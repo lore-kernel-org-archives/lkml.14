@@ -1,137 +1,96 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBF47CF3F;
-	Fri,  2 Feb 2024 21:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34CC81742
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706909816; cv=none; b=iOlnJYuX9V/jRDbKpSQDlbVknX2qnA/n2OzoZZLRckPGt0ePLAxcm08ZRPHLoRAL6Q7SXsLjtRU0LxQ8qJ5oAenDm9YQ+bgHQC/Hs11vlFzIPJOw2SvUxXqhPpKjiTlEGPud0HYUc4R6QlZP2f6KdXtd2WdPh5gxUhhH+/UOWQg=
+	t=1706909888; cv=none; b=TopCiESIF3lyfjs2jGIgb+/3DLpibwvXs7Q13/WpvcP0keiuKC0/Hj2E8dyDJYq7bKu5hnrLK8BKwUETYmVfkbeJ6WTs1T5sxTz9m2BmhH7sktWQY4TJ6+yh+2OiHsqJKhBPZMV2DVue99yMK8gEQ7HJnLOeDLPRg2zgOg3DQWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706909816; c=relaxed/simple;
-	bh=wcRhIvGHA+J82UxiABTG/8xiyiXgUs/xHOEBcQ1zOC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pU7b5aZECH06uXXbwJcfh5VvXTq2cAcgpm5S1HUcU9d2zjJ7v5nt2x6qSYO+59fbje7TELorpUm6Nel9nUmz55iiH5zdFINl0WztmhLXE/LbYcAznnS/FIWW+S56jGgsO4cluuNG6hhX0rxc7FqSs1M/lCALmTrdFAOt6H10RdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rW1DG-0003VB-38;
-	Fri, 02 Feb 2024 21:36:43 +0000
-Date: Fri, 2 Feb 2024 21:36:39 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Bc-bocun Chen <bc-bocun.chen@mediatek.com>,
-	Steven Liu <steven.liu@mediatek.com>,
-	John Crispin <john@phrozen.org>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: phy: mediatek,xfi-tphy: add new bindings
-Message-ID: <Zb1gZ7BjJlGCw13Z@makrotopia.org>
-References: <702afb0c1246d95c90b22e57105304028bdd3083.1706823233.git.daniel@makrotopia.org>
- <20240202212420.GA1561174-robh@kernel.org>
+	s=arc-20240116; t=1706909888; c=relaxed/simple;
+	bh=l4yBEaPM2iN7eZW+V6z8vwxu+0SiHLYw7zSuWZAIaaI=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r0yyArDTEh0HPSMYd2HmQllvn2pcVFHTsCMERsEcQ7cI1jAYihY98zY0J74fYBitExlj8oEijYfIvDBc/97KU0cCHixq5TpgeKM+l6Bh9J3UHo9SOfsBEZeQRYrADhQrae0ff77XJ9WpvmyXMG/nMTtHMzesD8/oCKnnGtLT7VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D5Eod6TE; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D5Eod6TE"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d05d774518so12257131fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 13:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706909885; x=1707514685; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lsomBTujcXZwChvimQjgCPTIq5/QQDBQdY15Zdim2x8=;
+        b=D5Eod6TEnTLnHEbeHR1CVGWug9eWQ8M4ky7UFCv6pwEc89UPTHNvInOnWPTELoxO69
+         pPpxHsyCZlLx76F/Ok0jyLevnSb0Z49u36zjDeUA3qMYkjYxT55pdCs2NoBOkvms9LWk
+         zQGLnwS+2nFOfOxsZiKhEURrpmG65c6XOop/g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706909885; x=1707514685;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lsomBTujcXZwChvimQjgCPTIq5/QQDBQdY15Zdim2x8=;
+        b=X39g91c9Hro8T/ZAyCunVohRV3jzHMjZifOn75/RdoZpg537K9JfZlhLQygIwaOdas
+         Za1gu+SzqgsYUxFn3H4g0w3lfgXi/zVstTSvG/JlJ0PjZG1gkkC5nKpdNY/1ceQV0ScC
+         uOD5cKrAmtVlzvPBvzEET10OXGWBKUTvDM0epRN6ZeSoVeY170slDDWx190Tye5dutPm
+         s2z/+GpUwrioyRyhowA+7Lj2c1+8qeiLtntUMIlA4hnlXJ7tu10u5EYPCJGv52P9iHn1
+         tzvK4IePYozz0rVp3Qddjy+tEiB9aUI53z8YkFIhj/A+wqxLYST30jQ94Lz6HjKU879G
+         lrjg==
+X-Gm-Message-State: AOJu0YzSqlLigjnG/Aa6LybKK0XvEdFKLoo3IHXn3+rEGRFgvb0gbbtd
+	U/cBmEkzGFxowAhOCXUXOPvSCM78ET5x7CAyLdICFctKrf3oR0GF54Iiyn8l9Wjcgq6giL5GMKo
+	5/7sHmYn0/DyjiF2oUNjkjsJ0Bk0TV3cw0jDdVBbKUvd391w=
+X-Google-Smtp-Source: AGHT+IHvfYyFfJ/R52vEVZbSRZ98QLR/0em/JjYcMxxy+2ZV0LfLeExVSgtkZoBvsF1omKzPLquVoYXeVi2DYmFj9yw=
+X-Received: by 2002:a05:651c:b22:b0:2d0:9a74:5e4a with SMTP id
+ b34-20020a05651c0b2200b002d09a745e4amr41079ljr.5.1706909884612; Fri, 02 Feb
+ 2024 13:38:04 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 2 Feb 2024 15:38:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202212420.GA1561174-robh@kernel.org>
+In-Reply-To: <20240201-strncpy-drivers-iio-proximity-sx9324-c-v5-1-78dde23553bc@google.com>
+References: <20240201-strncpy-drivers-iio-proximity-sx9324-c-v5-1-78dde23553bc@google.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Fri, 2 Feb 2024 15:38:03 -0600
+Message-ID: <CAE-0n5031k-5Gv+jFuWJekgPfHDw8yjUobqZr6+=UzgOEqOO4w@mail.gmail.com>
+Subject: Re: [PATCH v5] iio: sx9324: avoid copying property strings
+To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 02, 2024 at 03:24:20PM -0600, Rob Herring wrote:
-> On Thu, Feb 01, 2024 at 09:52:20PM +0000, Daniel Golle wrote:
-> > Add bindings for the MediaTek XFI T-PHY Ethernet SerDes PHY found in the
-> > MediaTek MT7988 SoC which can operate at various interfaces modes:
-> 
-> This is v4 unless I'm confused[1]. Where's the revision history?
+Quoting Justin Stitt (2024-02-01 10:55:03)
+> We're doing some needless string copies when trying to assign the proper
+> `prop` string. We can make `prop` a const char* and simply assign to
+> string literals.
+>
+> For the case where a format string is used, let's extract the parsing
+> logic out into sx9324_parse_phase_prop(). We no longer need to create
+> copies or allocate new memory.
+>
+> sx9324_parse_phase_prop() will simply return the default def value if it
+> fails.
+>
+> This also cleans up some deprecated strncpy() uses [1].
+>
+> Furthermore, let's clean up this code further by removing some unused
+> defines:
+> |  #define SX9324_PIN_DEF "semtech,ph0-pin"
+> |  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+> |  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
 
-It's a new series only covering the XFI T-PHY driver.
-However, I should have written a cover letter referencing the previous
-series to netdev. Sorry for that and thank you for pointing it out.
-
-> 
-> Rob
-> 
-> [1] https://lore.kernel.org/all/b875f693f6d4367a610a12ef324584f3bf3a1c1c.1702352117.git.daniel@makrotopia.org/
-> 
-> > 
-> > via USXGMII PCS:
-> >  * USXGMII
-> >  * 10GBase-R
-> >  * 5GBase-R
-> > 
-> > via LynxI SGMII PCS:
-> >  * 2500Base-X
-> >  * 1000Base-X
-> >  * Cisco SGMII (MAC side)
-> > 
-> > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> > ---
-> >  .../bindings/phy/mediatek,xfi-tphy.yaml       | 80 +++++++++++++++++++
-> >  1 file changed, 80 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/mediatek,xfi-tphy.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/mediatek,xfi-tphy.yaml b/Documentation/devicetree/bindings/phy/mediatek,xfi-tphy.yaml
-> > new file mode 100644
-> > index 0000000000000..e897118dcf7e6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/mediatek,xfi-tphy.yaml
-> > @@ -0,0 +1,80 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/mediatek,xfi-tphy.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: MediaTek XFI T-PHY
-> > +
-> > +maintainers:
-> > +  - Daniel Golle <daniel@makrotopia.org>
-> > +
-> > +description:
-> > +  The MediaTek XFI SerDes T-PHY provides the physical SerDes lanes
-> > +  used by the (10G/5G) USXGMII PCS and (1G/2.5G) LynxI PCS found in
-> > +  MediaTek's 10G-capabale SoCs.
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^phy@[0-9a-f]+$"
-> > +
-> > +  compatible:
-> > +    const: mediatek,mt7988-xfi-tphy
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: XFI PHY clock
-> > +      - description: XFI register clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: xfipll
-> > +      - const: topxtal
-> > +
-> > +  resets:
-> > +    items:
-> > +      - description: PEXTP reset
-> 
-> What is PEXTP?
-> 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
