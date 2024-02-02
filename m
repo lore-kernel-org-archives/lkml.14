@@ -1,125 +1,66 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565AB14691D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684001468E8
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.254.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706888194; cv=none; b=WWlpfwNnxfuCHVkc20f9hEDkwKsrUgEJ3nIoKVTWSEh9fAMuT46sWVjS05hppwvQkXV9nCUfObhrP+a+atc7BKX+ZF5xnjAEvf7vl5SE2TsWazOHag0MfU+4vcGhb9lfS/80XnibGabgJRw+4yEjHl0zliSAOUZDQ4800xfvei8=
+	t=1706888263; cv=none; b=RjZzpJJTfwfubR0FSNXLFn1kLTuxP5+pwxnx4/bssV25M3+1v4mI4o9foxFP0GO35rwy4fVkFgnTw9OkmlMoJNQlT0AiCFufxzpw+HrbDgIPh0maiP5PawxbVd944o/rNnwX+xOVrO+YHvIQ4tysYSdPaz0BdjVl3gDE9BIh8XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706888194; c=relaxed/simple;
-	bh=Fg0vF/DKGnFKdPAxtNJWEsCiIanMISLov5rth1azicY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxv7RgvEz87Hmc1QGOh3B3tBOlbYVKpyARiIUaKkybiAiydxpsn3sqmryj49IOSHTdCiUOcelw86BZat1KfZUigD+AaxRUL96Sldo85zGz8v/6hAe0UODau2kZ2S1ppzJi6zrnRFSl5Ji2Z43THeCBiVDp8xMIVHNwEEDzV/Xp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=It4UgSvK; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="It4UgSvK"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78552105081so47449685a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 07:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1706888185; x=1707492985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jRSa4TT8HVH8576bDhqIPmdbLRM9nyjGP0P+K9geus8=;
-        b=It4UgSvKLEpxOMpS7xqSJijhPsH5kq6d3Z3PfOt64xfqKYUDQc7S7XNMYqrlf28Ssu
-         e+tGq/2S4bUWfo+1XQlYrbDhpA8WkOOsfyTnY1m8hEogjNSGCIQBfXAKjK5btJ8E6SQ5
-         ObGCy93QhPdj8VXDJL5TKrU2NCdFk8xkyLcbkRtBk5ij7GOrxU6WLdaJ7HECiFAr4A/4
-         tDTzJvc+SyfUhnyqrb2JUf3kIAEzvcwcb6VOvIg705tsAHtW6aGXGYh4PYBaGSBwdzNC
-         zhrhSCEP9iJjXygGv12cK3f4Dc1ZaEgaty/QsSTeOqnaeYk9IQCjPE3SLKk2Q/hLnFMw
-         vnSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706888185; x=1707492985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jRSa4TT8HVH8576bDhqIPmdbLRM9nyjGP0P+K9geus8=;
-        b=IdcYaib4elBWxlLBA7lIj/PiwlfomLrRJx7GkcJrfhxanOczVv4/f76wXzhPGZQVWs
-         b259hDCiPVei0PvyWcS4Vg6wPstY8ETH25xzRbEK1yEJRFVblZ1y5ae8VG1VD5ktO/Rv
-         7DJiVODG8bCKebn6AnMfL/ueoDEk6bc7EkAFfNKZE5CM3wJKymKZ/IejlSbMpE2trJcU
-         GPbTMccV9P5iu05N8+ds+Ei+inqWICJPhcZVC6ltx53s+Skgwf38ylpZeV1et9p0vzyF
-         W+7JX5Fk0mNHLhXZAnYOno5vG+JnbLNrWzLNQLAzfqc9k5dAESzJXSlBxdG5Ou14zK5T
-         g4WQ==
-X-Gm-Message-State: AOJu0Yze10Fdtf8S+0mK+/YpFjLKBZFUV+VjBcFFy96MNpmD1+T8k7pU
-	DAaNxzhXFlObchZGyrMwtie/KrCvponVn5fNj4GiJ5xMxV2MYvxZcU+voN25JQU=
-X-Google-Smtp-Source: AGHT+IHgoLTjDGqcVBJHeDO/+4xepghxs6zy3yXbqAEo9+eksg5MPspO+NnPRp35JWUiTkmwcplNIA==
-X-Received: by 2002:a05:620a:1447:b0:785:43d7:cd0d with SMTP id i7-20020a05620a144700b0078543d7cd0dmr5503107qkl.27.1706888185060;
-        Fri, 02 Feb 2024 07:36:25 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUFwKseQX4Qsq/U7oliva32huh0WpnlP9H2RmmN32JeZGOlrWJLaJZWLc9ppObbDwYDQV4sN7pUUZMCsO8tSFXSQJmcRGn+0ufquLHbJD1n5fzINj6sjjJv3dkjJOrN1QEsZiBVWFkYzeqnXqMwOqEHyIymkSi3B0oCOc5x9B6RE9X0hh8jrCLAS/PANjfoSo/rRgMRJGBcFJUCufODDCXB9jPLvby/TOw6PDi/PiXXaNWf6dsKiH+LDw3kiKrGVwerK4/DkUHol9QZWPHWp5Omyx0ca2rOvsUYk+OUWtuGlc7B0eOG3a6RzgWhdK8dYHm0gscYJwdfLAiXXgZ7SzzLyziu3DsqSb/YsxwTsJLPwdREaYfhXn96czeFqnVrIVcsWxSSIWpVfPCraGXpvS0VTC8bFw6Xzg4VBcDrwgor7MFt03tk
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id vu21-20020a05620a561500b0078552f53b85sm724769qkn.86.2024.02.02.07.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 07:36:24 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rVvaZ-00AwH2-RL;
-	Fri, 02 Feb 2024 11:36:23 -0400
-Date: Fri, 2 Feb 2024 11:36:23 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Yan Zhao <yan.y.zhao@intel.com>, iommu@lists.linux.dev,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 15/16] iommu: Make iopf_group_response() return void
-Message-ID: <20240202153623.GA50608@ziepe.ca>
-References: <20240122054308.23901-1-baolu.lu@linux.intel.com>
- <20240122054308.23901-16-baolu.lu@linux.intel.com>
+	s=arc-20240116; t=1706888263; c=relaxed/simple;
+	bh=amxXWOA8shkwZCqq409xMVqZnLPj+Od52yEZEeelVY0=;
+	h=To:From:Subject:Date:Message-ID:References:Mime-Version:
+	 Content-Type:Cc; b=gqUAeSjypYvlIBwT30ARKvQwBYdHd14Gc15cEzFmfFZMMVfnEQd26LZgb5g9tYB+2A8qf6d2hWx36r+4MRCu2BFrKnASKssNveZAr4TG7uH64gIsGCoEAuC8/C2JLvrWqAyri26DqFOttfA2bL6g5NyQ/bGd133+/hPXihGKoQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=m.gmane-mx.org; arc=none smtp.client-ip=116.202.254.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.gmane-mx.org
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+	(envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
+	id 1rVvWp-0006F8-6z
+	for linux-kernel@vger.kernel.org; Fri, 02 Feb 2024 16:32:31 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: linux-kernel@vger.kernel.org
+From: Holger =?iso-8859-1?q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
+Subject: Re: Kernel - 6.7.3 - failed to compile the module
+Date: Fri, 2 Feb 2024 15:32:24 -0000 (UTC)
+Message-ID: <pan$2ed7c$db97fd26$2ea3b30f$fdd2e024@applied-asynchrony.com>
+References: <CAHOGJipx37tUoiSp87Np4b0qzREj60+FEkdi_0X0_JoQW8cYeA@mail.gmail.com>
+	<ZbzwgtGUHK2Dj5eo@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122054308.23901-16-baolu.lu@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+User-Agent: Pan/0.151 (Butcha; a6f63273)
+Cc: linux-rdma@vger.kernel.org,netdev@vger.kernel.org
 
-On Mon, Jan 22, 2024 at 01:43:07PM +0800, Lu Baolu wrote:
-> The iopf_group_response() should return void, as nothing can do anything
-> with the failure. This implies that ops->page_response() must also return
-> void; this is consistent with what the drivers do. The failure paths,
-> which are all integrity validations of the fault, should be WARN_ON'd,
-> not return codes.
+On Fri, 2 Feb 2024 20:39:14 +0700, Bagas Sanjaya wrote:
+
+> [also Cc: mellanox maintainers]
 > 
-> If the iommu core fails to enqueue the fault, it should respond the fault
-> directly by calling ops->page_response() instead of returning an error
-> number and relying on the iommu drivers to do so. Consolidate the error
-> fault handling code in the core.
+> On Fri, Feb 02, 2024 at 08:55:47AM +0100, Michał Jakubowski wrote:
+>> Regarding: https://bugzilla.kernel.org/show_bug.cgi?id=218445
+>> 
+>>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp1_execution.o
+>>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp1_transition.o
+>>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp2_execution.o
+>>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp2_transition.o
+>>   LD [M]  drivers/gpu/drm/amd/amdgpu/amdgpu.o
+>>   MODPOST Module.symvers
+>> ERROR: modpost: "sched_numa_hop_mask"
+>> [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+>> make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
+>> make[1]: *** [/usr/src/linux-6.7.3-gentoo/Makefile:1863: modpost] Error 2
+>> make: *** [Makefile:234: __sub-make] Error 2
 > 
-> Co-developed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  include/linux/iommu.h                       |  14 +--
->  drivers/iommu/intel/iommu.h                 |   4 +-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |  50 +++-----
->  drivers/iommu/intel/svm.c                   |  18 +--
->  drivers/iommu/io-pgfault.c                  | 132 +++++++++++---------
->  5 files changed, 99 insertions(+), 119 deletions(-)
+> Do you have above build failure on vanilla v6.7.3? Can you also check current
+> mainline (v6.8-rc2)?
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+No need to investigate further, this is caused by an additional non-mainline
+patch that has nothing to do with the mellanox driver.
 
->  
-> +static struct iopf_group *iopf_group_alloc(struct iommu_fault_param *iopf_param,
-> +					   struct iopf_fault *evt,
-> +					   struct iopf_group *abort_group)
-> +{
-> +	struct iopf_fault *iopf, *next;
-> +	struct iopf_group *group;
-> +
-> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
-> +	if (!group) {
-> +		/*
-> +		 * We always need to construct the group as we need it to abort
-> +		 * the request at the driver if it cfan't be handled.
-                                                  ^^^^^^ can't
+-h
 
-
-Jason
