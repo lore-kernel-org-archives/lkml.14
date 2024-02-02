@@ -1,136 +1,120 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3D580601;
-	Fri,  2 Feb 2024 20:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FE51803D
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 20:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706905582; cv=none; b=EyAEe4CEt/02Sn+7YsSztl2yimH5tiIVjVZp0CtS2+zhTfKGl6GJjwWqT1YJRHPRO0AwqFXk1q0KwZWbA5sgKEcpKFWK4LCIQ2njV7spIgARR+htUmErLfQIdfjuQLlm5yDSYbAvOg7v+uWVyfVLdHrZ8tX4KHMDL0L6qEpS5yA=
+	t=1706906223; cv=none; b=se5/C1kEtmcgQSjZ6tRhhmHWF3lA6c+ttPPHmjTCPcjcyi8UfGLQfDTAKkgxEQPjfpLhSRXta9nRuhqTAN9mA2JYwD+xHs7sx7JGWi+GoYhNocsOdrkW1ngzrWeRWG1L/umTxuINcw/tiQNRvXA8Y1liICg+hhXmpNYfA60dTNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706905582; c=relaxed/simple;
-	bh=VcZTs2Gq08PlBskokPhLEf4TRhE+oKA4D1KkVs9TtsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqdMzA1UAW4kBnG5rrj/zJrhizFy1YfXF5ZLj9oWRfOh18olrF3wnTAcMrk27Fmmz9VgX4GKrPZDT9GR5eJDQvUJnxdXc+d9nFBXeULYNMXhqB+gT5J5irfj7VamDGpxVCKev3kctLUB6w+lDBgeuLnX/sjNyqYyXTKlBTNp/tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=AGmPciXs; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1706906223; c=relaxed/simple;
+	bh=53lrrcAwsOReEPvUCjLVaJtxk7JP82CHsTgE15pO0as=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FG4asIGy+YXfnPHl4yAf4HJdgu6sMbVgIKQNbCkzkq/WGtokmnwymdQJ5TkNCrKYUeFRh1XoIUw7J76HO8pOmzDpgLkD+H+SENgzSJh02epmcPLcWUED+cQolMRjMDsuYZD9PqiIFExrf2vKD1cm4apZ/B2D1Rf447w9R7mwNs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AdRDldI6; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AGmPciXs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=WGnc/m8wZ5VekXMjEDlGv2LgOYZxP0Ar/ku6T9fE9Us=; b=AG
-	mPciXsoxeRmPl2pgCQEew0vyueQo9nP5a9cQdrR+vatsm8Rr4aFOl3MqKSocFSSE/Orl8uXD6DN+s
-	tZ17BYJL9sHXLLpXE/s7ECOaxX/7daK9ZtTjQDXczWjFuEWK588nEvNGnj111BYTG/AaTEMBvnC6b
-	+BzMRtZQ4btiEDE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rW06l-006qZX-8r; Fri, 02 Feb 2024 21:25:55 +0100
-Date: Fri, 2 Feb 2024 21:25:55 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v3 1/7] net: dsa: mt7530: empty default case on
- mt7530_setup_port5()
-Message-ID: <59e88b15-da57-4cff-83b3-91e38a185461@lunn.ch>
-References: <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
- <20240202-for-netnext-mt7530-improvements-2-v3-1-63d5adae99ca@arinc9.com>
- <ZbzUotyQm/FyKK7G@shell.armlinux.org.uk>
- <e3b4add6-425c-46ca-9da5-8713055fc422@arinc9.com>
- <Zb0u8NY0q6ay17j5@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AdRDldI6"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55ff5f6a610so1134678a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 12:37:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706906219; x=1707511019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0h1IIKH0viGaA3orHuy1hmOvR0Hle+LrWHOWH3Kx7Iw=;
+        b=AdRDldI6kbgDQkN8r07POl0MgA5ekz6Be9bJih8f9S4ZaCEedtCPBgJpsFVuFbZn1w
+         fadMvQKESc8Cue14gWHK4oEesN3T8aVdvDW/xwy3ZKemwfbVWmgIdqiIDZZ9PPpOChnW
+         izl1xoXkYbE+rDSbIktCnyM4TapuRW/g8dnXQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706906219; x=1707511019;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0h1IIKH0viGaA3orHuy1hmOvR0Hle+LrWHOWH3Kx7Iw=;
+        b=FZNtoEV9LUxIzEP3DRtkjCrZR4k+vMiw6JtLTPfogCjsiinCn1vMTknI82sOE+co82
+         ezLeqXqB1+5Hb9KAZpoPk5I7Rn770G7BaX/V3qIZcEwiBrnpv1JXlJyTHltcgIcITwKB
+         tkkjGvixNiAHCUXbNnkEaMfOcnnR4lgxQfs60ITq7qTZzVxYQK1d463xW3NkGw8GW1dp
+         Rissm69JWPs+jl6Hy71NQh2gQAsSMt0/sh9CdE1EwdBz8S9sOjowNno7xJHXo+aXTr4X
+         I26TXHVz1AIspEPM02GG9ggWHQ2F9ziwXCI6eI4g0J982WkilQQGAt5upWhPFDU+pg20
+         ocaQ==
+X-Gm-Message-State: AOJu0YyUw+rKIyJqaiTYAe97XBhgVA2zaeMmYS1QZOBs7A8Hx8QLo4R2
+	OGvpgWRzzZfF5dP5xN0Gn8FztLZDqDy/aWNrdZiNx9VPuWofomhr26P+NS+pFmcbNz+f4vcYS0v
+	s1Q7m
+X-Google-Smtp-Source: AGHT+IEcLQ0icpmNoy+J+kDMq54/4FuTbAdxRRN7Ob0FvPAi70bsan/AGhaq32V/bhYEYG8GiHJZYg==
+X-Received: by 2002:a17:906:f844:b0:a36:bc20:9a30 with SMTP id ks4-20020a170906f84400b00a36bc209a30mr4590802ejb.54.1706906219424;
+        Fri, 02 Feb 2024 12:36:59 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVghUENIoO47m2PJfqJHBKuP25jbNJTNRXaGyoFMoLTrrpxg0JGyMr1hRYcJ2ggz9Va986E30100ICsAzJUnQL4Eq88Qbwt4UAh+bYO
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id d13-20020a170906640d00b00a35d7b6cb63sm1216220ejm.28.2024.02.02.12.36.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 12:36:59 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55fff7a874fso13a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 12:36:59 -0800 (PST)
+X-Received: by 2002:a50:8d15:0:b0:55f:a1af:bade with SMTP id
+ s21-20020a508d15000000b0055fa1afbademr6757eds.4.1706905905770; Fri, 02 Feb
+ 2024 12:31:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zb0u8NY0q6ay17j5@shell.armlinux.org.uk>
+References: <20240202202329.4172917-1-quic_jhugo@quicinc.com>
+In-Reply-To: <20240202202329.4172917-1-quic_jhugo@quicinc.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 2 Feb 2024 12:31:30 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WkNKFiRKyadVnAMmtcDH=PVv6vk2CvMbME9FZ5UHNxuw@mail.gmail.com>
+Message-ID: <CAD=FV=WkNKFiRKyadVnAMmtcDH=PVv6vk2CvMbME9FZ5UHNxuw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: drm/bridge: ti-sn65dsi86: Fix bouncing
+ @codeaurora address
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	quic_bjorande@quicinc.com, airlied@gmail.com, daniel@ffwll.ch, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 02, 2024 at 06:05:36PM +0000, Russell King (Oracle) wrote:
-> On Fri, Feb 02, 2024 at 08:44:39PM +0300, Arınç ÜNAL wrote:
-> > On 2.02.2024 14:40, Russell King (Oracle) wrote:
-> > > While reviewing this change, but not related to it, I notice that this
-> > > function sets the TX delay based on the RGMII interface mode. This isn't
-> > > correct. I've explained why this is this many times in the past, but
-> > > essentially it comes down to the model:
-> > > 
-> > > 
-> > > phy-mode in NIC node	Network driver	PCB		PHY
-> > > rgmii			no delays	delays		no delays
-> > > rgmii-id		no delays	no delays	tx/rx delays
-> > > rgmii-txid		no delays	no delays	tx delays
-> > > rgmii-rxid		no delays	no delays	rx delays
-> > > 
-> > > Then we have rx-internal-delay-ps and tx-internal-delay-ps in the NIC
-> > > node which define the RGMII delays at the local end and similar
-> > > properties for the PHY node.
-> > > 
-> > > 
-> > > So, if we take the view that, when a switch is connected to a NIC in
-> > > RGMII mode, then the phy-mode specified delays still should not impact
-> > > the local NIC.
-> > > 
-> > > Now, for the switch, we specify the phy-mode in the port node as well.
-> > > Consider the case of a switch port connected to a RGMII PHY. This has
-> > > to operate in exactly the same way as a normal NIC - that is, the
-> > > RGMII delays at the port should be ignored as it's the responsibility
-> > > of a PHY.
+Hi,
 
-Not quite. It is unusual, but there are a few MAC drivers which do act
-on phy-mode, to configure MAC delays. However, if they do this, they
-then mask the value of phy-mode passed to the PHY in order to avoid
-double delays. Its not something i recommend, we prefer the PHYs do
-the delays. And it something i strongly suggest we avoid in DSA.
+On Fri, Feb 2, 2024 at 12:25=E2=80=AFPM Jeffrey Hugo <quic_jhugo@quicinc.co=
+m> wrote:
+>
+> The servers for the @codeaurora domain are long retired and any messages
+> sent there bounce.  Sandeep Panda's email address is no longer valid and
+> should be repleaced.  However Sandeep has left the company and has not
+> been active sice, therefore it looks like this binding is orphaned.
+>
+> Doug is listed as the reviewer for this file in MAINTAINERS and has
+> volunteered to be listed within the file as the binding maintainer.
+> Therefore replace Sandeep with Doug to make the documentation current.
+>
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> ---
+>  .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml        | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi8=
+6.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> index 6ec6d287bff4..c93878b6d718 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  title: SN65DSI86 DSI to eDP bridge chip
+>
+>  maintainers:
+> -  - Sandeep Panda <spanda@codeaurora.org>
+> +  - Douglas Anderson <dianders@chromium.org>
 
-> > > The final scenario to examine is the case of a RGMII switch port
-> > > connected to a NIC.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-This should also extend to a port connected to a port of another
-switch. For Marvell switches, these are so called DSA ports.
+Unless there are comments, I'll let this stew over the weekend and
+then land it through drm-misc next week.
 
-> > > The NIC's phy-mode has no way to be communicated
-> > > to DSA or vice versa, so neither phy-mode can impact the other side
-> > > of the RGMII link, but should only place the link into RGMII mode.
-> > > Given everything I've said above, the only way to configure RGMII
-> > > delays is via the rx-internal-delay-ps and tx-internal-delay-ps
-> > > properties. So, DSA drivers should _not_ be configuring their ports
-> > > with RGMII delays based on the RGMII phy interface mode.
-
-Marvell goes against this. rx-internal-delay-ps and
-tx-internal-delay-ps are pretty new, when compared to the age of
-mv88e6xxx. I had the problem of a FEC connected to an mv88e6xxx using
-RGMII and i needed to somehow configure RGMII delays, or packets did
-not get through. So mv88e6xxx will apply phy-mode to ports being used
-in CPU or DSA mode. So in the case of the FEC->switch, rgmii-id is
-used by the switch. For DSA->DSA, there are DT blobs with rgmii-txid
-on both ends of the link, which results in the needed delays.
-
-> > > The above is my purely logically reasoned point of view on this
-> > > subject. Others may have other (to me completely illogical)
-> > > interpretations that can only lead to interoperability issues.
-
-Now that rx-internal-delay-ps and tx-internal-delay-ps actually exist,
-these are the best ways to handle such delays, for new drivers. But we
-cannot change old drivers without causing regressions.
-
-       Andrew
+-Doug
