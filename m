@@ -1,89 +1,76 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2254E1474CF;
-	Fri,  2 Feb 2024 16:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0962114691C
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 16:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706890677; cv=none; b=eMkfjndmlSrnkR/EEaCsdqh7imxyfC6BlylcYc7BgHv/FUvgIL6IUuJAaXajQKyQVPro9AyPTBWZMI6YqAfNK+tDT67eDW70mtB6sPp/oXZZNbvA+UEWsy5KYg9EjBmlGuPzkcPpxF5DZOI4Ay5+CovFPUD689J/DP/XLIKE2Ys=
+	t=1706890783; cv=none; b=n7Njr5vztmQY0VBOsaALo1E+8QioXkQ5yBweI1uSlyuhbRVTJxuFz9xNCHFCeDe1zmbXRAAfzw/xLgy0WHpZbJ3gwWsfTwCCO8Vg85JEFY85ALtGcyF7mAZoyF3B3T7l9+pe4NEk9wItZQHzORp7cztsoUl0CUCEbiDdHD+jLYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706890677; c=relaxed/simple;
-	bh=AE0SEUj7Y/tfMu8o/0l1ilY4/oHuzQA8xZ6TeYOyFJU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nxy4RoZ0ROAwPnQ/tQiuKdauco5zrBmRYq3Q9ZxKxkApB2otYRNMSf2nfnqCABLVvzhwKLlSCZL4ZmOvTbQO25tuEEuEDvUF0te4s0pzgynYEyeR8jt5PzVWLwyJZVWzxiF56xNcHHyOz2wxI5cXbJZlyoODzVc0ESfOn0/qdK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=U2D7rWPe; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1706890783; c=relaxed/simple;
+	bh=iBulCc3SoVRLPdtGNVL+0rm2yqUVtuItnRwMqaYpERU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GtMdKngsSWhS4MV9buq+U//Bu1tGUBbGl/TraZqQxOOtq7lM6bGcRV1b7qM/Fr4NCfGqUH3wtIHAWSidEpU+sCsEqc30zUgqZvfyr7ZWC1Ptz9cdI+dYe3mrBwuME8XV1l8D579IfG8/QCbPLw20Lrm4ncKLb1tBmKLIB5z7x/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KAAF+dvk; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="U2D7rWPe"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412G7T7N005383;
-	Fri, 2 Feb 2024 10:17:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=d
-	ztUlVgM3uruxT9g6eLIIFQ6JObOYYRKqDfkXdE9Lv4=; b=U2D7rWPeo0Kwqh2Mq
-	qIqYSkGA2P9FvQOg8UODMnxUo/37N075UlLDm0Q6zn3erVVzSq+Zpr9FxfndCH1J
-	FUYa0pl8gfSxTVyZNEnpwZ57YPhv0kopDBurQ+7yJNFYBKTJqtEsdpjQKc++eYzl
-	V3fsUilNanUxqiDi+VU2KRZ1n6C7rd5ZDDjiGGPkBdb725t8dLKElgE91CQmGBcS
-	HPUvhfoXi8E3maV3zNejSyt/YwPvKkyM7r7+MZ5nxVqsakM25a6d7w40sMLh6K7z
-	oXGOePxSS441yRrlHFuV+BLu0OezMDfKyK/DEy06aMyfKcUsMByvqfB5vV0teZsG
-	sdsbA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w0puwgqxn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 10:17:35 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 2 Feb
- 2024 16:17:33 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 2 Feb 2024 16:17:33 +0000
-Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.64.191])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id C43FD820246;
-	Fri,  2 Feb 2024 16:17:32 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Stefan
- Binding" <sbinding@opensource.cirrus.com>
-Subject: [PATCH v1] ALSA: hda/realtek: Remove two HP Laptops using CS35L41
-Date: Fri, 2 Feb 2024 16:17:27 +0000
-Message-ID: <20240202161727.321373-1-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KAAF+dvk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706890782; x=1738426782;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iBulCc3SoVRLPdtGNVL+0rm2yqUVtuItnRwMqaYpERU=;
+  b=KAAF+dvkCgSEIFq8gPUTlNXemc2d48IIdm8P3S3ANguQWO3DrhpsIPlI
+   Ak/muZ/CfTwTJRmGr1YAvMwmjOWOqCt2Txmi13Cwy4YZWK9QFEKiHHJs1
+   XQizVQBS8M2UW/Tg5CkORIeyG4H7hk0uDET8ckgMZOR9zyF7lTR2oOdAk
+   oJEVYVrpAzpsr2O+JfKY7T98dv1z/vS6wi52+GlHmUjjIpsVRZJa1qwXs
+   pNjC8c+ej1100wU51Y6DV67rZYeG1we1nJ0v8ANPEYeaUBcsrBDguZUQZ
+   nAu+UMcV39FM0824Jk7hNTSk93fiakSkrV7DfVK9lUP+AT3/f87VoZszJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="10930188"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="10930188"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 08:19:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="823247497"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="823247497"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 08:19:39 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rVvZu-00000001J34-1Ij6;
+	Fri, 02 Feb 2024 17:35:42 +0200
+Date: Fri, 2 Feb 2024 17:35:42 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [resend, PATCH v1 1/1] logic_pio: Use RESOURCE_SIZE_MAX
+ definition
+Message-ID: <Zb0LzpBkE71wWyqO@smile.fi.intel.com>
+References: <20231016132611.1201402-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Lh3Nk5urHu-PSPEdo_zb_V356sj0i91C
-X-Proofpoint-GUID: Lh3Nk5urHu-PSPEdo_zb_V356sj0i91C
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231016132611.1201402-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-These two HP laptops are changing configurations.
+On Mon, Oct 16, 2023 at 04:26:11PM +0300, Andy Shevchenko wrote:
+> Use a predefined limit instead of hardcoding it.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
----
- sound/pci/hda/patch_realtek.c | 2 --
- 1 file changed, 2 deletions(-)
+Can we apply this one?
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 348505edf063..3d7e7b32fcf4 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -9855,8 +9855,6 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8cdd, "HP Spectre", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8cde, "HP Spectre", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8cf5, "HP ZBook Studio 16", ALC245_FIXUP_CS35L41_SPI_4_HP_GPIO_LED),
--	SND_PCI_QUIRK(0x103c, 0x8d01, "HP EliteBook G12", ALC287_FIXUP_CS35L41_I2C_4),
--	SND_PCI_QUIRK(0x103c, 0x8d08, "HP EliteBook 1045 G12", ALC287_FIXUP_CS35L41_I2C_4),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
- 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
