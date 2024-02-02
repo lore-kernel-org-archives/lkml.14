@@ -1,114 +1,83 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFB6E55E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82244E549;
 	Fri,  2 Feb 2024 04:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706846712; cv=none; b=A7eE2M3aQz977k4dYrkxGKxrTPSoznpyN3top40U25ya9MB8ixYs2epy+QQ4agVM4YomR9XFWllJ9SULufBUgM3XNeQY1zKq5KbXGdLvU4nutpq1eEnALrvmohLYbZBR6ieMpywJ8jPYQ/BJTB29bSIsVg8PF/roKeDL8JjYceE=
+	t=1706846713; cv=none; b=pEf18maCz62ErsJgI4knNR5EVI56hPbMM20FB3I/aCHJgSWYBLK7j9t1EgJUY/sgXY+X8OUfCAJenW/5g+M+xM5iHPxUZXQNXTbOqyYk3ZJW1U7yHAFgVMwzye1cypXvpYKcyuCSRmiJscVO2C06T6rbH+OHuhthYt1RxGP1bFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706846712; c=relaxed/simple;
-	bh=NNLcYCuc4BF/659D3HxJb+VQHj1+QX8RRAYRfMCjV08=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Sxx8xBxLAcOvLwnx85/nNcXtYfJWwQwNQGUPQyMA5QedmJGYMvEfevVNxodLs0Nj3woRoIk6M1IckDSzMmfK5SNgD+P+Xmmt+s4bBXhJlhRNRj4L9WCZDiWPgwsJt1Fp7AVbbCyLynn6bXGY69qTG1UH11uDrU+JaMw1seMdTD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=rRkd3Y9t; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1706846713; c=relaxed/simple;
+	bh=hZfxudAQbzcTFkLzrUZ/iFfqiq5eoB8LM/fFig+PAHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uBMoMYYBb2zR97aJvt0THOGBr1gL4bsr3gTXc8ZQ11FxIVZw2Dex8yrD+tx+8Pme0IZn4cqNg60sqy5cMdqxNL09EOPdyYq8sayb2h6ktkS99RTxeO0kzbC+CUFAv/cqaII09sAUjfU+x+Bp51kJWOrvqPGk+6/V1MSmFcobhrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=pIco9+AE; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="rRkd3Y9t"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=NNLcYCuc4B
-	F/659D3HxJb+VQHj1+QX8RRAYRfMCjV08=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=rRkd3Y9tCaT99HAOzulVgYIo663rTR0TJ
-	HOrCKvy1wvCo9kQ+VIuoYTuLARxRSwx0FNcS834C5NKE6XhczFPzhxJWbYtiCCCK4o44xQ
-	WYENp4Ro9L5NOlkFoBwFe/MNm6LMRxaQuf9ds27DuUGE6knsEcFGCgb/ZbA60s6scfYD5u
-	b9YJpdlnmv3LxZGFuio1O8F9hp+cqkUZhslMryt1sfmvGhC2OJEd2vwpiZJAycQexyJcvo
-	yw4t24gxBgj2ZJDaZ6Q1JsNnReiVPFff1skgGdcz105x8f3SyERpwV7kjrBqb+velzGYDI
-	tdBDE/yrWOidAHQk5Kqz3YmL3UFAQ==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 92cf0eba;
-	Thu, 1 Feb 2024 21:05:10 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Jeff Xu <jeffxu@google.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>,
-    Jeff Xu <jeffxu@chromium.org>,
-    "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-    Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    willy@infradead.org, gregkh@linuxfoundation.org,
-    usama.anjum@collabora.com, rdunlap@infradead.org,
-    jorgelo@chromium.org, groeck@chromium.org,
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-In-reply-to: <CALmYWFtqcixi3p3Ab44wENJr+n2k2SNaCJEofNm_awnNdJZnDQ@mail.gmail.com>
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver> <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com> <58408.1706828083@cvs.openbsd.org> <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com> <CALmYWFtqcixi3p3Ab44wENJr+n2k2SNaCJEofNm_awnNdJZnDQ@mail.gmail.com>
-Comments: In-reply-to Jeff Xu <jeffxu@google.com>
-   message dated "Thu, 01 Feb 2024 19:20:08 -0800."
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="pIco9+AE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zprcRbdEZTEbzRJzXIqOfmdBLyrHEeb0z5ZjrW+eJjk=; b=pIco9+AEcGpi1eJkqd1+TWTTQ/
+	XggxqzL2w7JuIlqFb/qCdHy0ULmOVossWG+kEFJsaGwMh+RytusUgg82M15TvEDjlqwGslNf7cvUq
+	sPt2Vassayxn3kWT9oVofZJaRl0DIN7pORLgWXb+9VTqqAlio+oguHQ5mP/B5DZuelRkEJdARnyFU
+	m/G0i2qfxHjXcpG4x8OeVf8YUMVphbhJ7Uxp1eVbk/1W+xGbO+bqjutgFRWwu6i/wdiHFEvnCchz4
+	ZhCB1hItyVOF2KQdksSMyIe3+2vMkZTegZ2UOl9ci4kUZVIH/f16rNHViC/gdF6VL8VPSjwmx0o57
+	Hxxlk+WA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rVknX-003e9i-0F;
+	Fri, 02 Feb 2024 04:05:03 +0000
+Date: Fri, 2 Feb 2024 04:05:03 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>,
+	Kees Cook <keescook@chromium.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] regset: use vmalloc() for regset_get_alloc()
+Message-ID: <20240202040503.GX2087318@ZenIV>
+References: <20240201171159.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
+ <20240202012249.GU2087318@ZenIV>
+ <CAD=FV=X5dpMyCGg4Xn+ApRwmiLB5zB0LTMCoSfW_X6eAsfQy8w@mail.gmail.com>
+ <20240202030438.GV2087318@ZenIV>
+ <CAD=FV=Wbq7R9AirvxnW1aWoEnp2fWQrwBsxsDB46xbfTLHCZ4w@mail.gmail.com>
+ <20240202034925.GW2087318@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <64877.1706846710.1@cvs.openbsd.org>
-Date: Thu, 01 Feb 2024 21:05:10 -0700
-Message-ID: <8744.1706846710@cvs.openbsd.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202034925.GW2087318@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Jeff Xu <jeffxu@google.com> wrote:
-
-> To me, the most important thing is to deliver a feature that's easy to
-> use and works well. I don't want users to mess things up, so if I'm
-> the one giving them the tools, I'm going to make sure they have all
-> the information they need and that there are safeguards in place.
+On Fri, Feb 02, 2024 at 03:49:25AM +0000, Al Viro wrote:
+> On Thu, Feb 01, 2024 at 07:15:48PM -0800, Doug Anderson wrote:
+> > >
+> > > Well, the next step would be to see which regset it is - if you
+> > > see that kind of allocation, print regset->n, regset->size and
+> > > regset->core_note_type.
+> > 
+> > Of course! Here are the big ones:
+> > 
+> > [   45.875574] DOUG: Allocating 279584 bytes, n=17474, size=16,
+> > core_note_type=1029
 > 
-> e.g. considering the following user case:
-> 1> a security sensitive data is allocated from heap, using malloc,
-> from the software component A, and filled with information.
-> 2> software component B then uses mprotect to change it to RO, and
-> seal it using mseal().
+> 0x405, NT_ARM_SVE
+>         [REGSET_SVE] = { /* Scalable Vector Extension */
+>                 .core_note_type = NT_ARM_SVE,
+>                 .n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
+>                                   SVE_VQ_BYTES),
+>                 .size = SVE_VQ_BYTES,
+> 
+> IDGI.  Wasn't SVE up to 32 * 2Kbit, i.e. 8Kbyte max?  Any ARM folks around?
+> Sure, I understand that it's variable-sized and we want to allocate enough
+> for the worst case, but can we really get about 280Kb there?  Context switches
+> would be really unpleasant on such boxen...
 
-  p = malloc(80);
-  mprotect(p & ~4095, 4096, PROT_NONE);
-  free(p);
-
-Will you save such a developer also?  No.
-
-Since the same problem you describe already exists with mprotect() what
-does mseal() even have to do with your proposal?
-
-What about this?
-
-  p = malloc(80);
-  munmap(p & ~4095, 4096);
-  free(p);
-
-And since it is not sealed, how about madvise operations on a proper
-non-malloc memory allocation?  Well, the process smashes it's own
-memory.  And why is it not sealed?  You make it harder to seal memory!
-
-How about this?
-
-  p = malloc(80);
-  bzero(p, 100000;
-
-Yes it is a buffer overflow.  But this is all the same class of software
-problem:
-
-Memory belongs to processes, which belongs to the program, which is coded
-by the programmer, who has to learn to be careful and handle the memory correctly.
-
-mseal() / mimmutable() add *no new expectation* to a careful programmer,
-because they expected to only use it on memory that they *promise will never
-be de-allocated or re-permissioned*.
-
-What you are proposing is not a "mitigation", it entirely cripples the
-proposed subsystem because you are afraid of it; because you have cloned a
-memory subsystem primitive you don't fully understand; and this is because
-you've not seen a complete operating system using it.
-
-When was the last time you developed outside of Chrome?
-
-This is systems programming.  The kernel supports all the programs, not
-just the one holy program from god.
+FWIW, this apparently intends to be "variable, up to SVE_PT_SIZE(...) bytes";
+no idea if SVE_PT_SIZE is the right thing to use here.
