@@ -1,131 +1,165 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DCA14462A
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556EC14462A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706888425; cv=none; b=JrrDx+HS3ADM3vfRiCkMKxLdlfjrwnhtXoJ32K9rsdpFFMEwsx9uDyR2wTKob7/igu+pwtb5MI1RBpvhvPOiVkX9oVtEUt88GicUbs67IO/ERfDx7Gln7OIJNz/trDRJKVJIkqPstJO8l/RaEHGQWNJFKb73zCXLnckDjzxW7GE=
+	t=1706888435; cv=none; b=EVNyyLOKewl6OtgF7YxOwh1D7JWImb2ovM6cartJRMeBKKdpbWrypML2sMgsuE1h+IqGIfSSqbgIOxwrnfLoWf9v4O4vRzDcWsFhD4zt1CZv6eZ3EMYRY/Yg3xk+7SCfIXF0Pxgyvg6DpgtzamoerTAqwSpMd60LqvW0arjih3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706888425; c=relaxed/simple;
-	bh=I/5cEXnXfXecm8Vpm494QcOnK381qggbTUU9ew5P+7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bKyyYDhu5A5y9MBNTzzxUbNLvqZ52gw3wpDqfCZ7g1lQtTLDgEdW/F6J7ickyyW57adTMe9aRDFZpBXUMi+EhYpGbARDlz/Ec23ePJhNVOgAUCJ5B9YmHvgcgWHMDh+2i+K7z24LIGEbO5a7BJfCJoAV+KVIxuvvtlEXfmGblM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YwAqxYJS; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706888435; c=relaxed/simple;
+	bh=bjIeEnCETjahOnKi5daTQMdziDOVMdzR9xtwT+pTcTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pry2pxHD8GYHI3vzXiTUj4Yg8aYrdW2hTUwrd+PPE2js0JZWl6V97pK0BUb2+pfu6u0UJPuDzBFOenBvBQ70Ya5dmLN+BHqkr789MxBmw7BfxpcmLJ0I+fcSp00hJlOKRenp4xcC9MG5zJj5CpA2VJsttjJ3d1t23syb+esXf3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=XGJzCeg3; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YwAqxYJS"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d94691de1eso103875ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 07:40:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706888423; x=1707493223; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T4ALzc52MUp0xsJuOuNKwtNjRqGPUBBZ7w0ggAt/c6A=;
-        b=YwAqxYJSB/4LLspUrzXogWBoq3y5U4iJPuQJmY8XBa98Sj/HUc3fmOsfZCCn7zmmTa
-         Fv8FtlPoaJ50M/v90apWw7APuCoPfee5b8JCLF+bJWmzlYyL9HSuyjRTXR/9zvxPBvvW
-         TMMAuvGcRaIG8MwKkqApFJceR9R2xoVIQvuToAqYdOe77D0yOh1eYto34SgwjyjNflAG
-         Of6bhdH5wL7yetFCLb/eBWscm1ocSQJVsBM0zRl7nbH08HjdnmoMCJBznEmHqiZ1BjJm
-         K0Uokh0fRCFsbfVsPUFN+C6t8ya0eAxJ21SlbVAr3KTQue9G/yq+p5tXJEWGWZB7h4BO
-         SPhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706888423; x=1707493223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T4ALzc52MUp0xsJuOuNKwtNjRqGPUBBZ7w0ggAt/c6A=;
-        b=bET978b7S1subD1VI5DI2A1kG7NoTTqu9fzi+Zjg8PN3DK2M/lZkPTw/DgDJBzeNYd
-         3lVjrHPPMl8OyjdTYMkaVci6fZnXoUjAwMleT2ZlQxH5nrhA3E7UICU14uzeqiJA2fCV
-         ykxKIhSruj6W8XOA1+3R1ddLEC2GkFrX0MMW27abR1tTDD2dSWnZW3Z5CYyLGd55fMqx
-         TUXHAxOhP0Oi5WDvT8f/LEowhcgnGhFrQaYCBI/gYXPTz3ICOwyE0Ryss2LuVWx8IMIH
-         bACWFpKCW5zhmd52WfRRBccyLGaLyujOHgh5d0jH4w3m90bsdX3AGAFmefnilEexfXGU
-         nXVw==
-X-Gm-Message-State: AOJu0YwrYwCjTjBSPQJ5v7A+igRGbUAnfaXY4G0gHMtA8BifDbpinO/r
-	/WiY1ndasb5+B8Vnif3oxQ36Qr2J5G1HLR3UxCXteHCsL3pVFrNOebOxf4/PhERuXlziqiAj4ZP
-	Mo/UE4jU5owkyvv5i6yI9ok+/7LY8iW2JHIjD
-X-Google-Smtp-Source: AGHT+IEjryog0R7Dnr+EJN2Y967Il12ITFkFDEmagWwY75a5uUW/AtcoQWfEnHsuiDM2W2Sivu27ieKqIoO/bkc2718=
-X-Received: by 2002:a17:902:fa43:b0:1d9:760d:31c1 with SMTP id
- lb3-20020a170902fa4300b001d9760d31c1mr18591plb.23.1706888423356; Fri, 02 Feb
- 2024 07:40:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="XGJzCeg3"
+Received: from cwcc.thunk.org (pool-173-48-116-13.bstnma.fios.verizon.net [173.48.116.13])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 412FdRxW008430
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 2 Feb 2024 10:39:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1706888371; bh=v0OLpV7O3ASnwWjO7516vRjTb6yQU2eLSXzlY93D1cM=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=XGJzCeg3fmqBhPg4vD7D6xLDHGgGhGgsPMfYWQeyAhW6rnWvl6xHyqi7NrD+O1+W0
+	 fAIIBZ/eA4pzLHh/A/xY0pctC9d5tM7Dvr4s3UAMulTvuVXupKOH/ksLulOLiJAbvn
+	 xV089O95IFxB0XcIkXQ+R0+bHKdpV7N8HT9T3lxorg8OwvSaoRdVJ+eGE31EjJfs6p
+	 KeihLYQmHWjzGnpEIYcAviO7/5EQiyuyXq0QUYU7d9bAv8t+4LRrntKAMMBuHSLGBv
+	 2j53Q8jX5X2l/bQvrFBVLKbhtKXANON78rqQrcuOzpaTEvDOsMlVqlM2ZeJ4Jhe2N4
+	 4VlgC47RUgkDg==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 0C25815C02FC; Fri,  2 Feb 2024 10:39:27 -0500 (EST)
+Date: Fri, 2 Feb 2024 10:39:27 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Nakajima, Jun" <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
+Message-ID: <20240202153927.GA119530@mit.edu>
+References: <DM8PR11MB5750B861F7A105886AA5FCE4E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
+ <20240131140756.GB2356784@mit.edu>
+ <Zbpc8tppxuKr-hnN@zx2c4.com>
+ <20240131171042.GA2371371@mit.edu>
+ <DM8PR11MB5750C7D16DC566CD1329D5A5E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com>
+ <20240201045710.GD2356784@mit.edu>
+ <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
+ <DM8PR11MB57505F657A8F08E15DC34673E7422@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zbz89KK5wHfZ82jv@x1>
-In-Reply-To: <Zbz89KK5wHfZ82jv@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 2 Feb 2024 07:40:12 -0800
-Message-ID: <CAP-5=fVcbhm2yrAHM=O+7DwtK75FV7NWdG97VbSRrOiUWe9WgQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf bpf: Clean up the generated/copied vmlinux.h
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@arm.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB57505F657A8F08E15DC34673E7422@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-On Fri, Feb 2, 2024 at 6:32=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> When building perf with BPF skels we either copy the minimalistic
-> tools/perf/util/bpf_skel/vmlinux/vmlinux.h or use bpftool to generate a
-> vmlinux from BTF, storing the result in $(SKEL_OUT)/vmlinux.h.
->
-> We need to remove that when doing a 'make -C tools/perf clean', fix it.
->
-> Fixes: b7a2d774c9c5a9a3 ("perf build: Add ability to build with a generat=
-ed vmlinux.h")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: bpf@vger.kernel.org
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Yang Jihong <yangjihong1@huawei.com>
-> Link: https://lore.kernel.org/lkml/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Fri, Feb 02, 2024 at 07:25:42AM +0000, Reshetova, Elena wrote:
+> This is a great summary of options, thank you Jason!
+> My proposal would be to wait on result of our internal investigation 
+> before proceeding to choose the approach. 
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I'm happy for the option "Do nothing for now", but if we do want to do
+something in the absence of more detailed information, I'd suggest
+doing something simple for first, on the theory that it doesn't make
+things worse, and we can always do something more complicated if it
+turns out to be needed.
 
-Thanks,
-Ian
+In that vein, my suggestion is:
 
-> ---
->  tools/perf/Makefile.perf | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 27e7c478880fdecd..51ac396ed9f641af 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1157,7 +1157,7 @@ bpf-skel:
->  endif # CONFIG_PERF_BPF_SKEL
->
->  bpf-skel-clean:
-> -       $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETON=
-S)
-> +       $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETON=
-S) $(SKEL_OUT)/vmlinux.h
->
->  clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-=
-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bp=
-f-skel-clean tests-coresight-targets-clean
->         $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-=
-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
-> --
-> 2.43.0
->
+> > Solution B) BUG_ON(is_early_boot && is_coco_system) in the RDRAND
+> > failure path (> 10 retries).
+> > 
+> > This is slightly less simple than A, because we have to plumb
+> > CoCo-detection through to the RDRAND helper. [Side note: I feel
+> > ridiculous typing 'CoCo'.] Systems-wise, I don't see drawbacks.
+> > RNG-wise, the drawback is that this doesn't help deal with secure
+> > reseeding later in time, which is a RNG property that we otherwise
+> > enjoy.
+
+If there isn't a global variable we can test to see if Confidential
+Compute is enabled, I suspect we should just add one.  I would assume
+that /dev/random isn't the only place where we might need to do
+whether Confidential Compute is enabled.
+
+So I don't think plumbing CC into the /dev/random code, and since we
+are only doing this in early boot, I wouldn't put it in the RDRAND
+helper, but rather in the caller of the RDRAND helper that gets used
+in the early boot path.
+
+(Side note, internally, at least in my part of my company, we use CC
+as the acronym of convenience.  And any comments that I make are my
+own opinion, and do not reflect the positions or desires of my
+employer...)
+
+> > Question iii) How likely is Intel to actually fix this in a
+> > satisfactory way (see "specifying this is an interesting question" in
+> > [1])? And if they would, what would the timeline even be?
+
+Here are at least two obvious ways that Intel could fix or mitigate
+this issue:
+
+(1) Add more hardware RNG IP's for chips with a huge number of cores.
+This is the *obvious* way to address the problem with hundreds of CPU
+cores, although it's only something that can be done on newer chips.
+
+(2) Have a per-core throttle where a core is not allowed to issue
+RDRAND or RDSEED instructions more than N times per millisecond (or
+some other unit of time).  So long as N is larger than the maximum
+number of SSL connections that a front-end server can actually
+terminate, it's not going to impact legitimate workloads.  This can be
+approximated by the number of public key operations per unit time that
+a single CPU core achieve.  And if RDRAND isn't sufficient to support
+that today, then see solution (1), or CPU customers should switch to
+some other CPU vendor that can...  
+
+(3) Provide some kind of perf counter so the host can see which cores
+are issuing a huge number of RDRAND/RDSEED instructions, and which
+cores have been suffering from entropy exhaustion RDRAND/RDSEED
+failures.  This would allow the operator of the host to detect which
+VM's might be carrying out DOS attacks, so that the operator can kill
+those VM's, and disable the customer account that was launching these
+abusive VM's.
+
+
+Hopefully mitigation #2 in particular (and maybe mitigation #3) is
+something that Intel could implement as a firmware update; I'd love
+comments from Intel if that is the case.
+
+I'll also note that the threat model where customer A is trying to
+start a CC VM, and customer B has purchased VM's that use all of the
+other cores on a server, is primarily the sort of thing that a public
+cloud vendor would need to worry about.  And *if* this become a real
+issue, where some researcher demonstrates that there is a problem, the
+cloud provider will be hugely incentivized to apply host-side
+mitigations, and to lean on the guest OS providers to apply guest-side
+mitigations.
+
+So if this is only a DOS which applies for CC VM's, and it turns out
+that solution (B) is not sufficient, we can do something more
+complicated, such as having the guest retry the RDRAND instruction for
+ten seconds.  And if some hypothetical "RandExhaust" attack is being
+written about by the New York Times, I suspect it won't be that hard
+to get Red Hat to apply mitigations to the RHEL kernel.  :-)
+
+So I don't think it really is *that* big of a deal; if it turns out to
+be an issue, we will be able to deal with it.
+
+      	     	     	     	     - Ted
