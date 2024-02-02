@@ -1,149 +1,149 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3D910F2
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 00:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A2F3C23;
+	Fri,  2 Feb 2024 00:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706833744; cv=none; b=Hs/vJsmcuvD0sD6rH+uD6x/3dDjIbqOXhjaX8GCMWofzmtGYTWbNTp9CJzbMJA1TvxEykmVL77R9xK01GlGgyTiA7YdiEb1ZpEQzxB4j+tKOA5irjO+bunAzW5l4zXjugdA2R+G5QKTxwdC+2lYPBEgkLF4Wg5xTkhj/8QJAqls=
+	t=1706834455; cv=none; b=LF65N9Nx0t0zF+ixjmnbzhD6ZweO1i0oiEs/MQHRDP/wE3aWPqw5KILv+RYpFK6L2lCyv46/43PgXHoUJRpUvpJLTC+cKcSu7E2cqZsBf3QCsF3ssTtI72iNl71rGlzihAdM63vG/StbfHMy+FtDMrMZA2+N7F5++qzPdCHnJDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706833744; c=relaxed/simple;
-	bh=mpV+cPmML3Jk+/Tuf2IR1WVkBy6cc/QDf4lHr7ZmniI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rR3xEy33Zm9HETNTRPwQhXjGnHZytMjjRaUXd7odt84b5jL5ht7z5RP78vd7hepuSoDKZKbiF+EGcnWDi21YSewTRsTtF60DS+4ngf4JIzjCfwtPKqnB0Exl8KUVFlTPWMmromK85xBNKiine01+Kgwg8jwrBbRL9OLlLtOkT1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=YRVx3k6h; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1706834455; c=relaxed/simple;
+	bh=dLf5cloqiSaHlekbWkAHkgFrqJzKTS7rJSxj4m9pkNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cI3xETHSpxpirktKonC4f186YIBKMx+Pewru366XT6MnTjFjyJUZJuMm8oxxgTtRXf37P8H8OdU/35BqTkBEuoMuHwUYw408VKsxK2BQr10DnJOO4HmkVy/SlMCbEEqQjqkd01qOqtGUi62a63Wu30GcNhwVgzTZkbOt0CAHuRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oz1LoouU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="YRVx3k6h"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9B3362C0362;
-	Fri,  2 Feb 2024 13:28:52 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1706833732;
-	bh=mpV+cPmML3Jk+/Tuf2IR1WVkBy6cc/QDf4lHr7ZmniI=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=YRVx3k6hiE/5oHswxkWaJ2DEEXEHro9ARHiM/faZemR788Jpj7qLOIy3ZPfMilN30
-	 PwAqQ1h36a2MWycmFSBwZVQ6zNsg24ZCuV1yC5FqDcnmUoGZ8GCC3IQSPpnvff2xn2
-	 bKbhna/Lg8SMcPGp9Qc3HhCaf7PNclilVmDfhzFQzKFq9fM10NeXZHJIwo3Yj306Un
-	 IMmZgFxyl5XOaZ9lLwzEVmuI1DeyoYj/nD/bZGNQbEWdJ3AtQU9R3aaQiU6id3PCov
-	 jKoBmsU7bkeFqve+9jq0BGzEz8cd7m/iC/EJaw9bNbv7/xhIw+ZvhErAKyRb4/X58m
-	 TthxVLy2UacCw==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65bc37440001>; Fri, 02 Feb 2024 13:28:52 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 13:28:52 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.040; Fri, 2 Feb 2024 13:28:52 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: =?utf-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>, "a.zummo@towertech.it"
-	<a.zummo@towertech.it>, "alexandre.belloni@bootlin.com"
-	<alexandre.belloni@bootlin.com>, "jdelvare@suse.com" <jdelvare@suse.com>,
-	"linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org"
-	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
-	<krzysztof.kozlowski+dt@linaro.org>, "antoniu.miclaus@analog.com"
-	<antoniu.miclaus@analog.com>
-CC: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 0/2] drivers: rtc: add max313xx series rtc driver
-Thread-Topic: [PATCH v5 0/2] drivers: rtc: add max313xx series rtc driver
-Thread-Index: AQHaT/57pfs9+wriS028zs2/xPWJR7Dq3xGAgARtWACAAErGAIAFzH2A
-Date: Fri, 2 Feb 2024 00:28:52 +0000
-Message-ID: <c69ab341-468a-4bca-96b7-793342c421a7@alliedtelesis.co.nz>
-References: <20230403154342.3108-1-Ibrahim.Tilki@analog.com>
- <147c92f9-b42b-4a51-a6f9-2d90bfe63aa0@alliedtelesis.co.nz>
- <1b42866bb6f05b7d68e9b8304e42359fccdf2bad.camel@gmail.com>
- <170c8d6b-3246-493f-8cd9-6ac580cabc28@alliedtelesis.co.nz>
- <84827fd6461c9650443608e33afe9eb011793656.camel@gmail.com>
-In-Reply-To: <84827fd6461c9650443608e33afe9eb011793656.camel@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <97DB4FBBE2A3344DB1A6742C47561F68@atlnz.lc>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oz1LoouU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07665C433C7;
+	Fri,  2 Feb 2024 00:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706834454;
+	bh=dLf5cloqiSaHlekbWkAHkgFrqJzKTS7rJSxj4m9pkNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oz1LoouUgbOyVQzt99sDj3Ic+NNgrwdyDpyOTD7l77xb4miDPki4x6F9ZILOQ1tr2
+	 EYTgfp6ytRYeXdDGPXAqK9+H3TFQDbgXqUvz7ktIe9pNyWzIaz+IHdTN+hox60Kpot
+	 mwFTcdcq5zS9g8npvGMhtOMvGreSG2+P67MMjBzDu63iZXtlhuZKLWT3F909SacwCk
+	 ZiXhvTWllzwJjXK3EMeD41FRTipnXYR2q+X7L8QqXHn15uctUMheaQ1wAaAP50dtQV
+	 tPh1ZF3go10X2JZt9dXMoLQZ2m9exWq8p7gzzj548QxOA4vibe8X2csE5HFx5Hmmmz
+	 8cIdJDEhS2j5Q==
+Date: Thu, 1 Feb 2024 18:40:50 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 0/9] power: sequencing: implement the subsystem and add
+ first users
+Message-ID: <xdef5sjo5bvdvgx2ezgubeboos45mkeb2dcua63qhmztqrk6ja@m5ylrmdrwmia>
+References: <20240201155532.49707-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=LZFCFQXi c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=QyXUC8HyAAAA:8 a=npl0IYgviOQm-zOkIj0A:9 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201155532.49707-1-brgl@bgdev.pl>
 
-DQpPbiAyOS8wMS8yNCAyMDo1NSwgTnVubyBTw6Egd3JvdGU6DQo+IE9uIE1vbiwgMjAyNC0wMS0y
-OSBhdCAwMzoyOCArMDAwMCwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+IE9uIDI2LzAxLzI0IDIw
-OjUxLCBOdW5vIFPDoSB3cm90ZToNCj4+PiBPbiBGcmksIDIwMjQtMDEtMjYgYXQgMDI6MjIgKzAw
-MDAsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+Pj4+IEhpIEFsbCwNCj4+Pj4NCj4+Pj4gT24gNC8w
-NC8yMyAwMzo0MywgSWJyYWhpbSBUaWxraSB3cm90ZToNCj4+Pj4+IGNoYW5nZWxvZzoNCj4+Pj4+
-IHNpbmNlIHY1Og0KPj4+Pj4gIMKgwqDCoCAtIGR0LWJpbmRpbmc6IGFkZCBlbnVtIHZhbHVlICIy
-IiB0byBhdXgtdm9sdGFnZS1jaGFyZ2FibGUNCj4+Pj4+ICDCoMKgwqAgLSBkdC1iaW5kaW5nOiBy
-ZW1vdmUgYWRpLHRyaWNrbGUtZGlvZGUtZW5hYmxlDQo+Pj4+PiAgwqDCoMKgIC0gZHQtYmluZGlu
-ZzogY2hhbmdlIGRlc2NyaXB0aW9uIG9mIHRyaWNrbGUtcmVzaXN0b3Itb2htcw0KPj4+Pj4gIMKg
-wqDCoCAtIGR0LWJpbmRpbmc6IHJlb3JkZXIgYXMgaW4gZXhhbXBsZSBzY2hlbWENCj4+Pj4+ICDC
-oMKgwqAgLSBwYXJzZSAid2FrZXVwLXNvdXJjZSIgd2hlbiBpcnEgbm90IHJlcXVlc3RlZA0KPj4+
-Pj4gIMKgwqDCoCAtIHJlbW92ZSBsaW1pdGF0aW9uIG9uIG1heDMxMzI4IGlycSBhbmQgY2xva291
-dA0KPj4+Pj4gIMKgwqDCoCAtIHJlbW92ZSBlcnJvciBhbmQgd2FybmluZyBtZXNzYWdlcyBkdXJp
-bmcgdHJpY2tsZSBjaGFyZ2VyIHNldHVwDQo+Pj4+Pg0KPj4+Pj4gc2luY2UgdjQ6DQo+Pj4+PiAg
-wqDCoMKgIC0gZHQtYmluZGluZzogcmVtb3ZlIGludGVycnVwdCBuYW1lcy4NCj4+Pj4+ICDCoMKg
-wqAgLSBkdC1iaW5kaW5nOiBhZGQgZGVzY3JpcHRpb24gZm9yICJpbnRlcnJ1cHRzIiBwcm9wZXJ0
-eQ0KPj4+Pj4gIMKgwqDCoCAtIGR0LWJpbmRpbmc6IHJlcGxhY2UgZGVwcmVjYXRlZCBwcm9wZXJ0
-eSAidHJpY2tsZS1kaW9kZS1kaXNhYmxlIg0KPj4+Pj4gIMKgwqDCoMKgwqDCoMKgIGJ5ICJhdXgt
-dm9sdGFnZS1jaGFyZ2VhYmxlIg0KPj4+Pj4gIMKgwqDCoCAtIGR0LWJpbmRpbmc6IGFkZCBuZXcg
-cHJvcGVydHkgImFkaSx0cmlja2xlLWRpb2RlLWVuYWJsZSINCj4+Pj4+ICDCoMKgwqAgLSBkdC1i
-aW5kaW5nOiByZW1vdmUgIndha2V1cC1zb3VyY2UiDQo+Pj4+PiAgwqDCoMKgIC0gdXNlIGNsZWFy
-X2JpdCBpbnN0ZWFkIG9mIF9fY2xlYXJfYml0DQo+Pj4+PiAgwqDCoMKgIC0gdXNlIGRldm1fb2Zf
-Y2xrX2FkZF9od19wcm92aWRlciBpbnN0ZWFkIG9mIG9mX2Nsa19hZGRfcHJvdmlkZXINCj4+Pj4+
-ICDCoMKgwqAgLSB1c2UgY2hpcF9kZXNjIHBvaW50ZXIgYXMgZHJpdmVyIGRhdGEgaW5zdGVhZCBv
-ZiBlbnVtLg0KPj4+Pj4NCj4+Pj4+IHNpbmNlIHYzOg0KPj4+Pj4gIMKgwqDCoCAtIGFkZCAiYnJl
-YWsiIHRvIGZpeCB3YXJuaW5nOiB1bmFubm90YXRlZCBmYWxsLXRocm91Z2gNCj4+Pj4+ICDCoMKg
-wqDCoMKgIFJlcG9ydGVkLWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4+
-Pj4+DQo+Pj4+PiBzaW5jZSB2MjoNCj4+Pj4+ICDCoMKgwqAgLSBkdC1iaW5kaW5nOiB1cGRhdGUg
-dGl0bGUgYW5kIGRlc2NyaXB0aW9uDQo+Pj4+PiAgwqDCoMKgIC0gZHQtYmluZGluZzogcmVtb3Zl
-IGxhc3QgZXhhbXBsZQ0KPj4+Pj4gIMKgwqDCoCAtIGRyb3Agd2F0Y2hkb2cgc3VwcG9ydA0KPj4+
-Pj4gIMKgwqDCoCAtIHN1cHBvcnQgcmVhZGluZyAxMkhyIGZvcm1hdCBpbnN0ZWFkIG9mIGZvcmNp
-bmcgMjRociBhdCBwcm9iZSB0aW1lDQo+Pj4+PiAgwqDCoMKgIC0gdXNlICJ0bV95ZWFyICUgMTAw
-IiBpbnN0ZWFkIG9mIHJhbmdlIGNoZWNrDQo+Pj4+PiAgwqDCoMKgIC0gcmVmYWN0b3IgbWF4MzEz
-eHhfaW5pdCBmb3IgcmVhZGFiaWxpdHkNCj4+Pj4+DQo+Pj4+PiBJYnJhaGltIFRpbGtpICgyKToN
-Cj4+Pj4+ICDCoMKgwqAgZHJpdmVyczogcnRjOiBhZGQgbWF4MzEzeHggc2VyaWVzIHJ0YyBkcml2
-ZXINCj4+Pj4+ICDCoMKgwqAgZHQtYmluZGluZ3M6IHJ0YzogYWRkIG1heDMxM3h4IFJUQ3MNCj4+
-Pj4+DQo+Pj4+PiAgwqDCoCAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvYWRpLG1heDMxM3h4
-LnlhbWwgfMKgIDE0NCArKysNCj4+Pj4+ICDCoMKgIGRyaXZlcnMvcnRjL0tjb25maWfCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDExICsN
-Cj4+Pj4+ICDCoMKgIGRyaXZlcnMvcnRjL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoCAxICsNCj4+Pj4+ICDCoMKgIGRyaXZl
-cnMvcnRjL3J0Yy1tYXgzMTN4eC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgfCAxMDUzDQo+Pj4+PiArKysrKysrKysrKysrKysrKw0KPj4+Pj4gIMKgwqAgNCBmaWxlcyBj
-aGFuZ2VkLCAxMjA5IGluc2VydGlvbnMoKykNCj4+Pj4+ICDCoMKgIGNyZWF0ZSBtb2RlIDEwMDY0
-NA0KPj4+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9hZGksbWF4MzEz
-eHgueWFtbA0KPj4+Pj4gIMKgwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcnRjL3J0Yy1t
-YXgzMTN4eC5jDQo+Pj4+IFdoYXQgaGFwcGVuZWQgdG8gdGhpcyBzZXJpZXMgaW4gdGhlIGVuZD8g
-SXQga2luZCBvZiB3ZW50IG9mZiBteSByYWRhcg0KPj4+PiBhbmQgSSBmb3Jnb3QgYWJvdXQgaXQu
-DQo+Pj4+DQo+Pj4+IFdlJ3ZlIGJlZW4gY2FycnlpbmcgYSB2ZXJzaW9uIG9mIHRoZXNlIGNoYW5n
-ZXMgaW4gb3VyIGxvY2FsIHRyZWUgZm9yIGENCj4+Pj4gd2hpbGUgKGFuZCB1c2luZyBpdCBxdWl0
-ZSBoYXBwaWx5IEkgc2hvdWxkIGFkZCkuDQo+Pj4+DQo+Pj4gSGkgQ2hyaXMsDQo+Pj4NCj4+PiBB
-bHNvIG5vdCBzdXJlLi4uLiBJbiB0aGUgbWVhbnRpbWUgSWJyYWhpbSBsZWZ0IEFESSBzbyBpZiB0
-aGlzIGlzIG5vdCBpbg0KPj4+IHNoYXBlIHRvDQo+Pj4gYmUgbWVyZ2VkIGhlIHdvbid0IGJlIGFi
-bGUgdG8gcmUtc3Bpbi4gSWYgdGhlcmUncyBhIG5lZWQgZm9yIGEgcmUtc3BpbiwNCj4+PiBwbGVh
-c2UNCj4+PiBsZXQgbWUga25vdyBzbyBJIGNhbiBzZWUgaW50ZXJuYWxseSBpZiB0aGVyZSdzIHNv
-bWVvbmUgd2hvIGNhbiBjb250aW51ZSB0aGlzDQo+Pj4gd29yay4gSSB3b3VsZCBkbyBpdCBteXNl
-bGYgaWYgSSBoYWQgdGhlIEhXLg0KPj4gSSd2ZSBnb3QgYSBib2FyZCB3aXRoIGEgbWF4MzEzMzEg
-c28gSSBjYW4gdGVzdCB0aGF0LiBJIGRvbid0IGhhdmUgYW55IG9mDQo+PiB0aGUgaW50ZXJydXB0
-cyBob29rZWQgdXAgc28gSSB3b24ndCBiZSBhYmxlIHRvIHRlc3QgdGhhdC4gTG9va3MgbGlrZQ0K
-Pj4gdGhlcmUgd2FzIHNvbWUgb3V0c3RhbmRpbmcgZGlzY3Vzc2lvbiBhcm91bmQgdGhlIHRyaWNr
-bGUtY2hhcmdlDQo+PiBkZXZpY2V0cmVlIHByb3BlcnRpZXMgc28gSSdkIG5lZWQgdG8gZmlndXJl
-IG91dCB3aGF0IHdhcyB3YW50ZWQgdGhlcmUuDQo+PiBJJ2xsIHRyeSB0byBwaWNrIHVwIHRoZSBs
-YXN0IHNlcmllcyBmcm9tIHRoZSBtYWlsaW5nIGxpc3QgYW5kIGdvIGZyb20gdGhlcmUuDQoNCkkg
-c2VlIHRoYXQgaW4gdGhlIG1lYW50aW1lIEFudG9uaXUgaGFzIGxhbmRlZCBhIG1heDMxMzM1IGRy
-aXZlci4gRG9lcyANCmFueW9uZSBrbm93IG9mZi1oYW5kIGhvdyBjbG9zZSB0aGUgbWF4MzEzMzUg
-aXMgdG8gdGhlIG90aGVyIG1heDMxM3h4IA0KdmFyaWFudHM/IFNob3VsZCBJIGxlYXZlIHRoZW0g
-c2VwYXJhdGUgb3IgYXR0ZW1wdCB0byBpbnRlZ3JhdGUgdGhlIHR3by4NCg0K
+On Thu, Feb 01, 2024 at 04:55:23PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+
+We now have 3 RFC and 1 PATCH versions of these patches on the list in
+under a month. Please at least add a version to your subject...
+
+> I'd like to preface the cover letter by saying right away that this
+> series is not complete. It's an RFC that presents my approach and is sent
+> to the list for discussion. There are no DT bindings nor docs in
+> Documentation/ yet. Please review it as an RFC and not an upstreambound
+> series. If the approach is accepted as correct, I'll add missing bits.
+> 
+> The RFC[1] presenting my proposed device-tree representation of the
+> QCA6391 package present on the RB5 board - while not really officially
+> accepted - was not outright rejected which is a good sign.
+> 
+> This series incorporates it and builds a proposed power sequencing
+> subsystem together with the first dedicated driver around it. Then it
+> adds first two users: the Bluetooth and WLAN modules of the QCA6391.
+> 
+> The Bluetooth part is pretty straightforward. The WLAN however is a PCIe
+> device and as such needs to be powered-up *before* it's detected on the
+> PCI bus. To that end, we modify the PCI core to instantiate platform
+> devices for existing DT child nodes of the PCIe ports. For those nodes
+> for which a power-sequencing driver exists, we bind it and let it probe.
+> The driver then triggers a rescan of the PCI bus with the aim of
+> detecting the now powered-on device. The device will consume the same DT
+> node as the platform, power-sequencing device. We use device links to
+> make the latter become the parent of the former.
+> 
+> The main advantage of the above approach (both for PCI as well as
+> generic power sequencers) is that we don't introduce significant changes
+> in DT bindings and don't introduce new properties. We merely define new
+> resources.
+> 
+
+How can we tell? There are still no Documentation/dt-bindings changes in
+your series.
+
+Regards,
+Bjorn
+
+> [1] https://lore.kernel.org/all/CAMRc=MckG32DQv7b1AQL-mbnYdx4fsdYWtLwCyXc5Ma7EeSAKw@mail.gmail.com/T/#md5dc62007d12f6833d4e51658b14e0493954ba68
+> 
+> Bartosz Golaszewski (9):
+>   of: provide a cleanup helper for OF nodes
+>   arm64: dts: qcom: qrb5165-rb5: model the PMU of the QCA6391
+>   power: sequencing: new subsystem
+>   power: pwrseq: add a driver for the QCA6390 PMU module
+>   Bluetooth: qca: use the power sequencer for QCA6390
+>   PCI: create platform devices for child OF nodes of the port node
+>   PCI: hold the rescan mutex when scanning for the first time
+>   PCI/pwrctl: add PCI power control core code
+>   PCI/pwrctl: add a PCI power control driver for power sequenced devices
+> 
+>  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts  | 128 +++++-
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi      |  10 +
+>  drivers/bluetooth/hci_qca.c               |  30 ++
+>  drivers/pci/Kconfig                       |   1 +
+>  drivers/pci/Makefile                      |   1 +
+>  drivers/pci/bus.c                         |   9 +-
+>  drivers/pci/probe.c                       |   2 +
+>  drivers/pci/pwrctl/Kconfig                |  17 +
+>  drivers/pci/pwrctl/Makefile               |   4 +
+>  drivers/pci/pwrctl/core.c                 |  82 ++++
+>  drivers/pci/pwrctl/pci-pwrctl-pwrseq.c    |  83 ++++
+>  drivers/pci/remove.c                      |   2 +
+>  drivers/power/Kconfig                     |   1 +
+>  drivers/power/Makefile                    |   1 +
+>  drivers/power/sequencing/Kconfig          |  28 ++
+>  drivers/power/sequencing/Makefile         |   6 +
+>  drivers/power/sequencing/core.c           | 482 ++++++++++++++++++++++
+>  drivers/power/sequencing/pwrseq-qca6390.c | 232 +++++++++++
+>  include/linux/of.h                        |   4 +
+>  include/linux/pci-pwrctl.h                |  24 ++
+>  include/linux/pwrseq/consumer.h           |  53 +++
+>  include/linux/pwrseq/provider.h           |  41 ++
+>  22 files changed, 1229 insertions(+), 12 deletions(-)
+>  create mode 100644 drivers/pci/pwrctl/Kconfig
+>  create mode 100644 drivers/pci/pwrctl/Makefile
+>  create mode 100644 drivers/pci/pwrctl/core.c
+>  create mode 100644 drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+>  create mode 100644 drivers/power/sequencing/Kconfig
+>  create mode 100644 drivers/power/sequencing/Makefile
+>  create mode 100644 drivers/power/sequencing/core.c
+>  create mode 100644 drivers/power/sequencing/pwrseq-qca6390.c
+>  create mode 100644 include/linux/pci-pwrctl.h
+>  create mode 100644 include/linux/pwrseq/consumer.h
+>  create mode 100644 include/linux/pwrseq/provider.h
+> 
+> -- 
+> 2.40.1
+> 
