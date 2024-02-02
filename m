@@ -1,69 +1,70 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2098.outbound.protection.outlook.com [40.107.241.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32AA1482FF;
-	Fri,  2 Feb 2024 16:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062E51474B2;
+	Fri,  2 Feb 2024 16:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.98
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706890190; cv=fail; b=G2Cng1x+DKHhVr2PhVKlRduGwob5Y8Jiv4+og+PCs8WU2PlnoENqcS4MRlO+NQWScL2ZCWJ09wqEeYo+832mxWgDO3XZ3TPFz0H+rnpSLAVB3j6zu7rHXrJp/uqPR8OMDrSt4w5OkYA2Ngc5skaeGwIqAdnE82bTIXhMLw2xobo=
+	t=1706890257; cv=fail; b=eOgGohUrfVtZTv+sn6udCBmS95snZmU7BXEvLS8eEdulqGPOWWaqUZErvGpz2lWII7aevxRuZjqSZTMr6AsQFapKZoHgaRMpP74tr49xm5QsFNzgD+O9sec3sKZYhl8GW2Mm3yP/L/TRCVv9BjtGtz99YB79l3C95vIeS45PWv4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706890190; c=relaxed/simple;
-	bh=3sr7Hv4Rzcj+au4x8r+AgdpzOAdyFSU8kV9xGpwXKOM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pUBGk+t04QaNPoqbwAmZAG1SA4neCjqGE6oUnG1JyeYLlFsuO5DLexaI+SeyNFt2qZXSWpFRfZ113swbMm+0rUfwxbGkYqF/NpCbypcsA+OJqzAqfHEQqMOiIAQoW5xfc1/2nliPYmNnvfmlcEV+Mo7cpqepFfNpHRnyu4klcTg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C9oRPqre; arc=fail smtp.client-ip=40.107.94.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1706890257; c=relaxed/simple;
+	bh=/AFhwce9jy00uSMBqBN1uM60wnY3CtRqra+U5vm2Qik=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=nCceVzgQ3fkjoStMae+IQcuQ28JVGBru1hU79LVTAWR2TuIP8zKD95CzIFDuxCgU/SdysEdkfUzd10QQRZllDk2a051cuKyJ2pzuDpY0gJCd15+kdW3bTxF2RC0MLhz50m17dIn69368rIwPj/SVf07djYOLGdF5YSrkTHeehp0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=dPPyi6uN; arc=fail smtp.client-ip=40.107.241.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C9oRPqre"
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="dPPyi6uN"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oCOKM3eBvyLVwElw+yWJBRfjCIwh9raIBLS2QZiXKe0HKCWVvFp9M9JyArB+pBChlkyYeM89P0THE3ULZKkFMWYHDLSIOvj5OZJQdUUUCxvGom75vWkmyYnRh6BxGElkJdhk+O7RtQkXTe2Im2RLVuxJuRjwvE4GlwmhldlxO+JAa2SOxbu5/zAigW66WPsMDQmP0WHHxR46oGXhJsiP3ED6ZynTJQAvg2qHCTh8nkvlW0mPFj6aGDsgF9dgGoEVpdEDGYQhNrv4YdqSXjAmC3qFHnkxdBnAVE6nEmguG5m8GfaYoRUB15I2XwtIgct3BhXbkoJadRV6yF74hd9IkQ==
+ b=NPMgQWDKvLPtN1k+oAUuO/gDvuYlOoKdMPNxQdjS/fP4wpJ4hPPYdP2Y87eOZsVZPd+1VcnK0dSzBQzI8zx+hyavkn9xKkqvO71o23WdcR8nS2qBGwGBjY1vRloxZZugmVNooSr7aqhmyfUjOJiCrdelV46LzsqtXBVgPIJm9QV8qyCY/D067QGlL5imEMcxftwIkA8G7M8yLy6C4UVQ/LlngY0iBOWj+n442yO79K68X2QDGkeMsAT4xsNy/xlg1u+3JfTim1uBtLwwJ4rTwFAgxQTQwHOTO3bwWq4Nb9qIaZEkVRPlfvdvLksNd1tkyri1UnNS94nYFULpQFQYVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8mWaYv6opTjZRWSwIWh1KPDATNt7iHpTLNTjdk80bCw=;
- b=Dd8wIYH1RSyC6DkY6ZQERCQCpsHUnYvEXqIcPDFtdffwysZIWPnSgwJU3aD79dFyjKi2zMWSdTqL9kUseRhkufP1nNI2eAEe5VoNO7QlkYJSEHZS7cCoTGt/tpzN0Q/2V7+xHWwf7wBQ4sd1DIQVs/3ga0DT5e0e1I+QHcLrWgZ33ixEVdvWoxsZJ//A3q6q0z2joS9sKlBFgysJ7p37BSSLGks4gbyuSP7H/L8qcqScLmy405ZX/+t+YCJ7/YbX1a3YeEtEV9qs4sL4iYUGi1fMF9ZM3wbPaM5OI14VN5zwnmij8/ntbtx0T2lQJ3bs3wZpYB1iZI0nbMkdrC3Dqg==
+ bh=5xhAhy9Ne3mpZiRcpteoPWTmLUCCCBx9qs/C00AWeT8=;
+ b=KaqdJvbklBZqzZVZu0ysrFXvB1LR2m53MFhlXMOIrXIz54fO43yLucTsxrQVdvIp30A+0EZa4U6nXq5JpG8SYbuNxMO10azFYQ3oy9xRPDYOSuMS5VzsXr4RkcL7Q/8zjauuLsVXZBbUPrfIY4ehSRjwMf4Yqp+1BsKv6KHeql/yqaFDnu/k2hziJD9ahUaui/e0oj1hv/NXXLS2uA3jnpVD+6AwE/VbkO2b1iFhH/aa52MQES532Pe8Lb62eP7414NhspLYTFE6ZFVIfJxE646cpuYkc1fiONx9vEhFSMz4NdQsv4Um5Zq7Cj+V2pT02HCjVej6mENFgk01XC40kQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8mWaYv6opTjZRWSwIWh1KPDATNt7iHpTLNTjdk80bCw=;
- b=C9oRPqrevwW6QXtsgozNmJ2RkjYNJ+NRgrYMWer4+Da6BDbWjbZ1D4sv3UCwxOxBxIzAWoZQctYs22BFOVZwi3cOFqo5cujdHy2tE7ZG8JWk+e1eJQAwtqZ4F/4MMYV9dYMAMduyu70P3il/k8PsHOCSOrAcn+mU3+1SxSnCV4I=
+ bh=5xhAhy9Ne3mpZiRcpteoPWTmLUCCCBx9qs/C00AWeT8=;
+ b=dPPyi6uNKavruJmvv7LTEl+1ExN4qHrJQMQQVtafxedqFbFARHqoGvhUCLk6ZopEmguADZwuoK9+ksn6zagViNEiMTAF8yEBl9JYr804V0M9tsnJ+6dqzA6/b17ZHGfgFv1ck7OyaEip+as+I0E3n3LfNAw7YRI3evL+8mlw8gE=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL1PR12MB5970.namprd12.prod.outlook.com (2603:10b6:208:399::21) with
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by DU2PR04MB8775.eurprd04.prod.outlook.com (2603:10a6:10:2e2::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.40; Fri, 2 Feb
- 2024 16:09:41 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64%4]) with mapi id 15.20.7249.024; Fri, 2 Feb 2024
- 16:09:41 +0000
-Message-ID: <c96de797-39c4-4c83-96e2-d4579504e88e@amd.com>
-Date: Fri, 2 Feb 2024 10:09:38 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] ACPI: video: Handle fetching EDID that is longer
- than 256 bytes
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
- Harry Wentland <harry.wentland@amd.com>, Hans de Goede
- <hdegoede@redhat.com>, "open list:ACPI" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- Melissa Wen <mwen@igalia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20240201221119.42564-1-mario.limonciello@amd.com>
- <20240201221119.42564-2-mario.limonciello@amd.com>
- <CAJZ5v0iw3PLB4W0QNmRCgK2AWxe5A7wxnWSz-Jm--Mb=fnugEw@mail.gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAJZ5v0iw3PLB4W0QNmRCgK2AWxe5A7wxnWSz-Jm--Mb=fnugEw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0501CA0108.namprd05.prod.outlook.com
- (2603:10b6:803:42::25) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30; Fri, 2 Feb
+ 2024 16:10:53 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::3b94:f607:ebe1:7d6c]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::3b94:f607:ebe1:7d6c%7]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
+ 16:10:53 +0000
+From: Josua Mayer <josua@solid-run.com>
+Date: Fri, 02 Feb 2024 17:10:48 +0100
+Subject: [PATCH v4 1/5] dt-bindings: arm: ti: Add bindings for SolidRun
+ AM642 HummingBoard-T
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240202-add-am64-som-v4-1-5f8b12af5e71@solid-run.com>
+References: <20240202-add-am64-som-v4-0-5f8b12af5e71@solid-run.com>
+In-Reply-To: <20240202-add-am64-som-v4-0-5f8b12af5e71@solid-run.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Yazan Shhady <yazan.shhady@solid-run.com>, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, 
+ Josua Mayer <josua@solid-run.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: FR0P281CA0158.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b3::16) To AM9PR04MB7586.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2d5::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,165 +72,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL1PR12MB5970:EE_
-X-MS-Office365-Filtering-Correlation-Id: d5cc3fbd-e26b-4f0a-f10f-08dc24095cc4
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|DU2PR04MB8775:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62fa7b12-59d9-4aa6-8001-08dc24098723
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	wI4TsAwpN8Ntpk7tFezr90l4tay2BUHUPkC8JNKLKoLDXeMXnC+LWD5HXGpJaYMCf4FzkD5nEhcPDAaQqw0H+VCSU93eApgGukbgxeoY2xTgYF5ODQz7k/D17zoQrDbr6xAbDioBJfcr7lyc1yUDJQotMlNRXQU/Ew/GgHDVkiDdSfoEtGujXT+jCpOin/oo8HR9C7PTLJskKft8GfbAkJ+G3aS4UlNtQI6vggOMdrk+p9j6CnZ7q0VTWgCzgFbpnkGWbTIeMpY8/ghEZ3ql/t5+Vv/zlmn5aOHseKyYJXs4gj6ayE4jrQiFeoAnhe5yMK2hXv71ypniIW9vK0Nclf1mzf30DPB2f/BfscNcFCe5SiLV64ax2FfAzL7jU/7IpoWqkc/BSPT8ADBeOc/A4GZjOX0gxetgQSrYaZC3CPKuBnndiaUFW1wgVK0uwcCrsf2yBlGTJrYWvz1ZIjB8c1juP3SZFJ6gcq27o3QwKSqtufwgs97d2y+AYm9YOZQth16v60u6B4krCWWjNiBthEW2hN/9dU9OyUjBtly5ojyIM+NPcTPaekLAH1tuOSmhSC5bOKK+bSQlv1Sg6haa72iJtRpDMbGX081VWiz/V43kSJHs5DEA5cJwi9cjVrQlp3UdmU475SevJiMAQ3qxCsCAam/QdA0YwIi0OSx6mmU=
+	wHN0jmMNfg2NSRELztMI0ldowRIfS9OX20ODTWNo4D/ClNTjO3rH5UKd1oBXZOiS3WIMYiHMxpJLVZqamHszfuD1Grm+hV7dePfVj4flBI+pJJ8moSvf3f6RrmvPwMc6NumKlBzuC5hdCH7fXTldNz6KNoJpXbEX9DnIYOTUUTHTrJZppzzvfEI3nv1JrwVrDRSbRNS2wprH9LhNmpsXxiWLjSMYto+ToAQwD4XlEqyZXUKEzpy4EvepUkYiU4sbmDHudIJzPYoE1ixIGGqPaF4IJgz4GwFfHBvXxHx+X7tUnf1csoNrSni0GeAzQ9Wsvjm0b+/EtMxSRevm0oNTtP0O56VXllc4y8uPsFr08BzQVE69I/3h0TQYyL70RPFncXPLoxQRsYpmQdmFzPDVNp9IpI33p6ntCLKsIJ9K3QAiEe16WcZ/Ph4FnjadlOmrNMlcLHRJx0r+7qK9UXG9JiwdSBlFcnPrqHIwi4HvvHnoWkOszuTC+FHYl3tQgXA9gkAox38i0Zo1KOxNBQKhiFtchCs7QRKE+giD+xDRbNv2TAd1WRZS3a24mr3fKgWXOKg99pbqTLeNVJVINwRSVffWVsvjxjq1BwtbCKgxYBcXHqixuFAGbB17Pmb4uPLU
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(136003)(39860400002)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(6486002)(53546011)(26005)(36756003)(2616005)(6512007)(6666004)(966005)(6506007)(41300700001)(38100700002)(86362001)(31696002)(83380400001)(478600001)(8936002)(8676002)(4326008)(31686004)(5660300002)(44832011)(2906002)(316002)(66946007)(66556008)(54906003)(6916009)(66476007)(148743002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(39830400003)(396003)(136003)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(6512007)(6666004)(52116002)(26005)(6506007)(2616005)(36756003)(8936002)(8676002)(66556008)(38350700005)(316002)(2906002)(7416002)(66476007)(5660300002)(4744005)(66946007)(86362001)(4326008)(110136005)(54906003)(41300700001)(478600001)(6486002)(38100700002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cE9tMitUTlVza2FEallUQTBac3VxYWFNU21WeGllUUYyYlU1ZWlNNFA4aDVk?=
- =?utf-8?B?RWRyWXUzbjlEcStGRm1qSHR2QWZ5MkxxQXI4K2k2ek5qMmlSVTQrTDR2SUgy?=
- =?utf-8?B?SlZuZDZhaUZ2cGFRSEt6UStQcFNTcmZPOVdEMVhpODh5akdxTDhVVU1Memcv?=
- =?utf-8?B?SStkTWlkQzhBTU96TW1Ca2VGa00xaVFKVHgycWNKSnlJZ1FpQXZXMCt5dTZk?=
- =?utf-8?B?aTZUNkY0SERaWHVMeFFRS3dQYlBXaXRkMzkwRGpjU0VxdHg2RnhkdlRJTkJw?=
- =?utf-8?B?Wkh4OHZlWWVpSGNzNnpleHRwY1U5c1Q0N09iR1lyRUdmaUhQNENHaDZycktE?=
- =?utf-8?B?c3pHMlhvR0dMN0xyb3ZZQmN5Q1BTWE9lR1ZnY2JFRTUwK1lEZU92VnNtWnNz?=
- =?utf-8?B?dmFTQnpTZjBBYTNKc3R5QmtHbzl5UldadzR3ODE5VVBLRnBzNDRYQ0I5UkV5?=
- =?utf-8?B?Mk1GcEkyejBIM2l4R243b3YwbDEwQXVaWlpwQVhHRGpaVkljTVFDSWVkNzFv?=
- =?utf-8?B?MStaVW9GejYxM28xQk94eFJQOTkwR1I3Y2NWMldheFZEZlBzdFh0UFhlU2lB?=
- =?utf-8?B?NFplSkRkdHIvZ3ExK2FvNGV0VXBLV1RpZzdJeGJ0WWwycXFPK01zcHdMK1dx?=
- =?utf-8?B?Qldhd0IzRDU2VUNqVWVsSUZWNzQ1SmpmMUVtaExzczczMURFT3l1WitIOUlT?=
- =?utf-8?B?Rmx4VWdQNXF5M3g2OW1xTDBQNXJKd2RPZ21FK3JEMjR6dG5OMndUdDBHL0lZ?=
- =?utf-8?B?QTFObG9RTzBnMXZUcVprTnorSVpKcXZIOUQvLzlTYkExKzdJQ2VaNlRiVEl6?=
- =?utf-8?B?K3VOS3pwcW5DVS82K0o3U3Z2eUNQZGg3RStjT2VEV1p4RUxiYWJXemZ5cjRB?=
- =?utf-8?B?aFRYdnYrMndBeG1lVEZWK2E3bEdXNkxBZlBQSnJleTlYSzdXaEwybHBzM0I2?=
- =?utf-8?B?VHBvL05waGRGcEpJWVJCKzlKa3pFWlpscE1Uak1SNjlzcnNVVFhzZzdWanE2?=
- =?utf-8?B?R2t4TUE2NHQ5ZkovUkMxTXdNSWVvZkpSL2loQ0pXNy9tcjRnTXhXYWVqaGdZ?=
- =?utf-8?B?RDdrVDFweDNaNGZhYkE4ZG84d0RTdkQvWnJHL1FEWG5rVEhjMWhlbWdQeFhu?=
- =?utf-8?B?enZqNDNsUk1aTmFyc2V4VWJIc1YxWHRlRkhDM1FHYmowTFBPWjd0SkNkV0Qy?=
- =?utf-8?B?dmw5Tnp4akVUNU8rbjFsWTdKQjVLRzIwVlZtTW9MSGx3c2ZwVHFZU0tOaGtD?=
- =?utf-8?B?bmNtL2srUHAyLzVpczdsQk1EdXZubWd5YUUxY2tMR1BPWWhab3dKOE8vVm4v?=
- =?utf-8?B?MmVYVXNjN2drMXZwb2ZaWnIxUVVTakJ1VnZCNkhPOFZwa2hZS2I1ZHp3enNs?=
- =?utf-8?B?VVpXclliQzBpOVVORklyYnlYWDJUbXRlK1JlN0dmMFE4RE5SOWx0NG9YekVE?=
- =?utf-8?B?NGc4UVl4Q0lpOUQ0STNCR3lBajRrNldCckJ3dmhTU1BCd2w0U1hkaWdxRnJz?=
- =?utf-8?B?c3V2RmNrNW10ek1KZVBOZ0FrZG1JOC9wVkJjMklxbG1pbU83Y0diZkthdlBC?=
- =?utf-8?B?VDhkY254S2orQUY2YXUvS0UzVGhoSmhyVWNwU015ejZ1NTFaMXp3TklVYmtS?=
- =?utf-8?B?Rzk3eWRRekZYcEFieTlzZkpYYU81OXBXSEhWY3VZeU53bGFmNElEbUFkYi9D?=
- =?utf-8?B?azZ0UWY3QzRSTk5sbEJ0TXJZOTNHQnNiRXh2YUN1d3FqQVloVlZ1RnU4N212?=
- =?utf-8?B?MEtKbFdTZ3BtN2FlZEpSZnF2dnl1NDRzdjFKMStnMEpVSHFIMkxtcXNrei9N?=
- =?utf-8?B?cXpYM1FqVjROV1ZYb2VzNWpaSVkrK0dPYVMzY25yeTJDRTZvRnAvaFdJNXdj?=
- =?utf-8?B?WjZzWURLalJWbFhwNDBDbHpSK3cyNjgxMVgrWm1kK1kvZ2NGbCtTS3Q5c09z?=
- =?utf-8?B?QnA3RC9mdVp6QmZsRTA2dXNsN2cwOEdrZmRiSmdVNDBpR0RaNFVLcW03R09Q?=
- =?utf-8?B?MG43bW82K3Exazg1ZmlURExVdysxYkZ3QW8zV1ZaYVdvU29lSmtrdWo0U0lt?=
- =?utf-8?B?c2haa21HbFcxMkJxRlJLU05yVkJTbXlVeG0rOTRDL04xczh6WllHTElPSDNY?=
- =?utf-8?Q?66qlCvPlNPUgULUELt9bpQVYh?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5cc3fbd-e26b-4f0a-f10f-08dc24095cc4
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+	=?utf-8?B?VXRDaCtNRm1EdGRwNW1ZZjMyYVovSm9EYjZvZ1FqVEFkdjJicEY5OERFdTkw?=
+ =?utf-8?B?UUJxeVBpR3RlTmxiMitPTkdtMWRmZTZpY3VmRVQ2WHYvMzJFRGx1U2tKSDNu?=
+ =?utf-8?B?TUY0Z25nS0JhTXFpakszUzcyQkg1TndCSXJIVTVzTW5vVVliV2tYR3M0dkJr?=
+ =?utf-8?B?dEhiczBvQithd2tkMkh3L3NzTlRKYks2MDFCc2J4SjVUbXdNM0k1MzhYMld4?=
+ =?utf-8?B?L2tDOGJjenhrdEJkbDladms0V2w5ajBNREhJQWJLM3FYSTFCYVhMSWtPc2VI?=
+ =?utf-8?B?OWxDd21lbmE5a1gyZkR2RHdaYXV3R21OVkJtaTFDRzRsY0tmL0pPVHBwK3o4?=
+ =?utf-8?B?WFcrUm81Y0ZBZVRrOWlRbHJiOEtiSXhpeWRZVk45T1BCMXV2bXMzbW04LzFU?=
+ =?utf-8?B?bXc4MVRraGprN054MDFwZFczSUJ5UWNIbGtnRHB3Wnk3N0x5bkE2WTlKQkE1?=
+ =?utf-8?B?blg1azNQVlZlS09VbUg3N1pxMmRCRWJMQXJNYStGUkRiNzlWaytwUzIxbytH?=
+ =?utf-8?B?SUlTeGt6aERVaEdJV2VvZ1R3aVhlTXF6U3FSd2hSRGs1RUY2V005Y1RHaDFp?=
+ =?utf-8?B?MkQ0dktIOTMvWk5sRUs0amxvY3NJQWZyalBtMnQzeEEvSlErcGxxVWcwV3ht?=
+ =?utf-8?B?R0d6ZTlwQUd1bjlkek5JcFBPdXZQNlJuVEV1cmd2T09pVDQ1MEZ3QjFmNjE4?=
+ =?utf-8?B?d2VQblh1b09XRkIxcUdlb0Q5eVl0eFZqMnZPM1BWRC9ERSswMzZaSzRoWjg3?=
+ =?utf-8?B?V05TY0FaeHk1L1JEb1NxajBCRXVwSG5UamJleVNQSlNDdFY1ZDNmZndERm9j?=
+ =?utf-8?B?Rk9RN2ZEVnRScFhkNTJrODdjYmR6YWN6L0VOZFpQT1hoV1dkb2ZUaEZiVzIr?=
+ =?utf-8?B?YzZEYVhxcThnYzYvMDA2YnpkZ2hPZmxGbHhnVlJVOTdBSlo1b0FnVFdDTklq?=
+ =?utf-8?B?a0VTUmNnTjQ5MVNrNkpGTlU4ZGh3dVFKb1VSZmx6eURiNHowMWF1UmhEN2VM?=
+ =?utf-8?B?Y3NZZ3NzK3FYTEhFZitHOWdObU1OQ1hZVE9lR3BZcm54MWdGYzVYSG9semtj?=
+ =?utf-8?B?U3dqS1RyNmdPZ1lvU0JDUVVFaGRZQi9MV0xaY01yamtPQVJCOUdtNC9kbXE0?=
+ =?utf-8?B?UUc3WHZ0Ym9VQllsNjV6NFZHUWJnYkpadUFTWDBETmp0VDJyUTcrYnVxakVS?=
+ =?utf-8?B?NUprRzVSems3anpOMEhESFZONWtIZ29aK3ZEU1JYdlU4Uld3eFFoTVU5OW5W?=
+ =?utf-8?B?SWpDN3pLSzJINmIvb0lJL2JpUGMwV3FPRDNVMXZyYndpNWhRelc0ZlNhUVZ5?=
+ =?utf-8?B?Z0Q0L1Qya2ltcFF1aG9QK0lNTHRiYXI1UHVJNTRHZzUrcURIaFY5NWk5N1hE?=
+ =?utf-8?B?cy9xSDB0SXFQN1pBZFpBa0V6a2MyWWtWU1doRGJ0bUVPRCtJM0lUM3hSZDJq?=
+ =?utf-8?B?ejR0SzlrTWlwL1paQ3lNZDA4d2hTVzdhMzZNZFFNT2c0VXduZmllWUJkejNB?=
+ =?utf-8?B?ZVFJblpGc0VrSzVqV0FnbFNVcTlGOXUzcUZuU01Ba1VzN1ZSR25maUplOStx?=
+ =?utf-8?B?ajBMR00vaDlmRjRuK1llcVVhUGtQdWVleVpmQUNyVEtkdk02blNsMk9sc1NN?=
+ =?utf-8?B?SURyNTBuTU5mdFYrYzh5aDN3c1dENDEwM2pxRDI2NFRteFJCZlJocDlYdzRS?=
+ =?utf-8?B?Y0M2Y0RWMzJqN3JjZ0JBT2h4QTRGeDhGY1pPaGRkRklVTVdGdkd6eDJYb2Rt?=
+ =?utf-8?B?aU1RQ25CR3haL2pVaUFNTlVXa3FRdEhDdWtjdGxKY0ZyYkdZSGNrUzYrN3pJ?=
+ =?utf-8?B?ckNkSGVZWmtZNTROdjFBQ1crR09Laml0L20zZGUzRjBwR00zU21xRFhaM0Zo?=
+ =?utf-8?B?S3BvRDJMRHZCVXh1YkZMdHdaeE5JYWtFSmxNWFRocjEvU1g5YnNQRForRkgx?=
+ =?utf-8?B?OVA0Z2N6bVFFcTQvTmIzREU2R0g5VnZHZzJJcng2bCtWbjYrelZYN01oVXZ2?=
+ =?utf-8?B?L05TQ09rUmFJRGxvZnJHMlh5TEJwSmtMOEh5aHk4OStHNDhrQVRBVGR6aGJw?=
+ =?utf-8?B?WlFlYmZtTjdxZytKVm1QeHRjNTd6dFVnLzJoYjhvUFBsaTR0YUxoOW5uZmhC?=
+ =?utf-8?Q?0DoOnlWoQrEvkYyfb2y5Bg5lM?=
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62fa7b12-59d9-4aa6-8001-08dc24098723
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 16:09:41.0939
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 16:10:52.1504
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NXkNY/lLITeNErjfP5Iv6tLizlaoHKh74Rd0KzqcPIF2nm/P5JG2oa5VjTY70QJEU8Wdv9Oto/i3YyJp8Yippg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5970
+X-MS-Exchange-CrossTenant-UserPrincipalName: zHOmzIiK9GagaVMFQ/+Zif04DEu+dJfk4CZpPjnAU9B0W6/gfaMcHkDQ0ixGlGtCYl9OSaCJM4jYSQJ9u70NeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8775
 
-On 2/2/2024 10:07, Rafael J. Wysocki wrote:
-> On Thu, Feb 1, 2024 at 11:11 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->>
->> The ACPI specification allows for an EDID to be up to 512 bytes but
->> the _DDC EDID fetching code will only try up to 256 bytes.
->>
->> Modify the code to instead start at 512 bytes and work it's way
->> down instead.
->>
->> As _DDC is now called up to 4 times on a machine debugging messages
->> are noisier than necessary.  Decrease from info to debug.
->>
->> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extensions/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> or I can apply it if that's preferred.
+Add bindings for SolidRun AM642 HummingBoard-T Board, which is the
+evaluation board for SolidRun AM642 SoM.
 
-Thanks!
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I think go ahead and apply this one to your -next tree.
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 03d2a0d79fb0..b9f2a8d36874 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -85,6 +85,13 @@ properties:
+           - const: tq,am642-tqma6442l
+           - const: ti,am642
+ 
++      - description: K3 AM642 SoC SolidRun SoM based boards
++        items:
++          - enum:
++              - solidrun,am642-hummingboard-t
++          - const: solidrun,am642-sr-som
++          - const: ti,am642
++
+       - description: K3 AM654 SoC
+         items:
+           - enum:
 
-The rest might take a few weeks to get right and no need to block on this.
-
-> 
-> Thanks!
-> 
->> ---
->> v1->v2:
->>   * Use for loop for acpi_video_get_edid()
->>   * Use one of Rafael's suggestions for acpi_video_device_EDID()
->>   * Decrease message level too
->> ---
->>   drivers/acpi/acpi_video.c | 25 +++++++++----------------
->>   1 file changed, 9 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
->> index 4afdda9db019..3bfd013e09d2 100644
->> --- a/drivers/acpi/acpi_video.c
->> +++ b/drivers/acpi/acpi_video.c
->> @@ -625,12 +625,9 @@ acpi_video_device_EDID(struct acpi_video_device *device,
->>
->>          if (!device)
->>                  return -ENODEV;
->> -       if (length == 128)
->> -               arg0.integer.value = 1;
->> -       else if (length == 256)
->> -               arg0.integer.value = 2;
->> -       else
->> +       if (!length || (length % 128))
->>                  return -EINVAL;
->> +       arg0.integer.value = length / 128;
->>
->>          status = acpi_evaluate_object(device->dev->handle, "_DDC", &args, &buffer);
->>          if (ACPI_FAILURE(status))
->> @@ -641,7 +638,8 @@ acpi_video_device_EDID(struct acpi_video_device *device,
->>          if (obj && obj->type == ACPI_TYPE_BUFFER)
->>                  *edid = obj;
->>          else {
->> -               acpi_handle_info(device->dev->handle, "Invalid _DDC data\n");
->> +               acpi_handle_debug(device->dev->handle,
->> +                                "Invalid _DDC data for length %ld\n", length);
->>                  status = -EFAULT;
->>                  kfree(obj);
->>          }
->> @@ -1447,7 +1445,6 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
->>
->>          for (i = 0; i < video->attached_count; i++) {
->>                  video_device = video->attached_array[i].bind_info;
->> -               length = 256;
->>
->>                  if (!video_device)
->>                          continue;
->> @@ -1478,18 +1475,14 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
->>                          continue;
->>                  }
->>
->> -               status = acpi_video_device_EDID(video_device, &buffer, length);
->> -
->> -               if (ACPI_FAILURE(status) || !buffer ||
->> -                   buffer->type != ACPI_TYPE_BUFFER) {
->> -                       length = 128;
->> +               for (length = 512; length > 0; length -= 128) {
->>                          status = acpi_video_device_EDID(video_device, &buffer,
->>                                                          length);
->> -                       if (ACPI_FAILURE(status) || !buffer ||
->> -                           buffer->type != ACPI_TYPE_BUFFER) {
->> -                               continue;
->> -                       }
->> +                       if (ACPI_SUCCESS(status))
->> +                               break;
->>                  }
->> +               if (!length)
->> +                       continue;
->>
->>                  *edid = buffer->buffer.pointer;
->>                  return length;
->> --
->> 2.34.1
->>
+-- 
+2.35.3
 
