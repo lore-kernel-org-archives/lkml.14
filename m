@@ -1,188 +1,147 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2132.outbound.protection.outlook.com [40.107.21.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C6C22067;
-	Fri,  2 Feb 2024 10:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871077; cv=none; b=AcMcGPkfCJ86RSlKWZylAgl9xvqzKOq+W4tKI6wR+KrNE8BBbaKf+WNKxAnkU6RywGzdvF/d2Di1GF89UNbJERcSUR8ogYRyqqt06QNJH4DJBrtkyAzI3apUmXxHNaXMx4xxF0K3N3RCg+ivh7acvb676AQamyKL/xiyqlYMTF0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871077; c=relaxed/simple;
-	bh=IOY6464NxNU4brqTtjjX6NWMS6Lq4bFk/LCbg383F2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VUIKcJAaZQZwuLrrfYHEKbPgyd8c91jGfJZzC6YzNEkvyV219IuL78XJH4mNO9ZZGQcuiVLG1/GSC+gl+tqC/JbgrgkviNoBgFMCEln0rSZKNeAjp7DUXf8NlIRJYVMLF7l3+/AW8ANQ9S1PcBV/plnGnWJ325ZtP+hwAUtJ0pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dvo8XzHi; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CDEF508;
+	Fri,  2 Feb 2024 10:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.132
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706871158; cv=fail; b=Q+pu1Yju+nl9hI5FuHSKHxNowmxKZw4x/KoLogcZnmwcQY3tjUr9naV15ewvts/3Mwn83indyy/CTzWpa02DI/dqFDi/OB1XjJhRbIcpsgD5rZ2DQaYiYebUa/Iuq2DiOQlPSDNxhaBkcSuVNaSCdFs/Ic6rJin+FIh4Cs8yEtw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706871158; c=relaxed/simple;
+	bh=hFz6nkb4Sc4H5bDlodOrbTXbjuA840k/wLNGSV8EMCA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=c96IBbjOaHK5G3QQbbzDqKAxXomIlIgI9i0LTfWRy2PjaF+xFicN+01wLVE7xFqasrMCzTnKYiFOa8rwSZFHWtCwQBjBHuf80KulVFIrEzpt4ILoR0EQKZ3F/Z6QG7KZ8MhsB/1LB30gQ2f5vmwDM2NGSWyfIgPfOawDBEH03Jc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=asem.it; dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b=KzwB9xIq; arc=fail smtp.client-ip=40.107.21.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asem.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dvo8XzHi"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d05b06b5f9so22743181fa.3;
-        Fri, 02 Feb 2024 02:51:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706871073; x=1707475873; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kx4mIgU1jBfilctvZhlH5DYX3FWSs/9dFiVk8rkOVB0=;
-        b=Dvo8XzHiGKjF4p0kxiOA6W1fyeSj2rWZfQPo3i0fIUKa2vWaPtxWLQuSgjKFoqdIPP
-         p9tTYQ022FUr/9VRdxbWLnOs5CaTfvXPS8XgIZkqh5I9xQlddvJ9nuVMAj762UT4Hn13
-         nd2rfqDj7usjSCoPq0VcpqNAW7h96alzRGni2iFFkFT/43dkHLFsa1OuHgSPAY/49zqa
-         Yr+1KBcH12dcaRtsz7D8Fse+x/B8glXG1XjJ529UVwuMj6XqrGUq9nVlBouzYPQ/XyM6
-         LtJuCK0V0dXX80pBTzKGRjqUBZho2qizSjZhM7iK2P4VcnP5avwFUGkckoXa7lFwMfwP
-         GN/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706871073; x=1707475873;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kx4mIgU1jBfilctvZhlH5DYX3FWSs/9dFiVk8rkOVB0=;
-        b=UIkxNWPZV06r0AIWLXCi0Z1ZJ/M1OurysbNS9nOnFhK7X9SP4lInsKbfZR+ZYeN76n
-         /ABomRVV3t6/q+eM0YgNgXVQj/fS2QXqHa+AEx2FOc5R3sRDnp2VpHUIX6r96AbxzCQb
-         nuBBypfrwnsRieVlEAkzVHHd3pdhJavjsHJsr8/0H1gS/xd7efoVpEGXxN4y62cjNZov
-         KBir15Ui1IcHpEjHxUV9GocJJazP3q0olBPxiUHiKgC4vNUeWfZAw6IHsZxAkAgJBZzJ
-         plKBanJm5/ScTMvaYl8HeICYXkKlgqNE7fw19m3W1Ks4WllNmQNGjTrc5Di3pKzRCH2t
-         IheA==
-X-Gm-Message-State: AOJu0Yxu+/QGv3h9vSAtjFYQQRuvQ6PtV14Tw3XFfzXklbcxzWur78pu
-	MR2RXmR3+9N8/3QFdYz/chq/6pp0RSDplwekNoH5pS137Zlf43ox
-X-Google-Smtp-Source: AGHT+IFBBAv4djkjIr64uSUqBaRgzJgTXmTCYRnLptqsty5wsmiMjBqHWBJy6fRmQbvifnYBus9v4Q==
-X-Received: by 2002:a2e:3c0f:0:b0:2d0:54ac:35a with SMTP id j15-20020a2e3c0f000000b002d054ac035amr990510lja.4.1706871073157;
-        Fri, 02 Feb 2024 02:51:13 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVHq+TVXuo5qAsWn2M07nkxLeFNz1PodEBo1sRZRYCLFTYpE77y15gWwkSE+lEJSNnsEz8coRLdXJ0rsUXI23QOOGaSE7TstJYQEssCaZCzD7BUaNHwBb4ziHp0BAKjLFKcuaZrIri7O/HWr7uHzLPxiNanY44oaCb+y9oCorn/VH1KFT/8PUCL5mm5q7A4BZR7aF0iXlnwmKlGElSdpwA8IvZltIj/CmBwcraguqkv4JWvzLa7daY4pmn9Aa2tyTEudKY5CsuK3RFE0KMQQXYx6Kid0jBaNRi7hzgiy6M3eRT6CF5ib9cI6Nd9G4ho8CTIXZODz6dyyzn/wLecTxt9tAe1fhnufBaMta04dEWL3BNhLa+E85Svbx3INGbslJNrQWK+JkdW/YKDSN9Kw5tAEYaU3Z7cJE13TgF1+1OVYC3VKcnPePhSjFPin/4szTTFLOIEqLGn/WUqjefN3R84AzA3VKP25fb7xAoK8QvPdF734i6yKutr9d2zhNOo5w+gfomo8GmdD+DZGcpgM7OxMEEb1T0nKNdp537/YSVomy/mkXFj1bNSC/dL44l1ffnWfZIUvkm4WQEq5RQPtsesZYfoGgv8FN5ozrguaVWsT3KG5oe6hi9641BykkJcAAbtfzaLF6DiKChg7hKLQPT5nupdw60gZUvEIKJY+DfGXg4OdeZf/TZ+YLs9Nif/c1tlQ50O8wJRFldJMnHWzze8rSmRN2B/aAyUM+k/mkHKfbG3CfHbAv9UMjwe5ZK9rDlpx2HvvaFF5a+t86lv47WVGibUCy3eFcLeSLXygnj/dCBlnFKQVFKurWYC9XtWn9C2Yn8uurLdZc+3grv1HGMII4tjfEk7YTZ3mXjgmg86MOc14fxUNdFAdwzI7RwkooVuqVXkWE3lTAtu3V0lwWYz9mGwoXI+iLvx
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id bx30-20020a05651c199e00b002d0511e7420sm241007ljb.6.2024.02.02.02.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 02:51:12 -0800 (PST)
-Date: Fri, 2 Feb 2024 13:51:10 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org, 
-	konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, 
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com, 
-	quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com, 
-	quic_vbadigan@quicinc.com, quic_parass@quicinc.com, quic_schintav@quicinc.com, 
-	quic_shijjose@quicinc.com, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
-Subject: Re: [PATCH v1 2/6] dmaengine: dw-edma: Introduce helpers for getting
- the eDMA/HDMA max channel count
-Message-ID: <yaf4wvjqy27whulyppep5qvw3cabfcvaoyxfn3p2i7khc3deyv@42pjna2sfmzr>
-References: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
- <1705669223-5655-3-git-send-email-quic_msarkar@quicinc.com>
+	dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b="KzwB9xIq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=asIQyp/KXci3lyxrQB27/MOEqBMDRmtXTFE5l0PvZxikcTzRp+YfpVeTVdVlKKSUX6YLZQ/zpZk5kdaLfYfIkomKgU+itxsXfFMg5+c1BmSyM/aIFzkAhNGhsD5C/Cj2+vJoqlPEzX5If0t//HP2Mk3oB3yxgKuwxYM6IDNpFksXJI3oSAAVsDbyG63iTGByfYxzB+IfrBS30OTzks7/9YPBYFcMPNeSNa+QBDuh5FmyCfeM3G5IvWGrZwFfwsM1tucNTWSOLs137xUNTKAl+x4m180+BkWlrJMP6HuEtk0By87Cg1trN3F3oD5TC367cyo5bTAdYwutJ0zDhzV4tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NCPjBpPE4EcVfMwTYFY6l2PdmyqghoBqOhtsWHsePiI=;
+ b=lL+L6n+4QQzfDyKUSE2tZRLQZOyFnv0AknmsNpO+UIUjRhqzK9zxdKHvgILbnt3xKj4gXuhkmLw7y8xZjNksoTFKBxttk6sI+T9Dvd1P+5CEj/x8GMdbwQclQUC4acbTy1vBQrxwxfjdfaWXI6HmTGPI/DLYYqOxqDzhMynE1Jn4/z4DWpcNRcbwLAhxXxJK14vsWS1rj1aeXCEYOwv5xqaXvApg+7/gLAWDkhGhQHdi2TMBfASRMqfDx71Sacg4wLu7mCHqxtxxiBdjx6KNWuU40T64yc/D3pbU48mB32TPl+iDNINV+zOV64i34CBeADhDx1Tz/GyrSMp5+RO53A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=asem.it; dmarc=pass action=none header.from=asem.it; dkim=pass
+ header.d=asem.it; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NCPjBpPE4EcVfMwTYFY6l2PdmyqghoBqOhtsWHsePiI=;
+ b=KzwB9xIqTpihSMwwQMyF94ICfnxPeOwsnK2GJLtL/JoiwwsmvZGMlCH+FYIQnzEYSi1Or/s3aUnDEroBl0gO3p8fg5nWg0S1GKZTO+wDe9okHDSSyo7P0/5aE3Bw2lF8tEsBpUVxYdel+vkj/1sSXeE/4NJN7KK02ElF2hM0Jgo=
+Received: from DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:273::14) by AS2PR01MB10291.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:5e9::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30; Fri, 2 Feb
+ 2024 10:52:32 +0000
+Received: from DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+ ([fe80::f272:d554:d6b7:13cd]) by DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+ ([fe80::f272:d554:d6b7:13cd%7]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
+ 10:52:32 +0000
+From: Flavio Suligoi <f.suligoi@asem.it>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: Lee Jones <lee@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Subject: RE: [PATCH v2 0/3] backlight: mp3309c: Allow to use on non-OF
+ platforms
+Thread-Topic: [PATCH v2 0/3] backlight: mp3309c: Allow to use on non-OF
+ platforms
+Thread-Index: AQHaVSJj4ATnO/nYS0S6xCnSjXvlN7D24Lmw
+Date: Fri, 2 Feb 2024 10:52:32 +0000
+Message-ID:
+ <DU2PR01MB80349345B0C1757C6958107FF9422@DU2PR01MB8034.eurprd01.prod.exchangelabs.com>
+References: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=asem.it;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PR01MB8034:EE_|AS2PR01MB10291:EE_
+x-ms-office365-filtering-correlation-id: cddaaef1-4806-4485-0075-08dc23dd0ef5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ vQ/EZrqfCfoSW7UeFruqeNgsksEY1/vxFJBc7DjRa03xzJmjTwGexGhz6pbB0BQke8sW4xITAei9ZbTejF+RwtbxgnPMX91uJPGYmaN7VCEwTFiasTfa2gaONaQVaQy0WJACPfVLld45JrM5yGay1v6KvefXXk7XG8UPH7sdOaJyzYA8RoVm5LT9kI1BSkXZZ05WjpfbolpQEvhdVNonurO+d1NH0xIRRw3/zeGbgQs3Z6CEQ9rvZbLNr8CRMd7OTTB9f0tSAultWCSHpbbDL0GbNw1U/JgsRrM7WPdmxOGyKqvUIJE+nJseu1WG5wBzhT0SdAHLGlXdsbmT4Buxcq+HQFyK0ElNMx0P/hyw3GeweiaoMqQiVAjk2SuRPwBJUiloveIbT8pkoJVWE5ZKmThZGFO6/p9K5F+qUBVIHfXZU8OIM9RnOOPWbv7ImWY1U3sNAJTt2P23WxUTASas+VM3Xrur26ijeup8vOdipUS5aPGsJo/uCaXNLlP8eIcrxvXDu40V26pco7VfAdCw6rTTieECHTnXUy22TJ8pbTC97K/pkKHd0b5JeL71SJnehosoabm+VWpRfeKCLpC2KW5SHlAjarYX625l/wzyUK2JZv9S+LZ2cD8ZkBIGM8Lj
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR01MB8034.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(136003)(396003)(39850400004)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(5660300002)(4744005)(478600001)(8676002)(33656002)(86362001)(6506007)(71200400001)(7696005)(4326008)(66446008)(66556008)(66476007)(110136005)(76116006)(66946007)(8936002)(64756008)(54906003)(316002)(122000001)(38100700002)(41300700001)(26005)(52536014)(9686003)(38070700009)(55016003)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?kULOdlY9Wd1CsIA96Lhkp+6/R+JfcHUKnBXBbrnhRQE3BDxrh3HhExrG26tv?=
+ =?us-ascii?Q?sl3AMpMY+fKKDGQJcnaewNI+ZF324lrDurF/PBea3OPmFnD4i+JatU65KXxE?=
+ =?us-ascii?Q?AqfGNKbHdIl7mHZIqrtyEFqobn2cGx1KZBGW9wetvK1L60WYcPYXwDbzhWXS?=
+ =?us-ascii?Q?moW0fBwczTY3KpR12irSusdl/Ic2RYEmK44bRpVTxGlxl14Lpzxp8t/n6bI5?=
+ =?us-ascii?Q?JR6jaqFZyI+gckpPUVIkiANgIoed3ZzjtYUuOw5CgVRIHRTsjZ2l37e9Zq07?=
+ =?us-ascii?Q?O3qC9DubTTUaAAsowr9m/QmEWrtddGtjEWYFOEczH9KAHa6VZbjwkh5AQrhH?=
+ =?us-ascii?Q?7ijm5bStT3SxPdWEJEwvkUAnrltFCfMlfmDPVKLTMWPCxAdtoSL2Edj959gt?=
+ =?us-ascii?Q?OE/qyGjE2AN8iwRjwl7U3QZZS1LOs2/apbs++2MMdoovfXlJUmmgjYYOIEAm?=
+ =?us-ascii?Q?qpBPeR4ySPkkmCdi9VkMzo7gLVYEVTD/as2/3+ggFLlR7j/ze8X0LMtFSStv?=
+ =?us-ascii?Q?jwF+92h0sRsj3+gxkHfpCo7D4g/cFRTuTbdidOOkM45FdZcg6J23x3SRxidW?=
+ =?us-ascii?Q?zmNVotmia2wRBQb0BFbkBqGUWnCSd4URt4Jl4XxP8wzLieH5wKh5GituzNIJ?=
+ =?us-ascii?Q?9u0bt3P2U6FmfCDQ/VqHfIUK3mEUD7LNYVVxPHqd7k4Eyw79bVT7cNjRpStF?=
+ =?us-ascii?Q?klcBkDu/3NfR6Vqs6fNRhdIYiX4VjbIYCUGXYuxKDtCW81YxxnFrWDgMyNf2?=
+ =?us-ascii?Q?PEJH2CWJGKkPuGhvDTd+8kCORXRvFdAdxcd1UtDwJl16PrKwqfSS7HjuWn8z?=
+ =?us-ascii?Q?TjYXkJb0kI7ldRJpoVUCb0BvxoiCE5CYNG35PcT/ZaGHDA6nnseJ5sQYEJSw?=
+ =?us-ascii?Q?4pP42xiVfZ3kXqx0JYX+6b7Jq1wUjuB4hRWEyY2GsiQpVscz6Se/yBAbaAjQ?=
+ =?us-ascii?Q?rQ5dU93CRrjosA1s37RA53oX40iRZ8G2SJow41v9zycij4kPs9RFZLRRnZpn?=
+ =?us-ascii?Q?mRduMu4l51qIJ1rSDTrfxuAiDyu09x7EeVmKPsGGwdokEzyBac+jIRaiyi12?=
+ =?us-ascii?Q?+uuOdOlgmJbc6/+gSpha30YDKd+a3WKCSsVBKnFc/wgCrb9GNC1VO4IRyrhZ?=
+ =?us-ascii?Q?ZIn7jAFLnkUuy3TqlfXWvUzlJ310GfCT2JSbAHJivwq09jshMhxIXVe13+zA?=
+ =?us-ascii?Q?AKIHEDfgOWlp4DMqJz5FVtCbb5EDxtVuDjFCLlZC8ncPqNQW3vR03dnwYuLT?=
+ =?us-ascii?Q?b60G9M5Fu21g55gYnkuyCSHEOkG9mbeP6SFlfQcRg7P1sDes7htRyXwiJW46?=
+ =?us-ascii?Q?GGClPGXAhwyVBzqVZ4fZg+tW/jLlHFOuM+rAb+8UWPIkATTdU5PLOY9HqDhX?=
+ =?us-ascii?Q?Lca8+5S39tupfQS3cS3jzt4fFN2GFxjdw+XKubaV7D6JhgPuPKm4vDbE6ceZ?=
+ =?us-ascii?Q?GxmMXqu3AhfrRJp9Z9C9voijMjLuMVaXrl8L/vMLUZdgN0AlENiTjsmQuR9n?=
+ =?us-ascii?Q?O81ot8jYtlz16OXMGBXABlW4RT88Pdx1R3DBPJO/cn45KOyQuqZMNkk40v0C?=
+ =?us-ascii?Q?fTbcRvg61oipprW79Aw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1705669223-5655-3-git-send-email-quic_msarkar@quicinc.com>
+X-OriginatorOrg: asem.it
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cddaaef1-4806-4485-0075-08dc23dd0ef5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2024 10:52:32.5402
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d0a766c6-7992-4344-a4a2-a467a7bb1ed2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8vidHsdALLsQwJwA9vKX+KYWSllFN8ZcdvE0K0+SUbE4FxBXVXDtb6g77LJ8BQgws+vgviqIWnMue+0HOM5oOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR01MB10291
 
-On Fri, Jan 19, 2024 at 06:30:18PM +0530, Mrinmay Sarkar wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Add common helpers for getting the eDMA/HDMA max channel count.
+Hi Andy,
 
-See my comment to the patch 4:
-https://lore.kernel.org/linux-pci/qfdsnz7louqdrs6mhz72o6mzjo66kw63vtlhgpz6hgqfyyzyhq@tge3r7mvwtw3/
+...
 
--Serge(y)
+> Subject: [PATCH v2 0/3] backlight: mp3309c: Allow to use on non-OF
+> platforms
+>=20
+> Allow to use driver on non-OF platforms and other cleanups.
+>=20
+> Changelog v2:
+> - rename pm3309c_parse_dt_node() --> mp3309c_parse_fwnode() (Daniel)
+> - add tags (Daniel, Flavio)
+> - new patch 2
+>=20
+> Andy Shevchenko (3):
+>   backlight: mp3309c: Make use of device properties
+>   backlight: mp3309c: use dev_err_probe() instead of dev_err()
+>   backlight: mp3309c: Utilise temporary variable for struct device
+...
+I've just tested again all your three patches (using the last 8.8.0-rc1 for=
+-backlight-next )  on my board and all is ok.
 
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c           | 18 ++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |  6 +++---
->  include/linux/dma/edma.h                     | 14 ++++++++++++++
->  3 files changed, 35 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index 7fe1c19..2bd6e43 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -902,6 +902,24 @@ static int dw_edma_irq_request(struct dw_edma *dw,
->  	return err;
->  }
->  
-> +static u32 dw_edma_get_max_ch(enum dw_edma_map_format mf, enum dw_edma_dir dir)
-> +{
-> +	if (mf == EDMA_MF_HDMA_NATIVE)
-> +		return HDMA_MAX_NR_CH;
-> +
-> +	return dir == EDMA_DIR_WRITE ? EDMA_MAX_WR_CH : EDMA_MAX_RD_CH;
-> +}
-> +
-> +u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf)
-> +{
-> +	return dw_edma_get_max_ch(mf, EDMA_DIR_READ);
-> +}
-> +
-> +u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf)
-> +{
-> +	return dw_edma_get_max_ch(mf, EDMA_DIR_WRITE);
-> +}
-> +
->  int dw_edma_probe(struct dw_edma_chip *chip)
->  {
->  	struct device *dev;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index eca047a..96575b8 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -864,7 +864,7 @@ static int dw_pcie_edma_irq_vector(struct dw_edma_chip *edma, unsigned int nr)
->  	char name[6];
->  	int ret;
->  
-> -	if (nr >= EDMA_MAX_WR_CH + EDMA_MAX_RD_CH)
-> +	if (nr >= dw_edma_get_max_rd_ch(edma->mf) + dw_edma_get_max_wr_ch(edma->mf))
->  		return -EINVAL;
->  
->  	ret = platform_get_irq_byname_optional(pdev, "dma");
-> @@ -923,8 +923,8 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
->  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
->  
->  	/* Sanity check the channels count if the mapping was incorrect */
-> -	if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > EDMA_MAX_WR_CH ||
-> -	    !pci->edma.ll_rd_cnt || pci->edma.ll_rd_cnt > EDMA_MAX_RD_CH)
-> +	if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > dw_edma_get_max_wr_ch(pci->edma.mf) ||
-> +	    !pci->edma.ll_rd_cnt || pci->edma.ll_rd_cnt > dw_edma_get_max_rd_ch(pci->edma.mf))
->  		return -EINVAL;
->  
->  	return 0;
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 7197a58..550f6a4 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -106,6 +106,9 @@ struct dw_edma_chip {
->  #if IS_REACHABLE(CONFIG_DW_EDMA)
->  int dw_edma_probe(struct dw_edma_chip *chip);
->  int dw_edma_remove(struct dw_edma_chip *chip);
-> +
-> +u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf);
-> +u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf);
->  #else
->  static inline int dw_edma_probe(struct dw_edma_chip *chip)
->  {
-> @@ -116,6 +119,17 @@ static inline int dw_edma_remove(struct dw_edma_chip *chip)
->  {
->  	return 0;
->  }
-> +
-> +static inline u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif /* CONFIG_DW_EDMA */
->  
->  #endif /* _DW_EDMA_H */
-> -- 
-> 2.7.4
-> 
+Thanks,
+Flavio
