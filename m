@@ -1,199 +1,230 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2031.outbound.protection.outlook.com [40.92.91.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C5E8594C
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 23:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706915789; cv=none; b=X7eOH1+7TmHBNg+pOFXpmurhLENdqKKEQiOGAXNktXDoHYFwrFTgB+hXfJfyGCXJyYVUlZZyIC16qt+2fZ6CcQFtYy5ioavsfmCKzr9t0nM5rKEHTXU9MGwBA/jeySFc7CWFhyTn3bm5j6whcMCjDg2Bf/WFTdkKBwmTdTtvMgQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706915789; c=relaxed/simple;
-	bh=cv/llAgdLFffQPBImWTkKAwlAxaOXdvBY69NlckOG7g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SI9sn+mt4rYuBNnxXz4Yujsa1Glw6LDLI9NYSyMg24e7UE6krNSGD2Vy4eFDQcijzlsH6oCsYSNWf9Zr3WXeNX7SzzDYBwOevgmte5Q1m6QNZC4BVwHM7UriDHr8m0DO14ujwZu0f4Oz/ffMmA6F0bEnsLIi3pRAdzho6+369uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=NZgH3sjn; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="NZgH3sjn"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33b123f99d6so1629647f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 15:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1706915786; x=1707520586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PteMdXSGEfK/S/yRN4kmhpTCq4Nr6CXKbchr8j0sDPk=;
-        b=NZgH3sjnBJy4FsVl7DyHkqfujQlUJn1G9oTeMsbC+GfmyQsVfWfdFBh9w2O0/peUbM
-         OoNEv19t+XZMD2rYm+YbnUlJTeEZa1m8VZRbWnU3c3vUXTchdUCBbxnSUXS9O08qgM9a
-         fHFH1SeHnbCYeHYxj60FAs6poODgFHMBFCkezlfebrvRftyAR/3lT0qtouAji35AvfTP
-         KfHRBOaykKFg22TPVhudMQz+ZXv15750SmR9/kXk39u8yU7jiVVVDcn6vTW8+StkrgXg
-         Dto8pNsQ40FsbHkz44yXIbQaznHhciy1D+LsVvTwxvP1C+CYeN2NxMTQPLcpNGdntQz8
-         Y9Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706915786; x=1707520586;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PteMdXSGEfK/S/yRN4kmhpTCq4Nr6CXKbchr8j0sDPk=;
-        b=wwDdW31G4nzaAvqtfE95BJXeMz1Hjk9POxPMdyKh6/yJQsW+8Y0wTgen6BCrxSsme/
-         7ojC8oIk3UkUf6149YStcKFe6TTIYHr4pSybs2zXRF+Ti4tf7+Vwoxa8FTtXQxZcH0cX
-         JsKvvKBuk2Op2MiSG3hFLpHrYHj4vyBHO9D/y69Su9czzusL6ZTUgDcH1NgVp4F0Se54
-         1uSClYIatzlZ/2koQRH54NUXR/v2ufAxIyS/v8ev7VU/96VAH36d2fth4GHmyzl+mNGm
-         L6gednqAQjQ0UJzjR+gMomEr6t5Cb/zOPnnlx2VxIhIOpF44jSt17tVuVZTJg7MyW7Il
-         j/jQ==
-X-Gm-Message-State: AOJu0YwpfcdAaqsl9DaWQwwIVcUCPFVIo5zCV20QAH4t8GS4RQpVRkAi
-	hIkxyb8gfQxPEdJ9UxDH21Nbo3nNNoTm9xiGb3I7ozz9F9qRevCHzfB8SUxNAak=
-X-Google-Smtp-Source: AGHT+IFx4fm66Jzjbq0kt3hMUWT/G1epWGZ2gABGvJrKNxgkFJHIu/iKrl7ttppsosE1Fe2ij5km7w==
-X-Received: by 2002:a5d:4b04:0:b0:33b:e5f:edec with SMTP id v4-20020a5d4b04000000b0033b0e5fedecmr5438030wrq.16.1706915785888;
-        Fri, 02 Feb 2024 15:16:25 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXy/HLNwyclEcV5Hu57vuuLGE5wfjlgNnKpn4JHUvlHt0ALwXw0P7QQYV03ANhBNKLn5dsOBX7d6nHr+CQ6tyoU675hjXgtF/n2HPm2piEJlio1H2FXTm0WIESpHymxlbH6B1eRug0GvFAFNhQBe5+wIFia3Q0DU7Bpo9Fc9UkNdpXxdKjg0KI2QB+fcB7cI+8nGB43MDo2M7eF0ltgGbxW1Qi+NHXw+YeP1wtxHOY4tAI+hIK0i9u7qlQErit2eURN8uMm9DCrwzsRcN8XCYzqRu60U0OG5Q6R+Z1ZneJOBCp9qFP6dGttW6KJ5LbpuvboEustfMEk0Y0ee7p8diUTQMPVwCoUJDOicH8U2Xq9
-Received: from debian.fritz.box (aftr-82-135-80-223.dynamic.mnet-online.de. [82.135.80.223])
-        by smtp.gmail.com with ESMTPSA id r18-20020a056000015200b0033aedfc5581sm2834766wrx.32.2024.02.02.15.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 15:16:25 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Federico Vaga <federico.vaga@vaga.pv.it>,
-	Carlos Bilbao <carlos.bilbao@amd.com>,
-	Avadhut Naik <avadhut.naik@amd.com>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] Documentation: coding-style: Fix indentation in code-blocks
-Date: Sat,  3 Feb 2024 00:13:16 +0100
-Message-Id: <20240202231316.7606-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE41EEE7;
+	Fri,  2 Feb 2024 23:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.31
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706915902; cv=fail; b=rKk4KqEHJiw2Lk/AYaGdXpbzeru3aJucakwSZ33o+Bf5/ay5UR7JYK9Qn6RzVRA7hqpHr9q+g72ymPfUaObLxSTM2VJk4fL3sMXvpjN40M4DYpvfYX8kXLNOoZ052A6I6NNaM/v5J/km7UMiNEn6PIOcCze9Ee0dWnXgU5FchUs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706915902; c=relaxed/simple;
+	bh=IyXJvgNuIwsdXWlqvyjeSsFUL34V47fn6nw4rmsV9jA=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YdY1cN2CgoQQ5UxfglKSLC92oa5LAO/lNs4Cbwjx0Dhx8S1gwYK4jEHfb3xA76SNR77qQ6CcDDBNewD3+UmSEyse6oKoCStkrer/eGLatKKpDu3Rve1JJFE7jds1EkHJPzCP8/CnL633W1cq6RgeliqR92In/Iz0mztKfsF7X8o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; arc=fail smtp.client-ip=40.92.91.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MuF1p+SAlAGZc4U9TXZLSVR1CBagMKYykciXhgNzfPYhOOJdS9EebUMhkNQ3/11wmQFvOL/9+IeeJPhxZYnbzwY7TAGsu0IpQoWy9R5sHXvP7yvPKFo/qmBgW+3gwk6JIeh7moQdgwOO3+pQ+zV0FGICtqEtTll9Go+uQX33268/ghvCFHvmVuXOJejAr9waXldwct4Srpx0RzwVN+jRwpaM0CIrPAD5tYVTdPVyPPSfvR7k+5kxpgkV9L2pA30aYDYMa6Rv2bCp7Dt0D1VQHU4F+TKiahrLorS1D4FtC73xEWEdnHEtn/rR0oMokL6dPpgm4q1XpH1hIOGmmTplIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+UckP0dmTkqRTCU1OYbtyYJ1mg4WuQhLwmHmqYOoZZw=;
+ b=OJrQCueJg3uJEf320rB24d4rcaa6U3FKlI4tOZ2yx4I5RjsbOnusZCgmK6N9F3Rw7/WwVbJaU7h7g7lgx0171ODhZlJrspjpBKZx9cmTbj5ir16t3ClkNl44bFxyW7Lvmv0duPUMy2XOuXamajnWCjfATISo2tVOAexZutwnwqmT+2iCr1WxGL3RYuI+GSET4uBaNWu18Fsd0X3NOZ1cYKjt91A/Z4++ZM0Ps778crg2D0io15ypjzWyN6QHfJxUk56jcFmvqH+qGg/cYja6i0QCXLN8vOyMCIsC2GPRgcfRu2zhg6v9Iigw90DmYWJUCbAkRYokK9Rea6eJCdO0fQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AS1PR03MB8189.eurprd03.prod.outlook.com (2603:10a6:20b:47d::10)
+ by AS8PR03MB7239.eurprd03.prod.outlook.com (2603:10a6:20b:2eb::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.31; Fri, 2 Feb
+ 2024 23:18:16 +0000
+Received: from AS1PR03MB8189.eurprd03.prod.outlook.com
+ ([fe80::ffb3:3ff8:6ea9:52b5]) by AS1PR03MB8189.eurprd03.prod.outlook.com
+ ([fe80::ffb3:3ff8:6ea9:52b5%5]) with mapi id 15.20.7202.035; Fri, 2 Feb 2024
+ 23:18:16 +0000
+Message-ID:
+ <AS1PR03MB8189D48114A559B080AF5BEA82422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+Date: Sat, 3 Feb 2024 00:18:13 +0100
+User-Agent: Mozilla Thunderbird
+From: Sergio Palumbo <palumbo.ser@outlook.it>
+Subject: Re: [PATCH net-next] net: sfp: add quirk for OEM DFP-34X-2C2 GPON ONU
+ SFP
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <AS1PR03MB8189AD85CEB6E139F27307D3827F2@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <ZbZn8oCiyc1aNPuW@shell.armlinux.org.uk>
+ <AS1PR03MB8189B99C360FB403B8A0DD6882422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <Zb0t+zKHx+0wTXH5@shell.armlinux.org.uk>
+Content-Language: it
+In-Reply-To: <Zb0t+zKHx+0wTXH5@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN: [ndP3sb6i8tlPcCS47fFEJhc8VYazFblxJxunVHwgQQGBdczloJ6YbeTbv0Y2W28F]
+X-ClientProxiedBy: MI0P293CA0014.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:44::14) To AS1PR03MB8189.eurprd03.prod.outlook.com
+ (2603:10a6:20b:47d::10)
+X-Microsoft-Original-Message-ID:
+ <d28a1b4b-4809-483c-ba32-1eaef4421122@outlook.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS1PR03MB8189:EE_|AS8PR03MB7239:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ce0a2a5-ff5a-4e8d-d2e2-08dc24453c40
+X-MS-Exchange-SLBlob-MailProps:
+	AlkLxVwsndnKCvQ/MAtVGZuRYfxhVfNmT+28bNf9n2b2i8hcFKXFyisW1vO/MASiwLp9KRyyjqn5Vo0S6JN/w6nxexuls0ZkYxsHcfJA6Lwqy5h7j9Jb/J7PIlDQhRR0p8YyZel341FVEzLbtxjcJC2au2XQeJ8JlN1Zh2B6vV0XVUsL9M8hjkiKrs58/nKzznjUSnbGpLwVx3zYiC/p2S+whblePZPCOGaVXIBg+NM7huwdcJJ0LU66V4+7qd7ck4Zs2tMCyFEOdF2rLknEEFjqQGb5SZ7lS+ZxcDT+8Jdb4ir2CCMowX5Ee9KYoJfjukmYP9yl8R3XtN8anra9LBYqFN3EJ94AymcJK3D6MSQs6EGP4I+KHwKR3cLlJH3Yhwj/Z1rgckH+18ARABtG1eGETTL0vXA8VLW57d7yrCXsHRqnpUtO2H35st88ltBQIAq2e5ni3gajoFuDVReynWJf8IwduFZJyyAAqw5OEXSOjJz+ycfOdy0jesfEywzhMxV01KhN1vQ4m8M9sltz6BkZgQurs7kVgDsyxn2idI5mfFEjY+rPb4s06qOMBXPiA4Agj+roe6Whu9cP6cmnZ0AyAAHRQGbc9Vvu3KeMvn19kIx6p5C5VqcdrcveUfYXGXgwVAu34MM9gssBEjTCDG3tq7sRrvUkWh+2cxhhKx9i/SHBqMNNfSugSLLEnwPsFKn1zUyCy/uwSNawuwKdbo6amPmW+meNdcdh7vzZaOnhqWBWERzV3Zz+ELUmopfhKHocUnpJyo/W1GUa3ybPbfbuVV9/5I+3
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7iS6l6aqRq+6EuXAxTLfdOZwJD2scjPmZorSo7YKROEfMB3iTtcpfURfm8Z9wIXCg7XeztYIvFw0nPQBaKGIiBHVYthG3paVZITpLFBjFhvrV65ZDqpJwlsWul1IuQ0fH9PfM+a2+ZcqdGVFzovPQ+E/IPPo3all9Q5ys2zSMGBg3Z5i6gu4E7NPZOa7KivQjy+x+GDrzQL1w4M9iPxiAQ6ZMQDdKtOD02nZLul0UxSFLBgW7GG7IEA/uyjLzacf1o3LrAi46TkqfxF6XrYvk8Mj4J929dZiYCZdNJmMHLGzfusW67qq2ge+aZFWpZFtDqo5fVAU4KKCq/Xmn7Nv0tHXb+mY8ZVttg9vx4gpjnQAnuYCOyxWYE9nJ+gOZ13fVTq26T3hU21ZO9CuMxDW9cfUeSY6s7Te4Itx+6mWas22s8jqkMBsF5lAYoX7XGyh7v3J4FrX1fDEXQeVaoXOFnFLy3qtpvA1jKBvJ+Kl57ClZgPPRpGgdmMwCcGzjU4HtE3bSZQqcmEvD5nyrh+aZb5WEfDMO88fHmnS1pM8FEM8u0XkwMKTv8HVOJQlQ0yk
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Tjg4bEhKTHBjeWRWZmFCSWU0WFJJUU5oQThSdWZETzc5cXN0eE1hTE1WbVkx?=
+ =?utf-8?B?THZPak9jYU1WWTNtTzVTUFBLMUM4b3dmVzJnWldIYXMzZXZGUXhZZ2pDU3ho?=
+ =?utf-8?B?VmpOUXI5SmIxYklqQ1haRHptUFNxV29rMHdOZ05nOGMzMHU0RWVMSDNTbzc4?=
+ =?utf-8?B?dEswd2kwVFpjVmZoYmFtTFVGNWd2ZmlGR1JMMUdoYTk2cHdzdWh2RkVUc2Fz?=
+ =?utf-8?B?VWZUNWxJT0twUzJNdDhySG9nVkJHenR5M3ExMlNTYW1peXRHZDdHK3dGSDNt?=
+ =?utf-8?B?SmhVMGdLVDd6a2tiRG84RFY2MW55RjNvd213V1BZVnZhbEdSQzFWS3VuUnEy?=
+ =?utf-8?B?SjR3Z1g5ejRQSEtDTWx5NG1hbHNYRjI3eFhOS0lNeEh6enVYWHhIOTJ2dHlw?=
+ =?utf-8?B?T080NzNndGZLSmFOOW1nMWZURmh4R2VnQ0wrbi81a3RaSmRjRk5WTTVzSEsz?=
+ =?utf-8?B?WkpacjRyUGdmb0ZJdDdTdE0yZEZSM0xVVFYvWVg2UVhEcjlhYkVlTG1ZandM?=
+ =?utf-8?B?bHMrbVpPSHNvMWg3aE93OHNRMkFNL0Y5NFQxdGpaVDhNaUlJTFI3bU16Yk13?=
+ =?utf-8?B?bzBCVi9uTkdoMGpNSkt2aVZqamJ1c1daWWdaZzJ1NWV2MnZ1ZjBhSFVvVmhR?=
+ =?utf-8?B?YXc3NTJFUllmWWpXVG9Xclc4U2hqbzJZdXFlV1VJajN1REV2TStJMlFXaWFa?=
+ =?utf-8?B?VkRSakwvdzhnSFdncEJ3blgrMEwrWjM0b0NUWERqeDUvUFNLeTBVeTZ1aFFy?=
+ =?utf-8?B?TFFDNjZCMCswaUQrYUlRMEl2RDduMWlOTVdVRXVMdU5jNE90aDJwQmdiT0Jo?=
+ =?utf-8?B?SE9MUzUyY05sUStiVVY0NDg2TU5TdlFWRVpWREpMRTA4bUpVVy9KUzFVMXox?=
+ =?utf-8?B?OWJ5QTdoU0ZsR0JveXN1NDFYOWdSWlZwZGQ1MEp5ODE0c0o4ODhxRTllaWo1?=
+ =?utf-8?B?cXIvQkJyT0RpQUhTQkxpSTlGcnZVZEIvTkJqYkJwSU1kSm5oZ0xjNCtWa2tN?=
+ =?utf-8?B?cVBMVHFjbVZzeHJGejV3Y0NHZDBEUmFXT3VEN3lQRXpJQmNnaURsZXhIamNs?=
+ =?utf-8?B?WHFQakJLa1JHNDlxbVlsQVRVbW9XU1RIT0FOTTFRTnZzNk1uZjBWMU5tb3Ar?=
+ =?utf-8?B?MXBBT0VDdDJhUGRqaHcxRWF2OTFxRWhoWUU4U3N2cGM5MFRYK0cyQ0YrRFNz?=
+ =?utf-8?B?dnlHR1JYUCt3YUhoakNReUFacFBaUzdKdUlsdWZ2dHRZSDVWdE5BMEVaRms1?=
+ =?utf-8?B?QXBKYWdrTG1IMTRaRkVMOUlsS05VWFZGQ0NkT2s3Z3oxZXFTY3lOWUIrR0Qx?=
+ =?utf-8?B?ZnVWQXAxc2pYQUU1QWxpOEU2dW16WG10R1FwNjhVQlVDREZyM2MrQm5JZVB2?=
+ =?utf-8?B?ak9LMnhmM0xxSno4TzB5ZVdseURqa1ZMRFBQaGdaZk5MZXp5WE9ubmk0UFJD?=
+ =?utf-8?B?d0xvamRCcSsrKy8rTVlRWi8wM1BlSFhVSExzMnVnaUN4U0V3QVpJRjFCeUgy?=
+ =?utf-8?B?WFpUTFlURDdQS1IyZ0lMNmNhdkF6SEYwK3lpRm1qQUQ0M1FEY1VPeUtkMzV0?=
+ =?utf-8?B?aVZyUnFnMHNQVXYrTlZJODlqdm5iRFc4TUxiRzJYclpSd0dCamswazZpLzdB?=
+ =?utf-8?B?TE00SGJSZnpJOE8rSnlqMDFyb2lVT3Jqb0JWU1MxbnRvR01WNjVVMHJabEtR?=
+ =?utf-8?B?YUZzdXVXSkZtbTFoVnMrc1dsNjMrMHRIMko1cWpuNmhxNmJlenNZc1IzdWJQ?=
+ =?utf-8?Q?S4GmRw6kl0nUNl68vI=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-10f0b.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ce0a2a5-ff5a-4e8d-d2e2-08dc24453c40
+X-MS-Exchange-CrossTenant-AuthSource: AS1PR03MB8189.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 23:18:16.6147
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB7239
 
-- Remove spaces in C code-blocks to align error labels consistently
-- Replace tab characters with spaces in emacs-lisp code blocks
+Hello Russell,
+thanks for your  explanation. I have to say that:
+Module default is LAN_SDS_MODE=1
+Host banana PI R3 supporting 1000base-X + 2500base-X
+I would update the table as follows:
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- Documentation/process/coding-style.rst                    | 6 +++---
- Documentation/translations/it_IT/process/coding-style.rst | 6 +++---
- Documentation/translations/sp_SP/process/coding-style.rst | 6 +++---
- Documentation/translations/zh_CN/process/coding-style.rst | 4 ++--
- Documentation/translations/zh_TW/process/coding-style.rst | 4 ++--
- 5 files changed, 13 insertions(+), 13 deletions(-)
+The current situation:
+Host supports		Module		Mode		Functional
+1000base-X		LAN_SDS_MODE=1	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X
+1000base-X		LAN_SDS_MODE=6	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X
+1000base-X + 2500base-X	LAN_SDS_MODE=1	1000base-X	Yes
+1000base-X + 2500base-X	LAN_SDS_MODE=6	1000base-X	Yes (host forcing module at 1000base-X)
 
-diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-index c48382c6b477..c1e070f5c750 100644
---- a/Documentation/process/coding-style.rst
-+++ b/Documentation/process/coding-style.rst
-@@ -586,9 +586,9 @@ fix for this is to split it up into two error labels ``err_free_bar:`` and
- 
- .. code-block:: c
- 
--	 err_free_bar:
-+	err_free_bar:
- 		kfree(foo->bar);
--	 err_free_foo:
-+	err_free_foo:
- 		kfree(foo);
- 		return ret;
- 
-@@ -679,7 +679,7 @@ values.  To do the latter, you can stick the following in your .emacs file:
-           (c-offsets-alist . (
-                   (arglist-close         . c-lineup-arglist-tabs-only)
-                   (arglist-cont-nonempty .
--		      (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-+                      (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-                   (arglist-intro         . +)
-                   (brace-list-intro      . +)
-                   (c                     . c-lineup-C-comments)
-diff --git a/Documentation/translations/it_IT/process/coding-style.rst b/Documentation/translations/it_IT/process/coding-style.rst
-index 5f244e16f511..284a75ac19f8 100644
---- a/Documentation/translations/it_IT/process/coding-style.rst
-+++ b/Documentation/translations/it_IT/process/coding-style.rst
-@@ -575,9 +575,9 @@ due parti ``err_free_bar:`` e ``err_free_foo:``:
- 
- .. code-block:: c
- 
--	 err_free_bar:
-+	err_free_bar:
- 		kfree(foo->bar);
--	 err_free_foo:
-+	err_free_foo:
- 		kfree(foo);
- 		return ret;
- 
-@@ -671,7 +671,7 @@ segue nel vostro file .emacs:
-           (c-offsets-alist . (
-                   (arglist-close         . c-lineup-arglist-tabs-only)
-                   (arglist-cont-nonempty .
--		      (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-+                      (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-                   (arglist-intro         . +)
-                   (brace-list-intro      . +)
-                   (c                     . c-lineup-C-comments)
-diff --git a/Documentation/translations/sp_SP/process/coding-style.rst b/Documentation/translations/sp_SP/process/coding-style.rst
-index a0261ba5b902..a37274764371 100644
---- a/Documentation/translations/sp_SP/process/coding-style.rst
-+++ b/Documentation/translations/sp_SP/process/coding-style.rst
-@@ -604,9 +604,9 @@ Normalmente la solución para esto es dividirlo en dos etiquetas de error
- 
- .. code-block:: c
- 
--	 err_free_bar:
-+	err_free_bar:
- 		kfree(foo->bar);
--	 err_free_foo:
-+	err_free_foo:
- 		kfree(foo);
- 		return ret;
- 
-@@ -698,7 +698,7 @@ sanos. Para hacer esto último, puede pegar lo siguiente en su archivo
-           (c-offsets-alist . (
-                   (arglist-close         . c-lineup-arglist-tabs-only)
-                   (arglist-cont-nonempty .
--		      (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-+                      (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-                   (arglist-intro         . +)
-                   (brace-list-intro      . +)
-                   (c                     . c-lineup-C-comments)
-diff --git a/Documentation/translations/zh_CN/process/coding-style.rst b/Documentation/translations/zh_CN/process/coding-style.rst
-index fa28ef0a7fee..3bc2810b151d 100644
---- a/Documentation/translations/zh_CN/process/coding-style.rst
-+++ b/Documentation/translations/zh_CN/process/coding-style.rst
-@@ -523,9 +523,9 @@ Linux 里这是提倡的做法，因为这样可以很简单的给读者提供
- 
- .. code-block:: c
- 
--	 err_free_bar:
-+	err_free_bar:
- 		kfree(foo->bar);
--	 err_free_foo:
-+	err_free_foo:
- 		kfree(foo);
- 		return ret;
- 
-diff --git a/Documentation/translations/zh_TW/process/coding-style.rst b/Documentation/translations/zh_TW/process/coding-style.rst
-index f11dbb65ca21..c7ac504f6f40 100644
---- a/Documentation/translations/zh_TW/process/coding-style.rst
-+++ b/Documentation/translations/zh_TW/process/coding-style.rst
-@@ -526,9 +526,9 @@ Linux 裏這是提倡的做法，因爲這樣可以很簡單的給讀者提供
- 
- .. code-block:: c
- 
--	 err_free_bar:
-+	err_free_bar:
- 		kfree(foo->bar);
--	 err_free_foo:
-+	err_free_foo:
- 		kfree(foo);
- 		return ret;
- 
--- 
-2.39.2
+I suppose that Banana PI R3 host is forced by linux drivers
+at 1000base-X so first two cases should be same as second two cases.
+
+
+With the quirk:
+Host supports		Module		Mode		Functional
+1000base-X		LAN_SDS_MODE=1	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X host
+1000base-X		LAN_SDS_MODE=6	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X host
+1000base-X + 2500base-X	LAN_SDS_MODE=1	1000base-X	Yes (module forcing host at 1000base-X)
+1000base-X + 2500base-X	LAN_SDS_MODE=6	2500base-X	Yes
+
+
+I suppose Banana PI R3 forcing Linux drivers at 1000-X when
+module in LAN_SDS_MODE=1 and expect it should work alpso with
+hosts at 1000base-X only in LAN_SDS_MODE=1 and LAN_SDS_MODE=6
+
+
+
+I also  tested them a Linux PC with ethernet at 1GB (Host) attached to
+a media converter ethertnet <-> sfp 2.5G module working at 1000base-X
+(speed of the host ehternet) with module set at both LAN_SDS_MODE=1 and
+LAN_SDS_MODE=6
+
+Do you think this could be enough?
+
+Waitng your comments.
+
+Best regards
+
+Sergio Palumbo
+
+
+Il 02/02/2024 19:01, Russell King (Oracle) ha scritto:
+> On Fri, Feb 02, 2024 at 06:41:51PM +0100, Sergio Palumbo wrote:
+>> Dear Russell,
+>> sorry for the indenting. I will no longer use indenting in future postings.
+>> As explained in the description setting up the module via telnet with
+>> LAN_SDS_MODE=6 puts the module in 2500X autonegotiating mode.
+> Okay, so this requires manual configuration to switch the module into
+> 2500base-X.
+>
+>> Without applying the patch the module shows up to linux at 1000X
+>> because the EEPROM is not correctly reporting the 2500X speeds.
+> Okay, so in its default as-new state without reconfiguring the module,
+> it reports 1000base-X and Linux drives it as such. This sounds fine.
+>
+>> Ethtool lines in the description repporting only 1000X and host
+>> connecting only at 1000X.
+> That would be expected.
+>
+>> After the quirk as you can see from the ethtool lines I put in the
+>> description the module shows up to linux with both speeds 1000X and 2500X.
+> Yes, adding the quirk will have that effect, but it will also have the
+> effect that we will choose 2500base-X for host interfaces that support
+> it, whether or not the module has been reconfigured to operate at
+> 2500base-X. This will result in a mismatch between the module and the
+> host, and the link will not come up.
+>
+>> According to the above if the host has the ability to connect at 2500X
+>> the module is connecting at 2500X, if the host has the ability to connect
+>> at 1000X only it will connect at 1000X.
+> The current situation:
+>
+> Host supports		Module		Mode		Functional
+> 1000base-X		default		1000base-X	Yes
+> 1000base-X		LAN_SDS_MODE=6	1000base-X	No
+> 1000base-X + 2500base-X	default		1000base-X	Yes	***
+> 1000base-X + 2500base-X	LAN_SDS_MODE=6	1000base-X	No
+>
+> With the quirk:
+> Host supports		Module		Mode		Functional
+> 1000base-X		default		1000base-X	Yes
+> 1000base-X		LAN_SDS_MODE=6	1000base-X	No
+> 1000base-X + 2500base-X	default		2500base-X	No	***
+> 1000base-X + 2500base-X	LAN_SDS_MODE=6	2500base-X	Yes
+>
+> The lines marked "***" are what I'm concerned about - by adding this
+> quirk, it has the effect of trading one working configuration (the
+> one where the module is in its default factory configuration) for one
+> which requires special configuration of the module _and_ which breaks
+> the factory configuration.
+>
+> On the plus side, ethtool _can_ be used to switch the interface mode
+> back to 1000base-X, but given that this was working it seems backwards
+> to need manual intervention.
+>
+>> On the other side after the quirk and the module set to LAN_SDS_MODE=1
+>> 1000X mode. Linux host is connecting at 1000X only.
+> No it won't. The module will still be detected, the quirk will be used,
+> which will indicate to the kernel that the module supports both
+> 1000base-X and 2500base-X. With a host interface that supports both,
+> the kernel will choose 2500base-X, but the module will be using
+> 1000base-X - and the link will not come up.
+>
+> At the very least, this needs to be mentioned in the commit message,
+> so that the implications of this can be properly considered.
+>
 
