@@ -1,132 +1,134 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7964F17C69;
-	Fri,  2 Feb 2024 17:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BBF149012;
+	Fri,  2 Feb 2024 17:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706893686; cv=none; b=ulCzBgAaxpfUou5oN2RbVmLXYQzQs0u+Tz6Zt19SZEcmjM9OIyk66pJtl6bosJrBBy1Xs1KexzouH3jog0HdNpKhth3N+YgijtmunQ76+8h6hIXYY7vuCPVm8kkW/VOvzkNJoP5SqDRFFXn9XEJXKrY8NvwDiZP8anu3FlMlV2Q=
+	t=1706893698; cv=none; b=QS13IVCQ6jKktY4r/oWeGufe8W8kEw218J5zt/VcoNwhBX+hg/LB7Hoti9QYgabWGqmsz6JhlQEj1ADw9LkXpYnwOC4eF9Ep1Rp5uJVyiPT5o32gO4BXjZQDdh53LxmnjCEapNko3GCtLOvlMHvLUbx0O0lQKogdbXwjoqmR1Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706893686; c=relaxed/simple;
-	bh=nJsDcQKPmUGxipMGHsoS3ef4KudBXimiRhwIHTZUido=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iT8iT4NYQyBE9D80o7jPvv5pCoS4KefBg/SLX17sYf64gDjX5VGJPGh9DiuCcYh3JZhdnQVd4BfQi3LLkEGXJmb2EVRRUpoGw4NQ33vJUUyZubOgsLvn+PnoLcBUyvPlAqGrDgWnCoXswN69fY5nNNAs5iqXARIDgpvh0eY3nIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JqiubCOe; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706893698; c=relaxed/simple;
+	bh=tjGciSGl0ur/hl1ZLVMU17REAhGH4g8QmpkEWPPJGXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bORiCmf+jxzO5BAYqkE4S5WdWX9sjylUjBneDcJQ3JGYfYDHn+dck5zDYnG/Q4BAISocQ52/fZtHiml2pM9+MFU8FmaOi/tdGya7T33qrCYsN7OQOIxTPkKmYPFeFw/5HEVBmvy66HMkSvzvihji+n9AyJUFwfDJLk8WdmnJkSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3a74InP; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqiubCOe"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40fc6578423so7703565e9.0;
-        Fri, 02 Feb 2024 09:08:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706893683; x=1707498483; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yz77hdqu3xW1RZmxsC2XtkWXQ/ktZsm22Dc2aBeR00=;
-        b=JqiubCOew5ZkKeGaWOH0EOFrmwCHH6aYxLR8vv6OQGwcvhWtPwysdCiRIss1RpDxfo
-         FexFolyqYblFU6mVsFN9jfMm0/T3OL0PNnNx+PIq1NK9TsaoW1R9GiuNkvnkGHILbLFC
-         9SYDd4mmpGkxehlRPqn5za5HHnkfwUs62ZMj53JKRK7tSwqS9RbQNuJOJm8Q6qyLWG4l
-         X+eYvOI3pKdbYDJWIoJwwp54705SZBNbeseKv09ReuD1AaTLZGWige4tz6R5sQ0UAphD
-         hopRqzJb0PQ58x6EVI16MAsEm+KRxmloqo8ZIR9WktkgZaleMpdKUFWPTYYkIhtvSl4E
-         XqUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706893683; x=1707498483;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8yz77hdqu3xW1RZmxsC2XtkWXQ/ktZsm22Dc2aBeR00=;
-        b=ZqLQNi2/FcuNG0FC+cRPaFvuwCptHgxoB0ZYryO0Cb/XyTzcUkruozG6JBq/aRq6j1
-         JzlNStnpcPBqmQ8CePAcTgNWog7hpIoqvi0yXOY3EFlaFIec3Gmvs/V/meNGwwTByhzn
-         J9FKS/jXOj69Kjkd6foVbDdZ6ALxZJ8E4s1aqAeIYfQglmtXn62MzDdXMcjifZGKL5TM
-         8N2QnmPpxR8xZxjY/fRtHfl3qBXRlL7VEdhHucUhaxH09iGaZkPp2VN5KVDuImW8ExSV
-         L3HAkg02AK4eSiX6ljVTTGiWKztcoHGCxMHzA7giHET0JCM3HXJpnjYRL76JQB3VmC9a
-         Te1g==
-X-Gm-Message-State: AOJu0YwXKVtDJ62NsTe0OQk5bngONF7TBwY6a8Ye9xtE36qSsBNOL+BS
-	gYWDYv89jfw/0B28zu228fuhShPiVmiNvkgYgwMj7Z5eOs1dmcL3
-X-Google-Smtp-Source: AGHT+IEkg1EFNRdi0qgjyn5EEuepISOEdRNauXjypgq3uZISwW/zYx/TcVjYpO9BtfrOvy25qdHm6g==
-X-Received: by 2002:a05:600c:4586:b0:40e:f5e3:5e16 with SMTP id r6-20020a05600c458600b0040ef5e35e16mr7815645wmo.27.1706893682521;
-        Fri, 02 Feb 2024 09:08:02 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUsZ+AnNrt9quaemMFKVJPRulRmfUkvJQf7KKsQcLA1ViI9TO63C1ciGqRdBl6oHO4rOySBX6YWEU+c8jXYex3tn3E/bgumxc3jvEmBvmta0jTq3/AuqfjfB/xDr/vMU4HTLT2xTW1ltrjW1UlEU+TGUgpfy1WylEEO+tIdxXmRKMXQpts6/pnZvlzF/mYmEOv1iKachjj76NdA68n/9azWdI5y4zgVE8xbgU/YteQJmGMsz90UabinURtMgQ2QedPKcmeMNMmFygw3jvdbCSW+eUwoebhGOVVeVQznF834H2WySfmqqkXfNSkKpdxK7OsjLf/9t4WQPz3CRJ6QZYXtTiCgH9DY5ZKXJED3c3PQi7h+hKCtbk9LP5pTHmmXKypTDHO4qESKbULnlKMvf4Q5l7G4W1eZl+bM3C4Ek7kzRlMtJOIbYNWZ2n12Onjo99AFEuwrG1jpIjkAH6DapCe4F/BkBnEjRVVra0snX7DIR22Qj6IK4nfdClLB1pNUik7yoj87B1njTLS8ZcrrgG2EwbFoq1Wa98p/Jrznz9D0qN2wwq3kVwM5PimhrLijNdo=
-Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.gmail.com with ESMTPSA id j17-20020a05600c1c1100b0040e88d1422esm452922wms.31.2024.02.02.09.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 09:08:02 -0800 (PST)
-Message-ID: <65bd2172.050a0220.b661.349f@mx.google.com>
-X-Google-Original-Message-ID: <Zb0hboevnTEURuwJ@Ansuel-xps.>
-Date: Fri, 2 Feb 2024 18:07:58 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Robert Marko <robert.marko@sartura.hr>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [net-next PATCH v5 9/9] net: phy: qca807x: add support for
- configurable LED
-References: <20240201151747.7524-1-ansuelsmth@gmail.com>
- <20240201151747.7524-10-ansuelsmth@gmail.com>
- <46085abf-8e82-4fd9-95b8-95cbfde6e5c2@lunn.ch>
- <65bd1af9.df0a0220.c0618.9f8d@mx.google.com>
- <Zb0glzoHmgN5iHl7@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3a74InP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706893696; x=1738429696;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tjGciSGl0ur/hl1ZLVMU17REAhGH4g8QmpkEWPPJGXY=;
+  b=X3a74InPNDt0jl3rD7VRlVWZwrPY5pEvlOogwyOU/x/O+AvjWal6UwIc
+   HI2uVmiLPUGryoY001AWQoUuXB7g8WZ7G67DhKOs5q3Pm2E6CmBfzATi2
+   /R0YX+5wFYraHNZKek1DwzAprNt9s/Y2+QAvEf1c/iTDiWSA9CBdd93Mq
+   3haL8rn1lXG241TaXhFHyt0qvid5ribHNwZYLf1vFF9Z0qziPlchhriej
+   7kxNzHDgQzCBOcAhPfVBYN5sBm5V8LJZB/Od6Ped1TrxXesLBkaewi1Uj
+   R8Y7VSHlms++RfFm5df4zfrFzb+f4e5TPWu3nT5emf4jNwpUK6ZDm5Kdc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="360197"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="360197"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 09:05:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="126636"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.118])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 09:05:49 -0800
+Message-ID: <8cea7b3f-1cdf-41e7-a8fb-f5c276973ad6@intel.com>
+Date: Fri, 2 Feb 2024 19:05:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zb0glzoHmgN5iHl7@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] tools: perf: Expose sample ID / stream ID to python
+ scripts
+Content-Language: en-US
+To: Ben Gainey <ben.gainey@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ namhyung@kernel.org, irogers@google.com, will@kernel.org
+References: <20240123103137.1890779-1-ben.gainey@arm.com>
+ <20240123103137.1890779-2-ben.gainey@arm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240123103137.1890779-2-ben.gainey@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 02, 2024 at 05:04:23PM +0000, Russell King (Oracle) wrote:
-> On Fri, Feb 02, 2024 at 05:40:21PM +0100, Christian Marangi wrote:
-> > On Fri, Feb 02, 2024 at 02:43:37AM +0100, Andrew Lunn wrote:
-> > > > +
-> > > > +			phydev->drv->led_brightness_set = NULL;
-> > > > +			phydev->drv->led_blink_set = NULL;
-> > > > +			phydev->drv->led_hw_is_supported = NULL;
-> > > > +			phydev->drv->led_hw_control_set = NULL;
-> > > > +			phydev->drv->led_hw_control_get = NULL;
-> > > 
-> > > I don't see how that works. You have multiple PHYs using this
-> > > driver. Some might have LEDs, some might have GPOs. But if you modify
-> > > the driver structure like this, you prevent all PHYs from having LEDs,
-> > > and maybe cause a Opps if a PHY device has already registered its
-> > > LEDs?
-> > >
-> > 
-> > God you are right! Off-topic but given the effects this may cause, why
-> > the thing is not const? I assume it wouldn't make sense to add OPS based
-> > on the detected feature since it would have side effect on other PHYs
-> > that use the same driver.
+On 23/01/24 12:31, Ben Gainey wrote:
+> perf script exposes the evsel_name to python scripts as part of the data
+> passed to the sample or tracepoint handler function, and it passes the id and
+> stream_id to the throttled/unthrottled handler functions. This makes matching
+> throttle events and samples difficult.
 > 
-> Maybe phydev->drv should be const to avoid this kind of thing. It
-> doesn't look like it would be hard to do, and importantly doesn't
-> require casting away the const-ness anywhere. PHY drivers themselves
-> can't be const because the driver model needs to be able to modify
-> the embedded device_driver struct (e.g. see bus_add_driver().)
+> To make this possible, this change exposes the sample id and stream_id values
+> to the script.
 > 
->  drivers/net/phy/phy.c               | 3 +--
->  drivers/net/phy/phy_device.c        | 4 ++--
->  drivers/net/phy/xilinx_gmii2rgmii.c | 2 +-
->  include/linux/phy.h                 | 2 +-
->  4 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> Just build-testing it.
->
+> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
 
-Seems sensible to me. Also for everyone that does that (downstream or
-driver that needs to be handled) it would result in a warning for
-modifying const stuff. Maybe I'm wrong but I can only see benefits in
-doing this change.
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
--- 
-	Ansuel
+> ---
+>  tools/perf/Documentation/perf-script-python.txt        | 4 ++--
+>  tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
+> index 6a8581012e162..13e37e9385ee4 100644
+> --- a/tools/perf/Documentation/perf-script-python.txt
+> +++ b/tools/perf/Documentation/perf-script-python.txt
+> @@ -642,8 +642,8 @@ SUPPORTED FIELDS
+>  
+>  Currently supported fields:
+>  
+> -ev_name, comm, pid, tid, cpu, ip, time, period, phys_addr, addr,
+> -symbol, symoff, dso, time_enabled, time_running, values, callchain,
+> +ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
+> +addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
+>  brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
+>  weight, transaction, raw_buf, attr, cpumode.
+>  
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 860e1837ba969..d88966645b2f4 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -858,6 +858,10 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+>  	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(evsel__name(evsel)));
+>  	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->core.attr, sizeof(evsel->core.attr)));
+>  
+> +	pydict_set_item_string_decref(dict_sample, "id",
+> +			PyLong_FromUnsignedLongLong(sample->id));
+> +	pydict_set_item_string_decref(dict_sample, "stream_id",
+> +			PyLong_FromUnsignedLongLong(sample->stream_id));
+>  	pydict_set_item_string_decref(dict_sample, "pid",
+>  			_PyLong_FromLong(sample->pid));
+>  	pydict_set_item_string_decref(dict_sample, "tid",
+> @@ -1306,7 +1310,7 @@ static void python_export_sample_table(struct db_export *dbe,
+>  	struct tables *tables = container_of(dbe, struct tables, dbe);
+>  	PyObject *t;
+>  
+> -	t = tuple_new(25);
+> +	t = tuple_new(27);
+>  
+>  	tuple_set_d64(t, 0, es->db_id);
+>  	tuple_set_d64(t, 1, es->evsel->db_id);
+> @@ -1333,6 +1337,8 @@ static void python_export_sample_table(struct db_export *dbe,
+>  	tuple_set_d64(t, 22, es->sample->insn_cnt);
+>  	tuple_set_d64(t, 23, es->sample->cyc_cnt);
+>  	tuple_set_s32(t, 24, es->sample->flags);
+> +	tuple_set_d64(t, 25, es->sample->id);
+> +	tuple_set_d64(t, 26, es->sample->stream_id);
+>  
+>  	call_object(tables->sample_handler, t, "sample_table");
+>  
+
