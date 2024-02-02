@@ -1,230 +1,152 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC761F4EA;
-	Fri,  2 Feb 2024 04:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B413F4F6
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 04:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706848841; cv=none; b=N9qHawXh7UP5WJHekp6g7Xv7PL7kDyr84YNqhj3YQ0pOdRSCmtOjO/82/oj/iBgzJ4E+azgxZQCNhei6PvozhCJevyq7gor5xEsV/5PCtgEZbK6NLyu/v52nnWKw5BIZ5F4rQDk4D5fNqqA+iFXPTABv5U80w+yJR4PgRDyVDWU=
+	t=1706848875; cv=none; b=pFLtp11AwTeBhEsiUcar7yc4iB1fv4Of4W7jwVR0u9LyTD5ThUp4926nk783uMNKqa1j9UmtxVZirI2ptyrP1zJJFXVe3y7JvkHTvVaHJ5P7HqZbtpdgyQ4KXA3P4XX+Laaodlf7G8ULjLwWaNFEYIOggrNdiHu/AmMrBAWxSek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706848841; c=relaxed/simple;
-	bh=KmlbEq3PO/srZBOCNisfz+EqGLgCMlx0Mf4zLb30HiI=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=GAy5bTWnreOYrYtGVXrc7vhytrNFosd5NVwxrtGq1SutXiHfzMAHkohji8pynaH5+3EMAVOdOYaGM8swrZ2+5Tb6oeUqAgeWSOBK/JSYapV9YSHaU/SjcDEXtxS0A2yfT1ND2bjjcNHulvrtr9nB8fFs76BlhQr+JKYsNWz3Qag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QLwOyes5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1706848875; c=relaxed/simple;
+	bh=tcEH8y9ILQRfJEiztnFPBtbL/SdrVqxuQ6BXuMiY/J8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MtM3HmWEk3FUYd2Xqo/VDSlbd5eafUrnm9opNpcGiO1B0UNCSs1VZKPa2AoLa9C4kVllVWM0tCQeYHTt8aAl3uNUvCaBz28RwKFtWZo4uHCXPxs6r1bgOExT+wuhvlJcPCHPJ1F2OWJYSTRcXVeZUkGXnADQqPiOVCXJp81EL84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gk7H7qJm; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QLwOyes5"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 2957B206FCE0; Thu,  1 Feb 2024 20:40:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2957B206FCE0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706848839;
-	bh=QySjbmai9GE4fttBeHnyPhjnPJbHO88dUi9nFOfGmao=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QLwOyes55GeO8JttIh47g7AUqqiDlOaDt3TFG3gWC7Ts/DdkBrtQfh85o1++ecdYw
-	 tOJzZrcxNpCHPc3JzOGBHn4AiIHj+u2FXvv2aTIkOJuQlm2cgcJaCP3PeVFuaztpnx
-	 XDP0SGYgRT2/idBBfLtYgW+PYgimiRZ7m7kEybBM=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Wojciech Drewek <wojciech.drewek@intel.com>,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	shradhagupta@microsoft.com,
-	stable@vger.kernel.org
-Subject: [PATCH net,v2] hv_netvsc: Register VF in netvsc_probe if NET_DEVICE_REGISTER missed
-Date: Thu,  1 Feb 2024 20:40:38 -0800
-Message-Id: <1706848838-24848-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gk7H7qJm"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc236729a2bso1645576276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 20:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706848871; x=1707453671; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MR2/y2vEPhv8eBcksIZP96OOa1fhQ1JeijHES+W35BI=;
+        b=gk7H7qJmWRxTONWlFZAJzlQt8r34Dwj0rA5axTYjyfswVxrTXK3t/vTla0eSJNE7oe
+         kmxW+A30ZJWLmH4bNZr3rRg4gAfmbChbyPVUPWrQr/SSnXA1f0/oBq/sxBQlvq4iWPGo
+         KkdTsHvsNuJlyi3ZDGMXNU/Nw9J6dfkk+364IRxdlY5B2Voko9WNCDKug4lACjHca+ph
+         rU3U3rs80yaiFzCVRB90djYY6gZetIyqLGkOSb8GVKlU/XaP4U9PfpYVSvUwWW1dtrzB
+         2uH+1PrG0VnJqW54G5BAJtJ2SfHDT1fyTqIR9qLeMsuWdkGFB7DFL4rLFlRkoeVJvFjH
+         uajA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706848871; x=1707453671;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MR2/y2vEPhv8eBcksIZP96OOa1fhQ1JeijHES+W35BI=;
+        b=I9xVAC8rt6LvsN4j3BMPrL6KHgZtekJ+g4BtrDZaA60ax169fxL72CNUsKFYn7gBEE
+         rTnExYKweEnAhKl55+fCEqrxVuMvReL7iizotzeg2vPQ0OxBRGoj0OqDNlAZZgNagFPN
+         NJ1l/eYgywslXST/nDK968CEYNGURqyigoAjdZG9Uzwk8SmBCDv6DDz/f1kLddz1R3N9
+         MhH2Q1Lw/vbNBxp+U4XQXeZi9uwlli2JZVcLrT5337jL9yISWCNofUM3boGngWD2IHut
+         sAGsLel5jGJPbDMKPZaiZldbuXXjCBgzKkqw4T4fxtM1dOkjULSQ3fgHi9ZxvI7Fj7a9
+         92Mw==
+X-Gm-Message-State: AOJu0YyUyJdAF5wwXWK8hAJpvKR50FjJswqrJgs+inwUD6dj0kGIZtrK
+	FE/A+kAP+4nCz2XLRJaD7yuiD18TBKeYjDlDWB+aLxfbg0heyU1VIyP8AI4ZChriXeGtReJM5lt
+	gzFPBB5RGWOmndydwaLbML4n5883rzseK7jYU
+X-Google-Smtp-Source: AGHT+IEeBKezZDIqBQF7eHwuYqAvCJ8nw+dAXcKn3tJnFoqaYeczMg4ET2n7H9b6PoIbYlxV8PzaiVJxGLGJ2vWoXDo=
+X-Received: by 2002:a25:9701:0:b0:dc6:bb86:ea11 with SMTP id
+ d1-20020a259701000000b00dc6bb86ea11mr4583776ybo.19.1706848871267; Thu, 01 Feb
+ 2024 20:41:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240201093515.849873-1-howardyen@google.com> <f5b626ae-bda1-479f-bc14-b1fd7ba043cf@arm.com>
+ <2024020156-reshuffle-salvaging-8161@gregkh>
+In-Reply-To: <2024020156-reshuffle-salvaging-8161@gregkh>
+From: Howard Yen <howardyen@google.com>
+Date: Fri, 2 Feb 2024 12:40:59 +0800
+Message-ID: <CAJDAHvZ=XVZ-Ea1LVqfTnDXJ+J=PLbZNCZkuSpvdOtEsreguWw@mail.gmail.com>
+Subject: Re: [PATCH] dma-coherent: add support for multi coherent rmems per dev
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, hch@lst.de, m.szyprowski@samsung.com, 
+	andriy.shevchenko@linux.intel.com, petr.tesarik.ext@huawei.com, 
+	rafael@kernel.org, broonie@kernel.org, james@equiv.tech, james.clark@arm.com, 
+	masahiroy@kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If hv_netvsc driver is unloaded and reloaded, the NET_DEVICE_REGISTER
-handler cannot perform VF register successfully as the register call
-is received before netvsc_probe is finished. This is because we
-register register_netdevice_notifier() very early( even before
-vmbus_driver_register()).
-To fix this, we try to register each such matching VF( if it is visible
-as a netdevice) at the end of netvsc_probe.
-
-Cc: stable@vger.kernel.org
-Fixes: 85520856466e ("hv_netvsc: Fix race of register_netdevice_notifier and VF register")
-Suggested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-
+On Thu, Feb 1, 2024 at 11:41=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Thu, Feb 01, 2024 at 10:45:30AM +0000, Robin Murphy wrote:
+> > On 2024-02-01 9:35 am, Howard Yen wrote:
+> > > Add support for multiple coherent rmems per device. This patch addes
+> > > dma_mem_list to device structure to store multiple rmems.
+> > >
+> > > These multiple rmems can be assigned to the device one by one by
+> > > of_reserved_mem_device_init_by_idx() with the memory-region
+> > > declaration in device tree as below and store the rmem to the dma_mem=
+_list.
+> > >
+> > >     device1@0 {
+> > >             ...
+> > >             memory-region =3D <&reserved_mem0>, <&reserved_mem1>;
+> > >             ...
+> > >     };
+> > >
+> > > When driver tries to allocate memory from the rmems, looks for the fi=
+rst
+> > > available rmem and allocates the memory from this rmem.
+> > >
+> > > Then if driver removed, of_reserved_mem_device_release() needs to be
+> > > invoked to release all the rmems assigned to the device.
+> > >
+> > > Signed-off-by: Howard Yen <howardyen@google.com>
+> > > ---
+> > >   include/linux/device.h |  1 +
+> > >   kernel/dma/coherent.c  | 66 +++++++++++++++++++++++++++++++++++----=
 ---
- Changes in v2:
- * Fixed the subject line of patch with branch details(net)
- * Added the logic to attach just the one right vf during register
- * Corrected comment messages
- * Renamed the context marco with a more appropriate name
- * Created a new function to avoid code repetition.
----
- drivers/net/hyperv/netvsc_drv.c | 82 +++++++++++++++++++++++++--------
- 1 file changed, 62 insertions(+), 20 deletions(-)
+> > >   2 files changed, 56 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/include/linux/device.h b/include/linux/device.h
+> > > index 97c4b046c09d..c8682ee507cf 100644
+> > > --- a/include/linux/device.h
+> > > +++ b/include/linux/device.h
+> > > @@ -751,6 +751,7 @@ struct device {
+> > >   #ifdef CONFIG_DMA_DECLARE_COHERENT
+> > >     struct dma_coherent_mem *dma_mem; /* internal for coherent mem
+> > >                                          override */
+> > > +   struct list_head        dma_mem_list;
+> >
+> > I'm not necessarily against the idea, but only if it's implemented sens=
+ibly.
+> > If we're going to have a list of these it should *replace* the existing
+> > pointer, not do this weird thing with both.
+>
+> Agreed, it should be one pointer max for this structure for this type of
+> thing.  Why not move it into the dma_coherent_mem structure?
+>
+> thanks,
+>
+> greg k-h
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 273bd8a20122..11831a1c9762 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -42,6 +42,10 @@
- #define LINKCHANGE_INT (2 * HZ)
- #define VF_TAKEOVER_INT (HZ / 10)
- 
-+/* Macros to define the context of vf registration */
-+#define VF_REG_IN_PROBE		1
-+#define VF_REG_IN_NOTIFIER	2
-+
- static unsigned int ring_size __ro_after_init = 128;
- module_param(ring_size, uint, 0444);
- MODULE_PARM_DESC(ring_size, "Ring buffer size (# of 4K pages)");
-@@ -2185,7 +2189,7 @@ static rx_handler_result_t netvsc_vf_handle_frame(struct sk_buff **pskb)
- }
- 
- static int netvsc_vf_join(struct net_device *vf_netdev,
--			  struct net_device *ndev)
-+			  struct net_device *ndev, int context)
- {
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
- 	int ret;
-@@ -2208,7 +2212,11 @@ static int netvsc_vf_join(struct net_device *vf_netdev,
- 		goto upper_link_failed;
- 	}
- 
--	schedule_delayed_work(&ndev_ctx->vf_takeover, VF_TAKEOVER_INT);
-+	/* If this registration is called from probe context vf_takeover
-+	 * is taken care of later in probe itself.
-+	 */
-+	if (context == VF_REG_IN_NOTIFIER)
-+		schedule_delayed_work(&ndev_ctx->vf_takeover, VF_TAKEOVER_INT);
- 
- 	call_netdevice_notifiers(NETDEV_JOIN, vf_netdev);
- 
-@@ -2346,7 +2354,7 @@ static int netvsc_prepare_bonding(struct net_device *vf_netdev)
- 	return NOTIFY_DONE;
- }
- 
--static int netvsc_register_vf(struct net_device *vf_netdev)
-+static int netvsc_register_vf(struct net_device *vf_netdev, int context)
- {
- 	struct net_device_context *net_device_ctx;
- 	struct netvsc_device *netvsc_dev;
-@@ -2386,7 +2394,7 @@ static int netvsc_register_vf(struct net_device *vf_netdev)
- 
- 	netdev_info(ndev, "VF registering: %s\n", vf_netdev->name);
- 
--	if (netvsc_vf_join(vf_netdev, ndev) != 0)
-+	if (netvsc_vf_join(vf_netdev, ndev, context) != 0)
- 		return NOTIFY_DONE;
- 
- 	dev_hold(vf_netdev);
-@@ -2484,10 +2492,31 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
- 	return NOTIFY_OK;
- }
- 
-+static int check_dev_is_matching_vf(struct net_device *event_ndev)
-+{
-+	/* Skip NetVSC interfaces */
-+	if (event_ndev->netdev_ops == &device_ops)
-+		return -ENODEV;
-+
-+	/* Avoid non-Ethernet type devices */
-+	if (event_ndev->type != ARPHRD_ETHER)
-+		return -ENODEV;
-+
-+	/* Avoid Vlan dev with same MAC registering as VF */
-+	if (is_vlan_dev(event_ndev))
-+		return -ENODEV;
-+
-+	/* Avoid Bonding master dev with same MAC registering as VF */
-+	if (netif_is_bond_master(event_ndev))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
- static int netvsc_probe(struct hv_device *dev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
--	struct net_device *net = NULL;
-+	struct net_device *net = NULL, *vf_netdev;
- 	struct net_device_context *net_device_ctx;
- 	struct netvsc_device_info *device_info = NULL;
- 	struct netvsc_device *nvdev;
-@@ -2599,6 +2628,30 @@ static int netvsc_probe(struct hv_device *dev,
- 	}
- 
- 	list_add(&net_device_ctx->list, &netvsc_dev_list);
-+
-+	/* When the hv_netvsc driver is unloaded and reloaded, the
-+	 * NET_DEVICE_REGISTER for the vf device is replayed before probe
-+	 * is complete. This is because register_netdevice_notifier() gets
-+	 * registered before vmbus_driver_register() so that callback func
-+	 * is set before probe and we don't miss events like NETDEV_POST_INIT
-+	 * So, in this section we try to register the matching vf device that
-+	 * is present as a netdevice, knowing that its register call is not
-+	 * processed in the netvsc_netdev_notifier(as probing is progress and
-+	 * get_netvsc_byslot fails).
-+	 */
-+	for_each_netdev(dev_net(net), vf_netdev) {
-+		ret = check_dev_is_matching_vf(vf_netdev);
-+		if (ret != 0)
-+			continue;
-+
-+		if (net != get_netvsc_byslot(vf_netdev))
-+			continue;
-+
-+		netvsc_prepare_bonding(vf_netdev);
-+		netvsc_register_vf(vf_netdev, VF_REG_IN_PROBE);
-+		__netvsc_vf_setup(net, vf_netdev);
-+		break;
-+	}
- 	rtnl_unlock();
- 
- 	netvsc_devinfo_put(device_info);
-@@ -2754,28 +2807,17 @@ static int netvsc_netdev_event(struct notifier_block *this,
- 			       unsigned long event, void *ptr)
- {
- 	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-+	int ret = 0;
- 
--	/* Skip our own events */
--	if (event_dev->netdev_ops == &device_ops)
--		return NOTIFY_DONE;
--
--	/* Avoid non-Ethernet type devices */
--	if (event_dev->type != ARPHRD_ETHER)
--		return NOTIFY_DONE;
--
--	/* Avoid Vlan dev with same MAC registering as VF */
--	if (is_vlan_dev(event_dev))
--		return NOTIFY_DONE;
--
--	/* Avoid Bonding master dev with same MAC registering as VF */
--	if (netif_is_bond_master(event_dev))
-+	ret = check_dev_is_matching_vf(event_dev);
-+	if (ret != 0)
- 		return NOTIFY_DONE;
- 
- 	switch (event) {
- 	case NETDEV_POST_INIT:
- 		return netvsc_prepare_bonding(event_dev);
- 	case NETDEV_REGISTER:
--		return netvsc_register_vf(event_dev);
-+		return netvsc_register_vf(event_dev, VF_REG_IN_NOTIFIER);
- 	case NETDEV_UNREGISTER:
- 		return netvsc_unregister_vf(event_dev);
- 	case NETDEV_UP:
--- 
-2.34.1
+I'm considering to modify the change to
 
+1. Move it into the dma_coherent_mem structure, like
+
+     HEAD
+mem0->node
+
+This case, if I check list_empty(mem0->node), it would give me the
+list is empty, but actually there is one rmem.
+
+2. Replace the pointer to a list_head.
+
+    HEAD
+dma_mems ---> mem0->node
+
+This case, if I check list_empty(dma_mems), it would give me the list
+is non-empty, it matches the actual status.
+
+So, the 2nd looks reasonable, I'm going to upload a v2 patch with the
+2nd approach, does that make sense?
+
+--=20
+Regards,
+
+Howard
