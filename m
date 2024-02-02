@@ -1,147 +1,155 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD22605BB
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDBB60257;
+	Fri,  2 Feb 2024 08:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706864135; cv=none; b=t5A8NYwy9Sa7E64BchJSEJpZlgiy7nKRj/KCUpL8VI8xAzjBo0tPKzVraZkEm536EZmO9EwvF2xFDs6uduP9d2Ab2cKAcr+mAAVRM8hSyMBxXmCb0vgqvlzUD81ThKppiSCHavpo8OdjlFA6uE9/JRmQJY+Kg5u93+ZTD93hU14=
+	t=1706864146; cv=none; b=rVIHaSTdsQ9QiXnDiSCKX6BOPSEnSE0kwgZPyb0+M+2pBYfpQVPVe+9Rq+Kw7k0htWDmcsnjQD3h78VEwmYO+IKT70XS1oEKJ/I5AevCJiWAm5QEBTNvcRR+LB6Vmdbbf782a3SZ7nzB//2d9PS7YW1cW9xRObhDMPCl4y5c27Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706864135; c=relaxed/simple;
-	bh=k6BF/q2AUq9fet7l2bvyEg/64CUFxjGNt72Xjm2UEvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sj8AogA1vjhSAVlNTcFPhRwpaI7FW5CL0ge4FFes3sIgRe51bd8bSe9Lmlk8d+SbbKh7hXNNHoPFB78ixD5pPSB+IZWC/tpGQBGl38lfAI0wvS+W+BX2Jqlcq/fhdcpkksfcfdHKeYB1+QE7jtGssh439QX/COdaUx2fYvvwki8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XQVha+XI; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706864146; c=relaxed/simple;
+	bh=QJN4byeE5cmqPJcwaf5F7ajBalsBJwhZ6yaGrvXhP0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aEjVoj/2imqTYFeQ+SpR4pEqAuETzcPBmKJbz2XY8kZKQqJiRuNqpVWld6KiPKk5/43T1kroTAJIQS5xbgiwqqoEqDC7ndfUKiCWlBHj1wBm0kZx0JlHSMTY5HCKeOVg+WIyhxVtpK3gh12QHeygyu9I9E5LJbwnrNJ5+5FNogQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=jSwxgw1o; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XQVha+XI"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a36126ee41eso250421266b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 00:55:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706864130; x=1707468930; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3fiin9xT95xmjaBWj39CSHW+K1rE7OpA6eoBA4kS3YI=;
-        b=XQVha+XIpWelasWeO6GH/tsGHtFiHEl76r5XSXNc1tp61aLzt2rupgw3ZHDmNZx2D8
-         4bVH9aSRxsWqY2IjhM4i1gIoijBlGBhg95/21IagAV0L7IRUxPvGqO9PMc0WU+UNRUrM
-         W+uuA+rkLOq3BllBrw+LTBsjTCSQcUlDJeXaOtP7U3tg6bXfcsNsxeTAohXzuZx7xmYB
-         FAClz8JLxXckw9DjSI8lvgkmCKzLUNaaSpJ2EVZG0vkcYbBmNMjpEbDlfha4/OVJOS97
-         ic0IFBMW5RS2/i42jGjgi3eKWNRXFQ5R294qzW9jlYZFKCqNgr+sP30wuvrT2SIFERu9
-         DXIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706864130; x=1707468930;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3fiin9xT95xmjaBWj39CSHW+K1rE7OpA6eoBA4kS3YI=;
-        b=dqhjlCSZY+3qq2QQAvld/NyOhN3EbdL7i6rSf0juoTGWcfWFLLdmg5v8kUYh0puDJC
-         CyqWHULz0mOxwFzTfMFlc0C5/vfXaIQCFTIgfEfmdk78HaVnfg6lkpbAHpb1Dpj6Hcx5
-         9QrVZrhHno+GgT1yygYKsOEPnCKBIvOyndiweySPm35/NQQLr1kJ/h4X/g9c1zt5krD9
-         ZokKFrNnbbrmLaU/X48DJcj6xB5RN/vbuYUSv4LMyT8WTuCrjgwb0Q5BFJ8Z9CDx5PBq
-         GtzYEcHSW5mxvHJp2CLCVQ2sB0zoqywzbKbipgMGEq09gEwp0uPZpd4eX+2dEnnJiy1A
-         gdAg==
-X-Gm-Message-State: AOJu0Yy17deSKIDFRhonOG649Rs1Vhp7yYrC8ZgTiy2/G9DTKzV+Bf2h
-	8acCWO09ywEBRgGkF8hfEAWK0FFoMBE3GdKp7S3LEBZad7CBW2v6OtEJOcM6AtQ=
-X-Google-Smtp-Source: AGHT+IH7WUTM7Tr4j7ap3Ccz9tzPdcldjtlakQgc7YxtH+BZ0fjWO+3Q6wdm9rI1txYNOLBjYQsLDQ==
-X-Received: by 2002:a17:906:5943:b0:a34:d426:1c0a with SMTP id g3-20020a170906594300b00a34d4261c0amr4824837ejr.24.1706864130412;
-        Fri, 02 Feb 2024 00:55:30 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXtKT7tGmKSZBXztNYa5HLg/nU10SEJnDpChKo7QwnMd9ENx3wKBYBz8SnOtUgGHlzrBNBAlGE4hv64gL+IeLNYLmphZi7HpWWjwegPBWniNPjDeypYyf9eN1GLHsgMHOhckj1iO01RV5IXIE6R5/nlubOoLQ/J956fbj3vXqwYlI66ipgnYvgiDtmnQ55uXBSD0NRtn1OrMAKJGdE0sAcacyIvVwvy/crUG1Ag6v6qsfpb92ssbf5+LyL6z0f7poAEzUlT1UUj6e8XOTcu+yFk0DMnTLT1irnrS4yM90qr+LGt1rK41GM=
-Received: from linaro.org ([62.231.97.49])
-        by smtp.gmail.com with ESMTPSA id y19-20020a170906071300b00a26d20a48dasm656755ejb.125.2024.02.02.00.55.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 00:55:30 -0800 (PST)
-Date: Fri, 2 Feb 2024 10:55:28 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="jSwxgw1o"
+Received: from dragon.fritz.box (unknown [58.7.187.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 6EE233FE92;
+	Fri,  2 Feb 2024 08:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1706864133;
+	bh=9y1paqiSjtE07Weh2QloWiCQOyB0q+cBO1seRMkGQ5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=jSwxgw1oinexsw8k0fTHX+F+36OtyHCsA6707oBJrYH9KWdzlxTFxDutKv68xnW/7
+	 UfEwG4imbeeLaBu6PF50zny0Ko3uNsUGcnXCuDGo1+za4PyofPz1YTmmAisLYRxKFB
+	 RQNEtNMBu9f4mZqqtdFvj/420c0CRGIdO2lNVRM1c+Tt7A+UEYdnw3BlWbxh7qyskM
+	 H8Sux6yJcmNlyAU3TI/EhMQzFPNECg7SVkuhX6S8KzUlkgRfEo4V1XBNWXyBzCx/xw
+	 rqlCB9HpUFzKqVIZgLcwTjE9Y9ZM4j1yCGlS2NHDhJXaruP5ECg+/CzSaLLAqKgwA2
+	 J40BhzF+wbxFA==
+From: Daniel van Vugt <daniel.van.vugt@canonical.com>
+To: 
+Cc: Daniel van Vugt <daniel.van.vugt@canonical.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Helge Deller <deller@gmx.de>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Add X1E80100 PCIe support
-Message-ID: <ZbyuANz7Jza7lzZS@linaro.org>
-References: <20240129-x1e80100-pci-v2-0-a466d10685b6@linaro.org>
- <20240129-x1e80100-pci-v2-2-a466d10685b6@linaro.org>
- <30360d96-4513-40c4-9646-e3ae09121fa7@linaro.org>
- <Zbyqn5wnH7yCe38P@linaro.org>
- <20240202084806.GF2961@thinkpad>
+Subject: [PATCH 2/2] fbcon: Defer console takeover for splash screens to first switch
+Date: Fri,  2 Feb 2024 16:53:55 +0800
+Message-ID: <20240202085408.23251-2-daniel.van.vugt@canonical.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240202085408.23251-1-daniel.van.vugt@canonical.com>
+References: <20240202085408.23251-1-daniel.van.vugt@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240202084806.GF2961@thinkpad>
 
-On 24-02-02 14:18:06, Manivannan Sadhasivam wrote:
-> On Fri, Feb 02, 2024 at 10:41:03AM +0200, Abel Vesa wrote:
-> > On 24-02-01 20:20:40, Konrad Dybcio wrote:
-> > > On 29.01.2024 12:10, Abel Vesa wrote:
-> > > > Add the compatible and the driver data for X1E80100.
-> > > > 
-> > > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > index 10f2d0bb86be..2a6000e457bc 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > @@ -1642,6 +1642,7 @@ static const struct of_device_id qcom_pcie_match[] = {
-> > > >  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
-> > > >  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
-> > > >  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
-> > > > +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
-> > > 
-> > > I swear I'm not delaying everything related to x1 on purpose..
-> > > 
-> > 
-> > No worries.
-> > 
-> > > But..
-> > > 
-> > > Would a "qcom,pcie-v1.9.0" generic match string be a good idea?
-> > 
-> > Sure. So that means this would be fallback compatible for all the following platforms:
-> > 
-> > - sa8540p
-> > - sa8775p
-> > - sc7280
-> > - sc8180x
-> > - sc8280xp
-> > - sdx55
-> > - sm8150
-> > - sm8250
-> > - sm8350
-> > - sm8450-pcie0
-> > - sm8450-pcie1
-> > - sm8550
-> > - x1e80100
-> > 
-> > Will prepare a patchset.
-> > 
-> 
-> NO. Fallback should be based on the base SoC for this platform.
+Until now, deferred console takeover only meant defer until there is
+output. But that risks stepping on the toes of userspace splash screens,
+as console messages may appear before the splash screen. So check for the
+"splash" parameter (as used by Plymouth) and if present then extend the
+deferral until the first switch.
 
-Right, so since the SM8250 is the one that has the core version 1.9.0,
-should we just the sm8550 compatible as fallback for all other ones.
+Closes: https://bugs.launchpad.net/bugs/1970069
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Daniel van Vugt <daniel.van.vugt@canonical.com>
+---
+ drivers/video/fbdev/core/fbcon.c | 32 +++++++++++++++++++++++++++++---
+ 1 file changed, 29 insertions(+), 3 deletions(-)
 
-Yes, I know that there is SM8150, which has core version 1.5.0, but it
-is still 1.9.0 compatible.
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index 63af6ab034..5b9f7635f7 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -76,6 +76,7 @@
+ #include <linux/crc32.h> /* For counting font checksums */
+ #include <linux/uaccess.h>
+ #include <asm/irq.h>
++#include <asm/cmdline.h>
+ 
+ #include "fbcon.h"
+ #include "fb_internal.h"
+@@ -146,6 +147,7 @@ static inline void fbcon_map_override(void)
+ 
+ #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+ static bool deferred_takeover = true;
++static int initial_console = -1;
+ #else
+ #define deferred_takeover false
+ #endif
+@@ -3341,7 +3343,7 @@ static void fbcon_register_existing_fbs(struct work_struct *work)
+ 	console_unlock();
+ }
+ 
+-static struct notifier_block fbcon_output_nb;
++static struct notifier_block fbcon_output_nb, fbcon_switch_nb;
+ static DECLARE_WORK(fbcon_deferred_takeover_work, fbcon_register_existing_fbs);
+ 
+ static int fbcon_output_notifier(struct notifier_block *nb,
+@@ -3358,6 +3360,21 @@ static int fbcon_output_notifier(struct notifier_block *nb,
+ 
+ 	return NOTIFY_OK;
+ }
++
++static int fbcon_switch_notifier(struct notifier_block *nb,
++				 unsigned long action, void *data)
++{
++	struct vc_data *vc = data;
++
++	WARN_CONSOLE_UNLOCKED();
++
++	if (vc->vc_num != initial_console) {
++		dummycon_unregister_switch_notifier(&fbcon_switch_nb);
++		dummycon_register_output_notifier(&fbcon_output_nb);
++	}
++
++	return NOTIFY_OK;
++}
+ #endif
+ 
+ static void fbcon_start(void)
+@@ -3370,7 +3387,14 @@ static void fbcon_start(void)
+ 
+ 	if (deferred_takeover) {
+ 		fbcon_output_nb.notifier_call = fbcon_output_notifier;
+-		dummycon_register_output_notifier(&fbcon_output_nb);
++		fbcon_switch_nb.notifier_call = fbcon_switch_notifier;
++		initial_console = fg_console;
++
++		if (cmdline_find_option_bool(boot_command_line, "splash"))
++			dummycon_register_switch_notifier(&fbcon_switch_nb);
++		else
++			dummycon_register_output_notifier(&fbcon_output_nb);
++
+ 		return;
+ 	}
+ #endif
+@@ -3417,8 +3441,10 @@ void __exit fb_console_exit(void)
+ {
+ #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+ 	console_lock();
+-	if (deferred_takeover)
++	if (deferred_takeover) {
+ 		dummycon_unregister_output_notifier(&fbcon_output_nb);
++		dummycon_unregister_switch_notifier(&fbcon_switch_nb);
++	}
+ 	console_unlock();
+ 
+ 	cancel_work_sync(&fbcon_deferred_takeover_work);
+-- 
+2.43.0
 
-Or maybe we should rename the config to 1_5_0 and have the sm8150
-compatible as fallback for all these platforms.
-
-> 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
