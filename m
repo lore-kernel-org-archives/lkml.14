@@ -1,255 +1,70 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0DFC2CF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 03:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BD7C2CD
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 03:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706843725; cv=none; b=u3iHGgvjNsq24c+MlUdhhVgwBOYHiTkh7VlGOGQa4x+Ocbv+ZWXSR14KYv9AASkVZ9flhIeuulhOjjDzFt+rY7YuV9EjxHnVAuxB7iYiLrYVqjydd4KfTZm1Wwb8aeeohEmbh0iugtA1ntih/dyjVasGO1XERGcS133h0Kb2XHg=
+	t=1706843770; cv=none; b=eZiXFbCpmByfYegVd4vndaZyIFdjhOVcTgTVsWg3CO10H7s1XTUtnnK/7JOqyc0VO3m9i2ISFqhKN353tqW03SWXcH30KJf65gLqj+ht26bDcZOnX36K97P0b5YVnkVLiK8Bx0NE/64nU3yF5diezkW+asQHPdItPqSO79r2GO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706843725; c=relaxed/simple;
-	bh=+aKsF4bZUw1R7o/3cYRtqYTnwDl/ul3fVHGiEe8I1EI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=FBp4Qk7GsMUgFVz4eX2SnAc70Li2a36Boz6aYrn5S9s+HhIuyW1KdYAtUxuIEQYWQaDIWVaLgXp+12WQhF86c51ucv3NlYAQahfe2PAX3Wsg2Hj4flf7kwTLAPwGk+jFQiXKbLx4OOxgv/slLjlT9fitphpvisYa1TWaBHytnKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RqhlkDgU; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqhlkDgU"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55f63fd3dd8so6355a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 19:15:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706843722; x=1707448522; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5tbMa2Y0zXDlCnN04UdSXdSWMrrR/rUx45iZWj/g4cU=;
-        b=RqhlkDgU40fFrHKyb/kWWVA2uhhQyOHZuBgzRPFdgNI1801bSD2pnTZl+3VRQuHbRz
-         ZUBj+/J7AbDBDddhnYXbPlNedplLREDtY3rO3yd2ogqS7E3Els6CKVcm8/6V8bubOkJ/
-         e7V6Dq4FQilFTrtXTobRqrbeWRYQM/wNj2LsEoTFBinbdpsZaOwsfvv2AT3K/BU+7Mkf
-         9kcyQrZubgShvBnHmUfPQF9eV+4SSQ872o5phImO8fin5Ol9mDPdeCLn2DWTzJIC37TD
-         l2tfYYL8VKqPXoya47PyIcALY7lbyGbeso4RU9vHGz7gmbp4XAhslXdprxrAr5NgZ5kg
-         u6Iw==
+	s=arc-20240116; t=1706843770; c=relaxed/simple;
+	bh=hRH8z0CGDpBh5Pg4CWenL/clDAB+lvyYzuERxsx3zYg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=N2M++qi9iaMQPnKyQE73QJF1/TDY3ivGs8y3Drq3VTQdnW28C8bbTpwo5WZZdCETTs8viR1KzUomZ9dnHHw1QiU6M4v95TDG5fl/cSfTb8BCozGUS+TNzQpgadTirvYju3csY62MfdhsaZPuoXZDNEvKxuXoOd+zbx5qvoiUdCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363ab88c5b0so8498075ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 19:16:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706843722; x=1707448522;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5tbMa2Y0zXDlCnN04UdSXdSWMrrR/rUx45iZWj/g4cU=;
-        b=aRxrWdnEh2ugZyEEB7VR4p8Ks+6q3Zve7ItiWQdf+Z+ENmMkUDNNDHqlecUoFcRkKg
-         347esPLmR6joowRxxmQsVfCkZfbloqser1UWovvXA5cU68Vf73BOALgASJmNLIlZB+II
-         efdtnm8g0Sy6B8SMXeC1ezcYe+vTtuOXgoSEJRQiMnV3NkwMLk9ixPgydIbpfmcY2Gbi
-         8DdoMuhcHVq1jw9NEIrUMP/VrjDhEm9CpbL6i5pH+WHQhpMMS51Myw5qamMoyCznuSyV
-         5wg5R6OaST82LZGlNvlqMeLB6eejKvc63uphEbtD98foQzIYue5Y+viGVqUrqKb2bsIu
-         +ZSQ==
-X-Gm-Message-State: AOJu0YwyEFOvzem7e0L2T2Qo1M4d7vajQHQLi5TX8qTdUT1rBeUL1PBC
-	Y1w7yIZz1MlATvt/Nz42/kMfSTmR+KQQZsO9oLqezkDQseapFPPWJzLTmJ/8yXpZo3tlUZhtOxN
-	W7odFMgEPolHliGN52VvigJhoBc+/DYZjwSuw
-X-Google-Smtp-Source: AGHT+IHeBmo0iI/CF7yQpc5a3P4jwIWNuulPfEyk+hpP8ZFTKhZLVbX0RzAe8SgBRYbu8IMS8jXp352GwiCcAquWmAo=
-X-Received: by 2002:a50:d598:0:b0:55f:e704:85ce with SMTP id
- v24-20020a50d598000000b0055fe70485cemr37702edi.3.1706843721564; Thu, 01 Feb
- 2024 19:15:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706843768; x=1707448568;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hNTh82Q50FGeOQ0uxlR1JVA0g+Lrvi8VKG5mDfKH6To=;
+        b=MMzKX47GXxkRlGeW6tzqUDeYQOqNbcZkA1+DraVJR/xzpXS8UAfX4ei5tKFxp5cvUp
+         EL1xI9WWxY3sp/SXpA/ECJdVRdKalpowu3JHWpevBXi2XrRNJC0OVc+C4PRj3DpAGKon
+         dC/73gfzd/0karbcEdMjSmmxOvoKpOC3iO1U0cayf0FN9ElvXOZv9EkDFmVAcVjirAfY
+         TuSr2i8xnYaVaYB0TEF+BDFoZBEPkfga76r3G9TAeKEyhNWQxm1XEc8P/qT8Wo8Rq+Vf
+         WkwrV9EczGRxUQXhXxRuDZe5Uahhj6J1hbYiM1Lg2LAFTPS/pY54xEb3diUGDbsOZ1NO
+         09qQ==
+X-Gm-Message-State: AOJu0YwshKu5TffcZIuBWqV8qPZGHD96rT2NVNIC2v/DuNP4nfo+YinK
+	QVcLVLcw1iojtvYsQPeGdjJQR7wXwznGcZRfoHWBaULEMzA7Uw6jrFhlNC9SPaEwFR/kpkXKaEw
+	joXrOUsNo+pEU55g8k3y5H0tzk/neCwm0/6u6MZfHpygvou/hxvK8Z2X8RQ==
+X-Google-Smtp-Source: AGHT+IFoBV+yKuRhED0KZlH6rWY0juqKzQRPnh5csdK0Al/tRfwHf6G/ImjX17qjydVhGO2lHIX2KZjibcwi1lLMD+MOgvXwOpVk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver>
-In-Reply-To: <20240201204512.ht3e33yj77kkxi4q@revolver>
-From: Jeff Xu <jeffxu@google.com>
-Date: Thu, 1 Feb 2024 19:14:42 -0800
-Message-ID: <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
-	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
-	usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+X-Received: by 2002:a05:6e02:144e:b0:361:a5f4:bab4 with SMTP id
+ p14-20020a056e02144e00b00361a5f4bab4mr670388ilo.5.1706843768397; Thu, 01 Feb
+ 2024 19:16:08 -0800 (PST)
+Date: Thu, 01 Feb 2024 19:16:08 -0800
+In-Reply-To: <20240202024950.941119-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000080a6e906105d883a@google.com>
+Subject: Re: [syzbot] [ntfs3?] KASAN: slab-out-of-bounds Read in mi_enum_attr
+From: syzbot <syzbot+a426cde6dee8c2884b0b@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 1, 2024 at 12:45=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * Jeff Xu <jeffxu@chromium.org> [240131 20:27]:
-> > On Wed, Jan 31, 2024 at 11:34=E2=80=AFAM Liam R. Howlett
-> > <Liam.Howlett@oracle.com> wrote:
-> > >
->
-> Having to opt-in to allowing mseal will probably not work well.
-I'm leaving the opt-in discussion in Linus's thread.
+Hello,
 
-> Initial library mappings happen in one huge chunk then it's cut up into
-> smaller VMAs, at least that's what I see with my maple tree tracing.  If
-> you opt-in, then the entire library will have to opt-in and so the
-> 'discourage inadvertent sealing' argument is not very strong.
->
-Regarding "The initial library mappings happen in one huge chunk then
-it is cut up into smaller VMAS", this is not a problem.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-As example of elf loading (fs/binfmt_elf.c), there is just a few
-places to pass in what type of memory to be allocated, e.g.
-MAP_PRIVATE, MAP_FIXED_NOREPLACE, we can  add MAP_SEALABLE at those
-places.
-If glic does additional splitting on the memory range, by using
-mprotect(), then the MAP_SEALABLE is automatically applied after
-splitting.
-If glic uses mmap(MAP_FIXED), then it should use mmap(MAP_FIXED|MAP_SEALABL=
-E).
+Reported-and-tested-by: syzbot+a426cde6dee8c2884b0b@syzkaller.appspotmail.com
 
-> It also makes a somewhat messy tracking of inheritance of the attribute
-> across splitting, MAP_FIXED replacement, vma_move, vma_copy.  I think
-> most of this is forced on the user?
->
-The inheritance is the same as other VMA flags.
+Tested on:
 
-> It makes your call less flexible, it means you have to hope that the VMA
-> origin was blessed before you decide you want to mseal it.
->
-> What if you want to ensure the library mapped by a parent or on launch
-> is mseal'ed?
->
-> What about the initial relocated VMA (expand/shrink of VMA)?
->
-> Creating something as "non-sealable" is pointless.  If you don't want it
-> sealed, then don't mseal() that region.
->
-> If your use case doesn't need it, then can we please drop the opt-in
-> behaviour and just have all VMAs treated the same?
->
-> If it does need it, can you explain why?
->
-> The glibc relocation/fixup will then work.  glibc could mseal once it is
-> complete - or an application could bypass glibc support and use the
-> feature itself.
+commit:         02153319 Kconfig: Disable -Wstringop-overflow for GCC ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=101765d3e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ac580c73b7cf3629
+dashboard link: https://syzkaller.appspot.com/bug?extid=a426cde6dee8c2884b0b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10e774b7e80000
 
-Yes. That is the idea.
-
->
-> If we proceed to remove the MAP_SEALABLE flag to mmap, then we have the
-> heap/stack concerns.  We can either let people shoot their own feet off
-> or try to protect them.
->
-> Right now, you seem to be trying to protect them.  Keeping with that, I
-> guess we could either get the kernel to mark those VMAs or tell some
-> other way?  I'd suggest a range, but people do very strange things with
-> these special VMAs [1].  I don't think you can predict enough crazy
-> actions to make a difference in trying to protect people.
->
-> There are far fewer VMAs that should not be allowed to be mseal'ed than
-> should be, and the kernel creates those so it seems logical to only let
-> the kernel opt-out on those ones.
->
-> I'd rather just let people shoot themselves and return an error.
->
-> I also hope it reduces the complexity of this code while increasing the
-> flexibility of the feature.  As stated before, we remove the dependency
-> of needing support from the initial loader.
->
-> Merging VMAs
-> I can see this going Very Bad with brk + mseal.  But, again, if someone
-> decides to mseal these VMAs then they should expect Bad Things to
-> happen (or maybe they know what they are doing even in some complex
-> situation?)
->
-> vma_merge() can also expand a VMA.  I think this is okay as it checks
-> for the same flags, so you will allow VMA expansion of two (or three)
-> vma areas to become one.  Is this okay in your model?
->
-> >
-> > > I mean, you specifically state that this is a 'very specific
-> > > requirement' in your cover letter.  Does this mean even other browser=
-s
-> > > have no use for it?
-> > >
-> > No, I don=E2=80=99t mean =E2=80=9Cother browsers have no use for it=E2=
-=80=9D.
-> >
-> > About specific requirements from Chrome, that refers to "The lifetime
-> > of those mappings are not tied to the lifetime of the process, which
-> > is not the case of libc" as in the cover letter. This addition to the
-> > cover letter was made in V3, thus, it might be beneficial to provide
-> > additional context to help answer the question.
-> >
-> > This patch series begins with multiple-bit approaches (v1,v2,v3), the
-> > rationale for this is that I am uncertain if Chrome's specific needs
-> > are common enough for other use cases.  Consequently, I am unable to
-> > make this decision myself without input from the community. To
-> > accommodate this, multiple bits are selected initially due to their
-> > adaptability.
-> >
-> > Since V1, after hearing from the community, Chrome has changed its
-> > design (no longer relying on separating out mprotect), and Linus
-> > acknowledged the defect of madvise(DONOTNEED) [1]. With those inputs,
-> > today mseal() has a simple design that:
-> >  - meet Chrome's specific needs.
->
-> How many VMAs will chrome have that are mseal'ed?  Is this a common
-> operation?
->
-> PROT_SEAL seems like an extra flag we could drop.  I don't expect we'll
-> be sealing enough VMAs that a hand full of extra syscalls would make a
-> difference?
->
-> >  - meet Libc's needs.
->
-> What needs of libc are you referring to?  I'm looking through the
-> version changelog and I guess you mean return EPERM?
->
-I meant libc's sealing RO part of the elf binary, those memory's
-lifetime are associated with the lifetime of the process.
-
-> >  - Chrome's specific need doesn't interfere with Libc's.
-> >
-> > [1] https://lore.kernel.org/all/CAHk-=3DwiVhHmnXviy1xqStLRozC4ziSugTk=
-=3D1JOc8ORWd2_0h7g@mail.gmail.com/
->
-> Linus said he'd be happier if we made the change in general.
->
-> >
-> > > I am very concerned this feature will land and have to be maintained =
-by
-> > > the core mm people for the one user it was specifically targeting.
-> > >
-> > See above. This feature is not specifically targeting Chrome.
-> >
-> > > Can we also get some benchmarking on the impact of this feature?  I
-> > > believe my answer in v7 removed the worst offender, but since there i=
-s
-> > > no benchmarking we really are guessing (educated or not, hard data wo=
-uld
-> > > help).  We still have an extra loop in madvise, mprotect_pkey, mremap=
-_to
-> > > (and mreamp syscall?).
-> > >
-> > Yes. There is an extra loop in mmap(FIXED), munmap(),
-> > madvise(DONOTNEED), mremap(), to emulate the VMAs for the given
-> > address range. I suspect the impact would be low, but having some hard
-> > data would be good. I will see what I can find to assist the perf
-> > testing. If you have a specific test suite in mind, I can also try it.
->
-> You should look at mmtests [2]. But since you are adding loops across
-> VMA ranges, you need to test loops across several ranges of VMAs.  That
-> is, it would be good to see what happens on 1, 3, 6, 12, 24 VMAs, or
-> some subset of small and large numbers to get an idea of complexity we
-> are adding.  My hope is that the looping will be cache-hot in the maple
-> tree and have minimum effect.
->
-> In my personal testing, I've seen munmap often do a single VMA, or 3, or
-> more rare 7 on x86_64.  There should be some good starting points in
-> mmtests for the common operations.
->
-Thanks. Will do.
-
-
-> [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kerne=
-l/mem/mmapstress/mmapstress03.c
-> [2] https://github.com/gormanm/mmtests
->
-> Thanks,
-> Liam
+Note: testing is done by a robot and is best-effort only.
