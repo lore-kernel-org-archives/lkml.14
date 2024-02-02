@@ -1,151 +1,232 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5992D5FF13
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706863721; cv=none; b=FZCQuhWtWN8eAW74keLI5Hl+XfvF+07Jwf2ChZLJveYN1Un7vEXfivfsmW2VM7qZANw3N6r53RoFFKYATxtHfy0sZivaBuQVAMn1k8tMwYhKOOeh02HkyKKYgvD8GQqh983IXntjbiY34NYqaew+iKGv/HQUitOYBGTaiABnspo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706863721; c=relaxed/simple;
-	bh=sxX6A1jY2QUTnGziquDNeweaFL0CvM8/+UjRl9k6dKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dSVaY0y5XfRULNeFyv69IGY93yHQoSyqrpbkWKt9ciC2cztq6DQiliKUZZk8N58opQV4v9pdCnVGgTT8gwS37agVRkQ5vYy9AzYlnEZ4lx5xCKetLlRs3VyzDY1yDOcxMNhteI3/oobH+8I5EQ5RRt/VblC0za5Y8Vf/q53ABDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lpOw8qrT; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B571F5FEE8;
+	Fri,  2 Feb 2024 08:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706863735; cv=fail; b=pj+FmtiJgfqujefJnrgd9HqSpdlyXx7LB3v+NGOxoBVG8RZ6C5s4IcuzGK5gX20xQ/6bz9YqdM8UhL7YOUqeySq7deVb6st3E19fEAVqkE5tQbsl/MkyskeAyLh6fsU0aMCJeoGQaex+0OeMPUzhXBDmTVQoZo6ZHE6OkTHMMtg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706863735; c=relaxed/simple;
+	bh=EDcVrJTH4zKLQ6NuePnVdPVgqZbw4K+NWkYWDaSKTFY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qiCZZSDLaAQKO8szWHmofKal0K2Kz/7JIrAH//oDWCSKJP5Oc/uRpWNVx1Ko/PvxAATuQHtVe/mdDARTbOIuXzvhKn6zkycnDoud9iQ5UFBvRP5SMRDLHglc5d1zKUKfomD3wQL53kx82b6EjD/UGjBymB/lj6PFEM6SLGuYquQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=fTSr6wtI; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=Vu6slBKc; arc=fail smtp.client-ip=208.84.65.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cadence.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lpOw8qrT"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d73066880eso15971605ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 00:48:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1706863720; x=1707468520; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TItsROaQHyjEbJFLwPA4KC7BHoQVWA8FloUjcj8REgk=;
-        b=lpOw8qrT/7eEPoth7zOhVcLEX9OJWruHy4yfIfIdqquPCOvj67p5PV4ysnSJnTnSEW
-         qCwxnCOsE7nfCHNbgbIJwaz0M47byGNvhfWcaP0XNotebjeCXZcy9+zH09oTXXgunGO6
-         Nq/kYlqIz+ZHMwJlGCFVp7Wn0NFGLegQQdCbIkR1Dw2NlA2p8oXAuFSlyxzFUwq976c8
-         M5MpsXewjGUnFOrvBLuMfQVErU35kcW6O+bEIOHzvAmiA0ytXdAnV96XTQIr+j9pXjsI
-         nwicTAbaFkyI3IAfO2vAvHLlB0i5yud7pRqT/hW5SwIb3sjjWDc2eEVe3u3Tc2VOmZpD
-         aJ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706863720; x=1707468520;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TItsROaQHyjEbJFLwPA4KC7BHoQVWA8FloUjcj8REgk=;
-        b=j3K52nHef8o/B4iMwIT+XSJ7ZP4Ld4wCvb9f60KywZ+XkkKEcNAEkB9gsmCG5rbidq
-         hOXs9dN/zWmqNj2is/09C/JbfJwUigq0nKHpxRSApAGYOFZfLV3LW110oMhY/AbJpNPb
-         fs0rSrT3YrjGiAGpLKFEI6XibghIQbcTXOa67PBNbNn/ok4gMGEgIrEyOb5RxuIHO79L
-         tGp/kkWXgMvE5NIadbqx7q3ZQom9hLNQNNCot0H4Royskk7PZJGmHcMQeQXqlQ9vrckr
-         EQJwY4OP+l2AtUdNUNNmvXbJT0b3XWVG+LYsyRRb9r2f5zZV69Bzm66DozSANlkTxZZV
-         MiXQ==
-X-Gm-Message-State: AOJu0YxQsMCZPNvNv5wq2126MZ7lIyDDLcymg3bWRNmwokee+LKkxP+t
-	lI0wP3AznrqMMsMHOFKwGKPBgcHNN60hqBiJkEnoWFfmtyaYrwWt9quiM33AgX4=
-X-Google-Smtp-Source: AGHT+IFKJTKBJ1qZaEdzHRI6R3ULv7nSG6aIb1erLw8eof4kdB83jJqiV5IsTHm9r+TtHnCR1jZmWQ==
-X-Received: by 2002:a17:90a:9415:b0:293:eaec:fd67 with SMTP id r21-20020a17090a941500b00293eaecfd67mr7058447pjo.14.1706863719736;
-        Fri, 02 Feb 2024 00:48:39 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXTEwJbtE+hsf4fe9iCtFquFGaddaPiWZ6SnyAr0Einu4dhTiJbRdR7UsVh3wDijhbLCJy4cgq+WMa32kNB4DVIJ2CTvjvXu0QA+jepl2n5oU047rQfjh9yHEHsiiZ+3aZVPN2LIIzPHR59vKArcMIcOGJnWSGcxBhqXb0TN0G04w4wTYfPowAIDmztFuw3hXmNVpH/zvuBW4p/QvlVMswA4AJlDPiFke0+cJC8VBOZEPAQgzm4hnXEjuGRTNbSYioOI/Q++uuarI9wkhlxcl5I/iYC8zOTF+O5BAWMOKXF8GJmHwEOCoeUxQ21aQ/KeZpdSNG+68oMJ51E2GniW1hMaJrxApOTFBMSMCQGwlT0ne8wRSNvA2p5z5j4f9Y1MkgOUW/sdryWa5PgJxIHDqPHSheCrCT7xbEOIL8mNdusCKQpve8UzaMbCRG6fEz3HztBo4io4GCsbdgYf/1hEo6jY7yscTM4euX7ng586XMYFPY4lUWHwAeHZb1XYtHyRIKmbQ43J31dY25rJbxYBSi2SXlZTf1I+etr5v6pZjLBurjzWF9YzWmS602pOBZV+Th8SH99xW9a0+HO/D+WYHwmaRpdLRXX+xGrUGyJKI4iS992HPL5L2yc2C19Aiu/pkxxCLNMOjjMh6SewbZHG5CEqgva9cPnS9GJGjqgxTvbudduv7QTe0cO9p6r6VSsC1kZ
-Received: from sunil-laptop ([106.51.184.12])
-        by smtp.gmail.com with ESMTPSA id kb3-20020a17090ae7c300b0029647c140ddsm564007pjb.17.2024.02.02.00.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 00:48:39 -0800 (PST)
-Date: Fri, 2 Feb 2024 14:18:31 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Haibo Xu <haibo1.xu@intel.com>
-Subject: Re: [RFC PATCH v2 05/21] pnp.h: Return -EPROBE_DEFER for disabled
- IRQ resource in pnp_irq()
-Message-ID: <ZbysXzWX6FH5e6AH@sunil-laptop>
-References: <20231025202344.581132-1-sunilvl@ventanamicro.com>
- <20231025202344.581132-6-sunilvl@ventanamicro.com>
- <CAJZ5v0hHYa4c2U-tegdBtoTak=MirXwyBXbN9yrWPx_x-+yMzg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="fTSr6wtI";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Vu6slBKc"
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+	by mx0a-0014ca01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4121Z45T031728;
+	Thu, 1 Feb 2024 23:14:59 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
+	from:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	proofpoint; bh=h/Xm2O60ob9sIPF9tK4eX0LqkEnjrCzFgZzK0ZQmaS4=; b=f
+	TSr6wtIpPdo7BsZgAYeLDSwMggK1xYDzTO9c6HnwoAqXo3Q6hRst8hyu1cOJ0sXt
+	lyIqNNh2cZ3j6JoxDcOfC/vc5un968Hsz8MsBjOLf/WaKIh6MLMO4byqXy5k7+Qj
+	QhyeeSW8/XiH4b6bSTGQvb05x5i13rwkll9K7CJvyNlV7yEAiq+LkyFG+wO4mq1Y
+	mKu9dix4Am79bFxX7r+3a55GTCZoIWCwiGuL3L4zWY9HM4C3xjX4RWLO29uHhPkL
+	VGxkSazz40YGX3lSQm6S7fqrgckGBLpdAsHjXDG/2S+26MWWC3SBc5ktS8wN2Itf
+	NEUREzNpK2t3tcFWrZ/wQ==
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazlp17011010.outbound.protection.outlook.com [40.93.1.10])
+	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 3w0pv18rku-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Feb 2024 23:14:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=POAGijm9N1XfjjchQGdHrjutaHRZH7ah4L2gd4bm1AHWEFQOutxmY0d6uxuIk5de5w3dtOg8LOq0V5i7T5rnSMNTVHd5EM6dzg2k2fYrpfedSVN/zT7mp69Y/i7H/gX+RZ2xNRAJtRV166uTJTMAJtvs8MjYdx/uxbGO0TRTDowgd5Gl/1zIZV28sgoZ2tYzsVouZDwrPtWKT3JoIirXtjwYelO6rdDe8TDXFascMXh/eXa2mX1teOdunJhInzJcKEAUXe/Pp7qTYsiljqTAGKFT7p3FcNV8zYecIBEcHc++5MZbzFHvNprC226AJOjjjNGRvA34Xs/V0NHtiDaoPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h/Xm2O60ob9sIPF9tK4eX0LqkEnjrCzFgZzK0ZQmaS4=;
+ b=XirQZS7/CTT+Zujttfet8/B7NLiQ2hWhx8PuqWEG1YJ467LqFZF1f2u3YKvCeQwwUBwUtnV+qleRmGEmzeqUtN0fY7q4YpDI7o6Io2xRWDk5ihnIYqc8EWBhadQsi5p3R8OLLt8K1/sLKo4g/2nvNJHuciUgiXfLcTNRpsK16CpxV3HOHbU7Mcp7eNcDBaxKrIsj9Hi7Z7Hubr13L9iG8XUBjHA3KASV+42PsZx4ye2p5aw4eiCW/+uReo9aLPA/WQeJknIoQKPWT9tb43cKt84koPQtkI11J/IoOVO0sLJhpega01FN2cVCl9BbUq/Dz4Y0XYQMU+ruXo1uz+LOtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h/Xm2O60ob9sIPF9tK4eX0LqkEnjrCzFgZzK0ZQmaS4=;
+ b=Vu6slBKc7pkBS5HLZ5eX4urW7rDr6r5epVN9v/CT+lkaF6UJKCajRISK7j+Vw+P3gzKlizg2v8wa0FI55z2fstAjmmdT+qoXrgfmXLSLmztP1VCp0hVJcPT4L9RdjwpSgoWAtG6N64Sn1Powy2oEnJTr7VBZqRELSoh+Jn8q7Ss=
+Received: from PH8PR07MB9512.namprd07.prod.outlook.com (2603:10b6:510:228::13)
+ by DM6PR07MB6969.namprd07.prod.outlook.com (2603:10b6:5:1ea::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Fri, 2 Feb
+ 2024 07:14:56 +0000
+Received: from PH8PR07MB9512.namprd07.prod.outlook.com
+ ([fe80::9879:3a31:5e67:38]) by PH8PR07MB9512.namprd07.prod.outlook.com
+ ([fe80::9879:3a31:5e67:38%4]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
+ 07:14:56 +0000
+From: Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+To: "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@kernel.org"
+	<kishon@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>
+CC: Milind Parab <mparab@cadence.com>,
+        "rogerq@kernel.org"
+	<rogerq@kernel.org>,
+        "s-vadapalli@ti.com" <s-vadapalli@ti.com>
+Subject: RE: [PATCH v4 0/5] PHY: Add support for dual refclk configurations in
+ Cadence Torrent PHY driver
+Thread-Topic: [PATCH v4 0/5] PHY: Add support for dual refclk configurations
+ in Cadence Torrent PHY driver
+Thread-Index: AQHaPxJE0stSc5FwfUSMCrJWMh3uFLD20EIQ
+Date: Fri, 2 Feb 2024 07:14:56 +0000
+Message-ID: 
+ <PH8PR07MB9512A5DEE4A7EFBFB7C5FE53C5422@PH8PR07MB9512.namprd07.prod.outlook.com>
+References: <20240104133013.2911035-1-sjakhade@cadence.com>
+In-Reply-To: <20240104133013.2911035-1-sjakhade@cadence.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: 
+ PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1jMWNiNDI3Yy1jMTlhLTExZWUtYmMwOC1jYzk2ZTViNzM1MWFcYW1lLXRlc3RcYzFjYjQyN2UtYzE5YS0xMWVlLWJjMDgtY2M5NmU1YjczNTFhYm9keS50eHQiIHN6PSI0ODA0IiB0PSIxMzM1MTMzMTY5MjU2NzQwNjMiIGg9IkpqT2JzTXVZUTN0OU5jMElRQVAybWZGcy9oQT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH8PR07MB9512:EE_|DM6PR07MB6969:EE_
+x-ms-office365-filtering-correlation-id: ed9e8745-e74d-4a46-1d04-08dc23bea8bb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ X9II7cTUullzc1Ilo8MYpHjI38jS3fAHk0Nm9VUlcM/LN7+QRkGaboDqq4gcnuPlT64A9vsafnCw94GVST0Ch3+AOK0OdXWOFyDESLI9xW/DcZk5F32MtoRtXea+O5mOdY2mRPY9Guj4AMDd7faSL9UXRA3i4LeDPOgXSYV5KfOyGXgqGcvwjteD1qJ9MPNC2s6gPTVezZ791fRySddRomSzifW5RzO04QopnqJBmUlEJQ69LU1N9AvdFU22NIkkNPz44BaGUngXbiFN2mvtlRp4qJl17OPHvgg+80ClKwLlOiw7xh973G1N8zAxWXhw1QailkqPTdcu101smVgce4C9SYJ2ONgD2QmzhGMchPGK5Ona2M48DSnRMF6e8EA5YA9AfVQQEkimgUwIWs295e3yU7LLi6R9OxZiMfmuyw7QDLyZ2+587KbnGraftvAmdcR+NkJZDfmbR2QVvzFcqsdb88Y8M1L4Cc9U6SOvyuufx2ZAwlMnDhTiKIPiON1+Zz2DuKXB31/Fx8cRrTsajLz1lG1lLssJqOPaSW6CAV9ZJJcQGAC5+VxgB1WMdk4eT6CsaTE5u5dRROcKgavuxt4mPs8/DIW2GM+XKC2deDE=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR07MB9512.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(396003)(366004)(136003)(346002)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(33656002)(83380400001)(41300700001)(122000001)(110136005)(53546011)(9686003)(26005)(38100700002)(5660300002)(7416002)(4326008)(52536014)(966005)(66946007)(8936002)(66476007)(8676002)(54906003)(7696005)(6506007)(2906002)(478600001)(316002)(76116006)(66446008)(71200400001)(64756008)(66556008)(38070700009)(86362001)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?CrYbWW4+JjLVRqHUx4TmU/AtnTOeYq57rjB7TnG5HfVptUBqv7fuIZZQDjoT?=
+ =?us-ascii?Q?kPEEXb0NlRMiR27E5hY/8/dcBlWAgYy9K4Ci4haOfeYEGqLWHLTrAkaZpThs?=
+ =?us-ascii?Q?jYJX9caINnJ/ic0TnYIH05qQErJooHafcV3R2I/eff0F785cQYWsCsPTwdtG?=
+ =?us-ascii?Q?zdWdQ6Y2xpvsLgvYgNA/7DuYvyL/Ly1iBBZjWTF6ZNIC+1mtzch0nxOPWD5n?=
+ =?us-ascii?Q?LmVM6kQJ61gAdJu3z79fC/WDSyR7jonMKwg+5c81laRUZc0Jn6yxnmHDER2A?=
+ =?us-ascii?Q?5RGU/tx4m3yhsClT9AkBP3wpoLRgfhFqDiMmQ7nu7RjKha3bBYxHD5/UtJW7?=
+ =?us-ascii?Q?XfbZkaIz15Ynt7DVOGLlDhyysVC9AvitoXbPnNt5FKpOE9Sih8AF6E8Ytsar?=
+ =?us-ascii?Q?kp5QDJ3QB3zsgGLV65CiiqGwXpNqeM0Ojn3HBmuCp40iBjiiED1ZD7nQ/ae2?=
+ =?us-ascii?Q?zMTWfpY7VOL5Voefbl7C5vk5e3PnRhecUxYZO2TSq4v5tzgBVJp+e4tBL9gM?=
+ =?us-ascii?Q?U4vi2uKZiuqfoXmWzIpvPuo3H84wFbjP2oEuFiBTv/zZQ27iYFtr5saKQoD3?=
+ =?us-ascii?Q?r9y4OVht5OBjNVsV3vvLSRsVazpwVpqU4EmDmrRIntZcyoReflIVc1vY51eh?=
+ =?us-ascii?Q?xnXhnISYIAOrIdUdJURpFsClBlh5Mklb/GZ+bRnS+dXESPQTsYQN41RmhwEe?=
+ =?us-ascii?Q?/5zja2JjMmIndDmQPeIECevXFxudb47BCXmOJ3HxKC2GQPNZJEbRVB0iX9s9?=
+ =?us-ascii?Q?w/z52rNqID8KK1Pc3ObP8COtihxEe4jfi95aeo/4U5DHbrW3xbiEu6e9Q6Dq?=
+ =?us-ascii?Q?bNtAhUCHm2HV90UOiUidq+6zBkIykKJcCcjsXQeX0ENdCyKiqVCas9jxfvv0?=
+ =?us-ascii?Q?t7SGhZUU7ctghxh+VhrpUdQ2cj1qhLqeNqKF3+F2hXDdieO7L7BLtT/JMmlv?=
+ =?us-ascii?Q?6BlTsomQraq47MjntucJz9BxOUua7BPTRN0RoMzHNChdkRP1XbnXyghUza8F?=
+ =?us-ascii?Q?6cauOZojpeCtT8xA72iSnTGF7EVIvOtUeJMEp0RW116Qb8WKVvxDp0DployW?=
+ =?us-ascii?Q?kHXnxJ40uze92jnHwY2dvS7wzCJygdb73v6BRDP7MaPWH3VQi2JnpspsmJZH?=
+ =?us-ascii?Q?e+Pn8hgISikyAaaAWyE/kTRSwMpw2szTmLmG2JoBAciWv+OPjoqAJuVthwwc?=
+ =?us-ascii?Q?ZBycjFFa2eHqprci5gaBqD6CHnLSEZE5Gd2qhZUzubwe2FdTIIV4b1zblWq5?=
+ =?us-ascii?Q?jX/CHhlMS9XBW5S0R7CP9wVK8F/rKYFJRN5V1XopHtJ762qSUkxysPkBVfNe?=
+ =?us-ascii?Q?rmk0mMZJ7M7GUVsZBh/xhhZ1MDQnPSkqjBqBfy5yZcr8i1X/VPhGPHUtHI72?=
+ =?us-ascii?Q?nwmuFkkFWGteM2fxPjClO5U5F5lxBgmzzBLPjTTzvY+PPx1KQ4CGnAuxvhhW?=
+ =?us-ascii?Q?XKB1BjHml5tkSIqVF8rSxbndKLkQvNkj0mk+E+5lTcfa8YGYQvzvLagoT3zN?=
+ =?us-ascii?Q?Wip7fAVwZjPVEiPYQA0WLQB5bTFwj0lX0E5tM0GuOggLfc0+OGs2R26VRcEX?=
+ =?us-ascii?Q?ZahM3s4fYr0nRdUMlixNm65PrIwG+yJg7Q8mJNfR?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hHYa4c2U-tegdBtoTak=MirXwyBXbN9yrWPx_x-+yMzg@mail.gmail.com>
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR07MB9512.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed9e8745-e74d-4a46-1d04-08dc23bea8bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2024 07:14:56.0958
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Hev4d151Plri1VoP7T8cb/BvdpzPHJhsWtv2B8LTy4XIkbbznSBleVt9k0dxIqtDxtzuSOom8iBJ8G20PjM7qtq4NCkFW6cyc5U+C0r/CIk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6969
+X-Proofpoint-ORIG-GUID: oazyf1b8djKUCDAGsUwxrT8dLiRcOTTn
+X-Proofpoint-GUID: oazyf1b8djKUCDAGsUwxrT8dLiRcOTTn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-02_01,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 suspectscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 phishscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402020052
 
-On Thu, Feb 01, 2024 at 07:00:51PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Oct 25, 2023 at 10:24 PM Sunil V L <sunilvl@ventanamicro.com> wrote:
-> >
-> > To support deferred PNP driver probe, pnp_irq() must return -EPROBE_DEFER
-> > so that the device driver can do deferred probe if the interrupt controller
-> > is not probed early.
-> >
-> > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> > ---
-> >  include/linux/pnp.h | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/linux/pnp.h b/include/linux/pnp.h
-> > index c2a7cfbca713..21cf833789fb 100644
-> > --- a/include/linux/pnp.h
-> > +++ b/include/linux/pnp.h
-> > @@ -147,12 +147,18 @@ static inline resource_size_t pnp_mem_len(struct pnp_dev *dev,
-> >  }
-> >
-> >
-> > -static inline resource_size_t pnp_irq(struct pnp_dev *dev, unsigned int bar)
-> > +static inline int pnp_irq(struct pnp_dev *dev, unsigned int bar)
-> >  {
-> >         struct resource *res = pnp_get_resource(dev, IORESOURCE_IRQ, bar);
-> >
-> > -       if (pnp_resource_valid(res))
-> > +       if (pnp_resource_valid(res)) {
-> > +#if IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI)
-> > +               if (!pnp_resource_enabled(res))
-> > +                       return -EPROBE_DEFER;
-> > +#endif
-> 
-> What would be wrong with
-> 
-> if (IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI) && !pnp_resource_enabled(res))
->         return -EPROBE_DEFER;
-> 
-> ?
-Hi Rafael,
+Hi Vinod,
 
-Actually, this is v2 version of the patch and there is recent v3. Please
-take a look at [1] for the latest version.
+> -----Original Message-----
+> From: Swapnil Jakhade <sjakhade@cadence.com>
+> Sent: Thursday, January 4, 2024 7:00 PM
+> To: vkoul@kernel.org; kishon@kernel.org; robh+dt@kernel.org;
+> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org; linux-
+> phy@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org
+> Cc: Milind Parab <mparab@cadence.com>; Swapnil Kashinath Jakhade
+> <sjakhade@cadence.com>; rogerq@kernel.org; s-vadapalli@ti.com
+> Subject: [PATCH v4 0/5] PHY: Add support for dual refclk configurations i=
+n
+> Cadence Torrent PHY driver
+>=20
+> This patch series extends Torrent PHY driver functionality to support dua=
+l input
+> reference clocks.
+>=20
+> It also adds support for following multilink configurations:
+> - PCIe(100MHz) + USXGMII(156.25MHz)
+> - USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
+>=20
+> The changes have been validated on TI J721E and J7200 platforms.
+>=20
+> v1 of the patch series can be found at [1].
+>=20
+> Version History:
+>=20
+> v4:
+>    - Fixed error handling in patch 2/5 as per review comments for v3
+>    - Added Acked-by and Reviewed-by tags
+>=20
+> v3:
+>    - Updated clock description in DT documentation
+>    - Added Acked-by from Conor
+>=20
+> v2:
+>    - Rename refclk1 to pll1_refclk in bindings and in driver
+>    - Simplify clock-names as suggested by Rob
+>=20
+> [1] https://lore.kernel.org/linux-phy/20230724150002.5645-1-
+> sjakhade@cadence.com/
+>=20
+> Swapnil Jakhade (5):
+>   dt-bindings: phy: cadence-torrent: Add optional input reference clock
+>     for PLL1
+>   phy: cadence-torrent: Add PCIe(100MHz) + USXGMII(156.25MHz) multilink
+>     configuration
+>   phy: cadence-torrent: Add USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
+>     multilink configuration
+>   dt-bindings: phy: cadence-torrent: Add a separate compatible for TI
+>     J7200
+>   phy: cadence-torrent: Add USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
+>     multilink config for TI J7200
+>=20
+>  .../bindings/phy/phy-cadence-torrent.yaml     |  11 +-
+>  drivers/phy/cadence/phy-cadence-torrent.c     | 720 +++++++++++++++++-
+>  2 files changed, 719 insertions(+), 12 deletions(-)
+>=20
+> --
 
-However, your comment is still valid for v3. I will update as you
-mentioned.
+Could you please consider reviewing and merging this series?
 
-[1] - https://lore.kernel.org/linux-arm-kernel/20231219174526.2235150-7-sunilvl@ventanamicro.com/
+Thanks & regards,
+Swapnil
 
-Thanks,
-Sunil
-> 
-> > +
-> >                 return res->start;
-> > +       }
-> >         return -1;
-> >  }
-> >
-> > --
-> > 2.39.2
-> >
+> 2.25.1
+
