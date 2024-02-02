@@ -1,77 +1,135 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD6E5FDDF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479A15FDB9
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706863661; cv=none; b=L4GqEm/EmF+FRnU3TjsMu+cjbd0YZOOOWNoc4K/hbYggWtYe13WZFXXqWxGikpROR1raYX79Uj2b5803lTCI8aZCGibPTQPQrjYPCZjBUvFPxPxfm3048hRDsxIdzK8UXiukImxAAM2Hi1FOcPkuRhzWjeqkrXy8as3RNVk8tc4=
+	t=1706863700; cv=none; b=JFq3OdwUpae8b8WZC7/gRdliojQjB9hGnAJfOoyij9q2w2E+oRubIQz3X8sD4H4WXUNFQfUN1O7oIPCDXDqbXad0WNhIcoc7sbil80WBU7VcRhOSPV/pZ74OGPn/nId48iagkfoaCEGRzuhwyEadkImbIyCgjtrTWIGGStyziTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706863661; c=relaxed/simple;
-	bh=TWrQ56IBIk385dRlWI6v4D/KSIm0/vXb/VmuQXJsf9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pwCA4jhMg05toUur1x/MljVb8hgZxIX5rHk9pDdjOIK6pdDYNCA1s76vThrJb+9VNxeoaMp6+/mripNWH1AVvOIbXRTfueHZ5jdSUq3cnqFU8GwChVNkqL1HB9BnYR2XnEu0lX+SoRa91Tc70fzh2VkppiScDFhg2CUSpDcTnp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=f4ufHFKq; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1706863700; c=relaxed/simple;
+	bh=LiAej0P6H3lelIcHWT6MqNXG8GitRKn4IWPkqQrxu80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FFZuojRyP4Awn/KALjwytbPYwuC8LWPTO01WEh3xPluM4nGc812EjOrSpLPv4k5+/Fzui+M6j1o++zsgVGsONqX/a4XtoE5pemd1QffQ4tVVvE2nCIXpH8uJXzA7EVc3/85DL6N4WSlD8VPSePpn/YlGWqAfPLXB/kA5PRVj16c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GiUqHY7t; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="f4ufHFKq"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706863655; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Wz0VMCZ/c7UOCmvQesFR0QZjCIgWilm0YmsxOmqNZmk=;
-	b=f4ufHFKqOTM9WVNCI6Q8DwJ3ELwisMehXrCSXxpbEfy2r1FzDwJZCM8foAQkX1TgXEDRtz3PH56p+xaGWX51810HyTHAeaURnMSqBm+9UiQv/fBmDsEQGqZoR5xU4sGgOSJ1kuNgC+4vS8J/xnZhM3FuvtrsNrkqvAnFfCW9G20=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W.wVXmB_1706863648;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W.wVXmB_1706863648)
-          by smtp.aliyun-inc.com;
-          Fri, 02 Feb 2024 16:47:34 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: harry.wentland@amd.com
-Cc: sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] drm/amd/display: Simplify the calculation of variables
-Date: Fri,  2 Feb 2024 16:47:26 +0800
-Message-Id: <20240202084726.91920-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GiUqHY7t"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-59a58ef4a04so992203eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 00:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706863698; x=1707468498; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hlJ0Q1eyYAeEt1iSF7yEYdHF92/78rgfCFmqlm7ymlk=;
+        b=GiUqHY7t6ksByrPhVMZq4k2Nqy+d19xmKviC5GCE36FuWU+TLUbxb4ugf6oEUzHmVw
+         jnW+nnvyiEgeUJaTkX/o8fZnFAZTke486laaPqoJYbLNGFfEROq9L4+hF5xcsbFN1scf
+         FV3/GCtfPj+NGz5HRiFYqJ13pNSyCnxZsNfCgV3HZTJVHM4dASLluonO4H/qY9Y/TjUS
+         SOeAwCkVoKQ1tQxNycTionJOGDBorkb5JpIYH862+wd49VyYYYANtazPsYjDU1IsFdcZ
+         SjG0yPUvvsIqwDmiEjmEQTuVpWmt+PhburZV25XJV8/qdfWuyKQc07jKwes4Qakv/F+S
+         UXUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706863698; x=1707468498;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hlJ0Q1eyYAeEt1iSF7yEYdHF92/78rgfCFmqlm7ymlk=;
+        b=Evxc0+2tpV/2nHig0Dp/aJbgUUwspQdssdBg/oAKkfBiv2FQpLc8nZUjPuJzJTQe/g
+         07flcdWe0swcdGTqjTnVPekmw7u6FvN/u6gPmeVwfsAAkbr67ztH1NQ8ar0IdN8Nxvtk
+         2PAEXqs81EOEKETQPA9H/5CnYd2WLN4DkcXUtMeA4lETwTSCU47eSq8kVdBFUeuAjSgR
+         zaEboLBjXZ7A4z7soEfKhRdPavqBVSht+wXmJyrzwhk3cQV52BF6qNd/bKmT1eB7jGWE
+         9Sji62dZ2JirlIKmt72eN8eC66Fnqz1OhDmkZ9KvIeKVHEx44bFSsnFcXzat7MO0AtQL
+         1sTg==
+X-Gm-Message-State: AOJu0YzAkrO4oZw99vABIAUwzI5rHW4ZCGbBIr+66gKPx+amppXG38P6
+	wakFmGQ8nTG9EvwrpTv64bst9vWtulebMHlZ6oBCwlS06n9ELjZqaJjQp2v/8w==
+X-Google-Smtp-Source: AGHT+IE4PDm8o+AXey/Gd8FKV4mwvNH75w1LkrJJ3WwLZ8OPLToVszBQ0k9VkjHiOCfQ1gFSIpW0yg==
+X-Received: by 2002:a05:6358:d094:b0:176:4a7f:8bb5 with SMTP id jc20-20020a056358d09400b001764a7f8bb5mr1548797rwb.1.1706863698223;
+        Fri, 02 Feb 2024 00:48:18 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX6//Rl/NFEukCqVE5Wbpo16UIfbgJW1PzRJxb2gPR1eyzOgM6Ogqnjzj7fm5OrIxm8zp/ARM5LyfDNk+Eb1n+je7xqDtXm2ObbvLLoEMEpPD/zxF/1bDxLOeeovBh0WVeYHPfo5p1tLWl0rHSbsUrhcX2DpZyVutiJuRbZ3Q9+9Ensax0nw5Ti/sbotn/RlutRKK934e8eIEIAGI2BFoUHMn5H6pbf+yY9qaZPiADrfetMvkw0zKNhY7VZoQJUHUF5EjJWlZvgTWuVdzj1gcSrs20DdgOZ41l7G591tx7uXOQMyBU9fL0=
+Received: from thinkpad ([120.56.198.122])
+        by smtp.gmail.com with ESMTPSA id n4-20020aa78a44000000b006dd872c00dasm1107990pfa.96.2024.02.02.00.48.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 00:48:17 -0800 (PST)
+Date: Fri, 2 Feb 2024 14:18:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Add X1E80100 PCIe support
+Message-ID: <20240202084806.GF2961@thinkpad>
+References: <20240129-x1e80100-pci-v2-0-a466d10685b6@linaro.org>
+ <20240129-x1e80100-pci-v2-2-a466d10685b6@linaro.org>
+ <30360d96-4513-40c4-9646-e3ae09121fa7@linaro.org>
+ <Zbyqn5wnH7yCe38P@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zbyqn5wnH7yCe38P@linaro.org>
 
-./drivers/gpu/drm/amd/display/dc/dml2/dml2_utils.c:236:49-51: WARNING !A || A && B is equivalent to !A || B.
+On Fri, Feb 02, 2024 at 10:41:03AM +0200, Abel Vesa wrote:
+> On 24-02-01 20:20:40, Konrad Dybcio wrote:
+> > On 29.01.2024 12:10, Abel Vesa wrote:
+> > > Add the compatible and the driver data for X1E80100.
+> > > 
+> > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index 10f2d0bb86be..2a6000e457bc 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -1642,6 +1642,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+> > >  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+> > >  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+> > >  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+> > > +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+> > 
+> > I swear I'm not delaying everything related to x1 on purpose..
+> > 
+> 
+> No worries.
+> 
+> > But..
+> > 
+> > Would a "qcom,pcie-v1.9.0" generic match string be a good idea?
+> 
+> Sure. So that means this would be fallback compatible for all the following platforms:
+> 
+> - sa8540p
+> - sa8775p
+> - sc7280
+> - sc8180x
+> - sc8280xp
+> - sdx55
+> - sm8150
+> - sm8250
+> - sm8350
+> - sm8450-pcie0
+> - sm8450-pcie1
+> - sm8550
+> - x1e80100
+> 
+> Will prepare a patchset.
+> 
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8169
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/gpu/drm/amd/display/dc/dml2/dml2_utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+NO. Fallback should be based on the base SoC for this platform.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml2_utils.c b/drivers/gpu/drm/amd/display/dc/dml2/dml2_utils.c
-index 1068b962d1c1..f15d1dbad6a9 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/dml2_utils.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/dml2_utils.c
-@@ -234,7 +234,7 @@ static bool get_plane_id(struct dml2_context *dml2, const struct dc_state *state
- 		if (state->streams[i]->stream_id == stream_id) {
- 			for (j = 0; j < state->stream_status[i].plane_count; j++) {
- 				if (state->stream_status[i].plane_states[j] == plane &&
--					(!is_plane_duplicate || (is_plane_duplicate && (j == plane_index)))) {
-+					(!is_plane_duplicate || (j == plane_index))) {
- 					*plane_id = (i << 16) | j;
- 					return true;
- 				}
+- Mani
+
 -- 
-2.20.1.7.g153144c
-
+மணிவண்ணன் சதாசிவம்
