@@ -1,153 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C2314A4CF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 17:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9759514A4F2;
+	Fri,  2 Feb 2024 17:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706895001; cv=none; b=jfJ9NAGv9UXdwNKzsVGwlXxo82K0+fNJl3T/lDZ7cbu2LRxXO9+8XLddFH2fkclQzVXsfjHXi02sMdlPfxEfm1Xeby7r546TYdAttXaO0FL182I8ixZ2I7sws4aE2R753f/T6Hf3nPquUgXmzPr70X/dW4esL+ZAbeCjqZwodsg=
+	t=1706895008; cv=none; b=Qm5J8OslidCGbEMYV/W6SemtlgVmyIp1u6pvVRL6Rkt8Btan5NHCEE46O2Mv9FjaD2p6Q3XOVwKsJVsLn7E+LInwVvEvx5CHTlSbRcxQnzJ+Qzb/AgXUlGpDKzocGEsVBbGHwBNJNt0tLp7KaqgdtGVYYu18Zq9pae0jNNLNG1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706895001; c=relaxed/simple;
-	bh=kO6aAZ0pKgUTlZffrnrlc+wT24FMTAWDS5t51S8QsRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BdhjiPNV/HUDSAprKUqRsfobX4jgFHCP0kZj2qnQkJyqjg3RJQ9abLrDjJM3vRIyUCKMMjAyKrsHw7UcGkgbO6SmHNoDqsGusE1mZaw3yHJW3BOIEdMaQJmz5sDFm4am2T8+D8bvvRMpQLBLTITFFPSpW1Q0b21FWMXuLDte5Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e8P2pZFm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706895008; c=relaxed/simple;
+	bh=wqNuAPanptQME98W67sLtw8ZvWcSrR//ShLTuJ17UaQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pWOkgH9RXvcY+1iVywbXDd7gwsf0QJonbSTmicom2BHlX+zHBI7QElgLO4IFJaTTuXFm0/00M5h+ggNEvxAjY7OWXL5rNg3j7R7TGLTL6UAXldpUweh4an7B6mP7qKJRtaCQrd+Z01KMcL0XJ6EuucoQ6rFwsTVJkyEGLH5quJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BGVzjsA6; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e8P2pZFm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706894998;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BGVzjsA6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BF38C40007;
+	Fri,  2 Feb 2024 17:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706894998;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VQmKdJtNienJwWNmm6v9a0mzgCKgqEXZjhpUCZP6vMg=;
-	b=e8P2pZFmfxBDAyrCpbVNmEnS83f0mHlqI/ZGP4cz0G4ouljEf2Sf+diThYtk6jRa4Mb76F
-	twv9e43PR9fZ0NMwU56KI9E+Erk73yF8eKOev0CNzhCm4GzyL/trhoEaIUk8hFD4+wyW3f
-	SleOme6M22UV+Lc/xE6l+U0P6GjK38M=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-408-jMk0UdvjPc-kQqr5sch0XA-1; Fri, 02 Feb 2024 12:29:56 -0500
-X-MC-Unique: jMk0UdvjPc-kQqr5sch0XA-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-51136eb0923so873225e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 09:29:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706894995; x=1707499795;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQmKdJtNienJwWNmm6v9a0mzgCKgqEXZjhpUCZP6vMg=;
-        b=bI7QYlzQNaQncAOeR+Ef92dvkeSqeAd8GxwnHACjUJfgKpWWYfJR0CA31V+xsvtmpC
-         aC7GtoGkEFfVYPaXFS/cAud++G2FAtpz335fVQ0j4D/M38zi0js3WQWZ2dD6cXtfMOul
-         thSMxD7PxbuzmFKfWww/2MxNEcDfk0JtBJtMjVl63dI1ElJehTnkeJbFLEcLcw7VIs6L
-         aTmhmVCKBjB2PmgqxByeNJGPNKigquuL/EdfqtAxvNb6PcnCZOP4KeVBxTaEsWEE6WCO
-         2TVxk4QGoCl0k+w/jNZEqVZxu6HE8u08AFTuTLTtZgBW2Bc3Q1faAOwnrt3i68bNB0mR
-         +Paw==
-X-Gm-Message-State: AOJu0Yy3mUSmQvWWQSoMyLl/Lw/tgic9jhqad6Jj8TnuhcW7NXzEukWz
-	hwR12+wpmAq6+WmpiD0H0q4zJdpgiJpRMLpXwLdD/bfYBYQGbLYO66ACgia/iqciN5gqr8Vu8Fy
-	SHpoxsAfgFD+6LrDTK1zBW9y1BLMPd6qfLfVBS3AzLhjk6kATcp7RpofMGW5SJw==
-X-Received: by 2002:a05:6512:3a84:b0:511:2aea:5b3f with SMTP id q4-20020a0565123a8400b005112aea5b3fmr4834441lfu.37.1706894995418;
-        Fri, 02 Feb 2024 09:29:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGYbd2IfyUkPZvdVN76TlGAqKG60jZr6iMuCWE+d3Zul7AoBzIwQueHDOiJOLbiR6SnxqUaIA==
-X-Received: by 2002:a05:6512:3a84:b0:511:2aea:5b3f with SMTP id q4-20020a0565123a8400b005112aea5b3fmr4834431lfu.37.1706894995079;
-        Fri, 02 Feb 2024 09:29:55 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXub7HTMncq+N4U2zioX9QPPfkBSBuaDAevR+5VsWrke7LH52Zdkt/yIWs63xEQf5apvORyKV0RzgWPUzqcu+YuB/K9q2tebZr6In6+FTTrXkPR5F37VcHYgym0IjoyRJ8R07Ydt38OW7xScgEUwYxEna3jzbUS+UI1uy34ELiv5VccXlX1v1r1zKhl69kATexxUMA0tTQhbFYKT5IIIqfoH4hNA1n2lA==
-Received: from [192.168.1.24] ([212.76.254.34])
-        by smtp.gmail.com with ESMTPSA id t15-20020a05600c450f00b0040fb01d61a3sm484220wmo.18.2024.02.02.09.29.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 09:29:54 -0800 (PST)
-Message-ID: <06e92b87-4d48-4519-b1db-6d7605bf3962@redhat.com>
-Date: Fri, 2 Feb 2024 18:29:53 +0100
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+FIIaUhKnjjImo2lXmcI5ga52r8L4n7S83Aop/cwrI4=;
+	b=BGVzjsA6m18eDYYQlpjHqj6iSi3qWCJgfHuP4KjmyGA6vLM+OZ++ZPTPu3glA9vGETzMQ1
+	7G8YKJzMNtM5rfSxRcv9buvL8rrcQXPNAsDuGDQh0Bx4DkSxk31pDBeL5JxvhQKKTKnl8X
+	sakENjwkaxhlfotrFmIP6RR82effY+SjOkm4C2PxiLgA0zCvW7BE4Y3JVd78DdceShuk6U
+	156ZQf6fCDWMZBqd9E4WWLY8jVT1e+C0j6VoQe9HSbNA0KT7inemWVm4yZHq9H3+qaySmi
+	8FuOi2sW5X9UVk+7PQlo8Q7gjslh1N0xKmciaTrmTa30eHuA0SfBAF86wz3CYw==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Fri, 02 Feb 2024 18:29:40 +0100
+Subject: [PATCH] spi: cadence-qspi: stop calling system-wide PM helpers for
+ runtime PM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86/amd/hsmp: switch to use
- device_add_groups()
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: naveenkrishna.chatradhi@amd.com, linux-kernel@vger.kernel.org,
- Carlos Bilbao <carlos.bilbao@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <2024020145-junior-outnumber-3e76@gregkh>
- <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com>
- <2024020243-blinks-pantomime-c51e@gregkh>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <2024020243-blinks-pantomime-c51e@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240202-cdns-qspi-pm-fix-v1-1-3c8feb2bfdd8@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAIMmvWUC/x2MQQqAMAwEv1JyNlCLKPoV8aBt1BystQERpH83e
+ BmYgd0XhDKTwGBeyHSz8BlV6sqA3+e4EXJQB2ddYxXoQxS8JDGmA1d+0PWttd63oVtW0FnKpPm
+ /HKdSPpR19q9iAAAA
+To: Mark Brown <broonie@kernel.org>, Apurva Nandan <a-nandan@ti.com>, 
+ Dhruva Gole <d-gole@ti.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+The ->runtime_suspend() and ->runtime_resume() callbacks are not
+expected to call spi_controller_suspend() and spi_controller_resume().
+Remove calls to those in the cadence-qspi driver.
+
+Those helpers have two roles currently:
+ - They stop/start the queue, including dealing with the kworker.
+ - They toggle the SPI controller SPI_CONTROLLER_SUSPENDED flag. It
+   requires acquiring ctlr->bus_lock_mutex.
+
+The cadence-qspi ->exec_op() implementation bumps the usage counter at
+its start. It might therefore run our ->runtime_resume()
+implementation. However, ctlr->bus_lock_mutex is acquired by
+spi_mem_exec_op() while ->exec_op() is being called.
+
+Here is a brief call tree highlighting the issue:
+
+spi_mem_exec_op()
+        ...
+        spi_mem_access_start()
+                mutex_lock(&ctlr->bus_lock_mutex)
+
+        cqspi_exec_mem_op()
+                pm_runtime_resume_and_get()
+                        cqspi_resume()
+                                spi_controller_resume()
+                                        mutex_lock(&ctlr->bus_lock_mutex)
+                ...
+
+        spi_mem_access_end()
+                mutex_unlock(&ctlr->bus_lock_mutex)
+        ...
+
+The fatal conclusion of this is a deadlock: we acquire a lock on each
+operation but while running the operation, we might want to runtime
+resume and acquire the same lock.
+
+Anyway, those helpers (spi_controller_{suspend,resume}) are aimed at
+system-wide suspend and resume and should NOT be called at runtime
+suspend & resume.
+
+Side note: the previous implementation had a second issue. It acquired a
+pointer to both `struct cqspi_st` and `struct spi_controller` using
+dev_get_drvdata(). Neither embed the other. This lead to memory
+corruption that was being hidden inside the big cqspi->f_pdata array on
+my setup. It was working until I tried changing the array side to its
+theorical max of 4, which lead to the discovery of this gnarly bug.
+
+Fixes: 0578a6dbfe75 ("spi: spi-cadence-quadspi: add runtime pm support")
+Fixes: 2087e85bb66e ("spi: cadence-quadspi: fix suspend-resume implementations")
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
 Hi,
 
-On 2/2/24 16:32, Greg Kroah-Hartman wrote:
-> On Fri, Feb 02, 2024 at 08:49:39AM +0100, Hans de Goede wrote:
->> Hi Greg,
->>
->> On 2/2/24 03:44, Greg Kroah-Hartman wrote:
->>> The use of devm_*() functions works properly for when the device
->>> structure itself is dynamic, but the hsmp driver is attempting to have a
->>> local, static, struct device and then calls devm_() functions attaching
->>> memory to the device that will never be freed.
->>
->> As I mentioned in my reply to v1, this is not correct.
->>
->> There is a global data struct, but that holds a struct device
->> pointer, not the device struct.
-> 
-> Ooops, I misread that:
-> 	static struct hsmp_plat_device plat_dev;
-> was not the actual device struct anymore.
-> 
->> The device itself is created with platform_device_alloc() +
->> platform_device_add() from module-init and it is removed
->> on module-exit by calling platform_device_unregister()
-> 
-> Ok, much better.
-> 
->> So AFAICT this should keep using the devm_ variant to properly
->> cleanup the sysfs attributes.
-> 
-> This devm_ variant is odd, and should never have been created as the
-> sysfs core always cleans up the sysfs attributes when a device is
-> removed, there is no need for it (i.e. they do the same thing.)
-> 
-> That's why I want to get rid of it, it's pointless :)
-> 
->> But what this really needs is to be converted to using
->> amd_hsmp_driver.driver.dev_groups rather then manually
->> calling devm_device_add_groups() I have already asked
->> Suma Hegde (AMD) to take a look at this.
-> 
-> The initial issue I saw with this is that these attributes are being
-> created dynamically, so using dev_groups can be a bit harder.  The code
-> paths here are twisty and not obvious as it seems to want to support
-> devices of multiple types in the same codebase at the same time.
-> 
-> But yes, using dev_groups is ideal, and if that happens, I'm happy.
-> It's just that there are now only 2 in-kernel users of
-> devm_device_add_groups() and I have a patch series to get rid of the
-> other one, and so this would be the last, hence my attention to this.
-> 
-> Again, moving from devm_device_add_groups() to device_add_groups() is a
-> no-op from a functional standpoint, so this should be fine.
+This is a draft patch highlighting a serious bug in the
+->runtime_suspend() and ->runtime_resume() implementations of
+cadence-qspi. Seeing how runtime PM and autosuspend are enabled by
+default, I believe this affects all users of the driver.
 
-Ok, I was not aware that the core automatically cleans up
-all the attributes anyways.
+I've tried my best to be exhaustive in the commit message. Have I missed
+something that could explain how the current implementations could have
+been functional in the last few revisions of the kernel?
 
-In that case this fine with me and I agree with merging this
-so that you can entirely remove the  devm_ variant:
+The MIPS platform at hand, used for debugging and testing, is currently
+not supported by the driver. It is the Mobileye EyeQ5 [0]. No code
+changes are required for support, only a new compatible and appropriate
+match data + flags. That will come later, with some performance-related
+patches.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Conclusion being: feedback from maintainers & others that know the
+driver and subsystem would be useful to bring this forward.
 
-Regards,
+Thanks all,
+Théo
 
-Hans
+[0]: https://lore.kernel.org/lkml/20240118155252.397947-1-gregory.clement@bootlin.com/
+---
+ drivers/spi/spi-cadence-quadspi.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index 74647dfcb86c..72f80c77ee35 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -1927,24 +1927,18 @@ static void cqspi_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ }
+ 
+-static int cqspi_suspend(struct device *dev)
++static int cqspi_runtime_suspend(struct device *dev)
+ {
+ 	struct cqspi_st *cqspi = dev_get_drvdata(dev);
+-	struct spi_controller *host = dev_get_drvdata(dev);
+-	int ret;
+ 
+-	ret = spi_controller_suspend(host);
+ 	cqspi_controller_enable(cqspi, 0);
+-
+ 	clk_disable_unprepare(cqspi->clk);
+-
+-	return ret;
++	return 0;
+ }
+ 
+-static int cqspi_resume(struct device *dev)
++static int cqspi_runtime_resume(struct device *dev)
+ {
+ 	struct cqspi_st *cqspi = dev_get_drvdata(dev);
+-	struct spi_controller *host = dev_get_drvdata(dev);
+ 
+ 	clk_prepare_enable(cqspi->clk);
+ 	cqspi_wait_idle(cqspi);
+@@ -1953,11 +1947,11 @@ static int cqspi_resume(struct device *dev)
+ 	cqspi->current_cs = -1;
+ 	cqspi->sclk = 0;
+ 
+-	return spi_controller_resume(host);
++	return 0;
+ }
+ 
+-static DEFINE_RUNTIME_DEV_PM_OPS(cqspi_dev_pm_ops, cqspi_suspend,
+-				 cqspi_resume, NULL);
++static DEFINE_RUNTIME_DEV_PM_OPS(cqspi_dev_pm_ops, cqspi_runtime_suspend,
++				 cqspi_runtime_resume, NULL);
+ 
+ static const struct cqspi_driver_platdata cdns_qspi = {
+ 	.quirks = CQSPI_DISABLE_DAC_MODE,
 
+---
+base-commit: 27470aa9b51a348f7edfb99641b5a9004f81e3e6
+change-id: 20240202-cdns-qspi-pm-fix-29600cc6d7bf
+
+Best regards,
+-- 
+Théo Lebrun <theo.lebrun@bootlin.com>
 
