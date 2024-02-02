@@ -1,89 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421DB146916
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18AF179A5;
+	Fri,  2 Feb 2024 15:58:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706889421; cv=none; b=moFJozw3U6HZgI6ue04K1QO6k+dDTJ6HfQ+WRbsELlhjzeT2ZqnVsOnBXwkrMOZS/NMf9E0hItvw6ea3mi1nF0QqL+7whiaZv7+qGr5cFn9xSopvRAApgapbGDWud7ruPawvMCwbJ3DGi+bjuAqqR80rJpv+4B8IYHJedSVW4eg=
+	t=1706889487; cv=none; b=TgnShTA+WMngeOtPWrw4B8yziL0TaMxnaETkXM1UHBAoktinyaxm6k5XGlNiW+6tp7REY8RhZ+86qKuW3rP65DYZaOrFdT6K/ddlidSxsgsFhNaibDr1z3/h8IwywT57+hE/tkvE0oCKc1uxB5BFMbzWB2Lyg5nFGgpbUDDOXGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706889421; c=relaxed/simple;
-	bh=MmO0Sers5UlYOvIhkdegHIwY3ye7rpzzr9dSXdHC/0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HakGpoKQV8CKeY44vBeiWFjxunJ6vKMK7tIcafIJRowgvyF+Ae3Ft9Lj3+sbKdFQ1yYkeI0kKTkPo7zl6t6ZZUdIu3soStoU6sR3hEmBbkLiUUZEdDCxADcU/wJZMoctAuR0//TFAznlwCcLeBR3hBxfMmAAGLohMjKk3OHk0us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK0DbzpH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706889487; c=relaxed/simple;
+	bh=wJKT5sIxNf/D+z4BQh9AyVtHvq/XuXC9v+TH4SmaVhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BONO3evOL9HHSXHoW5KyCvD0dAQ4fXrvx8iM2qIntBd2PkI7CHNwm8kds16tg4O3fHYg4/b9pWtb9HACOYuQ/SzRZlQIJDgCaJfuefHVZ//rYZBAG+jIGEM2RCYfyi2pCRH9+ponaDvw1BPC8gHZKz9fjHWFPVqVbV9ng7HP5mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa/+sWZx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK0DbzpH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFC3C43394
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:57:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa/+sWZx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335ABC433F1;
+	Fri,  2 Feb 2024 15:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706889420;
-	bh=MmO0Sers5UlYOvIhkdegHIwY3ye7rpzzr9dSXdHC/0E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FK0DbzpHUrAJYUPC+vn2IIX8xS6omoVzZBE8ov/RPcr2T7n27+ReQ1fNFaTKd1xYP
-	 54zlt4uAdtjO3ikHZ19YqYniazqlPYu1Nd1qx03scTR5WvgxWDZxA0RoGK5+aKrEnW
-	 we/wy45XOMGk+SGKbAtTv+32o57IPK6Cqg3iKM/Tj0fyG/vd17BcuwNHE9S2GImkd+
-	 mN7bzRMpfkJbFuYlWRnpz2B3Q5Uf8gXeCIxZYPf2lxhpxjFeXxaSiBPrESiONw86Cb
-	 DEBKiOX5k7UxsR/vsZwAKFjrsoPZj/qulPgpEGhyL+OyMaAE864FqsUwr0bKMQskMH
-	 5iPtiBKqytFmA==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5112d5ab492so2958468e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 07:57:00 -0800 (PST)
-X-Gm-Message-State: AOJu0YxXUq+zRxrzQRZ2+osxjVF5BTw304OLbu+9s/wO7MbB7jxvWHAF
-	Af0QzJS46oCZNXHaCZ92aT2cYwIDKxe5BHo4UETckOifr4rfImXqNFBGR8L93K58BgKRJ4u2ocY
-	0CMROyusT9jzbHb6D6j2EXa46Szc=
-X-Google-Smtp-Source: AGHT+IHqNlvYafMk1+0b461FMWQjXcpspXWu5GnSpp2uz9lVucLsHstGODLsZdjvf2AnS0uXTizXtd6fZqq79gASNcg=
-X-Received: by 2002:ac2:420d:0:b0:510:17b1:cfdd with SMTP id
- y13-20020ac2420d000000b0051017b1cfddmr3148277lfh.67.1706889419286; Fri, 02
- Feb 2024 07:56:59 -0800 (PST)
+	s=k20201202; t=1706889487;
+	bh=wJKT5sIxNf/D+z4BQh9AyVtHvq/XuXC9v+TH4SmaVhU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=sa/+sWZx+x6EWbUZhTKUbEeWga1LllPF+PKpXaA6jjhJYhsyRmGgqOt0nil0iseSt
+	 uAjvqTlMbaz/vgUazGmnTdGkZs3wkbAUal3EU9RpC+ZQ91jTvjydsnTmNXqU4dJBs+
+	 9OyHu2vCoZYwZNIxYXZdtFXq6becbC7ILFgILCfswe4Zi0XX7XVcMq7OUh95TnLYvr
+	 omeS4n0GlPzljshXa5PL9lCGuVG8z6YzethzKmN0qqAEvTsKnEqaceTegRkbd1PPxg
+	 LOlCpZqI1hOKbMOC7892Z4Vw9JUKYi9E41b6fvQLQXcmjoizLRep4LG14YOIcg7fV5
+	 Py/sPFu+6fuEw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id C214ACE2250; Fri,  2 Feb 2024 07:58:06 -0800 (PST)
+Date: Fri, 2 Feb 2024 07:58:06 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [BUG] workqueues and printk not playing nice since next-20240130
+Message-ID: <7b5a386e-2dcf-49f1-a8e9-c46d2a9f8800@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
+ <87le83ara7.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121235701.239606-1-masahiroy@kernel.org>
-In-Reply-To: <20231121235701.239606-1-masahiroy@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 3 Feb 2024 00:56:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQXw8owCpehxnUQG7upkENMezazzHFsdu9kggcZQLgykg@mail.gmail.com>
-Message-ID: <CAK7LNAQXw8owCpehxnUQG7upkENMezazzHFsdu9kggcZQLgykg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] x86: vdso: clean up vdso Makefile
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87le83ara7.fsf@jogness.linutronix.de>
 
-Hi x86 maintainers,
+On Fri, Feb 02, 2024 at 03:18:48PM +0106, John Ogness wrote:
+> On 2024-02-02, "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > So the system really did boot and is running just fine.  It is just that
+> > there is no console output.  Details, details!
+> >
+> > Is there anything I can do to some combination of workqueues and printk
+> > to help debug this?
+> 
+> The printk ringbuffer contents would certainly be interesting.
+> 
+> If you build the GDB scripts (CONFIG_GDB_SCRIPTS) then you will have:
+> 
+> (gdb) lx-dmesg
 
+This says no such command even though I do have CONFIG_GDB_SCRIPTS=y
+in my .config.
 
-Gentle ping.
+> As an alternative, you could copy the contents of
+> Documentation/admin-guide/kdump/gdbmacros.txt into your .gdbinit and
+> then will have:
+> 
+> (gdb) dmesg
 
-It has been more than 2 months since the submission.
+This one hangs.
 
+> There may be some hints in the kernel log as to why there is no console
+> output.
 
+On the other hand, next-20240202 doesn't show the problem.  No idea
+what might have changed.  :-/
 
-On Wed, Nov 22, 2023 at 8:57=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
->
->
->
-> Masahiro Yamada (4):
->   x86: vdso: consolidate targets and clean-files
->   x86: vdso: simplify obj-y addition
->   x86: vdso: use $(addprefix ) instead of $(foreach )
->   x86: vdso: use CONFIG_COMPAT_32 to specify vdso32
->
->  arch/x86/Makefile            |  3 +--
->  arch/x86/entry/vdso/Makefile | 28 +++++++---------------------
->  2 files changed, 8 insertions(+), 23 deletions(-)
->
-> --
-> 2.40.1
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+							Thanx, Paul
