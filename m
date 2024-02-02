@@ -1,40 +1,38 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED661768E6;
-	Fri,  2 Feb 2024 09:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCCD77629;
+	Fri,  2 Feb 2024 09:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865141; cv=none; b=NG49GrUUca0qrYEG9e00DsHuCIgmN9FJijnmUSEJNskw0tjnd+BiZ4zfWGrO3Oc5zfMKAmAboFxKpRYnx+0tC1Y8QXYClGh5Se1IC1PDQIzm99tuUgd4HOzLapHFDpWm6ZXoIZWOH8yOp9Qn79ZjkLYBdGkIrTovhc2zhM6SmVk=
+	t=1706865157; cv=none; b=riQEorA23allU3PhvicUklQJtmJSiJI4G/6EQzTFo8w3dfVO3HdMD81jxcfrE6xyIZp8HOsMaGu19uclFqAG2nPc6eNxucZAQpd8g+ZGln+RTcalDIy4vyxjdoC77AFPU6TeijkbxVgmLfeGw4oDayJBnAABzxksb/H7fKouPVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706865141; c=relaxed/simple;
-	bh=mKbj4nrp4DysHu5ieaVdYJT9MXIIya9/e61lxx3xm20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q3NqJO03e17sOCxNl8AIWGknb9Vq2gcH2HTjRsxQ2Bqib+BwRAOya03Fd4T2bw3L50YIU9I3GDcoCbT9rfRGGZjs8JZvHmxqW6j2wJ/z2FE4OIEaouBy5+Vtbmn0Tzd1w5vkIIhlxnI3n+Z9dA291rTQz0gQ/rw8FrmhsZsFa9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=TxRDHImx; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1706865157; c=relaxed/simple;
+	bh=PKmuhun5hicJU/NJ+sjbWZRyKiIfaq+KU/2m4Ypz33I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iMyUStjPplLItYOrJ3sdp+6oudTZmjd7uGrpRIEvFKnJLXenOeUBjcBGPTd3AkBpDuBQAvEFpnT/LaU/37zpUpWQ9gwiX3NDCIkRthE0s6D8kr64zUABHgPxQmXzhgMLl9sjABrWHcF1hhm8BiQpuSgsAZxpuU8t9qeR20pZqVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YoZ2lFXm; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="TxRDHImx"
-Received: from relay7-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::227])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 7CCF6C4EBC;
-	Fri,  2 Feb 2024 09:11:47 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6671420011;
-	Fri,  2 Feb 2024 09:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1706865105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y1NoW9zhjmqcQuUi6KkawAZpHX7sdUmwFKBiyO/7PKA=;
-	b=TxRDHImxBW1jNI5WVNtiHiElYu6N+plp8XivTZ6hMBaX315Na0NYYCaDzb66WoE7Cllpb4
-	ru8QC2pbYn+6vFyUANVu4eby5xhX3DrlOAzs3PJQy66gwpVnCp8pqMtI5RCYO83Bl9CPHM
-	7DlGNwhhEwwi5oBsuaGeqAtiAq0yPmOfeug6FBlujbTRFrzrs6j50z5TNOmVmdUH+BNATZ
-	DR6FygpLkPFRWJGxxLg0sTl2eJ4zUBjADblDxwLXOT4FR6bv+eR6P5Xt/ouJbQ5RmbKoez
-	/0K0bQ/uTyBgEZN/MO8qc4GnT6J+xg6AYPPOmr3HEMzU+rVvcSskEvG/+h/JXA==
-Message-ID: <1f0e67ba-edd7-4998-bc20-1de86bd53a68@arinc9.com>
-Date: Fri, 2 Feb 2024 12:11:37 +0300
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YoZ2lFXm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1706865133; x=1707469933; i=markus.elfring@web.de;
+	bh=PKmuhun5hicJU/NJ+sjbWZRyKiIfaq+KU/2m4Ypz33I=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=YoZ2lFXmvZ2OprFlyHqNnul+Ti7iHoHITbf/Qv0+sYybFDyFPApxcYZgco1NbLrC
+	 g3G9qqdg4oXTAQSst/+WjVpfztqZ/wzP7BkvkT6NansAGe0KEVTzOqueONLAHqWbN
+	 PBMhCUwEUNV4nZQjn0JBHn4O8QCoIIRmOGD5qTCqiYywWDMXh3HYMx5rDGCQ6yFRz
+	 pY7mbX0+aKaAR5/i0JjW2wxWmlNtuYxoTyjR+CtggGB1RueVvAK5/7zN54jaQTgE6
+	 rLhBbiSgoKdGSWvYX0C7ZAjsrvlRLqMQfVIgkAwqA3uLr0r4mi+jz9SuEvhpTtizg
+	 e0CqsZELpXvnX/Tfag==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnpGw-1qhbb519uE-00pcid; Fri, 02
+ Feb 2024 10:12:13 +0100
+Message-ID: <b08603d6-cac1-4876-a56c-30c680d5dc52@web.de>
+Date: Fri, 2 Feb 2024 10:12:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,63 +40,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net RFC] net: dsa: mt7530: fix link-local frames that
- ingress vlan filtering ports
-To: Vladimir Oltean <olteanv@gmail.com>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Alvin_=C5=A0ipraga?= <ALSI@bang-olufsen.dk>,
- Frank Wunderlich <frank-w@public-files.de>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, tools@kernel.org
-References: <65bbf40d.170a0220.a87f4.becdSMTPIN_ADDED_BROKEN@mx.google.com>
- <20240201225943.abphuuavp7bkbrt6@skbuf>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <20240201225943.abphuuavp7bkbrt6@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+Subject: =?UTF-8?Q?=5BPATCH_v2=5D_Coccinelle=3A_api=3A_Add_SmPL_script_?=
+ =?UTF-8?B?4oCcdXNlX0tNRU1fQ0FDSEUuY29jY2nigJ0=?=
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: cocci@inria.fr, kernel-janitors@vger.kernel.org,
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>
+Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <chentao@kylinos.cn>
+References: <8d53ac92-9693-4ff9-948c-29b7fb252b89@web.de>
+In-Reply-To: <8d53ac92-9693-4ff9-948c-29b7fb252b89@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:WNCUmyqr1pA3HJoX6TmKsz0s9lqwB4W+ZMqtYmkzCS8cyhcxsx9
+ tAQx6sZaiCBtz9m4H2Ox0OhV7tD0tcSninKyEtTVwNLfWbhGiD9JCIPpzw7DW1Q7nvpTbNV
+ uTDlfbW8ZxrlscWTyEMoFq2A18KF0AbW71Vg0B/tCYy8nxDzSc/ybeSqszx7OcwAJhzxRgd
+ vATfRD6HOZ0v6XQYh43tQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:tTVq7jzpR08=;Ye8eBRyqLIxiAqAKtJr7JfjMptl
+ S5uHgF3J4FUjCnAwNxEyn/aBm81DuYwi8W4WDjpaq9MydncgDfwEbBXkwJJZJXIeadL7ucYnb
+ oyEVtHK8jNzKUpxdk2cKc+UZSGeK1WEpyEwDQFkmTrRf91cvFK5K+5LCmrqfoixHRIcuMTFJz
+ bPq0rFrUoao+APs7wVUE0G01IZhoqYfuBkU5oQzmrf6pphelpM09gbupzrgehoXYI/hshyAAW
+ lMb+typeC4i1wowqVjWc7DVXJb9gJMxOYRiFHv/i90ZqAftI1siCJHRHQh0Ljj7mpjY9uGPlg
+ 3J+8N7Fo6hEtq+wBGyBoWR4o52h+sFarmhaqEbHW3Vr3V33HZkpUajN5dUw3y9Dd7vg6w2Wph
+ 956D0XvJJbVpf8bDxz8l4Ft2YBmd9gXQlKtyIY5HUViKPTDisvsrx6FvtIZNopfQWMQq01KC/
+ zpwUD3JKpuVlwEGtlKW+G3dsfBgm13rgj93imZaw8b2eXHrkl0xddxIhvMZGm5fjkjsIZ1Tjs
+ I0CiAQERgPGNtTU4PWRymE2o9omIqGE4fDJ8kexA21WqkVbt6bwyxy5gTMoNyuWl1WQMDL+SV
+ jbEvFxuWBeol9//5Kp6eIOh5/PpNkitzHq0nJ3rmp1sOwqMRQy2XGsheW8sUyDFkadOK2ZiGH
+ JAt0UogtvCoEfkw6zv93QELD3AoB+ZJrrj7FgCeVdBLKRzDi8qIRo66QLPEosp5gV27UCnp38
+ cPAnm2qwkYVsz6iAKs8neuRff1Q4WellYdaVot+IakM13/qggfkOu6777fjsZC4DFySQZz+zy
+ VAx7rBZAaHem7dtr/fkvyNe9ejqfl7h/N2lz6ROjPi30Q=
 
-On 2.02.2024 01:59, Vladimir Oltean wrote:
-> On Thu, Feb 01, 2024 at 10:13:39PM +0300, Arınç ÜNAL via B4 Relay wrote:
->> base-commit: 4e192be1a225b7b1c4e315a44754312347628859
->> change-id: 20240201-b4-for-net-mt7530-fix-link-local-that-ingress-vlan-filtering-ports-6a2099e7ffb3
->>
->> Best regards,
->> -- 
->> Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> You sent this patch 3 times. What happened, b4 didn't work so well?
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 2 Feb 2024 09:48:11 +0100
 
-Odd, I've received only a single email of this patch.
+A wrapper macro is available since the commit 0a31bd5f2bbb6473ef9d24f0063c=
+a91cfa678b64
+("KMEM_CACHE(): simplify slab cache creation").
+Provide design options for the adjustment of affected source code
+by the means of the semantic patch language (Coccinelle software).
 
-Looking at lore.kernel.org, it looks like the b4 web endpoint properly
-submitted the patch to the b4-sent mailing list but for some reason changed
-the Message-Id before submitting it to the netdev mailing list.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
-This is the email with what the Message-Id should be, which only exists on
-the b4-sent mailing list:
+v2:
+* The reference for the previous commit was adjusted in
+  the patch description.
 
-https://lore.kernel.org/all/20240201-b4-for-net-mt7530-fix-link-local-that-ingress-vlan-filtering-ports-v1-1-881c1c96b27f@arinc9.com/
+* A constraint was added for the metavariable =E2=80=9Ctext=E2=80=9D
+  also based on information in a hint by Julia Lawall from 2018-02-17.
 
-This is the email with changed Message-Id that was submitted to the netdev
-mailing list:
+  [Cocci] Clarification for scripted SmPL constraints
+  https://lore.kernel.org/cocci/alpine.DEB.2.20.1802171531330.2205@hadrien=
+/
 
-https://lore.kernel.org/all/=%3Futf-8%3Fq%3F=3C20240201-b4-for-net-mt7530-fix-link-local-that-ingr%3F=%20=%3Futf-8%3Fq%3Fess-vlan-filtering-ports-v1-1-881c1c96b27f=40arinc9=2Ecom=3E%3F=/
 
-There're no brackets enclosing the Message-Id. That must be why Gmail
-modified it with the SMTPIN_ADDED_BROKEN disclaimer added for you. I can't
-come up with a theory as to why you've received it thrice though.
 
-Konstantin, could you take a look at what happened here?
+ scripts/coccinelle/api/use_KMEM_CACHE.cocci | 53 +++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 scripts/coccinelle/api/use_KMEM_CACHE.cocci
 
-Arınç
+diff --git a/scripts/coccinelle/api/use_KMEM_CACHE.cocci b/scripts/coccine=
+lle/api/use_KMEM_CACHE.cocci
+new file mode 100644
+index 000000000000..e158e4c7c1d1
+=2D-- /dev/null
++++ b/scripts/coccinelle/api/use_KMEM_CACHE.cocci
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++/// Simplify a function call by using a known wrapper macro.
++//
++// Keywords: wrapper macro conversion cache creation
++// Confidence: High
++// Options: --no-includes --include-headers
++
++virtual context, patch, report, org
++
++@initialize:python@
++@@
++def is_equal(text, id):
++   return True if text[1:-1] =3D=3D id else False
++
++@depends on context disable sizeof_type_expr@
++expression alignment, flags;
++identifier id;
++constant char[] text: script:python(id) { is_equal(text, id) };
++@@
++*kmem_cache_create(text, sizeof(struct id), alignment, flags, NULL)
++
++@depends on patch disable sizeof_type_expr@
++expression alignment, flags;
++identifier id;
++constant char[] text: script:python(id) { is_equal(text, id) };
++@@
++-kmem_cache_create
+++KMEM_CACHE
++ (
++-text, sizeof(struct
++ id
++-), alignment
++ , flags
++-, NULL
++ )
++
++@x depends on org || report disable sizeof_type_expr@
++expression alignment, flags;
++identifier id;
++constant char[] text: script:python(id) { is_equal(text, id) };
++position p;
++@@
++ kmem_cache_create@p(text, sizeof(struct id), alignment, flags, NULL)
++
++@script:python depends on org@
++p << x.p;
++@@
++coccilib.org.print_todo(p[0], "WARNING: opportunity for KMEM_CACHE()")
++
++@script:python depends on report@
++p << x.p;
++@@
++coccilib.report.print_report(p[0], "WARNING: opportunity for KMEM_CACHE()=
+")
+=2D-
+2.43.0
+
