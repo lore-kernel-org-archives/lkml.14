@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AF562816;
-	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A49D69D03;
+	Fri,  2 Feb 2024 09:19:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865573; cv=none; b=BzQWgkvNSCFG2VaV5/5Ue1UY3Ymtei0KFXP9rv6ReqcfLfxS2JUDRMCSq40ar2M4PHrSoMNIf4DRbnI8JYX1JTJ3PoSY2zbFWk1BkQIbhxaQS301K2HCdpDH7R2mFkxRkAp2EZyS1l2cqvlVPyufkTavtbS0r3k4O5BO/ZzVWTI=
+	t=1706865573; cv=none; b=EQRrbGlTzqVkAXb26XtMKkRrB7ULKnLfMwMnD5o62RhwJEMhvtfrMNGmUuPrPkmERhvUYxbtGieqiJGL3aeiMVLcsRskYEZSAoRbDR0Gq7Hi7Bx3a9B75eqxVhpijqVHfLhRZg+u3W0MhfyftIZusqQ4GFuKM/z5++/K01pUuWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706865573; c=relaxed/simple;
-	bh=urKbjaUWgGpmRsfGLlhmq0QU5w9x/bMdWCZ0Tma4ii8=;
+	bh=Mbj/3lKU288Yv0v6r0IvbWbLwZTL+8ODP93iUqv62yk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QEDFB7MLv/vBuCFu2llONfVglpNFo6KEg6K0cOfjAC3apmc11P04v5R0+gRRkJUlBn67L0Np7D1c7s1HlwpojQN6XchcfhpknAF8G2hH2xyseKEBH75+HLz8i58tAcRI2dJNo4uGUQq5jY+AXscbTJJ44bRBfP1/G9/kHHSiSKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PujNNZov; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ezCojt+zY+v7Fr1FeiKmXs2r/mtKu3S0Qfs/QmFTtZFHJsR/a1ZRvwvA8s+Jbl5Orv8xO2QYftctUiFAsrTPP2jPReIgs+ZXqK7NGnoM8ozbwy8SuxBtQ+ZgTs5T3Kz00pR/J8M4/tx8NUikdtDqmRvKqhRiEDbRpSWc4sbc+Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qH6LbbQ1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PujNNZov"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BC4B3C43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qH6LbbQ1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E0CA2C433B2;
 	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706865572;
-	bh=urKbjaUWgGpmRsfGLlhmq0QU5w9x/bMdWCZ0Tma4ii8=;
+	bh=Mbj/3lKU288Yv0v6r0IvbWbLwZTL+8ODP93iUqv62yk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=PujNNZovB8TFADhjdZ+fXuswL1UiwaS355iNsNditbq32kP6JJH8HG/CV4GN/7OM2
-	 uj51ZtoB/w5NKhHdPrIh8/4G6/Nizara0C998nxHW65ZrzSjKHjMMX7Vdzg3rFXRbR
-	 /PMBU7sIZl+Uh5BrUHTquDkrt8qhI4HJ6ssn7+5Pl0A7XPldlxMy8C6pDQ8EVgOCnn
-	 qiillI+YseDzOHmYWL48wktvtAQjPxsbteZfKfhQAt94NcLmWFqvUVePtHFXVhUDtU
-	 cKHf7RV7gDWlSvEb114+p2vzuC8vB2nHttckNrC+dgXIY7JgPNCy4KMHsx0eaYV3zF
-	 CtFOfl+gQlMHw==
+	b=qH6LbbQ1hx6SwdrsqjDFXPolLI9239TgPcuXgHodD0a7S4adaDRCBod+EZqjkCWss
+	 YOK59HOkvBJkKX2xmSGquNDi/lurWIv61IR8uUF6MH2Ar4oWKUrMiV+o5iG2CIBMtu
+	 dlq25ms16I8ygZHNcekxe9V9D/EhOyeNDXIZwzklanV5cm3syCGSIkTQTU7/r4KjT7
+	 xfa8N8wI2+5r1SiPQsgkjshTYndkMvv8XzWECEN/koC8OCbJ15JZOsmwduGcSbK7IG
+	 2Pd8rJr5U8N8Vu23E5ufKPcKzpZxrg+hDDrlDMUtTjgSsfvDB+AYsE507z94swCG7n
+	 xlVexIw4HbowA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14DFC4828E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B7EC48292;
 	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 02 Feb 2024 12:19:08 +0300
-Subject: [PATCH net-next v3 2/7] net: dsa: mt7530: call port 6 setup from
- mt7530_mac_config()
+Date: Fri, 02 Feb 2024 12:19:10 +0300
+Subject: [PATCH net-next v3 4/7] net: dsa: mt7530: move XTAL check to
+ mt7530_setup()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240202-for-netnext-mt7530-improvements-2-v3-2-63d5adae99ca@arinc9.com>
+ <20240202-for-netnext-mt7530-improvements-2-v3-4-63d5adae99ca@arinc9.com>
 References:
  <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706865569; l=2415;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706865569; l=1500;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=B4ubcnj0kkoG/x10O/6vsrHgrghUPFvE8EQyfqv241o=;
- b=3S1dUOXUt3XkWFYjkGi5E5aLXTgWmOauxCmS+JNwup4u8gHV95Ic0EIcSiuILU+dmpv06jo/I
- E6WP/g3PbsZAlC92rWs/2qG4cixotc26yIkGHOOyDwrKwkNIE/P//P2
+ bh=tzbZi99DdeWCfP5IhTMb0r535zllNsHp9+oBk2Ev3sU=;
+ b=brIWlBShcSKoFoPX9dBBoYEN0jSVs7sXUjO+lJf5MtIOqozJn6V4XrOrZADDkN4YWOXkBPo4b
+ N+oy7MharIHC3aVF2ir7ueafoDRXalrOj05Qh8hUNVl2NOV0LoOHHNP
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -77,86 +77,50 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-mt7530_pad_clk_setup() is called if port 6 is enabled. It used to do more
-things than setting up port 6. That part was moved to more appropriate
-locations, mt7530_setup() and mt7530_pll_setup().
+The crystal frequency concerns the switch core. The frequency should be
+checked when the switch is being set up so the driver can reject the
+unsupported hardware earlier and without requiring port 6 to be used.
 
-Now that all it does is set up port 6, rename it to mt7530_setup_port6(),
-and move it to a more appropriate location, under mt7530_mac_config().
-
-Leave an empty mt7530_pad_clk_setup() to satisfy the pad_setup function
-pointer.
-
-This is the code path for setting up the ports before:
-
-mt753x_phylink_mac_config()
--> mt753x_mac_config()
-   -> mt7530_mac_config()
-      -> mt7530_setup_port5()
--> mt753x_pad_setup()
-   -> mt7530_pad_clk_setup()
-
-This is after:
-
-mt753x_phylink_mac_config()
--> mt753x_mac_config()
-   -> mt7530_mac_config()
-      -> mt7530_setup_port5()
-      -> mt7530_setup_port6()
+Move it to mt7530_setup(). Drop the unnecessary function printing.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/mt7530.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/net/dsa/mt7530.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 330e22abc076..2d468a5f2e70 100644
+index fdaf65b58b72..c4d492e29fdf 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -415,7 +415,7 @@ mt753x_preferred_default_local_cpu_port(struct dsa_switch *ds)
+@@ -422,13 +422,6 @@ mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
  
- /* Setup port 6 interface mode and TRGMII TX circuit */
- static int
--mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
-+mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
- {
- 	struct mt7530_priv *priv = ds->priv;
- 	u32 ncpo1, ssc_delta, trgint, xtal;
-@@ -487,6 +487,12 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
- 	return 0;
- }
+ 	xtal = mt7530_read(priv, MT7530_MHWTRAP) & HWTRAP_XTAL_MASK;
  
-+static int
-+mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
-+{
-+	return 0;
-+}
-+
- static int
- mt7531_pad_setup(struct dsa_switch *ds, phy_interface_t interface)
- {
-@@ -2624,12 +2630,15 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		  phy_interface_t interface)
- {
- 	struct mt7530_priv *priv = ds->priv;
-+	int ret;
- 
--	/* Only need to setup port5. */
--	if (port != 5)
--		return 0;
+-	if (xtal == HWTRAP_XTAL_20MHZ) {
+-		dev_err(priv->dev,
+-			"%s: MT7530 with a 20MHz XTAL is not supported!\n",
+-			__func__);
+-		return -EINVAL;
+-	}
 -
--	mt7530_setup_port5(priv->ds, interface);
-+	if (port == 5) {
-+		mt7530_setup_port5(priv->ds, interface);
-+	} else if (port == 6) {
-+		ret = mt7530_setup_port6(priv->ds, interface);
-+		if (ret)
-+			return ret;
-+	}
+ 	switch (interface) {
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		trgint = 0;
+@@ -2253,6 +2246,12 @@ mt7530_setup(struct dsa_switch *ds)
+ 		return -ENODEV;
+ 	}
  
- 	return 0;
- }
++	if ((val & HWTRAP_XTAL_MASK) == HWTRAP_XTAL_20MHZ) {
++		dev_err(priv->dev,
++			"MT7530 with a 20MHz XTAL is not supported!\n");
++		return -EINVAL;
++	}
++
+ 	/* Reset the switch through internal reset */
+ 	mt7530_write(priv, MT7530_SYS_CTRL,
+ 		     SYS_CTRL_PHY_RST | SYS_CTRL_SW_RST |
 
 -- 
 2.40.1
