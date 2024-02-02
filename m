@@ -1,70 +1,170 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 594C7199C7
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 10:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61657A732
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 10:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871417; cv=none; b=OkUa3/AtYCewLj4vsIIwvKOKsVO5TWcGJD4a+xGTPjbHP+jgmQb1zB3vyKaRTG3q1n3wJkQArjG87/7OplkBdIXV3wZoFO4n3qYdnwAIspCPeKt45Xx4kuu2SkswWdbB5wAesE8mBB03y/3YyV3uDqsWjyVzpCDMf42aRzpoaQQ=
+	t=1706871535; cv=none; b=i6p+1JOSLfS3EbPdVFtRPK5iuLkikvpXJt80LtW9cG4Kdl8rlrqgkw39Rqe//Yh8Cvb1/t9IrNZ7YTBRiEjMTK2qc88DN87dNH8eAWYiCLgA5hm7jL1HhVr8CPN1h1HMy0CVKihLyGBTAM0nP0J3apaoTpHUlnSOex+9yGFVU28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871417; c=relaxed/simple;
-	bh=UhmxrKkpaIwAPkg2ey4m3RwDio87j4qiq2Bw8ceoDqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AxxRkoq+Ol1YzY/btvMBErS7WFqOURK8u2HyKARHphniFSUyuFgRRKqJos/doWnYZx2k94WRRxS7eAS2DYiAaplIWl3aVBOkVH9HzzjKz6cxtsWi21pXcicRfEys8BX05YHsOeVh9tV1jLa8+Hyee20xUyTeTlsbn+dLYMcaQag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2B1EDA7;
-	Fri,  2 Feb 2024 02:57:36 -0800 (PST)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1895D3F738;
-	Fri,  2 Feb 2024 02:56:52 -0800 (PST)
-Date: Fri, 2 Feb 2024 10:56:50 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Pin-Chuan Liu <flash.liu@mediatek.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	wsd_upstream@mediatek.com, cylen.yao@mediatek.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2] firmware: arm_scmi: Avoid to call mbox_client_txdone
- on txdone_irq mode
-Message-ID: <ZbzKckIhn8HQv5pW@pluto>
-References: <20240201095754.25374-1-flash.liu@mediatek.com>
+	s=arc-20240116; t=1706871535; c=relaxed/simple;
+	bh=KKLOo2UMVr4G+/v1i5f0jDik+0v3nO4WaF3+RQvnxgk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W4pvAXKiL/4Jn0k1OaW7lfjE1QvJq0g7DnKDQxuejWp+xd8sq/+ngeCXAxbZ88gSyHJh1kE4VK7fby6jK+nxITAvzp4H/cSKUgoZZWQYbPdCDh9IhR9v0ujx9cQ+hsnY9MlAdSbKQHw3qP4koqtY1aWIqtX1VxH2yHUDu0fizKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BWP0PyfI; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BWP0PyfI"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55fc9a581f8so1752242a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 02:58:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706871532; x=1707476332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3mZJtsuUhpLgRm6K29/sbH1fz9ZV/gafRus3vx/CI0U=;
+        b=BWP0PyfIMlupmMUxIQkE83AV5euIbKhmplZOt/PLH21iiDWDg6gjE+KXxpO9ZPEVip
+         DrRZFpUChYPFCLSe+3/fLgMv+LjWgBlrVOtcSZ/9Hua0n+CueSxtCqR40w0lmHOgyEOl
+         r/4kTUE76fiTFwcuW/NaD7BJIIfbUDwCCed6F3WBEdUIGYHAAbXqdKWcEHnpm2j2TdZD
+         cXDn4NJ+XfmByPz7WFnzgdT+FYvksL9MD2jkytfL2kS+sLa4GUIzj/Q/aNm6XE05oiDT
+         KGdU26nKJoMSUIT5Lnkw+3ITHI8fkKcS/7WlAiCDUImANVupvY0uRztfGSyoNMdwSrbK
+         ekGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706871532; x=1707476332;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3mZJtsuUhpLgRm6K29/sbH1fz9ZV/gafRus3vx/CI0U=;
+        b=oIxxeh9u2+MHO3hBZO+5lKdLmZD4vhu47yALjnhrS07m8/GeUBJqEmMAHKC4Lw58RY
+         iaITSY2V7/i6ahE9bkepOtQFFkN7dUyeRIOmD5rW0n35H/Q5elPvig9Rv5vLgI8GLZpW
+         oxnNPInmsTJ75nYjEVVpyVi8MfVk16nhSWPypCw60hhFXOqugXEWt752Pd7JKuqZvRJx
+         CFBMQM6bBhwZt5Jjbk89AqQ52sRDAivxKdiedVvuM4JlSAYMX4u0k2jo72TcLCPEl3g0
+         0Kqi2PQswp4RE7aRkhqf91Zx7o6P4fHfoqCPrM5MdeZ0YZwdaK9BoeKeI724eE/T//SB
+         jSow==
+X-Gm-Message-State: AOJu0YxwUe5g2j7exkZKip69wDc50F8pxs6+mgDAAVo5j0osqVl1ho0Z
+	ahZODfe0KjW2PDjuQbr9pqJ46HRFPkH0NvMZ1dishyxxfe8yng5ULsdhucpxbtg=
+X-Google-Smtp-Source: AGHT+IGevUIZrZ67IIM3v0mt+LvqP19kVFsU543KbhAyc9CyE5vhvyCpmw1xg7ldWGRg72KeGDUEyQ==
+X-Received: by 2002:a17:906:13d0:b0:a36:7c26:b6f with SMTP id g16-20020a17090613d000b00a367c260b6fmr1207765ejc.52.1706871532058;
+        Fri, 02 Feb 2024 02:58:52 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVt2KyYQUcxu5hGuL8mAgnHpyBZ4Ykp6sd9qwUmLz+wUZLMMlAQbdCzsDqdz1ATkmTx1IEEr4ogDnUneUc0BGq4RyhSWyrgqQWz7id4dzDkmUcLf3A5nSvMNa3W7GMDdJFb0ouuoTa+Ib59CesR6S85idpzru6SJooTTqTicY9E
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id vo3-20020a170907a80300b00a36fee1350dsm610865ejc.130.2024.02.02.02.58.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 02:58:51 -0800 (PST)
+Message-ID: <e337bfdb-34dd-428f-b0c5-defd93b24822@linaro.org>
+Date: Fri, 2 Feb 2024 11:58:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201095754.25374-1-flash.liu@mediatek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] arm: topology: Fix missing clock-frequency
+ property warning
+Content-Language: en-US
+To: Stefan Wiehler <stefan.wiehler@nokia.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240201123605.3037829-2-stefan.wiehler@nokia.com>
+ <dfccb849-67b6-489b-8e83-3df1f9b29877@linaro.org>
+ <9da01fb1-9bab-436b-af49-783e44821b26@nokia.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <9da01fb1-9bab-436b-af49-783e44821b26@nokia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 01, 2024 at 05:57:52PM +0800, Pin-Chuan Liu wrote:
-> On txdone_irq mode, tx_tick is done from mbox_chan_txdone.
-> Calling to mbox_client_txdone could get error message
-> and return directly, add a check to avoid this.
+On 01/02/2024 16:03, Stefan Wiehler wrote:
+>> Does this mean the /cpus property is like a default for when a CPU node
+>> doesn't specify the clock frequency, or does it mean that the /cpus
+>> property should only exist when all the values for each CPU are
+>> identical and thus the individual CPU node clock frequency should
+>> not be specified.
 > 
-> Signed-off-by: Pin-Chuan Liu <flash.liu@mediatek.com>
+> Good question, the device tree specification in Section 3.7 [1] says:
+> 
+>  > The /cpus node may contain properties that are common across cpu
+> nodes. See Section 3.8 for details.
+> 
+> And in Section 3.8 [2]:
+> 
+>  > Properties that have identical values across cpu nodes may be placed
+>  > in the /cpus node instead. A client program must first examine a
+>  > specific cpu node, but if an expected property is not found then it
+>  > should look at the parent /cpus node. This results in a less verbose
+>  > representation of properties which are identical across all CPUs.
+> 
+> So I think it is pretty clear that it should only be used for 
+> common/identical values.
+> 
+>> Aren't you adding new property? Is it already documented in the
+>> bindings? After a quick look I think this is not documented.
+> 
+> You are right, clock-frequency is not mentioned neither in arm/cpus.yaml 
+> nor in any other <arch>/cpus.yaml binding, but the DT spec has it as a 
+> required property [3]. Should I add clock-frequency to all 
+> <arch>/cpus.yaml bindings? Only the ARM one explicitly mentions 
+> following the DT spec.
 
-Hi Pin-Chuan,
+It should go to dtschema. dtschema cpu.yaml has it, so you need to
+propose such to cpus.yaml, probably you could experiment with:
+not:
+  - required:
+      - clock-frequency
+  - patternProperties:
+      cpu@....
+        - required:
+            - clock-frequency
 
-thanks for this, it was indeed sort of on my todo-list too, to allow MHUs
-equipped with Tx-Ack IRQ to work with SCMI.
+Anyway, you cannot just keep adding some OF properties to the code
+without documenting them.
 
-Having said that, this looks good to me in general, my only pain points
-are: the fact that we have to peek into the controller structures to know
-how it is configured, BUT I wouldn't know how to do it in any other
-way in fact as pof now...; and the fact that there is a constant runtime
-conditional check for each message sent even though the tx_ack irq presence
-can be detected once for all at setup time, BUT even this is not easily
-solvable as of now in the SCMI stack.
+Best regards,
+Krzysztof
 
-So, after all of this babbling of mine, I would say that  your patch is fine
-as it is, also because it is easy to backport; next week when I am back I'll
-give it a go on a couple of platforms and get back to you with a proper
-review/test.
-
-Thanks again !
-Cristian
