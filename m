@@ -1,66 +1,125 @@
-Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684001468E8
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.254.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CBE1872
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706888263; cv=none; b=RjZzpJJTfwfubR0FSNXLFn1kLTuxP5+pwxnx4/bssV25M3+1v4mI4o9foxFP0GO35rwy4fVkFgnTw9OkmlMoJNQlT0AiCFufxzpw+HrbDgIPh0maiP5PawxbVd944o/rNnwX+xOVrO+YHvIQ4tysYSdPaz0BdjVl3gDE9BIh8XQ=
+	t=1706888333; cv=none; b=QTYn8UG/3OKoa3gxezJF2TxJSpNBx/XC8e9nvatf5iuOZKMGjl+7lhlbVPvRH/bJj1HVfGDurSxwHxyfEfVj6ouN0t46K5OVVn1xpVGrSvzGBdZt9+zUjSXOgQ5aMoIOlcSqgxnCrzRiNR8dU3dyOoucKWbjeH3fGqH6PBt655U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706888263; c=relaxed/simple;
-	bh=amxXWOA8shkwZCqq409xMVqZnLPj+Od52yEZEeelVY0=;
-	h=To:From:Subject:Date:Message-ID:References:Mime-Version:
-	 Content-Type:Cc; b=gqUAeSjypYvlIBwT30ARKvQwBYdHd14Gc15cEzFmfFZMMVfnEQd26LZgb5g9tYB+2A8qf6d2hWx36r+4MRCu2BFrKnASKssNveZAr4TG7uH64gIsGCoEAuC8/C2JLvrWqAyri26DqFOttfA2bL6g5NyQ/bGd133+/hPXihGKoQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=m.gmane-mx.org; arc=none smtp.client-ip=116.202.254.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.gmane-mx.org
-Received: from list by ciao.gmane.io with local (Exim 4.92)
-	(envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
-	id 1rVvWp-0006F8-6z
-	for linux-kernel@vger.kernel.org; Fri, 02 Feb 2024 16:32:31 +0100
-X-Injected-Via-Gmane: http://gmane.org/
-To: linux-kernel@vger.kernel.org
-From: Holger =?iso-8859-1?q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
-Subject: Re: Kernel - 6.7.3 - failed to compile the module
-Date: Fri, 2 Feb 2024 15:32:24 -0000 (UTC)
-Message-ID: <pan$2ed7c$db97fd26$2ea3b30f$fdd2e024@applied-asynchrony.com>
-References: <CAHOGJipx37tUoiSp87Np4b0qzREj60+FEkdi_0X0_JoQW8cYeA@mail.gmail.com>
-	<ZbzwgtGUHK2Dj5eo@archie.me>
+	s=arc-20240116; t=1706888333; c=relaxed/simple;
+	bh=UYblkh2pH0hBjmVVJDctM71dsCbLqTeguVKb8o0oNq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8AtRM5AyfdowcMg+wDwCJOr0drI6GYW7wk1FYNu1zZ3GXJPNDuHyfXE/onZs3p1pVn8EZNzAuotRYDDvF9KvSpj4tCOB6MzG8s4uUz/2sEpOF8bBUslPluYb4kTXMtR+gFLO4qOh6difw9r6CaEQahpErGQ5UfWfbknPDiWdTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JE3/OF6P; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JE3/OF6P; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JE3/OF6P";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JE3/OF6P"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3D71021E95;
+	Fri,  2 Feb 2024 15:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1706888329; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7DD5NcDaE4KXkL73aEaoSi9tMEuvt0oHfZv8FAecTdE=;
+	b=JE3/OF6P/OICQQObQF+DQQ8eB5RUYQtXiBvl8Dn2OzA9BiY6zEjcozPa/dL3PdOzAJwq3g
+	xtL/tF+edkLZESb51NpOwIykl3OsP5jOwq5aGwJOUcehIb5xdVk07tkJBGuN690O9tJJwp
+	qmJ44rbfcdkW7XLFO8jmuAMJs+K2A5Q=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1706888329; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7DD5NcDaE4KXkL73aEaoSi9tMEuvt0oHfZv8FAecTdE=;
+	b=JE3/OF6P/OICQQObQF+DQQ8eB5RUYQtXiBvl8Dn2OzA9BiY6zEjcozPa/dL3PdOzAJwq3g
+	xtL/tF+edkLZESb51NpOwIykl3OsP5jOwq5aGwJOUcehIb5xdVk07tkJBGuN690O9tJJwp
+	qmJ44rbfcdkW7XLFO8jmuAMJs+K2A5Q=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 201AC139AB;
+	Fri,  2 Feb 2024 15:38:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5RaJBokMvWXWMwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Fri, 02 Feb 2024 15:38:49 +0000
+Date: Fri, 2 Feb 2024 16:38:48 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, zokeefe@google.com, david@redhat.com,
+	songmuchun@bytedance.com, shy828301@gmail.com, peterx@redhat.com,
+	minchan@kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm/khugepaged: skip copying lazyfree pages on
+ collapse
+Message-ID: <Zb0MiIONNRVhcIhC@tiehlicka>
+References: <20240201125226.28372-1-ioworker0@gmail.com>
+ <Zby-sHLDlmTRaUcd@tiehlicka>
+ <CAK1f24=7sy_Bczpt5YeDbkhfriYUc1=zreSFdGCxfF3R0D6sRQ@mail.gmail.com>
+ <ZbzfxNn4AYnTVFLh@tiehlicka>
+ <CAK1f24mvBkc2c=fHL6UxMhL2mgLHVrSwZfE5516bOR0yVdfZpQ@mail.gmail.com>
+ <ZbzmvwyTGeW18nJy@tiehlicka>
+ <CAK1f24kdyOnUjcpnrk6j4cF6bSFXQwwzFk9tM+jD4RsO_Hc4hA@mail.gmail.com>
+ <Zbz_ao0uBKabzKB1@tiehlicka>
+ <CAK1f24nHmvqm1XD_UkWUB7DmNdH0NEOKzpLgKDJ=UuPWO=rEHw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-User-Agent: Pan/0.151 (Butcha; a6f63273)
-Cc: linux-rdma@vger.kernel.org,netdev@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK1f24nHmvqm1XD_UkWUB7DmNdH0NEOKzpLgKDJ=UuPWO=rEHw@mail.gmail.com>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b="JE3/OF6P"
+X-Spamd-Result: default: False [-2.13 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,google.com,redhat.com,bytedance.com,gmail.com,kernel.org,kvack.org,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.32)[96.85%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 3D71021E95
+X-Spam-Level: 
+X-Spam-Score: -2.13
+X-Spam-Flag: NO
 
-On Fri, 2 Feb 2024 20:39:14 +0700, Bagas Sanjaya wrote:
+On Fri 02-02-24 22:52:49, Lance Yang wrote:
+> How about blocking khugepaged from
+> collapsing lazyfree pages? This way,
+> is it not better to keep the semantics
+> of MADV_FREE?
 
-> [also Cc: mellanox maintainers]
-> 
-> On Fri, Feb 02, 2024 at 08:55:47AM +0100, Michał Jakubowski wrote:
->> Regarding: https://bugzilla.kernel.org/show_bug.cgi?id=218445
->> 
->>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp1_execution.o
->>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp1_transition.o
->>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp2_execution.o
->>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp2_transition.o
->>   LD [M]  drivers/gpu/drm/amd/amdgpu/amdgpu.o
->>   MODPOST Module.symvers
->> ERROR: modpost: "sched_numa_hop_mask"
->> [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
->> make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
->> make[1]: *** [/usr/src/linux-6.7.3-gentoo/Makefile:1863: modpost] Error 2
->> make: *** [Makefile:234: __sub-make] Error 2
-> 
-> Do you have above build failure on vanilla v6.7.3? Can you also check current
-> mainline (v6.8-rc2)?
-
-No need to investigate further, this is caused by an additional non-mainline
-patch that has nothing to do with the mellanox driver.
-
--h
-
+I do not see any reason why. And you are not providing any
+actual reasoning either. Unless you have a very specific
+example in mind I do not think we want to change the current
+behavior.
+-- 
+Michal Hocko
+SUSE Labs
