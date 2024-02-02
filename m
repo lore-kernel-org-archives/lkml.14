@@ -1,216 +1,223 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B07148FF7
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 16:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB991487E7;
+	Fri,  2 Feb 2024 16:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706891719; cv=none; b=Sx5urjzBfqwb2EP/9LDtlpO+piGCD8vNLoHaIQAWRB6wYusPPD1GiABraYpfCiyoHmSUnE8XeXMRTwJlybj3NdbT5oJ9bdlSNtzwT0qOokXMO21BxM0pbol8ocvafHtPMXBgx/QQ7y2LmEnopHQ4vOoNRkmMzy0m3Q7Ez1sTijc=
+	t=1706891743; cv=none; b=WrxHHd2Ft3Uis8MtCsFVJ9P+4n8WJUyF30eLuY8hqHUFzT9q04OSyywknwKpzOe81Cg07ZNEOOLEVuA8gi6JExSQH//hekb7uywUKenn8bXtZg1R49KZgSPo0q5zGMTnwj/C97P584BVFzP+nxe/xQUz9Pmrptet0F6SvhVb2Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706891719; c=relaxed/simple;
-	bh=kwpElfF3ofIfsAZmHuoQRAHBjk2EW3k5g726E+VJsDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JIc/jGcGpIV94lgtI7eIXf9DnRjhUIEm9SM8IPZrrf92dx/IyS6nazjkIKEDsbUzZD2J9veknA+j6DbeuS0KevPCnsgrubscdc1gxh/vqXY7Eah6qDPHIsOSZUeh3B26JdoOg8L/0SVKcTOkM8DOUFBZUzinf99eE7ntXWLPyPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/+VXkQL; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706891743; c=relaxed/simple;
+	bh=jfP5FzF2iADTs+nsumSsf+1ytpdI2PwVjp67EKLfiAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cXX0uCT+gnqPo6sUSa6aNfgo3Rt3xMniTwN53BaU6TINU366mvT6YJq/PxaFj2zKjigCyemJPC4i6G+E559pfw3eNKtDxtIhWb0r416/mj0qbu2wB3BsqB1pCNIWgdkzJqMdnfkvdY5PxJe8XQ8xmqOG6evuMLpM8xRlPnX7ecA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DjWjJhKY; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/+VXkQL"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-59584f41f1eso683572eaf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 08:35:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706891716; x=1707496516; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q1b7WFP4fLnEs1xL56WMoxp/TFOgr4QRcoCxeMPjVlo=;
-        b=K/+VXkQLr8mNda3V4NtFBmXRbs5nH83HRO9Nz5Iv2Sej5I4n9wae0bYbALcDd55xgH
-         JN3WTDa2lMeMld+ip2UAawVQobEy2aGpcrOV0yUrgn7ni86X1sgjNqHnex5DwBsndxr5
-         v6gJ8es23/fB8rdWhIc3GuaCwYZARs3jsupMttDecsXJUxcx6TqxwD/GYe+9uvA1/gVG
-         Dx30BhJwhjkT/zANW/j4vfBip4R9qbsTHcp3NoBWG9FcNPw4CSEci0p3FA9cvjMs2vtK
-         erlxsebM46gd/K9LLNwfu0YKn9fICTV1U0vj5t7aRN2/wz5BnldvDW1R8DOsKKnlOOik
-         kHIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706891716; x=1707496516;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q1b7WFP4fLnEs1xL56WMoxp/TFOgr4QRcoCxeMPjVlo=;
-        b=PSw49RW92y1BriEbhsyWHHksQBIoakQiVoAC9csC0/Z7JBLvf75UsVxav/GoJatFAC
-         Gd4UL3Yjq1DsNkRP/OqRNuBjTCif7kT/d9zCVi5nHwhBATA7QXkWKrVpqSu2R9ceWjri
-         K3y7iBHwzQAvcvs7Zi/0ZWPc3pBvXcUvSPAfuJ34TI/w/SIbHjlV173WFaGxsMWYiQte
-         zD6Ehx6FZDqLmA6wGlPmlwcD7hTZ199lNjOAdNvRaD/Jz2/Ahwc0elx8MHU/QM4a2pMW
-         +QmvBnioW9yWLBtbzU5kRAdq8qvBTcvxuoD/zGNrIFFccmwCSU/PswHe2p1d6VTa+epR
-         X7ag==
-X-Forwarded-Encrypted: i=0; AJvYcCUGDTEBm4yhOzFtnk1UNxSEjYXz2kD1hPCNbRxkc4ry+glZ9LRc1UOM1tUjV1opynsh9fpovOS1sonYKdSmQwpPs1OD8gnv0y4Lwoqw
-X-Gm-Message-State: AOJu0YygqZG5/7Ca9lRXDG1KNYjSrKmyOGFpxsST1/uMxzNZxuUawIPj
-	XbjGH5cHsD5ZAfSapoZXNc9Tl84KgFNI4E2v7Hx2StTikUged1TtmDD0g208gw2AKkqtztoMQTi
-	BBHHmdpXNiTfgospr1K1Bv7wgSps=
-X-Google-Smtp-Source: AGHT+IErnTQmqrpMqoIYTqabnL481xBFUNOvS9QOYdaktWUqC2PEVKx1ai1Cf+/xhKYohW6eUcfmFUF8BtDo2ZNL9hg=
-X-Received: by 2002:a05:6820:2224:b0:59a:127c:bdfe with SMTP id
- cj36-20020a056820222400b0059a127cbdfemr7159032oob.1.1706891716497; Fri, 02
- Feb 2024 08:35:16 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DjWjJhKY"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D347240E01A2;
+	Fri,  2 Feb 2024 16:35:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BDgLq2vi6VrF; Fri,  2 Feb 2024 16:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706891735; bh=owu4C5rP9Sd62pQo+ZZmYYXOi0xhUhCRq+QLaeQVQpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DjWjJhKYuKNK0B335q79y2JbDvwkbghSEGXDReaL7Cg1RJtRKkXofVtq1nTBVZYFi
+	 NowRJnt6AZzjVGdQXfyoK3lTxR79KCU89p043iQp2G6OSDb5f1nfaTLW3z2H4RgZq2
+	 y9lrlWDxtzk8HVUP2YJ9wG0mhbKPb+0G0s0Mefn2qTxGLwkmbmyJYZfu0PoqABvXpt
+	 /8GfEiQDhzYMT695rw8G95eurTWucDepUJF1M6nIOMR4W4qp9eeZEj7Va1k5/hCl0b
+	 8Aq8IR9bgZjtCvxYrvcNFiUklU/dLr8+1+R48++a/I9ah0Ias/yQ3L5qKvu4CM28jG
+	 182l15VndVVs5pW2EmKozZh9+FWxpmJDtqdlidMwHmvrV+z19zjgp0aVcmqvsLjlQj
+	 EO1sEM9Ows2Mhs8BSraRTv6JfSrcqrtdn8mJDXFMY+vGq4ItmzIZhahm4T03KYvvgK
+	 tqoXR4Mxzz7of/FQGvXn3zaUDaPYWQQYkOReLU9tzWhw+0mIL1lbncx7JXbH0sXmay
+	 xwFfgNHMV0dBmFIWezmZLwFZNyhbY0XfGmjIhvbeyIl0H65UvzF8a+B6ElLl4M74yN
+	 Ee25ps5Kn2cvhQB2MRfVMeC9wlh9tvPRDKSGSZtUexgk9Vr8SgQd6whdz5pyTzBBBc
+	 jg42PO4t4LFSICDfcWKeKE14=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D894040E016C;
+	Fri,  2 Feb 2024 16:35:16 +0000 (UTC)
+Date: Fri, 2 Feb 2024 17:35:10 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
+	linux-arch@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH] x86/Kconfig: Remove CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
+Message-ID: <20240202163510.GDZb0Zvj8qOndvFOiZ@fat_crate.local>
+References: <20240129180502.4069817-21-ardb+git@google.com>
+ <20240129180502.4069817-23-ardb+git@google.com>
+ <20240131083511.GIZboGP8jPIrUZA8DF@fat_crate.local>
+ <CAMj1kXG9W0XeEVR4tXDDg0Ai9XPsZGrTJaSRYUqgTV-xtFxjdQ@mail.gmail.com>
+ <20240131092952.GCZboTECip8DbWtYtz@fat_crate.local>
+ <8b38ef82-ec2b-4845-9732-15713a0e2a85@amd.com>
+ <CAMj1kXH4U7X3_xgwhYUgbWqVfnzL5Dx0QaUhb_5TpZGQEh=_8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsOzpRPZGg23QqJAzKnqkZPKzvieeg=W7sgjgi3q0pBo0g@mail.gmail.com>
- <CANpmjNN-5PpSQ1A_9aM3u4ei74HuvCoThiLAHi=reXXQwer67A@mail.gmail.com>
- <CANpmjNM=92PcmODNPB4DrAhfLY=0mePCbyG9=8BGrQ4MC0xZ6w@mail.gmail.com>
- <CABXGCsM+9TxxY-bOUw6MyRV7CSZsyQpfDgvwgaBBKk9UONJkBw@mail.gmail.com>
- <CABXGCsOp3Djn5uQYb3f=4k1m9rY9y3Ext9SMavWAFRTcKwtNMA@mail.gmail.com>
- <CA+fCnZeNsUV4_92A9DMg=yqyS_y_JTABguyQyNMpm6JPKVxruw@mail.gmail.com>
- <CABXGCsPerqj=zXJ0pUCnZ29JGmZFSvH6DB22r2uKio61c1bVkw@mail.gmail.com> <CANpmjNMn+ULqbSGQ6uOa0JDhw=2my5TtBK4Y+xyBES_iaG_SEA@mail.gmail.com>
-In-Reply-To: <CANpmjNMn+ULqbSGQ6uOa0JDhw=2my5TtBK4Y+xyBES_iaG_SEA@mail.gmail.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Fri, 2 Feb 2024 21:35:05 +0500
-Message-ID: <CABXGCsM9BSD+SYFkvkYxmcrZL+aUfUb_M-rjNJhzb2cYHQr5ww@mail.gmail.com>
-Subject: Re: regression/bisected commit 773688a6cb24b0b3c2ba40354d883348a2befa38
- make my system completely unusable under high load
-To: Marco Elver <elver@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>, glider@google.com, dvyukov@google.com, 
-	eugenis@google.com, Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXH4U7X3_xgwhYUgbWqVfnzL5Dx0QaUhb_5TpZGQEh=_8g@mail.gmail.com>
 
-On Fri, Feb 2, 2024 at 2:00=E2=80=AFPM Marco Elver <elver@google.com> wrote=
-:
->
-> > Maybe we can try something else?
->
-> That's strange - the patches at [1] definitely revert the change you
-> bisected to. It's possible there is some other strange side-effect. (I
-> assume that you are still running all this with a KASAN kernel.)
+On Thu, Feb 01, 2024 at 05:15:51PM +0100, Ard Biesheuvel wrote:
+> OK, I'll remove it in the next rev.
 
-Yes. build .config not changed between kernel builds.
+Considering how it simplifies sme_enable() even more, I'd like to
+expedite this one.
 
-> Just so I understand it right:
-> You say before commit cc478e0b6bdffd20561e1a07941a65f6c8962cab the
-> game's FPS were good. But that is strange, because at that point we're
-> already doing stackdepot refcounting, i.e. after commit
-> 773688a6cb24b0b3c2ba40354d883348a2befa38 which you reported as the
-> initial performance regression. The patches at [2] fixed that problem.
->
-> So now it's unclear to me how the simple change in
-> cc478e0b6bdffd20561e1a07941a65f6c8962cab causes the performance
-> problem, when in fact this is already with KASAN stackdepot
-> refcounting enabled but without the performance fixes from [1] and
-> [2].
->
-> [2] https://lore.kernel.org/all/20240118110216.2539519-2-elver@google.com=
-/
->
-> My questions now would be:
-> - What was the game's FPS in the last stable kernel (v6.7)?
+Thx.
 
-[6.7] - 83 FPS - 13060 frames during benchmark.
+---
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
+Date: Fri, 2 Feb 2024 17:29:32 +0100
+Subject: [PATCH] x86/Kconfig: Remove CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
 
-> - Can you collect another set of performance profiles between good and
-> bad? Maybe it would show where the time in the kernel is spent.
+It was meant well at the time but nothing's using it so get rid of it.
 
-Yes,
-please look at [aaa2c9a97c22 perf] and [cc478e0b6bdf perf]
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ Documentation/admin-guide/kernel-parameters.txt  |  4 +---
+ Documentation/arch/x86/amd-memory-encryption.rst | 16 ++++++++--------
+ arch/x86/Kconfig                                 | 13 -------------
+ arch/x86/mm/mem_encrypt_identity.c               | 11 +----------
+ 4 files changed, 10 insertions(+), 34 deletions(-)
 
-> perf diff perf-git-aaa2c9a97c22af5bf011f6dd8e0538219b45af88.data perf-git=
--cc478e0b6bdffd20561e1a07941a65f6c8962cab.data
-No kallsyms or vmlinux with build-id
-de2a040f828394c5ce34802389239c2a0668fcc7 was found
-No kallsyms or vmlinux with build-id
-33ab1cd545f96f5ffc2a402a4c4cfa647fd727a0 was found
-# Event 'cycles:P'
-#
-# Baseline  Delta Abs  Shared Object
-Symbol
-# ........  .........  ..............................................
-...........................................................................=
-...........................................................................=
-...............................
-#
-    48.48%    +21.75%  [kernel.kallsyms]
-[k] 0xffffffff860065c0
-    36.13%    -16.49%  ShadowOfTheTombRaider
-[.] 0x00000000001d7f5e
-     4.43%     -2.10%  libvulkan_radeon.so
-[.] 0x000000000006b870
-     3.28%     -0.63%  libcef.so
-[.] 0x00000000021720e0
-     1.11%     -0.53%  libc.so.6
-[.] syscall
-     0.65%     -0.24%  libc.so.6
-[.] __memmove_avx512_unaligned_erms
-     0.31%     -0.14%  libc.so.6
-[.] __memset_avx512_unaligned_erms
-     0.26%     -0.13%  libm.so.6
-[.] __powf_fma
-     0.20%     -0.10%  [amdgpu]
-[k] amdgpu_bo_placement_from_domain
-     0.22%     -0.09%  [amdgpu]
-[k] amdgpu_vram_mgr_compatible
-     0.67%     -0.09%  armada-drm_dri.so
-[.] 0x00000000000192b4
-     0.15%     -0.08%  libc.so.6
-[.] sem_post@GLIBC_2.2.5
-     0.16%     -0.07%  [amdgpu]
-[k] amdgpu_vm_bo_update
-     0.14%     -0.07%  [amdgpu]
-[k] amdgpu_bo_list_entry_cmp
-     0.13%     -0.06%  libm.so.6
-[.] powf@GLIBC_2.2.5
-     0.14%     -0.06%  libMangoHud.so
-[.] 0x000000000001c4c0
-     0.10%     -0.06%  libc.so.6
-[.] __futex_abstimed_wait_common
-     0.19%     -0.05%  libGLESv2.so
-[.] 0x0000000000160a11
-     0.07%     -0.04%  libc.so.6
-[.] __new_sem_wait_slow64.constprop.0
-     0.10%     -0.04%  radeonsi_dri.so
-[.] 0x0000000000019454
-     0.05%     -0.03%  [amdgpu]
-[k] optc1_get_position
-     0.05%     -0.03%  libc.so.6
-[.] sem_wait@@GLIBC_2.34
-     0.22%     -0.02%  [vdso]
-[.] 0x00000000000005a0
-     0.10%     -0.02%  libc.so.6
-[.] __memcmp_evex_movbe
-               +0.02%  [JIT] tid 8383
-[.] 0x00007f2de0052823
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 31b3a25680d0..2cb70a384af8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3320,9 +3320,7 @@
+ 
+ 	mem_encrypt=	[X86-64] AMD Secure Memory Encryption (SME) control
+ 			Valid arguments: on, off
+-			Default (depends on kernel configuration option):
+-			  on  (CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=y)
+-			  off (CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=n)
++			Default: off
+ 			mem_encrypt=on:		Activate SME
+ 			mem_encrypt=off:	Do not activate SME
+ 
+diff --git a/Documentation/arch/x86/amd-memory-encryption.rst b/Documentation/arch/x86/amd-memory-encryption.rst
+index 07caa8fff852..414bc7402ae7 100644
+--- a/Documentation/arch/x86/amd-memory-encryption.rst
++++ b/Documentation/arch/x86/amd-memory-encryption.rst
+@@ -87,14 +87,14 @@ The state of SME in the Linux kernel can be documented as follows:
+ 	  kernel is non-zero).
+ 
+ SME can also be enabled and activated in the BIOS. If SME is enabled and
+-activated in the BIOS, then all memory accesses will be encrypted and it will
+-not be necessary to activate the Linux memory encryption support.  If the BIOS
+-merely enables SME (sets bit 23 of the MSR_AMD64_SYSCFG), then Linux can activate
+-memory encryption by default (CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=y) or
+-by supplying mem_encrypt=on on the kernel command line.  However, if BIOS does
+-not enable SME, then Linux will not be able to activate memory encryption, even
+-if configured to do so by default or the mem_encrypt=on command line parameter
+-is specified.
++activated in the BIOS, then all memory accesses will be encrypted and it
++will not be necessary to activate the Linux memory encryption support.
++
++If the BIOS merely enables SME (sets bit 23 of the MSR_AMD64_SYSCFG),
++then memory encryption can be enabled by supplying mem_encrypt=on on the
++kernel command line.  However, if BIOS does not enable SME, then Linux
++will not be able to activate memory encryption, even if configured to do
++so by default or the mem_encrypt=on command line parameter is specified.
+ 
+ Secure Nested Paging (SNP)
+ ==========================
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5edec175b9bf..58d3593bc4f2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1539,19 +1539,6 @@ config AMD_MEM_ENCRYPT
+ 	  This requires an AMD processor that supports Secure Memory
+ 	  Encryption (SME).
+ 
+-config AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
+-	bool "Activate AMD Secure Memory Encryption (SME) by default"
+-	depends on AMD_MEM_ENCRYPT
+-	help
+-	  Say yes to have system memory encrypted by default if running on
+-	  an AMD processor that supports Secure Memory Encryption (SME).
+-
+-	  If set to Y, then the encryption of system memory can be
+-	  deactivated with the mem_encrypt=off command line option.
+-
+-	  If set to N, then the encryption of system memory can be
+-	  activated with the mem_encrypt=on command line option.
+-
+ # Common NUMA Features
+ config NUMA
+ 	bool "NUMA Memory Allocation and Scheduler Support"
+diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+index 7f72472a34d6..efe9f217fcf9 100644
+--- a/arch/x86/mm/mem_encrypt_identity.c
++++ b/arch/x86/mm/mem_encrypt_identity.c
+@@ -97,7 +97,6 @@ static char sme_workarea[2 * PMD_SIZE] __section(".init.scratch");
+ 
+ static char sme_cmdline_arg[] __initdata = "mem_encrypt";
+ static char sme_cmdline_on[]  __initdata = "on";
+-static char sme_cmdline_off[] __initdata = "off";
+ 
+ static void __init sme_clear_pgd(struct sme_populate_pgd_data *ppd)
+ {
+@@ -504,7 +503,7 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
+ 
+ void __init sme_enable(struct boot_params *bp)
+ {
+-	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
++	const char *cmdline_ptr, *cmdline_arg, *cmdline_on;
+ 	unsigned int eax, ebx, ecx, edx;
+ 	unsigned long feature_mask;
+ 	unsigned long me_mask;
+@@ -587,12 +586,6 @@ void __init sme_enable(struct boot_params *bp)
+ 	asm ("lea sme_cmdline_on(%%rip), %0"
+ 	     : "=r" (cmdline_on)
+ 	     : "p" (sme_cmdline_on));
+-	asm ("lea sme_cmdline_off(%%rip), %0"
+-	     : "=r" (cmdline_off)
+-	     : "p" (sme_cmdline_off));
+-
+-	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
+-		sme_me_mask = me_mask;
+ 
+ 	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
+ 				     ((u64)bp->ext_cmd_line_ptr << 32));
+@@ -602,8 +595,6 @@ void __init sme_enable(struct boot_params *bp)
+ 
+ 	if (!strncmp(buffer, cmdline_on, sizeof(buffer)))
+ 		sme_me_mask = me_mask;
+-	else if (!strncmp(buffer, cmdline_off, sizeof(buffer)))
+-		sme_me_mask = 0;
+ 
+ out:
+ 	if (sme_me_mask) {
+-- 
+2.43.0
 
 
-> - Could it be an inconclusive bisection?
+-- 
+Regards/Gruss,
+    Boris.
 
-I checked twice:
-[6.7] - 83 FPS
-[aaa2c9a97c22] - 111 FPS
-[cc478e0b6bdf] - 64 FPS
-[6.8-rc2 with patches] - 82 FPS
-
-
-[6.7] https://i.postimg.cc/15yyzZBr/v6-7.png
-[6.7 perf] https://mega.nz/file/QwJ3hbob#RslLFVYgz1SWMcPR3eF9uEpFuqxdgkwXSa=
-tWts-1wVA
-
-[aaa2c9a97c22] https://i.postimg.cc/Sxv4VYhg/git-aaa2c9a97c22af5bf011f6dd8e=
-0538219b45af88.png
-[aaa2c9a97c22 perf]
-https://mega.nz/file/dwQxha4J#2_nBF6uNzY11VX-T-Lr_-60WIMrbl1YEvPgY4CuXqEc
-
-[cc478e0b6bdf] https://i.postimg.cc/W3cQfMfw/git-cc478e0b6bdffd20561e1a0794=
-1a65f6c8962cab.png
-[cc478e0b6bdf perf]
-https://mega.nz/file/hl5kwLTC#_4Fg1KBXCnQ-8OElY7EYmPOoDG6ZeZYnKFjamWpklWw
-
-[6.8-rc2 with patches] https://i.postimg.cc/26dPpVsR/v6-8-rc2-with-patches.=
-png
-[6.8-rc2 with patches perf]
-https://mega.nz/file/NxgTAb4L#0KO_WU-svpDw60Y3148RZhELPcUtFg3_VCDzJqSyz34
-
---=20
-Best Regards,
-Mike Gavrilov.
+https://people.kernel.org/tglx/notes-about-netiquette
