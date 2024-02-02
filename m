@@ -1,62 +1,62 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A09242AB9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0D84643A;
 	Fri,  2 Feb 2024 13:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706881015; cv=none; b=Sy6pR0OCkUURn7rYteLmGcUj6W66tift1Dbiw+drbBJitp3pVGWwBbYBCY1ut16xyrbWWdTWa1WJN+mKsQ5By0lV3CoIdY303x+tSOwFe07XWU4GxN0/qYl+rX6J7I15nJC9qpzSpCvS5QYEpfWrvyiVm4MefBLcgnQlc7d1Cts=
+	t=1706881016; cv=none; b=dXgRlEq3WS4HhtLkh51/UnfW7aOoMfLvW9vC9LmyASLWHeyuXrl3nW+3PjhNicCXBeeqGGX1+cMT+gcvnYocOZiDNIHpDtYV+/mpeQsLhF5Mzt3v/o2jjBTzWEVHh3+RcPAJQICLvNsfVqaN9MBvYZnAmxh/x5OcHH5fxitSLEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706881015; c=relaxed/simple;
-	bh=NXmNEuZ+lk7CVgF94lrr8W6BJend42DqU15RZ2Qt4SQ=;
+	s=arc-20240116; t=1706881016; c=relaxed/simple;
+	bh=a0D7YFvUOEUJEBzo8I5mq62Kv+BvSEC14i8qhkl0W+c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r6raUFC3GWVavZk64Ybi4K5e5LdhvDu0EehZMHtcj14+8BOTdvjxL99IxKBI4vp/oE+sCDrao/heOdebgmx9mLwCVeIHcssYOngCOk/5IDtQ7UcuYs7Qb7MFSECPCmQVnQ9/IPDO0EAX12kS9aeyzdT/ADcOvLKnegsOGSigjRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HZaaON53; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=QXYJHYoYCFlWgMsVoEbenaaYVlZT5D749cjb5FsYQjnJFDlBqzhyFRZaAz7jdwF9xSULmgpqVD7kL53/R67rYXgLtCkW8X5Y8q+6oB1C9pRiLohts+/dIQ4RfPLrg1oXv6ho+W60ohQDVj/rE9I4mJ3AyhGHIQqM993WJXygmsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eaIClWeg; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HZaaON53"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4129sJ3D017314;
-	Fri, 2 Feb 2024 13:36:49 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eaIClWeg"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412CrS8J013475;
+	Fri, 2 Feb 2024 13:36:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=qcppdkim1; bh=jwi1ohA
-	Hup9rpeu+6saKPHEDzHPkxr/nJPS1uNomeBw=; b=HZaaON53wKzGUCb5JYFXVjw
-	fc4OE0apHjEIihFWQi5ap2tmWFcossuTYrAu7JtKTEEvkWyNeb1mlbbxnDMo+mlS
-	rYC3a6iNZnx77WNniiaB3z3E7ziQ8hyA6Tr4keZ775ZDVxmedDbTvSu6Xejoy11/
-	BOF6E8Fb/EaYZoZ8hecxCoW95rECnBrKGujDq2DEjtsBtg8beqpOdsroHVFhoTf4
-	cZ4SqcKwCUx+XX4tIA9Gz8csnkBbZnS0EPOYUJ3hmCfZgsKCTbiFZegT6/Ds3B93
-	lhJuGQ6J/RtucInwnAoRn/M+GUYQKYS13KeS0oO5sB2aBfUlmKeaJ3nZtOyxVsg=
+	:mime-version:content-transfer-encoding; s=qcppdkim1; bh=DsdXMe3
+	4KXFvuJanA/fj53vB84m7HoavxVPCeFqotvo=; b=eaIClWegCqBcPYtGYpPT8By
+	Suoj297CQnTLTifhqmBdcp14z121VGFTRYpQfngF7wn5mvQXJdnJaEn3+gXEnvFB
+	dPWIxN2mat1Y7bBCHMsz6AkH9Gw+hN/DxRZn3y0DLp/5fr092YiM0EoesoM+d0H/
+	XliQsWRKmlLiWE25ImzzoSL2sZHCw299Dy+H6wU28F7zusokOvjgYA4GyT5XHMAa
+	ZFHTNgWurdOQj/QgYpmrnsCSZ9XkkL8qkEe57xmoS+mHQguz/ZXDmUzlUuDdoKBz
+	eHGGji7MYB4SNGbCL2memAUA+9xAlY67DNs1MUbKcSGIjHQc9lKIm+fgPnqU9TA=
 	=
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwm1fak-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwjhf1a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 02 Feb 2024 13:36:49 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 412DajGk017959;
+	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 412DajDo017956;
 	Fri, 2 Feb 2024 13:36:45 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3vvtwm3wsx-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3vvtwm3wsy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
 	Fri, 02 Feb 2024 13:36:45 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 412DajPk017936;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 412Daj93017933;
 	Fri, 2 Feb 2024 13:36:45 GMT
 Received: from hu-maiyas-hyd.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.242.220])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 412DajwD017932;
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 412Daj1t017930;
 	Fri, 02 Feb 2024 13:36:45 +0000
 Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 3944840)
-	id CC37050094A; Fri,  2 Feb 2024 19:06:43 +0530 (+0530)
+	id D126B50094E; Fri,  2 Feb 2024 19:06:43 +0530 (+0530)
 From: Wasim Nazir <quic_wasimn@quicinc.com>
 To: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@quicinc.com,
         Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH 1/3] dt-bindings: arm: qcom: Document rb5gen2-hdk board
-Date: Fri,  2 Feb 2024 19:06:36 +0530
-Message-ID: <20240202133638.4720-2-quic_wasimn@quicinc.com>
+Subject: [PATCH 3/3] arm64: dts: qcom: Add initial support for rb5gen2 HDK board
+Date: Fri,  2 Feb 2024 19:06:38 +0530
+Message-ID: <20240202133638.4720-4-quic_wasimn@quicinc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240202133638.4720-1-quic_wasimn@quicinc.com>
 References: <20240202133638.4720-1-quic_wasimn@quicinc.com>
@@ -71,50 +71,181 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Yh_WYrsOcF8RSRqTVpDt1nYAp4UE53CE
-X-Proofpoint-ORIG-GUID: Yh_WYrsOcF8RSRqTVpDt1nYAp4UE53CE
+X-Proofpoint-GUID: USZtIWBM64vLo-YcR_cirIrr16QtLf24
+X-Proofpoint-ORIG-GUID: USZtIWBM64vLo-YcR_cirIrr16QtLf24
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-02_07,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- clxscore=1011 bulkscore=0 adultscore=0 mlxscore=0 mlxlogscore=724
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402020098
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402020098
 
-Document board bindings for Rb5 gen2 hardware development kit.
-Rb5gen2-HDK is using Rb5 gen2 SOM which is based on QCS8550 SoC.
-RB5gen2-HDK is development kit used for IOT solutions.
+RB5gen2 hardware development kit is based on QCS8550-Rb5gen2 SOM
+for IOT solutions.
+This initial version describes VPH_PWR, UART & USB3.1.
+
+On-board PMICs:
+- PMR735D
+- PM8010
 
 Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index 9cee874a8eae..ce5b5dfe0e46 100644
---- a/Documentation/devicetree/bindings/arm/qcom.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -104,6 +104,7 @@ description: |
-         qcp
-         qrd
-         rb2
-+        rb5gen2-hdk
-         ride
-         sbc
-         x100
-@@ -915,6 +916,14 @@ properties:
-           - const: qcom,qcm8550
-           - const: qcom,sm8550
-
-+      - items:
-+          - enum:
-+              - qcom,qcs8550-rb5gen2-hdk
-+          - const: qcom,qcs8550-rb5gen2
-+          - const: qcom,qcs8550
-+          - const: qcom,qcm8550
-+          - const: qcom,sm8550
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 6fdde64d7540..8840b219d6d5 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -93,6 +93,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-rb5gen2-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qrb2210-rb1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qrb4210-rb2.dtb
+diff --git a/arch/arm64/boot/dts/qcom/qcs8550-rb5gen2-hdk.dts b/arch/arm64/boot/dts/qcom/qcs8550-rb5gen2-hdk.dts
+new file mode 100644
+index 000000000000..6f4c68402823
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/qcs8550-rb5gen2-hdk.dts
+@@ -0,0 +1,136 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
 +
-       - items:
-           - enum:
-               - qcom,sa8155p-adp
++/dts-v1/;
++
++#include "qcs8550-rb5gen2.dtsi"
++#include "pm8010.dtsi"
++#include "pmr735d_a.dtsi"
++#include "pmr735d_b.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. QCS8550 RB5Gen2 HDK";
++	compatible = "qcom,qcs8550-rb5gen2-hdk", "qcom,qcs8550-rb5gen2",
++			"qcom,qcs8550", "qcom,qcm8550", "qcom,sm8550";
++
++	aliases {
++		serial0 = &uart7;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	pmic-glink {
++		compatible = "qcom,sm8550-pmic-glink", "qcom,pmic-glink";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		connector@0 {
++			compatible = "usb-c-connector";
++			reg = <0>;
++			power-role = "dual";
++			data-role = "dual";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++
++					pmic_glink_hs_in: endpoint {
++						remote-endpoint = <&usb_1_dwc3_hs>;
++					};
++				};
++			};
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&apps_rsc {
++	regulators-0 {
++		vdd-bob1-supply = <&vph_pwr>;
++		vdd-bob2-supply = <&vph_pwr>;
++	};
++
++	regulators-2 {
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++	};
++
++	regulators-3 {
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s6-supply = <&vph_pwr>;
++	};
++
++	regulators-4 {
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s7-supply = <&vph_pwr>;
++	};
++
++	regulators-5 {
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s2-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s6-supply = <&vph_pwr>;
++	};
++};
++
++&pm8550b_eusb2_repeater {
++	vdd18-supply = <&vreg_l15b_1p8>;
++	vdd3-supply = <&vreg_l5b_3p1>;
++};
++
++&uart7 {
++	status = "okay";
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "otg";
++	usb-role-switch;
++};
++
++&usb_1_dwc3_hs {
++	remote-endpoint = <&pmic_glink_hs_in>;
++};
++
++&usb_1_hsphy {
++	vdd-supply = <&vreg_l1e_0p88>;
++	vdda12-supply = <&vreg_l3e_1p2>;
++
++	phys = <&pm8550b_eusb2_repeater>;
++
++	status = "okay";
++};
++
++&usb_dp_qmpphy {
++	vdda-phy-supply = <&vreg_l3e_1p2>;
++	vdda-pll-supply = <&vreg_l3f_0p88>;
++
++	status = "okay";
++};
 --
 2.43.0
 
