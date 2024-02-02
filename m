@@ -1,125 +1,141 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7269B839ED
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C8E839E5
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706909511; cv=none; b=eIwhKnjMXqQAffuVgiGXEl2OqwnaoPu6+xnCQPkMYn4ND6xKKEXDBRfGKK2SwL7h+Yh2mDDDpCubhKgxAbx/Nmnc9gIRL2SEEVw2OdB2ZoE9Zs9kAlnK6zebwxWUAEUWwNSeHb0LpgPN7DW8lAEgfpUrMCyLrX0mbNNm8vxPWaU=
+	t=1706909535; cv=none; b=UFertq7LmsNfRTy5E4wHEGw6Aa1Nx/ShTUURvklbiAGGWeCBnU/pP3mCpTOLNCP40zeI5PFoiD14tfYYfzwc7JIi3NjleNhk68miBszoM3IfU22AMsqKBoSGZHYlHZBnxMQjem2/U1zMOR6IgTGEl1L1HJSR5/PmeXcISbG2HbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706909511; c=relaxed/simple;
-	bh=Op3qPrMY2i1ZY4j6pqonag0+3Lyq6QstDp2KxGm17rU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BHJNKWK8CGEBgsC6XxiIBgnCKgkF4F7MXBq1kxVd6WNUtXssYTazyta7j3mFgsGu0uZDKC4hgis7ndSjsWuyliM3IrWe5Tm6uEbrQZyE2ZMzlE6946LpYLOfjOk+9jt+L9A76dT55V9/n/nQw5xRARaIlWHwRaKjNHYFiscbyrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Z1PCcK2h; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1706909535; c=relaxed/simple;
+	bh=mGhUNxZMsWaoiJyj9PRjL1hNx8uB6yny+9h5RYXXVNc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QvpchIj4aBVtQ5YA7OQ1xuMoffPVAqiwYarZ5SkfvrtviGYzryqz9+aaYc2GwQcD5RNd4Pqy2C843QQxNtJprZayxs4+lSZbRSXj6+MjxuQP+spLHpK4/m+efvgAFr1EstiJ2GGA+vz/rVyrYdbJFvCd2TgqYp6FBePHuzpnI7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JiL6gOVa; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Z1PCcK2h"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e1226b30ffso1359368a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 13:31:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiL6gOVa"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40fb63c40c0so21797445e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 13:32:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706909506; x=1707514306; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZTiox0wmIDmYtPibh8OuRKBz+PUfxpupwELt6ygSWRU=;
-        b=Z1PCcK2h+fLVkaESVVTUMQTnFY7BoPDZRPjXoFRwR1i2wlc6CBbDM5ljNzLjfmjf7B
-         MKTUXKvRXPoDb+sZVWaTeV5psnQx/aEbkRu6PfrvWYVnUU/w8OTEt/QBrJVEj0Lg12+w
-         8rom5wfXsQYu8b/tfP9TuKIGJh80TVhwYwafPQvNdDGbTga/+1w9U9n2cSP7Q6jASlAt
-         R6aKd4xV4tWdZNGJwZYY+9GX2RHh2YamLBmZavzhO2SJ8t7C300NsW62TsbQuHyXISkA
-         l0uMrn/rWminD/YyR6SDNxZ/uabEtwdPMxL8f/de8Nj+Bs16uYFuHnuyy9Ze4WVm8M8V
-         g1Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706909506; x=1707514306;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1706909531; x=1707514331; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZTiox0wmIDmYtPibh8OuRKBz+PUfxpupwELt6ygSWRU=;
-        b=VveZ9J5gYDCT3gqQS/rVZ3Ak72C+WYkevFTb3V0t6441cpYOGh1TK9Pcxa8qR6vRuC
-         KsINxFaLdn8QqOVmXvMxic3V9ykqGjFdtWAs/hBhujpFddPZcQMlI2gxEGt/opM/X0mX
-         b6lJeOyc/E+LBrzv9YcAaZHHv1PuYKxm/d8nTipxI+LoPOZ2Jc6odwbPvwEJ0eEN1VNH
-         i/e/YIO0cX8ZM6RrzRLvF9HoV6CKbQhN3l78UE5DVmctjAiUdl63vXeJagjH0tNjEQnb
-         5Stn8w1MGpLKHZPy1VbzSiVotMDxRz7wDRLpou+1wtZsnomFzcd3UzX3c0HAJXOut14P
-         NPHA==
-X-Gm-Message-State: AOJu0YwD0KK8UnE3PrAMR+J7PV2wcrCdgVJM9lC+vhzUPkkIIN3B8KUm
-	KdwbA4JDTS0W1gdDgsIpAqPOaX5gbeNqWdNfI0s1y8jiiU1KoEB4KuzT9cPKopM=
-X-Google-Smtp-Source: AGHT+IF/RpXFVoFqWWIIG0pDfFvczWwKaz4e/giUbEuIHIeDJ0mRz9Iqlzmzunh/fzRY5YZO2KLYUQ==
-X-Received: by 2002:a05:6830:14c6:b0:6dd:e7b5:3eab with SMTP id t6-20020a05683014c600b006dde7b53eabmr9156231otq.2.1706909506443;
-        Fri, 02 Feb 2024 13:31:46 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVcUgL/jIyFlGndm48vyhsjjQr+1u7IbAG4kn5lDwpxHCDv8EM7sWNymGJu9x0yYkYw0yKIANfueWntVnz1Mi8XbRsUwon5lTsB1lPhxHrkIoxousF6lRBrPWIShy6oLD/C6eoFzwVICEBchS//pFcreRHOJdEJWwTP+WyCs3/3Y9Mxj1md843UjuYuIoKx2HEsodxdItUSVvs=
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id q23-20020a9d7c97000000b006e125aea5a3sm545994otn.41.2024.02.02.13.31.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 13:31:46 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: axi-spi-engine: use common AXI macros
-Date: Fri,  2 Feb 2024 15:31:32 -0600
-Message-ID: <20240202213132.3863124-2-dlechner@baylibre.com>
-X-Mailer: git-send-email 2.43.0
+        bh=W5Hc9mSNGHRmqMuX3vLv6BjyMkdxw/6pVnK77OZ+Opw=;
+        b=JiL6gOVaALg26POSKiYizB0tEBx7NGFDpowE20wur2ACWY9QJRNsKpG+ntef5FOfuH
+         tOOMJg3NFu+m4O28fAz/HrskzBnOKnoivtDFeBChram+o2n2SJdY69eFE8Cm1WWGB1E2
+         1FAzoSv45h1g7+/hOp733KMnRxh6e4EEJZlPfE/r6L3Yq+NyR7W423CcwoY3IuUu7IQE
+         8IQlkAIcMSquwy/+qxxAhxj+ZkPtSsKmXoUx3hDxfYMSchuU4REt/bM5X0/RBvvLRnhH
+         lr7VMWinCpTBcU30n7F1P18paXTQtDwZl/4NPZj9+7kvEoXRhm6tG1/bBgmxdvHiaZyE
+         ETPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706909531; x=1707514331;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W5Hc9mSNGHRmqMuX3vLv6BjyMkdxw/6pVnK77OZ+Opw=;
+        b=Yc+FnWxNZf2eYoiPRBAlGeXRR3xlg7Gpn/WTVzXWcH8gTJW/fq/CrNJLZ4Nmsq6NnS
+         Bl4P0BBCZDlmPclKNiCDrTFiv5iP8nq8ndWZEzGzEccvOfkY7L4z/Sy54E8EZO+rWIcO
+         q+pTccpZTC9qu8XPQd0iLWfzwWxvQu16Q5BoYUzzMXqxcflLx4M7AGgMCTRbdqxiP5LD
+         57SlxmTCuUeLWPNAr0bJvKKg4hoBqz4DPIfBH9cfrdkrv/bbx6H90oFKEmSJ16rcdlWX
+         h8QkLu0dVrYgmY2jaqGWrHwmq9pbjB4wk63SFaulLcieNa3GfY+nnN6s9lB7ug9GFf0h
+         IIuA==
+X-Gm-Message-State: AOJu0YwIt6ClXUVltt6naJFC4yQWCxsl2jB6nI004TqbHeuS6q5K4JEL
+	QKvU2uUw+3fr5qaHI3ci/mjCYC0BgGoJzSuiXc99e2IUScir36I1CV7bpytSaH+vBCfJ4r498qj
+	ZJ7y4UBaE
+X-Google-Smtp-Source: AGHT+IGyPixWYoi+L4/ukaGBHlcrE3M3qeKjP8naEQzcqadDPDsfbwSTPYGe0HluOek3vr3B35Am3w==
+X-Received: by 2002:a05:600c:1550:b0:40e:fb8f:76b2 with SMTP id f16-20020a05600c155000b0040efb8f76b2mr7592084wmg.12.1706909531281;
+        Fri, 02 Feb 2024 13:32:11 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVcz30ZwoH/5xCYeuEkyULtPjnugcNsrZooblZ7+o777yvjaEWQrcqbShcYM4dWmclsHEVB/1TNGAGbLTGQCCQX6Oz67KeLrqoMYb+dE37zKDXBA99J6ReiSRhz/Zhx27tbSpG5cCbraq3CbZ1ixBa7OrNl+p4VLRcJrmGHiD+qRbnOOU5ugn6RY/9JVf4M2TD3KZhWDNUIByvv7JwneXD2fYnSC4t1RxEGFgx2lEfu1Jg6xKiz6FGtZjYTLpMMzwFxzTrg9EN6kRNJ+JLUft1+Cd7E5w+OEXMl0x1J5xdofOSF3y5JTfj4Af6TMGe1JDafwvpEx1Ye+0OGQwZxmaxeAqzYxoiVI0AZD9MxAMtPvMaIUk6BJmrliqUv6Afqc5v0hBRGXxHtB7UqAQzmG2OmJnmMkK2UWRxBakzsOx1lqMOu01kDQSNGYd5IfbEH4s9obOyc7VP/6hz+HwqLNiMqjqdueeeG1XnKHEGhaSJzeh8xWY9WNRM0CyjBJQnSAtqIlONjlBbX4w7yVOGAbXV8FRLFH5pUBXUK5Us6xZv0nXCMFTpyzKkpryKTVIX8/i9ucNWekWlsh1oeczrLOcRf3dJqktVGTJtV4KXAGrXiyk+kUe2COFPTQ00Y6qn1N8rpCDEvS8qJewZqPNp7bVkRS9TmVApJrOwh
+Received: from [192.168.27.65] (home.beaume.starnux.net. [82.66.176.246])
+        by smtp.gmail.com with ESMTPSA id h6-20020a05600c314600b0040fb7695620sm1020943wmo.0.2024.02.02.13.32.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 13:32:10 -0800 (PST)
+Message-ID: <b8a5e5dd-e018-4305-9fb8-88f4ddc49a2f@linaro.org>
+Date: Fri, 2 Feb 2024 22:32:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] dt-bindings: drm/bridge: ti-sn65dsi86: Fix bouncing
+ @codeaurora address
+Content-Language: en-US, fr
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>, dianders@chromium.org,
+ andrzej.hajda@intel.com, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ quic_bjorande@quicinc.com
+Cc: airlied@gmail.com, daniel@ffwll.ch, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20240202202329.4172917-1-quic_jhugo@quicinc.com>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <20240202202329.4172917-1-quic_jhugo@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This avoid duplicating the same macros in multiple drivers by reusing
-the common AXI macros for the version register.
+On 02/02/2024 21:23, Jeffrey Hugo wrote:
+> The servers for the @codeaurora domain are long retired and any messages
+> sent there bounce.  Sandeep Panda's email address is no longer valid and
+> should be repleaced.  However Sandeep has left the company and has not
+> been active sice, therefore it looks like this binding is orphaned.
+> 
+> Doug is listed as the reviewer for this file in MAINTAINERS and has
+> volunteered to be listed within the file as the binding maintainer.
+> Therefore replace Sandeep with Doug to make the documentation current.
+> 
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> ---
+>   .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml        | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> index 6ec6d287bff4..c93878b6d718 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+>   title: SN65DSI86 DSI to eDP bridge chip
+>   
+>   maintainers:
+> -  - Sandeep Panda <spanda@codeaurora.org>
+> +  - Douglas Anderson <dianders@chromium.org>
+>   
+>   description: |
+>     The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/spi/spi-axi-spi-engine.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index 9ace259d2d29..6b0c72bf3395 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/fpga/adi-axi-common.h>
- #include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -15,12 +16,6 @@
- #include <linux/spi/spi.h>
- #include <linux/timer.h>
- 
--#define SPI_ENGINE_VERSION_MAJOR(x)	((x >> 16) & 0xff)
--#define SPI_ENGINE_VERSION_MINOR(x)	((x >> 8) & 0xff)
--#define SPI_ENGINE_VERSION_PATCH(x)	(x & 0xff)
--
--#define SPI_ENGINE_REG_VERSION			0x00
--
- #define SPI_ENGINE_REG_RESET			0x40
- 
- #define SPI_ENGINE_REG_INT_ENABLE		0x80
-@@ -661,12 +656,12 @@ static int spi_engine_probe(struct platform_device *pdev)
- 	if (IS_ERR(spi_engine->base))
- 		return PTR_ERR(spi_engine->base);
- 
--	version = readl(spi_engine->base + SPI_ENGINE_REG_VERSION);
--	if (SPI_ENGINE_VERSION_MAJOR(version) != 1) {
-+	version = readl(spi_engine->base + ADI_AXI_REG_VERSION);
-+	if (ADI_AXI_PCORE_VER_MAJOR(version) != 1) {
- 		dev_err(&pdev->dev, "Unsupported peripheral version %u.%u.%c\n",
--			SPI_ENGINE_VERSION_MAJOR(version),
--			SPI_ENGINE_VERSION_MINOR(version),
--			SPI_ENGINE_VERSION_PATCH(version));
-+			ADI_AXI_PCORE_VER_MAJOR(version),
-+			ADI_AXI_PCORE_VER_MINOR(version),
-+			ADI_AXI_PCORE_VER_PATCH(version));
- 		return -ENODEV;
- 	}
- 
--- 
-2.43.0
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
