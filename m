@@ -1,127 +1,65 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368D78175A
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 20:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF6915E5BA;
+	Fri,  2 Feb 2024 20:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706907436; cv=none; b=i496Q8rRWw3lF5pKCOg+CPsKzGtH7l0ns4OfeRVoYQ+hpf0STMik3eBmREvcV7R93uM3NmSF5Yk+vGQGXoVY/86anSovRkTbHRybNFj0uo2WVACsoCRa7gZ2j98NxZpLunsUjVfxzSwk/dZS4eSG4avIFxGFeVoO9rk3mcfysck=
+	t=1706907456; cv=none; b=oLC+hFCLTzV10VRGRkponajd+atu3UUA68gTOAk3RllPXVGNXo+Y7zZFfT7jZ+CxY3Ml4lmA0yALtXvHQklDQxqYAsBJLW+/9CGooWt3u8HZzgaoPnaqdJbK74kmH1tKRbuHPWKS6wpgHrysODQkz6QMqWzFN7Fad8wl7NcGgag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706907436; c=relaxed/simple;
-	bh=8ocUjGK2oy01qiBgCNBpq+20kZmTzsOI10qpJvgvgtg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nN4JS7UkMw77wXNl0jy/RutikrmUMaRebnvNqVN0ufYxFDdMtSTuyIlh9zFHjJsMPVOL7wK+R/TbJwAYis65djBtaF1zh31bs6CYBeQeBoaYrVtTR4wLCCv16ve9j4UVORpnyup1wP2hG8qj2Zo9PfQzVK0BtZa8Fte3ZObRZMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KACTs63E; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706907456; c=relaxed/simple;
+	bh=G8E1Z2HAgk8gQyMeGBM30dUIzCw/VotbAsYiqJ9dYfI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=udNsk62vlbx6sytGQs4+91LBHy77bPbUK9dgxcYln+RdX6yNi+d21Toy6pj8v1VMOYLDJSv0VpcXTMCldWIYTO8vgap9HFHEQPtWBDaMUQArwFqc+NC7ePI4WWVl6UUA2zkpxL7SfZJrZd7yOn3zh8cDkC1hkM/wMpJGMOwRsJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgpKnRNL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KACTs63E"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6dc8b280155so1540598a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 12:57:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706907432; x=1707512232; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jd5iB2GW7u96qhDXLTaDLBHJW+CgTFsPG8xtoncLIv8=;
-        b=KACTs63EtR/6LViJcdoyk8Wa0iQcMmiJlpSXahnHWJ8YGTWGJba7CB/Xa/BxDJgQqd
-         ALMG2GCJR6HO3JhzBS3s9F6AiEOVher3pftcZXRr+paWn3veTNXcpEWkr0FXh8L6vLrl
-         rNVPU5z+IbxFSEdq9sQsqEKAcE6aRJNfV8LrY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706907432; x=1707512232;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jd5iB2GW7u96qhDXLTaDLBHJW+CgTFsPG8xtoncLIv8=;
-        b=A+sbWyBbZcoUViRYL0mTVldYqZQskbsfeKlWTVu4gp34t2qScR5+B9jqLpNEehhjLy
-         +wXDPRuvpbSi+xhkLzOYUFZigtCqOuw51STOUvmIawlETfeTL43iwiIo0kdsSLprrIAQ
-         4MNJmGAy/PQfbvf6P5UIJvBpVk6pX6Joxu5tUKmOlL1L+J1+1omNngDifuHIcsmLAdbr
-         tx930bRnMhG9Hh3KK8rNS2aiYGe1zQIyA1nDZHN310g0VcQ1wVaEbkYOn119MZcWRHaK
-         pgnGQNx+HIovIeuu6UWZN3ZN62Jzgirh7BeW3AMa7Ep1NxL0n2CepXMQqJV60U6U29GU
-         DRNw==
-X-Gm-Message-State: AOJu0Yzqi1kvpIPs/FNCPowoBFiyJTE1aFZhZLi/UtmLhrzSui1/OO90
-	izDv+qodidPWUxTTi3h3yDWFdoQgGa8eTVpLaL/IL1IJDfnO2lOAWExF+BlI3PvqDU4NXAIndvT
-	lH9C11AMuWB5sMNFdlkWkA4GHixMszXdMtyfN
-X-Google-Smtp-Source: AGHT+IHD+GETF8yRafyaSp/X/xP7FsjAotm5fR7M2Zw0jtBAVo9XvmOEOv+rES1WAYdj2NtLbAOCDZfOEWCOvlbcyl4=
-X-Received: by 2002:a05:6870:96a1:b0:218:d1d4:78a9 with SMTP id
- o33-20020a05687096a100b00218d1d478a9mr871537oaq.24.1706907432643; Fri, 02 Feb
- 2024 12:57:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgpKnRNL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14288C433C7;
+	Fri,  2 Feb 2024 20:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706907455;
+	bh=G8E1Z2HAgk8gQyMeGBM30dUIzCw/VotbAsYiqJ9dYfI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=FgpKnRNLaBaru9nlNDJ63cEXUrO2WDEXa8MlvhCL270fDWNp/Mc+7wTNXXduw0Ibl
+	 TQwyaJnGGwJis5pVpE0zcQXqixGV3FfXsMK1+M213tSCL+6MO0rDDt3zz3Vvad74Px
+	 692KlSRUV+NV4zc/Tcxp9AA8t/IF/o/JXSTz91WKnGZ0ZBrDp4/SEyJCK1RjnJFE8L
+	 7NhJcVbu4tayV/ZKAyFFZfqDy4gJ1tZsb5iRECrE/rzZr9xNqWq4TWMCPhlhZkbHg4
+	 zRrgZ5duUD4+frB790aZJdBLLLLJqDDT8OUgJA9spz9aa71nBF0WMLTCmfxYVQCv29
+	 rTP7iu+eQxJYQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: alexander.shishkin@linux.intel.com,
+	acme@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	jolsa@kernel.org,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	mingo@redhat.com,
+	linux-kernel@vger.kernel.org,
+	mark.rutland@arm.com,
+	Yang Jihong <yangjihong1@huawei.com>,
+	irogers@google.com
+Subject: Re: [PATCH] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
+Date: Fri,  2 Feb 2024 12:57:33 -0800
+Message-ID: <170690725032.1264496.5196347115454509286.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+In-Reply-To: <20240127025756.4041808-1-yangjihong1@huawei.com>
+References: <20240127025756.4041808-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
- <20240202151345.kj4nhb5uog4aknsp@revolver> <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
- <20240202192137.6lupguvhtdt72rbr@revolver> <85714.1706902336@cvs.openbsd.org> <CAHk-=wjNXcqDVxDBJW8hEVpHHAE0odJEf63+oigabtpU6GoCBg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjNXcqDVxDBJW8hEVpHHAE0odJEf63+oigabtpU6GoCBg@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 2 Feb 2024 12:57:00 -0800
-Message-ID: <CABi2SkXiRKBXQ76uygV1bEegH0UrCJJZqQLNgN=raxNSd_MdPg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, usama.anjum@collabora.com, rdunlap@infradead.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 2, 2024 at 12:37=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, 2 Feb 2024 at 11:32, Theo de Raadt <deraadt@openbsd.org> wrote:
-> >
-> > Unix system calls must be atomic.
-> >
-> > They either return an error, and that is a promise they made no changes=
-.
->
-> That's actually not true, and never has been.
->
-> It's a good thing to aim for, but several errors means "some or all
-> may have been done".
->
-> EFAULT (for various system calls), ENOMEM and other errors are all
-> things that can happen after some of the system call has already been
-> done, and the rest failed.
->
-> There are lots of examples, but to pick one obvious VM example,
-> something like mlock() may well return an error after the area has
-> been successfully locked, but then the population of said pages failed
-> for some reason.
->
-> Of course, implementations can differ, and POSIX sometimes has insane
-> language that is actively incorrect.
->
-> Furthermore, the definition of "atomic" is unclear. For example, POSIX
-> claims that a "write()" system call is one atomic thing for regular
-> files, and some people think that means that you see all or nothing.
-> That's simply not true, and you'll see the write progress in various
-> indirect ways (look at intermediate file size with 'stat', look at
-> intermediate contents with 'mmap' etc etc).
->
-> So I agree that atomicity is something that people should always
-> *strive* for, but it's not some kind of final truth or absolute
-> requirement.
->
-> In the specific case of mseal(), I suspect there are very few reasons
-> ever *not* to be atomic, so in this particular context atomicity is
-> likely always something that should be guaranteed. But I just wanted
-> to point out that it's most definitely not a black-and-white issue in
-> the general case.
->
-Thanks.
-At least I got this part done right for mseal() :-)
+On Sat, 27 Jan 2024 02:57:56 +0000, Yang Jihong wrote:
+> data->id has been initialized at line 2362, remove duplicate initialization.
+> 
+> 
 
--Jeff
+Applied to perf-tools-next, thanks!
 
-
->              Linus
->
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
