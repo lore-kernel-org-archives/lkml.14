@@ -1,137 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D24210E8;
-	Fri,  2 Feb 2024 13:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA314C6A;
+	Fri,  2 Feb 2024 13:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706878902; cv=none; b=VRR2+LPcxFlXO1kW4EqX5IgIErfs4cuGnkhpRL/qpwt0DM1aZ3AISdfRONjNywEUKKNuiHKMbDaOrnF4almRqAOIoInjzLkZabNwQp+2tmb+fEiOdz78xDoKzHURb10n5s15GGqHs8OfT+oaVrc5x1l4lj+wicBa9If//RNI25g=
+	t=1706879086; cv=none; b=TmBUmFJrumX42Gc5h0HEXtp3IgRiq329frOqxPuQfeyVJKsA512mitQmy1wbugbjKz8uZkRxGhXPrDt9mIomcZkgB/eQhlSy2ZfFlmv/MBeDWsEUBPTurVZ6hqvqSZ6GlWQXpFW8QDZ57xwcyVzv+IL/o66r9o5jBFgcBKA2WfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706878902; c=relaxed/simple;
-	bh=ZjGVUgcdYqjFELWbtS5Tz+gafK6SLtjIYXwEYo18YXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lwlp1bbvGXNxCG5EyyNWbPK2jEUYH4sQ0NzWw4iAzSYmSNsmHVQCzCl/77Sw6WYsphX0FoPfmoYLeE6KDnfI3chh9fXGiP95J1HatK71nYtfJEXHlgDUelD6CnkcJ/BzBGP5simandsmv/c20WStXX+hMmXcSSQwGKPEkiR4KDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rk52/yef; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706879086; c=relaxed/simple;
+	bh=VHNzo62n2veQT6kzrf61FzcveAg/Vc9QAoX36epjdhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pNpZsqbD44mE2y8MfikfjkEOiZ41Qla0fRLi0/RnCLLIWWeO/j76mIM2ojFEgPW9uy8nkfAnVfDsZpgQEJ3hEkhqciXIta3257Rz+r6S4yFFm3XC3hUF2ojrQ8w/T6UATns3ITmqOv/ek9KljsCjca8bKw45hIvmneJbv+no+YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKse/JN6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rk52/yef"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9E34C433F1;
-	Fri,  2 Feb 2024 13:01:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKse/JN6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 228E8C43390;
+	Fri,  2 Feb 2024 13:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706878902;
-	bh=ZjGVUgcdYqjFELWbtS5Tz+gafK6SLtjIYXwEYo18YXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rk52/yefcJ7xC9MuTUP9sVCJC4n6DX/+ofLVOsiOkeAH60dIBnk2fZXv9ByUydBSm
-	 DtqxnIWw/Mom3yYSOahogiwlITZbO6GPKqH6MT9Kdr8LoJYR+meY7ea3x86U/vmdK4
-	 jRDsbJiXrCZxHBdA/8os4Npi7r/i1RsmqZO0HydLSMRy0rWgj6ua7CH416PSWMz9pG
-	 0eAtdr7brPlRIP4fC1N9uM9JlSNyxx5dHaPSkw9vVrEL5j6Xw4EmSZSGqLZYN6CIUl
-	 apPnlO5ZVBPs/+JA5YylF5MM9Ainw7YQkJYQDn356jUppnedKDWil6gE6ptW+ae8v4
-	 30Y4ACuH/ziuw==
-Date: Fri, 2 Feb 2024 14:01:39 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Sebastian Wick <sebastian.wick@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Emma Anholt <emma@anholt.net>, Jonathan Corbet <corbet@lwn.net>, 
-	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>, 
-	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: Re: [PATCH v5 08/44] drm/connector: hdmi: Add Broadcast RGB
- property
-Message-ID: <73peztbeeikb3fg6coxu3punxllgtyrmgco34tnxkojtsjbr3s@26bud3sjbcez>
-References: <20231207-kms-hdmi-connector-state-v5-0-6538e19d634d@kernel.org>
- <20231207-kms-hdmi-connector-state-v5-8-6538e19d634d@kernel.org>
- <20240115143308.GA159345@toolbox>
- <20240115143720.GA160656@toolbox>
+	s=k20201202; t=1706879086;
+	bh=VHNzo62n2veQT6kzrf61FzcveAg/Vc9QAoX36epjdhA=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=sKse/JN676bA5NZide99+MztzoAngiNHaHBrJtFzRH62D1u5E6R+3FQklBkF++I5N
+	 PcOVGesJho5Ib34+3T8GBWTTBBfiklACb4v9B7L+N9g6yCkIlqVOl4i0oCiRGvavMs
+	 uQQ6a64uLWESdPN6R4VyWAFV1KR0eb4wrLWEZpGdtnZXtU4awDjuxnIrk6gjOiLUUV
+	 UZtvn/gLYaKxe9z8ta+dNODgkusDTGiAe+6EAyvirnEsF7NrPBwhkNWdsh/7lR/wuy
+	 Zx5h7wAmjcXz+yXW7Xcb5I+b/VmW6TFU3lIxbSiEhJVHDsIALhhG1OEdfatM0BiDk3
+	 77EQWuVd01vqA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id B3478CE1ECC; Fri,  2 Feb 2024 05:04:45 -0800 (PST)
+Date: Fri, 2 Feb 2024 05:04:45 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org
+Subject: [BUG] workqueues and printk not playing nice since next-20240130
+Message-ID: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6dznigm7bfdw265q"
-Content-Disposition: inline
-In-Reply-To: <20240115143720.GA160656@toolbox>
-
-
---6dznigm7bfdw265q
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello!
 
-On Mon, Jan 15, 2024 at 03:37:20PM +0100, Sebastian Wick wrote:
-> > >  /**
-> > >   * DOC: HDMI connector properties
-> > >   *
-> > > + * Broadcast RGB
-> > > + *      Indicates the RGB Quantization Range (Full vs Limited) used.
-> > > + *      Infoframes will be generated according to that value.
-> > > + *
-> > > + *      The value of this property can be one of the following:
-> > > + *
-> > > + *      Automatic:
-> > > + *              RGB Range is selected automatically based on the mode
-> > > + *              according to the HDMI specifications.
-> > > + *
-> > > + *      Full:
-> > > + *              Full RGB Range is forced.
-> > > + *
-> > > + *      Limited 16:235:
-> > > + *              Limited RGB Range is forced. Unlike the name suggest=
-s,
-> > > + *              this works for any number of bits-per-component.
-> > > + *
-> > > + *      Drivers can set up this property by calling
-> > > + *      drm_connector_attach_broadcast_rgb_property().
-> > > + *
-> >=20
-> > This is a good time to document this in more detail. There might be two
-> > different things being affected:
-> >=20
-> > 1. The signalling (InfoFrame/SDP/...)
-> > 2. The color pipeline processing
-> >=20
-> > All values of Broadcast RGB always affect the color pipeline processing
-> > such that a full-range input to the CRTC is converted to either full- or
-> > limited-range, depending on what the monitor is supposed to accept.
-> >=20
-> > When automatic is selected, does that mean that there is no signalling,
-> > or that the signalling matches what the monitor is supposed to accept
-> > according to the spec? Also, is this really HDMI specific?
-> >=20
-> > When full or limited is selected and the monitor doesn't support the
-> > signalling, what happens?
->=20
-> Forgot to mention: user-space still has no control over RGB vs YCbCr on
-> the cable, so is this only affecting RGB? If not, how does it affect
-> YCbCr?
+Starting with next-20240130 (and perhaps a bit earlier), rcutorture gets
+what initially looked like early-boot hangs, but only when running on
+dual-socket x86 systems [1], as it it works just fine on my x86 laptop [2].
+But when running on dual-socket systems, this happens all the time,
+perhaps because rcutorture works hard to split each guest OS across a
+socket boundary.
 
-So I dug a bit into both the i915 and vc4 drivers, and it looks like if
-we're using a YCbCr format, i915 will always use a limited range while
-vc4 will follow the value of the property.
+This is the reproducer:
 
-I guess the best way to reconcile that would be to state that it also
-controls the YCbCr range, and i915 can choose to reject/adjust the
-configurations it can't support.
+tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs "10*TREE01" --trust-make
 
-Does that make sense?
+By "looked like early-boot hangs" I mean that qemu was quite happy,
+but there was absolutely no console output.
 
-Maxime
+Bisection identified this commit:
 
---6dznigm7bfdw265q
-Content-Type: application/pgp-signature; name="signature.asc"
+5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 
------BEGIN PGP SIGNATURE-----
+Reverting this commit made the problem go away.  Except that it is really
+hard to imagine this commit having any effect whatsoever on early boot
+execution.  Of course, this might be a failure of imagination on my part,
+so I enlisted the aid of gdb:
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZbznsgAKCRDj7w1vZxhR
-xY65AP4thN3Jypd+NMHjCI2DGcLcaa/6C19RZkReczuElu+gZwEA4x7ld5E6OIjM
-5nF1e+nTxH1f21uOqX5xJzdswy85Rw8=
-=NO9C
------END PGP SIGNATURE-----
+tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs "TREE01" --trust-make --gdb
 
---6dznigm7bfdw265q--
+After following the resulting gdb startup instructions and waiting for
+about ten seconds, I hit control-C on the gdb window and then:
+
+	(gdb) bt
+	#0  default_idle () at arch/x86/kernel/process.c:743
+	#1  0xffffffff81e94d34 in default_idle_call () at kernel/sched/idle.c:97
+	#2  0xffffffff810d746d in cpuidle_idle_call () at kernel/sched/idle.c:170
+	#3  do_idle () at kernel/sched/idle.c:312
+	#4  0xffffffff810d76a4 in cpu_startup_entry (state=state@entry=CPUHP_ONLINE)
+	    at kernel/sched/idle.c:410
+	#5  0xffffffff81e95417 in rest_init () at init/main.c:730
+	#6  0xffffffff8329adf2 in start_kernel () at init/main.c:1067
+	#7  0xffffffff832a5038 in x86_64_start_reservations (
+	    real_mode_data=real_mode_data@entry=0x13d50 <exception_stacks+32080> <error: Cannot access memory at address 0x13d50>) at arch/x86/kernel/head64.c:555
+	#8  0xffffffff832a513c in x86_64_start_kernel (
+	    real_mode_data=0x13d50 <exception_stacks+32080> <error: Cannot access memory at address 0x13d50>) at arch/x86/kernel/head64.c:536
+	#9  0xffffffff810001d2 in secondary_startup_64 ()
+	    at arch/x86/kernel/head_64.S:461
+	#10 0x0000000000000000 in ?? ()
+	(gdb) print jiffies
+	$1 = 4294676330
+	(gdb) print system_state
+	$2 = SYSTEM_RUNNING
+
+In other words, the system really has booted, and at least one CPU is
+happily idling in the idle loop.  And another CPU is (maybe not quite
+so happily) running rcutorture:
+
+	(gdb) thread 6
+	[Switching to thread 6 (Thread 1.6)]
+	#0  0xffffffff8111160b in rcu_torture_one_read (
+	    trsp=trsp@entry=0xffffc900004abe90, myid=myid@entry=4)
+	    at kernel/rcu/rcutorture.c:2003
+	2003            completed = cur_ops->get_gp_seq();
+	(gdb) bt
+	#0  0xffffffff8111160b in rcu_torture_one_read (
+	    trsp=trsp@entry=0xffffc900004abe90, myid=myid@entry=4)
+	    at kernel/rcu/rcutorture.c:2003
+	#1  0xffffffff81111bef in rcu_torture_reader (arg=0x4 <fixed_percpu_data+4>)
+	    at kernel/rcu/rcutorture.c:2097
+	#2  0xffffffff810af3e0 in kthread (_create=0xffff8880047aa480)
+	    at kernel/kthread.c:388
+	#3  0xffffffff8103af1f in ret_from_fork (prev=<optimized out>,
+	    regs=0xffffc900004abf58, fn=0xffffffff810af300 <kthread>,
+	    fn_arg=0xffff8880047aa480) at arch/x86/kernel/process.c:147
+	#4  0xffffffff8100247a in ret_from_fork_asm () at arch/x86/entry/entry_64.S:242
+	#5  0x0000000000000000 in ?? ()
+
+So the system really did boot and is running just fine.  It is just that
+there is no console output.  Details, details!
+
+Is there anything I can do to some combination of workqueues and printk
+to help debug this?  Or that I can do to anything else, as I am not
+feeling all that picky.  ;-)
+
+							Thanx, Paul
+
+[1] The dual-socket system is an 80-hardware-thread (20 cores per socket)
+    system with model name Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz.
+    I get the same results when using either of these compilers:
+    gcc version 8.5.0 20210514 (Red Hat 8.5.0-21) (GCC)
+    gcc version 11.4.1 20230605 (Red Hat 11.4.1-2) (GCC)
+
+[2] My laptop is a 16-hardware-thread (8 cores) single-socket system with
+    model name "Intel(R) Core(TM) i9-10885H CPU @ 2.40GHz" and
+    gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04).
