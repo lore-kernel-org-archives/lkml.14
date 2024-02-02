@@ -1,183 +1,107 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2881474D1
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 17:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE91A14AD16;
+	Fri,  2 Feb 2024 17:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706896362; cv=none; b=IrFjPzCXv80usP4V65lihOmGVJ8LawL35TYUc7IuYplPGBoNahsAoDjlcj7nSgHKni5r/ZlSNDIlbC9H8kCJKOQ6uWA/VdCTc5DTivGcm9R5nT0sWdn99ZnKrNyMO+C3zQ3nq7Si7aoVAG7+JaizFYhTiykaFKiTXF8MbsKQP9o=
+	t=1706896562; cv=none; b=D4gFiAnDFFGAKgDM28Sh74yybLxE2zTVOeAfKjjYuyr1f80llAkVVoyWrc78oyWNhNpX3pDfBBPjMca4zdUgEwy0jsVNtSkbEPLuHxnMxzaqfnCYW8eWl/jlBOHsj/RYCz1FSZyFB0r2vtlIDj3BPDSGgRkAnTqpArTiPZbeYQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706896362; c=relaxed/simple;
-	bh=thwc2BpCZUTvP4aysxwVHVYbONrwXJuuwnI5zKcv+uc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B276uDBVxxldqSQGMJ6mZodnn3yGCE33YBJ9tLzUNJZ0xGkLcDV3LYdgDQSRcs8DVgsxCH3NatP6zdeB1i69Zv4/GRIrcMCUM6h7AGAzS1rKm5gJa+hIcbaL/h9NG0FM0aBZz49z9Ct9UaohyjmMjL+2eIdmHdFjemcWos8E0XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=DVptwgIG reason="key not found in DNS"; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1706896562; c=relaxed/simple;
+	bh=qfwEz8hpHsqgnU+4/WFirpMN2irACdQrIsL+NmunY7U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WPIwUDU2h9b1EizJKLm28xiODrjItM/K/Q+Y5nMB2PaMijkL+4bTetzZEd1ZoHSG59a0Ce4VMzXS6QtERMZS43Q3SiM6vSKReHEWk65P9H9Tzyh4foK57oqEKMiWliFZIcG3lI1YOMfGYWfEslNYv47n7IRfIfZvwE4IPwI9G4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sQ25Q8lR; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="DVptwgIG"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-42ab4f89bdbso13814961cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 09:52:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1706896359; x=1707501159; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tic9SFl6RtBy5A5jkwNrOONIWfXMn2Yn279S/dAQN4s=;
-        b=DVptwgIGX60OTBCmWNn/WixvUOSoKHjmY7tr30itXhuKVXaGsyl9HRi/rZmGqwGA9e
-         RRb6S/c5to1ZQ9Vzs329tut2g5p9951X57Nyz8nzHYYj6xVg9lvnKPu0aP0ZvcEOdVZg
-         5yzUGGv9mkqDuGI8ZHivw3uSjmAcHD06e1QlG68cclXvNAKB+ba+kpFjoZIeIGSH4qpg
-         Ccs9Ofh4wFZnwr6idQyklm1PFAW/6mqI72PZak3aN8F9b/13MmwWzC8WXn97kxblBVe5
-         XVQxrW97u52p2L8Z4kzNjocQ404Tay6rMg9wc8cZekZ7jdPy2Z09Hnrp37KM0JOnc7ws
-         w4Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706896359; x=1707501159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tic9SFl6RtBy5A5jkwNrOONIWfXMn2Yn279S/dAQN4s=;
-        b=rokI7hPQJkNR8kKgx1m6Y8qQo33jyYba7nYNZmSCfbQl1dJOXLZxMWObbhEVqfvjZs
-         pfiZG/dXQqUxpEnVkch5NoXvTm+x4vW5sx4TR+bc5wlJEwDtE02rfdF/Rqtof61BvynT
-         R3XMTyW7Sz46o8dtFkC7txV3Ct3Wpp+Wn9o/FmT2h1a3w1XsWN6y7leZz704pQ18G0Db
-         Yqr5OxRjYZ5dePRM1V2xgUYqWkrcFmpQqbk4oemPPkXuQSIBG4l43k4SZPCNXxwnwhTh
-         WRIEWbdCrV+/gfyk/3A3lh01bD7LkUIKMuOtU4DJaTlMaqXSTYTtN00+pvlozkmJdtCy
-         5gZw==
-X-Gm-Message-State: AOJu0YxcI76KmfIN/0lly88/TWXGblGXODTr/OQAzzNqGLrJvSxh4zIr
-	MHQKrSvNzGljlcX+YJgU5Lztr0Gv8yCVjcd96xK2mqdqf+4dJpjIC2lCkZvWIXHnm/48KLxLOFi
-	gP3zLvYg/DUSI6/oxt27gGGrwpFaazTZfgGGRwg==
-X-Google-Smtp-Source: AGHT+IF/L/ZVnSmxYIpbF/6R4E3+3ofqDEXkLbosTV/HlVxwowatIOpcBf+LYIKvLNNieDl9Ov8+hl2pgPZa4GuPwtI=
-X-Received: by 2002:ac8:5d11:0:b0:42a:6217:f87d with SMTP id
- f17-20020ac85d11000000b0042a6217f87dmr3127013qtx.17.1706896359491; Fri, 02
- Feb 2024 09:52:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sQ25Q8lR"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 412HthxX030367;
+	Fri, 2 Feb 2024 11:55:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706896543;
+	bh=Vr15aner70yVXaHBFlAcgeLFRPozQNQYOHKtYk6Y8CE=;
+	h=From:To:CC:Subject:Date;
+	b=sQ25Q8lRPE4GkcyDs3KKXlSerUz8PWSTgoyvRF5kMJAmymb2Wd2yy6LhE5iZXbT6n
+	 MH4tL3RLcB0T50dumaRC7L/QvZt7v2kt3z3xYJV878JA4TU8Kave+s2uWaMe466c6n
+	 v7x0dwISaWda/jyfVJMz16t9g6lU6fNJzQTJEdSI=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 412HthTV003944
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 Feb 2024 11:55:43 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ Feb 2024 11:55:43 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 Feb 2024 11:55:43 -0600
+Received: from localhost ([10.249.48.175])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 412HtggK114579;
+	Fri, 2 Feb 2024 11:55:42 -0600
+From: Hari Nagalla <hnagalla@ti.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
+        <p.zabel@pengutronix.de>, <martyn.welch@collabora.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v7 0/5] TI K3 M4F support on AM64x and AM62x SoCs
+Date: Fri, 2 Feb 2024 11:55:33 -0600
+Message-ID: <20240202175538.1705-1-hnagalla@ti.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201193014.2785570-1-tatashin@google.com> <CAJD7tkbDwwzTfm5h6v5f8XSN8KduBy6h7EVuQt0CAfX--Nb0gQ@mail.gmail.com>
-In-Reply-To: <CAJD7tkbDwwzTfm5h6v5f8XSN8KduBy6h7EVuQt0CAfX--Nb0gQ@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 2 Feb 2024 12:52:03 -0500
-Message-ID: <CA+CK2bCCGXuB9QfAc+BZ_JWf872xy3uGE=-pUbhYJwZSkSdrew@mail.gmail.com>
-Subject: Re: [PATCH] iommu/iova: use named kmem_cache for iova magazines
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: robin.murphy@arm.com, joro@8bytes.org, will@kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rientjes@google.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-> > +static int iova_magazine_cache_init(void)
-> > +{
-> > +       int ret =3D 0;
-> > +
-> > +       mutex_lock(&iova_magazine_cache_mutex);
-> > +
-> > +       iova_magazine_cache_users++;
-> > +       if (iova_magazine_cache_users > 1)
-> > +               goto out_unlock;
-> > +
-> > +       iova_magazine_cache =3D kmem_cache_create("iommu_iova_magazine"=
-,
-> > +                                               sizeof(struct iova_maga=
-zine),
-> > +                                               0, SLAB_HWCACHE_ALIGN, =
-NULL);
->
-> Could this slab cache be merged with a compatible one in the slab
-> code? If this happens, do we still get a separate entry in
-> /proc/slabinfo?
+The following series introduces K3 M4F remoteproc driver support for
+AM64x and AM62x SoC families. These SoCs have a ARM Cortex M4F core in
+the MCU voltage domain. For safety oriented applications, this core is
+operated independently with out any IPC to other cores on the SoC.
+However, for non safety applications, some customers use it as a remote
+processor and so linux remote proc support is extended to the M4F core.
 
-Hi Yosry,
+See AM64x Technical Reference Manual (SPRUIM2C – SEPTEMBER 2021) for
+further details: https://www.ti.com/lit/pdf/SPRUIM2
 
-Good suggestion to check for merges. I have checked,
-iommu_iova_magazine is not merged.
+See AM62x Technical Reference Manual (SPRUIV7A – MAY 2022) for
+further details: https://www.ti.com/lit/pdf/SPRUIV7A
 
-> It may be useful to use SLAB_NO_MERGE if the purpose is to
-> specifically have observability into this slab cache, but the comments
-> above the flag make me think I may be misunderstanding it.
+kernel build log: https://paste.sr.ht/~hnagalla/be9d1c45e176ea8fa274ab13a3da43a9853fcf7f
+dt-binding-check log: https://paste.sr.ht/~hnagalla/25912c85f6a8c68e3da24053fc060f38024fb8ab 
+kernel boot log: https://paste.sr.ht/~hnagalla/5ba77847343f22b5f9ec2b7aeabc410aaf8cdf45
 
-SLAB_NO_MERGE may reduce performance, and fragmentation efficiency, it
-is better to keep it as-is.
+Hari Nagalla (2):
+  dt-bindings: remoteproc: k3-m4f: Add K3 AM64x SoCs
+  arm64: defconfig: Enable TI K3 M4 remote proc driver
 
-Pasha
+Martyn Welch (3):
+  remoteproc: k3: Move out data structures common with M4 driver
+  remoteproc: k3: Move out functions common with M4 driver
+  remoteproc: k3-m4: Add a remoteproc driver for M4F subsystem
 
-On Thu, Feb 1, 2024 at 5:29=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com> =
-wrote:
->
-> On Thu, Feb 1, 2024 at 11:30=E2=80=AFAM Pasha Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> >
-> > From: Pasha Tatashin <pasha.tatashin@soleen.com>
-> >
-> > The magazine buffers can take gigabytes of kmem memory, dominating all
-> > other allocations. For observability prurpose create named slab cache s=
-o
-> > the iova magazine memory overhead can be clearly observed.
-> >
-> > With this change:
-> >
-> > > slabtop -o | head
-> >  Active / Total Objects (% used)    : 869731 / 952904 (91.3%)
-> >  Active / Total Slabs (% used)      : 103411 / 103974 (99.5%)
-> >  Active / Total Caches (% used)     : 135 / 211 (64.0%)
-> >  Active / Total Size (% used)       : 395389.68K / 411430.20K (96.1%)
-> >  Minimum / Average / Maximum Object : 0.02K / 0.43K / 8.00K
-> >
-> > OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
-> > 244412 244239 99%    1.00K  61103       4    244412K iommu_iova_magazin=
-e
-> >  91636  88343 96%    0.03K    739     124      2956K kmalloc-32
-> >  75744  74844 98%    0.12K   2367      32      9468K kernfs_node_cache
-> >
-> > On this machine it is now clear that magazine use 242M of kmem memory.
-> >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  drivers/iommu/iova.c | 57 +++++++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 54 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-> > index d30e453d0fb4..617bbc2b79f5 100644
-> > --- a/drivers/iommu/iova.c
-> > +++ b/drivers/iommu/iova.c
-> > @@ -630,6 +630,10 @@ EXPORT_SYMBOL_GPL(reserve_iova);
-> >
-> >  #define IOVA_DEPOT_DELAY msecs_to_jiffies(100)
-> >
-> > +static struct kmem_cache *iova_magazine_cache;
-> > +static unsigned int iova_magazine_cache_users;
-> > +static DEFINE_MUTEX(iova_magazine_cache_mutex);
-> > +
-> >  struct iova_magazine {
-> >         union {
-> >                 unsigned long size;
-> > @@ -654,11 +658,51 @@ struct iova_rcache {
-> >         struct delayed_work work;
-> >  };
-> >
-> > +static int iova_magazine_cache_init(void)
-> > +{
-> > +       int ret =3D 0;
-> > +
-> > +       mutex_lock(&iova_magazine_cache_mutex);
-> > +
-> > +       iova_magazine_cache_users++;
-> > +       if (iova_magazine_cache_users > 1)
-> > +               goto out_unlock;
-> > +
-> > +       iova_magazine_cache =3D kmem_cache_create("iommu_iova_magazine"=
-,
-> > +                                               sizeof(struct iova_maga=
-zine),
-> > +                                               0, SLAB_HWCACHE_ALIGN, =
-NULL);
->
-> Could this slab cache be merged with a compatible one in the slab
-> code? If this happens, do we still get a separate entry in
-> /proc/slabinfo?
->
-> It may be useful to use SLAB_NO_MERGE if the purpose is to
-> specifically have observability into this slab cache, but the comments
-> above the flag make me think I may be misunderstanding it.
+ .../bindings/remoteproc/ti,k3-m4f-rproc.yaml  |  138 ++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/remoteproc/Kconfig                    |   13 +
+ drivers/remoteproc/Makefile                   |    3 +-
+ drivers/remoteproc/ti_k3_common.c             |  583 ++++++++
+ drivers/remoteproc/ti_k3_common.h             |  107 ++
+ drivers/remoteproc/ti_k3_dsp_remoteproc.c     | 1277 +++++------------
+ drivers/remoteproc/ti_k3_m4_remoteproc.c      |  327 +++++
+ 8 files changed, 1539 insertions(+), 910 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yaml
+ create mode 100644 drivers/remoteproc/ti_k3_common.c
+ create mode 100644 drivers/remoteproc/ti_k3_common.h
+ rewrite drivers/remoteproc/ti_k3_dsp_remoteproc.c (67%)
+ create mode 100644 drivers/remoteproc/ti_k3_m4_remoteproc.c
+
+-- 
+2.34.1
+
