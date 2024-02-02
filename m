@@ -1,112 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C969814A4EC;
-	Fri,  2 Feb 2024 16:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD8214A4C3;
+	Fri,  2 Feb 2024 16:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706892746; cv=none; b=o/NaY5058QPilt+ofBL4I7E2wEu96fKwMhjtldgiQEpm7xWDMm++EjZ4rGkFL8a0UJJna9JHPxahaB8g7CsR+SVjKuVnyQ7bI1gtH1IX5MvqN8mMVItTEh6tZHeT7PVg5tOlqvQWlvbgIAj/it1zyAy0fOsoiGGalOFIatl17ME=
+	t=1706892759; cv=none; b=aWIUStLF3885wEjiNHH6r7yRew9OKyfEiflXLussZqpMELEhnbaCXKWw7kdHEGlG6mNUxL8K8HKgYaI9Dp7H7Q4giPv/Y6qU9YdeDJvPcm5eOfCTyhCHfTvwDB6VyKDwbcoUkOlmQPHlmhuB2EQAe8bAedflLB6EVl1vOAKDlu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706892746; c=relaxed/simple;
-	bh=HzgDzI/Ge9eFvWVgikaxYZfFSROrOdcCMT23siR2Q6o=;
-	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
-	 Message-ID:In-Reply-To; b=qiYSeYdsG7NMeAWcp7YGSFJtBdqDc+r4/NaLh4U3A+CAyzp9BQ4tdLIjEvdnmecbUss25/n6DYH+ZAJzD/HlA9dbXo5Uc3iePCfPH+c5dbKtld4K3vD7Rhpt388FY3j6Hw3jxGbP4dHkzf2Rbh1GLLthd6a3RfCCYDAN+dYabPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LQCciCfU; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706892759; c=relaxed/simple;
+	bh=YhZYOEt/Mhq5UOiR24gxD3SphpDnqDkRm98hcjeYxHY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G/5TH4EfwOUIlKqNJf1L9TCpuxOtAuRSgilYZ4XVyfcKuG6HxOjSU3sVlpc72Xwr2froptx5W0QPc44eMWTzjx+zF4WZSyTYCT0EadhXIpVDRfRWSwq41vOyKhJCWqoiujRLLH6PAq0KDAojvIj4BVXzfEvvGd3It0cTayW1bRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MUTu1QGJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LQCciCfU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706892741; x=1738428741;
-  h=to:cc:subject:references:date:mime-version:
-   content-transfer-encoding:from:message-id:in-reply-to;
-  bh=HzgDzI/Ge9eFvWVgikaxYZfFSROrOdcCMT23siR2Q6o=;
-  b=LQCciCfUe7id/mI1xZw4oEdn51ZVVKlNNI29SfutAVYE83VXu+DI8eEb
-   +e9gHAiZpOcssBeugERBY9KqzSKhnwm9sM2o5JewkhR9Vz/2tpvepMN5L
-   WH9GF9Lrv+bmkFVZmNz0n6KUgKSYpUSftW2rmdRLPwr2uEKi4xn9Gk7nY
-   TUGukvG6CbRiQY3bb6UJBErXn+gZV4QdkP7HoZJ4MHmu9W2AOdflmhEcC
-   YynHR0pyrX59sce/RQjnTNrhfFHYo7hrRInKVBeB8ehsoNy9AfNMmdQeH
-   CegEs7jQLjQmaftmGtnjhyppqjwAjlnBVsrgezmynSGJwVZIel/zV6kFJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="102604"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="102604"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 08:52:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="435399"
-Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA; 02 Feb 2024 08:52:15 -0800
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To: dave.hansen@linux.intel.com, tj@kernel.org, mkoutny@suse.com,
- linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, x86@kernel.org,
- cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- hpa@zytor.com, sohil.mehta@intel.com, "Jarkko Sakkinen" <jarkko@kernel.org>
-Cc: zhiquan1.li@intel.com, kristen@linux.intel.com, seanjc@google.com,
- zhanb@microsoft.com, anakrish@microsoft.com, mikko.ylinen@linux.intel.com,
- yangjie@microsoft.com, chrisyan@microsoft.com
-Subject: Re: [PATCH v8 05/15] x86/sgx: Add sgx_epc_lru_list to encapsulate LRU
- list
-References: <20240130020938.10025-1-haitao.huang@linux.intel.com>
- <20240130020938.10025-6-haitao.huang@linux.intel.com>
- <CYU4S0Y9SVZ2.2G9RM5Y3K28XI@suppilovahvero>
-Date: Fri, 02 Feb 2024 10:52:12 -0600
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MUTu1QGJ"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412DjtRg015707;
+	Fri, 2 Feb 2024 16:52:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=mfoB8ip
+	fy0L6OloPCbkGz5gD4ZpAk/e1jBDItP4Z7sE=; b=MUTu1QGJqk3zZdN8AIVKUtE
+	mFcQWxkLVJFTvhDfzpIzuV0U/Z7WaRwJ4HLOwDIto12izImUD/X9LEYrcblH2mhA
+	STql53jX9YK9R3VJ6s+KGrBTlxL373f/LFCzCTwP5DzLkk3xf8m+TQHzjr9Sal6s
+	Kye2eU8cdsPZvBhbk3IQpc3M5/OhjHapoKBDmtl+X8Mm5jHf4msWO0Ui1FXivxGS
+	qKCiGY0s+y/EfEWYZv5Kr/vhZ+1/DHzZvbdU++32+AGqCy0shsXRK6Zp6wjla2Rz
+	fpsQFp39SRqjffq7oaiN6W5DM3qEsshMVFZ36ybL3PcPYmOuuo+jdjwOhtRxShg=
+	=
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwjhws5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 Feb 2024 16:52:24 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412GqNLP014387
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 2 Feb 2024 16:52:23 GMT
+Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 2 Feb 2024 08:52:22 -0800
+From: Jeffrey Hugo <quic_jhugo@quicinc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>, <quic_stummala@quicinc.com>,
+        <quic_bjorande@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>
+Subject: [PATCH] f2fs: doc: Fix bouncing email address for Sahitya Tummala
+Date: Fri, 2 Feb 2024 09:52:08 -0700
+Message-ID: <20240202165208.4091800-1-quic_jhugo@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From: "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel
-Message-ID: <op.2iiw5ajmwjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <CYU4S0Y9SVZ2.2G9RM5Y3K28XI@suppilovahvero>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6-HTTPrKvZyBZbc5_9FVnicmaTolsfVZ
+X-Proofpoint-ORIG-GUID: 6-HTTPrKvZyBZbc5_9FVnicmaTolsfVZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-02_10,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1011 mlxscore=0 phishscore=0 mlxlogscore=452
+ malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402020121
 
-On Thu, 01 Feb 2024 17:28:32 -0600, Jarkko Sakkinen <jarkko@kernel.org>  
-wrote:
+The servers for the @codeaurora domain are long retired and any messages
+addressed there will bounce.  Sahitya Tummala has a .mailmap entry to an
+updated address, but the documentation files still list @codeaurora
+which might be a problem for anyone reading the documentation directly.
+Update the documentation files to match the .mailmap update.
 
-> On Tue Jan 30, 2024 at 4:09 AM EET, Haitao Huang wrote:
->> From: Sean Christopherson <sean.j.christopherson@intel.com>
->>
->> Introduce a data structure to wrap the existing reclaimable list and its
->> spinlock. Each cgroup later will have one instance of this structure to
->> track EPC pages allocated for processes associated with the same cgroup.
->> Just like the global SGX reclaimer (ksgxd), an EPC cgroup reclaims pages
->> from the reclaimable list in this structure when its usage reaches near
->> its limit.
->>
->> Use this structure to encapsulate the LRU list and its lock used by the
->> global reclaimer.
->>
->> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> Co-developed-by: Kristen Carlson Accardi <kristen@linux.intel.com>
->> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
->> Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
->> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
->
-> I'd put author as last sob but that said I'm not sure if there is rigid
-> rule to do so. Thus not saying must here.
->
+Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+---
+ Documentation/ABI/testing/sysfs-fs-f2fs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The documentation says "the ordering of Signed-off-by: tags should reflect  
-the chronological history of the patch insofar as possible, regardless of  
-whether the author is attributed via From: or Co-developed-by:. Notably,  
-the last Signed-off-by: must always be that of the developer submitting  
-the patch."
+diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+index 48c135e24eb5..22d070c0de40 100644
+--- a/Documentation/ABI/testing/sysfs-fs-f2fs
++++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+@@ -205,7 +205,7 @@ Description:	Controls the idle timing of system, if there is no FS operation
+ What:		/sys/fs/f2fs/<disk>/discard_idle_interval
+ Date:		September 2018
+ Contact:	"Chao Yu" <yuchao0@huawei.com>
+-Contact:	"Sahitya Tummala" <stummala@codeaurora.org>
++Contact:	"Sahitya Tummala" <quic_stummala@quicinc.com>
+ Description:	Controls the idle timing of discard thread given
+ 		this time interval.
+ 		Default is 5 secs.
+@@ -213,7 +213,7 @@ Description:	Controls the idle timing of discard thread given
+ What:		/sys/fs/f2fs/<disk>/gc_idle_interval
+ Date:		September 2018
+ Contact:	"Chao Yu" <yuchao0@huawei.com>
+-Contact:	"Sahitya Tummala" <stummala@codeaurora.org>
++Contact:	"Sahitya Tummala" <quic_stummala@quicinc.com>
+ Description:    Controls the idle timing for gc path. Set to 5 seconds by default.
+ 
+ What:		/sys/fs/f2fs/<disk>/iostat_enable
+-- 
+2.34.1
 
-So this should be OK.
-[...]
->>  struct sgx_epc_page *__sgx_alloc_epc_page(void);
->>  void sgx_free_epc_page(struct sgx_epc_page *page);
->>
->
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->
-> BR, Jarkko
->
-Thank you!
-Haitao
