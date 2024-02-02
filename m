@@ -1,199 +1,232 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F6218635;
-	Fri,  2 Feb 2024 06:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FB9D18E28
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 06:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706856186; cv=none; b=pbunB/hppL+8cntgddqFL1ky4j0WjdQRidldxnJp2/e1rMEvOjKgPCwPbl0I5Z1Aqtp7ndbX8ZIX7HuUWy3fcBUYVwQ4k6dOcSkWPtQbde6kS9839qJnk4fIydfy8zk6allQ4i2uvcR61lhR5nQTd20OrSdw/DMmFH0bGVWZL64=
+	t=1706856212; cv=none; b=IhrLvb8Zlbng0NLz0ERw19YZ5lxZbXm//enQwcGyGVqRp927EKCgtwV9JZUaZMyrb7YkiIEkqDsUgPB2N1b9drT5uv64XSv5OJUEvRRfOJKviSkO0gSrZKUX471C1g97u3JwKD7f/lgvEBNvYECm9mEG+F4zt2Z78uyqgHKwhC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706856186; c=relaxed/simple;
-	bh=u3L/t25hSxI8r3lIflWodO5iFF9bpJmEaOR9QAr2m9s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XCFlD9++YGsIhBO+dtRmViowZDfd65Uvsyot/Cxp3frO+YMqM9NtbUBTlP+V5CoOKPN9A8O4lgnlotftoVbyr6lxndh07vHlcrPq6KOof8bZttRbBhNjMAwRmDOXrqrmRBepnpprTe7cYT7XzbnWN/NSx1sU6lo+zb9eQvU0OBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWlYgLX6; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706856212; c=relaxed/simple;
+	bh=1abfXCBdaVL06qhbdUchwr0RLvq8rUYXW2BJ8pcbj+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=HI0SvYbmeSy1gyz6KVtwAQfG5bKgGLGr5ym56Go91sHTE0U516fbYqJACIfJx6Bezz+tS9TdpDY2cHi29yaRBhnGcdnjUnXaSHOg0vAUNIymXzZ/7IDXkxNb2k0G+3DiiSRQNERtrnLs+95Txm1BVo4TBLLkhOz9QYeRlhfLeaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QdhZU2uW; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWlYgLX6"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e1352dd653so1091661a34.2;
-        Thu, 01 Feb 2024 22:43:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706856184; x=1707460984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BW7ioWygsib3qTGH3bCtwZFbfdrDyw7qBL154vPbYOU=;
-        b=EWlYgLX6VYLKel1/rpi1T4W6PIpPLHgHRJOGRY/yhcTPDs1Lcb6TEBDao2LOwDKz8R
-         kIAyVN1+CkYxdt46g2k16EKis+e4FZ/RjVTcDCixouIoKihL9NvuV4i+k+qoljLlVlux
-         tNai/V7SLh3t+1hQaoZT8Po7awgPJHOF3E5QTzX2LKXyBw3Yv+UBmFzdZpTZVNTT4dKG
-         36IurewKxkd3/3NAzi5KWQ40EeLFF95KgrnqpWt29/A8QJ4gXHAkagVOllavUs3qo71X
-         ySiW2E3Ila++b+4Q5Qq2h0ferLOwM0JXPTGn4LQSqRkyiQpGSeJYjd+sp3BhWzuqdzSf
-         VrTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706856184; x=1707460984;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BW7ioWygsib3qTGH3bCtwZFbfdrDyw7qBL154vPbYOU=;
-        b=Ss7JXXHasRHLxKzlFl7ZjJq74umN9nh2bScC0YklM5+4v6aX2yNgTt8vRqrS8aZieQ
-         fpYqeThc3CBGBpDZgQDnahbTwIvLk4LjuLeI6Vp6LLySZqqwOogZDNlmj0VsLmSd5AhH
-         tIB8eXTjl1QPV3yDQwN9H0zcJXqYzcyVIr1D5hLbPF8lqLnOoP2L37j084Q7h5MVbJwC
-         ko0QucGTVWMoZp86BeFGGK4BwGONLav30Hu7hmCLnvwrPhuPZK4vjKPRx+vGIsfHmMtf
-         WWuDo0KNpMdaLMbguBMG7XaenLIJXV84N5wTUPCSQPRgb7Lt3HmSZPgy/Sus9OUz1NP2
-         wm5A==
-X-Gm-Message-State: AOJu0Yw6cunDetp046sqTuzTA4LZStuig9jMNarmTMSzY5F5UGRVy7FZ
-	2kVPB2ozM1pSnOVlKaI+mBAYJlcEkPfKyG8PuQGqOKrYEG+NLRmh
-X-Google-Smtp-Source: AGHT+IEZS7LpY55EN479CaW9byfcrn8q3PFeWPPALesksVI+uPsKgcQAI6MDDGRLkQvFwDr2sJ5+0g==
-X-Received: by 2002:a9d:7747:0:b0:6e1:1437:8a45 with SMTP id t7-20020a9d7747000000b006e114378a45mr1116187otl.16.1706856184002;
-        Thu, 01 Feb 2024 22:43:04 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX4R0qDFeaJy982qi5eiCQC391aH5Ffpz/+ineKapBilqeevjYTAitfeFBMTjPa+gvB1EsA3lO9IDA5scj1w2ZHotBHONco0z8Hs3Tpciz7GZBBWBz+vWFxKDr6MEelmjZ9OZcKJlVkO/RBAUS8/D0RyHI1qO7LPjYkYuoWUeODjh8gBmVnCmBt8dG9TI8XWyZy2gr6Ys4Phg9He7ULmDT8+vuQ+gupoT8KNvptVFvaF1by7WIGL2bqb6nCTlx1vUxnJGXOWMvQIssiiVHqGDshYrvuiKmObj4u6NoD8euyrvd5pBY1oxdoPmXG7mR0jQWS2fd1FILhYg2vLkHFHIbPaaxDiDxfJMFEGvnF8jcJAftwPbUedkeElpvN79AHJUjhyB+3R/qDbdbGSH0bGzTMvxOapOjoyQ2auOiTsERY+Phdx2vuka3w0bcRwgGQwKtNYPyeNvW7QD9fNVlDf+l3jDr9JgkIcVzeycgqyS7ngBDE0CmSqWt3okOZT4R9LUjY/ySiJvd5m+0VaqA0+e0ymG2+MBTyq6gEUiKO26QmSeCaoQiKQD94SKZDbBeJrUXHqlwD4Rv6XJUh9yN8hhFkq5tdrZqr7x4Z4s9Qk9yv8XwabgxykqKxlN8OGuxH5DC2I58t9wHae2syY+Qnsrb+XkxkKK5C/klvjdflv4fAk2Q=
-Received: from localhost.localdomain ([122.8.183.87])
-        by smtp.gmail.com with ESMTPSA id q24-20020a05683022d800b006e1116e5169sm278807otc.7.2024.02.01.22.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 22:43:03 -0800 (PST)
-From: Chen Wang <unicornxw@gmail.com>
-To: aou@eecs.berkeley.edu,
-	chao.wei@sophgo.com,
-	conor@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	mturquette@baylibre.com,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	richardcochran@gmail.com,
-	robh+dt@kernel.org,
-	sboyd@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	haijiao.liu@sophgo.com,
-	xiaoguang.xing@sophgo.com,
-	guoren@kernel.org,
-	jszhang@kernel.org,
-	inochiama@outlook.com,
-	samuel.holland@sifive.com
-Cc: Chen Wang <unicorn_wang@outlook.com>
-Subject: [PATCH v9 5/5] riscv: dts: add clock generator for Sophgo SG2042 SoC
-Date: Fri,  2 Feb 2024 14:42:56 +0800
-Message-Id: <dff0beff331dcc4e0d46175787f045064f8bcbc9.1706854074.git.unicorn_wang@outlook.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706854074.git.unicorn_wang@outlook.com>
-References: <cover.1706854074.git.unicorn_wang@outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QdhZU2uW"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id C4CDD20B2000; Thu,  1 Feb 2024 22:43:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C4CDD20B2000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1706856210;
+	bh=/bx6QDZpUAu0zrSd8HA7Hzv58wlXmlOwd1w++Z5qd8c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QdhZU2uWQWHXyEgfYWLD1DveLDO8kE+lv1wiSfe5h0KXuSgz1p7NfoCb+4+WfzXRy
+	 a1F/BLKb1PQujut7dyK0vnngiK/dWsXFXVw+FAbe3U0B0dtrTeKbs2FDX8YwO5Bn9M
+	 HAqPN5ZHHobOGeyyRHWltE9/LugzXQOIasB8Yts8=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.dev>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v4, 1/2] drm: Check output polling initialized before disabling
+Date: Thu,  1 Feb 2024 22:43:28 -0800
+Message-Id: <1706856208-9617-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1706856176-9483-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1706856176-9483-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Chen Wang <unicorn_wang@outlook.com>
+In drm_kms_helper_poll_disable() check if output polling
+support is initialized before disabling polling. If not flag
+this as a warning.
+Additionally in drm_mode_config_helper_suspend() and
+drm_mode_config_helper_resume() calls, that re the callers of these
+functions, avoid invoking them if polling is not initialized.
+For drivers like hyperv-drm, that do not initialize connector
+polling, if suspend is called without this check, it leads to
+suspend failure with following stack
+[  770.719392] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+[  770.720592] printk: Suspending console(s) (use no_console_suspend to debug)
+[  770.948823] ------------[ cut here ]------------
+[  770.948824] WARNING: CPU: 1 PID: 17197 at kernel/workqueue.c:3162 __flush_work.isra.0+0x212/0x230
+[  770.948831] Modules linked in: rfkill nft_counter xt_conntrack xt_owner udf nft_compat crc_itu_t nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink vfat fat mlx5_ib ib_uverbs ib_core mlx5_core intel_rapl_msr intel_rapl_common kvm_amd ccp mlxfw kvm psample hyperv_drm tls drm_shmem_helper drm_kms_helper irqbypass pcspkr syscopyarea sysfillrect sysimgblt hv_balloon hv_utils joydev drm fuse xfs libcrc32c pci_hyperv pci_hyperv_intf sr_mod sd_mod cdrom t10_pi sg hv_storvsc scsi_transport_fc hv_netvsc serio_raw hyperv_keyboard hid_hyperv crct10dif_pclmul crc32_pclmul crc32c_intel hv_vmbus ghash_clmulni_intel dm_mirror dm_region_hash dm_log dm_mod
+[  770.948863] CPU: 1 PID: 17197 Comm: systemd-sleep Not tainted 5.14.0-362.2.1.el9_3.x86_64 #1
+[  770.948865] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 05/09/2022
+[  770.948866] RIP: 0010:__flush_work.isra.0+0x212/0x230
+[  770.948869] Code: 8b 4d 00 4c 8b 45 08 89 ca 48 c1 e9 04 83 e2 08 83 e1 0f 83 ca 02 89 c8 48 0f ba 6d 00 03 e9 25 ff ff ff 0f 0b e9 4e ff ff ff <0f> 0b 45 31 ed e9 44 ff ff ff e8 8f 89 b2 00 66 66 2e 0f 1f 84 00
+[  770.948870] RSP: 0018:ffffaf4ac213fb10 EFLAGS: 00010246
+[  770.948871] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8c992857
+[  770.948872] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff9aad82b00330
+[  770.948873] RBP: ffff9aad82b00330 R08: 0000000000000000 R09: ffff9aad87ee3d10
+[  770.948874] R10: 0000000000000200 R11: 0000000000000000 R12: ffff9aad82b00330
+[  770.948874] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
+[  770.948875] FS:  00007ff1b2f6bb40(0000) GS:ffff9aaf37d00000(0000) knlGS:0000000000000000
+[  770.948878] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  770.948878] CR2: 0000555f345cb666 CR3: 00000001462dc005 CR4: 0000000000370ee0
+[  770.948879] Call Trace:
+[  770.948880]  <TASK>
+[  770.948881]  ? show_trace_log_lvl+0x1c4/0x2df
+[  770.948884]  ? show_trace_log_lvl+0x1c4/0x2df
+[  770.948886]  ? __cancel_work_timer+0x103/0x190
+[  770.948887]  ? __flush_work.isra.0+0x212/0x230
+[  770.948889]  ? __warn+0x81/0x110
+[  770.948891]  ? __flush_work.isra.0+0x212/0x230
+[  770.948892]  ? report_bug+0x10a/0x140
+[  770.948895]  ? handle_bug+0x3c/0x70
+[  770.948898]  ? exc_invalid_op+0x14/0x70
+[  770.948899]  ? asm_exc_invalid_op+0x16/0x20
+[  770.948903]  ? __flush_work.isra.0+0x212/0x230
+[  770.948905]  __cancel_work_timer+0x103/0x190
+[  770.948907]  ? _raw_spin_unlock_irqrestore+0xa/0x30
+[  770.948910]  drm_kms_helper_poll_disable+0x1e/0x40 [drm_kms_helper]
+[  770.948923]  drm_mode_config_helper_suspend+0x1c/0x80 [drm_kms_helper]
+[  770.948933]  ? __pfx_vmbus_suspend+0x10/0x10 [hv_vmbus]
+[  770.948942]  hyperv_vmbus_suspend+0x17/0x40 [hyperv_drm]
+[  770.948944]  ? __pfx_vmbus_suspend+0x10/0x10 [hv_vmbus]
+[  770.948951]  dpm_run_callback+0x4c/0x140
+[  770.948954]  __device_suspend_noirq+0x74/0x220
+[  770.948956]  dpm_noirq_suspend_devices+0x148/0x2a0
+[  770.948958]  dpm_suspend_end+0x54/0xe0
+[  770.948960]  create_image+0x14/0x290
+[  770.948963]  hibernation_snapshot+0xd6/0x200
+[  770.948964]  hibernate.cold+0x8b/0x1fb
+[  770.948967]  state_store+0xcd/0xd0
+[  770.948969]  kernfs_fop_write_iter+0x124/0x1b0
+[  770.948973]  new_sync_write+0xff/0x190
+[  770.948976]  vfs_write+0x1ef/0x280
+[  770.948978]  ksys_write+0x5f/0xe0
+[  770.948979]  do_syscall_64+0x5c/0x90
+[  770.948981]  ? syscall_exit_work+0x103/0x130
+[  770.948983]  ? syscall_exit_to_user_mode+0x12/0x30
+[  770.948985]  ? do_syscall_64+0x69/0x90
+[  770.948986]  ? do_syscall_64+0x69/0x90
+[  770.948987]  ? do_user_addr_fault+0x1d6/0x6a0
+[  770.948989]  ? do_syscall_64+0x69/0x90
+[  770.948990]  ? exc_page_fault+0x62/0x150
+[  770.948992]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+[  770.948995] RIP: 0033:0x7ff1b293eba7
+[  770.949010] Code: 0b 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+[  770.949011] RSP: 002b:00007ffde3912128 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  770.949012] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007ff1b293eba7
+[  770.949013] RDX: 0000000000000005 RSI: 00007ffde3912210 RDI: 0000000000000004
+[  770.949014] RBP: 00007ffde3912210 R08: 000055d7dd4c9510 R09: 00007ff1b29b14e0
+[  770.949014] R10: 00007ff1b29b13e0 R11: 0000000000000246 R12: 0000000000000005
+[  770.949015] R13: 000055d7dd4c53e0 R14: 0000000000000005 R15: 00007ff1b29f69e0
+[  770.949016]  </TASK>
+[  770.949017] ---[ end trace e6fa0618bfa2f31d ]---
 
-Add clock generator node to device tree for SG2042, and enable clock for
-uart.
-
-Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+Built-on: Rhel9, Ubuntu22
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- .../boot/dts/sophgo/sg2042-milkv-pioneer.dts  | 12 ++++++
- arch/riscv/boot/dts/sophgo/sg2042.dtsi        | 41 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
+Changes in v4
+ * clubbed similar patches together and added a cover letter
+Changes in v3
+ * Also added checks in the _suspend and _resume calls to avoid driver bugs
+ * Added WARN_ON around the checks in _enable and _disable calls
+ * Fixed the patch description to reflect new changes
+Changes in v2
+ * Moved the poll_enabled check in drm_kms_helper_poll_disable()
+ * Reworded the patch description based on new changes
+---
+ drivers/gpu/drm/drm_modeset_helper.c | 19 ++++++++++++++++---
+ drivers/gpu/drm/drm_probe_helper.c   | 13 +++++++++++--
+ 2 files changed, 27 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-index 49b4b9c2c101..80cb017974d8 100644
---- a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-+++ b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-@@ -14,6 +14,18 @@ chosen {
- 	};
- };
+diff --git a/drivers/gpu/drm/drm_modeset_helper.c b/drivers/gpu/drm/drm_modeset_helper.c
+index f858dfedf2cf..2c582020cb42 100644
+--- a/drivers/gpu/drm/drm_modeset_helper.c
++++ b/drivers/gpu/drm/drm_modeset_helper.c
+@@ -193,13 +193,22 @@ int drm_mode_config_helper_suspend(struct drm_device *dev)
  
-+&cgi_main {
-+	clock-frequency = <25000000>;
-+};
-+
-+&cgi_dpll0 {
-+	clock-frequency = <25000000>;
-+};
-+
-+&cgi_dpll1 {
-+	clock-frequency = <25000000>;
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-index ead1cc35d88b..d83b6a01fbd9 100644
---- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-@@ -5,6 +5,7 @@
+ 	if (!dev)
+ 		return 0;
++	/*
++	 * Don't disable polling if it was never initialized
++	 */
++	if (dev->mode_config.poll_enabled)
++		drm_kms_helper_poll_disable(dev);
  
- /dts-v1/;
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/clock/sophgo,sg2042-clkgen.h>
+-	drm_kms_helper_poll_disable(dev);
+ 	drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 1);
+ 	state = drm_atomic_helper_suspend(dev);
+ 	if (IS_ERR(state)) {
+ 		drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 0);
+-		drm_kms_helper_poll_enable(dev);
++		/*
++		 * Don't enable polling if it was never initialized
++		 */
++		if (dev->mode_config.poll_enabled)
++			drm_kms_helper_poll_enable(dev);
++
+ 		return PTR_ERR(state);
+ 	}
  
- #include "sg2042-cpus.dtsi"
+@@ -239,7 +248,11 @@ int drm_mode_config_helper_resume(struct drm_device *dev)
+ 	dev->mode_config.suspend_state = NULL;
  
-@@ -18,12 +19,49 @@ aliases {
- 		serial0 = &uart0;
- 	};
+ 	drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 0);
+-	drm_kms_helper_poll_enable(dev);
++	/*
++	 * Don't enable polling if it is not initialized
++	 */
++	if (dev->mode_config.poll_enabled)
++		drm_kms_helper_poll_enable(dev);
  
-+	cgi_main: oscillator0 {
-+		compatible = "fixed-clock";
-+		clock-output-names = "cgi_main";
-+		#clock-cells = <0>;
-+	};
-+
-+	cgi_dpll0: oscillator1 {
-+		compatible = "fixed-clock";
-+		clock-output-names = "cgi_dpll0";
-+		#clock-cells = <0>;
-+	};
-+
-+	cgi_dpll1: oscillator2 {
-+		compatible = "fixed-clock";
-+		clock-output-names = "cgi_dpll1";
-+		#clock-cells = <0>;
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
+ 	return ret;
+ }
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index 3f479483d7d8..bd76603dc387 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -293,14 +293,17 @@ static void reschedule_output_poll_work(struct drm_device *dev)
+  * Drivers can call this helper from their device resume implementation. It is
+  * not an error to call this even when output polling isn't enabled.
+  *
++ * If device polling was never initialized before, this call will trigger a
++ * warning and return.
++ *
+  * Note that calls to enable and disable polling must be strictly ordered, which
+  * is automatically the case when they're only call from suspend/resume
+  * callbacks.
+  */
+ void drm_kms_helper_poll_enable(struct drm_device *dev)
+ {
+-	if (!dev->mode_config.poll_enabled || !drm_kms_helper_poll ||
+-	    dev->mode_config.poll_running)
++	if (drm_WARN_ON_ONCE(dev, !dev->mode_config.poll_enabled) ||
++	    !drm_kms_helper_poll || dev->mode_config.poll_running)
+ 		return;
  
-+		pllclk: clock-controller@70300100c0 {
-+			compatible = "sophgo,sg2042-pll";
-+			reg = <0x70 0x300100c0 0x0 0x40>;
-+			clocks = <&cgi_main>, <&cgi_dpll0>, <&cgi_dpll1>;
-+			#clock-cells = <1>;
-+		};
+ 	if (drm_kms_helper_enable_hpd(dev) ||
+@@ -871,12 +874,18 @@ EXPORT_SYMBOL(drm_kms_helper_is_poll_worker);
+  * not an error to call this even when output polling isn't enabled or already
+  * disabled. Polling is re-enabled by calling drm_kms_helper_poll_enable().
+  *
++ * If however, the polling was never initialized, this call will trigger a
++ * warning and return
++ *
+  * Note that calls to enable and disable polling must be strictly ordered, which
+  * is automatically the case when they're only call from suspend/resume
+  * callbacks.
+  */
+ void drm_kms_helper_poll_disable(struct drm_device *dev)
+ {
++	if (drm_WARN_ON(dev, !dev->mode_config.poll_enabled))
++		return;
 +
-+		rpgate: clock-controller@7030010368 {
-+			compatible = "sophgo,sg2042-rpgate";
-+			reg = <0x70 0x30010368 0x0 0x98>;
-+			#clock-cells = <1>;
-+		};
-+
-+		clkgen: clock-controller@7030012000 {
-+			compatible = "sophgo,sg2042-clkgen";
-+			reg = <0x70 0x30012000 0x0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
- 		clint_mswi: interrupt-controller@7094000000 {
- 			compatible = "sophgo,sg2042-aclint-mswi", "thead,c900-aclint-mswi";
- 			reg = <0x00000070 0x94000000 0x00000000 0x00004000>;
-@@ -333,6 +371,9 @@ uart0: serial@7040000000 {
- 			interrupt-parent = <&intc>;
- 			interrupts = <112 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-frequency = <500000000>;
-+			clocks = <&clkgen GATE_CLK_UART_500M>,
-+				 <&clkgen GATE_CLK_APB_UART>;
-+			clock-names = "baudclk", "apb_pclk";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
+ 	if (dev->mode_config.poll_running)
+ 		drm_kms_helper_disable_hpd(dev);
+ 
 -- 
-2.25.1
+2.34.1
 
