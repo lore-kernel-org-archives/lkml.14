@@ -1,126 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FB046430
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 13:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7ED54643A;
+	Fri,  2 Feb 2024 13:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706880553; cv=none; b=KemsSDFaq62xsNZiRvSgYZO10chBnwPo0Z9rtVkViFHx043hCY4SeO1jQ4rZfHHHOy2exgOqRNevHg2ewUT9OZxTWX1mPoVle+sOQjFCrEVC596yDuTX+xX1+cxhPNWHxP/c3w7alnjrIuXkL+GWW6CULGewpGAU3Y0xa/sH60g=
+	t=1706880586; cv=none; b=BwvgTz6z/D7vNGC8NjoGcH9u91PyKCxoTU9BMlgLohDkBu4TJKBckwmDJQWZNjmcHdkzWBG29IDZs89Ir+IA60vyHD6NaBlR98DB5mrRV3u2MEl81Uz3FHpt39V3GWTs7VQlyU23/O7P1h5rZATYu7qSCAtcI/UhjGjZ53JpU+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706880553; c=relaxed/simple;
-	bh=EOuVn7h5rBzXLjSX6vgvwOxg8VenfLXWcdGIB/LkqTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iR1GfXi6tOWpYCnoLiAxu705CPv6PjPfedkKMOAsnsnFkntXGABd1TuICF6OK/ogEF4eQCAdR0Fs2tp6jdcQHKSzdz3rKxH5JFUr/eSQ9VpQ/LtD6YkMAJDpB28wux2t8XMMarq6nMV6ycMnYn/XLoVmck7imYLE1qz0BVZdqd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YM6ccpn0; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706880586; c=relaxed/simple;
+	bh=emWHbtbKmHt44W1EEZpZpoNIQ47i7QfIYpdTdG9/FUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNs1m1BhFO2AyGYbfE6ZARxI2K7b8yXitZaDgaOUmJCivnVAV92p3qndFckbcfRvihSNaoBTR9taV2I4L1JILFQ6AnmDg+4v9PmAfcLWQ90fjjGxiGUpvRMgsyao46d5Df184LFv89/+Va8FEH5I5tFz3tXkNtDrjIaaj6LcbbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IezIkzd0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YM6ccpn0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706880552; x=1738416552;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=EOuVn7h5rBzXLjSX6vgvwOxg8VenfLXWcdGIB/LkqTA=;
-  b=YM6ccpn05oQ4zXVo6+8kYvOCz8E9QtsIEPdsqwr+6LDTFVFpQXpqJF/F
-   3zHVtGNnZMjVPWh4zdFkVzH9WNL7Zlnq2+dBe9HuXs4kx4ijgHbAiDWOB
-   tTYz3brnARTgbPIy32PK7N46LxCF7kC7JnWXQENWbCLK8v4sp/tefuXJP
-   zEg/qWn7Sab7caS57b8v5MDc6LWcppZVD9iptrwcCuB2PBrOuNSVq0p8G
-   l/cuYQ6c06r8IyXGARx4xxG/HOIS9C2jCyz+ctDRgvQwoGpml7x3fwdW3
-   RerbP3szGiLHKyY2DzB7EMkC/2KXQiBYqDOgCkHS8v40Ks+nSgu7B1YlH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="17685033"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="17685033"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 05:29:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="31174623"
-Received: from feng-clx.sh.intel.com ([10.239.159.50])
-  by fmviesa001.fm.intel.com with ESMTP; 02 Feb 2024 05:29:09 -0800
-From: Feng Tang <feng.tang@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	gpiccoli@igalia.com,
-	Feng Tang <feng.tang@intel.com>
-Subject: [PATCH] panic: add option to dump blocked tasks in panic_print
-Date: Fri,  2 Feb 2024 21:20:42 +0800
-Message-Id: <20240202132042.3609657-1-feng.tang@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IezIkzd0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13CEEC433F1;
+	Fri,  2 Feb 2024 13:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706880585;
+	bh=emWHbtbKmHt44W1EEZpZpoNIQ47i7QfIYpdTdG9/FUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IezIkzd0Uc+tG7hy/lyHyY7q+70ph0LArTYnWrdSZB/soOCU74p82GOqyzzZ3IspI
+	 P9kuaKt8RC9Pmg8Ga9ETLt8LtAXwxTp8lvwbQPVD15lHJp20ymArkNM3epDmSVwG5P
+	 D8xnQLyCodAAy5pXpS8pLk8Rh4IZw9yydGpfDQ00ot6PbMwatR7pccRGdEUiYYeoHV
+	 XbN7wXgQyj1tc4eejDh7ZHC4KRQEbT21umWIvKAmMqBnjm07DU7hjTGh2E+rtIJ+yl
+	 PRQTsvj264iIPI0o4IWVce/N3prRs8Hw5dSaYZZ2NldH24jwjFpzhjKVQIDupQU8RD
+	 rgwg88YkFkmmg==
+Date: Fri, 2 Feb 2024 13:29:40 +0000
+From: Lee Jones <lee@kernel.org>
+To: Karel Balej <karelb@gimli.ms.mff.cuni.cz>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Karel Balej <balejk@matfyz.cz>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/5] mfd: add 88pm88x driver
+Message-ID: <20240202132940.GG1379817@google.com>
+References: <20231217131838.7569-1-karelb@gimli.ms.mff.cuni.cz>
+ <20231217131838.7569-3-karelb@gimli.ms.mff.cuni.cz>
+ <20240125122634.GE74950@google.com>
+ <CYQ8MEQRJELE.2GB9316NZA998@gimli.ms.mff.cuni.cz>
+ <20240131110311.GI8551@google.com>
+ <CYTURHOW0WMR.2UMOT0D1GFZ2W@gimli.ms.mff.cuni.cz>
+ <20240202124550.GE1379817@google.com>
+ <CYULY1BYVCYK.1EGSBSVNRSTLQ@gimli.ms.mff.cuni.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CYULY1BYVCYK.1EGSBSVNRSTLQ@gimli.ms.mff.cuni.cz>
 
-For debugging kernel panic and other bugs, there is already option of
-panic_print to dump all tasks' call stacks. On today's large servers
-running many containers, there could be thousands of tasks or more,
-and it will print out huge amount of call stacks, and take a lot of
-time (for serial console which is main target user case of panic_print).
+Linus,
 
-And in many cases, only those several tasks being blocked is key for
-the panic, so add an option to only dump blocked tasks' call stack.
+On Fri, 02 Feb 2024, Karel Balej wrote:
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 1 +
- Documentation/admin-guide/sysctl/kernel.rst     | 1 +
- kernel/panic.c                                  | 4 ++++
- 3 files changed, 6 insertions(+)
+> Lee Jones, 2024-02-02T12:45:50+00:00:
+> > On Thu, 01 Feb 2024, Karel Balej wrote:
+> >
+> > > Lee Jones, 2024-01-31T11:03:11+00:00:
+> > > > On Sun, 28 Jan 2024, Karel Balej wrote:
+> > > > > > > +	/* GPIO1: DVC, GPIO0: input */
+> > > > > > > +	REG_SEQ0(PM88X_REG_GPIO_CTRL1, 0x40),
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25680d0..0f2369e87175 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4182,6 +4182,7 @@
- 			bit 4: print ftrace buffer
- 			bit 5: print all printk messages in buffer
- 			bit 6: print all CPUs backtrace (if available in the arch)
-+			bit 7: print tasks in uninterruptible (blocked) state
- 			*Be aware* that this option may print a _lot_ of lines,
- 			so there are risks of losing older messages in the log.
- 			Use this option carefully, maybe worth to setup a
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 6584a1f9bfe3..e066a16b35d5 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -850,6 +850,7 @@ bit 3  print locks info if ``CONFIG_LOCKDEP`` is on
- bit 4  print ftrace buffer
- bit 5  print all printk messages in buffer
- bit 6  print all CPUs backtrace (if available in the arch)
-+bit 7  print tasks in uninterruptible (blocked) state
- =====  ============================================
- 
- So for example to print tasks and memory info on panic, user can::
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 2807639aab51..aa17ae0897c0 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -73,6 +73,7 @@ EXPORT_SYMBOL_GPL(panic_timeout);
- #define PANIC_PRINT_FTRACE_INFO		0x00000010
- #define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
- #define PANIC_PRINT_ALL_CPU_BT		0x00000040
-+#define PANIC_PRINT_BLOCKED_TASKS	0x00000080
- unsigned long panic_print;
- 
- ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-@@ -227,6 +228,9 @@ static void panic_print_sys_info(bool console_flush)
- 
- 	if (panic_print & PANIC_PRINT_FTRACE_INFO)
- 		ftrace_dump(DUMP_ALL);
-+
-+	if (panic_print & PANIC_PRINT_BLOCKED_TASKS)
-+		show_state_filter(TASK_UNINTERRUPTIBLE);
- }
- 
- void check_panic_on_warn(const char *origin)
+Do we have a precedent for drivers setting up their own pins like this?
+
+> > > > > > Shouldn't you set these up using Pintrl?
+> > > > > 
+> > > > > You mean to add a new MFD cell for the pins and write the respective
+> > > > > driver? The downstream implementation has no such thing so I'm not sure
+> > > > > if I would be able to do that from scratch.
+> > > >
+> > > > This is not a Pinctrl driver.
+> > > >
+> > > > Isn't there a generic API you can use?
+> > > 
+> > > I'm sorry, I don't think I understand what you mean.
+> >
+> > Perhaps I misunderstand the code.  It looks like this regmap patch hack
+> > is configuring pins and a bunch of other things.  Would that be a
+> > correct assessment?
+> 
+> Yes, that sounds correct.
+> 
+> > If so, where do we draw the line here?  Do we accept a 1000 line driver
+> > which configures a large SoC with a bunch of bespoke register writes?
+> 
+> I understand, I just don't know what you mean by "a generic API". I'm
+> also not clear on whether what you have in mind is simply adding a
+> dedicated driver for the pins as a new subdevice of this MFD.
+
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
