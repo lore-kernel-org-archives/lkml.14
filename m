@@ -1,89 +1,103 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A83960DF4;
-	Fri,  2 Feb 2024 09:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEE874297;
+	Fri,  2 Feb 2024 09:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865017; cv=none; b=ndm4/GUjX3acTBrDbNq62raDIcG/jORlg44eBomtdN8krjrMa4cEVOXF//KVVL6qKYcR4XN6ZpL26feIYe8gG/+G07N5XG36HXAp9yppn5JxdATmjXQKVraxUjuUPDCxpworTcS7+Pd0yeWusESTA8720436EGZJI3rHVSJP75Q=
+	t=1706865047; cv=none; b=K+n/k4qXzQeMAmlzf6HFsH0a5BKoCHbi8FA9asnX2GwQ2N4YrHOPcFW6rMBIyH+SFE22q8x3Oovpu5UafsOD1DRx1v0gScbxvmf2e3n+9KIFTFGrMZHYGwLtkr0GuV1dd941doXx9CwoQePuaJc55FMrsXSWYnr4nyqLO/T2ecQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706865017; c=relaxed/simple;
-	bh=9Lw3yyGGfLfAKvtWSVgcJ3MOHZlqdZ5nHi2QTFG85R8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ek7OA4WoFSxRM2ZA5m5PqGMi1yhxUQlXgByeIVQQwK6vgsxR6bjTxdTjLdn4212N1q8+4fiZ+dk7xVBMnd06hGSQQtGQrhWzVV1O/UDIqJAlaDWmfqFrI/XyMoQjkXSrSrUX3sI58CiSZP2eE1ImRl1pPvWHtBe1i1z5Rjez55U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 99FF62800B3D2;
-	Fri,  2 Feb 2024 10:00:33 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 8C6CE2F6385; Fri,  2 Feb 2024 10:00:33 +0100 (CET)
-Date: Fri, 2 Feb 2024 10:00:33 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 0/2] Enable D3 support for Qualcomm bridges
-Message-ID: <20240202090033.GA9589@wunner.de>
-References: <20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org>
+	s=arc-20240116; t=1706865047; c=relaxed/simple;
+	bh=Mj2eWb37LuM66Dj95CdWDSuDwe5WJYgKCJAiwOQErps=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=J9f5hiJCkaChY9ploAuzm51tTf6VUzFe+Jc6s8Dp4nCTbgNeOrcMhjXMK2TGqzCNjtMNhNH6qyWJ3knt6B3vtB2xi59tsZ0LhXURGm+Xs/0IUMf8hj+ip6o2MRE/tlmgSq579a6uKmqOeEMLtDcFZWzENdvtwt5tQjbjPEbQk4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ik5xPRN4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9+50Y3iD; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ik5xPRN4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9+50Y3iD"
+Date: Fri, 02 Feb 2024 09:10:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706865043;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rFmzybAsJfE0cVsdsUehIbPmaxNb2tCDaeYPwTsVCSY=;
+	b=ik5xPRN4cmK7PvqdvkZ5D8hZzI2VgC8RDV/Cge/ovYrUNZg5XXJiEzZA19A2aEUq9BedMw
+	og2Af0Rbh2X1PnodNY5VeEKUMlvpgQNKq1N2MshEYvuGyq0RoFgFCsB6oNb4Sb8yVx/6lf
+	DVAdiEK7cSmTJe43i4plmTzXQLo9hdMIh8gpQjQS+VbyD9j+0PTl5acTRipopSw+yAmptO
+	BjJDAdgDzJbyOSrRigfW9FgpHeDDOL0gC4530s36DaqWhhSFmQWAMQ0qyiFxI4HfwScWFg
+	3QvXukOIm0Lh5Ln/CryHIQn+TUgbOPmWY1Ye241Rdc/OaFZ+lg6m/LOy6+SQVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706865043;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rFmzybAsJfE0cVsdsUehIbPmaxNb2tCDaeYPwTsVCSY=;
+	b=9+50Y3iDRkpaRCUgs0TPws9H3gDLx9qcPbhV88ZFRndsozK3ZMwDPWeHkm6Q2sxOXk8V2o
+	pUVDEGxlu0nxLSAA==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fred] x86/fred: Fix a build warning with allmodconfig due
+ to 'inline' failing to inline properly
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, "Xin Li (Intel)" <xin@zytor.com>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240202090225.322544-1-xin@zytor.com>
+References: <20240202090225.322544-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <170686504193.398.15699527281623271387.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 02, 2024 at 12:24:16PM +0530, Manivannan Sadhasivam wrote:
-> This series enables D3 support for PCI bridges found in Qcom SoCs. Currently,
-> PCI core will enable D3 support for PCI bridges only when the following
-> conditions are met:
-> 
-> 1. Platform is ACPI based
-> 2. Thunderbolt controller is used
-> 3. pcie_port_pm=force passed in cmdline
-> 
-> While options 1 and 2 do not apply to Qcom SoCs, option 3 will make the life
-> harder for distro maintainers. Due to this, runtime PM is also not getting
-> enabled for the bridges.
-> 
-> Ideally, D3 support should be enabled by default for the recent PCI bridges,
-> but we do not have a sane way to detect them. So this series adds a new flag
-> "bridge_d3_capable" to "struct pci_dev" which could be set by the bridge
-> drivers for capable devices. This will allow the PCI core to enable D3
-> support for the bridges during enumeration.
+The following commit has been merged into the x86/fred branch of tip:
 
-I think the right way to do this is to use the existing call to
-platform_pci_bridge_d3() in pci_bridge_d3_possible().
+Commit-ID:     cba9ff33451162a6aa9b1424b32503354d7ef20e
+Gitweb:        https://git.kernel.org/tip/cba9ff33451162a6aa9b1424b32503354d7ef20e
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Fri, 02 Feb 2024 01:02:24 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 02 Feb 2024 10:05:55 +01:00
 
-Please amend platform_pci_bridge_d3() to call a new of_pci_bridge_d3()
-function which determines whether D3 is supported by the platform.
+x86/fred: Fix a build warning with allmodconfig due to 'inline' failing to inline properly
 
-E.g. of_pci_bridge_d3() could contain a whitelist of supported VID/DID
-tuples.  Or it could be defined as a __weak function which always
-returns false but can be overridden at link time by a function
-defined somewhere in arch/arm/, arch/arm64/ or in some driver
-whose Kconfig option is enabled in Qualcomm platforms.
+Change array_index_mask_nospec() to __always_inline because "inline" is
+broken as https://www.kernel.org/doc/local/inline.html.
 
-Adding a bit to struct pci_dev essentially duplicates the existing
-platform_pci_bridge_d3() functionality, which seems inelegant.
-It increases the size of struct pci_dev even on platforms which
-don't need it (e.g. ACPI).
+Fixes: 6786137bf8fd ("x86/fred: FRED entry/exit and dispatch code")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20240202090225.322544-1-xin@zytor.com
+---
+ arch/x86/include/asm/barrier.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Lukas
+diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
+index 0216f63..fe1e7e3 100644
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -33,7 +33,7 @@
+  * Returns:
+  *     0 - (index < size)
+  */
+-static inline unsigned long array_index_mask_nospec(unsigned long index,
++static __always_inline unsigned long array_index_mask_nospec(unsigned long index,
+ 		unsigned long size)
+ {
+ 	unsigned long mask;
