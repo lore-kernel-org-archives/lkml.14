@@ -1,132 +1,121 @@
-Received: from ermis.csd.uoc.gr (ermis.csd.uoc.gr [147.52.203.66])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040181420A5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 14:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.52.203.66
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD0260249
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 14:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706883094; cv=none; b=uhSF17/LYCl9eYD6p1vEEQHuKDlar12acQD9EC+sIOq48YB7X/Ok9K6loCunK2RLyARRXdcHgdlzLKfE0P1vQxVAwWOyTQltnMQjC+GQjXWrfmPc0oE8oTF6kjYH+cCrTjQnLezPY23iaT4nljnpGstKelUv87iHrFNOIDRvZyQ=
+	t=1706883095; cv=none; b=CZ253lS9mDDQRQFLvo11Sn+LfnvqAiOhJ+J+3cNyTyNEXwo4DgGDZAJ9EfLLWCxfM3fz8gOmcCXGh0R74DrGiVvb7bAxfgAWAyyPLzvDvqeuK8zqJJkeP/7GxRbsC7oBwWdEAvSN5cI1it6o2AhY2gTGhn7VhtIYFzWztNOcIvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706883094; c=relaxed/simple;
-	bh=0fLShIaYA46L2v+Ga5N4MTBmAYSvwPEcuI+RHi2CSIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=V4VGjRpXsdTQ7DSmRskYLRdMOGKcm9Y5goKqa9Wrgv98ewevhSl16iKJoI5VWGWGjBHSxtUnwfPWoavfhXG/JNOaLr61ajcsVgGcM5RkWD/PeHCZN+1LVAhi79/nfL4nki2tYf5C6MoF/k5Weon9VOOceqzwUG6+OtXf+hNTjqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csd.uoc.gr; spf=pass smtp.mailfrom=csd.uoc.gr; dkim=pass (2048-bit key) header.d=csd.uoc.gr header.i=@csd.uoc.gr header.b=G7vOWtx0; arc=none smtp.client-ip=147.52.203.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csd.uoc.gr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csd.uoc.gr
+	s=arc-20240116; t=1706883095; c=relaxed/simple;
+	bh=wjLjnJAjbNBLCn9zKPLVKdaXKEMkZpMbB5LhcZy/RbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=INStssRMVamt4B8T7aJNTEbaZEERiHmad+J3l/OxNSxVC81EwSA37VQl2o3qgojQV3IP9d7RxbPXKvF8EIwSsn3FqckxKl8d87NuUowKXEH+HhXg6oHMBcT7VDqXXWUE9sFeHNKDK7YNHwj9eiDgK+7xUWH++68zJUKAgNxvKas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=LwlOtlJL; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=csd.uoc.gr header.i=@csd.uoc.gr header.b="G7vOWtx0"
-Received: from cave.168.239.147 (ppp178059052035.access.hol.gr [178.59.52.35])
-	by ermis.csd.uoc.gr (Postfix) with ESMTPSA id 818193C07E6;
-	Fri,  2 Feb 2024 15:50:30 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csd.uoc.gr; s=csd;
-	t=1706881833;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8xiDaKPe3EcE5yGO2LEkBF3Kug+H9effrggz/KsrocE=;
-	b=G7vOWtx0lFu4MpEoOLGB2l0LVjYeOEEP8SLtdxbFCuJBUsoFkr5PapgIdpBgZ9HGKHdovC
-	T9hiqPlubuPwxlRkDirmTTclG7A9VLAOONzptl7QzWzQ9dbWqtHXR96D1FAmmM1qlMmu83
-	EDdIJuzldAFuNP9eARfbbbaV4fk5oNai1Bb6l2WBZbaxS2s+hBADclXx0g1hSYlggOSwr7
-	Ly7lT+jew6Q6ym6RuEAmFHbcOdFXSjxy+ih4dRAKwAeDtWXAbRwmm+5/Sef6rJwUt5a4G1
-	6PsTMaT9EE5kGhAOaJvOYXUnUlVHi4mWS2HQksueYpcDuHaLq6A6+C/VgTcPgw==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=csd4492 smtp.mailfrom=csd4492@csd.uoc.gr
-From: Dimitris Vlachos <csd4492@csd.uoc.gr>
-To: csd4492@csd.uoc.gr,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: clameter@sgi.com,
-	akpm@linux-foundation.org,
-	rppt@kernel.org,
-	arnd@arndb.de,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	alexghiti@rivosinc.com,
-	mick@ics.forth.gr
-Subject: [PATCH] [RFC] sparsemem: warn on out-of-bounds initialization
-Date: Fri,  2 Feb 2024 15:50:30 +0200
-Message-Id: <20240202135030.42265-1-csd4492@csd.uoc.gr>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="LwlOtlJL"
+Received: from 8bytes.org (p4ffe0c3c.dip0.t-ipconnect.de [79.254.12.60])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 5D1431E1FDD;
+	Fri,  2 Feb 2024 15:11:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1706883086;
+	bh=wjLjnJAjbNBLCn9zKPLVKdaXKEMkZpMbB5LhcZy/RbI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=LwlOtlJLDYZupoUvtA4BGF9e9WqN2ngejjHfAJyE7pK1AQrV3crlsWCXDEjRRSiD1
+	 C1LzBYi0+9CEtZiIvzNpc3wWpPs4HS74edv7CNG0mTPYDlR3F4Ydi6W0rNhOI7ODzp
+	 4X2FV3NNnMXkpGLwaJvmlEmrGHa57IlKym+VUYxvSmiawgI0dGKGqxw8ur66CtBR8a
+	 RygOFpYyNP2wQPNcgu/WQevk8SHCpq56sPoCzPL4ZbZ1g+WYgb0RF44OKO/nupfNBo
+	 09jXpbTDG5cQ7RK/sfauKgZoGGw6LDfcty8/8TBQXFZfj3qcr047y5bLwevLs+rJ2x
+	 f2dlXOXSIqZ/A==
+Date: Fri, 2 Feb 2024 15:11:25 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: [git pull] IOMMU Fixes for Linux v6.8-rc2
+Message-ID: <Zbz4DdrTl4js-w9H@8bytes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="30+K22LByfpbaTue"
+Content-Disposition: inline
 
-From: Dimitris Vlachos <dvlachos@ics.forth.gr>
 
-Hello all
+--30+K22LByfpbaTue
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I am sending this email with regards to a bug that I discovered in the Sparse Memory Model configuration and more specifically, the Virtual Memory Map optimization. Moreover, I would like to inquire about possible ways of fixing it.
+Hi Linus,
 
-I work as a pre-graduate research assistant at ICS-FORTH in the Computer Architecture and VLSI Systems laboratory.
-We were running some tests in our prototype hardware (RISC-V), where we noticed that the Kernel crashes early in the boot process with the following setup:
+The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
 
-We are using the default Kconfig configurations (defconfig) that includes Sparse Memory + Virtual Memory Map.
-The DRAM base address of our system is : 0x800000000000
-A 3-level page table is used (Sv39).
+  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
 
-When the vmemmap optimization is enabled the macro pfn_to_page() is called, which offsets the vmemmap with the pfn argument to acquire a struct page pointer.
+are available in the Git repository at:
 
-As our DRAM starts at 0x800000000000, the initial pfn will be 0x800000000000 divided by PAGE_SIZE. The calculation result will be:
-0xffffffcf00000000 (vmemmap start) +  (0x800000000 (pfn) * 64 (sizeof(struct page))
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v6.8-rc2
 
-This causes an overflow as the number is very large, the resulting address is 0x1c700000000​ which is not a valid Sv39 address (all bits above bit 38 should be set) and does not belong to the kernel’s virtual address space.
+for you to fetch changes up to d2d00e15808c37ec476a5c040ee2cdd23854ef18:
 
-The same will happen with all valid pfns as the memory is being initialized. When the Kernel will try to access a page using pfn_to_page, a page fault will occur crashing the system.
-It should be noted that when the vmemmap is disabled the system boots normally.
+  powerpc: iommu: Bring back table group release_ownership() call (2024-02-02 09:26:20 +0100)
 
-However, I would like to emphasize another important detail. When the DRAM base is small enough to avoid an overflow, the virtual memory map mappings will be initialized out of bounds with regard to the vmemmap address space which is 4GiB in Sv39.
-The system will not crash, but the address space used for this purpose will be outside of the designated range.
+----------------------------------------------------------------
+IOMMU Fixes for Linux v6.8-rc2
 
-Everything mentioned above holds true when Sv48 is used as well. Given a high enough DRAM base the system will either crash or perform false initializations. Given the fact that virtual memory map is not only used by RISC-V systems, this could be an issue for other architectures as well.
+Including:
 
-The kernel already contains mminit_validate_memmodel_limits() that checks memory limits.
-However, it only checks physical memory ranges. I added a few checks, provided that virtual memory map is enabled, to determine whether offset start and offset end fall inside the range of virtual memory map. Otherwise, a warning will be printed.
+	- Make iommu_ops->default_domain work without CONFIG_IOMMU_DMA to fix
+	  initialization of FSL-PAMU devices
 
-Finally, I would like to ask you for any information/advice that could help me fix/prevent the issues that I mentioned (if it’s possible) or recover from them at runtime by disabling the optimization and reverting back to the non-vmemmap mappings.
+	- Fix for Tegra fbdev initialization failure
 
-Thank you in advance.
-Best regards,
-Dimitris Vlachos
----
- mm/sparse.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+	- Fix for a VFIO device unbinding failure on PowerPC
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 338cf946d..33b57758e 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -149,6 +149,26 @@ static void __meminit mminit_validate_memmodel_limits(unsigned long *start_pfn,
- 		WARN_ON_ONCE(1);
- 		*end_pfn = max_sparsemem_pfn;
- 	}
-+
-+	/*check vmemmap limits*/
-+	#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+
-+	unsigned long vmemmap_offset_start = (unsigned long) pfn_to_page(*start_pfn);
-+	unsigned long vmemmap_offset_end   = (unsigned long) pfn_to_page(*end_pfn);
-+
-+	if (vmemmap_offset_start < VMEMMAP_START) {
-+		mminit_dprintk(MMINIT_WARNING, "pfnvalidation",
-+			"Start of range %lu -> %lu exceeds bounds of SPARSEMEM virtual memory map address range %lu -> %lu\n",
-+			vmemmap_offset_start, vmemmap_offset_end, VMEMMAP_START,VMEMMAP_END);
-+		WARN_ON_ONCE(1);
-+
-+	} else if (vmemmap_offset_end > VMEMMAP_END ) {
-+		mminit_dprintk(MMINIT_WARNING, "pfnvalidation",
-+			"End of range %lu -> %lu exceeds bounds of SPARSEMEM virtual memory map address range %lu -> %lu\n",
-+			vmemmap_offset_start, vmemmap_offset_end, VMEMMAP_START,VMEMMAP_END);
-+		WARN_ON_ONCE(1);
-+	}
-+	#endif
- }
- 
- /*
--- 
-2.39.2
+----------------------------------------------------------------
+Jason Gunthorpe (2):
+      iommu: Allow ops->default_domain to work when !CONFIG_IOMMU_DMA
+      drm/tegra: Do not assume that a NULL domain means no DMA IOMMU
 
+Shivaprasad G Bhat (1):
+      powerpc: iommu: Bring back table group release_ownership() call
+
+ arch/powerpc/kernel/iommu.c | 37 ++++++++++++++++++++++++++++---------
+ drivers/gpu/drm/tegra/drm.c |  3 ++-
+ drivers/iommu/iommu.c       | 18 +++++++++++++-----
+ 3 files changed, 43 insertions(+), 15 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--30+K22LByfpbaTue
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAmW8+A0ACgkQK/BELZcB
+GuO8Hw/+MDm8+qaRSjySkUWpfewPcQEFbMLrcuHTsIW0WvHyvnKOCB+SZjHrWRa1
+phXK27RassNVOpkCySxe+8f6qJcIuorPB/7X4XVLCntIbghp1KyoIGOiwJ8i5Etd
+kjbrzIWsMw6S+g3zvM0IaVlezxWG9/cBNx1vKOrvL1RA/+BBptUfsm5KEQT1+FMa
++ZzmycC4ooM2yvEGwuVvMUTcLpp0noaeEJY0sy54udg9XE6FmONkzR0laOhagNPW
+Yeu03zETVJm2Cke5PRrpDygcf58smWrk1zh/t1A4WkG/zbJF4GxoG2kKhzeHXnp3
+ZvZ3GlAGs8seqh97eX1tsUGdi66J4utTg5yq+KpUvcF1HfyRe7X0iU+Zs0wgIq7e
+m/Z5ZgA1XzpJiytKpcR1bMb4x/67VMyUejzrpHjtaPrJIRu0CprdiUkqWeeVNO6A
+6NxbRdC+c4TwOMZ5a3oJSxNzcDuOLHh0PiDTeAz9uY5R1TVs5oI84ao9/EtGTBb1
+1cbmeJv7jIDsr54v8p88njjP9iaVku3TkXm0+5RIptXrkr9DnJsxEmRgOD4PY5rv
+tplEV+6Po1kkJcZZQAXbUSR22Nn3E741KvoBpTGgfrYbS1UX5kpd7TgFw+AjO6fm
+RtCYWr7mlX0uEpBMDLy7C25hfUdi5UoRwx7bdTkLpLTEV1qrqS8=
+=w3pA
+-----END PGP SIGNATURE-----
+
+--30+K22LByfpbaTue--
