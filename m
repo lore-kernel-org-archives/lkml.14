@@ -1,45 +1,45 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BD360BBD;
-	Fri,  2 Feb 2024 09:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF8E65BA5;
+	Fri,  2 Feb 2024 09:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706866423; cv=none; b=mHJYbFn3Hm1sOgMXEwhp64A2tuVoJZPJep3knlh2/eeQARgthRiMtFi9eBVQk0WnPIsal97yHeviY9BIS1rjNRsELboAHjo51LqTXMH3RLDXUHoi1zzhEMvkaMQu8D+2/iT4/Snp4lmuGzdaV21IovGGnIMbttYZEKFbgdZ58F0=
+	t=1706866424; cv=none; b=pv6SE9r2wdYqYRPRy39zPKlQoTEeyzx4EJ/FaG0neNpv2ezNQXDlD2iaKu6azsI0z/6Dc6PrtA5lAfMHyd4WTsXXBZ0lJzzQWOPfdXzUezOtfPuybwkRsOVSQgWqxU0MvXhGr3RBmnouKbrmiJ+yiILq1r4OtUsJfzWBkhvGO+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706866423; c=relaxed/simple;
-	bh=Uewh1FnrdtUjaw3IbQp5/cVxlxfhVTRPnk+3maWKx+g=;
+	s=arc-20240116; t=1706866424; c=relaxed/simple;
+	bh=M+aWPuLCB+CFfRhAbs9PuOpoT5UnSdPTM1qXrm+Q10Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xuh1ytJFxqCQL+1QfTG2fWSG+3u+h/NlGU2cXtHL31yhSQhJwffUviu+wNPaRye3RgBfxOhgv8OuES2QKCmWaSdxkKSkV4rAfFxkpimOqrMJ18Dc24EhGSXowG12pnuaqA/m/Y28AZey2cAnerw25kSTbcJuVvIQPqrWqNbVb+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Nypg9Ybi; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=ZG52tk0TuT5zAIHu5OZ/C83BtOa5XrT77uIYHGDuASWeJEUsIFBPcM5BqS7Hlb+vHt/WABWKHT6VsnWH6erf+7h3r9zIE1YF1a1cns8V8JCw8X5D34ICtEx3bmI29B/mk01NAFtUN6fXloHFqnb4t3NUWN33MZhPyei1ez9H34E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LfdYq9td; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Nypg9Ybi"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4127J5jg032310;
-	Fri, 2 Feb 2024 09:33:21 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LfdYq9td"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4123KDno012854;
+	Fri, 2 Feb 2024 09:33:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=eG0cw3V2V7bP1GdeOMsX
-	cfVKOjDgrWaClaMQX8x+Rcc=; b=Nypg9Ybi1+QZYotWBqaX7uYc5ddyIFQwvUxj
-	n/mVp26wTSq+r3Ie5qvVOKSqalzs+d71KKs1Qq4mRxK4bG7r9l7m1XjpszEJNU6Z
-	lAaC0cLH5HmIa5C9bxaHK+46R8dF0CVA+ivlw6M6Nv22jl/DjG2WWKShk9CY1Xq2
-	v4b7QJEtoLqj4yRPb4tUc2Z2MyezmADsOXCFJk8EefBJsnxgacBxS4yqCtzl5gcB
-	dR4vD/H7GyywvmUG9BTs3YOE+vXGX3U12bo1rrymiPVHdZhXBwPccRlNCw/Z8lST
-	f01q09n8liGtk3qTRFVtT2vuMB7Ius2jrhG3NNni14F8QK3QKg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwc1082-1
+	:mime-version:content-type; s=qcppdkim1; bh=0Smu9OPbuIZJeQjZ3sBY
+	nzjPuVxq+g/6HsHgM4EhnTk=; b=LfdYq9tdWnwUYoZdyCs2aMKbTkaROTTOe2ro
+	esrXww+0LH0MLVqfSXkkbdggQ1Fz8fnSr7BQCTRK0R7u64ib5ooNX6wQra5tmblx
+	GxPkXt0xPPSpVepmm5s4s5uu+I77zyyOmvsybtQcRp7T0a951HaN50PB/g9hcBV0
+	Kzsh3MGBvMKzjM6RCGHMFdjzpkGxlm4Qyax1JVrhyzEovd42NsVRdaH8CXkz8RfP
+	w37qeZFfI2rnArweU8Hbz/ptv2TuHwjzlJ5vl13JKdB7yDe/djD5UMyhHZvg2xoV
+	VXbRJ/E3qidRrLuRR3Z1iN/lhAzx8ObN4Fe+ZIX+0tEUK1vgcg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pu1s0fr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 09:33:21 +0000 (GMT)
+	Fri, 02 Feb 2024 09:33:30 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4129XKV2032226
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4129XTu4009821
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 09:33:20 GMT
+	Fri, 2 Feb 2024 09:33:29 GMT
 Received: from taozha-gv.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 01:33:15 -0800
+ 15.2.1118.40; Fri, 2 Feb 2024 01:33:25 -0800
 From: Tao Zhang <quic_taozha@quicinc.com>
 To: Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose
@@ -62,9 +62,9 @@ CC: Tao Zhang <quic_taozha@quicinc.com>,
 	<quic_tsoni@quicinc.com>,
         Song Chai <quic_songchai@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         <andersson@kernel.org>
-Subject: [PATCH v6 01/10] coresight-tpdm: Optimize the store function of tpdm simple dataset
-Date: Fri, 2 Feb 2024 17:32:35 +0800
-Message-ID: <1706866364-19861-2-git-send-email-quic_taozha@quicinc.com>
+Subject: [PATCH v6 03/10] dt-bindings: arm: qcom,coresight-tpdm: Add support for CMB element size
+Date: Fri, 2 Feb 2024 17:32:37 +0800
+Message-ID: <1706866364-19861-4-git-send-email-quic_taozha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1706866364-19861-1-git-send-email-quic_taozha@quicinc.com>
 References: <1706866364-19861-1-git-send-email-quic_taozha@quicinc.com>
@@ -79,100 +79,73 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ldpLBHA8uUoK49pL3re1qnr5DzUexIa1
-X-Proofpoint-ORIG-GUID: ldpLBHA8uUoK49pL3re1qnr5DzUexIa1
+X-Proofpoint-GUID: klIzg2aq6Sb7LcvmnEExHR3B4YJQpf5p
+X-Proofpoint-ORIG-GUID: klIzg2aq6Sb7LcvmnEExHR3B4YJQpf5p
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-02_04,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=882 clxscore=1015
- phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020069
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ impostorscore=0 clxscore=1015 mlxlogscore=930 malwarescore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 adultscore=0
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402020068
 
-Replace spin lock/unlock to avoid forgetting to unlock when the
-function exits. And refine methods for handling various conditions.
+Add property "qcom,cmb-elem-bits" to support CMB(Continuous
+Multi-Bit) element for TPDM. The associated aggregator will read
+this size before it is enabled. CMB element size currently only
+supports 8-bit, 32-bit and 64-bit. Because the existing example
+tpdm "tpdm@684c000" which only supports dsb sub-unit, I introduce
+a new example "tpdm@6c29000" to describe the usage of this new
+property.
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
 ---
- drivers/hwtracing/coresight/coresight-tpdm.c | 39 ++++++++++----------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ .../bindings/arm/qcom,coresight-tpdm.yaml     | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
-index bd13a548375c..0427c0fc0bf3 100644
---- a/drivers/hwtracing/coresight/coresight-tpdm.c
-+++ b/drivers/hwtracing/coresight/coresight-tpdm.c
-@@ -77,51 +77,50 @@ static ssize_t tpdm_simple_dataset_store(struct device *dev,
- 					 size_t size)
- {
- 	unsigned long val;
--	ssize_t ret = size;
-+	ssize_t ret = -EINVAL;
+diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
+index 61ddc3b5b247..2320b5445900 100644
+--- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
+@@ -52,6 +52,14 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/uint8
+     enum: [32, 64]
  
- 	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
- 	struct tpdm_dataset_attribute *tpdm_attr =
- 		container_of(attr, struct tpdm_dataset_attribute, attr);
++  qcom,cmb-element-bits:
++    description:
++      Specifies the CMB(Continuous Multi-Bit) element size supported by
++      the monitor. The associated aggregator will read this size before it
++      is enabled. CMB element size currently only supports 8-bit, 32-bit
++      and 64-bit.
++    enum: [8, 32, 64]
++
+   qcom,dsb-msrs-num:
+     description:
+       Specifies the number of DSB(Discrete Single Bit) MSR(mux select register)
+@@ -110,4 +118,21 @@ examples:
+       };
+     };
  
- 	if (kstrtoul(buf, 0, &val))
--		return -EINVAL;
-+		return ret;
- 
--	spin_lock(&drvdata->spinlock);
-+	guard(spinlock)(&drvdata->spinlock);
- 	switch (tpdm_attr->mem) {
- 	case DSB_TRIG_PATT:
--		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT)
-+		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT) {
- 			drvdata->dsb->trig_patt[tpdm_attr->idx] = val;
--		else
--			ret = -EINVAL;
-+			ret = size;
-+		}
- 		break;
- 	case DSB_TRIG_PATT_MASK:
--		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT)
-+		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT) {
- 			drvdata->dsb->trig_patt_mask[tpdm_attr->idx] = val;
--		else
--			ret = -EINVAL;
-+			ret = size;
-+		}
- 		break;
- 	case DSB_PATT:
--		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT)
-+		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT) {
- 			drvdata->dsb->patt_val[tpdm_attr->idx] = val;
--		else
--			ret = -EINVAL;
-+			ret = size;
-+		}
- 		break;
- 	case DSB_PATT_MASK:
--		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT)
-+		if (tpdm_attr->idx < TPDM_DSB_MAX_PATT) {
- 			drvdata->dsb->patt_mask[tpdm_attr->idx] = val;
--		else
--			ret = -EINVAL;
-+			ret = size;
-+		}
- 		break;
- 	case DSB_MSR:
--		if (tpdm_attr->idx < drvdata->dsb_msr_num)
-+		if (tpdm_attr->idx < drvdata->dsb_msr_num) {
- 			drvdata->dsb->msr[tpdm_attr->idx] = val;
--		else
--			ret = -EINVAL;
-+			ret = size;
-+		}
- 		break;
- 	default:
--		ret = -EINVAL;
-+		break;
- 	}
--	spin_unlock(&drvdata->spinlock);
- 
- 	return ret;
- }
++    tpdm@6c29000 {
++      compatible = "qcom,coresight-tpdm", "arm,primecell";
++      reg = <0x06c29000 0x1000>;
++
++      qcom,cmb-element-bits = <64>;
++
++      clocks = <&aoss_qmp>;
++      clock-names = "apb_pclk";
++
++      out-ports {
++        port {
++          tpdm_ipcc_out_funnel_center: endpoint {
++            remote-endpoint = <&funnel_center_in_tpdm_ipcc>;
++          };
++        };
++      };
++    };
+ ...
 -- 
 2.17.1
 
