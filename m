@@ -1,134 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BBF149012;
-	Fri,  2 Feb 2024 17:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93AF7CF04;
+	Fri,  2 Feb 2024 17:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706893698; cv=none; b=QS13IVCQ6jKktY4r/oWeGufe8W8kEw218J5zt/VcoNwhBX+hg/LB7Hoti9QYgabWGqmsz6JhlQEj1ADw9LkXpYnwOC4eF9Ep1Rp5uJVyiPT5o32gO4BXjZQDdh53LxmnjCEapNko3GCtLOvlMHvLUbx0O0lQKogdbXwjoqmR1Co=
+	t=1706893728; cv=none; b=ga281wioI9vu573/Nt9PAhzIiKINVI7A65CUUgegMBB7GzF80P7dVF0mEv10+eqQGtMWZdp7i76VEAtGaeVMEGp5t7D/xRcTyeIiwh82OeZY/Yv3scNnbv61KIlxnoHD7ihsd12r0MFWmIJ/7PZVHpJMhIFUQDy7uoq2T/C335g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706893698; c=relaxed/simple;
-	bh=tjGciSGl0ur/hl1ZLVMU17REAhGH4g8QmpkEWPPJGXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bORiCmf+jxzO5BAYqkE4S5WdWX9sjylUjBneDcJQ3JGYfYDHn+dck5zDYnG/Q4BAISocQ52/fZtHiml2pM9+MFU8FmaOi/tdGya7T33qrCYsN7OQOIxTPkKmYPFeFw/5HEVBmvy66HMkSvzvihji+n9AyJUFwfDJLk8WdmnJkSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3a74InP; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706893728; c=relaxed/simple;
+	bh=BrNCrKllmegxbiAtsW/MTJ3MKAd683ma6biQRAVn/0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E03Cve86pEjKkme9z3pF9h9RXkXy4EkNGLfE936/USbebbw7ez1S8H7vsQpzTMv4U+0viqa56//pp5yWFUfXvoq93Pm2XyZWEk6CUlR2EXtqePj451TihCWt+GLwZcauajh274UnBd+aKAAmRhlttib5pSbYPqArw4OeiHis9ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CFz4Mlp0; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3a74InP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706893696; x=1738429696;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tjGciSGl0ur/hl1ZLVMU17REAhGH4g8QmpkEWPPJGXY=;
-  b=X3a74InPNDt0jl3rD7VRlVWZwrPY5pEvlOogwyOU/x/O+AvjWal6UwIc
-   HI2uVmiLPUGryoY001AWQoUuXB7g8WZ7G67DhKOs5q3Pm2E6CmBfzATi2
-   /R0YX+5wFYraHNZKek1DwzAprNt9s/Y2+QAvEf1c/iTDiWSA9CBdd93Mq
-   3haL8rn1lXG241TaXhFHyt0qvid5ribHNwZYLf1vFF9Z0qziPlchhriej
-   7kxNzHDgQzCBOcAhPfVBYN5sBm5V8LJZB/Od6Ped1TrxXesLBkaewi1Uj
-   R8Y7VSHlms++RfFm5df4zfrFzb+f4e5TPWu3nT5emf4jNwpUK6ZDm5Kdc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="360197"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="360197"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 09:05:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="126636"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.118])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 09:05:49 -0800
-Message-ID: <8cea7b3f-1cdf-41e7-a8fb-f5c276973ad6@intel.com>
-Date: Fri, 2 Feb 2024 19:05:42 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CFz4Mlp0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=xBboSvhnv3xL8BrH5HURwKtLYk60Bcq74cRcWVNCjGA=; b=CFz4Mlp0R2QPm1LuWWqEYlmurt
+	KeWk7Kt7lKCnxpdSMNegCUdYuSC/VCvVSOVEDRUyvBdHD4kewt1/dYHYjXjkO5nHnnK5AJKqTkGDS
+	iR7UPigbinAu9DR0uPCzF4g6xje7RLtPWdjpPJHs5up1TcRwd2bdLY7qppGtrgrEITAs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rVx1l-006pRv-U3; Fri, 02 Feb 2024 18:08:33 +0100
+Date: Fri, 2 Feb 2024 18:08:33 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Robert Marko <robert.marko@sartura.hr>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [net-next PATCH v5 9/9] net: phy: qca807x: add support for
+ configurable LED
+Message-ID: <8bbff46a-f316-49b7-82f8-44dbdd452b0d@lunn.ch>
+References: <20240201151747.7524-1-ansuelsmth@gmail.com>
+ <20240201151747.7524-10-ansuelsmth@gmail.com>
+ <46085abf-8e82-4fd9-95b8-95cbfde6e5c2@lunn.ch>
+ <65bd1af9.df0a0220.c0618.9f8d@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] tools: perf: Expose sample ID / stream ID to python
- scripts
-Content-Language: en-US
-To: Ben Gainey <ben.gainey@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- namhyung@kernel.org, irogers@google.com, will@kernel.org
-References: <20240123103137.1890779-1-ben.gainey@arm.com>
- <20240123103137.1890779-2-ben.gainey@arm.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240123103137.1890779-2-ben.gainey@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65bd1af9.df0a0220.c0618.9f8d@mx.google.com>
 
-On 23/01/24 12:31, Ben Gainey wrote:
-> perf script exposes the evsel_name to python scripts as part of the data
-> passed to the sample or tracepoint handler function, and it passes the id and
-> stream_id to the throttled/unthrottled handler functions. This makes matching
-> throttle events and samples difficult.
+On Fri, Feb 02, 2024 at 05:40:21PM +0100, Christian Marangi wrote:
+> On Fri, Feb 02, 2024 at 02:43:37AM +0100, Andrew Lunn wrote:
+> > > +
+> > > +			phydev->drv->led_brightness_set = NULL;
+> > > +			phydev->drv->led_blink_set = NULL;
+> > > +			phydev->drv->led_hw_is_supported = NULL;
+> > > +			phydev->drv->led_hw_control_set = NULL;
+> > > +			phydev->drv->led_hw_control_get = NULL;
+> > 
+> > I don't see how that works. You have multiple PHYs using this
+> > driver. Some might have LEDs, some might have GPOs. But if you modify
+> > the driver structure like this, you prevent all PHYs from having LEDs,
+> > and maybe cause a Opps if a PHY device has already registered its
+> > LEDs?
+> >
 > 
-> To make this possible, this change exposes the sample id and stream_id values
-> to the script.
-> 
-> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+> God you are right! Off-topic but given the effects this may cause, why
+> the thing is not const?
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+I would like it to be, but its not easy. There are fields in the
+driver structure that phylib needs to modify. e.g. mdiodrv.driver gets
+passed to the driver core when registering the driver, and it modifies
+it. mdiodrv.flags is also manipulated. So we cannot make the whole
+structure const.
 
-> ---
->  tools/perf/Documentation/perf-script-python.txt        | 4 ++--
->  tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
->  2 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-> index 6a8581012e162..13e37e9385ee4 100644
-> --- a/tools/perf/Documentation/perf-script-python.txt
-> +++ b/tools/perf/Documentation/perf-script-python.txt
-> @@ -642,8 +642,8 @@ SUPPORTED FIELDS
->  
->  Currently supported fields:
->  
-> -ev_name, comm, pid, tid, cpu, ip, time, period, phys_addr, addr,
-> -symbol, symoff, dso, time_enabled, time_running, values, callchain,
-> +ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
-> +addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
->  brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
->  weight, transaction, raw_buf, attr, cpumode.
->  
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 860e1837ba969..d88966645b2f4 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -858,6 +858,10 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(evsel__name(evsel)));
->  	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->core.attr, sizeof(evsel->core.attr)));
->  
-> +	pydict_set_item_string_decref(dict_sample, "id",
-> +			PyLong_FromUnsignedLongLong(sample->id));
-> +	pydict_set_item_string_decref(dict_sample, "stream_id",
-> +			PyLong_FromUnsignedLongLong(sample->stream_id));
->  	pydict_set_item_string_decref(dict_sample, "pid",
->  			_PyLong_FromLong(sample->pid));
->  	pydict_set_item_string_decref(dict_sample, "tid",
-> @@ -1306,7 +1310,7 @@ static void python_export_sample_table(struct db_export *dbe,
->  	struct tables *tables = container_of(dbe, struct tables, dbe);
->  	PyObject *t;
->  
-> -	t = tuple_new(25);
-> +	t = tuple_new(27);
->  
->  	tuple_set_d64(t, 0, es->db_id);
->  	tuple_set_d64(t, 1, es->evsel->db_id);
-> @@ -1333,6 +1337,8 @@ static void python_export_sample_table(struct db_export *dbe,
->  	tuple_set_d64(t, 22, es->sample->insn_cnt);
->  	tuple_set_d64(t, 23, es->sample->cyc_cnt);
->  	tuple_set_s32(t, 24, es->sample->flags);
-> +	tuple_set_d64(t, 25, es->sample->id);
-> +	tuple_set_d64(t, 26, es->sample->stream_id);
->  
->  	call_object(tables->sample_handler, t, "sample_table");
->  
-
+	Andrew
