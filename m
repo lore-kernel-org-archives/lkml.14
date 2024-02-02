@@ -1,234 +1,125 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2084.outbound.protection.outlook.com [40.107.243.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1125657B1;
-	Fri,  2 Feb 2024 08:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706864217; cv=fail; b=i8ckWjG7SU68grzDMiKvunuzi60YRior8t5r4GI86KwtxigT/yhksAuFGEV2zMAjJ01Bx4ZZZUxMa2QKzzuhKmDvcO3uumeUTycC5ZCRd3z/xw08bFl3kwKIGmJiS0hwOhnp3S6Y1wz1HXhfs4+6aXQaTvfND8XfeANLkrlTHfs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706864217; c=relaxed/simple;
-	bh=yOCCQCTpnvj3nuPvtfIDTm8RQEtbzParytfcTSnGX50=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YycW68okn2kjJTLDs3FVQ61cbr8Kt6Tt+Y3aRx6q6jtzGwa5b8kK6BKszOOGi0LSrU2kvLhxYs1VSuEvuD0cH9ZGHQdrEqw+aUVvU4BR58dn6C4ebU+x6c+31x9q6KP9ld3PoAj7J10EdxNVMF3tTWiB//fOh4CYzs/HlTRCkjQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0qNr3K8s; arc=fail smtp.client-ip=40.107.243.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E2F69975
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 09:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706864446; cv=none; b=LY8rn1MIzD3hIrQeV+7Nch5KgahNkwJ5ZJm2MDz37Ag7GVGVzdtNYISdn9W9ECx2U59BacB2zC1lWuTXORKTx/XZgXDLcYCyw3m9kiRNaE++ZiZqnycPQ7ZGyWW6Xnxb5u1U/SUVrFOzeLLezt/iU7XtZW/+8Dd/tfnsISenefQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706864446; c=relaxed/simple;
+	bh=fUbtS7AlQNO3rXfSPLzoZ0x8HSq0pOklxREwmRXlnEE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jIVrypQkeE8Q7R9cF9odtXwPFmRicViK3Bd4nzO6TLc6vSCLfnGTf/jDfKNPQ177yAq25Hnoi3eMD+T7sZvJihp3tZfvfg4JwglClTKEpMVPWea0lzWUpDd5oQ5vLj1MGKCnEoGevV9p3yaDijDTYz9XgtMXuUcV1eyzHzCltUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e61iWgMU; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0qNr3K8s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AQhxX6fE073OqirTWeLLcW52ZA3+2RQYKnfjc59vHxGoSW0oDozQwjenTtUaTEeb/HLi1//eMcdiu/KJe6lZ8qAg8vZgMyyXAW+GcP5C/C2y14ICcIf4q1/RTsVlhAfJ8AqVAiLOH+nejkHcml/hTRhapis+Ez4dy+F7wyUUvOe06gE9dRtiw38Ec+27KHT5RM89wAZuNHSiBVWcLS89zM5/VQ+cpM5Cjvb1xF+l61lRRqUmLq8z7nd1ZnFfFvDTM24/DiAoEnUuSlZc5TmyusIwafsGuD2MaOWt7SlyQ/LheJNtFdxRsMnUKgKlhRcCNXGslOk5XBzA8D2TUq2uyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mVC3pcPs/FaQC/14DB2xXYtV3fcl6BaZNqt81QTVQw4=;
- b=lMs787alIZZqS4BNoqDZ+tdiF9sVMcfDSyPKBY3gC81nYHg1WvKTpESPEJEYIlurGZ1ZpRrNfWe05Sj5fgHX/LFIYQlie8yu40iLsH6Kuq3m7DqbIVKJwoXAq8yd/KrcNMzGD0EHdMiwt1AQjDctxhslxJSmtsBBAgktknl/qw5WQsh64HnuqwllS8gOtv7pRx426WwAYoBsEmk6WlDLNCPMffEW2PVi8351jUP1w73ViALbI51mprlR1yiQcshk1Y7a36up8s1vfpCncOf8bLO3tTWSZvvWsBcyFqyPBdbNtVxk/MzyP7s/1sev/9EcmRC/fHWYRs/V+t/93S8ryw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mVC3pcPs/FaQC/14DB2xXYtV3fcl6BaZNqt81QTVQw4=;
- b=0qNr3K8sGBwmc8lwp2X390Q6cwp0GyXn+eYCRcJKdQ/unk1BW0ph6ukbFpYMotwhw+w1gDTDNfTvSHBwNlL3cvuv6XvnaqEMrXFvNCkM4WOmj5JoiXlYPGqPjl/l3cEDEcghp8iEDOGtAZXrXkWCgY5k6CCGFAy3Ux6patKqChQ=
-Received: from CYZPR05CA0001.namprd05.prod.outlook.com (2603:10b6:930:89::7)
- by DS0PR12MB8788.namprd12.prod.outlook.com (2603:10b6:8:14f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.13; Fri, 2 Feb
- 2024 08:56:53 +0000
-Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com
- (2603:10b6:930:89:cafe::8d) by CYZPR05CA0001.outlook.office365.com
- (2603:10b6:930:89::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.11 via Frontend
- Transport; Fri, 2 Feb 2024 08:56:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.80) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Fri, 2 Feb 2024 08:56:53 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 2 Feb 2024 02:56:49 -0600
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<viresh.kumar@linaro.org>, <Ray.Huang@amd.com>, <gautham.shenoy@amd.com>,
-	<Borislav.Petkov@amd.com>
-CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
-	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 6/6] cpufreq:amd-pstate: add quirk for the pstate CPPC capabilities missing
-Date: Fri, 2 Feb 2024 16:55:38 +0800
-Message-ID: <8a55135d10cfc906616d3cd4530f9aac487c5034.1706863981.git.perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706863981.git.perry.yuan@amd.com>
-References: <cover.1706863981.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e61iWgMU"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d2e007751eso1005172241.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 01:00:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706864443; x=1707469243; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fUbtS7AlQNO3rXfSPLzoZ0x8HSq0pOklxREwmRXlnEE=;
+        b=e61iWgMUAYHNTcFwgGnZFHgij4BK7MeNlEGiuXGYRx38rOffj8REQSoQ+fNjFczVCz
+         Ln1KlgnIN3IEiBXWp9x8a5f5++IUktiQMwYOIDt6dsAP16LA4VJHTbvVlFtCjcAt0vly
+         3iTN2l4hh5S/9K8b01uuttIha/ckdG0Bow9wehoyDkGUEIDljhE+S7PCWFCLWgCRuVo+
+         5yfUaExm1E/6mH1zULOmX2GfNL0ImhdlW2a4RkMfmc2MtliLtL7JsnYH9OzXRBUGMSoV
+         ZhcdPhdj1fnEElNEjIbmnw1EUqCuCVBCyWPWNOFH7G7xp7wVVjorAKWIXNb5WDld0nL8
+         bMsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706864443; x=1707469243;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fUbtS7AlQNO3rXfSPLzoZ0x8HSq0pOklxREwmRXlnEE=;
+        b=v2EGEzetGkN61/+mWEDFNbKTiU6C5soeqajDt+XwRYiXjO4NthooEmyS0NtZMmCFbp
+         4dZZbSEYfr0zph9AmYPgnr87QlKHUFzVfk/eXIqdFLneiRjiZwkcFTbI5RI67r3mAeKT
+         CAUPZxlML+iFaxXI/gri9SV9AJY/wHYMtns1NZvLcMcixEgeBvjIHYRanESp2vQVGkFF
+         e9rT9DB6rd7NJSGUYdVTiDxWNL4ja907Btl9bMFSDH8Ub0X3BVjfE2JBWc4R4i8iD+ZY
+         rnvgDtNjJQEskWoYnsLQf2Y1JNqub+ko37hWfAS0RDyzztmnF56UNwHpREHS6jcK9tBY
+         DgWw==
+X-Gm-Message-State: AOJu0YzAsiDIUvKu4NG0pB49QsLyAwS4gs9QpkNFuYVxzHI2BNurPiH6
+	6SuKDNrRmc7emDyZ+bjz5MwFbk9KmTxLYbe4mK/987JecNDRxwN7U97shetzV5vNwhkB/YtlMGG
+	GwkJSrC3biHwFhCOp2+hmXoLeMhXX8q87Xj8S
+X-Google-Smtp-Source: AGHT+IG7SiMdL9gUo2xl2ZG4MU0H1TvymNc2kxS+OO0fT6OUON6b6UMCIosMZlRr8qyVga5+bqJLuQppuWmz4u8wVMI=
+X-Received: by 2002:a05:6122:3a05:b0:4bd:728b:c108 with SMTP id
+ fp5-20020a0561223a0500b004bd728bc108mr8052890vkb.8.1706864443194; Fri, 02 Feb
+ 2024 01:00:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|DS0PR12MB8788:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb53f080-838f-4a73-966b-08dc23cce6bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fQv1Jme2ylK3lkuX8U4V7fZgftaSSmoGQIpa1NVTCz8Ay1xq7aB6/31zuTY+tTdDfh7wtvu94ciRSLbsKUQrOL7gYm/evJNLQoOLeU1JT/fq36JlZpBE5/rPn+N0OFkHNt7bjq7naaQtJm6G7iekMpiA6FU5iM/frfwJnhEmKA0P4sCFsZcjUs/I4gdYUkYPLY2Nm/7SjG8zVLX3O3XzfcX9EQNdVJY2GIPA5xaUqmOH8qcSKVNrEJLVZd6XWSvOVFpHaFCkuuSJzsQf68+41PDfVPworCnGvmp7oClLkIzdMxUK9mCmhpkbJfkzhyqYtXwD5zY3pLuJl3WgC1FQdnvUapowl5kCTRFZxA7FFKx2jySDfO2vERZDMWrr46Auqhif5FM4V3A2seWyXxPE4Uu8O32niv4vdw+yg/25sASDOG6hLda0ccNVP4+pYU0G74BvTuz6Aq3QXvNqDrnO/PHF+/PoFFnAGIAMS92hBtKCLiwL2Rqeekk+YshYHkA1gczDMoWt+TqaMv74Wxee63DRhiiRcOSWA4vhSyVX82yqUAFEe5sJL0bXCPyXKUh6ybH0zbhEcsIkaJ2ZrDxmgm5ZVZnFjWNIJC2Fl389bAP9q2i0QzUIzmJlbPQ3Vz3qzMUoBuUVGf8NvqIhj+Z3PBH7sHBwqv6yf9SH/MTfYmxmLYN91ShlnXhQbrU8fpOCcX4WYSwnbtXgBvyhqcj9kYXcJmQlfVjLEWi8HhaJxSbJd+xD03mVBNXOq9vaNCh/bBoMvh1qJYRS90u2JVDp1A==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(376002)(346002)(396003)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(82310400011)(36840700001)(40470700004)(46966006)(8676002)(4326008)(8936002)(356005)(82740400003)(40460700003)(2906002)(40480700001)(47076005)(81166007)(478600001)(36860700001)(86362001)(44832011)(36756003)(6636002)(316002)(83380400001)(5660300002)(70206006)(110136005)(70586007)(54906003)(26005)(16526019)(2616005)(426003)(336012)(7696005)(41300700001)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 08:56:53.0184
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb53f080-838f-4a73-966b-08dc23cce6bb
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D6.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8788
+References: <CABXGCsOzpRPZGg23QqJAzKnqkZPKzvieeg=W7sgjgi3q0pBo0g@mail.gmail.com>
+ <CANpmjNN-5PpSQ1A_9aM3u4ei74HuvCoThiLAHi=reXXQwer67A@mail.gmail.com>
+ <CANpmjNM=92PcmODNPB4DrAhfLY=0mePCbyG9=8BGrQ4MC0xZ6w@mail.gmail.com>
+ <CABXGCsM+9TxxY-bOUw6MyRV7CSZsyQpfDgvwgaBBKk9UONJkBw@mail.gmail.com>
+ <CABXGCsOp3Djn5uQYb3f=4k1m9rY9y3Ext9SMavWAFRTcKwtNMA@mail.gmail.com>
+ <CA+fCnZeNsUV4_92A9DMg=yqyS_y_JTABguyQyNMpm6JPKVxruw@mail.gmail.com> <CABXGCsPerqj=zXJ0pUCnZ29JGmZFSvH6DB22r2uKio61c1bVkw@mail.gmail.com>
+In-Reply-To: <CABXGCsPerqj=zXJ0pUCnZ29JGmZFSvH6DB22r2uKio61c1bVkw@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Fri, 2 Feb 2024 10:00:05 +0100
+Message-ID: <CANpmjNMn+ULqbSGQ6uOa0JDhw=2my5TtBK4Y+xyBES_iaG_SEA@mail.gmail.com>
+Subject: Re: regression/bisected commit 773688a6cb24b0b3c2ba40354d883348a2befa38
+ make my system completely unusable under high load
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>, glider@google.com, dvyukov@google.com, 
+	eugenis@google.com, Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add quirk table to get CPPC capabilities issue fixed by providing
-correct perf or frequency values while driver loading.
+On Thu, 1 Feb 2024 at 23:08, Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> On Tue, Jan 30, 2024 at 4:14=E2=80=AFAM Andrey Konovalov <andreyknvl@gmai=
+l.com> wrote:
+> > Hi Mikhail,
+> >
+> > Please try to apply these two patches on top:
+> > https://lore.kernel.org/linux-mm/20240129100708.39460-1-elver@google.co=
+m/
+[1]
+> >
+> > They effectively revert the change you mentioned.
+> >
+>
+> I tried applying these patches on top of 6.8-rc2 and
+> 6.8-git6764c317b6bb but performance unfortunately has not changed and
+> is still on regression level.
+> Maybe we can try something else?
 
-If CPPC capabilities are not defined in the ACPI tables or wrongly
-defined by platform firmware, it needs to use quick to get those
-issues fixed with correct workaround values to make pstate driver
-can be loaded even though there are CPPC capabilities errors.
+That's strange - the patches at [1] definitely revert the change you
+bisected to. It's possible there is some other strange side-effect. (I
+assume that you are still running all this with a KASAN kernel.)
 
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 49 ++++++++++++++++++++++++++++++++++--
- include/linux/amd-pstate.h   |  6 +++++
- 2 files changed, 53 insertions(+), 2 deletions(-)
+Just so I understand it right:
+You say before commit cc478e0b6bdffd20561e1a07941a65f6c8962cab the
+game's FPS were good. But that is strange, because at that point we're
+already doing stackdepot refcounting, i.e. after commit
+773688a6cb24b0b3c2ba40354d883348a2befa38 which you reported as the
+initial performance regression. The patches at [2] fixed that problem.
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 77effc3caf6c..4d426516abb9 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -67,6 +67,7 @@ static struct cpufreq_driver amd_pstate_epp_driver;
- static int cppc_state = AMD_PSTATE_UNDEFINED;
- static bool cppc_enabled;
- static bool amd_pstate_prefcore = true;
-+static struct quirk_entry *quirks;
- 
- /*
-  * AMD Energy Preference Performance (EPP)
-@@ -111,6 +112,33 @@ static unsigned int epp_values[] = {
- 
- typedef int (*cppc_mode_transition_fn)(int);
- 
-+static struct quirk_entry quirk_amd_7k62 = {
-+	.nominal_freq = 2600,
-+	.lowest_freq = 550,
-+};
-+
-+static int __init dmi_matched(const struct dmi_system_id *dmi)
-+{
-+	quirks = dmi->driver_data;
-+	pr_info("hardware type %s found\n", dmi->ident);
-+
-+	return 1;
-+}
-+
-+static const struct dmi_system_id amd_pstate_quirks_table[] __initconst = {
-+	{
-+		.callback = dmi_matched,
-+		.ident = "AMD EPYC 7K62",
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "C1"),
-+			DMI_MATCH(DMI_PRODUCT_SERIAL, "FX19911000028"),
-+		},
-+		.driver_data = &quirk_amd_7k62,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, amd_pstate_quirks_table);
-+
- static inline int get_mode_idx_from_str(const char *str, size_t size)
- {
- 	int i;
-@@ -600,13 +628,19 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
- static int amd_get_min_freq(struct amd_cpudata *cpudata)
- {
- 	struct cppc_perf_caps cppc_perf;
-+	u32 lowest_freq;
- 
- 	int ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
- 	if (ret)
- 		return ret;
- 
-+	if (quirks && quirks->lowest_freq)
-+		lowest_freq = quirks->lowest_freq;
-+	else
-+		lowest_freq = cppc_perf.lowest_freq;
-+
- 	/* Switch to khz */
--	return cppc_perf.lowest_freq * 1000;
-+	return lowest_freq * 1000;
- }
- 
- static int amd_get_max_freq(struct amd_cpudata *cpudata)
-@@ -635,12 +669,18 @@ static int amd_get_max_freq(struct amd_cpudata *cpudata)
- static int amd_get_nominal_freq(struct amd_cpudata *cpudata)
- {
- 	struct cppc_perf_caps cppc_perf;
-+	u32 nominal_freq;
- 
- 	int ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
- 	if (ret)
- 		return ret;
- 
--	return cppc_perf.nominal_freq;
-+	if (quirks && quirks->nominal_freq)
-+		nominal_freq = quirks->nominal_freq;
-+	else
-+		nominal_freq = cppc_perf.nominal_freq;
-+
-+	return nominal_freq;
- }
- 
- static int amd_get_lowest_nonlinear_freq(struct amd_cpudata *cpudata)
-@@ -1672,6 +1712,11 @@ static int __init amd_pstate_init(void)
- 	if (cpufreq_get_current_driver())
- 		return -EEXIST;
- 
-+	quirks = NULL;
-+
-+	/* check if this machine need CPPC quirks */
-+	dmi_check_system(amd_pstate_quirks_table);
-+
- 	switch (cppc_state) {
- 	case AMD_PSTATE_UNDEFINED:
- 		/* Disable on the following configs by default:
-diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
-index d21838835abd..7b2cbb892fd9 100644
---- a/include/linux/amd-pstate.h
-+++ b/include/linux/amd-pstate.h
-@@ -124,4 +124,10 @@ static const char * const amd_pstate_mode_string[] = {
- 	[AMD_PSTATE_GUIDED]      = "guided",
- 	NULL,
- };
-+
-+struct quirk_entry {
-+	u32 nominal_freq;
-+	u32 lowest_freq;
-+};
-+
- #endif /* _LINUX_AMD_PSTATE_H */
--- 
-2.34.1
+So now it's unclear to me how the simple change in
+cc478e0b6bdffd20561e1a07941a65f6c8962cab causes the performance
+problem, when in fact this is already with KASAN stackdepot
+refcounting enabled but without the performance fixes from [1] and
+[2].
 
+[2] https://lore.kernel.org/all/20240118110216.2539519-2-elver@google.com/
+
+My questions now would be:
+- What was the game's FPS in the last stable kernel (v6.7)?
+- Can you collect another set of performance profiles between good and
+bad? Maybe it would show where the time in the kernel is spent.
+- Could it be an inconclusive bisection?
+
+Thanks,
+-- Marco
