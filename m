@@ -1,211 +1,129 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3765313E20C;
-	Fri,  2 Feb 2024 11:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706873928; cv=none; b=YH8sBK5d2r0n/xeSPQbGwly3uDCssA3Ih4eqAFe1mpQYZxC8yoUS6yxjJkB5jUK1jJ9X2ShstGYutGVxyXxK4jw6+Fs0GSexjyXsdaRAR3r0oVGA6qrHN5jlL0/Qlgcx9WsildW7C6sUdCp/egfnfKIugx8JepYJeInWUx6dxps=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706873928; c=relaxed/simple;
-	bh=5qO+mfUaZtTcVTpJmzixm59usgIAuE62ywXyiE2jGOs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=CWOhjPMB/C4R31C7aB+FGve0M3IDd4JRpvX4m6V6rirg9owv5FRmh+9sNUc11mdjbysClg1BkyqUXc4l77Iv4UA2fmDXLYNIwzVHnfUGwfYoKV965CWqKvq6VpuPBbJf+h2VsGoqO3183sIzgowbqoKul10oISh7Jk9W2sTng1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id DF9B461E5FE01;
-	Fri,  2 Feb 2024 12:38:04 +0100 (CET)
-Message-ID: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
-Date: Fri, 2 Feb 2024 12:38:04 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA61913D4E0;
+	Fri,  2 Feb 2024 11:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706873958; cv=fail; b=DFGl9RvlcWb9hUkzNsTqFDDaX7db48UKrWkdfgrvGeuqVslkIf6kMdL9MkKsOb40dsizVKwa/cojUdLj0b+A08OxpbO8D/3uhENHnLYV9eto7HSIfeFDB/kNkq5ZWtYOguIIvzBm6+Qr4CQizbGnGlqDulJK30EOH0kDcOw19t0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706873958; c=relaxed/simple;
+	bh=l0/IJsEWpWMnne1DByITXAw4wvzSk0Nc8wVwXFaeuFc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n7YImQYESQzjLQZKu8vwYd/1sv7DwjQ054VSAw8VJRLOX7gA0wdf9FmV59k0cdEme0r/n7XEoijfjPCzYEyi5GG8waaT3t2oSQLEKQBuAR6WqDd1cy//d8N022NWD+0noWqqfcpHS/HoNf2DpaokoklVSxSkNMw1U0NAOmIU594=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QOutpt5p; arc=fail smtp.client-ip=40.107.236.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QOutpt5p"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TC7zqnUNq10nzCyEuTytapyjShhHlukMSWlpZujw2DVoxZKZClSrhkqjxBOD7lSGn2Mg+dn/kggOjMXUo2wJfUM2C0zD9PiJCtndfJ25KF8cDVzSzUby2qdfKEXRhusMf77wsX0dY3Iv/Bw9IOyMgKUJiQDg9mmlL3scds/AhkuKnbjTKyYYX/8j+ldJMQNRDnDkdaFVoD816x56XArpJTR4Tah8AtedvItwj4E5ruAC96Y3zWz5SNWci3Xt7Nm4Q/lIonzvPbKtyWPccjz0AZN5am89uKyupCT7Nz7/vy/6/zsU+n4Mz6JhEQPSMHFDBrGjZdtF20gKUgtK3I2v9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7SiU2R7wNta4ojKu0BQyAnM9/sKwGJT8TnQbQqeCi9A=;
+ b=Tk/UaygfSYB+0h9XfBCmU6L6Tx32nk/xLY9RBGnadjGkAqU83TVOyD9in4RnFEqW1TH1y1agQjJ9fdtQf0wWCKuWiZmkuJZRQgEUGMqE+RlviXrrOcb7jaacra0pizEZKQkPQkG5LC0mYlm5vJc9CRVV3q6cIM8PMDhMALYEaf+iWrujm7D92ZmoDuwjOoNjUjE/vqAP/qNvO4PL44xL5Rzvx9Lh8waNbYoX0yiTe4VkEOccw8Tfj07xwwf8pKECjA9fJq96IkqKMQiWJbYtgNp9u17v2NrIFilsBVAioTwQR3t1JhpNIgsS+M+zjNra6zlkVDX3MmlXExfVeNkOug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7SiU2R7wNta4ojKu0BQyAnM9/sKwGJT8TnQbQqeCi9A=;
+ b=QOutpt5pUUl5Ct8odoUPLgjKW28maBw/Ads+AYdujafY7ZAcnRW22cQu5g04b4Z03dw1LkThLrp5U9W7gO9I4K2PGihgw8L8EPLRBz5Hp8rnzRb9/Lz5XEKnkwh/YA8QcuxB5k+iyWZmTL3fnwfJFoNhg8oeNRxNF9vcvWP0HIg=
+Received: from PH0P220CA0021.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:d3::9) by
+ DM4PR12MB5342.namprd12.prod.outlook.com (2603:10b6:5:39f::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7270.11; Fri, 2 Feb 2024 11:39:12 +0000
+Received: from SN1PEPF0002BA4B.namprd03.prod.outlook.com
+ (2603:10b6:510:d3:cafe::84) by PH0P220CA0021.outlook.office365.com
+ (2603:10b6:510:d3::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.29 via Frontend
+ Transport; Fri, 2 Feb 2024 11:39:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4B.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Fri, 2 Feb 2024 11:39:11 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 2 Feb
+ 2024 05:39:11 -0600
+Received: from xhdbharathm40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Fri, 2 Feb 2024 05:39:09 -0600
+From: Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>
+To: <srinivas.kandagatla@linaro.org>, <michal.simek@amd.com>,
+	<kalyani.akula@amd.com>, <praveen.teja.kundanala@amd.com>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>
+Subject: [PATCH V4 0/4] Add ZynqMP efuse access support
+Date: Fri, 2 Feb 2024 17:08:39 +0530
+Message-ID: <20240202113843.17999-1-praveen.teja.kundanala@amd.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Hans de Goede <hdegoede@redhat.com>, regressions@lists.linux.dev
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: [REGRESSION] `lis3lv02d_i2c_suspend()` causes `unbalanced disables
- for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4B:EE_|DM4PR12MB5342:EE_
+X-MS-Office365-Filtering-Correlation-Id: d9b73cb3-8422-4788-72a5-08dc23e3936e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	sOONRhhtVRya5xOLWrywIopcA6XXcb2Bt59EGdoe46KYOsI8q7sOniL56hejvYuPG5jBC6GkAHg0KdsJRT3o0E4Bz8Mln7uval/j3oMORqkai7eUeqHaVP/QBuv1u+/CTbep+dTccSRsP3enQQnDgMTw95EffsPKwr5YZ1G9i1odIdfRLbbG1sihV1oC0DIxBz6RCbG4LU47nunlnlqQsAre2OS1omYcQ54Y4iyYo7GzWWAHzp9c52izL5DKHta7EwrZNXyhnhVE9jOZMdg/D+e+rDY7jkPe/js7pZk1oC3lnZ7tAhEsoqWP17dd3U0w3/ZHjdn0men2++e0NLYk7tGglLxR26DOVRdHC3CMEp5fKhXAyWguNairY2A3nyE/xIe7oD0PBRG+1QH8Y17KWbBHwwcppUmoKFshlym1Xb92dNn64FGLTOdr8p7V9v+o4su0Dwmv/s/uVB5qeBO3ENpFeqVw/6xteiQS28MFP7YvqObSZZlKN8a3nB3tmnlLoCwxBDK0kfW65RV7JMdJCtATUUvKl7TqXTg+TzI2NVkZJRrXYMbmCWpnQLwMD0YQniInkEKUDOb/YL5eC6TAxtz9W5ZtmTg+2CioYUqJM7usK/bxdKHJjfkamD4b/+GyxZ7ZYXVEWqYk0rABb1dKdAnGvXHNmc2FUovKfe4rmNlDVoHpxAqO67TjrzCq4Xl2XUZLTHLShYAIxYund6TEQCMy4j/GDSosa2wE2uzuxyKuOvrYL4ofMWpRqH10M2Py5rNYjJ52fRSyzJ6PVbv1wDAhFJkHB9hxXzGiw/xkbm8=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(376002)(346002)(136003)(230922051799003)(1800799012)(64100799003)(451199024)(82310400011)(186009)(36840700001)(40470700004)(46966006)(40480700001)(40460700003)(83380400001)(103116003)(356005)(86362001)(36756003)(41300700001)(36860700001)(426003)(1076003)(26005)(47076005)(81166007)(336012)(2616005)(82740400003)(6666004)(2906002)(478600001)(70206006)(316002)(110136005)(70586007)(8676002)(5660300002)(4326008)(8936002)(966005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 11:39:11.7180
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9b73cb3-8422-4788-72a5-08dc23e3936e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5342
 
-#regzbot introduced 2f189493ae32
+ - Add ZynqMP efuse firmware API for efuse access
+ - zynqmp_nvmem_probe cleanup
+ - Add support to read/write ZynqMP efuse memory
 
+The first patch depends on
+https://lore.kernel.org/linux-arm-kernel/20231004094116.27128-2-jay.buddhabhatti@amd.com/
 
-Dear Linux folks,
+---
+V3 patch link:
+	https://lore.kernel.org/all/20240108052617.32510-1-praveen.teja.kundanala@amd.com/
+V4 Changes:
+      - Removed [2/3] dt-bindings: nvmem: Convert xlnx,zynqmp-nvmem.txt to yaml
+        as it got applied https://lore.kernel.org/all/170635581622.41421.8980881999042944764.b4-ty@linaro.org/#r
+      - Split patches as per comments
+---
 
+Praveen Teja Kundanala (4):
+  firmware: xilinx: Add ZynqMP efuse access API
+  nvmem: zynqmp_nvmem: zynqmp_nvmem_probe cleanup
+  nvmem: zynqmp_nvmem: Add support to access efuse
+  MAINTAINERS: Add maintainers for ZynqMP NVMEM driver
 
-Testing commit 2f189493ae32 (i2c: i801: Add lis3lv02d for Dell XPS 15 
-7590) [1], it’s very likely this commit, it turns out, that Linux logs 
-the warning below during ACPI S3 suspend:
+ MAINTAINERS                          |   8 +
+ drivers/firmware/xilinx/zynqmp.c     |  25 ++++
+ drivers/nvmem/zynqmp_nvmem.c         | 215 +++++++++++++++++++++++----
+ include/linux/firmware/xlnx-zynqmp.h |   8 +
+ 4 files changed, 225 insertions(+), 31 deletions(-)
 
-```
-[    0.000000] Linux version 6.8.0-rc2 (pmenzel@villette) (gcc (Debian 
-13.2.0-12) 13.2.0, GNU ld (GNU Binutils for Debian) 2.41.90.20240122) #9 
-SMP PREEMPT_DYNAMIC Mon Jan 29 15:49:07 CET 2024
-[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.8.0-rc2 
-root=UUID=9fa41e21-7a5f-479e-afdc-9a5503368d8e ro cryptomgr.notests 
-quiet rd.luks=1 rd.auto=1 initcall_debug log_buf_len=8M
-[…]
-[    0.000000] DMI: Dell Inc. XPS 15 7590/0VYV0G, BIOS 1.24.0 09/11/2023
-[…]
-[ 1528.577767] lis3lv02d_i2c 0-0029: PM: calling 
-lis3lv02d_i2c_suspend+0x0/0x30 [lis3lv02d_i2c] @ 92, parent: i2c-0
-[…]
-[ 1528.578506] ------------[ cut here ]------------
-[ 1528.578508] unbalanced disables for regulator-dummy
-[ 1528.578522] WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 
-_regulator_disable+0xbb/0x190
-[ 1528.578532] Modules linked in: snd_seq_dummy(E) snd_hrtimer(E) 
-snd_seq(E) snd_seq_device(E) rfcomm(E) snd_sof_probes(E) 
-snd_hda_codec_hdmi(E) snd_hda_codec_realtek(E) snd_hda_codec_generic(E) 
-l2tp_ppp(E) l2tp_netlink(E) l2tp_core(E) ip6_udp_tunnel(E) udp_tunnel(E) 
-pppox(E) ppp_generic(E) slhc(E) xfrm_interface(E) xfrm6_tunnel(E) 
-tunnel6(E) xfrm_user(E) xfrm_algo(E) qrtr(E) cmac(E) algif_hash(E) 
-algif_skcipher(E) af_alg(E) bnep(E) snd_sof_pci_intel_cnl(E) 
-snd_sof_intel_hda_common(E) snd_sof_pci(E) snd_sof_xtensa_dsp(E) 
-snd_sof_intel_hda(E) snd_sof(E) snd_sof_utils(E) 
-snd_soc_acpi_intel_match(E) snd_soc_acpi(E) snd_soc_hdac_hda(E) 
-binfmt_misc(E) iwlmvm(E) snd_soc_core(E) snd_compress(E) 
-snd_sof_intel_hda_mlink(E) x86_pkg_temp_thermal(E) wacom(E) 
-snd_hda_ext_core(E) intel_powerclamp(E) i915(E) mac80211(E) joydev(E) 
-coretemp(E) iTCO_wdt(E) usbhid(E) hid_multitouch(E) kvm_intel(E) 
-intel_pmc_bxt(E) lis3lv02d_i2c(E) hid_generic(E) iTCO_vendor_support(E) 
-dell_laptop(E) snd_hda_intel(E) lis3lv02d(E) dell_wmi(E) mei_wdt(E)
-[ 1528.578601]  nls_ascii(E) ledtrig_audio(E) ee1004(E) mei_hdcp(E) 
-libarc4(E) mei_pxp(E) watchdog(E) nls_cp437(E) snd_intel_dspcfg(E) kvm(E)
-[ 1528.578609] idma64 idma64.1: PM: platform_pm_suspend+0x0/0x50 
-returned 0 after 742 usecs
-[ 1528.578612]  snd_hda_codec(E) btusb(E) snd_hwdep(E) vfat(E) 
-i2c_algo_bit(E) processor_thermal_device_pci_legacy(E) btrtl(E) 
-uvcvideo(E) snd_hda_core(E) dell_smbios(E) btintel(E) fat(E)
-[ 1528.578623] platform regulatory.0: PM: calling 
-platform_pm_suspend+0x0/0x50 @ 70543, parent: platform
-[ 1528.578625]  videobuf2_vmalloc(E) dcdbas(E) intel_rapl_msr(E) 
-snd_pcm(E) irqbypass(E)
-[ 1528.578628] platform regulatory.0: PM: platform_pm_suspend+0x0/0x50 
-returned 0 after 0 usecs
-[ 1528.578632]  drm_buddy(E) intel_soc_dts_iosf(E) dell_wmi_sysman(E) 
-videobuf2_memops(E) btbcm(E) rapl(E) processor_thermal_device(E) uvc(E) 
-iwlwifi(E)
-[ 1528.578639] iTCO_wdt iTCO_wdt: PM: calling 
-platform_pm_suspend+0x0/0x50 @ 70543, parent: 0000:00:1f.4
-[ 1528.578641]  dell_smm_hwmon(E) ttm(E) videobuf2_v4l2(E) mxm_wmi(E)
-[ 1528.578644] iTCO_wdt iTCO_wdt: PM: platform_pm_suspend+0x0/0x50 
-returned 0 after 0 usecs
-[ 1528.578646]  snd_timer(E) firmware_attributes_class(E) wmi_bmof(E) 
-intel_cstate(E) btmtk(E) dell_wmi_descriptor(E) intel_wmi_thunderbolt(E) 
-processor_thermal_wt_hint(E) processor_thermal_rfim(E) intel_uncore(E) 
-psmouse(E) bluetooth(E) pcspkr(E) drm_display_helper(E) i2c_i801(E) snd(E)
-[ 1528.578661] intel_rapl_msr intel_rapl_msr.0: PM: calling 
-platform_pm_suspend+0x0/0x50 @ 70543, parent: platform
-[ 1528.578663]  processor_thermal_rapl(E) video(E) videodev(E) 
-drm_kms_helper(E) cfg80211(E) soundcore(E)
-[ 1528.578667] intel_rapl_msr intel_rapl_msr.0: PM: 
-platform_pm_suspend+0x0/0x50 returned 0 after 0 usecs
-[ 1528.578670]  i2c_smbus(E) intel_rapl_common(E)
-[ 1528.578667] i2c_hid_acpi i2c-WCOM490B:00: PM: calling 
-acpi_subsys_suspend+0x0/0x60 @ 88, parent: i2c-1
-[ 1528.578672]  intel_lpss_pci(E) videobuf2_common(E) cec(E) mei_me(E) 
-processor_thermal_wt_req(E) intel_lpss(E) 
-processor_thermal_power_floor(E) ecdh_generic(E) thunderbolt(E)
-[ 1528.578679] idma64 idma64.0: PM: calling platform_pm_suspend+0x0/0x50 
-@ 70543, parent: 0000:00:15.0
-[ 1528.578683]  mc(E) cdc_acm(E) mei(E) rfkill(E) rc_core(E) idma64(E) 
-processor_thermal_mbox(E) intel_pch_thermal(E) int3403_thermal(E) 
-int340x_thermal_zone(E) dell_smo8800(E) wmi(E) button(E) intel_hid(E) 
-evdev(E) battery(E) int3400_thermal(E) sparse_keymap(E) 
-acpi_thermal_rel(E) acpi_pad(E) ac(E) parport_pc(E) ppdev(E) lp(E) 
-parport(E) fuse(E) loop(E) efi_pstore(E) configfs(E) nfnetlink(E) 
-ip_tables(E) x_tables(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E) 
-jbd2(E) dm_crypt(E) nvme(E) rtsx_pci_sdmmc(E) xhci_pci(E) 
-i2c_hid_acpi(E) nvme_core(E) i2c_hid(E) mmc_core(E) ahci(E) xhci_hcd(E) 
-hid(E) t10_pi(E) libahci(E) crc64_rocksoft_generic(E) crc32_pclmul(E) 
-ucsi_acpi(E) crc64_rocksoft(E) crc32c_intel(E) libata(E) typec_ucsi(E) 
-crc_t10dif(E) ghash_clmulni_intel(E) crct10dif_generic(E) drm(E) 
-roles(E) sha512_ssse3(E) usbcore(E) crct10dif_pclmul(E) sha256_ssse3(E) 
-crc64(E) scsi_mod(E) sha1_ssse3(E) rtsx_pci(E) typec(E) 
-crct10dif_common(E) scsi_common(E) usb_common(E) serio_raw(E) 
-dm_mirror(E) dm_region_hash(E) dm_log(E)
-[ 1528.578760]  dm_mod(E) msr(E) efivarfs(E) autofs4(E) aesni_intel(E) 
-crypto_simd(E) cryptd(E)
-[ 1528.578768] CPU: 1 PID: 92 Comm: kworker/u24:5 Tainted: G 
-E      6.8.0-rc2 #9
-[ 1528.578773] Hardware name: Dell Inc. XPS 15 7590/0VYV0G, BIOS 1.24.0 
-09/11/2023
-[ 1528.578775] Workqueue: events_unbound async_run_entry_fn
-[ 1528.578783] RIP: 0010:_regulator_disable+0xbb/0x190
-[ 1528.578789] Code: 56 c7 45 0c 00 00 00 00 eb a8 48 8b 85 a8 03 00 00 
-48 85 c0 74 2a 48 8b 30 48 85 f6 74 22 48 c7 c7 6f a1 45 b9 e8 55 86 8b 
-ff <0f> 0b 41 bc fb ff ff ff 5b 5d 44 89 e0 41 5c 41 5d c3 cc cc cc cc
-[ 1528.578793] RSP: 0018:ffffa2a3403e3d48 EFLAGS: 00010282
-[ 1528.578796] RAX: 0000000000000000 RBX: ffff8bd0456ee300 RCX: 
-0000000000000027
-[ 1528.578799] RDX: ffff8bd79a061708 RSI: 0000000000000001 RDI: 
-ffff8bd79a061700
-[ 1528.578801] RBP: ffff8bd041304000 R08: 0000000000000000 R09: 
-ffff8bd8bc03adff
-[ 1528.578803] R10: ffffffffffffffff R11: 20726f662073656c R12: 
-ffffffffc10692c8
-[ 1528.578805] R13: 0000000000000002 R14: ffffffffc10692a8 R15: 
-0000000000000001
-[ 1528.578808] FS:  0000000000000000(0000) GS:ffff8bd79a040000(0000) 
-knlGS:0000000000000000
-[ 1528.578811] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1528.578813] CR2: 000055742d2f3e06 CR3: 0000000466020004 CR4: 
-00000000003706f0
-[ 1528.578816] Call Trace:
-[ 1528.578819]  <TASK>
-[ 1528.578820]  ? _regulator_disable+0xbb/0x190
-[ 1528.578825]  ? __warn+0x81/0x130
-[ 1528.578832]  ? _regulator_disable+0xbb/0x190
-[ 1528.578837]  ? report_bug+0x171/0x1a0
-[ 1528.578847]  ? handle_bug+0x3c/0x80
-[ 1528.578852]  ? exc_invalid_op+0x17/0x70
-[ 1528.578856]  ? asm_exc_invalid_op+0x1a/0x20
-[ 1528.578863]  ? _regulator_disable+0xbb/0x190
-[ 1528.578869]  ? _regulator_disable+0xbb/0x190
-[ 1528.578874]  regulator_bulk_disable+0x8e/0x180
-[ 1528.578880]  ? __pfx_lis3lv02d_i2c_suspend+0x10/0x10 [lis3lv02d_i2c]
-[ 1528.578890]  lis3lv02d_i2c_suspend+0x24/0x30 [lis3lv02d_i2c]
-[ 1528.578898]  dpm_run_callback+0x89/0x1e0
-[ 1528.578906]  __device_suspend+0xf1/0x4f0
-[ 1528.578912]  async_suspend+0x1e/0x70
-[ 1528.578918]  async_run_entry_fn+0x31/0x130
-[ 1528.578924]  process_one_work+0x171/0x340
-[ 1528.578930]  worker_thread+0x27b/0x3a0
-[ 1528.578936]  ? __pfx_worker_thread+0x10/0x10
-[ 1528.578940]  kthread+0xe5/0x120
-[ 1528.578944]  ? __pfx_kthread+0x10/0x10
-[ 1528.578948]  ret_from_fork+0x31/0x50
-[ 1528.578952]  ? __pfx_kthread+0x10/0x10
-[ 1528.578955]  ret_from_fork_asm+0x1b/0x30
-[ 1528.578965]  </TASK>
-[ 1528.578967] ---[ end trace 0000000000000000 ]---
-[ 1528.578970] Failed to disable Vdd_IO: -EIO
-[ 1528.578974] lis3lv02d_i2c 0-0029: PM: lis3lv02d_i2c_suspend+0x0/0x30 
-[lis3lv02d_i2c] returned 0 after 1190 usecs
-```
+-- 
+2.37.6
 
-Unfortunately, this is out of my expertise, so any help is appreciated.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://git.kernel.org/linus/2f189493ae32be9768b27072c9388e62b38d2dda
