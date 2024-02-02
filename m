@@ -1,77 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB85A15E5A0;
-	Fri,  2 Feb 2024 19:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F87815E5A6
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 19:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706901601; cv=none; b=ipf2KbB9XuNA1d0d7qefM/AGjwwJv16/UAL5rpwE9IxYWfxlqAm1MNn5FcA7x7Y6LwPTIy3eTowqFGXFHLE+TYhRJtu6WFdTnH5BVcyS2iO24t4FBvbYCy1dFtwjRiYmDz2WicbvVHUeB8vaa2AOIXG0BUjfPaouU0igiY1Y0Q8=
+	t=1706901667; cv=none; b=U01ntkE+QDUS61I9OyPQaIqbuqEc0E69rP0xCtg0LRoGItTDOugPovAhfMqOYM7kdHczhNDYegvc+jW4Z6kmrR0ExTdqKhs6pErVGdH0sedIpqWr1rcIGACDAlZ92kEbhr79sdUxDqTFLA0iASV19Sp0Xk8S8HGoYJIeiKuX9Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706901601; c=relaxed/simple;
-	bh=CbXReCX3ZlwbbZZ2LtMRe+PpRclG31Ljw0m0O0lK4fo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oe0HPkht0TCMdpkHMpWI27bQfSalwAd2CB6cmjKOksRTAW/K1iNnXmNsrMWhXHWS61S0x/dGR3EKlSh6+Xqdd+l0Qh6j+gMy8ftG6nKKpctPlK/aCNFK/EbOYPCYVASrkc4zp0nkrnx0FIq66M4zlLEXPK/51YDwhkv7HLeBJjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWWnRyOf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706901667; c=relaxed/simple;
+	bh=SX/1kOEJ3Ax/hWf0xgUvpBYNBAwAbB0XQf4SpCcsEO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ws2hj3Cb8Db+LGBSEHRTCjfiTlqEuJenbU9ZNJixRRNIVew+NyJbpEA698QtHGPPYdouaRKuXNZMt0bz/Y9S4zoCn2VEvUyKPfq4MAmMiLg7Mpi8zoVzsPTu3Om76+YoVAz9XOcGH9T8AAxx2008isjnr37PADC1DrG3jrYR2eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ERFw2f+7; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWWnRyOf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E5EC433F1;
-	Fri,  2 Feb 2024 19:20:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706901600;
-	bh=CbXReCX3ZlwbbZZ2LtMRe+PpRclG31Ljw0m0O0lK4fo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fWWnRyOfm4mJOX4/eZm+IhaEuLd1JuKdV+JW9Cqe8Z9GKZLpYjLR+5gi8kaWErJYW
-	 3K2uTX+OuwDimwPLsJKDLMCcYTyK/9WaPRneECK2oHFpiWGS/psfiQHarTduW11vtq
-	 NJcFDB8Uird8U3HpiEpeO5H6m/aTS3hYKe5RoB4a9jLR2IBN27hS+e7QbL6zt8twBD
-	 Sxh2/kDFpF9026EJNrEwzxCygItSwYJ46LVz+a3FXjBJeloGejiKvT3ELuY3LSEfoZ
-	 VRqeGWicI+QLrMmr76xm0QYXyNbPgmJP8NmrhBMeJkFpZnhdPdnkahKMIR3hcQOn+b
-	 vAsjtwJfaQG3A==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH ] mm/damon/sysfs-schemes: fix wrong DAMOS tried regions update timeout setup
-Date: Fri,  2 Feb 2024 11:19:56 -0800
-Message-Id: <20240202191956.88791-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ERFw2f+7"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d040a62a76so26473421fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 11:21:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706901663; x=1707506463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AzRl/p/zBM55V3qi6ZzeQftf/q51vbL6S+/zvQ3KD1E=;
+        b=ERFw2f+7iPRhhZJmxJgvdF4FkggcG8ZCPJew47O5IaW4Z3UoejdaJJLVm7t4IHr9Zp
+         i27NjxcSydlFGcrc/DHpQwtWiDGr8THWTG5pIGqMn8KOYo3hAuKlz02YbiJak+f/49Th
+         KryKnsQ50kg5sl85FLeuo+tp9Eh8E545I3aqU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706901663; x=1707506463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AzRl/p/zBM55V3qi6ZzeQftf/q51vbL6S+/zvQ3KD1E=;
+        b=AuA8lcL8P6olVGA2meU0d7B7NJ9t7Ar6cKcfxuecDxrdPyTMgU22/PWQyUsa19dojV
+         KX1QZWgDaBvlvlWB7NwsSZ4h2j+ttI3iIHCSJdCX4+tbipYV5B7EGku9wkQFoa5d3moO
+         BVE9Gvq1jM8Xx0zAXr7Ypnu7fhsnQPLyDF0F9gMPV8pIO0W/eNWnYfVIu4GNZNSRwugu
+         uRwxCzZYzMK/3qUjtxvvQDCMZ0FO2qHkUT/Tbtf29t/BYpISCte1JVGl/ElF5E7gJCP1
+         RxLXZFlMZajM/XpqVH96hSMDgVMCJC5khKtCezQRTJ/5z5l2hlVOHYrUAK4zzO7BG+eA
+         bFMA==
+X-Gm-Message-State: AOJu0YykpQeEgtfNm0lOg3EvbMkEb3UGkfAoUSbjV0haBusNsPN4ppiW
+	ma3mOwUv/Wdau3DFw89LK2kJGmONcpDk4aHnD6AhlxS97naLU5fICVqzBkCqQ6EXC76ewsWQZiG
+	IR1cH
+X-Google-Smtp-Source: AGHT+IEQ5mhB6dbpe0NShtpSWGfiOalkn/spXOWnfpwh58Q6baioYnxNBDBJrtNqDBo2gArQrw3E0A==
+X-Received: by 2002:a05:651c:220f:b0:2d0:97e9:99c with SMTP id y15-20020a05651c220f00b002d097e9099cmr295168ljq.19.1706901662883;
+        Fri, 02 Feb 2024 11:21:02 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV7TqzGjzhe9taiOrrlCPzEfEJIxH0HS7xRVpTIGnypWgUwwpiMnYP6FJeeZTzjeyRtioE9Lj5dweSwSPc47iwzNfnHHA0iQCjRUsjM
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
+        by smtp.gmail.com with ESMTPSA id fe9-20020a056402390900b0055d312732dbsm1057600edb.5.2024.02.02.11.21.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 11:21:02 -0800 (PST)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40f00adacfeso6995e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 11:21:02 -0800 (PST)
+X-Received: by 2002:a05:600c:6016:b0:40f:cb0d:4dd1 with SMTP id
+ az22-20020a05600c601600b0040fcb0d4dd1mr54895wmb.6.1706901204019; Fri, 02 Feb
+ 2024 11:13:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240201171159.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
+ <20240202012249.GU2087318@ZenIV> <CAD=FV=X5dpMyCGg4Xn+ApRwmiLB5zB0LTMCoSfW_X6eAsfQy8w@mail.gmail.com>
+ <20240202030438.GV2087318@ZenIV> <CAD=FV=Wbq7R9AirvxnW1aWoEnp2fWQrwBsxsDB46xbfTLHCZ4w@mail.gmail.com>
+ <20240202034925.GW2087318@ZenIV> <20240202040503.GX2087318@ZenIV>
+ <CAD=FV=X93KNMF4NwQY8uh-L=1J8PrDFQYu-cqSd+KnY5+Pq+_w@mail.gmail.com>
+ <20240202164947.GC2087318@ZenIV> <20240202165524.GD2087318@ZenIV> <Zb0vem7KC28gmT5U@e133380.arm.com>
+In-Reply-To: <Zb0vem7KC28gmT5U@e133380.arm.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 2 Feb 2024 11:13:08 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XDg2Q2Gkv0pnngfUMJUOctXhe7f_33DW4TpLxTdG7KBw@mail.gmail.com>
+Message-ID: <CAD=FV=XDg2Q2Gkv0pnngfUMJUOctXhe7f_33DW4TpLxTdG7KBw@mail.gmail.com>
+Subject: Re: [PATCH] regset: use vmalloc() for regset_get_alloc()
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Oleg Nesterov <oleg@redhat.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DAMON sysfs interface's update_schemes_tried_regions command has a
-timeout of two apply intervals of the DAMOS scheme.  Having zero value
-DAMOS scheme apply interval means it will use the aggregation interval
-as the value.  However, the timeout setup logic is mistakenly using the
-sampling interval insted of the aggregartion interval for the case.
-This could cause earlier-than-expected timeout of the command.  Fix it.
+Hi,
 
-Fixes: 7d6fa31a2fd7 ("mm/damon/sysfs-schemes: add timeout for update_schemes_tried_regions")
-Cc: <stable@vger.kernel.org> # 6.7.x
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
+On Fri, Feb 2, 2024 at 10:08=E2=80=AFAM Dave Martin <Dave.Martin@arm.com> w=
+rote:
+>
+> So, if the only reason for trying to migrate to vmalloc() is to cope
+> with an insanely sized regset on arm64, I think somehow or other we can
+> avoid that.
 
- mm/damon/sysfs-schemes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right. The only reason for the patch to switch to vmalloc() was in
+reaction to seeing the order 7 memory allocation. If we can decrease
+that to something sensible then I'm happy enough keeping the
+allocation as kmalloc().
 
-diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
-index 8dbaac6e5c2d..dd2fb5127009 100644
---- a/mm/damon/sysfs-schemes.c
-+++ b/mm/damon/sysfs-schemes.c
-@@ -2194,7 +2194,7 @@ static void damos_tried_regions_init_upd_status(
- 		sysfs_regions->upd_timeout_jiffies = jiffies +
- 			2 * usecs_to_jiffies(scheme->apply_interval_us ?
- 					scheme->apply_interval_us :
--					ctx->attrs.sample_interval);
-+					ctx->attrs.aggr_interval);
- 	}
- }
- 
--- 
-2.39.2
 
+> Options:
+>
+>  a) bring back ->get_size() so that we can allocate the correct size
+> before generating the regset data;
+>
+>  b) make aarch64_regsets[] __ro_after_init and set
+> aarch64_regsets[REGSET_SVE].n based on the boot-time probed maximum size
+> (which will be sane); or
+>
+>  c) allow membufs to grow if needed (sounds fragile though, and may be
+> hard to justify just for one arch?).
+>
+>
+> Thoughts?
+>
+> If people don't want to bring back get_size(), then (b) doesn't look
+> too bad.
+
+Either a) or b) sounds fine to me, but I'm just a visitor to this code
+so maybe I'll let the adults in the room chime in with their opinions.
+;-) Also: if you think it's fruitful for me to try to write a patch to
+do either of those then I can, but I also wouldn't object at all to
+someone else writing a patch to fix this and I can just provide a
+Tested-by and/or Reviewed-by. Let me know.
+
+-Doug
