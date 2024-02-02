@@ -1,83 +1,63 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEB88175D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC2082C60;
+	Fri,  2 Feb 2024 21:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706907926; cv=none; b=NXHY3xGJb00UC6IT34n1Ea/Bkj+vcVVFF0yOGdRu9ggi1whWzmxOVyoO1aZo5k5Q1rRsByUcMJmRMA78VaXec022AK9g5DeXia+s/rI+2GXRBAu019nzmi49YOkL/6/y4e8UCZnMprgfn6IRBCcHMfKWe0WcuVpFFIO0SmC0kZU=
+	t=1706908022; cv=none; b=WV0sfvojY6MbjB0XSwBNT93aYa+ED1QWzsatsWoO6ffhk+eLwjVBGy4YI8tX4/KDS4adK+lr5bg4qTGD8YcjQyHOZ1Dx0C/SF0YSu0BNg1PYKWZ/+vKS6FbqmaAAfd5LGIk4flE72SDXtlib7hcL+piCNmz1QDn+Yyef8r/oE/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706907926; c=relaxed/simple;
-	bh=zVEZF3UmOBGaFQWlFwsyEckv1Kv26SyyTDwlsRJ2Ctk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bhtne686UHFGEyvFd8iQ7otS8+5zeqTLzS0fdcnVi+/GRNt/CNyimCeNrDM/48mHQ625nq4p2rhoglw1UR3bDOKyahD/k/9QkTYQMFpmI/vEE+DbN0lx2YgHwFdamfrZ7BXYMHwcMBAeviJqGdwVh49LOchUUFizVkod4Q/w/Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363b281a3b9so10079895ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 13:05:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706907923; x=1707512723;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NbpB9CkzBKZ5YTB7Sbfot3j8a0vy9QxqN92wrcvFWh0=;
-        b=AYudY9HeuQObJxoxTsW3BOvCmcs9+Uf9uv+0L+oFPKqvtQPzynecIjr3NIfafZRd3X
-         soZC4oazmz1z4wPEo4kBbIWxFJYeAtgZPWojblDREtD54rYyUgtFMVr6+Phs/hwjksaw
-         nsR+EknaZ1zGFquvVpyiK+ntQgY4N7BW7CukOpO86mjnuI/rOHlJ+R8IZ1aQeYc01YdR
-         BrTCXqFcfEic9umOJT7cmgxBRaxIXjBwMHertLcblvz/cYNtwVuiusmlROj3AzBeBUf4
-         aiLS08d5YYt+n8rxoCXy1p898qsuXAO00rIHuxrndvUkxzsCeo6OohONrsCbX3PJUUIh
-         Y2uw==
-X-Gm-Message-State: AOJu0Yytnny0Jl6cukOwH4Gq/v8UmsACAoTDsngi8XZuVUW7LdF2r9UT
-	vz244GnO/I70BIEbgjejR583xajutnFJGWodLo3c12zGkEkIppZAL1SNAsbaJRKBL9V9v+LaHiJ
-	3rPlOJiJrGGoQSQPxLMJZAg84ovkCINcmtB0xK1/ix6kVYcOUlCjHUt0=
-X-Google-Smtp-Source: AGHT+IEI8OXCfeauopidytDzSIZbNGtVMQpXAP1br3oXmhVIQDyUj9v/vVb7+FQJTlApf+zfmh2v1Juc07EX1h3FuRAuwJBtuQTI
+	s=arc-20240116; t=1706908022; c=relaxed/simple;
+	bh=pOT08KJNuS1sfLS3vZwggchfB5iy1EZEG3QY463HBfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRFD6l8jKHkR4mkBzLQY7xjtHVQWcTDSRSZwTlx3dm1yyxV8FmGPFO6drQhMElbgkiZEQuV9WZ4sNa4V5n114BkbYsPH49JedUk8TIgl1qRfZO8RjWqDAyGg9MAWj9tyEyltISdzmZFaCUavhOSuWmjcBsFsWdryTUjCoV9yYrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbPykI0F; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbPykI0F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB44C433F1;
+	Fri,  2 Feb 2024 21:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706908022;
+	bh=pOT08KJNuS1sfLS3vZwggchfB5iy1EZEG3QY463HBfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lbPykI0FhQTq9PNUjiMoVTYdWNs6UbKW/swId0j174aITvgl3tBPi8qYaffrMpRp8
+	 2TWv85F6hmYtkqHK2DtRq2sDgzXXr8hokdNGKd7c2z4dcsN458XXRF/2mPb0gaRax4
+	 bQsCGq3mnBO1Yq7TPCK5JDfQsjUKd7FDdSvX1kSZqjKLqy965ow9LIQymRYzSfw6nZ
+	 nsjkt/rCCBbwHeCWDeLmAblaBCutOvOe+IO5clMXGIQ027Vm5stwXZ240h+hvqsXkd
+	 0a7aMUYhskZjh2Jc9UFOFbtnjZdt3c3Id8O87s/sxBGpM2WJA3b0WRvUmnh29Xt9N3
+	 PZUPfqyqORNzA==
+Date: Fri, 2 Feb 2024 15:06:59 -0600
+From: Rob Herring <robh@kernel.org>
+To: Brandon Brnich <b-brnich@ti.com>
+Cc: Nas Chung <nas.chung@chipsnmedia.com>,
+	Jackson Lee <jackson.lee@chipsnmedia.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Darren Etheridge <detheridge@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: media: Add sram-size Property for Wave5
+Message-ID: <20240202210659.GA1390727-robh@kernel.org>
+References: <20240201184238.2542695-1-b-brnich@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:160e:b0:363:32d1:80ce with SMTP id
- t14-20020a056e02160e00b0036332d180cemr733331ilu.5.1706907923416; Fri, 02 Feb
- 2024 13:05:23 -0800 (PST)
-Date: Fri, 02 Feb 2024 13:05:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000708ebb06106c7865@google.com>
-Subject: [syzbot] Monthly nilfs report (Feb 2024)
-From: syzbot <syzbot+lista589ce3cf9a23bf25db5@syzkaller.appspotmail.com>
-To: konishi.ryusuke@gmail.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nilfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201184238.2542695-1-b-brnich@ti.com>
 
-Hello nilfs maintainers/developers,
+On Thu, Feb 01, 2024 at 12:42:38PM -0600, Brandon Brnich wrote:
+> Wave521c has capability to use SRAM carveout to store reference data with
+> purpose of reducing memory bandwidth. To properly use this pool, the driver
+> expects to have an sram and sram-size node. Without sram-size node, driver
+> will default value to zero, making sram node irrelevant.
 
-This is a 31-day syzbot report for the nilfs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/nilfs
+The mmio-sram binding already defines how to carve up shared SRAM.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 9 issues are still open and 37 have been fixed so far.
+Also, sram-size here is property, not a node.
 
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 475     Yes   kernel BUG at fs/buffer.c:LINE!
-                  https://syzkaller.appspot.com/bug?extid=cfed5b56649bddf80d6e
-<2> 114     Yes   INFO: task hung in nilfs_detach_log_writer
-                  https://syzkaller.appspot.com/bug?extid=e3973c409251e136fdd0
-<3> 24      No    KMSAN: uninit-value in nilfs_add_checksums_on_logs (2)
-                  https://syzkaller.appspot.com/bug?extid=47a017c46edb25eff048
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Rob
