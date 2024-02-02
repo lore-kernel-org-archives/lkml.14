@@ -1,92 +1,137 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64216150990;
-	Fri,  2 Feb 2024 18:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59A152DF9
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 18:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706898166; cv=none; b=VSlUMqFv0qf3drKQKA5rmCtFKxVAop09yBHGl8ubxVcXdcR9ZNrcs6dis5hOSnVEIUnlZIcbMW9kFqS6JmUyBPr9PETj1McvW1L4vt+ckEWOeq5erS7uWO+C4e4cILHpR/z8EWVPDjbp+nNdkylBAipsjXQh70+I+rUXYeYF7ZI=
+	t=1706898169; cv=none; b=KVU+GyzF48R8GOWGHsncTvGIMfEHqvlCZP0SoJ4yDf/5cEqprLsRfA7QSZbukH1no1wkoXkbdoa+yda2iJ+WlTscT07Gcou38l0mx484RxUXK3jKx+xVLCRj6j6DhSdJajU096YOx53n8H3QK6PM5fMT0ZqoWNOsvACfHzd+skI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706898166; c=relaxed/simple;
-	bh=2VoEdRvrRqBHfptG31aYebj1E1qTdeZ8YWp0J6B5gdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Syc0T8rzonN4rh3v8OPY6ZRABH8ENuXfmplYMjij21w4wTBBqGNNbchLKu8XNPRDHwTt83rFeSdlnSfPSwb9DZbylw0MeWGm66A1fAJJCNMPK8AIG4UMmDBS7Hu2Qkw9BD6N1OaU/A6XLTel2xPX4foqk9F7FjcgVNsEN1UpuJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VG7D5afL; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706898169; c=relaxed/simple;
+	bh=5ZVyar9au3uXcBd6Rum3RbOscF4rzj84T3kzSFo1sFE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cUgMNhQY9DuejcbhFj3N6MNs4wM6KhKPLVmPsZiOG+FT7s6vqO1M5wOUFCOP0o9ANdZCOl60addaaHvhirml1qB555m0k+Z/OTt0a9DCiukV/7z13Hf3f8vVnSFZQgq+crTO/Gm4ndi7no4Y9flO6BEILysMd3o6QqvJTVyuDzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F9OZVisQ; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VG7D5afL"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-28bec6ae0ffso1787170a91.3;
-        Fri, 02 Feb 2024 10:22:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9OZVisQ"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6dc36e501e1so1546525a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:22:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706898164; x=1707502964; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YT/0Srb3byEwhZGAN9MvjmeizM6BiaKwUj1DsG3vCZE=;
-        b=VG7D5afLoG6oay4ugal35RSMw6734XJSxkyc+cXzMhFs4G0Cwz0ErzCQfqIK1Y0gNS
-         ee1iZsu/WFOe4vt6UnMb2pOlEqpNUxNt2S9zzD3MRc0Z/OuM8f1cDtDssp7pniEgMNvE
-         7QZm41vkI4RaOHtHn5ESWny9hYaQc8d/4A9ly6Ahm+fCjs9lOOSyVp0HmWGH5na1ZzA6
-         cOB3GYd3AJ33fcLj2YsImqUt/3KCDLHSa1mVDP7Rb48G0oruF1A3kaO+hTa77uvILIqV
-         K/uQhuvPUJaNv28n72yc94moArVgKTsNausthTQxgr2fou+ahBkNwpN2s2kkZ5OJOdV2
-         c5vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706898164; x=1707502964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1706898166; x=1707502966; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YT/0Srb3byEwhZGAN9MvjmeizM6BiaKwUj1DsG3vCZE=;
-        b=usecHkz8m7P+ZG0mZVpFdNQA9ktO1RfqcZl5JQzI3XpC+MQhknuiR66jtsjpcZ81Ml
-         aaPkKtF94+klmJmhTfy9l6Lhd0laK24wpde62obqeSRyMLUdIbhapXzTrer7e/AV6Y0Q
-         PlVN359+5F+QdcSvbvfqOmR2w+VyYNhSxEuQ7rg6gOWA+IOtQWGIfJkUXCieJWf2i/Ri
-         Fw2/8kUd+nf/xXl5LqOJI2uNU1O0eCrAPduSZ9xwAxHgxZaopgWKaGAiNXhMSHTLDTr1
-         KMX9565sw+6gYGpuq+H4hZrC3gHDFkrmZ0ijzM/NBav7tjXg5gNxoljCiXPIZSDUAfvh
-         rmpw==
-X-Gm-Message-State: AOJu0YxukAAqDhELoQlbxP2jm+jwRDwMGQrbji/8IHcPyYpnsQXo2/md
-	uG4+O0VfoA1b+dnK415w1W801NdgR9lvjm/ia3OPeGk4EgxXAqMwa6vvWINp
-X-Google-Smtp-Source: AGHT+IGrUXxBw9jg+aIzlF/xYC+0+LaqvOK84khmAMHLUTLNSJQDwY6j38qwSHgxrWVfIv1UR3NiZg==
-X-Received: by 2002:a17:90b:205:b0:295:f9a5:f8f0 with SMTP id fy5-20020a17090b020500b00295f9a5f8f0mr2883428pjb.10.1706898164395;
-        Fri, 02 Feb 2024 10:22:44 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUeBJY7v8lYdeGa0d/C1VBduqn96gP+fdlNA+X/J9qXmj4Z7PxTFe8Y6ugyx2+vcY+meTvYtVcYnq+HNLCDwxbTLECJcq2IiSbCYXYXbM1MBTCJmOpzl4PLgmp+Dykf7J1yWbGHAkAr
-Received: from google.com ([2620:15c:9d:2:c30c:2f35:dc97:44fc])
-        by smtp.gmail.com with ESMTPSA id u16-20020a17090ac89000b00290f9e8b4f9sm311350pjt.46.2024.02.02.10.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 10:22:44 -0800 (PST)
-Date: Fri, 2 Feb 2024 10:22:41 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Fix strange behavior of touchpad on Clevo NS70PU
-Message-ID: <Zb0y8cc0T6rr_NDr@google.com>
-References: <20231205163602.16106-1-wse@tuxedocomputers.com>
+        bh=5Vgtnno6wkR+VkAzje/RiytvB0nk1FOGbedoxkxlBHI=;
+        b=F9OZVisQvYwJkT+o0qAZ3HXBOa+MH3FfmmRCmb3deMbyH3bwvfgZUv6+TZs72q7ACg
+         wJQhHs+WCyLJBQ9pr++aMhtwqB1YPIevYaMG5RLwWRV5aJSroVXjXNw9eqCgMksZDRDT
+         f3sygMXu33s46AmUQ3mHConxZo8hg7w5p8FykMMXbfDM8uoIpb0Nl3LTSMixkHjKYp4p
+         ZDuv1QnOfYC1LZFkSW5NvIQxmdHFEN1Zk3E7DX6SSnB+fXRXmbA34/DFdtnWfI5OnOsN
+         CJPTW1hSi30EVOt68O5yhC/PPp5t7cHjbWGVccsd7XPpfLCYu1ZvLtwl3YkxHdUgwGde
+         TwXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706898166; x=1707502966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Vgtnno6wkR+VkAzje/RiytvB0nk1FOGbedoxkxlBHI=;
+        b=B0MecWucRBrZ0Oic+CXpto/TEIxhENe5YbNEWfFkbE74mqn5qCgIkUxebUvIfs2Kgn
+         kbyBL6RFc4GgPzY3IrU52V9lIEN4g1dYWigIAYO39CqQBgLQxm+Ipr8oGabauHmjAafs
+         7vPuy68ppP5nUhFAVveZ9im3W6J9DA8gx6q+Pm5GZLD8WsC3aCjS/ztP/bBWBqyrZzV6
+         Ejj5eG2FIlGoaSSTgVma1zimL48wFKKvfttSrA987SNaFZJFfpASydptnKpviWou7QYX
+         uyCvHwKh0SzjSzvQyjHEEmmtwYOmcDzLfAXkDOCPyRl3/G0a6BrHuvWdnuXf9pG/YFvw
+         xkFg==
+X-Gm-Message-State: AOJu0YyIqfF3p1g9pcbfBch2yzhc/5okyk4H61fhcCiSdQlomBzrWV/g
+	7WZhcywEvGnNJP42vqXVem6RqQJy+AoQKiDNIWn5N9Ngsn+zj9ReK9b+FlghSFIUXhB0C8rZqPa
+	vQmWcszedeYS4SWCyQafaaPXHYaUSE+1HhznD
+X-Google-Smtp-Source: AGHT+IGcU+EKjFdt3AgFAbkSPSfwDQmkDe3lffsGg4gSwfWzSHPSCNHR2D8ZEri2mw0YLTGlB0gcT19xB71Pgzgw4qk=
+X-Received: by 2002:a9d:7302:0:b0:6dd:ecaa:3aea with SMTP id
+ e2-20020a9d7302000000b006ddecaa3aeamr10041878otk.1.1706898166366; Fri, 02 Feb
+ 2024 10:22:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231205163602.16106-1-wse@tuxedocomputers.com>
+References: <20240201153428.GA307226@cmpxchg.org> <20240202050247.45167-1-yangyifei03@kuaishou.com>
+ <vofidz4pzybyxoozjrmuqhycm2aji6inp6lkgd3fakyv5jqsjr@pleoj7ljsxhi>
+In-Reply-To: <vofidz4pzybyxoozjrmuqhycm2aji6inp6lkgd3fakyv5jqsjr@pleoj7ljsxhi>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Fri, 2 Feb 2024 10:22:34 -0800
+Message-ID: <CABdmKX2KsxVExVWzysc_fQagGkYWhqRF00KxNxjpVWovHHip+Q@mail.gmail.com>
+Subject: Re: Re: [PATCH] mm: memcg: Use larger chunks for proactive reclaim
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Efly Young <yangyifei03@kuaishou.com>, hannes@cmpxchg.org, akpm@linux-foundation.org, 
+	android-mm@google.com, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mhocko@kernel.org, muchun.song@linux.dev, 
+	roman.gushchin@linux.dev, shakeelb@google.com, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 05, 2023 at 05:36:01PM +0100, Werner Sembach wrote:
-> When closing the laptop lid with an external screen connected, the mouse
-> pointer has a constant movement to the lower right corner. Opening the
-> lid again stops this movement, but after that the touchpad does no longer
-> register clicks.
-> 
-> The touchpad is connected both via i2c-hid and PS/2, the predecessor of
-> this device (NS70MU) has the same layout in this regard and also strange
-> behaviour caused by the psmouse and the i2c-hid driver fighting over
-> touchpad control. This fix is reusing the same workaround by just
-> disabling the PS/2 aux port, that is only used by the touchpad, to give the
-> i2c-hid driver the lone control over the touchpad.
-> 
-> v2: Rebased on current master
-> 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Cc: stable@vger.kernel.org
+On Fri, Feb 2, 2024 at 2:15=E2=80=AFAM Michal Koutn=C3=BD <mkoutny@suse.com=
+> wrote:
+>
+> On Fri, Feb 02, 2024 at 01:02:47PM +0800, Efly Young <yangyifei03@kuaisho=
+u.com> wrote:
+> > > Looking at the code, I'm not quite sure if this can be read this
+> > > literally. Efly might be able to elaborate, but we do a full loop of
+> > > all nodes and cgroups in the tree before checking nr_to_reclaimed, an=
+d
+> > > rely on priority level for granularity. So request size and complexit=
+y
+> > > of the cgroup tree play a role. I don't know where the exact factor
+> > > two would come from.
+> >
+> > I'm sorry that this conclusion may be arbitrary. It might just only sui=
+t
+> > for my case. In my case, I traced it loop twice every time before check=
+ing
+> > nr_reclaimed, and it reclaimed less than my request size(1G) every time=
+.
+> > So I think the upper bound is 2 * request. But now it seems that this i=
+s
+> > related to cgroup tree I constucted and my system status and my request
+> > size(a relatively large chunk). So there are many influencing factors,
+> > a specific upper bound is not accurate.
+>
+> Alright, thanks for the background.
+>
+> > > IMO it's more accurate to phrase it like this:
+> > >
+> > > Reclaim tries to balance nr_to_reclaim fidelity with fairness across
+> > > nodes and cgroups over which the pages are spread. As such, the bigge=
+r
+> > > the request, the bigger the absolute overreclaim error. Historic
+> > > in-kernel users of reclaim have used fixed, small request batches to
+> > > approach an appropriate reclaim rate over time. When we reclaim a use=
+r
+> > > request of arbitrary size, use decaying batches to manage error while
+> > > maintaining reasonable throughput.
+>
+> Hm, decay...
+> So shouldn't the formula be
+>   nr_pages =3D delta <=3D SWAP_CLUSTER_MAX ? delta : (delta + 3*SWAP_CLUS=
+TER_MAX) / 4
+> where
+>   delta =3D nr_to_reclaim - nr_reclaimed
+> ?
+> (So that convergence for smaller deltas is same like original- and other
+> reclaims while conservative factor is applied for effectivity of higher
+> user requests.)
 
-Applied, thank you.
+Tapering out at 32 instead of 4 doesn't make much difference in
+practice because of how far off the actually reclaimed amount can be
+from the request size. We're talking thousands of pages of error for a
+request size of a few megs, and hundreds of pages of error for
+requests less than 100 pages.
 
--- 
-Dmitry
+So all of these should be more or less equivalent:
+delta <=3D SWAP_CLUSTER_MAX ? delta : (delta + 3*SWAP_CLUSTER_MAX) / 4
+max((nr_to_reclaim - nr_reclaimed) / 4, (nr_to_reclaim - nr_reclaimed) % 4)
+(nr_to_reclaim - nr_reclaimed) / 4 + 4
+(nr_to_reclaim - nr_reclaimed) / 4
+
+I was just trying to avoid putting in a 0 for the request size with the mod=
+.
