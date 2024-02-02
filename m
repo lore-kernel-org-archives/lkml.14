@@ -1,118 +1,124 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B53314C5A7
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 17:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632CA7CF04
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 17:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706893643; cv=none; b=a6BDWbosFvJgqqE4VPlcEZLLfhhZQ4fNuKQgLS+qW48DFQxGi2gopwaGMZ7yb6cokt3GWAI6Edbj8GdOBXbzr8eRxBm93lNrciSu+VZ2x5DME7sZ4NXX6RMuU2p0ucBsQrDTLGaTJu+4Qur+MYHslASyVToRaRtVO4E5cTijGDU=
+	t=1706893663; cv=none; b=q72gwt/0nrhMhsLRKQMlC6J2l5sYd1kyxfJPDrqTyVq5vOOyAtQNUJH8hCyzvpa7lXnrkCV15cNZmdsVOK53CZoD9v8VUqX7T2ZH/bpFTl46AZHAVle7MKIPuLJzbF7G1nFqYyuSSnuTr93e2bPSM5WDqgKfS+zFnGtCDrRWhI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706893643; c=relaxed/simple;
-	bh=y+gAPT68yktKEC3SZi/PBBCLmq/Ebt4n1T1gRSBSaXU=;
+	s=arc-20240116; t=1706893663; c=relaxed/simple;
+	bh=c4RcPMFX8/n1fPS/BEjIz5l09Pf1Qh+kPRau7pkLQ30=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U0zo/8voeseIm1EJU6Aq2Q13WbfquYtsWrt4Vx5O10DfVmL6h77VF4jsI5Zf/0h0uol2nzUhNl3xGTyT1ma5bQEcbns3YT/dlX8+RZpxlA/1JQosIYF6C1xWYiMnrxKISkM+5HSn/VvO4kMRQOqqDnbFvi9ZLjP8KpWrqdkmZvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i0hfUrGJWJA4pqQ8gibenMdj4Ml/+SPBVFXST+bAmZqVTs6NNIDKK24oPQz/mavY/qLgpqFn0YSEUvjeW7Q0fHtqwbn0e5ffnvE5azgZlTDCIrsyRHSyk3cPR6Ao5Z7e37qxuQRUO0qHO0nO7vaqwLPDXckDZTSXdDANY8uRYX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8zpX9Xs; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-68c794970d5so15254556d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 09:07:17 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8zpX9Xs"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d932f6ccfaso18695595ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 09:07:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706893661; x=1707498461; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KXiHcGm/fEWJbHkucFqY9QtCWzZf+8tRbfnCNBla688=;
+        b=c8zpX9Xs/tCs4oTL1KMhDJ9gJjrbECzHT971OMJa+HsBK8TEmd41vHHnAqvxryWKnc
+         ilpGK2XVqKr5IOVdw/iu23W9Yd+hjRGPwlwEFMMkoSmCA/ASoKFe9C27XQkQCXcD6PdY
+         v9OhnqAr3WvcDNl8S4uByXylrTZPOCez6pf0X41AnX/nqxuJbK3nw6zXOoL8ZkwTORQS
+         LJiD8eV/twC31HndQL3asvLyb6TH6R/II0gNXQa3hemwoSnOT9SLflivwxWWyPu9Gk2y
+         ZratI2fkY5JNREZT4lKvI1qHs1LA6TYad9F6pmNjGhJl83KDM7twNqKCYOEF9TnsUrwt
+         p71w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706893636; x=1707498436;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1706893661; x=1707498461;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y+gAPT68yktKEC3SZi/PBBCLmq/Ebt4n1T1gRSBSaXU=;
-        b=lXSPZ8f6QMAiPzMaF9ru1wjnhcXMPqrS8VQ9PXGPydYlGf4+E7LElId8OI7xthdZ8C
-         ipl2LSu366BUlmClIlZU35pZk7mfcMhrLpawL03I155x0I0TqDP5SjhPR/04QojQou+v
-         hN519lxJvXNq9OgDtRVD55pbpJtiiy92JQKy1yKkh2ak44bfuuaN+rDI8jPkmrMcSlcE
-         g10i5AKAtewp1S+GROKa5/1pLeFlpuV9fqw83gAb1KOLbfoK+a1fGNGJ1X/NrXNiCPr1
-         Q2Oy+kMqd8ZHIvG5DQA695SLXmEhm5LphUFw4ICbMGHc6LycQf6kxlPJSX3MSgfNVmIa
-         77hA==
-X-Gm-Message-State: AOJu0Yzh1v5DXCtagQiVL5oDs5wLmpbH87vKoSIT7YbRB6znemS5S5Qx
-	BLRCGJafq5zFS8AGrCUqWFpHJStchvO399s5xNlXHHBi0CATbzsO
-X-Google-Smtp-Source: AGHT+IFgMn7G49IMgaFPDtinjH2Oc1djCOjdrS3AUmkMFaaJ19AFcapU2qK6Ndxp3bk/XyGVZNuYAQ==
-X-Received: by 2002:a05:6214:2527:b0:68c:7302:8974 with SMTP id gg7-20020a056214252700b0068c73028974mr4680152qvb.30.1706893636113;
-        Fri, 02 Feb 2024 09:07:16 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVzE9W/xHwkhE7x6DjMoApkSYNkXT+2USzaZmjbS3sbgrF3DuuvI/47O2BvF8T08qBw49dxUuhmo9mZIxB1R1AxE4SDiNufQPx9s3iaL6qXyXjpVAe2Y95NnjECfXFS2WA6RIj1XgpClJ30LS65jR3Qo5GlDtlZb5Mk6g2qD1nm33uLFV8d2OytNhHfS0VrXysm0MD5skLE89Da8kxRkxTj/85Es2in21h4yaesgvHX/zuE6yZytjMDD7t4F1H+cw54nL1Jxi9eXUV3zEEAf4uWp869RVSbUr9m1na6vIBBbkDXp5uFVQffYvbizP/7nj8OakHwc8LKkpt2Mbi5hqnMGME7H3dNBA==
-Received: from maniforge (c-24-1-27-177.hsd1.il.comcast.net. [24.1.27.177])
-        by smtp.gmail.com with ESMTPSA id mf5-20020a0562145d8500b0068c749df8f2sm969308qvb.20.2024.02.02.09.07.14
+        bh=KXiHcGm/fEWJbHkucFqY9QtCWzZf+8tRbfnCNBla688=;
+        b=DFhmM0gZmQYFM+/QHzSlvrRS4sxM8YQbIF451ozIGv2hZvftJyDRLlRFkgtWgV6bJX
+         ukULAb4jadWiU4ongk+O1Kwwy3kQJP3kwmQADwWu8qF9tbTF1nQBCb8khvMJN/3ai/Xn
+         5GRKLzBv7xibsoK6hUH1e0aRPV49rJf/OZj9UCmyZC+XVyy6SHbjDON///W0CBi6pH2e
+         pvPki6o2AxzowL1BNVFV2d57ma+lK+q/rnMZ5UG+ftVMAZshMBHs9PEODUKMASwvPT3v
+         w1FR3bEZdlD3TXENQPDbkfVy6aplsrvW6ELWIRSd4ZOAhtp3SBnTz6k0qd/ooynyRS80
+         /WzA==
+X-Gm-Message-State: AOJu0YxrmpmrOXWcWsHRRTo9w281Xlb3udkEmK9FeNc/KTrQii4XysRV
+	I+zISD+wAM/xI/ztv++MrggYoeEawQ/poC30X+YPd/9xXJQAIVrXhA03D1HLrVA=
+X-Google-Smtp-Source: AGHT+IHIu3EAwC5B4Q4BYqqfcYp8/QGh817BIxy7EUL4xdDr1iHONRWOwyePb4EgK/cLsEcCSXU4YA==
+X-Received: by 2002:a17:903:1d2:b0:1d8:fe1e:7cb9 with SMTP id e18-20020a17090301d200b001d8fe1e7cb9mr11129366plh.19.1706893661549;
+        Fri, 02 Feb 2024 09:07:41 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVfv6SYCKtmQaa9wAyQLbdqRRfAfnjsFSqxPLTWpoO8Tlz5ZpOTxNLSdLbpFrD/kFeLP7X137J6gdCoRof9gzIDDmmpss0/GcV3G21l+mgs79V9v5MFuioKmKOjvI7O6XMIymqK5vLU2sSGiEppOMHpAi7Ix+vnPhbRoAjECNxh0hikJT6tE0iZCTz+MY4BOY4w2EO6zFBaOlMraEUFxPA=
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id ja11-20020a170902efcb00b001d8921f2058sm1820644plb.205.2024.02.02.09.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 09:07:15 -0800 (PST)
-Date: Fri, 2 Feb 2024 11:07:12 -0600
-From: David Vernet <void@manifault.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, kernel-team@meta.com
-Subject: Re: [PATCH] sched/fair: Simplify some logic in
- update_sd_pick_busiest()
-Message-ID: <20240202170712.GC2238525@maniforge>
-References: <20240202070216.2238392-1-void@manifault.com>
- <xhsmhwmrmhkbh.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        Fri, 02 Feb 2024 09:07:41 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 2 Feb 2024 07:07:40 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: Waiman Long <longman@redhat.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	linux-kernel@vger.kernel.org, Cestmir Kalina <ckalina@redhat.com>,
+	Alex Gladkov <agladkov@redhat.com>
+Subject: Re: [RFC PATCH 0/3] workqueue: Enable unbound cpumask update on
+ ordered workqueues
+Message-ID: <Zb0hXLDlXmfmn_Yw@slm.duckdns.org>
+References: <20240130183336.511948-1-longman@redhat.com>
+ <ZbpElS5sQV_o9NG1@localhost.localdomain>
+ <89927d84-279a-492e-83d3-6d3e20b722f7@redhat.com>
+ <Zbtv4v2KCKshnCL2@localhost.localdomain>
+ <ff2c0ce1-4d40-4661-8d74-c1d81ff505ec@redhat.com>
+ <Zb0CU2OrTCv457Wo@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aaczLianmhiTpaH6"
-Content-Disposition: inline
-In-Reply-To: <xhsmhwmrmhkbh.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-
-
---aaczLianmhiTpaH6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Zb0CU2OrTCv457Wo@localhost.localdomain>
 
-On Fri, Feb 02, 2024 at 06:01:22PM +0100, Valentin Schneider wrote:
-> On 02/02/24 01:02, David Vernet wrote:
-> > When comparing the current struct sched_group with the yet-busiest
-> > domain in update_sd_pick_busiest(), if the two groups have the same
-> > group type, we're currently doing a bit of unnecessary work for any
-> > group >=3D group_misfit_task. We're comparing the two groups, and then
-> > returning only if false (the group in question is not the busiest).
-> > Othewise, we break, do an extra unnecessary conditional check that's
-> > vacuously false for any group type > group_fully_busy, and then always
-> > return true.
-> >
-> > Let's just return directly in the switch statement instead. This doesn't
-> > change the size of vmlinux with llvm 17 (not surprising given that all
-> > of this is inlined in load_balance()), but it does shrink load_balance()
-> > by 88 bytes on x86. Given that it also improves readability, this seems
-> > worth doing.
-> >
-> > As a bonus, remove an unnecessary goto in update_sd_lb_stats().
-> >
->=20
-> Given that's a different scope than what the rest of the patch touches, I=
-'d
-> rather see this as a separate patch.
->=20
-> Other than that:
-> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Hello,
 
-Thanks, would you like me to send a follow-on series split into two with
-your tag on both? Or were you just letting me know for next time?
+On Fri, Feb 02, 2024 at 03:55:15PM +0100, Juri Lelli wrote:
+> Indeed. I believe this is what my 3/4 [1] was trying to cure, though. I
+> still think that with current code the new_attr->cpumask gets first
+> correctly initialized considering unbound_cpumask
+> 
+> apply_wqattrs_prepare ->
+>   copy_workqueue_attrs(new_attrs, attrs);
+>   wqattrs_actualize_cpumask(new_attrs, unbound_cpumask);
+> 
+> but then overwritten further below using cpu_possible_mask
+> 
+> apply_wqattrs_prepare ->
+>   copy_workqueue_attrs(new_attrs, attrs);
+>   cpumask_and(new_attrs->cpumask, new_attrs->cpumask, cpu_possible_mask);
+> 
+> operation that I honestly seem to still fail to grasp why we need to do.
+> :)
 
-We could also update this check to only do a strict greater than to
-avoid unnecessary writes, but I figured it was preferable to have no
-logical changes for this iteration:
+So, imagine the following scenario on a system with four CPUs:
 
-return sgs->group_misfit_task_load >=3D busiest->group_misfit_task_load;
+1. Initially both wq_unbound_cpumask and wq A's cpumask are 0xf.
 
---aaczLianmhiTpaH6
-Content-Type: application/pgp-signature; name="signature.asc"
+2. wq_unbound_cpumask is set to 0x3. A's effective is 0x3.
 
------BEGIN PGP SIGNATURE-----
+3. A's cpumask is set to 0xe, A's effective is 0x3.
 
-iHUEARYKAB0WIQRBxU1So5MTLwphjdFZ5LhpZcTzZAUCZb0hQAAKCRBZ5LhpZcTz
-ZCd1APsHJ+HAuY/9jG+onEyWQ4qCDcfvGlESj1ixqg+mDd2ZpgEA1Q0HN0+A5vXi
-LLt53N1JFUeN7fCOj+uzuP5Rh5G/9ws=
-=fzh1
------END PGP SIGNATURE-----
+4. wq_unbound_cpumask is restore to 0xf. A's effective should become 0xe.
 
---aaczLianmhiTpaH6--
+The reason why we're saving what user requested rather than effective is to
+be able to do #4 so that the effective is always what's currently allowed
+from what the user specified for the workqueue.
+
+Now, if you want the current effective cpumask, that always coincides with
+the workqueue's dfl_pwq's __pod_cpumask and if you look at the current
+wq/for-6.9 branch, that's accessible through unbound_effective_cpumask()
+helper.
+
+Thanks.
+
+-- 
+tejun
