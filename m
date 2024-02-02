@@ -1,177 +1,96 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D71168A8;
-	Fri,  2 Feb 2024 05:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660251754E;
+	Fri,  2 Feb 2024 05:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706850029; cv=none; b=ldWClKAcdu3a1T9o7UhNJb8Yu/Dfd21ZVJymo3Ngnt9ijitM4XytwvwKL0XOPEFCEnmr50W/G2pOALRk/5ZtPNNhelrkrdZ/2ZXtQNRvSRoQzq6TB+x+nLcDdCrt1mxDubH930i4s48+h1ygG1oZ79ul0Rbn8pc8S9ZPkMMeaqM=
+	t=1706850041; cv=none; b=AIfUvQios7BV0jkYqdix1Mckfdi+leimtWY3CC6TKsQajUloNU3PUrFSssG5ZxbpEXMtQMPFUt9qUWSIWPIyYeYE3zNAg0JL+t0nxjqt4GrHRE/xQdBeX74m2QSBjvvx3d/K8Owh/9sA/nuzq2GHRNAPI5lN+h+tnk9XyDW9lYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706850029; c=relaxed/simple;
-	bh=TTF9pIjOvmYCK7xj74APPIL6UJt+YN06DbhD6BwGLRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TFf5j9bGIKph4Ri3ftsigcXrTkeHIZxON8Yzsi7o+K7T5F+Ky1xdM4Py3yzoTCoEG+6q27d7fqu4vVxu6yvu/PifsENnDif7/GiAZEIDQl/rA8iTLA4Lc3bJ+vvE5rvWkYORmxD+/ZkU8Vuy+kZCkpOYPpH2YHdgSLLbyJSSf+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RVIwWGOW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706850041; c=relaxed/simple;
+	bh=Al3s5n9XbYajMyMjy8quEUVmt9j6PNC6PhjL+sDVrak=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=PGOTImyz1wFwfZ9t20gApuf5zW8PHdj5W2O7mHeFDzhKW8HpDfsA07nvuQRb4mwBS2F7Bx7x3u4i4eFKMR4wnJEMGkFTpi82nog37jKTAVbTo7L1hPBZKLrHT8vsrY/vzhSZ5c4VIWMsKvyQPN0j9bQIRl8j/S5d8AwYXzHLSh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=sh1XyYJV; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RVIwWGOW"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4121WueO016177;
-	Fri, 2 Feb 2024 05:00:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=mmbLhvHwv02ZMGLBVAAIet0bcTLvaM48nkxu87LZJ4I=; b=RV
-	IwWGOWBebEzaKCmx6z+g6zeUZgGqrenxNffBj/0EsEt9IHIWuNQDzKjVb3xlwWAn
-	k39viQRD1D6G87nh1b38Z6mqN/ZQE3Ni+T0wdTlDyUPEdTHQEJN+SM0IFADDCEL5
-	JjooZj1a8iDwH4b5bynpXpcG9WPzZCGNKPNtl3rad4jN0dh+7GKh34ZYJumTQKNM
-	INUdxEA+s/PhBNgDBUhJ1y2hemQjbae+ZQU3pOuEC7PQTzd4Eguh4sbfFvZvgqKl
-	R72qv4Y4DkAL1DqJUUkKP0mraejTSymTAyL9z8pQdTLG70ERm+RdkpIQ7FpZmjwk
-	wTQkiGGGyVlyaaQdSGjw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pu00dbw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 05:00:22 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41250LN1020193
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 05:00:21 GMT
-Received: from [10.216.18.100] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 1 Feb
- 2024 21:00:15 -0800
-Message-ID: <b929f0cd-89b6-c48d-d466-db6bbed621b5@quicinc.com>
-Date: Fri, 2 Feb 2024 10:30:12 +0530
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="sh1XyYJV"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=Al3s5n9XbY
+	ajMyMjy8quEUVmt9j6PNC6PhjL+sDVrak=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=sh1XyYJVZYspbYXNo5lPr6eTzSsPxlnzX
+	fUpQ+m0g7osvlXQvcV2G+BhKvz2pnkmgRy3sVTKxdare0Z+M7o58U4MMgKzbCRET9klZsc
+	oaoityDPeqv1qGDLleLPnYPYicdjJuag7OdSxzy341IzrDsWbdrRCEaTWYw12r5aZd3hyr
+	mcd8IEBO6yBRfN5Fz7z8ZIlyNrK9UAHgi3UX4zLwYtrzUPse+VNOk62UmZbSMl6Ep8Isxo
+	dY7bZ+afNtjp+jwl2P7FZeJp52muDmP09AelHIjXZ7q3df86FM2xZDjkxoVIfNiwglMPfI
+	RFfcaD4q2AxYDQzikS7LzNlMfZSRw==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 96394933;
+	Thu, 1 Feb 2024 22:00:35 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Jeff Xu <jeffxu@chromium.org>
+cc: Jeff Xu <jeffxu@google.com>,
+    Linus Torvalds <torvalds@linux-foundation.org>,
+    "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+    Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, sroettger@google.com,
+    willy@infradead.org, gregkh@linuxfoundation.org,
+    usama.anjum@collabora.com, rdunlap@infradead.org,
+    jorgelo@chromium.org, groeck@chromium.org,
+    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+In-reply-to: <CABi2SkWSt=UMFWe9n916ZH16wCzaipKXmEJ5VasQHMr1AxerxQ@mail.gmail.com>
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver> <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com> <58408.1706828083@cvs.openbsd.org> <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com> <CALmYWFtqcixi3p3Ab44wENJr+n2k2SNaCJEofNm_awnNdJZnDQ@mail.gmail.com> <8744.1706846710@cvs.openbsd.org> <CABi2SkWSt=UMFWe9n916ZH16wCzaipKXmEJ5VasQHMr1AxerxQ@mail.gmail.com>
+Comments: In-reply-to Jeff Xu <jeffxu@chromium.org>
+   message dated "Thu, 01 Feb 2024 20:54:28 -0800."
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 0/2] Add board-id support for multiple DT selection
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <1705749649-4708-1-git-send-email-quic_amrianan@quicinc.com>
- <20240124145631.GA873781-robh@kernel.org>
-From: Amrit Anand <quic_amrianan@quicinc.com>
-In-Reply-To: <20240124145631.GA873781-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: FiaoEXri2mgT76E2ysfraOjz-5wrbyDs
-X-Proofpoint-ORIG-GUID: FiaoEXri2mgT76E2ysfraOjz-5wrbyDs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-01_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 lowpriorityscore=0 impostorscore=0
- bulkscore=0 clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020034
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <60913.1706850035.1@cvs.openbsd.org>
+Date: Thu, 01 Feb 2024 22:00:35 -0700
+Message-ID: <29248.1706850035@cvs.openbsd.org>
 
-Sorry for the spam, earlier mail had some formatting issue.
+Jeff Xu <jeffxu@chromium.org> wrote:
 
-On 1/24/2024 8:26 PM, Rob Herring wrote:
-> On Sat, Jan 20, 2024 at 04:50:47PM +0530, Amrit Anand wrote:
->> Device manufacturers frequently ship multiple boards or SKUs under a
->> single software package. These software packages will ship multiple
->> devicetree blobs and require some mechanism to pick the correct DTB for
->> the board the software package was deployed. Introduce a common
->> definition for adding board identifiers to device trees. board-id
->> provides a mechanism for bootloaders to select the appropriate DTB which
->> is vendor/OEM-agnostic.
-> Show me a 2nd user. Or does vendor/OEM-agnostic just mean vendors of
-> QCom devices? Multiple SoC families using this would help your case. I'm
-> not inclined to take it into the DTSpec without that.
+> Even without free.
+> I personally do not like the heap getting sealed like that.
+> 
+> Component A.
+> p=malloc(4096);
+> writing something to p.
+> 
+> Component B:
+> mprotect(p,4096, RO)
+> mseal(p,4096)
+> 
+> This will split the heap VMA, and prevent the heap from shrinking, if
+> this is in a frequent code path, then it might hurt the process's
+> memory usage.
+> 
+> The existing code is more likely to use malloc than mmap(), so it is
+> easier for dev to seal a piece of data belonging to another component.
+> I hope this pattern is not wide-spreading.
+> 
+> The ideal way will be just changing the library A to use mmap.
 
-Agree; since the DT selection identifiers and algorithm used by various 
-DT users has been largely undocumented, we were trying to reach a 
-generic solution based on our known use-cases.
+I think you are lacking some test programs to see how it actually
+behaves; the effect is worse than you think, and the impact is immediately
+visible to the programmer, and the lesson is clear:
 
->> Isn't that what the compatible property is for?
->> -----------------------------------------------
->> The compatible property can be used for board matching, but requires
->> bootloaders and/or firmware to maintain a database of possible strings
->> to match against or have complex compatible string matching. Compatible
->> string matching becomes complicated when there are multiple versions of
->> board: the device tree selector should recognize a DTB that cares to
->> distinguish between v1/v2 and a DTB that doesn't make the distinction.
->> An eeprom either needs to store the compatible strings that could match
->> against the board or the bootloader needs to have vendor-specific
->> decoding logic for the compatible string. Neither increasing eeprom
->> storage nor adding vendor-specific decoding logic is desirable.
-> You could hash the compatible strings if it was just a size issue.
->
->> The solution proposed here is simpler to implement and doesn't require
->> updating firmware or bootloader for every new board.
->>
->> How is this better than Qualcomm's qcom,msm-id/qcom,board-id?
->> -------------------------------------------------------------
->> The selection process for devicetrees was Qualcomm-specific and not
->> useful for other devices and bootloaders that were not developed by
->> Qualcomm because a complex algorithm was used to implement. Board-ids
->> provide a matching solution that can be implemented by bootloaders
->> without introducing vendor-specific code. Qualcomm uses three
->> devicetree properties: msm-id (interchangeably: soc-id), board-id, and
->> pmic-id.  This does not scale well for use casese which use identifiers,
->> for example, to distinguish between a display panel. For a display
->> panel, an approach could be to add a new property: display-id, but now
->> bootloaders need to be updated to also read this property. We want to
->> avoid requiring to update bootloaders with new hardware identifiers: a
->> bootloader need only recognize the identifiers it can handle.
-> So the id list will be always expanding list for every last component
-> that is 2nd sourced? The ChromeOS folks are also trying to solve that
-> problem.
+	you can only seal objects which you gaurantee never get recycled.
 
-Agree, this could be an expanding list as and when any new hardware 
-identifiers for DT selection become pertinent in future.
+	Pushing a sealed object back into reuse is a disasterous bug.
 
->
-> There's a similar issue for EFI boot with how to select an OS installed
-> DTB[1]. You might not care now, but users may later on (like we have
-> already with QCom devices with fixed bootloaders). If you do this
-> board-id route, then no doubt that compatible values won't be specific
-> enough or have suitable fallbacks to be used. Then EFI boot can't use
-> compatible either and needs to use this QCom specific logic. It may be a
-> common property name, but all the types you defined are QCom specific
-> and the matching logic is pretty much undocumented. I'm not saying we
-> have to use compatible. There wasn't even agreement to use it for EFI
-> boot case. This does need to work for multiple vendors and multiple boot
-> scenarios.
->
-Agree, given so many hardware identifiers Qcom uses to find the DT based 
-on a best and exact match algorithm, it may not work as is for other 
-vendors/users outside the scope of Qcom.
-Since we have none to very limited visibility into complete set of DT 
-selection identifiers being used by other users or into their selection 
-algorithms since it is mostly undocumented,
-designing a perfectly generic solution (one-size-fits-all) could be 
-far-fetched. The number of board files in Qcom DT selection software 
-package often reaches over 100 DT files due to multiple SoCs and
-board types being supported out of a single software package and these 
-multiple hardware identifiers helps to pick the closest best match DT 
-within a very large pool of DTs.
-Not to affect other users/vendors who would be using their own set of 
-identifiers and an entirely different algorithm for DT selection, would 
-it make more sense to define these Qcom specific
-identifiers within Qcom specific bindings (qcom.yaml), along with 
-detailed documentation on our DT selection algorithm?
+	Noone should call this interface, unless they understand that.
 
-Thanks,
-Amrit
+I'll say again, you don't have a test program for various allocators to
+understand how it behaves.  The failure modes described in your docuemnts
+are not correct.
 
->
-> Rob
->
-> [1] https://lore.kernel.org/u-boot/20231114232012.GD6601@bill-the-cat/#r
+
