@@ -1,103 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7F5132480;
-	Fri,  2 Feb 2024 23:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E53130AF2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 23:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706917284; cv=none; b=cyo6352daf3vZkL682RqS/dVtjGbHgw9ahPN46c1B7W0bIq8XFi9vpQ87j1MiQv+EX1cT5w3aeRCDSAUmYyIeJAbdpuNUTq6AVpAkjPHUwF09lZvJAbZ7NUBJS8bd3bBDEVw7VB/j/x15jyNsh97dkahsnIG3kVRy828+LxVxeA=
+	t=1706917283; cv=none; b=Drct7RqBXuicnBw7sBcKTNTeakDYm05wYBD8+k071ihzoUGheFMXCk9yZTt6yis6gFYZxN6/RyvGLABT8uHTiN7GlDMjZDt+YXFx6dtADoUGFexqOsMKUqjD3ar+2dyEumgVT8DzhbpZWpX5JedUR/VbWe5Qj9I8lNJygVCwtXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706917284; c=relaxed/simple;
-	bh=gX+4EF1aa8LAyzPJib2hQOtkg0CUXK5HquVqw1n55so=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFs8gdxcj8N9Airq5RhY43wj5OxueDzIVq7WOGncvu/lLEplgE4mLi4Y/xYqVMfiR2MVeIa0TlCgqlCZRFGb00g6vUDecAQjUt8zwNWxJlP3CFkvzGS/KEGPCetirt+/vyhtMjJMMbippS6H7UzRxeUTdCEJDgaaLIKUlVoUFfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zZaZBQti; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706917283; c=relaxed/simple;
+	bh=TXC4fY94F4QG3R5rAXB5MKDuVhvys01fhTTOf+9TuDM=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=MjNbVMywgfqJ9LSTHKtNUxeBm0VDZwjh4ocVqygFBJ/htOvHj7Haz8Ac0lPElod0mZsRaGftS8rsnh5uQlJPRUMbn8tYIIWPyNVZGoMFwTedbNxRTGd8+Ka8xWshsj8TMZOK6McG2BFgfjFKlZifjdnRhtD37+xbMdwgo3Vb/h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sMuuW/oA; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zZaZBQti"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC7DDC433A6;
-	Fri,  2 Feb 2024 23:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706917283;
-	bh=gX+4EF1aa8LAyzPJib2hQOtkg0CUXK5HquVqw1n55so=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zZaZBQtipCcf5XBGD66l7h1yJKY1ffHOnvxlbMtnRWA3xh9aONF4zzKTO6U6oVTZG
-	 j4ftTBoZkLHG6gZyYjjrMLkVh+1o6h3+gq5c0PQg91mWkhiEgE6ngXzTGsBf+39xK8
-	 S0wo69WpngQm/A6CTieAkB6+8kZG8WR58yEq4TGw=
-Date: Fri, 2 Feb 2024 15:41:23 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Hamza Mahfooz <hamza.mahfooz@amd.com>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Le Ma <le.ma@amd.com>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	James Zhu <James.Zhu@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Shi <alexs@kernel.org>, Jerry Snitselaar <jsnitsel@redhat.com>,
-	Wei Liu <wei.liu@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/amdgpu: wire up the can_remove() callback
-Message-ID: <2024020216-letdown-uproar-718d@gregkh>
-References: <20240202222603.141240-1-hamza.mahfooz@amd.com>
- <20240202222603.141240-3-hamza.mahfooz@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sMuuW/oA"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc64f63d768so4754962276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 15:41:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706917281; x=1707522081; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9PKn59qI/eEru2iRWjl8r3A2NQszSA8YlNSVgwlBz0k=;
+        b=sMuuW/oAwOEVa93y3Ljf4HwsW9FKQ/j+oHFKLOuY1zE1iGOnRqhmjnRRaE4Z8jwLR3
+         gEQcjNhVLPW1yyMJWUR9nnCwtNM1m8j9Q6zssgfYlyUWfiC7mEo2LyLETLlD/dU0kqhO
+         ejm/n+48PbiQFl4x9qw9MB73KRCtRZJZ8A8q2kzTUwZr06x7IyiWJPjJAi9XbbssnAYz
+         JmqupUkqXZy52FfPvWgUSeqAddd5T9PmV8fiH8wwTV1VyiQKNaK5hnkd+hEc2tovNRhO
+         ifi4wFsNI43STWImWgqqeBtMCdXi2saFTZ4DT1sEVa4E2GhDd/VzKPWLOOv5bloQu7+o
+         zo9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706917281; x=1707522081;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PKn59qI/eEru2iRWjl8r3A2NQszSA8YlNSVgwlBz0k=;
+        b=e1mTl/WwXSNiAuk5GfFs9CxyUEDciOhnLwcu4xSekOU6KDdyvZ362O4Oacas1NDxxD
+         /+cPuFkGo2Op1+z0IJmjAz85X4vOu+GW1Vktyn/Ylzn/mdGJVjtd5/t7CrypmMT/How8
+         UqzE4NsQ3BCLr4zUuXHFqqopLr/UbkO/v23P3AzzHODfEFZAfqzkgDAqxMji8jc9NG+2
+         bNnjAc6Ti5WmcbKkRUv5OlHnVGs0xDntXYTHSIWewHJNlPMOV3JmqgEU7EHIR+0cUxKw
+         NNUPgtALy9W6LJBiGPjSLh9SLLX9u5iICvEeSAVtyXNNQt+TS+215fPDcHi+Pt/VuoYY
+         lVhg==
+X-Gm-Message-State: AOJu0YyV6SaGw6m9PIPsAJYVtQaOjk9Vhl20FBGUuQ9v48wDly3F5Pmv
+	RFCYF/Ezj/Ax770KAqP8tKzmx9sHZR49MwbqUmnvkjEOIBPOJ3+5StljvlOmU2CSYWdieDrhsAa
+	ROoqFCQ==
+X-Google-Smtp-Source: AGHT+IHWmLxSFYG5o2YfD0f8kFtxG69QWwfC87vLwnlWGI5t07xlvynFj+vFP0PXcxWx19/9iJha3k0Bf84P
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7732:d863:503:f53d])
+ (user=irogers job=sendgmr) by 2002:a05:6902:2512:b0:dc2:1dd0:c517 with SMTP
+ id dt18-20020a056902251200b00dc21dd0c517mr2454050ybb.7.1706917280766; Fri, 02
+ Feb 2024 15:41:20 -0800 (PST)
+Date: Fri,  2 Feb 2024 15:40:54 -0800
+In-Reply-To: <20240202234057.2085863-1-irogers@google.com>
+Message-Id: <20240202234057.2085863-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202222603.141240-3-hamza.mahfooz@amd.com>
+Mime-Version: 1.0
+References: <20240202234057.2085863-1-irogers@google.com>
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Subject: [PATCH v3 5/8] perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
+	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, 
+	"=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Yang Li <yang.lee@linux.alibaba.com>, Changbin Du <changbin.du@huawei.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Paran Lee <p4ranlee@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 02, 2024 at 05:25:56PM -0500, Hamza Mahfooz wrote:
-> Removing an amdgpu device that still has user space references allocated
-> to it causes undefined behaviour. So, implement amdgpu_pci_can_remove()
-> and disallow devices that still have files allocated to them from being
-> unbound.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> index cc69005f5b46..cfa64f3c5be5 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> @@ -2323,6 +2323,22 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
->  	return ret;
->  }
->  
-> +static bool amdgpu_pci_can_remove(struct pci_dev *pdev)
-> +{
-> +	struct drm_device *dev = pci_get_drvdata(pdev);
-> +
-> +	mutex_lock(&dev->filelist_mutex);
-> +
-> +	if (!list_empty(&dev->filelist)) {
-> +		mutex_unlock(&dev->filelist_mutex);
-> +		return false;
-> +	}
-> +
-> +	mutex_unlock(&dev->filelist_mutex);
-> +
-> +	return true;
+Most uses of what was perf_cpu_map__empty but is now
+perf_cpu_map__has_any_cpu_or_is_empty want to do something with the
+CPU map if it contains CPUs. Replace uses of
+perf_cpu_map__has_any_cpu_or_is_empty with other helpers so that CPUs
+within the map can be handled.
 
-Also, to be pedantic, this will not work as right after you returned
-"true" here, userspace could open a file, causing the same issue you are
-trying to prevent to have happen, happen.
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/builtin-c2c.c   | 6 +-----
+ tools/perf/builtin-stat.c  | 9 ++++-----
+ tools/perf/util/auxtrace.c | 4 ++--
+ tools/perf/util/record.c   | 2 +-
+ tools/perf/util/stat.c     | 2 +-
+ 5 files changed, 9 insertions(+), 14 deletions(-)
 
-So even if we wanted to do this, which again, we do not, this isn't even
-a solution for it because it will still cause you problems.
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 16b40f5d43db..24107062c43e 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2319,11 +2319,7 @@ static int setup_nodes(struct perf_session *session)
+ 
+ 		nodes[node] = set;
+ 
+-		/* empty node, skip */
+-		if (perf_cpu_map__has_any_cpu_or_is_empty(map))
+-			continue;
+-
+-		perf_cpu_map__for_each_cpu(cpu, idx, map) {
++		perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
+ 			__set_bit(cpu.cpu, set);
+ 
+ 			if (WARN_ONCE(cpu2node[cpu.cpu] != -1, "node/cpu topology bug"))
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5fe9abc6a524..280eb0c99d2b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1317,10 +1317,9 @@ static int cpu__get_cache_id_from_map(struct perf_cpu cpu, char *map)
+ 	 * be the first online CPU in the cache domain else use the
+ 	 * first online CPU of the cache domain as the ID.
+ 	 */
+-	if (perf_cpu_map__has_any_cpu_or_is_empty(cpu_map))
++	id = perf_cpu_map__min(cpu_map).cpu;
++	if (id == -1)
+ 		id = cpu.cpu;
+-	else
+-		id = perf_cpu_map__cpu(cpu_map, 0).cpu;
+ 
+ 	/* Free the perf_cpu_map used to find the cache ID */
+ 	perf_cpu_map__put(cpu_map);
+@@ -1623,7 +1622,7 @@ static int perf_stat_init_aggr_mode(void)
+ 	 * taking the highest cpu number to be the size of
+ 	 * the aggregation translate cpumap.
+ 	 */
+-	if (!perf_cpu_map__has_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
++	if (!perf_cpu_map__is_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
+ 		nr = perf_cpu_map__max(evsel_list->core.user_requested_cpus).cpu;
+ 	else
+ 		nr = 0;
+@@ -2290,7 +2289,7 @@ int process_stat_config_event(struct perf_session *session,
+ 
+ 	perf_event__read_stat_config(&stat_config, &event->stat_config);
+ 
+-	if (perf_cpu_map__has_any_cpu_or_is_empty(st->cpus)) {
++	if (perf_cpu_map__is_empty(st->cpus)) {
+ 		if (st->aggr_mode != AGGR_UNSET)
+ 			pr_warning("warning: processing task data, aggregation mode not set\n");
+ 	} else if (st->aggr_mode != AGGR_UNSET) {
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 3684e6009b63..6b1d4bafad59 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -174,7 +174,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+ 				   struct evlist *evlist,
+ 				   struct evsel *evsel, int idx)
+ {
+-	bool per_cpu = !perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus);
++	bool per_cpu = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
+ 
+ 	mp->mmap_needed = evsel->needs_auxtrace_mmap;
+ 
+@@ -648,7 +648,7 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 
+ static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel, int idx)
+ {
+-	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus);
++	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
+ 
+ 	if (per_cpu_mmaps) {
+ 		struct perf_cpu evlist_cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 87e817b3cf7e..e867de8ddaaa 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -237,7 +237,7 @@ bool evlist__can_select_event(struct evlist *evlist, const char *str)
+ 
+ 	evsel = evlist__last(temp_evlist);
+ 
+-	if (!evlist || perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus)) {
++	if (!evlist || perf_cpu_map__is_any_cpu_or_is_empty(evlist->core.user_requested_cpus)) {
+ 		struct perf_cpu_map *cpus = perf_cpu_map__new_online_cpus();
+ 
+ 		if (cpus)
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index b0bcf92f0f9c..0bd5467389e4 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -315,7 +315,7 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
+ 	if (!counter->per_pkg)
+ 		return 0;
+ 
+-	if (perf_cpu_map__has_any_cpu_or_is_empty(cpus))
++	if (perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+ 		return 0;
+ 
+ 	if (!mask) {
+-- 
+2.43.0.594.gd9cf4e227d-goog
 
-greg k-h
