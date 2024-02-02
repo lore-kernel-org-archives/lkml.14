@@ -1,134 +1,146 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705917F486
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 09:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820F57AE7D
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 09:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865784; cv=none; b=u1dSdzCLUnr9kh1IdQkuUJ2pN/DBEeub+JbzxxwJ2NHU258dvvyNeMRJPVXjJCw/u0FqKL1Lij8mAgTi/IfDJFiWLznvwdKcfP4eGud0MrFydlxamNo82O4Cmc3lV+vMiDdVdteURPg6SyxLUvBKNpU2dMSaSLpHgBmLsUYByrI=
+	t=1706865875; cv=none; b=l4lMkwjUKb73dMsdyvaIdXPXET8vuG9OeMh4FYZr5amjYXDaIDqR96FW8furq3V2pD5ZIUUtpWrUNi1dJ5iGSn8ZgCJPiyyGWS/gGU0GiQZOHQb6+naPOhuGpky5HL89SzCot9lwXos3w64x8IlWKK5awxQlmDDx4m9l9iCRVNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706865784; c=relaxed/simple;
-	bh=d5iHkLoKQ8sjTlEpS17LaVao7OCj1mW9ysVyF9v8tcQ=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=Nn4ous9A+tPOV2snTAnY/ZtL8IQassWBGc52+QRC2alfoO4sPr6RZ3CmS0eTURrTocyEanm/UrENNTffTbBbVKEvjA022RFTAsmsc0E9SIYcroU4cPLQG0G2RHvlLq+ZLkWItzoREh9JfoRHXGK0ONq79WBoAPADPY8kx5UKzes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XAtGc7il; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XAtGc7il"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-604186a5775so22242957b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 01:23:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706865781; x=1707470581; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=daL4XB8bCp+vh8RMiM1+uZyeaTeJtdmdzdYfvAgKrYE=;
-        b=XAtGc7ilxk0h7ynIvyZU5VI8VTyQGZglr2qGTG62aqFdmlLfYwVHLacjD/nhRI9pY9
-         wJ2ULa7M+xT5sbv0BuARZz+rfqbOCyTO7f/IOS2uYXcQGeyL0cYFEDeJ8CxObozOK5Xq
-         DDMoxqcsyVPpJ3BujiI7kQB92fCdV1eW7cgaX0WGIwlDL0nGAgc/t0gE/O7Re1v/WvVn
-         Y0Ia/1BGoQM12GxVl4meMnBmizOmVVXTZtMiiuC7Nt17b6E0OZ1/vkRDRtvlSvbrCmiu
-         mTUY/8OZ4r3UpNr+JpSoZcrzhBhLLmTcExpwjc9R/MlW8xtYbxU5C+XhRPVOc/4QoPk9
-         uRNQ==
+	s=arc-20240116; t=1706865875; c=relaxed/simple;
+	bh=KpO7yKY6sxbBzQ3uJr1u4FkYuO/0+Q+j+vxxKbE63hE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=awwMihFFubfRYUSAH0dHLNPmp8P4EW7A7XZkMik2MvZsD5f6Z09LYRgHcbmGb0dbqalb5KJuML9wb1DKlVy9BBCKlYqrrBq9Ea4V7K77fVFyN9pVeNbUAxV3ttFe5kPAfRQhrvVGTI4kKgK5XAZ97d1uZ73t6EWtOsofviaG3Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363b6ee24d3so470485ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 01:24:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706865781; x=1707470581;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=daL4XB8bCp+vh8RMiM1+uZyeaTeJtdmdzdYfvAgKrYE=;
-        b=QgtLV4CFvCvhFyIvbghjMdys9iOWKaDUlvQiiROY9Ta03CeA1aN+xK3hXpxWjfoyFU
-         7+IfonFavwPS1V4Ks7EQMTJZ2FuLCBMNNiMYjWJpt7WIjyPsNCjjHl+G8YZbeNN7PUIk
-         c1UIgG1KJfTsp1Y2E2jvHKCfRsVQt5g5a/s/PO7QyWGrsKIr9vSpLUYJJ0Od2r5SCZKM
-         +q1E+SuzR6PHfOdRdf72y7jNsLn1EicPQtY3ZjenhMqnvTGsO1OJSRU8g3Pens+eNPvk
-         AXJ78fTnppEiSk2lXvAfLx0vdtt/LlnMcVpA+LxQmXDFcIgrOLr5DPk+XlOoL/90RGlT
-         x5FA==
-X-Gm-Message-State: AOJu0YzwvRuohwA18oN2aO4hWLWz4n08rgwOfd6h7g/HSFdts00uZIHq
-	WI12am1S/PY1/DlwjSKtp50ZsYRj+TO5rfdUeP1lsCBBkpEjMfkfUFsvc0sngJEtgxmWW0l4I6n
-	Cy3EQ0S2XNenarg==
-X-Google-Smtp-Source: AGHT+IGQPZ+QAI3nTjJcEAtdbpsI/TLmMfcBg/mRbiQVbb6wFyd6SkghlV26g5LFiwyJJT3RiC+0U/pbLbALrzY=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:6f0:da10:9cb3:5b3])
- (user=saravanak job=sendgmr) by 2002:a05:690c:2911:b0:5ff:78d0:b4b2 with SMTP
- id eg17-20020a05690c291100b005ff78d0b4b2mr214000ywb.3.1706865781565; Fri, 02
- Feb 2024 01:23:01 -0800 (PST)
-Date: Fri,  2 Feb 2024 01:22:49 -0800
-In-Reply-To: <20240202092250.786276-1-saravanak@google.com>
-Message-Id: <20240202092250.786276-4-saravanak@google.com>
+        d=1e100.net; s=20230601; t=1706865867; x=1707470667;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WPtIpSzuSpFtfcglYU7ZOgBzedE9MgV+9Ht7eXOMfdY=;
+        b=KeNcyr+WVH53Mk1IP0vEbw20jYBhoT0VqOZZd5z+6grJBWyRMbE9Rk5BGw/Z+TnkEL
+         tTeqPPQ89iQ+GEJdnW9sp3MzH5wBIMBRidiGshsx/ofDzFokqsfPrs8GzOr1BpfNP+x7
+         ZgseJCqGS2JpYrH4w+TstYVths/BCzEiPOs8nfsKF4g6Gu2bgqxjqZPz4QDc61pu5qO2
+         D+RGQE9hPzb23MW35lw6yfNOwASm9NyDPkpPdSnrqpR2x6IBqbpSMlsf1NhPdSAaF8Qv
+         41y9VrpwQQDQogt2kl1qUALewCFMNpQh96KgaIs66EgCtxm7YhWFOrkhriNRQIJWIuXJ
+         vDEg==
+X-Gm-Message-State: AOJu0YzDPyIa7rI/iJCwF7yU3ROa+WpcWfVqvOiylc6LMWjRhAcBbfSp
+	+eiGFs/qCRIl0a23tcWKbB25349UReunpKpILKfmJCcDJWLQfRXhG5fc22dX4GTaVutiBPLFmgL
+	Sd7Pr3FGGcE46W+WMisINwYEfZZ6DDDFI8x9UfB7K+T5sG3kNU9UPMkM=
+X-Google-Smtp-Source: AGHT+IFrqpxbgQOf8vCr0HY4EsOrYMQFMnr67z/eqirSmcXeyRBL5epRfdoHP++TUkOMJuJHsdvoDs7OL6lnAiRvkTjIGy/IQl+j
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240202092250.786276-1-saravanak@google.com>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v1 3/3] driver core: fw_devlink: Improve logs for cycle detection
-From: Saravana Kannan <saravanak@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>
-Cc: Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a6d:b0:363:7b21:c860 with SMTP id
+ w13-20020a056e021a6d00b003637b21c860mr371640ilv.4.1706865866841; Fri, 02 Feb
+ 2024 01:24:26 -0800 (PST)
+Date: Fri, 02 Feb 2024 01:24:26 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ac258b061062ad8d@google.com>
+Subject: [syzbot] [ext4?] kernel BUG in ext4_write_inline_data_end (2)
+From: syzbot <syzbot+0c89d865531d053abb2d@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
 Content-Type: text/plain; charset="UTF-8"
 
-The links in a cycle are not all logged in a consistent manner or not
-logged at all. Make them consistent and log all the link in the cycles
-(even the child ==> parent dependency) so that it's easier to debug cycle
-detection code. Also, mark the start and end of a cycle so it's easy to
-tell when multiple cycles are logged back to back.
+Hello,
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+syzbot found the following issue on:
+
+HEAD commit:    6764c317b6bb Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=132faab7e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2c0ac5dfae6ecc58
+dashboard link: https://syzkaller.appspot.com/bug?extid=0c89d865531d053abb2d
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/90c636d7609b/disk-6764c317.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9d76784c4adc/vmlinux-6764c317.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4fa116a29660/bzImage-6764c317.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0c89d865531d053abb2d@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at fs/ext4/inline.c:763!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 1 PID: 11999 Comm: syz-executor.1 Not tainted 6.8.0-rc2-syzkaller-00055-g6764c317b6bb #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:ext4_write_inline_data_end+0x550/0xc20 fs/ext4/inline.c:763
+Code: 25 28 00 00 00 0f 85 1d 06 00 00 48 81 c4 b0 00 00 00 44 89 f0 5b 5d 41 5c 41 5d 41 5e 41 5f e9 46 d6 87 08 e8 21 65 4c ff 90 <0f> 0b e8 19 65 4c ff 4d 8d 7c 24 34 4c 89 e7 e8 5c 3c 7c ff be 04
+RSP: 0018:ffffc90004a3f928 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff8880452c82b0 RCX: ffffffff82400124
+RDX: ffff888020358000 RSI: ffffffff8240049f RDI: 0000000000000001
+RBP: 0000000000000020 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000004 R12: ffffea00013a6980
+R13: 0000000000000020 R14: ffff8880452c8050 R15: ffffc90004a3f978
+FS:  00007f1365d136c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb7e6f02425 CR3: 0000000028762000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ ext4_write_end+0x4af/0xed0 fs/ext4/inode.c:1284
+ generic_perform_write+0x33b/0x620 mm/filemap.c:3941
+ ext4_buffered_write_iter+0x11f/0x3d0 fs/ext4/file.c:299
+ ext4_file_write_iter+0x819/0x1960 fs/ext4/file.c:698
+ call_write_iter include/linux/fs.h:2085 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0x6e1/0x1110 fs/read_write.c:590
+ ksys_write+0x12f/0x260 fs/read_write.c:643
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd8/0x270 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f136507dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1365d130c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f13651abf80 RCX: 00007f136507dda9
+RDX: 0000000000000020 RSI: 00000000200002c0 RDI: 0000000000000005
+RBP: 00007f13650ca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f13651abf80 R15: 00007ffc77beff18
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:ext4_write_inline_data_end+0x550/0xc20 fs/ext4/inline.c:763
+Code: 25 28 00 00 00 0f 85 1d 06 00 00 48 81 c4 b0 00 00 00 44 89 f0 5b 5d 41 5c 41 5d 41 5e 41 5f e9 46 d6 87 08 e8 21 65 4c ff 90 <0f> 0b e8 19 65 4c ff 4d 8d 7c 24 34 4c 89 e7 e8 5c 3c 7c ff be 04
+RSP: 0018:ffffc90004a3f928 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff8880452c82b0 RCX: ffffffff82400124
+RDX: ffff888020358000 RSI: ffffffff8240049f RDI: 0000000000000001
+RBP: 0000000000000020 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000004 R12: ffffea00013a6980
+R13: 0000000000000020 R14: ffff8880452c8050 R15: ffffc90004a3f978
+FS:  00007f1365d136c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffb08627d58 CR3: 0000000028762000 CR4: 0000000000350ef0
+
+
 ---
- drivers/base/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index e3d666461835..084d9648e254 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -125,7 +125,7 @@ static void __fwnode_link_del(struct fwnode_link *link)
-  */
- static void __fwnode_link_cycle(struct fwnode_link *link)
- {
--	pr_debug("%pfwf: Relaxing link with %pfwf\n",
-+	pr_debug("%pfwf: cycle: depends on %pfwf\n",
- 		 link->consumer, link->supplier);
- 	link->flags |= FWLINK_FLAG_CYCLE;
- }
-@@ -1945,6 +1945,7 @@ static bool __fw_devlink_relax_cycles(struct device *con,
- 
- 	/* Termination condition. */
- 	if (sup_dev == con) {
-+		pr_debug("----- cycle: start -----\n");
- 		ret = true;
- 		goto out;
- 	}
-@@ -1976,8 +1977,11 @@ static bool __fw_devlink_relax_cycles(struct device *con,
- 	else
- 		par_dev = fwnode_get_next_parent_dev(sup_handle);
- 
--	if (par_dev && __fw_devlink_relax_cycles(con, par_dev->fwnode))
-+	if (par_dev && __fw_devlink_relax_cycles(con, par_dev->fwnode)) {
-+		pr_debug("%pfwf: cycle: depends on %pfwf\n", sup_handle,
-+			 par_dev->fwnode);
- 		ret = true;
-+	}
- 
- 	if (!sup_dev)
- 		goto out;
-@@ -1993,6 +1997,8 @@ static bool __fw_devlink_relax_cycles(struct device *con,
- 
- 		if (__fw_devlink_relax_cycles(con,
- 					      dev_link->supplier->fwnode)) {
-+			pr_debug("%pfwf: cycle: depends on %pfwf\n", sup_handle,
-+				 dev_link->supplier->fwnode);
- 			fw_devlink_relax_link(dev_link);
- 			dev_link->flags |= DL_FLAG_CYCLE;
- 			ret = true;
-@@ -2072,6 +2078,7 @@ static int fw_devlink_create_devlink(struct device *con,
- 		if (__fw_devlink_relax_cycles(con, sup_handle)) {
- 			__fwnode_link_cycle(link);
- 			flags = fw_devlink_get_flags(link->flags);
-+			pr_debug("----- cycle: end -----\n");
- 			dev_info(con, "Fixed dependency cycle(s) with %pfwf\n",
- 				 sup_handle);
- 		}
--- 
-2.43.0.594.gd9cf4e227d-goog
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
