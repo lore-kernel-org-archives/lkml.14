@@ -1,285 +1,170 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A610182BF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D875FDBD
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706863736; cv=none; b=hhNOsqilD5xegh78SV1p7JaMhllQHZHwvgql68+rkjSzM8hEgoPeT0JwSGVGVbH6TvmoDqJr9zrNSFacm8m4L6zNlTgAqEe+/ySH8DkgBaJl3lG6jOhxJ4s8+SExMG5A675GSFPZZbi/pcQAj8jfrhegUZYGtSR3iY9fwsrg9x4=
+	t=1706863780; cv=none; b=QxtTmj9Y9CtyN5MHOMoZMtZkgrFzAIsD8O9tMIkjpFKW9itTmK6jbtHrvj8ib6Ef+dRPKPXXXpGJ+ofR11RtWtqWANLcLSA5zxibR6Let/f6gsFOoeqR3QOrcHSzraMFNvcAIwkmKsVUSK52hMcRSQwQQ7kT5voSWpgZRpMrNaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706863736; c=relaxed/simple;
-	bh=PyfZug3UJbUT2FpKBL66KgofFvAVaAe+Y0aAJL/b8gU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ja/XIlmuc4Ly3M9YkhkCKw4odmNIN88sZKy1HATG5TJFQ8Eg8WEZzHV2p1JaT0yP4EjIOkDEoEoR3kLd+stN0EINEl59kif08dsjjSVTLGhbQV3s6CJ7lBFZsHZmlnyvQTOP8vkGg4B9jmO0ibk516R/ni/60VRAly7rxWZHFbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=docIvLfx; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com
+	s=arc-20240116; t=1706863780; c=relaxed/simple;
+	bh=s5g5tND4VncSJJnpgai+1STmfwY17PR0zOkvpBvqkBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brDcjs4vtZG/Grj76EKtUQiy1YS97gCWEHsveBvtjJoxL6YUaLGg3fA/iRVlNmpK6iXYB1rsAQIMt6Qp9Fd+uLyb2MECxPdPiWIbaMrHHJ/0JMeF8iWIYej+cjlcgZYPznSDeEZC9raU9VA/GIuu13PDDdydHrjuLyExWOJVoY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=Yf+voq//; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="docIvLfx"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc693399655so2997488276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 00:48:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="Yf+voq//"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dc6af9a988eso1638510276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 00:49:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706863733; x=1707468533; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cS/CXgsmoznLCM/58EMa+C4HAC14gnF5J7VKWxLdqzo=;
-        b=docIvLfx/y43tGLFtzVNeQxQhniD5ZAOULOT2Ler5jQ8yRDBnUjKigZa0FhyWvcjBe
-         n+c5rcRcHY04OVt4YzK3lvVInV6kiW1B+38B3JL9dtlrvGQh8Z+3Vv4Lv1ufm4xHOO6/
-         z9jepCeDFNdwTXt11CFJcVbjJ2IuvR/u/2sXfc4rMw5jefPLzYYriSEWakcIez046pPM
-         2AsWugWQjYfcZgp8dy0nk8UyylPLwEMzXhZMr6igTYvEoHi4/oJQ2tElLriij+dia7p6
-         9vuR2ub0XG07xoeI6Wtqc3TfbGjdGhnAFhflQlFSa9ddKMjG5bCFj6F07Jg+/tRvzqRW
-         2ZJQ==
+        d=endlessos.org; s=google; t=1706863776; x=1707468576; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VIPMr9gZ2ntFdhqS2A/x2RHH72S8+R3tOzCoETsh9oA=;
+        b=Yf+voq//sAGg3WTgaevPYQy0hb2RJg9y1SmIIKJU7lM4x11x609ILkQt1cu2oHjB11
+         Z2byK6cWb22h0AieGDxN6hJd5KWDgPQJA+yE1LuhaRujjc9Buj/NH40pWddd0Jbk4daC
+         dgXn/5d2kptmSvpFMFiUH//ege/HU9nA4ebB3WOCkxIMXC5K2+ABZ2IDtAbc5OGsTP8O
+         3I2bjeCZZCM6vKOVnLHBhJsM667LvF2IgOHAtu0aX9JC9r5/xInNL1adptRErMzJh/Nb
+         jxGpHQV4QdGuTlVnuV4KFw3gYHt5vFHRn7YspplLO8TRUpzmPrD9kbnDVEw07Djaa636
+         ZlCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706863733; x=1707468533;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cS/CXgsmoznLCM/58EMa+C4HAC14gnF5J7VKWxLdqzo=;
-        b=FuCGpY7cvn8onTn2/5FN8gfZQr1FW38Tj4/IB40+nZDed4XsHnP/wvmE1NfV9BQ6+g
-         jqlFvp0eZv5asRVPqdojOYacpLr6p6/ITDVjQF8FaNa3Jw4njATn3k2dTm3ty3Xo8T4i
-         DHQgtnqI74FDbwqbYoj3U8VC4uvtNO8JPiD/bYfKMVuwQAkZF2GtMHFiphLjYTZktvyA
-         loRouTzLilfA8aA7PgbTriU5vW2/aTqUMe/RfvJ/Hvn/HcrzPB9L96kyo9F9zYp99gNj
-         2iOaeHolWT/LVNiHs9UxDRs5sktMgvWgbGdhYJ00XmQtABTxyzfYrQTOdbYjQszeKoqS
-         e5TQ==
-X-Gm-Message-State: AOJu0Yyh05IdiqW+1q3rh+PWeCgf3MYQfNcRvWwQ5H2ugFsJVSGMJXCr
-	g3p0wjIighC9E/sgJjc7n7CD37mZyOqND9mTEc5KVD9aED97zE/uFNbUmNhHL8HpJcVaxn4lwNL
-	hVZBZJx6h1Ka9SA==
-X-Google-Smtp-Source: AGHT+IF6xSbbu10GIVl4H7+tZyrBPZryIPb0mbF+NXCFwl8Nvh4CdA77KCaumYU6jv2DEa4k6vNprhMgTbaxpwI=
-X-Received: from guanyulin.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:1af])
- (user=guanyulin job=sendgmr) by 2002:a05:6902:1085:b0:dc6:e5e9:f3af with SMTP
- id v5-20020a056902108500b00dc6e5e9f3afmr685079ybu.9.1706863733001; Fri, 02
- Feb 2024 00:48:53 -0800 (PST)
-Date: Fri,  2 Feb 2024 08:42:35 +0000
+        d=1e100.net; s=20230601; t=1706863776; x=1707468576;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VIPMr9gZ2ntFdhqS2A/x2RHH72S8+R3tOzCoETsh9oA=;
+        b=Ustq5w8hhzYl+BhfDY3G3Dgx8KT+D657ABYepei4udMAFLqxaIL2rkMUfYgkjYsHlh
+         mQXNnJMBP29dsYZzUSCYBsnbWYBcseb7DkqQSA/Lx0t3oprLVbUwLneWs+K+vEuvqiaw
+         gjgXESZZWoajla9MIU/W7VBaTsuQBUi9Sha1jfgJ4Dk3a4AtpNU3ZwHQ2a16fh3cFndC
+         w/lxt0GT6sgc8uNYX3VrOfSWfNlwHtf8+b/XnBE91fQJItpnh8EOlAwn1JG2Clr78Ixq
+         3J/rvUsNWVSumFtQ3zRsr/dNZCsOwjwKZSoyExDZQwKEWrTRaSsx1Skb10MA9lk7U9jQ
+         oZJQ==
+X-Gm-Message-State: AOJu0Yx5old1j0wJDrXBMF9isJjw6aOGiKNGDf1WJ7ahHKRMfOMe8oXj
+	Cf4RvDsQwAflqlNKjTQHvU3QAOr03kdE3nvsZdv9TNcAWxvkQowZLKG0oZPGmoFkwQS0f+sNTV9
+	buhr2m+MCLTcL3XeuYFi6CJ/3meh9u5vOsM0OfojuXd7RXcHmV9M=
+X-Google-Smtp-Source: AGHT+IF0D39gNrmGTF17Hmk0hB+DrIWvGVp5pVLHi+wF6FPshuZ7YrcQykD87BeYp9GozcMFufqOk9CZnK7/8cpL6D0=
+X-Received: by 2002:a25:c782:0:b0:dc2:2f4b:c9d8 with SMTP id
+ w124-20020a25c782000000b00dc22f4bc9d8mr7270958ybe.16.1706863776050; Fri, 02
+ Feb 2024 00:49:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240202084815.3064391-1-guanyulin@google.com>
-Subject: [PATCH] usb: host: enable suspend-to-RAM control in userspace
-From: Guan-Yu Lin <guanyulin@google.com>
-To: gregkh@linuxfoundation.org, mathias.nyman@intel.com, 
-	stern@rowland.harvard.edu, royluo@google.com, benjamin.tissoires@redhat.com, 
-	hadess@hadess.net, heikki.krogerus@linux.intel.com, grundler@chromium.org, 
-	oneukum@suse.com, dianders@chromium.org, yajun.deng@linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Guan-Yu Lin <guanyulin@google.com>
+MIME-Version: 1.0
+References: <20240130095933.14158-1-jhp@endlessos.org> <20240130101335.GU2543524@black.fi.intel.com>
+ <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
+ <Zbonprq/1SircQon@x1-carbon> <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
+ <ZbrNLxHL03R66PxQ@x1-carbon> <ZbuyVbMEBWKi729y@x1-carbon>
+In-Reply-To: <ZbuyVbMEBWKi729y@x1-carbon>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 2 Feb 2024 16:49:00 +0800
+Message-ID: <CAPpJ_efmzy_FU0urdHDmO5htOBCPaX-T5W+Er7AmWYhqUTwnyA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Daniel Drake <drake@endlessos.org>, Vitalii Solomonov <solomonov.v@gmail.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, David Box <david.e.box@linux.intel.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-ide@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessos.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In systems with both a main processor and a co-processor, asynchronous
-controller management can lead to conflicts. For example, the main
-processor might attempt to suspend a USB device while the co-processor
-is actively transferring data. To address this, we introduce a new
-sysfs entry, "disable_suspend2ram", which allows userspace to control
-the suspend-to-RAM functionality of devices on a specific USB bus.
-Since the userspace has visibility into the activities of both
-processors, it can resolve potential conflicts.
+Niklas Cassel <cassel@kernel.org> =E6=96=BC 2024=E5=B9=B42=E6=9C=881=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:01=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, Jan 31, 2024 at 11:43:59PM +0100, Niklas Cassel wrote:
+> > On Wed, Jan 31, 2024 at 07:08:12AM -0400, Daniel Drake wrote:
+>
+> (snip)
+>
+> > In libata we perform a reset of the port at boot, see:
+> > libata-sata.c:sata_link_hardreset()
+> > after writing to SControl, we call
+> > libata-core.c:ata_wait_ready() that will poll for the port being ready
+> > by calling the check_ready callback.
+> > For AHCI, this callback funcion is set to:
+> > libahci.c:ahci_check_ready().
+> >
+> > A reset should take the device out of deep power state and should be
+> > sufficient to establish a connection (and that also seems to be the
+> > case when not using Intel VMD).
+> >
+> > However, if you want to debug, I would start by adding prints to
+> > libata-sata.c:sata_link_hardreset()
+> > libata-core.c:ata_wait_ready()
+> > libahci.c:ahci_check_ready().
+>
+> FWIW, this will dump SStatus.DET every time the check_ready callback func=
+tion
+> (ahci_check_ready()) is called:
+>
+>
+> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+> index 1a63200ea437..0467e150601e 100644
+> --- a/drivers/ata/libahci.c
+> +++ b/drivers/ata/libahci.c
+> @@ -1533,6 +1533,12 @@ int ahci_check_ready(struct ata_link *link)
+>  {
+>         void __iomem *port_mmio =3D ahci_port_base(link->ap);
+>         u8 status =3D readl(port_mmio + PORT_TFDATA) & 0xFF;
+> +       u32 cur =3D 0;
+> +
+> +       sata_scr_read(link, SCR_STATUS, &cur);
+> +
+> +       ata_link_info(link, "BUSY ? %d (status: %#x) SStatus.DET: %#x\n",
+> +                     status & ATA_BUSY, status, cur & 0xf);
+>
+>         return ata_check_ready(status);
+>  }
 
-Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
----
- Documentation/ABI/testing/sysfs-bus-usb | 10 +++++++
- drivers/usb/core/driver.c               | 12 ++++++++
- drivers/usb/core/sysfs.c                | 29 ++++++++++++++++++
- drivers/usb/host/xhci-plat.c            | 40 ++++++++++++++++++++++---
- include/linux/usb.h                     |  4 +++
- 5 files changed, 91 insertions(+), 4 deletions(-)
+I think I can join the test based on kernel v6.8-rc2, too.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-usb b/Documentation/ABI/testing/sysfs-bus-usb
-index 2b7108e21977..f6a4f496c8f6 100644
---- a/Documentation/ABI/testing/sysfs-bus-usb
-+++ b/Documentation/ABI/testing/sysfs-bus-usb
-@@ -19,6 +19,16 @@ Description:
- 		would be authorized by default.
- 		The value can be 1 or 0. It's by default 1.
- 
-+What:		/sys/bus/usb/devices/usbX/disable_suspend2ram
-+Date:		January 2024
-+Contact:	Guan-Yu Lin <guanyulin@google.com>
-+Description:
-+		Disables "suspend-to-RAM" system power management in USB devices
-+		and their host contorller under this usb bus. The modification of
-+		this entry should be done when the system is active to ensure the
-+		correctness of system power state transitions.
-+		The value can be 1 or 0. It's by default 0.
-+
- What:		/sys/bus/usb/device/.../authorized
- Date:		July 2008
- KernelVersion:	2.6.26
-diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-index e02ba15f6e34..c555e2b1ddda 100644
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -1569,6 +1569,12 @@ int usb_suspend(struct device *dev, pm_message_t msg)
- 	struct usb_device	*udev = to_usb_device(dev);
- 	int r;
- 
-+	if (msg.event == PM_EVENT_SUSPEND && udev->bus->disable_suspend2ram) {
-+		/* Skip "suspend-to-RAM" process under the same USB bus */
-+		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.suspend\n");
-+		return 0;
-+	}
-+
- 	unbind_no_pm_drivers_interfaces(udev);
- 
- 	/* From now on we are sure all drivers support suspend/resume
-@@ -1605,6 +1611,12 @@ int usb_resume(struct device *dev, pm_message_t msg)
- 	struct usb_device	*udev = to_usb_device(dev);
- 	int			status;
- 
-+	if (msg.event == PM_EVENT_RESUME && udev->bus->disable_suspend2ram) {
-+		/* Skip "suspend-to-RAM" process under the same USB bus */
-+		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.resume\n");
-+		return 0;
-+	}
-+
- 	/* For all calls, take the device back to full power and
- 	 * tell the PM core in case it was autosuspended previously.
- 	 * Unbind the interfaces that will need rebinding later,
-diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
-index 5d21718afb05..7a228ea95506 100644
---- a/drivers/usb/core/sysfs.c
-+++ b/drivers/usb/core/sysfs.c
-@@ -68,6 +68,34 @@ static ssize_t bMaxPower_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(bMaxPower);
- 
-+static ssize_t disable_suspend2ram_show(struct device *dev,
-+					struct device_attribute *attr, char *buf)
-+{
-+	struct usb_device *udev;
-+
-+	udev = to_usb_device(dev);
-+	return sysfs_emit(buf, "%d\n", !!(udev->bus->disable_suspend2ram));
-+}
-+
-+static ssize_t disable_suspend2ram_store(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t count)
-+{
-+	struct usb_device *udev = to_usb_device(dev);
-+	bool val;
-+	int rc;
-+
-+	if (kstrtobool(buf, &val) != 0)
-+		return -EINVAL;
-+	rc = usb_lock_device_interruptible(udev);
-+	if (rc < 0)
-+		return -EINTR;
-+	udev->bus->disable_suspend2ram = !!(val);
-+	usb_unlock_device(udev);
-+	return count;
-+}
-+static DEVICE_ATTR_RW(disable_suspend2ram);
-+
- static ssize_t configuration_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
- {
-@@ -984,6 +1012,7 @@ static DEVICE_ATTR_RW(interface_authorized_default);
- static struct attribute *usb_bus_attrs[] = {
- 		&dev_attr_authorized_default.attr,
- 		&dev_attr_interface_authorized_default.attr,
-+		&dev_attr_disable_suspend2ram.attr,
- 		NULL,
- };
- 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index f04fde19f551..86733249fcdc 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -436,12 +436,18 @@ void xhci_plat_remove(struct platform_device *dev)
- }
- EXPORT_SYMBOL_GPL(xhci_plat_remove);
- 
--static int xhci_plat_suspend(struct device *dev)
-+static int xhci_plat_suspend_common(struct device *dev, struct pm_message pmsg)
- {
- 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
- 	int ret;
- 
-+	if (pmsg.event == PM_EVENT_SUSPEND && hcd->self.disable_suspend2ram) {
-+		/* Skip "suspend-to-RAM" process under the same USB bus */
-+		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.suspend\n");
-+		return 0;
-+	}
-+
- 	if (pm_runtime_suspended(dev))
- 		pm_runtime_resume(dev);
- 
-@@ -464,12 +470,33 @@ static int xhci_plat_suspend(struct device *dev)
- 	return 0;
- }
- 
-+static int xhci_plat_suspend(struct device *dev)
-+{
-+	return xhci_plat_suspend_common(dev, PMSG_SUSPEND);
-+}
-+
-+static int xhci_plat_freeze(struct device *dev)
-+{
-+	return xhci_plat_suspend_common(dev, PMSG_FREEZE);
-+}
-+
-+static int xhci_plat_poweroff(struct device *dev)
-+{
-+	return xhci_plat_suspend_common(dev, PMSG_HIBERNATE);
-+}
-+
- static int xhci_plat_resume_common(struct device *dev, struct pm_message pmsg)
- {
- 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
- 	int ret;
- 
-+	if (pmsg.event == PM_EVENT_RESUME && hcd->self.disable_suspend2ram) {
-+		/* Skip "suspend-to-RAM" process under the same USB bus */
-+		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.resume\n");
-+		return 0;
-+	}
-+
- 	if (!device_may_wakeup(dev) && (xhci->quirks & XHCI_SUSPEND_RESUME_CLKS)) {
- 		ret = clk_prepare_enable(xhci->clk);
- 		if (ret)
-@@ -510,6 +537,11 @@ static int xhci_plat_resume(struct device *dev)
- 	return xhci_plat_resume_common(dev, PMSG_RESUME);
- }
- 
-+static int xhci_plat_thaw(struct device *dev)
-+{
-+	return xhci_plat_resume_common(dev, PMSG_THAW);
-+}
-+
- static int xhci_plat_restore(struct device *dev)
- {
- 	return xhci_plat_resume_common(dev, PMSG_RESTORE);
-@@ -539,9 +571,9 @@ static int __maybe_unused xhci_plat_runtime_resume(struct device *dev)
- const struct dev_pm_ops xhci_plat_pm_ops = {
- 	.suspend = pm_sleep_ptr(xhci_plat_suspend),
- 	.resume = pm_sleep_ptr(xhci_plat_resume),
--	.freeze = pm_sleep_ptr(xhci_plat_suspend),
--	.thaw = pm_sleep_ptr(xhci_plat_resume),
--	.poweroff = pm_sleep_ptr(xhci_plat_suspend),
-+	.freeze = pm_sleep_ptr(xhci_plat_freeze),
-+	.thaw = pm_sleep_ptr(xhci_plat_thaw),
-+	.poweroff = pm_sleep_ptr(xhci_plat_poweroff),
- 	.restore = pm_sleep_ptr(xhci_plat_restore),
- 
- 	SET_RUNTIME_PM_OPS(xhci_plat_runtime_suspend,
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index 9e52179872a5..a3b8f799c5a4 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -465,6 +465,10 @@ struct usb_bus {
- 					 * the ep queue on a short transfer
- 					 * with the URB_SHORT_NOT_OK flag set.
- 					 */
-+	unsigned disable_suspend2ram:1; /* Disables the "suspend-to-RAM" system
-+					 * power management of USB devices on this
-+					 * bus and their hcd.
-+					 */
- 	unsigned no_sg_constraint:1;	/* no sg constraint */
- 	unsigned sg_tablesize;		/* 0 or largest number of sg list entries */
- 
--- 
-2.43.0.594.gd9cf4e227d-goog
+The original ASUS B1400CEAE has only one NVMe SSD.  I prepare the
+patch ("ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE") to
+fix the power consumption issue for s2idle with enabled VMD.
 
+The patch is a quirk limiting ASUS B1400CEAE only, not generic for the
+SATA controller [8086:a0d3].  Then, I install another SATA HDD into
+ASUS B1400CEAE for test.  The SATA HDD shows up and works.
+
+$ dmesg | grep SATA
+[    0.785120] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+Gbps 0x1 impl SATA mode
+[    0.785269] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+0x76102100 irq 144 lpm-pol 3
+[    1.096684] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+
+However, if I simply revert the commit 6210038aeaf4 ("ata: ahci:
+Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI controller"") (fix the
+conflict, of course), then the SATA HDD disappears!!?  Both
+CONFIG_SATA_MOBILE_LPM_POLICY=3D3 and 0 can reproduce the issue.
+
+$ dmesg | grep SATA
+[    0.783211] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+Gbps 0x1 impl SATA mode
+[    0.783399] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+0x76102100 irq 144 lpm-pol 3
+[    1.096685] ata1: SATA link down (SStatus 4 SControl 300)
+
+Here is the dmesg of reverting ("ata: ahci: Revert "ata: ahci: Add
+Tiger Lake UP{3,4} AHCI controller"")
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217114#c27
+The code already includes the debug message in ahci_check_ready() from
+Niklas.  However, the dmesg does not show the "BUSY ? ..." from
+ahci_check_ready().
+
+From these scenarios mentioned above, they all apply LPM policy to the
+SATA controller [8086:a0d3].  But, they apply LPM policy at different
+time:
+* The patch ("ata: ahci: Add force LPM policy quirk for ASUS
+B1400CEAE") applies LPM policy in early ahci_init_one(), which is the
+probe callback.
+* Reverting 6210038aeaf4 ("ata: ahci: Revert "ata: ahci: Add Tiger
+Lake UP{3,4} AHCI controller"") applies LPM policy via "ahci_pci_tbl"
+table.
+
+Jian-Hong Pan
