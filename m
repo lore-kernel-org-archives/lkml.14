@@ -1,156 +1,248 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0776B487A7;
-	Fri,  2 Feb 2024 09:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9B6487A7;
+	Fri,  2 Feb 2024 09:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706867682; cv=none; b=m/jY02O53l2VENSwxUT6dopU+n7dlMz1IbBV8kCX7RdhEH/WdxTeh2vOxClo8qplyuRpHS2rTMocXFlYyOkXUpPldfHPOBG84kKwCUXPZnN+Qgu21YwJ+D0yYOdhTzb7nZK/dNhp4PeqIYvPKQ3bQg7JwOq0a+lOjuCmvCaUsos=
+	t=1706867691; cv=none; b=YIC8885s62yG4lvC+gkmzYScdpQ13LCq0DnzOyQjwoENicyn2B84vgpDFb7Eb2rjhA4m+FHdlvPHsy7RjomuTTCaN0COlFsSAvzfcBrPvpzQsEZq+CHJrnBJMq7rRqcRAKCQe5Lcy+2amQYxf+GGptbI/Te/K/7rhCctMQpi/N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706867682; c=relaxed/simple;
-	bh=HLdAtsTxbl4fEyp+8gS0jl/pp8gu2Z4JAGbawefcu48=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tN+7dOqhgeqB3m9GQ9AOB3JSv6VGQkrpuU3QC0iZPTgtuERQAMYNiP/HiGmUg00SK6AFXlSZZ94SKipslMYJ/VmFDkXBqv6xXxxIJnMYzwY85N9NFG8dvjO8vokeJrqkf49zuBSpsHnP8zMgYhe3Clw+imxPDcIOrvQIwIRo4ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=bmDGsdPX; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1706867691; c=relaxed/simple;
+	bh=Wp6H4kX1lKHyIutWo3Ze/1OUO6DOsMZfBQQlx0oszbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GLjJ+YuGLrZL4Vq6wfEyvphACZtCv+hVzIr6B9GCCbLq0x1Q433MbLw0fmjelUHJQM8Au4CVAw9EKaO01BM0YGFdg5niMRFe5oQkXk1tKP0XyOfUawaXPcgwPwXo9+NHpzjyLeFlGOjTqLaE2A0eWnlZoDza6crxCzZAHsDY+tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQQe/mrQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bmDGsdPX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1706867679; x=1738403679;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HLdAtsTxbl4fEyp+8gS0jl/pp8gu2Z4JAGbawefcu48=;
-  b=bmDGsdPXg2fPqrLj4hWG/CxXMVVgrXyuinAJRbviU6RFsjD+IKPtTtYL
-   b9v8JZAU8faDTdcZDEhZryqhZmFrErXLIRcnaTEnycw85Zj/5YkTQyU7Q
-   mO91E8twisvshiv4UuIvA/xSl+w+jWI5lS0c8/VBxW2PrQjLB4rrhxqQa
-   GioXgsA+bSVayH5TPV+Fx97di1VuW3mYvHf8rmBHq51Vx3hGAbX4dJqj4
-   1yBVPyEmZLh4QEhVZoRuo5e9wlV+IORVQ/4yv4/dBMwec1W9hsN1QUFLC
-   4Yk1OPUAWL1gi6PztfT7a90w1XU1OEgCO9SNDSj8583qvSnibLwv8nCse
-   A==;
-X-CSE-ConnectionGUID: /ifdK88ERii550o6UWvHNg==
-X-CSE-MsgGUID: aAm2nhaDT8m6OZg3lj+5xw==
-X-IronPort-AV: E=Sophos;i="6.05,237,1701154800"; 
-   d="asc'?scan'208";a="182925598"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Feb 2024 02:54:32 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 2 Feb 2024 02:53:52 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 2 Feb 2024 02:53:49 -0700
-Date: Fri, 2 Feb 2024 09:53:11 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Roger Quadros <rogerq@kernel.org>
-CC: Conor Dooley <conor@kernel.org>, Bin Liu <b-liu@ti.com>, <nm@ti.com>,
-	<vigneshr@ti.com>, <afd@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>, <srk@ti.com>,
-	<r-gunasekaran@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/5] dt-bindings: usb/ti,am62-usb.yaml: Add PHY2
- register space
-Message-ID: <20240202-unzip-whacky-bb2f151c618b@wendy>
-References: <20240201120332.4811-1-rogerq@kernel.org>
- <20240201120332.4811-5-rogerq@kernel.org>
- <20240201-viewpoint-upload-fb714f650ff5@spud>
- <20240201-violet-chalice-51a73f113e7b@spud>
- <20240201183522.ssj553rwefr2wuqi@iaqt7>
- <20240201-clad-unopposed-ccfdfe53b770@spud>
- <bc3ab60f-539b-41d0-8595-6e0b55f2763d@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQQe/mrQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7D4C433C7;
+	Fri,  2 Feb 2024 09:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706867691;
+	bh=Wp6H4kX1lKHyIutWo3Ze/1OUO6DOsMZfBQQlx0oszbU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CQQe/mrQpxV6NU8EfEV2i0f5+F4mG4EE9YbFprtwRFZUxzud0ouYvBc0Eor9fOsR5
+	 S+Zqmunx9hHksCkAeEvt6oOXySfLSUs+4DV5iF2GxJUGJsd3goP7ZdLbx7BI94AV5y
+	 ou1XSyiSm0TBd61DcGEKCFm+Q/SclZgek9Rm6tGEg2srosk3BHkCaGTuo2KLhw3T5R
+	 1kMXuh44XEHfgrLJqwioOdRs7afKykqvzLdOSADp9FWCPow+RCIXtj7+j8bw6OP/DJ
+	 +Cc6niIVMhqVbRJ41wu3Eeh7uppvXWpdbBqaUuS1DL74EqgEwnRfhigNaxK/XFfwS0
+	 6bQ290loxcnXg==
+Message-ID: <9c78f4b5-8580-4679-ae65-60878221e00b@kernel.org>
+Date: Fri, 2 Feb 2024 11:54:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="09bQoPjxvThdjUNR"
-Content-Disposition: inline
-In-Reply-To: <bc3ab60f-539b-41d0-8595-6e0b55f2763d@kernel.org>
-
---09bQoPjxvThdjUNR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 02, 2024 at 11:36:55AM +0200, Roger Quadros wrote:
->=20
->=20
-> On 01/02/2024 21:13, Conor Dooley wrote:
-> > On Thu, Feb 01, 2024 at 12:35:22PM -0600, Bin Liu wrote:
-> >> On Thu, Feb 01, 2024 at 06:18:05PM +0000, Conor Dooley wrote:
-> >>> On Thu, Feb 01, 2024 at 06:15:20PM +0000, Conor Dooley wrote:
-> >>>> On Thu, Feb 01, 2024 at 02:03:31PM +0200, Roger Quadros wrote:
-> >>>>> So far this was not required but due to the newly identified
-> >>>>> Errata i2409 [1] we need to poke this register space.
-> >>>>>
-> >>>>> [1] https://www.ti.com/lit/er/sprz487d/sprz487d.pdf
-> >>>>>
-> >>>>> Signed-off-by: Roger Quadros <rogerq@kernel.org>
-> >>>>
-> >>>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> >>>
-> >>> Actually, where is the user for this that actually pokes the register
-> >>> space?
->=20
-> https://lore.kernel.org/all/20240201121220.5523-5-rogerq@kernel.org/
->=20
-> >>> You're adding another register region, so I went to check how you were
-> >>> handling that in drivers, but there's no driver patch.
-> >>
-> >> See Roger's another patch set 'Add workaround for Errata i2409' posted
-> >> on 16th.
-> >=20
-> > This patch should be with that series, not with these dts patches.
-> >=20
->=20
-> Why not? There should be no dependency between DTS and driver implementat=
-ion.
->=20
-> As DTS and driver will be merged by separate maintainers I thought it
-> would be easier for maintainers this way.
-
-dts and driver might be merged by different people, but dt-bindings and
-drivers are merged by the same people. This is a bindings patch, not a
-dts patch. Look at what get_maintainer says for this file:
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:USB SUBSYSTEM)
-	Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED D=
-EVICE TREE BINDINGS)
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org> (maintainer:OPEN F=
-IRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-	Conor Dooley <conor+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED=
- DEVICE TREE BINDINGS)
-	Aswath Govindraju <a-govindraju@ti.com> (in file)
-	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM)
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE T=
-REE BINDINGS)
-	linux-kernel@vger.kernel.org (open list)
-Greg and linux-usb are on there, but you have not CCed them.
-
-Being with the driver also allows bindings maintainers to check that you
-don't break backwards compatibility. It also prevents me having to ask
-for the driver patch, then be given just a subject line that I have to
-go and look up myself!
-
-Thanks,
-Conor.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 13/13] arm64: dts: ti: k3-am6*: Reorganize MMC
+ properties
+Content-Language: en-US
+To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Andrew Davis <afd@ti.com>,
+ Udit Kumar <u-kumar1@ti.com>, devicetree@vger.kernel.org,
+ Randolph Sapp <rs@ti.com>
+References: <20240131003714.2779593-1-jm@ti.com>
+ <20240131003714.2779593-14-jm@ti.com>
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20240131003714.2779593-14-jm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---09bQoPjxvThdjUNR
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+On 31/01/2024 02:37, Judith Mendez wrote:
+> Reorganize various MMC properties for MMC nodes to be
+> more uniform across devices.
+> 
+> Add ti,clkbuf-sel to MMC nodes that are missing this property.
+> 
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62-main.dtsi       | 5 +++--
+>  arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 2 --
+>  arch/arm64/boot/dts/ti/k3-am62a-main.dtsi      | 4 ++--
+>  arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 2 ++
+>  arch/arm64/boot/dts/ti/k3-am64-main.dtsi       | 7 +++++--
+>  arch/arm64/boot/dts/ti/k3-am642-evm.dts        | 3 +--
+>  arch/arm64/boot/dts/ti/k3-am642-sk.dts         | 1 -
+>  7 files changed, 13 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> index ca825088970f..32a8a68f1311 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> @@ -559,9 +559,9 @@ sdhci0: mmc@fa10000 {
+>  		clock-names = "clk_ahb", "clk_xin";
+>  		assigned-clocks = <&k3_clks 57 6>;
+>  		assigned-clock-parents = <&k3_clks 57 8>;
+> +		bus-width = <8>;
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZby7hgAKCRB4tDGHoIJi
-0lZNAQDfnUDAjmRAZ9RFirPTEdFAI3fOleBFWcr1Z3YYeNtPUwEA9Zdsa1/GJnq1
-Vr1bHu3HSNYVpAUxksp5F4oVbySSUgM=
-=eVOE
------END PGP SIGNATURE-----
+Is bus-width fix for this instance? If not then we don't really know here what
+bus-width is used by the board implementation. And it should come in the
+board DTS file.
 
---09bQoPjxvThdjUNR--
+>  		mmc-ddr-1_8v;
+>  		mmc-hs200-1_8v;
+> -		bus-width = <8>;
+>  		ti,clkbuf-sel = <0x7>;
+>  		ti,otap-del-sel-legacy = <0x0>;
+>  		ti,otap-del-sel-mmc-hs = <0x0>;
+> @@ -576,8 +576,8 @@ sdhci1: mmc@fa00000 {
+>  		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> -		ti,clkbuf-sel = <0x7>;
+>  		bus-width = <4>;
+> +		ti,clkbuf-sel = <0x7>;
+>  		ti,otap-del-sel-legacy = <0x0>;
+>  		ti,otap-del-sel-sd-hs = <0x0>;
+>  		ti,otap-del-sel-sdr12 = <0xf>;
+> @@ -599,6 +599,7 @@ sdhci2: mmc@fa20000 {
+>  		power-domains = <&k3_pds 184 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 184 5>, <&k3_clks 184 6>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> +		bus-width = <4>;
+>  		ti,clkbuf-sel = <0x7>;
+>  		ti,otap-del-sel-legacy = <0x0>;
+>  		ti,otap-del-sel-sd-hs = <0x0>;
+> diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> index f69dbf9b8406..0422615e4d98 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> @@ -836,7 +836,6 @@ &sdhci1 {
+>  	bootph-all;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&sd_pins_default>;
+> -
+>  	vmmc-supply = <&vdd_3v3_sd>;
+>  	vqmmc-supply = <&vdd_sd_dv>;
+>  	disable-wp;
+> @@ -850,7 +849,6 @@ &sdhci2 {
+>  	vmmc-supply = <&wlan_en>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&wifi_pins_default>, <&wifi_32k_clk>;
+> -	bus-width = <4>;
+
+I wouldn't remove this from here if bus-width is variable for this
+instance of MMC controller.
+
+>  	non-removable;
+>  	ti,fails-without-test-cd;
+>  	cap-power-off-card;
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+> index db5a7746c82e..88b112e657c8 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+> @@ -561,6 +561,8 @@ sdhci1: mmc@fa00000 {
+>  		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> +		bus-width = <4>;
+> +		ti,clkbuf-sel = <0x7>;
+>  		ti,otap-del-sel-legacy = <0x0>;
+>  		ti,otap-del-sel-sd-hs = <0x0>;
+>  		ti,otap-del-sel-sdr12 = <0xf>;
+> @@ -572,8 +574,6 @@ sdhci1: mmc@fa00000 {
+>  		ti,itap-del-sel-sd-hs = <0x0>;
+>  		ti,itap-del-sel-sdr12 = <0x0>;
+>  		ti,itap-del-sel-sdr25 = <0x0>;
+> -		ti,clkbuf-sel = <0x7>;
+> -		bus-width = <4>;
+>  		no-1-8-v;
+>  		status = "disabled";
+>  	};
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+> index 6dd48c826f74..2b4c10b35db1 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+> @@ -407,10 +407,12 @@ &main_i2c2 {
+>  };
+>  
+>  &sdhci0 {
+> +	/* eMMC */
+>  	bootph-all;
+>  	status = "okay";
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&main_mmc0_pins_default>;
+> +	non-removable;
+>  	disable-wp;
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+> index 1842f05ac351..34706ab9f5fb 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+> @@ -626,9 +626,11 @@ sdhci0: mmc@fa10000 {
+>  		power-domains = <&k3_pds 57 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 57 0>, <&k3_clks 57 1>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> +		bus-width = <8>;
+>  		mmc-ddr-1_8v;
+>  		mmc-hs200-1_8v;
+> -		ti,trm-icp = <0x2>;
+> +		ti,clkbuf-sel = <0x7>;
+> +		ti,trm-icp = <0x8>;
+>  		ti,otap-del-sel-legacy = <0x0>;
+>  		ti,otap-del-sel-mmc-hs = <0x0>;
+>  		ti,otap-del-sel-ddr52 = <0x6>;
+> @@ -646,6 +648,8 @@ sdhci1: mmc@fa00000 {
+>  		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 58 3>, <&k3_clks 58 4>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> +		bus-width = <4>;
+> +		ti,clkbuf-sel = <0x7>;
+>  		ti,otap-del-sel-legacy = <0x0>;
+>  		ti,otap-del-sel-sd-hs = <0x0>;
+>  		ti,otap-del-sel-sdr12 = <0xf>;
+> @@ -653,7 +657,6 @@ sdhci1: mmc@fa00000 {
+>  		ti,otap-del-sel-sdr50 = <0xc>;
+>  		ti,otap-del-sel-sdr104 = <0x6>;
+>  		ti,otap-del-sel-ddr50 = <0x9>;
+> -		ti,clkbuf-sel = <0x7>;
+>  		ti,itap-del-sel-legacy = <0x0>;
+>  		ti,itap-del-sel-sd-hs = <0x0>;
+>  		ti,itap-del-sel-sdr12 = <0x0>;
+> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> index 0583ec3a9b52..572b98a217a6 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> @@ -493,8 +493,8 @@ eeprom@0 {
+>  
+>  /* eMMC */
+>  &sdhci0 {
+> +	bootph-all;
+>  	status = "okay";
+> -	bus-width = <8>;
+>  	non-removable;
+>  	ti,driver-strength-ohm = <50>;
+>  	disable-wp;
+> @@ -506,7 +506,6 @@ &sdhci1 {
+>  	status = "okay";
+>  	vmmc-supply = <&vdd_mmc1>;
+>  	pinctrl-names = "default";
+> -	bus-width = <4>;
+>  	pinctrl-0 = <&main_mmc1_pins_default>;
+>  	disable-wp;
+>  };
+> diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+> index c3a77f6282cb..600056105874 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+> @@ -469,7 +469,6 @@ &sdhci1 {
+>  	status = "okay";
+>  	vmmc-supply = <&vdd_mmc1>;
+>  	pinctrl-names = "default";
+> -	bus-width = <4>;
+>  	pinctrl-0 = <&main_mmc1_pins_default>;
+>  	disable-wp;
+>  };
+
+-- 
+cheers,
+-roger
