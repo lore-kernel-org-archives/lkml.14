@@ -1,170 +1,255 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2134.outbound.protection.outlook.com [40.107.105.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61657A732
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 10:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871535; cv=none; b=i6p+1JOSLfS3EbPdVFtRPK5iuLkikvpXJt80LtW9cG4Kdl8rlrqgkw39Rqe//Yh8Cvb1/t9IrNZ7YTBRiEjMTK2qc88DN87dNH8eAWYiCLgA5hm7jL1HhVr8CPN1h1HMy0CVKihLyGBTAM0nP0J3apaoTpHUlnSOex+9yGFVU28=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871535; c=relaxed/simple;
-	bh=KKLOo2UMVr4G+/v1i5f0jDik+0v3nO4WaF3+RQvnxgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W4pvAXKiL/4Jn0k1OaW7lfjE1QvJq0g7DnKDQxuejWp+xd8sq/+ngeCXAxbZ88gSyHJh1kE4VK7fby6jK+nxITAvzp4H/cSKUgoZZWQYbPdCDh9IhR9v0ujx9cQ+hsnY9MlAdSbKQHw3qP4koqtY1aWIqtX1VxH2yHUDu0fizKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BWP0PyfI; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7C171AA;
+	Fri,  2 Feb 2024 10:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706871565; cv=fail; b=NX3uOrj4wiveZFXV/aOsYE6OfZgHhh5Ss6rCiB3IiiWujEALxCLq+Mc+DOsRTWQGMdgBrtSne9Amln9ttJR3IF32FqKeqW7nDmkb9yBbV9AfJa5Ye8lQu+dtzXn1ZwaVBqTuVDC+NOpBs+YTtoGQi9TnuJm6Yp8PZhe4dslYT30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706871565; c=relaxed/simple;
+	bh=JhY5/9u2l/8nbusigI0vTkh14e3ES605y0HpvJWrvNo=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version:
+	 References; b=RlhnbB+SnYnT8qGwVlVkUQ/OAxLlhdVrW1NnoSirBYH1G84Qs7lyEifHSznPcmnZS/OOr6KjJVdd4ly0IreadjVeRXh3tlKuTteyktJnTJXJYyx1pcZKIxmDdv/X3ZXHZe0RTiCUFOH9Zgn+kkYPy9G7POkl9rMP3VBGjFUuBnM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=hAMMuES/; arc=fail smtp.client-ip=40.107.105.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BWP0PyfI"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55fc9a581f8so1752242a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 02:58:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706871532; x=1707476332; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3mZJtsuUhpLgRm6K29/sbH1fz9ZV/gafRus3vx/CI0U=;
-        b=BWP0PyfIMlupmMUxIQkE83AV5euIbKhmplZOt/PLH21iiDWDg6gjE+KXxpO9ZPEVip
-         DrRZFpUChYPFCLSe+3/fLgMv+LjWgBlrVOtcSZ/9Hua0n+CueSxtCqR40w0lmHOgyEOl
-         r/4kTUE76fiTFwcuW/NaD7BJIIfbUDwCCed6F3WBEdUIGYHAAbXqdKWcEHnpm2j2TdZD
-         cXDn4NJ+XfmByPz7WFnzgdT+FYvksL9MD2jkytfL2kS+sLa4GUIzj/Q/aNm6XE05oiDT
-         KGdU26nKJoMSUIT5Lnkw+3ITHI8fkKcS/7WlAiCDUImANVupvY0uRztfGSyoNMdwSrbK
-         ekGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706871532; x=1707476332;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3mZJtsuUhpLgRm6K29/sbH1fz9ZV/gafRus3vx/CI0U=;
-        b=oIxxeh9u2+MHO3hBZO+5lKdLmZD4vhu47yALjnhrS07m8/GeUBJqEmMAHKC4Lw58RY
-         iaITSY2V7/i6ahE9bkepOtQFFkN7dUyeRIOmD5rW0n35H/Q5elPvig9Rv5vLgI8GLZpW
-         oxnNPInmsTJ75nYjEVVpyVi8MfVk16nhSWPypCw60hhFXOqugXEWt752Pd7JKuqZvRJx
-         CFBMQM6bBhwZt5Jjbk89AqQ52sRDAivxKdiedVvuM4JlSAYMX4u0k2jo72TcLCPEl3g0
-         0Kqi2PQswp4RE7aRkhqf91Zx7o6P4fHfoqCPrM5MdeZ0YZwdaK9BoeKeI724eE/T//SB
-         jSow==
-X-Gm-Message-State: AOJu0YxwUe5g2j7exkZKip69wDc50F8pxs6+mgDAAVo5j0osqVl1ho0Z
-	ahZODfe0KjW2PDjuQbr9pqJ46HRFPkH0NvMZ1dishyxxfe8yng5ULsdhucpxbtg=
-X-Google-Smtp-Source: AGHT+IGevUIZrZ67IIM3v0mt+LvqP19kVFsU543KbhAyc9CyE5vhvyCpmw1xg7ldWGRg72KeGDUEyQ==
-X-Received: by 2002:a17:906:13d0:b0:a36:7c26:b6f with SMTP id g16-20020a17090613d000b00a367c260b6fmr1207765ejc.52.1706871532058;
-        Fri, 02 Feb 2024 02:58:52 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVt2KyYQUcxu5hGuL8mAgnHpyBZ4Ykp6sd9qwUmLz+wUZLMMlAQbdCzsDqdz1ATkmTx1IEEr4ogDnUneUc0BGq4RyhSWyrgqQWz7id4dzDkmUcLf3A5nSvMNa3W7GMDdJFb0ouuoTa+Ib59CesR6S85idpzru6SJooTTqTicY9E
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id vo3-20020a170907a80300b00a36fee1350dsm610865ejc.130.2024.02.02.02.58.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 02:58:51 -0800 (PST)
-Message-ID: <e337bfdb-34dd-428f-b0c5-defd93b24822@linaro.org>
-Date: Fri, 2 Feb 2024 11:58:50 +0100
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="hAMMuES/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mQrEAYazqw+AWxV4UuMcvurM76qceR46w7jAtY6IYP69jClcardBXdAcNuHSYtIXV7VsH8TuzvZHpQOny/yFHgoJ7FDjk4Vw/3Bp397pf3Z+M1W0kdLLFm5fqRBxukbvi8EnTknS3D42w20kFAhDbnRz3rgHQK3L2K0IG26QKIOL0YqsBlO9UF8r3VkxHiZlZM5jr9DT8VvnHT+qeNLpYZFRdonknWpI3B1Lr4GiJfUNs7vduEdSlyp4p/o+kv9feeeZTRFj60HA5ZVnkQwvqr8jyrL/VWo791CstKtGrGlBpBFmAPE5XqpqGefu2rHkY6WB50nVzneCWqahKDp0kA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UhDDIo9ty5H5gi/d+SJdGh8vssIBwSJNGt0ebqdb2UI=;
+ b=Fb4rniQPf0wH+chRIRRGdFyB4DD7o+kVDwtDjWqsaOz19E4g3CtwQGHFjIq55D074DPE8lmhp+USSRNXsnNfH5JcRC/MyaAdZ5LE7qYotzKL2uycXfka/FSi+JsUX7PR3hMm0aIyGqoP8EcfbNiV1l14H5diRbeUVn7kIbVOsXZdqiluEG9wTFoXeQ52lKyDp6KfbT5TjP3KCstzri3sH3l6OlRdqKIhl61InoXIYDI6FiZNvn8EuRNjD16Jpnx539tA5M94HE9sl64gGnyIgOcrxRj2XuTqdurXwZ0bt5bm3iCLd4WegdCyBk1thjpQo/3pDVahShotJtL7mpzRHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 20.93.157.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=topic.nl;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=topic.nl;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UhDDIo9ty5H5gi/d+SJdGh8vssIBwSJNGt0ebqdb2UI=;
+ b=hAMMuES/ffFL608+OAdN5dOJrSSA5gJ6mPp8oIygX9oS63Jkt/tQF4AKNiJklarBLgSZmqmAJfmUDr64GuX4mbFw+3QQRSprHhIg9hjYZA2GQN/VET2cTS2Npxn4yxSFull+E+k63SqKpF/69KkkZL8ybQ7rt364s6Zd50Vssfz+/t80VPGviv7V4DO+oC94LlMO3ou2LMYXIhI0ij6zMYLcpCQAhw9m33hmeFyBbjI8aqxF89SbdJ2MSBSUDJoE8jzMX6Gb2RAVYZDLKcOv0uuVbrYYIXtvjZcv2uoiO52tggsFWDJJ4rNlYv8MkeQOxcu22DClZZxyETOSrQ6ACw==
+Received: from AM6PR01CA0053.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:e0::30) by DU2PR04MB8888.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e3::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.23; Fri, 2 Feb
+ 2024 10:59:18 +0000
+Received: from AM4PEPF00027A66.eurprd04.prod.outlook.com
+ (2603:10a6:20b:e0:cafe::19) by AM6PR01CA0053.outlook.office365.com
+ (2603:10a6:20b:e0::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.23 via Frontend
+ Transport; Fri, 2 Feb 2024 10:59:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.93.157.195)
+ smtp.mailfrom=topic.nl; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 20.93.157.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.93.157.195; helo=westeu11-emailsignatures-cloud.codetwo.com;
+ pr=C
+Received: from westeu11-emailsignatures-cloud.codetwo.com (20.93.157.195) by
+ AM4PEPF00027A66.mail.protection.outlook.com (10.167.16.91) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7249.19 via Frontend Transport; Fri, 2 Feb 2024 10:59:18 +0000
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (104.47.1.50) by westeu11-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Fri, 02 Feb 2024 10:59:16 +0000
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
+ by AS8PR04MB7991.eurprd04.prod.outlook.com (2603:10a6:20b:289::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30; Fri, 2 Feb
+ 2024 10:59:11 +0000
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::651a:dedd:945a:d1dd]) by AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::651a:dedd:945a:d1dd%6]) with mapi id 15.20.7249.025; Fri, 2 Feb 2024
+ 10:59:11 +0000
+From: Mike Looijmans <mike.looijmans@topic.nl>
+To: devicetree@vger.kernel.org,
+	linux-iio@vger.kernel.org
+CC: Mike Looijmans <mike.looijmans@topic.nl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: iio: adc: ti-ads1298: Add bindings
+Date: Fri, 2 Feb 2024 11:59:00 +0100
+Message-ID: <20240202105901.925875-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR02CA0104.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::45) To AS8PR04MB8644.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] arm: topology: Fix missing clock-frequency
- property warning
-Content-Language: en-US
-To: Stefan Wiehler <stefan.wiehler@nokia.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240201123605.3037829-2-stefan.wiehler@nokia.com>
- <dfccb849-67b6-489b-8e83-3df1f9b29877@linaro.org>
- <9da01fb1-9bab-436b-af49-783e44821b26@nokia.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <9da01fb1-9bab-436b-af49-783e44821b26@nokia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-TrafficTypeDiagnostic:
+	AS8PR04MB8644:EE_|AS8PR04MB7991:EE_|AM4PEPF00027A66:EE_|DU2PR04MB8888:EE_
+X-MS-Office365-Filtering-Correlation-Id: 65949ad9-c895-4c9c-f811-08dc23de00dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original:
+ 3U2ErhR360xAbkZhRqxZF+ktFIWBKRSJSzhFWXY6vPHz68kJKP+qdZ8UiaGLqvCPdlrMR2LPclqWcYiieTvTG9rxRiexCYLTqY0xMnv861BMcnJxaby1iXqNG7eiwPuDw4vJLXioZJClWFFuawza6h9gA8mb4G4GwQqqAZMMiVhQdwzv3nJlkonWKrYws/vR9LVxvEZGDthMkK04B5g2KSXuVnrFhRl4niBlMEBJhuL8QFm73gRxMI+DXzmkET1US4LspdGu8Q1ghSf4kLqcca0R679j/2leXy08cvQyQmVnxTt8b9UphFMKMOMzwoqmg+crl6hRYSX++nmuE/chDPad7owBLpuY9TvoBjgk0HgaAXeF34gbn/bpeTqMWDSOyxPnTpmfIak+2lo3GuJY562sMRR7wGBpaYQRsjlzNQQ4Ab5m78HIEk+U3Lc1qXlqlWOnG9ZhH8sCyct+IC7IiklNqEwN0TlohH9t5WdcgzMftizHiTDYSMZUhpQDpgt7DxmkTcHmTg9P8XIpT5PH3ixGlZRI8P57AtdYe4HZOzjoMGVFxikfgck3mos8eaZ99svVhb/V6F8NwQURDjzOTB5ALrVEngclSUFC/Frby55lRdS2t6HCrXS1zeGsupY/UXAMMs5R9DD7HZBglb8/DQ==
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(136003)(396003)(346002)(39840400004)(230173577357003)(230273577357003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(83380400001)(1076003)(6512007)(26005)(38100700002)(2616005)(44832011)(66476007)(5660300002)(52116002)(4326008)(8676002)(8936002)(966005)(6506007)(6486002)(478600001)(2906002)(6666004)(54906003)(66946007)(316002)(66556008)(38350700005)(36756003)(86362001)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7991
+X-CodeTwo-MessageID: 6e63819d-57ca-4ba2-9096-614e5872ee9d.20240202105916@westeu11-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.50455eb1-2ccc-4e6a-b8ed-0c142743ae03@emailsignatures365.codetwo.com>
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AM4PEPF00027A66.eurprd04.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	a7a9279a-62e5-46cf-7f6c-08dc23ddfca5
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Q2YlxJtwp2NVyv3qwgTgx0zRjHXK9iKvHZYg3x5eiLEdgUXsXEdtMnAAid+arNJwKe5tI5sAYpwcskN3IPXlN3jLiw79Vu2N7PHukmoudhX6Az3vcQ3ABzktpRisqN7Od5MvgQvhxOJpMAWrLfCAdp9P70+1S8n+v/SZATsrPApOBMkO7rZ3fCN3ft5RJbsdHQmygpJ31cP4OQDEmLBRpbKu/D9wgnVzDhfVLUp5sUT2LoyeJG5Y962n8LsEsZQk9Wng22XwKlxCbX9LZfuDbcReXt/kAM2dJor9b9orxJ+9Yj9iadVGHb54v1S8QXtNadPMFly6Db0bKqbgki7kTo+SXxfOKB20JJH5rAfSun+YQOzBkjm/u8s5bk7/c3K/jlQHuuw9m3ZHm7U4wQZBZNlkgJsH+SQuvAh2lvTHIGn0Qdmq502v5y2xbQNzDuqbpP2dgKSG/PNfylHPgdJTXMwEv1owfvtu/FMe+0xrT6+Fr/Zk/BhF5rzEn8V+bRtS67iDJmNobXrMCpbXN7VEI0vbOE6XMHIKbHszEwahJ6i0nKQk5C0XNqHQTQ+s6mA3/8qCC/TwSAN0n6m6icUHHiJRMIHKXrKi4i00D5O+QUgVQH5fw/2Ycxd8Kj64WKJ5U770IffufddJSUf/bG8inVGy26phTPstt6zsmbrAoOCKDbWDa0HXyIkk33DnCB75Gy+tC6jcw5XHSt3WSxKaAhoEl9CPmVEXkEb/uGanIsw=
+X-Forefront-Antispam-Report:
+	CIP:20.93.157.195;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu11-emailsignatures-cloud.codetwo.com;PTR:westeu11-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(39830400003)(396003)(376002)(136003)(230173577357003)(230273577357003)(230922051799003)(64100799003)(82310400011)(186009)(1800799012)(451199024)(36840700001)(46966006)(336012)(1076003)(2616005)(26005)(40480700001)(41300700001)(36860700001)(6506007)(6512007)(7636003)(36756003)(966005)(316002)(83380400001)(478600001)(6666004)(6486002)(356005)(47076005)(7596003)(54906003)(8936002)(2906002)(5660300002)(70586007)(86362001)(44832011)(4326008)(70206006)(15974865002)(8676002);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 10:59:18.3557
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65949ad9-c895-4c9c-f811-08dc23de00dd
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[20.93.157.195];Helo=[westeu11-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00027A66.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8888
 
-On 01/02/2024 16:03, Stefan Wiehler wrote:
->> Does this mean the /cpus property is like a default for when a CPU node
->> doesn't specify the clock frequency, or does it mean that the /cpus
->> property should only exist when all the values for each CPU are
->> identical and thus the individual CPU node clock frequency should
->> not be specified.
-> 
-> Good question, the device tree specification in Section 3.7 [1] says:
-> 
->  > The /cpus node may contain properties that are common across cpu
-> nodes. See Section 3.8 for details.
-> 
-> And in Section 3.8 [2]:
-> 
->  > Properties that have identical values across cpu nodes may be placed
->  > in the /cpus node instead. A client program must first examine a
->  > specific cpu node, but if an expected property is not found then it
->  > should look at the parent /cpus node. This results in a less verbose
->  > representation of properties which are identical across all CPUs.
-> 
-> So I think it is pretty clear that it should only be used for 
-> common/identical values.
-> 
->> Aren't you adding new property? Is it already documented in the
->> bindings? After a quick look I think this is not documented.
-> 
-> You are right, clock-frequency is not mentioned neither in arm/cpus.yaml 
-> nor in any other <arch>/cpus.yaml binding, but the DT spec has it as a 
-> required property [3]. Should I add clock-frequency to all 
-> <arch>/cpus.yaml bindings? Only the ARM one explicitly mentions 
-> following the DT spec.
+Bindings for the TI ADS1298 medical ADC. This device is
+typically used for ECG and similar measurements. Supports data
+acquisition at configurable scale and sampling frequency.
 
-It should go to dtschema. dtschema cpu.yaml has it, so you need to
-propose such to cpus.yaml, probably you could experiment with:
-not:
-  - required:
-      - clock-frequency
-  - patternProperties:
-      cpu@....
-        - required:
-            - clock-frequency
+The device has so many options for connecting stuff, at this
+point the bindings aren't nearly complete but partial bindings
+are better than no bindings at all.
 
-Anyway, you cannot just keep adding some OF properties to the code
-without documenting them.
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 
-Best regards,
-Krzysztof
+---
 
+Changes in v2:
+Remove "clk" name
+Add datasheet and "incomplete" note
+
+ .../bindings/iio/adc/ti,ads1298.yaml          | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,ads1298.ya=
+ml
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads1298.yaml b/Do=
+cumentation/devicetree/bindings/iio/adc/ti,ads1298.yaml
+new file mode 100644
+index 000000000000..bf5a43a81d59
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti,ads1298.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/ti,ads1298.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments' ads1298 medical ADC chips
++
++description: |
++  Datasheet at: https://www.ti.com/product/ADS1298
++  Bindings for this chip aren't complete.
++
++maintainers:
++  - Mike Looijmans <mike.looijmans@topic.nl>
++
++properties:
++  compatible:
++    enum:
++      - ti,ads1298
++
++  reg:
++    maxItems: 1
++
++  spi-cpha: true
++
++  reset-gpios:
++    maxItems: 1
++
++  avdd-supply:
++    description:
++      Analog power supply, voltage between AVDD and AVSS. When providing a
++      symmetric +/- 2.5V, the regulator should report 5V.
++
++  vref-supply:
++    description:
++      Optional reference voltage. If omitted, internal reference is used,
++      which is 2.4V when analog supply is below 4.4V, 4V otherwise.
++
++  clocks:
++    description: Optional 2.048 MHz external source clock on CLK pin
++    maxItems: 1
++
++  interrupts:
++    description: Interrupt on DRDY pin, triggers on falling edge
++    maxItems: 1
++
++  label: true
++
++required:
++  - compatible
++  - reg
++  - avdd-supply
++  - interrupts
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi {
++        #address-cells =3D <1>;
++        #size-cells =3D <0>;
++
++        adc@1 {
++          reg =3D <1>;
++          compatible =3D "ti,ads1298";
++          label =3D "ads1298-1-ecg";
++          avdd-supply =3D <&reg_iso_5v_a>;
++          clocks =3D <&clk_ads1298>;
++          interrupt-parent =3D <&gpio0>;
++          interrupts =3D <78 IRQ_TYPE_EDGE_FALLING>;
++          spi-max-frequency =3D <20000000>;
++          spi-cpha;
++        };
++    };
++...
+--=20
+2.34.1
+
+
+Met vriendelijke groet / kind regards,=0A=
+=0A=
+Mike Looijmans=0A=
+System Expert=0A=
+=0A=
+=0A=
+TOPIC Embedded Products B.V.=0A=
+Materiaalweg 4, 5681 RJ Best=0A=
+The Netherlands=0A=
+=0A=
+T: +31 (0) 499 33 69 69=0A=
+E: mike.looijmans@topic.nl=0A=
+W: www.topic.nl=0A=
+=0A=
+Please consider the environment before printing this e-mail=0A=
