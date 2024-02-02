@@ -1,121 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C915A146916;
-	Fri,  2 Feb 2024 15:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A091474C1;
+	Fri,  2 Feb 2024 15:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706889507; cv=none; b=NKUzqk1AuckNx17ZzHlGVwJSbj26kIwVJEO7cM3AWqB7jYLroTzWZ/YmgDCSwFazJPS2AqE6puYB+MjGQDljvNbkgTeOYzEWyQ7/eZ4IQvHVnb4fbzX0zKO2iENewFqu2KU21nmWEOZyVxrLdyEEUNcu2JtHb8zCunvfcJ1Bb/A=
+	t=1706889511; cv=none; b=RzUNpUPOWp9nKEcUEuE3MWayQT1+cno82Y72HdKjY89SSasR5ixf5nN9RFVPz29U+H9DColAZN285Z6O4qBq6BMAXorPf8Agcxct1NARxzqf5SHxfkH561dVrIgTg7jDtKPlQy/fO1Ndq0CBeP2X93+zrh7td1odiJ0JoI3wpcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706889507; c=relaxed/simple;
-	bh=wUwZPwNqrEK75tnxfRq10rV4lQ31r9uKs2N3OkJYfbY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UMFe76NyoS+pMTJCLSb/vpD96TXM9QVkcaXwHaf4EVdPBgQM1LHNL61r3qrUBHX9PkEfC6664p4sGBU84Ya7CL1ykK1FAyj5ItDm72Dz57c7uIS43DbUxAEeDLe+L9Qm4plJLipQaYbH86jbjskWf9IOGJ//imQCmMgk/VLEZvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b+TpP/av; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706889511; c=relaxed/simple;
+	bh=THdTZv21XZx2i61Uk13KVjH1FY7txkw6aueP1w2kwcI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sCnO2hrKdMGhJvLaWO3pX0w6d9AzlCp7iV3WcLamU+u3E1HDZW+HdIbQWUaiPVyN3Tnyi5jB9ABqbWyahuEkpcg9ULFcAf1SEoHYGgKmu84ODa0NnJHXpQ8ay5u6twE0IM8XQCYlwr2UrqJjJc+pHsxsmFk1Xi6o+NVPpqGR7CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPvFaSbk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b+TpP/av"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706889506; x=1738425506;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=wUwZPwNqrEK75tnxfRq10rV4lQ31r9uKs2N3OkJYfbY=;
-  b=b+TpP/av+x2k7VPTuHVf5oGeSEtJ32gNNziWEhiSaKO4RVMBmSYq0WRS
-   G4QlY7CHdjFkAxJDoSRPqfJd6H0ycv4uY2t72PU0p4Iaq1j94G8BRgFMX
-   rj3MYdrradms1YIYeqOArmGv5rIKd1T9VZT3DNdT8rCEbENa1DmnTxspz
-   G09NV2NSHWiCirIYsk0ueTNXM15WdMa34MsyMzgzNh56V2+uWg5TVB8vD
-   /FoVwyr6moc3aUtcn4DbL4LGObB01KdvPiufBbBp7m0MFAKtb84dHZ7gW
-   DnAPV9MWvsHPD7q0TQRJjznk5Y5ZgCgDoJ7t5H1Epkvfb94DMUNBgAjtQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="89240"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="89240"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 07:58:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="425162"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.50.66])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 07:58:23 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 Feb 2024 17:58:17 +0200 (EET)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Hans de Goede <hdegoede@redhat.com>, naveenkrishna.chatradhi@amd.com, 
-    LKML <linux-kernel@vger.kernel.org>, Carlos Bilbao <carlos.bilbao@amd.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/amd/hsmp: switch to use
- device_add_groups()
-In-Reply-To: <2024020243-blinks-pantomime-c51e@gregkh>
-Message-ID: <14131097-3f19-70f1-0a9c-41dd26c6be0d@linux.intel.com>
-References: <2024020145-junior-outnumber-3e76@gregkh> <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com> <2024020243-blinks-pantomime-c51e@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPvFaSbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1FA8C433C7;
+	Fri,  2 Feb 2024 15:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706889510;
+	bh=THdTZv21XZx2i61Uk13KVjH1FY7txkw6aueP1w2kwcI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gPvFaSbkOu1EVcR0LO3IDxDJRosfPHPMRL1ZpU5T1Whg3aHQRzcWeBA7MPq/VOnOR
+	 XzoeMdtOkqJSO1A9rueHd3DGa1hSRxUjBlaPCOrJ2MHqquQAe8ksgpIVTunv6EmuXc
+	 SfeqkZdTGBeGZ37BMahqX1FdLzwEDHKhImJrLFIoHr72WBZPDIkOsLa2ebwckAZL3F
+	 w2JAjeY/pFewx0PEqqO970UAUfdoeymZUvOssQ3PKUDssE1oAaPlsdn+DzdpcfbW1P
+	 JXvvLn5PhhHcVDoNVYnzKS5xMAaOUFL1+pUVl7xDGB7AqgS0Z1t8v9Z+jst2R9yOqY
+	 0/PEgtbKDhJhg==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 00/27] kconfig: refactor lexer and parser code
+Date: Sat,  3 Feb 2024 00:57:58 +0900
+Message-Id: <20240202155825.314567-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2 Feb 2024, Greg Kroah-Hartman wrote:
+Random fixes, cleanups, etc.
 
-> On Fri, Feb 02, 2024 at 08:49:39AM +0100, Hans de Goede wrote:
-> > Hi Greg,
-> > 
-> > On 2/2/24 03:44, Greg Kroah-Hartman wrote:
-> > > The use of devm_*() functions works properly for when the device
-> > > structure itself is dynamic, but the hsmp driver is attempting to have a
-> > > local, static, struct device and then calls devm_() functions attaching
-> > > memory to the device that will never be freed.
-> > 
-> > As I mentioned in my reply to v1, this is not correct.
-> > 
-> > There is a global data struct, but that holds a struct device
-> > pointer, not the device struct.
-> 
-> Ooops, I misread that:
-> 	static struct hsmp_plat_device plat_dev;
-> was not the actual device struct anymore.
-> 
-> > The device itself is created with platform_device_alloc() +
-> > platform_device_add() from module-init and it is removed
-> > on module-exit by calling platform_device_unregister()
-> 
-> Ok, much better.
-> 
-> > So AFAICT this should keep using the devm_ variant to properly
-> > cleanup the sysfs attributes.
-> 
-> This devm_ variant is odd, and should never have been created as the
-> sysfs core always cleans up the sysfs attributes when a device is
-> removed, there is no need for it (i.e. they do the same thing.)
-> 
-> That's why I want to get rid of it, it's pointless :)
->
-> > But what this really needs is to be converted to using
-> > amd_hsmp_driver.driver.dev_groups rather then manually
-> > calling devm_device_add_groups() I have already asked
-> > Suma Hegde (AMD) to take a look at this.
-> 
-> The initial issue I saw with this is that these attributes are being
-> created dynamically, so using dev_groups can be a bit harder.  The code
-> paths here are twisty and not obvious as it seems to want to support
-> devices of multiple types in the same codebase at the same time.
+Masahiro Yamada (27):
+  kconfig: fix infinite loop when expanding a macro at the end of file
+  kconfig: fix off-by-one in zconf_error()
+  kconfig: remove orphan lookup_file() declaration
+  kconfig: remove compat_getline()
+  kconfig: remove unneeded sym_find() call in conf_parse()
+  kconfig: write Kconfig files to autoconf.cmd in order
+  kconfig: call env_write_dep() right after yyparse()
+  kconfig: split preprocessor prototypes into preprocess.h
+  kconfig: replace current_pos with separate cur_{filename,lineno}
+  kconfig: remove zconf_curname() and zconf_lineno()
+  kconfig: associate struct menu with file name directly
+  kconfig: associate struct property with file name directly
+  kconfig: replace file->name with name in zconf_nextfile()
+  kconfig: do not delay the cur_filename update
+  kconfig: replace remaining current_file->name with cur_filename
+  kconfig: move the file and lineno in struct file to struct buffer
+  kconfig: make file::name a flexible array member
+  kconfig: change file_lookup() to return the file name
+  kconfig: split list_head into a separate header
+  kconfig: resync list.h
+  kconfig: import more list macros and inline functions
+  kconfig: add macros useful for hashtable
+  kconfig: move ARRAY_SIZE to a header
+  kconfig: move strhash() to a header
+  kconfig: convert linked list of files to hash table
+  kconfig: use generic macros to implement symbol hashtable
+  kconfig: do not imply the type of choice value
 
-It wants to provide metrics for each socket. The ACPI part was a recent 
-addition (as you've now probably discovered) and works slighty differently 
-because the discovered structure is different but it's not really that 
-different otherwise.
+ scripts/kconfig/array_size.h |  11 ++
+ scripts/kconfig/conf.c       |  12 +-
+ scripts/kconfig/confdata.c   |  91 +++----------
+ scripts/kconfig/expr.h       |  24 +---
+ scripts/kconfig/hashtable.h  |  48 +++++++
+ scripts/kconfig/internal.h   |  12 ++
+ scripts/kconfig/lexer.l      | 100 +++++++-------
+ scripts/kconfig/list.h       | 254 ++++++++++++++++++++++++++---------
+ scripts/kconfig/list_types.h |  17 +++
+ scripts/kconfig/lkc.h        |   5 +-
+ scripts/kconfig/lkc_proto.h  |  15 ---
+ scripts/kconfig/mconf.c      |   1 +
+ scripts/kconfig/menu.c       |  24 ++--
+ scripts/kconfig/nconf.c      |   1 +
+ scripts/kconfig/parser.y     |  92 +++++++------
+ scripts/kconfig/preprocess.c |  23 ++--
+ scripts/kconfig/preprocess.h |  19 +++
+ scripts/kconfig/qconf.cc     |   2 +-
+ scripts/kconfig/symbol.c     |  46 +++----
+ scripts/kconfig/util.c       |  38 ++++--
+ scripts/kconfig/util.h       |  15 +++
+ 21 files changed, 511 insertions(+), 339 deletions(-)
+ create mode 100644 scripts/kconfig/array_size.h
+ create mode 100644 scripts/kconfig/hashtable.h
+ create mode 100644 scripts/kconfig/list_types.h
+ create mode 100644 scripts/kconfig/preprocess.h
+ create mode 100644 scripts/kconfig/util.h
 
 -- 
- i.
-
-> But yes, using dev_groups is ideal, and if that happens, I'm happy.
-> It's just that there are now only 2 in-kernel users of
-> devm_device_add_groups() and I have a patch series to get rid of the
-> other one, and so this would be the last, hence my attention to this.
-> 
-> Again, moving from devm_device_add_groups() to device_add_groups() is a
-> no-op from a functional standpoint, so this should be fine.
+2.40.1
 
