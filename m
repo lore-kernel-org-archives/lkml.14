@@ -1,74 +1,71 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5591E17BC7
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 07:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8E17BA4;
+	Fri,  2 Feb 2024 07:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706860466; cv=none; b=qcKu7Y/HPzcxYu48AxFussFt5sfDiN240IArysoFutd4RRx5c9vYC4fwgC8up6quQfrhONhXbQS01VMi0uxjGSW6me3wb7BlKgoILlF80ubKr02tBr02fXCflOPsHa3jEzbnqQfJd+3ZgqCb0S66HBdTzVbMxk9sHQzYnYk1kA0=
+	t=1706860555; cv=none; b=Pe/v7OCl4RS/uuTDq4yKjWOSn58t2yMFmlyRzgfTfHCnMCxPbxq15wQWj3Ruf3Xp/AZ67yL2LfY6Vlyds2evLa3a0wt/uG4Ztn58AFpDH4Lb1KHZygfC0zMn8R9OUGqYw0E5JSHle+cgbDMd4vWv85dCQVjVnluzP7wLFx1qj6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706860466; c=relaxed/simple;
-	bh=XxRpLa/IOE75cRWpu6fpKAMFysBjwggTfJU7a6h0y1A=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=KA+1kvpwflF2WTdxGSNaAnmjdovbvrV1MUDUBLe7wZVpM3JbgLinW7RdfzobUON6XVdqn9+DrVWr04SuDX1hht4SuXNRBR3bzx2DcBkeekbCX3fAUEM7ePjlw+bd2WquAjc51l2wu4wpLMTdP7P4/KKE8LuW0pLv5c/pTG9SN+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQMCSWcj; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706860555; c=relaxed/simple;
+	bh=68hL+FZLLcrrCGOYzkanDw/JbY5cOul8cp+uyDfPMTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QLS1WlDXJbdSKXIEJ0VBriMJkf5+xPZk4Bc/iW/LJkPs+JTpGFInQE+gs62EtYDV0PCiM1iFopDG2MDCp2NThm/ShesBTl7hrJDzO1gr5+8X8mMwqeJjTUpkK90QouA0r7rhlUUaRKFkSs4Pt9K3q8HzDZFng/9XseQnUriRHjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nYYKAISt; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQMCSWcj"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d3216781c5so354115241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 23:54:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706860464; x=1707465264; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=D8E2Jbl6TudHLXjI1L3R9CJRxDNzy0rQRKMEEkmPbao=;
-        b=iQMCSWcjf1ShJAKw1QCdcqE2gTRg1UaWqUbe78S4K5ZBoejcQCf34txWJWWTWkWW55
-         Qy9x5wAcrKdu3RMp1oW14kHhnP3HvHvH2XFwgQ2IrqmdFRbfJJrN8lrNC46Jfe35Kqle
-         GQh67DiZ4IsOPo3T+MBCercuXFKcFPvMySDX17NkTsqKBnfM7/HVO4Eqv6SzX/KKm/nr
-         oyOrSDuX9ZjV1xnDeYA7YtI1RqT7mJOI22lRvHrkknN/grjAO7yCiutN8O3PQzNqMU0R
-         rDCizusmFLtjV36F+i87xcQ9fhNLCROIZ3rx2Yw9GiJSyQUOUimTeVFmBq1JcHxZPxDS
-         kRKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706860464; x=1707465264;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D8E2Jbl6TudHLXjI1L3R9CJRxDNzy0rQRKMEEkmPbao=;
-        b=puT23DHRhFlolRSNEzC0Zt9cTwFPsSeu4fEbrgfoVpZN8gcD3JS0kyxhFZy0F4LOAT
-         gBmynTnAhpVoSFce7TSL2BNTUgMYQncYLlpNKCuZiE1zGauz96cVVFutIGzJYDqP5jXj
-         RtBkCBp6xBBEgMDHun0QVQIbHgtTsLxRu0GTuy3ZHI0VdeXtYREzaFFOUke6p9fJ2FEq
-         2JnA32190HrOXiooh45JZwqSwi/8//J93SUB4bmjmqIzM8q0CxCvaa74pt9i5c0ac5J3
-         Ktql0VLoE49b6xKvu6CvVK6ByWt2d56u7xPm318wI87XrQApEvT5gW2y07RpX8chs3q2
-         ZH1g==
-X-Gm-Message-State: AOJu0YzqcpkkAlowrAYh24qtlbgGV0e9g5MGVUv0XRAmAMVCBn9uHzz+
-	TJhEW64Ip8VPLXP9SDHDlzGK4FENb3WuGLivNRph01yo7prf4hDDCkwGVlL0O4I4LJek18SX8JZ
-	2QGPBFoQu1+lTGeTTJiKPSQ+MWWSJVsw1FDY=
-X-Google-Smtp-Source: AGHT+IGvkQoUqT2UVIVzqQykX+xcinX1NylLLznhFoj2GLfhkLNHyYB9NOYZ61MBH51WarwooIhs9sn2b30NvCNOK9o=
-X-Received: by 2002:a05:6102:5f6d:b0:46d:2f4:15fc with SMTP id
- ix13-20020a0561025f6d00b0046d02f415fcmr609133vsb.2.1706860463957; Thu, 01 Feb
- 2024 23:54:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nYYKAISt"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E5CDD1C0007;
+	Fri,  2 Feb 2024 07:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706860549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=68hL+FZLLcrrCGOYzkanDw/JbY5cOul8cp+uyDfPMTY=;
+	b=nYYKAIStwHLyok/90gVQUFipyrI5YTOPkDuMKsKZ6iZU4RCiPkvWu2iiOmX9O+5I1v1zss
+	tbBKziub+xr6Xg6lIMCdA330UzueJNF2KyZfD1DNKcyh3N9SkN+KesMvgETxfb0m5Fdhr2
+	Q4ZSRQ/LvGHV6fs4wiNe5HtG6OzJVAKVm2hYcabkrIAd8jTzWdCtclIzjqHcEAOEUn3EYV
+	Mtdmr0Gfe9Nb1YdP2ZZW9Vk6BoL5mQExjs0m1n5UKNwqGil2nussRjtsJudP7ekEQgSkwA
+	9ICpSqtpNWUUUzgpLyObGH93FcSHrWV4Kuo7mEKiZ2SgMtUk30wxome9qPJedQ==
+Date: Fri, 2 Feb 2024 08:55:47 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Bo Liu <liubo03@inspur.com>
+Cc: <alex.aring@gmail.com>, <stefan@datenfreihafen.org>,
+ <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+ <pabeni@redhat.com>, <linux-wpan@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: ieee802154: at86rf230: convert to use maple tree
+ register cache
+Message-ID: <20240202085547.46c81c96@xps-13>
+In-Reply-To: <20240202064512.39259-1-liubo03@inspur.com>
+References: <20240202064512.39259-1-liubo03@inspur.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?Q?Micha=C5=82_Jakubowski?= <kajanos@gmail.com>
-Date: Fri, 2 Feb 2024 08:53:47 +0100
-Message-ID: <CAHOGJioO4bdtH=8swCQQXW0-RKpWFuiRTKMzQ5orEbK8=kmA7g@mail.gmail.com>
-Subject: shravankr@nvidia.com
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Regarding: https://bugzilla.kernel.org/show_bug.cgi?id=218445
+Hi Bo,
 
-  CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp1_execution.o
-  CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp1_transition.o
-  CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp2_execution.o
-  CC [M]  drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp2_transition.o
-  LD [M]  drivers/gpu/drm/amd/amdgpu/amdgpu.o
-  MODPOST Module.symvers
-ERROR: modpost: "sched_numa_hop_mask"
-[drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
-make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
-make[1]: *** [/usr/src/linux-6.7.3-gentoo/Makefile:1863: modpost] Error 2
-make: *** [Makefile:234: __sub-make] Error 2
+liubo03@inspur.com wrote on Fri, 2 Feb 2024 01:45:12 -0500:
+
+> The maple tree register cache is based on a much more modern data structu=
+re
+> than the rbtree cache and makes optimisation choices which are probably
+> more appropriate for modern systems than those made by the rbtree cache.
+
+What are the real intended benefits? Shall we expect any drawbacks?
+
+> Signed-off-by: Bo Liu <liubo03@inspur.com>
+
+Thanks,
+Miqu=C3=A8l
