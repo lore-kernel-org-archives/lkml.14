@@ -1,93 +1,149 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355F01854;
-	Fri,  2 Feb 2024 14:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BF31854;
+	Fri,  2 Feb 2024 14:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706883992; cv=none; b=layv9/Kx7lkj9FOBrREzcFgO9pwx+K5UoYYYjA6Wg/iP87pddzFx6UBuXaS0KCJP0PEfZm2NpYrTbjiO3ox2QBYZhcF9V6U1Vr7vy4W85F7Cy98XpfgUcgd1IA1VNEkIAX0V1DfBWLhYsfRf6SL98FXeJPLY+MBjIaqWM9KEZ4k=
+	t=1706884031; cv=none; b=ZVi1el5BYsDo00rW8sLH5XgYOCHrVHhYZ5/95RlCk6+bv+I6MGff/c7WxLByogp8baDY1vbBnPqxBY3xfOEztsTFblPMGJ1n88OB+XkTmjoGn0YZbzbFM2SVhixqZ/Ln1FrD0ArBKKVXz9ascgm933qrOqIkGrgqoJf+XHbHRSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706883992; c=relaxed/simple;
-	bh=Hek7OsUPTK/+2iL5vxjRI0TRniJiNEvzpxxb70WqieY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hDuT/VDmvGTRxUSiEF8nsGzZORsKTFEsE9+cxVjGnEun+5QEXRI+bbMnBiNjrydhIIqRjy0pEoVZ8q5eI0ED7fuWqZ3uJoDf2FXr0EIEiVBe98bTmyWBZK4cKtuzQFBgCnBb74IdeXinulzWy71/bAfOnTiZIZ6mFPGkfkSrzaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=iHvft8L4; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1706884031; c=relaxed/simple;
+	bh=CHL4VTwATVPlntAxMS+V97knUqQfUioN/hnMfpChPiY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DOvTpdWYHhCym8NMXGfHzssHmIIpsjncNx8iGyg/1mYmeRCuo4D9DDEFnms/zQWabHP1AbTTkK44vmkO/4HKrscYlZjfg2Hdwok+/TRN5xY5zZ/vkYKIrsxY1uswalZb9n8QNugViYGEbIaGO11pSmENLhKl+mo3kc2ZugpUugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=tv1lOjPn; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="iHvft8L4"
-Received: from [192.168.42.20] (p5de453e7.dip0.t-ipconnect.de [93.228.83.231])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id D1CF22FC0055;
-	Fri,  2 Feb 2024 15:26:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1706883980;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rjb1X9/opxrO69KIAP8GbmQxkKMjdNz9fFqZgIlfaFo=;
-	b=iHvft8L4Q/QKjbUsU6dGjcf9ASdUNkAWJjCWZ9XpweIkg3TWZIgzbS6msRf325wL1JuRYC
-	zRhwp9dJJbbDCM8nbPN3UlDu4RiDQ63Iu1SgOfZafAeoZxN0DJw5tDC9JQeqy+BP9coPSA
-	yBw1hrh6D+Wd+ZwVZ9Hajt82HB9My5k=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <029a0d30-c68a-4e12-80a6-db3203ff3907@tuxedocomputers.com>
-Date: Fri, 2 Feb 2024 15:26:20 +0100
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="tv1lOjPn"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 856F8100009;
+	Fri,  2 Feb 2024 17:27:03 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 856F8100009
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1706884023;
+	bh=JeqPP36z4pnlbw1sLnjMU+SnvqzYB8B7+7WjQdUZT4c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=tv1lOjPnlavwyjm3XqtQCuyI0jQIgx8BjwD5J7mtuY+0ASihXhtcUwGqBSlJOpxF0
+	 4VcsGPlJbYKLmhw4lYFAHsYtbmjiRh6elHhYTXK16Txt+RykRNbsbloux+baHiiROX
+	 O37p8jA5N1pIMokgEMIfVIHfHW8aiWYuyJ5Jt0y3likxUqK0Y4+Q3N5+TD23MQyNmh
+	 JL1FlWWuJiMA4sWq+EBP80SCK6Ckxspn9FxGmMxjpacDIaBY4YL2T4SdV6rqW26I4N
+	 UBwHr9zyHt7iTS+fJ2xhaDLfRz5V6XQbSr4acJqiKHuO/pqPndy8yaPV2POm8jBRTd
+	 hCSgBs0aA0r9Q==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri,  2 Feb 2024 17:27:03 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 2 Feb 2024 17:27:03 +0300
+From: Igor Prusov <ivprusov@salutedevices.com>
+To: <jbrunet@baylibre.com>, <neil.armstrong@linaro.org>
+CC: <kernel@salutedevices.com>, <prusovigor@gmail.com>, Igor Prusov
+	<ivprusov@salutedevices.com>, Kevin Hilman <khilman@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] clk: meson: Add missing clocks to axg_clk_regmaps
+Date: Fri, 2 Feb 2024 17:25:48 +0300
+Message-ID: <20240202172537.1.I64656c75d84284bc91e6126b50b33c502be7c42a@changeid>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Fix strange behavior of touchpad on Clevo NS70PU
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231205163602.16106-1-wse@tuxedocomputers.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20231205163602.16106-1-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183159 [Feb 02 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: ivprusov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/02 11:00:00 #23326006
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-gentle bump
+Some clocks were missing from axg_clk_regmaps, which caused kernel panic
+during cat /sys/kernel/debug/clk/clk_summary
 
-Am 05.12.23 um 17:36 schrieb Werner Sembach:
-> When closing the laptop lid with an external screen connected, the mouse
-> pointer has a constant movement to the lower right corner. Opening the
-> lid again stops this movement, but after that the touchpad does no longer
-> register clicks.
->
-> The touchpad is connected both via i2c-hid and PS/2, the predecessor of
-> this device (NS70MU) has the same layout in this regard and also strange
-> behaviour caused by the psmouse and the i2c-hid driver fighting over
-> touchpad control. This fix is reusing the same workaround by just
-> disabling the PS/2 aux port, that is only used by the touchpad, to give the
-> i2c-hid driver the lone control over the touchpad.
->
-> v2: Rebased on current master
->
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Cc: stable@vger.kernel.org
-> ---
->   drivers/input/serio/i8042-acpipnpio.h | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/input/serio/i8042-acpipnpio.h b/drivers/input/serio/i8042-acpipnpio.h
-> index 9c39553d30fa2..b31d3285bea69 100644
-> --- a/drivers/input/serio/i8042-acpipnpio.h
-> +++ b/drivers/input/serio/i8042-acpipnpio.h
-> @@ -1200,6 +1200,12 @@ static const struct dmi_system_id i8042_dmi_quirk_table[] __initconst = {
->   					SERIO_QUIRK_RESET_ALWAYS | SERIO_QUIRK_NOLOOP |
->   					SERIO_QUIRK_NOPNP)
->   	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "NS5x_7xPU"),
-> +		},
-> +		.driver_data = (void *)(SERIO_QUIRK_NOAUX)
-> +	},
->   	{
->   		.matches = {
->   			DMI_MATCH(DMI_BOARD_NAME, "NJ50_70CU"),
+[   57.349402] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001fc
+...
+[   57.430002] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   57.436900] pc : regmap_read+0x1c/0x88
+[   57.440608] lr : clk_regmap_gate_is_enabled+0x3c/0xb0
+[   57.445611] sp : ffff800082f1b690
+[   57.448888] x29: ffff800082f1b690 x28: 0000000000000000 x27: ffff800080eb9a70
+[   57.455961] x26: 0000000000000007 x25: 0000000000000016 x24: 0000000000000000
+[   57.463033] x23: ffff800080e8b488 x22: 0000000000000015 x21: ffff00000e7e7000
+[   57.470106] x20: ffff00000400ec00 x19: 0000000000000000 x18: ffffffffffffffff
+[   57.477178] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0000042a3000
+[   57.484251] x14: 0000000000000000 x13: ffff0000042a2fec x12: 0000000005f5e100
+[   57.491323] x11: abcc77118461cefd x10: 0000000000000020 x9 : ffff8000805e4b24
+[   57.498396] x8 : ffff0000028063c0 x7 : ffff800082f1b710 x6 : ffff800082f1b710
+[   57.505468] x5 : 00000000ffffffd0 x4 : ffff800082f1b6e0 x3 : 0000000000001000
+[   57.512541] x2 : ffff800082f1b6e4 x1 : 000000000000012c x0 : 0000000000000000
+[   57.519615] Call trace:
+[   57.522030]  regmap_read+0x1c/0x88
+[   57.525393]  clk_regmap_gate_is_enabled+0x3c/0xb0
+[   57.530050]  clk_core_is_enabled+0x44/0x120
+[   57.534190]  clk_summary_show_subtree+0x154/0x2f0
+[   57.538847]  clk_summary_show_subtree+0x220/0x2f0
+[   57.543505]  clk_summary_show_subtree+0x220/0x2f0
+[   57.548162]  clk_summary_show_subtree+0x220/0x2f0
+[   57.552820]  clk_summary_show_subtree+0x220/0x2f0
+[   57.557477]  clk_summary_show_subtree+0x220/0x2f0
+[   57.562135]  clk_summary_show_subtree+0x220/0x2f0
+[   57.566792]  clk_summary_show_subtree+0x220/0x2f0
+[   57.571450]  clk_summary_show+0x84/0xb8
+[   57.575245]  seq_read_iter+0x1bc/0x4b8
+[   57.578954]  seq_read+0x8c/0xd0
+[   57.582059]  full_proxy_read+0x68/0xc8
+[   57.585767]  vfs_read+0xb0/0x268
+[   57.588959]  ksys_read+0x70/0x108
+[   57.592236]  __arm64_sys_read+0x24/0x38
+[   57.596031]  invoke_syscall+0x50/0x128
+[   57.599740]  el0_svc_common.constprop.0+0x48/0xf8
+[   57.604397]  do_el0_svc+0x28/0x40
+[   57.607675]  el0_svc+0x34/0xb8
+[   57.610694]  el0t_64_sync_handler+0x13c/0x158
+[   57.615006]  el0t_64_sync+0x190/0x198
+[   57.618635] Code: a9bd7bfd 910003fd a90153f3 aa0003f3 (b941fc00)
+[   57.624668] ---[ end trace 0000000000000000 ]---
+
+Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+---
+
+ drivers/clk/meson/axg.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+index c12f81dfa674..5f60f2bcca59 100644
+--- a/drivers/clk/meson/axg.c
++++ b/drivers/clk/meson/axg.c
+@@ -2142,7 +2142,9 @@ static struct clk_regmap *const axg_clk_regmaps[] = {
+ 	&axg_vclk_input,
+ 	&axg_vclk2_input,
+ 	&axg_vclk_div,
++	&axg_vclk_div1,
+ 	&axg_vclk2_div,
++	&axg_vclk2_div1,
+ 	&axg_vclk_div2_en,
+ 	&axg_vclk_div4_en,
+ 	&axg_vclk_div6_en,
+-- 
+2.34.1
+
