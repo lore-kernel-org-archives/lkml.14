@@ -1,153 +1,232 @@
-Received: from mx1.135e2.dev (unknown [192.227.193.244])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673728479;
-	Fri,  2 Feb 2024 03:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.227.193.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6139EEAF2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 03:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706844472; cv=none; b=WBKHLo54IhCsOISgqo5qr6USpVQuSsWxDR0jJ5zIV7cdEVNtCqdEHRKy4n5VCDfbInDMKQTuQ++AkrSfHzmmXhnW4r+6zpdPbO22ww9300cypTxDXF7BhBRLEnwwQCovWfc0lb8csxUJdbNXJZA/uOZM0ThQ4TrdW36J0PwGb40=
+	t=1706844493; cv=none; b=L4PejwS37nffbz5CeKWjhWMOCq+Gh2B0ZsQcXNc2B72KQdLg27OUZx/mGDxqlhlQEPe/86+iSSdhLegqrkyFXRBUvhE+H/BugPoPCqOQOoc9bG5gogEZm8Tqt3m/44Gnx6sN8mdNait+P0SZcgDjCaIde14jld9a3IFzJ9RyoQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706844472; c=relaxed/simple;
-	bh=Si4Fpi4Zt3/wkiQXc7LEba2uEw20yGovMPeMTq4B4jc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Idu4JczeFr+PpT1ykk24Fxj8YGtNNFhhaAvVlHbkN+VFb8hB2DNXkLeMbmtLZzI14a/bJTitlyLuB2t5cZ8MMR7vN4mCNJSX9lrkEsdiDwFqpwItsYwvs7zChmDrCqyS9vjaYiTxC58yK8typR1DuZaoQ10GJeGu8+wtln7/al8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=135e2.dev; spf=pass smtp.mailfrom=135e2.dev; dkim=pass (2048-bit key) header.d=135e2.dev header.i=@135e2.dev header.b=BxlicnwD; arc=none smtp.client-ip=192.227.193.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=135e2.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=135e2.dev
+	s=arc-20240116; t=1706844493; c=relaxed/simple;
+	bh=tRsSz0rRGQGEurlNUDrfhHIIFpo2AzDD0v9zjA3NQHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rNpOWE77ICvs5tSn+bK/YGshf0Zk2np3hi7Kc5uBmuRBpBsq2yRvCV22FPSJWOt9vYG98j7zwipMCqn6rxpCrij7wVsslxOnJCWvTMAFyuQ1PPaJttl+Z8jHrddnR7lqdiIxAszlTjETMxKWy7QaGo1iE3b14Tgtg344rJat9pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=kLsPps1E; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=135e2.dev header.i=@135e2.dev header.b="BxlicnwD"
-DKIM-Signature: a=rsa-sha256; bh=iK915+z9S4n8pu5RcTV8cEzXvYlmbw06d1vH3FCQZbQ=;
- c=relaxed/relaxed; d=135e2.dev;
- h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
- i=@135e2.dev; s=default; t=1706843543; v=1; x=1707275543;
- b=BxlicnwDy8+jnrrSQIEg6N98s+HdFzwAF4G5/OxrDhQAgCoIojy8GmPLzEo1O836zunQfqjD
- ddOu3etzgisZ9PoUxwgAZZt18/th19+Nclxp6a6y6Sw+axonhzb9q6A+/gaBAH2z1bE6AWGWjdL
- uCAP//VRJTVIQWqHnetcbdDVmcRtV6Xm5jHFPJzK8QjJfkIDeHdGVqSptH71FWAvpv9DLskUBYe
- odFEwSF4GeBGbXmrfBSuKcI2hcYmKFP7lhp46EZ2svwjbxG3I2kvvTdXOiRY4NIMoStfjUMpfGx
- XMFu9MFUUs2ES7c+m7fSwcJD5QIZtnoevacwiVxlpnLRA==
-Received: by mx1.135e2.dev (envelope-sender <135e2@135e2.dev>) with ESMTPS
- id bbaa66b6; Fri, 02 Feb 2024 11:12:23 +0800
-From: Mole Shang <135e2@135e2.dev>
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- pierre-louis.bossart@linux.intel.com, peter.ujfalusi@linux.intel.com,
- ranjani.sridharan@linux.intel.com, sound-open-firmware@alsa-project.org
-Subject:
- [REGRESSION] 6.7.0: ASoC: SOF: refactoring breaks sof-rt5682 audio on
- chromebook; successfully bisected
-Date: Fri, 02 Feb 2024 11:12:18 +0800
-Message-ID: <6013930.lOV4Wx5bFT@ayana>
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="kLsPps1E"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d7881b1843so13900895ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 19:28:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1706844491; x=1707449291; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfF4/s9dcpinrBOfbHzFC1zqyW5aEfZvc1NtOczCj0U=;
+        b=kLsPps1ErIzsvaqGg5DraR+HHXd6GzlmvgpnnYOn4fExgH5VbpgsQspjRm3Af+0x+0
+         kTo9EisynNWzjUtoVCMT/0GM9dNYD8YbYSMQ+rIUmG7/OnqeJ2AJPlZQ2Cr4ed2c3Lcs
+         51KlUBfSwETLf85psFR7gk37zDSgYAp8uP6v0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706844491; x=1707449291;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OfF4/s9dcpinrBOfbHzFC1zqyW5aEfZvc1NtOczCj0U=;
+        b=eBp3sKXzQPxc1EiHrqlvHqBC7p1JHrpdxboUg64Bk6lT7+qQ4R5Pfl38At+jFRL921
+         4AdsQxJzd9xzPmcqERPLX9ZTXyNext4plLsvL/zri2ZZhdKinGy7TuinjAIijW+uZIZA
+         IzlaFYEOebLNQ9jdrxYblOzpE0MKF47SZ2uypCEzVzxuLsCxtlVtWKIBZl2HPusBxIHC
+         oXUZ/BFm4D8hHyEvrK8/mPfcAjDBviXfaASCFj/xyBVKDSCYum+PnCDNNQFigyIIr1ss
+         auTM0sBP90vcJ+vhzrqqn0mAgGgIB4SnIT+Oz5Rrq26jBuYLdK6ZwnzoGfbm2SoU0J9T
+         EVnQ==
+X-Gm-Message-State: AOJu0Ywz4Jdgn9nwcZM3gn/Y3MFQOugrY5Fdx+WJDKJf7yfB3Hl1wZ/C
+	2muFPQBgmaqWf5dtkss6Nz8JGJAlR+hwOL+0OO96lBjOuxWAf/UBYU0DIzIorEU=
+X-Google-Smtp-Source: AGHT+IEDDqwj2U559sryBjaL/MexHTgUqHLuC2vNU8AmZ7xKqpKvYdvTBaNe2TTPjNNOHcqlAx7eGg==
+X-Received: by 2002:a17:902:e812:b0:1d8:fb17:a1fe with SMTP id u18-20020a170902e81200b001d8fb17a1femr1210673plg.48.1706844490595;
+        Thu, 01 Feb 2024 19:28:10 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW47KZ1SfG40xqflewdxwUw3bVZfHLvv+EKuax55tIOa8B2y1KX4ptYyUNOyE2hvPLjlffr9yJXKXyp/PUXL/Xp+AUyCcm1a2Ods6KudB4WOTol/zmG/6BeJHGdMeJTJ2G3lZr6f4GkanMbD1baOao/plBvBiOGULGv4umGBIw4WHFXqYqqiHqFw0gCa62AX/YmCtX4tbrVNX7KXbSp4t2RWWZhmSKwfeHclrEk/3OK6krCwRcZHTQyGkrcK9ZkMgcpu8fgZJcjnqd/u6RePY5GeIy8LSoAvYwDzK5qLbC1Juh1iB3JtCxGte89ToEkzkCcJxtRFjaKT+1B2H13d/tzBoxLKeu6Fh4UJUuvmGr+uWw/3swMRdmAIMryw3bL5F/9xHiCm4Uwu7B4RQcgXA==
+Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id l5-20020a170902eb0500b001d8f81ecea1sm538319plb.172.2024.02.01.19.28.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Feb 2024 19:28:09 -0800 (PST)
+Date: Thu, 1 Feb 2024 19:28:07 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: "Samudrala, Sridhar" <sridhar.samudrala@intel.com>
+Cc: Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chuck.lever@oracle.com,
+	jlayton@kernel.org, linux-api@vger.kernel.org, brauner@kernel.org,
+	davem@davemloft.net, alexander.duyck@gmail.com, kuba@kernel.org,
+	Wei Wang <weiwan@google.com>,
+	Amritha Nambiar <amritha.nambiar@intel.com>
+Subject: Re: [net-next 0/3] Per epoll context busy poll support
+Message-ID: <20240202032806.GA8708@fastly.com>
+References: <20240124025359.11419-1-jdamato@fastly.com>
+ <CANn89i+YKwrgpt8VnHrw4eeVpqRamLkTSr4u+g1mRDMZa6b+7Q@mail.gmail.com>
+ <5faf88de-5063-421f-ad78-ad24d931fd17@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5faf88de-5063-421f-ad78-ad24d931fd17@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 
-I'm relatively new here, first time reporting a regression, so apologies in 
-advance if I'm doing something wrong.
+On Tue, Jan 30, 2024 at 12:54:50PM -0600, Samudrala, Sridhar wrote:
+> 
+> 
+> On 1/24/2024 2:20 AM, Eric Dumazet wrote:
+> >On Wed, Jan 24, 2024 at 3:54 AM Joe Damato <jdamato@fastly.com> wrote:
+> >>
+> >>Greetings:
+> >>
+> >>TL;DR This builds on commit bf3b9f6372c4 ("epoll: Add busy poll support to
+> >>epoll with socket fds.") by allowing user applications to enable
+> >>epoll-based busy polling and set a busy poll packet budget on a per epoll
+> >>context basis.
+> >>
+> >>To allow for this, two ioctls have been added for epoll contexts for
+> >>getting and setting a new struct, struct epoll_params.
+> >>
+> >>This makes epoll-based busy polling much more usable for user
+> >>applications than the current system-wide sysctl and hardcoded budget.
+> 
+> Agree. looking forward to see this patch series accepted soon.
+> 
+> >>
+> >>Longer explanation:
+> >>
+> >>Presently epoll has support for a very useful form of busy poll based on
+> >>the incoming NAPI ID (see also: SO_INCOMING_NAPI_ID [1]).
+> >>
+> >>This form of busy poll allows epoll_wait to drive NAPI packet processing
+> >>which allows for a few interesting user application designs which can
+> >>reduce latency and also potentially improve L2/L3 cache hit rates by
+> >>deferring NAPI until userland has finished its work.
+> >>
+> >>The documentation available on this is, IMHO, a bit confusing so please
+> >>allow me to explain how one might use this:
+> >>
+> >>1. Ensure each application thread has its own epoll instance mapping
+> >>1-to-1 with NIC RX queues. An n-tuple filter would likely be used to
+> >>direct connections with specific dest ports to these queues.
+> >>
+> >>2. Optionally: Setup IRQ coalescing for the NIC RX queues where busy
+> >>polling will occur. This can help avoid the userland app from being
+> >>pre-empted by a hard IRQ while userland is running. Note this means that
+> >>userland must take care to call epoll_wait and not take too long in
+> >>userland since it now drives NAPI via epoll_wait.
+> >>
+> >>3. Ensure that all incoming connections added to an epoll instance
+> >>have the same NAPI ID. This can be done with a BPF filter when
+> >>SO_REUSEPORT is used or getsockopt + SO_INCOMING_NAPI_ID when a single
+> >>accept thread is used which dispatches incoming connections to threads.
+> >>
+> >>4. Lastly, busy poll must be enabled via a sysctl
+> >>(/proc/sys/net/core/busy_poll).
+> >>
+> >>The unfortunate part about step 4 above is that this enables busy poll
+> >>system-wide which affects all user applications on the system,
+> >>including epoll-based network applications which were not intended to
+> >>be used this way or applications where increased CPU usage for lower
+> >>latency network processing is unnecessary or not desirable.
+> >>
+> >>If the user wants to run one low latency epoll-based server application
+> >>with epoll-based busy poll, but would like to run the rest of the
+> >>applications on the system (which may also use epoll) without busy poll,
+> >>this system-wide sysctl presents a significant problem.
+> >>
+> >>This change preserves the system-wide sysctl, but adds a mechanism (via
+> >>ioctl) to enable or disable busy poll for epoll contexts as needed by
+> >>individual applications, making epoll-based busy poll more usable.
+> >>
+> >
+> >I think this description missed the napi_defer_hard_irqs and
+> >gro_flush_timeout settings ?
+> >
+> >I would think that if an application really wants to make sure its
+> >thread is the only one
+> >eventually calling napi->poll(), we must make sure NIC interrupts stay masked.
+> >
+> >Current implementations of busy poll always release NAPI_STATE_SCHED bit when
+> >returning to user space.
+> >
+> >It seems you want to make sure the application and only the
+> >application calls the napi->poll()
+> >at chosen times.
+> >
+> >Some kind of contract is needed, and the presence of the hrtimer
+> >(currently only driven from dev->@gro_flush_timeout)
+> >would allow to do that correctly.
+> >
+> >Whenever we 'trust' user space to perform the napi->poll shortly, we
+> >also want to arm the hrtimer to eventually detect
+> >the application took too long, to restart the other mechanisms (NIC irq based)
+> >
+> >Note that we added the kthread based napi polling, and we are working
+> >to add a busy polling feature to these kthreads.
+> >allowing to completely mask NIC interrupts and further reduce latencies.
+> 
+> 
+> Good to know that you are looking into enabling busy polling for napi
+> kthreads.
+> We have something similar in our ice OOT driver that is implemented and we
+> call it 'independent pollers' as in this mode, busy polling will not be app
+> dependent or triggered by an application.
+> Here is a link to the slides we presented at netdev 0x16 driver workshop.
+> https://netdevconf.info/0x16/slides/48/netdev0x16_driver_workshop_ADQ.pdf
+> 
+> We haven't yet submitted the patches upstream as there is no kernel
+> interface to configure napi specific timeouts.
+> With the recent per-queue and per-napi netlink APIs that are accepted
+> upstream
+> https://lore.kernel.org/netdev/170147307026.5260.9300080745237900261.stgit@anambiarhost.jf.intel.com/
+> 
+> we are thinking of making timeout as a per-napi parameter and can be used as
+> an interface to enable napi kthread based busy polling.
 
-I'm using Arch Linux (linux-mainline kernel) on my chromebook Acer Spin 713-2W 
-(Voxel), and after upgrading linux-mainline from 6.7-rc4 to 6.7-rc5 the audio 
-setup isn't working anymore. Firstly I suspected its some changes in the sof-
-firmware, yet got no luck in upgrading sof-firmware (2023.09.2 -> 2023.12). 
+I know I am replying to a stale thread on the patches I've submit (there is
+a v5 now [1]), but I just looked at your message - sorry I didn't reply
+sooner.
 
-On certain chromebooks, audio setup needs custom ALSA ucm confs [1], but after 
-contacting the chromebook-linux-audio developer [2], I think it's not a conf 
-problem, but rather a kernel regression.
+The per-queue and per-napi netlink APIs look extremely useful, thanks for
+pointing this out.
 
-After hours of bisecting, the first bad commit 31ed8da (ASoC: SOF: sof-audio: 
-Modify logic for enabling/disabling topology cores) ensures the regression. 
-demsg log pasted below:
+In my development tree, I had added SIOCGIFNAME_BY_NAPI_ID which works
+similar to SIOCGIFNAME: it takes a NAPI ID and returns the IF name. This is
+useful on machines with multiple NICs where each NIC could be located in
+one of many different NUMA zones.
 
-// before 31ed8da, working
-[   61.572587] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.572593] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.572594] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-[   61.573247] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.573250] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.573251] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-[   61.573888] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.573892] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.573893] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-[   61.574570] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.574572] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.574573] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
+The idea was that apps would use SO_INCOMING_NAPI_ID, distribute the NAPI
+ID to a worker thread which could then use SIOCGIFNAME_BY_NAPI_ID to
+compute which NIC the connection came in on. The app would then (via
+configuration) know where to pin that worker thread; ideally somewhere NUMA
+local to the NIC.
 
+I had assumed that such a change would be rejected, but I figured I'd send
+an RFC for it after the per epoll context stuff was done and see if anyone
+thought SIOCGIFNAME_BY_NAPI_ID would be useful for them, as well.
 
-// after 31ed8da, broken
-[   48.930740] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x30020000 (msg/reply size: 12/0): -13
-[   48.930762] sof-audio-pci-intel-tgl 0000:00:1f.3: failed to free widget 
-DMIC0.IN
-[   57.235697] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x30030000 (msg/reply size: 16/0): -22
-[   57.235701] sof-audio-pci-intel-tgl 0000:00:1f.3: sof_ipc3_route_setup: 
-route DMIC0.IN -> BUF4.0 failed
-[   57.235703] sof-audio-pci-intel-tgl 0000:00:1f.3: 
-sof_ipc3_set_up_all_pipelines: route set up failed
-[   57.235704] sof-audio-pci-intel-tgl 0000:00:1f.3: Failed to restore 
-pipeline after resume -22
-[   57.235706] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.235926] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.235966] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236006] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236041] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236074] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236107] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236141] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236173] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236205] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236239] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+> I think even the per-device napi_defer_hard_irqs and gro_flush_timeout
+> should become per-napi parameters.
 
-Steps to reproduce:
+I agree.
 
-- Run chromebook-linux-audio script [2] (this would install custom sof-rt5682 
-ucm confs [1] into /usr/share/alsa/ucm2/conf.d/sof-rt5682 and write a line 
-`options snd-intel-dspcfg dsp_driver=3` to /etc/modprobe.d/snd-sof.conf)
-- Reboot, gets audio working on kernels before 31ed8da
-- Install latest stable kernel (6.7.3), audio broken
-- Install latest git kernel (6.8-rc2), audio broken
-- Revert 31ed8da, build upon latest linux-git (6.8-rc2), audio working
+I had been contemplating implementing this until I tried a different method
+similar to an academic paper I was reading [2][3]. I think per-device
+defer_hard_irqs and gro_flush_timeout would be extremely useful and a
+better approach than the one I'm currently using.
 
-Apologies for my busyiness that I should have reported it long before the 
-regression enters stable and lts, but sadly linux-lts (6.6.13) seems to be 
-affected too [3].
+Is this something you are currently working? I may try implementing this,
+but didn't want to duplicate effort if you are already working on this.
 
-Please let me know if there's any other thing that I can help debugging.
+Thanks,
+Joe
 
--- Mole Shang
-
-[1]: https://github.com/WeirdTreeThing/chromebook-ucm-conf/tree/main/sof-rt5682
-[2]: https://github.com/WeirdTreeThing/chromebook-linux-audio/issues/70
-[3]: https://github.com/WeirdTreeThing/chromebook-linux-audio/issues/
-70#issuecomment-1911048309
-
-
-#regzbot introduced: 31ed8da1c8e5e504710bb36863700e3389f8fc81
-
-
+[1]: https://lore.kernel.org/all/20240131180811.23566-1-jdamato@fastly.com/
+[2]: https://dl.acm.org/doi/pdf/10.1145/3626780
+[3]: https://gitlab.uwaterloo.ca/p5cai/netstack-exp/-/blob/master/kernel-polling-5.15.79-base.patch?ref_type=heads
