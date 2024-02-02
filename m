@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662B5151CF4;
-	Fri,  2 Feb 2024 15:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73D915350E;
+	Fri,  2 Feb 2024 15:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706889538; cv=none; b=ZwFKWZmXplKlHChirBOhDFliu1r94yjwY/jYY/3zSLFpAw2q4iYHhncbQvV8RKGaSN6fB2McH+m4QiLL891xHxysoxfP88TMwOEGbifnP8WyBubwYU5CQ6a4pmff86TKFEzk6ftGJTjeSb7gecqiUhDnUzAQBgHYiUTjhTKS6jM=
+	t=1706889541; cv=none; b=VsuSThnnYomgWjk6JFcsg7/9mga9UFVFcAPqe4BagROxq+VptKycGF93SAN0C6PeDfOvmEGsIevuyE5uG04dRRb4B0Oj7AYPfz7owQwuxYTQr0gW5PxwBlh5BsuwgvGM2oitRCXWf4lnUaY7WSbnLdA1N9CFhWVByW/maD/G09I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706889538; c=relaxed/simple;
-	bh=X8I9rXVeGCoi7QcnwK71myLC6oWao8zTKDKpyMAWvVo=;
+	s=arc-20240116; t=1706889541; c=relaxed/simple;
+	bh=z4Cms56kmTfXRHkY+P++VOmPThXzhuLEMnCh+5t5LTk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q02AA6ixz2XkoF09bp+idYDM3ey6oXXHaJCRKcg6zOk6Sa9IUfGcrLDJkakwWYxMIyCJOk5h6vMx4Ns1Gr0/TZdP90mMrniU8Ec1uYFsCU4x9w5zf35Yf9zMFJKNpFQlNp05YHeqROwa0ex+faZgpsN3eh6X8SoN25EYB52j7xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruhFwbtw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XpBfO3kKOzjLLhS0sOJaEb1M3U4UQafTpl/PxSdxhs7Q+GBZ9hV95VtwRwXlXq5KPg4S+ACEw9TX5DO9tKQcPfrSF7VDR3RnW3ZPYG7woFyGzGNCKEayiG8tllvGvxSsMhENVpjhlHhOcWTyObbOkSeWwscp0JfCuo0Zi2y4SPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nn3YZR80; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruhFwbtw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B95C433F1;
-	Fri,  2 Feb 2024 15:58:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nn3YZR80"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF86C43390;
+	Fri,  2 Feb 2024 15:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706889538;
-	bh=X8I9rXVeGCoi7QcnwK71myLC6oWao8zTKDKpyMAWvVo=;
+	s=k20201202; t=1706889540;
+	bh=z4Cms56kmTfXRHkY+P++VOmPThXzhuLEMnCh+5t5LTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ruhFwbtwadYQ+aNHjKCd11eXVlQ7wLThqD6C1mWZNU+jhMKHpQ2auVnO/eSPsB6+u
-	 37fcPp48rAWE7w8tmgQYNgB205Io0CJL1RzBt5MN6MVDulVdvkZNXNS8yyzBeOD6dq
-	 0Nuy2uyWp560OU3J+py8kfOlcsRxjitACuxs778wcKnhtQP4/ufG5yFAdmDGuoBFUy
-	 ZxBG8KGyl8XEzY4hpEvAmUzyXcrdsHLpFF4Wzscwb/kSbDEO62qKYMtqehjee25PRx
-	 6yij5ztam2Vo9vMKZwrkOgVwit0UIp5GpPcAB4KTMVDWxZZVr0SljfNwNju0I5yHT9
-	 8LliXU3QuTMug==
+	b=nn3YZR80OfoXt/sLgprXuYM20Lq3vti3Bsrk0CaUs8c7oU5QF7MwxAzEWpoAp9dGH
+	 7rM06W06R0+Uc+bAhvFj+HuwDNJUXxXM12eCARlJH9by5rQqTStGZPzBilgeI/p5MJ
+	 zUr2e3hI5gBKtgGLvo9zFFSWMuLsr7zqWMjsTaS9/tncjCAYGRzRoJIwbQZVWRpYF2
+	 lXgiuhMH+k5Kq7rgx3lRGc4eBztnQjo6zIwlPiwFSdQNnJ1XEPeLr792PFoXTrmEo2
+	 ZOAn5mBQ+DSbMPqRfKYqqNjxjzNKH8fE+0IEAhaVFyPXRnJOxdwu19DP2OUWxbVUNg
+	 MmBYRI1Hd6Afg==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 25/27] kconfig: convert linked list of files to hash table
-Date: Sat,  3 Feb 2024 00:58:23 +0900
-Message-Id: <20240202155825.314567-26-masahiroy@kernel.org>
+Subject: [PATCH 27/27] kconfig: do not imply the type of choice value
+Date: Sat,  3 Feb 2024 00:58:25 +0900
+Message-Id: <20240202155825.314567-28-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240202155825.314567-1-masahiroy@kernel.org>
 References: <20240202155825.314567-1-masahiroy@kernel.org>
@@ -44,78 +44,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, a linked list is used to keep track of all the Kconfig
-files that have ever been parsed. Every time the "source" statement
-is encountered, the linked list is traversed to check if the file has
-been opened before. This prevents the same file from being recorded
-in include/config/auto.conf.cmd again.
+Do not feed back the choice type to choice values.
 
-Given 1500+ Kconfig files parsed, a hashtable is now a more optimal
-data structure.
-
-By the way, you may wonder why we check this in the first place.
-It matters only when the same file is included multiple times.
-In old days, such a use case was forbidden, but commit f094f8a1b273
-("kconfig: allow multiple inclusion of the same file") provided a bit
-more flexibility. Of course, it is almost hypothetical...
+Each choice value should explicitly specify 'bool' or 'tristate',
+as all the Kconfig files already do. If the type were missing,
+"config symbol defined without type" would be shown.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/util.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ scripts/kconfig/menu.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/scripts/kconfig/util.c b/scripts/kconfig/util.c
-index 610d64c01479..abd697ed8de7 100644
---- a/scripts/kconfig/util.c
-+++ b/scripts/kconfig/util.c
-@@ -7,34 +7,37 @@
- #include <stdarg.h>
- #include <stdlib.h>
- #include <string.h>
-+
-+#include "hashtable.h"
- #include "lkc.h"
-+#include "util.h"
-+
-+/* hash table of all parsed Kconfig files */
-+static HASHTABLE_DEFINE(file_hashtable, 1U << 11);
+diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+index 696803d944e0..44465945d6b1 100644
+--- a/scripts/kconfig/menu.c
++++ b/scripts/kconfig/menu.c
+@@ -305,12 +305,6 @@ void menu_finalize(struct menu *parent)
+ 					}
+ 				}
+ 			}
+-			/* set the type of the remaining choice values */
+-			for (menu = parent->list; menu; menu = menu->next) {
+-				current_entry = menu;
+-				if (menu->sym && menu->sym->type == S_UNKNOWN)
+-					menu_set_type(sym->type);
+-			}
  
- struct file {
--	struct file *next;
-+	struct hlist_node node;
- 	char name[];
- };
- 
--static struct file *file_list;
--
- /* file already present in list? If not add it */
- const char *file_lookup(const char *name)
- {
- 	struct file *file;
- 	size_t len;
-+	int hash = strhash(name);
- 
--	for (file = file_list; file; file = file->next) {
--		if (!strcmp(name, file->name)) {
-+	hash_for_each_possible(file_hashtable, file, node, hash)
-+		if (!strcmp(name, file->name))
- 			return file->name;
--		}
--	}
- 
- 	len = strlen(name);
- 	file = xmalloc(sizeof(*file) + len + 1);
- 	memset(file, 0, sizeof(*file));
- 	memcpy(file->name, name, len);
- 	file->name[len] = '\0';
--	file->next = file_list;
--	file_list = file;
-+
-+	hash_add(file_hashtable, &file->node, hash);
- 
- 	str_printf(&autoconf_cmd, "\t%s \\\n", name);
- 
+ 			/*
+ 			 * Use the choice itself as the parent dependency of
 -- 
 2.40.1
 
