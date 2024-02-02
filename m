@@ -1,89 +1,205 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B764322085;
-	Fri,  2 Feb 2024 16:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC4B14198F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 16:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706890526; cv=none; b=knO/PdmtuKK4TTCqMIsvGYYPLzhBQ54eeTzPHFvXvwvek+VJ6XNyEZdVGUYj33nrugVRRYdliMMZYv4kaikcNxQao7bxNQADKJ6RNzm6//zIMGc0Dl8kxV0SPM2EqUqhVjjGZ+zjVJyOZu+Q8zSQkpXn9DKXi87haX0DExbApLM=
+	t=1706890579; cv=none; b=TTa9twik41BK5bT6TtsJZsP7UN59yqUkOCMR0jak0vNPckXwYBaFytda6dRKo5xZ//F6tcT/pLrvvEMa1AwLiFtP2P5pq4cMPEjSQtGLglTMKYoS+ad0XhWfs1o9PkhrMo14Z8OffyM52DOURI2pI7nYgJCA+M+000VBsPvOC/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706890526; c=relaxed/simple;
-	bh=1oJizMCHG1hlosutpk4RpqLBX0WXRZQW0RTvwcRGebw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=se+YUTJ/Y+qy/Hpl8/QqycCg1zWjkxg5tx2Ub9py2CRX9hC8B2+MhNAJS/T+mnz9571C0AvAHaFevY0OLCBoZK2sVEMjMtEZMvmkRkeQa+l2SrQ3RAcr7+kf/aItIbr52IDuAyQZwfb6cgLcufxdSnuWRT/NmxBJg37yDvkSwMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IdoCnj6F; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706890579; c=relaxed/simple;
+	bh=CHBuBJuhamNrP6U0fj4Mt2MwBKcPu0swmlgl3BSB8TE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hcIG0Gr5CjCPh4r/9O/Yg2uPKRrouwyeOZJfefEWTQ9vmUEJrW9yhiMGHHo9b1ERP8qLl6/nqVKbSz+wNWFTRDBZFno0MSsQJPnF3JjClUTYrN6vGC7iSoQUVUErKk1ZrAgpej9nEFMoUR3FbbN5OvDpdUfL1Bu68wEilaEPD6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=w9AwuLYZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jITQjR9f; arc=none smtp.client-ip=66.111.4.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IdoCnj6F"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5045440E01A9;
-	Fri,  2 Feb 2024 16:15:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 4X56FUvCTb6l; Fri,  2 Feb 2024 16:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706890512; bh=FqNdTzwizpTxcThi22pmlOatH0Ownz2aial+W3Sb/Ao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IdoCnj6F9k+/LwGWIsZ3DTPyhBqANUizcPQ3M3LzX/M84nEhPMLjFcCfDsl6Al+k+
-	 DDLS2foLI8Ga7QbSOUjddBn0TNsfCHdJ5hxCrBYWhEF4kCckFdkG/f5iS9jDgv6AC5
-	 Wxwivo5npZ75Fh/0N3AjasxpQ7+HH+Vb9bS35OfsFK5Fuln6QEcrIPeV7rLnDlNoa8
-	 4B6dLkKuB3GiIcx/tga4dqtYvz6fyVWYRJKpz7AY0LbqTgxrHupRdbiFYZpdtTlPcy
-	 fnVpnnRsNW63Ob++n3AhH80K2CUpZrZ5ioBtb5uIMeGBmKNt41Kgly6ZEN/YCjBWN5
-	 9QS1Mew7fNJW2aAmCxumM8kmLu/uOdSgLGY4TVpJ4DTT/456O9fcgUyrBtvlyWJyhR
-	 Qof9k4AAlgWm3lRiFSDtdJA59jHqqNAH45t+ltmkESdZF0J3ZcCRB2v4fxzSkGI5cX
-	 ux2ganjQTsrYXNbbwy7qZ8jH9p7OGXeObQ2WGLcOUrC0Qgfv4+T3pqhImPED2ZByhe
-	 5974L2QMtlLz8T4LCyfhK8hjBO3244oXIXqQWpu9WFDqZwuSo77ojcVS0/lm/U+DxE
-	 O/j4AoGfgRNeeo28D9lCvBycTByKLYHSN+5SebYaQ48LAx2yXAGn68VGxN6xbEkMpR
-	 eaC2fog6UfDdSI55JI09roHg=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A369840E00C5;
-	Fri,  2 Feb 2024 16:15:00 +0000 (UTC)
-Date: Fri, 2 Feb 2024 17:14:55 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Nikunj A. Dadhania" <nikunj@amd.com>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
-	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, dionnaglaze@google.com,
-	pgonda@google.com, seanjc@google.com, pbonzini@redhat.com
-Subject: Re: [PATCH v7 03/16] virt: sev-guest: Add SNP guest request structure
-Message-ID: <20240202161455.GCZb0U_9jckCT8loBc@fat_crate.local>
-References: <20231220151358.2147066-1-nikunj@amd.com>
- <20231220151358.2147066-4-nikunj@amd.com>
- <20240125115952.GXZbJNOGfxfuiC5WRT@fat_crate.local>
- <03719b26-9b59-4e88-9e7e-60c6f2617565@amd.com>
- <20240201102946.GCZbtymsufm3j2KI85@fat_crate.local>
- <98b23de9-48e4-4599-9e7f-0736055893fc@amd.com>
- <20240201140727.GDZbuln8aOnCn1Hooz@fat_crate.local>
- <408e40b4-4428-4bef-bb96-8009194a9633@amd.com>
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="w9AwuLYZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jITQjR9f"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id BE2FD5C0080;
+	Fri,  2 Feb 2024 11:16:16 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 02 Feb 2024 11:16:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1706890576; x=1706976976; bh=b0LGZXB2atC7cRDxeVKB29tfMJXHfhbupvu
+	qzgL5H0w=; b=w9AwuLYZjR/BP+cqnv3LMOCFQHBsCSwi895LQemcBc+Vo5ZToOt
+	HCHtnMIu+rwnyKxCfClEPDT0/5F+CkwVbcGInCTjWeCWmRjStV7xls7XKOArtfsI
+	w5V3vmmkw+KiHx2VdkyMZ0QacA6O+hqiEA/i4E9XOJ9z+Q/x3xQMDQ8arvA/lk0g
+	BqHpu1wNeN9kn2L6C96cJ1thlhPyVv97m93rRRo8gewh7pXpNJHfVbnhc94d+/OT
+	8eny1dAyhp8oVMCHXdhdF/yxvyNKMP/6aOC8MZKzfU4jhN/6nuOWJw7hUSqswAT0
+	if8thmyelZ6EE/eBsHrgVEmiLME2G476qSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1706890576; x=1706976976; bh=b0LGZXB2atC7cRDxeVKB29tfMJXHfhbupvu
+	qzgL5H0w=; b=jITQjR9fZ4vUH7jpIKUSGUf69CmGaNlTyKWC7zCok4dJZu5NM+M
+	tfqbsksM2p0nTWynjXbTfU3uIPh+tzf0SEH3sdEbK6yLqYCUcsSri81slnPWg0Vl
+	+tv7SmGQ6GXwLg/uEogMGAdWcRQ2uUpLFNRY5TeNJYaKuyqHrI9LDFZyoAHDTJrv
+	laJlFvAREQb49Osr7ozT8+HHU7Do0nEFj3n2Ks80KnGAxDm5blkXMdpNaQpb5tkl
+	znMVFC71CcxwrGQpSwLwE8Et4YppV1zGIp7VMnNW8+rHy1e+kLti4NGDKwzC/JLD
+	oTrbPSupWq5z6Db9SfEWk+3EevvpLfpHAYw==
+X-ME-Sender: <xms:UBW9ZazlDycr4MFLl50ja0ITLIpUdhU4G0v3mGYvnyEIbX96U4VoJw>
+    <xme:UBW9ZWRuoxQoSIpG-G8voG-QBLLYP5diyy94UtrpPgXuUw1NXP5GW8Npr6MWMZlta
+    -KnadSJgoMM5kK7-Q>
+X-ME-Received: <xmr:UBW9ZcUwVBLkPVMYu4-WBAFp8Ib8lj5Mq9z17h0uxapV1Y3aU3SNGb4ThwqGFJgZDmVpwIkKINAcKaSJwO67m4WHcHeddHtsoVDidujGhNACtRLl_ami9jiQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedugedgkeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofgjfhhrgggtgfesthekredtredtjeenucfhrhhomhepkghi
+    ucgjrghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepje
+    ekteekffelleekudfftdefvddtjeejuedtuedtteegjefgvedtfedujeekieevnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiihirdihrghnse
+    hsvghnthdrtghomh
+X-ME-Proxy: <xmx:UBW9ZQguKYLro88YJXYyfpcU7gbhtrx1itTHsshc0CT5t0x7SmSjbg>
+    <xmx:UBW9ZcCNhwbq_F2UkcE9VXSB2bg3RiPwHxTifLhuFBn4eHb8ydit4w>
+    <xmx:UBW9ZRJ3-D5zl4Beh-VCQe7V5sH5F6QzY7b7SFA21LIHX0mslwJJKw>
+    <xmx:UBW9ZU61UoIpbNPoIrFOiXEVfHwkYb6xcTCImFdlGVWaFDcMlACBZg>
+Feedback-ID: iccd040f4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 2 Feb 2024 11:16:15 -0500 (EST)
+From: Zi Yan <zi.yan@sent.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Zi Yan <ziy@nvidia.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Yin, Fengwei" <fengwei.yin@intel.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Rohan Puri <rohan.puri15@gmail.com>,
+	Mcgrof Chamberlain <mcgrof@kernel.org>,
+	Adam Manzanares <a.manzanares@samsung.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v3 1/3] mm/compaction: enable compacting >0 order folios.
+Date: Fri,  2 Feb 2024 11:15:52 -0500
+Message-ID: <20240202161554.565023-2-zi.yan@sent.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240202161554.565023-1-zi.yan@sent.com>
+References: <20240202161554.565023-1-zi.yan@sent.com>
+Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <408e40b4-4428-4bef-bb96-8009194a9633@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 02, 2024 at 09:20:22AM +0530, Nikunj A. Dadhania wrote:
-> I have opportunistically moved the header in this patch as I was
-> adding guest request structure. Movement of rest of the functions
-> implementation from sev-guest.c => kernel/sev.c is done in patch 7/16.
+From: Zi Yan <ziy@nvidia.com>
 
-And kernel/sev.c has a corresponding header arch/x86/include/asm/sev.h
-which is kinda *begging* to collect all the stuff that sev.c is
-using instead of introducing a sev-guest.h thing which doesn't make
-a lot of sense, TU-wise.
+migrate_pages() supports >0 order folio migration and during compaction,
+even if compaction_alloc() cannot provide >0 order free pages,
+migrate_pages() can split the source page and try to migrate the base pages
+from the split. It can be a baseline and start point for adding support for
+compacting >0 order folios.
 
+Suggested-by: Huang Ying <ying.huang@intel.com>
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/compaction.c | 43 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 4add68d40e8d..e43e898d2c77 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -816,6 +816,21 @@ static bool too_many_isolated(struct compact_control *cc)
+ 	return too_many;
+ }
+ 
++/*
++ * 1. if the page order is larger than or equal to target_order (i.e.,
++ * cc->order and when it is not -1 for global compaction), skip it since
++ * target_order already indicates no free page with larger than target_order
++ * exists and later migrating it will most likely fail;
++ *
++ * 2. compacting > pageblock_order pages does not improve memory fragmentation,
++ * skip them;
++ */
++static bool skip_isolation_on_order(int order, int target_order)
++{
++	return (target_order != -1 && order >= target_order) ||
++		order >= pageblock_order;
++}
++
+ /**
+  * isolate_migratepages_block() - isolate all migrate-able pages within
+  *				  a single pageblock
+@@ -1010,7 +1025,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 		/*
+ 		 * Regardless of being on LRU, compound pages such as THP and
+ 		 * hugetlbfs are not to be compacted unless we are attempting
+-		 * an allocation much larger than the huge page size (eg CMA).
++		 * an allocation larger than the compound page size.
+ 		 * We can potentially save a lot of iterations if we skip them
+ 		 * at once. The check is racy, but we can consider only valid
+ 		 * values and the only danger is skipping too much.
+@@ -1018,11 +1033,18 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 		if (PageCompound(page) && !cc->alloc_contig) {
+ 			const unsigned int order = compound_order(page);
+ 
+-			if (likely(order <= MAX_PAGE_ORDER)) {
+-				low_pfn += (1UL << order) - 1;
+-				nr_scanned += (1UL << order) - 1;
++			/*
++			 * Skip based on page order and compaction target order
++			 * and skip hugetlbfs pages.
++			 */
++			if (skip_isolation_on_order(order, cc->order) ||
++			    PageHuge(page)) {
++				if (order <= MAX_PAGE_ORDER) {
++					low_pfn += (1UL << order) - 1;
++					nr_scanned += (1UL << order) - 1;
++				}
++				goto isolate_fail;
+ 			}
+-			goto isolate_fail;
+ 		}
+ 
+ 		/*
+@@ -1165,10 +1187,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 			}
+ 
+ 			/*
+-			 * folio become large since the non-locked check,
+-			 * and it's on LRU.
++			 * Check LRU folio order under the lock
+ 			 */
+-			if (unlikely(folio_test_large(folio) && !cc->alloc_contig)) {
++			if (unlikely(skip_isolation_on_order(folio_order(folio),
++							     cc->order) &&
++				     !cc->alloc_contig)) {
+ 				low_pfn += folio_nr_pages(folio) - 1;
+ 				nr_scanned += folio_nr_pages(folio) - 1;
+ 				folio_set_lru(folio);
+@@ -1786,6 +1809,10 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ 	struct compact_control *cc = (struct compact_control *)data;
+ 	struct folio *dst;
+ 
++	/* this makes migrate_pages() split the source page and retry */
++	if (folio_test_large(src) > 0)
++		return NULL;
++
+ 	if (list_empty(&cc->freepages)) {
+ 		isolate_freepages(cc);
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
