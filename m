@@ -1,97 +1,82 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EF3B80618;
-	Fri,  2 Feb 2024 19:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1601281732
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 19:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706901191; cv=none; b=E+2IM199/cFzR2mIksM5wjDPMi07QH7sG7uOTptsuZ9MGKKGtRtVGo46CMQE+vQ2mbSWF0txe4I177ewR2RlIl8I5QNpQ6pZDotHPVgj8QSU4x/oQ1I0Pe6+uYoELUvS27ljukdpcBcUXuTi1tpYxD1NEFxL5wZ/BJPUx+ogVjg=
+	t=1706901314; cv=none; b=WM/K6ejnJqVtCO+URHrmryM+9Ohgj+BAf7o4Y78fQAxNjO3rFsrWpduA3a5x244d53LiLf/m1iZHOMM404d9RkGcLmyxbX+q6UROG+SWqk81AULlD91ToutpUM9lO635nMOg55WlbZQ3ekomg/9gL2uupNl0iJ5mnZXk7HDhr+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706901191; c=relaxed/simple;
-	bh=zS2ruA8tqKW4S6ZfvZ5YkkvA9o8UBqCZlA+Oud/kXL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KzoRCAWACvtLjTA47bbezs03Lhq1LD+kzLIcaaDSJIVNgIuT6KFlMAdxyNbjtb6r1Vxo5Yepf35N2fEiXjMVhpcqkAyfMBMzLIVh+l/w9zdFprbjHkcApWxYu0PGTFtjxUhLxu6dRQySoO3z0hpyqDi7n6sc/eJuD+jdtKw8nu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=IB3/3JT6; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1706901314; c=relaxed/simple;
+	bh=Qkg5eFUSCl733X8fpmEZ2SfBmPh8Cs0pCAFSoIGM7XM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u8pEQTpMAamtcPY9wpnvchvcM7m+ccePN95k88nKK1E/GftMC5jGY0hGDCEWLWZGjhnbuHzzBtXY4BQscDZOHCqLie2xCykWAfR/PF5lmfWdneLM6Izy2Tl+3NjHuz9EawUrQgpy6A7P0xeGt2UHkRyCXXSnv1y6w2FiULN0Z6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=B+zXFQma reason="key not found in DNS"; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="IB3/3JT6"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id VyxArgRG8LHvUVyxBrSZHA; Fri, 02 Feb 2024 20:12:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1706901120;
-	bh=hgM+sL1lI70tjST9OWNADLTm22CNrbWKCKWuKXAi1Wc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=IB3/3JT6Z9JwTQHO8O1IuAxpknm9XSa6vRNk/mJMGNMxeIHLklWEuuRA3HZHXbKCH
-	 SIEacC8FD7VjBhbe2LtIsw/fUEespg7qsk02Is9GRLYAYHKpBAXRGGhUufgPYdDY3A
-	 2k6OMW8d6JhRk0HaKA3QKz7BX/DXExTJoTja9xyZaQMsYCSt8Qj9F21o8cGcNsMpaE
-	 773tUqCOZEgA8YEkKadnR0k0zs2o+4siRxG5vPS0l3xalOMxHQJhORRZABjtFQqugg
-	 Qn2cLA+CzmSPs01iJnYwLHNLg0ziVOB9yWJfpVkvXjn6VBNnZHiQqVsZdW4wM4DtJB
-	 T/X7JTTdd4/KQ==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 02 Feb 2024 20:12:00 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <30e5c9c2-b13a-4b7e-a266-1e03e654f1d3@wanadoo.fr>
-Date: Fri, 2 Feb 2024 20:11:56 +0100
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="B+zXFQma"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-42a4516ec46so11095751cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 11:15:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1706901312; x=1707506112; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qkg5eFUSCl733X8fpmEZ2SfBmPh8Cs0pCAFSoIGM7XM=;
+        b=B+zXFQma58Eaurq1lGtPMKYnAsFFSt8lixgg2rr3UzdzuMFvjfHm0qntzY9e8r+qZ5
+         gSETG0QwmgFdrABZMEXXorhDJdMnVJbcL4yxy3LIOJmy8posW4gbd1X1pQftuz+5bZMz
+         HENl2PDDgj8GjDu7xwtEB7+UASkh6yI+Yqg6Dz9/MDNzsxWWOzPMiMHOClNcuRIm/QpX
+         1x2CbXvALFFmYXfL6K7t0kDdYd0xO8EpfTrnHPQ2xZ6gS1BQsCznD45KFBWhBsneuT/0
+         iJMNdnGE6oboyWOUWJ6ob1x3wrztTQI65duMkWzvCU7GSkQtmmoSkPNGvcwnyTHGPNgw
+         JZww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706901312; x=1707506112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qkg5eFUSCl733X8fpmEZ2SfBmPh8Cs0pCAFSoIGM7XM=;
+        b=hMwH8rpTbxAqRx/gojzuUT59punyDWTpktBESbEdXQoSgrGHEBZZ5ExEgGDph5Y5e1
+         5ymmrFcrdOm7l7pUGNidiYdLx+JaaagH7Fob+wxoukacKok1npDX5jX6zm9C9aGa6ZD1
+         a1xz5QsIrCifbZgXGU24/m0ts54P3r6CWeQCbAdUl+X3P/niIv5XOxoneoJ+v6DM7mib
+         d8UtIcZwhe3qT77ow67eRHhR0ExXDx2Uq6h7PSluoRSEZFNd3a4fAe0x5u6H4dldGClE
+         QjtT67n//UH/bjChEY59gUdy1y7Q45np6Lf6Dd9QyFxyQdTyLk1oYqBwqEtCh6xrBgnG
+         mXBw==
+X-Gm-Message-State: AOJu0Yx3U5Dq43uPORy11MPe+s5NdH9mJWnm41n8s4BNyEvsJCOugQga
+	b5tjetsfl+hqhpKolMNSsT7/KyDze799W+XvF9i05Y7IXcCF9qWMIvIOj85v79Hx03yr1PeaghI
+	9Fp4FqggvCS9GVEPRVDU9yo/6rIxxvG3clf05nQ==
+X-Google-Smtp-Source: AGHT+IGRYLsM+jFPG/+OQ6YbfxNeymzH6TMB4pT268OsL/EM4HwUGWuXnrdcfT7i3XzApUte4yWs+G5NVXUrdrCl+P4=
+X-Received: by 2002:a05:622a:ce:b0:42a:9d1f:d0e5 with SMTP id
+ p14-20020a05622a00ce00b0042a9d1fd0e5mr123854qtw.11.1706901312011; Fri, 02 Feb
+ 2024 11:15:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] nfc: hci: Save a few bytes of memory when
- registering a 'nfc_llc' engine
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
-References: <6d2b8c390907dcac2e4dc6e71f1b2db2ef8abef1.1705744530.git.christophe.jaillet@wanadoo.fr>
- <20240131150803.2fec5a5c@kernel.org>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240131150803.2fec5a5c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240201193014.2785570-1-tatashin@google.com> <02610629-05ef-4956-a122-36b6ac98fbc2@arm.com>
+ <CA+CK2bD_q3pnThtLVSzFCjyevBEaG6Ad+1o2=1tVZsYg35UMmg@mail.gmail.com>
+ <84c7e816-f749-48d8-a429-8b0ef799cdbb@arm.com> <CA+CK2bCFbeRHT172KUci5+8WJNUeo-2A1M=UXsSqqOy64w1LJw@mail.gmail.com>
+ <bcddef81-3979-4ad0-b3f6-771871a44433@arm.com>
+In-Reply-To: <bcddef81-3979-4ad0-b3f6-771871a44433@arm.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 2 Feb 2024 14:14:35 -0500
+Message-ID: <CA+CK2bD=h+rp4M8+vf3pjzrGAw3QE_LjxK0c-8YCNT=D+wYknQ@mail.gmail.com>
+Subject: Re: [PATCH] iommu/iova: use named kmem_cache for iova magazines
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rientjes@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Le 01/02/2024 à 00:08, Jakub Kicinski a écrit :
-> On Sat, 27 Jan 2024 10:58:29 +0100 Christophe JAILLET wrote:
->> nfc_llc_register() calls pass a string literal as the 'name' parameter.
->>
->> So kstrdup_const() can be used instead of kfree() to avoid a memory
->> allocation in such cases.
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> There is a kfree() call in nfc_llc_exit() that looks suspiciously
-> like it may also free the name.
-> 
-> 
+> Yikes, so it really does just have that many IOMMU groups? OK, fair
+> enough, call me convinced :)
+>
+> On balance though, I think I'd prefer to just stick the lifecycle
+> management into iova_cache_{get,put} for simplicity - spending ~256
+> bytes on another kmem_cache we might not use can hardly be significantly
+> more than the extra code and static data necessary to track its usage
+> separately anyway.
 
-Hi,
+Sure, I will send a v2 soon.
 
-you are right.
-
-
-Should we have something like:
-
-void nfc_llc_exit(void)
-{
-	struct nfc_llc_engine *llc_engine, *n;
-
-	list_for_each_entry_safe(llc_engine, n, &llc_engines, entry)
-		nfc_llc_unregister(&llc_engine->name);
-}
-
-
-It would be slower, but it would reduce code duplication as well.
-This is just an _exit() function, so it shouldn't be called that often 
-anyway, if called at all.
-
-Or, add another function with the list_del()+kfree_const()+kfree(), that 
-would be called from nfc_llc_exit() and nfc_llc_unregister(), to have 
-the best of the 2 worlds?
-
-CJ
+Pasha
