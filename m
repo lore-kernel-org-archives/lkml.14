@@ -1,232 +1,285 @@
-Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B571F5FEE8;
-	Fri,  2 Feb 2024 08:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706863735; cv=fail; b=pj+FmtiJgfqujefJnrgd9HqSpdlyXx7LB3v+NGOxoBVG8RZ6C5s4IcuzGK5gX20xQ/6bz9YqdM8UhL7YOUqeySq7deVb6st3E19fEAVqkE5tQbsl/MkyskeAyLh6fsU0aMCJeoGQaex+0OeMPUzhXBDmTVQoZo6ZHE6OkTHMMtg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706863735; c=relaxed/simple;
-	bh=EDcVrJTH4zKLQ6NuePnVdPVgqZbw4K+NWkYWDaSKTFY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qiCZZSDLaAQKO8szWHmofKal0K2Kz/7JIrAH//oDWCSKJP5Oc/uRpWNVx1Ko/PvxAATuQHtVe/mdDARTbOIuXzvhKn6zkycnDoud9iQ5UFBvRP5SMRDLHglc5d1zKUKfomD3wQL53kx82b6EjD/UGjBymB/lj6PFEM6SLGuYquQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=fTSr6wtI; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=Vu6slBKc; arc=fail smtp.client-ip=208.84.65.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cadence.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A610182BF
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706863736; cv=none; b=hhNOsqilD5xegh78SV1p7JaMhllQHZHwvgql68+rkjSzM8hEgoPeT0JwSGVGVbH6TvmoDqJr9zrNSFacm8m4L6zNlTgAqEe+/ySH8DkgBaJl3lG6jOhxJ4s8+SExMG5A675GSFPZZbi/pcQAj8jfrhegUZYGtSR3iY9fwsrg9x4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706863736; c=relaxed/simple;
+	bh=PyfZug3UJbUT2FpKBL66KgofFvAVaAe+Y0aAJL/b8gU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ja/XIlmuc4Ly3M9YkhkCKw4odmNIN88sZKy1HATG5TJFQ8Eg8WEZzHV2p1JaT0yP4EjIOkDEoEoR3kLd+stN0EINEl59kif08dsjjSVTLGhbQV3s6CJ7lBFZsHZmlnyvQTOP8vkGg4B9jmO0ibk516R/ni/60VRAly7rxWZHFbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=docIvLfx; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="fTSr6wtI";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Vu6slBKc"
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-	by mx0a-0014ca01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4121Z45T031728;
-	Thu, 1 Feb 2024 23:14:59 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	proofpoint; bh=h/Xm2O60ob9sIPF9tK4eX0LqkEnjrCzFgZzK0ZQmaS4=; b=f
-	TSr6wtIpPdo7BsZgAYeLDSwMggK1xYDzTO9c6HnwoAqXo3Q6hRst8hyu1cOJ0sXt
-	lyIqNNh2cZ3j6JoxDcOfC/vc5un968Hsz8MsBjOLf/WaKIh6MLMO4byqXy5k7+Qj
-	QhyeeSW8/XiH4b6bSTGQvb05x5i13rwkll9K7CJvyNlV7yEAiq+LkyFG+wO4mq1Y
-	mKu9dix4Am79bFxX7r+3a55GTCZoIWCwiGuL3L4zWY9HM4C3xjX4RWLO29uHhPkL
-	VGxkSazz40YGX3lSQm6S7fqrgckGBLpdAsHjXDG/2S+26MWWC3SBc5ktS8wN2Itf
-	NEUREzNpK2t3tcFWrZ/wQ==
-Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazlp17011010.outbound.protection.outlook.com [40.93.1.10])
-	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 3w0pv18rku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Feb 2024 23:14:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=POAGijm9N1XfjjchQGdHrjutaHRZH7ah4L2gd4bm1AHWEFQOutxmY0d6uxuIk5de5w3dtOg8LOq0V5i7T5rnSMNTVHd5EM6dzg2k2fYrpfedSVN/zT7mp69Y/i7H/gX+RZ2xNRAJtRV166uTJTMAJtvs8MjYdx/uxbGO0TRTDowgd5Gl/1zIZV28sgoZ2tYzsVouZDwrPtWKT3JoIirXtjwYelO6rdDe8TDXFascMXh/eXa2mX1teOdunJhInzJcKEAUXe/Pp7qTYsiljqTAGKFT7p3FcNV8zYecIBEcHc++5MZbzFHvNprC226AJOjjjNGRvA34Xs/V0NHtiDaoPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h/Xm2O60ob9sIPF9tK4eX0LqkEnjrCzFgZzK0ZQmaS4=;
- b=XirQZS7/CTT+Zujttfet8/B7NLiQ2hWhx8PuqWEG1YJ467LqFZF1f2u3YKvCeQwwUBwUtnV+qleRmGEmzeqUtN0fY7q4YpDI7o6Io2xRWDk5ihnIYqc8EWBhadQsi5p3R8OLLt8K1/sLKo4g/2nvNJHuciUgiXfLcTNRpsK16CpxV3HOHbU7Mcp7eNcDBaxKrIsj9Hi7Z7Hubr13L9iG8XUBjHA3KASV+42PsZx4ye2p5aw4eiCW/+uReo9aLPA/WQeJknIoQKPWT9tb43cKt84koPQtkI11J/IoOVO0sLJhpega01FN2cVCl9BbUq/Dz4Y0XYQMU+ruXo1uz+LOtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h/Xm2O60ob9sIPF9tK4eX0LqkEnjrCzFgZzK0ZQmaS4=;
- b=Vu6slBKc7pkBS5HLZ5eX4urW7rDr6r5epVN9v/CT+lkaF6UJKCajRISK7j+Vw+P3gzKlizg2v8wa0FI55z2fstAjmmdT+qoXrgfmXLSLmztP1VCp0hVJcPT4L9RdjwpSgoWAtG6N64Sn1Powy2oEnJTr7VBZqRELSoh+Jn8q7Ss=
-Received: from PH8PR07MB9512.namprd07.prod.outlook.com (2603:10b6:510:228::13)
- by DM6PR07MB6969.namprd07.prod.outlook.com (2603:10b6:5:1ea::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Fri, 2 Feb
- 2024 07:14:56 +0000
-Received: from PH8PR07MB9512.namprd07.prod.outlook.com
- ([fe80::9879:3a31:5e67:38]) by PH8PR07MB9512.namprd07.prod.outlook.com
- ([fe80::9879:3a31:5e67:38%4]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
- 07:14:56 +0000
-From: Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-To: "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@kernel.org"
-	<kishon@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-CC: Milind Parab <mparab@cadence.com>,
-        "rogerq@kernel.org"
-	<rogerq@kernel.org>,
-        "s-vadapalli@ti.com" <s-vadapalli@ti.com>
-Subject: RE: [PATCH v4 0/5] PHY: Add support for dual refclk configurations in
- Cadence Torrent PHY driver
-Thread-Topic: [PATCH v4 0/5] PHY: Add support for dual refclk configurations
- in Cadence Torrent PHY driver
-Thread-Index: AQHaPxJE0stSc5FwfUSMCrJWMh3uFLD20EIQ
-Date: Fri, 2 Feb 2024 07:14:56 +0000
-Message-ID: 
- <PH8PR07MB9512A5DEE4A7EFBFB7C5FE53C5422@PH8PR07MB9512.namprd07.prod.outlook.com>
-References: <20240104133013.2911035-1-sjakhade@cadence.com>
-In-Reply-To: <20240104133013.2911035-1-sjakhade@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: 
- PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1jMWNiNDI3Yy1jMTlhLTExZWUtYmMwOC1jYzk2ZTViNzM1MWFcYW1lLXRlc3RcYzFjYjQyN2UtYzE5YS0xMWVlLWJjMDgtY2M5NmU1YjczNTFhYm9keS50eHQiIHN6PSI0ODA0IiB0PSIxMzM1MTMzMTY5MjU2NzQwNjMiIGg9IkpqT2JzTXVZUTN0OU5jMElRQVAybWZGcy9oQT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH8PR07MB9512:EE_|DM6PR07MB6969:EE_
-x-ms-office365-filtering-correlation-id: ed9e8745-e74d-4a46-1d04-08dc23bea8bb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- X9II7cTUullzc1Ilo8MYpHjI38jS3fAHk0Nm9VUlcM/LN7+QRkGaboDqq4gcnuPlT64A9vsafnCw94GVST0Ch3+AOK0OdXWOFyDESLI9xW/DcZk5F32MtoRtXea+O5mOdY2mRPY9Guj4AMDd7faSL9UXRA3i4LeDPOgXSYV5KfOyGXgqGcvwjteD1qJ9MPNC2s6gPTVezZ791fRySddRomSzifW5RzO04QopnqJBmUlEJQ69LU1N9AvdFU22NIkkNPz44BaGUngXbiFN2mvtlRp4qJl17OPHvgg+80ClKwLlOiw7xh973G1N8zAxWXhw1QailkqPTdcu101smVgce4C9SYJ2ONgD2QmzhGMchPGK5Ona2M48DSnRMF6e8EA5YA9AfVQQEkimgUwIWs295e3yU7LLi6R9OxZiMfmuyw7QDLyZ2+587KbnGraftvAmdcR+NkJZDfmbR2QVvzFcqsdb88Y8M1L4Cc9U6SOvyuufx2ZAwlMnDhTiKIPiON1+Zz2DuKXB31/Fx8cRrTsajLz1lG1lLssJqOPaSW6CAV9ZJJcQGAC5+VxgB1WMdk4eT6CsaTE5u5dRROcKgavuxt4mPs8/DIW2GM+XKC2deDE=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR07MB9512.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(396003)(366004)(136003)(346002)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(33656002)(83380400001)(41300700001)(122000001)(110136005)(53546011)(9686003)(26005)(38100700002)(5660300002)(7416002)(4326008)(52536014)(966005)(66946007)(8936002)(66476007)(8676002)(54906003)(7696005)(6506007)(2906002)(478600001)(316002)(76116006)(66446008)(71200400001)(64756008)(66556008)(38070700009)(86362001)(55016003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?CrYbWW4+JjLVRqHUx4TmU/AtnTOeYq57rjB7TnG5HfVptUBqv7fuIZZQDjoT?=
- =?us-ascii?Q?kPEEXb0NlRMiR27E5hY/8/dcBlWAgYy9K4Ci4haOfeYEGqLWHLTrAkaZpThs?=
- =?us-ascii?Q?jYJX9caINnJ/ic0TnYIH05qQErJooHafcV3R2I/eff0F785cQYWsCsPTwdtG?=
- =?us-ascii?Q?zdWdQ6Y2xpvsLgvYgNA/7DuYvyL/Ly1iBBZjWTF6ZNIC+1mtzch0nxOPWD5n?=
- =?us-ascii?Q?LmVM6kQJ61gAdJu3z79fC/WDSyR7jonMKwg+5c81laRUZc0Jn6yxnmHDER2A?=
- =?us-ascii?Q?5RGU/tx4m3yhsClT9AkBP3wpoLRgfhFqDiMmQ7nu7RjKha3bBYxHD5/UtJW7?=
- =?us-ascii?Q?XfbZkaIz15Ynt7DVOGLlDhyysVC9AvitoXbPnNt5FKpOE9Sih8AF6E8Ytsar?=
- =?us-ascii?Q?kp5QDJ3QB3zsgGLV65CiiqGwXpNqeM0Ojn3HBmuCp40iBjiiED1ZD7nQ/ae2?=
- =?us-ascii?Q?zMTWfpY7VOL5Voefbl7C5vk5e3PnRhecUxYZO2TSq4v5tzgBVJp+e4tBL9gM?=
- =?us-ascii?Q?U4vi2uKZiuqfoXmWzIpvPuo3H84wFbjP2oEuFiBTv/zZQ27iYFtr5saKQoD3?=
- =?us-ascii?Q?r9y4OVht5OBjNVsV3vvLSRsVazpwVpqU4EmDmrRIntZcyoReflIVc1vY51eh?=
- =?us-ascii?Q?xnXhnISYIAOrIdUdJURpFsClBlh5Mklb/GZ+bRnS+dXESPQTsYQN41RmhwEe?=
- =?us-ascii?Q?/5zja2JjMmIndDmQPeIECevXFxudb47BCXmOJ3HxKC2GQPNZJEbRVB0iX9s9?=
- =?us-ascii?Q?w/z52rNqID8KK1Pc3ObP8COtihxEe4jfi95aeo/4U5DHbrW3xbiEu6e9Q6Dq?=
- =?us-ascii?Q?bNtAhUCHm2HV90UOiUidq+6zBkIykKJcCcjsXQeX0ENdCyKiqVCas9jxfvv0?=
- =?us-ascii?Q?t7SGhZUU7ctghxh+VhrpUdQ2cj1qhLqeNqKF3+F2hXDdieO7L7BLtT/JMmlv?=
- =?us-ascii?Q?6BlTsomQraq47MjntucJz9BxOUua7BPTRN0RoMzHNChdkRP1XbnXyghUza8F?=
- =?us-ascii?Q?6cauOZojpeCtT8xA72iSnTGF7EVIvOtUeJMEp0RW116Qb8WKVvxDp0DployW?=
- =?us-ascii?Q?kHXnxJ40uze92jnHwY2dvS7wzCJygdb73v6BRDP7MaPWH3VQi2JnpspsmJZH?=
- =?us-ascii?Q?e+Pn8hgISikyAaaAWyE/kTRSwMpw2szTmLmG2JoBAciWv+OPjoqAJuVthwwc?=
- =?us-ascii?Q?ZBycjFFa2eHqprci5gaBqD6CHnLSEZE5Gd2qhZUzubwe2FdTIIV4b1zblWq5?=
- =?us-ascii?Q?jX/CHhlMS9XBW5S0R7CP9wVK8F/rKYFJRN5V1XopHtJ762qSUkxysPkBVfNe?=
- =?us-ascii?Q?rmk0mMZJ7M7GUVsZBh/xhhZ1MDQnPSkqjBqBfy5yZcr8i1X/VPhGPHUtHI72?=
- =?us-ascii?Q?nwmuFkkFWGteM2fxPjClO5U5F5lxBgmzzBLPjTTzvY+PPx1KQ4CGnAuxvhhW?=
- =?us-ascii?Q?XKB1BjHml5tkSIqVF8rSxbndKLkQvNkj0mk+E+5lTcfa8YGYQvzvLagoT3zN?=
- =?us-ascii?Q?Wip7fAVwZjPVEiPYQA0WLQB5bTFwj0lX0E5tM0GuOggLfc0+OGs2R26VRcEX?=
- =?us-ascii?Q?ZahM3s4fYr0nRdUMlixNm65PrIwG+yJg7Q8mJNfR?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="docIvLfx"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc693399655so2997488276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 00:48:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706863733; x=1707468533; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cS/CXgsmoznLCM/58EMa+C4HAC14gnF5J7VKWxLdqzo=;
+        b=docIvLfx/y43tGLFtzVNeQxQhniD5ZAOULOT2Ler5jQ8yRDBnUjKigZa0FhyWvcjBe
+         n+c5rcRcHY04OVt4YzK3lvVInV6kiW1B+38B3JL9dtlrvGQh8Z+3Vv4Lv1ufm4xHOO6/
+         z9jepCeDFNdwTXt11CFJcVbjJ2IuvR/u/2sXfc4rMw5jefPLzYYriSEWakcIez046pPM
+         2AsWugWQjYfcZgp8dy0nk8UyylPLwEMzXhZMr6igTYvEoHi4/oJQ2tElLriij+dia7p6
+         9vuR2ub0XG07xoeI6Wtqc3TfbGjdGhnAFhflQlFSa9ddKMjG5bCFj6F07Jg+/tRvzqRW
+         2ZJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706863733; x=1707468533;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cS/CXgsmoznLCM/58EMa+C4HAC14gnF5J7VKWxLdqzo=;
+        b=FuCGpY7cvn8onTn2/5FN8gfZQr1FW38Tj4/IB40+nZDed4XsHnP/wvmE1NfV9BQ6+g
+         jqlFvp0eZv5asRVPqdojOYacpLr6p6/ITDVjQF8FaNa3Jw4njATn3k2dTm3ty3Xo8T4i
+         DHQgtnqI74FDbwqbYoj3U8VC4uvtNO8JPiD/bYfKMVuwQAkZF2GtMHFiphLjYTZktvyA
+         loRouTzLilfA8aA7PgbTriU5vW2/aTqUMe/RfvJ/Hvn/HcrzPB9L96kyo9F9zYp99gNj
+         2iOaeHolWT/LVNiHs9UxDRs5sktMgvWgbGdhYJ00XmQtABTxyzfYrQTOdbYjQszeKoqS
+         e5TQ==
+X-Gm-Message-State: AOJu0Yyh05IdiqW+1q3rh+PWeCgf3MYQfNcRvWwQ5H2ugFsJVSGMJXCr
+	g3p0wjIighC9E/sgJjc7n7CD37mZyOqND9mTEc5KVD9aED97zE/uFNbUmNhHL8HpJcVaxn4lwNL
+	hVZBZJx6h1Ka9SA==
+X-Google-Smtp-Source: AGHT+IF6xSbbu10GIVl4H7+tZyrBPZryIPb0mbF+NXCFwl8Nvh4CdA77KCaumYU6jv2DEa4k6vNprhMgTbaxpwI=
+X-Received: from guanyulin.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:1af])
+ (user=guanyulin job=sendgmr) by 2002:a05:6902:1085:b0:dc6:e5e9:f3af with SMTP
+ id v5-20020a056902108500b00dc6e5e9f3afmr685079ybu.9.1706863733001; Fri, 02
+ Feb 2024 00:48:53 -0800 (PST)
+Date: Fri,  2 Feb 2024 08:42:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR07MB9512.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed9e8745-e74d-4a46-1d04-08dc23bea8bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2024 07:14:56.0958
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hev4d151Plri1VoP7T8cb/BvdpzPHJhsWtv2B8LTy4XIkbbznSBleVt9k0dxIqtDxtzuSOom8iBJ8G20PjM7qtq4NCkFW6cyc5U+C0r/CIk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6969
-X-Proofpoint-ORIG-GUID: oazyf1b8djKUCDAGsUwxrT8dLiRcOTTn
-X-Proofpoint-GUID: oazyf1b8djKUCDAGsUwxrT8dLiRcOTTn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_01,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 suspectscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 phishscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020052
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Message-ID: <20240202084815.3064391-1-guanyulin@google.com>
+Subject: [PATCH] usb: host: enable suspend-to-RAM control in userspace
+From: Guan-Yu Lin <guanyulin@google.com>
+To: gregkh@linuxfoundation.org, mathias.nyman@intel.com, 
+	stern@rowland.harvard.edu, royluo@google.com, benjamin.tissoires@redhat.com, 
+	hadess@hadess.net, heikki.krogerus@linux.intel.com, grundler@chromium.org, 
+	oneukum@suse.com, dianders@chromium.org, yajun.deng@linux.dev
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Guan-Yu Lin <guanyulin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Vinod,
+In systems with both a main processor and a co-processor, asynchronous
+controller management can lead to conflicts. For example, the main
+processor might attempt to suspend a USB device while the co-processor
+is actively transferring data. To address this, we introduce a new
+sysfs entry, "disable_suspend2ram", which allows userspace to control
+the suspend-to-RAM functionality of devices on a specific USB bus.
+Since the userspace has visibility into the activities of both
+processors, it can resolve potential conflicts.
 
-> -----Original Message-----
-> From: Swapnil Jakhade <sjakhade@cadence.com>
-> Sent: Thursday, January 4, 2024 7:00 PM
-> To: vkoul@kernel.org; kishon@kernel.org; robh+dt@kernel.org;
-> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org; linux-
-> phy@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org
-> Cc: Milind Parab <mparab@cadence.com>; Swapnil Kashinath Jakhade
-> <sjakhade@cadence.com>; rogerq@kernel.org; s-vadapalli@ti.com
-> Subject: [PATCH v4 0/5] PHY: Add support for dual refclk configurations i=
-n
-> Cadence Torrent PHY driver
->=20
-> This patch series extends Torrent PHY driver functionality to support dua=
-l input
-> reference clocks.
->=20
-> It also adds support for following multilink configurations:
-> - PCIe(100MHz) + USXGMII(156.25MHz)
-> - USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
->=20
-> The changes have been validated on TI J721E and J7200 platforms.
->=20
-> v1 of the patch series can be found at [1].
->=20
-> Version History:
->=20
-> v4:
->    - Fixed error handling in patch 2/5 as per review comments for v3
->    - Added Acked-by and Reviewed-by tags
->=20
-> v3:
->    - Updated clock description in DT documentation
->    - Added Acked-by from Conor
->=20
-> v2:
->    - Rename refclk1 to pll1_refclk in bindings and in driver
->    - Simplify clock-names as suggested by Rob
->=20
-> [1] https://lore.kernel.org/linux-phy/20230724150002.5645-1-
-> sjakhade@cadence.com/
->=20
-> Swapnil Jakhade (5):
->   dt-bindings: phy: cadence-torrent: Add optional input reference clock
->     for PLL1
->   phy: cadence-torrent: Add PCIe(100MHz) + USXGMII(156.25MHz) multilink
->     configuration
->   phy: cadence-torrent: Add USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
->     multilink configuration
->   dt-bindings: phy: cadence-torrent: Add a separate compatible for TI
->     J7200
->   phy: cadence-torrent: Add USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
->     multilink config for TI J7200
->=20
->  .../bindings/phy/phy-cadence-torrent.yaml     |  11 +-
->  drivers/phy/cadence/phy-cadence-torrent.c     | 720 +++++++++++++++++-
->  2 files changed, 719 insertions(+), 12 deletions(-)
->=20
-> --
+Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
+---
+ Documentation/ABI/testing/sysfs-bus-usb | 10 +++++++
+ drivers/usb/core/driver.c               | 12 ++++++++
+ drivers/usb/core/sysfs.c                | 29 ++++++++++++++++++
+ drivers/usb/host/xhci-plat.c            | 40 ++++++++++++++++++++++---
+ include/linux/usb.h                     |  4 +++
+ 5 files changed, 91 insertions(+), 4 deletions(-)
 
-Could you please consider reviewing and merging this series?
-
-Thanks & regards,
-Swapnil
-
-> 2.25.1
+diff --git a/Documentation/ABI/testing/sysfs-bus-usb b/Documentation/ABI/testing/sysfs-bus-usb
+index 2b7108e21977..f6a4f496c8f6 100644
+--- a/Documentation/ABI/testing/sysfs-bus-usb
++++ b/Documentation/ABI/testing/sysfs-bus-usb
+@@ -19,6 +19,16 @@ Description:
+ 		would be authorized by default.
+ 		The value can be 1 or 0. It's by default 1.
+ 
++What:		/sys/bus/usb/devices/usbX/disable_suspend2ram
++Date:		January 2024
++Contact:	Guan-Yu Lin <guanyulin@google.com>
++Description:
++		Disables "suspend-to-RAM" system power management in USB devices
++		and their host contorller under this usb bus. The modification of
++		this entry should be done when the system is active to ensure the
++		correctness of system power state transitions.
++		The value can be 1 or 0. It's by default 0.
++
+ What:		/sys/bus/usb/device/.../authorized
+ Date:		July 2008
+ KernelVersion:	2.6.26
+diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
+index e02ba15f6e34..c555e2b1ddda 100644
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -1569,6 +1569,12 @@ int usb_suspend(struct device *dev, pm_message_t msg)
+ 	struct usb_device	*udev = to_usb_device(dev);
+ 	int r;
+ 
++	if (msg.event == PM_EVENT_SUSPEND && udev->bus->disable_suspend2ram) {
++		/* Skip "suspend-to-RAM" process under the same USB bus */
++		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.suspend\n");
++		return 0;
++	}
++
+ 	unbind_no_pm_drivers_interfaces(udev);
+ 
+ 	/* From now on we are sure all drivers support suspend/resume
+@@ -1605,6 +1611,12 @@ int usb_resume(struct device *dev, pm_message_t msg)
+ 	struct usb_device	*udev = to_usb_device(dev);
+ 	int			status;
+ 
++	if (msg.event == PM_EVENT_RESUME && udev->bus->disable_suspend2ram) {
++		/* Skip "suspend-to-RAM" process under the same USB bus */
++		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.resume\n");
++		return 0;
++	}
++
+ 	/* For all calls, take the device back to full power and
+ 	 * tell the PM core in case it was autosuspended previously.
+ 	 * Unbind the interfaces that will need rebinding later,
+diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+index 5d21718afb05..7a228ea95506 100644
+--- a/drivers/usb/core/sysfs.c
++++ b/drivers/usb/core/sysfs.c
+@@ -68,6 +68,34 @@ static ssize_t bMaxPower_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(bMaxPower);
+ 
++static ssize_t disable_suspend2ram_show(struct device *dev,
++					struct device_attribute *attr, char *buf)
++{
++	struct usb_device *udev;
++
++	udev = to_usb_device(dev);
++	return sysfs_emit(buf, "%d\n", !!(udev->bus->disable_suspend2ram));
++}
++
++static ssize_t disable_suspend2ram_store(struct device *dev,
++					 struct device_attribute *attr,
++					 const char *buf, size_t count)
++{
++	struct usb_device *udev = to_usb_device(dev);
++	bool val;
++	int rc;
++
++	if (kstrtobool(buf, &val) != 0)
++		return -EINVAL;
++	rc = usb_lock_device_interruptible(udev);
++	if (rc < 0)
++		return -EINTR;
++	udev->bus->disable_suspend2ram = !!(val);
++	usb_unlock_device(udev);
++	return count;
++}
++static DEVICE_ATTR_RW(disable_suspend2ram);
++
+ static ssize_t configuration_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
+@@ -984,6 +1012,7 @@ static DEVICE_ATTR_RW(interface_authorized_default);
+ static struct attribute *usb_bus_attrs[] = {
+ 		&dev_attr_authorized_default.attr,
+ 		&dev_attr_interface_authorized_default.attr,
++		&dev_attr_disable_suspend2ram.attr,
+ 		NULL,
+ };
+ 
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index f04fde19f551..86733249fcdc 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -436,12 +436,18 @@ void xhci_plat_remove(struct platform_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(xhci_plat_remove);
+ 
+-static int xhci_plat_suspend(struct device *dev)
++static int xhci_plat_suspend_common(struct device *dev, struct pm_message pmsg)
+ {
+ 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+ 	int ret;
+ 
++	if (pmsg.event == PM_EVENT_SUSPEND && hcd->self.disable_suspend2ram) {
++		/* Skip "suspend-to-RAM" process under the same USB bus */
++		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.suspend\n");
++		return 0;
++	}
++
+ 	if (pm_runtime_suspended(dev))
+ 		pm_runtime_resume(dev);
+ 
+@@ -464,12 +470,33 @@ static int xhci_plat_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
++static int xhci_plat_suspend(struct device *dev)
++{
++	return xhci_plat_suspend_common(dev, PMSG_SUSPEND);
++}
++
++static int xhci_plat_freeze(struct device *dev)
++{
++	return xhci_plat_suspend_common(dev, PMSG_FREEZE);
++}
++
++static int xhci_plat_poweroff(struct device *dev)
++{
++	return xhci_plat_suspend_common(dev, PMSG_HIBERNATE);
++}
++
+ static int xhci_plat_resume_common(struct device *dev, struct pm_message pmsg)
+ {
+ 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+ 	int ret;
+ 
++	if (pmsg.event == PM_EVENT_RESUME && hcd->self.disable_suspend2ram) {
++		/* Skip "suspend-to-RAM" process under the same USB bus */
++		dev_dbg(dev, "suspend-to-RAM disabled, skipping dev_pm_ops.resume\n");
++		return 0;
++	}
++
+ 	if (!device_may_wakeup(dev) && (xhci->quirks & XHCI_SUSPEND_RESUME_CLKS)) {
+ 		ret = clk_prepare_enable(xhci->clk);
+ 		if (ret)
+@@ -510,6 +537,11 @@ static int xhci_plat_resume(struct device *dev)
+ 	return xhci_plat_resume_common(dev, PMSG_RESUME);
+ }
+ 
++static int xhci_plat_thaw(struct device *dev)
++{
++	return xhci_plat_resume_common(dev, PMSG_THAW);
++}
++
+ static int xhci_plat_restore(struct device *dev)
+ {
+ 	return xhci_plat_resume_common(dev, PMSG_RESTORE);
+@@ -539,9 +571,9 @@ static int __maybe_unused xhci_plat_runtime_resume(struct device *dev)
+ const struct dev_pm_ops xhci_plat_pm_ops = {
+ 	.suspend = pm_sleep_ptr(xhci_plat_suspend),
+ 	.resume = pm_sleep_ptr(xhci_plat_resume),
+-	.freeze = pm_sleep_ptr(xhci_plat_suspend),
+-	.thaw = pm_sleep_ptr(xhci_plat_resume),
+-	.poweroff = pm_sleep_ptr(xhci_plat_suspend),
++	.freeze = pm_sleep_ptr(xhci_plat_freeze),
++	.thaw = pm_sleep_ptr(xhci_plat_thaw),
++	.poweroff = pm_sleep_ptr(xhci_plat_poweroff),
+ 	.restore = pm_sleep_ptr(xhci_plat_restore),
+ 
+ 	SET_RUNTIME_PM_OPS(xhci_plat_runtime_suspend,
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index 9e52179872a5..a3b8f799c5a4 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -465,6 +465,10 @@ struct usb_bus {
+ 					 * the ep queue on a short transfer
+ 					 * with the URB_SHORT_NOT_OK flag set.
+ 					 */
++	unsigned disable_suspend2ram:1; /* Disables the "suspend-to-RAM" system
++					 * power management of USB devices on this
++					 * bus and their hcd.
++					 */
+ 	unsigned no_sg_constraint:1;	/* no sg constraint */
+ 	unsigned sg_tablesize;		/* 0 or largest number of sg list entries */
+ 
+-- 
+2.43.0.594.gd9cf4e227d-goog
 
