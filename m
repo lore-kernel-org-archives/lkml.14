@@ -1,258 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2563522085;
-	Fri,  2 Feb 2024 15:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C3714198F;
+	Fri,  2 Feb 2024 15:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706887663; cv=none; b=knv4iTU8+T3cEmmZSFJZZ5U8uXsmwKrQpCoOoYpf0KGIlJyOjWIUWh2GXv4muOipaJd1l0cQCWjcUDkaU5NYam933t9D1Yb1kf0IMDfPheDfuW1duwXYJ0EU3/HfjVlBMxzENiFJsr5AK8+JjMxakW4d8zD24hWwe9qFH47K0Kk=
+	t=1706887750; cv=none; b=RXYLhPBUQexWME5W42Kanj1Bcdw2dYN8qqGhtaB4yl2taH3YRNI/V+B/ybbySml7554mFJiTS79lrmgtO/FMXfi0dAK8e8NgSrIpwcPW26L8P6uhXlSRjWyhvmeg+LUpxc+Co5f695dKAiSPPYcr08usGLx4TVAEJ+MMoSbwuTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706887663; c=relaxed/simple;
-	bh=RhCaan2xTl8pGQjWVw71sQan87Rb8PlWXG6TrDgynRg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PJIw5WLBEs3KFfcVUomraKljLAMgHxOTaCp03Stl10sCr2LXkjZFYhJFQJ8GWEPsKK4ZZpyYBWhr50Yj0Qyl/2x8K248E/krRae9jzKpj79Z3BgrmQqCqEVhinqAfYnzMpsPIazHwKYQkY+9daKd4EYV+OWzn0H3MXOFkNYfwR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fp1UGuaX; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706887750; c=relaxed/simple;
+	bh=eWCT34Fq+b7991k5pNSiwWeUVYQTzCYYL/cyt2+oOI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pbq9uBsYpli02Ah7Dtnaspvmo4L2DkvyR8UPFjxB1rBAYwCe/uRukt7eO0BwBChkckQLBVxnNf+740o3/3eK95RAzZMZkVL8sPqTpTWjLJoiKhyUhapaD092BMvxo3rzurLnFuQKRsixMRFN6kL4Eve4jgqj/YX5ayGG9fkqpX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQcMYbJD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fp1UGuaX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706887662; x=1738423662;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=RhCaan2xTl8pGQjWVw71sQan87Rb8PlWXG6TrDgynRg=;
-  b=fp1UGuaXrClAb6fC5wlH2lsdisU2HNcGvL0ZZOFOAlJ8Fmc4/NSTl3Wj
-   zOT2KmeX7W0jwDhDGTQUF1Vqf77YIeAttpbtd7YZqQdn1SwVw3SV/8P/A
-   x6UI/BSsr+9AmQTq18SbpgctFc9J0AaM7oj5mcchlzJf/7pM7FhAcytlY
-   RDmpGp0Gy9FeFllT5kCjk5EC7OhhF26WiT7pi5JvbfLkDAShJvr+xEAxd
-   NknwtplfhO1v2Nzbily3n8BImnR5nHW8a9k0PpDlXBwk+0/LQIt1KfAOj
-   N8MtdvFUZqi+tPWdRQeWsy6Ov8OhWMSrDgUK4LAOFvihfsKG0J+iCPhmU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="338877"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="338877"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 07:27:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="376364"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.50.66])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 07:27:39 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 Feb 2024 17:27:34 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
- quirk
-In-Reply-To: <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk>
-Message-ID: <d9f6efe3-3e99-0e4b-0d1c-5dc3442c2419@linux.intel.com>
-References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk> <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com> <d5f14b8f-f935-5d5e-e098-f2e78a2766c6@linux.intel.com>
- <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQcMYbJD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F71C433C7;
+	Fri,  2 Feb 2024 15:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706887750;
+	bh=eWCT34Fq+b7991k5pNSiwWeUVYQTzCYYL/cyt2+oOI4=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
+	b=FQcMYbJD377UCUye1ongyzueF7fnGQ9TAFH0kSvL/OREHfX9BuNNBixbmGDTpSsMq
+	 DnoNGZ/Kn76YG6ZZNVnKfa3/2buI1j9JIbr8szqq+uV17LUgaGkVQBGv9rk7OttVZJ
+	 CbCxbTeiws5gZ66nmRbYgOViuF/j045PjFYyBXr4mtt5VG2MOzy/9vu1e9jJ9TpbeZ
+	 E8UCx5f2lOujI5D4n2prtl7OWXa8ya7Gukiz8HJHfe7jVUdAgbX6BKLJz2qTR9Ht10
+	 Qg40JNqkJOm3scz4i6gT2vl7FSJ697eV2hiFvdYOd3MTXu4ACBMyrz8qgR+m9LyROd
+	 iwO5+XeVvnCrg==
+Date: Fri, 2 Feb 2024 09:29:08 -0600
+From: Rob Herring <robh@kernel.org>
+To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, frowand.list@gmail.com,
+	vgupta@kernel.org, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+	guoren@kernel.org, monstr@monstr.eu, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, dinguyen@kernel.org, chenhuacai@kernel.org,
+	tsbogend@alpha.franken.de, jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+	mpe@ellerman.id.au, ysato@users.sourceforge.jp, dalias@libc.org,
+	glaubitz@physik.fu-berlin.de, richard@nod.at,
+	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+	chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	kernel@quicinc.com
+Subject: Re: [PATCH 00/46] Dynamic allocation of reserved_mem array.
+Message-ID: <20240202152908.GA4045321-robh@kernel.org>
+References: <20240126235425.12233-1-quic_obabatun@quicinc.com>
+ <20240131000710.GA2581425-robh@kernel.org>
+ <51dc64bb-3101-4b4a-a54f-c0df6c0b264c@quicinc.com>
+ <20240201194653.GA1328565-robh@kernel.org>
+ <d98288ed-a0d9-4fc1-87bc-d79cb528778c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-987821708-1706879739=:1020"
-Content-ID: <9428fc1c-220f-94a7-802d-c45a846ed36f@linux.intel.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d98288ed-a0d9-4fc1-87bc-d79cb528778c@quicinc.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Feb 01, 2024 at 01:10:18PM -0800, Oreoluwa Babatunde wrote:
+> 
+> On 2/1/2024 11:46 AM, Rob Herring wrote:
+> > On Thu, Feb 01, 2024 at 09:08:06AM -0800, Oreoluwa Babatunde wrote:
+> >> On 1/30/2024 4:07 PM, Rob Herring wrote:
+> >>> On Fri, Jan 26, 2024 at 03:53:39PM -0800, Oreoluwa Babatunde wrote:
+> >>>> The reserved_mem array is used to store data for the different
+> >>>> reserved memory regions defined in the DT of a device.  The array
+> >>>> stores information such as region name, node, start-address, and size
+> >>>> of the reserved memory regions.
+> >>>>
+> >>>> The array is currently statically allocated with a size of
+> >>>> MAX_RESERVED_REGIONS(64). This means that any system that specifies a
+> >>>> number of reserved memory regions greater than MAX_RESERVED_REGIONS(64)
+> >>>> will not have enough space to store the information for all the regions.
+> >>>>
+> >>>> Therefore, this series extends the use of the static array for
+> >>>> reserved_mem, and introduces a dynamically allocated array using
+> >>>> memblock_alloc() based on the number of reserved memory regions
+> >>>> specified in the DT.
+> >>>>
+> >>>> Some architectures such as arm64 require the page tables to be setup
+> >>>> before memblock allocated memory is writable.  Therefore, the dynamic
+> >>>> allocation of the reserved_mem array will need to be done after the
+> >>>> page tables have been setup on these architectures. In most cases that
+> >>>> will be after paging_init().
+> >>>>
+> >>>> Reserved memory regions can be divided into 2 groups.
+> >>>> i) Statically-placed reserved memory regions
+> >>>> i.e. regions defined in the DT using the @reg property.
+> >>>> ii) Dynamically-placed reserved memory regions.
+> >>>> i.e. regions specified in the DT using the @alloc_ranges
+> >>>>     and @size properties.
+> >>>>
+> >>>> It is possible to call memblock_reserve() and memblock_mark_nomap() on
+> >>>> the statically-placed reserved memory regions and not need to save them
+> >>>> to the reserved_mem array until memory is allocated for it using
+> >>>> memblock, which will be after the page tables have been setup.
+> >>>> For the dynamically-placed reserved memory regions, it is not possible
+> >>>> to wait to store its information because the starting address is
+> >>>> allocated only at run time, and hence they need to be stored somewhere
+> >>>> after they are allocated.
+> >>>> Waiting until after the page tables have been setup to allocate memory
+> >>>> for the dynamically-placed regions is also not an option because the
+> >>>> allocations will come from memory that have already been added to the
+> >>>> page tables, which is not good for memory that is supposed to be
+> >>>> reserved and/or marked as nomap.
+> >>>>
+> >>>> Therefore, this series splits up the processing of the reserved memory
+> >>>> regions into two stages, of which the first stage is carried out by
+> >>>> early_init_fdt_scan_reserved_mem() and the second is carried out by
+> >>>> fdt_init_reserved_mem().
+> >>>>
+> >>>> The early_init_fdt_scan_reserved_mem(), which is called before the page
+> >>>> tables are setup is used to:
+> >>>> 1. Call memblock_reserve() and memblock_mark_nomap() on all the
+> >>>>    statically-placed reserved memory regions as needed.
+> >>>> 2. Allocate memory from memblock for the dynamically-placed reserved
+> >>>>    memory regions and store them in the static array for reserved_mem.
+> >>>>    memblock_reserve() and memblock_mark_nomap() are also called as
+> >>>>    needed on all the memory allocated for the dynamically-placed
+> >>>>    regions.
+> >>>> 3. Count the total number of reserved memory regions found in the DT.
+> >>>>
+> >>>> fdt_init_reserved_mem(), which should be called after the page tables
+> >>>> have been setup, is used to carry out the following:
+> >>>> 1. Allocate memory for the reserved_mem array based on the number of
+> >>>>    reserved memory regions counted as mentioned above.
+> >>>> 2. Copy all the information for the dynamically-placed reserved memory
+> >>>>    regions from the static array into the new allocated memory for the
+> >>>>    reserved_mem array.
+> >>>> 3. Add the information for the statically-placed reserved memory into
+> >>>>    reserved_mem array.
+> >>>> 4. Run the region specific init functions for each of the reserve memory
+> >>>>    regions saved in the reserved_mem array.
+> >>> I don't see the need for fdt_init_reserved_mem() to be explicitly called 
+> >>> by arch code. I said this already, but that can be done at the same time 
+> >>> as unflattening the DT. The same conditions are needed for both: we need 
+> >>> to be able to allocate memory from memblock.
+> >>>
+> >>> To put it another way, if fdt_init_reserved_mem() can be called "early", 
+> >>> then unflattening could be moved earlier as well. Though I don't think 
+> >>> we should optimize that. I'd rather see all arches call the DT functions 
+> >>> at the same stages.
+> >> Hi Rob,
+> >>
+> >> The reason we moved fdt_init_reserved_mem() back into the arch specific code
+> >> was because we realized that there was no apparently obvious way to call
+> >> early_init_fdt_scan_reserved_mem() and fdt_init_reserved_mem() in the correct
+> >> order that will work for all archs if we placed fdt_init_reserved_mem() inside the
+> >> unflatten_devicetree() function.
+> >>
+> >> early_init_fdt_scan_reserved_mem() needs to be
+> >> called first before fdt_init_reserved_mem(). But on some archs,
+> >> unflatten_devicetree() is called before early_init_fdt_scan_reserved_mem(), which
+> >> means that if we have fdt_init_reserved_mem() inside the unflatten_devicetree()
+> >> function, it will be called before early_init_fdt_scan_reserved_mem().
+> >>
+> >> This is connected to your other comments on Patch 7 & Patch 14.
+> >> I agree, unflatten_devicetree() should NOT be getting called before we reserve
+> >> memory for the reserved memory regions because that could cause memory to be
+> >> allocated from regions that should be reserved.
+> >>
+> >> Hence, resolving this issue should allow us to call fdt_init_reserved_mem() from
+> >> the  unflatten_devicetree() function without it changing the order that we are
+> >> trying to have.
+> > There's one issue I've found which is unflatten_device_tree() isn't 
+> > called for ACPI case on arm64. Turns out we need /reserved-memory 
+> > handled in that case too. However, I think we're going to change 
+> > calling unflatten_device_tree() unconditionally for another reason[1]. 
+> >
+> > [1] https://lore.kernel.org/all/efe6a7886c3491cc9c225a903efa2b1e.sboyd@kernel.org/
+> >
+> >> I will work on implementing this and send another revision.
+> > I think we should go with a simpler route that's just copy the an 
+> > initial array in initdata to a properly sized, allocated array like the 
+> > patch below. Of course it will need some arch fixes and a follow-on 
+> > patch to increase the initial array size.
+> >
+> > 8<--------------------------------------------------------------------
+> > From: Rob Herring <robh@kernel.org>
+> > Date: Wed, 31 Jan 2024 16:26:23 -0600
+> > Subject: [PATCH] of: reserved-mem: Re-allocate reserved_mem array to actual
+> >  size
+> >
+> > In preparation to increase the static reserved_mem array size yet again,
+> > copy the initial array to an allocated array sized based on the actual
+> > size needed. Now increasing the the size of the static reserved_mem
+> > array only eats up the initdata space. For platforms with reasonable
+> > number of reserved regions, we have a net gain in free memory.
+> >
+> > In order to do memblock allocations, fdt_init_reserved_mem() is moved a
+> > bit later to unflatten_device_tree(). On some arches this is effectively
+> > a nop.
 
---8323328-987821708-1706879739=:1020
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <66007069-bb7d-66e7-d4f6-94c027dc9ebb@linux.intel.com>
+[...]
 
-On Thu, 1 Feb 2024, Maciej W. Rozycki wrote:
+> Hi Rob,
+> 
+> One thing that could come up with this is that  memory
+> for the dynamically-placed reserved memory regions
+> won't be allocated until we call fdt_init_reserved_mem().
+> (i.e. reserved memory regions defined using @alloc-ranges
+> and @size properties)
+> 
+> Since fdt_init_reserved_mem() is now being called from
+> unflatten_device_tree(), the page tables would have been
+> setup on most architectures, which means we will be
+> allocating from memory that have already been mapped.
+> 
+> Could this be an issue for memory that is supposed to be
+> reserved? 
 
-> On Thu, 1 Feb 2024, Ilpo J=E4rvinen wrote:
+I suppose if the alloc-ranges region is not much bigger than the size 
+and the kernel already made some allocation that landed in the region, 
+then the allocation could fail. Not much we can do other than alloc the 
+reserved regions as soon as possible. Are there cases where that's not 
+happening?
 
-> > > >  This can be problematic AFAICT however.  While I am not able to ve=
-rify=20
-> > > > suspend/resume operation with my devices, I expect the behaviour to=
- be=20
-> > > > exactly the same after resume as after a bus reset: the link will f=
-ail to=20
-> > > > negotiate and the LBMS and DLLLA bits will be respectively set and =
-clear. =20
-> > > > Consequently if you clear LBMS at resume, then the workaround won't=
-=20
-> > > > trigger and the link will remain inoperational in its limbo state.
-> > >=20
-> > > How do you get the LBMS set in the first place? Isn't that because th=
-e=20
-> > > link tries to come up so shouldn't it reassert that bit again before =
-the=20
-> > > code ends up into the target speed quirk? That is, I assumed you actu=
-ally=20
-> > > wanted to detect LBMS getting set during pcie_wait_for_link_status() =
-call=20
-> > > preceeding pcie_failed_link_retrain() call?
->=20
->  It is a good question what the sequence of events exactly is that sets=
-=20
-> the LBMS bit.  I don't know the answer offhand.
->
-> > > In any case and unrelated to this patch, the way this quirk monopoliz=
-es=20
-> > > LBMS bit is going to have to be changed because it won't be reliable =
-with=20
-> > > the PCIe BW controller that sets up and irq for LBMS (and clears the =
-bit).
-> > > In bwctrl v5 (yet to be posted) I'll add LBMS counter into bwctrl to =
-allow=20
-> > > this quirk to keep working (which will need to be confirmed).
->=20
->  If there's an interrupt handler for LBMS events, then it may be the best=
-=20
-> approach if the quirk is triggered by the handler instead, possibly as a=
-=20
-> softirq.
+I suppose the kernel could try and avoid all alloc-ranges until they've 
+been allocated, but that would have to be best effort. I've seen 
+optimizations where it's desired to spread buffers across DRAM banks, so 
+you could have N alloc-ranges for N banks that covers all of memory.
 
-Okay, I'll look into changing the code towards that direction. The small=20
-trouble there is that soon I've very little that can be configured away=20
-from the bandwidth controller because this quirk already relates to the=20
-target speed changing code and the LBMS will require the other side to be=
-=20
-always compiled too...
+There's also the issue that if you have more fixed regions than memblock 
+can handle (128) before it can reallocate its arrays, then the 
+page tables themselves could be allocated in reserved regions.
 
-> > > >  What kind of scenario does the LBMS bit get set in that you have a=
-=20
-> > > > trouble with?  You write that in your case the downstream device ha=
-s been=20
-> > > > disconnected while the bug hierarchy was suspended and it is not pr=
-esent=20
-> > > > anymore at resume, is that correct?
-> > > >
-> > > >  But in that case no link negotiation could have been possible and=
-=20
-> > > > consequently the LBMS bit mustn't have been set by hardware (accord=
-ing to=20
-> > > > my understanding of PCIe), because (for compliant, non-broken devic=
-es=20
-> > > > anyway) it is only specified to be set for ports that can communica=
-te with=20
-> > > > the other link end (the spec explicitly says there mustn't have bee=
-n a=20
-> > > > transition through the DL_Down status for the port).
-> > > >
-> > > >  Am I missing something?
-> > >=20
-> > > Yes, when resuming the device is already gone but the bridge still ha=
-s=20
-> > > LBMS set. My understanding is that it was set because it was there
-> > > from pre-suspend time but I've not really taken a deep look into it=
-=20
-> > > because the problem and fix seemed obvious.
->=20
->  I've always been confused with the suspend/resume terminology: I'd have=
-=20
-> assumed this would have gone through a power cycle, in which case the LBM=
-S=20
-> bit would have necessarily been cleared in the transition, because its=20
-> required state at power-up/reset is 0, so the value of 1 observed would b=
-e=20
-> a result of what has happened solely through the resume stage.  Otherwise=
-=20
-> it may make sense to clear the bit in the course of the suspend stage,=20
-> though it wouldn't be race-free I'm afraid.
+> Especially for the regions that are specified as
+> no-map?
 
-I also thought suspend as one possibility but yes, it racy. Mika also=20
-suggested clearing LBMS after each successful retrain but that wouldn't=20
-cover all possible ways to get LBMS set as devices can set it=20
-independently of OS. Keeping it cleared constantly is pretty much what=20
-will happen with the bandwidth controller anyway.
+'no-map' is a hint, not a guarantee. Arm32 ignores it for regions 
+within the kernel's linear map (at least it used to). I don't think 
+anything changes here with it.
 
-> > > I read that "without the Port transitioning through DL_Down status"=
-=20
-> > > differently than you, I only interpret that it relates to the two=20
-> > > bullets following it. ...So if retrain bit is set, and link then goes=
-=20
-> > > down, the bullet no longer applies and LBMS should not be set because=
-=20
-> > > there was transition through DL_Down. But I could well be wrong...
->=20
-> What I refer to is that if you suspend your system, remove the device=20
-> that originally caused the quirk to trigger and then resume your system=
-=20
-> with the device absent,
-
-A small correction here, the quirk didn't trigger initially for the=20
-device, it does that only after resume. And even then quirk is called=20
-only because the link doesn't come up.
-
-On longer term, I'd actually want to have hotplug resumed earlier so the=20
-disconnect could be detected before/while all this waiting related to link=
-=20
-up is done. But that's very complicated to realize in practice because=20
-hotplug lurks behind portdrv so resuming it earlier isn't going to be=20
-about just moving a few lines around.
-
-> then LBMS couldn't have been set in the course of=20
-> resume, because the port couldn't have come out of the DL_Down status in=
-=20
-> the absence of the downstream device.  Do you interpret it differently?
-
-That's a good question and I don't have an answer to this yet, that is,
-I don't fully understand what happens to those device during runtime=20
-suspend/resume cycle and what is the exact mechanism that preserves the=20
-LBMS bit, I'll look more into it.
-
-But I agree that if the device goes cold enough and downstream is=20
-disconnected, the port should no longer have a way to reassert LBMS.
-
-> Of course once set the bit isn't self-clearing except at power-up/reset.
-
-Okay, I misunderstood you meant it would be self-clearing whenever=20
-DL_Down happens. I can see that could have been one possible=20
-interpretation of the text fragment in the spec.
-
-> > So I would be really curious now to know how you get the LBMS on the=20
-> > device that needs the Target Speed quirk? Is this true (from the commit=
-=20
-> > a89c82249c37 ("PCI: Work around PCIe link training failures")):
-> >=20
-> > "Instead the link continues oscillating between the two speeds, at the=
-=20
-> > rate of 34-35 times per second, with link training reported repeatedly=
-=20
-> > active ~84% of the time."
-> >=20
-> > ?
->=20
->  That is what I have observed.  It was so long ago I don't remember how I=
-=20
-> calculated the figures anymore, it may have been with a U-Boot debug patc=
-h=20
-> made to collect samples (because with U-Boot you can just poll the LT bit=
-=20
-> while busy-looping).  I'd have to try and dig out the old stuff.
-
-I'd guess it probably sets the bit on each try, or perhaps only on the=20
-subset of tries which were "successful" before the link almost immediately=
-=20
-runs into another error (that 16% of the time).
-
-> > Because if it is constantly picking another speed, it would mean you ge=
-t=20
-> > LBMS set over and over again, no? If that happens 34-35 times per secon=
-d,=20
-> > it should be set already again when we get into that quirk because ther=
-e=20
-> > was some wait before it gets called.
->=20
->  I'll see if I can experiment with the hardware over the next couple of=
-=20
-> days and come back with my findings.
-
-Okay thanks.
-
-
---=20
- i.
---8323328-987821708-1706879739=:1020--
+Rob
