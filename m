@@ -1,132 +1,104 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675BEF4F3;
-	Fri,  2 Feb 2024 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127AD146902
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706887163; cv=none; b=htz7gYCnn0zEpFqCQ/c4CaHnNBf8VRQBX2QZdNdOim3ErfY63sABr0Gfknqqj96qn2q4deSPhR09T8icHVMYYFnZC96j7DKZvJShahdS7ZUGyhb6rYw0pWin19iI3GcUKDtgETYpFG0h//Yr1hBt8jv6xDvWbBYKC8u1EtqtsFE=
+	t=1706887175; cv=none; b=FPg77oNgeIsWELhhLluZQjdE6mFpN3TCDI2sv93JUGw8PwDYHJKQNdvAjpAsambyTNFOfb2wlqp9jX3M/BO53ksxJkDNql3rsIezj9tiSqApndyYV/x43MAhKePuW7xd9VeQgODZJ8KjpEW00f6nGdDDH/YiX/HOkfCY1O1Yeeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706887163; c=relaxed/simple;
-	bh=Ox8L57JA4AUkcDs2pE0/4jJPX9j0BxzICdkXV9TY1Ic=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CoGe8kaMSDmKpcqJ+qYOWjNtPUYm76/zMTE6bNnebAczqDTtx6jeMQRLbOl2LZyUaGE5dAsgM1hPvXdOpRiCDe20PvDU1Eo1mlUvGzDK7eYak1uLgxTWMX8q2EmMEm6FHMCcalz78M2D8O3R+eGHg1H2jupb69jjHMOvOSVaRFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctN0Iwm+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706887175; c=relaxed/simple;
+	bh=2Dbxz5xYJkxF7TJ2GJxLcMWWwSL1lpUM3YqACQhdtpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tyl+/JcQUgMXmk3w6qmWR+m9Sbjtd5BnKSXxYEpdDgDh43z82ZMX4gH/z3MOxI5nlNHscY09zLNxQFLJA0cxv8T6HE+dIvvWwkBLVrm159pDfFMZet+9oQ54nkoMBsbAaFXA8xDq1b6DRD8lW8e5yaRItETClZLQny0MoM/Anzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WeeBvoVn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctN0Iwm+"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fc549ab9bso7343885e9.0;
-        Fri, 02 Feb 2024 07:19:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706887159; x=1707491959; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=aE9RDzquXUnyGWyqx2WNSmBkRu7c0fXOe0fgH0xt2RM=;
-        b=ctN0Iwm+k9xjon0XsBg6U9HdazIHPJh5CrvU7yRDRsvUqUQScVuvXvMwfmNU31NOY7
-         hm4I4Wgb3m0W6bQ6Jgo0PPxUq6hBAN/0XmvoTrzHRzSBhYizrD9DgeE2pzvVsUsmBuiN
-         u33ab2dwOcEuxNK6o7/2D4OkRq5uwjx4u8IC/G8pZl7upmzCczLOtmnB9JyNrUMza+69
-         diUgiGDxasT3kdpWuZOO3PLw0roDVIXVprW5fvoz6hXiblX97W4P26SB7Q+e6AIKGNwW
-         KBlIAzHYkKRmlJeXaF0l/GoTh8cFRXoO1pQFnh216uB9KWiFqTVHI5llBTiGRBfpx4T0
-         CWoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706887159; x=1707491959;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aE9RDzquXUnyGWyqx2WNSmBkRu7c0fXOe0fgH0xt2RM=;
-        b=BgwK25+Z5d6XQnKTA8yu+0T2gbK4on62ZBUbBgdaEo3JncKbsykwUDumkFg2srCebb
-         VFluBkvo0imI1QiDAw6bN8OO5MktWgT0p1sQxd2mU14ReFNKsWRmIBdXMemHu+85oKe3
-         QWNtOjRKk5Q6MWHe/zAM0sZrmHCez20mfbCpvGognkjEBFmyOPpTtYZv8axAX60snBPz
-         IATKusYd2bQe9/EQsU3FoEfb5EJmK+h9WoznF1vVSLz1Oez91lhAlbxI+v5gA7aDfp6y
-         McV68LteAipNsqLdggTzdnpdsq+VMGDYo66KAVgBwgeWsbMzwGiZJxowsq5vxNhQXdIF
-         G+IA==
-X-Gm-Message-State: AOJu0Yx7pXunfmZJy4H66dDoMoQq9C7OkDlDp8WdAtcuBrk/fr6qAuQL
-	/T08AKgo5+ivhrCDTb7DrZ570u8IGBC8cSBy7uD8DCUEtgYGLEqB
-X-Google-Smtp-Source: AGHT+IEo7/Rzm0+xYpDkykRaqOuEUD5HBdSjeFCGgYWOO5TRuwAEy1mX6pCrsH5WXijWGxUgOtl9Bw==
-X-Received: by 2002:a5d:4750:0:b0:33b:1b2d:1b36 with SMTP id o16-20020a5d4750000000b0033b1b2d1b36mr1584527wrs.60.1706887159342;
-        Fri, 02 Feb 2024 07:19:19 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXqaNGiczieVynTdbeIb5Hq9n8fAiBLtKq21c8lIci57jJWxN1hxES9cetibpdKn9WU1A5NCX7dIBfquSoVXp6e9WLbXWMRXkaQ8KVG6YmvyU5mszXeEa+3GmOhpIB7vuY+aDQCUkF50mtHa4prgqQN4JBfhhikRv2ZeL7ZUjvcyWjudZWvcbfnNOzIq4+nm0coCKvRJtCaoiZ7NLA8ajE5i1kmN2khux/hQYco9LDpDNQ+glw7lC9Ag+AKxsB9P3u3BQuZSuD/YU9NQ8oFCxD5ZEB5VKmx05/tIUaXE0dvgLv1Y8c8fObMomc57ZyVyRjV3o1jfDHgOsMF1TFFymTtKAFfwMqG3nVK51aeKYubwvt0Q9p/dcdQ8IhO/sSQnvl0XPRjqU4SFlZjt1X06U6yTJOF/nJDCecqnzm5yKDt/6HcRIlzteqIMt5n2R2KaB5EoTBE+aj3isj/ZQgMqDPJSiVsRXDSIK3D7YEPAgJb5ZKg0K5oUkRC5sFOG436cs9oC4H+CIzjzdUUteM+NEwk9IToD98nxD6QzlKpWoa1
-Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.gmail.com with ESMTPSA id k10-20020a056000004a00b0033affaade9csm2149033wrx.68.2024.02.02.07.19.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 07:19:19 -0800 (PST)
-Message-ID: <65bd07f7.050a0220.e8e5e.9e28@mx.google.com>
-X-Google-Original-Message-ID: <Zb0H82fRtGfMbXfQ@Ansuel-xps.>
-Date: Fri, 2 Feb 2024 16:19:15 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WeeBvoVn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706887173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=odElO08YnTHudO0RnXkSSEFFNVCU35WEEp/Vx52s7/Y=;
+	b=WeeBvoVnV2h55j1VsTNxq5HbhU9HxCB0/zS8IRZ55Lx70pGWqxv6yn9qxPwDDQ0TvTNDZ0
+	x2X5o2RUBMOQdWAKlsxakbaI+n4BYIQ7tQ/y8MpAwfaI5jUF4NAuu4NkMXCWV7JibkuQs7
+	/mpqQI8vx9vHeDFA84l/6WjmkxnbU4E=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-75-QE6NjE1MPzSH2RcgRceGjQ-1; Fri,
+ 02 Feb 2024 10:19:27 -0500
+X-MC-Unique: QE6NjE1MPzSH2RcgRceGjQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 67EC33C000BD;
+	Fri,  2 Feb 2024 15:19:27 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.245])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1733A2026D66;
+	Fri,  2 Feb 2024 15:19:25 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Robert Marko <robert.marko@sartura.hr>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [net-next PATCH v5 5/9] dt-bindings: net: add QCA807x PHY defines
-References: <20240201151747.7524-1-ansuelsmth@gmail.com>
- <20240201151747.7524-6-ansuelsmth@gmail.com>
- <9933685a-5265-467e-aa39-d2c92a12edca@linaro.org>
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/4] rxrpc: Miscellaneous fixes
+Date: Fri,  2 Feb 2024 15:19:12 +0000
+Message-ID: <20240202151920.2760446-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9933685a-5265-467e-aa39-d2c92a12edca@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Fri, Feb 02, 2024 at 08:41:56AM +0100, Krzysztof Kozlowski wrote:
-> On 01/02/2024 16:17, Christian Marangi wrote:
-> > From: Robert Marko <robert.marko@sartura.hr>
-> > 
-> > Add DT bindings defined for Qualcomm QCA807x PHY series related to
-> > calibration and DAC settings.
-> 
-> Nothing from this file is used and your commit msg does not provide
-> rationale "why", thus it does not look like something for bindings.
-> Otherwise please point me which patch with *driver* uses these bindings.
->
+Here some miscellaneous fixes for AF_RXRPC:
 
-Hi, since I have to squash this, I will include the reason in the schema
-patch.
+ (1) The zero serial number has a special meaning in an ACK packet serial
+     reference, so skip it when assigning serial numbers to transmitted
+     packets.
 
-Anyway these are raw values used to configure the qcom,control-dac
-property.
+ (2) Don't set the reference serial number in a delayed ACK as the ACK
+     cannot be used for RTT calculation.
 
-In the driver it's used by qca807x_config_init. We read what is set in
-DT and we configure the reg accordingly.
+ (3) Don't emit a DUP ACK response to a PING RESPONSE ACK coming back to a
+     call that completed in the meantime.
 
-If this is wrong should we use a more schema friendly approach with
-declaring an enum of string and document that there?
+ (4) Fix the counting of acks and nacks in ACK packet to better drive
+     congestion management.  We want to know if there have been new
+     acks/nacks since the last ACK packet, not that there are still
+     acks/nacks.  This is more complicated as we have to save the old SACK
+     table and compare it.
 
-> > 
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> > ---
-> >  include/dt-bindings/net/qcom-qca807x.h | 30 ++++++++++++++++++++++++++
-> 
-> Use filename matching compatible, so vendor,device. No wildcards, unless
-> your compatible also has them.
-> 
-> >  1 file changed, 30 insertions(+)
-> >  create mode 100644 include/dt-bindings/net/qcom-qca807x.h
-> > 
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+David
 
--- 
-	Ansuel
+---
+The patches can be found here also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David Howells (4):
+  rxrpc: Fix generation of serial numbers to skip zero
+  rxrpc: Fix delayed ACKs to not set the reference serial number
+  rxrpc: Fix response to PING RESPONSE ACKs to a dead call
+  rxrpc: Fix counting of new acks and nacks
+
+ include/trace/events/rxrpc.h |   8 ++-
+ net/rxrpc/ar-internal.h      |  37 ++++++++---
+ net/rxrpc/call_event.c       |  12 ++--
+ net/rxrpc/call_object.c      |   1 +
+ net/rxrpc/conn_event.c       |  10 ++-
+ net/rxrpc/input.c            | 115 +++++++++++++++++++++++++++++------
+ net/rxrpc/output.c           |   8 +--
+ net/rxrpc/proc.c             |   2 +-
+ net/rxrpc/rxkad.c            |   4 +-
+ 9 files changed, 154 insertions(+), 43 deletions(-)
+
