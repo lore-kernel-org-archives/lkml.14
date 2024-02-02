@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A44D63128;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7E07764F;
 	Fri,  2 Feb 2024 09:19:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865573; cv=none; b=qiGb1tSQ89BrddpDvyjRgp39ehetcUFG++Opy3GUSKeFT9JQp91UiuBC+ZHsLN4oS8WhpClMib/aXR2uHNm1U6Wn5/VWVVzDFmAfbyhtQ1rTSqC+4g3Wiwt5LezI6aCOl7npgRxoQ7Akyy96a2C3/5MEXWJgUgfEaM3hGB+veTc=
+	t=1706865573; cv=none; b=jfGb2bHvNgc10nwlhb3z2OLBPJgyFotat3LZ2TnRgk3LJVeJnjgGg8GefBDGscz/bBwMExp6J4o+2BWdm2q7m3OBG4RytERghVrm5Sy8A7HHSKQh2ZFD5g1Ghqg6fjsVUxnagl6YEWiWII6hQ/AOehUN2jKVl5RBjYliqLHGwIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706865573; c=relaxed/simple;
-	bh=geuIbXh9w4KhgrtRBbriGKSSJk8c4449tqrOQjGdf2M=;
+	bh=xbOYQ6vgMY8Ad9HjvLOG9yt3xcYe8E0VH499yRcv+v0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cMiew0Xw97LOeDA1HCq1BATrl7AO5yANGJ7IU9BKq262MRUjkRgwnRwZe6XLxR8sSCzhjd5W90GUcAzpkvL202TleTI3zEP8txZZwCBCeBRcQh/AWgSnQW9DAms0eMt9dD3QFClZZkOJBbqqljRPtLK3fEwkztw0r+jY0FDH9dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cprgKsM/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CloleMDuPrPLPY2ux4EeoLOU23If1jpop+Yj9NjrYjO2UMtfCKXxHFaE9828X7AYyMl8vjGvJLxMucWgzCeebrPLBMAdtB4vAnpkKIe/X5qf8/LRLYLlo+NVcW2S25segNu9V3o2R72CISTax7P/SmaytHmNMovg5a3NG1+/lMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNTwGHPX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cprgKsM/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CE4F6C43399;
-	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNTwGHPX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19BA5C43141;
+	Fri,  2 Feb 2024 09:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706865572;
-	bh=geuIbXh9w4KhgrtRBbriGKSSJk8c4449tqrOQjGdf2M=;
+	s=k20201202; t=1706865573;
+	bh=xbOYQ6vgMY8Ad9HjvLOG9yt3xcYe8E0VH499yRcv+v0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=cprgKsM/iYxfcE/7gy+vSMDr5VSP4I5OoyPwpPsUO6No9rHZdl41a6ty2ma/TAICp
-	 kS47Pc6TGee22xTayvCbuP81VaBhAJOx7m2C4T5Mkfmwq7r/JpJYMLxY65nz2FPyl2
-	 sKxRy0rm+TWLC8RX3yxWUV3tNdLAV02w2WaHoylsUQwHfr1jloDOavL9EMnJ910tp7
-	 IQdd2ZZORYFikFL9WokRRM4stfMvXVrs+LYW9rVuHdwpoZsbpb8HDbQ/HVRI5gLm/K
-	 GD7gKo5InX7r6TZfwrrx5BKnK4+Dz6YZ4BfYj2kw3EM+lINSrOPEB/dAYhWR9mUFyV
-	 P3xOAAfq6tS5w==
+	b=JNTwGHPXph1fz5NcoNtbJiYcwjaWlRnjcKrrkAKxHjIWV0QPv5ZrcTP45MFBLvp3h
+	 JCcGh+G7mSWIZuq4Po2NDT2+qvFaK51tesT1HkQMpQX8UCkoLKwafMkeb5vuKIGcdG
+	 kttWDL8MvuvD6pl7muicRUZ6Lb9wcFV51fNLJyIgS+9HcYTXlbe06n2bNcXDXj1fkr
+	 Pm0WGCw+skIDHFg4y6oUCohoUfZbyDHOtq7UmqJIAAoqNBMPvNjWdU9kia3nZZA72k
+	 6o3roNZSaH7Ya393azKT1q9ce7jgiLz/LWQ5sPm7Vc2q6tzdv4KwDpok4SsPESjCN3
+	 U4Ect4Dgs+MMg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E7C47258;
-	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A41C48292;
+	Fri,  2 Feb 2024 09:19:33 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 02 Feb 2024 12:19:09 +0300
-Subject: [PATCH net-next v3 3/7] net: dsa: mt7530: remove pad_setup
- function pointer
+Date: Fri, 02 Feb 2024 12:19:13 +0300
+Subject: [PATCH net-next v3 7/7] net: dsa: mt7530: do not clear
+ config->supported_interfaces
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240202-for-netnext-mt7530-improvements-2-v3-3-63d5adae99ca@arinc9.com>
+ <20240202-for-netnext-mt7530-improvements-2-v3-7-63d5adae99ca@arinc9.com>
 References:
  <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706865569; l=5377;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706865569; l=1237;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=mGG9kyQDvMUC5EklHXtFMAWXK1ZdqyzJT5eZTcp+Y90=;
- b=f+JF8KM64zJRkj/KJDQN8vkKEhVQccWLWxKkI9NLRqF95gugIsq0aGI6z7zAusGK1wqh/vUX9
- 98PKylHG9ELB39c21cVqccSsAatjC94jCTROF3zABtiabLBf0e5hZVJ
+ bh=O2Jc3kMGKF7p2IMR4BSUcjDORbDflRydvglEQ/7DqIY=;
+ b=oz1Jb+hTkQBq+zHBfH5lPDglY2+5P/R0xXWcb/3ehsxh63f1fIu/v/CVfc5jNziMq+IR/xQEe
+ TAGfppGixF8A3Xdq7Zr8sCu9n7Yz5Rgl2SRFrlH3BIAVgvJgGlv3qtv
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -77,147 +77,34 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-The pad_setup function pointer was introduced with 88bdef8be9f6 ("net: dsa:
-mt7530: Extend device data ready for adding a new hardware"). It was being
-used to set up the core clock and port 6 of the MT7530 switch, and pll of
-the MT7531 switch.
+There's no need to clear the config->supported_interfaces bitmap before
+reporting the supported interfaces as all bits in the bitmap will already
+be initialized to zero when the phylink_config structure is allocated. The
+"config" pointer points to &dp->phylink_config, and "dp" is allocated by
+dsa_port_touch() with kzalloc(), so all its fields are filled with zeroes.
 
-All of these were moved to more appropriate locations, and it was never
-used for the switch on the MT7988 SoC. Therefore, this function pointer
-hasn't got a use anymore. Remove it.
+There's no code that would change the bitmap beforehand. Remove it.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 Acked-by: Daniel Golle <daniel@makrotopia.org>
 Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/mt7530.c | 36 ++----------------------------------
- drivers/net/dsa/mt7530.h |  3 ---
- 2 files changed, 2 insertions(+), 37 deletions(-)
+ drivers/net/dsa/mt7530.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 2d468a5f2e70..fdaf65b58b72 100644
+index 4ca7ba94788e..aed1ea6815ee 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -487,18 +487,6 @@ mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
- 	return 0;
- }
- 
--static int
--mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
--{
--	return 0;
--}
--
--static int
--mt7531_pad_setup(struct dsa_switch *ds, phy_interface_t interface)
--{
--	return 0;
--}
--
- static void
- mt7531_pll_setup(struct mt7530_priv *priv)
+@@ -2573,8 +2573,6 @@ static void mt7531_mac_port_get_caps(struct dsa_switch *ds, int port,
+ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
+ 				     struct phylink_config *config)
  {
-@@ -2617,14 +2605,6 @@ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
- 	}
- }
- 
--static int
--mt753x_pad_setup(struct dsa_switch *ds, const struct phylink_link_state *state)
--{
--	struct mt7530_priv *priv = ds->priv;
+-	phy_interface_zero(config->supported_interfaces);
 -
--	return priv->info->pad_setup(ds, state->interface);
--}
--
- static int
- mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		  phy_interface_t interface)
-@@ -2794,8 +2774,6 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		if (priv->p6_interface == state->interface)
- 			break;
- 
--		mt753x_pad_setup(ds, state);
--
- 		if (mt753x_mac_config(ds, port, mode, state) < 0)
- 			goto unsupported;
- 
-@@ -3113,11 +3091,6 @@ mt753x_conduit_state_change(struct dsa_switch *ds,
- 	mt7530_rmw(priv, MT7530_MFC, CPU_EN | CPU_PORT_MASK, val);
- }
- 
--static int mt7988_pad_setup(struct dsa_switch *ds, phy_interface_t interface)
--{
--	return 0;
--}
--
- static int mt7988_setup(struct dsa_switch *ds)
- {
- 	struct mt7530_priv *priv = ds->priv;
-@@ -3181,7 +3154,6 @@ const struct mt753x_info mt753x_table[] = {
- 		.phy_write_c22 = mt7530_phy_write_c22,
- 		.phy_read_c45 = mt7530_phy_read_c45,
- 		.phy_write_c45 = mt7530_phy_write_c45,
--		.pad_setup = mt7530_pad_clk_setup,
- 		.mac_port_get_caps = mt7530_mac_port_get_caps,
- 		.mac_port_config = mt7530_mac_config,
- 	},
-@@ -3193,7 +3165,6 @@ const struct mt753x_info mt753x_table[] = {
- 		.phy_write_c22 = mt7530_phy_write_c22,
- 		.phy_read_c45 = mt7530_phy_read_c45,
- 		.phy_write_c45 = mt7530_phy_write_c45,
--		.pad_setup = mt7530_pad_clk_setup,
- 		.mac_port_get_caps = mt7530_mac_port_get_caps,
- 		.mac_port_config = mt7530_mac_config,
- 	},
-@@ -3205,7 +3176,6 @@ const struct mt753x_info mt753x_table[] = {
- 		.phy_write_c22 = mt7531_ind_c22_phy_write,
- 		.phy_read_c45 = mt7531_ind_c45_phy_read,
- 		.phy_write_c45 = mt7531_ind_c45_phy_write,
--		.pad_setup = mt7531_pad_setup,
- 		.cpu_port_config = mt7531_cpu_port_config,
- 		.mac_port_get_caps = mt7531_mac_port_get_caps,
- 		.mac_port_config = mt7531_mac_config,
-@@ -3218,7 +3188,6 @@ const struct mt753x_info mt753x_table[] = {
- 		.phy_write_c22 = mt7531_ind_c22_phy_write,
- 		.phy_read_c45 = mt7531_ind_c45_phy_read,
- 		.phy_write_c45 = mt7531_ind_c45_phy_write,
--		.pad_setup = mt7988_pad_setup,
- 		.cpu_port_config = mt7988_cpu_port_config,
- 		.mac_port_get_caps = mt7988_mac_port_get_caps,
- 		.mac_port_config = mt7988_mac_config,
-@@ -3248,9 +3217,8 @@ mt7530_probe_common(struct mt7530_priv *priv)
- 	/* Sanity check if these required device operations are filled
- 	 * properly.
- 	 */
--	if (!priv->info->sw_setup || !priv->info->pad_setup ||
--	    !priv->info->phy_read_c22 || !priv->info->phy_write_c22 ||
--	    !priv->info->mac_port_get_caps ||
-+	if (!priv->info->sw_setup || !priv->info->phy_read_c22 ||
-+	    !priv->info->phy_write_c22 || !priv->info->mac_port_get_caps ||
- 	    !priv->info->mac_port_config)
- 		return -EINVAL;
- 
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 80060cc740d2..26a6d2160c08 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -704,8 +704,6 @@ struct mt753x_pcs {
-  * @phy_write_c22:	Holding the way writing PHY port using C22
-  * @phy_read_c45:	Holding the way reading PHY port using C45
-  * @phy_write_c45:	Holding the way writing PHY port using C45
-- * @pad_setup:		Holding the way setting up the bus pad for a certain
-- *			MAC port
-  * @phy_mode_supported:	Check if the PHY type is being supported on a certain
-  *			port
-  * @mac_port_validate:	Holding the way to set addition validate type for a
-@@ -726,7 +724,6 @@ struct mt753x_info {
- 			    int regnum);
- 	int (*phy_write_c45)(struct mt7530_priv *priv, int port, int devad,
- 			     int regnum, u16 val);
--	int (*pad_setup)(struct dsa_switch *ds, phy_interface_t interface);
- 	int (*cpu_port_config)(struct dsa_switch *ds, int port);
- 	void (*mac_port_get_caps)(struct dsa_switch *ds, int port,
- 				  struct phylink_config *config);
+ 	switch (port) {
+ 	/* Ports which are connected to switch PHYs. There is no MII pinout. */
+ 	case 0 ... 3:
 
 -- 
 2.40.1
