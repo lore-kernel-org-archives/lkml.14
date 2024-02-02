@@ -1,143 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428097A723;
-	Fri,  2 Feb 2024 20:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AEE7C6CE
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 20:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706907552; cv=none; b=sOEvBrJS3si5mBUcvXkBNLH0SUHDRms7UhqRtswQ9HGDFReXbDP2H4OYqflBU2mxDWZx7AbZBBDYYIm9e6TpkBmbLkPB89VNkRlJUiGQVMng5qG1ZRFOEudEzBgmAU5MIuLnJLwHPGShDPk/g3bi992tx6bsa13Sn3rfs1pz3rk=
+	t=1706907599; cv=none; b=k5l5K3g8sYjNtsbvpSCnXLeoZf0MZaqoey7R5kAXHiuXT569DvZ3XP1HY6gT8oMSMTVlUXkIeFaQu12uxodmNXMTryX5oj2IDn5UtxNs9QMFngNRffRMqmAKzb5WfnCm3z//BjXCD28c5e0QBCMWDHMrjXFSHZOfUifpugXCt+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706907552; c=relaxed/simple;
-	bh=T1SmPiaekiTqw+dUGeKjsiOONvZZYtkQjwGugxBhr98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgYhbilp8PzgoGMNZ+eBYifTiJOMuB/P3GrSSTLlnM1af8CQn/7n72HgarimosaZtN+ybXRKBWD2XVkKhFFGjIbvifB2WaFxSE6TYn3VUq04Px58dyuSv1CknjGMaH+mpARjDpACGlT37Ni9405JFPhx/Fv86qByKsiEkwsxDiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IGJllm8m; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706907599; c=relaxed/simple;
+	bh=ge9WmExw3RYtr47lcMES3xw541P+2RTLYMoq4ZWA3M4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dAmLbLmLEwy/bEOL82aW5l9X6m8Kr9gNLYlGplGSjqir7AVdx094b9cM+v6o7duX8XCRGoiInOxo55ztQjHPd4ME/NuA7wHfeZnWuf1+GIINYBeBs2GRpUXVoBtwNyqYKMOksEhm3ZrkcegtsiFj5j9PMlbgg5JRrZHkUHBUT2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=WDn0CIZX; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IGJllm8m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706907550; x=1738443550;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T1SmPiaekiTqw+dUGeKjsiOONvZZYtkQjwGugxBhr98=;
-  b=IGJllm8mbzV39eSHMpIEUln/Sg73uM/6H98RCt0UJl48UJ4ew/rNc29s
-   ejXDR5bn/zHfAOiIVFMo+6ymZq0XUVXq28WdUnQiKX1SBT3y+FWAnY2Bd
-   TSrXbc7LsxV0aTqu8WT5kZuZ+BMlOpUDQ9yNW7uX2Bhat424Xw7l26T3g
-   RbgLAVXu2tRH0WJ0faEM86+7w3FYAfZZH5J/F6HXqdEf+b8LwyhXo8qMT
-   9Rk5DASRh7LdCf9q5ut1wHkdH0YhEZmZe3NzCL7zPFeMeH11oDqx4QhuZ
-   /619jzdLLvNZU8FmcZuwIr2l62LSHP9Lj3dSTVqj4dVGbHvbcXlyp2Qda
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="462859"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="462859"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 12:59:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="157606"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 02 Feb 2024 12:59:05 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rW0co-0004G6-34;
-	Fri, 02 Feb 2024 20:59:02 +0000
-Date: Sat, 3 Feb 2024 04:58:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Jeff LaBundy <jeff@labundy.com>
-Cc: oe-kbuild-all@lists.linux.dev, catalin.popescu@leica-geosystems.com,
-	mark.satterthwaite@touchnetix.com,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	bsp-development.geo@leica-geosystems.com,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH v7 3/3] Input: Add TouchNetix axiom i2c touchscreen driver
-Message-ID: <202402030433.2vfAa4qt-lkp@intel.com>
-References: <20240131141158.3350344-4-kamel.bouhara@bootlin.com>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="WDn0CIZX"
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4TRSp438vTzDqQ6;
+	Fri,  2 Feb 2024 20:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1706907596; bh=ge9WmExw3RYtr47lcMES3xw541P+2RTLYMoq4ZWA3M4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WDn0CIZXXkpAYI365jt8RJMpj6sA8NTH9JM2nq6NTxHIil5aIOQghOt5lo+sotJ/B
+	 wvcVfAScYOFf5UL9UvufcO0shV4HvNOxVBQxMhhod69+0h4zUmYZ12G3U3RTYGGPER
+	 dPC4QTFdt8nU/79b8RrzLg8B4Ihxz7iFEUHY3Sb0=
+X-Riseup-User-ID: 8D545961835A176C093ABDD1C101A5788877D082A0844039CD0237B84AD211E3
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4TRSnx4ww1zJp0l;
+	Fri,  2 Feb 2024 20:59:49 +0000 (UTC)
+Message-ID: <40287e9a-efb8-480a-bb50-85361feb44a4@riseup.net>
+Date: Fri, 2 Feb 2024 17:59:46 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131141158.3350344-4-kamel.bouhara@bootlin.com>
+Subject: Re: [PATCH 1/2] drm/vkms: Create a type to check a function pointer
+ validity
+Content-Language: en-US
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, marcheu@google.com, seanpaul@google.com,
+ nicolejadeyee@google.com
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com
+References: <20240201-yuv-v1-0-3ca376f27632@bootlin.com>
+ <20240201-yuv-v1-1-3ca376f27632@bootlin.com>
+From: Arthur Grillo <arthurgrillo@riseup.net>
+In-Reply-To: <20240201-yuv-v1-1-3ca376f27632@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Kamel,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on dtor-input/next]
-[also build test WARNING on dtor-input/for-linus robh/for-next krzk-dt/for-next linus/master v6.8-rc2 next-20240202]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 01/02/24 14:31, Louis Chauvet wrote:
+> Add the pixel_read_t type to check function prototype in structures
+> and functions.
+> It avoids casting to (void *) and at the same occasion allows the
+> compiler to check the type properly.
+> 
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>  drivers/gpu/drm/vkms/vkms_drv.h     | 17 +++++++++++++++--
+>  drivers/gpu/drm/vkms/vkms_formats.c |  4 ++--
+>  drivers/gpu/drm/vkms/vkms_formats.h |  2 +-
+>  3 files changed, 18 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> index 51349a0c32d8..cb20bab26cae 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -48,6 +48,20 @@ struct vkms_writeback_job {
+>  	void (*pixel_write)(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel);
+>  };
+>  
+> +/**
+> + * typedef pixel_read_t - These functions are used to read the pixels in the source frame, convert
+> + * them to argb16 and write them to out_pixel.
+> + * It assumes that src_pixels point to a valid pixel (not a block, or a block of 1x1 pixel)
+> + *
+> + * @src_pixels: Source pointer to a pixel
+> + * @out_pixel: Pointer where to write the pixel value
+> + * @encoding: Color encoding to use (mainly used for YUV formats)
+> + * @range: Color range to use (mainly used for YUV formats)
+> + */
+> +typedef void (*pixel_read_t)(u8 **src_pixels, int y,
+> +			     struct pixel_argb_u16 *out_pixel, enum drm_color_encoding enconding,
+> +			     enum drm_color_range range);
+> +
+>  /**
+>   * vkms_plane_state - Driver specific plane state
+>   * @base: base plane state
+> @@ -56,8 +70,7 @@ struct vkms_writeback_job {
+>  struct vkms_plane_state {
+>  	struct drm_shadow_plane_state base;
+>  	struct vkms_frame_info *frame_info;
+> -	void (*pixel_read)(u8 **src_buffer, struct pixel_argb_u16 *out_pixel,
+> -			   enum drm_color_encoding enconding, enum drm_color_range range);
+> +	pixel_read_t pixel_read;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kamel-Bouhara/dt-bindings-vendor-prefixes-Add-TouchNetix-AS/20240131-221925
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-patch link:    https://lore.kernel.org/r/20240131141158.3350344-4-kamel.bouhara%40bootlin.com
-patch subject: [PATCH v7 3/3] Input: Add TouchNetix axiom i2c touchscreen driver
-config: s390-randconfig-r131-20240201 (https://download.01.org/0day-ci/archive/20240203/202402030433.2vfAa4qt-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project fdac7d0b6f74f919d319b31a0680c77f66732586)
-reproduce: (https://download.01.org/0day-ci/archive/20240203/202402030433.2vfAa4qt-lkp@intel.com/reproduce)
+Hi,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402030433.2vfAa4qt-lkp@intel.com/
+Please Cc me on the next versions,
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/input/touchscreen/touchnetix_axiom.c:181:18: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le32 [usertype] preamble @@     got unsigned int @@
-   drivers/input/touchscreen/touchnetix_axiom.c:181:18: sparse:     expected restricted __le32 [usertype] preamble
-   drivers/input/touchscreen/touchnetix_axiom.c:181:18: sparse:     got unsigned int
->> drivers/input/touchscreen/touchnetix_axiom.c:183:40: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned int reg @@     got restricted __le32 [usertype] preamble @@
-   drivers/input/touchscreen/touchnetix_axiom.c:183:40: sparse:     expected unsigned int reg
-   drivers/input/touchscreen/touchnetix_axiom.c:183:40: sparse:     got restricted __le32 [usertype] preamble
+You added the argument 'y' to the function but did not change the calls
+to it, resulting in a compiler error. I think this argument addition
+would be better on patch #2.
 
-vim +181 drivers/input/touchscreen/touchnetix_axiom.c
+Best Regards,
+~Arthur Grillo
 
-   171	
-   172	static int axiom_read(struct axiom_data *ts, u8 usage, u8 page, void *buf, u16 len)
-   173	{
-   174		struct axiom_cmd_header cmd_header;
-   175		__le32 preamble;
-   176		int ret;
-   177	
-   178		cmd_header.target_address = cpu_to_le16(axiom_usage_to_target_address(ts, usage, page, 0));
-   179		cmd_header.length = cpu_to_le16(len | AXIOM_CMD_HEADER_READ_MASK);
-   180	
- > 181		preamble = get_unaligned_le32((u8 *)&cmd_header);
-   182	
- > 183		ret = regmap_write(ts->regmap, preamble, 0);
-   184		if (ret) {
-   185			dev_err(ts->dev, "failed to write preamble, error %d\n", ret);
-   186			return ret;
-   187		}
-   188	
-   189		ret = regmap_raw_read(ts->regmap, 0, buf, len);
-   190		if (ret) {
-   191			dev_err(ts->dev, "failed to read target address %04x, error %d\n",
-   192				cmd_header.target_address, ret);
-   193			return ret;
-   194		}
-   195	
-   196		/* Wait device's DMA operations */
-   197		usleep_range(AXIOM_DMA_OPS_DELAY_USEC, AXIOM_DMA_OPS_DELAY_USEC + 50);
-   198	
-   199		return 0;
-   200	}
-   201	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  };
+>  
+>  struct vkms_plane {
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> index e06bbd7c0a67..c6376db58d38 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -390,7 +390,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+>  		wb->pixel_write(dst_pixels, &in_pixels[x]);
+>  }
+>  
+> -void *get_pixel_conversion_function(u32 format)
+> +pixel_read_t get_pixel_conversion_function(u32 format)
+>  {
+>  	switch (format) {
+>  	case DRM_FORMAT_ARGB8888:
+> @@ -420,7 +420,7 @@ void *get_pixel_conversion_function(u32 format)
+>  	case DRM_FORMAT_YVU444:
+>  		return &planar_yvu_to_argb_u16;
+>  	default:
+> -		return NULL;
+> +		return (pixel_read_t)NULL;
+>  	}
+>  }
+>  
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
+> index 0cf835292cec..04e31e126ab1 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.h
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.h
+> @@ -5,7 +5,7 @@
+>  
+>  #include "vkms_drv.h"
+>  
+> -void *get_pixel_conversion_function(u32 format);
+> +pixel_read_t get_pixel_conversion_function(u32 format);
+>  
+>  void *get_pixel_write_function(u32 format);
+>  
+> 
