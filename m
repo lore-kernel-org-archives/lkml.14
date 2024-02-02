@@ -1,188 +1,125 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C4A8061F;
-	Fri,  2 Feb 2024 19:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9A58175F;
+	Fri,  2 Feb 2024 19:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706903592; cv=none; b=nwOvG5ap1f7k7sLCb3QIa9p19+PMC0WcpNT/NeD2cBHQXRomfxUo3hU6MNM8I2ewLua86pjdSxWnkVgNK9dlXOy6Y0g2g0RRiBKMnltQUHbE23UvAAoFXBX5IrZXjcAT7JpBisthXtCV+3h10Y0BFBN8UYA2b64fcJhcNe+0gJY=
+	t=1706903607; cv=none; b=cjV7w2H7INHfjNL4u93SMDlSXQriMjC6ASIlQ9q0YRSmnI52MkU1HQofdft44VLhgbdRjN8HAGEUipSEVVCV9JHZiJwivmdy2+nATMULvZvIefOmrvKzItis0ITn5MkiN45ah0WDg1ma43DQ/EbFRKdMRYzly7Hd6V8+3/lbtPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706903592; c=relaxed/simple;
-	bh=Cx6EG8vypPzndLS7Ci2U+EWqhOBaSrbMRb5+d5MjE6I=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=e+uITd0vRg5KLERTNO1u9v/SrlsdrT/b67Mj6QcU38tcqTS667PHq8+74wPocI0EdWvFLmfxP55836oBwd4vTr7pbbXbbqo6cHFmPUUaRj/Tdn43QIQg0loH/eL1Wb1746wa+nc61DKYKJKlbllQwTiuXDSYpfpCZZsPy0L+ous=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=F2PNnK/d; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1706903607; c=relaxed/simple;
+	bh=y9CPof6+weJZ90idQr8vFZCmimYUO08YPbLC5Rk2XFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V2Dv8xcr5rLVMp9KZ3v0GE0tr95X/F+BOYsnlAv0jiHVT9KzXp8B8xQSwRr+yxi+y8AYKChfKVdWKMOjRCTQ/87ISXMB22qMGLAIXCRQSzygP5JKUxO/CwPPM+NQC6PmNd9ZExenRQQyUgMnKrl50L8zah35Uy/LDfC0zmWAkCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nR/Rc+Nv; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="F2PNnK/d"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C76729C162B;
-	Fri,  2 Feb 2024 14:53:00 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id rkkg6uFupPcq; Fri,  2 Feb 2024 14:53:00 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0D8899C427E;
-	Fri,  2 Feb 2024 14:53:00 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 0D8899C427E
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR/Rc+Nv"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6de287449f1so1735648b3a.2;
+        Fri, 02 Feb 2024 11:53:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1706903580; bh=4J2a0QDfP718AuLxSl1uhB7/kdY3eNQeApKcDVE9S54=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=F2PNnK/dsBbkjCtf5H2Lp6KgituxClJLhXm03ci6+bOq0PXrvkcd/BYeyDPQebno9
-	 S9IHEGOzikotcsKqf2shrU4IbMJVH6j12c2MDtxUDT+rdRgxk6TBseFnXQ6xnMCAPZ
-	 +BfWeS0IhU/qCTR/lgDQxPHU50ACI8WGRd/fXTD1YCg4m4KH0U1lUsopj+YwmbPbw7
-	 wTn3HaeVhD0zyLDKv7WHL7cA+Rjx4BDmbhYpEpZCj7Qb+WaZ1u2bCcksmLSKgNlcAE
-	 RW+rqM0uSxQWlf4djF+Djz11YiwuQOUchVqMTLjOeOTI4HufnkUKAk6hZHG/f+neVR
-	 BFeyXha/Q84Fg==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 59U-PZUrHrqJ; Fri,  2 Feb 2024 14:52:59 -0500 (EST)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id BC1499C162B;
-	Fri,  2 Feb 2024 14:52:59 -0500 (EST)
-Date: Fri, 2 Feb 2024 14:52:59 -0500 (EST)
-From: Charles Perry <charles.perry@savoirfairelinux.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: mdf <mdf@kernel.org>, Allen VANDIVER <avandiver@markem-imaje.com>, 
-	Brian CODY <bcody@markem-imaje.com>, hao wu <hao.wu@intel.com>, 
-	yilun xu <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	krzysztof kozlowski+dt <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	Michal Simek <michal.simek@amd.com>, 
-	linux-fpga <linux-fpga@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Message-ID: <689519725.467683.1706903579718.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <4e9360cf-2952-45e9-8c85-caa4c0d92175@linaro.org>
-References: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com> <20240131230542.3993409-1-charles.perry@savoirfairelinux.com> <20240131230542.3993409-3-charles.perry@savoirfairelinux.com> <d5fe1ec2-b647-4902-a599-fb866e96e9cf@linaro.org> <1391244934.434321.1706811892834.JavaMail.zimbra@savoirfairelinux.com> <4e9360cf-2952-45e9-8c85-caa4c0d92175@linaro.org>
-Subject: Re: [PATCH 2/3] dt-bindings: fpga: xlnx,fpga-slave-selectmap: add
- DT schema
+        d=gmail.com; s=20230601; t=1706903596; x=1707508396; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pEX04GHs2TY1yrUpMLFp489utbKDIJ1QmjpEDT80Li8=;
+        b=nR/Rc+NvdZYrQGhI/1VvjFNb21PceZmG8Q0cF3/tFGS1KQF5SsN6R/rhEmsC6e5v5E
+         kLZa9RuOkfhwy7pjztLx4LH6BQwB2Iv4J5kHDK8/sCaPXmaxvl+N10qndebXdbwvCT+e
+         MGsE9YVsuCErFAu1r4sSYjGSxllPjx5B7z7DvXfmds/Qk6ggBwbjg3JQBoEdNZbd5FE6
+         tNpXl/9V1FRnEvBe3+7ZTnGgOTGTjKyOidKDmyKl3zvALoEdjP5H7GhOesy/liBbsvXK
+         sjnlQJ6tr835XhrIuKHXlBMyWUQEh5lH5bWJ3xdV9A4vsCXncF6pJu58eJKre0WbTZJ8
+         HQLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706903596; x=1707508396;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pEX04GHs2TY1yrUpMLFp489utbKDIJ1QmjpEDT80Li8=;
+        b=AiH662mv04+K1ae1mmuckPEFtF4lJzvBVCo3mJkuIHxRExajQ5hBKFKXZCcgJh00Sl
+         gZdx+qUCywWmWMFQwVhAHwyPOh2RPfE4JWbwXfYrq5yy9upFOoILP5tXuRtjk7cK4YO4
+         wH4BAPTNpaJ3JaOFVtAy/jMOVk+krDplOfZ1VNPW9BLlBTR7s/KU4JtuBsyY89SGHqRs
+         g98gFQTWsplBvxYxog1ikqwlL37gDN40cmVtUs7lIpdyox1qo0vJYs3/uXV7+4mjV+cs
+         YS1dgAZhw1t7M0ozl+1R4FgWQrBl7pdlOgGVxXAQDW/YdwOwxnsbjrf4dOgNuX1XeO0M
+         zsWw==
+X-Gm-Message-State: AOJu0YzQxs2Zy3HP//OlsAKyVusmvQTsLDkn1FZlrlxW4WdlLtOG/pKK
+	nA98ZceL+xslB9ucXdJvEabieiBkPi2wvniHtqm2SbwiI9wpwVLi
+X-Google-Smtp-Source: AGHT+IFsrhQ86WJEX11iXZxHiEA7cKVixtXRAzDz5v8qGUQSJ1SAe6vH89vYUKa+vGhhNECIm4DW3Q==
+X-Received: by 2002:aa7:8c48:0:b0:6d9:b9b4:8ca with SMTP id e8-20020aa78c48000000b006d9b9b408camr8765723pfd.28.1706903596462;
+        Fri, 02 Feb 2024 11:53:16 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUcA24CxtkUNk1HKIW57bt2Yn8/sgrl3vr3/NEnFXZX3YNZHGoJ519CEhWXtYlVHDIkIAa2CjTGCs3E5SztkqCXa4rvUxN26y2OZ3Jf/g/3LmI7t+R44IxnWBL/Ep7tUdMyo1ni2gU=
+Received: from google.com ([2620:15c:9d:2:d093:a15e:90dc:f5f8])
+        by smtp.gmail.com with ESMTPSA id b23-20020aa78717000000b006dfed5251easm2010164pfo.76.2024.02.02.11.51.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 11:52:23 -0800 (PST)
+Date: Fri, 2 Feb 2024 11:51:32 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v6.8-rc2
+Message-ID: <Zb1HxLM3Vs9p4MiG@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - FF120 (Linux)/8.8.15_GA_4581)
-Thread-Topic: dt-bindings: fpga: xlnx,fpga-slave-selectmap: add DT schema
-Thread-Index: IIdIVNrNF28klyCh7vYGkBY0dXzlUw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Linus,
+
+Please pull from:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.8-rc2
+ 
+to receive updates for the input subsystem. You will get:
+
+- a fix for the fix to deal with newer laptops which get confused by the
+  "GET ID" command when probing for PS/2 keyboards
+
+- a couple of tweaks to i8042 to handle Clevo NS70PU and Lifebook U728
+  laptops
+
+- a change to bcm5974 to validate that the device has appropriate
+  endpoints
+
+- an addition of new product ID to xpad driver to recognize Lenovo
+  Legion Go controllers
+
+- a quirk to Goodix controller to deal with extra GPIO described in ACPI
+  tables on some devices.
+
+Changelog:
+---------
+
+Brenton Simpson (1):
+      Input: xpad - add Lenovo Legion Go controllers
+
+Hans de Goede (3):
+      Input: goodix - accept ACPI resources with gpio_count == 3 && gpio_int_idx == 0
+      Input: atkbd - skip ATKBD_CMD_SETLEDS when skipping ATKBD_CMD_GETID
+      Input: atkbd - do not skip atkbd_deactivate() when skipping ATKBD_CMD_GETID
+
+Javier Carrasco (1):
+      Input: bcm5974 - check endpoint type before starting traffic
+
+Szilard Fabian (1):
+      Input: i8042 - add Fujitsu Lifebook U728 to i8042 quirk table
+
+Werner Sembach (1):
+      Input: i8042 - fix strange behavior of touchpad on Clevo NS70PU
+
+Diffstat:
+--------
+
+ drivers/input/joystick/xpad.c         |  2 ++
+ drivers/input/keyboard/atkbd.c        | 14 +++++++++-----
+ drivers/input/mouse/bcm5974.c         | 20 ++++++++++++++++++++
+ drivers/input/serio/i8042-acpipnpio.h | 14 ++++++++++++++
+ drivers/input/touchscreen/goodix.c    |  3 ++-
+ 5 files changed, 47 insertions(+), 6 deletions(-)
+
+Thanks.
 
 
------ On Feb 2, 2024, at 5:49 AM, Krzysztof Kozlowski krzysztof.kozlowski@linaro.org wrote:
-
-> On 01/02/2024 19:24, Charles Perry wrote:
->> 
->> 
->> ----- On Feb 1, 2024, at 3:07 AM, Krzysztof Kozlowski
->> krzysztof.kozlowski@linaro.org wrote:
->> 
->>> On 01/02/2024 00:05, Charles Perry wrote:
->>>> Document the slave SelectMAP interface of Xilinx 7 series FPGA.
->>>>
->>>> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
->>>> ---
->>>>  .../bindings/fpga/xlnx,fpga-selectmap.yaml    | 83 +++++++++++++++++++
->>>>  1 file changed, 83 insertions(+)
->>>>  create mode 100644
->>>>  Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
->>>> b/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
->>>> new file mode 100644
->>>> index 0000000000000..c9a446b43cdd9
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
->>>> @@ -0,0 +1,83 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/fpga/xlnx,fpga-selectmap.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Xilinx SelectMAP FPGA interface
->>>> +
->>>> +maintainers:
->>>> +  - Charles Perry <charles.perry@savoirfairelinux.com>
->>>> +
->>>> +description: |
->>>> +  Xilinx 7 Series FPGAs support a method of loading the bitstream over a
->>>> +  parallel port named the SelectMAP interface in the documentation. Only
->>>> +  the x8 mode is supported where data is loaded at one byte per rising edge of
->>>> +  the clock, with the MSB of each byte presented to the D0 pin.
->>>> +
->>>> +  Datasheets:
->>>> +
->>>> https://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
->>>> +
->>>> +allOf:
->>>> +  - $ref: /schemas/memory-controllers/mc-peripheral-props.yaml#
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    enum:
->>>> +      - xlnx,fpga-selectmap
->>>
->>> Your description mentions "7 Series" which is not present in compatible
->>> and title. What is exactly the product here? Interface usually is not
->>> the final binding, so is this specific to some particular FPGA or SoC?
->>>
->>>
->>> Best regards,
->>> Krzysztof
->> 
->> This is specific to the FPGA, the 7 series encompass the following part
->> family:
->>  * Spartan-7 (XC7S6, XC7S15, ... XC7S100)
->>  * Artix-7 (XC7A12T, XC7A15T, ... XC7A200T)
->>  * Kintex-7 (XC7K70T, XC7K160T, ... XC7K480T)
->>  * Virtex-7 (XC7V585T, XC7V2000T,
->>              XC7VX330T, XC7VX415T, ... XC7VX1140T,
->>              XC7VH580T, XC7VH870T)
->> 
->> 
->> The configuration guide of Xilinx [1] tells us that all those devices
->> share a common programming scheme.
->> 
->> I do agree that having a mention of "7 series" in the compatible name
->> would be beneficial as Xilinx has more FPGA than just the 7 series.
->> The name was inspired from "xlnx,fpga-slave-serial" which is the compatible
->> for the serial interface.
->> 
->> What about "xlnx,fpga-xc7-selectmap" ?
->> 
-> 
-> I am not sure what xc7 is and how Xilinx numbers it products, but
-> compatibles are supposed to be device specific, not family. Common
-> programming model could be denoted with generic fallback, but then the
-> fallback could be device-specific as well, which usually we recommend.
-> 
-> Best regards,
-> Krzysztof
-
-XC7 is the common prefix for all 4 families of the 7 series.
-
-Then we have XC7S, XC7A, XC7K and XC7V as the prefixes of those 4 family.
-
-Following that is a number denoting the number of logic element, e.g.
-XC7S6, XC7S15, XC7S100, ... I don't think that should be part of the
-compatible.
-
-Finally there will be another set of letters and numbers for the
-temperature grade and physical package, but those are usually not part
-of a compatible string.
-
-I'll change it to four compatibles: "xlnx,fpga-xc7[sakv]-selectmap" so
-that the driver can do device specific things if anomalies are found in
-one of them.
-
-Thanks again for the review!
-
-Regards,
-Charles
+-- 
+Dmitry
