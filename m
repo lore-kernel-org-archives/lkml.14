@@ -1,36 +1,30 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D5E46B98;
-	Fri,  2 Feb 2024 14:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B3620DFA;
+	Fri,  2 Feb 2024 14:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706884833; cv=none; b=hAzaWlKZ3qMPOCjRGJkl98kDj6xIFNa0cZATuRHFpYjc+hof3t/P7rl43rdCBPiU2cEblUKsQjEBw9MHtyMhJSFszqlpgeuSo1hleMgzT7jOe27Iu0RSAcxa5efbr9Tuq5Caw+GOiulV07zYwDqdA6b+vvyRiPEPRCAIT2imn2Y=
+	t=1706884956; cv=none; b=deF2gvgEj1j8ivZh+GnKZZiOK8ne5+M7M+eF8IFugRs8ATykRtQnh+8FAJw7DK0ah4S0HBwrPVfBSrizBypc50cg50qIWgukyOF9aRqTicMNcvdcqurLS2e6kMBiNaWMBn0tnMgakfBICao8UI9a35pXrqkM0fiPTrE+c5WnYSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706884833; c=relaxed/simple;
-	bh=75xRr+Hh8XvCcTnldScx3u7vNNKbiPCXSVT3faG9PZY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VPK0T3+Gd5cyQZlwQEs8mUtjFJL9nFysnAA4lnC7mdoZREpB3h0SypKfU3ktyr3JMpp52y8pPu3cpt0O5tZ6JYui67f8MzSNaKNC7cQBnLo16bbw7w8SdjUmEjXuWugpwO4EoVUYobWmAkiHHhbEDMrIehupt+UO1CJAL9UMU5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=vygKGwH5; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="vygKGwH5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1706884819;
-	bh=75xRr+Hh8XvCcTnldScx3u7vNNKbiPCXSVT3faG9PZY=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=vygKGwH5Oj72Vz0Ai3eQ8qhTXUCVBw5yan0ZsVxgZNCeP0yq73w6MH+HpicWZy5+u
-	 BmL+qoc9jn/GD6Z+9V3g0sT5hZ4XR3tZG3tfcWPRfIiUKsDPGohjfGYtUZjUm+BIM9
-	 byIhaYQlDp21cpVnX/T3UJmO3PfQL20DCBolr0waUkft+ctCw4B1JBsJOv5hT0aaHF
-	 +ljaSkBLFUZu8Tl4qP7asELPgGvp3aoPRhBDBoNvOoxaTaOCu6bAzyIUHIZLbvCaiL
-	 vzxr77H44QWgZDV6ev2C9Y7tEQsIBZgUxnbWnfgiR4yCILQdkzipROCj16VedDYrbT
-	 +4YNXnsiyAjnw==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TRJN2717NzXBc;
-	Fri,  2 Feb 2024 09:40:18 -0500 (EST)
-Message-ID: <b28819f3-890f-4eac-befd-f9da1c77e34a@efficios.com>
-Date: Fri, 2 Feb 2024 09:40:20 -0500
+	s=arc-20240116; t=1706884956; c=relaxed/simple;
+	bh=2P+ZNughbw18nF0XEj47/8gcO7qDHTuHeliWPvBKGcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fv66hovJgcF2JO/Fi4S78QjqZVUx3MlWyq5yIRYJj+6gioxBcQblAvKoRcFy9xTOROf3bIDgVIDWj74mNoJb3e393PKuuh4IPBp0P7C+y59csntCdOSBnbmeHY3VTN/3cxaaGhO4qSQgKiUNl923LZYf9cYQ1NjRQHrx87WvLDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TRHkl5ZTlz9xqpg;
+	Fri,  2 Feb 2024 22:11:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id B75331405F9;
+	Fri,  2 Feb 2024 22:26:28 +0800 (CST)
+Received: from [10.81.209.159] (unknown [10.81.209.159])
+	by APP1 (Coremail) with SMTP id LxC2BwBHPxiM+7xl22O9AQ--.55539S2;
+	Fri, 02 Feb 2024 15:26:28 +0100 (CET)
+Message-ID: <c6ce8816-c4ff-4668-8cbb-88285330057d@huaweicloud.com>
+Date: Fri, 2 Feb 2024 15:26:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,99 +32,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 2/4] dax: Check for data cache aliasing at runtime
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dan Williams <dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>,
- Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>,
- Russell King <linux@armlinux.org.uk>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- dm-devel@lists.linux.dev
-References: <20240131162533.247710-1-mathieu.desnoyers@efficios.com>
- <20240131162533.247710-3-mathieu.desnoyers@efficios.com>
- <65bab567665f3_37ad2943c@dwillia2-xfh.jf.intel.com.notmuch>
- <0a38176b-c453-4be0-be83-f3e1bb897973@efficios.com>
- <65bac71a9659b_37ad29428@dwillia2-xfh.jf.intel.com.notmuch>
- <f1d14941-2d22-452a-99e6-42db806b6d7f@efficios.com>
-In-Reply-To: <f1d14941-2d22-452a-99e6-42db806b6d7f@efficios.com>
+Subject: Re: [BUG] workqueues and printk not playing nice since next-20240130
+To: paulmck@kernel.org, Tejun Heo <tj@kernel.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>, John Ogness
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org,
+ rcu@vger.kernel.org
+References: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 2024-02-01 10:44, Mathieu Desnoyers wrote:
-[...]
->> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
->> index 4e8fdcb3f1c8..b69c9e442cf4 100644
->> --- a/drivers/nvdimm/pmem.c
->> +++ b/drivers/nvdimm/pmem.c
->> @@ -560,17 +560,19 @@ static int pmem_attach_disk(struct device *dev,
->>       dax_dev = alloc_dax(pmem, &pmem_dax_ops);
->>       if (IS_ERR(dax_dev)) {
->>           rc = PTR_ERR(dax_dev);
->> -        goto out;
->> +        if (rc != -EOPNOTSUPP)
->> +            goto out;
-> 
-> If I compare the before / after this change, if previously
-> pmem_attach_disk() was called in a configuration with FS_DAX=n, it would
-> result in a NULL pointer dereference.
-
-I was wrong. drivers/nvdimm/Kconfig has:
-
-config BLK_DEV_PMEM
-         select DAX
-
-and
-
-drivers/nvdimm/Makefile has:
-
-obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
-nd_pmem-y := pmem.o
-
-which means that anything in pmem.c can assume that alloc_dax() is
-implemented.
-
-[...]
->> diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
->> index 4b7ecd4fd431..f911e58a24dd 100644
->> --- a/drivers/s390/block/dcssblk.c
->> +++ b/drivers/s390/block/dcssblk.c
->> @@ -681,12 +681,14 @@ dcssblk_add_store(struct device *dev, struct 
->> device_attribute *attr, const char
->>       if (IS_ERR(dev_info->dax_dev)) {
->>           rc = PTR_ERR(dev_info->dax_dev);
->>           dev_info->dax_dev = NULL;
->> -        goto put_dev;
->> +        if (rc != -EOPNOTSUPP)
->> +            goto put_dev;
-> 
-> config DCSSBLK selects FS_DAX_LIMITED and DAX.
-> 
-> I'm not sure what selecting DAX is trying to achieve here, because the
-> Kconfig option is "FS_DAX".
-> 
-> So depending on the real motivation behind this select, we may want to
-> consider failure rather than success in the -EOPNOTSUPP case.
-> 
-
-I missed that alloc_dax() is implemented as not supported based on
-CONFIG_DAX (not CONFIG_FS_DAX).
-
-Therefore DCSSBLK Kconfig does the right thing and always selects DAX,
-and thus an implemented version of alloc_dax().
-
-This takes care of two of my open questions at least. :)
-
-Thanks,
-
-Mathieu
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:LxC2BwBHPxiM+7xl22O9AQ--.55539S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr1UAF1xXry8uF45CFyDWrg_yoWrtryfpr
+	W5Gr4UWr4kG347ZF1kAw15Xa4Yy3Z0yay3JasxGr98Xw15KF1ayF1ftFW7ua4qvr4rCF1a
+	qF90v3y2qw1UAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Am 2/2/2024 um 2:04 PM schrieb Paul E. McKenney:
+> Hello!
+>
+> Starting with next-20240130 (and perhaps a bit earlier), rcutorture gets
+> what initially looked like early-boot hangs, but only when running on
+> dual-socket x86 systems [1], as it it works just fine on my x86 laptop [2].
+> But when running on dual-socket systems, this happens all the time,
+> perhaps because rcutorture works hard to split each guest OS across a
+> socket boundary.
+>
+> This is the reproducer:
+>
+> tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs "10*TREE01" --trust-make
+>
+> By "looked like early-boot hangs" I mean that qemu was quite happy,
+> but there was absolutely no console output.
+>
+> Bisection identified this commit:
+>
+> 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
+>
+> Reverting this commit made the problem go away.  Except that it is really
+> hard to imagine this commit having any effect whatsoever on early boot
+> execution.  Of course, this might be a failure of imagination on my part,
+> so I enlisted the aid of gdb:
+>
+> tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs "TREE01" --trust-make --gdb
+>
+> After following the resulting gdb startup instructions and waiting for
+> about ten seconds, I hit control-C on the gdb window and then:
+>
+> 	(gdb) bt
+> 	#0  default_idle () at arch/x86/kernel/process.c:743
+> 	#1  0xffffffff81e94d34 in default_idle_call () at kernel/sched/idle.c:97
+> 	#2  0xffffffff810d746d in cpuidle_idle_call () at kernel/sched/idle.c:170
+> 	#3  do_idle () at kernel/sched/idle.c:312
+> 	#4  0xffffffff810d76a4 in cpu_startup_entry (state=state@entry=CPUHP_ONLINE)
+> 	    at kernel/sched/idle.c:410
+> 	#5  0xffffffff81e95417 in rest_init () at init/main.c:730
+> 	#6  0xffffffff8329adf2 in start_kernel () at init/main.c:1067
+> 	#7  0xffffffff832a5038 in x86_64_start_reservations (
+> 	    real_mode_data=real_mode_data@entry=0x13d50 <exception_stacks+32080> <error: Cannot access memory at address 0x13d50>) at arch/x86/kernel/head64.c:555
+> 	#8  0xffffffff832a513c in x86_64_start_kernel (
+> 	    real_mode_data=0x13d50 <exception_stacks+32080> <error: Cannot access memory at address 0x13d50>) at arch/x86/kernel/head64.c:536
+> 	#9  0xffffffff810001d2 in secondary_startup_64 ()
+> 	    at arch/x86/kernel/head_64.S:461
+> 	#10 0x0000000000000000 in ?? ()
+> 	(gdb) print jiffies
+> 	$1 = 4294676330
+> 	(gdb) print system_state
+> 	$2 = SYSTEM_RUNNING
+>
+> In other words, the system really has booted, and at least one CPU is
+> happily idling in the idle loop.  And another CPU is (maybe not quite
+> so happily) running rcutorture:
+>
+> 	(gdb) thread 6
+> 	[Switching to thread 6 (Thread 1.6)]
+> 	#0  0xffffffff8111160b in rcu_torture_one_read (
+> 	    trsp=trsp@entry=0xffffc900004abe90, myid=myid@entry=4)
+> 	    at kernel/rcu/rcutorture.c:2003
+> 	2003            completed = cur_ops->get_gp_seq();
+> 	(gdb) bt
+> 	#0  0xffffffff8111160b in rcu_torture_one_read (
+> 	    trsp=trsp@entry=0xffffc900004abe90, myid=myid@entry=4)
+> 	    at kernel/rcu/rcutorture.c:2003
+> 	#1  0xffffffff81111bef in rcu_torture_reader (arg=0x4 <fixed_percpu_data+4>)
+> 	    at kernel/rcu/rcutorture.c:2097
+> 	#2  0xffffffff810af3e0 in kthread (_create=0xffff8880047aa480)
+> 	    at kernel/kthread.c:388
+> 	#3  0xffffffff8103af1f in ret_from_fork (prev=<optimized out>,
+> 	    regs=0xffffc900004abf58, fn=0xffffffff810af300 <kthread>,
+> 	    fn_arg=0xffff8880047aa480) at arch/x86/kernel/process.c:147
+> 	#4  0xffffffff8100247a in ret_from_fork_asm () at arch/x86/entry/entry_64.S:242
+> 	#5  0x0000000000000000 in ?? ()
+>
+> So the system really did boot and is running just fine.  It is just that
+> there is no console output.  Details, details!
+>
+> Is there anything I can do to some combination of workqueues and printk
+> to help debug this?  Or that I can do to anything else, as I am not
+> feeling all that picky.  ;-)
+
+
+Just to exclude one source of troubles, have you tried turning all 
+atomics into full barriers and seen if the issue still reproduces?
+
+jonas
+
+
+>
+> 							Thanx, Paul
+>
+> [1] The dual-socket system is an 80-hardware-thread (20 cores per socket)
+>      system with model name Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz.
+>      I get the same results when using either of these compilers:
+>      gcc version 8.5.0 20210514 (Red Hat 8.5.0-21) (GCC)
+>      gcc version 11.4.1 20230605 (Red Hat 11.4.1-2) (GCC)
+>
+> [2] My laptop is a 16-hardware-thread (8 cores) single-socket system with
+>      model name "Intel(R) Core(TM) i9-10885H CPU @ 2.40GHz" and
+>      gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04).
 
