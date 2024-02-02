@@ -1,98 +1,253 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A3A8173E
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED12D8175F;
+	Fri,  2 Feb 2024 21:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706910180; cv=none; b=UMfqEu8518J2P1DCH7W7ddkEupJTWHJpCDxm0Q7dHMEMEIHAY/x1S1bNnOIqt1GnsRFB3t0ebbkcELn9X4g7olLCkDNd4tE1SW5OyJsA5RH63SEk9I0wIYKJ77MtfLvATJDCxcyD9B6ndMaFntQkAkOUX0R/2844hpWAU79eGWQ=
+	t=1706910632; cv=none; b=bCkmCx9X9SWOE6vXEKoapXPQUkIsVWd9PQiQneqtu66GmF5Vtwd7V9qDj4fCOmtCiPUP1ifc/fsqwiQ8mGVKqZwmxiSumJ1ZQFLCLKWVSB56fy3ToP95sabD/pjfDmn703Ddyo8J+8gxBQSud3JRk0Ympot+q5PEMtV3xtdx5Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706910180; c=relaxed/simple;
-	bh=JMTAKCnlm+qRofrbzQT0twQWPmdB7rbVAIRwYv4C2eY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sfb6XSGvy1Uf0wISC1uH2s53AGDjh6xpRqpJChFJoF1TkZGrSoARyjW8H0vIOzNELV+E6sfj8dIq9LeC+jIJ5DcvJnsEP1RiUYXZmIQ3JSmev+EJ9PDjqN2Md+pM5/1L2XQck2zRDoNvIxt3pz3GsrSVji3UA26wtzjw0qCoGpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b+2bvFHM; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706910632; c=relaxed/simple;
+	bh=hHxaw+nn+YcEJGGK4DNyV7fvRw6Yx8yXT/whi8BAW/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fbjJ6YUu+c61xzz7SR1Vbl5MaBZEHjTnYXj5JdV2bil0shqcf8CeZrdjevdnQpo8d15pfZV7EiWTWV8RfoKSOhnRe5l/esTpK90K44NxGbQ11VPCxfeOPuRl6q2tgiraOsSuGj4Ad0ElKeiIC5ej+Ez+AdVCNGGNLNBvVw1Fv1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+sbDsAY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b+2bvFHM"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-604255f581cso15923357b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 13:42:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706910178; x=1707514978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JMTAKCnlm+qRofrbzQT0twQWPmdB7rbVAIRwYv4C2eY=;
-        b=b+2bvFHMt/shTzmoWL5DDZZanZduRvwtWMeUbrg14JSv2o7g1pnYM/zyRPFdH4qh3D
-         HiUgbmp9tKe76sIoeliVx0cT69mQufXj7x4YxQaFUI2BFtzjQ6eXRaNsheSgxgN6n2rT
-         VXLZX1KMWi9Lf0lQgHfxgg2p7pyIS1DUIw9yq0/SWbpibBx+PtLG1J2V0/xNaCz7JoXj
-         3QDoos5dwjaz1f0YE5obz3nOji7n44OFf7yNeOawOPLQdsgR7PufauTBjYU7r03UCb4I
-         Y0mcstiM0mAf4an21kVUtTTcQT2VpeqyGA0txzucY74JjbMPZB0q41tFanQisdRsr+2I
-         sFRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706910178; x=1707514978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JMTAKCnlm+qRofrbzQT0twQWPmdB7rbVAIRwYv4C2eY=;
-        b=l5mPQNNyCmrcFcbaFDdOr3B7za8bXHfgPoZaVYZB7c8FkMKemkVcO/bTA+WciBn1Hx
-         5tVp5L1aXSruf/mVWiHG2Z/vM4PwI8NteuKkeM7F0+6Frypl3Vh3i9DPn4zXyoNcG9Li
-         QjJE3Smnt+RZIxUz072sSsEUCTAV9OHXglNB+x8JWj9e3PcnQyY2dMZPoIaDmRvoCXvu
-         cMmuzwD3ZT6sCMI/3LPXLoiVsRJYVZ6wZtup0fbfMvtRxIRHB8Xx7XxtjL0rnwuguVfj
-         Q6XESq2Z2btSvV8VIaEGaZzFnUUXAf8TFi48xnySVjzcykOl5DOxdG3wlttIcHjNsHCL
-         kXfg==
-X-Gm-Message-State: AOJu0YzghbgrwIf0TC7FSZPGSWH67pvA0xmuamRuKg3kB0Cr0PGpBqGw
-	Lo6W/dp0kKNG6tI79+iNruv09KVRrIny1NpF2HMI5ydfk8+punraGCYTkXFCPq1iIZl1H+Cc+QT
-	ul5o3/X4AqGZwnoYZAVPtKqFA9elNfTXS3DdD
-X-Google-Smtp-Source: AGHT+IHCXjtFXHPMmcjKAuZloPxLqvRZDzLRsio77BcVGOg3RTtHzUSiPVrgFhG7UEsNkzW/caKJn5/hzaqDvapj1VY=
-X-Received: by 2002:a0d:d495:0:b0:5eb:3851:2bba with SMTP id
- w143-20020a0dd495000000b005eb38512bbamr9522889ywd.41.1706910178189; Fri, 02
- Feb 2024 13:42:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+sbDsAY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490D7C433C7;
+	Fri,  2 Feb 2024 21:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706910631;
+	bh=hHxaw+nn+YcEJGGK4DNyV7fvRw6Yx8yXT/whi8BAW/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u+sbDsAYLj91MJYJb1fQsbtsO4gd29RCXVuvQUoxe7YVHfcK9q8TubRVA0iuzOYr3
+	 QqDrAD7+rYQpfrRtIMFqh3g354/1lWHKYzPFYHb0v5NnyuMz4xWBx3OLJHqpxBUmgl
+	 1Fx3FXyi6KKXdN0xkDcgmrvlsN2Ao9dBAlg0YrzyWdAvIRL8NVK8k8gNGPhgiM4/sK
+	 Pu7uJFdJwxGs0YXF1H0H5jQq6bPxqi0KTfUGT7a0fjI/R/e2Z/UGrSgfNAyMyXGXOn
+	 CFLG9Y+G5xzJuaoe0/zL5vDWNTZT2kWRmqjzVabX6RlFm/GIOOdNzIsEgNfVQ83o6M
+	 Q5p2UL+OJd/3w==
+Date: Fri, 2 Feb 2024 15:50:29 -0600
+From: Rob Herring <robh@kernel.org>
+To: Hari Nagalla <hnagalla@ti.com>
+Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
+	p.zabel@pengutronix.de, martyn.welch@collabora.com, nm@ti.com,
+	vigneshr@ti.com, kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 1/5] dt-bindings: remoteproc: k3-m4f: Add K3 AM64x SoCs
+Message-ID: <20240202215029.GA1597859-robh@kernel.org>
+References: <20240202175538.1705-1-hnagalla@ti.com>
+ <20240202175538.1705-2-hnagalla@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201153428.GA307226@cmpxchg.org> <20240202050247.45167-1-yangyifei03@kuaishou.com>
- <vofidz4pzybyxoozjrmuqhycm2aji6inp6lkgd3fakyv5jqsjr@pleoj7ljsxhi>
- <CABdmKX2KsxVExVWzysc_fQagGkYWhqRF00KxNxjpVWovHHip+Q@mail.gmail.com> <bycpbzvo2fpd2qrrl7ipnzrsyun7hg5tjlqouafuosxxlxfml5@vpbl6kl74hx5>
-In-Reply-To: <bycpbzvo2fpd2qrrl7ipnzrsyun7hg5tjlqouafuosxxlxfml5@vpbl6kl74hx5>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Fri, 2 Feb 2024 13:42:46 -0800
-Message-ID: <CABdmKX3Be=AHSvHOa7NQVapb5pdL9pk-oW_yyxG3NuC4D9aCAQ@mail.gmail.com>
-Subject: Re: Re: Re: [PATCH] mm: memcg: Use larger chunks for proactive reclaim
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Efly Young <yangyifei03@kuaishou.com>, hannes@cmpxchg.org, akpm@linux-foundation.org, 
-	android-mm@google.com, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, mhocko@kernel.org, muchun.song@linux.dev, 
-	roman.gushchin@linux.dev, shakeelb@google.com, yuzhao@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202175538.1705-2-hnagalla@ti.com>
 
-On Fri, Feb 2, 2024 at 11:46=E2=80=AFAM Michal Koutn=C3=BD <mkoutny@suse.co=
-m> wrote:
->
-> On Fri, Feb 02, 2024 at 10:22:34AM -0800, "T.J. Mercier" <tjmercier@googl=
-e.com> wrote:
-> > So all of these should be more or less equivalent:
-> > delta <=3D SWAP_CLUSTER_MAX ? delta : (delta + 3*SWAP_CLUSTER_MAX) / 4
-> > max((nr_to_reclaim - nr_reclaimed) / 4, (nr_to_reclaim - nr_reclaimed) =
-% 4)
-> > (nr_to_reclaim - nr_reclaimed) / 4 + 4
-> > (nr_to_reclaim - nr_reclaimed) / 4
-> >
-> > I was just trying to avoid putting in a 0 for the request size with the=
- mod.
->
-> The third variant would be simpler then. Modulo looks weird.
->
-> Oh, and I just realized that try_to_free_mem_cgroup_pages() does
-> max(nr_pages, SWAP_CLUSTER_MAX). Then I'd vote for the fourth variant +
-> possible comment about harmless 0.
-> (I'm sorry if this was discussed before.)
->
-> Michal
+On Fri, Feb 02, 2024 at 11:55:34AM -0600, Hari Nagalla wrote:
+> K3 AM64x SoC has a Cortex M4F subsystem in the MCU voltage domain.
+> The remote processor's life cycle management and IPC mechanisms are
+> similar across the R5F and M4F cores from remote processor driver
+> point of view. However, there are subtle differences in image loading
+> and starting the M4F subsystems.
+> 
+> The YAML binding document provides the various node properties to be
+> configured by the consumers of the M4F subsystem.
+> 
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> ---
+> Changes since v1:
+>  - Spelling corrections
+>  - Corrected to pass DT checks
+> 
+> Changes since v2:
+>  - Missed spelling correction to commit message
+> 
+> Changes since v3:
+>  - Removed unnecessary descriptions and used generic memory region names
+>  - Made mboxes and memory-region optional
+>  - Removed unrelated items from examples
+> 
+> Changes since v4:
+>  - Rebased to the latest kernel-next tree
+>  - Added optional sram memory region for m4f device node
+> 
+> Changes since v5:
+>  - None
+> 
+> Changes since v6:
+>  - Removed blank line, fixed type for firm-ware property and binding check
+>    errors.
+> 
+> link to v6:
+>   https://lore.kernel.org/all/20230913111644.29889-2-hnagalla@ti.com/
+> 
+>  .../bindings/remoteproc/ti,k3-m4f-rproc.yaml  | 138 ++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yaml
+> new file mode 100644
+> index 000000000000..645dbce3773b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yaml
+> @@ -0,0 +1,138 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-m4f-rproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI K3 M4F processor subsystems
+> +
+> +maintainers:
+> +  - Hari Nagalla <hnagalla@ti.com>
+> +  - Mathieu Poirier <mathieu.poirier@linaro.org>
+> +
+> +description: |
+> +  Some K3 family SoCs have Arm Cortex M4F cores. AM64x is a SoC in K3
+> +  family with a M4F core. Typically safety oriented applications may use
+> +  the M4F core in isolation without an IPC. Where as some industrial and
+> +  home automation applications, may use the M4F core as a remote processor
+> +  with IPC communications.
+> +
+> +$ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,am64-m4fss
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: IRAM internal memory region
+> +      - description: DRAM internal memory region
+> +
+> +  reg-names:
+> +    items:
+> +      - const: iram
+> +      - const: dram
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  firmware-name:
+> +    maxItems: 1
+> +    description: Name of firmware to load for the M4F core
+> +
+> +  mboxes:
+> +    description: |
 
-Ok great, let's do that. Thanks for your input.
+Don't need '|' if no formatting.
+
+> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +      communication with the remote processor. This property should match
+> +      with the sub-mailbox node used in the firmware image.
+> +    maxItems: 1
+> +
+> +  memory-region:
+> +    description: |
+> +      phandle to the reserved memory nodes to be associated with the
+> +      remoteproc device. The reserved memory nodes should be carveout nodes,
+> +      and should be defined with a "no-map" property as per the bindings in
+> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.yaml
+
+This has moved to dtschema. I'd just drop the file name.
+
+> +      Optional memory regions available for firmware specific purposes.
+> +    maxItems: 8
+> +    items:
+> +      - description: regions used for DMA allocations like vrings, vring buffers
+> +                     and memory dedicated to firmware's specific purposes.
+> +    additionalItems: true
+
+I think you want just:
+
+minItems: 1
+maxItems: 8
+
+> +
+> +  sram:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    maxItems: 4
+> +    items:
+> +      maxItems: 1
+> +    description: |
+> +      phandles to reserved on-chip SRAM regions. The regions should be
+> +      defined as child nodes of the respective SRAM node, and
+> +      should be defined as per the generic bindings in,
+> +      Documentation/devicetree/bindings/sram/sram.yaml
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - ti,sci
+> +  - ti,sci-dev-id
+> +  - ti,sci-proc-ids
+> +  - resets
+> +  - firmware-name
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        mcu_m4fss_dma_memory_region: m4f-dma-memory@9cb00000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0x9cb00000 0x00 0x100000>;
+> +            no-map;
+> +        };
+> +
+> +        mcu_m4fss_memory_region: m4f-memory@9cc00000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0x9cc00000 0x00 0xe00000>;
+> +            no-map;
+> +        };
+> +    };
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        mailbox0_cluster0: mailbox-0 {
+> +            #mbox-cells = <1>;
+> +        };
+> +
+> +        remoteproc@5000000 {
+> +            compatible = "ti,am64-m4fss";
+> +            reg = <0x00 0x5000000 0x00 0x30000>,
+> +                  <0x00 0x5040000 0x00 0x10000>;
+> +            reg-names = "iram", "dram";
+> +            ti,sci = <&dmsc>;
+> +            ti,sci-dev-id = <9>;
+> +            ti,sci-proc-ids = <0x18 0xff>;
+> +            resets = <&k3_reset 9 1>;
+> +            firmware-name = "am62-mcu-m4f0_0-fw";
+> +            mboxes = <&mailbox0_cluster0>, <&mbox_m4_0>;
+> +            memory-region = <&mcu_m4fss_dma_memory_region>,
+> +                            <&mcu_m4fss_memory_region>;
+> +            sram = <&oc_sram>;
+> +         };
+> +    };
+> -- 
+> 2.34.1
+> 
