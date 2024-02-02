@@ -1,71 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD90E1474C5;
-	Fri,  2 Feb 2024 18:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF7D1474C5;
+	Fri,  2 Feb 2024 18:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706896957; cv=none; b=AEUGnTI84J1Dv4gfcWhwT2QMccCf/Ke3Hm7GrmBhVy6FshDyiLn9aELtOJGiPj83Po9z1pbawaUgV6sZY/3hxr2zEVV5RLE9sbg/+pRbY3nSnnlkQtwkuCBtBQJD8ch4errVnyw0dkieW0X9rDofJ8W6iOgQ0A+F0vFK3/9VKo8=
+	t=1706897005; cv=none; b=PQSN7WMG6AaK9HsamtQf++mHCqjFL1z/3qfRuOiaufMQ5fZfTCX4OtvjUyfaVKqYZ3yX0FZ1D3bmU5YMunLPdjK7akOQjCZxMfB6XgocABlAxVM/vswozT9f+4iAzX+ZxK/RpdtaSWY4oGik8I/vgD6HMM8OXln963I0ss/LVAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706896957; c=relaxed/simple;
-	bh=AObZK8lt0kI8yyuwv9Pg9H4m9ru+FQwHPMzYJIqRXqk=;
+	s=arc-20240116; t=1706897005; c=relaxed/simple;
+	bh=Uup5FZMCcfCZOBIUv6G2Fi/wsqkNSTdL09LNTQwRP+o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q+XCJdD6yqgrgJ8MAjNgReZn4UVIngidlmz6GwrpF7M+Fa1G80eiSZS1306g1NRa2Htwl5wy3sJ6Ce5bJOT+OkOLNTNbjhM3YB7bxxsf9ovhHDWx89pWPxiwgo1hzY0941cvV/oro1I4yV8NH0sxeqr9kHw9LD9yVatIkm+/I7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nw+0bw6t; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9jueDsoKwZAEE+j4Xt65rR5gEv6Mbrpp1XD2O3qoKQd3UU+0Ogb0Ojs8LUwd4ja/eBWK6I5TDbjNEketBmiAjkMXyvyjfzga1tSrUCYqZSR8FrbbU8aOFctI1fYdHmlHg4XCVDzFj/8hkJQGHZpRfL3o14cf+UmOcsJOVejr7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jqGmbV+Q; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nw+0bw6t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706896955; x=1738432955;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AObZK8lt0kI8yyuwv9Pg9H4m9ru+FQwHPMzYJIqRXqk=;
-  b=nw+0bw6tgqqQ3FEpkmwBt7Bm8TC0of0iNxxnT5Ecf99jGe1y4UL3gcp0
-   iXeHhoW528XOBpvBAKpvfO8eEHn2tol3P6jwOW7ZRVZcHojlSut1xGuUM
-   37fpTLp1NNZ97JosC/rnApLTpItzMIaOWTKahhnhRV+05YBff94SzqU8C
-   7sYnUm/QO1WHikQiLvXwq6awdIOceVe4YMFpbbfmXQyI9PiEmmH7GrR7O
-   Pw7Uo4t17JVG3TJ3iKG1h3h2bz7+ug5XbEOxn+Zr+4CX1X6IrJBF21GuI
-   p7/OBK9by8CP+QUT6PpOnNh/IGIxoqmwRPZRERf1jWh1Tx3Bew5lVytz4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="434424"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="434424"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 10:02:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="23410586"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 02 Feb 2024 10:02:29 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rVxru-00048M-2Q;
-	Fri, 02 Feb 2024 18:02:26 +0000
-Date: Sat, 3 Feb 2024 02:02:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Guru Das Srinagesh <quic_gurus@quicinc.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kernel@quicinc.com,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: Re: [RESEND PATCH v6 02/12] firmware: qcom: scm: enable the TZ mem
- allocator
-Message-ID: <202402030101.nxmgLcAB-lkp@intel.com>
-References: <20240122102157.22761-3-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jqGmbV+Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qW6erQdXZh/wex5Ipty9iKt5f/CAhi5xgAqgpkUZTXE=; b=jqGmbV+Q1QaVQdi2aLgWcgAdoB
+	aSdWAty4d+FolwETOQNX57ObHIwrXEVvpY7/ORK8jpChvDNRv+Cc4SLhJqw7g1IzilwXF9S1WJWiF
+	agLfa4ntaPuZdC9+NJl9JPwTTLJFwABGpyG6Fl40FdRfkxbzezkornZ9aubEFUnHZWc1VhEoOBIHz
+	AOHTY4cg+kXDUth76QIHTUSN90EtNCU8ej7CsZ50Lid51NlTyWHfUIwFzBWGaFNvCRS+2qqG5rEAu
+	CC6kKNcawpRX3WnKxgNcsKsR0tY0tkx97z4KFlyzthfOEqMxWooyHOrgQN/js7g9TTLAfuG7dcyza
+	cm7uPp7w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42210)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rVxsj-0006KR-1y;
+	Fri, 02 Feb 2024 18:03:17 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rVxsh-0008VD-Sk; Fri, 02 Feb 2024 18:03:15 +0000
+Date: Fri, 2 Feb 2024 18:03:15 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sergio Palumbo <palumbo.ser@outlook.it>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: sfp: add quirk for ODI DFP-34X-2C2 GPON
+ ONU SFP
+Message-ID: <Zb0uYyxaKIMHQbQW@shell.armlinux.org.uk>
+References: <AS1PR03MB81893D69344708C98EE2B470827F2@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <ZbZoDIPR3O/iei5z@shell.armlinux.org.uk>
+ <AS1PR03MB818918BC313CC8A59E288FF082422@AS1PR03MB8189.eurprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,70 +59,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240122102157.22761-3-brgl@bgdev.pl>
+In-Reply-To: <AS1PR03MB818918BC313CC8A59E288FF082422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Bartosz,
+All the concerns with the OEM version of this patch apply to this one
+as well.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on krzk-dt/for-next v6.8-rc2 next-20240202]
-[cannot apply to arm64/for-next/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/firmware-qcom-add-a-dedicated-TrustZone-buffer-allocator/20240122-182633
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240122102157.22761-3-brgl%40bgdev.pl
-patch subject: [RESEND PATCH v6 02/12] firmware: qcom: scm: enable the TZ mem allocator
-config: i386-buildonly-randconfig-004-20240202 (https://download.01.org/0day-ci/archive/20240203/202402030101.nxmgLcAB-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240203/202402030101.nxmgLcAB-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402030101.nxmgLcAB-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: gen_pool_create
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_pool_new) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_best_fit
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_pool_new) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_set_algo
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_pool_new) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_add_owner
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_pool_new) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_destroy
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_pool_new) in archive vmlinux.a
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_pool_free) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_alloc_algo_owner
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_alloc) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_virt_to_phys
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_alloc) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: gen_pool_free_owner
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_alloc) in archive vmlinux.a
-   >>> referenced by qcom_tzmem.c
-   >>>               drivers/firmware/qcom/qcom_tzmem.o:(qcom_tzmem_free) in archive vmlinux.a
+On Fri, Feb 02, 2024 at 06:44:32PM +0100, Sergio Palumbo wrote:
+> Hello Russell,
+> this is the pach for the vendor "ODI".
+> Same hardware but different vendor.
+> I explained it in the description.
+> Hope this clarifies.
+> 
+> Thanks and regards
+> 
+> Sergio Palumbo
+> 
+> Il 28/01/2024 15:43, Russell King (Oracle) ha scritto:
+> > Oh, a second repost. What's different from the first repost?
+> > 
+> > On Sun, Jan 28, 2024 at 03:23:06PM +0100, Sergio Palumbo wrote:
+> > >       DFP-34X-2C2 is a GPON spf module working at both 1000baseX
+> > >       and 2500baseX.
+> > >       Setting the module to LAN_SDS_MODE=6 the module is working
+> > >       at 2500baseX with auto negotiation see at
+> > >       https://hack-gpon.org/ont-odi-realtek-dfp-34x-2c2/
+> > >       Unfortunatly the module's PHY is accessible at 1000baseX only.
+> > >       ethtool returning:
+> > >       Supported ports: [ Fibre ]
+> > >       Supported link modes: 1000baseX/Full
+> > > 
+> > >       After applying the quirk:
+> > >       Supported ports: [ Fibre ]
+> > >       Supported link modes: 1000baseX/Full
+> > >                             2500baseX/Full
+> > >       Tested on BANANA PI R3 in OpenWRT v 23.05.2 Kernel 5.15.137
+> > >       Tested on sfp to ethernet Media Converter.
+> > >       Autonegotiating 1000baseX or 2500baseX according to the
+> > >       connected host speed.
+> > > 
+> > >       This module is existing in 2 versions:
+> > >       Vendor = "ODI"
+> > >       Vendor = "OEM"
+> > >       This is the patch for vendor "ODI"
+> > > 
+> > >       Patch has been inserted keeping the list in alphabetical order
+> > >       first by vendor first and then by part string.
+> > > 
+> > > Signed-off-by: Sergio Palumbo <palumbo.ser@outlook.it>
+> > > ---
+> > >   drivers/net/phy/sfp.c | 3 +++
+> > >   1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> > > index 3c0028a4af92..410375bc6b94 100644
+> > > --- a/drivers/net/phy/sfp.c
+> > > +++ b/drivers/net/phy/sfp.c
+> > > @@ -495,6 +495,9 @@ static const struct sfp_quirk sfp_quirks[] = {
+> > >   	// 2500MBd NRZ in their EEPROM
+> > >   	SFP_QUIRK_M("Lantech", "8330-262D-E", sfp_quirk_2500basex),
+> > > +	// ODI DFP-34X-2C2 GPON ONU support 2500base-X
+> > > +	SFP_QUIRK_M("ODI", "DFP-34X-2C2", sfp_quirk_2500basex),
+> > > +
+> > >   	SFP_QUIRK_M("UBNT", "UF-INSTANT", sfp_quirk_ubnt_uf_instant),
+> > >   	// Walsun HXSX-ATR[CI]-1 don't identify as copper, and use the
+> > > -- 
+> > > 2.34.1
+> > > 
+> > > 
+> 
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
