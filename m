@@ -1,142 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB48417542;
-	Fri,  2 Feb 2024 13:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F5146B9B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 13:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706881279; cv=none; b=bhhJrFbXKVJVY85s0rNU6NOEZqHCNcuuhN7//X2OH/uc8RlHA1y/YZW/bCmp1YwqlDuK5ebGSovvG5NXiQcOK8krEPF+K1TU0CcLmZN1ekttKsDapZ0anp/mXxamrWlmLezHOQu2zSGbyXfYVE52Uzly4zwqDMuaxeIHS3DYUr4=
+	t=1706881507; cv=none; b=PTZ7Pg9lBiBkhplRsj7/BUNh4vlki2gvdcclNjvWQQUrTlBf8gOAdA2th4VRIJekhVKADriwclIg1vh4ySfgHw6BqtIVm/+9oU0nDV/5x9spDjKNuMM5eU8otyFfcoDlQqmErSCLjRtzKrsrZfkdOEr6n4IZrv8079m9wMaa628=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706881279; c=relaxed/simple;
-	bh=LTFK+5OJJ3JAaDjXIW/81oyDqHT85WKN9Hx3itF82S8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=TAImqIuFKFd9xWlO9UI7+eZneAJ1okJfgaKLL7owhs+bILbAdyHrEn+sViwtrmIX/2odC5f3Lx6NiHzIrvuebJj4o0Qbw4TnvHCrVrAYsWPpCLGGoHc6avd14T7izPLkvIhdEekWjqj6LFQwZdlaWF+720jUUQSdv8NrWOi2dH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DiCtJhgO; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706881507; c=relaxed/simple;
+	bh=PKzcI1q48e2Z9AZgmA1h8iLqG3H0FbHpPV+nCkPjFVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oAgy3YWjCIq2CYnqCPPByJ8TUKSr3xAtiIlBOTrIjug3S9UvuLVOUqYRgydtnpa9qqCy5EnXv62JedFUZ9LEcV6mM91PB6pnvVJ46H3pEeJxmmRX/cgCMC2C3ydZw8HfeuOVXa3N+yiWB734PczKrO9d5vYohsADDfjbiAremC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ciLtjmQe; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DiCtJhgO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706881278; x=1738417278;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=LTFK+5OJJ3JAaDjXIW/81oyDqHT85WKN9Hx3itF82S8=;
-  b=DiCtJhgOb4iRBxPflDPKnRg9p70Tfg61D4tvx9m59OeNbDh5qIr+dAUn
-   0r4cBKCH9j5BUORIIobG/uncTkikpPuNNlkFWDzYnWP8tl85ZSlRis1Wi
-   o9p+H2YV90wXB6siqwMD1qfLBieqs0W69bIlh8+oEvX4u55m3v0D1iji+
-   QRL8VZlVb2SsHz+ioV8XSvXlb7j9GeMt7FH436CKvv6rUvD5K/SfeB9gg
-   SIrR+XvgsEyu1VVWLy6I/Ng84PumyOwAuk8tfnuO5onS1MnoTsYA0Y6TF
-   9RHw2b/i0/ZNKivrouZCNCXa4L/acKV1Hwy2Kvv8E2i6wXfWGAUHAitJm
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="338478"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="338478"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 05:41:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="152500"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.50.66])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 05:41:15 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI: Cleanup link activation wait logic
-Date: Fri,  2 Feb 2024 15:41:08 +0200
-Message-Id: <20240202134108.4096-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ciLtjmQe"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4b739b49349so780594e0c.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 05:45:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706881504; x=1707486304; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IIzUaTAWY721VAmsfjicI7pRblrKzWu2/3eiQAJEETw=;
+        b=ciLtjmQe/0vRcQ3JQLVTYPqCoOMXdITAKbYTfWsB+fpRqSM8y404m8HozoFm5QYZsL
+         hFVfXSOloLdjHecWKFMM8jdutG0nvWpKrQtzxZo7VpdpsY5FH7fHh9BR6g0EGI8yTVqL
+         X2XFDObPrxafA/1Sb4+6fkZuqIpPeMelkv2aWExfqoPn7KK9tQZeXG9t/AtPel9FGaH7
+         3D6N/jyiXnluyTCTST9wICuZosRMjt6x7r2WaOnXojP+XdYv5tffqk+WBcrAJVqpgHB0
+         mPBL6rpGZIAnxdCjkOS5UtTwYUk7va1agy48bAvxlJJIq+FtWNph+TEW7FIGMQjeVOYY
+         27KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706881504; x=1707486304;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IIzUaTAWY721VAmsfjicI7pRblrKzWu2/3eiQAJEETw=;
+        b=k4HXrVEzHCq9k8DPnE2wInab1hgelQEr16tJ8XAr4VgVbymqtfzs/ZQf52/nR40ja6
+         XCBo1YUbgrIHzdGHUJaBNpnOQBCBwfRd5V5QuwaXmsTYkcw7NDuBVw/pyzROQezVQ9AX
+         Durt/+To6gh/Nt/yVK1ZP03kxTQ3xNkE0IGUeJNbu0A3JnPOMuFFpW5vmBItl3YNSfWN
+         UpkjFdHTeInNHBoAob/ZlV3SY2R0wlyxby22+KWOF5Ca3cxX/6/unIX4abmqmvkyvW+u
+         9UfxNC2wm2xOJVt6q/tP7bqxEA8n6auH9gKW42RWsCFcbpEVDOLNqtBKfDkTgWTM09iq
+         LTKg==
+X-Gm-Message-State: AOJu0YwejKkxMC/zJWwYxrJC2q6sMyA9fcMk6HjOjt6TuSDAbB84jtWJ
+	qdN3J4E/w6S6avsN+GQ3OhhE97pPdxJ1zJOw5jNpyUk/0SMBKMWPpNXxA53ln9VYBKSIPFFayMs
+	fQjDkqjKeZzG0g39nhmLVBBvD9/hw1b9gKfpr
+X-Google-Smtp-Source: AGHT+IHcugcAY0onJJ9YbOTRMsO8AuL33RLMvypF1xfaELG25ml3lxK0pklBkcHRLPdq/bsUZds6rXkq0SmKDaybI0c=
+X-Received: by 2002:a1f:f4c9:0:b0:4b6:bdba:8460 with SMTP id
+ s192-20020a1ff4c9000000b004b6bdba8460mr1847799vkh.9.1706881503872; Fri, 02
+ Feb 2024 05:45:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240202101311.it.893-kees@kernel.org> <20240202101642.156588-2-keescook@chromium.org>
+ <CANpmjNPPbTNPJfM5MNE6tW-jCse+u_RB8bqGLT3cTxgCsL+x-A@mail.gmail.com> <202402020405.7E0B5B3784@keescook>
+In-Reply-To: <202402020405.7E0B5B3784@keescook>
+From: Marco Elver <elver@google.com>
+Date: Fri, 2 Feb 2024 14:44:25 +0100
+Message-ID: <CANpmjNO-4A4LMK8kbWiiODB-vOZqc5gZndWtnYDc5RCGDBcoSQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] ubsan: Reintroduce signed and unsigned overflow sanitizers
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Hao Luo <haoluo@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Fangrui Song <maskray@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Bill Wendling <morbo@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The combination of logic in pcie_failed_link_retrain() and
-pcie_wait_for_link_delay() is hard to track and does not really make
-sense in some cases.
+On Fri, 2 Feb 2024 at 13:17, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Feb 02, 2024 at 12:01:55PM +0100, Marco Elver wrote:
+> > On Fri, 2 Feb 2024 at 11:16, Kees Cook <keescook@chromium.org> wrote:
+> > > [...]
+> > > +config UBSAN_UNSIGNED_WRAP
+> > > +       bool "Perform checking for unsigned arithmetic wrap-around"
+> > > +       depends on $(cc-option,-fsanitize=unsigned-integer-overflow)
+> > > +       depends on !X86_32 # avoid excessive stack usage on x86-32/clang
+> > > +       depends on !COMPILE_TEST
+> > > +       help
+> > > +         This option enables -fsanitize=unsigned-integer-overflow which checks
+> > > +         for wrap-around of any arithmetic operations with unsigned integers. This
+> > > +         currently causes x86 to fail to boot.
+> >
+> > My hypothesis is that these options will quickly be enabled by various
+> > test and fuzzing setups, to the detriment of kernel developers. While
+> > the commit message states that these are for experimentation, I do not
+> > think it is at all clear from the Kconfig options.
+>
+> I can certainly rephrase it more strongly. I would hope that anyone
+> enabling the unsigned sanitizer would quickly realize how extremely
+> noisy it is.
+>
+> > Unsigned integer wrap-around is relatively common (it is _not_ UB
+> > after all). While I can appreciate that in some cases wrap around is a
+> > genuine semantic bug, and that's what we want to find with these
+> > changes, ultimately marking all semantically valid wrap arounds to
+> > catch the unmarked ones. Given these patterns are so common, and C
+> > programmers are used to them, it will take a lot of effort to mark all
+> > the intentional cases. But I fear that even if we get to that place,
+> > _unmarked_  but semantically valid unsigned wrap around will keep
+> > popping up again and again.
+>
+> I agree -- it's going to be quite a challenge. My short-term goal is to
+> see how far the sanitizer itself can get with identifying intentional
+> uses. For example, I found two more extremely common code patterns that
+> trip it now:
+>
+>         unsigned int i = ...;
+>         ...
+>         while (i--) { ... }
+>
+> This trips the sanitizer at loop exit. :P It seems like churn to
+> refactor all of these into "for (; i; i--)". The compiler should be able
+> to identify this by looking for later uses of "i", etc.
+>
+> The other is negative constants: -1UL, -3ULL, etc. These are all over
+> the place and very very obviously intentional and should be ignored by
+> the compiler.
 
-To cleanup the logic mess:
+Yeah, banning technically valid code like this is going to be a very hard sell.
 
-1. Change pcie_failed_link_retrain() to return true only if link was
-   retrained successfully due to the Target Speed quirk. If there is no
-   LBMS set, return false instead of true because no retraining was
-   even attempted. This seems correct considering expectations of both
-   callers of pcie_failed_link_retrain().
+> > What is the long-term vision to minimize the additional churn this may
+> > introduce?
+>
+> My hope is that we can evolve the coverage over time. Solving it all at
+> once won't be possible, but I think we can get pretty far with the
+> signed overflow sanitizer, which runs relatively cleanly already.
+>
+> If we can't make meaningful progress in unsigned annotations, I think
+> we'll have to work on gaining type-based operator overloading so we can
+> grow type-aware arithmetic. That will serve as a much cleaner
+> annotation. E.g. introduce jiffie_t, which wraps.
+>
+> > I think the problem reminds me a little of the data race problem,
+> > although I suspect unsigned integer wraparound is much more common
+> > than data races (which unlike unsigned wrap around is actually UB) -
+> > so chasing all intentional unsigned integer wrap arounds and marking
+> > will take even more effort than marking all intentional data races
+> > (which we're still slowly, but steadily, making progress towards).
+> >
+> > At the very least, these options should 'depends on EXPERT' or even
+> > 'depends on BROKEN' while the story is still being worked out.
+>
+> Perhaps I should hold off on bringing the unsigned sanitizer back? I was
+> hoping to work in parallel with the signed sanitizer, but maybe this
+> isn't the right approach?
 
-2. Handle link-was-not-retrained-successfully return (false) from
-   pcie_failed_link_retrain() properly in pcie_wait_for_link_delay() by
-   directly returning false.
+I leave that to you - to me any of these options would be ok:
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pci.c    |  4 +---
- drivers/pci/quirks.c | 25 +++++++++++++------------
- 2 files changed, 14 insertions(+), 15 deletions(-)
+1. Remove completely for now.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d8f11a078924..ca4159472a72 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5068,9 +5068,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(20);
- 	rc = pcie_wait_for_link_status(pdev, false, active);
- 	if (active) {
--		if (rc)
--			rc = pcie_failed_link_retrain(pdev);
--		if (rc)
-+		if (rc < 0 && !pcie_failed_link_retrain(pdev))
- 			return false;
- 
- 		msleep(delay);
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index efb2ddbff115..e729157be95d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -88,24 +88,25 @@ bool pcie_failed_link_retrain(struct pci_dev *dev)
- 	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
- 		return false;
- 
--	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
- 	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
--	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
--	    PCI_EXP_LNKSTA_LBMS) {
--		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
-+	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) !=
-+	    PCI_EXP_LNKSTA_LBMS)
-+		return false;
- 
--		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
--		lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
--		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
-+	pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
- 
--		if (pcie_retrain_link(dev, false)) {
--			pci_info(dev, "retraining failed\n");
--			return false;
--		}
-+	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
-+	lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
-+	lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
-+	pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
- 
--		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-+	if (pcie_retrain_link(dev, false)) {
-+		pci_info(dev, "retraining failed\n");
-+		return false;
- 	}
- 
-+	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-+
- 	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
- 	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
- 	    pci_match_id(ids, dev)) {
--- 
-2.39.2
+2. Make it 'depends on BROKEN' (because I think even 'depends on
+EXPERT' won't help avoid the inevitable spam from test robots).
 
+3. Make it a purely opt-in sanitizer: rather than having subsystems
+opt out with UBSAN_WRAP_UNSIGNED:=n, do the opposite and say that for
+subsystems that want to opt in, they have to specify
+UBSAN_WRAP_UNSIGNED:=y to explicitly opt in.
+
+I can see there being value in explicitly marking semantically
+intended unsigned integer wrap, and catch unintended cases, so option
+#3 seems appealing. At least that way, if a maintainer chooses to opt
+in, they are committed to sorting out their code. Hypothetically, if I
+was the maintainer of some smaller subsystem and have had wrap around
+bugs in the past, I would certainly consider opting in. It feels a lot
+nicer than having it forced upon me.
+
+Thanks,
+-- Marco
