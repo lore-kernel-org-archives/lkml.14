@@ -1,109 +1,92 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E950185949;
-	Fri,  2 Feb 2024 19:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7840812C7F7;
+	Fri,  2 Feb 2024 19:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706900925; cv=none; b=tLCYNbCrFKNMm0EukoIKg7dWdOVxSRD6cuEIrkrOl65273WNnIkHOZlDbGPnNsnwIJNHWxIw+Ol5xPCBxQ3APD1B9M2ef71ebvMTeR0/x3gLyb2shXfkcmGKpsy4LdQa5UwuIX6EbIE3Ys190nzLIoO4fcqJcflT3K+aq7tj2GE=
+	t=1706901028; cv=none; b=jnlg55Kdfa5K7CFVc2f67pjM3oQYzav9EtONb8lWfwlBBtOqprtJP8B2wT8lq7u9tlrm65vRjbDen2yw+i1wgGle/JDa3d44i6uC3U1ifoO5BnRJG4PyFa/0/lJxfCt5jivEXTZAS/xMePDLPjZE95EyHsRsS1NgpJi/Xos7FQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706900925; c=relaxed/simple;
-	bh=32B//JDxJiRZBsf53iQ3isYk7MyrOdW/YuQLIRZa11g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4DV5UWc5NhvZf/YjiYSTbjTNWLTzy6JKgDndXvDH5CQETfGtIVGFPN8GKJO1YfxWEDCAjkvFy9J07WXDcbzCoidXS+oJ92KTOZGhL4A/ozGGRPWrofE4shfkB7YEfSYKDVyNADZnCCqLNAY40cOpZh+K+CpjNvQh824vigI00o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OD+9YKOs; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706901028; c=relaxed/simple;
+	bh=iJn7ks39CQmQhgEd4wtOZ6UX0hQLi95z7T6yi3mqIGo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=OB+uB2P/mKOOvX28UQsCLygk0sJksaGR0iHEg0Z/NnHjlttmKWVFSuzWK1RJM+RhK7Ak9b9xWhPJzB6FEDGNAVfBft+R7oL41JoGl7gBbdAGE/psUlUyaLxAdoV/GdxYH1+dSkHhTEqa139oV/BHFJTtkvlmyD30WebPKwzL6v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qfdpx4EU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OD+9YKOs"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6de2735151cso1768661b3a.1;
-        Fri, 02 Feb 2024 11:08:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706900923; x=1707505723; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X2Hvb4/kWmn4mJzDVdWKR0899OF3sPbKQ4xVeSo/y6s=;
-        b=OD+9YKOsoVGroJdk8crb/770vtT+fHBt8A/k/EJpMFwKRZMH7OCa4jh7eIt2sMyUWA
-         fAbGCqskzfR07Fl0NYI/95XOHaydqe+k72hQxOjhnjy/Lb4pYqO7ArCMq8q1grsOkQaJ
-         bm05vAmqqhSaqQY9JgLspkywKvjzzinDZsJO1MTAI0ymRJ2OoJG4KJtourhJS7t7w0dp
-         XMYwAl1sYr1AqLDvR/0T4IfEMSIgWoMZXSAj2jr12G1BEIXb4ZmeE+Je0QdO1VWf0bHO
-         ngcWVZZLzwwn7TUdGYToYc7JG9KxQ+CrIa661TOLaeIR14IilyrJRn5PZhcGW7v3kVmP
-         aqhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706900923; x=1707505723;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X2Hvb4/kWmn4mJzDVdWKR0899OF3sPbKQ4xVeSo/y6s=;
-        b=whZIEoRDOdovp7vpO+isfcOfAunlw1bXVw4CyjJpBenDY1gDR5E2Eh8XxJM7+ZB4qi
-         78EzZKhKZ0+fE3aMJBayUYq/868GvLHExFSRM4tfitYi+swFr1+Bp2UJ2q/qfcTBWHUF
-         MY233jKAryT/Q8i5fvvmljG/1+4PeH369nOE4AuZK3DlfvO/zNsTUnWS5UKKrhEIMq33
-         Jbauu2boH9+yt/Hyd+kzLgSHWO+c3LgYvEJH5Da4vx5lg6oKh8okvVMwFAfduej3342a
-         8MV2BYvAxD9xX1hDVTPAJidHPpDDNStsV7CQOfcgHCX8ZI4RrdF5WPnaJiwbW6EsidDW
-         fEQQ==
-X-Gm-Message-State: AOJu0YzLwcpOfIcesLhYP44nBgrwyn1yrDsL1gBmy+ausk7DsO0IWLwD
-	q/2sxy3G+KaJ2zuoI7+k0wOHpz1nwsm8dFUEO4U8W4UzMo1pDWAa
-X-Google-Smtp-Source: AGHT+IFCp1izFJ0G/yBcNiE8pRu44wDS+LmUg2K6xxIfEty5450/IQnZPOEPpKIS8PXNw5FC0AXbxQ==
-X-Received: by 2002:a05:6a00:1c88:b0:6dd:8992:6b26 with SMTP id y8-20020a056a001c8800b006dd89926b26mr7399021pfw.9.1706900922944;
-        Fri, 02 Feb 2024 11:08:42 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWk1wsoWixPcNdQ/G2Jg3R+qqKLyMsrEY3xM5Boc7fMQxJknbzlOwQAVF4I8YnEOQB+rqFzgT5Qn+S/aSjplw+zhuxglpVcmOsA/Y1Oyt2wUbbghTpTaTcqhevkv5nkA9bIYakvYFHuaOXmHUXl0HlVQPPiMqK2FYT79joOvhIYg1Y7qbOX4ejP9+w4hKCauac7wp8AXEyQY5Y4zZjSTooAZTie+4J1XSeIHTXqp5Ig2OKI
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b28-20020aa78edc000000b006de09d94723sm2022017pfr.17.2024.02.02.11.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 11:08:42 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 2 Feb 2024 11:08:41 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Aleksa Savic <savicaleksa83@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, Jonas Malaco <jonas@protocubo.io>,
-	Yury Zhuravlev <stalkerg@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: Add driver for NZXT Kraken X and Z series AIO CPU
- coolers
-Message-ID: <c4ecb715-ec25-416e-a893-6e9eecb37409@roeck-us.net>
-References: <20240129111932.368232-1-savicaleksa83@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qfdpx4EU"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 39EFAC4E662;
+	Fri,  2 Feb 2024 19:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706901028;
+	bh=iJn7ks39CQmQhgEd4wtOZ6UX0hQLi95z7T6yi3mqIGo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Qfdpx4EUmTQzqKwHc8Z7+cLOPWxpG8WHSAIfi/DbKggrlx4mQ8BhYnhgQj9wmWzKY
+	 MqJJSm0dE5QqFtuj1TWO/lwO97AmRLnxk98Idvz4akFoQCvhxr8/3UOKrZQ6i39GS0
+	 EYwpNGe///bob55O0R1DwhqolnadTsqLjbGzbcJiqO4JHUCFZXGpED1sGXfu9sXNnu
+	 t9t4OXnrPv3iA5II0ZysporrAHUh8ZGArmdJgZqfc/HDq0kj1TJTiPyI7tpZcBKIdv
+	 rIyHHsAoWdx9HW7PTwzxtWNE+10gzL3ECI0vLXLrvQNFBhn9whn4mJQMLvUqpgA/24
+	 3RuAmVzCcpUnA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1E88ED8C978;
+	Fri,  2 Feb 2024 19:10:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129111932.368232-1-savicaleksa83@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v5 0/4] net/sched: Load modules via alias
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170690102811.13805.7780804677680827549.git-patchwork-notify@kernel.org>
+Date: Fri, 02 Feb 2024 19:10:28 +0000
+References: <20240201130943.19536-1-mkoutny@suse.com>
+In-Reply-To: <20240201130943.19536-1-mkoutny@suse.com>
+To: =?utf-8?b?TWljaGFsIEtvdXRuw70gPG1rb3V0bnlAc3VzZS5jb20+?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ cake@lists.bufferbloat.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, jhs@mojatatu.com,
+ xiyou.wangcong@gmail.com, jiri@resnulli.us, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+ haoluo@google.com, jolsa@kernel.org, toke@toke.dk, vinicius.gomes@intel.com,
+ stephen@networkplumber.org, horms@kernel.org, pctammela@mojatatu.com
 
-On Mon, Jan 29, 2024 at 12:19:28PM +0100, Aleksa Savic wrote:
-> This driver enables hardware monitoring support for NZXT Kraken
-> X53/X63/X73 and Z53/Z63/Z73 all-in-one CPU liquid coolers.
-> 
-> All models expose liquid temperature and pump speed (in RPM), as well as
-> PWM control (natively only through a temp-PWM curve, but the driver also
-> emulates fixed PWM control on top of that). The Z-series models
-> additionally expose the speed and duty of an optionally connected fan,
-> with the same PWM control capabilities.
-> 
-> Pump and fan duty control mode can be set through pwm[1-2]_enable,
-> where 1 is for the manual control mode and 2 is for the liquid temp
-> to PWM curve mode. Writing a 0 disables control of the channel through
-> the driver after setting its duty to 100%. As it is not possible to query
-> the device for the active mode, the driver keeps track of it.
-> 
-> The temperature of the curves relates to the fixed [20-59] C range, per
-> device limitations, and correlating to the detected liquid temperature.
-> Only PWM values (ranging from 0-255) can be set.
-> 
-> The addressable RGB LEDs and LCD screen, included only on Z-series models,
-> are not supported in this driver.
-> 
-> Co-developed-by: Jonas Malaco <jonas@protocubo.io>
-> Signed-off-by: Jonas Malaco <jonas@protocubo.io>
-> Co-developed-by: Yury Zhuravlev <stalkerg@gmail.com>
-> Signed-off-by: Yury Zhuravlev <stalkerg@gmail.com>
-> Signed-off-by: Aleksa Savic <savicaleksa83@gmail.com>
+Hello:
 
-Applied.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Thanks,
-Guenter
+On Thu,  1 Feb 2024 14:09:39 +0100 you wrote:
+> These modules may be loaded lazily without user's awareness and
+> control. Add respective aliases to modules and request them under these
+> aliases so that modprobe's blacklisting mechanism (through aliases)
+> works for them. (The same pattern exists e.g. for filesystem
+> modules.)
+> 
+> For example (before the change):
+>   $ tc filter add dev lo parent 10: protocol ip prio 10 handle 1: cgroup
+>   # cls_cgroup module is loaded despite a `blacklist cls_cgroup` entry
+>   # in /etc/modprobe.d/*.conf
+> 
+> [...]
+
+Here is the summary with links:
+  - [v5,1/4] net/sched: Add helper macros with module names
+    https://git.kernel.org/netdev/net-next/c/b26577001af4
+  - [v5,2/4] net/sched: Add module aliases for cls_,sch_,act_ modules
+    https://git.kernel.org/netdev/net-next/c/241a94abcf46
+  - [v5,3/4] net/sched: Load modules via their alias
+    https://git.kernel.org/netdev/net-next/c/2c15a5aee2f3
+  - [v5,4/4] net/sched: Remove alias of sch_clsact
+    https://git.kernel.org/netdev/net-next/c/6cff01581789
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
