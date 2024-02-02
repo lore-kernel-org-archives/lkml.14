@@ -1,147 +1,169 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE03604BF;
-	Fri,  2 Feb 2024 10:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F507A732
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 10:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706868937; cv=none; b=YAV/dsg6IHclGLuvOGLkpkEua9EH3FYMnPhSoBoFxJl9+dpzq85NPNZIwkyq/dSpkDDdLUvMD22I5HClnuyPV2KdPuEn9KVk5dm2Pf6acOiMA3LVd1Yy4G3x6Dphq2tK93qXcc3lq7xYT1gIWN/8h5Z/jPkt7VfCPCH6xdXgfVs=
+	t=1706869008; cv=none; b=K+/u6X054U1SgXcCZ4+C4jS+ngJvy8+PbFeWnnmmloQvN+9UxJQ8DUxtF3o1jnfamt9PLk76Rt3RRrGj+jv5ccFNJJNNlE7Y+97PRenG0IrsBWuP6SHxl4/BMN9MxCSou11vPPPDAV2MHwF/xCLC069CoDkQxCLDBD6TPFFCj6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706868937; c=relaxed/simple;
-	bh=E3WldveCa94S5WNb2X3oqe4POnlIFKkp9qpQEU3ZUV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZhcgJ+/UcOk9RyifyoU9X3wRh1Mqxa9P+h/I3sbewXiDud1FvexxLxQG/o1Fxta4ujG/oTIUlHqf8PNFVC2Xo1E83Pu1bEwNxGdTr4CiNfaMqV+CIIeNsGtHBDWEJRy0KvfF9mYptbjrf1JzFXkospPLexQL2Kplo20WO3w3Oq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=t5NptUfm; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=KDSpFCd3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706869008; c=relaxed/simple;
+	bh=2l9nEKso4+AOWcpX8WNY7A6dHeDCfYN/6uhOB8hks2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R6ffDp9fOCIY9/WmFjfcYVjnxcx5hjrYaKLLnp87h9x9gr+ozaQXOr7Hd4yvZuVxoZDg0R38Bfq6MxV+oVEXLv09VhsDI98NPcDO/d+OtVb2M5/goJDOKY7VhAQ67XoFCmYfwIOzh8FnEO8O2tXmPS92QeHRh3hHsLXorYMXUAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=J4NAQtov; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="t5NptUfm";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="KDSpFCd3"
-Received: from blackpad (unknown [10.100.12.75])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 58CFC1F461;
-	Fri,  2 Feb 2024 10:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706868933; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YG/G98bRsAnGh877wO+CNpr7OSPc876vz8JKWKpu7x8=;
-	b=t5NptUfm52ay6TCDiMFIYGgKuDry0bkrabgNwhUrEeWMOj5LMcIhmbfcWOkXw09jBzFxNo
-	2RE0ujQRjek0Wf25yAizUoO3EFfBg2uT17S0xdFm/LpeEVl/pBGHb5yGMcFcpl1/wGq2xT
-	E+1Nki4QSrgUVEcFS3NUtrkQC1Z1n8s=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706868932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YG/G98bRsAnGh877wO+CNpr7OSPc876vz8JKWKpu7x8=;
-	b=KDSpFCd3kVc5wqknaVaSk2qJ3647XRbzLNQrQDlg6lV0P6KuX2x1yLYAGp7BlvgfJSVx0a
-	0XrVgWj1v3Fe2yFAJHCr16adkisWRbVzkfJCT/BGHbV68XWard5frxgx1f2C7HhDO369SN
-	mtCza+wH2LLg7J97GGAnRfviryBcIgU=
-Date: Fri, 2 Feb 2024 11:15:31 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Efly Young <yangyifei03@kuaishou.com>
-Cc: hannes@cmpxchg.org, akpm@linux-foundation.org, android-mm@google.com, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	mhocko@kernel.org, muchun.song@linux.dev, roman.gushchin@linux.dev, 
-	shakeelb@google.com, tjmercier@google.com, yuzhao@google.com
-Subject: Re: Re: [PATCH] mm: memcg: Use larger chunks for proactive reclaim
-Message-ID: <vofidz4pzybyxoozjrmuqhycm2aji6inp6lkgd3fakyv5jqsjr@pleoj7ljsxhi>
-References: <20240201153428.GA307226@cmpxchg.org>
- <20240202050247.45167-1-yangyifei03@kuaishou.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J4NAQtov"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6dde65d585bso1281497b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 02:16:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706869003; x=1707473803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6EHXdAThkGXTR3eJPl49+AVsRbrPUkQd45PvGXZEUlI=;
+        b=J4NAQtovGcYBwjbdEE0R3Lha8so/lU+5NjSS9EDWldBsEfpOTHmiM+hxBLzvaLkTmE
+         u774oxYhU/IibYp4Mz+tgPNqHug3EO02ZMK3vFdNxJhKZ9YHA/VOB4U2RE5pbDLVUBcU
+         b6lgmEH8MxznE7FJH95y2ia3bLf6rfdCBsEnw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706869003; x=1707473803;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6EHXdAThkGXTR3eJPl49+AVsRbrPUkQd45PvGXZEUlI=;
+        b=B4WPtZORwxS6VrVZzNtGHexE2kvoquI8g+tc8pex7kB9vHRdcv1PdubENLbV1CVoNA
+         MgzaLp3sfGUsfBZPy28MEKU+OdvH6H3Sfo8rteNAhox8f6VnaRs4uBVorCTAeU/lGoNd
+         +h8z9N4GhSHNNEIjExzOiUaAwH9YzicBAs/O5dTR8H5a0DMX0M9c2A4+bB53fpco/Ydk
+         1E5cKolKu+0RNaBdXGmGoai653J64y/xcWcBmbLnsnZc+axPdu5d8c2NBvSP0hMGxyXu
+         VlOWtkCy6IXr4N9U82pspCp1pjDhHxZta92yyioFwXO6+PT5lzS3tihQPYN3hRNL/919
+         /A/w==
+X-Gm-Message-State: AOJu0YzfoJwJo6KHMOpv2Dq1eRRwkCZc/E9h3GkKFVeMVX3ToyVt+lV6
+	k2CoX7A296qKQRczrfBqd6i1I/4bzH8/0TiJgX5+QHseQoAF1GSO47qJcsCalg==
+X-Google-Smtp-Source: AGHT+IHMKOiQ6mHZakC/jI0iiftn9S+TFj6r9sQjHhGGiqUcwILCJdVCYMDM6jzLDgaScuq8as349w==
+X-Received: by 2002:a05:6a20:94cd:b0:199:c9a2:fb0 with SMTP id ht13-20020a056a2094cd00b00199c9a20fb0mr8667691pzb.16.1706869003557;
+        Fri, 02 Feb 2024 02:16:43 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWM0evwmk61ML9mKlP7sQqZt4NIu2CDf4tNN7ZfZBwVop6WGktFTrN8OQ6otbkJV/lVl6pxcL/V59G96BahEDFx4D7uY4o04C+92sAr/f+65Vbvjtnyg2OPcPHZOyvi6dhxH+kafSvPLJ0gPpvBuxExxguupg7UHSjrbBnSuY7diqz3XRNyLJLE+k3NrKhDBQVfDkjSCPv5+IPi2tsC4kTfC8bHtbQ9Ds1QNM+OfHrrAG95YPgJkHok9YDBlFI2yp2omYAuCblWCU4E8xsjCg4uDuDPIrLsHiSO/YSQ877+xeTLG4We7BgzltdppTfhDtq5LoXEOHmAuGsaNV44gP/1OkY/j2EKxPna1dwhxyWss5i11x9OKRpqTatFqLO9bRvuZjNP5JYKnM70Ypx/DONZf56mG3Z/X3xbiG9mWGOrrlhF8VkWCvK/2DlLipi7xDyBvtYleNfk9SMbxw2SILv94Pjffr/mFJybLlIBEQVzRFgY1Lzh5lWQA7tomI9J5O+hbVp6srbBPr/obebIVCKkQqaan6RFPi81BbO8TUbrbFI8LUK+uytdppF3tBQ/UWgWGYhbMHdL3uarjfDfTC+h/5sXe7a55tsWq4g=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u26-20020aa7839a000000b006dde0724247sm1273062pfm.149.2024.02.02.02.16.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 02:16:42 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Fangrui Song <maskray@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Bill Wendling <morbo@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH v2 0/6] ubsan: Introduce wrap-around sanitizers
+Date: Fri,  2 Feb 2024 02:16:33 -0800
+Message-Id: <20240202101311.it.893-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i6547u4e3dsdsmiu"
-Content-Disposition: inline
-In-Reply-To: <20240202050247.45167-1-yangyifei03@kuaishou.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -5.90
-X-Spamd-Result: default: False [-5.90 / 50.00];
-	 TO_DN_SOME(0.00)[];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 SIGNED_PGP(-2.00)[];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-0.998];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[kuaishou.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[]
-X-Spam-Flag: NO
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2894; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=2l9nEKso4+AOWcpX8WNY7A6dHeDCfYN/6uhOB8hks2s=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlvMEGR2w/jDkKre5GPT1/M/XftJt/c1PyB4wL/
+ haxlFPUi1KJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbzBBgAKCRCJcvTf3G3A
+ JtsCD/9zn8FXQvcFAIIQgYZmbnBXO2DwIbRtXhGNbq2Nup24+qU2V23CPL1rxaHKDC/EiJJEnKb
+ e5BpVrssi1sNVM0eT1gSuZh3+Fe9MuSkT1qu5cuE+fhykPOt7JYBmAot97DhLNGpbC4Wh6wS2Gm
+ zt9zRh7VdGjswl0SiQQT3Ko7H0hMo+8Du/2ufEy3yiken9zj1VMMJ1KoVnxpVhaMUra5smuX5fZ
+ xfIadzk4bYAjWidY713+WT72pgRr7qsh7cHstL2GUq2+nI0GL0j6nmtuhPKMexyPaOp6rTzXwvb
+ Z7GBANHBt9W7RFT2e5jxCw2iSyb/9aZQDjTzC7dGQNytXEvHnP+Phzhj7xCmXOuITiwx70ObSXS
+ ME7gGoLJ13vK/Z1MOOR4KUNhbNwuaGi5yPooFb0xcsg4KnCSY2MOorFK9WWpu/OjmWo+DxUMEvR
+ 1J/KCnkcS1uyoVLsNj2Sh3VJJfz2UhtJtuwtqbFW43Uy4aaj00q7AmQ+NDje2eWQ70R0R+2XSMI
+ ndQHgrn7bxz13hk+ym9Je7oT6lJtEH74ncnlLRyN2B+2wk61/16LUCxqpP2Qjq0ZUSeYdi1IICL
+ eEpdx3A5WLH/w5PScFuSOwRUsIvtR3tCIgLvj1N4YRLGfj9EYX2DFA1VIUBOXReGwVa9kHKDz29
+ jIcc1AN WIb7pOrg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
---i6547u4e3dsdsmiu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v2:
+ - improve CC list
+ - add reviewed-by tags
+ - reword some commit logs
+v1: https://lore.kernel.org/all/20240129175033.work.813-kees@kernel.org/
 
-On Fri, Feb 02, 2024 at 01:02:47PM +0800, Efly Young <yangyifei03@kuaishou.=
-com> wrote:
-> > Looking at the code, I'm not quite sure if this can be read this
-> > literally. Efly might be able to elaborate, but we do a full loop of
-> > all nodes and cgroups in the tree before checking nr_to_reclaimed, and
-> > rely on priority level for granularity. So request size and complexity
-> > of the cgroup tree play a role. I don't know where the exact factor
-> > two would come from.
->=20
-> I'm sorry that this conclusion may be arbitrary. It might just only suit
-> for my case. In my case, I traced it loop twice every time before checking
-> nr_reclaimed, and it reclaimed less than my request size(1G) every time.
-> So I think the upper bound is 2 * request. But now it seems that this is
-> related to cgroup tree I constucted and my system status and my request
-> size(a relatively large chunk). So there are many influencing factors,
-> a specific upper bound is not accurate.
+Lay the ground work for gaining instrumentation for signed[1],
+unsigned[2], and pointer[3] wrap-around by making all 3 sanitizers
+available for testing. Additionally gets x86_64 bootable under the
+unsigned sanitizer for the first time.
 
-Alright, thanks for the background.
+The compilers will need work before this can be generally useful, as the
+signed and pointer sanitizers are effectively a no-op with the kernel's
+required use of -fno-strict-overflow. The unsigned sanitizer will also
+need adjustment to deal with the many common code patterns that exist
+for unsigned wrap-around (e.g. "while (var--)", "-1UL", etc).
 
-> > IMO it's more accurate to phrase it like this:
-> >=20
-> > Reclaim tries to balance nr_to_reclaim fidelity with fairness across
-> > nodes and cgroups over which the pages are spread. As such, the bigger
-> > the request, the bigger the absolute overreclaim error. Historic
-> > in-kernel users of reclaim have used fixed, small request batches to
-> > approach an appropriate reclaim rate over time. When we reclaim a user
-> > request of arbitrary size, use decaying batches to manage error while
-> > maintaining reasonable throughput.
+-Kees
 
-Hm, decay...
-So shouldn't the formula be
-  nr_pages =3D delta <=3D SWAP_CLUSTER_MAX ? delta : (delta + 3*SWAP_CLUSTE=
-R_MAX) / 4
-where
-  delta =3D nr_to_reclaim - nr_reclaimed
-?
-(So that convergence for smaller deltas is same like original- and other
-reclaims while conservative factor is applied for effectivity of higher
-user requests.)
+Link: https://github.com/KSPP/linux/issues/26 [1]
+Link: https://github.com/KSPP/linux/issues/27 [2]
+Link: https://github.com/KSPP/linux/issues/344 [3]
 
-Thanks,
-Michal
+Kees Cook (6):
+  ubsan: Use Clang's -fsanitize-trap=undefined option
+  ubsan: Reintroduce signed and unsigned overflow sanitizers
+  ubsan: Introduce CONFIG_UBSAN_POINTER_WRAP
+  ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL
+  ubsan: Split wrapping sanitizer Makefile rules
+  ubsan: Get x86_64 booting with unsigned wrap-around sanitizer
 
---i6547u4e3dsdsmiu
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/dev-tools/ubsan.rst | 28 +++-------
+ arch/arm/Kconfig                  |  2 +-
+ arch/arm64/Kconfig                |  2 +-
+ arch/mips/Kconfig                 |  2 +-
+ arch/parisc/Kconfig               |  2 +-
+ arch/powerpc/Kconfig              |  2 +-
+ arch/riscv/Kconfig                |  2 +-
+ arch/s390/Kconfig                 |  2 +-
+ arch/x86/Kconfig                  |  2 +-
+ arch/x86/kernel/Makefile          |  1 +
+ arch/x86/kernel/apic/Makefile     |  1 +
+ arch/x86/mm/Makefile              |  1 +
+ arch/x86/mm/pat/Makefile          |  1 +
+ crypto/Makefile                   |  1 +
+ drivers/acpi/Makefile             |  1 +
+ include/linux/compiler_types.h    | 19 ++++++-
+ kernel/Makefile                   |  1 +
+ kernel/locking/Makefile           |  1 +
+ kernel/rcu/Makefile               |  1 +
+ kernel/sched/Makefile             |  1 +
+ lib/Kconfig.ubsan                 | 41 +++++++++-----
+ lib/Makefile                      |  1 +
+ lib/crypto/Makefile               |  1 +
+ lib/crypto/mpi/Makefile           |  1 +
+ lib/test_ubsan.c                  | 82 ++++++++++++++++++++++++++++
+ lib/ubsan.c                       | 89 +++++++++++++++++++++++++++++++
+ lib/ubsan.h                       |  5 ++
+ lib/zlib_deflate/Makefile         |  1 +
+ lib/zstd/Makefile                 |  2 +
+ mm/Makefile                       |  1 +
+ net/core/Makefile                 |  1 +
+ net/ipv4/Makefile                 |  1 +
+ scripts/Makefile.lib              | 11 +++-
+ scripts/Makefile.ubsan            | 11 +++-
+ 34 files changed, 278 insertions(+), 43 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.34.1
 
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZbzArwAKCRAGvrMr/1gc
-jgzbAQCS67JzDKT6wEDM8S72f5VdiKV8t/HeB+VB6/lh57jnsQEAgbHFRm3ydZLW
-+QPinqIYWeFg0bd97cxxHhyNjoAmswY=
-=64ep
------END PGP SIGNATURE-----
-
---i6547u4e3dsdsmiu--
