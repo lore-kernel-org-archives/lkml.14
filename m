@@ -1,83 +1,89 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E639515E5C5;
-	Fri,  2 Feb 2024 19:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E10B15E5C6;
+	Fri,  2 Feb 2024 19:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706902171; cv=none; b=TaB/J9gm5EZXfTIgo1FnHeUqeOzX2T8ekBcvPxkYQYvhUgosIiCcPDHJ09v5CJj7aR7QVvJV/+3ma3KHoEfePqLRpGYcc8O80RMWJXc7GLyMdk3TMPL8u84XiN2XLiLjg8iStGMGfkgm33aXr9/AwtDIN8vUfOJ6HZu7RAzqiMA=
+	t=1706902344; cv=none; b=Wm8eobPS9b80WQwr0yV3Uk8zQ7f8ApwUU5CCgImeS2vkM26xbyF64K1c5dK7aDLqtFFif1wabm9bUfezWs28N/+NaTLKxmzbnlG9kD8kyEU9SDWnjph0Eh9BF7Mj9MD/koFwOvOTz3SIfWw8d+h9P0LbzQqekETDCncrUfh8Iyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706902171; c=relaxed/simple;
-	bh=OSLx8ZGHgNRq/oilqETzpjFY24Zt3C6hbKYIPHxjhUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TQTVRzu3LLr+qh1xqaV2se69GNbevlmMYHkO7CTIqW9OSDoZYLHm9+X7ys1ZWjuyT9BPf9/F5bEuXo17tPfK/2TQpQV/xoshNvFgTziKlwFcpMuhIUCasFFeBI6iReOX1k4dBCa4EchlcnD3lMZhRb6Jsnld75JLfMLyyyY6g3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 5D9DD3000C980;
-	Fri,  2 Feb 2024 20:20:48 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 4DDF8406333; Fri,  2 Feb 2024 20:20:48 +0100 (CET)
-Date: Fri, 2 Feb 2024 20:20:48 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Patrick Williams <patrick@stwcx.xyz>,
-	Tao Ren <rentao.bupt@gmail.com>,
-	Bruno Thomsen <bruno.thomsen@gmail.com>, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	joel@jms.id.au, shawnguo@kernel.org, bcousson@baylibre.com,
-	tony@atomide.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-omap@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.7 20/23] ARM: dts: Fix TPM schema violations
-Message-ID: <20240202192048.GA22666@wunner.de>
-References: <20240202183926.540467-1-sashal@kernel.org>
- <20240202183926.540467-20-sashal@kernel.org>
+	s=arc-20240116; t=1706902344; c=relaxed/simple;
+	bh=ekn8zZyh2SJ/K4/UbZI/dsGbE82SD/gtWKgnDxS+Csg=;
+	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
+	 Date:Message-ID; b=Uh3Rbv9YxbeoDIEGmMTUW0Di0S7H+iDZwhdGzPD6Q2jK8CuvmU2iGipB9kYS4UJfL20P6uT/WiIfeK/p6RsoKYrjfTnF2WAYctWMOX82GYbjc1WalzgLWfKL+oK1vykE25Aa2prMhYctxY+uNYYwn31rjBoIA+9Y1XHL7diWJFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=ZdHsQtxZ; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="ZdHsQtxZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=ekn8zZyh2S
+	J/K4/UbZI/dsGbE82SD/gtWKgnDxS+Csg=; h=date:references:in-reply-to:
+	subject:to:from; d=openbsd.org; b=ZdHsQtxZd7zV7xxA41DRY2ESVMUbSAnvR1xc
+	AlK7ecM9Ucc9edCmBIKnSpBApeWQwf3odD6e7TBICtNVqhp2Zva5TXONs0ssS378pCBvkM
+	4lyOWSpIn7akT2yQnl1fhqedjWlWt2K7DRAapspanK04WySI/fAE7WB4yp1ASTvAcVJv76
+	dOREtdXKhniP8HAbBjy9NG4YE4EhcjBPAESBMP3Yu43xtw8YvyKPC3muuRLI2uNjjRC1mB
+	4cz9yJYYcle46GXKmS9Z4NPB4cVl9QFhxzXe68UB5hOodzmyCJfxFaqihHUt55frwCB07R
+	gkgopKTD0GkEtx/ZgDrPzaJwnw==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 78374f08;
+	Fri, 2 Feb 2024 12:32:16 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+    Jeff Xu <jeffxu@chromium.org>, Jeff Xu <jeffxu@google.com>,
+    Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, sroettger@google.com,
+    willy@infradead.org, gregkh@linuxfoundation.org,
+    torvalds@linux-foundation.org, usama.anjum@collabora.com,
+    rdunlap@infradead.org, jorgelo@chromium.org, groeck@chromium.org,
+    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+                  Jeff Xu <jeffxu@chromium.org>,
+                  Jeff Xu <jeffxu@google.com>,
+                  Jonathan Corbet <corbet@lwn.net>,
+                  akpm@linux-foundation.org, keescook@chromium.org,
+                  jannh@google.com, sroettger@google.com,
+                  willy@infradead.org, gregkh@linuxfoundation.org,
+                  torvalds@linux-foundation.org,
+                  usama.anjum@collabora.com, rdunlap@infradead.org,
+                  jorgelo@chromium.org, groeck@chromium.org,
+                  linux-kernel@vger.kernel.org,
+                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+                  pedro.falcato@gmail.com, dave.hansen@intel.com,
+                  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+In-reply-to: <20240202192137.6lupguvhtdt72rbr@revolver>
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com> <20240202151345.kj4nhb5uog4aknsp@revolver> <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com> <20240202192137.6lupguvhtdt72rbr@revolver>
+Comments: In-reply-to "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+   message dated "Fri, 02 Feb 2024 14:21:37 -0500."
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202183926.540467-20-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <98845.1706902336.1@cvs.openbsd.org>
+Date: Fri, 02 Feb 2024 12:32:16 -0700
+Message-ID: <85714.1706902336@cvs.openbsd.org>
 
-Hi Sasha,
+> What I'm more concerned about is what happens if you call mseal() on a
+> range and it can mseal a portion.  Like, what happens to the first vma
+> in your test_seal_unmapped_middle case?  I see it returns an error, but
+> is the first VMA mseal()'ed? (no it's not, but test that)
 
-On Fri, Feb 02, 2024 at 01:39:16PM -0500, Sasha Levin wrote:
-> [ Upstream commit 8412c47d68436b9f9a260039a4a773daa6824925 ]
-> 
-> Since commit 26c9d152ebf3 ("dt-bindings: tpm: Consolidate TCG TIS
-> bindings"), several issues are reported by "make dtbs_check" for ARM
-> devicetrees:
+That is correct, Liam.
 
-You've auto-selected this commit for backporting to v6.6 and v6.7
-stable kernels, but it's only really needed for v6.8 to avoid
-issues reported by "make dtbs_check".
+Unix system calls must be atomic.
 
-So IMO this commit can be dropped from the v6.6 and v6.7 patch queues.
+They either return an error, and that is a promise they made no changes.
 
-Thanks,
+Or they do the work required, and then return success.
 
-Lukas
+In OpenBSD, all mimmutable() aspects were carefully studied to gaurantee
+this behaviour.
 
-> The nodename needs to be "tpm@0" rather than "tpmdev@0" and the
-> compatible property needs to contain the chip's name in addition to the
-> generic "tcg,tpm_tis-spi" or "tcg,tpm-tis-i2c":
-> 
->   tpmdev@0: $nodename:0: 'tpmdev@0' does not match '^tpm(@[0-9a-f]+)?$'
->         from schema $id: http://devicetree.org/schemas/tpm/tcg,tpm_tis-spi.yaml#
-> 
->   tpm@2e: compatible: 'oneOf' conditional failed, one must be fixed:
->         ['tcg,tpm-tis-i2c'] is too short
->         from schema $id: http://devicetree.org/schemas/tpm/tcg,tpm-tis-i2c.yaml#
-> 
-> Fix these schema violations.
+I am not an expert in the Linux kernel to make the assessment; someone
+who is qualified must make that assessment.  Fuzzing with tests is a good
+way to judge it simpler.
