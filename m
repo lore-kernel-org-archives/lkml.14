@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C64681733;
-	Fri,  2 Feb 2024 20:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A9381725;
+	Fri,  2 Feb 2024 20:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706905548; cv=none; b=I1QoxcTiDZhm+ORtRQXku5KNDUYiHGtKRpdbgqKXrt8fFhuGtwMXVWBYkUxmFPoGdZll3LYHsFSBOwOb+YNhsJK//+4ZMo+DmhkzREHXhrgtJaof0GgLB17kKbNQJG3Uy0zHyL6qSIZA7o9RsWFRvEkwkFWGjOHxVjpJRH7wFdg=
+	t=1706905566; cv=none; b=disbdTAlx8Vxeu3aMQn0XP86K4uafIqWxI017UNbnBkW/qSuDBswG8ZzkuRXLGPGUXa6JdCCX+fnMLmmVy+10pTUn0qoXWWhhUo4ajQtI0a2PuOEOpDv8a2knxP5KeAXiHmt1GnHKeRNcD74A21SHI+HElV89gB2//vFzZ8A+To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706905548; c=relaxed/simple;
-	bh=MxAY5Cr9y7y/S5/XsNbAVU3wBhUsOla7ylwsneRNvHU=;
+	s=arc-20240116; t=1706905566; c=relaxed/simple;
+	bh=/1JZId+2n0CkTPlZTieyUQy2OiqiKThajJaUY47t+F8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zj8383eBWKrCo+NO0PmgDftdC0Ip/YBjiYDjDP2WsWdeXMFXoSocYJnp+t+7FsiRBMSl7L4VhsXnf7juLJf5YO12GRL7h2QdaILKSH/ET9KUh6wUCXdeDXA4JPVcApB1MIjaA9EdmTUHctkQMnUUsapSJX7nXTi/CeS/7f01xHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvuEFcSe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iazSSNI83+Xqw4dLJVOhhCZCKcg8JUkafIkRxmnUxDOeNuRGBwiEoDjPsBYgeKYjy3hPo5vs8vD6OtlDZg7IkSKqeoo1V9KJlu57O0ywqeHAmTIG3b8OCUW/9VZtGsZrbxeCaVUIW5D3kh0a5DtxgFUKS9zqVBulD44iRbnxfn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr8CZbD8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvuEFcSe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C772DC433C7;
-	Fri,  2 Feb 2024 20:25:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr8CZbD8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EF9C433F1;
+	Fri,  2 Feb 2024 20:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706905548;
-	bh=MxAY5Cr9y7y/S5/XsNbAVU3wBhUsOla7ylwsneRNvHU=;
+	s=k20201202; t=1706905565;
+	bh=/1JZId+2n0CkTPlZTieyUQy2OiqiKThajJaUY47t+F8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lvuEFcSerMoxvaB1n89J940CgGMD9ZbGWrbU5KHXB6NaJQ+jZzmgg2xhE9x/GjOob
-	 ihGS6Vqnv6/EqSbFnw8SKz7ZQyLX6BJELWJToO9XiyvIRCsO47pIv5+pWZSCCAWY0W
-	 t96J4AvkyDEvPNsKwScqxJPYxhl0/fb6utAk9cG3k5uN/FNCmyRDk1gXh5EgDayATn
-	 mzagtP0dFT+hiuPFwlAI5Pb67If5tkeaA9TiC8BtQRlQuQaOrz1Y3Zsw9VuY2Iigdt
-	 c9OX+vyRmSWl0JFYs2FrR/OAh52So3r8ORVoMRu9RQr44jo5qZaVSOkXNj/er6FET6
-	 HT/0b2o2GF1LA==
-Date: Fri, 2 Feb 2024 14:25:45 -0600
+	b=rr8CZbD8YfgfYohHuZgQzTYRcx2V6NgtG4hYAr1/7fzjJ/0rkbMNFO1/r5ZDLbYCn
+	 Try/3FPL9vOl1KbHnWE3hbgdbz2QyNDpUo6WIu/+nSof5DrEOpEr4kg2KYz+Z1GcSY
+	 2tw/5J++pQsRywK90ljEhBllW8rdxxJw3ohjilNAI/MCKGP14tlCq8mIx1DqfFXZog
+	 O1fMHAj+EwV1YbC9ipqymjcQxjfSqq2AoYwRO8iOQlDLXODqKhXV74ZH2L6HksbStL
+	 XscZFyyP4EnkQyrTue1K114yG8a0eSdaIv/izhmJwKXeT+51r7rmYf0ls5475xqEji
+	 U20tRHxK6V5Mw==
+Date: Fri, 2 Feb 2024 14:26:03 -0600
 From: Rob Herring <robh@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, michal.simek@xilinx.com,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sungbo Eo <mans0n@gorani.run>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	monstr@monstr.eu, git@xilinx.com,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH] dt-bindings: gpio: gpio-pca9570: Add label property
-Message-ID: <170690554482.1072178.3894093393921778859.robh@kernel.org>
-References: <a8396308c995959349fd40e61199853a9b711ece.1706783050.git.michal.simek@amd.com>
+To: Roger Quadros <rogerq@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, nm@ti.com,
+	linux-kernel@vger.kernel.org, b-liu@ti.com, r-gunasekaran@ti.com,
+	srk@ti.com, krzysztof.kozlowski+dt@linaro.org, vigneshr@ti.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org,
+	afd@ti.com, kristo@kernel.org
+Subject: Re: [PATCH v3 1/5] dt-bindings: mfd: syscon: Add
+ ti,am62-usb-phy-ctrl compatible
+Message-ID: <170690556320.1075006.3197540858856784438.robh@kernel.org>
+References: <20240201120332.4811-1-rogerq@kernel.org>
+ <20240201120332.4811-2-rogerq@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,21 +47,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a8396308c995959349fd40e61199853a9b711ece.1706783050.git.michal.simek@amd.com>
+In-Reply-To: <20240201120332.4811-2-rogerq@kernel.org>
 
 
-On Thu, 01 Feb 2024 11:24:20 +0100, Michal Simek wrote:
-> Add a label property to allow a custom name to be used for identifying
-> a device on the board. This is useful when multiple devices are present on
-> the same board. Similar change was done by commit ffae65fb1ae4
-> ("dt-bindings: spi: spi-cadence: Add label property") or by commit
-> a53faa6bfa3b ("dt-bindings: hwmon: ina2xx: Add label property").
+On Thu, 01 Feb 2024 14:03:28 +0200, Roger Quadros wrote:
+> Add the compatible for TI AM62 USB PHY Control register. This
+> register is found in the TI AM62 WKUP_CTRL_MMR0 space [1]. It
+> is used to indicate the USB PHY PLL reference clock rate and
+> core voltage level to the USB controller.
 > 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> [1] - https://www.ti.com/lit/pdf/spruiv7
+> 
+> Signed-off-by: Roger Quadros <rogerq@kernel.org>
 > ---
 > 
->  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+> Notes:
+>     Changelog:
+> 
+>     v3 - add compatibles in alphabetical order
+>     v2 - New patch
+> 
+>     Changelog:
+> 
+>     v2 - New patch
+> 
+>  Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
