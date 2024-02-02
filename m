@@ -1,180 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB402B9D2
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 06:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0178481B4
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 06:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706856220; cv=none; b=RNtrOeWK6f0Fe/8+J86VNL/fFzZ+CjZ0idtNoB4e0hn4GcD6crtZGtNlRzGEmPttzwoCHx6jkVyHYaq9e9mfYvwO8rznO/T1yhqXnqWONi19yY8e0gneNxLwcQ7/0EEEV6WIZ17CLCr246rYz36HycyplEwZM6UwGbB0N41PB00=
+	t=1706856228; cv=none; b=INNlsXaCiBfepO0avJgRNA9l9rhNrzFRcjPSxejcpStP25b1Id/9oERNnjXJIl9+zZogJsCYgi2qidbl318TkZub86J1THDVOLfjntq7IwvgTfDhFv4KhPSHpGg7UqluX3uCx7Mz20Yz0jU/4fiCv0szbfvbpMswY5q+hxDR+0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706856220; c=relaxed/simple;
-	bh=XLvulHZVJquTrMep5y1cVtcFzDjgJkl/pS+1VTnGBD0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UrkFk9VHN15N3EZkPlDtzFY3XozTSpcn2TD2sDGI6LqjnH8VrlrJdZg6ezLn3BSNf0++3FUHbz8ZdXUcIfGw4iXjfAw/f4PDD7hShHXGjp7dGyLQ5pbIdL8TNmTkFx1KDUtAJiqaVjVXS5EEHPPeQTOVXEGx5mpanzWIc9AK8V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=czyfSCD4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706856228; c=relaxed/simple;
+	bh=AT0D06dEnCX3xAFZpn1FFCz1gETYrTU97dZV26IIREo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=G5pbIkPWpi0a7jQMBl+f4vi4GPU73cYuZLs4sj8FZbAZCIMrxTISbIP3X0xlxDKZD+evvCDTiuBEw3ifrgAIyyRHAwWI9z9TRj1seHV6o3vFIA3Sv+m4ioIBNYbdBNZRDuAGMiNpMooUJyQAP048GEwdwccs9Jqn43u24h7ef70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JDQge6j0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="czyfSCD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706856217;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0uFHR1zAX7zGOTNl6chkBN+h5HVp+40si/IAsptCuA8=;
-	b=czyfSCD4WRV5k89F0cBYd/AVjS2zdg83fDdRC0p0LQfDce0zyna6vnIB6DDq5FRM3teJHl
-	MvA5iANcHusXzIPj1I/EJxRY9OnUT6iq1/Zhsf74BE+hzwdi25HUGmPqa8DpQ6D7GtWVd5
-	VS0M+AQlyMXLJHtlv2bpW0J3wgsUVRM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-500-xf7PUJSRNKyGeKSykiMSGw-1; Fri, 02 Feb 2024 01:43:34 -0500
-X-MC-Unique: xf7PUJSRNKyGeKSykiMSGw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 00403827D88;
-	Fri,  2 Feb 2024 06:43:34 +0000 (UTC)
-Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DEEB63C2E;
-	Fri,  2 Feb 2024 06:43:33 +0000 (UTC)
-From: Shaoqin Huang <shahuang@redhat.com>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: Peter Xu <peterx@redhat.com>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] KVM: selftests: Fix the dirty_log_test semaphore imbalance
-Date: Fri,  2 Feb 2024 01:43:32 -0500
-Message-Id: <20240202064332.9403-1-shahuang@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JDQge6j0"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 4597320B2000; Thu,  1 Feb 2024 22:43:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4597320B2000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1706856227;
+	bh=yJ2N3/HVGxJA0MGmEiSpJS8Lev4/X5f6v9PbC3nQxsU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JDQge6j0N748zAX3m40uBjCAofdEIZ3yaeynY2aCazTw07uwLOJStak9RvU57N2nB
+	 xoyU8AZgWNF+KwYqVPJcCO3VOiAA3OGEzS2cgwoBZQ+GTMxR6EHoPlkGqkcOsWfgsQ
+	 DN0ZpUT6L7+m8E6ocHeGZSEiIkaw6wQKXDKzYCEo=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.dev>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v4, 2/2] drm: Check polling initialized before enabling in drm_helper_probe_single_connector_modes
+Date: Thu,  1 Feb 2024 22:43:44 -0800
+Message-Id: <1706856224-9725-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1706856176-9483-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1706856176-9483-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-When execute the dirty_log_test on some aarch64 machine, it sometimes
-trigger the ASSERT:
+In function drm_helper_probe_single_connector_modes() when we enable
+polling again, if it is already uninitialized, a warning is reported.
+This patch fixes the warning message by checking if poll is initialized
+before enabling it.
 
-==== Test Assertion Failure ====
-  dirty_log_test.c:384: dirty_ring_vcpu_ring_full
-  pid=14854 tid=14854 errno=22 - Invalid argument
-     1  0x00000000004033eb: dirty_ring_collect_dirty_pages at dirty_log_test.c:384
-     2  0x0000000000402d27: log_mode_collect_dirty_pages at dirty_log_test.c:505
-     3   (inlined by) run_test at dirty_log_test.c:802
-     4  0x0000000000403dc7: for_each_guest_mode at guest_modes.c:100
-     5  0x0000000000401dff: main at dirty_log_test.c:941 (discriminator 3)
-     6  0x0000ffff9be173c7: ?? ??:0
-     7  0x0000ffff9be1749f: ?? ??:0
-     8  0x000000000040206f: _start at ??:?
-  Didn't continue vcpu even without ring full
-
-The dirty_log_test fails when execute the dirty-ring test, this is
-because the sem_vcpu_cont and the sem_vcpu_stop is non-zero value when
-execute the dirty_ring_collect_dirty_pages() function. When those two
-sem_t variables are non-zero, the dirty_ring_wait_vcpu() at the
-beginning of the dirty_ring_collect_dirty_pages() will not wait for the
-vcpu to stop, but continue to execute the following code. In this case,
-before vcpu stop, if the dirty_ring_vcpu_ring_full is true, and the
-dirty_ring_collect_dirty_pages() has passed the check for the
-dirty_ring_vcpu_ring_full but hasn't execute the check for the
-continued_vcpu, the vcpu stop, and set the dirty_ring_vcpu_ring_full to
-false. Then dirty_ring_collect_dirty_pages() will trigger the ASSERT.
-
-Why sem_vcpu_cont and sem_vcpu_stop can be non-zero value? It's because
-the dirty_ring_before_vcpu_join() execute the sem_post(&sem_vcpu_cont)
-at the end of each dirty-ring test. It can cause two cases:
-
-1. sem_vcpu_cont be non-zero. When we set the host_quit to be true,
-   the vcpu_worker directly see the host_quit to be true, it quit. So
-   the log_mode_before_vcpu_join() function will set the sem_vcpu_cont
-   to 1, since the vcpu_worker has quit, it won't consume it.
-2. sem_vcpu_stop be non-zero. When we set the host_quit to be true,
-   the vcpu_worker has entered the guest state, the next time it exit
-   from guest state, it will set the sem_vcpu_stop to 1, and then see
-   the host_quit, no one will consume the sem_vcpu_stop.
-
-When execute more and more dirty-ring tests, the sem_vcpu_cont and
-sem_vcpu_stop can be larger and larger, which makes many code paths
-don't wait for the sem_t. Thus finally cause the problem.
-
-To fix this problem, we can wait a while before set the host_quit to
-true, which gives the vcpu time to enter the guest state, so it will
-exit again. Then we can wait the vcpu to exit, and let it continue
-again, then the vcpu will see the host_quit. Thus the sem_vcpu_cont and
-sem_vcpu_stop will be both zero when test finished.
-
-Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202401191128.db8423f1-oliver.sang@intel.com
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
-v2->v3:
-  - Rebase to v6.8-rc2.
-  - Use TEST_ASSERT().
+ Changes in v4
+ * Clubbed this patch with similar patches and added a cover letter
+---
+ drivers/gpu/drm/drm_probe_helper.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-v1->v2:
-  - Fix the real logic bug, not just fresh the context.
-
-v1: https://lore.kernel.org/all/20231116093536.22256-1-shahuang@redhat.com/
-v2: https://lore.kernel.org/all/20231117052210.26396-1-shahuang@redhat.com/
-
- tools/testing/selftests/kvm/dirty_log_test.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 6cbecf499767..dd2d8be390a5 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -417,7 +417,8 @@ static void dirty_ring_after_vcpu_run(struct kvm_vcpu *vcpu, int ret, int err)
- 
- static void dirty_ring_before_vcpu_join(void)
- {
--	/* Kick another round of vcpu just to make sure it will quit */
-+	/* Wait vcpu exit, and let it continue to see the host_quit. */
-+	dirty_ring_wait_vcpu();
- 	sem_post(&sem_vcpu_cont);
- }
- 
-@@ -719,6 +720,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
- 	struct kvm_vm *vm;
- 	unsigned long *bmap;
- 	uint32_t ring_buf_idx = 0;
-+	int sem_val;
- 
- 	if (!log_mode_supported()) {
- 		print_skip("Log mode '%s' not supported",
-@@ -726,6 +728,11 @@ static void run_test(enum vm_guest_mode mode, void *arg)
- 		return;
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index bd76603dc387..30e6063535cd 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -622,8 +622,12 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
+ 					 0);
  	}
  
-+	sem_getvalue(&sem_vcpu_stop, &sem_val);
-+	assert(sem_val == 0);
-+	sem_getvalue(&sem_vcpu_cont, &sem_val);
-+	assert(sem_val == 0);
-+
- 	/*
- 	 * We reserve page table for 2 times of extra dirty mem which
- 	 * will definitely cover the original (1G+) test range.  Here
-@@ -825,6 +832,13 @@ static void run_test(enum vm_guest_mode mode, void *arg)
- 		sync_global_to_guest(vm, iteration);
- 	}
- 
+-	/* Re-enable polling in case the global poll config changed. */
+-	drm_kms_helper_poll_enable(dev);
 +	/*
-+	 *
-+	 * Before we set the host_quit, let the vcpu has time to run, to make
-+	 * sure we consume the sem_vcpu_stop and the vcpu consume the
-+	 * sem_vcpu_cont, to keep the semaphore balance.
++	 * Re-enable polling in case the global poll config changed but polling
++	 * is still initialized.
 +	 */
-+	usleep(p->interval * 1000);
- 	/* Tell the vcpu thread to quit */
- 	host_quit = true;
- 	log_mode_before_vcpu_join();
-
-base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
++	if (dev->mode_config.poll_enabled)
++		drm_kms_helper_poll_enable(dev);
+ 
+ 	if (connector->status == connector_status_disconnected) {
+ 		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] disconnected\n",
 -- 
-2.40.1
+2.34.1
 
