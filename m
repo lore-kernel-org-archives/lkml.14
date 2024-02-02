@@ -1,130 +1,176 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A937B481A5;
-	Fri,  2 Feb 2024 06:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227CA48788;
+	Fri,  2 Feb 2024 06:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706856088; cv=none; b=jvRGiG9imlAqpO7UpHot6urrnYUX0RKYebkjmOYOBLK/E2f/APm0Zih56LdkYfz5VMOv+sjh6ApnLzioJ+egPSIEu/PrOccmMQJHKv1grs7ID7929+3xQEK7+md3Bnr8jS/T5vyf6Hd3xJBHQ7hxSwcZlQlvRkxf2E/crMFSQ98=
+	t=1706856098; cv=none; b=N8vJFCH1WDN8afM39cjh6NDJ9wJEfV52dUbcQWgGBIteRIvndmnGEJpr+uOrSYIHx1d4fhePidtrMPTMmkvXvKZZgRGyOrMV8wMPxWu0JJugyXGnWdG0F+7swz2IsHt3vTizDykD3usv+yZJGhV+IrR42UZVwDpda2qqrZe7MoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706856088; c=relaxed/simple;
-	bh=ZDnGKGfbR/v3Yx+LWz4vHfhF/MSvu7CCgdFnaeoJrQM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=afUb2iRpfBuQkrP+2w4mWMSR1dulfosAdPVl35eqY65uV06rzIPh2+tjo5Xs0L8lXbbgH52M5jrjldUrFpoevrao+FEPZTLGPs3Co9j2dVq9EDXLpXJf3jgX0Gsz0eQM9sPbItp9awcdyRxZIGGGGteC5zt908syrzObGWuXm8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eJ6aqHIm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706856098; c=relaxed/simple;
+	bh=FnWjsjwj8800isp2bFvFIFMiFcnzRWHiCH41bnxfCwY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DlGTxOfVcL1SH1ayq5ToceQ+sa2ClZIN4PRaAvjHnyvBTSJFXAicrQt55wsPXw9dtHe4YD3+wSR2ydXGLUV9UKkOo1DyvqkBxu0X6AT4YQnpqImqjtK0dRMxEbHTV0Sm1oNtqnv65DxczGfLxJkqxLjUPF6HjWsTrL3KPeqWopI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5sW7cfD; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eJ6aqHIm"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4124aHeJ005911;
-	Fri, 2 Feb 2024 06:41:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=joizP/oCmG0LM1+iiXJ4
-	kYTWEPaLDXDLpePwjwt1kV0=; b=eJ6aqHIm1IZ+4TntyRvYcDjEH6HLcT+fKvrH
-	tXp2HOnjDOdHbkOza6lqfc3ji4jfHbgzJqPsy5ZqnvCvkkFN/rMBWRkSIIDUgF+d
-	ahlQ9DUCneog5qj8as2WAiNiK3zrN0/nh0+UwL/1IVIefr9NwhzLFeAREs2QmIpe
-	xDT4Ri3/7EpyeO1pH9+7mvTHQjrgOzggXYe2lU2sXS4eX+bSclZkNoEOUWa+bwWO
-	lgWYmSh0UzPQwceL1J1PPiLlj9ahc/ae+iOb617UwlbRP4bMMQmxaX/ogK7NYi/W
-	USFFyuDiApIQUxXcKvMxRg52w3bE6sLuVYSqpe1rxBnJHvX3YQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptu0nya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 06:41:24 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4126fNxW004876
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 06:41:23 GMT
-Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 1 Feb 2024 22:41:21 -0800
-From: Ekansh Gupta <quic_ekangupt@quicinc.com>
-To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
-CC: <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 16/16] misc: fastrpc: Add system unsigned PD support
-Date: Fri, 2 Feb 2024 12:10:39 +0530
-Message-ID: <20240202064039.15505-17-quic_ekangupt@quicinc.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20240202064039.15505-1-quic_ekangupt@quicinc.com>
-References: <20240202064039.15505-1-quic_ekangupt@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5sW7cfD"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2144c37f3d3so989380fac.0;
+        Thu, 01 Feb 2024 22:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706856096; x=1707460896; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H/7Ihe4vPnqb+El0TxxOCHRxUyQil8HxVU+vhaaiIU4=;
+        b=M5sW7cfDuayE8gjf3PSbR6cgR9/Gge2XgASzvIjgQ/dt4SVRsj4NQC69bslN7NXzSc
+         La3dI+IqSwAg0rCJ8SUnmcUo9a8sOSszdZl4aH77jlBlDvQejQjOWVSTuj3ln8jGglZ8
+         2MDvVCJkwJ8aI1VYQ44oXoEpyMzNVVJOphER5zYgD+J+KhP0GhzOZE9FeXrqoyjqIvC8
+         nXLOOxHiZm9q9GptSw1O0wCNEl7M6iEkRzy0LTHeLL/s1mE514D1r9wXEP3sVMDcilYN
+         tjiZOihnQKOVprwID6Q/zkyrhi1o2EUVUvrpqN2nqbXknHM17L8fIcjM1sEJbAqAlLHS
+         L/WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706856096; x=1707460896;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H/7Ihe4vPnqb+El0TxxOCHRxUyQil8HxVU+vhaaiIU4=;
+        b=KF0lTWdB0XgirbcQ22XjppLvEysKpOww/GSpj/WBD/cgL2g2mVA0GspD92I0XenOKT
+         mbGM9AZpZ77Ob4voMCbPFl8sMFsJgZDxjx+JGcqC374t/666iCdzCpWoEJy0isDKRfAJ
+         1gMD73Nw+2oFqmGHA1TqDKm4kufgUdAu5zW2Ih4tjhCIJR+S5JtROjK21LmDEkwBd9Lm
+         IUfaYIhc6l3TNBPZ/xKoqsjyMBYMeREx0oMzJZvElMCTATt9kvS+McTJX+5Hucj6TZCl
+         prDyts9btbZ/DVoXDSZyGxAGxcu3ydJuSyRej/NhISPsau9dcWar0dUUA6+16DxD4uFT
+         FOyg==
+X-Gm-Message-State: AOJu0YzcKx9JggTSHcUd3alHjrfcDS033Zv6I80WSWkhXOFecarlGrP6
+	jhMYXnH8rvBITrIVCO8Lt1jStfQ8NKQcbsY5MaFou06plDw4YnZZ
+X-Google-Smtp-Source: AGHT+IHSiFTmHke13wN1SxKcd66FM+K2StullT3LYnHJcbR7rpQ5ZFrlEClwc0zT0kIMT5IkxBOkrQ==
+X-Received: by 2002:a05:6870:a119:b0:218:dec1:8330 with SMTP id m25-20020a056870a11900b00218dec18330mr1063507oae.8.1706856096067;
+        Thu, 01 Feb 2024 22:41:36 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX9fyP97T4LGPWcPjGEhvjLc+c58XmBo0/gXNEC1NZHfGLci4RzYqgMSvCkP8r6WWKeQ7rFoFtGpwnKpMbt0wCIrhZoIgV1ULFXJqV+EMaX9Xxbids+QPLJ90x0WP7Te/hJovSp9zxHKtUQwuz5Dfm8+98FhhJEJy09Rl8NfghF3w9XRO6mtxdq1Df1JXZ0UWkQtg1+2nCjVv0wIO2DFtGj53Fy9pi3TihN8uPmOGJadRFlUTavMeHu403+hY57YoDLcDbeqrSNXke3rUlt+GzxjjAGnYZ7O0mXmLdp6TG7Q/H7L5iVxUqaDWa0jDEBx18ac77BmzWKfbSDhCvo+rqVxeMOuvgh4mImSKrpVl7D9WcIQMePJDi5G/LYutDX6l/3yGSmrGLcZVxaouXDXVaXNmshRMLPsNZQCaYmw2Xpld5+UFbBThgBBXYqsVsAAtwKa04Nay28Vu9UYdoixkdkOLW3cQYoL+GGjVvhPMWyzSnJg9wx92qqCInTah3uPV5/uKnZ8aycVNNEyjNfuPSIVdvZuP566bNINTOQv07bBKymsvDHBTBQAE7gxqACz0WwDy/2wP3GykpZkXQkKSBMatCXahwyF5NNlgiBceV6ws1EElGHJi9GoF58aR50ERZWFtGyFdghkkBU/RBUSRqmFff7hSYS/0F/vmJ5XmOJxfw=
+Received: from localhost.localdomain ([122.8.183.87])
+        by smtp.gmail.com with ESMTPSA id sc23-20020a056871221700b00205d664c127sm335381oab.16.2024.02.01.22.41.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 22:41:35 -0800 (PST)
+From: Chen Wang <unicornxw@gmail.com>
+To: aou@eecs.berkeley.edu,
+	chao.wei@sophgo.com,
+	conor@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	mturquette@baylibre.com,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	richardcochran@gmail.com,
+	robh+dt@kernel.org,
+	sboyd@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	haijiao.liu@sophgo.com,
+	xiaoguang.xing@sophgo.com,
+	guoren@kernel.org,
+	jszhang@kernel.org,
+	inochiama@outlook.com,
+	samuel.holland@sifive.com
+Cc: Chen Wang <unicorn_wang@outlook.com>
+Subject: [PATCH v9 1/5] dt-bindings: clock: sophgo: add pll clocks for SG2042
+Date: Fri,  2 Feb 2024 14:41:27 +0800
+Message-Id: <bf3b8178a013004f259cd9254b13279254505852.1706854074.git.unicorn_wang@outlook.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1706854074.git.unicorn_wang@outlook.com>
+References: <cover.1706854074.git.unicorn_wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7oMHNIU_IpdEdGw41FrG_bnTeYlAvhMN
-X-Proofpoint-ORIG-GUID: 7oMHNIU_IpdEdGw41FrG_bnTeYlAvhMN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-01_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 phishscore=0 clxscore=1015 adultscore=0
- priorityscore=1501 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020047
+Content-Transfer-Encoding: 8bit
 
-Trusted CPU applications currently offload to signed PDs on CDSP to
-gain some additional services provided by root PD. Unsigned PDs have
-access to limited root PD services that may not be sufficient for
-all use-cases. Signed PDs have a higher dynamic loading latency
-which impacts the performance of applications. Limited root PD
-services could be opened up for unsigned PDs but that should be
-restricted for untrusted processes. For this requirement, System
-unsigned PD is introduced which will be same as Unsigned PD for
-most part but will have access to more root PD services. Add
-changes to offload trusted applications to System unsigned PD
-when unsigned offload is requested.
+From: Chen Wang <unicorn_wang@outlook.com>
 
-Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Add bindings for the pll clocks for Sophgo SG2042.
+
+Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
 ---
- drivers/misc/fastrpc.c      | 7 +++++++
- include/uapi/misc/fastrpc.h | 2 ++
- 2 files changed, 9 insertions(+)
+ .../bindings/clock/sophgo,sg2042-pll.yaml     | 45 +++++++++++++++++++
+ include/dt-bindings/clock/sophgo,sg2042-pll.h | 14 ++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/sophgo,sg2042-pll.yaml
+ create mode 100644 include/dt-bindings/clock/sophgo,sg2042-pll.h
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 4aa4e36bebc3..2f893c94dcc8 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -2002,11 +2002,18 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
- 	if (init.attrs & FASTRPC_MODE_UNSIGNED_MODULE)
- 		fl->is_unsigned_pd = true;
- 
-+	/* Disregard any system unsigned PD attribute from userspace */
-+	init.attrs &= (~FASTRPC_MODE_SYSTEM_UNSIGNED_PD);
+diff --git a/Documentation/devicetree/bindings/clock/sophgo,sg2042-pll.yaml b/Documentation/devicetree/bindings/clock/sophgo,sg2042-pll.yaml
+new file mode 100644
+index 000000000000..b9af733e8a73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/sophgo,sg2042-pll.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/sophgo,sg2042-pll.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	if (is_session_rejected(fl, fl->is_unsigned_pd)) {
- 		err = -EACCES;
- 		goto err;
- 	}
- 
-+	/* Trusted apps will be launched as system unsigned PDs */
-+	if (!fl->untrusted_process && fl->is_unsigned_pd)
-+		init.attrs |= FASTRPC_MODE_SYSTEM_UNSIGNED_PD;
++title: Sophgo SG2042 PLL Clock Generator
 +
- 	if (init.filelen > INIT_FILELEN_MAX) {
- 		err = -EINVAL;
- 		goto err;
-diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
-index 7053a5b6b16b..d0fb01e7277d 100644
---- a/include/uapi/misc/fastrpc.h
-+++ b/include/uapi/misc/fastrpc.h
-@@ -63,6 +63,8 @@ enum fastrpc_proc_attr {
- 	FASTRPC_MODE_SYSTEM_PROCESS	= (1 << 5),
- 	/* Macro for Prvileged Process */
- 	FASTRPC_MODE_PRIVILEGED		= (1 << 6),
-+	/* Macro for system unsigned PD */
-+	FASTRPC_MODE_SYSTEM_UNSIGNED_PD	= (1 << 17),
- };
- 
- /* Fastrpc attribute for memory protection of buffers */
++maintainers:
++  - Chen Wang <unicorn_wang@outlook.com>
++
++properties:
++  compatible:
++    const: sophgo,sg2042-pll
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Oscillator(Clock Generation IC) for Main/Fixed PLL (25 MHz)
++      - description: Oscillator(Clock Generation IC) for DDR PLL 0 (25 MHz)
++      - description: Oscillator(Clock Generation IC) for DDR PLL 1 (25 MHz)
++
++  '#clock-cells':
++    const: 1
++    description:
++      See <dt-bindings/clock/sophgo,sg2042-pll.h> for valid indices.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    clock-controller@10000000 {
++      compatible = "sophgo,sg2042-pll";
++      reg = <0x10000000 0x10000>;
++      clocks = <&cgi_main>, <&cgi_dpll0>, <&cgi_dpll1>;
++      #clock-cells = <1>;
++    };
+diff --git a/include/dt-bindings/clock/sophgo,sg2042-pll.h b/include/dt-bindings/clock/sophgo,sg2042-pll.h
+new file mode 100644
+index 000000000000..2d519b3bf51c
+--- /dev/null
++++ b/include/dt-bindings/clock/sophgo,sg2042-pll.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
++/*
++ * Copyright (C) 2023 Sophgo Technology Inc. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_SOPHGO_SG2042_PLL_H__
++#define __DT_BINDINGS_SOPHGO_SG2042_PLL_H__
++
++#define MPLL_CLK			0
++#define FPLL_CLK			1
++#define DPLL0_CLK			2
++#define DPLL1_CLK			3
++
++#endif /* __DT_BINDINGS_SOPHGO_SG2042_PLL_H__ */
 -- 
-2.17.0
+2.25.1
 
