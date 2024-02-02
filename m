@@ -1,114 +1,116 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C395F839E5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 19:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EE5839E2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 19:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706900795; cv=none; b=nDUajgRocGN8/xumc5JrxonRkynRICd2M9lvrx3D2QT81vItiTakS2ltwd2YLsgpIQ8GwuwO8TfPYuCOnZqsr7+jsFZcTGS0oDO6k140DS6qgyLQ1dSRwvkxyTN3sssYzuJapHAiBSF0ifUtAesXO6noIl/F44q5dAo3gveF760=
+	t=1706900820; cv=none; b=Ta293O3BBYK4SP1B10axPGTKLqrjN/yzaNbcxTcksoJoItGAtAAUwLu/qr+0dBi000OmrZjdjOYPnneWuRSLPOBmt+vuIWfP7aTAKRWDLWTnIzUbNSZzpVerv41JaMnIRI6P4R4M/Vm0ALbJ53YDHDuwnZ3F0ZM2zn6tcVcSK1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706900795; c=relaxed/simple;
-	bh=rNWqum3/yYvzJfhaZjhWCaFc1cTDx8Mx6rzWVIVoCyU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z/dpxp3+FAtTW8O2oIfJv/luEru16U4n18O0sYCpKYO3R66tX5nmHoS3upIYPPFz7atVUrhMsXFgnX+ixngRtCgXxu791TM43tY2/F+eMIOcFv1wVrbDT4r4CqnQQH08Wyws3WSIueJgLifB+nRkQkxvj76AOiVHbc3h5YnNG6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geWC4g8l; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706900820; c=relaxed/simple;
+	bh=dwvDik9e8en0dQjzXY4W2z8vsp3fk80/NMt6Sj0VM9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YPokr0ynMKB2/e4RZ9WvA6mu7S8+YbhbMP0zXppOkLeDuNOTZ7pgQTOTe9c/R1wX2NHGUdqRVffqMAWuJMwcHni1ZCFxDs82arNclg6aCOC0yuFUO+L/ShHkWb8YIBmd0bxBlCQOjAm5ZgLEIWeBnIZkR0rwwcHdwzXcpHJTYx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bUHA2sRB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geWC4g8l"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d081a0e5feso15508971fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 11:06:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706900792; x=1707505592; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EfyIjo6kez38DeVdB3upQeRKk1i+rP6oI+i6zlaUfoo=;
-        b=geWC4g8lliMc722fjCcD1BWfvohFaoXqVb9Be3c0PgDO/PPR9eoZhLU01u1/3H8dVD
-         ET9ND7Wm7Jdl9UCfYLXrVfXzFqm9QO0o5i/HWY2IvgWRngKMa5vdFMgZ4Ol333oC3ZOw
-         6F6BNFz0NCKZoKbmCYTPy6Vl+51jEF9Y61lYab/YWImHfQHzcOr2zXIlcaH1OmGRqWtO
-         B0PZddapIxsQjjqrGM678GmZLtAxof5KDbWjnzZaGSyfrLdNEQWo4O5l2GCu0hN51z+M
-         ugay55elXL5XuDVjfm7swTj6HuuCEC95cg+g/WDsHt1lH1eZBc+eG02sFyxg5u1LygC9
-         QZLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706900792; x=1707505592;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EfyIjo6kez38DeVdB3upQeRKk1i+rP6oI+i6zlaUfoo=;
-        b=ZFZt0Ol9HH1FA9oa1gmFKO3D9Qt1ED/K+tFsJtaJo6q63RD6dNc+tupmHl3LX591rt
-         injweMMH+WFC2a6aZ/BEa5Dd2PfSJ3YoSX3qPEml/HFdZ87xkSlSmArAVmGmbouD44tJ
-         w7IhLQRiVGcISBJ57K19hEB79QdzsAVIC4QV6mmo+U4bF58BDrKPOZ4i9nd6arL7EAP4
-         paYqpVFnzcVZH8H96GbfAVt5RzlUgo1bUgQSDbpUdz7eG824YypHwj1RtiMbflwDZ0hX
-         y+s2pRumIy3jlWENOFF9ABDuw39SjNlSOoPXh4jr5HL4tl66QnOwXf2RVxY71qoNBz6V
-         5lQQ==
-X-Gm-Message-State: AOJu0YxTal9+1iA+j24pFBjeVddYvBRRvf245p+tXC/0E5I55EidjYjw
-	Ueea0JFQcA/jHs+6EpffEMgRMXyQyQKr+mioGaduBrmUompqTpKU
-X-Google-Smtp-Source: AGHT+IHtyU5/7ucIPamzM379TcohrpY27WfOJr7P6Tq9bDYiN8E6PqLXwyXaVlVfe6ps2VVxllG9Og==
-X-Received: by 2002:a2e:a4b7:0:b0:2d0:7f95:1e3d with SMTP id g23-20020a2ea4b7000000b002d07f951e3dmr2445991ljm.40.1706900791373;
-        Fri, 02 Feb 2024 11:06:31 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWEOqqB5uM/ZmiUeUdHWjO7MY/KcV6nzIPGUJ31nUcBeA2L7eQ9N5NI7fkF8C37YuahFUEd2kOpYu8x6WYfnpb/LDj2OYIBKScbAfzMBHEM480SJzArDdTwjCEFkR41eRK3d7T5D0kzUy9ofYBPgAbNNtq6PCoM/9PHOBczPPmSEANnI8kMIv4O+vM5CUo9O3rw9jgdL+i/lqZh055QYa+xlYlPObGucrdfAdlhrng6hgo4rc2i4rxsKo3uXHCSlrLokST19mc1Hgtl/ZXlHyDocYZdEVHiY0qIng==
-Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
-        by smtp.gmail.com with ESMTPSA id y9-20020a2e3209000000b002d0522b2550sm353782ljy.32.2024.02.02.11.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 11:06:30 -0800 (PST)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dave Chinner <david@fromorbit.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH 1/1] mm: vmalloc: Add a scan area of VA only once
-Date: Fri,  2 Feb 2024 20:06:28 +0100
-Message-Id: <20240202190628.47806-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bUHA2sRB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706900816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9RvkmEU5gtVAa6D4MSMfcWS5vVfixTS9eCiHPt3AK1c=;
+	b=bUHA2sRBDqJw6N2ztlTF9VbtkRNiRThmobuchfkSOaNBGlJWe9JRrbisBm4XdZdeetG9ES
+	F8OyC2RiAi36X9yK+Gf97IR3OM3hToHkLdwbj9xcVmwDxRloFUcSKGe11JVPvpuU1JyHFp
+	MQLIwZ2uq6IXioP+ilWh/uGG/HV79fc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-428-KU3gxnRRN8aZHQDimBDisQ-1; Fri, 02 Feb 2024 14:06:52 -0500
+X-MC-Unique: KU3gxnRRN8aZHQDimBDisQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76A0585A58A;
+	Fri,  2 Feb 2024 19:06:51 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.76])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 98102C154AB;
+	Fri,  2 Feb 2024 19:06:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  2 Feb 2024 20:05:36 +0100 (CET)
+Date: Fri, 2 Feb 2024 20:05:29 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] pidfd_poll: report POLLHUP when pid_task() == NULL
+Message-ID: <20240202190529.GA28818@redhat.com>
+References: <20240202131147.GA25988@redhat.com>
+ <20240202131226.GA26018@redhat.com>
+ <20240202-arbeit-fruchtig-26880564a21a@brauner>
+ <20240202160704.GA5850@redhat.com>
+ <20240202-lackmantel-vervielfachen-4c0f0374219b@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202-lackmantel-vervielfachen-4c0f0374219b@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Invoke a kmemleak_scan_area() function only for newly allocated
-objects to add a scan area within that object. There is no reason
-to add a same scan area(pointer to beginning or inside the object)
-several times. If a VA is obtained from the cache its scan area
-has already been associated.
+On 02/02, Christian Brauner wrote:
+>
+> > I think we need a simpler patch. I was going to send it as 4/4, but I'd
+> > like to think more, _perhaps_ we can also discriminate the PIDFD_THREAD
+> > and non-PIDFD_THREAD waiters. I'll try to make the patch(es) tomorrow or
+>
+> Right, I didn't go that far.
+>
+> > at least provided more info.
+> >
+> > 3 notes for now:
+> >
+> > 	1. we can't use wake_up_poll(), it passes nr_exclusive => 1
+>
+> Bah. So we need the same stuff we did for io_uring and use
+> __wake_up() directly. Or we add wake_up_all_poll() and convert the other
+> three callsites:
 
-Fixes: 7db166b4aa0d ("mm: vmalloc: offload free_vmap_area_lock lock")
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/vmalloc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+...
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 449f45b0e474..25a8df497255 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1882,13 +1882,13 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
- 		va = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
- 		if (unlikely(!va))
- 			return ERR_PTR(-ENOMEM);
--	}
- 
--	/*
--	 * Only scan the relevant parts containing pointers to other objects
--	 * to avoid false negatives.
--	 */
--	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
-+		/*
-+		 * Only scan the relevant parts containing pointers to other objects
-+		 * to avoid false negatives.
-+		 */
-+		kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
-+	}
- 
- retry:
- 	if (addr == vend) {
--- 
-2.39.2
+> +#define wake_up_all_poll(x, m)                                                 \
+> +       __wake_up(x, TASK_NORMAL, 0, poll_to_key(m))
+
+Agreed, but I think this + s/wake_up/wake_up_all_poll/ conversions
+need a separate patch.
+
+
+> -void do_notify_pidfd(struct task_struct *task)
+> +void pidfd_wake_up_poll(struct task_struct *task, bool dead)
+>  {
+> -	struct pid *pid;
+> -
+>  	WARN_ON(task->exit_state == 0);
+> -	pid = task_pid(task);
+> -	wake_up_all(&pid->wait_pidfd);
+> +	WARN_ON(mask == 0);
+> +	wake_up_all_poll(&task_pid(task)->wait_pidfd,
+> +			 EPOLLIN | EPOLLRDNORM | dead ? EPOLLHUP : 0);
+
+No...
+
+This is still overcomplicated and is not right.
+
+Christian, I'll write another email tomorrow.
+
+Oleg.
 
