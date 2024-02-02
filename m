@@ -1,187 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2CBBA48
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 02:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F89FBE5A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 02:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706840466; cv=none; b=VZBLKbkl3tYHNB8i4FUaVgY4NNp01khhxignMOnREX5eFc0NEuIKX4JdY2/s1tTfDxD0a9J2dBtPyrdk0Ksn5aixtAYXgF+vWFNVV1yZkUJrsid2Y9UE/SLV7/K+i71hwnbC8adO8LvaMq+xm5bM9eeOxV40tFkEv2i6biJI3aI=
+	t=1706840712; cv=none; b=pc6u/laYbcMr/vnIccc9ixB3gYOpkEdK0vEZP0WPwcV8Sp2vqBjBioF4v9yMBkUvUeD5t+ciJfRcRIm4h5/W9USaHKlj9A0CzNFe2leZh5RXpBAI5Dk40gvXE1VDsYAw/qtCYpxyiIOGAaosRfkUIDFbOY5a+3NHIVtkpj/oyig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706840466; c=relaxed/simple;
-	bh=EQIwbZHsGuMlZyQ+7R9MpEihML0bmDWknH+HvCa+3QI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UppPgccqvHjFKFxSGS06bxYVQKon2wdLrOdn8mWLiCf6pmzeqQF14b9NrNbsLkDj7IJf45cD9yqWKXV4+I/13cLnDee9T3UavzT9rsBmbfQOAUNTwO0sIXECNpPGdPzabniQsAxaDkgesLMYsexVfoYSbEfeRehnkjJ76/AZ77A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=crslRzn8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706840712; c=relaxed/simple;
+	bh=9N2iU88+gARQNe6fozJMjFI5OkOXZkUyFALlpWKir8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i65sC8422FfelaE2IUBr9xEfEVeDb2UVbnK9k6il7DbAaO6D6AtHz6AvtJuJXKVtVhbM3Y51SgmsMZK4CjGRdh6zxA1NU4q6dkVbquvf/2jNpWSiw3UR+i7PTc1j83Iip3RH0vTe80KT4TGJmoJ7OJQXq+Ruk6fFtw6AuaDbhCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=frbL0wz1; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crslRzn8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706840463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/AFNq394fKdD6rutt1qh+bLin+C/DGw45kLcKx0YqTM=;
-	b=crslRzn8TIDEYKtqWxAUJMegEew8Yoh1yPbu4l2l56NrRQa1fg3iIIXBCl49gSRezmOi7w
-	q27LNdKljx+9HCt3D8RtXuGGnZpjeZ/laBf2Z4IVc1RsJeKxMvMeIJxTAk311wCYvBHyBX
-	jiZeMRMZY9bpdSJcgLKWhKoDxfY3Qe8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-124-aBo1uFCGPYOOyb7-_Gf_gw-1; Thu,
- 01 Feb 2024 21:20:58 -0500
-X-MC-Unique: aBo1uFCGPYOOyb7-_Gf_gw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 975C729AC00A;
-	Fri,  2 Feb 2024 02:20:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.16])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id ABCD01121306;
-	Fri,  2 Feb 2024 02:20:56 +0000 (UTC)
-From: Ming Lei <ming.lei@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Ming Lei <ming.lei@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Don Dutile <ddutile@redhat.com>,
-	Rafael Aquini <raquini@redhat.com>,
-	Dave Chinner <david@fromorbit.com>,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: [PATCH] mm/madvise: set ra_pages as device max request size during ADV_POPULATE_READ
-Date: Fri,  2 Feb 2024 10:20:29 +0800
-Message-ID: <20240202022029.1903629-1-ming.lei@redhat.com>
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="frbL0wz1"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e76626170so13385765e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 18:25:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1706840709; x=1707445509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+MYOUdkffZklmJiRyDcBSvfexdw+Ug/dwNFb912Mic=;
+        b=frbL0wz1UmxnOBA5ovKX05Ts7a3K0TlLlKRG2bDTohnp8LoLAnyt56C6UR9d+CH0Yc
+         FuJiapWXxscrm/qaCPYqWvhvTweU063XysN6at25XE6NmtxeRmm5K8ypX5mWUC3auhXt
+         dgzc9eq5HhlNkRwW3iJgHaXRlZvhjEPTfJKn3qf6v6GURY3/eRYzhcMlB40l+kHQ2uEU
+         k22Hg7Xpz/8bG7MvkS5UUpmZXpYhnJFM5p1zgiDXDKqjazCZDVRgBzkmJM25+HCcYxj8
+         28XrBWPNGxCUPSl5EtJGRLIYIi2ST8IThJuaa01tg/EvBrMq4sF6ND6oe6P4U4ZEkxqZ
+         9Ekw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706840709; x=1707445509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5+MYOUdkffZklmJiRyDcBSvfexdw+Ug/dwNFb912Mic=;
+        b=mpwCudIGDE8NIJWk1CT5qVqDAU8+B4Qs7WlLA62auzu6mwUCUCYNPXPCxwa042j1nB
+         iHgZCGMSqtC8vHvT3f84sGjBEqcKMpanlcdGSXJWd2tP77KY0v0VwbWp6FkFMBkhZQVu
+         Gy5/RMHMO6ivwTZoO0dYUe0dofyT2xwc+Diolpv++7Tpv7MKf3LW89Efyrs6Bp+5cYeo
+         1DeouyCnG0ucdcJ4q0PjZXAzd5kuFdLnGakUONGDSapGmGSUN0zZMtcjZdO9ONtdZ5oa
+         Zc6Q0iss/VuAP0osH7rghM4zhgsitUs2lg9te8wa9cq4EXnLr5KNDoff6WPHslNYODMs
+         QYow==
+X-Gm-Message-State: AOJu0Yz1z7dr+VMW7CNcFYGEdVSPGZs4o7zxeeu66FaoP8sFUyD1aA72
+	TS2jVu+vo+Up8QZCcnY5/sKqVX1saX6sThtXNP4t1OUejifC0qF7UbTMMAa8Cg==
+X-Google-Smtp-Source: AGHT+IHKoqvqHwrBIymRLXaN8QWWHiRU1Hnh5rwpivU3OiIucqg0XN5yHdkFYRxlifcErpSpJBiHsA==
+X-Received: by 2002:a05:600c:1e09:b0:40e:e839:82d3 with SMTP id ay9-20020a05600c1e0900b0040ee83982d3mr558787wmb.20.1706840708752;
+        Thu, 01 Feb 2024 18:25:08 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVxrAidf68sKuOnQRo82PhZxVEETGD8gQt1wMzSdK5oZVhC3f7C4bCzGBZPilM1QM3clRcjoHMVeBfNy8z6CipHoaMrSIKBWu9MT3MjibepjVJZTx9N7qj6AIKxw5eW21ot8gfK1Ldw9uDRUN/fmuQzcNR+7HZMsRJztUONVQTZ0DZ33/idL/7sWEdICOhwKDn7pOv0Ai3dSgG2oQp1kCmtax51lFGdszk4WMAzBzDBk2Oke5mintYVzQ6fTaMDIeWo0wNpXY2/qg24Qnbra4bGeFFwNCOfQLI44y1fEFKU7aEdtwbuI/20aq2dyt8tw4b+6MgNEu/bEG5f8ccXOFhfIskTTSmo8V0NASEp
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id f8-20020a05600c4e8800b0040f22171921sm1201476wmq.3.2024.02.01.18.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 18:25:07 -0800 (PST)
+From: Dmitry Safonov <dima@arista.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Dmitry Safonov <dima@arista.com>,
+	Dmitry Safonov <0x7f454c46@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	Mohammad Nassiri <mnassiri@ciena.com>,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/net: Amend per-netns counter checks
+Date: Fri,  2 Feb 2024 02:24:59 +0000
+Message-ID: <20240202-unsigned-md5-netns-counters-v1-1-8b90c37c0566@arista.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.13-dev-b6b4b
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706840700; l=2805; i=dima@arista.com; s=20231212; h=from:subject:message-id; bh=9N2iU88+gARQNe6fozJMjFI5OkOXZkUyFALlpWKir8s=; b=Puw0xgLo615QE2e5RmlZ8jpNiFzXn/gxginyxBI+5ARAFf3Yf/fwt1KlR7ELKNDr5xs5BwLnh Vt+269xSIvFDDBwXaQR/uQqRY+N8HWQp2YYJrQKGvZFm1ELDkbYIv2F
+X-Developer-Key: i=dima@arista.com; a=ed25519; pk=hXINUhX25b0D/zWBKvd6zkvH7W2rcwh/CH6cjEa3OTk=
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-madvise(MADV_POPULATE_READ) tries to populate all page tables in the
-specific range, so it is usually sequential IO if VMA is backed by
-file.
+Selftests here check not only that connect()/accept() for
+TCP-AO/TCP-MD5/non-signed-TCP combinations do/don't establish
+connections, but also counters: those are per-AO-key, per-socket and
+per-netns.
 
-Set ra_pages as device max request size for the involved readahead in
-the ADV_POPULATE_READ, this way reduces latency of madvise(MADV_POPULATE_READ)
-to 1/10 when running madvise(MADV_POPULATE_READ) over one 1GB file with
-usual(default) 128KB of read_ahead_kb.
+The counters are checked on the server's side, as the server listener
+has TCP-AO/TCP-MD5/no keys for different peers. All tests run in
+the same namespaces with the same veth pair, created in test_init().
 
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Don Dutile <ddutile@redhat.com>
-Cc: Rafael Aquini <raquini@redhat.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+After close() in both client and server, the sides go through
+the regular FIN/ACK + FIN/ACK sequence, which goes in the background.
+If the selftest has already started a new testing scenario, read
+per-netns counters - it may fail in the end iff it doesn't expect
+the TCPAOGood per-netns counters go up during the test.
+
+Let's just kill both TCP-AO sides - that will avoid any asynchronous
+background TCP-AO segments going to either sides.
+
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Closes: https://lore.kernel.org/all/20240201132153.4d68f45e@kernel.org/T/#u
+Fixes: 6f0c472a6815 ("selftests/net: Add TCP-AO + TCP-MD5 + no sign listen socket tests")
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- mm/madvise.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/tcp_ao/unsigned-md5.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 912155a94ed5..db5452c8abdd 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -900,6 +900,37 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
- 		return -EINVAL;
+diff --git a/tools/testing/selftests/net/tcp_ao/unsigned-md5.c b/tools/testing/selftests/net/tcp_ao/unsigned-md5.c
+index c5b568cd7d90..6b59a652159f 100644
+--- a/tools/testing/selftests/net/tcp_ao/unsigned-md5.c
++++ b/tools/testing/selftests/net/tcp_ao/unsigned-md5.c
+@@ -110,9 +110,9 @@ static void try_accept(const char *tst_name, unsigned int port,
+ 		test_tcp_ao_counters_cmp(tst_name, &ao_cnt1, &ao_cnt2, cnt_expected);
+ 
+ out:
+-	synchronize_threads(); /* close() */
++	synchronize_threads(); /* test_kill_sk() */
+ 	if (sk > 0)
+-		close(sk);
++		test_kill_sk(sk);
  }
  
-+static void madvise_restore_ra_win(struct file **file, unsigned int ra_pages)
-+{
-+	if (*file) {
-+		struct file *f = *file;
-+
-+		f->f_ra.ra_pages = ra_pages;
-+		fput(f);
-+		*file = NULL;
-+	}
-+}
-+
-+static struct file *madvise_override_ra_win(struct file *f,
-+		unsigned long start, unsigned long end,
-+		unsigned int *old_ra_pages)
-+{
-+	unsigned int io_pages;
-+
-+	if (!f || !f->f_mapping || !f->f_mapping->host)
-+		return NULL;
-+
-+	io_pages = inode_to_bdi(f->f_mapping->host)->io_pages;
-+	if (((end - start) >> PAGE_SHIFT) < io_pages)
-+		return NULL;
-+
-+	f = get_file(f);
-+	*old_ra_pages = f->f_ra.ra_pages;
-+	f->f_ra.ra_pages = io_pages;
-+
-+	return f;
-+}
-+
- static long madvise_populate(struct vm_area_struct *vma,
- 			     struct vm_area_struct **prev,
- 			     unsigned long start, unsigned long end,
-@@ -908,9 +939,21 @@ static long madvise_populate(struct vm_area_struct *vma,
- 	const bool write = behavior == MADV_POPULATE_WRITE;
- 	struct mm_struct *mm = vma->vm_mm;
- 	unsigned long tmp_end;
-+	unsigned int ra_pages;
-+	struct file *file;
- 	int locked = 1;
- 	long pages;
+ static void server_add_routes(void)
+@@ -302,10 +302,10 @@ static void try_connect(const char *tst_name, unsigned int port,
+ 		test_ok("%s: connected", tst_name);
  
-+	/*
-+	 * In case of file backing mapping, increase readahead window
-+	 * for reducing the whole populate latency, and restore it
-+	 * after the populate is done
-+	 */
-+	if (behavior == MADV_POPULATE_READ)
-+		file = madvise_override_ra_win(vma->vm_file, start, end,
-+				&ra_pages);
-+	else
-+		file = NULL;
- 	*prev = vma;
+ out:
+-	synchronize_threads(); /* close() */
++	synchronize_threads(); /* test_kill_sk() */
+ 	/* _test_connect_socket() cleans up on failure */
+ 	if (ret > 0)
+-		close(sk);
++		test_kill_sk(sk);
+ }
  
- 	while (start < end) {
-@@ -920,8 +963,10 @@ static long madvise_populate(struct vm_area_struct *vma,
- 		 */
- 		if (!vma || start >= vma->vm_end) {
- 			vma = vma_lookup(mm, start);
--			if (!vma)
-+			if (!vma) {
-+				madvise_restore_ra_win(&file, ra_pages);
- 				return -ENOMEM;
-+			}
- 		}
- 
- 		tmp_end = min_t(unsigned long, end, vma->vm_end);
-@@ -935,6 +980,9 @@ static long madvise_populate(struct vm_area_struct *vma,
- 			vma = NULL;
- 		}
- 		if (pages < 0) {
-+			/* restore ra pages back in case of any failure */
-+			madvise_restore_ra_win(&file, ra_pages);
-+
- 			switch (pages) {
- 			case -EINTR:
- 				return -EINTR;
-@@ -954,6 +1002,8 @@ static long madvise_populate(struct vm_area_struct *vma,
- 		}
- 		start += pages * PAGE_SIZE;
+ #define PREINSTALL_MD5_FIRST	BIT(0)
+@@ -486,10 +486,10 @@ static void try_to_add(const char *tst_name, unsigned int port,
  	}
-+
-+	madvise_restore_ra_win(&file, ra_pages);
- 	return 0;
+ 
+ out:
+-	synchronize_threads(); /* close() */
++	synchronize_threads(); /* test_kill_sk() */
+ 	/* _test_connect_socket() cleans up on failure */
+ 	if (ret > 0)
+-		close(sk);
++		test_kill_sk(sk);
  }
  
+ static void client_add_ip(union tcp_addr *client, const char *ip)
+
+---
+base-commit: 021533194476035883300d60fbb3136426ac8ea5
+change-id: 20240202-unsigned-md5-netns-counters-35134409362a
+
+Best regards,
 -- 
-2.41.0
+Dmitry Safonov <dima@arista.com>
 
