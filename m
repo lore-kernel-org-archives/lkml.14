@@ -1,321 +1,132 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ermis.csd.uoc.gr (ermis.csd.uoc.gr [147.52.203.66])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00CE60249
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 14:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040181420A5
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 14:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.52.203.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706882866; cv=none; b=k1rbMhKBMuw/+L0VxOkkvuV9nKBL6byskxG0FGjO42MI5N+wcFddhx65Z/RnU0jOdCF2620Ev6ju1zORSMbByivmUreXr7Z2qaZuneIdUHGC5ijwVIVTQf0vBNXfodaOYfSp1RKbWALfKEnWOammCUqC+ajQOa5vjCyskcc/6uc=
+	t=1706883094; cv=none; b=uhSF17/LYCl9eYD6p1vEEQHuKDlar12acQD9EC+sIOq48YB7X/Ok9K6loCunK2RLyARRXdcHgdlzLKfE0P1vQxVAwWOyTQltnMQjC+GQjXWrfmPc0oE8oTF6kjYH+cCrTjQnLezPY23iaT4nljnpGstKelUv87iHrFNOIDRvZyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706882866; c=relaxed/simple;
-	bh=ANIJS9UzkOmFsPmPeZuENE1ZuoiAp/fMOA7MnKgVqIE=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=ExDQfTFjSW5LU1efMJKL9EJLmCTir3AEMubmCVQGqAvOHu4RSPIIxAGddyXVpuZdiP1srVaZWAdJiDC3NLjCE8tUQpOu+lMNKu027Tiqx54pGn7zrVlJACruACx6zLTEcQwlzqmqmwoTPheY/++E32QPrYb882PblEqftCmGmjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Y9YIZYgg; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1706883094; c=relaxed/simple;
+	bh=0fLShIaYA46L2v+Ga5N4MTBmAYSvwPEcuI+RHi2CSIw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=V4VGjRpXsdTQ7DSmRskYLRdMOGKcm9Y5goKqa9Wrgv98ewevhSl16iKJoI5VWGWGjBHSxtUnwfPWoavfhXG/JNOaLr61ajcsVgGcM5RkWD/PeHCZN+1LVAhi79/nfL4nki2tYf5C6MoF/k5Weon9VOOceqzwUG6+OtXf+hNTjqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csd.uoc.gr; spf=pass smtp.mailfrom=csd.uoc.gr; dkim=pass (2048-bit key) header.d=csd.uoc.gr header.i=@csd.uoc.gr header.b=G7vOWtx0; arc=none smtp.client-ip=147.52.203.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csd.uoc.gr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csd.uoc.gr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y9YIZYgg"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240202135954epoutp02e9c2497205fc329cfe758488358a44a8~wEH5w0ipD1606816068epoutp02u
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 13:59:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240202135954epoutp02e9c2497205fc329cfe758488358a44a8~wEH5w0ipD1606816068epoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706882394;
-	bh=uPljuUqcnvBKfoTySKkhA0+5apgmEsMGTJCKcyU/yGk=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=Y9YIZYgg0UM/CDb7siYyh1EpHU+CwmZrspyKMd+PBWop6KQgudfOqKCmHWgANBUtg
-	 rEHe3CjXYZxJwsheX4pVvc0iobLihlKFsKQ4ny572K0NcvRJwDL8dpWBGkBUcTG9es
-	 j1M9pU78pNuj3pC6yMo8ZToCfJp9VW5s6AlfMNI4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240202135952epcas5p14a5f82d917b630160044cc0cab67da79~wEH4njU-I2501125011epcas5p1N;
-	Fri,  2 Feb 2024 13:59:52 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4TRHTM0l7hz4x9Ps; Fri,  2 Feb
-	2024 13:59:51 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	4B.4C.19369.655FCB56; Fri,  2 Feb 2024 22:59:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240202115943epcas5p4ffd74eaf0571f61e3bac50be11a94632~wCe_eyBOS1710017100epcas5p4u;
-	Fri,  2 Feb 2024 11:59:43 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240202115943epsmtrp1f6562f1a4757eff343b41e8d1578699c~wCe_dpNxn1052510525epsmtrp1f;
-	Fri,  2 Feb 2024 11:59:43 +0000 (GMT)
-X-AuditID: b6c32a50-c99ff70000004ba9-e9-65bcf556438e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D7.27.07368.F29DCB56; Fri,  2 Feb 2024 20:59:43 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240202115940epsmtip103f90ce67606603a09560c7217533b83~wCe79AHbc2779527795epsmtip1y;
-	Fri,  2 Feb 2024 11:59:40 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Manivannan Sadhasivam'" <manivannan.sadhasivam@linaro.org>,
-	<m.szyprowski@samsung.com>, <sboyd@kernel.org>, <mturquette@baylibre.com>
-Cc: <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <jingoohan1@gmail.com>,
-	<lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-	<bhelgaas@google.com>, <krzysztof.kozlowski@linaro.org>,
-	<alim.akhtar@samsung.com>, <linux@armlinux.org.uk>,
-	<pankaj.dubey@samsung.com>
-In-Reply-To: <20240129065448.GC2971@thinkpad>
-Subject: RE: [PATCH v4 1/2] clk: Provide managed helper to get and enable
- bulk clocks
-Date: Fri, 2 Feb 2024 17:29:30 +0530
-Message-ID: <08a901da55cf$4ee48000$ecad8000$@samsung.com>
+	dkim=pass (2048-bit key) header.d=csd.uoc.gr header.i=@csd.uoc.gr header.b="G7vOWtx0"
+Received: from cave.168.239.147 (ppp178059052035.access.hol.gr [178.59.52.35])
+	by ermis.csd.uoc.gr (Postfix) with ESMTPSA id 818193C07E6;
+	Fri,  2 Feb 2024 15:50:30 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csd.uoc.gr; s=csd;
+	t=1706881833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8xiDaKPe3EcE5yGO2LEkBF3Kug+H9effrggz/KsrocE=;
+	b=G7vOWtx0lFu4MpEoOLGB2l0LVjYeOEEP8SLtdxbFCuJBUsoFkr5PapgIdpBgZ9HGKHdovC
+	T9hiqPlubuPwxlRkDirmTTclG7A9VLAOONzptl7QzWzQ9dbWqtHXR96D1FAmmM1qlMmu83
+	EDdIJuzldAFuNP9eARfbbbaV4fk5oNai1Bb6l2WBZbaxS2s+hBADclXx0g1hSYlggOSwr7
+	Ly7lT+jew6Q6ym6RuEAmFHbcOdFXSjxy+ih4dRAKwAeDtWXAbRwmm+5/Sef6rJwUt5a4G1
+	6PsTMaT9EE5kGhAOaJvOYXUnUlVHi4mWS2HQksueYpcDuHaLq6A6+C/VgTcPgw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=csd4492 smtp.mailfrom=csd4492@csd.uoc.gr
+From: Dimitris Vlachos <csd4492@csd.uoc.gr>
+To: csd4492@csd.uoc.gr,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: clameter@sgi.com,
+	akpm@linux-foundation.org,
+	rppt@kernel.org,
+	arnd@arndb.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	alexghiti@rivosinc.com,
+	mick@ics.forth.gr
+Subject: [PATCH] [RFC] sparsemem: warn on out-of-bounds initialization
+Date: Fri,  2 Feb 2024 15:50:30 +0200
+Message-Id: <20240202135030.42265-1-csd4492@csd.uoc.gr>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIcpPks/WB953w72Rl3v8cfkz9jJgG3GiapAsOufW4BkcYK8bBB75tA
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUxTVxjGc3r7ydLlrkU5dKHBi1MR+agreFEYS2DsLriExTjnpmM3cNci
-	/UpvK27OjLiqgYH41SBFqiIBRWBSKAJr58K3ZBNZm06jqJtd6GSbHQM2BMooFzf++533vM95
-	8rznHD4i8nEl/HyNgdJrSBXGDWG390RHx7475aASiq3b8EfWdi5ee1iJX56s5OHOcTsPLyqd
-	5eC2xx4O/mfpAw7u6jrHxb+3DnDxs8PfsPBusxPgpjkTG2/qHeXho6ZiDj4y9AZeY5/k4QuO
-	Dh4e8LSwXxcRLs8IQjy9c4RHdFpGecQFm5GwNRRzifseB5fwuitYRGvt58TxtgZA/GWTZoe8
-	X5CipMg8Sh9JaXK1efkaRSqWtSMnPScxKUEWK0vGt2CRGlJNpWIZ27NjM/NVi5GwyP2kyrhY
-	yiZpGot/LUWvNRqoSKWWNqRilC5PpZPr4mhSTRs1ijgNZdgqS0jYnLjY+FGB0tXbw9X54w/8
-	dOMMUgSc60qAgA9ROfReq+GVgBC+CHUAaHd0IsxiAsDATQuLWUwDWDrZySkB/CXJvaZtTN0J
-	4B9zjezgUSLUB+BvTXSQuegm6HXPIUEORcsA7PIXBgUIegqB9X2zILghQGPhbb+JE2Qxugue
-	ni5jBZmNroWDPw4usRBNhjd8VQjDL8Gbld4lMwSNgXUXxxEmQySc+aWOw5hlwqo2G5fpCYN9
-	M6VLcSBaLoDHpqo4jCADfrnwA2BYDJ8MtPEYlsBfy48uswJeaT27bKCC0621LIbT4Lfuc+zg
-	JBA0Gn7VFc+UI6B5qJnF+L4Iy2a9y+1C2GF9zlFwct7BZjgcWvtdnBMAs6yIZlkRzbIiguV/
-	twuA3QAklI5WK6jcRJ0sVkMV/nfjuVq1DSw9+Y3ZHeDqtfm4bsDig24A+QgWKrwi7aREwjzy
-	k08pvTZHb1RRdDdIXBz4SUSyKle7+Gc0hhyZPDlBnpSUJE9+NUmGhQnHj1TniVAFaaAKKEpH
-	6Z/rWHyBpIgljvEJ/XX2OM+T/XdbHqetj7ofisR4Wpoa/+krd8vTn30Xte/Q3g3tt1ZpGmKm
-	9ogiXI/2kIrLBtRpCxdVrD5/Ujph/yzz2Bnz9dOEtPDtiJJdCrZZvHNd2VTgwzHBYH7DQ/vH
-	nuohgfbOm2rJWv+limHBzykzPVdHyIM7X9CJd/eEHbi3ufnB9Q/Ulpa0/vqMTv+mv+fGwmVF
-	t9dkheZKzvc3krKnvb8nNu09vrU7ekvNRLTyYav1vUPpRwONh794eQYUBr5Ok7SNiQcqrT4W
-	1Ruzen4N37yw3aQcHqqYCevPEtD1mbtPVG94S3p3yjTUjD07NWK79QpcMO94Z5/i0kE3xqaV
-	pGwjoqfJfwHDWPdIewQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsWy7bCSnK7+zT2pBj2XRSwezNvGZrGkKcNi
-	xZeZ7BZ7X29lt2jo+c1qsenxNVaLjz33WC0u75rDZnF23nE2ixnn9zFZHJq6l9Gi5U8Li8Xa
-	I3fZLe62dLJaXDzlarFo6xd2i/97drBb/Lu2kcVByOPytYvMHu9vtLJ77Jx1l91jwaZSj02r
-	Otk87lzbw+bx5Mp0Jo/NS+o9+rasYvT4vEkugCuKyyYlNSezLLVI3y6BK+Ptjr9MBc/1Kv5M
-	nMzUwLhYtYuRg0NCwETi9lrrLkYuDiGB3YwSX46sYOti5ASKS0p8vriOCcIWllj57zk7RNEz
-	RomTT68wgiTYBHQknlz5wwySEBGYyCixfl4HK4jDLLCAWWL+pW/MEC13GCVaF71gAWnhFNCV
-	uPChhRXEFhYIldh9ZjM7iM0ioCJx4voJsH28ApYS+1/MZoawBSVOznwC1sssoC3x9OZTOHvZ
-	wtfMEPcpSPx8ugxspoiAm8TsLZvYIGrEJY7+7GGewCg8C8moWUhGzUIyahaSlgWMLKsYJVML
-	inPTc5MNCwzzUsv1ihNzi0vz0vWS83M3MYJjXUtjB+O9+f/0DjEycTAeYpTgYFYS4V0ptzNV
-	iDclsbIqtSg/vqg0J7X4EKM0B4uSOK/hjNkpQgLpiSWp2ampBalFMFkmDk6pBqatWysDRbm3
-	Brx7+sh3F3/+IncXe3a/iukzfTP/eNZce701VP5WinJG0WvuXWXuJ+euenLUaP+GI9dmsP7w
-	cMz903svS2fNf3nZQ+7/znU7XTv63OvWJVEPVcE3kwW+h+5kTdbOPCPV1fOvUDjxVrybTdeN
-	10ZNE9Sn7A+Kkcu01rP0Vwhjrm4qFjn44Nsij+WvZ0xXPH/ALW7ny/VRZz1bJx5uWWUVPP8V
-	+9Q4C837cTY6Nj8mM+7nVy6syZUVitaedOTkxW/JCw5/+v9h+4FTS+9M2Gpt/H9iwyXeNR0v
-	NrzYqfwqkUdPODtYNEzc2vTuB7EzZ77l6YqeOicp2sAkonDHpujZJv2VSiJTGf2VWIozEg21
-	mIuKEwFOiEzzZAMAAA==
-X-CMS-MailID: 20240202115943epcas5p4ffd74eaf0571f61e3bac50be11a94632
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d
-References: <20240124103838.32478-1-shradha.t@samsung.com>
-	<CGME20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d@epcas5p2.samsung.com>
-	<20240124103838.32478-2-shradha.t@samsung.com>
-	<20240129065448.GC2971@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Dimitris Vlachos <dvlachos@ics.forth.gr>
 
+Hello all
 
-> -----Original Message-----
-> From: Manivannan Sadhasivam <manivannan.sadhasivam=40linaro.org>
-> Sent: 29 January 2024 12:25
-> To: Shradha Todi <shradha.t=40samsung.com>
-> Cc: linux-clk=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-
-> pci=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-sams=
-ung-
-> soc=40vger.kernel.org; mturquette=40baylibre.com; sboyd=40kernel.org;
-> jingoohan1=40gmail.com; lpieralisi=40kernel.org; kw=40linux.com; robh=40k=
-ernel.org;
-> bhelgaas=40google.com; krzysztof.kozlowski=40linaro.org;
-> alim.akhtar=40samsung.com; linux=40armlinux.org.uk;
-> m.szyprowski=40samsung.com; pankaj.dubey=40samsung.com
-> Subject: Re: =5BPATCH v4 1/2=5D clk: Provide managed helper to get and en=
-able bulk
-> clocks
->=20
-> On Wed, Jan 24, 2024 at 04:08:37PM +0530, Shradha Todi wrote:
-> > Provide a managed devm_clk_bulk* wrapper to get and enable all bulk
-> > clocks in order to simplify drivers that keeps all clocks enabled for
-> > the time of driver operation.
-> >
-> > Suggested-by: Marek Szyprowski <m.szyprowski=40samsung.com>
-> > Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
-> > ---
-> >  drivers/clk/clk-devres.c =7C 40
-> ++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/clk.h      =7C 24 ++++++++++++++++++++++++
-> >  2 files changed, 64 insertions(+)
-> >
-> > diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c index
-> > 4fb4fd4b06bd..cbbd2cc339c3 100644
-> > --- a/drivers/clk/clk-devres.c
-> > +++ b/drivers/clk/clk-devres.c
-> > =40=40 -182,6 +182,46 =40=40 int __must_check devm_clk_bulk_get_all(str=
-uct
-> > device *dev,  =7D  EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
-> >
-> > +static void devm_clk_bulk_release_all_enable(struct device *dev, void
-> > +*res) =7B
-> > +	struct clk_bulk_devres *devres =3D res;
-> > +
-> > +	clk_bulk_disable_unprepare(devres->num_clks, devres->clks);
-> > +	clk_bulk_put_all(devres->num_clks, devres->clks); =7D
-> > +
-> > +int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
-> > +					      struct clk_bulk_data **clks) =7B
-> > +	struct clk_bulk_devres *devres;
-> > +	int ret;
-> > +
-> > +	devres =3D devres_alloc(devm_clk_bulk_release_all_enable,
-> > +			      sizeof(*devres), GFP_KERNEL);
-> > +	if (=21devres)
-> > +		return -ENOMEM;
-> > +
-> > +	ret =3D clk_bulk_get_all(dev, &devres->clks);
-> > +	if (ret > 0) =7B
-> > +		*clks =3D devres->clks;
-> > +		devres->num_clks =3D ret;
-> > +	=7D else =7B
-> > +		devres_free(devres);
-> > +		return ret;
-> > +	=7D
->=20
-> How about:
->=20
-> 	ret =3D clk_bulk_get_all(dev, &devres->clks);
-> 	if (ret <=3D 0) =7B
-> 		devres_free(devres);
-> 		return ret;
-> 	=7D
->=20
-> 	*clks =3D devres->clks;
-> 	devres->num_clks =3D ret;
->=20
-> Even though this patch follows the pattern used by the rest of the APIs i=
-n the
-> driver, IMO above makes it more readable.
->=20
+I am sending this email with regards to a bug that I discovered in the Sparse Memory Model configuration and more specifically, the Virtual Memory Map optimization. Moreover, I would like to inquire about possible ways of fixing it.
 
-Since I have usually seen that maintainers suggest to maintain the coding s=
-tyle of the file, I followed the same.
-If you have a stronger reason to change this, please let me know
-Marek, Michael, Stephen please let us know what do you think about this?
+I work as a pre-graduate research assistant at ICS-FORTH in the Computer Architecture and VLSI Systems laboratory.
+We were running some tests in our prototype hardware (RISC-V), where we noticed that the Kernel crashes early in the boot process with the following setup:
 
-> > +
-> > +	ret =3D clk_bulk_prepare_enable(devres->num_clks, *clks);
-> > +	if (=21ret) =7B
-> > +		devres_add(dev, devres);
-> > +	=7D else =7B
-> > +		clk_bulk_put_all(devres->num_clks, devres->clks);
-> > +		devres_free(devres);
-> > +	=7D
-> > +
->=20
-> Same as above:
->=20
-> 	ret =3D clk_bulk_prepare_enable(devres->num_clks, *clks);
-> 	if (ret) =7B
-> 		clk_bulk_put_all(devres->num_clks, devres->clks);
-> 		devres_free(devres);
-> 		return ret;
-> 	=7D
->=20
-> 	devres_add(dev, devres);
->=20
-> > +	return ret;
->=20
-> 	return 0;
->=20
+We are using the default Kconfig configurations (defconfig) that includes Sparse Memory + Virtual Memory Map.
+The DRAM base address of our system is : 0x800000000000
+A 3-level page table is used (Sv39).
 
-Same as above
+When the vmemmap optimization is enabled the macro pfn_to_page() is called, which offsets the vmemmap with the pfn argument to acquire a struct page pointer.
 
-> > +=7D
-> > +EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all_enable);
-> > +
-> >  static int devm_clk_match(struct device *dev, void *res, void *data)
-> > =7B
-> >  	struct clk **c =3D res;
-> > diff --git a/include/linux/clk.h b/include/linux/clk.h index
-> > 1ef013324237..a005e709b7bd 100644
-> > --- a/include/linux/clk.h
-> > +++ b/include/linux/clk.h
-> > =40=40 -438,6 +438,23 =40=40 int __must_check
-> > devm_clk_bulk_get_optional(struct device *dev, int num_clks,  int
-> __must_check devm_clk_bulk_get_all(struct device *dev,
-> >  				       struct clk_bulk_data **clks);
-> >
-> > +/**
-> > + * devm_clk_bulk_get_all_enable - managed get multiple clk consumers a=
-nd
-> > + *				  enable all clks
->=20
-> =22Get and enable all clocks of the consumer (managed)=22
->=20
+As our DRAM starts at 0x800000000000, the initial pfn will be 0x800000000000 divided by PAGE_SIZE. The calculation result will be:
+0xffffffcf00000000 (vmemmap start) +  (0x800000000 (pfn) * 64 (sizeof(struct page))
 
-Will take this up in the next patchset
+This causes an overflow as the number is very large, the resulting address is 0x1c700000000​ which is not a valid Sv39 address (all bits above bit 38 should be set) and does not belong to the kernel’s virtual address space.
 
-> > + * =40dev: device for clock =22consumer=22
-> > + * =40clks: pointer to the clk_bulk_data table of consumer
-> > + *
-> > + * Returns success (0) or negative errno.
-> > + *
-> > + * This helper function allows drivers to get several clk
->=20
-> =22This helper function allows drivers to get all clocks of the consumer =
-and enables
-> them...=22
->=20
-> - Mani
->=20
+The same will happen with all valid pfns as the memory is being initialized. When the Kernel will try to access a page using pfn_to_page, a page fault will occur crashing the system.
+It should be noted that when the vmemmap is disabled the system boots normally.
 
-Will take this up. Thanks for your review Mani=21
+However, I would like to emphasize another important detail. When the DRAM base is small enough to avoid an overflow, the virtual memory map mappings will be initialized out of bounds with regard to the vmemmap address space which is 4GiB in Sv39.
+The system will not crash, but the address space used for this purpose will be outside of the designated range.
 
-> > + * consumers and enable all of them in one operation with management.
-> > + * The clks will automatically be disabled and freed when the device
-> > + * is unbound.
-> > + */
-> > +
-> > +int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
-> > +					      struct clk_bulk_data **clks);
-> > +
-> >  /**
-> >   * devm_clk_get - lookup and obtain a managed reference to a clock pro=
-ducer.
-> >   * =40dev: device for clock =22consumer=22
-> > =40=40 -960,6 +977,13 =40=40 static inline int __must_check
-> devm_clk_bulk_get_all(struct device *dev,
-> >  	return 0;
-> >  =7D
-> >
-> > +static inline int __must_check devm_clk_bulk_get_all_enable(struct dev=
-ice
-> *dev,
-> > +						struct clk_bulk_data **clks)
-> > +=7B
-> > +
-> > +	return 0;
-> > +=7D
-> > +
-> >  static inline struct clk *devm_get_clk_from_child(struct device *dev,
-> >  				struct device_node *np, const char *con_id)  =7B
-> > --
-> > 2.17.1
-> >
->=20
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D=20=E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D=0D=0A=0D=0A
+Everything mentioned above holds true when Sv48 is used as well. Given a high enough DRAM base the system will either crash or perform false initializations. Given the fact that virtual memory map is not only used by RISC-V systems, this could be an issue for other architectures as well.
+
+The kernel already contains mminit_validate_memmodel_limits() that checks memory limits.
+However, it only checks physical memory ranges. I added a few checks, provided that virtual memory map is enabled, to determine whether offset start and offset end fall inside the range of virtual memory map. Otherwise, a warning will be printed.
+
+Finally, I would like to ask you for any information/advice that could help me fix/prevent the issues that I mentioned (if it’s possible) or recover from them at runtime by disabling the optimization and reverting back to the non-vmemmap mappings.
+
+Thank you in advance.
+Best regards,
+Dimitris Vlachos
+---
+ mm/sparse.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 338cf946d..33b57758e 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -149,6 +149,26 @@ static void __meminit mminit_validate_memmodel_limits(unsigned long *start_pfn,
+ 		WARN_ON_ONCE(1);
+ 		*end_pfn = max_sparsemem_pfn;
+ 	}
++
++	/*check vmemmap limits*/
++	#ifdef CONFIG_SPARSEMEM_VMEMMAP
++
++	unsigned long vmemmap_offset_start = (unsigned long) pfn_to_page(*start_pfn);
++	unsigned long vmemmap_offset_end   = (unsigned long) pfn_to_page(*end_pfn);
++
++	if (vmemmap_offset_start < VMEMMAP_START) {
++		mminit_dprintk(MMINIT_WARNING, "pfnvalidation",
++			"Start of range %lu -> %lu exceeds bounds of SPARSEMEM virtual memory map address range %lu -> %lu\n",
++			vmemmap_offset_start, vmemmap_offset_end, VMEMMAP_START,VMEMMAP_END);
++		WARN_ON_ONCE(1);
++
++	} else if (vmemmap_offset_end > VMEMMAP_END ) {
++		mminit_dprintk(MMINIT_WARNING, "pfnvalidation",
++			"End of range %lu -> %lu exceeds bounds of SPARSEMEM virtual memory map address range %lu -> %lu\n",
++			vmemmap_offset_start, vmemmap_offset_end, VMEMMAP_START,VMEMMAP_END);
++		WARN_ON_ONCE(1);
++	}
++	#endif
+ }
+ 
+ /*
+-- 
+2.39.2
+
