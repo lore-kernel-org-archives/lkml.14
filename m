@@ -1,122 +1,131 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18EA605DB;
-	Fri,  2 Feb 2024 09:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B4A63119;
+	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865372; cv=none; b=bucqx/RDWSpY9FjeS/A4lx8FsVjiMfV3TAr6FSYJa31qQqTGVwdwVOAsR+SCmaIJIT7pFCAojg+pGDvhMIWJXwETrkGSpo46jKsc4OP4ysgDB2HuiRoFrU8Jf08kX/jBpKWK7VP2trDC1N4qxu6JMJbYy8IGAOWuoBxhQePWJ4k=
+	t=1706865573; cv=none; b=Vvd0rZWFS9cAV4BbRCIS9FNawUioRDdRIl10UI3bjQUIBXLIgldPMOR5TYCEPZnr4Kg4dhpK/vKefxD2Dj3K5sXFMY/SRXz98+6y+1ibfRO8xCMoPTeRINMPoD79nNn4Zl3o5MdFEG4epzrJj2dEQbntGUtm9sAVv8hhnpJnfz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706865372; c=relaxed/simple;
-	bh=jupD0jZ+G5XPKvqrDMiFv55S/1T9122VpUTg6FgOS4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l7WxU0rAF0GYjqBKLYSHps+GZ8MrDQ4AOEsNC3EyYViZGmARtU+Q247gr48wtnm7wTsG6JVXu5/jdGnOzsvV9rtwF1KQHco+e7m8a7FZctk3IcIbNHW1CxKWVufAWyP0eWEtdeZlFaN9BGASR7S77k8Ht4tYq224nygU42sG7ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=giqW65Tt; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1706865573; c=relaxed/simple;
+	bh=rCvaDAdvVEPkc/5uSMACu9gWCQ1/fxBqVhcE39XQOQs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=e4O7dYpGRh4FojwxTeHznpFnFz/VKRn7wFmL23Fv4hbGK7wQOz42vR9MNxjRprEaA80B7Z/lgN192uNLTSBRiIcMYCdwY3mv2vZsVXa9488N3+xW37mH1t4sp81JZbr+lbsbQbyuwQ9adiL6RCkjEu1DMKxG4HSc5M414xduong=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jedQRPVG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="giqW65Tt"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4128TqlG019825;
-	Fri, 2 Feb 2024 09:16:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=0s58srxMlt0tFYwCA04+jek/EjXJpoI5doi8EjmkYNI=;
- b=giqW65TtJnR5Ae5X4x1EaI+SxsTlfKGd+ikMqVHSB7e788P8YCwEddhuTI3Az89uSaQc
- Znr+op6exf/jf+/Cz2hqFChoNhp/fnvvX62AUJlTblVpJpWrvY9i4dB/U+Zvl5iK7g7w
- 3VwDGgKlntZPA8EM7o0bFZMxgD6zxa0V53TmMNwkxidORji3W98u0+jPoxRiEJbMBMuQ
- 2+0wOQcFJA6IHtozkRTjcHB28vVmE3FOQr4bfpHlJMU1d9X9Zk6ZAmGXd+OKKMvPS9pe
- PqXnpesupj0goNb6UNZ/uf42Pp/s3S20kXpfghMekTsknnBNIOwTuFx4quxljtjRDPFc yg== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvrrcq5rn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 Feb 2024 09:16:07 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4128flO4005480;
-	Fri, 2 Feb 2024 09:16:06 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr9hnqjv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 Feb 2024 09:16:06 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4129G2Gd000955;
-	Fri, 2 Feb 2024 09:16:05 GMT
-Received: from brm-x62-14.us.oracle.com (brm-x62-14.us.oracle.com [10.80.150.231])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3vvr9hnqd6-2;
-	Fri, 02 Feb 2024 09:16:05 +0000
-From: William Kucharski <william.kucharski@oracle.com>
-To: Bart Van Assche <bvanassche@acm.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCH v2 1/1] RDMA/srpt: Do not register event handler until srpt device is fully setup
-Date: Fri,  2 Feb 2024 02:15:49 -0700
-Message-Id: <20240202091549.991784-2-william.kucharski@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240202091549.991784-1-william.kucharski@oracle.com>
-References: <20240202091549.991784-1-william.kucharski@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jedQRPVG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B11D4C433C7;
+	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706865572;
+	bh=rCvaDAdvVEPkc/5uSMACu9gWCQ1/fxBqVhcE39XQOQs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=jedQRPVGaqsVoflMFNGtVWJlXpfMwFOMXBbGSAXWJXebPXa0Rl8xvaFZZB7l5yL5P
+	 spg70w7n5wcikpt0DRk+fAlAAJCmSs1CLNvxtMgJZ3S33dY1UqwkPuiMb6gdayVbVl
+	 yYqYnTAFUB+Hc5my9apQcy/6LB2QuQ72U173iPglKqBFbq4YL3Wb1dGpnlm991878Z
+	 mZZDfDeREsDJbwIeDMvJkV2qaYBgOM9sQJh46CwEBky5NgW3Bb4ePQ3B8e8CDT88nN
+	 vIcvsTltXzPRsGVrzJzp8CgX+JAkxx2RxOkRDw45ZnqEMUPWH03Kv7Lr7zJ9HJGIDd
+	 pFbv/yJw6MuKA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90493C48291;
+	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
+From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
+ <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Fri, 02 Feb 2024 12:19:07 +0300
+Subject: [PATCH net-next v3 1/7] net: dsa: mt7530: empty default case on
+ mt7530_setup_port5()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_03,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402020067
-X-Proofpoint-ORIG-GUID: f2XL1vAKbQmIDLtQxFHQjSy_dACsKSkF
-X-Proofpoint-GUID: f2XL1vAKbQmIDLtQxFHQjSy_dACsKSkF
+Message-Id:
+ <20240202-for-netnext-mt7530-improvements-2-v3-1-63d5adae99ca@arinc9.com>
+References:
+ <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
+In-Reply-To:
+ <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
+To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706865569; l=1561;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=4iqmJSREOOSr69rzXZ9fMqbTsIjeBdURHVNrmhTA6EI=;
+ b=TeFqFshuDfZ5ZtHlV2wYOCIagEY8/cQ/3dz9qwLIC/uvZRz991/HxiXn7Sc7VwzOs3fXymSgc
+ 2QG09ps/xpsCkrJzsYBYius5Nc8Wj7wCPq+UiEBslQK8hZxHpMleGK9
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received:
+ by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
+X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Reply-To: <arinc.unal@arinc9.com>
 
-Upon rare occasions, KASAN reports a use-after-free Write
-in srpt_refresh_port().
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-This seems to be because an event handler is registered before the
-srpt device is fully setup and a race condition upon error may leave a
-partially setup event handler in place.
+There're two code paths for setting up port 5:
 
-Instead, only register the event handler after srpt device initialization
-is complete.
+mt7530_setup()
+-> mt7530_setup_port5()
 
-Fixes: dcc9881e6767 ("RDMA/(core, ulp): Convert register/unregister event handler to be void")
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
+mt753x_phylink_mac_config()
+-> mt753x_mac_config()
+   -> mt7530_mac_config()
+      -> mt7530_setup_port5()
+
+On the first code path, priv->p5_intf_sel is either set to
+P5_INTF_SEL_PHY_P0 or P5_INTF_SEL_PHY_P4 when mt7530_setup_port5() is run.
+
+On the second code path, priv->p5_intf_sel is set to P5_INTF_SEL_GMAC5 when
+mt7530_setup_port5() is run.
+
+Empty the default case which will never run but is needed nonetheless to
+handle all the remaining enumeration values.
+
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/dsa/mt7530.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-index 58f70cfec45a..d35f021f154b 100644
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -3204,7 +3204,6 @@ static int srpt_add_one(struct ib_device *device)
- 
- 	INIT_IB_EVENT_HANDLER(&sdev->event_handler, sdev->device,
- 			      srpt_event_handler);
--	ib_register_event_handler(&sdev->event_handler);
- 
- 	for (i = 1; i <= sdev->device->phys_port_cnt; i++) {
- 		sport = &sdev->port[i - 1];
-@@ -3227,6 +3226,7 @@ static int srpt_add_one(struct ib_device *device)
- 		}
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 68be38ae66e0..330e22abc076 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -943,9 +943,7 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 		val &= ~MHWTRAP_P5_DIS;
+ 		break;
+ 	default:
+-		dev_err(ds->dev, "Unsupported p5_intf_sel %d\n",
+-			priv->p5_intf_sel);
+-		goto unlock_exit;
++		break;
  	}
  
-+	ib_register_event_handler(&sdev->event_handler);
- 	spin_lock(&srpt_dev_lock);
- 	list_add_tail(&sdev->list, &srpt_dev_list);
- 	spin_unlock(&srpt_dev_lock);
-@@ -3237,7 +3237,6 @@ static int srpt_add_one(struct ib_device *device)
+ 	/* Setup RGMII settings */
+@@ -975,7 +973,6 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 	dev_dbg(ds->dev, "Setup P5, HWTRAP=0x%x, intf_sel=%s, phy-mode=%s\n",
+ 		val, p5_intf_modes(priv->p5_intf_sel), phy_modes(interface));
  
- err_port:
- 	srpt_unregister_mad_agent(sdev, i);
--	ib_unregister_event_handler(&sdev->event_handler);
- err_cm:
- 	if (sdev->cm_id)
- 		ib_destroy_cm_id(sdev->cm_id);
+-unlock_exit:
+ 	mutex_unlock(&priv->reg_mutex);
+ }
+ 
+
 -- 
-2.39.3
+2.40.1
 
