@@ -1,117 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F0E1798F;
-	Fri,  2 Feb 2024 14:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705FE145334;
+	Fri,  2 Feb 2024 14:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706884318; cv=none; b=pxhrTL7FMh7FsaoeiKbfG/BGHWHotOe///xMRNZwmp9lp5d9wuRFkD9FuYon4V9VIT70eg2b0Kbmolwete28GhNFERzYnRInGpBeIkY8moH4DX5tO36203d+akfHpAvaHw0zqa76xN2yEI2lgbc8XD9KcfHt/R3HKvRAFiiJDxE=
+	t=1706884346; cv=none; b=B0izVzBsRyh7WK6vd/b1YYyf3f7UbmaV/IiO+U7q7LIInZvA7QzdfE/bmZ7vCdtt2SDNP54bCn5M8N621ZPQDvjzM7QCi7MZeelHkkPtcSdRlSpw6xHsqF616tscp9oQ2BTD47WVgE5HFt2/OG2apiGrJhCm1DeYTUNGx7F+7e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706884318; c=relaxed/simple;
-	bh=z6F1Vqx6GtWdDy310WShoLrVHNDidoWv2Wvi/+HfaQc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=r+z8R2zyS7sMHqvMq85H+VFvkwzVxm1q8dbbxBv7VbiJgnjxM7F31LzcwaYtwn/zaT0v2D6ME5NZrR5Cfxufjv1MNIoaBEcmhva9KF7ZvPz6a3caxyBJ68cCVOaTQxxECOAsWACRmAXIppgN9NpDtCDm0WQjrEdpri2x/TxtDF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5AguqSU; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706884346; c=relaxed/simple;
+	bh=Lmfieud73BcgseATjFSGPCLch3+jpSxrJB6K0BO3xmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JjWunds9Z/+Ywbs1ETb6k5elCC6RLT1Qtnnjsu7zzvYw1EFfGN2+CBzVxBXr1oQq9syDVnB9T9qb36ny6WAofE6nHI2GVdftNY8dO69HhjiQz2qpn2e+4UUTNF/DLOwYpGSLtm33Toa0+agt5wpCSRsBbCAHcIeN1YeP95LOTMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQL0iDpE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5AguqSU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706884317; x=1738420317;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=z6F1Vqx6GtWdDy310WShoLrVHNDidoWv2Wvi/+HfaQc=;
-  b=T5AguqSUE35gqnSYhA30rq/0VIHybQscSkzgdPREVZlGzL8RLYdyYlpB
-   E0qPD+6qr+sNm1EE109n1GB46OWCc3MmU8Re2EZIwfu/ATh6M2X+on6se
-   EpgEj01ZAMBIxZPMtCrWvWmj561g8XSw0fY5osmYx/lfDBDbR+fUZThzD
-   iYhack2+yk9Q5L0oc1cBSz2PYEdz3vPXduUD3lV8z2qiEya7XTiLcboSU
-   eP5nBC2fAKIZnegSVAd8+ZERXauPYpvrJxKKK2x24Q4y00dUXbdUq5mC8
-   Hb4lmhuM69PAddqWP9DsAu+FZqoarEmyv1w2T/NJXctGCEN7YFxERZ03h
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="394600759"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="394600759"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 06:31:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="393298"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.50.66])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 06:31:54 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 Feb 2024 16:31:49 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/1] PCI: Cleanup link activation wait logic
-In-Reply-To: <alpine.DEB.2.21.2402021359450.15781@angie.orcam.me.uk>
-Message-ID: <a0e8ae37-cc11-2219-201e-d6740028b735@linux.intel.com>
-References: <20240202134108.4096-1-ilpo.jarvinen@linux.intel.com> <alpine.DEB.2.21.2402021359450.15781@angie.orcam.me.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQL0iDpE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F7BC433F1;
+	Fri,  2 Feb 2024 14:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706884343;
+	bh=Lmfieud73BcgseATjFSGPCLch3+jpSxrJB6K0BO3xmI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tQL0iDpEH8IIJNf858ZIKK20QpdNal19Z1ayr5RRTbxI4DDGdJ8+bstfkgab5JgE4
+	 ERNPM6+Gfi3xJinj2D1lvnGd+gzSz3lcUXh8NMjrmTwhu9GpguN6RIADgDMtDoCedt
+	 q2tBbwwIxKJy2W0TkEJ2kKGT/NhNEBnqN2aLUXRgGlKpa2bj71jPXo1wGeh52EYG1X
+	 R5RYSZhEI4J3yBmYPNx4TJGYU0dHnIGUeXR77fYmNEuptgqgkHJXXU6QiCt3AEjpld
+	 gdFYte/Uyho3ZfuGzKsnpgmM5vwQdoEb1HxEUYAKXp4Fj/z/I2MTiMpfN9hhdTgCUD
+	 3nq1Tf2wb7FnA==
+Date: Fri, 2 Feb 2024 11:32:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf bpf: Clean up the generated/copied vmlinux.h
+Message-ID: <Zbz89KK5wHfZ82jv@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-687759446-1706884309=:1020"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+When building perf with BPF skels we either copy the minimalistic
+tools/perf/util/bpf_skel/vmlinux/vmlinux.h or use bpftool to generate a
+vmlinux from BTF, storing the result in $(SKEL_OUT)/vmlinux.h.
 
---8323328-687759446-1706884309=:1020
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+We need to remove that when doing a 'make -C tools/perf clean', fix it.
 
-On Fri, 2 Feb 2024, Maciej W. Rozycki wrote:
+Fixes: b7a2d774c9c5a9a3 ("perf build: Add ability to build with a generated vmlinux.h")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Yang Jihong <yangjihong1@huawei.com>
+Link: https://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Fri, 2 Feb 2024, Ilpo J=C3=A4rvinen wrote:
->=20
-> > 1. Change pcie_failed_link_retrain() to return true only if link was
-> >    retrained successfully due to the Target Speed quirk. If there is no
-> >    LBMS set, return false instead of true because no retraining was
-> >    even attempted. This seems correct considering expectations of both
-> >    callers of pcie_failed_link_retrain().
->=20
->  You change the logic here in that the second conditional isn't run if th=
-e=20
-> first has not.  This is wrong, unclamping is not supposed to rely on LBMS=
-=2E=20
-> It is supposed to be always run and any failure has to be reported too, a=
-s=20
-> a retraining error.  I'll send an update according to what I have outline=
-d=20
-> before then, with some testing done first.
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 27e7c478880fdecd..51ac396ed9f641af 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1157,7 +1157,7 @@ bpf-skel:
+ endif # CONFIG_PERF_BPF_SKEL
+ 
+ bpf-skel-clean:
+-	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
++	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS) $(SKEL_OUT)/vmlinux.h
+ 
+ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+-- 
+2.43.0
 
-Oh I see now, I'm sorry, I didn't read all the way to the last paragraph=20
-of the commit message because the earlier one in the commit message hinted=
-=20
-the restriction is removed afterwards so I thought it was only linked to=20
-the first part of the quirk.
-
-> > 2. Handle link-was-not-retrained-successfully return (false) from
-> >    pcie_failed_link_retrain() properly in pcie_wait_for_link_delay() by
-> >    directly returning false.
->=20
->  I think it has to be a separate change, as a fix to what I can see is an=
-=20
-> issue with a three-way-merge done with commit 1abb47390350 ("Merge branch=
-=20
-> 'pci/enumeration'"); surely a bool result wasn't supposed to be assigned=
-=20
-> to an int variable carrying an error code.
->=20
->  Either or both changes may have to be backported independently.
-
-But can it be? Won't the intermediate state cause more breakage? (although=
-=20
-that obviously can only hit some very unfortunate bisecter so perhaps not=
-=20
-a big deal because one would need many holes to align, the biggest being=20
-the link has to fail training which is rare to begin with).
-
---=20
- i.
-
---8323328-687759446-1706884309=:1020--
