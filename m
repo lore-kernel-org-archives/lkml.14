@@ -1,105 +1,76 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB578062E;
-	Fri,  2 Feb 2024 20:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172DE2FE3F;
+	Fri,  2 Feb 2024 20:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706905119; cv=none; b=d49LNG+8uzbVwouRZSquhxnfRxL6+Ghqyme4OJwoeqcAM2Y5BoBbEtS5ErchDTSpdI7NcBzeSsaP6SexgKdOgSWp2yR3OUkEaJwILPaRCqQor/wkrQMbFxY0WWgyLeEmxXjHDtAn/H5sngKSd190gNidxnNCB9Zf2iDA+q3IuzM=
+	t=1706905321; cv=none; b=k28n3CRAqCy52eNFOAeGR5Hpu0CZIBKIrPEFVA8p/HcIqWIwJHPdSM1FTMkBZpNSnV9VzzQS4QlTMtu7Z3JzPkAql+XNlg9izmB2gvmI6HahyfPWe7DANInEksuQzMXFt6VEOOMg1ityV+3YvWP5vlO+TzD40lr8CJ7ZmBPUQzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706905119; c=relaxed/simple;
-	bh=mh+mo38fsEQgb9l3Kuwv1eN4wevPn1ndoe/G9f1R3Wg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uHn5/lGzD9U37WtlaMGvwzelWDLRrcQIDnJCfepOltQ5rDb4MJuMAFXwkM6HC1hBrW3/ilGHEthFcS5qF3tjFjMM2i3q5Q6q4gwR3kQ3qWEjDdyGhmKdu8UdXe2mmHMRIMExcx3ve0dHOyWy0idtQje/U2h/bfGF1aDqWggLwwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=j0YbsdI3; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1706905321; c=relaxed/simple;
+	bh=+l6xmMtGx88Ja2KwOafyi6g4YZxkCJK5ea96nkAej3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aT+s1UIoPpPCNjMVvPi+fEHUjcpwH7GRgLheTaenTFz6bbMUduqZIJNyohopXZK+upfbsbbaRPwvIw5dNc6+e8Ry/FFvrrClRS1puWMOiQJUx+TVLz1EyzCyzvXka1WX5fCXa2hAHXPtD7KsVLpSKCR5Z/eOLb0xBG1Pp/sxjbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHfONgv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="j0YbsdI3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1706905115;
-	bh=mh+mo38fsEQgb9l3Kuwv1eN4wevPn1ndoe/G9f1R3Wg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j0YbsdI3y6vCPgWvcLlBfSENnF1fM18wQKlrQ47Z6vS/Lu+5uXdTUXoJtf3p1E10p
-	 20YTd4Yysds9Fc8+0b6V+OsfbT17mhbkv37sH0RogmtvLcyJvkNXvcbLGe74TWbrhS
-	 HUx5JRvOie7xZ1Qqhc3oXMoE8WJJLhi/VkVjuI8CQ7qNhPK+No8OaIzt+DQfEKdgYt
-	 woV0Cd/riDC8CadDDjBDCpwxlRatUyiNLEwFXzLL03k+hlFBnEBK1c1gytA7iBfe3e
-	 AMPZTBIMrqrQGCYQEWxcSx259uC6FjHPECXXrtL/pbBU/8IJthIyCDSvplBrQc2OEO
-	 hD2B6tCO0gM5A==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TRRtM1f6yzXBq;
-	Fri,  2 Feb 2024 15:18:35 -0500 (EST)
-Message-ID: <f3ec50a5-ff5e-41ae-ab2f-7319a18381e2@efficios.com>
-Date: Fri, 2 Feb 2024 15:18:36 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHfONgv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C077C43390;
+	Fri,  2 Feb 2024 20:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706905320;
+	bh=+l6xmMtGx88Ja2KwOafyi6g4YZxkCJK5ea96nkAej3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vHfONgv5bp3nw/5BQQBxFABlpD4dswpeqWaZ9kdLpNnG25ND9Ibg1qtNTnwxNP0k+
+	 UjTINVQLu3iGG19vu3S5zvxAfpiIqRMZe15H2ktSLwiY3J9M9p/ye/AmVfAGCjHU6G
+	 UDpmWstk/3Yuh+20glbCwJOqYGQuWnxKfUqkfMZo4OR8InE2j1wMTUIqyBWGAxpNRm
+	 UAB1adOXcwtSWxPlKUX2hO6CwPUtlWl/Gs1cHYkAjJEOZw2BPS7sdYN3Zybmwza90b
+	 x7u/uahun+vLqGdLOSdo1F+fNO/EbjeRR+ddEjCQFi3KhyNnoc1/p5679HFl0tdA5o
+	 1cEWNWSfAotMw==
+Date: Fri, 2 Feb 2024 14:21:58 -0600
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Charles Hsu <ythsu0511@gmail.com>,
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: trivial-devices: sort entries
+ alphanumerically
+Message-ID: <20240202202158.GA1007609-robh@kernel.org>
+References: <20240201075805.7492-1-krzysztof.kozlowski@linaro.org>
+ <5461a237-1df4-4077-86ef-e9ff6ff17e27@roeck-us.net>
+ <20240201-silliness-unfair-265a0d896377@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 2/4] dax: Check for data cache aliasing at runtime
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>,
- Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>,
- Russell King <linux@armlinux.org.uk>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- dm-devel@lists.linux.dev
-References: <20240131162533.247710-1-mathieu.desnoyers@efficios.com>
- <20240131162533.247710-3-mathieu.desnoyers@efficios.com>
- <65bab567665f3_37ad2943c@dwillia2-xfh.jf.intel.com.notmuch>
- <0a38176b-c453-4be0-be83-f3e1bb897973@efficios.com>
- <65bac71a9659b_37ad29428@dwillia2-xfh.jf.intel.com.notmuch>
- <f1d14941-2d22-452a-99e6-42db806b6d7f@efficios.com>
- <65bd284165177_2d43c29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <6bdf6085-101d-47ef-86f4-87936622345a@efficios.com>
- <65bd457460fb1_719322942@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <5e838147-524c-40e5-b106-e388bf4e549b@efficios.com>
- <65bd4d18cab98_7193229421@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <65bd4d18cab98_7193229421@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201-silliness-unfair-265a0d896377@spud>
 
-On 2024-02-02 15:14, Dan Williams wrote:
-> Mathieu Desnoyers wrote:
-> [..]
->>> Thanks for that. All of those need to be done before the fs goes live
->>> later in virtio_device_ready(), but before that point nothing should be
->>> calling into virtio_fs_dax_ops, so as far as I can see it is safe to
->>> change the order.
->>
->> Sounds good, I'll do that.
->>
->> I will soon be ready to send out a RFC v4, which is still only
->> compiled-tested. Do you happen to have some kind of test suite
->> you can use to automate some of the runtime testing ?
+On Thu, Feb 01, 2024 at 06:32:09PM +0000, Conor Dooley wrote:
+> On Thu, Feb 01, 2024 at 05:25:13AM -0800, Guenter Roeck wrote:
+> > On 1/31/24 23:58, Krzysztof Kozlowski wrote:
+> > > Sort entries alphanumerically.  This was a semi manual job with help of:
+> > > 
+> > >    cat Documentation/devicetree/bindings/trivial-devices.yaml | grep '    - ' > old
+> > >    cat old | sort -n > new
+> > >    diff -ubB old new
+> > > 
+> > > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > 
+> > 
+> > Acked-by: Guenter Roeck <linux@roeck-us.net>
 > 
-> There is a test suite for the pmem, dm, and dax changes
-> (https://github.com/pmem/ndctl?tab=readme-ov-file#unit-tests), but not
-> automated unfortunately. The NVDIMM maintainer team will run that before
-> pushing patches out to the fixes branch if you just want to lean on
-> that. For the rest I think we will need to depend on tested-by's from
-> s390 + virtio_fs folks, and / or sufficient soak time in linux-next.
+> z sorts before a, please fix in the whole file.
 
-I suspect this will be necessary. There are just so many combinations
-of architectures, drivers and filesystems involved here that I don't
-think it is realistic to try to do all this testing manually on my own.
+I don't follow this comment.
 
-I prefer to voice this up front, so there are no misplaced expectations
-about testing.
-
-Thanks,
-
-Mathieu
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Thanks,
+> Conor.
