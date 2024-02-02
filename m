@@ -1,129 +1,153 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A4FFF500;
-	Fri,  2 Feb 2024 03:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx1.135e2.dev (unknown [192.227.193.244])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673728479;
+	Fri,  2 Feb 2024 03:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.227.193.244
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706844342; cv=none; b=a63AJoo7CeOOZKJp7NLSP5d67ISW5djIaYRZlbbbn/nrzL7XkNSmnrSlL3/jceq05QKE2tx1Y15A8eNbalzFDPd5q8gCD02nPw5NqGQo9WWpTu90Ceb3oWgq8KG9O0cBLEnW7UGrzxUP7oYXcvoLtLaf40zNBuVG13L8vSmiscI=
+	t=1706844472; cv=none; b=WBKHLo54IhCsOISgqo5qr6USpVQuSsWxDR0jJ5zIV7cdEVNtCqdEHRKy4n5VCDfbInDMKQTuQ++AkrSfHzmmXhnW4r+6zpdPbO22ww9300cypTxDXF7BhBRLEnwwQCovWfc0lb8csxUJdbNXJZA/uOZM0ThQ4TrdW36J0PwGb40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706844342; c=relaxed/simple;
-	bh=5FqF6XjRAP7FUafdp3VbHh6CWxWN40EUhF23QZ+j5mE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLTY7Ww9CXRSXwKgzP9w2oVWAtZjF4Np6VHvzz6QUg8zvtnBvpRxS0xCDyyx3luAqtGu2cWOjzBKFbcgvgjir6ZWadjVzxzCRMQo2WDIBt/8rf5heXrMTDFN+0GHxZgn5DdktprHj/1bapE2aVn2+nv6sN2zD97MArV0SMvDgXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aawybKbj; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1706844472; c=relaxed/simple;
+	bh=Si4Fpi4Zt3/wkiQXc7LEba2uEw20yGovMPeMTq4B4jc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Idu4JczeFr+PpT1ykk24Fxj8YGtNNFhhaAvVlHbkN+VFb8hB2DNXkLeMbmtLZzI14a/bJTitlyLuB2t5cZ8MMR7vN4mCNJSX9lrkEsdiDwFqpwItsYwvs7zChmDrCqyS9vjaYiTxC58yK8typR1DuZaoQ10GJeGu8+wtln7/al8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=135e2.dev; spf=pass smtp.mailfrom=135e2.dev; dkim=pass (2048-bit key) header.d=135e2.dev header.i=@135e2.dev header.b=BxlicnwD; arc=none smtp.client-ip=192.227.193.244
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=135e2.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=135e2.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aawybKbj"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id DF85B206FCE2; Thu,  1 Feb 2024 19:25:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DF85B206FCE2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706844340;
-	bh=rBO9aX1g8nZoaH4O94txNiEXsHgf2YweqLUV2Mz2V5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aawybKbjyvNmR21bUKDWIESmZatr9ZF7K0kQRiVSnVEbqwlHg6o+fk2/f9jD8UWH2
-	 VCRWwEJhyMKTjwinwPKR816umJQbaOFqQUT2FMgsfM0cXo+y3wAjMJhuv1pMCDO2TW
-	 XaylzByrLYdXl5olfUBf1c7DiO5g7kJLbQ3hRJ5g=
-Date: Thu, 1 Feb 2024 19:25:40 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"ssengar@microsoft.com" <ssengar@microsoft.com>
-Subject: Re: [PATCH] x86/hyperv: Use per cpu initial stack for vtl context
-Message-ID: <20240202032540.GA13603@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1706811931-3579-1-git-send-email-ssengar@linux.microsoft.com>
- <SN6PR02MB415750EE9132ECB049D7B20AD4432@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=135e2.dev header.i=@135e2.dev header.b="BxlicnwD"
+DKIM-Signature: a=rsa-sha256; bh=iK915+z9S4n8pu5RcTV8cEzXvYlmbw06d1vH3FCQZbQ=;
+ c=relaxed/relaxed; d=135e2.dev;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
+ i=@135e2.dev; s=default; t=1706843543; v=1; x=1707275543;
+ b=BxlicnwDy8+jnrrSQIEg6N98s+HdFzwAF4G5/OxrDhQAgCoIojy8GmPLzEo1O836zunQfqjD
+ ddOu3etzgisZ9PoUxwgAZZt18/th19+Nclxp6a6y6Sw+axonhzb9q6A+/gaBAH2z1bE6AWGWjdL
+ uCAP//VRJTVIQWqHnetcbdDVmcRtV6Xm5jHFPJzK8QjJfkIDeHdGVqSptH71FWAvpv9DLskUBYe
+ odFEwSF4GeBGbXmrfBSuKcI2hcYmKFP7lhp46EZ2svwjbxG3I2kvvTdXOiRY4NIMoStfjUMpfGx
+ XMFu9MFUUs2ES7c+m7fSwcJD5QIZtnoevacwiVxlpnLRA==
+Received: by mx1.135e2.dev (envelope-sender <135e2@135e2.dev>) with ESMTPS
+ id bbaa66b6; Fri, 02 Feb 2024 11:12:23 +0800
+From: Mole Shang <135e2@135e2.dev>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ pierre-louis.bossart@linux.intel.com, peter.ujfalusi@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, sound-open-firmware@alsa-project.org
+Subject:
+ [REGRESSION] 6.7.0: ASoC: SOF: refactoring breaks sof-rt5682 audio on
+ chromebook; successfully bisected
+Date: Fri, 02 Feb 2024 11:12:18 +0800
+Message-ID: <6013930.lOV4Wx5bFT@ayana>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB415750EE9132ECB049D7B20AD4432@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Feb 01, 2024 at 07:53:59PM +0000, Michael Kelley wrote:
-> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Thursday, February 1, 2024 10:26 AM
-> > 
-> > Currently, the secondary vCPUs in Hyper-V VTL context lack support for
-> > parallel startup. Therefore, relying on the single initial_stack fetched
-> > from the current task structure suffices for all vCPUs.
-> > 
-> > However, common initial_stack risks stack corruption when parallel startup
-> > is enabled. In order to facilitate parallel startup, use the initial_stack
-> > from the per CPU idle thread instead of the current task.
-> > 
-> > Fixes: 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE")
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_vtl.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> > index 96e6c51515f5..a54b46b673de 100644
-> > --- a/arch/x86/hyperv/hv_vtl.c
-> > +++ b/arch/x86/hyperv/hv_vtl.c
-> > @@ -12,6 +12,7 @@
-> >  #include <asm/i8259.h>
-> >  #include <asm/mshyperv.h>
-> >  #include <asm/realmode.h>
-> > +#include <../kernel/smpboot.h>
-> > 
-> >  extern struct boot_params boot_params;
-> >  static struct real_mode_header hv_vtl_real_mode_header;
-> > @@ -71,7 +72,8 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
-> >  	struct ldttss_desc *ldt;
-> >  	struct desc_struct *gdt;
-> > 
-> > -	u64 rsp = current->thread.sp;
-> > +	struct task_struct *idle = idle_thread_get(target_vp_index);
-> 
-> The "VP index" of a vCPU is a Hyper-V concept, and may not match
-> the Linux concept of a CPU number.   In most cases, they *do* match,
-> so your testing of this patch probably worked.  But there's no guarantee
-> that they match.  The Hyper-V TLFS does not even guarantee that VP
-> indices are dense or that they start with 0 (even though they do in
-> current versions of Hyper-V).
-> 
-> As a different kind of example, in a kdump kernel, Linux labels the
-> booting CPU as CPU 0, but it may not be the 0th CPU in the guest
-> VM, and hence may not have VP index of 0.  Of course, in a kdump
-> kernel nr_cpus is typically 1, so you aren't bringing up secondary
-> CPUs.  But sometimes kdump kernels boot with nr_cpus=2 or greater,
-> in which case the mismatch would occur.
-> 
-> This conceptual difference in VP index and Linux CPU numbers is why
-> the hv_vp_index array exists -- to map from a Linux CPU number to a
-> Hyper-V VP index, and thereby avoid assuming they are equal.
-> 
-> So before hv_vtl_wakeup_secondary_cpu() calls this function, it needs
-> to separately map the apicid to a Linux CPU number, which can then
-> be passed to idle_thread_get().
-> 
-> Michael
+I'm relatively new here, first time reporting a regression, so apologies in 
+advance if I'm doing something wrong.
 
-Thanks for the review. I will fix this in V2.
+I'm using Arch Linux (linux-mainline kernel) on my chromebook Acer Spin 713-2W 
+(Voxel), and after upgrading linux-mainline from 6.7-rc4 to 6.7-rc5 the audio 
+setup isn't working anymore. Firstly I suspected its some changes in the sof-
+firmware, yet got no luck in upgrading sof-firmware (2023.09.2 -> 2023.12). 
 
-> 
-> > +	u64 rsp = (unsigned long)idle->thread.sp;
-> >  	u64 rip = (u64)&hv_vtl_ap_entry;
-> > 
-> >  	native_store_gdt(&gdt_ptr);
-> > --
-> > 2.34.1
-> > 
-> 
+On certain chromebooks, audio setup needs custom ALSA ucm confs [1], but after 
+contacting the chromebook-linux-audio developer [2], I think it's not a conf 
+problem, but rather a kernel regression.
+
+After hours of bisecting, the first bad commit 31ed8da (ASoC: SOF: sof-audio: 
+Modify logic for enabling/disabling topology cores) ensures the regression. 
+demsg log pasted below:
+
+// before 31ed8da, working
+[   61.572587] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
+0x60010000 (msg/reply size: 108/20): -22
+[   61.572593] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
+stream 1
+[   61.572594] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
+[   61.573247] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
+0x60010000 (msg/reply size: 108/20): -22
+[   61.573250] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
+stream 1
+[   61.573251] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
+[   61.573888] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
+0x60010000 (msg/reply size: 108/20): -22
+[   61.573892] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
+stream 1
+[   61.573893] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
+[   61.574570] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
+0x60010000 (msg/reply size: 108/20): -22
+[   61.574572] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
+stream 1
+[   61.574573] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
+
+
+// after 31ed8da, broken
+[   48.930740] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
+0x30020000 (msg/reply size: 12/0): -13
+[   48.930762] sof-audio-pci-intel-tgl 0000:00:1f.3: failed to free widget 
+DMIC0.IN
+[   57.235697] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
+0x30030000 (msg/reply size: 16/0): -22
+[   57.235701] sof-audio-pci-intel-tgl 0000:00:1f.3: sof_ipc3_route_setup: 
+route DMIC0.IN -> BUF4.0 failed
+[   57.235703] sof-audio-pci-intel-tgl 0000:00:1f.3: 
+sof_ipc3_set_up_all_pipelines: route set up failed
+[   57.235704] sof-audio-pci-intel-tgl 0000:00:1f.3: Failed to restore 
+pipeline after resume -22
+[   57.235706] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.235926] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.235966] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236006] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236041] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236074] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236107] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236141] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236173] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236205] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+[   57.236239] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
+snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
+
+Steps to reproduce:
+
+- Run chromebook-linux-audio script [2] (this would install custom sof-rt5682 
+ucm confs [1] into /usr/share/alsa/ucm2/conf.d/sof-rt5682 and write a line 
+`options snd-intel-dspcfg dsp_driver=3` to /etc/modprobe.d/snd-sof.conf)
+- Reboot, gets audio working on kernels before 31ed8da
+- Install latest stable kernel (6.7.3), audio broken
+- Install latest git kernel (6.8-rc2), audio broken
+- Revert 31ed8da, build upon latest linux-git (6.8-rc2), audio working
+
+Apologies for my busyiness that I should have reported it long before the 
+regression enters stable and lts, but sadly linux-lts (6.6.13) seems to be 
+affected too [3].
+
+Please let me know if there's any other thing that I can help debugging.
+
+-- Mole Shang
+
+[1]: https://github.com/WeirdTreeThing/chromebook-ucm-conf/tree/main/sof-rt5682
+[2]: https://github.com/WeirdTreeThing/chromebook-linux-audio/issues/70
+[3]: https://github.com/WeirdTreeThing/chromebook-linux-audio/issues/
+70#issuecomment-1911048309
+
+
+#regzbot introduced: 31ed8da1c8e5e504710bb36863700e3389f8fc81
+
+
