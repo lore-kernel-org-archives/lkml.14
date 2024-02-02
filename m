@@ -1,61 +1,61 @@
 Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BA7182B9
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 20:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF7B15E5B8
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 20:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706904276; cv=none; b=WhIsAO/un08cc35b4Tse4N5PGRmm4C7v1FNrium8kVqpc131oGvHco2hFoPUofms3jnZ7gz7k69h3EJ3DV+8ObT4t9wzVxXgz82NScvtSK6ZIathAoqOBkM1xGbjt8HS9gQ4LH1UcbFfP1hUthhNJfZa2iQpA3t/+CJlsggOcIU=
+	t=1706904430; cv=none; b=JCWpHUAMQvWN82ti2Ha19mJCBNQOAxoNA4yFddWiAFW5udRhygQV34dd/7eEloCjUv5Kdp3JuAfqCgpbdYDLPFDtKSJra0Gkg65MNPaCQsHPU9rk0t+RsCt2mUR8LSFvET97ez30UkqhsMc6mAKpjr0JyWEcmNLf56mN4MzYByM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706904276; c=relaxed/simple;
-	bh=V1VQqFLAkrpbWV7SZVFnSmm/4adUuUJqwtYUdKoILuw=;
+	s=arc-20240116; t=1706904430; c=relaxed/simple;
+	bh=Te5zVoY4lGAuebG0OZci+Zfj6mpoDeO64xLwy1nbzu4=;
 	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=McRU+xXdckjiOwH1uCPAsCto13pwIxHjAfIWb+hT6iAfDSOn37BywyAyD2RA667Ea74UaeTtTyxKY7HlSc7EvGv/bR5pQjptPV2MiMMY5+CS6hyGy3/OnTbRlQl/L9fTBTUttrnHRCRnyMkvwce3LT1yNWwE4xKeoOUeY5geOJ8=
+	 Content-Type; b=sfUZRyL7qcAK2wOoU3hX47nRY6ONPJAEZv4kqum6HVHnbikFdGaE4hY/PvKKItyakWxpIeMNSJUnxP9uass+a4Y4e4xxNVL0SvyOH6H3M7fZfa32XMRXiaUX43+6ya+j/nmac6qivMofgjVAHWR4pLTBrTymsjrYvQqbGNO+APc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c0001148c3so193584939f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 12:04:34 -0800 (PST)
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bad62322f0so265511039f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 12:07:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706904274; x=1707509074;
+        d=1e100.net; s=20230601; t=1706904428; x=1707509228;
         h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V1VQqFLAkrpbWV7SZVFnSmm/4adUuUJqwtYUdKoILuw=;
-        b=wMA6kD/+PqkarntW7jGl9QVFr2VKZP9zMls+nRh8BuX4oymCUy/ht+/y750fJIFvM2
-         AeIxdpqXaMSvb/bQ819x79rI4holeQbL0f9EAyTCiKhQK+PkVK3Aef5hVYRZXEOTg52/
-         nzoAeD7riBYemuYW77lnva8Crgk62CX6ljb51usTbn8LWQlOST0wh/+lOEssUu3zV1cS
-         WBywat9x1BVnWhCOVvFO+GVOYmydewAzlHiy1UswxUlV1dZ95Kuz9w2BKJQd5pxhki/Z
-         WW3IYmo7Bem3XLsfdr16Hr9nb3rXG1WSgJezIp3ATl6RAlI35WwyxzhoCEU7PZnR3Mpq
-         lfjg==
-X-Gm-Message-State: AOJu0YwyL+Ip7MEAF8b90bhfqOMY3KMHcFPydjX68y421hK2nxoDqvIZ
-	ieVc8oNANBY/iAKJcj2oUGBuFF1Q3nJ/rDtgfJNqYdJGOV4eV7JlYhXMgV62E0oQfE1YRF3kPtX
-	lpomTgyoEUtx2NX3pmctVSzU1K3+HriIbYGacMm43TZfEqxhBRAcsngIX3w==
-X-Google-Smtp-Source: AGHT+IHhVQDv08DHAQTVM37VeRSedTQoMWl0+0fU8XPCxTleTIIWxK3pON4e42BaoNW9JeV5a6hE3evIy4xZJHpTjL0AySDeqnI+
+        bh=Te5zVoY4lGAuebG0OZci+Zfj6mpoDeO64xLwy1nbzu4=;
+        b=CZp1j42A+q1Z4Z5YMGKTQqx4q8nSGqRInh87eA+1rLh9B61N5p1UT3MDnoXsmmkO74
+         dStSQ2ntafpuuj3rcxuc2m8gOnyqU7u3+i9QSbg+0fFcs7hEQHf9gaME+w6ptA1/ti7e
+         GXilNbQR8UBbczsfEctOu8gCnfv/8eZuAA/a91VYmCMFOXPbnpKujKFPQiKi+NxZtSmw
+         LOvfBi9iNlAeHAMwVdicoccYGfS5hCoHwxY7h5wNFwZMDdos8hzqn2v1YGTyes/5nPVp
+         45z/RqcuEduN/TfgO8k7Xmy9/2wNiz7kAuZKt2T1GpPNj/HJmTYmJ8Cp0QO6BVvULAIU
+         dDQA==
+X-Gm-Message-State: AOJu0YzGHxAlQh0Cy+NmQ4RD2wlrsoqPjTnpRW3wFQVhUJQbCufYoM8/
+	dF2189XCYgPbLh89Bme3SLv7pfsVbdnvQB10A5UwmhVXZl5En5epBzXGcQ/NOljf9RtI97qKN2Q
+	SluS/YLHN1+KD6utQjup6/ijNRndyV+/abqiOGiEiWRi3PBc6ZlIhIN4EAw==
+X-Google-Smtp-Source: AGHT+IEWzOl2OyHdEbF9n1McQox1dJfLFfHLAgV4JDrOBh74rX68utrXZVU3qwpqCGTzSRFLd3BBc39qb1Hcac6SYGD6t/uzV+A+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a04:b0:363:b5e3:1082 with SMTP id
- s4-20020a056e021a0400b00363b5e31082mr162053ild.4.1706904274086; Fri, 02 Feb
- 2024 12:04:34 -0800 (PST)
-Date: Fri, 02 Feb 2024 12:04:34 -0800
-In-Reply-To: <000000000000936c2d0606280cb2@google.com>
+X-Received: by 2002:a05:6e02:20e5:b0:363:812d:d6a8 with SMTP id
+ q5-20020a056e0220e500b00363812dd6a8mr485309ilv.0.1706904428342; Fri, 02 Feb
+ 2024 12:07:08 -0800 (PST)
+Date: Fri, 02 Feb 2024 12:07:08 -0800
+In-Reply-To: <0000000000009d3fa2060a3575ad@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ec387a06106b9e75@google.com>
-Subject: Re: [syzbot] Re: possible deadlock in hci_dev_do_close
-From: syzbot <syzbot+4e3a76c5c505a3f49083@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
+Message-ID: <0000000000001df5bd06106ba8b0@google.com>
+Subject: Re: [syzbot] Re: possible deadlock in hci_error_reset
+From: syzbot <syzbot+47d22a47f6bd21399c93@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
 ***
 
-Subject: Re: possible deadlock in hci_dev_do_close
+Subject: Re: possible deadlock in hci_error_reset
 Author: pchelkin@ispras.ru
 
 #syz dup: possible deadlock in hci_rfkill_set_block
