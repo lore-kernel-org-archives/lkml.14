@@ -1,207 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25309134CD9;
-	Fri,  2 Feb 2024 18:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E992C136985
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 18:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706899246; cv=none; b=rF4Q87dXAxsDjuK2ARxxkOrwC4Qm8UV/5wZIKr4Gik1DXhGLgRsm2b/ouoKwSuNYYuEb6mlIw77B/XA4PqUvnZPytly9/MbO2JYUeVZqj6Y3p292YDZUNTzAqFfVyQ1fUo0xwLaArJTjtr3LRtoWf9GjFAb2HwKnV5ob1ooTTYI=
+	t=1706899248; cv=none; b=FoftVz9Vv7Vuxn+C5Na1WtXtEhckuNy1aCE7T/by+2cbvtt49exYU+Mfh5GkJCIF4UGA0ONtlW5+F1bvYUTTIdWg/U/iMyPAsepHgq0yOGYuRFqIPYTiCLjpFKxgNUAA1C/v3yVGqIKUIfEWDvv/Ntse++sNn+Hh87LISLS3jVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706899246; c=relaxed/simple;
-	bh=XCTM5YShZa4xIIctJvmxroRS23j3adEVF/nKbOlAr7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TgaGGtVD87qyAn67gscOuCF4t7e8Xaugn2o9Mi26zBnN5ZXDFmZElVYefIbW/VGkvnINkO1ZT50bonvbHcda+FIUAUn42xDpC84hjeBBp7wNzIAm0G4htYkCc5ytVvd5/4Ff3r6/GauXW9Pv+t1xPsWbx+bxqHBMf3Yo1xS/Cmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQOpnmLA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706899248; c=relaxed/simple;
+	bh=iDIZyoYwVMCcH6jvBcxQvEoGmUeiAgOkJkI2EMrtO0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=frJquPMzXMGU5vF2iNEZEbAeshqSa0zHFVoXMpSxPFfHSCyrK2MlgBDzfaOfUrxq4u0oqwYfWlWbtZbQJFnr0YnWauK0zRFCNGc6Dm1X+Ix7vXCT1mCzLNMxVxue+nCfgYdavyZt+yNSr2lZQM1AerRfVhc5CxaQQ8z/rYjaIrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=blbQL5nW; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQOpnmLA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFD7BC43390;
-	Fri,  2 Feb 2024 18:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706899245;
-	bh=XCTM5YShZa4xIIctJvmxroRS23j3adEVF/nKbOlAr7s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QQOpnmLA38KbU0IeL42/BcmvMoD5b/nakpnnrIPhuzqWfxT8dLgemjVpWzgGuIdGV
-	 3/vnBhjeFLNTpcBiZ/zqFyZdqolLdvs98EXpWkacA/BYkre79/JqM5ZlVahAJ29CLb
-	 70P5qw3EhZCzu96RkEgkNAD3K6KP+XDFPE+7sPSQf4EhyUtWVKLL9waUgGTSMGzBOc
-	 e1zi6gUwGvQ1BxJ48IePcFmsEuFS185CFceMt5SbSDbuI5OnPbNfT1ZS1g9mYzhI6p
-	 nfEv8JnUUPhkPx7ocvG7tq/6bS3hWSPT40LP/bftsz7/jXEEvr4R7HAq9c1h/c0V72
-	 fG5cKYQjNFNzQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Lennert Buytenhek <kernel@wantstofly.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	dlemoal@kernel.org,
-	linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 18/21] ahci: add 43-bit DMA address quirk for ASMedia ASM1061 controllers
-Date: Fri,  2 Feb 2024 13:40:05 -0500
-Message-ID: <20240202184015.540966-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240202184015.540966-1-sashal@kernel.org>
-References: <20240202184015.540966-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blbQL5nW"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d7431e702dso21052385ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706899246; x=1707504046; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ETc3MSsRJzGBMpx74CiCs8JTE3lIxFPwksv6ifKyi6k=;
+        b=blbQL5nW1pBD3dfMOgaSSR9ZMRi8VSRr5eU94ae1t2iM+fSh5G6EF8LjLV67K/V1wP
+         3QVAzzjL5pFG6BgAOnMRLU6PnzdznHV3V00bZybcRzhlmKemA87vPa69KBu795si2UHV
+         2sSKKa2gvP1ZSG5FtYIL7+iHSJ0PY394Le/npjkrLcUBo7vttklGun3FeWO7/M3g1So5
+         i21svC3xGm5YOoa18E3bgDkUI2sneQXd6qt3NHx9CgOXqEKiUted2VoS3O/tM/4y5r9P
+         RB2rKNHyAGChJy234tJ/N+sEjELXAgal9wRxg7YymJTqC7fGCn+Bumn/R+iKXuI1tFwP
+         3ecA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706899246; x=1707504046;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ETc3MSsRJzGBMpx74CiCs8JTE3lIxFPwksv6ifKyi6k=;
+        b=CK8wDrk2FjBaAc3oFZeZgeIPN5OTelFkVsOQ4oYSwSkYgTXBPGH8YmfNMAp4dlCxLB
+         TIZgvjWBA2wXNoBLN2er47qtqOtvA/n6Yf3AqdA0nO6JYGiUXd6gf0FJdE59DV/wbZm4
+         zLPhIJqddBBLD/2FfBKEu/0nW2IzYdISDEFV8XC8IVITCAQa7uVVmDpDzizZeyA/fLzs
+         6DyqDZYTVdnIsEZHZsHd2I2XvTAYnIK2gyXBoAvvHnMBrqq7hm0VHmBTvh8eQztcjgP3
+         cSb8rJtFdk2LJxTGoryo+fK3TCunBJDsozIRO/noF7J3WQ4hbQuyfziLqRV/SaP5BL1T
+         nJ/Q==
+X-Gm-Message-State: AOJu0YxwuYMKtAEoVVBFLkClXORvbsLMG+XXPEG4rKhIIFjnLadoxQ8O
+	gbYtvBZW/N43JM5vwXBOp+13u8lJXlCEZ9CSKZhTrmTIRaipwAcg
+X-Google-Smtp-Source: AGHT+IHMI7ICrbVNiKX1z+Oto6aNGJCe3UR3TXyy7FNW9KQC6RygHNftgy0M8m1opYzNpMzVSmMM5A==
+X-Received: by 2002:a17:903:1c5:b0:1d9:3d3:484e with SMTP id e5-20020a17090301c500b001d903d3484emr10657563plh.64.1706899246034;
+        Fri, 02 Feb 2024 10:40:46 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWkt2T97j6wAXGdP0Lg5EqXhVHLeLedErjtgtd99megDpwMqlK4zyrXBKnA3xU/o+78cBPyVBNOzEanbeErAAGvqqFf7oIDKdkfCQg6z+LyJHuiIYLYniDl2BRKAk76ROCQylDG2PBptQR9j3A/+ICsQPMEfDJeYEJ5EHWYb47PXbLbMDq9D8Lm8Pf3P4I15Bxq0xMnv3ty8fJLobxS2XMO
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id l4-20020a170903244400b001d9620dd3fdsm1889607pls.206.2024.02.02.10.40.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 10:40:45 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 2 Feb 2024 08:40:44 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
+	Naohiro.Aota@wdc.com, kernel-team@meta.com,
+	Bjorn Andersson <andersson@kernel.org>
+Subject: Re: Workqueue regression
+Message-ID: <Zb03LDPmMcBU0-Gj@slm.duckdns.org>
+References: <b3d08cd8-d77f-45dd-a2c3-4a4db5a98dfa@kernel.org>
+ <ZbxK01xuA_FFWaE6@slm.duckdns.org>
+ <17cae1aa-98a8-48f4-adf3-2ddfc451bef6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.15
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <17cae1aa-98a8-48f4-adf3-2ddfc451bef6@linaro.org>
 
-From: Lennert Buytenhek <kernel@wantstofly.org>
+Hello,
 
-[ Upstream commit 20730e9b277873deeb6637339edcba64468f3da3 ]
+On Fri, Feb 02, 2024 at 01:31:01PM +0100, Konrad Dybcio wrote:
+> > If the system doesn't become live enough after suspend/resume cycle to get
+> > more info, the following might help:
+> 
+> Looks like it's too far gone indeed..
+> 
+> > 
+> > $ echo test_resume > /sys/power/disk
+> > $ echo disk > /sys/power/state
+> 
+> Sadly, hibernation is not a thing on this platform.. Without going into much
+> detail of how messy the power management stuff is, you can either have
+> "on", "off" or "power collapsed" (bound to s2idle).. Trying to trigger this
+> sequence makes the thing lock up and die due to unclocked accesses with or
+> without the WQ regression.
 
-With one of the on-board ASM1061 AHCI controllers (1b21:0612) on an
-ASUSTeK Pro WS WRX80E-SAGE SE WIFI mainboard, a controller hang was
-observed that was immediately preceded by the following kernel
-messages:
+I see, so, if you enable CONFIG_PM_DEBUG, CONFIG_PM_ADVANCED_DEBUG and
+CONFIG_PM_SLEEP_DEBUG, there will be /sys/power/pm_test file which allows to
+select the stage at which suspend is going to abort. Can you please play
+with it and see whether you can reproduce the issue while maintaining the
+console output?
 
-ahci 0000:28:00.0: Using 64-bit DMA addresses
-ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00000 flags=0x0000]
-ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00300 flags=0x0000]
-ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00380 flags=0x0000]
-ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00400 flags=0x0000]
-ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00680 flags=0x0000]
-ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00700 flags=0x0000]
+Can you also make sure that the system is actually dead, not just the
+console? e.g. by pinging from network?
 
-The first message is produced by code in drivers/iommu/dma-iommu.c
-which is accompanied by the following comment that seems to apply:
+Thanks.
 
-        /*
-         * Try to use all the 32-bit PCI addresses first. The original SAC vs.
-         * DAC reasoning loses relevance with PCIe, but enough hardware and
-         * firmware bugs are still lurking out there that it's safest not to
-         * venture into the 64-bit space until necessary.
-         *
-         * If your device goes wrong after seeing the notice then likely either
-         * its driver is not setting DMA masks accurately, the hardware has
-         * some inherent bug in handling >32-bit addresses, or not all the
-         * expected address bits are wired up between the device and the IOMMU.
-         */
-
-Asking the ASM1061 on a discrete PCIe card to DMA from I/O virtual
-address 0xffffffff00000000 produces the following I/O page faults:
-
-vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000000 flags=0x0010]
-vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000500 flags=0x0010]
-
-Note that the upper 21 bits of the logged DMA address are zero.  (When
-asking a different PCIe device in the same PCIe slot to DMA to the
-same I/O virtual address, we do see all the upper 32 bits of the DMA
-address as 1, so this is not an issue with the chipset or IOMMU
-configuration on the test system.)
-
-Also, hacking libahci to always set the upper 21 bits of all DMA
-addresses to 1 produces no discernible effect on the behavior of the
-ASM1061, and mkfs/mount/scrub/etc work as without this hack.
-
-This all strongly suggests that the ASM1061 has a 43 bit DMA address
-limit, and this commit therefore adds a quirk to deal with this limit.
-
-This issue probably applies to (some of) the other supported ASMedia
-parts as well, but we limit it to the PCI IDs known to refer to
-ASM1061 parts, as that's the only part we know for sure to be affected
-by this issue at this point.
-
-Link: https://lore.kernel.org/linux-ide/ZaZ2PIpEId-rl6jv@wantstofly.org/
-Signed-off-by: Lennert Buytenhek <kernel@wantstofly.org>
-[cassel: drop date from error messages in commit log]
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ata/ahci.c | 29 +++++++++++++++++++++++------
- drivers/ata/ahci.h |  1 +
- 2 files changed, 24 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 2b8f0c3c3879..20761eeea410 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -48,6 +48,7 @@ enum {
- enum board_ids {
- 	/* board IDs by feature in alphabetical order */
- 	board_ahci,
-+	board_ahci_43bit_dma,
- 	board_ahci_ign_iferr,
- 	board_ahci_low_power,
- 	board_ahci_no_debounce_delay,
-@@ -128,6 +129,13 @@ static const struct ata_port_info ahci_port_info[] = {
- 		.udma_mask	= ATA_UDMA6,
- 		.port_ops	= &ahci_ops,
- 	},
-+	[board_ahci_43bit_dma] = {
-+		AHCI_HFLAGS	(AHCI_HFLAG_43BIT_ONLY),
-+		.flags		= AHCI_FLAG_COMMON,
-+		.pio_mask	= ATA_PIO4,
-+		.udma_mask	= ATA_UDMA6,
-+		.port_ops	= &ahci_ops,
-+	},
- 	[board_ahci_ign_iferr] = {
- 		AHCI_HFLAGS	(AHCI_HFLAG_IGN_IRQ_IF_ERR),
- 		.flags		= AHCI_FLAG_COMMON,
-@@ -596,11 +604,11 @@ static const struct pci_device_id ahci_pci_tbl[] = {
- 	{ PCI_VDEVICE(PROMISE, 0x3f20), board_ahci },	/* PDC42819 */
- 	{ PCI_VDEVICE(PROMISE, 0x3781), board_ahci },   /* FastTrak TX8660 ahci-mode */
- 
--	/* Asmedia */
-+	/* ASMedia */
- 	{ PCI_VDEVICE(ASMEDIA, 0x0601), board_ahci },	/* ASM1060 */
- 	{ PCI_VDEVICE(ASMEDIA, 0x0602), board_ahci },	/* ASM1060 */
--	{ PCI_VDEVICE(ASMEDIA, 0x0611), board_ahci },	/* ASM1061 */
--	{ PCI_VDEVICE(ASMEDIA, 0x0612), board_ahci },	/* ASM1062 */
-+	{ PCI_VDEVICE(ASMEDIA, 0x0611), board_ahci_43bit_dma },	/* ASM1061 */
-+	{ PCI_VDEVICE(ASMEDIA, 0x0612), board_ahci_43bit_dma },	/* ASM1061/1062 */
- 	{ PCI_VDEVICE(ASMEDIA, 0x0621), board_ahci },   /* ASM1061R */
- 	{ PCI_VDEVICE(ASMEDIA, 0x0622), board_ahci },   /* ASM1062R */
- 	{ PCI_VDEVICE(ASMEDIA, 0x0624), board_ahci },   /* ASM1062+JMB575 */
-@@ -948,11 +956,20 @@ static int ahci_pci_device_resume(struct device *dev)
- 
- #endif /* CONFIG_PM */
- 
--static int ahci_configure_dma_masks(struct pci_dev *pdev, int using_dac)
-+static int ahci_configure_dma_masks(struct pci_dev *pdev,
-+				    struct ahci_host_priv *hpriv)
- {
--	const int dma_bits = using_dac ? 64 : 32;
-+	int dma_bits;
- 	int rc;
- 
-+	if (hpriv->cap & HOST_CAP_64) {
-+		dma_bits = 64;
-+		if (hpriv->flags & AHCI_HFLAG_43BIT_ONLY)
-+			dma_bits = 43;
-+	} else {
-+		dma_bits = 32;
-+	}
-+
- 	/*
- 	 * If the device fixup already set the dma_mask to some non-standard
- 	 * value, don't extend it here. This happens on STA2X11, for example.
-@@ -1925,7 +1942,7 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	ahci_gtf_filter_workaround(host);
- 
- 	/* initialize adapter */
--	rc = ahci_configure_dma_masks(pdev, hpriv->cap & HOST_CAP_64);
-+	rc = ahci_configure_dma_masks(pdev, hpriv);
- 	if (rc)
- 		return rc;
- 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 4bae95b06ae3..df8f8a1a3a34 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -247,6 +247,7 @@ enum {
- 	AHCI_HFLAG_SUSPEND_PHYS		= BIT(26), /* handle PHYs during
- 						      suspend/resume */
- 	AHCI_HFLAG_NO_SXS		= BIT(28), /* SXS not supported */
-+	AHCI_HFLAG_43BIT_ONLY		= BIT(29), /* 43bit DMA addr limit */
- 
- 	/* ap->flags bits */
- 
 -- 
-2.43.0
-
+tejun
