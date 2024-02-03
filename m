@@ -1,45 +1,45 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED77779E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7124501E;
 	Sat,  3 Feb 2024 02:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706927903; cv=none; b=pnla2N4GazrUkBqm1ZDx/UGfe8xQC1dPAMPjQ89/smTl2TotBBlHwkvM3A2yhW1xDB4XcXz6y0i6VsAbgkMcuwT92M2c5+PdpcKSxdKH/1JPVMHPJr68T0IZNuH+5pcmr3dKy/rYrKfAYG7YXhDA/mIpqyIVzboHHkYS+umuMOo=
+	t=1706927903; cv=none; b=KqktkJqpNwFG2EzTwCqpVCRlpaSiEP6CycJCIhh7cv+dWApWJlLocl7SYhhWYUBGg7I1g8UW2466oO6h27K686TYzq0x2iVlVYrNPX4VXd4Smq1oXZF/ztb+r22ZoOEYVkClAJoV631WNElAf511JJMU+0Uonvh6nbTA0OF1ggY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706927903; c=relaxed/simple;
-	bh=Zn94y7bErg2fCTqgECKQemiKoOfcE1kcsfixHwdqr+Q=;
+	bh=UemOCUX9OC/jB7lWASuqhcBieye2GhhUA69QsoWo44I=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OuI6qrDJqdE/8bEV8ZxK8B+ZVfFn9KX9L7Su+EhbVkyNt27OZQMR0Csu+okHvHYZ/YBIRzd7NBv0/LftTwPE1S0RStY53H0o1OE7XF3rVJ4m2X3lEv3wi4+O4UDS6BdW+krxZhCqNgJ9eyT/QhtcLF/5k8oMvEEKpQQWVyC26RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j1a9vamk; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=q2sfTh1CxSpGyFWrR1k+l0dSRApG2x4zj90W/IO5vuxx4pz2n+G4XnWRFudHdKyPI6gYQfHgMd3v6AAKlP7vbEc+KmJrRCN4KbgifrWqXE+ApSOtTTHpJNFyOa+7FPrnn99YhGD1XrafC7VnBzf2E63c1Joibpv1i+QXxczLgYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bOvbcF9l; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j1a9vamk"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bOvbcF9l"
 Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4132PXTd002870;
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4132c63H024009;
 	Sat, 3 Feb 2024 02:38:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=As/LdtUmbbB5siySloFf
-	0kGunSrAkzqtvS8hEof3Hjw=; b=j1a9vamk/KuJ54vzMkgK3oAGhbqo5/wf8tZH
-	U91KxAmkBXY4Og8BSYKcO0T7PxgR1zi4tVYtAl8HxtgoTnKn0JJY2C+gkDTfOYNM
-	t5/wneUWsRoyuls9VaD+zsS55jKWFs/vmH/mLL8BdqmnO2YzjrMvN98yas7Y75G5
-	of/2Sow2J/oWju8EIQvDY/TPj8lf2TA8CZgH2EemxKUfyrf/CBXZqGRUCByBLihs
-	ceocmJxNsE+CUCJgiw8SZzYowOg+A42OKaa2M1wFPPe2/dLafWuA4xrPnCFaqtY9
-	EUOi6SISMUOq9EZVbIiNq9gYnUDWHbfaacCuYDB/MRmCAa3mwg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwjjuj6-1
+	:mime-version:content-type; s=qcppdkim1; bh=5vmvA/j8Eq+r73ofFDYJ
+	664BV9DDh9rA330ASd5d/Rg=; b=bOvbcF9lEfc2DnRmzYzQ5zh+DDW4e8DwKtTs
+	mWTBMQpYUOdDF3ISJCNAu0G5i9QVCBDjB1A4cjq0n8tjIpUC7LIlemAO7DsRn5RI
+	RMR3MgaqFm6y8KpZJi+VzbMQimdmGI4xvyzgRKFHCynzCh5EPqk8kqKqUj4ESKcv
+	Tn0DpcGmWaLFOg5oTV2gsm0k92EDsU+Rrd5XpYDpkRAxL0oxVUMaofrMsyyero2L
+	cw9DIa4rFzjXUJGI1CwOX25XMSv8y1oyd0tCwEuuInNdj1l3kI06iuTA3UWT/mKd
+	30O7uzJxSo9WKGdrxgYgB1KgkV6l4RY7qpCvF/ktSFjlgw3jTQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwjjujb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Sat, 03 Feb 2024 02:38:05 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4132bRNd004275
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4132bXsf008647
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 3 Feb 2024 02:37:27 GMT
+	Sat, 3 Feb 2024 02:37:33 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 18:37:27 -0800
+ 15.2.1118.40; Fri, 2 Feb 2024 18:37:32 -0800
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -52,9 +52,9 @@ CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v13 33/53] ASoC: usb: Add PCM format check API for USB backend
-Date: Fri, 2 Feb 2024 18:36:25 -0800
-Message-ID: <20240203023645.31105-34-quic_wcheng@quicinc.com>
+Subject: [PATCH v13 52/53] ASoC: qcom: Populate SoC components string
+Date: Fri, 2 Feb 2024 18:36:44 -0800
+Message-ID: <20240203023645.31105-53-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240203023645.31105-1-quic_wcheng@quicinc.com>
 References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
@@ -69,8 +69,8 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: FtFEGaf0EJDoW-hUlOu0fOgW_sJnnpNn
-X-Proofpoint-ORIG-GUID: FtFEGaf0EJDoW-hUlOu0fOgW_sJnnpNn
+X-Proofpoint-GUID: jjtMxWjlG0ucgCNvJnglWa15LLs-FZGM
+X-Proofpoint-ORIG-GUID: jjtMxWjlG0ucgCNvJnglWa15LLs-FZGM
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-02_16,2024-01-31_01,2023-05-22_02
@@ -80,63 +80,70 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 imposto
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401310000 definitions=main-2402030015
 
-Introduce a helper to check if a particular PCM format is supported by the
-USB audio device connected.  If the USB audio device does not have an
-audio profile which can support the requested format, then notify the USB
-backend.
+For userspace to know about certain capabilities of the current platform
+card, add tags to the components string that it can use to enable support
+for that audio path.  In case of USB offloading, the "usboffldplybk: 1" tag
+is added to the string.
 
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- include/sound/soc-usb.h |  2 ++
- sound/soc/soc-usb.c     | 25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ sound/soc/qcom/common.c | 22 ++++++++++++++++++++++
+ sound/soc/qcom/common.h |  1 +
+ sound/soc/qcom/sm8250.c |  3 +++
+ 3 files changed, 26 insertions(+)
 
-diff --git a/include/sound/soc-usb.h b/include/sound/soc-usb.h
-index c0c6b5abacdf..d9fc83180c56 100644
---- a/include/sound/soc-usb.h
-+++ b/include/sound/soc-usb.h
-@@ -38,6 +38,8 @@ struct snd_soc_usb {
- };
- 
- const char *snd_soc_usb_get_components_tag(bool playback);
-+int snd_soc_usb_find_format(int card_idx, struct snd_pcm_hw_params *params,
-+			int direction);
- 
- int snd_soc_usb_connect(struct device *usbdev, struct snd_soc_usb_device *sdev);
- int snd_soc_usb_disconnect(struct device *usbdev, struct snd_soc_usb_device *sdev);
-diff --git a/sound/soc/soc-usb.c b/sound/soc/soc-usb.c
-index 5b127141f0a1..cad8e1d798e4 100644
---- a/sound/soc/soc-usb.c
-+++ b/sound/soc/soc-usb.c
-@@ -80,6 +80,31 @@ void *snd_soc_usb_find_priv_data(struct device *dev)
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index c81a52f64ef8..bd83ac3f2638 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -258,4 +258,26 @@ int qcom_snd_usb_offload_jack_setup(struct snd_soc_pcm_runtime *rtd,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(snd_soc_usb_find_priv_data);
- 
-+/**
-+ * snd_soc_usb_find_format() - Check if audio format is supported
-+ * @card_idx: USB sound chip array index
-+ * @params: PCM parameters
-+ * @direction: capture or playback
-+ *
-+ * Ensure that a requested audio profile from the ASoC side is able to be
-+ * supported by the USB device.
-+ *
-+ * Return 0 on success, negative on error.
-+ *
-+ */
-+int snd_soc_usb_find_format(int card_idx, struct snd_pcm_hw_params *params,
-+			int direction)
-+{
-+	struct snd_usb_stream *as;
+ EXPORT_SYMBOL_GPL(qcom_snd_usb_offload_jack_setup);
 +
-+	as = snd_usb_find_suppported_substream(card_idx, params, direction);
-+	if (!as)
-+		return -EOPNOTSUPP;
++int qcom_snd_add_components_string(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
++	struct snd_soc_card *card = rtd->card;
++	const char *prev = card->components;
++
++	switch (cpu_dai->id) {
++	case USB_RX:
++		card->components = devm_kasprintf(card->dev, GFP_KERNEL, "%s %s",
++					  card->components,
++					  snd_soc_usb_get_components_tag(true));
++	default:
++		break;
++	}
++
++	if (prev && prev != card->components)
++		devm_kfree(card->dev, prev);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(snd_soc_usb_find_format);
++EXPORT_SYMBOL_GPL(qcom_snd_add_components_string);
+ MODULE_LICENSE("GPL");
+diff --git a/sound/soc/qcom/common.h b/sound/soc/qcom/common.h
+index fca3046c8674..8546723e0aa8 100644
+--- a/sound/soc/qcom/common.h
++++ b/sound/soc/qcom/common.h
+@@ -11,4 +11,5 @@ int qcom_snd_wcd_jack_setup(struct snd_soc_pcm_runtime *rtd,
+ 			    struct snd_soc_jack *jack, bool *jack_setup);
+ int qcom_snd_usb_offload_jack_setup(struct snd_soc_pcm_runtime *rtd,
+ 			    struct snd_soc_jack *jack, bool *jack_setup);
++int qcom_snd_add_components_string(struct snd_soc_pcm_runtime *rtd);
+ #endif
+diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
+index 52136897cc92..2a5384dd5988 100644
+--- a/sound/soc/qcom/sm8250.c
++++ b/sound/soc/qcom/sm8250.c
+@@ -38,6 +38,9 @@ static int sm8250_snd_init(struct snd_soc_pcm_runtime *rtd)
+ 						&data->usb_offload_jack_setup);
+ 	else
+ 		ret = qcom_snd_wcd_jack_setup(rtd, &data->jack, &data->jack_setup);
 +
- /**
-  * snd_soc_usb_allocate_port() - allocate a SOC USB device
-  * @component: USB DPCM backend DAI component
++	qcom_snd_add_components_string(rtd);
++
+ 	return ret;
+ }
+ 
