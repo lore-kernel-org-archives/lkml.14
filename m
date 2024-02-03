@@ -1,112 +1,105 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEBF482FF;
-	Sat,  3 Feb 2024 10:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AA92A8D7
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 11:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706957645; cv=none; b=X9gh7kl8ATI+1tyyBkFkm8c+/hu9IXw7cfH2/6v9ih6c3Ymu+SGfYco/mBu2ntzh6n5mMY6oYkv9twZ79BI/ZdD75rGDxvD5r+xCyZetam/icgNZUeX6/cnRbLtPYuka5A0SvjAH2EdmMTZTmt8RKRRESH+9aq+46o39bdadB2E=
+	t=1706959563; cv=none; b=A1MEZslBCwisEzNMHbl3GGO/ZKar/+JSTAVsaFQwAMYr+3DeajWF7IgMZgzT6T1TiEXZCL+0ZoldFJgnUFyyYnxRuoV2Of7Vru7zwdBua7P1ECFkzmexKnxNBVqqlj7KJpSIAoy9dxme2CZEl+UptfWCs4Y8eeegLe3kdPpf/Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706957645; c=relaxed/simple;
-	bh=F+69FTeIjzSdatJi0VG2CjE/hSQPwZ6HCaeuaIWBHzw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ANW0UvDLbWFxqo8uZAAYCKtkmlZkTZ05dJbyugP3uDD/hxs0XP77Pkk/FYHC9sMtpAVHim60Wc6cYX0xVTxwsHCK16Whhtb7WQwF6Nyp0mX6YwMLFRGsTBN6fH1gXcWOEa1/SgtY27dwhl80kwVk77Y3DrEzmVTLHRt14IXVuG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav311.sakura.ne.jp (fsav311.sakura.ne.jp [153.120.85.142])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 413Arep7052729;
-	Sat, 3 Feb 2024 19:53:40 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav311.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav311.sakura.ne.jp);
- Sat, 03 Feb 2024 19:53:40 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav311.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 413AqOr0052397
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 3 Feb 2024 19:53:39 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <c62a36de-716e-439d-80a2-57e6a3c22db0@I-love.SAKURA.ne.jp>
-Date: Sat, 3 Feb 2024 19:53:39 +0900
+	s=arc-20240116; t=1706959563; c=relaxed/simple;
+	bh=3AnlwDJY1PiOq3jo238nrekVn4FA6LanT3SjuGnUNFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FB+AZ2Oan3+hxAWvWmu5ao369ogJOBiTwBJQMGRcBKMcZ93ZzTVb7FO8lBX4XS8qJ6CvOJeHl/VsYqxHNe519d7O0NDUUluaFuwX6U8VdkTjnOQ03/4XlKfAiEMOrEo4pb+TKqzQTGED42F52bAYkPiVfkVJPBHuRLM4QGrCFPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=k7SLT0z1; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="k7SLT0z1"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A7C0E40E016C;
+	Sat,  3 Feb 2024 11:25:58 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ZZdsozVbr2fC; Sat,  3 Feb 2024 11:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706959556; bh=GuG1PrL37XWGzIIK0mw2Gt1HAsW61W8Mi9u163lCSVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k7SLT0z1a6VwwSd1j6S+NY5WVLAG6pKXTHAfSLkGHYdDXtvi4ZN68CwMjjJT7v41Y
+	 QBl0nQasVgluTRQ9OC12wu8bpJl+fpBzQOS7upk59vFyqDBtBhy0JxGDjJZGqCed7t
+	 Q1W21BKWILSodbmMtbFfgojNIr3nqGaUP7dq+Chr0Dh4lNfRgNonqj5bE8xl2WKkMN
+	 xC9W0h1g4t7DpKlrtY1d6NCLwh4OPIfriSkZko03vHUtAKTOwB2FqxzcCMVoDSvHeL
+	 FRd0NhWcqUxz5ikbinA0rEb3vgTrH1mXNa7SkDQA1VoeQQuzRmOo60F4TVm7U9jr5M
+	 4OTbjFc4+XquvVGXrTwQZITf8rp0O/ykfu2o3KxoA19HLkeKuFD28MevrFK7ssd9H9
+	 vH1tRO628mjwcnFV3owV1PLOJJw7xO238IY1EhdexfTAf0myJeDIECqlL+Iq/wF/Em
+	 /LHXj0FDLZMhNqlf9cHUhoGqYYztpsIQ5vfCbd1pRq1vPO9gm+Fntebevp/LBVKgcg
+	 xeH+8AN1IiJsTDccYdQH874BmcwgCG7Mvbmnt2P4iTYeYTlRV57x4ThyNMc/nBRr+6
+	 ZvmNPwZERyrObnv3IxSQtSbayNUwTjfOnPzm0NGIwFEVPNge1Ihi5PKLByux7DGVlV
+	 /tkluTSi9W/JstENo+WUjV3s=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E6D4B40E00C5;
+	Sat,  3 Feb 2024 11:25:31 +0000 (UTC)
+Date: Sat, 3 Feb 2024 12:25:26 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kevin Loughlin <kevinloughlin@google.com>,
+	Jacob Xu <jacobhxu@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Pankaj Gupta <pankaj.gupta@amd.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-coco@lists.linux.dev, Ashish Kalra <ashish.kalra@amd.com>,
+	Andi Kleen <ak@linux.intel.com>, Adam Dunlap <acdunlap@google.com>,
+	Peter Gonda <pgonda@google.com>,
+	Sidharth Telang <sidtelang@google.com>
+Subject: Re: [PATCH v3 0/2] x86: enforce and cleanup RIP-relative accesses in
+ early boot code
+Message-ID: <20240203112526.GGZb4iphr6YR5f5QNf@fat_crate.local>
+References: <20240121182040.GBZa1geI5NxWSslvt0@fat_crate.local>
+ <20240130220845.1978329-1-kevinloughlin@google.com>
+ <20240131140037.GDZbpShX2b0elXlqDA@fat_crate.local>
+ <CAJ5mJ6j-Vw2P=QLK-J_J79S35UggvZPtm5sia74=enR1qq9X9A@mail.gmail.com>
+ <20240131182944.GJZbqRmBN_KDgK_nmB@fat_crate.local>
+ <CAGdbjmJgu4euOTEzns4-7pqUWo8n-gNJiAfARoZWxw8T252zJQ@mail.gmail.com>
+ <20240203101927.GEZb4TL2H3XTqCSo5d@fat_crate.local>
+ <CAMj1kXGh9pw0U=+-Pg8Uh4xzNhyDZBDvGC7jcnCYvmTQxaUZTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2 3/3] fs/exec: remove current->in_execve flag
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <8fafb8e1-b6be-4d08-945f-b464e3a396c8@I-love.SAKURA.ne.jp>
-In-Reply-To: <8fafb8e1-b6be-4d08-945f-b464e3a396c8@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGh9pw0U=+-Pg8Uh4xzNhyDZBDvGC7jcnCYvmTQxaUZTQ@mail.gmail.com>
 
-Addition of security_execve_abort() hook made it possible to remove
-this flag.
+On Sat, Feb 03, 2024 at 11:27:19AM +0100, Ard Biesheuvel wrote:
+> The minimal fix doesn't look that bad IMHO. Note that this version is
+> based on your patch that removes
+> CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT, and we'd need to see whether
+> or not to backport that as well.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- fs/exec.c             | 3 ---
- include/linux/sched.h | 3 ---
- 2 files changed, 6 deletions(-)
+Ok, please send it formally so that I can take a look.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index d6d35a06fd08..c197573b2940 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1865,7 +1865,6 @@ static int bprm_execve(struct linux_binprm *bprm)
- 	 * where setuid-ness is evaluated.
- 	 */
- 	check_unsafe_exec(bprm);
--	current->in_execve = 1;
- 	sched_mm_cid_before_execve(current);
- 
- 	sched_exec();
-@@ -1882,7 +1881,6 @@ static int bprm_execve(struct linux_binprm *bprm)
- 	sched_mm_cid_after_execve(current);
- 	/* execve succeeded */
- 	current->fs->in_exec = 0;
--	current->in_execve = 0;
- 	rseq_execve(current);
- 	user_events_execve(current);
- 	acct_update_integrals(current);
-@@ -1901,7 +1899,6 @@ static int bprm_execve(struct linux_binprm *bprm)
- 
- 	sched_mm_cid_after_execve(current);
- 	current->fs->in_exec = 0;
--	current->in_execve = 0;
- 
- 	return retval;
- }
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index ffe8f618ab86..66ada87249b1 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -919,9 +919,6 @@ struct task_struct {
- #ifdef CONFIG_RT_MUTEXES
- 	unsigned			sched_rt_mutex:1;
- #endif
--
--	/* Bit to tell TOMOYO we're in execve(): */
--	unsigned			in_execve:1;
- 	unsigned			in_iowait:1;
- #ifndef TIF_RESTORE_SIGMASK
- 	unsigned			restore_sigmask:1;
+Thx.
+
 -- 
-2.18.4
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
