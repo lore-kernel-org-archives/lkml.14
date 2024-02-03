@@ -1,163 +1,193 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57704625;
-	Sat,  3 Feb 2024 00:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6478636;
+	Sat,  3 Feb 2024 00:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706918712; cv=none; b=JzGlOPoKnvs65fnGg0wc2uo7BPCezIdfu4B2AwCSnkmC3KNNoAgVjlWFpoCcVZMRp9rLu4hXjHG1yMzudf/ozAP8THsouuRTzN+pdg4ofiqpYitmMZIWcp5KJz0PnCChKUNDTM1ENl1AUx/g21mC87W7StndN8z/3cMRK+i4cFE=
+	t=1706918725; cv=none; b=qRfgvA7KQxQaezVFEZ2JwwaItxIvbdPRf6D2WNN+2KKo1z8Il2ctcUqVIbrMkovOXu9EJYtSrkxuH7I/yVYCfXBDwdw4JtUdK9mEZAvp03G/WGX7qps89ekY+9+taPuZUeiao8W+iV3c12WLvL+Jw0RiSKPUDcFsY070HCCLYhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706918712; c=relaxed/simple;
-	bh=30NXHrEg3FK6BQ39cfSMRrxz2GANhbrY1bn8h8hUjSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R7lFbIgE8QfwPwhktQlRr0CXR+yO5UM91S5JPsXYWhEOrF/Kh5U2EcC0CdSM/GJ9G2lHxeAs4g0iJRa/UzajZ5cCU4CqkO0Mtk6GSVQ3M/qZKDsYBppwPlZvbLXbPjg1x63XE/TCCRvfg8lhELiUpzPHyK7jD+vdpwkzyltg4zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI7IupAl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706918725; c=relaxed/simple;
+	bh=ADET036q7av5d6Yajw8qW29bC06EEDm2pUfR64LXErM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EcDUw8rJKiNo8bh8O43XpUuZCmcmssaWWSo37p79p2t1ZstjB2/fIq2ULgtM72IAKpxvJSjI7v5NG78RHD88q301abMEywvCl8Ll60GG8xmEZ2/QaxVT3zafM5vyVqvXXE6jjxU2DNTwchyqDG1zMiRjoFy+KmYpSIigqMOOPKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7H5wlvG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI7IupAl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8798CC433C7;
-	Sat,  3 Feb 2024 00:05:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7H5wlvG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C955C433C7;
+	Sat,  3 Feb 2024 00:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706918711;
-	bh=30NXHrEg3FK6BQ39cfSMRrxz2GANhbrY1bn8h8hUjSM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=BI7IupAlZJxxwlTraPZPHgUy2G+wNxm5B1zNLy8MRGv7jZDkYu9xRGsQHTpGfmALz
-	 ULNMvrkuprFyvMQzzuzIeiGGQ8Hrikj3ICvDgPmtQRFhdmSUwQBGW5nMnALJHswHc6
-	 vNAhhT+92v0nEiuz7EMPobJD3Lu/QDcLRzrMJlvJ2+IoRaPqiyfRXc+/jSxr3e5rFN
-	 R2Zqx/JTgsBLrYBfFoiZUppdT8er49HM/mSCFCQrhineuoxr2nBhMR3VnfDHUeSOgh
-	 1tb38ieCQg5U5zhrB2rAhHV+y7HkrGnmffx92pRtFrguQfXyh46m6shU4hqu6W2T6L
-	 qkANSMwAn2O9g==
-Date: Fri, 2 Feb 2024 18:05:10 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: Johan Hovold <johan@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	David Box <david.e.box@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux@endlessos.org
-Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
- PCIe Root Port and NVMe
-Message-ID: <20240203000510.GA738687@bhelgaas>
+	s=k20201202; t=1706918724;
+	bh=ADET036q7av5d6Yajw8qW29bC06EEDm2pUfR64LXErM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=m7H5wlvGMIflskB2V2LNCSlNdSOkBWhdrO38vDOjn0bD0CqcIIfyc/b7S85r8oQcT
+	 NQR1JVNgd7XAapTnhvd9TwepVLrgAM6EEB0tfGeTXPBssX9t/I0COeIyTXjLXZ6Dzn
+	 7f37ivgQQjPF9KC0ywtT5/3fK8eYAYfFKU0igo+bbKIhnX02T25I456qq51jhCji0B
+	 C0Ush9k4+qWeuNmO5kAm0auz6QZgunbzIrW7ty4vM8WDTJTFh7xFjMkG36GS+NGB4e
+	 E0ZSmfgWMF0tq6dXPjTbyajK2df8caqjlrcUUjDwgwwvouyFeOaLAp0SvEhazFH8Hm
+	 2FrndW3Sfq71w==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH RFT v5 0/7] fork: Support shadow stacks in clone3()
+Date: Sat, 03 Feb 2024 00:04:56 +0000
+Message-Id: <20240203-clone3-shadow-stack-v5-0-322c69598e4b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202071110.8515-3-jhp@endlessos.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACiDvWUC/23Nu04DMRAF0F+JXGPkGT/WUFHxAREdovBjnLUSr
+ ZEdbUDR/jvWUhCULe9czblX1qhmaux5d2WV5txymXrQDzsWRjcdiOfYM0OBEgQ88XAqE0neRhf
+ LhbezC0cOOioR0SctDeufn5VS/lrVd7Z/fWMf/Tjmdi71e12aYa1+UZSb6Axc8GjNEIXvfhQvR
+ 6oTnR5LPazgjH8IgNpGsCPegEzWWACt7xB5g6DYRmRH3OAtRUnoQrhD1C1itxHVEevRpkQqmcH
+ 8Q5Zl+QHMEaZJiwEAAA==
+To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
+ "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, 
+ Daniel Bristot de Oliveira <bristot@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, 
+ Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ jannh@google.com, bsegall@google.com, linux-kselftest@vger.kernel.org, 
+ linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ David Hildenbrand <david@redhat.com>
+X-Mailer: b4 0.13-dev-a684c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5783; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=ADET036q7av5d6Yajw8qW29bC06EEDm2pUfR64LXErM=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlvYM3npsMX9TJ+rXiQ0MR0Q5jhU9ckhziWi5BnCOV
+ qmUQ+H6JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZb2DNwAKCRAk1otyXVSH0O0EB/
+ 9q7W39KKLWQLLXi4q1NOuQYVFhxUGNYybGDasHnhcRQElcx/0UJ7t6RIxdYvpsRR/CVm6k4WQLoM5i
+ wd9FlIPxvERr0Y1HGvktUQ4QKWTBWor9YvgEGjgvmVqR6IZlnrY2LMthdAyhP4mXto+2IQSXUOBLQa
+ 961D4KEDpcBeslzQ9t0yRMlIcyvq3ike15JsN55lowvAOe/LI0zyMEdI60UJFCIRnReUzpUaut30ac
+ igDJs+rKoF5JKwEAtMqgqAObX8UcEU6UOst/Ycwq1o9WsbocVpsYHPY6DNy/04usqX9Z1igSIjQUOL
+ dhLkftMeLi26qCqnHv49h53oAxILjS
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
-> The remapped PCIe Root Port and NVMe have PCI PM L1 substates
-> capability, but they are disabled originally:
-> 
-> Here is an example on ASUS B1400CEAE:
-> 
-> Capabilities: [900 v1] L1 PM Substates
->         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
->                   PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
->         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->                    T_CommonMode=0us LTR1.2_Threshold=0ns
->         L1SubCtl2: T_PwrOn=10us
-> 
-> Power on all of the VMD remapped PCI devices and quirk max snoop LTR
-> before enable PCI-PM L1 PM Substates by following "Section 5.5.4 of PCIe
-> Base Spec Revision 6.0". Then, PCI PM's L1 substates control are
-> initialized & enabled accordingly.
+The kernel has recently added support for shadow stacks, currently
+x86 only using their CET feature but both arm64 and RISC-V have
+equivalent features (GCS and Zicfiss respectively), I am actively
+working on GCS[1].  With shadow stacks the hardware maintains an
+additional stack containing only the return addresses for branch
+instructions which is not generally writeable by userspace and ensures
+that any returns are to the recorded addresses.  This provides some
+protection against ROP attacks and making it easier to collect call
+stacks.  These shadow stacks are allocated in the address space of the
+userspace process.
 
-> Also, update the comments of
-> pci_enable_link_state() and pci_enable_link_state_locked() for
-> kernel-doc, too.
+Our API for shadow stacks does not currently offer userspace any
+flexiblity for managing the allocation of shadow stacks for newly
+created threads, instead the kernel allocates a new shadow stack with
+the same size as the normal stack whenever a thread is created with the
+feature enabled.  The stacks allocated in this way are freed by the
+kernel when the thread exits or shadow stacks are disabled for the
+thread.  This lack of flexibility and control isn't ideal, in the vast
+majority of cases the shadow stack will be over allocated and the
+implicit allocation and deallocation is not consistent with other
+interfaces.  As far as I can tell the interface is done in this manner
+mainly because the shadow stack patches were in development since before
+clone3() was implemented.
 
-The aspm.c changes should be in a separate patch.  Presumably the
-aspm.c code change fixes a defect, and that defect can be described in
-that patch.  That fix may be needed for non-VMD situations, and having
-it in this vmd patch means it won't be as easy to find and backport.
+Since clone3() is readily extensible let's add support for specifying a
+shadow stack when creating a new thread or process in a similar manner
+to how the normal stack is specified, keeping the current implicit
+allocation behaviour if one is not specified either with clone3() or
+through the use of clone().  The user must provide a shadow stack
+address and size, this must point to memory mapped for use as a shadow
+stackby map_shadow_stack() with a shadow stack token at the top of the
+stack.
 
-Nit: rewrap commit log to fill 75 columns.
+Please note that the x86 portions of this code are build tested only, I
+don't appear to have a system that can run CET avaible to me, I have
+done testing with an integration into my pending work for GCS.  There is
+some possibility that the arm64 implementation may require the use of
+clone3() and explicit userspace allocation of shadow stacks, this is
+still under discussion.
 
-> @@ -751,11 +751,9 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
->  	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
->  		return 0;
->  
-> -	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
-> -
->  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
->  	if (!pos)
-> -		return 0;
-> +		goto out_enable_link_state;
->  
->  	/*
->  	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-> @@ -763,7 +761,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
->  	 */
->  	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
->  	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-> -		return 0;
-> +		goto out_enable_link_state;
->  
->  	/*
->  	 * Set the default values to the maximum required by the platform to
-> @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
->  	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
->  	pci_info(pdev, "VMD: Default LTR value set by driver\n");
+Please further note that the token consumption done by clone3() is not
+currently implemented in an atomic fashion, Rick indicated that he would
+look into fixing this if people are OK with the implementation.
 
-You're not changing this part, and I don't understand exactly how LTR
-works, but it makes me a little bit queasy to read "set the LTR value
-to the maximum required to allow the deepest power management
-savings" and then we set the max snoop values to a fixed constant.
+A new architecture feature Kconfig option for shadow stacks is added as
+here, this was suggested as part of the review comments for the arm64
+GCS series and since we need to detect if shadow stacks are supported it
+seemed sensible to roll it in here.
 
-I don't think the goal is to "allow the deepest power savings"; I
-think it's to enable L1.2 *when the device has enough buffering to
-absorb L1.2 entry/exit latencies*.
+[1] https://lore.kernel.org/r/20231009-arm64-gcs-v6-0-78e55deaa4dd@kernel.org/
 
-The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set this to
-the platform's maximum supported latency or less," so it seems like
-that value must be platform-dependent, not fixed.
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v5:
+- Rebase onto v6.8-rc2.
+- Rework ABI to have the user allocate the shadow stack memory with
+  map_shadow_stack() and a token.
+- Force inlining of the x86 shadow stack enablement.
+- Move shadow stack enablement out into a shared header for reuse by
+  other tests.
+- Link to v4: https://lore.kernel.org/r/20231128-clone3-shadow-stack-v4-0-8b28ffe4f676@kernel.org
 
-And I assume the "_DSM for Latency Tolerance Reporting" is part of the
-way to get those platform-dependent values, but Linux doesn't actually
-use that yet.
+Changes in v4:
+- Formatting changes.
+- Use a define for minimum shadow stack size and move some basic
+  validation to fork.c.
+- Link to v3: https://lore.kernel.org/r/20231120-clone3-shadow-stack-v3-0-a7b8ed3e2acc@kernel.org
 
-I assume that setting the max values incorrectly may lead to either
-being too conservative, so we don't use L1.2 when we could, or too
-aggressive, so we use L1.2 when we shouldn't, and the device loses
-data because it doesn't have enough internal buffering to absorb the
-entry/exit delays.
+Changes in v3:
+- Rebase onto v6.7-rc2.
+- Remove stale shadow_stack in internal kargs.
+- If a shadow stack is specified unconditionally use it regardless of
+  CLONE_ parameters.
+- Force enable shadow stacks in the selftest.
+- Update changelogs for RISC-V feature rename.
+- Link to v2: https://lore.kernel.org/r/20231114-clone3-shadow-stack-v2-0-b613f8681155@kernel.org
 
-This paper has a lot of background and might help answer some of my
-questions:
-https://www.intel.co.za/content/dam/doc/white-paper/energy-efficient-platforms-white-paper.pdf
+Changes in v2:
+- Rebase onto v6.7-rc1.
+- Remove ability to provide preallocated shadow stack, just specify the
+  desired size.
+- Link to v1: https://lore.kernel.org/r/20231023-clone3-shadow-stack-v1-0-d867d0b5d4d0@kernel.org
 
-> +out_enable_link_state:
-> +	/*
-> +	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
-> +	 * Section 5.5.4 of PCIe Base Spec Revision 6.0
-> +	 */
-> +	pci_set_power_state_locked(pdev, PCI_D0);
-> +	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+---
+Mark Brown (7):
+      Documentation: userspace-api: Add shadow stack API documentation
+      selftests: Provide helper header for shadow stack testing
+      mm: Introduce ARCH_HAS_USER_SHADOW_STACK
+      fork: Add shadow stack support to clone3()
+      selftests/clone3: Factor more of main loop into test_clone3()
+      selftests/clone3: Allow tests to flag if -E2BIG is a valid error code
+      selftests/clone3: Test shadow stack support
 
-Hmmm.  PCIE_LINK_STATE_ALL includes ASPM L1.2.  We may do this even if
-the device doesn't have an LTR Capability.  ASPM L1.2 cannot work
-without LTR.
+ Documentation/userspace-api/index.rst             |   1 +
+ Documentation/userspace-api/shadow_stack.rst      |  41 +++++
+ arch/x86/Kconfig                                  |   1 +
+ arch/x86/include/asm/shstk.h                      |  11 +-
+ arch/x86/kernel/process.c                         |   2 +-
+ arch/x86/kernel/shstk.c                           |  91 +++++++---
+ fs/proc/task_mmu.c                                |   2 +-
+ include/linux/mm.h                                |   2 +-
+ include/linux/sched/task.h                        |   2 +
+ include/uapi/linux/sched.h                        |  13 +-
+ kernel/fork.c                                     |  61 +++++--
+ mm/Kconfig                                        |   6 +
+ tools/testing/selftests/clone3/clone3.c           | 211 ++++++++++++++++++----
+ tools/testing/selftests/clone3/clone3_selftests.h |   8 +
+ tools/testing/selftests/ksft_shstk.h              |  63 +++++++
+ 15 files changed, 430 insertions(+), 85 deletions(-)
+---
+base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+change-id: 20231019-clone3-shadow-stack-15d40d2bf536
 
-I only took a quick look but was not convinced that
-pci_enable_link_state() does the right thing when we enable
-PCIE_LINK_STATE_ALL (including ASPM L1.2) on a device that doesn't
-have LTR.  I think it *should* decline to set PCI_L1SS_CTL1_ASPM_L1_2,
-but I'm not sure it does.  Can you double check that path?  Maybe
-that's another defect in aspm.c.
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-> @@ -1164,6 +1164,8 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
->  		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
->  	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
->  		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
-> +	if (state & ASPM_STATE_L1_2_MASK)
-> +		aspm_l1ss_init(link);
->  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
->  
->  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
