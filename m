@@ -1,216 +1,273 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4067D5D72C
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 12:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E4C5D8F8
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 12:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706961951; cv=none; b=gb0z5fsVS1zdz8dPnc+qyAb5r4xyMJCukghLPWviEDz6ygVK607neThIYctNYD4MzK3TWSQAkt+l0RJRi4fkCSBt87/QxpPM+g85PLN2kIF8c+DlLkiDRvstyIJE3UFdZ7TSix1kGJJiN3aNLQccuE1VUe3FUzaR6rENgY3ESCo=
+	t=1706962138; cv=none; b=t1n4Yb4RUAJKA58vnIG8H05tJBN+xPrrx4KfBNikNbvnjLkzC4Wz4cl+Yod/XcQmbEXv+Nguifid1y+BA7Aj4/3sdcXPjiAPot4jWlbjAVT0U/64JDiQpdWcwJPubc+mWh1l51Wi/6a0DLxI+Fv0gM/rIJt17dQS1i/E/3gbQC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706961951; c=relaxed/simple;
-	bh=4N6u89cf+F03UpwkJFE+VlZv032k1fSw3iQLQC00Ba8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QYydZaU7MYcbw8K3dPW2xpNDUfztKmffF1AWKzVLsQCmZB4g4ysnFgtcGrF+8/pG6eWgJ9JZq7vPlnXaQ8FWD6u2CvkntRkqwlTn2c8CdWuXt+meLcOegosUWqZJviTS80wtpil4f9FCex8IN4VFO/4t3sB4smo9nj/yDHBF4Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AAVE034x; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706962138; c=relaxed/simple;
+	bh=xMNpAhAsEry1vcYLjIuuEbsTzKSSIZ/3xxEaeYNs79o=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=i5Uv6wvDcFNhva0k0IuAA1mVh13VRRnpBlusSJYxnzMTFD7+0etWUz3GDvtedoxzKVN17AIMYym2giuBk0wVsnUjnQHhTtD/JWSdgN51D15wk1NDyeBrN6SBCRulCdvQ/iZBuODWmCIdpSaKxRUULyc60Hc5whGZ5MT4V+WylNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I4dSvAv0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AAVE034x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706961948;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sbI2eS5Hr20zr/SF7iQvl7dOfMS34w2zMpG0aCO1sHI=;
-	b=AAVE034x7omrp6zStZNhDr1O9Z7916UG6P/VeswebaIqcvaFfjNJQOCUXYsdtp5lOVk3jX
-	WVllO7Tvn/sJNMCyj7MBbfQCMrk0OmaY6csctEguHI0whrjWvjXf+UMqvFPVIVKIkisjuO
-	MsqLFrud+mmGgwy6qvvaHy9f7WFzRDg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-385-MxdKvUX9NcmcNbgJlejw6g-1; Sat, 03 Feb 2024 07:05:44 -0500
-X-MC-Unique: MxdKvUX9NcmcNbgJlejw6g-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC353827E54;
-	Sat,  3 Feb 2024 12:05:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.56])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 2CF64492BC6;
-	Sat,  3 Feb 2024 12:05:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat,  3 Feb 2024 13:04:28 +0100 (CET)
-Date: Sat, 3 Feb 2024 13:04:26 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] pidfd_poll: report POLLHUP when pid_task() == NULL
-Message-ID: <20240203120425.GA30029@redhat.com>
-References: <20240202131147.GA25988@redhat.com>
- <20240202131226.GA26018@redhat.com>
- <20240202-arbeit-fruchtig-26880564a21a@brauner>
- <20240202160704.GA5850@redhat.com>
- <20240202-lackmantel-vervielfachen-4c0f0374219b@brauner>
- <20240202190529.GA28818@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I4dSvAv0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706962137; x=1738498137;
+  h=date:from:to:cc:subject:message-id;
+  bh=xMNpAhAsEry1vcYLjIuuEbsTzKSSIZ/3xxEaeYNs79o=;
+  b=I4dSvAv0yaEbGB0tgYT3TI2WfvC+xfcdUSBPZm+vgxUEtgU+YeFsWD0H
+   iVBpaV07HCtpg6pLpzPR++lPvpffccc6BDxe8U63uuxSmeecg0ej6R8Pu
+   P23rRDjimzvjbWvdj8/MfZdGHjuxvZPXtjSKwuJhlWoQieQ1Vov+uTIyw
+   AdIqMoQqho+ezXjYK+GNZKgdhAto7Sns5QNu+ZWgk/sQd51PSAPS2690U
+   u4ZqAp7v8w4GzzWRbBdK7ZPkOMJY2l2e21eLqrgeppQiPmMqJXy+0lDG1
+   347mBVMsE64GcqqADKSLMdiBPbP9sem/gWzFOoiAMYBjKPmYWVYqS0CLA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="220740"
+X-IronPort-AV: E=Sophos;i="6.05,240,1701158400"; 
+   d="scan'208";a="220740"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 04:08:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,240,1701158400"; 
+   d="scan'208";a="4933851"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 03 Feb 2024 04:08:55 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rWEpI-00050m-2x;
+	Sat, 03 Feb 2024 12:08:52 +0000
+Date: Sat, 03 Feb 2024 20:08:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/fred] BUILD SUCCESS
+ e13841907b8fda0ae0ce1ec03684665f578416a8
+Message-ID: <202402032048.pBxeHzOb-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202190529.GA28818@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Christian, I apologize for my terse and unclear emails yesterday,
-I was a bit busy.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/fred
+branch HEAD: e13841907b8fda0ae0ce1ec03684665f578416a8  MAINTAINERS: Add a maintainer entry for FRED
 
-On 02/02, Oleg Nesterov wrote:
->
-> On 02/02, Christian Brauner wrote:
-> >
-> > > I think we need a simpler patch. I was going to send it as 4/4, but I'd
-> > > like to think more, _perhaps_ we can also discriminate the PIDFD_THREAD
-> > > and non-PIDFD_THREAD waiters. I'll try to make the patch(es) tomorrow or
-> >
-> > Right, I didn't go that far.
+elapsed time: 1451m
 
-OK, so lets forget about the PIDFD_THREAD waiters for the moment.
-Then everything is trivial, please see below.
+configs tested: 200
+configs skipped: 3
 
-> > > 	1. we can't use wake_up_poll(), it passes nr_exclusive => 1
-> >
-> > Bah. So we need the same stuff we did for io_uring and use
-> > __wake_up() directly. Or we add wake_up_all_poll() and convert the other
-> > three callsites:
->
-> ...
->
-> > +#define wake_up_all_poll(x, m)                                                 \
-> > +       __wake_up(x, TASK_NORMAL, 0, poll_to_key(m))
->
-> Agreed, but I think this + s/wake_up/wake_up_all_poll/ conversions
-> need a separate patch.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-And if it was not clear I like this change! In fact I thought about
-the new helper too, but I didn't realize that it already have the
-users.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240202   gcc  
+arc                   randconfig-001-20240203   gcc  
+arc                   randconfig-002-20240202   gcc  
+arc                   randconfig-002-20240203   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                     davinci_all_defconfig   clang
+arm                                 defconfig   clang
+arm                           h3600_defconfig   gcc  
+arm                   randconfig-001-20240202   gcc  
+arm                   randconfig-002-20240202   gcc  
+arm                   randconfig-003-20240202   gcc  
+arm                   randconfig-003-20240203   gcc  
+arm                   randconfig-004-20240202   clang
+arm                         socfpga_defconfig   gcc  
+arm                           u8500_defconfig   gcc  
+arm                       versatile_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240202   gcc  
+arm64                 randconfig-002-20240202   clang
+arm64                 randconfig-003-20240202   gcc  
+arm64                 randconfig-003-20240203   gcc  
+arm64                 randconfig-004-20240202   gcc  
+arm64                 randconfig-004-20240203   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240202   gcc  
+csky                  randconfig-001-20240203   gcc  
+csky                  randconfig-002-20240202   gcc  
+csky                  randconfig-002-20240203   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240202   clang
+hexagon               randconfig-002-20240202   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240203   clang
+i386         buildonly-randconfig-002-20240203   gcc  
+i386         buildonly-randconfig-003-20240203   clang
+i386         buildonly-randconfig-004-20240203   clang
+i386         buildonly-randconfig-005-20240203   clang
+i386         buildonly-randconfig-006-20240203   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240203   clang
+i386                  randconfig-002-20240203   gcc  
+i386                  randconfig-003-20240203   clang
+i386                  randconfig-004-20240203   gcc  
+i386                  randconfig-005-20240203   clang
+i386                  randconfig-006-20240203   gcc  
+i386                  randconfig-011-20240203   clang
+i386                  randconfig-012-20240203   gcc  
+i386                  randconfig-013-20240203   gcc  
+i386                  randconfig-014-20240203   gcc  
+i386                  randconfig-015-20240203   gcc  
+i386                  randconfig-016-20240203   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch                 loongson3_defconfig   gcc  
+loongarch             randconfig-001-20240202   gcc  
+loongarch             randconfig-001-20240203   gcc  
+loongarch             randconfig-002-20240202   gcc  
+loongarch             randconfig-002-20240203   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          sun3x_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     loongson2k_defconfig   gcc  
+mips                          rm200_defconfig   gcc  
+nios2                            alldefconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240202   gcc  
+nios2                 randconfig-001-20240203   gcc  
+nios2                 randconfig-002-20240202   gcc  
+nios2                 randconfig-002-20240203   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                       virt_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240202   gcc  
+parisc                randconfig-001-20240203   gcc  
+parisc                randconfig-002-20240202   gcc  
+parisc                randconfig-002-20240203   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                       ebony_defconfig   clang
+powerpc                          g5_defconfig   gcc  
+powerpc               mpc834x_itxgp_defconfig   clang
+powerpc                    mvme5100_defconfig   gcc  
+powerpc               randconfig-001-20240202   clang
+powerpc               randconfig-002-20240202   clang
+powerpc               randconfig-003-20240202   clang
+powerpc                  storcenter_defconfig   gcc  
+powerpc64             randconfig-001-20240202   clang
+powerpc64             randconfig-002-20240202   gcc  
+powerpc64             randconfig-002-20240203   gcc  
+powerpc64             randconfig-003-20240202   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240202   gcc  
+riscv                 randconfig-002-20240202   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240202   clang
+s390                  randconfig-001-20240203   gcc  
+s390                  randconfig-002-20240202   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                             espt_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                    randconfig-001-20240202   gcc  
+sh                    randconfig-001-20240203   gcc  
+sh                    randconfig-002-20240202   gcc  
+sh                    randconfig-002-20240203   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                           se7206_defconfig   gcc  
+sh                        sh7785lcr_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240202   gcc  
+sparc64               randconfig-001-20240203   gcc  
+sparc64               randconfig-002-20240202   gcc  
+sparc64               randconfig-002-20240203   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                    randconfig-001-20240202   clang
+um                    randconfig-002-20240202   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-003-20240203   clang
+x86_64                randconfig-013-20240203   clang
+x86_64                randconfig-014-20240203   clang
+x86_64                randconfig-015-20240203   clang
+x86_64                randconfig-016-20240203   clang
+x86_64                randconfig-071-20240203   clang
+x86_64                randconfig-073-20240203   clang
+x86_64                randconfig-074-20240203   clang
+x86_64                randconfig-075-20240203   clang
+x86_64                randconfig-076-20240203   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240202   gcc  
+xtensa                randconfig-001-20240203   gcc  
+xtensa                randconfig-002-20240202   gcc  
+xtensa                randconfig-002-20240203   gcc  
 
-> > -void do_notify_pidfd(struct task_struct *task)
-> > +void pidfd_wake_up_poll(struct task_struct *task, bool dead)
-> >  {
-> > -	struct pid *pid;
-> > -
-> >  	WARN_ON(task->exit_state == 0);
-> > -	pid = task_pid(task);
-> > -	wake_up_all(&pid->wait_pidfd);
-> > +	WARN_ON(mask == 0);
-> > +	wake_up_all_poll(&task_pid(task)->wait_pidfd,
-> > +			 EPOLLIN | EPOLLRDNORM | dead ? EPOLLHUP : 0);
->
-> No...
->
-> This is still overcomplicated and is not right.
-                                ^^^^^^^^^^^^^^^^
-Sorry, sorry, I misread your change, "dead" is always false so it has
-no effect and thus the change is correct.
-
-But why do we need this arg? All we need is the trivial one-liner:
-
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2025,7 +2025,8 @@ void do_notify_pidfd(struct task_struct *task)
- 
- 	WARN_ON(task->exit_state == 0);
- 	pid = task_pid(task);
--	wake_up_all(&pid->wait_pidfd);
-+	__wake_up(&pid->wait_pidfd, TASK_NORMAL, 0,
-+		  poll_to_key(EPOLLIN | EPOLLRDNORM));
- }
- 
- /*
-
-and I was going to send the patch above as 4/4, but then decided
-to delay it, see below.
-
-We can rename do_notify_pidfd() if you wish, and of course the
-new wake_up_all_poll() helper you proposed makes sense, but this
-is another story.
-
-As for __change_pid(). In this case wake_up_all() is fine, we can
-change it to use wake_up_all_poll() too for consistency, but this
-is not strictly necessary and in fact "key = 0" makes a bit more
-sense imo.
-
-And just in case... previously I said that (perhaps) it can use
-__wake_up_pollfree() but no, this would be obviously wrong.
-
-------------------------------------------------------------------
-Now let's recall about the PIDFD_THREAD waiters. exit_notify() does
-		
-	/*
-	 * sub-thread or delay_group_leader(), wake up the
-	 * PIDFD_THREAD waiters.
-	 */
-	if (!thread_group_empty(tsk))
-		do_notify_pidfd(tsk);
-
-and it would be nice to not wakeup the non-PIDFD_THREAD waiters.
-
-I was thinking about something like the changes below but
-
-	- I am NOT sure it will work! I need to read the code
-	  in fs/select.c
-
-	- in fact I am not sure this makes a lot of sense, and
-	  the hack in pidfd_poll() doesn't look very nice even
-	  _if_ it can work.
-
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2081,6 +2081,13 @@ static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
- 	struct task_struct *task;
- 	__poll_t poll_flags = 0;
- 
-+	if (thread && pts && pts->_qproc) {
-+		// We are not registered yet. Update the key to mark
-+		// us a a PIDFD_THREAD waiter, __pollwait() will copy
-+		// this ->_key to poll_table_entry->key.
-+		if (pts->_key & EPOLLIN) // exclude the POLLHUP-only waiters
-+			pts->_key |= EPOLLMSG; // random flag
-+	}
- 	poll_wait(file, &pid->wait_pidfd, pts);
- 	/*
- 	 * Depending on PIDFD_THREAD, inform pollers when the thread
-
-Now, do_notify_pidfd() can do
-
-	if (!thread_group_empty(tsk))
-		mask = EPOLLMSG; // matches the hack in pidfd_poll
-	else
-		mask = EPOLLIN | EPOLLRDNORM;
-
-	__wake_up(..., poll_to_key(mask));
-
-Yes, in this case it makes more sense to pass !thread_group_empty()
-as a "bool thread" argument.
-
----------------------------------------------------------------------
-
-What do you think?
-
-I am starting to think that I shouldn't have delayed the 1st trivial
-change. Feel free to push it, with or without rename, with or without
-the new wake_up_all_poll() helper, I am fine either way. But please
-don't add the new "int dead" argument, afaics it makes no sense.
-
-Thanks,
-
-Oleg.
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
