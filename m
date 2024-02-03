@@ -1,156 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B40F1CAA4;
-	Sat,  3 Feb 2024 11:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E0F5D72C
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 12:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706961602; cv=none; b=mea3E6TuI5aMGMLjFkOLGs7eiAWk9MWXd2XHkkkW55zGrF77SyfuAVjtRj1NmlQ1QpIy7WSsCphgKqhWb/HHe4KCrf9P436uCqGwxbBuMf5qi9uWaTzm0IVL88HUmAgemlboYNlC2e/VTEx9YAMDqUaIqOJ0YKZK0oaCtIaeNSo=
+	t=1706961931; cv=none; b=q+F2d3e0KSFDBP/Nc0l/LTKA9lvNbn+UEJ6ixc3i7qWXYFOsrUpwSndoj6Oz0ZWGAJ7iBwXxD0bAPEFb/seSD9FFaTX+19NTfFEW+IYRe/z37Z0koOKnD+AzGB2Nj2T+7wDHwr50Dzt87TOc5V3d/bpCsoR9ZzjnVl2EAz552AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706961602; c=relaxed/simple;
-	bh=OaM3NQPREDdpKg0JK+QSLTqUnxO///RJV6jgIGAqKH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HzwMsAmMSqjw/6gAnPE+BTyaQNPBd8fCDMg7RXl4bsvbv8Q7jYtobQRkdw1YS4IQ6pR0/RlW0xJ7UPZohq3spxumrJTctnQL1UPnToMDH6TGQbVbqhOFqgf5l1d8CLBqpEJkTk1LMFzAksoFaBWFNpgNKNQQz6axxLp4G+mMVvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btXJjrnF; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706961931; c=relaxed/simple;
+	bh=L7J4BtlzFMnw9DdI6YfXQugI7y6JrV+u8xRZY8+4iN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H61ArIQ19M3ZaEegf2MfqXbjHkbpaBEtWX+Khyf2xKyZkm8SiJIuvwWr6/BtLtS2XtZqRyQy0+YlQT4Yr0hB9s7mw17zwLFP3RJ3+V5oeATegT0GRlj7x7vfHZU4OzA64bC6gN+Jt2IuAMJ6Kex88LhbUa+F3S4BgEdxEDGcHw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DtiXvBGz; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btXJjrnF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706961600; x=1738497600;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OaM3NQPREDdpKg0JK+QSLTqUnxO///RJV6jgIGAqKH8=;
-  b=btXJjrnFM9KelXjPU22Mz/JdfICOQKyAJrrHqTvH6R3DdjvnMabiJEpe
-   K+z9NXOo/Nie4TeWRkvmZD8VAElyfoBBupMH97Gfu1BwtJyZqra9RQpsA
-   xGafuKiQIeGUuKOdh8ZHRvO+lyBLpfftZcCN5KOUcugVIFrs/ch/CEVEU
-   3anw4xm01/LJxgBl1E80QC7OpO6/d5DvAG0jjFtWQiqd4qUGUJntf34xm
-   qYuZlnAZxepckPH2wR9mT9SH6/RyO4tEUn9gSyAFEzbFii2AQHmU1s8o7
-   Fo0DMBFJMlVeueuWBBYUjAYAcQGu3dEfuFPOvU2RsCEo9G70vJLbTEfWz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="17835200"
-X-IronPort-AV: E=Sophos;i="6.05,240,1701158400"; 
-   d="scan'208";a="17835200"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 03:59:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,240,1701158400"; 
-   d="scan'208";a="4911402"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 03 Feb 2024 03:59:55 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rWEga-000506-0C;
-	Sat, 03 Feb 2024 11:59:52 +0000
-Date: Sat, 3 Feb 2024 19:59:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thierry Reding <thierry.reding@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH net-next 2/3] net: stmmac: Allow drivers to provide a
- default AXI configuration
-Message-ID: <202402031948.IySiUm4u-lkp@intel.com>
-References: <20240201-stmmac-axi-config-v1-2-822e97b2d26e@nvidia.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DtiXvBGz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=U6K8i0MaCEnq6aAWU9nsKRYoHgfyqur22ObbnL0HdxE=; b=DtiXvBGzv2N12Yp7Wv/UHDVpax
+	13XxhpO1rYsH3gsG4haH+HDZ1g6Rhxbtfp3z1KNYSvsen0y9quegcSJcSoUU5PlBq0YhcvrfNSAgK
+	TGhjw0OqTiFAku6Tg9ZTi+gutGcCjolsjWqDT61d8PZDcE1cNENJ+Xkod35MxVysVQssiiVHrsMo1
+	4mMtZUUJ6+0QBJr/s1kkeQ0sJX1VzwrO7ZPXUJF/Vj9ZQOZdCaexDYLJ5TCwWNwtIQhEKgQOJQboH
+	Xgo1g8nueqpUOI1BP2LLpUmIET7ztJCGMAQYlTOwIEIQG8Y7tQ7+NPBYhhiT/41YsSb0rqzaPF6o6
+	SudOuV2w==;
+Received: from [187.90.178.235] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rWElm-00DHeR-3d; Sat, 03 Feb 2024 13:05:14 +0100
+Message-ID: <d8d97bbe-b57d-fcae-93ff-76fd0381187a@igalia.com>
+Date: Sat, 3 Feb 2024 09:05:08 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201-stmmac-axi-config-v1-2-822e97b2d26e@nvidia.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] panic: add option to dump blocked tasks in panic_print
+Content-Language: en-US
+To: Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+References: <20240202132042.3609657-1-feng.tang@intel.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20240202132042.3609657-1-feng.tang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thierry,
+On 02/02/2024 10:20, Feng Tang wrote:
+> For debugging kernel panic and other bugs, there is already option of
+> panic_print to dump all tasks' call stacks. On today's large servers
+> running many containers, there could be thousands of tasks or more,
+> and it will print out huge amount of call stacks, and take a lot of
+> time (for serial console which is main target user case of panic_print).
+> 
+> And in many cases, only those several tasks being blocked is key for
+> the panic, so add an option to only dump blocked tasks' call stack.
+> 
+> Signed-off-by: Feng Tang <feng.tang@intel.com>
+> [...]
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 51b70ff55ed88edd19b080a524063446bcc34b62]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Thierry-Reding/net-stmmac-Pass-resources-to-DT-parsing-code/20240202-025357
-base:   51b70ff55ed88edd19b080a524063446bcc34b62
-patch link:    https://lore.kernel.org/r/20240201-stmmac-axi-config-v1-2-822e97b2d26e%40nvidia.com
-patch subject: [PATCH net-next 2/3] net: stmmac: Allow drivers to provide a default AXI configuration
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20240203/202402031948.IySiUm4u-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240203/202402031948.IySiUm4u-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402031948.IySiUm4u-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c:96: warning: Function parameter or struct member 'res' not described in 'stmmac_axi_setup'
+Thank you Feng Tang, this is an interesting and useful idea!
+I've just tested the patch and works fine - also no code issues from my
+side. So, feel free to add:
 
 
-vim +96 drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-3b57de958e2aa3 Vince Bridgers     2014-07-31   86  
-afea03656add70 Giuseppe Cavallaro 2016-02-29   87  /**
-afea03656add70 Giuseppe Cavallaro 2016-02-29   88   * stmmac_axi_setup - parse DT parameters for programming the AXI register
-afea03656add70 Giuseppe Cavallaro 2016-02-29   89   * @pdev: platform device
-afea03656add70 Giuseppe Cavallaro 2016-02-29   90   * Description:
-afea03656add70 Giuseppe Cavallaro 2016-02-29   91   * if required, from device-tree the AXI internal register can be tuned
-afea03656add70 Giuseppe Cavallaro 2016-02-29   92   * by using platform parameters.
-afea03656add70 Giuseppe Cavallaro 2016-02-29   93   */
-af49f82367c1e3 Thierry Reding     2024-02-01   94  static struct stmmac_axi *stmmac_axi_setup(struct platform_device *pdev,
-af49f82367c1e3 Thierry Reding     2024-02-01   95  					   struct stmmac_resources *res)
-afea03656add70 Giuseppe Cavallaro 2016-02-29  @96  {
-afea03656add70 Giuseppe Cavallaro 2016-02-29   97  	struct device_node *np;
-afea03656add70 Giuseppe Cavallaro 2016-02-29   98  	struct stmmac_axi *axi;
-afea03656add70 Giuseppe Cavallaro 2016-02-29   99  
-afea03656add70 Giuseppe Cavallaro 2016-02-29  100  	np = of_parse_phandle(pdev->dev.of_node, "snps,axi-config", 0);
-af49f82367c1e3 Thierry Reding     2024-02-01  101  	if (!np && !res->axi)
-afea03656add70 Giuseppe Cavallaro 2016-02-29  102  		return NULL;
-afea03656add70 Giuseppe Cavallaro 2016-02-29  103  
-64f48e593a54a8 Joao Pinto         2017-03-07  104  	axi = devm_kzalloc(&pdev->dev, sizeof(*axi), GFP_KERNEL);
-4613b279bee795 Peter Chen         2016-08-01  105  	if (!axi) {
-af49f82367c1e3 Thierry Reding     2024-02-01  106  		if (np)
-4613b279bee795 Peter Chen         2016-08-01  107  			of_node_put(np);
-af49f82367c1e3 Thierry Reding     2024-02-01  108  
-afea03656add70 Giuseppe Cavallaro 2016-02-29  109  		return ERR_PTR(-ENOMEM);
-4613b279bee795 Peter Chen         2016-08-01  110  	}
-afea03656add70 Giuseppe Cavallaro 2016-02-29  111  
-af49f82367c1e3 Thierry Reding     2024-02-01  112  	if (res->axi)
-af49f82367c1e3 Thierry Reding     2024-02-01  113  		*axi = *res->axi;
-af49f82367c1e3 Thierry Reding     2024-02-01  114  
-af49f82367c1e3 Thierry Reding     2024-02-01  115  	if (np) {
-afea03656add70 Giuseppe Cavallaro 2016-02-29  116  		axi->axi_lpi_en = of_property_read_bool(np, "snps,lpi_en");
-afea03656add70 Giuseppe Cavallaro 2016-02-29  117  		axi->axi_xit_frm = of_property_read_bool(np, "snps,xit_frm");
-61d4f140943c47 Jisheng Zhang      2022-12-03  118  		axi->axi_kbbe = of_property_read_bool(np, "snps,kbbe");
-61d4f140943c47 Jisheng Zhang      2022-12-03  119  		axi->axi_fb = of_property_read_bool(np, "snps,fb");
-61d4f140943c47 Jisheng Zhang      2022-12-03  120  		axi->axi_mb = of_property_read_bool(np, "snps,mb");
-61d4f140943c47 Jisheng Zhang      2022-12-03  121  		axi->axi_rb =  of_property_read_bool(np, "snps,rb");
-afea03656add70 Giuseppe Cavallaro 2016-02-29  122  
-af49f82367c1e3 Thierry Reding     2024-02-01  123  		if (of_property_read_u32(np, "snps,wr_osr_lmt", &axi->axi_wr_osr_lmt)) {
-af49f82367c1e3 Thierry Reding     2024-02-01  124  			if (!res->axi)
-6b3374cb1c0bd4 Niklas Cassel      2016-12-05  125  				axi->axi_wr_osr_lmt = 1;
-af49f82367c1e3 Thierry Reding     2024-02-01  126  		}
-af49f82367c1e3 Thierry Reding     2024-02-01  127  
-af49f82367c1e3 Thierry Reding     2024-02-01  128  		if (of_property_read_u32(np, "snps,rd_osr_lmt", &axi->axi_rd_osr_lmt)) {
-af49f82367c1e3 Thierry Reding     2024-02-01  129  			if (!res->axi)
-6b3374cb1c0bd4 Niklas Cassel      2016-12-05  130  				axi->axi_rd_osr_lmt = 1;
-af49f82367c1e3 Thierry Reding     2024-02-01  131  		}
-af49f82367c1e3 Thierry Reding     2024-02-01  132  
-afea03656add70 Giuseppe Cavallaro 2016-02-29  133  		of_property_read_u32_array(np, "snps,blen", axi->axi_blen, AXI_BLEN);
-af49f82367c1e3 Thierry Reding     2024-02-01  134  
-4613b279bee795 Peter Chen         2016-08-01  135  		of_node_put(np);
-af49f82367c1e3 Thierry Reding     2024-02-01  136  	}
-afea03656add70 Giuseppe Cavallaro 2016-02-29  137  
-afea03656add70 Giuseppe Cavallaro 2016-02-29  138  	return axi;
-afea03656add70 Giuseppe Cavallaro 2016-02-29  139  }
-afea03656add70 Giuseppe Cavallaro 2016-02-29  140  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers!
+
+ ---
+>  Documentation/admin-guide/kernel-parameters.txt | 1 +
+>  Documentation/admin-guide/sysctl/kernel.rst     | 1 +
+>  kernel/panic.c                                  | 4 ++++
+>  3 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 31b3a25680d0..0f2369e87175 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4182,6 +4182,7 @@
+>  			bit 4: print ftrace buffer
+>  			bit 5: print all printk messages in buffer
+>  			bit 6: print all CPUs backtrace (if available in the arch)
+> +			bit 7: print tasks in uninterruptible (blocked) state
+>  			*Be aware* that this option may print a _lot_ of lines,
+>  			so there are risks of losing older messages in the log.
+>  			Use this option carefully, maybe worth to setup a
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 6584a1f9bfe3..e066a16b35d5 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -850,6 +850,7 @@ bit 3  print locks info if ``CONFIG_LOCKDEP`` is on
+>  bit 4  print ftrace buffer
+>  bit 5  print all printk messages in buffer
+>  bit 6  print all CPUs backtrace (if available in the arch)
+> +bit 7  print tasks in uninterruptible (blocked) state
+>  =====  ============================================
+>  
+>  So for example to print tasks and memory info on panic, user can::
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 2807639aab51..aa17ae0897c0 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -73,6 +73,7 @@ EXPORT_SYMBOL_GPL(panic_timeout);
+>  #define PANIC_PRINT_FTRACE_INFO		0x00000010
+>  #define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
+>  #define PANIC_PRINT_ALL_CPU_BT		0x00000040
+> +#define PANIC_PRINT_BLOCKED_TASKS	0x00000080
+>  unsigned long panic_print;
+>  
+>  ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+> @@ -227,6 +228,9 @@ static void panic_print_sys_info(bool console_flush)
+>  
+>  	if (panic_print & PANIC_PRINT_FTRACE_INFO)
+>  		ftrace_dump(DUMP_ALL);
+> +
+> +	if (panic_print & PANIC_PRINT_BLOCKED_TASKS)
+> +		show_state_filter(TASK_UNINTERRUPTIBLE);
+>  }
+>  
+>  void check_panic_on_warn(const char *origin)
