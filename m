@@ -1,35 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C354554674;
-	Sat,  3 Feb 2024 15:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468B95F557;
+	Sat,  3 Feb 2024 15:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706975849; cv=none; b=frEgUQLRF8JM8YtKWl0V7MxlybWlB2X0ALClGKrmFD5YekDPg+fiDg7cZG00krdBcR7TpKqSDtQEzEJ+hLaNRNNUOI1SUruL7+a4Wo/gOA5mFQ/2zF2o+zrlXvVjca86Pt3wL5IOyLmBT3FVFyppxw9L7fCQmMTV+be/uPnwGcQ=
+	t=1706975857; cv=none; b=mfSEj4+5odnmAog2Hcb+lP112AenXPIIR5Vt0rHRitJHoIn141aNJ4IDG0wrdkePurLpxKWdEPijRln7/DKK+hhZjv8uxCqw51pyf8SCViUfRI3/OqVVHU77zNpv5Ala7ePW4QdsdyGk48sOeFundLVxNSTe+pJXSRIPNSwu060=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706975849; c=relaxed/simple;
-	bh=BHcg/pyr2bxuPy4onVRUXGc1geuuTaQXdkQvJ0lueS0=;
+	s=arc-20240116; t=1706975857; c=relaxed/simple;
+	bh=dshOJS4N3pd4aPqoR2rq5Jh64ntgtbu8Mpn7QXGGWNg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XEHXvmwIbkaNpKMwYy8wvBsaFyOaPs6oTb20RL7D8Qb8wMUO6vIs1yoQ8Bj1V5Tk/LNKv13pRs9LfLPISV5fLd89pCfk2qFu+3DzN1DtwfJ9LbxL6huJrydA/90kHzJZYawPoqRRsKp1TFjVBdlCVt2R0XrRq2WJ/p9INaXwfHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mR3C3w+T; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hdj7J78tRGL3uhDIlt30Zn0BhP+XE7pDR54PYN6N/TbDsWLufc/jSzY3x0y9AATLA+B2KK4mlOZLPzq9JePrAE7J2ffwr40C/dPCsPqzEjgreqYdsFTEt4ubL0Sp4ddGMhL/OcGNdTzgWYw+VDjDnJVWBAdN34ZIhlltePPdDCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ksPAVLFs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mR3C3w+T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7B7C43390;
-	Sat,  3 Feb 2024 15:57:28 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ksPAVLFs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DDDC433F1;
+	Sat,  3 Feb 2024 15:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706975848;
-	bh=BHcg/pyr2bxuPy4onVRUXGc1geuuTaQXdkQvJ0lueS0=;
+	s=korg; t=1706975856;
+	bh=dshOJS4N3pd4aPqoR2rq5Jh64ntgtbu8Mpn7QXGGWNg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mR3C3w+T0ij2fYGzN1DsdzK1kdv/p9H4gDhEfCh6Gr0NEu26YQFQ+tFmXGIqV3/eL
-	 SKUCf0EEgV8AZPvv+ayQLFZ1c80MOgrKRNJ7N1tLpip0Ix/KoAkNaOVfsraOKyQ3Ir
-	 5HbjnXfYipTYzII3lBqNOtS4md756eIc0J1/JS1I=
-Date: Sat, 3 Feb 2024 06:46:11 -0800
+	b=ksPAVLFsGPjLOApCixqXuulqd/S2BjZWAAMUTsWRGrGeT7wGsTecHvX2GTc9PjaK9
+	 BW4ILM7Zw/VdSreDX6bkcm5bH6+Oi/rwr3t7dJPjUw6UT3LFvatOKlSgz8VmymOVTF
+	 MRnKcFo9zCdElTBfivjd6xPtRxyiRWv28p1EIvgs=
+Date: Sat, 3 Feb 2024 07:20:35 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ronald Warsow <rwarsow@gmx.de>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.7 000/353] 6.7.4-rc1 review
-Message-ID: <2024020343-handiness-nanometer-ae7d@gregkh>
-References: <295b099e-3b60-416f-a28c-6d58bb5564bb@gmx.de>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Vineeth Vijayan <vneethv@linux.ibm.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Tony Krowiak <akrowiak@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Jason Herne <jjherne@linux.ibm.com>, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] s390: struct bus_type cleanup
+Message-ID: <2024020317-darkish-reboot-eeef@gregkh>
+References: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,22 +49,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <295b099e-3b60-416f-a28c-6d58bb5564bb@gmx.de>
+In-Reply-To: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
 
-On Sat, Feb 03, 2024 at 02:39:41PM +0100, Ronald Warsow wrote:
-> Hi Greg
+On Sat, Feb 03, 2024 at 11:57:57AM -0300, Ricardo B. Marliere wrote:
+> This series is part of an effort to cleanup the users of the driver
+> core, as can be seen in many recent patches authored by Greg across the
+> tree (e.g. [1]). Specifically, this series is part of the task of
+> splitting one of his TODOs [2].
 > 
-> Kernel does *NOT* boot here on x86_64 (Intel Rocket Lake: i5-11400) and
-> Fedora 39
+> ---
+> [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
+> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
 > 
-> just after grub the box is dead; not pingable, etc ...
-> 
-> 
-> Thanks
-> 
-> Tested-by: Ronald Warsow <rwarsow@gmx.de>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-I guess just not tested successfully :(
+Thanks for doing this!
 
-I'll look into all of these errors in a bit..
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
