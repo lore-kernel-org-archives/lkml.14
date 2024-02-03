@@ -1,136 +1,220 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3A2482C4
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 07:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4964B5C1;
+	Sat,  3 Feb 2024 07:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706943766; cv=none; b=DRALMRVXGiIUF2+dN0ZsGwHcne/PDlLH3uqRUJlURDV6zKQi83uwcvyTyVi7r7EynFJk4Kw5lapxP9ht+si7SpdmfANArIhyericB232v6DeihT58ZpZglr23nzqPzhVh/DCu+vtmxRKnhcj4R9sVJPfJUKBUgNWIYjGPxIGEgw=
+	t=1706944109; cv=none; b=Kqiq7uNZzBBL7j17q+nlL/NF8Q6Z4AumTi9fv3RkgZVs5vDVmT61UM5y9b/PR3mg3caNILvF3XShGym/rmP0i7F1662/4SgOSXYeVKupYqRai0w84e2fOtF/KmeDcUAqwZOeT08o5tYGdZ7tf7b3ZvNlDu5cgLshmLRZzwQM5zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706943766; c=relaxed/simple;
-	bh=h2fM7rc/F7wbTwf42YgOD0rHOq6xAjpwpoQykbHjlkU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sffhAuvZTwc0kHpmm7Pzfajki5+bxcFWUKt/eie1nARDhW8XNr6oZ9vatS2MmCr3W6yvO6/d5cIqDwwT1FmSxBGFm1p3UTyHVGOyjIUD0zgb8stjVx3oOEM/gadNOMMcyhEeAMdH0h31yxz4h+V5QuAcy9JkkBLreDngjX4lloo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PdgQCHVm; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706944109; c=relaxed/simple;
+	bh=QikV9LjfXCKhq110UZUbqz0FYd57gjfWzqI2NfGAlhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZrX0fUbDGmv5cLaa7/18hGLAdEKkha/Hxyw9GL0I1ANxsXyTIn3w6RL5OXnNQDT/4HiOGvDD8Bv2URxk9U+coyFzDyWj4igeNhg6m5yhfkZ+c420col8asGsSDNVKP4QQ5/x58U+GsnpSKuf5YjSX4ni7taGnd0t10xtNdAHpnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Btrmv4XQ; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PdgQCHVm"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-21959151f4fso4814fac.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 23:02:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706943764; x=1707548564; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vlWjANUaYQwVUMpCKRrrDgA9uFKERft9XbPhIdDG8Y8=;
-        b=PdgQCHVmGbj+NuqOr6lN3yPvW4Zzyl6/QBk42+mI0b6Fy1UJk88ZuPu/pu+LwUsW9L
-         q60/wvue0d+kft/RXnmG6JpivHfladeoz8TpK0n5ayl8aa90wnvN7YV7FqEVvYKAhECb
-         5wTzBZtFmP9FjvlnUTxbcPM59E0ocA2aYuJAISgbybVYm13ewH/U5DQZYCrZYIr3izMb
-         UG5FO+sUv/3jpZw8TIAqRIQqcS0A35TT/zUGxsmN/XL3Pfjpgn5Ij7OeyXF9UZBYo+lk
-         EDLUmH+EdDR0qu9LgV5H0XOxCMd0bC8qbkIOmVvy9vtRvAven8V0Wx/18V8ZtInXYCZD
-         yB/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706943764; x=1707548564;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vlWjANUaYQwVUMpCKRrrDgA9uFKERft9XbPhIdDG8Y8=;
-        b=qZzpKvyYFqQ4Fzz4Xl/TOGW1oO3pr4TxCpjLOU8OzfYtTawQp5KQAJodX5b1HvcV8G
-         N83b0BSYxgnPfex8266CpeLmasj8KaMgcfI1VNPDPuPWdFWlCsxtgH4xer1Fy82J/hjn
-         0n7KJ0fEDQ327amvQrCggcV53B3IQdO6wXFYlOJshCViH7jio0kBIEu8f0Lku+BMoe4Y
-         cNPLYUZaixL7Jml8InUqQwhx4C0vpuIq0b2eFlZhznRtQDnSyciNdgrGTtYTMpt6pX/o
-         Tzqf4HlEs9lGktrZb4y4f0TRu2+bLJdJIYk0dTR7i0XdQ+mqIfIYR5YYR5qKwyLeCWFO
-         A3GQ==
-X-Gm-Message-State: AOJu0Yx2sjjBwP3oZfFPNMMU0D7jN2SiBu/MWY/OxjUpY3MfjVhUhPYJ
-	VGOXtI/tADsqCGN2CF4YkzvIYd7qUQ1iJjrlXARUl0GVLf0nQbdmZPNj03m5mxb0R7u2AlVUhMK
-	wqMKETw==
-X-Google-Smtp-Source: AGHT+IGyJKL564bbjeTHUNQlaF9o1FxnbrAUyU1yF9si0FjSbmxSOjKjVSe4z6FwYlpbhISyiRV+RA==
-X-Received: by 2002:a05:6870:b6a3:b0:214:e186:4d3f with SMTP id cy35-20020a056870b6a300b00214e1864d3fmr1708185oab.26.1706943763992;
-        Fri, 02 Feb 2024 23:02:43 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXF+v060q+BIe0PITMEbjGeKyNuAVzwVaq+Vests1GAO6QJOf3B92ackeIGvwlkzarqahed14QjRqY4lOET0flnpCOuT3phwGsJ1DSE/wZUVyV/JgRI9ro7H8aUj8Rhel8JPC0bGyB5BxwP3v9ROY6Et8Y1xh5TP59yodrEy+GD5fzArfJyqTsCjuYrly/IA2I80miuhbvTOsgMVrUK4gnm1QItdYZO672XopcGc+AGwYnm8PjMubDci6u7oe0A+zaz+6gDF4Xus8nqd32rLZShsUkYg4v+PDwC18fSV2uX0aHiIAGRbIsqgyF5bqbf2MBDkUV8JSyDDhxjywvJZBWAlykeCVQleQ1a/lUOKM+zvuFY1e6nno7oThaDI6SNHSkmi53JRKp82LKYAPUm4J1vwsmwB1mcStjy98TEjKEo9NH6tNEhVm1B2EcTNgPoEUKZkKEQucjzMsR9bNePBSplb7un4f54L20XDE5Dn8lE/HxYtTPTQHsjlG7po98RxCgq9LWHSDu4DuK9uFRa2HO/Nlr7ZxGIp2mPTvfFdEHSK7QUwSXohmmhfZTNGxRTKtWN7oMA80Q8opOH
-Received: from [192.168.17.16] ([138.84.62.70])
-        by smtp.gmail.com with ESMTPSA id ba33-20020a056830462100b006e11c53b99esm700670otb.64.2024.02.02.23.02.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 23:02:43 -0800 (PST)
-Message-ID: <5c1f616b-6244-4df9-967f-8063968dff3c@linaro.org>
-Date: Sat, 3 Feb 2024 01:02:41 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Btrmv4XQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706944106; x=1738480106;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QikV9LjfXCKhq110UZUbqz0FYd57gjfWzqI2NfGAlhI=;
+  b=Btrmv4XQaDWLQ1LaQKxFQYKUAJK1rpYAA+Fe1Vd/wtvkNpj2J1I395b5
+   diIdn6UzpLT02lDUtWH2jZI/wjMZtvl1bEo1qds2NgQM7L0yZBNHQkV5x
+   nMepge98CnsZ8+CQwc70WPRr/WMSK+bh+QUlBDlsBE6yqCvWpbfw4d05/
+   URJjDA3waYt3wBBV866FWYVA1/Lo1uQv7XpmUCoxOS68ttnae3Lc5eVFX
+   G3TSyuBeJ2jZ6FWBqSMX94F0CklWKD92pE3DpQb6rmUy8qrsa7U4+JH+C
+   HN68Iwvg61L9T4as1ciIutfoxRFXa8UTMOkX6UOab75yTCxZm+vJFDBC+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="435436787"
+X-IronPort-AV: E=Sophos;i="6.05,240,1701158400"; 
+   d="scan'208";a="435436787"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 23:08:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,240,1701158400"; 
+   d="scan'208";a="278653"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 02 Feb 2024 23:08:22 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rWA8R-0004j8-1p;
+	Sat, 03 Feb 2024 07:08:19 +0000
+Date: Sat, 3 Feb 2024 15:07:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>,
+	alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	jdelvare@suse.com, linux@roeck-us.net, antoniu.miclaus@analog.com,
+	noname.nuno@gmail.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Ibrahim Tilki <Ibrahim.Tilki@analog.com>,
+	Zeynep Arslanbenzer <Zeynep.Arslanbenzer@analog.com>,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v6 1/2] drivers: rtc: add max313xx series rtc driver
+Message-ID: <202402031414.zapkL312-lkp@intel.com>
+References: <20240202025241.834283-2-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.7 000/353] 6.7.4-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com,
- dmitry.baryshkov@linaro.org
-References: <20240203035403.657508530@linuxfoundation.org>
-From: =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
-In-Reply-To: <20240203035403.657508530@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202025241.834283-2-chris.packham@alliedtelesis.co.nz>
 
-Hello!
+Hi Chris,
 
-On 02/02/24 10:01 p. m., Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.7.4 release.
-> There are 353 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Mon, 05 Feb 2024 03:51:47 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+kernel test robot noticed the following build warnings:
 
-Same problems as reported with 6.1, but something else happening on Arm (32-bits):
+[auto build test WARNING on abelloni/rtc-next]
+[also build test WARNING on robh/for-next linus/master v6.8-rc2 next-20240202]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
------8<-----
-   Error: /builds/linux/arch/arm/boot/dts/qcom/qcom-msm8960-cdp.dts:91.1-10 Label or path pmicintc not found
-   FATAL ERROR: Syntax error parsing input tree
-   make[4]: *** [/builds/linux/scripts/Makefile.lib:419: arch/arm/boot/dts/qcom/qcom-msm8960-cdp.dtb] Error 1
-   make[4]: Target 'arch/arm/boot/dts/qcom/' not remade because of errors.
------>8-----
+url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Packham/drivers-rtc-add-max313xx-series-rtc-driver/20240202-105538
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
+patch link:    https://lore.kernel.org/r/20240202025241.834283-2-chris.packham%40alliedtelesis.co.nz
+patch subject: [PATCH v6 1/2] drivers: rtc: add max313xx series rtc driver
+config: i386-randconfig-063-20240203 (https://download.01.org/0day-ci/archive/20240203/202402031414.zapkL312-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240203/202402031414.zapkL312-lkp@intel.com/reproduce)
 
-This is seen with Clang (17 and nightly) and GCC-8.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402031414.zapkL312-lkp@intel.com/
 
-Bisection here points to:
+sparse warnings: (new ones prefixed by >>)
+>> drivers/rtc/rtc-max313xx.c:546:21: sparse: sparse: symbol 'max313xx_nvmem_cfg' was not declared. Should it be static?
+>> drivers/rtc/rtc-max313xx.c:656:22: sparse: sparse: symbol 'max313xx_clk_init' was not declared. Should it be static?
 
-   commit 4fed142bbe3ca920810eba12fe96800cfd094d0c
-   Author: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-   Date:   Thu Sep 28 14:02:44 2023 +0300
+vim +/max313xx_nvmem_cfg +546 drivers/rtc/rtc-max313xx.c
 
-       ARM: dts: qcom: msm8960: fix PMIC node labels
-       
-       [ Upstream commit a10a09f34eb80b83ca7275e23bf982dae2aa7632 ]
+   545	
+ > 546	struct nvmem_config max313xx_nvmem_cfg = {
+   547		.reg_read = max313xx_nvmem_reg_read,
+   548		.reg_write = max313xx_nvmem_reg_write,
+   549		.word_size = 8,
+   550	};
+   551	
+   552	static unsigned long max313xx_clkout_recalc_rate(struct clk_hw *hw,
+   553							 unsigned long parent_rate)
+   554	{
+   555		struct max313xx *rtc = clk_hw_to_max313xx(hw);
+   556		const struct clkout_cfg *clkout = rtc->chip->clkout;
+   557		unsigned int freq_mask;
+   558		unsigned int reg;
+   559		int ret;
+   560	
+   561		ret = regmap_read(rtc->regmap, clkout->reg, &reg);
+   562		if (ret)
+   563			return 0;
+   564	
+   565		freq_mask = __roundup_pow_of_two(clkout->freq_size) - 1;
+   566	
+   567		return clkout->freq_avail[(reg >> clkout->freq_pos) & freq_mask];
+   568	}
+   569	
+   570	static long max313xx_clkout_round_rate(struct clk_hw *hw, unsigned long rate,
+   571					       unsigned long *prate)
+   572	{
+   573		struct max313xx *rtc = clk_hw_to_max313xx(hw);
+   574		struct clkout_cfg *clkout = rtc->chip->clkout;
+   575		int index;
+   576	
+   577		index = find_closest(rate, clkout->freq_avail, clkout->freq_size);
+   578		return clkout->freq_avail[index];
+   579	}
+   580	
+   581	static int max313xx_clkout_set_rate(struct clk_hw *hw, unsigned long rate,
+   582					    unsigned long parent_rate)
+   583	{
+   584		struct max313xx *rtc = clk_hw_to_max313xx(hw);
+   585		struct clkout_cfg *clkout = rtc->chip->clkout;
+   586		unsigned int freq_mask;
+   587		int index;
+   588	
+   589		index = find_closest(rate, clkout->freq_avail, clkout->freq_size);
+   590		freq_mask = __roundup_pow_of_two(clkout->freq_size) - 1;
+   591	
+   592		return regmap_update_bits(rtc->regmap, clkout->reg,
+   593					  freq_mask << clkout->freq_pos,
+   594					  index << clkout->freq_pos);
+   595	}
+   596	
+   597	static int max313xx_clkout_enable(struct clk_hw *hw)
+   598	{
+   599		struct max313xx *rtc = clk_hw_to_max313xx(hw);
+   600		struct clkout_cfg *clkout = rtc->chip->clkout;
+   601	
+   602		if (clkout->en_invert)
+   603			return regmap_clear_bits(rtc->regmap, clkout->reg,
+   604						 clkout->en_bit);
+   605	
+   606		return regmap_set_bits(rtc->regmap, clkout->reg,  clkout->en_bit);
+   607	}
+   608	
+   609	static void max313xx_clkout_disable(struct clk_hw *hw)
+   610	{
+   611		struct max313xx *rtc = clk_hw_to_max313xx(hw);
+   612		struct clkout_cfg *clkout = rtc->chip->clkout;
+   613	
+   614		switch (rtc->id) {
+   615		case ID_MAX31331:
+   616		case ID_MAX31334:
+   617			if (rtc->irq > 0) {
+   618				dev_err(rtc->rtc->dev.parent,
+   619					"clkout cannot be disabled when IRQ is requested");
+   620				return;
+   621			}
+   622			break;
+   623		default:
+   624			break;
+   625		}
+   626	
+   627		if (clkout->en_invert)
+   628			regmap_set_bits(rtc->regmap, clkout->reg, clkout->en_bit);
+   629		else
+   630			regmap_clear_bits(rtc->regmap, clkout->reg,  clkout->en_bit);
+   631	}
+   632	
+   633	static int max313xx_clkout_is_enabled(struct clk_hw *hw)
+   634	{
+   635		struct max313xx *rtc = clk_hw_to_max313xx(hw);
+   636		struct clkout_cfg *clkout = rtc->chip->clkout;
+   637		unsigned int reg;
+   638		int ret;
+   639	
+   640		ret = regmap_read(rtc->regmap, clkout->reg, &reg);
+   641		if (ret)
+   642			return ret;
+   643	
+   644		return !!(reg & clkout->en_bit) ^ clkout->en_invert;
+   645	}
+   646	
+   647	static const struct clk_ops max313xx_clkout_ops = {
+   648		.recalc_rate = max313xx_clkout_recalc_rate,
+   649		.round_rate = max313xx_clkout_round_rate,
+   650		.set_rate = max313xx_clkout_set_rate,
+   651		.enable = max313xx_clkout_enable,
+   652		.disable = max313xx_clkout_disable,
+   653		.is_enabled = max313xx_clkout_is_enabled,
+   654	};
+   655	
+ > 656	struct clk_init_data max313xx_clk_init = {
+   657		.name = "max313xx-clkout",
+   658		.ops = &max313xx_clkout_ops,
+   659	};
+   660	
 
-Reverting that commit makes that problem go away.
-
-Reproducer:
-
-   tuxmake --runtime podman --target-arch arm --toolchain gcc-8 --kconfig defconfig
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-
-Greetings!
-
-Daniel Díaz
-daniel.diaz@linaro.org
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
