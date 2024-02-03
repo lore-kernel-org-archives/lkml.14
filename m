@@ -1,70 +1,127 @@
-Received: from mail.r2rien.org (srv.r2rien.org [92.243.11.103])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5918F5DF0C;
-	Sat,  3 Feb 2024 16:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.243.11.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBD55C8EF
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 16:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706979016; cv=none; b=irfBvMOq8ihVnky7yS0PwlLBo88Rnb/w7VemagPKOsJ3D/+QeFcbIQujflNNT1lhibobtc9+SaQLBa5gYDSSWJHsSHfYL5eS8uorwTPmCZt4sL7auCYpJp16faJ7pnSimgWZHsvNNH6fsjDRNLbHDXCG2hj3gTTU4BKPZG0BO0g=
+	t=1706979093; cv=none; b=rUTnmVITR3NXeWc08wgFwOyyHGYBQwrgxQi7+By2p7P6yosJi8ct9QwjDuSHtHQbo96Agl+uhXk97VihvOcP34KP2mRlCkS3MlE+urio1+Gfmb4IQRAqF9f0O5IFbuAz1as5o5Wo1H2fHjFNhMB1BTxmnnpHA0zjFzQDe90h8EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706979016; c=relaxed/simple;
-	bh=Y86ictid7gY0ft+rClKcRFxQAdXWDQup5I+qVZWiij0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=Pz2kPUxmdodU4fD2HNEBqUWKC5T0FwIptQx0C6FKFkqS2RnTtpuqBAasA5D6YhXBummGijd52PgQCuSMeJmA2AERJINxs/VefS3rexgOC4jE0XmmrKCPc+MZ3ra0QNEODgeRckniu/4V47lnKxl+KC055IDz1o2d4nV9dCOX2Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=r2rien.net; spf=pass smtp.mailfrom=r2rien.net; arc=none smtp.client-ip=92.243.11.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=r2rien.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r2rien.net
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=178.132.106.162; helo=[10.8.3.5]; envelope-from=debian@r2rien.net; receiver=hdegoede@redhat.com 
-Received: from [10.8.3.5] (unknown [178.132.106.162])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mail.r2rien.org (Postfix) with ESMTP id 6B0AB31F9F;
-	Sat,  3 Feb 2024 17:13:36 +0100 (CET)
-Message-ID: <bc166c19-8da3-cd42-b749-e35eaebe7822@r2rien.net>
-Date: Sat, 3 Feb 2024 17:16:50 +0100
+	s=arc-20240116; t=1706979093; c=relaxed/simple;
+	bh=a2OG5inng2XwCM+xjK9nJgfWWl1tseTOrhwjbgIF/y4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FYNfv2v4u27FYds+JKY4o/bzlCcm6LmlEh6qx9HMJgZ7nyPU9dusNrajEs9nXvA+2kVn8EHUD/I0PT/ihR26JqajJsg1M+CKen8aAXCnR3083qhRfaPGCKKMTpzh6vfCMm02hVNCKOONdP6JvXDgef5q6IiNXC6+GmYP6PZFdkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ev2ZlBDK; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ev2ZlBDK"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so2434931a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Feb 2024 08:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706979091; x=1707583891; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2f67kU//P87HeqhHQJd0E1lsyn7wir/Giu2Il+t7u78=;
+        b=ev2ZlBDKeVnHj15YVBKLCu0bTHptUNXYvqJXQPVZ8BgN9ZSp6kqxjepyuZuNalG7cp
+         QLIsvuBtInZMlIeXew0WvoRPJMhGFjsHDSLNcTNyVGbQD55sQ9VlZuMHMKiBBmVBQpos
+         lutvF3F49kymQns9D6IxpouoGO0wIMRJJS0JAohgS7wNTBthfRjqXj04AFIQM1QWYBo1
+         9YD9+z6Pazs00R9FvojXEGxNh3LXWce5HiSCOMqjc4LBwZtuHSGR5yLZWoSZZGeQIkw9
+         3DhJWpXYUtl4fmZFdo1q8xKQ2IMvirAzZLr6Xre+fO+IYk4t8oDqqIX51kD8tNELNycn
+         QNSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706979091; x=1707583891;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2f67kU//P87HeqhHQJd0E1lsyn7wir/Giu2Il+t7u78=;
+        b=hE0A9dOrbH6Bd463OsIAMUligxaQJSpKmjg0ny+Fwcg7oP+NcF+sO2leAEVEe8u6zn
+         sFx68QY7X8Y6qd4RGQeE8uLjOOkN58g46G26B/0b94b8xpd/AxJXs1KCU8bEEUCwI/ij
+         rPiLPMucu2R9d22729n+TOhwI3ir4M3NRqjeO33tgdzijJgUJYUOw+OFb7Q9WB3GVTxu
+         5hZ6sC8zygTszLwO2P0bF3J81m1Ai2k38LxlX7dZEyYmmu/7rZ0a7MV/gXaBfm0zWnl+
+         VhBy6zN0RoeNYp3u5T8fheWPFJhCEx4Ot+6JzhNktH/vTxS5In1HD8GaGInn0iysiJkE
+         Gasw==
+X-Gm-Message-State: AOJu0YxR3/ajEopo0QUW+H++60kyS/bDNfnySQIR95oY99WZEC6p1hGP
+	zbTOLQj5gFZ6tPdNHq23u5kXsCicHutxeESDFmujldYN3uNS1ymQ
+X-Google-Smtp-Source: AGHT+IHhDcmD8X+7rW+aMDaQQnH/xqH0DG80QzaXb6LAqgE+ZXfaZHVBJV+/kb+kN34lt7Nh993jRg==
+X-Received: by 2002:a17:90a:dc07:b0:296:ec9:6232 with SMTP id i7-20020a17090adc0700b002960ec96232mr7477868pjv.10.1706979090764;
+        Sat, 03 Feb 2024 08:51:30 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXPE0VdD4Pz7o0ke7OUcflfjLqedg7oj8+my2iGnEqGRLzIT/ZHb1GFNWOwftvcdxs/+kGWXykhQL/wdRKMDGOphhBgQ3unRXiq
+Received: from localhost.localdomain ([122.161.75.254])
+        by smtp.gmail.com with ESMTPSA id h5-20020a17090adb8500b002904cba0ffbsm2051861pjv.32.2024.02.03.08.51.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Feb 2024 08:51:30 -0800 (PST)
+From: Abhinav Jain <jain.abhinav177@gmail.com>
+To: skhan@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Abhinav Jain <jain.abhinav177@gmail.com>
+Subject: [PATCH 2/2] Task: Kselftests : LKMP Bug Fixing Spring 2024
+Date: Sat,  3 Feb 2024 16:51:23 +0000
+Message-Id: <20240203165123.149564-1-jain.abhinav177@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.15.1
-Subject: + XPS 13 9343
-Content-Language: en-US
-To: hdegoede@redhat.com
-References: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
- <f27b491c-2f1c-4e68-804c-24eeaa8d10de@redhat.com>
-From: Antoine <debian@r2rien.net>
-Cc: Dell.Client.Kernel@dell.com, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- pmenzel@molgen.mpg.de, regressions@lists.linux.dev, 1061521@bugs.debian.org
-In-Reply-To: <f27b491c-2f1c-4e68-804c-24eeaa8d10de@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/20/24 21:26, Hans de Goede wrote:
-> Can you try adding "i8042.dumbkbd=1" to your kernel commandline?
-> 
-> The next question is if the keyboard will still actually
-> work after suspend/resume with "i8042.dumbkbd=1". If it
-> stays in the list, but no longer works
+Modified the function arguments, adding %s format specifier
+in order to fix the "format not a string literal" warnings
 
-Hi, thanks a lot for taking into account our hardware,
-just a supplementary feedback:
+Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
+---
+ tools/testing/selftests/net/tcp_ao/lib/setup.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-In my case (Dell XPS 13 9343/i5-5200U):
-- Dell Inc. XPS 13 9343/0TM99H, BIOS A19 12/24/2018
-- Linux version 6.6.13-1 (2024-01-20)
+diff --git a/tools/testing/selftests/net/tcp_ao/lib/setup.c b/tools/testing/selftests/net/tcp_ao/lib/setup.c
+index 92276f916f2f..e408b9243b2c 100644
+--- a/tools/testing/selftests/net/tcp_ao/lib/setup.c
++++ b/tools/testing/selftests/net/tcp_ao/lib/setup.c
+@@ -17,37 +17,37 @@ static pthread_mutex_t ksft_print_lock = PTHREAD_MUTEX_INITIALIZER;
+ void __test_msg(const char *buf)
+ {
+ 	pthread_mutex_lock(&ksft_print_lock);
+-	ksft_print_msg(buf);
++	ksft_print_msg("%s", buf);
+ 	pthread_mutex_unlock(&ksft_print_lock);
+ }
+ void __test_ok(const char *buf)
+ {
+ 	pthread_mutex_lock(&ksft_print_lock);
+-	ksft_test_result_pass(buf);
++	ksft_test_result_pass("%s", buf);
+ 	pthread_mutex_unlock(&ksft_print_lock);
+ }
+ void __test_fail(const char *buf)
+ {
+ 	pthread_mutex_lock(&ksft_print_lock);
+-	ksft_test_result_fail(buf);
++	ksft_test_result_fail("%s", buf);
+ 	pthread_mutex_unlock(&ksft_print_lock);
+ }
+ void __test_xfail(const char *buf)
+ {
+ 	pthread_mutex_lock(&ksft_print_lock);
+-	ksft_test_result_xfail(buf);
++	ksft_test_result_xfail("%s", buf);
+ 	pthread_mutex_unlock(&ksft_print_lock);
+ }
+ void __test_error(const char *buf)
+ {
+ 	pthread_mutex_lock(&ksft_print_lock);
+-	ksft_test_result_error(buf);
++	ksft_test_result_error("%s", buf);
+ 	pthread_mutex_unlock(&ksft_print_lock);
+ }
+ void __test_skip(const char *buf)
+ {
+ 	pthread_mutex_lock(&ksft_print_lock);
+-	ksft_test_result_skip(buf);
++	ksft_test_result_skip("%s", buf);
+ 	pthread_mutex_unlock(&ksft_print_lock);
+ }
+ 
+-- 
+2.25.1
 
-commandline with `i8042.dumbkbd=1` fixes the issue,
-with capslock functional but without led
-+ as a side note, hibernate doesn't trigger any issue
-
-(before getting informed of and testing `i8042.dumbkbd=1`)
-I had attached logs before/after suspend against 6.6.11 and 6.6.13 :
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1061521#30
-
-I remain at your disposal for any further infos/testing
-best regards,
-Antoine
