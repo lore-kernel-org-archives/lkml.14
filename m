@@ -1,529 +1,184 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04olkn2087.outbound.protection.outlook.com [40.92.73.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43B84BAA8;
-	Sat,  3 Feb 2024 09:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706951145; cv=none; b=tkrCn9iC2byt1qKNo9lcfiaYQD7HIZ+TRx4LqURaQS83REBuVretpzOLtso4KrQbmcvLGkCI1ZUuYeIdAFWUL4IPX1OLE9AyA4XgH5Ppx2ucDHO6wip7BMzoSn1Oegvhaj3neAQ1I8Qy3KavLJUEeUcPQYQyatx0xE8emVU0mQo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706951145; c=relaxed/simple;
-	bh=0LIvJzVS4YdQCz7a9auX6qZszDj1B+wmUCysaen78hY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Zl/3slpn1qg5bQlh47Ppt9fUZmvB0nFd0bxHHmJCABwpA9vAmI9taqgh1zpY7iUtCTUgNcasHpmEyPzFnTqpcNDMxmrQbDXnNDiaL6GY/oGkRjmR9PQyCDie4TdaijhmVCxXzZLoFmTDUqIs40NRUbU1K802qvLUr11WUUe509c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rc9GfFnP; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rc9GfFnP"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-558f523c072so4213131a12.2;
-        Sat, 03 Feb 2024 01:05:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706951141; x=1707555941; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Q9Qpt0fJtqR9PGSOOdGqGAth7HERHnwhbrnzVdLJMA=;
-        b=Rc9GfFnP5GHkdHF1DtJnX2IL08ZTidISYGSyEFgkZBBVFGdQxVxRj4EvHZKT01fwLR
-         8k+VO0EBCBubBqz7k/hyAktzMpTkUynG8UjPSUVXJGAyIcVlkIdpDICaViTMeDKy4cXW
-         LX+aEqcz9qE8JoxBqpz3mNhvajPBCUb9fSgJf7XgVzlzNspXExZqVOro9UhJKjK3JmVU
-         +V+Nfx14/HEn162XkxiI//EfMHrf1HbL+B3brB0OY/xfD3aR1Cc/j9HNQBRGYu5EXXR1
-         MxsQvmaLw2gpAVv+UXxHIj+eAtvjd2iEdaEqXBO1OxS1JNK43QtMTxeesvQrB+wivH2k
-         Pzrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706951141; x=1707555941;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6Q9Qpt0fJtqR9PGSOOdGqGAth7HERHnwhbrnzVdLJMA=;
-        b=FWYG+HpOT3iXtd6Bvi4Aqp0k0dFFNcLRhotChCs/yAJlxeLTQVzxG5Tc+ehTfhBcOI
-         PNwyz44/CsvX3FYQN6WYd4yYEQspigDbBSBjJsMOU0cahIvkM12hiN7sUwaWdBYhC7OD
-         N0M6X0Hc0OLPKAWeE7IK0ZgUejFuXlQ5BIe2ntJ0DnDbd5sGnYkj6IiHPV2RMtYe5BF4
-         gxQBgMbqKWso4KDGE4pSJ7lwV7oVm0F3BQqT4JvBFzTv4Efkz6GyURtNgNVpjId+XXOR
-         APybwnjPAQebNz9OBmZcU0Wtfd4VCPBpZVet7xJmk6ABRl6u5WyaqGyV9HrktIT199Uu
-         mn8Q==
-X-Gm-Message-State: AOJu0YxXhQDX/7+O3wx715YbYx0rOXPwE6ze80Y+79GNY+CRmHQG7XUW
-	IHjAYZByuWmBjAUZyYmjpydcFjhzYvdAsfzMEfD08EUfxhxOdcOV
-X-Google-Smtp-Source: AGHT+IGWjQIJfY3d5EvR18PKOb7dRP/onldI9ZfzUgkRMCGQk11PdoJEa8wmWRAFo/2jnt+LzNe+CA==
-X-Received: by 2002:a17:906:29c5:b0:a36:cff2:5482 with SMTP id y5-20020a17090629c500b00a36cff25482mr4537055eje.68.1706951140438;
-        Sat, 03 Feb 2024 01:05:40 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWOR9bSOjWy2RRnTUNJuK2ZJoQMqW/Po81Edmk6sMVy6rTfg+jS1wsKNDf7klhRGWhew3JQhHo6lxg20CxkwqDHHis4BcS9LvlSZaoQYLkUXOfpDepJzRFX006VT6C1fWpzf7dOGrX19+n1rkk9/RpiIcMrtdCxJ4BazgoUohI79iOPhvqh24px5u+NsnzJLEdCl8ITk7c+ap7btB1QPDcOzVeJuZkdtb3IqKbSnk8q6MGKyMpgUcx/0VldTg==
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id pw8-20020a17090720a800b00a349d05c837sm1767668ejb.154.2024.02.03.01.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Feb 2024 01:05:39 -0800 (PST)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Li peiyu <579lpy@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: humidity: hdc3020: add threshold events support
-Date: Sat,  3 Feb 2024 10:05:29 +0100
-Message-Id: <20240203090530.53374-1-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195315D720;
+	Sat,  3 Feb 2024 09:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.73.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706951818; cv=fail; b=TvyLsrTofsSM+Vlv4nlIyeW10YZmhP9vW6R9qFHBYNY+dNzlHeMEL3YK0gtlBSeUk3/bMQAuZrLkJDI/+m1SyKrRpykL6xT+tkN5u4dqKsHC/9awT9EVvQ+hldTUd8egkwTaoBnf1iMGtOXZ87zglprQy7Hm3szIJbSyva00mnk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706951818; c=relaxed/simple;
+	bh=55pAwv2Ef5t2iTEevbGIvayNImdOe4pT+Sa1xxWKuOg=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BzorG2sQFUYgnfSU2ztlMvzjDLoz1bfLb8M3Brmk22tWmxxpJVBOSVQBgNxQfn6C6pvmfRzshW5OK5IHHLTOdTWIQmAc1vSQIOdS8FvDYDbGfrdgYNsqJX1yYyFBqUvapjKekZ1yWJhh9fpOt5r/j5Iq+CpMwQyCgb4wB3pJXqI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; arc=fail smtp.client-ip=40.92.73.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hNOZ7/CO97bE2SEoFSUy+Asw5PMkFcyrZdUsE9l0OQ51GQrRmTVQwdqcEtH2TnE4B0Fexm5OHWWw4xjy6wxs1+aQXK4c/+3pLROgVaotX7h5fdmaxmuKbwtWasFZ5nyiUZ27V9WSCUDHyNEwwcftJpaWvaITeUaDS1ETG4m4DppQqW7ziIT8Ne2ot/unzzBpNQBtlpFcKv3QKMuUE9YiH3yQKaVAJwc7Nx6lip9a5V+pgd5KduG7fBTvxTSeZr7omvFm/yWROg/96Az8APwVg8tRCFEIXca9u3LY4GbZlUxUTSUn0dp2LadXGKOiSLkkQZV97bRn3DOZ77FJXY+UCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uuMqsTVR6f8s2b00XMsxeXCsnhsQOWg3MY2IYVRiluk=;
+ b=AZMLnyytVnQQVsnHuC3Ws/Bllaf8BvotaEUjc+xBtrMlhWuN3SM8S/SxbHphI3zu8Tp6XFkEzQN/SvZxzqirnezFlDet2W80ULCa7J7rNTaW3a25ZdVkUjVAPXLDqJdUmu1qGwEnKt1wa9DizQWGMFNf1y/2yaViafE3nDHFCxct+Q0PduXuV0pFIv2i/aFxo+ncLRip5XevOGxjpJF6dYgMxiZpmpaKJRLW57VxiJl02qp9Afe2mS/JlJRWzfMr3eNRDttJjWV7zrPAx/VnXfV+XPCppivP0CX+avadGEBsxhlid2DNJrG7JtdheZGE7AoR1Whht89vvGKvmy8EAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AS1PR03MB8189.eurprd03.prod.outlook.com (2603:10a6:20b:47d::10)
+ by AS2PR03MB9718.eurprd03.prod.outlook.com (2603:10a6:20b:60e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30; Sat, 3 Feb
+ 2024 09:16:52 +0000
+Received: from AS1PR03MB8189.eurprd03.prod.outlook.com
+ ([fe80::ffb3:3ff8:6ea9:52b5]) by AS1PR03MB8189.eurprd03.prod.outlook.com
+ ([fe80::ffb3:3ff8:6ea9:52b5%5]) with mapi id 15.20.7249.027; Sat, 3 Feb 2024
+ 09:16:52 +0000
+Message-ID:
+ <AS1PR03MB8189C3FAA5D3AC95CA1F5D9D82412@AS1PR03MB8189.eurprd03.prod.outlook.com>
+Date: Sat, 3 Feb 2024 10:16:47 +0100
+User-Agent: Mozilla Thunderbird
+From: Sergio Palumbo <palumbo.ser@outlook.it>
+Subject: Re: [PATCH net-next] net: sfp: add quirk for OEM DFP-34X-2C2 GPON ONU
+ SFP
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <AS1PR03MB8189AD85CEB6E139F27307D3827F2@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <ZbZn8oCiyc1aNPuW@shell.armlinux.org.uk>
+ <AS1PR03MB8189B99C360FB403B8A0DD6882422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <Zb0t+zKHx+0wTXH5@shell.armlinux.org.uk>
+ <AS1PR03MB8189D48114A559B080AF5BEA82422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <Zb1+p6FiJwUF53xc@shell.armlinux.org.uk>
+Content-Language: it
+In-Reply-To: <Zb1+p6FiJwUF53xc@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN: [HHC8CRkMwpkwfZe3fPvE5igbpSRxepMKF06ndDOAi+HNRzKvZGgu7ZLVtDzdedFK]
+X-ClientProxiedBy: MI2P293CA0011.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:45::11) To AS1PR03MB8189.eurprd03.prod.outlook.com
+ (2603:10a6:20b:47d::10)
+X-Microsoft-Original-Message-ID:
+ <f8cf41f2-4a90-4ef5-b214-906319bd82d4@outlook.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS1PR03MB8189:EE_|AS2PR03MB9718:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9531a97c-8714-4e5e-e411-08dc2498db76
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	uNp9AfTgvIOytDAocBRtLedjfc65adIkzre0Ot3t0xWHkdseB/LXve1MfBFVVHeihOhz6qpvV1BULmuL4/U/UUGWa4Csr/S+tZcKHyLnuj/8sd05gTCAFcQGFFJ9gt4Yl+5bwM4Cb7zLHXGiLBIIL47hY+wO4+NPA8JeSAPatvOgnks3sQaNWWCwxIHbcIjFLQnbpmLIlH77o8YJwDPdZC0Hxe62JTHyFXWwgss6K4zppZf7RIKPtwUKHFijUaMmY6Tbj+VgaxOM/787h7Ek4SHFlP/MV2VBdufXVkm88cAUytbyPSBmLtmaR8F48zXCPHWUip0kk/AQxBfrnZOghSsDDn6iqhfR2B7mvAb49IOeepnV/Kgq6zmKGdJZNHwORwRE/PjqxODo/q1+x3wAHNFdyvvEZvhrpad1fEg1QGuvO+x/7pbgQnwYlHUPm7czhjCgRr3U5PMjpGU+rV2pshuFf1GFikbkGeCR6zUkaYTAL1rGb2tRThC20fJtGX9xLQ63a6YFo/xl5UzOJTHm/x++AiSGM/wRuyogRKW4m8m3cQb3GSzY8+1GCk7bG97G
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RnpNQnBGS2lwUFpyUjRVTUowenoyeXpvM3poZVg4VGlhaitNSXQyWVRNMzVx?=
+ =?utf-8?B?aGVFbTZMTVFhZ1dTd1VxWFljd29EUkpTN21mbFRidnZqQ2hGclJ4L1ZBRW9Z?=
+ =?utf-8?B?bkFYMzR1RW1zeXc0UVNaS3VwcXU5QmJnUWk1OFVTVzhmWUpXcEdJa0NyV04y?=
+ =?utf-8?B?Tm8xQm1GcUtxL1JCcWFlZExDNjRGTmFTZDIwWWRKWWIveEQ4SzN5VmszRThK?=
+ =?utf-8?B?UlVKcWQwWit0S0VEd1JkOTRJTHhvVnB0NG5nZ05pOGlIQ3lEUDZidzdMbHZh?=
+ =?utf-8?B?VHk0QVJFbHlkeTJ1MENSaFlRZVZPRUVxK2lZcmpIWnpja0dMTG9CVVF3SXI1?=
+ =?utf-8?B?OVVFNFIybEZWR1UyRnlGY2s5VXhFQnNPSzJGZXpSMnlwQUpUSk16ZlpMK0Vp?=
+ =?utf-8?B?aWNweVYxUHVHWGJBaTk2YWtlaGJNaFh6OHBiODhDR2pSOWRiTWJ1S1MyVnNB?=
+ =?utf-8?B?Ri9JYkc2eEF4ZkVFcE1Ld3Y5L2grUWU5M0ZBeGtZSEd1ZHovTGMzR0dLNTVD?=
+ =?utf-8?B?d21oU3JKejNKZ0QvSSt2eXJDVE1lQXlLMGpzZzJmSFNHQVA0S21rWkZQdjBU?=
+ =?utf-8?B?TGpMcDdONzVuWDdDRExVZ2RpQ0JwTWJmUXAzc1dPV1o0QnhPQ1N2NDZvRDFq?=
+ =?utf-8?B?bVpEeGRmQnlhODg1RWw4TExvQ3FnN3Q1QWNOU0lreWFVQlBucWNZU0QrTjdF?=
+ =?utf-8?B?TDhwMWhaZTk5NEpXVk1DZmU3QThsdlk4MEdRbGE0bkpVYzZOOXhuNlNKeU9Z?=
+ =?utf-8?B?cXBNVkN4VlN1c2greHJDTTBXMEFlazc2T3ZFUXY1NDBuVEpFY1lXSHlHSWdH?=
+ =?utf-8?B?WFc4QktxaDJVU1ptTDRYaWptdlorbHBXbkdRQ0NDcUNBa3p3ZS9qaG1xdVNU?=
+ =?utf-8?B?cExyaHB2TzhZYjJ4czNrSm1vdUZnSUZHbGxFdHRQdW9WUi9uT2lnTU9XOCth?=
+ =?utf-8?B?VEJZZGRKbFdLU1c2K3ZHNStoL1AyeDlVeXVNVUNsRXc1OFZvRkV6aFc5Y2NJ?=
+ =?utf-8?B?YmFzOWNDQ3FTRDhyd1d2Q21rblNxY2NwSHJ4T09zNitkUVBsVFpTT0JiNWNj?=
+ =?utf-8?B?RWZ5M0YzWUp5c3ZBV2RhQjdhS21sSnlRNHVzRkJFa3NJeFp3ejBnS2U0QnYw?=
+ =?utf-8?B?ZUtoLy9VSm93WDFLeUxnM2FpN0o1M3ZMK0kxZFFCdHRIMjFXMUFSa05TYUhS?=
+ =?utf-8?B?S3p1aUdHMTlDb0RSeFdldzYyaXNEMWlEV1pLRjJ2N1J5TTJtNlhQRU5qdzB6?=
+ =?utf-8?B?UFM1RzFVeGJZTzJ6K1RnZDNuUGhMWUwveS9qNkIyOFl5Mmc1ZFE0UTdXY3Q0?=
+ =?utf-8?B?ZlFOZlEvYlE0bTA3Z3VOSmJZZmFUTzMwUTBkQWZPeEFXeW5aN3MveVBpV0J4?=
+ =?utf-8?B?WWs5Um9tcEZEendUVms5M0U2U25yQnAxclBSdVJ5eG0vSjBBTldGWjBhSHNi?=
+ =?utf-8?B?TEFlRFJibWZINloxRFJnSTY2V2tEZTlHWkpIai8rZVB0TzdDazBRRmdsN1JV?=
+ =?utf-8?B?NEhrMjlMdHI2VlhLREtYZHZGR3J5b05JZDgrelloOVc0blJkcnBhRDdGQ1cx?=
+ =?utf-8?B?bTIrdUNpTmNVa3Y4dHo0YWxsQmVpb0xXcU9yTHVyODRBSlpQOGFDQXlPMm9X?=
+ =?utf-8?B?OG96MTJHTzhWd2JGc1BPUDkrTkY3TVVLY2xUbmwxRTZNS2o4U0QvdURYOVRt?=
+ =?utf-8?B?TjhPejZ2d2JJM3VIT01qTllkR3UvRjlHYWdvcjdRTTk2T0haWklyVmc2amJj?=
+ =?utf-8?Q?5zqTmHr4d3IHFq//Hc=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-76d7b.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9531a97c-8714-4e5e-e411-08dc2498db76
+X-MS-Exchange-CrossTenant-AuthSource: AS1PR03MB8189.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2024 09:16:51.8103
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR03MB9718
 
-Add threshold events support for temperature and relative humidity. To
-enable them the higher and lower threshold registers must be programmed
-and the higher threshold must be greater then or equal to the lower
-threshold. Otherwise the event is disabled. Invalid hysteresis values
-are ignored by the device. There is no further configuration possible.
+Hello Russell,
+I understand your point on third line, but I quite sure that it is 
+working at
+1000-X because with LAN_SDS_MODE=1 makes the module to show up
+at 1000-X to Linux host, but now you made me doubtful.
+I'm now out of home and cannot do this test. I will test it on monday 
+evening
+when will be back at home.
+Unfortunately not so skilled to:
+"Add #define DEBUG in phylink.c, rebuild and run that kernel. Try
+that exact configuration. Report to me the kernel messages."
+Would it be enough to check if using LAN_SDS_MODULE=1 with the quirk, the
+confirmation that  ethtool will report 1000-X only and speed connectioin
+reported by ethtool will be 1000?
+Will let you know the result of this test.
+Thanks for your kind support.
+Regards
 
-Tested by setting thresholds/hysteresis and turning the heater on/off.
-Used iio_event_monitor in tools/iio to catch events while constantly
-displaying temperature and humidity values.
-Threshold and hysteresis values are cached in the driver, used i2c-tools
-to read the threshold and hysteresis values from the device and make
-sure cached values are consistent to values written to the device.
+Sergio Palumbo
 
-Based on Fix:
-a69eeaad093d "iio: humidity: hdc3020: fix temperature offset" in branch
-fixes-togreg
-
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
----
- drivers/iio/humidity/hdc3020.c | 339 +++++++++++++++++++++++++++++++++
- 1 file changed, 339 insertions(+)
-
-diff --git a/drivers/iio/humidity/hdc3020.c b/drivers/iio/humidity/hdc3020.c
-index ed70415512f6..1cdff7af4ca8 100644
---- a/drivers/iio/humidity/hdc3020.c
-+++ b/drivers/iio/humidity/hdc3020.c
-@@ -16,16 +16,27 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/interrupt.h>
- 
- #include <asm/unaligned.h>
- 
- #include <linux/iio/iio.h>
-+#include <linux/iio/events.h>
- 
- #define HDC3020_HEATER_CMD_MSB		0x30 /* shared by all heater commands */
- #define HDC3020_HEATER_ENABLE		0x6D
- #define HDC3020_HEATER_DISABLE		0x66
- #define HDC3020_HEATER_CONFIG		0x6E
- 
-+#define HDC3020_THRESH_TEMP_MASK	GENMASK(8, 0)
-+#define HDC3020_THRESH_TEMP_SHIFT	7
-+#define HDC3020_THRESH_HUM_MASK		GENMASK(15, 9)
-+
-+#define HDC3020_STATUS_T_LOW_ALERT	BIT(6)
-+#define HDC3020_STATUS_T_HIGH_ALERT	BIT(7)
-+#define HDC3020_STATUS_RH_LOW_ALERT	BIT(8)
-+#define HDC3020_STATUS_RH_HIGH_ALERT	BIT(9)
-+
- #define HDC3020_READ_RETRY_TIMES	10
- #define HDC3020_BUSY_DELAY_MS		10
- 
-@@ -33,14 +44,28 @@
- 
- static const u8 HDC3020_S_AUTO_10HZ_MOD0[2] = { 0x27, 0x37 };
- 
-+static const u8 HDC3020_S_STATUS[2] = { 0x30, 0x41 };
-+
- static const u8 HDC3020_EXIT_AUTO[2] = { 0x30, 0x93 };
- 
-+static const u8 HDC3020_S_T_RH_THRESH_LOW[2] = { 0x61, 0x00 };
-+static const u8 HDC3020_S_T_RH_THRESH_LOW_CLR[2] = { 0x61, 0x0B };
-+static const u8 HDC3020_S_T_RH_THRESH_HIGH_CLR[2] = { 0x61, 0x16 };
-+static const u8 HDC3020_S_T_RH_THRESH_HIGH[2] = { 0x61, 0x1D };
-+
- static const u8 HDC3020_R_T_RH_AUTO[2] = { 0xE0, 0x00 };
- static const u8 HDC3020_R_T_LOW_AUTO[2] = { 0xE0, 0x02 };
- static const u8 HDC3020_R_T_HIGH_AUTO[2] = { 0xE0, 0x03 };
- static const u8 HDC3020_R_RH_LOW_AUTO[2] = { 0xE0, 0x04 };
- static const u8 HDC3020_R_RH_HIGH_AUTO[2] = { 0xE0, 0x05 };
- 
-+static const u8 HDC3020_R_T_RH_THRESH_LOW[2] = { 0xE1, 0x02 };
-+static const u8 HDC3020_R_R_RH_THRESH_LOW_CLR[2] = { 0xE1, 0x09 };
-+static const u8 HDC3020_R_T_RH_THRESH_HIGH_CLR[2] = { 0xE1, 0x14 };
-+static const u8 HDC3020_R_T_RH_THRESH_HIGH[2] = { 0xE1, 0x1F };
-+
-+static const u8 HDC3020_R_STATUS[2] = { 0xF3, 0x2D };
-+
- struct hdc3020_data {
- 	struct i2c_client *client;
- 	/*
-@@ -50,22 +75,54 @@ struct hdc3020_data {
- 	 * if the device does not respond).
- 	 */
- 	struct mutex lock;
-+	/*
-+	 * Temperature and humidity thresholds are packed together into a single
-+	 * 16 bit value. Each threshold is represented by a truncated 16 bit
-+	 * value. The 7 MSBs of a relative humidity threshold are concatenated
-+	 * with the 9 MSBs of a temperature threshold, where the temperature
-+	 * threshold resides in the 7 LSBs. Due to the truncated representation,
-+	 * there is a resolution loss of 0.5 degree celsius in temperature and a
-+	 * 1% resolution loss in relative humidity.
-+	 */
-+	u16 t_rh_thresh_low;
-+	u16 t_rh_thresh_high;
-+	u16 t_rh_thresh_low_clr;
-+	u16 t_rh_thresh_high_clr;
- };
- 
- static const int hdc3020_heater_vals[] = {0, 1, 0x3FFF};
- 
-+static const struct iio_event_spec hdc3020_t_rh_event[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-+		BIT(IIO_EV_INFO_HYSTERESIS),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-+		BIT(IIO_EV_INFO_HYSTERESIS),
-+	},
-+};
-+
- static const struct iio_chan_spec hdc3020_channels[] = {
- 	{
- 		.type = IIO_TEMP,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 		BIT(IIO_CHAN_INFO_SCALE) | BIT(IIO_CHAN_INFO_PEAK) |
- 		BIT(IIO_CHAN_INFO_TROUGH) | BIT(IIO_CHAN_INFO_OFFSET),
-+		.event_spec = hdc3020_t_rh_event,
-+		.num_event_specs = ARRAY_SIZE(hdc3020_t_rh_event),
- 	},
- 	{
- 		.type = IIO_HUMIDITYRELATIVE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 		BIT(IIO_CHAN_INFO_SCALE) | BIT(IIO_CHAN_INFO_PEAK) |
- 		BIT(IIO_CHAN_INFO_TROUGH),
-+		.event_spec = hdc3020_t_rh_event,
-+		.num_event_specs = ARRAY_SIZE(hdc3020_t_rh_event),
- 	},
- 	{
- 		/*
-@@ -389,10 +446,241 @@ static int hdc3020_write_raw(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
-+static int hdc3020_write_thresh(struct iio_dev *indio_dev,
-+				const struct iio_chan_spec *chan,
-+				enum iio_event_type type,
-+				enum iio_event_direction dir,
-+				enum iio_event_info info,
-+				int val, int val2)
-+{
-+	struct hdc3020_data *data = iio_priv(indio_dev);
-+	u16 *thresh;
-+	u8 buf[5];
-+	int ret;
-+
-+	/* Supported temperature range is from –40 to 125 degree celsius */
-+	if (val < -45 || val > 125)
-+		return -EINVAL;
-+
-+	/* Select threshold and associated register */
-+	if (info == IIO_EV_INFO_VALUE) {
-+		if (dir == IIO_EV_DIR_RISING) {
-+			thresh = &data->t_rh_thresh_high;
-+			memcpy(buf, HDC3020_S_T_RH_THRESH_HIGH, 2);
-+		} else {
-+			thresh = &data->t_rh_thresh_low;
-+			memcpy(buf, HDC3020_S_T_RH_THRESH_LOW, 2);
-+		}
-+	} else {
-+		if (dir == IIO_EV_DIR_RISING) {
-+			thresh = &data->t_rh_thresh_high_clr;
-+			memcpy(buf, HDC3020_S_T_RH_THRESH_HIGH_CLR, 2);
-+		} else {
-+			thresh = &data->t_rh_thresh_low_clr;
-+			memcpy(buf, HDC3020_S_T_RH_THRESH_LOW_CLR, 2);
-+		}
-+	}
-+
-+	guard(mutex)(&data->lock);
-+	switch (chan->type) {
-+	case IIO_TEMP:
-+		/*
-+		 * Store truncated temperature threshold into 9 LSBs while
-+		 * keeping the old humidity threshold in the 7 MSBs.
-+		 */
-+		val = (((val + 45) * 65535 / 175) >> HDC3020_THRESH_TEMP_SHIFT);
-+		val &= HDC3020_THRESH_TEMP_MASK;
-+		val |= (*thresh & HDC3020_THRESH_HUM_MASK);
-+		break;
-+	case IIO_HUMIDITYRELATIVE:
-+		/*
-+		 * Store truncated humidity threshold into 7 MSBs while
-+		 * keeping the old temperature threshold in the 9 LSBs.
-+		 */
-+		val = ((val * 65535 / 100) & HDC3020_THRESH_HUM_MASK);
-+		val |= (*thresh & HDC3020_THRESH_TEMP_MASK);
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	put_unaligned_be16(val, &buf[2]);
-+	buf[4] = crc8(hdc3020_crc8_table, buf + 2, 2, CRC8_INIT_VALUE);
-+	ret = hdc3020_write_bytes(data, buf, 5);
-+	if (ret)
-+		return ret;
-+
-+	/* Update threshold */
-+	*thresh = val;
-+
-+	return 0;
-+}
-+
-+static int _hdc3020_read_thresh(struct hdc3020_data *data,
-+				enum iio_event_info info,
-+				enum iio_event_direction dir, u16 *thresh)
-+{
-+	u8 crc, buf[3];
-+	const u8 *cmd;
-+	int ret;
-+
-+	if (info == IIO_EV_INFO_VALUE) {
-+		if (dir == IIO_EV_DIR_RISING)
-+			cmd = HDC3020_R_T_RH_THRESH_HIGH;
-+		else
-+			cmd = HDC3020_R_T_RH_THRESH_LOW;
-+	} else {
-+		if (dir == IIO_EV_DIR_RISING)
-+			cmd = HDC3020_R_T_RH_THRESH_HIGH_CLR;
-+		else
-+			cmd = HDC3020_R_R_RH_THRESH_LOW_CLR;
-+	}
-+
-+	ret = hdc3020_read_bytes(data, cmd, buf, 3);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* CRC check of the threshold */
-+	crc = crc8(hdc3020_crc8_table, buf, 2, CRC8_INIT_VALUE);
-+	if (crc != buf[2])
-+		return -EINVAL;
-+
-+	*thresh = get_unaligned_be16(buf);
-+
-+	return 0;
-+}
-+
-+static int hdc3020_read_thresh(struct iio_dev *indio_dev,
-+			       const struct iio_chan_spec *chan,
-+			       enum iio_event_type type,
-+			       enum iio_event_direction dir,
-+			       enum iio_event_info info,
-+			       int *val, int *val2)
-+{
-+	struct hdc3020_data *data = iio_priv(indio_dev);
-+	u16 *thresh;
-+
-+	/* Select threshold */
-+	if (info == IIO_EV_INFO_VALUE) {
-+		if (dir == IIO_EV_DIR_RISING)
-+			thresh = &data->t_rh_thresh_high;
-+		else
-+			thresh = &data->t_rh_thresh_low;
-+	} else {
-+		if (dir == IIO_EV_DIR_RISING)
-+			thresh = &data->t_rh_thresh_high_clr;
-+		else
-+			thresh = &data->t_rh_thresh_low_clr;
-+	}
-+
-+	guard(mutex)(&data->lock);
-+	switch (chan->type) {
-+	case IIO_TEMP:
-+		/* Get the truncated temperature threshold from 9 LSBs,
-+		 * shift them and calculate the threshold according to the
-+		 * formula in the datasheet.
-+		 */
-+		*val = ((*thresh) & HDC3020_THRESH_TEMP_MASK) <<
-+			HDC3020_THRESH_TEMP_SHIFT;
-+		*val = -2949075 + (175 * (*val));
-+		*val2 = 65535;
-+		break;
-+	case IIO_HUMIDITYRELATIVE:
-+		/* Get the truncated humidity threshold from 7 MSBs, and
-+		 * calculate the threshold according to the formula in the
-+		 * datasheet.
-+		 */
-+		*val = 100 * ((*thresh) & HDC3020_THRESH_HUM_MASK);
-+		*val2 = 65535;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return IIO_VAL_FRACTIONAL;
-+}
-+
-+static int hdc3020_clear_status(struct hdc3020_data *data)
-+{
-+	return hdc3020_write_bytes(data, HDC3020_S_STATUS, 2);
-+}
-+
-+static int hdc3020_read_status(struct hdc3020_data *data, u16 *stat)
-+{
-+	u8 crc, buf[3];
-+	int ret;
-+
-+	ret = hdc3020_read_bytes(data, HDC3020_R_STATUS, buf, 3);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* CRC check of the status */
-+	crc = crc8(hdc3020_crc8_table, buf, 2, CRC8_INIT_VALUE);
-+	if (crc != buf[2])
-+		return -EINVAL;
-+
-+	*stat = get_unaligned_be16(buf);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t hdc3020_interrupt_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct hdc3020_data *data;
-+	u16 stat;
-+	int ret;
-+
-+	data = iio_priv(indio_dev);
-+	ret = hdc3020_read_status(data, &stat);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	if (!(stat & (HDC3020_STATUS_T_HIGH_ALERT | HDC3020_STATUS_T_LOW_ALERT |
-+		HDC3020_STATUS_RH_HIGH_ALERT | HDC3020_STATUS_RH_LOW_ALERT)))
-+		return IRQ_NONE;
-+
-+	if (stat & HDC3020_STATUS_T_HIGH_ALERT)
-+		iio_push_event(indio_dev,
-+			       IIO_MOD_EVENT_CODE(IIO_TEMP, 0,
-+						  IIO_NO_MOD,
-+						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_DIR_RISING),
-+						  iio_get_time_ns(indio_dev));
-+
-+	if (stat & HDC3020_STATUS_T_LOW_ALERT)
-+		iio_push_event(indio_dev,
-+			       IIO_MOD_EVENT_CODE(IIO_TEMP, 0,
-+						  IIO_NO_MOD,
-+						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_DIR_FALLING),
-+						  iio_get_time_ns(indio_dev));
-+
-+	if (stat & HDC3020_STATUS_RH_HIGH_ALERT)
-+		iio_push_event(indio_dev,
-+			       IIO_MOD_EVENT_CODE(IIO_HUMIDITYRELATIVE, 0,
-+						  IIO_NO_MOD,
-+						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_DIR_RISING),
-+						  iio_get_time_ns(indio_dev));
-+
-+	if (stat & HDC3020_STATUS_RH_LOW_ALERT)
-+		iio_push_event(indio_dev,
-+			       IIO_MOD_EVENT_CODE(IIO_HUMIDITYRELATIVE, 0,
-+						  IIO_NO_MOD,
-+						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_DIR_FALLING),
-+						  iio_get_time_ns(indio_dev));
-+
-+	return IRQ_HANDLED;
-+}
-+
- static const struct iio_info hdc3020_info = {
- 	.read_raw = hdc3020_read_raw,
- 	.write_raw = hdc3020_write_raw,
- 	.read_avail = hdc3020_read_available,
-+	.read_event_value = hdc3020_read_thresh,
-+	.write_event_value = hdc3020_write_thresh,
- };
- 
- static void hdc3020_stop(void *data)
-@@ -402,6 +690,7 @@ static void hdc3020_stop(void *data)
- 
- static int hdc3020_probe(struct i2c_client *client)
- {
-+	const struct i2c_device_id *hdc3020_id;
- 	struct iio_dev *indio_dev;
- 	struct hdc3020_data *data;
- 	int ret;
-@@ -413,6 +702,8 @@ static int hdc3020_probe(struct i2c_client *client)
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
-+	hdc3020_id = i2c_client_get_device_id(client);
-+
- 	data = iio_priv(indio_dev);
- 	data->client = client;
- 	mutex_init(&data->lock);
-@@ -425,6 +716,54 @@ static int hdc3020_probe(struct i2c_client *client)
- 	indio_dev->channels = hdc3020_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(hdc3020_channels);
- 
-+	/* Read out upper and lower thresholds and hysteresis, which can be the
-+	 * default values or values programmed into non-volatile memory.
-+	 */
-+	ret = _hdc3020_read_thresh(data, IIO_EV_INFO_VALUE, IIO_EV_DIR_FALLING,
-+				   &data->t_rh_thresh_low);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "Unable to get low thresholds\n");
-+
-+	ret = _hdc3020_read_thresh(data, IIO_EV_INFO_VALUE, IIO_EV_DIR_RISING,
-+				   &data->t_rh_thresh_high);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "Unable to get high thresholds\n");
-+
-+	ret = _hdc3020_read_thresh(data, IIO_EV_INFO_HYSTERESIS,
-+				   IIO_EV_DIR_FALLING,
-+				   &data->t_rh_thresh_low_clr);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "Unable to get low hysteresis\n");
-+
-+	ret = _hdc3020_read_thresh(data, IIO_EV_INFO_HYSTERESIS,
-+				   IIO_EV_DIR_RISING,
-+				   &data->t_rh_thresh_high_clr);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "Unable to get high hysteresis\n");
-+
-+	if (client->irq) {
-+		/* The alert output is activated by default upon power up, hardware
-+		 * reset, and soft reset. Clear the status register before enabling
-+		 * the interrupt.
-+		 */
-+		ret = hdc3020_clear_status(data);
-+		if (ret)
-+			return ret;
-+
-+		ret = devm_request_threaded_irq(&client->dev, client->irq,
-+						NULL, hdc3020_interrupt_handler,
-+						IRQF_TRIGGER_RISING |
-+						IRQF_ONESHOT,
-+						hdc3020_id->name, indio_dev);
-+		if (ret)
-+			return dev_err_probe(&client->dev, ret,
-+					     "Failed to request IRQ\n");
-+	}
-+
- 	ret = hdc3020_write_bytes(data, HDC3020_S_AUTO_10HZ_MOD0, 2);
- 	if (ret)
- 		return dev_err_probe(&client->dev, ret,
--- 
-2.39.2
+Il 03/02/2024 00:45, Russell King (Oracle) ha scritto:
+> On Sat, Feb 03, 2024 at 12:18:13AM +0100, Sergio Palumbo wrote:
+>> Hello Russell,
+>> thanks for your  explanation. I have to say that:
+>> Module default is LAN_SDS_MODE=1
+>> Host banana PI R3 supporting 1000base-X + 2500base-X
+>> I would update the table as follows:
+>>
+>> The current situation:
+>> Host supports		Module		Mode		Functional
+>> 1000base-X		LAN_SDS_MODE=1	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X
+>> 1000base-X		LAN_SDS_MODE=6	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X
+>> 1000base-X + 2500base-X	LAN_SDS_MODE=1	1000base-X	Yes
+>> 1000base-X + 2500base-X	LAN_SDS_MODE=6	1000base-X	Yes (host forcing module at 1000base-X)
+>>
+>> I suppose that Banana PI R3 host is forced by linux drivers
+>> at 1000base-X so first two cases should be same as second two cases.
+>>
+>>
+>> With the quirk:
+>> Host supports		Module		Mode		Functional
+>> 1000base-X		LAN_SDS_MODE=1	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X host
+>> 1000base-X		LAN_SDS_MODE=6	1000base-X	Not tested, but expect to work as 1000base-X + 2500base-X host
+>> 1000base-X + 2500base-X	LAN_SDS_MODE=1	1000base-X	Yes (module forcing host at 1000base-X)
+>> 1000base-X + 2500base-X	LAN_SDS_MODE=6	2500base-X	Yes
+> Your third line is just wrong. Given the capabilities of the host
+> _and_ the capabilities of the module adjusted by your quirk, phylink
+> _will_ choose 2500base-X _not_ 1000base-X for that. With your quirk,
+> there is no way for Linux to know what LAN_SDS_MODE has been set
+> in the module. Even without your quirk, _unless_ the module updates
+> the EEPROM contents which is unlikely, there isn't a way to know.
+>
+>
+> Adding a quirk that makes it not work in its default state is
+> technically a regression. We can't know whether people are already
+> using this module with Linux in this state. Adding this change
+> potentially breaks users setups.
+>
+>> I suppose Banana PI R3 forcing Linux drivers at 1000-X when
+>> module in LAN_SDS_MODE=1 and expect it should work alpso with
+>> hosts at 1000base-X only in LAN_SDS_MODE=1 and LAN_SDS_MODE=6
+> There is no way for Linux to know what LAN_SDS_MODE the module is
+> in.
+>
 
