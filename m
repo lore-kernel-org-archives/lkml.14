@@ -1,105 +1,63 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557725D904
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 13:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F195D47E;
+	Sat,  3 Feb 2024 13:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706965654; cv=none; b=f6ehesi7evAfvrbYuLVKfjnLuxN380F0NZU6Sfcz5gBxS8aJOBI6yVo/QZxsOqXZReQ1Umeo/ZzjMl5m1auRMNgZ2p2PBUUy78oaorYFcq+4x6qHAzM1Dzk0eIOgH00RIt/s12pto3yROHLXkSk/ERIragvXHxV6praheGLtJCc=
+	t=1706966130; cv=none; b=MdAhwj46gmyJJJI7Xits1zox7oyX0oq5xuJoYvQlKUuLbXdimvEipAMJ/Tg4BqIu2rcuLY7xz2SlrxwHK4+smZFHqFbnsQkdmQgmPCX4Q2rdXDbl3noojzRjopwQs8jsJLClar4OQn98s5xAR9ur2Rsyj+G/JrAN6stwKUCPQyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706965654; c=relaxed/simple;
-	bh=MNorqcheca3qSqKF2uY5r/B3fNXw7byVmQRVNnFgubQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EaQ1EsrM/79OEXGPX9FZGGn5z7+P69SkFjzNGZ5I2pueSLhReBlkIVxJ84yFqy49QKHPu3LBxxt/BQysphHkobWb/0o2wzPeEVjJ6KDz9XdTF5nBSRV5ebpHnMVRWNxPJt8T+3tQmnzX0U3iHkwsAaBNHrVsuwOSOmi6ZNjj320=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDYf9dso; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706966130; c=relaxed/simple;
+	bh=flQ6GnLUKLFnvuxnXDKqbRXwudb/hut3th1YVysTEfI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=W4BEbDhN3Q5k7EM/JfTlh85q5nTtcvyRp/CTP+3lBQvSEMHYWXNtOCZQ3qvCF+TYlW+h7eOHx+z9ea98Sc8c815utKJ3ReayJAP34PdMgNOKzz8xfdf17lCI3roMfgsX25DI4zMw8cQaU4a0Bi8lRmDvQpgfsvOt0FZ1r/qXKT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ojq/QYEr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDYf9dso"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-290fb65531eso2223356a91.2
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Feb 2024 05:07:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706965652; x=1707570452; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+JrlPIuSE8yozR+GhrPVSUGhg1SjxElkVKDTnKOx20=;
-        b=gDYf9dsoNIi69OwBsoXvpXpdL+ev5wp998rZ71ZuFaSa+LsgNTwVuREZnRwcObR9B9
-         7gVFARv3WTh48IYeMRCv4nEFRuf2Op3YNC4yswTWanZwKuh9rdOv2wmP9T2GiZlmXv/c
-         w1NOUKi8UqbbmprIc+A0+poetdkxj0yS0qbp9M0WIY2gOx0mitWvuN4q/uxH72Q88kPW
-         rutFUMKlnLCZrz71mYvkUNvq5Wk81B5s0fGpgtjqIbfJ2SmZilJoI0l9mn/C0mjtqieG
-         ZHxs0IKaz6G1CnUmVMFLxbTko5Vr/3Ol4R+xI0j0XVDuYS1LpOUmKfrbYOHOBp32BwbC
-         Q5uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706965652; x=1707570452;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y+JrlPIuSE8yozR+GhrPVSUGhg1SjxElkVKDTnKOx20=;
-        b=sX6ZqWDyJO+HgEqjrRUw5lqkg/dx/5PvBwp/IQILoPfUtV4Tlkpo6Dm29kVqYUHfw/
-         5eju6smx9eIa8A/6VBmirp9MGHJpE6L+9x46yG/dOUl/bf/qHVu/Mng9AU1AI+suxT9H
-         MDER2Lx+abV1MwEvh0D3ra9tSGjdjmgPlbSz7lnOhMcaFPPRHEq3Us2v24r3WEUd1/Mz
-         O0DDXT3/VCL36RkqTDPC5kwmujGQ4Eu/vXsL53Hpord7vUh8gFm4MFD4dmuoEfqKB61Y
-         vzCvHJbqCX67NjK3vcwqAHNzISKJ9iIOsNFOwMlfd+3HQ/XK5CqqEKIj4yolznOVzk0p
-         j2Aw==
-X-Gm-Message-State: AOJu0YyLN/Kx/4JKX7GhyRF9mETIvNbJnk+QHwZcp9gVVf4NNXCI7CR1
-	yhzUifYqtwbdmvLN6x7fPnRAStz58S1m8vbPgpZ7NzUxKYp0sK3K
-X-Google-Smtp-Source: AGHT+IEylMPsDlrVCFsSiEAjV/Co51g3W9EQE7MKXyaGWIf6YkYRSVswlXt5iEb4J5XHmc1kAGTQcg==
-X-Received: by 2002:a17:90a:7c06:b0:296:1943:35a1 with SMTP id v6-20020a17090a7c0600b00296194335a1mr6497683pjf.35.1706965652538;
-        Sat, 03 Feb 2024 05:07:32 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUPXO0n5NhZyjb/0v7BsREUUf7j6U6ubGD4pYArzaa77z8OR6Zw+8miZ+Jkr/p0cb+iDsmVCUnmKkkUYNor5dJGkYjEK3v+DJY4
-Received: from localhost.localdomain ([122.161.75.254])
-        by smtp.gmail.com with ESMTPSA id o20-20020a17090aac1400b002961a98c181sm1737940pjq.56.2024.02.03.05.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Feb 2024 05:07:31 -0800 (PST)
-From: Abhinav Jain <jain.abhinav177@gmail.com>
-To: skhan@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	Abhinav Jain <jain.abhinav177@gmail.com>
-Subject: [PATCH] Task: Extra credit : LKMP Bug Fixing 2024 Spring : Documentation
-Date: Sat,  3 Feb 2024 13:07:25 +0000
-Message-Id: <20240203130725.14802-1-jain.abhinav177@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ojq/QYEr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6227FC433F1;
+	Sat,  3 Feb 2024 13:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706966129;
+	bh=flQ6GnLUKLFnvuxnXDKqbRXwudb/hut3th1YVysTEfI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Ojq/QYErN4buWyS0hjJoAjvD1qew51dG3yRYS/ug94Tdr3wlQiQXAgDQxAQPizarT
+	 ZaCmI+uGklCmY3CktbdW1NORm2tuDLEO8ZTKujSGMx+RkmF+9FdY9BRKVX5YKEel/t
+	 3caU6iup9fqSuYdDkbAKS/T3rqxB1AAzJ3XuArAw/WYtONoD2qkKTjG3Juj2Uw5qeo
+	 ew+bGh5M4YnZAQNRMYIM54MRxFjmLFi4gzJu5vESDjCKYUIRspeVPAbcKLClz+i4Aw
+	 +ry+7KIFiGkvyDbdKfyj4SfIB/+9ZgRB0sPyy1XOqO6q7waTHuwb1MFHV6B94iU8Et
+	 NrBjS6cRmU8kA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4B088C04E32;
+	Sat,  3 Feb 2024 13:15:29 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240201202254.15588-1-acme@kernel.org>
+References: <20240201202254.15588-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240201202254.15588-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.8-1-2024-02-01
+X-PR-Tracked-Commit-Id: fdd0ae72b34e56eb5e896d067c49a78ecb451032
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b555d191561a7f89b8d2108dff687d9bc4284e48
+Message-Id: <170696612929.602.15683354228494654874.pr-tracker-bot@kernel.org>
+Date: Sat, 03 Feb 2024 13:15:29 +0000
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, Thomas Richter <tmricht@linux.ibm.com>, Yanteng Si <siyanteng@loongson.cn>, Yicong Yang <yangyicong@hisilicon.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Added a prototype for dget() to fix the warning
+The pull request you sent on Thu,  1 Feb 2024 17:22:54 -0300:
 
-Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
----
- include/linux/dcache.h | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.8-1-2024-02-01
 
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 3da2f0545d5d..b082b48e7eb5 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -301,7 +301,7 @@ extern char *dentry_path(const struct dentry *, char *, int);
- /* Allocation counts.. */
- 
- /**
-- *	dget, dget_dlock -	get a reference to a dentry
-+ *	dget_dlock -	get a reference to a dentry
-  *	@dentry: dentry to get a reference to
-  *
-  *	Given a dentry or %NULL pointer increment the reference count
-@@ -315,6 +315,13 @@ static inline struct dentry *dget_dlock(struct dentry *dentry)
- 	return dentry;
- }
- 
-+/**
-+ *	dget -	get a reference to a dentry
-+ *	@dentry: dentry to get a reference to
-+ *
-+ *	Given a dentry or %NULL pointer increment the reference count
-+ *	unconditionally and return it.
-+ */
- static inline struct dentry *dget(struct dentry *dentry)
- {
- 	if (dentry)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b555d191561a7f89b8d2108dff687d9bc4284e48
+
+Thank you!
+
 -- 
-2.25.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
