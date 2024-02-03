@@ -1,45 +1,45 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55481798A;
-	Sat,  3 Feb 2024 02:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E73119473;
+	Sat,  3 Feb 2024 02:37:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706927875; cv=none; b=m44vVjk8ILdgONr5wVqVwEyJSYOETO06vnOzNdvAVFvM8EH/XB3KouVXF0sN4WuHv2zM7Gmx7is2IQ9Gj7eUCn/5C4ZX/x3TmmP6yopq8gGuLsmTFyjoHxTcUXvhC+XYv02w08OeyU5hBUmFR/8jgyBtEkwLN/Mdir2JqrwHOdk=
+	t=1706927877; cv=none; b=oLR3s6kzinxypJJFQp/0elJ8MTRSd2STiQVEdV/mDljJc+97hyZrGurfzKtcp5W9FBTrLFs91gY32geGGOGAKaHVy9JEtwSZstRZqUq+BGQrr7Wk3NpZObpg/3wNdwPo6jGLJGI7yeU0tfhQA2g6uKjKQl5fiaONQa9Nuac5H2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706927875; c=relaxed/simple;
-	bh=AUzYa+W3vXThhkfZrkvq18z95m/MUhJSaK13Esrt9IU=;
+	s=arc-20240116; t=1706927877; c=relaxed/simple;
+	bh=GgnICuH7GHv7SDlK6A+NlCN2HhLTGdZZc+5NwsH4lPE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NyL1+H13WDJV+XdlPg+zSnQ2IkC8CUD8P1JTZKryJtg31JiaA/b8VLtJxEh1UUS9O5tMJ3PRTGprrEZoYcjKDXC2dIzsP7jApgZYi8Bw2j+BqkomEO/Gb+XgbPBQHDSquadChSfMaJuHxM7HOS1tIYKNn5TER14rwuzY3MH6g7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Zo4s8Gx7; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=ODIb3cUTOC2O1MwMgVc/f/oC5aTkkciWkUPzOqwJ5LfMPkQaApyLJBbsZc1ThCDEZATp5T8NnX2riQf+g8SzKaFGSMHAiLY6XD2M0uFlbGI0yzwzQnVbLVNNQCe3dkJ6fg+50WsyWIp71ze7Rb4rfJvkB38GTyssc4Rov+AgelQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FIU68p+D; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Zo4s8Gx7"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FIU68p+D"
 Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4132bROW029984;
-	Sat, 3 Feb 2024 02:37:27 GMT
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4132RUjw014040;
+	Sat, 3 Feb 2024 02:37:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=jumcsyHAMPRdK6BBRrtX
-	rViYw1o9e9jHI3H7NDZD9Tc=; b=Zo4s8Gx7nCs3+0vl2HUQCuFIHDx1bGEB8xB6
-	ZXRV5sU/kFKFUzuIJIXbZzjAQucU9yNTG8xiYa1hH9m+GJt5s74nIJMBaqdI104q
-	xOO98fOW2/2zYM5Ozlr3CVVuC1Vu1FHJ1dRNAUn2GL4dKEDExRxyq8v1aUO08ZAb
-	Jmm2o9sNDxavD21dhLNx1CepTOrk96BjzHW1rpnLNia+bFfFykgqh5VoRu2VzaAq
-	WXP6UDszfUmgk3ClwDi+Dplh0TIYEi0iqW+kOEB7CWz4RuL+rooNR3SiVkOH3X9d
-	N+ZdxHNE9ZOtNGJ5IQJDYPbBwxS5+GUC8Lpm0usBXzc+l1Yfpw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptwawr7-1
+	:mime-version:content-type; s=qcppdkim1; bh=1gKa8uPfE60yWjTTUplQ
+	LsTc6cS2VTs4IFAWikb6MkA=; b=FIU68p+D2Hr/fliG/7ZASIcldR9rO26JGz1a
+	yKy84AZVmBBjGaknOd2jiFmYt1WBGCuZtYOOzvRwICF+5NQ7b0tyXMGMDfQAs5tS
+	Q4bE76irFiC/GD9sm81DFbOU4gO3e7RMgcz4k4kKZOsn24MrqaSPCXDK773LI+/r
+	ahXPi2OAJFZkIZzrNxjF70FNXfnVBpzPcKH7T3wWELKhDViUxN4nmD9zTjqgOnXS
+	Bsb/RyoS2812XWuccJUVr8hDfNtWSZPvM/w1pSJ3sEJw91X2klw2nIrvCOfqcJop
+	ChtZKdf6PAN/g04n9W9Vq6eGjQsBNK65I5hJf1f8SdoojeKtQA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptwawrh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 03 Feb 2024 02:37:27 +0000 (GMT)
+	Sat, 03 Feb 2024 02:37:34 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4132bIHf003503
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4132bXDA004333
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 3 Feb 2024 02:37:18 GMT
+	Sat, 3 Feb 2024 02:37:33 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 18:37:17 -0800
+ 15.2.1118.40; Fri, 2 Feb 2024 18:37:32 -0800
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -51,12 +51,10 @@ To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
 CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v13 02/53] xhci: fix off by one check when adding a secondary interrupter.
-Date: Fri, 2 Feb 2024 18:35:54 -0800
-Message-ID: <20240203023645.31105-3-quic_wcheng@quicinc.com>
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v13 51/53] ASoC: usb: Rediscover USB SND devices on USB port add
+Date: Fri, 2 Feb 2024 18:36:43 -0800
+Message-ID: <20240203023645.31105-52-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240203023645.31105-1-quic_wcheng@quicinc.com>
 References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
@@ -71,8 +69,8 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 3rUdhidrD1t1Pnpgqa5TYwH6m5OxXRcN
-X-Proofpoint-GUID: 3rUdhidrD1t1Pnpgqa5TYwH6m5OxXRcN
+X-Proofpoint-ORIG-GUID: fF25EnyuiHyp2kNNunyZP5ekd6I5gnsd
+X-Proofpoint-GUID: fF25EnyuiHyp2kNNunyZP5ekd6I5gnsd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-02_16,2024-01-31_01,2023-05-22_02
@@ -82,40 +80,52 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamsco
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401310000 definitions=main-2402030015
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In case the USB backend device has not been initialized/probed, USB SND
+device connections can still occur.  When the USB backend is eventually
+made available, previous USB SND device connections are not communicated to
+the USB backend.  Call snd_usb_rediscover_devices() to generate the connect
+callbacks for all USB SND devices connected.  This will allow for the USB
+backend to be updated with the current set of devices available.
 
-The sanity check of interrupter index when adding a new interrupter is
-off by one. intr_num needs to be smaller than xhci->max_interrupter to
-fit the array of interrupters.
+The chip array entries are all populated and removed while under the
+register_mutex, so going over potential race conditions:
 
-Luckily this doesn't cause any real word harm as xhci_add_interrupter()
-is always called with a intr_num value smaller than xhci->max_interrupters
-in any current kernel.
+Thread#1:
+  q6usb_component_probe()
+    --> snd_soc_usb_add_port()
+      --> snd_usb_rediscover_devices()
+        --> mutex_lock(register_mutex)
 
-Should not be needed for stable as 6.7 kernel and older only supports
-one interrupter, with intr_num always being zero.
+Thread#2
+  --> usb_audio_disconnect()
+    --> mutex_lock(register_mutex)
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-usb/e9771296-586d-456a-ac24-a82de79bb2e6@moroto.mountain/
-Fixes: 4bf398e15aa4 ("xhci: split allocate interrupter into separate alloacte and add parts")
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20240125152737.2983959-3-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So either thread#1 or thread#2 will complete first.  If
+
+Thread#1 completes before thread#2:
+  SOC USB will notify DPCM backend of the device connection.  Shortly
+  after, once thread#2 runs, we will get a disconnect event for the
+  connected device.
+
+Thread#2 completes before thread#1:
+  Then during snd_usb_rediscover_devices() it won't notify of any
+  connection for that particular chip index.
+
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- drivers/usb/host/xhci-mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-usb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index d00d4d937236..a7716202a8dd 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -2322,7 +2322,7 @@ xhci_add_interrupter(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
- 	u64 erst_base;
- 	u32 erst_size;
+diff --git a/sound/soc/soc-usb.c b/sound/soc/soc-usb.c
+index dfd6f53898c5..4d6d6ab0601f 100644
+--- a/sound/soc/soc-usb.c
++++ b/sound/soc/soc-usb.c
+@@ -437,6 +437,8 @@ int snd_soc_usb_add_port(struct snd_soc_usb *usb)
+ 	list_add_tail(&usb->list, &usb_ctx_list);
+ 	mutex_unlock(&ctx_mutex);
  
--	if (intr_num > xhci->max_interrupters) {
-+	if (intr_num >= xhci->max_interrupters) {
- 		xhci_warn(xhci, "Can't add interrupter %d, max interrupters %d\n",
- 			  intr_num, xhci->max_interrupters);
- 		return -EINVAL;
++	snd_usb_rediscover_devices();
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_usb_add_port);
