@@ -1,107 +1,89 @@
-Received: from secondary.pambor.com (secondary.pambor.com [46.38.233.203])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70E24F20C;
-	Sat,  3 Feb 2024 13:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.233.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3DE433D5;
+	Sat,  3 Feb 2024 13:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706966504; cv=none; b=rDYpI4WBXZDivCdMSnjQq1/WI76ZbnO9o7nvyB6Ve6TozLH7voTaVmIFl7A7sVxL6GWD7c52Oy+yGgRf7269vComLVS2QUvdPqPu8n09pkqWf8wKXzdWA6fX09KK0hYUFgFTu2vXaXPMM7sQCTpeq1dd5L7dJGXR8SvU8LNs+zU=
+	t=1706967324; cv=none; b=VolwkFFA/w8w5UuEWBLCX2rG4PjgIHxq7Em8/E7RrMp4KrgZ05q/jQpa8o7EEbZUD+FaClEr1kMJL3gIveUsWMxq4rdeS+e2Oo7rjlccylqHGOsKTETGm/HzG/7x5UIoov/Y+Yb4rwA3JkqoUnFwq/APrH3QC2+yHXdRDlDT4uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706966504; c=relaxed/simple;
-	bh=DKL9b3icrAnYHUAIyTMERLKYVfDCo69laJyU52r8+hE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xu//NxB9oIv2w+UXsKtszrUVLIXnSV0zeZ7ZlVlKQuY/lLYtbgu25Z0+oaUhx3TgEz+Rz/zc1A9ElkBIuL8RR++IeAAYGByK8lOcXqf2fo0IsHzAcGvhKZ4hVO+amwLUrrSq+xKVa4K29QDJVFDmzf3gr7+A6rghTmMpTCaJxsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osasysteme.de; spf=pass smtp.mailfrom=osasysteme.de; dkim=pass (2048-bit key) header.d=osasysteme.de header.i=@osasysteme.de header.b=rL9qRFRt; arc=none smtp.client-ip=46.38.233.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osasysteme.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=osasysteme.de
+	s=arc-20240116; t=1706967324; c=relaxed/simple;
+	bh=A+hGYOL0gt/GgmcQa7WP6qCGq9VmybxKV6Sy9oD3vaY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YTSrxKPJHwXSZpq9pKmXqC7cnBEXMFq8U2IqELElxUgwBI8ka6lwWq4cdQpvoip9MeNzUCvEn3zOdUHsGUoK7Jym2rGMrDaFaxUZZ0UicWD9OyVlvn7TG5IysZv7DMOcn/YseUTthKFm9Wyp6aLIxncdfkWwU3HR5JRj97eVZGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKXDPmCY; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=osasysteme.de header.i=@osasysteme.de header.b="rL9qRFRt"
-Received: from localhost (localhost [127.0.0.1])
-	by secondary.pambor.com (Postfix) with ESMTP id 2D6326EFF5E;
-	Sat,  3 Feb 2024 14:12:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=osasysteme.de;
-	s=19022017; t=1706965974;
-	bh=DKL9b3icrAnYHUAIyTMERLKYVfDCo69laJyU52r8+hE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rL9qRFRtTjPbGId30HzVsjzKPVd2dZ+fTgzPAk+cPcN5NZmgWvqCRIFDO3uOv5utI
-	 PmkJQEPOpxTkRm2syjaZqXpBqzlimnmcZHJagunTrYEAqr3C2Bw+blrvcLPhr7gRnx
-	 8iEh/A0MRAZiTtGeY6x3S/m3OIQYKZY/USDVtA/lMECQOu3StkDuNssBj+phy+Rwu5
-	 3vytXYY6W3Q5HzVk/0ZQKMvD6ERkT8mbW1V9FNlt3Ke6z7s1rsITmnklW+PD41HUkx
-	 G3k1PMiI0vMXoIdqtONGsrDLfRo2LVb6/4Gmq69I8EtpCezLnnrtPXDnPrXhURPsny
-	 XYEKl7umiyscQ==
-X-Virus-Scanned: Debian amavisd-new at secondary.pambor.com
-Received: from secondary.pambor.com ([127.0.0.1])
-	by localhost (secondary.pambor.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id wwGa7QVwNd2p; Sat,  3 Feb 2024 14:12:51 +0100 (CET)
-Received: from chromebook.fritz.box (dynamic-2a01-0c23-79b1-ee00-489e-3931-3658-2abd.c23.pool.telefonica.de [IPv6:2a01:c23:79b1:ee00:489e:3931:3658:2abd])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.osasysteme.de (Postfix) with ESMTPSA id 52D406EFF0F;
-	Sat,  3 Feb 2024 14:12:51 +0100 (CET)
-From: Tim Pambor <tp@osasysteme.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Dan Murphy <dmurphy@ti.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tim Pambor <tp@osasysteme.de>
-Subject: [PATCH] net: phy: dp83822: Fix RGMII TX delay configuration
-Date: Sat,  3 Feb 2024 14:11:51 +0100
-Message-ID: <20240203131152.61958-1-tp@osasysteme.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKXDPmCY"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6040a879e1eso31389347b3.3;
+        Sat, 03 Feb 2024 05:35:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706967322; x=1707572122; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J3yWyYi4bDAa4Pmz/SsjyeLYBc9Qo5resphR6lTSFh8=;
+        b=WKXDPmCYgcxbgsdVy590ZgAX/7bsyUb+Y5e/ZBZpqFOXJkzr0ky+77glaCcVHcOZkW
+         0+jCgJ0jsOGx3aNdu6v6+IIWneHZuoWbJkAD31eG7Mv/ypPdTv/AURwTInwFJ/RWclxz
+         iB8TB7tvi0u31lUL/puxV6313lLYKmJ58QFBkkbzbi/ZbMJfp4h7kWJYj1lFyOB+/7D9
+         8IPYOjMCTeLRi128aEy+978Bz/YHL+W7pNin64N8kZCfttLA1qhqkxL1FV87rzg7iCK8
+         KOSBi5+L0k8t8hBtGOaDlbP5AGdvid7Cat5OGbXEHs8506oyJOcJnyJjDyu3GvHZ/ohj
+         ofPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706967322; x=1707572122;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J3yWyYi4bDAa4Pmz/SsjyeLYBc9Qo5resphR6lTSFh8=;
+        b=jJ/M7E37iPPCsKXKcAbpl/fjW9+YKvsL1M4tnV5QJ0Y3XAmFNtwkY0IAy5tL88Zr2I
+         Mbj09OsRXdNOfYolia6Im9xR2Kk18LMftKWcPh4XnYJwT75CW8B0dBaT3VfdQXUSBgtF
+         HzB48UurRsaBI+8wl+apfV1f/DPGBBg57ZVq4lM3Ks1Gdec9nEzSjrCZZ4REc9pHtNne
+         zefX8bSLEeA181YmrO9Jx/Oi3UnHGoMXRP8b0CqE0E08rI3rmmP4CBMBgBrnYMQQHgtb
+         nWl7NA3jMfDPt2O5P4jKvkMb4iMZ70TZftVZ5nsRdhDbt/0fnVG9tTARqaHCa1RpR949
+         vV7Q==
+X-Gm-Message-State: AOJu0YwIJhDKJQua2HxWwkT76OSIUVWICXrHGnNmCppMWihYUTN/Fun8
+	wmUBqDxBXhKdNw5Wut/vTCq/tS+lqDCitqGyqUd4yy1rXFyC7VHoxvDfZMoFcwHTBiP1vkXPZxl
+	w7uNw3zxY4HZ2UksoziEaipyXIPY=
+X-Google-Smtp-Source: AGHT+IGy+mF9kwovaYnQ1qob9QLWfl7MTKcTdjCQ20jgFHHNz2gCRW/kwOpFSoixlIPD75u4OmDB5ajbR1avB8Wddts=
+X-Received: by 2002:a81:a0d0:0:b0:602:d12f:1b7a with SMTP id
+ x199-20020a81a0d0000000b00602d12f1b7amr9960316ywg.7.1706967322547; Sat, 03
+ Feb 2024 05:35:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231215194828.2611213-1-mmaurer@google.com> <ca0f2db8-e353-4f52-aaa1-35042e52ad91@intel.com>
+In-Reply-To: <ca0f2db8-e353-4f52-aaa1-35042e52ad91@intel.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 3 Feb 2024 14:35:11 +0100
+Message-ID: <CANiq72m3-j_ZmwfSCZG+-uMr9fzocMmUJhDkjgspzCKbYbbO_w@mail.gmail.com>
+Subject: Re: [PATCH] x86: rust: Disable entry padding with Rust
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Matthew Maurer <mmaurer@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The logic for enabling the TX clock shift is inverse of enabling the RX
-clock shift. The TX clock shift is disabled when DP83822_TX_CLK_SHIFT is
-set. Correct the current behavior and always write the delay configuration
-to ensure consistent delay settings regardless of bootloader configuration.
+On Wed, Jan 31, 2024 at 9:32=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
+>
+> That way, someone who is using CALL_DEPTH_TRACKING doesn't accidentally
+> lose it by turning on RUST.  To turn on RUST, they'd first need to go
+> turn off the things that are selecting CALL_THUNKS.
 
-Reference: https://www.ti.com/lit/ds/symlink/dp83822i.pdf p. 69
++1, we should prefer to avoid disabling other things, especially since
+Rust is still a bit of an "expert" option, so please feel free to add
+it to the `RUST` list.
 
-Fixes: 8095295292b5 ("net: phy: DP83822: Add setting the fixed internal delay")
-Signed-off-by: Tim Pambor <tp@osasysteme.de>
----
- drivers/net/phy/dp83822.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index b7cb71817780..b061036f654a 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -398,16 +398,15 @@ static int dp83822_config_init(struct phy_device *phydev)
- 		tx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
- 						      false);
- 		if (tx_int_delay <= 0)
--			rgmii_delay &= ~DP83822_TX_CLK_SHIFT;
--		else
- 			rgmii_delay |= DP83822_TX_CLK_SHIFT;
-+		else
-+			rgmii_delay &= ~DP83822_TX_CLK_SHIFT;
- 
--		if (rgmii_delay) {
--			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
--					       MII_DP83822_RCSR, rgmii_delay);
--			if (err)
--				return err;
--		}
-+		err = phy_modify_mmd(phydev, DP83822_DEVADDR, MII_DP83822_RCSR,
-+				     DP83822_RX_CLK_SHIFT | DP83822_TX_CLK_SHIFT, rgmii_delay);
-+
-+		if (err < 0)
-+			return err;
- 
- 		phy_set_bits_mmd(phydev, DP83822_DEVADDR,
- 					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
--- 
-2.43.0
-
+Cheers,
+Miguel
