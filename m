@@ -1,32 +1,34 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5055F862
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 19:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E675FBB4
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 19:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706987550; cv=none; b=biPCdKEkuC5+TtLGot8lWIdobcmuBhtaQioK8aujFhiYVp8E1F72JJD+wGJUXqiQs2qReIFXJXFnbhZS9BniwGlRIGEYab8h1Za3UGt2oQNl1EYR3tSnsJOtmy9JB89ZWTorilnXo1zMTIh9KpGkRDezbFI+5Bvs/c8cWISCXeQ=
+	t=1706987550; cv=none; b=drWl3v49cExkN2bYsji7yvUpmQuLsTLqHvQsZyp570T1P6gaRi2ufUq0GCWHDWp0Pbm/FEdLwl9cOGqGpTU/pXM0baE3St8VpAbigiiVX80LuY4t5ZfwmeTl1H20VcfaXZJh6xtNDy6NTJS6id5ypXmxAOOMiFkV0FtNV8zfpQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706987550; c=relaxed/simple;
-	bh=u1QLkA77qJUV2s+haADuAyOF0wOezvuTZRjcx5x6hLg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l0fSaATLP2VJyD57Z1lP7SmBH+76t0/EpMaSlbDj/mKtwdmmQU2jIHokBXbJpuFYPt2DkvdM57D7ZQLPcMjN7BS7Css35C88WhWqwxGML1D1ZceC5yLVqmK/ctWovUHI6OIMLQrLeNhZUfRAK5PCIHHmQUA2tB5qzBHWbWP7V2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=ESCF8mdi; arc=none smtp.client-ip=91.218.175.170
+	bh=giYyQ4lqO2YoScnu5Fp4JQtpjhwywXg+LNVOFgiaUWk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Btk3Gm2WrfjuaO8elAy+1fPZPXcfsAlW5Y5ldeJJSmH1Ot4l9PYTbgfu6+go6uuh2sg7uqiYmhew1mE59X8EnNxV4qQwaBcal7+xM3sFSUFCIkUXDGnH6PY7fS1XcVCburSyobntBq5idFBtT4Yn4yL8dJo7pFJltfNizSwb8W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=igtWCgzx; arc=none smtp.client-ip=91.218.175.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="ESCF8mdi"
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="igtWCgzx"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1706987545;
+	s=key1; t=1706987547;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=D1MXZI9L74r1ABpx4pzdB40ULzWPeZ87x2jaWvvAELo=;
-	b=ESCF8mdiLBfK3pKZmMQBhWkcZgZnntajRFUJyB+aEmrPgzwd5JQyY1XUePSvljVefCa6uR
-	eoRaVolnRbRc1IgauUP0Usl4KLcodmvNQyJhbbwfCiCYIGysQgvJMVJAsiPVHx/yuzNPFR
-	+sAkJv2/IchL+n37XRxl5PeyyVAOoGhXJNd71UdQMzZdgpqNj/vZQ6IXxdpfm/I5hy4XJl
-	6sdahhDl9iiJBJ8mUgrLbBNNK9j/B6H36vl7jjZgt9dELga61G394fnTdjuyJQSWwvuA/H
-	N2vo/ZxgC3ySA3Umhu/kVR1SD7BL1r0z5Hqunti3MY7zLqwUjeKAg6Yu3UBSUw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k8u/VoqVTUPlxnhfNHXLj42MX1rvQDLgTi15K0P6Loc=;
+	b=igtWCgzxSlUCY3vSNXhlX14Ld4HMdQpGC5OG1/xekfw1Iw7LK9I+a7JvnL26JGiJnJo5Y7
+	FP9Jee7bYrhOo7U9FN8YZ5lR2KUNeQG+kLvgEYTt101d+yY7+iFifakR41ZvDiNnBJ0b4J
+	sbMONfaK0/k27pCQGvFhgLBMrd9l/77Y85KwTYql02DuDTSMT3JzsPvO6zNkeCWDhoiSZa
+	g5NO19QNoHLDepK++u0ln4Y+gHT2tdLMR4SnVDAJn7biNNpbgBtfuNAugU2sHnI+/HOq+E
+	fWjDThdRgxx04oIaw+xV6cictjDm6Taek0dtySMNGx8Kgc7iGLS+5yyngfOqdw==
 From: Anton Bambura <jenneron@postmarketos.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -36,9 +38,11 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] Device-tree improvements for Lenovo Flex/Yoga 5G laptop
-Date: Sat,  3 Feb 2024 21:11:54 +0200
-Message-ID: <20240203191200.99185-1-jenneron@postmarketos.org>
+Subject: [PATCH v2 3/6] arm64: dts: qcom: sc8180x-lenovo-flex-5g: move pinctrl to appropriate nodes
+Date: Sat,  3 Feb 2024 21:11:57 +0200
+Message-ID: <20240203191200.99185-4-jenneron@postmarketos.org>
+In-Reply-To: <20240203191200.99185-1-jenneron@postmarketos.org>
+References: <20240203191200.99185-1-jenneron@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,39 +52,115 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This improves device-tree of Lenovo Flex/Yoga 5G laptop with these changes:
-- fix GPU firmware path (make it use device-specific firmware directory);
-- set names for i2c hid nodes (so it is clear which node corresponds to
-which device);
-- add touchscreen support;
-- fix touchpad issue when it gets stuck on right or middle click;
-- allow UFS regulators load/mode setting;
-- move some pinctrl properties to appropriate nodes.
+Split keyboard and touchpad pinctrl nodes since they are for different
+devices and move keyboard, touchpad and touchscreen pinctrl references to
+appropriate nodes.
+
+Signed-off-by: Anton Bambura <jenneron@postmarketos.org>
 ---
-Changes in v2:
-- fix the description for touchpad i2c patch;
-- move touchscreen reset gpio pinctrl to appropriate node;
-- add a patch splitting and moving some other pinctrl stuff, so it is in
-correct nodes as well;
-- change touchscreen interrupt from edge falling to active low, because
-edge falling is apparently against i2c hid specification, and ACPI uses
-active low as well.
+ .../boot/dts/qcom/sc8180x-lenovo-flex-5g.dts  | 41 +++++++++++++------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
----
-Anton Bambura (6):
-  arm64: dts: qcom: sc8180x-lenovo-flex-5g: fix GPU firmware path
-  arm64: dts: qcom: sc8180x-lenovo-flex-5g: set names for i2c hid nodes
-  arm64: dts: qcom: sc8180x-lenovo-flex-5g: move pinctrl to appropriate
-    nodes
-  arm64: dts: qcom: sc8180x-lenovo-flex-5g: enable touchscreen
-  arm64: dts: qcom: sc8180x-lenovo-flex-5g: set touchpad i2c frequency
-    to 1 MHz
-  arm64: dts: qcom: sc8180x-lenovo-flex-5g: Allow UFS regulators
-    load/mode setting
-
- .../boot/dts/qcom/sc8180x-lenovo-flex-5g.dts  | 85 +++++++++++++++----
- 1 file changed, 68 insertions(+), 17 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts b/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
+index af61acf58d68..6ae6cb030b70 100644
+--- a/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
++++ b/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
+@@ -357,7 +357,7 @@ zap-shader {
+ &i2c1 {
+ 	clock-frequency = <100000>;
+ 
+-	pinctrl-0 = <&i2c1_active>, <&i2c1_hid_active>;
++	pinctrl-0 = <&i2c1_active>;
+ 	pinctrl-names = "default";
+ 
+ 	status = "okay";
+@@ -368,13 +368,16 @@ touchscreen@10 {
+ 		hid-descr-addr = <0x1>;
+ 
+ 		interrupts-extended = <&tlmm 122 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&ts_int_default>;
++		pinctrl-names = "default";
+ 	};
+ };
+ 
+ &i2c7 {
+ 	clock-frequency = <100000>;
+ 
+-	pinctrl-0 = <&i2c7_active>, <&i2c7_hid_active>;
++	pinctrl-0 = <&i2c7_active>;
+ 	pinctrl-names = "default";
+ 
+ 	status = "okay";
+@@ -385,6 +388,9 @@ keyboard@5 {
+ 		hid-descr-addr = <0x20>;
+ 
+ 		interrupts-extended = <&tlmm 37 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&kb_int_default>;
++		pinctrl-names = "default";
+ 	};
+ 
+ 	touchpad@2c {
+@@ -393,6 +399,9 @@ touchpad@2c {
+ 		hid-descr-addr = <0x20>;
+ 
+ 		interrupts-extended = <&tlmm 24 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&tp_int_default>;
++		pinctrl-names = "default";
+ 	};
+ };
+ 
+@@ -669,14 +678,6 @@ i2c1_active: i2c1-active-state {
+ 		drive-strength = <2>;
+ 	};
+ 
+-	i2c1_hid_active: i2c1-hid-active-state {
+-		pins = "gpio122";
+-		function = "gpio";
+-
+-		bias-pull-up;
+-		drive-strength = <2>;
+-	};
+-
+ 	i2c7_active: i2c7-active-state {
+ 		pins = "gpio98", "gpio99";
+ 		function = "qup7";
+@@ -685,8 +686,8 @@ i2c7_active: i2c7-active-state {
+ 		drive-strength = <2>;
+ 	};
+ 
+-	i2c7_hid_active: i2c7-hid-active-state {
+-		pins = "gpio37", "gpio24";
++	kb_int_default: kb-int-default-state {
++		pins = "gpio37";
+ 		function = "gpio";
+ 
+ 		bias-pull-up;
+@@ -718,6 +719,22 @@ wake-n-pins {
+ 		};
+ 	};
+ 
++	tp_int_default: tp-int-default-state {
++		pins = "gpio24";
++		function = "gpio";
++
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++
++	ts_int_default: ts-int-default-state {
++		pins = "gpio122";
++		function = "gpio";
++
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++
+ 	usbprim_sbu_default: usbprim-sbu-state {
+ 		oe-n-pins {
+ 			pins = "gpio152";
 -- 
 2.42.0
 
