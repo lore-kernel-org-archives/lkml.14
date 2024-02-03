@@ -1,143 +1,131 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C51125B4
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D61D6FB2
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706920189; cv=none; b=K/YCktuAPtd0+rKFROVHdEqm2n7Wh73LzvNNCN9BpDs34be5Qr59yvfeZtWXmHqvno1Ke8z5ONn6uH1WU/5erbK6H2oW0jCchbLC+LsrIZ2Zsgge+G2/RE+EMdDxR1tmhz2fHoDz2rsGeo9S42SveIeHkqqpAau+gMYYDxffm40=
+	t=1706920458; cv=none; b=Iw6cJDKzpq6+aR5o4sUFMdIlWSEQPt0KxC85u3J+67uxC1ftF2qshyOKkIp4gBvXD5MTzTcbHnj/Zkk3k/fsH1Dt6hOCIVuFpKXDQH3C+mpArUIgeFS6CETtp9+Z87QJ/a+xPKsKHZmr8q5502JYwbnK7J4/AiyGkaimTCWEepE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706920189; c=relaxed/simple;
-	bh=oYWu5Fo1F0+7WCqhPKRqpGmYX5+YscXs0w2BLbY2DiQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lrDdj8aL+yEK8qf9bGqf8j+b2hNdlU5s/eUEtgMWNUg+e53CpvEySb67Tz1Uo9xkTV2ynYVj1h+CCUP1Taur0bHRkws68t1Ey3Ff+w82kHg3xosnvGvdycClwWPHUkfRqflxCZkiFZwNhwCh6JE2NLfgXQsJaUwgy9G+Bn2gaFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HbftFuFp; arc=none smtp.client-ip=192.19.166.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1706920458; c=relaxed/simple;
+	bh=Z/cm2m18PsL8Vu1wWGOW1aO61N6+BbgnM41QboNb6Z0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=W9KrZstmAu874AULxdxbIZ3RowsibHzLDF6NSnzbWN+GJYzkVXlaH9ReaGj+6RnTnDh0Cm7Wj8t46d2Q2VBzuqL1KYNItanvKbdV2eI9yzmQZDQWdiYd4BEvU19dgy1s01SjFTzv1oEtmFpvomVM1X7E9dFNLbcyUdaTK24nPKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IeAPXW0V; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HbftFuFp"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 43320C001C89;
-	Fri,  2 Feb 2024 16:29:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 43320C001C89
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1706920184;
-	bh=oYWu5Fo1F0+7WCqhPKRqpGmYX5+YscXs0w2BLbY2DiQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HbftFuFpjR7830bsBF/2j9Qdq7mRKEkN9FA1o1PTlAT6Ls2omsvXj9V71I+nLbXmK
-	 oPgWUth5QCxpRyG8ZE4lNLwGKgLAkQ0W3W3bbASQZxAmZVqLfRo+4/slP5RQS/EKO4
-	 00n+k/iE5SCbt0di86f5a4vuy3c/gnasIbnS40VQ=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id D179218041CAC4;
-	Fri,  2 Feb 2024 16:29:42 -0800 (PST)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com,
-	kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com,
-	anand.gore@broadcom.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com,
-	David Regan <dregan@broadcom.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	William Zhang <william.zhang@broadcom.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-kernel@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Brian Norris <computersforpeace@gmail.com>,
-	Richard Weinberger <richard@nod.at>
-Subject: [PATCH v4 11/12] mtd: rawnand: brcmnand: exec_op helper functions return type fixes
-Date: Fri,  2 Feb 2024 16:28:32 -0800
-Message-Id: <20240203002834.171462-12-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20240203002834.171462-1-william.zhang@broadcom.com>
-References: <20240203002834.171462-1-william.zhang@broadcom.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IeAPXW0V"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5eba564eb3fso49236667b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 16:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706920456; x=1707525256; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BCDzdkXKmcCm4b3zn1uKLp7BZ6kePV4TL8d+mF4c+RU=;
+        b=IeAPXW0VuvfS+wjiPjpLv4EX+pkt7nF/1G9Xrk/CuA8qsO3RVnx8Ab2dxNpI+IWjX3
+         9+W00wk+3rbi4v0p21xPZJcDqr14iP7/YXGdUTw+sK6UUDO9jukrZ6VPMRU6JNPfMRX3
+         TJHd+TyI7LWtyxAVjKX1UIG/+bddyHwaNwurbQ2DFfUCuUrFQxMvKwkVtm7allXaGF2a
+         L4B4rZc530n0Wt2TDbynOrpWJsqSNuy3JiQSc8RM0BaXQhFSUCKkzfw9rH3dcWzfOXdE
+         Jz+jC8uEb6vM4fxrt41EOe4KTg+PPU2vagp4VvjX4sgS5o6KJ6f9VLX2rXC4azD8L3Do
+         n0BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706920456; x=1707525256;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BCDzdkXKmcCm4b3zn1uKLp7BZ6kePV4TL8d+mF4c+RU=;
+        b=f8ifr0odlGb8fcxQO6mEH860QSqixMUTw+p13tOy0tEOJrysIVXMAvdFTMqtMB4QMf
+         jKoKy3naEyynBjoI6WPcJt3qpeyLHTqqbvBeOVceBxRkN+JsgJZbznsZJrNAOoJwxFNF
+         +zcmKTybajOGsDUe3ZtYirjnPifclFETb57BNCWf48Dr8yiUvgdjGG3ZlTqcx04BYVyi
+         n6ScxnRgw+505UFqDPkmEt34UmCVRYmWZLoPONh/7vlMupWgCPLv2y6SogMkeLnxP2WH
+         ZziWBNjSpz1X0aA7d+ocBkNytrDorAetWzmc1P5pSILDj0062FVSnIEUNcZMdD7oAr0d
+         b35w==
+X-Gm-Message-State: AOJu0YxMQJ8sjy/NOZOER9O6kUy4NeuP+xFW+wGli0pB9wrn3kTMaXov
+	pqxgk5FW49YA891FQWf7Ce2FLBFMdiW3FLfNBIJybx6Bto4epFRVm0KaFNcwsCLIYAW/OGYhrwr
+	16huabVN9mwtRxr+atw==
+X-Google-Smtp-Source: AGHT+IFD+IjFOQHibdEZhu5cMU8oPxcS9RMVwqQhE2xvOJKOdLFApGCusY2fdfTuFLUq9U4BvkSau2GMSgc0xy0p
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:6902:2192:b0:dc6:fec4:1c26 with
+ SMTP id dl18-20020a056902219200b00dc6fec41c26mr37502ybb.1.1706920456138; Fri,
+ 02 Feb 2024 16:34:16 -0800 (PST)
+Date: Sat,  3 Feb 2024 00:34:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Message-ID: <20240203003414.1067730-1-yosryahmed@google.com>
+Subject: [PATCH mm-hotfixes-unstable] mm: memcg: fix struct
+ memcg_vmstats_percpu size and alignment
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeelb@google.com>, 
+	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>, 
+	Greg Thelen <gthelen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: David Regan <dregan@broadcom.com>
+Commit da10d7e140196 ("mm: memcg: optimize parent iteration in
+memcg_rstat_updated()") added two additional pointers to the end of
+struct memcg_vmstats_percpu with CACHELINE_PADDING to put them in a
+separate cacheline. This caused the struct size to increase from 1200 to
+1280 on my config (80 extra bytes instead of 16).
 
-fix return type for exec_op reset and status detect helper functions
+Upon revisiting, the relevant struct members do not need to be on a
+separate cacheline, they just need to fit in a single one. This is a
+percpu struct, so there shouldn't be any contention on that cacheline
+anyway. Move the members to the beginning of the struct and cachealign
+the first member. Add a comment about the members that need to fit
+together in a cacheline.
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: http://lists.infradead.org/pipermail/linux-mtd/2023-December/102423.html
-Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-Signed-off-by: David Regan <dregan@broadcom.com>
-Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: William Zhang <william.zhang@broadcom.com>
+The struct size is now 1216 on my config with this change.
 
+Fixes: da10d7e140196 ("mm: memcg: optimize parent iteration in memcg_rstat_updated()")
+Reported-by: Greg Thelen <gthelen@google.com>
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 ---
+ mm/memcontrol.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-Changes in v4:
-- Fix the commit id in the fixes tag
-
-Changes in v3: None
-Changes in v2:
-- Added to patch series
-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 8c1489ff7bd6..7ce2b267676f 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -625,7 +625,7 @@ enum {
- /* Only for v7.2 */
- #define	ACC_CONTROL_ECC_EXT_SHIFT		13
- 
--static u8 brcmnand_status(struct brcmnand_host *host);
-+static int brcmnand_status(struct brcmnand_host *host);
- 
- static inline bool brcmnand_non_mmio_ops(struct brcmnand_controller *ctrl)
- {
-@@ -1749,7 +1749,7 @@ static int brcmnand_waitfunc(struct nand_chip *chip)
- 				 INTFC_FLASH_STATUS;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d9ca0fdbe4ab0..09f09f37e397e 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -621,6 +621,15 @@ static inline int memcg_events_index(enum vm_event_item idx)
  }
  
--static u8 brcmnand_status(struct brcmnand_host *host)
-+static int brcmnand_status(struct brcmnand_host *host)
- {
- 	struct nand_chip *chip = &host->chip;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-@@ -1760,7 +1760,7 @@ static u8 brcmnand_status(struct brcmnand_host *host)
- 	return brcmnand_waitfunc(chip);
- }
- 
--static u8 brcmnand_reset(struct brcmnand_host *host)
-+static int brcmnand_reset(struct brcmnand_host *host)
- {
- 	struct nand_chip *chip = &host->chip;
- 
-@@ -2492,11 +2492,14 @@ static int brcmnand_exec_op(struct nand_chip *chip,
- 
- 	if (brcmnand_op_is_status(op)) {
- 		status = op->instrs[1].ctx.data.buf.in;
--		*status = brcmnand_status(host);
-+		ret = brcmnand_status(host);
-+		if (ret < 0)
-+			return ret;
+ struct memcg_vmstats_percpu {
++	/* Stats updates since the last flush */
++	unsigned int			stats_updates ____cacheline_aligned;
 +
-+		*status = ret & 0xFF;
++	/* Cached pointers for fast iteration in memcg_rstat_updated() */
++	struct memcg_vmstats_percpu	*parent;
++	struct memcg_vmstats		*vmstats;
++
++	/* The above should fit a single cacheline for memcg_rstat_updated() */
++
+ 	/* Local (CPU and cgroup) page state & events */
+ 	long			state[MEMCG_NR_STAT];
+ 	unsigned long		events[NR_MEMCG_EVENTS];
+@@ -632,16 +641,6 @@ struct memcg_vmstats_percpu {
+ 	/* Cgroup1: threshold notifications & softlimit tree updates */
+ 	unsigned long		nr_page_events;
+ 	unsigned long		targets[MEM_CGROUP_NTARGETS];
+-
+-	/* Fit members below in a single cacheline for memcg_rstat_updated() */
+-	CACHELINE_PADDING(_pad1_);
+-
+-	/* Stats updates since the last flush */
+-	unsigned int		stats_updates;
+-
+-	/* Cached pointers for fast iteration in memcg_rstat_updated() */
+-	struct memcg_vmstats_percpu	*parent;
+-	struct memcg_vmstats		*vmstats;
+ };
  
- 		return 0;
--	}
--	else if (brcmnand_op_is_reset(op)) {
-+	} else if (brcmnand_op_is_reset(op)) {
- 		ret = brcmnand_reset(host);
- 		if (ret < 0)
- 			return ret;
+ struct memcg_vmstats {
 -- 
-2.37.3
+2.43.0.594.gd9cf4e227d-goog
 
