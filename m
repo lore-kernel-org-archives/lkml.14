@@ -1,168 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1194F625;
-	Sat,  3 Feb 2024 00:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA487468;
+	Sat,  3 Feb 2024 00:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706920150; cv=none; b=GrYTu0r5yTsR3sWnRx1fCRcoNuAGd9GI+Oz/pxhEvBh4jmjCNXylybpw3IHU+w0xLT5TcuQMNF73FBurXQAY5tihUrqZV1yAIjShESH6EJk8eXRPMfI1rIU13LHOtNcXZdREe/iS46VsuJ2nq+WMoTpCodztwALalCl3fVOVuUg=
+	t=1706920160; cv=none; b=CW+hIZjerGaX2iLSWq7Z0AnlKtSSLWwwjRrPPl9/uxvDwYnWb8FR5mjnM/gim79YlL3tCd9w8RntdAJeOQRgF9CHWfXRzavHiayS6ZXHudhMd+k5tYKq0s0eXPGxOTzuXVh2RmrNuQ7f0HiNv2o4w4Icgg0FCFFvGR/d86BYXCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706920150; c=relaxed/simple;
-	bh=9TtDN1r4VnqbVkMbIdvO5V9mK3wtnObkCogkcygbwo4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uSP13Hbgl36PQlfqk1LTqPDOJ0HHbO6lKbn/dxURimCT32P7G6B1EbNCDpK7ffoM6SVXidqEswqu9+Cnpq0XH3LmmT9MieU/41Sp+3qkL7M0GGzCX4r4CD4XDjO4PBvPYbqLKT51uhwzGdBXuU30RrG5LyszfF/hi9YRHAf8F/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkJShWdw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706920160; c=relaxed/simple;
+	bh=te5+l18ZZxWvnmfq+UvIJN6+FYEaQdsKeXHBLOKms1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PFvuHACZWZqxNi81kOg34+CMH5iK10HJsrcN78OTvoH1wwKVqET6NBcv/d30Hlu7FnBxDLnSC5eGZotmK23uj8mUbmb36Cmqpn1BmifK11tNgG0TFo3zA3uKMkacHd/vGznxGYyqd1IZcneQoeg9YH2mTpKSq8/4vLV8+dyAN+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ty2gDHgv; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkJShWdw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F22C43330;
-	Sat,  3 Feb 2024 00:29:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706920149;
-	bh=9TtDN1r4VnqbVkMbIdvO5V9mK3wtnObkCogkcygbwo4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fkJShWdwEJvycdkTp0BR6okr208Rn+CRxEsYXN8dp8LGq20F5iMEMPf/LKG2rRSwU
-	 i86MAVC9Lg8lRpv87YNIHKkgSFn/WtbEVpDSLSVunszCH04cXeKk8NmmcTPvxyIUC4
-	 SBwOAug5vdJuF1W8jHSw3tCnThvEGK+4N/4r+FYRiYQkooe9ONd8axRsCk1cxmxgyS
-	 hg6wJnx7rYERvEeAvVQNHQ4WWTw899IsHWvCJQyJv5sKNmh0efJ/DFNc/vQmoKOCl4
-	 kT1uMjkJj1VHspspmatx/LYjW1DoPQn+CHWTbs2PAMgZAPRiAqPBETVlrZlNIerMmQ
-	 nM9+l0OcDUf+A==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a352d9c0f9dso77298466b.0;
-        Fri, 02 Feb 2024 16:29:09 -0800 (PST)
-X-Gm-Message-State: AOJu0YwxFK22Xe5RRetNoLp+RyBph1rVUBUHOIJaSAAwVSrN0vsy9b3b
-	j8/MJcYvQnjPGrSI5qF2pdPo3s0FBZBRcKIYt5eDaIl9s/wK2XeKOHnKvOSktyta477aUxiYUaH
-	h49QYFrdCnyuxSgwOkv6w7xYV85I=
-X-Google-Smtp-Source: AGHT+IFZ3ZGMvuqs3thX1yxw7hTJ2qyHWlAIiaxSWDC0fd6vOK5H12/qSr7bNlL3hDdiX5obbzjZ0yxKiPDlE9ehK0A=
-X-Received: by 2002:a17:906:3c02:b0:a36:95cd:5e62 with SMTP id
- h2-20020a1709063c0200b00a3695cd5e62mr4340840ejg.7.1706920147920; Fri, 02 Feb
- 2024 16:29:07 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ty2gDHgv"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 0AC1AC001668;
+	Fri,  2 Feb 2024 16:29:18 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 0AC1AC001668
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1706920158;
+	bh=te5+l18ZZxWvnmfq+UvIJN6+FYEaQdsKeXHBLOKms1E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ty2gDHgv+jc6uy7673PtqGYXFmrpGpr/XOfWkQZt2NVMDG34t3iGTNr/MwC4zIL/H
+	 cMNoD2hcIjF62NLa9sUCpg5cgECxGbB9GP2s0EK60Mn1UsGiunyIEk9+/OBg2UggyY
+	 op+TypxFuMBBfe7j3uvH5VR6ku6uctfclC31MeCE=
+Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 98EA018041CAC4;
+	Fri,  2 Feb 2024 16:29:16 -0800 (PST)
+From: William Zhang <william.zhang@broadcom.com>
+To: Linux MTD List <linux-mtd@lists.infradead.org>,
+	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
+Cc: f.fainelli@gmail.com,
+	kursad.oney@broadcom.com,
+	joel.peshkin@broadcom.com,
+	anand.gore@broadcom.com,
+	dregan@mail.com,
+	kamal.dasu@broadcom.com,
+	tomer.yacoby@broadcom.com,
+	dan.beygelman@broadcom.com,
+	William Zhang <william.zhang@broadcom.com>,
+	devicetree@vger.kernel.org,
+	Brian Norris <computersforpeace@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Kamal Dasu <kdasu.kdev@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v4 03/12] dt-bindings: mtd: brcmnand: Add ecc strap property
+Date: Fri,  2 Feb 2024 16:28:24 -0800
+Message-Id: <20240203002834.171462-4-william.zhang@broadcom.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20240203002834.171462-1-william.zhang@broadcom.com>
+References: <20240203002834.171462-1-william.zhang@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102124747.21644-1-hao.qin@mediatek.com>
-In-Reply-To: <20240102124747.21644-1-hao.qin@mediatek.com>
-From: Sean Wang <sean.wang@kernel.org>
-Date: Fri, 2 Feb 2024 18:28:56 -0600
-X-Gmail-Original-Message-ID: <CAGp9LzpuLr4vKGSfBoCdES9kKyduADw+2DZp8aZqbR78S_sOuQ@mail.gmail.com>
-Message-ID: <CAGp9LzpuLr4vKGSfBoCdES9kKyduADw+2DZp8aZqbR78S_sOuQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] Bluetooth: btusb: mediatek: refactor
- btusb_mtk_reset function
-To: Hao Qin <hao.qin@mediatek.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Von Dentz <luiz.dentz@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>, 
-	Chris Lu <chris.lu@mediatek.com>, Steve Lee <steve.lee@mediatek.com>, 
-	linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-mediatek <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 2, 2024 at 6:49=E2=80=AFAM Hao Qin <hao.qin@mediatek.com> wrote=
-:
->
-> From: "hao.qin" <hao.qin@mediatek.com>
->
-> Extract function btusb_mtk_subsys_reset from btusb_mtk_reset
-> for future handling of resetting bluetooth controller without
-> USB reset.
->
-> Signed-off-by: hao.qin <hao.qin@mediatek.com>
->
+Add brcm,nand-ecc-use-strap to get ecc and spare area size settings from
+board boot strap for broadband board designs because they do not specify
+ecc setting in dts but rather using the strap setting.
 
-The patch doesn't modify any logic; it simply divides the existing
-logic into two parts,
-each prepared to be called in a specific context. Thus,  Acked-by:
-Sean Wang <sean.wang@kernel.org>
+Signed-off-by: William Zhang <william.zhang@broadcom.com>
 
-> ---
-> V1 -> V2: refactor btusb_mtk_reset function
->
-> Link:
->   https://lore.kernel.org/all/20231215063714.7684-1-hao.qin@mediatek.com/
-> ---
->  drivers/bluetooth/btusb.c | 45 +++++++++++++++++++++++----------------
->  1 file changed, 27 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 0926e4451802..abefcd1a089d 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -2994,28 +2994,13 @@ static u32 btusb_mtk_reset_done(struct hci_dev *h=
-dev)
->         return val & MTK_BT_RST_DONE;
->  }
->
-> -static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
-> +static int btusb_mtk_subsys_reset(struct hci_dev *hdev, u32 dev_id)
->  {
->         struct btusb_data *data =3D hci_get_drvdata(hdev);
-> -       struct btmediatek_data *mediatek;
->         u32 val;
->         int err;
->
-> -       /* It's MediaTek specific bluetooth reset mechanism via USB */
-> -       if (test_and_set_bit(BTUSB_HW_RESET_ACTIVE, &data->flags)) {
-> -               bt_dev_err(hdev, "last reset failed? Not resetting again"=
-);
-> -               return -EBUSY;
-> -       }
-> -
-> -       err =3D usb_autopm_get_interface(data->intf);
-> -       if (err < 0)
-> -               return err;
-> -
-> -       btusb_stop_traffic(data);
-> -       usb_kill_anchored_urbs(&data->tx_anchor);
-> -       mediatek =3D hci_get_priv(hdev);
-> -
-> -       if (mediatek->dev_id =3D=3D 0x7925) {
-> +       if (dev_id =3D=3D 0x7925) {
->                 btusb_mtk_uhw_reg_read(data, MTK_BT_RESET_REG_CONNV3, &va=
-l);
->                 val |=3D (1 << 5);
->                 btusb_mtk_uhw_reg_write(data, MTK_BT_RESET_REG_CONNV3, va=
-l);
-> @@ -3059,8 +3044,32 @@ static int btusb_mtk_reset(struct hci_dev *hdev, v=
-oid *rst_data)
->         if (!val)
->                 bt_dev_err(hdev, "Can't get device id, subsys reset fail.=
-");
->
-> -       usb_queue_reset_device(data->intf);
-> +       return err;
-> +}
->
-> +static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
-> +{
-> +       struct btusb_data *data =3D hci_get_drvdata(hdev);
-> +       struct btmediatek_data *mediatek;
-> +       int err;
-> +
-> +       /* It's MediaTek specific bluetooth reset mechanism via USB */
-> +       if (test_and_set_bit(BTUSB_HW_RESET_ACTIVE, &data->flags)) {
-> +               bt_dev_err(hdev, "last reset failed? Not resetting again"=
-);
-> +               return -EBUSY;
-> +       }
-> +
-> +       err =3D usb_autopm_get_interface(data->intf);
-> +       if (err < 0)
-> +               return err;
-> +
-> +       btusb_stop_traffic(data);
-> +       usb_kill_anchored_urbs(&data->tx_anchor);
-> +       mediatek =3D hci_get_priv(hdev);
-> +
-> +       err =3D btusb_mtk_subsys_reset(hdev, mediatek->dev_id);
-> +
-> +       usb_queue_reset_device(data->intf);
->         clear_bit(BTUSB_HW_RESET_ACTIVE, &data->flags);
->
->         return err;
-> --
-> 2.18.0
->
->
+---
+
+Changes in v4:
+- Move ecc strap property to this separate patch and remove some
+non-binding related text from the description
+
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
+index d0168d55c73e..2599d902ec3a 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
+@@ -147,6 +147,14 @@ patternProperties:
+           layout.
+         $ref: /schemas/types.yaml#/definitions/uint32
+ 
++      brcm,nand-ecc-use-strap:
++        description:
++          This flag indicates the ecc strength and spare area size should
++          be retrieved from the SoC NAND boot strap setting instead of
++          nand-ecc-strength and brcm,nand-oob-sector-size or auto detection.
++          This is commonly used by the BCMBCA SoC board design.
++        $ref: /schemas/types.yaml#/definitions/flag
++
+     unevaluatedProperties: false
+ 
+ allOf:
+-- 
+2.37.3
+
