@@ -1,180 +1,170 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBE3636
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB016FB2
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706919019; cv=none; b=Bh1XhHUsQ+sITHfoAn6zEPxDf1WQiR5IXqWyEVw7LfDQwxdXLZCD8D/pWB0pMVlY8K3Ky1Xcz39YLm2RUWEKgoh6gpN9km9YQpOIylT9614qk6tRx/irGj/wlgaRmCjVKMc3Ps8D1mX+T2RgGveSdqGZvPts7eJgKXLCriv3Ko8=
+	t=1706919111; cv=none; b=GMj141QrxpB5rG/1TiMRwPGYcLw7UI77f1dQgDcH1Lo3R1Ex2rIUIgnUDTr1FKfGcARMMJj6WFzTuncmfFSJAX0fvgXEWwbKEjXOfHVQsoyf0hUPXYR7ZL+N05LsdcQq/A+fg+l9ahWX0Vm5lvH+gOiJi7Wl0kvXlwgZNOOy2Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706919019; c=relaxed/simple;
-	bh=lYrl0fMGsQMv4kqgDrYyuon4dy2WZcZ4nXzIifz7B8c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dv+G3FqugKSK5rURJllXn3NuPDqMjkS1oXlt5qa+3rFA1mm8nriktEkxPivErzOzc3Xn4Nz2hcj9oBra8gqamF28XW45qYlTp+UXu7e1Wkw+1ODDMFdAzY8/3ic1gWqnkEf7VTrI6Nrl+VI62hgLaIhxvOih0wqv/nHwOnC0f2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pwo5n540; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706919111; c=relaxed/simple;
+	bh=Fw5yc3KwqIkUpRbUG5IvtK1nJa179n0/6LQurRMjCCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R1tiXbqy1xNYYASJuRaAdZPMpZ1zcHHBWOfojDHQpCyaDt1W3O2gnm8+4MRfjtMCLW8qb5hpbuHPZmx7ejU+xUe92qArlrgx2sMdqSEMIFO7nQKkMOVUJGQ7XP42fGGSjXzG+Hpp5gwqWJNWENE5KhQ+BgbgVKWMksVurUmNWSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WTaWMhq8; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pwo5n540"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5112a04c7acso4402831e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 16:10:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTaWMhq8"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57b9so1220876241.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 16:11:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706919016; x=1707523816; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+i/pqntxef3SaSJAi399Z+K8zvxssthTj40vaMmV808=;
-        b=pwo5n540YiAMwmMzWpFLlg26V4gpBMvNVCvIeJQ9o/KXppQo23jhYWf911yi/TI2wx
-         Zt8Is5bkeQCHbyOk9UVUpvLkRKa4h5Cx4b60zQBppNgLhS+KDnxpqEZeFUpV7QfagqJ/
-         hKW8aCUP3aOhg7hjdTj3inybWbUyZTi8FBUY+Wfrzyjv3qudoDvo58/l2SMz7gYCbseB
-         77x802lxxkQThQFNk3kmxuFqNAqYl6Jau+2OnM59LRRRCP2/1u6aHMSAgEGOZdVZVHbe
-         phQGBJaxOym+FiZf0BNPG6ZxFuJGKSRHJOYpIz291L2kZlelrrVtxhs6R0X4JP951133
-         eNKQ==
+        d=google.com; s=20230601; t=1706919109; x=1707523909; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BPxmyRdExJEvcPRl0CWuqoDDXvPz9lLHrgamSw5zf9Y=;
+        b=WTaWMhq89HeEvXUsmLkjFJnqcsjFt3CuaW2hTkic2In+l2QXYZ7QsvOz/6HlI89oW3
+         k6bzeDfC9X4wwCl6AX7SuARWwj7F3b6kOnVHYAC7FAzzXN+sO0EzBwz4fgnHDuXmG6qT
+         HcoGW0GMXQSZGcnJJ/B3vljQyLMoWRWlqlxuvXsTnMXiy3FSBivljiM/yLVZDlYYVZJ4
+         UjiNykYyRpbe7yqsdAYFgyl+vl+Y26ugly+zw055MLmdLWlDSK8L7YLotQc/Kk/ytNzM
+         9yAhctSEtJt/3uJ6quhlQCKDiLD93meCIjFYJT6xsew894TODCDVpTWVJ1sKYH35FxNU
+         gWZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706919016; x=1707523816;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+i/pqntxef3SaSJAi399Z+K8zvxssthTj40vaMmV808=;
-        b=W3Uwlgt8Y530XCD2O+jX5LWdVOkJcbDSrg4Iq8qBO3R6ff+SeWPslfCQv+ZokBxMxC
-         ceAb9Xm+oDT8bxtV917hNQtU3uofAi4LwEH9xlihc9xfITZtc494CtC48bNVscT/eejU
-         K3Y0ItoEZg55vKZpMh/4DObfH0WtynmkPKdIJM5oFkc3Av2PGEXfMHEwgK113fseyG2v
-         pGUPRdyO12WiCuzdvQygJFPG+T0/azhvGxuQkJHuImRL7S5WYJrfDaULl+qXMGNNGzP9
-         6Zmk0PtjCLghgQzYYRFlkogoabz44wKtNh/cveQu5VUFlbaxFjkeLDcyTc6ZCHRbsvfh
-         xgbg==
-X-Gm-Message-State: AOJu0Yz4niFZeE2Z8O7OwbF0MzVJro/AybCL9mZ4vkdoI2aQI9dAx8pA
-	6/iB2ZNbONqJBwkVHBRbVdQV669pAUvedBJaXkj0R3+fGoCCvrO2WP8ewETWyNM=
-X-Google-Smtp-Source: AGHT+IHv5rAc8QRwm75Y2Kq5VRPClPoZydxjw0V5JodbhYnOvc7BqLhI+FAL74jEj+E5+TpeQbpSdQ==
-X-Received: by 2002:ac2:531a:0:b0:511:83e:87f with SMTP id c26-20020ac2531a000000b00511083e087fmr2255293lfh.19.1706919015679;
-        Fri, 02 Feb 2024 16:10:15 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVpfq7nsHkCKDeY3juM7KxutkUuUjuCzsgvPID2b8QyfgEAxG4ulY6Koxp679pTujGedhIugehLP7Ve/jgmDajdAu9L2rdew2fCwZ1YJwsPzw2U/LMnMGJnAhvMGMTGv1DLAUNrbz5cpNo659A6CjmGVe2SFU+qReWnLUZ8TI2ohkOqwPnbkaj7/p4ThY+E3/FsDUN51ODHO6Ccj7Ek/pfh13ubKDF2ENEFptu2Hll3ZqsDPRUc492Tx3M7ELmrAFiJqXx4k0LfQD4ljbNCm7a7kB37p3Jrc2wPLfmIRQJtQeolQax05lbO/UejADEeqSo0SxzLjZ05Dp49lCmrPt5+UkaJOUA=
-Received: from [10.167.154.1] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
-        by smtp.gmail.com with ESMTPSA id jy13-20020a170907762d00b00a2b1a20e662sm1396594ejc.34.2024.02.02.16.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 16:10:15 -0800 (PST)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Sat, 03 Feb 2024 01:10:11 +0100
-Subject: [PATCH v2] arm64: dts: qcom: sm8550: Switch UFS from opp-table-hz
- to opp-v2
+        d=1e100.net; s=20230601; t=1706919109; x=1707523909;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BPxmyRdExJEvcPRl0CWuqoDDXvPz9lLHrgamSw5zf9Y=;
+        b=VIiakI6TkGA5NN1sMEEFcA/uT+QzOKxfvVG30PP/bKA6Y7ti7a3mcK3e+MMKK6KnO6
+         ejreqWdt8m6GKr/zJPSwD3xlIigoCIgPoev6jhjIuOxIjiqkeURB2Ef8pVpx9unpzUmf
+         ZGBLn5IZ6VIOrPBRHnu7AugCqOwMKqz6+5jW6dpFAxmFH/jgsx8SOLlmlNqqV+phIdOg
+         llgnQdeUb10nWb6J8WRWXOcY2ldm7OHvSuOVokBfyYuwzkxuNnNmRSzsEXXRViYIQoIx
+         1fQsoJnHyDQQf0F//G/YbRV+X/VUfb/eIz8NumTYPqqRzt3coS0OOF2N1sVxacYUGGJV
+         vS3g==
+X-Gm-Message-State: AOJu0YzX/1lYMOa3w5iwxKotkC/sj82e+vhMujaHJRa9Yb2g/Urx6wGI
+	XXG6xsoOIjrhQyt2KPt8GmR/v0IdRirvSdbSOJmMxMB4DYEZfQcJg+xQ0KuGdGGAWc589z3pstv
+	XEfdEej4JSf3kOC78JtJEE8CO6NSGBHBFxRQX
+X-Google-Smtp-Source: AGHT+IG5YGYD/SvWKixRXTjsDK5srI/exvF5e/PZdXyguzPkATWPAwx4LtVWEHkt5wEgNBmX7AEbMCjq7BycjpF5Hzg=
+X-Received: by 2002:a67:fb52:0:b0:46d:5b7:f618 with SMTP id
+ e18-20020a67fb52000000b0046d05b7f618mr2584782vsr.24.1706919108610; Fri, 02
+ Feb 2024 16:11:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240203-topic-8550_ufs_oppv2-v2-1-b0bef2a73e6c@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGKEvWUC/x2N0QqDMAwAf0XyvECJVsp+ZQxpa5wBaUszZSD++
- 4qPd3DcCcpVWOHZnVD5EJWcGtCjg7j69GGUuTGQocGQ6fGbi0R01pppX3TKpRyEITg3j70fonX
- Q0uCVMVSf4tritG9bk6XyIr/79Xpf1x9/k6ByewAAAA==
-To: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706919014; l=2714;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=lYrl0fMGsQMv4kqgDrYyuon4dy2WZcZ4nXzIifz7B8c=;
- b=D8EXau7qLW2FEu0QWtjBIB2g9tGLro6lg8B0M7x5mNj8s6R8DKRpY8zY+JUe1ksDpFPcAliVb
- VSrQ2IxN6o5CDOljZLF+ZgZl2DWuwBs+HVnXFOc4G945qznfSH6AqGl
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+References: <20240121182040.GBZa1geI5NxWSslvt0@fat_crate.local>
+ <20240130220845.1978329-2-kevinloughlin@google.com> <4ljfvg7c23g2wx4hcqz6x6tx7uvp6fffayqvu4ptsmfqajlujr@zngokbd2awma>
+ <CAGdbjm+dt2LMqsWkzME-Gya9F=pZMubTuW3Ad3dStj=L+MW+ng@mail.gmail.com> <CAMj1kXGSZkJ-1opx9mrpfhzyreCM+P616xM+MhPOaR+EgP5NNg@mail.gmail.com>
+In-Reply-To: <CAMj1kXGSZkJ-1opx9mrpfhzyreCM+P616xM+MhPOaR+EgP5NNg@mail.gmail.com>
+From: Kevin Loughlin <kevinloughlin@google.com>
+Date: Fri, 2 Feb 2024 16:11:37 -0800
+Message-ID: <CAGdbjmKO-XDmm-0kw0xm=58TFYdK8t6Yp8OfXCrXVAwWEh3m-A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] x86/sev: enforce RIP-relative accesses in early
+ SEV/SME code
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Pankaj Gupta <pankaj.gupta@amd.com>, 
+	Hou Wenlong <houwenlong.hwl@antgroup.com>, Dionna Glaze <dionnaglaze@google.com>, 
+	Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-coco@lists.linux.dev, Ashish Kalra <ashish.kalra@amd.com>, 
+	Andi Kleen <ak@linux.intel.com>, Adam Dunlap <acdunlap@google.com>, 
+	Peter Gonda <pgonda@google.com>, Jacob Xu <jacobhxu@google.com>, 
+	Sidharth Telang <sidtelang@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that the non-legacy form of OPP is supported within the UFS driver,
-go ahead and switch to it, adding support for more intermediate freq/power
-states.
+On Fri, Feb 2, 2024 at 2:47=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wro=
+te:
+>
+> On Fri, 2 Feb 2024 at 23:00, Kevin Loughlin <kevinloughlin@google.com> wr=
+ote:
+> >
+> > On Wed, Jan 31, 2024 at 12:20=E2=80=AFAM Kirill A. Shutemov
+> > <kirill.shutemov@linux.intel.com> wrote:
+> > >
+> > > On Tue, Jan 30, 2024 at 10:08:44PM +0000, Kevin Loughlin wrote:
+> > > > diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/=
+asm/mem_encrypt.h
+> > > > index 359ada486fa9..b65e66ee79c4 100644
+> > > > --- a/arch/x86/include/asm/mem_encrypt.h
+> > > > +++ b/arch/x86/include/asm/mem_encrypt.h
+> > > > @@ -17,6 +17,20 @@
+> > > >
+> > > >  #include <asm/bootparam.h>
+> > > >
+> > > > +/*
+> > > > + * Like the address operator "&", evaluates to the address of a LH=
+S variable
+> > > > + * "var", but also enforces the use of RIP-relative logic. This ma=
+cro can be
+> > > > + * used to safely access global data variables prior to kernel rel=
+ocation.
+> > > > + */
+> > > > +#define RIP_RELATIVE_ADDR(var)               \
+> > > > +({                                   \
+> > > > +     void *rip_rel_ptr;              \
+> > > > +     asm ("lea "#var"(%%rip), %0"    \
+> > > > +             : "=3Dr" (rip_rel_ptr)    \
+> > > > +             : "p" (&var));          \
+> > > > +     rip_rel_ptr;                    \
+> > > > +})
+> > > > +
+> > >
+> > > I don't think it is the right place for the macro. The next patch use=
+s for
+> > > things unrelated to memory encryption.
+> >
+> > You're right; with the cleanup, I agree it becomes more general. We
+> > can move it to arch/x86/include/asm/asm.h.
+> >
+> > >
+> > > > @@ -239,14 +244,14 @@ unsigned long __head __startup_64(unsigned lo=
+ng physaddr,
+> > > >        */
+> > > >
+> > > >       next_pgt_ptr =3D fixup_pointer(&next_early_pgt, physaddr);
+> > > > -     pud =3D fixup_pointer(early_dynamic_pgts[(*next_pgt_ptr)++], =
+physaddr);
+> > > > -     pmd =3D fixup_pointer(early_dynamic_pgts[(*next_pgt_ptr)++], =
+physaddr);
+> > > > +     early_dynamic_pgts_ptr =3D fixup_pointer(early_dynamic_pgts, =
+physaddr);
+> > > > +     pud =3D (pudval_t *) early_dynamic_pgts_ptr[(*next_pgt_ptr)++=
+];
+> > > > +     pmd =3D (pmdval_t *) early_dynamic_pgts_ptr[(*next_pgt_ptr)++=
+];
+> > > >
+> > >
+> > > This change doesn't belong to this patch. Maybe move it into the next
+> > > patch and combine with removing fixup_pointer().
+> >
+> > I'll put it in a separate commit even preceding this one, as it's
+> > actually a bug in the existing fixup pointer logic that I noticed when
+> > transitioning to the use of the RIP-relative macro. Specifically,
+> > early_dynamic_pgts is a global variable just like next_early_pgt and
+> > thus also needs to be fixed up to guarantee the correct address is
+> > used across toolchains.
+>
+> No, this is not a bug.
+>
+> early_dynamic_pgts is a two dimensional array
+>
+> extern pmd_t early_dynamic_pgts[EARLY_DYNAMIC_PAGE_TABLES][PTRS_PER_PMD];
+>
+> and so this expression
+>
+> early_dynamic_pgts[(*next_pgt_ptr)++]
+>
+> produces the kernel virtual address of one of the top level elements,
+> which itself is an array, and so this can be fixed up as usual.
+> IOW, the [] operation does not result in pointer dereference here,
+> only in pointer arithmetic.
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
-Extracted out of:
-https://lore.kernel.org/linux-arm-msm/15d2bd66-29f3-435b-8494-d82ec4036413@linaro.org/#t
-
-Changes since v1:
-- Set the reference clock rate to 0 in opp entries, it doesn't support
-  ratesetting anyway. Confirmed UFS still works.
----
- arch/arm64/boot/dts/qcom/sm8550.dtsi | 50 +++++++++++++++++++++++++++++-------
- 1 file changed, 41 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index c89d8f3dad21..144e20edf237 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -1966,6 +1966,7 @@ ufs_mem_hc: ufs@1d84000 {
- 			iommus = <&apps_smmu 0x60 0x0>;
- 			dma-coherent;
- 
-+			operating-points-v2 = <&ufs_opp_table>;
- 			interconnects = <&aggre1_noc MASTER_UFS_MEM 0 &mc_virt SLAVE_EBI1 0>,
- 					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_UFS_MEM_CFG 0>;
- 
-@@ -1986,18 +1987,49 @@ ufs_mem_hc: ufs@1d84000 {
- 				 <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
- 				 <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
- 				 <&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
--			freq-table-hz =
--				<75000000 300000000>,
--				<0 0>,
--				<0 0>,
--				<75000000 300000000>,
--				<100000000 403000000>,
--				<0 0>,
--				<0 0>,
--				<0 0>;
- 			qcom,ice = <&ice>;
- 
- 			status = "disabled";
-+
-+			ufs_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-75000000 {
-+					opp-hz = /bits/ 64 <75000000>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <75000000>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+				};
-+
-+				opp-150000000 {
-+					opp-hz = /bits/ 64 <150000000>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <150000000>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>;
-+					required-opps = <&rpmhpd_opp_svs>;
-+				};
-+
-+				opp-300000000 {
-+					opp-hz = /bits/ 64 <300000000>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <300000000>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>,
-+						 /bits/ 64 <0>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+				};
-+			};
- 		};
- 
- 		ice: crypto@1d88000 {
-
----
-base-commit: 076d56d74f17e625b3d63cf4743b3d7d02180379
-change-id: 20240203-topic-8550_ufs_oppv2-bb88d63a4c58
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
-
+Ah, yes, you're right. Thanks for the correction! I will just drop it then.
