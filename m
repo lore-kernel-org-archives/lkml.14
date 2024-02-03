@@ -1,34 +1,34 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DAA5F554
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 19:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E75860247
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 19:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706987551; cv=none; b=GYtBgBOccShbxH/VaEtN9V3+XXLW9mxwqui8TR74ulfVbLdqaqrT5hvchc1Hv4efaBn2G6Y+99pVjKrK8dFPMLYh4X9gmdIlnQhi4vPvW3+6FDTC0By5al7GNZg/YhzjbxQMvbuKc/acIKnSdnumWrYgU1KQIQmMNtRUhGkXJ4c=
+	t=1706987553; cv=none; b=hS2mIzTKRGAhb2N/0JnWNC14TEOjtRWqp110BKfnvx5UfIQB/r3ecp82YWRQFGmPAttc817EUTjWtTYZP40W7PNdBvyB9jEK+0a6M16U6G7DiFhyigIH8mCS5LEdshnWZNGNuOLwMkuJqvlCQfO1zz8OfLCuQUv05wpRir/1Zkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706987551; c=relaxed/simple;
-	bh=Kyg5hCGVIsasfn2sYOZ2Upwno/GNqXDiIQfjVDfxKzQ=;
+	s=arc-20240116; t=1706987553; c=relaxed/simple;
+	bh=TdNOj56gRwLjQaHS89k0AnOJ05DtbA6b9MJxjIDYlIY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GFpTgVHGkYZX82ODZgSaAu3ee64fRiX2nNjl5IGE35J+ZjVotgJCVgaz3/qP2d1jEjiL3p1bTr4ePRBUHOQyAAQwUDVa+PWU/U2oUBZN6In+7SrOgWAERSGYOhpFMOhQh5noOEgSqbbaNHYBT9zYpZ1O2iEuArWIV/G4VBJoKsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=RbjIWUwX; arc=none smtp.client-ip=91.218.175.185
+	 MIME-Version; b=ddj6RKVJzhhGL/15qNGdv4R/EULpjHgax1Vo8wKmyzkYxS5Ji64wtm5ekvtBoSidlwAhq2f3QgMvUE4dOv2Xey5iDC8PoUNZd4ikDz5UuqBum80ehhq10Pdo99o8pT57dihJCxPSuTebEssPZJuy5Umh2kruhiAsRQJO/AUyc+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=qkXcRaT3; arc=none smtp.client-ip=91.218.175.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="RbjIWUwX"
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="qkXcRaT3"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1706987548;
+	s=key1; t=1706987549;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gYHXn/FsWUe2ytcr0pi3c4QgJvZ4Eb2tVvL9ad3fkVg=;
-	b=RbjIWUwXmQ9KchClb5AWuFa2usojLqz8Bv+i2risRZblgtQW+0z4oIfe6f0rb5VhoY6d7G
-	IPQTzKnoT957/z2cORub5Fcv4RXTT8xXEn4JsZGFC496CS5DxrTBiAAxSjrlK8vKmVuhHr
-	9ofvbkgDweD4oqZ0JZqCyC4yz0KAuPVmmeMkQkCXNiWqmfwDnPu8ApHEpzxO822WuyubVe
-	Dt6duOZd5Xcs+vjzwyUfOXhpYmOdAAqnyjihds0LTJ8itLWvIkgpvNXsANs1Bq8CjPLdni
-	BL4jvQ9cZCbBAEfCn6UaONbi+PI3DjyrS6XOksBchN/ul2yE4NAR61CNrChlnw==
+	bh=IWrCDsFafWqQwP/SgCzI7FzJHbtr/YwtyR/hwDdPlkY=;
+	b=qkXcRaT3gXjv7MJuG6M0Ta3E04bYGrYAV8QVhfA3YMLMk6BSeQH77LBgcizpvwsAZTgKUg
+	+UIT/nJGoxaOIY873ozy5oYQ9JLIm4eLmwenCI3uI9R0wiX0QnqIHHnLk2aL4eBLEndqQl
+	m+8sILMc+FSrJAloR7kVU2ahca2/oH/910RsR8OLEQ7uBqet1M0eiitlduUd+pFehWpqaf
+	Iw9/Op7kO1H2SXOWvARiRu6aNSwzgRvNZ1WQq5YRM676I2R/Qsfpftlc1E+oTou+MS3EyT
+	huzoCGBibmFYDA3Ox+U87miZ9ALdNu+GRMBNg/4RXXxMS4z5+0/vX0j74LiMCQ==
 From: Anton Bambura <jenneron@postmarketos.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -38,9 +38,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] arm64: dts: qcom: sc8180x-lenovo-flex-5g: enable touchscreen
-Date: Sat,  3 Feb 2024 21:11:58 +0200
-Message-ID: <20240203191200.99185-5-jenneron@postmarketos.org>
+Subject: [PATCH v2 6/6] arm64: dts: qcom: sc8180x-lenovo-flex-5g: Allow UFS regulators load/mode setting
+Date: Sat,  3 Feb 2024 21:12:00 +0200
+Message-ID: <20240203191200.99185-7-jenneron@postmarketos.org>
 In-Reply-To: <20240203191200.99185-1-jenneron@postmarketos.org>
 References: <20240203191200.99185-1-jenneron@postmarketos.org>
 Precedence: bulk
@@ -52,79 +52,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Set regulators, reset gpio and delays according to ACPI tables.
+The UFS driver expects to be able to set load (and by extension, mode)
+on the supplied regulators. Add the necessary properties to make that
+possible.
+
+Based on https://lore.kernel.org/r/20231214-topic-sc8180_fixes-v1-6-421904863006@linaro.org
 
 Signed-off-by: Anton Bambura <jenneron@postmarketos.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- .../boot/dts/qcom/sc8180x-lenovo-flex-5g.dts  | 30 ++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts b/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
-index 6ae6cb030b70..5bf6285f905f 100644
+index 0bfc655e9a31..a41958f9ef2b 100644
 --- a/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
 +++ b/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
-@@ -271,6 +271,12 @@ vreg_l3c_1p2: ldo3 {
+@@ -335,12 +335,18 @@ vreg_l7e_1p8: ldo7 {
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1800000>;
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
++						   RPMH_REGULATOR_MODE_HPM>;
++			regulator-allow-set-load;
  		};
  
-+		vreg_l4c_3p3: ldo4 {
-+			regulator-min-microvolt = <3296000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
- 		vreg_l10c_3p3: ldo10 {
- 			regulator-min-microvolt = <3000000>;
- 			regulator-max-microvolt = <3312000>;
-@@ -337,6 +343,12 @@ vreg_l10e_2p9: ldo10 {
+ 		vreg_l10e_2p9: ldo10 {
+ 			regulator-min-microvolt = <2904000>;
+ 			regulator-max-microvolt = <2904000>;
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
++						   RPMH_REGULATOR_MODE_HPM>;
++			regulator-allow-set-load;
  		};
  
-+		vreg_l12e_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
- 		vreg_l16e_3p0: ldo16 {
- 			regulator-min-microvolt = <3072000>;
- 			regulator-max-microvolt = <3072000>;
-@@ -365,11 +377,19 @@ &i2c1 {
- 	touchscreen@10 {
- 		compatible = "hid-over-i2c";
- 		reg = <0x10>;
-+
- 		hid-descr-addr = <0x1>;
-+		reset-gpios = <&tlmm 54 GPIO_ACTIVE_LOW>;
-+
-+		vdd-supply = <&vreg_l4c_3p3>;
-+		vddl-supply = <&vreg_l12e_1p8>;
-+
-+		post-power-on-delay-ms = <3>;
-+		post-reset-deassert-delay-ms = <200>;
- 
- 		interrupts-extended = <&tlmm 122 IRQ_TYPE_LEVEL_LOW>;
- 
--		pinctrl-0 = <&ts_int_default>;
-+		pinctrl-0 = <&ts_int_default>, <&ts_reset_default>;
- 		pinctrl-names = "default";
- 	};
- };
-@@ -735,6 +755,14 @@ ts_int_default: ts-int-default-state {
- 		drive-strength = <2>;
- 	};
- 
-+	ts_reset_default: ts-reset-default-state {
-+		pins = "gpio54";
-+		function = "gpio";
-+
-+		bias-disable;
-+		drive-strength = <16>;
-+	};
-+
- 	usbprim_sbu_default: usbprim-sbu-state {
- 		oe-n-pins {
- 			pins = "gpio152";
+ 		vreg_l12e_1p8: ldo12 {
 -- 
 2.42.0
 
