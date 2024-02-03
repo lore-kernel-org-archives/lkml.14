@@ -1,192 +1,154 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433CC5C91E;
-	Sat,  3 Feb 2024 10:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4A15D72E;
+	Sat,  3 Feb 2024 10:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706954834; cv=none; b=WSRM/gR6yLJUEHcHvsOA33SvpPJF05yUTqyhc1V9ITnO7OI+E50Psc4uAZxQ2brfOmW6Duqh0ds6yxMuccdM/MwsztkQrOHm8y/5/wok+0PiMQTofQWbVpnkzYrAZ9yImiBBXLXhef7mOmz4TXfK/X5VF3M6wgL8DOlnwaGHBq0=
+	t=1706955164; cv=none; b=He6pLdDwcw+YTBRjHoHh7FWcUUiTBUnlF4ZBR/tC1z75TwT/FmHBOYg06pHeXKmkvmqQo6yKmJeYAqkDgh3rYOWoTiO/GAzol2F+eiLrd6VBg1MDSroW62kp0ncSiY1vqJygH3ha0NrFc924oMIDT7FgV3e5oPtW+F26TB1SknA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706954834; c=relaxed/simple;
-	bh=YQvE7y0NHy8x4IJxViUtYas8Dp3o2T+eCwn5UkgB5Sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wn9bEVNTumU1OsgXBsIbn2wS51avZH7+XFF3MwJDKiLLCdvljcDoJPYYTeUnBfNgOmj5UD4D7ivLvvZMSrlnY7QAqsc4fCA/TRaFPAYeAzq8sJ1lKVG9zk2brnjkFRiBRrGRSTSqZI9nj7cpdX508/TuJXl7VvmPpBFR14TkWcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iM7eB28r; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1706955164; c=relaxed/simple;
+	bh=DvXqZtbYFVinLivL3K4A/ClltCGxOW4cow1fDLrjL9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCEHmCdeIoAKFsMF4yDZr8L8Bmn/NIAf5zoiqbxlqrcB7Qb+L4oQkxll2ZJ2VkevjZUmzLfHoTTuuamGmGvuxDFjoH6PaEL50yMGh4OyPqc9nKi37Zfz2kXHVqRrNfzeHb2WGoRDMQ0alXlDUcXXJeUyKnKlZ3RvnhOk8WWWTB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=jUTnY4su; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iM7eB28r"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id WCn3r4y1Qn8K2WCn3rKyrj; Sat, 03 Feb 2024 10:58:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1706954305;
-	bh=53zy55g4yqyQ0+8fdEt1Lnm92Clz5kD41n0D2EGwMlY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iM7eB28rFWHTU7/83TflV0d3jSZwcEUI9pMm8BlF4EXuqXPWFOc5ga/yyaCxACEVH
-	 ASeL4T1eSFbEuoj6gupci1lDuX0635O9k28orVXMYkvkPMv01DKQl1mGO/mUfLE2pL
-	 W9Au43oZoVPPz9eyppVP/iheOVax6ZSl9TkVdLDoXZu2ZmTTgIXh3WTfRiMCIntGHw
-	 vFEm24RsN0FMZJnrpM2Q36aN05tIws3oRxF2gNZsTxDPmJWBB0PjnWa8HOXRglaDI6
-	 wunQ9LEVJlBMIuakndaj6XVTWNc8JNCVPOQxJoWxUTuBoqzEuc+eXoG64J/dHviWxS
-	 I15/bBxgbOLig==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 03 Feb 2024 10:58:25 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <236dc9db-8525-413e-a77b-54df198c86f5@wanadoo.fr>
-Date: Sat, 3 Feb 2024 10:58:24 +0100
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jUTnY4su"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9402BC433F1;
+	Sat,  3 Feb 2024 10:12:42 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jUTnY4su"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1706955161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fyk47rv6PoXblVb+58I9Tj/qLrH+SfbKgfIIMGJ0GzE=;
+	b=jUTnY4su1U7l4f/7BLAhdUi1vD/Oo6HHZp5XMY5o3SvJ0sasDgJTMby5wxjTzpIsXSjRbt
+	zMYNSdoHnQaFRj5S54sERYGFkowrbnduWTcpq7o8vrE2BErJMTjfKmTYZ8NKQQk8yRi941
+	lIjlYerzkuq0HNN8mnPkQD1pz1IAi4M=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id be5d1e7e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sat, 3 Feb 2024 10:12:40 +0000 (UTC)
+Date: Sat, 3 Feb 2024 11:12:37 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
+Message-ID: <Zb4RlTzq_LV7AzsH@zx2c4.com>
+References: <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
+ <20240131140756.GB2356784@mit.edu>
+ <Zbpc8tppxuKr-hnN@zx2c4.com>
+ <20240131171042.GA2371371@mit.edu>
+ <DM8PR11MB5750C7D16DC566CD1329D5A5E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com>
+ <20240201045710.GD2356784@mit.edu>
+ <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
+ <DM8PR11MB57505F657A8F08E15DC34673E7422@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <20240202153927.GA119530@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: humidity: hdc3020: add threshold events support
-To: dima.fedrau@gmail.com
-Cc: 579lpy@gmail.com, javier.carrasco.cruz@gmail.com, jic23@kernel.org,
- lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240203090530.53374-1-dima.fedrau@gmail.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240203090530.53374-1-dima.fedrau@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240202153927.GA119530@mit.edu>
 
-Le 03/02/2024 à 10:05, Dimitri Fedrau a écrit :
-> Add threshold events support for temperature and relative humidity. To
-> enable them the higher and lower threshold registers must be programmed
-> and the higher threshold must be greater then or equal to the lower
-> threshold. Otherwise the event is disabled. Invalid hysteresis values
-> are ignored by the device. There is no further configuration possible.
+Hi Ted, Kirill,
+
+On Fri, Feb 02, 2024 at 10:39:27AM -0500, Theodore Ts'o wrote:
+> On Fri, Feb 02, 2024 at 07:25:42AM +0000, Reshetova, Elena wrote:
+> > This is a great summary of options, thank you Jason!
+> > My proposal would be to wait on result of our internal investigation 
+> > before proceeding to choose the approach. 
 > 
-> Tested by setting thresholds/hysteresis and turning the heater on/off.
-> Used iio_event_monitor in tools/iio to catch events while constantly
-> displaying temperature and humidity values.
-> Threshold and hysteresis values are cached in the driver, used i2c-tools
-> to read the threshold and hysteresis values from the device and make
-> sure cached values are consistent to values written to the device.
+> I'm happy for the option "Do nothing for now", but if we do want to do
+> something in the absence of more detailed information, I'd suggest
+> doing something simple for first, on the theory that it doesn't make
+> things worse, and we can always do something more complicated if it
+> turns out to be needed.
 > 
-> Based on Fix:
-> a69eeaad093d "iio: humidity: hdc3020: fix temperature offset" in branch
-> fixes-togreg
+> In that vein, my suggestion is:
 > 
-> Signed-off-by: Dimitri Fedrau <dima.fedrau-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   drivers/iio/humidity/hdc3020.c | 339 +++++++++++++++++++++++++++++++++
->   1 file changed, 339 insertions(+)
+> > > Solution B) BUG_ON(is_early_boot && is_coco_system) in the RDRAND
+> > > failure path (> 10 retries).
+> > > 
+> > > This is slightly less simple than A, because we have to plumb
+> > > CoCo-detection through to the RDRAND helper. [Side note: I feel
+> > > ridiculous typing 'CoCo'.] Systems-wise, I don't see drawbacks.
+> > > RNG-wise, the drawback is that this doesn't help deal with secure
+> > > reseeding later in time, which is a RNG property that we otherwise
+> > > enjoy.
 > 
-> diff --git a/drivers/iio/humidity/hdc3020.c b/drivers/iio/humidity/hdc3020.c
-> index ed70415512f6..1cdff7af4ca8 100644
-> --- a/drivers/iio/humidity/hdc3020.c
-> +++ b/drivers/iio/humidity/hdc3020.c
-> @@ -16,16 +16,27 @@
->   #include <linux/init.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
-> +#include <linux/interrupt.h>
+> If there isn't a global variable we can test to see if Confidential
+> Compute is enabled, I suspect we should just add one.  I would assume
+> that /dev/random isn't the only place where we might need to do
+> whether Confidential Compute is enabled.
+> 
+> So I don't think plumbing CC into the /dev/random code, and since we
+> are only doing this in early boot, I wouldn't put it in the RDRAND
+> helper, but rather in the caller of the RDRAND helper that gets used
+> in the early boot path.
 
-Nit: alphabetical order could be kept
+Yea, actually, I had a pretty similar idea for something like that
+that's very non-invasive, where none of this even touches the RDRAND
+core code, much less random.c. Specifically, we consider "adding some
+extra RDRAND to the pool" like any other driver that wants to add some
+of its own seeds to the pool, with add_device_randomness(), a call that
+lives in various driver code, doesn't influence any entropy readiness
+aspects of random.c, and can safely be sprinkled in any device or
+platform driver.
 
->   
->   #include <asm/unaligned.h>
->   
->   #include <linux/iio/iio.h>
-> +#include <linux/iio/events.h>
+Specifically what I'm thinking about is something like:
 
-Nit: same
+void coco_main_boottime_init_function_somewhere_deep_in_arch_code(void)
+{
+  // [...]
+  // bring up primary CoCo nuts
+  // [...]
 
-...
+  /* CoCo requires an explicit RDRAND seed, because the host can make the
+   * rest of the system deterministic.
+   */
+  unsigned long seed[32 / sizeof(long)];
+  size_t i, longs;
+  for (i = 0; i < ARRAY_SIZE(seed); i += longs) {
+    longs = arch_get_random_longs(&seed[i], ARRAY_SIZE(seed) - i);
+    /* If RDRAND is being DoS'd, panic, because we can't ensure
+     * confidentiality.
+     */
+    BUG_ON(!longs);
+  }
+  add_device_randomness(seed, sizeof(seed));
+  memzero_explicit(seed, sizeof(seed));
 
->   
-> +static const u8 HDC3020_R_T_RH_THRESH_LOW[2] = { 0xE1, 0x02 };
-> +static const u8 HDC3020_R_R_RH_THRESH_LOW_CLR[2] = { 0xE1, 0x09 };
+  // [...]
+  // do other CoCo things
+  // [...]
+}
 
-I don't know what the R and T are for, but shoukld this be 
-HDC3020_R_T_RH_THRESH_LOW_CLR to match other adjacent line?
+I would have no objection to the CoCo people adding something like this
+and would give it my Ack, but more importantly, my Ack for that doesn't
+even matter, because add_device_randomness() is pretty innocuous.
 
-> +static const u8 HDC3020_R_T_RH_THRESH_HIGH_CLR[2] = { 0xE1, 0x14 };
-> +static const u8 HDC3020_R_T_RH_THRESH_HIGH[2] = { 0xE1, 0x1F };
+So Kirill, if nobody else here objects to that approach, and you want to
+implement it in some super minimal way like that, that would be fine
+with me. Or maybe we want to wait for that internal inquiry at Intel to
+return some answers first. But either way, this might be an easy
+approach that doesn't add too much complexity.
 
-...
-
-> +static int hdc3020_write_thresh(struct iio_dev *indio_dev,
-> +				const struct iio_chan_spec *chan,
-> +				enum iio_event_type type,
-> +				enum iio_event_direction dir,
-> +				enum iio_event_info info,
-> +				int val, int val2)
-> +{
-> +	struct hdc3020_data *data = iio_priv(indio_dev);
-> +	u16 *thresh;
-> +	u8 buf[5];
-> +	int ret;
-> +
-> +	/* Supported temperature range is from –40 to 125 degree celsius */
-> +	if (val < -45 || val > 125)
-> +		return -EINVAL;
-> +
-> +	/* Select threshold and associated register */
-> +	if (info == IIO_EV_INFO_VALUE) {
-> +		if (dir == IIO_EV_DIR_RISING) {
-> +			thresh = &data->t_rh_thresh_high;
-> +			memcpy(buf, HDC3020_S_T_RH_THRESH_HIGH, 2);
-> +		} else {
-> +			thresh = &data->t_rh_thresh_low;
-> +			memcpy(buf, HDC3020_S_T_RH_THRESH_LOW, 2);
-> +		}
-> +	} else {
-> +		if (dir == IIO_EV_DIR_RISING) {
-> +			thresh = &data->t_rh_thresh_high_clr;
-> +			memcpy(buf, HDC3020_S_T_RH_THRESH_HIGH_CLR, 2);
-> +		} else {
-> +			thresh = &data->t_rh_thresh_low_clr;
-> +			memcpy(buf, HDC3020_S_T_RH_THRESH_LOW_CLR, 2);
-> +		}
-> +	}
-> +
-> +	guard(mutex)(&data->lock);
-> +	switch (chan->type) {
-> +	case IIO_TEMP:
-> +		/*
-> +		 * Store truncated temperature threshold into 9 LSBs while
-> +		 * keeping the old humidity threshold in the 7 MSBs.
-> +		 */
-> +		val = (((val + 45) * 65535 / 175) >> HDC3020_THRESH_TEMP_SHIFT);
-
-Why 175?
-If the span is -40/+120, I guess it should be 160 and if it is -45/+120, 
-165. No?
-
-Maybe something like:
-   #define MIN_TEMP -45 (or -40)
-   #define MAX_TEMP 120
-in order to avoid hard coded constant?
-
-> +		val &= HDC3020_THRESH_TEMP_MASK;
-> +		val |= (*thresh & HDC3020_THRESH_HUM_MASK);
-> +		break;
-> +	case IIO_HUMIDITYRELATIVE:
-> +		/*
-> +		 * Store truncated humidity threshold into 7 MSBs while
-> +		 * keeping the old temperature threshold in the 9 LSBs.
-> +		 */
-> +		val = ((val * 65535 / 100) & HDC3020_THRESH_HUM_MASK);
-> +		val |= (*thresh & HDC3020_THRESH_TEMP_MASK);
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	put_unaligned_be16(val, &buf[2]);
-> +	buf[4] = crc8(hdc3020_crc8_table, buf + 2, 2, CRC8_INIT_VALUE);
-> +	ret = hdc3020_write_bytes(data, buf, 5);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Update threshold */
-> +	*thresh = val;
-> +
-> +	return 0;
-> +}
-
-CJ
-
+Jason
