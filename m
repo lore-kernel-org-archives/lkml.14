@@ -1,400 +1,214 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304AB622;
-	Sat,  3 Feb 2024 00:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766196FB2
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706920489; cv=none; b=iZ+Snf1FnEouYmeJvqALd9bNIiqMGlAZ5MGiD51tro0UdOH/Qcl4CfHVbVAZU4NyiAJ97ZIUGX6Oflz79kjao+LWfH69nKWR/BMISuCLh/waRpVeqn+piLcc5j0no3vcte8plERjQRvBAXy0A/GSoJcuySN5M3mKRomNJvJSWlY=
+	t=1706920523; cv=none; b=di31VfzQNKzZiU4+WlOqCZIfcvA+uLJ9YEXQwUKfn9+u1QbnKFxzfl0a9Qlqm0nKtIMCrp0V+EM3wLe3Poi8EJNuu+m2fc3y6LWOp3OBwlBEpcrKfP/gWYlbcoLIpExYGYL7GCnM5l6xOKyKrgS8x9nz9Lyw+BtfybgB41MPKik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706920489; c=relaxed/simple;
-	bh=8VGrM99yM9EeYsSzd1lKRouGyu2IusmLymDzd5jAIOY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=M95uqn5vXPhioVc32fvSosLk3tZ5p2A9gyybxHrEjUto2YJROWVxdHuatD0zrcFWVMjancDP41OdFdSGuuEh5WyXgPBri7y0ng4BsZ7YtAMK9DSwUV+wfoum21J5fhA5HC85i+6Fq+s87AnvoImuketljPqNOCWqvtH425b2Xh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XjWooVKv; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1706920523; c=relaxed/simple;
+	bh=+W0x0qmDTWJBFhcBNY7FAOGQpUdjN0SQbJHn4/GsvUM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BEW0mkJhJeII3YwosdHSAh8SLFWTNuMBU2EUVyY/Xk23hndt9tQulT7XzoGMYdNugark7fP7IYXFdBOZ0LmuVtctd94Ok/5J/y3TcqRt4Twzo1DNV1isJJn3qozQve0uch582Siua8oePpIZxZdFmKft9ZxxDMd9r2zX8eh26gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yuxm8q/g; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XjWooVKv"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 981A2C0000E8;
-	Fri,  2 Feb 2024 16:29:26 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 981A2C0000E8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1706920166;
-	bh=8VGrM99yM9EeYsSzd1lKRouGyu2IusmLymDzd5jAIOY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XjWooVKvUmZv/YVIzD4MtTq9R+4mHU0RsJnCD6wO6L4KRqQ11BUH9mg7XubuVFnjj
-	 8vwYB0dWmoNJBmwNB/yh2bbdzv3VSLirYFgnhIr8vu6jhvrUPLkaAfYNVuLgICRLMW
-	 OdfjV2+JIMmYtxfAacNAVFdDXNhTzlWJpiI5UTC8=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id ECB9418041CAC4;
-	Fri,  2 Feb 2024 16:29:24 -0800 (PST)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com,
-	kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com,
-	anand.gore@broadcom.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com,
-	William Zhang <william.zhang@broadcom.com>,
-	David Regan <dregan@broadcom.com>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: [PATCH v4 05/12] arm64: dts: broadcom: bcmbca: Add NAND controller node
-Date: Fri,  2 Feb 2024 16:28:26 -0800
-Message-Id: <20240203002834.171462-6-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20240203002834.171462-1-william.zhang@broadcom.com>
-References: <20240203002834.171462-1-william.zhang@broadcom.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yuxm8q/g"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2963e7ea1d2so1241196a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 16:35:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706920521; x=1707525321; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w8/W/QW1OnGWzQANjW/wBiiWNdyxuosNQc6VIGtK4Bs=;
+        b=yuxm8q/g7wRZaYvJ84zNlOADVgcgwiGoJHiirIKTuSbufO7jiTG680Gf6z+YHy4YSK
+         WZ8e/Us3lRnPdqOT1YEyclsLJtmJ7CjQIR14ZmGtQ6i9d745E1OrGxj5BXzbX+ARmiGe
+         n/iVcKddvlF/55gmQlkU9iJ6qDkkZf+OPbjmVM72hvGqcwppRCM+ohhJDr/frsG5Ox1D
+         YLnLXcY6OXok11Tc4KynmoJrlfYRaFgUFJqVtIw8Dns8ETUH55cHwRaA/QwT/bbL4b5Q
+         e/xpSxpU4n/bNAqnVKUaDdn2F943yczm72eBfmUi+tvBOxSVT0O9vRH7PsMnUcUdiLtq
+         TTXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706920521; x=1707525321;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w8/W/QW1OnGWzQANjW/wBiiWNdyxuosNQc6VIGtK4Bs=;
+        b=uBZ9Jqna3GZqasLtuB46JYSJ/jt1MfAy8ZSRQOx4tw6lx52DW9fmL/gQWc/iw022b7
+         yOZDjikt0uNXbFgp0R8O1BZ/FpS/qtAKlIMpXej6MfdMJFCd/t55padIfPa2L9tfOwxn
+         j1kjmLOIA6o1Lb0FX3zQD5k947s/mV0NOleGiSVdPJxfZ4JFNZA8xT25PGpK6oAKP6hp
+         1+bTFh2ff+dRsDZWBTy23iFxvV2UXUqQmozo+3oJ4ijH/DXHvGQprc6xVk/dveUKuKdb
+         gv5J61FXlTfvfplt4t6TLSMeYC+Ke3c2JBsmwE4VahDW0edoOm9bdddnJHG7LtVifUxR
+         CmLw==
+X-Gm-Message-State: AOJu0YysBapt0md1NteZbPx4oG315hPy0sHIiJoRH1c46HL8Akac+LsI
+	RwbRrXDrSHnPDBlHrVqSvMdTRmQLz1HgdQRjPNoZ2dhrnIC/qkiZQpzhG+4zDDtlc2uW+cfCRyH
+	q/Q==
+X-Google-Smtp-Source: AGHT+IGQ+vZkDSPZfozDOkYUmCM0pGO67d9wOLL8i5LulF6+4vDmWr6layMlPRZzcYK65MkYyIWpX1/esfg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:5108:b0:296:5baa:63e with SMTP id
+ sc8-20020a17090b510800b002965baa063emr75980pjb.8.1706920520809; Fri, 02 Feb
+ 2024 16:35:20 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri,  2 Feb 2024 16:35:18 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Message-ID: <20240203003518.387220-1-seanjc@google.com>
+Subject: [PATCH v3] KVM: x86/mmu: Retry fault before acquiring mmu_lock if
+ mapping is changing
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yan Zhao <yan.y.zhao@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Yuan Yao <yuan.yao@linux.intel.com>, Xu Yilun <yilun.xu@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for Broadcom STB NAND controller in BCMBCA ARMv8 chip dts
-files.
+Retry page faults without acquiring mmu_lock if the resolved gfn is covered
+by an active invalidation.  Contending for mmu_lock is especially
+problematic on preemptible kernels as the mmu_notifier invalidation task
+will yield mmu_lock (see rwlock_needbreak()), delay the in-progress
+invalidation, and ultimately increase the latency of resolving the page
+fault.  And in the worst case scenario, yielding will be accompanied by a
+remote TLB flush, e.g. if the invalidation covers a large range of memory
+and vCPUs are accessing addresses that were already zapped.
 
-Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: David Regan <dregan@broadcom.com>
+Alternatively, the yielding issue could be mitigated by teaching KVM's MMU
+iterators to perform more work before yielding, but that wouldn't solve
+the lock contention and would negatively affect scenarios where a vCPU is
+trying to fault in an address that is NOT covered by the in-progress
+invalidation.
 
+Add a dedicated lockess version of the range-based retry check to avoid
+false positives on the sanity check on start+end WARN, and so that it's
+super obvious that checking for a racing invalidation without holding
+mmu_lock is unsafe (though obviously useful).
+
+Wrap mmu_invalidate_in_progress in READ_ONCE() to ensure that pre-checking
+invalidation in a loop won't put KVM into an infinite loop, e.g. due to
+caching the in-progress flag and never seeing it go to '0'.
+
+Force a load of mmu_invalidate_seq as well, even though it isn't strictly
+necessary to avoid an infinite loop, as doing so improves the probability
+that KVM will detect an invalidation that already completed before
+acquiring mmu_lock and bailing anyways.
+
+Do the pre-check even for non-preemptible kernels, as waiting to detect
+the invalidation until mmu_lock is held guarantees the vCPU will observe
+the worst case latency in terms of handling the fault, and can generate
+even more mmu_lock contention.  E.g. the vCPU will acquire mmu_lock,
+detect retry, drop mmu_lock, re-enter the guest, retake the fault, and
+eventually re-acquire mmu_lock.  This behavior is also why there are no
+new starvation issues due to losing the fairness guarantees provided by
+rwlocks: if the vCPU needs to retry, it _must_ drop mmu_lock, i.e. waiting
+on mmu_lock doesn't guarantee forward progress in the face of _another_
+mmu_notifier invalidation event.
+
+Note, adding READ_ONCE() isn't entirely free, e.g. on x86, the READ_ONCE()
+may generate a load into a register instead of doing a direct comparison
+(MOV+TEST+Jcc instead of CMP+Jcc), but practically speaking the added cost
+is a few bytes of code and maaaaybe a cycle or three.
+
+Reported-by: Yan Zhao <yan.y.zhao@intel.com>
+Closes: https://lore.kernel.org/all/ZNnPF4W26ZbAyGto@yzhao56-desk.sh.intel.com
+Cc: Kai Huang <kai.huang@intel.com>
+Cc: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Yuan Yao <yuan.yao@linux.intel.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
 
-Changes in v4:
-- Move the board related dts setting from SoC dtsi to board dts
+Kai and Yan, I dropped your reviews as this changed just enough to make me
+uncomfortable carrying reviews over from the previous version.
 
-Changes in v3: None
-Changes in v2:
-- Add nand controller node label for 4908 so it is consistent with other
-SoCs and can be referenced by board dts file
+v3:
+ - Release the pfn, i.e. put the struct page reference if one was held,
+   as the caller doesn't expect to get a reference on "failure". [Yuan]
+ - Fix a typo in the comment.
 
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi  |  4 ++--
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts  | 10 ++++++++++
- 14 files changed, 156 insertions(+), 2 deletions(-)
+v2:
+ - Introduce a dedicated helper and collapse to a single patch (because
+   adding an unused helper would be quite silly).
+ - Add a comment to explain the "unsafe" check in kvm_faultin_pfn(). [Kai]
+ - Add Kai's Ack.
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-index 2f124b027bbf..336016e334d9 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-@@ -589,7 +589,7 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
+v1: https://lore.kernel.org/all/20230825020733.2849862-1-seanjc@google.com
+
+ arch/x86/kvm/mmu/mmu.c   | 19 +++++++++++++++++++
+ include/linux/kvm_host.h | 26 ++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 3c193b096b45..8ce9898914f1 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4415,6 +4415,25 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 	if (unlikely(!fault->slot))
+ 		return kvm_handle_noslot_fault(vcpu, fault, access);
  
--		nand-controller@1800 {
-+		nand_controller: nand-controller@1800 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-@@ -597,7 +597,7 @@ nand-controller@1800 {
- 			reg-names = "nand", "nand-int-base";
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "nand_ctlrdy";
--			status = "okay";
-+			status = "disabled";
++	/*
++	 * Pre-check for a relevant mmu_notifier invalidation event prior to
++	 * acquiring mmu_lock.  If there is an in-progress invalidation and the
++	 * kernel allows preemption, the invalidation task may drop mmu_lock
++	 * and yield in response to mmu_lock being contended, which is *very*
++	 * counter-productive as this vCPU can't actually make forward progress
++	 * until the invalidation completes.  This "unsafe" check can get false
++	 * negatives, i.e. KVM needs to re-check after acquiring mmu_lock.
++	 *
++	 * Do the pre-check even for non-preemtible kernels, i.e. even if KVM
++	 * will never yield mmu_lock in response to contention, as this vCPU is
++	 * *guaranteed* to need to retry, i.e. waiting until mmu_lock is held
++	 * to detect retry guarantees the worst case latency for the vCPU.
++	 */
++	if (mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn)) {
++		kvm_release_pfn_clean(fault->pfn);
++		return RET_PF_RETRY;
++	}
++
+ 	return RET_PF_CONTINUE;
+ }
  
- 			nandcs: nand@0 {
- 				compatible = "brcm,nandcs";
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi
-index d658c81f7285..14b2adfb817c 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi
-@@ -138,6 +138,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 7e7fd25b09b3..179df96b20f8 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2031,6 +2031,32 @@ static inline int mmu_invalidate_retry_gfn(struct kvm *kvm,
+ 		return 1;
+ 	return 0;
+ }
++
++/*
++ * This lockless version of the range-based retry check *must* be paired with a
++ * call to the locked version after acquiring mmu_lock, i.e. this is safe to
++ * use only as a pre-check to avoid contending mmu_lock.  This version *will*
++ * get false negatives and false positives.
++ */
++static inline bool mmu_invalidate_retry_gfn_unsafe(struct kvm *kvm,
++						   unsigned long mmu_seq,
++						   gfn_t gfn)
++{
++	/*
++	 * Use READ_ONCE() to ensure the in-progress flag and sequence counter
++	 * are always read from memory, e.g. so that checking for retry in a
++	 * loop won't result in an infinite retry loop.  Don't force loads for
++	 * start+end, as the key to avoiding infinite retry loops is observing
++	 * the 1=>0 transition of in-progress, i.e. getting false negatives
++	 * due to stale start+end values is acceptable.
++	 */
++	if (unlikely(READ_ONCE(kvm->mmu_invalidate_in_progress)) &&
++	    gfn >= kvm->mmu_invalidate_range_start &&
++	    gfn < kvm->mmu_invalidate_range_end)
++		return true;
++
++	return READ_ONCE(kvm->mmu_invalidate_seq) != mmu_seq;
++}
+ #endif
  
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi
-index 4f474d47022e..589b8a1efc72 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi
-@@ -119,6 +119,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi
-index 909f254dc47d..48d618e75866 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi
-@@ -137,6 +137,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi
-index 685ae32951c9..1d1303cf90f3 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi
-@@ -138,6 +138,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi
-index 820553ce541b..00c62c1e5df0 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi
-@@ -119,5 +119,19 @@ hsspi: spi@1000 {
- 			num-cs = <8>;
- 			status = "disabled";
- 		};
-+
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi
-index 0eb93c298297..caeaf428dc15 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi
-@@ -156,5 +156,19 @@ hsspi: spi@1000 {
- 			num-cs = <8>;
- 			status = "disabled";
- 		};
-+
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts
-index c4e6e71f6310..030ffa5364fb 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts
-index e69cd683211a..4b779e6c22e1 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts
-index db2c82d6dfd8..2851e8e41bf4 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts
-index 25c12bc63545..17dc594fe83f 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts
-index faba21f03120..34832a734734 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts
-index 9808331eede2..e1396b5544b7 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts
-index 1f561c8e13b0..30bbf6f2917e 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
+ #ifdef CONFIG_HAVE_KVM_IRQ_ROUTING
+
+base-commit: 60eedcfceda9db46f1b333e5e1aa9359793f04fb
 -- 
-2.37.3
+2.43.0.594.gd9cf4e227d-goog
 
