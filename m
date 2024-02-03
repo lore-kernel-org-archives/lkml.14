@@ -1,56 +1,56 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702CA1FB2
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AE779C8
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 00:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706918967; cv=none; b=ebJebhaUhdWx6jRA9xnspAaE/OKoqTzPoK9WNrFIX2h5SYhW6+pG81zoeC+lapoaxjwKUKrvrOTG+I3D8VOfjNh9JvBltIdg0rowg5clBjLMAyfcHwENA2vzixudPB20C5cXoWmjR6BoAFAWNWLq4hiy22dNvUS9Ul5fwFBMbaQ=
+	t=1706918971; cv=none; b=iShYPZgpsjU7gACshcdgaQ1PLy6SSEjQc49eskpnynSfbd9S1PjtUSjYk9ZfeL2YpY1u1MMpE9nl+6U/lZnRSTC5p3sk245Ghz5/P/6/yv13NoYlwjgHxoxRolA5mkqVjurqT0imUQkU+nwde0tEN/VBZy7D387XIpnKuL85ZCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706918967; c=relaxed/simple;
-	bh=CNPk1afhnBjcfCeKhJ+dXXQAMfAeimm4XlBq2aq6RHw=;
+	s=arc-20240116; t=1706918971; c=relaxed/simple;
+	bh=WLkUW0/Unoe62tn0PAI8vXH8dvOJolXpQGzrHPU+8WU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j1CKuEAELfF96atnuF/5GO/ldfRV7AoV1kAnYefy0O2wyacH8K2XdtOXuRqLvdavJyYIddimuzZbvz+abDMDIEJHYbG424ithrX9n1Hmm6I9+0A4DJ6e9quRaPnpoXHn4hkvXBIo47PbvB2dTQ0uU33ci1H7M3lWsQb/Royg6O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cK2RC+av; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=rOXY9NMtUQMeB7vISyemwyqqW+InFgaCBLP1uxj270rI4FVnTM8ecYPnimxw5fj125Nj3mV+dpC2mtQMhg2/pkcBvWCvl6yWPnR0C8rfPw7u74cb6pKABQlshdF+BL1eq8NB/CL0lfO6Vfw8mIp2J8V6u3N7bf8n0XMDhFOpvpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i0u1N5ds; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cK2RC+av"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5d8dc8f906aso2494656a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 16:09:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i0u1N5ds"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5f38d676cecso44494287b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 16:09:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706918965; x=1707523765; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706918968; x=1707523768; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fg/vqH030f9YZARetCg5UZ+D2wOsplctpRVUYVfmsZ0=;
-        b=cK2RC+avJAJ9jOkjhYkgaGPwauQ9rNIT7+b4lLLqyTyDYkgVBM2xqSDpE9OXH5bJgy
-         SR2p+BFGQPaS1svOYUrk9Im3R3/p2h04PXTlx56tom05gPAcV7MCefxNAAQZioDZlFKj
-         H23/DBtfZqWbZJATe6fDsjVzKsmSa3sBNZJJpNLGvnrK6f/TgD4U/lTN5q7msnt8n7pK
-         YX0AkwK3MHkP6GJcqDgWoAp0HgICmc9fIptRjN1lpAGu8s5+9rtakwVkyXt9PR9jyoTB
-         djlM7b0MNylgEEOFwlZejT3/Qo0/Bv420VVTn0bC8fHsmIgyKB1ucDtohxcLGQWFpUB7
-         7gCQ==
+        bh=CwvKSfH4xv/NatBnDCESKILLStQmhSJKJagouj3ct64=;
+        b=i0u1N5dsSmRPwUp91mpyA8kVP1ezD7HeFPc3JuIWVmQGwynyCvZ4JU84J0tDJfEjWl
+         JninIDOspfAG03g/KL8GlNV2TfGxGCt88XU6AqE4H5jkubPfhTM02Pc8kCyNi9v7LDW3
+         H5LwKPD5eg1Bya9/7HHnLCOMDTq3NHZvQyN4Yo19FKMOhPUxzvYE6B1MTE/+6+BjsXPy
+         QM/YkghIzbSa/eh3X1YIF0tOX4jmuZnKYb1jZgqgPGKkKy1Mqfnlp5URG2ub0A0dbglX
+         cP9JKr2pOKCx+6j9aCZhShwMV+Mcp3I6sDiu4vmE4uHVpdBTr3IqE4Pp7siZV2Ze4IpV
+         qSzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706918965; x=1707523765;
+        d=1e100.net; s=20230601; t=1706918968; x=1707523768;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Fg/vqH030f9YZARetCg5UZ+D2wOsplctpRVUYVfmsZ0=;
-        b=inJlsdru6IoOmn7TBmmJ6wo8A/XRlP2QFIKIE7+XT/eaSmwQd221hV4U2V5Zwa4xG5
-         nlvGfgxk3ZD5PQXhkzuXs6bM2OirvS83JPKt7leDFHOXSoai4u6ZK57GkOwBDeeqpCKZ
-         M9p+CP/feyVBact/FeFMLML2ZIrg1BCVco8VfsWZ21LaUOTf5lKAoMDI6vaEHXgzeHX0
-         MWJxYKa6QiGCoBfJQCWPEsWMvW0EDaNhRjoHZNE2sSIaPO34zhoqfXh3FzRTN94/H2c9
-         fO0pLZex5GsDTWG89/KhHsWX9DR2advbAnTA/NB7S2e5PZ5g5I9Km9qfUhMATLKIZO4u
-         h9HA==
-X-Gm-Message-State: AOJu0YycjlYwDMgalME43bxFFS3zeYgQZoGRWen9O3a7sTVI4rkPPu1d
-	pV2/UqcteSZ7HfGumgpvYxSENYeE9Et3UuXSKzOXh5wfB6RkVJeARFzbUsSIshjlClSg98ZcPkw
-	7Mw==
-X-Google-Smtp-Source: AGHT+IGM9HGyUUoLJfu31MYrwpoT/03aGaAM8UVTlWmMdWn4RNq+59MKCFyERKnp3/HUc35fvBADh6Lb6+Y=
+        bh=CwvKSfH4xv/NatBnDCESKILLStQmhSJKJagouj3ct64=;
+        b=rfcB2tUUYcemFelWv1feQzEvD8hhvDxo1iZ/SFe6WGxNj8zLxzwmAgYhKYt41/QMCw
+         kdhyK6FfBTaQY3Ud3JGP/xT1bmOn9bTk8OsWsh98ED8fGQfZCSvj5xrTmBJv/JHokXfN
+         zGJXa0LeS0AvejU0l7IP/Ex3Bo+pLg9HNBj2Pjv8M2P7ZnEXqHJcOGEgWhtldc9COaAg
+         D7sfhHoGwZJZ7ioqXBFsItVVM9kS4fJ5eeRrIphTx5dYxBj1/lm+Gk5uyUNPX5rQhjDh
+         GQ2CRIEc3/AqwVTTShitfJX59MpfYEprmp0JhBnOfCWSW8Qq00pNBeyaiIiYTzmMBlu3
+         jKRg==
+X-Gm-Message-State: AOJu0Yx+d7m6K3HNTzoYIH3e7+You8HzHfkzzEO7T3+zFY6JhOSSqFe0
+	qFQ3fDejgSTZWjAXNO39SUg8bwvLVGZZ83wBJB7TvsaIN1Y0kWtRZuuII4XVYNansTOgUsmRfIN
+	jaQ==
+X-Google-Smtp-Source: AGHT+IFuvqEiFXNSQKUMPqjc73s/NvoLgkLdyu0SSnFN41+IjHOkDf5OlEYBJH0O9B2BnRrsucGfLCjldz4=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:d4c4:b0:1d9:697d:6817 with SMTP id
- o4-20020a170902d4c400b001d9697d6817mr174835plg.1.1706918964815; Fri, 02 Feb
- 2024 16:09:24 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a25:ce90:0:b0:dc6:deca:8122 with SMTP id
+ x138-20020a25ce90000000b00dc6deca8122mr35402ybe.5.1706918968697; Fri, 02 Feb
+ 2024 16:09:28 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  2 Feb 2024 16:09:08 -0800
+Date: Fri,  2 Feb 2024 16:09:10 -0800
 In-Reply-To: <20240203000917.376631-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240203000917.376631-1-seanjc@google.com>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240203000917.376631-3-seanjc@google.com>
-Subject: [PATCH v8 02/10] KVM: selftests: Make sparsebit structs const where appropriate
+Message-ID: <20240203000917.376631-5-seanjc@google.com>
+Subject: [PATCH v8 04/10] KVM: selftests: Add support for allocating/managing
+ protected guest memory
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Anup Patel <anup@brainfault.org>, 
@@ -77,301 +78,160 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	Michael Roth <michael.roth@amd.com>, Peter Gonda <pgonda@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Michael Roth <michael.roth@amd.com>
+From: Peter Gonda <pgonda@google.com>
 
-Make all sparsebit struct pointers "const" where appropriate.  This will
-allow adding a bitmap to track protected/encrypted physical memory that
-tests can access in a read-only fashion.
+Add support for differentiating between protected (a.k.a. private, a.k.a.
+encrypted) memory and normal (a.k.a. shared) memory for VMs that support
+protected guest memory, e.g. x86's SEV.  Provide and manage a common
+bitmap for tracking whether a given physical page resides in protected
+memory, as support for protected memory isn't x86 specific, i.e. adding a
+arch hook would be a net negative now, and in the future.
 
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Sean Christopherson <seanjc@google.com>
 Cc: Vishal Annapurve <vannapurve@google.com>
 Cc: Ackerley Tng <ackerleytng@google.com>
-Cc: Andrew Jones <andrew.jones@linux.dev>
+cc: Andrew Jones <andrew.jones@linux.dev>
 Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
+Originally-by: Michael Roth <michael.roth@amd.com>
 Signed-off-by: Peter Gonda <pgonda@google.com>
-[sean: massage changelog]
+Co-developed-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- .../testing/selftests/kvm/include/sparsebit.h | 36 +++++++-------
- tools/testing/selftests/kvm/lib/sparsebit.c   | 48 +++++++++----------
- 2 files changed, 42 insertions(+), 42 deletions(-)
+ .../selftests/kvm/include/kvm_util_base.h     | 25 +++++++++++++++++--
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 22 +++++++++++++---
+ 2 files changed, 41 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/sparsebit.h b/tools/testing/selftests/kvm/include/sparsebit.h
-index 12a9a4b9cead..fb5170d57fcb 100644
---- a/tools/testing/selftests/kvm/include/sparsebit.h
-+++ b/tools/testing/selftests/kvm/include/sparsebit.h
-@@ -30,26 +30,26 @@ typedef uint64_t sparsebit_num_t;
+diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
+index d9dc31af2f96..a82149305349 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util_base.h
++++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
+@@ -46,6 +46,7 @@ typedef uint64_t vm_vaddr_t; /* Virtual Machine (Guest) virtual address */
+ struct userspace_mem_region {
+ 	struct kvm_userspace_memory_region2 region;
+ 	struct sparsebit *unused_phy_pages;
++	struct sparsebit *protected_phy_pages;
+ 	int fd;
+ 	off_t offset;
+ 	enum vm_mem_backing_src_type backing_src_type;
+@@ -573,6 +574,13 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		uint64_t guest_paddr, uint32_t slot, uint64_t npages,
+ 		uint32_t flags, int guest_memfd_fd, uint64_t guest_memfd_offset);
  
- struct sparsebit *sparsebit_alloc(void);
- void sparsebit_free(struct sparsebit **sbitp);
--void sparsebit_copy(struct sparsebit *dstp, struct sparsebit *src);
-+void sparsebit_copy(struct sparsebit *dstp, const struct sparsebit *src);
++#ifndef vm_arch_has_protected_memory
++static inline bool vm_arch_has_protected_memory(struct kvm_vm *vm)
++{
++	return false;
++}
++#endif
++
+ void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
+ void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
+ void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
+@@ -836,10 +844,23 @@ const char *exit_reason_str(unsigned int exit_reason);
  
--bool sparsebit_is_set(struct sparsebit *sbit, sparsebit_idx_t idx);
--bool sparsebit_is_set_num(struct sparsebit *sbit,
-+bool sparsebit_is_set(const struct sparsebit *sbit, sparsebit_idx_t idx);
-+bool sparsebit_is_set_num(const struct sparsebit *sbit,
- 			  sparsebit_idx_t idx, sparsebit_num_t num);
--bool sparsebit_is_clear(struct sparsebit *sbit, sparsebit_idx_t idx);
--bool sparsebit_is_clear_num(struct sparsebit *sbit,
-+bool sparsebit_is_clear(const struct sparsebit *sbit, sparsebit_idx_t idx);
-+bool sparsebit_is_clear_num(const struct sparsebit *sbit,
- 			    sparsebit_idx_t idx, sparsebit_num_t num);
--sparsebit_num_t sparsebit_num_set(struct sparsebit *sbit);
--bool sparsebit_any_set(struct sparsebit *sbit);
--bool sparsebit_any_clear(struct sparsebit *sbit);
--bool sparsebit_all_set(struct sparsebit *sbit);
--bool sparsebit_all_clear(struct sparsebit *sbit);
--sparsebit_idx_t sparsebit_first_set(struct sparsebit *sbit);
--sparsebit_idx_t sparsebit_first_clear(struct sparsebit *sbit);
--sparsebit_idx_t sparsebit_next_set(struct sparsebit *sbit, sparsebit_idx_t prev);
--sparsebit_idx_t sparsebit_next_clear(struct sparsebit *sbit, sparsebit_idx_t prev);
--sparsebit_idx_t sparsebit_next_set_num(struct sparsebit *sbit,
-+sparsebit_num_t sparsebit_num_set(const struct sparsebit *sbit);
-+bool sparsebit_any_set(const struct sparsebit *sbit);
-+bool sparsebit_any_clear(const struct sparsebit *sbit);
-+bool sparsebit_all_set(const struct sparsebit *sbit);
-+bool sparsebit_all_clear(const struct sparsebit *sbit);
-+sparsebit_idx_t sparsebit_first_set(const struct sparsebit *sbit);
-+sparsebit_idx_t sparsebit_first_clear(const struct sparsebit *sbit);
-+sparsebit_idx_t sparsebit_next_set(const struct sparsebit *sbit, sparsebit_idx_t prev);
-+sparsebit_idx_t sparsebit_next_clear(const struct sparsebit *sbit, sparsebit_idx_t prev);
-+sparsebit_idx_t sparsebit_next_set_num(const struct sparsebit *sbit,
- 				       sparsebit_idx_t start, sparsebit_num_t num);
--sparsebit_idx_t sparsebit_next_clear_num(struct sparsebit *sbit,
-+sparsebit_idx_t sparsebit_next_clear_num(const struct sparsebit *sbit,
- 					 sparsebit_idx_t start, sparsebit_num_t num);
+ vm_paddr_t vm_phy_page_alloc(struct kvm_vm *vm, vm_paddr_t paddr_min,
+ 			     uint32_t memslot);
+-vm_paddr_t vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
+-			      vm_paddr_t paddr_min, uint32_t memslot);
++vm_paddr_t __vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
++				vm_paddr_t paddr_min, uint32_t memslot,
++				bool protected);
+ vm_paddr_t vm_alloc_page_table(struct kvm_vm *vm);
  
- void sparsebit_set(struct sparsebit *sbitp, sparsebit_idx_t idx);
-@@ -62,9 +62,9 @@ void sparsebit_clear_num(struct sparsebit *sbitp,
- 			 sparsebit_idx_t start, sparsebit_num_t num);
- void sparsebit_clear_all(struct sparsebit *sbitp);
++static inline vm_paddr_t vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
++					    vm_paddr_t paddr_min, uint32_t memslot)
++{
++	/*
++	 * By default, allocate memory as protected for VMs that support
++	 * protected memory, as the majority of memory for such VMs is
++	 * protected, i.e. using shared memory is effectively opt-in.
++	 */
++	return __vm_phy_pages_alloc(vm, num, paddr_min, memslot,
++				    vm_arch_has_protected_memory(vm));
++}
++
+ /*
+  * ____vm_create() does KVM_CREATE_VM and little else.  __vm_create() also
+  * loads the test binary into guest memory and creates an IRQ chip (x86 only).
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index a53caf81eb87..ea677aa019ef 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -717,6 +717,7 @@ static void __vm_mem_region_delete(struct kvm_vm *vm,
+ 	vm_ioctl(vm, KVM_SET_USER_MEMORY_REGION2, &region->region);
  
--void sparsebit_dump(FILE *stream, struct sparsebit *sbit,
-+void sparsebit_dump(FILE *stream, const struct sparsebit *sbit,
- 		    unsigned int indent);
--void sparsebit_validate_internal(struct sparsebit *sbit);
-+void sparsebit_validate_internal(const struct sparsebit *sbit);
+ 	sparsebit_free(&region->unused_phy_pages);
++	sparsebit_free(&region->protected_phy_pages);
+ 	ret = munmap(region->mmap_start, region->mmap_size);
+ 	TEST_ASSERT(!ret, __KVM_SYSCALL_ERROR("munmap()", ret));
+ 	if (region->fd >= 0) {
+@@ -1098,6 +1099,8 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 	}
  
- #ifdef __cplusplus
+ 	region->unused_phy_pages = sparsebit_alloc();
++	if (vm_arch_has_protected_memory(vm))
++		region->protected_phy_pages = sparsebit_alloc();
+ 	sparsebit_set_num(region->unused_phy_pages,
+ 		guest_paddr >> vm->page_shift, npages);
+ 	region->region.slot = slot;
+@@ -1924,6 +1927,10 @@ void vm_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
+ 			region->host_mem);
+ 		fprintf(stream, "%*sunused_phy_pages: ", indent + 2, "");
+ 		sparsebit_dump(stream, region->unused_phy_pages, 0);
++		if (region->protected_phy_pages) {
++			fprintf(stream, "%*sprotected_phy_pages: ", indent + 2, "");
++			sparsebit_dump(stream, region->protected_phy_pages, 0);
++		}
+ 	}
+ 	fprintf(stream, "%*sMapped Virtual Pages:\n", indent, "");
+ 	sparsebit_dump(stream, vm->vpages_mapped, indent + 2);
+@@ -2025,6 +2032,7 @@ const char *exit_reason_str(unsigned int exit_reason)
+  *   num - number of pages
+  *   paddr_min - Physical address minimum
+  *   memslot - Memory region to allocate page from
++ *   protected - True if the pages will be used as protected/private memory
+  *
+  * Output Args: None
+  *
+@@ -2036,8 +2044,9 @@ const char *exit_reason_str(unsigned int exit_reason)
+  * and their base address is returned. A TEST_ASSERT failure occurs if
+  * not enough pages are available at or above paddr_min.
+  */
+-vm_paddr_t vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
+-			      vm_paddr_t paddr_min, uint32_t memslot)
++vm_paddr_t __vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
++				vm_paddr_t paddr_min, uint32_t memslot,
++				bool protected)
+ {
+ 	struct userspace_mem_region *region;
+ 	sparsebit_idx_t pg, base;
+@@ -2050,8 +2059,10 @@ vm_paddr_t vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
+ 		paddr_min, vm->page_size);
+ 
+ 	region = memslot2region(vm, memslot);
++	TEST_ASSERT(!protected || region->protected_phy_pages,
++		    "Region doesn't support protected memory");
++
+ 	base = pg = paddr_min >> vm->page_shift;
+-
+ 	do {
+ 		for (; pg < base + num; ++pg) {
+ 			if (!sparsebit_is_set(region->unused_phy_pages, pg)) {
+@@ -2070,8 +2081,11 @@ vm_paddr_t vm_phy_pages_alloc(struct kvm_vm *vm, size_t num,
+ 		abort();
+ 	}
+ 
+-	for (pg = base; pg < base + num; ++pg)
++	for (pg = base; pg < base + num; ++pg) {
+ 		sparsebit_clear(region->unused_phy_pages, pg);
++		if (protected)
++			sparsebit_set(region->protected_phy_pages, pg);
++	}
+ 
+ 	return base * vm->page_size;
  }
-diff --git a/tools/testing/selftests/kvm/lib/sparsebit.c b/tools/testing/selftests/kvm/lib/sparsebit.c
-index 88cb6b84e6f3..cfed9d26cc71 100644
---- a/tools/testing/selftests/kvm/lib/sparsebit.c
-+++ b/tools/testing/selftests/kvm/lib/sparsebit.c
-@@ -202,7 +202,7 @@ static sparsebit_num_t node_num_set(struct node *nodep)
- /* Returns a pointer to the node that describes the
-  * lowest bit index.
-  */
--static struct node *node_first(struct sparsebit *s)
-+static struct node *node_first(const struct sparsebit *s)
- {
- 	struct node *nodep;
- 
-@@ -216,7 +216,7 @@ static struct node *node_first(struct sparsebit *s)
-  * lowest bit index > the index of the node pointed to by np.
-  * Returns NULL if no node with a higher index exists.
-  */
--static struct node *node_next(struct sparsebit *s, struct node *np)
-+static struct node *node_next(const struct sparsebit *s, struct node *np)
- {
- 	struct node *nodep = np;
- 
-@@ -244,7 +244,7 @@ static struct node *node_next(struct sparsebit *s, struct node *np)
-  * highest index < the index of the node pointed to by np.
-  * Returns NULL if no node with a lower index exists.
-  */
--static struct node *node_prev(struct sparsebit *s, struct node *np)
-+static struct node *node_prev(const struct sparsebit *s, struct node *np)
- {
- 	struct node *nodep = np;
- 
-@@ -273,7 +273,7 @@ static struct node *node_prev(struct sparsebit *s, struct node *np)
-  * subtree and duplicates the bit settings to the newly allocated nodes.
-  * Returns the newly allocated copy of subtree.
-  */
--static struct node *node_copy_subtree(struct node *subtree)
-+static struct node *node_copy_subtree(const struct node *subtree)
- {
- 	struct node *root;
- 
-@@ -307,7 +307,7 @@ static struct node *node_copy_subtree(struct node *subtree)
-  * index is within the bits described by the mask bits or the number of
-  * contiguous bits set after the mask.  Returns NULL if there is no such node.
-  */
--static struct node *node_find(struct sparsebit *s, sparsebit_idx_t idx)
-+static struct node *node_find(const struct sparsebit *s, sparsebit_idx_t idx)
- {
- 	struct node *nodep;
- 
-@@ -393,7 +393,7 @@ static struct node *node_add(struct sparsebit *s, sparsebit_idx_t idx)
- }
- 
- /* Returns whether all the bits in the sparsebit array are set.  */
--bool sparsebit_all_set(struct sparsebit *s)
-+bool sparsebit_all_set(const struct sparsebit *s)
- {
- 	/*
- 	 * If any nodes there must be at least one bit set.  Only case
-@@ -775,7 +775,7 @@ static void node_reduce(struct sparsebit *s, struct node *nodep)
- /* Returns whether the bit at the index given by idx, within the
-  * sparsebit array is set or not.
-  */
--bool sparsebit_is_set(struct sparsebit *s, sparsebit_idx_t idx)
-+bool sparsebit_is_set(const struct sparsebit *s, sparsebit_idx_t idx)
- {
- 	struct node *nodep;
- 
-@@ -921,7 +921,7 @@ static inline sparsebit_idx_t node_first_clear(struct node *nodep, int start)
-  * used by test cases after they detect an unexpected condition, as a means
-  * to capture diagnostic information.
-  */
--static void sparsebit_dump_internal(FILE *stream, struct sparsebit *s,
-+static void sparsebit_dump_internal(FILE *stream, const struct sparsebit *s,
- 	unsigned int indent)
- {
- 	/* Dump the contents of s */
-@@ -969,7 +969,7 @@ void sparsebit_free(struct sparsebit **sbitp)
-  * sparsebit_alloc().  It can though already have bits set, which
-  * if different from src will be cleared.
-  */
--void sparsebit_copy(struct sparsebit *d, struct sparsebit *s)
-+void sparsebit_copy(struct sparsebit *d, const struct sparsebit *s)
- {
- 	/* First clear any bits already set in the destination */
- 	sparsebit_clear_all(d);
-@@ -981,7 +981,7 @@ void sparsebit_copy(struct sparsebit *d, struct sparsebit *s)
- }
- 
- /* Returns whether num consecutive bits starting at idx are all set.  */
--bool sparsebit_is_set_num(struct sparsebit *s,
-+bool sparsebit_is_set_num(const struct sparsebit *s,
- 	sparsebit_idx_t idx, sparsebit_num_t num)
- {
- 	sparsebit_idx_t next_cleared;
-@@ -1005,14 +1005,14 @@ bool sparsebit_is_set_num(struct sparsebit *s,
- }
- 
- /* Returns whether the bit at the index given by idx.  */
--bool sparsebit_is_clear(struct sparsebit *s,
-+bool sparsebit_is_clear(const struct sparsebit *s,
- 	sparsebit_idx_t idx)
- {
- 	return !sparsebit_is_set(s, idx);
- }
- 
- /* Returns whether num consecutive bits starting at idx are all cleared.  */
--bool sparsebit_is_clear_num(struct sparsebit *s,
-+bool sparsebit_is_clear_num(const struct sparsebit *s,
- 	sparsebit_idx_t idx, sparsebit_num_t num)
- {
- 	sparsebit_idx_t next_set;
-@@ -1041,13 +1041,13 @@ bool sparsebit_is_clear_num(struct sparsebit *s,
-  * value.  Use sparsebit_any_set(), instead of sparsebit_num_set() > 0,
-  * to determine if the sparsebit array has any bits set.
-  */
--sparsebit_num_t sparsebit_num_set(struct sparsebit *s)
-+sparsebit_num_t sparsebit_num_set(const struct sparsebit *s)
- {
- 	return s->num_set;
- }
- 
- /* Returns whether any bit is set in the sparsebit array.  */
--bool sparsebit_any_set(struct sparsebit *s)
-+bool sparsebit_any_set(const struct sparsebit *s)
- {
- 	/*
- 	 * Nodes only describe set bits.  If any nodes then there
-@@ -1070,20 +1070,20 @@ bool sparsebit_any_set(struct sparsebit *s)
- }
- 
- /* Returns whether all the bits in the sparsebit array are cleared.  */
--bool sparsebit_all_clear(struct sparsebit *s)
-+bool sparsebit_all_clear(const struct sparsebit *s)
- {
- 	return !sparsebit_any_set(s);
- }
- 
- /* Returns whether all the bits in the sparsebit array are set.  */
--bool sparsebit_any_clear(struct sparsebit *s)
-+bool sparsebit_any_clear(const struct sparsebit *s)
- {
- 	return !sparsebit_all_set(s);
- }
- 
- /* Returns the index of the first set bit.  Abort if no bits are set.
-  */
--sparsebit_idx_t sparsebit_first_set(struct sparsebit *s)
-+sparsebit_idx_t sparsebit_first_set(const struct sparsebit *s)
- {
- 	struct node *nodep;
- 
-@@ -1097,7 +1097,7 @@ sparsebit_idx_t sparsebit_first_set(struct sparsebit *s)
- /* Returns the index of the first cleared bit.  Abort if
-  * no bits are cleared.
-  */
--sparsebit_idx_t sparsebit_first_clear(struct sparsebit *s)
-+sparsebit_idx_t sparsebit_first_clear(const struct sparsebit *s)
- {
- 	struct node *nodep1, *nodep2;
- 
-@@ -1151,7 +1151,7 @@ sparsebit_idx_t sparsebit_first_clear(struct sparsebit *s)
- /* Returns index of next bit set within s after the index given by prev.
-  * Returns 0 if there are no bits after prev that are set.
-  */
--sparsebit_idx_t sparsebit_next_set(struct sparsebit *s,
-+sparsebit_idx_t sparsebit_next_set(const struct sparsebit *s,
- 	sparsebit_idx_t prev)
- {
- 	sparsebit_idx_t lowest_possible = prev + 1;
-@@ -1244,7 +1244,7 @@ sparsebit_idx_t sparsebit_next_set(struct sparsebit *s,
- /* Returns index of next bit cleared within s after the index given by prev.
-  * Returns 0 if there are no bits after prev that are cleared.
-  */
--sparsebit_idx_t sparsebit_next_clear(struct sparsebit *s,
-+sparsebit_idx_t sparsebit_next_clear(const struct sparsebit *s,
- 	sparsebit_idx_t prev)
- {
- 	sparsebit_idx_t lowest_possible = prev + 1;
-@@ -1300,7 +1300,7 @@ sparsebit_idx_t sparsebit_next_clear(struct sparsebit *s,
-  * and returns the index of the first sequence of num consecutively set
-  * bits.  Returns a value of 0 of no such sequence exists.
-  */
--sparsebit_idx_t sparsebit_next_set_num(struct sparsebit *s,
-+sparsebit_idx_t sparsebit_next_set_num(const struct sparsebit *s,
- 	sparsebit_idx_t start, sparsebit_num_t num)
- {
- 	sparsebit_idx_t idx;
-@@ -1335,7 +1335,7 @@ sparsebit_idx_t sparsebit_next_set_num(struct sparsebit *s,
-  * and returns the index of the first sequence of num consecutively cleared
-  * bits.  Returns a value of 0 of no such sequence exists.
-  */
--sparsebit_idx_t sparsebit_next_clear_num(struct sparsebit *s,
-+sparsebit_idx_t sparsebit_next_clear_num(const struct sparsebit *s,
- 	sparsebit_idx_t start, sparsebit_num_t num)
- {
- 	sparsebit_idx_t idx;
-@@ -1583,7 +1583,7 @@ static size_t display_range(FILE *stream, sparsebit_idx_t low,
-  * contiguous bits.  This is done because '-' is used to specify command-line
-  * options, and sometimes ranges are specified as command-line arguments.
-  */
--void sparsebit_dump(FILE *stream, struct sparsebit *s,
-+void sparsebit_dump(FILE *stream, const struct sparsebit *s,
- 	unsigned int indent)
- {
- 	size_t current_line_len = 0;
-@@ -1681,7 +1681,7 @@ void sparsebit_dump(FILE *stream, struct sparsebit *s,
-  * s.  On error, diagnostic information is printed to stderr and
-  * abort is called.
-  */
--void sparsebit_validate_internal(struct sparsebit *s)
-+void sparsebit_validate_internal(const struct sparsebit *s)
- {
- 	bool error_detected = false;
- 	struct node *nodep, *prev = NULL;
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
