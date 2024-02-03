@@ -1,92 +1,98 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B255F479;
-	Sat,  3 Feb 2024 15:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2376655E70;
+	Sat,  3 Feb 2024 15:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706973473; cv=none; b=DlgAbUS3ZIj3+1r31fNcPLUm6YuFm7IKgwE+7Tn3xMlZVdpV/0KN+Ev9DRHN/qs6XgX4aRnkia0bbHFkbO7eJucmccbnkswcsXgi5U+n9zWDhZQtC9xi2UOmqVZ72ymnB0qWxpD4vd1udcMn7RcT/aZgl3iMStl4liI0sV+TYz8=
+	t=1706973749; cv=none; b=E5Qgh8NzYDx979b5S4WbxirX9atL2W2ibnu4iU4AYveYoUDBs1cg1kJTLg3sB1dHXOLgOmAFkmqMlc/Cc/2os4joimuidTIaC61217iAIoXJr0v5rZt+V3FjqNLhHS1G5CfBHyBo67r62SGAFHzLHcK2r4kF16Fyua1wuHSF7AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706973473; c=relaxed/simple;
-	bh=IUlOK6oOP99wQKuMhpqLYRYSvzT4AufyHCIUW8c1v2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s0AMhY1o1e5lUQWwvrQPT0ZzqSDLgZ2REL2gzXd48Rxh6Y4nnANL1D6laIpSjA1tHw1VoGy52SODg/U4L/VMBt+SJU67rJOTw/vRhZj/UgE4SFZxEEsLqxa54LdrlwgyJ2BNpiUMmPrOtAnvpNq2zFoSWbuPaZIam6njHGh4e2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VmviKh0M; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706973749; c=relaxed/simple;
+	bh=c+Jc4BAS+IryDupflpvWK9nQ/pkuVv+Flzsyr7rEEDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t19uylTRv/yNx35kajZ4VaP7jhRNOVQbzG5dBI29XyWPT0bcuW00k2cF9yw2TWxwRuP38OIB7J8QAEGXJWqG3NemqLKUNn6xYhyhNsrWXAm9ay8/1Ls56gXNzEoEgq3LrxAYKgAq39+K9FhBvBK9fjX/wLkuv/m6J9YYFlVBQvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=QGqG24Wv; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmviKh0M"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d99c5f6bfeso731325ad.1;
-        Sat, 03 Feb 2024 07:17:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706973472; x=1707578272; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2lUzUF2MBNp5VCtXVAH46rRo9sIQAjaiGzL0rWPuBxk=;
-        b=VmviKh0MkzbJHp1wgSWX2HESFAWf5e2qYLz7e7ytDtXfE9Nde8T9xU9g5UgqwHsafU
-         M2FJDCudvcrYZf4V1hU9HRPbvDRjdQtjNSPDB/PGG5nsw4B4Ke3jNe5oMhS18xU/GxT7
-         Vjp2rDTW1eHNSgAgkYtpAnSpnvt1msV3bAKOzUWA7t187yy567zZpdgsCuCf3wJ0gZqu
-         UMMpFewEI28ZuMw9N9+DoMGz9TouGXG+i581CVT1wXJAhNGtd2iTIva1aLGKNCU3rvYe
-         vXTFQUNGr+bvWjuTnhcRSvUKYfxF6Gg8STL4BQrBcGYymgb4TPg2CfrY/FcEOQHmGFvR
-         esAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706973472; x=1707578272;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2lUzUF2MBNp5VCtXVAH46rRo9sIQAjaiGzL0rWPuBxk=;
-        b=S9LvfN++dwVlvo/mJ9OAULVMoLI6khlolOHikyQO/KlLLM0iwk0vIN/0kKtl4a4nI7
-         XmcpLIkIwUJDwff/NVduc9dPQl/CjzbOvJh06xvjYBzyAootwzEww1KJt/2ri1gC9xpX
-         v5KErNRmnhfSfulETv1aFP04rz4SgVhUvVtKDAPhBX5JIMAs/QbqKFicQkD5OoQzTzE1
-         mAVLCkEwIFjXZ3k4fGdZA1Dy7t1JJ+NlSj4pgcjFgvsxR6WTh1R9I+IJ0tOXpSDnex4R
-         wjIWptjutO1On99acMpsEApheRN0geAVZGl88kZPyeQD0HA2C9SLt5PZTwbfOBldPEAB
-         /W8g==
-X-Gm-Message-State: AOJu0Yw9WkKjgd+bpOwK+vFm0wdhhTkUQ16UvvEclIO2eEe3WdCFP1qr
-	zL2cwxOtAHMKT6GDrizoNtkRLpyM+BQhwwCXr7isVigdfs2ygzM+WNB7DKo0
-X-Google-Smtp-Source: AGHT+IEW2KW4nZwiBGgCcsLxy1SbfBczTtO90qzrOeBfw49XVDCt9jvVTCQDPSOdHa1RIJKxcy+6Mg==
-X-Received: by 2002:a17:902:d2ca:b0:1d9:7814:ae3b with SMTP id n10-20020a170902d2ca00b001d97814ae3bmr2211332plc.21.1706973471785;
-        Sat, 03 Feb 2024 07:17:51 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVF5Uh70ChZOG4rsDfNklgJXQDzdlL9/0NlTFDpm5MfSMYT9sOWuAHLoLZowXJMYfVtkN0Ib+xybTYMOl3zbDBFDfkAZOI3O0986UASbkaNDWA9OpX6skL9nt5Mc6lpyMhkWJjVwZHpsS0AhtAkAWc5eZxAEWfPvcu3ArSbYjFg
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g24-20020a1709029f9800b001d8e671e24asm3352806plq.254.2024.02.03.07.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Feb 2024 07:17:51 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sat, 3 Feb 2024 07:17:50 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: jdelvare@suse.com, fenghua.yu@intel.com, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 03/11] hwmon: (coretemp) Enlarge per package core
- count limit
-Message-ID: <93654683-90b5-43b5-9bef-0427d0042c03@roeck-us.net>
-References: <20240202092144.71180-1-rui.zhang@intel.com>
- <20240202092144.71180-4-rui.zhang@intel.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="QGqG24Wv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=j9K/vax56e3sCnb71UIU5Gz4B8feV2qAX5/Vur9/dM8=; b=QGqG24WvpulgcmjYWeP8Fzj7U/
+	IDQyV210c3AwnZgQSuytBZ8xpVsTGWSJ7OKnfCWF6MzQD65aautSRsr4vcTcPBP1lnF1s9HZ2yg5W
+	veng2shFrLwq4KM5wmQ4c5HY1YQV3z4cEmzp5IGQv9rxhOHMjaXeKHUaAnUh84TLin29RxETU+W3Q
+	V7jDq/T41zpRwMhWr/6RiucZo5uZXV3x9Lw29Wx63CkLQifvwWH9Df5cct3cZ19CrUxRKBpAnDsAj
+	QnmnmrAMxGPnQ+pz8gO65O5q22jYQ9bGzBvISh11tdCpVn+PrKwTuoBlnmDx3goLsIWj8HWmu5bXt
+	ztzRv2CQ==;
+Received: from [187.90.178.235] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1rWHqP-00DJoe-Vg; Sat, 03 Feb 2024 16:22:14 +0100
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: linux-doc@vger.kernel.org,
+	corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	rdunlap@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	kernel@gpiccoli.net,
+	kernel-dev@igalia.com,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH] docs: Document possible_cpus parameter
+Date: Sat,  3 Feb 2024 12:21:13 -0300
+Message-ID: <20240203152208.1461293-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202092144.71180-4-rui.zhang@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 02, 2024 at 05:21:36PM +0800, Zhang Rui wrote:
-> Currently, coretemp driver supports only 128 cores per package.
-> This loses some core temperature information on systems that have more
-> than 128 cores per package.
->  [   58.685033] coretemp coretemp.0: Adding Core 128 failed
->  [   58.692009] coretemp coretemp.0: Adding Core 129 failed
->  ...
-> 
-> Enlarge the limitation to 512 because there are platforms with more than
-> 256 cores per package.
-> 
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+The number of possible CPUs is set be kernel in early boot time through
+some discovery mechanisms, like ACPI in x86. We have a parameter both
+in x86 and S390 to override that - there are some cases of BIOSes exposing
+more possible CPUs than the available ones, so this parameter is a good
+testing mechanism, but for some reason wasn't mentioned so far in the
+kernel parameters guide - let's fix that.
 
-Applied.
+Cc: Changwoo Min <changwoo@igalia.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks,
-Guenter
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 31b3a25680d0..e553740190ea 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4644,6 +4644,11 @@
+ 			may be specified.
+ 			Format: <port>,<port>....
+ 
++	possible_cpus=  [SMP,S390,X86]
++			Format: <unsigned int>
++			Set the number of possible CPUs, overriding the
++			regular discovery mechanisms (such as ACPI/FW, etc).
++
+ 	powersave=off	[PPC] This option disables power saving features.
+ 			It specifically disables cpuidle and sets the
+ 			platform machine description specific power_save
+-- 
+2.43.0
+
