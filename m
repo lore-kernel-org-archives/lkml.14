@@ -1,94 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C467D5D754
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 10:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1575D734
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 10:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706956052; cv=none; b=MOtzzVdGFqunTCtQKgIzwMH2cxFbBr/UXc0rIl7eN+Rk7WZrbz21RoxnPlm6/W9x48CGQon37dR2X9fLk7jvmuAIZ2EwctDUu/r/WdPQAqeELKbnrro7+l89dl8HwdC0XEibGlxMcW1r5DwVxmPOHU47egGuMQqxM58UWxmj+CU=
+	t=1706956185; cv=none; b=IyzExVm+ME+ydN4shHBQp9bKsIIO1wk970v2OInBBxRO/bhDdxWDuwJEOkyHcCjZa3EghCd5EKWqpGXa6wMgIszgR5ZQV00fS72ZXazO8EPhI/c5Fkv/hC3an5upc42MTZ68FI2WKJoF4DNTJG+pEO6Ga/ILKHyvC/OVw8uK9nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706956052; c=relaxed/simple;
-	bh=cP0msj1t8wyJ2dcgj7bifErL/pCrSLrZq5t++VseJdg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TPqmZbEcwudG420P8PcAwl5xuWwupQaYihjNX9ZaSE9kLzUtQM1FiznPZa5mrRJof79XgtpI/FyGYAx3vF0hCrVnOIghqdMh6xYpik/y2Z0fF7oYhRjvIIu0izbr5X3bLgE9bzAsES0Hgxu7+A2hWqh0g7h31ZT25QnJ67I+NZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q27ZZ3+M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706956185; c=relaxed/simple;
+	bh=mdUxL8RJ5LBysSTmS48XBZdP0i52a9+liv4tYojfPoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7s0sUOsZiyNqikChQauheNk5E0GoMthF+5zPjxBV1IgnA8Y4Xtg5Hdj3svBcoRPinVhRD+r3++OdGXyVoMn086jkEVGOPVHz1tC/4I16PtHLkP5lWyx4BFP/i82AKuX8UKRG9dedbOEfLegNzDHhiWA88whM9riZZlwnjCyJnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PYeSrXLu; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q27ZZ3+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B28EC433F1
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 10:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706956052;
-	bh=cP0msj1t8wyJ2dcgj7bifErL/pCrSLrZq5t++VseJdg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q27ZZ3+MqG3q5LcScV1zUuNSPUoXLpeL88B4qOiKwTRer/4jqsvzIFfoIpYfGKAWW
-	 +2BQ196gyxJiMvG7OdH3gjBPHuwkVFmsz0vI05v+6A2AQ6pb9KAOkzRJ60uFGmzKi8
-	 IuMbEDXHoUMU8jdZqedcTuOy4cKwlLd6WpRZfcChpeOGpfaTRA6PUJE2QexIzYf9kf
-	 LlxlQiVXC8c9is+FD7oMy7ji5WAh8W2iIcsFPckZBLRhoppF+Py+j83G+wq1Gai0QN
-	 r3jFwDkEgifF+tJcYnKEpIFh5ylTAjPrDV1pWEcUvZdlC3JwTtRarML/4la0/cmv7E
-	 eS5diNfv6sCSQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51032058f17so3444505e87.3
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Feb 2024 02:27:32 -0800 (PST)
-X-Gm-Message-State: AOJu0YyucrbMJkc3nhUws9oJjkk6cUDipoadRnLRrvmCZLT6jjbC/Se1
-	X0y2otni0CZ0WCTL0eKl8xJfkryMplFAsh6nn7qMCPYIquM1PeppuaG0iI6lCAc9q4014mSBIzq
-	xtZFoiFHfwYsI+X0bgaUYAul7tz8=
-X-Google-Smtp-Source: AGHT+IHb8cBPyA/QawkbQ9qzwWsYgUaeqJKJTfu9WFtSZ0iKSt/aVpkqocorS6+5YBh6Bv6nidqXzImV2SOy/dXzAhc=
-X-Received: by 2002:ac2:4e8e:0:b0:511:3208:d4e7 with SMTP id
- o14-20020ac24e8e000000b005113208d4e7mr4341732lfr.69.1706956050543; Sat, 03
- Feb 2024 02:27:30 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PYeSrXLu"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 94ABA40E01A9;
+	Sat,  3 Feb 2024 10:29:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 3VPB0sa50QDg; Sat,  3 Feb 2024 10:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706956179; bh=PpFVx0KRK8Fi5jzyistetVbiB87/96T4pWjZRktWrp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PYeSrXLuRz378w5jeT+l+liLevtEt1E5gWQUp4/ve5+xPo8mdJhZrjwJObX17oIX8
+	 zh89zyX2wXg+Qp09lohNyTrfZ38jMk97sGPKFYJg+V+1lgbPCiU4azz/csYmtXdskt
+	 CTEI7SodLggSdYkNTg++nu5Ff7jh5Zzey+lWMgfqIFVtJ82W6ZLECXwi5QbV6QQIvg
+	 ESXZHVaCMUlE7mSIMkeTqAWDCdAju1ey8gSEBsCy8k+Cx0ENGR2gF7Y7LiTBspWzZG
+	 c0DNNffwmzgnF0DNUJYr8Uk+DgKdA2jPtfiUQUzN7Mlxr4gm80res80b2efJFuImg3
+	 h00oejHvlk+3ptaTn4rYGBZB6fT4FfPMcEaJjX0GA+C9wNCslFMOkB4T0LeVQeNFqK
+	 3Av9fDkX1CVqJU1il0nmijYD3yGthOb9w/p3b8YtC1l2cxBNX0PfKBdFKETCQsPNjf
+	 i12URjMFpNX9iyBTZDCFJjwj/bDfvmaSS1e0vZ/bQhvVNU1voI0pk7MEdA/K7KGbBg
+	 QZHJLo0QDkLGJW/k3VsCknnOk77SAIp+IslKh5dlom20P4WoYE5e8hwjF1ai/ksURG
+	 UpvfgNxiZGVsgYDgvFJ57n4LBdw9mustLqwtoZenfnWCFR3kehzfJv8/xys5IGfQhQ
+	 8gpnN6ztJd7FWA2Ib13u5b0w=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 373E040E00C5;
+	Sat,  3 Feb 2024 10:29:26 +0000 (UTC)
+Date: Sat, 3 Feb 2024 11:29:25 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org,
+	kirill.shutemov@linux.intel.com, ndesaulniers@google.com,
+	morbo@google.com, justinstitt@google.com,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev
+Subject: Re: [PATCH] x86/coco: Define cc_vendor without
+ CONFIG_ARCH_HAS_CC_PLATFORM
+Message-ID: <20240203102925.GFZb4VhT1IwX-XRxTV@fat_crate.local>
+References: <20240202-provide-cc_vendor-without-arch_has_cc_platform-v1-1-09ad5f2a3099@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240121182040.GBZa1geI5NxWSslvt0@fat_crate.local>
- <20240130220845.1978329-1-kevinloughlin@google.com> <20240131140037.GDZbpShX2b0elXlqDA@fat_crate.local>
- <CAJ5mJ6j-Vw2P=QLK-J_J79S35UggvZPtm5sia74=enR1qq9X9A@mail.gmail.com>
- <20240131182944.GJZbqRmBN_KDgK_nmB@fat_crate.local> <CAGdbjmJgu4euOTEzns4-7pqUWo8n-gNJiAfARoZWxw8T252zJQ@mail.gmail.com>
- <20240203101927.GEZb4TL2H3XTqCSo5d@fat_crate.local>
-In-Reply-To: <20240203101927.GEZb4TL2H3XTqCSo5d@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 3 Feb 2024 11:27:19 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGh9pw0U=+-Pg8Uh4xzNhyDZBDvGC7jcnCYvmTQxaUZTQ@mail.gmail.com>
-Message-ID: <CAMj1kXGh9pw0U=+-Pg8Uh4xzNhyDZBDvGC7jcnCYvmTQxaUZTQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] x86: enforce and cleanup RIP-relative accesses in
- early boot code
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kevin Loughlin <kevinloughlin@google.com>, Jacob Xu <jacobhxu@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Pankaj Gupta <pankaj.gupta@amd.com>, 
-	Hou Wenlong <houwenlong.hwl@antgroup.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-coco@lists.linux.dev, 
-	Ashish Kalra <ashish.kalra@amd.com>, Andi Kleen <ak@linux.intel.com>, 
-	Adam Dunlap <acdunlap@google.com>, Peter Gonda <pgonda@google.com>, 
-	Sidharth Telang <sidtelang@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240202-provide-cc_vendor-without-arch_has_cc_platform-v1-1-09ad5f2a3099@kernel.org>
 
-On Sat, 3 Feb 2024 at 11:20, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Feb 02, 2024 at 04:22:02PM -0800, Kevin Loughlin wrote:
-> > True. I just think it would be better to have an upstream fix for
-> > clang builds of SEV-SNP guests; I believe the first such SEV-SNP code
-> > was merged in 5.19 if I'm not mistaken.
->
-> SNP host support is not upstream yet. So we'd be supporting something
-> which is out-of-tree. Lemme see how ugly it'll get...
->
+On Fri, Feb 02, 2024 at 04:53:21PM -0700, Nathan Chancellor wrote:
+> Commit a9ef277488cf ("x86/kvm: Fix SEV check in sev_map_percpu_data()")
+> exposes this build error but I think it is really a problem with commit
+> da86eb961184 ("x86/coco: Get rid of accessor functions"), although I am
+> not positive so I left out the fixes tag.
 
-The minimal fix doesn't look that bad IMHO. Note that this version is
-based on your patch that removes
-CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT, and we'd need to see whether
-or not to backport that as well.
+Well, which is it?
 
- arch/x86/include/asm/asm.h         | 13 +++++++++++++
- arch/x86/include/asm/mem_encrypt.h | 13 ++++++++-----
- arch/x86/kernel/sev-shared.c       | 12 ++++++------
- arch/x86/kernel/sev.c              |  9 +++++++--
- arch/x86/mm/mem_encrypt_identity.c | 27 ++++++++++++---------------
- 5 files changed, 46 insertions(+), 28 deletions(-)
+If you're running those GCOV LLVM tests regularly and you haven't seen
+it after da86eb961184, then it cannot be that one, can it?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/commit/?h=x86-pie-for-sev-v4a&id=65d0e5f4ed6ca807cdf28a1c5c0389af2c9f9bda
+In any case, you can simply revert a9ef277488cf and see if it fires.
+
+> It would be nice if this could go along with KVM tree that has that
+> change but it is obviously well within -tip's territory so I will just
+> aim it at both parties and let them figure it out :)
+
+The answer to the above question would determine the proper Fixes tag
+and who picks it up.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
