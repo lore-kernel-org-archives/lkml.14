@@ -1,157 +1,168 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587DF1FBF;
-	Sat,  3 Feb 2024 00:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1194F625;
+	Sat,  3 Feb 2024 00:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706920149; cv=none; b=C16ZHAsoUgMgNNKS/3Wi2kA7H2rX8hGnORp1MfyrbxNflhCh27uRDgcixaJsN9ADH5feLbPrGB1CFebMyIsMNf7NYkslu96/Hh90XO67aFiEh+2O56B80h4MOBZFHlcNXU+PiVF7NvQGOyMnJVGEwaHTLfB/pM1UtAmom0Iwwkk=
+	t=1706920150; cv=none; b=GrYTu0r5yTsR3sWnRx1fCRcoNuAGd9GI+Oz/pxhEvBh4jmjCNXylybpw3IHU+w0xLT5TcuQMNF73FBurXQAY5tihUrqZV1yAIjShESH6EJk8eXRPMfI1rIU13LHOtNcXZdREe/iS46VsuJ2nq+WMoTpCodztwALalCl3fVOVuUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706920149; c=relaxed/simple;
-	bh=s6uMo50V83lQTFPmBSTZbJWskTqu4gIvfj3LFjK0xHk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NoE8fFWCV2gFC/LnnLQAg8lOy3g5iba2YLVQcigBNBHsERhADzYY5i1/EmqRleU+9N6JanFtyHiYmjR34XzTubNVnuROP/SO4bNwYx5eevCy4Aj0gjsGzWPZBb6vmopX7eNIpSY1kZ4L8oEeWxleAQnL14a5UeoS6+/n/DalNtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=SYsPErs/; arc=none smtp.client-ip=192.19.166.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1706920150; c=relaxed/simple;
+	bh=9TtDN1r4VnqbVkMbIdvO5V9mK3wtnObkCogkcygbwo4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uSP13Hbgl36PQlfqk1LTqPDOJ0HHbO6lKbn/dxURimCT32P7G6B1EbNCDpK7ffoM6SVXidqEswqu9+Cnpq0XH3LmmT9MieU/41Sp+3qkL7M0GGzCX4r4CD4XDjO4PBvPYbqLKT51uhwzGdBXuU30RrG5LyszfF/hi9YRHAf8F/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkJShWdw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SYsPErs/"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id AFA6EC001668;
-	Fri,  2 Feb 2024 16:29:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com AFA6EC001668
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1706920147;
-	bh=s6uMo50V83lQTFPmBSTZbJWskTqu4gIvfj3LFjK0xHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SYsPErs/LBSgVl54vY+9OxENj5P2edKlodbbaIvSW/ld25bUWhQgOLIiuqhBX6GXc
-	 eFJ61p8suOaZsO22pVY7v9NiFgsZxmy6UkwwHKGDfVtJl2L8fQ7ZppXP9aWQ6Uw288
-	 JFKXakzG4zkCGo/dmKPXuVmLNi37es760zhicSX0=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 48C9418041CAC4;
-	Fri,  2 Feb 2024 16:29:06 -0800 (PST)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com,
-	kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com,
-	anand.gore@broadcom.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com,
-	William Zhang <william.zhang@broadcom.com>,
-	David Regan <dregan@broadcom.com>,
-	devicetree@vger.kernel.org,
-	Brian Norris <computersforpeace@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Kamal Dasu <kdasu.kdev@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v4 01/12] dt-bindings: mtd: brcmnand: Updates for bcmbca SoCs
-Date: Fri,  2 Feb 2024 16:28:22 -0800
-Message-Id: <20240203002834.171462-2-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20240203002834.171462-1-william.zhang@broadcom.com>
-References: <20240203002834.171462-1-william.zhang@broadcom.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkJShWdw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F22C43330;
+	Sat,  3 Feb 2024 00:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706920149;
+	bh=9TtDN1r4VnqbVkMbIdvO5V9mK3wtnObkCogkcygbwo4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fkJShWdwEJvycdkTp0BR6okr208Rn+CRxEsYXN8dp8LGq20F5iMEMPf/LKG2rRSwU
+	 i86MAVC9Lg8lRpv87YNIHKkgSFn/WtbEVpDSLSVunszCH04cXeKk8NmmcTPvxyIUC4
+	 SBwOAug5vdJuF1W8jHSw3tCnThvEGK+4N/4r+FYRiYQkooe9ONd8axRsCk1cxmxgyS
+	 hg6wJnx7rYERvEeAvVQNHQ4WWTw899IsHWvCJQyJv5sKNmh0efJ/DFNc/vQmoKOCl4
+	 kT1uMjkJj1VHspspmatx/LYjW1DoPQn+CHWTbs2PAMgZAPRiAqPBETVlrZlNIerMmQ
+	 nM9+l0OcDUf+A==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a352d9c0f9dso77298466b.0;
+        Fri, 02 Feb 2024 16:29:09 -0800 (PST)
+X-Gm-Message-State: AOJu0YwxFK22Xe5RRetNoLp+RyBph1rVUBUHOIJaSAAwVSrN0vsy9b3b
+	j8/MJcYvQnjPGrSI5qF2pdPo3s0FBZBRcKIYt5eDaIl9s/wK2XeKOHnKvOSktyta477aUxiYUaH
+	h49QYFrdCnyuxSgwOkv6w7xYV85I=
+X-Google-Smtp-Source: AGHT+IFZ3ZGMvuqs3thX1yxw7hTJ2qyHWlAIiaxSWDC0fd6vOK5H12/qSr7bNlL3hDdiX5obbzjZ0yxKiPDlE9ehK0A=
+X-Received: by 2002:a17:906:3c02:b0:a36:95cd:5e62 with SMTP id
+ h2-20020a1709063c0200b00a3695cd5e62mr4340840ejg.7.1706920147920; Fri, 02 Feb
+ 2024 16:29:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240102124747.21644-1-hao.qin@mediatek.com>
+In-Reply-To: <20240102124747.21644-1-hao.qin@mediatek.com>
+From: Sean Wang <sean.wang@kernel.org>
+Date: Fri, 2 Feb 2024 18:28:56 -0600
+X-Gmail-Original-Message-ID: <CAGp9LzpuLr4vKGSfBoCdES9kKyduADw+2DZp8aZqbR78S_sOuQ@mail.gmail.com>
+Message-ID: <CAGp9LzpuLr4vKGSfBoCdES9kKyduADw+2DZp8aZqbR78S_sOuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] Bluetooth: btusb: mediatek: refactor
+ btusb_mtk_reset function
+To: Hao Qin <hao.qin@mediatek.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Luiz Von Dentz <luiz.dentz@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
+	Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>, 
+	Chris Lu <chris.lu@mediatek.com>, Steve Lee <steve.lee@mediatek.com>, 
+	linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-mediatek <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the descriptions to reflect different families of broadband SoC and
-use the general name bcmbca for ARM based SoC.
+On Tue, Jan 2, 2024 at 6:49=E2=80=AFAM Hao Qin <hao.qin@mediatek.com> wrote=
+:
+>
+> From: "hao.qin" <hao.qin@mediatek.com>
+>
+> Extract function btusb_mtk_subsys_reset from btusb_mtk_reset
+> for future handling of resetting bluetooth controller without
+> USB reset.
+>
+> Signed-off-by: hao.qin <hao.qin@mediatek.com>
+>
 
-Remove the requirement of interrupts property to reflect the driver
-code and only require interrupt-names when interrupts property present.
+The patch doesn't modify any logic; it simply divides the existing
+logic into two parts,
+each prepared to be called in a specific context. Thus,  Acked-by:
+Sean Wang <sean.wang@kernel.org>
 
-Also add myself to the list of maintainers.
-
-Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: David Regan <dregan@broadcom.com>
-
----
-
-Changes in v4:
-- Split the yaml changes into three patches. This is the first one.
-
-Changes in v3:
-- Update brcm,nand-use-wp description
-- Revert the description change to BCM63168 SoC-specific NAND controller
-
-Changes in v2:
-- Revert the new compatible string nand-bcmbca
-- Drop the BCM63168 compatible fix to avoid any potential ABI
-incompatibility issue
-- Simplify the explanation for brcm,nand-use-wp
-- Keep the interrupt name requirement when interrupt number is specified
-
- .../devicetree/bindings/mtd/brcm,brcmnand.yaml      | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-index f57e96374e67..e54ca08a798a 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-@@ -9,6 +9,7 @@ title: Broadcom STB NAND Controller
- maintainers:
-   - Brian Norris <computersforpeace@gmail.com>
-   - Kamal Dasu <kdasu.kdev@gmail.com>
-+  - William Zhang <william.zhang@broadcom.com>
- 
- description: |
-   The Broadcom Set-Top Box NAND controller supports low-level access to raw NAND
-@@ -18,9 +19,10 @@ description: |
-   supports basic PROGRAM and READ functions, among other features.
- 
-   This controller was originally designed for STB SoCs (BCM7xxx) but is now
--  available on a variety of Broadcom SoCs, including some BCM3xxx, BCM63xx, and
--  iProc/Cygnus. Its history includes several similar (but not fully register
--  compatible) versions.
-+  available on a variety of Broadcom SoCs, including some BCM3xxx, MIPS based
-+  Broadband SoC (BCM63xx), ARM based Broadband SoC (BCMBCA) and iProc/Cygnus.
-+  Its history includes several similar (but not fully register compatible)
-+  versions.
- 
-   -- Additional SoC-specific NAND controller properties --
- 
-@@ -53,7 +55,7 @@ properties:
-               - brcm,brcmnand-v7.2
-               - brcm,brcmnand-v7.3
-           - const: brcm,brcmnand
--      - description: BCM63138 SoC-specific NAND controller
-+      - description: BCMBCA SoC-specific NAND controller
-         items:
-           - const: brcm,nand-bcm63138
-           - enum:
-@@ -177,6 +179,8 @@ allOf:
-             - const: iproc-idm
-             - const: iproc-ext
-   - if:
-+      required:
-+        - interrupts
-       properties:
-         interrupts:
-           minItems: 2
-@@ -189,7 +193,6 @@ unevaluatedProperties: false
- required:
-   - reg
-   - reg-names
--  - interrupts
- 
- examples:
-   - |
--- 
-2.37.3
-
+> ---
+> V1 -> V2: refactor btusb_mtk_reset function
+>
+> Link:
+>   https://lore.kernel.org/all/20231215063714.7684-1-hao.qin@mediatek.com/
+> ---
+>  drivers/bluetooth/btusb.c | 45 +++++++++++++++++++++++----------------
+>  1 file changed, 27 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 0926e4451802..abefcd1a089d 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -2994,28 +2994,13 @@ static u32 btusb_mtk_reset_done(struct hci_dev *h=
+dev)
+>         return val & MTK_BT_RST_DONE;
+>  }
+>
+> -static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
+> +static int btusb_mtk_subsys_reset(struct hci_dev *hdev, u32 dev_id)
+>  {
+>         struct btusb_data *data =3D hci_get_drvdata(hdev);
+> -       struct btmediatek_data *mediatek;
+>         u32 val;
+>         int err;
+>
+> -       /* It's MediaTek specific bluetooth reset mechanism via USB */
+> -       if (test_and_set_bit(BTUSB_HW_RESET_ACTIVE, &data->flags)) {
+> -               bt_dev_err(hdev, "last reset failed? Not resetting again"=
+);
+> -               return -EBUSY;
+> -       }
+> -
+> -       err =3D usb_autopm_get_interface(data->intf);
+> -       if (err < 0)
+> -               return err;
+> -
+> -       btusb_stop_traffic(data);
+> -       usb_kill_anchored_urbs(&data->tx_anchor);
+> -       mediatek =3D hci_get_priv(hdev);
+> -
+> -       if (mediatek->dev_id =3D=3D 0x7925) {
+> +       if (dev_id =3D=3D 0x7925) {
+>                 btusb_mtk_uhw_reg_read(data, MTK_BT_RESET_REG_CONNV3, &va=
+l);
+>                 val |=3D (1 << 5);
+>                 btusb_mtk_uhw_reg_write(data, MTK_BT_RESET_REG_CONNV3, va=
+l);
+> @@ -3059,8 +3044,32 @@ static int btusb_mtk_reset(struct hci_dev *hdev, v=
+oid *rst_data)
+>         if (!val)
+>                 bt_dev_err(hdev, "Can't get device id, subsys reset fail.=
+");
+>
+> -       usb_queue_reset_device(data->intf);
+> +       return err;
+> +}
+>
+> +static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
+> +{
+> +       struct btusb_data *data =3D hci_get_drvdata(hdev);
+> +       struct btmediatek_data *mediatek;
+> +       int err;
+> +
+> +       /* It's MediaTek specific bluetooth reset mechanism via USB */
+> +       if (test_and_set_bit(BTUSB_HW_RESET_ACTIVE, &data->flags)) {
+> +               bt_dev_err(hdev, "last reset failed? Not resetting again"=
+);
+> +               return -EBUSY;
+> +       }
+> +
+> +       err =3D usb_autopm_get_interface(data->intf);
+> +       if (err < 0)
+> +               return err;
+> +
+> +       btusb_stop_traffic(data);
+> +       usb_kill_anchored_urbs(&data->tx_anchor);
+> +       mediatek =3D hci_get_priv(hdev);
+> +
+> +       err =3D btusb_mtk_subsys_reset(hdev, mediatek->dev_id);
+> +
+> +       usb_queue_reset_device(data->intf);
+>         clear_bit(BTUSB_HW_RESET_ACTIVE, &data->flags);
+>
+>         return err;
+> --
+> 2.18.0
+>
+>
