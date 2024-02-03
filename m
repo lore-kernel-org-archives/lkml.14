@@ -1,146 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BC65F541;
-	Sat,  3 Feb 2024 15:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94A65F54B;
+	Sat,  3 Feb 2024 15:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706975260; cv=none; b=icHGwknTIXeHkgFNg7mlZMmwbxYSiCYk59G3mzrhgEzZwj4zeI3KKow3dKBW3TVu8xRknXvWcGSxq++VGrDsW7LdhEyuGWi/6tNpBaP8lUleD6knQ0pPKBPpiU0k5BLSsc2VSn2ia3zoZ6HpgbuLjgn3OVXguOhFcZItbU1M8iM=
+	t=1706975619; cv=none; b=OFU1iU5IlI0Vp0C+sKI2kAtVulj92LEwDC0SPHIFb+XoE1G0wMcc67Q3aFykpLXmIx37hH0SgjyL8A9RE6FSwVrvczNKG69oiE8ofxOi5ZMwW4OEp/6izrlBHMMvxbbcf0LKjRWW20U1jc2DUOJVABGugLihMNeoIw/3CTRZ+V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706975260; c=relaxed/simple;
-	bh=FdSFBTe2mH/CETNqoGpiNaQFDRF7hVi4nwjoi22gR8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hEa0UnlUU2eyeJiiyzyvtw/2Vgx5OTYpJBquyBMCDEoqq7H8eu1oWPVmoT36J9DfKVx47PAz1Nz8qSG3GO5E0OGFdQkxUfAeboUEMhqma1deMVNkgUCIn72yoWyXPAg3lfQu1hB1btWmkTeCYP2HK/5KSVQSbc35ooagJ7Ifyo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/KixfTk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706975619; c=relaxed/simple;
+	bh=V4qePdpxMdZApQIojvu0zaGw1t4lmxRKgYlqEuXbuJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N6NSY8Oym5Ck6IQ5pzDFCkzHkVNhXGugoCh1m9GZ+TDIIlY8D/dSv9F11NMXzpH0GMBoE9icoUejESAftNxQWY6WBMt7sZQ4qVHOXhlyh364NJ0jM7hk3kuYBoU5Fl/zd4FbikC658ArmrzIvB5kAW4cx/HEeeSs55Fj7GCEqTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUfkNceP; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/KixfTk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E91EC433C7;
-	Sat,  3 Feb 2024 15:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706975260;
-	bh=FdSFBTe2mH/CETNqoGpiNaQFDRF7hVi4nwjoi22gR8M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J/KixfTkiQLcg85zXo7hEw2HNaO7s0tvsbnDwtcYTL3AIshaR4s7PAagp5SN7FQfi
-	 BKLE6j6eps8RIHN1wwNAawngFuAel40dCMrToaBfvd1QOVlEcwBilsXlP3GylEg7ew
-	 O2m/KItnC2z+JcbEWog1DCI/oO+31jSdWVh8nSA0DQShTLzMMf+0ZmZxcGNuO7kRyE
-	 KXHrOuBwdACMssYvmsLIZBr1QB4YVFSX06XgyWRuJ4vSNdOdJcodXTEPxc4jG4BFeo
-	 VPQPU6wbAGnyNfdnsQW7M2B+fXm1rPQ5H726BfCGtOoJlkn0f0nC3/nvhQ2hPwBE1e
-	 7ei4LIls3qynw==
-User-agent: mu4e 1.10.8; emacs 27.1
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: tj@kernel.org
-Cc: jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Subject: [BUG REPORT] workqueue: Hung task reported when executing
- generic/001 on XFS on next-20240202
-Date: Sat, 03 Feb 2024 21:09:14 +0530
-Message-ID: <87o7cxeehy.fsf@debian-BULLSEYE-live-builder-AMD64>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUfkNceP"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e80046246so9708385e9.1;
+        Sat, 03 Feb 2024 07:53:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706975616; x=1707580416; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/dADcvM1Q++FMJXYvceHm1q1pwEpXncGBHJbJ+0LI+o=;
+        b=DUfkNcePIWsRL7RdHHifXGubAYrZSiMEqNSSuu549+dF6l/yP+IYN0P0j7+Vguto96
+         FqixPonCEsuZg7aZ4QIttE83UTwlcaj8BLaXeSfY4V5dDc/RbH+WFZMMLG2qbseYJ1bq
+         72AjfZEIb5Nr/dm7amkgM9aNxp2QYoew+6eta2outLXZy6wFlrGms4NcU5qH7h1NZJAV
+         pI5mbiSR2gxBVzZzovdo1e11n5mTgnqO9YgbRCS8OnKAdow0oF7QmGtiZu6YRNsBOExk
+         24RdehY1NKa586Efy9PIfWeh8YaOt26AJMD79VAzd2ShsvoJdwicAGO0blSkjgGDwRRJ
+         517Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706975616; x=1707580416;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dADcvM1Q++FMJXYvceHm1q1pwEpXncGBHJbJ+0LI+o=;
+        b=a1DbXDMDhoRl6L975HXg0UaUFQRT5ErLcSuKegSeu3kulCp5TCdbYGEglD4NW+9AUP
+         OjnO2F75uAWNfL8FLDN+Ut3QhdM55YWi7R988de8st62vnjE4oAloYS/VaypZS/SuuGC
+         X/OmHt27+L2K33B875JmsXBBOZQqi+q/JDe7iXZv6mcanKYOGW6MZjI4UMXMeVxK5jw/
+         mmwQ2r9ZKWFn31kUhIMS3hHvoBMUpDKZ2PAibUShfsR0Qn2KJn6hL7Qo+OYCcSYKI1+j
+         VZtOvkb8kUZ8UaAQP3jvtkFIYYlUVL/nQp4t88hQoB67jhN3w6q7x/plkbZeuJAnadt/
+         Kfbw==
+X-Gm-Message-State: AOJu0Yxun6MT3VLJCLSXmTh9l6ubxkmkO+yxkV40lkWtvaZBxrfi/oLQ
+	H/5sxydIlUs6XeWQ6F3VJo23WeXT3GJDDraaMofjAmtZJ9YVEeMo
+X-Google-Smtp-Source: AGHT+IHH2x7hJXA4kfaVWqIY4+uREhDuwzkNxWmkfpOT3qqvR5/fvjl0KPmsPtLPMlN3wxuyk5fa6A==
+X-Received: by 2002:a05:600c:1c2a:b0:40f:d242:a2d2 with SMTP id j42-20020a05600c1c2a00b0040fd242a2d2mr863350wms.12.1706975615972;
+        Sat, 03 Feb 2024 07:53:35 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVDoOdN+HictDq4hTrzzaobl9rfFxp3/ZLci6IMllOhZ45ClgnOBVmCSBIydGlG7a4u0HVXbdSQ0QVpRxcHD4E1w6ewvlYQuT2RUszV+TC4p3I//fWOKIoBoxW5fpwR/0u1npkE1tiiFM5c6ADpyNj+eUyeg/7GLeO38s9f/ZdLNTxDZi7V3w0wB64=
+Received: from ?IPV6:2a02:8389:41cf:e200:f581:7be3:f073:d676? (2a02-8389-41cf-e200-f581-7be3-f073-d676.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:f581:7be3:f073:d676])
+        by smtp.gmail.com with ESMTPSA id h18-20020a05600c351200b0040faf3df118sm3277597wmq.32.2024.02.03.07.53.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 03 Feb 2024 07:53:35 -0800 (PST)
+Message-ID: <871e7e7a-c987-4926-957e-5dfdb46d0740@gmail.com>
+Date: Sat, 3 Feb 2024 16:53:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: humidity: hdc3020: add threshold events support
+Content-Language: en-US
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Li peiyu <579lpy@gmail.com>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240203090530.53374-1-dima.fedrau@gmail.com>
+ <1eb2034f-b1ef-474d-91f6-c562a5768bfd@gmail.com>
+ <20240203144205.GA3727@debian>
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <20240203144205.GA3727@debian>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 03.02.24 15:42, Dimitri Fedrau wrote:
+> Am Sat, Feb 03, 2024 at 10:30:09AM +0100 schrieb Javier Carrasco:
+>> Hi Dimitri,
+>>
+> Hi Javier,
+> 
+>>> +	/* Supported temperature range is from –40 to 125 degree celsius */
+>> Should that not be val < -40?
+> yes, you are right. Will fix it.
+>>> +	if (val < -45 || val > 125)
+>>> +		return -EINVAL;
+>>> +
+> 
+> Best regards,
+> Dimitri
 
-Executing generic/001 test on XFS on a machine running next-20240201 kernel
-causes the following hung task to occur,
+When at it, could you please rename the hdc3020_id variable you added to
+the probe function? It shadows the i2c_device_id global variable (it is
+not used in the probe function, but there is no need to use the exact
+same name), and given that it is in the hdc3020_probe function,
+mentioning the device name again is kind of redundant. Something like
+just "id" or "dev_id" would suffice.
 
-    INFO: task umount:6305 blocked for more than 122 seconds.
-          Not tainted 6.8.0-rc2-next-20240202 #17
-    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-    task:umount          state:D stack:13008 pid:6305  tgid:6305  ppid:6301   flags:0x00004000
-    Call Trace:
-     <TASK>
-     __schedule+0x2f6/0xa20
-     schedule+0x36/0xb0
-     schedule_timeout+0x20b/0x280
-     ? srso_return_thunk+0x5/0x5f
-     ? irq_work_queue+0x40/0x60
-     ? srso_return_thunk+0x5/0x5f
-     ? __wake_up_klogd.part.0+0x5a/0x80
-     wait_for_completion+0x8a/0x140
-     __flush_workqueue+0x11a/0x3b0
-     xfs_inodegc_flush+0x24/0xf0
-     xfs_unmountfs+0x14/0x180
-     xfs_fs_put_super+0x3d/0x90
-     generic_shutdown_super+0x7c/0x160
-     kill_block_super+0x1b/0x40
-     xfs_kill_sb+0x12/0x30
-     deactivate_locked_super+0x35/0x90
-     deactivate_super+0x42/0x50
-     cleanup_mnt+0x109/0x170
-     __cleanup_mnt+0x12/0x20
-     task_work_run+0x60/0x90
-     syscall_exit_to_user_mode+0x146/0x150
-     do_syscall_64+0x5d/0x110
-     entry_SYSCALL_64_after_hwframe+0x6c/0x74
-    RIP: 0033:0x7f13c103b38b
-    RSP: 002b:00007fff161aeff8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-    RAX: 0000000000000000 RBX: 00007f13c116d204 RCX: 00007f13c103b38b
-    RDX: ffffffffffffff78 RSI: 0000000000000000 RDI: 000055964eda0030
-    RBP: 000055964ed99310 R08: 0000000000000000 R09: 00007fff161adda0
-    R10: 00007f13c1159379 R11: 0000000000000246 R12: 000055964eda0030
-    R13: 0000000000000000 R14: 000055964ed99408 R15: 000055964ed99520
-
-Git bisect revealed the following as the bad commit,
-
-dd6c3c5441263723305a9c52c5ccc899a4653000 is the first bad commit
-commit dd6c3c5441263723305a9c52c5ccc899a4653000
-Author: Tejun Heo <tj@kernel.org>
-Date:   Mon Jan 29 08:11:24 2024 -1000
-
-    workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling
-    
-    The planned shared nr_active handling for unbound workqueues will make
-    pwq_dec_nr_active() sometimes drop the pool lock temporarily to acquire
-    other pool locks, which is necessary as retirement of an nr_active count
-    from one pool may need kick off an inactive work item in another pool.
-    
-    This patch moves pwq_dec_nr_in_flight() call in try_to_grab_pending() to the
-    end of work item handling so that work item state changes stay atomic.
-    process_one_work() which is the other user of pwq_dec_nr_in_flight() already
-    calls it at the end of work item handling. Comments are added to both call
-    sites and pwq_dec_nr_in_flight().
-    
-    This shouldn't cause any behavior changes.
-    
-    Signed-off-by: Tejun Heo <tj@kernel.org>
-    Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
-
- kernel/workqueue.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-Here is the full git bisect log,
-# bad: [076d56d74f17e625b3d63cf4743b3d7d02180379] Add linux-next specific files for 20240202
-# good: [881f78f472556ed05588172d5b5676b48dc48240] xfs: remove conditional building of rt geometry validator functions
-git bisect start 'HEAD' '881f78f47255' 'fs/'
-# good: [50673a33b8dc743777e79d7206acdc8d64452498] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
-git bisect good 50673a33b8dc743777e79d7206acdc8d64452498
-# good: [717a7216eaa84233dc70498db3e92989153fa444] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git
-git bisect good 717a7216eaa84233dc70498db3e92989153fa444
-# bad: [e6ead6ea890b2c2df0faf62ca2da15392cdc4165] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git
-git bisect bad e6ead6ea890b2c2df0faf62ca2da15392cdc4165
-# good: [be364bf6099dc52d26ce25e2996fa2a04502a890] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-git bisect good be364bf6099dc52d26ce25e2996fa2a04502a890
-# good: [b043e7f00dfd9def840c03a8eb1cb56b0def4db9] Merge branch 'next' of https://github.com/kvm-x86/linux.git
-git bisect good b043e7f00dfd9def840c03a8eb1cb56b0def4db9
-# bad: [6806f880feafd5a565f00714f2f6254e7c80e961] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-git bisect bad 6806f880feafd5a565f00714f2f6254e7c80e961
-# bad: [6e50cdc4feb87e269649adb2c7498ce98fcf458c] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
-git bisect bad 6e50cdc4feb87e269649adb2c7498ce98fcf458c
-# good: [c5404d4e6df6faba1007544b5f4e62c7c14416dd] workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
-git bisect good c5404d4e6df6faba1007544b5f4e62c7c14416dd
-# bad: [15930da42f8981dc42c19038042947b475b19f47] workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
-git bisect bad 15930da42f8981dc42c19038042947b475b19f47
-# bad: [91ccc6e7233bb10a9c176aa4cc70d6f432a441a5] workqueue: Introduce struct wq_node_nr_active
-git bisect bad 91ccc6e7233bb10a9c176aa4cc70d6f432a441a5
-# bad: [dd6c3c5441263723305a9c52c5ccc899a4653000] workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling
-git bisect bad dd6c3c5441263723305a9c52c5ccc899a4653000
-# good: [9f66cff212bb3c1cd25996aaa0dfd0c9e9d8baab] workqueue: RCU protect wq->dfl_pwq and implement accessors for it
-git bisect good 9f66cff212bb3c1cd25996aaa0dfd0c9e9d8baab
-# first bad commit: [dd6c3c5441263723305a9c52c5ccc899a4653000] workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling
-
--- 
-Chandan
+Best regards,
+Javier Carrasco
