@@ -1,135 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7E85F579
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 15:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BC65F541;
+	Sat,  3 Feb 2024 15:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706975048; cv=none; b=HJGCmgRph4acVTXAwgtwYsvYVTiZLofZmg+iQTC0sCVCtDTlFOL7dfPTssuRz0HJYgcrvYL3VF8zth7PXlXRYUB50XY0YnZpvUrc6kaorUW5UDUL1/0EhN9CGMXrOsiQcPW61f8EUf9ivM2w3WJUujUHjmePeVsk6VOgXTAynfA=
+	t=1706975260; cv=none; b=icHGwknTIXeHkgFNg7mlZMmwbxYSiCYk59G3mzrhgEzZwj4zeI3KKow3dKBW3TVu8xRknXvWcGSxq++VGrDsW7LdhEyuGWi/6tNpBaP8lUleD6knQ0pPKBPpiU0k5BLSsc2VSn2ia3zoZ6HpgbuLjgn3OVXguOhFcZItbU1M8iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706975048; c=relaxed/simple;
-	bh=1jnXP20A8FTVhBfK5XMoOFBXtkTqsoRl3cBJhPND+Tg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bR/2f25UTt7qPHKoL/J+aq2Wx/rQhbrjtbXmvELpV2tBLE4F24V4hgynW8IeoapKS41ss1TVujBP+RJsmj5lRD7VBD6WeRQ/pdVW58iA8qPGLKmWhmRxqFTN9R0m5xk7b8kuaW5xel2NoKHrG6qU9cyG3TQNih8thhwKd1KIOpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aBhH4ipD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706975260; c=relaxed/simple;
+	bh=FdSFBTe2mH/CETNqoGpiNaQFDRF7hVi4nwjoi22gR8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hEa0UnlUU2eyeJiiyzyvtw/2Vgx5OTYpJBquyBMCDEoqq7H8eu1oWPVmoT36J9DfKVx47PAz1Nz8qSG3GO5E0OGFdQkxUfAeboUEMhqma1deMVNkgUCIn72yoWyXPAg3lfQu1hB1btWmkTeCYP2HK/5KSVQSbc35ooagJ7Ifyo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/KixfTk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aBhH4ipD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706975045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z37S38Ac+FZG32K3ttyGhIlDZkrUn25fgqCMfEdj2WY=;
-	b=aBhH4ipDEgoo8UXOSW7WmbWhPq9zVUBr1RB1JReM0I2qHV25bosFShNDkM++oHn+LNqiLO
-	b3egrFqb1OMWR4oeWq18EgYNa42rGuuURj5vddWafBBPgCEwIU8smI9Y7AA7AKF88HdkyK
-	X758m2z5hPhBi+/wM5dmaGOf4vjkvBc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-571-KRPLBrgKMu6TrTKsDj8DEA-1; Sat, 03 Feb 2024 10:44:00 -0500
-X-MC-Unique: KRPLBrgKMu6TrTKsDj8DEA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 537488432A0;
-	Sat,  3 Feb 2024 15:44:00 +0000 (UTC)
-Received: from llong.com (unknown [10.22.32.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D413D492BC6;
-	Sat,  3 Feb 2024 15:43:59 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Cestmir Kalina <ckalina@redhat.com>,
-	Alex Gladkov <agladkov@redhat.com>,
-	Phil Auld <pauld@redhat.com>,
-	Costa Shulyupin <cshulyup@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH-wq v2 3/5] workqueue: Thaw frozen pwq in workqueue_apply_unbound_cpumask()
-Date: Sat,  3 Feb 2024 10:43:32 -0500
-Message-Id: <20240203154334.791910-4-longman@redhat.com>
-In-Reply-To: <20240203154334.791910-1-longman@redhat.com>
-References: <20240203154334.791910-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/KixfTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E91EC433C7;
+	Sat,  3 Feb 2024 15:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706975260;
+	bh=FdSFBTe2mH/CETNqoGpiNaQFDRF7hVi4nwjoi22gR8M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=J/KixfTkiQLcg85zXo7hEw2HNaO7s0tvsbnDwtcYTL3AIshaR4s7PAagp5SN7FQfi
+	 BKLE6j6eps8RIHN1wwNAawngFuAel40dCMrToaBfvd1QOVlEcwBilsXlP3GylEg7ew
+	 O2m/KItnC2z+JcbEWog1DCI/oO+31jSdWVh8nSA0DQShTLzMMf+0ZmZxcGNuO7kRyE
+	 KXHrOuBwdACMssYvmsLIZBr1QB4YVFSX06XgyWRuJ4vSNdOdJcodXTEPxc4jG4BFeo
+	 VPQPU6wbAGnyNfdnsQW7M2B+fXm1rPQ5H726BfCGtOoJlkn0f0nC3/nvhQ2hPwBE1e
+	 7ei4LIls3qynw==
+User-agent: mu4e 1.10.8; emacs 27.1
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: tj@kernel.org
+Cc: jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Subject: [BUG REPORT] workqueue: Hung task reported when executing
+ generic/001 on XFS on next-20240202
+Date: Sat, 03 Feb 2024 21:09:14 +0530
+Message-ID: <87o7cxeehy.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Type: text/plain
 
-workqueue_apply_unbound_cpumask() cannot proceed with an ordered
-workqueue if its dfl_pwq is still frozen. Just do a sleep wait for
-it to be thawed may not work in some cases if pwq_release_workfn() is
-somehow prevented from being called due to resources (e.g. wq_pool_mutex)
-that are held by its caller.
+Hi,
 
-To break the logjam, we have to actively check if the frozen dfl_pwq
-is ready to be thawed and call thaw_pwq() directly if so.
+Executing generic/001 test on XFS on a machine running next-20240201 kernel
+causes the following hung task to occur,
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/workqueue.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+    INFO: task umount:6305 blocked for more than 122 seconds.
+          Not tainted 6.8.0-rc2-next-20240202 #17
+    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+    task:umount          state:D stack:13008 pid:6305  tgid:6305  ppid:6301   flags:0x00004000
+    Call Trace:
+     <TASK>
+     __schedule+0x2f6/0xa20
+     schedule+0x36/0xb0
+     schedule_timeout+0x20b/0x280
+     ? srso_return_thunk+0x5/0x5f
+     ? irq_work_queue+0x40/0x60
+     ? srso_return_thunk+0x5/0x5f
+     ? __wake_up_klogd.part.0+0x5a/0x80
+     wait_for_completion+0x8a/0x140
+     __flush_workqueue+0x11a/0x3b0
+     xfs_inodegc_flush+0x24/0xf0
+     xfs_unmountfs+0x14/0x180
+     xfs_fs_put_super+0x3d/0x90
+     generic_shutdown_super+0x7c/0x160
+     kill_block_super+0x1b/0x40
+     xfs_kill_sb+0x12/0x30
+     deactivate_locked_super+0x35/0x90
+     deactivate_super+0x42/0x50
+     cleanup_mnt+0x109/0x170
+     __cleanup_mnt+0x12/0x20
+     task_work_run+0x60/0x90
+     syscall_exit_to_user_mode+0x146/0x150
+     do_syscall_64+0x5d/0x110
+     entry_SYSCALL_64_after_hwframe+0x6c/0x74
+    RIP: 0033:0x7f13c103b38b
+    RSP: 002b:00007fff161aeff8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+    RAX: 0000000000000000 RBX: 00007f13c116d204 RCX: 00007f13c103b38b
+    RDX: ffffffffffffff78 RSI: 0000000000000000 RDI: 000055964eda0030
+    RBP: 000055964ed99310 R08: 0000000000000000 R09: 00007fff161adda0
+    R10: 00007f13c1159379 R11: 0000000000000246 R12: 000055964eda0030
+    R13: 0000000000000000 R14: 000055964ed99408 R15: 000055964ed99520
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index f089e532758a..ee934c2c6ea8 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -6354,6 +6354,32 @@ void thaw_workqueues(void)
- }
- #endif /* CONFIG_FREEZER */
- 
-+/*
-+ * Check the given ordered workqueue to see if its non-default pwq's have
-+ * zero reference count and if so thaw the frozen default pwq.
-+ *
-+ * Return:
-+ * %true if dfl_pwq has been thawed or %false otherwise.
-+ */
-+static bool ordered_workqueue_ref_check(struct workqueue_struct *wq)
-+{
-+	int refs = 0;
-+	struct pool_workqueue *pwq;
-+
-+	if (!READ_ONCE(wq->dfl_pwq->frozen))
-+		return true;
-+	mutex_lock(&wq->mutex);
-+	for_each_pwq(pwq, wq) {
-+		if (pwq == wq->dfl_pwq)
-+			continue;
-+		refs += pwq->refcnt;
-+	}
-+	if (!refs)
-+		thaw_pwq(wq->dfl_pwq);
-+	mutex_unlock(&wq->mutex);
-+	return !refs;
-+}
-+
- static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
- {
- 	LIST_HEAD(ctxs);
-@@ -6378,12 +6404,12 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
- 
- 			if (!(wq->flags & __WQ_ORDERED_EXPLICIT)) {
- 				wq->flags &= ~__WQ_ORDERED;
--			} else if (pwq && pwq->frozen) {
-+			} else if (pwq && !ordered_workqueue_ref_check(wq)) {
- 				int i;
- 
- 				for (i = 0; i < 10; i++) {
- 					msleep(10);
--					if (!pwq->frozen)
-+					if (ordered_workqueue_ref_check(wq))
- 						break;
- 				}
- 				if (WARN_ON_ONCE(pwq->frozen))
+Git bisect revealed the following as the bad commit,
+
+dd6c3c5441263723305a9c52c5ccc899a4653000 is the first bad commit
+commit dd6c3c5441263723305a9c52c5ccc899a4653000
+Author: Tejun Heo <tj@kernel.org>
+Date:   Mon Jan 29 08:11:24 2024 -1000
+
+    workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling
+    
+    The planned shared nr_active handling for unbound workqueues will make
+    pwq_dec_nr_active() sometimes drop the pool lock temporarily to acquire
+    other pool locks, which is necessary as retirement of an nr_active count
+    from one pool may need kick off an inactive work item in another pool.
+    
+    This patch moves pwq_dec_nr_in_flight() call in try_to_grab_pending() to the
+    end of work item handling so that work item state changes stay atomic.
+    process_one_work() which is the other user of pwq_dec_nr_in_flight() already
+    calls it at the end of work item handling. Comments are added to both call
+    sites and pwq_dec_nr_in_flight().
+    
+    This shouldn't cause any behavior changes.
+    
+    Signed-off-by: Tejun Heo <tj@kernel.org>
+    Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+
+ kernel/workqueue.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+Here is the full git bisect log,
+# bad: [076d56d74f17e625b3d63cf4743b3d7d02180379] Add linux-next specific files for 20240202
+# good: [881f78f472556ed05588172d5b5676b48dc48240] xfs: remove conditional building of rt geometry validator functions
+git bisect start 'HEAD' '881f78f47255' 'fs/'
+# good: [50673a33b8dc743777e79d7206acdc8d64452498] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+git bisect good 50673a33b8dc743777e79d7206acdc8d64452498
+# good: [717a7216eaa84233dc70498db3e92989153fa444] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git
+git bisect good 717a7216eaa84233dc70498db3e92989153fa444
+# bad: [e6ead6ea890b2c2df0faf62ca2da15392cdc4165] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git
+git bisect bad e6ead6ea890b2c2df0faf62ca2da15392cdc4165
+# good: [be364bf6099dc52d26ce25e2996fa2a04502a890] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+git bisect good be364bf6099dc52d26ce25e2996fa2a04502a890
+# good: [b043e7f00dfd9def840c03a8eb1cb56b0def4db9] Merge branch 'next' of https://github.com/kvm-x86/linux.git
+git bisect good b043e7f00dfd9def840c03a8eb1cb56b0def4db9
+# bad: [6806f880feafd5a565f00714f2f6254e7c80e961] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+git bisect bad 6806f880feafd5a565f00714f2f6254e7c80e961
+# bad: [6e50cdc4feb87e269649adb2c7498ce98fcf458c] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
+git bisect bad 6e50cdc4feb87e269649adb2c7498ce98fcf458c
+# good: [c5404d4e6df6faba1007544b5f4e62c7c14416dd] workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
+git bisect good c5404d4e6df6faba1007544b5f4e62c7c14416dd
+# bad: [15930da42f8981dc42c19038042947b475b19f47] workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
+git bisect bad 15930da42f8981dc42c19038042947b475b19f47
+# bad: [91ccc6e7233bb10a9c176aa4cc70d6f432a441a5] workqueue: Introduce struct wq_node_nr_active
+git bisect bad 91ccc6e7233bb10a9c176aa4cc70d6f432a441a5
+# bad: [dd6c3c5441263723305a9c52c5ccc899a4653000] workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling
+git bisect bad dd6c3c5441263723305a9c52c5ccc899a4653000
+# good: [9f66cff212bb3c1cd25996aaa0dfd0c9e9d8baab] workqueue: RCU protect wq->dfl_pwq and implement accessors for it
+git bisect good 9f66cff212bb3c1cd25996aaa0dfd0c9e9d8baab
+# first bad commit: [dd6c3c5441263723305a9c52c5ccc899a4653000] workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling
+
 -- 
-2.39.3
-
+Chandan
