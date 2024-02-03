@@ -1,70 +1,102 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B226D16436
-	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 22:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F2F168CD
+	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 22:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706999235; cv=none; b=YP1lTUYAvbsk/QXnRYvtZW3zOTJ4mJzkVBUTeyx6UDMQ9sEEDiPmwYwWPw8g2+dAfGd5QVG5yanTrob4+gvEoCe+No7We9PiQ4vyWgXhvaAD6KffJwaiif9URvdADPAwYp9yO3xxlEobY3e2Chreis81yFIQg1gjDiUSUpbtQVY=
+	t=1707000129; cv=none; b=da3UX4nU0s/oNIF83sseAegpAkWqKZQvQuzQq6ppSaksQlpaPLr+1Yg9zv4hcArfPgfM7VqSPVYSXabfWWnLjZttTzaNe3lDsylQ/eQ1s5szC+5m/HhIlPSUS62r9GFLatWTCkx14Ae3wPw9/xMotm/iM9O7YjUtYj2XPcme8cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706999235; c=relaxed/simple;
-	bh=aahhH/EVTyCGj2vPjj00iOsqui8LSXEZU/AjnDeMmV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a51mzNBzlAqAUPX8/p6xNGkdPqJaPXyLrpPaIRPjyPm5AZQB/Mqdxduk4MLG7tHOXbcRuTK8JQI35/wdLNtzvfkF2eIfEEm6pA/yOd2I7Xjv6NUVD3mfl3ayGDTyRZt7WxHNiFRCZyhxi+6cbV84HS4H7ZKSykU5uyPeIVIvd8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y0Q6cJ4s; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707000129; c=relaxed/simple;
+	bh=VRgg9tPPV9ch9xVJUoSdcCPIv9S0ZNXn78YmVch3TGI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sSQ3TozsO3pLyqCymjcYvqll7stQQwURs1w7sz1q/5tQpYlSTHQckohXDYoaSDyxVUCbnDC+BygDqf0mKcRJ2kEy3S4cwoI+GK+d8pS7VeYJGHyVO2hviKY6CJm2KrG2yyJTupTL3RC5j2o2Nq//zfbwSJsREwB9D9KZZMcH6lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Shahi+uV; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y0Q6cJ4s"
-Date: Sat, 3 Feb 2024 14:26:55 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706999230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k36R5UvzRPlrw/DQ0hgA6MvLeuxxDoXMOSsEOQMkqGY=;
-	b=Y0Q6cJ4sMvlntRaHHNrMEuzR8PdJnVFjqNXoAeWY0ZHZ85WWe7PTTOBYj0jTUToge1hdk+
-	yayBlCurOdjKsqGcQP1i05CKEF3ItKTpUSElXRxcSOXUIvBMnqqZR4jRVz89W+ksG8PUlV
-	5JIKcHITTUIWnZrEbGqgrsADtBWqLRU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: selftests: Fix GUEST_PRINTF() format warnings in
- ARM code
-Message-ID: <Zb69ryhz_mDw9UK4@linux.dev>
-References: <20240202234603.366925-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Shahi+uV"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51032058f17so3816498e87.3
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Feb 2024 14:42:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707000126; x=1707604926; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9pUvdF72w2iDqX6eJFryQDKrSqvsabYyjqNTlDp/2Ts=;
+        b=Shahi+uVv5Jcqs2zxX02dgEREOkT5swaIMXdkJcSNGrNI7FTfmf4IEXsVNlimWeeA2
+         VFVSa0YVt0bHV83gILEsKWHrwEtJHDG6t/ErR3q9/bWOvHlxvLek21vJiDQHmB1UiSYu
+         nqEvmxkwEsXh6HH1PEKQKTi2mS8YY9HfYuJk3t66xI2XlJofpqcC+mdSjALtrSxcCntj
+         2mGK/7k4UJmiREwpmLeJYBdhJ/j7JWrlr0rrfn+ofaUBk2EQ3sZNsmJprpqHmAM3Ju/4
+         42uXtg5qYt2+/MCNNlyHiQY7btCR9WtWrbJ3jsyLupyp7YCQt5g7zdTld502fZ3C8qwp
+         zZoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707000126; x=1707604926;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9pUvdF72w2iDqX6eJFryQDKrSqvsabYyjqNTlDp/2Ts=;
+        b=Zo2+cOp8D34VgyWUD0DlJntG0cuX0x9F9LTV39f/xuzZS4x6AcxDYe2d4WLFrEG7Yy
+         KjEHXbn24I/KzzsK1jYmoiBybFsTjxs3zRoxw4H5OeE4wtwpgVlP5oAd4lOF6M3j0bBD
+         NPTQg3iLeg1RkiZl+HOzwdlVdFjppLygZc4GZl3TKPNJiP/HQROYACxpHubmIZCKQ0be
+         jDLOGnh+3mp9/v1P2JQMZ77Iqe6JWnAvDzzKQ0dq9dp7hywmMDGO3we41sUwjLBx3R3e
+         PEM7/sbOPtUXVAaC3/sj2y8bwaM6N4eqDFRskKRD0GHwb3o18ejF5zQKrt8lf6famCCU
+         8VFQ==
+X-Gm-Message-State: AOJu0Yx5bQ5Z/b7xq0erbE9/EggxNTHTxQ4tPjzxRLNvsvKHFrTWROEC
+	r42PF0h9j4lmWHYoFEHBydOKlxkz3xxy/vzhuezdxbTiMFcB/nIRcuQmVcQkOSs=
+X-Google-Smtp-Source: AGHT+IE9qPqtc1+PfvjJ+mQSHAJeywN/9Ky3PPuW1h7Jw1sd53SYl7XPn1yGC0KN/q7qrQ/T88KkMg==
+X-Received: by 2002:a05:6512:3b82:b0:511:2fdf:ce3b with SMTP id g2-20020a0565123b8200b005112fdfce3bmr7522710lfv.15.1707000126012;
+        Sat, 03 Feb 2024 14:42:06 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVzSbN8YU69aED7LPdo/0CeRE01XONXwbdpqTN5X3IY9EWWvwmIUdvY3i/l/EjV7MjgFFWvNkwMcxXPm7pCgLyF7kyGICK9piXkMfGPWCCyCg5g557tC17mp8kaqSnrWnkKczoJqarViosz/tm471+fV/hAlCK6ac0eoyNkIQqXT1U=
+Received: from debian.fritz.box (aftr-82-135-80-223.dynamic.mnet-online.de. [82.135.80.223])
+        by smtp.gmail.com with ESMTPSA id wb6-20020a170907d50600b00a37026ef8e8sm2271055ejc.18.2024.02.03.14.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Feb 2024 14:42:05 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] Documentation: coding-style: Update syntax highlighting for code-blocks
+Date: Sat,  3 Feb 2024 23:39:26 +0100
+Message-Id: <20240203223926.5077-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202234603.366925-1-seanjc@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 02, 2024 at 03:46:03PM -0800, Sean Christopherson wrote:
-> Fix a pile of -Wformat warnings in the KVM ARM selftests code, almost all
-> of which are benign "long" versus "long long" issues (selftests are 64-bit
-> only, and the guest printf code treats "ll" the same as "l").  The code
-> itself isn't problematic, but the warnings make it impossible to build ARM
-> selftests with -Werror, which does detect real issues from time to time.
-> 
-> Opportunistically have GUEST_ASSERT_BITMAP_REG() interpret set_expected,
-> which is a bool, as an unsigned decimal value, i.e. have it print '0' or
-> '1' instead of '0x0' or '0x1'.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+Use c and elisp instead of none in code-blocks
 
-This all looks good to me. Just want to confirm before applying: you're
-not planning any other patches that'll go through your tree that depend
-on this right?
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ Documentation/process/coding-style.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Figured not since you sent it separately, but just want to be sure.
-
+diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+index c48382c6b477..a75c7044d8b7 100644
+--- a/Documentation/process/coding-style.rst
++++ b/Documentation/process/coding-style.rst
+@@ -203,7 +203,7 @@ Do not unnecessarily use braces where a single statement will do.
+ 
+ and
+ 
+-.. code-block:: none
++.. code-block:: c
+ 
+ 	if (condition)
+ 		do_this();
+@@ -660,7 +660,7 @@ make a good program).
+ So, you can either get rid of GNU emacs, or change it to use saner
+ values.  To do the latter, you can stick the following in your .emacs file:
+ 
+-.. code-block:: none
++.. code-block:: elisp
+ 
+   (defun c-lineup-arglist-tabs-only (ignored)
+     "Line up argument lists by tabs, not spaces"
 -- 
-Thanks,
-Oliver
+2.39.2
+
