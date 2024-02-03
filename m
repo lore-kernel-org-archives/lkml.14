@@ -1,44 +1,44 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7BD5F55E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D4B5F844
 	for <linux-kernel@vger.kernel.org>; Sat,  3 Feb 2024 15:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706975048; cv=none; b=dIWxxy10rmkNKE6BnZhuXTsoaXcrK5IXvfe3YHkD1PLH2DnJl3vxoLLjUBF0V2KRSDC7VOVBU99UpFcK8qGpukEPlGfm4pZzPgqqsMybot9UpESJpm8IKuChDNaU1W8lDGybBNqti4rM+e79Nmddl/EfxPjlJmxwdSJShp9Ffmk=
+	t=1706975048; cv=none; b=Ai7Tqx5SSkJ2WN03IoaYN9XSzLpk3658wE3WYNyxXjxh064O/OExTS+04IZQpBSBPOVwyhEYEDS4e+2HIVNTVuIITMcD0HtKHMj52S6ysDddI9hifg2CI8+U/H5D+kzKYDuM/Tx1H1iX3QE1mMr0/oSPlrgLKC+5ybjbBKIaxFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706975048; c=relaxed/simple;
-	bh=h5QmlYtfNPJkR43xmQK8MmClp8+0FgNrfjWDooIF2m0=;
+	bh=i6TPdcvT1TQK+CKu+xNdsdflEhMuYXP1v6ppPXqzfUY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hI6Z0gZLxAieT32sIs6vOW6QMeYZKBAf/2/822iMShMCtTuvv1sJTNaC8PwTOkPL9S0YYbbIZBLaO83wmglGgzEQb0DJbW295MJHL6Icq6gVLaA4IyDINRcLunF38W93jlDCbhuilykEAxKnRHnP1KufvBaQQGnuXWs7jzITRG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WjzxMAgk; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=NCoSI1LTkJ9Ij7HiX8XBlnghvFl47onquJbOSgcDmNh6DoN4/MwINVE9C7s/+pp2ysx2P6x+X2vY6uhg2UE9rrUUsKyJHBDpR5cS9OJDPwXFknea3igj+ku67sTN6K3YXPIFxWmqWaFUrsiWYpuu0pPEAGhPHsuzCLlDE+kB7N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X7LUy/uz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WjzxMAgk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7LUy/uz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1706975045;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=X2395hdNLA+e2lfzBFwx2gFoDSFHPhjOE9LGsAepU2M=;
-	b=WjzxMAgkj36pZ35fZ6xBRi93t2HvO53jHTZVM6VOjM+EAtUwjRCKhiyB6IVNpn3pIpgZ5w
-	pQs1pVx8nJoU3rfC/fwWD8U4q6DifCDJ//hrVme7ZEeT3ps4KWTcBpnsmrI4WQd6Auevly
-	6b+aSadqgxXqOcnIAzwT5t3ka5bvgBo=
+	bh=ZE5SuTiC1eU6caXAnwVyMAj7DO/jK06d00aD2gGGC9Y=;
+	b=X7LUy/uzVH5EXH2n/t6My/QPxHBhhzeFjPesyb1BeDWyZYucG8QvuZbXhkanu9NxnO2ITA
+	R6Js1uhp6Cw+e8iw4hTp3SDnZ+cexYHPcDXJvsi7bjUcqGwJeK9AjvX9FmIgwGb6J/obev
+	VTJRJg1DBcXNS5Gmk0goxFKqbe0UuKw=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-573-LSgab-vdNNS5dJajugvDTA-1; Sat, 03 Feb 2024 10:44:01 -0500
-X-MC-Unique: LSgab-vdNNS5dJajugvDTA-1
+ us-mta-583-kpxT-kJSPYyD4ihjCqYHlA-1; Sat, 03 Feb 2024 10:44:01 -0500
+X-MC-Unique: kpxT-kJSPYyD4ihjCqYHlA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC44E10651AF;
-	Sat,  3 Feb 2024 15:44:00 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 69864185A781;
+	Sat,  3 Feb 2024 15:44:01 +0000 (UTC)
 Received: from llong.com (unknown [10.22.32.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 64ECB492BC6;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EB934492BC6;
 	Sat,  3 Feb 2024 15:44:00 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Tejun Heo <tj@kernel.org>,
@@ -50,9 +50,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Phil Auld <pauld@redhat.com>,
 	Costa Shulyupin <cshulyup@redhat.com>,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH-wq v2 4/5] kernel/workqueue: Let rescuers follow unbound wq cpumask changes
-Date: Sat,  3 Feb 2024 10:43:33 -0500
-Message-Id: <20240203154334.791910-5-longman@redhat.com>
+Subject: [PATCH-wq v2 5/5] workqueue: Bind unbound workqueue rescuer to wq_unbound_cpumask
+Date: Sat,  3 Feb 2024 10:43:34 -0500
+Message-Id: <20240203154334.791910-6-longman@redhat.com>
 In-Reply-To: <20240203154334.791910-1-longman@redhat.com>
 References: <20240203154334.791910-1-longman@redhat.com>
 Precedence: bulk
@@ -64,41 +64,40 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-From: Juri Lelli <juri.lelli@redhat.com>
+Commit 85f0ab43f9de ("kernel/workqueue: Bind rescuer to unbound
+cpumask for WQ_UNBOUND") modified init_rescuer() to bind rescuer of
+an unbound workqueue to the cpumask in wq->unbound_attrs. However
+unbound_attrs->cpumask's of all workqueues are initialized to
+cpu_possible_mask and will only be changed if it has the WQ_SYSFS flag
+to expose a cpumask sysfs file to be written by users. So this patch
+doesn't achieve what it is intended to do.
 
-When workqueue cpumask changes are committed the associated rescuer (if
-one exists) affinity is not touched and this might be a problem down the
-line for isolated setups.
+If an unbound workqueue is created after wq_unbound_cpumask is modified
+and there is no more unbound cpumask update after that, the unbound
+rescuer will be bound to all CPUs unless the workqueue is created
+with the WQ_SYSFS flag and an user explicitly modified its cpumask
+sysfs file.  Fix this problem by binding directly to wq_unbound_cpumask
+in init_rescuer().
 
-Make sure rescuers affinity is updated every time a workqueue cpumask
-changes, so that rescuers can't break isolation.
-
- [longman: set_cpus_allowed_ptr() will block until the designated task
-  is enqueued on an allowed CPU, no wake_up_process() needed. Also use
-  the unbound_effective_cpumask() helper as suggested by Tejun.]
-
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Fixes: 85f0ab43f9de ("kernel/workqueue: Bind rescuer to unbound cpumask for WQ_UNBOUND")
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/workqueue.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index ee934c2c6ea8..172f7299aa71 100644
+index 172f7299aa71..1e022899c13c 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -4905,6 +4905,11 @@ static void apply_wqattrs_commit(struct apply_wqattrs_ctx *ctx)
- 	/* update node_nr_active->max */
- 	wq_update_node_max_active(ctx->wq, -1);
+@@ -5149,7 +5149,7 @@ static int init_rescuer(struct workqueue_struct *wq)
  
-+	/* rescuer needs to respect wq cpumask changes */
-+	if (ctx->wq->rescuer)
-+		set_cpus_allowed_ptr(ctx->wq->rescuer->task,
-+				     unbound_effective_cpumask(ctx->wq));
-+
- 	mutex_unlock(&ctx->wq->mutex);
- }
- 
+ 	wq->rescuer = rescuer;
+ 	if (wq->flags & WQ_UNBOUND)
+-		kthread_bind_mask(rescuer->task, wq->unbound_attrs->cpumask);
++		kthread_bind_mask(rescuer->task, wq_unbound_cpumask);
+ 	else
+ 		kthread_bind_mask(rescuer->task, cpu_possible_mask);
+ 	wake_up_process(rescuer->task);
 -- 
 2.39.3
 
