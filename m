@@ -1,68 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468B95F557;
-	Sat,  3 Feb 2024 15:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D62D5F558;
+	Sat,  3 Feb 2024 15:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706975857; cv=none; b=mfSEj4+5odnmAog2Hcb+lP112AenXPIIR5Vt0rHRitJHoIn141aNJ4IDG0wrdkePurLpxKWdEPijRln7/DKK+hhZjv8uxCqw51pyf8SCViUfRI3/OqVVHU77zNpv5Ala7ePW4QdsdyGk48sOeFundLVxNSTe+pJXSRIPNSwu060=
+	t=1706975858; cv=none; b=kjPrnXkM8Pug6UofZqsKtW0JdcE3ZM1lhsrlGcNbkpoIVz1Rmgr+Pdp6wznwfkbEKbcfFxe0mvkAH4qFdBvU+NCtPDmJqNz5O9eI3seeOHNs/cFlzPd+VueItDub5usHABqpYVd6w26pYN0Szz5QrOE6NXNeHNoSJOLjuSLxcW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706975857; c=relaxed/simple;
-	bh=dshOJS4N3pd4aPqoR2rq5Jh64ntgtbu8Mpn7QXGGWNg=;
+	s=arc-20240116; t=1706975858; c=relaxed/simple;
+	bh=RVZICuT7ZNXc0IdPylALsPQkZuzgT2vONmyqyXZSKvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hdj7J78tRGL3uhDIlt30Zn0BhP+XE7pDR54PYN6N/TbDsWLufc/jSzY3x0y9AATLA+B2KK4mlOZLPzq9JePrAE7J2ffwr40C/dPCsPqzEjgreqYdsFTEt4ubL0Sp4ddGMhL/OcGNdTzgWYw+VDjDnJVWBAdN34ZIhlltePPdDCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ksPAVLFs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jh/sOMq7bNIgvIfKjcFADVE6cLM3SNGVByGqpiZM4ekSRqYbUrpDVOGa80aVV28tK/W+ULrkCiVbS0V+OeboJcAZd6AQgb5iMasvrpnfxAv31LV/XFCrnrnc3FOjUs7K6GgRyk1PCMbsxSPM/wWnbtRwfovzcKN4Y61QwumdbNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I/loqnf3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ksPAVLFs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DDDC433F1;
-	Sat,  3 Feb 2024 15:57:36 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I/loqnf3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F84DC43390;
+	Sat,  3 Feb 2024 15:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706975856;
-	bh=dshOJS4N3pd4aPqoR2rq5Jh64ntgtbu8Mpn7QXGGWNg=;
+	s=korg; t=1706975857;
+	bh=RVZICuT7ZNXc0IdPylALsPQkZuzgT2vONmyqyXZSKvI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ksPAVLFsGPjLOApCixqXuulqd/S2BjZWAAMUTsWRGrGeT7wGsTecHvX2GTc9PjaK9
-	 BW4ILM7Zw/VdSreDX6bkcm5bH6+Oi/rwr3t7dJPjUw6UT3LFvatOKlSgz8VmymOVTF
-	 MRnKcFo9zCdElTBfivjd6xPtRxyiRWv28p1EIvgs=
-Date: Sat, 3 Feb 2024 07:20:35 -0800
+	b=I/loqnf3xC0cpJOS1KVBzxuiHwFqkl+eRgurOlYPknMAzDY4dBmObIwzgxOZEF79A
+	 UWK+NS0cIrSDLRl1E8LyL++K78wTXQ/iPd7cNcIpXYr3c4mGLubTyXksLo6x8p70TB
+	 DT9DPXb2X1DzC39wd97dOvJ5G97gRmoBkE0aizFE=
+Date: Sat, 3 Feb 2024 07:40:06 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Vineeth Vijayan <vneethv@linux.ibm.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Tony Krowiak <akrowiak@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Jason Herne <jjherne@linux.ibm.com>, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] s390: struct bus_type cleanup
-Message-ID: <2024020317-darkish-reboot-eeef@gregkh>
-References: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
+To: Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com,
+	mathias.nyman@linux.intel.com, dmitry.baryshkov@linaro.org
+Subject: Re: [PATCH 6.6 000/322] 6.6.16-rc1 review
+Message-ID: <2024020313-studio-pronto-db36@gregkh>
+References: <20240203035359.041730947@linuxfoundation.org>
+ <4344da38-13b2-44db-8a2b-fd65ef5501c1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4344da38-13b2-44db-8a2b-fd65ef5501c1@linaro.org>
 
-On Sat, Feb 03, 2024 at 11:57:57AM -0300, Ricardo B. Marliere wrote:
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]). Specifically, this series is part of the task of
-> splitting one of his TODOs [2].
+On Sat, Feb 03, 2024 at 01:09:15AM -0600, Daniel Díaz wrote:
+> Hello!
 > 
-> ---
-> [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
+> On 02/02/24 10:01 p. m., Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.6.16 release.
+> > There are 322 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Mon, 05 Feb 2024 03:51:47 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.16-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> Same problems as reported on 6.7 and 6.1.
+> 
+> Build error/warning ("variable 'slot_id' is uninitialized", as seen on 6.7 and 6.1) can be found on this branch too, with Clang 17 and Clang nightly on Arm64, Arm32, i386, x86, MIPS, RISC-V.
+> 
+> Build error due to pmicintc is present on this branch too.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Thanks for doing this!
+Yeah, looks like the xhci changes here are not for stable as the fix it
+makes is not correct here (it depends on other changes.)  I'll go drop
+them and push out new stable trees, hopefully that should resolve the
+issues people are having.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
+
+greg k-h
