@@ -1,45 +1,45 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BF563D1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F233363DD;
 	Sat,  3 Feb 2024 02:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706927867; cv=none; b=pW1XuXvS+Neu4x9Mi281zVcD316LtNjDV8RF4QQwx5sJwQp4lizTzGbjDzk6+Co3Yi7Q9NTxlRZhaEfkHZReJKRN1HuP5uk8lO3zBmXucgB0yHjoVVpD6up4n7yOfCtGQ3tW6d3c6elIk07qDhqwZOydFWGnY95ov/4xiCCjtmM=
+	t=1706927867; cv=none; b=Wiv/jcCp7zsoQ0oWIAX6uOrcZaGxH7cj5SKhJXsW7PYi9BKIYy0pxfbDtTEe2CDJpOzzN+MAh4Wr3ZLs01X4G1yEqWrnYhaKM3d1ITsifNLnsNaerm1giYpDAkbJ4C3ZdvK3pj8af+sn864jrH/+bPrI7MV3+kATMyHdZwe8KvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706927867; c=relaxed/simple;
-	bh=u1nuq17zD0xhgBZbYsuMjFfbINv/RaVLoPTPOjJ2BuQ=;
+	bh=5l1ZDxiiOCJBz70DKB8YoEv4oAwewH8W9SdYrKkgC5E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c/d1PAOfZgK1PuciT0Ltir2idkLfF7ISaVvEAM460fg2JaJu0Zj2DIONLoUW7+4ZD2ry2oUsNPV1xrQWfo+DKCliR57/fN0lKT7BY5QM8oXjZlRCpqFZMyrGmZB1BA+IFlB3+EWsVqr5nmiJhUFg1KxZQMGwcAenc2b+2Dp3zIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cP6Z6uDO; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=NUOrejQ8E4UHc2t7ne+UkVvQXR6jl17trmbdZEzZFnX9+7mB9xpgLq5E0vckab8XibRkp+S+R47kPVXzQs1lfimTj0INhuXN/o6RgUYTDb3K0+cNxeFLwFHQo8nK1vZuWJbEkHY04FAymi9qIkRWCIKf0tn3CJdgWABKnDED10o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=anQIJ/qY; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cP6Z6uDO"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4132PUCt002860;
-	Sat, 3 Feb 2024 02:37:20 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="anQIJ/qY"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4132RRb2029633;
+	Sat, 3 Feb 2024 02:37:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=cPeqWAOHiC/DRr2Pu2t5
-	FImj3arw3vFei7pmew6OZTU=; b=cP6Z6uDOl2quqgTKT9mluYa60go76oXDvGp2
-	vjl4WQh4/NAFagKC52RYY37V05M/XcXYzhPODr1TYLCMuJ00IfHxWRver9Fddsz7
-	xeqk0NSkE9OJI8TlituzReFgjm3auFNjsIXhn3dJbrrL6x/Tmd3C5ZFqawudMJ6+
-	moA/8o1olzeoWS31yla5hApN9Gj3Gw+1CGEnedGWbnTrp9Vy6utQBYpMwDcOEtPj
-	Mp1PVHM9EXCWiop/s1BdFtuL8edPwZdwS4ZTnJkK+IuQERyycR1Zsuf0tz8nIb9U
-	jHurEEv7y8YJCpYIuHhUX7TLSY990m/Hey41qEiHB7primOEXw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwjjuht-1
+	:mime-version:content-type; s=qcppdkim1; bh=Okp2NIuxOum+UIJx68gt
+	8HGPT3ztWG2atEl9RFxfZvI=; b=anQIJ/qY5FkulZ7aQxVV2SbHwbgE+4WcIAgY
+	ul2Bt0kDjWLrBeiTghNEQF0pED1AxogpJDxGvOslxckQceZOste+lYSYGbjVC3GJ
+	fEHeuR45xWiKXnplmBI1zMDiEwwyr/gToCMyMd+FWJWAOQjVRv7K8wlJ9bUidVil
+	gQhxT0aideBWslycquWCiB1bGaD9SZc35x+tVaG+wB5AhY20qJx9u76Mfkxz0P2v
+	w86QheGolJ1hE8696iyD8YwoF1ZjgMO7+rnEkHxb9GCusht+1cMLAuOjkqqFN0R6
+	EZXvdjNi8xTsWCaMHDS8xqiXwxQT52Rlyg/+Ct//XD1XuA+A9g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w1ax4849e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 03 Feb 2024 02:37:19 +0000 (GMT)
+	Sat, 03 Feb 2024 02:37:25 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4132bIVc003506
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4132bOwV012251
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 3 Feb 2024 02:37:18 GMT
+	Sat, 3 Feb 2024 02:37:24 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 18:37:18 -0800
+ 15.2.1118.40; Fri, 2 Feb 2024 18:37:24 -0800
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -51,12 +51,10 @@ To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
 CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v13 04/53] xhci: Add helper to set an interrupters interrupt moderation interval
-Date: Fri, 2 Feb 2024 18:35:56 -0800
-Message-ID: <20240203023645.31105-5-quic_wcheng@quicinc.com>
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v13 23/53] ASoC: qdsp6: q6afe: Increase APR timeout
+Date: Fri, 2 Feb 2024 18:36:15 -0800
+Message-ID: <20240203023645.31105-24-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240203023645.31105-1-quic_wcheng@quicinc.com>
 References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
@@ -71,82 +69,40 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tZfZScfQ2utlznKT4y6RWKKTlslZSepE
-X-Proofpoint-ORIG-GUID: tZfZScfQ2utlznKT4y6RWKKTlslZSepE
+X-Proofpoint-ORIG-GUID: AbWG9Rkaxqj2QNjiybVD7XFVvrJd5F8C
+X-Proofpoint-GUID: AbWG9Rkaxqj2QNjiybVD7XFVvrJd5F8C
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-02_16,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 phishscore=0 mlxlogscore=999
- malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402030014
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 mlxlogscore=828 priorityscore=1501
+ impostorscore=0 malwarescore=0 spamscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402030015
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+For USB offloading situations, the AFE port start command will result in a
+QMI handshake between the Q6DSP and the main processor.  Depending on if
+the USB bus is suspended, this routine would require more time to complete,
+as resuming the USB bus has some overhead associated with it.  Increase the
+timeout to 3s to allow for sufficient time for the USB QMI stream enable
+handshake to complete.
 
-Add a helper to set the interrupt moderation interval for an interrupter.
-Each interrupter can have its own moderation value.
-
-Hardware has a 16bit register for the moderation value, each step is 250ns.
-
-Helper function imod_interval argument is in nanoseconds.
-
-Values from 0 to 16383750 (250 x 0xffff) are accepted.
-0 means no interrupt throttling.
-
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- drivers/usb/host/xhci.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ sound/soc/qcom/qdsp6/q6afe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 0886829d53e5..b405b8236134 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -346,6 +346,23 @@ static int xhci_disable_interrupter(struct xhci_interrupter *ir)
- 	return 0;
- }
+diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
+index 948007955934..452d7e8b9b30 100644
+--- a/sound/soc/qcom/qdsp6/q6afe.c
++++ b/sound/soc/qcom/qdsp6/q6afe.c
+@@ -366,7 +366,7 @@
+ #define AFE_API_VERSION_SLOT_MAPPING_CONFIG	1
+ #define AFE_API_VERSION_CODEC_DMA_CONFIG	1
  
-+/* interrupt moderation interval imod_interval in nanoseconds */
-+static int xhci_set_interrupter_moderation(struct xhci_interrupter *ir,
-+					   u32 imod_interval)
-+{
-+	u32 imod;
-+
-+	if (!ir || !ir->ir_set || imod_interval > U16_MAX * 250)
-+		return -EINVAL;
-+
-+	imod = readl(&ir->ir_set->irq_control);
-+	imod &= ~ER_IRQ_INTERVAL_MASK;
-+	imod |= (imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
-+	writel(imod, &ir->ir_set->irq_control);
-+
-+	return 0;
-+}
-+
- static void compliance_mode_recovery(struct timer_list *t)
- {
- 	struct xhci_hcd *xhci;
-@@ -528,7 +545,6 @@ static int xhci_run_finished(struct xhci_hcd *xhci)
-  */
- int xhci_run(struct usb_hcd *hcd)
- {
--	u32 temp;
- 	u64 temp_64;
- 	int ret;
- 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
-@@ -551,12 +567,7 @@ int xhci_run(struct usb_hcd *hcd)
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"ERST deq = 64'h%0lx", (long unsigned int) temp_64);
- 
--	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
--			"// Set the interrupt modulation register");
--	temp = readl(&ir->ir_set->irq_control);
--	temp &= ~ER_IRQ_INTERVAL_MASK;
--	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
--	writel(temp, &ir->ir_set->irq_control);
-+	xhci_set_interrupter_moderation(ir, xhci->imod_interval);
- 
- 	if (xhci->quirks & XHCI_NEC_HOST) {
- 		struct xhci_command *command;
+-#define TIMEOUT_MS 1000
++#define TIMEOUT_MS 3000
+ #define AFE_CMD_RESP_AVAIL	0
+ #define AFE_CMD_RESP_NONE	1
+ #define AFE_CLK_TOKEN		1024
