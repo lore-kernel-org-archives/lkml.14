@@ -1,92 +1,96 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8563C22EEB
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 16:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E487722EE0
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 16:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707063742; cv=none; b=P21tPTza7PozmIHu/iK2nd0NhBZvIPhAp4RQ63zWM7thNpoAyIsmYW5YgKsE4ZrgL1n/cbkLe3jzAs1UufD5QbhF4naviEDoyXAO550Cu+XcMWfBwGa9UZdq8nsFvyJbRsbbn+SwP4eYJoOtdLgyvxBKDig9syROFmgOzbFM6cI=
+	t=1707063909; cv=none; b=Go1yHGQgt/VZDrw/tmSIc4ymZI6y+YPvMq4pMKjU0Z+FoPqtz4xOgFzP0vXNupTB6C9L6OpPCFQOsroZn+hsVxEOgaXe0mN/M5iVrUvcTcPWX3C58Ond/h/6iNhH0DJS+xKXcRCXuaRjTRVsXgTx5fqcX1da+Fhx2qOtcUy+aec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707063742; c=relaxed/simple;
-	bh=jWl4w/4OtxRG3KppKdL4PminQ5fAWwwOAlPqvG8qoHk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CHpZwReFz3fvjY89+Rc80jIhFG+kIp7XMQqN2246Yg61bbMWLSM5UwGSSz7+CGH00io4/COcCqoC/PkqIHJmV9ZxkrgE5hTiPGr4io9KnhNO7S4qG/bFGw0+apSyiEJEuX0CgvOI1Vbr6A/0vaps6Z1nKZhyLTPavfrqFzAZNDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-30.elisa-laajakaista.fi [88.113.26.30])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 6810e854-c379-11ee-b972-005056bdfda7;
-	Sun, 04 Feb 2024 18:21:10 +0200 (EET)
-From: andy.shevchenko@gmail.com
-To: Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Vladimir Oltean <olteanv@gmail.com>,
-	Minjie Du <duminjie@vivo.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v1 1/1] spi: fsl-dspi: Unify error messaging in dspi_request_dma()
-Date: Sun,  4 Feb 2024 18:21:06 +0200
-Message-ID: <20240204162106.1179621-1-andy.shevchenko@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1707063909; c=relaxed/simple;
+	bh=plU8UoPkzCaurb47JhN6xQzr89BfEnqggC31tveZ0go=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Cc/BeD5fyR1OtaDnHFK4VwxeVpHciJ6xe8y+Xx0t0cuZOfQB9sYgdJgecVRE5SHakcjjaqeDCHbgM/mMRWZVuWYgTAO2URrI9KnJjjSGfyd57KRVIFEP5lOBqaTo/T+9ILvI+SholaECQedf17Qz3tUwkGdGaMnAdhzV47wgbjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D244D240003;
+	Sun,  4 Feb 2024 16:24:54 +0000 (UTC)
+Message-ID: <035070c6-7adf-4a38-bb5a-fdc4be353c93@ghiti.fr>
+Date: Sun, 4 Feb 2024 17:24:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [riscv?] kernel panic: Kernel stack overflow (2)
+Content-Language: en-US
+To: syzbot <syzbot+5c1ebfe49c5e8e998e75@syzkaller.appspotmail.com>,
+ aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, syzkaller-bugs@googlegroups.com
+References: <000000000000ed365206107e0783@google.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <000000000000ed365206107e0783@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-Use `ret = dev_err_probe(...);` pattern for all messages in dspi_request_dma()
-for the sake of uniforming them. While at it, fix indentation issue reported
-by Vladimir Oltean.
+On 03/02/2024 19:02, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+>
+> HEAD commit:    6613476e225e Linux 6.8-rc1
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
+> console output: https://syzkaller.appspot.com/x/log.txt?x=144ac160180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=877e61347079aad5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5c1ebfe49c5e8e998e75
+> compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: riscv64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c57b90180000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d369ffe80000
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-6613476e.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/33ea806d02dd/vmlinux-6613476e.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/33195f72f823/Image-6613476e.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+5c1ebfe49c5e8e998e75@syzkaller.appspotmail.com
+>
+>   s11: ff60000011241a00 t3 : 0000000000000004 t4 : 1fec00000224849b
+>   t5 : 0000000000000002 t6 : 1fec0000022484c6
+> status: 0000000200000100 badaddr: ff2000000493ffc0 cause: 000000000000000f
+> Kernel panic - not syncing: Kernel stack overflow
+> CPU: 1 PID: 3859 Comm: kworker/1:3 Not tainted 6.8.0-rc1-syzkaller #0
+> Hardware name: riscv-virtio,qemu (DT)
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+> [<ffffffff80010868>] dump_backtrace+0x2e/0x3c arch/riscv/kernel/stacktrace.c:121
+> [<ffffffff858a9b60>] show_stack+0x34/0x40 arch/riscv/kernel/stacktrace.c:127
+> [<ffffffff85904e9c>] __dump_stack lib/dump_stack.c:88 [inline]
+> [<ffffffff85904e9c>] dump_stack_lvl+0xe8/0x154 lib/dump_stack.c:106
+> [<ffffffff85904f24>] dump_stack+0x1c/0x24 lib/dump_stack.c:113
+> [<ffffffff858aa5b2>] panic+0x33c/0x77a kernel/panic.c:344
+> [<ffffffff80010396>] handle_bad_stack+0xe0/0xf4 arch/riscv/kernel/traps.c:412
+> [<ffffffff80214a26>] mark_usage kernel/locking/lockdep.c:4599 [inline]
+> [<ffffffff80214a26>] __lock_acquire+0xaa8/0x784c kernel/locking/lockdep.c:5091
+> SMP: stopping secondary CPUs
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/spi/spi-fsl-dspi.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index c9eae046f66c..e0832f1f10bd 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -502,15 +502,12 @@ static int dspi_request_dma(struct fsl_dspi *dspi, phys_addr_t phy_addr)
- 		return -ENOMEM;
- 
- 	dma->chan_rx = dma_request_chan(dev, "rx");
--	if (IS_ERR(dma->chan_rx)) {
--		return dev_err_probe(dev, PTR_ERR(dma->chan_rx),
--			"rx dma channel not available\n");
--	}
-+	if (IS_ERR(dma->chan_rx))
-+		return dev_err_probe(dev, PTR_ERR(dma->chan_rx), "rx dma channel not available\n");
- 
- 	dma->chan_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR(dma->chan_tx)) {
--		ret = PTR_ERR(dma->chan_tx);
--		dev_err_probe(dev, ret, "tx dma channel not available\n");
-+		ret = dev_err_probe(dev, PTR_ERR(dma->chan_tx), "tx dma channel not available\n");
- 		goto err_tx_channel;
- 	}
- 
-@@ -541,16 +538,14 @@ static int dspi_request_dma(struct fsl_dspi *dspi, phys_addr_t phy_addr)
- 	cfg.direction = DMA_DEV_TO_MEM;
- 	ret = dmaengine_slave_config(dma->chan_rx, &cfg);
- 	if (ret) {
--		dev_err(dev, "can't configure rx dma channel\n");
--		ret = -EINVAL;
-+		ret = dev_err_probe(dev, -EINVAL, "can't configure rx dma channel\n");
- 		goto err_slave_config;
- 	}
- 
- 	cfg.direction = DMA_MEM_TO_DEV;
- 	ret = dmaengine_slave_config(dma->chan_tx, &cfg);
- 	if (ret) {
--		dev_err(dev, "can't configure tx dma channel\n");
--		ret = -EINVAL;
-+		ret = dev_err_probe(dev, -EINVAL, "can't configure tx dma channel\n");
- 		goto err_slave_config;
- 	}
- 
--- 
-2.43.0
+I ran the reproducer locally all week-end but not luck, it did not 
+trigger any panic.
 
