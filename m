@@ -1,146 +1,123 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D73E22EE5
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 16:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0F822EF4
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 16:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707064179; cv=none; b=Y6A7mLSWUvBeJoR8QaLuNU2VZj1jp5iC/+BN1n5OoeiLUS+oQbnSmwSI2Dx+iYMcYFlT5JjHaU3C4mjZNmjACfBhoG2g6J3tLrekoImI2+qwOUH/qs3r/aZFvwrzqEvL/2X2/jLMXB59YwfR+Nc7OIAatJJ68CBvagZhUX/fO4A=
+	t=1707064307; cv=none; b=GQBzifrrNkRRP1ZOmvXz4tUCoKoGxhxNj0TohzxrQf2qPfnpIQrsGHLZmY4CaDsfh7tDKXFfD9DgLboXO6aDLIM3e/ManKjCxk7tJ7f0NsT78nj1wDbeFA4t6i8E7amImpWKXVZYIVm5dgKbnymGhjNBTVUdJhAhWyAZKBiEQ04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707064179; c=relaxed/simple;
-	bh=HclOV+rrCZDwOVlAAJSRoojO0aSBe/fa1KdBQod+1Q8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sShabzXFWdv5GtaelzWn0cs1pf/DFi/fVMN0Hlq5GtIaP9ssx+RGVWDqAkVRLPj8duDRt0FhSGNOO/6q8aYRfP0Cold1Zhz7fw6o6dM5dDqdpe6ZjSp2eUFkR062wBISBEaery+hj1Y9QmJMQVi5MBPqO+a5rPDKlAvxafESoeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IH3PLuu9; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707064307; c=relaxed/simple;
+	bh=1vCWtqB6ylOUUALqfuFHp9gDM8uqiKTAT9Jq9akjcpE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sBSWvIoX5xwCRcNV3GbdyyK/cPEh5zHGqbp3J21HknQ6nNi4Spciw4FBARtQ0T2xReVm8FeeIrKbh+PqXTAa+xWimU83fBk3qG4xNLIGL0b51zw11n0WSS9H3DRRTu2+yesRYIdX/DW39Wj0Z0OjTPuopsXA6tA7xHmjQ+YgQeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=cbsct1H+ reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IH3PLuu9"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6002317a427so31649977b3.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 08:29:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707064177; x=1707668977; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WLm7YiWrpLuC8lMxG3SB3hDe/1zoUfNMJZQo8qUZp+s=;
-        b=IH3PLuu9+bSa1tO4Is+lBcPajOQtQsdLINEAFekq3AR/qcVyGpkZtA6dYQXLgcYHPa
-         Y5A4WuCtI86FY812aOpG6IfWQ3xT6XWEtc8xMjpDkPOkQP07u1jsQ8WSMh39OuHJ38Kg
-         nX6GVLm6ZRdpRmQt84jNVIDmm4kZawS1MyfMIiydX0AfDyCecBVDQutSGoR3J4jCBcvh
-         4YEO+IXs6tIwvrsVJ8ULD9QC+eF/5v1FQ/OqOhBTGzIH84qlNblBGkJOY7FeycxyjW9N
-         9t4dj/iP0w06pbzRTOWAqi0rnZZn4tbr/eBEIdOqguTVjQgJTKz8Xkj+aatftx8ADW4+
-         O/rQ==
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="cbsct1H+"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d7858a469aso26170805ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 08:31:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707064177; x=1707668977;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WLm7YiWrpLuC8lMxG3SB3hDe/1zoUfNMJZQo8qUZp+s=;
-        b=Jn03RAjSdtdTGEBQwFNbbw9lY0ufySe1SWuDCDY27554Pkn56rca9fwTKqpizMWNCa
-         PFj0F/+oCD8DgCR4f1Lh+06OP8I2ax5iZDZN75FNZiudWka45AvfcYzYBYptCxMIX8Bu
-         GkRZIXX56192zTt+cHcfNasyZ2/3WIHCnWyp1m2x5bjhdIwye9PZLZzmAmIaReL6v5Zt
-         S1X75Z4d+w8aR0f228TyKmzxcer6QRXjIRPfOMPoOmhLx4HYVX0kSjGesupKe4XRax4W
-         1bWxcf9X9xHA2Icdazsl1/LuYuhaTIzcW1NZTTtHp12osren+2EfQ2TxAkL2fmQV5Z6q
-         bM1g==
-X-Gm-Message-State: AOJu0YyTydYuCeyagBOgJ5yijfrAlXAUhH8LdkKb94bRKdIB3zSQIZoO
-	sbFZgomcfvDcg2iVcU7UFbZoauIrauBFfRbKbAYSffVhyQgEpNbVbxJFWLA5vKJFQnudykiCUbr
-	cH6n3iXiYP3Ft0oro2eQO878X4WbXKRkp+hzUgA==
-X-Google-Smtp-Source: AGHT+IEdKmZwmDiJR3yzuB5XfjzAGu+fELDwSN691Nf/rx1nyhSnDyGaSWKglskcCeWmwA4QPXVUltXw5iD6qvaiMXQ=
-X-Received: by 2002:a81:9197:0:b0:604:5cd0:a79c with SMTP id
- i145-20020a819197000000b006045cd0a79cmr583017ywg.16.1707064177328; Sun, 04
- Feb 2024 08:29:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707064305; x=1707669105;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XNhSAcOQsJgzxt52AFrV6cIjy7K7mCwx+eGcq1tfVTY=;
+        b=Pq6bZTin+TD6klt9HaRLMECDTCPX8ecMsxvlkjNwMRKDU/wX+WLJtchk+dbOI+V9Fu
+         amzTEsBHz0grteQZg38HqSfJBTPfWB5GxuGQwIToU9Dl89lYGkuyVW9Hr3N6SNRBdCJT
+         R2IMKnbQs3BRx6vAjc/wxZ1/VRNOXMk2GGB59aqumHCUYxMaf7TLhBiZ8sOXGo1WFfMV
+         //r3kGVZTqNFyOqVsbWdz5f9njst3MGZiAF3g2Ytt1YhyyhGY5jUOMftlTKwB+JHbTJu
+         AXUbNNmL09/SEV+2Hkp2jBciB3qit9Zgk7j9b51wcDyPxosk9y3pH7R4lBbuNz/5EpY9
+         uHcA==
+X-Gm-Message-State: AOJu0YyjrulMrNWcb6Iu+5b3c5MSLphSfHK8usxRhJneHxY+0SAchGdn
+	dIbZ4ompphCGSxwaMQ3lK9XF2iw1mkXLWEGUzwaoiIN+60UFC3fl
+X-Google-Smtp-Source: AGHT+IFFXzU/1GbmPmeLTmOTZ6yyEqMeLu5u+GStqUPtLo/TcDGkyo8gnWjxkzmNTiFrahnyHENf+A==
+X-Received: by 2002:a17:90b:357:b0:296:37c7:3b6b with SMTP id fh23-20020a17090b035700b0029637c73b6bmr6387497pjb.2.1707064304701;
+        Sun, 04 Feb 2024 08:31:44 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVL8oBMiXRE28I9z0RYp7DMI69Cmda749qFoQca9lpG/ctgRv52RZYxchbRK5aI1mS0cMWI6i5m4nCOphEm2KAQUkgUKXdz41YD9A==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id kt5-20020a170903088500b001d8d1a2e5f2sm4713157plb.216.2024.02.04.08.31.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 08:31:43 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707064302;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XNhSAcOQsJgzxt52AFrV6cIjy7K7mCwx+eGcq1tfVTY=;
+	b=cbsct1H+fF470xncsGDJU6p5IMifK2Yc5Xp0PmFluBsfr1/JVy4dow9NIlblaosAPSWTnF
+	09p3YXu0/4AkBt+Aql5gTIa+629hkRSQIn43nP8C2obify+4NtDI1ognSotQn8FdRLAwjO
+	fWTOCBV735iUmOrhcJi0JPPUPQXdCRhhFGJfNpKspidqbVsWD503eBxcdM6/gvz+EXoyFd
+	dHME307X8Sk1+d9+1cxTWTyCrdQ02A0DiE9tAUNOov+rcRtwFHUYtT/riFVdslt18YM4J6
+	RkMbreFaVrUkhnZKrbXgsDxYu5JbZwN+9oDt+e0Trbe4xVxbBmL3/8rGfSE33w==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 13:32:13 -0300
+Subject: [PATCH] hsi: hsi_core: make hsi_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119100621.11788-1-quic_tengfan@quicinc.com> <20240119100621.11788-2-quic_tengfan@quicinc.com>
-In-Reply-To: <20240119100621.11788-2-quic_tengfan@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 4 Feb 2024 17:29:26 +0100
-Message-ID: <CAA8EJprpMjK03rKPK6wgfVuDvBikYsKZjMc0Wusa1BxFOBnXhQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: arm: qcom: Document QCM8550, QCS8550
- SoC and board
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-hsi-v1-1-f9318131e842@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAAy8v2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDIwMT3aTS4vjknNTEvNIC3YziTF1Ly0Qz0xRjY/Nk82QloK6CotS0zAq
+ widGxtbUAOZpSjmEAAAA=
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1109; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=1vCWtqB6ylOUUALqfuFHp9gDM8uqiKTAT9Jq9akjcpE=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv7wNE4d5I0fZMJtZNkFvHsjD8g5XL0GH8HguA
+ 5tqfSTzFPiJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+8DQAKCRDJC4p8Y4ZY
+ pvd0EACikbxBqfUmQYuu9co0zY1N82UGTzjuk1O2HWaOTBx7qBCyHmacCn/zM7VCgT/ZsedGjGx
+ GSknp0XSgfgiZyzIqW79oAi6kMpyulwmaTojWj1KSEwFkig6JJ3vIQxQlANwQoGKdBixhMBmSAs
+ 9oVCWO0b7eRfOq120B1YcIx38WTXkrA73kkpCKrlJgFxCm6yO9slHoaKhC3lXWSUISgjQolfLFS
+ aQKt1AM9jhKglbgM9BuTwk06ddPcTv2S01LFmWyXLxvsPX1r+x0t0lXBMJarWFIcFn4FE875IxD
+ s4ZCsJJfIKClldvjzewrWiktKv/JQc4uRip+DkHBfV7F6JJY/9oXNn+Ty3FIMc8vNbXQkAdcxMx
+ W8r3nuXBE/7j9gYrwLZoAGNKfccRcKWnZxVc1FowCcX7l8+taWAqQF+plRl4Hiurz9RhfJmlDLg
+ meqN8vkRtACwKdID97Ts7S/IT6tZuSQ3BAaJgbD/r+nmvaK3YvpTICoaJsK/4IjX4wpZlgUEDin
+ Cmak8gFh+c8suOWQnWkNSPQiaSLHpUiI2BGup0U6gRPTxlNQv2jrcFyz26p9Qe8o6hhfWkBS9al
+ Rrs71IM9fJ7cx6F4Tg3NRwRu9j71BiI7CKWG72VfGHt+/TRQeAlnen++XIs3EzkO2dRhSwDTEta
+ 1YFdEqWmgW7rY/w==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Fri, 19 Jan 2024 at 11:07, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
->
-> Document QCM8550, QCS8550 SoC and the AIM300 AIoT board bindings.
-> QCS8550 and QCM8550 processor combines powerful computing, extreme edge
-> AI processing, Wi-Fi 7, and robust video and graphics for a wide range
-> of use cases for the Internet of Things (IoT). QCS8550 is a QCS version
-> for QCM8550. Modem RF only in QCM8550 but not in QCS8550.
-> AIM300 Series is a highly optimized family of modules designed to
-> support AIoT applications. The module is mounted onto Qualcomm AIoT
-> carrier board to support verification, evaluation and development. It
-> integrates QCS8550 SoC, UFS and PMIC chip etc.
-> AIM stands for Artificial Intelligence Module. AIoT stands for AI IoT.
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index 1a5fb889a444..9cee874a8eae 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -49,8 +49,10 @@ description: |
->          msm8996
->          msm8998
->          qcs404
-> +        qcs8550
->          qcm2290
->          qcm6490
-> +        qcm8550
+Now that the driver core can properly handle constant struct bus_type,
+move the hsi_bus_type variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-Drop
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/hsi/hsi_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->          qdu1000
->          qrb2210
->          qrb4210
-> @@ -93,6 +95,7 @@ description: |
->    The 'board' element must be one of the following strings:
->
->          adp
-> +        aim300-aiot
+diff --git a/drivers/hsi/hsi_core.c b/drivers/hsi/hsi_core.c
+index acbf82f755a8..e3beeac8aee5 100644
+--- a/drivers/hsi/hsi_core.c
++++ b/drivers/hsi/hsi_core.c
+@@ -48,7 +48,7 @@ static int hsi_bus_match(struct device *dev, struct device_driver *driver)
+ 	return false;
+ }
+ 
+-static struct bus_type hsi_bus_type = {
++static const struct bus_type hsi_bus_type = {
+ 	.name		= "hsi",
+ 	.dev_groups	= hsi_bus_dev_groups,
+ 	.match		= hsi_bus_match,
 
-We probably need to drop this list, it doesn't surve its purposes.
+---
+base-commit: fa72d143471d04ce3055d8dad9743b08c19e4060
+change-id: 20240204-bus_cleanup-hsi-99a65d337c7c
 
->          cdp
->          dragonboard
->          idp
-> @@ -904,6 +907,14 @@ properties:
->            - const: qcom,qcs404-evb
->            - const: qcom,qcs404
->
-> +      - items:
-> +          - enum:
-> +              - qcom,qcs8550-aim300-aiot
-> +          - const: qcom,qcs8550-aim300
-> +          - const: qcom,qcs8550
-> +          - const: qcom,qcm8550
-
-In the review comments for v3 you have been asked to add qcom,sm8550.
-But not the qcom,qcm8550. I don't think that there is any need to
-mention qcm8550 here.
-
-> +          - const: qcom,sm8550
-> +
->        - items:
->            - enum:
->                - qcom,sa8155p-adp
-> --
-> 2.17.1
->
-
-
+Best regards,
 -- 
-With best wishes
-Dmitry
+Ricardo B. Marliere <ricardo@marliere.net>
+
