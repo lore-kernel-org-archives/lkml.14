@@ -1,233 +1,399 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DEEEBE;
-	Sun,  4 Feb 2024 01:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DB0EDE;
+	Sun,  4 Feb 2024 01:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707010526; cv=none; b=TMLC/fdU3+iuLlkOgfNnWIU6snUSDYamt+4Fl0JC/laHshmm6MY1+kdAjwQQuJbR7JP1xT/AWqo9RAcaitKPUch6J23m5boZWbzvKJQOxDuOFPz289/fGOVGDfbswddODrHifsoeDKoX3EPFTnQiFfKKsOOEECJkp3G0q6NUqWM=
+	t=1707010715; cv=none; b=AGZkom1cq69lV171fVxLsvU0ON9IrCqg3lgRAllDqwoYX2/KxAJhr9oj+38SQVBdnpcHjKqDfF6TpQFhfp8oaZPX0Kr93gdURKIia8kpf/fSbp2dGHdJSUriPB5kUMSvrzQgiLM49Xw7d+HgXKHMftDL8/hphnQWQl1ZRHnbQ+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707010526; c=relaxed/simple;
-	bh=KQkZtPc3Eys4j6v8gCXCHGDmJyPKKgZ3gFxxf0iZbT4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=qRxjzUGzyhSHDoZxug/b9Li3RZgZUayfSDW17Sm55uOsLbjU/ZKZ/6d/gKfw7XuVPXAdhnp1AylQF24BaCGFRtaf8PhRtnVvinMr9NU1XLTV49BI5KKlCs7UKQQ6/moqSLHeFwEaea2u7nm/w7bNec0zX8FtiX+KvrOlBBQ63v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TSBsB6sHYz4f3k6L;
-	Sun,  4 Feb 2024 09:35:10 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id A00A21A027B;
-	Sun,  4 Feb 2024 09:35:13 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7N6b5lt1WeCw--.38132S3;
-	Sun, 04 Feb 2024 09:35:11 +0800 (CST)
-Subject: Re: [PATCH v5 00/14] dm-raid/md/raid: fix v6.7 regressions
-To: Benjamin Marzinski <bmarzins@redhat.com>,
- Yu Kuai <yukuai1@huaweicloud.com>
-Cc: mpatocka@redhat.com, heinzm@redhat.com, xni@redhat.com,
- blazej.kucman@linux.intel.com, agk@redhat.com, snitzer@kernel.org,
- dm-devel@lists.linux.dev, song@kernel.org, jbrassow@f14.redhat.com,
- neilb@suse.de, shli@fb.com, akpm@osdl.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240201092559.910982-1-yukuai1@huaweicloud.com>
- <Zb2wxIpf7uYV6Vya@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <528ce926-6f17-c1ea-8e77-c7d5d7f56022@huaweicloud.com>
-Date: Sun, 4 Feb 2024 09:35:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1707010715; c=relaxed/simple;
+	bh=q2WYwEP41q968H3Wia+vSPE3HbcbOywPEjNeVkjNTPc=;
+	h=From:Subject:To:Cc:Date:Message-ID:References:MIME-Version:
+	 Content-Type; b=MfZZIsTrfoEGhrk/HRjsiHDbPZlXIWjOqBHaIntS5hcHQtPXjxZn7i02DEGedQZ4dMO1+MDx23t3rlfot1oLdPlQzUsJfP6o6LgFNHCjfBk32yCaND6HYckg3V88RHla6SAwOs+wK+uRu4i3kJs1zqspp7oM5gllBUyQdOxeGcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7c336899e83f419ea456173712c57e95-20240204
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:c375914e-a347-4a5c-aa25-f97daa786333,IP:20,
+	URL:0,TC:-7,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,A
+	CTION:release,TS:-27
+X-CID-INFO: VERSION:1.1.35,REQID:c375914e-a347-4a5c-aa25-f97daa786333,IP:20,UR
+	L:0,TC:-7,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-27
+X-CID-META: VersionHash:5d391d7,CLOUDID:0aaf7bfe-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240204092218OLZSALSI,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,
+	TC:1,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:
+	0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,
+	TF_CID_SPAM_FSI
+X-UUID: 7c336899e83f419ea456173712c57e95-20240204
+Received: from node2.com.cn [(39.156.73.10)] by mailgw
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 374233321; Sun, 04 Feb 2024 09:22:15 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id D3BE0B807587;
+	Sun,  4 Feb 2024 09:22:14 +0800 (CST)
+Received: by node2.com.cn (NSMail, from userid 0)
+	id BCD5CB807587; Sun,  4 Feb 2024 09:22:14 +0800 (CST)
+From: =?UTF-8?B?5p2O5L+K?= <lijun01@kylinos.cn>
+Subject: =?UTF-8?B?5Zue5aSNOiBSZTogW1BBVENIXSBhY3BpOiBNb2RpZnkgQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUg==?=
+To: 	=?UTF-8?B?UmFmYWVsIEouIFd5c29ja2k=?= <rafael@kernel.org>,
+Cc: 	=?UTF-8?B?cm9iZXJ0Lm1vb3Jl?= <robert.moore@intel.com>,
+	=?UTF-8?B?cmFmYWVsLmoud3lzb2NraQ==?= <rafael.j.wysocki@intel.com>,
+	=?UTF-8?B?bGludXgtYWNwaQ==?= <linux-acpi@vger.kernel.org>,
+	=?UTF-8?B?ZXZlbA==?= <evel@acpica.org>,
+	=?UTF-8?B?bGludXgta2VybmVs?= <linux-kernel@vger.kernel.org>,
+	=?UTF-8?B?bGVuYg==?= <lenb@kernel.org>,
+Date: Sun, 04 Feb 2024 09:22:14 +0800
+X-Mailer: NSMAIL 7.0.0
+Message-ID: <oj7d2vw0xp-oj9wyiq4la@nsmail7.0.0--kylin--1>
+References: CAJZ5v0iqDJGfM+i0T80L33Nd5y0h6KyK0JBbr8a2rMJLqba36A@mail.gmail.com
+X-Israising: 0
+X-Seclevel-1: 0
+X-Seclevel: 0
+X-Delaysendtime: Sun, 04 Feb 2024 09:22:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zb2wxIpf7uYV6Vya@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7N6b5lt1WeCw--.38132S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3WF4UXw47GryUGFy8AryrWFg_yoW3tFWDpa
-	9xKa1ft340kw1IqrnxAa40qrWftF13J395Ca1fWr4xAry5u392yrs3tF1F9FnIy3sY9a42
-	q3yDJryrCF12gFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: multipart/mixed; boundary=nsmail-rwuwzeq7r4-rww6x859kx
+X-ns-mid: webmail-65bee6c6-roghcqn6
+X-ope-from: <lijun01@kylinos.cn>
 
-Hi,
+This message is in MIME format.
 
-ÔÚ 2024/02/03 11:19, Benjamin Marzinski Ð´µÀ:
-> On Thu, Feb 01, 2024 at 05:25:45PM +0800, Yu Kuai wrote:
->> From: Yu Kuai <yukuai3@huawei.com>
->> I apply this patchset on top of v6.8-rc1, and run lvm2 tests suite with
->> folling cmd for 24 round(for about 2 days):
->>
->> for t in `ls test/shell`; do
->>          if cat test/shell/$t | grep raid &> /dev/null; then
->>                  make check T=shell/$t
->>          fi
->> done
->>
->> failed count                             failed test
->>        1 ###       failed: [ndev-vanilla] shell/dmsecuretest.sh
->>        1 ###       failed: [ndev-vanilla] shell/dmsetup-integrity-keys.sh
->>        1 ###       failed: [ndev-vanilla] shell/dmsetup-keyring.sh
->>        5 ###       failed: [ndev-vanilla] shell/duplicate-pvs-md0.sh
->>        1 ###       failed: [ndev-vanilla] shell/duplicate-vgid.sh
->>        2 ###       failed: [ndev-vanilla] shell/duplicate-vgnames.sh
->>        1 ###       failed: [ndev-vanilla] shell/fsadm-crypt.sh
->>        1 ###       failed: [ndev-vanilla] shell/integrity.sh
->>        6 ###       failed: [ndev-vanilla] shell/lvchange-raid1-writemostly.sh
->>        2 ###       failed: [ndev-vanilla] shell/lvchange-rebuild-raid.sh
->>        5 ###       failed: [ndev-vanilla] shell/lvconvert-raid-reshape-stripes-load-reload.sh
->>        4 ###       failed: [ndev-vanilla] shell/lvconvert-raid-restripe-linear.sh
->>        1 ###       failed: [ndev-vanilla] shell/lvconvert-raid1-split-trackchanges.sh
->>       20 ###       failed: [ndev-vanilla] shell/lvconvert-repair-raid.sh
->>       20 ###       failed: [ndev-vanilla] shell/lvcreate-large-raid.sh
->>       24 ###       failed: [ndev-vanilla] shell/lvextend-raid.sh
->>
->> And I ramdomly pick some tests verified by hand that these test will
->> fail in v6.6 as well(not all tests):
->>
->> shell/lvextend-raid.sh
->> shell/lvcreate-large-raid.sh
->> shell/lvconvert-repair-raid.sh
->> shell/lvchange-rebuild-raid.sh
->> shell/lvchange-raid1-writemostly.sh
-> 
-> In my testing with this patchset on top of the head of linus's tree
-> (5c24e4e9e708) I am seeing failures in
-> shell/lvconvert-raid-reshape-stripes-load-reload.sh and
-> shell/lvconvert-repair-raid.sh in about 20% of my runs. I have never
-> seen either of these these fail running on the 6.6 kernel (ffc253263a13).
+--nsmail-rwuwzeq7r4-rww6x859kx
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-This sounds quite different in my testing, as I said, the test
+PHA+aGkgYWxsOjwvcD4KPHA+Jm5ic3A7PC9wPgo8cD50aGVuIHRoZSBhY29i
+amVjdC5oIGluIGFjcGljYSBkaWZmZXJlbnQgZnJvbSB0aGUga2VybmVsLCAi
+QUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUiIgYW5kICJ1OCIgbm90IGluIHRo
+ZSBzYW1lIGxpbmUgLjwvcD4KPHA+Jm5ic3A7PC9wPgo8cCBzdHlsZT0idGV4
+dC1hbGlnbjogbGVmdDsiPmluIHRoZSBhY3BpY2EmbmJzcDsgdGhpcyBmaWxl
+Jm5ic3A7PC9wPgo8cCBzdHlsZT0idGV4dC1hbGlnbjogbGVmdDsiPnR5cGVk
+ZWYgc3RydWN0IGFjcGlfb2JqZWN0X2NvbW1vbjxicj57PGJyPiZuYnNwOyAm
+bmJzcDsgQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUjwvcD4KPHAgc3R5bGU9
+InRleHQtYWxpZ246IGxlZnQ7Ij59IEFDUElfT0JKRUNUX0NPTU1PTjs8L3A+
+CjxwIHN0eWxlPSJ0ZXh0LWFsaWduOiBsZWZ0OyI+dHlwZWRlZiBzdHJ1Y3Qg
+YWNwaV9vYmplY3RfaW50ZWdlcjxicj57PGJyPiZuYnNwOyAmbmJzcDsgPHNw
+YW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6ICNmMWM0MGY7Ij5BQ1BJX09C
+SkVDVF9DT01NT05fSEVBREVSPC9zcGFuPjxicj48c3BhbiBzdHlsZT0iYmFj
+a2dyb3VuZC1jb2xvcjogI2YxYzQwZjsiPiZuYnNwOyAmbmJzcDsgVUlOVDgg
+RmlsbFszXTsgPC9zcGFuPi8qIFByZXZlbnQgd2FybmluZyBvbiBzb21lIGNv
+bXBpbGVycyAqLzxicj4mbmJzcDsgJm5ic3A7IFVJTlQ2NCBWYWx1ZTs8L3A+
+CjxwIHN0eWxlPSJ0ZXh0LWFsaWduOiBsZWZ0OyI+Jm5ic3A7PC9wPgo8cCBz
+dHlsZT0idGV4dC1hbGlnbjogbGVmdDsiPn0gQUNQSV9PQkpFQ1RfSU5URUdF
+Ujs8L3A+CjxwIHN0eWxlPSJ0ZXh0LWFsaWduOiBsZWZ0OyI+Jm5ic3A7PC9w
+Pgo8cCBzdHlsZT0idGV4dC1hbGlnbjogbGVmdDsiPiZuYnNwOzwvcD4KPHAg
+c3R5bGU9InRleHQtYWxpZ246IGxlZnQ7Ij5hbmQgaW4ga2VuZWwgdGhpcyBm
+aWxlIC9kcml2ZXJzL2FjcGkvYWNwaWNhL2Fjb2JqZWN0LmggPGJyPnN0cnVj
+dCBhY3BpX29iamVjdF9jb21tb24gezxicj4mbmJzcDsgJm5ic3A7ICZuYnNw
+OyAmbmJzcDtBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSfTs8L3A+CjxwIHN0
+eWxlPSJ0ZXh0LWFsaWduOiBsZWZ0OyI+c3RydWN0IGFjcGlfb2JqZWN0X2lu
+dGVnZXIgezxicj4mbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDs8c3BhbiBz
+dHlsZT0iYmFja2dyb3VuZC1jb2xvcjogI2YxYzQwZjsiPjxzdHJvbmc+QUNQ
+SV9PQkpFQ1RfQ09NTU9OX0hFQURFUiB1OCBmaWxsWzNdOyA8L3N0cm9uZz48
+L3NwYW4+LyogUHJldmVudCB3YXJuaW5nIG9uIHNvbWUgY29tcGlsZXJzICov
+PGJyPiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3U2NCB2YWx1ZTs8YnI+
+fTs8L3A+CjxwPjxicj5vdGhlcnMganVzdCBzby48YnI+PGJyPjxicj48YnI+
+PGJyPi0tLS08L3A+CjxkaXYgaWQ9ImNzMmNfbWFpbF9zaWdhdHVyZSI+PC9k
+aXY+CjxwPiZuYnNwOzwvcD4KPGRpdiBpZD0icmUiIHN0eWxlPSJtYXJnaW4t
+bGVmdDogMC41ZW07IHBhZGRpbmctbGVmdDogMC41ZW07IGJvcmRlci1sZWZ0
+OiAxcHggc29saWQgZ3JlZW47Ij48YnI+PGJyPjxicj4KPGRpdiBzdHlsZT0i
+YmFja2dyb3VuZC1jb2xvcjogI2Y1ZjdmYTsiPjxzdHJvbmc+5Li744CA6aKY
+77yaPC9zdHJvbmc+PHNwYW4gaWQ9InN1YmplY3QiPlJlOiBbUEFUQ0hdIGFj
+cGk6IE1vZGlmeSBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSPC9zcGFuPiA8
+YnI+PHN0cm9uZz7ml6XjgIDmnJ/vvJo8L3N0cm9uZz48c3BhbiBpZD0iZGF0
+ZSI+MjAyMy0xMi0yMSAyMjoxNTwvc3Bhbj4gPGJyPjxzdHJvbmc+5Y+R5Lu2
+5Lq677yaPC9zdHJvbmc+PHNwYW4gaWQ9ImZyb20iPlJhZmFlbCBKLiBXeXNv
+Y2tpPC9zcGFuPiA8YnI+PHN0cm9uZz7mlLbku7bkurrvvJo8L3N0cm9uZz48
+c3BhbiBpZD0idG8iIHN0eWxlPSJ3b3JkLWJyZWFrOiBicmVhay1hbGw7Ij7m
+nY7kv4o7PC9zcGFuPjwvZGl2Pgo8YnI+CjxkaXYgaWQ9ImNvbnRlbnQiPgo8
+ZGl2IGNsYXNzPSJ2aWV3ZXJfcGFydCIgc3R5bGU9InBvc2l0aW9uOiByZWxh
+dGl2ZTsiPgo8ZGl2Pk9uIEZyaSwgRGVjIDE1LCAyMDIzIGF0IDg6MzjigK9B
+TSBsaWp1biB3cm90ZTo8YnI+Jmd0Ozxicj4mZ3Q7IG1vZGlmeSA0IG1hY3Jv
+czo8YnI+Jmd0OyBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSLDxicj4mZ3Q7
+IEFDUElfQ09NTU9OX0JVRkZFUl9JTkZPLDxicj4mZ3Q7IEFDUElfQ09NTU9O
+X05PVElGWV9JTkZPLDxicj4mZ3Q7IEFDUElfQ09NTU9OX0ZJRUxEX0lORk88
+YnI+Jmd0OyB0aGV5IGNhdXNlIHBvb3IgcmVhZGFiaWxpdHkuc28gZGVsIHRo
+ZSBsYXN0ICI7Ijxicj4mZ3Q7IGFuZCB3aGVuIHVzZSB0aGVtIGluIGEgc2lu
+Z2xlIGxpbmUgd2l0aCB0aGUgIjsiaW4gdGhlIGVuZC48YnI+Jmd0Ozxicj4m
+Z3Q7IFNpZ25lZC1vZmYtYnk6IGxpanVuIDxicj4mZ3Q7IC0tLTxicj4mZ3Q7
+IGRyaXZlcnMvYWNwaS9hY3BpY2EvYWNvYmplY3QuaCB8IDk1ICsrKysrKysr
+KysrKysrKysrKysrKysrLS0tLS0tLS0tLS08YnI+PGJyPkFDUElDQSBjb2Rl
+IGNvbWVzIGZyb20gYW4gZXh0ZXJuYWwgcHJvamVjdC4gVGhlIHByb3BlciB3
+YXkgb2Y8YnI+bW9kaWZ5aW5nIGl0IGlzIHRvIHN1Ym1pdCBhIHB1bGwgcmVx
+dWVzdCB0byB0aGUgdXBzdHJlYW0gQUNQSUNBPGJyPnByb2plY3Qgb24gR2l0
+SHViLiBPbmNlIHRoaXMgcHVsbCByZXF1ZXN0IGhhcyBiZWVuIG1lcmdlZCB1
+cHN0cmVhbSwgYTxicj5MaW51eCBwYXRjaCBjb250YWluaW5nIGEgTGluazog
+dGFnIHRvIHRoZSBjb3JyZXNwb25kaW5nIHVwc3RyZWFtIHB1bGw8YnI+cmVx
+dWVzdCBjYW4gYmUgc3VibWl0dGVkLjxicj48YnI+VGhhbmtzITxicj48YnI+
+Jmd0OyAxIGZpbGUgY2hhbmdlZCwgNjQgaW5zZXJ0aW9ucygrKSwgMzEgZGVs
+ZXRpb25zKC0pPGJyPiZndDs8YnI+Jmd0OyBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9hY3BpL2FjcGljYS9hY29iamVjdC5oIGIvZHJpdmVycy9hY3BpL2FjcGlj
+YS9hY29iamVjdC5oPGJyPiZndDsgaW5kZXggMWJkZmVlZTVkN2M1Li4wY2Qx
+NzY5MDIyYWEgMTAwNjQ0PGJyPiZndDsgLS0tIGEvZHJpdmVycy9hY3BpL2Fj
+cGljYS9hY29iamVjdC5oPGJyPiZndDsgKysrIGIvZHJpdmVycy9hY3BpL2Fj
+cGljYS9hY29iamVjdC5oPGJyPiZndDsgQEAgLTQ4LDcgKzQ4LDcgQEA8YnI+
+Jmd0OyB1OCBkZXNjcmlwdG9yX3R5cGU7IC8qIFRvIGRpZmZlcmVudGlhdGUg
+dmFyaW91cyBpbnRlcm5hbCBvYmpzICovXDxicj4mZ3Q7IHU4IHR5cGU7IC8q
+IGFjcGlfb2JqZWN0X3R5cGUgKi9cPGJyPiZndDsgdTE2IHJlZmVyZW5jZV9j
+b3VudDsgLyogRm9yIG9iamVjdCBkZWxldGlvbiBtYW5hZ2VtZW50ICovXDxi
+cj4mZ3Q7IC0gdTggZmxhZ3M7PGJyPiZndDsgKyB1OCBmbGFnczxicj4mZ3Q7
+IC8qPGJyPiZndDsgKiBOb3RlOiBUaGVyZSBhcmUgMyBieXRlcyBhdmFpbGFi
+bGUgaGVyZSBiZWZvcmUgdGhlPGJyPiZndDsgKiBuZXh0IG5hdHVyYWwgYWxp
+Z25tZW50IGJvdW5kYXJ5IChmb3IgYm90aCAzMi82NCBjYXNlcyk8YnI+Jmd0
+OyBAQCAtNzEsMTAgKzcxLDEyIEBAPGJyPiZndDsgKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKiovPGJyPiZndDs8YnI+Jmd0OyBzdHJ1Y3QgYWNw
+aV9vYmplY3RfY29tbW9uIHs8YnI+Jmd0OyAtQUNQSV9PQkpFQ1RfQ09NTU9O
+X0hFQURFUn07PGJyPiZndDsgKyBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVS
+Ozxicj4mZ3Q7ICt9Ozxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlfb2Jq
+ZWN0X2ludGVnZXIgezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9OX0hF
+QURFUiB1OCBmaWxsWzNdOyAvKiBQcmV2ZW50IHdhcm5pbmcgb24gc29tZSBj
+b21waWxlcnMgKi88YnI+Jmd0OyArIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFE
+RVI7PGJyPiZndDsgKyB1OCBmaWxsWzNdOyAvKiBQcmV2ZW50IHdhcm5pbmcg
+b24gc29tZSBjb21waWxlcnMgKi88YnI+Jmd0OyB1NjQgdmFsdWU7PGJyPiZn
+dDsgfTs8YnI+Jmd0Ozxicj4mZ3Q7IEBAIC04NiwyMyArODgsMjYgQEAgc3Ry
+dWN0IGFjcGlfb2JqZWN0X2ludGVnZXIgezxicj4mZ3Q7ICovPGJyPiZndDsg
+I2RlZmluZSBBQ1BJX0NPTU1PTl9CVUZGRVJfSU5GTyhfdHlwZSkgXDxicj4m
+Z3Q7IF90eXBlICpwb2ludGVyOyBcPGJyPiZndDsgLSB1MzIgbGVuZ3RoOzxi
+cj4mZ3Q7ICsgdTMyIGxlbmd0aDxicj4mZ3Q7PGJyPiZndDsgLyogTnVsbCB0
+ZXJtaW5hdGVkLCBBU0NJSSBjaGFyYWN0ZXJzIG9ubHkgKi88YnI+Jmd0Ozxi
+cj4mZ3Q7IHN0cnVjdCBhY3BpX29iamVjdF9zdHJpbmcgezxicj4mZ3Q7IC0g
+QUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUiBBQ1BJX0NPTU1PTl9CVUZGRVJf
+SU5GTyhjaGFyKSAvKiBTdHJpbmcgaW4gQU1MIHN0cmVhbSBvciBhbGxvY2F0
+ZWQgc3RyaW5nICovPGJyPiZndDsgKyBBQ1BJX09CSkVDVF9DT01NT05fSEVB
+REVSOzxicj4mZ3Q7ICsgQUNQSV9DT01NT05fQlVGRkVSX0lORk8oY2hhcik7
+IC8qIFN0cmluZyBpbiBBTUwgc3RyZWFtIG9yIGFsbG9jYXRlZCBzdHJpbmcg
+Ki88YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlfb2Jq
+ZWN0X2J1ZmZlciB7PGJyPiZndDsgLSBBQ1BJX09CSkVDVF9DT01NT05fSEVB
+REVSIEFDUElfQ09NTU9OX0JVRkZFUl9JTkZPKHU4KSAvKiBCdWZmZXIgaW4g
+QU1MIHN0cmVhbSBvciBhbGxvY2F0ZWQgYnVmZmVyICovPGJyPiZndDsgKyBB
+Q1BJX09CSkVDVF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgQUNQSV9DT01N
+T05fQlVGRkVSX0lORk8odTgpOy8qIEJ1ZmZlciBpbiBBTUwgc3RyZWFtIG9y
+IGFsbG9jYXRlZCBidWZmZXIgKi88YnI+Jmd0OyB1MzIgYW1sX2xlbmd0aDs8
+YnI+Jmd0OyB1OCAqYW1sX3N0YXJ0Ozxicj4mZ3Q7IHN0cnVjdCBhY3BpX25h
+bWVzcGFjZV9ub2RlICpub2RlOyAvKiBMaW5rIGJhY2sgdG8gcGFyZW50IG5v
+ZGUgKi88YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlf
+b2JqZWN0X3BhY2thZ2Ugezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9O
+X0hFQURFUiBzdHJ1Y3QgYWNwaV9uYW1lc3BhY2Vfbm9kZSAqbm9kZTsgLyog
+TGluayBiYWNrIHRvIHBhcmVudCBub2RlICovPGJyPiZndDsgKyBBQ1BJX09C
+SkVDVF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgc3RydWN0IGFjcGlfbmFt
+ZXNwYWNlX25vZGUgKm5vZGU7IC8qIExpbmsgYmFjayB0byBwYXJlbnQgbm9k
+ZSAqLzxicj4mZ3Q7IHVuaW9uIGFjcGlfb3BlcmFuZF9vYmplY3QgKiplbGVt
+ZW50czsgLyogQXJyYXkgb2YgcG9pbnRlcnMgdG8gYWNwaV9vYmplY3RzICov
+PGJyPiZndDsgdTggKmFtbF9zdGFydDs8YnI+Jmd0OyB1MzIgYW1sX2xlbmd0
+aDs8YnI+Jmd0OyBAQCAtMTE2LDExICsxMjEsMTMgQEAgc3RydWN0IGFjcGlf
+b2JqZWN0X3BhY2thZ2Ugezxicj4mZ3Q7ICoqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqLzxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlfb2Jq
+ZWN0X2V2ZW50IHs8YnI+Jmd0OyAtIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFE
+RVIgYWNwaV9zZW1hcGhvcmUgb3Nfc2VtYXBob3JlOyAvKiBBY3R1YWwgT1Mg
+c3luY2hyb25pemF0aW9uIG9iamVjdCAqLzxicj4mZ3Q7ICsgQUNQSV9PQkpF
+Q1RfQ09NTU9OX0hFQURFUjs8YnI+Jmd0OyArIGFjcGlfc2VtYXBob3JlIG9z
+X3NlbWFwaG9yZTsgLyogQWN0dWFsIE9TIHN5bmNocm9uaXphdGlvbiBvYmpl
+Y3QgKi88YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlf
+b2JqZWN0X211dGV4IHs8YnI+Jmd0OyAtIEFDUElfT0JKRUNUX0NPTU1PTl9I
+RUFERVIgdTggc3luY19sZXZlbDsgLyogMC0xNSwgc3BlY2lmaWVkIGluIE11
+dGV4KCkgY2FsbCAqLzxicj4mZ3Q7ICsgQUNQSV9PQkpFQ1RfQ09NTU9OX0hF
+QURFUjs8YnI+Jmd0OyArIHU4IHN5bmNfbGV2ZWw7IC8qIDAtMTUsIHNwZWNp
+ZmllZCBpbiBNdXRleCgpIGNhbGwgKi88YnI+Jmd0OyB1MTYgYWNxdWlzaXRp
+b25fZGVwdGg7IC8qIEFsbG93IG11bHRpcGxlIEFjcXVpcmVzLCBzYW1lIHRo
+cmVhZCAqLzxicj4mZ3Q7IGFjcGlfbXV0ZXggb3NfbXV0ZXg7IC8qIEFjdHVh
+bCBPUyBzeW5jaHJvbml6YXRpb24gb2JqZWN0ICovPGJyPiZndDsgYWNwaV90
+aHJlYWRfaWQgdGhyZWFkX2lkOyAvKiBDdXJyZW50IG93bmVyIG9mIHRoZSBt
+dXRleCAqLzxicj4mZ3Q7IEBAIC0xMzIsNyArMTM5LDggQEAgc3RydWN0IGFj
+cGlfb2JqZWN0X211dGV4IHs8YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZndDsg
+c3RydWN0IGFjcGlfb2JqZWN0X3JlZ2lvbiB7PGJyPiZndDsgLSBBQ1BJX09C
+SkVDVF9DT01NT05fSEVBREVSIHU4IHNwYWNlX2lkOzxicj4mZ3Q7ICsgQUNQ
+SV9PQkpFQ1RfQ09NTU9OX0hFQURFUjs8YnI+Jmd0OyArIHU4IHNwYWNlX2lk
+Ozxicj4mZ3Q7IHN0cnVjdCBhY3BpX25hbWVzcGFjZV9ub2RlICpub2RlOyAv
+KiBDb250YWluaW5nIG5hbWVzcGFjZSBub2RlICovPGJyPiZndDsgdW5pb24g
+YWNwaV9vcGVyYW5kX29iamVjdCAqaGFuZGxlcjsgLyogSGFuZGxlciBmb3Ig
+cmVnaW9uIGFjY2VzcyAqLzxicj4mZ3Q7IHVuaW9uIGFjcGlfb3BlcmFuZF9v
+YmplY3QgKm5leHQ7PGJyPiZndDsgQEAgLTE0Miw3ICsxNTAsOCBAQCBzdHJ1
+Y3QgYWNwaV9vYmplY3RfcmVnaW9uIHs8YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJy
+PiZndDsgc3RydWN0IGFjcGlfb2JqZWN0X21ldGhvZCB7PGJyPiZndDsgLSBB
+Q1BJX09CSkVDVF9DT01NT05fSEVBREVSIHU4IGluZm9fZmxhZ3M7PGJyPiZn
+dDsgKyBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgdTgg
+aW5mb19mbGFnczs8YnI+Jmd0OyB1OCBwYXJhbV9jb3VudDs8YnI+Jmd0OyB1
+OCBzeW5jX2xldmVsOzxicj4mZ3Q7IHVuaW9uIGFjcGlfb3BlcmFuZF9vYmpl
+Y3QgKm11dGV4Ozxicj4mZ3Q7IEBAIC0xNzgsMzMgKzE4Nyw0MSBAQCBzdHJ1
+Y3QgYWNwaV9vYmplY3RfbWV0aG9kIHs8YnI+Jmd0OyAqLzxicj4mZ3Q7ICNk
+ZWZpbmUgQUNQSV9DT01NT05fTk9USUZZX0lORk8gXDxicj4mZ3Q7IHVuaW9u
+IGFjcGlfb3BlcmFuZF9vYmplY3QgKm5vdGlmeV9saXN0WzJdOyAvKiBIYW5k
+bGVycyBmb3Igc3lzdGVtL2RldmljZSBub3RpZmllcyAqL1w8YnI+Jmd0OyAt
+IHVuaW9uIGFjcGlfb3BlcmFuZF9vYmplY3QgKmhhbmRsZXI7IC8qIEhhbmRs
+ZXIgZm9yIEFkZHJlc3Mgc3BhY2UgKi88YnI+Jmd0OyArIHVuaW9uIGFjcGlf
+b3BlcmFuZF9vYmplY3QgKmhhbmRsZXIgLyogSGFuZGxlciBmb3IgQWRkcmVz
+cyBzcGFjZSAqLzxicj4mZ3Q7PGJyPiZndDsgLyogQ09NTU9OIE5PVElGWSBm
+b3IgUE9XRVIsIFBST0NFU1NPUiwgREVWSUNFLCBhbmQgVEhFUk1BTCAqLzxi
+cj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlfb2JqZWN0X25vdGlmeV9jb21t
+b24gezxicj4mZ3Q7IC1BQ1BJX09CSkVDVF9DT01NT05fSEVBREVSIEFDUElf
+Q09NTU9OX05PVElGWV9JTkZPfTs8YnI+Jmd0OyArIEFDUElfT0JKRUNUX0NP
+TU1PTl9IRUFERVI7PGJyPiZndDsgKyBBQ1BJX0NPTU1PTl9OT1RJRllfSU5G
+Tzs8YnI+Jmd0OyArfTs8YnI+Jmd0Ozxicj4mZ3Q7IHN0cnVjdCBhY3BpX29i
+amVjdF9kZXZpY2Ugezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9OX0hF
+QURFUjxicj4mZ3Q7IC0gQUNQSV9DT01NT05fTk9USUZZX0lORk8gc3RydWN0
+IGFjcGlfZ3BlX2Jsb2NrX2luZm8gKmdwZV9ibG9jazs8YnI+Jmd0OyArIEFD
+UElfT0JKRUNUX0NPTU1PTl9IRUFERVI7PGJyPiZndDsgKyBBQ1BJX0NPTU1P
+Tl9OT1RJRllfSU5GTzs8YnI+Jmd0OyArIHN0cnVjdCBhY3BpX2dwZV9ibG9j
+a19pbmZvICpncGVfYmxvY2s7PGJyPiZndDsgfTs8YnI+Jmd0Ozxicj4mZ3Q7
+IHN0cnVjdCBhY3BpX29iamVjdF9wb3dlcl9yZXNvdXJjZSB7PGJyPiZndDsg
+LSBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSIEFDUElfQ09NTU9OX05PVElG
+WV9JTkZPIHUzMiBzeXN0ZW1fbGV2ZWw7PGJyPiZndDsgKyBBQ1BJX09CSkVD
+VF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgQUNQSV9DT01NT05fTk9USUZZ
+X0lORk87PGJyPiZndDsgKyB1MzIgc3lzdGVtX2xldmVsOzxicj4mZ3Q7IHUz
+MiByZXNvdXJjZV9vcmRlcjs8YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZndDsg
+c3RydWN0IGFjcGlfb2JqZWN0X3Byb2Nlc3NvciB7PGJyPiZndDsgLSBBQ1BJ
+X09CSkVDVF9DT01NT05fSEVBREVSPGJyPiZndDsgKyBBQ1BJX09CSkVDVF9D
+T01NT05fSEVBREVSOzxicj4mZ3Q7IC8qIFRoZSBuZXh0IHR3byBmaWVsZHMg
+dGFrZSBhZHZhbnRhZ2Ugb2YgdGhlIDMtYnl0ZSBzcGFjZSBiZWZvcmUgTk9U
+SUZZX0lORk8gKi88YnI+Jmd0OyB1OCBwcm9jX2lkOzxicj4mZ3Q7IHU4IGxl
+bmd0aDs8YnI+Jmd0OyAtIEFDUElfQ09NTU9OX05PVElGWV9JTkZPIGFjcGlf
+aW9fYWRkcmVzcyBhZGRyZXNzOzxicj4mZ3Q7ICsgQUNQSV9DT01NT05fTk9U
+SUZZX0lORk87PGJyPiZndDsgKyBhY3BpX2lvX2FkZHJlc3MgYWRkcmVzczs8
+YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlfb2JqZWN0
+X3RoZXJtYWxfem9uZSB7PGJyPiZndDsgLUFDUElfT0JKRUNUX0NPTU1PTl9I
+RUFERVIgQUNQSV9DT01NT05fTk9USUZZX0lORk99Ozxicj4mZ3Q7ICsgQUNQ
+SV9PQkpFQ1RfQ09NTU9OX0hFQURFUjs8YnI+Jmd0OyArIEFDUElfQ09NTU9O
+X05PVElGWV9JTkZPOzxicj4mZ3Q7ICt9Ozxicj4mZ3Q7PGJyPiZndDsgLyoq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKjxicj4mZ3Q7ICo8YnI+
+Jmd0OyBAQCAtMjI2LDE3ICsyNDMsMjIgQEAgQUNQSV9PQkpFQ1RfQ09NTU9O
+X0hFQURFUiBBQ1BJX0NPTU1PTl9OT1RJRllfSU5GT307PGJyPiZndDsgdTMy
+IGJhc2VfYnl0ZV9vZmZzZXQ7IC8qIEJ5dGUgb2Zmc2V0IHdpdGhpbiBjb250
+YWluaW5nIG9iamVjdCAqL1w8YnI+Jmd0OyB1MzIgdmFsdWU7IC8qIFZhbHVl
+IHRvIHN0b3JlIGludG8gdGhlIEJhbmsgb3IgSW5kZXggcmVnaXN0ZXIgKi9c
+PGJyPiZndDsgdTggc3RhcnRfZmllbGRfYml0X29mZnNldDsvKiBCaXQgb2Zm
+c2V0IHdpdGhpbiBmaXJzdCBmaWVsZCBkYXR1bSAoMC02MykgKi9cPGJyPiZn
+dDsgLSB1OCBhY2Nlc3NfbGVuZ3RoOyAvKiBGb3Igc2VyaWFsIHJlZ2lvbnMv
+ZmllbGRzICovPGJyPiZndDsgKyB1OCBhY2Nlc3NfbGVuZ3RoIC8qIEZvciBz
+ZXJpYWwgcmVnaW9ucy9maWVsZHMgKi88YnI+Jmd0Ozxicj4mZ3Q7PGJyPiZn
+dDsgLyogQ09NTU9OIEZJRUxEIChmb3IgQlVGRkVSLCBSRUdJT04sIEJBTkss
+IGFuZCBJTkRFWCBmaWVsZHMpICovPGJyPiZndDs8YnI+Jmd0OyBzdHJ1Y3Qg
+YWNwaV9vYmplY3RfZmllbGRfY29tbW9uIHs8YnI+Jmd0OyAtIEFDUElfT0JK
+RUNUX0NPTU1PTl9IRUFERVIgQUNQSV9DT01NT05fRklFTERfSU5GTyB1bmlv
+biBhY3BpX29wZXJhbmRfb2JqZWN0ICpyZWdpb25fb2JqOyAvKiBQYXJlbnQg
+T3BlcmF0aW9uIFJlZ2lvbiBvYmplY3QgKFJFR0lPTi9CQU5LIGZpZWxkcyBv
+bmx5KSAqLzxicj4mZ3Q7ICsgQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUjs8
+YnI+Jmd0OyArIEFDUElfQ09NTU9OX0ZJRUxEX0lORk87PGJyPiZndDsgKyB1
+bmlvbiBhY3BpX29wZXJhbmRfb2JqZWN0ICpyZWdpb25fb2JqOzxicj4mZ3Q7
+ICsgLyogUGFyZW50IE9wZXJhdGlvbiBSZWdpb24gb2JqZWN0IChSRUdJT04v
+QkFOSyBmaWVsZHMgb25seSkgKi88YnI+Jmd0OyB9Ozxicj4mZ3Q7PGJyPiZn
+dDsgc3RydWN0IGFjcGlfb2JqZWN0X3JlZ2lvbl9maWVsZCB7PGJyPiZndDsg
+LSBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSIEFDUElfQ09NTU9OX0ZJRUxE
+X0lORk8gdTE2IHJlc291cmNlX2xlbmd0aDs8YnI+Jmd0OyArIEFDUElfT0JK
+RUNUX0NPTU1PTl9IRUFERVI7PGJyPiZndDsgKyBBQ1BJX0NPTU1PTl9GSUVM
+RF9JTkZPOzxicj4mZ3Q7ICsgdTE2IHJlc291cmNlX2xlbmd0aDs8YnI+Jmd0
+OyB1bmlvbiBhY3BpX29wZXJhbmRfb2JqZWN0ICpyZWdpb25fb2JqOyAvKiBD
+b250YWluaW5nIG9wX3JlZ2lvbiBvYmplY3QgKi88YnI+Jmd0OyB1OCAqcmVz
+b3VyY2VfYnVmZmVyOyAvKiByZXNvdXJjZV90ZW1wbGF0ZSBmb3Igc2VyaWFs
+IHJlZ2lvbnMvZmllbGRzICovPGJyPiZndDsgdTE2IHBpbl9udW1iZXJfaW5k
+ZXg7IC8qIEluZGV4IHJlbGF0aXZlIHRvIHByZXZpb3VzIENvbm5lY3Rpb24v
+VGVtcGxhdGUgKi88YnI+Jmd0OyBAQCAtMjQ0LDEyICsyNjYsMTUgQEAgc3Ry
+dWN0IGFjcGlfb2JqZWN0X3JlZ2lvbl9maWVsZCB7PGJyPiZndDsgfTs8YnI+
+Jmd0Ozxicj4mZ3Q7IHN0cnVjdCBhY3BpX29iamVjdF9iYW5rX2ZpZWxkIHs8
+YnI+Jmd0OyAtIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFERVIgQUNQSV9DT01N
+T05fRklFTERfSU5GTyB1bmlvbiBhY3BpX29wZXJhbmRfb2JqZWN0ICpyZWdp
+b25fb2JqOyAvKiBDb250YWluaW5nIG9wX3JlZ2lvbiBvYmplY3QgKi88YnI+
+Jmd0OyArIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFERVI7PGJyPiZndDsgKyBB
+Q1BJX0NPTU1PTl9GSUVMRF9JTkZPOzxicj4mZ3Q7ICsgdW5pb24gYWNwaV9v
+cGVyYW5kX29iamVjdCAqcmVnaW9uX29iajsgLyogQ29udGFpbmluZyBvcF9y
+ZWdpb24gb2JqZWN0ICovPGJyPiZndDsgdW5pb24gYWNwaV9vcGVyYW5kX29i
+amVjdCAqYmFua19vYmo7IC8qIGJhbmtfc2VsZWN0IFJlZ2lzdGVyIG9iamVj
+dCAqLzxicj4mZ3Q7IH07PGJyPiZndDs8YnI+Jmd0OyBzdHJ1Y3QgYWNwaV9v
+YmplY3RfaW5kZXhfZmllbGQgezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09N
+TU9OX0hFQURFUiBBQ1BJX0NPTU1PTl9GSUVMRF9JTkZPPGJyPiZndDsgKyBB
+Q1BJX09CSkVDVF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgQUNQSV9DT01N
+T05fRklFTERfSU5GTzs8YnI+Jmd0OyAvKjxicj4mZ3Q7ICogTm8gIlJlZ2lv
+bk9iaiIgcG9pbnRlciBuZWVkZWQgc2luY2UgdGhlIEluZGV4IGFuZCBEYXRh
+IHJlZ2lzdGVyczxicj4mZ3Q7ICogYXJlIGVhY2ggZmllbGQgZGVmaW5pdGlv
+bnMgdW50byB0aGVtc2VsdmVzLjxicj4mZ3Q7IEBAIC0yNjEsNyArMjg2LDkg
+QEAgc3RydWN0IGFjcGlfb2JqZWN0X2luZGV4X2ZpZWxkIHs8YnI+Jmd0OyAv
+KiBUaGUgYnVmZmVyX2ZpZWxkIGlzIGRpZmZlcmVudCBpbiB0aGF0IGl0IGlz
+IHBhcnQgb2YgYSBCdWZmZXIsIG5vdCBhbiBvcF9yZWdpb24gKi88YnI+Jmd0
+Ozxicj4mZ3Q7IHN0cnVjdCBhY3BpX29iamVjdF9idWZmZXJfZmllbGQgezxi
+cj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUiBBQ1BJX0NPTU1P
+Tl9GSUVMRF9JTkZPIHU4IGlzX2NyZWF0ZV9maWVsZDsgLyogU3BlY2lhbCBj
+YXNlIGZvciBvYmplY3RzIGNyZWF0ZWQgYnkgY3JlYXRlX2ZpZWxkKCkgKi88
+YnI+Jmd0OyArIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFERVI7PGJyPiZndDsg
+KyBBQ1BJX0NPTU1PTl9GSUVMRF9JTkZPOzxicj4mZ3Q7ICsgdTggaXNfY3Jl
+YXRlX2ZpZWxkOyAvKiBTcGVjaWFsIGNhc2UgZm9yIG9iamVjdHMgY3JlYXRl
+ZCBieSBjcmVhdGVfZmllbGQoKSAqLzxicj4mZ3Q7IHVuaW9uIGFjcGlfb3Bl
+cmFuZF9vYmplY3QgKmJ1ZmZlcl9vYmo7IC8qIENvbnRhaW5pbmcgQnVmZmVy
+IG9iamVjdCAqLzxicj4mZ3Q7IH07PGJyPiZndDs8YnI+Jmd0OyBAQCAtMjcy
+LDcgKzI5OSw4IEBAIHN0cnVjdCBhY3BpX29iamVjdF9idWZmZXJfZmllbGQg
+ezxicj4mZ3Q7ICoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqLzxi
+cj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFjcGlfb2JqZWN0X25vdGlmeV9oYW5k
+bGVyIHs8YnI+Jmd0OyAtIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFERVIgc3Ry
+dWN0IGFjcGlfbmFtZXNwYWNlX25vZGUgKm5vZGU7IC8qIFBhcmVudCBkZXZp
+Y2UgKi88YnI+Jmd0OyArIEFDUElfT0JKRUNUX0NPTU1PTl9IRUFERVI7PGJy
+PiZndDsgKyBzdHJ1Y3QgYWNwaV9uYW1lc3BhY2Vfbm9kZSAqbm9kZTsgLyog
+UGFyZW50IGRldmljZSAqLzxicj4mZ3Q7IHUzMiBoYW5kbGVyX3R5cGU7IC8q
+IFR5cGU6IERldmljZS9TeXN0ZW0vQm90aCAqLzxicj4mZ3Q7IGFjcGlfbm90
+aWZ5X2hhbmRsZXIgaGFuZGxlcjsgLyogSGFuZGxlciBhZGRyZXNzICovPGJy
+PiZndDsgdm9pZCAqY29udGV4dDs8YnI+Jmd0OyBAQCAtMjgwLDcgKzMwOCw4
+IEBAIHN0cnVjdCBhY3BpX29iamVjdF9ub3RpZnlfaGFuZGxlciB7PGJyPiZn
+dDsgfTs8YnI+Jmd0Ozxicj4mZ3Q7IHN0cnVjdCBhY3BpX29iamVjdF9hZGRy
+X2hhbmRsZXIgezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURF
+UiB1OCBzcGFjZV9pZDs8YnI+Jmd0OyArIEFDUElfT0JKRUNUX0NPTU1PTl9I
+RUFERVI7PGJyPiZndDsgKyB1OCBzcGFjZV9pZDs8YnI+Jmd0OyB1OCBoYW5k
+bGVyX2ZsYWdzOzxicj4mZ3Q7IGFjcGlfYWRyX3NwYWNlX2hhbmRsZXIgaGFu
+ZGxlcjs8YnI+Jmd0OyBzdHJ1Y3QgYWNwaV9uYW1lc3BhY2Vfbm9kZSAqbm9k
+ZTsgLyogUGFyZW50IGRldmljZSAqLzxicj4mZ3Q7IEBAIC0zMDcsNyArMzM2
+LDggQEAgc3RydWN0IGFjcGlfb2JqZWN0X2FkZHJfaGFuZGxlciB7PGJyPiZn
+dDsgKiBUaGUgUmVmZXJlbmNlLkNsYXNzIGRpZmZlcmVudGlhdGVzIHRoZXNl
+IHR5cGVzLjxicj4mZ3Q7ICovPGJyPiZndDsgc3RydWN0IGFjcGlfb2JqZWN0
+X3JlZmVyZW5jZSB7PGJyPiZndDsgLSBBQ1BJX09CSkVDVF9DT01NT05fSEVB
+REVSIHU4IGNsYXNzOyAvKiBSZWZlcmVuY2UgQ2xhc3MgKi88YnI+Jmd0OyAr
+IEFDUElfT0JKRUNUX0NPTU1PTl9IRUFERVI7PGJyPiZndDsgKyB1OCBjbGFz
+czsgLyogUmVmZXJlbmNlIENsYXNzICovPGJyPiZndDsgdTggdGFyZ2V0X3R5
+cGU7IC8qIFVzZWQgZm9yIEluZGV4IE9wICovPGJyPiZndDsgdTggcmVzb2x2
+ZWQ7IC8qIFJlZmVyZW5jZSBoYXMgYmVlbiByZXNvbHZlZCB0byBhIHZhbHVl
+ICovPGJyPiZndDsgdm9pZCAqb2JqZWN0OyAvKiBuYW1lX29wPSZndDtIQU5E
+TEUgdG8gb2JqLCBpbmRleF9vcD0mZ3Q7dW5pb24gYWNwaV9vcGVyYW5kX29i
+amVjdCAqLzxicj4mZ3Q7IEBAIC0zNDAsNyArMzcwLDggQEAgdHlwZWRlZiBl
+bnVtIHs8YnI+Jmd0OyAqIEN1cnJlbnRseTogUmVnaW9uIGFuZCBmaWVsZF91
+bml0IHR5cGVzPGJyPiZndDsgKi88YnI+Jmd0OyBzdHJ1Y3QgYWNwaV9vYmpl
+Y3RfZXh0cmEgezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURF
+UiBzdHJ1Y3QgYWNwaV9uYW1lc3BhY2Vfbm9kZSAqbWV0aG9kX1JFRzsgLyog
+X1JFRyBtZXRob2QgZm9yIHRoaXMgcmVnaW9uIChpZiBhbnkpICovPGJyPiZn
+dDsgKyBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgc3Ry
+dWN0IGFjcGlfbmFtZXNwYWNlX25vZGUgKm1ldGhvZF9SRUc7IC8qIF9SRUcg
+bWV0aG9kIGZvciB0aGlzIHJlZ2lvbiAoaWYgYW55KSAqLzxicj4mZ3Q7IHN0
+cnVjdCBhY3BpX25hbWVzcGFjZV9ub2RlICpzY29wZV9ub2RlOzxicj4mZ3Q7
+IHZvaWQgKnJlZ2lvbl9jb250ZXh0OyAvKiBSZWdpb24tc3BlY2lmaWMgZGF0
+YSAqLzxicj4mZ3Q7IHU4ICphbWxfc3RhcnQ7PGJyPiZndDsgQEAgLTM1MCwx
+NCArMzgxLDE2IEBAIHN0cnVjdCBhY3BpX29iamVjdF9leHRyYSB7PGJyPiZn
+dDsgLyogQWRkaXRpb25hbCBkYXRhIHRoYXQgY2FuIGJlIGF0dGFjaGVkIHRv
+IG5hbWVzcGFjZSBub2RlcyAqLzxicj4mZ3Q7PGJyPiZndDsgc3RydWN0IGFj
+cGlfb2JqZWN0X2RhdGEgezxicj4mZ3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9O
+X0hFQURFUiBhY3BpX29iamVjdF9oYW5kbGVyIGhhbmRsZXI7PGJyPiZndDsg
+KyBBQ1BJX09CSkVDVF9DT01NT05fSEVBREVSOzxicj4mZ3Q7ICsgYWNwaV9v
+YmplY3RfaGFuZGxlciBoYW5kbGVyOzxicj4mZ3Q7IHZvaWQgKnBvaW50ZXI7
+PGJyPiZndDsgfTs8YnI+Jmd0Ozxicj4mZ3Q7IC8qIFN0cnVjdHVyZSB1c2Vk
+IHdoZW4gb2JqZWN0cyBhcmUgY2FjaGVkIGZvciByZXVzZSAqLzxicj4mZ3Q7
+PGJyPiZndDsgc3RydWN0IGFjcGlfb2JqZWN0X2NhY2hlX2xpc3Qgezxicj4m
+Z3Q7IC0gQUNQSV9PQkpFQ1RfQ09NTU9OX0hFQURFUiB1bmlvbiBhY3BpX29w
+ZXJhbmRfb2JqZWN0ICpuZXh0OyAvKiBMaW5rIGZvciBvYmplY3QgY2FjaGUg
+YW5kIGludGVybmFsIGxpc3RzICovPGJyPiZndDsgKyBBQ1BJX09CSkVDVF9D
+T01NT05fSEVBREVSOzxicj4mZ3Q7ICsgdW5pb24gYWNwaV9vcGVyYW5kX29i
+amVjdCAqbmV4dDsgLyogTGluayBmb3Igb2JqZWN0IGNhY2hlIGFuZCBpbnRl
+cm5hbCBsaXN0cyAqLzxicj4mZ3Q7IH07PGJyPiZndDs8YnI+Jmd0OyAvKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqPGJyPiZndDsgLS08YnI+
+Jmd0OyAyLjM0LjE8YnI+Jmd0Ozxicj4mZ3Q7PC9kaXY+CjwvZGl2Pgo8L2Rp
+dj4KPC9kaXY+
 
-shell/lvconvert-repair-raid.sh is very likely to fail in v6.6 already,
-I don't know why it never fail in your testing, test log in v6.6:
-
-| [ 1:38.162] #lvconvert-repair-raid.sh:1+ aux teardown
-| [ 1:38.162] ## teardown.......## removing stray mapped devices with 
-names beginning with LVMTEST3474:
-| [ 1:39.207] .set +vx; STACKTRACE; set -vx
-| [ 1:41.448] ##lvconvert-repair-raid.sh:1+ set +vx
-| [ 1:41.448] ## - /mnt/test/lvm2/test/shell/lvconvert-repair-raid.sh:1
-| [ 1:41.449] ## 1 STACKTRACE() called from 
-/mnt/test/lvm2/test/shell/lvconvert-repair-raid.sh:1
-| [ 1:41.449] ## ERROR: The test started dmeventd (3718) unexpectedly.
-
-And the same in v6.8-rc1. Perhaps do you know how to fix this error?
-
-Thanks,
-Kuai
-
-> 
-> lvconvert-repair-raid.sh creates a raid array and then disables one if
-> its drives before there's enough time to finish the initial sync and
-> tries to repair it. This is supposed to fail (it uses dm-delay devices
-> to slow down the sync). When the test succeeds, I see things like this:
-> 
-> [ 0:13.469] #lvconvert-repair-raid.sh:161+ lvcreate --type raid10 -m 1 -i 2 -L 64 -n LV1 LVMTEST191946vg /tmp/LVMTEST191946.ImUMG6dyqB/dev/mapper/LVMTEST191946pv1 /tmp/LVMTEST191946.ImUMG6dyqB/dev/mapper/LVMTEST191946pv2 /tmp/LVMTEST191946.ImUMG6dyqB/dev/mapper/LVMTEST191946pv3 /tmp/LVMTEST191946.ImUMG6dyqB/dev/mapper/LVMTEST191946pv4
-> [ 0:13.469]   Using default stripesize 64.00 KiB.
-> [ 0:13.483]   Logical volume "LV1" created.
-> [ 0:14.042] 6,8908,1194343108,-;device-mapper: raid: Superblocks created for new raid set
-> [ 0:14.042] 5,8909,1194348704,-;md/raid10:mdX: not clean -- starting background reconstruction
-> [ 0:14.042] 6,8910,1194349443,-;md/raid10:mdX: active with 4 out of 4 devices
-> [ 0:14.042] 4,8911,1194459161,-;mdX: bitmap file is out of date, doing full recovery
-> [ 0:14.042] 6,8912,1194563810,-;md: resync of RAID array mdX
-> [ 0:14.042]   WARNING: This metadata update is NOT backed up.
-> [ 0:14.042] aux disable_dev "$dev4"
-> [ 0:14.058] #lvconvert-repair-raid.sh:163+ aux disable_dev /tmp/LVMTEST191946.ImUMG6dyqB/dev/mapper/LVMTEST191946pv4
-> [ 0:14.058] Disabling device /tmp/LVMTEST191946.ImUMG6dyqB/dev/mapper/LVMTEST191946pv4 (253:5)
-> [ 0:14.101] not lvconvert -y --repair $vg/$lv1
-> 
-> When it fails, I see:
-> 
-> [ 0:13.831] #lvconvert-repair-raid.sh:161+ lvcreate --type raid10 -m 1 -i 2 -L 64 -n LV1 LVMTEST192248vg /tmp/LVMTEST192248.ATcecgSGfE/dev/mapper/LVMTEST192248pv1 /tmp/LVMTEST192248.ATcecgSGfE/dev/mapper/LVMTEST192248pv2 /tmp/LVMTEST192248.ATcecgSGfE/dev/mapper/LVMTEST192248pv3 /tmp/LVMTEST192248.ATcecgSGfE/dev/mapper/LVMTEST192248pv4
-> [ 0:13.831]   Using default stripesize 64.00 KiB.
-> [ 0:13.847]   Logical volume "LV1" created.
-> [ 0:14.499]   WARNING: This metadata update is NOT backed up.
-> [ 0:14.499] 6,8925,1187444256,-;device-mapper: raid: Superblocks created for new raid set
-> [ 0:14.499] 5,8926,1187449525,-;md/raid10:mdX: not clean -- starting background reconstruction
-> [ 0:14.499] 6,8927,1187450148,-;md/raid10:mdX: active with 4 out of 4 devices
-> [ 0:14.499] 6,8928,1187452472,-;md: resync of RAID array mdX
-> [ 0:14.499] 6,8929,1187453016,-;md: mdX: resync done.
-> [ 0:14.499] 4,8930,1187555486,-;mdX: bitmap file is out of date, doing full recovery
-> [ 0:14.499] aux disable_dev "$dev4"
-> [ 0:14.515] #lvconvert-repair-raid.sh:163+ aux disable_dev /tmp/LVMTEST192248.AT
-> cecgSGfE/dev/mapper/LVMTEST192248pv4
-> [ 0:14.515] Disabling device /tmp/LVMTEST192248.ATcecgSGfE/dev/mapper/LVMTEST192
-> 248pv4 (253:5)
-> [ 0:14.554] not lvconvert -y --repair $vg/$lv1
-> 
-> To me the important looking difference (and I admit, I'm no RAID expert), is that in the
-> case where the test passes (where lvconvert fails as expected), I see
-> 
-> [ 0:14.042] 4,8911,1194459161,-;mdX: bitmap file is out of date, doing full recovery
-> [ 0:14.042] 6,8912,1194563810,-;md: resync of RAID array mdX
-> 
-> When it fails I see:
-> 
-> [ 0:14.499] 6,8928,1187452472,-;md: resync of RAID array mdX
-> [ 0:14.499] 6,8929,1187453016,-;md: mdX: resync done.
-> [ 0:14.499] 4,8930,1187555486,-;mdX: bitmap file is out of date, doing full recovery
-> 
-> Which appears to show a resync that takes no time, presumable because it happens before
-> the device notices that the bitmaps are wrong and schedules a full recovery.
-> 
-> 
-> lvconvert-raid-reshape-stripes-load-reload.sh repeatedly reloads the
-> device table during a raid reshape, and then tests the filesystem for
-> corruption afterwards. With this patchset, the filesystem is
-> occasionally corrupted.  I do not see this with the 6.6 kernel.
-> 
-> -Ben
->   
->> Xiao Ni also test the last version on a real machine, see [1].
->>
->> [1] https://lore.kernel.org/all/CALTww29QO5kzmN6Vd+jT=-8W5F52tJjHKSgrfUc1Z1ZAeRKHHA@mail.gmail.com/
->>
->> Yu Kuai (14):
->>    md: don't ignore suspended array in md_check_recovery()
->>    md: don't ignore read-only array in md_check_recovery()
->>    md: make sure md_do_sync() will set MD_RECOVERY_DONE
->>    md: don't register sync_thread for reshape directly
->>    md: don't suspend the array for interrupted reshape
->>    md: fix missing release of 'active_io' for flush
->>    md: export helpers to stop sync_thread
->>    md: export helper md_is_rdwr()
->>    dm-raid: really frozen sync_thread during suspend
->>    md/dm-raid: don't call md_reap_sync_thread() directly
->>    dm-raid: add a new helper prepare_suspend() in md_personality
->>    md/raid456: fix a deadlock for dm-raid456 while io concurrent with
->>      reshape
->>    dm-raid: fix lockdep waring in "pers->hot_add_disk"
->>    dm-raid: remove mddev_suspend/resume()
->>
->>   drivers/md/dm-raid.c |  78 +++++++++++++++++++--------
->>   drivers/md/md.c      | 126 +++++++++++++++++++++++++++++--------------
->>   drivers/md/md.h      |  16 ++++++
->>   drivers/md/raid10.c  |  16 +-----
->>   drivers/md/raid5.c   |  61 +++++++++++----------
->>   5 files changed, 192 insertions(+), 105 deletions(-)
->>
->> -- 
->> 2.39.2
->>
-> 
-> .
-> 
-
+--nsmail-rwuwzeq7r4-rww6x859kx--
