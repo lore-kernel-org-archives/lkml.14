@@ -1,115 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [5.144.164.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064522555F;
-	Sun,  4 Feb 2024 17:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4CB2C691
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 17:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707067882; cv=none; b=h751M6A+pLhtNhw+v9oePFwFjMJp/BH64EdcBu8WlmeOcSWMmj7QDDFLyt0wJge7ca414HhVkB6tMD2tZzRjebG8uoVcxdEAUFh22A6mWBKZ2DW0p+hJXU2Opfz9LExCUyOz7g9DFhS413WRCVl//Ef00iKBEH8Ecdp2G/HpEBg=
+	t=1707067928; cv=none; b=OyZmiFCvLdSHaGiAn55pxgJ9e7KAJkOO9SEjj3/YFwNCikdhuuVIl84uYugikVm1eWFX31nGl5M3WOvFc4aZjRdUInp+Wf3oDOrwFy7ffXUZfseBM3sTODEaxiq5vdPcXwnDNhhnxf65tmInCDDVfRrAUPYyldW54bkkC1/STJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707067882; c=relaxed/simple;
-	bh=FPf3c+XFlSNb7MJJi6PdgXBeD5uKtm42qLdX4zSVwgw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hov32Us3IJxqWeReI0HuelDWSzx4yklBPVyaFcTHp65rcxUMCV8SMWLwBZ0X97EG5g/ai16+kiVCYYCIXES5MxVRXXquv3roquXsTwid9DI7N7N4XPmBE9hpkKasOlKN2opsg2D3/SU92oorZfhGx6FkhvUQxlA0D/pSz0ohY7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMxkc0Bj; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMxkc0Bj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707067881; x=1738603881;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FPf3c+XFlSNb7MJJi6PdgXBeD5uKtm42qLdX4zSVwgw=;
-  b=ZMxkc0Bj8IwXyGhz+drDD2xmCxXDcKcMNa2mK+C+XhlilrP626tYWYzB
-   ZmFcOnXjgmosD0TTTy9KSza+w80ZRUbUOdvQpG0Qkz/BMTuAh+SjCX29V
-   56//Dlu+TqHu/Aqwgi9GeDN3dzu5/fc0rXXhEMepdj63xRuMN+VCmWmre
-   G/q+2+7jZX0fZ7zYdlVxCP7REmDy0pkkMyVC4lvQ5GSvKzJCXqzPqaP+b
-   u2ni8EeKIhs/fp67gPwF6jMuzZ15TYktAvro36iqIfHzya7NWe6HO0zL2
-   mKlq882bWWPIBCMHHbD1nElG9P/iMcrMo4DNVVM7VPFswhoUZ97hHQzZC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="4225908"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="4225908"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 09:31:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="31626386"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.213.2.137])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 09:31:18 -0800
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>,
-	linux-cxl@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH 2/2] cxl/region: Use cond_guard() in show_targetN()
-Date: Sun,  4 Feb 2024 18:31:05 +0100
-Message-ID: <20240204173105.935612-3-fabio.maria.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com>
-References: <20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1707067928; c=relaxed/simple;
+	bh=bcNFXOXgVZBEkNCwZd1X9XvtwNPnxgf0ip+0KH9NcyE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ARC+aa8hwNZb+Uw5SDNCLkBB3TKMoSMu81kTwvBtunIMrNLql8XVe5y2/XmeYTrO7oiogMJsSrmlOGExShDyMGlEFZUBjojBvggMxE8NpE6e/DLS+jfgAPoj+B12nENl0X7CKQpuHsBlGuy0cccV6a4UGG7mztgNPWolMCNzUQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from Marijn-Arch-Book.localdomain (2a02-a420-67-c93f-164f-8aff-fee4-5930.mobile6.kpn.net [IPv6:2a02:a420:67:c93f:164f:8aff:fee4:5930])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id D639D3E74E;
+	Sun,  4 Feb 2024 18:24:31 +0100 (CET)
+From: Marijn Suijten <marijn.suijten@somainline.org>
+Date: Sun, 04 Feb 2024 18:24:20 +0100
+Subject: [PATCH v5] leds: qcom-lpg: Add PM660L configuration and compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-pm660l-lpg-v5-1-2f54d1a0894b@somainline.org>
+X-B4-Tracking: v=1; b=H4sIAEPIv2UC/zXMTQ6CMBBA4auQWVsy/QELK+9hXFQdYAhtSYvGh
+ HB3GxOX3+K9HTIlpgx9tUOiN2eOoaA5VfCYXBhJ8LMYFCqDCo1YfdviIpZ1FINu7tZpp61BKMG
+ aaODPb3a9FQ8perFNidx/ofAsOyWlNbaWbaM7hUIK7xLPoc4vnjcKlxy947BwoDqmEY7jC0BOA
+ K6lAAAA
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, Johan Hovold <johan@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@somainline.org>, 
+ Martin Botka <martin.botka@somainline.org>, 
+ Jami Kettunen <jami.kettunen@somainline.org>, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Bjorn Andersson <andersson@kernel.org>
+X-Mailer: b4 0.12.4
 
-Use cond_guard() in show_target() to not open code an up_read() in an 'out'
-block. If the down_read_interruptible() fails, the statement passed to the
-second argument of cond_guard() returns -EINTR.
+Inherit PM660L PMIC LPG/triled block configuration from downstream
+drivers and DT sources, consisting of a triled block with automatic
+trickle charge control and source selection, three colored led channels
+belonging to the synchronized triled block and one loose PWM channel.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/cxl/core/region.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Changes since v4:
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 0f05692bfec3..bd3236786a25 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -666,28 +666,20 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_endpoint_decoder *cxled;
--	int rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+	cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
- 
- 	if (pos >= p->interleave_ways) {
- 		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
- 			p->interleave_ways);
--		rc = -ENXIO;
--		goto out;
-+		return -ENXIO;
- 	}
- 
- 	cxled = p->targets[pos];
- 	if (!cxled)
--		rc = sysfs_emit(buf, "\n");
-+		return sysfs_emit(buf, "\n");
- 	else
--		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
--out:
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
+- Rebased on -next and resolve conflict with removed lpg_remove();
+- v4: https://lore.kernel.org/linux-leds/20220719211848.1653920-2-marijn.suijten@somainline.org/
+---
+ drivers/leds/rgb/leds-qcom-lpg.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index 156b73d1f4a2..ab298391f9e0 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -1360,6 +1360,23 @@ static int lpg_probe(struct platform_device *pdev)
+ 	return lpg_add_pwm(lpg);
  }
  
- static int match_free_decoder(struct device *dev, void *data)
++static const struct lpg_data pm660l_lpg_data = {
++	.lut_base = 0xb000,
++	.lut_size = 49,
++
++	.triled_base = 0xd000,
++	.triled_has_atc_ctl = true,
++	.triled_has_src_sel = true,
++
++	.num_channels = 4,
++	.channels = (const struct lpg_channel_data[]) {
++		{ .base = 0xb100, .triled_mask = BIT(5) },
++		{ .base = 0xb200, .triled_mask = BIT(6) },
++		{ .base = 0xb300, .triled_mask = BIT(7) },
++		{ .base = 0xb400 },
++	},
++};
++
+ static const struct lpg_data pm8916_pwm_data = {
+ 	.num_channels = 1,
+ 	.channels = (const struct lpg_channel_data[]) {
+@@ -1502,6 +1519,7 @@ static const struct lpg_data pmk8550_pwm_data = {
+ };
+ 
+ static const struct of_device_id lpg_of_table[] = {
++	{ .compatible = "qcom,pm660l-lpg", .data = &pm660l_lpg_data },
+ 	{ .compatible = "qcom,pm8150b-lpg", .data = &pm8150b_lpg_data },
+ 	{ .compatible = "qcom,pm8150l-lpg", .data = &pm8150l_lpg_data },
+ 	{ .compatible = "qcom,pm8350c-pwm", .data = &pm8350c_pwm_data },
+
+---
+base-commit: 01af33cc9894b4489fb68fa35c40e9fe85df63dc
+change-id: 20240204-pm660l-lpg-f35b8a3a3840
+
+Best regards,
 -- 
-2.43.0
+Marijn Suijten <marijn.suijten@somainline.org>
 
