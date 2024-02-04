@@ -1,110 +1,117 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B88224F0
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 13:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78AE224DF;
+	Sun,  4 Feb 2024 14:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707055003; cv=none; b=hwUmHzaZjdWe8CvcXDkC51dEW0iF795kReuy35FOY6Ltm7UOZv55kjBQFSn7PH5IMxL1B03AlbNr9f5YndJT8/brylJXjoI9tdFu0Z3GcyWdeYMelbItpnGtD4SRluFLec540AYRcP4QbQPAQqsWTDpy0hBIoeAQEtV7YI2yRyc=
+	t=1707055224; cv=none; b=mCka1B9KRP8aRC6NKAz/nbVIfEvGQ2jqb0K3Hlgw2BlkWOyg8PZPy8hIxOPnx1C3z1MzxRF4sX5VBBNNdpgQ8KsNp65snhxYh+0bFqRh5c3wIQ4ZlTqpKwf4ASTtqerYhKHe8thylqq24HrkyP5uCF8xu1XYuonYSuEzLgsfupA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707055003; c=relaxed/simple;
-	bh=tJuCMmVGPqjd839e1z8+vTfJCbhSpH7uhSZwYeJ2Rn8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X3kUGdWUdx1H5Z5Yxi8dkO+GP8upI6qcmD9w88Jq2l34JPLhyRITHl+PpH6bkm8RzGEmzePfpgkC4NKPKa+gzfSbHfJrevRXTC4nsF6XA3Ueiy8+MQhjQa5lTcf3dh03Rv7HZoY//uv7rIsVrec4O1U0XAHGx6dIKJPbQ60sPfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-59a7682486aso1356801eaf.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 05:56:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707055001; x=1707659801;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AK5HHzPHOnJw06PkmeDxTeJoWKOlCirPBPN/7WaX+mg=;
-        b=A6E60dCpIYKBMVlTqUG26UHmCUX1IGmrmEOIgxO86/50mMBjTqGqTr2sMxEdXuvl38
-         zpHtrjJhUTX9GakIvibEOF46ehPcAKFp2H2bwy04N4Jgy5LfAARwDh10UC7tRsSqm4Z9
-         mkWJmU1ao/eNDSLu4kFT8cAWLskJztb76QbecxEawsgNLurzmTUr077mH27cJO0wv2U7
-         iqz39H2uDSwxSAXehj3qkKR1+hDW4+Bm3sg4WczuJOyBHnduMPL7tyOefGFOOD/nooLC
-         /alnsx/xeXuzjbZO8N0c5O0gkoCX4j1ZCAJiTkVn+4vsB8vay3B/gGZ/eZR8hQ+W0Qo+
-         lRAg==
-X-Gm-Message-State: AOJu0YyOjWFxXKytpW30LRzulbAHS+amFeC37a/fjzpuucwks9lQj/LU
-	UqLk22tWuPLY6qsgQHG8bQyha0/pdZEF4Z7kXJ8qV8eoThO41q+Rsvg4/VJOqa6IayQPHTk3hXy
-	4CoJWQBndvfTa2v2OYsynVR11Jys=
-X-Google-Smtp-Source: AGHT+IEgFL+oArtYo9MSy3rjb/Xp9QIC5qVF6dVHA9GYj9ihuddYCKzmTlB0ALs+JGFe1SiI2g1uBGusiLUzvu83rLc=
-X-Received: by 2002:a05:6358:7e13:b0:175:67e3:cb28 with SMTP id
- o19-20020a0563587e1300b0017567e3cb28mr11987431rwm.12.1707055000858; Sun, 04
- Feb 2024 05:56:40 -0800 (PST)
+	s=arc-20240116; t=1707055224; c=relaxed/simple;
+	bh=+GbbwUe7Q/ClATrUhODZyGj8Pxv7kTwf0nLJ4c8so2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K48bVjbioR7zxtVOaVBvW+EUfMQBMjhw+V94ViYGrrQokH0RvjqtBOH0wB4g6xsIFQ3+1C0QFDiP4WLeR937dQS92TcDJq0386jhRzXa1vIc+HeaDcSv3o/4KwXanEgYoEFVXwGsb+nH8B1aF3ZwOIy3b13UfdP3SG5AkWj5r4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZG18/A7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZG18/A7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCDDC43390;
+	Sun,  4 Feb 2024 14:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707055224;
+	bh=+GbbwUe7Q/ClATrUhODZyGj8Pxv7kTwf0nLJ4c8so2Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kZG18/A7pATcoA7ozOqMJrduF5tXbE9xArqvMAIOJUTfOu//omK3EHrMvIi2WaA+b
+	 9OllZmyZsjRz3U5ALKGQZGCJUorupiVv3PxLBUJJGXTcdiSENbk5LGZuyQvtgW70tl
+	 O6+O4JBJ4T8vDteylY5clKCVQfodca/23VXKXPDk2h2edthKCPW7ihXPzLxfACJLPy
+	 QLrTuiowESJpIqQExq6zR74a6QxtwCBrRB0iVEyyCNcwFXXtM4xgx6lom01z/CtxLn
+	 MPUoqUMltP3TniYqfbBNm8XJQMzZRtOMxrVfzAhYOIk9fKxPb4DJZeyYaSsOLZ/t4f
+	 bFzI6kfE1hR2A==
+Date: Sun, 4 Feb 2024 14:00:10 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jesus Gonzalez <jesusmgh@gmail.com>
+Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 1/1] Add 10EC5280 to bmi160_i2c ACPI IDs to allow
+ binding on some devices
+Message-ID: <20240204140010.7edaa782@jic23-huawei>
+In-Reply-To: <20240202173040.26806-2-jesusmgh@gmail.com>
+References: <20240202173040.26806-2-jesusmgh@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20221111081316.30373-1-mailhol.vincent@wanadoo.fr>
- <20240128050449.1332798-1-mailhol.vincent@wanadoo.fr> <20240128050449.1332798-3-mailhol.vincent@wanadoo.fr>
- <c47fedaf-cdc9-f970-460f-d2ee7e806da4@linux-m68k.org> <CAMZ6RqKj207uv5AF_fvb65nhCM32V=VAQXsUGLNmbeXYKPvZJg@mail.gmail.com>
- <9d9be9dbe92f43d2a95d11d6b2f434c1@AcuMS.aculab.com> <CAMZ6Rq+RnY16sREhAZ6AFn3sz1SuPsKqhW-m0TrrDz1hd=vNOA@mail.gmail.com>
- <77831c6f-7fc9-c42d-b29b-c3b2f3f5e687@linux-m68k.org>
-In-Reply-To: <77831c6f-7fc9-c42d-b29b-c3b2f3f5e687@linux-m68k.org>
-From: Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Date: Sun, 4 Feb 2024 22:56:28 +0900
-Message-ID: <CAMZ6RqLyRxvUiLKZLkQF1cYFkdOqX73V2K=dGbNROMDj61OKLw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] m68k/bitops: use __builtin_{clz,ctzl,ffs} to
- evaluate constant expressions
-To: Finn Thain <fthain@linux-m68k.org>
-Cc: David Laight <David.Laight@aculab.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yury Norov <yury.norov@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Douglas Anderson <dianders@chromium.org>, 
-	Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Zhaoyang Huang <zhaoyang.huang@unisoc.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Marco Elver <elver@google.com>, 
-	Brian Cain <bcain@quicinc.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Matthew Wilcox <willy@infradead.org>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	"linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Finn and David,
+On Fri,  2 Feb 2024 18:30:41 +0100
+Jesus Gonzalez <jesusmgh@gmail.com> wrote:
 
-Sorry for the late feedback, I did not have much time during weekdays.
+> "10EC5280" is used by several manufacturers like Lenovo, GPD, or AYA (and 
+> probably others) in their ACPI table as the ID for the bmi160 IMU. This 
+> means the bmi160_i2c driver won't bind to it, and the IMU is unavailable 
+> to the user. Manufacturers have been approached on several occasions to 
+> try getting a BIOS with a fixed ID, mostly without actual positive 
+> results, and since affected devices are already a few years old, this is 
+> not expected to change. This patch enables using the bmi160_i2c driver for 
+> the bmi160 IMU on these devices.
+Hi Jesus,
 
-On Monday. 29 Jan. 2024 at 07:34, Finn Thain <fthain@linux-m68k.org> wrote:
-> On Sun, 28 Jan 2024, Vincent MAILHOL wrote:
-> > > > The asm is meant to produce better results when the argument is not
-> > > > a constant expression.
->
-> Is that because gcc's implementation has to satisfy requirements that are
-> excessively stringent for the kernel's purposes? Or is it a compiler
-> deficiency only affecting certain architectures?
+https://lore.kernel.org/lkml/CAHp75Vct-AXnU7QQmdE7nyYZT-=n=p67COPLiiZTet7z7snL-g@mail.gmail.com/
+Lays out what Andy (and for that matter I) consider necessary for such
+a patch.
 
-I just guess that GCC guys followed the Intel datasheet while the
-kernel guys like to live a bit more dangerously and rely on some not
-so well defined behaviours... But I am really not the person to whom
-you should ask.
+In short, we want to see devices called out here - with a DSDT section.
++ a clear comment in the code.
 
-I just want to optimize the constant folding and this is the only
-purpose of this series. I am absolutely not an asm. That's also why I
-am reluctant to compare the asm outputs.
+The big problem here is this tramples on Realtech's ID space. It's not just
+a made up code (incidentally the BMI0160 isn't valid either),
+it's a valid code but for an entirely different (PCI) device.
 
-> > ... The only thing I am not ready to do is to compare the produced
-> > assembly code and confirm whether or not it is better to remove asm
-> > code.
-> >
->
-> If you do the comparison and find no change, you get to say so in the
-> commit log, and everyone is happy.
+So we need as much info as possible in the patch description and the driver
+itself to justify carrying this.   Tempting to add a firmware bug taint on
+it as well but that might scare people :)
 
-Without getting into details, here is a quick comparaisons of gcc and
-clang generated asm for all the bitops builtin:
-
-  https://godbolt.org/z/Yb8nMKnYf
-
-To the extent of my limited knowledge, it looks rather OK for gcc, but
-for clang... seems that this is the default software implementation.
-
-So are we fine with the current patch? Or maybe clang support is not
-important for m68k? I do not know so tell me :)
+Jonathan
 
 
-Yours sincerely,
-Vincent Mailhol
+> 
+> Signed-off-by: Jesus Gonzalez <jesusmgh@gmail.com>
+> ---
+> A device-specific transformation matrix can then be provided in a second
+> step through udev hwdb.
+> 
+> This has been discussed before in 2021, see here:
+> https://lore.kernel.org/lkml/CACAwPwYQHRcrabw9=0tvenPzAcwwW1pTaR6a+AEWBF9Hqf_wXQ@mail.gmail.com/
+> 
+> Lenovo, as an example of a big manufacturer, is also using this ID:
+> https://www.reddit.com/r/linux/comments/r6f9de/comment/hr8bdfs/?context=3
+> 
+> At least some discussions with GPD took place on the GPD server Discord,
+> for which I can provide proof on demand via screenshot (if not accessible
+> directly).
+> 
+> I have read the patch submission instructions and followed them to the
+> best of my knowledge. Still, this is my first kernel patch submission,
+> so I'd be glad if you could please point out any mistakes. Thank you!
+> 
+> 
+>  drivers/iio/imu/bmi160/bmi160_spi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
+> index 8b573ea99af2..0874c37c6670 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_spi.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_spi.c
+> @@ -41,6 +41,7 @@ MODULE_DEVICE_TABLE(spi, bmi160_spi_id);
+>  
+>  static const struct acpi_device_id bmi160_acpi_match[] = {
+>  	{"BMI0160", 0},
+> +	{"10EC5280", 0},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(acpi, bmi160_acpi_match);
+
