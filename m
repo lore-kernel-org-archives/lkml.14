@@ -1,152 +1,61 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21B410EB
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 03:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823D21C17
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 03:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707016281; cv=none; b=lsTitqEG2C+zVSyby65m0v0vgn+ULagOjOlWUEB13phLvv+D3U/zst1o4ofr65aUeuSCJLTltJYy1r29JVHalnQ6P+1nlUoyoBbjGKPAJxTT06BDyY7QLpJh12w+tKIG196Ur4J8J6u4vJF8Sx8XCvMAA7Oy/3fQs2l/6gO9Hlo=
+	t=1707016436; cv=none; b=cj4Yw5zlOsEIGtqIN8h8zmAYRN/FNMjm2SER5L1JtuySBnwKbB/h9mIHlKs6kg779PtKDkzItCvkE3jWzlosTisOSqoF58kALs8AvqLV6YBKWD359NAu+6jD2QGWtS6bu4YfSLy+nauAZ/e5Aq9EoQUycptbwoC2EP25MFflnOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707016281; c=relaxed/simple;
-	bh=Rg/Q7uvffcTHZcJlhEx+89mKvetaAH1fSbnyGWrBPAA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XFjShDEiwvSoSrOvR3R0If+RiT0RncFYoaCkD7a3bDDLh4DoripJ1z0z6pOOLn94doBxywOyvzlWtBPaKAV8E1k1Q5W4C3TYqu6StdwnyrVm2+nFoLQupK3dkq9K4/6n2iRkeQ2JBHG6nRGuEIAnluO1IM1rTKXeeROgxOWjPwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZL3VzbJ; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707016436; c=relaxed/simple;
+	bh=Eti2NB0KIjgkNzs/sLAB0bK7ofCKBJxDarMp4JeuXnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FWVnXEAMGeg99Lpvp11vsnVC3s6ZA2qtumyoAG2excLKib4c9sFA3AlZN7QV9zcr/SopTaPzD8cyYHs251lKUClR2gfGLkOVfRvcQdZLMePw0UWpwU9+6WnY4sqBMlC58SsFakjJ8XjdSXfGpXRlw2KgburN5YALEKCWsqiCpQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FA7oSEYy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZL3VzbJ"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-295f9a4a656so2751875a91.1
-        for <linux-kernel@vger.kernel.org>; Sat, 03 Feb 2024 19:11:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707016279; x=1707621079; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+usYO9kmYXbpy+mniJppEmKl5G0Ak9hnYSfizal5zIo=;
-        b=nZL3VzbJV/rXQ0FX/JKmvjNuzxnUnitafz+mDtTnLXt7PnLA7u5aaX30h52BV5JeCw
-         2QQp4/s/+vugWhZTqgRJUdXA3/KsGdgIh7sxVN4ARSgmyiPgAc7ktqslWTI/lnWnDUQv
-         5B3JsY+4rLO3UxGJHfe756BnDxHELgu6qZfYHvjnW49w06BQvHpSQR8q+8nVBBo6BLWy
-         ku5tsYeE/gm0wjSOneUbWcjoHmzNpnAHg0SBKRpBOX5SadIzFtVoGv2as2Baec3mzq5O
-         munPtu3JP5ctRNL14yeNw6wRA27CwRtX3qtnDPp7cp6E4Zc48hQ/2Uu0F2cv81Daw8w/
-         TklA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707016279; x=1707621079;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+usYO9kmYXbpy+mniJppEmKl5G0Ak9hnYSfizal5zIo=;
-        b=A8WLAfX4YnYlDl7dD0a2zAgrbw4UEA//27WskYxMxw2HY2ojgYpWDVb1ZfJSGdPvPy
-         c58Ue9piu+jl3OD34/jLCsfOanfn/ewnO2JOXo6RUKLq91cn+1gM0yDEyv4LXCtO21Ch
-         dyqeO0nFYB0/bMIFkcWdtQG1UmIcTreLOvSFC6Cl3ZWVz5nF803OsTZQYnjrM0EFmWQK
-         xSfDTlQgD8fU0BUXg7yZ+VH1j5u9PD9eam5aMtHmeyfIb7oNhS3NHrUOEyARg0bpt3K5
-         TlhJN+qa9qByf/aEGPV3oSO4I3KqX+ijkaoFG//4qzHjp1MUU4NjzEaNDYZxNpQm9E0g
-         bE5g==
-X-Gm-Message-State: AOJu0Yx8lvlIjMqt8LsByFUD+Yopt/MInkWizu2Ig0R6ZQkYYfVCuwbB
-	E8jrBe3bQ24THRS14I57bOQRMZ55Lj0lB83nzO+WeolBGdlu0KGd
-X-Google-Smtp-Source: AGHT+IGx2qqIW96Pfh8jonNWQmOXBn1OWquAQPwRPRYif17747FkB7bAA3tCN3Te7DS2ydaz7PcPxQ==
-X-Received: by 2002:a17:90a:17e2:b0:296:3779:813c with SMTP id q89-20020a17090a17e200b002963779813cmr6504495pja.4.1707016278986;
-        Sat, 03 Feb 2024 19:11:18 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVzR7hi5WM5nw9LaiP+Ix1SnjAyaZWBh8NaFdwA6BLv2FwdR/AUj/+M5eCWX0EQVYaPyN39+RXrUfByI0ST/ePJETynEugUz4p5XLd5USeD2fjh0VFfPkup7Jug8KdywlviXnNuiBzWbOaUTyVrrWdQBrSu+v9HnnK4fR9hrakRzRVA0Ni9RPnVTCoG6/J5mP+wGIM++byp8K74lCXM+rqaQSqDcKePM58DRq2IrSSM6A==
-Received: from localhost.localdomain ([112.38.163.83])
-        by smtp.gmail.com with ESMTPSA id n9-20020a170902d0c900b001d8f82c61cdsm7312pln.231.2024.02.03.19.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Feb 2024 19:11:18 -0800 (PST)
-From: Wenjie Qi <qwjhust@gmail.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	yangyongpeng1@oppo.com,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: hustqwj@hust.edu.cn,
-	Wenjie Qi <qwjhust@gmail.com>
-Subject: [PATCH v5] f2fs: fix zoned block device information initialization
-Date: Sun,  4 Feb 2024 11:10:22 +0800
-Message-ID: <20240204031022.1189-1-qwjhust@gmail.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FA7oSEYy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473E6C433F1;
+	Sun,  4 Feb 2024 03:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707016435;
+	bh=Eti2NB0KIjgkNzs/sLAB0bK7ofCKBJxDarMp4JeuXnY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FA7oSEYyK6hKtYUD17C7Dd8J6OB1tOcWEd8AOjozhvtknPt4aMgm2RehFhfvG9qzz
+	 ekWfd2HudtytfzvM0u98F3sWNEh8AilUbzdhUOVTskJQxmZ4qSKM7uetFNyZ/jpd8z
+	 UPq21rBQV3fObUJ4Q+dxd0DwYU7DPjz3jlEM5Oq6ewk1srf1AHv0nR2ezPV07JtX1t
+	 ttjVkXUacO37jjw/XstluGQ12F1xBDO6rOO6Ysnci4mlYv8njf9WWF72J6K7b1K7yX
+	 8um3mT+B8BxT7Egte1+PGuz/18QvfdM6xrHqa48zzobUzBDnrJpJsO97px6uhBayWf
+	 J2/Ddha8pFIYw==
+Message-ID: <30907165-9727-451e-8955-0e26cd219fdb@kernel.org>
+Date: Sun, 4 Feb 2024 11:13:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] f2fs: fix zoned block device information
+ initialization
+Content-Language: en-US
+To: Wenjie Qi <qwjhust@gmail.com>, jaegeuk@kernel.org,
+ yangyongpeng1@oppo.com, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Cc: hustqwj@hust.edu.cn
+References: <20240204031022.1189-1-qwjhust@gmail.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20240204031022.1189-1-qwjhust@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If the max open zones of zoned devices are less than
-the active logs of F2FS, the device may error due to
-insufficient zone resources when multiple active logs
-are being written at the same time.
+On 2024/2/4 11:10, Wenjie Qi wrote:
+> If the max open zones of zoned devices are less than
+> the active logs of F2FS, the device may error due to
+> insufficient zone resources when multiple active logs
+> are being written at the same time.
+> 
+> Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
 
-Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
----
- fs/f2fs/f2fs.h  |  1 +
- fs/f2fs/super.c | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 543898482f8b..161107f2d3bd 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1558,6 +1558,7 @@ struct f2fs_sb_info {
- 
- #ifdef CONFIG_BLK_DEV_ZONED
- 	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
-+	unsigned int max_open_zones;		/* max open zone resources of the zoned device */
- #endif
- 
- 	/* for node-related operations */
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1b718bebfaa1..c6709efbc294 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2388,6 +2388,16 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 	if (err)
- 		goto restore_opts;
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (sbi->max_open_zones < F2FS_OPTION(sbi).active_logs) {
-+		f2fs_err(sbi,
-+			"zoned: max open zones %u is too small, need at least %u open zones",
-+				 sbi->max_open_zones, F2FS_OPTION(sbi).active_logs);
-+		err = -EINVAL;
-+		goto restore_opts;
-+	}
-+#endif
-+
- 	/* flush outstanding errors before changing fs state */
- 	flush_work(&sbi->s_error_work);
- 
-@@ -3930,11 +3940,22 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
- 	sector_t nr_sectors = bdev_nr_sectors(bdev);
- 	struct f2fs_report_zones_args rep_zone_arg;
- 	u64 zone_sectors;
-+	unsigned int max_open_zones;
- 	int ret;
- 
- 	if (!f2fs_sb_has_blkzoned(sbi))
- 		return 0;
- 
-+	max_open_zones = bdev_max_open_zones(bdev);
-+	if (max_open_zones && (max_open_zones < sbi->max_open_zones))
-+		sbi->max_open_zones = max_open_zones;
-+	if (sbi->max_open_zones < F2FS_OPTION(sbi).active_logs) {
-+		f2fs_err(sbi,
-+			"zoned: max open zones %u is too small, need at least %u open zones",
-+				 sbi->max_open_zones, F2FS_OPTION(sbi).active_logs);
-+		return -EINVAL;
-+	}
-+
- 	zone_sectors = bdev_zone_sectors(bdev);
- 	if (!is_power_of_2(zone_sectors)) {
- 		f2fs_err(sbi, "F2FS does not support non power of 2 zone sizes\n");
-@@ -4253,6 +4274,9 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
- 
- 	logical_blksize = bdev_logical_block_size(sbi->sb->s_bdev);
- 	sbi->aligned_blksize = true;
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	sbi->max_open_zones = UINT_MAX;
-+#endif
- 
- 	for (i = 0; i < max_devices; i++) {
- 		if (i == 0)
--- 
-2.34.1
-
+Thanks,
