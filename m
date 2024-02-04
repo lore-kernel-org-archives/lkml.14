@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D900AD5C;
-	Sun,  4 Feb 2024 01:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA1AB654;
+	Sun,  4 Feb 2024 01:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009487; cv=none; b=r5WMeHoE0FaqrwEkuRxXlIZBBrEU3ckHD9jtPcF3KEVnOpfBOEvTaR6jfpuGaoYFQNEOccNh/DsO5BVdIiEF6KuKTZO5/KlwwNZB7L/IVlzJ5OR3Ugjl/a2QM7dSpM7yrkGFIK7YE5L6lGQIS0EHvXFSfO2kitC7mxS5ExwR8mg=
+	t=1707009487; cv=none; b=Na4nM/pjeQwVasU9jqD2rinphziaZZ8/Ed+Yia5ChwDZ9u9Yarmz4qs34PNsh6TrDZpVH55FWgt4R4gE6hjr8zRRYxAfHHVRHmVhaHoJkgNGexCqOrCAP/tPl/UlwFPW/iad8ByIXRdYd4vYB91sXXVgG66gaUvs1bSA+9MEjFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707009487; c=relaxed/simple;
-	bh=B0uV6XWIxjvgJPAviJ7+MRlI7Dxo4ugR+2338kkGDTE=;
+	bh=3adZE3XRvsxSdhBsQIqBjy7xLEJW/dok2uD8qBYZMss=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=s7o+5TGkAaVWxegpjAEExBuv1PBICdavY5qyAGR40jGJrJ+mTZj9tFKIoKqbxddIASv8iyk1QYebtkRP0yHKfhzelkZJx+hMNToAvrXtavg15Kgn5OgMsDtGo9YQP06kGiFeE6h/hTvyMv+2xHLo++383NhzYP8bjbws/V3wd/c=
+	 Content-Type; b=GInzBFKRQE0+viDe0f/tRVUB9NcdtQpJizeH2zONviJRj1+2feSJZY3NLUfAjVdzAxKQTbePJ3+kLn9hDNMoc6lCaK455mT/QMSsX2wFwWHgf98iIViywwbnO3NCVgjGnAbb7RYxVJ7ARn48YqllFx4/EE7i3UiiQFEmzBTm3sg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB3FC4AF69;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DA0CC4AF75;
 	Sun,  4 Feb 2024 01:18:06 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rWR9Q-00000006Opr-3R73;
-	Sat, 03 Feb 2024 20:18:28 -0500
-Message-ID: <20240204011828.676131911@goodmis.org>
+	id 1rWR9R-00000006Oqs-0cRt;
+	Sat, 03 Feb 2024 20:18:29 -0500
+Message-ID: <20240204011829.008666210@goodmis.org>
 User-Agent: quilt/0.67
-Date: Sat, 03 Feb 2024 20:16:26 -0500
+Date: Sat, 03 Feb 2024 20:16:28 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -31,10 +31,11 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Kees Cook <keescook@chromium.org>
-Subject: [v6.7][PATCH 11/23] eventfs: Save directory inodes in the eventfs_inode structure
+ Christian Brauner <brauner@kernel.org>,
+ Al Viro <viro@ZenIV.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ kernel test robot <oliver.sang@intel.com>
+Subject: [v6.7][PATCH 13/23] tracefs: Zero out the tracefs_inode when allocating it
 References: <20240204011615.703023949@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,116 +47,77 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The eventfs inodes and directories are allocated when referenced. But this
-leaves the issue of keeping consistent inode numbers and the number is
-only saved in the inode structure itself. When the inode is no longer
-referenced, it can be freed. When the file that the inode was representing
-is referenced again, the inode is once again created, but the inode number
-needs to be the same as it was before.
+eventfs uses the tracefs_inode and assumes that it's already initialized
+to zero. That is, it doesn't set fields to zero (like ti->private) after
+getting its tracefs_inode. This causes bugs due to stale values.
 
-Just making the inode numbers the same for all files is fine, but that
-does not work with directories. The find command will check for loops via
-the inode number and having the same inode number for directories triggers:
+Just initialize the entire structure to zero on allocation so there isn't
+any more surprises.
 
-  # find /sys/kernel/tracing
-find: File system loop detected;
-'/sys/kernel/debug/tracing/events/initcall/initcall_finish' is part of the same file system loop as
-'/sys/kernel/debug/tracing/events/initcall'.
-[..]
+This is a partial fix to access to ti->private. The assignment still needs
+to be made before the dentry is instantiated.
 
-Linus pointed out that the eventfs_inode structure ends with a single
-32bit int, and on 64 bit machines, there's likely a 4 byte hole due to
-alignment. We can use this hole to store the inode number for the
-eventfs_inode. All directories in eventfs are represented by an
-eventfs_inode and that data structure can hold its inode number.
+Link: https://lore.kernel.org/linux-trace-kernel/20240131185512.315825944@goodmis.org
 
-That last int was also purposely placed at the end of the structure to
-prevent holes from within. Now that there's a 4 byte number to hold the
-inode, both the inode number and the last integer can be moved up in the
-structure for better cache locality, where the llist and rcu fields can be
-moved to the end as they are only used when the eventfs_inode is being
-deleted.
-
-Link: https://lore.kernel.org/all/CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20240122152748.46897388@gandalf.local.home
-
+Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 53c41052ba31 ("eventfs: Have the inodes all for files and directories all be the same")
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202401291043.e62e89dc-oliver.sang@intel.com
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- fs/tracefs/event_inode.c | 14 +++++++++++---
- fs/tracefs/internal.h    |  7 ++++---
- 2 files changed, 15 insertions(+), 6 deletions(-)
+ fs/tracefs/inode.c    | 6 ++++--
+ fs/tracefs/internal.h | 3 ++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 6795fda2af19..6b211522a13e 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -34,7 +34,15 @@ static DEFINE_MUTEX(eventfs_mutex);
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index e1b172c0e091..888e42087847 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -38,8 +38,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+ 	if (!ti)
+ 		return NULL;
  
- /* Choose something "unique" ;-) */
- #define EVENTFS_FILE_INODE_INO		0x12c4e37
--#define EVENTFS_DIR_INODE_INO		0x134b2f5
+-	ti->flags = 0;
+-
+ 	return &ti->vfs_inode;
+ }
+ 
+@@ -779,7 +777,11 @@ static void init_once(void *foo)
+ {
+ 	struct tracefs_inode *ti = (struct tracefs_inode *) foo;
+ 
++	/* inode_init_once() calls memset() on the vfs_inode portion */
+ 	inode_init_once(&ti->vfs_inode);
 +
-+/* Just try to make something consistent and unique */
-+static int eventfs_dir_ino(struct eventfs_inode *ei)
-+{
-+	if (!ei->ino)
-+		ei->ino = get_next_ino();
-+
-+	return ei->ino;
-+}
++	/* Zero out the rest */
++	memset_after(ti, 0, vfs_inode);
+ }
  
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-@@ -396,7 +404,7 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 	inode->i_fop = &eventfs_file_operations;
- 
- 	/* All directories will have the same inode number */
--	inode->i_ino = EVENTFS_DIR_INODE_INO;
-+	inode->i_ino = eventfs_dir_ino(ei);
- 
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
-@@ -802,7 +810,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		name = ei_child->name;
- 
--		ino = EVENTFS_DIR_INODE_INO;
-+		ino = eventfs_dir_ino(ei_child);
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
- 			goto out_dec;
+ static int __init tracefs_init(void)
 diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 12b7d0150ae9..45397df9bb65 100644
+index 91c2bf0b91d9..7d84349ade87 100644
 --- a/fs/tracefs/internal.h
 +++ b/fs/tracefs/internal.h
-@@ -55,6 +55,10 @@ struct eventfs_inode {
- 	struct eventfs_attr		*entry_attrs;
- 	struct eventfs_attr		attr;
- 	void				*data;
-+	unsigned int			is_freed:1;
-+	unsigned int			is_events:1;
-+	unsigned int			nr_entries:30;
-+	unsigned int			ino;
- 	/*
- 	 * Union - used for deletion
- 	 * @llist:	for calling dput() if needed after RCU
-@@ -64,9 +68,6 @@ struct eventfs_inode {
- 		struct llist_node	llist;
- 		struct rcu_head		rcu;
- 	};
--	unsigned int			is_freed:1;
--	unsigned int			is_events:1;
--	unsigned int			nr_entries:30;
+@@ -11,9 +11,10 @@ enum {
  };
  
- static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+ struct tracefs_inode {
++	struct inode            vfs_inode;
++	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+ 	unsigned long           flags;
+ 	void                    *private;
+-	struct inode            vfs_inode;
+ };
+ 
+ /*
 -- 
 2.43.0
 
