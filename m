@@ -1,60 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A619E22EE3
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 14:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5C41EA7E;
+	Sun,  4 Feb 2024 14:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707057512; cv=none; b=R1nTEdH67OSKW1lc5UPfOFXppTwDu2NNaCqZpcVt7bZaM//+YapE5ujv0ww7NBOWaOke7VAAI2M2Pcqxwb/+kGsETSNY0hVwOso7Dh4LBzkESBnDN/MM774asjPL/A6ICOKiv750D6KwaiWs5awE3WtK5FtYQPfkdr+eM6F3NxA=
+	t=1707057590; cv=none; b=nwJvJ9PatEkPwf8Ukh2Xk1P0FRFZ1FL6IzDkmnFFwKoMxWr2aAOWgvjWTsUTuPwDvKRm6EcONoti0LC53ouilEok1DI5ZtZ2rEsxxBF9/mDsxj+Z3US1Nv7qseY8k+bjiNVddRHU9jqwZZH5A5vf1yELAT3yaeSy0AyH4bXOPJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707057512; c=relaxed/simple;
-	bh=nt/QMLw6lg1n1+RHbp6/VU6M7m38l4egTNOdCoMZaiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JpB+KUp3E+Cy9pwM3F1T8VbhgIytN1wrUaJPAvhQrFPAA/LdhbitFohb1hYZpj4YEtGbGUsvwSrEHR1orqBuMtgr8JvSVYS0zP94TBceXNf8Sz8XYpz9naJjH+nnjFnwnGxP/Ex0ZB45V+9HeY4Nu+fb826Bky2xNWSkZQYRb8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XRokyKIJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707057590; c=relaxed/simple;
+	bh=YPtF05/G1lPm57cNsmvdhqj9M4hNZFetbczpZyK0TVg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PCpfXJdAOZ2va9lY/lL9C+iI1rpMGZmhf8kq6FOBbTkeY972As4bA3oSS3Z31heok5z1r3Iz4/ISIc7gKYTUq8IThfDpqkVz9CDJ06pkr/Rp+93ki/8bMK6uP7jhtL4g+3Xw4bPvenLswJ4W+A2edh+xppmozl9UWJ23x+QtpeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=gTePWLzz reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XRokyKIJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1925AC433C7;
-	Sun,  4 Feb 2024 14:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707057512;
-	bh=nt/QMLw6lg1n1+RHbp6/VU6M7m38l4egTNOdCoMZaiM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XRokyKIJHDKNPPt+r8mNyoSlH/xAc/vrIvluI4CiVkz9WAwG1G6amr7yogFjuWBi8
-	 9sIP571fk9+ecybV7YDSlZ7D5qutbEaL64pyThdUv1GKamQZ4lUkfBv1V4DZnJnmg1
-	 +HXCX9CWd9/SNU8Vu8ysT7DNDHV3tyPg5fgi5He0=
-Date: Sun, 4 Feb 2024 06:38:31 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Geoff Levand <geoff@infradead.org>, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] powerpc: struct bus_type cleanup
-Message-ID: <2024020426-abrasion-boozy-78d4@gregkh>
-References: <20240204-bus_cleanup-powerpc-v1-0-c763f0e142e9@marliere.net>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="gTePWLzz"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d9b2400910so662925ad.0;
+        Sun, 04 Feb 2024 06:39:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707057588; x=1707662388;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:dkim-signature:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3ERBkTWboSgSMwK6QkBGheNdAxRHtxD6ZHyTOKGmeWg=;
+        b=NY2RHNkIHe0fOODCIh+AqTSGZKx8bnrm7KU1Bv2XEg6J+YFVvtzYBgWoWmJmtUJcV3
+         hETRswqCY1C7fyKH/BKhvcARa/iK+PJrUAJmLN7VL3jM9b/tiMh6c/fp9PIdk/n1eF+Y
+         hj510JbUSuM1IM/bj2GwV+HZ3kZWYLxatGrp/lDLD0G6iU7oPVsaw+UP4KLJRTl7Hvb6
+         7B9quds3JyaoAM45aaxLuCYyFLCyEeSFldNVX8F7eyrlieN+LRz9f9+Rg7g8EroBd4fA
+         pHeG8zHh0O1tDnSWKaQd2co+C0XqJOzijDuTiZ9/gMsyYQOtV/QifI2IPC83YY1D0D58
+         vphQ==
+X-Gm-Message-State: AOJu0YyCaXgUolAXvnYoW5soYvHWS8PZtqGIjhjOnpEXLntH5xd/59ln
+	55QPwaAn0bNpj2IElZ+uCalyKtwGO4QTaJb8lICba/3xbzKcrU/V
+X-Google-Smtp-Source: AGHT+IEIBRA3ABRqNapbWepV6ZUSgEf+wQ8ykbkFrOeYtCQ7IKlF4pL85kxRaLZOG6KiM0wsOLW7UQ==
+X-Received: by 2002:a17:902:da89:b0:1d9:6206:9cd4 with SMTP id j9-20020a170902da8900b001d962069cd4mr5722144plx.25.1707057588045;
+        Sun, 04 Feb 2024 06:39:48 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWXA4OdxuQ1bwDEWMzle5g6C5hyTpaeS+ZOAL5xNx4hzRrlf70ElaLF4YYw2te6JLe64Yzbj+WvjFRXGPnrKFJ0aolOLKcBviWFpPlv29nzaIn8qPu+skD8bPOpiHAmxB7jRWWHqivtQbUoRkDkzmlp+SoMuSBJAU5KPizgd8KRddaS/baEQR1yyQSVY3HvsMryigzcpsNf9HezWCc=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id k15-20020a63d10f000000b0059b2316be86sm5255776pgg.46.2024.02.04.06.39.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 06:39:47 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707057586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3ERBkTWboSgSMwK6QkBGheNdAxRHtxD6ZHyTOKGmeWg=;
+	b=gTePWLzz//Xk8FSZCjOSTHK45f3hfJawOFXU82jYV0SgRGmdeA8N2NuLJwd11l85ZQD5WK
+	N7kUcE8YrwB+flxqTKw/BeGnHjFva4rU5nYg/mZp3HWJYJmu6IgW7pBXhFg9LiS4pwg81Q
+	6y23d+Qm103ol3Amj2Uzkxt2QEmOUR3r7Vl1NY6qVJK7rMWaV+jdbW37MXvL+KdMZfWxn6
+	xIJ9ykKezTaIsVk8Z2f+7at3Xq7y4DZlXSt77qm+AC9Dy/qa28THXZEVLwVDe8UqJW6WvT
+	xe6AQrKVnpc6mxZJOxRj2IUL5AO4xvQIVgqUqBkH24rTKCYOcCQ8n716egfVzQ==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Subject: [PATCH 0/2] platform: x86: struct bus_type cleanup
+Date: Sun, 04 Feb 2024 11:40:15 -0300
+Message-Id: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-powerpc-v1-0-c763f0e142e9@marliere.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM+hv2UC/x3NQQrCMBBG4auUWTsQY0jFq4hI2v7VgZqGGVsKp
+ Xc3uPw27+1kUIHRrdlJsYrJnCvOp4b6d8ovsAzV5J0PzrvA3WLPfkLKS+Eype8464cHlRVqvF0
+ jB4eI2IW2vSSqmaIYZfsv7o/j+AGUkJbycgAAAA==
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1077; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=YPtF05/G1lPm57cNsmvdhqj9M4hNZFetbczpZyK0TVg=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv6HQR/0gLexaFXTDxQRVNnf053sR0pirknkZx
+ BAiT8Ltsx2JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+h0AAKCRDJC4p8Y4ZY
+ poWeD/9PwYtqWdcVmFevIkT/24+TXyNX+TbA0st6K8s6D41Mg+tN0aqfsvyhCAeeu/ljEn2rCcX
+ HMlf2WBqTqAIAtb80AuDZN5PhwCMVdaNHO4VQstJsCs0EoQ18yx1mASHYHZWwLbV5Of359U86MG
+ xsrhof2dpAH9YEeTBlt4o9YR8rJ64LtqveWCzcjcwSld20S6DbnGJpkbizjU2942UDdNkknkTTo
+ QlsiqzTu0tYZdYLe1KL2hc0fy+yTsLK2GlPgfH58jIg8op1eGLJQsbmSQg8pa+sUcrzHlArdBGa
+ 0f63lXciwdnGBVXQIc8+drKWReoagZD6zJvO3PqI38UB3+PUcacOXQrwM5W5c5F+iZXeHYmfYK3
+ IIPobO1vhBhU1tTd1mEBP9h/02lHnVG7SjUBqpXTzRd7r2SyuVDlmHRp3v2UwfCTnz/+ESP7Gos
+ rztNy84F1LBl5HtsWUgS5c8I8PGWHeD9wIbyLvd+2UiCl7Pw+T780AMp6Zjgi4fsnCtwXovynqY
+ laLo8S+hcLQXdJXNckN70rskO1+t0skh04eZzuMf/MrLS7vdrO4VeeAHlpj3g0ePQPH+UdGBhQh
+ ZONBJdbsdikC8b4Z8yN8q1yfWKjiUA8sMHG0VX6d7a/ydmseuPc6iJO4ib4Dvv2LnE+T27OCjn+
+ 9rVvdkjt+C6wg+A==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Sun, Feb 04, 2024 at 11:21:54AM -0300, Ricardo B. Marliere wrote:
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]). Specifically, this series is part of the task of
-> splitting one of his TODOs [2].
-> 
-> ---
-> [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+This series is part of an effort to cleanup the users of the driver
+core, as can be seen in many recent patches authored by Greg across the
+tree (e.g. [1]). Specifically, this series is part of the task of
+splitting one of his TODOs [2].
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+[1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+
+---
+Ricardo B. Marliere (2):
+      platform: x86: wmi: make wmi_bus_type const
+      platform: x86: ibm_rtl: make rtl_subsys const
+
+ drivers/platform/x86/ibm_rtl.c | 2 +-
+ drivers/platform/x86/wmi.c     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: 682c259a849610c7864cc75d52415c782c78653a
+change-id: 20240204-bus_cleanup-platform-drivers-x86-40e6e6b4773a
+
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
+
