@@ -1,140 +1,66 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D47221A0A
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 11:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447BB22094;
+	Sun,  4 Feb 2024 11:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707047304; cv=none; b=FpE27zXIqNxijTQe5TWJFPu3Am8f0EZ84tFSBJfc3gsaLx5dxS2ZMRfcGRuFRh94brI/jde/ZeolL7TTCyq/gI4/5CjhH7CAqMV/qjnnJlfVmBS8KNuAXZ05Pu1p/7ryHyhdhxbPteudLOsWXip/zSPGk7M6GzXGZ30GP0iCoNw=
+	t=1707047400; cv=none; b=b1KXmtcERi4WGLKxqTTa1fX/p2Hx1XwIUqew6HgFI89DqrV3xEU3GUlQDxw8GjUO9iYPcLsHehpv8rUA+4bYKKrE8ecoqbg7gcc0Yf0YxgvsKRxA/doMZJ004nj2OoFSxHUR4FAqD6ASE1849N5k0ixrV3zRVGQ8KBWjyCG9a1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707047304; c=relaxed/simple;
-	bh=1DuL6dXCrknE23VcOSIz+lgVGVDMztlVCyPAUOOnS+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cH960flYyHuUPOrCyoohkPIdB+I7pmqbRj1AJjcGmF5DyMPCdFHyj3W0qIAgrmkeFqYGw4kzQmMROQTAU7A2cxBVFJalRDYQinZoTZeeL/Sntfqx+2jnGydK5XDrOA7OvEP9mL9q4MwYGd861vJ16eA6Wc2oGlZQ7+7c02KXSWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jwpBX1bv; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwpBX1bv"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-290d59df3f0so2871957a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:48:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707047302; x=1707652102; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLWoLtoNTPqCxrIM8mN16L13n1zpFY2d5lyre0SQZo0=;
-        b=jwpBX1bvu2O+77BorHqyXEp8JoFLYo1Z7+zWf5hhwmuoRQ+j03TEzK8iyyaJTuTQzS
-         XEMLvekwTdtpX/fjnxkYI/OQk98KyYmzRfXiO60FmFb34HlNwCQb14A30fLRAVMlpG8Z
-         uWK5Gp5dexEDMO8u7V0/Jv88KjgDuFY/ee37X5iBCn90pyfXh9Kc/uN0iZuUVQtjL8UX
-         PYknD2smuB0kEyaTty2PhUgEeyj0Mrlhevw3RgW+meDMmzOgoHCLN+GDm37MuCAJ+KEK
-         TsZciUWd+frZb1zhvER2DpqUo3QH0mls2ELLauY+AKms8PjAQVUcsyu5VG3gfLjqZQyJ
-         NyCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707047302; x=1707652102;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iLWoLtoNTPqCxrIM8mN16L13n1zpFY2d5lyre0SQZo0=;
-        b=tbR/vcJLumB0csfpwO2hLyNqrnnaz9huPgmhCzi5mz676lsBKgbB5gBM/eehfbvzgB
-         YAwIvl9PRHFK+bLtcos4Ngtbqwk/7Xse+j4kNXuz2CQyE8e45fw+KMntM07pwozICUAL
-         BMGwozmXoQsdEVNUSPJm12xhM/Gj/vO0zbk/ZngRgeS1npkIGA5bUxyQk5VXd7P43pIF
-         iN/Df6ImMQcJ/izWZmPV64YBjzs0IT5N1R3Pc+QohLU04rwOiAT1S+MA8Z1S2NCiJy5D
-         DWxhfnlvJgIc7ePutrkkTDMCm0QrjrTpGYt+lDD7o7mVytZNJlF7tHM4EL4hPcW4SxGA
-         IXjA==
-X-Gm-Message-State: AOJu0YwGekPz5Xuq7z8VuwY1cfXEeYYU7d+eME1xtEc9hMUw8WgvK/j+
-	szG4RILThtnXr6eBnCCHckWaQ50Ni/+oSBvyhJIKS0YQv/gd5JnIRD1yjZ3Yq/4GcZpdRx1jHM5
-	RHrj11O756wzm7SkLd9jsTm66+WJdfZyb8ylKcQ==
-X-Google-Smtp-Source: AGHT+IEOi1scUQyf78MY4kTNWqSEf7HlOqWLYuomTqqK+b8A2/eT8u4bXLkS3+LMceEB+Lz2pWQR/bpqnLMe5hA5unU=
-X-Received: by 2002:a17:90b:387:b0:296:24cf:bae6 with SMTP id
- ga7-20020a17090b038700b0029624cfbae6mr6785135pjb.27.1707047302628; Sun, 04
- Feb 2024 03:48:22 -0800 (PST)
+	s=arc-20240116; t=1707047400; c=relaxed/simple;
+	bh=s9S8h1/2eSklTK7wU4q4viPGhMla9isvvs+OxGtXtlY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F1F8VcjfqkV2GmBUXCiISU9DKHfQXmmL1t4oBR60Q3NHBXLetniPfJCZKi6A5A0BUiNLlRY2vvoyjxe5K648cSBxj0ldEdtdHdU7TKNmDZWrWa2av1BVnk+xAltCVrPtkP2wqghP6lWQxENYvvmzX+xgnPpZ6wupx+hcKBoZbJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from [185.175.219.2] (helo=phil.fosdem.net)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rWaUp-00051V-1q; Sun, 04 Feb 2024 12:17:11 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Andy Yan <andyshrk@163.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-kernel@vger.kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-rockchip@lists.infradead.org,
+	robh+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: aliase sdmmc as mmc1 for Cool Pi 4B
+Date: Sun,  4 Feb 2024 12:17:05 +0100
+Message-Id: <170704542189.2517832.10645480852416416649.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240201121106.1471301-1-andyshrk@163.com>
+References: <20240201121106.1471301-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240204044618.46100-1-void@manifault.com> <20240204044618.46100-4-void@manifault.com>
-In-Reply-To: <20240204044618.46100-4-void@manifault.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Sun, 4 Feb 2024 12:48:11 +0100
-Message-ID: <CAKfTPtB5NbvJt58zpi9aM-8kOxchgzYccY03wUEQLypaWjUXew@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] sched/fair: Simplify some logic in update_sd_pick_busiest()
-To: David Vernet <void@manifault.com>
-Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, 4 Feb 2024 at 05:46, David Vernet <void@manifault.com> wrote:
->
-> When comparing the current struct sched_group with the yet-busiest
-> domain in update_sd_pick_busiest(), if the two groups have the same
-> group type, we're currently doing a bit of unnecessary work for any
-> group >= group_misfit_task. We're comparing the two groups, and then
-> returning only if false (the group in question is not the busiest).
-> Othewise, we break, do an extra unnecessary conditional check that's
-> vacuously false for any group type > group_fully_busy, and then always
-> return true.
->
-> Let's just return directly in the switch statement instead. This doesn't
-> change the size of vmlinux with llvm 17 (not surprising given that all
-> of this is inlined in load_balance()), but it does shrink load_balance()
-> by 88 bytes on x86. Given that it also improves readability, this seems
-> worth doing.
->
-> As a bonus, remove an unnecessary goto in update_sd_lb_stats().
+On Thu, 1 Feb 2024 20:11:03 +0800, Andy Yan wrote:
+> Follow others rk3588 based boards, and u-boot only use mmc0/1
+> as mmc boot targets, so aliase sdmmc as mmc1.
+> 
+> 
 
-The line above is not relevant to the content of the patch.
+Applied, thanks!
 
-Other than that
+[1/4] arm64: dts: rockchip: aliase sdmmc as mmc1 for Cool Pi 4B
+      commit: a41f91b4da1490b90ae5859f3464e94d418fea2c
+[2/4] arm64: dts: rockchip: aliase sdmmc as mmc1 for Cool Pi CM5 EVB
+      commit: cebda3dd36bebb11d3e6df4d1944a1cdcf3cd4cf
+[3/4] arm64: dts: rockchip: rename vcc5v0_usb30_host regulator for Cool Pi CM5 EVB
+      commit: c7e8dbb3bc12f389d617e6c0e9537f11a1fa6eb1
+[4/4] arm64: dts: rockchip: Fix the num-lanes of pcie3x4 on Cool Pi CM5 EVB
+      commit: 5556a8c3af8b4ee648b0fd4cdb4a1356d92de07b
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-
->
-> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
-> Signed-off-by: David Vernet <void@manifault.com>
-> ---
->  kernel/sched/fair.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 76d03106040d..fa049f866461 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10006,9 +10006,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
->         switch (sgs->group_type) {
->         case group_overloaded:
->                 /* Select the overloaded group with highest avg_load. */
-> -               if (sgs->avg_load <= busiest->avg_load)
-> -                       return false;
-> -               break;
-> +               return sgs->avg_load > busiest->avg_load;
->
->         case group_imbalanced:
->                 /*
-> @@ -10019,18 +10017,14 @@ static bool update_sd_pick_busiest(struct lb_env *env,
->
->         case group_asym_packing:
->                 /* Prefer to move from lowest priority CPU's work */
-> -               if (sched_asym_prefer(sg->asym_prefer_cpu, sds->busiest->asym_prefer_cpu))
-> -                       return false;
-> -               break;
-> +               return sched_asym_prefer(sds->busiest->asym_prefer_cpu, sg->asym_prefer_cpu);
->
->         case group_misfit_task:
->                 /*
->                  * If we have more than one misfit sg go with the biggest
->                  * misfit.
->                  */
-> -               if (sgs->group_misfit_task_load <= busiest->group_misfit_task_load)
-> -                       return false;
-> -               break;
-> +               return sgs->group_misfit_task_load > busiest->group_misfit_task_load;
->
->         case group_smt_balance:
->                 /*
-> --
-> 2.43.0
->
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
