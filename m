@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA1AB654;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4E6C2FE;
 	Sun,  4 Feb 2024 01:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009487; cv=none; b=Na4nM/pjeQwVasU9jqD2rinphziaZZ8/Ed+Yia5ChwDZ9u9Yarmz4qs34PNsh6TrDZpVH55FWgt4R4gE6hjr8zRRYxAfHHVRHmVhaHoJkgNGexCqOrCAP/tPl/UlwFPW/iad8ByIXRdYd4vYB91sXXVgG66gaUvs1bSA+9MEjFg=
+	t=1707009487; cv=none; b=hYoxle+rixhdxqYAtSbL1iQneRPwfoD7CsO7HrS1l+Gl58qINl5on2F65Q8q0PYdqGr2nNSwqMebFK0HAQpzG7/lL/dtk1xHB4JdbHmu3pVNaIRecycgJLUcb3SdtBapLadtLwnpIunsTg6tnO6LpRwpiX3bQvEHI7VEK4sisQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707009487; c=relaxed/simple;
-	bh=3adZE3XRvsxSdhBsQIqBjy7xLEJW/dok2uD8qBYZMss=;
+	bh=6ZjGB20lu+D72LkOxZozH0kq/zHvSI+SlGbD2+KSFzM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=GInzBFKRQE0+viDe0f/tRVUB9NcdtQpJizeH2zONviJRj1+2feSJZY3NLUfAjVdzAxKQTbePJ3+kLn9hDNMoc6lCaK455mT/QMSsX2wFwWHgf98iIViywwbnO3NCVgjGnAbb7RYxVJ7ARn48YqllFx4/EE7i3UiiQFEmzBTm3sg=
+	 Content-Type; b=jywflouJluNoBvjaa5btLXQNm+7e3cQHiwbv+EhX8rdJla46pl4MpWj38Fevz4zT148sURU/U083KVs7syZqBbVMWpUN+N9rhH1SpozbWMuewvGpTtuNyz9T6iF9PVILLwBYFW4Pil+bP0dpFwgt1E6XRHDdI2LzBjOYEbMCBnU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DA0CC4AF75;
-	Sun,  4 Feb 2024 01:18:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D72DC32788;
+	Sun,  4 Feb 2024 01:18:07 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rWR9R-00000006Oqs-0cRt;
+	id 1rWR9R-00000006Oss-3KkG;
 	Sat, 03 Feb 2024 20:18:29 -0500
-Message-ID: <20240204011829.008666210@goodmis.org>
+Message-ID: <20240204011829.656627126@goodmis.org>
 User-Agent: quilt/0.67
-Date: Sat, 03 Feb 2024 20:16:28 -0500
+Date: Sat, 03 Feb 2024 20:16:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -33,9 +33,8 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Christian Brauner <brauner@kernel.org>,
  Al Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- kernel test robot <oliver.sang@intel.com>
-Subject: [v6.7][PATCH 13/23] tracefs: Zero out the tracefs_inode when allocating it
+ Ajay Kaher <ajay.kaher@broadcom.com>
+Subject: [v6.7][PATCH 17/23] eventfs: Remove unused d_parent pointer field
 References: <20240204011615.703023949@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,19 +44,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-eventfs uses the tracefs_inode and assumes that it's already initialized
-to zero. That is, it doesn't set fields to zero (like ti->private) after
-getting its tracefs_inode. This causes bugs due to stale values.
+It's never used
 
-Just initialize the entire structure to zero on allocation so there isn't
-any more surprises.
-
-This is a partial fix to access to ti->private. The assignment still needs
-to be made before the dentry is instantiated.
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240131185512.315825944@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/202401291043.e62e89dc-oliver.sang@intel.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240131185512.961772428@goodmis.org
 
 Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
@@ -67,57 +59,50 @@ Cc: Christian Brauner <brauner@kernel.org>
 Cc: Al Viro <viro@ZenIV.linux.org.uk>
 Cc: Ajay Kaher <ajay.kaher@broadcom.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202401291043.e62e89dc-oliver.sang@intel.com
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c1504e510238 ("eventfs: Implement eventfs dir creation functions")
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/inode.c    | 6 ++++--
- fs/tracefs/internal.h | 3 ++-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ fs/tracefs/event_inode.c | 4 +---
+ fs/tracefs/internal.h    | 2 --
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index e1b172c0e091..888e42087847 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -38,8 +38,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
- 	if (!ti)
- 		return NULL;
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 04c2ab90f93e..16ca8d9759b1 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -680,10 +680,8 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	INIT_LIST_HEAD(&ei->list);
  
--	ti->flags = 0;
--
- 	return &ti->vfs_inode;
- }
+ 	mutex_lock(&eventfs_mutex);
+-	if (!parent->is_freed) {
++	if (!parent->is_freed)
+ 		list_add_tail(&ei->list, &parent->children);
+-		ei->d_parent = parent->dentry;
+-	}
+ 	mutex_unlock(&eventfs_mutex);
  
-@@ -779,7 +777,11 @@ static void init_once(void *foo)
- {
- 	struct tracefs_inode *ti = (struct tracefs_inode *) foo;
- 
-+	/* inode_init_once() calls memset() on the vfs_inode portion */
- 	inode_init_once(&ti->vfs_inode);
-+
-+	/* Zero out the rest */
-+	memset_after(ti, 0, vfs_inode);
- }
- 
- static int __init tracefs_init(void)
+ 	/* Was the parent freed? */
 diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 91c2bf0b91d9..7d84349ade87 100644
+index 09037e2c173d..932733a2696a 100644
 --- a/fs/tracefs/internal.h
 +++ b/fs/tracefs/internal.h
-@@ -11,9 +11,10 @@ enum {
- };
- 
- struct tracefs_inode {
-+	struct inode            vfs_inode;
-+	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
- 	unsigned long           flags;
- 	void                    *private;
--	struct inode            vfs_inode;
- };
- 
- /*
+@@ -36,7 +36,6 @@ struct eventfs_attr {
+  * @name:	the name of the directory to create
+  * @children:	link list into the child eventfs_inode
+  * @dentry:     the dentry of the directory
+- * @d_parent:   pointer to the parent's dentry
+  * @d_children: The array of dentries to represent the files when created
+  * @entry_attrs: Saved mode and ownership of the @d_children
+  * @attr:	Saved mode and ownership of eventfs_inode itself
+@@ -51,7 +50,6 @@ struct eventfs_inode {
+ 	const char			*name;
+ 	struct list_head		children;
+ 	struct dentry			*dentry; /* Check is_freed to access */
+-	struct dentry			*d_parent;
+ 	struct dentry			**d_children;
+ 	struct eventfs_attr		*entry_attrs;
+ 	struct eventfs_attr		attr;
 -- 
 2.43.0
 
