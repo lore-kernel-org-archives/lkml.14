@@ -1,148 +1,120 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9308E225A9
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 14:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E07E2261B;
+	Sun,  4 Feb 2024 14:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707057596; cv=none; b=hTacTNqA0rVn3rAa65KZG3orql1Tow2n1SezV/10xpOyzUF7gOe1WcR82c61F2vo0QHej5b9ZuLs6z6pxcQjGVDzOePqRksYnCUovvWx5WKPsdOJqlPiVs/ghPlzOeuZSMEOZUXwMDZ3odilFL/02uBMejHMqVBG2/b/40mXU2Q=
+	t=1707057596; cv=none; b=GoiexaLFRVVegujJJNlS8GVU5hnPWmhFV44u1xOs1RF+x7uPz/zJM2h+zi64UqLz2PZRlMrFb7BrW3MWDCC9w4JH5aWldBQv/C6VU9fJ7as7XcP/LIsX+o6SBTYJKjMpXGE9D3uOW4IBxdX9X7q96h9Wbr6ZSa1sgVO2zVuQFrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707057596; c=relaxed/simple;
-	bh=BL/x9orUY4Qx6/R/opi/OiQWicq/Bdzd8RXJYTHUSLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zw60G8Nkw3LM6O+XaxJQBwwtEo5r9DafQVWL15/Friom0MD7onYipHVhgM7xCI1BUGf6/fw6rpfNSLN7S+NCCN/kJzmzbx+R3tODqgCLogFCdvzAVt5Ll1dSRCBuQjTHZC3DVzw9byAeneV+YJ7F0qvSUi9zxxi+KARQ8DLxcKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ApSE4Iec; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=DCD6AMLvjzfV2dwxayyk2LAMb3B1QNeqUuCbdIScgfs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gA3qsGgVIHO4sDz0/auU8bKqlR4/r7iFknbyrsDVxLv4a/takJusc9b6SbPXkexfIrpxcK0YoJt/pbDHJ6fwz5coS53aPhmV4tp52uwiYH0P7EHRyIWCwPtbO+oFrwnkrskKn8I8vB1EibM3zeOkTvczkPN0GCoKsKRrYYqrWJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=Z1myHvU3 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ApSE4Iec"
-Message-ID: <6b88bdc3-37da-423f-a665-308ac519a256@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707057591;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="Z1myHvU3"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-295f3bf41d5so1599887a91.0;
+        Sun, 04 Feb 2024 06:39:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707057594; x=1707662394;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ezYYHGSX/pcUtiy9cJ9ZdjJ+J+xQpwes4VQvX7jx/zo=;
+        b=RT0Sgu0aoNjulOc7Zycjz0j3UtUZc+foDlikSGkLfRxvsJEcTSIlKWmTuXhbIV87Gw
+         b6SqDlEvxMS9np90zxUSatvwKkXkQTK+c1JAw/Gv2Euhg0MbkWyY4HlgFydxjos0LYze
+         CNeGFdzsMPYNBA8o0O1Rrn0kySQSDi7ln9GV/r+ha7J9lmflb5DcGanopNNHHv/MPjPt
+         VEpnv4BGP8qEkc0Eek9hOa+eSuiZBfwvoRcEx7VaQW9LPTivzUprPm6NNLT52u0e9/5D
+         dgYc7fZGDnLNmyn49r6g6xve5fqFf9EStCq0Xgl3pb8+6Wi9t4iLdo/xaC+KWQkvuCSH
+         ac0Q==
+X-Gm-Message-State: AOJu0YzEIAXjvdXRixhQ99MCdZ+gzKMDarXbRitxu6pXUTTxRmCawuvJ
+	9NbUZRytSt1mOIpTrdxjqK9JO0bZdfAMIVq5RCnthsK+dvG2JiI33tQyNRLPMd4i+A==
+X-Google-Smtp-Source: AGHT+IF/LvGJWFS07g8bPEr+AKxZH71SH4eIfgFeUu6FkNgwsUi64JoyUEuMoMNAu+cDJxo5eqn30w==
+X-Received: by 2002:a17:90b:4004:b0:296:2865:cc17 with SMTP id ie4-20020a17090b400400b002962865cc17mr4844717pjb.20.1707057594330;
+        Sun, 04 Feb 2024 06:39:54 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUiJQ+lFPYnIgtSHcOMHhIoRsTg1y8TX4eG3ha1gdpvWlZ8DoutWGCstkDBbT2AyJ9AjUebTbvOsp2OcX2p6SieVVUMfFlEOvyItA3uk/xAApO+w/89aHEkQtAzamj5MVhejKf7TaCTPCJ/mwghU41I9zdHASE6LndooIXlYl1q1AgOL8domq1ITFDmvZvpGgOWA8CHq4WdoiVtizc=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id c3-20020a17090a020300b002965e463ee9sm3536633pjc.34.2024.02.04.06.39.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 06:39:53 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707057592;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y80CdJjL2kWlKWe2vMEsTFd6tb84k4wJ4sCbchotmMI=;
-	b=ApSE4IecJ9joafKTB6l39BAFgHUNTXfhO+zwHvK0cYzw3KXqKm+QQ7mo6MuLlPqVWstEEm
-	WWFxpRtF6mHexGCbpGKdOdF8uq421EBc0jz5dsGlQHnAlmVxU07jESxrbRVqFg3zpvl7bu
-	RLyqjfTA+IF1u1PGlIBJlsI5SvYT/MQ=
-Date: Sun, 4 Feb 2024 14:39:46 +0000
+	bh=ezYYHGSX/pcUtiy9cJ9ZdjJ+J+xQpwes4VQvX7jx/zo=;
+	b=Z1myHvU3csMaqFB7GKFE3I0v5WQk4GK1zNW4Bb4qUrz5maEWPuvglehuNuL1BFocoxDO+L
+	FEZwjdHTq3TTOxh7bm9gIZLiXjqw0SH3xAo+YTVaz8nenpn8fdgPyDrhT81uVnnwX68frP
+	aFUDCQea4Qt72A+VaC7R12cxoyC6VVAo/R54m6j1jrbO6UqTEYSQQpr9yxJzmmp2t3MY5r
+	yksHNK4pQnexU6BrQbehR8d6K65riD5jMn3LXKGztQKV9ZTCkb8c0kiWcNDV44rRCwAFgc
+	Vh3BBvN0AYeCk3qFmFJHu1fe22jwxZxzIdfMvBpyACRF15Dwxl0HYnK5ZT4hkA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 11:40:17 -0300
+Subject: [PATCH 2/2] platform: x86: ibm_rtl: make rtl_subsys const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5] ptp: ocp: add Adva timecard support
-Content-Language: en-US
-To: Sagi Maimon <maimon.sagi@gmail.com>
-Cc: richardcochran@gmail.com, jonathan.lemon@gmail.com, vadfed@fb.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org
-References: <20240117114350.3105-1-maimon.sagi@gmail.com>
- <8a6c5297-6e86-4f0d-a85e-1a93b2215d68@linux.dev>
- <CAMuE1bFEbrY2PiDB6OdZGzDNijPAhoGBircTpqiyVs0Qq6bOig@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <CAMuE1bFEbrY2PiDB6OdZGzDNijPAhoGBircTpqiyVs0Qq6bOig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-platform-drivers-x86-v1-2-1f0839b385c6@marliere.net>
+References: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=923; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=DCD6AMLvjzfV2dwxayyk2LAMb3B1QNeqUuCbdIScgfs=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv6HQ3+29jKxh1mamu111xgE2/ToCrm5moNnId
+ 9Ra8XP3s7iJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+h0AAKCRDJC4p8Y4ZY
+ poAFD/4rJaNnFbM3l1qCLz9O/ci74mgChD/er5TjAFUHPNVYWPFXacqN50/ui04UubrqQTZtpFV
+ aEOIxPcG7vwsbqgump7v3M1z0En9e8EXDqlbCyL9En81NP36ORYJz14qha9G1jwUqVmo6nU23kX
+ v+PfuwQFrw8RrDQfVJo+/GvTfgKt1EFoZwNK2GaR/9YHTqSHLnclH4+wU4wKVciaLLLgHfrJ704
+ 8qUcY0zqRhdtXDf5hcUtJvXj73+KOeoyNRPmyzo/7b+eryawwVOYRFD5PihezfNEBzkjPuelPue
+ 7UkU66iptLqoWoI64Pv7Dlh7nWC4ddXDFnFCNUYBTSzeTBnX32c/PiqdNy/xfgmmECjmSy54zox
+ E1Vo+9wVR8oY5HNCgJZBuY20ebc8tRzl5QIr7UAIbj9XFXmXHb0aHd95SyiPQ2IWzYsLg+aHr8X
+ 3cQ1+xtVYfvr1bWHXw21tNeUKIxKrgPLova+CpADd5hio1MSlWBOFM7DLXOUN0ZQdi3KAkbYNiA
+ +Mju3mFGxYZAUd61eWqDZTeZGwF/3bwXsHBTQ+DsTnJvCrQz3L8RnOvXFmAkmoYBJI6rH3sce/w
+ l8OfXdpW62WBCFSLiYPA4wAMiwUmZUEahDWDk1TMhKiYtxSB2SJioLEsCTtZ8FaTH6Q7z4lWw2L
+ 70SIcne5QNUP6IQ==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On 04/02/2024 11:31, Sagi Maimon wrote:
-> Hi Vadim,
-> Sorry but I was on vacation for the last two weeks.
-> So What should I do now:
-> 1) Do you want me to set my changes into the main linux git tree:
->      git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->      and use  use '[PATCH v6] ...' prefix
-> 2) Or
->      set my changes into the net-next git tree:
->      git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
->      and use  use '[PATCH net-next v6] ...' prefix
+Now that the driver core can properly handle constant struct bus_type,
+move the rtl_subsys variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-Hi Sagi!
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/platform/x86/ibm_rtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Option 2 is the way to go.
+diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
+index 2ab7d9ac542d..1d4bbae115f1 100644
+--- a/drivers/platform/x86/ibm_rtl.c
++++ b/drivers/platform/x86/ibm_rtl.c
+@@ -179,7 +179,7 @@ static ssize_t rtl_set_state(struct device *dev,
+ 	return ret;
+ }
+ 
+-static struct bus_type rtl_subsys = {
++static const struct bus_type rtl_subsys = {
+ 	.name = "ibm_rtl",
+ 	.dev_name = "ibm_rtl",
+ };
 
-Thanks,
-Vadim
-
-> 
-> BR,
-> Sagi
-> 
-> On Wed, Jan 17, 2024 at 11:23 PM Vadim Fedorenko
-> <vadim.fedorenko@linux.dev> wrote:
->>
->> On 17/01/2024 11:43, Sagi Maimon wrote:
->>> Adding support for the Adva timecard.
->>> The card uses different drivers to provide access to the
->>> firmware SPI flash (Altera based).
->>> Other parts of the code are the same and could be reused.
->>>
->>
->> Hi Sagi,
->>
->> Thanks for adjusting the code. One signle still have to be
->> adjusted, see comments below. And this is treated as net-next
->> material, but net-next is closed now until merge window ends,
->> you will have to submit new version next week.
->>
->> Please, also use '[PATCH net-next v6] ...' prefix for it.
->>
->>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
->>> ---
->>>    Changes since version 4:
->>>    - alignment fix.
->>>
->>
->> Please, preserve changes from all previous versions for next submissions.
->>
->>>    drivers/ptp/ptp_ocp.c | 302 ++++++++++++++++++++++++++++++++++++++++--
->>>    1 file changed, 293 insertions(+), 9 deletions(-)
->>>
->>
->> [ ..skip.. ]
->>
->>> @@ -2603,7 +2819,44 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
->>>        if (err)
->>>                return err;
->>>
->>> -     return ptp_ocp_init_clock(bp);
->>> +     return ptp_ocp_init_clock(bp, r->extra);
->>> +}
->>> +
->>> +/* ADVA specific board initializers; last "resource" registered. */
->>> +static int
->>> +ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
->>> +{
->>> +     int err;
->>> +     u32 version;
->>> +
->>> +     bp->flash_start = 0xA00000;
->>> +     bp->eeprom_map = fb_eeprom_map;
->>> +     bp->sma_op = &ocp_adva_sma_op;
->>> +
->>> +     version = ioread32(&bp->image->version);
->>> +     /* if lower 16 bits are empty, this is the fw loader. */
->>> +     if ((version & 0xffff) == 0) {
->>> +             version = version >> 16;
->>> +             bp->fw_loader = true;
->>> +     }
->>> +     bp->fw_tag = 1;
->>
->> Please, use fw_tag = 3 here, other tags are for other vendors.
->>
->> Thanks,
->> Vadim
->>
->>> +     bp->fw_version = version & 0xffff;
->>> +     bp->fw_cap = OCP_CAP_BASIC | OCP_CAP_SIGNAL | OCP_CAP_FREQ;
->>> +
->>> +     ptp_ocp_tod_init(bp);
->>> +     ptp_ocp_nmea_out_init(bp);
->>> +     ptp_ocp_signal_init(bp);
->>> +
->>
+-- 
+2.43.0
 
