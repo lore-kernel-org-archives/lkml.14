@@ -1,60 +1,60 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C561250E2
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 19:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDD8250F8;
+	Sun,  4 Feb 2024 19:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707076313; cv=none; b=qXhzKvswwr0XWPWwn+K/Cdne0YH99m/Hm5fz2UMcfUoH5DoADvnhwLtSeNGLtcyEn9HbOTQApPWrt/laI8JGESI6tKRzWa1p31JadNfuyJq93SB8/h4QeZoz6xE9blfnpmQPURoNv7HmKEZglQ4KLHY6hc4iWewHf71cCeA437c=
+	t=1707076570; cv=none; b=g1fo7rxawq67c/iZmWOgvd1/OXF8a7MA+59gqrRveZnyrSn08TlFUdDpuTrlayiJDG7WGx1DALP+PSse9vPWJxLF9dXy4plt1LWhT+0h0A9UYaxpr/8e4tNrJsz2I1Oije49I29V0NbA7Fz49Txu8HKpo63mInxOjezeACppXew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707076313; c=relaxed/simple;
-	bh=IFGJxHx2foEPhvFQU7sM0GpN2LJlqR4qLVoO7StADyE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=I6u/LMBpAWxr3ycDkV8OrcwNtbhuev2KHQUzTbPSQBRymQSEduHJPWeQMb/BzVLtnjsyPprJW6O+KbEEK0g3sbZ8A6FRORYqkO3xs0zVT2CB3Puy/zUrhx6TWFPzTY8kZkWnnF29ftOnlEjAQVElVrC3EwkGfItnIooAzbsPEQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=IXM5dO/4 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1707076570; c=relaxed/simple;
+	bh=bSEtUm8bN+TyipvwF0npj5p02e8GpdyMYtxzssJwS1E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=chySs/I/e7rK5D07JqSVhpSN6+1BGL+5xgIrFOvxV1vQ1Qif5qVuuYMKbpc5T1pQfsKuxATw5x52R26VgUUh4sacmej5CAilHXk34U7FH+OzjLAuKJVsCFqXU1tW2xHF2p4TmSqnj3GkK5re6EeRV3I+q9JhzJyRHVKQm+68/6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=Q0KFR0Q+ reason="key not found in DNS"; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="IXM5dO/4"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d7393de183so26855195ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 11:51:51 -0800 (PST)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="Q0KFR0Q+"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29026523507so3094944a91.0;
+        Sun, 04 Feb 2024 11:56:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707076311; x=1707681111;
+        d=1e100.net; s=20230601; t=1707076568; x=1707681368;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m/VZER7gPfVe5svDXHye7OkZXrLijBRk2e2Xh6GGgdQ=;
-        b=KihY7LlDm8L7mbZ+fq0lTte3yIaiGhQxaf9OcCZc0bHigCVVSzQPPJCxKEa9nxrD3S
-         FiEllOaoq6cujMENSPjtHyNNdFkXm9W+GemQWG2f7gBBHock8dkF2mxdvvi/BgzkB5Ha
-         yEDYbpeLArPR9EQ09etE/gIKmPMrCOe56hRu7NOkOxvtXaLPdqju5zmlh0LRrCzwynNA
-         dtybE0y68spYK+c6JUlP3x9aT6gHY5Osfll6Czsw7M2aIZDNkVp7sD4p8EUKcXJ1hBD5
-         LD2ncFIohrULd+zLjuY1vZGlexE8lVSpJaFIhxL6Lqj41XJYt/JKJep1/eMei+XTqzp0
-         75Dw==
-X-Gm-Message-State: AOJu0YxPBHcNpCLmqtrjClf/kKz5IaJnvYzcvsB7p4V2HVDwIIduB4k7
-	2BgV9OLEokG5OGJiWXvHIKJJJAsZ4RaZJHgzSvTfof43+gEkCWLF2Db+pY6s06X1lw==
-X-Google-Smtp-Source: AGHT+IELouHz1u2E8BfCjxMHYJVLdhaBKPdQlsG+TenyZJdYo0QNtq1PI//3Cil7hbT5DOeZRmq/tg==
-X-Received: by 2002:a17:902:c084:b0:1d9:624e:126d with SMTP id j4-20020a170902c08400b001d9624e126dmr8377157pld.62.1707076311353;
-        Sun, 04 Feb 2024 11:51:51 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWLon5groo4jnw4/mZbU+Z+fUcODlwd0FpsBATMWMDY9nvN9tcp5E2kLQsuZI6R6CfvwkU83uxZesBaJuEYUvxeBIesoxTiN06ibg==
+        bh=XGUsNvd4PYKbli2LypFPvRIIr39Yk7M4UXOO8wgms5g=;
+        b=TH5jraGWvK42iWqu4NlnQ61SqTE16GWSsqP3mbQf2kqXr3WE8xwE0V7Po6zUfrPmMs
+         Q7L4y24XEci1jK8yE2vfc3DIetcNavpptDNmlEvAvQOA4jXAr9CcNGqc6hyWWeyh38mE
+         HlDnGhUY5wYlVdqVNECggmfwuBolRgnuO4gGP07D95T+AVV0QdRU3gTmSvjkizp9f4Ks
+         ZOZOeHsw689/GUCPxVFhXN8vNKwJE7AcotePyrvUkxXKNDxVmfBt9RsWnySwmzIWqBly
+         eT+BebVeTL/oJnnRPbc35T73OAAJk1XhI7oWG85SM5YljmsqHX7UIZo0ipTHwlh0UUE4
+         f5Fw==
+X-Gm-Message-State: AOJu0YzYR4LTfrSBwFC+UiV8cExqw1cPkpI9gJT2l9zzr99yWfbc3Cge
+	cCpi27cUqxLWfBOo+tVq9jLVnOzYUOPqgn2xLFJB3FCIxSCgIC4fhCJdInh1YVcXTw==
+X-Google-Smtp-Source: AGHT+IGJtojgv40FETF3Pfp8sNZocmaMKbWfuIUknW6yNtaz1Zv8giWHKv4qJkx3zQX8a8g/5Wd1LQ==
+X-Received: by 2002:a17:90a:31c8:b0:296:669d:bf74 with SMTP id j8-20020a17090a31c800b00296669dbf74mr4327882pjf.1.1707076567694;
+        Sun, 04 Feb 2024 11:56:07 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWBJoyNhK0xn68r+hQsJsGlxrjEJWw+tPc8qe1LWbRuyrGrYvSShFdet7GF3TGtAQalM14eifWiHKDf/d5lmI7W4jLX4Mb3aflKOPXn66og3smU5fKHVpKxzUoCSekC5mnB/fU9m0WbIA==
 Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id v7-20020a170903238700b001d960a29da2sm4866223plh.62.2024.02.04.11.51.50
+        by smtp.gmail.com with ESMTPSA id em7-20020a17090b014700b00295f31c3109sm3959473pjb.0.2024.02.04.11.56.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Feb 2024 11:51:50 -0800 (PST)
+        Sun, 04 Feb 2024 11:56:07 -0800 (PST)
 From: "Ricardo B. Marliere" <ricardo@marliere.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1707076309;
+	s=2023; t=1707076566;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=m/VZER7gPfVe5svDXHye7OkZXrLijBRk2e2Xh6GGgdQ=;
-	b=IXM5dO/4n53v0C99ssxTCdC4Y0W0soa+LR4Np/AZkoTsCPIbT6+SfuM9rncvFN/lgJdqpd
-	LFsawKwH5K/KL7UsxYN6rnmpzZgfm136ixXkx+LbJfUsIcI+H1ZbDZtZUQp8QUe7/hxsjc
-	8f/M1INN5Mgy4MQtqGvb/JFWht6t13w/FOXPHLh3Sf38dtLSlEPqxeLHQDCMS1WkoFGV/X
-	86DF1fdzVfUFOfsGHDzV6hZyXQm+3zJrsqkQKP+3SlIl6bCd9XrBRlZ1ZIF7sCjnGM5Kot
-	2Y0+0pe/98t+5/FTc3xHnRfsQvatIFa//kvLvgYWcnWMZPLrzvtlb0wwWrIOvg==
+	bh=XGUsNvd4PYKbli2LypFPvRIIr39Yk7M4UXOO8wgms5g=;
+	b=Q0KFR0Q+6IU9bGvm+xMkP3mSzOP3bqcNPZP3dkb5GRxR17YPLc+YRH1dZsNUZKzig+8H7m
+	K1nvPOpqT/ziIWzk8cuG9XwKQJ4AMKQ8lfcirzJOiN/1LKxjWIQFAmqWhTqd8sIRQbxs6v
+	1o3qLfI4LQ2DcT2vnV3+5PKghZ4nhgj3yvK5YhpWjVxdFnBWBzAbyYos+NuWrGbrrTM8NW
+	tCowYaOomk5XZ9ZbKJ31xlJ+HRnENWsXojdz+Geo1WXixqTqCN+kpBtFUsosSpMxAkQehp
+	+3kBSlay6BSbA+5I0Mhhim+DD+mo8Ca7kYOLB5g2RjmjlZUKr+tyNTTQrY0dWA==
 Authentication-Results: ORIGINATING;
 	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sun, 04 Feb 2024 16:52:18 -0300
-Subject: [PATCH] intel_th: make intel_th_bus const
+Date: Sun, 04 Feb 2024 16:56:34 -0300
+Subject: [PATCH] input: gameport: make gameport_bus const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,59 +63,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240204-bus_cleanup-hwtracing-v1-1-23adbf4e6bb5@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAPHqv2UC/x3MQQqAIBBA0avErBPMpKirRITZWANhoVmBePek5
- Vv8H8GjI/TQFxEc3uTpsBlVWYDelF2R0ZINggvJBZdsDn7SOyobTrY9l1Oa7MpkZ6q2mQ2va4T
- cng4Nvf93GFP6AA/lXIFnAAAA
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, 
+Message-Id: <20240204-bus_cleanup-input-v1-1-74c2438801cf@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAPHrv2UC/x3MQQqAIBBA0avIrBPUpKKrRETZVANh4mQE0d2Tl
+ m/x/wOMkZChFQ9EvIjp8Bm6EOC20a8oac4Go4xVRlk5JR7cjqNPQZIP6ZR15Zwys23KSkPuQsS
+ F7v/Z9e/7ARDWnzFjAAAA
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1153; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=IFGJxHx2foEPhvFQU7sM0GpN2LJlqR4qLVoO7StADyE=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv+r0cQBlxYlJ4A2ynSWr/rScgjJwaakJqRf6z
- /kKBp2TCteJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb/q9AAKCRDJC4p8Y4ZY
- piZpEACl/cSgbf644uTzaFaXigNtdVLSPoB2pZb4OeqW5f/6UgSNaCOqidA1EDIB9M+yiF5SEeL
- Vdu9qjE5x1fI/+Buia12TkPcsyLLAxAt7PiLLqYvTzuLUf+Xp7hOX/0JIcIdaC1XnrhaFKOznJB
- /0EX1+beZPzNB5Ytcz7VDehtGPig2qscBtnv1Gc3XvaMIEkWiWU+4fJMGE5FepV1dMdbHg3qAIB
- kSeblxIHe3i0xXdOLY0YV51jla39zwen2PM1ZXXVnK5oqbh0nP0+Yl7JzfiziLZh6A3evtPXAI3
- 7fkh4hPCFAC+H/w92gTzDeCJ7mKST9anGkPxOHWGaqRoenRuVcJTQM8DvDh0WBVaMx0+oo1NywE
- /U1/P8re7RtV9SKBcvS6CSqwKgIZDZSpWjughkPIQLVGPihNJbvNSJYyT+P4vJXz7ovd7uOYPsM
- 8LnV0kj+5M4NWTSS/MXOE/1/8zybSAw0y2fXqMNVfRl5rxlBP+aXtYhmjWqvPeFzG/wspeMhxu1
- aaLZ6b/pkJE54BeNdFvz0x4ojClQg+zSqG949BVCJODBCvZnWUIxjlWwHDs2sOYElDT9rtECk2D
- sXbuUycGe2YYMD0ZQTCphS/bqgv4logoGS8ALxWGIa3WCWm+32mDSy4qo2tbGhYBGCq52IrrgA6
- UtvHuoahpn34IvQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1523; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=bSEtUm8bN+TyipvwF0npj5p02e8GpdyMYtxzssJwS1E=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv+v0az0jIoYyxRLbxhUIdVYA+NxtEuutbWBjQ
+ LJj/vRMDKOJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb/r9AAKCRDJC4p8Y4ZY
+ po09D/41Ife/+pectYaYdPS9SkBTq6b3eFgVz4ua8qgDfj0VRKLzr1bpuEvOg5F5loyLXIrW+Et
+ tUvBtuiRde/O/FrizA/SvFqofAXe1goROBPAEWhHxoejR4uJaH+B4ozF/+ax4A5jJgNHcQ1RgzB
+ oWeyE7FlIVJaxE5OR9poxHOsp3+UIVKyNuA3+jXokkR2QY6CBpmeUmR1XiGPU1qor4K5gswJWv9
+ RO/gQC3iwYJWEBmnnGSHjtaDILzG7AJwdUP8snrhKFUvyX52JPGfEzsuPiFpr98lttfjOYPHjzQ
+ zmOUxnvxZ5/HF1S2qVdzDaTXZnt62HP/uajDZ+wBwj+wqsiystW2LkIrrn021km59vw3N1hbdpV
+ U5GCcVEXox0qYo/+l6v2OjYn4XfafvR7WTkvRyHzp+ASqfLvHk0K7Pk2/NBi7e7QVJdvgg4I6hE
+ K12KGXnOh0d+1zbkaJewB5FrZ0VZSr7OhOCTlyNUNvK/dnghqyuc6g8t4DmjbPszFcTRnzkAsPL
+ ycmuxOq7nyW9NsZIZsG3hl5vb/Mtz/3gqTeUKR6YDmnpzNuB8Auofh/obiNCmuwwaOTctSJrkrJ
+ QiPg7BjyseN+l3LmHBDHOceK1fl9orZtwwrjw2MCPxAWEsWj2w1Xp9O1ptzMLAkAvlvkZTucDYt
+ yYj3rvzzphRrJ2w==
 X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
  fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
 Now that the driver core can properly handle constant struct bus_type,
-move the intel_th_bus variable to be a constant structure as well,
+move the gameport_bus variable to be a constant structure as well,
 placing it into read-only memory which can not be modified at runtime.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
- drivers/hwtracing/intel_th/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/gameport/gameport.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/intel_th/core.c b/drivers/hwtracing/intel_th/core.c
-index cc7f879bb175..7df56b4093f8 100644
---- a/drivers/hwtracing/intel_th/core.c
-+++ b/drivers/hwtracing/intel_th/core.c
-@@ -166,7 +166,7 @@ static void intel_th_remove(struct device *dev)
- 	pm_runtime_enable(dev);
+diff --git a/drivers/input/gameport/gameport.c b/drivers/input/gameport/gameport.c
+index 34f416a3ebcb..cfcc81c47b50 100644
+--- a/drivers/input/gameport/gameport.c
++++ b/drivers/input/gameport/gameport.c
+@@ -38,7 +38,7 @@ static DEFINE_MUTEX(gameport_mutex);
+ 
+ static LIST_HEAD(gameport_list);
+ 
+-static struct bus_type gameport_bus;
++static const struct bus_type gameport_bus;
+ 
+ static void gameport_add_port(struct gameport *gameport);
+ static void gameport_attach_driver(struct gameport_driver *drv);
+@@ -813,7 +813,7 @@ static int gameport_bus_match(struct device *dev, struct device_driver *drv)
+ 	return !gameport_drv->ignore;
  }
  
--static struct bus_type intel_th_bus = {
-+static const struct bus_type intel_th_bus = {
- 	.name		= "intel_th",
- 	.match		= intel_th_match,
- 	.probe		= intel_th_probe,
+-static struct bus_type gameport_bus = {
++static const struct bus_type gameport_bus = {
+ 	.name		= "gameport",
+ 	.dev_groups	= gameport_device_groups,
+ 	.drv_groups	= gameport_driver_groups,
 
 ---
-base-commit: 41b9fb381a486360b2daaec0c7480f8e3ff72bc7
-change-id: 20240204-bus_cleanup-hwtracing-49f176bf033e
+base-commit: 7d0f351da46098b3bbb147f886f059473b84ff48
+change-id: 20240204-bus_cleanup-input-76cc02d48361
 
 Best regards,
 -- 
