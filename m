@@ -1,117 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78AE224DF;
-	Sun,  4 Feb 2024 14:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E993022611;
+	Sun,  4 Feb 2024 14:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707055224; cv=none; b=mCka1B9KRP8aRC6NKAz/nbVIfEvGQ2jqb0K3Hlgw2BlkWOyg8PZPy8hIxOPnx1C3z1MzxRF4sX5VBBNNdpgQ8KsNp65snhxYh+0bFqRh5c3wIQ4ZlTqpKwf4ASTtqerYhKHe8thylqq24HrkyP5uCF8xu1XYuonYSuEzLgsfupA=
+	t=1707055243; cv=none; b=YeLwmvhAWiTZOyDvEVYw7Y90KBiSTRJzJo+FBjMWw4A0PzWc6pf34kkl6FL6j+B8P+lFT9lLDntaSkejo/vgEHfVRkmH+X8FW+q8RkBFeH947FHFHYryglntYUrVBwTOPE3Qxm3+RM8EiXf8YiZ9t+qzygp3MiTlyMHl+dNYEbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707055224; c=relaxed/simple;
-	bh=+GbbwUe7Q/ClATrUhODZyGj8Pxv7kTwf0nLJ4c8so2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K48bVjbioR7zxtVOaVBvW+EUfMQBMjhw+V94ViYGrrQokH0RvjqtBOH0wB4g6xsIFQ3+1C0QFDiP4WLeR937dQS92TcDJq0386jhRzXa1vIc+HeaDcSv3o/4KwXanEgYoEFVXwGsb+nH8B1aF3ZwOIy3b13UfdP3SG5AkWj5r4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZG18/A7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707055243; c=relaxed/simple;
+	bh=Vf8alaPRUSd87sz0uhqcA3Em4cAEUY1UWVa53iKMltQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uw+LomRnLlJZAb6Vv/1wsz+6MhLyYSmmLpAN7mQ5j71PiH7OLrfbx/Xk4/e2abg3rwZkGz7tZFICP8kNyamuN0c+0tD4iW6fW/cR0tfHHV7H213TSOnXbrWf6ozAyc6ITJ6+rOwG2Mp8tNI3qYFSgIGJleGYISE6K6FAwRQiDVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=R8R/F5p+; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZG18/A7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCDDC43390;
-	Sun,  4 Feb 2024 14:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707055224;
-	bh=+GbbwUe7Q/ClATrUhODZyGj8Pxv7kTwf0nLJ4c8so2Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kZG18/A7pATcoA7ozOqMJrduF5tXbE9xArqvMAIOJUTfOu//omK3EHrMvIi2WaA+b
-	 9OllZmyZsjRz3U5ALKGQZGCJUorupiVv3PxLBUJJGXTcdiSENbk5LGZuyQvtgW70tl
-	 O6+O4JBJ4T8vDteylY5clKCVQfodca/23VXKXPDk2h2edthKCPW7ihXPzLxfACJLPy
-	 QLrTuiowESJpIqQExq6zR74a6QxtwCBrRB0iVEyyCNcwFXXtM4xgx6lom01z/CtxLn
-	 MPUoqUMltP3TniYqfbBNm8XJQMzZRtOMxrVfzAhYOIk9fKxPb4DJZeyYaSsOLZ/t4f
-	 bFzI6kfE1hR2A==
-Date: Sun, 4 Feb 2024 14:00:10 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jesus Gonzalez <jesusmgh@gmail.com>
-Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 1/1] Add 10EC5280 to bmi160_i2c ACPI IDs to allow
- binding on some devices
-Message-ID: <20240204140010.7edaa782@jic23-huawei>
-In-Reply-To: <20240202173040.26806-2-jesusmgh@gmail.com>
-References: <20240202173040.26806-2-jesusmgh@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="R8R/F5p+"
+Received: from relay2-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::222])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id EE2F0C19EC;
+	Sun,  4 Feb 2024 13:55:55 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 64D3A40002;
+	Sun,  4 Feb 2024 13:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1707054947;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WT0/6zQt68cW/v3LjBVmp3jhbfU8KRIHt1R6FOnr5Ug=;
+	b=R8R/F5p+3gb8fz+0YdlFYto2IronmylP4tdxdS6FlqK8FtbhiCNwwd7Cs0h0di9wJ5lMp+
+	jENMaTbvWyxdgWORNDJ/YWw57xPdPhAb2Ddczh71LaLghV6CEg8N2ZsmiDY1mA6Tyw7v6J
+	HixUudJmnf8VbXdPqfZ5aDYlv1+WnwpIOTGGq1N2tgZA0UEUR1MHtdxS8za3lIMih2fMLZ
+	eagalIfv0VE074zMGTx9Y1bGwKafqle+FzXW6/76LwTfC9CJRQZgrF4HeEegDXjTBGDd5C
+	IoOhCQJnGDwoQ8b2wYKaApGIPa5KiEP3PgG7e5qczsYevON2b8b9NzAC67c2gw==
+Message-ID: <f6234b46-ce30-4b2a-9681-15633a06feff@arinc9.com>
+Date: Sun, 4 Feb 2024 16:55:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 4/7] net: dsa: mt7530: move XTAL check to
+ mt7530_setup()
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
+ Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
+ <20240202-for-netnext-mt7530-improvements-2-v3-4-63d5adae99ca@arinc9.com>
+ <ZbzWpmZrukknMsYf@shell.armlinux.org.uk>
+ <5b744f7f-2f63-4219-a0e9-8f08267b1fdd@arinc9.com>
+ <Zb021ozEQSbU-gPd@makrotopia.org>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <Zb021ozEQSbU-gPd@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Fri,  2 Feb 2024 18:30:41 +0100
-Jesus Gonzalez <jesusmgh@gmail.com> wrote:
-
-> "10EC5280" is used by several manufacturers like Lenovo, GPD, or AYA (and 
-> probably others) in their ACPI table as the ID for the bmi160 IMU. This 
-> means the bmi160_i2c driver won't bind to it, and the IMU is unavailable 
-> to the user. Manufacturers have been approached on several occasions to 
-> try getting a BIOS with a fixed ID, mostly without actual positive 
-> results, and since affected devices are already a few years old, this is 
-> not expected to change. This patch enables using the bmi160_i2c driver for 
-> the bmi160 IMU on these devices.
-Hi Jesus,
-
-https://lore.kernel.org/lkml/CAHp75Vct-AXnU7QQmdE7nyYZT-=n=p67COPLiiZTet7z7snL-g@mail.gmail.com/
-Lays out what Andy (and for that matter I) consider necessary for such
-a patch.
-
-In short, we want to see devices called out here - with a DSDT section.
-+ a clear comment in the code.
-
-The big problem here is this tramples on Realtech's ID space. It's not just
-a made up code (incidentally the BMI0160 isn't valid either),
-it's a valid code but for an entirely different (PCI) device.
-
-So we need as much info as possible in the patch description and the driver
-itself to justify carrying this.   Tempting to add a firmware bug taint on
-it as well but that might scare people :)
-
-Jonathan
-
-
+On 2.02.2024 21:39, Daniel Golle wrote:
+> On Fri, Feb 02, 2024 at 09:16:02PM +0300, Arınç ÜNAL wrote:
+>> On 2.02.2024 14:48, Russell King (Oracle) wrote:
+>>> On Fri, Feb 02, 2024 at 12:19:10PM +0300, Arınç ÜNAL via B4 Relay wrote:
+>>>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>>>
+>>>> The crystal frequency concerns the switch core. The frequency should be
+>>>> checked when the switch is being set up so the driver can reject the
+>>>> unsupported hardware earlier and without requiring port 6 to be used.
+>>>>
+>>>> Move it to mt7530_setup(). Drop the unnecessary function printing.
+>>>>
+>>>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>>>> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+>>>
+>>> I would prefer this to be earlier in the series, before patch 2 which
+>>> moves mt7530_setup_port6() to be called from mac_config(). mac_config()
+>>> is supposed to be configuration error-free - in other words, all state
+>>> should have been checked before hand.
+>>
+>> I agree but mt7530_mac_config() is not a void function yet. The
+>> mac_port_config member of the mt753x_info structure points to this
+>> function. My next patch series gets rid of all useless error returns on the
+>> phylink path and change mac_port_config to void. So I don't think working
+>> on this patch series further will worth the effort. I'd rather have this
+>> version applied as is.
 > 
-> Signed-off-by: Jesus Gonzalez <jesusmgh@gmail.com>
-> ---
-> A device-specific transformation matrix can then be provided in a second
-> step through udev hwdb.
-> 
-> This has been discussed before in 2021, see here:
-> https://lore.kernel.org/lkml/CACAwPwYQHRcrabw9=0tvenPzAcwwW1pTaR6a+AEWBF9Hqf_wXQ@mail.gmail.com/
-> 
-> Lenovo, as an example of a big manufacturer, is also using this ID:
-> https://www.reddit.com/r/linux/comments/r6f9de/comment/hr8bdfs/?context=3
-> 
-> At least some discussions with GPD took place on the GPD server Discord,
-> for which I can provide proof on demand via screenshot (if not accessible
-> directly).
-> 
-> I have read the patch submission instructions and followed them to the
-> best of my knowledge. Still, this is my first kernel patch submission,
-> so I'd be glad if you could please point out any mistakes. Thank you!
-> 
-> 
->  drivers/iio/imu/bmi160/bmi160_spi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
-> index 8b573ea99af2..0874c37c6670 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_spi.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_spi.c
-> @@ -41,6 +41,7 @@ MODULE_DEVICE_TABLE(spi, bmi160_spi_id);
->  
->  static const struct acpi_device_id bmi160_acpi_match[] = {
->  	{"BMI0160", 0},
-> +	{"10EC5280", 0},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(acpi, bmi160_acpi_match);
+> I agree regarding not changing the patch itself, but I also agree
+> with Russell regarding the patch ordering. I know it's a 10-minute
+> git headache to rebase the patches on top of each other in a different
+> order, but you can easily compare the end result being identical to
+> what you had before and hence don't need to retest.
 
+This is not about laziness. This is before patch 2:
+
+phylink_mac_ops :: mac_config() -> dsa_port_phylink_mac_config()
+-> dsa_switch_ops :: phylink_mac_config() -> mt753x_phylink_mac_config()
+    -> mt753x_mac_config()
+       -> mt753x_info :: mac_port_config() -> mt7530_mac_config()
+          -> mt7530_setup_port5()
+    -> mt753x_pad_setup()
+       -> mt753x_info :: pad_setup() -> mt7530_pad_clk_setup()
+
+This is after:
+
+phylink_mac_ops :: mac_config() -> dsa_port_phylink_mac_config()
+-> dsa_switch_ops :: phylink_mac_config() -> mt753x_phylink_mac_config()
+    -> mt753x_mac_config()
+       -> mt753x_info :: mac_port_config() -> mt7530_mac_config()
+          -> mt7530_setup_port5()
+          -> mt7530_setup_port6()
+
+Patch 2 does not move mt7530_setup_port6() to be called from
+phylink_mac_ops :: mac_config(), it already is. There is no valid reason to
+reorder the patches.
+
+My response to Russell should've stated this instead of focusing on his
+second sentence.
+
+pw-bot: under-review
+
+Arınç
