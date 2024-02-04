@@ -1,90 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3A8224E3;
-	Sun,  4 Feb 2024 15:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F207F22339;
+	Sun,  4 Feb 2024 15:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707059338; cv=none; b=dSXsFCQAR939n75qL9tfwkudycDlMKK92tra5UCMsQC5cDCvbm7hCXNv465gLDm/8xc0aE7BH84WkxqevLvAVz9nbP2Z1FKbdhKR//XbLf9AVNTE9F5uHBUDkEsMcXzpqKLmTaAVErF+RzAq6ceVUQjEsdn1KkSk4sdXIds/nt0=
+	t=1707059682; cv=none; b=LrmVsM9O1EtNTuW4oRduGiJr9MW5RZVpmPbf6PxkWPiT7XAIuJ0sGH8xwoLxIQ0Yq64XKp8uS9B9xlrCt0C2bt8+Y+0dAfTBvldIUC4tTbf8s8LI7zuUcfK+F3ttev5zcd0UixPhVbUnPgu8VLAVYumyzt4pgJaL8bXw8f6WwnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707059338; c=relaxed/simple;
-	bh=diWs3n7BcEuYEZpCWt4QRWyW21+UNJGnGq5SYsQ7F/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D0d5552CJDnsPaW9NWZVS21IguIJcozWy0Vt/LZ7M6iomqNvK8XEOhEueUWYRvN2igkZMCO1g/EMn4CyrqS/eZ+53hTpExcKIucrAVt5m8r2ykNwKHeRD3SnxhVbQpi9sxTdYztGXmgwzEU1M4vGK2QHUbn3RpVR7VsT0PSSF9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMDiEiCo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707059682; c=relaxed/simple;
+	bh=unFrVMxFKdtlqsueW7SbasHzGEZbQ6TZB8LIc+Kh/8g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R/0MqcGOnOBDif3bhe2tXXbkknTgEky9Sj4Gwrz2fWw2+rkBtDPqyD3NYit4cZuWoFOAsC/iUvGBxc1MDI4sauiuXdAql8gbvFAzRCbB7aOqTnKT3Q4Bm1o4JsBtxORQ9/DMmTZ/u4Q/rIcRHohiW9ZLbh4jAmF4ZOyDP9CFW0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=hoJc365J reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMDiEiCo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 712F9C433C7;
-	Sun,  4 Feb 2024 15:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707059337;
-	bh=diWs3n7BcEuYEZpCWt4QRWyW21+UNJGnGq5SYsQ7F/M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CMDiEiCoShhFWaDKBgKT3zcw8DLeWsPhdrEwqM8OV5nPqcRGY4Sas8LTHorAY9GOE
-	 1od/nEiNUobZGmSraGcd7naeGZesBdZHvVlHL/VvwWbK/0DR8Z4yIq5giSZKfL3JAr
-	 BE5Lw1HWn2BhAMabGwlkTuA9IvC0OhN77hcYpYhkxaWHaLz0TocbHy6ZG10Zzpua50
-	 +5gVWF757qcXYvgZyJLnNm1fbDa7DAJnvPVZ/FahYy+98oM/TTHs/FmmB1YFxAVwF/
-	 LzhyxG8dBnJ9GTQv9lcwDGKjy2o6hyClFvn7ztm3To5rOslG07QpbcH9Dfw56OHgdX
-	 WJByZlA4FhFiQ==
-Date: Sun, 4 Feb 2024 15:08:43 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nikita Mikhailevich <ermyril@gmail.com>
-Cc: lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: accel: mxc4005: new ACPI ID for the MXC6655
- accelerometer
-Message-ID: <20240204150843.79f76071@jic23-huawei>
-In-Reply-To: <20240201151848.1666245-1-ermyril@gmail.com>
-References: <20240201151848.1666245-1-ermyril@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="hoJc365J"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d7881b1843so31613965ad.3;
+        Sun, 04 Feb 2024 07:14:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707059680; x=1707664480;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xVaWgQ1LmZY0En2Gv1UD7y3r8EXSlwnu8I23/WONgF4=;
+        b=h9IyzhDSDsQQMOCVxt2fS5mTXqSINSleYtZrqQHQrOzLAbCO/tRjKn+qQm1ud3Xo2N
+         j4gK5jsqvUu62lSlQU7hDKArM3S0gGo+oZi5sT/VkL93sxz3JHiKsCLvxLV2gI5Ef4w2
+         pUampbDCtEH6CqEMVC4oTi8LRxdqL1fwHy68R3Takum7souMCnzBjKcJw17/12rpK3Tz
+         fixOE/CdfbukEytPgNj5Uz0hQK+2yksZDiUQCwPqfvX1YJXA9X5bEnCH0vcKNyfJSH6G
+         8MBtLMtqMJ5PqNpQ0n8y7bzBfDqqKxQhxf2RNEKGM3qw5fBhHfP40HdGenxJ5sIRS7Rx
+         ndtw==
+X-Gm-Message-State: AOJu0YxY2juFe2OwX/HUrloIPpSGVJrpYFx9C+kX6uqWIyd3spd5c+bB
+	kq2HIJyfjWQSnkh3tTGt1fQYk40hdVtFTnW4GBuntkHO79+6OfhX3TKKiSkZ5iZYKQ==
+X-Google-Smtp-Source: AGHT+IGDzq37VVdp17hoYkuKaFrCKYQpGo+DEPCydb82x+tNqHr6PhSxcFI+1ZycGEhxE+/NgMLn2A==
+X-Received: by 2002:a05:6a21:3a47:b0:19e:2a1e:9650 with SMTP id zu7-20020a056a213a4700b0019e2a1e9650mr8502299pzb.38.1707059680256;
+        Sun, 04 Feb 2024 07:14:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWIYkZHoemoqL767NAqkaGmbRzZCLG0NEQRhqW9NTjXZQ6RzQHf1i7zNPf3DWvGQmF0XxBr4rXPU9SAfEQaspXjAjslEKd73LydnsV33pcNJK21rSs+YQ1Z1JewIhNptsH8t7GNRyi0B/kvjhi7Aeqp4c69ubhU+KphirzU9GTnxVDOqCsr6kee5IN8I94XjVTx1nKWi1Je
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id g9-20020aa78189000000b006da96503d9fsm4913302pfi.109.2024.02.04.07.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 07:14:39 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707059678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xVaWgQ1LmZY0En2Gv1UD7y3r8EXSlwnu8I23/WONgF4=;
+	b=hoJc365JYKgNUQj3hn22YIOD8f0t7HndiNGa+bD/gkkHXV14IzEYyMpG9/y6Gd70aFYcr5
+	kWoBvHJAzMFqYFN7HcuKpdN85moNHcAg11sDZkpeBXyDmjb1fUZZ40P8oq+/X5sUuWwBIp
+	t7hSOpHuxTHxOuzUNMFL6qaYYUzf0fsI9k9ZEKG5g8tM3sgwTKHWuwY3h6/gwIyATF0Vs9
+	uX6UqZZ7WAcWalCughPwentMfqrXkjWxArJmKhHiOGtnJjyL0bKmsr1lgHULkXVxYwYHHR
+	mlzbvlyDbmyDea1unm7/mgp9jxhgn2PCxuFchG1rHytL1THgFyYF+ZgmS4FKsA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 12:15:09 -0300
+Subject: [PATCH] dma: dma-sysfs: make dma_subsys const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-sh-v1-1-44ced951bb16@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAPypv2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDIwMT3aTS4vjknNTEvNIC3eIMXbMU42RDY7OURLOkJCWgpoKi1LTMCrC
+ B0bG1tQD0gQiSYAAAAA==
+To: Yoshinori Sato <ysato@users.sourceforge.jp>, 
+ Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1063; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=unFrVMxFKdtlqsueW7SbasHzGEZbQ6TZB8LIc+Kh/8g=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv6n9FGNJyod4DtP0WFNNlPJ/fSSPQH8L0WfqL
+ wkAkwvOqSKJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+p/QAKCRDJC4p8Y4ZY
+ phNhEACW1zdIRC1W3ggdTI9lW8Xlbv7ns5oeBSNfr0yiKF7lDbcy6aCRQP/IXJgajOZz7xJIbfI
+ Lzpu1IgUAGRoz4VE5sXuZkicDgMQX84SLLQ1up5XTNfeV+I7IH6wifAz/f48WcWlyj6pTDXC8nQ
+ 5ko62B8nwrd5L0z3jTebDZKhFjY4fMTchGa3mwPZdzMpesZ2Af17l86VLxosgvMYVWOyq0UE7Br
+ Rh7Fl9DFPmzJ8392xoxXsghD6ylRiu0w5/bMt1KDCQ21MR9krQmzyPldmxtpwqAlfqqFXn7cQlk
+ Ph/T6zM5Ry3viUp8/ftEMW/xUMSVAe/43yaA+xkb2aYmWlXkyl7Iin+tP3UPRe31JkihAk6XuHk
+ F+l+CGwZFp5XN1o+S1CndSG+AMIApTXhOi5yToaOpzPpb+wDS3zi1UbrdChwtxpE38TpOp0A16n
+ z9uJKv3gOPadodMGE6XHr3TItTqpqCRc/9+tGDbho7pTUoD9/F2GtNVdwALOptwZMZgPFxz45bL
+ 724uuVsDtRNG3JCDXbne/cA+S1axsI+ZXALwmRjOsKvFVnzSlVkcOD2o6pX+Sl/QWS1XqJaenv/
+ dtf1AjcX/UCwaR75GRsLJeE3nS2M5mZEHZPHcaxMHWoRjd8Eibl9O4W7ivjV0gdWhmF3edayi2N
+ kwKfr824GMROhyg==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Thu,  1 Feb 2024 16:18:48 +0100
-Nikita Mikhailevich <ermyril@gmail.com> wrote:
+Now that the driver core can properly handle constant struct bus_type,
+move the dma_subsys variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-> New ID was introduced by Chuwi on Minibook X 2023.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ arch/sh/drivers/dma/dma-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So interestingly MDA is a valid PNP ID. But an old one from 1997 for
-Media4 Inc. 
+diff --git a/arch/sh/drivers/dma/dma-sysfs.c b/arch/sh/drivers/dma/dma-sysfs.c
+index 431bc18f0a41..9f666280d80c 100644
+--- a/arch/sh/drivers/dma/dma-sysfs.c
++++ b/arch/sh/drivers/dma/dma-sysfs.c
+@@ -15,7 +15,7 @@
+ #include <linux/string.h>
+ #include <asm/dma.h>
+ 
+-static struct bus_type dma_subsys = {
++static const struct bus_type dma_subsys = {
+ 	.name = "dma",
+ 	.dev_name = "dma",
+ };
 
-Let's hope they never used that device number in a way that will bite us.
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240204-bus_cleanup-sh-6d3c136da6bb
 
-Applied to the togreg branch of iio.git and pushed out as testing for 0-day
-to play with it.
-
-Note that if anyone has a path to Chuwi to educate them on how to do
-ACPI ids correctly then feel free to pass it on!
-
-The MXC ones are also invalid btw - in that case there is no such PNP
-ID unless it's been very recently granted which seems unlikely.
-
-Jonathan
-
-> 
-> Signed-off-by: Nikita Mikhailevich <ermyril@gmail.com>
-> ---
->  drivers/iio/accel/mxc4005.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iio/accel/mxc4005.c b/drivers/iio/accel/mxc4005.c
-> index 82e8d0b39..09764ef8b 100644
-> --- a/drivers/iio/accel/mxc4005.c
-> +++ b/drivers/iio/accel/mxc4005.c
-> @@ -472,6 +472,7 @@ static int mxc4005_probe(struct i2c_client *client)
->  static const struct acpi_device_id mxc4005_acpi_match[] = {
->  	{"MXC4005",	0},
->  	{"MXC6655",	0},
-> +	{"MDA6655",	0},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(acpi, mxc4005_acpi_match);
-> --
-> 2.43.0
-> 
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
