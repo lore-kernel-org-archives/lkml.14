@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA8A79EE;
-	Sun,  4 Feb 2024 07:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A298468
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 07:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707031117; cv=none; b=maGsAw9zjgPnvcHT+g2UAv69bhmVr8tJtHU/YQFWRpIMvZkHDzrzohkCv/DxkE5TIWkBCS7KQF8MuDovT1XyWs31Ej6P4CqQFEDWKMeWfe2Kb123tE7XDouoadtY5GhRDt+ukkeE8o+mzEictdISBTrMl86vkDcIyzO3JCkwJ/o=
+	t=1707031117; cv=none; b=gm0blfLEMogXADLR/mO/XTUr3tsIc5fO+fHxhR/nZ4BQdToVF0TGbpXQaiz71ce2tUbqBOFQk5kEPnm1mCZV5omOTGFkbl263AEwEylJpWbSZJqSKKAybb6tW78C3bMqOn1RXuZXZROSgVH5awxbQf+nhzZ1L8+hYOUSy0Ny6Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707031117; c=relaxed/simple;
-	bh=7adbtacqyGpK9hS7czGsDEaY9b2tfwAggQjBFPc8Vcg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=OQbRyUZWLloegyX8QmAkCEaX6L9jWq4pZFZUDzzEHjYn29bkHqRN8dRoKOIBjItpl4RjhHmv/eKqX84Mq/RBRoQPtiAI6Sa109DuIZGwgUu2sPd+TcF4ncoZd7e1U1CDD1bfdqNN7zdwEsiC230nmwJIvKqfuj2qoawoj7wJV0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOHgujhq; arc=none smtp.client-ip=10.30.226.201
+	bh=PZgj6B3XsTx16xhV0ttPql3JMNX84uxGMZCjdNsaAro=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=CrlHK5gmbUH3sHvuvtbNZPNQ5D1s6l3cMw6EyG9cjoZleJZ1nRfAf3ppHdv1DASuqAHu4z5C9g+HEUSbHUvsDN1ElWivX5wPE/ctbiBiPO+m15YsHhCL7/kPFsm2XgbylG5H81is7mWi0Z70fzA3GOusdrk5lVzcStr6KXi7DNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZri2QtZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOHgujhq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E1FD9C43390;
-	Sun,  4 Feb 2024 07:18:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZri2QtZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C9D1C43330;
+	Sun,  4 Feb 2024 07:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707031116;
-	bh=7adbtacqyGpK9hS7czGsDEaY9b2tfwAggQjBFPc8Vcg=;
+	s=k20201202; t=1707031117;
+	bh=PZgj6B3XsTx16xhV0ttPql3JMNX84uxGMZCjdNsaAro=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=VOHgujhqzaGax71/R/VLhYC4vNndEcU0ZvxB4OVVnQ9Z3a2QK2ex7MUknPeBHQ0uh
-	 jsQCft9zD4oy2cnREFS/I4NlZepW88cPD1IGaUqMP3jeu9DBHbjrOEwoXV1acqBANz
-	 sdBjlfCdFXdw9eC97xHmHcgwgwfO5Dj5YDsQvqmUR5vBlRAHHTyRSWqyqytmHH8Reo
-	 D7wgHG7gwqbUiTVE/wLLWy6NaNjZbNcukbY+aRyLFrC/9STDh+74cQasrlpY3iLa8F
-	 ygyxjquhUGx3dai1jJuRm/ULxUT3UL5uMdTVbBBe1Pb6LZL6wODXl8HSjT/wosuN5i
-	 zv1nDQWq/6NbA==
+	b=fZri2QtZy+eEdTFepjAFgH+6H5kpJ2NWu8OrSvKV7xnxmdD0asa+UgulUswa+KV0L
+	 P7TkrV7La0Em3Py+/hIgaCFtN+br/ttKNB3X2/be7gstxu6U2QYbkba7bhWJ8PzQJg
+	 koLq2Yl+W6yu/DRFTNVqlkNNdTq6prZTbzyWcHNzQ40xQIn3e/zV4GstebmVOb3R7u
+	 Gb818+QAFOXA8/ip+Nz9N7iCU8fpF+s0awrkS/5O9rBEZTgvyr+U8CYjC8ew335BRO
+	 US9Ou2lyCmpJpbvE+6jdYqiz7kMlY+HdjaYgQhmKlH9JNbzL7YgzW4Fg4UxMi0fWc3
+	 /pCwym/+pkSIg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C72B9D8C970;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E5A5CC0C40E;
 	Sun,  4 Feb 2024 07:18:36 +0000 (UTC)
-Subject: Re: [GIT PULL] USB driver fixes for 6.8-rc3
+Subject: Re: [GIT PULL] Char/Misc driver fixes for 6.8-rc3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <Zb604Bt0_l-KUvkg@kroah.com>
-References: <Zb604Bt0_l-KUvkg@kroah.com>
+In-Reply-To: <Zb61EW7GkqldLC7b@kroah.com>
+References: <Zb61EW7GkqldLC7b@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Zb604Bt0_l-KUvkg@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.8-rc3
-X-PR-Tracked-Commit-Id: ad834c7c8e4a74dd6cd4397848aa255e473d4a63
+X-PR-Tracked-Message-Id: <Zb61EW7GkqldLC7b@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-6.8-rc3
+X-PR-Tracked-Commit-Id: 97830f3c3088638ff90b20dfba2eb4d487bf14d7
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 809be620dc070c02a6e0daee0dcb0479c6296891
-Message-Id: <170703111681.23816.17747359219398741800.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 3a0e922079408c6749770f38a2f4db10dd4d0927
+Message-Id: <170703111693.23816.11465408194685327048.pr-tracker-bot@kernel.org>
 Date: Sun, 04 Feb 2024 07:18:36 +0000
 To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 3 Feb 2024 13:49:20 -0800:
+The pull request you sent on Sat, 3 Feb 2024 13:50:09 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.8-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-6.8-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/809be620dc070c02a6e0daee0dcb0479c6296891
+https://git.kernel.org/torvalds/c/3a0e922079408c6749770f38a2f4db10dd4d0927
 
 Thank you!
 
