@@ -1,123 +1,220 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m17207.xmail.ntesmail.com (mail-m17207.xmail.ntesmail.com [45.195.17.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7E425542
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 19:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FF62555B;
+	Sun,  4 Feb 2024 20:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707076789; cv=none; b=iIhWLld8RxqcnLUDyK3R3EPxJj1zfTIdbZK8ODg+7YFJbUMiKSLIcWT1whja0G7ij0rCQ+Y/vIoDRoPAp9jneXFPgsxZWaAYggALsvFXsfuFBfm1w64F058a+0alh4dN4XBnfvndRIo52n4XvRGNKWOeNjPwcOY3xEk7DfkUsy8=
+	t=1707076944; cv=none; b=rAlXUSxvIqD/F9RXr1jbDSzpzEgkqj9CQ3/vZccbC8CJukXf0t6ScxmNZpfCszP+oApef7svqt0SnUNVlD8XJoI6SjjE2q8qEN0vKyS1YXpmUFDSlhAgPlUuB2OzqGd3S5D1eTQ/cyeGwca6qK5/5ZDWqQM8CiG1OjWwuZGPQxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707076789; c=relaxed/simple;
-	bh=kiJZm4wcXa1B+I5trmXEIwmSwZMiWeOAqzJ4LvYhcHA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eg1zYy1yXash/cSEG+yliYQNQJxWVZv+/TTg6IyQ8tOOW7+GYdMc+ajibCmPCdbCSNCgOOXn0VABqszqrVuHNVSQmGtA41wUlFhgxT3UhxV/ylKKTdrhiPI21kVR3gLbuaBqD7xFk2SGN2pAMxEv38qeULCro0lgLAHZoVIVuUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=B5zKljTb reason="key not found in DNS"; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707076944; c=relaxed/simple;
+	bh=Hx5T6jiL5JDohIoeQQYX6s2r6lgspe5rrFcW3TlWnfE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=DfjeNEZ85qwxP8Gkg4BbT40V3MzOEVDTsJ8RZHdYwkdTMZm1jdXiYbXhWUnzjSMHuDq1ksKR2YiaM+vze8oK+1bGElp8Bcfl6MlTvkcRq6T9Lcj2ZCSRzbcRML9hePv5jkFtDxx97TBN4B2hmPoezy7XAAYBM5CzL9f2/CN4gv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hXSuCVq2; arc=none smtp.client-ip=45.195.17.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="B5zKljTb"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d4a1e66750so2914666a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 11:59:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707076787; x=1707681587;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K8BTH4uSJK5VLlyRZp4zK2rdV7F6EDvysDCPB0/W6F8=;
-        b=YeE9jgMWyz5FT8DF+BytqIAOtFhQ/MgX1RSyHhGJg/ZF4GglExZZWY6ljZyG93TWzn
-         FnK2PJDpj6HyJqr5+JNzThPiLCZ8DXQHni6xY2cd1nbLugxG1K7gvOogrbgipEaIWvk0
-         NUrlv6DXxFuZy7IZFvD8jgFHVU+qTyj1ag5yC+F5f02CQjWmIphUH4BrZo6QJO4hG4JY
-         iTmEybESxbRVBKGsG+OQcw+OqxQcmYtVl0p74YfvJiBQglBSzPXBh7qL7eJxM3Xoq7Sl
-         +nwQA8O2Ob6LRBXTV6HkOiEtQIGlrUPN8xYAbIMEfrGp3cNNy35GziGraNL+dd70awuF
-         yG7g==
-X-Gm-Message-State: AOJu0Yzmrt3K7hKDLTQAjfO5om5KElgF+SpMEj9s8siIoZWobX1mIm/W
-	2kIMVH/rVaQ/COjv/eTvhJc4jHWbN3ZByLTwqGz6h+7i7yGVbpGm
-X-Google-Smtp-Source: AGHT+IGZe3/5sH4A2QF1xjvr9pAuWRkR3UQBZ2jj5MuHHYwQgnkU3FCyVvNwaBYgiE0s+zbCthMXhQ==
-X-Received: by 2002:a05:6a20:9f4e:b0:19e:3a9f:f925 with SMTP id ml14-20020a056a209f4e00b0019e3a9ff925mr12258679pzb.14.1707076787267;
-        Sun, 04 Feb 2024 11:59:47 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV9DXBuCEsYM69/54OIWpGogSc3OiEmq+wKJ8seEr2VcT3lx0sYo4kUB1OzE9yerX6YrAg0WE6w4XHOMRLsgwwfJNYXLbApIMUUhsYQ1Seh9TaqOr1UXXSojuGXBDHO/+3i7sw7UhBzQU9U7s+GHYScj3OBmM+Mgf2xRZKX/ZJDGg2uzrI=
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id j13-20020a170902c3cd00b001d9a422e0c0sm1340567plj.20.2024.02.04.11.59.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Feb 2024 11:59:46 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1707076785;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K8BTH4uSJK5VLlyRZp4zK2rdV7F6EDvysDCPB0/W6F8=;
-	b=B5zKljTbZF2EZB3O4wjQTtkTaMss+5/vc503yu0sRf7uMw2uXJeR8BAc/kOqzutAAykQ0v
-	8n1F7ExiO09AwW9cwel6PTjgfYmYByJWIQv9QdicAHNdJJBnV2k5m5wkJ8kuKCaSoISabL
-	6vmYpegiKfwkoMMkEIaz3QY7OEcS91Oc4PWgPIyIliwMKB9AWZ8vsLlIf2RsfC7tKLjjOF
-	HQejNwElMeT/bgNsjdfdCLAL1d3KlVxhlw7U7jEL4qU4BDvCYnxFOKBhwpOcOXrlU8rNsP
-	7wX6LVasUhbH4D5EDE4nAMHhaxEyFQHrmSauVrUw+DGchgWlOy6paNDfiypGyg==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sun, 04 Feb 2024 17:00:13 -0300
-Subject: [PATCH] ipack: make ipack_bus_type const
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hXSuCVq2"
+DKIM-Signature: a=rsa-sha256;
+	b=hXSuCVq2LKTILSa4M3DYwHpUWtWrO2+lc94QcnrtRZhcYoiQ0+fwbTvSFL9OmF9EPfgXfnX+W9L1zUOG6jfj3kTKGktV1278LF6y/U0KRXCUIvuhpQ898iSg0Q4t76QTcPM+nS2hLT1rhPLoKv4ufoIHlJNOSb3e7E14H06gAYc=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=JNfM+7oms0dEDMBQD4/1F/HmMJB11Kg5/MrVVOISNs8=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.93] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id A32209001BC;
+	Sun,  4 Feb 2024 17:56:34 +0800 (CST)
+Message-ID: <546543ec-7817-4422-8717-82aaf46f2a3b@rock-chips.com>
+Date: Sun, 4 Feb 2024 17:56:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240204-bus_cleanup-ipack-v1-1-aef5e8f84d01@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAMzsv2UC/x2MWwqAIBAArxL7naBiBF0lInystRQmShGId0/6H
- IaZAhkTYYapK5DwoUxXaCD6Duyuw4aMXGOQXCouuWLmzqs9UYc7MoraHmzEoRkpnBEeWhcTenr
- /57zU+gHEPjmeYwAAAA==
-To: Vaibhav Gupta <vaibhavgupta40@gmail.com>, 
- Jens Taprogge <jens.taprogge@taprogge.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: industrypack-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1047; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=kiJZm4wcXa1B+I5trmXEIwmSwZMiWeOAqzJ4LvYhcHA=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv+zPU3u2VSdljkQv1wkG1xVdFooTEbCkut9gw
- QrGXMxbjiGJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb/szwAKCRDJC4p8Y4ZY
- pqrQD/9plIEwfL5aEv+ZyBjh6nQwoXcClbBkiXrdoFuN2ZfCzqBG0qaNmO0EWbawtI9tJel8O1Z
- NJOyDAPVq3gDquiU+RLCVWPpFFt3QNz+XcS8eMifKCYnOCaFdueKFyAIdaoqu0F5Veux0W5QbMb
- +3XYKtajyROvKeiLjC5RLwqx4gXShbibRgEqf7p/BGyI5RSofF2puL3fhPm1rK5W0F12bhssB9G
- f8GSofOo/6SMfORoZNujfUAAu8fHgHe4mNaI3tpiTekNC3ZjkxmHLm7OR/9pflFohm1G4WrSzNe
- GV2HmcT5WimTwbX05s75trowCw1afG2lkBDcFD/7JYsRw2B/Vu3IcT/++Umcwqmsn5PhtbDP7Ps
- me47hG2eLOQ0aLvIZhSgnRtnEpAMXIccQlTCn+YwIIPUXyPak8Bj0rniBHZOgDwkTYy+E4AOuMa
- nitWaRVjl4V65KXZ+l+/QhmOf2Qn+9K7Z1e/Ji9crVNCFxDobpubAjm7EVqtpkvekiXRnScO5hm
- PyZ4DtOCUM8VjDLy5xmBrwpDp/cmDeVLTGHi3PVvXTV96DnbgegyxNoDwXEolpCV0YlxS7mloJn
- 6ZZLBMxRdTnAdD1IAVial2npqeCMQH5Ee+fdPM2wRnDMH2UCTVrpDqzqDGhXrnX3O9XdE64GHBL
- Lt2Mf7WvnS375MA==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+User-Agent: Mozilla Thunderbird
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: rk3588: remove redundant cd-gpios
+ in sdmmc node
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Ondrej Jirman <megi@xff.cz>
+Cc: linux-rockchip@lists.infradead.org,
+ Christopher Obbard <chris.obbard@collabora.com>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
+ Jagan Teki <jagan@edgeble.ai>, John Clark <inindev@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Shreeya Patel <shreeya.patel@collabora.com>,
+ =?UTF-8?B?VGFtw6FzIFN6xbFjcw==?= <tszucs@protonmail.ch>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, quentin.schulz@theobroma-systems.com
+References: <20240201034621.1970279-1-kever.yang@rock-chips.com>
+ <4514845.zXnORWrf4K@diego>
+Content-Language: en-US
+In-Reply-To: <4514845.zXnORWrf4K@diego>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhpDSVZJTE8ZS08ZT0xLH09VEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8d738c5eb003a9kunma32209001bc
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NiI6Ezo4TzMIDz42LwlPTi4M
+	Hy8KCR5VSlVKTEtMS09LTkJNSkxDVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFDSUpPNwY+
 
-Now that the driver core can properly handle constant struct bus_type,
-move the ipack_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+Hi Heiko,
 
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/ipack/ipack.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2024/2/1 16:41, Heiko Stübner wrote:
+> Hi Kever,
+>
+> Am Donnerstag, 1. Februar 2024, 04:46:21 CET schrieb Kever Yang:
+>> The sdmmc node already have a "&sdmmc_det" for pinctrl which switch the
+>> GPIO0A4 to sdmmc detect function, no need to define a separate "cd-gpios".
+> just to make sure, did you test this on actual hardware?
+> Because there might be differences in behaviour.
 
-diff --git a/drivers/ipack/ipack.c b/drivers/ipack/ipack.c
-index b1471ba016a5..866bf48d803b 100644
---- a/drivers/ipack/ipack.c
-+++ b/drivers/ipack/ipack.c
-@@ -187,7 +187,7 @@ static struct attribute *ipack_attrs[] = {
- };
- ATTRIBUTE_GROUPS(ipack);
- 
--static struct bus_type ipack_bus_type = {
-+static const struct bus_type ipack_bus_type = {
- 	.name      = "ipack",
- 	.probe     = ipack_bus_probe,
- 	.match     = ipack_bus_match,
+We use this feature in vendor kernel for many boards.
 
----
-base-commit: 41b9fb381a486360b2daaec0c7480f8e3ff72bc7
-change-id: 20240204-bus_cleanup-ipack-7e502021db1f
+For mainline support, there are 15 rk3588/rk3588 boards available, and 
+10 of them
 
-Best regards,
--- 
-Ricardo B. Marliere <ricardo@marliere.net>
+enable sdmmc node in dts, and 4 boards define "cd-gpios" while the 
+hardware do use GPIO0A4,
 
+and 1 board(rk3588-jaguar) using "broken-cd", and the other 5 boards are 
+using default "&sdmmc_det"
+
+  with the same hardware design.
+
+If the hardware is using GPIO0A4(SDMMC_DET function IO) for sdmmc 
+detect, then no need to define "cd-gpios";
+
+if the hardware is not using GPIO0A4 for sdmmc detect, then the 
+"cd-gpios" or "broken-cd" is needed.
+
+So this patch is to sync up to use the "&sdmmc_det" when the IO is using 
+the one has SDMMC_DET function.
+
+>> RK3588 has force_jtage feature which is enable JTAG function via sdmmc
+>> pins automatically when there is no SD card insert, this feature will
+>> need the GPIO0A4 works in sdmmc_det function like other mmc signal instead
+>> of GPIO function, or else the force_jtag can not auto be disabled when
+>> SD card insert.
+> We disable the jtag switching by default [0] ;-) .
+> And there are very good reasons for it too:
+
+I know you have disable the force_jtag by default, and I didn't want to 
+change this.
+
+As you have said we may need to enable it for debug, we suppose to only 
+have to revert
+
+the disable force_jtag patch and then it works without affect the 
+default sdmmc function.
+
+The sdmmc function is broken if we enable force_jtag for debug, and this 
+patch can fix it.
+
+> (1) JTAG is very much a debug feature, that the normal user will not need.
+> Especially not in a finished product. If a developer is debugging _that_
+> deep and needs jtag, they can enable it in their debug build.
+>
+>
+> (2) Randomly enabling features that may compromise security.
+> Why go through all the hoops of doing things like secure boot, signed
+> images and everything, just to have the kernel then export direct access
+> to the hardware on sd-card pins. If one wants to expose JTAG somewhere
+> this should be conscious choice and devs should not need to fork their
+> kernel just to shut down unwanted security-critical functionality.
+>
+>
+> (3) It affects board layouts _not following_ the standard layout.
+> Nobody is forcing board-designers to use Rockchip's desired pin
+> for card-detection. Some designer may just select a different pin
+> or a board could go without card-detect at all - see rk3588-jaguar.
+
+You are right, "cd-gpios" and "broken-cd" are available for boards have 
+different design,
+
+and this patch is for the boards with SDMMC_DET(GPIO0A4) as sdmmc 
+detect, they should go to
+
+the default "&sdmmc_det" in sdmmc node.
+
+
+Thanks,
+
+- Kever
+
+> These are both valid use-cases that need to be supported.
+>
+>
+> Heiko
+>
+>
+> [0]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6878ec6faf16a5f36761c93da6ea9cf09adb33
+>
+>
+>> ---
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts | 1 -
+>>   arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts     | 1 -
+>>   arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts         | 1 -
+>>   arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts        | 1 -
+>>   4 files changed, 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
+>> index 3e660ff6cd5ff..1b606ea5b6cf2 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
+>> @@ -444,7 +444,6 @@ &sdhci {
+>>   &sdmmc {
+>>   	bus-width = <4>;
+>>   	cap-sd-highspeed;
+>> -	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+>>   	disable-wp;
+>>   	max-frequency = <150000000>;
+>>   	no-sdio;
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+>> index 87a0abf95f7d4..67414d72e2b6e 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+>> @@ -429,7 +429,6 @@ &sdhci {
+>>   &sdmmc {
+>>   	bus-width = <4>;
+>>   	cap-sd-highspeed;
+>> -	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+>>   	disable-wp;
+>>   	max-frequency = <150000000>;
+>>   	no-sdio;
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+>> index a0e303c3a1dc6..25a82008e4f76 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+>> @@ -371,7 +371,6 @@ &sdmmc {
+>>   	bus-width = <4>;
+>>   	cap-mmc-highspeed;
+>>   	cap-sd-highspeed;
+>> -	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+>>   	disable-wp;
+>>   	sd-uhs-sdr104;
+>>   	vmmc-supply = <&vcc_3v3_s3>;
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+>> index 2002fd0221fa3..00afb90d4eb10 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+>> @@ -366,7 +366,6 @@ &sdmmc {
+>>   	bus-width = <4>;
+>>   	cap-mmc-highspeed;
+>>   	cap-sd-highspeed;
+>> -	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+>>   	disable-wp;
+>>   	max-frequency = <150000000>;
+>>   	no-sdio;
+>>
+>
