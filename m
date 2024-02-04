@@ -1,169 +1,125 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFEA219EB;
-	Sun,  4 Feb 2024 11:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850522137A;
+	Sun,  4 Feb 2024 11:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707044601; cv=none; b=ED+XEE1oSZvn/cIkevynK/AnlaNdcMqAprdoYtt+mHekOSopU3qvv2bJbuLs//cW6JGOLRgOGxu6ikDc06J2WnvCEgEOcassnUfpY7k9rkHBGU4Kmkwssz8AFh4Ed4a+w5R2GRse4nNtPQjOfwWX6sEpdt+sVj+xpVCA017dAcw=
+	t=1707044785; cv=none; b=K6PNf0zqiUKnPQ8sRaUrqfSjkgtM97armXNbznsUqgX+DF068ePdYSngtgAV/BmhEeLVXw9lGbw2gi+GiCtpscuh1cznVDLjN+EqMEoAjthBH1/q0gcZ4J9nk9sZDWhft1Vo14JHIRha8xZ980ECakuTbqvoHo3VYgFTr5geuJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707044601; c=relaxed/simple;
-	bh=Y2D//G+8jRO7QyOnjxy4nQr1hf6l/qJNHpnyOYklcGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IsE/EXB7UJE2xGJ07CCuB+FUkIaDzX7mLy1r7ohrklkiHgbniiTRCcmonC3854o8hGnD08x8JnuScNa3Sjdj6Myv9f3Z9tWJ86aFm8TJlu+rBp2L6KNC3RgkAs9/5+u7HYsODnuqr4jsj3jlnwFLlwGk8zVtpBGn7Dp/UYigtn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=klD336ts; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JgyI4Lqb; arc=none smtp.client-ip=66.111.4.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1707044785; c=relaxed/simple;
+	bh=qYMfr5XdU8wnfObBkptjGfUmtNKpQZbnQkHY+J8xNxg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rCywHTMmQx/6BMlGPykWwXxpNxDYRyZTWuURAF8enSHEj6gwyPhEhp3cESOlRvR/uya3t6ltuuJMW31MuzdCTnRwrg3vxCaUaWIJH45/9CrAwQMzCHJSyZT4YVoGVlVso1xgWWZMwwB/uEJ3gEe8YToT2vbwftjMZ7GT59Tm73M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3P3C7iq; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="klD336ts";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JgyI4Lqb"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 31F905C00D1;
-	Sun,  4 Feb 2024 06:03:18 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sun, 04 Feb 2024 06:03:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1707044598;
-	 x=1707130998; bh=Bf+fUOrYXcGEM/eDTspqcwbDeCrIad7HJCkL0vJjXLo=; b=
-	klD336tsM1X2o9/VFc1F2tiyrPMCN8vuP1BjytGFIGBJ2Rxb6lHcG6Me/Ha3i3Uh
-	S+nERwVD4tqcNLb6cHAY9q4XCdA3LV7MMa2d4ELjiej+BZZaN/NgNaBo1CS0/PWo
-	zc23jK3N5jqKT06eN35uWiOsqGNGOmW87/mQEne68vI9D7wjsYWy6JkeYnYk8yR/
-	vSOsLLd8m5Sr9il4Sdh4K/RG2/BZ0U9545PTRgKJlOtQwkhQDEVdt6OF9/1BvRqg
-	FCpLP+9017MxqjF81tLyXFsCSNnmY47CmuR4e9FKfanzOdJ7Aa6hfLqX408qPDZv
-	M/kipRaZCnX85eXc5Wkt/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707044598; x=
-	1707130998; bh=Bf+fUOrYXcGEM/eDTspqcwbDeCrIad7HJCkL0vJjXLo=; b=J
-	gyI4Lqb8jFaFM6HQMVA+uf8nSiSvbsykpqRFok0ht0Nz1lM48osxHhH+Jdjmk3Es
-	+iz/gr39XspwzhpwifTFJcL6Ki4Y/HXAmT6SVzPEQjvWqDuZtrJvpnr4jJVc8aIL
-	7MB7PHU9WmcbzB3WdAdsIj3KeIlw10sNsn3zTcZnRpxGGwYpn9iyQBrsMAL3q53E
-	vTclfAnK+diImUUk5L6rZV0gioei3wO5lP6i7gPq87Pcd9l6GpBRMn7OObC2tcu8
-	LZ4vp0Wf4jEUVe6V4fHID9Q1hX7xsTIcHYR2iFJKaZru6jaQxjzHClqIpT92kEX5
-	0JhLy2Lqfz6NSMIhgU4Tw==
-X-ME-Sender: <xms:9W6_ZeNM8W5rJoFiz3tR799_85vDw1q-4xEFWEhEgEeIvB0nA-mPqw>
-    <xme:9W6_Zc_KCwu_u6Q5c_U9GQlAAhyokw5FadsNWHl1rOQgC-d9NLTQuUTnZIybRURkg
-    jXd8rsS7Wqq6NS1SIE>
-X-ME-Received: <xmr:9W6_ZVSsb7zULL22ychE4jCwhFVXwOSjbuG8aVgeobi9RjiuppStxA6wQSn-csJ-ah5GIZp7Vv4ptyAS76gsmxClryMB9-5s0h2i9gc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedukedgvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeflihgr
-    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
-    cuggftrfgrthhtvghrnhepleeuffehheegleeuvdelgffhueekjeetueevuefhffdtgfeu
-    hfeggfeukefffedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:9W6_ZetDs4oxeb9fA48aayR_EcvMPlerTX4oBiPvSbAVrwtmVSqGUw>
-    <xmx:9W6_ZWfRQMC4uOt-90jXLePBVPjpGDL3uCggxFeGs3F__Oi4-GUQLA>
-    <xmx:9W6_ZS1PlvUeqaojsU16jHW-zKDdh7EPrfZLblb10YIX251RpUNi3g>
-    <xmx:9m6_ZdxRcoWByLpSgiF_e4ZSv4wPpg2dV5l8DNbI3URIjTVC5GQ_iQ>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 4 Feb 2024 06:03:16 -0500 (EST)
-Message-ID: <716af17c-136b-4852-86ce-a23bafe34fbb@flygoat.com>
-Date: Sun, 4 Feb 2024 11:03:15 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3P3C7iq"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d751bc0c15so30412975ad.2;
+        Sun, 04 Feb 2024 03:06:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707044782; x=1707649582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jFC3FYaDvYaAQ3PAKsfJ4Lq2XNibWfkQG12CMQWzbDQ=;
+        b=D3P3C7iqb2bRohgGrxOys8NqvNNu4kA6w8CWENqS7l/Jec5KwfK3ufDygAQdWsIET9
+         r97VKbPezP+bXAB9VXDVEDVIuzvFe+p5pMJqgQDwzM3G514/OpQiyAux3Um9OlF/w59S
+         pETj6iuoBkBz7tTOSJpYxFPKDcfeRDvaG11j7c6Wx1GBXaF51KxjNRDViB0oN8LJvaPJ
+         y7cznFGcoCDTUkYeln7MNlvYWoBk9HY1GXCMT61krfHYPZtVIYSmF3kX+fZgt1z17dn4
+         dW5DE89uor3YRJx7Z7fZgmHlun9KzcMu2QIlCQBcukqJXniW/GtY5sQyZEnOoH1XcNU1
+         XPpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707044782; x=1707649582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jFC3FYaDvYaAQ3PAKsfJ4Lq2XNibWfkQG12CMQWzbDQ=;
+        b=ibT+wO0HJxkq15og6Y295uEo9jyFPSCqVYrVbJ3O9pho2O42isk1DStX3D6KoF7uXT
+         OVdDg89lYBvQKoHCSZF3laaprahRtfallpMdPcVm7pHyuGOf0kKAF+KnhlDysZ+b/MgQ
+         dCntMf197IxgB60d4rHaIvvI+gMAzDziEWBrrTgjO9hP+AfKgqArMpdPGTGZDa6ErueO
+         fp87vKVn5zx7FNtjS+r1Hp5Mjqxxm9KhNfXGNCZ7jHBYsgvx8YNDm92sC1hQ/w5koS/Y
+         becSizs8obZ8YiQNo7NcdekQtc2q+7v8SVMBAvwmKNyBnNTBD/fFgL5udoaAwBCDyr9Q
+         UmJA==
+X-Gm-Message-State: AOJu0YzhpZgkPnotzmlVL43tU78OSEhJ2ZRL44oqjltUhInpsXPMGj0V
+	zq2QMErSWMJaVWVuV+9aV/8f2cnZBNIUQapqToVWca0HZFHkdrlR
+X-Google-Smtp-Source: AGHT+IHTcC+lNyISJD1nDPbEX5waCxGPSwuScQMsamCmjLMoe8bzHwer25GauMjxpD7yp57ghsIUKQ==
+X-Received: by 2002:a17:903:248:b0:1d9:1359:75ec with SMTP id j8-20020a170903024800b001d9135975ecmr16720239plh.30.1707044782652;
+        Sun, 04 Feb 2024 03:06:22 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUhub+o1uLlu6ppy4nncTJ3sEfp2Lmd1WGyds8o7Bva2aBfCRrnLpbk5ibe6xGsnSsDe2dU3Zyk/XdrN19poDrHUBaDWy5lkc2rEN5cyBzbwTTPWto6s22lEtlNgRwEzcduthNVlZ5QRaExky0Ko5ylebNc4dYpwInqGfddr9rjEcyQ6EZUUHkuCi9DJJvRb/UhbZHZjTaGNmbE/XqsBP1ZsMAVmy04kbp1PUX5ri4PtVzt1KHTJ40V8fentFZWIPdV+jdSRZGVweyY2PG4jFrXkjmnVlgaaTVZo8cExemn+p0ha2HwBovVGTL4Kmth50AIDQhGY3J5oNhKnZrsZQEFxYhZfthzWufhSi/yYsOxrG27pznfOt0pEWQ6OB/xpeQnNj/Y5WchxquDJadYjwfRyj8OkCYiC9Z1NMCh5+DQBWkiyeiD/ihWGhdjtfCxtei0RJkPDZ5KHeQwYYru4VsStZTOx9fpHoUmImtmscvTg8Q=
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id u3-20020a170903304300b001d706e373a9sm4390561pla.292.2024.02.04.03.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 03:06:22 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 1E005184797C0; Sun,  4 Feb 2024 18:06:18 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Michael Roth <michael.roth@amd.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	Peter Gonda <pgonda@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] crypto: ccp: Fix sev_issue_cmd code block
+Date: Sun,  4 Feb 2024 18:06:04 +0700
+Message-ID: <20240204110604.192024-1-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Handle delay slot for extable lookup
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Ben Hutchings <ben@decadent.org.uk>, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, Xi Ruoyao <xry111@xry111.site>
-References: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
- <CAHk-=wiaSjYApqmUYCdCyYfr_bRsfVKDkwU6r6FMmoZzrxHrKQ@mail.gmail.com>
- <eeb92d70-44d6-47f4-a059-66546be5f62a@flygoat.com>
- <CAHk-=wiUb1oKMHqrxZ6pA7OjNmtgw6giTKWiagUC2kt-ePCakg@mail.gmail.com>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Autocrypt: addr=jiaxun.yang@flygoat.com;
- keydata= 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
- HVO98ZmbMeg=
-In-Reply-To: <CAHk-=wiUb1oKMHqrxZ6pA7OjNmtgw6giTKWiagUC2kt-ePCakg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1809; i=bagasdotme@gmail.com; h=from:subject; bh=qYMfr5XdU8wnfObBkptjGfUmtNKpQZbnQkHY+J8xNxg=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDKn7865G/gg4N3PD0/JeH8/OvmceYekRj18tFznxlC8lm bmoTbGgo5SFQYyLQVZMkWVSIl/T6V1GIhfa1zrCzGFlAhnCwMUpABOJWM7I8DwwkG/bN/m9B1hn yyT17sg73HRvbf3KyWttC+XnyodwpzMyXGP+a9brvaxFIKQx4U38vCbp2MWc1VN/Kpj0/fURqMl hAwA=
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
 
+Stephen Rothwell reports htmldocs warnings when merging tip tree:
 
+Documentation/virt/coco/sev-guest.rst:75: WARNING: Inline emphasis start-string without end-string.
+Documentation/virt/coco/sev-guest.rst:78: WARNING: Inline emphasis start-string without end-string.
+Documentation/virt/coco/sev-guest.rst:81: WARNING: Inline emphasis start-string without end-string.
+Documentation/virt/coco/sev-guest.rst:83: WARNING: Definition list ends without a blank line; unexpected unindent.
 
-在 2024/2/4 07:41, Linus Torvalds 写道:
-[...]
-> The thing is, the only reason for the code in
-> get_mmap_lock_carefully() is for kernel bugs. IOW, some kernel bug
-> with a wild pointer, and we do not want to deadlock on the mm
-> semaphore, we want to get back to the fault handler and it should
-> report an oops.
->
-> ... and one of the "wild pointers" might in fact be the instruction
-> pointer, in case we've branched through a NULL function pointer or
-> similar. IOW, the exception *source* might be the instruction pointer
-> itself.
+sev_issue_cmd struct code block has unindented block marker, hence above
+warnings. Fix the marker by appending it instead at the end of preceding
+paragraph to silence these warnings.
 
-Well this is the tricky part of my assumption.
-In `exception_epc()` `__isa_exception_epc()` stuff is only called if we 
-are in delay slot.
-It is impossible for a invalid instruction_pointer to be considered as 
-"in delay slot"
-by hardware.
-
-I'd agree that sounds fragile though.
-
-Thanks
->
-> So I realy think that MIPS needs to have some kind of "safe kernel
-> exception pointer" helper. One that is guaranteed not to fault when
-> evaluating the exception pointer.
->
-> Assuming the kernel itself is never built with MIPS16e instructions,
-> maybe that's a safe assumption thanks to the "get_isa16_mode()" check
-> of EPC. But all of this makes me nervous.
->
->                Linus
-
--- 
+Fixes: f5db8841ebe59d ("crypto: ccp: Add the SNP_PLATFORM_STATUS command")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/linux-next/20240202145932.31c62fd6@canb.auug.org.au/
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
-Jiaxun Yang
+ Documentation/virt/coco/sev-guest.rst | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Documentation/virt/coco/sev-guest.rst b/Documentation/virt/coco/sev-guest.rst
+index 14c9de997b7d34..ab3ccfd5b54838 100644
+--- a/Documentation/virt/coco/sev-guest.rst
++++ b/Documentation/virt/coco/sev-guest.rst
+@@ -68,9 +68,8 @@ counter (e.g. counter overflow), then -EIO will be returned.
+         };
+ 
+ The host ioctls are issued to a file descriptor of the /dev/sev device.
+-The ioctl accepts the command ID/input structure documented below.
++The ioctl accepts the command ID/input structure documented below::
+ 
+-::
+         struct sev_issue_cmd {
+                 /* Command ID */
+                 __u32 cmd;
+
+base-commit: 00bd91c99f9e8b4bb6b65c45598fbf426e1f1b53
+-- 
+An old man doll... just what I always wanted! - Clara
 
