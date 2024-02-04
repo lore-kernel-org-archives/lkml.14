@@ -1,58 +1,59 @@
-Received: from mx0a-00007101.pphosted.com (mx0a-00007101.pphosted.com [148.163.135.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6DD7460;
-	Sun,  4 Feb 2024 04:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38666FB9
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 04:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707021931; cv=none; b=ZtXdMfaoe+rTxU3JegeGxlqoGxsPoeIy3HgpkQg6CNg9ryJdk/xpAOEPe90cS7QsYtE1eb6sWxUxXRjRGaC75fZtHI5ehguSXlOMY809Inu5+U/xH9gGdg4P3y8CaCgqOrMJSCekr99m9qvP1fwwV2fQqNFSu++g3uGnDp532Ts=
+	t=1707021995; cv=none; b=cE9ePIX5R2r1gwwPOyIXK2ZSuYELslPETMLIXHCzW487ILj4oFeno7Vr7OLGRt5RQHdTP/P0GZcVUvckIxzLtEtvvdtwZXlzUHfHJ9kteLe7VJz+264/hBIz7/+kKsUMJCJdLnwl5He9tpxS+kDCL2y8wS3aNPOTdGaqtW8GNs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707021931; c=relaxed/simple;
-	bh=cqAZVRCbOXBgk10uwImR7+eKfgO2Qe7PuU3zufmS+y4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fo+pZO3UaYnCdDpcknXFUTRejfUxJn0rOIetCVGC4NHtESseR7gSVm9vmxa5+JjZlq7mSTR5pM4gnZthjQJozklNlpzq91JJw0YOjyIDjhjPcf6h8NYZm1+3ttBsFI2Vnkr1YUJDhXfrqIlK3S/Attcw9M+zq5rck8EHCBb5/Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=B9CDCUQN; arc=none smtp.client-ip=148.163.135.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="B9CDCUQN"
-Received: from pps.filterd (m0166257.ppops.net [127.0.0.1])
-	by mx0a-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4142oQ1A012456;
-	Sun, 4 Feb 2024 03:13:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=campusrelays;
- bh=UaL3xCx8AUncFg+isg4UuFMjDAHuz/SlcxJjBkpVqCM=;
- b=B9CDCUQN3zDFBCCGiaUCLDwePzw1IonQjBqfD8408/OH+b+Ua80ddiA2AsDpHy7tbcpK
- ODw5//Z1iEZEh4gpA2i/izSDqffEMCS76Yb1ObhOeqg84QrW7rkZtyVcklA5WAZxa/Y+
- rwIpRrhF5m+Hu9yKEYBQ0LX4XcTTdEMf/qJLs43Ra2T4UbWskLT+jXNw6v8tc63hppT8
- S+uOcb9b5Eijqdi/g+iAwCd2AHOo3SRSBBtez5Wc0QJO7/N5CmcxK+TeTBfahrvp/PLT
- z4WxKpDUM2ecgpSokxHfw9yaXhi4p5A7ZKdalmx635kMDTY0dQ85QUtHZePHbIEUWM8I jg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-00007101.pphosted.com (PPS) with ESMTPS id 3w1e8n4ku0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 04 Feb 2024 03:13:07 +0000
-Received: from m0166257.ppops.net (m0166257.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4143D4G2010150;
-	Sun, 4 Feb 2024 03:13:07 GMT
-Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
-	by mx0a-00007101.pphosted.com (PPS) with ESMTP id 3w1e8n4ktm-4;
-	Sun, 04 Feb 2024 03:13:07 +0000
-From: Jinghao Jia <jinghao7@illinois.edu>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jinghao Jia <jinghao7@illinois.edu>
-Subject: [PATCH v2 3/3] x86/kprobes: Boost more instructions from grp2/3/4/5
-Date: Sat,  3 Feb 2024 21:13:00 -0600
-Message-ID: <20240204031300.830475-4-jinghao7@illinois.edu>
+	s=arc-20240116; t=1707021995; c=relaxed/simple;
+	bh=pYurAIAdDs3zqLyccEjZYVhP849U5nz3V7/2Uz0E/kE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PAPd2m8516eyY+/bT40CpXZ19WsBO8M1tf/sjLkbKvodJ9IUs5wN1oeglv6VUeWgQJy9FDpflPVIo6Zr7TtpRObN76a6UCm53kq39BqrLOAfrII+cENpcXCmfVvANjV4gUEKNddhFjnbmeKtwfjiBxDDP1l8aGQZwv7ceSydh7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42bf29aff0dso24196371cf.3
+        for <linux-kernel@vger.kernel.org>; Sat, 03 Feb 2024 20:46:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707021992; x=1707626792;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=geUmMcTX8p4NRKeidELidreXuEDuXbffq2eplBFLGBM=;
+        b=BiO41MWF7dyB+h9XyIgEurt4eQqZhtW3X0LIVoAy9NMTp/JGFhj4G3PG0AMYMTa0OD
+         XQL5HodVE25kAEX3V1N0N47z61n3JV1RrDubTYWOw4Ntu712Oab3mll/jX6MtHq2hVEr
+         3HOQtnuXmZcAty5WE7dr0OOyMqUqn+352rAsY5DBq1oHpiUwuR0fa6rKlbaLNVXRjPWq
+         rfT9w5N3Gr9a/ylNO5vDX7fLYD/8Hg5Qmv/zeQk69Pcd+20/eD22HYcTaPneEigvZPI8
+         CJTEVWOKQc1j/Shg2g480sb7mX+DTdhxOcFb6VnVqem09amh1YdROGBwssPmI/thijvD
+         b90w==
+X-Gm-Message-State: AOJu0YydcbgClOMfEhl5G+LGRWtDV3GTDnlfQoiWxSpbdZkspS3JxJvl
+	ga87jzNYp6LLc5nFdg2Pq8jy8yP3B2Qq9Qhh912noOYXDCISM8RhximYGd681q0=
+X-Google-Smtp-Source: AGHT+IECA3hDqjyWiTbm6pF4WjZmsJ+loipk3IJd2n85QmBlqNfQ/YyTbxwPJEdO+9GW0IHFrm4fdg==
+X-Received: by 2002:ac8:4582:0:b0:42b:ef49:5e07 with SMTP id l2-20020ac84582000000b0042bef495e07mr2933315qtn.46.1707021992461;
+        Sat, 03 Feb 2024 20:46:32 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVdDn8OaVbbUDCJRc/x2ofrtYIWuuJr0iQtTx3w4xPSKMjXMv84Ii7mM75I3UKeAl345Ogw52ElOxpzateVykYX6VvVRAjPEVEyX7LuxbxTr5r7m3b0Xq66GVGt1ouX48sPM1gMOAuQEbw9jJeADWwsp+SOItbuDFMrxIFZxuho2ISewWA6YItWy9Dmf+RAO+QYDKDgNRg31JcIxnRmMngrSla9RNs/GoEDp1khQlJK0PBedTso+bkan/A7ze5Drv8+YnGZL9WJ5vcOiIQ2lYo4xaWYQOaUaQ5Drk6O1csfO3iHFbpaIAp4xgHm4jtNJpSW9RBopyNHCeczVrIkcSaEXx/2E5HaI8uArQ==
+Received: from localhost (c-24-1-27-177.hsd1.il.comcast.net. [24.1.27.177])
+        by smtp.gmail.com with ESMTPSA id fx12-20020a05622a4acc00b0042a6e6792basm2409321qtb.69.2024.02.03.20.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Feb 2024 20:46:32 -0800 (PST)
+From: David Vernet <void@manifault.com>
+To: linux-kernel@vger.kernel.org
+Cc: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	kernel-team@meta.com
+Subject: [PATCH v2 0/3] sched/fair: Simplify and optimize update_sd_pick_busiest()
+Date: Sat,  3 Feb 2024 22:46:15 -0600
+Message-ID: <20240204044618.46100-1-void@manifault.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240204031300.830475-1-jinghao7@illinois.edu>
-References: <20240204031300.830475-1-jinghao7@illinois.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,89 +61,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: czHbX_K7foO7WJCefQH9zPBPKAETMcJM
-X-Proofpoint-ORIG-GUID: 9XqJBTkOjiePTMozqFeXhqssPsd8m9Fm
-X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
- impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402040022
-X-Spam-Score: 0
-X-Spam-OrigSender: jinghao7@illinois.edu
-X-Spam-Bar: 
 
-With the instruction decoder, we are now able to decode and recognize
-instructions with opcode extensions. There are more instructions in
-these groups that can be boosted:
+update_sd_pick_busiest() (and its caller) has some room for small
+optimizations, and some improvements in readability.
 
-Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
-Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
-Group 4: INC, DEC (byte operation)
-Group 5: INC, DEC (word/doubleword/quadword operation)
 
-These instructions are not boosted previously because there are reserved
-opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
-unmapped. As a result, kprobes attached to them requires two int3 traps
-as being non-boostable also prevents jump-optimization.
+- In update_sd_lb_stats(), we're using a goto to skip a single if check.
+  Let's remove the goto and just add another condition to the if.
 
-Some simple tests on QEMU show that after boosting and jump-optimization
-a single kprobe on these instructions with an empty pre-handler runs 10x
-faster (~1000 cycles vs. ~100 cycles).
+- In update_sd_pick_busiest(), only update a group_misfit_task group to
+  be the busiest if it has strictly more load than the current busiest
+  task, rather than >= the load.
 
-Since these instructions are mostly ALU operations and do not touch
-special registers like RIP, let's boost them so that we get the
-performance benefit.
+- When comparing the current struct sched_group with the yet-busiest
+  domain in update_sd_pick_busiest(), if the two groups have the same
+  group type, we're currently doing a bit of unnecessary work for any
+  group >= group_misfit_task. We're comparing the two groups, and then
+  returning only if false (the group in question is not the busiest).
+  Othewise, we break, do an extra unnecessary conditional check that's
+  vacuously false for any group type > group_fully_busy, and then always
+  return true. This patch series has us instead simply return directly
+  in the switch statement, saving some bytes in load_balance().
 
-Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
 ---
- arch/x86/kernel/kprobes/core.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 7a08d6a486c8..530f6d4b34f4 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -169,22 +169,33 @@ bool can_boost(struct insn *insn, void *addr)
- 	case 0x62:		/* bound */
- 	case 0x70 ... 0x7f:	/* Conditional jumps */
- 	case 0x9a:		/* Call far */
--	case 0xc0 ... 0xc1:	/* Grp2 */
- 	case 0xcc ... 0xce:	/* software exceptions */
--	case 0xd0 ... 0xd3:	/* Grp2 */
- 	case 0xd6:		/* (UD) */
- 	case 0xd8 ... 0xdf:	/* ESC */
- 	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
- 	case 0xe8 ... 0xe9:	/* near Call, JMP */
- 	case 0xeb:		/* Short JMP */
- 	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
--	case 0xf6 ... 0xf7:	/* Grp3 */
--	case 0xfe:		/* Grp4 */
- 		/* ... are not boostable */
- 		return false;
-+	case 0xc0 ... 0xc1:	/* Grp2 */
-+	case 0xd0 ... 0xd3:	/* Grp2 */
-+		/*
-+		 * AMD uses nnn == 110 as SHL/SAL, but Intel makes it reserved.
-+		 */
-+		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b110;
-+	case 0xf6 ... 0xf7:	/* Grp3 */
-+		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
-+		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b001;
-+	case 0xfe:		/* Grp4 */
-+		/* Only INC and DEC are boostable */
-+		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
-+		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001;
- 	case 0xff:		/* Grp5 */
--		/* Only indirect jmp is boostable */
--		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
-+		/* Only INC, DEC, and indirect JMP are boostable */
-+		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
-+		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001 ||
-+		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b100;
- 	default:
- 		return true;
- 	}
+v1: https://lore.kernel.org/lkml/20240202070216.2238392-1-void@manifault.com/
+
+v1 -> v2 changes:
+
+- Split the patch series into separate patches (Valentin)
+- Update the group_misfit_task busiest check to use strict inequality
+
+
+David Vernet (3):
+  sched/fair: Remove unnecessary goto in update_sd_lb_stats()
+  sched/fair: Do strict inequality check for busiest misfit task group
+  sched/fair: Simplify some logic in update_sd_pick_busiest()
+
+ kernel/sched/fair.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
 -- 
 2.43.0
 
