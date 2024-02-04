@@ -1,124 +1,126 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from irl.hu (irl.hu [95.85.9.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17603250F4;
-	Sun,  4 Feb 2024 20:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C38025558;
+	Sun,  4 Feb 2024 20:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707077132; cv=none; b=IUI1jE2mQcIoeICSdVjP8pbNNmdp8qtdp2162su0q8UpdCnV1NQJqdysFz8YWimV7duWfKqMel6A+kefGpjbD+OJvYZCW2jX5PxAnIC54FLr5OOsqdq78Fr1dw0qFqEWNZOOa7o1qD2pcdm/Ma06GXC0kg9L0i4DxCIzdx1rZhM=
+	t=1707077209; cv=none; b=uk5LMuteNNAlhFLfZcnp/zLA1D00O9v9MxetZiGslD0r+fhNWa9fB4jG702MRb7ECRKCYiUbR3OuF+MLaPEeRe2I/zptHy24nUtKVkfnAXEBrosc2Ag1FUn9Ln/N4V56RQU0hE6bkFfn8g3Ublwr+n3h5ZrASxFFpuFikzklo6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707077132; c=relaxed/simple;
-	bh=oEJ4JhtS0wXcYfKGUCUlUbO6a9vJjiMWTLf8kU8BVHw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=duljL/31X8k098f5dOdJoKmSsQye+nV0HPlEy4IFN6PqeUpERmTBB+ZT8J17S0/8+MozDT0Tlg6fM2nHbV2QHsSxvx0qufsdgH99/5iCGf1L21Hhmt+pde+hTzFie5gGo/HemOx2Y407Jqs+O8+QDqsihqYQ8lDRa2s5RtnxB1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=nMS88LQa reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="nMS88LQa"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d944e8f367so29244665ad.0;
-        Sun, 04 Feb 2024 12:05:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707077130; x=1707681930;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4mjI4Kmknsf20qmE5l06ItyuuAfH7RZdp4ZZ/sVgV8c=;
-        b=bNMutOFCV3fPJ2LSGZNAfd/Fp2ra8nIgl33qZzc6aaRDM966O1mS/MTnXZLPMJPtSi
-         qf1Edzr8UnVeiU1GsLSpz3S32DMex3EkDAD1AFUqCYZiL8gGCUFmDbhFAWviPxGdT+ww
-         nSGRZRj2oX8ybzgh6mq4J8nEQocVS3fu1M6CMmqPBzlQmFvEKp1ph9UlI/3Jr2kKDYYE
-         82/vLkyd3GVbot0jM3N30tFCEDHZOed09sMkhhpmFi+zRteR4za3+abD86TIdMIvKB64
-         /9J/3pXe2YhIiJswK+DWEct7QTdxZsy1hw777KFmUnKLDnzCdquL8t04h0JHLc2OsV5Q
-         9EmA==
-X-Gm-Message-State: AOJu0Yw9jz7xPZTMWzMZSPAsNWqACzen74JEm9tz/qOxZsgL0eAQTVk7
-	QI7Z8RQfH2u7odwGv7TBnP6EMqeenp+3CNznCEq94cKRPsC+8yTq
-X-Google-Smtp-Source: AGHT+IF2nXTe6APFDAqxt8zpMBtpuynDrkZISSjP3itcfXtof3+GMWt+GoKL5XG07EFjbqte68+PNw==
-X-Received: by 2002:a17:902:9a4c:b0:1d8:94e4:7712 with SMTP id x12-20020a1709029a4c00b001d894e47712mr10935455plv.29.1707077130239;
-        Sun, 04 Feb 2024 12:05:30 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV/2nECvWWs7yf6LyQDJBSCXUWYtN58+qaB/IMRzSFHP3m3WFKgsphdDIeE0I7NdNORV+J8DuNxK9b6LaxjTjO805umDvI2wkdRtXfRkZwlpIPaRWtXXHNW8yhQ2Op+eNs3Co57rwtjJfUODg8KprWkJx0abd1mH3qSWEb1IlElSPhl9zSoFTef1JxC9TMfILpY
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id jy3-20020a17090342c300b001d9a41daf85sm1380291plb.256.2024.02.04.12.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Feb 2024 12:05:29 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1707077128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4mjI4Kmknsf20qmE5l06ItyuuAfH7RZdp4ZZ/sVgV8c=;
-	b=nMS88LQaiVxp9TvFogmtDAfJgW/92E5jJT3JCULXe1WqAWthmrlFaW93hAt1Hexdrv+Pgt
-	BCCupuWZIT/6uRzEl7THqd3DuwjuvRWhDYhTrPXkiWH24PAiWio35CDCcstgFwM9yPX2OI
-	Roj94Ci87j2xKb79+3hczHWYP7p4TWLvTQdH4xn1+DfpNaitAzT93el8GhgN2nJ56Qr7bO
-	4K5f/aTaAgoBuj4APsP/6bLYfUJ8BIavzLjbpY6ktr2CUUanzcwcBGlGxhkX3lPvwFX/nM
-	7p34gjfuCX7o6fVwae+JSkSZGXT2z8ZvGIi+HysQnBsCcIy9hK+WuByyiCfmEA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sun, 04 Feb 2024 17:05:58 -0300
-Subject: [PATCH] memstick: core: make memstick_bus_type const
+	s=arc-20240116; t=1707077209; c=relaxed/simple;
+	bh=tpbjTw4X23EhfXeKly94uyy0NFWMMOuT2ePsQRoyPa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=ZgslfUj0tW8w1rOP61nEEo1di2cuBRSBjF6OCimdXqHQptFSZyAsBG/3qz9aZLKCBKhXUjIq/YNfg9GIm9gTaYuLyAQOro49rPP72yFmHaNzmRciL+M97/SvC//zq4q9ZigLXjlk8QmRItzzXeHczAIW+6sE+MPbAvkMPUPm77w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b68916.dsl.pool.telekom.hu [::ffff:81.182.137.22])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 000000000007429F.0000000065BFED1F.001A84E5; Sun, 04 Feb 2024 21:01:35 +0100
+From: Gergo Koteles <soyer@irl.hu>
+To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+  Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
+  Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+  Mark Brown <broonie@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+  alsa-devel@alsa-project.org, Gergo Koteles <soyer@irl.hu>,
+  stable@vger.kernel.org
+Subject: [PATCH] ASoC: tas2781: add module parameter to tascodec_init()
+Date: Sun,  4 Feb 2024 21:01:17 +0100
+Message-ID: <118dad922cef50525e5aab09badef2fa0eb796e5.1707076603.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240204-bus_cleanup-memstick-v1-1-14809d4405d8@marliere.net>
-X-B4-Tracking: v=1; b=H4sIACXuv2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIwMT3aTS4vjknNTEvNIC3dzU3OKSzORsXQNzwyRjUzOTFAsDCyWg1oK
- i1LTMCrCx0bG1tQB5OpTcZgAAAA==
-To: Maxim Levitsky <maximlevitsky@gmail.com>, Alex Dubov <oakad@yahoo.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1202; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=oEJ4JhtS0wXcYfKGUCUlUbO6a9vJjiMWTLf8kU8BVHw=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv+4m2NDsQtytOCNt1FBI7M7m3IYnmNvEnr0QL
- 3zc1VDvUByJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb/uJgAKCRDJC4p8Y4ZY
- pqcsEACjeGYT6x+D0Voi3eEyiIzwhf2iNp0sJ1wB4jT55WDjl43tqocQhvYcasXvx5NDenknIXW
- z52RZLvVYsTF24Qmu4/q/FPZhXmsQ2+xEWHZDTJFZDQlMk3agVgpMygfJm9A49TJFjITFv4dNIr
- Yv+nZVHGRpKLHU8R5YYOl/zWhHLMc1VmLEoJ0KTHYEX6eAQvMeUPQMQmrWH6bJB7jkA3nGIypM2
- NE/KC4+pmRQ/05FXQU0AKqDMPHYKZ+AXR2vNZLZvl1V3QaY9bH7MlL4ZG4Rmmsr11QQez8vUhh0
- k2jEYGDFC7yDrfw70UeP93NEcrZ2Se0Ms4obD6x9PVOVGjkR1Ey91H6l/VIkuPsCB0n7jVAG+zN
- VrRaur5TOuuNOyG3rsxEu2T1YbCV+h+TlGo6xhHk7wack7wk6D3NDyY5gKf2Aoi40s8scdI/zR0
- 26sUx5YSTIgbm5pX/6YeGaOTMLazGDuTfHsgGttPv9G4q+R+KljabVm+QH1baa8isLcnNKHz677
- ROSyyZjuogS6q6hJcjT3+rZ2sVETSPo3Axk++kpijDi4hsqrtK/zlMs+6xsXOjCisqWMiROPcrX
- i3GcfwoIHhfgdV4M8F7drY0PGS0F8HYO+W2mEPZl0+o1HEnYn7snPS6sUKvsxlfwJEBEBxQACjs
- vZOATeph0T3j+Jg==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-Now that the driver core can properly handle constant struct bus_type,
-move the memstick_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+The tascodec_init() of the snd-soc-tas2781-comlib module is called from
+snd-soc-tas2781-i2c and snd-hda-scodec-tas2781-i2c modules. It calls
+request_firmware_nowait() with parameter THIS_MODULE and a cont/callback
+from the latter modules.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+The latter modules can be removed while their callbacks are running,
+resulting in a general protection failure.
+
+Add module parameter to tascodec_init() so request_firmware_nowait() can
+be called with the module of the callback.
+
+Fixes: ef3bcde75d06 ("ASoC: tas2781: Add tas2781 driver")
+CC: stable@vger.kernel.org
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- drivers/memstick/core/memstick.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/sound/tas2781.h           | 1 +
+ sound/pci/hda/tas2781_hda_i2c.c   | 2 +-
+ sound/soc/codecs/tas2781-comlib.c | 3 ++-
+ sound/soc/codecs/tas2781-i2c.c    | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
-index bbfaf6536903..23fea51ecbdd 100644
---- a/drivers/memstick/core/memstick.c
-+++ b/drivers/memstick/core/memstick.c
-@@ -164,7 +164,7 @@ static struct attribute *memstick_dev_attrs[] = {
- };
- ATTRIBUTE_GROUPS(memstick_dev);
+diff --git a/include/sound/tas2781.h b/include/sound/tas2781.h
+index b00d65417c31..9aff384941de 100644
+--- a/include/sound/tas2781.h
++++ b/include/sound/tas2781.h
+@@ -142,6 +142,7 @@ struct tasdevice_priv {
  
--static struct bus_type memstick_bus_type = {
-+static const struct bus_type memstick_bus_type = {
- 	.name           = "memstick",
- 	.dev_groups	= memstick_dev_groups,
- 	.match          = memstick_bus_match,
+ void tas2781_reset(struct tasdevice_priv *tas_dev);
+ int tascodec_init(struct tasdevice_priv *tas_priv, void *codec,
++	struct module *module,
+ 	void (*cont)(const struct firmware *fw, void *context));
+ struct tasdevice_priv *tasdevice_kzalloc(struct i2c_client *i2c);
+ int tasdevice_init(struct tasdevice_priv *tas_priv);
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index 2dd809de62e5..1bfb00102a77 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -710,7 +710,7 @@ static int tas2781_hda_bind(struct device *dev, struct device *master,
+ 
+ 	strscpy(comps->name, dev_name(dev), sizeof(comps->name));
+ 
+-	ret = tascodec_init(tas_hda->priv, codec, tasdev_fw_ready);
++	ret = tascodec_init(tas_hda->priv, codec, THIS_MODULE, tasdev_fw_ready);
+ 	if (!ret)
+ 		comps->playback_hook = tas2781_hda_playback_hook;
+ 
+diff --git a/sound/soc/codecs/tas2781-comlib.c b/sound/soc/codecs/tas2781-comlib.c
+index b7e56ceb1acf..5d0e5348b361 100644
+--- a/sound/soc/codecs/tas2781-comlib.c
++++ b/sound/soc/codecs/tas2781-comlib.c
+@@ -267,6 +267,7 @@ void tas2781_reset(struct tasdevice_priv *tas_dev)
+ EXPORT_SYMBOL_GPL(tas2781_reset);
+ 
+ int tascodec_init(struct tasdevice_priv *tas_priv, void *codec,
++	struct module *module,
+ 	void (*cont)(const struct firmware *fw, void *context))
+ {
+ 	int ret = 0;
+@@ -280,7 +281,7 @@ int tascodec_init(struct tasdevice_priv *tas_priv, void *codec,
+ 		tas_priv->dev_name, tas_priv->ndev);
+ 	crc8_populate_msb(tas_priv->crc8_lkp_tbl, TASDEVICE_CRC8_POLYNOMIAL);
+ 	tas_priv->codec = codec;
+-	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_UEVENT,
++	ret = request_firmware_nowait(module, FW_ACTION_UEVENT,
+ 		tas_priv->rca_binaryname, tas_priv->dev, GFP_KERNEL, tas_priv,
+ 		cont);
+ 	if (ret)
+diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
+index 32913bd1a623..b5abff230e43 100644
+--- a/sound/soc/codecs/tas2781-i2c.c
++++ b/sound/soc/codecs/tas2781-i2c.c
+@@ -566,7 +566,7 @@ static int tasdevice_codec_probe(struct snd_soc_component *codec)
+ {
+ 	struct tasdevice_priv *tas_priv = snd_soc_component_get_drvdata(codec);
+ 
+-	return tascodec_init(tas_priv, codec, tasdevice_fw_ready);
++	return tascodec_init(tas_priv, codec, THIS_MODULE, tasdevice_fw_ready);
+ }
+ 
+ static void tasdevice_deinit(void *context)
 
----
-base-commit: 4e99ffb173faaf38f010acb369bff57a20e9e531
-change-id: 20240204-bus_cleanup-memstick-071b3564d808
-
-Best regards,
+base-commit: d4ea2bd1bb502c54380cc44a4130660494679bb8
 -- 
-Ricardo B. Marliere <ricardo@marliere.net>
+2.43.0
 
