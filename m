@@ -1,15 +1,15 @@
 Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [5.144.164.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4CB2C691
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 17:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20F524211
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 17:35:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707067928; cv=none; b=OyZmiFCvLdSHaGiAn55pxgJ9e7KAJkOO9SEjj3/YFwNCikdhuuVIl84uYugikVm1eWFX31nGl5M3WOvFc4aZjRdUInp+Wf3oDOrwFy7ffXUZfseBM3sTODEaxiq5vdPcXwnDNhhnxf65tmInCDDVfRrAUPYyldW54bkkC1/STJY=
+	t=1707068151; cv=none; b=PuI+YwMf5xPRTUgivOzfCRiEilSXU9/RUcOItVjyPGUwWxSxT1R1gVYrNAF84zpfojxa6rr1XqHZRWLEcqDCRLnVXUapkxSgfqvIBGBKvtANndPQovfPpdkHeQkfnAaiuy8o3JDQVZMzLTNZGSKkezvbCDYFZcWENFQE+e9q6EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707067928; c=relaxed/simple;
-	bh=bcNFXOXgVZBEkNCwZd1X9XvtwNPnxgf0ip+0KH9NcyE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ARC+aa8hwNZb+Uw5SDNCLkBB3TKMoSMu81kTwvBtunIMrNLql8XVe5y2/XmeYTrO7oiogMJsSrmlOGExShDyMGlEFZUBjojBvggMxE8NpE6e/DLS+jfgAPoj+B12nENl0X7CKQpuHsBlGuy0cccV6a4UGG7mztgNPWolMCNzUQc=
+	s=arc-20240116; t=1707068151; c=relaxed/simple;
+	bh=oYJMOCwPyaX5sr3C8ht02ltCESTYiMyacCQTJL4xgEk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XXxcCcbyUfeAk+/IEz1ZA9FQz8zmMhGaBiKcDLXIQSmcOcx3dFBdbZCtRKxJnGnUDw1yWrQnlJ/pPhMzM8Mw9grVw/Art0xQ/ibbAoHhVX+ieHkE9gmrM188WmiICwSAv373PoselMcCDa2F2WLwyegcWuBfHgx2w5OCXacOppQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
@@ -17,11 +17,12 @@ Received: from Marijn-Arch-Book.localdomain (2a02-a420-67-c93f-164f-8aff-fee4-59
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id D639D3E74E;
-	Sun,  4 Feb 2024 18:24:31 +0100 (CET)
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 2A7E73F0C8;
+	Sun,  4 Feb 2024 18:35:47 +0100 (CET)
 From: Marijn Suijten <marijn.suijten@somainline.org>
-Date: Sun, 04 Feb 2024 18:24:20 +0100
-Subject: [PATCH v5] leds: qcom-lpg: Add PM660L configuration and compatible
+Date: Sun, 04 Feb 2024 18:35:22 +0100
+Subject: [PATCH] arm64: dts: qcom: sdm630-nile: Enable and configure PM660L
+ WLED
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,80 +31,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240204-pm660l-lpg-v5-1-2f54d1a0894b@somainline.org>
-X-B4-Tracking: v=1; b=H4sIAEPIv2UC/zXMTQ6CMBBA4auQWVsy/QELK+9hXFQdYAhtSYvGh
- HB3GxOX3+K9HTIlpgx9tUOiN2eOoaA5VfCYXBhJ8LMYFCqDCo1YfdviIpZ1FINu7tZpp61BKMG
- aaODPb3a9FQ8perFNidx/ofAsOyWlNbaWbaM7hUIK7xLPoc4vnjcKlxy947BwoDqmEY7jC0BOA
- K6lAAAA
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, Johan Hovold <johan@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@somainline.org>, 
- Martin Botka <martin.botka@somainline.org>, 
- Jami Kettunen <jami.kettunen@somainline.org>, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Bjorn Andersson <andersson@kernel.org>
+Message-Id: <20240204-sdm630-nile-wled-v1-1-9f5c4f8147f2@somainline.org>
+X-B4-Tracking: v=1; b=H4sIANnKv2UC/x3M0QpAQBBG4VfRXJsaS5RXkQuZH1Ms7RZK3t3m8
+ rs456GIYIjUZg8FnBZt9wlFntG4DH4GmyaTE1eJk4qjbnUp7G0FXyuU4UpthkInGUEpOwImu/9
+ l17/vB03ahC9iAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Marijn Suijten <marijn.suijten@somainline.org>
 X-Mailer: b4 0.12.4
 
-Inherit PM660L PMIC LPG/triled block configuration from downstream
-drivers and DT sources, consisting of a triled block with automatic
-trickle charge control and source selection, three colored led channels
-belonging to the synchronized triled block and one loose PWM channel.
+The board-specific (electrical) configuration was removed from PM660L in
+90ba636e40cb ("arm64: dts: qcom: pm660l: Remove board-specific WLED
+configuration") as it is platform-dependent.  We reintroduce it here in
+the Nile board configuration (with a slightly lower current limit, as
+per downstream DT sources) and enable it for use in the dsi0 node.
 
 Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-Changes since v4:
+ arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-- Rebased on -next and resolve conflict with removed lpg_remove();
-- v4: https://lore.kernel.org/linux-leds/20220719211848.1653920-2-marijn.suijten@somainline.org/
----
- drivers/leds/rgb/leds-qcom-lpg.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-index 156b73d1f4a2..ab298391f9e0 100644
---- a/drivers/leds/rgb/leds-qcom-lpg.c
-+++ b/drivers/leds/rgb/leds-qcom-lpg.c
-@@ -1360,6 +1360,23 @@ static int lpg_probe(struct platform_device *pdev)
- 	return lpg_add_pwm(lpg);
- }
- 
-+static const struct lpg_data pm660l_lpg_data = {
-+	.lut_base = 0xb000,
-+	.lut_size = 49,
-+
-+	.triled_base = 0xd000,
-+	.triled_has_atc_ctl = true,
-+	.triled_has_src_sel = true,
-+
-+	.num_channels = 4,
-+	.channels = (const struct lpg_channel_data[]) {
-+		{ .base = 0xb100, .triled_mask = BIT(5) },
-+		{ .base = 0xb200, .triled_mask = BIT(6) },
-+		{ .base = 0xb300, .triled_mask = BIT(7) },
-+		{ .base = 0xb400 },
-+	},
-+};
-+
- static const struct lpg_data pm8916_pwm_data = {
- 	.num_channels = 1,
- 	.channels = (const struct lpg_channel_data[]) {
-@@ -1502,6 +1519,7 @@ static const struct lpg_data pmk8550_pwm_data = {
+diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+index 87d0293c728d..852aecfba95a 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+@@ -241,6 +241,16 @@ led@3 {
+ 	};
  };
  
- static const struct of_device_id lpg_of_table[] = {
-+	{ .compatible = "qcom,pm660l-lpg", .data = &pm660l_lpg_data },
- 	{ .compatible = "qcom,pm8150b-lpg", .data = &pm8150b_lpg_data },
- 	{ .compatible = "qcom,pm8150l-lpg", .data = &pm8150l_lpg_data },
- 	{ .compatible = "qcom,pm8350c-pwm", .data = &pm8350c_pwm_data },
++&pm660l_wled {
++	status = "okay";
++
++	qcom,switching-freq = <800>;
++	qcom,ovp-millivolt = <29600>;
++	qcom,current-boost-limit = <970>;
++	qcom,current-limit-microamp = <17500>;
++	qcom,num-strings = <2>;
++};
++
+ &pon_pwrkey {
+ 	status = "okay";
+ };
 
 ---
 base-commit: 01af33cc9894b4489fb68fa35c40e9fe85df63dc
-change-id: 20240204-pm660l-lpg-f35b8a3a3840
+change-id: 20240204-sdm630-nile-wled-e23d7a1df0ce
 
 Best regards,
 -- 
