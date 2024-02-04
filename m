@@ -1,35 +1,35 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9A479C2;
-	Sun,  4 Feb 2024 06:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065FD79EF;
+	Sun,  4 Feb 2024 06:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029991; cv=none; b=AxVa73+1flqkrLX3G9goOuq6/WrxKwBo/QvU7GaZ79eFK0WjDfBs3GZJHn1hjhIY/qmFAcytpcHCVO0lGK5b3G4RKi1TulovMKoSfStCOOiHfEBHpZRFRB0MCXwJdufmdCCqAe5jn1ewiAI9SUr7g9R7UE1pn23ZN/bcePXImJM=
+	t=1707029992; cv=none; b=W8T2l+PdY1UFbOLYtdzT6ahZxaksi9cbA63U0ZOXuAbMlAwqGFLnSkhPHwT85g6KjLNARdIMsdt1AkAb1IQC3xPB9NdjH6i84H0S5RMgjRvXLoux/wSiViqkUh3Mjl/tH3ua1KIhUYKFTFcBsWyknE1bQTYuByeMzYRAXbJpM34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707029991; c=relaxed/simple;
-	bh=RLYgg5uhQAylhts/gCnRLQvxBY4oj1aNfe4bZ1vMoX0=;
+	s=arc-20240116; t=1707029992; c=relaxed/simple;
+	bh=maid+6FnKyfgLvDNIj9UNdnmVbmTc0Ajov9jAYEtftE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jmRbqLgi78ll+o/WQ7RShSue9zYAN5WbeswnsOVMOBvpoi8iFALGC06lzWYOAtdWmOuSuKIIk1AWVlWFWBl4PrvLL//GpwmkKPM8yRQg6svIQVbMY9tkAHfZNrCEYM2A80wsu8QVWBFNKqhguRG0YeKqG5mLIOPWPZLAHlBZnGw=
+	 MIME-Version; b=OKDGzuQkxQeVZyKNFfJ36ulzhnlX6kv1Qr15LnAM/4YnhPjU76+B5Sq3ansmiiYi3qUR+vzKFEqFdHlRwyIIPE1nHvploe+vHuiOnxBuk4uIm2rPLy2c4YEbIjwgeZXanjokg1/glohclHZ43HN6yS6T0vuW2+6obDbeY0xohE8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D8B0722083;
-	Sun,  4 Feb 2024 06:59:47 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 382CE22096;
+	Sun,  4 Feb 2024 06:59:49 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BFF061338E;
-	Sun,  4 Feb 2024 06:59:47 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1F7B21338E;
+	Sun,  4 Feb 2024 06:59:49 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MJ63LOM1v2V7ZwAAD6G6ig
-	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:47 +0000
+	id 4j+bBeU1v2V/ZwAAD6G6ig
+	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:49 +0000
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -43,11 +43,10 @@ To: Vinod Koul <vkoul@kernel.org>,
 Cc: Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
 	Phil Elwell <phil@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.org>,
 	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH 01/12] bcm2835-dma: Add support for per-channel flags
-Date: Sun,  4 Feb 2024 07:59:29 +0100
-Message-ID: <ca23b0dcaa1b5f70ff5f0a9bef4ed0a6ea014a48.1706948717.git.andrea.porta@suse.com>
+Subject: [PATCH 03/12] bcm2835-dma: Add NO_WAIT_RESP, DMA_WIDE_SOURCE and DMA_WIDE_DEST flag
+Date: Sun,  4 Feb 2024 07:59:31 +0100
+Message-ID: <14ef0b836c93152d5cb2229ba89ebab457db42cf.1706948717.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
 References: <cover.1706948717.git.andrea.porta@suse.com>
@@ -58,83 +57,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
 Authentication-Results: smtp-out1.suse.de;
 	none
-X-Spamd-Result: default: False [2.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 REPLY(-4.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLecjp584x17qehbj331hhfqn7)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FORGED_SENDER(0.30)[andrea.porta@suse.com,aporta@suse.de];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com,raspberrypi.org,suse.com];
-	 FROM_NEQ_ENVFROM(0.10)[andrea.porta@suse.com,aporta@suse.de];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Level: **
-X-Spam-Score: 2.80
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: 382CE22096
 X-Spam-Flag: NO
 
-From: Phil Elwell <phil@raspberrypi.org>
+From: Phil Elwell <phil@raspberrypi.com>
 
-Add the ability to interpret the high bits of the dreq specifier as
-flags to be included in the DMA_CS register. The motivation for this
-change is the ability to set the DISDEBUG flag for SD card transfers
-to avoid corruption when using the VPU debugger.
+Use bit 27 of the dreq value (the second cell of the DT DMA descriptor)
+to request that the WAIT_RESP bit is not set.
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Use (reserved) bits 24 and 25 of the dreq value
+(the second cell of the DT DMA descriptor) to request
+that wide source reads or wide dest writes are required
+
+Cc: Dom Cobley <popcornmix@gmail.com>
+Cc: Phil Elwell <phil@raspberrypi.com>
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/dma/bcm2835-dma.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/dma/bcm2835-dma.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 9d74fe97452e..2704e2578e23 100644
+index 11c6bf7d8a4b..36bad198b655 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -137,6 +137,10 @@ struct bcm2835_desc {
- #define BCM2835_DMA_S_DREQ	BIT(10) /* enable SREQ for source */
- #define BCM2835_DMA_S_IGNORE	BIT(11) /* ignore source reads - read 0 */
- #define BCM2835_DMA_BURST_LENGTH(x) ((x & 15) << 12)
-+#define BCM2835_DMA_CS_FLAGS(x) ((x) & (BCM2835_DMA_PRIORITY(15) | \
-+				      BCM2835_DMA_PANIC_PRIORITY(15) | \
-+				      BCM2835_DMA_WAIT_FOR_WRITES | \
-+				      BCM2835_DMA_DIS_DEBUG))
- #define BCM2835_DMA_PER_MAP(x)	((x & 31) << 16) /* REQ source */
+@@ -163,6 +163,21 @@ struct bcm2835_desc {
  #define BCM2835_DMA_WAIT(x)	((x & 31) << 21) /* add DMA-wait cycles */
  #define BCM2835_DMA_NO_WIDE_BURSTS BIT(26) /* no 2 beat write bursts */
-@@ -450,7 +454,8 @@ static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
- 	c->desc = d = to_bcm2835_dma_desc(&vd->tx);
  
- 	writel(d->cb_list[0].paddr, c->chan_base + BCM2835_DMA_ADDR);
--	writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
-+	writel(BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
-+	       c->chan_base + BCM2835_DMA_CS);
- }
++/* A fake bit to request that the driver doesn't set the WAIT_RESP bit. */
++#define BCM2835_DMA_NO_WAIT_RESP BIT(27)
++#define WAIT_RESP(x) (((x) & BCM2835_DMA_NO_WAIT_RESP) ? \
++		      0 : BCM2835_DMA_WAIT_RESP)
++
++/* A fake bit to request that the driver requires wide reads */
++#define BCM2835_DMA_WIDE_SOURCE BIT(24)
++#define WIDE_SOURCE(x) (((x) & BCM2835_DMA_WIDE_SOURCE) ? \
++		      BCM2835_DMA_S_WIDTH : 0)
++
++/* A fake bit to request that the driver requires wide writes */
++#define BCM2835_DMA_WIDE_DEST BIT(25)
++#define WIDE_DEST(x) (((x) & BCM2835_DMA_WIDE_DEST) ? \
++		      BCM2835_DMA_D_WIDTH : 0)
++
+ /* debug register bits */
+ #define BCM2835_DMA_DEBUG_LAST_NOT_SET_ERR	BIT(0)
+ #define BCM2835_DMA_DEBUG_FIFO_ERR		BIT(1)
+@@ -913,8 +928,9 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_memcpy(
+ {
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+-	u32 info = BCM2835_DMA_D_INC | BCM2835_DMA_S_INC;
+-	u32 extra = BCM2835_DMA_INT_EN | BCM2835_DMA_WAIT_RESP;
++	u32 info = BCM2835_DMA_D_INC | BCM2835_DMA_S_INC |
++		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
++	u32 extra = BCM2835_DMA_INT_EN;
+ 	size_t max_len = bcm2835_dma_max_frame_length(c);
+ 	size_t frames;
  
- static irqreturn_t bcm2835_dma_callback(int irq, void *data)
-@@ -477,7 +482,8 @@ static irqreturn_t bcm2835_dma_callback(int irq, void *data)
- 	 * if this IRQ handler is threaded.) If the channel is finished, it
- 	 * will remain idle despite the ACTIVE flag being set.
- 	 */
--	writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE,
-+	writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE |
-+	       BCM2835_DMA_CS_FLAGS(c->dreq),
- 	       c->chan_base + BCM2835_DMA_CS);
+@@ -944,7 +960,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+ 	dma_addr_t src = 0, dst = 0;
+-	u32 info = BCM2835_DMA_WAIT_RESP;
++	u32 info = WAIT_RESP(c->dreq) |
++		   WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
+ 	u32 extra = BCM2835_DMA_INT_EN;
+ 	size_t frames;
  
- 	d = c->desc;
+@@ -1006,7 +1023,7 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+ 	dma_addr_t src, dst;
+-	u32 info = BCM2835_DMA_WAIT_RESP;
++	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
+ 	u32 extra = 0;
+ 	size_t max_len = bcm2835_dma_max_frame_length(c);
+ 	size_t frames;
 -- 
 2.41.0
 
