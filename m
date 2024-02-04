@@ -1,146 +1,89 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDE622309
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 11:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDF5224CC;
+	Sun,  4 Feb 2024 11:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707047846; cv=none; b=t+MzDAJN9DwjsGJlLCusv8hHamfzdij0594J+RDCUWkwYtE+vjqJWfL2JkHgDSdh9hXFVF0u9Erl71jhVbDTrW7bTEYapzwR27OOZPTW6OyFId8Sm8SsWhbjFAKgciOO0AdLuRX+qwXonvZLeAGCeLuRfwQ+vLTyeET+aJ+uVgE=
+	t=1707047861; cv=none; b=qjXpKVdkGb07tEOEZzEeHtZ8DOEgyhtSeOizCoH/I/+aCWtvvbWqrGxVJ17OK3lhVodUMGFURszIMB4hD5yfl5igY/DK040Rkiw8kKFdCYWrKlzK6h2H3ax6E7gXmkCnB067OxpGv+lEFV0cZBnL+KAy7ibYvAQMQZhtsjLjGUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707047846; c=relaxed/simple;
-	bh=zfHxKnze1zst7lS0M6qYgHzsqoY0Z67CTQM5r25muvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DXKN2OURfC5LWwVFj7UXaqn6/5VCDVrKfn3APONlcEW6uFfchCOlXs76vvUETZdaxP2Jyb7vAIP4be+Mswb3n3Pn9jxwOPjkVn3hh2x0xsLh6aWhfNOpoOE/zhGHqtFM6q6SEnKrZuufLg/4MeRruIBVus1BkriR9+AE+ahXDKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2y3m2fs; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707047861; c=relaxed/simple;
+	bh=NQM9ewEAOMuQm+se/Npgt3IKsTDh+L8SAE7Lj7MYFvU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=M2T15ekIPPEe2f1mi9Jzny1vbu+tC89IDNqvwRkLfO+dE/0oH/crSYCjW/XmDrQFw6S05Hd9iFRlAbChotCGDJIc9nALrRk+lgT/o39zbQZEY8cj3FAxf9u/uy4x/+RLqx7WpQEOhZbFlthsA0FjLh8l4FrHZGWa9wvmqcF0TF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=XNEtcZmM; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2y3m2fs"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6e1270e8cd3so1678092a34.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707047844; x=1707652644; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FdnC+0PjgyOKa+pKvPd4AQCjcLpAyk4MtGcD9BnAIFI=;
-        b=T2y3m2fs59WuQRyiCYNUiYGF/CS7tRI48/VKAxxjAK5fobOubYUfYObIE3gkdRwx3V
-         jiFr0Ey0DfxwF5fFUArG2iB+3CS2ite4kv4/L3zOUS9jdCZKr5L0kSdivKsTTiJClksW
-         Bxm/ZEz/Se4VOF2wd8+uovZvUDH3ZonXXd185YqhhecKQHcn3kYOQ5uIvq7urEwVN1/T
-         /gJn9tKSF3GFOOY8Fy3KWVzNShNvfkQC1gkOM2eg2cTi5qL9abz5M3qMiyPZ8PCRIeFi
-         DM4v5/QnGFdukzYf8ux4sCCevujGCvBDU36MCZdlrSNkT8LFLNNQ99H2XeVODxMtXhe+
-         BoCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707047844; x=1707652644;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FdnC+0PjgyOKa+pKvPd4AQCjcLpAyk4MtGcD9BnAIFI=;
-        b=Bwai6d8REhMZ/oza6W5hS+AlPNE0WszSnMOqA31UZVBUDijwYmXC+dcIbzjuQ4IgCZ
-         lv7x5mk80rJVJWUC6wvqwxzuYwcjMrleyB6ZYKBtXJNtvnjEKS9eItqI/N4SFy/oJ26F
-         cig+4pxeUgng9hWJlceiFJ6ABARbA9qJ/I8spriylfVKtKolufN4lL6bsnNAqa+i2KRc
-         WS+8AwbdIUMilNN2FW09717H8Bgpuy2b4TShETpkRMM3IcE8WxbZLJinM2Ff9lvaCB81
-         iTVnLNabM+s7IW79DG0FpqSTm4Zk8HWTlXWt5+sNgK668ji+mtmGW9KKcnK+NUNjfn62
-         TN7A==
-X-Gm-Message-State: AOJu0YzulswtOmubNcCesQB7hGkACsE83r7vXqhbggEKSV+0PhYjM/z+
-	hg/0biirCYaiLmCiJLRKo8yPcAOMJqMCM4Pf4iNT7vsWbO/oUJ6K
-X-Google-Smtp-Source: AGHT+IEXi/xHFeohYu4bF9t/k2Y/CK3N2OEnkEjg17oJ8Jjl08ngGrx2syyQMsQJv4YAX6oO1qu/FA==
-X-Received: by 2002:a05:6830:1448:b0:6db:ee16:6254 with SMTP id w8-20020a056830144800b006dbee166254mr7487028otp.33.1707047843974;
-        Sun, 04 Feb 2024 03:57:23 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVCZhuThsYJVmF8a4H0UyW5qrOgJb2pOCCqoOk2xjmcurbiAHzsYVAgLnv4i1MeQnjTKnXQMIULe/asyOvB1Vejeso0KZ/ZCZ2Oa0z8YyU1bwYBOIUCKXmSrsvfUVc3C53/yYpXfrP6zl175481AhoKJQud+OgTo69ChQDY+BTdWouuD3uhtAzLOu6yH37nTyh28XjLRPXVHqeeMKQLb3fWpDDvo0wsLW32B4+0Rt/zfA9xpbO1qzstbQo+2ma06Sb8Sa1aaYW8dBYnWM0jh1uaKlxA0LBh6+7f9QSjalpsUrEhytbeDQXCkLeQQGxXnglFS152rmDeawdI+wQq1pKbrnRTTAsbrJvYW1DqArXSb6Opou7sUpmD7cnjMONgOqRmwvc3lBBFVE+RjItd2tv0d1NBf2gOcuBSVOLGlDlSZ9ZOcFKxsx65bxEshCdO
-Received: from [192.168.255.10] ([43.132.141.26])
-        by smtp.gmail.com with ESMTPSA id h1-20020a056a00170100b006e0414d7cf8sm385450pfc.95.2024.02.04.03.57.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Feb 2024 03:57:23 -0800 (PST)
-Message-ID: <0b1f1de7-9394-40df-9b5c-c8c1cb1239d4@gmail.com>
-Date: Sun, 4 Feb 2024 19:57:19 +0800
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="XNEtcZmM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1707047849; bh=6IHcRw4gkKhhZegzn1OH3uiNgGEL9LqQ6Vszdi2xy6A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=XNEtcZmMiwTlKiTLDHEiKAaqccfnTRiFpyYhr1a8JFjz1ie5yikEjhQnKH7vkYgz7
+	 CHTKs9YKDYe/Oe/xiy4i0Fw4tWPAJ9HUptw6SBNl+ztuc3D6cHwVIN/ktTUUdlAKgB
+	 6ArgbqrGn45Etw2lb9vcqIKCT+UHGH7WUY419Tp8=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id CD5A4A7F; Sun, 04 Feb 2024 19:51:21 +0800
+X-QQ-mid: xmsmtpt1707047481t8mna7hj6
+Message-ID: <tencent_164AB8743976ED67863C2F375496E236B009@qq.com>
+X-QQ-XMAILINFO: OOPJ7pYMv25tidAIa0px2wHqSkcb+RQFaqhNT1q4VDqpL/DSKIkClttaSJejqZ
+	 oQkl8S+6CuffNTMlObsck87wXme7JbMeTk+lamkaB6OuCt++r5qO+ML+T8y2grA5l7dbNvacBbYh
+	 TvNDtN3P8c+7KO5ub0//l2rBseiVjyqka+F4eaFlRnZ1lsJCQBTRkWVnSLVmRNOMiazPYWkfzLe1
+	 VuhCX/i3pKNyxllhBgUOmXp36UTFsAZb5C2qJ8Rgk5z1LeCjR/dzF8eFEzg8cEs8/i7iGdeMm+VY
+	 pkHH//REvMxc1J+ekB6sFzSG8iZn3EDvsQKh3qLaD1KKeo1xMZNe1M4jw1uFuQsqcyeqo5cpo6pz
+	 molP7pK75fiKAHEuPkp3lI7EIEnKSzow1tLQxzKPDuqXfUun3gv3NIyzFhrZK9IMkE9GcF+vXdkg
+	 GMqSls4E8Vk5u+PHo6HUwhkkh4QgIaHl/QqWigg+44Ij4zn/+JjMq+B4TuMgc6OljGqjnqFq3TKQ
+	 5tmdo2gJ11QzuF3UMhgqNGJjAcOXYUTFhc0fyNikJ3l0B9cY8EXcvO+roWAGsc3fIdgILdym+BcT
+	 A+wviPpOlDD5yklMwEZSYOniE7yJst6BXNzcIdA7FSwSJcX89FsfsJvBH+fJM2c+X8zfovJ8AkD6
+	 u/H9fjt4EbaBE50Z+GnW5cDEaFVWIPaQgPcVXQQrOxuNok8L413CTapaPGfC/1LPX6B59TlAMKJ0
+	 b0wTGQqh05W4W5rCHrKDT0k6xWsZgo5af+NrMWtskF6DYYS1nEK6xu8sLNDz/Dl5j33Z6rhqqrmA
+	 yAEG91SypdEb/Bq9p5t+p3ExNFsmy1OuLIZih4NWp1Iy4Wqyf6NMwUbLVYBG2HSzO/iEnqGF17RS
+	 8uVMkuen2XwJt7pZN5W7PVpUtZLQIe8eCjmbgkGxxN11/+Gi8gTP6grpwVd19sOHSEQfPb3kL+RO
+	 N35bq/MNQ=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+57028366b9825d8e8ad0@syzkaller.appspotmail.com
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH next] hfsplus: fix oob in hfsplus_bnode_read_key
+Date: Sun,  4 Feb 2024 19:51:22 +0800
+X-OQ-MSGID: <20240204115121.1906264-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000c37a740610762e55@google.com>
+References: <000000000000c37a740610762e55@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] sched/fair: add SD_CLUSTER in comments
-Content-Language: en-US
-To: Valentin Schneider <vschneid@redhat.com>, alexs@kernel.org,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- linux-kernel@vger.kernel.org, ricardo.neri-calderon@linux.intel.com,
- sshegde@linux.ibm.com
-References: <20240201115447.522627-1-alexs@kernel.org>
- <xhsmhzfwjgcvf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: kuiliang Shi <seakeel@gmail.com>
-In-Reply-To: <xhsmhzfwjgcvf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+In hfs_brec_insert(), if data has not been moved to "data_off + size", the size
+should not be added when reading search_key from node->page.
 
+Reported-and-tested-by: syzbot+57028366b9825d8e8ad0@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/hfsplus/brec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On 2/2/24 10:27 PM, Valentin Schneider wrote:
-> 
-> Subject nit: the prefix should be sched/topology
-> 
-> On 01/02/24 19:54, alexs@kernel.org wrote:
->> From: Alex Shi <alexs@kernel.org>
->>
->> The description of SD_CLUSTER is missing. Add it.
->>
->> Signed-off-by: Alex Shi <alexs@kernel.org>
->> To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
->> To: Valentin Schneider <vschneid@redhat.com>
->> To: Vincent Guittot <vincent.guittot@linaro.org>
->> To: Juri Lelli <juri.lelli@redhat.com>
->> To: Peter Zijlstra <peterz@infradead.org>
->> To: Ingo Molnar <mingo@redhat.com>
->> ---
->>  kernel/sched/topology.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
->> index 10d1391e7416..8b45f16a1890 100644
->> --- a/kernel/sched/topology.c
->> +++ b/kernel/sched/topology.c
->> @@ -1554,6 +1554,7 @@ static struct cpumask		***sched_domains_numa_masks;
->>   * function:
->>   *
->>   *   SD_SHARE_CPUCAPACITY   - describes SMT topologies
->> + *   SD_CLUSTER             - describes CPU Cluster topologies
-> 
-> So I know this is the naming we've gone for the "Cluster" naming, but this
-> comment isn't really explaining anything.
-> 
-> include/linux/sched/sd_flags.h has a bit more info already:
->  * Domain members share CPU cluster (LLC tags or L2 cache)
-> 
-> I had to go through a bit of git history to remember what the CLUSTER thing
-> was about, how about this:
-> 
-> * SD_CLUSTER             - describes shared shared caches, cache tags or busses
+diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
+index 1918544a7871..9e0e0c1f15a5 100644
+--- a/fs/hfsplus/brec.c
++++ b/fs/hfsplus/brec.c
+@@ -138,7 +138,8 @@ int hfs_brec_insert(struct hfs_find_data *fd, void *entry, int entry_len)
+ 	 * at the start of the node and it is not the new node
+ 	 */
+ 	if (!rec && new_node != node) {
+-		hfs_bnode_read_key(node, fd->search_key, data_off + size);
++		hfs_bnode_read_key(node, fd->search_key, data_off + 
++				(idx_rec_off == data_rec_off ? 0 : size));
+ 		hfs_brec_update_parent(fd);
+ 	}
+ 
+-- 
+2.43.0
 
-Double "shared", so could we use:
-* SD_CLUSTER             - describes shared caches, cache tags or busses?
-
-
-> * SD_SHARE_PKG_RESOURCES - describes shared LLC cache
-> 
-> And looking at this it would make sense to:
->   rename SD_CLUSTER into SD_SHARE_PKG_RESOURCES
->   rename SD_SHARE_PKG_RESOURCES into SD_SHARE_LLC
-> but that's another topic...
-
-Uh, naming is a hard things. :)
-
-Thanks
-Alex
-> 
->>   *   SD_SHARE_PKG_RESOURCES - describes shared caches
->>   *   SD_NUMA                - describes NUMA topologies
->>   *
->> --
->> 2.43.0
-> 
