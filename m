@@ -1,224 +1,103 @@
-Received: from mx0a-00007101.pphosted.com (mx0a-00007101.pphosted.com [148.163.135.28])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE5063A1;
-	Sun,  4 Feb 2024 03:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADCA15B7;
+	Sun,  4 Feb 2024 04:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707019077; cv=none; b=ZtLibcZ4NcgQrrLnknlSEqu1BDMwgoz72Sbn/Sb25mL0S4jHJyDuZCOUs/8zfBU8lX9GLmXbQDjt4DcHOg1xzwlzt3fCrjSBgNDeYuvWL6zJOnShpSv5epvUf9KRUdUgCLjhwmOiV2mvcS3CJcWHEG/3Lj0H8qySW6ujVWy0Nek=
+	t=1707019547; cv=none; b=CcLO5m1P8uw1f1WFB/+qFK8LubFYbf/COj8ZZ55FSxjrlHtuOL9t3hbvr4ri6aa7AUTRFHnZbCbShH2OwG1xcNoTu/ec6s/T7M+m1RHeU/Ufq4+uSzR9O8Jb8KCW3WXovPJklS8RIOYxsCGXaso5G7j2mdPnWIWs7ldDz8n2yJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707019077; c=relaxed/simple;
-	bh=WD//COAAgnwG6ByL9FIxCxWk6nNqTSw772pmIuR8KyY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CTUxzT8Cu2xHAJCDe+iP2gxd1K2kfIrMNcLA6+Z9FL9vWwb+5LdcRmbT8sEi/SCpsUu5RwlcuqDrG8wZ1Ef1BtaBF5aHVZPkpkoc5TavH6FpSH+YL162t1IkIHiXRMHsZI2fe4b9z7kKRz81693Z9JWMdsgxwPIT7/znulAKMLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=KLq57fu1; arc=none smtp.client-ip=148.163.135.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
+	s=arc-20240116; t=1707019547; c=relaxed/simple;
+	bh=b9XEpdFPe/PNZC2HYAEQHdLzNXB1WRKccHhHm8G9vkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=USZ6rGCAR9Sim5Kc0JNuBSvqIIVCeKSjo3qKgSIp6Z7UbVkFE17YOMZrAOFhciEmOn1RsNSf9NJe/stoXipr4nA3Gkuq0Ij7vt9IwwRRj8DWAJTS45zNobFgqIMDpKDHwFSZowD2x3RWZHoTqDW/zXQ7T9/RAJmxx/+G5QW7SGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QB+Mzl1N; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="KLq57fu1"
-Received: from pps.filterd (m0166257.ppops.net [127.0.0.1])
-	by mx0a-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4140prQH023253;
-	Sun, 4 Feb 2024 03:13:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=campusrelays;
- bh=QKbEKF0BOPhRZnolIBDBWcg1t+uTArb4iAsWd5YiF10=;
- b=KLq57fu1F+VBizIUU7SbpnoOGk2ACVWDAVGSrlHtlBhjKfHgr5LULDfhhGLZifoDbL01
- 7CJRcq9Ut0tgxrzCD45HA+fgS+WhONZo0/Qo355B4vJTDfn7OlyG8eFDsIRYeApRHg4Y
- n7lXn4YWKlAQX/4ilWViaF/9gOrEyh0kTVIr5T7iuYvJ7n7EtMu/8HwxHBADz3Up30Dj
- fpBN8AZ53DZM7kOXSz0w+Xl/Ha1GQUPd8qzMEnNNu3QzbdCHoFoLCi4NQJMgmU08+D5N
- 39afaFKDEK1TFK9f08xiePsVZx2D2BBQ5t4mLG3vdzv7i+XpjaC0/+IKFiXA5qGkXkP9 xA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-00007101.pphosted.com (PPS) with ESMTPS id 3w1e8n4ktt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 04 Feb 2024 03:13:05 +0000
-Received: from m0166257.ppops.net (m0166257.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4143D4Fw010150;
-	Sun, 4 Feb 2024 03:13:05 GMT
-Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
-	by mx0a-00007101.pphosted.com (PPS) with ESMTP id 3w1e8n4ktm-2;
-	Sun, 04 Feb 2024 03:13:05 +0000
-From: Jinghao Jia <jinghao7@illinois.edu>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jinghao Jia <jinghao7@illinois.edu>
-Subject: [PATCH v2 1/3] x86/kprobes: Refactor can_{probe,boost} return type to bool
-Date: Sat,  3 Feb 2024 21:12:58 -0600
-Message-ID: <20240204031300.830475-2-jinghao7@illinois.edu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240204031300.830475-1-jinghao7@illinois.edu>
-References: <20240204031300.830475-1-jinghao7@illinois.edu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QB+Mzl1N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707019546; x=1738555546;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=b9XEpdFPe/PNZC2HYAEQHdLzNXB1WRKccHhHm8G9vkE=;
+  b=QB+Mzl1N2d5FOpwVpPCojpnOaX0mUnMOHJkD0lHwyIuo5YCBRYILl5Fu
+   ZB13s1TQXCvipPAo/69MzBXaOdJFjtcGN9ib3U7kyPgAyAkrlTjk6spNC
+   ZZ09AlC/5LF2EZ5wtwFiygvtJM0mbc8NaBv7OWHZVsW7cy9SH9ZkLhnAC
+   D64wVHNlsjzxLFy1EaQ8vMuJYCoBuVqYmLu3NwRwosWyXjPNCTyYE0APK
+   OBj6UBxEjjJKWYsYLDQ5FE5wZqAxwKO3QHVdLgvu3r5hvjalIz4P9geH+
+   bDZuq1Fs9vz+qajEIj1C4pWizSPHVsemIjtJ4OFdWsrk43xnKOj+AK2NQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="11727322"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="11727322"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 20:05:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="480284"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 03 Feb 2024 20:05:42 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rWTlD-0005zq-0O;
+	Sun, 04 Feb 2024 04:05:39 +0000
+Date: Sun, 4 Feb 2024 12:04:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 4/5] firmware: imx: support BBM module
+Message-ID: <202402041140.l2qPp6Gn-lkp@intel.com>
+References: <20240202-imx95-bbm-misc-v1-4-3cb743020933@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: BvmB3QU77cDUQOBIJkGSbqBZkiK1PtJh
-X-Proofpoint-ORIG-GUID: oTAYOSqsYwSJlP7N4HcTMSh_KAGAJsTs
-X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
- impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402040022
-X-Spam-Score: 0
-X-Spam-OrigSender: jinghao7@illinois.edu
-X-Spam-Bar: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202-imx95-bbm-misc-v1-4-3cb743020933@nxp.com>
 
-Both can_probe and can_boost have int return type but are using int as
-boolean in their context.
+Hi Peng,
 
-Refactor both functions to make them actually return boolean.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
----
- arch/x86/kernel/kprobes/common.h |  2 +-
- arch/x86/kernel/kprobes/core.c   | 33 +++++++++++++++-----------------
- 2 files changed, 16 insertions(+), 19 deletions(-)
+[auto build test ERROR on 51b70ff55ed88edd19b080a524063446bcc34b62]
 
-diff --git a/arch/x86/kernel/kprobes/common.h b/arch/x86/kernel/kprobes/common.h
-index c993521d4933..e772276f5aa9 100644
---- a/arch/x86/kernel/kprobes/common.h
-+++ b/arch/x86/kernel/kprobes/common.h
-@@ -78,7 +78,7 @@
- #endif
- 
- /* Ensure if the instruction can be boostable */
--extern int can_boost(struct insn *insn, void *orig_addr);
-+extern bool can_boost(struct insn *insn, void *orig_addr);
- /* Recover instruction if given address is probed */
- extern unsigned long recover_probed_instruction(kprobe_opcode_t *buf,
- 					 unsigned long addr);
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index e8babebad7b8..644d416441fb 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -137,14 +137,14 @@ NOKPROBE_SYMBOL(synthesize_relcall);
-  * Returns non-zero if INSN is boostable.
-  * RIP relative instructions are adjusted at copying time in 64 bits mode
-  */
--int can_boost(struct insn *insn, void *addr)
-+bool can_boost(struct insn *insn, void *addr)
- {
- 	kprobe_opcode_t opcode;
- 	insn_byte_t prefix;
- 	int i;
- 
- 	if (search_exception_tables((unsigned long)addr))
--		return 0;	/* Page fault may occur on this address. */
-+		return false;	/* Page fault may occur on this address. */
- 
- 	/* 2nd-byte opcode */
- 	if (insn->opcode.nbytes == 2)
-@@ -152,7 +152,7 @@ int can_boost(struct insn *insn, void *addr)
- 				(unsigned long *)twobyte_is_boostable);
- 
- 	if (insn->opcode.nbytes != 1)
--		return 0;
-+		return false;
- 
- 	for_each_insn_prefix(insn, i, prefix) {
- 		insn_attr_t attr;
-@@ -160,7 +160,7 @@ int can_boost(struct insn *insn, void *addr)
- 		attr = inat_get_opcode_attribute(prefix);
- 		/* Can't boost Address-size override prefix and CS override prefix */
- 		if (prefix == 0x2e || inat_is_address_size_prefix(attr))
--			return 0;
-+			return false;
- 	}
- 
- 	opcode = insn->opcode.bytes[0];
-@@ -181,12 +181,12 @@ int can_boost(struct insn *insn, void *addr)
- 	case 0xf6 ... 0xf7:	/* Grp3 */
- 	case 0xfe:		/* Grp4 */
- 		/* ... are not boostable */
--		return 0;
-+		return false;
- 	case 0xff:		/* Grp5 */
- 		/* Only indirect jmp is boostable */
- 		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
- 	default:
--		return 1;
-+		return true;
- 	}
- }
- 
-@@ -253,20 +253,18 @@ unsigned long recover_probed_instruction(kprobe_opcode_t *buf, unsigned long add
- }
- 
- /* Check if paddr is at an instruction boundary */
--static int can_probe(unsigned long paddr)
-+static bool can_probe(unsigned long paddr)
- {
- 	unsigned long addr, __addr, offset = 0;
- 	struct insn insn;
- 	kprobe_opcode_t buf[MAX_INSN_SIZE];
- 
- 	if (!kallsyms_lookup_size_offset(paddr, NULL, &offset))
--		return 0;
-+		return false;
- 
- 	/* Decode instructions */
- 	addr = paddr - offset;
- 	while (addr < paddr) {
--		int ret;
--
- 		/*
- 		 * Check if the instruction has been modified by another
- 		 * kprobe, in which case we replace the breakpoint by the
-@@ -277,11 +275,10 @@ static int can_probe(unsigned long paddr)
- 		 */
- 		__addr = recover_probed_instruction(buf, addr);
- 		if (!__addr)
--			return 0;
-+			return false;
- 
--		ret = insn_decode_kernel(&insn, (void *)__addr);
--		if (ret < 0)
--			return 0;
-+		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
-+			return false;
- 
- #ifdef CONFIG_KGDB
- 		/*
-@@ -290,7 +287,7 @@ static int can_probe(unsigned long paddr)
- 		 */
- 		if (insn.opcode.bytes[0] == INT3_INSN_OPCODE &&
- 		    kgdb_has_hit_break(addr))
--			return 0;
-+			return false;
- #endif
- 		addr += insn.length;
- 	}
-@@ -310,10 +307,10 @@ static int can_probe(unsigned long paddr)
- 		 */
- 		__addr = recover_probed_instruction(buf, addr);
- 		if (!__addr)
--			return 0;
-+			return false;
- 
- 		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
--			return 0;
-+			return false;
- 
- 		if (insn.opcode.value == 0xBA)
- 			offset = 12;
-@@ -324,7 +321,7 @@ static int can_probe(unsigned long paddr)
- 
- 		/* This movl/addl is used for decoding CFI. */
- 		if (is_cfi_trap(addr + offset))
--			return 0;
-+			return false;
- 	}
- 
- out:
+url:    https://github.com/intel-lab-lkp/linux/commits/Peng-Fan-OSS/dt-bindings-firmware-add-i-MX-SCMI-Extension-protocol/20240202-143439
+base:   51b70ff55ed88edd19b080a524063446bcc34b62
+patch link:    https://lore.kernel.org/r/20240202-imx95-bbm-misc-v1-4-3cb743020933%40nxp.com
+patch subject: [PATCH 4/5] firmware: imx: support BBM module
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20240204/202402041140.l2qPp6Gn-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240204/202402041140.l2qPp6Gn-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402041140.l2qPp6Gn-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   s390-linux-ld: drivers/firmware/imx/sm-bbm.o: in function `scmi_imx_bbm_probe':
+>> sm-bbm.c:(.text+0xbdc): undefined reference to `devm_rtc_allocate_device'
+>> s390-linux-ld: sm-bbm.c:(.text+0xc90): undefined reference to `__devm_rtc_register_device'
+   s390-linux-ld: drivers/firmware/imx/sm-bbm.o: in function `scmi_imx_bbm_notifier':
+>> sm-bbm.c:(.text+0xeb6): undefined reference to `rtc_update_irq'
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
