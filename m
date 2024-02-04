@@ -1,87 +1,86 @@
 Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7885C224E0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB245224E4
 	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 13:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707053428; cv=none; b=LuLJiGZm4rJVzrgk28kFw4a1QbnE0VxL0ZC9FMdW4pBNMuNuUWnChYVx/tZvM2MBDZUh01gOdXT4sib+r2drYhwLcjhL4/hNdaFI8WWati6e5uO7molABepmSu6caua24/27BKfslhZWL74dD6nAHDrvzyAsmX7vPNsZT+BJzwM=
+	t=1707053428; cv=none; b=NeMk9oA84zTScIV7WHKp1/WPkv7sgRRp/UioKgyvH/mxPMPSLIz+kfybhPmtMsgZJLKSFcU+n/Qg/aFufi6PjnggT/+YuQ2sYyCsH1dWIPcnDnH6QpdRhPa+EhYrkxYPuVvQ7bwVrDYAuOUUr6Pje8OavmKNZPAjAhKWYhTLVHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707053428; c=relaxed/simple;
-	bh=UaMSnAIomP0d4/QVoz2dzuPbz+yAssf64Z9+owHSSDo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZbEHMRJLUiEIGNm66XBXFF+nDP83pHJzxN7MniscewTcmQBNlQcCyP8TdVWA83rgu+O+3BQSNwRnBUdtzn/saVPMFvnHQlv8bdORD+vbLylcoy2xjaX13RJdk1HJsdLpagh3flC8H+IKQXjEcdLwPheudYd1/TWoTrepWaMNAFA=
+	bh=3c25MrpNPqYaKgEVmj+KZMIXXjyRkcFqQ00/SVuN/Y8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rpMOXxwsnQhtU0lScRIiA7l19qwvWZZQLUqK3qd69rsO5EhnbAsRK1w5hHaI1Df5q2QLfkg5QdpQvehzdVtiAV99p7SU6T++ILXkdNb/P7Ht8EIgD179r+F6KCPP/4BJ/4pyvBH0vhGBsc0R9iCV32JfgKyr0/rLUxbNPC3vXKM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7baa6cc3af2so395438139f.2
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7bfeae6a263so271553739f.2
         for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 05:30:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707053425; x=1707658225;
+        d=1e100.net; s=20230601; t=1707053426; x=1707658226;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tzM0gFWX358jgiBmOqZtwQSB/F2tsNwCbyAEBJz63Vc=;
-        b=PYWYLwZ6yU4u8z5hImUX+gktgHUdn5nd/r8VBWZEoKqzMJDmJ+K6m5Ihpen5I7Mw1r
-         2LwEkfrGvm5M1FBdsN8I9pxwOdkIRxDZaCMU4veZpUhyHWhWCzWvT4beGDaQ0l8yCCRB
-         hUlTFcDH6SF2kcpP6BPEZ2RpbdxKpkd+1V/ueVxUjWOXu2zunNdNZMRxjpd1kMddL+Gz
-         Z8vas+zkxheSKNf3Dd5qFikAk/9m77CzfqFhhaKEuAwmpb5rQ5ZcQgv2Wguc4nH8HvXt
-         zoxzVcThnvbkQI5wk34Kgv9F5vj9M9p0CCs70+bX4xuyY6ZAALuA6B606Iiy8XtOYIfR
-         Pzfg==
-X-Gm-Message-State: AOJu0Yzng6amB2j/Oo/e1SyEkgbp71VtbPPzaUtIYWDZyKs98BQAj6un
-	GNEEPBsh6ZN2Yr6TOmKXFjDgFdzeF3u2JZP59AiaAGNtnB2pvXS2XLHlOrEj+G8amPNTl8hmerj
-	BNtq5Eqj9IQq//E3stHIrasUF3MenLQDN+g43pBcm46LGci/cq6B5RjI=
-X-Google-Smtp-Source: AGHT+IHCw+64iELG79qhBXYxXl02VqldZ1Z1z7ljzrHWmEXSfj/t9tLgEWnk5meIw7bn7d7KKARtlDI3i6cpUlTad/3ij0mEVaHC
+        bh=6TFqpW6dgI10Wg9gbBuvsp+dL9osWb3iohFtOwY/vQM=;
+        b=YaMsmPwzdtn3wOb5ROMI/QOlmvw8ynVRi+yRcoGCK7cGzH28tm4CUaAgsX9QRryD3w
+         n4U+/wrh31rctUByyRNB4q/bg+mpikziYJ+2dSWhokxDGtkAL5y1j5gKJzMxCvVw7+oM
+         loHjC6TGLJmzYmQK5Kmb4+2ZacWBnZtszbYJpiFhaLgdEVVoWdjCfHFtKxYEZTaVZZod
+         PlIjjViev8ImIECKqW3CvLo84EffHE6E/4tYmDii1yHpp/Bt8p7nWRy43WMYGl83H748
+         ytFYRQHBqYmvi3TC8MqitrCP8B4F2zx8udKNyQT7J/VeZc3+1AkgR74Fjjm2OUvNUymx
+         y5PQ==
+X-Gm-Message-State: AOJu0Yy2WuV587EOKqXc13Gh9A5m35JRyiAVA7m7RsZFhczSGQGPi9Y0
+	kL1w69UFuFOO0A3TPF/pbBenp1CwX/HJdU25KEZLdhiVedF3+FouXPF8p6Xw2DUDQirW+CR3kB8
+	9InIC1xrgq1/B/1yTyCRuETWe1NDmB0DSkLmn62SQEN/0X+AUYwRu30Y=
+X-Google-Smtp-Source: AGHT+IEMb0FjEEZXwlb93fDJ1Vf5xs+uuKNu4bepE1hs9N8VlgmRhs6lMjw1WK88yLau+069VHBh39A4oSOwvRLYNJTAo6/YDlnc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d11:b0:363:c8ba:ea5a with SMTP id
- i17-20020a056e021d1100b00363c8baea5amr46326ila.6.1707053425706; Sun, 04 Feb
+X-Received: by 2002:a05:6e02:12c5:b0:363:c3d9:c10 with SMTP id
+ i5-20020a056e0212c500b00363c3d90c10mr157976ilm.0.1707053425915; Sun, 04 Feb
  2024 05:30:25 -0800 (PST)
 Date: Sun, 04 Feb 2024 05:30:25 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000d4e8006108e5989@google.com>
-Subject: [syzbot] Monthly jfs report (Feb 2024)
-From: syzbot <syzbot+list857c7d203040989b10bd@syzkaller.appspotmail.com>
-To: jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, shaggy@kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000107f6106108e5995@google.com>
+Subject: [syzbot] Monthly reiserfs report (Feb 2024)
+From: syzbot <syzbot+list63b3a3942997eecbf429@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello jfs maintainers/developers,
+Hello reiserfs maintainers/developers,
 
-This is a 31-day syzbot report for the jfs subsystem.
+This is a 31-day syzbot report for the reiserfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/jfs
+https://syzkaller.appspot.com/upstream/s/reiserfs
 
 During the period, 2 new issues were detected and 0 were fixed.
-In total, 34 issues are still open and 31 have been fixed so far.
+In total, 68 issues are still open and 28 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref  Crashes Repro Title
-<1>  1661    Yes   general protection fault in lmLogSync (2)
-                   https://syzkaller.appspot.com/bug?extid=e14b1036481911ae4d77
-<2>  1416    Yes   kernel BUG in jfs_evict_inode
-                   https://syzkaller.appspot.com/bug?extid=9c0c58ea2e4887ab502e
-<3>  985     Yes   general protection fault in write_special_inodes
-                   https://syzkaller.appspot.com/bug?extid=c732e285f8fc38d15916
-<4>  574     Yes   WARNING in inc_nlink (3)
-                   https://syzkaller.appspot.com/bug?extid=2b3af42c0644df1e4da9
-<5>  527     Yes   kernel BUG in txUnlock
-                   https://syzkaller.appspot.com/bug?extid=a63afa301d1258d09267
-<6>  357     Yes   general protection fault in jfs_flush_journal
-                   https://syzkaller.appspot.com/bug?extid=194bfe3476f96782c0b6
-<7>  279     Yes   KASAN: use-after-free Read in release_metapage
-                   https://syzkaller.appspot.com/bug?extid=f1521383cec5f7baaa94
-<8>  109     Yes   KASAN: user-memory-access Write in __destroy_inode
-                   https://syzkaller.appspot.com/bug?extid=dcc068159182a4c31ca3
-<9>  104     Yes   kernel BUG in dbFindLeaf
-                   https://syzkaller.appspot.com/bug?extid=dcea2548c903300a400e
-<10> 84      Yes   kernel BUG in lbmIODone
-                   https://syzkaller.appspot.com/bug?extid=52ddb6c83a04ca55f975
+<1>  7667    Yes   possible deadlock in open_xa_dir
+                   https://syzkaller.appspot.com/bug?extid=8fb64a61fdd96b50f3b8
+<2>  1675    Yes   possible deadlock in mnt_want_write_file
+                   https://syzkaller.appspot.com/bug?extid=1047e42179f502f2b0a2
+<3>  1339    Yes   KMSAN: uninit-value in reiserfs_new_inode (2)
+                   https://syzkaller.appspot.com/bug?extid=6450929faa7a97cd42d1
+<4>  522     Yes   WARNING in journal_end
+                   https://syzkaller.appspot.com/bug?extid=d43f346675e449548021
+<5>  519     Yes   possible deadlock in reiserfs_dirty_inode
+                   https://syzkaller.appspot.com/bug?extid=c319bb5b1014113a92cf
+<6>  327     Yes   KASAN: out-of-bounds Read in leaf_paste_entries (2)
+                   https://syzkaller.appspot.com/bug?extid=38b79774b6c990637f95
+<7>  310     Yes   KASAN: use-after-free Read in leaf_paste_in_buffer
+                   https://syzkaller.appspot.com/bug?extid=55b82aea13452e3d128f
+<8>  305     Yes   possible deadlock in path_openat (2)
+                   https://syzkaller.appspot.com/bug?extid=a844a888fbc0ba4829ce
+<9>  278     No    KASAN: slab-use-after-free Read in __ext4_iget
+                   https://syzkaller.appspot.com/bug?extid=5407ecf3112f882d2ef3
+<10> 225     Yes   possible deadlock in vm_mmap_pgoff
+                   https://syzkaller.appspot.com/bug?extid=f619f7c0a2a5f87694e6
 
 ---
 This report is generated by a bot. It may contain errors.
