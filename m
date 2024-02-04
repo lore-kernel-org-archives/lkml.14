@@ -1,79 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2297B654;
-	Sun,  4 Feb 2024 07:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF20BE49;
+	Sun,  4 Feb 2024 07:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707032600; cv=none; b=Oeu0IaaXpnfjYtIfIvDvnJdUn6oFpY1YLyAi09KpQ1Wzdo9BbTVupwqPNJB+Pg73kAxq/wIaaHGcEp/LLuNl7Q6A/G1RwrFLwe8wabQWcoKWVUCtylsyhsRASj+6x128oXUAnNSHQKaPCrBlx98rizce9azh26KSUYro0LkQ1Pg=
+	t=1707032678; cv=none; b=lR5cLJIhsJIRgb0Hku5jlqsexGxY2GgqHo2zin6TjGl7G5iMQ8FyGdQ8W18ZYw9DxIZ9VUpaFO39R7BXnNUNpyngON/D808QxH79erJZ3KLD8Kw4TFCY8OAcC+2zMfMA8ae4+lHmYuRsubGyMCM2beRUIKKwiLWRMHas+Hbhols=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707032600; c=relaxed/simple;
-	bh=gCY6a7aRfG65U/xuEIFO5NxEPEue1XRDBewjvojLT04=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WJYmyWp5G2LwYRGihd6A4BzHsmiSg6H/uU+T5IqO72l/92H+y1GLUxU4ROnRoTtWnlJyLvxJTkyyY8diF5LN+A/IQKtZHZAqyRkIctUXnvXg5sTDtQb+aBIzwMwlkQePwLnPUSSOO+RV6au2yiPXOEEiDWiGpu1z+3TOVvqEhVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lgsy4/RV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707032678; c=relaxed/simple;
+	bh=+ChSxUQxL8MC74qRmkrbO+IxbnULJIW2R9Y8/bomwA8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=g6NPhkxB7RbPxDECdy5A5VfMZFRuJzp2Rb6lmmcAuMExRJiEKfGRRPPMe1xMA5RMBXS70EzZKVCt/STUqvLA0SJtGOj6oiGNKsH7B8xkevKCP/oxjAdVJypL0J8R7wVOR0K6UjLueh/yxJ2FFkMa30uy6koFpeVGEw3SmGmCdQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hG0oxloy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lgsy4/RV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A92C433F1;
-	Sun,  4 Feb 2024 07:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hG0oxloy"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B8374C433F1;
+	Sun,  4 Feb 2024 07:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707032600;
-	bh=gCY6a7aRfG65U/xuEIFO5NxEPEue1XRDBewjvojLT04=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Lgsy4/RVQVnP+ZtTHkAD4McQQtfczi5nCfcJgnM6YDD/V5+RLdlEsQlMD0xdcxE0o
-	 pmD9gp3TOdoYcasf5VXEsq75o+2EXGY8HHCkWhx+AtOdEiP1EseOJRIvS67nmR6TwK
-	 2XzcAYiPmIzEVp79pK/XOlS0SK2QAyk78hrqIYAWgWQBYx6TqFlPqsrWGsC1T4jg8N
-	 ZWxyA1z0BnqpLJN/eLTOBeJTNtTPdfkOT6bllo+zOL3Ps+IwFdf8UYVCOuhOWqC4Kb
-	 JJE6WtxAd3rmo5VaAt7XXCx8EObVVrT8lroW1DdQ5gtYnHus1jffIEavcI1QfICsEH
-	 hXNqJRgZouvaA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	kvmarm@lists.linux.dev
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: arm64: do not source virt/lib/Kconfig twice
-Date: Sun,  4 Feb 2024 16:43:05 +0900
-Message-Id: <20240204074305.31492-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	s=k20201202; t=1707032677;
+	bh=+ChSxUQxL8MC74qRmkrbO+IxbnULJIW2R9Y8/bomwA8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=hG0oxloyBz6U4fS8lyxwk01/aW3eDwtKPtiIkeZGM66D2nJDDu7RgVCpDC5zWBk0V
+	 Rq52BkQNF3YufDd3/To3BtOXkYrlQ+tzfw5tNuv1btvvLK99el/ZaHw6a8hx7XUonh
+	 L++Y9JFh99DWHd7S69pF3mw8HWhyq2bIlwJspbcsvAcgtboNP77+2coKSxVYHd/7zH
+	 zXcrNm+fDpidL62PLFDiuD99L6STflFMQBBIDmLLdDAQY0njfdJi/2z0s3ogpAypnV
+	 tpXgd6tHHBrI1pdLpWVtZUnEFcXHFVvFJhSv8fwBa7lUIML1OxSAsdMIkmCeni6hw9
+	 GgIa9ZPggS0FQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A6BBFC595CE;
+	Sun,  4 Feb 2024 07:44:37 +0000 (UTC)
+Subject: Re: [GIT PULL] ext4 bug fixes for v6.8-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240204051524.GA206753@mit.edu>
+References: <20240204051524.GA206753@mit.edu>
+X-PR-Tracked-List-Id: <linux-ext4.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240204051524.GA206753@mit.edu>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/for-linus-6.8-rc3
+X-PR-Tracked-Commit-Id: ec9d669eba4c276d00af88951947fe0e82a6b84c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3f24fcdacd40c70dd2949c1cfd8cc2e75942a9e3
+Message-Id: <170703267767.4518.14613545460977800413.pr-tracker-bot@kernel.org>
+Date: Sun, 04 Feb 2024 07:44:37 +0000
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ext4 Developers List <linux-ext4@vger.kernel.org>, Linux Kernel Developers List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-For ARCH=arm64, virt/lib/Kconfig is sourced twice,
-from arch/arm64/kvm/Kconfig and from drivers/vfio/Kconfig.
-There is no good reason to parse virt/lib/Kconfig twice.
+The pull request you sent on Sun, 4 Feb 2024 00:15:24 -0500:
 
-Commit 2412405b3141 ("KVM: arm/arm64: register irq bypass consumer
-on ARM/ARM64") should not have added this 'source' directive.
+> https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/for-linus-6.8-rc3
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3f24fcdacd40c70dd2949c1cfd8cc2e75942a9e3
 
- arch/arm64/kvm/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+Thank you!
 
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index 6c3c8ca73e7f..27ca89b628a0 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -3,7 +3,6 @@
- # KVM configuration
- #
- 
--source "virt/lib/Kconfig"
- source "virt/kvm/Kconfig"
- 
- menuconfig VIRTUALIZATION
 -- 
-2.40.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
