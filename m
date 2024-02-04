@@ -1,39 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650FF2374C;
-	Sun,  4 Feb 2024 16:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0215C249EF;
+	Sun,  4 Feb 2024 16:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707064492; cv=none; b=iAPYlvKElwIeCoHGxdfmT7Grw4zLpcw8GwSkTqFeQqzSXHXgew0Q8rxdOmGhBPpRoTJiX4Nt9b6f/O1RgWqVfibYNLaFZOlB648K6RH7P/KjlUsw8lh6QzPQyWQv9nDo19SbIQJnb14an7lDaxoSq1tZVlcPy1EGtGWpfUkeQw4=
+	t=1707064657; cv=none; b=GEcq9lT0eYTzHhXwenJryYFyOp0WS3FvIN3bBlCTjDTtWu+ovfceE8k7ZWrccYAPyga/rtEdgZInOind4TPhkkDcNm5WnUXcGlTqApysCNjwPSRdZ/Lr6YjKrG7KhjPnGyX4ySkGNAVUILz1Db2Mjkv3VrpJGBo9sKzwF+sdW1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707064492; c=relaxed/simple;
-	bh=d1jd+Fl7RNj7Psg5rAt5zL7BjJf3BEMUc++o5vPBRxo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SBXedU8YKAmLnoeiJ1ltfgwhFdSe26KqTRdSMy+j+Qi6js2KP2xf3Cjyq+AvYiBPCdl4uY1xYgX60A0xerPbUni6cnd44SVgifpzfKlZgHpEPfb+XDfkb4oqBViSCmdizjt6+OBTkB2Uo4uEiYAZCDu+IaYYVbakkuWEYgC5Pog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtsrW/ic; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707064657; c=relaxed/simple;
+	bh=3G6GdpQvGcMU6GrYP4m78WRclDepncCFqt0pc6FRrO0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qWTm37sx6P0eCitBNBW1ieWeilViC1g78FvAfftQ1UbmGPuGAUKli4FAoYcvFtE2M1OaEUL/DGlaoXpUpHnrTDQLzCwsXHbU9j7U6fIEByqWddttgzXopW+d7wxAXw1L9SSI0pZD7tn2YTvTIPmOEUQv1+qmHrMELJiwkJx6354=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=h50To4vN reason="key not found in DNS"; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtsrW/ic"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFD9DC433B2;
-	Sun,  4 Feb 2024 16:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707064492;
-	bh=d1jd+Fl7RNj7Psg5rAt5zL7BjJf3BEMUc++o5vPBRxo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=AtsrW/icKD1jGN0Bnk+CzGhj4mZmVA26M3/AXSWIIRHBtQjuw/ycYdaplmLMWApjC
-	 COMkEQ2bAlTBJRFMgpUj8g7p7VeSseGZmx7ZMX+ajV3MvaoaRQ4U9y9w51ZEhrUA4b
-	 pq7zwx4zBY70POd8kvCf8lYhhx+QvdutBqf2OyPZWKaH3d/2xevyDGdYqgpqHtMG5d
-	 9Ek2aTPgnI5fHb7MpiFzvTcbC9w1bvixMPfuoqZmvHh4c/rILx9sl2RAE0Xp8Bz1TV
-	 nGmF5oeu5i4QRRBX6xR7xPMQkCQoiAhnBjHrlggqNITzfXT/tWWayXFMCiY0AdQOvb
-	 NN9nGpqwqxeUw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D221CC48298;
-	Sun,  4 Feb 2024 16:34:51 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Sun, 04 Feb 2024 19:34:22 +0300
-Subject: [PATCH net-next v4 4/7] net: dsa: mt7530: call port 6 setup from
- mt7530_mac_config()
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="h50To4vN"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2965b7bcc89so804188a91.3;
+        Sun, 04 Feb 2024 08:37:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707064655; x=1707669455;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QJ0lEvjdmBFBNPHoZy7QFocIylJbISzcWHhdTatUO5I=;
+        b=muXE7Loid/nfUME1sgn3xezKHMdsdcttNexFHHEVP9SZfvGC2J3EKSO5zGlA7e4YJd
+         LaccGmA5vrpEIq0cfKJ6Cp4MdCBAsBe4Zq8lN7eLXbzlpOwEHfFTtYoHnTQM5S7BV4Ur
+         oCuQ3Xn1YV5xJObR9B9UNs2rnq3w3vWUQN/PSWB0k7hMjmtAq+L40zxU9GxxrEKJcSyM
+         AdAPxwNdvAaH7Fuuiq0KFLSxoVf9VwO2+RrkRrgqdYq5qZwaMWKcQXfja8jiGGjaXqfa
+         aqHn3gbuiVSZZnJG5Y4g+DDoGnaFwDuMIXQWjT/SNuizbyg2VpIN7q/BpdYjc4IVoZrU
+         PXdQ==
+X-Gm-Message-State: AOJu0Yzp5IueKQlg13aq62Dc3xWT5v46dbchhszgOv1xApPXi9S8OMf+
+	Q6Kci9RHyKtbi/rYHr+jmWmCS39U2kk3U7b1gaNuhjFhfxMcVhYB
+X-Google-Smtp-Source: AGHT+IF6sriXiSq3rscsCsCBQ2mdGsuU0bUMVJxN8UYdjmVJDjsKInpE6VzDlxp/QjpjQZ7Cnyp//g==
+X-Received: by 2002:a17:90a:d103:b0:295:eaff:78f3 with SMTP id l3-20020a17090ad10300b00295eaff78f3mr11979622pju.8.1707064655354;
+        Sun, 04 Feb 2024 08:37:35 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXMZV3Sv+lJKSbk1Qk+EFdVZFi/j9IchwiaK+++go0DkJuFpAeev1njNimjxq6aGAhSNjSXVDkpObQAfXcOcl9D51q1raw+PlbEIMbBDUnTZLKEBHuNrRdOaZZ3Z34xWpGxL+xGkTguTQqGlWxGw3wk5lU03sfq109rUuzEGaaZv6aSUxLOSiEQnhNd3jo1Qz6NGcKARLePFZSJ1TkYChkjuO7csjZ+NJRz
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id u16-20020a17090ac89000b00290f9e8b4f9sm3416585pjt.46.2024.02.04.08.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 08:37:34 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707064653;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QJ0lEvjdmBFBNPHoZy7QFocIylJbISzcWHhdTatUO5I=;
+	b=h50To4vNneCIKOuEO/8D/efzkZvX7cBRhHkLp7C8RGpS0IQMsXlr6KH76Z2PKBODl1T/K2
+	ro/SfR2HyhbWpRRGt8qyw/SlM70y8VcdDoXqtq5iCqLd3QsI1ps1mbM8Xnia3zNKeoaTAI
+	Ikbe8ap8DoKC+Jz49SxTCEMVQLKUh4kXciZbNwk5inueJwa4TUScdrAs+qTL4I3R19qaGl
+	4jJL11M97Eci8rbvDJ0oukb/99TuutthN3N1Cx+ArNruotAEuu9d/T+/klvsN4y3SEU1hT
+	ZsaRA8EB2xi1k1anBokWqcXjGFS0kVp+/VicOyDHj+Dh6RevyghoIGPzlq5QJA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 13:38:02 -0300
+Subject: [PATCH] hv: vmbus: make hv_bus const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,123 +62,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id:
- <20240204-for-netnext-mt7530-improvements-2-v4-4-02bf0abaadb8@arinc9.com>
-References:
- <20240204-for-netnext-mt7530-improvements-2-v4-0-02bf0abaadb8@arinc9.com>
-In-Reply-To:
- <20240204-for-netnext-mt7530-improvements-2-v4-0-02bf0abaadb8@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, 
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707064489; l=2654;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=1hpZjAIapmRbOQsfxIUO58Y9kVJXnb7j8qJPy2E+m/0=;
- b=KHb2QUE4Hhz8YMEq0xZjyf+Oc+A45D3UsjybeXA537nc0jvbGMe2d2naSMjf3XoFDdD/1LQKB
- KAkJWugqAk1AMvSlKBf834UtyfBGuN0XIWeTtnQNLbG57lpcTOGRfHs
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-hv-v1-1-521bd4140673@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAGm9v2UC/x3MQQqAIBBA0avIrBPMJKKrRITalANhoiiBdPek5
+ Vv8XyFhJEwwswoRCyW6fUPfMbBO+xM57c0ghVRCCsVNTpu9UPscuCtcWj1pNYoBjYUWhYgHPf9
+ wWd/3A6Cl7SVgAAAA
+To: "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1071; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=3G6GdpQvGcMU6GrYP4m78WRclDepncCFqt0pc6FRrO0=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv71sGx29pojSTD9LZBXjDM1C4KQaFPoMXD6q9
+ t+k2ay1NdyJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+9bAAKCRDJC4p8Y4ZY
+ ptL7D/4nVxnScbzNdjn9HV6sMToBG3S5ebYXmH6WapZnzOsR1+R/Hhn3zZ9ZLFnjXLs8BYbRb0c
+ fverS72RS8knP9yhr0hJE4uu9+jJrUha9jNnAljcMBN08qbhVSGFlBNBiZRzXFCfqm5iWDT7Jd2
+ R4hdnzrKS+fOK2enHGqJ24LItGKD/9VQXEnK0ZzlgP/TlFSXkWzv0cxmmQAqD4uNT30tqOWeQlH
+ GDgyf28PrcGyw/OWoP6Ve663qJLbeN0VWjDY99iOiVuHsqpjO7VNIWZ+OHE0rQXtZUGkUl8lDEx
+ G4ekb8j7X98g7Z9N34MLAFwsUxqFImQ+WTl3s/ow7tdDGOs/STM//FxsJ5YfXYQiLOpoxIJPzFD
+ MpN/Lf55AQFcPWgp3R2tnuKEFP17jZGy0AVUMQ/xI6z/D3i64gEFtN6tDcEvTqv9ujVZleH+w+f
+ m1itQEz9oPt/+TUD8oAKZAzpZEnki60pATdNC/eGWKB/LpW4RqMpAgbNXn2+e9/XuFrk4iPxVeq
+ CkQQ3FDiXTV9oSu0IskWDpe6sotzyRvTjSvdd+RZCv8bpFAROfwvxJYDakvJD7u606DnRuy5EBn
+ IYWbiQFYeYByadiZl5rGsavmqJ5qR7zYLTQClC18PJIocezWhu3cTMiXL2G7vPKzMyqJ4NMyLbT
+ SuKZNoQWaQbjm0Q==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+Now that the driver core can properly handle constant struct bus_type,
+move the hv_bus variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-mt7530_pad_clk_setup() is called if port 6 is enabled. It used to do more
-things than setting up port 6. That part was moved to more appropriate
-locations, mt7530_setup() and mt7530_pll_setup().
-
-Now that all it does is set up port 6, rename it to mt7530_setup_port6(),
-and move it to a more appropriate location, under mt7530_mac_config().
-
-Change mt7530_setup_port6() to void as there're no error cases.
-
-Leave an empty mt7530_pad_clk_setup() to satisfy the pad_setup function
-pointer.
-
-This is the code path for setting up the ports before:
-
-dsa_switch_ops :: phylink_mac_config() -> mt753x_phylink_mac_config()
--> mt753x_mac_config()
-   -> mt753x_info :: mac_port_config() -> mt7530_mac_config()
-      -> mt7530_setup_port5()
--> mt753x_pad_setup()
-   -> mt753x_info :: pad_setup() -> mt7530_pad_clk_setup()
-
-This is after:
-
-dsa_switch_ops :: phylink_mac_config() -> mt753x_phylink_mac_config()
--> mt753x_mac_config()
-   -> mt753x_info :: mac_port_config() -> mt7530_mac_config()
-      -> mt7530_setup_port5()
-      -> mt7530_setup_port6()
-
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
- drivers/net/dsa/mt7530.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/hv/vmbus_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 82e90da1e52b..18842c759b63 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -414,8 +414,8 @@ mt753x_preferred_default_local_cpu_port(struct dsa_switch *ds)
- }
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index edbb38f6956b..c4e6d9f1b510 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -988,7 +988,7 @@ static const struct dev_pm_ops vmbus_pm = {
+ };
  
- /* Setup port 6 interface mode and TRGMII TX circuit */
--static int
--mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
-+static void
-+mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
- {
- 	struct mt7530_priv *priv = ds->priv;
- 	u32 ncpo1, ssc_delta, xtal;
-@@ -465,7 +465,11 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
- 
- 	/* Enable the MT7530 TRGMII clocks */
- 	core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_TRGMIICK_EN);
-+}
- 
-+static int
-+mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
-+{
- 	return 0;
- }
- 
-@@ -2613,11 +2617,10 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- {
- 	struct mt7530_priv *priv = ds->priv;
- 
--	/* Only need to setup port5. */
--	if (port != 5)
--		return 0;
--
--	mt7530_setup_port5(priv->ds, interface);
-+	if (port == 5) {
-+		mt7530_setup_port5(priv->ds, interface);
-+	else if (port == 6)
-+		mt7530_setup_port6(priv->ds, interface);
- 
- 	return 0;
- }
+ /* The one and only one */
+-static struct bus_type  hv_bus = {
++static const struct bus_type  hv_bus = {
+ 	.name =		"vmbus",
+ 	.match =		vmbus_match,
+ 	.shutdown =		vmbus_shutdown,
 
+---
+base-commit: ce9ecca0238b140b88f43859b211c9fdfd8e5b70
+change-id: 20240204-bus_cleanup-hv-2ca8a4603ebc
+
+Best regards,
 -- 
-2.40.1
+Ricardo B. Marliere <ricardo@marliere.net>
 
