@@ -1,154 +1,112 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA71715AE0;
-	Sun,  4 Feb 2024 08:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9C1426B;
+	Sun,  4 Feb 2024 08:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707035505; cv=none; b=KSUI0KAR8spBUseVr7jNHIkJGOMBCsIREc41iOnxnv8GhF81xyVPrulNjpKlTRcThNAIHv8OkBtoAJmJv3jKzxkUGbFqGdni41mBpkbqD98E+kO2qlCO+TY4R2F5GhwZmtaROWDb/qdpo37jhTUlfcdaRurSb7mCbcoN03N6IAY=
+	t=1707035624; cv=none; b=gqQK+ob9p+oQbYbr16Q5bJhAWVSOAY8WoAuRYF3GvWg6IKsxEFF9XCY74SWicCH8CWZ6/uQslfC/DIHRI8+AhbeXBiurz4sd3hT0MHfsNYfe4ynDbVkt59e6HUm3FIIdZq4gC83nFo/th9Q9E2DtLfWJEcnAUzlu2KWcpQsbj1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707035505; c=relaxed/simple;
-	bh=zuZ16cXlvgwszlj4UY3oSjQsOuqVS9Gy8T9k3jLpus4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TCl551nN79dE9HGJhR2tik3t2NFYsoxZd84fcMa7T7YJ4FMw2JbCQ7HKNIFRFebLYtaOmjEbKdMVA39skGEun2c3MPUCBkK6NAxJXvu/qjus3Ij9aqnF39yyEkH1HFAwc40+QfGlAuTxuyPOLl+cUjyQmoIsrbSa3onC0mohOVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JaQRKEh9; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1707035624; c=relaxed/simple;
+	bh=6hnOSJLUGircKMBizQ5z9dUDIidd26XLeYApieCrnlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i53u2/k7TxxEQR7zunfT4FyP2rALKSNviCKE8+ej6t7WrBMkKrMoQPg4rP5himX8mtQVLMEx93lL/ltg+PUzeZawggJfLogmUMPbjtPof21ettspzzeQaOTnpqC2v3sYSQwJwyPsaHLH/L2L/lAGCUsk9no1t8Psc57nAvgyPIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3ALNsLK; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JaQRKEh9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=14TOX
-	UYYbIa7nuVrv7wPD6Hm67H8jXpzC51fRcD2YDI=; b=JaQRKEh9BwNt7ESr+7YWP
-	16ewiOYq3OUnVLx+mE5ZgxGytIvGcvSaGohW+d0v75n7TKDyiKA5G5LQpC+XJFw/
-	MsuZJOyr9WMrAfJ/10S+WuSq++Lj0xnyG1AWoCIq5/S8FqZ/5Frc7cm5Gaq8W3aN
-	CYUGg3yjryAqEXnzGKHplc=
-Received: from localhost.localdomain (unknown [39.144.137.116])
-	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDnM2Y+S79lBerCAg--.45702S3;
-	Sun, 04 Feb 2024 16:30:58 +0800 (CST)
-From: Xing Tong Wu <xingtong_wu@163.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Xing Tong Wu <xingtong.wu@siemens.com>,
-	Tobias Schaffner <tobias.schaffner@siemens.com>,
-	Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-	Henning Schild <henning@hennsch.de>
-Subject: [PATCH RESEND 1/1] leds: simatic-ipc-leds-gpio: add support for module BX-59A
-Date: Sun,  4 Feb 2024 16:30:48 +0800
-Message-Id: <20240204083048.2458-2-xingtong_wu@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240204083048.2458-1-xingtong_wu@163.com>
-References: <20240204083048.2458-1-xingtong_wu@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3ALNsLK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707035623; x=1738571623;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6hnOSJLUGircKMBizQ5z9dUDIidd26XLeYApieCrnlA=;
+  b=N3ALNsLKSUQq2kw1m+mJNidksnRm5BZh8FCtmy4QJ3W6Z83JHrdNPIWQ
+   iLY+wZJWuIHbVae+fz7kbZaGzk+wxPKHYW0sI4BXIJEzP7xGZjs1yJGly
+   h39f+pVjSnQt5W8BOSmCxS7ks7I8O7NY3xt8ltDOGMi4TpLAUbf6D38DA
+   UhjG7kQwGVWJt2wpDIFY3vlb3RWdAd52dRTGYET9alYKfRTLlW1cTFhQ+
+   qOw4tQi8kGZatm4wKpwmd4cS7Aup4dQ+9vNuCppvPpOKwMZqgbag2lR9s
+   neMLhgIoVxQOKLnJCWplKeaYohgLDjbi9m1BnVyRod0rFC8BCHh8LnOlE
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="25823114"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="25823114"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 00:33:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="781505"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa008.jf.intel.com with ESMTP; 04 Feb 2024 00:33:38 -0800
+Date: Sun, 4 Feb 2024 16:30:05 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Kris Chaplin <kris.chaplin@amd.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Charles Perry <charles.perry@savoirfairelinux.com>, mdf@kernel.org,
+	"michal.simek@amd.com" <michal.simek@amd.com>, hao.wu@intel.com,
+	yilun.xu@intel.com, trix@redhat.com,
+	krzysztof.kozlowski+dt@linaro.org, bcody@markem-imaje.com,
+	avandiver@markem-imaje.com, linux-fpga@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: fpga: xlnx,fpga-slave-selectmap: add DT
+ schema
+Message-ID: <Zb9LDQP3xzrv6LWr@yilunxu-OptiPlex-7050>
+References: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com>
+ <20240129225602.3832449-2-charles.perry@savoirfairelinux.com>
+ <9b0680b6-1952-41d3-82f4-88c60469dc3a@linaro.org>
+ <471d9438-e2c0-4881-8ace-778c9d14669c@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnM2Y+S79lBerCAg--.45702S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXr1kurWUJw15Xry7JFy7Jrb_yoWrXF1fpF
-	nrJ39YkFW5J3Zrtw13CFW7ZF93u3WxKr97tFZrGa90g3Wjvr10qF9rAFW3XFZ5J3ykuF17
-	GF1rtFyUur4DAwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jqxRfUUUUU=
-X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/xtbBEAd60GVOCGzapQAAsN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <471d9438-e2c0-4881-8ace-778c9d14669c@amd.com>
 
-From: Xing Tong Wu <xingtong.wu@siemens.com>
+On Wed, Jan 31, 2024 at 11:03:25AM +0000, Kris Chaplin wrote:
+> Hello Krzysztof,
+> 
+> On 30/01/2024 16:09, Krzysztof Kozlowski wrote:
+> 
+> > > +
+> > > +description: |
+> > > +  Xilinx 7 Series FPGAs support a method of loading the bitstream over a
+> > > +  parallel port named the slave SelectMAP interface in the documentation. Only
+> > > +  the x8 mode is supported where data is loaded at one byte per rising edge of
+> > > +  the clock, with the MSB of each byte presented to the D0 pin.
+> > > +
+> > > +  Datasheets:
+> > > +    https://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
+> > 
+> > I am surprised that AMD/Xilinx still did not update the document to
+> > modern naming (slave->secondary).
+> 
+> Thank you for bringing this up.
+> 
+> We are moving away from using non-inclusive technical terminology and are
+> removing non-inclusive language from our products and related collateral.
+> You will for some time find examples of non-inclusive language, especially
+> in our older products as we work to make these changes and align with
+> industry standards.  For new IP we're ensuring that we switch and stick to
+> inclusive terminology, as you may have seen with my recent w1 driver
+> submission.
+> 
+> SelectMAP is a decades-old interface and as such it is unlikely that we will
+> update this in all documentation dating back this time.  I shall however
+> look to understand what is planned here for active documentation and new
+> driver submissions.
 
-This is used for the Siemens Simatic IPC BX-59A, which has its LEDs
-connected to GPIOs provided by the Nuvoton NCT6126D
+Yes, I need review from AMD/Xilinx side. Especially the HW parts, and
+some namings of variables, e.g. if xilinx-core is proper for what products
+it supports, and won't be an issue in future.
 
-Signed-off-by: Xing Tong Wu <xingtong.wu@siemens.com>
----
- .../leds/simple/simatic-ipc-leds-gpio-core.c  |  1 +
- .../simple/simatic-ipc-leds-gpio-f7188x.c     | 42 ++++++++++++++++---
- 2 files changed, 37 insertions(+), 6 deletions(-)
+Thanks,
+Yilun
 
-diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-index 667ba1bc3a30..85003fd7f1aa 100644
---- a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-+++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-@@ -56,6 +56,7 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
- 	case SIMATIC_IPC_DEVICE_127E:
- 	case SIMATIC_IPC_DEVICE_227G:
- 	case SIMATIC_IPC_DEVICE_BX_21A:
-+	case SIMATIC_IPC_DEVICE_BX_59A:
- 		break;
- 	default:
- 		return -ENODEV;
-diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-index c7c3a1f986e6..783e74e9a805 100644
---- a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-+++ b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-@@ -17,7 +17,10 @@
- 
- #include "simatic-ipc-leds-gpio.h"
- 
--static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
-+static struct gpiod_lookup_table *led_lookup_table;
-+static struct gpiod_lookup_table *led_lookup_table_extra;
-+
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
- 	.dev_id = "leds-gpio",
- 	.table = {
- 		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
-@@ -30,7 +33,7 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
- 	},
- };
- 
--static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra_227g = {
- 	.dev_id = NULL, /* Filled during initialization */
- 	.table = {
- 		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
-@@ -39,16 +42,43 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
- 	},
- };
- 
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_bx_59a = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-5", 3, NULL, 2, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-5", 2, NULL, 3, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-7", 7, NULL, 4, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-7", 4, NULL, 5, GPIO_ACTIVE_LOW),
-+		{} /* Terminating entry */
-+	}
-+};
-+
- static int simatic_ipc_leds_gpio_f7188x_probe(struct platform_device *pdev)
- {
--	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
--					   &simatic_ipc_led_gpio_table_extra);
-+	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
-+
-+	switch (plat->devmode) {
-+	case SIMATIC_IPC_DEVICE_227G:
-+		led_lookup_table = &simatic_ipc_led_gpio_table_227g;
-+		led_lookup_table_extra = &simatic_ipc_led_gpio_table_extra_227g;
-+		break;
-+	case SIMATIC_IPC_DEVICE_BX_59A:
-+		led_lookup_table = &simatic_ipc_led_gpio_table_bx_59a;
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	return simatic_ipc_leds_gpio_probe(pdev, led_lookup_table,
-+					   led_lookup_table_extra);
- }
- 
- static void simatic_ipc_leds_gpio_f7188x_remove(struct platform_device *pdev)
- {
--	simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
--				     &simatic_ipc_led_gpio_table_extra);
-+	simatic_ipc_leds_gpio_remove(pdev, led_lookup_table,
-+				     led_lookup_table_extra);
- }
- 
- static struct platform_driver simatic_ipc_led_gpio_driver = {
--- 
-2.25.1
-
+> 
+> regards
+> Kris
+> 
