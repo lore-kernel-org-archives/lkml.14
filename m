@@ -1,117 +1,95 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07392C86E
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 21:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D487376E1;
+	Sun,  4 Feb 2024 21:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707082200; cv=none; b=qaLrbYFugBgcvAuZS3bmJcyDeNnsBAzaYUhK5b3wFKfaWRgIbRzKazqHG8YhWUNnuVMRHbB1Xmo2sURK56LQ1n1QAU5/QuKDLRC8w0jw13Om0NePewYs+x+O9VQJHuPKQTEbOsxm29fgsIbm2NCgzW1Xkp9GkUm48grPHbEq1dc=
+	t=1707082209; cv=none; b=cLPA/mcyu8EGANe0ngcE3CU8mQwbxsDc7rQV+csVXCNsL/cN6jNBjF2Rx54fxzfJ32WSEpl5mtU4UmlIhQfX0hSA8qO9X94lSlHV4ej53ZORydOJHHtKsnf5zXCgJOOdzmlYurvRFoJJaUZalGFfCUbRnqaECHjfD6Sb/0lw4xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707082200; c=relaxed/simple;
-	bh=gWNgzaqzune7TGLgUbGGYous35DnLM8EJ4ZMDBYEuJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I3RW/ZYA3Y+XvQu6we5UizKSoMUwCzQnULSwRhW6DUf9OgpoFTGqaQURq0tIVZj4qcLZhcdTaYmb+A6A7vqlhwHaU1k1MkEPVE+QlFy5KcXkoiMFlbTXYK6x4Ww8n74qA934UnZD3PPAkbtqkgV8uEbuKNSz0rkCCGGRB6tBP8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWk3k-0001FB-Vg; Sun, 04 Feb 2024 22:29:52 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWk3j-004Ve7-Ti; Sun, 04 Feb 2024 22:29:51 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWk3j-00F29F-2i;
-	Sun, 04 Feb 2024 22:29:51 +0100
-Date: Sun, 4 Feb 2024 22:29:51 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Thorsten Scherer <t.scherer@eckelmann.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] siox: make siox_bus_type const
-Message-ID: <oixce2fflwe6rodxsv625ogbymqlblw7qvvbxmtp7tpgarqpju@ufnqi7j364md>
-References: <20240204-bus_cleanup-siox-v1-1-2d12583d3a6c@marliere.net>
+	s=arc-20240116; t=1707082209; c=relaxed/simple;
+	bh=JQ0zUz1l0mTDkk8bS6tBo39s7e+mi+NPDwnScOgeYcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=tteuGMNcRKLrE0xhxbzg9WSq1/XA2jbQuKyYd9bKFaS02Wl97j2Vk7d0Q64oUzLq8Gncn1fjC36rDCGOO/8Z4ixF9rGqBDkFNY/OhEpmS5F8MrfZM6XyzcN1n/gy0/7UWmMKbkUZYLOCQr6POgVB1MXMxRiIaS8edb/VzFWxhOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QyXEZKdh; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QyXEZKdh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1707082197;
+	bh=rk1j7C6A23t5nXWPgqJXUtNrPH7V2Kfa7sANGsAkP6s=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QyXEZKdhz4Snu0Nw6Svr8lT3i3YHA47TIM4Xl2qonyhH1V2nysfB6sqc7vdhANqiL
+	 1dqiETVrzjgOHW73VBA6IbjzJFO5Olyjs6OCmzkJ+Im7JaU2wTBiKWz5SPc8LXxQ7T
+	 PXpEes9gnVkstXE3LB6Tg2zBwdzbzMVTCGkPHBOayIsfRG+qa8Co/EySuMQIs/zfmQ
+	 NAz0w1dmVfO5oA6tV0PhgyMPiiyzN5vFuvF5O+VOiehK645tIcHLE4tk6gT/s6O3sT
+	 L9ys6Dq43cH/aU+VPY7el9J7l2ilJuOTnCrixzXiDm0QfQFlbwpGIPMDaGVQXe+8OC
+	 JkI2VchO3RG9w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TSjMn2wcsz4wp3;
+	Mon,  5 Feb 2024 08:29:56 +1100 (AEDT)
+Date: Mon, 5 Feb 2024 08:29:34 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the mm tree
+Message-ID: <20240205082934.2a8b10bb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4q3fuj3ylhholgv6"
-Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-siox-v1-1-2d12583d3a6c@marliere.net>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/sL=JypT+KbJREMCx8JcYpnO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-
---4q3fuj3ylhholgv6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+--Sig_/sL=JypT+KbJREMCx8JcYpnO
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hello Ricardo,
+Hi all,
 
-On Sun, Feb 04, 2024 at 05:36:03PM -0300, Ricardo B. Marliere wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the siox_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
->=20
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> ---
->  drivers/siox/siox-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/siox/siox-core.c b/drivers/siox/siox-core.c
-> index 561408583b2b..a1eda7bd76ed 100644
-> --- a/drivers/siox/siox-core.c
-> +++ b/drivers/siox/siox-core.c
-> @@ -543,7 +543,7 @@ static void siox_shutdown(struct device *dev)
->  		sdriver->shutdown(sdevice);
->  }
-> =20
-> -static struct bus_type siox_bus_type =3D {
-> +static const struct bus_type siox_bus_type =3D {
->  	.name =3D "siox",
->  	.match =3D siox_match,
->  	.probe =3D siox_probe,
+In commit
 
-while I like this change, I wonder about the "Now" in the commit log.
-Doing the homework, this is about commit d492cc2573a0 ("driver core:
-device.h: make struct bus_type a const *") which is in 6.4-rc1. Would
-you please care to mention that commit as the one that makes this siox
-change possible?
+  d2593cf2e3f2 ("mm: memcg: use larger batches for proactive reclaim")
 
-Thanks
-Uwe
+Fixes tag
+
+  Fixes: 0388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive =
+re=3D
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+  - Subject does not match target commit subject
+    Just use
+        git log -1 --format=3D'Fixes: %h ("%s")'
+
+Please do not split fixes tags over more than one line.
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Cheers,
+Stephen Rothwell
 
---4q3fuj3ylhholgv6
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/sL=JypT+KbJREMCx8JcYpnO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXAAc4ACgkQj4D7WH0S
-/k4s9Af/QB+rLnHB02hNPhuBJli4ziKQC5YsDnKvHelaGTNXS/OT1Z6uP2deeQWT
-8N6D1yWZvoLNjLzEdRmb+/aeNhB57stbASDom/+w/i5CV8pQNua8zRVOBixBFPiH
-be5KQtdhtPbd7ga29mVjz9H2C2snppLKwHp75Gep3Ulb8xvtBGJE9lmQXRVc5d4f
-T5ZkrfhPFa11tDlmKvMAQmPRUymTcCmoGg5gWRkYIa46sqHn2zCc+y34I7KO6M8S
-VdGUQ9mjChb/e6IwV93op267Bv4dueFHas0sHh+NP9CUgnYb0P4EmyqJu9n+dhf/
-t/qP2QokB3r7B5ueU5g5acYPa5ZLMg==
-=YAp6
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXAAb4ACgkQAVBC80lX
+0GwLtQf+OWksLdvFlSDBQKV1fp9UDkmwxulgjqW7LTQvA01oT5UgSiRzPLKGAf3+
+neTBzDzWrolDqECt/9WHPcXu9AOmj/v4AqUZKk0zO30WMy8mlVcOxF7o9iUltFsl
+bNbYRjsiHJ9iRpQsz7IzkWUJE09ZOB4snoXWRKyVVvwJjZNsTME4XID33HZSrgx+
+mTBwxg19BGE712dgaTJRDkdZZnvdGEYoslDeTUjjcEhsxttifsHFRekoTxDEx58R
+E7sojBls64UHJMtUryc2Y2m3mnLNMbfi/MlkUYxUZI5tkZQrRC3zpXMMuxRYhxj7
+zIhaJ6YzoW0kJr3VFofx5nJXriN2UQ==
+=YWra
 -----END PGP SIGNATURE-----
 
---4q3fuj3ylhholgv6--
+--Sig_/sL=JypT+KbJREMCx8JcYpnO--
