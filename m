@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B18E57F;
-	Sun,  4 Feb 2024 01:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4E7EDE;
+	Sun,  4 Feb 2024 01:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009488; cv=none; b=mUG1d39Zu3n26H1r7R4SRtiYLYkj+8Qseyz8MbftZYLDBasfq0xm0TFHvz/OvYuyKikAv2Gc6uk7r7/tY/Lu//wnNh16x8bb8PK3NlZ5JjuC4nVm+6HtsbPuSLUXAaBTblae2RwHvgNLcZHr7yqiZ7cnQuKDwakAZFKGHHuZO4Q=
+	t=1707009487; cv=none; b=Hmo3uCYGpsJoTdV0SPnhHjbnZuJkEGsaoJFRsWQeR47Gm/i4xtLWrOl+B5gn8oRJGBRAQ58MGchp0ohnQVbAnIMiGIYyB2bbg9LV5uOIkr8OFVfHlyyWjWqCcGm8Nt+20hd+PvQ8UUGtVRWcXIJHql1vD4yW/iwAcJYkYHlyRbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707009488; c=relaxed/simple;
-	bh=bzFVFZX6ZxTI6abHrIBPqY91OKE0skzJprX6xWIWAm4=;
+	s=arc-20240116; t=1707009487; c=relaxed/simple;
+	bh=NR3h4mErQ47RHUi+GxBhB9CL/lVTmIE+3l5kJKozkPk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Vpb0npwZ5jFdAdve30voao4s2bGrDIH2VsdcQwmjYKma9L7MzMwzdDOhQ7OGHZHsIDT3ZpjalA8iLppxtOiGYyNffiqkD4qpW3Q/8rrrrLKbZLhiPnlzpMezhsDQwAtK8orjLIWKsf0+x7uVlqEEcmiEZXhCOspiY/1sE/Rsbo0=
+	 Content-Type; b=e6oJYQaQ9xmtD4vudplaefhW2xVtL1cKdNkExEA8Lxd+QPK3Lt93JjLNkeDECGrrSriUYZz1CtWK9MYJos8EHFDF2pmacxe+Lg3nAoQSlVRhbbc7uYfoRasIOU2T6V5DukepcawK3t0AeSsjxXpKQMbYaYEf0RObxNG0YeQSJ1U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3E3FC3278D;
-	Sun,  4 Feb 2024 01:18:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB49CC4AF7E;
+	Sun,  4 Feb 2024 01:18:06 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rWR9S-00000006OuN-1E5D;
-	Sat, 03 Feb 2024 20:18:30 -0500
-Message-ID: <20240204011830.140246345@goodmis.org>
+	id 1rWR9R-00000006Ors-1zJh;
+	Sat, 03 Feb 2024 20:18:29 -0500
+Message-ID: <20240204011829.331283280@goodmis.org>
 User-Agent: quilt/0.67
-Date: Sat, 03 Feb 2024 20:16:35 -0500
+Date: Sat, 03 Feb 2024 20:16:30 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -34,7 +34,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Christian Brauner <brauner@kernel.org>,
  Al Viro <viro@ZenIV.linux.org.uk>,
  Ajay Kaher <ajay.kaher@broadcom.com>
-Subject: [v6.7][PATCH 20/23] eventfs: Warn if an eventfs_inode is freed without is_freed being set
+Subject: [v6.7][PATCH 15/23] tracefs: Avoid using the ei->dentry pointer unnecessarily
 References: <20240204011615.703023949@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,84 +44,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-There should never be a case where an evenfs_inode is being freed without
-is_freed being set. Add a WARN_ON_ONCE() if it ever happens. That would
-mean there was one too many put_ei()s.
+The eventfs_find_events() code tries to walk up the tree to find the
+event directory that a dentry belongs to, in order to then find the
+eventfs inode that is associated with that event directory.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240201161616.843551963@goodmis.org
+However, it uses an odd combination of walking the dentry parent,
+looking up the eventfs inode associated with that, and then looking up
+the dentry from there.  Repeat.
 
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+But the code shouldn't have back-pointers to dentries in the first
+place, and it should just walk the dentry parenthood chain directly.
+
+Similarly, 'set_top_events_ownership()' looks up the dentry from the
+eventfs inode, but the only reason it wants a dentry is to look up the
+superblock in order to look up the root dentry.
+
+But it already has the real filesystem inode, which has that same
+superblock pointer.  So just pass in the superblock pointer using the
+information that's already there, instead of looking up extraneous data
+that is irrelevant.
+
+Link: https://lore.kernel.org/linux-trace-kernel/202401291043.e62e89dc-oliver.sang@intel.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240131185512.638645365@goodmis.org
+
+Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Christian Brauner <brauner@kernel.org>
 Cc: Al Viro <viro@ZenIV.linux.org.uk>
 Cc: Ajay Kaher <ajay.kaher@broadcom.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: c1504e510238 ("eventfs: Implement eventfs dir creation functions")
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ fs/tracefs/event_inode.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 515fdace1eea..ca7daee7c811 100644
+index 824b1811e342..e9819d719d2a 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -73,6 +73,9 @@ enum {
- static void release_ei(struct kref *ref)
+@@ -156,33 +156,30 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return ret;
+ }
+ 
+-static void update_top_events_attr(struct eventfs_inode *ei, struct dentry *dentry)
++static void update_top_events_attr(struct eventfs_inode *ei, struct super_block *sb)
  {
- 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
-+
-+	WARN_ON_ONCE(!ei->is_freed);
-+
- 	kfree(ei->entry_attrs);
- 	kfree_const(ei->name);
- 	kfree_rcu(ei, rcu);
-@@ -84,6 +87,14 @@ static inline void put_ei(struct eventfs_inode *ei)
- 		kref_put(&ei->kref, release_ei);
+-	struct inode *inode;
++	struct inode *root;
+ 
+ 	/* Only update if the "events" was on the top level */
+ 	if (!ei || !(ei->attr.mode & EVENTFS_TOPLEVEL))
+ 		return;
+ 
+ 	/* Get the tracefs root inode. */
+-	inode = d_inode(dentry->d_sb->s_root);
+-	ei->attr.uid = inode->i_uid;
+-	ei->attr.gid = inode->i_gid;
++	root = d_inode(sb->s_root);
++	ei->attr.uid = root->i_uid;
++	ei->attr.gid = root->i_gid;
  }
  
-+static inline void free_ei(struct eventfs_inode *ei)
-+{
-+	if (ei) {
-+		ei->is_freed = 1;
-+		put_ei(ei);
-+	}
-+}
-+
- static inline struct eventfs_inode *get_ei(struct eventfs_inode *ei)
+ static void set_top_events_ownership(struct inode *inode)
  {
- 	if (ei)
-@@ -679,7 +690,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	struct tracefs_inode *ti = get_tracefs(inode);
+ 	struct eventfs_inode *ei = ti->private;
+-	struct dentry *dentry;
  
- 	/* Was the parent freed? */
- 	if (list_empty(&ei->list)) {
--		put_ei(ei);
-+		free_ei(ei);
- 		ei = NULL;
- 	}
+ 	/* The top events directory doesn't get automatically updated */
+ 	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
+ 		return;
+ 
+-	dentry = ei->dentry;
+-
+-	update_top_events_attr(ei, dentry);
++	update_top_events_attr(ei, inode->i_sb);
+ 
+ 	if (!(ei->attr.mode & EVENTFS_SAVE_UID))
+ 		inode->i_uid = ei->attr.uid;
+@@ -235,8 +232,10 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	do {
+-		/* The parent always has an ei, except for events itself */
+-		ei = dentry->d_parent->d_fsdata;
++		// The parent is stable because we do not do renames
++		dentry = dentry->d_parent;
++		// ... and directories always have d_fsdata
++		ei = dentry->d_fsdata;
+ 
+ 		/*
+ 		 * If the ei is being freed, the ownership of the children
+@@ -246,12 +245,11 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 			ei = NULL;
+ 			break;
+ 		}
+-
+-		dentry = ei->dentry;
++		// Walk upwards until you find the events inode
+ 	} while (!ei->is_events);
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	update_top_events_attr(ei, dentry);
++	update_top_events_attr(ei, dentry->d_sb);
+ 
  	return ei;
-@@ -770,7 +781,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	return ei;
- 
-  fail:
--	put_ei(ei);
-+	free_ei(ei);
- 	tracefs_failed_creating(dentry);
- 	return ERR_PTR(-ENOMEM);
  }
-@@ -801,9 +812,8 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
- 	list_for_each_entry(ei_child, &ei->children, list)
- 		eventfs_remove_rec(ei_child, level + 1);
- 
--	ei->is_freed = 1;
- 	list_del(&ei->list);
--	put_ei(ei);
-+	free_ei(ei);
- }
- 
- /**
 -- 
 2.43.0
 
