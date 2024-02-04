@@ -1,63 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE07C8DE;
-	Sun,  4 Feb 2024 07:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5622BA57
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 07:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707032680; cv=none; b=K8QGQ4g0eu+B7lfQgJY2JDxPdD4aQnrCKFPoNyU0iP2m//TFz79EWqzFDi9TvRosOxxxcmry+wUf9miDgpMKtAKFixOxVErywOzrK5RzPhmngufmPG/58EtjbQbLR1e8BQLGBd4+MmvgpYxqhIV+1GjGXqffdctuuYE9ZIFEhXw=
+	t=1707032680; cv=none; b=bilZXss3ENdGRGNWsEWrrg+FNlZ71hweFi7YI85HvoERamlLkm7ZQr3+ToBFND5WD/1QiNp/gkO5oug1kM0KjCj7cm/2nXwdTXiRxJPbJf4sG8kFdvsYczcIwdIDj+Idvi3xc8KZ7jcjV0c9Bu6YWga/WOqCm5ujRU48gd67t1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707032680; c=relaxed/simple;
-	bh=sILQ9VZBDR1OqWqF9UygYcGdPPc6HN8uAqrWCZcddog=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=arNrHEvF9wrvsj4COEHQdMnxA0a0PqqknMYQcowoHIQn+W4zDSYLFmlWAAxIBVhcWKy1DJyBv9D95nkxTFrw+eS5e9HgphLDJfrohrDTNpJdtQCZANgeSDZykp1WkQn3MjqpMz/QSOUOLLCkHq44j832GbcyLqxhQ5jIHKIdUMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dA5MmX2W; arc=none smtp.client-ip=10.30.226.201
+	bh=KcUQS9KaviPrUiGpEwBjuSuhOXzyV6fa/aehuoXcrpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n4IHW8kwA6zsQtIAUGr0xNc6r3j3zW1KRl2N+/i/+hWjAoWKjLhVPVKf//a4MFruC52UCoJy5GiDOhXwXSuHCSv8+JXCE55Cd4iPzux6c5mTnqiyCUvQUGf3C8WZPa4FDIntuqRssGl3LNpFnk6rbVUwyORyTRfCAdye74lQEDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kXzeiZnf; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dA5MmX2W"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C3161C43390;
-	Sun,  4 Feb 2024 07:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707032679;
-	bh=sILQ9VZBDR1OqWqF9UygYcGdPPc6HN8uAqrWCZcddog=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=dA5MmX2WsIi005mMyU1COXVA4LCKmQvVVsRCdivQxkigs+0irFUIhDoGNdb97bW7A
-	 X2H0H5KUCQ70G8AB7kk5wisw/Q77RrPHFzAdKLOGGKq1+opOW6fjwskiqcNZHiQyOH
-	 DmPOFnNauCqsW9RaNGVX4G/Qo2hh2tpp+eoM9MsbRE6ef1YEpmPICgFtAEkGTK1GH9
-	 cKU6iHqzeAvD6OcHMnthw2R5eQz4YWabCOdCgQP+CYA0Ltg4mC1Tc+DaewZizCqfST
-	 0EXh8UPIvHPovTUCueV4YmasORsqLYmsJgIykq9SuSj7EcfEG2ulMyv53qWlJMjAW4
-	 C1smMRgUXpYOA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ADEE4C0C40E;
-	Sun,  4 Feb 2024 07:44:39 +0000 (UTC)
-Subject: Re: [GIT PULL] smb3 client fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5mvqa_RSjwQ1oqXt0a51KVu46Bov6_X-x6FUH4s8H1wVRA@mail.gmail.com>
-References: <CAH2r5mvqa_RSjwQ1oqXt0a51KVu46Bov6_X-x6FUH4s8H1wVRA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5mvqa_RSjwQ1oqXt0a51KVu46Bov6_X-x6FUH4s8H1wVRA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git tags/v6.8-rc3-smb-client-fixes
-X-PR-Tracked-Commit-Id: 11d4d1dba3315f73d2d1d386f5bf4811a8241d45
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9e28c7a23bac7452935d1768fbfedad113586f9b
-Message-Id: <170703267970.4518.7127461965102732836.pr-tracker-bot@kernel.org>
-Date: Sun, 04 Feb 2024 07:44:39 +0000
-To: Steve French <smfrench@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kXzeiZnf"
+Message-ID: <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707032675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PYmkSyAiI8ZNFZt9h2B5b9tnwLmATn/wLxZOMDo8mKg=;
+	b=kXzeiZnfqHf+rROkc2BSnppq0lJy1pPlYyZFAiXuLA07iCziWLDn0VEFbrUa74a8OrFi8T
+	ZF9xku65yVr5aUqN5rs69O2TpU50pH5zjuRu1SJ70GKaEFMYMfcsPZDIK4y2kh/9W52kgq
+	/cInjIwCZVYdR3kTSIkdujIh7lf8HVI=
+Date: Sun, 4 Feb 2024 15:44:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/1] hugetlb: fix CONFIG_PADATA dependency for non-SMP
+ system
+To: Gang Li <gang.li@linux.dev>
+Cc: Gang Li <ligang.bdlg@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Randy Dunlap <rdunlap@infradead.org>,
+ kernel test robot <lkp@intel.com>
+References: <20240204072525.1986626-1-gang.li@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20240204072525.1986626-1-gang.li@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-The pull request you sent on Sat, 3 Feb 2024 14:47:21 -0600:
 
-> git://git.samba.org/sfrench/cifs-2.6.git tags/v6.8-rc3-smb-client-fixes
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9e28c7a23bac7452935d1768fbfedad113586f9b
+On 2024/2/4 15:25, Gang Li wrote:
+> Randy Dunlap and kernel test robot reported a warning:
+>
+> ```
+> WARNING: unmet direct dependencies detected for PADATA
+>    Depends on [n]: SMP [=n]
+>    Selected by [y]:
+>    - HUGETLBFS [=y] && (X86 [=y] || SPARC64 || ARCH_SUPPORTS_HUGETLBFS [=n] || BROKEN [=n]) && (SYSFS [=y] || SYSCTL [=n])
+> ```
+>
+> hugetlb parallelization depends on PADATA, and PADATA depends on SMP, so
+> when the SMP config is disabled, the dependency of hugetlb on padata
+> should be downgraded to single thread.
+>
+> Fixes: f2f635264b98 ("hugetlb: have CONFIG_HUGETLBFS select CONFIG_PADATA")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/lkml/ec5dc528-2c3c-4444-9e88-d2c48395b433@infradead.org/
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202402020454.6EPkP1hi-lkp@intel.com/
+> Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
+> ```
+> Hi Andrew, this fix patch is based on mm/mm-unstable.
+> Thanks!
+> ```
+> ---
+>   fs/Kconfig   | 2 +-
+>   mm/hugetlb.c | 9 ++++++++-
+>   2 files changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/Kconfig b/fs/Kconfig
+> index 3abc107ab2fbd..f2bc73fc0417e 100644
+> --- a/fs/Kconfig
+> +++ b/fs/Kconfig
+> @@ -261,7 +261,7 @@ menuconfig HUGETLBFS
+>   	depends on X86 || SPARC64 || ARCH_SUPPORTS_HUGETLBFS || BROKEN
+>   	depends on (SYSFS || SYSCTL)
+>   	select MEMFD_CREATE
+> -	select PADATA
+> +	select PADATA if SMP
 
-Thank you!
+I don't think it is a clear way to fix this. If someone want to
+use PADATA in a non-SMP system, he should be carefully to handle
+the non-SMP case himself. I think the better way is to make PADATA
+handle the non-SMP case, I think it should be easy for it, which
+could just call ->thread_fn() many times instead of creating many
+threads in the non-SMP case.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks.
+
+>   	help
+>   	  hugetlbfs is a filesystem backing for HugeTLB pages, based on
+>   	  ramfs. For architectures that support it, say Y here and read
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index bf3d5dfb921e6..1b01b244fb50b 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3457,6 +3457,7 @@ static void __init gather_bootmem_prealloc_node(unsigned long start, unsigned lo
+>   
+>   static void __init gather_bootmem_prealloc(void)
+>   {
+> +#ifdef CONFIG_PADATA
+>   	struct padata_mt_job job = {
+>   		.thread_fn	= gather_bootmem_prealloc_node,
+>   		.fn_arg		= NULL,
+> @@ -3469,6 +3470,9 @@ static void __init gather_bootmem_prealloc(void)
+>   	};
+>   
+>   	padata_do_multithreaded(&job);
+> +#else
+> +	gather_bootmem_prealloc_node(0, 0, NULL);
+> +#endif
+>   }
+>   
+>   static void __init hugetlb_hstate_alloc_pages_onenode(struct hstate *h, int nid)
+> @@ -3568,6 +3572,7 @@ static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h)
+>   
+>   static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+>   {
+> +#ifdef CONFIG_PADATA
+>   	struct padata_mt_job job = {
+>   		.fn_arg		= h,
+>   		.align		= 1,
+> @@ -3600,7 +3605,9 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+>   	job.max_threads	= num_node_state(N_MEMORY) * 2;
+>   	job.min_chunk	= h->max_huge_pages / num_node_state(N_MEMORY) / 2;
+>   	padata_do_multithreaded(&job);
+> -
+> +#else
+> +	hugetlb_pages_alloc_boot_node(0, h->max_huge_pages, h);
+> +#endif
+>   	return h->nr_huge_pages;
+>   }
+>   
+
