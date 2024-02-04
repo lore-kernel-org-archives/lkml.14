@@ -1,132 +1,110 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDECD2209A
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 11:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D42622081
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 11:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707047073; cv=none; b=pSJh22onpbliMRl6qrkNbkeG7YvKjpf9AC7rU778Qv8onQVF9ODCTnaJblxuQuQxTOfl+6wrXJuu9BziQuDwnuRjDH2VLT7YPyVTbhKtYYKPG0XjKGnywki1ev5kcLCZ+VaniMRQ/TPMM0NafsgrCbz/XrSCjzXrs8DTv8g0vao=
+	t=1707047132; cv=none; b=Xa8OftqYfhdrZVZAcixQsPE3VzbMfkBDTUZdM+jGczmYl6lhrteJaW+PbOHyAYGyQzf2aXIEbDvs7CaqmPCcS3uQLoReywwQMavZk/4MgckQEJYPyZhzeFdMqqVHjD1Hr4lB86qzg4b8tw86QzprjyGrMeFzblRQnL1XYLGIRNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707047073; c=relaxed/simple;
-	bh=W+PrOG+3qjgKVWlr8gdUcu/HyylkSKA8m2x73hOH6a4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=a9OfVV6SFqjI1Mai+xZcoOcKS9U3IGqOslcczyVDeDnhqZf1iRfwAEsd8iONb1GcPOAtvF3bgWwNZimD1W4ewC0vFB+3ZAuInp39nuc/TuEmCk/31yVTV9m+D8r0w4MQ4ID3QGpLoIjU0DNJvsdkcZZlAUeXEModrDob/yU/TF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363be67c17aso3480405ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:44:31 -0800 (PST)
+	s=arc-20240116; t=1707047132; c=relaxed/simple;
+	bh=XR83UQlwxz6s5+olPT6yncgAKlHegp9awIw+AN/9VJk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A7iGc+kwrEuAInV4vPuciPD20088zePAgJvMvNcFIJuz1ZwvIq4zJnSV3f3RlIlxme9k9iO5slwanrilYhKnjwG4s+2sPCWqtSZKS3S13ImZQnawNi12qz1uyyFrVHdgP/1FXvl2YESnNs6Q/Issd9dLh4jVC9DQ8u2PeMrjBrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hJqmGnWi; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hJqmGnWi"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-290b37bb7deso2888200a91.0
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:45:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707047130; x=1707651930; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3rkWxkZIZnZS6vY+tGpyDAUE64mPHdya01WcnVrnuEU=;
+        b=hJqmGnWiSGKsObJ17nQvT2TUvf++PC+WopYLn2Qea5ly9WIx9XDVYhOU5iS1NsMlyh
+         RLPg7i0tqXZTKwSUTi965ARrGK7sQuZ8XCH9erhHXDkeEx+ip94KNEeHQp8HQKCzCUiO
+         bdqP56+70M9K5ll8dA43vSOxY6OBTfZiZ5dZWjfMnvVphx9aQX73oxy7kRS80kmXDA0d
+         mMFXo8HyRnj9vmq2v35b5ju7E20YMDNrWA1pV0ZDGsgXFOK31+X7ofbcpRHt4YSJqLSy
+         PQFV4EqETn8B6sFcE2D693GR6vLBv5xt8g8ZPj/soQAU4x8jyFf0anaKehpQMYLK2cz1
+         i9bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707047071; x=1707651871;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6MyD/vd8jdcu5CLhoPmsunjC+RxH9aURP3x2XieB+UE=;
-        b=JuV4WVfiK17QHDFBByShLrNKr4h8e5tUjBX/2wuuJODJnH0DdBySKN6/qbTwduaEaC
-         oxsUj+2AdZf3JkduP9QDeMNyoY1x8ET+iPyEzog3Kv8yabntsnH8uAn8f0kfFS74DmwU
-         HS2NHi44bUsOeAGWCDqrEXY5CRn+tlYJaVLmNLz1rGqkVYJ4gea168m+nO534xXyyifY
-         cVrA8hE04CQQFWTmmGBgcC4inQ6mUrQXbxx49Fa9OUcDzbxqwkg2hC9YHIUMz23x8Apt
-         H27P8y7gaDQsbO3z1VBLu9L2hpVwlAVT5Pyw6kTAbjyUZb712fOpw4fAE74anYzwZ1H9
-         OMlA==
-X-Gm-Message-State: AOJu0YyaUTyeF16gEnccq7Ft3ODctXdn5VPlioSJzCpUAXVozu1s6fUe
-	dZK7GIXzb50xg27EhIiCqAobsnYUjS/x0ctIM3tCbZzDMK7ObnemEyohvYFCVyW52zS1iy48uRE
-	HhR3sKXzCnxOE4vXQDhTm/Y9rkDdIKPsBEGrvWGGQjvYiCFZWAXtQr48=
-X-Google-Smtp-Source: AGHT+IHEKadB5q6lC0tXQyqaJh7ql2qjGqAWHNec8Metezww0Ghn88vKADo2NdJlqlFSt1D39aJxgO2gMQ3AFurC2OhBnaf1F4zP
+        d=1e100.net; s=20230601; t=1707047130; x=1707651930;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3rkWxkZIZnZS6vY+tGpyDAUE64mPHdya01WcnVrnuEU=;
+        b=BhuuxRpkyid0CERLqZiH/E/wpzyi85aOArJ5qPHGUiTGpsbT9614W/mli+J5CnkSEH
+         u9XQryX26IrM1m5eXl6UGIDLXfDaIvqcTKUnH0QdCDBO20dpCy4/mgNZqzeG8mkZkUhr
+         5WigEw53EOwdhLN4LxFrCfTgzR25viQwnQ0Pd1Fx3Fep4Vg3RuGKO7XwmXJ7qPLRzUgk
+         6FUdq2WqOB2RWwDkUIMVFtZmkiqf+DEm7wF9uS6tbU/0Q2xtWMN8j7Dt2XS4rVNVAm8z
+         aoRStuw8RUjhlDTZAxMSMC5dDmvJ6QjXV2EOykjqwplgBG7WRKRlR4VI5ilMinrAGlji
+         Ut2A==
+X-Gm-Message-State: AOJu0YyZRH/gCzyiEDH8ZFkg2YrIb1MdmYJgqyVVVJwt3gfSaFLM+CsE
+	5wJKbVhdc64KQVKUNibScJ0gncu2ucDEgA/Rj4InhRfFcZJ9wpgS4Ao1mPZakN5wApo57k9I0DQ
+	z36upl+nREksVfvThZwbaLzvSYUwuP6phcawI4w==
+X-Google-Smtp-Source: AGHT+IFQ956jj3duj7CC1HL8RzD/3WY3ppBJ8h9We6XCfshFDd2wvtLUPw57DbwDftTOs83VDBkgckb8iXKe0MVmm38=
+X-Received: by 2002:a17:90b:e0c:b0:295:d722:a420 with SMTP id
+ ge12-20020a17090b0e0c00b00295d722a420mr6260158pjb.6.1707047129757; Sun, 04
+ Feb 2024 03:45:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:210f:b0:471:2b64:d967 with SMTP id
- n15-20020a056638210f00b004712b64d967mr26201jaj.2.1707047070350; Sun, 04 Feb
- 2024 03:44:30 -0800 (PST)
-Date: Sun, 04 Feb 2024 03:44:30 -0800
-In-Reply-To: <000000000000b6ffa9060ee52c74@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003e469906108cde8d@google.com>
-Subject: Re: [syzbot] [btrfs?] KMSAN: uninit-value in bcmp (2)
-From: syzbot <syzbot+3ce5dea5b1539ff36769@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, clm@fb.com, dsterba@suse.com, jack@suse.cz, 
-	josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	repnop@google.com, syzkaller-bugs@googlegroups.com
+References: <20240204044618.46100-1-void@manifault.com> <20240204044618.46100-3-void@manifault.com>
+In-Reply-To: <20240204044618.46100-3-void@manifault.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Sun, 4 Feb 2024 12:45:18 +0100
+Message-ID: <CAKfTPtCGfUSa4trbCPnbhDqwqM9jL-qpfg=_E6G9amRuhm4NHg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] sched/fair: Do strict inequality check for busiest
+ misfit task group
+To: David Vernet <void@manifault.com>
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
 
-syzbot has found a reproducer for the following issue on:
+On Sun, 4 Feb 2024 at 05:46, David Vernet <void@manifault.com> wrote:
+>
+> In update_sd_pick_busiest(), when comparing two sched groups that are
+> both of type group_misfit_task, we currently consider the new group as
+> busier than the current busiest group even if the new group has the
+> same misfit task load as the current busiest group. We can avoid some
+> unnecessary writes if we instead only consider the newest group to be
+> the busiest if it has a higher load than the current busiest. This
+> matches the behavior of other group types where we compare load, such as
+> two groups that are both overloaded.
+>
+> Let's update the group_misfit_task type comparison to also only update
+> the busiest group in the event of strict inequality.
 
-HEAD commit:    9f8413c4a66f Merge tag 'cgroup-for-6.8' of git://git.kerne..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=10fcfdc0180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=656820e61b758b15
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ce5dea5b1539ff36769
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139dd53fe80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12685aa8180000
+fair enough
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/79d9f2f4b065/disk-9f8413c4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cbc68430d9c6/vmlinux-9f8413c4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9740ad9fc172/bzImage-9f8413c4.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/25f4008bd752/mount_0.gz
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ce5dea5b1539ff36769@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in memcmp lib/string.c:692 [inline]
-BUG: KMSAN: uninit-value in bcmp+0x186/0x1c0 lib/string.c:713
- memcmp lib/string.c:692 [inline]
- bcmp+0x186/0x1c0 lib/string.c:713
- fanotify_fh_equal fs/notify/fanotify/fanotify.c:51 [inline]
- fanotify_fid_event_equal fs/notify/fanotify/fanotify.c:72 [inline]
- fanotify_should_merge fs/notify/fanotify/fanotify.c:168 [inline]
- fanotify_merge+0x15f5/0x27e0 fs/notify/fanotify/fanotify.c:209
- fsnotify_insert_event+0x1d0/0x600 fs/notify/notification.c:113
- fanotify_handle_event+0x47f7/0x6140 fs/notify/fanotify/fanotify.c:966
- send_to_group fs/notify/fsnotify.c:360 [inline]
- fsnotify+0x2510/0x3530 fs/notify/fsnotify.c:570
- fsnotify_parent include/linux/fsnotify.h:80 [inline]
- fsnotify_file include/linux/fsnotify.h:100 [inline]
- fsnotify_close include/linux/fsnotify.h:362 [inline]
- __fput+0x578/0x10c0 fs/file_table.c:368
- __fput_sync+0x74/0x90 fs/file_table.c:467
- __do_sys_close fs/open.c:1554 [inline]
- __se_sys_close+0x28a/0x4c0 fs/open.c:1539
- __x64_sys_close+0x48/0x60 fs/open.c:1539
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- slab_alloc mm/slub.c:3486 [inline]
- __kmem_cache_alloc_lru mm/slub.c:3493 [inline]
- kmem_cache_alloc+0x579/0xa90 mm/slub.c:3502
- fanotify_alloc_fid_event fs/notify/fanotify/fanotify.c:584 [inline]
- fanotify_alloc_event fs/notify/fanotify/fanotify.c:817 [inline]
- fanotify_handle_event+0x2ff6/0x6140 fs/notify/fanotify/fanotify.c:952
- send_to_group fs/notify/fsnotify.c:360 [inline]
- fsnotify+0x2510/0x3530 fs/notify/fsnotify.c:570
- fsnotify_parent include/linux/fsnotify.h:80 [inline]
- fsnotify_file include/linux/fsnotify.h:100 [inline]
- fsnotify_close include/linux/fsnotify.h:362 [inline]
- __fput+0x578/0x10c0 fs/file_table.c:368
- __fput_sync+0x74/0x90 fs/file_table.c:467
- __do_sys_close fs/open.c:1554 [inline]
- __se_sys_close+0x28a/0x4c0 fs/open.c:1539
- __x64_sys_close+0x48/0x60 fs/open.c:1539
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-CPU: 0 PID: 5010 Comm: syz-executor120 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-=====================================================
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> Signed-off-by: David Vernet <void@manifault.com>
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index e7519ea434b1..76d03106040d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10028,7 +10028,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+>                  * If we have more than one misfit sg go with the biggest
+>                  * misfit.
+>                  */
+> -               if (sgs->group_misfit_task_load < busiest->group_misfit_task_load)
+> +               if (sgs->group_misfit_task_load <= busiest->group_misfit_task_load)
+>                         return false;
+>                 break;
+>
+> --
+> 2.43.0
+>
