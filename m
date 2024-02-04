@@ -1,112 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9C1426B;
-	Sun,  4 Feb 2024 08:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BF714277
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 08:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707035624; cv=none; b=gqQK+ob9p+oQbYbr16Q5bJhAWVSOAY8WoAuRYF3GvWg6IKsxEFF9XCY74SWicCH8CWZ6/uQslfC/DIHRI8+AhbeXBiurz4sd3hT0MHfsNYfe4ynDbVkt59e6HUm3FIIdZq4gC83nFo/th9Q9E2DtLfWJEcnAUzlu2KWcpQsbj1E=
+	t=1707035697; cv=none; b=p2NboSnbXsXFp7jNSu/iJptCihFfjvR+KwAh7w6S/tFgWx/yBfKkCCACpvOWMWSdY9XIijnDm0TQ3lGqn2KYZYYtZHp17jWngFIxU5bkvTx3S2btKVnMMe2MBoFXbgev8w2/pRB2F8NXdD/L8po+C2swjxZBELOoOYXD9K/HzEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707035624; c=relaxed/simple;
-	bh=6hnOSJLUGircKMBizQ5z9dUDIidd26XLeYApieCrnlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i53u2/k7TxxEQR7zunfT4FyP2rALKSNviCKE8+ej6t7WrBMkKrMoQPg4rP5himX8mtQVLMEx93lL/ltg+PUzeZawggJfLogmUMPbjtPof21ettspzzeQaOTnpqC2v3sYSQwJwyPsaHLH/L2L/lAGCUsk9no1t8Psc57nAvgyPIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3ALNsLK; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3ALNsLK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707035623; x=1738571623;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6hnOSJLUGircKMBizQ5z9dUDIidd26XLeYApieCrnlA=;
-  b=N3ALNsLKSUQq2kw1m+mJNidksnRm5BZh8FCtmy4QJ3W6Z83JHrdNPIWQ
-   iLY+wZJWuIHbVae+fz7kbZaGzk+wxPKHYW0sI4BXIJEzP7xGZjs1yJGly
-   h39f+pVjSnQt5W8BOSmCxS7ks7I8O7NY3xt8ltDOGMi4TpLAUbf6D38DA
-   UhjG7kQwGVWJt2wpDIFY3vlb3RWdAd52dRTGYET9alYKfRTLlW1cTFhQ+
-   qOw4tQi8kGZatm4wKpwmd4cS7Aup4dQ+9vNuCppvPpOKwMZqgbag2lR9s
-   neMLhgIoVxQOKLnJCWplKeaYohgLDjbi9m1BnVyRod0rFC8BCHh8LnOlE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="25823114"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="25823114"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 00:33:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="781505"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa008.jf.intel.com with ESMTP; 04 Feb 2024 00:33:38 -0800
-Date: Sun, 4 Feb 2024 16:30:05 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Kris Chaplin <kris.chaplin@amd.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Charles Perry <charles.perry@savoirfairelinux.com>, mdf@kernel.org,
-	"michal.simek@amd.com" <michal.simek@amd.com>, hao.wu@intel.com,
-	yilun.xu@intel.com, trix@redhat.com,
-	krzysztof.kozlowski+dt@linaro.org, bcody@markem-imaje.com,
-	avandiver@markem-imaje.com, linux-fpga@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: fpga: xlnx,fpga-slave-selectmap: add DT
- schema
-Message-ID: <Zb9LDQP3xzrv6LWr@yilunxu-OptiPlex-7050>
-References: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com>
- <20240129225602.3832449-2-charles.perry@savoirfairelinux.com>
- <9b0680b6-1952-41d3-82f4-88c60469dc3a@linaro.org>
- <471d9438-e2c0-4881-8ace-778c9d14669c@amd.com>
+	s=arc-20240116; t=1707035697; c=relaxed/simple;
+	bh=52IuM5w4zXtuLhzfWQ+0wIQOBvpLw9tXlOp2CIEBv1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbB11rs5IvyeYH8tbTfMSoTivxTIilUFH7Y4UK5rCaEXW1wGFN/Ap+jhb73ecAT0GIDZEW0FAx++4FA+0jZiHEY03e1qjadbhMLTjpX12CxAG8c1AXAxc6AgobG2QRHKinGQQjzuq7YQqlft4C9Wcenu0UxyyCg7/eCgr/aW+WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ustc.edu; spf=pass smtp.mailfrom=ustc.edu; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ustc.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ustc.edu
+Received: from localhost.localdomain (unknown [111.206.94.146])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id E6B9C7E011C;
+	Sun,  4 Feb 2024 16:34:16 +0800 (CST)
+From: Chunsheng Luo <luochunsheng@ustc.edu>
+To: gregkh@linuxfoundation.org
+Cc: rafael@kernel.org,
+	akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Chunsheng Luo <luochunsheng@ustc.edu>
+Subject: [PATCH] meminfo: provide estimated per-node's available memory
+Date: Sun,  4 Feb 2024 03:34:14 -0500
+Message-ID: <20240204083414.107799-1-luochunsheng@ustc.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <471d9438-e2c0-4881-8ace-778c9d14669c@amd.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS0pOVk0eGEJOSR5KH04eGVUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKSlVJS01VQk9VSk9NWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
+	++
+X-HM-Tid: 0a8d7341047e03a2kunme6b9c7e011c
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PT46Hhw6GjMLHz8VH0wWAjw9
+	PCIKCwlVSlVKTEtMS0hOTU5MTENOVTMWGhIXVRcOFBgTDhUIEx4VHDsOCA8YVR4fDkVZV1kSC1lB
+	WUpKSlVJS01VQk9VSk9NWVdZCAFZQU5IQks3Bg++
 
-On Wed, Jan 31, 2024 at 11:03:25AM +0000, Kris Chaplin wrote:
-> Hello Krzysztof,
-> 
-> On 30/01/2024 16:09, Krzysztof Kozlowski wrote:
-> 
-> > > +
-> > > +description: |
-> > > +  Xilinx 7 Series FPGAs support a method of loading the bitstream over a
-> > > +  parallel port named the slave SelectMAP interface in the documentation. Only
-> > > +  the x8 mode is supported where data is loaded at one byte per rising edge of
-> > > +  the clock, with the MSB of each byte presented to the D0 pin.
-> > > +
-> > > +  Datasheets:
-> > > +    https://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
-> > 
-> > I am surprised that AMD/Xilinx still did not update the document to
-> > modern naming (slave->secondary).
-> 
-> Thank you for bringing this up.
-> 
-> We are moving away from using non-inclusive technical terminology and are
-> removing non-inclusive language from our products and related collateral.
-> You will for some time find examples of non-inclusive language, especially
-> in our older products as we work to make these changes and align with
-> industry standards.  For new IP we're ensuring that we switch and stick to
-> inclusive terminology, as you may have seen with my recent w1 driver
-> submission.
-> 
-> SelectMAP is a decades-old interface and as such it is unlikely that we will
-> update this in all documentation dating back this time.  I shall however
-> look to understand what is planned here for active documentation and new
-> driver submissions.
+The system offers an estimate of the per-node's available memory,
+in addition to the system's available memory provided by /proc/meminfo.
 
-Yes, I need review from AMD/Xilinx side. Especially the HW parts, and
-some namings of variables, e.g. if xilinx-core is proper for what products
-it supports, and won't be an issue in future.
+like commit 34e431b0ae39("/proc/meminfo: provide estimated available
+memory"), it is more convenient to provide such an estimate in
+/sys/bus/node/devices/nodex/meminfo. If things change in the future,
+we only have to change it in one place.
 
-Thanks,
-Yilun
+Shown below:
+/sys/bus/node/devices/node1/meminfo:
+Node 1 MemTotal:        4084480 kB
+Node 1 MemFree:         3348820 kB
+Node 1 MemAvailable:    3647972 kB
+Node 1 MemUsed:          735660 kB
+....
 
-> 
-> regards
-> Kris
-> 
+Link: https://github.com/numactl/numactl/issues/210
+
+Signed-off-by: Chunsheng Luo <luochunsheng@ustc.edu>
+---
+ drivers/base/node.c |  4 ++++
+ include/linux/mm.h  |  1 +
+ mm/show_mem.c       | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 48 insertions(+)
+
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 1c05640461dd..ba27f25d2b81 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -372,11 +372,13 @@ static ssize_t node_read_meminfo(struct device *dev,
+ 	int len = 0;
+ 	int nid = dev->id;
+ 	struct pglist_data *pgdat = NODE_DATA(nid);
++	long available;
+ 	struct sysinfo i;
+ 	unsigned long sreclaimable, sunreclaimable;
+ 	unsigned long swapcached = 0;
+ 
+ 	si_meminfo_node(&i, nid);
++	available = si_mem_node_available(nid);
+ 	sreclaimable = node_page_state_pages(pgdat, NR_SLAB_RECLAIMABLE_B);
+ 	sunreclaimable = node_page_state_pages(pgdat, NR_SLAB_UNRECLAIMABLE_B);
+ #ifdef CONFIG_SWAP
+@@ -385,6 +387,7 @@ static ssize_t node_read_meminfo(struct device *dev,
+ 	len = sysfs_emit_at(buf, len,
+ 			    "Node %d MemTotal:       %8lu kB\n"
+ 			    "Node %d MemFree:        %8lu kB\n"
++			    "Node %d MemAvailable:   %8lu kB\n"
+ 			    "Node %d MemUsed:        %8lu kB\n"
+ 			    "Node %d SwapCached:     %8lu kB\n"
+ 			    "Node %d Active:         %8lu kB\n"
+@@ -397,6 +400,7 @@ static ssize_t node_read_meminfo(struct device *dev,
+ 			    "Node %d Mlocked:        %8lu kB\n",
+ 			    nid, K(i.totalram),
+ 			    nid, K(i.freeram),
++			    nid, K(available),
+ 			    nid, K(i.totalram - i.freeram),
+ 			    nid, K(swapcached),
+ 			    nid, K(node_page_state(pgdat, NR_ACTIVE_ANON) +
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index f5a97dec5169..3caef083fe5b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3202,6 +3202,7 @@ static inline void show_mem(void)
+ extern long si_mem_available(void);
+ extern void si_meminfo(struct sysinfo * val);
+ extern void si_meminfo_node(struct sysinfo *val, int nid);
++extern long si_mem_node_available(int nid);
+ #ifdef __HAVE_ARCH_RESERVED_KERNEL_PAGES
+ extern unsigned long arch_reserved_kernel_pages(void);
+ #endif
+diff --git a/mm/show_mem.c b/mm/show_mem.c
+index 8dcfafbd283c..37d4c7212b06 100644
+--- a/mm/show_mem.c
++++ b/mm/show_mem.c
+@@ -86,6 +86,49 @@ void si_meminfo(struct sysinfo *val)
+ EXPORT_SYMBOL(si_meminfo);
+ 
+ #ifdef CONFIG_NUMA
++long si_mem_node_available(int nid)
++{
++	int zone_type;
++	long available;
++	unsigned long pagecache;
++	unsigned long wmark_low = 0;
++	unsigned long reclaimable;
++	pg_data_t *pgdat = NODE_DATA(nid);
++
++	for (zone_type = 0; zone_type < MAX_NR_ZONES; zone_type++)
++		wmark_low += low_wmark_pages((&pgdat->node_zones[zone_type]));
++
++	/*
++	 * Estimate the amount of memory available for userspace allocations,
++	 * without causing swapping for mbind process.
++	 */
++	available = sum_zone_node_page_state(nid, NR_FREE_PAGES) - pgdat->totalreserve_pages;
++
++	/*
++	 * Not all the page cache can be freed, otherwise the system will
++	 * start swapping or thrashing. Assume at least half of the page
++	 * cache, or the low watermark worth of cache, needs to stay.
++	 */
++	pagecache = node_page_state(pgdat, NR_ACTIVE_FILE) +
++		node_page_state(pgdat, NR_INACTIVE_FILE);
++	pagecache -= min(pagecache / 2, wmark_low);
++	available += pagecache;
++
++	/*
++	 * Part of the reclaimable slab and other kernel memory consists of
++	 * items that are in use, and cannot be freed. Cap this estimate at the
++	 * low watermark.
++	 */
++	reclaimable = node_page_state_pages(pgdat, NR_SLAB_RECLAIMABLE_B) +
++		node_page_state(pgdat, NR_KERNEL_MISC_RECLAIMABLE);
++	reclaimable -= min(reclaimable / 2, wmark_low);
++	available += reclaimable;
++
++	if (available < 0)
++		available = 0;
++	return available;
++}
++
+ void si_meminfo_node(struct sysinfo *val, int nid)
+ {
+ 	int zone_type;		/* needs to be signed */
+-- 
+2.43.0
+
