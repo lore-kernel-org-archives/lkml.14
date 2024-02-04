@@ -1,292 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2048.outbound.protection.outlook.com [40.107.237.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BE9322E
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 03:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707017183; cv=none; b=ta7HQJNTfwRjQohzd3D7GoLZY7oIL+4HFBGTfPndA0SjCozcjyBy4kYI2K1GGgJmxe3ewupp/sjcAlIsRUY9SbP7AaBOYg1RjcGGkL981JWcQW0cA1r9brrC9IU/zheL3AzY5NVGnTxpimKy85jjbc52Raqllp1dcoM4LeI7BtM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707017183; c=relaxed/simple;
-	bh=cCrUgip/wd0GQevGmH2jhQsDZoc4azCewghl3pZSqRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vq+P/k2WPWT8Fspl3bBfKF4sOcT+98a3Nn3GYnqItyUbi1s7gVBt9yEzR+6NBzAxLP/oYJohoLUALFbWaQ7k7tNQZRlAIvssCzNpQBmzPyYFNMiAw2ZCjeO9gUlANyec5z13xQ+Rws2HGZQyB/PPmbGx+pnIupGL55jMepF93Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g+wbH4xV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9957310F1;
+	Sun,  4 Feb 2024 03:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707017194; cv=fail; b=q6xHsPTTkZ/LfF18R4CBT4ycWvEb/U/arc4ZynZVb+xuIAGmO6tzq6XTGQwOb0r/mmGUrnjIzTHITAlXDs5LpffRxmh8Z2aAYTy/6fKmn1zbqhdnfgNd4T8DPnoBUNfprxHxJL25QQYZkyJ1bsod/kMvXAC16NZ+00bscYPIBI0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707017194; c=relaxed/simple;
+	bh=VzxkN1Q6KCRRAHNdfhp2IeMulaSJxtP4Cw0+D+3pZiM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RsJV8FnR8IQuRxFjUdQyxcJkomDNncV9DKs3fRPri3Da0H9rjMO7wk6ydhkeRfiWmIx3QgUepMGSFN9O/jthQIbduN4utmC0K+ewRDIDgsKT/6R1hzKl/4jKe0XCSWnjkd+HhzKIg7c256H7Sac9hm7mMBGDPLG5po6BrGMXu40=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UIkg6uQi; arc=fail smtp.client-ip=40.107.237.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g+wbH4xV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707017180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eysYxb9qJ6RxmbOxjXjjrpSobYnMDkjTn7GmoY0o3W4=;
-	b=g+wbH4xVR5TIYGbaJPaTOUcd6/yTBulfvWmc3axUFTVbL4AyCT7rt+Ig59r0dh0FV5SVC3
-	3kajx+qSUwJf92cHEKcZHsod704pldGgsWDrVkSB/rfAFiGj8wwuIubIeD98JOfyAjAvyl
-	vsMFTS53aCvNX3PNUao8USQUk5fGLcw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-220-x_mqoEOfNmSyHGbxxMyZPQ-1; Sat,
- 03 Feb 2024 22:26:17 -0500
-X-MC-Unique: x_mqoEOfNmSyHGbxxMyZPQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9FBD1C0514F;
-	Sun,  4 Feb 2024 03:26:16 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.13])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id ED10F2026F95;
-	Sun,  4 Feb 2024 03:26:15 +0000 (UTC)
-Date: Sun, 4 Feb 2024 11:26:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev, akpm@linux-foundation.org,
-	ebiederm@xmission.com, piliu@redhat.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2 00/14] Split crash out from kexec and clean up related
- config items
-Message-ID: <Zb8D1ASrgX0qVm9z@MiWiFi-R3L-srv>
-References: <20240119145241.769622-1-bhe@redhat.com>
- <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UIkg6uQi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L1GdqJ8iOT1uRCrsrP2ZRhAdMJ2JCfitHKDtYNjfBkr7+HDqHIZepnIET6AE+qW8r6j5XrK7xJARE0NZEze+ySF7cMmlUNcmqZcPFM60RNC8RzMvAQ1lKnHHR1g4zAF8jbkEh6fkksoYP3Jnprw3esC5XislM7pgr4ATkG/gbs4jCXMfIJdmlMlmR7aRAReMB0aihiZV/ZAwxbc2eeWU/0uhnMhVTR1EaNPA2/TDUdpKhRuXGTy8clU8b+ySfZSW6RHcRv5xrHk7JiXMt/tNVi9tXApMuQDsi2drYStE6lLKkcfPYoYpx3fcO64S46zuGdyeXd5s6OocTvYwzBM7MA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BLrResU8wGQtGGqBaXNf3pGfdb6zut6S8Dxd+OpjQp0=;
+ b=WggJ9B4DJT8n9r3qJzCz7VOd3HUcgOKT/qpeJtJUreYGZfuG8S2jUJNl6Awp17wLr8R/3Ar+1ADNmFHHPLT9oDNqwYkbs6I06Yop1139W3PFb5jJybIA+EnIwLNS+6RRoo9heK0Gi7PqaAisqpCCdpshH+hJn6/vgP+Xigq/+OPSmYxW+DNw0hFMCbbsrD0yZxVvBss1H54l1TNycPRH36EyKvbPGklxRgUcVPlapd6UrTnT1mitvZrd+mqdzrtYfUYOuxZXpYgyIuRj+xKXo6P5lXab1FJUJ2cRxZy+e1VwmCBZ6Z9AFGKVdhe0s6Wyc9dOuTmdTAQP4f/G+93ZmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BLrResU8wGQtGGqBaXNf3pGfdb6zut6S8Dxd+OpjQp0=;
+ b=UIkg6uQiVRrol115vBnJ0f+DzgiEQ16dgEedzb4SpYR+Mw73fS+9Sn+SpbPHPuP7GVaiOVToA9UK3EaLp6JkBq6KvnHsRqRnAJPtdqLxygmYsnXlYu6SvP2Py465JLKz29B4fmy6U+PZacEXwa9PSMawixpDbnD9rgARWjZMEfE=
+Received: from CY8PR12CA0014.namprd12.prod.outlook.com (2603:10b6:930:4e::16)
+ by DM4PR12MB5771.namprd12.prod.outlook.com (2603:10b6:8:62::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.14; Sun, 4 Feb
+ 2024 03:26:30 +0000
+Received: from CY4PEPF0000FCC2.namprd03.prod.outlook.com
+ (2603:10b6:930:4e:cafe::77) by CY8PR12CA0014.outlook.office365.com
+ (2603:10b6:930:4e::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.32 via Frontend
+ Transport; Sun, 4 Feb 2024 03:26:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC2.mail.protection.outlook.com (10.167.242.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.13 via Frontend Transport; Sun, 4 Feb 2024 03:26:29 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Sat, 3 Feb 2024 21:26:26 -0600
+From: Perry Yuan <perry.yuan@amd.com>
+To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
+	<viresh.kumar@linaro.org>, <Ray.Huang@amd.com>, <gautham.shenoy@amd.com>,
+	<Borislav.Petkov@amd.com>
+CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
+	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/6] AMD Pstate Fixes And Enhancements
+Date: Sun, 4 Feb 2024 11:26:08 +0800
+Message-ID: <cover.1707016927.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC2:EE_|DM4PR12MB5771:EE_
+X-MS-Office365-Filtering-Correlation-Id: c5c51bd3-ad85-4f41-c0d5-08dc253113f7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	u3LM8yWXclj7vz2TOLv7SNGnJSHcP3Kdj41nLWwht4zgWICNG/MnF11UnrMFR7ilzpbE5momGLMjFEcRZP5NXU0+G04zLZM3yJIxtqmWv+QA0P1yw6CjJZT5wzmq5IhX7wGAtzGl7Wm7midRVzz5Z51rfG5IAvKYb5ZOlI+iFcDrDvF2JRRfnib70rYNtm39vKrIZXBXD5bAtxjq3Xo5HUwooGwMz9baBDdQPsVtp3nodM6CfZbVhBp+U4bt1Qkhm4uAZCBLx3DzdxBjMuWNls+jjPc7ArOV54EI7Ss7LMgPHNpaZZAyklouytkIcxNBbgap7WhxJAmMpchbGgZe7rbAjC6J3DvbTNJWAKaMn4zTWZUgkUcf9VBuVU0qH0ycQ5pUIrBcTGkpDbDxGAEtagWIuvlT+8stXF3uREZwWWi4ElqKeAWijV696llb+j/q4SEKq8pkm3XBIs0C6Tg+8MwcBxg9MUaMZGD9L2YJgMWMVw4RXP4dMaHvWm+k2koxDwUzSAUzJc61zALLGZrCAQZlN9c+qR1idp2EVX8/QhmGYD/hqs3IijF9ygYRN/9cI8q4j7QyFv+EKeq6mW6IZEfU0zwArVEDzOvfARC8nM2NHTLjorrC8PDioVhppiI3z36IyxXwE/vYkg1ZHJUijoF/5HN0QjjSgGQHMslF6pHEhueAk+LsHnqy29xwcj+U5IIqkkIBsRg0Ow6koCiAEdjUm9Hj0vCY/XWA9dvRtatp+4Ao8L7gSKEA72zapuCdAyAjOQQUPGr+WnXbJedMj3V0VR6RLgDjekGRAuBmzps=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(376002)(39860400002)(136003)(230922051799003)(82310400011)(64100799003)(451199024)(186009)(1800799012)(40470700004)(36840700001)(46966006)(54906003)(4326008)(8936002)(8676002)(44832011)(2906002)(5660300002)(86362001)(110136005)(70586007)(70206006)(6636002)(316002)(47076005)(36860700001)(36756003)(81166007)(82740400003)(356005)(7696005)(966005)(478600001)(6666004)(83380400001)(26005)(2616005)(426003)(336012)(16526019)(41300700001)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2024 03:26:29.7303
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5c51bd3-ad85-4f41-c0d5-08dc253113f7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC2.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5771
 
-On 02/02/24 at 10:53am, Hari Bathini wrote:
-> Hi Baoquan,
-> 
-> On 19/01/24 8:22 pm, Baoquan He wrote:
-> > Motivation:
-> > =============
-> > Previously, LKP reported a building error. When investigating, it can't
-> > be resolved reasonablly with the present messy kdump config items.
-> > 
-> >   https://lore.kernel.org/oe-kbuild-all/202312182200.Ka7MzifQ-lkp@intel.com/
-> > 
-> > The kdump (crash dumping) related config items could causes confusions:
-> > 
-> > Firstly,
-> > ---
-> > CRASH_CORE enables codes including
-> >   - crashkernel reservation;
-> >   - elfcorehdr updating;
-> >   - vmcoreinfo exporting;
-> >   - crash hotplug handling;
-> > 
-> > Now fadump of powerpc, kcore dynamic debugging and kdump all selects
-> > CRASH_CORE, while fadump
-> >   - fadump needs crashkernel parsing, vmcoreinfo exporting, and accessing
-> >     global variable 'elfcorehdr_addr';
-> >   - kcore only needs vmcoreinfo exporting;
-> >   - kdump needs all of the current kernel/crash_core.c.
-> > 
-> > So only enabling PROC_CORE or FA_DUMP will enable CRASH_CORE, this
-> > mislead people that we enable crash dumping, actual it's not.
-> > 
-> > Secondly,
-> > ---
-> > It's not reasonable to allow KEXEC_CORE select CRASH_CORE.
-> > 
-> > Because KEXEC_CORE enables codes which allocate control pages, copy
-> > kexec/kdump segments, and prepare for switching. These codes are
-> > shared by both kexec reboot and kdump. We could want kexec reboot,
-> > but disable kdump. In that case, CRASH_CORE should not be selected.
-> > 
-> >   --------------------
-> >   CONFIG_CRASH_CORE=y
-> >   CONFIG_KEXEC_CORE=y
-> >   CONFIG_KEXEC=y
-> >   CONFIG_KEXEC_FILE=y
-> >      ---------------------
-> > 
-> > Thirdly,
-> > ---
-> > It's not reasonable to allow CRASH_DUMP select KEXEC_CORE.
-> > 
-> > That could make KEXEC_CORE, CRASH_DUMP are enabled independently from
-> > KEXEC or KEXEC_FILE. However, w/o KEXEC or KEXEC_FILE, the KEXEC_CORE
-> > code built in doesn't make any sense because no kernel loading or
-> > switching will happen to utilize the KEXEC_CORE code.
-> >   ---------------------
-> >   CONFIG_CRASH_CORE=y
-> >   CONFIG_KEXEC_CORE=y
-> >   CONFIG_CRASH_DUMP=y
-> >   ---------------------
-> > 
-> > In this case, what is worse, on arch sh and arm, KEXEC relies on MMU,
-> > while CRASH_DUMP can still be enabled when !MMU, then compiling error is
-> > seen as the lkp test robot reported in above link.
-> > 
-> >   ------arch/sh/Kconfig------
-> >   config ARCH_SUPPORTS_KEXEC
-> >           def_bool MMU
-> > 
-> >   config ARCH_SUPPORTS_CRASH_DUMP
-> >           def_bool BROKEN_ON_SMP
-> >   ---------------------------
-> > 
-> > Changes:
-> > ===========
-> > 1, split out crash_reserve.c from crash_core.c;
-> > 2, split out vmcore_infoc. from crash_core.c;
-> > 3, move crash related codes in kexec_core.c into crash_core.c;
-> > 4, remove dependency of FA_DUMP on CRASH_DUMP;
-> > 5, clean up kdump related config items;
-> > 6, wrap up crash codes in crash related ifdefs on all 9 arch-es
-> >     which support crash dumping;
-> > 
-> > Achievement:
-> > ===========
-> > With above changes, I can rearrange the config item logic as below (the right
-> > item depends on or is selected by the left item):
-> > 
-> >      PROC_KCORE -----------> VMCORE_INFO
-> > 
-> >                 |----------> VMCORE_INFO
-> >      FA_DUMP----|
-> >                 |----------> CRASH_RESERVE
-> 
-> FA_DUMP also needs PROC_VMCORE (CRASH_DUMP by dependency, I guess).
-> So, the FA_DUMP related changes here will need a relook..
+The patch series adds some fixes and enhancements to the AMD pstate
+driver.
+It enables CPPC v2 for certain processors in the family 17H, as
+requested
+by TR40 processor users who expect improved performance and lower system
+temperature.
 
-Thanks for checking this.
+Additionally, it fixes the initialization of nominal_freq for each
+cpudata
+and changes latency and delay values to be read from platform firmware
+firstly
+for more accurate timing.
 
-So FA_DUMP needs vmcoreinfo exporting, crashkernel reservation,
-/proc/vmcore. Then it's easy to adjust the kernel config item of FA_DUMP
-to make it select CRASH_DUMP. Except of this, do you have concern about
-the current code and Kconfig refactorying?
+A new quirk is also added for legacy processors that lack CPPC
+capabilities which caused the pstate driver to fail loading.
+
+I would greatly appreciate any feedbacks.
+
+Thank you!
 
 
-                           ---->VMCORE_INFO
-                         /|
-FA_DUMP--> CRASH_DUMP-->/-|---->CRASH_RESERVE
-                        \ |
-                          \---->PROC_VMCORE
+Changes from v2:
+ * change quirk matching to BIOS version and release (Mario)
+ * pick up RB flag from Mario
+
+Changes from v1:
+ * pick up the RB flags from Mario
+ * address review comment of patch #6 for amd_get_nominal_freq()
+ * rebased the series to linux-pm/bleeding-edge v6.8.0-rc2
+ * update debug log for patch #5 as Mario suggested.
+ * fix some typos and format problems
+ * tested on 7950X platform
 
 
-> 
-> 
-> >                                                      ---->VMCORE_INFO
-> >                                                     /
-> >                                                     |---->CRASH_RESERVE
-> >      KEXEC      --|                                /|
-> >                   |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
-> >      KEXEC_FILE --|                               \ |
-> >                                                     \---->CRASH_HOTPLUG
-> > 
-> > 
-> >      KEXEC      --|
-> >                   |--> KEXEC_CORE (for kexec reboot only)
-> >      KEXEC_FILE --|
-> > 
-> > Test
-> > ========
-> > On all 8 architectures, including x86_64, arm64, s390x, sh, arm, mips,
-> > riscv, loongarch, I did below three cases of config item setting and
-> > building all passed. Let me take configs on x86_64 as exampmle here:
-> > 
-> > (1) Both CONFIG_KEXEC and KEXEC_FILE is unset, then all kexec/kdump
-> > items are unset automatically:
-> > # Kexec and crash features
-> > # CONFIG_KEXEC is not set
-> > # CONFIG_KEXEC_FILE is not set
-> > # end of Kexec and crash features
-> > 
-> > (2) set CONFIG_KEXEC_FILE and 'make olddefconfig':
-> > ---------------
-> > # Kexec and crash features
-> > CONFIG_CRASH_RESERVE=y
-> > CONFIG_VMCORE_INFO=y
-> > CONFIG_KEXEC_CORE=y
-> > CONFIG_KEXEC_FILE=y
-> > CONFIG_CRASH_DUMP=y
-> > CONFIG_CRASH_HOTPLUG=y
-> > CONFIG_CRASH_MAX_MEMORY_RANGES=8192
-> > # end of Kexec and crash features
-> > ---------------
-> > 
-> > (3) unset CONFIG_CRASH_DUMP in case 2 and execute 'make olddefconfig':
-> > ------------------------
-> > # Kexec and crash features
-> > CONFIG_KEXEC_CORE=y
-> > CONFIG_KEXEC_FILE=y
-> > # end of Kexec and crash features
-> > ------------------------
-> > 
-> > Note:
-> > For ppc, it needs investigation to make clear how to split out crash
-> > code in arch folder.
-> 
-> On powerpc, both kdump and fadump need PROC_VMCORE & CRASH_DUMP.
-> Hope that clears things. So, patch 3/14 breaks things for FA_DUMP..
+V1: https://lore.kernel.org/lkml/63c2b3d7-083a-4daa-ba40-629b3223a92d@mailbox.org/
+V2: https://lore.kernel.org/all/cover.1706863981.git.perry.yuan@amd.com/
 
-I see it now. We can easily fix that with below patch. What do you
-think?
+Perry Yuan (6):
+  ACPI: CPPC: enable AMD CPPC V2 support for family 17h processors
+  cpufreq:amd-pstate: fix the nominal freq value set
+  cpufreq:amd-pstate: initialize nominal_freq of each cpudata
+  cpufreq:amd-pstate: get pstate transition delay and latency value from
+    ACPI tables
+  cppc_acpi: print error message if CPPC is unsupported
+  cpufreq:amd-pstate: add quirk for the pstate CPPC capabilities missing
 
-By the way, do you have chance to help test these on powerpc system?
-I can find ppc64le machine, while I don't know how to operate to test
-fadump.
+ arch/x86/kernel/acpi/cppc.c  |   2 +-
+ drivers/acpi/cppc_acpi.c     |   4 +-
+ drivers/cpufreq/amd-pstate.c | 108 +++++++++++++++++++++++++++++------
+ include/linux/amd-pstate.h   |   6 ++
+ 4 files changed, 101 insertions(+), 19 deletions(-)
 
-From fa8e6c3930d4f22f2b3768399c5bf0523c17adde Mon Sep 17 00:00:00 2001
-From: Baoquan He <bhe@redhat.com>
-Date: Sun, 4 Feb 2024 11:06:54 +0800
-Subject: [PATCH] power/fadump: make FA_DUMP select CRASH_DUMP
-Content-type: text/plain
-
-FA_DUMP which is similar with kdump needs vmcoreinfo exporting,
-crashkernel reservation and /proc/vmcore file . After refactoring crash
-related codes and Kconfig items, make FA_DUMP select CRASH_DUMP. Now
-the dependency layout is like below:
-
-                           ---->VMCORE_INFO
-                         /|
-FA_DUMP--> CRASH_DUMP-->/-|---->CRASH_RESERVE
-                        \ |
-                          \---->PROC_VMCORE
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/powerpc/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index f182fb354bef..d5d4c890f010 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -695,8 +695,7 @@ config ARCH_SELECTS_CRASH_DUMP
- config FA_DUMP
- 	bool "Firmware-assisted dump"
- 	depends on PPC64 && (PPC_RTAS || PPC_POWERNV)
--	select VMCORE_INFO
--	select CRASH_RESERVE
-+	select CRASH_DUMP
- 	help
- 	  A robust mechanism to get reliable kernel crash dump with
- 	  assistance from firmware. This approach does not use kexec,
 -- 
-2.41.0
-
-
-> 
-> > Hope Hari and Pingfan can help have a look, see if
-> > it's doable. Now, I make it either have both kexec and crash enabled, or
-> > disable both of them altogether.
-> 
-> 
-> Sure. I will take a closer look...
-
-Thanks a lot. Please feel free to post patches to make that, or I can do
-it with your support or suggestion.
+2.34.1
 
