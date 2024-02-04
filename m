@@ -1,132 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mx0a-00007101.pphosted.com (mx0a-00007101.pphosted.com [148.163.135.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED12A6119;
-	Sun,  4 Feb 2024 05:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF61D6119;
+	Sun,  4 Feb 2024 05:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707023953; cv=none; b=FwWIp9xkCNdm5oqzMPHVAfNL+ullsOoUEYRw7BdrSW+FaoMc9YvCsUkNlElT5uexFiUSfTo+lk2Z/SeKsE/y3+vOboUh3aG2/OCewfg7iDGUb+5XZSEhgjTZ4ZibcjCm+GSAdy6L99NKs8BfQop1YNfNP0swRvAED97gb5mvd6o=
+	t=1707024182; cv=none; b=B/0kZDPhpwCFbw2x2qHl7EnCni75NFyeiXXYZl5egF+9WEYEMyWVsd8UfuUMqcgFKIDH7x7Ryrzyn4ykQdB+rEGIYeg/N5/gc3y8SnATRANdvw+NsyfqK5wjtpdDZRJ7uO7MUbmHGFLqCSMWvFzVY3oMWc1zpZydyko5JFPCZo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707023953; c=relaxed/simple;
-	bh=P6VGiDl0jduaJYu6jiH+VhGE0WfXIZzpvflkq0mKjH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TiwuX0CWgeqXJuwVM9JA60kpe3mhM3WMIMCWvk3x/sBd5bPHcnh7HLq8bj6tiQF+WKJHLQ9G2s5qdPS61ssdC5fn46GV2TudhDZ8QsOLgCI2+dOzPgkKz6pcQGMcqnIkmF22PgCzyIiPlrMaFslziPYRTjtb+JCZFocea7t4wBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVkmGt+L; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707024182; c=relaxed/simple;
+	bh=UyQtY5NzwuQh5f8YBmtuvP5BCquorDhnoNHeHzzRUOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W1EE8UgVl31TrHPXuIM+ZQU2tsk876x6n5Uop1U+47Zs4/xZ58YR4jeDoELGlr0Z/EFq8aNfYXPbmEGCbIpz5lUDbMuDP/2rqMInWZkJSiQjaMO8FsQe60Fxj7K7Tad0TZuvqQEQILCM+Kietm9bH5/rk/UPSmWs/7NteGiV3g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=khJzISEW; arc=none smtp.client-ip=148.163.135.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVkmGt+L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707023952; x=1738559952;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P6VGiDl0jduaJYu6jiH+VhGE0WfXIZzpvflkq0mKjH4=;
-  b=DVkmGt+L+gvx+1jrSn94ZVGw7jn9EePrfnUiO1KIMFg7nyXQ9NdwaSaP
-   yLUfc84f8vCNqxbHAGkaX/Cv2dLEu4qHq4W3VFEoxVQlEsISGO6A9N95U
-   i/ZFh+rFQH/Gfgm9V5IEhcksH/pN7glLC7Bu1hGgjX0hNhZKWkCF09hhZ
-   +ROFFYK5yz1GxETiQFU+lUdIXuP5oq1LmJQaldgEcF6bgzCW37vma+BYT
-   llVdOfdUjVajkWzlBFje2jHli1x+c5YurDYqbKryI6tX1S2w+sXE9dJ5c
-   o2WLvoToBs0Va3t1GGP5e1yn4aZiaaecpXK8dp0HhS/2SaJk27EcRHr7L
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="394787343"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="394787343"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 21:19:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="23694652"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa002.fm.intel.com with ESMTP; 03 Feb 2024 21:19:08 -0800
-Date: Sun, 4 Feb 2024 13:15:35 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marpagan@redhat.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Tull <atull@opensource.altera.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fpga@vger.kernel.org
-Subject: Re: [RFC PATCH v5 1/1] fpga: add an owner and use it to take the
- low-level module's refcount
-Message-ID: <Zb8dd9af0Ru/fzGi@yilunxu-OptiPlex-7050>
-References: <20240111160242.149265-1-marpagan@redhat.com>
- <20240111160242.149265-2-marpagan@redhat.com>
- <Zbh7iO9wlm9ekzB7@yilunxu-OptiPlex-7050>
- <0720eb91-72f9-4781-8558-8a1b0a3691c2@redhat.com>
+	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="khJzISEW"
+Received: from pps.filterd (m0166257.ppops.net [127.0.0.1])
+	by mx0a-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4142fM2V032217;
+	Sun, 4 Feb 2024 03:13:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=campusrelays;
+ bh=8U/uRPUZ4LmGmqQfXkYTK77RgNRpuaAarihJR0mJhDA=;
+ b=khJzISEWHGYeSlSHd+aovNPF7cTLl2U1ohNvSG4mQCuUQ3P+pgXiDgUkoDeBwkCQgsU8
+ LRYttbHmF3YtW70lEUaSuKkiT8heve4LAR3fyQZP350l2tFp7iQ1rBGhuCxybt73PiLy
+ YdnvFt502AYf74YviWdk0ybK5dy6/+YMMwZqMUtSPcRztEZcYbJL26+pSibG6DVxSDxB
+ yM5NUVIFckBbOgCAEbvHejYeHtYlS6lCfUlpxeZ2/PM3Mdliz3IftGgY7jJ8LA5SA4Eg
+ EFRkcUFGMBC1KoIhKJzgKz3FpkBO5nMZQaaTCtJfNVO3La0oNSHwj4KgqRKzF5rAJasa Xg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-00007101.pphosted.com (PPS) with ESMTPS id 3w1e8n4ktv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 04 Feb 2024 03:13:06 +0000
+Received: from m0166257.ppops.net (m0166257.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4143D4G0010150;
+	Sun, 4 Feb 2024 03:13:06 GMT
+Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
+	by mx0a-00007101.pphosted.com (PPS) with ESMTP id 3w1e8n4ktm-3;
+	Sun, 04 Feb 2024 03:13:06 +0000
+From: Jinghao Jia <jinghao7@illinois.edu>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinghao Jia <jinghao7@illinois.edu>
+Subject: [PATCH v2 2/3] x86/kprobes: Prohibit kprobing on INT and UD
+Date: Sat,  3 Feb 2024 21:12:59 -0600
+Message-ID: <20240204031300.830475-3-jinghao7@illinois.edu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240204031300.830475-1-jinghao7@illinois.edu>
+References: <20240204031300.830475-1-jinghao7@illinois.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0720eb91-72f9-4781-8558-8a1b0a3691c2@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: pTjztUL61FTrJXA6ja-s8oTry9VD_41U
+X-Proofpoint-ORIG-GUID: 3fRQU1wk2aq7g_e9smfCVJe3fgw5voOI
+X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402040022
+X-Spam-Score: 0
+X-Spam-OrigSender: jinghao7@illinois.edu
+X-Spam-Bar: 
 
-On Fri, Feb 02, 2024 at 06:44:01PM +0100, Marco Pagani wrote:
-> 
-> 
-> On 2024-01-30 05:31, Xu Yilun wrote:
-> >> +#define fpga_mgr_register_full(parent, info) \
-> >> +	__fpga_mgr_register_full(parent, info, THIS_MODULE)
-> >>  struct fpga_manager *
-> >> -fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
-> >> +__fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
-> >> +			 struct module *owner);
-> >>  
-> >> +#define fpga_mgr_register(parent, name, mops, priv) \
-> >> +	__fpga_mgr_register(parent, name, mops, priv, THIS_MODULE)
-> >>  struct fpga_manager *
-> >> -fpga_mgr_register(struct device *parent, const char *name,
-> >> -		  const struct fpga_manager_ops *mops, void *priv);
-> >> +__fpga_mgr_register(struct device *parent, const char *name,
-> >> +		    const struct fpga_manager_ops *mops, void *priv, struct module *owner);
-> >> +
-> >>  void fpga_mgr_unregister(struct fpga_manager *mgr);
-> >>  
-> >> +#define devm_fpga_mgr_register_full(parent, info) \
-> >> +	__devm_fpga_mgr_register_full(parent, info, THIS_MODULE)
-> >>  struct fpga_manager *
-> >> -devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
-> >> +__devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
-> >> +			      struct module *owner);
-> > 
-> > Add a line here. I can do it myself if you agree.
-> 
-> Sure, that is fine by me. I also spotted a typo in the commit log body
-> (in taken -> is taken). Do you want me to send a v6, or do you prefer
-> to fix that in place?
+Both INT (INT n, INT1, INT3, INTO) and UD (UD0, UD1, UD2) serve special
+purposes in the kernel, e.g., INT3 is used by KGDB and UD2 is involved
+in LLVM-KCFI instrumentation. At the same time, attaching kprobes on
+these instructions (particularly UD) will pollute the stack trace dumped
+in the kernel ring buffer, since the exception is triggered in the copy
+buffer rather than the original location.
 
-No need, I can fix it.
+Check for INT and UD in can_probe and reject any kprobes trying to
+attach to these instructions.
 
-> 
-> > 
-> > There is still a RFC prefix for this patch. Are you ready to get it merged?
-> > If yes, Acked-by: Xu Yilun <yilun.xu@intel.com>
-> 
-> I'm ready for the patch to be merged. However, I recently sent an RFC
-> to propose a safer implementation of try_module_get() that would
-> simplify the code and may also benefit other subsystems. What do you
-> think?
-> 
-> https://lore.kernel.org/linux-modules/20240130193614.49772-1-marpagan@redhat.com/
+Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
+---
+ arch/x86/kernel/kprobes/core.c | 48 +++++++++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 9 deletions(-)
 
-I suggest take your fix to linux-fpga/for-next now. If your try_module_get()
-proposal is applied before the end of this cycle, we could re-evaluate
-this patch.
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 644d416441fb..7a08d6a486c8 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -252,7 +252,28 @@ unsigned long recover_probed_instruction(kprobe_opcode_t *buf, unsigned long add
+ 	return __recover_probed_insn(buf, addr);
+ }
+ 
+-/* Check if paddr is at an instruction boundary */
++/* Check if insn is INT or UD */
++static inline bool is_exception_insn(struct insn *insn)
++{
++	/* UD uses 0f escape */
++	if (insn->opcode.bytes[0] == 0x0f) {
++		/* UD0 / UD1 / UD2 */
++		return insn->opcode.bytes[1] == 0xff ||
++		       insn->opcode.bytes[1] == 0xb9 ||
++		       insn->opcode.bytes[1] == 0x0b;
++	}
++
++	/* INT3 / INT n / INTO / INT1 */
++	return insn->opcode.bytes[0] == 0xcc ||
++	       insn->opcode.bytes[0] == 0xcd ||
++	       insn->opcode.bytes[0] == 0xce ||
++	       insn->opcode.bytes[0] == 0xf1;
++}
++
++/*
++ * Check if paddr is at an instruction boundary and that instruction can
++ * be probed
++ */
+ static bool can_probe(unsigned long paddr)
+ {
+ 	unsigned long addr, __addr, offset = 0;
+@@ -291,6 +312,22 @@ static bool can_probe(unsigned long paddr)
+ #endif
+ 		addr += insn.length;
+ 	}
++
++	/* Check if paddr is at an instruction boundary */
++	if (addr != paddr)
++		return false;
++
++	__addr = recover_probed_instruction(buf, addr);
++	if (!__addr)
++		return false;
++
++	if (insn_decode_kernel(&insn, (void *)__addr) < 0)
++		return false;
++
++	/* INT and UD are special and should not be kprobed */
++	if (is_exception_insn(&insn))
++		return false;
++
+ 	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
+ 		/*
+ 		 * The compiler generates the following instruction sequence
+@@ -305,13 +342,6 @@ static bool can_probe(unsigned long paddr)
+ 		 * Also, these movl and addl are used for showing expected
+ 		 * type. So those must not be touched.
+ 		 */
+-		__addr = recover_probed_instruction(buf, addr);
+-		if (!__addr)
+-			return false;
+-
+-		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
+-			return false;
+-
+ 		if (insn.opcode.value == 0xBA)
+ 			offset = 12;
+ 		else if (insn.opcode.value == 0x3)
+@@ -325,7 +355,7 @@ static bool can_probe(unsigned long paddr)
+ 	}
+ 
+ out:
+-	return (addr == paddr);
++	return true;
+ }
+ 
+ /* If x86 supports IBT (ENDBR) it must be skipped. */
+-- 
+2.43.0
 
-Thanks,
-Yilun
-
-> 
-> > Next time if you think patches are ready for serious review and merge, drop
-> > the RFC prefix. That avoids an extra query.
-> 
-> Okay, I'll do it like that next time.
-> 
-> Thanks,
-> Marco
-> 
