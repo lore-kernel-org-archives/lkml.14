@@ -1,94 +1,139 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278DF22301;
-	Sun,  4 Feb 2024 12:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943F92230C;
+	Sun,  4 Feb 2024 12:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707048506; cv=none; b=bjjKkAI8PvR3fru7ETiWzdD9ygtlghU/tW7/mNCeRoDSRfAFy+TiRNzCGQTA905Qiyx+IOr3HDsmkOviaUUESjCoFTgerm6ud94izIUupx4SoXa3jVHs1pgVRi4dAYft30LYW5vI9454EnS4RqxORHzG/iy1JfqGD4gaD5VvSI0=
+	t=1707048577; cv=none; b=LlP45nZ9VfI7xlNys13e2K9L9rgwzWDYFromVf+78xo2+xinTC6dTb9F3Tu0ib7rrlbBcfJhwEaM5ghzzCi1LuYhly2D9eVFOOAGxhtm02W/RVD2C/FJVwwzmAilq0MWD/i5H7ky6HfVc2wt+lgREGFFcMH+14J3kT3qOgl7y0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707048506; c=relaxed/simple;
-	bh=4p2LdF4W3zyeFbKsz2u3VE+emGdF/UbygSLZnNszXfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wwmmq8DGptZIW40ScK34S2RekN3VmucCaWSt1LE6lkD9yho1ElIBEJlG9PQVTXPYUpRCI305IXy3ljAHAr/xoUg5S5ujLrC8OrjycQl5QXO76C73f27Y+2yH3ORefty+ecYhyk3YAsb39Ttnzn5hsEnOw6KAkLFs/9vY5r3Cc3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ROOY3X9d; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1707048577; c=relaxed/simple;
+	bh=1oX+987QSLgHiJKrbV64gz3eFSMyM4D/Fvphc6DYZIw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CETHvYje2sc3GWFTvXbUjHeRaAj7AsNu/euBKFQqVC2svw/5hpi45XShTdKND8j48NUUPGVT+NtgBeo+jdAjlsIedsyEY95qdJs7FcgtD9uTvNAQ8x2rWpKJkMXZFxAVJukYpUiUydYGU9bGbWjcPvl7sBexq9CPmijn/Tn0HoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8ogO4RQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ROOY3X9d"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 5D2C122352;
-	Sun,  4 Feb 2024 13:00:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1707048049;
-	bh=hNBhjuj5iOFzwHKbDLRqgrUiUwu8spdC0cNIku83Ix0=; h=From:To:Subject;
-	b=ROOY3X9dZiwGhbpObv9MEW8DVpX0EPcrjFwq235uTkOz73e5j5rQznImCKXF23efY
-	 r6rlHe/Q3W3CpUCPZQPfQDCaGm5xIZ/EU23Rr/pyeS3exy4D1M5zyEcWGEInbELBs4
-	 rWPLoalJDge8ZAQ9OokOWfW1km4xH9YQRYlowrLOTVhy2w84kpvg1x4WSxnGzDTNhL
-	 Nhgo6L6H4LP/OBVeVFVhHx75vrX+tkpon9aG5LaAXYPpn1MojgJbbvucyy4OvOV4ug
-	 3SWXfZV0uxdEFR0e/X+y8/CEKSGam5cOKpBEHAocLvh0mhSLOQu39atHEwFTQZfrRm
-	 bX9wgy/4St07w==
-Date: Sun, 4 Feb 2024 13:00:33 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, marex@denx.de,
-	alexander.stein@ew.tq-group.com, frieder.schrempf@kontron.de,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Liu Ying <victor.liu@nxp.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH V8 06/12] arm64: dts: imx8mp: add HDMI irqsteer
-Message-ID: <20240204120033.GA4656@francesco-nb>
-References: <20240203165307.7806-1-aford173@gmail.com>
- <20240203165307.7806-7-aford173@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8ogO4RQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31815C433F1;
+	Sun,  4 Feb 2024 12:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707048577;
+	bh=1oX+987QSLgHiJKrbV64gz3eFSMyM4D/Fvphc6DYZIw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=m8ogO4RQnF4nhyTx7Kew2UE2KFs6K/s3+XxgSQEv5L87Lp+nB0yhbuTCt9uh6gkqp
+	 jRDxzPOZcyJqBg3M5hn4YufhP/fEObw1O4nirrO/U4l74CTUrdATGrb5ZwJfnueFVt
+	 RgrHM6Pm1XRJdj9sF9gUFDuVpjVGcHtkYISzTfztjRJ5EV+AZ4/+Eq+OarnfSdGBsi
+	 Db9sCXtFobGi5O5iHYW2SKi/6FyxeKXcVD+FS9munkn+k/IIXZf5DtF2BLbAIF8y9u
+	 LJgVm9y6aWU0ljy14Zg06m/x+KPN9Nd1Z7n+H268kKF0INisy9tubRfkWoj5ivxs1J
+	 v7UfnofQSHx5Q==
+Date: Sun, 4 Feb 2024 21:09:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinghao Jia <jinghao7@illinois.edu>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>, Xin Li <xin@zytor.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] x86/kprobes: Boost more instructions from
+ grp2/3/4/5
+Message-Id: <20240204210932.bd112a37dd3c276b046f6b16@kernel.org>
+In-Reply-To: <20240204031300.830475-4-jinghao7@illinois.edu>
+References: <20240204031300.830475-1-jinghao7@illinois.edu>
+	<20240204031300.830475-4-jinghao7@illinois.edu>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240203165307.7806-7-aford173@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 03, 2024 at 10:52:46AM -0600, Adam Ford wrote:
-> From: Lucas Stach <l.stach@pengutronix.de>
+On Sat,  3 Feb 2024 21:13:00 -0600
+Jinghao Jia <jinghao7@illinois.edu> wrote:
+
+> With the instruction decoder, we are now able to decode and recognize
+> instructions with opcode extensions. There are more instructions in
+> these groups that can be boosted:
 > 
-> The HDMI irqsteer is a secondary interrupt controller within the HDMI
-> subsystem that maps all HDMI peripheral IRQs into a single upstream
-> IRQ line.
+> Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
+> Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
+> Group 4: INC, DEC (byte operation)
+> Group 5: INC, DEC (word/doubleword/quadword operation)
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> These instructions are not boosted previously because there are reserved
+> opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
+> unmapped. As a result, kprobes attached to them requires two int3 traps
+> as being non-boostable also prevents jump-optimization.
+> 
+> Some simple tests on QEMU show that after boosting and jump-optimization
+> a single kprobe on these instructions with an empty pre-handler runs 10x
+> faster (~1000 cycles vs. ~100 cycles).
+> 
+> Since these instructions are mostly ALU operations and do not touch
+> special registers like RIP, let's boost them so that we get the
+> performance benefit.
+> 
 
-This is missing your signed-off-by, and in other patches of this series
-your signed-off-by is not the last, as it should be.
+This looks good to me. And can you check how many instructions in the
+vmlinux will be covered by this change typically?
 
-Please have a look and fix this and the other instances.
+Thank you,
 
-Thanks for this work!
+> Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
+> ---
+>  arch/x86/kernel/kprobes/core.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> index 7a08d6a486c8..530f6d4b34f4 100644
+> --- a/arch/x86/kernel/kprobes/core.c
+> +++ b/arch/x86/kernel/kprobes/core.c
+> @@ -169,22 +169,33 @@ bool can_boost(struct insn *insn, void *addr)
+>  	case 0x62:		/* bound */
+>  	case 0x70 ... 0x7f:	/* Conditional jumps */
+>  	case 0x9a:		/* Call far */
+> -	case 0xc0 ... 0xc1:	/* Grp2 */
+>  	case 0xcc ... 0xce:	/* software exceptions */
+> -	case 0xd0 ... 0xd3:	/* Grp2 */
+>  	case 0xd6:		/* (UD) */
+>  	case 0xd8 ... 0xdf:	/* ESC */
+>  	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
+>  	case 0xe8 ... 0xe9:	/* near Call, JMP */
+>  	case 0xeb:		/* Short JMP */
+>  	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
+> -	case 0xf6 ... 0xf7:	/* Grp3 */
+> -	case 0xfe:		/* Grp4 */
+>  		/* ... are not boostable */
+>  		return false;
+> +	case 0xc0 ... 0xc1:	/* Grp2 */
+> +	case 0xd0 ... 0xd3:	/* Grp2 */
+> +		/*
+> +		 * AMD uses nnn == 110 as SHL/SAL, but Intel makes it reserved.
+> +		 */
+> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b110;
+> +	case 0xf6 ... 0xf7:	/* Grp3 */
+> +		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
+> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b001;
+> +	case 0xfe:		/* Grp4 */
+> +		/* Only INC and DEC are boostable */
+> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
+> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001;
+>  	case 0xff:		/* Grp5 */
+> -		/* Only indirect jmp is boostable */
+> -		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
+> +		/* Only INC, DEC, and indirect JMP are boostable */
+> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
+> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001 ||
+> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b100;
+>  	default:
+>  		return true;
+>  	}
+> -- 
+> 2.43.0
+> 
 
-Francesco
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
