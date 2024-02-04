@@ -1,93 +1,104 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FFA33997
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 20:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5EE286A6;
+	Sun,  4 Feb 2024 20:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707079691; cv=none; b=ZzNVsSGqixZeLUM4LS/kRJpw9T2B3lCMFxn9k/2Srzb8f4Haj6Las1XeZHGx2YK8wf+3Bx181wdYjVRpAzuLXdiAP/HL9cowh/MRHnPeHoCvumkthcBEtJf7CVxXUSOrim8uFIB67cYFYKyG8Kf58uu2XKGxL8s1zZDyme1aY4Y=
+	t=1707079790; cv=none; b=Uezyccpl3FIjoHA/XM7jVytuIgvUi1VtYmHswzBV4yxGBLYQ4k0kk49OWy6gNi4bu7mZWwzVkr6fQ+1vCrsb/ad92Gk2mu1NgS68gNvYOCHsR82MXj6vEOa5BMQHJBmxKxF4OjcZH/0wPTv+PqgvQAAbHEiXb3OP1m/RbQbMsyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707079691; c=relaxed/simple;
-	bh=R/I7dk8sqQgMHMTdsGzqQK7XxNsAJud+1AIwiPgLJwQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DF/uObRbQiC99PxrGc96W1b+GCTho3BbjFj5DS9Qno5Tx43QGVACeoAIXfztgVC84IBesA/8/K1FLGApx9Ml3hLSlTwLXhxbKZf4wvlBXW6PAoFxN+f8mRU0+BGsNWv0cPuF7xLkGt0SR4CKzqWQnzfVdKucEWb4En4ETm4hSVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60406da718aso38135217b3.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 12:48:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707079688; x=1707684488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WuZCS9y13xUQN18d8Gu/e8RowOQI4ytQlPYFh0yEfC8=;
-        b=JVrC2/q66PA8WY4jCTUFQl9tyT1RDyJwFtJ0oES0rY+MncpwK9c4z3hsI9HUNtHxIC
-         +eJN+DJOlsEaPxlc4i96kn6jxb5fWdBu+GzySkeqIYKo+E2fKokPVwb0fSZAiA5Mwui8
-         LnyL12/1PhzXhDAlbstyD72pxJpJcDhgv7UZNFXcNF3y/WfJAvMtxBcldZgnpsy+cGsT
-         quINhHOBGs9axEh5mNRe5IRcpFWcDG2nHtQj6Kc1uWp9ktyRfRa+43ykQDiM6F4htUUN
-         hxGnzr1zqfS0DFzNFmZJ4HcyeJZCUbHvWMOJ+abkeJ8uP6W78MvswgLURSBQxafQ97ye
-         kMFA==
-X-Gm-Message-State: AOJu0Yy7/GVu57nIvbm7JTewBlqwrafTUXYOl9f5nwq4qL9vOYLh5+sw
-	9ZIb3PoQNmjKRKWMPJ6bV7oMR05deBNjEGDCX9LVYAOynanfQolMOHJhLuLdr9U=
-X-Google-Smtp-Source: AGHT+IGB1GFjAFsXU7aufGDQDxAovjLso5yym24xc/CcfK1188ZyBD8xY9+cx1c9Ie7pB9QIqgjTXg==
-X-Received: by 2002:a81:5258:0:b0:5ff:d4c1:48f9 with SMTP id g85-20020a815258000000b005ffd4c148f9mr7471685ywb.0.1707079687980;
-        Sun, 04 Feb 2024 12:48:07 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVJMCYt1xzIxbNMTOT9GbJQicIND754JzTnG8lvsNMgwidETUhuILWUnMKjoi97npZMF1sAmCCNTJBrsfBZIFtwD3/30jC2WUXSy32o
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id k125-20020a816f83000000b005ff9b3e6dd4sm1638162ywc.116.2024.02.04.12.48.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Feb 2024 12:48:07 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60412866c36so37161367b3.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 12:48:07 -0800 (PST)
-X-Received: by 2002:a81:f205:0:b0:604:3ee2:f258 with SMTP id
- i5-20020a81f205000000b006043ee2f258mr4071749ywm.45.1707079687488; Sun, 04 Feb
- 2024 12:48:07 -0800 (PST)
+	s=arc-20240116; t=1707079790; c=relaxed/simple;
+	bh=ojWqsp/aBmsejpkcR12AdCvNFJNKEtttghVnPq6oxmo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PegV9SgRU1+7nEsMY98g+gW2tP2YYqfAAyamoIllnZbI+sLFe6bnzWxUwW1C5aowpNi/E0zcSgrWJrJGca+ld3Xt9bB7B1fsnAEwuqPiWsXTYrJstKL28pbDHL3THymNnZJo+C726fa/oNA4eBTPXAKnJ/WowaQJ4Zt3VEz/x9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrVlmveh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrVlmveh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECEA3C433F1;
+	Sun,  4 Feb 2024 20:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707079789;
+	bh=ojWqsp/aBmsejpkcR12AdCvNFJNKEtttghVnPq6oxmo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KrVlmvehk3qAqC+mImzdxev2eaBuCLiF9nGmJQWSJUbYP4cUxdbBXWqtTJ7yJWpgy
+	 mdPXBGLldb83ha+ULf1yZBkhZW4ONAWapMVJ6P6uWEp2HryAOamInDXSWiESvcUCXs
+	 gPnehXOU0ehnm+e0fYyZZUfUOjCX6wKN8Lq4sMsbHTDsvUlSEMCHvU7tWNdLAeSSLx
+	 k0ZEMQR9yk/gau7hzbDCH+uuW8x6KHADGc/66gqc4yl9j6H7JoKShegAoDdgFz8mhO
+	 2P3UMLO9l5xdWM1dhBRiIpRVyUWE2H3XpmmH5zJg0SCkNGRvRs5cr6tRT+7TXO1p5c
+	 XdpsR48O2aXyw==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/damon/core: check apply interval in
+Date: Sun,  4 Feb 2024 12:49:46 -0800
+Message-Id: <20240204204946.87265-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240204-bus_cleanup-powerpc-v1-0-c763f0e142e9@marliere.net> <20240204-bus_cleanup-powerpc-v1-2-c763f0e142e9@marliere.net>
-In-Reply-To: <20240204-bus_cleanup-powerpc-v1-2-c763f0e142e9@marliere.net>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 4 Feb 2024 21:47:55 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWmFZjWK483JhAuq1GTk0GOH_urRdWdxSB9EwR+YNaqww@mail.gmail.com>
-Message-ID: <CAMuHMdWmFZjWK483JhAuq1GTk0GOH_urRdWdxSB9EwR+YNaqww@mail.gmail.com>
-Subject: Re: [PATCH 2/4] powerpc: ps3: make ps3_system_bus_type const
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Geoff Levand <geoff@infradead.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 4, 2024 at 3:23=E2=80=AFPM Ricardo B. Marliere <ricardo@marlier=
-e.net> wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the ps3_system_bus_type variable to be a constant structure as
-> well, placing it into read-only memory which can not be modified at
-> runtime.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+kdamond_apply_schemes() checks apply intervals of schemes and avoid
+further applying any schemes if no scheme passed its apply interval.
+However, the following schemes applying function,
+damon_do_apply_schemes() iterates all schemes without the apply interval
+check.  As a result, the shortest apply interval is applied to all
+schemes.  Fix the problem by checking the apply interval in
+damon_do_apply_schemes().
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: 42f994b71404 ("mm/damon/core: implement scheme-specific apply interval")
+Cc: <stable@vger.kernel.org> # 6.7.x
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ mm/damon/core.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index 0c144fb466b8..f444734cc613 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -1064,6 +1064,9 @@ static void damon_do_apply_schemes(struct damon_ctx *c,
+ 	damon_for_each_scheme(s, c) {
+ 		struct damos_quota *quota = &s->quota;
+ 
++		if (c->passed_sample_intervals != s->next_apply_sis)
++			continue;
++
+ 		if (!s->wmarks.activated)
+ 			continue;
+ 
+@@ -1216,10 +1219,6 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
+ 		if (c->passed_sample_intervals != s->next_apply_sis)
+ 			continue;
+ 
+-		s->next_apply_sis +=
+-			(s->apply_interval_us ? s->apply_interval_us :
+-			 c->attrs.aggr_interval) / sample_interval;
+-
+ 		if (!s->wmarks.activated)
+ 			continue;
+ 
+@@ -1235,6 +1234,14 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
+ 		damon_for_each_region_safe(r, next_r, t)
+ 			damon_do_apply_schemes(c, t, r);
+ 	}
++
++	damon_for_each_scheme(s, c) {
++		if (c->passed_sample_intervals != s->next_apply_sis)
++			continue;
++		s->next_apply_sis +=
++			(s->apply_interval_us ? s->apply_interval_us :
++			 c->attrs.aggr_interval) / sample_interval;
++	}
+ }
+ 
+ /*
+-- 
+2.39.2
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
