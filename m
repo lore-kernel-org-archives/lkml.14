@@ -1,190 +1,100 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091D6249F8;
-	Sun,  4 Feb 2024 16:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1D92374C
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 16:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707065528; cv=none; b=DafstO+qjuP4wKUHD80nMK9+paU3RTlM8BkbIbVKu3BlGkQKQGpHYc9pRS1V53FQsCLZEhGcMrvGIpeLRwbCoVKnDmpl6FHgT9KKLmm7BI5k8JmJE8aQjA6GqDPUqOlBwmGkT0mvOBfiJHk5dJU4R9v5TYayxFOnwUkPd7Ef/P4=
+	t=1707065578; cv=none; b=qfRNejrjm673AgvQa1hLOhPi/Ncz+pZe4/JCvDe3AvPAzXFaBKuZTO0Op2otk5EBo4jpb+5ksyBUguyXIICgwJHPiGWy07lQFmsNZNyaET1DNASmbm3np4PsbTUZKyn7R2SB7d8SdVOvhCEmgoHBgDBu87Sm1+X8NEml7WWIXrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707065528; c=relaxed/simple;
-	bh=IuiMDzYq5uY3jd0orr9KJ2WPca7quZ/7Z8pR24y3dsw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tSOyFl9i5CSVd9y/Vi5238SPcUufMVkTupUJc6VgovnfEGG42g3WyzOkIubB3rza7ws+MT6Zfv5DV0foh6fWz9icHg2n6rboRhRUOJCG01WJC+TczASrCdsht/8JGPCH9Caj+7SoYQ7iQR1dwI2b1a0EAlKhCyaTcGWn+KNrZg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=NJiKvJ8L; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="NJiKvJ8L"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DA2EDFF802;
-	Sun,  4 Feb 2024 16:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1707065516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lTWWPxMsjq/XryQ86M+xV2rVGgxew1NiI9dJe8B9IbY=;
-	b=NJiKvJ8LE15kaHibv07wnHviWNGE1RPBEYYoFDCCEyzf9inDzPe0DfZ34OAM0XvYZPRez5
-	OTdFT62d6A8bgNBtRxtl69olsKvC46F8FFb0y8lxmH6mRvNb2KGpzbpHpHD3y++6kYFzYX
-	BzVBqMAY0U1DkHQS3TTl+KVO7IdWcQFYzfRijoiYmapJ7k1FMNzWT9xCrODyffiBBWXfs4
-	4rr6M4kR1Yk1KpuHLFKA91Nzz3PmD0wCBPSooIsM5yV7JFLxTq2sjMwGXqwyJCEdgdjogx
-	6tXI78G/pjduFqaOQwVKiUVxdEBU3O3FE+tbuZpoFQjtgXVKbAuUz2LtHyB0xg==
-Message-ID: <850064fb-59c6-4e07-962a-6a213e9e7f90@arinc9.com>
-Date: Sun, 4 Feb 2024 19:51:49 +0300
+	s=arc-20240116; t=1707065578; c=relaxed/simple;
+	bh=K/E7ETvaj+X2Ti4ARxVdVCWTPlLP+cEd+P8iXxNB+9U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ofOPwKhbPLBWtk21aWYIzSXuoYnA2G19AH2hQh6gYgZEXQqJV4jfg21ewxc/j7Css7b5/iRUoQrsk8so//ifDy6VwR/AvDTKQIdRE42Aib2R7wvlHCUfXQtbkXnzMic5YfHPGKJu5BOmmOyWvfpeKhYqeXtbCeGIt0/GrIFpepE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-30.elisa-laajakaista.fi [88.113.26.30])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id d5fb6ba5-c37d-11ee-b3cf-005056bd6ce9;
+	Sun, 04 Feb 2024 18:52:54 +0200 (EET)
+From: andy.shevchenko@gmail.com
+Date: Sun, 4 Feb 2024 18:52:52 +0200
+To: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Joel Stanley <joel@jms.id.au>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Wei Xu <xuwei5@hisilicon.com>, Huisong Li <lihuisong@huawei.com>,
+	Walker Chen <walker.chen@starfivetech.com>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 08/39] soc: Add SoC driver for Cirrus ep93xx
+Message-ID: <Zb_A5H5kkxw1oiQv@surfacebook.localdomain>
+References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+ <20240118-ep93xx-v7-8-d953846ae771@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 4/7] net: dsa: mt7530: move XTAL check to
- mt7530_setup()
-Content-Language: en-US
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
- <20240202-for-netnext-mt7530-improvements-2-v3-4-63d5adae99ca@arinc9.com>
- <ZbzWpmZrukknMsYf@shell.armlinux.org.uk>
- <5b744f7f-2f63-4219-a0e9-8f08267b1fdd@arinc9.com>
- <Zb021ozEQSbU-gPd@makrotopia.org>
- <f6234b46-ce30-4b2a-9681-15633a06feff@arinc9.com>
- <Zb+ctEe9TVA3zhv8@shell.armlinux.org.uk>
- <4fa2ff0d-2804-4a58-980f-162e62b3dc9c@arinc9.com>
- <Zb+9jQUqaha3Idsi@shell.armlinux.org.uk>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <Zb+9jQUqaha3Idsi@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240118-ep93xx-v7-8-d953846ae771@maquefel.me>
 
-On 4.02.2024 19:38, Russell King (Oracle) wrote:
-> On Sun, Feb 04, 2024 at 06:55:14PM +0300, Arınç ÜNAL wrote:
->> On 4.02.2024 17:18, Russell King (Oracle) wrote:
->>> On Sun, Feb 04, 2024 at 04:55:40PM +0300, Arınç ÜNAL wrote:
->>>> This is not about laziness. This is before patch 2:
->>>>
->>>> phylink_mac_ops :: mac_config() -> dsa_port_phylink_mac_config()
->>>> -> dsa_switch_ops :: phylink_mac_config() -> mt753x_phylink_mac_config()
->>>>      -> mt753x_mac_config()
->>>>         -> mt753x_info :: mac_port_config() -> mt7530_mac_config()
->>>>            -> mt7530_setup_port5()
->>>>      -> mt753x_pad_setup()
->>>>         -> mt753x_info :: pad_setup() -> mt7530_pad_clk_setup()
->>>>
->>>> This is after:
->>>>
->>>> phylink_mac_ops :: mac_config() -> dsa_port_phylink_mac_config()
->>>> -> dsa_switch_ops :: phylink_mac_config() -> mt753x_phylink_mac_config()
->>>>      -> mt753x_mac_config()
->>>>         -> mt753x_info :: mac_port_config() -> mt7530_mac_config()
->>>>            -> mt7530_setup_port5()
->>>>            -> mt7530_setup_port6()
->>>>
->>>> Patch 2 does not move mt7530_setup_port6() to be called from
->>>> phylink_mac_ops :: mac_config(), it already is. There is no valid reason to
->>>> reorder the patches.
->>>>
->>>> My response to Russell should've stated this instead of focusing on his
->>>> second sentence.
->>>
->>> This patch moves the test for a 20MHz crystal to mt7530_setup(),
->>> which is something that is entirely orthogonal to patch 2, which
->>> can be done cleanly (I've just applied the patches in the original
->>> order and then reordered them:
->>>
->>> 98c481f5d706 net: dsa: mt7530: do not clear config->supported_interfaces
->>> 93c6b53b17f4 net: dsa: mt7530: correct port capabilities of MT7988
->>> c9c6d4c51a1d net: dsa: mt7530: simplify mt7530_setup_port6() and change to void
->>> adfa948253e0 net: dsa: mt7530: remove pad_setup function pointer
->>> 57e21e6c2fc0 net: dsa: mt7530: call port 6 setup from mt7530_mac_config()
->>> 959a0f9323c8 net: dsa: mt7530: move XTAL check to mt7530_setup()
->>> 856ab64a22ef net: dsa: mt7530: empty default case on mt7530_setup_port5()
->>>
->>> No problems. The end result is identical comparing the git tree at the
->>> original "move XTAL" patch with adfa948253e0.
->>>
->>> Now, if we look at "net: dsa: mt7530: remove pad_setup function pointer"
->>> we can see that yes, the pad_setup() method was called from mac_confing,
->>> but this is the exact contents of that patch removing the callsite:
->>>
->>> -               mt753x_pad_setup(ds, state);
->>>
->>> This returns an integer, which may be an error code, which is ignored.
->>> Therefore, if the XTAL frequency check fires, and mt753x_pad_setup()
->>> returns an error, it is ignored today.
->>>
->>> After "net: dsa: mt7530: call port 6 setup from mt7530_mac_config()"
->>> the renamed pad_setup() method is now called from mac_config() thusly:
->>>
->>> +               ret = mt7530_setup_port6(priv->ds, interface);
->>> +               if (ret)
->>> +                       return ret;
->>>
->>> So now the error checks cause mt7530_mac_config() to return an error
->>> which in turn causes mt753x_mac_config() to fail, and therefore
->>> mt753x_phylink_mac_config() has different behaviour.
->>>
->>> So, patch 2 changes the driver behaviour in the case of a 20MHz XTAL,
->>> which is then changed again by patch 4.
->>>
->>> It would be better to have only one change of behaviour by moving
->>> patch 4 before patch 2.
->>
->> If the idea is to not bring any more error returns to mt753x_mac_config()
->> because the return code is actually checked for that, I should do a bit
->> more effort and put patch 5 before patch 2 as well, to live up to what you
->> originally requested.
+Thu, Jan 18, 2024 at 11:20:51AM +0300, Nikita Shubin kirjoitti:
+> Add an SoC driver for the ep93xx. Currently there is only one thing
+> not fitting into any other framework, and that is the swlock setting.
 > 
-> I assume you are referring to getting rid of the default case in
-> mt7530_pad_clk_setup().
-> 
-> In patch "net: dsa: mt7530: call port 6 setup from mt7530_mac_config()"
-> where you move this to be called from mt7530_mac_config(), you add it
-> as:
-> 
-> +       } else if (port == 6) {
-> +               ret = mt7530_setup_port6(priv->ds, interface);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> 
-> So it is only called for port 6. The switch within the called function
-> deals with PHY_INTERFACE_MODE_RGMII and PHY_INTERFACE_MODE_TRGMII.
-> Anything else results in the use of the default case, and thus
-> returning an error.
-> 
-> Since mt7530_mac_port_get_caps() does this for port 6:
-> 
->                  __set_bit(PHY_INTERFACE_MODE_RGMII,
->                            config->supported_interfaces);
->                  __set_bit(PHY_INTERFACE_MODE_TRGMII,
->                            config->supported_interfaces);
-> 
-> mt7530_setup_port6() will only ever be called for these two modes,
-> which means that the default case is unreachable, thus we will never
-> execute that path, thus whether that path returns an error or not is
-> completely irrelevant.
-> 
-> The only case in mt7530_setup_port6() / mt7530_pad_clk_setup() which
-> can today return an error is the XTAL check.
-> 
-> Therefore, my suggestion makes complete sense, and there is no need
-> to also move patch 5.
+> Used for clock settings, pinctrl and restart.
 
-Understood. I've already submitted v4 which moves patch 5. The remaining
-benefit is that there're fewer code changes as I don't need to add an error
-return for mt7530_setup_port6() and then remove it.
+...
 
-Arınç
+> +static struct auxiliary_device *ep93xx_adev_alloc(struct device *parent, const char *name,
+> +						  struct ep93xx_map_info *info)
+> +{
+> +	struct ep93xx_regmap_adev *rdev;
+> +	struct auxiliary_device *adev;
+> +	int ret;
+> +
+> +	rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
+> +	if (!rdev)
+> +		return ERR_PTR(-ENOMEM);
+
+Use __free() ?
+(You already included cleanup.h for other cases, why not using it here?)
+
+> +	rdev->map = info->map;
+> +	rdev->base = info->base;
+> +	rdev->lock = &info->lock;
+> +	rdev->write = ep93xx_regmap_write;
+> +	rdev->update_bits = ep93xx_regmap_update_bits;
+> +
+> +	adev = &rdev->adev;
+> +	adev->name = name;
+> +	adev->dev.parent = parent;
+> +	adev->dev.release = ep93xx_adev_release;
+> +
+> +	ret = auxiliary_device_init(adev);
+> +	if (ret) {
+> +		kfree(adev);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	return adev;
+> +}
+
+...
+
+> +	model = (enum ep93xx_soc_model)(uintptr_t)of_device_get_match_data(dev);
+
+I believe Rob wants to get rid of of_device.h or at least of this call (see his
+patches to convert this API to use device_get_match_data() instead).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
