@@ -1,95 +1,140 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9CE2231A
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 11:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D47221A0A
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 11:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707047134; cv=none; b=N1SvYaF1C9cCkgZDIy4DLkeUlaayhUJmc/7diFoNr2vAcQ0BKIBA5/l7P4HaUAGf6c4Joga5Dj+w72X1p2fUkjEE3BRkvevx0rt8cvJlsGLmWq2Z1IPy/51dV+2J3ljSjSvdJDDWI9rY5Mr72El3vLGEL7qwzUpB/KhaqJt+Who=
+	t=1707047304; cv=none; b=FpE27zXIqNxijTQe5TWJFPu3Am8f0EZ84tFSBJfc3gsaLx5dxS2ZMRfcGRuFRh94brI/jde/ZeolL7TTCyq/gI4/5CjhH7CAqMV/qjnnJlfVmBS8KNuAXZ05Pu1p/7ryHyhdhxbPteudLOsWXip/zSPGk7M6GzXGZ30GP0iCoNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707047134; c=relaxed/simple;
-	bh=qgF9mgJuwBON3XPXrWsmUJR+tGrDKBmgIGDGKxUWbwg=;
+	s=arc-20240116; t=1707047304; c=relaxed/simple;
+	bh=1DuL6dXCrknE23VcOSIz+lgVGVDMztlVCyPAUOOnS+g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a+bOXBYZJ+gwwAA16WV7Jl3YPFEwy7WXfEOUsO743jnc/fWovrQc0wJ6jEz74TuPr69IF2BdfQE9fv6nrJ2LyQfkvMYLRxV3TPzONQYAbmec9xOReG7gL+odrn/2y1iBkVQIGLv3c6aXN+epNnz1/npHkumvzOh07boB7evU9k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gvDqrOcG; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=cH960flYyHuUPOrCyoohkPIdB+I7pmqbRj1AJjcGmF5DyMPCdFHyj3W0qIAgrmkeFqYGw4kzQmMROQTAU7A2cxBVFJalRDYQinZoTZeeL/Sntfqx+2jnGydK5XDrOA7OvEP9mL9q4MwYGd861vJ16eA6Wc2oGlZQ7+7c02KXSWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jwpBX1bv; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gvDqrOcG"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a36126e7459so453439466b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:45:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwpBX1bv"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-290d59df3f0so2871957a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:48:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1707047131; x=1707651931; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707047302; x=1707652102; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWi8x1miBJ1PGJBMtpIeIYYJwAHPliiF8cHXBoeQK6g=;
-        b=gvDqrOcGI+qfW2Yg1FJSAzMhM5mvboG757dGgBtsDT0Lh5JQWT6oeHO58uMWtg4ow9
-         UQkRjgYXyTq1p6kDCKMASLMum4BM5tHsWDN9JV5ghrKi/5HW/kvbDbuVZtke3CI1rdgd
-         X7aOOM0hEbdRGMjYLjcO7fd2BID/J5GN8L1Yg=
+        bh=iLWoLtoNTPqCxrIM8mN16L13n1zpFY2d5lyre0SQZo0=;
+        b=jwpBX1bvu2O+77BorHqyXEp8JoFLYo1Z7+zWf5hhwmuoRQ+j03TEzK8iyyaJTuTQzS
+         XEMLvekwTdtpX/fjnxkYI/OQk98KyYmzRfXiO60FmFb34HlNwCQb14A30fLRAVMlpG8Z
+         uWK5Gp5dexEDMO8u7V0/Jv88KjgDuFY/ee37X5iBCn90pyfXh9Kc/uN0iZuUVQtjL8UX
+         PYknD2smuB0kEyaTty2PhUgEeyj0Mrlhevw3RgW+meDMmzOgoHCLN+GDm37MuCAJ+KEK
+         TsZciUWd+frZb1zhvER2DpqUo3QH0mls2ELLauY+AKms8PjAQVUcsyu5VG3gfLjqZQyJ
+         NyCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707047131; x=1707651931;
+        d=1e100.net; s=20230601; t=1707047302; x=1707652102;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VWi8x1miBJ1PGJBMtpIeIYYJwAHPliiF8cHXBoeQK6g=;
-        b=uWUM6bD4V3dV+my8++jkj7qta7IA4Seirrw2j4FLuWf7S9UAvZOHO273DTVxR56Mgj
-         OQEuPnzK8U6sxm4rNu5cgidPdYe4y+qal0p00M6pkq8XWr/Tr1xt5AQbem2d2jqKPqgh
-         LwU/8uYsbGXMPU/NwslZdvHq8JA3xHDncSi4ROjiqBQNFO5TV7MsIK+0wji79kl4Lvjl
-         CwJKFg6I+M8W82gARZJrZtb6D/x2KO3//cbRTkNluOtdZlEwgDswUySfTXYQZC51dxo7
-         2HmjaR3lNjJ6I/udcDYokxi+7+tG9trD7732mkIsZUdrZ/3wtWRdftnYvTASTTEXNFtK
-         x6ww==
-X-Forwarded-Encrypted: i=0; AJvYcCUexottMHgTAp5+zRncQ2A96Hhv77oJUFms8nHxrr90y9eJ3mAPsWIUBkIWfVciJ2YeocHaZjyLbmC8Bib3ffzM1k/EzjDFKPflGxoE
-X-Gm-Message-State: AOJu0YxHfF1xFDX7+uPvPLSlC/CvIsDC9Nq1nMsL9dTlDZsSTyDkeVvA
-	cch9WkX0sdweNBxoQ+BV0FHpWUorxv+LHiVo6zrOpUWwoemTPaEhM2ha192wkMBds5PMw4wjZ1R
-	540I=
-X-Google-Smtp-Source: AGHT+IFvU0+fp66rG356ahWBK1M8aq1VvHsV509YLlq3Dekct58or4ApSu4TBUh7ZN8Qyce93jhz1g==
-X-Received: by 2002:a17:906:2dd5:b0:a37:4d06:50b8 with SMTP id h21-20020a1709062dd500b00a374d0650b8mr3378987eji.64.1707047131205;
-        Sun, 04 Feb 2024 03:45:31 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUkjRR4KRMJAwOUGsjXMVhFzdXSd+z4CUcx1FqVSl6LAtAfUEa/paGJinq7nl9yT35eZJUH069X4dy3qKhJMVWZmOA+8TQ12JtYU7Fn
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id vw3-20020a170907a70300b00a35920de35dsm3044945ejc.188.2024.02.04.03.45.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Feb 2024 03:45:30 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55a8fd60af0so4712132a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 03:45:29 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCViDzaygXQGKtAF9zFWZLTIgoPi2s0h6ibXIuish/zMvgPOK/mv/FefE8UHf5ayxkHzcZDpKDjFlF+ypOlwguortSHbY6WBvFVEwiM4
-X-Received: by 2002:aa7:d294:0:b0:55f:8bba:d0ae with SMTP id
- w20-20020aa7d294000000b0055f8bbad0aemr3329700edq.23.1707047129481; Sun, 04
- Feb 2024 03:45:29 -0800 (PST)
+        bh=iLWoLtoNTPqCxrIM8mN16L13n1zpFY2d5lyre0SQZo0=;
+        b=tbR/vcJLumB0csfpwO2hLyNqrnnaz9huPgmhCzi5mz676lsBKgbB5gBM/eehfbvzgB
+         YAwIvl9PRHFK+bLtcos4Ngtbqwk/7Xse+j4kNXuz2CQyE8e45fw+KMntM07pwozICUAL
+         BMGwozmXoQsdEVNUSPJm12xhM/Gj/vO0zbk/ZngRgeS1npkIGA5bUxyQk5VXd7P43pIF
+         iN/Df6ImMQcJ/izWZmPV64YBjzs0IT5N1R3Pc+QohLU04rwOiAT1S+MA8Z1S2NCiJy5D
+         DWxhfnlvJgIc7ePutrkkTDMCm0QrjrTpGYt+lDD7o7mVytZNJlF7tHM4EL4hPcW4SxGA
+         IXjA==
+X-Gm-Message-State: AOJu0YwGekPz5Xuq7z8VuwY1cfXEeYYU7d+eME1xtEc9hMUw8WgvK/j+
+	szG4RILThtnXr6eBnCCHckWaQ50Ni/+oSBvyhJIKS0YQv/gd5JnIRD1yjZ3Yq/4GcZpdRx1jHM5
+	RHrj11O756wzm7SkLd9jsTm66+WJdfZyb8ylKcQ==
+X-Google-Smtp-Source: AGHT+IEOi1scUQyf78MY4kTNWqSEf7HlOqWLYuomTqqK+b8A2/eT8u4bXLkS3+LMceEB+Lz2pWQR/bpqnLMe5hA5unU=
+X-Received: by 2002:a17:90b:387:b0:296:24cf:bae6 with SMTP id
+ ga7-20020a17090b038700b0029624cfbae6mr6785135pjb.27.1707047302628; Sun, 04
+ Feb 2024 03:48:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
- <CAHk-=wiaSjYApqmUYCdCyYfr_bRsfVKDkwU6r6FMmoZzrxHrKQ@mail.gmail.com>
- <eeb92d70-44d6-47f4-a059-66546be5f62a@flygoat.com> <CAHk-=wiUb1oKMHqrxZ6pA7OjNmtgw6giTKWiagUC2kt-ePCakg@mail.gmail.com>
- <716af17c-136b-4852-86ce-a23bafe34fbb@flygoat.com>
-In-Reply-To: <716af17c-136b-4852-86ce-a23bafe34fbb@flygoat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 4 Feb 2024 11:45:13 +0000
-X-Gmail-Original-Message-ID: <CAHk-=wjvt75XFUWxPQQJZE0Wdi8HtSLtqQm2L-ZrqH7=2g3ByQ@mail.gmail.com>
-Message-ID: <CAHk-=wjvt75XFUWxPQQJZE0Wdi8HtSLtqQm2L-ZrqH7=2g3ByQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Handle delay slot for extable lookup
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ben Hutchings <ben@decadent.org.uk>, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	Xi Ruoyao <xry111@xry111.site>
+References: <20240204044618.46100-1-void@manifault.com> <20240204044618.46100-4-void@manifault.com>
+In-Reply-To: <20240204044618.46100-4-void@manifault.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Sun, 4 Feb 2024 12:48:11 +0100
+Message-ID: <CAKfTPtB5NbvJt58zpi9aM-8kOxchgzYccY03wUEQLypaWjUXew@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] sched/fair: Simplify some logic in update_sd_pick_busiest()
+To: David Vernet <void@manifault.com>
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 4 Feb 2024 at 11:03, Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Sun, 4 Feb 2024 at 05:46, David Vernet <void@manifault.com> wrote:
 >
-> Well this is the tricky part of my assumption.
-> In `exception_epc()` `__isa_exception_epc()` stuff is only called if we
-> are in delay slot.
-> It is impossible for a invalid instruction_pointer to be considered as
-> "in delay slot" by hardware.
+> When comparing the current struct sched_group with the yet-busiest
+> domain in update_sd_pick_busiest(), if the two groups have the same
+> group type, we're currently doing a bit of unnecessary work for any
+> group >= group_misfit_task. We're comparing the two groups, and then
+> returning only if false (the group in question is not the busiest).
+> Othewise, we break, do an extra unnecessary conditional check that's
+> vacuously false for any group type > group_fully_busy, and then always
+> return true.
+>
+> Let's just return directly in the switch statement instead. This doesn't
+> change the size of vmlinux with llvm 17 (not surprising given that all
+> of this is inlined in load_balance()), but it does shrink load_balance()
+> by 88 bytes on x86. Given that it also improves readability, this seems
+> worth doing.
+>
+> As a bonus, remove an unnecessary goto in update_sd_lb_stats().
 
-Ok, I guess I'm convinced this is all safe. Not great, and not exactly
-giving me the warm fuzzies, but not buggy.
+The line above is not relevant to the content of the patch.
 
-         Linus
+Other than that
+
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+
+>
+> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+> Signed-off-by: David Vernet <void@manifault.com>
+> ---
+>  kernel/sched/fair.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 76d03106040d..fa049f866461 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10006,9 +10006,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+>         switch (sgs->group_type) {
+>         case group_overloaded:
+>                 /* Select the overloaded group with highest avg_load. */
+> -               if (sgs->avg_load <= busiest->avg_load)
+> -                       return false;
+> -               break;
+> +               return sgs->avg_load > busiest->avg_load;
+>
+>         case group_imbalanced:
+>                 /*
+> @@ -10019,18 +10017,14 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+>
+>         case group_asym_packing:
+>                 /* Prefer to move from lowest priority CPU's work */
+> -               if (sched_asym_prefer(sg->asym_prefer_cpu, sds->busiest->asym_prefer_cpu))
+> -                       return false;
+> -               break;
+> +               return sched_asym_prefer(sds->busiest->asym_prefer_cpu, sg->asym_prefer_cpu);
+>
+>         case group_misfit_task:
+>                 /*
+>                  * If we have more than one misfit sg go with the biggest
+>                  * misfit.
+>                  */
+> -               if (sgs->group_misfit_task_load <= busiest->group_misfit_task_load)
+> -                       return false;
+> -               break;
+> +               return sgs->group_misfit_task_load > busiest->group_misfit_task_load;
+>
+>         case group_smt_balance:
+>                 /*
+> --
+> 2.43.0
+>
