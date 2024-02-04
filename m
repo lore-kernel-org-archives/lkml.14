@@ -1,124 +1,262 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6972122EE0;
-	Sun,  4 Feb 2024 16:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+Received: from befuddled.reisers.ca (befuddled.reisers.ca [206.248.184.127])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255C022EE5
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 16:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.248.184.127
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707063218; cv=none; b=FIGuWBXtX+hYiZH6vMJFWUBGaLP40EdogcX9NSv5ybwaqDkv0WRyRNponuHbHRRX2n5T4EMcWiThMYYRZ7GP7LsJ8KuXMoFdzVKt6f6vUxZgC7E2ZTxwFOCOUXEEr9V81ZkXhwIq3vJv5YVzDCrJtc+Ovbt9UjF2hStPKJdbJWw=
+	t=1707063287; cv=none; b=SuwtsXUlBkT7YHyU56TzEFIm7DzOBxEzxrImAA63hp8cM1VdgH87Yru8iiwtazHwknUWJDM6+0w+ZSOuSwWEj+ePqZ+YEYjI6bnKNb473popAX5PsQ+YZ49Iw8oT+6N6PQB+VJkjXrm5MtIjmEcy0tIVqSR0Q2w86FWoRWEQPe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707063218; c=relaxed/simple;
-	bh=TgShaFHPoP3Kn1TopBdrlrcCUbL7pn3NVxXgfCNsZ/Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TDcMfFTkriH3rV/cFuetxg5wEKsES4Xr2+pIbr/ScVohB41aBOz3gC3t7+Gf3i8MhYz0sRm4gVraBUToWlpOlqm+e84A1f+i3IXEVTd2oo8Vlo02KV6BOGk/G32fdw947I86VgVpotlqLpU6mYu+OhnxyzaRhB5wANOwF2HMXMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=CKOk89Wj reason="key not found in DNS"; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707063287; c=relaxed/simple;
+	bh=tWnu2y4zJ6KFIND6qBtnbCYUimzDqDUKamLNQO3cP9g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PIFcye+c+33Q/g4/qpTa2Q2vuss0PlBq34KAqFlCYpMDDpE2j4GGq2HCCxbo8kxZkm28bvyaZh+N6+H9lMcg8ARR+1WGl16M1ZNuGddro4CTMI+UWGUJhGQ+KEKQZCR79wRgc3Q2QXu8fkN40OqqWHR8KMDNSMKCMazZYNbg6Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=reisers.ca; spf=none smtp.mailfrom=reisers.ca; dkim=pass (1024-bit key) header.d=reisers.ca header.i=@reisers.ca header.b=KClBTr3R; dkim=pass (1024-bit key) header.d=reisers.ca header.i=@reisers.ca header.b=KClBTr3R; arc=none smtp.client-ip=206.248.184.127
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=reisers.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=reisers.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="CKOk89Wj"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2906773c7e9so2378574a91.1;
-        Sun, 04 Feb 2024 08:13:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707063217; x=1707668017;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j895wKcHeXQZJMdGzfGU+B0tFjcF0tffVFSqSapa/yQ=;
-        b=eTb3rWQ1ID02EynVC0A8yL+gzAYRa0XLiwR4lEkHfqLZZ307T1NXkWhPc3paiJap6Z
-         kJwcK5fzJSBxL332lL3ZaLzalLHaKG9N08a+e3WamiNIOxOYEIfvJ/zcSy4gJBUqB++A
-         P4SsdtBP9GUfq2gcD6POnVLJHEqBnCHLMwgdN34lHTN+NLyrtm1JrPrivprTWLLNfzYZ
-         I/Hplw+idWGWm09Yelfwd05N2BiYjv/a8OIPi1GF57dfIro5nq9t/fQixgAVeu/k8kYO
-         bJi9jJQRKJwO/DzZaIItxH9mdaeq6aSuzFy7vkbpzVCnZTPz23CqS2jbeXILrFqdsrNS
-         +aHg==
-X-Gm-Message-State: AOJu0Ywy3vECWB9bBeU9jdH/wP2bV3ypf2Btt+KmNr+BXxI9zXNnq/YF
-	qs3Jj2FNFAOunvU3WrTVi1D997uqJoLtLaRd5VecvmMdGxx8fyDs
-X-Google-Smtp-Source: AGHT+IE7wftt5fJcizab0kosuFSovjbMuArVg2IktHPYXrVXjlsP67gFbimtBhExDvESA7jQicw3OA==
-X-Received: by 2002:a17:90a:f48f:b0:28c:3e2:2d8a with SMTP id bx15-20020a17090af48f00b0028c03e22d8amr12143414pjb.23.1707063216757;
-        Sun, 04 Feb 2024 08:13:36 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXQpIItCKC4/HggsTvDjo0xAjnl48o6jSC3Nfo8ez6+5H8nuSj5eUWxjLABSD3usb22oEFQgZMcbjq2YKh3iJV0noz0BhC2Rl+serF34uMj4K3xQJ2G70F/b8DkdDXXvTGi8AoimFy8CHjTrsja9jvyHWysJtLrwTuqVWjtg7yHUXu6bMLFHYQWyRxN6oKu4jBrLMkSenHVURtUe95M
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id jg1-20020a17090326c100b001d8d3b94404sm4709310plb.137.2024.02.04.08.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Feb 2024 08:13:35 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1707063214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=j895wKcHeXQZJMdGzfGU+B0tFjcF0tffVFSqSapa/yQ=;
-	b=CKOk89WjQlOhcXFU/ySoTySlPOYLXIg2LIimX62ojk1MB5KqimYWtUX9DJ2wdhN12RTq8R
-	UV9Y0QvRIT7uOqe3NNPQS0ws20hhUOmJP7299aCy5OMUSRdxkDMqdcXcH/nyaBiBW5j/Ao
-	f/LuXrxcYOc0BmwFgLTMuQlMwe6Qun1ZNNZAP0D5rTxD+Z6w/z+Avvh2WMGxTvnN9TAmFM
-	ETT13fDkpiKJUxId1JL5SMhakTOg3WkWk0kRQtihFEx944A4w2M+DBM2U72m0Qfby/B7RY
-	FvHJ6s/p8PJjjT9Af0qQ5XbxXvAs+hbYqi8PwxM3ak7BVVvx3fM2oC4Jbf0DQQ==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sun, 04 Feb 2024 13:14:05 -0300
-Subject: [PATCH] fpga: dfl: make dfl_bus_type const
+	dkim=pass (1024-bit key) header.d=reisers.ca header.i=@reisers.ca header.b="KClBTr3R";
+	dkim=pass (1024-bit key) header.d=reisers.ca header.i=@reisers.ca header.b="KClBTr3R"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=reisers.ca;
+	s=befuddled; t=1707062834;
+	bh=tWnu2y4zJ6KFIND6qBtnbCYUimzDqDUKamLNQO3cP9g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=KClBTr3RlOOGaORXGkA8W8w0+4zY707YIQdEz7scbfTdPfyNgVvMsmaxHFys9Xw1v
+	 k7xvxY9le7yEKGGQnUnqkeyeP6BikEyn9f/foLh9A5jQMBHUKntJ5S6BA5f2UqboDG
+	 7+aoMbKx1O9z2wuqv+kP5qnkSR/PemFQ1/NBkFDU=
+Received: by befuddled.reisers.ca (Postfix, from userid 65534)
+	id 6C7D3382537; Sun,  4 Feb 2024 11:07:14 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=reisers.ca;
+	s=befuddled; t=1707062834;
+	bh=tWnu2y4zJ6KFIND6qBtnbCYUimzDqDUKamLNQO3cP9g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=KClBTr3RlOOGaORXGkA8W8w0+4zY707YIQdEz7scbfTdPfyNgVvMsmaxHFys9Xw1v
+	 k7xvxY9le7yEKGGQnUnqkeyeP6BikEyn9f/foLh9A5jQMBHUKntJ5S6BA5f2UqboDG
+	 7+aoMbKx1O9z2wuqv+kP5qnkSR/PemFQ1/NBkFDU=
+Received: from localhost (localhost [IPv6:::1])
+	by befuddled.reisers.ca (Postfix) with ESMTPS id 3BB4238251B;
+	Sun,  4 Feb 2024 11:07:14 -0500 (EST)
+Date: Sun, 4 Feb 2024 11:07:14 -0500 (EST)
+From: Kirk Reiser <kirk@reisers.ca>
+To: Samuel Thibault <samuel.thibault@ens-lyon.org>
+cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+    speakup@linux-speakup.org
+Subject: Re: [PATCH] speakup: Add /dev/synthu device
+In-Reply-To: <20240204155825.ditstifsbqndnce3@begin>
+Message-ID: <eacaf4db-5b1e-e42e-96aa-3c803fda9180@reisers.ca>
+References: <20240204155825.ditstifsbqndnce3@begin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240204-bus_cleanup-fpga-v1-1-dae8b5bf7220@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAMy3v2UC/x3MTQqAIBBA4avErBNM+6OrRITZaANhohhBePek5
- bd474WIgTDCVL0Q8KZIlyto6gr0oZxFRnsxCC5aLnjLthRXfaJyyTPjrWI4otRy73qxDVAyH9D
- Q8y/nJecPURkuYWIAAAA=
-To: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, 
- Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>
-Cc: linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1066; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=TgShaFHPoP3Kn1TopBdrlrcCUbL7pn3NVxXgfCNsZ/Y=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv7fNm4LCLEaZHRrxilHOODNiUcZydOc/yohJU
- iBzzwwA0HyJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+3zQAKCRDJC4p8Y4ZY
- pm7jEACJb0uv0JqkxMe2d7g/ah6Y6i7cCaXIC8eyG2pFX0dWNYfpfXY4DAJTzuz+xGlnSpF6eSl
- sWBma8Kv7oYslPVXRJyC8ynMo5auW7iQheR3DLpY8Z7HnW8BXrghvR/Is2V9cZzJK828vD/eejU
- OCRc/FhDZaLrRgZyosHnU9zD5299lRfSRtnAhrndR2bLIGE1bGvIrwir1w1UBL/u4/VUbssFczp
- n9pbO2j0LzVV0jlKmc6ONmr8rZ0Wv8fbD+qb5s+02L2gFd9k3MnB6QqOxndb9/11D+Ako/orjUS
- 6GZ2xgPkvDfroqgBHD96d/54zQBKsq9d7L3yd4KZyMs5tMI+WQLNnZXJofEWRMAgUtQ06Y+CX8x
- QBae/0sLLTc97GUozedbYHC/mySDa8lCy5Ivk06IYmnIEy1U8HsAfpVc5LTlz93h0lHjtm2H6as
- 3kR7xM6aDJqOrBtr6l1DZ4pg72G2cNOgUv5DKOAI5pTbyZP1f6tv87ZsVCdXxHXX33Y8r7Lnifw
- QetAliHzNO5xkq7OvC+D5PmqraOgY7JzNKaqOS/GV599Q1HDgHE+nM71TT9xAdrbP+kfJm3YLhB
- nr73nICL6fwkqK3cERZbAQlQg6xWHQPOsizbYbf9ndYGz/xkSvCjwKTrC/MWcakBt3OCrVxY6c/
- miIr8pAYkhpTsrg==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.2.5
 
-Now that the driver core can properly handle constant struct bus_type,
-move the dfl_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+Samuel: Would you possibly look into passing the characters from
+saychar and it's family through to the softsynu device? There is a
+disconnect because espeakup/espeak-ng pronounces characters one way
+and the chartab look up has a different way of saying them. I believe
+passing them on is probably better although we give up the ability to
+pronounce them as we'd like to hear them.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/fpga/dfl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for dealing with all this stuff!
 
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index e6d12fbab653..094ee97ea26c 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -327,7 +327,7 @@ static struct attribute *dfl_dev_attrs[] = {
- };
- ATTRIBUTE_GROUPS(dfl_dev);
- 
--static struct bus_type dfl_bus_type = {
-+static const struct bus_type dfl_bus_type = {
- 	.name		= "dfl",
- 	.match		= dfl_bus_match,
- 	.probe		= dfl_bus_probe,
+   Kirk
 
----
-base-commit: 8680970410625875c34d6b97b6fd89d7d62a74ec
-change-id: 20240204-bus_cleanup-fpga-e8e3c3d562b7
+On Sun, 4 Feb 2024, Samuel Thibault wrote:
 
-Best regards,
--- 
-Ricardo B. Marliere <ricardo@marliere.net>
-
+> /dev/synth has always been 8bit, but applications nowadays mostly
+> expect to be using utf-8 encoding.  This adds /dev/synthu to be able
+> to synthesize non-latin1 characters.  This however remains limited
+> to 16bit unicode like the rest of speakup.  Any odd input or input
+> beyond 16bit is just discarded.
+>
+> Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+>
+> Index: linux-6.4/drivers/accessibility/speakup/devsynth.c
+> ===================================================================
+> --- linux-6.4.orig/drivers/accessibility/speakup/devsynth.c
+> +++ linux-6.4/drivers/accessibility/speakup/devsynth.c
+> @@ -7,9 +7,10 @@
+> #include "speakup.h"
+> #include "spk_priv.h"
+>
+> -static int misc_registered;
+> +static int synth_registered, synthu_registered;
+> static int dev_opened;
+>
+> +/* Latin1 version */
+> static ssize_t speakup_file_write(struct file *fp, const char __user *buffer,
+> 				  size_t nbytes, loff_t *ppos)
+> {
+> @@ -34,6 +35,97 @@ static ssize_t speakup_file_write(struct
+> 	return (ssize_t)nbytes;
+> }
+>
+> +/* UTF-8 version */
+> +static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
+> +				   size_t nbytes, loff_t *ppos)
+> +{
+> +	size_t count = nbytes, want;
+> +	const char __user *ptr = buffer;
+> +	size_t bytes;
+> +	unsigned long flags;
+> +	unsigned char buf[256];
+> +	u16 ubuf[256];
+> +	size_t in, in2, out;
+> +
+> +	if (!synth)
+> +		return -ENODEV;
+> +
+> +	want = 1;
+> +	while (count >= want) {
+> +		/* Copy some UTF-8 piece from userland */
+> +		bytes = min(count, sizeof(buf));
+> +		if (copy_from_user(buf, ptr, bytes))
+> +			return -EFAULT;
+> +
+> +		/* Convert to u16 */
+> +		for (in = 0, out = 0; in < bytes; in++) {
+> +			unsigned char c = buf[in];
+> +			int nbytes = 8 - fls(c ^ 0xff);
+> +			u32 value;
+> +
+> +			switch (nbytes) {
+> +			case 8: /* 0xff */
+> +			case 7: /* 0xfe */
+> +			case 1: /* 0x80 */
+> +				/* Invalid, drop */
+> +				goto drop;
+> +
+> +			case 0:
+> +				/* ASCII, copy */
+> +				ubuf[out++] = c;
+> +				continue;
+> +
+> +			default:
+> +				/* 2..6-byte UTF-8 */
+> +
+> +				if (bytes - in < nbytes) {
+> +					/* We don't have it all yet, stop here
+> +					 * and wait for the rest
+> +					 */
+> +					bytes = in;
+> +					want = nbytes;
+> +					continue;
+> +				}
+> +
+> +				/* First byte */
+> +				value = c & ((1u << (7 - nbytes)) - 1);
+> +
+> +				/* Other bytes */
+> +				for (in2 = 2; in2 <= nbytes; in2++) {
+> +					c = buf[in + 1];
+> +					if ((c & 0xc0) != 0x80)	{
+> +						/* Invalid, drop the head */
+> +						want = 1;
+> +						goto drop;
+> +					}
+> +					value = (value << 6) | (c & 0x3f);
+> +					in++;
+> +				}
+> +
+> +				if (value < 0x10000)
+> +					ubuf[out++] = value;
+> +				want = 1;
+> +				break;
+> +			}
+> +drop:
+> +		}
+> +
+> +		count -= bytes;
+> +		ptr += bytes;
+> +
+> +		/* And speak this up */
+> +		if (out) {
+> +			spin_lock_irqsave(&speakup_info.spinlock, flags);
+> +			for (in = 0; in < out; in++)
+> +				synth_buffer_add(ubuf[in]);
+> +			synth_start();
+> +			spin_unlock_irqrestore(&speakup_info.spinlock, flags);
+> +		}
+> +	}
+> +
+> +	return (ssize_t)(nbytes - count);
+> +}
+> +
+> static ssize_t speakup_file_read(struct file *fp, char __user *buf,
+> 				 size_t nbytes, loff_t *ppos)
+> {
+> @@ -62,31 +154,57 @@ static const struct file_operations synt
+> 	.release = speakup_file_release,
+> };
+>
+> +static const struct file_operations synthu_fops = {
+> +	.read = speakup_file_read,
+> +	.write = speakup_file_writeu,
+> +	.open = speakup_file_open,
+> +	.release = speakup_file_release,
+> +};
+> +
+> static struct miscdevice synth_device = {
+> 	.minor = MISC_DYNAMIC_MINOR,
+> 	.name = "synth",
+> 	.fops = &synth_fops,
+> };
+>
+> +static struct miscdevice synthu_device = {
+> +	.minor = MISC_DYNAMIC_MINOR,
+> +	.name = "synthu",
+> +	.fops = &synthu_fops,
+> +};
+> +
+> void speakup_register_devsynth(void)
+> {
+> -	if (misc_registered != 0)
+> -		return;
+> -/* zero it so if register fails, deregister will not ref invalid ptrs */
+> -	if (misc_register(&synth_device)) {
+> -		pr_warn("Couldn't initialize miscdevice /dev/synth.\n");
+> -	} else {
+> -		pr_info("initialized device: /dev/synth, node (MAJOR %d, MINOR %d)\n",
+> -			MISC_MAJOR, synth_device.minor);
+> -		misc_registered = 1;
+> +	if (!synth_registered) {
+> +		if (misc_register(&synth_device)) {
+> +			pr_warn("Couldn't initialize miscdevice /dev/synth.\n");
+> +		} else {
+> +			pr_info("initialized device: /dev/synth, node (MAJOR %d, MINOR %d)\n",
+> +				MISC_MAJOR, synth_device.minor);
+> +			synth_registered = 1;
+> +		}
+> +	}
+> +	if (!synthu_registered) {
+> +		if (misc_register(&synthu_device)) {
+> +			pr_warn("Couldn't initialize miscdevice /dev/synthu.\n");
+> +		} else {
+> +			pr_info("initialized device: /dev/synthu, node (MAJOR %d, MINOR %d)\n",
+> +				MISC_MAJOR, synthu_device.minor);
+> +			synthu_registered = 1;
+> +		}
+> 	}
+> }
+>
+> void speakup_unregister_devsynth(void)
+> {
+> -	if (!misc_registered)
+> -		return;
+> -	pr_info("speakup: unregistering synth device /dev/synth\n");
+> -	misc_deregister(&synth_device);
+> -	misc_registered = 0;
+> +	if (synth_registered) {
+> +		pr_info("speakup: unregistering synth device /dev/synth\n");
+> +		misc_deregister(&synth_device);
+> +		synth_registered = 0;
+> +	}
+> +	if (synthu_registered) {
+> +		pr_info("speakup: unregistering synth device /dev/synthu\n");
+> +		misc_deregister(&synthu_device);
+> +		synthu_registered = 0;
+> +	}
+> }
+>
