@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B6E5660;
-	Sun,  4 Feb 2024 01:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9ABB647;
+	Sun,  4 Feb 2024 01:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009486; cv=none; b=XIOFKkvJAJozx0jkBmDoOyq+zdrB0Mkj/M+KS6+uJslKLv/bdbUyFJGEab4hsUqU2CKNtCDiYf/79EXNIUsrzmcKjksYbePHYVbkPrqdyo8rXlpv8sftbsjkKQGTES5CFJRBlzB7wZdGJpUqNfle1j/6Xhar9fx/exD4Fxm6cYQ=
+	t=1707009487; cv=none; b=hRe1j1IoET//Gdmdk7bNjygzJ9RTaEYuzD5l8+CbElRDw1L0L+9MqTtmqHkap5189DLxWwB0jEzHvkm7qqOvBdWwmZEySlFlsFhFGTSAJ1DNJNZCEI7vM447FxsnzF4yShd+lxgXbGJ3F6ZQlXYYBXg96kfcV0Uck9ByapOvtVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707009486; c=relaxed/simple;
-	bh=/JpS99lNgHIlmUQoiQN2u6X1Nyd8YU3yIhcsAIJ1oQc=;
+	s=arc-20240116; t=1707009487; c=relaxed/simple;
+	bh=Xuuj38zWAdqjpeYCtGvAUUvs1e01F3I0KslCF+lAPSw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=pyZwXklrAueG4tjuwnfkUCYcnuXU1RV23o2R2fDk8+mpddGSPomXhqXwt9h4M7arnMWcybY3SIHu1BS+suM5ZK9pvk0ddjCF4uQ+ivbD8CheI7DxX1aBCien4k12KSoBpWgLs7TZ3agxzXOvTgarNDm6Wlt18dM6OCsZY/InpvY=
+	 Content-Type; b=PVPy6kpPFx/qvlXsKWJboGsyXHY3eyjLzRR8z8+VfbPysBpW+7EOzwA74ZRjQuCTb5bQ8TU5pGRlAA2/s5iZp4WkE8PlkBSXEER186u5GWZxiuVOthUqJMLHKiK89NHCb593uiQP4P+WxvZWzMGCAo3Sp97iq8tPwr90iaeq0a4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B658C32789;
-	Sun,  4 Feb 2024 01:18:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B58E1C4AF7C;
+	Sun,  4 Feb 2024 01:18:06 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rWR9Q-00000006Onr-0hp8;
-	Sat, 03 Feb 2024 20:18:28 -0500
-Message-ID: <20240204011828.022360802@goodmis.org>
+	id 1rWR9R-00000006OrM-1Ibb;
+	Sat, 03 Feb 2024 20:18:29 -0500
+Message-ID: <20240204011829.169534556@goodmis.org>
 User-Agent: quilt/0.67
-Date: Sat, 03 Feb 2024 20:16:22 -0500
+Date: Sat, 03 Feb 2024 20:16:29 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -31,9 +31,11 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Al Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>
-Subject: [v6.7][PATCH 07/23] eventfs: Shortcut eventfs_iterate() by skipping entries already read
+ Christian Brauner <brauner@kernel.org>,
+ Al Viro <viro@ZenIV.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ kernel test robot <oliver.sang@intel.com>
+Subject: [v6.7][PATCH 14/23] eventfs: Initialize the tracefs inode properly
 References: <20240204011615.703023949@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,90 +45,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-As the ei->entries array is fixed for the duration of the eventfs_inode,
-it can be used to skip over already read entries in eventfs_iterate().
+The tracefs-specific fields in the inode were not initialized before the
+inode was exposed to others through the dentry with 'd_instantiate()'.
 
-That is, if ctx->pos is greater than zero, there's no reason in doing the
-loop across the ei->entries array for the entries less than ctx->pos.
-Instead, start the lookup of the entries at the current ctx->pos.
+Move the field initializations up to before the d_instantiate.
 
-Link: https://lore.kernel.org/all/CAHk-=wiKwDUDv3+jCsv-uacDcHDVTYsXtBR9=6sGM5mqX+DhOg@mail.gmail.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20240104220048.494956957@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20240131185512.478449628@goodmis.org
 
+Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Christian Brauner <brauner@kernel.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202401291043.e62e89dc-oliver.sang@intel.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ fs/tracefs/event_inode.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index a1934e0eea3b..fdff53d5a1f8 100644
+index 1c3dd0ad4660..824b1811e342 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -746,21 +746,15 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	if (!ei || !ei_dentry)
- 		goto out;
+@@ -370,6 +370,8 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
  
--	ret = 0;
--
- 	/*
- 	 * Need to create the dentries and inodes to have a consistent
- 	 * inode number.
- 	 */
--	for (i = 0; i < ei->nr_entries; i++) {
--		void *cdata = ei->data;
--
--		if (c > 0) {
--			c--;
--			continue;
--		}
-+	ret = 0;
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
++	/* Only directories have ti->private set to an ei, not files */
++	ti->private = ei;
  
--		ctx->pos++;
-+	/* Start at 'c' to jump over already read entries */
-+	for (i = c; i < ei->nr_entries; i++, ctx->pos++) {
-+		void *cdata = ei->data;
+ 	inc_nlink(inode);
+ 	d_instantiate(dentry, inode);
+@@ -515,7 +517,6 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+ {
+ 	struct eventfs_inode *ei_child;
+-	struct tracefs_inode *ti;
  
- 		entry = &ei->entries[i];
- 		name = entry->name;
-@@ -769,7 +763,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		/* If ei->is_freed then just bail here, nothing more to do */
- 		if (ei->is_freed) {
- 			mutex_unlock(&eventfs_mutex);
--			goto out_dec;
-+			goto out;
- 		}
- 		r = entry->callback(name, &mode, &cdata, &fops);
- 		mutex_unlock(&eventfs_mutex);
-@@ -778,14 +772,17 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	lockdep_assert_held(&eventfs_mutex);
  
- 		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
- 		if (!dentry)
--			goto out_dec;
-+			goto out;
- 		ino = dentry->d_inode->i_ino;
- 		dput(dentry);
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
--			goto out_dec;
-+			goto out;
- 	}
- 
-+	/* Subtract the skipped entries above */
-+	c -= min((unsigned int)c, (unsigned int)ei->nr_entries);
-+
- 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+@@ -525,9 +526,6 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
  				 srcu_read_lock_held(&eventfs_srcu)) {
+ 		ei_child->d_parent = ei->dentry;
+ 	}
+-
+-	ti = get_tracefs(ei->dentry->d_inode);
+-	ti->private = ei;
+ }
  
+ /**
 -- 
 2.43.0
 
