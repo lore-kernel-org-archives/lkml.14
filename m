@@ -1,158 +1,148 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00007101.pphosted.com (mx0a-00007101.pphosted.com [148.163.135.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDD07465;
-	Sun,  4 Feb 2024 04:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6DD7460;
+	Sun,  4 Feb 2024 04:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707021807; cv=none; b=he9gh9a9JuqFvI9/Pig7vQ1mHe7QoCPFYHVIe7A7bg5zKJ2azXyh6sbLHSKmjVVUOK0f+nCHjke4cwvW5tu/ViYQVO4sueraML5UOGM8FbAvmJFYaysdBDdhXF2fwcHQQYo3QZc2SHcQHyrfQ9I0cdc9U3oVseZkCobUTdtjWHU=
+	t=1707021931; cv=none; b=ZtXdMfaoe+rTxU3JegeGxlqoGxsPoeIy3HgpkQg6CNg9ryJdk/xpAOEPe90cS7QsYtE1eb6sWxUxXRjRGaC75fZtHI5ehguSXlOMY809Inu5+U/xH9gGdg4P3y8CaCgqOrMJSCekr99m9qvP1fwwV2fQqNFSu++g3uGnDp532Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707021807; c=relaxed/simple;
-	bh=MhG1u2KwcRXQB60CoVgu2vlfbo2nYRBz9tNq8Go3+YA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=TfGk9aSgZnDFiJxxJ7uUteUHPtZk/lsmX3b8qtDy7u0eCAM+5y4VwwpMAQ3IdWMMdhsboe1MlAk4y7MWFIyvps3W5woWe5UCxVdlRyhVUZ6K3xwL40Zu9kiTmzRuNuTGf6mo005KevgZktTmK+lij1P221DHIGlWG+vvjWurkfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IB5bylwV; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707021931; c=relaxed/simple;
+	bh=cqAZVRCbOXBgk10uwImR7+eKfgO2Qe7PuU3zufmS+y4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Fo+pZO3UaYnCdDpcknXFUTRejfUxJn0rOIetCVGC4NHtESseR7gSVm9vmxa5+JjZlq7mSTR5pM4gnZthjQJozklNlpzq91JJw0YOjyIDjhjPcf6h8NYZm1+3ttBsFI2Vnkr1YUJDhXfrqIlK3S/Attcw9M+zq5rck8EHCBb5/Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=B9CDCUQN; arc=none smtp.client-ip=148.163.135.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IB5bylwV"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5600f79607eso1257214a12.0;
-        Sat, 03 Feb 2024 20:43:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707021803; x=1707626603; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=q3kBtxxL4VO3WYdtIvm8IZkFAj2RFAPSHZXFLvTp7QI=;
-        b=IB5bylwVdSd8btI/+C7xZFfkOEP3VXJcgUxZArKHwbB89Q5I9JAnxkwTB7Z0ARTiwM
-         R0hRNtHmfocc1cdeZdXl5gCdC1nuAU96+DRzok9rMhMfQA23VYzCjL3NkcbdebiJJdP/
-         skpqZ1MLWYPzCQm+iZy/zlrtXCF30wDFyRfmLSkmhDdRBwVO9ELqe3X1aSEiYN/1FkLD
-         Z/KRa7fTImYgKE19y0/UZmvCqGPPJmN6RomRHarpfDGJ35X31bC+IATUKIH1MZLANTfm
-         ztjTwZxGk0eYvUnK2nVq7FgUQtlnQQB0TcZDU1LugglXVVIM/CDi6RArN+07ccrjRNmr
-         DonQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707021803; x=1707626603;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q3kBtxxL4VO3WYdtIvm8IZkFAj2RFAPSHZXFLvTp7QI=;
-        b=AfUpmSef/nvQteMoU0k2AgQBO1OQHgxlfKoLMjiXD33/Yk8JHVkyn1HIHilhi2vRwK
-         Iz5gXaa/0D4CI613Nph5ECqk/DWFb51N8MnrH+LWQh1izK58HjjunxIU18rWVvHPE0AG
-         P1jzHn78XB3tarPJrqMohP9TBiREYfuxIp9xwfs0b2ZQdJsTJkaLlyTOU/JzKzOOCmHE
-         yyUA0Ujx1K88UvP8LPMgEAH4qCaSEhvFT40JZdsYGJMAP1MEwZTsRNWkCLdGvP7yCqzI
-         vKCZU6dbLfKsGe2Rh4YJh9HSyPhMvlHSVoUvT8BMT96Tmzez0aNLLCJe9lpRyEAjMwVE
-         tytA==
-X-Gm-Message-State: AOJu0Yw8YCaT39T4ciFYF5Yt3RpgG/gtBWwbiz8udWXuHwE6VwSa6Ddv
-	C79IcJD4DSm7exYcryioIB0+x6hV9QSqvc8dlXPFsZ+rLIbF0rHUJ1828x4wx5EwYjrxghFL1K8
-	Hcm21EFEJeoa41uJV9e5f6loxjut6vThfRTMARQ==
-X-Google-Smtp-Source: AGHT+IGVfFEqhuH2lesZXMAW+oN7+ske2gC+okX7GaHk6yZD6onVD0CaPVwFwaK9EXd9cSmAgUVw1VgwYCJ3oEMoNK4=
-X-Received: by 2002:a05:6402:31a2:b0:560:56a3:6ef4 with SMTP id
- dj2-20020a05640231a200b0056056a36ef4mr44606edb.26.1707021802937; Sat, 03 Feb
- 2024 20:43:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="B9CDCUQN"
+Received: from pps.filterd (m0166257.ppops.net [127.0.0.1])
+	by mx0a-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4142oQ1A012456;
+	Sun, 4 Feb 2024 03:13:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=campusrelays;
+ bh=UaL3xCx8AUncFg+isg4UuFMjDAHuz/SlcxJjBkpVqCM=;
+ b=B9CDCUQN3zDFBCCGiaUCLDwePzw1IonQjBqfD8408/OH+b+Ua80ddiA2AsDpHy7tbcpK
+ ODw5//Z1iEZEh4gpA2i/izSDqffEMCS76Yb1ObhOeqg84QrW7rkZtyVcklA5WAZxa/Y+
+ rwIpRrhF5m+Hu9yKEYBQ0LX4XcTTdEMf/qJLs43Ra2T4UbWskLT+jXNw6v8tc63hppT8
+ S+uOcb9b5Eijqdi/g+iAwCd2AHOo3SRSBBtez5Wc0QJO7/N5CmcxK+TeTBfahrvp/PLT
+ z4WxKpDUM2ecgpSokxHfw9yaXhi4p5A7ZKdalmx635kMDTY0dQ85QUtHZePHbIEUWM8I jg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-00007101.pphosted.com (PPS) with ESMTPS id 3w1e8n4ku0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 04 Feb 2024 03:13:07 +0000
+Received: from m0166257.ppops.net (m0166257.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4143D4G2010150;
+	Sun, 4 Feb 2024 03:13:07 GMT
+Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
+	by mx0a-00007101.pphosted.com (PPS) with ESMTP id 3w1e8n4ktm-4;
+	Sun, 04 Feb 2024 03:13:07 +0000
+From: Jinghao Jia <jinghao7@illinois.edu>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinghao Jia <jinghao7@illinois.edu>
+Subject: [PATCH v2 3/3] x86/kprobes: Boost more instructions from grp2/3/4/5
+Date: Sat,  3 Feb 2024 21:13:00 -0600
+Message-ID: <20240204031300.830475-4-jinghao7@illinois.edu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240204031300.830475-1-jinghao7@illinois.edu>
+References: <20240204031300.830475-1-jinghao7@illinois.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?B?0KHRgtCw0YEg0J3QuNGH0LjQv9C+0YDQvtCy0LjRhw==?= <stasn77@gmail.com>
-Date: Sun, 4 Feb 2024 07:43:24 +0300
-Message-ID: <CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-ddMYHSw4wK0Q@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/326] 6.6.16-rc2 review
-To: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: czHbX_K7foO7WJCefQH9zPBPKAETMcJM
+X-Proofpoint-ORIG-GUID: 9XqJBTkOjiePTMozqFeXhqssPsd8m9Fm
+X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402040022
+X-Spam-Score: 0
+X-Spam-OrigSender: jinghao7@illinois.edu
+X-Spam-Bar: 
 
-After trying again to create the ipset with timeout option I get a kernel panic
-# ipset create throttled-ips hash:ip family inet hashsize 1024 maxelem
-100000 timeout 600 bucketsize 12 initval 0x22b96e3a
-ipset v7.20: Set cannot be created: set with the same name already exists
+With the instruction decoder, we are now able to decode and recognize
+instructions with opcode extensions. There are more instructions in
+these groups that can be boosted:
 
+Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
+Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
+Group 4: INC, DEC (byte operation)
+Group 5: INC, DEC (word/doubleword/quadword operation)
 
-[Sat Feb  3 21:51:43 2024] Kernel 6.6.16- started...
-[Sat Feb  3 21:51:44 2024] ------------[ cut here ]------------
-[Sat Feb  3 21:51:44 2024] WARNING: CPU: 0 PID: 0 at
-__run_timers.part.0+0x45d/0x570
-[Sat Feb  3 21:51:44 2024] Modules linked in: netconsole configfs
-xt_multiport xt_HL xt_TCPMSS xt_tcpudp xt_comment xt_mark
-iptable_mangle iptable_raw iptable_filter xt_MASQUERADE xt_set
-iptable_nat nfnetlink_cttimeout nfnetlink_log ip_set_list_set
-ip_set_hash_ipport ip_set_hash_ip ip_set_hash_netiface ip_set_hash_net
-ip_set nf_nat_sip nf_nat_ftp nf_nat_tftp nf_nat_irc nf_nat_amanda
-nf_nat_h323 nf_nat_snmp_basic asn1_decoder nf_nat_pptp nf_nat
-nf_conntrack_irc nf_conntrack_snmp nf_conntrack_netbios_ns
-nf_conntrack_broadcast nf_conntrack_sip nf_conntrack_tftp
-nf_conntrack_pptp ts_kmp nf_conntrack_amanda nf_conntrack_sane
-nf_conntrack_h323 xt_conntrack nf_conntrack_ftp xt_dns(O)
-nf_conntrack_netlink nfnetlink ipt_NETFLOW(O) ip6_tables ip_tables
-xt_ndpi(O) xt_RATELIMIT(O) nf_conntrack_rtcache nf_conntrack
-nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c crc32c_generic crc32c_intel
-x_tables vrf sha1_ssse3 sha1_generic hmac ipv6 ixgbevf ixgbe mdio
-mdio_devres libphy ifb virtio_rng rng_core button
-[Sat Feb  3 21:51:44 2024] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G
-       O       6.6.16- #12
-[Sat Feb  3 21:51:44 2024] RIP: 0010:__run_timers.part.0+0x45d/0x570
-[Sat Feb  3 21:51:44 2024] Code: 21 0d f5 7e 89 ca 89 c8 81 e2 00 00
-00 80 44 09 f2 65 0f b1 15 0c 0d f5 7e 39 c1 75 e0 48 89 df e8 38 b0
-48 00 e9 53 ff ff ff <0f> 0b e9 4c ff ff ff 44 89 f2 4c 89 fe 48 c7 c7
-e0 9a 8f 81 c6 05
-[Sat Feb  3 21:51:44 2024] RSP: 0018:ffff88807d805f20 EFLAGS: 00010046
-[Sat Feb  3 21:51:44 2024] RAX: 0000000000000000 RBX: ffff88807d81c9c0
-RCX: ffff88807d805f20
-[Sat Feb  3 21:51:44 2024] RDX: ffff888003207768 RSI: 00000000000000a5
-RDI: ffff88807d81c9e8
-[Sat Feb  3 21:51:44 2024] RBP: ffff88807d805f20 R08: 0000000003ffeee2
-R09: 7fffffffffffffff
-[Sat Feb  3 21:51:44 2024] R10: ffffffff81a050c0 R11: 0000000000000082
-R12: dead000000000122
-[Sat Feb  3 21:51:44 2024] R13: 0000000000000000 R14: ffffffff81a050c8
-R15: 0000000000000000
-[Sat Feb  3 21:51:44 2024] FS:  0000000000000000(0000)
-GS:ffff88807d800000(0000) knlGS:0000000000000000
-[Sat Feb  3 21:51:44 2024] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[Sat Feb  3 21:51:44 2024] CR2: 00007fb98e5e95b0 CR3: 0000000001a12003
-CR4: 00000000001706b0
-[Sat Feb  3 21:51:44 2024] Call Trace:
-[Sat Feb  3 21:51:44 2024]  <IRQ>
-[Sat Feb  3 21:51:44 2024]  ? __warn+0x6c/0x130
-[Sat Feb  3 21:51:44 2024]  ? report_bug+0x136/0x1b0
-[Sat Feb  3 21:51:44 2024]  ? handle_bug+0x36/0x70
-[Sat Feb  3 21:51:44 2024]  ? exc_invalid_op+0x17/0x1a0
-[Sat Feb  3 21:51:44 2024]  ? asm_exc_invalid_op+0x16/0x20
-[Sat Feb  3 21:51:44 2024]  ? __run_timers.part.0+0x45d/0x570
-[Sat Feb  3 21:51:44 2024]  ? ktime_get+0x30/0x90
-[Sat Feb  3 21:51:44 2024]  ? clockevents_program_event+0x76/0xd0
-[Sat Feb  3 21:51:44 2024]  __do_softirq+0xb4/0x1e8
-[Sat Feb  3 21:51:44 2024]  irq_exit_rcu+0x5d/0x80
-[Sat Feb  3 21:51:44 2024]  sysvec_apic_timer_interrupt+0x66/0x80
-[Sat Feb  3 21:51:44 2024]  </IRQ>
-[Sat Feb  3 21:51:44 2024]  <TASK>
-[Sat Feb  3 21:51:44 2024]  asm_sysvec_apic_timer_interrupt+0x16/0x20
-[Sat Feb  3 21:51:44 2024] RIP: 0010:default_idle+0xb/0x10
-[Sat Feb  3 21:51:44 2024] Code: 07 76 e7 48 89 07 49 c7 c0 08 00 00
-00 4d 29 c8 4c 01 c7 4c 29 c2 e9 72 ff ff ff cc cc cc cc eb 07 0f 00
-2d 47 27 2b 00 fb f4 <fa> c3 0f 1f 00 65 48 8b 04 25 c0 10 02 00 f0 80
-48 02 20 48 8b 10
-[Sat Feb  3 21:51:44 2024] RSP: 0018:ffffffff81a03eb0 EFLAGS: 00000206
-[Sat Feb  3 21:51:44 2024] RAX: ffff88807d81fa80 RBX: 0000000000000000
-RCX: 4000000000000000
-[Sat Feb  3 21:51:44 2024] RDX: 0000000000000000 RSI: 0000000000000000
-RDI: 00000000000d8494
-[Sat Feb  3 21:51:44 2024] RBP: ffffffff81a08a40 R08: 0000000000000001
-R09: 0000000000000000
-[Sat Feb  3 21:51:44 2024] R10: 0000000000100000 R11: 000000000122662f
-R12: ffffffff81a08a40
-[Sat Feb  3 21:51:44 2024] R13: ffff88807ffda040 R14: ffffffff81a085e0
-R15: 0000000000013c70
-[Sat Feb  3 21:51:44 2024]  default_idle_call+0x1f/0x26
-[Sat Feb  3 21:51:44 2024]  do_idle+0x92/0xf0
-[Sat Feb  3 21:51:44 2024]  cpu_startup_entry+0x21/0x30
-[Sat Feb  3 21:51:44 2024]  rest_init+0x9e/0xa0
-[Sat Feb  3 21:51:44 2024]  arch_call_rest_init+0x5/0x20
-[Sat Feb  3 21:51:44 2024]  start_kernel+0x3f3/0x460
-[Sat Feb  3 21:51:44 2024]  x86_64_start_reservations+0x14/0x30
-[Sat Feb  3 21:51:44 2024]  x86_64_start_kernel+0xa9/0xc0
-[Sat Feb  3 21:51:44 2024]  secondary_startup_64_no_verify+0x174/0x17b
-[Sat Feb  3 21:51:44 2024]  </TASK>
-[Sat Feb  3 21:51:44 2024] ---[ end trace 0000000000000000 ]---
+These instructions are not boosted previously because there are reserved
+opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
+unmapped. As a result, kprobes attached to them requires two int3 traps
+as being non-boostable also prevents jump-optimization.
 
+Some simple tests on QEMU show that after boosting and jump-optimization
+a single kprobe on these instructions with an empty pre-handler runs 10x
+faster (~1000 cycles vs. ~100 cycles).
 
-reverting netfilter-ipset-fix-performance-regression-in-swap-o.patch
-fixes panic.
+Since these instructions are mostly ALU operations and do not touch
+special registers like RIP, let's boost them so that we get the
+performance benefit.
+
+Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
+---
+ arch/x86/kernel/kprobes/core.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 7a08d6a486c8..530f6d4b34f4 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -169,22 +169,33 @@ bool can_boost(struct insn *insn, void *addr)
+ 	case 0x62:		/* bound */
+ 	case 0x70 ... 0x7f:	/* Conditional jumps */
+ 	case 0x9a:		/* Call far */
+-	case 0xc0 ... 0xc1:	/* Grp2 */
+ 	case 0xcc ... 0xce:	/* software exceptions */
+-	case 0xd0 ... 0xd3:	/* Grp2 */
+ 	case 0xd6:		/* (UD) */
+ 	case 0xd8 ... 0xdf:	/* ESC */
+ 	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
+ 	case 0xe8 ... 0xe9:	/* near Call, JMP */
+ 	case 0xeb:		/* Short JMP */
+ 	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
+-	case 0xf6 ... 0xf7:	/* Grp3 */
+-	case 0xfe:		/* Grp4 */
+ 		/* ... are not boostable */
+ 		return false;
++	case 0xc0 ... 0xc1:	/* Grp2 */
++	case 0xd0 ... 0xd3:	/* Grp2 */
++		/*
++		 * AMD uses nnn == 110 as SHL/SAL, but Intel makes it reserved.
++		 */
++		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b110;
++	case 0xf6 ... 0xf7:	/* Grp3 */
++		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
++		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b001;
++	case 0xfe:		/* Grp4 */
++		/* Only INC and DEC are boostable */
++		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
++		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001;
+ 	case 0xff:		/* Grp5 */
+-		/* Only indirect jmp is boostable */
+-		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
++		/* Only INC, DEC, and indirect JMP are boostable */
++		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
++		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001 ||
++		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b100;
+ 	default:
+ 		return true;
+ 	}
+-- 
+2.43.0
+
