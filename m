@@ -1,114 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392D310A09
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 08:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C8E10971
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 08:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707034214; cv=none; b=WmWJjCAFiaT6MAz/18AP+qrTf4eNSm81khpV7K4k74/w+YddFB4Df2uIeM/RWyebiQWnB+1iVM9VG1wj5Z+cTAg4iNpnzwftXYArMghBCV6hJT4jZplmDAuuwt54xweA4NN9+A3u81EOXZEPTAM+EWH23D3e7CeMlPCdlOM6hBg=
+	t=1707034475; cv=none; b=u3dPnVmf2b3jLmR5AtKFrUHl9l7v31OADpXOS6b6CcV9Mo61YDSGsL1PvzaDrb6c1psxh7Odti9RpZKrY/f1RYNa2w78fZkxwycCa+1IJutOIjUdFjWejNMJK5rfPFn7zD1sP0oSupio+qdHRJlrH6ekToPk/stHCOr0qPh0v8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707034214; c=relaxed/simple;
-	bh=ETBf1FO+9nmgKQPZs8HdwPMyJlT1LQh/VW2kdPjj5ug=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YkJ14qwhQRm/jBqqiRoU9mTCEofa7jmQl9Ljht+AefTg4ldIgckg6iGhyvEFNlrNvZfIGJdZFnI9nntnUgtcXeqQs8i6E/+FFy322MrkBN/x98g5ghkrFYVfByvD1h/LesgJshoWILK6H+AoqwLBWepwYuouIjSYRHsgAuUVAfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7vEqYW4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707034475; c=relaxed/simple;
+	bh=rZoq6b5pkukaVG8jwnirhFvcRHGagrh51WlaI+SeVG4=;
+	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
+	 MIME-Version:Content-Type; b=HnJUwhIKC9pIIz4lZZYLe08odX/evpj+w3a0BLyMwKF9YbV4m2kMh/35wfP65I5q/odscZHeTPKLcEC5ZpXyzlWmG6x6dcY3EXXkfRRAGs3nzlbFCpe6RylsR+7uBXsp8OZayLvk4XXnZWtexJh3es0HXACGTqDQojkDkDFS3No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Ghkf/B8s; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7vEqYW4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16DE2C433C7;
-	Sun,  4 Feb 2024 08:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707034213;
-	bh=ETBf1FO+9nmgKQPZs8HdwPMyJlT1LQh/VW2kdPjj5ug=;
-	h=From:To:Cc:Subject:Date:From;
-	b=q7vEqYW4MpSQte4JFhgfQ4DF6zyFO/T8rMaCa/8PRlIuy6ReGDKRr+Vv5iGFbMBEu
-	 LrUthmt//6M5m1s+TOzT4nOZAe5ANbqubJA0+HtyYmGrNGNV8++IVH9WLVVn9VYZRE
-	 PrSQA8YBx9STdhHXbLrluKk06SB1WU+XXdrg3HlZonzHH/Gupc5Ng8qQOOwjkKFDGh
-	 vAj6CUcUcvL1ALzW53nuiFfVhpqwXOYLAvST2v/rXk6VTOD0mv0HoMQf0epE7Y+2cS
-	 /x6os5UP8yown/e26xArgGGYmvMd2xUcWThYjwjxmigVhRhFBokiDZzEFk5c9OEwWK
-	 4+YB0ReqAdvqw==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Greg Hackmann <ghackmann@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	x86@kernel.org
-Subject: [PATCH] platform: goldfish: move the separate 'default' propery for CONFIG_GOLDFISH
-Date: Sun,  4 Feb 2024 17:10:04 +0900
-Message-Id: <20240204081004.33871-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Ghkf/B8s"
+Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	by cmsmtp with ESMTPS
+	id WQbIrStNqpUFLWXcWrkAbU; Sun, 04 Feb 2024 08:12:56 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id WXcVrH6t7JBPLWXcWrqsR7; Sun, 04 Feb 2024 08:12:56 +0000
+X-Authority-Analysis: v=2.4 cv=GdG0nhXL c=1 sm=1 tr=0 ts=65bf4708
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=pHq7qycJMCxksKlQHHsrnLJ7JcU6CWtMAm4b1Bs4fcw=; b=Ghkf/B8snnPxdCMD5Ud/dyZ6E4
+	+gad47o6/FS0nUOEMd+krH30sRsP7Q1YjfkeCapOk9+epJtWc041g1Dcg0eZO9hKWr8Rsh9LlMyUU
+	SY0TsddWzLEjH7ve6q7McYV6X22dMpvLrlwGcO8HJuRcFf8gey+aWEujcHleYgCst4LT84o5+szFc
+	ikMmgnjSYT8r2SBjHd1j8gmxDoxP6FYo1Lg3QnR/1wtRG1s57xQfzLwniYWZQOwcC2OFF1KcWx0Xq
+	+H78x4KtAQTMi+tmalR53bVilkHPUuLZp/G1LJ+RI4oDMSu3MtU4VicCJHpesl4y2jD4FalQIqP+Y
+	pkryFV4w==;
+Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:38136 helo=[10.0.1.47])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1rWXcT-001HVN-1X;
+	Sun, 04 Feb 2024 01:12:53 -0700
+Subject: Re: [PATCH 6.7 000/355] 6.7.4-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
+References: <20240203174813.681845076@linuxfoundation.org>
+In-Reply-To: <20240203174813.681845076@linuxfoundation.org>
+From: Ron Economos <re@w6rz.net>
+Message-ID: <19dc547a-d718-351a-ae4d-4b91a239db18@w6rz.net>
+Date: Sun, 4 Feb 2024 00:12:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 98.207.139.8
+X-Source-L: No
+X-Exim-ID: 1rWXcT-001HVN-1X
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:38136
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 4
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFaWFr8F+ol2mHFrgWG2sqziHKSKuRZChro5vXYArh6JQtN3Bnf9StTINIpA9zAWdnNPg3kp+yf2cBzWyivIMOzVrhk/dfLGyM8pkAHjGHv2J6OPnrjG
+ R+vM7vN7g2EgifzHlW3ORw9qHwVp+u9lEjDLHpi4AE526VtkvqkXJX83Uo6Gqzv+UWGOmrzQiaMJ5P9dUDltO5xV8k5uLUWoxgI=
 
-Currently, there are two entries for CONFIG_GOLDFISH.
+On 2/3/24 9:53 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.7.4 release.
+> There are 355 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Mon, 05 Feb 2024 17:47:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.4-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-In arch/x86/Kconfig:
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-  config GOLDFISH
-          def_bool y
-          depends on X86_GOLDFISH
-
-In drivers/platform/goldfish/Kconfig:
-
-  menuconfig GOLDFISH
-          bool "Platform support for Goldfish virtual devices"
-          depends on HAS_IOMEM && HAS_DMA
-
-While Kconfig allows multiple entries, it generally leads to tricky
-code.
-
-Prior to commit bd2f348db503 ("goldfish: refactor goldfish platform
-configs"), CONFIG_GOLDFISH was an alias of CONFIG_X86_GOLDFISH.
-
-After the mentioned commit added the second entry with a user prompt,
-the former provides the 'default' property that is effective only when
-X86_GOLDFISH=y.
-
-Merge them tegether to clarify how it has worked in the past 8 years.
-
-Cc: Greg Hackmann <ghackmann@google.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- arch/x86/Kconfig                  | 4 ----
- drivers/platform/goldfish/Kconfig | 1 +
- 2 files changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5edec175b9bf..eb6c9f5b3be7 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -471,10 +471,6 @@ config X86_MPPARSE
- 	  For old smp systems that do not have proper acpi support. Newer systems
- 	  (esp with 64bit cpus) with acpi support, MADT and DSDT will override it
- 
--config GOLDFISH
--	def_bool y
--	depends on X86_GOLDFISH
--
- config X86_CPU_RESCTRL
- 	bool "x86 CPU resource control support"
- 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
-diff --git a/drivers/platform/goldfish/Kconfig b/drivers/platform/goldfish/Kconfig
-index f3d09b1631e3..03ca5bf19f98 100644
---- a/drivers/platform/goldfish/Kconfig
-+++ b/drivers/platform/goldfish/Kconfig
-@@ -2,6 +2,7 @@
- menuconfig GOLDFISH
- 	bool "Platform support for Goldfish virtual devices"
- 	depends on HAS_IOMEM && HAS_DMA
-+	default X86_GOLDFISH
- 	help
- 	  Say Y here to get to see options for the Goldfish virtual platform.
- 	  This option alone does not add any kernel code.
--- 
-2.40.1
+Tested-by: Ron Economos <re@w6rz.net>
 
