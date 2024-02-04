@@ -1,65 +1,74 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5088F72
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 07:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4ADFDDBB
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 07:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707032911; cv=none; b=uBla3lg/n5wfFy9MJ9e3oF2f/4CCidjkejKcL6SSHZ5Rh7avOkAgpaBqAbv+z1D4wZdPuaSOcs4NsM/QJcAk/Cat0xs3Rs4fUmOPcKoYIVlL/88rF2aUpeKPAntr/buY4sIUi9DEhM5TEYKAGf9dGmCeHCcGSrJISlYkPnxVDUI=
+	t=1707032980; cv=none; b=MQa8fG2y/ak76TzFPMrnc8/a23L7ncZSiiEyq4CrCOTIbYrFilXL2Foq9fd8FJAIw0qwS9hU4qFYabdbL9Fe22uf19FH4HoJM73VyacOrNq0IhQcZblnUeMxdB2RsOD1iUjkDTjORUFAikOXdHGEqXoooGqcQ0XZajoV1Io2T2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707032911; c=relaxed/simple;
-	bh=X8FBMStfWNIAGr/K/Lw6nj8iJgQ51dBuJztdUDIjqMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pkA1v+pw08bJB1a1SyHi9SDnp3NutdcT3b/WNFDhB843E9+kNGUtqpCodPjx+I7B3gW+rD4XoyFakyBmXV4c0UKrXthG6j+sbHAlT1f5tJjzktEsUDW9EqgC+d3JmYEynyJ2dDudYqf9oNL2oIIU8nATAIBQT9BPAvkiQV0mKL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EI/tZZiu; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EI/tZZiu"
-Message-ID: <a749cb06-9495-40fc-9192-b019b48eca92@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707032906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eNLMD4Rtcx6eRP5bHEJyzsY+D9XLppdCBqZ5byzRpFE=;
-	b=EI/tZZiuDOweJFlYW4diPs4pBQ63y2hUk42vGWef9+eHlyaClru6292LYvy/Q6sHaPKV0t
-	3+jgFeRQmzKm2lS1ZieNP4H99sgmI46hJM0tEUC6rGdWnHGVt2DH4fO0EcAj98gvSlzWFU
-	WNmnWcuAEuQSleIKwuO0hcHdPurq+Ig=
-Date: Sun, 4 Feb 2024 15:48:12 +0800
+	s=arc-20240116; t=1707032980; c=relaxed/simple;
+	bh=rXYFvyH79l7+Yc0s96NnJNKgXE+8nT+G+a5Np9FZCgk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K3jGuOaXnCHvnqBqCftgm2dCLvjI7dEvxQ1XwsekQpqU0b1sbR4p9kem5SpR4OpYsGlvfzbyuMhDHV9iVxZRjlgWM+b4A0c4ankpx8Dy1wzmHIaNOP81/2Fo3XlLHQItiVGKY4lJsY/QvB2vclOo7b+j6xUxG9O3G/tFp21t5zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TSM7j5MRszsWsW;
+	Sun,  4 Feb 2024 15:48:17 +0800 (CST)
+Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
+	by mail.maildlp.com (Postfix) with ESMTPS id DA800140384;
+	Sun,  4 Feb 2024 15:49:34 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 4 Feb 2024 15:49:34 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <jonathan.cameron@huawei.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<hejunhao3@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <fanghao11@huawei.com>
+Subject: [PATCH 0/7] Several updates for HiSilicon PCIe PMU driver
+Date: Sun, 4 Feb 2024 15:45:20 +0800
+Message-ID: <20240204074527.47110-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] hugetlb: fix CONFIG_PADATA dependency for non-SMP
- system
-Content-Language: en-US
-To: Muchun Song <muchun.song@linux.dev>
-Cc: Gang Li <ligang.bdlg@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Randy Dunlap <rdunlap@infradead.org>,
- kernel test robot <lkp@intel.com>
-References: <20240204072525.1986626-1-gang.li@linux.dev>
- <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Gang Li <gang.li@linux.dev>
-In-Reply-To: <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
 
-On 2024/2/4 15:44, Muchun Song wrote:
-> I don't think it is a clear way to fix this. If someone want to
-> use PADATA in a non-SMP system, he should be carefully to handle
-> the non-SMP case himself. I think the better way is to make PADATA
-> handle the non-SMP case, I think it should be easy for it, which
-> could just call ->thread_fn() many times instead of creating many
-> threads in the non-SMP case.
-> 
-> Thanks.
->
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-Sounds good, I'll take a look at padata and send a new patch.
+This series mainly fix and optimize the several usage of the driver:
+- Add more events to complement the TLP bandwidth counting
+- Fix the wrong counting on using the event group
+- Properly check the target filter to avoid invalid filter value
+- Optimize the handling of related events which are not in an event group
+- Update the docs
+
+Junhao He (4):
+  drivers/perf: hisi_pcie: Check the target filter properly
+  drivers/perf: hisi_pcie: Relax the check on related events
+  drivers/perf: hisi_pcie: Merge find_related_event() and
+    get_event_idx()
+  docs: perf: Update usage for target filter of hisi-pcie-pmu
+
+Yicong Yang (3):
+  drivers/perf: hisi_pcie: Introduce hisi_pcie_pmu_get_filter()
+  drivers/perf: hisi_pcie: Fix incorrect counting under metric mode
+  drivers/perf: hisi_pcie: Add more events for counting TLP bandwidth
+
+ .../admin-guide/perf/hisi-pcie-pmu.rst        | 31 ++++--
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        | 99 ++++++++++---------
+ 2 files changed, 74 insertions(+), 56 deletions(-)
+
+-- 
+2.24.0
+
