@@ -1,114 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FB410F5;
-	Sun,  4 Feb 2024 01:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C7B10F1;
+	Sun,  4 Feb 2024 01:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009035; cv=none; b=thhyWNVJ5bEoCOfYrjGgc5KJEbZORNsQvQSuzJHNvo+yW51w+/HgdXWhQ++W4Wv0Vz4N+sSolBSfqGbKVnGXjOmjsupnDDMdT6Fv0cWXh+lnjTcmHlwMEc3N6erdLquki3GszG6CQzBKBIxJchfNt7CfKefJwc5mC+ma3yLY/z0=
+	t=1707009409; cv=none; b=ngTch6DKx//eJQcwFGVeNUKQ+tcmrqMlmREJ4C5SIOenOHt4CZUgGp185oB5T9ZrJbUx4G8rfarAIyesRYLCnrvXR184udkFLLIweDRI32x2ZZQffr+ja3aDc0ZACKk2fgbp8fj+1RQjZ3rEStGVXeVr6RhP/5cn/JY6nxKB0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707009035; c=relaxed/simple;
-	bh=WyIMQvoDbOUygrCXL4tcOl6XsrIf1Y+KcQ21LH218W8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tcO/fKDvGALM652aTuwx7KCm2tJufvzuEulzDx0q68SO4GJ/bi+mfs361C1Y8dQFhdShki4ZDmWjaEDg0AcmiLbVC/9drc5Tazph6dbuUGFfrwFKFS6OwNSNJRX83VvGAUV3knw6jLZZ9nWQDbc1187Obq2MvqFTdGG5MV70XCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KHgEuPjE; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KHgEuPjE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707009033; x=1738545033;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WyIMQvoDbOUygrCXL4tcOl6XsrIf1Y+KcQ21LH218W8=;
-  b=KHgEuPjE4OL20NWLhTNA8kyYe1wKqPV5wW2JGbIMPKcxzgpn6Rx77OmV
-   COML4e1F+pe++ZF6jyNYBFef2TXrKUtKUQEDfRabIWKF4QEqdOGMx5axC
-   bK76fxQW2jWbh/LndzX+diWX5VssqMSWi6LvPceMUuWuKnw2ML95bY2hv
-   qWxqjOYzZjUa2lqoIqfqU1opCCE8bF7kqYhFe1NlJLEBOWusx8hR2AZ1f
-   LV2TBo+wi8Fs6v6rlIZ2D9b1y57hJUk3Ern+AXjwq0pVvNBQTxc7bQzoD
-   OoUCjKEjdiPcdZ/WD1QhYrYOZ0SGDF5A/w3+kq9DwVJch+LQ6PMw0JLJQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="11718335"
-X-IronPort-AV: E=Sophos;i="6.05,241,1701158400"; 
-   d="scan'208";a="11718335"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 17:10:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,241,1701158400"; 
-   d="scan'208";a="715429"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 03 Feb 2024 17:10:30 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rWR1Q-0005pK-1O;
-	Sun, 04 Feb 2024 01:10:26 +0000
-Date: Sun, 4 Feb 2024 09:09:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>,
-	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 03/16] misc: fastrpc: Add static PD restart support
-Message-ID: <202402040834.qMpd4i4O-lkp@intel.com>
-References: <20240202064039.15505-4-quic_ekangupt@quicinc.com>
+	s=arc-20240116; t=1707009409; c=relaxed/simple;
+	bh=kXAxuf/NRu62ybdEKHkf0EJhPGPJTi5CpcwG4gK4aNs=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PsGZRdX9x9etZDKVdJ9R+wsMXeVqMU1/4w3dGo8j2cpNuxruIayCztBJDA/EMYRTMUCjGqgZ8wQ4vNc3APMDR+2FRjo9z8aCgy5E07E+obs8O20+qmGZfoynXfpl/IiT0wijVqpYN/LUEmert8aJN0/bfCYcVEBuRX0visDP4iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TSBPp0JJlzvRdm;
+	Sun,  4 Feb 2024 09:14:54 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id A934B140258;
+	Sun,  4 Feb 2024 09:16:37 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 4 Feb 2024 09:16:36 +0800
+Subject: Re: [RFC PATCH] kprobes: Use synchronize_rcu_tasks_rude in
+ kprobe_optimizer
+To: <paulmck@kernel.org>
+CC: Chen Zhongjin <chenzhongjin@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <naveen.n.rao@linux.ibm.com>,
+	<anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
+	<mhiramat@kernel.org>, <akpm@linux-foundation.org>, <tglx@linutronix.de>,
+	<peterz@infradead.org>, <pmladek@suse.com>, <dianders@chromium.org>,
+	<npiggin@gmail.com>, <mpe@ellerman.id.au>, <jkl820.git@gmail.com>,
+	<juerg.haefliger@canonical.com>, <rick.p.edgecombe@intel.com>,
+	<eric.devolder@oracle.com>, <mic@digikod.net>
+References: <20240102034024.256326-1-chenzhongjin@huawei.com>
+ <29eaed4d-c4e5-cf9b-113b-da146b719820@huawei.com>
+ <d7cb96d8-86e1-423d-a135-46b4e472fe9e@paulmck-laptop>
+ <d7dfe177-6bfb-63c2-9be5-6ad25c8c243e@huawei.com>
+ <d970cda7-bf17-49c5-85b9-7596beb3690b@paulmck-laptop>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <bbeebd04-f8c2-866b-0016-79778c64cab8@huawei.com>
+Date: Sun, 4 Feb 2024 09:16:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202064039.15505-4-quic_ekangupt@quicinc.com>
+In-Reply-To: <d970cda7-bf17-49c5-85b9-7596beb3690b@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-Hi Ekansh,
+Hello,
 
-kernel test robot noticed the following build errors:
+On 2024/2/4 6:00, Paul E. McKenney wrote:
+> On Mon, Jan 29, 2024 at 08:58:10AM +0800, Yang Jihong wrote:
+>> Hello,
+>>
+>> On 2024/1/28 3:22, Paul E. McKenney wrote:
+>>> On Tue, Jan 09, 2024 at 07:28:29PM +0800, Yang Jihong wrote:
+>>>> Hello,
+>>>>
+>>>> PING.
+>>>>
+>>>> I had a similar problem. Is this solution feasible?
+>>>
+>>> Sadly, no.
+>>>
+>>> It fails on CONFIG_PREEMPT=y kernels because synchronize_rcu_tasks_rude()
+>>> will not wait on tasks that have been preempted while executing in
+>>> a trampoline.
+>>>
+>>> But could you please try out the patch shown at the end of this email?
+>>
+>> Thanks for the patch, yes, I've tested and it solves the problem.
+> 
+> Very good, and thank you for testing it!
+> 
+> May I apply your Tested-by to the commit to record your efforts for
+> posterity?
+> 
+Sure absolutely.
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.8-rc2 next-20240202]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Tested-by: Yang Jihong <yangjihong1@huawei.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ekansh-Gupta/misc-fastrpc-Redesign-remote-heap-management/20240202-144921
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20240202064039.15505-4-quic_ekangupt%40quicinc.com
-patch subject: [PATCH v1 03/16] misc: fastrpc: Add static PD restart support
-config: arm64-randconfig-r053-20240203 (https://download.01.org/0day-ci/archive/20240204/202402040834.qMpd4i4O-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240204/202402040834.qMpd4i4O-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402040834.qMpd4i4O-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: pdr_handle_alloc
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_rpmsg_probe) in archive vmlinux.a
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_rpmsg_probe) in archive vmlinux.a
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_setup_service_locator) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: pdr_add_lookup
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_rpmsg_probe) in archive vmlinux.a
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_rpmsg_probe) in archive vmlinux.a
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_setup_service_locator) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: pdr_handle_release
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_rpmsg_remove) in archive vmlinux.a
-   >>> referenced by fastrpc.c
-   >>>               drivers/misc/fastrpc.o:(fastrpc_rpmsg_remove) in archive vmlinux.a
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Yang
