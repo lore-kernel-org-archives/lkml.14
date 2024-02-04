@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F20138E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56D51C3D;
 	Sun,  4 Feb 2024 01:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009485; cv=none; b=lQk0ENDVnhfdSD1eHW8kl2EhWF+qvRKrJotqySWs598qOS7dfAYhn4TcZ7IDHAewWGZo92zDDrVizsQRjLv/WkT27LOsEolI627saoEBpLcc7suJbxMenK8vAnroBFyAfqK3p5pUDLK4oEBmj1qfNrnoh0cr80Tr9v+D69oLnHw=
+	t=1707009485; cv=none; b=sMixlXe2yy6/Xc+43/lYndK0qyLLttv9e9ty3l/JFj+6E5YenBm3EvQ9dMaeB/rxXoakO6HQ14x/eIrzQFPX3EMzHIUWGA+l0B62n73FZIXMJMdzJ2gMjLUxGSyLif+eEWs2pu7hg+WKOdZFtiVca6ZtbwKGAClyL4OMuaZA3nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707009485; c=relaxed/simple;
-	bh=ggzO8piDWd729+n8HwEUay+QGmmX3pyBkc192DI4teg=;
+	bh=457Nek55iCxNWFMYlAJ4La72v4encx2620jX8BgfCwU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=d0uv/Z7th/C39yWIWSuVDdhJ15MCtX7AYkX2FiqRY+AgGD27TppyEcpBEbhW9AeUFrotCUgZSPQkJSHWGPIVzBy3w6ZkN84oB2ikiPQ3XG4xzf1ZQfiEbCwTa6CMxQEtPZaJXBItwoxQafR27d9YfpMxVJp0L+qhNLXMUZpr6GM=
+	 Content-Type; b=ppv2WxcK3l39+RjEeJYk6HTCReSJ5sUbPqokwPR8i5c1FCyYMAqvUyRCklXH+sFiYoXJufNMi/yVsgtDnwcdPKe88mBuxwISVd1Q2xaLew5pSSkBjLjI3KB3mOvBOuKJExuKsoijWcy6uBopBf6BSgaS9KgJsfc9kjAVXS9FO0o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ABE8C43609;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A43C4167E;
 	Sun,  4 Feb 2024 01:18:05 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rWR9P-00000006OmP-2pcL;
-	Sat, 03 Feb 2024 20:18:27 -0500
-Message-ID: <20240204011827.535604040@goodmis.org>
+	id 1rWR9Q-00000006OnN-00lz;
+	Sat, 03 Feb 2024 20:18:28 -0500
+Message-ID: <20240204011827.860926069@goodmis.org>
 User-Agent: quilt/0.67
-Date: Sat, 03 Feb 2024 20:16:19 -0500
+Date: Sat, 03 Feb 2024 20:16:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -33,8 +33,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Al Viro <viro@zeniv.linux.org.uk>,
  Christian Brauner <brauner@kernel.org>
-Subject: [v6.7][PATCH 04/23] eventfs: Have eventfs_iterate() stop immediately if ei->is_freed is
- set
+Subject: [v6.7][PATCH 06/23] eventfs: Read ei->entries before ei->children in eventfs_iterate()
 References: <20240204011615.703023949@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,12 +45,13 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-If ei->is_freed is set in eventfs_iterate(), it means that the directory
-that is being iterated on is in the process of being freed. Just exit the
-loop immediately when that is ever detected, and separate out the return
-of the entry->callback() from ei->is_freed.
+In order to apply a shortcut to skip over the current ctx->pos
+immediately, by using the ei->entries array, the reading of that array
+should be first. Moving the array reading before the linked list reading
+will make the shortcut change diff nicer to read.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240104220048.016261289@goodmis.org
+Link: https://lore.kernel.org/all/CAHk-=wiKwDUDv3+jCsv-uacDcHDVTYsXtBR9=6sGM5mqX+DhOg@mail.gmail.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240104220048.333115095@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -63,31 +63,97 @@ Cc: Christian Brauner <brauner@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ fs/tracefs/event_inode.c | 46 ++++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 72912b5f9a90..0aca6910efb3 100644
+index c73fb1f7ddbc..a1934e0eea3b 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -788,11 +788,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		name = entry->name;
+@@ -752,8 +752,8 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	 * Need to create the dentries and inodes to have a consistent
+ 	 * inode number.
+ 	 */
+-	list_for_each_entry_srcu(ei_child, &ei->children, list,
+-				 srcu_read_lock_held(&eventfs_srcu)) {
++	for (i = 0; i < ei->nr_entries; i++) {
++		void *cdata = ei->data;
  
- 		mutex_lock(&eventfs_mutex);
--		/* If ei->is_freed, then the event itself may be too */
--		if (!ei->is_freed)
--			r = entry->callback(name, &mode, &cdata, &fops);
--		else
--			r = -1;
+ 		if (c > 0) {
+ 			c--;
+@@ -762,23 +762,32 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ctx->pos++;
+ 
+-		if (ei_child->is_freed)
+-			continue;
++		entry = &ei->entries[i];
++		name = entry->name;
+ 
+-		name = ei_child->name;
++		mutex_lock(&eventfs_mutex);
 +		/* If ei->is_freed then just bail here, nothing more to do */
 +		if (ei->is_freed) {
 +			mutex_unlock(&eventfs_mutex);
-+			goto out;
++			goto out_dec;
 +		}
 +		r = entry->callback(name, &mode, &cdata, &fops);
- 		mutex_unlock(&eventfs_mutex);
- 		if (r <= 0)
++		mutex_unlock(&eventfs_mutex);
++		if (r <= 0)
++			continue;
+ 
+-		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
++		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
+ 		if (!dentry)
+ 			goto out_dec;
+ 		ino = dentry->d_inode->i_ino;
+ 		dput(dentry);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
+ 			goto out_dec;
+ 	}
+ 
+-	for (i = 0; i < ei->nr_entries; i++) {
+-		void *cdata = ei->data;
++	list_for_each_entry_srcu(ei_child, &ei->children, list,
++				 srcu_read_lock_held(&eventfs_srcu)) {
+ 
+ 		if (c > 0) {
+ 			c--;
+@@ -787,27 +796,18 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ctx->pos++;
+ 
+-		entry = &ei->entries[i];
+-		name = entry->name;
+-
+-		mutex_lock(&eventfs_mutex);
+-		/* If ei->is_freed then just bail here, nothing more to do */
+-		if (ei->is_freed) {
+-			mutex_unlock(&eventfs_mutex);
+-			goto out_dec;
+-		}
+-		r = entry->callback(name, &mode, &cdata, &fops);
+-		mutex_unlock(&eventfs_mutex);
+-		if (r <= 0)
++		if (ei_child->is_freed)
  			continue;
+ 
+-		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++		name = ei_child->name;
++
++		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
+ 		if (!dentry)
+ 			goto out_dec;
+ 		ino = dentry->d_inode->i_ino;
+ 		dput(dentry);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+ 			goto out_dec;
+ 	}
+ 	ret = 1;
 -- 
 2.43.0
 
