@@ -1,99 +1,89 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CD679D8;
-	Sun,  4 Feb 2024 23:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF591BE5D
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 23:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707088608; cv=none; b=gS/vStz3u9F8NClnaynFVdeSon1008L4IntG5hezjNQzNPP2vRHcs+wvdV5ehiFBhstygJXLB1Ha4NNkbq358vuMhh3qUbnaC8Q3z0uYzqhxD+BNhxwcvoz7qJe5DdLGxN6uNjajYUBY3tULgELhUrLYnk4CEzc9wFh9M9dr7pI=
+	t=1707089257; cv=none; b=JQEeFZXOU6t1G7ceKrp8hsh+y3Kd//FCOL703PgIWMwbonMEY9X+xonvgsY371f7L/AxHWO3d+9t2OH04+gJlHncwOmeZWDO24fUAdtN/G64iuDcRWZL/GBWt2Y30RoRUcG0HoWRPzzXIpTfb0fPkb1nB/hisXf9qGpJt32qdvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707088608; c=relaxed/simple;
-	bh=C9z1oCM0aoZrRkDJxd7jDlrFsjg7dFGVjJSKnwS/2Uw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=KwnJrfDxd9JxYNaKomA/Y8aH2rJ9J8LIUSHQE03yG5B2LjcCYQS7Eu49SeDW/+Vu0PEhYfopjNnmRQ+kFqEQk9FvGstjQXcDofWO/W32i7k7wL/H16cf5O5iJQwpIdmS7Bg4BmozlQkFruRwqqxZBN1hBviiLP0p1uhVJE0bikk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=beGsTce/; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707089257; c=relaxed/simple;
+	bh=MAjIol0GMAbNG1XtptnpLn4hnzS07i0B7wM2K4Nfk5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZR6r7JdfiiAEWwYEtwLyER3/5IvHVmb9S0fQKovpNyrqoaU0vdAxOKY+OULM5pvQTWl6nel/J+/3VawQgvfbPMWdP5jaiL/8a/BnmkNxgaUfUzCV3cWITD4Jo/3Wz2KLWbXWWYpxQlw837VzDug+p3yzBXeUGzFCZTi68RSJRkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jBqqpKB8; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beGsTce/"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d09bdddfc9so13957761fa.2;
-        Sun, 04 Feb 2024 15:16:46 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jBqqpKB8"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-363b361ba6dso7945235ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 15:27:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707088605; x=1707693405; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y5VGuwU7sRb6X3OaRcDA234b6ozpGj7s2IWLXVXNdas=;
-        b=beGsTce/qlJnfFzNAt4j/VwFqIwKn1pGe//e3OpWzY9uNmYkUzWH940T4O/C6K5fE2
-         TUL0udvDcb2w93NTuB6ofsiw1mj8y4w9M1KzjeXpoaUvb1pKYmYGM6Nm9eKcGz5xmqEq
-         dDqyWAlkyyGct8rnE0rCafe3c3uBMod2CvfeC4dgDIGjI7q1w2cjmngedzmxTAPuRf17
-         oANk64Mj4Ig0hfIfGOi977d5DYgmGnBNZZLGfyNiku1u+6g3c4ehy+yERV0d0v7uCowe
-         jKNsmAvq1gELOH64XV/erQvdnTdbiv+o9eCTTyHRKcSU7u7ORqs37vXpp+/eDLTQq2D8
-         EVdg==
+        d=chromium.org; s=google; t=1707089255; x=1707694055; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2B0ik/kzubl2ohroAMvpSs7bJe3x1W1deMGszOUAAz0=;
+        b=jBqqpKB8cIVfJqTX3DyOvjd5BBd/3+HF9SLSTZ9CwyqFdvNU2/eLNaSbTyujMQhWEM
+         ob0xcsP8yjpXYwNeuRsbUV5+bQfrhc2p23Na9gxRbETSXwL+q0VvA9Ik9VT0D5H0intA
+         ca4brRwKdD3OxOCETDm2e4CPSFteP2nqMnnYk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707088605; x=1707693405;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Y5VGuwU7sRb6X3OaRcDA234b6ozpGj7s2IWLXVXNdas=;
-        b=LMsGt68Ceygt44euu5/QByTVu14kDl7xlWABlHa0g+GmUBSkqOKURjYFNziAp6GXj4
-         easO0SHbclWR3kIX5kJFsaV11EccUELcgBscIJ14sGoIun8Ab7q5jiv46J6bq8jcVVjR
-         Q+QfqL0SntxedtMXCFhYTWFKHsEFYkcRote0Ht/PZgnNlPbfOT6I7RsE05qYZDFXYrnF
-         AmyS1x7zkRzMxGYrBTaOkeGsIRBdWPaswKW0Q9EjuGAc99upAUsGUY4FYRilhEkm1CIn
-         cLkgHYXZH0TVCMblXVoRie2WjVJZxI05+lSxMb9Pioe1STVZ3atDywjjxZMnbF47nFdA
-         GUnw==
-X-Gm-Message-State: AOJu0Yz65Ny0glNcKdqSdAdDx/46DKCjHWCd4sc1URqfdsZrTn7q9Mx6
-	DSiacaNNqVbNgR6Bu+kCwdrl8Ay/WPfbs6yhkG8J429CXdhS2LCafF4jZ/Xd
-X-Google-Smtp-Source: AGHT+IGuXT9bYE9gMIH7LN//FJs3Z0wankWaxPRTI9OA2HPcm1HgjgSW6SbdfyCYKAsb0V5zFMcl9Q==
-X-Received: by 2002:a05:6512:481e:b0:511:495b:f83d with SMTP id eo30-20020a056512481e00b00511495bf83dmr2311389lfb.38.1707088604840;
-        Sun, 04 Feb 2024 15:16:44 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWy4xJNlOKG8NbSFb7Ic0yPYvabi8Skm5y+9UnF0KSKE0YUXDNHcSkgSNIx5u5LMJlr8MiocdZ095wRYCBsd8p7C2nG6iK+wQUrsM+dtWU/UkP/szJN0P7UF7ICBJ36ZTa8e24kY5EpnXoW5OiU1A2jhBVms1wj0I2nLmXt2nH85BX58zvAZIzrwWt/k1OTpVBIWwOMxgxDjoxvP3DUBV4Q2kHEB4wt/Ei1rmEP4MZVvgGBNaiWzcH/H4zvBLa1//oFx6DvTrgiOVYx+dge69iHpHUE7xjP8e0fMY+wWpSDneaI83HJWGbDZj0=
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id vb9-20020a170907d04900b00a36814670cbsm3624216ejc.62.2024.02.04.15.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Feb 2024 15:16:44 -0800 (PST)
-Message-ID: <5551846d-62cd-4b72-94f4-07541e726c37@gmail.com>
-Date: Mon, 5 Feb 2024 00:16:43 +0100
+        d=1e100.net; s=20230601; t=1707089255; x=1707694055;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2B0ik/kzubl2ohroAMvpSs7bJe3x1W1deMGszOUAAz0=;
+        b=Hjf4ZxMa4sLomAiXfydwdXZ+Awr6qEKQj3FvMg2QgfzRh9B8+IC0BrrUooBD8rc+p5
+         huzq+uHZR10BIoCBC6C4VcWrMrVGkXWzUuRS2ih3B9mw/1IUMvxRlgyqCaxQ9H4hY7hQ
+         71Vd6nUDwc1LsJliOkJOP0Vs+5FJuBr4GGBD3ABnAgNbPOs7t8L/8XiLHs7z9RaJbojk
+         Jai95fVUpvj9Qid/+NhswNZ/X8IMFv9x0Isy9Hwzohe7l9pzkZ5YsKlDo9Sy5sXXW/D9
+         jo15Ic23bWDnV6Job45Jy6ComD5eXP4/hYj5hKk5fvnNFmEvIGphyYaBHQ72fCT4cfem
+         LNPg==
+X-Gm-Message-State: AOJu0YycQifCkpsV5OjCqquFvMXzmwo4w4My2mgxSegSVOxhA/LFa5WB
+	pfC6tW5qxIQBgx+GRQiz0kv0bsvHOPXt7AseEB1h6tNKl8C/WHXouJSz5TsfWw==
+X-Google-Smtp-Source: AGHT+IELS2HMKrbocabiUC9EdzHbrbzqRol0OG6EbLJH83pJP4kqomPSMPylSJJzAnmfnbyw5cSlZQ==
+X-Received: by 2002:a05:6e02:2185:b0:363:8919:814d with SMTP id j5-20020a056e02218500b003638919814dmr18898992ila.22.1707089254874;
+        Sun, 04 Feb 2024 15:27:34 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVNxPgkoSegRvKBH/4yZ3pchmWlBdXmDwQ4EzB5pgM9U4b1ZoYZYxPITBku/U7SW/5mDtdxmD0ua75P3dqb7kyzYQEwKXk/fqy38qsfw58wbPtrzh0dXaREQFUpEMH/8tFCM03h1rNuWYOriXvy6RJRjsDmI5kooK19/aO/TC09kKfaHNDQM3eYDocMtofXFJjgVvetCdJd93etxAALMb5j0FGg11lmA/dyZPcVXovwjPZXXnn/ohU=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j32-20020a632320000000b005cd821a01d4sm5690137pgj.28.2024.02.04.15.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 15:27:33 -0800 (PST)
+Date: Sun, 4 Feb 2024 15:27:33 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Jan Bujak <j@exia.io>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
+Message-ID: <202402041526.23118AD@keescook>
+References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
+ <874jf5co8g.fsf@email.froward.int.ebiederm.org>
+ <202401221226.DAFA58B78@keescook>
+ <87v87laxrh.fsf@email.froward.int.ebiederm.org>
+ <202401221339.85DBD3931@keescook>
+ <95eae92a-ecad-4e0e-b381-5835f370a9e7@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v1] arm64: dts: rockchip: rk3328: Drop interrupts property
- from pwm-rockchip nodes
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95eae92a-ecad-4e0e-b381-5835f370a9e7@leemhuis.info>
 
-The binding doesn't define interrupts and adding such a definition was
-refused because it's unclear how they should ever be used and the
-relevant registers are outside the PWM range. So drop them fixing
-several dtbs_check warnings.
+On Thu, Feb 01, 2024 at 11:47:02AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+> 
+> Eric, what's the status wrt. to this regression? Things from here look
+> stalled, but I might be missing something.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+If Eric doesn't beat me to it, I'm hoping to look at this more this
+coming week.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index a73234b11ff1..b6f045069ee2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -488,7 +488,6 @@ pwm2: pwm@ff1b0020 {
- 	pwm3: pwm@ff1b0030 {
- 		compatible = "rockchip,rk3328-pwm";
- 		reg = <0x0 0xff1b0030 0x0 0x10>;
--		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru SCLK_PWM>, <&cru PCLK_PWM>;
- 		clock-names = "pwm", "pclk";
- 		pinctrl-names = "default";
---
-2.39.2
-
+-- 
+Kees Cook
