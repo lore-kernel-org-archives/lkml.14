@@ -1,33 +1,33 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5622BA57
-	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 07:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5088F72
+	for <linux-kernel@vger.kernel.org>; Sun,  4 Feb 2024 07:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707032680; cv=none; b=bilZXss3ENdGRGNWsEWrrg+FNlZ71hweFi7YI85HvoERamlLkm7ZQr3+ToBFND5WD/1QiNp/gkO5oug1kM0KjCj7cm/2nXwdTXiRxJPbJf4sG8kFdvsYczcIwdIDj+Idvi3xc8KZ7jcjV0c9Bu6YWga/WOqCm5ujRU48gd67t1w=
+	t=1707032911; cv=none; b=uBla3lg/n5wfFy9MJ9e3oF2f/4CCidjkejKcL6SSHZ5Rh7avOkAgpaBqAbv+z1D4wZdPuaSOcs4NsM/QJcAk/Cat0xs3Rs4fUmOPcKoYIVlL/88rF2aUpeKPAntr/buY4sIUi9DEhM5TEYKAGf9dGmCeHCcGSrJISlYkPnxVDUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707032680; c=relaxed/simple;
-	bh=KcUQS9KaviPrUiGpEwBjuSuhOXzyV6fa/aehuoXcrpQ=;
+	s=arc-20240116; t=1707032911; c=relaxed/simple;
+	bh=X8FBMStfWNIAGr/K/Lw6nj8iJgQ51dBuJztdUDIjqMs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n4IHW8kwA6zsQtIAUGr0xNc6r3j3zW1KRl2N+/i/+hWjAoWKjLhVPVKf//a4MFruC52UCoJy5GiDOhXwXSuHCSv8+JXCE55Cd4iPzux6c5mTnqiyCUvQUGf3C8WZPa4FDIntuqRssGl3LNpFnk6rbVUwyORyTRfCAdye74lQEDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kXzeiZnf; arc=none smtp.client-ip=95.215.58.171
+	 In-Reply-To:Content-Type; b=pkA1v+pw08bJB1a1SyHi9SDnp3NutdcT3b/WNFDhB843E9+kNGUtqpCodPjx+I7B3gW+rD4XoyFakyBmXV4c0UKrXthG6j+sbHAlT1f5tJjzktEsUDW9EqgC+d3JmYEynyJ2dDudYqf9oNL2oIIU8nATAIBQT9BPAvkiQV0mKL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EI/tZZiu; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kXzeiZnf"
-Message-ID: <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EI/tZZiu"
+Message-ID: <a749cb06-9495-40fc-9192-b019b48eca92@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707032675;
+	t=1707032906;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PYmkSyAiI8ZNFZt9h2B5b9tnwLmATn/wLxZOMDo8mKg=;
-	b=kXzeiZnfqHf+rROkc2BSnppq0lJy1pPlYyZFAiXuLA07iCziWLDn0VEFbrUa74a8OrFi8T
-	ZF9xku65yVr5aUqN5rs69O2TpU50pH5zjuRu1SJ70GKaEFMYMfcsPZDIK4y2kh/9W52kgq
-	/cInjIwCZVYdR3kTSIkdujIh7lf8HVI=
-Date: Sun, 4 Feb 2024 15:44:26 +0800
+	bh=eNLMD4Rtcx6eRP5bHEJyzsY+D9XLppdCBqZ5byzRpFE=;
+	b=EI/tZZiuDOweJFlYW4diPs4pBQ63y2hUk42vGWef9+eHlyaClru6292LYvy/Q6sHaPKV0t
+	3+jgFeRQmzKm2lS1ZieNP4H99sgmI46hJM0tEUC6rGdWnHGVt2DH4fO0EcAj98gvSlzWFU
+	WNmnWcuAEuQSleIKwuO0hcHdPurq+Ig=
+Date: Sun, 4 Feb 2024 15:48:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,112 +36,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 1/1] hugetlb: fix CONFIG_PADATA dependency for non-SMP
  system
-To: Gang Li <gang.li@linux.dev>
+Content-Language: en-US
+To: Muchun Song <muchun.song@linux.dev>
 Cc: Gang Li <ligang.bdlg@bytedance.com>,
  Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
  linux-mm@kvack.org, Randy Dunlap <rdunlap@infradead.org>,
  kernel test robot <lkp@intel.com>
 References: <20240204072525.1986626-1-gang.li@linux.dev>
+ <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20240204072525.1986626-1-gang.li@linux.dev>
+From: Gang Li <gang.li@linux.dev>
+In-Reply-To: <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
-
-
-On 2024/2/4 15:25, Gang Li wrote:
-> Randy Dunlap and kernel test robot reported a warning:
+On 2024/2/4 15:44, Muchun Song wrote:
+> I don't think it is a clear way to fix this. If someone want to
+> use PADATA in a non-SMP system, he should be carefully to handle
+> the non-SMP case himself. I think the better way is to make PADATA
+> handle the non-SMP case, I think it should be easy for it, which
+> could just call ->thread_fn() many times instead of creating many
+> threads in the non-SMP case.
+> 
+> Thanks.
 >
-> ```
-> WARNING: unmet direct dependencies detected for PADATA
->    Depends on [n]: SMP [=n]
->    Selected by [y]:
->    - HUGETLBFS [=y] && (X86 [=y] || SPARC64 || ARCH_SUPPORTS_HUGETLBFS [=n] || BROKEN [=n]) && (SYSFS [=y] || SYSCTL [=n])
-> ```
->
-> hugetlb parallelization depends on PADATA, and PADATA depends on SMP, so
-> when the SMP config is disabled, the dependency of hugetlb on padata
-> should be downgraded to single thread.
->
-> Fixes: f2f635264b98 ("hugetlb: have CONFIG_HUGETLBFS select CONFIG_PADATA")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Closes: https://lore.kernel.org/lkml/ec5dc528-2c3c-4444-9e88-d2c48395b433@infradead.org/
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202402020454.6EPkP1hi-lkp@intel.com/
-> Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
-> ```
-> Hi Andrew, this fix patch is based on mm/mm-unstable.
-> Thanks!
-> ```
-> ---
->   fs/Kconfig   | 2 +-
->   mm/hugetlb.c | 9 ++++++++-
->   2 files changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/Kconfig b/fs/Kconfig
-> index 3abc107ab2fbd..f2bc73fc0417e 100644
-> --- a/fs/Kconfig
-> +++ b/fs/Kconfig
-> @@ -261,7 +261,7 @@ menuconfig HUGETLBFS
->   	depends on X86 || SPARC64 || ARCH_SUPPORTS_HUGETLBFS || BROKEN
->   	depends on (SYSFS || SYSCTL)
->   	select MEMFD_CREATE
-> -	select PADATA
-> +	select PADATA if SMP
 
-I don't think it is a clear way to fix this. If someone want to
-use PADATA in a non-SMP system, he should be carefully to handle
-the non-SMP case himself. I think the better way is to make PADATA
-handle the non-SMP case, I think it should be easy for it, which
-could just call ->thread_fn() many times instead of creating many
-threads in the non-SMP case.
-
-Thanks.
-
->   	help
->   	  hugetlbfs is a filesystem backing for HugeTLB pages, based on
->   	  ramfs. For architectures that support it, say Y here and read
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index bf3d5dfb921e6..1b01b244fb50b 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3457,6 +3457,7 @@ static void __init gather_bootmem_prealloc_node(unsigned long start, unsigned lo
->   
->   static void __init gather_bootmem_prealloc(void)
->   {
-> +#ifdef CONFIG_PADATA
->   	struct padata_mt_job job = {
->   		.thread_fn	= gather_bootmem_prealloc_node,
->   		.fn_arg		= NULL,
-> @@ -3469,6 +3470,9 @@ static void __init gather_bootmem_prealloc(void)
->   	};
->   
->   	padata_do_multithreaded(&job);
-> +#else
-> +	gather_bootmem_prealloc_node(0, 0, NULL);
-> +#endif
->   }
->   
->   static void __init hugetlb_hstate_alloc_pages_onenode(struct hstate *h, int nid)
-> @@ -3568,6 +3572,7 @@ static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h)
->   
->   static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
->   {
-> +#ifdef CONFIG_PADATA
->   	struct padata_mt_job job = {
->   		.fn_arg		= h,
->   		.align		= 1,
-> @@ -3600,7 +3605,9 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
->   	job.max_threads	= num_node_state(N_MEMORY) * 2;
->   	job.min_chunk	= h->max_huge_pages / num_node_state(N_MEMORY) / 2;
->   	padata_do_multithreaded(&job);
-> -
-> +#else
-> +	hugetlb_pages_alloc_boot_node(0, h->max_huge_pages, h);
-> +#endif
->   	return h->nr_huge_pages;
->   }
->   
-
+Sounds good, I'll take a look at padata and send a new patch.
