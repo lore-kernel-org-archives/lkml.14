@@ -1,125 +1,86 @@
-Received: from mx0a-00007101.pphosted.com (mx0a-00007101.pphosted.com [148.163.135.28])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0AC1C0F;
-	Sun,  4 Feb 2024 03:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E1F15B7;
+	Sun,  4 Feb 2024 03:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707018342; cv=none; b=qZASpeTjiL+KoWq6GDh2GPM4Ozf0z9l7MFB7PgBcNZaRk4kAvflsUOZl+55ChfAZkPn00BFl614cblKDkTxh2qya6+AvprymPwQdofEnMfn0U5WtTx81B+T0PEZbn4j9zXMSbZvEWp62k7ZjoAuVql/TNNOw7NSHC3Oous6y1gk=
+	t=1707018439; cv=none; b=n0V60mqtpywtWxuBqn+y/puSe3jdsaWkn8JpyOW9l//7Q93Yz8IZjt3TPhKU6UErfGoPqemh8WI9T08e9uhXiqJQvpU44WNkG/tqxOYEp6f3e5wsmDcH8EMKT72UqgZFBGFNHbCRZZxxfIhCwJQveK2IR91tKJoK95/v4vnG44Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707018342; c=relaxed/simple;
-	bh=bp3+moavKJUOU9+YcZZ62WFzPtg6yWFvn6eFkIqmXdQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g0sT6s/vcudNnYZ6w7G6KnV5QYlLfnByTd0Nd2pHIkViYQ4NV0NYpeKX++vuE2+xGnrIRwrio3lIqZFK+6Y8C3YMlqKcJOZ+TFEyPf88JEQSyr1h2TFgMiNwrd0zcpgwh4YRv0Wj7Oz8bCZNmNy5to/O7dGX96tDw3DkE+cyISs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=VuBoUPpO; arc=none smtp.client-ip=148.163.135.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
+	s=arc-20240116; t=1707018439; c=relaxed/simple;
+	bh=nN8b/YIhvuAxbyPKPHgRfYM5wEEdCOqOUQZ/LG7L0wY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ldvB2ajod1dV9+jsol8hyHNUHb6tN+zQjSTxXsN6rRUNGW5FafE5403OKXlHGGDwlcEDo35Z9+KtAdVTNzGy79ihXQ80GyRSMUIkQDXIs7KsgpeU1coMRQVwUxmjfYsERBJfROOcKZ6lJuvoDh3SaA58tw4jq/bLsy3d29Hccr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8dLUbZS; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="VuBoUPpO"
-Received: from pps.filterd (m0166257.ppops.net [127.0.0.1])
-	by mx0a-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41432XDK027752;
-	Sun, 4 Feb 2024 03:13:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=campusrelays; bh=ed8waYid509TfcIsLqBzgp/9YodzRQmW/h6oOEGt1rk=;
- b=VuBoUPpOtJ3EOrtirkhidspd7kjf8Yb3fLEPLU/54q1tfk38gQUZq46pdEbnzAq3Xnhe
- YlfjixALde/JlgA0Q2CGDSVXmGUPnjr9yyussiP5mj/QtyHoS77Y4+JY0NnERnSr5XUZ
- scFC7otRSHgpHuAKib6R0it9d2qCPGPqt26D2IsEBl8gngHcvA53lSum4CjW/ym2NA2j
- Pv5y3ctpPK59qoQKT7wryF4aYBpEOUMWqDPJnPesQQmU0DI31vmzEDOkV4O2cTLG1myk
- SKjVB9ZVpvmncPmiVbs+jfZ69Ml2Ts/7OZuiHt+b7Ow1w8jdBb3F8+8ZvVvM7WgT1Sxl pA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-00007101.pphosted.com (PPS) with ESMTPS id 3w1e8n4ktp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 04 Feb 2024 03:13:04 +0000
-Received: from m0166257.ppops.net (m0166257.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4143D4Fu010150;
-	Sun, 4 Feb 2024 03:13:04 GMT
-Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
-	by mx0a-00007101.pphosted.com (PPS) with ESMTP id 3w1e8n4ktm-1;
-	Sun, 04 Feb 2024 03:13:03 +0000
-From: Jinghao Jia <jinghao7@illinois.edu>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jinghao Jia <jinghao7@illinois.edu>
-Subject: [PATCH v2 0/3] x86/kprobes: add exception opcode detector and boost more opcodes
-Date: Sat,  3 Feb 2024 21:12:57 -0600
-Message-ID: <20240204031300.830475-1-jinghao7@illinois.edu>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R8dLUbZS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707018438; x=1738554438;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nN8b/YIhvuAxbyPKPHgRfYM5wEEdCOqOUQZ/LG7L0wY=;
+  b=R8dLUbZSfjtA67RvHMERXTp9JIFzORbk4eLUJc7bjdePJCqDiLHaHlC9
+   LcujNgmuPj9xPIwMtqHBCuhDO9vZjIeFGF/gjyZpfTdtHdv0nlQJFVzC0
+   D64W7GdNNvEkUdLSY8yQV6AWx9xji2+PwHbtziSkPfdoN/DxjjuGYxohH
+   SaYqylufWm/HtkCsghN6+/Rlv9QNrRwSv1ZWXN0VaL4OJVe18A56tGSmq
+   1DRowcGbWpUPok0m4wu1nvIAgkqUzCtId9xacFGKCMMHyek6ghGqMDdvu
+   v3J7z3Aotp8Zy43DcrAbT7MCSIXSTD/N2MGrMVSBYTJyLf5gNYDgkkaKe
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="251493"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="251493"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 19:47:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="908969342"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="908969342"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 19:47:17 -0800
+Date: Sat, 3 Feb 2024 19:48:37 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <len.brown@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Zhao Liu <zhao1.liu@intel.com>,
+	Zhuocheng Ding <zhuocheng.ding@intel.com>, x86@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Zhao Liu <zhao1.liu@linux.intel.com>
+Subject: Re: [PATCH 9/9] x86/cpu: Introduce interface to reset hardware
+ history
+Message-ID: <20240204034837.GA26316@ranerica-svr.sc.intel.com>
+References: <20240203040515.23947-1-ricardo.neri-calderon@linux.intel.com>
+ <20240203040515.23947-10-ricardo.neri-calderon@linux.intel.com>
+ <20240203094014.GCZb4J_loB5DEohHxT@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: mn5VSJ0mvjV8e4iC5xZSg_c-bVZsA20H
-X-Proofpoint-ORIG-GUID: 904boGWkVLvojL-KnoPb6Eo3_D3d1Dp0
-X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
- impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402040022
-X-Spam-Score: 0
-X-Spam-OrigSender: jinghao7@illinois.edu
-X-Spam-Bar: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240203094014.GCZb4J_loB5DEohHxT@fat_crate.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Hi everyone,
+On Sat, Feb 03, 2024 at 10:40:14AM +0100, Borislav Petkov wrote:
+> On Fri, Feb 02, 2024 at 08:05:15PM -0800, Ricardo Neri wrote:
+> > +void reset_hardware_history(void)
+> > +{
+> > +	asm_inline volatile (ALTERNATIVE("", __ASM_HRESET, X86_FEATURE_HRESET)
+> > +			     : : "a" (hardware_history_features) : "memory");
+> > +}
+> 
+> This thing belongs in the header too, and it should be __always_inline.
 
-This patch set makes the following 3 changes:
+Thanks a lot for your feedback Boris!
 
-- It refactors the can_probe and can_boost function to make them return
-  bool instead of int. Both functions are just using int as bool so let's
-  make them return a real boolean value.
+Sure, I can move this code to the header ad use __always_inline.
 
-- It adds an exception opcode detector to prevent kprobing on INTs and UDs.
-  These opcodes serves special purposes in the kernel and kprobing them
-  will also cause the stack trace to be polluted by the copy buffer
-  address. This is suggested by Masami.
-
-- At the same time, this patch set also boosts more opcodes from the group
-  2/3/4/5. The newly boosted opcodes are all arithmetic instructions with
-  semantics that are easy to reason about, and therefore, they are able to
-  be boosted and executed out-of-line. These instructions were not boosted
-  previously because they use opcode extensions that are not handled by the
-  kernel. But now with the instruction decoder they can be easily handled.
-  Boosting (and further jump optimizing) these instructions leads to a 10x
-  performance gain for a single probe on QEMU.
-
-Changelog:
----
-v1 -> v2
-v1: https://lore.kernel.org/linux-trace-kernel/20240127044124.57594-1-jinghao7@illinois.edu/
-
-- Address feedback from Xin:
-  - Change return type of is_exception_insn from int to bool.
-
-- Address feedback from Masami:
-  - Improve code style in is_exception_insn.
-  - Move instruction boundary check of the target address (addr == paddr)
-    right after the decoding loop to avoid decoding if the target address
-    is not a valid instruction boundary.
-  - Document instruction encoding differences between AMD and Intel for
-    instruction group 2 and 3 in can_boost.
-
-- Add an extra patch to change the return type of can_probe and can_boost
-  from int to bool based on v1 discussion.
-
-- Improve code comments in general.
-
-Jinghao Jia (3):
-  x86/kprobes: Refactor can_{probe,boost} return type to bool
-  x86/kprobes: Prohibit kprobing on INT and UD
-  x86/kprobes: Boost more instructions from grp2/3/4/5
-
- arch/x86/kernel/kprobes/common.h |  2 +-
- arch/x86/kernel/kprobes/core.c   | 98 ++++++++++++++++++++++----------
- 2 files changed, 69 insertions(+), 31 deletions(-)
-
---
-2.43.0
-
+BR,
+Ricardo
