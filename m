@@ -1,67 +1,89 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C5411197;
-	Mon,  5 Feb 2024 08:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751F811184;
+	Mon,  5 Feb 2024 08:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707120611; cv=none; b=L0c6iLjbCCdhopK99UemdxEhLEB/lBvZT3PKDuWSmUQP7MuViyUopxva33W8K/HYOdyffk2gzwTrHoNhdjiTt7KS//Y1bCknaTWNFmSH+mNKij5tPQVA7rD5EN7fmsMXiDmiq/u7yJTjeC3MXnH8ALHewp/U6cwJLEaJkC+1cOo=
+	t=1707120636; cv=none; b=ZnsWOHe32bSq3YcbRiEasmnAgO2KWuOWwyLuBVZcmRB2RZrWjPKXEM1ujh9aDh2rNYYEgeu/yZ9MFn+EN1OvagDIC2i79hWNZszlmlEULRiY+OrGbtRIasb9HI+8yhh8F99i3e5AudWBojmuprmuN/T5C+CFyjUnGg8CMvcQWVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707120611; c=relaxed/simple;
-	bh=Ddy/ljBytqvKFtjT6EJefVgfG8ZRmZ74N35MfnnBHWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMxitpZOSTv3khmS/wvdBc1+Cmtqrg08FSobP6061Z5RsaN4bSm7ZKxZk8SvYFRHeA/+npsNo9pp/PjWoc4gQKYdqLM95rE3W0hYtcIEAJUrQowjjfT3zIp04FlgSSsm7nTo16nNF6ZzojU/o+6Gt8lw5ZqDXkVYjBQVP8JTOSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=nBU44E1j; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="nBU44E1j"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 8342C6033F;
-	Mon,  5 Feb 2024 08:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707120608;
-	bh=Ddy/ljBytqvKFtjT6EJefVgfG8ZRmZ74N35MfnnBHWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nBU44E1jSf5dsBUZixtXnd9OqM8ocvHXbNyfwTOr/JN8uolMFfZYI1pw6QPgJyVAr
-	 b7DgZJ4As+RqOGyERYM/uBAeCyOZbivdhTHK3xRoDv+ymw9NZ98rRQ1RyG+P5Jjfyi
-	 08eLLrZvc2KTAeWaQDeZI+kcsVWa799+TFds1c8hEzasww2lqIBvfjACZKZMuX4JPF
-	 FnQUl32RNQHEFH6cPhhS4HAEM1FWzjpWf/CsK4ZEmLuBGYvJX+CbRG2SlZGPrBcoNo
-	 ag9HWtwCimr2NgAYaKhgp+vRISJZ4tPTxrQbyXGl59cT7V0b0u/L/xncfy0JesdhPf
-	 9BoOhTdDB6y+A==
-Date: Mon, 5 Feb 2024 10:09:53 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Hillf Danton <hdanton@sina.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	syzbot <syzbot+listbb8340e4e1f8191bee93@syzkaller.appspotmail.com>
-Subject: Re: [syzbot] Monthly serial report (Feb 2024)
-Message-ID: <20240205080953.GC31612@atomide.com>
-References: <00000000000074375c06106c787f@google.com>
+	s=arc-20240116; t=1707120636; c=relaxed/simple;
+	bh=lJfLls5gfxNink17J4VWmEfa8CGJgcmPdq9FvLEAIgA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EY1e67ffKQn5ZFR5wJc1R/LmZwyMIWd/YDiMCjoA65P1fQEjdQt2YjNKBuGzX0kIL2rdqGtBgYKJFpU8OqsjeInVRYJq/+7hbgDFf8rMQ62tQ+db+5ejdU8aCUns3GXb/81DUaydEayZbiFfBFv2rzhhhR74lQH+qHUYuTF5oZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 1d47c6aa2b3747909181acbb0103231e-20240205
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:e90204c5-e0b1-407d-855a-d1d3f5b1baaf,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:1
+X-CID-INFO: VERSION:1.1.35,REQID:e90204c5-e0b1-407d-855a-d1d3f5b1baaf,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:1
+X-CID-META: VersionHash:5d391d7,CLOUDID:23702180-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:240205161028035G384B,BulkQuantity:0,Recheck:0,SF:17|19|42|74|66|38|2
+	4|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: 1d47c6aa2b3747909181acbb0103231e-20240205
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 968780155; Mon, 05 Feb 2024 16:10:25 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 1BE1FE000EBC;
+	Mon,  5 Feb 2024 16:10:25 +0800 (CST)
+X-ns-mid: postfix-65C097F0-91013334
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 539BFE000EBC;
+	Mon,  5 Feb 2024 16:10:24 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: dlemoal@kernel.org,
+	naohiro.aota@wdc.com,
+	jth@kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] zonefs: Simplify the allocation of slab caches in zonefs_init_inodecache
+Date: Mon,  5 Feb 2024 16:10:22 +0800
+Message-Id: <20240205081022.433945-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000074375c06106c787f@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hillf,
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
-* syzbot <syzbot+listbb8340e4e1f8191bee93@syzkaller.appspotmail.com> [700101 02:00]:
-> <5> 73      Yes   general protection fault in serial8250_tx_chars
->                   https://syzkaller.appspot.com/bug?extid=837b8c9032c053262db8
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ fs/zonefs/super.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Can you please send your earlier fix [0] to the linux-serial mailing list
-so it can be applied?
+diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
+index 93971742613a..9b578e7007e9 100644
+--- a/fs/zonefs/super.c
++++ b/fs/zonefs/super.c
+@@ -1387,10 +1387,8 @@ static struct file_system_type zonefs_type =3D {
+=20
+ static int __init zonefs_init_inodecache(void)
+ {
+-	zonefs_inode_cachep =3D kmem_cache_create("zonefs_inode_cache",
+-			sizeof(struct zonefs_inode_info), 0,
+-			(SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD | SLAB_ACCOUNT),
+-			NULL);
++	zonefs_inode_cachep =3D KMEM_CACHE(zonefs_inode_info,
++			SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD | SLAB_ACCOUNT);
+ 	if (zonefs_inode_cachep =3D=3D NULL)
+ 		return -ENOMEM;
+ 	return 0;
+--=20
+2.39.2
 
-Not quite sure what triggers the serial_port_remove().. But let's fix the
-serial_port_runtime_resume() issue first.
-
-Regards,
-
-Tony
-
-[0] https://groups.google.com/g/syzkaller-bugs/c/m3vOaJRjnMs
