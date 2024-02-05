@@ -1,78 +1,104 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6387B1C291
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6B21C2AC;
+	Mon,  5 Feb 2024 12:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707135633; cv=none; b=QenWaf6aRFRlXaEMWL6t7EEL32AyJsJL3/gm4a0tzmOnAWNg8WP3ggYIkz3faXqy2TP2GIcIxryqwv8U5nphyLyzNl5KRyRBI7zLc1Vv7A7NvtBbx9+rMJcm+2CEa1VXVg2xXekUDKln8NVQy4a3KXYTllmQxhgsIvV7mveMno0=
+	t=1707135656; cv=none; b=lIYaPlGdNblQ72nanLNxMwJe6akkMsujUY/W7nUE9GGqU+ccwqsL/1uBurJw+6IKsf3lBI+aal9+G5Bh2j5YGkAV5UGkoM8lcpcOlGnspV+joiginzRnfoU043VnZNPRLPPfFa6iLl3MiIe55yRdTDlmiKjEsUXXI3SOzQSzYNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707135633; c=relaxed/simple;
-	bh=FSqx85FKav5UTjkwrO0C/DvlGRzbLe0MGXGqjZ2Gkcc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lOyVWgpSEEgjMGorTOYtu6OYwvu97SD9YgRkYLAyzCvKuMCYl/4cx7dniSnDsW2rYFjeTD27bU4wPcdUoN0gpyyjN9w/+2eiOE6eAnR9qkxKfZtcrwHAt5ZWvFQzmjYxVsHFt+Osh8YqY0zBfQdXaCx7IhxHRB6u9btE8tBJz6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=gFJTrvji; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1707135656; c=relaxed/simple;
+	bh=ssiJlgBUI7ADgXSqk107hR0CggEulbQh1yQXI0z7sdc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=l06w0undXnc5lnhI5lyeOw26yCj8uOlwxzv3QJsEOKpYGi/abkj6j1SF83W0Bo2ilGlNlJ9bfN+xD6Z2IIXk7AZvyPKJbqwbrLTnBWrbTlua/H2gRg6VfEJd40PLWADaoEouz2Hiiisc/vP9Y+gNVgg2xaW1iM8ZV1/LVPZLHlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=vtp3+NxY; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="gFJTrvji"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1707135628; x=1707394828;
-	bh=DaP+uYIz8KmFM7LmToBkEKWVv9jbRasxcLtql4VpI7I=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=gFJTrvjie5dIOI+j7tg45YffNTUKliKqj/6ogvDOw92xcJdevRwTRv/L2jitWhsEa
-	 lVA4+dSQTvi183O0U8wfCAEzQ+FYQveY/lpgo11e4jarAdoValLvnsUG+8NMD4GgIY
-	 3iui1LL21jOrHOjjmkdruPX104S42Id0+2vxUL176O0uB/kJCmtx2pSphyEX5rTK0j
-	 hj8eqFHjl0bBaa6JI7j241HIpQ53sHqAyp4GCVe6SCzwy3AblHIT0NyXylOzcyR5NU
-	 suEprCRfQyE+KqzNvgubSlF9VVblouIxj9acW+7Tc2sMo8G8Erf/Z6asOq/GfriHzp
-	 NyvLUmpUfQ7uA==
-Date: Mon, 05 Feb 2024 12:20:12 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 4/9] rust: cred: add Rust abstraction for `struct cred`
-Message-ID: <4da53a00-77e5-4062-a743-c48e93235b97@proton.me>
-In-Reply-To: <20240202-alice-file-v4-4-fc9c2080663b@google.com>
-References: <20240202-alice-file-v4-0-fc9c2080663b@google.com> <20240202-alice-file-v4-4-fc9c2080663b@google.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="vtp3+NxY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1707135631; x=1707740431; i=markus.elfring@web.de;
+	bh=ssiJlgBUI7ADgXSqk107hR0CggEulbQh1yQXI0z7sdc=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=vtp3+NxYPaQVXNd+ebO+tEKeJ6HD7qi3MAxXoevBMmguK9PaLZ5/MoRxYaa0+DCZ
+	 TD3GKN7XJiXray4h3S9I9YfGf+9/fVpxYFPG9382PLUOLSj0NqVL0mh26U0i195oz
+	 rZjklZxMPm8kJtE0jHU1bHYbDwm5XAQp7QPNDCwDELhasBxANPJWzRNwlYEoWTBRa
+	 LyTJW5G1xQ4EEyxHwsTHvB5ndbsK1FoQib4+i5s0QoV7msQ6os3b0ZkWqh8YFplA0
+	 jHHHxrItYmB9WTsA0q9O8DatO9tBBfyPnfD7Ubl/jeP0GS5gPXfPQYae3CnixGcn7
+	 fODx6hGqQEBWoMsIfw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mdf89-1qxuG61hOD-00Zemy; Mon, 05
+ Feb 2024 13:20:31 +0100
+Message-ID: <66d7218d-ed57-4dec-b6ac-630b01056b5e@web.de>
+Date: Mon, 5 Feb 2024 13:20:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+To: linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Jai Luthra <j-luthra@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] media: ti: Use devm_platform_get_and_ioremap_resource() in
+ ti_csi2rx_probe()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:c8yM135bGmgwYC7BG02277c5xhebqr+9/bcAkhSvOz8K9U1VdZk
+ C1x4YkMyfvuW747HRLRycFhOiawMvQmF+5q4wq+lMHvfwaYPHiHnl1SlWMANc7jAv1RjGYP
+ xJO58S+2daU2kHEXQQNDZTtzVPmIYADevmWLK/7kq8VsriHFa1U64zw+eA6DBQVad+3t4h2
+ GJ/nZnrnDxv5KMk3QuGdg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XYQUlrf8/cI=;p+FRLnS58AOgbgxls0D7TAWU6yT
+ 3xoTpT5Kz6fwRYNCvz8HLRuEPDXBacEOE4CYolaqKxB1cNX791czIDlHaHObPLBJPn8uqTjRD
+ D6WoL+WDYzjQmPjIRcChr4/QzPF6ZQligVYnHymEkAfj+FmY86UtB6IRO8nlCTw6jUumsI5BC
+ ZOhifBuS+aZNGmSQNNCyENn5e2M73dlb+0kZOEUybjakHy7MTAwmqCaULYE3n2LqcR3GHQaHY
+ qkFiiVPoNdfyCga8rf4dayFobCqYXqxWmp/o56tRI+9HrQ2UtXEwMc6wh5YWcNCSYPfO7Rh4U
+ tZaMgrHncvibDJHJNkaphbnRwx1DyRycePchDrpvJXeIHJ8X6zPi9Izt6FwTWpg5ijOUxG8tc
+ LmtX0GLoBz0c+xumOTJo3DY0CmJ2ULS1sUuhVGpj3z7E5TWBSG3sL20qBHitiYHMsc35sMJ6z
+ cXKBTMn+2FZUTphdtqrqvsFs9SzYtmXi62lBbk6XKXlPL7MTkkqvWKe0XauGbYCUkg5AeywjG
+ HzMcVOIZVN9IOwv1yIJ7ldLDd5DghCphEL5gp94QsoOXCJy2qE2XSwBANsrftg3Z1foV7MTL2
+ U1Ke6aujzi8zvBJpg2psKRuGX0Y++dX0jo0bD63jzu390hrgELZxXmMiikflE0K2BDX8LOlaV
+ oxUZLuWAA5saf+f6ur4qA8o6VZEKxpfXuIHX9BAE3KMV0CdjFUqf2Q+hZ3Cpxs41Idxic03wD
+ HWN7g3YP0BZ1jhSLsgc1P//UtGNxyqsqDVShtn2RhElRuPRfKJ8S7lhDosmowFJx7cMHMP8iE
+ Zw5PYPKlL8Fcxm4zSZQmwR22t7OLlCnG4XEYKpZVAV6GA=
 
-On 2/2/24 11:55, Alice Ryhl wrote:
-> From: Wedson Almeida Filho <wedsonaf@gmail.com>
->=20
-> Add a wrapper around `struct cred` called `Credential`, and provide
-> functionality to get the `Credential` associated with a `File`.
->=20
-> Rust Binder must check the credentials of processes when they attempt to
-> perform various operations, and these checks usually take a
-> `&Credential` as parameter. The security_binder_set_context_mgr function
-> would be one example. This patch is necessary to access these security_*
-> methods from Rust.
->=20
-> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/bindings/bindings_helper.h |  1 +
->  rust/helpers.c                  | 13 ++++++
->  rust/kernel/cred.rs             | 72 +++++++++++++++++++++++++++++++++
->  rust/kernel/file.rs             | 13 ++++++
->  rust/kernel/lib.rs              |  1 +
->  5 files changed, 100 insertions(+)
->  create mode 100644 rust/kernel/cred.rs
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 5 Feb 2024 13:14:00 +0100
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+A wrapper function is available since the commit 890cc39a879906b63912482df=
+c41944579df2dc6
+("drivers: provide devm_platform_get_and_ioremap_resource()").
+Thus reuse existing functionality instead of keeping duplicate source code=
+.
 
---
-Cheers,
-Benno
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drive=
+rs/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+index 2b078c5d7f5d..6ff066097346 100644
+=2D-- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
++++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+@@ -1100,9 +1100,7 @@ static int ti_csi2rx_probe(struct platform_device *p=
+dev)
+ 	platform_set_drvdata(pdev, csi);
+
+ 	mutex_init(&csi->mutex);
+-
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	csi->shim =3D devm_ioremap_resource(&pdev->dev, res);
++	csi->shim =3D devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(csi->shim)) {
+ 		ret =3D PTR_ERR(csi->shim);
+ 		goto err_mutex;
+=2D-
+2.43.0
 
