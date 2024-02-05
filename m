@@ -1,187 +1,104 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324E6482C3;
-	Mon,  5 Feb 2024 18:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E33E481A7;
+	Mon,  5 Feb 2024 18:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159024; cv=none; b=FzK2/w9S8nLt1i7UXjRQitOd4O+aIs8KTyfwxXGH/HsneYm4xVwdQP4dcTh/Oebz4WuqvnSubx0BDSTUUC+BkOEDbmVmIDjYoQD8yH90DpVauhm4DsEjaXdGgKMBaQl/d8CIosPKqkaugriF4ww7cSNXTkJGV1hseyPheokehnA=
+	t=1707159065; cv=none; b=B+hk5lkv1VCtVW1toVlnwrP8CCg6lF/uKjDhoobz5MtqVdzf6AMwshZ69n+C985Uhlk2wpqaAkjLZzO+iVQgDqh0saB0pCSQDG/kxy9xnfJDmmYnxatW7gc3FXPna7KiRc4FnsMMzy7qMt8SmLSFt1xySWTY2kNaWykyj8tkX3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159024; c=relaxed/simple;
-	bh=Xhujo+wDiMZRhR3TwEcnhYIXAGX+tOaXYwuQFNEDweY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UA2lThwlvvSkO8CL7t22ixDlAINcP7t777OwkTCJ4UlLqXfg5KqwxMFDTmuGFMBYagXB9jWWg5IgDaSSlfmljpq0epDZaf3bROl9tYd3c1rLgNpTriQEwHvzyzl6nBdjYBu8BrEFT9qUKzUkfERSGsxHAG9rve4lcRpcHG4Q2lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fczhIVlu; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707159065; c=relaxed/simple;
+	bh=upqk38mFRyStMDt//TKFKUs+Ve4eIcUYsnW4DHzmzkk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KQIOJx1gY8+aVlLyhdA9M7PHw/fcI1M/NeS3mmhlLDg5ynBFoeRol3XrwS4Tc2165icta4zTQ4TOUKl5BFCa6Fccwt57i5liR4syI1+Rvkh6OnZ5BKh9zJ3yfsY9MPINCapA5RH2EJsbf5ZwmC1su9DPs7ftkmnUpQ/AotNX5CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=sFQxMOR4; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fczhIVlu"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-599f5e71d85so22402eaf.3;
-        Mon, 05 Feb 2024 10:50:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707159022; x=1707763822; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a5/QetKatJetZu8QUL35h5FIsCUnt2b4O8Bogdh7dS4=;
-        b=fczhIVluWfK1xuswkTnwErAk+mc/BUBKeXF6FkefdyoXj6xrC/HmdWsR7itXA9xBP1
-         BQ707M4yOC1eGN/He5ThRm9/vRu552A+x1YTBmU8mtdkmVnhUgwW6VwuvV1f0Mf19NpQ
-         bOvp3ljJx3u15JWxs3NtWY5OzXXGdUQJtnBA6389H+2xCQrNv+D+Dqr95cVyr3BozGr6
-         mCyNeIbbirtC+wV3yDlcCpFTVY688ZRmgZ3peFxo6952U+fr7DItSp1WlscJ1eJbOuFl
-         fFnRq2dx+ksnU6eKzxBIJZKZaB8+s89pkTzPBZGIbUmnmzetZva3vnNoZLgWPOCWlhVB
-         aAxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707159022; x=1707763822;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a5/QetKatJetZu8QUL35h5FIsCUnt2b4O8Bogdh7dS4=;
-        b=hoWDB0CB4/iuCXefH/QZ7NWjueIqTShsBICM9P7/spq6vDW7YG8VwOVyE4wIv8tH3v
-         dR3edy07DxDtBol3459wLsd8YrQgHaL4U7NECf+XVvjJaD+QC0EVq23E/I3pCrohz6TL
-         jmOCD7ZjpNFmYiWU0XpHmjuUz22DqixQJPH6XUTmN3MCLX/dSDNdh42JYhjSS2lQbR0M
-         ojuSt7Hk35SS53Jt904gZezF/VfpgrBX70ljfsRV8uoe04e8hV4hU32VeCo5aybto9us
-         OnvqaVaXVSXniUoxv9CufdI3y/ULOLX0wrSvuNdBauAV8gt6RnHz4ReFMOMnnY+HT6M/
-         unuw==
-X-Gm-Message-State: AOJu0YyibJSTj7L+1vG7v8CHWqPV3yoPpaxAugkKTT+nXpjECPXV8Eol
-	TgCOaokFNcuxGBHUZb/vsv0TMCNBSA8ghfp/2ShGIRWfZJsy4yyF
-X-Google-Smtp-Source: AGHT+IGdMtsWr1OpAk73Qdb2h2Xh3VJkag4VDyc6etFQCzn0YJKsKWR1PimbbtLuYoStFbba0Frj2g==
-X-Received: by 2002:a4a:241d:0:b0:599:49ec:6d15 with SMTP id m29-20020a4a241d000000b0059949ec6d15mr542271oof.1.1707159022108;
-        Mon, 05 Feb 2024 10:50:22 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUhhGoU4pHLpckzL33j+8HDGr+TsjC1gXJaozqI+dj5ji++n55Rbv9euK17brsZ5XaENmpcVnPmXeQyKwE4k+xkTu7UVelm7TNQ8+QmNEdRKzc++XUCK0tbget5H5rQA0d2mCTit3gTYDJTXgCkWfozQZrcb4HL2A5rJEJ6lufiWTkMJw==
-Received: from localhost.localdomain (i577B6813.versanet.de. [87.123.104.19])
-        by smtp.gmail.com with ESMTPSA id x5-20020a4a8005000000b0059a096ee494sm59382oof.47.2024.02.05.10.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 10:50:21 -0800 (PST)
-From: Jesus Gonzalez <jesusmgh@gmail.com>
-To: andriy.shevchenko@linux.intel.com,
-	jic23@kernel.org,
-	lars@metafoo.de
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jesus Gonzalez <jesusmgh@gmail.com>
-Subject: [PATCH v2 1/1] Add 10EC5280 to bmi160_i2c ACPI IDs to allow binding on some devices
-Date: Mon,  5 Feb 2024 19:36:20 +0100
-Message-ID: <20240205183618.7761-3-jesusmgh@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZcDnikkiwSIDGzT0@smile.fi.intel.com>
-References: <ZcDnikkiwSIDGzT0@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="sFQxMOR4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1707159046; x=1707763846; i=wahrenst@gmx.net;
+	bh=upqk38mFRyStMDt//TKFKUs+Ve4eIcUYsnW4DHzmzkk=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=sFQxMOR4lBl0ynbvvfjdFyUXoUBduM8Ehl7tP/w3+Pvv2H5tWP9HOgbJaNmUYiv4
+	 vEqWsjTolDiOQTep2/mVIqE+YC/dhGt6luzH+2bQP87xzc8gDKsQKrzklkdwEq2xq
+	 d5GTkmMXD0+izIxTGFLnRyWP6WGevCB8U7wr5Tat9Kye0ixp2XxD9wVspvmKBT9tF
+	 dlJ/ledji93moAbdAd7181kKa05zKrc/I5TIMsUDHh6EJqg8ZCLGr7ugQAo4kaxIQ
+	 iUZFYiaNMrKRMrZEP6rx1RBYZSKS/PvzLlNlISveAL6pgqYbaq8W/1miz4D1AVshX
+	 6Xmc6mrW21IgcrYyUg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MfHAB-1r4t2s3OHr-00gnns; Mon, 05
+ Feb 2024 19:50:45 +0100
+Message-ID: <8736c115-e11c-41ca-85eb-7cd19a205068@gmx.net>
+Date: Mon, 5 Feb 2024 19:50:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/12] bcm2835-dma: Add proper 40-bit DMA support
+Content-Language: en-US
+To: Andrea della Porta <andrea.porta@suse.com>, Vinod Koul
+ <vkoul@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: Maxime Ripard <maxime@cerno.tech>, Dom Cobley <popcornmix@gmail.com>,
+ Phil Elwell <phil@raspberrypi.com>
+References: <cover.1706948717.git.andrea.porta@suse.com>
+ <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ii4aBdJ8kdgErTxKfxhBRtdB3pc6lV5wLFe/sAgqQ5AnKXMZvTW
+ xMXVLy0c+DxqhOMD/AFraT41Xb+d8vrvLNpFSkzAbphr2r6bfz2o++cW6w/ZOIETZhPGbpK
+ HVfc8q04onLVVVQobyvuO5MLTBJgtihAnVU6uGh4HPly9T2BsUgXwEhBT0jXewpkEhGaM28
+ 6krDfJfsk2uQxgToU+e0w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DS/kBFCe9ac=;ckCKwTG7+MtxefQmnJZhkuFh7ss
+ O720MPV88X09bbKqI6InGNRGhtgcHyUBJE7TIOss7ANe++XhLLqLvWoQq0PQFdkSHrxGw71bU
+ M5PoH/MsQ6c68EP/wSYCVek/0vv+XGuPQcIAhLVSkLF8yeMcJtseJ06OhSMTvYhrWdOQmZj2m
+ fUZQmhKPHUetv4/WsV0CUu+A349KmkzcmTb2873yNf2R+wnQwsG6nDDZBrY4WAUk1I5Bz4KaJ
+ 3cMyU59cK5O55RMeaFY7WheUG6d/ssP3Yisy0Du5CfVxxJe+HrDBboNvqlAP4p/qQYmNiv+Wd
+ dSyYs0FkSLNCBFRhiu28i19+c806LwFwxNfLYasWkkbc7aVVofuRdmxSF9uTXWWWK0F7TooP+
+ mC5bDPexDDH7W5ReXeNlcqL2QFebDUbCsKXDIP4BclZbxK4a06Z8lHsz+KcuBTYeh5abg4I5m
+ DdYbrJxPNUUG2JwCWyAgUn/yqYOyDhe8nEicmS4m7JJtug/VKAu2VqOGPuySGB4w5pvy3Z/sI
+ kcEc87Ljgu0E1f32gJ5NMxH4U0/+V0Rkn3YeSoPTKAQ/QFkSchR3ioBx/+n6qvdbSQrqbW3xH
+ RsSFYP9SIssvnmFOsvotYufyd0zm1ncVv9ti0Gy8MLx/6jtAzvC+cQVTz9/A8tkxn7jSYzL+b
+ o1rrkwDEbF57SZbG7EQaBHwDusI9BNne9Dyio3bsKC/r45YieRBM1SryTn0134LcsWBNw2dvZ
+ V2e0j4joJhMIUt/OVbugJV3Yt2vW1Lpfn9iKNquEoyyOh1uOiWkWN4c7kY2iIJIPyY/6b7kbp
+ HibJYq8+Tar8sMVbmVMcWgJz3UYHPYTBjDVCtffnl0Cxo=
 
-"10EC5280" is used by several manufacturers like Lenovo, GPD, or AYA (and 
-probably others) in their ACPI table as the ID for the bmi160 IMU. This 
-means the bmi160_i2c driver won't bind to it, and the IMU is unavailable 
-to the user. Manufacturers have been approached on several occasions to 
-try getting a BIOS with a fixed ID, mostly without actual positive 
-results, and since affected devices are already a few years old, this is 
-not expected to change. This patch enables using the bmi160_i2c driver for 
-the bmi160 IMU on these devices.
+Hi Andrea,
 
-Here is the relevant extract from the DSDT of a GPD Win Max 2 (AMD 6800U
-model) with the latest firmware 1.05 installed. GPD sees this as WONTFIX
-with the argument of the device working with the Windows drivers.
+[add Dave]
 
-     Scope (_SB.I2CC)
-    {
-        Device (BMA2)
-        {
-            Name (_ADR, Zero)  // _ADR: Address
-            Name (_HID, "10EC5280")  // _HID: Hardware ID
-            Name (_CID, "10EC5280")  // _CID: Compatible ID
-            Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
-            Name (_UID, One)  // _UID: Unique ID
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Name (RBUF, ResourceTemplate ()
-                {
-                    I2cSerialBusV2 (0x0069, ControllerInitiated, 0x00061A80,
-                        AddressingMode7Bit, "\\_SB.I2CC",
-                        0x00, ResourceConsumer, , Exclusive,
-                        )
-                })
-                Return (RBUF) /* \_SB_.I2CC.BMA2._CRS.RBUF */
-            }
+Am 04.02.24 um 07:59 schrieb Andrea della Porta:
+> From: Phil Elwell <phil@raspberrypi.org>
+>
+> BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
+> to access the full 4GB of memory on a Pi 4.
+>
+> Cc: Phil Elwell <phil@raspberrypi.org>
+> Cc: Maxime Ripard <maxime@cerno.tech>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+mainlining isn't that simple by sending just the downstream patches to
+the mailing list. In many cases there reasons why this hasn't been
+upstreamed yet.
 
-            OperationRegion (CMS2, SystemIO, 0x72, 0x02)
-            Field (CMS2, ByteAcc, NoLock, Preserve)
-            {
-                IND2,   8, 
-                DAT2,   8
-            }
+In my opinion just this feature is worth a separate patch series. In
+2021 i already send an initial version, which tried to implement it in a
+cleaner & maintainabler way [1]. In the meantime Dave Stevenson from
+Raspberry Pi wrote that he also wanted to work on this. Maybe you want
+to work on this together?
 
-            IndexField (IND2, DAT2, ByteAcc, NoLock, Preserve)
-            {
-                Offset (0x74), 
-                BACS,   32
-            }
-
-            Method (ROMS, 0, NotSerialized)
-            {
-                Name (RBUF, Package (0x03)
-                {
-                    "0 -1 0", 
-                    "-1 0 0", 
-                    "0 0 1"
-                })
-                Return (RBUF) /* \_SB_.I2CC.BMA2.ROMS.RBUF */
-            }
-
-            Method (CALS, 1, NotSerialized)
-            {
-                Local0 = Arg0
-                If (((Local0 == Zero) || (Local0 == Ones)))
-                {
-                    Return (Local0)
-                }
-                Else
-                {
-                    BACS = Local0
-                }
-            }
-
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Return (0x0F)
-            }
-        }
-    }
-
-Signed-off-by: Jesus Gonzalez <jesusmgh@gmail.com>
----
-v2 patch implementing the improvements mentioned by Mr. Cameron and Mr.
-Shevchenko, if I understood them correctly. Please tell me if anything
-else should be changed, and I'll be happy to make a new revision.
-
-Thank you!
-
-
- drivers/iio/imu/bmi160/bmi160_spi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
-index 8b573ea99af2..f88d4b2ba79b 100644
---- a/drivers/iio/imu/bmi160/bmi160_spi.c
-+++ b/drivers/iio/imu/bmi160/bmi160_spi.c
-@@ -40,6 +40,14 @@ static const struct spi_device_id bmi160_spi_id[] = {
- MODULE_DEVICE_TABLE(spi, bmi160_spi_id);
- 
- static const struct acpi_device_id bmi160_acpi_match[] = {
-+	/* FIRMWARE BUG WORKAROUND
-+	 * Some manufacturers like GPD, Lenovo or Aya used the incorrect
-+	 * ID "10EC5280" for bmi160 in their DSDT. A fixed firmware is not
-+	 * available as of Feb 2024 after trying to work with OEMs, and
-+	 * this is not expected to change anymore since at least some of
-+	 * the affected devices are from 2021/2022.
-+	 */
-+	{"10EC5280", 0},
- 	{"BMI0160", 0},
- 	{ },
- };
--- 
-2.43.0
-
+[1] -
+https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3ad711=
+46c@i2se.com/T/
