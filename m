@@ -1,140 +1,156 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915FC17580;
-	Mon,  5 Feb 2024 10:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1171317586;
+	Mon,  5 Feb 2024 10:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707130091; cv=none; b=mxFi7OJaZ7Yy6P6PEN9g/CwJiXewKyNnibc9CEtGgwqYTDjl/JIxk3Pr7qp1s+wuVkEO5DwEHubAe4NN3nxiYBzBPS0dXAoilcrdkigaenNdoO2yigedbnDagZJz+gFvHIK/f4ioxeY3LYbfFiCNL6MqYnOpzXTvv69/T24S47E=
+	t=1707130159; cv=none; b=Xa2Q14HtkXZJOiUjAqzo9VbMvsnZe1dk0wCq+QlXJIMrHJP0LdEi3/7nEgE28PWG4lVIyCAAZ5dht1gs4hi3zuRyqDdJLmFB2E+v7ULyztK+pZs7gawThKENQ8yIGYkXfvbeC50NLbwhHQkEabiKEUoEmuMGj7ME+2PlQ+h+iSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707130091; c=relaxed/simple;
-	bh=zgdRXtCQVgt2Or41jbGbqOJrId8F/mOhYFJZ0vVkfxs=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=pQxf18H9j7BCMECJDrlcO4FDwhicmeKIhnwiPDgQLXy+NzEs99WEZDb23dOq2dUi08SkH26uywWwyAQomsWo8uAxY4IbahlcNROxIS+Zo7K5kbuHVZONyLIZSqz/HYaIq+Z+JMvD1TvGZttGYVbYXFhuCbaucLZXKeMXZkK+GSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YRY6/qA5; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707130159; c=relaxed/simple;
+	bh=govUFsIU8oUtrCbGqxjAUy8sqpOQeqhvoaRkgz6Ypo4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B8yQfsj27viKS9vtx5GB3C2nE3XY5w21lcSSOK0woYJ1j3/CtHiy4w2qiWPZ98GpLpnrO1OA/Vc/M2dGTJNmzCXAiYgbjTYBOFzlnjCaRzwLMImsZna1CBGQqsyGSmO7xZRUCHWrLsb6Y3h4RqHow5J5uSafa8NJaLYEHE2Hf3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=YIsXeHju; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YRY6/qA5"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 415A07w1029161;
-	Mon, 5 Feb 2024 10:48:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=mime-version : date :
- from : to : cc : subject : reply-to : in-reply-to : references :
- message-id : content-type : content-transfer-encoding; s=pp1;
- bh=D7V6wffE7jnUqvHbks/jTIWjjzAJmTZcNtR1eMolikU=;
- b=YRY6/qA52VcknRqJSxY0v7xVkuXi8/9HtsAHDb20iMmhHati7UxxZmA2SbRuMNc0obaB
- fF2RXVi0pg7i9EUuXkh+tFXdkP5FTsHka4qChqU0QSE4l4RQfAYsB80eosJd9666OAxB
- 1S6NFNqGZqh3vNj+jEXIjJWYC+ayaHNJYV+RX97qH5DlNxh1gzgaGzNuhGMpGLqTDyH9
- HZOWlFwn88BqnSVxr6V3NHsdvyPlJTGsjSysbdt+U2S8SpbAJ1VmIKXzMcLyrfQLUfvl
- NRwAfdSN+r87l2AxIKVxLDzGxuRXR2V5swBYfyHYtwUPNMH70oSB28rbbaZqnJgPlu7H iw== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w2tx84ty8-6
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Feb 2024 10:47:59 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4159w9HV019996;
-	Mon, 5 Feb 2024 10:36:35 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w1ytsr41m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Feb 2024 10:36:35 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 415AaXUd1049268
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 Feb 2024 10:36:34 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DA19358061;
-	Mon,  5 Feb 2024 10:36:33 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D047858067;
-	Mon,  5 Feb 2024 10:36:32 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  5 Feb 2024 10:36:32 +0000 (GMT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YIsXeHju"
+X-UUID: 30e95b26c41411ee9e680517dc993faa-20240205
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=fUeRA0Jda+Lyqu/i6W8IEQOOKZJBQt/IPjmrmBJEcYo=;
+	b=YIsXeHjux330gf2denmnvznBQxMRhpKW9FqauUIxZxwLTPkRK2sQjNP2yRp0h3P8fCnaA1cZrnyIS9U6UvuUJrrbDI9nu/5g1AKC2nPQqpwbiJr8F2xhw8+D3iNPbyHMLNqxhsuqjYDXU/fUNLwPPB1FE7kFbV5C3VtySqBLRL4=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:2045a737-53c4-4def-862a-8da50850b13b,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:a83988fe-c16b-4159-a099-3b9d0558e447,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 30e95b26c41411ee9e680517dc993faa-20240205
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <alice.chao@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1851177890; Mon, 05 Feb 2024 18:49:09 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Mon, 5 Feb 2024 18:49:07 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 5 Feb 2024 18:49:07 +0800
+From: <alice.chao@mediatek.com>
+To: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>, "James E.J. Bottomley"
+	<jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <wsd_upstream@mediatek.com>, <stanley.chu@mediatek.com>,
+	<peter.wang@mediatek.com>, <powen.kao@mediatek.com>,
+	<naomi.chu@mediatek.com>, <cc.chou@mediatek.com>, <tun-yu.yu@mediatek.com>,
+	<chun-hung.wu@mediatek.com>, <casper.li@mediatek.com>, Alice Chao
+	<alice.chao@mediatek.com>, <linux-scsi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: [PATCH v1 1/1] ufs: core: fix shift issue in ufshcd_clear_cmd
+Date: Mon, 5 Feb 2024 18:49:04 +0800
+Message-ID: <20240205104905.24929-1-alice.chao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 05 Feb 2024 11:36:32 +0100
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter
- <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic
- <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] s390: AP: make ap_bus_type const
-Reply-To: freude@linux.ibm.com
-Mail-Reply-To: freude@linux.ibm.com
-In-Reply-To: <20240203-bus_cleanup-s390-v1-5-ac891afc7282@marliere.net>
-References: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
- <20240203-bus_cleanup-s390-v1-5-ac891afc7282@marliere.net>
-Message-ID: <696c7ded128d46addc16ecafa6128822@linux.ibm.com>
-X-Sender: freude@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0GLNHfCFchkaM5BLNQwuhdGmU8Ejkfil
-X-Proofpoint-GUID: 0GLNHfCFchkaM5BLNQwuhdGmU8Ejkfil
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-05_06,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 mlxlogscore=783 bulkscore=0 spamscore=0 clxscore=1011
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402050082
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.721700-8.000000
+X-TMASE-MatchedRID: KISk8WdGcXBCI2iUrGleqpdc7I2df+ms2D9FbDg9BP42/UwdvFG5IpBn
+	0Y6NyRFo+hJFNJdQq3OnwZyfnQYxDBLekAZjy1WtdXu122+iJtrXAvRa0tfJGvuoLVXE/uWaDbI
+	Geo4FmxIppITnGCYXcdLS2IFgBJ3tVQ7O/4REy+v62mDKTRDEUkJfxXUWJFGS31GU/N5W5BB91D
+	unZtIaFuLzNWBegCW2xl8lw85EaVQLbigRnpKlKTpcQTtiHDgWu7FQYXTUmCAUzE8GbcbxJmrYG
+	6Z2cg1Fe4VlQFoik74zs1tzCvb5Hw==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.721700-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: CDD062A06CE60E35FB211DAD39DB59CF632CD39BD23F74EAC619151C171A39CD2000:8
+X-MTK: N
 
-On 2024-02-03 15:58, Ricardo B. Marliere wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the ap_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> ---
->  drivers/s390/crypto/ap_bus.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/ap_bus.c 
-> b/drivers/s390/crypto/ap_bus.c
-> index f46dd6abacd7..2ecf4d36e78b 100644
-> --- a/drivers/s390/crypto/ap_bus.c
-> +++ b/drivers/s390/crypto/ap_bus.c
-> @@ -135,7 +135,7 @@ static int ap_max_domain_id = 15;
->  /* Maximum adapter id, if not given via qci */
->  static int ap_max_adapter_id = 63;
-> 
-> -static struct bus_type ap_bus_type;
-> +static const struct bus_type ap_bus_type;
-> 
->  /* Adapter interrupt definitions */
->  static void ap_interrupt_handler(struct airq_struct *airq,
-> @@ -1603,7 +1603,7 @@ static struct attribute *ap_bus_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(ap_bus);
-> 
-> -static struct bus_type ap_bus_type = {
-> +static const struct bus_type ap_bus_type = {
->  	.name = "ap",
->  	.bus_groups = ap_bus_groups,
->  	.match = &ap_bus_match,
+From: Alice Chao <alice.chao@mediatek.com>
 
-Reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
+When task_tag > 32 (in mcq mode), 1U << task_tag will out of bound
+for u32 mask. Fix this bug to prevent SHIFT_ISSUE (Bitwise shifts
+that are out of bounds for their data type).
+
+[name:debug_monitors&]Unexpected kernel BRK exception at EL1
+[name:traps&]Internal error: BRK handler: 00000000f2005514 [#1] PREEMPT SMP
+[name:mediatek_cpufreq_hw&]cpufreq stop DVFS log done
+[name:mrdump&]Kernel Offset: 0x1ba5800000 from 0xffffffc008000000
+[name:mrdump&]PHYS_OFFSET: 0x80000000
+[name:mrdump&]pstate: 22400005 (nzCv daif +PAN -UAO)
+[name:mrdump&]pc : [0xffffffdbaf52bb2c] ufshcd_clear_cmd+0x280/0x288
+[name:mrdump&]lr : [0xffffffdbaf52a774] ufshcd_wait_for_dev_cmd+0x3e4/0x82c
+[name:mrdump&]sp : ffffffc0081471b0
+<snip>
+Workqueue: ufs_eh_wq_0 ufshcd_err_handler
+Call trace:
+ dump_backtrace+0xf8/0x144
+ show_stack+0x18/0x24
+ dump_stack_lvl+0x78/0x9c
+ dump_stack+0x18/0x44
+ mrdump_common_die+0x254/0x480 [mrdump]
+ ipanic_die+0x20/0x30 [mrdump]
+ notify_die+0x15c/0x204
+ die+0x10c/0x5f8
+ arm64_notify_die+0x74/0x13c
+ do_debug_exception+0x164/0x26c
+ el1_dbg+0x64/0x80
+ el1h_64_sync_handler+0x3c/0x90
+ el1h_64_sync+0x68/0x6c
+ ufshcd_clear_cmd+0x280/0x288
+ ufshcd_wait_for_dev_cmd+0x3e4/0x82c
+ ufshcd_exec_dev_cmd+0x5bc/0x9ac
+ ufshcd_verify_dev_init+0x84/0x1c8
+ ufshcd_probe_hba+0x724/0x1ce0
+ ufshcd_host_reset_and_restore+0x260/0x574
+ ufshcd_reset_and_restore+0x138/0xbd0
+ ufshcd_err_handler+0x1218/0x2f28
+ process_one_work+0x5fc/0x1140
+ worker_thread+0x7d8/0xe20
+ kthread+0x25c/0x468
+ ret_from_fork+0x10/0x20
+
+Signed-off-by: Alice Chao <alice.chao@mediatek.com>
+---
+ drivers/ufs/core/ufshcd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 029d017fc1b6..c6cff4aa440a 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -3057,7 +3057,7 @@ bool ufshcd_cmd_inflight(struct scsi_cmnd *cmd)
+  */
+ static int ufshcd_clear_cmd(struct ufs_hba *hba, u32 task_tag)
+ {
+-	u32 mask = 1U << task_tag;
++	u32 mask;
+ 	unsigned long flags;
+ 	int err;
+ 
+@@ -3075,6 +3075,8 @@ static int ufshcd_clear_cmd(struct ufs_hba *hba, u32 task_tag)
+ 		return 0;
+ 	}
+ 
++	mask = 1U << task_tag;
++
+ 	/* clear outstanding transaction before retry */
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+ 	ufshcd_utrl_clear(hba, mask);
+-- 
+2.18.0
+
