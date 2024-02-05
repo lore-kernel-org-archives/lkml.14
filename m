@@ -1,108 +1,112 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CF528E09;
-	Mon,  5 Feb 2024 14:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1A922F11
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707143025; cv=none; b=Gutw9QNlCURSPOOJHV9xhDClhJRvC3cr32OKGedl5cD35hv9ddc74GVVpN0PU7Acx99wCxGPMnn8vVL89WC90zq4ZuklwN5GSwMjR/e29v/Y0k/qflZu2F/bTUykgBGwtdzYSr07teRbx8aLU7dM9GMgPMlXL/sNIAxBrXx8L7A=
+	t=1707143036; cv=none; b=l8v2eS0cWyh12o4qfWmU2NLC2WLfUg4z0uX57pboyyCxtVtGxttBuwdaYz1gpXKZPhNIYNg4akTSMc8HTFNmT5jtva9a7n7uNZH4pXpBTt65LJqSJz9CUVv81yrxAZTRddw0DdavyinfZ/go1pjtgebcilwxllhgUFwoyKE0iMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707143025; c=relaxed/simple;
-	bh=dnIBfbHB8ZPlHqVXA+eJYYPip2Nlrn+++FytfzTBiTM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=a9APTmotxZnZTdknK1zj+Xr6rW/AvkP516nqGodpA4pf8BfmatBoSYtw1/ZkXuRUQuklCUyzuPgHoLake0PVMWikE5yk39Nek1hEpXtJm1RfUnadWAQ6gLE4tsVK3+i2ml5w7X3AgZyaGTRKDq88quFx4oAAu5n1Xet3T19Ae5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KLm4V0bl; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1707143036; c=relaxed/simple;
+	bh=6/5mKIj8fn/l/2zcBE1I76cqFTdIUIkRulboZYl02L4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPGxF+8ZA+LadWGKZHEesDIu0TikEoOKKFTRD/F0czVU6tdydtgoOQGjbVIkc5PZFY19865gSZn/QBUOJMGCCqR7yQUwzdd8PsMz1rbbeu0STizHMns5iPC8AgsbuUXdityy8Yc99Y2vJFKrOVd9jTM7CiM9WNSfliqGGn0N/2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AShhOTyW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KLm4V0bl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1707143000; x=1707747800; i=markus.elfring@web.de;
-	bh=dnIBfbHB8ZPlHqVXA+eJYYPip2Nlrn+++FytfzTBiTM=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=KLm4V0blbSMIAGoBSC9mXB8FoGR1shqWQKuYJTqNaJfah9ZXy6C88xPezTwQZ7iZ
-	 o08IgUmVlAlGV7wN1RLyi+hIXUzlzlvQp35zt1qBJJQEBcNtcmHMBYgboazVK0emi
-	 dicoXgwXol3ylS9hXSZsTfwYnXp1cJjAMemJmTzsn6nUOLPYf9ageVqO//u1bg1k8
-	 qXNmlFfBe9xLHTag/LUC+J7H0nZjQ9oafUi3/ud7F8J4MrwwJG5X9VooDKviXMVEy
-	 L9NY5TYvDF5h041mtEuN0T/Wp9p0T7ItXjZAu93OzkOArdZowMiTtEnElDO+36wZQ
-	 mD6eftyehLbH38lLVw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MC0LJ-1rjK5d3GOr-00CNRJ; Mon, 05
- Feb 2024 15:23:20 +0100
-Message-ID: <da6af483-5ee9-45cd-922e-d9d5364674dc@web.de>
-Date: Mon, 5 Feb 2024 15:23:18 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AShhOTyW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707143033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9vD4cczi13MuDg3gk2/XtBn2JMSKQaW/Vs1BWrM2cQA=;
+	b=AShhOTyWieQhtLU0DPki5e6AkrsqIqlWHxUYQHiug0COlJtD9leHdqdibNrL/BiWyiM0rZ
+	EJIN+hoDuX7J7w/FsoHgSWbf78BVKS+6KzWokF3IAfSuOmH2jgIaYXAIpuqADVc8LHkkor
+	f2iz+2VzyTm4F5Jx56LY9dbNZw7QDPQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-hm6g-lS1M9iKInPMpQE9nw-1; Mon,
+ 05 Feb 2024 09:23:47 -0500
+X-MC-Unique: hm6g-lS1M9iKInPMpQE9nw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 21C783CBDF61;
+	Mon,  5 Feb 2024 14:23:47 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.165])
+	by smtp.corp.redhat.com (Postfix) with SMTP id A9A1E40C95AD;
+	Mon,  5 Feb 2024 14:23:45 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  5 Feb 2024 15:22:31 +0100 (CET)
+Date: Mon, 5 Feb 2024 15:22:29 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pidfd: change do_notify_pidfd() to use
+ __wake_up(poll_to_key(EPOLLIN))
+Message-ID: <20240205142229.GA16757@redhat.com>
+References: <20240205141050.GA16278@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-pm@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] pmdomain: mediatek: Use
- devm_platform_get_and_ioremap_resource() in init_scp()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Qk9+8YbmEYpkEKxu5CX80yzJiKq/O07RES/6VuICIr0ippZkpn4
- +r0wYvjgmLpZo3rV+cALSmNXrH8l2dLYM5uGCk9VINKHybD8mkHH5LUwB6ktuwG6Vkq5za9
- aXPi+9TgrBgoot1B4GWajqZcqGIPBDYJKMX4gIoappbK/MU0JA2+BYk/eyXr6jPsioXFmDd
- Tuaaz/TxM9fLDgzWwUqKA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:r9Z430C379U=;ilM33fD4v70mE6uWIXsWyXQKWCK
- dsXZDH6BvRcR7mUyDjiXmJM+hkrFdUWqXEQs0b90wl7rQDuhQt3LlEcSrGTCR6BAlhQ1E9GVD
- QEhX4KXDLu0RkEZC54ydlfMNFozgY4v5Pww5o+i3eOvabToBAR9KPl2RX9NPQNSX03JbX5MaC
- /Ch9a1Rc29+bNhZ2YwMEM8RdjvLXC8+xvXZle598Z3gV9R/U8FF+yATT3KbbI4aiB28yuxvzl
- 6kdlXxDSTF5uIv3XpfwTglBBLE2nQwewbptuwUoStSqUzjCOXuMsjDdRj32Y3zcEXxPWqH8pC
- CYltKfBrndxqR8q42dvy3jBuTjjbvR8wrLVQBxb0c/BjlTS2D9IvbaYCysY0E9SHgz+fse5LC
- Ydvv3SJ+JLmyd62OrYrS8SmTZwdKeFgqYptLQXK2IZ1Svxji7PQLePDBZc4/wIfBdyJiQ3yJC
- irmXwRVzLw7EinjgwxuRAijiutU6m9l4uSIOLBL3peBfvUlshrv4QwnY3JfJ0eEJ8+h2InKqh
- PEFKAft2NMmHWimsJQ192fxKgXUxc2k94s11+35g26/1e2U3q2OJaKPYK7pDy07v47AmW0l/O
- 6eRr2l0aI+hiIxPcXKg1BTOnBt6cX4odLRItGYCreOqp1Uyqdd2cADTfYVgN/KzQ43KplSqLp
- 6GpjXXDPmy1qN82nx3Ppz9jmdsbZwFUirV+3dJRORZzL7iKVpjXJLEhN3zhBDYMRBuaweivKt
- px89WBWS8u6KGQ4zcLICgaZUxS/7nMh+TlXziDHtozxpHw5d7KcwpNJjffvUYiIApEaBXJ6Mt
- 43yfxJPG/y4L1Sq0I0MepnInsU8wuAFV2EWGCnz+JVMJc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205141050.GA16278@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 5 Feb 2024 15:08:27 +0100
+Argh, sorry for noise Christian, I have sent the same patch twice.
 
-A wrapper function is available since the commit 890cc39a879906b63912482df=
-c41944579df2dc6
-("drivers: provide devm_platform_get_and_ioremap_resource()").
-Thus reuse existing functionality instead of keeping duplicate source code=
-.
+Please ignore this email, the next email from me with the same
+subject adds the reference to our discussion into the changelog.
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/pmdomain/mediatek/mtk-scpsys.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/pmdomain/mediatek/mtk-scpsys.c b/drivers/pmdomain/med=
-iatek/mtk-scpsys.c
-index b374d01fdac7..9e7f0771e7e4 100644
-=2D-- a/drivers/pmdomain/mediatek/mtk-scpsys.c
-+++ b/drivers/pmdomain/mediatek/mtk-scpsys.c
-@@ -441,8 +441,7 @@ static struct scp *init_scp(struct platform_device *pd=
-ev,
-
- 	scp->dev =3D &pdev->dev;
-
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	scp->base =3D devm_ioremap_resource(&pdev->dev, res);
-+	scp->base =3D devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(scp->base))
- 		return ERR_CAST(scp->base);
-
-=2D-
-2.43.0
+On 02/05, Oleg Nesterov wrote:
+>
+> rather than wake_up_all(). This way do_notify_pidfd() won't wakeup the
+> POLLHUP-only waiters which wait for pid_task() == NULL.
+> 
+> TODO:
+>     - as Christian pointed out, this asks for the new wake_up_all_poll()
+>       helper, it can already have other users.
+> 
+>     - we can probably discriminate the PIDFD_THREAD and non-PIDFD_THREAD
+>       waiters, but this needs more work.
+> 
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  kernel/signal.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9b40109f0c56..c3fac06937e2 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2021,11 +2021,12 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
+>  
+>  void do_notify_pidfd(struct task_struct *task)
+>  {
+> -	struct pid *pid;
+> +	struct pid *pid = task_pid(task);
+>  
+>  	WARN_ON(task->exit_state == 0);
+> -	pid = task_pid(task);
+> -	wake_up_all(&pid->wait_pidfd);
+> +
+> +	__wake_up(&pid->wait_pidfd, TASK_NORMAL, 0,
+> +			poll_to_key(EPOLLIN | EPOLLRDNORM));
+>  }
+>  
+>  /*
+> -- 
+> 2.25.1.362.g51ebf55
+> 
+> 
 
