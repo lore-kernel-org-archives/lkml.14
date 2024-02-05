@@ -1,119 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2DF18EB9;
-	Mon,  5 Feb 2024 11:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A2B1B7EA;
+	Mon,  5 Feb 2024 11:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134288; cv=none; b=RenZqMSYNP99ssWllrUHxxQo9WaK5gdC2tyo1YsVyfIDNCJK7g0L5rVrLNoyi1w9vU+kdhPonN9HQbiRh84S6NmhQP+NoiM8Gfly/MRWBuEOvSctFz8h0ejw7gPDAx5weQqvSAV47zTojfyJN+aoeGwEIVTPT7mNi/3JJ2AzhR4=
+	t=1707134296; cv=none; b=HqNAYD6Ys3pAE+Cgb2e2boQvu3hkNrDM5Dc7lpNhX2inDzBx0h33BtiFoX8KGHx7qyh/fWXX83E+yMP7SPTHMDr+qsGdDaHiOcQQV5nTnifAm/Gx+bSl7aRQ3Qagt7mORoSTnP5ExzIueDpmfRd/2Z4hYxsFvMR4rcv5jyTNbQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134288; c=relaxed/simple;
-	bh=7TVjhZRcGSDBg8WholubRtQ/4dPPkNOismsM1iFeAmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VvFuoEt79SM4D091AO0+g5UFalRZR57LPx5BFCBnS0KrD9uAciSFZUmGBUAG+2/ZAN7J7S4wCR2k/8kQv7E0ldcxYiA7i0Hh50h2q8selBQVn6tAfL2LOmDU+yy6+y433fl8p1SIDu5MUmjwYSECCByQT6mYmuv6uxBtLhkp65k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c777OkkO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707134296; c=relaxed/simple;
+	bh=RYHnkHzjQTO1csC37QGC5LASS/49QmvTHhynWg7zK+s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qvx0YT//jwchMUqA9lLFYk1oD53ToHZOL7j/UluFOwCwIAsUJf31mnyq/SEK5Z9sI30yBrBwE3PbHyHQdPgxE+V/bB9ymX9h4KBnGQsMdIiQjIAVwNACqnYmn7R3UJCJpmTr24qMlBf7LC6pYrunQQXVII+vM4g1BN83Zd3qR5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C9+r26/d; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c777OkkO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB73C433C7;
-	Mon,  5 Feb 2024 11:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707134288;
-	bh=7TVjhZRcGSDBg8WholubRtQ/4dPPkNOismsM1iFeAmI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c777OkkONkvw4s74UzHN4N9E09qBlbCf/qa18onl7cGFB3rUbkLqV0y5Gbzqf4s01
-	 batHHR5A0KNO6yguYJy3UUB0wRyXmLUbmFz29OHRiL9fuK9JMvlXQGTX/ZCGIjyJsR
-	 cv6DlVpraqRU5gWCQL4vddCV/FtaCevyi5jSzTaR8O0CIp0dteeVByB/l2SLhFZr0z
-	 S9+Kv0zAcRq9nt2/vJH4nrBzUtPx63VWQ1pOGmAin7/jPT99W+q/cWiEZPU68e9NXR
-	 +RTrTIut8cOPsZM4N0yZX99cX0OQU3ichNbIYOdcXkOvt4NNkTmBD3E2XgnADKBc6r
-	 fqn6LF2Ug8Kwg==
-Date: Mon, 5 Feb 2024 12:57:55 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
-	Andreas Gruenbacher <agruenba@redhat.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, 
-	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
-	ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org
-Subject: Re: [PATCH v3 04/47] filelock: add some new helper functions
-Message-ID: <20240205-laufen-hosen-38578e076df5@brauner>
-References: <20240131-flsplit-v3-0-c6129007ee8d@kernel.org>
- <20240131-flsplit-v3-4-c6129007ee8d@kernel.org>
- <20240205-wegschauen-unappetitlich-2b0926023605@brauner>
- <de77ec5ade7fac7e72445cb2d10d95efe8bf9c92.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C9+r26/d"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 415Bng2R009513;
+	Mon, 5 Feb 2024 11:58:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=+FLjOha
+	9hsz0N3kTVXjRHky3yB34sbwW32/QLwTYprw=; b=C9+r26/dK0WzIXaQaQ82lO9
+	ff/omTQjeEz2tHhxj8Ee8GMWuN16q6rsAYeQQkhnqPpQ+csk28MH7rykyfplrXYA
+	/mDfvYwFWUIol1+at6oOHJ9q8MzGrZ9jP8Ykauajg17161r1TrkB7axbZcRvLVHl
+	0vLrI1/YKionBAaD119IMsKbdCZPgX8RCw5F2Y+0sSD01g8dwf58XCfEmuDvj0zU
+	c4OZlXqf7FyUM8AwD7f6VSpxLKNj/g1XZ5gOMyXM5e8jXkSb4EWamcyUI5ba0OxK
+	g1zj+wn3qrz2JLaAFfyHeWcnSONoPuuYo97h0HjaFrelp92/HN+5WIrFM75Hd8Q=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w2rk70r23-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 11:58:11 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 415BwAKj004961
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 5 Feb 2024 11:58:10 GMT
+Received: from jingyw-gv.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 5 Feb 2024 03:58:05 -0800
+From: Jingyi Wang <quic_jingyw@quicinc.com>
+To: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <quic_jingyw@quicinc.com>, <kernel@quicinc.com>
+Subject: [RFC PATCH 0/6] arm64: dts: qcom: Introduce AIM500 platform device tree
+Date: Mon, 5 Feb 2024 19:57:15 +0800
+Message-ID: <20240205115721.1195336-1-quic_jingyw@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <de77ec5ade7fac7e72445cb2d10d95efe8bf9c92.camel@kernel.org>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5VZmEekwiCFsCTUmWV2-tpTTxyo59yLu
+X-Proofpoint-ORIG-GUID: 5VZmEekwiCFsCTUmWV2-tpTTxyo59yLu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_06,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=491 impostorscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402050091
 
-On Mon, Feb 05, 2024 at 06:55:44AM -0500, Jeff Layton wrote:
-> On Mon, 2024-02-05 at 12:36 +0100, Christian Brauner wrote:
-> > > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> > > index 085ff6ba0653..a814664b1053 100644
-> > > --- a/include/linux/filelock.h
-> > > +++ b/include/linux/filelock.h
-> > > @@ -147,6 +147,29 @@ int fcntl_setlk64(unsigned int, struct file *, unsigned int,
-> > >  int fcntl_setlease(unsigned int fd, struct file *filp, int arg);
-> > >  int fcntl_getlease(struct file *filp);
-> > >  
-> > > 
-> > > 
-> > > 
-> > > 
-> > > 
-> > > 
-> > > 
-> > > +static inline bool lock_is_unlock(struct file_lock *fl)
-> > > +{
-> > > +	return fl->fl_type == F_UNLCK;
-> > > +}
-> > > +
-> > > +static inline bool lock_is_read(struct file_lock *fl)
-> > > +{
-> > > +	return fl->fl_type == F_RDLCK;
-> > > +}
-> > > +
-> > > +static inline bool lock_is_write(struct file_lock *fl)
-> > > +{
-> > > +	return fl->fl_type == F_WRLCK;
-> > > +}
-> > > +
-> > > +static inline void locks_wake_up(struct file_lock *fl)
-> > > +{
-> > > +	wake_up(&fl->fl_wait);
-> > > +}
-> > > +
-> > > +/* for walking lists of file_locks linked by fl_list */
-> > > +#define for_each_file_lock(_fl, _head)	list_for_each_entry(_fl, _head, fl_list)
-> > > +
-> > 
-> > This causes a build warning for fs/ceph/ and fs/afs when
-> > !CONFIG_FILE_LOCKING. I'm about to fold the following diff into this
-> > patch. The diff looks a bit wonky but essentially I've moved
-> > lock_is_unlock(), lock_is_{read,write}(), locks_wake_up() and
-> > for_each_file_lock() out of the ifdef CONFIG_FILE_LOCKING:
-> > 
-> 
-> I sent a patch for this problem yesterday. Did you not get it?
+Add the device tree for the AIM500 AIoT board along with usb, regulators,
+serial and PCIe found in this board.
 
-Whoops, probably missed it on the trip back from fosdem.
-I'll double check now.
+AIM500 Series is a highly optimized family of modules designed to support
+AIoT and Generative AI applications which is based on SM8650P soc with
+addtional functions like PMIC and bluetooth. And AIM500 AIoT is mounted
+onto Qualcomm AIoT carrier board to support verification, evaluation and
+development.
+
+Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
+---
+
+This patch series has some open discussion topics depend on [1], including:
+1. memory map will have a large reserved region for firmware related,
+   since currently firmware features are still in developing and easily to
+   be changed.
+2. vph_pwr was open whether it should be put in som.dtsi, or board.dts. we
+   can see vph_pwr may have different design and implementation from
+   different boards design, while vph_pwr needed to be one of the som input,
+   and then the vph_pwr is used inside som to different pmics input. So we
+   proposed have the definition in som.dtsi, and have it's own implementation
+   in board.dts.
+3. board compatible like aim300-aiot was open whether can be added or not.
+   We added currently since it will fail dt binding check if not.
+
+[1] https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com/#t
+
+And we got following error while doing dtb check:
+sm8650p-aim500-aiot.dtb: usb@a6f8800: interrupt-names: ['hs_phy_irq', 'ss_phy_irq', 'dm_hs_phy_irq', 'dp_hs_phy_irq'] is too short
+Which should be caused by missing intertupt name "pwr_event" in sm8650.dtsi
+
+Jingyi Wang (6):
+  dt-bindings: arm: qcom: Document sm8650p soc and AIM500 AIoT board
+  dt-bindings: arm: qcom,ids: Add SoC ID for SM8650P
+  soc: qcom: socinfo: Add SM8650P SoC ID table entry
+  arm64: dts: qcom: sm8650p: introduce sm8650p dtsi
+  arm64: dts: qcom: add base AIM500 dtsi
+  arm64: dts: qcom: add AIM500 AIoT
+
+ .../devicetree/bindings/arm/qcom.yaml         |   9 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/sm8650p-aim500-aiot.dts     | 314 ++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8650p-aim500.dtsi  | 409 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8650p.dtsi         | 180 ++++++++
+ drivers/soc/qcom/socinfo.c                    |   1 +
+ include/dt-bindings/arm/qcom,ids.h            |   1 +
+ 7 files changed, 915 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8650p-aim500-aiot.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8650p-aim500.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8650p.dtsi
+
+--
+base-commit: 076d56d74f17e625b3d63cf4743b3d7d02180379 
+2.25.1
+
