@@ -1,143 +1,101 @@
-Received: from davidv.dev (mail.davidv.dev [78.46.233.60])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0E619474
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.233.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883981AAB9
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133731; cv=none; b=hO7SlYSsNOzenfUZIBWUejQn3rzLXFLQ6g+NXJfkbfY8YL/KZchRKqkP0V93e5INH8Amq8D7bzZ5fMAApGpLBcZjOGXKujaEz6Mjf8xj1LOR+h6U114TVcFecYBg9Se21KTtvycjFwY3yRRZQYw8UuwSGzFa11f9Bic0FFf47H4=
+	t=1707133738; cv=none; b=EV6frs794abb6BY2m/ZhfFTGXp2Elh2TigKrtKzfRkVdhqDgmYqX6nbpS2qK9BwOOGhNiaIwNLFXxKbDQ8wGaLtqIMLHaUrpd6I6MRJpuOIL2k9eLqt4TqWhVDGgFkhCm87neNM17cGZlHNMNjSlGSptHP90KEDc3yfDNWYIHE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133731; c=relaxed/simple;
-	bh=zquoTPDiDMopq79YAJN8pFBJInmPfdGsBn+pPQU1BdE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sBl+go7O2vYG1cqiptEEmJPq0DjElHKEkl+R3sGsVUUroVW+wZDtfCG3IR27WLcjYWCUaCqrgoU99+4acqvi+yxdH22dk+jyu9qUuxJhIfX2OUG6pn/aXtEhEHvo+mLXD2pVXatJguNuqpX08L+iMiAsMdb8IAt2CgBjjTCkXnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev; spf=pass smtp.mailfrom=davidv.dev; arc=none smtp.client-ip=78.46.233.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidv.dev
-Received: from framework.labs
-	by mail.davidv.dev (chasquid) with ESMTPSA
-	tls TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
-	(over submission+TLS, TLS-1.2, envelope from "david@davidv.dev")
-	; Mon, 05 Feb 2024 12:46:51 +0100
-From: David Ventura <david@davidv.dev>
-To: 
-Cc: David Ventura <david@davidv.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH] net: make driver settling time configurable
-Date: Mon,  5 Feb 2024 12:44:40 +0100
-Message-Id: <20240205114609.440597-1-david@davidv.dev>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707133738; c=relaxed/simple;
+	bh=66nJ5U9a3ygOX+4bgNF22AZhA969qXdhW9QnM1tqb+U=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=M3Li8MZ8E7TXPwaDUHiF2A2MI64bjvgDhVPkAXz/n6giuUB3JGfjFRJO2LlS9zUAEvFkpaY0T8PQO9c1cgnLzcB/QOJmt55xHv9U1cZln3AT70MBzbTwLySqLAlJU4PNdm2Uecf97v1T+JoclKhIF11fZ2X/s2U2UPrlFbd5B9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aJLkMblF; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aJLkMblF"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60402c8d651so69541557b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 03:48:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707133735; x=1707738535; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=u9pWmEPb+QInAD00/XoRdhrFOb+26lZmMlfpGr1ljBY=;
+        b=aJLkMblFWBL9XVc1PJoJXSkm8ljOnaOEEA6+3BswwYhNIKmh2NNRjD05c8GUrp8m3V
+         BnC6dQ4Rt/0+NE6pGEs4Lv/lSzV/937B9X86IsZYHhHi+WIPxxR60TXpfasrKE4HeUhU
+         vlm8K5DezmD5/PChIFbj2PqVFCt8vJft+qlzEhTzSQRI+LSWU/f5lThHdo2rIm2tFYBz
+         Mk684qg2sk8zdUxYzYPXcdLBt39ox9akjoH7Ka/iZBZvsTvkilrD1yIegcTWjnxxNh+Z
+         R+9zLzErx1vNDVx/Ypm/a8F2IGXb/2s8RgkdN8nSQYeieoKH7/BVbo/Pp2iYh+heXsgh
+         YwWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707133735; x=1707738535;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u9pWmEPb+QInAD00/XoRdhrFOb+26lZmMlfpGr1ljBY=;
+        b=WjKofLWAnf3gDjapLzjOdzjTwUqOzded4Ssfs1bBGe4e90/2OxHHyZ8Zp4OWjXYSaz
+         1P6OIYUYjwK5A8oPyCzArEBPoCkQIVjrjHoqM51j43Pg5iq7QDPL2/M2c5pg7P5swa8h
+         xr99bTO6kKKfIKPGNQYkIycvFxSQoPHL+YO8rWxtug8Ev2sI92h8PhZZxEG9++acGKgB
+         lOpY9suKARadtJJUf9LRikd3vFanaOVg4WA6sJ+Q0jwf3gMe84B7jp1lrGmP9/OVwXP/
+         yVQjWy8tnqSxqhYnWbdIQDclggpZjDQGxJoUVceuVntkIQTSwPFegBKofQjlAXBaEE3y
+         mgOg==
+X-Gm-Message-State: AOJu0Yw0uTgIRftuVPUEzcFFvVhUpWGHYJ1zPSm5yxkmlTsPX2qAN9/W
+	ZcekiPZnJIFR1FVeRJXUzZUw/NSnB2bzVVEhUP6/PdnQt7eHy7X0PC3C3mswGlgqKCTBFLB7Cmy
+	n5IL+Z65r5g==
+X-Google-Smtp-Source: AGHT+IEPDNTIa/kKHtaCXI3j37eU6GqdIPxhD6Vmn3ytaAwwRwQ+2yvQ4xpCwyA7G89YtL2LJe0aotg9tt3g6w==
+X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
+ (user=joychakr job=sendgmr) by 2002:a05:690c:39d:b0:5ff:5135:ffcf with SMTP
+ id bh29-20020a05690c039d00b005ff5135ffcfmr2388161ywb.4.1707133735545; Mon, 05
+ Feb 2024 03:48:55 -0800 (PST)
+Date: Mon,  5 Feb 2024 11:48:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Message-ID: <20240205114826.39036-1-joychakr@google.com>
+Subject: [PATCH] nvmem: rmem: Fix return value of rmem_read()
+From: Joy Chakraborty <joychakr@google.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, manugautam@google.com, 
+	Joy Chakraborty <joychakr@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-During IP auto configuration, some drivers apparently need to wait a
-certain length of time to settle; as this is not true for all drivers,
-make this length of time configurable.
+reg_read() callback registered with nvmem core expects an integer error
+as a return value but rmem_read() returns the number of bytes read, as a
+result error checks in nvmem core fail even when they shouldn't.
 
-Signed-off-by: David Ventura <david@davidv.dev>
+Return 0 on success where number of bytes read match the number of bytes
+requested and a negative error -EINVAL on all other cases.
+
+Fixes: 5a3fa75a4d9c ("nvmem: Add driver to expose reserved memory as nvmem")
+Signed-off-by: Joy Chakraborty <joychakr@google.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  4 ++++
- Documentation/admin-guide/nfs/nfsroot.rst     |  3 +++
- net/ipv4/ipconfig.c                           | 23 ++++++++++++++++---
- 3 files changed, 27 insertions(+), 3 deletions(-)
+ drivers/nvmem/rmem.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b47940577c10..b07a035642fa 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2291,6 +2291,10 @@
+diff --git a/drivers/nvmem/rmem.c b/drivers/nvmem/rmem.c
+index 752d0bf4445e..a74dfa279ff4 100644
+--- a/drivers/nvmem/rmem.c
++++ b/drivers/nvmem/rmem.c
+@@ -46,7 +46,12 @@ static int rmem_read(void *context, unsigned int offset,
  
- 	ip=		[IP_PNP]
- 			See Documentation/admin-guide/nfs/nfsroot.rst.
-+	ip.dev_wait_ms=
-+			[IP_PNP]
-+			See Documentation/admin-guide/nfs/nfsroot.rst.
+ 	memunmap(addr);
+ 
+-	return count;
++	if (count != bytes) {
++		dev_err(priv->dev, "Failed read memory (%d)\n", count);
++		return -EINVAL;
++	}
 +
- 
- 	ipcmni_extend	[KNL,EARLY] Extend the maximum number of unique System V
- 			IPC identifiers from 32,768 to 16,777,216.
-diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
-index 135218f33394..f26f7a342af6 100644
---- a/Documentation/admin-guide/nfs/nfsroot.rst
-+++ b/Documentation/admin-guide/nfs/nfsroot.rst
-@@ -223,6 +223,9 @@ ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>:<dns
-   /proc/net/ipconfig/ntp_servers to an NTP client before mounting the real
-   root filesystem if it is on NFS).
- 
-+ip.dev_wait_ms=<value>
-+  Set the number of milliseconds to delay after opening the network device
-+  which will be autoconfigured. Defaults to 10 milliseconds.
- 
- nfsrootdebug
-   This parameter enables debugging messages to appear in the kernel
-diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
-index c56b6fe6f0d7..cbf35163b973 100644
---- a/net/ipv4/ipconfig.c
-+++ b/net/ipv4/ipconfig.c
-@@ -82,8 +82,6 @@
- #define IPCONFIG_DYNAMIC
- #endif
- 
--/* Define the friendly delay before and after opening net devices */
--#define CONF_POST_OPEN		10	/* After opening: 10 msecs */
- 
- /* Define the timeout for waiting for a DHCP/BOOTP/RARP reply */
- #define CONF_OPEN_RETRIES 	2	/* (Re)open devices twice */
-@@ -101,6 +99,7 @@
- 
- /* Wait for carrier timeout default in seconds */
- static unsigned int carrier_timeout = 120;
-+static unsigned int dev_wait_ms = 10;
- 
- /*
-  * Public IP configuration
-@@ -1516,7 +1515,8 @@ static int __init ip_auto_config(void)
- 		return err;
- 
- 	/* Give drivers a chance to settle */
--	msleep(CONF_POST_OPEN);
-+	if(dev_wait_ms > 0)
-+		msleep(dev_wait_ms);
- 
- 	/*
- 	 * If the config information is insufficient (e.g., our IP address or
-@@ -1849,3 +1849,20 @@ static int __init set_carrier_timeout(char *str)
- 	return 1;
++	return 0;
  }
- __setup("carrier_timeout=", set_carrier_timeout);
-+
-+
-+static int __init set_dev_wait_ms(char *str)
-+{
-+	ssize_t ret;
-+
-+	if (!str)
-+		return 0;
-+
-+	ret = kstrtouint(str, 0, &dev_wait_ms);
-+	if (ret)
-+		return 0;
-+
-+	return 1;
-+}
-+
-+__setup("ip.dev_wait_ms=", set_dev_wait_ms);
+ 
+ static int rmem_probe(struct platform_device *pdev)
 -- 
-2.39.2
+2.43.0.594.gd9cf4e227d-goog
 
