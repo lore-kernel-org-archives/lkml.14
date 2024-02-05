@@ -1,60 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE95C210E6;
-	Mon,  5 Feb 2024 13:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3A01BDD3
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707138375; cv=none; b=t5SccQdXfUJP6dl/Grrmbe3gOSvfSphFOeT1n/lAIoydedf3o/OHqbNu2wLWM2meO6Lh/KZ75C1iRrWD6AD5IJZR3+rpWbzsH+Dr2ii9Eim7zGMjd8IJCGxmoSQPKpE8IM4iYkfgNU8fE0lqsAu0xWJjM3RBj0DqFxl7HPDiOPg=
+	t=1707138459; cv=none; b=jGR117lh1rLgPIF9aJeCc3kjJq1qvpSsjhzI2Z92t6eVjt3qdd6RIxUiOh/wRlNn8PF6+DXESfnceAadZT8hbWia5pp3vco8q3WIY4xWm58ocNx21Wfv75QUz2GgXi+6zaRLbQJk2i4isR4uyoyDZtxivjPSC0KE7RxJOwZPHrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707138375; c=relaxed/simple;
-	bh=jNCvi3Kx1udjn5zsmKNV0axNM8kCnrRuz3EFoPq0zNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jv2667yYsz8SrzfHnx26YrN3dcQb+lhU5xGxb4U4A8aYL26vsBLKfu+MZlOQGxitJas13NMPa7NllfwUeUgcADl9oZPx3Tg5dFp2Gmn+As/xZuT/pQlju8R48x819JcTlyc4EN+hX0tvmfzV3fszFMHc21jplKj9NfqkpphJbSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D183C433F1;
-	Mon,  5 Feb 2024 13:06:13 +0000 (UTC)
-Date: Mon, 5 Feb 2024 08:06:09 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: richard clark <richard.xnu.clark@gmail.com>, nico@fluxnic.net,
- mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Question about the ipi_raise filter usage and output
-Message-ID: <20240205080609.563df00f@rorschach.local.home>
-In-Reply-To: <ZcC4aWWKFU1NgrZM@FVFF77S0Q05N>
-References: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
-	<ZcC4aWWKFU1NgrZM@FVFF77S0Q05N>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707138459; c=relaxed/simple;
+	bh=8IPgAyBOVlUjnkv8wh+Tm4lw+PMeIONQj8dzU1ytE3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3ZCw3ABk3U9+4/1u9jCKJwVcnmR4Jq32tTTVYmf3DssuneMwQ2pwKjTwSEo20BvJdUEerNkS9BjKimljMVHsnrTCYbcsQO8qQl4qq377PFSN82T1QjvR+O2rcIOjrGokoMrrH6XSVFZwT9yH3i8ysIb2O0Qxq3D8Twh8p2FQ3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JICJc5iu; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JICJc5iu"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d09bdddfc9so20693531fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:07:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1707138455; x=1707743255; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2QXzXXwRZfKvmUtqjt4P+dHxSnzs9bcTO1bAgWVXXC0=;
+        b=JICJc5iux+vDhZDe+F5nTSWNnDwWBL4XfRySup2VdqXmQNnmfkaU4rlSYIcCELTUF/
+         lhbnCsqZPTZlh4TYCSg89YVDd+xVLwEeTsRikgQO5kE8/wRUtLVaPTa84ks4Rqa0uAX1
+         iJeIqSh/7Z/aOiIjaNqe21icfLyJdXQLK2ITQ3F+fjUbYg/KF266hhKLaDhm5lDblP3m
+         AlwzlIOKkNNaCC0v6Kob93OAh0/qSZ8NYhOH06KAChFJFAiTMlCJ+Dks7Wc32TVTOCIg
+         Yxlzmrq6mGSdkIB3WVjZTI4PB8pyMWPCnNauWTzvShhmSdDJDLsRVHMZlH59fDlztvCw
+         idgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707138455; x=1707743255;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2QXzXXwRZfKvmUtqjt4P+dHxSnzs9bcTO1bAgWVXXC0=;
+        b=OaRrgcETPoj8TJcVRmLFtlJ0Ta+oWvg5MKIirrJoYt4ZxbDnIS6QRc05+AtOwkoE/d
+         dzkFmMjedA5UhxQkZ95wP3koRU5SaFDNh+R6I0FpEEPWGKujRv5EnBqfczqYXdHJzERa
+         aDdKAFkMBiHbRavy/5bdfUS3/mJSOtvh8Bh9M2WMIADBnE+WRip5+7fgjwRubTh4FYtw
+         GOMA4FWi422jbffzAaaVYOc2dVZj7a95qgnI7pPkcRWRhKFm3/pFDSQMi1dy8az3FfP/
+         Sm0rfpEziQ1rkaQaPPIkDRcqnibiddoK66NpjxC7indRdSTw7KKT9oF4zP8Kckup7UUB
+         8BYQ==
+X-Gm-Message-State: AOJu0Yyg7CneO91VbpiCYoKxV8G3Hw0qOR3uMDvQcID9ZFTX/x5gUQsU
+	S0ky9AbhUIi878OyAO+IQGd8u4tN94hDedf+LDEJplMJyJyevrJ5Il/FwHhYkL0=
+X-Google-Smtp-Source: AGHT+IEcLotDGIjm/kaJeJMJ8VntOQLtpRdpfPe+Jsve8SNyEZkjXViB/veEPUmLh8Rh3z40K+VdBQ==
+X-Received: by 2002:a2e:9081:0:b0:2cd:1366:4aa9 with SMTP id l1-20020a2e9081000000b002cd13664aa9mr5752768ljg.25.1707138455398;
+        Mon, 05 Feb 2024 05:07:35 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUcbVCMXiuGEVBvNpiKwsOgnfIlxdtU0yH+3bKYd8NAqpexK7JwzXttmuGtRjsOSKMiYo1ZQmIU8WlRIZdEFwvTO4if4cclWvQrf0blwafgWvY0Ra8GQqTAETy0kJjOQJtlEIqc2OEecuBmQBxHplBaO+yyToyewE9PT6mBNnK/p83v2fKbPwvLNvkiOmvc/6U3MObMBOq1tlK4gdxLp329/6j2hKYY/TOapQ8WGezvUthkJaY4cS4NogPrQj5541J4HDTRrP6VNJ4QIlst3z0hf+wta7/kfyQDB/5FXVJoX9q210QyqGDoHD7PpI5zRp8ImT241AyCIMzqjw==
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id ch17-20020a0564021bd100b0055c8a30152bsm3729106edb.83.2024.02.05.05.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 05:07:35 -0800 (PST)
+Date: Mon, 5 Feb 2024 14:07:33 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>,
+	Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [BUG] workqueues and printk not playing nice since next-20240130
+Message-ID: <ZcDdlRzpofn2cAuO@alley>
+References: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
+ <c6ce8816-c4ff-4668-8cbb-88285330057d@huaweicloud.com>
+ <25fd8537-5a27-4b62-9bf9-1ee7ca59b5b8@paulmck-laptop>
+ <Zb0evDquygkDI_8P@slm.duckdns.org>
+ <c5d5ad66-da86-447b-8014-820d2c67382d@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5d5ad66-da86-447b-8014-820d2c67382d@paulmck-laptop>
 
-On Mon, 5 Feb 2024 10:28:57 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
-
-> > I try to write below:
-> > echo 'target_cpus == 11 && reason == "Function call interrupts"' >
-> > events/ipi/ipi_raise/filter  
+On Fri 2024-02-02 09:40:05, Paul E. McKenney wrote:
+> On Fri, Feb 02, 2024 at 06:56:28AM -1000, Tejun Heo wrote:
+> > Hello,
+> > 
+> > On Fri, Feb 02, 2024 at 08:35:51AM -0800, Paul E. McKenney wrote:
+> > > Good point, and if this sort of thing happens frequently, perhaps there
+> > > should be an easy way of doing this.  One crude hack that might come
+> > > pretty close would be to redefine the barrier() macro to be smp_mb().
+> > > 
+> > > But as noted earlier, -ENOREPRODUCE on today's -next.  I will try the
+> > > next several -next releases.  But if they all get -ENOREPRODUCE, I owe
+> > > everyone on CC an apology for having sent this report out before trying
+> > > next-20240202.  :-/
+> > 
+> > I think I saw that problem too but could reproduce it with or without the
+> > workqueue changes, so I did the lazy thing "oh well, somebody is gonna fix
+> > that" and just tested as-is. It's a bit worrying that ppl don't seem to
+> > already know what the culprit is. Hmm... I can't reproduce it anymore
+> > either.
 > 
-> The '=' checks if the target_cpus bitmap *only* contains CPU 11. If the cpumask
-> contains other CPUs, the filter will skip the call.
+> Glad that it is not just me!  I think...  ;-)
 > 
-> I believe you can use '&' to check whether a cpumask contains a CPU, e.g.
+> > So, there is some chance that this may really be a subtle breakage. If you
+> > ever see it happening again, triggering sysrq-t and capturing the dmesg
+> > output (network should still work fine, so these shouldn't be too difficult)
+> > may help. sysrq-t has workqueue state dump at the end which should clearly
+> > indicate if anything is stalled in workqueue.
 > 
-> 	'target_cpus & 11'
+> Good point, if it does recur, I could try it on bare metal.
 
-11 == 0xb = b1011
+Please, me, John, and Sergey know if anyone see this again. I do not
+feel comfortable when there is problem which might make consoles calm.
 
-So the above would only be true for CPUs 0,1 and 3 ;-)
+Well, there is no queued printk change. Also I do not see anything
+obvious in the changes added to 6.7 which might cause this behavior.
 
-I think you meant: 'target_cpus & 0x800' 
+> > That said, another data point. In my test setup, I use the earlyprintk boot
+> > option which enables console output way before than workqueue becomes
+> > operational, so having on console output at all is highly unlikely to be
+> > indicative of workqueue problem. My memory is hazy but it seems like I can
+> > no longer reproduce the problem on the same git commit. Maybe it was a
+> > problem on the qemu side?
+> 
+> It might have been a qemu issue, but I am using the same qemu.
 
-I tried "1 << 11' but it appears to not allow shifts. I wonder if we should add that?
+In theory, it might also be caused by a change in the serial console
+driver. But I do not see anything obvious there either.
 
--- Steve
+Best Regards,
+Petr
