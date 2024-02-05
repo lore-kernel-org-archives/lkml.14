@@ -1,132 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5892C19D;
-	Mon,  5 Feb 2024 14:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A32C6B2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707144754; cv=none; b=T/TftYFhEQFhBX1QNQa16TqSYB0mV275JxksXoa5p5hRIBuBJXhFXVpBKLnCeFe5whoaXK2bsI69+Dx/J1TWOPxD2j8J1H0Ps7kwe3ecZaUn9h8bY6p7fy0E3Kcq7x3ExefWG9lGQK32cuPL6WNOVNAlQlPi/kDPw18/98IO2NQ=
+	t=1707144765; cv=none; b=n9WHwRizGT/T9kjGS9AbIL9G9/QhFx15vXqz7RXQFKLRMcWxCZXeKr9PkryEoBBLyKneNWGTtrWLwjjPRidatuPkKDU7cCML3L3Zk6Oft+EKwLD+OqeNCO7Y9+LHNqwr8DTUp51X8Vq/q/0Y5SRMKfS9G4pochGpIX2qMC1JRwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707144754; c=relaxed/simple;
-	bh=fjMQKYSrzUd6ahmVPMrjRavcut9sSWmunk404/C9SHI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rX6z85dfNOS7QiEJKPUxSiuU59LAV5I7YG7osqqLO36dBsNFObHdNNoWcEsUcYVsU1fcVbwUrFuOu4nCs0n/useFkxUT2l+haDhN4PVZ1gOxhjDUUlvX9V3ZL04vciYNWnYsWGErzVgNiAjZ7Y8eCkTMTqhCOckNRQ98g63L1a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+vxXMg3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707144765; c=relaxed/simple;
+	bh=kdUOmRDXfFl0jnIDxBdauT+ue8GQmGp+3PNk2EP1TCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rGZwbuZ69JcWpeOVsC59MkF03nvrn7gVqzUx+7mhKV8KdFeKlB2xOtiW9hlVU5facatKORYCct3dnwp0bysWhKbrXN4QMehQXy9DIDI2cgovZwgvPzY9LJ/Z1/xxrIWZawj+8DXeE3k0VJtM3vh7AOXEbFXmNhK1qdLfKTS5B3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xYwF7tfL; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+vxXMg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB0BC433C7;
-	Mon,  5 Feb 2024 14:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707144753;
-	bh=fjMQKYSrzUd6ahmVPMrjRavcut9sSWmunk404/C9SHI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d+vxXMg3O535t4GiNIaxACgO2E14a3T8adkMrgdyRWzz/KKlYEAeQuiVJqYKPIrse
-	 lci5KB9s948+wRFQSjHQ362v/2nm78HQEMIOD083k+4ETVSUfw1j99rB7DbjC/UrIr
-	 hguiNIeqRgfbUIU+mRJ1T6yCr8el+2eEyMy5VIWDSLPisTLlvngX5bJxlxn1MdLsah
-	 ugYDzwndbh6b24yN2y4oOVua88cGMclRmEMmho1hKHZ8uP3dbvG47wMklhXe+L8XMR
-	 C8ftLKSDavq1QFlyjBzgpTXCfGnOnnxlW7MKJq6PPGV2KPYcwZTrzk4EChO4SLV1bY
-	 vsuOGKILww4Qg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rX0Kk-000SGO-Lx;
-	Mon, 05 Feb 2024 14:52:30 +0000
-Date: Mon, 05 Feb 2024 14:52:29 +0000
-Message-ID: <864jen6k0i.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	broonie@kernel.org,
-	suzuki.poulose@arm.com,
-	acme@kernel.org,
-	James Morse <james.morse@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas
- <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Leo Yan <leo.yan@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Rob Herring
- <robh@kernel.org>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	Jintack Lim <jintack.lim@linaro.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Kristina Martsenko <kristina.martsenko@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Jing Zhang
- <jingzhangos@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] arm64: KVM: Use shared area to pass PMU event state to hypervisor
-In-Reply-To: <a7cc7791-c476-fd81-b79d-a151293b8302@arm.com>
-References: <20240104162714.1062610-1-james.clark@arm.com>
-	<20240104162714.1062610-3-james.clark@arm.com>
-	<Zb1mCCi13AJ_YjFZ@linux.dev>
-	<8a908ee8-620a-d9c2-734b-5a6402950072@arm.com>
-	<ZcDc8-FQo8wKavA4@linux.dev>
-	<867cjj6ohz.wl-maz@kernel.org>
-	<ZcDg1sP3EYZG-i_3@linux.dev>
-	<a7cc7791-c476-fd81-b79d-a151293b8302@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xYwF7tfL"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56077dd7936so965369a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 06:52:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707144761; x=1707749561; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g+B1PQfcVc67wCAzKjMbkuU0YKimpNnbO8uCUJIhj5w=;
+        b=xYwF7tfLZewgC+mClXAtzvN7a8QE+WYjQ4//NCCo2luQr9W1TfXBvgkaeu5FBpk11T
+         c/YT9zT4zpZzX5Rh3ItY5vqnCcoR6ArQrq8OUyw2UTaYrHnZVf58JASQ/iK/BoMZAYD/
+         6Rue6QRwDm3Ctji7cec059l5s1prqjMWIlJxC0jYzRi+kj/cM2KpyIRQd34207YuCSMa
+         LgtkA8+IrzF3BBMIjkGT0CuLvFkFYmOSHuFBk1K7Bu1l/lrrK3Ahumsftu+wPDIDoz0c
+         8xSP2z+7BPAyO/T5scJ7boS9qsByJx74jxxErUph4qjEquHsHlooTJRnrFOR4VsklAz/
+         ow3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707144761; x=1707749561;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g+B1PQfcVc67wCAzKjMbkuU0YKimpNnbO8uCUJIhj5w=;
+        b=NDi+ieJ0SGvKojkQ2u7HJdKF/enS41EYeKo2SnyESjYZLNqYp1v/Dk8DshHJFV0lGJ
+         jZmGP79rMECZH/d6aUJ1ooqB6Vdsk3tAIobH+u34kgKjincuwBpvnSeiyNlfcRF2DYR9
+         hOTmbtitngiJ2KBJxjB1V+8QUymLD6cHBqrnxQ0lY8vga7uw3WbrzqcEC/ol5LoZre4Y
+         gssdrQ9BSxAqHcodm/THyzfarge/KyZClbcqrreHDKqVJzKYMvK4qUZzCnTaTc8zC9mB
+         wXkmEm1ZTB1f112N5Xhb2/yX1066jlERLPg77nu3trt9BpG/KlMKnjXarAumIhpE7Y9u
+         rD/w==
+X-Gm-Message-State: AOJu0Yz7nxL22R8OA1pL9+ViZPHI+acAOuN3as5zIEl8v6EvqeiSqSgx
+	rq4ka+jMKFb2rG1rczX1PT8edZIoVjw6saVmvAzo4GZVl/Fahpw65GgsFiqc9w8=
+X-Google-Smtp-Source: AGHT+IGG+Z4rp6MIk2RqL/xipEmA/8eU+tKGuvnFbLRs+W5ftWOW2kQ0uAQc5mvqzaC5TFZudNMhsg==
+X-Received: by 2002:aa7:df14:0:b0:55e:e9f3:4f63 with SMTP id c20-20020aa7df14000000b0055ee9f34f63mr5397435edy.3.1707144760808;
+        Mon, 05 Feb 2024 06:52:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXetjilpo/u+b9OWUhUddsYGepxvOzImn+KeO64qdnzYe7m1v2v9migu3ttmYYHK/pckPkqrERHQqUnzBY5T1/5j5BOsLHLyLcxE6FCtvOnuH2siRKTDrudh6LwVVrUSimPhdtB+6WEPdf98TrRy130u3b49UZAsxS/Z2bAyTn4v6+/1/qz2+0mB26Z5ln8hL8ifbL3Im98npQuQS+EaLrjbqiMHNBfhyNtRliMumlGIJQjPgEPsR7/u++dGOT2MTBdJoS4MX57BQk=
+Received: from ttritton.c.googlers.com.com (61.134.90.34.bc.googleusercontent.com. [34.90.134.61])
+        by smtp.gmail.com with ESMTPSA id h31-20020a0564020e9f00b00558a1937dddsm3821348eda.63.2024.02.05.06.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 06:52:40 -0800 (PST)
+From: Terry Tritton <terry.tritton@linaro.org>
+To: akpm@linux-foundation.org,
+	shuah@kernel.org
+Cc: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	peter.griffin@linaro.org,
+	bettyzhou@google.com,
+	Terry Tritton <terry.tritton@linaro.org>
+Subject: [PATCH] selftests/mm: uffd-unit-test check if huge page size is 0
+Date: Mon,  5 Feb 2024 14:50:56 +0000
+Message-ID: <20240205145055.3545806-2-terry.tritton@linaro.org>
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: james.clark@arm.com, oliver.upton@linux.dev, coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, broonie@kernel.org, suzuki.poulose@arm.com, acme@kernel.org, james.morse@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, anshuman.khandual@arm.com, robh@kernel.org, miguel.luis@oracle.com, jintack.lim@linaro.org, ardb@kernel.org, mark.rutland@arm.com, arnd@arndb.de, vdonnefort@google.com, kristina.martsenko@arm.com, tabba@google.com, joey.gouly@arm.com, akihiko.odaki@daynix.com, jingzhangos@google.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 05 Feb 2024 14:17:10 +0000,
-James Clark <james.clark@arm.com> wrote:
->
-> On 05/02/2024 13:21, Oliver Upton wrote:
-> > On Mon, Feb 05, 2024 at 01:15:36PM +0000, Marc Zyngier wrote:
-> >> On Mon, 05 Feb 2024 13:04:51 +0000,
-> >> Oliver Upton <oliver.upton@linux.dev> wrote:
-> >>>
-> >>> Unless someone has strong opinions about making this work in protected
-> >>> mode, I am happy to see tracing support limited to the 'normal' nVHE
-> >>> configuration. The protected feature as a whole is just baggage until
-> >>> upstream support is completed.
-> >>
-> >> Limiting tracing to non-protected mode is a must IMO. Allowing tracing
-> >> when pKVM is enabled is a sure way to expose secrets that should
-> >> stay... secret. The only exception I can think of is when
-> >> CONFIG_NVHE_EL2_DEBUG is enabled, at which point all bets are off.
-> > 
-> > Zero argument there :) I left off the "and PMU" part of what I was
-> > saying, because that was a feature that semi-worked in protected mode
-> > before VM/VCPU shadowing support landed.
-> > 
-> 
-> In that case I can hide all this behind CONFIG_NVHE_EL2_DEBUG for pKVM.
-> This will also have the effect of disabling PMU again for pKVM because I
-> moved that into this new shared area.
+If HUGETLBFS is not enabled then the default_huge_page_size function will
+return 0 and cause a divide by 0 error. Add a check to see if the huge page
+size is 0 and skip the hugetlb tests if it is.
 
-I'm not sure what you have in mind, but dropping PMU support for
-non-protected guests when protected-mode is enabled is not an
-acceptable outcome.
+Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+---
+ tools/testing/selftests/mm/uffd-unit-tests.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hiding the trace behind a debug option is fine as this is a global
-setting that has no userspace impact, but impacting guests isn't.
-
-	M.
-
+diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing/selftests/mm/uffd-unit-tests.c
+index cce90a10515a..2b9f8cc52639 100644
+--- a/tools/testing/selftests/mm/uffd-unit-tests.c
++++ b/tools/testing/selftests/mm/uffd-unit-tests.c
+@@ -1517,6 +1517,12 @@ int main(int argc, char *argv[])
+ 				continue;
+ 
+ 			uffd_test_start("%s on %s", test->name, mem_type->name);
++			if ((mem_type->mem_flag == MEM_HUGETLB ||
++			    mem_type->mem_flag == MEM_HUGETLB_PRIVATE) &&
++			    (default_huge_page_size() == 0)) {
++				uffd_test_skip("huge page size is 0, feature missing?");
++				continue;
++			}
+ 			if (!uffd_feature_supported(test)) {
+ 				uffd_test_skip("feature missing");
+ 				continue;
 -- 
-Without deviation from the norm, progress is not possible.
+2.43.0.594.gd9cf4e227d-goog
+
