@@ -1,102 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35B18EB9;
-	Mon,  5 Feb 2024 11:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2DF18EB9;
+	Mon,  5 Feb 2024 11:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134266; cv=none; b=XmoiF/B7phj5A6M6NM0U0v/2Sbf8NKkz6wSxbGI2JtF8hjKDHs/fqX1t0VEmF+GZr8ruUJgb0kdiYN7Hyj/lRl94ydlMD8xkioOPIsoA+0C/mwvpFpFyai3B4Q8pAJP6qrYB9k+nukOmzkXpGqrbB/SCEGP2fyHp+MUB1Wlm3wg=
+	t=1707134288; cv=none; b=RenZqMSYNP99ssWllrUHxxQo9WaK5gdC2tyo1YsVyfIDNCJK7g0L5rVrLNoyi1w9vU+kdhPonN9HQbiRh84S6NmhQP+NoiM8Gfly/MRWBuEOvSctFz8h0ejw7gPDAx5weQqvSAV47zTojfyJN+aoeGwEIVTPT7mNi/3JJ2AzhR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134266; c=relaxed/simple;
-	bh=GVqGwsZ3oAzNGM6DmqmUlOaiQdppIpSmPlxDVDHqgzY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=dmA3juokE2H4NXgaMdosk241TtcDPZZNpsQ6uotZeYFzspXOnzfvWqiGOgBs1SCKXo3uoEopF3M1FPGayZPXsgG9MvQtaN1ebyuqNevYfV7FNSN891QOOPneBp0SSCqUIDqRZoMkVVjCGk5BY41+4AyLnlDUdJOaAgiFJ+btYyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSfpQl+V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707134288; c=relaxed/simple;
+	bh=7TVjhZRcGSDBg8WholubRtQ/4dPPkNOismsM1iFeAmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VvFuoEt79SM4D091AO0+g5UFalRZR57LPx5BFCBnS0KrD9uAciSFZUmGBUAG+2/ZAN7J7S4wCR2k/8kQv7E0ldcxYiA7i0Hh50h2q8selBQVn6tAfL2LOmDU+yy6+y433fl8p1SIDu5MUmjwYSECCByQT6mYmuv6uxBtLhkp65k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c777OkkO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSfpQl+V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0669CC433C7;
-	Mon,  5 Feb 2024 11:57:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c777OkkO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB73C433C7;
+	Mon,  5 Feb 2024 11:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707134265;
-	bh=GVqGwsZ3oAzNGM6DmqmUlOaiQdppIpSmPlxDVDHqgzY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-	b=qSfpQl+VMN9Sym0+Rh/3jeZVEaw7L1pOoKN5Deqz6QmNqS0tdC8OeFEu8f+EQpUpB
-	 lL/5KZSiyL8qZkLaQqWLYs6WSosqRS894q2NXDXit7zPo9VK5DorSXDFJ12rSTD1Nc
-	 hm7lio8CA9KZPNWgJYDSWY/jHmNGQHL+XvkLNuhQ6aBk1eVitcR59NTplECGqn0Nma
-	 WlJ7wQcUt76nNKRLY8RMzCEVQOKG9olavtCaGIBcCP8fpM05nQQt/U2r4rX/kIJqHb
-	 3UsgLpr9xnTDplkyigfQ8kPz6Sti78R9Hdt7QozPbypHNLDW8bVdhi0DuE8bJeH2dz
-	 XDey3pWDv0dmQ==
-References: <87o7cxeehy.fsf@debian-BULLSEYE-live-builder-AMD64>
- <Zb_-LQLY7eRuakfe@slm.duckdns.org>
-User-agent: mu4e 1.10.8; emacs 27.1
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Subject: Re: [PATCH wq/for-6.9] workqueue: Fix pwq->nr_in_flight corruption
- in try_to_grab_pending()
-Date: Mon, 05 Feb 2024 17:25:38 +0530
-In-reply-to: <Zb_-LQLY7eRuakfe@slm.duckdns.org>
-Message-ID: <877cjji0ne.fsf@debian-BULLSEYE-live-builder-AMD64>
+	s=k20201202; t=1707134288;
+	bh=7TVjhZRcGSDBg8WholubRtQ/4dPPkNOismsM1iFeAmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c777OkkONkvw4s74UzHN4N9E09qBlbCf/qa18onl7cGFB3rUbkLqV0y5Gbzqf4s01
+	 batHHR5A0KNO6yguYJy3UUB0wRyXmLUbmFz29OHRiL9fuK9JMvlXQGTX/ZCGIjyJsR
+	 cv6DlVpraqRU5gWCQL4vddCV/FtaCevyi5jSzTaR8O0CIp0dteeVByB/l2SLhFZr0z
+	 S9+Kv0zAcRq9nt2/vJH4nrBzUtPx63VWQ1pOGmAin7/jPT99W+q/cWiEZPU68e9NXR
+	 +RTrTIut8cOPsZM4N0yZX99cX0OQU3ichNbIYOdcXkOvt4NNkTmBD3E2XgnADKBc6r
+	 fqn6LF2Ug8Kwg==
+Date: Mon, 5 Feb 2024 12:57:55 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Eric Van Hensbergen <ericvh@kernel.org>, 
+	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Christian Schoenebeck <linux_oss@crudebyte.com>, David Howells <dhowells@redhat.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+	Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
+	Andreas Gruenbacher <agruenba@redhat.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, 
+	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Namjae Jeon <linkinjeon@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, 
+	ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org
+Subject: Re: [PATCH v3 04/47] filelock: add some new helper functions
+Message-ID: <20240205-laufen-hosen-38578e076df5@brauner>
+References: <20240131-flsplit-v3-0-c6129007ee8d@kernel.org>
+ <20240131-flsplit-v3-4-c6129007ee8d@kernel.org>
+ <20240205-wegschauen-unappetitlich-2b0926023605@brauner>
+ <de77ec5ade7fac7e72445cb2d10d95efe8bf9c92.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <de77ec5ade7fac7e72445cb2d10d95efe8bf9c92.camel@kernel.org>
 
-On Sun, Feb 04, 2024 at 11:14:21 AM -1000, Tejun Heo wrote:
-> dd6c3c544126 ("workqueue: Move pwq_dec_nr_in_flight() to the end of work
-> item handling") relocated pwq_dec_nr_in_flight() after
-> set_work_pool_and_keep_pending(). However, the latter destroys information
-> contained in work->data that's needed by pwq_dec_nr_in_flight() including
-> the flush color. With flush color destroyed, flush_workqueue() can stall
-> easily when mixed with cancel_work*() usages.
->
-> This is easily triggered by running xfstests generic/001 test on xfs:
->
->      INFO: task umount:6305 blocked for more than 122 seconds.
->      ...
->      task:umount          state:D stack:13008 pid:6305  tgid:6305  ppid:6301   flags:0x00004000
->      Call Trace:
->       <TASK>
->       __schedule+0x2f6/0xa20
->       schedule+0x36/0xb0
->       schedule_timeout+0x20b/0x280
->       wait_for_completion+0x8a/0x140
->       __flush_workqueue+0x11a/0x3b0
->       xfs_inodegc_flush+0x24/0xf0
->       xfs_unmountfs+0x14/0x180
->       xfs_fs_put_super+0x3d/0x90
->       generic_shutdown_super+0x7c/0x160
->       kill_block_super+0x1b/0x40
->       xfs_kill_sb+0x12/0x30
->       deactivate_locked_super+0x35/0x90
->       deactivate_super+0x42/0x50
->       cleanup_mnt+0x109/0x170
->       __cleanup_mnt+0x12/0x20
->       task_work_run+0x60/0x90
->       syscall_exit_to_user_mode+0x146/0x150
->       do_syscall_64+0x5d/0x110
->       entry_SYSCALL_64_after_hwframe+0x6c/0x74
->
-> Fix it by stashing work_data before calling set_work_pool_and_keep_pending()
-> and using the stashed value for pwq_dec_nr_in_flight().
->
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: Chandan Babu R <chandanbabu@kernel.org>
-> Link: http://lkml.kernel.org/r/87o7cxeehy.fsf@debian-BULLSEYE-live-builder-AMD64
-> Fixes: dd6c3c544126 ("workqueue: Move pwq_dec_nr_in_flight() to the end of work item handling")
-> ---
-> Hello, Chandan.
->
-> Thanks a lot for the report. I could reproduce the problem and verified that
-> this patch fixes the issue. I'm applying this to wq/for-6.9 but would really
-> appreciate if you could confirm the fix.
+On Mon, Feb 05, 2024 at 06:55:44AM -0500, Jeff Layton wrote:
+> On Mon, 2024-02-05 at 12:36 +0100, Christian Brauner wrote:
+> > > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+> > > index 085ff6ba0653..a814664b1053 100644
+> > > --- a/include/linux/filelock.h
+> > > +++ b/include/linux/filelock.h
+> > > @@ -147,6 +147,29 @@ int fcntl_setlk64(unsigned int, struct file *, unsigned int,
+> > >  int fcntl_setlease(unsigned int fd, struct file *filp, int arg);
+> > >  int fcntl_getlease(struct file *filp);
+> > >  
+> > > 
+> > > 
+> > > 
+> > > 
+> > > 
+> > > 
+> > > 
+> > > +static inline bool lock_is_unlock(struct file_lock *fl)
+> > > +{
+> > > +	return fl->fl_type == F_UNLCK;
+> > > +}
+> > > +
+> > > +static inline bool lock_is_read(struct file_lock *fl)
+> > > +{
+> > > +	return fl->fl_type == F_RDLCK;
+> > > +}
+> > > +
+> > > +static inline bool lock_is_write(struct file_lock *fl)
+> > > +{
+> > > +	return fl->fl_type == F_WRLCK;
+> > > +}
+> > > +
+> > > +static inline void locks_wake_up(struct file_lock *fl)
+> > > +{
+> > > +	wake_up(&fl->fl_wait);
+> > > +}
+> > > +
+> > > +/* for walking lists of file_locks linked by fl_list */
+> > > +#define for_each_file_lock(_fl, _head)	list_for_each_entry(_fl, _head, fl_list)
+> > > +
+> > 
+> > This causes a build warning for fs/ceph/ and fs/afs when
+> > !CONFIG_FILE_LOCKING. I'm about to fold the following diff into this
+> > patch. The diff looks a bit wonky but essentially I've moved
+> > lock_is_unlock(), lock_is_{read,write}(), locks_wake_up() and
+> > for_each_file_lock() out of the ifdef CONFIG_FILE_LOCKING:
+> > 
+> 
+> I sent a patch for this problem yesterday. Did you not get it?
 
-fstests executed without any regressions on a next-20240202 kernel with this
-patch applied.
-
--- 
-Chandan
+Whoops, probably missed it on the trip back from fosdem.
+I'll double check now.
