@@ -1,150 +1,76 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231C5405FF
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C681344C66;
+	Mon,  5 Feb 2024 17:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707153494; cv=none; b=ek9w9Y3xg9iJWoUQHnvDaa3EQTxS2EMKbJpX8j8+Y4w7SdcV8sFc8Qh+tXkSd36d4oGXfhB2GyE/IW/9d9UMePpdIVMLhl2q779UvKtuo2zJYigw8nDtk5qyqadb47ELHwPuPBMpdyGsQX32OFx+JMTb/zeuOLMYPTEFYB7FhUw=
+	t=1707153558; cv=none; b=YUiT9bPOSM4itGqreOvtF2EtFpuOxZSesIg1A0rPou1RRQRcrs9K5+wWFsbizZdN1oE9X+j1l+WxQDPX9GvYLO9elQLfdqv23ecDg77siYJsJK2/b5FrAYXznnHWwOfL2WLG5lrEXevjOH/mYrkyaBTW1mLL30DDT/kMouFA7YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707153494; c=relaxed/simple;
-	bh=CyumhhrHla5qlVLb8PYoku4ZnpdwiWELhWWIcVR2E3M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=vABEFvfgQ3XndVSjvC2HHMd4MulULs/gOFx60NDoPAja4Uf39ZL39ZBs4ClfQfKaFlQ6asH09DIUhko8hbKsovIExJgRCktrSy+Eb9mZ8vqbz6iQSWnDWIMIp1ZvEbQn4jKqg6lF1OtUxGn3ulAnKGegJajvMsBKYWmC7CLdhKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aHWMNv80; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707153558; c=relaxed/simple;
+	bh=I/dPQVxNsqI+9sYP9jfmmTlxuMjd/mdTPS+ppBlP91k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s302S1tHwKk9mm+gMv0U1lIshUaZtkOIkuxWCBrHcWLNJl59MWhS6HDo/0qp3dRm6IeCNycsjR7nFXK97GmG8J6gV4nZXy9B/xkaCLj4IXxKym7Lla8Eyc1CbElGBPHdY0nx+vGh6jBao1wz7DFHgLujiquDiBxAh+qXsOLS+UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjLMnhnS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHWMNv80"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a358ec50b7cso600530866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 09:18:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707153491; x=1707758291; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RaYPHvXkobnpa/6f4ulwQBNQwVfT6AO5Tj9arok4IUM=;
-        b=aHWMNv80t8YUsma+2ZoiLz05ZZvT66ZBN9WfYg6adgpGZGshJgiHdvFElEgWjhwSQ1
-         QS2Vdfodn/h7CTru7o6Q7e8G1/cdct8kSGootFRYHsh5ijVIo5qjTxs9KuxmeKrUiNfg
-         l0wqs3l1PQq2CCxynPEWRIZO/N1wKJFwSQJy2Z50C48nOZfT8nZDasKbsnHL2TnAhRI6
-         xBBnTHL2yAOzU9VP/0KJU7Yz5o9vk7e1tRxdNydEQUaNyd7U3aunNRUPtbEFX589K/3s
-         eJ2hArMyw6TjCWg03KVn0RsZMVbsPinsCLX4pxt7gj1CiDewanvpW9AaXamFES56GccU
-         ErkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707153491; x=1707758291;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RaYPHvXkobnpa/6f4ulwQBNQwVfT6AO5Tj9arok4IUM=;
-        b=FH8KbAF35/OU635iC8yYLxY1dD3qPt8Yngiop9m4TLy1MSn7lcUq7zWzRSSXl1/mao
-         LulI7XBsO+dPC5b3biQ5EVwWA+/wL/KOwzzCv2vyXpZ/KuNpLwP6nurArStBi4eCRIO6
-         4oTg9sgvolf1Ob+2o9TTlKNuPzVV8mAE3R0zjfDQmSYxYJqG7ufcJOxqm25S26+2yNmJ
-         b8OE1VFNJ33su7YMlAHk58gx4Jvm2SC8zWEBAS3YZmU22ZmXgoB6SSGCTGrz+Bej2FeP
-         kY16ps1uarJPTOlOZ7qpz2HgMa1BIUEhG8kgqMOflSX0H+NkQfomgJjGgLbrjVZB8Epz
-         PNWA==
-X-Gm-Message-State: AOJu0YzRHRAn4OhHQNlzCQJ2GkmC3LiHftCTYMRh2uoVjIPy0Cew+71T
-	TVMMItwfnO15VhEZZ4tLCexOKwo/hTG7Lvc4pF56Ib6jVppfy/q4idqpZo9dfTFzW1s2FPvNJzh
-	CQlDkH6laI6jvfmYLJg8GSHnwou2qUIDb5EE=
-X-Google-Smtp-Source: AGHT+IGCf/2T7fbv87BeYDVWJz+788X4MMPPJTKOuEBPh303EM14LzP1OLVvWQHHhfOdyOAo67Lkh2EVaqioVNq0Kms=
-X-Received: by 2002:a17:906:378f:b0:a35:3eb8:2f6e with SMTP id
- n15-20020a170906378f00b00a353eb82f6emr251706ejc.33.1707153490633; Mon, 05 Feb
- 2024 09:18:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjLMnhnS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CBD8C433F1;
+	Mon,  5 Feb 2024 17:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707153558;
+	bh=I/dPQVxNsqI+9sYP9jfmmTlxuMjd/mdTPS+ppBlP91k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gjLMnhnS6bLqj5NEb2kdZC1z8lR4VQEnrshyp+MlHCJjA9yFuBHRtW3ApRELIL5Vq
+	 D1QlzYPuzqErllQIS+pbu5Fak5hAKAyUuf9S8xTCw90/v2nRz4eXBVHT760hftISK5
+	 hG6xlJ/mLI0206EygnzvudqY+8M47NFCv7JpN1RNSz/CbMn5SrkIQ00wEP7406MdQE
+	 TSuHLhB5i1JeyqdjlSQkp3+wa/+1pGKx3xQvjjmyK3Kc1u1j+A5plAEZwsVviM2Qbe
+	 mGIjWSyPOrdcW+kpHLypq/JrTs2jdf5VBd+Ec7VXO5f2JkH9u4jEMOjW71JtZPUSJz
+	 kkZzWmjmM/rQA==
+Date: Mon, 5 Feb 2024 17:19:15 +0000
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: linux-gpio@vger.kernel.org,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-mips@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v4 06/18] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl:
+ add bindings
+Message-ID: <170715355367.3639066.15524146689406248436.robh@kernel.org>
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+ <20240131-mbly-clk-v4-6-bcd00510d6a0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAF8BazD5JxGOxPU7bOQED4nn_ZbBqWLtYnPQSqQHKFn81Xj=0Q@mail.gmail.com>
- <CAF8BazBk9xZAZ8SV2jkM6D-ZaYLTSx0xHb7H=+KbzfJZyZpToQ@mail.gmail.com>
-In-Reply-To: <CAF8BazBk9xZAZ8SV2jkM6D-ZaYLTSx0xHb7H=+KbzfJZyZpToQ@mail.gmail.com>
-From: Aleksey Midenkov <midenok@gmail.com>
-Date: Mon, 5 Feb 2024 20:32:32 +0300
-Message-ID: <CAF8BazAQNnpaF0k9=iOd6NidAsDGVNqouoHXtc9pYXVRbKoQBA@mail.gmail.com>
-Subject: IMSM (Intel Matrix Storage Manager) device is not detected by
- 6.6.x/6.7.x but works in 5.19.17
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240131-mbly-clk-v4-6-bcd00510d6a0@bootlin.com>
 
-In 6.x.x /dev/md/imsm0 does not appear at boot.
-The only difference I see in dmesg which seems to be relevant:
 
-  block device autoloading is deprecated and will be removed.
+On Wed, 31 Jan 2024 17:26:19 +0100, Théo Lebrun wrote:
+> Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 +++++++++++++++++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 243 insertions(+)
+> 
 
-Printed in 5.x.x, but not in 6.x.x.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-/proc/mdstat in 5.x.x:
-
-Personalities : [raid0] [linear] [multipath] [raid1] [raid6] [raid5]
-[raid4] [raid10]
-md126 : active raid0 sdb[1] sda[0]
-     937698304 blocks super external:/md127/0 128k chunks
-
-md127 : inactive sdb[1](S) sda[0](S)
-     4784 blocks super external:imsm
-
-/proc/mdstat in 6.x.x:
-
-Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5]
-[raid4] [raid10]
-unused devices: <none>
-
-Kernel config is the same regarding MD and RAID. Trying to manually
-assemble RAID in 6.x.x leads to:
-
-mdadm: looking for devices for /dev/md0
-mdadm: No OROM/EFI properties for /dev/sda
-mdadm: no RAID superblock on /dev/sda
-mdadm: /dev/sda has no superblock - assembly aborted
-
-While superblock is correctly displayed by 6.x.x as well:
-
-/dev/sda:
-         Magic : Intel Raid ISM Cfg Sig.
-       Version : 1.0.00
-   Orig Family : 38d93728
-        Family : 38d93728
-    Generation : 0000018b
- Creation Time : Unknown
-    Attributes : All supported
-          UUID : b762ef98:7900e4ea:f6395076:47a40d15
-      Checksum : 4c2193cc correct
-   MPB Sectors : 1
-         Disks : 2
-  RAID Devices : 1
-
- Disk01 Serial : YG952401WA480BGN
-         State : active
-            Id : 00000000
-   Usable Size : 937698304 (447.13 GiB 480.10 GB)
-
-[Vortex]:
-      Subarray : 0
-          UUID : b41d5d94:b2438127:629eca5c:4a65945a
-    RAID Level : 0
-       Members : 2
-         Slots : [UU]
-   Failed disk : none
-     This Slot : 1
-   Sector Size : 512
-    Array Size : 1875396608 (894.26 GiB 960.20 GB)
-  Per Dev Size : 937698568 (447.13 GiB 480.10 GB)
- Sector Offset : 0
-   Num Stripes : 3662884
-    Chunk Size : 128 KiB
-      Reserved : 0
- Migrate State : idle
-     Map State : normal
-   Dirty State : clean
-    RWH Policy : off
-     Volume ID : 1
-
- Disk00 Serial : YG952300KC480BGN
-         State : active
-            Id : 00000001
-   Usable Size : 937698304 (447.13 GiB 480.10 GB)
-
-Any info on what happened with IMSM driver in 6.x.x?
-
-I guess CONFIG_MD_AUTODETECT is responsible for that, which is Y in
-both kernels (as well as CONFIG_BLOCK_LEGACY_AUTOLOAD).
---
-@midenok
