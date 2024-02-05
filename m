@@ -1,166 +1,205 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2084.outbound.protection.outlook.com [40.107.8.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7F61B5B2;
-	Mon,  5 Feb 2024 11:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133337; cv=none; b=MHkarTeu4GSvER9W15nIRVsskgN6gmcp0kq9s5W3kChSTEP7VgeCAdTecBUun+JkmAuZdK+NRqMl2g066I3qVoVSumIKLbxxAm2lwLVpdWYP9ll/qw/5g7aBvfEwTq8qmWa1CzBE+bJjDKCsNonMjDTy6ZNxTtSeERNYAI2iFS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133337; c=relaxed/simple;
-	bh=EshFlkhiftLg/bHBAsbRfzDaghSEmFcjRUNQjPQ4a7Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L9rPlq15d4Sk3giu1e9YzLm9uqF6426rdAjtOCjQ1O2APXvBV4fbIutbPu1/XZXuhcD22jpVGD2sFHIh9Y6qwjCEMvRdgK6qkqQaE5MALCr5lT01xpfVyTx9aWvI4NnDfUHbEBqApajA6AwFCi8t+/7XjGktjB63TnTINkzqdfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TT4Dw6Lv5z1Q8Mm;
-	Mon,  5 Feb 2024 19:40:16 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 189471402E0;
-	Mon,  5 Feb 2024 19:42:12 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemd100002.china.huawei.com
- (7.221.188.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Mon, 5 Feb
- 2024 19:42:10 +0800
-Date: Mon, 5 Feb 2024 19:41:53 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-CC: Changbin Du <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, Andi
- Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
-	<changbin.du@gmail.com>
-Subject: Re: [PATCH v5 3/5] perf: script: add field 'disasm' to display
- mnemonic instructions
-Message-ID: <20240205114153.7y4hwxaiewql4gk5@M910t>
-References: <20240122112054.1576835-1-changbin.du@huawei.com>
- <20240122112054.1576835-4-changbin.du@huawei.com>
- <f8c1b042-2b65-4dd7-a692-79fead351e5a@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD0518EAD;
+	Mon,  5 Feb 2024 11:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707133347; cv=fail; b=H2jdOSaSa4x9KFDFC/nSs+6yMCJmqgOOkviMPUc2YYvo1geat9ZzdrWUaD/hbW548yhrKgoRB96tGvcFP6zyG9VjagAXJz9MmvXPz2PB5dyc9hBR0G8j/53BpGFzOrduxyL7AT+HtxjkCI0p5LqZ76AQMBfkIAjqHHuyFO4fA7Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707133347; c=relaxed/simple;
+	bh=FCaCHWBzd1/Eo2gs9bLrPzOLRTdSVTtDPKgZjGV2QTE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lFFRdBji0pE0BomFTDGb1QDORH21AvssFi9FwsFcLhui9qEiVlmhN+Ugy0olBwl4ylKCb3tA8zdsVpDUQhn4ukQsR1sukUMlpOFTx2FnsEHoYK+gFxOL2PRALggDOtbhFtzKMc2aext9i4T5p57QEudgd9V4kxCQWaQGUMvOYGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=XeIR/JGK; arc=fail smtp.client-ip=40.107.8.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XeIR/JGK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BnYotPLB+VbUXHsCZq72l8sWiOiKdzm4r3t4WB48ufNviMN80iqlv9/Bqp7ZJAlPL/iAmby1nMf448dv2X+e/qUVkrpVcmvwdW6ZxaUeRf3cug3sipzHDdmOyUN9L2h0qg1YTG9ELwpGlrqWykFHwGQ8JtmYJCfLToER8KNbjCygTq+O6ksngroqZkpk5XPUqZCeWViYtMR2QmRPUAL2u6FBiKpyjfovhVkblqPYewUa85380vMI3s2d0Sq2sTUAWAi79/plAaEbHuP2mR5p1hQuCpV4zcby0SJjfqbX6KPuu/Ze+QRJKNjtw7Hvq+UKrFJIo8lxtjsAkmpgfkardQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rlDRYAB7a97sQgm0cZzC/1d9DHcC5zY1AVEL+TemQU8=;
+ b=Wd4rnBX1ug7qpXGMzMoomcQiJRTd5oDXDQRLncxcBsNRrSO4TaVfmoFR5UhopRG7Pc/iM+/k5LwXWXHC8JgJKiAzAa6JyQekj7mczpXqIWhrpAF6sZQTwTwIcOP0vcIYGBn5J3CHYL/X+EptTJf41/+CYp3H5554rjeb7gQs0VScMnlQcThv/mTEEYOnhjO7UY/XV7dGXeZoMzL0OG10+rveuEUi1Q8RTh1nPeHXt5A3ZmHQmrdrljklzSPktyC/so5AaxLZEn9NhBWSePOXTqrEBEwZBkCww5xCkWRwwNJgwdzZ7uXEZhZEgdFtPJxlUeEaNvdccjU+yTrRSJYAuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rlDRYAB7a97sQgm0cZzC/1d9DHcC5zY1AVEL+TemQU8=;
+ b=XeIR/JGKZVwaMhu8v25jQmM+qGaR1Ly0gfuKW+jL9NJt5OHYyvjAgMaU7LpK0oKKpBJQJOv6OIk6T6zGercVsk2wNORr0vDYNWxTtA6fo0gTn01d/sfbH5uftLiucUd1/Owi6/ZnRUI9BC0j6BOpX8TQMv4Hp4zHp2AMmyNJwxQ=
+Received: from DB6PR04MB3190.eurprd04.prod.outlook.com (2603:10a6:6:5::31) by
+ PAXPR04MB8909.eurprd04.prod.outlook.com (2603:10a6:102:20c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34; Mon, 5 Feb
+ 2024 11:42:21 +0000
+Received: from DB6PR04MB3190.eurprd04.prod.outlook.com
+ ([fe80::530c:5815:14e4:2c7c]) by DB6PR04MB3190.eurprd04.prod.outlook.com
+ ([fe80::530c:5815:14e4:2c7c%6]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
+ 11:42:20 +0000
+From: Kshitiz Varshney <kshitiz.varshney@nxp.com>
+To: Shawn Guo <shawn.gsc@gmail.com>
+CC: Herbert Xu <herbert@gondor.apana.org.au>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Varun Sethi <V.Sethi@nxp.com>, Gaurav Jain
+	<gaurav.jain@nxp.com>, Pankaj Gupta <pankaj.gupta@nxp.com>, Sahil Malhotra
+	<sahil.malhotra@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Meenakshi
+ Aggarwal <meenakshi.aggarwal@nxp.com>, Rahul Kumar Yadav
+	<rahulkumar.yadav@nxp.com>, Nikhil Singla <nikhil.singla@nxp.com>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v1] imx_v6_v7_defconfig: Enable sm3, sm4,
+ polyval, xctr cipher test support
+Thread-Topic: [EXT] Re: [PATCH v1] imx_v6_v7_defconfig: Enable sm3, sm4,
+ polyval, xctr cipher test support
+Thread-Index: AQHaMzkv0uKPr9fQ6U+/vbkIUpb10rD48jOAgAL3fjA=
+Date: Mon, 5 Feb 2024 11:42:19 +0000
+Message-ID:
+ <DB6PR04MB3190048410A18A231D5B7FC08F472@DB6PR04MB3190.eurprd04.prod.outlook.com>
+References: <20231220113857.1127598-1-kshitiz.varshney@nxp.com>
+ <20240203142149.GI463595@dragon>
+In-Reply-To: <20240203142149.GI463595@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB6PR04MB3190:EE_|PAXPR04MB8909:EE_
+x-ms-office365-filtering-correlation-id: 845643ff-d733-4026-8136-08dc263f82da
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ YA5z1aN3eVLnMKeeP9x475eLYg+/GVJ+Xg4xuzp0fTtyZTJgejZyOx4R+mP9USH8sKFG9Ebz8YcbJA9IFbJvp+9IBZ5JG19801cm0O8wldRVFD4qo47kNdSqnTmeNX62oCzYJ8ivRz4UPztmlrMmZK3lEOLukutfJvbXGpE9qJfjf+JxembwaoxizOZDbeqWpXZfpKAngU1PocODQs/So/MlkjhlDk9hrP9tkcK0LJiCQF7wgcRbwQSfvL8cbkXpBY3Skb1+s+Nx9AlYTlJTZzHmsf5Zxa4gP/9LzXAEw2cEoJCvYDr4HnpanoIlUSJ7dN54fo051l+0dpvUmtKR3AunaP9auABL12kpkKx0LXBmaHS1kGbsCafpc5N4uE2dn42HB0SC72G9vH2m/7p7rkhq0ekFQLKY1p4WOBjiBKARrI4n2U2Y0M/5kQuVscbiDbqKKsvGDaqZun2yGQiFKVB765X4eUrVqjgSuvhPuwy3CjEHToZA+VgNcRp3YIHTxtvpEQVJ4IkPP0PjplJAAq/9UxmUJAckmEH1Gudg0UlkkqAeWKejQ5mfb8MLYWdLh283mORTzZoRHYk8PUX5upqikTW+4N7yCEiTF6HdBpEtrMCtZhPHBavQ0bHi4/mS
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR04MB3190.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(366004)(376002)(136003)(39860400002)(230922051799003)(230273577357003)(1800799012)(186009)(451199024)(64100799003)(55016003)(33656002)(86362001)(71200400001)(26005)(2906002)(7696005)(6506007)(9686003)(55236004)(53546011)(44832011)(41300700001)(38070700009)(83380400001)(5660300002)(66476007)(66946007)(316002)(64756008)(54906003)(478600001)(66556008)(66446008)(52536014)(76116006)(6916009)(122000001)(8936002)(38100700002)(8676002)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?h3jHklNUv+Evk5YzOeKif6LhPwYVIY+1fppeZU8F5l+M1lrzyN2DcN3g5I8m?=
+ =?us-ascii?Q?FU29OIlrGcELybQkxRW+arh6/fwVQ1uKvGknUTVT9m0g7GHrCslDFHgX2nv/?=
+ =?us-ascii?Q?rixcrhGoE95Cjp22HPP1GF8e9scwTspUNDDN+x36G3lOvx4dTEfvwB+38XvY?=
+ =?us-ascii?Q?6zVbsn3HKg6vkKjiph4viez+6VPMPqQLgDqqAMJ5qreLESJCizcdGCHyS1tm?=
+ =?us-ascii?Q?m4LpTVMqKnWp1X9wTSLH8l5WAU1R0s10r8kRYj6IcZ2YDqqz8wjwbDD7iGY7?=
+ =?us-ascii?Q?KdTh0gHcTyhfT0co/GDOQDs2rIerzFZRSh87Bsp+Ub3t/5j2QQMG/7CkeELK?=
+ =?us-ascii?Q?AAnyIASYdZbfdzN5Qp3FBWGb5o8cKPMbQy3HXWojukL8NEuqVhFJK9EP3E07?=
+ =?us-ascii?Q?rePLu0AXAzE+O4gJnH2jlC5JO/UmRw1udbKXNRdZgf7ZtR1xGxY60I0Eapwt?=
+ =?us-ascii?Q?No0Rt9nlX4LXUZdV6/5uwjeUnWS47WysSAM3qx885fR0Off1nl5mzZPvlUGV?=
+ =?us-ascii?Q?89rEWc6oojTpJAH0T4wUtynr+HcWv/r9bMaYz8TSOk1R+aQkde3K4wRFD7kC?=
+ =?us-ascii?Q?6nh5da+rrnje583GhQ3xUjG1JOX0kZXqclqGyLI62tIAyeLoCp3Kh0t4PzbC?=
+ =?us-ascii?Q?CU7GbESSlelPRM4zWGQozR9rosQ5K0hhGhi+rDw0vhPF6CR8sutefGcEZ6O+?=
+ =?us-ascii?Q?yoFB7mMrdI9JoSr4oTT6klO/e5qJ4PSj2VvmuS+C/UJHFwMSb2hNXFLBalBO?=
+ =?us-ascii?Q?cVCP1ISOR/P0bSstBRAFWivd4RUsoNWyew73/1xOA1m9PUIVFHf+N2mMwtfK?=
+ =?us-ascii?Q?3RJPtV0CfWxhq+XzIuaAB8SlWxuvZsT7tL9SJAIEteUazVHEJ/TphWMAQAxk?=
+ =?us-ascii?Q?EEn7MM09g05eERPv5UnqmTrVnHj1rFjDF/kIiu4fraQx/N46MOT73RVHT8/m?=
+ =?us-ascii?Q?QddddEzSx4OdBfZVIdwIZKUCnpl6Raj1mu3eLdZOsrHekJCYLI751OvkMAFN?=
+ =?us-ascii?Q?nKURN9OIE0AfFx9L37A6vQFf6u398GA3XrTWQiQAt+fahbmHQlDHrf0zHaWI?=
+ =?us-ascii?Q?OmF5Uql1N3tSiE63hw43gZjbSL9g8mF8TtT8KQPssAzQwbzh+hdCfR+MhI4F?=
+ =?us-ascii?Q?Tvl86ws3zfiaBJsJWa186yWpxoYkGaHW19qpmRBbnGlA2qbtQsb7zyWHdApm?=
+ =?us-ascii?Q?jI3PdATT+Gq8mCU7q+4FFOPgXDa50vSOeRkbc6knfUroXQQXq7Extt1lwxoR?=
+ =?us-ascii?Q?NzzWMZXv5ed1CEHtDTVxXbZQeE4++fmOav0HDEShns7VxDxcnnh81NSpfGib?=
+ =?us-ascii?Q?hmhipYiZD4IyTpRRjgKaA+DZSbb5XjufWtszP+RRhgwnQGP+GGsOvmmHWfuh?=
+ =?us-ascii?Q?4f/DgULqL8Q7Ur2CPlh9QgEbOdxpH6aUAoazUdrk1HVsZ2uj5A097Fmq9B5O?=
+ =?us-ascii?Q?2M1nyemJc3z9LbmW+7sVKQCGVpSn9wgmYC3FugyDY0wWwNdjk+boqhff2vGF?=
+ =?us-ascii?Q?1dMVpRM1c4ITUDME8qEwbSQREFbVcLdGxaH/cWAcyO+2bjVm+Fvu0CgeiKKU?=
+ =?us-ascii?Q?Jslt8eT+vy1Dv9E8iEXlbGSxr9iO//Ncndyv9GlM?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f8c1b042-2b65-4dd7-a692-79fead351e5a@intel.com>
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR04MB3190.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 845643ff-d733-4026-8136-08dc263f82da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2024 11:42:19.9506
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ez5UGDmCOMFYcuvKIE+RvnZDfVmsKZiwblLxWJIMakEwLK//qm7MhNFlLT9e940xys/BXtQBnKfT+jYO47J8rYQBjBFjK3OieeO7Z8zBQhE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8909
 
-On Mon, Feb 05, 2024 at 11:23:21AM +0200, Adrian Hunter wrote:
-> On 22/01/24 13:20, Changbin Du wrote:
-> > In addition to the 'insn' field, this adds a new field 'disasm' to
-> > display mnemonic instructions instead of the raw code.
-> > 
-> > $ sudo perf script -F +disasm
-> >        perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
-> >        perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
-> >               ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	movq %rsp, %rdi
-> >               ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	callq _dl_start+0x0
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > 
+
+
+> -----Original Message-----
+> From: Shawn Guo <shawn.gsc@gmail.com>
+> Sent: Saturday, February 3, 2024 7:52 PM
+> To: Kshitiz Varshney <kshitiz.varshney@nxp.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>; Shawn Guo
+> <shawnguo@kernel.org>; Sascha Hauer <s.hauer@pengutronix.de>; Fabio
+> Estevam <festevam@gmail.com>; dl-linux-imx <linux-imx@nxp.com>;
+> Pengutronix Kernel Team <kernel@pengutronix.de>; Varun Sethi
+> <V.Sethi@nxp.com>; Gaurav Jain <gaurav.jain@nxp.com>; Pankaj Gupta
+> <pankaj.gupta@nxp.com>; Sahil Malhotra <sahil.malhotra@nxp.com>;
+> Vabhav Sharma <vabhav.sharma@nxp.com>; Meenakshi Aggarwal
+> <meenakshi.aggarwal@nxp.com>; Rahul Kumar Yadav
+> <rahulkumar.yadav@nxp.com>; Nikhil Singla <nikhil.singla@nxp.com>;
+> linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [EXT] Re: [PATCH v1] imx_v6_v7_defconfig: Enable sm3, sm4,
+> polyval, xctr cipher test support
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report
+> this email' button
+>=20
+>=20
+> On Wed, Dec 20, 2023 at 12:38:57PM +0100, Kshitiz Varshney wrote:
+> >     Enable config for sm3, sm4, polyval, xctr cipher test as built in m=
+odule.
+> >
+> >     Issue:-
+> >     Multiple crypto tests like sm3, sm4 xctr and polyval failing.
+> >
+> >     skcipher: failed to allocate transform for xctr(aes): -2
+> >     alg: self-tests for xctr(aes) using xctr(aes) failed (rc=3D-2)
+> >     alg: self-tests for sm3 using sm3 failed (rc=3D-2)
+> >     tcrypt: failed to load transform for sm3: -2
+> >     alg: hash: failed to allocate transform for polyval: -2
+> >     alg: self-tests for polyval using polyval failed (rc=3D-2)
+> >
+> >     Resolution:-
+> >     Enabling CONFIG_CRYPTO_SM3_GENERIC,
+> CONFIG_CRYPTO_SM4_GENERIC,
+> >     CONFIG_CRYPTO_HCTR2, CONFIG_CRYPTO_ARIA as module enables
+> support of
+> >     sm3, sm4, aria, polyval & xctr.
+> >
+> >     Signed-off-by: Kshitiz Varshney <kshitiz.varshney@nxp.com>
+>=20
+> The commit log and Signed-off-by lines shouldn't have leading
+> spaces/indent.=20
+Checkpatch has not reported any such issues.
+>=20
 > > ---
-> > v2:
-> >   - update Documentation.
-> > ---
-> >  tools/perf/Documentation/perf-script.txt | 13 +++++++------
-> >  tools/perf/builtin-script.c              |  8 +++++++-
-> >  2 files changed, 14 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> > index ff9a52e44688..578fa59f51a5 100644
-> > --- a/tools/perf/Documentation/perf-script.txt
-> > +++ b/tools/perf/Documentation/perf-script.txt
-> > @@ -132,9 +132,10 @@ OPTIONS
-> >          Comma separated list of fields to print. Options are:
-> >          comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-> >          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-> > -        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-> > -        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-> > -        machine_pid, vcpu, cgroup, retire_lat.
-> > +        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-> > +        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
-> > +        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-> > +
-> >          Field list can be prepended with the type, trace, sw or hw,
-> >          to indicate to which event type the field list applies.
-> >          e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-> > @@ -217,9 +218,9 @@ OPTIONS
-> >  	Instruction Trace decoding. For calls and returns, it will display the
-> >  	name of the symbol indented with spaces to reflect the stack depth.
-> >  
-> > -	When doing instruction trace decoding insn and insnlen give the
-> > -	instruction bytes and the instruction length of the current
-> > -	instruction.
-> > +	When doing instruction trace decoding, insn, disasm and insnlen give the
-> > +	instruction bytes, disassembled instructions (requires libcapstone support)
-> > +	and the instruction length of the current instruction respectively.
-> >  
-> >  	The synth field is used by synthesized events which may be created when
-> >  	Instruction Trace decoding.
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 4817a37f16e2..4ac9670704ff 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -135,6 +135,7 @@ enum perf_output_field {
-> >  	PERF_OUTPUT_CGROUP          = 1ULL << 39,
-> >  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
-> >  	PERF_OUTPUT_DSOFF           = 1ULL << 41,
-> > +	PERF_OUTPUT_DISASM          = 1ULL << 42,
-> >  };
-> >  
-> >  struct perf_script {
-> > @@ -190,6 +191,7 @@ struct output_option {
-> >  	{.str = "bpf-output",   .field = PERF_OUTPUT_BPF_OUTPUT},
-> >  	{.str = "callindent", .field = PERF_OUTPUT_CALLINDENT},
-> >  	{.str = "insn", .field = PERF_OUTPUT_INSN},
-> > +	{.str = "disasm", .field = PERF_OUTPUT_DISASM},
-> >  	{.str = "insnlen", .field = PERF_OUTPUT_INSNLEN},
-> >  	{.str = "brstackinsn", .field = PERF_OUTPUT_BRSTACKINSN},
-> >  	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
-> > @@ -1515,6 +1517,10 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
-> >  		printed += fprintf(fp, " insn: ");
-> >  		printed += sample__fprintf_insn_raw(sample, fp);
-> >  	}
-> > +	if (PRINT_FIELD(DISASM) && sample->insn_len) {
-> > +		printed += fprintf(fp, "\t\t");
-> 
-> This is good, except if both 'insn' and 'disasm' are used together.
-> It either:
->  a) without libcapstone, prints insn bytes twice
->
-> 	Probably simpler to make 'disasm' without libcapstone
-> 	a fatal error explaining that perf needs to be built
-> 	with libcapstone support for 'disasm' to work.
-> 
->  b) with libcapstone, disassembly does not line up nicely
->
-I prefer to #a which is simpler. I'll rename sample__fprintf_insn() to
-sample__fprintf_insn_asm() wihtout fallback to raw version.
+> >  arch/arm/configs/imx_v6_v7_defconfig | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm/configs/imx_v6_v7_defconfig
+> > b/arch/arm/configs/imx_v6_v7_defconfig
+> > index 0a90583f9f01..627f57da9d5b 100644
+> > --- a/arch/arm/configs/imx_v6_v7_defconfig
+> > +++ b/arch/arm/configs/imx_v6_v7_defconfig
+> > @@ -484,3 +484,7 @@ CONFIG_DEBUG_FS=3Dy
+> >  # CONFIG_SLUB_DEBUG is not set
+> >  # CONFIG_SCHED_DEBUG is not set
+> >  # CONFIG_FTRACE is not set
+> > +CONFIG_CRYPTO_HCTR2=3Dm
+> > +CONFIG_CRYPTO_SM3_GENERIC=3Dm
+> > +CONFIG_CRYPTO_SM4_GENERIC=3Dm
+> > +CONFIG_CRYPTO_ARIA=3Dm
+>=20
+> Instead of adding lines at the end of file, please use help from 'make
+> savedefconfig' to get them appear at the correct places.
+Changes done in v2.
+>=20
+> Shawn
 
-> > +		printed += sample__fprintf_insn(sample, thread, machine, fp);
-> > +	}
-> >  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
-> >  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
-> >  
-> > @@ -3900,7 +3906,7 @@ int cmd_script(int argc, const char **argv)
-> >  		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
-> >  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
-> >  		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
-> > -		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-> > +		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
-> >  		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
-> >  		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
-> >  		     parse_output_fields),
-> 
-
--- 
-Cheers,
-Changbin Du
