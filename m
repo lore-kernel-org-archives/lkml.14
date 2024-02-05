@@ -1,66 +1,64 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF51D2C84C;
-	Mon,  5 Feb 2024 12:36:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B5A1CABD;
+	Mon,  5 Feb 2024 12:36:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707136588; cv=none; b=GURVY4eUpirlt/Y7+FNHqBZ3WMcoOPeARr623sJiWk/2jDVkZx5OZrilMRqjfitXxwoBZxLTvEojfZwueVenKCiniZNZYR4FksHuG0mNDE5+tSn/F6m3edcDFKpKoqHvlNW7IEZU/wMxkhS+AmgPWmmT8vK/ozyCHjbbvkgYeVU=
+	t=1707136606; cv=none; b=C9dU/pUeAobrZmJackk1T21vGlMIbJMqwrvrU7w4y8152so/ogaYlbjEngEsp5bG4DcnFPH2hZrxredDe5HS7XWc7U18i+/gDkrPGaFqjeMofuSwAOa+r4w9ANgXCVxCy/a9A5/jIh8HoOwzkMkevziUk8KQ5WiSr015wGRLPUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707136588; c=relaxed/simple;
-	bh=dA7t09iSTZBR9qJHJtb0Kd3uzZQ9x94EEo0iVVGv9CQ=;
+	s=arc-20240116; t=1707136606; c=relaxed/simple;
+	bh=ENgpbAtrqID8ovJNk+F/h+zg1txNrGQPaTzLXnkwiLQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aWuGtPGnwibQUUK6WDkLlyfoyq7tlHM1wPFpEVg46tdsIgBRqMFvtjEdVu8aJ36jf493dW23A0uy+9FCZSWAdMimnAe7iASNuqRIPFrsuS9MYnPfSY+ec7Rm3+KCR/24Ap0HXwec20kydL0+NPBL8aTa1aGTXpx0KXQv56krh+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQOtvsZf; arc=none smtp.client-ip=192.198.163.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6UKTF3AOLbwgWRjmXGsnYD07ylDk2TOOYfkFW+iUj2WmEccdcwMRPmQMo355U7+rhwd8b6ymjELQ/bUsj/6scJKkx07Be/yx7BQjLKnZjF8qgrqJaWJlKUk4QaynjsqudICNBxR8BbDOgoOU/piTTyupXKvFkxQy0PSJeUwMEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GemHoD06; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQOtvsZf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GemHoD06"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707136587; x=1738672587;
+  t=1707136604; x=1738672604;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=dA7t09iSTZBR9qJHJtb0Kd3uzZQ9x94EEo0iVVGv9CQ=;
-  b=XQOtvsZfDcCHaNEEwcjg/9ht4M9H7yys5U5r8WW/hm2/anlNXoUQDZh1
-   fP2PisfvwxkWkuItOgIkfW3YqSLL6L1kCIV/qvZ8ibJDrYnVdGBJjCg0O
-   AOheK7vUSxLwBviprztBpcFPTC+bixqO+yIBHsqKwXeJW83+rnXicBBrV
-   7K5a3TqNL0zXtsvU7QLIix6xgsNgEW7vvDFHoLPiPvuCobDpVj/ZXDsxZ
-   BLrTYr+7qQzmZ7HX106RFn97MIb+B9oLqHcjn1J70On1HbggfMsjKPrg+
-   aXIZt4OBjST9znbWIKbfMW435rYenLHVE3dCb3L/de/kx3Vsq2O39zMUt
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="11883184"
+  bh=ENgpbAtrqID8ovJNk+F/h+zg1txNrGQPaTzLXnkwiLQ=;
+  b=GemHoD06K1eA1j4Adi7cIcvvVcGEej9YgMBrxZVsMLyxepWqHfKocaTC
+   Xe7y465ZRskszFjS1eqxU2ki9M6KFK2W1wN5x/dxYSn67hbQEqPrIAtGx
+   DPDAqHxdwvNHyVpDGCsowz2L2RUwRD8F8Amv/dOJ0Mm4gVGmiAuusOmLU
+   yousYO8P+2Ux6mt+C/sBbO+YwWWmGiX8eokuebN4JEcBs3LFkJ6clOyAM
+   vGtvqRdm5tgtEWbROaeNkxAroTt+bf6SL5GB0wydyQvvF5YilSMiDrT+s
+   T4DCopdGwNlyIRugPPsOJHO1AUN3V9sH2g+vQYACPXca/2OKPyUMHgWtW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="11883224"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="11883184"
+   d="scan'208";a="11883224"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:36:26 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:36:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="909285570"
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="909285677"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="909285570"
+   d="scan'208";a="909285677"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:36:23 -0800
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:36:40 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rWyCy-0000000248J-0zC9;
-	Mon, 05 Feb 2024 14:36:20 +0200
-Date: Mon, 5 Feb 2024 14:36:19 +0200
+	id 1rWxw1-000000023v6-3Rmk;
+	Mon, 05 Feb 2024 14:18:49 +0200
+Date: Mon, 5 Feb 2024 14:18:49 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: nuno.sa@analog.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] of: dynamic: flush devlinks workqueue before
- destroying the changeset
-Message-ID: <ZcDWQ52BGix3ocUC@smile.fi.intel.com>
-References: <20240205-fix-device-links-overlays-v2-0-5344f8c79d57@analog.com>
- <20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 08/23] gpio: sysfs: use gpio_device_find() to iterate
+ over existing devices
+Message-ID: <ZcDSKYqFHSUZb2Qx@smile.fi.intel.com>
+References: <20240205093418.39755-1-brgl@bgdev.pl>
+ <20240205093418.39755-9-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,45 +67,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com>
+In-Reply-To: <20240205093418.39755-9-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 05, 2024 at 01:09:33PM +0100, Nuno Sa via B4 Relay wrote:
-> From: Nuno Sa <nuno.sa@analog.com>
+On Mon, Feb 05, 2024 at 10:34:03AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Device links will drop their supplier + consumer refcounts
-> asynchronously. That means that the refcount of the of_node attached to
-> these devices will also be dropped asynchronously and so we cannot
-> guarantee the DT overlay assumption that the of_node refcount must be 1 in
-> __of_changeset_entry_destroy().
-> 
-> Given the above, call the new fwnode_links_flush_queue() helper to flush
-> the devlink workqueue so we can be sure that all links are dropped before
-> doing the proper checks.
-
-Have you seen my comments against v1?
-
-> +++ b/drivers/of/dynamic.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/proc_fs.h>
-> +#include <linux/fwnode.h>
-
-Try to squeeze this to make it ordered (with given context it may go before
-linux/s* ones, but maybe you may find a better spot).
+> With the list of GPIO devices now protected with SRCU we can use
+> gpio_device_find() to traverse it from sysfs.
 
 ...
 
-> +	/*
-> +	 * device links drop their device references (and hence their of_node
+> +static int gpiofind_sysfs_register(struct gpio_chip *gc, void *data)
+> +{
+> +	struct gpio_device *gdev = gc->gpiodev;
+> +	int ret;
+> +
+> +	if (gdev->mockdev)
+> +		return 0;
+> +
+> +	ret = gpiochip_sysfs_register(gdev);
+> +	if (ret)
+> +		chip_err(gc, "failed to register the sysfs entry: %d\n", ret);
 
-Device links...
+> +	return 0;
 
-> +	 * references) asynchronously on a dedicated workqueue. Hence we need
-> +	 * to flush it to make sure everything is done before doing the below
-> +	 * checks.
-> +	 */
+???
+
+> +}
 
 -- 
 With Best Regards,
