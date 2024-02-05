@@ -1,359 +1,90 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from davidv.dev (mail.davidv.dev [78.46.233.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D33589C
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5BC3D99E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.233.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707148698; cv=none; b=LVCYnHYLxqWzQ8JrdJBOnHjJhDo7EAEEw3iS3bf22BEzVfs3osqEe7WS2pqMlP4tRsuwoagyVpLKj9Eg8XZskKQodZmof4COFIo52dGpr64NT7TvlrPtyJj7zaUhPymYE5KeRca93GOpGs7t8I6Ydy/HgEvk6Ru1YYfH3928PdU=
+	t=1707148736; cv=none; b=Cvc5m0uANs6wr2pMs5uso+NwYYtSwWUg5vWfJcGTQoxdj9bQbTfm/rGckOTc8b2rRbRUw/WYi+k4OShKE+OK3xwyTgcFSYDBu5/HYFcUGdf11NRXU29Gj22djnWpjjdRbBWu4gQ9ZizJlIq17Iw50jQ2t69WNVRHTpO4pLVECg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707148698; c=relaxed/simple;
-	bh=nHHToYVe7UDazNBh0UHL8RPPmFaMG4R39iXsV4seckA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bmiSUgxEIuZCMB6D74MnbSO6MojuAHj3ia+rQj4UEXrObsT7nbYc3HZWFqNqq3tMrqaVzsNlc9qiXMZ9aVdZMgYjmYDwWSGmb58ELrazmkYwpqTtbOeTrndbxjrkzzgX+TMpIVf6UqUoDk360AYWmAdfn/4MkfjMswQ0FtbvxKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iwaEo2so; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iwaEo2so"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40fc52c2ae4so30144285e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 07:58:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707148695; x=1707753495; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xd67LVywORJcC5ZhK9PLnVObuzsV4zR/OauMaIQMMEo=;
-        b=iwaEo2so8fktDghhwOOackrRRZenyMhSbKxaSSTUeLczTjzYzuKBZD3gLbXao+4KcT
-         OaZmA6RNgI7dhCQauh5zIvtNrzYejLlHqr45/UKzmhZ+XdCTqpXDfor5SMfghzv7/31d
-         cFEMEQKKJZyct20UEo4UK6g77od7mumrv43A8G7MaDhaUxR28LhyRR6mwRF+qIaGAY/j
-         67jAyzoaTbU9OfL+dq/bSeP3eQYViB0ue8UsR0ettmuDrufVcjQb9NRulANQ0uT8JHGO
-         RZOi1Lem1UVpnkT3JI4lIA4JtcUg0Zb7Fh5ansEoI4DVNztD9aeX6varXJoHZItn5FEx
-         YPsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707148695; x=1707753495;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xd67LVywORJcC5ZhK9PLnVObuzsV4zR/OauMaIQMMEo=;
-        b=sBN1GrSIOVL5Fg3w/Df7sAYliT0gyxF58Zgxq9qmJ3cVGdzvO2G9V87aL+lHnR/+p/
-         icuovtMNO9TS7BSRvWf1Mloz36aQvp0tG86DOpJz7cIl/nenJ9AnQobL+piCHWX/Ds31
-         YQr7Uc0Y6ybKiVNUsnHfR6Prm2RVX+VSAdeUb4ZiA8BAw0ZKvPdXiIvBmH2IsNa95SIb
-         NVxyXDPgrOLtvJSsTpp4YYwP0w7IZbBfP9dResYbsrfTpI849zRouySoJBW1mzKo+mxS
-         rixN6TqQAhPzIAgrX82VJtFYOgyCFdP+3VqHIHKmfE0liR32vABkzLUARQ5iUG693KZx
-         no9g==
-X-Gm-Message-State: AOJu0YyocaM3qKudEMuz9EVnHRVgMWMyuzdx85r2lx7/isjYM64zpGMR
-	MNTGWhYsMMP5clHz/sWTXtZWwZTMEX9bgOzeKOBFnWScqIRtpv1YQGxbnenFCAk=
-X-Google-Smtp-Source: AGHT+IGDuVQQtVJ5jNm79dOhLXCyGQIYaviUdG02y+lpA+4WPODAzqez7/K4R8u8hsGwhq3RP16IfA==
-X-Received: by 2002:a05:600c:4f95:b0:40e:f3ee:5622 with SMTP id n21-20020a05600c4f9500b0040ef3ee5622mr159015wmq.11.1707148694950;
-        Mon, 05 Feb 2024 07:58:14 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUifZdu33C96BZpe+tFkmI0RVRx8WLvi5A3F44DdITKPd/iaG8hGd5vgBDF2lReQskUo+KWjbvgj3/er0VN5uh6xacfHxCAaatUeCJpFkA2rSUBYbUlCnsuEzk1Rmo5EbUffpwLj9xNOL/fFSffGNqaNOqwaOE2ZyC6d+2lNaWOiEi+CcOKXY+CFLObalsRfe7nMczF3bokRhx8VU/N+MzWnTXlQmLB6YTsi2UAMeGma4fGlpx51MuzCa7MFa7xjDFAn4wSqWgRgSa1dhVmOsuWqOrtW5O+WQegJKtv3CVVC4tQGsh8qqC4JNazMNwVqBc+S/eb5sEKTBgf6sBD3TALzd/kG8FCgQCiK6uL6zKicepma+8vluUqnVWPz5DiQ96YAIiQYHNbrp0eFDAoA5BQna99fBCUFtmxZcPdwU+wRc/Ng4jBvUKwiQtdJP+5VbiAdpRQ
-Received: from [127.0.1.1] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id fc11-20020a05600c524b00b0040fddae917bsm243714wmb.9.2024.02.05.07.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 07:58:14 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Mon, 05 Feb 2024 16:58:03 +0100
-Subject: [PATCH 3/3] dt-bindings: PCI: qcom,pcie-sa8775p: move SA8775p to
- dedicated schema
+	s=arc-20240116; t=1707148736; c=relaxed/simple;
+	bh=Pppg7VSwpwIuek6Wg6dxlq5yApM3fhfhfp70mFwuCPQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=APJ4dkZ2TcCaH862YxHTZO+7zErY+vcM5xb5ET/mZRonODMkRejSezRe/11o/he5EPeldv//9YZY/mH/MK0md4RCIGgCExV5ekD8A7CXElad49DS8I8v+DD0lYdPsVBy11Ua87LfAX2o15PLDlDo7AXR00I/07gVdpIUvE1xEXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev; spf=pass smtp.mailfrom=davidv.dev; arc=none smtp.client-ip=78.46.233.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidv.dev
+Received: from framework.labs
+	by mail.davidv.dev (chasquid) with ESMTPSA
+	tls TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+	(over submission+TLS, TLS-1.2, envelope from "david@davidv.dev")
+	; Mon, 05 Feb 2024 16:58:51 +0100
+From: David Ventura <david@davidv.dev>
+To: david@davidv.dev
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH] net: Change default delay on IP autoconfig to 0ms
+Date: Mon,  5 Feb 2024 16:55:43 +0100
+Message-Id: <20240205155717.484198-1-david@davidv.dev>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <580001e3-17ef-4f24-8fd8-bc14110e874e@lunn.ch>
+References: <580001e3-17ef-4f24-8fd8-bc14110e874e@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240205-dt-bindings-pci-qcom-split-continued-v1-3-c333cab5eeea@linaro.org>
-References: <20240205-dt-bindings-pci-qcom-split-continued-v1-0-c333cab5eeea@linaro.org>
-In-Reply-To: <20240205-dt-bindings-pci-qcom-split-continued-v1-0-c333cab5eeea@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8285;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=nHHToYVe7UDazNBh0UHL8RPPmFaMG4R39iXsV4seckA=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBlwQWQihmErBYS9Z1zBNfPnFt5Mj/4JqB8FNs7S
- NqBE/B2J62JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZcEFkAAKCRDBN2bmhouD
- 1y9zD/4+gr5chQPKMCgooZvd9ON2IXvsoTcYxo87MjsY9CatpIp4y9kssx6OnMi49aTovszNuF9
- OdrxzOTbARSen2NDepjmk5ZlefA+aRPM2T1GttmSG3wCXvUfGBuk9bVGm7vbNogj+rCeqcJctPD
- roli2D4VdF2aTOkXRuI29B9BaXxKFLjTWCvrz9UiN6hzFN9cNMttdtP4wUtL7NCC4NuNwxudroT
- CRat/ggqfVK1hnVqXvlDOxdTwnHh3sqL6ygwsoCF0/136qm0XVw16HJNQ1MpfPLjVUpZvstBqKH
- gMwnIBVBAdBVfYoqYSkLwa/hlcll/j6yI4+fp3uR7bCWQc3nntcNStMOdQN+mYubrJfLsXRws2T
- gHStI5QlCNFxcN/rxS30fcdF/SucdmRObP0OcKayleatThRZfSwUePFwAliHB9W6nsWnzWcZzmV
- CM3KKSWRJf5p2gr4+ibdW8xtYUqm03z1zAZS55VuC3gsXbrcADNfh8WRrZsOc3qLPa7syc8+vgx
- yzN4LiEhwPSACougxUrDc2C/NDxybWCnckcEWu1LuOsXMjDcO79GhbS9sMjgPYAeGGEmvWhgxCP
- ttjRJZi8ArsfMvQeUpGzPCls2KuMjKHCOCj8HitFQIrEazQBHYI8bBigVHyuBlrcvYrNYpv8sPV
- Sw3P1Ie1B4kwvFg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-Move SA8775p PCIe devices from qcom,pcie.yaml binding to a dedicated file
-to make reviewing easier.
+As suggested, I'm updating the default to 0ms. 
 
-This creates equivalent schema file, except:
- - Missing required compatible which is actually redundant.
- - Expecting eight MSI interrupts, instead of only one, which was
-   incomplete hardware description.
+This patch depends on 1f0aa0c947eeb4edb60add141a5bc2309f2dc8dd ("
+net: make driver settling time configurable").
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: David Ventura <david@davidv.dev>
 ---
- .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 166 +++++++++++++++++++++
- .../devicetree/bindings/pci/qcom,pcie.yaml         |  38 -----
- 2 files changed, 166 insertions(+), 38 deletions(-)
+ Documentation/admin-guide/nfs/nfsroot.rst | 2 +-
+ net/ipv4/ipconfig.c                       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-new file mode 100644
-index 000000000000..efde49d1bef8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-@@ -0,0 +1,166 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm SA8775p PCI Express Root Complex
-+
-+maintainers:
-+  - Bjorn Andersson <andersson@kernel.org>
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+description:
-+  Qualcomm SA8775p SoC PCIe root complex controller is based on the Synopsys
-+  DesignWare PCIe IP.
-+
-+properties:
-+  compatible:
-+    const: qcom,pcie-sa8775p
-+
-+  reg:
-+    minItems: 6
-+    maxItems: 6
-+
-+  reg-names:
-+    items:
-+      - const: parf # Qualcomm specific registers
-+      - const: dbi # DesignWare PCIe registers
-+      - const: elbi # External local bus interface registers
-+      - const: atu # ATU address space
-+      - const: config # PCIe configuration space
-+      - const: mhi # MHI registers
-+
-+  clocks:
-+    minItems: 5
-+    maxItems: 5
-+
-+  clock-names:
-+    items:
-+      - const: aux # Auxiliary clock
-+      - const: cfg # Configuration clock
-+      - const: bus_master # Master AXI clock
-+      - const: bus_slave # Slave AXI clock
-+      - const: slave_q2a # Slave Q2A clock
-+
-+  interrupts:
-+    minItems: 8
-+    maxItems: 8
-+
-+  interrupt-names:
-+    items:
-+      - const: msi0
-+      - const: msi1
-+      - const: msi2
-+      - const: msi3
-+      - const: msi4
-+      - const: msi5
-+      - const: msi6
-+      - const: msi7
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: pci
-+
-+required:
-+  - interconnects
-+  - interconnect-names
-+
-+allOf:
-+  - $ref: qcom,pcie-common.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interconnect/qcom,sa8775p-rpmh.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@1c00000 {
-+            compatible = "qcom,pcie-sa8775p";
-+            reg = <0x0 0x01c00000 0x0 0x3000>,
-+                  <0x0 0x40000000 0x0 0xf20>,
-+                  <0x0 0x40000f20 0x0 0xa8>,
-+                  <0x0 0x40001000 0x0 0x4000>,
-+                  <0x0 0x40100000 0x0 0x100000>,
-+                  <0x0 0x01c03000 0x0 0x1000>;
-+            reg-names = "parf", "dbi", "elbi", "atu", "config", "mhi";
-+            ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
-+                     <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-+
-+            bus-range = <0x00 0xff>;
-+            device_type = "pci";
-+            linux,pci-domain = <0>;
-+            num-lanes = <2>;
-+
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+
-+            assigned-clocks = <&gcc GCC_PCIE_0_AUX_CLK>;
-+            assigned-clock-rates = <19200000>;
-+
-+            clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-+                     <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+                     <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+                     <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-+            clock-names = "aux",
-+                          "cfg",
-+                          "bus_master",
-+                          "bus_slave",
-+                          "slave_q2a";
-+
-+            dma-coherent;
-+
-+            interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "msi0",
-+                              "msi1",
-+                              "msi2",
-+                              "msi3",
-+                              "msi4",
-+                              "msi5",
-+                              "msi6",
-+                              "msi7";
-+            #interrupt-cells = <1>;
-+            interrupt-map-mask = <0 0 0 0x7>;
-+            interrupt-map = <0 0 0 1 &intc GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
-+                            <0 0 0 2 &intc GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
-+                            <0 0 0 3 &intc GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
-+                            <0 0 0 4 &intc GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>;
-+
-+            interconnects = <&pcie_anoc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-+                            <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
-+            interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+            iommu-map = <0x0 &pcie_smmu 0x0000 0x1>,
-+                        <0x100 &pcie_smmu 0x0001 0x1>;
-+
-+            phys = <&pcie0_phy>;
-+            phy-names = "pciephy";
-+
-+            power-domains = <&gcc PCIE_0_GDSC>;
-+
-+            resets = <&gcc GCC_PCIE_0_BCR>;
-+            reset-names = "pci";
-+
-+            perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-+            wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 6c50d887ad5f..aedd23a71c70 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -28,7 +28,6 @@ properties:
-           - qcom,pcie-ipq8074-gen3
-           - qcom,pcie-msm8996
-           - qcom,pcie-qcs404
--          - qcom,pcie-sa8775p
-           - qcom,pcie-sdm845
-           - qcom,pcie-sdx55
-       - items:
-@@ -200,7 +199,6 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - qcom,pcie-sa8775p
-               - qcom,pcie-sdx55
-     then:
-       properties:
-@@ -495,41 +493,6 @@ allOf:
-           items:
-             - const: pci # PCIe core reset
+diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
+index f26f7a342af6..fce610a4ec54 100644
+--- a/Documentation/admin-guide/nfs/nfsroot.rst
++++ b/Documentation/admin-guide/nfs/nfsroot.rst
+@@ -225,7 +225,7 @@ ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>:<dns
  
--  - if:
--      properties:
--        compatible:
--          contains:
--            enum:
--              - qcom,pcie-sa8775p
--    then:
--      properties:
--        clocks:
--          minItems: 5
--          maxItems: 5
--        clock-names:
--          items:
--            - const: aux # Auxiliary clock
--            - const: cfg # Configuration clock
--            - const: bus_master # Master AXI clock
--            - const: bus_slave # Slave AXI clock
--            - const: slave_q2a # Slave Q2A clock
--        resets:
--          maxItems: 1
--        reset-names:
--          items:
--            - const: pci # PCIe core reset
--
--  - if:
--      properties:
--        compatible:
--          contains:
--            enum:
--              - qcom,pcie-sa8775p
--    then:
--      required:
--        - interconnects
--        - interconnect-names
--
-   - if:
-       not:
-         properties:
-@@ -565,7 +528,6 @@ allOf:
-           contains:
-             enum:
-               - qcom,pcie-msm8996
--              - qcom,pcie-sa8775p
-               - qcom,pcie-sdm845
-     then:
-       oneOf:
-
+ ip.dev_wait_ms=<value>
+   Set the number of milliseconds to delay after opening the network device
+-  which will be autoconfigured. Defaults to 10 milliseconds.
++  which will be autoconfigured. Defaults to 0 milliseconds.
+ 
+ nfsrootdebug
+   This parameter enables debugging messages to appear in the kernel
+diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+index cbf35163b973..8b7d08649b09 100644
+--- a/net/ipv4/ipconfig.c
++++ b/net/ipv4/ipconfig.c
+@@ -99,7 +99,7 @@
+ 
+ /* Wait for carrier timeout default in seconds */
+ static unsigned int carrier_timeout = 120;
+-static unsigned int dev_wait_ms = 10;
++static unsigned int dev_wait_ms = 0;
+ 
+ /*
+  * Public IP configuration
 -- 
-2.34.1
+2.39.2
 
