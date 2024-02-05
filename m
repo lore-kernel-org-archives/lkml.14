@@ -1,89 +1,188 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007765C5F4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD665C5F4;
+	Mon,  5 Feb 2024 19:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707161576; cv=none; b=kfuqLw2xA0UDjfYRUPRA7S5uwOmIeniDTQWlUIiYNLTwpHVAQ6gGVf07MgZb7MXcdMwXdlfTL/1FMvn5IH7EwsrnbjtFZ5clcODfFZkRDdoUki22Okd080tN48wSBsICWp+LXtGfFVfKhqaLfhBWr6c6oFwDe9taU9EvnMEcwnY=
+	t=1707161601; cv=none; b=FMAcqSpJbrIaU2w37jZJe6BPj7iCiJrjquu48e8ezVtFAIW5dBN5BrqV0pPZ16/TO6Xv+exQWI5EMXjjJYX5jmDbb5yxo28LRNNzFH+CLpB+W12g5/PYqhO1Sik2lXI6B8/Pu0wbFAppru1cptycphIowOXYzKcMNMm7StD6dYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707161576; c=relaxed/simple;
-	bh=hO63VuEPXJUY9hUIA7K7fRg3qwjtnbS+xLs8dPIgUPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KqytyzaEnwq2K/kmrkPEmQV8uOxiVdulX50Qy/ButpVJQ/jiaiR/6ckAH1nz3ZP2Sfk8wj8HuWLfENYq155b0QlgVt81l9lVPTBVQ6Kwy+4W0h57ufiVxfnXkJmy8nPG5rVSiVa45K4SzEWIxxnJj0qEWXM0r9deAudVc8PeakY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QIDXPnXJ; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1707161601; c=relaxed/simple;
+	bh=RKS0Zwmm+lqDuahv6NxZpCmj50fOgiMp59F2U0j90YQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XDJDvGpLgV/wJ4tbSQauxYTxUAtQupVWlZc7LfZOg8lVgYBLyVkPKDpHNnvcLbYvQP5No413ZgIpXdxkfmIKR3EmZRzUUEJwAit7klmOpqQAMqK8de3qCIGrFyY87DEJNB8TdHm7w3YtXGED0bIDo7obAeaN4tSONEpCvHPSKJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sTjdErzz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QIDXPnXJ"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7d2940ad0e1so10452241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 11:32:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707161574; x=1707766374; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kpJ2KDFjypNCJA/M9vBCBkVGGyjLvFlc5UOprwF/PLc=;
-        b=QIDXPnXJ9Cfbam2BeLztIMEAW7J8m/ok9AkPkDk+FEYIYywJwpGsn3cPblYCjJ79wm
-         8ztnCTVMDdix1IMT8CI+HirNGVyHrGQqa307orXNHtJJfLcx1HFhkoYWY3BzNJDOAjWP
-         2H3JezcJfm0c4DVIXDEkhgLGiHuK7cL0D8XBQ498GaFoPLr2Spf4qDRBvZDSlnpklRtV
-         suvDZE4/z+x7NqWT6iEYNBV4dnD455fqn6Ai8pZ20mSpjAbbO/COEjUhcbtLhw/KN8ng
-         NnYn26PZjk/0VsEavogscDRfxaXJGpQgpdGCZ80rukRmGWrjFtdYzRoMTf2CnDCMzizt
-         tcKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707161574; x=1707766374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kpJ2KDFjypNCJA/M9vBCBkVGGyjLvFlc5UOprwF/PLc=;
-        b=kSDgdUreqHXJ5RD2oJ8goyEjsZ/JAgL07nJh9uOYCLNNL+KGgIL5x80tBM30jpGhgo
-         Gac3G+86QsJfuqAys+P4gYf6ocmvuMub+hmVJkjB8rQmLDR4P622+JsGiXozyLannHYt
-         vl3XLkIh8OCl/mxXR2O+EJ3K4KC7pMhIAIRzCZBTCAKHHvIAE/Y3zqkT2hjeyeTRTC2T
-         K/g+jVWAUdwKPekNWFTI90QxfduYNyMOeE0H8Uyxfqf404Ud6v2bN6z90Ca7ITtLJ51A
-         IPuLH4crJYaYfHUuBqjhKhqG4qCUgdIWTE7ehi18okWIiURT3Wnsz+m1YImgddbT42ZD
-         2ixw==
-X-Gm-Message-State: AOJu0YxC/8XlADgXzxrWcuE1o9mkSqKCYBq64eUoUATMxCPKO0NkxDnu
-	geJGU+ZuJHNFVc0/sa1fvUoyXBsZZrpohg8ERDZC9TrCFRdZMPhKw13DX2+mhlIYUOfEkE0YEnc
-	zv9Bnl5RNK2mzIg9ZckOZ4cHqxgMQvZILwwDa6Q==
-X-Google-Smtp-Source: AGHT+IGRj4nXNEOxA0AWu3Js+UzaMaCNnffXbyCuNiwCnejBiZnqQGgFyQD10my/FkTY9R7SNeFBm/zW+a4AHcwEcaQ=
-X-Received: by 2002:a05:6102:c88:b0:46d:2558:9490 with SMTP id
- f8-20020a0561020c8800b0046d25589490mr1013540vst.15.1707161573804; Mon, 05 Feb
- 2024 11:32:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sTjdErzz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E0CBC433F1;
+	Mon,  5 Feb 2024 19:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707161600;
+	bh=RKS0Zwmm+lqDuahv6NxZpCmj50fOgiMp59F2U0j90YQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sTjdErzzPM4vkK1sRQumMXvJhuoQOw2mMVKfaj1GpyFnCS1p757d3nfA9inzTi4RE
+	 ow5i/bqMj+urQi5swwaPJgQEmshbhGBU8IuK0dVO9y+WBCAl8rdiP8oZlMmFKGLgOm
+	 YqFn50H6RTbv3soY2aA4uDLk30mlIhGzpB9LnNAk=
+Date: Mon, 5 Feb 2024 19:33:17 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Vimal Kumar <vimal.kumar32@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chinmoyghosh2001@gmail.com,
+	badolevishal1116@gmail.com, mintupatel89@gmail.com
+Subject: Re: [PATCH v4] PM / sleep: Mechanism to find source aborting kernel
+ suspend transition
+Message-ID: <2024020555-usable-hardy-345e@gregkh>
+References: <20240205170747.19748-1-vimal.kumar32@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205093418.39755-1-brgl@bgdev.pl> <20240205093418.39755-22-brgl@bgdev.pl>
- <ZcDVNA6Id7Bmckt0@smile.fi.intel.com>
-In-Reply-To: <ZcDVNA6Id7Bmckt0@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 5 Feb 2024 20:32:42 +0100
-Message-ID: <CAMRc=MeXeKwX3RH602+CnXf_t6BvBMoRYzGYhYXkpN0XTprQsQ@mail.gmail.com>
-Subject: Re: [PATCH v2 21/23] gpio: protect the pointer to gpio_chip in
- gpio_device with SRCU
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205170747.19748-1-vimal.kumar32@gmail.com>
 
-On Mon, Feb 5, 2024 at 1:31=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
+On Mon, Feb 05, 2024 at 10:37:45PM +0530, Vimal Kumar wrote:
+> Sometimes kernel suspend transitions can be aborted unconditionally by
+> manipulating pm_abort_suspend value using "hard" wakeup triggers or
+> through "pm_system_wakeup()".
+> 
+> There is no way to trace the source path of module or subsystem which
+> aborted the suspend transitions. This change will create a list of
+> wakeup sources aborting suspend in progress through "hard" events as
+> well as subsytems aborting suspend using "pm_system_wakeup()".
+> 
+> Example: Existing suspend failure logs:
+> [  349.708359] PM: Some devices failed to suspend, or early wake event detected
+> [  350.327842] PM: suspend exit
+> 
+> Suspend failure logs with this change:
+> [  518.761835] PM: Some devices failed to suspend, or early wake event detected
+> [  519.486939] PM: wakeup source or subsystem uart_suspend_port aborted suspend
+> [  519.500594] PM: suspend exit
+> 
+> Here we can clearly identify the module triggerring abort suspend.
+> 
+> Co-developed-by: Chinmoy Ghosh <chinmoyghosh2001@gmail.com>
+> Signed-off-by: Chinmoy Ghosh <chinmoyghosh2001@gmail.com>
+> Co-developed-by: Mintu Patel <mintupatel89@gmail.com>
+> Signed-off-by: Mintu Patel <mintupatel89@gmail.com>
+> Co-developed-by: Vishal Badole <badolevishal1116@gmail.com>
+> Signed-off-by: Vishal Badole <badolevishal1116@gmail.com>
+> Signed-off-by: Vimal Kumar <vimal.kumar32@gmail.com>
+> ---
+> Changes in v4:
+> - Changed GFP_KERNEL flag to GFP_ATOMIC
+> - Changed mutex_lock to raw_spin_lock
 
-[snip]
+why raw?
 
->
-> > +     /* FIXME Cannot use gpio_chip_guard due to const desc. */
->
-> gpio_chip_guard()
->
 
-Nope, it's the name of the class type, not a function.
+> ---
+>  drivers/base/power/wakeup.c | 100 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 99 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index a917219feea6..b04794557eef 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -73,6 +73,16 @@ static struct wakeup_source deleted_ws = {
+> 
+>  static DEFINE_IDA(wakeup_ida);
+> 
+> +#ifdef CONFIG_PM_DEBUG
+> +static DEFINE_RAW_SPINLOCK(pm_abort_suspend_list_lock);
+> +
+> +struct pm_abort_suspend_source {
+> +	struct list_head list;
+> +	char *source_triggering_abort_suspend;
+> +};
+> +static LIST_HEAD(pm_abort_suspend_list);
+> +#endif
+> +
+>  /**
+>   * wakeup_source_create - Create a struct wakeup_source object.
+>   * @name: Name of the new wakeup source.
+> @@ -575,6 +585,54 @@ static void wakeup_source_activate(struct wakeup_source *ws)
+> 	trace_wakeup_source_activate(ws->name, cec);
+>  }
+> 
+> +#ifdef CONFIG_PM_DEBUG
 
-Bart
+Please do not add #ifdef to .c files, this makes this file even messier.
+
+> @@ -590,8 +648,13 @@ static void wakeup_source_report_event(struct wakeup_source *ws, bool hard)
+> 	if (!ws->active)
+> 		wakeup_source_activate(ws);
+> 
+> -	if (hard)
+> +	if (hard) {
+> +#ifdef CONFIG_PM_DEBUG
+> +		if (pm_suspend_target_state != PM_SUSPEND_ON)
+> +			pm_abort_suspend_source_add(ws->name);
+> +#endif
+
+Especially for stuff like this, if you write your .h files properly, no
+#ifdef are needed.
+
+
+
+> 		pm_system_wakeup();
+> +	}
+>  }
+> 
+>  /**
+> @@ -893,12 +956,47 @@ bool pm_wakeup_pending(void)
+> 		pm_print_active_wakeup_sources();
+> 	}
+> 
+> +#ifdef CONFIG_PM_DEBUG
+> +	if (atomic_read(&pm_abort_suspend) > 0) {
+> +		struct pm_abort_suspend_source *info;
+> +
+> +		raw_spin_lock_irqsave(&pm_abort_suspend_list_lock, flags);
+> +		list_for_each_entry(info, &pm_abort_suspend_list, list) {
+> +			pm_pr_dbg("wakeup source or subsystem %s aborted suspend\n",
+> +					info->source_triggering_abort_suspend);
+> +		}
+> +		raw_spin_unlock_irqrestore(&pm_abort_suspend_list_lock, flags);
+> +		pm_abort_suspend_list_clear();
+> +	}
+> +#endif
+> +
+> 	return ret || atomic_read(&pm_abort_suspend) > 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pm_wakeup_pending);
+> 
+>  void pm_system_wakeup(void)
+>  {
+> +
+> +#ifdef CONFIG_PM_DEBUG
+> +#ifdef CONFIG_DEBUG_INFO
+> +	if (pm_suspend_target_state != PM_SUSPEND_ON) {
+> +		char *source_name = kasprintf(GFP_ATOMIC,
+> +					"%ps",
+> +					__builtin_return_address(0));
+> +		if (!source_name)
+> +			goto exit;
+> +
+> +		if (strcmp(source_name, "pm_wakeup_ws_event"))
+> +			pm_abort_suspend_source_add(source_name);
+> +
+> +		kfree(source_name);
+> +	}
+> +exit:
+> +#else
+> +	if (pm_suspend_target_state != PM_SUSPEND_ON)
+> +		pm_pr_dbg("Some wakeup source or subsystem aborted suspend\n");
+> +#endif
+> +#endif
+
+Would you want to maintain this #ifdef nesting mess for the next 20
+years?  Please do not do this.
+
+thanks,
+
+greg k-h
