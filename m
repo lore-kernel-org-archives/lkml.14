@@ -1,120 +1,78 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842702D60B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8572C6A7;
+	Mon,  5 Feb 2024 15:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707146110; cv=none; b=slvScSfvlNcuPHfCPZe9FUhmN0vaRttfgd/lC7oMUbVq53XIl95DQpVVG8+I4sE3buSATvmdxdLcfPIY/Nt/44hbCitoU8FMkyrlm2G7wO6rHsSp/VThvL4z/iqIYXN9i4Q610kY74W/FU0yUTCjPKJ+YmOn2zgYjYfTzzB9DFA=
+	t=1707146269; cv=none; b=jzhyzH/PgHBCwqPNAo52flF7jpPg3t5lv3DyiHID2/VgC8/bTTQeJhWjCXAk3PdGk9/oC3X/AaaNMLLUNzxpzX8JgfJPKC0MtlpFjDvuJIZqSwWTMW3/7OTWkJJO8g1B52pqpeV5GoE1hqSZ3V5FvBzlvFBzfN8yBlGLPkkEW9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707146110; c=relaxed/simple;
-	bh=Au4LVORN6H/onQsw+fO8tyJyMuEiQJy3CYj6SC/W5Y0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FS5w4ji2h0bE0HeKB7BDqbI/ctm6eNeVjSTxEllVrAgmapoFjLIojAO7MHiF38/5m/5URc0djkqx7iLyv8X6QW2RfBBUMdyxr8tFOafqeBi9MEQ5Iz4W0KHNSWhb94csa0lTCzhKzmmAVwRPy36W/BHLTV0PCIAKDNBjAFCnrCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cTcEakOv; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707146269; c=relaxed/simple;
+	bh=J5h136Z6o5MpC5NtPS2K7viSPN8N5yI9efnCDUsJ24c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TuFtUfL8GhP5GFkcBGHG8dzfVHKsiBSpraIDwUU9nZJlmN3chuqlyBmDwZsVB+K9lMmQn7yIU2bTJ1cwM22c55rtJbkJpAddf+A0TrKE7PCxO/x+0S23GctZHSvqH5JgNi33N3wEvCPm771C9CBGOeiWBB9UvtFfIg8NTHHqmcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OqKMP23s; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cTcEakOv"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-783f3d27bfbso252037585a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 07:15:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707146107; x=1707750907; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SagLyPv+tU2JHwW9rPzTIveX03STHYINvfEVvGHvYDk=;
-        b=cTcEakOvQDZ7Mb5rKzpRotRkW6lTnJPLC/HW10XK9Nmy6AFWqh1Fb0JdgZEy2Of1g4
-         7ZUdgCd5Rmth3kJKy7On97jxTISm0N97fqiXWXr7jLd7UoL3JOmXJB/3a5HXM54TK/BY
-         jyuUjYmpC3HjNHnmzzIT6fDqD/NXICO+amY8kk4rSyF87+nP+e69eVqPyu4wa3rW/9v5
-         cKLSptdaZmUkSM9ygOZjqu0zvAO0h9t+x8D184iOSVRO9OJ2QGirK1OgXW1OPB8XNi8A
-         x2X23FXQAHRSfMUIrHmDbpyye9F/AEAQ9neAYswZA7E1Ws7OwL/R4pDz21aVt7Cube3P
-         osCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707146107; x=1707750907;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SagLyPv+tU2JHwW9rPzTIveX03STHYINvfEVvGHvYDk=;
-        b=IddWthezqkPsbdApfmFdpSaDiwAvU6dLdpJY30J5i5lOjtFJUnWge4TYLXa7BSRcq/
-         qB566oUBeCLXXirElUo2ZjxRKGdMs/TKn6kup03GsYjk5qsGVEt+RATfOPNDd8wcx3+T
-         syhl2Sg1heFHsFZOeMYpwg4RtYavqrpaWjh8lH1+WXbeZaUXvHEELGkJcj3fe3Fvvsnt
-         OCnzahF8wbfLKvARMLrNF9ZWbu4AVrgf1V/2fEOBv4Ro3u1Dt14rQHYKCRs9aItj72w5
-         ckbBTuJQW/eWxu+JdqA5OGuqLe80IvB1cezIpAsqswwmGkg4D8wTjWxEwOd99rMVGWAF
-         /lEw==
-X-Gm-Message-State: AOJu0YyNLCStLNAZkJU+zgglgAYW/wN2pfX/Nj+IOIbpBPRyBN15FZ4L
-	i2wvxuvjcQyrrzXgbsPQs9S86ZqJ+dMONV/Utl3WWhh39pqMDxNdqyRvHEXgVaoOfJV4p3pR7sB
-	mHlGD5paSuP988szu4xV1UltBskPG62Qv7EnAGA==
-X-Google-Smtp-Source: AGHT+IEJiCZJgCddiVpWsHVt/Z+aTDGcg5cltCSOe6qZPrQ2iyQVush+5469m4nHWe2ATfO1pbwocsEiLH2smm+MZUI=
-X-Received: by 2002:a0c:dd04:0:b0:68c:67ad:93cb with SMTP id
- u4-20020a0cdd04000000b0068c67ad93cbmr6650169qvk.37.1707146107317; Mon, 05 Feb
- 2024 07:15:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OqKMP23s"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E1425FF80A;
+	Mon,  5 Feb 2024 15:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707146265;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J5h136Z6o5MpC5NtPS2K7viSPN8N5yI9efnCDUsJ24c=;
+	b=OqKMP23sJ9USNkvLnB89vcAw/4g9Gdwip5r7ovmTsI5T+DtcK/6Y6dpojmZXiqQ+xgRgVR
+	xzRqfeqRW9Gtf28YycKhbuRFbApbvHgAHKNfprDL0Vte8aRZeodL5nLkuWz+d/NUFofC1h
+	ggbeIiWBk3WzyViPQhfQkoOh7/MIrpW26ISw9GYLLZGiHFYAmbrYH27H6gOj6E0XBJuql5
+	EgV7+HEoGQOCh0LBIGEZyN38huOE6C0PMqC5LhYk82Sz+Il8AFlZF1frq0bEJS5SNK/teq
+	4NroVxu2s/ixdVIpx3RoRLADUNBrZRs6dM4pCcdUIldHfSIuTfUnART0nLgUbg==
+Date: Mon, 5 Feb 2024 16:17:43 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Elad Nachman <enachman@marvell.com>
+Cc: <richard@nod.at>, <vigneshr@ti.com>, <vadym.kochan@plvision.eu>,
+ <aviramd@marvell.com>, <linux-mtd@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mtd: rawnand: marvell: fix layouts
+Message-ID: <20240205161743.6c13af7b@xps-13>
+In-Reply-To: <20240205134435.2769452-1-enachman@marvell.com>
+References: <20240205134435.2769452-1-enachman@marvell.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201172224.574238-1-alexey.klimov@linaro.org> <20240201172224.574238-4-alexey.klimov@linaro.org>
-In-Reply-To: <20240201172224.574238-4-alexey.klimov@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 5 Feb 2024 15:14:55 +0000
-Message-ID: <CADrjBPpWXHhRhid77=utZuaQVzw8aaXUV_EKwwn0=rp7-Jt+NQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] soc: samsung: exynos-chipid: fix revision calculation
- for gs101
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
-	linux-samsung-soc@vger.kernel.org, semen.protsenko@linaro.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, klimov.linux@gmail.com, kernel-team@android.com, 
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org, saravanak@google.com, 
-	willmcvicker@google.com, arnd@arndb.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Alexey,
+Hi Elad,
 
-On Thu, 1 Feb 2024 at 17:22, Alexey Klimov <alexey.klimov@linaro.org> wrote:
->
-> The main revision for gs101 SoC is not reported in the CHIPID_REV
-> register. The gs101 Product ID and revisions registers have a behaviour
-> split between old Exynos SoCs and new SoCs. The sub-revision is
-> reported in CHIPID_REV register in [19:16] bits but main revision
-> is still present in Product ID [7:0].
->
-> To construct soc_info->revision correctly for gs101 the main_rev
-> should not be reset from a value read from CHIPID_REV.
->
+enachman@marvell.com wrote on Mon, 5 Feb 2024 15:44:35 +0200:
 
-I think it would also be worth adding in the commit message how the
-main_rev and sub_rev relate to the a0, b0, b1 reported by the
-bootloader.
+> From: Elad Nachman <enachman@marvell.com>
+>=20
+> The check in nand_base.c, nand_scan_tail() : has the following code:
+> (ecc->steps * ecc->size !=3D mtd->writesize) which fails for some NAND ch=
+ips.
+> Remove ECC entries in this driver which are not integral multiplications,
+> and adjust the number of chunks for entries which fails the above
+> calculation so it will calculate correctly (this was previously done
+> automatically before the check and was removed in a later commit).
 
-> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-> ---
->  drivers/soc/samsung/exynos-chipid.c       | 20 ++++++++++++++++----
->  include/linux/soc/samsung/exynos-chipid.h |  1 +
->  2 files changed, 17 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> index 7fee6094db12..3b952ffd8cf7 100644
-> --- a/drivers/soc/samsung/exynos-chipid.c
-> +++ b/drivers/soc/samsung/exynos-chipid.c
-> @@ -87,14 +87,26 @@ static int exynos_chipid_get_chipid_info(struct regmap *regmap,
->         soc_info->product_id = val & EXYNOS_MASK;
->
->         if (data->rev_reg != EXYNOS_CHIPID_REG_PRO_ID) {
-> -               ret = regmap_read(regmap, data->rev_reg, &val);
-> +               unsigned int val2;
-> +
-> +               ret = regmap_read(regmap, data->rev_reg, &val2);
->                 if (ret < 0)
->                         return ret;
-> +
-> +               if (data->main_rev_shift == 0)
-> +                       main_rev = (val >> data->main_rev_shift)
-> +                                  & EXYNOS_REV_PART_MASK_GS101;
+I don't know why linux-mtd does not collect your patches, for this time
+I applied it manually to mtd/fixes.
 
-Looks like it can be simplified to
-main_rev = val & EXYNOS_REV_PART_MASK_GS101;
+See, linux-mtd lore link is broken, but linux-stable collected
+correctly:
+https://lore.kernel.org/linux-mtd/20240205134435.2769452-1-enachman@marvell=
+.com/
 
-Peter
+Thanks,
+Miqu=C3=A8l
