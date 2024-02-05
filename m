@@ -1,23 +1,22 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBEE3BB3B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBC73FE4F
 	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 16:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707151424; cv=none; b=SWPWKqA+6GKGiCOKs2XadaTsmjCr/khmEHCQdvM7T8w0b2N2CG5Y650u7h8SsPro/OTSfI7P5MWAEGgnhf4Lol6mxGPFjOXVJK6a54+RkaXMFekvShrcpMehP+fej34AFegNn0JwplrKKASDltCf8oDUrdfGPAly4jZH54t2zTc=
+	t=1707151424; cv=none; b=U+IzDDNpXUnBz8uuGsB8eGMHbOxiW1vJYWHeyPmievtJhfbCR9C6Jhnf+F1UjsKkLpTywKSzdJxAPlx92RawboOHlL8US1YKtJ87NRsDyw5Y/sj+kAC+9iBpTJrRygG3noNtkXl4Los3p3wNaTdTLhbfKMru1le8fXU3lvXjhjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707151424; c=relaxed/simple;
-	bh=BXEfUqrdgr1DKewKs2YvG49yuJcxFfA8kMr2pr3Rye8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MIZuRpAIb1CcpGh4mzRrtznnD1fUw8RuiHu3CaPbFJ399suFEAK1TWLKbIoyeQGIuSOeBBznwJ8ymk49jf2up6LzrDjRm7/NP8WMAg5mhWCZSjylepaiEEhRqwQN9NgFKeV79hxdz+oABVOJJrUC809oJpLHscKaQvnXrPOP/1Q=
+	bh=BFvZkNV6wb7PoKEUe58zRpeKa5nlGZK65hmeJTAj55s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jUBJ42QSxE+8bXqdmYWFnMTZ/bMspiTKM4qcRmjZEFymVxf3HK9x84CHFakt41EaHjXOPkZxahZMqbzJOMh2Ds0GpDJ5LgxT6lLLDUjHpfo6zDMoPx1Ey8ODHjQ6+gJ5IL2sqOAQUe1F0KZGs8SUus4JV3bfp5yZk+cCUlghgaE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.felsch@pengutronix.de>)
-	id 1rX240-0004Lp-CN; Mon, 05 Feb 2024 17:43:20 +0100
+	id 1rX240-0004Lp-7a; Mon, 05 Feb 2024 17:43:20 +0100
 From: Marco Felsch <m.felsch@pengutronix.de>
 To: gregkh@linuxfoundation.org,
 	robh+dt@kernel.org,
@@ -29,12 +28,10 @@ Cc: linux-usb@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH 2/4] usb: typec: tcpci: add generic tcpci compatible
-Date: Mon,  5 Feb 2024 17:43:14 +0100
-Message-Id: <20240205164316.805408-3-m.felsch@pengutronix.de>
+Subject: [PATCH 0/4] USB-C TCPM Orientation Support
+Date: Mon,  5 Feb 2024 17:43:12 +0100
+Message-Id: <20240205164316.805408-1-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240205164316.805408-1-m.felsch@pengutronix.de>
-References: <20240205164316.805408-1-m.felsch@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,26 +44,40 @@ X-SA-Exim-Mail-From: m.felsch@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The driver already support the tcpci binding for the i2c_device_id so
-add the support for the of_device_id too.
+Hi,
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/usb/typec/tcpm/tcpci.c | 1 +
- 1 file changed, 1 insertion(+)
+this adds the support to controll the optional connector-orientation
+available on some TCPC from the TCPM.
 
-diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index 0ee3e6e29bb1..7118551827f6 100644
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -889,6 +889,7 @@ MODULE_DEVICE_TABLE(i2c, tcpci_id);
- #ifdef CONFIG_OF
- static const struct of_device_id tcpci_of_match[] = {
- 	{ .compatible = "nxp,ptn5110", },
-+	{ .compatible = "tcpci", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, tcpci_of_match);
+I used an custom board with OnSemi FUSB307B TCPC which is spec [1]
+compatible but albeit the spec [1] says that this pin is controlled by
+the TCPC if 'TCPC_CONTROL.DebugAccessoryControl = 0' it isn't at least
+for this device.
+
+I'm unsure if the usb tcpci spec has an copy'n'paste failure since
+'TCPC_CONTROL.DebugAccessoryControl' shouldn't control the state of the
+'connector orientation' pin or if the OnSemi FUSB307B has an HW bug.
+Because on my device the 'TCPC_CONTROL.DebugAccessoryControl' is set to
+0 but the register wasn't updated automatically.
+
+Regards,
+  Marco
+
+[1] https://www.usb.org/sites/default/files/documents/usb-port_controller_specification_rev2.0_v1.0_0.pdf
+
+Marco Felsch (4):
+  dt-bindings: usb: typec-tcpci: add tcpci compatible binding
+  usb: typec: tcpci: add generic tcpci compatible
+  usb: typec: tcpm: add support to set tcpc connector orientatition
+  usb: typec: tcpci: add support to set connector orientation
+
+ .../devicetree/bindings/usb/nxp,ptn5110.yaml  |  4 +-
+ drivers/usb/typec/tcpm/tcpci.c                | 44 +++++++++++++++++++
+ drivers/usb/typec/tcpm/tcpm.c                 |  6 +++
+ include/linux/usb/tcpci.h                     |  8 ++++
+ include/linux/usb/tcpm.h                      |  2 +
+ 5 files changed, 63 insertions(+), 1 deletion(-)
+
 -- 
 2.39.2
 
