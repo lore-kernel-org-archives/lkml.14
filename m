@@ -1,139 +1,104 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E282D043;
-	Mon,  5 Feb 2024 15:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD082E63B;
+	Mon,  5 Feb 2024 15:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707146439; cv=none; b=oAkKpDVMNjvPNtNxcw1vtH5sSoyeSfZ9VO3jad8PBL6MAnts8XDu/ARLkSngP503eGImsGOOpPKu2kKseZx4LcN8QMyQmFGckv9B34Oa8uYhz9WPcgFDaRXEjir+7iuQ4aNhygrJTb5gKiLhGOxq9bv2nn+sRyF4iUT4KD1c1VE=
+	t=1707146443; cv=none; b=cOlmXKceEivJtYnUDzmlRLT3rad4nTpKVry/cCPZS4cwJifCsWFGQZIHZbTY6jlt2GD92UROnqYAGKZ5qJBjE2DlL/MomPyO8G0r7XY7KALNqpMJBDlQ0tXKsytzS4U3kjZaYm9AW/XM3Hh7B4EITeoTKaVkQxrRX4Ll6EXeyrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707146439; c=relaxed/simple;
-	bh=GGePl5eiEEdPNRh0+sAveAROhsr1GXVAVnMj8eHt2vg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PpEgxheu7iEryG4U2sgAy1nEPYzlBIjgv9psKREYHfSOWwHBVakfVvEkHcVfbGNo+PR9Jbind61vNLlG8A7IWlymLfNMqi3kjg2eXVg4vo3IBRRj+5gJPqV0uzz2TsFjMWzrFdiJtjC3o6VrIJ571U0y8OJ3Bt6Mp2lZi+RK61U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2VWjqL0; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707146443; c=relaxed/simple;
+	bh=RcWOjD26WJ8My7Q+eCiNGU84jj3EPhEAksItK/992bw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PtZ1x+nZzQaSnv9w1ntR5GzP86CWn+PsrytinqF/LogzIvNIsQ3H6NIkFDFNG0O9kH02kFZ9CWC39cGcqz57pR1BkmykHjEdkphPAPBjRgy3qVI2HavAfh1vmjqvVa7O6ObtyrvIBGqbNN+z9cMGueDwLfdcHk4TSTL4IqL6/sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=cXOX1Ha2; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2VWjqL0"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d953fa3286so31654045ad.2;
-        Mon, 05 Feb 2024 07:20:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707146437; x=1707751237; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=giwgZ4wcf6FmR6qMTFI58iXdRxoX8Uci/OXHw4NZoHQ=;
-        b=W2VWjqL0JIzc04Fr41o0uVYOEoN8cWBFr5PGCo78LTJVRKoO2/TgBSu634jgbhU3BN
-         w8sk3mFJJY7P4gdD9LWSMn0EopZDmqmNf0avb/4R9wHKGT6IR1eWJ4bvNvKgpdjXMohQ
-         vLzH8v921YlQZx1pwIcIQy2VPGNZlPckvq2jnXSnSgn/nKrA3LNSbHp2dF5tZvUjbmcz
-         nN9E5N29mUOAQyJJc8lnMMwr0rkOs4om1CkoWTUeb9TZc8ffP9GS94/LaKs1LyLM3d/l
-         ckD/pi5czQ8BiKbaGsxksIqAcI7e9/czqDQr2ey2nuLkl4WDkshrt1uenRcUGXis10J7
-         yw0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707146437; x=1707751237;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=giwgZ4wcf6FmR6qMTFI58iXdRxoX8Uci/OXHw4NZoHQ=;
-        b=KUtWnzucjYbBx9aOxr81n3Gjn1tFUYOyr61JscUl/eYgbtrZ0U0aihwAnc6VbtmwdU
-         2VLNLZRCVoqEUIn60IAg7N91soc1EFCpZXJHPY5sSGEhoihGC0MKt8E2Lb7oSDgFuLgT
-         igBwjc6Eot0CbI+9ECbuSLRggmtvodvSuTVAb61Pu64R9omzQ9Wv4oXtrWZgKB2BvSQQ
-         wcO3IAH2x+kXvA07sxzxJXt1PDPLytud5E9sFlGIxtfFD4colHas/7E8C8wBhF6/fk3M
-         M860ndbfzqbA5ndaCz4VBj4GrPycRA/vvzYJa41EBLPR+udV46xY+9IqRKDuT0bm85/k
-         r3BQ==
-X-Gm-Message-State: AOJu0YwbwUWUXdzLd5xdFJkmj11hc+pmj6dyg1ljj8ZKOeZl6Ol5NtUo
-	fYnCnaVFzR/YHZM0LFoL0E74NKbpczuksGj6qE4mkOVc/FfTVcbE
-X-Google-Smtp-Source: AGHT+IEGDYq4EfYGE4WQ4F8P9Y0pgjjFCa9OC7ZnaM6cBq6r0ynZIrWRaWacoH1ZFzR7YC4l0OPhEg==
-X-Received: by 2002:a17:903:2452:b0:1d9:af94:9f3d with SMTP id l18-20020a170903245200b001d9af949f3dmr4584960pls.28.1707146437351;
-        Mon, 05 Feb 2024 07:20:37 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVVS1ti89jiT+X2JZbru4oYtoPXaIhsjbjD6tD25wyERqoX7j2hmQYsr9b7lRt4x7Z1wmVaSCiLCgfjHZxgzdVOjH1/JLISqxgz3VjBzg1mpsFQkLy1m/njZTEN7YkP+QFH+vt37Us0awOIhEtXXEgJtWZmYxrlAEMJrew2LHFdTd7VN0tNpi6XtPM5gdDgIjcLtOmtQojCdjCgKnxRQqQDYTBBF2NQeJ1QC+EKbaDudVtlGm96Ah7sOfzPveX46nyNzu2mz5Jpz8oTFGTi+4aTqdDdQi/1HASqctE1bV29qLl7OzxP5vmog1BlBRwy+tqQ+c9iNpvcFH38Cp1YUKxkLG+noQW1Gerg4es/i1RcyZGZuc7x8WVsiDrL4cMWcMri+1znqJ3tpag7K/RxbmIwAKAvfATwwfP0hHjCNoRAHxtESSZ49XEdpNXhgUmOpJrZFC+OiUS/jukXlOr+J2DiOnvtKCnSxLWfV56g2FBx8AOewnM9MDVuwWlPbxOGnXTM+e9I5jlUg0d7stWUFU+j6dZ7dVsmsl0+w9iCy1DvS2y5WTfGU7Tmt4annA7LtWpenBWggENppwj/vn+qJrz3wJWMvrP6r6rJngKtJTglgOub9zRyFcfu4JzkJ+f4k2P6CgnrvzWYesEv6MjMjYnfICpzZsYKRRWpi14hzWjcpfIWL9EOYPo0+r6GwhhJh2PAI4RxebuUmnPWnTD5UrTdgutacjZefthZ9JPRhzTjJcQx4xWtRaZSJmVXDhsDwF/J+EXETnROz/siE1Fq3Wh4PcGbiMag8sdt38vi5TuBoaS3cNTDNWtsubiOq8V3m091LbJcvw==
-Received: from cosmo-ubuntu-2204.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id k21-20020a170902f29500b001d94a3f3987sm6444393plc.184.2024.02.05.07.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 07:20:36 -0800 (PST)
-From: Cosmo Chou <chou.cosmo@gmail.com>
-To: linux@roeck-us.net,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jdelvare@suse.com,
-	corbet@lwn.net,
-	broonie@kernel.org,
-	naresh.solanki@9elements.com,
-	vincent@vtremblay.dev,
-	patrick.rudolph@9elements.com,
-	luca.ceresoli@bootlin.com,
-	bhelgaas@google.com,
-	festevam@denx.de,
-	alexander.stein@ew.tq-group.com,
-	heiko@sntech.de,
-	jernej.skrabec@gmail.com,
-	macromorgan@hotmail.com,
-	forbidden405@foxmail.com,
-	sre@kernel.org,
-	linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	chou.cosmo@gmail.com,
-	cosmo.chou@quantatw.com
-Subject: [PATCH v5 0/1] hwmon: Add driver for Astera Labs PT5161L retimer
-Date: Mon,  5 Feb 2024 23:20:12 +0800
-Message-Id: <20240205152013.3833940-1-chou.cosmo@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="cXOX1Ha2"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4TT9793Lcrz9snM;
+	Mon,  5 Feb 2024 16:20:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1707146437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O5QpBm9OVYV8g3cMHMrIijGXJuiMqqynbOTCB/oJ0aY=;
+	b=cXOX1Ha29Ld4nfj9cuuSNhqtFhZEWJsriIMfUx2094ad47RC6zJWZZmfA/Kc27sAgINjfq
+	DgHIsV7uu0KxFEgQgh5sr31Oe3RiP+vETLygLg4mQGjgMkfuIoZdmwkbtfVOq9inRz0hIh
+	ZwNYYwE/ai4QYoI8bWSK8PTMfh2W24kBuBkl7U5w6bSMR9LhpivpBaTm+EEpb+hEn/qpSg
+	L4H5+kodVLRutrE19pLE+Qx0Srp6to2AlnphJtg/Kq4dhY2CXQU82mYnv5eCt8HndzHMRM
+	oWZCtVhtiyi+EohyJmzR66CAemW9Bab6rxKh2WWxi3Xan0v+2IOoE7UcakfiOA==
+Date: Mon, 5 Feb 2024 16:20:32 +0100
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: hch@lst.de, djwong@kernel.org, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, dchinner@redhat.com, jack@suse.cz, chandan.babu@oracle.com, 
+	martin.petersen@oracle.com, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com, 
+	p.raghav@samsung.com
+Subject: Re: [PATCH 1/6] fs: iomap: Atomic write support
+Message-ID: <7ttdwk46hkj6ohdyq3ruwb2zkskzrpicz7dpf4g53v32nh7mgy@5g63yuoyotyi>
+References: <20240124142645.9334-1-john.g.garry@oracle.com>
+ <20240124142645.9334-2-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124142645.9334-2-john.g.garry@oracle.com>
 
-This driver implements support for temperature monitoring of Astera Labs
-PT5161L series PCIe retimer chips.
+On Wed, Jan 24, 2024 at 02:26:40PM +0000, John Garry wrote:
+> Add flag IOMAP_ATOMIC_WRITE to indicate to the FS that an atomic write
+> bio is being created and all the rules there need to be followed.
+> 
+> It is the task of the FS iomap iter callbacks to ensure that the mapping
+> created adheres to those rules, like size is power-of-2, is at a
+> naturally-aligned offset, etc. However, checking for a single iovec, i.e.
+> iter type is ubuf, is done in __iomap_dio_rw().
+> 
+> A write should only produce a single bio, so error when it doesn't.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/iomap/direct-io.c  | 21 ++++++++++++++++++++-
+>  fs/iomap/trace.h      |  3 ++-
+>  include/linux/iomap.h |  1 +
+>  3 files changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index bcd3f8cf5ea4..25736d01b857 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -275,10 +275,12 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
+>  static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+>  		struct iomap_dio *dio)
+>  {
+> +	bool atomic_write = iter->flags & IOMAP_ATOMIC;
 
-LINK: [v1] https://lore.kernel.org/all/20231205074723.3546295-1-chou.cosmo@gmail.com/
+Minor nit: the commit says IOMAP_ATOMIC_WRITE and you set the enum as
+IOMAP_ATOMIC in the code.
 
-v5:
-  - Fix warning and check messages of 'checkpatch --strict'
-  - Without resubmitting the applied patches
+As the atomic semantics only apply to write, the commit could be just
+reworded to reflect the code?
 
-v4:
-  - Rebased
-
-v3:
-  - Revise pt5161l.rst
-  - Revise the style of comments
-  - Remove unused pec_enable
-  - Add back safe access wide registers
-  - fix build warning
-
-v2:
-  - Add "asteralabs,pt5161l" to trivial-devices.yaml
-  - Change naming PT516XX/pt516xx to PT5161L/pt5161l
-  - Separated debugfs files for health status
-  - Revise the style of comments
-  - Remove unused defines
-  - Remove including unused header files
-  - Remove unnecessary debugging messages
-  - Revise the data parsing for a big-endian system
-  - Use read_block_data instead of accessing wide registers
-  - Remove the debugfs files when the device is unloaded
-  - Add acpi_match_table
-
-Cosmo Chou (1):
-  hwmon: Add driver for Astera Labs PT5161L retimer
-
- Documentation/hwmon/index.rst   |   1 +
- Documentation/hwmon/pt5161l.rst |  42 ++
- MAINTAINERS                     |   7 +
- drivers/hwmon/Kconfig           |  10 +
- drivers/hwmon/Makefile          |   1 +
- drivers/hwmon/pt5161l.c         | 673 ++++++++++++++++++++++++++++++++
- 6 files changed, 734 insertions(+)
- create mode 100644 Documentation/hwmon/pt5161l.rst
- create mode 100644 drivers/hwmon/pt5161l.c
-
--- 
-2.34.1
-
+<snip>
+> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+> index c16fd55f5595..c95576420bca 100644
+> --- a/fs/iomap/trace.h
+> +++ b/fs/iomap/trace.h
+> @@ -98,7 +98,8 @@ DEFINE_RANGE_EVENT(iomap_dio_rw_queued);
+>  	{ IOMAP_REPORT,		"REPORT" }, \
+>  	{ IOMAP_FAULT,		"FAULT" }, \
+>  	{ IOMAP_DIRECT,		"DIRECT" }, \
+> -	{ IOMAP_NOWAIT,		"NOWAIT" }
+> +	{ IOMAP_NOWAIT,		"NOWAIT" }, \
+> +	{ IOMAP_ATOMIC,		"ATOMIC" }
+>  
