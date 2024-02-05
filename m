@@ -1,155 +1,179 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D505533CDB
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 16:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5345E33CDA;
+	Mon,  5 Feb 2024 16:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707149128; cv=none; b=l7KU+Hy/uceMgDJ4Mq78Va5fQFZpXpjVObT7qBqAITsiiH/ORqGtCBB6UsBRY09jYb+WiCRitFIL+3F98QjDYag3EEuWBjzIfwLnabh7l6cjSXVA8vfEKAv3O/5AdnC/7wfN7ijS39sdGbT4N5VmxDPeXq5rZVUfYEMdOmvDLY4=
+	t=1707149168; cv=none; b=L/RxKitu8gIu7M/ZbI1aolK2M2TSV9X19WN82nTdMSmeC1wC4Wqzngp93LIaAT7JkN7cSe88KVpaKu6WXiOwu1GfI5W80G0q/+rYZNS8aC5Kk+92dIkxUx/swqHAsH+VdhT7JfFWsvUaJwup36N6qm7m68GSeyPLf8/bKBPkg0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707149128; c=relaxed/simple;
-	bh=NuQZpRiWrPYNbtok44uV0c5QL3pOiTiUKf8wXxbmRZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C6YfH/CqTIeQbyFtQK3LptcH6NobUlWnDp27xlc0Yf2Vx44YGVlWdgIUWKE8rCJJPGQxL/foqu3AJl3ZmSeZqfJZ/r/NPXYZ+Y+jBNpN0keq+od9losI+Sv1/e8VjHwDAEe0sCS+JHs5AvcvMgSq1nxiDme7gT7K/CHd0dcQZ6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S4r0uvxH; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707149168; c=relaxed/simple;
+	bh=F5TdBqpfmRqtEIvYYBWWHquyP7yxsMy/qm/7PwSOixw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pHbnfBo8JFK/pwbuJQkEPgcyXVuSxEsjfw7eSrDoWLem1ReBvr+pzczc+dp8UAS21dzDsiL1kuDiQ1xnl1LLBzJBeBho7auOBAY2cNsEowkbXp6Q9J4a5DKiw/f7KN2fXQh/lXP7sMcjjSY43hRm2gWCP6wQn5nX+kAVy56GID4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i1iHZOeh; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S4r0uvxH"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40fd15fe6a8so75045e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 08:05:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1iHZOeh"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d9b2400910so6714415ad.0;
+        Mon, 05 Feb 2024 08:06:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707149124; x=1707753924; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYZyNjIxlDFPhWyjksZUxS6xmnfxwnVZbORSM0gvtHE=;
-        b=S4r0uvxH7N4CShH7d/GQ1sH8oVj1zNIqz3aALePMDH0LqIm1dvW5Uk1xaT0OkZGpk9
-         IIupQRkB9AgUQklijdC9h7aUToBm7DUgl5jmawQTLhXQY3yHtD8EWXRPA+bppIkQG9eS
-         TWrB27QjHHuDjAaRHtp4qK/DCajVPlvObsuNTycz9V83u4BI/TR10maSTdAaDFQzojE1
-         zXnaZ0FHwI+GpMZN0KRxS+D9WnRDnOFqwjNTav59xj4UoVf3ljMoL6/OW4BkIpl+YGnD
-         bMM+HWY9oX+umgmxIk+H6pu07gsgJPdtaDmzOYUMn1+7Clk7XZ7aS7vtPK7N1gMEJW+X
-         W6wA==
+        d=gmail.com; s=20230601; t=1707149165; x=1707753965; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+EeZAfwEPyGr3bPcxLVrnaOfNElu/B3c1f9i79s2kVI=;
+        b=i1iHZOehLMz/h5kJppv3HX/ulZHbvJns8HJH+Ra9d3LXbhF4beLH2Dwc6xwZEM3DU/
+         cj0UN6Fe4V6h5Ex63gxbQTmBJEwgEQD3i+Z5x1pNrgYHnfkGlPR0TedBUmMvG3G41yrw
+         11xpqYEXavz5tGkpsSHl1Ukd7NO9LjPLQCbQ9Tx/TjU7m1Q5IyYkWZKAbYFWM6/36w9J
+         j7/SiYDmYYYD8CldaBGwZ2zONJfDIz1VPEbBGR3hqK3UTysyggYcQazKxgESUpJNPWPB
+         WREYe75wfRKQnFuqjun0VSXhOIQivuB2s3o3Ywpsy0J9piIaBWODIq/cUmUjXauBglhg
+         Kf5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707149124; x=1707753924;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CYZyNjIxlDFPhWyjksZUxS6xmnfxwnVZbORSM0gvtHE=;
-        b=pa6DDm8nOmTwpXrL3mNygMgI6qowc3ptA7ZOij+VzUvFfRHznzjrV8gPGvLzycaYQb
-         I8PFQSuLQQWgopiZiGTQ/ubBADCcwcNvAOuPboyrk5EJxIwKSFiuIIDSp/o0XjCb9IJZ
-         PmrQLjuWUz81eaBrk+6l5iIZ1BO1OP9+ADnsvTyy9JFgt9pInfJubx3UP3RAWawKX6T8
-         TNVqzs43N5POTtcwm+LYi/fbtPOF741ADYquMenHFa6yRwEyXdafmxo4mtivYyO2pmOq
-         hiEsUCssOfkrm1vQYmja0BbD77zw3M2qv3pzLgy0/9DSHKG84hc8G8P1dm1qkzhEXUA3
-         h6mA==
-X-Gm-Message-State: AOJu0YwI/BXhg1F+Va1sVZPpfaTCGooS0OxDgYgjbFEJeyOKwUdVFE0a
-	skZM573o/TCCUQjLngtp/NRegvxs7CzNjadwn34CqdGr0oVc5aLmtgwH3prbWQ==
-X-Google-Smtp-Source: AGHT+IFbUog5YW+R34dfZwqpeAWaXbXS7kqTE+M1tcTJHXAI7hpcjA6iAanTUc4hznRPTVUGW1SHQQ==
-X-Received: by 2002:a05:600c:5187:b0:40f:dd8f:152c with SMTP id fa7-20020a05600c518700b0040fdd8f152cmr113764wmb.4.1707149123951;
-        Mon, 05 Feb 2024 08:05:23 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXeaO7j728zekDuQdzDKwJj2UOXOnTcpuMyB6C4+Q/i3YYe48qy8m5wOt1VAn4vSM36Of0JOYedLRDhCezQCi9WSzqvziZN9Mcz+RWLUtL0W8QqzxtnX04pfT9/tnXCV5gCJ/M4fiV+bkF8tx6qEmYqYNNFRnYaJg0H/jhAb/3EHAidNkEd5nIvEaOQ7b1cGd+IoqPAyayKCaa5VABEicjCg3Asnx1c7M14Ut0q8OOJUaXZ/u06rAKoDL6pohqagXPpCy2OtI8wR4UbRVo08w7sWzp41yLno0GCkQvP3UtkEXhdMBixOShYUnV4lxo2iw53PjjnwyhKHlMW42EQOoDmLgXrDZc1w9M4ehA0O2RYTsLi+SBRkvuXnLbBPQrnIktEGrdaxCl7YDZUHlF3Ba5yuOqDtG1fGi0RruYyz1hh/DMCoXh1eOlrjOgq0cqoRZPLv5IJwUgjHnZaJM4G23i2rfovFO6ruRQNeXxm8m96KGETgu0gU89j23IBhUo801E=
-Received: from google.com (161.126.77.34.bc.googleusercontent.com. [34.77.126.161])
-        by smtp.gmail.com with ESMTPSA id w15-20020a05600c474f00b0040fc26183e8sm259274wmo.8.2024.02.05.08.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 08:05:23 -0800 (PST)
-Date: Mon, 5 Feb 2024 16:05:21 +0000
-From: Sebastian Ene <sebastianene@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: will@kernel.org, James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, catalin.marinas@arm.com,
-	mark.rutland@arm.com, akpm@linux-foundation.org, maz@kernel.org,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com,
-	vdonnefort@google.com, qperret@google.com, smostafa@google.com
-Subject: Re: [PATCH v4 02/10] KVM: arm64: Add ptdump registration with
- debugfs for the stage-2 pagetables
-Message-ID: <ZcEHQSFx4gNh4yMm@google.com>
-References: <20231218135859.2513568-2-sebastianene@google.com>
- <20231218135859.2513568-4-sebastianene@google.com>
- <ZYSAfORj2-cXo5t_@linux.dev>
- <Zbt-leieTD64ZefR@google.com>
- <ZcDfM2VRiTETM04I@linux.dev>
+        d=1e100.net; s=20230601; t=1707149165; x=1707753965;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+EeZAfwEPyGr3bPcxLVrnaOfNElu/B3c1f9i79s2kVI=;
+        b=wYDuGjA7CmWHA/akCOggx7jK/UdO3apbhpQAxan83vm5o/8WFU0K4ajian6lfLVwgh
+         CnWEn/2UGzPMkcUNRfQbo9oYAE4pe6XrCSN0u6qd1rOrBmcvElQ2Jj5/Z5K+t43XVUAb
+         aWmmAoHLff0SGggLdtU6aU2/slxiEyW0tHHJDkb3HWmwpKZKMLY75JkPyqx4X1kWOB38
+         4bdXZShh30bbxChQ7M7O5Lfd1Qxxa9pXc0kKXyL6XbAtRoVG2G99mdpbhlCLXO12wJ53
+         eN1mbowSgKlLZk9kaxeX5NL/EOvrYCgfZYcEiqMKHx3QnkDMHHvxt4J/y6XuNdJnBcgs
+         t2hA==
+X-Gm-Message-State: AOJu0Yw/Hkxk2ZAF1MdHRbqLfOSLE7cY20ftAHTrCVlY8e9Q36yWFyHz
+	ZyrboRmT3JaBxboIhpfAyyJldAFaAGEg7cvw9MDZ77ksvgQPqfqEeHPqJTDj
+X-Google-Smtp-Source: AGHT+IETXLcDJRAUe2shZb8ZtYFJuD3Oq0aklzw4ozcLCR+0pAh4CFB1L8vPhXEG0nYHAiIiKFKBZw==
+X-Received: by 2002:a17:902:d902:b0:1d9:803a:8b0b with SMTP id c2-20020a170902d90200b001d9803a8b0bmr98496plz.33.1707149165428;
+        Mon, 05 Feb 2024 08:06:05 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXSRz2GVa/571uh5IbM9khs7E3R9b0KYqyBoUMTCLuXJL0kQnioQZvm9oHiViJM7xVy6pdAdyOIRn1bvfKk/7ttyoaueKJUllGa9Jz29CR/E4H8jOS+AOYm158UdYaVLpdM22RFyQQh7bLafw/Vmjsyr6TiKnRnPT/i3KtwuKfOkJ6px7kfjFQcWQRQYGt9cw8sTsC9YN4VfLk6zuTQ9YsjwA304823Pkk9DcD30YsjM0tOBbC7aVHzDmmEN10=
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id ki6-20020a170903068600b001d916995423sm39851plb.99.2024.02.05.08.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Feb 2024 08:06:05 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <c1d89da0-f9ef-44d8-8731-5a34240eba95@roeck-us.net>
+Date: Mon, 5 Feb 2024 08:06:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcDfM2VRiTETM04I@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kunit test failures with cpumask tests on parisc
+Content-Language: en-US
+To: Helge Deller <deller@gmx.de>, Yury Norov <yury.norov@gmail.com>
+Cc: James.Bottomley@hansenpartnership.com, linux-parisc@vger.kernel.org,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-kernel@vger.kernel.org
+References: <e6f0ab85-5bbe-41c1-8976-5ba00044998c@roeck-us.net>
+ <929506cf-a1a7-436e-938d-4e5eff0181e4@gmx.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <929506cf-a1a7-436e-938d-4e5eff0181e4@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 05, 2024 at 01:14:27PM +0000, Oliver Upton wrote:
-> On Thu, Feb 01, 2024 at 11:20:53AM +0000, Sebastian Ene wrote:
-> > On Thu, Dec 21, 2023 at 06:14:20PM +0000, Oliver Upton wrote:
-> > 
-> > Hi Oliver,
-> > 
-> > I am planning to split the series based on your suggestion and I
-> > wanted to make sure that I understand your feedback.
-> > 
-> > > On Mon, Dec 18, 2023 at 01:58:52PM +0000, Sebastian Ene wrote:
-> > > > +config PTDUMP_STAGE2_DEBUGFS
-> > > > +       bool "Present the stage-2 pagetables to debugfs"
-> > > > +       depends on PTDUMP_DEBUGFS && KVM
-> > > > +       default n
-> > > > +       help
-> > > > +         Say Y here if you want to show the stage-2 kernel pagetables
-> > > > +         layout in a debugfs file. This information is only useful for kernel developers
-> > > > +         who are working in architecture specific areas of the kernel.
-> > > > +         It is probably not a good idea to enable this feature in a production
-> > > > +         kernel.
-> > > 
-> > > It isn't really a good idea to mount debugfs at all in a production
-> > > system. There are already plenty worse interfaces lurking in that
-> > > filesystem. The pKVM portions already depend on CONFIG_NVHE_EL2_DEBUG,
-> > > so I don't see a need for this Kconfig option.
-> > > 
-> > 
-> > I created a separate option because I wanted to re-use the parsing
-> > functionality from the already existing ptdump code for EL1. This option
-> > is turned off in production and only enabled for debug.
-> > 
-> > I was thinking to make use of the `CONFIG_NVHE_EL2_DEBUG` but then I abandoned 
-> > this ideea as one can use ptdump for vHE as well.
+On 2/5/24 01:28, Helge Deller wrote:
+> On 2/5/24 07:53, Guenter Roeck wrote:
+>> when running cpumask Kunit tests on parisc/parisc64 in qemu,
+>> I get the following errors.
+>>
+>>        KTAP version 1
+>>        # Subtest: cpumask
+>>        # module: cpumask_kunit
+>>        1..6
+>>        # test_cpumask_weight: EXPECTATION FAILED at lib/cpumask_kunit.c:68
+>>        Expected nr_cpu_ids == cpumask_weight(((const struct cpumask *)&__cpu_possible_mask)), but
+>>            nr_cpu_ids == 16 (0x10)
+>>            cpumask_weight(((const struct cpumask *)&__cpu_possible_mask)) == 1 (0x1)
+>>    cpu_possible_mask contains CPUs 0
+>>        not ok 1 test_cpumask_weight
+>>        # test_cpumask_first: EXPECTATION FAILED at lib/cpumask_kunit.c:79
+>>        Expected nr_cpu_ids <= cpumask_first_zero(((const struct cpumask *)&__cpu_possible_mask)), but
+>>            nr_cpu_ids == 16 (0x10)
+>>            cpumask_first_zero(((const struct cpumask *)&__cpu_possible_mask)) == 1 (0x1)
+>>    cpu_possible_mask contains CPUs 0
+>>        not ok 2 test_cpumask_first
+>>        # test_cpumask_last: EXPECTATION FAILED at lib/cpumask_kunit.c:87
+>>        Expected nr_cpu_ids - 1 == cpumask_last(((const struct cpumask *)&__cpu_possible_mask)), but
+>>            nr_cpu_ids - 1 == 15 (0xf)
+>>            cpumask_last(((const struct cpumask *)&__cpu_possible_mask)) == 0 (0x0)
+>>    cpu_possible_mask contains CPUs 0
+>>        not ok 3 test_cpumask_last
+>>        # test_cpumask_next: EXPECTATION FAILED at lib/cpumask_kunit.c:94
+>>        Expected nr_cpu_ids <= cpumask_next_zero(-1, ((const struct cpumask *)&__cpu_possible_mask)), but
+>>            nr_cpu_ids == 16 (0x10)
+>>            cpumask_next_zero(-1, ((const struct cpumask *)&__cpu_possible_mask)) == 1 (0x1)
+>>    cpu_possible_mask contains CPUs 0
+>>        not ok 4 test_cpumask_next
+>>        ok 5 test_cpumask_iterators
+>>        ok 6 test_cpumask_iterators_builtin
+>>    # cpumask: pass:2 fail:4 skip:0 total:6
+>>    # Totals: pass:2 fail:4 skip:0 total:6
+>>    not ok 5 cpumask
+>>
+>> It appears that parisc sets __cpu_possible_mask to the number of online CPUs,
+>> which is limited in qemu and doesn't match CONFIG_NR_CPUS. Is this a problem
+>> with the unit test or with the parisc architecture, or does the unit test
+>> simply not apply for parisc ?
 > 
-> Fair enough. I was going to say we could just have KVM follow
-> CONFIG_PTDUMP_DEBUGFS, but it doesn't matter either way.
+> Thank you for finding and reporting this!
+> It's a bug (or a misunderstanding) in the parisc kernel.
+> Reverting commit 0921244f6f4f ("parisc: Only list existing CPUs in cpu_possible_mask")
+> fixes the KUnit test.
 > 
-> > > > +void kvm_ptdump_register_host(void)
-> > > > +{
-> > > > +	if (!is_protected_kvm_enabled())
-> > > > +		return;
-> > > > +
-> > > > +	kvm_ptdump_debugfs_register(&host_reg, "host_page_tables",
-> > > > +				    kvm_debugfs_dir);
-> > > > +}
-> > > > +
-> > > > +static int __init kvm_host_ptdump_init(void)
-> > > > +{
-> > > > +	host_reg.priv = (void *)host_s2_pgtable_pages();
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +device_initcall(kvm_host_ptdump_init);
-> > > 
-> > > Why can't all of this be called from finalize_pkvm()?
-> > > 
-> > 
-> > I guess it can be called from finalize_pkvm before the is_protected_kvm_enabled
-> > check. This should work for nvhe & vhe as well.
-> 
-> What does nvhe and vhe modes have to do with it? I thought this was for
-> hooking up the host's S2, which does not exist outside protected mode.
+> Furthermore the revert fixes the issue that CPU hot-unplugging doesn't
+> work and which I just was starting to debug:
+> https://lore.kernel.org/lkml/Zb0mbHlIud_bqftx@slm.duckdns.org/t/
 > 
 
-True I guess there is no other need for the initialization portion in
-this function. I will split the series to address the non-protected
-support first.
+Glad to help, and thanks for the update.
 
-Thanks,
-Seb
+Guenter
 
-> -- 
-> Thanks,
-> Oliver
