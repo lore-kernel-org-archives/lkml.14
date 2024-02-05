@@ -1,209 +1,93 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4852481AC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 18:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F8D482F4;
+	Mon,  5 Feb 2024 18:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707157561; cv=none; b=IuGdvnk+pwCyjD2QzmwksJbTKRUYPi82Od45UMUT+GKJ9KS2UGGlAd6bOZ7tyPcau43XvBTVHxjdzrb3mSG9bUaAS/wo9AqrzI2hfVwvXMmswCeM6zswkn3V2e+2KmodlBW6ZTeBY+aM2yPfHzPLAxrT/R7wU1SMlmEA1Xcaly0=
+	t=1707157680; cv=none; b=laOETMqzwPrS0SnVVtp85WX6C7JacdW16JusSifqDpZSvXb+yLJN1asx0DAyiAwr7or0IY1KkMNIjJWsbExRiv43OK6TF8tK6mk3sN264eINjzGJz8uIjvgq/CC0alEfCjJgBL+Gb7cW3KJHXSKXdJhhzDci+wttD4RUSZEJN40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707157561; c=relaxed/simple;
-	bh=OhVjfgQ6ypsXAl4aTp6y2RSd+qg4DOU5DAB4K9X8HUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K2FFzBQsIsbiUw2H+KysS0pPTQFhg+ciTG/ummuI9M9lzatm1lViFmoL2AbxZlDuxsnU7OYgtxDdlk+6QXwajEKh7pXvMeH3O1NYoDHLC6k/qgD0L2e57Sxjyc4T//IuTxUGAaFj8xcF/JA18SR58bZjk9k7KvUia8NmTKrJuRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ZEYJAhpS; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1707157680; c=relaxed/simple;
+	bh=bMMY96zKQOaV7c0QaYEhXG+N+Y2d3Sum11vxyvPZOXc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YS+RgVEcW+kAzDDu4qsU7qvuQiqmTadBb6uYcXqqN+PC2FBwQM1TW08MYyAm0ZMfGfkVJQ1Df4ewV8lfr58h4P+n4YaI6k8gnpfLqCaHgtAtxd7wIOU4UZD17HQF8g2Q8BGkc1RnxiQGZ5AN0TrWhBqljgD/mBt9h/85DppFMeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PgQLVmXF; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ZEYJAhpS"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d780a392fdso40313925ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 10:25:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1707157559; x=1707762359; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8YYhJmNwACs7xWzxaru2OLoYfAu9N74lwcPjzUDB+xg=;
-        b=ZEYJAhpSf25DJNLMudbcAfzw1CZQMJLzK/SqywQ5irB9Sq2jplxCSBCbNAxBwS+Txn
-         0L7nwuaesxFlBH0w6dg1Sgv904eVAU3pbZtPqeAE1fuHmxWkP4x3w9iC7mI7SgKqiL0P
-         N1c+a55ibd5Orfi5+g50OkgB/c/mIxdCx5Ftg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707157559; x=1707762359;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8YYhJmNwACs7xWzxaru2OLoYfAu9N74lwcPjzUDB+xg=;
-        b=vg/tbT5aXT9OL+wj7zKhiAXgkKeeeRTepyGQ/hkjkm2/TDu1tsJ9jqcaC9h5SaHlDH
-         RmZf4g38ja6ryB7gbaEOuAfFlghHzHQhqUh41OVNBMAU0GPX2TdfOBXMoyR3NeX9Nfi6
-         QJAy9MWRVg/SF+TM4fYs3WElKRFSw7Z0NWAZXmfdpoCK7KIS8lq73rLuhJUMx6/n3jHk
-         amPmj1QCSYGO2X/9YazMNV0/FsUa59l4yG5OdUgtHcu0TjeGMszRYRUmgRQ3UazIm92p
-         4IgwN94N/v7vQuH39j28VwiC5Zdso8AiLrfTM3yLXIC3qIu3R2zeyB7nA80qmAza2zZi
-         +LqQ==
-X-Gm-Message-State: AOJu0YzqrhnoUMflFp4cpIsT9xwvARoQHsCqw6kfxrhLYdvHVEFVcnNC
-	JdhGwHwpZrsYyJ5dhV6eq5tD/+CvZ/Z6euLWMksN5qqCxZ3fankPGov22O/1X9/jkR2pi7Rss/C
-	0ZfvAC60IKe9b/iqLOIcqy3frAsIwWbB1Y0z53ghIak+bHc25Z8scKT74tc8G1zCxrniEzGhAdn
-	swqN005pEqjLTvZGGJvbgFKQhiK1rwUAcA6ml1obVXwDU=
-X-Google-Smtp-Source: AGHT+IGZSu01SCfpuVAoKxEEGhseye5jcYZ2OTQbBwLSosCOhrRB2L0bvS8C7HVgC2MzoPFWHatu+Q==
-X-Received: by 2002:a17:902:6f16:b0:1d9:742b:fedd with SMTP id w22-20020a1709026f1600b001d9742bfeddmr388747plk.34.1707157558764;
-        Mon, 05 Feb 2024 10:25:58 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUbE7iGxVCPUBH4KvD0r1Rt49gMPSuQYHBQM6KluyR+1rAgHNElceTU1aObRosTlZRh1FwTv1OVSOIf5VGTjAwMhd8Xt2ohpeA+TlBhB25QhdhzTGBdE3ky5Ly2mQFPUURjnLLXpkP7V0yvChDB3MHjgqdb95/LIxNcHrt3OPWTXCSy1W8i1mP2JAETIcueqC1VCOhWPZUjKJlAfeYpMcsRgwqmeW/AIqBe2Ll/QP8ytuhKCvwSk8zJVNm2rMXjBS7v4r2WCPZw9dPf4XXIwg1wQHfPe1mozEAE1ZyTliyzm4tbIDfCZbZQZTYE/sDVy8ZcfcMOe5hCYpNtqjaK70F6w16d3Y1cQsjnGz7pwSTQS97sPVP9HJW5NbUIyIed5uExBAzifS8OSNOShYXISKThexfg5lqTXlALwMxkIgeZdFlfrI+YbM7GE3tE/EfeEvGkoKk4MIrk0dy+qxGTkwcIgG+b4mk0Qvjmwk1Ic/Ij1hLRr1BHlAs9hb4mBBJ3Gvd70gcpQehyK2WeY6yr/Veo52kvsaNLIvPGn2vG5EI=
-Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id iy15-20020a170903130f00b001d8f3c7fb96sm170642plb.166.2024.02.05.10.25.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Feb 2024 10:25:58 -0800 (PST)
-Date: Mon, 5 Feb 2024 10:25:55 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, linux-api@vger.kernel.org,
-	brauner@kernel.org, edumazet@google.com, davem@davemloft.net,
-	alexander.duyck@gmail.com, sridhar.samudrala@intel.com,
-	kuba@kernel.org, willemdebruijn.kernel@gmail.com, weiwan@google.com,
-	David.Laight@ACULAB.COM, arnd@arndb.de,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH net-next v5 1/3] eventpoll: support busy poll per epoll
- instance
-Message-ID: <20240205182555.GA10463@fastly.com>
-References: <20240131180811.23566-1-jdamato@fastly.com>
- <20240131180811.23566-2-jdamato@fastly.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PgQLVmXF"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415IRswT120256;
+	Mon, 5 Feb 2024 12:27:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707157675;
+	bh=fojgM4V6c/EvbnCvW9bg946O2LaY18YdMAN1MROclH8=;
+	h=From:To:CC:Subject:Date;
+	b=PgQLVmXFmIC/3Wy/PXSExKb6CiO3aabCHVWBIMxWlt4gBauS9JHEIc0jITO34jU7p
+	 BPRvLTHKtaUp0dEP6vcBmLAhX3cP1WhsU+g9Ma7V2WXwWzb+fPZMJ9YH8wIlnkoASG
+	 2/NEqkn6ADXpvSxqO0DyWNcOTwhMnMMiN6c/mo1Q=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415IRsLB017710
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 Feb 2024 12:27:54 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ Feb 2024 12:27:54 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 Feb 2024 12:27:54 -0600
+Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415IRsX4058567;
+	Mon, 5 Feb 2024 12:27:54 -0600
+From: Andrew Davis <afd@ti.com>
+To: Jai Luthra <j-luthra@ti.com>, Hari Nagalla <hnagalla@ti.com>,
+        Bjorn
+ Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew
+ Davis <afd@ti.com>
+Subject: [PATCH v2 0/5] K3 DSP Remoteproc remove cleanup
+Date: Mon, 5 Feb 2024 12:27:48 -0600
+Message-ID: <20240205182753.36978-1-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131180811.23566-2-jdamato@fastly.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, Jan 31, 2024 at 06:08:03PM +0000, Joe Damato wrote:
-> Allow busy polling on a per-epoll context basis. The per-epoll context
-> usec timeout value is preferred, but the pre-existing system wide sysctl
-> value is still supported if it specified.
-> 
-> Note that this change uses an xor: either per epoll instance busy polling
-> is enabled on the epoll instance or system wide epoll is enabled. Enabling
-> both is disallowed.
+Hello all,
 
-I just realized that I updated the code below to use a an or (||) instead
-of xor (^), but forgot to update the commit message.
+This series uses various devm_ helpers to simplify the device
+removal path.
 
-I can fix this and send a v6.
+Removing an unused var "ret1" got squashed into the wrong patch in
+the v1 series causing a bisectability error. v2 is based on -next
+with the first 3 already taken. These are the last 5 patches of the
+v1 series[0].
 
-> 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> ---
->  fs/eventpoll.c | 49 +++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 45 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 3534d36a1474..ce75189d46df 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -227,6 +227,8 @@ struct eventpoll {
->  #ifdef CONFIG_NET_RX_BUSY_POLL
->  	/* used to track busy poll napi_id */
->  	unsigned int napi_id;
-> +	/* busy poll timeout */
-> +	u64 busy_poll_usecs;
->  #endif
->  
->  #ifdef CONFIG_DEBUG_LOCK_ALLOC
-> @@ -386,12 +388,44 @@ static inline int ep_events_available(struct eventpoll *ep)
->  		READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
->  }
->  
-> +/**
-> + * busy_loop_ep_timeout - check if busy poll has timed out. The timeout value
-> + * from the epoll instance ep is preferred, but if it is not set fallback to
-> + * the system-wide global via busy_loop_timeout.
-> + *
-> + * @start_time: The start time used to compute the remaining time until timeout.
-> + * @ep: Pointer to the eventpoll context.
-> + *
-> + * Return: true if the timeout has expired, false otherwise.
-> + */
-> +static inline bool busy_loop_ep_timeout(unsigned long start_time, struct eventpoll *ep)
-> +{
-> +#ifdef CONFIG_NET_RX_BUSY_POLL
-> +	unsigned long bp_usec = READ_ONCE(ep->busy_poll_usecs);
-> +
-> +	if (bp_usec) {
-> +		unsigned long end_time = start_time + bp_usec;
-> +		unsigned long now = busy_loop_current_time();
-> +
-> +		return time_after(now, end_time);
-> +	} else {
-> +		return busy_loop_timeout(start_time);
-> +	}
-> +#endif
-> +	return true;
-> +}
-> +
->  #ifdef CONFIG_NET_RX_BUSY_POLL
-> +static bool ep_busy_loop_on(struct eventpoll *ep)
-> +{
-> +	return !!ep->busy_poll_usecs || net_busy_loop_on();
-> +}
-> +
->  static bool ep_busy_loop_end(void *p, unsigned long start_time)
->  {
->  	struct eventpoll *ep = p;
->  
-> -	return ep_events_available(ep) || busy_loop_timeout(start_time);
-> +	return ep_events_available(ep) || busy_loop_ep_timeout(start_time, ep);
->  }
->  
->  /*
-> @@ -404,7 +438,7 @@ static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
->  {
->  	unsigned int napi_id = READ_ONCE(ep->napi_id);
->  
-> -	if ((napi_id >= MIN_NAPI_ID) && net_busy_loop_on()) {
-> +	if ((napi_id >= MIN_NAPI_ID) && ep_busy_loop_on(ep)) {
->  		napi_busy_loop(napi_id, nonblock ? NULL : ep_busy_loop_end, ep, false,
->  			       BUSY_POLL_BUDGET);
->  		if (ep_events_available(ep))
-> @@ -430,7 +464,8 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
->  	struct socket *sock;
->  	struct sock *sk;
->  
-> -	if (!net_busy_loop_on())
-> +	ep = epi->ep;
-> +	if (!ep_busy_loop_on(ep))
->  		return;
->  
->  	sock = sock_from_file(epi->ffd.file);
-> @@ -442,7 +477,6 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
->  		return;
->  
->  	napi_id = READ_ONCE(sk->sk_napi_id);
-> -	ep = epi->ep;
->  
->  	/* Non-NAPI IDs can be rejected
->  	 *	or
-> @@ -466,6 +500,10 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
->  {
->  }
->  
-> +static inline bool ep_busy_loop_on(struct eventpoll *ep)
-> +{
-> +	return false;
-> +}
->  #endif /* CONFIG_NET_RX_BUSY_POLL */
->  
->  /*
-> @@ -2058,6 +2096,9 @@ static int do_epoll_create(int flags)
->  		error = PTR_ERR(file);
->  		goto out_free_fd;
->  	}
-> +#ifdef CONFIG_NET_RX_BUSY_POLL
-> +	ep->busy_poll_usecs = 0;
-> +#endif
->  	ep->file = file;
->  	fd_install(fd, file);
->  	return fd;
-> -- 
-> 2.25.1
-> 
+Thanks,
+Andrew
+
+[0] https://lore.kernel.org/lkml/20240123184913.725435-4-afd@ti.com/T/
+
+Andrew Davis (5):
+  remoteproc: k3-dsp: Use devm_ti_sci_get_by_phandle() helper
+  remoteproc: k3-dsp: Use devm_kzalloc() helper
+  remoteproc: k3-dsp: Add devm action to release tsp
+  remoteproc: k3-dsp: Use devm_ioremap_wc() helper
+  remoteproc: k3-dsp: Use devm_rproc_add() helper
+
+ drivers/remoteproc/ti_k3_dsp_remoteproc.c | 116 ++++++----------------
+ 1 file changed, 32 insertions(+), 84 deletions(-)
+
+-- 
+2.39.2
+
