@@ -1,102 +1,147 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A32C6B2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4BF2C1A7;
+	Mon,  5 Feb 2024 14:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707144765; cv=none; b=n9WHwRizGT/T9kjGS9AbIL9G9/QhFx15vXqz7RXQFKLRMcWxCZXeKr9PkryEoBBLyKneNWGTtrWLwjjPRidatuPkKDU7cCML3L3Zk6Oft+EKwLD+OqeNCO7Y9+LHNqwr8DTUp51X8Vq/q/0Y5SRMKfS9G4pochGpIX2qMC1JRwY=
+	t=1707144789; cv=none; b=piGaQUWa7DbhG1W1cP0rNKutNbU9GZimpwDsdKsILawOR75glrnM8Uybb+6EoxZPi3CbPpTfM9tIfCNZ9iG9E0LLWPyej0YR4fTXxS3aP3fdZjUIGgDY7K9uyOwWwerQKy5x1QS/h69mZ9cM35MGwEHXhIcKf2PAr5v92Btd9mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707144765; c=relaxed/simple;
-	bh=kdUOmRDXfFl0jnIDxBdauT+ue8GQmGp+3PNk2EP1TCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rGZwbuZ69JcWpeOVsC59MkF03nvrn7gVqzUx+7mhKV8KdFeKlB2xOtiW9hlVU5facatKORYCct3dnwp0bysWhKbrXN4QMehQXy9DIDI2cgovZwgvPzY9LJ/Z1/xxrIWZawj+8DXeE3k0VJtM3vh7AOXEbFXmNhK1qdLfKTS5B3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xYwF7tfL; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707144789; c=relaxed/simple;
+	bh=B32fFpSglPmh6EsegcSjTE9A2vs7Th/PastyE8w3mTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZrOzo5aeZa+KVSJdVsScn0L6y7t627LKuWhlkFHzNwm6q0DFVk03C+0Flc+JRqw1rTxLa1+IFMTw1ZRB4+OAPIHbY7kv+eHG8EfobPp2TYXWRgjrmxAwEdRz5Ztd3KLFDBc+VZa2Zat6QqgsEMVDDXgNfnPquwFVBPzC68pwmYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a9M/b/YL; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xYwF7tfL"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56077dd7936so965369a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 06:52:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9M/b/YL"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2191dc7079aso1636462fac.0;
+        Mon, 05 Feb 2024 06:53:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707144761; x=1707749561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+B1PQfcVc67wCAzKjMbkuU0YKimpNnbO8uCUJIhj5w=;
-        b=xYwF7tfLZewgC+mClXAtzvN7a8QE+WYjQ4//NCCo2luQr9W1TfXBvgkaeu5FBpk11T
-         c/YT9zT4zpZzX5Rh3ItY5vqnCcoR6ArQrq8OUyw2UTaYrHnZVf58JASQ/iK/BoMZAYD/
-         6Rue6QRwDm3Ctji7cec059l5s1prqjMWIlJxC0jYzRi+kj/cM2KpyIRQd34207YuCSMa
-         LgtkA8+IrzF3BBMIjkGT0CuLvFkFYmOSHuFBk1K7Bu1l/lrrK3Ahumsftu+wPDIDoz0c
-         8xSP2z+7BPAyO/T5scJ7boS9qsByJx74jxxErUph4qjEquHsHlooTJRnrFOR4VsklAz/
-         ow3A==
+        d=gmail.com; s=20230601; t=1707144787; x=1707749587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qLHPk+aymp1ecm0O7KZKJBd8OHOUWRsl0TLFYxwyOGQ=;
+        b=a9M/b/YLL0syzhXyP7cN36F7bxaZZhtYOZZx+lB7fEzMhD0OUUlO3T7uR/lJaU5aWM
+         eFNVbwTqlNRIAr/shtjCLGVD4Tpp6unijlLRJrpWhduDqV38HhDjBKWJ+2nvCq1jorRC
+         XfSIJDE80Mahj8HTZU7mDqRg4PMHCfXSvUMTFIoTF9i7J0ulExiWamdjnsKfssemhHfk
+         6cObD6pTWZvdricJGWBOEoT0rOoLyTHEDYXuaGiJiBMX3+e2AUijcSQEs73TWnuVajn0
+         VjAi2vUMm8s1qAaHIqV7h+cpD9a3ktUWUiwe/voW75Z1lftBJYU48Xbi/ydTxFf91SsA
+         c4ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707144761; x=1707749561;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g+B1PQfcVc67wCAzKjMbkuU0YKimpNnbO8uCUJIhj5w=;
-        b=NDi+ieJ0SGvKojkQ2u7HJdKF/enS41EYeKo2SnyESjYZLNqYp1v/Dk8DshHJFV0lGJ
-         jZmGP79rMECZH/d6aUJ1ooqB6Vdsk3tAIobH+u34kgKjincuwBpvnSeiyNlfcRF2DYR9
-         hOTmbtitngiJ2KBJxjB1V+8QUymLD6cHBqrnxQ0lY8vga7uw3WbrzqcEC/ol5LoZre4Y
-         gssdrQ9BSxAqHcodm/THyzfarge/KyZClbcqrreHDKqVJzKYMvK4qUZzCnTaTc8zC9mB
-         wXkmEm1ZTB1f112N5Xhb2/yX1066jlERLPg77nu3trt9BpG/KlMKnjXarAumIhpE7Y9u
-         rD/w==
-X-Gm-Message-State: AOJu0Yz7nxL22R8OA1pL9+ViZPHI+acAOuN3as5zIEl8v6EvqeiSqSgx
-	rq4ka+jMKFb2rG1rczX1PT8edZIoVjw6saVmvAzo4GZVl/Fahpw65GgsFiqc9w8=
-X-Google-Smtp-Source: AGHT+IGG+Z4rp6MIk2RqL/xipEmA/8eU+tKGuvnFbLRs+W5ftWOW2kQ0uAQc5mvqzaC5TFZudNMhsg==
-X-Received: by 2002:aa7:df14:0:b0:55e:e9f3:4f63 with SMTP id c20-20020aa7df14000000b0055ee9f34f63mr5397435edy.3.1707144760808;
-        Mon, 05 Feb 2024 06:52:40 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXetjilpo/u+b9OWUhUddsYGepxvOzImn+KeO64qdnzYe7m1v2v9migu3ttmYYHK/pckPkqrERHQqUnzBY5T1/5j5BOsLHLyLcxE6FCtvOnuH2siRKTDrudh6LwVVrUSimPhdtB+6WEPdf98TrRy130u3b49UZAsxS/Z2bAyTn4v6+/1/qz2+0mB26Z5ln8hL8ifbL3Im98npQuQS+EaLrjbqiMHNBfhyNtRliMumlGIJQjPgEPsR7/u++dGOT2MTBdJoS4MX57BQk=
-Received: from ttritton.c.googlers.com.com (61.134.90.34.bc.googleusercontent.com. [34.90.134.61])
-        by smtp.gmail.com with ESMTPSA id h31-20020a0564020e9f00b00558a1937dddsm3821348eda.63.2024.02.05.06.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 06:52:40 -0800 (PST)
-From: Terry Tritton <terry.tritton@linaro.org>
-To: akpm@linux-foundation.org,
-	shuah@kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	peter.griffin@linaro.org,
-	bettyzhou@google.com,
-	Terry Tritton <terry.tritton@linaro.org>
-Subject: [PATCH] selftests/mm: uffd-unit-test check if huge page size is 0
-Date: Mon,  5 Feb 2024 14:50:56 +0000
-Message-ID: <20240205145055.3545806-2-terry.tritton@linaro.org>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+        d=1e100.net; s=20230601; t=1707144787; x=1707749587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qLHPk+aymp1ecm0O7KZKJBd8OHOUWRsl0TLFYxwyOGQ=;
+        b=LuEtqXQQ1klASyJeNGlh087JMnpZgBx+RqLJhWPg5rq0ykNJrigPzA1y7kdxjY2aEs
+         NCMifbd2FPDjMjrbdPcvVOcJXS7cGpbXvWIDrUn06ii9qM1G2CIOslkSoV+2C/TvpP05
+         8+PwmRO9rmaz/18no0MSOMfz8fnBAWwXCtJ9jIHE0uxNfIku1KD2+DAooW2aYi9UPqvU
+         8FgYMOWs4pfh2kutUWyWNq20vvsKYPBQyzXn9w5n8y/mt2D+kHuINxZgi9SMn54PT7wF
+         GT3ZmSoDWiKsY53+KZJePCAVgOJzHFCeimdZiYoSDEUhp0zllhwt3wUIe7Om36KmDm2F
+         cy0g==
+X-Gm-Message-State: AOJu0Yw2+WVA70UBej0++ueuxI+4VKLTAeAlcqwmwYSfw/i+QHMso4Cv
+	4gCjiTYWQNFJ54O24eCOU1uo2fFDT+u/m5Mkk66IKtxnWCmvK4B2kkQ21tk16A2ZRa72OOIFZkW
+	rvQFY76i2jj0qJXRe+lCR/b6xA40=
+X-Google-Smtp-Source: AGHT+IFwuMmjulFcBFt/EQ5igsfyYhU2jRYXgkdSsjAuGeGkusyGrlUrW1JsuUSmLN+2s4EbaOWjBZ7aP9bKqbiME1Y=
+X-Received: by 2002:a05:6870:1cd:b0:219:97e7:a99a with SMTP id
+ n13-20020a05687001cd00b0021997e7a99amr1501792oad.12.1707144786728; Mon, 05
+ Feb 2024 06:53:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240205133450.5222-1-ilpo.jarvinen@linux.intel.com> <20240205133450.5222-4-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20240205133450.5222-4-ilpo.jarvinen@linux.intel.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Mon, 5 Feb 2024 15:52:55 +0100
+Message-ID: <CAMhs-H9QaQCz70dmBfMWJ4xoSagrYCJLqejA72fqb50uDwZY9A@mail.gmail.com>
+Subject: Re: [PATCH 3/4] MIPS: PCI: Return PCIBIOS_* from tx4927_pci_config_read/write()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If HUGETLBFS is not enabled then the default_huge_page_size function will
-return 0 and cause a divide by 0 error. Add a check to see if the huge page
-size is 0 and skip the hugetlb tests if it is.
+Hi,
 
-Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
----
- tools/testing/selftests/mm/uffd-unit-tests.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Mon, Feb 5, 2024 at 3:35=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> pci_ops .read/.write must return PCIBIOS_* codes but
+> tx4927_pci_config_read/write() return -1 when mkaddr() cannot find
+> devfn from the root bus. Return PCIBIOS_DEVICE_NOT_FOUND instead and
+> pass that onward in the call chain instead of overwriting the return
+> value.
+>
+> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>  arch/mips/pci/ops-tx4927.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/mips/pci/ops-tx4927.c b/arch/mips/pci/ops-tx4927.c
+> index f7802f100401..4dd8b93985fb 100644
+> --- a/arch/mips/pci/ops-tx4927.c
+> +++ b/arch/mips/pci/ops-tx4927.c
+> @@ -60,7 +60,7 @@ static int mkaddr(struct pci_bus *bus, unsigned int dev=
+fn, int where,
+>  {
+>         if (bus->parent =3D=3D NULL &&
+>             devfn >=3D PCI_DEVFN(TX4927_PCIC_MAX_DEVNU, 0))
+> -               return -1;
+> +               return PCIBIOS_DEVICE_NOT_FOUND;
+>         __raw_writel(((bus->number & 0xff) << 0x10)
+>                      | ((devfn & 0xff) << 0x08) | (where & 0xfc)
+>                      | (bus->parent ? 1 : 0),
 
-diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing/selftests/mm/uffd-unit-tests.c
-index cce90a10515a..2b9f8cc52639 100644
---- a/tools/testing/selftests/mm/uffd-unit-tests.c
-+++ b/tools/testing/selftests/mm/uffd-unit-tests.c
-@@ -1517,6 +1517,12 @@ int main(int argc, char *argv[])
- 				continue;
- 
- 			uffd_test_start("%s on %s", test->name, mem_type->name);
-+			if ((mem_type->mem_flag == MEM_HUGETLB ||
-+			    mem_type->mem_flag == MEM_HUGETLB_PRIVATE) &&
-+			    (default_huge_page_size() == 0)) {
-+				uffd_test_skip("huge page size is 0, feature missing?");
-+				continue;
-+			}
- 			if (!uffd_feature_supported(test)) {
- 				uffd_test_skip("feature missing");
- 				continue;
--- 
-2.43.0.594.gd9cf4e227d-goog
+Should we also return PCIBIOS_SUCCESSFUL instead of 'return 0' in
+'mkaddr' for coherency?
 
+Other than that, changes look good to me.
+
+Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+
+Thanks,
+    Sergio Paracuellos
+
+> @@ -140,10 +140,12 @@ static int tx4927_pci_config_read(struct pci_bus *b=
+us, unsigned int devfn,
+>                                   int where, int size, u32 *val)
+>  {
+>         struct tx4927_pcic_reg __iomem *pcicptr =3D pci_bus_to_pcicptr(bu=
+s);
+> +       int ret;
+>
+> -       if (mkaddr(bus, devfn, where, pcicptr)) {
+> +       ret =3D mkaddr(bus, devfn, where, pcicptr);
+> +       if (ret !=3D PCIBIOS_SUCCESSFUL) {
+>                 *val =3D 0xffffffff;
+> -               return -1;
+> +               return ret;
+>         }
+>         switch (size) {
+>         case 1:
+> @@ -162,9 +164,11 @@ static int tx4927_pci_config_write(struct pci_bus *b=
+us, unsigned int devfn,
+>                                    int where, int size, u32 val)
+>  {
+>         struct tx4927_pcic_reg __iomem *pcicptr =3D pci_bus_to_pcicptr(bu=
+s);
+> +       int ret;
+>
+> -       if (mkaddr(bus, devfn, where, pcicptr))
+> -               return -1;
+> +       ret =3D mkaddr(bus, devfn, where, pcicptr);
+> +       if (ret !=3D PCIBIOS_SUCCESSFUL)
+> +               return ret;
+>         switch (size) {
+>         case 1:
+>                 icd_writeb(val, where & 3, pcicptr);
+> --
+> 2.39.2
+>
+>
