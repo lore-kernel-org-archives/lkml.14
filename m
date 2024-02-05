@@ -1,103 +1,139 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9463D54A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5315444C7F;
+	Mon,  5 Feb 2024 17:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707152923; cv=none; b=Im+3heg8+JiwJiM3saUj/XQ4ldhcpIm/tS/kLW87BcPM8oeB51HuN626rVOreEiqzAVpNFkTDEDc8ox9IJBOSlZbnLx+1BYm3/b2gB5QFGEfXmMEzv/uNSGm4EZzS4pyVeVGMBK7PNKrUhwAIXml1eLsVzL5Ytd1RSIEKpLEJ1U=
+	t=1707152928; cv=none; b=Td4XR2gS/CkWzJFEDF8dXEMGXEM834fFY8YDSt4RWGxNs4eWi1k4AT67gC6/8nO6MJBZW+zITtKpIo+cVWuB4hnuZGp2OlM78XzfVl38fhi8cbF2oHiNbWsmwMcbYwCmnXSplSqwJnhzqjbe6brQTE809+ANj/unlk5CDdfnEDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707152923; c=relaxed/simple;
-	bh=8gBlKfQm3vRprhFc0/QpnWE8p96XYPuWr7rTbz4Ejy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lTlbY43S+ZveNo8AaIU3M53GP0pWrt8gmg7oUkkyp3qQl624LqX93DkRLF5/RtFbyFa9RqQ+mb9vwHWFloENDsXgjR0BSo8jj6oA6FiPprKKwdIWZhQc0/1O4h3nhYBoCBbU/UopWzk9yKeI5rxeMUZqrXUibW5KEzqVZ+oNV7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=pThueR9t; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1707152928; c=relaxed/simple;
+	bh=6hNaaG/8oJZcN6VD13NiOeX06CYfaL53eZydv1sk94A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EO1cSKGPIBTonDepboTM8jYG6uh4+EXGi7N9cl8OXJMRWn9II65y+AWsrumYDHp/XRw4585hxvvqswOX6VdOCy5UTxNX460IjXlmRdl0QRERZyies1O/oFO+Sgbxdzb8Wzf84z6yMkjvB5E2oHV23hNGgEfnL8/itpilS8OgCfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=d6jz3Gdl; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pThueR9t"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a8be32041so38881051cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 09:08:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1707152920; x=1707757720; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8gBlKfQm3vRprhFc0/QpnWE8p96XYPuWr7rTbz4Ejy4=;
-        b=pThueR9tS4++4Ak+63QKJD5ztu0stiKwKjMYm8GGi9NWP+lqt1uz0Qk1hMqaGZ0sTr
-         fPWtCd+6Er9idhCPt1WvCPSvXTC9fC9GPLMkj6ZNKYLoknf0CPuLke9GltXcdBZOvuxr
-         QMbWzMqbX4BQAQm2Z4Fyl/Qm2YXQ+PH33fP3J0bLXIXGackyhFW0peHrgVFTIWQu+rab
-         SfQohNzSaxb3Gg7BUYxxs5LK+Hrs4oWJbn7fVhubCyLl3Iw3uTx17WKAQxtiqxVPH4pm
-         Ie1MIxErmkxewE9orbvfB1z2fHDsEB4SYyMoVokL/kYAP+1AsEFk4YK+1kNm7OOB2JzR
-         oKcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707152920; x=1707757720;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8gBlKfQm3vRprhFc0/QpnWE8p96XYPuWr7rTbz4Ejy4=;
-        b=Nd68L0bPqpW94iy802SC8ayR/NbH3ynu+x6bgYyEt+UooYN8fsFHUb7fu9IuK3ZSQ1
-         1zg2lNMUzR3InmZeDCQOlf5OBU3oLXvcYoR1fXWBrLqeGdtxNmHatShUJFKjQeYzGvL2
-         UkyT9qGsWyp7Dk+987ZrlQZct+0kedolK83xJyGwb6pb43fv0Cz0Uxncbi+cP6edK4/x
-         NMd0EwEVrqYKVmeC2fd4jERllvS/tyzEc5mM9pI+LkE7+UZEVV6NlLLSywU4q+L2Ox8c
-         bAn2OiYZ35o9coXOAKqzxfHSGD564iGhRbGhBEwLK3oicFD1c7pppVOUkc1gNVr4LUri
-         LqtA==
-X-Gm-Message-State: AOJu0YzkAfMLMORKQaf29ip1wK3X9BKRa5NWszFmpiR0nIcV7Eyx65sw
-	VGLbMdbJBDefQgbb/Ctl7Tp5Xd3pr2SZRNpHztHzQKm5cWmSmYf50LaAdyzlwpw=
-X-Google-Smtp-Source: AGHT+IFRr68RJWhr55aAuCOmm/7ig7Z946GhQZxCWJnXpgTkXxQZq9u9NN3DdLuHLeVoxwlh1gajUQ==
-X-Received: by 2002:ac8:6bcb:0:b0:42a:48bc:f69 with SMTP id b11-20020ac86bcb000000b0042a48bc0f69mr7977973qtt.35.1707152920631;
-        Mon, 05 Feb 2024 09:08:40 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWFnZsn/+oaH85mYCSnpv4YgXZiAdaRH0+Rq60h3VhSx80V/GhIDkgZR10vmkuwF1N3jhhz9aRo8LLD4ff5OgXLimlfMXcSIPuyfjqJcxPxDRiouB5DndZ1kQz5dDjvpSVf2qZnwpdmYLKdUUiGGPxIlHQiPas89V0qswdC6497cElumvLrngGqTJkZscqv6ouG2f0OrpG6Ei2Zn4TY19Lk9NbJPoaaQZIBZSq0XCtZUA7d3PA2XkCWjmZueMp2A4tCAorCWj6i6E3kIrdi2y7VdUXMK5IQwL1ODMaERiIbTXBJbVrhlVGqhDyHvDIuotZrahRKcH/dGKlHT6GOh0AiVMK8Tzohvd/1DqWSOsUrv6/uL6cpoulHtaNasUn2g1+as+1/aN3+PukRM38uB/fouGVfLgmdpOE3dunZMoCAT8ZvWsyLQq5HJzPKp8dnEjpdvCDijtK2oY+4Fte+c9yCkKSI9o3pZZZEGbyVB7g/qoYjmnzB6UvMvTFVVXtvqMnEmcwOaYKyi0HF6aat2Ve6C6mKE8L/YuQwof83w3Z5XmIHwIZ2oGMal/R+I06RZSVRWXaOUkQuB8sHRlexzojF3AdtuOI7nq6sqs2lcG4+ML2g+c2ZAxM9tnpLd69JMkvGu7iMwJ1692U5EjqV1QDP6l+mc+OUUzf8X6XSuc3UdFj+vXovcLlbwYzYR22mSvd+Sld4DusAh+aVZhGTkOMpJe7mDCGP0YbiYqikir3ZKx0d
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id f22-20020ac84996000000b0042c22902ca2sm112941qtq.81.2024.02.05.09.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 09:08:39 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rX2SV-000d2w-7N;
-	Mon, 05 Feb 2024 13:08:39 -0400
-Date: Mon, 5 Feb 2024 13:08:39 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: James Gowans <jgowans@amazon.com>
-Cc: linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
-	kexec@lists.infradead.org, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	Alexander Graf <graf@amazon.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	"Jan H . Schoenherr" <jschoenh@amazon.de>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	madvenka@linux.microsoft.com, steven.sistare@oracle.com,
-	yuleixzhang@tencent.com
-Subject: Re: [RFC 13/18] vfio: add ioctl to define persistent pgtables on
- container
-Message-ID: <20240205170839.GA31743@ziepe.ca>
-References: <20240205120203.60312-1-jgowans@amazon.com>
- <20240205120203.60312-14-jgowans@amazon.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="d6jz3Gdl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1707152869; x=1707757669; i=w_armin@gmx.de;
+	bh=6hNaaG/8oJZcN6VD13NiOeX06CYfaL53eZydv1sk94A=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=d6jz3Gdls9Dh8s8BdM9Gg6wc27fk4qvfSQLJSkDF1qKFmo57q94SShyXOm1a3vtH
+	 G2gHIlx75kFXnaSMvaNAL4i0KpMVNWd77kycf6qYM4Lmlyc9xu+5UwjxJpUGg+ijf
+	 CJVjlCN0zZfLUUC+4la45HD85M4QiH10EtkzmfrS1PfQ/iX5uhpvIXEFwuWKS0IFM
+	 vfL20QLY6QJdGMtrNSadUx4ggcpvNuUFxaAmoDP5sDWjckQskmCf+tv6DknGZOJXB
+	 TRVZuo7ZUWxsO83SQnBPsqzXBME6cu7UftbhB1X6EgmzeUTXshghaJPnIugHN8eQq
+	 8XTKV9Tmtnj8yMsmmQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M5fIQ-1reBKB048Q-007Gm6; Mon, 05
+ Feb 2024 18:07:49 +0100
+Message-ID: <df011292-48cd-4fbb-856c-20a3db9f99e8@gmx.de>
+Date: Mon, 5 Feb 2024 18:07:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205120203.60312-14-jgowans@amazon.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] platform/x86/fujitsu-laptop: Add battery charge
+ control support
+Content-Language: en-US
+To: Szilard Fabian <szfabian@bluemarch.art>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, jwoithe@just42.net,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20240129163502.161409-2-szfabian@bluemarch.art>
+ <20240129175714.164326-2-szfabian@bluemarch.art>
+ <fabf391c-933c-4a7b-a23c-d361ad3d7cc0@gmx.de> <Zb2GMCSIz1MuWpQZ@N>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <Zb2GMCSIz1MuWpQZ@N>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9jOyCVzgEG/WOK2QiLHZdi4aqCWEUsTJ1xjpyhB/b35LltZX1zS
+ 09Kk5oWyw3XuPROLRKaHwak37v0XjG+kbrb3GbpLRiialtw49hJ/e5eMP91qbAVXgRHcyQa
+ ZhcxqG7V0/t4QgMg716VKKW550HLFiO5nLCHErZxdlaZEO6hoOKmN46n7tET0rYgXsUJYET
+ o/6l4WjtV3Lg1YnF1Axtg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:FywLzaAvvJs=;vhBNhZOl0/1zIX+ZbwQKLzw2SwO
+ l6nqcTQInmbCUF3ba1JWmvRYn+j7n4xYLwZg1JR/w94Uu6Xit+vJ+SylGrdrIcpv2tJXQZcGf
+ ug4FYg03KWiwuepndu8PjqcG6AQ+UQZx5e7yaEmcVuDceGCAAZzTScWA532LAYAAnTEHZVvzC
+ cRqZ7Vsm+INQowLQKjWqsVd8/XBveWMzIg76IWt2U60iW3QW9hCtdFOVO146TdHbGbBXoy/gn
+ xVeqNVQcHAtcbmPaPByyEouHL6LuTEcNZgdqVvtJRT5fXvUx3hL/mf+E2lqbJ1PPQE5u15xZo
+ qS8Ijuhc0lM6YNaNU0SCIGLLflb7FgVs//Q1BXIf9VC626dECJD1eTxhv64uQYUsybZJ2TnSu
+ 3QOTNMD5iv7a8DH/YfUcOgvnKor/+iT5iuHwS0oe+pnMAAPFF9JX+fH+YPoh9zdWINcHDYzva
+ ejGnSYToJPERYm6SM1b10hroPuI2m+v+yGGOFXCPqaOL8xBiusoD1vvFAxwe/cJJGw16Y5z/1
+ auI7nNCxx+vGY9NUrA3h+z3vtG4cFxOwTgEfLHEuiSsVQhVTA5HCvnoJ0MR9NCG5DwAfzMp4Z
+ /fF4Ur+42ep6gGPmqi7UabPjEt5euiNP9W+mHe/hOjOeLNZpi210KSSsrhdqhA8IO8dFtW5Z+
+ UnCrfUY5A7BD3D+sON0d1LzBLBuiCDCo9/nvO5HcWvPSI5EjdBpg+ebqoB/Ym5CFljtooxHkm
+ ch4X6pLq7qw/7dsZwReVF2XNWBLjG2/ATzt0uD9QdOGHDWvhTFxgJFAx0NENfPWuz432k7as+
+ FW1XNMUndEGeNP90l/4LYum+Bi84tFyQhSQH/QOIyCGqg=
 
-On Mon, Feb 05, 2024 at 12:01:58PM +0000, James Gowans wrote:
-> The previous commits added a file type in pkernfs for IOMMU persistent
-> page tables. Now support actually setting persistent page tables on an
-> IOMMU domain. This is done via a VFIO ioctl on a VFIO container.
+Am 03.02.24 um 01:17 schrieb Szilard Fabian:
 
-Please no changes to VFIO in the iommu area, new features need to be
-implemented on top of iommufd instead.
+> Hello,
+>
+> On Tue, Jan 30, 2024 at 03:02:09AM +0100, Armin Wolf wrote:
+>> Am 29.01.24 um 19:00 schrieb Szilard Fabian:
+>>> +
+>>> +	return sprintf(buf, "%d\n", status);
+>>> +}
+>>> +
+>>> +static DEVICE_ATTR_RW(charge_control_end_threshold);
+>>> +
+>>> +/* ACPI battery hook */
+>>> +
+>>> +static int fujitsu_battery_add(struct power_supply *battery,
+>>> +			       struct acpi_battery_hook *hook)
+>>> +{
+>>> +	/* Check if there is an existing FUJ02E3 ACPI device. */
+>>> +	if (fext == NULL)
+>>> +		return -ENODEV;
+>> Can you put the struct acpi_battery_hook into the struct fujitsu_laptop
+>> and then use container_of() to retrieve the ACPI device from there?
+>> The dell-wmi-ddv driver does something similar.
+>>
+>> This would guarantee that the battery hook always accesses the correct ACPI device
+>> and you could drop this check.
+>>
+>>> +
+>>> +	/*
+>>> +	 * Check if the S006 0x21 method exists by trying to get the current
+>>> +	 * battery charge limit.
+>>> +	 */
+>>> +	int s006_cc_return;
+>>> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
+>>> +					CHARGE_CONTROL_RW, 0x21, 0x0);
+>>> +	if (s006_cc_return == UNSUPPORTED_CMD)
+>>> +		return -ENODEV;
+>> Maybe this check should be done once during probe?
+> What about the following scenario?
+> - Put a bool into the struct fujitsu_laptop to store information about the
+>    machine's charge control ability.
+> - The S006 0x21 method check with `battery_hook_register` gets moved into
+>    an 'init function'. In that 'init function' the bool gets set accordingly.
+> - `battery_hook_unregister` gets moved into an 'exit function', where the
+>    bool gets read and when it's false nothing happens.
+> - `fext` check gets removed from `fujitsu_battery_add` because it's
+>    redundant (more about that later).
+> - The 'init function' gets called in `acpi_fujitsu_laptop_add` and the 'exit
+>    function' gets called in `acpi_fujitsu_laptop_remove`.
+>
+> With that scenario the code could be a little bit clearer in my opinion.
+> And it is possible to drop the `fext` check because if the FUJ02E3 ACPI
+> device exists `fext` gets set in the `acpi_fujitsu_laptop_add` function with
+> an error check.
+> (And the `fujitsu_battery_add` `fext` check was already redundant because
+> `battery_hook_register` got called in `acpi_fujitsu_laptop_add`. `fext`
+> gets set in the same function, and there is an error check already.)
+>
+> Thanks,
+> Szilard
+>
+This would work too.
 
-We already have the infrastructure there to customize iommu_domain
-allocations that this can be implemented on top of.
+Armin Wolf
 
-Jason
