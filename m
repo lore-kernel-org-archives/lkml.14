@@ -1,89 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FAB1CA9E;
-	Mon,  5 Feb 2024 14:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6EF28E09
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707143261; cv=none; b=JB6S8gA4L8TUapqHp1MTjZseVF9JuO0PdE7KevNzykefWGNIVod8fbDCfhVt10DLgKN1tT1qOTLGi3xBQW6avcShMYjlWiPNPiGVQpv4t5OjOWkpeSwj2PG0rb1C0BsqGTGaKWMPTo/NzqwfCKpJGvhLQMHBrxxfiXqMiSqMP08=
+	t=1707143286; cv=none; b=GLmyicr7Kf1ZJ6ld8QfWOkR5PDK6Sqt0EbywMCS5S3hUmT8ddvXktJzM9VvVFG2CBYblUEvjdzlzrVXTRzuuvOFDLHns++8ScsH4gmaVCJu874s0Q5cou+rExNjkmDckyJ4KqpOx7jZbcl2KlxCSh+3sV5qinW12mYhG3KLSj2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707143261; c=relaxed/simple;
-	bh=B8TpQw2Jaip2TPWJ9RND2ETvhmZ3Nd2W09imw/Jdy90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9ivVpKcfEblze7wqxGQ9WkzuPpErKmdt1crSXsedwtLT+gJWIGpF9g6lF2BJMJWWgHOU/bMrvgejtN/fgamITVljZPq61GHH5jtJ9TCXi1HRD8iOU0Fo0u3FaFJfA4F61Yrj3e8IXT6rnUzSU4QCNwBZKybgERgMdBe5nqNBfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Djc83Lpa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707143286; c=relaxed/simple;
+	bh=c6woLy2+EgbXcJiwHU3W4/j7iI+sLz3RGz/O8g5vcec=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZRv5andhI6mUWoEeZ+ayEzc4OZ6anrF1EvTvSVUIBicGMYLuDJOD3/HSKjzPQqsaYHFpYwaX/z5XUnAMppODzgH16KoQZLv6fHkp1+qjkVIF5PLDNRnyLSbsSeEJSIOlWr659sxDNxTrRGWjM+WGHmbB84+JMv4jU5os8yvYUCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U5DBarV1; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Djc83Lpa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C70C433C7;
-	Mon,  5 Feb 2024 14:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707143261;
-	bh=B8TpQw2Jaip2TPWJ9RND2ETvhmZ3Nd2W09imw/Jdy90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Djc83LpaFVG47BdcdzPc+EfjNgWxUFm2Hd4k/0dOoei9ttuoj9WKmAzsmgd+DaQf3
-	 VxEM7aL7O1qwXZx6Z5I/tBNtLjxjYSosvpGRosjGnAjI+slFnFxf9y20PswHxmDKGO
-	 VaROituVdfOKtXiXPObSuILx2DuKSHK5MavMDYU/z0NGrXoQP3XM2igV2uIK+upsv3
-	 OEgpLYH/f8BB+6qIuK1xWUR1UlajnVDGlq2AMy3ZGOb1AieO3VoVL7OS/Bz5L+teOr
-	 EjG0e1e4QY3DAGu25g25fKyFHgbvPwNUXw8IvQFTHcIz9AkM6XrRGHeqojj6KbadAZ
-	 Fo6RMCJtYg74Q==
-Date: Mon, 5 Feb 2024 14:27:35 +0000
-From: Lee Jones <lee@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Christian Marangi <ansuelsmth@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Li Zetao <lizetao1@huawei.com>, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] leds: trigger: netdev: Fix kernel panic on interface
- rename trig notify
-Message-ID: <20240205142735.GA53266@google.com>
-References: <20240203235413.1146-1-ansuelsmth@gmail.com>
- <8d51f09b-e6d2-4ee1-9e7d-b545d561798a@lunn.ch>
- <20240205085007.GA19855@google.com>
- <2cf84815-f9b6-4a0a-a3b4-d23628a89aa4@lunn.ch>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U5DBarV1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 32AFEE000E;
+	Mon,  5 Feb 2024 14:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707143282;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rr8qzPIYqM+HdXpoa3bzvlmyjnTmSf9J/CC9t8G0s0A=;
+	b=U5DBarV1kWvF6kp6bsYh7pMLbNmHG365DTQi/YCihxMfxi3a94oiNCX0QoZem3hi/YJM1P
+	Dgpo1S7r2d+8hybPIBGTKY4JK6pSTMP5lO+krI1U049Qt1oEsOgbSGzWeq3oMgjnbmcIAB
+	AkOU7a9qwJnFbvgBqNAzSlEDe6HpQ8aLDX77UecgqHEZ8JgLcsv+xW8RWy+TBh/vpbwnyd
+	L2OP+pTXjafmMZQWKYE33jVBYFKOQvjfNU1Z3fzPVHH83J6i6yxmEpIGmDzUWeeM5mSksI
+	BrYJ07GDTL+HBVIaitm7ekLHQzHWm/jII1GAmQP2sA5bPybyv43/6h2mWEEWLA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Ezra Buehler <ezra@easyb.ch>,
+	linux-mtd@lists.infradead.org
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Chuanhong Guo <gch981213@gmail.com>,
+	Dmitry Rokosov <ddrokosov@sberdevices.ru>,
+	Martin Kurbanov <mmkurbanov@sberdevices.ru>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Richard Weinberger <richard@nod.at>,
+	Sridharan S N <quic_sridsn@quicinc.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mtd: spinand: esmt: Extend IDs to 5 bytes
+Date: Mon,  5 Feb 2024 15:28:00 +0100
+Message-Id: <20240205142800.466649-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240125200108.24374-3-ezra@easyb.ch>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: b'4bd14b2fd8a83a2f5220ba4ef323f741e11bfdfd'
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2cf84815-f9b6-4a0a-a3b4-d23628a89aa4@lunn.ch>
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, 05 Feb 2024, Andrew Lunn wrote:
-
-> > > This should have 'net' in the subject line, to indicate which tree its
-> > > for.
-> > 
-> > No, it shouldn't.
-> > 
-> > Contributors aren't obliged to know anything about merging strategies.
+On Thu, 2024-01-25 at 20:01:08 UTC, Ezra Buehler wrote:
+> From: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
 > 
-> With netdev, we tend to assume they do, or at least can contribute to
-> the discussion. They often know about any dependencies etc which could
-> influence the decision. When there are multiple subsystem maintainers
-> involved, i tend to use To: to indicate the maintainer i think should
-> merge the patch, and Cc: for the rest.
-
-This isn't a netdev patch. :)
-
-We make no such stipulation for any of the subsystems I maintain.
-
-The subject line should indicate which subsystem the commit pertains to,
-not which maintainer will merge it or which tree it's merged via.  In
-this case, it's drivers/leds, so "leds: " is fine.
-
-> > Why does this need to go in via net?
+> According to the datasheets, the ESMT chips in question will return a 5
+> byte long identification code where the last 3 bytes are the JEDEC
+> continuation codes (7Fh). Although, I would have expected 4 continuation
+> codes as Powerchip Semiconductor (C8h, corresponding to the parameter
+> page data) is located in bank 5 of the JEDEC database.
 > 
-> It does not, as far as i'm aware. Christian, do you know of any
-> reason?
+> By matching the full 5 bytes we can avoid clashes with GigaDevice NAND
+> flashes.
+> 
+> This fix allows the MT7688-based GARDENA smart Gateway to boot again.
+> 
+> Fixes: aa08bf187f32 ("mtd: spinand: esmt: add support for F50D2G41KA")
+> Signed-off-by: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
+> Reviewed-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+> Tested-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
 
-It's pretty early in the cycle and there are no cross-subsystem deps
-yet, as far as I'm aware.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
--- 
-Lee Jones [李琼斯]
+Miquel
