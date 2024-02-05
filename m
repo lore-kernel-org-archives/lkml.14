@@ -1,71 +1,91 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2077.outbound.protection.outlook.com [40.107.21.77])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7A31A58E;
-	Mon,  5 Feb 2024 11:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6648E1AAB1;
+	Mon,  5 Feb 2024 11:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707132610; cv=fail; b=gzjoAHB0MNLo1yFYgSDQwXbuauFhHemD1Hba0R3Hq7oxB2SijgHY6mY2lKb/A+KUFeL+JjTwZUPkv8nK5N6g6kOvw2vnxwa1gECPbk0w7ZjvhcDFUX1JDuVOcf1zHmCjhawViAsyFeqh9+QRtp1YT33u9S1LBEXh1u4nR5wqGSc=
+	t=1707132628; cv=fail; b=aZOl8hkAocb0IChsCnH/dhNWMbdYGMyf2YYWkUKIob7ptkg7CABPwhjXuta1UzTTy7l5dcSdPvNAOSYwQPCzIvI+tISlvsgGRX6RhH2UA9VW8PR2zba+HvJXNGANuNkQajPPDt4GF29rqmrOz2dReoHN1g6hRDSiOwVjDI05Mdk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707132610; c=relaxed/simple;
-	bh=iXEi/7VJ4PZ6/0WZl/Yuy3JKLQdNhZ1DWmBHlDjpa0s=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=BdzrA9JAACErMt+ax56VLvxSJlViu9uf0CbMJ5BE4MGT5AkUPHKNYpEsDxCoN3HRsqn8E4YR8NJDxWu0RJ+9KR1AATPuPiTgjbPHCzu9VXsg0UIVxum4b3quD3K150Re86VUhb2lj50jN6WfFVQEOSxcLrRGZXoJC6MDjTzsFiU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=IWofyPUF; arc=fail smtp.client-ip=40.107.21.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1707132628; c=relaxed/simple;
+	bh=+rfWIfl5bj4LEPAlIBqm5+67T9du0/9u20DwTzKZQJk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WJoyxWojONTnK3lHIoFYNpmdbqPNBeBzaeHrkrOUZoM666sDgWq6GuzIc+LA0KEicBEt7+votO3BPAJI3ct45VyRPwhaRv6343McUM065eoprqYma4eGupBkZn4DtLlyS70G+FeQKZqkI/oXsFBY3fSnb/1e4DKHl3SUv+ZCEO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Zkd+OqII; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Dzzqp0cN; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IWofyPUF"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Zkd+OqII";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Dzzqp0cN"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4159P5av012466;
+	Mon, 5 Feb 2024 11:30:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=Z+4vNLkh7dApZthJM8wNNfevIYVpi/AonuSavfqSQ1k=;
+ b=Zkd+OqIICzzFwMscPO2B5XP+vPj1iDI2aqTN04LU18xQ2BEz4Xjd54kUEhOjoUzo4i4e
+ ZObDme6r8irR11G8RtCrCGmNJ23k2NVr+xi2+UdhYusw4TlG3veVMFmck/Jla+vcWr75
+ nIU0TBraH0/JbBxexUvaDUyceJDBYtCO6zm4cck6jAZ/2lir4Pjou/OdWodT0VUFaC3H
+ bXzFht57OaO9ltRat9E9e79bkSgs7xAsEHqNSHfrOH0nEQeNupSkhgVpUEXjxkE6BoEw
+ jkWIwe8mAZvVyyCXaaOvXCKWfL2wTqg/HXHKK4UxE/y7H++L1ge3OgG65an9XJxorp/d tQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w1e1v3krp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 05 Feb 2024 11:30:04 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 415BPFnV039462;
+	Mon, 5 Feb 2024 11:30:03 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2040.outbound.protection.outlook.com [104.47.57.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3w1bx5b1ef-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 05 Feb 2024 11:30:03 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j6Ac05o9FzRxkBlz9cRjuF5pIWphqzI+EcLTzcEF4MPLT1oNWoe0l2D0ne/Tlc9uADlUbO8qI1Z7n/cy9YyZUAdbU8rz9PaWwEmNwYwIMmTS3TdpfINho7/xwrWrrHzUIOLx9mMwj4dWAbUPLoHW5ewNsMaKmJqsS3KaU5L6BUOqp2cMnRLrLNLCZen7rQdMiC2tS7Qftvu2li1y+W117tKbYMHFBMJrpgRZid27kSyvwPlrn60g9E/90Cg/XiMAiwylgcUA9WEf6nZLrMSF9RrGoyN1gu5iDb1NfN2JHUmaIXFJ3O/jlP+KJxwEsVmQpMhEIEVJPNHtq5N8wu/LzQ==
+ b=aEoaifzqRZ6MUrji8KXykm/mTp2ncQEeYgUdW7QDJfGeF+ABMW72zY9YMZA1qDdQ9+Y8267X9E0pGoXJ4PGz5/SSw8wy+7CTJC6Y3JYIKetASqRfZsthByqurAph+laL+lLQcFPbNxo/JlxU8fdo8YmZFro1eyW6zntBGVAFqjaMAFvXtC+fUPKbdoCmIIeFl2oiKNAqxTtnNDzQ2dP4PnsL3OR9n/Yav+FQ+prxE+Mab26OxxquCSgjmcfGSHAjPpTaMe/y3GpxGWrocT07h01YUM2Iq7BlM2Qzqk7K+xUXSr8DlxLJ5fvHhotDhYLjEm5YT6hSwcivTUiVqel3Iw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xYDrcWLBhL1sh2abCPOqInagFGGCFDjNdaFZ/sM7Ti4=;
- b=HEsHetXWnvFuM00Q+uql1fUbo9paKV15B4cc1uhoDrkkjSSQx1HQjZq11Upm7UkCGsnXaUEa4o4xs1uUAsFHsZfjWctD529z1koooIdNL7+Evcrx3kvGQ+Y0HxlSqeHPLlBV0qOA7QNXD3k6D7zdAkL+5HiEhOL1Kh0ENac5M5lYpHmyoknaH6DL0ujhesYB2Z2D31qSvWnch7As8x8FPfipweUDykn0GB8XUW4xE1E3HB7TTbUgYdNNJiIW6RoqOWL05JdWtJS/U4t9AYmye8r+TD2tH4mOHsjZCCtZcC7k2aBrdD37JGzlq0EpGWmFXkAM8GGWM4adKmFHuAELFA==
+ bh=Z+4vNLkh7dApZthJM8wNNfevIYVpi/AonuSavfqSQ1k=;
+ b=oWL74SVJd2hZ96ZYxixiqubQxoyMLYJH+/3ZAcrFC1kZrLeIz/L0Sfjm2dcZsNfBRadPGVXUCuClA/N3d4FOVHsmg9+BFfcjVvY87PTpkhPzAJBnucClB8yk57YShLRgL2020DMbK/Ex+yswJon1yy6v4mH9dqqzMjv1aFeeOsC2UV5QZPhBbQFBFvbCIpnB2cecxOVJcTlzzga+b3crW38QrY6/3URjFCMqROr2lLJ5rvC2IZDwOkIZhvY3W9OtCaRxLrgns+LfmIC4pejTgSKfAcEI35khOSvRg+aM5c4gUiPZ/U45ZrXbikvLaf96yCEGtCGno6Qi+Mf1BJWyjw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xYDrcWLBhL1sh2abCPOqInagFGGCFDjNdaFZ/sM7Ti4=;
- b=IWofyPUFsNWOjMLPpvpOWwg2nXeVuKx6uNWt/ag9zl1a/k30HV8A7Wmvqa0nuTkfNtlr38r+ZdZPpxGMa0Ikfqgb1yJj4ev9cF8GdP5IpD5TG29xkqYKEvfN3ELTvlAv0UMfrq7oQREAstV74ykaP38h8KPmdibAI3Q9B2oujMw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR04MB3190.eurprd04.prod.outlook.com (2603:10a6:6:5::31) by
- DB9PR04MB8265.eurprd04.prod.outlook.com (2603:10a6:10:24f::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.34; Mon, 5 Feb 2024 11:30:04 +0000
-Received: from DB6PR04MB3190.eurprd04.prod.outlook.com
- ([fe80::530c:5815:14e4:2c7c]) by DB6PR04MB3190.eurprd04.prod.outlook.com
- ([fe80::530c:5815:14e4:2c7c%6]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
- 11:30:04 +0000
-From: Kshitiz Varshney <kshitiz.varshney@nxp.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Varun Sethi <V.Sethi@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Sahil Malhotra <sahil.malhotra@nxp.com>,
-	Vabhav Sharma <vabhav.sharma@nxp.com>,
-	Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
-	Rahul Kumar Yadav <rahulkumar.yadav@nxp.com>,
-	Nikhil Singla <nikhil.singla@nxp.com>
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kshitiz Varshney <kshitiz.varshney@nxp.com>
-Subject: [PATCH v2] Enable config for sm3, sm4, polyval, xctr cipher test as built in module.
-Date: Mon,  5 Feb 2024 12:29:33 +0100
-Message-Id: <20240205112933.3084766-1-kshitiz.varshney@nxp.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0047.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::27) To DB6PR04MB3190.eurprd04.prod.outlook.com
- (2603:10a6:6:5::31)
+ bh=Z+4vNLkh7dApZthJM8wNNfevIYVpi/AonuSavfqSQ1k=;
+ b=Dzzqp0cNn4zuQUrL07YrHb/+FPp5FVB+f/eot+jQ8UfqiVMJ3YfPQ19HW2G4XYyysZduOsNEQybbbVCi4TDAyM0tq1v7iNm85dsGjy/ri1p5NCxdRaVBHn9+7tlnkkuME9F1ig+hMcKq/Mef+qH78QBorvUNRDLsYjIcRMFNyc8=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by CH2PR10MB4230.namprd10.prod.outlook.com (2603:10b6:610:a5::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Mon, 5 Feb
+ 2024 11:30:01 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::56f9:2210:db18:61c4]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::56f9:2210:db18:61c4%4]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
+ 11:30:01 +0000
+Message-ID: <2f91a71e-413b-47b6-8bc9-a60c86ed6f6b@oracle.com>
+Date: Mon, 5 Feb 2024 11:29:57 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] fs: iomap: Atomic write support
+Content-Language: en-US
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
+        dchinner@redhat.com, jack@suse.cz, chandan.babu@oracle.com,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com
+References: <20240124142645.9334-1-john.g.garry@oracle.com>
+ <20240124142645.9334-2-john.g.garry@oracle.com>
+ <20240202172513.GZ6226@frogsfrogsfrogs>
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20240202172513.GZ6226@frogsfrogsfrogs>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0169.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:312::6) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,92 +93,247 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB6PR04MB3190:EE_|DB9PR04MB8265:EE_
-X-MS-Office365-Filtering-Correlation-Id: e0b3ab74-d32d-4e2b-614b-08dc263dcc3c
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH2PR10MB4230:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe170ace-236e-42fc-8774-08dc263dca7f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	TMXiSc1J52Z7SucxM9IFiB/a/w1dQFQR1OhtyR+7YqKGnBLlKZigilpUqLUNawfVu6624Af7xlfOhVaE9706r8GQszoY3gwvRVdMmCun1LEzAl/iHH/YIgbFDqqGasWfNJyQTVWv4U0l1EclHRCdlWscQrxgqqrXqC/FL4BVQ1vbdCyDZ1DZiRbrsxj+cP+FM/5U8V5auVfCwJ0ZIHTGM9ZTXfs25r1PrdR3q8THbrxYkuDEr8whizYc8zQNXE83lzujPcFvqNB9hVKonl+4b2eKSrU54qrlLWs1mwv55EZzeclg8mpEXGbppJQ5CHXB7BWZz4I0Qo3hPutq6MIcHkRN4NYtC9k+5ChG25iUPkgOJbpbzCv/AN05Caw/2y0IU/yP15HGH7K+9typ1JWkiMB2j779XHqTXF6HYR2bKrg1GyUFAd0wXmLsOvHGulOpqEaII73u4oJZLg/Gm6RJ02Bs3DRiq9LdPUTZWQZqo8B+znK6h/rJncE2c8v34r3Suj1PqWeIQR6OFXTWFZE5O4OjM6DzMXpgMlseMvnFlhYc4EQ+5FBLb1Ljzv1rU/t3uKZyvQ3vm+lLTotVA7xFrnkicBKdtqRRX3ffUJT8twwQ746tV5uFKUylUmBSqw84WQZrKuQsuzJuH6vEZrPkcA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR04MB3190.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(376002)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(86362001)(921011)(26005)(1076003)(2906002)(6512007)(6666004)(44832011)(52116002)(6506007)(36756003)(41300700001)(38350700005)(2616005)(83380400001)(6636002)(66556008)(316002)(66476007)(6486002)(66946007)(8936002)(4326008)(5660300002)(478600001)(110136005)(38100700002)(8676002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 
+	xGjAjyDParYUKX56Xvj8Ay8lcDOjclTYTwbLdSsx1OO9dTE0O1sMUjuPGOlOHbQHcAdlKwubZ/Ake0zrAF75oXgVbTC6meb92KeeYEPoqGLlh0u73w9iHyDKYrOMpmzvd4GqDeG9Seg2Onj7OYEQsGzaNlPV/cBKR4ZFNTKHb7zmOlXocmwU/goOJCiPWEcugtxKE5DOF8DXRZUO9JxRWUfU/lUJzC/6EgEBlzwZCY5tET6ONoDkGXfzQWWmqZJv4AaW/Iwf9FF80SW8+ficWpLyCXEVF8mOOWtmsm6U/X+SRC7XTegPC0ZH7bnH2yaPnWTxPkqri1x56zPtfyhjBAx4gKs+FRN8sy+YKBqIUc5eKDZzo+euNUFOar5ndJGoLDOfW/Usal1nzXMY0n6px+ai8fJr3eiz6K1dIOcxLnzEAMTPj19VPb1z8kLM6yMVZlufp7AXze/Bf9VvhtRgrAdMz4UXn3VmZwZ2QgGZhZAqJbKRQPieqhYlWGFP2vHFbRU+i9iG9DpHe61ujVEXZ7vG2rpvnHaa6kUMkcMxDh2uF+Jq+12J9VyyOW8CBsZtk2UVhmaxKripnNKf63VKEAVpWshWkxjARCb1n+5mPr7qMm9tMKtFhsnkGKFE6hN/ljfFUese50C9IlgQDFLHWw==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(366004)(346002)(376002)(396003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(66556008)(41300700001)(4326008)(8936002)(8676002)(86362001)(5660300002)(2906002)(31696002)(7416002)(66476007)(83380400001)(6916009)(478600001)(316002)(6486002)(66946007)(38100700002)(36756003)(6512007)(36916002)(6666004)(966005)(6506007)(53546011)(2616005)(31686004)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g6RUF50shrzfgYNAVCXAVPSFWbpqAetJhUjCQqjECu6xT0181w32l6JG0oe6?=
- =?us-ascii?Q?JkxceExbHgphVI484VFXNdcyAvEwhKJ1S4wZj5r8NHXjVNJnqL1kB/eKKPOv?=
- =?us-ascii?Q?dYNVX6cI9H5dWT9G+8VVaSLKTE7sWlu1Y+Tkj4eQkl394jNPrF2P98iOdcj8?=
- =?us-ascii?Q?C2vY3hD7sqWqxdX9NrMm4YepVe8D6665ROl9eJIRlhMUdAvqTgYMIo4XAMZI?=
- =?us-ascii?Q?f/mLhdTk2uPu1+BuDBA6IvNAlyb4mAbHZF8fmoPvwH0N7VJfcofkyDJETvYA?=
- =?us-ascii?Q?sE9Do9O+8XW7iCZ1ESpPfG5FB7GsfYU+Q3dDqWRpPgxTPtucN7AKdFsOttvg?=
- =?us-ascii?Q?HV6czwHsAoMtPrEN9UA4AYi4e1sTWi2KFucpLnJCA+IKN8ql/TMM6NDPrvDb?=
- =?us-ascii?Q?z6qtcPh2bVaEWqs6CFvHQFt8KsXvmEVI8E/yHmrj0CULz0uI+XicKYBJQJ7H?=
- =?us-ascii?Q?X/NVabcMghxCJoxD3i6SJWkiL7JNXB9xTwiwsczf2OGpzGfFMCEfgO7y5z4I?=
- =?us-ascii?Q?F7HhKifvFp4OHNYu44WJZ5+NEO0NqOulbXzE0zRt8od1eezoecF5xsREz2qZ?=
- =?us-ascii?Q?V2oqY4c1BN5f63gMZ8j9ZEiDELWDEpDDT8v97FDEOTTrYUt9szL1R27v3CxI?=
- =?us-ascii?Q?OPES7aQl3jjFhQUzvv0nhQmwMqcWhIrUsj0XQtQ+DKM7yegOkwKl4adoLssb?=
- =?us-ascii?Q?pINIRw1tycnF1nkrZVbF9ITcH8IceKATiPqmDAIPijqYKsvRP1F/3jVmfrDV?=
- =?us-ascii?Q?mPAogwVQ1jHDZSVUg/CU+0r6FKPAWo+QUadSOuU8Yc3V3u53knr5h6DSj1Pd?=
- =?us-ascii?Q?Q5tbPYJOwZEFxIDKRVF/IczVSkwuA2OzToVQmI2s/e/VuUa2OAkP1qe+iWZk?=
- =?us-ascii?Q?NGSkDCEDxo7Md9PHLBbGBYDa/vg6amjSnacm6esT/XA2/7/W8rTIREsMCo5T?=
- =?us-ascii?Q?ZkMLESNvBvGYsx9iwaW+t+pjbdkWkhY/94GAei6faSogVB85MxDQ6YUERkbI?=
- =?us-ascii?Q?WEUZKGer3S0Ji6x+ubAaizOn01TImDlKOWUgy0jgSshUuJHo/ARHuK5Opp5y?=
- =?us-ascii?Q?k/MOEUqCEKA74cX9REW5J6H/Q81u/22qA4tctmjmDP27uiYgPQ31RnbWTZbx?=
- =?us-ascii?Q?CpOricyUPdfwWdAujXzXSLnp4BOiqL8c6/Lz4BSx3JiVVZYDVvm1x4LjpeWW?=
- =?us-ascii?Q?bIwmU+TykoYWylYAiBTlFiLP5JrK8cenALijxo8Anua5vhmKAfvJXwbtuVnj?=
- =?us-ascii?Q?Pb8c5nwuhRtWm/3ZQLXQLQAgKPoA3SWKWhprzYVALkouHzdNJla9wVJfTHez?=
- =?us-ascii?Q?NiIB/ZlUubMcmmvRFVeyra8jgorPNes2CXP2UYfZrPpQ91HzCo1g6XRHtuYT?=
- =?us-ascii?Q?d72wJUjGParZk0f54U3BnODnHeIndzXjZudCbhuPIAUj917SHFVZ9tQ9DEBN?=
- =?us-ascii?Q?1LwE2FDGVXI5EQJGxQssReUvi7Jouxr12xa6NzemjEVbO45OO45/UYld0QuL?=
- =?us-ascii?Q?rRp3RRWxx+3RD6VX68HeQO1T0icjgM5Rxd2JTH61PbiSQG34qR+XOCCaMrI8?=
- =?us-ascii?Q?msIq/XFt9r065oBsIXgPnB8vs7D1ENJO2rdfOmiqFEF4fG1SLoKE01zcOkTp?=
- =?us-ascii?Q?Aw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0b3ab74-d32d-4e2b-614b-08dc263dcc3c
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR04MB3190.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?VG5IekpwVHBoNTdMTG9vampIeng5YTRGQ1BLWHVSMHR0Mk80Qlh6dnpJRE1G?=
+ =?utf-8?B?bFJVeWxGTFMyV1NRb1I3MWlZUTNHUG8rVGJKSE5pMU1henR0eHpqdUFQRkth?=
+ =?utf-8?B?K2Z6eE14c0YxdWxyZHFJVFF2WEd1cnQyaitiMVZNMU42WmdNbzgxbUtlczlE?=
+ =?utf-8?B?RDdUNmxJc05iTS9YaDJDRGxxQytRTTJWRFVKUm1pcDVjSFB3TXRsVSswcHF5?=
+ =?utf-8?B?T01zL1ZjbEMyWSsxZWVYays4ZmF6ZU9neGZIQ3VMcnAxcXZLSUpKQVl0Vk9Y?=
+ =?utf-8?B?dkt0d0pvblgwQnJvM21PRDhLUWdoOG9tSE9VS0dNWTh4RFVqNGcwMURFaHlx?=
+ =?utf-8?B?Y1FZdTJZN0dvM25jdW92UTF2MDNqUEdSNlBoVEJJSFlMcm0rTER1MlYzNjBm?=
+ =?utf-8?B?Q0VOUkhCNjBvdndweTl3N2FZTGFRdHVUdXNuRFlzNDloYTA0UWR6VytUVkdl?=
+ =?utf-8?B?WjFDdlJieXZxZytQdlVFaEh0U2RjeENpeHZZaFFSL2dYM2MxMVhYSnV6c3Nj?=
+ =?utf-8?B?M0tLRG9ieFNCbnNZNGxmVmo0ekFDUzJxa3BTakFJUkF3djAvZHRTbnlJRlZs?=
+ =?utf-8?B?WnpOeWYzZWlwdCtuSXc5QngwZ3RqbEtHRnh4MCt3MThVMk82ck5hQ0dmRW9P?=
+ =?utf-8?B?N1k2aVpnNWt4L08rejZuTkMyV0kxVXFaYlhhSDlQcWNadnljamxFbmczYVM4?=
+ =?utf-8?B?cTAzRnhkU010ZS9QaEx0ODNGQXYwNHkwS3FWU0hUQncwaXZSVXp5TncvNjYw?=
+ =?utf-8?B?eXJkSWxYZ1kxbHVqN3pmb25JWWVYTTgyTXJpMVNkWlQvYmZqNUtnT3ZQcWhx?=
+ =?utf-8?B?MlRTOVFrTEZSTG5LNkVYS2Fuc3RrWmtOL2h1amxHclJzSmVuUGJGYk5ZZlA0?=
+ =?utf-8?B?bTlOSWlqaUhXWDBiNU1ZdDN0dDlpV213Ri9MY2RvYlFZY1NQcWhPRzV5VmJq?=
+ =?utf-8?B?OXh5aUZlQmEyRlBjZHAyaVdFb1p4WXdhUkNsSjdGcEgyamRZMkY5OUt5SFFC?=
+ =?utf-8?B?NFJGMytJUWl3L1l5RGxtc3cyR1VMZWh5VExuYVc3Uko1SkY4UjVvMEZucUhh?=
+ =?utf-8?B?bU85S1pLaWVsTzFkd0E1MFkvM1lvLy91a0NySjU5K1o3SlpDMkNRaDFpa0tG?=
+ =?utf-8?B?THNUVkdBZDcyWmcvTGhaKzdwNDZiV2VNaDY2SHpDVGorbmp3bjNSK0xnNnpi?=
+ =?utf-8?B?bTdSRVVRR25IRTlZaUxiZi9pSGgveUdkeFNwMnhUWHdvYkpCeTlramNpTkdN?=
+ =?utf-8?B?WWZseHZjM0d4RjQ2T08rUEVrWlFXajBGTjhXQVNidHlVdkRhY3UyRno0Skdz?=
+ =?utf-8?B?c0tLL253U3l3Z2p6ODByYXpTRDg5Z2wzTGdVc2NYQUs2UG1OdlIwYzJMUlRm?=
+ =?utf-8?B?bUptV1BYWGZpbDJrZGJ3L010L0Jxdit5NkhDN0I4bTEzdGtQUkV1dG9oVVQ5?=
+ =?utf-8?B?b3dVd3BiYWpyZUJiNjlRaHJlbGI5RzBPVXhYWmFlaDB1UXhDMkRkRitwUHcy?=
+ =?utf-8?B?SzJmSGZUcUFaU2trZEc0UXJpemRyR3dKMEkzWkdENkZZYi9FU0FuWmtCVlBG?=
+ =?utf-8?B?dzZPRnVOb2JlOEl4U2QyRlh2UXhmdmduemlMTmtHMWhRK1dRZC9XdndKVmtj?=
+ =?utf-8?B?Z2h6dnBna3g1YTFTcTVSdEV5dEYycUVZTXZBNG5TQndHczBUai81UkxCSWhi?=
+ =?utf-8?B?RWYrVW1vYlRIVGE0c2M2SnNZYVl0anNXU0dLYUMwckxKNy9EK01WbnhqWEoz?=
+ =?utf-8?B?T0p2MithMENSUWNhTW1kb1dMeUlxL3R5NHVRbDlzZVpEUmhsNnArZnZjZXlV?=
+ =?utf-8?B?OHFkckkvZmU4V0MxT1hLSkNSbjFTSk52TCtUOGRrVkM2bDB2NVNxQVNUK3B3?=
+ =?utf-8?B?Z3Q1MytJRFF0WTdQbU8xU25xVUk4N1JJN2RSTlVjaHRJb0pHS3RoTys5NnZn?=
+ =?utf-8?B?eWQ3UUJLTkZpWi92amNHT2ErajZmT1hPeE1Dbmxua09wSzYzM3o5eFdTWUNw?=
+ =?utf-8?B?WnlpYlcvZitOdmxyeFIwcFpjMmJyeFJMRFgxVS9zci80WUwyZHYxOU8wMmdT?=
+ =?utf-8?B?ZDBseU9mL3F1VS9KMVlmazEya2hsZ0N6UHVyMDJKNUhpKzAzQjIvL0M1b0VG?=
+ =?utf-8?B?MW1QdVUzTWFoMDgwZ3VYUnZRUTEwMHNLc24yS2hWWC81aTQ0SFZwNmxXUWFS?=
+ =?utf-8?B?Wnc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	u+ZnKvd7JFlATIMb26ZMOpdIPmLdIa0dKZCCSn4vf30MCfb1LvbnzpGGeSWEZ1P1fCuBOtWNOrMCghNctjb9jfjZCM5iUf4qnURVVT1ezTK4EfzRkO0x4wKVAvhEWAbuVyIdWGlharG12P96pVcNbyW+0oHbPivbNIN7OhEyRHWPh6Vl2rrzxMkmlJdqjpUfYRI95LOiP+S3Etgzs4v8ffZwr/94h/bEKWiWtEHrT87hLm1gWw4brDvCoga5VTyTVcwjn+6kG8YN0LvKBIcQ7eDTCRNEX3tlUzKsyPuJD/5tNW3fvVk9G6d7R/EKypO5wU709eVGpBGK+QJdgav2wTSmDBF3m51w5prdSd8B+98AS1Pml+ASRUPUQNNBsqYlBk88uVJmZ6AmgQECxIBOls5CHKfcf4Gnq+4QGVcN0YMDL3dx3xHQhQnP3GkV+fbWHhkiu+Uj4/DUFDGZOr8r63SKrsnWDtjNGoL8EhC2yppYe6XeueeXDx5Qjyeu2mdqrdz0MKJVjjQAAvPM40eUgRkN7a7qilKzs8qaDjnRXT1JdmxJpigxcGGGt6sFymQTuzI/PxwKhLp0kLCfq0Wm+bwozK50lG0gDSAJxmrQ1J0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe170ace-236e-42fc-8774-08dc263dca7f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 11:30:04.3185
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 11:30:01.4066
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ERieqGRgRX8MgYEefSwTNTNoEFi2g5i5sIr3DKm9FKjLYzMVqRdW4Je2nwjobADLQf9zJHlZDM9/yUcp2af+pYLXuYDBaYXKdaCVN2jOpY8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8265
+X-MS-Exchange-CrossTenant-UserPrincipalName: m3NUfUnvMyHfCMwBZBXzqYv4aKNHABr9a7OFf9YcF7fLQ4W5SIhB6uErCL/IcAuLMO5Bjg4zLz21T8F3Vg1Q9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4230
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_06,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 phishscore=0
+ spamscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402050087
+X-Proofpoint-GUID: NkCjtPbBfvxoQquxOI7ps6DcWmI7PKRB
+X-Proofpoint-ORIG-GUID: NkCjtPbBfvxoQquxOI7ps6DcWmI7PKRB
 
-Issue:-
-Multiple crypto tests like sm3, sm4 xctr and polyval failing.
+On 02/02/2024 17:25, Darrick J. Wong wrote:
+> On Wed, Jan 24, 2024 at 02:26:40PM +0000, John Garry wrote:
+>> Add flag IOMAP_ATOMIC_WRITE to indicate to the FS that an atomic write
+>> bio is being created and all the rules there need to be followed.
+>>
+>> It is the task of the FS iomap iter callbacks to ensure that the mapping
+>> created adheres to those rules, like size is power-of-2, is at a
+>> naturally-aligned offset, etc. However, checking for a single iovec, i.e.
+>> iter type is ubuf, is done in __iomap_dio_rw().
+>>
+>> A write should only produce a single bio, so error when it doesn't.
+>>
+>> Signed-off-by: John Garry <john.g.garry@oracle.com>
+>> ---
+>>   fs/iomap/direct-io.c  | 21 ++++++++++++++++++++-
+>>   fs/iomap/trace.h      |  3 ++-
+>>   include/linux/iomap.h |  1 +
+>>   3 files changed, 23 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+>> index bcd3f8cf5ea4..25736d01b857 100644
+>> --- a/fs/iomap/direct-io.c
+>> +++ b/fs/iomap/direct-io.c
+>> @@ -275,10 +275,12 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
+>>   static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+>>   		struct iomap_dio *dio)
+>>   {
+>> +	bool atomic_write = iter->flags & IOMAP_ATOMIC;
+>>   	const struct iomap *iomap = &iter->iomap;
+>>   	struct inode *inode = iter->inode;
+>>   	unsigned int fs_block_size = i_blocksize(inode), pad;
+>>   	loff_t length = iomap_length(iter);
+>> +	const size_t iter_len = iter->len;
+>>   	loff_t pos = iter->pos;
+>>   	blk_opf_t bio_opf;
+>>   	struct bio *bio;
+>> @@ -381,6 +383,9 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+>>   					  GFP_KERNEL);
+>>   		bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
+>>   		bio->bi_ioprio = dio->iocb->ki_ioprio;
+>> +		if (atomic_write)
+>> +			bio->bi_opf |= REQ_ATOMIC;
+> 
+> This really ought to be in iomap_dio_bio_opflags.  Unless you can't pass
+> REQ_ATOMIC to bio_alloc*, in which case there ought to be a comment
+> about why.
 
-skcipher: failed to allocate transform for xctr(aes): -2
-alg: self-tests for xctr(aes) using xctr(aes) failed (rc=-2)
-alg: self-tests for sm3 using sm3 failed (rc=-2)
-tcrypt: failed to load transform for sm3: -2
-alg: hash: failed to allocate transform for polyval: -2
-alg: self-tests for polyval using polyval failed (rc=-2)
+I think that should be ok
 
-Resolution:-
-Enabling CONFIG_CRYPTO_SM3_GENERIC, CONFIG_CRYPTO_SM4_GENERIC,
-CONFIG_CRYPTO_HCTR2, CONFIG_CRYPTO_ARIA as module enables support of
-sm3, sm4, aria, polyval & xctr.
+> 
+> Also, what's the meaning of REQ_OP_READ | REQ_ATOMIC? 
 
-Signed-off-by: Kshitiz Varshney <kshitiz.varshney@nxp.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+REQ_ATOMIC will be ignored for REQ_OP_READ. I'm following the same 
+policy as something like RWF_SYNC for a read.
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 0a90583f9f01..bc2bfc7c61b0 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -466,6 +466,10 @@ CONFIG_NLS_ISO8859_1=y
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=y
- CONFIG_SECURITYFS=y
-+CONFIG_CRYPTO_ARIA=m
-+CONFIG_CRYPTO_SM4_GENERIC=m
-+CONFIG_CRYPTO_HCTR2=m
-+CONFIG_CRYPTO_SM3_GENERIC=m
- CONFIG_CRYPTO_DEV_FSL_CAAM=y
- CONFIG_CRYPTO_DEV_SAHARA=y
- CONFIG_CRYPTO_DEV_MXS_DCP=y
--- 
-2.25.1
+However, if FMODE_CAN_ATOMIC_WRITE is unset, then REQ_ATOMIC will be 
+rejected for both REQ_OP_READ and REQ_OP_WRITE.
 
+> Does that
+> actually work?  I don't know what that means, and "block: Add REQ_ATOMIC
+> flag" says that's not a valid combination.  I'll complain about this
+> more below.
+
+Please note that I do mention that this flag is only meaningful for 
+pwritev2(), like RWF_SYNC, here:
+https://lore.kernel.org/linux-api/20240124112731.28579-3-john.g.garry@oracle.com/
+
+> 
+>> +
+>>   		bio->bi_private = dio;
+>>   		bio->bi_end_io = iomap_dio_bio_end_io;
+>>   
+>> @@ -397,6 +402,12 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+>>   		}
+>>   
+>>   		n = bio->bi_iter.bi_size;
+>> +		if (atomic_write && n != iter_len) {
+> 
+> s/iter_len/orig_len/ ?
+
+ok, I can change the name if you prefer
+
+> 
+>> +			/* This bio should have covered the complete length */
+>> +			ret = -EINVAL;
+>> +			bio_put(bio);
+>> +			goto out;
+>> +		}
+>>   		if (dio->flags & IOMAP_DIO_WRITE) {
+>>   			task_io_account_write(n);
+>>   		} else {
+>> @@ -554,12 +565,17 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>>   	struct blk_plug plug;
+>>   	struct iomap_dio *dio;
+>>   	loff_t ret = 0;
+>> +	bool is_read = iov_iter_rw(iter) == READ;
+>> +	bool atomic_write = (iocb->ki_flags & IOCB_ATOMIC) && !is_read;
+> 
+> Hrmm.  So if the caller passes in an IOCB_ATOMIC iocb with a READ iter,
+> we'll silently drop IOCB_ATOMIC and do the read anyway?  That seems like
+> a nonsense combination, but is that ok for some reason?
+
+Please see above
+
+> 
+>>   	trace_iomap_dio_rw_begin(iocb, iter, dio_flags, done_before);
+>>   
+>>   	if (!iomi.len)
+>>   		return NULL;
+>>   
+>> +	if (atomic_write && !iter_is_ubuf(iter))
+>> +		return ERR_PTR(-EINVAL);
+> 
+> Does !iter_is_ubuf actually happen? 
+
+Sure, if someone uses iovcnt > 1 for pwritev2
+
+Please see __import_iovec(), where only if iovcnt == 1 we create 
+iter_type == ITER_UBUF, if > 1 then we have iter_type == ITER_IOVEC
+
+> Why don't we support any of the
+> other ITER_ types?  Is it because hardware doesn't want vectored
+> buffers?
+It's related how we can determine atomic_write_unit_max for the bdev.
+
+We want to give a definitive max write value which we can guarantee to 
+always fit in a BIO, but not mandate any extra special iovec 
+length/alignment rules.
+
+Without any iovec length or alignment rules (apart from direct IO rules 
+that an iovec needs to be bdev logical block size and length aligned) , 
+if a user provides many iovecs, then we may only be able to only fit 
+bdev LBS of data (typically 512B) in each BIO vector, and thus we need 
+to give a pessimistically low atomic_write_unit_max value.
+
+If we say that iovcnt max == 1, then we know that we can fit PAGE size 
+of data in each BIO vector (ignoring first/last vectors), and this will 
+give a reasonably large atomic_write_unit_max value.
+
+Note that we do now provide this iovcnt max value via statx, but always 
+return 1 for now. This was agreed with Christoph, please see:
+https://lore.kernel.org/linux-nvme/20240117150200.GA30112@lst.de/
+
+> 
+> I really wish there was more commenting on /why/ we do things here:
+> 
+> 	if (iocb->ki_flags & IOCB_ATOMIC) {
+> 		/* atomic reads do not make sense */
+> 		if (iov_iter_rw(iter) == READ)
+> 			return ERR_PTR(-EINVAL);
+> 
+> 		/*
+> 		 * block layer doesn't want to handle handle vectors of
+> 		 * buffers when performing an atomic write i guess?
+> 		 */
+> 		if (!iter_is_ubuf(iter))
+> 			return ERR_PTR(-EINVAL);
+> 
+> 		iomi.flags |= IOMAP_ATOMIC;
+> 	}
+
+ok, I can make this more clear.
+
+Note: It would be nice if we could check this in 
+xfs_iomap_write_direct() or a common VFS helper (which 
+xfs_iomap_write_direct() calls), but iter is not available there.
+
+I could just check iter_is_ubuf() on its own in the vfs rw path, but I 
+would like to keep the checks as close together as possible.
+
+Thanks,
+John
