@@ -1,94 +1,86 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FBC481BF;
-	Mon,  5 Feb 2024 22:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94D44BAB5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 22:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707173029; cv=none; b=CbADypHTfz56XoMyNCCaXq/TF2QOnaAa0RtHdajwjwamGK1Zyv2zwsZiug3IlfQL3+G5mWGYMsIev4nfskuGBPYPKlaaEojwIk84Cn4s2vsLpn0oi11A7tiorCBs/m26aRXpGs5B/0w5NCEazQx6F55DH3lFm0n0Vz7cNoMetPg=
+	t=1707173058; cv=none; b=XSGTQOF+vqnHHHOCA3abfF3L+4Zk6eVnRtVeTmI4KqwIiQFXYxvHbzZVZJi86cYuPhDlnAtcftaKBZqCuCKIbd7NE0mr5hWhdtntqhnNDnHedDwvWJ26LBRnFvqowi2XwHNYS0frdT/zuaeuBoggzGZzwrH8MyLbIX3WMV+kcHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707173029; c=relaxed/simple;
-	bh=B5LFCChfXOV41x2TfdwcmAIvY8W+Ckng0SDd0NGO450=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VEywcb9NxQzEcda/EqJbemm7cXAIEiP7Vy7nlbUEIBzMaEgCrdUmUy91SdeO9RyZnZBvWBTCp6n9BOhd7THYWv17AXR3XZWpDX4euy9PqegswlA0H4ByER+ULUechKscBrxFZNlF4NLsIV3cAiLyrPX0mFt+GuVlq9GFrUurziA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DKz4TB+z; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707173058; c=relaxed/simple;
+	bh=ZQgq1MCIgYVKvCXkNtnZ9U1EnbNFNTYyqAwvNP/4WjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SClsj+7Uyh4089jcXqofuf9rEDbJ9/uZJxuYcx9G5C8xeDS9SgREPeCf3yQZ2/18XtI+F+lmBr509iOdYlXs1YQCjyTvxvnJfQYh/zdCgKGJHOt8yDIBEB6j6JGv7kS5I5vvp1oy9ntfkKGzwQ//fEo3vZ7r2s4iG8hvl32w6WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FemScorA; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKz4TB+z"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-511344235c6so6032321e87.0;
-        Mon, 05 Feb 2024 14:43:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FemScorA"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e0353e47daso1349551b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 14:44:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707173025; x=1707777825; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5LFCChfXOV41x2TfdwcmAIvY8W+Ckng0SDd0NGO450=;
-        b=DKz4TB+z2Mzh81+kvdBIeXxgKHtE1bm/zcwRcG1GDYmBf+ieJjZV18zlujqeCyEVFi
-         0nVbTDBPzfizjaY7Cg+9aGCTy78WfDY+qeJCrsfE6hAe/wPIw+9iRxhWvvCA8qoKbz/U
-         OsXmVI23HvG2EnuBsVCrED9biPXD79nCUZBL4l00K2dWfDekUhitpUPr6TaYjo+K3a4O
-         jgTXnUxq0b05+ycLyleb+kevfkYWyZpSISnnBEn1x8rKIl1zbmxPr6K0qBOu7+Hge2q4
-         wpszepnx05dpRzuqa+Yg0xj86us35/7y2z+obFtpOcaTPQvRG1ghXVNPRRuay4tb3aRX
-         jGmw==
+        d=chromium.org; s=google; t=1707173056; x=1707777856; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YlsSc3pFtKmxKFilYiWjxo3LPVslJeCkCNbb2hluo8Q=;
+        b=FemScorA3FgpmqmyNWIkNg1H3g0+setZhSxFAN8BB8QkkuHitYIpjJpuo0dVLod3m/
+         A5ZwdjiGrEEWPcrjWJwVNHjxQqWgHCNI0Wa4+53eJgF6l+uyemKEgwWa+UQuka5sujOQ
+         1Si01k2CS5xZoF7qMh6F1Bb1OPqVQn4mTivTQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707173025; x=1707777825;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B5LFCChfXOV41x2TfdwcmAIvY8W+Ckng0SDd0NGO450=;
-        b=RMeqib7COP5TA4VBGf9k2UIu0HaFtu+QkFKOrYkx0r83RNqK0whLvgwfTMehvDJpCg
-         TY5m+BY0LtfzESDF6m7LxOrXfWJtTVW6YpdPnYkobNF0oTdJLLS/ckDY6ItnqfcH+iqf
-         y10q15rgsVS7oo7tvGrzd6szIuz71vioHhYUhf1PPgwSpm8/YXk0f7ZWQkm7syDMHCju
-         pfHAIXvEXJHT9F332dFL8bVnM2o06Np0/CaUGjTO1vdGeBcGFv5utnXLx/rPvkkQ1n6J
-         z8sSAKgPFBYURPsEQcd8lDKgNAUnE4RAyXszERGgrOsfHniMacowwKO9RNaANCfl77vu
-         h0Bw==
-X-Gm-Message-State: AOJu0YzgqiGFz4vIqH6gobWYkFvPAXdfKZ49M/bnNwM1qTzxDlYw1bsy
-	DRuyexlJsGgefl36z8bGIP/lVc8cPAicq8OwQQUPa3RusQD91pe7JxMpamMNq3G2mSgoXvimDcB
-	nFqDgyZde8Q28e4Wf8dE3/2TCieU=
-X-Google-Smtp-Source: AGHT+IHseQXpYVdIoy5VWPKXjRpQk8S1Nl2OlAONy8uH9N2+8szilnpvFR6yjoGW8Wd1pLrXFfIn1CjMigxOSU9ivWc=
-X-Received: by 2002:ac2:4aca:0:b0:511:3ef8:5 with SMTP id m10-20020ac24aca000000b005113ef80005mr572988lfp.34.1707173025259;
- Mon, 05 Feb 2024 14:43:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707173056; x=1707777856;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YlsSc3pFtKmxKFilYiWjxo3LPVslJeCkCNbb2hluo8Q=;
+        b=IB7XR16dXZXMJ0FRxFILn7LVoV1ZQKdA0g54ygjBqrYGbJg9VnVeO9LjWnuToYw72h
+         oaz+/xJph8hu9bEc1gpTo1/ar5uCi0cQ32vB9bNq962M1rr6Q12fZB00W82HLoXXKI/T
+         WGYLYBaqjqN7F4lOGueQx7XHLGelAT5G1ta8ShvrDIXwDWRu5xYqZW6dAi9sf2kWh998
+         NxrkYYb0b/LlKpJCtXDE3VRO6RTJ17++uN2W5P5I4nPR8hs/f82mBMaac03oNns+N7MT
+         bLd/bRbWz0/W35vPk7uIBiWy/8+u5vXqMwE8vrptKWOSTSxkH/uz1jRLP5TVnojMyCUo
+         L3/Q==
+X-Gm-Message-State: AOJu0Yy8WzJMlElCWU29eWqdOnmNxjqJLfE6brS0b6wdOBizQ6s4C/zE
+	B4+OoBkrKjlawu9ULClWopWoMDtxXX9SLooFNrEiv8Ysf/X0LYklzp7O27Qryg==
+X-Google-Smtp-Source: AGHT+IE1QBh6gexcQ+2X2Gc5NMQeqE3k7X4xb8teEBAWlblyskPJ73kN16UO1tfLOwj40JT2WfGZ/g==
+X-Received: by 2002:a62:cec3:0:b0:6e0:450c:4a28 with SMTP id y186-20020a62cec3000000b006e0450c4a28mr761387pfg.29.1707173056004;
+        Mon, 05 Feb 2024 14:44:16 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUv8l7nHBzn2Bdlub4E1yxV75RGWc8+YfI/ZYUKbrk58oaZHuJVOKCFMyxtvcBbuHCJfRv54TwpsQ7oF6IHvjR/Ubalse+Y+AegHLipH7c0uAej5DDm1C7P0ShBhVOo1Y5oN80ZZsHeKZXzSpJ2nUqpcDFT96NANp+kB0vSKnfnntY6DT4JMsucdb9o8UpfrGWGBK0zQ3AICs1n2KSrms02YxAQoDWAMw==
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id fn11-20020a056a002fcb00b006dfb8105235sm392409pfb.112.2024.02.05.14.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 14:44:15 -0800 (PST)
+Date: Mon, 5 Feb 2024 14:44:14 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-hardening@vger.kernel.org,
+	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and
+ mul_wrap()
+Message-ID: <202402051443.A813E4D@keescook>
+References: <20240205090854.make.507-kees@kernel.org>
+ <20240205091233.1357377-2-keescook@chromium.org>
+ <20240205202145.GB2220@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130-realtek_reverse-v5-0-ecafd9283a07@gmail.com>
- <20240130-realtek_reverse-v5-9-ecafd9283a07@gmail.com> <20240201224516.pujapjenqtyejihg@skbuf>
-In-Reply-To: <20240201224516.pujapjenqtyejihg@skbuf>
-From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Date: Mon, 5 Feb 2024 19:43:34 -0300
-Message-ID: <CAJq09z4ForDXY322xceFJCaH5tiXKQKS=EgFMKbdiSNf8O1Lbg@mail.gmail.com>
-Subject: Re: [PATCH net-next v5 09/11] net: dsa: realtek: migrate user_mii_bus
- setup to realtek-dsa
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
-	Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205202145.GB2220@sol.localdomain>
 
-> > +/**
-> > + * rtl83xx_setup_user_mdio() - register the user mii bus driver
-> > + * @ds: DSA switch associated with this user_mii_bus
-> > + *
-> > + * This function first gets and mdio node under the dev OF node, aborting
-> > + * if missing. That mdio node describing an mdio bus is used to register a
-> > + * new mdio bus.
->
-> The description has the overall feel of "Family Guy - Peter narrates his life"
-> (https://www.youtube.com/watch?v=zw8zUMjEW0I).
+On Mon, Feb 05, 2024 at 12:21:45PM -0800, Eric Biggers wrote:
+> On Mon, Feb 05, 2024 at 01:12:30AM -0800, Kees Cook wrote:
+> > Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and mul_wrap()
+> 
+> Maybe these should be called wrapping_add, wrapping_sub, and wrapping_mul?
+> Those names are more grammatically correct, and Rust chose those names too.
 
-Hahaha. Yes it does.
+Sure, that works for me. What bout the inc_wrap() and dec_wrap() names?
+I assume wrapping_inc() and wrapping_dec() ?
 
-> You could be a bit more succinct and say something like "Registers the
-> MDIO bus for built-in Ethernet PHYs, and associates it with the
-> mandatory 'mdio' child OF node of the switch".
-
-Done. Thanks.
-
-Regards,
-
-Luiz
+-- 
+Kees Cook
