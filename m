@@ -1,111 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FDE11185;
-	Mon,  5 Feb 2024 08:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108FF11197;
+	Mon,  5 Feb 2024 08:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707121234; cv=none; b=Vm0c0AMVylIlSDtR1iwmxSqCelGrXdGpwooB5j2FAUWDmaep3kV5Mr5U37p8cbN9M2tor22tw/akOLuKi+1Dwlk481X5BElvKhTnzUi93dl2P2hh26cDq3+PhPP6a+Kp05HHfBxLm424rlSXYI4m7+HEC2/0crQmGfcSjF5a9+k=
+	t=1707121309; cv=none; b=hPcKK8P351DrowPOEghh+gt8dKaB2EJPCVlm+GB+xTGIeApWnAuyMCz9+IlIyA6WxO/id3w5G/1tOnI7Pm0FkMKPn7xE7Pl8oWITn5qX+g/AO/C1Z0zXLRoodGzTsm+RsYznXmu+dpW0t+LXM+hkrUn322zPLSEt9Ir4JwRHMXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707121234; c=relaxed/simple;
-	bh=p7VIl6MhCIqATnPphkUNjx22KAhNDEK+6bbzQyPLhPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eqjuflvAarAdrPCkHHiZZg3LDFH7gFf8Q4lboiOikXmJzpR0aREtxBKsR6ROUis57v7GXUNbICzfiPQgYdMlBGDYaZzGORAWuIwSsw1mmXIMDR/Tc4Fk9F3iBU41qnGOvrWAPCacdT3ou6jB8utYW/3DpOu8PWpocoim72MF8MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M26sS6Pi; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707121309; c=relaxed/simple;
+	bh=jWoYKNOaJZkQXUjbgKMKgXdgzbUGl0YlxWmC3h9cIEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKAnrkucGOKG2nwwlHfwMEEZE+PjXcB58kebtWg06524gtpHgQ823CGX6LUcSNs00UiAGUsTmt+dcLu+sBtRT+4BnNbn/AZaACfmiaI09jG1kjfqnUOCUgaS3bZDYUqzuKXF7eF1nTxE5ctH0Z4y2hFHNPpFdVAfjntusFLIvGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Owi8gK9h; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d6vYOyw/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M26sS6Pi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707121234; x=1738657234;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=p7VIl6MhCIqATnPphkUNjx22KAhNDEK+6bbzQyPLhPQ=;
-  b=M26sS6PiLtaeWB9+F4n6nNXW2tIfN9gF3OHGZyMocr1nk3NHQhzj24Vl
-   phdvCu38+8yEXhE5JVtLQ5JI+5TGRQgM6QaDNRa9nFJlKkn0eVFfyXPpB
-   N6AMhhEFAVPSPqe9zNYfgOmAhFL+HairrUZQCPAjTpqY97Sq9bLPX+324
-   wokcQGQfbYTgrdVy34X+oknBJX4IfjFBGg3YkAjkgNH3P8COciKb3m8rl
-   ShzBq1WKQJZbPBMIenUjDnh0pR8pp+u9XPKuUQ88u0umDoMrq/qlsYiHn
-   x5ST5cb64kYMD+hTB92wHHm6PG9dXOyWnEMIH5QLW1q4gdH4sfx6EKx7X
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="11566172"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="11566172"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 00:20:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="5401061"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 00:20:23 -0800
-Message-ID: <2abb6c0b-ea66-4649-b205-bafe49340aee@linux.intel.com>
-Date: Mon, 5 Feb 2024 09:20:20 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Owi8gK9h";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d6vYOyw/"
+Date: Mon, 5 Feb 2024 09:21:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707121299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jWoYKNOaJZkQXUjbgKMKgXdgzbUGl0YlxWmC3h9cIEo=;
+	b=Owi8gK9hxlNii8V3eWJUhqWBOTxiRLx5KBn2BL8bjZ5ScFJVAxkHWu+OX5Or1ZdkXvPcJc
+	geBiq9G0LGSB2B7a9txtW05+SXTff8YLVoQ4MPdAA9S1kjFsHjOf7bA5+Jbj3eDjr2g5Ws
+	y31sbMg4E2rB82cilHwUGc8vRTMSOxFRmIVHVftc5rxent4mxcD46jSccAzhvRj6SbBJ5E
+	5qyMgHAXVS2Rh+v/ywP3lXJVj5hzNM+zjl5dKFo/ckn3vxNuEGP0HIl1U5H9b0Md1fwwUq
+	Mw80JHszWuB5f3ss6x1SGDnfPRc7hyBcrlW4tvoiN1pfqwN7Kd9txBrPbl7Ktg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707121299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jWoYKNOaJZkQXUjbgKMKgXdgzbUGl0YlxWmC3h9cIEo=;
+	b=d6vYOyw/DvOqugkKocJ/FqMnMxxg6NMhwO2gFQGyWcnWYDDhrU5pRQQOeBMiM0oP5MKPjE
+	9AE/vIE6psVmudDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Daniel Wagner <wagi@monom.org>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT 0/1] Linux v4.19.306-rt132-rc1
+Message-ID: <20240205082138.HtHvUfp9@linutronix.de>
+References: <20240202170457.29516-1-wagi@monom.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 20/53] ASoC: Add SOC USB APIs for adding an USB
- backend
-Content-Language: en-US
-To: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
- mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
- corbet@lwn.net, lgirdwood@gmail.com, andersson@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, gregkh@linuxfoundation.org,
- Thinh.Nguyen@synopsys.com, broonie@kernel.org, bgoswami@quicinc.com,
- tiwai@suse.com, robh+dt@kernel.org, konrad.dybcio@linaro.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- alsa-devel@alsa-project.org
-References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
- <20240203023645.31105-21-quic_wcheng@quicinc.com>
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20240203023645.31105-21-quic_wcheng@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240202170457.29516-1-wagi@monom.org>
 
-On 2/3/2024 3:36 AM, Wesley Cheng wrote:
-> Some platforms may have support for offloading USB audio devices to a
-> dedicated audio DSP.  Introduce a set of APIs that allow for management of
-> USB sound card and PCM devices enumerated by the USB SND class driver.
-> This allows for the ASoC components to be aware of what USB devices are
-> available for offloading.
-> 
-> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> ---
+On 2024-02-02 18:04:56 [+0100], Daniel Wagner wrote:
+> Dear RT Folks,
+Hi,
 
-...
+> This is the RT stable review cycle of patch 4.19.306-rt132-rc1.
+=E2=80=A6
+> Please scream at me if I messed something up. Please test the patches
+> too.
 
-> +
-> +/**
-> + * snd_soc_usb_add_port() - Add a USB backend port
-> + * @dev: USB backend device
-> + * @priv: private data
-> + * @connection_cb: connection status callback
-> + *
-> + * Register a USB backend device to the SND USB SOC framework.  Memory is
-> + * allocated as part of the USB backend device.
-> + *
-> + */
-> +int snd_soc_usb_add_port(struct snd_soc_usb *usb)
-> +{
-> +
-> +
+Good.
 
-Cosmetic, but why is there white space between start of function and 
-body of function?
+> Enjoy!
+> Daniel
 
-> +	mutex_lock(&ctx_mutex);
-> +	list_add_tail(&usb->list, &usb_ctx_list);
-> +	mutex_unlock(&ctx_mutex);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(snd_soc_usb_add_port);
-> +
-
+Sebastian
