@@ -1,117 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CA44D5A7;
-	Mon,  5 Feb 2024 22:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C28B4F60C;
+	Mon,  5 Feb 2024 22:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707170853; cv=none; b=T4VZStqjjS57Vb/zy/zQ5knoUZ+p+fHBZmmM6tj709JNVOb7kMYdcP0qaJMyxKA6ltn4FmZEjsBT1qow1X/gV12D/0nLZk7r3wcQpIZ8cVcq4CregOzJmaNrII+mI+qwlFXHBLu2myGrAHePrtwU9x0kNjpsOylGuwXJx4oA2zQ=
+	t=1707170894; cv=none; b=DX0aIAwvWt4QUrxG1miGz/hYdNZw8gNA5rhy/a8ZhcItePnHReSpqeUPA5PvL0n5xZvYixNKbVoMDxFk0yAZxTidxKmUFwYgbXKtmc3lqpAPYkW/jWUlOX0TL0ZgdQeo8257YRAL3n4DG6WoZz+hdo59SQFDqk0+Fpj9umRkJ88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707170853; c=relaxed/simple;
-	bh=K8Wi9nbWh4scyBXEx/WRPqEifNVn6pTOX+L2VOPol0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NbJMGt7JIbxfT9U0uLOIOQFGJyzFaAx9AMEc7dAZ69HKkJPSaE3FRlALOSkou9/+Nuif/4r4cNNq/68165oOgxXH48oAs1LZwyHAXYN6w97nYt/NFzK1bx+80G2R7OFnXMVgtUub5LlTEdmZPDL40GBzDZgsf0rA2oj9rjwr1Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O8391Xi7; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707170894; c=relaxed/simple;
+	bh=8EgBgwLLDbF/8jK7XPHzV7GGgAjVhqj4SpRaslo5nG4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ax5/o5Ex1FkdwmibV2Y2oFeQKU5k4kzeHbtEbC/ohLrzaq6tzmX0nVnCYCVwzhtk3f4dwlKRPz+y0KtJMMMQyVed1xiAddum705ar5e6iGf0zIHOuntrBUSB9VJ5nIihPq3faKLBUnvRmV40U4VqQCKMDdCt0ONG7+w8RirpMzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZET9z3z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O8391Xi7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707170852; x=1738706852;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K8Wi9nbWh4scyBXEx/WRPqEifNVn6pTOX+L2VOPol0U=;
-  b=O8391Xi7/SuRXbNwW2kggbghhBYcal0z6u90QnLTYBLgcH/Fw5i3hUW0
-   7+8tdpHS4uVI/qNKoYCN0zGdGA285fKqawFoi+ItFctaS5dlrMpHtB7rY
-   7zYUandL6odAxvzZUTIec0JzIu73ZHqYPvflLHMEYUUn/2Psy9FFRH9nB
-   HtfxYAZGyRCKWTCOcHu+sofQ6697hKAybiGlVIRoxkBpfDl73Xn3uCCAJ
-   81D7DTpJKMM1KdP8MIAnpDMahh7+sVMc4WNOVDESN6MPZdfyel1r64RHB
-   o1WgDE0eaBqjDVThaUnoHKe7E4ynJRUwnBINIo+FO2/ORUHGRWcpSkc2K
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="4410175"
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="4410175"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 14:07:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="933269717"
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="933269717"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.181]) ([10.246.112.181])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 14:07:30 -0800
-Message-ID: <33d241bf-e360-44c5-b63d-550da3cc66d9@intel.com>
-Date: Mon, 5 Feb 2024 15:07:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZET9z3z"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 449A8C433C7;
+	Mon,  5 Feb 2024 22:08:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707170894;
+	bh=8EgBgwLLDbF/8jK7XPHzV7GGgAjVhqj4SpRaslo5nG4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=QZET9z3zeedOcUFANG1j5xtmknEO9qufzKyFJM3PWulLWLocFZjKndR/AOWoQoCa5
+	 3V/MsB7BrI7qusCBlXECDyfv5ljB7aB7fakS9PqZne1P/DkaOsbin8jN1CnwYTR1NZ
+	 vvG4guoHprTITFmhSe1vZBpMiw1ccTeVkSuRF9NGGAanx5+Hzz8D7h+skZYG3FNq6V
+	 gGqMQs+0SA5mMTM/qU0RpjS/ASQhNSXY+/Bdqy49J3b+Lvb74vYTdBwKaIglnclKMQ
+	 ghykALF2m5LRIm5y1Le3b0CHNGCSBMhG1l4XQVOzZ5CUCN/sN9olX4umSM867eTDH6
+	 6Nu9jxit9sSaw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F6EC4828D;
+	Mon,  5 Feb 2024 22:08:14 +0000 (UTC)
+From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
+ <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Tue, 06 Feb 2024 01:08:02 +0300
+Subject: [PATCH net-next v5 1/7] net: dsa: mt7530: empty default case on
+ mt7530_setup_port5()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: remove CONFIG_CXL_PMU entry in drivers/cxl/Kconfig
-Content-Language: en-US
-To: Masahiro Yamada <masahiroy@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20240204094613.40687-1-masahiroy@kernel.org>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240204094613.40687-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id:
+ <20240206-for-netnext-mt7530-improvements-2-v5-1-d7d92a185cb1@arinc9.com>
+References:
+ <20240206-for-netnext-mt7530-improvements-2-v5-0-d7d92a185cb1@arinc9.com>
+In-Reply-To:
+ <20240206-for-netnext-mt7530-improvements-2-v5-0-d7d92a185cb1@arinc9.com>
+To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707170890; l=1626;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=w0AE+3vdRdnNAeZ4Rw1iuOmXQ/hQFv6Ji5v3rRgN9bg=;
+ b=gDGcthfD6OjI984VKp0zlbDTxdggWBt3tmhCllIbyTIAMYWMBBgmWODnybQRLAOeQoF87Tjov
+ 8H7Qck/hmaYC/HRYET2p2f2Ns05cxQoJMPLHHQdK/glbZ1j2xpm45Qs
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received:
+ by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
+X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Reply-To: <arinc.unal@arinc9.com>
 
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
+There're two code paths for setting up port 5:
 
-On 2/4/24 2:46 AM, Masahiro Yamada wrote:
-> Commit 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-> added the config entries for CXL_PMU in drivers/cxl/Kconfig and
-> drivers/perf/Kconfig, so it can be toggled from multiple locations:
-> 
-> [1] Device Drivers
->      -> PCI support
->        -> CXL (Compute Expres Link) Devices
->          -> CXL Performance Monitoring Unit
-> 
-> [2] Device Drivers
->      -> Performance monitor support
->        -> CXL Performance Monitoring Unit
-> 
-> This complicates things, and nobody else does this.
-> 
-> I kept the one in drivers/perf/Kconfig because CONFIG_CXL_PMU controls
-> the compilation of drivers/perf/cxl_pmu.c.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+mt7530_setup()
+-> mt7530_setup_port5()
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> 
->  drivers/cxl/Kconfig | 13 -------------
->  1 file changed, 13 deletions(-)
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 67998dbd1d46..5f3c9c5529b9 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -144,17 +144,4 @@ config CXL_REGION_INVALIDATION_TEST
->  	  If unsure, or if this kernel is meant for production environments,
->  	  say N.
->  
-> -config CXL_PMU
-> -	tristate "CXL Performance Monitoring Unit"
-> -	default CXL_BUS
-> -	depends on PERF_EVENTS
-> -	help
-> -	  Support performance monitoring as defined in CXL rev 3.0
-> -	  section 13.2: Performance Monitoring. CXL components may have
-> -	  one or more CXL Performance Monitoring Units (CPMUs).
-> -
-> -	  Say 'y/m' to enable a driver that will attach to performance
-> -	  monitoring units and provide standard perf based interfaces.
-> -
-> -	  If unsure say 'm'.
->  endif
+mt753x_phylink_mac_config()
+-> mt753x_mac_config()
+   -> mt7530_mac_config()
+      -> mt7530_setup_port5()
+
+On the first code path, priv->p5_intf_sel is either set to
+P5_INTF_SEL_PHY_P0 or P5_INTF_SEL_PHY_P4 when mt7530_setup_port5() is run.
+
+On the second code path, priv->p5_intf_sel is set to P5_INTF_SEL_GMAC5 when
+mt7530_setup_port5() is run.
+
+Empty the default case which will never run but is needed nonetheless to
+handle all the remaining enumeration values.
+
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ drivers/net/dsa/mt7530.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 68be38ae66e0..330e22abc076 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -943,9 +943,7 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 		val &= ~MHWTRAP_P5_DIS;
+ 		break;
+ 	default:
+-		dev_err(ds->dev, "Unsupported p5_intf_sel %d\n",
+-			priv->p5_intf_sel);
+-		goto unlock_exit;
++		break;
+ 	}
+ 
+ 	/* Setup RGMII settings */
+@@ -975,7 +973,6 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 	dev_dbg(ds->dev, "Setup P5, HWTRAP=0x%x, intf_sel=%s, phy-mode=%s\n",
+ 		val, p5_intf_modes(priv->p5_intf_sel), phy_modes(interface));
+ 
+-unlock_exit:
+ 	mutex_unlock(&priv->reg_mutex);
+ }
+ 
+
+-- 
+2.40.1
+
