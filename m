@@ -1,240 +1,101 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458C6482F0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 23:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCE7482F0;
+	Mon,  5 Feb 2024 23:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707174308; cv=none; b=uKpv2To5urzci0PqHXcZ0XFW9yIOMFsJMEy6DsWusxtCHTgWSpMgqOWFHzLKTVibNIBfdZUsfwZmIKS1GjT8QddOwCYNyIT6GU/O1xFEgvqtYhl3NJSSe99FovBkWcu6LfndChzhVsXHEWVCFxfF4dzTjGTMm0sfcLerA9l9TEo=
+	t=1707174497; cv=none; b=AiaK3jHuRaoBVySqXVRwH25/rsoBquzhE1vzuQbrxcrmbb2nkbTRXRcQiJqKbtUCX58CSdlB5Po2vfbtFx/YBtSy8PNLAt+DWlz1Gg1tRvd8cv0+o8+hwjUIr11j4N38UWRSvNA1+4QziSD7ZIRQDZ5z/ns6RysC+vb0nBAy/Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707174308; c=relaxed/simple;
-	bh=r7hwl9FZPSbwtzf91HLG2uYS3wWs5xJYPgd288Oe7tU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WwtOgaS3v8qyKxeou6GOBps5BpdgOoA5dHuw/0YkeYjNaBdBtGvU3i/vQiwXlKi2lNwsXv1Yb/9FPxYVjWQJcVqg1n3FKvGNqFP4YlHcCo+B6GgpTTLXa4+FkwDZtPQ4oqA0o42XxYCnc7vck3t4pcrz7kdGUGu32+N99x5+5Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TKzJc/BO; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	s=arc-20240116; t=1707174497; c=relaxed/simple;
+	bh=xuDmFQSWGlQWb6duBmXc34XJaq9eqcK4l/dLZuW5nP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EYbxYzmRucS2+cquo8ZNFNsH82eO5bKGUdcwnIv7sjSMfyWJVOfTjTm8TYwIFoU2GaK0MU9JNpYPrHtZ6+Xrj1TCtF5Hqsv0oQ8teR2uY4ofkUyQFm/w7kDlgpP1B646Aqsh+P3IeRlmXVT8Et5GPwZGcuIDsKqyheAUuTMUO9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gjvN0RdJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TKzJc/BO"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60416f4cba4so91547867b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 15:05:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707174304; x=1707779104; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BZxrWnq5zjsPkEKkrjYrS8M9CKMdrdKLinApXAx16Nw=;
-        b=TKzJc/BOKkbOwVMIjJZKR3Q42nBn6EtR2HouUMZRJtZRYg1hL3dyfIKLoB3+WLFf9m
-         TwFjk4kud47L02YJEss4rYDWIOB1nZ0mt2MyxaCKobGqRaucivPsKa3xpyGILWIGIkth
-         ANlZzzdkse0Tvz0ed6qMKEdb2TTeAQLPLUgRNlTzV7MuLxDN4Mh9DdCyohry80dAa2Y7
-         YLqtnMbNELFIlBqc/eeqYVCsLE11u8bXtPn58In7nIEtJdUzENUOMcKhinH8LOi2j7gv
-         z0kZbwkCfNUJQj5S8rWQAZwP/5qXOBClEo/eCMsVK37Ebg6VnSaN7BwI3SLwjGzIVtLt
-         zBFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707174304; x=1707779104;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BZxrWnq5zjsPkEKkrjYrS8M9CKMdrdKLinApXAx16Nw=;
-        b=OTLg5b76sJH4GM/osfm4b8F7/avX6HFjGuTzUtsL41zmcc6mE4/Ph6f32eaVBXIhqS
-         qtQds+pyxjvo3lJcWRgbApC7K4EEsQs+X161fNw+dob9PxEVIhUOXR+55KRG0/R2rO1M
-         wXBa+Ll2Za3LDgy8o2QvpQM8U264AiriKgK9WS/07uoudQmOsYleaW8bTUYTPbanrN/b
-         fFCcQ3XzSe4mON7v8clO2oWWat4hQMXv6LV71Igyp5YSG92dT8aZxbYphaUV7VV0PhXJ
-         WiZDC1p+tCR72B2MYMHXrxgGrekgpRqwx6TCGBxOudRcCmyNfgQlQGQ/LIdd3fyaVzPY
-         IFZg==
-X-Gm-Message-State: AOJu0YxrIOdFKh1qxtgncxJD7PW2z00vkajoiw7ArjVIuaT4z/PmpPgE
-	dwhvssFKlMbplVTVSZ0duQMfPymdeZ+Q9fiP5TPUrROTWlh6dF5xhA12MDtRyhL0AcAnaKTBT6m
-	DvoISqgUW1Vrcf8t6Xw==
-X-Google-Smtp-Source: AGHT+IEUIGBmonf8OUL3+nxDnw4mX6xBUsQEC+uMCjLlLfEloLx4Ka+Rv5WbqnXlV8aBShzzt7LSfSBY3cgF6gyX
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:e04:b0:dc6:af9a:8cfa with SMTP
- id df4-20020a0569020e0400b00dc6af9a8cfamr225097ybb.6.1707174304249; Mon, 05
- Feb 2024 15:05:04 -0800 (PST)
-Date: Mon, 5 Feb 2024 23:05:02 +0000
-In-Reply-To: <20240205225608.3083251-4-nphamcs@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gjvN0RdJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+Nztq3kAKxiN7XZ+pUFMrtGoSQCmAM3BMqRaoiMZEu0=; b=gjvN0RdJ5BQAJPPtsuIJEMkWIm
+	UH7igtwCP8GH/tjcpDdA4n8J63nSPTOfOAczSD9S6tlSSKQPATjpOXpj6KXwliUguwyXRTYtF0C4d
+	8uwfKmw3nZRI1HI+7j0Aia7GDNPxZlo3I+TL1scE5mk4WSgivL5KZK77V8xmspJYAXzGQ1/a1imLk
+	+6pJl7uee9flJs8Fj/CXwp36v2GS6F5g9NNYXyXl8M5mS2xQR0CAR9yqZQQJYELQAMKgRH2aST+52
+	7nxk0KqviKqcghKQkZwvOJ4byVSUDpmCdSokZeWJQd6Hiudlx1PgGSSL/tXiusEWmNG3Q8pen44H1
+	bDBmqYNg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rX84Q-0000000Afhw-1S2j;
+	Mon, 05 Feb 2024 23:08:10 +0000
+Date: Mon, 5 Feb 2024 23:08:10 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: JonasZhou <jonaszhou-oc@zhaoxin.com>
+Cc: CobeChen@zhaoxin.com, JonasZhou@zhaoxin.com, LouisQi@zhaoxin.com,
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] fs/address_space: move i_mmap_rwsem to mitigate a false
+ sharing with i_mmap.
+Message-ID: <ZcFqWifk2cBExIvG@casper.infradead.org>
+References: <Zb1DVNGaorZCDS7R@casper.infradead.org>
+ <20240205062229.5283-1-jonaszhou-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240205225608.3083251-1-nphamcs@gmail.com> <20240205225608.3083251-4-nphamcs@gmail.com>
-Message-ID: <ZcFpnokh3W1DFBCj@google.com>
-Subject: Re: [PATCH v3 3/3] selftests: add zswapin and no zswap tests
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: akpm@linux-foundation.org, riel@surriel.com, shuah@kernel.org, 
-	hannes@cmpxchg.org, tj@kernel.org, lizefan.x@bytedance.com, 
-	roman.gushchin@linux.dev, linux-mm@kvack.org, kernel-team@meta.com, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205062229.5283-1-jonaszhou-oc@zhaoxin.com>
 
-On Mon, Feb 05, 2024 at 02:56:08PM -0800, Nhat Pham wrote:
-> Add a selftest to cover the zswapin code path, allocating more memory
-> than the cgroup limit to trigger swapout/zswapout, then reading the
-> pages back in memory several times. This is inspired by a recently
-> encountered kernel crash on the zswapin path in our internal kernel,
-> which went undetected because of a lack of test coverage for this path.
+On Mon, Feb 05, 2024 at 02:22:29PM +0800, JonasZhou wrote:
+> When running UnixBench/execl, each execl process repeatedly performs 
+> i_mmap_lock_write -> vma_interval_tree_remove/insert -> 
+> i_mmap_unlock_write. As indicated below, when i_mmap and i_mmap_rwsem 
+> are in the same CACHE Line, there will be more HITM.
+
+(I wasn't familiar with the term HITM.  For anyone else who's
+unfamiliar, this appears to mean a HIT in another core's cache, which
+has the cachline in the Modified state)
+
+> Func0: i_mmap_lock_write
+> Func1: vma_interval_tree_remove/insert
+> Func2: i_mmap_unlock_write
+> In the same CACHE Line
+> Process A | Process B | Process C | Process D | CACHE Line state 
+> ----------+-----------+-----------+-----------+-----------------
+> Func0     |           |           |           | I->M
+>           | Func0     |           |           | HITM M->S
+> Func1     |           |           |           | may change to M
+>           |           | Func0     |           | HITM M->S
+> Func2     |           |           |           | S->M
+>           |           |           | Func0     | HITM M->S
 > 
-> Add a selftest to verify that when memory.zswap.max = 0, no pages can go
-> to the zswap pool for the cgroup.
+> In different CACHE Lines
+> Process A | Process B | Process C | Process D | CACHE Line state 
+> ----------+-----------+-----------+-----------+-----------------
+> Func0     |           |           |           | I->M
+>           | Func0     |           |           | HITM M->S
+> Func1     |           |           |           | 
+>           |           | Func0     |           | S->S
+> Func2     |           |           |           | S->M
+>           |           |           | Func0     | HITM M->S
 > 
-> Suggested-by: Rik van Riel <riel@surriel.com>
-> Suggested-by: Yosry Ahmed <yosryahmed@google.com>
-> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+> The same issue will occur in Unixbench/shell because the shell 
+> launches a lot of shell commands, loads executable files and dynamic 
+> libraries into memory, execute, and exit.
 
-LGTM with a few nits below:
-Acked-by: Yosry Ahmed <yosryahmed@google.com>
+OK, I see.
 
-Thanks!
+> Yes, his commit has been merged into the Linux kernel, but there 
+> is an issue. After moving i_mmap_rwsem below flags, there is a 
+> 32-byte gap between i_mmap_rwsem and i_mmap. However, the struct 
+> address_space is aligned to sizeof(long), which is 8 on the x86-64 
+> architecture. As a result, i_mmap_rwsem and i_mmap may be placed on 
+> the same CACHE Line, causing a false sharing problem. This issue has 
+> been observed using the perf c2c tool.
 
-> ---
->  tools/testing/selftests/cgroup/test_zswap.c | 120 +++++++++++++++++++-
->  1 file changed, 119 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testing/selftests/cgroup/test_zswap.c
-> index 32ce975b21d1..c263610a4a60 100644
-> --- a/tools/testing/selftests/cgroup/test_zswap.c
-> +++ b/tools/testing/selftests/cgroup/test_zswap.c
-> @@ -60,6 +60,27 @@ static long get_zswpout(const char *cgroup)
->  	return cg_read_key_long(cgroup, "memory.stat", "zswpout ");
->  }
->  
-> +static int allocate_and_read_bytes(const char *cgroup, void *arg)
-> +{
-> +	size_t size = (size_t)arg;
-> +	char *mem = (char *)malloc(size);
-> +	int ret = 0;
-> +
-> +	if (!mem)
-> +		return -1;
-> +	for (int i = 0; i < size; i += 4095)
-> +		mem[i] = 'a';
-> +
-> +	/* go through the allocated memory to (z)swap in and out pages */
-
-nit: s/go/Go
-
-> +	for (int i = 0; i < size; i += 4095) {
-> +		if (mem[i] != 'a')
-> +			ret = -1;
-> +	}
-> +
-> +	free(mem);
-> +	return ret;
-> +}
-> +
->  static int allocate_bytes(const char *cgroup, void *arg)
->  {
->  	size_t size = (size_t)arg;
-> @@ -100,7 +121,6 @@ static int test_zswap_usage(const char *root)
->  	int ret = KSFT_FAIL;
->  	char *test_group;
->  
-> -	/* Set up */
-
-We removed this comment here.
-
->  	test_group = cg_name(root, "no_shrink_test");
->  	if (!test_group)
->  		goto out;
-> @@ -133,6 +153,102 @@ static int test_zswap_usage(const char *root)
->  	return ret;
->  }
->  
-> +/*
-> + * Check that when memory.zswap.max = 0, no pages can go to the zswap pool for
-> + * the cgroup.
-> + */
-> +static int test_swapin_nozswap(const char *root)
-> +{
-> +	int ret = KSFT_FAIL;
-> +	char *test_group;
-> +	long swap_peak, zswpout;
-> +
-> +	test_group = cg_name(root, "no_zswap_test");
-> +	if (!test_group)
-> +		goto out;
-> +	if (cg_create(test_group))
-> +		goto out;
-> +	if (cg_write(test_group, "memory.max", "8M"))
-> +		goto out;
-> +	if (cg_write(test_group, "memory.zswap.max", "0"))
-> +		goto out;
-> +
-> +	/* Allocate and read more than memory.max to trigger swapin */
-> +	if (cg_run(test_group, allocate_and_read_bytes, (void *)MB(32)))
-> +		goto out;
-> +
-> +	/* Verify that pages are swapped out, but no zswap happened */
-> +	swap_peak = cg_read_long(test_group, "memory.swap.peak");
-> +	if (swap_peak < 0) {
-> +		ksft_print_msg("failed to get cgroup's swap_peak\n");
-> +		goto out;
-> +	}
-> +
-> +	if (swap_peak == 0) {
-> +		ksft_print_msg("pages should be swapped out\n");
-> +		goto out;
-> +	}
-
-We can actually check that this number is >= 24M instead. Not a big
-deal, but might as well.
-
-> +
-> +	zswpout = get_zswpout(test_group);
-> +	if (zswpout < 0) {
-> +		ksft_print_msg("failed to get zswpout\n");
-> +		goto out;
-> +	}
-> +
-> +	if (zswpout > 0) {
-> +		ksft_print_msg("zswapout > 0 when memory.zswap.max = 0\n");
-> +		goto out;
-> +	}
-> +
-> +	ret = KSFT_PASS;
-> +
-> +out:
-> +	cg_destroy(test_group);
-> +	free(test_group);
-> +	return ret;
-> +}
-> +
-> +/* Simple test to verify the (z)swapin code paths */
-> +static int test_zswapin(const char *root)
-> +{
-> +	int ret = KSFT_FAIL;
-> +	char *test_group;
-> +	long zswpin;
-> +
-> +	/* Set up */
-
-Yet we added a similar one here :)
-
-> +	test_group = cg_name(root, "zswapin_test");
-> +	if (!test_group)
-> +		goto out;
-> +	if (cg_create(test_group))
-> +		goto out;
-> +	if (cg_write(test_group, "memory.max", "8M"))
-> +		goto out;
-> +	if (cg_write(test_group, "memory.zswap.max", "max"))
-> +		goto out;
-> +
-> +	/* Allocate and read more than memory.max to trigger (z)swap in */
-> +	if (cg_run(test_group, allocate_and_read_bytes, (void *)MB(32)))
-> +		goto out;
-> +
-> +	zswpin = cg_read_key_long(test_group, "memory.stat", "zswpin ");
-> +	if (zswpin < 0) {
-> +		ksft_print_msg("failed to get zswpin\n");
-> +		goto out;
-> +	}
-> +
-> +	if (zswpin == 0) {
-> +		ksft_print_msg("zswpin should not be 0\n");
-> +		goto out;
-> +	}
-
-Same here, we can check that zswpin is at least 24M worth of events.
-Again, not a big deal, but might as well.
+Got it.  OK, let's put this patch in.  It's a stopgap measure, clearly.
+I'll reply to Dave's email with a longer term solution.
