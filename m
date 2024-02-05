@@ -1,92 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B873417552;
-	Mon,  5 Feb 2024 22:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36170482D1
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 22:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707172937; cv=none; b=koY7mRwndvkBMRHWjNocLwVI/3vETXK7h7crGM2aLFyp8qqxVKeaRq0YsJVVqI3sQLirf2GCrwTHdu2yvpG/3D0zqKg/6Q0vJI/szYawUWpXw72ptk5eKK76haKLJWBhK+wCMAGvt7eQ7K5gDG9O+p4r4NpljVkFq/bwOSofCoI=
+	t=1707173026; cv=none; b=gMlyxTEY6UU8Pz2k6oeChUjYbm6M774/RZJYt3JXlGFY+AEOhknoIJIGzGNeCvWTLip8o5YPAjmjpgKoDv/9Az7GwGmnCaVX9HOmxpfxymbjFu2FfGOF6JPa96HIPOktc6RrhM5qRJDv1jx3ZjGmK94w4WFjv1n6tSotJfUJfjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707172937; c=relaxed/simple;
-	bh=DnCjxT2XshchSsawOjYIcnaeIH3yQaFkalYSYgYAmes=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Af9uxMZpJdrsjWAgudRoc37MTj0VSmooYTdx/AFlEMCu9Y/cawevXh6TiLR5GY4SY0L2FAsVBRvddAwoDLzyr2KawDO4fnB2WuNqJupvnOxp1HjwDOygaA34QQ9+81WTBSPOZ2MEktxhYkMMBIMXWZHXUJdZ7A+uGCLM2MLosXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVcIZSkd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707173026; c=relaxed/simple;
+	bh=P6jsH88dVQl2k3TFc9d+OcA130i51RnnnqPRV/d93e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OAw869NJ0TwpWlBE8C10ugXt0UPyPtD2uyHF4wyswSfVkl9v+6qrRnHHkd2PJzISuUIL0gDszR699/bUAgC7sTHSEb+iomQLZRTL9e2qVON7hOz5BWa/TriU6KlamTm/LrFahYQqy9KpKzCU+Smqvk5LTRWagzCAvwokjShJaNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JiIfOCLI; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVcIZSkd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCDB8C433F1;
-	Mon,  5 Feb 2024 22:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707172937;
-	bh=DnCjxT2XshchSsawOjYIcnaeIH3yQaFkalYSYgYAmes=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VVcIZSkd8xtGNl1+FJ92wYTnpAio29YDwI59SJYxL7bRu9pcL6LPTjUw76mrAa2Eo
-	 7x2EbVGQlBse07cO8bGoA6X0lxu00+Q52xkwMLkvkrO5a4FB2BbLGbRwni5nzTCAwb
-	 WvvfU7QwuFhLFfrqp+1dUIXfK25a44llpnMSDRa9R9tLfGykWUk9mwes9oEgoDkeTo
-	 X5IwfEuAMIM7KdFSxN2WItQrhQms1NduZPtOWGz+i90Q/sBmm85whqy3AZoEManTGe
-	 OQed1GhDhtAuqAe8jRZVzdfheSm1KWx3ileB4DdyS+x5jT7G4s7YdILNqCxil8vEXf
-	 bHUgMkjF+SSzw==
-Date: Mon, 5 Feb 2024 16:42:15 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Jian-Hong Pan <jhp@endlessos.org>, Johan Hovold <johan@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux@endlessos.org
-Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
- PCIe Root Port and NVMe
-Message-ID: <20240205224215.GA829734@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JiIfOCLI"
+Date: Mon, 5 Feb 2024 17:43:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707173021;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V535WHzbvh6MboWD4TxDTfLy8x7b35oNP0njlbHg1zk=;
+	b=JiIfOCLIjmghQB2/CUlA7W2pLqdUiodJw3BZU+55tegre6WClntaDJCqreOVaTg3RZfiiS
+	BAefit8hMaAo0SDdyTkpFdUU/f21bePCfTWhVTRwTuYSKNH+IGHA0XgOrJTXcJFiGYqFII
+	R9U8+Irfl61FbMKOxlZJAbLu6/8mwug=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>, 
+	Theodore Ts'o <tytso@mit.edu>, Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH 4/6] fs: FS_IOC_GETSYSFSNAME
+Message-ID: <7si54ajkdqbauf2w64xnzfdglkokifgsjptmkxwdhgymxpk353@zf6nfn53manb>
+References: <20240205200529.546646-1-kent.overstreet@linux.dev>
+ <20240205200529.546646-5-kent.overstreet@linux.dev>
+ <20240205222732.GO616564@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc3fce1400541a269ecee2b2ee33d8f1ec8e52e7.camel@linux.intel.com>
+In-Reply-To: <20240205222732.GO616564@frogsfrogsfrogs>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Feb 05, 2024 at 11:37:16AM -0800, David E. Box wrote:
-> On Fri, 2024-02-02 at 18:05 -0600, Bjorn Helgaas wrote:
-> > On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
-> ...
-
-> > > @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev,
-> > > void *userdata)
-> > >  	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-> > >  	pci_info(pdev, "VMD: Default LTR value set by driver\n");
+On Mon, Feb 05, 2024 at 02:27:32PM -0800, Darrick J. Wong wrote:
+> On Mon, Feb 05, 2024 at 03:05:15PM -0500, Kent Overstreet wrote:
+> > Add a new ioctl for getting the sysfs name of a filesystem - the path
+> > under /sys/fs.
 > > 
-> > You're not changing this part, and I don't understand exactly how LTR
-> > works, but it makes me a little bit queasy to read "set the LTR value
-> > to the maximum required to allow the deepest power management
-> > savings" and then we set the max snoop values to a fixed constant.
+> > This is going to let us standardize exporting data from sysfs across
+> > filesystems, e.g. time stats.
 > > 
-> > I don't think the goal is to "allow the deepest power savings"; I
-> > think it's to enable L1.2 *when the device has enough buffering to
-> > absorb L1.2 entry/exit latencies*.
+> > The returned path will always be of the form "$FSTYP/$SYSFS_IDENTIFIER",
+> > where the sysfs identifier may be a UUID (for bcachefs) or a device name
+> > (xfs).
 > > 
-> > The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set this to
-> > the platform's maximum supported latency or less," so it seems like
-> > that value must be platform-dependent, not fixed.
+> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: Dave Chinner <dchinner@redhat.com>
+> > Cc: "Darrick J. Wong" <djwong@kernel.org>
+> > Cc: Theodore Ts'o <tytso@mit.edu>
+> > Cc: Josef Bacik <josef@toxicpanda.com>
+> > ---
+> >  fs/ioctl.c              | 17 +++++++++++++++++
+> >  include/linux/fs.h      |  1 +
+> >  include/uapi/linux/fs.h |  5 +++++
+> >  3 files changed, 23 insertions(+)
 > > 
-> > And I assume the "_DSM for Latency Tolerance Reporting" is part of the
-> > way to get those platform-dependent values, but Linux doesn't actually
-> > use that yet.
+> > diff --git a/fs/ioctl.c b/fs/ioctl.c
+> > index 858801060408..cb3690811d3d 100644
+> > --- a/fs/ioctl.c
+> > +++ b/fs/ioctl.c
+> > @@ -776,6 +776,20 @@ static int ioctl_getfsuuid(struct file *file, void __user *argp)
+> >  	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
+> >  }
+> >  
+> > +static int ioctl_getfssysfsname(struct file *file, void __user *argp)
 > 
-> This may indeed be the best way but we need to double check with our
-> BIOS folks.  AFAIK BIOS writes the LTR values directly so there
-> hasn't been a need to use this _DSM. But under VMD the ports are
-> hidden from BIOS which is why we added it here. I've brought up the
-> question internally to find out how Windows handles the DSM and to
-> get a recommendation from our firmware leads.
+> ackpthspacesplease.
+> 
+> "ioctl_get_fs_sysfs_name"?
 
-We want Linux to be able to program LTR itself, don't we?  We
-shouldn't have to rely on firmware to do it.  If Linux can't do
-it, hot-added devices aren't going to be able to use L1.2, right?
+It did feel a bit trolling writing that :)
 
-Bjorn
+> 
+> > +{
+> > +	struct super_block *sb = file_inode(file)->i_sb;
+> > +
+> > +	if (!strlen(sb->s_sysfs_name))
+> > +		return -ENOIOCTLCMD;
+> > +
+> > +	struct fssysfsname u = {};
+> > +
+> > +	snprintf(u.name, sizeof(u.name), "%s/%s", sb->s_type->name, sb->s_sysfs_name);
+> 
+> Does this actually guarantee that there will be a trailing null in the
+> output?  It's really stupid that GETFSLABEL can return an unterminated
+> string if the label is exactly the size of the char array.
+
+It's snprintf, so yes.
+
+(queue another "why are we using raw char arrays everywhere in 2024"
+rant, I have to double check this stuff too).
+
+> 
+> > +
+> > +	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
+> > +}
+> > +
+> >  /*
+> >   * do_vfs_ioctl() is not for drivers and not intended to be EXPORT_SYMBOL()'d.
+> >   * It's just a simple helper for sys_ioctl and compat_sys_ioctl.
+> > @@ -861,6 +875,9 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+> >  	case FS_IOC_GETFSUUID:
+> >  		return ioctl_getfsuuid(filp, argp);
+> >  
+> > +	case FS_IOC_GETFSSYSFSNAME:
+> 
+> File System Ioctl Get File System System File System Name.
+> 
+> Yuck.
+> 
+> FS_IOC_GETSYSFSPATH?
+> 
+> Also, do we want to establish that this works for /sys/fs and
+> /sys/kernel/debug at the same time?
+
+Yeah, I'll add a comment to that effect.
+
+> 
+> > +		return ioctl_getfssysfsname(filp, argp);
+> > +
+> >  	default:
+> >  		if (S_ISREG(inode->i_mode))
+> >  			return file_ioctl(filp, cmd, argp);
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index ff41ea6c3a9c..7f23f593f17c 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -1258,6 +1258,7 @@ struct super_block {
+> >  	char			s_id[32];	/* Informational name */
+> >  	uuid_t			s_uuid;		/* UUID */
+> >  	u8			s_uuid_len;	/* Default 16, possibly smaller for weird filesystems */
+> > +	char			s_sysfs_name[UUID_STRING_LEN + 1];
+> >  
+> >  	unsigned int		s_max_links;
+> >  
+> > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> > index 0389fea87db5..6dd14a453277 100644
+> > --- a/include/uapi/linux/fs.h
+> > +++ b/include/uapi/linux/fs.h
+> > @@ -78,6 +78,10 @@ struct fsuuid2 {
+> >  	__u8        fsu_uuid[16];
+> >  };
+> >  
+> > +struct fssysfsname {
+> > +	__u8			name[64];
+> > +};
+> > +
+> >  /* extent-same (dedupe) ioctls; these MUST match the btrfs ioctl definitions */
+> >  #define FILE_DEDUPE_RANGE_SAME		0
+> >  #define FILE_DEDUPE_RANGE_DIFFERS	1
+> > @@ -231,6 +235,7 @@ struct fsxattr {
+> >  #define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
+> >  #define FS_IOC_GETFSUUID		_IOR(0x94, 51, struct fsuuid2)
+> >  #define FS_IOC_SETFSUUID		_IOW(0x94, 52, struct fsuuid2)
+> > +#define FS_IOC_GETFSSYSFSNAME		_IOR(0x94, 53, struct fssysfsname)
+> 
+> 0x94 is btrfs, don't add things to their "name" space.
+
+Can we please document this somewhere!?
+
+What, dare I ask, is the "namespace" I should be using?
