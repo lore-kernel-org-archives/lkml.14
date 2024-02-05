@@ -1,141 +1,82 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0481798E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 10:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9267517575;
+	Mon,  5 Feb 2024 10:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707129140; cv=none; b=kOpSG+eidnRyQPvA1fFy33A6a9j0LoEZuSsPpQmsiXkM5sObgTxZc1UiDxuA7TCyk1vsvFN/AFsy+q2kqdIgMbXZrlZy+f7gSaBsOPrvhfJrRy60PfXTzHIYTNXLJVqBYqIE7l4ZZ9Cbghtb5PkOF17QHuR6+FyBEtX4pzgQDfc=
+	t=1707129504; cv=none; b=HczjSbV0gM0kqwGczz/c3vakOVE/8Kfj/un6xmQJOpunwdVsxLSXHBu1aZc1x5NO0nYXQf9D6t8+kj2Hiu5wcP/pd6250s9k2/OlHHCmuL03sTqz+eC4GDLq7r0vKyNdb0orjAOPq1BOs8HMfYnNn1AMEfmr2+LHzzQ8PGHo2N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707129140; c=relaxed/simple;
-	bh=MFOE+nUaSwDTYdIw9JQlFvPuda2tfFqnXYWlhZRBQXc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=N9mPevaxKDIlPT0Q2q/6Hc3z+w/V+/Gldp41JPvMvb04GUxyeiZi725P3/YDwD1ML2GPfRHjnQYJuCHrWZiexqoAkj3ZUFXd7UOnE0vhpZIMK1nsInE7G13xr1pfZUhIZ210dfb8RyaW/3kRuWJoJ/ralFcCk2yWSTZl/pQXOCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HMRYX5pd; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HMRYX5pd"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240205103216epoutp023e3677d54ca02dfb53c80f95e117e0fc~w8Oebxzfb1458614586epoutp02K
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 10:32:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240205103216epoutp023e3677d54ca02dfb53c80f95e117e0fc~w8Oebxzfb1458614586epoutp02K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707129136;
-	bh=rTfeTZ1ggn+RSJzom8PUIzN6CDAju1vOdXUC/7MJkyo=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=HMRYX5pdwH8IpHuy9SxI15wo75ZVsGXkYXTDa+vUksylHbMYGooYViChaxBmyvhZP
-	 UMttth/AzIGoj9cUyrUN4ynrLbbmA864r6LHlY9v4gd8kxGdIWbBeXr6dFFEyxpyfk
-	 eX5B3SAYN7ZO9UztYfBNeHRuqXkcDtHNLqdegtqw=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240205103215epcas5p25b3cebc15ff98c8ef461994fdb5193aa~w8OeEttbK0949909499epcas5p25;
-	Mon,  5 Feb 2024 10:32:15 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4TT2kQ1cvxz4x9Px; Mon,  5 Feb
-	2024 10:32:14 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2B.25.09634.E29B0C56; Mon,  5 Feb 2024 19:32:14 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240205082631epcas5p170b45d20431bfe0b9410caf470216e92~w6groBMcR1289912899epcas5p1X;
-	Mon,  5 Feb 2024 08:26:31 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240205082631epsmtrp19edb53b67162d04dbd76a9e66613707b~w6grm3anV2306123061epsmtrp1U;
-	Mon,  5 Feb 2024 08:26:31 +0000 (GMT)
-X-AuditID: b6c32a49-eebff700000025a2-b6-65c0b92e133c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	95.79.07368.7BB90C56; Mon,  5 Feb 2024 17:26:31 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240205082629epsmtip160ca2a4b599a9d600f44baffbcea11da~w6gqK6xcr2432124321epsmtip1S;
-	Mon,  5 Feb 2024 08:26:29 +0000 (GMT)
-From: Tamseel Shams <m.shams@samsung.com>
-To: alim.akhtar@samsung.com, linux-fsd@tesla.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tamseel Shams
-	<m.shams@samsung.com>
-Subject: [PATCH v2] arm64: dts: fsd: Add fifosize for UART in Device Tree
-Date: Mon,  5 Feb 2024 13:56:25 +0530
-Message-Id: <20240205082625.39259-1-m.shams@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7bCmlq7ezgOpBk+2sFo8mLeNzWLN3nNM
-	FvOPnGO16HvxkNli0+NrrBYPX4VbXN41h81ixvl9TBZ3WxezW7TuPcLuwOWxaVUnm8eda3vY
-	PDYvqffo27KK0eNf01x2j8+b5ALYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
-	zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBTo
-	FSfmFpfmpevlpZZYGRoYGJkCFSZkZ5xfdpCtoJe9omnzLZYGxjusXYycHBICJhL7d+xg7mLk
-	4hAS2M0o0XDsBRuE84lR4tqrlVCZb4wS577dZoRpOX+5gxUisZdR4tW/2ewgCSGBViaJBdOD
-	uhg5ONgENCWOn+cGCYsI1En0bjkBNpVZYB2jxN+1C1hAEsICnhI/D30Bs1kEVCV29ixmB+nl
-	FbCQmPlbBGKXvMTqDQfAjpAQOMUucWPaT6i7XSRWfFrJDmELS7w6vgXKlpJ42d8GZadLzH3Y
-	ywRhF0gs2/UdKm4vceDKHBaQXcxAd67fpQ8RlpWYemodWDmzAJ9E7+8nUK28EjvmwdiKEv93
-	90ONEZd4t2IK1DkeEtf/vmODBEOsxMIb21kmMMrOQtiwgJFxFaNkakFxbnpqsWmBYV5qOTye
-	kvNzNzGCk5uW5w7Guw8+6B1iZOJgPMQowcGsJMJrtuNAqhBvSmJlVWpRfnxRaU5q8SFGU2CQ
-	TWSWEk3OB6bXvJJ4QxNLAxMzMzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamPI2
-	rFF0P+sfl7xBf5Kd1e99s+efy1HhO3U+VpM/SOrCxKuVqUd7HMut/JmXXtm6quj820Pp7z9+
-	VBNcn9LJyn7TLI7nT57kUo3nwW53L58zv9ndJ/3jc9DTrm+tMbXhd8yer+Qo6jgoEPntQpFc
-	f3b9q6VuPHvm5s/+eblifWRv38KJs9dN27Zl7XHVIPV27/L4km92kxtN303fPXfvoSzxhsv6
-	OuHWX5aUdtUlFvxe1n7Y41pGi43CDre+G/F+67VzZl5Yaxjo0RtlIaUnIXpSeukF283dRtlC
-	3gUv1EUeyllf38e5IvPoBYUwqQUdDvP/vlj75sffRezSlzdfdz22++BLx1cLDex1ir8/llFi
-	Kc5INNRiLipOBADV1hCF9wMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprALMWRmVeSWpSXmKPExsWy7bCSnO722QdSDVq/8Vs8mLeNzWLN3nNM
-	FvOPnGO16HvxkNli0+NrrBYPX4VbXN41h81ixvl9TBZ3WxezW7TuPcLuwOWxaVUnm8eda3vY
-	PDYvqffo27KK0eNf01x2j8+b5ALYorhsUlJzMstSi/TtErgyzi87yFbQy17RtPkWSwPjHdYu
-	Rk4OCQETifOXO4BsLg4hgd2MEqeOzWeCSIhLTPu1nxHCFpZY+e85O0RRM5PEvxWPmLsYOTjY
-	BDQljp/nBomLCLQwSqy+fgKsmVlgE6PEg/1cILawgKfEz0NfWEBsFgFViZ09i9lBenkFLCRm
-	/haBmC8vsXrDAeYJjDwLGBlWMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefnbmIEB5qWxg7G
-	e/P/6R1iZOJgPMQowcGsJMI7QXhvqhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFewxmzU4QE0hNL
-	UrNTUwtSi2CyTBycUg1M4ozBsy9tNVx2esrm/qQ44VQl38122Y0+vcaPfZunTerz9QtzUxRQ
-	/KasnhKYKR491elo2qVb9YuDlHk+pPSXTP3M73vrrNL0Q1anG83cp6xPyGeyzjl6zGPXoo0K
-	kj/bJ1n7nKg1szc9zGn3viG634uhMXp50UyDM8WzfpVkv/66qvfMj9QQW+MwrosXP3kq/f6t
-	tnD+yYSp7OeNVuguYvrD9CXy6IyNLlp25/8fk99YdzK8P2dv/J0JGY8+r+Pf1b+E5e6vx4KH
-	BfOcevq6Oqv4c3e8ag81XLloEW+bsfPJM0sO33QI2SARVS52kfXj54y6ogmb/FSdlDI4t+ey
-	1my/fG3b47zWM/s+y7EqsRRnJBpqMRcVJwIA8yP2u6MCAAA=
-X-CMS-MailID: 20240205082631epcas5p170b45d20431bfe0b9410caf470216e92
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240205082631epcas5p170b45d20431bfe0b9410caf470216e92
-References: <CGME20240205082631epcas5p170b45d20431bfe0b9410caf470216e92@epcas5p1.samsung.com>
+	s=arc-20240116; t=1707129504; c=relaxed/simple;
+	bh=/QC8CAThaPcMyddwkEEQp4pIMysU99QBeEJYEmYBv94=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CEd1D07rZ+MSZPLYtMITUTS4BIyHPTVLGSxzZMAvTkHoZiQKfr60b2dvK3s6gJE7tskRn+e0Wu6yjsGv+5STk6Xw76JulBJ9WtQgiNhJVSYBfQ/0xywpf/SFi2QhtC2tVUyquVb+DKpf0WOsu1AKDhkMz13l9LRzTT+dP2+2MM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90635C433C7;
+	Mon,  5 Feb 2024 10:38:22 +0000 (UTC)
+Date: Mon, 5 Feb 2024 05:38:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: richard clark <richard.xnu.clark@gmail.com>
+Cc: nico@fluxnic.net, Mark Rutland <mark.rutland@arm.com>,
+ mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Question about the ipi_raise filter usage and output
+Message-ID: <20240205053819.3cf848f0@rorschach.local.home>
+In-Reply-To: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
+References: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-UART in FSD SoC has fifosize of 64 bytes.
-Set fifosize as 64 bytes for UART from Device Tree.
+On Mon, 5 Feb 2024 17:57:29 +0800
+richard clark <richard.xnu.clark@gmail.com> wrote:
 
-Signed-off-by: Tamseel Shams <m.shams@samsung.com>
----
- arch/arm64/boot/dts/tesla/fsd.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> Hi guys,
+> 
+> With the ipi_raise event enabled and filtered with:
+> echo 'reason == "Function call interrupts"' > filter, then the 'cat
+> trace' output below messages:
+> ...
+> insmod-3355    [010] ....1.. 24479.230381: ipi_raise:
+> target_mask=00000000,00000bff (Function call interrupts)
+> ...
+> The above output is triggered by my kernel module where it will smp
+> cross call a remote function from cpu#10 to cpu#11, for the
+> 'target_mask' value, what does the '00000000,00000bff' mean?
+>  ~~~~~~~~~~~~~~
 
-diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi b/arch/arm64/boot/dts/tesla/fsd.dtsi
-index aaffb50b8b60..047a83cee603 100644
---- a/arch/arm64/boot/dts/tesla/fsd.dtsi
-+++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
-@@ -601,6 +601,7 @@
- 			clocks = <&clock_peric PERIC_PCLK_UART0>,
- 				 <&clock_peric PERIC_SCLK_UART0>;
- 			clock-names = "uart", "clk_uart_baud0";
-+			samsung,uart-fifosize = <64>;
- 			status = "disabled";
- 		};
- 
-@@ -613,6 +614,7 @@
- 			clocks = <&clock_peric PERIC_PCLK_UART1>,
- 				 <&clock_peric PERIC_SCLK_UART1>;
- 			clock-names = "uart", "clk_uart_baud0";
-+			samsung,uart-fifosize = <64>;
- 			status = "disabled";
- 		};
- 
--- 
-2.17.1
+It's the CPU mask. bff is bits 101111111111 or CPUs = 0-9,11.
 
+
+> 
+> Another question is for the filter, I'd like to catch the IPI only
+> happening on cpu#11 *AND* a remote function call, so how to write the
+> 'target_cpus' in the filter expression?
+> 
+> I try to write below:
+> echo 'target_cpus == 11 && reason == "Function call interrupts"' >
+> events/ipi/ipi_raise/filter
+
+You mean when it is sent only to CPU 11? Not when the event is
+happening on CPU 11. Like the above example, the event was triggered on
+CPU 10, but the mask was for all the other CPUs.
+
+If you are looking for just CPU 11, you can do:
+
+  echo 'target_cpus == 0x800 && reason == "Function call interrupts"'
+
+
+> 
+> But the 'cat trace' doesn't show anything about cpu#11 IPI info,
+> although both the /proc/interrupts and the smp_processor_id() in the
+> remote function shows there's IPI sent to the cpu#11.
+> 
+
+
+-- Steve
