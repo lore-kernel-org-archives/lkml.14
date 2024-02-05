@@ -1,132 +1,72 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx10lb.world4you.com (mx10lb.world4you.com [81.19.149.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E634E1BC;
-	Mon,  5 Feb 2024 21:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7388A55E6E;
+	Mon,  5 Feb 2024 21:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707168451; cv=none; b=FD0W0X9SWcRGhuyL2fxAM24qOIYOmy+tS36jEt/GP6VOCo8bA8+4I78hvHnAeAuz0VNlbKoW2ENX5zyVo4IOOBtqYaPYLmkUy6/4GcaaZJSOtJGu6CZbImEamvkw/imUBzMnY/U8ZszFhIGp1EqL5uKBcrESFBFQAzXfojKxUz8=
+	t=1707168480; cv=none; b=gqpIJiSLO6+yWd0XE87hDfKoMTopqBnjuQsaKTHlmuLiVBtDmmLSpAMcSVfuNxRJaL23jxonSN3xiV9H+1Wvm4zyUR2M2CHQ97ELNRZ1OJBwG/9iiwJIm7jvPf9/mBUWUhTQ4iSC5ty9fj+GSyx1xlejBUB63ewr+gequ25mQPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707168451; c=relaxed/simple;
-	bh=WF79LcyptTYwzEhU/Gz6Jrq78t2eREqNKLqqvgDivhE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Zdtj2ME9RP4WNDmJ8XKyuhoNetlB/PxI/uM41Xqaz/zXuT4EKeKNJHGqrJ5r2oqCkwLI5ub1kB9//1DB1cF/LjcQVHtX99Ovm9sEi2eSHpxBEDh7i+DPeS/VA7ljR4prjQDNZFv52TNKnlEIIiNwtZ1H5I0qSbdZp15L78IHKig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E0XU/KjY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707168480; c=relaxed/simple;
+	bh=agcKveseb9lfBVqx8d6myKsRhGARFKeegN5jrHFVRMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KDD8kFlitkMK2EU0IiirhXQKgwFNyt+a1W54+iR8py63IaXxShY2O1qqNWkG5p/ortIRdgqviR3NUttfYO8rmluBCh3/IFpgRHY0+bAbZL+TYh54tfuq18ujX/IPXPlmHb9mr8ly6+8p4OI2ZMja4/JTMMOdhraIkdushBOCRZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=RxCnstMO; arc=none smtp.client-ip=81.19.149.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E0XU/KjY"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 415KZpZL013684;
-	Mon, 5 Feb 2024 21:27:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=80XiqQagWrXSjkbFB7IZMeTVBIcws+/+UsrZOrDK37I=; b=E0
-	XU/KjYVh5bclOJjOXgEj6T88+d0afhkJxj5YaelqQJ+m8FOEjWzsdu3CIHAI+ZIk
-	jcwrtkEBcGhxNA9Qho3kXxKyzNE3HbI8qLUZdGrl89ScoD8hFJP8p29DjDZH0D4W
-	SxB1pWPjN7t6dxhNPoX46jk/J3EPisOLhOpOYtlSSzUhHHdJqS3SmY9I25oCMAmt
-	mnpp5hbnmSXzctKtYbTmgxpSvAxDIpfRvXa9fQtWdh7Rrs08s3L07CJ7ac5suS9R
-	TGMIs2jrQk94HnbFTsZLYD7+JvjMU438r/HQ9KxgsNcp4fDa7/oAaZrym2m5ZysC
-	NSkqWMWXECqDA8u+dnOw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w32s1rqj6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Feb 2024 21:27:07 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 415LR6JQ011461
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 Feb 2024 21:27:06 GMT
-Received: from [10.110.7.251] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 5 Feb
- 2024 13:27:05 -0800
-Message-ID: <c5e9419d-1d16-4816-4fd0-c23c5eb358e1@quicinc.com>
-Date: Mon, 5 Feb 2024 13:26:59 -0800
+	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="RxCnstMO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=he8yop61Q/oM6FHfZWgijEzftDrOEirDa6XmewAxTv8=; b=RxCnstMO0/bvZ9uTkRL8FIpLcC
+	b4YwdcvpXnZC1kqpWGbWJfBU7ERIYN8hTidLVbvVfYrScp1dSfIAneTEc4l7XDR5YnDuw0nJOGxkT
+	9bDXJeqWYDc/7VdEchFDhujGfROHtcHPN+J1jBncfQfl4Kvze3X3vhOvhUETUPHq7qWI=;
+Received: from [88.117.50.204] (helo=[10.0.0.160])
+	by mx10lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1rX5ro-0001Io-26;
+	Mon, 05 Feb 2024 21:47:00 +0100
+Message-ID: <8a6c3c9a-0bff-40a0-aa0b-3032066b8d04@engleder-embedded.com>
+Date: Mon, 5 Feb 2024 21:47:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v13 20/53] ASoC: Add SOC USB APIs for adding an USB
- backend
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tsnep: Use devm_platform_get_and_ioremap_resource() in
+ tsnep_probe()
+To: Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Paolo Abeni <pabeni@redhat.com>, Yunsheng Lin <linyunsheng@huawei.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <29e9dc0f-5597-4fee-be5c-25a5ab4fe2dc@web.de>
 Content-Language: en-US
-To: =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?=
-	<amadeuszx.slawinski@linux.intel.com>,
-        <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-        <lgirdwood@gmail.com>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
-        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
-        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>
-References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
- <20240203023645.31105-21-quic_wcheng@quicinc.com>
- <2abb6c0b-ea66-4649-b205-bafe49340aee@linux.intel.com>
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <2abb6c0b-ea66-4649-b205-bafe49340aee@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kbmUi6lAuyvjf1WEfxhQ6nHGodNDySsr
-X-Proofpoint-ORIG-GUID: kbmUi6lAuyvjf1WEfxhQ6nHGodNDySsr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-05_15,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- suspectscore=0 bulkscore=0 phishscore=0 adultscore=0 spamscore=0
- mlxlogscore=756 malwarescore=0 lowpriorityscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402050160
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <29e9dc0f-5597-4fee-be5c-25a5ab4fe2dc@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-Hi Amadeusz,
+On 05.02.24 13:54, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Mon, 5 Feb 2024 13:43:14 +0100
+> 
+> A wrapper function is available since the commit 890cc39a879906b63912482dfc41944579df2dc6
+> ("drivers: provide devm_platform_get_and_ioremap_resource()").
+> Thus reuse existing functionality instead of keeping duplicate source code.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-On 2/5/2024 12:20 AM, Amadeusz Sławiński wrote:
-> On 2/3/2024 3:36 AM, Wesley Cheng wrote:
->> Some platforms may have support for offloading USB audio devices to a
->> dedicated audio DSP.  Introduce a set of APIs that allow for 
->> management of
->> USB sound card and PCM devices enumerated by the USB SND class driver.
->> This allows for the ASoC components to be aware of what USB devices are
->> available for offloading.
->>
->> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
->> ---
-> 
-> ...
-> 
->> +
->> +/**
->> + * snd_soc_usb_add_port() - Add a USB backend port
->> + * @dev: USB backend device
->> + * @priv: private data
->> + * @connection_cb: connection status callback
->> + *
->> + * Register a USB backend device to the SND USB SOC framework.  
->> Memory is
->> + * allocated as part of the USB backend device.
->> + *
->> + */
->> +int snd_soc_usb_add_port(struct snd_soc_usb *usb)
->> +{
->> +
->> +
-> 
-> Cosmetic, but why is there white space between start of function and 
-> body of function?
-> 
-
-Thanks for catching this.  Will fix it.
-
-Thanks
-Wesley Cheng
+Tested-by: Gerhard Engleder <gerhard@engleder-embedded.com>
