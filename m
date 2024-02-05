@@ -1,104 +1,140 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E33E481A7;
-	Mon,  5 Feb 2024 18:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2A9481B5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 18:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159065; cv=none; b=B+hk5lkv1VCtVW1toVlnwrP8CCg6lF/uKjDhoobz5MtqVdzf6AMwshZ69n+C985Uhlk2wpqaAkjLZzO+iVQgDqh0saB0pCSQDG/kxy9xnfJDmmYnxatW7gc3FXPna7KiRc4FnsMMzy7qMt8SmLSFt1xySWTY2kNaWykyj8tkX3k=
+	t=1707159096; cv=none; b=buvBOAgIZQF/lfrXuC5Jpu7Jo9XdClCGxc8H2y6tXQTzaG/3DdaM3zKVLaQowtDmQPJ7mQ4BFBeH404kkXqp6d01R41rc5a8g0i4uCwoXyjD+A5htGVV/eP2FgAw5RzCdns4EDGIAjZSdrsFf6YDIY7CMn72tJznQVo75bdKC3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159065; c=relaxed/simple;
-	bh=upqk38mFRyStMDt//TKFKUs+Ve4eIcUYsnW4DHzmzkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KQIOJx1gY8+aVlLyhdA9M7PHw/fcI1M/NeS3mmhlLDg5ynBFoeRol3XrwS4Tc2165icta4zTQ4TOUKl5BFCa6Fccwt57i5liR4syI1+Rvkh6OnZ5BKh9zJ3yfsY9MPINCapA5RH2EJsbf5ZwmC1su9DPs7ftkmnUpQ/AotNX5CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=sFQxMOR4; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1707159096; c=relaxed/simple;
+	bh=YRLvcN9CSCBV0BFZJgyI3M9B7d5hDjTdl+eOK8xw9TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhJ7yp/4MTcYh/cxrB/0yO3aYlOMquyWRLUyPWqfNQKjrVZoF+hJgfITu/inzM8hxhTMNtnY3dcd1uQYdQbUUDVMZDIBrXcu0SscqY8O2COeZqR1aE/AEtYAJ5PL8X6M2KmjzR5DRPoZuvapE3krlGYGgR/TGIltNorq+70i0cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=kI10tHfW; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="sFQxMOR4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707159046; x=1707763846; i=wahrenst@gmx.net;
-	bh=upqk38mFRyStMDt//TKFKUs+Ve4eIcUYsnW4DHzmzkk=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=sFQxMOR4lBl0ynbvvfjdFyUXoUBduM8Ehl7tP/w3+Pvv2H5tWP9HOgbJaNmUYiv4
-	 vEqWsjTolDiOQTep2/mVIqE+YC/dhGt6luzH+2bQP87xzc8gDKsQKrzklkdwEq2xq
-	 d5GTkmMXD0+izIxTGFLnRyWP6WGevCB8U7wr5Tat9Kye0ixp2XxD9wVspvmKBT9tF
-	 dlJ/ledji93moAbdAd7181kKa05zKrc/I5TIMsUDHh6EJqg8ZCLGr7ugQAo4kaxIQ
-	 iUZFYiaNMrKRMrZEP6rx1RBYZSKS/PvzLlNlISveAL6pgqYbaq8W/1miz4D1AVshX
-	 6Xmc6mrW21IgcrYyUg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MfHAB-1r4t2s3OHr-00gnns; Mon, 05
- Feb 2024 19:50:45 +0100
-Message-ID: <8736c115-e11c-41ca-85eb-7cd19a205068@gmx.net>
-Date: Mon, 5 Feb 2024 19:50:44 +0100
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="kI10tHfW"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d93f2c3701so24531845ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 10:51:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1707159094; x=1707763894; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OOjV1gXJ7yW6QwEyKkVtGPB0y6fpvUh/vBUx9bdiItE=;
+        b=kI10tHfWp4zAEYeu4x2+QcyIuhYCJtNhOjd077+nYImca8UtTWhi/c0Y7/ik63Y1hj
+         YIkwA0zfvrUryjfEDAP9wZ1FwAdmHJlO0jr7kVUVF+N+lU2j/oJw1rMjCPdsxQVS2Ea/
+         Nzn9vx2Bd2/8ouojdXpZah5q9XNLa0Lydghag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707159094; x=1707763894;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOjV1gXJ7yW6QwEyKkVtGPB0y6fpvUh/vBUx9bdiItE=;
+        b=HWUdvvZ6kufCbr7SqXr0U46gGJqfSccRp61KopOO3J7RPgZiN4XTq3LQCKEJkcu6SK
+         eIlHZT/cpWYhCivjaFXb7Z/kI7yGTvF/1pU2wuM+EpWR0G4Y65dCK+KGCT8QdMtCdbye
+         bMfQiWlerdPNQ48xgi3ea1DzG5mkLyFy3UHucGI57C3v0YjKewO9QgNUpBgVAoW89lW/
+         02qMAmus+qc4uyeEZlsPtPlR1YbYchEqfF2dBX6Tts4NrAz4lzNcX0syKrcyrh51K0UK
+         fPlCMrojui6mc2J58K1+zMGIM6+a7+tG4HDOlMzn1+oVCI6UbyIOTeqg1KsoT8rDErLG
+         4sgQ==
+X-Gm-Message-State: AOJu0Yy20MhByJUL+upkB9RKmALOCuTlW8yGaC0HtJLufcEXjuv7IP1Q
+	4X/jIvu5unp/PomsNDNFfHqm8QvWLt4WyK5y9pEO57AyLR2oMZ4RIvcrfGtPl8o=
+X-Google-Smtp-Source: AGHT+IHpVFCNoHwA10pfYXFqdcT5vM2l0+xFNFBhTBQjKZ74TWGiQprOTFulXZSLL1k7B78D0T1ZRg==
+X-Received: by 2002:a17:902:ed45:b0:1d9:2a26:d4fa with SMTP id y5-20020a170902ed4500b001d92a26d4famr442390plb.50.1707159094008;
+        Mon, 05 Feb 2024 10:51:34 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUV92h4DiOCBdCc6zj1PuI/ULHWjgYrzV4rTNn41DCqn+B9x6eWVUrk+ADYysx+vyi309dzHSfqjSiHER4MNGQ5IYQXaT78BDBQQ7ynb1H9CUhL1TVlrosSS7f1t8+JMnb6+7MBsbzaq7SmiwwEtIF2GTDiqOUCFjrBQll0xW7eDRXq9vjCUe3Cf6LzbGDxtpzQm0n7BI4p4tC6u/6px8l0sIUMMc1f0V8G9eB8GDbxox1beqo/1/M7d/aaRo9R76v72riHGX5wgcqA1C1jcEliFQcaRDYOX4N8pqADGcvq6hP1U5s6JmxvX2AMifpzDM5kdugY6DffjDfMfR/LuUjLZNuUt83rDKPnFWyN0uwrS9Z7yTx6cJflff5Jbrndl/+b+9TRRGDJs3FUUIYOTH6KMqo=
+Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id s1-20020a170902ea0100b001d958f8ab2bsm195912plg.107.2024.02.05.10.51.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Feb 2024 10:51:33 -0800 (PST)
+Date: Mon, 5 Feb 2024 10:51:30 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "Samudrala, Sridhar" <sridhar.samudrala@intel.com>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chuck.lever@oracle.com,
+	jlayton@kernel.org, linux-api@vger.kernel.org, brauner@kernel.org,
+	davem@davemloft.net, alexander.duyck@gmail.com,
+	Wei Wang <weiwan@google.com>,
+	Amritha Nambiar <amritha.nambiar@intel.com>
+Subject: Re: [net-next 0/3] Per epoll context busy poll support
+Message-ID: <20240205185130.GB10463@fastly.com>
+References: <20240124025359.11419-1-jdamato@fastly.com>
+ <CANn89i+YKwrgpt8VnHrw4eeVpqRamLkTSr4u+g1mRDMZa6b+7Q@mail.gmail.com>
+ <5faf88de-5063-421f-ad78-ad24d931fd17@intel.com>
+ <20240202032806.GA8708@fastly.com>
+ <f0b4d813-d7cb-428b-9c41-a2d86684f3f1@intel.com>
+ <20240202102239.274ca9bb@kernel.org>
+ <20240202193332.GA8932@fastly.com>
+ <20240202115828.6fd125bf@kernel.org>
+ <20240202202344.GA9283@fastly.com>
+ <20240202171539.7347cb01@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/12] bcm2835-dma: Add proper 40-bit DMA support
-Content-Language: en-US
-To: Andrea della Porta <andrea.porta@suse.com>, Vinod Koul
- <vkoul@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Maxime Ripard <maxime@cerno.tech>, Dom Cobley <popcornmix@gmail.com>,
- Phil Elwell <phil@raspberrypi.com>
-References: <cover.1706948717.git.andrea.porta@suse.com>
- <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ii4aBdJ8kdgErTxKfxhBRtdB3pc6lV5wLFe/sAgqQ5AnKXMZvTW
- xMXVLy0c+DxqhOMD/AFraT41Xb+d8vrvLNpFSkzAbphr2r6bfz2o++cW6w/ZOIETZhPGbpK
- HVfc8q04onLVVVQobyvuO5MLTBJgtihAnVU6uGh4HPly9T2BsUgXwEhBT0jXewpkEhGaM28
- 6krDfJfsk2uQxgToU+e0w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DS/kBFCe9ac=;ckCKwTG7+MtxefQmnJZhkuFh7ss
- O720MPV88X09bbKqI6InGNRGhtgcHyUBJE7TIOss7ANe++XhLLqLvWoQq0PQFdkSHrxGw71bU
- M5PoH/MsQ6c68EP/wSYCVek/0vv+XGuPQcIAhLVSkLF8yeMcJtseJ06OhSMTvYhrWdOQmZj2m
- fUZQmhKPHUetv4/WsV0CUu+A349KmkzcmTb2873yNf2R+wnQwsG6nDDZBrY4WAUk1I5Bz4KaJ
- 3cMyU59cK5O55RMeaFY7WheUG6d/ssP3Yisy0Du5CfVxxJe+HrDBboNvqlAP4p/qQYmNiv+Wd
- dSyYs0FkSLNCBFRhiu28i19+c806LwFwxNfLYasWkkbc7aVVofuRdmxSF9uTXWWWK0F7TooP+
- mC5bDPexDDH7W5ReXeNlcqL2QFebDUbCsKXDIP4BclZbxK4a06Z8lHsz+KcuBTYeh5abg4I5m
- DdYbrJxPNUUG2JwCWyAgUn/yqYOyDhe8nEicmS4m7JJtug/VKAu2VqOGPuySGB4w5pvy3Z/sI
- kcEc87Ljgu0E1f32gJ5NMxH4U0/+V0Rkn3YeSoPTKAQ/QFkSchR3ioBx/+n6qvdbSQrqbW3xH
- RsSFYP9SIssvnmFOsvotYufyd0zm1ncVv9ti0Gy8MLx/6jtAzvC+cQVTz9/A8tkxn7jSYzL+b
- o1rrkwDEbF57SZbG7EQaBHwDusI9BNne9Dyio3bsKC/r45YieRBM1SryTn0134LcsWBNw2dvZ
- V2e0j4joJhMIUt/OVbugJV3Yt2vW1Lpfn9iKNquEoyyOh1uOiWkWN4c7kY2iIJIPyY/6b7kbp
- HibJYq8+Tar8sMVbmVMcWgJz3UYHPYTBjDVCtffnl0Cxo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202171539.7347cb01@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 
-Hi Andrea,
+On Fri, Feb 02, 2024 at 05:15:39PM -0800, Jakub Kicinski wrote:
+> On Fri, 2 Feb 2024 12:23:44 -0800 Joe Damato wrote:
+> > > Did you see SO_PREFER_BUSY_POLL by any chance? (In combination with
+> > > gro_flush_timeout IIRC). We added it a while back with Bjorn, it seems
+> > > like a great idea to me at the time but I'm unclear if anyone uses it 
+> > > in production..  
+> > 
+> > I have seen it while reading the code, yes. I think maybe I missed
+> > something about its interaction with gro_flush_timeout. In my use case,
+> > the machine has no traffic until after the app is started.
+> > 
+> > In this case, I haven't needed to worry about regular NAPI monopolizing the
+> > CPU and preventing busy poll from working.
+> > 
+> > Maybe I am missing something more nuanced, though? I'll have another look
+> > at the code, just incase.
+> 
+> We reused the gro_flush_timeout as an existing "user doesn't care if
+> packets get delayed by this much in worst case" value. If you set
+> SO_PREFER_BUSY_POLL the next time you busy pool the NAPI will be marked 
+> as "already scheduled" and a timer is set (to gro_flush_timeout).
+> If NIC IRQ fires before gro_flush_timeout it gets ignored, because NAPI
+> is already marked as scheduled.
+> If you busy poll again the timer gets postponed for another
+> gro_flush_timeout nsec.
+> If timer fires we go back to normal NAPI processing.
 
-[add Dave]
+Ah, I see. From my reading of the code in busy_poll_stop (which could be
+wrong), defer_hard_irqs_count must also be non-zero to postpone the timer.
 
-Am 04.02.24 um 07:59 schrieb Andrea della Porta:
-> From: Phil Elwell <phil@raspberrypi.org>
->
-> BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
-> to access the full 4GB of memory on a Pi 4.
->
-> Cc: Phil Elwell <phil@raspberrypi.org>
-> Cc: Maxime Ripard <maxime@cerno.tech>
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-mainlining isn't that simple by sending just the downstream patches to
-the mailing list. In many cases there reasons why this hasn't been
-upstreamed yet.
+Is that right?
 
-In my opinion just this feature is worth a separate patch series. In
-2021 i already send an initial version, which tried to implement it in a
-cleaner & maintainabler way [1]. In the meantime Dave Stevenson from
-Raspberry Pi wrote that he also wanted to work on this. Maybe you want
-to work on this together?
+If so, I think the tricky thing with this is that these settings are
+system-wide, so they'd affect non-busy poll apps, too.
 
-[1] -
-https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3ad711=
-46c@i2se.com/T/
+I think in the ideal case being able to set these on a per-NAPI basis would
+be very helpful. Maybe something for me to try working on next.
+
+> The idea is that you set gro_flush_timeout to some high value, like 
+> 10 msec, and expect your app to poll more often than every 10 msec. 
+
+Yea, that makes sense.
+
+> Then the normal NAPI processing will never kick in, and there will 
+> be only 1 NIC IRQ after which the HW IRQ remains masked.
+> With high coalescing timer you technically still get an IRQ every
+> so often and interrupt the app. Worst case (UDP flood) you may even
+> get into an overload where the app gets starved out completely..
+
+Yup, this is true. I had been using a modified version of a patch from a
+research paper to avoid enabling NIC IRQs [1][2], but I think making
+defer_hard_irqs_count and gro_flush_timeout per NAPI parameters would make
+more sense.
+
+[1]: https://gitlab.uwaterloo.ca/p5cai/netstack-exp/-/raw/master/kernel-polling-5.15.79-base.patch?ref_type=heads
+[2]: https://dl.acm.org/doi/pdf/10.1145/3626780
