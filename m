@@ -1,139 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9505044C86;
-	Mon,  5 Feb 2024 17:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CE847794
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707154590; cv=none; b=nTdF61Ry5P9dasTcpNNOu1phSlNlrF78o1V2nmSlR8asQxpfZcF5or2cLtIiNK0XqecE6rw2vODsHgR5+P/SHM/e8hnJR1m9c5z76vkYnE3VGPehw6V3OTtDHOfJpFnNZsleQssk1iX0u4Zbw0r+KmZGKvL8cx6ZwUl6239xQXU=
+	t=1707154712; cv=none; b=nd2TqZMwJTVNEzBxZUWgwF7pyab9hrKJVY+5WCSriKARNvv1MZTAKTk8ZaO4HjB660VCXHBU7jrtiSQW1OF2YGbP6M2HjgU9JHeMI5aQR5YU4SUQO22MlJFi8K4E3i6by9c9LuE6iG8VSmWSJvY7cIf4kUk0gXhVlZCNuCgtxmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707154590; c=relaxed/simple;
-	bh=oug84/jAh2q4sTWNbFpcEEy9Xv7ih9u0DpiD3rJtKas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0SWdxuiCxCjjmH09sZj32anNm3wyaxjxEN7vfcpZPf/2p1a/5CaTghQ3Ya+DZBCIQQlAK3I7vypKn+rlUz9AgNsefyfsqtSXiCuER0AH5EwK+IlYWtldCS03Udq6wFl90Fh5fBgGn7oxZ0P+x/0tc5tPeILQk4T2c4lad1WFIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLpQhohu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLpQhohu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF56AC433F1;
-	Mon,  5 Feb 2024 17:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707154590;
-	bh=oug84/jAh2q4sTWNbFpcEEy9Xv7ih9u0DpiD3rJtKas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TLpQhohu2fCSUvObkfP17e/wahSiCKaz20Q+MpYXn5UisvzkvHLmBnA/55waBi11k
-	 HWXg1Wvc1S2jBz6Tew0FsL5oiZD8GqzBw48UNkBZITLZSLcsGi0PWfK2iC50VYETfz
-	 z0wxHvbb7Zi89mTEys4JmQpcapbP32OOrDw5E6+awYS/76LIiBgm/jJISoi+FpVz62
-	 C+lQ1FwsPVoyTsoV7fiJisHfgfSDf2CBr4yCvLiwCanzABP0ctsZjmMbHGCKgjOkrx
-	 mWEgJaUpw0uw+0bhsUUYhCA/zAPKk/N0Vqe5kmWXwYiTg5ROXI/vPuuQ/rWv2Gqay7
-	 CZGd67xbnEUtQ==
-Date: Mon, 5 Feb 2024 17:36:26 +0000
-From: Rob Herring <robh@kernel.org>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	kernel-team@android.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] of: property: Improve finding the consumer of a
- remote-endpoint property
-Message-ID: <20240205173626.GA3657127-robh@kernel.org>
-References: <20240202101326.876070-1-saravanak@google.com>
- <20240202101326.876070-2-saravanak@google.com>
+	s=arc-20240116; t=1707154712; c=relaxed/simple;
+	bh=+63XEcuL9/gnnYBEnW0AUIQGWHH7s4ALuOwLU+Fi/PQ=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nKz8h8fpDCgFlnTnmISpHj8d0kK0rpN372JzwQ+hb7JS8rWtDM/wVC+nPbAKOAVtTic/DbtmRWfBWjRqRuWuQb4ILVaJAHQ3TD5AhfE1lJhoXSoTEBS5Pgygo4sohsat3UuoCTXjiBE8rzgqbh/1ikyYyp1o5vKoa5Y4k9YjgV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id CD6321A0AFF;
+	Mon,  5 Feb 2024 17:38:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf17.hostedemail.com (Postfix) with ESMTPA id 6914C1B;
+	Mon,  5 Feb 2024 17:38:27 +0000 (UTC)
+Message-ID: <cea9bc906796cdbfdd85a8c36ea5eb11a25979a7.camel@perches.com>
+Subject: Re: [PATCH 2/2] checkpatch: minor whitespace changes for readability
+From: Joe Perches <joe@perches.com>
+To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org, 
+	akpm@linuxfoundation.org
+Date: Mon, 05 Feb 2024 09:38:25 -0800
+In-Reply-To: <20240203195527.212505-3-jim.cromie@gmail.com>
+References: <20240203195527.212505-1-jim.cromie@gmail.com>
+	 <20240203195527.212505-3-jim.cromie@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202101326.876070-2-saravanak@google.com>
+X-Rspamd-Queue-Id: 6914C1B
+X-Stat-Signature: f4ofds1wqg3uyyaqbmxjd5cej5r6oh7y
+X-Rspamd-Server: rspamout04
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/VrpeVGTuinPBkeQ4nkXS5lR4SUuqwcoM=
+X-HE-Tag: 1707154707-834100
+X-HE-Meta: U2FsdGVkX1+ex1aeBuOSLw9+pIvy/RzSUFLIu1atr6hkCgeRmVeF84Vh0NytG/14i8Pzmr2dNytpU7U3C4trfv7VibxvOjOQrTa4S0PhEOCthCW7NBDUo12Vld7ZooTBMZKSqAU0kzyNyEbCcVs0/W/GQaTfyAFP0sP99porpoOj4XmtZ/AZhKeZDqENG+QU3lxZ3IIgDxJDrWJlPWpb0if/aw7WGmKVK8JzvvIe4fn9ZM+Ww3DP+xXlMlHGk+CyJAIfZgLzkNedwf0RXJE4DuiLPbgoDFgTlnc6pyFe3podaM4uvjFqt+e7o4Wt/4M2dtyviuhP1on2MNlcB1tZ3OZrSI4rl1F9
 
-On Fri, Feb 02, 2024 at 02:13:24AM -0800, Saravana Kannan wrote:
-> We have a more accurate function to find the right consumer of a
-> remote-endpoint property instead of searching for a parent with
-> compatible string property. So, use that instead. While at it, make the
-> code to find the consumer a bit more flexible and based on the property
-> being parsed.
-> 
-> Fixes: f7514a663016 ("of: property: fw_devlink: Add support for remote-endpoint")
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+On Sat, 2024-02-03 at 12:55 -0700, Jim Cromie wrote:
+> Change the per-patch report format slightly, so its more paragraphic,
+> and easier to peruse/scan.
+>=20
+> OLD FORM:
+>=20
+> 0001-checkpatch-report last line, looks part of 0002 has no ...
+> --------------------------------------------------------------
+> 0002-checkpatch-minor-whitespace-changes-for-readability.patch
+> --------------------------------------------------------------
+> total: 0 errors, 0 warnings, 15 lines checked
+>=20
+> 0002-checkpatch-minor-whitespace-changes-for-readability.patch has no ...
+> --------------------------------------------------------------
+>=20
+> NEW FORM:
+>=20
+> --------------------------------------------------------------
+> 0002-checkpatch-minor-whitespace-changes-for-readability.patch
+> --------------------------------------------------------------
+> total: 0 errors, 0 warnings, 15 lines checked
+> 0002-checkpatch-minor-whitespace-changes-for-readability.patch
+>  has no obvious style problems and is ready for submission.
+>=20
+> --------------------------------------------------------------
+>=20
+> For the optimum (warning free) patchset, the new report format is a
+> series of single paragraphs (with the --- banners), one for each patch
+> in the series.  This is trivial to scan/peruse, and is also more
+> visually distinct from warning/error reports.
+>=20
+> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 > ---
->  drivers/of/property.c | 52 +++++++++++++------------------------------
->  1 file changed, 15 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 641a40cf5cf3..ba374a1f2072 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1063,36 +1063,6 @@ of_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
->  	return of_device_get_match_data(dev);
->  }
->  
-> -static struct device_node *of_get_compat_node(struct device_node *np)
-> -{
-> -	of_node_get(np);
-> -
-> -	while (np) {
-> -		if (!of_device_is_available(np)) {
-> -			of_node_put(np);
-> -			np = NULL;
-> -		}
-> -
-> -		if (of_property_present(np, "compatible"))
-> -			break;
-> -
-> -		np = of_get_next_parent(np);
-> -	}
-> -
-> -	return np;
-> -}
-> -
-> -static struct device_node *of_get_compat_node_parent(struct device_node *np)
-> -{
-> -	struct device_node *parent, *node;
-> -
-> -	parent = of_get_parent(np);
-> -	node = of_get_compat_node(parent);
-> -	of_node_put(parent);
-> -
-> -	return node;
-> -}
-> -
->  static void of_link_to_phandle(struct device_node *con_np,
->  			      struct device_node *sup_np)
->  {
-> @@ -1222,10 +1192,10 @@ static struct device_node *parse_##fname(struct device_node *np,	     \
->   *  parse_prop.prop_name: Name of property holding a phandle value
->   *  parse_prop.index: For properties holding a list of phandles, this is the
->   *		      index into the list
-> + * @get_con_dev: If the consumer node containing the property is never converted
-> + *		 to a struct device, implement this ops so fw_devlink can use it
-> + *		 to find the true consumer.
->   * @optional: Describes whether a supplier is mandatory or not
-> - * @node_not_dev: The consumer node containing the property is never converted
-> - *		  to a struct device. Instead, parse ancestor nodes for the
-> - *		  compatible property to find a node corresponding to a device.
->   *
->   * Returns:
->   * parse_prop() return values are
-> @@ -1236,8 +1206,8 @@ static struct device_node *parse_##fname(struct device_node *np,	     \
->  struct supplier_bindings {
->  	struct device_node *(*parse_prop)(struct device_node *np,
->  					  const char *prop_name, int index);
-> +	struct device_node *(*get_con_dev)(struct device_node *np);
->  	bool optional;
-> -	bool node_not_dev;
->  };
->  
->  DEFINE_SIMPLE_PROP(clocks, "clocks", "#clock-cells")
-> @@ -1328,6 +1298,11 @@ static struct device_node *parse_interrupts(struct device_node *np,
->  	return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.np;
->  }
->  
-> +static struct device_node *get_remote_endpoint_dev(struct device_node *np)
-> +{
-> +	return to_of_node(fwnode_graph_get_port_parent(of_fwnode_handle(np)));
+>  scripts/checkpatch.pl | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index dc17c6da3af2..cd249ae9abdd 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -7796,12 +7796,12 @@ EOM
+>  	}
+> =20
+>  	if ($quiet =3D=3D 0) {
+> -		print "\n";
+>  		if ($clean =3D=3D 1) {
+> -			print "$vname has no obvious style problems and is ready for submissi=
+on.\n";
+> +			print "$vname \n has no obvious style problems and is ready for submi=
+ssion.\n";
 
-DT APIs shouldn't depend on fwnode APIs.
+Space after filename / $vname isn't necessary.
 
-Otherwise, this series looks good.
+>  		} else {
+> -			print "$vname has style problems, please review.\n";
+> +			print "$vname \n has style problems, please review.\n";
+
+here too.
+
+>  		}
+> +		print "\n";
+>  	}
+>  	return $clean;
+>  }
+
