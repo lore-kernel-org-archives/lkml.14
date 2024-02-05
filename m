@@ -1,221 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7115A1CF90;
-	Mon,  5 Feb 2024 12:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1441CF90;
+	Mon,  5 Feb 2024 12:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134945; cv=none; b=Rv5otLtk6mraBspSEOTgwMZf2OWRpMwMa5nPMD3Th3wrVQsKf0evfXt+h7FRZNBxiN4WUr4YXhYTEXDhcTr7GTwlIKJGva8PHufcT/Ml8CCr8wIoUnjuCHVmRwG5ONNEddevI4RwSt7PvVh+y6y5+HEOfqnrVkG3Xg//ikHlEdc=
+	t=1707134969; cv=none; b=Leq3kpa1n4y3U104oj+8IK9UOg1xWlDU0ZYaU0qU0byRgUwX6NVWCzaiHwitrPk64QzIB6loy3o8zvgCfCNAJK3Tq1xoCKL0L1Ns+vXZGZi44RzZ9Y6E+2+m6FcLpSjF2o2Ky2DDpD6bWmg2fyRyxgzTLEnpjFzsg2V6/dVg5j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134945; c=relaxed/simple;
-	bh=5E7/z2Mru2OC7j/RzNtJjVcVj7QA3NKSvWiDl8UWntI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PJgrfPLLK97DbGJtVQYcFxcIMOzD5JZ7//Lppl76S+J7kAjz5Oqm7Lc84qV+azCGMRsHGQ12ln2Jm5MPxgxpBMWhiACyegJvIBG8wtQtz3ESGdlD7UwClegISU9q3Kg+0oxynshAEIKUekQZk/tq7LY8AU3boqhGnuN3ZK0znQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtwuUJzC; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707134969; c=relaxed/simple;
+	bh=rIS3Kq1SWOO0Zhnbi5PnG6r7kDJfMeM311Gm53usdsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEqJGQxnskE4z3j3MPjMbXnpdRECMnCnky6nsidpX4vpoDKawFplcQ9WmL6MlPkgnbtMpx7t0/Kyk6sdoEUNzhAhO3MJK1VMECZaSC7O/MagKQC1HqQ40OEd0hrQeSZvn+4WpeFfB9sPdDEiNmfHj9QxLrKK8EF70AdRqxzlG0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=Dcohv9Zm reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtwuUJzC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707134944; x=1738670944;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5E7/z2Mru2OC7j/RzNtJjVcVj7QA3NKSvWiDl8UWntI=;
-  b=FtwuUJzCxKvod8sZHWSGYJ1K8kP3b9kR06wq0iWfd6Y65yDxGCmofHJR
-   kPRRllfS1/+fj7ug+XGvxc/ONro2H8zSBO96k+/WvISDBfABETWntTJdJ
-   /GZVBqTNJPU7utArdOJJ4iqI+yFTeYF6y4nY7KQGf2qMt0LVFQVZb4fc+
-   fLUAsRO6amumzC3QSejPgHpKx/RRfvlMmeicQHrv1w/Tg2+KQofXIcAX2
-   V7Y0WXqmZ1iQjzZFENersutFCt0gRDMc+6k/ROzimkIgkb4Nqi0wFr/B9
-   1Aw/KrmsRmcH1oYH/0D4dQnkrpVZHnpmR782hou20hnLm1iiUtNPifr2N
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="4303572"
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="4303572"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:09:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="5446025"
-Received: from snestero-mobl.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.21.196])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:09:00 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: fenghua.yu@intel.com,
-	reinette.chatre@intel.com,
-	shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v4 5/5] selftests/resctrl: Add non-contiguous CBMs CAT test
-Date: Mon,  5 Feb 2024 13:08:46 +0100
-Message-ID: <b341ecc8d1143932307708aff44ab90db3a91564.1707130307.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1707130307.git.maciej.wieczor-retman@intel.com>
-References: <cover.1707130307.git.maciej.wieczor-retman@intel.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="Dcohv9Zm"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d94323d547so34010485ad.3;
+        Mon, 05 Feb 2024 04:09:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707134966; x=1707739766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DLefc7pK7RFw+slAQXx+5sxeMi8rLG7VIsDmWRBNNj4=;
+        b=CIq+YDDMuidVL6k1eRx+s9l4JdKNEMe9YtKGo/ryW+A1YnCCgc6fUFU6yzYf2LPJvs
+         vn+1JUJOPHgALl57FPMfeIG+HO0CRdFeEXQpHhkoqvfWzWw4AGC5TdZtdWOUy5/753Ub
+         VEeEE7UvJd2gLb13o3EqKVAzD1T5oE859hNGj9huqmONMQRkZMLsrc3y0Fl8TQrJ8dEg
+         OY7Xbr02xGsAVCAemveYoQZD/c76QWXpXc5INcmYINaht1E0sKOzdBggPnLtW7O6WS7d
+         vfVRlge5FiDhB2GO+f6HVXrIwoMaUHH8uhDKxIkp3ucj2PHaBRCNIGMKL6Pjonp23hZG
+         A8dQ==
+X-Gm-Message-State: AOJu0YzxYvbNDWHZOhW3jUkhwKn3rIqJd1AitjOZhhCpyPrGqiEwCgLr
+	hq8V08Tcz6ce+I+PZC2gmpJhurZ9oMPNEeFGt5yBKvy1NjeOaNq8
+X-Google-Smtp-Source: AGHT+IFrYOIMiP3EBjQ3nn8jd9iPQ++Rmhlp00zJ2q9BETQ3jKHx72CnQjqjRJbiQ6SSobwcN+WNhA==
+X-Received: by 2002:a17:903:22c4:b0:1d9:8cd8:acff with SMTP id y4-20020a17090322c400b001d98cd8acffmr7337201plg.62.1707134966532;
+        Mon, 05 Feb 2024 04:09:26 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUP/czwzdKsfd/YxV57fPcqHupmEkuS0ucXZWYDNuIK2VLIR2MJQoI62z06hO+1lV1aJpuX7wfy41O3lX6ZXNvqZxBv+qVT348l5ETrgqIzrAuWmilV5xdZ0ZLs1CiqpOHUEHxPHTXY7cNZipCTq5PucPayGV9dck4EjojGJM4PYFP8BScerxKgdUFTgnOFXvJ2f9w=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id e6-20020a170902b78600b001d8a81e22cbsm6204351pls.14.2024.02.05.04.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 04:09:26 -0800 (PST)
+Date: Mon, 5 Feb 2024 09:09:55 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707134964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DLefc7pK7RFw+slAQXx+5sxeMi8rLG7VIsDmWRBNNj4=;
+	b=Dcohv9ZmrIkhJHT1VAYvE3tesaObT45lBMg4covJzOgHaqPIVv+acV70HlaZY2qT6De7U7
+	agkhlwF42FTe2kfo4z6MnQeuyvJML4w9UZ57f/gepD1xCjRLmiXckd+rrtaO5JUY1TJIj2
+	6hY2z7N10vSxUj9HHdKswJWXcZWWq41VMHQi135/NqzWschf5OW3g2bg9za15O0i6+ZBff
+	lYGWnAqR3j6gH3cnGN61cgFaFcdHlCH9Y4YOEQPtc1dDUodcOoS0rwxTlMNdd/v2+dIfSj
+	Zpa7NN5oDwwER+nZODQX4SBZhXm4A80XffkKy/3hhYcIhet8ji7ztmqGTA5PHA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] dma: dma-sysfs: make dma_subsys const
+Message-ID: <paxhpsxe6w5r3urpwr5jvj36mlg5zxtmpdj2tzqhahl7qt66zi@4ppfluzcsaso>
+References: <20240204-bus_cleanup-sh-v1-1-44ced951bb16@marliere.net>
+ <26d729c173a2ba0b536de4b41dacd403793d94c7.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26d729c173a2ba0b536de4b41dacd403793d94c7.camel@physik.fu-berlin.de>
 
-Add tests for both L2 and L3 CAT to verify the return values
-generated by writing non-contiguous CBMs don't contradict the
-reported non-contiguous support information.
+On  5 Feb 06:17, John Paul Adrian Glaubitz wrote:
+> Hi Ricardo,
+> 
+> On Sun, 2024-02-04 at 12:15 -0300, Ricardo B. Marliere wrote:
+> > Now that the driver core can properly handle constant struct bus_type,
+> > move the dma_subsys variable to be a constant structure as well,
+> > placing it into read-only memory which can not be modified at runtime.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> > ---
+> >  arch/sh/drivers/dma/dma-sysfs.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/sh/drivers/dma/dma-sysfs.c b/arch/sh/drivers/dma/dma-sysfs.c
+> > index 431bc18f0a41..9f666280d80c 100644
+> > --- a/arch/sh/drivers/dma/dma-sysfs.c
+> > +++ b/arch/sh/drivers/dma/dma-sysfs.c
+> > @@ -15,7 +15,7 @@
+> >  #include <linux/string.h>
+> >  #include <asm/dma.h>
+> >  
+> > -static struct bus_type dma_subsys = {
+> > +static const struct bus_type dma_subsys = {
+> >  	.name = "dma",
+> >  	.dev_name = "dma",
+> >  };
+> > 
+> > ---
+> > base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> > change-id: 20240204-bus_cleanup-sh-6d3c136da6bb
+> > 
+> > Best regards,
+> 
+> Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> 
+> Thanks for your patch. I will merge it into my linux-sh this weekend
+> after returning from FOSDEM, either this evening or tomorrow.
 
-Use a logical XOR to confirm return value of write_schemata() and
-non-contiguous CBMs support information match.
+Hi John,
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
-Changelog v4:
-- Return failure instead of error on check of cpuid against sparse_masks
-  and on contiguous write_schemata fail. (Reinette)
+thanks for reviewing. I was wondering if your tree should be listed
+under SUPERH in the MAINTAINERS file? I didn't find it there and had to
+do some searching.
 
-Changelog v3:
-- Roll back __cpuid_count part. (Reinette)
-- Update function name to read sparse_masks file.
-- Roll back get_cache_level() changes.
-- Add ksft_print_msg() to contiguous schemata write error handling
-  (Reinette).
+All the best,
+-	Ricardo.
 
-Changelog v2:
-- Redo the patch message. (Ilpo)
-- Tidy up __cpuid_count calls. (Ilpo)
-- Remove redundant AND in noncont_mask calculations (Ilpo)
-- Fix bit_center offset.
-- Add newline before function return. (Ilpo)
-- Group non-contiguous tests with CAT tests. (Ilpo)
-- Use a helper for reading sparse_masks file. (Ilpo)
-- Make get_cache_level() available in other source files. (Ilpo)
 
- tools/testing/selftests/resctrl/cat_test.c    | 81 +++++++++++++++++++
- tools/testing/selftests/resctrl/resctrl.h     |  2 +
- .../testing/selftests/resctrl/resctrl_tests.c |  2 +
- 3 files changed, 85 insertions(+)
-
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 39fc9303b8e8..20eb978e624b 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -294,6 +294,71 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 	return ret;
- }
- 
-+static int noncont_cat_run_test(const struct resctrl_test *test,
-+				const struct user_params *uparams)
-+{
-+	unsigned long full_cache_mask, cont_mask, noncont_mask;
-+	unsigned int eax, ebx, ecx, edx, ret, sparse_masks;
-+	char schemata[64];
-+	int bit_center;
-+
-+	/* Check to compare sparse_masks content to CPUID output. */
-+	ret = resource_info_unsigned_get(test->resource, "sparse_masks", &sparse_masks);
-+	if (ret)
-+		return ret;
-+
-+	if (!strcmp(test->resource, "L3"))
-+		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
-+	else if (!strcmp(test->resource, "L2"))
-+		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
-+	else
-+		return -EINVAL;
-+
-+	if (sparse_masks != ((ecx >> 3) & 1)) {
-+		ksft_print_msg("CPUID output doesn't match 'sparse_masks' file content!\n");
-+		return 1;
-+	}
-+
-+	/* Write checks initialization. */
-+	ret = get_full_cbm(test->resource, &full_cache_mask);
-+	if (ret < 0)
-+		return ret;
-+	bit_center = count_bits(full_cache_mask) / 2;
-+	cont_mask = full_cache_mask >> bit_center;
-+
-+	/* Contiguous mask write check. */
-+	snprintf(schemata, sizeof(schemata), "%lx", cont_mask);
-+	ret = write_schemata("", schemata, uparams->cpu, test->resource);
-+	if (ret) {
-+		ksft_print_msg("Write of contiguous CBM failed\n");
-+		return 1;
-+	}
-+
-+	/*
-+	 * Non-contiguous mask write check. CBM has a 0xf hole approximately in the middle.
-+	 * Output is compared with support information to catch any edge case errors.
-+	 */
-+	noncont_mask = ~(0xf << (bit_center - 2)) & full_cache_mask;
-+	snprintf(schemata, sizeof(schemata), "%lx", noncont_mask);
-+	ret = write_schemata("", schemata, uparams->cpu, test->resource);
-+	if (ret && sparse_masks)
-+		ksft_print_msg("Non-contiguous CBMs supported but write of non-contiguous CBM failed\n");
-+	else if (ret && !sparse_masks)
-+		ksft_print_msg("Non-contiguous CBMs not supported and write of non-contiguous CBM failed as expected\n");
-+	else if (!ret && !sparse_masks)
-+		ksft_print_msg("Non-contiguous CBMs not supported but write of non-contiguous CBM succeeded\n");
-+
-+	return !ret == !sparse_masks;
-+}
-+
-+static bool noncont_cat_feature_check(const struct resctrl_test *test)
-+{
-+	if (!resctrl_resource_exists(test->resource))
-+		return false;
-+
-+	return resource_info_file_exists(test->resource, "sparse_masks");
-+}
-+
- struct resctrl_test l3_cat_test = {
- 	.name = "L3_CAT",
- 	.group = "CAT",
-@@ -301,3 +366,19 @@ struct resctrl_test l3_cat_test = {
- 	.feature_check = test_resource_feature_check,
- 	.run_test = cat_run_test,
- };
-+
-+struct resctrl_test l3_noncont_cat_test = {
-+	.name = "L3_NONCONT_CAT",
-+	.group = "CAT",
-+	.resource = "L3",
-+	.feature_check = noncont_cat_feature_check,
-+	.run_test = noncont_cat_run_test,
-+};
-+
-+struct resctrl_test l2_noncont_cat_test = {
-+	.name = "L2_NONCONT_CAT",
-+	.group = "CAT",
-+	.resource = "L2",
-+	.feature_check = noncont_cat_feature_check,
-+	.run_test = noncont_cat_run_test,
-+};
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 2b9a3d0570c7..9e834496401c 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -209,5 +209,7 @@ extern struct resctrl_test mbm_test;
- extern struct resctrl_test mba_test;
- extern struct resctrl_test cmt_test;
- extern struct resctrl_test l3_cat_test;
-+extern struct resctrl_test l3_noncont_cat_test;
-+extern struct resctrl_test l2_noncont_cat_test;
- 
- #endif /* RESCTRL_H */
-diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
-index 3044179ee6e9..f3dc1b9696e7 100644
---- a/tools/testing/selftests/resctrl/resctrl_tests.c
-+++ b/tools/testing/selftests/resctrl/resctrl_tests.c
-@@ -19,6 +19,8 @@ static struct resctrl_test *resctrl_tests[] = {
- 	&mba_test,
- 	&cmt_test,
- 	&l3_cat_test,
-+	&l3_noncont_cat_test,
-+	&l2_noncont_cat_test,
- };
- 
- static int detect_vendor(void)
--- 
-2.43.0
-
+> 
+> Thanks,
+> Adrian
+> 
+> -- 
+>  .''`.  John Paul Adrian Glaubitz
+> : :' :  Debian Developer
+> `. `'   Physicist
+>   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
