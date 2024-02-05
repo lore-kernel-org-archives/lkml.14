@@ -1,252 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11022010.outbound.protection.outlook.com [52.101.56.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBA27E57B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162402; cv=none; b=ZLPl0c9k2xp8WChfgaJRUVZC458bTSVXo9UbM9Um2h5W7b12eF2g+oYXKmTnKR0hdZLQ80DGRNB8j1QVNEHdFyQZkH8G38jeFrfD0CT3P9Z+z99Xbgu2c/X5R9yvJH4GNQe4c3CSKJPt7sGRzDiYmCGEKjuNeYMJNS4KdugdvHU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162402; c=relaxed/simple;
-	bh=Q+FFFAKX8L0wFsTUyEe+rGAUs3xDIwQRI/Gs81w7hWE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jiev9hZJvs7ddy74GS/IiLT9hDLnwmShg1/uHKTsJd8Q1xou+VMBw2/K0/qbgarrv3wCLxr9+J2VT6dfyZMT+evqrsv5M5fAgkkoazN0tqSr+Kl1In4tU671Pb+ZZeERxYruEPAuI/m3Fvtlkkv7qNd14rfOzKVrSFtxPmW0wbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aG5bp3gT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CB761683
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707162443; cv=fail; b=UCeKmo6BtPyzORHm0SbZmNcxrAljYTNxRj3DM2MuKRZqlToDWjmre0WTtyERxSyl8cOuiTmyVHvCyU8he43M6caGZagKmGaBccqjk10l9GjtNOp8GWD+Pz94VprZY0arTF2O8yQ2/iPCk3IJhf3bdR0Tne0zIJEavTkwF46RtAg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707162443; c=relaxed/simple;
+	bh=QA6vWnsGNLKbEmtoQv9Sh4IL7WEneiqBNc+1/2QFBgg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Exk36NlpB88sHdVegp8ri4xfV9OQWW7znro8VVC36MWq4YkINOSBhtAbHrQ6+rIVkVK+rwQfivxcRBTkccRWO+sO4ZNtgMC69zXi9DIyUO0XwzULtxkk90moWfTdoK2y+8BAC6BOTQpIaOqEsRmzJ3TaeVJ+aKAHPD9tD8faP9Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=eol1OS8R; arc=fail smtp.client-ip=52.101.56.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aG5bp3gT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707162399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iAw8XR8UIKF5pxcWD9Lf41raO40/9bfeM2Aq6TfckS8=;
-	b=aG5bp3gTP13nJNj3TRZHvYq1G40oNAlPzYyADdC/cv4YVwQ/yopYOssBw3Szbe5ZZ/eXRc
-	V4jwQTpc+zbVKKd4o5pw/kzI5YGHp+6EYaFZAF/63mHnBVaHopadyy0NvOztN6npwi9fZq
-	U/1OTYGx83T4bn/mSKyTRzjXuhfwya8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-jbBf-C3IMaayxZIYikLHnA-1; Mon,
- 05 Feb 2024 14:46:36 -0500
-X-MC-Unique: jbBf-C3IMaayxZIYikLHnA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7D221C04331;
-	Mon,  5 Feb 2024 19:46:35 +0000 (UTC)
-Received: from llong.com (unknown [10.22.17.212])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 72F041C060B3;
-	Mon,  5 Feb 2024 19:46:35 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Cestmir Kalina <ckalina@redhat.com>,
-	Alex Gladkov <agladkov@redhat.com>,
-	Phil Auld <pauld@redhat.com>,
-	Costa Shulyupin <cshulyup@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH-wq v3 1/4] workqueue: Enable unbound cpumask update on ordered workqueues
-Date: Mon,  5 Feb 2024 14:45:59 -0500
-Message-Id: <20240205194602.871505-2-longman@redhat.com>
-In-Reply-To: <20240205194602.871505-1-longman@redhat.com>
-References: <20240205194602.871505-1-longman@redhat.com>
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="eol1OS8R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j9V1BtI1L14TxW0iGwkvwP/PCO7f0hbGgl7zK1Xb9rEKXWqlK0+iYgpAujuLx9g5cw8oK1EIS7uHfX7AhuhTPYdyhU8M7nM+B/wi4+QfNBEaud09Zr1TkkpPIYiF0kPhzOC46QC56bujV3Ey8r6PiZrwCKwuyoPWHpGRvwks3X4gWaRPJ0U+AI+gPX23mA9Rdx8OfFB9SkCj0fYw0eGs+7b3EgR0y4xbRI/X3VkvgpuQK2NjCdclrzriuGtkGSG+m4ODYzbhNalCsg2t5717YCncq+kdXaTqQkXF+RntM3SdEzs7VSOznz56b7aaP2ssJjJrk6GpkFH9On4QgW0X6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tDG3VsODBDoudct+TNRUtkrBKkKrFJnJUyr7ImlKMcI=;
+ b=FnDan5fjZs7mD8h/GN6FU3Jqz+O8374DkaaZvkG85JhmpwB3Qka53LgDL8qvdbM9Fr5+iNXKfF24D5J5AaPb42L5l6yC/koPzOugO4mtN8eGoq4yLFEU1xzJHi+8AXnU0pDV5391rR58CEVGpzw7hEjX0HqO6ToLcoXLLboevc4F41OlFtcxjXG90YsykwD9cVx+FbYkXtI0AGkPFn9801tazQUj/zt9joH9moCaOnsAcF7+3BJHtHOoujZjfnf4RN4qKV5CGj3zYk9w17a2sx4AuVZYsOMUlxPbqkOMmZHx/N+7jcaru8Tkqu9swqDepSD6uJz2GQNx/GE+F8JuFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tDG3VsODBDoudct+TNRUtkrBKkKrFJnJUyr7ImlKMcI=;
+ b=eol1OS8RiKht9nxroLSsG1D62BUVhG/23aEY7B/79xZvwHMet9vbrW5mds9GdHDlhGn2S6lvxAJsdfmzM7e/ldkYws55nxif+lBzIuFqevsBKytBPOceDm5ZfMSDn7mffkM6/fW/JORagr9qnCCqJ65Eg/iVjQrnyUCRKDlMNtA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from PH0PR01MB8166.prod.exchangelabs.com (2603:10b6:510:293::17) by
+ CO1PR01MB6696.prod.exchangelabs.com (2603:10b6:303:d7::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7249.36; Mon, 5 Feb 2024 19:47:18 +0000
+Received: from PH0PR01MB8166.prod.exchangelabs.com
+ ([fe80::67b9:4671:4fdb:2dbf]) by PH0PR01MB8166.prod.exchangelabs.com
+ ([fe80::67b9:4671:4fdb:2dbf%5]) with mapi id 15.20.7249.035; Mon, 5 Feb 2024
+ 19:47:18 +0000
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Robin Murphy <robin.murphy@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Subject: [PATCH] perf/arm-cmn: Workaround AmpereOneX errata AC04_MESH_1 (incorrect child count)
+Date: Mon,  5 Feb 2024 11:46:55 -0800
+Message-Id: <20240205194655.1567434-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.40.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH5P221CA0017.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:1f2::17) To PH0PR01MB8166.prod.exchangelabs.com
+ (2603:10b6:510:293::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR01MB8166:EE_|CO1PR01MB6696:EE_
+X-MS-Office365-Filtering-Correlation-Id: f88ca737-3e30-47fd-91a0-08dc268342c4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OV1n/Zjg+i4xzlrNHiiVursUqZsBkynXSyqtpyG3P1fWdBI3Pkb6VVBbY3uo76OiW3fqkLpCqLpOlz/te4pbFj/aE3G9E7Ma+6ypfdgLUg5Nvjg/ptIy3Na8YuuiJKZiFbd8N2ixDKKg2W6/B5SZMMdi8tWvY8saYYlkyq74Sj67l96gwpjAMv0hJaP0JXty2Okq93xmXYh9AZyejH9DbbvRpuNmYEZiC+hLcVc4EAkvGOUv7+Hy8Fbmjx6ySgOkqTG1USrAYl7/wAbyHgaPhqgvKzJh/yZRiXXVOpHMkm+7whwZQitSWtVYhyazL63Fr1wFkVCuwiEFpIj9MC+mYXKbSqxA5thsGg2e9TvN7nRgfZnMYs+W2FYPkgaC6Wm72AfhEe5rItfTLFePsdXrRCf8xQS6I+5DmE4Vi6D8/RER6g8cJGP2taQXIKXhWZHf8G0X1kMsjsxJhvlPYeqCAG/IHMscvLd3EKQWo/ZhIcYf5YLAoq1OL9ANmBwU5B9HmU8ZH6qp4EoPcT0XLWs1kmok6VrRYVR9DJ1/qOXjErERtKCNdcbKrR/U20+CpjKDy++Fl+MaSntoUxI/pcS8gNz84OfWLQvCqM4HWyvrkGYaYx/RsQdRkWkAU3Edkzms
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB8166.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39850400004)(396003)(136003)(346002)(366004)(230922051799003)(230273577357003)(1800799012)(64100799003)(186009)(451199024)(38100700002)(52116002)(6506007)(6666004)(83380400001)(316002)(86362001)(26005)(1076003)(41300700001)(2616005)(107886003)(4326008)(8676002)(8936002)(6512007)(2906002)(478600001)(6486002)(5660300002)(38350700005)(66476007)(66946007)(66556008)(110136005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?okzNUD0mPUDIbPPP2dQJJmLhuzkCB7pHpHXpuwr0ZGzZW1SkBoQhS4EUk7/N?=
+ =?us-ascii?Q?N8XaSVb+KpNZ1Pazq48X7uMGtnruxe7ydwhCFnGRuoEiHU7egFr5qwCqILYj?=
+ =?us-ascii?Q?0LHvaLNy4lid5i8xRUumqOHcAQBGsz7aBZ5M9wPZX7rY+8qv7kGrSye8G3X9?=
+ =?us-ascii?Q?ag9u0eUp7W+zLJGAm0HT6Js6qMJRlYo1VUheInHeSJBJXZ1EzWeYakpjWMxv?=
+ =?us-ascii?Q?ABQr7JNETXLHBowaT06GZ3IFX4AOrHytYMBINfooACZT7jWS/XzMHF7d2Wdn?=
+ =?us-ascii?Q?8WXK7wkOZf3SrqNXKMLwHZvfc6EUgpX/erFj6kzpReWZRHllrmH1G9OdtcFI?=
+ =?us-ascii?Q?W7/oLWW/GsvOhkWfjW4Lv+yHXQ/L5WQzoMFADZWcBlaluWzPMlyTeqcBXLJg?=
+ =?us-ascii?Q?+XFfvT6Jt8Ryg7hR/2FVqNkMC7/nQOqozn9BpOy6AorBjtu4VzbDZggMqurn?=
+ =?us-ascii?Q?rbuJ2bUUwIieVpgtPxauTDy5fJAzvcOIF4BZe1jqdL4R637IhYjKLAm8vyrk?=
+ =?us-ascii?Q?hB7OH5Sefunju0+v2JOSxic0anJk2aXECIjLNTYdWPQQlMWrhvtAhHLUogNL?=
+ =?us-ascii?Q?1zK6RVdXZNgJ/MnmPdSSByLgbccYA2IT/Ug3HNJXLJzayac70AwTFO0/0V0u?=
+ =?us-ascii?Q?TaprGmUqduMwNv6SC5F2NUJ6CHPfsoGFatMo/1z+TZqMQ4eJtTIr46WVZ3Hr?=
+ =?us-ascii?Q?cfRj8vbN5wEZ8WWmUB+zhsEUUzHYwAqvVPFHzExG3GPELsPIrvIo/ZQcgcSH?=
+ =?us-ascii?Q?fZJbXiCRJSTYxlVJhxyI+xKKbwK0xrNHqhZ57kmTuhtl56uBAa2NQ0HWQmxd?=
+ =?us-ascii?Q?W4Zb4C5dK+MQFecPBBtzNXiVNRu9U+ZeFf3GbdPETi/fT/AWiSCTPCK16dBp?=
+ =?us-ascii?Q?gwzR+zu4z2Ev0r/UYgxi5a6rhk+54mZw5k+ULVzecLBYRJXD4KeiTQ9myee4?=
+ =?us-ascii?Q?pApJ2X3gyB1LlTF76velHvQFwpIkoW3afN+1cfvzqOjfVdd1hTsGjEnw+qKX?=
+ =?us-ascii?Q?rdx3jYlk9r7V4Ds5y5weeUC2X8jLyqPBUUfaqeLt7bhLTmfTnD6OeB2NfW1F?=
+ =?us-ascii?Q?5BVwIipE7AqFcQ1WN/yaq8lCOsmhrcW5KqCchtwK+Dw8pKHz/4myzMAVwm0I?=
+ =?us-ascii?Q?koYX/DuzIUBHD55bJWLRZXN7tSEecwXIpqpYkMKOKoar9p8SvRnNYUS9Izbt?=
+ =?us-ascii?Q?sl7HEKQ7EOMBw/dQd2tS+TVhK8Vs+Qcxn8usGz3uSwCvNW4cvnroSRny7MCz?=
+ =?us-ascii?Q?K4HWAHFjdKZisNijJdNzNVlJfa//cdFrVymD7LYjCgMvHoZQzQQ5moKlwTYu?=
+ =?us-ascii?Q?wcZxXbL0GrtF2+n0o+BuSFGQvlX1LqNTpquSSHHLt6naprZWbihwK5MZrkSX?=
+ =?us-ascii?Q?ls1DwZIFYpEeS5haSi4oEB5HPcyUGPGxgDHwQuHP4ZBDIDhczVS9laLtxxcZ?=
+ =?us-ascii?Q?uWO0byhAse3hiGZInyYK6T0xt5ZujUqFhD0ye1St2JnaMIt4LYuRMEKkk7BC?=
+ =?us-ascii?Q?jnA1sufy6iH2QgrZAKW7pnIko2Hxt332YHGdJg4+bY/sLOsBKar1X/q9jD6O?=
+ =?us-ascii?Q?qbzCeBSWeRqxunJvGnykmyIp4uxuNOdyo3qr/oAMOiDDCk1g++yFR94oY56L?=
+ =?us-ascii?Q?7srRpuDfl8zqtJXkhvGO7ws=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f88ca737-3e30-47fd-91a0-08dc268342c4
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB8166.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 19:47:18.3798
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RbsPPKVG0b8UuVd/1usqZ1vpJDBHY+scA5HPPwEXNsY02bbWClvXYNHHuiye1GTdfgJgVXqrrPW5LlEI3VKk7vAMu6Ftb+fBm7EeXxX5hf2HD5hltMGAWvFCho5sxF0I
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR01MB6696
 
-Ordered workqueues does not currently follow changes made to the
-global unbound cpumask because per-pool workqueue changes may break
-the ordering guarantee. IOW, a work function in an ordered workqueue
-may run on an isolated CPU.
+AmpereOneX mesh implementation has a bug in HN-P nodes that makes them
+report incorrect child count. The failing crosspoints report 8 children
+while they only have two.
 
-This patch enables ordered workqueues to follow changes made to
-the global unbound cpumask by temporaily freeze the newly allocated
-pool_workqueue by using the new frozen flag to freeze execution of
-newly queued work items until the old pwq has been properly flushed.
+When the driver tries to access the inexistent child nodes, it believes it
+has reached an invalid node type and probing fails. The workaround is to
+ignore those incorrect child nodes and continue normally.
 
-This enables ordered workqueues to follow the unbound cpumask changes
-like other unbound workqueues at the expense of some delay in execution
-of work functions during the transition period.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 ---
- kernel/workqueue.c | 93 +++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 80 insertions(+), 13 deletions(-)
+ drivers/perf/arm-cmn.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 68c48489eab3..9b107e8a2c15 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -255,6 +255,7 @@ struct pool_workqueue {
- 	int			refcnt;		/* L: reference count */
- 	int			nr_in_flight[WORK_NR_COLORS];
- 						/* L: nr of in_flight works */
-+	int			frozen;		/* L: temporarily frozen */
- 
- 	/*
- 	 * nr_active management and WORK_STRUCT_INACTIVE:
-@@ -1702,6 +1703,9 @@ static bool pwq_tryinc_nr_active(struct pool_workqueue *pwq, bool fill)
- 
- 	lockdep_assert_held(&pool->lock);
- 
-+	if (pwq->frozen)
-+		return false;
-+
- 	if (!nna) {
- 		/* BH or per-cpu workqueue, pwq->nr_active is sufficient */
- 		obtained = pwq->nr_active < READ_ONCE(wq->max_active);
-@@ -1782,6 +1786,21 @@ static bool pwq_activate_first_inactive(struct pool_workqueue *pwq, bool fill)
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index c584165b13ba..97fed8ec3693 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2168,6 +2168,23 @@ static enum cmn_node_type arm_cmn_subtype(enum cmn_node_type type)
  	}
  }
  
-+/**
-+ * thaw_pwq - thaw a frozen pool_workqueue
-+ * @pwq: pool_workqueue to be thawed
-+ */
-+static void thaw_pwq(struct pool_workqueue *pwq)
++static inline bool arm_cmn_is_ampereonex_bug(const struct arm_cmn *cmn,
++					     struct arm_cmn_node *dn,
++					     u16 child_count, int child)
 +{
-+	unsigned long flags;
++	/*
++	 * The bug occurs only when a crosspoint reports 8 children
++	 * while it only has two HN-P child nodes.
++	 */
++	dn -= 2;
 +
-+	raw_spin_lock_irqsave(&pwq->pool->lock, flags);
-+	pwq->frozen = false;
-+	if (pwq_activate_first_inactive(pwq, true))
-+		kick_pool(pwq->pool);
-+	raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
++	if (arm_cmn_model(cmn) == CMN650 && child_count == 8 &&
++	    child == 2 && dn->type == CMN_TYPE_HNP)
++		return true;
++
++	return false;
 +}
 +
- /**
-  * node_activate_pending_pwq - Activate a pending pwq on a wq_node_nr_active
-  * @nna: wq_node_nr_active to activate a pending pwq for
-@@ -4740,6 +4759,18 @@ static void pwq_release_workfn(struct kthread_work *work)
- 		mutex_lock(&wq->mutex);
- 		list_del_rcu(&pwq->pwqs_node);
- 		is_last = list_empty(&wq->pwqs);
+ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ {
+ 	void __iomem *cfg_region;
+@@ -2292,6 +2309,14 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 
+ 		for (j = 0; j < child_count; j++) {
+ 			reg = readq_relaxed(xp_region + child_poff + j * 8);
++			if (reg == 0)
++				if (arm_cmn_is_ampereonex_bug(cmn, dn, child_count, j))
++					/*
++					 * We know there are only two real children and the rest 6
++					 * are inexistent. Thus, we can skip the rest of the loop
++					 */
++					break;
 +
-+		/*
-+		 * For ordered workqueue with a frozen dfl_pwq, thaw it now.
-+		 */
-+		if (!is_last && (wq->flags & __WQ_ORDERED_EXPLICIT)) {
-+			struct pool_workqueue *dfl_pwq;
-+
-+			dfl_pwq = rcu_access_pointer(wq->dfl_pwq);
-+			if (dfl_pwq && dfl_pwq->frozen)
-+				thaw_pwq(dfl_pwq);
-+		}
-+
- 		mutex_unlock(&wq->mutex);
- 	}
- 
-@@ -4906,7 +4937,22 @@ static void apply_wqattrs_cleanup(struct apply_wqattrs_ctx *ctx)
- 
- 		for_each_possible_cpu(cpu)
- 			put_pwq_unlocked(ctx->pwq_tbl[cpu]);
-+
-+		/*
-+		 * Acquire rcu_read_lock() before refcnt can become 0 to
-+		 * ensure that ctx->dfl_pwq won't be freed.
-+		 */
-+		rcu_read_lock();
- 		put_pwq_unlocked(ctx->dfl_pwq);
-+		if ((ctx->wq->flags & __WQ_ORDERED_EXPLICIT) &&
-+		     ctx->dfl_pwq && !ctx->dfl_pwq->refcnt) {
-+			struct pool_workqueue *dfl_pwq;
-+
-+			dfl_pwq = rcu_access_pointer(ctx->wq->dfl_pwq);
-+			if (dfl_pwq && dfl_pwq->frozen)
-+				thaw_pwq(dfl_pwq);
-+		}
-+		rcu_read_unlock();
- 
- 		free_workqueue_attrs(ctx->attrs);
- 
-@@ -4966,6 +5012,15 @@ apply_wqattrs_prepare(struct workqueue_struct *wq,
- 	cpumask_copy(new_attrs->__pod_cpumask, new_attrs->cpumask);
- 	ctx->attrs = new_attrs;
- 
-+	/*
-+	 * For initialized ordered workqueues, there is only one pwq (dfl_pwq).
-+	 * Temporarily the frozen flag of ctx->dfl_pwq to freeze the execution
-+	 * of newly queued work items until execution of older work items in
-+	 * the old pwq has completed.
-+	 */
-+	if (!list_empty(&wq->pwqs) && (wq->flags & __WQ_ORDERED_EXPLICIT))
-+		ctx->dfl_pwq->frozen = true;
-+
- 	ctx->wq = wq;
- 	return ctx;
- 
-@@ -5006,13 +5061,8 @@ static int apply_workqueue_attrs_locked(struct workqueue_struct *wq,
- 	if (WARN_ON(!(wq->flags & WQ_UNBOUND)))
- 		return -EINVAL;
- 
--	/* creating multiple pwqs breaks ordering guarantee */
--	if (!list_empty(&wq->pwqs)) {
--		if (WARN_ON(wq->flags & __WQ_ORDERED_EXPLICIT))
--			return -EINVAL;
--
-+	if (!list_empty(&wq->pwqs) && !(wq->flags & __WQ_ORDERED_EXPLICIT))
- 		wq->flags &= ~__WQ_ORDERED;
--	}
- 
- 	ctx = apply_wqattrs_prepare(wq, attrs, wq_unbound_cpumask);
- 	if (IS_ERR(ctx))
-@@ -6504,11 +6554,29 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
- 		if (!(wq->flags & WQ_UNBOUND) || (wq->flags & __WQ_DESTROYING))
- 			continue;
- 
--		/* creating multiple pwqs breaks ordering guarantee */
-+		/*
-+		 * We does not support changing cpumask of an ordered workqueue
-+		 * again before the previous cpumask change is completed.
-+		 * Sleep up to 100ms in 10ms interval to allow previous
-+		 * operation to complete and skip it if not done by then.
-+		 */
- 		if (!list_empty(&wq->pwqs)) {
--			if (wq->flags & __WQ_ORDERED_EXPLICIT)
--				continue;
--			wq->flags &= ~__WQ_ORDERED;
-+			struct pool_workqueue *dfl_pwq;
-+
-+			dfl_pwq = rcu_access_pointer(wq->dfl_pwq);
-+			if (!(wq->flags & __WQ_ORDERED_EXPLICIT)) {
-+				wq->flags &= ~__WQ_ORDERED;
-+			} else if (dfl_pwq && dfl_pwq->frozen) {
-+				int i;
-+
-+				for (i = 0; i < 10; i++) {
-+					msleep(10);
-+					if (!dfl_pwq->frozen)
-+						break;
-+				}
-+				if (WARN_ON_ONCE(dfl_pwq->frozen))
-+					continue;
-+			}
- 		}
- 
- 		ctx = apply_wqattrs_prepare(wq, wq->unbound_attrs, unbound_cpumask);
-@@ -7024,9 +7092,8 @@ int workqueue_sysfs_register(struct workqueue_struct *wq)
- 	int ret;
- 
- 	/*
--	 * Adjusting max_active or creating new pwqs by applying
--	 * attributes breaks ordering guarantee.  Disallow exposing ordered
--	 * workqueues.
-+	 * Adjusting max_active breaks ordering guarantee.  Disallow exposing
-+	 * ordered workqueues.
- 	 */
- 	if (WARN_ON(wq->flags & __WQ_ORDERED_EXPLICIT))
- 		return -EINVAL;
+ 			/*
+ 			 * Don't even try to touch anything external, since in general
+ 			 * we haven't a clue how to power up arbitrary CHI requesters.
 -- 
-2.39.3
+2.40.1
 
