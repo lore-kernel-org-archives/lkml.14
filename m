@@ -1,243 +1,143 @@
-Received: from out187-19.us.a.mail.aliyun.com (out187-19.us.a.mail.aliyun.com [47.90.187.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from davidv.dev (mail.davidv.dev [78.46.233.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875881BC26
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0E619474
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.233.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133658; cv=none; b=ihd8nX5HWbcwH1cw/cG0A4tOxmJ044FW3y/Ol4dpcZo+lX1lBt+LDgCgnD21GCgTU3aBkAXItLeyo6od4bdDb3Rhpq1K8g5zKWNRNg86nkp8ficJZVE+6J3DvUhr+6MdGSP9sS+ebiSJFeL4AGudg9ikzPJghwzmZpEvLXoA+qo=
+	t=1707133731; cv=none; b=hO7SlYSsNOzenfUZIBWUejQn3rzLXFLQ6g+NXJfkbfY8YL/KZchRKqkP0V93e5INH8Amq8D7bzZ5fMAApGpLBcZjOGXKujaEz6Mjf8xj1LOR+h6U114TVcFecYBg9Se21KTtvycjFwY3yRRZQYw8UuwSGzFa11f9Bic0FFf47H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133658; c=relaxed/simple;
-	bh=1sr2sdDMijyrY3fpb7f0Qr+PhaKz1rnNX0kYmghypxM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZaWWa4doAzFAlBzT2i9AH4ZPi+pAp/terPlzPDQ4E2AUOoAFcEPplHT1+LWxV+4/3Mog1tD1uTCdmJqXAy/kpt3sjuiO70D2HXK1hmR88uuW++N3Iv3BFEsUyY0zlhd02dwwAwgUpojeBXmQdMD6881Pvn4iR9z7SGdB0pjNoOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047212;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WNt.Hlx_1707133638;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WNt.Hlx_1707133638)
-          by smtp.aliyun-inc.com;
-          Mon, 05 Feb 2024 19:47:18 +0800
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-To: richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net
-Cc:  <linux-um@lists.infradead.org>,
-   <linux-kernel@vger.kernel.org>,
-  "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 1/6] um: Make local functions and variables static
-Date: Mon, 05 Feb 2024 19:47:03 +0800
-Message-Id: <20240205114708.25235-2-tiwei.btw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240205114708.25235-1-tiwei.btw@antgroup.com>
-References: <20240205114708.25235-1-tiwei.btw@antgroup.com>
+	s=arc-20240116; t=1707133731; c=relaxed/simple;
+	bh=zquoTPDiDMopq79YAJN8pFBJInmPfdGsBn+pPQU1BdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sBl+go7O2vYG1cqiptEEmJPq0DjElHKEkl+R3sGsVUUroVW+wZDtfCG3IR27WLcjYWCUaCqrgoU99+4acqvi+yxdH22dk+jyu9qUuxJhIfX2OUG6pn/aXtEhEHvo+mLXD2pVXatJguNuqpX08L+iMiAsMdb8IAt2CgBjjTCkXnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev; spf=pass smtp.mailfrom=davidv.dev; arc=none smtp.client-ip=78.46.233.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidv.dev
+Received: from framework.labs
+	by mail.davidv.dev (chasquid) with ESMTPSA
+	tls TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+	(over submission+TLS, TLS-1.2, envelope from "david@davidv.dev")
+	; Mon, 05 Feb 2024 12:46:51 +0100
+From: David Ventura <david@davidv.dev>
+To: 
+Cc: David Ventura <david@davidv.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH] net: make driver settling time configurable
+Date: Mon,  5 Feb 2024 12:44:40 +0100
+Message-Id: <20240205114609.440597-1-david@davidv.dev>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This will also fix the warnings like:
+During IP auto configuration, some drivers apparently need to wait a
+certain length of time to settle; as this is not true for all drivers,
+make this length of time configurable.
 
-warning: no previous prototype for ‘fork_handler’ [-Wmissing-prototypes]
-  140 | void fork_handler(void)
-      |      ^~~~~~~~~~~~
-
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+Signed-off-by: David Ventura <david@davidv.dev>
 ---
- arch/um/drivers/pcap_kern.c              | 4 ++--
- arch/um/drivers/ubd_user.c               | 2 +-
- arch/um/kernel/kmsg_dump.c               | 2 +-
- arch/um/kernel/process.c                 | 8 ++++----
- arch/um/kernel/time.c                    | 6 +++---
- arch/um/os-Linux/drivers/ethertap_kern.c | 2 +-
- arch/um/os-Linux/drivers/tuntap_kern.c   | 2 +-
- arch/um/os-Linux/signal.c                | 4 ++--
- arch/x86/um/os-Linux/registers.c         | 2 +-
- 9 files changed, 16 insertions(+), 16 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |  4 ++++
+ Documentation/admin-guide/nfs/nfsroot.rst     |  3 +++
+ net/ipv4/ipconfig.c                           | 23 ++++++++++++++++---
+ 3 files changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/arch/um/drivers/pcap_kern.c b/arch/um/drivers/pcap_kern.c
-index 25ee2c97ca21..d9bf95d7867b 100644
---- a/arch/um/drivers/pcap_kern.c
-+++ b/arch/um/drivers/pcap_kern.c
-@@ -15,7 +15,7 @@ struct pcap_init {
- 	char *filter;
- };
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index b47940577c10..b07a035642fa 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2291,6 +2291,10 @@
  
--void pcap_init_kern(struct net_device *dev, void *data)
-+static void pcap_init_kern(struct net_device *dev, void *data)
- {
- 	struct uml_net_private *pri;
- 	struct pcap_data *ppri;
-@@ -50,7 +50,7 @@ static const struct net_kern_info pcap_kern_info = {
- 	.write			= pcap_write,
- };
+ 	ip=		[IP_PNP]
+ 			See Documentation/admin-guide/nfs/nfsroot.rst.
++	ip.dev_wait_ms=
++			[IP_PNP]
++			See Documentation/admin-guide/nfs/nfsroot.rst.
++
  
--int pcap_setup(char *str, char **mac_out, void *data)
-+static int pcap_setup(char *str, char **mac_out, void *data)
- {
- 	struct pcap_init *init = data;
- 	char *remain, *host_if = NULL, *options[2] = { NULL, NULL };
-diff --git a/arch/um/drivers/ubd_user.c b/arch/um/drivers/ubd_user.c
-index a1afe414ce48..b4f8b8e60564 100644
---- a/arch/um/drivers/ubd_user.c
-+++ b/arch/um/drivers/ubd_user.c
-@@ -23,7 +23,7 @@
- #include <os.h>
- #include <poll.h>
+ 	ipcmni_extend	[KNL,EARLY] Extend the maximum number of unique System V
+ 			IPC identifiers from 32,768 to 16,777,216.
+diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
+index 135218f33394..f26f7a342af6 100644
+--- a/Documentation/admin-guide/nfs/nfsroot.rst
++++ b/Documentation/admin-guide/nfs/nfsroot.rst
+@@ -223,6 +223,9 @@ ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>:<dns
+   /proc/net/ipconfig/ntp_servers to an NTP client before mounting the real
+   root filesystem if it is on NFS).
  
--struct pollfd kernel_pollfd;
-+static struct pollfd kernel_pollfd;
++ip.dev_wait_ms=<value>
++  Set the number of milliseconds to delay after opening the network device
++  which will be autoconfigured. Defaults to 10 milliseconds.
  
- int start_io_thread(unsigned long sp, int *fd_out)
- {
-diff --git a/arch/um/kernel/kmsg_dump.c b/arch/um/kernel/kmsg_dump.c
-index 427dd5a61a38..4382cf02a6d1 100644
---- a/arch/um/kernel/kmsg_dump.c
-+++ b/arch/um/kernel/kmsg_dump.c
-@@ -57,7 +57,7 @@ static struct kmsg_dumper kmsg_dumper = {
- 	.dump = kmsg_dumper_stdout
- };
+ nfsrootdebug
+   This parameter enables debugging messages to appear in the kernel
+diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+index c56b6fe6f0d7..cbf35163b973 100644
+--- a/net/ipv4/ipconfig.c
++++ b/net/ipv4/ipconfig.c
+@@ -82,8 +82,6 @@
+ #define IPCONFIG_DYNAMIC
+ #endif
  
--int __init kmsg_dumper_stdout_init(void)
-+static int __init kmsg_dumper_stdout_init(void)
- {
- 	return kmsg_dump_register(&kmsg_dumper);
+-/* Define the friendly delay before and after opening net devices */
+-#define CONF_POST_OPEN		10	/* After opening: 10 msecs */
+ 
+ /* Define the timeout for waiting for a DHCP/BOOTP/RARP reply */
+ #define CONF_OPEN_RETRIES 	2	/* (Re)open devices twice */
+@@ -101,6 +99,7 @@
+ 
+ /* Wait for carrier timeout default in seconds */
+ static unsigned int carrier_timeout = 120;
++static unsigned int dev_wait_ms = 10;
+ 
+ /*
+  * Public IP configuration
+@@ -1516,7 +1515,8 @@ static int __init ip_auto_config(void)
+ 		return err;
+ 
+ 	/* Give drivers a chance to settle */
+-	msleep(CONF_POST_OPEN);
++	if(dev_wait_ms > 0)
++		msleep(dev_wait_ms);
+ 
+ 	/*
+ 	 * If the config information is insufficient (e.g., our IP address or
+@@ -1849,3 +1849,20 @@ static int __init set_carrier_timeout(char *str)
+ 	return 1;
  }
-diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-index ab95648e93e1..20f3813143d8 100644
---- a/arch/um/kernel/process.c
-+++ b/arch/um/kernel/process.c
-@@ -137,7 +137,7 @@ void new_thread_handler(void)
- }
- 
- /* Called magically, see new_thread_handler above */
--void fork_handler(void)
-+static void fork_handler(void)
- {
- 	force_flush_all();
- 
-@@ -268,14 +268,14 @@ int clear_user_proc(void __user *buf, int size)
- static atomic_t using_sysemu = ATOMIC_INIT(0);
- int sysemu_supported;
- 
--void set_using_sysemu(int value)
-+static void set_using_sysemu(int value)
- {
- 	if (value > sysemu_supported)
- 		return;
- 	atomic_set(&using_sysemu, value);
- }
- 
--int get_using_sysemu(void)
-+static int get_using_sysemu(void)
- {
- 	return atomic_read(&using_sysemu);
- }
-@@ -313,7 +313,7 @@ static const struct proc_ops sysemu_proc_ops = {
- 	.proc_write	= sysemu_proc_write,
- };
- 
--int __init make_proc_sysemu(void)
-+static int __init make_proc_sysemu(void)
- {
- 	struct proc_dir_entry *ent;
- 	if (!sysemu_supported)
-diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
-index 3e270da6b6f6..efa5b9c97992 100644
---- a/arch/um/kernel/time.c
-+++ b/arch/um/kernel/time.c
-@@ -319,7 +319,7 @@ void time_travel_add_event_rel(struct time_travel_event *e,
- 	time_travel_add_event(e, time_travel_time + delay_ns);
- }
- 
--void time_travel_periodic_timer(struct time_travel_event *e)
-+static void time_travel_periodic_timer(struct time_travel_event *e)
- {
- 	time_travel_add_event(&time_travel_timer_event,
- 			      time_travel_time + time_travel_timer_interval);
-@@ -812,7 +812,7 @@ unsigned long calibrate_delay_is_known(void)
- 	return 0;
- }
- 
--int setup_time_travel(char *str)
-+static int setup_time_travel(char *str)
- {
- 	if (strcmp(str, "=inf-cpu") == 0) {
- 		time_travel_mode = TT_MODE_INFCPU;
-@@ -862,7 +862,7 @@ __uml_help(setup_time_travel,
- "devices using it, assuming the device has the right capabilities.\n"
- "The optional ID is a 64-bit integer that's sent to the central scheduler.\n");
- 
--int setup_time_travel_start(char *str)
-+static int setup_time_travel_start(char *str)
- {
- 	int err;
- 
-diff --git a/arch/um/os-Linux/drivers/ethertap_kern.c b/arch/um/os-Linux/drivers/ethertap_kern.c
-index 3182e759d8de..5e5ee40680ce 100644
---- a/arch/um/os-Linux/drivers/ethertap_kern.c
-+++ b/arch/um/os-Linux/drivers/ethertap_kern.c
-@@ -63,7 +63,7 @@ const struct net_kern_info ethertap_kern_info = {
- 	.write 			= etap_write,
- };
- 
--int ethertap_setup(char *str, char **mac_out, void *data)
-+static int ethertap_setup(char *str, char **mac_out, void *data)
- {
- 	struct ethertap_init *init = data;
- 
-diff --git a/arch/um/os-Linux/drivers/tuntap_kern.c b/arch/um/os-Linux/drivers/tuntap_kern.c
-index adcb6717be6f..ff022d9cf0dd 100644
---- a/arch/um/os-Linux/drivers/tuntap_kern.c
-+++ b/arch/um/os-Linux/drivers/tuntap_kern.c
-@@ -53,7 +53,7 @@ const struct net_kern_info tuntap_kern_info = {
- 	.write 			= tuntap_write,
- };
- 
--int tuntap_setup(char *str, char **mac_out, void *data)
-+static int tuntap_setup(char *str, char **mac_out, void *data)
- {
- 	struct tuntap_init *init = data;
- 
-diff --git a/arch/um/os-Linux/signal.c b/arch/um/os-Linux/signal.c
-index 24a403a70a02..787cfb9a0308 100644
---- a/arch/um/os-Linux/signal.c
-+++ b/arch/um/os-Linux/signal.c
-@@ -72,7 +72,7 @@ static int signals_blocked;
- static unsigned int signals_pending;
- static unsigned int signals_active = 0;
- 
--void sig_handler(int sig, struct siginfo *si, mcontext_t *mc)
-+static void sig_handler(int sig, struct siginfo *si, mcontext_t *mc)
- {
- 	int enabled = signals_enabled;
- 
-@@ -108,7 +108,7 @@ static void timer_real_alarm_handler(mcontext_t *mc)
- 	timer_handler(SIGALRM, NULL, &regs);
- }
- 
--void timer_alarm_handler(int sig, struct siginfo *unused_si, mcontext_t *mc)
-+static void timer_alarm_handler(int sig, struct siginfo *unused_si, mcontext_t *mc)
- {
- 	int enabled;
- 
-diff --git a/arch/x86/um/os-Linux/registers.c b/arch/x86/um/os-Linux/registers.c
-index df8f4b4bf98b..f3638dd09cec 100644
---- a/arch/x86/um/os-Linux/registers.c
-+++ b/arch/x86/um/os-Linux/registers.c
-@@ -17,7 +17,7 @@
- #include <linux/elf.h>
- #include <registers.h>
- 
--int have_xstate_support;
-+static int have_xstate_support;
- 
- int save_i387_registers(int pid, unsigned long *fp_regs)
- {
+ __setup("carrier_timeout=", set_carrier_timeout);
++
++
++static int __init set_dev_wait_ms(char *str)
++{
++	ssize_t ret;
++
++	if (!str)
++		return 0;
++
++	ret = kstrtouint(str, 0, &dev_wait_ms);
++	if (ret)
++		return 0;
++
++	return 1;
++}
++
++__setup("ip.dev_wait_ms=", set_dev_wait_ms);
 -- 
-2.34.1
+2.39.2
 
