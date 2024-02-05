@@ -1,136 +1,157 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB8D125B8;
-	Mon,  5 Feb 2024 09:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79F913FFB;
+	Mon,  5 Feb 2024 09:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707124067; cv=none; b=qmI6cqzqmzYJKvPZwa4TgLqCLrRCa6FOx77LJPaZT+sQdxM53ecvcjP2+vIHDsXQ7zGmtkfnJYk5oThR6DdU3SQm3o33Se41kczJDX7Id1TYxw42Endqlh/j20a7bPlYa5AD3wx20DZ99MW+mzf/s7NDKX/FtqiKNbb+uOCwS3Y=
+	t=1707124066; cv=none; b=AoEq5Bnj7G3SKL57qK9NJFkJIiilSQhvKeC77jFLvSqE/ztE+ggpYwAdbPF2S463GX8vXWjmU5ne9hrFsVoDRH3MP0CE053cn21uljf4gPtiWAPmVTL6536jTca4ooTS7Yb2tgvQfOlDyhH9a3MlR8XKcbAd+xrCNdGUPpuYh5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707124067; c=relaxed/simple;
-	bh=OYWfKIZZbNVvNdUGeXPzqCrger3e70yeWu9jt5ZwRbY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eVDKAiUqe9e4+v7fWPwjdBgdmbHwOqxdRHXtzSSiKpQ6MAvQ1TkSR5zPO0wv2XB2vHxrrlif05PkAtEVo8SPUFBCwaSswWuLEbFFADYYW97ZfadHm3arKTPGB/gGCz87fmx4zUUGhS+/375g4padh7bWKnkqKagGCgM1+Cg14zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YaF51rik; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707124066; c=relaxed/simple;
+	bh=/PC3cwCnH2K8/ch3GGJtdAHUfyOeBPVZZUZYOfJ9cjg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=V0o5bnEvPVQ3Oy9StGuZ8QDENmldQsGnim59DPyynTdoAot45XGkYr74XJ+L9jaum4xGgCxIeCDHB4okKSIPnP3KSmrB9HqZW1KXHg3HONdDE0vkWG8PazfXTfk/yMyw129OfqP+EZ6Dzxk7h0sqKcniskrr4ewzxQiJ129PGIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ha4lGeLJ; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YaF51rik"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41595nLk075683;
-	Mon, 5 Feb 2024 03:05:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707123949;
-	bh=jEerUnjT73P4OnEdJfNUUf24fkGk3mF2BgO5V6SKjwE=;
-	h=From:To:CC:Subject:Date;
-	b=YaF51rik1O/Zu93T4Jft/HFeMLWUbnKT5SxFy7LrYzy0rVNdtjKDZDT+v57B9qxVx
-	 ILktmALQP0dIOnvJhkPOBGKldGeWp/dF3IuvmYuorzezbRPKYrbmVO1FNcInnUc7IN
-	 s5AxT38TqOsxB8mPE6TXIGaGskbJzFQjsFQTjgE4=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41595nNU029214
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 03:05:49 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 03:05:49 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 03:05:49 -0600
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41595nVN010124;
-	Mon, 5 Feb 2024 03:05:49 -0600
-Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 41595mCt032276;
-	Mon, 5 Feb 2024 03:05:49 -0600
-From: MD Danish Anwar <danishanwar@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
-CC: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Tero
- Kristo <kristo@kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>,
-        Roger
- Quadros <rogerq@kernel.org>,
-        MD Danish Anwar <danishanwar@ti.com>
-Subject: [PATCH v4 0/3] Add AM64x ICSSG Ethernet support
-Date: Mon, 5 Feb 2024 14:35:43 +0530
-Message-ID: <20240205090546.4000446-1-danishanwar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ha4lGeLJ"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4158QGPd010843;
+	Mon, 5 Feb 2024 10:06:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=selector1; bh=0b38tedRyxz1wugMy9qAGe9nstQPcZ6cdawHN0/CbEE
+	=; b=ha4lGeLJMAyMUexImqMbKQl4r/g+pV2RPCto7FtbIm7bY/+I+gTfoBzFxou
+	B84aZqtcQRYeUMCKhEMqygX7Tz0y0ZcVS+GePA7QAh8rZskYVSXbzOIkMMrD6GyP
+	1gHEmuKevzlVJWbEj+JD8eMKNPdHy4KFLHJeFNkeG5SMCNsBiFTlT9ZxFML3mbS7
+	8sXLuiGnEzPYdikHQM6TmUi3yCKlhB8ewKeVWPwUr2FdG25xKj8ZunzGydk5KXxe
+	yscM6vY76+d22E6928GZ8Zq9NArm4ADTKoNONZJUKffpZCwK6klXGsMkWJ17Vhdt
+	lBTYzDg4eJIBQzx9uLNRn+FPZFw==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w1eyp60u0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 10:06:56 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C02E010003B;
+	Mon,  5 Feb 2024 10:06:53 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AB8CB29E60A;
+	Mon,  5 Feb 2024 10:06:53 +0100 (CET)
+Received: from localhost (10.252.18.216) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 5 Feb
+ 2024 10:06:53 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+Date: Mon, 5 Feb 2024 10:06:51 +0100
+Subject: [PATCH 1/5] ARM: dts: stm32: add LTDC support for STM32MP13x SoC
+ family
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <20240205-ltdc_mp13-v1-1-072d24bf1b36@foss.st.com>
+References: <20240205-ltdc_mp13-v1-0-072d24bf1b36@foss.st.com>
+In-Reply-To: <20240205-ltdc_mp13-v1-0-072d24bf1b36@foss.st.com>
+To: Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Raphael Gallais-Pou
+	<raphael.gallais-pou@foss.st.com>,
+        Yannick Fertre
+	<yannick.fertre@foss.st.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_04,2024-01-31_01,2023-05-22_02
 
-Hi All,
+STM32MP13x SoC family embeds a new version of LTDC (Liquid crystal
+display - Thin film transistor) Display Controller.
 
-This series adds support for ICSSG ethernet on AM64x. 
-This series is based on the latest next-20240205 linux-next.
+It provides a parallel digital RGB (red, green, blue) and signals for
+horizontal, vertical synchronization, pixel clock and data enable as
+output to interface directly to a variety of LCD-TFT panels.
 
-AM64x EVM has three ethernet ports. One is dedicated to CPSW and one is
-dedicated to ICSSG1. The remaining port is muxed between CPSW and ICSSG1
-ICSSG1 ports. The ICSSG1 node is added in the k3-am642-evm.dts. By default
-the muxed port is used by CPSW so 2nd ICSSG1 port is disabled in the
-k3-am642-evm.dts. But overlay k3-am642-evm-icssg1-dualemac.dtso can be
-applied to use muxed port as ICSSG1.
+Main features
+  * 2 input layers blended together to compose the display
+  * Cropping of layers from any input size and location
+  * Multiple input pixel formats:
+    – Predefined ARGB, with 7 formats: ARGB8888, ABGR8888, RGBA8888,
+    BGRA8888, RGB565, BGR565, RGB888packed.
+    – Flexible ARGB, allowing any width and location for A,R,G,B
+    components.
+    – Predefined YUV, with 3 formats: YUV422-1L (FourCC: YUYV,
+    Interleaved), YUV420-2L (FourCC: NV12, semi planar), YUV420-3L
+    (FourCC: Yxx, full planar) with some flexibility on the sequence of
+    the component.
+  * Color look-up table (CLUT) up to 256 colors (256x24 bits) per layer
+  * Color transparency keying
+  * Composition with flexible window position and size versus output
+  display
+  * Blending with flexible layer order and alpha value (per pixel or
+  constant)
+  * Background underlying color
+  * Gamma with non-linear configurable table
+  * Dithering for output with less bits per component (pseudo-random on
+  2 bits)
+  * Polarity inversion for HSync, VSync, and DataEnable outputs
+  * Output as RGB888 24 bpp or YUV422 16 bpp
+  * Secure layer (using Layer2) capability, with grouped regs and
+  additional interrupt set
+  * Interrupts based on 7 different events
+  * AXI master interface with long efficient bursts (64 or 128 bytes)
 
-This is the v4 of the series [v1].
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
+---
+ arch/arm/boot/dts/st/stm32mp135.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Changes from v3 to v4:
-*) Dropped ethernet3 alias from k3-am642-evm.dts as suggested by Roger.
-*) Dropped extra blank lines from k3-am642-evm.dts.
-*) Updated commit message of patch 3/3
-*) Updated licensing header in k3-am642-evm-icssg1-dualemac.dtso.
-*) Fixed up alias for ethernet1 to icssg1_emac1 in
-   k3-am642-evm-icssg1-dualemac.dtso as suggested by Roger.
-*) Renamed 'mdio-mux-1' and 'mdio-mux-2' to 'mdio-mux@1' and 'mdio-mux@0'
-   respectively as suggested by Roger.
+diff --git a/arch/arm/boot/dts/st/stm32mp135.dtsi b/arch/arm/boot/dts/st/stm32mp135.dtsi
+index 68d32f9f5314..834a4d545fe4 100644
+--- a/arch/arm/boot/dts/st/stm32mp135.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp135.dtsi
+@@ -19,5 +19,16 @@ dcmipp: dcmipp@5a000000 {
+ 			port {
+ 			};
+ 		};
++
++		ltdc: display-controller@5a001000 {
++			compatible = "st,stm32-ltdc";
++			reg = <0x5a001000 0x400>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&rcc LTDC_PX>;
++			clock-names = "lcd";
++			resets = <&scmi_reset RST_SCMI_LTDC>;
++			status = "disabled";
++		};
+ 	};
+ };
 
-Changes from v2 to v3:
-*) No functional changes.
-*) Rebased on latest linux-next (next-20240122) after 6.8-rc1.
-
-Changes from v1 to v2:
-*) Fixed aliases section in k3-am642-evm.dts
-*) Fixed firmware-names in k3-am642-evm.dts
-*) Changed icssg1_phy1 to ethernet-phy@f from ethernet-phy@0 as suggested
-   by Andrew L.
-*) Changed makefile to handle overlays using CONFIG_OF_ALL_DTBS as
-   suggested by Nishant and Andrew Davis.
-*) Fixed aliases section in k3-am642-evm-icssg1-dualemac.dtso
-*) Fixed pinctrl in k3-am642-evm-icssg1-dualemac.dtso
-*) Updated commit message of patch 3/3 of the series to warn about adding
-   label name to 'mdio-mux-1' node.
-
-[v1] https://lore.kernel.org/all/20231207081917.340167-1-danishanwar@ti.com/
-[v2] https://lore.kernel.org/all/20231212165832.3933335-1-danishanwar@ti.com/
-[v3] https://lore.kernel.org/all/20240122113045.1711818-1-danishanwar@ti.com/
-
-Thanks and Regards,
-MD Danish Anwar
-
-MD Danish Anwar (2):
-  arm64: dts: ti: k3-am642-evm: add ICSSG1 Ethernet support
-  arm64: dts: ti: k3-am642-evm: add overlay for icssg1 2nd port
-
-Suman Anna (1):
-  arm64: dts: ti: k3-am64-main: Add ICSSG IEP nodes
-
- arch/arm64/boot/dts/ti/Makefile               |  5 +
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi      | 24 +++++
- .../dts/ti/k3-am642-evm-icssg1-dualemac.dtso  | 79 +++++++++++++++
- arch/arm64/boot/dts/ti/k3-am642-evm.dts       | 99 ++++++++++++++++++-
- 4 files changed, 206 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac.dtso
-
-base-commit: 23e11d0318521e8693459b0e4d23aec614b3b68b
 -- 
-2.34.1
+2.25.1
 
