@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E0E5674A;
-	Mon,  5 Feb 2024 19:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299BF58127;
+	Mon,  5 Feb 2024 19:03:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159782; cv=none; b=CKWbVtxCMCb0m6I2yvONROjTI+8GrntrMbqPU+1o6S0K6Wl5NowT8XO6JFjDQ+dujVGTp6DAkzMweWnjuAP+L/WoXLm5d3Wvt+nYDkCDpbrfXHuwVlnfynCSy2BpAZtShhCSjyMnptPnfssn5OEM9foFphpZapmN2G+UgWvyhqU=
+	t=1707159785; cv=none; b=a4Oiaow5IgJS88Z89iP0jFDRL8UwzuISXHI1vwQGs+ercuHEfkEBV29VTGOAxziu6nO5VIyDVH0Z3ePbPFB4V8n7v2Y0yHLw4Fwa1HBI7agObfc/Cc0iX6wpMsqt8i7jR/fqeyRpTcY12Qi72OYnBvXAHKvYWqWkeino619VhY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159782; c=relaxed/simple;
-	bh=znOHAaa3DwDxM9WxEYLeSLhTNRtK/ileI0+EFf25BJg=;
+	s=arc-20240116; t=1707159785; c=relaxed/simple;
+	bh=mMsgTGDgH2EjVae8ropBazsxehXluLS59BuMK2VgrxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j0U/fleXI+tkN0fxBeIiQYjZKTPDFU+oiGXnOSEAyneYf4zf72QPdc/Qw7CsmE3gFOyIQMKJN4wo4AE3oc0pgJsJMb5cmbvSxN1+ewv1N/uO24lxNqRh3mnvzCKApN6huylXxp9x4E0Jte3L5eax5eIwOF1gqOn59Yuq57xDWr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CK6gDeWz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yay/gAUHsOm0cwBL+R2vhem7TbuGBTRePRdTEO1/7QWuaajuODhTijJ1/LIhfynkSuDLOQOvkXZnLY4Kg8f5e79BYk8hS8a192mbu4meDZ8+F97V4e93t9NZhGW8FBXBrlNykvXMgDycyl8Bz0kqq7D5FUQXCmM9mhne/1DSC8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i+++u7Q0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CK6gDeWz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1AA5C433F1;
-	Mon,  5 Feb 2024 19:03:01 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i+++u7Q0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582C2C433A6;
+	Mon,  5 Feb 2024 19:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159782;
-	bh=znOHAaa3DwDxM9WxEYLeSLhTNRtK/ileI0+EFf25BJg=;
+	s=korg; t=1707159784;
+	bh=mMsgTGDgH2EjVae8ropBazsxehXluLS59BuMK2VgrxU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CK6gDeWzryYBIhmvc3sZdBDLF8IHTQ7MRUDiWNIphDXcET3zwxhgLhzsVrZgnlqmL
-	 r6XF/i16wo5e3R2TXfadszu0HWFuFFkpz/67eMR+s2yOj5+3i/Y/MrtrAhS/zgS+WC
-	 NfmYPJPAJLefxJr7HiafmXt3fcT2nKO0xwX/3SzY=
-Date: Mon, 5 Feb 2024 04:46:32 -0800
+	b=i+++u7Q0b3k3ygSpepKnv8bvRZjuiQe3pIoLP8FCWu9qKm+KUNDxAX+2wK2FujKpS
+	 6UZbiY3mErn140+CaNJkjJ/doAfVepPhCrZ1gGbhIcfn3Cc601PgSbUAIdOdFtIYnH
+	 OAPFQT6qLEsqVNUoqfjm0VWvAMmlLSnhc2uI12GY=
+Date: Mon, 5 Feb 2024 04:46:40 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vdpa: make vdpa_bus const
-Message-ID: <2024020528-armrest-disinfect-2c84@gregkh>
-References: <20240204-bus_cleanup-vdpa-v1-1-1745eccb0a5c@marliere.net>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: tcm_loop: make tcm_loop_lld_bus const
+Message-ID: <2024020535-straining-marital-0334@gregkh>
+References: <20240204-bus_cleanup-target-v1-1-96106936c4ab@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +40,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-vdpa-v1-1-1745eccb0a5c@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-target-v1-1-96106936c4ab@marliere.net>
 
-On Sun, Feb 04, 2024 at 05:50:45PM -0300, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 05:48:26PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the vdpa_bus variable to be a constant structure as well,
+> move the tcm_loop_lld_bus variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
