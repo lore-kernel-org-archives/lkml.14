@@ -1,94 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.astralinux.ru (mail.astralinux.ru [217.74.38.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6165A446B2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872022C85C;
+	Mon,  5 Feb 2024 15:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.74.38.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707146646; cv=none; b=o1G/lPgsZZK83M1n9xFM7USIPmAOq/ogPdR54VZ9RlzwHNjASauXPUHrp62W2fm4p7m/gML+YpqeMhf5K4k/5F10LZdJRy1FMkqrtT5qnVNJyJmd+TV506E6ICzM3yuMRKA3kBaCm9y80fEMcJ8N33WWTOIxN0AuMkba6ChsJB8=
+	t=1707146684; cv=none; b=pB1/9jwwVUJSQOVdP/a1k3KaBKRCWgn9xY4AEPwb2/+tGPBjMGXUyzuxOmc83KiQVtwjyOFa03lH0fbyxM8rEKf0xhBMR8L889cyKY3HgCOdrnNNdqTrtEC/dC5QQ2CiKzZ3p8FonCq3IiuH0OEPGwyPh3KnFC3plPd/TpKOpys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707146646; c=relaxed/simple;
-	bh=bY2LCfx5dCeJo/RzEZUvi63DItu/t1wlxCBwCaaht2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UvEQ9x7gd9msll6ouMa9Qbi6rVevfoLQaJrm6a85m9g4/2+jFgCWja96tj6ZKiihx8ncrAKYlBz2V0Vt/K4sUpTt7cjakFBcHqWSFgO7yqBLTQY2DrZ/wDagOtnBHIO1tcWWsQH9tMslmDqqBav/0qHMfNuLVwKMcJtUT+xr5dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wb06kQfv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wb06kQfv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707146643;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMmxqlMU+IwtfjOZB2FX79QpzJiP3NtOWGspNIlRY28=;
-	b=Wb06kQfvuWN4HOzFEs42IS+VClIyzSzovYyEcG2NyRRwqqswxoWpZ0EAe5bCwDuzHs5Eem
-	+Q4mjmeCjqpdca60MNaaOZ7ALme4x/V9RjsLy8DRxoERFiFmVjfJmvdmEfEYKsA54s1yND
-	03SMX3DziwmEodOJOGAw4NK7hqY5wOs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-KihJCJEhN_i8IzwsAGZJog-1; Mon, 05 Feb 2024 10:23:59 -0500
-X-MC-Unique: KihJCJEhN_i8IzwsAGZJog-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 95B9687DC00;
-	Mon,  5 Feb 2024 15:23:59 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.165])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 2A40F1C060AF;
-	Mon,  5 Feb 2024 15:23:57 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  5 Feb 2024 16:22:44 +0100 (CET)
-Date: Mon, 5 Feb 2024 16:22:41 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] pidfd: implement PIDFD_THREAD flag for
- pidfd_open()
-Message-ID: <20240205152241.GB15853@redhat.com>
-References: <20240131132541.GA23632@redhat.com>
- <20240131132602.GA23641@redhat.com>
- <20240202-helium-eurem-f63c0f9328c0@brauner>
+	s=arc-20240116; t=1707146684; c=relaxed/simple;
+	bh=fEE6msD4XdTRoTXofN5+urjqqiYv6m5CX0D62N32MYg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FJ5uaGIeU2pE3AzMKIaFv+wOO2xo6PWun6BRqq6/rPhmvgdT5Mb38yZAzEwwX9d/EmeYQWJ05rSe9f/8q+Mvf2j+G3onwultatKSfsDR7+/vnbq6aiTEABRDaUiIzPvK15LDJeNBzQgGPtGz1PjSxNl7DdGQDEFjMQhL/6IJkJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=217.74.38.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.astralinux.ru (Postfix) with ESMTP id 2E9C31865695;
+	Mon,  5 Feb 2024 18:24:31 +0300 (MSK)
+Received: from mail.astralinux.ru ([127.0.0.1])
+	by localhost (rbta-msk-vsrv-mail01.astralinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id VQTBXYzT9CdU; Mon,  5 Feb 2024 18:24:30 +0300 (MSK)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.astralinux.ru (Postfix) with ESMTP id CC8F1186563B;
+	Mon,  5 Feb 2024 18:24:30 +0300 (MSK)
+X-Virus-Scanned: amavisd-new at astralinux.ru
+Received: from mail.astralinux.ru ([127.0.0.1])
+	by localhost (rbta-msk-vsrv-mail01.astralinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kfOHWGwef5L5; Mon,  5 Feb 2024 18:24:30 +0300 (MSK)
+Received: from rbta-msk-lt-106062.astralinux.ru (unknown [10.177.20.58])
+	by mail.astralinux.ru (Postfix) with ESMTPSA id 1C40A18639A5;
+	Mon,  5 Feb 2024 18:24:30 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Kamil Debski <k.debski@samsung.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] media: coda: cast an operand of multiplication to a larger type
+Date: Mon,  5 Feb 2024 18:23:50 +0300
+Message-Id: <20240205152350.22547-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202-helium-eurem-f63c0f9328c0@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Transfer-Encoding: quoted-printable
 
-On 02/02, Christian Brauner wrote:
->
-> > @@ -2050,6 +2051,8 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
-> >
-> >  	seq_put_decimal_ll(m, "Pid:\t", nr);
-> >
-> > +	/* TODO: report PIDFD_THREAD */
->
-> So I think we don't need to do anything here. Since PIDFD_THREAD sets
-> O_EXCL in file->f_flags and in contrast to do_dentry_open() it isn't
-> dropped. So userspace can already detect PIDFD_NONBLOCK as O_NONBLOCK
-> and PIDFD_THREAD as O_EXCL.
+If width and height are 0xffff (or close), the result of
+multiplication overflow. Add casting to a larger type
+to avoid undefined behavior.
 
-Ah, indeed, I didn't know that fs/proc/fd.c:seq_show() reports ->f_flags.
-Thanks.
+Such values are possible in CODA7, but unlikely.
 
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
+Fixes: 918c66fd4126 ("[media] coda: add CODA7541 decoding support")
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+---
+ drivers/media/platform/chips-media/coda/coda-bit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-OK, what about another TODO in sys_pidfd_send_signal() ?
-
-I mean, should I send a simple patch which changes pidfd_send_signal()
-to use do_send_specific() if PIDFD_THREAD ? Or do you think this should
-be controlled by pidfd_send_signal's "flags" argument?
-
-I honestly do not know what makes more sense.
-
-Oleg.
+diff --git a/drivers/media/platform/chips-media/coda/coda-bit.c b/drivers=
+/media/platform/chips-media/coda/coda-bit.c
+index ed47d5bd8d61..84ded154adfe 100644
+--- a/drivers/media/platform/chips-media/coda/coda-bit.c
++++ b/drivers/media/platform/chips-media/coda/coda-bit.c
+@@ -585,7 +585,7 @@ static int coda_alloc_context_buffers(struct coda_ctx=
+ *ctx,
+=20
+ 	if (!ctx->slicebuf.vaddr && q_data->fourcc =3D=3D V4L2_PIX_FMT_H264) {
+ 		/* worst case slice size */
+-		size =3D (DIV_ROUND_UP(q_data->rect.width, 16) *
++		size =3D (unsigned long)(DIV_ROUND_UP(q_data->rect.width, 16) *
+ 			DIV_ROUND_UP(q_data->rect.height, 16)) * 3200 / 8 + 512;
+ 		ret =3D coda_alloc_context_buf(ctx, &ctx->slicebuf, size,
+ 					     "slicebuf");
+--=20
+2.30.2
 
