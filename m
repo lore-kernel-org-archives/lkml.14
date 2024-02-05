@@ -1,132 +1,172 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AD422EF0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606DA1CD0C;
+	Mon,  5 Feb 2024 13:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707138665; cv=none; b=ujPniwZX++1EeYFYEkOrY3aUJEfRY5Ct8e2A+4mh/sDh9l7AuaDIwQaXYUfDC0Gr7KQpoNe1NyWmyEwcLLUuny47y8A9GcCF4nxtp0/veqWtbd8oMGdzKQptVuVNXNFipdA5Zj7li1/6b0LJ486BhzHBUsteNM8pCBHa7wLfybw=
+	t=1707138668; cv=none; b=i9P0/3Nmb7fNTRbh7AYTzYVsDlYV2K020veor+HL74iGMI5+8M3WEHiGkX226C4iGsC2HmLvCm0WILE0gcQibCk3uTYsqS0od/S5YLOz4tXH1WbVEouiNDEabF9Wo8CdjyVO5e9k9eNNMvZxKCbxg9iGOXmH9iuy42BdIeN0lek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707138665; c=relaxed/simple;
-	bh=8xEKAj/aIXoAnef6WCYeb1etalNTieAd05i+DkQi20o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UINsD6bdmsLTejNWZLNMyDcQhzezemkGcqaF9SDZZGEODEur0CZ0piJ1eZkj9j7KeiRN8fX0NHjILrogpxWT6QSWiGZ5KIGa+1lbQiHAto0VyIRUWe2klNfULn4i3zxT9Wx3E2VCAwCzkf7LvE+R9Id4/RuWcoPjPy/WGZB1rSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bBdQmjDS; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707138668; c=relaxed/simple;
+	bh=MYkS9d2s6p9HKgiwTdKBmVmHZlIcyzTFIDk1v+yTDhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=txRo6nyh45tzv6A9MKOwrgSBARkz6ZOyeBDRgWDPaHhrwwJrvh0OimEzdUsaJuIMbJOUl4U2MA3bNzY52zFzSta7vyQ53g3nKu6Hk+adKxQoZ2egeOe2uC4sH/Msw1fH8ydHbotaD1qj3tLIEzSAootX7gqLYF1Pa4GcGc5Jpwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HEwAjSJg; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bBdQmjDS"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d5bbbe5844so1902476241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:11:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707138663; x=1707743463; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kgO66v67ga2hZ/fa1VFxPxUYTn/f70qrUJZfQyHF9yA=;
-        b=bBdQmjDSnnkWD5f1QtQfnNPLrvNXSidpvjrE8+RIApgvH2HKizXXrMUh00mjc8DvCt
-         0uWD3IiASEdE+OaouQPasLRBYGy7GPQS4VFIulh9aa7qBIGAlYT0lhbkaztXGVQmoi95
-         nH3VQDKDQ45KtC9Q0GoNsinbGjpAIOT5KLcUVQTUSynRcODRAvBReUkh5EfK0isEGbC0
-         ss1WFU3SRdB3YxF2LjxnnAbHp9a9cThGow+xNeDPZHBohqIHlQq8Ix0wlQdzjhzGOzsW
-         dUSMCivz48FGXUHIAKWnF87ayITJSgWEyzxtoJwacYBDZZhKUvjPFWVpWfewdGzsh6qt
-         BZIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707138663; x=1707743463;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kgO66v67ga2hZ/fa1VFxPxUYTn/f70qrUJZfQyHF9yA=;
-        b=X02qpOSr9+/qBChlfcn1SI09pfnWEt9Gz2HVvwMZ2gtZwdE7nfy/Q7jxmDwyf/LSGk
-         I9Thl/+CMks/Js1Rf09g0f7ayEonoMHzHhJIVKkz1R+AmrWF5/X3o6swXBGQ6CWgqGH7
-         bC5MESa4ZozpHIvACV6WV3aPlnjV0n7FQB5rpaUMyF4ByuOp/sR1GbaEjd1pFqUjLYLa
-         DzVqaNeSxvXIr/PeydaQQ6cvacEQvPg8tR1WVmOWWwJpdBdsYFJLHmb6vsjjL2/5psT7
-         IAII6+k+U55fhYJRMZerExU6KrhuFoErSX1WPOkwXRXAuFzK7Inom0HUIY6Wqc4ZZtKE
-         nsag==
-X-Gm-Message-State: AOJu0YxedK65AoONSqrJRRdHEL2t/6TG+kkWZDq7xV12DEBmkK7dONTN
-	fiNzJcKPho7EvcpylAKVIhW9Y+u0rpDYjust67DBgGUL08yG7iwlqlW7jI0NLsn9+7s01ORf/lW
-	y63BTRJD3cOUvYUN95ctKLC2JkzcSCUAqj7c4
-X-Google-Smtp-Source: AGHT+IGvWhOgVq5Sybn9CKaxdFweO8fp2yqczsb5Bclf6Z7TT13n+R/qBMPNOqS9yiUPSbnFy6IPYHjqSKy05FWL5Oc=
-X-Received: by 2002:a05:6122:4d14:b0:4c0:1cc8:8819 with SMTP id
- fi20-20020a0561224d1400b004c01cc88819mr2759261vkb.5.1707138662522; Mon, 05
- Feb 2024 05:11:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HEwAjSJg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707138666; x=1738674666;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MYkS9d2s6p9HKgiwTdKBmVmHZlIcyzTFIDk1v+yTDhg=;
+  b=HEwAjSJg5dHWu/CRBT7FkhPMH025bzkdDevjX7xpRC9DlQmAuaPMjg3h
+   IpWwR7Gkhnw9CtD23PO5GDanq9H9BUc/JUTcgoi74n2f0LnsIcJ8Veq9B
+   qPbcrIywHxCU6BukqJagG0wFQKUOJ2FVd0yXuYlVDLOfq1YQv/coAI94r
+   ZOM50Jeg2aU7PZ/mbALyU4y1NmrhocopDWCFQ16zgmRCZ9apttW9Yk/8i
+   gJq6IZ3LiCW5FgaTpKSQgeOBeQwZEsM1SoKgUBPH3M64SP3KULNsUDvXU
+   s/W8xezoiwRb3nztzHQw2f7w42FVaA2IxiGu8242qaVIFd3b4g96q2P3A
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="677922"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="677922"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:11:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="1033021"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.164])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:11:01 -0800
+Message-ID: <1ff39c81-f207-480a-8169-85b273631594@intel.com>
+Date: Mon, 5 Feb 2024 15:10:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205093725.make.582-kees@kernel.org> <67a842ad-b900-4c63-afcb-63455934f727@gmail.com>
- <202402050457.0B4D90B1A@keescook>
-In-Reply-To: <202402050457.0B4D90B1A@keescook>
-From: Marco Elver <elver@google.com>
-Date: Mon, 5 Feb 2024 14:10:26 +0100
-Message-ID: <CANpmjNMiMuUPPPeOvL76V9O-amx9uyKZYtOf5Q2b73v8O_xHWw@mail.gmail.com>
-Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
-To: Kees Cook <keescook@chromium.org>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] perf: script: add field 'disasm' to display
+ mnemonic instructions
+Content-Language: en-US
+To: Changbin Du <changbin.du@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com
+References: <20240122112054.1576835-1-changbin.du@huawei.com>
+ <20240122112054.1576835-4-changbin.du@huawei.com>
+ <f8c1b042-2b65-4dd7-a692-79fead351e5a@intel.com>
+ <20240205121938.sl4ykpk25lgxhgfj@M910t>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240205121938.sl4ykpk25lgxhgfj@M910t>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 5 Feb 2024 at 13:59, Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Feb 05, 2024 at 01:54:24PM +0100, Andrey Ryabinin wrote:
-> >
-> >
-> > On 2/5/24 10:37, Kees Cook wrote:
-> >
-> > > ---
-> > >  include/linux/compiler_types.h |  9 ++++-
-> > >  lib/Kconfig.ubsan              | 14 +++++++
-> > >  lib/test_ubsan.c               | 37 ++++++++++++++++++
-> > >  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
-> > >  lib/ubsan.h                    |  4 ++
-> > >  scripts/Makefile.lib           |  3 ++
-> > >  scripts/Makefile.ubsan         |  3 ++
-> > >  7 files changed, 137 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> > > index 6f1ca49306d2..ee9d272008a5 100644
-> > > --- a/include/linux/compiler_types.h
-> > > +++ b/include/linux/compiler_types.h
-> > > @@ -282,11 +282,18 @@ struct ftrace_likely_data {
-> > >  #define __no_sanitize_or_inline __always_inline
-> > >  #endif
-> > >
-> > > +/* Do not trap wrapping arithmetic within an annotated function. */
-> > > +#ifdef CONFIG_UBSAN_SIGNED_WRAP
-> > > +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
-> > > +#else
-> > > +# define __signed_wrap
-> > > +#endif
-> > > +
-> > >  /* Section for code which can't be instrumented at all */
-> > >  #define __noinstr_section(section)                                 \
-> > >     noinline notrace __attribute((__section__(section)))            \
-> > >     __no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
-> > > -   __no_sanitize_memory
-> > > +   __no_sanitize_memory __signed_wrap
-> > >
-> >
-> > Given this disables all kinds of code instrumentations,
-> > shouldn't we just add __no_sanitize_undefined here?
->
-> Yeah, that's a very good point.
->
-> > I suspect that ubsan's instrumentation usually doesn't cause problems
-> > because it calls __ubsan_* functions with all heavy stuff (printk, locks etc)
-> > only if code has an UB. So the answer to the question above depends on
-> > whether we want to ignore UBs in "noinstr" code or to get some weird side effect,
-> > possibly without proper UBSAN report in dmesg.
->
-> I think my preference would be to fail safe (i.e. leave in the
-> instrumentation), but the intent of noinstr is pretty clear. :P I wonder
-> if, instead, we could adjust objtool to yell about cases where calls are
-> made in noinstr functions (like it does for UACCESS)... maybe it already
-> does?
+On 5/02/24 14:19, Changbin Du wrote:
+> On Mon, Feb 05, 2024 at 11:23:21AM +0200, Adrian Hunter wrote:
+>> On 22/01/24 13:20, Changbin Du wrote:
+>>> In addition to the 'insn' field, this adds a new field 'disasm' to
+>>> display mnemonic instructions instead of the raw code.
+>>>
+>>> $ sudo perf script -F +disasm
+>>>        perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
+>>>        perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
+>>>               ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	movq %rsp, %rdi
+>>>               ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	callq _dl_start+0x0
+>>>
+>>> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+>>>
+>>> ---
+>>> v2:
+>>>   - update Documentation.
+>>> ---
+>>>  tools/perf/Documentation/perf-script.txt | 13 +++++++------
+>>>  tools/perf/builtin-script.c              |  8 +++++++-
+>>>  2 files changed, 14 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+>>> index ff9a52e44688..578fa59f51a5 100644
+>>> --- a/tools/perf/Documentation/perf-script.txt
+>>> +++ b/tools/perf/Documentation/perf-script.txt
+>>> @@ -132,9 +132,10 @@ OPTIONS
+>>>          Comma separated list of fields to print. Options are:
+>>>          comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
+>>>          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+>>> -        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
+>>> -        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
+>>> -        machine_pid, vcpu, cgroup, retire_lat.
+>>> +        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
+>>> +        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
+>>> +        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
+>>> +
+>>>          Field list can be prepended with the type, trace, sw or hw,
+>>>          to indicate to which event type the field list applies.
+>>>          e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
+>>> @@ -217,9 +218,9 @@ OPTIONS
+>>>  	Instruction Trace decoding. For calls and returns, it will display the
+>>>  	name of the symbol indented with spaces to reflect the stack depth.
+>>>  
+>>> -	When doing instruction trace decoding insn and insnlen give the
+>>> -	instruction bytes and the instruction length of the current
+>>> -	instruction.
+>>> +	When doing instruction trace decoding, insn, disasm and insnlen give the
+>>> +	instruction bytes, disassembled instructions (requires libcapstone support)
+>>> +	and the instruction length of the current instruction respectively.
+>>>  
+>>>  	The synth field is used by synthesized events which may be created when
+>>>  	Instruction Trace decoding.
+>>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>>> index 4817a37f16e2..4ac9670704ff 100644
+>>> --- a/tools/perf/builtin-script.c
+>>> +++ b/tools/perf/builtin-script.c
+>>> @@ -135,6 +135,7 @@ enum perf_output_field {
+>>>  	PERF_OUTPUT_CGROUP          = 1ULL << 39,
+>>>  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
+>>>  	PERF_OUTPUT_DSOFF           = 1ULL << 41,
+>>> +	PERF_OUTPUT_DISASM          = 1ULL << 42,
+>>>  };
+>>>  
+>>>  struct perf_script {
+>>> @@ -190,6 +191,7 @@ struct output_option {
+>>>  	{.str = "bpf-output",   .field = PERF_OUTPUT_BPF_OUTPUT},
+>>>  	{.str = "callindent", .field = PERF_OUTPUT_CALLINDENT},
+>>>  	{.str = "insn", .field = PERF_OUTPUT_INSN},
+>>> +	{.str = "disasm", .field = PERF_OUTPUT_DISASM},
+>>>  	{.str = "insnlen", .field = PERF_OUTPUT_INSNLEN},
+>>>  	{.str = "brstackinsn", .field = PERF_OUTPUT_BRSTACKINSN},
+>>>  	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
+>>> @@ -1515,6 +1517,10 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>>>  		printed += fprintf(fp, " insn: ");
+>>>  		printed += sample__fprintf_insn_raw(sample, fp);
+>>>  	}
+>>> +	if (PRINT_FIELD(DISASM) && sample->insn_len) {
+>>> +		printed += fprintf(fp, "\t\t");
+>>
+>> This is good, except if both 'insn' and 'disasm' are used together.
+>> It either:
+>>  a) without libcapstone, prints insn bytes twice
+>>
+>> 	Probably simpler to make 'disasm' without libcapstone
+>> 	a fatal error explaining that perf needs to be built
+>> 	with libcapstone support for 'disasm' to work.
+>>
+> Instead of fatal error, I print a warning message for this. Because
+> perf_sample__fprintf_insn() cannot return negtive error number.
 
-It already does, see CONFIG_NOINSTR_VALIDATION (yes by default on x86).
+It could be validated in advance, perhaps in parse_output_fields().
+
+> 
+>>  b) with libcapstone, disassembly does not line up nicely
+>>
+>  
+> 
+
