@@ -1,90 +1,128 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F334BB641;
-	Mon,  5 Feb 2024 02:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE978F47
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 02:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707100956; cv=none; b=FYPQ8rr3zaz4gnpWBe1Ytyi8iuW4sJGwldozjGE66nkntPuR7HDVEIlv3wQ0evjKQKmCU6VM3+BWMzpdkTh2fxIsSaTSFcbVMLrDR/fDOEQ/lGe4wikdKx4IvhhLX3KgjNbHejBpKYV2o9oz+VXhho5bURxn+5T/ZcNBuMeBFBw=
+	t=1707101423; cv=none; b=fyor/RTM/5HHJ/cUVkIin1Uap6qfEeWCNqZO4b3LB+WPQLFnsFu1PNiclh/temf2VxZBkA4A8lt/MwS3bTpTcLsxshLQjURuqR5xqaU75YUBj+XTUlJQFz/IT05eXvuDx/h0xfyiUmgcX5WIB+hPosKG1yjyGQsTlxDz4g2iv8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707100956; c=relaxed/simple;
-	bh=HLOV5juc9V21oxs5QlKgUfEkMeIEqmDHRV557PeYu5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ul7PuYKExvfovABrvNsi1BgxDp2b3kQU86/DVOvdNtt8NPTkdl2aNEwoYgpLR3hqZXoATyLsSLjYImq34gJnoDngOUCMeK5gQr1OlbNTlX8VwnqXLhl6KJwM7FSZtn0QaymSUJyfsFPyn+d5jKG5U9BKFUQ7hXAlm9RelCOW8Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.62.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp71t1707100845t33pzhpj
-X-QQ-Originating-IP: tEmptkO3RX7FmDcpxkDieLOniV0tL5NFvlU0xAeyXd0=
-Received: from localhost ( [183.209.108.228])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 05 Feb 2024 10:40:44 +0800 (CST)
-X-QQ-SSF: 01400000000000504000000A0000000
-X-QQ-FEAT: q+EIYT+FhZrcpAw8J2l7WYvl1nkWUiMk5YKYvT/b9Yt7WT9Ef3sSYNzREBFwn
-	gfqNy+umEk8UOTLeVLbEYL49fYXZ8WvfbX9v7vsGiGxNF/c7na+ZIQxjRURnp4WpzmK8ecM
-	Af9captGYMnaoI1MxWe+IgV7UisapmLsv7QgGRookv0v6EzH3n7Kmq4MZ7pNxUtxr0V5b6Y
-	xzwvPq+CBgupPWnqqfCMZyrgw0rAksl9UTMQfyspbiL8FSUbma74JDxoYvg0R4JEBjRW7ce
-	UzeNk3xSIMjQu3kZ4qHcLpE5W2XRvaAKAT6LVBjpm24S7ZXoGxfPVIUtYPsPsXgeWOof9P0
-	7x1A3x7GMb6Hk1NeKxNCm4eQ2TndP92FbXtLDdYM+68BG0J/lin+0Zv/RMUkRQUoUU1EovZ
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 1361134515028198652
-From: Dawei Li <dawei.li@shingroup.cn>
-To: robh+dt@kernel.org,
-	frowand.list@gmail.com,
-	lkp@intel.com
-Cc: stephen.boyd@linaro.org,
-	oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH] of: Make explicit cpu_to_be32 conversion to mute sparse warning
-Date: Mon,  5 Feb 2024 10:40:33 +0800
-Message-Id: <20240205024033.3572617-1-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <202402042134.GEb3Bgwl-lkp@intel.com>
-References: <202402042134.GEb3Bgwl-lkp@intel.com>
+	s=arc-20240116; t=1707101423; c=relaxed/simple;
+	bh=/+eNhUX5Da15gfgQrb2hDNqaoiKofc+mK/1pSJDmibc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gPZSKj5+8PHEy3cuSCCcVXuaWEQiHmmxpNUXN2XwiN08iS2GXLXYxq1HASxxy9HYV1n/YSBc9XiXuLPazVABUJu1uJRZER7f86Yeaf5vF2QQQcI/SQjRN/GRFcSBOx7d+TxRa2ZH5PyioVc3u9GiJ1W8IqMQE6i2pI5bLFdDPiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jt+T+wjw; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jt+T+wjw"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1707101418; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=t0gk3xBIxgK8STj8RToaRUAGDh+0bUS8n9Avz3FOyak=;
+	b=jt+T+wjwnAsHod4w78hjPtemo/SM4xuCyDPPxKW0FM0iamlRTHeAb0EwfLgLSKU9dQWeWv/IMg4JNvDg7VkQCWXCtNGyNhST8qQL7gL3Zt1gEhORwdkOaE02hkfsRl6c1ltMSG78ZvMJFH0YGrU1Ww0c7ikMIep8esoTALdRzrc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W02DprY_1707101415;
+Received: from 30.97.56.40(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W02DprY_1707101415)
+          by smtp.aliyun-inc.com;
+          Mon, 05 Feb 2024 10:50:16 +0800
+Message-ID: <909cee7d-0201-4429-b85d-7d2662516e45@linux.alibaba.com>
+Date: Mon, 5 Feb 2024 10:50:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm: hugetlb: remove __GFP_THISNODE flag when
+ dissolving the old hugetlb
+To: Michal Hocko <mhocko@suse.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, osalvador@suse.de,
+ david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <6f26ce22d2fcd523418a085f2c588fe0776d46e7.1706794035.git.baolin.wang@linux.alibaba.com>
+ <Zbu4cD1XLFLfKan8@tiehlicka>
+ <3f31cd89-f349-4f9e-bc29-35f29f489633@linux.alibaba.com>
+ <ZbylJr_bbWCUMjMl@tiehlicka>
+ <f1606912-5bcc-46be-b4f4-666149eab7bd@linux.alibaba.com>
+ <Zby7-dTtPIy2k5pj@tiehlicka>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <Zby7-dTtPIy2k5pj@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Kernel test robot reports sparse warning:
-sparse warnings: (new ones prefixed by >>)
->> drivers/of/base.c:1337:73: sparse: sparse: incorrect type in initializer
-   (different base types) @@  expected restricted __be32 @@  got int @@
-   drivers/of/base.c:1337:73: sparse:     expected restricted __be32
-   drivers/of/base.c:1337:73: sparse:     got int
 
-Thus, Make explicit conversions to mute warning(Although BE and LE are
-exactly same in binary representation for 0/~0).
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402042134.GEb3Bgwl-lkp@intel.com/
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- drivers/of/base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 2/2/2024 5:55 PM, Michal Hocko wrote:
+> On Fri 02-02-24 17:29:02, Baolin Wang wrote:
+>> On 2/2/2024 4:17 PM, Michal Hocko wrote:
+> [...]
+>>>> Agree. So how about below changing?
+>>>> (1) disallow fallbacking to other nodes when handing in-use hugetlb, which
+>>>> can ensure consistent behavior in handling hugetlb.
+>>>
+>>> I can see two cases here. alloc_contig_range which is an internal kernel
+>>> user and then we have memory offlining. The former shouldn't break the
+>>> per-node hugetlb pool reservations, the latter might not have any other
+>>> choice (the whole node could get offline and that resembles breaking cpu
+>>> affininty if the cpu is gone).
+>>
+>> IMO, not always true for memory offlining, when handling a free hugetlb, it
+>> disallows fallbacking, which is inconsistent.
+> 
+> It's been some time I've looked into that code so I am not 100% sure how
+> the free pool is currently handled. The above is the way I _think_ it
+> should work from the usability POV.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b0ad8fc06e80..f71cda9ac09d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1345,8 +1345,8 @@ int of_parse_phandle_with_args_map(const struct device_node *np,
- 	char *pass_name = NULL;
- 	struct device_node *cur, *new = NULL;
- 	const __be32 *map, *mask, *pass;
--	static const __be32 dummy_mask[] = { [0 ... MAX_PHANDLE_ARGS] = ~0 };
--	static const __be32 dummy_pass[] = { [0 ... MAX_PHANDLE_ARGS] = 0 };
-+	static const __be32 dummy_mask[] = { [0 ... MAX_PHANDLE_ARGS] = cpu_to_be32(~0) };
-+	static const __be32 dummy_pass[] = { [0 ... MAX_PHANDLE_ARGS] = cpu_to_be32(0) };
- 	__be32 initial_match_array[MAX_PHANDLE_ARGS];
- 	const __be32 *match_array = initial_match_array;
- 	int i, ret, map_len, match;
--- 
-2.27.0
+Please see alloc_and_dissolve_hugetlb_folio().
 
+>> Not only memory offlining, but also the longterm pinning (in
+>> migrate_longterm_unpinnable_pages()) and memory failure (in
+>> soft_offline_in_use_page()) can also break the per-node hugetlb pool
+>> reservations.
+> 
+> Bad
+> 
+>>> Now I can see how a hugetlb page sitting inside a CMA region breaks CMA
+>>> users expectations but hugetlb migration already tries hard to allocate
+>>> a replacement hugetlb so the system must be under a heavy memory
+>>> pressure if that fails, right? Is it possible that the hugetlb
+>>> reservation is just overshooted here? Maybe the memory is just terribly
+>>> fragmented though?
+>>>
+>>> Could you be more specific about numbers in your failure case?
+>>
+>> Sure. Our customer's machine contains serveral numa nodes, and the system
+>> reserves a large number of CMA memory occupied 50% of the total memory which
+>> is used for the virtual machine, meanwhile it also reserves lots of hugetlb
+>> which can occupy 50% of the CMA. So before starting the virtual machine, the
+>> hugetlb can use 50% of the CMA, but when starting the virtual machine, the
+>> CMA will be used by the virtual machine and the hugetlb should be migrated
+>> from CMA.
+> 
+> Would it make more sense for hugetlb pages to _not_ use CMA in this
+> case? I mean would be better off overall if the hugetlb pool was
+> preallocated before the CMA is reserved? I do realize this is just
+> working around the current limitations but it could be better than
+> nothing.
+
+In this case, the CMA area is large and occupies 50% of the total 
+memory. The purpose is that, if no virtual machines are launched, then 
+CMA memory can be used by hugetlb as much as possible. Once the virtual 
+machines need to be launched, it is necessary to allocate CMA memory as 
+much as possible, such as migrating hugetlb from CMA memory.
+
+After more thinking, I think we should still drop the __GFP_THISNODE 
+flag in alloc_and_dissolve_hugetlb_folio(). Firstly, not only it 
+potentially cause CMA allocation to fail, but it might also cause memory 
+offline to fail like I said in the commit message. Secondly, there have 
+been no user reports complaining about breaking the per-node hugetlb 
+pool, although longterm pinning, memory failure, and memory offline can 
+potentially break the per-node hugetlb pool.
+
+>> Due to several nodes in the system, one node's memory can be exhausted,
+>> which will fail the hugetlb migration with __GFP_THISNODE flag.
+> 
+> Is the workload NUMA aware? I.e. do you bind virtual machines to
+> specific nodes?
+
+Yes, the VM can bind nodes.
