@@ -1,251 +1,103 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89F03FB37;
-	Mon,  5 Feb 2024 17:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9463D54A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707152901; cv=none; b=hYX+aeqonosNQV9MzVpVdY/rBNXfiDtrhXuq4TJCN7PQKIx1jVtNtD4aaRGSPYaC3GUrI886wsOZjLEX1PM8xcrX63OHDRdGZEpU4aFl9cgdjm+fCEyPro9oVE/PYy8UxX5h8Yt2pJIbUI3iXCEoQwItaHWjLxT24qyN3d823o0=
+	t=1707152923; cv=none; b=Im+3heg8+JiwJiM3saUj/XQ4ldhcpIm/tS/kLW87BcPM8oeB51HuN626rVOreEiqzAVpNFkTDEDc8ox9IJBOSlZbnLx+1BYm3/b2gB5QFGEfXmMEzv/uNSGm4EZzS4pyVeVGMBK7PNKrUhwAIXml1eLsVzL5Ytd1RSIEKpLEJ1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707152901; c=relaxed/simple;
-	bh=reCj+r4VxIU6Y+cGYb9l8G/P6+gruLC060SkULyMf0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p610WiOStJG/BQPRCRqildPngpxkL2oU+zI8y95J7dRsVoD4/dhjlkJTpR3oUHU0S1KmvXHLrkIi9irgHbDyAuiSNUdPvBwQ0TG/L2sgVje9cBe+5dBoeX/akAIilPPYWSoYxHVwmOzp+45aWWXOYzIC+RVAKRraIwTj9zgU0hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XV11RjE3; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707152923; c=relaxed/simple;
+	bh=8gBlKfQm3vRprhFc0/QpnWE8p96XYPuWr7rTbz4Ejy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lTlbY43S+ZveNo8AaIU3M53GP0pWrt8gmg7oUkkyp3qQl624LqX93DkRLF5/RtFbyFa9RqQ+mb9vwHWFloENDsXgjR0BSo8jj6oA6FiPprKKwdIWZhQc0/1O4h3nhYBoCBbU/UopWzk9yKeI5rxeMUZqrXUibW5KEzqVZ+oNV7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=pThueR9t; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV11RjE3"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2906773c7e9so3133236a91.1;
-        Mon, 05 Feb 2024 09:08:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pThueR9t"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a8be32041so38881051cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 09:08:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707152899; x=1707757699; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dgMORd5WuhV/bci5sht7N7PthwPEl3wM3uOQ63QyyAM=;
-        b=XV11RjE3y4eJMooxHHZZKpo/ftPLKk21EMTwu7Y+ohPi9nEt2U4SjM6U8HWvpP8JaI
-         6FyQegfgkIH53zYAMK1fB/u+Q4vM9pqItbVHM9me/RHWR45EaUeiLoaT9tTKEM/R9FYQ
-         rFUCWrN9ExZGYvY3vCAPkw4vmQtOMCDtCNWIrFhRDpqT8SAFq/L4xjbq7JIrctEvqBI/
-         xqZ85ZK5MJrd9JbsO1AQajbix3rtHK6/YSECa7agaodM09sTM81zY3MjBF3SWMSkrRX8
-         SBz80RPIryCHL/okwxYz8mvi3isIUV73UhWqg8A9ZDYp52ZADE1pu3oa9Ct4hmy1hF6m
-         x7Fg==
+        d=ziepe.ca; s=google; t=1707152920; x=1707757720; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8gBlKfQm3vRprhFc0/QpnWE8p96XYPuWr7rTbz4Ejy4=;
+        b=pThueR9tS4++4Ak+63QKJD5ztu0stiKwKjMYm8GGi9NWP+lqt1uz0Qk1hMqaGZ0sTr
+         fPWtCd+6Er9idhCPt1WvCPSvXTC9fC9GPLMkj6ZNKYLoknf0CPuLke9GltXcdBZOvuxr
+         QMbWzMqbX4BQAQm2Z4Fyl/Qm2YXQ+PH33fP3J0bLXIXGackyhFW0peHrgVFTIWQu+rab
+         SfQohNzSaxb3Gg7BUYxxs5LK+Hrs4oWJbn7fVhubCyLl3Iw3uTx17WKAQxtiqxVPH4pm
+         Ie1MIxErmkxewE9orbvfB1z2fHDsEB4SYyMoVokL/kYAP+1AsEFk4YK+1kNm7OOB2JzR
+         oKcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707152899; x=1707757699;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dgMORd5WuhV/bci5sht7N7PthwPEl3wM3uOQ63QyyAM=;
-        b=xHvo/7V5sgimMFJaAtcIDV4HQ7pYcM+/dYtIIljDsTMqePm8dfKfChb4QtpSdBACYY
-         rcoRjb8r/ILozix/t68VvhzSG0mBhz8K5sicPPZu3w4Iz5oaRBw/gaTXRo0554/DneoL
-         8nLXvw0EeF9phZvqft0cJ+aPbivslY2rlMkbGJwQfF269Il+HiPYkIO735YeDoSPUHqj
-         cyU0kv8MgV33IY5Hjm7k3hNa7fgCs19Li8qLGC9qQl1/yKO0jRR2ALmEtxzd5qS7rUEf
-         7fZb97nTJCTgchkHSQBocRFHlSUwRF6JwN/RtxuGk76YEKjV8n2PT+5ALPidZ385kGJf
-         up9w==
-X-Gm-Message-State: AOJu0YxVMMhITdTaWyrXzsw7to4Y1CKnzSzTxeNviAeAT9D7d08mpF2l
-	ppeLCXTUXZ7DcVi+gpRsPkpV3T4Dm4AWIFvNpQaFagQBqBjsmv/x
-X-Google-Smtp-Source: AGHT+IEN8VwL5mUjtDptE3O+Q/E3w/eaXXOjhoayZExDIwTCa+t1EV/XRm5igfn3dGmCszytvJ8NiA==
-X-Received: by 2002:a17:90a:d484:b0:296:1ddc:d46a with SMTP id s4-20020a17090ad48400b002961ddcd46amr7862pju.39.1707152898830;
-        Mon, 05 Feb 2024 09:08:18 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUuPIQXEj6bW9heF/JBeXugHU6pLE90dQ73ui0SQmNvk0hrfegwKN57evn5rmEP/FiWO6SI2lfM14uaV9Vwz8M/+hLdc2ZKzam6rzBN/D/Eala2DW2U3vwdUMcUBwPOqRkX5vBPZ8JCGWW1LxlV8TbGL9oeKB399WKF6EeXE+08PGU2c2SQq9s3aw/GroA1Jhrs30z/dT+stcsV01qQ/xpAEE66ar+EPxiiQSTvtpTLe5C0y10yd6+F145uFq/8Tklfz0Kssmd9m+skOUVw03GU4Cyr8ROf1eUhv/W4oCu8Tc27GywMxpHemckP6+JsPmC3AQ==
-Received: from DESKTOP-KA7F9LU.localdomain ([2406:7400:63:bcee:c97d:bee2:a20a:e6d3])
-        by smtp.googlemail.com with ESMTPSA id nr3-20020a17090b240300b002927a36b7a0sm222882pjb.23.2024.02.05.09.08.15
+        d=1e100.net; s=20230601; t=1707152920; x=1707757720;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8gBlKfQm3vRprhFc0/QpnWE8p96XYPuWr7rTbz4Ejy4=;
+        b=Nd68L0bPqpW94iy802SC8ayR/NbH3ynu+x6bgYyEt+UooYN8fsFHUb7fu9IuK3ZSQ1
+         1zg2lNMUzR3InmZeDCQOlf5OBU3oLXvcYoR1fXWBrLqeGdtxNmHatShUJFKjQeYzGvL2
+         UkyT9qGsWyp7Dk+987ZrlQZct+0kedolK83xJyGwb6pb43fv0Cz0Uxncbi+cP6edK4/x
+         NMd0EwEVrqYKVmeC2fd4jERllvS/tyzEc5mM9pI+LkE7+UZEVV6NlLLSywU4q+L2Ox8c
+         bAn2OiYZ35o9coXOAKqzxfHSGD564iGhRbGhBEwLK3oicFD1c7pppVOUkc1gNVr4LUri
+         LqtA==
+X-Gm-Message-State: AOJu0YzkAfMLMORKQaf29ip1wK3X9BKRa5NWszFmpiR0nIcV7Eyx65sw
+	VGLbMdbJBDefQgbb/Ctl7Tp5Xd3pr2SZRNpHztHzQKm5cWmSmYf50LaAdyzlwpw=
+X-Google-Smtp-Source: AGHT+IFRr68RJWhr55aAuCOmm/7ig7Z946GhQZxCWJnXpgTkXxQZq9u9NN3DdLuHLeVoxwlh1gajUQ==
+X-Received: by 2002:ac8:6bcb:0:b0:42a:48bc:f69 with SMTP id b11-20020ac86bcb000000b0042a48bc0f69mr7977973qtt.35.1707152920631;
+        Mon, 05 Feb 2024 09:08:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWFnZsn/+oaH85mYCSnpv4YgXZiAdaRH0+Rq60h3VhSx80V/GhIDkgZR10vmkuwF1N3jhhz9aRo8LLD4ff5OgXLimlfMXcSIPuyfjqJcxPxDRiouB5DndZ1kQz5dDjvpSVf2qZnwpdmYLKdUUiGGPxIlHQiPas89V0qswdC6497cElumvLrngGqTJkZscqv6ouG2f0OrpG6Ei2Zn4TY19Lk9NbJPoaaQZIBZSq0XCtZUA7d3PA2XkCWjmZueMp2A4tCAorCWj6i6E3kIrdi2y7VdUXMK5IQwL1ODMaERiIbTXBJbVrhlVGqhDyHvDIuotZrahRKcH/dGKlHT6GOh0AiVMK8Tzohvd/1DqWSOsUrv6/uL6cpoulHtaNasUn2g1+as+1/aN3+PukRM38uB/fouGVfLgmdpOE3dunZMoCAT8ZvWsyLQq5HJzPKp8dnEjpdvCDijtK2oY+4Fte+c9yCkKSI9o3pZZZEGbyVB7g/qoYjmnzB6UvMvTFVVXtvqMnEmcwOaYKyi0HF6aat2Ve6C6mKE8L/YuQwof83w3Z5XmIHwIZ2oGMal/R+I06RZSVRWXaOUkQuB8sHRlexzojF3AdtuOI7nq6sqs2lcG4+ML2g+c2ZAxM9tnpLd69JMkvGu7iMwJ1692U5EjqV1QDP6l+mc+OUUzf8X6XSuc3UdFj+vXovcLlbwYzYR22mSvd+Sld4DusAh+aVZhGTkOMpJe7mDCGP0YbiYqikir3ZKx0d
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id f22-20020ac84996000000b0042c22902ca2sm112941qtq.81.2024.02.05.09.08.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 09:08:18 -0800 (PST)
-From: Vimal Kumar <vimal.kumar32@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	Len Brown <len.brown@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: chinmoyghosh2001@gmail.com,
-	badolevishal1116@gmail.com,
-	mintupatel89@gmail.com,
-	Vimal Kumar <vimal.kumar32@gmail.com>
-Subject: [PATCH v4] PM / sleep: Mechanism to find source aborting kernel suspend transition
-Date: Mon,  5 Feb 2024 22:37:45 +0530
-Message-Id: <20240205170747.19748-1-vimal.kumar32@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 05 Feb 2024 09:08:39 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rX2SV-000d2w-7N;
+	Mon, 05 Feb 2024 13:08:39 -0400
+Date: Mon, 5 Feb 2024 13:08:39 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: James Gowans <jgowans@amazon.com>
+Cc: linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
+	kexec@lists.infradead.org, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	Alexander Graf <graf@amazon.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Jan H . Schoenherr" <jschoenh@amazon.de>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	madvenka@linux.microsoft.com, steven.sistare@oracle.com,
+	yuleixzhang@tencent.com
+Subject: Re: [RFC 13/18] vfio: add ioctl to define persistent pgtables on
+ container
+Message-ID: <20240205170839.GA31743@ziepe.ca>
+References: <20240205120203.60312-1-jgowans@amazon.com>
+ <20240205120203.60312-14-jgowans@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205120203.60312-14-jgowans@amazon.com>
 
-Sometimes kernel suspend transitions can be aborted unconditionally by
-manipulating pm_abort_suspend value using "hard" wakeup triggers or
-through "pm_system_wakeup()".
+On Mon, Feb 05, 2024 at 12:01:58PM +0000, James Gowans wrote:
+> The previous commits added a file type in pkernfs for IOMMU persistent
+> page tables. Now support actually setting persistent page tables on an
+> IOMMU domain. This is done via a VFIO ioctl on a VFIO container.
 
-There is no way to trace the source path of module or subsystem which
-aborted the suspend transitions. This change will create a list of
-wakeup sources aborting suspend in progress through "hard" events as
-well as subsytems aborting suspend using "pm_system_wakeup()".
+Please no changes to VFIO in the iommu area, new features need to be
+implemented on top of iommufd instead.
 
-Example: Existing suspend failure logs:
-[  349.708359] PM: Some devices failed to suspend, or early wake event detected
-[  350.327842] PM: suspend exit
+We already have the infrastructure there to customize iommu_domain
+allocations that this can be implemented on top of.
 
-Suspend failure logs with this change:
-[  518.761835] PM: Some devices failed to suspend, or early wake event detected
-[  519.486939] PM: wakeup source or subsystem uart_suspend_port aborted suspend
-[  519.500594] PM: suspend exit
-
-Here we can clearly identify the module triggerring abort suspend.
-
-Co-developed-by: Chinmoy Ghosh <chinmoyghosh2001@gmail.com>
-Signed-off-by: Chinmoy Ghosh <chinmoyghosh2001@gmail.com>
-Co-developed-by: Mintu Patel <mintupatel89@gmail.com>
-Signed-off-by: Mintu Patel <mintupatel89@gmail.com>
-Co-developed-by: Vishal Badole <badolevishal1116@gmail.com>
-Signed-off-by: Vishal Badole <badolevishal1116@gmail.com>
-Signed-off-by: Vimal Kumar <vimal.kumar32@gmail.com>
----
-Changes in v4:
-- Changed GFP_KERNEL flag to GFP_ATOMIC
-- Changed mutex_lock to raw_spin_lock
----
- drivers/base/power/wakeup.c | 100 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 99 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index a917219feea6..b04794557eef 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -73,6 +73,16 @@ static struct wakeup_source deleted_ws = {
-
- static DEFINE_IDA(wakeup_ida);
-
-+#ifdef CONFIG_PM_DEBUG
-+static DEFINE_RAW_SPINLOCK(pm_abort_suspend_list_lock);
-+
-+struct pm_abort_suspend_source {
-+	struct list_head list;
-+	char *source_triggering_abort_suspend;
-+};
-+static LIST_HEAD(pm_abort_suspend_list);
-+#endif
-+
- /**
-  * wakeup_source_create - Create a struct wakeup_source object.
-  * @name: Name of the new wakeup source.
-@@ -575,6 +585,54 @@ static void wakeup_source_activate(struct wakeup_source *ws)
-	trace_wakeup_source_activate(ws->name, cec);
- }
-
-+#ifdef CONFIG_PM_DEBUG
-+/**
-+ * pm_abort_suspend_list_clear - Clear pm_abort_suspend_list.
-+ *
-+ * The pm_abort_suspend_list will be cleared when system PM exits.
-+ */
-+static void pm_abort_suspend_list_clear(void)
-+{
-+	unsigned long flags;
-+	struct pm_abort_suspend_source *info, *tmp;
-+
-+	raw_spin_lock_irqsave(&pm_abort_suspend_list_lock, flags);
-+	list_for_each_entry_safe(info, tmp, &pm_abort_suspend_list, list) {
-+		list_del(&info->list);
-+		kfree(info);
-+	}
-+	raw_spin_unlock_irqrestore(&pm_abort_suspend_list_lock, flags);
-+}
-+
-+/**
-+ * pm_abort_suspend_source_add - Update pm_abort_suspend_list
-+ * @source_name: Wakeup_source or function aborting suspend transitions.
-+ *
-+ * Add the source name responsible for updating the abort_suspend flag in the
-+ * pm_abort_suspend_list.
-+ */
-+static void pm_abort_suspend_source_add(const char *source_name)
-+{
-+	unsigned long flags;
-+	struct pm_abort_suspend_source *info;
-+
-+	info = kmalloc(sizeof(*info), GFP_ATOMIC);
-+	if (!info)
-+		return;
-+
-+	INIT_LIST_HEAD(&info->list);
-+	info->source_triggering_abort_suspend = kstrdup(source_name, GFP_ATOMIC);
-+	if (!info->source_triggering_abort_suspend) {
-+		kfree(info);
-+		return;
-+	}
-+
-+	raw_spin_lock_irqsave(&pm_abort_suspend_list_lock, flags);
-+	list_add_tail(&info->list, &pm_abort_suspend_list);
-+	raw_spin_unlock_irqrestore(&pm_abort_suspend_list_lock, flags);
-+}
-+#endif
-+
- /**
-  * wakeup_source_report_event - Report wakeup event using the given source.
-  * @ws: Wakeup source to report the event for.
-@@ -590,8 +648,13 @@ static void wakeup_source_report_event(struct wakeup_source *ws, bool hard)
-	if (!ws->active)
-		wakeup_source_activate(ws);
-
--	if (hard)
-+	if (hard) {
-+#ifdef CONFIG_PM_DEBUG
-+		if (pm_suspend_target_state != PM_SUSPEND_ON)
-+			pm_abort_suspend_source_add(ws->name);
-+#endif
-		pm_system_wakeup();
-+	}
- }
-
- /**
-@@ -893,12 +956,47 @@ bool pm_wakeup_pending(void)
-		pm_print_active_wakeup_sources();
-	}
-
-+#ifdef CONFIG_PM_DEBUG
-+	if (atomic_read(&pm_abort_suspend) > 0) {
-+		struct pm_abort_suspend_source *info;
-+
-+		raw_spin_lock_irqsave(&pm_abort_suspend_list_lock, flags);
-+		list_for_each_entry(info, &pm_abort_suspend_list, list) {
-+			pm_pr_dbg("wakeup source or subsystem %s aborted suspend\n",
-+					info->source_triggering_abort_suspend);
-+		}
-+		raw_spin_unlock_irqrestore(&pm_abort_suspend_list_lock, flags);
-+		pm_abort_suspend_list_clear();
-+	}
-+#endif
-+
-	return ret || atomic_read(&pm_abort_suspend) > 0;
- }
- EXPORT_SYMBOL_GPL(pm_wakeup_pending);
-
- void pm_system_wakeup(void)
- {
-+
-+#ifdef CONFIG_PM_DEBUG
-+#ifdef CONFIG_DEBUG_INFO
-+	if (pm_suspend_target_state != PM_SUSPEND_ON) {
-+		char *source_name = kasprintf(GFP_ATOMIC,
-+					"%ps",
-+					__builtin_return_address(0));
-+		if (!source_name)
-+			goto exit;
-+
-+		if (strcmp(source_name, "pm_wakeup_ws_event"))
-+			pm_abort_suspend_source_add(source_name);
-+
-+		kfree(source_name);
-+	}
-+exit:
-+#else
-+	if (pm_suspend_target_state != PM_SUSPEND_ON)
-+		pm_pr_dbg("Some wakeup source or subsystem aborted suspend\n");
-+#endif
-+#endif
-	atomic_inc(&pm_abort_suspend);
-	s2idle_wake();
- }
---
-2.25.1
+Jason
