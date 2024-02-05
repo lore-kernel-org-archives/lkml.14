@@ -1,142 +1,116 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE6314A8E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A2F17582;
+	Mon,  5 Feb 2024 09:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707125681; cv=none; b=LN8CGh6JFNc6BZ09w8o0MXFosaJ8CC6jdmkgE7tBvxbjYKO9JaBuOyjHAHkmpCSApE8d/UrwOfk0+5uFu3xdMveY7W5gfDZUe5YURmqZ7bOnVc7oaFYs5r4FbKDTrBHfEQNl8gB1qCiV0PXlWqJKa2NT4wZGEbAlvJ3uD4sNrbQ=
+	t=1707125681; cv=none; b=GtQuPqx+YEkRrH4JOsWCaWY7ht8ndhY2IPle8qu88nvl3v5tAUmtX3OCWolToj+bNMd8QAr90lOpT+5plvPqtvlPWUU0CgO/hZSIGjtO01bo5XSnUQSR8spEEJlxEPwqXQFIcn6OjtczRFncd8bWARQp9S5WU+pJgGwyjZ/Gkp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707125681; c=relaxed/simple;
-	bh=dvNWzN3ht8/FdUM9oKycIS4wx6Ize3NJvGw5mcCj4kA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ISQk6DXinnk5N5VeNyZrFxRYUtTa1Urwv02apEXCroKvu5FEEcq0eHmxST/VyyjdeBhDn1VxekcqaMSfl19cYxi2FGGt2GUNZYMxVqRymrI0d5SIYjOv8fp+ny9Tq5VZGvhjBqf3Pg59InVxJeiEeNhHX/R7Eqa1cW6EUQc64dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=orscmaR7; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=3oGCy5voRlN85Whw6ttPtaf7dpukqP5pCVoAcNGsgCY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=qMz2ll8qro5HoTF32Z6+liPkwcR7XQbY7rbpdczkTMvNSoi0ysEISdhBRy3hdQRlTLAsIDUNMguaCBcfpwB6x2xWlbtxzszBsJ2HhlEa9NWB9PlRXDo1+P/u/4YfOs6MJ/YH1mqRBB1MSlA45jX6577KCQz8GhgsGwEIxfUgWqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ELAybzml; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="orscmaR7"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fc549ab9bso25503785e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:34:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707125677; x=1707730477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nkDPe1O0gAbIcKrknOKSxNlPidMI9YPWSkCZD1MG6Wc=;
-        b=orscmaR7Efyb+6xjb8f5wnnU8y9W3058FcC+OP5Yj+a11/+LuPWhyzLLR3Xh4MLsvN
-         7IAe55dI4mmaz0I12mylsMDUOnOvMCDsT8kAHMZovp1g8wsTiq2+LBWfbd2uhjxHnd/e
-         HgCOQAFh4N2yvw38CBjKKqAljikWUQ1e4Cw87V50YGlgUN6JJ/10rKqY35ACn6k3r7GQ
-         S6iy9TW54oOehVrSblKPC3zWTCK0ByJVLhQ8SE8ISyAVEcQ9YDbFHqbe3B4gmr59MRkE
-         SE+PlJdhN3hdpu6/I+nB5nIFkrWx3RsFBhb4YyfkLSVVPUEPAxoPJoa0+Uba3vJYsn13
-         ophA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707125677; x=1707730477;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nkDPe1O0gAbIcKrknOKSxNlPidMI9YPWSkCZD1MG6Wc=;
-        b=rxMYkA1UJMQkn6t+89m7vgzJO2KxLuT6OlBfMcbvhEkggrqygzY7MjCA2elp2AkLqI
-         TpjL2+l401LxovdMM15TfU5LjLvozMSq+cECSKieUUZzhjXQ/JSN6iRHNeUujq0TRwKX
-         fFsgdqggcJ3/8xfXENxYFhZ0A1kbVsd8mhPjPnqE/fVUUPzf8tz512WN/EF2AZwYnDcR
-         ALIdw3qsCWTalRXEY5uIiwGntpKdcc7x8xFdp9xUEdjbfjrm/hUGkywcBdhtYz9vfVFy
-         Djsy6wLKjY/SWT9TaPW6RzYW+WOVvqVqeUiRuzWXEa3RLt5t9NgFTwPgc5x2cPBfU2cI
-         MGAQ==
-X-Gm-Message-State: AOJu0Yy7yq0Gt2p8pOKDHyw/G//Lb1xF+8SCL4AI1amMMAPMSucSZkqw
-	w1pPZE7HhmxejmYk+ZFhk6gJlAXSGzODH8UEIT7VE1ktIste4Hhkfqn5nvIptU4=
-X-Google-Smtp-Source: AGHT+IGRtximsZuHOJ+4t7O1k20vhwzMFUlcMGGnBrLsaGExTNJF6XHpbFDep4ZG6gEfToYEqqNUog==
-X-Received: by 2002:a05:600c:154f:b0:40f:d253:38f1 with SMTP id f15-20020a05600c154f00b0040fd25338f1mr3921163wmg.26.1707125677471;
-        Mon, 05 Feb 2024 01:34:37 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUtKZ4n8oU5koW9HFK4egEwXKSg2J4+0iyLOdhFrR5BFLFICgg2ZxVxx+HreUxjkIAcZ6Er128kBk0zLOFMm9V644WeSe7Em77IlosfjExrIlg1PVfe1r/QRTj2eojyqPxCu/1MB4dVaD5MBh+c5vQclpTdCLc1zlhVyNDUPB3IofmtBUzDqtC3CbIm7N3fiuHywSMglHKV6rWVC6TdXOEvv0Il52DsBqy2BQ9jT6wHy8U3UmPJkcLJFIAQhYXyOSCmrKkbchdWerYdX1CyBMx80AQu6oCx416aCbL2BYiYbg6F2VpvFNnGsDtJCmyZzKTSDQkgh0+tOl0DqhynPWNvXXYMx6Yz3Q==
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d929:10db:5b5c:b49d])
-        by smtp.gmail.com with ESMTPSA id f15-20020a05600c154f00b0040fc771c864sm7980397wmg.14.2024.02.05.01.34.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 01:34:37 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 13/23] gpio: sysfs: pass the GPIO device - not chip - to sysfs callbacks
-Date: Mon,  5 Feb 2024 10:34:08 +0100
-Message-Id: <20240205093418.39755-14-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240205093418.39755-1-brgl@bgdev.pl>
-References: <20240205093418.39755-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ELAybzml"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4158Jfau017463;
+	Mon, 5 Feb 2024 10:34:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=selector1; bh=yRD+45wPol9C5Oo/j6x0XsNhrnxr5qZGHo18uofpfm4
+	=; b=ELAybzmlTlHzCV4JWfGPhoA6fEeBBz5dIQ2Qzty0alFer7RAu2+HQvN9K4T
+	DeD5EAOGeCHcAeCSM10LwE8F610ihmtaGFKqHj6ETrmNJpbiVPwBGmJyqqii04kn
+	AklFnqOKgJtQg8n3opcJ0xLRD9AkK+71IMztqcA/kMmUVaOKX7FBqIyDEIkB3Cln
+	1AjFtO1yRGLn3oQ3e4LRQZtz8T1YzqoP/n3gp0+DYlQiwQ0DvcmsgbQ4LJj9ifAD
+	LpcAC5Tmorl0I2Rkcqj2DP9rdC2j1Ya8kxLHo1HpESw9tHLXvT84mS8K05iUyBAF
+	U7fVuw/1fGCxm4h6Zi12oIS00Pw==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w1eyp656b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 10:34:18 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4D7F810003B;
+	Mon,  5 Feb 2024 10:34:17 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 425C72AC0F0;
+	Mon,  5 Feb 2024 10:34:17 +0100 (CET)
+Received: from localhost (10.252.18.216) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 5 Feb
+ 2024 10:34:14 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+Date: Mon, 5 Feb 2024 10:26:50 +0100
+Subject: [PATCH 5/5] drm/panel: simple: push blanking limit on RK32FN48H
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240205-ltdc_mp13-v1-5-116d43ebba75@foss.st.com>
+References: <20240205-ltdc_mp13-v1-0-116d43ebba75@foss.st.com>
+In-Reply-To: <20240205-ltdc_mp13-v1-0-116d43ebba75@foss.st.com>
+To: Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Raphael Gallais-Pou
+	<raphael.gallais-pou@foss.st.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_04,2024-01-31_01,2023-05-22_02
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Push horizontal front porch and vertical back porch blanking limit.
+This allows to get a 60 fps sharp.
 
-We're working towards protecting the chip pointer in struct gpio_device
-with SRCU. In order to use it in sysfs callbacks we must pass the pointer
-to the GPIO device that wraps the chip instead of the address of the
-chip itself as the user data.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 ---
- drivers/gpio/gpiolib-sysfs.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 5da316ea9cc7..654a5bc53047 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -401,27 +401,27 @@ static const struct attribute_group *gpio_groups[] = {
- static ssize_t base_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip *chip = dev_get_drvdata(dev);
-+	const struct gpio_device *gdev = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%d\n", chip->base);
-+	return sysfs_emit(buf, "%d\n", gdev->chip->base);
- }
- static DEVICE_ATTR_RO(base);
- 
- static ssize_t label_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip *chip = dev_get_drvdata(dev);
-+	const struct gpio_device *gdev = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%s\n", chip->label ?: "");
-+	return sysfs_emit(buf, "%s\n", gdev->chip->label ?: "");
- }
- static DEVICE_ATTR_RO(label);
- 
- static ssize_t ngpio_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip *chip = dev_get_drvdata(dev);
-+	const struct gpio_device *gdev = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%u\n", chip->ngpio);
-+	return sysfs_emit(buf, "%u\n", gdev->chip->ngpio);
- }
- static DEVICE_ATTR_RO(ngpio);
- 
-@@ -751,7 +751,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 		parent = &gdev->dev;
- 
- 	/* use chip->base for the ID; it's already known to be unique */
--	dev = device_create_with_groups(&gpio_class, parent, MKDEV(0, 0), chip,
-+	dev = device_create_with_groups(&gpio_class, parent, MKDEV(0, 0), gdev,
- 					gpiochip_groups, GPIOCHIP_NAME "%d",
- 					chip->base);
- 	if (IS_ERR(dev))
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 7b286382ffb4..10b361d603be 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -3516,10 +3516,10 @@ static const struct display_timing rocktech_rk043fn48h_timing = {
+ 	.pixelclock = { 6000000, 9000000, 12000000 },
+ 	.hactive = { 480, 480, 480 },
+ 	.hback_porch = { 8, 43, 43 },
+-	.hfront_porch = { 2, 8, 8 },
++	.hfront_porch = { 2, 8, 10 },
+ 	.hsync_len = { 1, 1, 1 },
+ 	.vactive = { 272, 272, 272 },
+-	.vback_porch = { 2, 12, 12 },
++	.vback_porch = { 2, 12, 26 },
+ 	.vfront_porch = { 1, 4, 4 },
+ 	.vsync_len = { 1, 10, 10 },
+ 	.flags = DISPLAY_FLAGS_VSYNC_LOW | DISPLAY_FLAGS_HSYNC_LOW |
+
 -- 
-2.40.1
+2.25.1
 
