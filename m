@@ -1,210 +1,283 @@
-Received: from egress-ip43b.ess.de.barracuda.com (egress-ip43b.ess.de.barracuda.com [18.185.115.247])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DAD1350DD
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 20:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.185.115.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6B0135401;
+	Mon,  5 Feb 2024 20:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707165277; cv=none; b=h6yjrhf9QmZy4v8fuTjzaUuEAqL70Mp4I7W2b15A5hZO+yB5V473BdmJCIImC9cBzzkMWrcg08JUznZMqPXna1xasBSEfecpvtOvTfZrNsO/IJgS9g/rCzNFiGPFaI/f1oEKSDfSutL+USRN0BEwfCbt1DLteKdWijMhmWhBk9k=
+	t=1707165407; cv=none; b=G/BWdBOaG3Z7TAMLoDcvIZIF4oRXRKl0IpYPr9x1fDtcg8rle1hOMrLrPQfNRUU/8LaRlYoVDhFls8iB4rXXlAXsknlgZS6ThJm8cZYpgCThhD5MxAYt/lXJG4nXACCNNnnSf/vp3gc7eZh8aeNBkZAA5kk4a9fbXEfNOPrcgKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707165277; c=relaxed/simple;
-	bh=1jqizwfQ+c6Q0OkvZZEEQNJguvmRguC+Fg/Y3Oaxf64=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dnBy9CsUt+zcEKQem9XzXjrSgjtHFw6W7pk6XgbJ/lV8F7QyoFjmwVX2c+jMNL50ZNhTDZSx0BtEwiX69S+EzXuvtrJWWk3oQdcZCc/gMd7g0y/6rMnPWEDNm3XuI6Nt/XCxzjBoGGPz8kTn395GwkO6RPn4sOo7C+tX/gk4DxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mistralsolutions.com; spf=pass smtp.mailfrom=mistralsolutions.com; dkim=pass (1024-bit key) header.d=mistralsolutions.com header.i=@mistralsolutions.com header.b=NosmGqAf; arc=none smtp.client-ip=18.185.115.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mistralsolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mistralsolutions.com
+	s=arc-20240116; t=1707165407; c=relaxed/simple;
+	bh=DRkyC6zPMVrR6ee3fzmH3McgLkWBRYr9qSC/XSH/CZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8szkG5OpP+dl1/ydlzAN3Grcnpzwhkgqt+ObgTq3RzQqEIKgTmQFk+CJlplyvtQ8bb2GuSOocRNH974CZJCkPk2V/5+x6w8RMn2FZt3tux6aLSPK34R5EdYAyQvPyucjH45MoKCkdb/+kysdxlaG9xvPR9wBbX4Ne2SMyuY6OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=MfABY2cV; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=eRJpnDIb; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mistralsolutions.com header.i=@mistralsolutions.com header.b="NosmGqAf"
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71]) by mx-outbound16-171.eu-central-1b.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Mon, 05 Feb 2024 20:34:32 +0000
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-295b119823aso3761663a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 12:34:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mistralsolutions.com; s=google; t=1707165271; x=1707770071; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vs9QQhw4M4FWqaWliwpzwmw2s69GQGFmwNivTz/YgYc=;
-        b=NosmGqAfKhoRMUVBKXP87h8R9ps9cPmuB/ZBWa+1S2WgFaCuKJ5bPvMlE2OnbkeJMw
-         U2usQmpqCvVKO4i6joDlqjx5FKHQmWvMTuuYebvWzewWSMzDfN+8GPNeNQXjbh7Ne3r3
-         G4KpPrdWG6B9C2LZZ9lnHGKtviBxWD6VCsWqs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707165271; x=1707770071;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vs9QQhw4M4FWqaWliwpzwmw2s69GQGFmwNivTz/YgYc=;
-        b=UHFnHFL106Om1d/aY+F2JGYs3VgCxeufJ6rk5MEx3XW5UlgV5SZtcEPTkIxVS8mnKl
-         uiWaQRjX9Wt+yFfNMlvHIlPpFUrVl38yOPWoyYXEbIg/eMWptfpwfimyBd8ThTqZyf2U
-         VrNXyaWSssU2xxmktslfDBqYkyaHwlKwR1N6FM/Yv/jXMHTJTCr8Z31bIC5NVyrWsEk7
-         sLVMY3xehGNmbiEFbd81K8jxW2ybYR8fVzTzU6j5npkRQXPmhvGOd4M+xZko26Lxp1Ou
-         BABLoIFlaVyufizFSbd+Emyy7EbKPW32cuiMkd8WU7HhBdarF2xpsRqNZUmv/KRoU5Vd
-         U7Pw==
-X-Gm-Message-State: AOJu0YwrpCjwrfHKhXJFrAl7bmttGEPF6ZhFkYhxB8So0duE8fic9OKf
-	vyxBWVuhyV3tJyXahm6iO34VDdKSAaC+i/cYz3s11cybSWMUuEGk0He8ApSWI+UVfUeDMWnT5bU
-	GMEQF9LVxDZtiFEd0GGEaKUoLWObRctANDDFjPnBjqtoq2vZu5bG28hLweYbR9gFUrPitletpy6
-	em/ArRcZn9HzxUGeSMmGPk
-X-Received: by 2002:a17:902:e5d0:b0:1d7:15ea:4249 with SMTP id u16-20020a170902e5d000b001d715ea4249mr596359plf.7.1707163699301;
-        Mon, 05 Feb 2024 12:08:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG+TbU6NmX6W2bzIYIQRyWAElFQs/FQQEtJfQK8Kn6rtpLl8gL33k0Yu+6JqwoRfB3jaJcd9A==
-X-Received: by 2002:a17:902:e5d0:b0:1d7:15ea:4249 with SMTP id u16-20020a170902e5d000b001d715ea4249mr596335plf.7.1707163699019;
-        Mon, 05 Feb 2024 12:08:19 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUVNmuGupMxQg5vulrHPonr+3p+V+sHMd6H4tUdzU62/we5NXpd84XL+ZNIUsQ9+augtOsbYIikx6K2KEpkCGhWLGhrvcYvGFeJf4Ef3TIIhfL6AT9dp18G7T7m4qkx4MdFQnCgg7etS3T2Wy8IZsd5y8Zm/R2BxU997Zg+B5d/zvPUsf0+WDx2/8dcgmGTNDKhlOXuOoeB9WP4I7NY1H0nFwMBTuTPH6TdPhUAybGejRFJdR8OiaEcA/GU1gP3i0Zymq7CsaVb8Q7h72Id5g9gi0+me7XXI+eAwdShqTGrVZ5vzs+SwmRfALWINy/Y7nUGek9dBfBysA+A4aQGEmoKyZM=
-Received: from LAP559U.mistral.in ([106.51.69.35])
-        by smtp.gmail.com with ESMTPSA id t21-20020a170902dcd500b001d739667fc3sm263900pll.207.2024.02.05.12.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 12:08:18 -0800 (PST)
-From: sabiya.d@mistralsolutions.com
-X-Google-Original-From: sabiya.d@ti.com
-To: nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	u-kumar1@ti.com,
-	sabiya.d@mistralsolutions.com,
-	Dasnavis Sabiya <sabiya.d@ti.com>
-Subject: [PATCH V2 2/2] arm64: dts: ti: k3-am69-sk: Add support for OSPI flash
-Date: Tue,  6 Feb 2024 01:37:43 +0530
-Message-Id: <20240205200744.216572-3-sabiya.d@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240205200744.216572-1-sabiya.d@ti.com>
-References: <20240205200744.216572-1-sabiya.d@ti.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="MfABY2cV";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="eRJpnDIb"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D086021F04;
+	Mon,  5 Feb 2024 20:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707165401; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/HI0JTDRvPpvy217ZsMPRSu6ANke2HQzyk7K93T+6gg=;
+	b=MfABY2cVcPI6n3TYICRakABtOaTm8ZJw3qkwwUufnPgfPRZL5DU0O1DR3eGkYAVTuQCTvj
+	edW6C2TeoI7YL3D7lsf0QZ32Ffcs5jyQqW4sDtTxqQ1RfDNkdfKt89JVtUcRyh9eL1LtI6
+	9EDg//wEUAm8Jfpk/T0wJ/0FodRzj6Y=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707165400; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/HI0JTDRvPpvy217ZsMPRSu6ANke2HQzyk7K93T+6gg=;
+	b=eRJpnDIbfWkAr47SVIlkX01LA0Ly29XRLazU1ryQO5KMYs3+FZaC2+5avgEUJ+mRKtvNAD
+	0BUs0kRedbCPT4B3bUKRPjSN46hMx19uGMfi4Igmu4zhCsZEFgQQJmtrbpWvLHet+T/iWT
+	Y0Kay+79NuwBbUHk05yE3y1ZN0V8ECs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A9387132DD;
+	Mon,  5 Feb 2024 20:36:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NB7QJdhGwWUKSwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 05 Feb 2024 20:36:40 +0000
+Date: Mon, 5 Feb 2024 21:36:40 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
+	yuzhao@google.com, mkoutny@suse.com,
+	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: memcg: Use larger batches for proactive reclaim
+Message-ID: <ZcFG2JoXI7i8XzQY@tiehlicka>
+References: <20240202233855.1236422-1-tjmercier@google.com>
+ <ZcC7Kgew3GDFNIux@tiehlicka>
+ <CABdmKX3HbSxX6zLF4z3f+=Ybiq1bA71jckkeHv5QJxAjSexgaA@mail.gmail.com>
+ <ZcE5n9cTdTGJChmq@tiehlicka>
+ <CABdmKX0Du2F+bko=hjLBqdQO-bJSFcG3y1Bbuu2v6J8aVB39sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-BESS-ID: 1707165271-304267-12419-36669-1
-X-BESS-VER: 2019.1_20240201.2150
-X-BESS-Apparent-Source-IP: 209.85.216.71
-X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUirNy1bSUcovVrIysjQxBLIygIKWBkmJKWaJqU
-	lGRknJ5hZJlsapZmnJZkkGFmZm5onJZkq1sQC4+3ihQQAAAA==
-X-BESS-Outbound-Spam-Score: 0.50
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.254009 [from 
-	cloudscan14-232.eu-central-1a.ess.aws.cudaops.com]
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------
-	0.00 BSF_SC0_MISMATCH_TO    META: Envelope rcpt doesn't match header 
-	0.50 BSF_RULE7568M          META: Custom Rule 7568M 
-	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-	0.00 NO_REAL_NAME           HEADER: From: does not include a real name 
-X-BESS-Outbound-Spam-Status: SCORE=0.50 using account:ESS91090 scores of KILL_LEVEL=7.0 tests=BSF_SC0_MISMATCH_TO, BSF_RULE7568M, BSF_BESS_OUTBOUND, NO_REAL_NAME
-X-BESS-BRTS-Status:1
+In-Reply-To: <CABdmKX0Du2F+bko=hjLBqdQO-bJSFcG3y1Bbuu2v6J8aVB39sw@mail.gmail.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-From: Dasnavis Sabiya <sabiya.d@ti.com>
+On Mon 05-02-24 12:26:10, T.J. Mercier wrote:
+> On Mon, Feb 5, 2024 at 11:40 AM Michal Hocko <mhocko@suse.com> wrote:
+> >
+> > On Mon 05-02-24 11:29:49, T.J. Mercier wrote:
+> > > On Mon, Feb 5, 2024 at 2:40 AM Michal Hocko <mhocko@suse.com> wrote:
+> > > >
+> > > > On Fri 02-02-24 23:38:54, T.J. Mercier wrote:
+> > > > > Before 388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive
+> > > > > reclaim") we passed the number of pages for the reclaim request directly
+> > > > > to try_to_free_mem_cgroup_pages, which could lead to significant
+> > > > > overreclaim. After 0388536ac291 the number of pages was limited to a
+> > > > > maximum 32 (SWAP_CLUSTER_MAX) to reduce the amount of overreclaim.
+> > > > > However such a small batch size caused a regression in reclaim
+> > > > > performance due to many more reclaim start/stop cycles inside
+> > > > > memory_reclaim.
+> > > >
+> > > > You have mentioned that in one of the previous emails but it is good to
+> > > > mention what is the source of that overhead for the future reference.
+> > >
+> > > I can add a sentence about the restart cost being amortized over more
+> > > pages with a large batch size. It covers things like repeatedly
+> > > flushing stats, walking the tree, evaluating protection limits, etc.
+> > >
+> > > > > Reclaim tries to balance nr_to_reclaim fidelity with fairness across
+> > > > > nodes and cgroups over which the pages are spread. As such, the bigger
+> > > > > the request, the bigger the absolute overreclaim error. Historic
+> > > > > in-kernel users of reclaim have used fixed, small sized requests to
+> > > > > approach an appropriate reclaim rate over time. When we reclaim a user
+> > > > > request of arbitrary size, use decaying batch sizes to manage error while
+> > > > > maintaining reasonable throughput.
+> > > >
+> > > > These numbers are with MGLRU or the default reclaim implementation?
+> > >
+> > > These numbers are for both. root uses the memcg LRU (MGLRU was
+> > > enabled), and /uid_0 does not.
+> >
+> > Thanks it would be nice to outline that in the changelog.
+> 
+> Ok, I'll update the table below for each case.
+> 
+> > > > > root - full reclaim       pages/sec   time (sec)
+> > > > > pre-0388536ac291      :    68047        10.46
+> > > > > post-0388536ac291     :    13742        inf
+> > > > > (reclaim-reclaimed)/4 :    67352        10.51
+> > > > >
+> > > > > /uid_0 - 1G reclaim       pages/sec   time (sec)  overreclaim (MiB)
+> > > > > pre-0388536ac291      :    258822       1.12            107.8
+> > > > > post-0388536ac291     :    105174       2.49            3.5
+> > > > > (reclaim-reclaimed)/4 :    233396       1.12            -7.4
+> > > > >
+> > > > > /uid_0 - full reclaim     pages/sec   time (sec)
+> > > > > pre-0388536ac291      :    72334        7.09
+> > > > > post-0388536ac291     :    38105        14.45
+> > > > > (reclaim-reclaimed)/4 :    72914        6.96
+> > > > >
+> > > > > Fixes: 0388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive reclaim")
+> > > > > Signed-off-by: T.J. Mercier <tjmercier@google.com>
+> > > > > Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
+> > > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > > >
+> > > > > ---
+> > > > > v3: Formatting fixes per Yosry Ahmed and Johannes Weiner. No functional
+> > > > > changes.
+> > > > > v2: Simplify the request size calculation per Johannes Weiner and Michal Koutný
+> > > > >
+> > > > >  mm/memcontrol.c | 6 ++++--
+> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > > > index 46d8d02114cf..f6ab61128869 100644
+> > > > > --- a/mm/memcontrol.c
+> > > > > +++ b/mm/memcontrol.c
+> > > > > @@ -6976,9 +6976,11 @@ static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
+> > > > >               if (!nr_retries)
+> > > > >                       lru_add_drain_all();
+> > > > >
+> > > > > +             /* Will converge on zero, but reclaim enforces a minimum */
+> > > > > +             unsigned long batch_size = (nr_to_reclaim - nr_reclaimed) / 4;
+> > > >
+> > > > This doesn't fit into the existing coding style. I do not think there is
+> > > > a strong reason to go against it here.
+> > >
+> > > There's been some back and forth here. You'd prefer to move this to
+> > > the top of the while loop, under the declaration of reclaimed? It's
+> > > farther from its use there, but it does match the existing style in
+> > > the file better.
+> >
+> > This is not something I deeply care about but generally it is better to
+> > not mix styles unless that is a clear win. If you want to save one LOC
+> > you can just move it up - just couple of lines up, or you can keep the
+> > definition closer and have a separate declaration.
+> 
+> I find it nicer to have to search as little as possible for both the
+> declaration (type) and definition, but I am not attached to it either
+> and it's not worth annoying anyone over here. Let's move it up like
+> Yosry suggested initially.
+> 
+> > > > > +
+> > > > >               reclaimed = try_to_free_mem_cgroup_pages(memcg,
+> > > > > -                                     min(nr_to_reclaim - nr_reclaimed, SWAP_CLUSTER_MAX),
+> > > > > -                                     GFP_KERNEL, reclaim_options);
+> > > > > +                                     batch_size, GFP_KERNEL, reclaim_options);
+> > > >
+> > > > Also with the increased reclaim target do we need something like this?
+> > > >
+> > > > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > > > index 4f9c854ce6cc..94794cf5ee9f 100644
+> > > > --- a/mm/vmscan.c
+> > > > +++ b/mm/vmscan.c
+> > > > @@ -1889,7 +1889,7 @@ static unsigned long shrink_inactive_list(unsigned long nr_to_scan,
+> > > >
+> > > >                 /* We are about to die and free our memory. Return now. */
+> > > >                 if (fatal_signal_pending(current))
+> > > > -                       return SWAP_CLUSTER_MAX;
+> > > > +                       return sc->nr_to_reclaim;
+> > > >         }
+> > > >
+> > > >         lru_add_drain();
+> > > > >
+> > > > >               if (!reclaimed && !nr_retries--)
+> > > > >                       return -EAGAIN;
+> > > > > --
+> > >
+> > > This is interesting, but I don't think it's closely related to this
+> > > change. This section looks like it was added to delay OOM kills due to
+> > > apparent lack of reclaim progress when pages are isolated and the
+> > > direct reclaimer is scheduled out. A couple things:
+> > >
+> > > In the context of proactive reclaim, current is not really undergoing
+> > > reclaim due to memory pressure. It's initiated from userspace. So
+> > > whether it has a fatal signal pending or not doesn't seem like it
+> > > should influence the return value of shrink_inactive_list for some
+> > > probably unrelated process. It seems more straightforward to me to
+> > > return 0, and add another fatal signal pending check to the caller
+> > > (shrink_lruvec) to bail out early (dealing with OOM kill avoidance
+> > > there if necessary) instead of waiting to accumulate fake
+> > > SWAP_CLUSTER_MAX values from shrink_inactive_list.
+> >
+> > The point of this code is to bail out early if the caller has fatal
+> > signals pending. That could be SIGTERM sent to the process performing
+> > the reclaim for whatever reason. The bail out is tuned for
+> > SWAP_CLUSTER_MAX as you can see and your patch is increasing the reclaim
+> > target which means that bailout wouldn't work properly and you wouldn't
+> > get any useful work done but not really bail out.
+> 
+> It's increasing to 1/4 of what it was 6 months ago before 88536ac291
+> ("mm:vmscan: fix inaccurate reclaim during proactive reclaim") and
+> this hasn't changed since then, so if anything the bailout should
+> happen quicker than originally tuned for.
 
-AM69 SK has S28HS512T OSPI flash connected to MCU OSPI0.
-Enable support for the same. Also describe the partition
-information according to the offsets in the bootloader.
+Yes, this wasn't handled properly back then either.
 
-Signed-off-by: Dasnavis Sabiya <sabiya.d@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am69-sk.dts | 81 +++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+> > > As far as changing the value, SWAP_CLUSTER_MAX puts the final value of
+> > > sc->nr_reclaimed pretty close to sc->nr_to_reclaim. Since there's a
+> > > loop for each evictable lru in shrink_lruvec, we could end up with 4 *
+> > > sc->nr_to_reclaim in sc->nr_reclaimed if we switched to
+> > > sc->nr_to_reclaim from SWAP_CLUSTER_MAX... an even bigger lie. So I
+> > > don't think we'd want to do that.
+> >
+> > The actual number returned from the reclaim is not really important
+> > because memory_reclaim would break out of the loop and userspace would
+> > never see the result.
+> 
+> This makes sense, but it makes me uneasy. I can't point to anywhere
+> this would cause a problem currently (except maybe super unlikely
+> overflow of nr_reclaimed), but it feels like a setup for future
+> unintended consequences.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am69-sk.dts b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-index 64c737cc3d49..9ef9aec0b5bd 100644
---- a/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-@@ -470,6 +470,25 @@ J784S4_IOPAD(0x09C, PIN_OUTPUT, 0) /* (AF35) MCAN7_TX */
- 	};
- };
- 
-+&wkup_pmx0 {
-+	bootph-all;
-+	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-default-pins {
-+		pinctrl-single,pins = <
-+			J784S4_WKUP_IOPAD(0x000, PIN_OUTPUT, 0) /* (E32) MCU_OSPI0_CLK */
-+			J784S4_WKUP_IOPAD(0x02c, PIN_OUTPUT, 0) /* (A32) MCU_OSPI0_CSn0 */
-+			J784S4_WKUP_IOPAD(0x00c, PIN_INPUT, 0) /* (B33) MCU_OSPI0_D0 */
-+			J784S4_WKUP_IOPAD(0x010, PIN_INPUT, 0) /* (B32) MCU_OSPI0_D1 */
-+			J784S4_WKUP_IOPAD(0x014, PIN_INPUT, 0) /* (C33) MCU_OSPI0_D2 */
-+			J784S4_WKUP_IOPAD(0x018, PIN_INPUT, 0) /* (C35) MCU_OSPI0_D3 */
-+			J784S4_WKUP_IOPAD(0x01c, PIN_INPUT, 0) /* (D33) MCU_OSPI0_D4 */
-+			J784S4_WKUP_IOPAD(0x020, PIN_INPUT, 0) /* (D34) MCU_OSPI0_D5 */
-+			J784S4_WKUP_IOPAD(0x024, PIN_INPUT, 0) /* (E34) MCU_OSPI0_D6 */
-+			J784S4_WKUP_IOPAD(0x028, PIN_INPUT, 0) /* (E33) MCU_OSPI0_D7 */
-+			J784S4_WKUP_IOPAD(0x008, PIN_INPUT, 0) /* (C34) MCU_OSPI0_DQS */
-+		>;
-+	};
-+};
-+
- &wkup_pmx2 {
- 	bootph-all;
- 	pmic_irq_pins_default: pmic-irq-default-pins {
-@@ -1073,3 +1092,65 @@ &main_mcan7 {
- 	pinctrl-0 = <&main_mcan7_pins_default>;
- 	phys = <&transceiver4>;
- };
-+
-+&ospi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_fss0_ospi0_pins_default>;
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0x0>;
-+		spi-tx-bus-width = <8>;
-+		spi-rx-bus-width = <8>;
-+		spi-max-frequency = <25000000>;
-+		cdns,tshsl-ns = <60>;
-+		cdns,tsd2d-ns = <60>;
-+		cdns,tchsh-ns = <60>;
-+		cdns,tslch-ns = <60>;
-+		cdns,read-delay = <4>;
-+
-+		partitions {
-+			bootph-all;
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "ospi.tiboot3";
-+				reg = <0x0 0x80000>;
-+			};
-+
-+			partition@80000 {
-+				label = "ospi.tispl";
-+				reg = <0x80000 0x200000>;
-+			};
-+
-+			partition@280000 {
-+				label = "ospi.u-boot";
-+				reg = <0x280000 0x400000>;
-+			};
-+
-+			partition@680000 {
-+				label = "ospi.env";
-+				reg = <0x680000 0x40000>;
-+			};
-+
-+			partition@6c0000 {
-+				label = "ospi.env.backup";
-+				reg = <0x6c0000 0x40000>;
-+			};
-+
-+			partition@800000 {
-+				label = "ospi.rootfs";
-+				reg = <0x800000 0x37c0000>;
-+			};
-+
-+			partition@3fc0000 {
-+				bootph-pre-ram;
-+				label = "ospi.phypattern";
-+				reg = <0x3fc0000 0x40000>;
-+			};
-+		};
-+	};
-+};
+This of something like
+timeout $TIMEOUT echo $TARGET > $MEMCG_PATH/memory.reclaim
+where timeout acts as a stop gap if the reclaim cannot finish in
+TIMEOUT.
+
 -- 
-2.34.1
-
+Michal Hocko
+SUSE Labs
