@@ -1,197 +1,259 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44218482F5
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 23:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F6E481AA
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 23:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707174565; cv=none; b=H22D8YaB0xq5CcVjsQiyjbvTCqrJFkVP4a8qHQh45rkmpFBxhItmaN52hnDg9LZVRfYgpNP26rNWB0mmnAOiICtuOm9DzNQryCY6rUHDS51Yhz/O9WCIdL7xZcLS0PNo4FsJnf6U6XNL6v+7/FNqOnF6pvL5q9zthqSKhGcRDAc=
+	t=1707174661; cv=none; b=C/aEX/Cm2J7BROfHCFmdrSEEyE38mJ+hQLrXGmSx15cVdFMnddaRcJE0yH2R+uAXcU2sX95g1LATb9sZJYHyVq4KIZXgCOof8uSBDxww0Figiby621oLlf274r4tHLdSLmF2oK/S3LOwfmaor2B4kMfWS43hzj0H0RUXwSoYRxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707174565; c=relaxed/simple;
-	bh=vq9o4EymX13PyuQHF9HrAPC/1CRoCrWY/UyL7qmMYvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wc2qzVceLJvW8eCItWSEkz4SuBmGPuchwWh02NvbT7YZX4MYo3EvrbrFivCK1JtHD82F3ZetfYk1MzVsrxlU5+u8wzcSZXgy7nanbaUZcDopySfcPeFqLVdlmnOExiVAxksW/jNHMSuWs5Am/5Vd7DbEmiIBRY6yfFfpfzyGGn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=RfYn9sDJ; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1707174661; c=relaxed/simple;
+	bh=98ETdYEYjeLAfEolbR/C15K5yV0mp9d6RDnidWccDTY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SSoIhEdgk4JVvxUlwXkdpsA2h2ytl/1ymyuGoehdWLajcHkIiic8N2rKNaMPf8y/hCAJcPvAnXpHFcAv8Zjwp8gLqU92H6KS1LibkEHsi+aMskENrtwBriWURYNs9oxHLX4+KkU5tZ/fSSNtsENDXm5CFRP3If9x9BIdbBF5CUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=WRiaGYpr; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RfYn9sDJ"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d72f71f222so40080995ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 15:09:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="WRiaGYpr"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6047bb0d20fso312097b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 15:10:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707174561; x=1707779361; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSwq0kqDcJFU0BRDFanOctiB1Z+4ozxhyzWWA6dFk0s=;
-        b=RfYn9sDJMntUBNe11BmNLnStA10fBGzH8xGTgHO8RdbAnItx0ykuBun3uuGjK/M/N2
-         9X+YeiF37NOVeW/R4EEnlJIEaaAavfqSRaER9kF4v99t3grHtJQjpD+chypvZCnWaDI+
-         L2YYm8uvftXxmeVrcz3XnEHLso6WKXF7i4iu6mKT+pPO+qL+LZM12zzv8Ks9uZN/PMDs
-         iI94J2jCzzi1D/vDIp3UM64rwwte2RyGX7gTeXxilH22L2ySRZWgKJ+pUhkNOR83G/zE
-         mkmo67zIYkNif/+N1OtS5QoJzamBK/G/oEp0U3rK9vlSGI7xKMVE4fsnQW3Zg/He5/02
-         gkUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707174561; x=1707779361;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1707174658; x=1707779458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nSwq0kqDcJFU0BRDFanOctiB1Z+4ozxhyzWWA6dFk0s=;
-        b=KffI4IjlSHm+kasV6XisvbI1HjVuAOjTt/oZ4fQE4nmCBF+0l8hD02e+ozBbX1mG+a
-         8CXMhW2UucaHgkHZjcdk8wH60AtiHlbfka5/B6pjWmG/eAsO6smGBlH7gtv4+mAe93/M
-         EkLen+/+A5pbu8+xLUoKVra6xc3h0TQUIa2uoYMiJoTL0DeoLOM9f6EO+HbwYMySZ5tB
-         kf1nMbSlQUXjfFNlK5BSCFefhp/16KZmlguetAsShZi3XI6QyWXptj/RddwqB0jOiNPw
-         lYeCdxShXJhMIiGoIMpL/f+rGmcCWAi+H993r+RuDNmUxIHhSCy8IV060cgJVJtr6dns
-         d3SQ==
-X-Gm-Message-State: AOJu0YyX6xvqF7RbGUDcLahqVS/CDyAOKAwoZkDw+W0invt2MJ6qAfZ7
-	kmPa//euREwLpcSwoXBSQuWdNYur0FpF6XLxQ0M6KdopVwZg/50uyySkospFHWA=
-X-Google-Smtp-Source: AGHT+IGWMSVP4g1RkkGppscPVtyZNu/IY0rg2dbT54+40Cs+tkHyOIqM7on6+FJVjo9rViYIkkpgsA==
-X-Received: by 2002:a17:902:bc45:b0:1d9:8cd8:acff with SMTP id t5-20020a170902bc4500b001d98cd8acffmr941573plz.62.1707174561185;
-        Mon, 05 Feb 2024 15:09:21 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXKI30Vl6WZduHvlKzCNdPAifq8CEQxrTFOAWDyKxPHczXy/jrjnvAi+a6hMW/JpVitKZhL3OZkYjKA4oJYZnkRPmTKAGO7uDO8PM5lxtZUnPutBFCx7p6POaymKGn15culFuICFPYwWXseNLX+iqzD3goBLbH5ucc/HKkn7i5suEOdspDOg7mi9mvFEDjsizrroAECI7dLzw==
-Received: from ghost ([12.44.203.122])
-        by smtp.gmail.com with ESMTPSA id e6-20020a170902744600b001d93bb0c9c8sm414955plt.85.2024.02.05.15.09.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 15:09:20 -0800 (PST)
-Date: Mon, 5 Feb 2024 15:09:18 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Only flush the mm icache when setting an exec pte
-Message-ID: <ZcFqnm5/odPzQoHK@ghost>
-References: <20240202124711.256146-1-alexghiti@rivosinc.com>
+        bh=qukmwsoJr7mQjUV1Px87duNcYP7pZmjoAINvmrLBQgA=;
+        b=WRiaGYprqsiqKvdw3zMea/UgTgbfZVAtjOWqrNSG7hs4AeGn1FGpik2WTomgsFjqAx
+         hCOFEE25vq0NYUIIx5paFvdF2jMVYV4gME8NCfjU8KlkEU0Conp4qNCeVuOMK6MS7rNW
+         NLmLY4ZwacEGNHCUgeV/yDouJeMP7CBh/NTeIuLEE9Ax7NoGa3Ut2FRC8dtchzUiqCT2
+         KtIgCkSDOIGfDVNl1a4ecDqfUIZlyWDqmQGcOE5Cb8bb60DiqjOieNV/LqTjl65T1O2n
+         CdxKGxUik+1c1Dv9SzAWKcnmLy0Oyt76JorED1EpT7NyhyQujaETMyy4gJ8txYhAA1X1
+         PoTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707174658; x=1707779458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qukmwsoJr7mQjUV1Px87duNcYP7pZmjoAINvmrLBQgA=;
+        b=wEoeyemjJbTcDWfgvivYTEpd/TgTAlN8aapkMtOLCeH2OkCxzmwPkKIS7Ptsj43A1b
+         +vguPr+IOz6V6hG4twYUhUjzzSs+hxgg9m7CA56J+etwogqRSxYkIAd6QLD88nuVKZ/z
+         uTe4enW/MjwJ527IVr7b+XJBgGSmj1mEm7YPwv4HafwfInFEfIziLgzFxFp7MpCu7RjO
+         Vv53VBnOPRL1EUKOy6UPcXaT5RME/zBwgJeDaMY9xzn30V3bMI1PSuAgfDLXXP0u2sqv
+         a9dQNPAd5L1MCD2JnVhO6feiyPTHx3q5+WpirR4dq56kuhpIOewkIoYkIyqDa59TrQOH
+         OsxA==
+X-Gm-Message-State: AOJu0YygLk8OS7B4hlO/uXbcSb44pHwcf/lC72o83DNEHqemrCIoq7Hq
+	DB+WBqllb7Ha61+elR8g62TdruTZousKiLhpYsXKYvOEUngFCR83MDLP1f50XeOBIvW/NfP1lAg
+	STdghdyE7S3DbP2FwlEwtnodeyClQXIQorIFV
+X-Google-Smtp-Source: AGHT+IFeMStOFrv0XIgr14+fDBGkClnixJ9TyyYhiV9/R7V1nPl7eILrH74xPNpD1d/PL5zMi5bYdlmCJwc/AqNEKig=
+X-Received: by 2002:a05:6902:18c7:b0:dc6:a5e1:3a05 with SMTP id
+ ck7-20020a05690218c700b00dc6a5e13a05mr1060705ybb.14.1707174658515; Mon, 05
+ Feb 2024 15:10:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202124711.256146-1-alexghiti@rivosinc.com>
+References: <1706654228-17180-9-git-send-email-wufan@linux.microsoft.com>
+ <737a8ea0323b3db38044813041215bac@paul-moore.com> <6e7c707c-28cd-42ec-a617-6f8d2ce9da4f@linux.microsoft.com>
+In-Reply-To: <6e7c707c-28cd-42ec-a617-6f8d2ce9da4f@linux.microsoft.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 5 Feb 2024 18:10:47 -0500
+Message-ID: <CAHC9VhSX4iNHEw89-mpF07cSqgGd1myQ6CUfiQnA9pgg3QS7Tw@mail.gmail.com>
+Subject: Re: [PATCH RFC v12 8/20] ipe: add userspace interface
+To: Fan Wu <wufan@linux.microsoft.com>
+Cc: corbet@lwn.net, zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com, 
+	tytso@mit.edu, ebiggers@kernel.org, axboe@kernel.dk, agk@redhat.com, 
+	snitzer@kernel.org, eparis@redhat.com, linux-doc@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-fscrypt@vger.kernel.org, linux-block@vger.kernel.org, 
+	dm-devel@lists.linux.dev, audit@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Deven Bowers <deven.desai@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 02, 2024 at 01:47:11PM +0100, Alexandre Ghiti wrote:
-> We used to emit a flush_icache_all() whenever a dirty executable
-> mapping is set in the page table but we can instead call
-> flush_icache_mm() which will only send IPIs to cores that currently run
-> this mm and add a deferred icache flush to the others.
-> 
-> The number of calls to sbi_remote_fence_i() (tested without IPI
-> support):
-> 
-> With a simple buildroot rootfs:
-> * Before: ~5k
-> * After :  4 (!)
-> 
-> Tested on HW, the boot to login is ~4.5% faster.
-> 
-> With an ubuntu rootfs:
-> * Before: ~24k
-> * After : ~13k
-> 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/pgtable.h | 14 +++++++-------
->  arch/riscv/mm/cacheflush.c       |  4 ++--
->  arch/riscv/mm/pgtable.c          |  2 +-
->  3 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 0c94260b5d0c..058cfa89dd29 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -513,12 +513,12 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
->  	WRITE_ONCE(*ptep, pteval);
->  }
->  
-> -void flush_icache_pte(pte_t pte);
-> +void flush_icache_pte(struct mm_struct *mm, pte_t pte);
->  
-> -static inline void __set_pte_at(pte_t *ptep, pte_t pteval)
-> +static inline void __set_pte_at(struct mm_struct *mm, pte_t *ptep, pte_t pteval)
->  {
->  	if (pte_present(pteval) && pte_exec(pteval))
-> -		flush_icache_pte(pteval);
-> +		flush_icache_pte(mm, pteval);
->  
->  	set_pte(ptep, pteval);
->  }
-> @@ -529,7 +529,7 @@ static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
->  	page_table_check_ptes_set(mm, ptep, pteval, nr);
->  
->  	for (;;) {
-> -		__set_pte_at(ptep, pteval);
-> +		__set_pte_at(mm, ptep, pteval);
->  		if (--nr == 0)
->  			break;
->  		ptep++;
-> @@ -541,7 +541,7 @@ static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
->  static inline void pte_clear(struct mm_struct *mm,
->  	unsigned long addr, pte_t *ptep)
->  {
-> -	__set_pte_at(ptep, __pte(0));
-> +	__set_pte_at(mm, ptep, __pte(0));
->  }
->  
->  #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS	/* defined in mm/pgtable.c */
-> @@ -707,14 +707,14 @@ static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
->  				pmd_t *pmdp, pmd_t pmd)
->  {
->  	page_table_check_pmd_set(mm, pmdp, pmd);
-> -	return __set_pte_at((pte_t *)pmdp, pmd_pte(pmd));
-> +	return __set_pte_at(mm, (pte_t *)pmdp, pmd_pte(pmd));
->  }
->  
->  static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
->  				pud_t *pudp, pud_t pud)
->  {
->  	page_table_check_pud_set(mm, pudp, pud);
-> -	return __set_pte_at((pte_t *)pudp, pud_pte(pud));
-> +	return __set_pte_at(mm, (pte_t *)pudp, pud_pte(pud));
->  }
->  
->  #ifdef CONFIG_PAGE_TABLE_CHECK
-> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-> index b0774993c0f3..3e234e95d952 100644
-> --- a/arch/riscv/mm/cacheflush.c
-> +++ b/arch/riscv/mm/cacheflush.c
-> @@ -85,12 +85,12 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
->  #endif /* CONFIG_SMP */
->  
->  #ifdef CONFIG_MMU
-> -void flush_icache_pte(pte_t pte)
-> +void flush_icache_pte(struct mm_struct *mm, pte_t pte)
->  {
->  	struct folio *folio = page_folio(pte_page(pte));
->  
->  	if (!test_bit(PG_dcache_clean, &folio->flags)) {
-> -		flush_icache_all();
-> +		flush_icache_mm(mm, false);
->  		set_bit(PG_dcache_clean, &folio->flags);
->  	}
->  }
-> diff --git a/arch/riscv/mm/pgtable.c b/arch/riscv/mm/pgtable.c
-> index ef887efcb679..533ec9055fa0 100644
-> --- a/arch/riscv/mm/pgtable.c
-> +++ b/arch/riscv/mm/pgtable.c
-> @@ -10,7 +10,7 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
->  			  pte_t entry, int dirty)
->  {
->  	if (!pte_same(ptep_get(ptep), entry))
-> -		__set_pte_at(ptep, entry);
-> +		__set_pte_at(vma->vm_mm, ptep, entry);
->  	/*
->  	 * update_mmu_cache will unconditionally execute, handling both
->  	 * the case that the PTE changed and the spurious fault case.
-> -- 
-> 2.39.2
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+On Mon, Feb 5, 2024 at 6:01=E2=80=AFPM Fan Wu <wufan@linux.microsoft.com> w=
+rote:
+> On 2/3/2024 2:25 PM, Paul Moore wrote:
+> > On Jan 30, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
+> >>
+> >> As is typical with LSMs, IPE uses securityfs as its interface with
+> >> userspace. for a complete list of the interfaces and the respective
+> >> inputs/outputs, please see the documentation under
+> >> admin-guide/LSM/ipe.rst
+> >>
+> >> Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+> >> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+> >> ---
+> >> v2:
+> >>    + Split evaluation loop, access control hooks,
+> >>      and evaluation loop from policy parser and userspace
+> >>      interface to pass mailing list character limit
+> >>
+> >> v3:
+> >>    + Move policy load and activation audit event to 03/12
+> >>    + Fix a potential panic when a policy failed to load.
+> >>    + use pr_warn for a failure to parse instead of an
+> >>      audit record
+> >>    + Remove comments from headers
+> >>    + Add lockdep assertions to ipe_update_active_policy and
+> >>      ipe_activate_policy
+> >>    + Fix up warnings with checkpatch --strict
+> >>    + Use file_ns_capable for CAP_MAC_ADMIN for securityfs
+> >>      nodes.
+> >>    + Use memdup_user instead of kzalloc+simple_write_to_buffer.
+> >>    + Remove strict_parse command line parameter, as it is added
+> >>      by the sysctl command line.
+> >>    + Prefix extern variables with ipe_
+> >>
+> >> v4:
+> >>    + Remove securityfs to reverse-dependency
+> >>    + Add SHA1 reverse dependency.
+> >>    + Add versioning scheme for IPE properties, and associated
+> >>      interface to query the versioning scheme.
+> >>    + Cause a parser to always return an error on unknown syntax.
+> >>    + Remove strict_parse option
+> >>    + Change active_policy interface from sysctl, to securityfs,
+> >>      and change scheme.
+> >>
+> >> v5:
+> >>    + Cause an error if a default action is not defined for each
+> >>      operation.
+> >>    + Minor function renames
+> >>
+> >> v6:
+> >>    + No changes
+> >>
+> >> v7:
+> >>    + Propagating changes to support the new ipe_context structure in t=
+he
+> >>      evaluation loop.
+> >>
+> >>    + Further split the parser and userspace interface changes into
+> >>      separate commits.
+> >>
+> >>    + "raw" was renamed to "pkcs7" and made read only
+> >>    + "raw"'s write functionality (update a policy) moved to "update"
+> >>    + introduced "version", "policy_name" nodes.
+> >>    + "content" renamed to "policy"
+> >>    + changes to allow the compiled-in policy to be treated
+> >>      identical to deployed-after-the-fact policies.
+> >>
+> >> v8:
+> >>    + Prevent securityfs initialization if the LSM is disabled
+> >>
+> >> v9:
+> >>    + Switch to securityfs_recursive_remove for policy folder deletion
+> >>
+> >> v10:
+> >>    + Simplify and correct concurrency
+> >>    + Fix typos
+> >>
+> >> v11:
+> >>    + Correct code comments
+> >>
+> >> v12:
+> >>    + Correct locking and remove redundant code
+> >> ---
+> >>   security/ipe/Makefile    |   2 +
+> >>   security/ipe/fs.c        | 101 +++++++++
+> >>   security/ipe/fs.h        |  16 ++
+> >>   security/ipe/ipe.c       |   3 +
+> >>   security/ipe/ipe.h       |   2 +
+> >>   security/ipe/policy.c    | 123 ++++++++++
+> >>   security/ipe/policy.h    |   9 +
+> >>   security/ipe/policy_fs.c | 469 +++++++++++++++++++++++++++++++++++++=
+++
+> >>   8 files changed, 725 insertions(+)
+> >>   create mode 100644 security/ipe/fs.c
+> >>   create mode 100644 security/ipe/fs.h
+> >>   create mode 100644 security/ipe/policy_fs.c
+> >
+> > ...
+> >
+> >> diff --git a/security/ipe/policy.c b/security/ipe/policy.c
+> >> index f22a576a6d68..61fea3e38e11 100644
+> >> --- a/security/ipe/policy.c
+> >> +++ b/security/ipe/policy.c
+> >> @@ -43,6 +71,68 @@ static int set_pkcs7_data(void *ctx, const void *da=
+ta, size_t len,
+> >>      return 0;
+> >>   }
+> >>
+> >> +/**
+> >> + * ipe_update_policy - parse a new policy and replace old with it.
+> >> + * @root: Supplies a pointer to the securityfs inode saved the policy=
+.
+> >> + * @text: Supplies a pointer to the plain text policy.
+> >> + * @textlen: Supplies the length of @text.
+> >> + * @pkcs7: Supplies a pointer to a buffer containing a pkcs7 message.
+> >> + * @pkcs7len: Supplies the length of @pkcs7len.
+> >> + *
+> >> + * @text/@textlen is mutually exclusive with @pkcs7/@pkcs7len - see
+> >> + * ipe_new_policy.
+> >> + *
+> >> + * Context: Requires root->i_rwsem to be held.
+> >> + * Return:
+> >> + * * !IS_ERR        - The existing policy saved in the inode before u=
+pdate
+> >> + * * -ENOENT        - Policy doesn't exist
+> >> + * * -EINVAL        - New policy is invalid
+> >> + */
+> >> +struct ipe_policy *ipe_update_policy(struct inode *root,
+> >> +                                 const char *text, size_t textlen,
+> >> +                                 const char *pkcs7, size_t pkcs7len)
+> >> +{
+> >> +    int rc =3D 0;
+> >> +    struct ipe_policy *old, *ap, *new =3D NULL;
+> >> +
+> >> +    old =3D (struct ipe_policy *)root->i_private;
+> >> +    if (!old)
+> >> +            return ERR_PTR(-ENOENT);
+> >> +
+> >> +    new =3D ipe_new_policy(text, textlen, pkcs7, pkcs7len);
+> >> +    if (IS_ERR(new))
+> >> +            return new;
+> >> +
+> >> +    if (strcmp(new->parsed->name, old->parsed->name)) {
+> >> +            rc =3D -EINVAL;
+> >> +            goto err;
+> >> +    }
+> >> +
+> >> +    if (ver_to_u64(old) > ver_to_u64(new)) {
+> >> +            rc =3D -EINVAL;
+> >> +            goto err;
+> >> +    }
+> >> +
+> >> +    root->i_private =3D new;
+> >> +    swap(new->policyfs, old->policyfs);
+> >
+> > Should the swap() take place with @ipe_policy_lock held?
+> >
+> I think we are safe here because root->i_rwsem is held. Other two
+> operations set_active and delete are also depending on the inode lock.
+> >> +    mutex_lock(&ipe_policy_lock);
+> >> +    ap =3D rcu_dereference_protected(ipe_active_policy,
+> >> +                                   lockdep_is_held(&ipe_policy_lock))=
+;
+> >> +    if (old =3D=3D ap) {
+> >> +            rcu_assign_pointer(ipe_active_policy, new);
+> >> +            mutex_unlock(&ipe_policy_lock);
+> >> +            synchronize_rcu();
+> >
+> > I'm guessing you are forcing a synchronize_rcu() here because you are
+> > free()'ing @old in the caller, yes?  Looking at the code, I only see
+> > one caller, update_policy().  With only one caller, why not free @old
+> > directly in ipe_update_policy()?  Do you see others callers that would
+> > do something different?
+> >
+> The call of synchronize_rcu() is because we are updating the current
+> active policy so we need to set the new policy as active.
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Unless I'm mistaken, a syncronize_rcu() call only ensures that the
+current task will see the updated value by waiting until all current
+RCU critical sections have finished.  Given the mutex involved here I
+don't believe this is necessary, but please correct me if I'm wrong.
 
+--=20
+paul-moore.com
