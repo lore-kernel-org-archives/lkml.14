@@ -1,36 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B301386B8
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C0E13C1C2;
+	Mon,  5 Feb 2024 19:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159824; cv=none; b=sRKyzuXOgV/aUP+jke8LdZvkOA7fhNrxjMU/umwoGLz2KRFkPqKJk/LzSPq+PjbIH1/vwqIPGeztxqQ1FwgARUGBPlx+HBcQ2QaEkQOeeygHKu/QFd7dTJdUSl9Xk0y4UjIM9MhPHw43Maowk9vdoB3v/JA/dXy1s6h5YLj63Wk=
+	t=1707159826; cv=none; b=csRwB/gyHiBTRCa2YLshr4fVOBSEkBmDY1rmWZ98e47T05mPsWGKWrC5rdZ0/Smsb7WkwsK2/91GHmHqoFrSGIDXhdJwTNcEIXw+hrcZuVfpu43TC6Jn2GO+bLb8jaXS/gN7IPxE24VjPZC1jPUQSUS9bm8Yv9ueocsbep/QP1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159824; c=relaxed/simple;
-	bh=GXjD/rRoFrhMHi5VOUmupIgP5YWbLXkneuejfG8wT2Y=;
+	s=arc-20240116; t=1707159826; c=relaxed/simple;
+	bh=cBdQybg3QvOmh0T+8TRo03v1EOMi2jdUNh9UnbpZkXA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=edX/NJ7D8Tf/MuC6R4WBAXBVXRRdm7nRdlnhY25wW/OgCn3Hf4qCmB9ABtoe06/JFmOlRV8N/uH2wNBGJ1zn0/14RE40fUdDfNqJKX2HvzY3uyxdWSrag2r6nJQNezxvZGoKRVgIK0dCikPLE+K7HKPQW6G06rSXO5T1Rqa+ewI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nI6T51ug; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Af/kgXftclJjktwUIkYSY7bHQkKjn84mDc0bR2NYlGU5w2S/BqOfgRwVEHjjpJsyIFp1dxq82aNGTO5N13BMX/udkIS6ER1s3a1tmZdRJMfVa90vFT1FvFQIQ2bBV6zcr9DIwE4pggCgEev5YEaZU9kQqrbkWo2WSPung13aXlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pFHsMilY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nI6T51ug"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A41C433B1;
-	Mon,  5 Feb 2024 19:03:43 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pFHsMilY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2505EC43394;
+	Mon,  5 Feb 2024 19:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159823;
-	bh=GXjD/rRoFrhMHi5VOUmupIgP5YWbLXkneuejfG8wT2Y=;
+	s=korg; t=1707159826;
+	bh=cBdQybg3QvOmh0T+8TRo03v1EOMi2jdUNh9UnbpZkXA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nI6T51ugITQjo/tdsgCLowWFZO6KPnE6KHKBDDwF3mJNWdsjUsfWOCpSqpFJFJJp7
-	 B4/BtpZ8Py5iK/2c+7NlR06pWs2lI1yBlQ/IHmRESc3X/yjJJyqw7dVB/q0IHFSMdW
-	 PtzpuLYRieuWf9ALMhC/uDLtHmtt98QFEMqNWokc=
-Date: Mon, 5 Feb 2024 04:49:19 -0800
+	b=pFHsMilY/kx4AbdiN3h0RF6AC4GZML4oRcUUeXyzkmfZ8+OPBJis2igauMBoKU7xj
+	 IwsUT+ee3BGLFntJCeZGR2/kAcUkk90fyOS8oNAPD8igaTL8xZTePoPX1y9pT+bDcy
+	 XmsMP9Chc+tkEF01sdjdP/rN/sJEu8XHev6CC8R0=
+Date: Mon, 5 Feb 2024 04:49:30 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] intel_th: make intel_th_bus const
-Message-ID: <2024020515-refinery-audacity-1d5d@gregkh>
-References: <20240204-bus_cleanup-hwtracing-v1-1-23adbf4e6bb5@marliere.net>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hv: vmbus: make hv_bus const
+Message-ID: <2024020526-playlist-december-b3f4@gregkh>
+References: <20240204-bus_cleanup-hv-v1-1-521bd4140673@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,11 +41,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-hwtracing-v1-1-23adbf4e6bb5@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-hv-v1-1-521bd4140673@marliere.net>
 
-On Sun, Feb 04, 2024 at 04:52:18PM -0300, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 01:38:02PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the intel_th_bus variable to be a constant structure as well,
+> move the hv_bus variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
