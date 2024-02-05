@@ -1,62 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8221F17C78F;
-	Mon,  5 Feb 2024 19:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C711A6BB9
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159857; cv=none; b=caA3ALboc7/p4PpztJhjR/xfxapyJtSAEZqcRL/Fq3NvfrsQAWKSPbM7pho9EkQVIwSgL1uBcEDK8PMTBXah+KsCSv+xon5DnbNHQJmOFfQ9It9MYVX5hX54ZacwZAi24GcNroMEwp7+VTLbUrITwVB+mxWC7/USKsvfEDudObE=
+	t=1707159904; cv=none; b=FQmDS+IY5drCA10mx5xvaPLEeHPGk/Z5i21slXzeFnKip3aHhYaVWes2N22FeQCep+4EQii8I5GDPDAR5BYWTZ0W6EaAzZJbjXwBwX3tHDlHnMvv06Ul9WCR1fnhhqoYpvQPCPrUVLs6NYYs0vBoQ5L+kXCEbQOs6NvKiCP6cyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159857; c=relaxed/simple;
-	bh=GWC/R9KnvqMqsuGJbyvLUE5rq9tD0443OWb0hB5RjH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AHN8F1Pk+VgjvIdk66g4C0e3D1vpx2V3RlswhZGeBs4DBsfNZutu0pSafLMfdEXh3yiD4cPnLi1RuYWRMfuzvRiBGb+wyvGcQIyuTszpAj2ZVN/k+1u67wNufbnmAs4V9zaV8v4mXA4farq5zjnjBZrI9jEOQsPLe9/v9kj56KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ro2jZQjI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707159904; c=relaxed/simple;
+	bh=wMerWchyBglTjYaCZJW9+4cKaKj+xDW9hzP6obVdoog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzzQIWrLOGxN9SyMVmPd3ssxqTv83KYb7541cr7ar1rHbQxAZD/t0+ctmD/LBXmkDFD1OiPSHfV3UkbhsStNMfMfmImK4yDRAhimjUbsTOn1Y5CuW5taSwLYMbzcTlaodgq1Yxr3OyQ2Gz8/TlL0cFcz0p7u+X51RiWPDISe4W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=B44QJ8tC; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ro2jZQjI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 196AFC43399;
-	Mon,  5 Feb 2024 19:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159857;
-	bh=GWC/R9KnvqMqsuGJbyvLUE5rq9tD0443OWb0hB5RjH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ro2jZQjI3U/cwZ2pnMgqNNoA00k5AzWG69901vgqg3IW7qeKeGC447ywZXjKFc/nJ
-	 g7d1pz5SVg1CIdEnt7uJ16Y+tQAuPKS/LAtxz39RW8FTq4p2TS5HnVurx5g608cYwC
-	 UXCw41oKsf4+2bxFcK8kxUWHX5/ygEhmvxci5gck=
-Date: Mon, 5 Feb 2024 04:51:56 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] mips: struct bus_type cleanup
-Message-ID: <2024020550-mountable-grandkid-a4a9@gregkh>
-References: <20240204-bus_cleanup-mips-v1-0-05af5e9a7ead@marliere.net>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B44QJ8tC"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5114b1e8819so2292762e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 11:05:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1707159900; x=1707764700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wMerWchyBglTjYaCZJW9+4cKaKj+xDW9hzP6obVdoog=;
+        b=B44QJ8tC8Pq4VtK5t5HRqsqfAYaNo13DPAForyokAy5Te2Rjj+YS3zpYtyR10rwvht
+         zkYwa761ReeH/nuct+xo5KoH+4W91IH8BDAlZR1lonc+qHe8ib+pfO5QMlUb/O0Scf/+
+         WE4Ho4bn/SWHdPlsZScDcMknTu2DHoW8ToF+0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707159900; x=1707764700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wMerWchyBglTjYaCZJW9+4cKaKj+xDW9hzP6obVdoog=;
+        b=oaNuz8yw1u+pTsEyUsnWvfRkm1LlDmy5c72ahOSpwDe0yhcbhkMEat2Zmqt4brNLqn
+         tAOT3jYljGzizYNF4OlLZQshnq+SOpgcFRSV3IYJmbtg0CeN5CBnxi24ufxtJvS5u7rm
+         /RjeSWYtwX1M454We1vbXGO+HwVBlzz4NcuCMFaMOu7d10A/yDVbhN8aVapb3lRDFGGO
+         A/r1/dBF1/pTkNQiglnHiT5zvaV72SnCAxR9J8FfnqTJaJgMWRLl9iAPUBj3IsDDHp9E
+         mg0DVk0szg4NfV+NNQZspjFM/bGHcyAQmgbCkRs21uiYqRGhL5J1nMfX1DC0QKZg4YOq
+         8PHA==
+X-Gm-Message-State: AOJu0YyaphYsZc3Bqd8HhGsWMGet4zBip9LMWUQDEJFi2vSZNs/JDUS9
+	d2Qbb26S9I/Q/+uHzbTfvI1x06sgrIaOqmrG9/+3P7/r/Qc9hdDFQvGSrw4qK1KUF7y0o5ECjVv
+	Qi0pT7iBbUm6UO63L3zgZeRNS2Bzsh4UOsFfS
+X-Google-Smtp-Source: AGHT+IEcHW/vOu1+KgLsWEuqn8Io9gHrYaSWNPFK5jkvm/DQsp3jCU/XfKZgWdu8K529ifOfonW3kj5xctfw62fdoaE=
+X-Received: by 2002:ac2:58f9:0:b0:511:2f76:e093 with SMTP id
+ v25-20020ac258f9000000b005112f76e093mr69835lfo.58.1707159900103; Mon, 05 Feb
+ 2024 11:05:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-mips-v1-0-05af5e9a7ead@marliere.net>
+References: <20240202182339.1725466-1-nadav.amit@gmail.com>
+In-Reply-To: <20240202182339.1725466-1-nadav.amit@gmail.com>
+From: Jerrin Shaji George <jerrin.shaji-george@broadcom.com>
+Date: Mon, 5 Feb 2024 11:04:49 -0800
+Message-ID: <CACKNADUCcW-Mrkt14VeGHTKsZ9KHMt9h=hfcncmDGUCyVGZqaw@mail.gmail.com>
+Subject: Re: [PATCH] vmw_balloon: change maintainership
+To: Nadav Amit <nadav.amit@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 04, 2024 at 12:06:56PM -0300, Ricardo B. Marliere wrote:
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]). Specifically, this series is part of the task of
-> splitting one of his TODOs [2].
-> 
-> ---
-> [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
-> ---
-> Ricardo B. Marliere (2):
->       mips: sgi-ip22: make gio_bus_type const
->       mips: txx9: make txx9_sramc_subsys const
+On Fri, Feb 2, 2024 at 10:24=E2=80=AFAM Nadav Amit <nadav.amit@gmail.com> w=
+rote:
+>
+> Jerrin will be the new maintainer of the VMware balloon driver following
+> Broadcom's acquisition and Nadav's departure.
+>
+> Update accordingly:
+> 1. Update the maintainer name and email.
+> 2. Update the reviewer list to Broadcom's, which acquired VMware.
+> 3. Add .mailmap entries for Nadav.
+>
+> Cc: Jerrin Shaji George <jerrin.shaji-george@broadcom.com>
+> Signed-off-by: Nadav Amit <nadav.amit@gmail.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Jerrin Shaji George <jerrin.shaji-george@broadcom.com>
