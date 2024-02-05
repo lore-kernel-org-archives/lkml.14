@@ -1,142 +1,113 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154D0AD32;
-	Mon,  5 Feb 2024 04:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3720AB64A;
+	Mon,  5 Feb 2024 04:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707108600; cv=none; b=eITWtNZQGRipG0CHGtmCTyjhlTuU4Mmmk4LAoIo9Bsw5Ed86wJOVe1pBMEpvcPBIWeNkVG/hCsL2hggGW/OPyEhF1IEzmZfEfHPEeOyXDtDXXwTJ78GF1w9zglAebwEuefkSj2j/34VHNLh/5YTh8416YCd7UkbseVSyaHrK+gI=
+	t=1707108759; cv=none; b=h2n4xQXHCg82eQZ3Ot3SAXTBxUFyKQElMAoZk07LcnzXJR1DldXFNsRColoyOeGiQ4oWT8N7XGUYnfrOoFKti/kKczHVEJan+QaR+hLmIREFuF71KAhs+Y7Yhy1MeEfz+4Pujnt6lp43cU9fOtmA+x8p7KrTenaBD9V3WHtEq3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707108600; c=relaxed/simple;
-	bh=NduTLHFnZfhCN2CkJ9oqz73qOh10y1E+6FLyT0zEKO0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EdqwiqhH40g+E1KDV4zvWh41ASQy+7XnpODDEJ0BhYLbxbaxC4AcovFFtxvEwM/y88Qea600VzZ4sMxY75gOeabL3YMEeRETn8Gxgdx4Z08LzIOLye9U/ZdoiRrtMRdKynymlMdiOb8dbmrxfJjrxB1yam+3sXBMsa+XZ+FOmb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cOON0SHv; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707108759; c=relaxed/simple;
+	bh=HhfVX9BYq7tXbakLwJPIqNA5VK+k8QfcCLl9is71Btw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UTXclpzwzN8aypA+rSqSDtGZtvg8lE6qrTcPA0yCbKQ8xtnfgXD3C0Fe6c7pGgYtAeQ9WrswO2hriGxeEJ/KCHMpC2OdrMAX5icltoyKvB+SWkJadiCnD/DZ00VRyx4DKJRBdtIIZhXIX5OMmz4ApbjkIoMa5VatWoylEjbt/MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnhPjGgF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cOON0SHv"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4154nElG022636;
-	Sun, 4 Feb 2024 22:49:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707108554;
-	bh=Xtnfb8xnQNhu/YXCkFubO57gi1E2WQInflCGp92loXQ=;
-	h=From:To:CC:Subject:Date;
-	b=cOON0SHvZCUNGkGhchQdw7q+4bpaFV9mnhg0AQDO9GSCKkxzkOuEaWO4QqUa16+49
-	 8k2/LwQs8SjG+mM/LxQCT4P5MFcvljlwbtCJQur5gjTgjPJ/wlsLXMot1TxnIoq7XD
-	 VEOLYb5P1K82DJE/Hbm4pkl6bK9Gv1MupKij/z+Q=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4154nE5h031263
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 4 Feb 2024 22:49:14 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 4
- Feb 2024 22:49:13 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 4 Feb 2024 22:49:13 -0600
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4154nA0K035269;
-	Sun, 4 Feb 2024 22:49:11 -0600
-From: Udit Kumar <u-kumar1@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <ssantosh@kernel.org>
-CC: <vigneshr@ti.com>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, Udit Kumar <u-kumar1@ti.com>
-Subject: [PATCH v1] clk: keystone: sci-clk: Adding support for non contiguous clocks
-Date: Mon, 5 Feb 2024 10:15:58 +0530
-Message-ID: <20240205044557.3340848-1-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnhPjGgF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB08C433F1;
+	Mon,  5 Feb 2024 04:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707108758;
+	bh=HhfVX9BYq7tXbakLwJPIqNA5VK+k8QfcCLl9is71Btw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CnhPjGgFyQhyuQROGwOdLLBeT4oA12tLKttw3ALePE6WEt5r6N1S/oT5DqWI2UJmr
+	 cDha40mGE4hpMAWU7OU2F5aEVU1DwbqE4JPMUwNIFsUogmCfILErgFHmonh6JAJlPw
+	 SU+rAT2zvHYtebukTj9XiNuBXw+S4N0LgtZT3feln2JSB1gOg09qDW0P6sMYubT6cv
+	 BQjcCnzMDOVJ987LoSFX2Xh/UX8uuC5qOH4loInt5EjdGQRkDgWWoZvBmaD1ujQVKR
+	 BXeGb/ZW2RngcjwIFPpe2NsfPJbccSK1ci6x48yD59ajzVAK4RZ+57mocJoyOk0zp+
+	 WaXH4op24+DrQ==
+Date: Mon, 5 Feb 2024 12:52:27 +0800
+From: Peter Chen <peter.chen@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: rogerq@kernel.org, felipe.balbi@linux.intel.com,
+	gregkh@linuxfoundation.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	pawell@cadence.com
+Subject: Re: [PATCH v2 2/2] usb: cdns3: fix memory double free when handle
+ zero packet
+Message-ID: <20240205045227.GD1200221@nchen-desktop>
+References: <20240202154217.661867-1-Frank.Li@nxp.com>
+ <20240202154217.661867-2-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202154217.661867-2-Frank.Li@nxp.com>
 
-Most of clocks and their parents are defined in contiguous range,
-But in few cases, there is gap in clock numbers[0].
+On 24-02-02 10:42:17, Frank Li wrote:
+> 829  if (request->complete) {
+> 830          spin_unlock(&priv_dev->lock);
+> 831          usb_gadget_giveback_request(&priv_ep->endpoint,
+> 832                                    request);
+> 833          spin_lock(&priv_dev->lock);
+> 834  }
+> 835
+> 836  if (request->buf == priv_dev->zlp_buf)
+> 837      cdns3_gadget_ep_free_request(&priv_ep->endpoint, request);
+> 
+> Driver append an additional zero packet request when queue a packet, which
+> length mod max packet size is 0. When transfer complete, run to line 831,
+> usb_gadget_giveback_request() will free this requestion. 836 condition is
+> true, so cdns3_gadget_ep_free_request() free this request again.
+> 
+> Log:
+> 
+> [ 1920.140696][  T150] BUG: KFENCE: use-after-free read in cdns3_gadget_giveback+0x134/0x2c0 [cdns3]
+> [ 1920.140696][  T150]
+> [ 1920.151837][  T150] Use-after-free read at 0x000000003d1cd10b (in kfence-#36):
+> [ 1920.159082][  T150]  cdns3_gadget_giveback+0x134/0x2c0 [cdns3]
+> [ 1920.164988][  T150]  cdns3_transfer_completed+0x438/0x5f8 [cdns3]
+> 
+> Add check at line 829, skip call usb_gadget_giveback_request() if it is
+> additional zero length packet request. Needn't call
+> usb_gadget_giveback_request() because it is allocated in this driver.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Driver assumes clocks to be in contiguous range, and assigns
-accordingly.
+Acked-by: Peter Chen <peter.chen@kernel.org>
 
-New firmware started returning error in case of
-non-available clock id.  Therefore drivers throws error while
-re-calculate and other functions.
+> ---
+>  drivers/usb/cdns3/cdns3-gadget.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
+> index d6723d31fc6e2..fd1beb10bba72 100644
+> --- a/drivers/usb/cdns3/cdns3-gadget.c
+> +++ b/drivers/usb/cdns3/cdns3-gadget.c
+> @@ -828,7 +828,11 @@ void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
+>  			return;
+>  	}
+>  
+> -	if (request->complete) {
+> +	/*
+> +	 * zlp request is appended by driver, needn't call usb_gadget_giveback_request() to notify
+> +	 * gadget composite driver.
+> +	 */
+> +	if (request->complete && request->buf != priv_dev->zlp_buf) {
+>  		spin_unlock(&priv_dev->lock);
+>  		usb_gadget_giveback_request(&priv_ep->endpoint,
+>  					    request);
+> -- 
+> 2.34.1
+> 
 
-In this fix, before assigning and adding clock in list,
-driver checks if given clock is valid or not.
-
-Fixes: 3c13933c6033 ("clk: keystone: sci-clk: add support for dynamically probing clocks")
-
-[0] https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j7200/clocks.html
-Section Clocks for NAVSS0_CPTS_0 Device,
-clock id 12-15 and 18-19 not present
-
-Signed-off-by: Udit Kumar <u-kumar1@ti.com>
----
-Original logs
-https://gist.github.com/uditkumarti/de4b36b21247fb36725ad909ce4812f6#file-original-logs
-Line 2630 for error
-
-Logs with fix
-https://gist.github.com/uditkumarti/de4b36b21247fb36725ad909ce4812f6#file-with-fix
-Line 2594 
-
- drivers/clk/keystone/sci-clk.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
-index 35fe197dd303..d417ec018d82 100644
---- a/drivers/clk/keystone/sci-clk.c
-+++ b/drivers/clk/keystone/sci-clk.c
-@@ -517,6 +517,8 @@ static int ti_sci_scan_clocks_from_dt(struct sci_clk_provider *provider)
- 	int num_clks = 0;
- 	int num_parents;
- 	int clk_id;
-+	int max_clk_id;
-+	u64 freq;
- 	const char * const clk_names[] = {
- 		"clocks", "assigned-clocks", "assigned-clock-parents", NULL
- 	};
-@@ -584,6 +586,7 @@ static int ti_sci_scan_clocks_from_dt(struct sci_clk_provider *provider)
- 				}
- 
- 				clk_id = args.args[1] + 1;
-+				max_clk_id = clk_id + num_parents;
- 
- 				while (num_parents--) {
- 					sci_clk = devm_kzalloc(dev,
-@@ -592,11 +595,20 @@ static int ti_sci_scan_clocks_from_dt(struct sci_clk_provider *provider)
- 					if (!sci_clk)
- 						return -ENOMEM;
- 					sci_clk->dev_id = args.args[0];
--					sci_clk->clk_id = clk_id++;
--					sci_clk->provider = provider;
--					list_add_tail(&sci_clk->node, &clks);
-+					/* check if given clock id is valid by calling get_freq */
-+					/* loop over max possible ids */
-+					do {
-+						sci_clk->clk_id = clk_id++;
- 
--					num_clks++;
-+						ret = provider->ops->get_freq(provider->sci,
-+							   sci_clk->dev_id, sci_clk->clk_id, &freq);
-+					} while (ret != 0 && clk_id < max_clk_id);
-+
-+					sci_clk->provider = provider;
-+					if (ret == 0) {
-+						list_add_tail(&sci_clk->node, &clks);
-+						num_clks++;
-+					}
- 				}
- 			}
- 
 -- 
-2.34.1
 
+Thanks,
+Peter Chen
