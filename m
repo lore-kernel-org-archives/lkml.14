@@ -1,159 +1,141 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A59D1773D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AEE4125AF;
+	Mon,  5 Feb 2024 09:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707123920; cv=none; b=pppeQW/8kAJGnVYPfAt2KTbca6gM/DXZlwBzaGS2MUFwo6VJiAUQPzp2P4AB/5HcVMY3L2pS4wItQy2WK61LSaXolarAIDcJPOiFBPG14EVnqmLoX0nmZNGPfZDvoZgdAkypQIJn6noEwAfs7F+j0pDPL+BOwr2cpcJObFKdWaM=
+	t=1707123963; cv=none; b=SjENR0S6ZAR31fOnGQlreboA9XgHCMFjHB5DR1bJ7zv9A7SVRtYaCk+65Uj2qExtUJmRFumcL+G6wOoZ+JULB5Ugn/8nX+JvQd6jsWZfWNXk51d5wVQN+J5MME8d47wJEGHAy3VI+I6yG+emMw3VUxxXPVy4BLmaNJZ0awLoXPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707123920; c=relaxed/simple;
-	bh=5uslP+6MiU5p4xB80AbckdzpFTK8AZLC0FSdU6yovsc=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=saC9x47dyGlCoWLBpocqy0J7QJald1HlOLp/L2K/bCeGtTC5KevbLuogzshYVIRKiYtoQFvrskaEB3LAwCgthp1bXsVDRO2t8c9uy1JSW9rV8tYC6UWgTiQjhVaVx380d/E6QuxUy2Zl4T7q3Vp/4d9QcTpeo6xYWPgLcXJncsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lO/DlnOT; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1707123963; c=relaxed/simple;
+	bh=cLno8nXsijZnWS2UJtaH5N5P2B6t8PmHRwjGLZQJMmc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GMu4/05lAMXf9FLLXxVQYJcjWGqp16qXJRAG1YZFPaCj3mtFMAjbWBxWs4IaFjjuJpfOJPY3E0qle/jUuhNKuJ4RMBOSMoeBu9FxNvkxQLt80EL2dFkfHrQ11+NA/2zWPlKjfcu+Wze19PHggRXDjwhimPjdClbpxDxb/pU1GPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iIjV8ofK; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lO/DlnOT"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40fccd09082so18143175e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707123915; x=1707728715; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=FrzyemCCCe25zosXOoDYB16obaNMd4rjugvPsL9t2Tc=;
-        b=lO/DlnOTsaXup4aulR7ByDaFa5LT985S2rvMV1Hx7xUnl0oI9WNNsdQSfeP10vkJ7P
-         BtCHPjqc41MMGhBxXifdUN1MeKZxTH0Mn4VsJR0dYOgdzlMsfoekMgmGLFnHd47SGiyZ
-         dw8VLOl7b5WW3NvNAmn9581hxcM7zMMV26IhD3ZBdVq57stN7A04DHcSMqTteh9p67ND
-         Mdn/NAZ1YE8QnhbO5C8fY4JtanRm76WmS13xxe751bsIivr8Rjygly8lP4eE9JY0NrqX
-         ZDftsEbRC+6BtlHwHLPc642iM+LSxB/fXBkR/JGy1YWeVlLZdujpASm3NvJkvZwuuY2J
-         uC/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707123915; x=1707728715;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FrzyemCCCe25zosXOoDYB16obaNMd4rjugvPsL9t2Tc=;
-        b=YR7AHtjF8GO4B4EV1wYJPNWYYlm9UQYai6Z3DOiTnGf8cu7e9gBFUFbrHH2oSilhKb
-         8wyP+IdEA+jfD4cwjDT3iCpOfHtWC2J+SiixUzCYl8xndhnmSauDX7HNsLLnGF96fDSD
-         xTR0Yw23/gvIxEu8GS5JybG7QMxXtjDu0JnHsNHljumMGmWlOh+ZwexlMiY2VCMDpQM5
-         1CT/fjdsK/dnmD7mHBbmi5hWMV9hcxKpujjMUHtJotg4LKOmtdUsVQIiuVJDgTCJZu3x
-         t5XyK712foUwgRkhZAkoQ411s0KJJv3UM3d0KRfZiv5pYv8RM4+aIyG0gvJlCeZv1O0O
-         yA8A==
-X-Gm-Message-State: AOJu0Yzs7ohqZnde3mcreR/0zjFma/l3wWwITSsae6fshoa7VUt74/Ly
-	7vT4PlwlCCbEgLBnzekP/8v/TBWP11scJQjXwE4Ccgjuynz+W7GTG5gQopV6mRY=
-X-Google-Smtp-Source: AGHT+IG52hmC5Eu0sn2V0dkLHe/o74ig7s+Lp2f9Gnes0yU8mdwBjfMoRc4d5bnf/qpdhfHC23lgYg==
-X-Received: by 2002:a7b:cd85:0:b0:40e:fa6b:f355 with SMTP id y5-20020a7bcd85000000b0040efa6bf355mr4202944wmj.41.1707123915229;
-        Mon, 05 Feb 2024 01:05:15 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX7Wqy/vaUuoF/84sU2+37uNkcfW0D2VCaoFNsTSZi4e3JJEHKNwI+us6HkHjkYhwNaV5JILIKpnQrvUoG+vj+nBRSXfWhLuT1oQDOMLlTKIt77g2J8TfZ0WjBKxk9MEFPAIq4YAUGWuTJwJClAwRQTEOqLyJTmj4CZQ16p2SaLVx+ooRoppxNZO7MW9ue09hSQzl5Y1rdyaabmK0aMd5l4DdacudoB1InieW+d1kF0KxKdE5m13iR9mHcTD9SMvgpNYidAHQoxxndHA0idnQffXO8gKa/GQS5JytIIb20FZb3IK7HwewdhN2Wh/N4RexHqx0hPg6sb9fsKGZAx9/9h9SDwUvmBrMhhWmT9sY6JqVxfrJm8y7qQuN4IyAZzccwvRgL8CII3j804eaqFlCcv1HkXcmHaD0gvaGXtZt4LMt+sBzA6Bm7rAaYzeABxbhF0ZKcCaYm/iHBoKq7m3BuG
-Received: from localhost ([2a01:e0a:3c5:5fb1:455:1a2b:40a2:1766])
-        by smtp.gmail.com with ESMTPSA id fm24-20020a05600c0c1800b0040ee8765901sm8029761wmb.43.2024.02.05.01.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 01:05:14 -0800 (PST)
-References: <20240202172537.1.I64656c75d84284bc91e6126b50b33c502be7c42a@changeid>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Igor Prusov <ivprusov@salutedevices.com>
-Cc: jbrunet@baylibre.com, neil.armstrong@linaro.org,
- kernel@salutedevices.com, prusovigor@gmail.com, Kevin Hilman
- <khilman@baylibre.com>, Martin  Blumenstingl
- <martin.blumenstingl@googlemail.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: meson: Add missing clocks to axg_clk_regmaps
-Date: Mon, 05 Feb 2024 10:02:01 +0100
-In-reply-to: <20240202172537.1.I64656c75d84284bc91e6126b50b33c502be7c42a@changeid>
-Message-ID: <1j7cjji8mu.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iIjV8ofK"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41595pUQ098580;
+	Mon, 5 Feb 2024 03:05:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707123952;
+	bh=2cuwx8uQWWFYnfHdRsH5mjSDyuNRfi/7cJl2DykRGQA=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=iIjV8ofKrIryt3Hq2CRQNuVR/NmVua4KNr8cv7NinklymGqRfbk3ntTiQhN+bhvh2
+	 lk/31rxm99iXD5O2vW+saSAJohqLgafmNZEcjF6dXStYUZ4GTIV/ac3SkEcHX5fbpk
+	 dM2+cm3jBguKbgmTiqAk4QhcwiGgkCbvPc6fU6T8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41595p4b029240
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 Feb 2024 03:05:51 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ Feb 2024 03:05:51 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 Feb 2024 03:05:51 -0600
+Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41595pZq009492;
+	Mon, 5 Feb 2024 03:05:51 -0600
+Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 41595oi0032281;
+	Mon, 5 Feb 2024 03:05:51 -0600
+From: MD Danish Anwar <danishanwar@ti.com>
+To: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
+CC: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        "Tero
+ Kristo" <kristo@kernel.org>, <srk@ti.com>,
+        <r-gunasekaran@ti.com>, "Roger
+ Quadros" <rogerq@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Grygorii Strashko
+	<grygorii.strashko@ti.com>,
+        MD Danish Anwar <danishanwar@ti.com>
+Subject: [PATCH v4 1/3] arm64: dts: ti: k3-am64-main: Add ICSSG IEP nodes
+Date: Mon, 5 Feb 2024 14:35:44 +0530
+Message-ID: <20240205090546.4000446-2-danishanwar@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205090546.4000446-1-danishanwar@ti.com>
+References: <20240205090546.4000446-1-danishanwar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+From: Suman Anna <s-anna@ti.com>
 
-On Fri 02 Feb 2024 at 17:25, Igor Prusov <ivprusov@salutedevices.com> wrote:
+The ICSSG IP on AM64x SoCs have two Industrial Ethernet Peripherals (IEPs)
+to manage/generate Industrial Ethernet functions such as time stamping.
+Each IEP sub-module is sourced from an internal clock mux that can be
+derived from either of the IP instance's ICSSG_IEP_GCLK or from another
+internal ICSSG CORE_CLK mux. Add both the IEP nodes for both the ICSSG
+instances. The IEP clock is currently configured to be derived
+indirectly from the ICSSG_ICLK running at 250 MHz.
 
-> Some clocks were missing from axg_clk_regmaps, which caused kernel panic
-> during cat /sys/kernel/debug/clk/clk_summary
->
-> [   57.349402] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001fc
-> ...
-> [   57.430002] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   57.436900] pc : regmap_read+0x1c/0x88
-> [   57.440608] lr : clk_regmap_gate_is_enabled+0x3c/0xb0
-> [   57.445611] sp : ffff800082f1b690
-> [   57.448888] x29: ffff800082f1b690 x28: 0000000000000000 x27: ffff800080eb9a70
-> [   57.455961] x26: 0000000000000007 x25: 0000000000000016 x24: 0000000000000000
-> [   57.463033] x23: ffff800080e8b488 x22: 0000000000000015 x21: ffff00000e7e7000
-> [   57.470106] x20: ffff00000400ec00 x19: 0000000000000000 x18: ffffffffffffffff
-> [   57.477178] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0000042a3000
-> [   57.484251] x14: 0000000000000000 x13: ffff0000042a2fec x12: 0000000005f5e100
-> [   57.491323] x11: abcc77118461cefd x10: 0000000000000020 x9 : ffff8000805e4b24
-> [   57.498396] x8 : ffff0000028063c0 x7 : ffff800082f1b710 x6 : ffff800082f1b710
-> [   57.505468] x5 : 00000000ffffffd0 x4 : ffff800082f1b6e0 x3 : 0000000000001000
-> [   57.512541] x2 : ffff800082f1b6e4 x1 : 000000000000012c x0 : 0000000000000000
-> [   57.519615] Call trace:
-> [   57.522030]  regmap_read+0x1c/0x88
-> [   57.525393]  clk_regmap_gate_is_enabled+0x3c/0xb0
-> [   57.530050]  clk_core_is_enabled+0x44/0x120
-> [   57.534190]  clk_summary_show_subtree+0x154/0x2f0
-> [   57.538847]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.543505]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.548162]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.552820]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.557477]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.562135]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.566792]  clk_summary_show_subtree+0x220/0x2f0
-> [   57.571450]  clk_summary_show+0x84/0xb8
-> [   57.575245]  seq_read_iter+0x1bc/0x4b8
-> [   57.578954]  seq_read+0x8c/0xd0
-> [   57.582059]  full_proxy_read+0x68/0xc8
-> [   57.585767]  vfs_read+0xb0/0x268
-> [   57.588959]  ksys_read+0x70/0x108
-> [   57.592236]  __arm64_sys_read+0x24/0x38
-> [   57.596031]  invoke_syscall+0x50/0x128
-> [   57.599740]  el0_svc_common.constprop.0+0x48/0xf8
-> [   57.604397]  do_el0_svc+0x28/0x40
-> [   57.607675]  el0_svc+0x34/0xb8
-> [   57.610694]  el0t_64_sync_handler+0x13c/0x158
-> [   57.615006]  el0t_64_sync+0x190/0x198
-> [   57.618635] Code: a9bd7bfd 910003fd a90153f3 aa0003f3 (b941fc00)
-> [   57.624668] ---[ end trace 0000000000000000 ]---
->
-> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+Reviewed-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-This has gone un-noticed for a while :/
-Thanks Igor.
-
-Please remember to add an appropriate Fixes tag for patches like this.
-It is important to help stable releases.
-
-Fixes: 14ebb3154b8f ("clk: meson: axg: add Video Clocks")
-
-> ---
->
->  drivers/clk/meson/axg.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
-> index c12f81dfa674..5f60f2bcca59 100644
-> --- a/drivers/clk/meson/axg.c
-> +++ b/drivers/clk/meson/axg.c
-> @@ -2142,7 +2142,9 @@ static struct clk_regmap *const axg_clk_regmaps[] = {
->  	&axg_vclk_input,
->  	&axg_vclk2_input,
->  	&axg_vclk_div,
-> +	&axg_vclk_div1,
->  	&axg_vclk2_div,
-> +	&axg_vclk2_div1,
->  	&axg_vclk_div2_en,
->  	&axg_vclk_div4_en,
->  	&axg_vclk_div6_en,
-
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index e348114f42e0..9d2dad8ae8df 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -1244,6 +1244,18 @@ icssg0_iepclk_mux: iepclk-mux@30 {
+ 			};
+ 		};
+ 
++		icssg0_iep0: iep@2e000 {
++			compatible = "ti,am654-icss-iep";
++			reg = <0x2e000 0x1000>;
++			clocks = <&icssg0_iepclk_mux>;
++		};
++
++		icssg0_iep1: iep@2f000 {
++			compatible = "ti,am654-icss-iep";
++			reg = <0x2f000 0x1000>;
++			clocks = <&icssg0_iepclk_mux>;
++		};
++
+ 		icssg0_mii_rt: mii-rt@32000 {
+ 			compatible = "ti,pruss-mii", "syscon";
+ 			reg = <0x32000 0x100>;
+@@ -1385,6 +1397,18 @@ icssg1_iepclk_mux: iepclk-mux@30 {
+ 			};
+ 		};
+ 
++		icssg1_iep0: iep@2e000 {
++			compatible = "ti,am654-icss-iep";
++			reg = <0x2e000 0x1000>;
++			clocks = <&icssg1_iepclk_mux>;
++		};
++
++		icssg1_iep1: iep@2f000 {
++			compatible = "ti,am654-icss-iep";
++			reg = <0x2f000 0x1000>;
++			clocks = <&icssg1_iepclk_mux>;
++		};
++
+ 		icssg1_mii_rt: mii-rt@32000 {
+ 			compatible = "ti,pruss-mii", "syscon";
+ 			reg = <0x32000 0x100>;
 -- 
-Jerome
+2.34.1
+
