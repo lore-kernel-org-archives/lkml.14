@@ -1,43 +1,43 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0EF3A8F4;
-	Mon,  5 Feb 2024 15:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5473F8CA;
+	Mon,  5 Feb 2024 15:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707146595; cv=none; b=H3LR4bAPhlxlMf27GSmmeVf8dmr67choPN1ptqP+Qvue2pzlPwurHtu7GaNwDcn33ZUD8Z3iclKiCNFTphSgdZ3XzqV1XbFetGo7OXZLVxSmpbHpLo8V34t7a1W3YJOVWNMLGYOmcwF2cCQnqVhfUBKnMvIQFY5gAposaJ8IwMU=
+	t=1707146600; cv=none; b=ZBbRTEJ5O2etY6O+Vb/DKzmUYDd5SawtPCgizUQsuLEd0TTwFbPZh0AMgCIfoKfswhLsDjLcEaAK6Mmg/uKsFJr+Ad1QCDbpls8HgbEFG4AevgysFihI+rIPhPZmV7orWTT+ibIln6NTgM286dj53yw10SVJ2W7UW1CczSemFpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707146595; c=relaxed/simple;
-	bh=/3dNKggDHZ8IDpHedZkuDBEbq+kfTgK2pJtlaJ3P5io=;
+	s=arc-20240116; t=1707146600; c=relaxed/simple;
+	bh=LSFmengqkqFNIcTkqiKdRYtwv5rLf2wHfu4gB3QVAfo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OE/SHb8v2XNolGpNVJYHxwHDcvxYt5jA0bzMh53ZJnPPhW87BEagE8o4Gl7wrGRcjAAlqBrcTYzuH9Y+qVvVoUqU0CEEdfTiip/ww41A5n8bp9ip0InBO3qUDrLI6FCQdPnMGtolGEt1pA6MIY1lv7iLc+v/ZHZrwrpTitqVYhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=IDaUUJ5P; arc=none smtp.client-ip=80.241.56.151
+	 In-Reply-To:To:Cc; b=lAwEviHVlc9FxtP83SZ9lbx+diYIrulYjoKp+zBxYxh92WfpE8dcU+LxxNwzuBKxvQj6Er8KhDE4polMZg5bstrmxMJG6En+3HHyjgtp3kcUfxPpBcqi9t5R+F/6SGy+rEXgz9INeupMv06duVzDwQFf5fHvScuxrzS+GCOz41Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=w6kjYLuC; arc=none smtp.client-ip=80.241.56.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="IDaUUJ5P"
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="w6kjYLuC"
 Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4TT9B00qv3z9sqg;
-	Mon,  5 Feb 2024 16:23:04 +0100 (CET)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4TT9BB6x4Vz9sSw;
+	Mon,  5 Feb 2024 16:23:14 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1707146584;
+	s=MBO0001; t=1707146595;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jU9BjDKbdWvhuTRibGk4N23TVvjyO4DZIzgSg1oCo6o=;
-	b=IDaUUJ5PaOMkW+Dzmqmhvw1A2j2Lfq6AF6jkWqYyvuUV1mnPji1NK36FRhHisVpA1kq91J
-	N9nQAbdp5x1uKIQ2nJMSsJBfeEHeU3Lg9wlnrwSTrGCBbbi4aekUehgkYMOuMyjdmRX9Cm
-	/HR6dLUGcoGE9kf3JY6qhuiTgh3x5FGGw5WaK7OZ/NYc/XBo5xkaX5CJMwKyMDWdZBYdTc
-	OXJ2OcDHedVgWThIGV1viXPs+xhuOKsRMHQoSZ2rQEguyscQBTVXgunD07NfRF2RbDin8P
-	OhYcz/VzrOJo7cdUDvCVE+Y5ISgk6LdGAIg3AWTcgjra1KaYtxslApH5S7yN5g==
+	bh=HMiu8mBySgExM6KnP08YCgNs308ubxzfSD1bMdoSvkY=;
+	b=w6kjYLuCRS3PYRkS6IqG9bJQWNXSkIeBNUQ0a/K9Q3EmD2SqZ9dyoKN1X+kvFkc+kcq0fE
+	3ZGSTlVdQ/emHV4ZSXkzYMw2jzA5Iw2bYOgs4f37ss5kISEkby6ruKD05m3dWKM9djXBFp
+	KDVFgvoHsC+IjL7XKQ0qmMQSAh2B15bNpriFEe/YhwrORFqQBr1f73CSwMCWkAE7lao7Ke
+	mOt0Wmkqh+lKRt8KZ+uKLgFRaLYnA+s4L9VoFjydLO3dj1SznAntvNjJ9+ERCruWlLlZW5
+	xqFmQEqzkRe5F1W4sTAdkVKOCN62t1issOg6UbWjwLLrqnD9jz8CGWJMyUhByQ==
 From: Frank Oltmanns <frank@oltmanns.dev>
-Date: Mon, 05 Feb 2024 16:22:26 +0100
-Subject: [PATCH v2 3/6] clk: sunxi-ng: nkm: Support minimum and maximum
- rate
+Date: Mon, 05 Feb 2024 16:22:28 +0100
+Subject: [PATCH v2 5/6] drm/panel: st7703: Drive XBD599 panel at higher
+ clock rate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240205-pinephone-pll-fixes-v2-3-96a46a2d8c9b@oltmanns.dev>
+Message-Id: <20240205-pinephone-pll-fixes-v2-5-96a46a2d8c9b@oltmanns.dev>
 References: <20240205-pinephone-pll-fixes-v2-0-96a46a2d8c9b@oltmanns.dev>
 In-Reply-To: <20240205-pinephone-pll-fixes-v2-0-96a46a2d8c9b@oltmanns.dev>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -67,74 +67,77 @@ Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
  dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
  Frank Oltmanns <frank@oltmanns.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1857; i=frank@oltmanns.dev;
- h=from:subject:message-id; bh=/3dNKggDHZ8IDpHedZkuDBEbq+kfTgK2pJtlaJ3P5io=;
- b=owEB7QES/pANAwAIAZppogiUStPHAcsmYgBlwP0/R/bYRLSWDoR8LFJNAtlZjd3AuDTv0TkSy
- h6Q/t85+q+JAbMEAAEIAB0WIQQC/SV7f5DmuaVET5aaaaIIlErTxwUCZcD9PwAKCRCaaaIIlErT
- x7cUC/90hwXY99Ja4sPw6whiQKjE2ZtXg2fE1iRFw0+6vh1HBrZuuzBYjAond8O2cZhSszDwTV6
- fsKjWCndURyzjCM50NZOZidj8q2F2hNxNfwzYtd2DeYxhaT7IzHpzwWiS150YVdru/4YTgc+zmm
- 6fePa2l5nnrf+nr1LL2371HweSyQbxUHiAzrCR2iaZhkhDpkEmRQBmkzIQRIKlLHf6TkaG1j0IQ
- mzbCbsCDTfewQUPHe+sRDAndVbsxwi65ZoCI5BPtDlLoW9SgJLeawQ27nR22EsgA1VR1+FqSKgt
- JUka8btp+cH79A2OeLbeZoKapTa3T3BcU8gYviht8L24G99WcywrYzEOKfxJkZGwaXzfXJWTzjs
- NjaepFV6e+z/1Xy6E7oRgHP2Ns+4brhuPhnqfwBgjK9bmo7ogE0uC9OV4JtNygG/5CDGm8IIOaO
- UE5j/+5B8D47kn6fIaozCmuA1f3Ti/UgXv2t63jjvvM0LYNdWpiBJf8IZ/SmdsXkpFNNU=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2123; i=frank@oltmanns.dev;
+ h=from:subject:message-id; bh=LSFmengqkqFNIcTkqiKdRYtwv5rLf2wHfu4gB3QVAfo=;
+ b=owEB7QES/pANAwAIAZppogiUStPHAcsmYgBlwP0/wUrDb0L4eaQ3AOCfpz1m+nA/BCEEvgN2u
+ 7U9SQoHUPmJAbMEAAEIAB0WIQQC/SV7f5DmuaVET5aaaaIIlErTxwUCZcD9PwAKCRCaaaIIlErT
+ x4kRC/4rCGnrv1sdHdQhxuE+E7Qs/Ixz80c+RlRevhWxSLuchp7r/ZRPGL8HBukk/gTMbsbHW9m
+ B+eVzGS02ZXLAmI1dwPxqdojPbw7i1L2aBa9yfm0MGh1YBRlHA4PXiFJ51RT3Vbb3GZG4OMp528
+ o/z5QdRbg+0ArhHok8ahCtbtArSEkBIk3NmOmd+u7m2Ei21wXiN5/fPLILnLLutplZfYd3BqE59
+ 4QkwFX7Iq2mjK/2rpnLEilhv76Bh5hwBrL46RchB/NgflkWArkO1TImCQWM+c8lOOhND1ws6wCH
+ J5kgYo7XlEtqxOL18kcu7AkIbr1lg3etPq5xoSrefTZlJcmRK4jm7BKVJ6E5yIZUYJwOSl6dyra
+ Zt+Cs/Ciow0CWZxUZmwdYgTYhO96y9Nf30Xu3ffDTS305T6Kf1PooAdFnOyLwDArpj3XtfM6cdZ
+ ukgrNAsTLOicxp0C6hGAxj+yWW+ISTaRwNyREGjCvAAbafE/Dy+25QHlzPnSM++ROsQ7c=
 X-Developer-Key: i=frank@oltmanns.dev; a=openpgp;
  fpr=02FD257B7F90E6B9A5444F969A69A208944AD3C7
-X-Rspamd-Queue-Id: 4TT9B00qv3z9sqg
+X-Rspamd-Queue-Id: 4TT9BB6x4Vz9sSw
 
-According to the Allwinner User Manual, the Allwinner A64 requires
-PLL-MIPI to run at 500MHz-1.4GHz. Add support for that to ccu_nkm.
+This panel is used in the pinephone that runs on a Allwinner A64 SOC.
+The SOC requires pll-mipi to run at more than 500 MHz.
+
+This is the relevant clock tree:
+ pll-mipi
+    tcon0
+       tcon-data-clock
+
+tcon-data-clock has to run at 1/4 the DSI per-lane bit rate. The XBD599
+has 24 bpp and 4 lanes. Therefore, the resulting requested
+tcon-data-clock rate is:
+    crtc_clock * 1000 * (24 / 4) / 4
+
+tcon-data-clock runs at tcon0 / 4 (fixed divisor), so it requests a
+parent rate of
+    4 * (crtc_clock * 1000 * (24 / 4) / 4)
+
+Since tcon0 is a ccu_mux, the rate of tcon0 equals the rate of pll-mipi.
+
+pll-mipi's constraint to run at 500MHz or higher forces us to have a
+crtc_clock >= 83333 kHz if we want a 60 Hz vertical refresh rate.
+
+Change [hv]sync_(start|end) so that we reach a clock rate of 83502 kHz
+so that it is high enough to align with pll-pipi limits.
 
 Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
 ---
- drivers/clk/sunxi-ng/ccu_nkm.c | 13 +++++++++++++
- drivers/clk/sunxi-ng/ccu_nkm.h |  2 ++
- 2 files changed, 15 insertions(+)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
-index 1168d894d636..7d135908d6e0 100644
---- a/drivers/clk/sunxi-ng/ccu_nkm.c
-+++ b/drivers/clk/sunxi-ng/ccu_nkm.c
-@@ -181,6 +181,12 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
- 	if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
- 		rate *= nkm->fixed_post_div;
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+index b55bafd1a8be..6886fd7f765e 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+@@ -320,14 +320,14 @@ static int xbd599_init_sequence(struct st7703 *ctx)
  
-+	if (nkm->min_rate && rate < nkm->min_rate)
-+		rate = nkm->min_rate;
-+
-+	if (nkm->max_rate && rate > nkm->max_rate)
-+		rate = nkm->max_rate;
-+
- 	if (!clk_hw_can_set_rate_parent(&nkm->common.hw))
- 		rate = ccu_nkm_find_best(*parent_rate, rate, &_nkm, &nkm->common);
- 	else
-@@ -220,6 +226,13 @@ static int ccu_nkm_set_rate(struct clk_hw *hw, unsigned long rate,
- 	_nkm.min_m = 1;
- 	_nkm.max_m = nkm->m.max ?: 1 << nkm->m.width;
- 
-+
-+	if (nkm->min_rate && rate < nkm->min_rate)
-+		rate = nkm->min_rate;
-+
-+	if (nkm->max_rate && rate > nkm->max_rate)
-+		rate = nkm->max_rate;
-+
- 	ccu_nkm_find_best(parent_rate, rate, &_nkm, &nkm->common);
- 
- 	spin_lock_irqsave(nkm->common.lock, flags);
-diff --git a/drivers/clk/sunxi-ng/ccu_nkm.h b/drivers/clk/sunxi-ng/ccu_nkm.h
-index c409212ee40e..358a9df6b6a0 100644
---- a/drivers/clk/sunxi-ng/ccu_nkm.h
-+++ b/drivers/clk/sunxi-ng/ccu_nkm.h
-@@ -27,6 +27,8 @@ struct ccu_nkm {
- 	struct ccu_mux_internal	mux;
- 
- 	unsigned int		fixed_post_div;
-+	unsigned long		min_rate;
-+	unsigned long		max_rate;
- 	unsigned long		max_m_n_ratio;
- 	unsigned long		min_parent_m_ratio;
- 
+ static const struct drm_display_mode xbd599_mode = {
+ 	.hdisplay    = 720,
+-	.hsync_start = 720 + 40,
+-	.hsync_end   = 720 + 40 + 40,
+-	.htotal	     = 720 + 40 + 40 + 40,
++	.hsync_start = 720 + 65,
++	.hsync_end   = 720 + 65 + 65,
++	.htotal      = 720 + 65 + 65 + 65,
+ 	.vdisplay    = 1440,
+-	.vsync_start = 1440 + 18,
+-	.vsync_end   = 1440 + 18 + 10,
+-	.vtotal	     = 1440 + 18 + 10 + 17,
+-	.clock	     = 69000,
++	.vsync_start = 1440 + 30,
++	.vsync_end   = 1440 + 30 + 22,
++	.vtotal	     = 1440 + 30 + 22 + 29,
++	.clock	     = (720 + 65 + 65 + 65) * (1440 + 30 + 22 + 29) * 60 / 1000,
+ 	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ 	.width_mm    = 68,
+ 	.height_mm   = 136,
 
 -- 
 2.43.0
