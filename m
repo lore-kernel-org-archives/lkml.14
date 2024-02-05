@@ -1,71 +1,47 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BC640BF4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4EF48780;
+	Mon,  5 Feb 2024 17:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707153654; cv=none; b=fuaXSAOoCcv2VPRUheNDzCHMK8mPWRU3aHrXS7ehkWYKFXEIrDAbGwwTtwe1HdBZlx2PENGwfY7WxAnrIK0XPWRX5Q/yMAQns/6oMPMJDrMyfPshIrWJXJTc42Hmz8hObw0b1jBlwKN30XRyduDSD3j5L4+FrKjh1ibTNwio0vk=
+	t=1707153685; cv=none; b=tQvmFL0ZMr6Tk492nD9RWDfCF/ckqsj8xTpLiZDokqXaaCFqmLkJppwWqwgn2f0DcxOkuzYsHhWc6MpN/921Pcqmsjo4XKncYWk/LuEFxGC7FfhnrjJNjGAAiLUKH95YRDkf9xaS5S3Hm9/rBpUOycjjXAat07u8hDnxz0hKoA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707153654; c=relaxed/simple;
-	bh=xhPLxXIzC51auq7hQp+cgbgYYKK067ZfNuJFRMEPjiI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNu731UAwL3ghvNKPri3q/BJvDARscb4weoe5rDregjLQAMr74OHMS8ZILj+FejfhPL27GfEx4Lc2+8lY2rBRDmrvKT1MtYodt1ECeZrgJRYsNnsdeE3Av5HFToQjmtH5CVj2Z14XSzTRR9gNTTkCaScIohMt0aDFsqR3BTrffE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3tJEZ1J; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707153685; c=relaxed/simple;
+	bh=TtEdRyvBolsu7hDkQmw3V3u02IpjDyC0rSysvf+GMjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjMcoFYZyFQJh3NCeFpzzc7flarhOjA3qdjkBrgLSbNP+R7eHKDehhxAU5D9Y9FKTgy5OQ0HIEqh1O4a1J3rwjMP4ZdC2pla5i3iSiaHX1kUy4E+iUjOLFVooyfqNr8P6ZOKVgJFTGOTZiZNWOFCmcFB2mX5xg2v9W4MrFjqqec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=We1r8X5g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3tJEZ1J"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51109060d6aso6573163e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 09:20:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707153644; x=1707758444; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aG4tUT3lHaMLFEjxeD8AYZy4cfDkV2X5VzQR/NYYshw=;
-        b=D3tJEZ1JY38tmBhLiwUqrF4gKuXbDx3956SzcX95zx10adnkEwzg8oZoWdEn6W3qd/
-         Mkn7hUdbRI5JCr+JMyxhGLUPUaHTth1Ap8NQxq9gtI1gIuBK6g08Jk0dCdW/qRwCMLDB
-         Asxzi2U0vAkyBGFWhIkOd7zQHNLcw5EQrJ5AFqqeWQqMvzdlWmEvJkJw6RylkPcggD+O
-         TiPVjoo7O7wBnE3Wsr86dUifjVTekMhKaKVqOWzFKHX23U3O0J3cefU5JprlgwWzzMW0
-         tDf5YGOwPAODF6b82p8+/72DRwJAE0DkVML5rRdg1+Ssuiji4rpPBuRA0abN6PXen3d3
-         7sAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707153644; x=1707758444;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aG4tUT3lHaMLFEjxeD8AYZy4cfDkV2X5VzQR/NYYshw=;
-        b=llZA4c+no8M/6TAvKbPnc9DgoDA9FTpHtO4LxxsWOCTgoWNCPWV6ObvupOM6mEj+9P
-         z3r97CeVCcSKLU0ox2XnERZ9E1fERSP5zMYUwd0+6ersjiVWzP9W2DrtBYI8IfsqXos7
-         6s2hC8tFBvUg9m29kZ+7BzM840e04LEnd52hsUXEs9jFttx7+uNfsGUtH796WOsSGdDW
-         kP2Hf2+cztMhUhaj+dctLu6HgyrspIp8H6dVU9eBdmmROP1LGxsvrH9RvPq8koayGMrU
-         h9PNp/ea/RIAvQgFnYd9fWHI2o4awUscZcLCuPgypGbJmaz9NBdxXsihFulArYZN253N
-         1Eog==
-X-Gm-Message-State: AOJu0Yz5gjbloAqSwQn3rSS3fYogKqmFhQHMW8LacX5QH3/rpGvEGiIk
-	LT1N1bTu1wPXzwjJS3LK+RzZCgXzOul2qhe5DjXioCHU8xl/ckQL
-X-Google-Smtp-Source: AGHT+IHBfuTpMKunVkbNFq+t0Jlc+3UenKYMKydVkNh0nKnDorXd0XPWQrbcuKoVCBcbIveTCL2fNA==
-X-Received: by 2002:a05:6512:32a9:b0:511:4f00:45b2 with SMTP id q9-20020a05651232a900b005114f0045b2mr177437lfe.25.1707153644019;
-        Mon, 05 Feb 2024 09:20:44 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUCTBkSmuKMbc/++9kbkskzZcICPaSQR3u3/T/Z8Z4ztlu33Rrd7Z1XYXEj4Zw7DBkp5kOt0yiWQCtENFkEVBFpu8clhvYD2ZFB3MFO02232yoQ+x0PRRygI1J+pK72nv1K6vwn17rJSbVVakq2KEmN9fYjrX/kIp2OsSsJEeXVsJeCd1BmHQP4jV824KTi8BwwO3nEwhVBYGfVgKVab5LpIWcdPs7JznvV2mcxXYnynPbRI+QnoWK+DhTJy+8VCB9TLFziR+C3PYwVNLoAmIQ48L8Zh2kMryIfhaulo0Ig2NjepA4hNA==
-Received: from pc636 (host-90-233-221-0.mobileonline.telia.com. [90.233.221.0])
-        by smtp.gmail.com with ESMTPSA id b10-20020ac2410a000000b0051157349af3sm13348lfi.47.2024.02.05.09.20.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 09:20:43 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 5 Feb 2024 18:20:41 +0100
-To: Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dave Chinner <david@fromorbit.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH 1/1] mm: vmalloc: Add a scan area of VA only once
-Message-ID: <ZcEY6b86OijLi9Cz@pc636>
-References: <20240202190628.47806-1-urezki@gmail.com>
- <dd3ce359-1caf-4eaf-8464-ec17284487a3@lucifer.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="We1r8X5g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC82C433A6;
+	Mon,  5 Feb 2024 17:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707153684;
+	bh=TtEdRyvBolsu7hDkQmw3V3u02IpjDyC0rSysvf+GMjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=We1r8X5g0i7EQ8I1wQztuyCM/WFbDr/htyuKgUDFK8sXnPRCFOE8xi5fAFcmZ63ts
+	 kKVtPGC9M1IIvAnyNA84h8NCmzrmc2iAcs8hRatrp5C3s4qSrHLkNoNuOr5zklmFyH
+	 5qvPiEgapCotI1UANSOqqG8t8mY83gG2qd06ka8GydAdkN3sVjNv4YJeXeUNmJT2uO
+	 qc7E/tyEb3V+y8tpfjBw5GaAZitZy3O597YZZCXPcUIUJL6k8kwaN3GO7q0yc1MSaG
+	 +M2CHCF8Cp4RzXk5rlSYpwE4Yj2Z6UO4QqqQnKeXdJb7bgUmiV7RTAdE4pvlzqDCzp
+	 +97ay1DyIgVUg==
+Date: Mon, 5 Feb 2024 17:21:20 +0000
+From: Rob Herring <robh@kernel.org>
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: tudor.ambarus@linaro.org, linux-samsung-soc@vger.kernel.org,
+	krzysztof.kozlowski@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org, andre.draszik@linaro.org,
+	kernel-team@android.com, peter.griffin@linaro.org,
+	robh+dt@kernel.org, arnd@arndb.de, klimov.linux@gmail.com,
+	semen.protsenko@linaro.org, saravanak@google.com,
+	willmcvicker@google.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alim.akhtar@samsung.com
+Subject: Re: [PATCH 1/4] dt-bindings: hwinfo: samsung,exynos-chipid: add
+ gs101-chipid compatible
+Message-ID: <170715368034.3642320.248183501361428491.robh@kernel.org>
+References: <20240201172224.574238-1-alexey.klimov@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,55 +50,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dd3ce359-1caf-4eaf-8464-ec17284487a3@lucifer.local>
+In-Reply-To: <20240201172224.574238-1-alexey.klimov@linaro.org>
 
-On Sun, Feb 04, 2024 at 07:44:55PM +0000, Lorenzo Stoakes wrote:
-> On Fri, Feb 02, 2024 at 08:06:28PM +0100, Uladzislau Rezki (Sony) wrote:
-> > Invoke a kmemleak_scan_area() function only for newly allocated
-> > objects to add a scan area within that object. There is no reason
-> > to add a same scan area(pointer to beginning or inside the object)
-> > several times. If a VA is obtained from the cache its scan area
-> > has already been associated.
-> >
-> > Fixes: 7db166b4aa0d ("mm: vmalloc: offload free_vmap_area_lock lock")
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > ---
-> >  mm/vmalloc.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index 449f45b0e474..25a8df497255 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -1882,13 +1882,13 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
-> >  		va = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
-> >  		if (unlikely(!va))
-> >  			return ERR_PTR(-ENOMEM);
-> > -	}
-> >
-> > -	/*
-> > -	 * Only scan the relevant parts containing pointers to other objects
-> > -	 * to avoid false negatives.
-> > -	 */
-> > -	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
-> > +		/*
-> > +		 * Only scan the relevant parts containing pointers to other objects
-> > +		 * to avoid false negatives.
-> > +		 */
-> > +		kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
-> > +	}
-> >
-> >  retry:
-> >  	if (addr == vend) {
-> > --
-> > 2.39.2
-> >
-> 
-> Looks good to me, feel free to add:
-> 
-> Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
->
-Appreciate for review!
 
---
-Uladzislau Rezki
+On Thu, 01 Feb 2024 17:22:21 +0000, Alexey Klimov wrote:
+> Add "google,gs101-chipid" compatible string to binding document.
+> 
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+> ---
+>  .../devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml        | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
+
