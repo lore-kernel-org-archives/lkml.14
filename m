@@ -1,130 +1,196 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2086.outbound.protection.outlook.com [40.107.102.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12E74C3B3;
-	Mon,  5 Feb 2024 22:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707171407; cv=fail; b=ae3QHCSjGQl506Io0wPZd37lI7W/3mKZruCz+exzntl/FS1hpCpDEJKMOu4T/hiGeHJ0/BJlZY572Ou5cuIld6ddb6qeOpbGfvu9XSc5NFKl2gIkkQqXV31FTTDYb1Q4wV9MtTVneWgL5ZU/CBeX80HNIqg2WtmLNiXxQYo/aMo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707171407; c=relaxed/simple;
-	bh=mxbP3vBviYrpIx+68K7umWrWxjfcR6b6lDEWecf5kOw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c55YQJPS7fB0KhW5KEwKykcuJtS1w9AkL4iheFIEl26BrtS925QBnL1OobIxCsT9iBT66lt2ypEw7X+ysNNQradeJPjNIe6wnEuOZQqzRdA+gAAmZt1MgqRFkHYqVpb9/Oz6cTdM3//EbAztkA64t3KtUFVum7TL+CYYPxDdFls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yAud9Hz2; arc=fail smtp.client-ip=40.107.102.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90454BAA4
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 22:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707171484; cv=none; b=iAdfzkVNPwdqualPm+H6kBZe6bGoIpvQxdjBdaCNC+zqoDL8ugqHHn4jbi0u6JLIh/KZn/CR52jw83PwEmQ1Q762gkvy2qnMyA5/ncUjUd1vEVGnJT7XTdOiAL2kt4CAgOVsdidWtUqAQi+quMvAWidZdewCIEZN2NeahGOvxWY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707171484; c=relaxed/simple;
+	bh=WFirQiv/bif0ORcBDskVBLI31abXA7X4de7fsW5AqyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jnZu14kVQH/eBKd4AIgN5kCk87ti+0ZoDxoatY4aoqolpPWi0a1MAWy2IYTjyj/HHt/8RKOermrvoj85o9Glbf/2UdaACNEdKOyIqrFI4H16G0HHWNWkeEJBKt3ykJUr2SCkLut9lTgRE02+s4qtMs7LiBe+ApFiwJuL9QBc0xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=V8iRoTdT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yAud9Hz2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OniM0ODB6ux4AVI+BdNgotWO0KRMoX67f2cJjGRKdyeMFEp4VWzDywfov6/N3tDwbuW8SFd808DRy1HOigwgmm08F48iRkaFV/Bjuejh5J951l5W0RGLer8/FnotflPkTWvh/cmuEna/Y7SkqrM9vfireNiu7X5+5WHY5+lGD3c7kxwHw6T3ctI9EjzfpCrZ0TGXRu16Wwhk9ZZQBvYyzb53/hyyU0VUhU1ceQcdfMRFS5Zx8NqP1P0HIdtlP4g3Onib8udSavQoa60Qh11R3mISyrUqIdsN46i+LpPb62Vg//atmC8m08FFdDWVP0KmdyTzNMIvX8sDC46tliRbng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ye7ww5NaX9dwyzgceCVYtHR1cq15Hq41BCuZ6BhLIZ4=;
- b=bfbzWQTnQxlEtULQ1HAyQS49wuWZoJOqhdgyfQIWbEBnpYvpi2bN0M3MhBP+orC80sqOBt6nOmG49P4DnO6nCTNIQRZTU+tggG/dPulbO9iNUvgvlryXHzpXKAmoWBIxnU49KRyIVCN1JHyURiK6q5T3ziaTDZ6YmvJ/zyGwimUJa1RqLiwbvVNumqmh3lUTZf+OSE6ZuVq8O1VsfiMSZc9qPjdLTn5l9xu0mA4ZOFooRF3f4TdbfkZMqdYS8JraMKF8zuuxMyJ1l4dzL5CZQfZCnO3mpx7+1jjoFttaHwTKcMcgAziz19I0Zm6wQK2hnXk1Ed3rZWM96dGWfDGH4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ye7ww5NaX9dwyzgceCVYtHR1cq15Hq41BCuZ6BhLIZ4=;
- b=yAud9Hz2bWs0ad4fn3TLCm6rhO/ryFCcvYYckMWqaumdlLZ9OBzAlAI34M9ygS83zxAvTQ1c9rzYk4rgVjKmP0OajC4IFaC+6qmYdBtJzJlNMk9ZbdBWroibTOyiTrrGxwb/xPbnzL/56rmyokosRsNjKfHHdefueh6ezu2DOaw=
-Received: from BN1PR10CA0028.namprd10.prod.outlook.com (2603:10b6:408:e0::33)
- by DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Mon, 5 Feb
- 2024 22:16:42 +0000
-Received: from BN2PEPF000044A6.namprd04.prod.outlook.com
- (2603:10b6:408:e0:cafe::a8) by BN1PR10CA0028.outlook.office365.com
- (2603:10b6:408:e0::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34 via Frontend
- Transport; Mon, 5 Feb 2024 22:16:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000044A6.mail.protection.outlook.com (10.167.243.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Mon, 5 Feb 2024 22:16:41 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 5 Feb
- 2024 16:16:39 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Stanislav Petrov
-	<stanislav.i.petrov@gmail.com>, <stable@vger.kernel.org>
-Subject: [PATCH] ASoC: amd: yc: Add DMI quirk for Lenovo Ideapad Pro 5 16ARP8
-Date: Mon, 5 Feb 2024 15:48:53 -0600
-Message-ID: <20240205214853.2689-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="V8iRoTdT"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d7881b1843so43923505ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 14:18:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707171482; x=1707776282; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RQ2KX6PtmVgxF5myahHQmzeyx34uFsn54JKIPJOPSpQ=;
+        b=V8iRoTdTMUO1v76w5YIHp3hWgXPOLsK29pk1c4BMkXiQN2bAdsfgsmtkbQR+mZokXx
+         9dcy48l0wmpecdAfa1JPnGt2sdOdbXDnTK/GLxyxor/G3HYrVcbPJF2L43Yn5Cbqw6sq
+         FC6VEqFOvOdkZmaZksrEUlNrnULcqL/lBxRSmqKD9nqc1+xcDyeaAJ0OKV3qvC+Y/kyb
+         O208mg75XQFaQMJd4QzqSSHptgcy6O0CmZo1zHo1OErnm667MCTzHno2yUcGHxNF3Owi
+         MNsOySirEtorWUMCv3ccYgKy9IUfHuZqJdJCuPCBFy45jeFL2OiE8D1Lfcf84t7eDrnq
+         CgqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707171482; x=1707776282;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RQ2KX6PtmVgxF5myahHQmzeyx34uFsn54JKIPJOPSpQ=;
+        b=guIybanCJIlNjk06QZXCe+n4h6uwsmhygXsgSNAdwJSsTDXRXVN0p4zLAUxfYjKwcK
+         W0CZJvH2eQeVNzN8/9CfJgulzYADeWxhS9tWtlbxflJxEc5Oaf59ivEIA59pRFaDMoSk
+         eocUODzPTFJrknROkGY7spGmHYK5KDem3SlAxOOHXcIZnV4k1AWxrVuWVHMVdUOoJKU9
+         o4VXX6815NA8pTPQHnGFr+p2YjaFKc9+CZ4/s0ppR3u6oSkCDhuJjrAcCPuPT7c8QK1b
+         8L3acOwwQ+jec+X5712C7yxxsSz+lhiHTqgg9GnGzmDMufa70coUlknvZnXfJHkA0kUD
+         GiCQ==
+X-Gm-Message-State: AOJu0YzapJ1P2DMHV9KNFYerlU/C/r3Za2eFRUXuuKPP8YaAmmr05Usa
+	W2iioiHgmLyoP6w62MNL675rWapMP1iWrNELM8/m8LY0+Ubl+FxQaDCy7UhKWI0=
+X-Google-Smtp-Source: AGHT+IGukEyR/oTSk6uDnfCM3DsGByrIPzirka2urPJDZhACgRtMbr5HUrwSDj+XoBjd9qAvrwVMBA==
+X-Received: by 2002:a17:902:ac88:b0:1d7:428f:50fd with SMTP id h8-20020a170902ac8800b001d7428f50fdmr906434plr.31.1707171482093;
+        Mon, 05 Feb 2024 14:18:02 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCU821uwUmfcCx4HStlzYkKkb4zVsnGy/9OCw3fqzMV3pdkmOcH6fejWbcoRuKEJA9x6kHl3OVFRo10vz1oQ8DrabMiV/k2fsF6ZrY3ertY6MX0BBQmKfYZJY1XVKj1F06TdPsTKwO16gabTa8v6wD9gV1799mlzzg0pEGyAltTMq3TX3ohmHxgHVwsTNBSO05Wq5T9BN/+cIjJi4XBn5lOcVfcxrafPv1hl4w9DaMRmdAnuSH7sL8Du1Sq4Nf5aq+I7fABRffRs+Bsj/LLKtv6YnTvg0hqMfeV8565M+4VOdEsP4fY3e97vf2QFc6FNoigP94GZrQs3hjEKCLWIodngZwfwUbcTL9zyaOcZ/dDkWLPn126gMdV+
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id r17-20020a170903015100b001d92f2129dasm369262plc.233.2024.02.05.14.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 14:18:01 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rX7Hq-002Z3q-0O;
+	Tue, 06 Feb 2024 09:17:58 +1100
+Date: Tue, 6 Feb 2024 09:17:58 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>, linux-fsdevel@vger.kernel.or
+Subject: Re: [PATCH 2/6] fs: FS_IOC_GETUUID
+Message-ID: <ZcFelmKPb374aebH@dread.disaster.area>
+References: <20240205200529.546646-1-kent.overstreet@linux.dev>
+ <20240205200529.546646-3-kent.overstreet@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A6:EE_|DM4PR12MB5070:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d838c5c-c7f1-4e77-3aa1-08dc26982162
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	7ewkgPlBixfV6Pp4DhQVA5ilgvDCygD1ddh+V/401sbc1PH+yNF4anQPp3uUGvjeJKM0hz6+8RpzXSaG617tvYP/Mu88XcNukUW8H6iLsag1Bh8udNgVhrzbxreRnuFuEwBaI092KDv+nVCqo+uHk3usCkXEQtwy+ew+a614wAFcLZaWFb8IkKWer7RtS3MPD4NkmMaAuhaCinq6Q4v5oBIHI9bYFPYGXk8qjZGpztHJIyolZMFvYqAiL8oUEfQ+d2boDQTPLBZ8bU8dPGcfoSpCHPKXELek0tFyv6vAfCLBYZ1gDpulR+/S7ERuUAmSeL3urnL7O1k28pbQiYvMA3LVSpoe8Z6qvq02+1vur1OnunhVBNPxe9XmJj9X9ZfvXnb5pYPRMvNz/14ESDQ/3i+6uQnpsDcljsS8tT3JFL52AaDV07n3xaT+nLhmUy9Y99O3nTI3L3dryyRTAbHPxUzxLrPOPZvKAKzsUHMKklLCdXNPgqDj11JUvl5DYFK2tfIESo8L/fYm62XhxgRcoDnISINYIU+noHWRTyjkL1uNWMZI8ggMbJ5ad2lBJPDrZ/kZ+2Jpf5uwTBefSYMBh5yT6AcgrMDUQjOfwVrIkQMbAnV+w0jEEMQ3HVwJFg8QcTmyaHPamw+lXo8/QJ04xMV2t0WGHos8Fi6fYkyfhP1R8I0ee4hVX+Dm/QoB6DIbHhLCWEzKBf2xLSk2OzEfpAkKObMtasGGRc4uoqOfqleaYuv2ua2reYAYetQhAmAGOq3DkYsVknYI7u3xAayo8w==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(136003)(376002)(39860400002)(230922051799003)(1800799012)(64100799003)(451199024)(82310400011)(186009)(40470700004)(36840700001)(46966006)(40460700003)(40480700001)(36756003)(41300700001)(47076005)(356005)(81166007)(82740400003)(2906002)(6666004)(36860700001)(478600001)(336012)(83380400001)(426003)(26005)(16526019)(1076003)(2616005)(86362001)(7696005)(4744005)(4326008)(316002)(54906003)(966005)(70206006)(70586007)(110136005)(8676002)(44832011)(8936002)(5660300002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 22:16:41.6269
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d838c5c-c7f1-4e77-3aa1-08dc26982162
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A6.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205200529.546646-3-kent.overstreet@linux.dev>
 
-The laptop requires a quirk ID to enable its internal microphone. Add
-it to the DMI quirk table.
+On Mon, Feb 05, 2024 at 03:05:13PM -0500, Kent Overstreet wrote:
+> Add a new generic ioctls for querying the filesystem UUID.
+> 
+> These are lifted versions of the ext4 ioctls, with one change: we're not
+> using a flexible array member, because UUIDs will never be more than 16
+> bytes.
+> 
+> This patch adds a generic implementation of FS_IOC_GETFSUUID, which
+> reads from super_block->s_uuid; FS_IOC_SETFSUUID is left for individual
+> filesystems to implement.
+> 
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Dave Chinner <dchinner@redhat.com>
+> Cc: "Darrick J. Wong" <djwong@kernel.org>
+> Cc: Theodore Ts'o <tytso@mit.edu>
+> Cc: linux-fsdevel@vger.kernel.or
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> ---
+>  fs/ioctl.c              | 16 ++++++++++++++++
+>  include/uapi/linux/fs.h | 16 ++++++++++++++++
+>  2 files changed, 32 insertions(+)
+> 
+> diff --git a/fs/ioctl.c b/fs/ioctl.c
+> index 76cf22ac97d7..858801060408 100644
+> --- a/fs/ioctl.c
+> +++ b/fs/ioctl.c
+> @@ -763,6 +763,19 @@ static int ioctl_fssetxattr(struct file *file, void __user *argp)
+>  	return err;
+>  }
+>  
+> +static int ioctl_getfsuuid(struct file *file, void __user *argp)
+> +{
+> +	struct super_block *sb = file_inode(file)->i_sb;
+> +
+> +	if (WARN_ON(sb->s_uuid_len > sizeof(sb->s_uuid)))
+> +		sb->s_uuid_len = sizeof(sb->s_uuid);
 
-Reported-by: Stanislav Petrov <stanislav.i.petrov@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=216925
-Cc: stable@vger.kernel.org
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+A "get"/read only ioctl should not be change superblock fields -
+this is not the place for enforcing superblock filed constraints.
+Make a helper function super_set_uuid(sb, uuid, uuid_len) for the
+filesystems to call that does all the validity checking and then
+sets the superblock fields appropriately.
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 23d44a50d815..80ad60d485ea 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -248,6 +248,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82YM"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83AS"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
+> +
+> +	struct fsuuid2 u = { .fsu_len = sb->s_uuid_len, };
+> +	memcpy(&u.fsu_uuid[0], &sb->s_uuid, sb->s_uuid_len);
+
+	if (!u.fsu_len)
+		return -ENOENT;
+	memcpy(&u.fsu_uuid[0], &sb->s_uuid, u.fsu_len);
+
+> +
+> +	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
+> +}
+> +
+>  /*
+>   * do_vfs_ioctl() is not for drivers and not intended to be EXPORT_SYMBOL()'d.
+>   * It's just a simple helper for sys_ioctl and compat_sys_ioctl.
+> @@ -845,6 +858,9 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+>  	case FS_IOC_FSSETXATTR:
+>  		return ioctl_fssetxattr(filp, argp);
+>  
+> +	case FS_IOC_GETFSUUID:
+> +		return ioctl_getfsuuid(filp, argp);
+> +
+>  	default:
+>  		if (S_ISREG(inode->i_mode))
+>  			return file_ioctl(filp, cmd, argp);
+> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> index 48ad69f7722e..0389fea87db5 100644
+> --- a/include/uapi/linux/fs.h
+> +++ b/include/uapi/linux/fs.h
+> @@ -64,6 +64,20 @@ struct fstrim_range {
+>  	__u64 minlen;
+>  };
+>  
+> +/*
+> + * We include a length field because some filesystems (vfat) have an identifier
+> + * that we do want to expose as a UUID, but doesn't have the standard length.
+> + *
+> + * We use a fixed size buffer beacuse this interface will, by fiat, never
+> + * support "UUIDs" longer than 16 bytes; we don't want to force all downstream
+> + * users to have to deal with that.
+> + */
+> +struct fsuuid2 {
+> +	__u32       fsu_len;
+> +	__u32       fsu_flags;
+> +	__u8        fsu_uuid[16];
+> +};
+
+Nobody in userspace will care that this is "version 2" of the ext4
+ioctl. I'd just name it "fs_uuid" as though the ext4 version didn't
+ever exist.
+
+> +
+>  /* extent-same (dedupe) ioctls; these MUST match the btrfs ioctl definitions */
+>  #define FILE_DEDUPE_RANGE_SAME		0
+>  #define FILE_DEDUPE_RANGE_DIFFERS	1
+> @@ -215,6 +229,8 @@ struct fsxattr {
+>  #define FS_IOC_FSSETXATTR		_IOW('X', 32, struct fsxattr)
+>  #define FS_IOC_GETFSLABEL		_IOR(0x94, 49, char[FSLABEL_MAX])
+>  #define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
+> +#define FS_IOC_GETFSUUID		_IOR(0x94, 51, struct fsuuid2)
+> +#define FS_IOC_SETFSUUID		_IOW(0x94, 52, struct fsuuid2)
+
+0x94 is the btrfs ioctl space, not the VFS space - why did you
+choose that? That said, what is the VFS ioctl space identifier? 'v',
+perhaps?
+
+-Dave.
+
 -- 
-2.34.1
-
+Dave Chinner
+david@fromorbit.com
