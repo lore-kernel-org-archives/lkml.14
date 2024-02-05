@@ -1,122 +1,136 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB5147F52
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 18:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05CAB44C66;
+	Mon,  5 Feb 2024 18:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707156186; cv=none; b=s7rtEsCl/6ztS0uIPiUIp0DGZ11aS5nHema8rxkgQ0PzkGlqtzVg8j7Mdpx9Q/tPDdSe4fxVf+rlWbHjqUKx9XtYL0t4zN56BqL7+vF9VzyXn4ntPeqxX9LtWEB4YbHoZ4GzbSVTndtwbFJkXbnRhiTsqP5fFz/FVHqQmBMeyUQ=
+	t=1707156240; cv=none; b=HpXDpaOdxUl2mFDeVzKKGninC0v64FRZU9dCNveFEvj7MSYo1pVmazHsb/AnF9aD55vIoRdETF4O7UYMzWDYAFPZn420Wh3b46oXuDJWREZTkesFyOLo3aixPDfsbDhr0IQIJJDPfEwlMq6sjDudl7bdmcTpg1CS1mzRod6LGYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707156186; c=relaxed/simple;
-	bh=OOgVZRPlSywx4rxRdVx+mq68r49uSU2xQZ5q5NB18Nc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=S2bs0TFolzkfgcD8JgM9fAd4/jGK+9NYGTxEijZhKy4i3n+aiVTIUXKt4KI50zusjKuiklYKs17ZZBaBf3F4mBqcLIauTJgvWUh+rflU4h+jiM8wa1Ts9zZn8QVWM/BBGH0/WffmrkJwzVCrkCitV1HXToHb5opXC31P+05NlyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VqGyY1OU; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqGyY1OU"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so3448104b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 10:03:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707156184; x=1707760984; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=fAEbF6lnUf3UCRJv3PsQ/b68B+NGFJMDZrCznOHMIO8=;
-        b=VqGyY1OUPeP43vNeWFDz1guLYC8yCkEpica+fC0agdKfO5dY69up8aoL6M8W3fFgC0
-         8zjVJhJB2FbjJfUu9OHTjS2MWt25DAMbQab6xK9SFvqxbHoX2ONZcYIKIdjFl/cHOBNe
-         bWM+7phzk1A5H438XvW2DZGtuhncppzuMsySfh13KyfcPsbWOcK6DN8vfYlYDnnOk98D
-         lfnd+UisJmnWmbaQTPNxsVZJYmh3zeqS8qXS+mkREXxzO5RKHbOGmeGWKjRG1HC5dedr
-         gJ6tkHqu2M1t75GCnfAArE+3Uf3rsISJgUjoP0SxN62u1wUhioO4rsfeRw2ZNKssHa73
-         ryMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707156184; x=1707760984;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fAEbF6lnUf3UCRJv3PsQ/b68B+NGFJMDZrCznOHMIO8=;
-        b=tNK2zBZl4c9VUkVjIh9k824ADKiZ+JbT6VSmWjf3SJT57WXY2WJ7wNIAXDApzKFGHx
-         UL/OcBzZihRjajytCYgO9VnR5t09J2CHXWK+qLjbvhdAgC9B4KMKR5fG/v3jZzqwBBsk
-         g3MaqNmrmm50DeWzVii7kKs7NmDbbQIRotfBtHKGM71jwN8nnxHIXj+QsKLkmPthCvzk
-         TysG3gLQh0UB/i0G8roIklHmoTbQO4KtI4wGuis/SjGFeP7KVdt4pDj+IkuBFIrsB6CG
-         KI6GORKJfpcBEuGXmv68AZx2XjAqiPmLdVBjSd96QLQT4ft9Mz9+lFKgdXG1ZXR8fyOC
-         qeHw==
-X-Gm-Message-State: AOJu0Yz5vFjlbn82BtNEqkcJ9efhi9ITbXPZhgK8S30eMQl9PZWSYcWv
-	9IQz6J2+4ALPCgyXbrsngYedFECjMzKsSMhTxkFDuQZMjvM7pnha
-X-Google-Smtp-Source: AGHT+IENJCdywK0pbsFqRYMAydL/rsvOI9Bgpl/04DmuE3DOBeBv4DpHmFcV9dot2b7lfqLn3QNxLA==
-X-Received: by 2002:aa7:84c6:0:b0:6e0:35e9:a78e with SMTP id x6-20020aa784c6000000b006e035e9a78emr261321pfn.21.1707156183923;
-        Mon, 05 Feb 2024 10:03:03 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX75jwKFX0H8LHboe02efvZ8bvzkanZLydpE5+l9I+n4yS4HEAHqMjev9OUnF7NSaRd0AOiHgoBOjBXQ24QBABCg/tpo+uZ7GRf7I0ZWgEvF4N8LeDcJoxBggO4bZw=
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e4-20020a63e004000000b005dc1d18c0c6sm299988pgh.11.2024.02.05.10.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 10:03:02 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 5 Feb 2024 10:03:01 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Spurious problems when running regmap unit tests in qemu
-Message-ID: <fc1d865d-3e2e-48bc-8cd1-389ec6b15909@roeck-us.net>
+	s=arc-20240116; t=1707156240; c=relaxed/simple;
+	bh=acHH8lLMt/+fXy9cDtqL91wGghvqnB/fGWuddTkpbls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Os0AYlcbGpQOajvi6FoCkJsMSl71ZLlon7WDJquF/37rXpdpgqLzY+y2BSh8K5sFl6K9kjyHU5AiyedGPvNc85kV+Ho5zlyMMkW1czVjDNvT1e26XXRb6B9n8RtqnKgRp7H/u7ZFQlbtsw0llbcjgp29eR4hAswpN9J+UO9QPYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D0E212FC;
+	Mon,  5 Feb 2024 10:04:39 -0800 (PST)
+Received: from [10.57.48.140] (unknown [10.57.48.140])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 651753F5A1;
+	Mon,  5 Feb 2024 10:03:54 -0800 (PST)
+Message-ID: <ee19a95d-fe1e-4f3f-bc81-bdef38475469@arm.com>
+Date: Mon, 5 Feb 2024 18:03:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/12] bcm2835-dma: Derive slave DMA addresses correctly
+Content-Language: en-GB
+To: Andrea della Porta <andrea.porta@suse.com>, Vinod Koul
+ <vkoul@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Cc: Maxime Ripard <maxime@cerno.tech>, Dom Cobley <popcornmix@gmail.com>,
+ Phil Elwell <phil@raspberrypi.com>
+References: <cover.1706948717.git.andrea.porta@suse.com>
+ <30da53ebdf43b712da790fd2ae0f0040f71762b8.1706948717.git.andrea.porta@suse.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <30da53ebdf43b712da790fd2ae0f0040f71762b8.1706948717.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 2024-02-04 6:59 am, Andrea della Porta wrote:
+> From: Phil Elwell <phil@raspberrypi.com>
+> 
+> Slave addresses for DMA are meant to be supplied as physical addresses
+> (contrary to what struct snd_dmaengine_dai_dma_data does). It is up to
+> the DMA controller driver to perform the translation based on its own
+> view of the world, as described in Device Tree.
+> 
+> Now that the Pi Device Trees have the correct peripheral mappings,
+> replace the hacky address munging with phys_to_dma().
+> 
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> ---
+>   drivers/dma/bcm2835-dma.c | 23 +++++------------------
+>   1 file changed, 5 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+> index 237dcdb8d726..077812eda609 100644
+> --- a/drivers/dma/bcm2835-dma.c
+> +++ b/drivers/dma/bcm2835-dma.c
+> @@ -18,6 +18,7 @@
+>    *	Copyright 2012 Marvell International Ltd.
+>    */
+>   #include <linux/dmaengine.h>
+> +#include <linux/dma-direct.h>
 
-I am observing spurious regmap unit test failures in my qemu test runs.
-Examples:
+Please read the comment at the top of that file; this driver is 
+definitely not a DMA API implementation, and should not be including it.
 
-  # raw_noinc_write: ASSERTION FAILED at drivers/base/regmap/regmap-kunit.c:1243
-  Expected val_test == val, but
-      val_test == 65581 (0x1002d)
-      val == 45 (0x2d)
-      not ok 8 maple-big
-  # raw_noinc_write: pass:7 fail:1 skip:0 total:8
+>   #include <linux/dma-mapping.h>
+>   #include <linux/dmapool.h>
+>   #include <linux/err.h>
+> @@ -980,22 +981,12 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
+>   	if (direction == DMA_DEV_TO_MEM) {
+>   		if (c->cfg.src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+>   			return NULL;
+> -		src = c->cfg.src_addr;
+> -		/*
+> -		 * One would think it ought to be possible to get the physical
+> -		 * to dma address mapping information from the dma-ranges DT
+> -		 * property, but I've not found a way yet that doesn't involve
+> -		 * open-coding the whole thing.
+> -		 */
+> -		if (c->is_40bit_channel)
+> -			src |= 0x400000000ull;
+> +		src = phys_to_dma(chan->device->dev, c->cfg.src_addr);
 
-  or
+FWIW I'd argue that abusing DMA API internals like this is even more 
+hacky than bypassing it entirely. The appropriate public API for setting 
+up the device end of a transfer is dma_map_resource(). Now, it *is* the 
+case currently that the dma-direct implementation of that does not take 
+dma_range_map into account, but that's already an open question:
 
-  # raw_noinc_write: ASSERTION FAILED at drivers/base/regmap/regmap-kunit.c:1243
-  Expected val_test == val, but
-      val_test == 65556 (0x10014)
-      val == 20 (0x14)
-      not ok 5 rbtree-little
-      ok 6 rbtree-big
-      ok 7 maple-little
-      ok 8 maple-big
-  # raw_noinc_write: pass:7 fail:1 skip:0 total:8
-
-The problem is not seen all the time. I see it with various qemu machines,
-but not always the same. Endianness does not seem to make a difference.
-The failure is always in raw_noinc_write. So far, I have observed the
-following individual test failures:
-
-not ok 2 none-big
-not ok 4 flat-big
-not ok 5 rbtree-little
-not ok 8 maple-big
-
-The most recent test run (on v6.8-rc3) failed on the following
-architectures and machines (again, those are not always the same).
-
-arm:npcm750-evb:regmap
-mips:malta:regmap
-mipsel64:malta:regmap
-i386:q35:regmap
-
-I only recently started to track unit test failures, so I don't know yet
-if this problem has been introduced recently or if it has existed since
-the tests were introduced.
-
-Any idea how to debug this problem would be welcome. I'll try to bisect,
-but of course that will only help if the problem was introduced recently.
+https://lore.kernel.org/linux-iommu/20220610080802.11147-1-Sergey.Semin@baikalelectronics.ru/
 
 Thanks,
-Guenter
+Robin.
+
+>   		info |= BCM2835_DMA_S_DREQ | BCM2835_DMA_D_INC;
+>   	} else {
+>   		if (c->cfg.dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+>   			return NULL;
+> -		dst = c->cfg.dst_addr;
+> -		if (c->is_40bit_channel)
+> -			dst |= 0x400000000ull;
+> +		dst = phys_to_dma(chan->device->dev, c->cfg.dst_addr);
+>   		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
+>   	}
+>   
+> @@ -1064,17 +1055,13 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+>   	if (direction == DMA_DEV_TO_MEM) {
+>   		if (c->cfg.src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+>   			return NULL;
+> -		src = c->cfg.src_addr;
+> -		if (c->is_40bit_channel)
+> -			src |= 0x400000000ull;
+> +		src = phys_to_dma(chan->device->dev, c->cfg.src_addr);
+>   		dst = buf_addr;
+>   		info |= BCM2835_DMA_S_DREQ | BCM2835_DMA_D_INC;
+>   	} else {
+>   		if (c->cfg.dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+>   			return NULL;
+> -		dst = c->cfg.dst_addr;
+> -		if (c->is_40bit_channel)
+> -			dst |= 0x400000000ull;
+> +		dst = phys_to_dma(chan->device->dev, c->cfg.dst_addr);
+>   		src = buf_addr;
+>   		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
+>   
