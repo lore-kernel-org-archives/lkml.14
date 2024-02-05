@@ -1,94 +1,114 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C9F2375D;
-	Mon,  5 Feb 2024 13:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540B21CA9F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707138167; cv=none; b=SieThCByQLu3KxzqkMg7bV1XJt4UGV0lW7kkwcYrp0EOlpafTr2fmwbkBWSzTJF38+8uJnC8/S5tL9JOVZ1BMykfXvQCVQD0LdQ8GeYmmivAAYG9chpz5+kqgsynVKRNLYPF+5LfwgXZS0HOf7I/60JJd3um+1Z4vSFJNXvGrok=
+	t=1707138299; cv=none; b=Dbt6zapHSW5QgRCcjMVaWwX7HdglR41S/qS8F3W3oFUUkiS1ILLTrCxw6LMk/H8HOq4DkkRuDnIrklMrS/qnptwmunSPPmcsxkGGE5xSBhaxXVX7r1wL2DZK9N4vOiSxTyw2IwZez3vPLSN+Urzc6qhLZ7daGj937sAvkY7zuVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707138167; c=relaxed/simple;
-	bh=M7kC1Gk7zW5Rzv1t84FKmyEQZQWveaLF7BWFYaTRwo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V7SfLJ3M6+t0EAXpCKofnNetnfC+lXW0Flq3B73tPUUvht1BzU9KFY4oc5jzEUndI/qMDszxNu0bUPlzhpsenrMSqmEIAtSxtK/j2qsClYc5Pt9mxPiD8jop8zY4i+7tjjpqUaqY6V7PuikPpQRLFDlx2txZqzyqh/XDi4GfKrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=gInmokFX; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1707138299; c=relaxed/simple;
+	bh=6R73Y1eL+XW9/5GN5zqnbfIAD02pmTNPIsXX1PzbkQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LZBGfVnoj4z5KDdh8wNTnCNLuIy6b33w6POyc0Ql5pGVpK2hdacNo4pDOl9/y9TAiWU4lo6x23feyGJsghBEU2IoR2GoEZp/C+QXd9rkPAqbKjmo6agxfvBxn8p4L5peBt5PAeWvjyYs4L9yyUJj2XY33A+7VJx+Nc5wW8I0LTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d5OTMkxI; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="gInmokFX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1707138155; x=1707742955; i=markus.elfring@web.de;
-	bh=M7kC1Gk7zW5Rzv1t84FKmyEQZQWveaLF7BWFYaTRwo8=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=gInmokFXD88OG+TQVq9DRGXn7Uytl5F1dxzbh7DYKEfCVm6ufvmFd9MObR349q2E
-	 W7wPDJoPaokW6lwnmQUfgRecr59+ioYqi7QJq+m4DaWUQ9iBQiV+kL02lQOJQh0fI
-	 3JNPJPhHaGNt/n4c9DtcvkU3jMnpesA2LCD1genyOpk8gYV4gp2l4MOEXgY4siNB4
-	 3PSpYYdGsHJ8UpjnNsI8kpSo1hmo7Ntq10OmBx7d1VK7JxiOLS4Wnnp3fi/H/NNm1
-	 yqU/HBYuhWpRJPHjpxx9VxPi6347eyPFtOEo8wnK03WtYon8WkzTdCX7LiF5Ga5Ym
-	 OxTXH5+UbagcjQSO2g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MCGSU-1rgMXJ2Y6s-009fM2; Mon, 05
- Feb 2024 14:02:35 +0100
-Message-ID: <0c757d69-ec60-477c-a978-a94118a571a2@web.de>
-Date: Mon, 5 Feb 2024 14:02:34 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d5OTMkxI"
+Date: Mon, 5 Feb 2024 13:04:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707138294;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjDbYJsA64v+kSKvUvgWTs/MwMgC5uCGKzp4l4kiFPQ=;
+	b=d5OTMkxIJ0g6UM3z7bHVp+C0KObAXlBjbpjAGtUI0R/TQZptwEcQ3TPCtL7tWTrDSzMYAy
+	OEIqo5T0Z0ZpuQ3X9or70pTazC4A7W2D8fH7WO3AfkMisgfErJgHNcefcgqSjmBGDZqsr1
+	QsiPxQfd2K9662ohcknZ8OQ8jJl523k=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: James Clark <james.clark@arm.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, broonie@kernel.org, maz@kernel.org,
+	suzuki.poulose@arm.com, acme@kernel.org,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Rob Herring <robh@kernel.org>, Miguel Luis <miguel.luis@oracle.com>,
+	Jintack Lim <jintack.lim@linaro.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Kristina Martsenko <kristina.martsenko@arm.com>,
+	Fuad Tabba <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Jing Zhang <jingzhangos@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] arm64: KVM: Use shared area to pass PMU event
+ state to hypervisor
+Message-ID: <ZcDc8-FQo8wKavA4@linux.dev>
+References: <20240104162714.1062610-1-james.clark@arm.com>
+ <20240104162714.1062610-3-james.clark@arm.com>
+ <Zb1mCCi13AJ_YjFZ@linux.dev>
+ <8a908ee8-620a-d9c2-734b-5a6402950072@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: iommu/ipmmu-vmsa: Use devm_platform_get_and_ioremap_resource() in
- ipmmu_probe()
-Content-Language: en-GB
-To: Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
- kernel-janitors@vger.kernel.org, =?UTF-8?B?SsO2cmcgUsO2ZGVs?=
- <joro@8bytes.org>, Will Deacon <will@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <e01cdb99-8497-4fec-b423-a0bfb483ac75@web.de>
- <324d4e02-6a5a-4112-a3a7-d7aeb5876acc@arm.com>
- <49fc6a59-2c07-4366-b32f-0599c2418916@web.de>
- <51315925-21ac-427c-abea-4d652ed5280f@arm.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <51315925-21ac-427c-abea-4d652ed5280f@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:q0Qe30SNi/9mqfN3u/mG03dVuA8Cg6vcFggSYnH0fpTJrb5x0RK
- uN+E+ui+VphNCypZhvXPO8v0SZCqSi7nqW48GoU0giwxlyrdihct5RxLgjCHVWanuJCV9hr
- /pwdaUAS3Cd8wn5Ozt5KAqTChfDDEy+054BcGJlC2Guboml9nd9TemoEXYPxzXNX3hrD6yZ
- cLvDd5bbTQ1SzSEjmYn8w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:G9WiypKrGiA=;uV7MKkwX+3MbtwDIw4sYVlU1Zwl
- b+/PB1TmIceiC2kiIRRY4NJgkuV+/t0iqNqZoAVcAZe7ReuXQVC60YuPjDD0gQU3KyBqK3hOW
- ZAD1GzFNOI9JSSFQ4BAhgvZ12N3zXijCJh6UyPvvQyCHUM5BXDRzRr79lrrCxDiLhH393QXUW
- /QPbjcWKo1sCh8cUoIWjlFz3pFOTg21VCMIDgP/7fhfb0+h0FTjriIMq2IKS3rKEGvtu/kF83
- bqm4jmuXoHCR+PCtGxW+HW4hg4iePM7mH+deDznnXIcbY/OYjfoX1D0myXDN6plJvl/kp0dVC
- 7jqyGmP8EbvgSe0a6Eq4q3DWd5Fyske9Cm8BvVhLt4HulQupB9z7r07CDntS7zDtyQ840D9NI
- VsKOV5Dy9G+ATbv9K7mudMmbNv3qJFMtVChl2a6Uu9l4gbmJQD45M022N5Me6FNyNdI5iAyxX
- zBda4TLAxQAeGTUeRSMWwsBNZYS4D92azj+ERSkpNFeEz0Nd+etkl1druyeLDsJioESmnuweO
- 5Svv2AgnloFfa4TUeW1sIk/ayMVldb079xnPIZAz02qm4dn/Oy5Jsqd8bWP6N/nfXZAZoPiRR
- CAv/eQAHdqna+BItLaLEDQm7aAcG/AF96diMzh2yZMGq2b/G/nBvNSTlV6vn0sMo0Uiu5UzNR
- JLe8zwZeQRkyFejwQe6avLfy49AQa3sCTdLm27qdeeZo2OcuLVTmQrxuf667kqW/NCJgetFeZ
- 5DB67PJoCcnIzgjERoryxA7E3SY353d637QLYfacCCarbqItV96a70ikX7LhGtgvZbGWLB8Zd
- VK5lG6OqzIyCL83/HTdrWbo7UMevQoQx2TCips5aG23kc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a908ee8-620a-d9c2-734b-5a6402950072@arm.com>
+X-Migadu-Flow: FLOW_OUT
 
->>>> Thus reuse existing functionality instead of keeping duplicate source=
- code.
->>>
->>> Much as I detest the get_and_ioremap_resource obfuscator, it's not eve=
-n appropriate here since nothing else is using "res".
->>
->> I got the impression that this local variable is needed to perform
->> a desired function call.
->
-> Yes, the call to devm_ioremap_resource(). Which you're proposing to remo=
-ve...
+On Mon, Feb 05, 2024 at 12:16:53PM +0000, James Clark wrote:
+> > This now allows the host to program event counters for a protected
+> > guest. That _might_ be a useful feature behind some debug option, but is
+> > most definitely *not* something we want to do for pVMs generally.
+> 
+> Unless I'm missing something, using PMUs on protected guests was added
+> by 722625c6f4c5b ("KVM: arm64: Reenable pmu in Protected Mode"). This
+> change is just a refactor that will allow us to add the same behavior
+> for a similar feature (tracing) without adding yet another copy of some
+> state before the guest switch.
 
-I propose to replace a specific function call combination
-by an other single call for a known wrapper function.
-The mentioned variable is preserved for this purpose.
+Ha, I had forgotten about that patch (and I had reviewed it!)
 
-Regards,
-Markus
+My interpretation of the intent for that change was to enable the usage
+of vPMU for non-protected VMs. The situation has changed since then, as
+we use the shadow state for vCPUs unconditionally in protected mode as
+of commit  be66e67f1750 ("KVM: arm64: Use the pKVM hyp vCPU structure
+in handle___kvm_vcpu_run()")
+
+Protected mode is well understood at this point to be a WIP feature, and
+that not all things are expected to work with it. Eventually we will
+need a way to distinguish between 'normal' VMs and true pVMs (i.e. the
+VMM selected full isolation) in nVHE, but right now what we have enables
+testing of some isolation features.
+
+> > I'm perfectly happy leaving these sorts of features broken for pKVM and
+> > using the 'normal' way of getting percpu data to the nVHE hypervisor
+> > otherwise.
+> > 
+> 
+> I can do that. But do I also disable PMU at the same time in a new
+> commit? Now that both PMU and tracing is working maybe it would be a
+> waste to throw that away and hiding it behind an option is better. Or I
+> can leave the PMU as it is and just keep tracing disabled in pKVM.
+> 
+> I don't mind either way, my main goal was to get exclude/include guest
+> tracing working for normal VMs. For pKVM I don't have a strong opinion.
+
+Unless someone has strong opinions about making this work in protected
+mode, I am happy to see tracing support limited to the 'normal' nVHE
+configuration. The protected feature as a whole is just baggage until
+upstream support is completed.
+
+-- 
+Thanks,
+Oliver
