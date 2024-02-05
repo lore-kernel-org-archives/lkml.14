@@ -1,49 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5377D2C688;
-	Mon,  5 Feb 2024 14:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A242BB1F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707143645; cv=none; b=J8+8JYTnGyg/n+dfe8Z1T/YkdwAB/41yS8MF9CI89ji7XH4djvVTjXww1a7vHZALFD1nn0e3xMYTJ5AWKDDIRxb08M9MnbzhV8NQutsvkeRfV4eg2gRGnAImZDTaP24Yz7qvJpgI4DYbjwFLKLKwO57+3A803x6bUH4Pttj2LNo=
+	t=1707143748; cv=none; b=H8xGf3sVLf/OJuR7vFqpjhSuZ63q+RSeZgCtr9suaxbB0qpeKE2j6yeXAmZIue7AHX6CbNgqwByhYKLeu2wRm8G+NjGnsDqDDctPZ0JV9PZ8kIwr6mhh8QlPD9KjswTXffvIKqUz1M+nLWDy5uI0/biSRYitZham7U13iNG35bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707143645; c=relaxed/simple;
-	bh=iBEoat+OSUZc6lnPLh2AanULhM+rpP8BzE4RZbNK5z8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksB1nhIbxyTMvCQQUYbePXpaAAeWHiSbbK++zDvWfu6a3F+DIbXZo8nwRyyhFX9jgmZxN4VRO7jKR2YEFxW5OKHthk24Tou7dybafvbFMcwkjpILayYst/w8oyCgATVUiEg34XhNisU2sudW9dFBFHB6Zl70bZUnWJR6/qTqvLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJX3U8uv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707143748; c=relaxed/simple;
+	bh=Z8SRYrvV4JZgQHuXnbU5u5fodN1hKThQZYfhVac4BLA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dJrkTFgT1gQl84JobybUC1QI/MljBrh6uf7JSDZjRXV945exrS/x+VQCCQDPrMpuoEzXG2A9YP/s6jepfnVQt0Wbmk9G6aZ8EUDcjIxMYvY1R9mmZxZD6OSDyJ7ZHLSJftJ1XhnahGy5MsJ/UwNwIFwHbxmt6+TKIqxZwLP7Xnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCIj2VQb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJX3U8uv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD81C433F1;
-	Mon,  5 Feb 2024 14:34:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCIj2VQb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445BBC433C7;
+	Mon,  5 Feb 2024 14:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707143644;
-	bh=iBEoat+OSUZc6lnPLh2AanULhM+rpP8BzE4RZbNK5z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sJX3U8uvH5HXjL4C/OEXRtNtDYD89dJ7oms9PFEVAaAn8XVtPBMXKQr5hvTm+y9Gy
-	 gfBL4Jcez1RpKXmz0LWF0lDwKf6ZS1AsPEIWK/KozH6g3X1cjz5EM4BwlUOAwHuqm6
-	 wf4ZGvcc/ZObkBLVKAT9yfIf9FLSBxOYC/zp0K231vnLs8ynig29DsqXzSlK92p6i4
-	 QX+BIjk0HV4/W2uuiOfeXlmte/RFV2UZdhJIdORjBwGKm6A6lt7n9OBepiLcwOCvna
-	 IKAp2QLORaRKAAd/mzaDhArRXFYo8MP6Bq+PUjLvNKW6uHakgeTMHHjbKgQ0LG7+Ak
-	 WosUh47y4XRig==
-Date: Mon, 5 Feb 2024 14:33:59 +0000
-From: Lee Jones <lee@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Li Zetao <lizetao1@huawei.com>, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] leds: trigger: netdev: Fix kernel panic on interface
- rename trig notify
-Message-ID: <20240205143359.GB53266@google.com>
-References: <20240203235413.1146-1-ansuelsmth@gmail.com>
- <8d51f09b-e6d2-4ee1-9e7d-b545d561798a@lunn.ch>
- <20240205085007.GA19855@google.com>
- <2cf84815-f9b6-4a0a-a3b4-d23628a89aa4@lunn.ch>
- <65c0e874.df0a0220.257a.43b1@mx.google.com>
+	s=k20201202; t=1707143747;
+	bh=Z8SRYrvV4JZgQHuXnbU5u5fodN1hKThQZYfhVac4BLA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=CCIj2VQbnsP8pGUX8XJomx4wB7Jcb6kfPo9ZQRGayljJfVs6PvfoaJn+E9KdyHG6p
+	 036HGbBylrKcZxQNcXtLxmxpgl9a1fVFhA2HMl4iapCsAIelBmxSmJ0qr+JsDgon/F
+	 o9Il2JJfB+aXtMBY/fRKJjWPkBtWyd9vcHsJC8/JkEGyJ0WvezxjLuhKLJ04AT6oV2
+	 Wb3ptHRp72mWmwbkGazUUEi1O14PnOycFSzLzwvVPEXwtiyLvKEYiyF+A8yPsTWDj5
+	 8/CheUDP8OwTvw5PMx/ErDz72wUSMMWFy+8+0jAv46+tLI++VhqAm8+n2N/1S53YG+
+	 kbNEjKoHs6F0g==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Anup Patel <anup@brainfault.org>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>,
+ linux-riscv@lists.infradead.org, Andrew Jones <ajones@ventanamicro.com>
+Subject: Re: [PATCH] RISC-V: Don't use IPIs in flush_icache_all() when
+ patching text
+In-Reply-To: <CAAhSdy08ocy2Ad96MdHdYN0fk5V0+0Kxc65m+mPQ6UnedFkckQ@mail.gmail.com>
+References: <20240205042955.833752-1-apatel@ventanamicro.com>
+ <d5e21238-89f4-444e-9c35-f4a28e01052e@ghiti.fr>
+ <CAK9=C2XEmFBDB6R5f+L9++7ojhWb8rJK-e-vgFrDmsi2=DMOBw@mail.gmail.com>
+ <87y1bzch0u.fsf@all.your.base.are.belong.to.us>
+ <a3cb563b-5b41-4189-ac82-091d5cb3223e@ghiti.fr>
+ <CAAhSdy08ocy2Ad96MdHdYN0fk5V0+0Kxc65m+mPQ6UnedFkckQ@mail.gmail.com>
+Date: Mon, 05 Feb 2024 15:35:44 +0100
+Message-ID: <87mssfx9kv.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,55 +50,187 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <65c0e874.df0a0220.257a.43b1@mx.google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 05 Feb 2024, Christian Marangi wrote:
+Anup Patel <anup@brainfault.org> writes:
 
-> On Mon, Feb 05, 2024 at 02:41:46PM +0100, Andrew Lunn wrote:
-> > > > This should have 'net' in the subject line, to indicate which tree its
-> > > > for.
-> > > 
-> > > No, it shouldn't.
-> > > 
-> > > Contributors aren't obliged to know anything about merging strategies.
-> > 
-> > With netdev, we tend to assume they do, or at least can contribute to
-> > the discussion. They often know about any dependencies etc which could
-> > influence the decision. When there are multiple subsystem maintainers
-> > involved, i tend to use To: to indicate the maintainer i think should
-> > merge the patch, and Cc: for the rest.
-> >
-> 
-> I'm always a bit confused when I have to send patch to mixed subsystem
-> (not the case but for net trigger it's almost that). Sorry for the
-> confusion/noise.
+> On Mon, Feb 5, 2024 at 7:38=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wr=
+ote:
+>>
+>>
+>> On 05/02/2024 12:00, Bj=C3=B6rn T=C3=B6pel wrote:
+>> > Anup Patel <apatel@ventanamicro.com> writes:
+>> >
+>> >> On Mon, Feb 5, 2024 at 11:52=E2=80=AFAM Alexandre Ghiti <alex@ghiti.f=
+r> wrote:
+>> >>> Hi Anup,
+>> >>>
+>> >>> On 05/02/2024 05:29, Anup Patel wrote:
+>> >>>> If some of the HARTs are parked by stop machine then IPI-based
+>> >>>> flushing in flush_icache_all() will hang. This hang is observed
+>> >>>> when text patching is invoked by various debug and BPF features.
+>> >>>>
+>> >>>> To avoid this hang, we force use of SBI-based icache flushing
+>> >>>> when patching text.
+>> >>>>
+>> >>>> Fixes: 627922843235 ("RISC-V: Use IPIs for remote icache flush when=
+ possible")
+>> >>>> Reported-by: Bjorn Topel <bjorn@kernel.org>
+>> >>>> Closes: https://gist.github.com/bjoto/04a580568378f3b5483af07cd9d22=
+501
+>> >>>> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+>> >>>> ---
+>> >>>>    arch/riscv/include/asm/cacheflush.h | 7 ++++---
+>> >>>>    arch/riscv/kernel/hibernate.c       | 2 +-
+>> >>>>    arch/riscv/kernel/patch.c           | 4 ++--
+>> >>>>    arch/riscv/mm/cacheflush.c          | 7 ++++---
+>> >>>>    4 files changed, 11 insertions(+), 9 deletions(-)
+>> >>>>
+>> >>>> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/inclu=
+de/asm/cacheflush.h
+>> >>>> index a129dac4521d..561e079f34af 100644
+>> >>>> --- a/arch/riscv/include/asm/cacheflush.h
+>> >>>> +++ b/arch/riscv/include/asm/cacheflush.h
+>> >>>> @@ -32,7 +32,8 @@ static inline void flush_dcache_page(struct page =
+*page)
+>> >>>>     * RISC-V doesn't have an instruction to flush parts of the inst=
+ruction cache,
+>> >>>>     * so instead we just flush the whole thing.
+>> >>>>     */
+>> >>>> -#define flush_icache_range(start, end) flush_icache_all()
+>> >>>> +#define flush_icache_range(start, end) flush_icache_all(true)
+>> >>>> +#define flush_icache_patch_range(start, end) flush_icache_all(fals=
+e)
+>> >>>>    #define flush_icache_user_page(vma, pg, addr, len) \
+>> >>>>        flush_icache_mm(vma->vm_mm, 0)
+>> >>>>
+>> >>>> @@ -43,12 +44,12 @@ static inline void flush_dcache_page(struct pag=
+e *page)
+>> >>>>
+>> >>>>    #ifndef CONFIG_SMP
+>> >>>>
+>> >>>> -#define flush_icache_all() local_flush_icache_all()
+>> >>>> +#define flush_icache_all(want_ipi) local_flush_icache_all()
+>> >>>>    #define flush_icache_mm(mm, local) flush_icache_all()
+>> >>>>
+>> >>>>    #else /* CONFIG_SMP */
+>> >>>>
+>> >>>> -void flush_icache_all(void);
+>> >>>> +void flush_icache_all(bool want_ipi);
+>> >>>>    void flush_icache_mm(struct mm_struct *mm, bool local);
+>> >>>>
+>> >>>>    #endif /* CONFIG_SMP */
+>> >>>> diff --git a/arch/riscv/kernel/hibernate.c b/arch/riscv/kernel/hibe=
+rnate.c
+>> >>>> index 671b686c0158..388f10e187ba 100644
+>> >>>> --- a/arch/riscv/kernel/hibernate.c
+>> >>>> +++ b/arch/riscv/kernel/hibernate.c
+>> >>>> @@ -153,7 +153,7 @@ int swsusp_arch_suspend(void)
+>> >>>>        } else {
+>> >>>>                suspend_restore_csrs(hibernate_cpu_context);
+>> >>>>                flush_tlb_all();
+>> >>>> -             flush_icache_all();
+>> >>>> +             flush_icache_all(true);
+>> >>>>
+>> >>>>                /*
+>> >>>>                 * Tell the hibernation core that we've just restore=
+d the memory.
+>> >>>> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+>> >>>> index 37e87fdcf6a0..721e144a7847 100644
+>> >>>> --- a/arch/riscv/kernel/patch.c
+>> >>>> +++ b/arch/riscv/kernel/patch.c
+>> >>>> @@ -182,7 +182,7 @@ int patch_text_set_nosync(void *addr, u8 c, siz=
+e_t len)
+>> >>>>        ret =3D patch_insn_set(tp, c, len);
+>> >>>>
+>> >>>>        if (!ret)
+>> >>>> -             flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len=
+);
+>> >>>> +             flush_icache_patch_range((uintptr_t)tp, (uintptr_t)tp=
+ + len);
+>> >>>>
+>> >>>>        return ret;
+>> >>>>    }
+>> >>>> @@ -217,7 +217,7 @@ int patch_text_nosync(void *addr, const void *i=
+nsns, size_t len)
+>> >>>>        ret =3D patch_insn_write(tp, insns, len);
+>> >>>>
+>> >>>>        if (!ret)
+>> >>>> -             flush_icache_range((uintptr_t) tp, (uintptr_t) tp + l=
+en);
+>> >>>> +             flush_icache_patch_range((uintptr_t) tp, (uintptr_t) =
+tp + len);
+>> >>>>
+>> >>>>        return ret;
+>> >>>>    }
+>> >>>> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+>> >>>> index 55a34f2020a8..03cd3d4831ef 100644
+>> >>>> --- a/arch/riscv/mm/cacheflush.c
+>> >>>> +++ b/arch/riscv/mm/cacheflush.c
+>> >>>> @@ -17,11 +17,12 @@ static void ipi_remote_fence_i(void *info)
+>> >>>>        return local_flush_icache_all();
+>> >>>>    }
+>> >>>>
+>> >>>> -void flush_icache_all(void)
+>> >>>> +void flush_icache_all(bool want_ipi)
+>> >>>>    {
+>> >>>>        local_flush_icache_all();
+>> >>>>
+>> >>>> -     if (IS_ENABLED(CONFIG_RISCV_SBI) && !riscv_use_ipi_for_rfence=
+())
+>> >>>> +     if (IS_ENABLED(CONFIG_RISCV_SBI) &&
+>> >>>> +         (!want_ipi || !riscv_use_ipi_for_rfence()))
+>> >>>>                sbi_remote_fence_i(NULL);
+>> >>>>        else
+>> >>>>                on_each_cpu(ipi_remote_fence_i, NULL, 1);
+>> >>>> @@ -87,7 +88,7 @@ void flush_icache_pte(pte_t pte)
+>> >>>>        struct folio *folio =3D page_folio(pte_page(pte));
+>> >>>>
+>> >>>>        if (!test_bit(PG_dcache_clean, &folio->flags)) {
+>> >>>> -             flush_icache_all();
+>> >>>> +             flush_icache_all(true);
+>> >>>>                set_bit(PG_dcache_clean, &folio->flags);
+>> >>>>        }
+>> >>>>    }
+>> >>>
+>> >>> Since patch_text_cb() is run on all cpus, couldn't we completely avo=
+id
+>> >>> any remote icache flush by slightly changing patch_text_cb() instead=
+ as
+>> >>> follows?
+>> >> Unfortunately patch_text_cb() is not the only user of patch_text_nosy=
+nc
+>> >> since patch_text_nosync() and patch_text_set_nosync() are called dire=
+ctly
+>> >> from other places as well.
+>> > Yeah. There is one more stop_machine() text patching user, and that's
+>> > ftrace. ftrace is using stop_machine() with the last argument set to
+>> > NULL, so only patching on *any* hart. Continuing on Alex' idea would be
+>> > to place an IPI flush in ftrace_arch_code_modify_post_process(),
+>> > unfortately that's too late since we're already moved on from
+>> > stop_machine().
+>>
+>>
+>> After discussion with Bjorn, we think the solution would be to
+>> reimplement arch_ftrace_update_code() with stop_machine(...,
+>> cpu_online_mask) and use the same barrier as the one in patch_text_cb()
+>> (csky does just that
+>> https://elixir.bootlin.com/linux/latest/source/arch/csky/kernel/ftrace.c=
+#L224).
+>> And then we can apply the same solution as I first proposed: no more
+>> remote icache flushes, only local ones.
+>>
+>> What do you think Anup? I can come up with this patch if you want.
+>
+> Sounds good to me. You will need a special .config from Bjorn to test
+> your patch.
 
-When you have a truly cross-subsystem patch, it's up to you.
+I also (apparently ;-)) like this solution!
 
- - Mention both e.g. leds/net:
- - Mention neither e.g. <device>:
- - Mention the one that is most relevant
+To clarify; "The special config" does ftrace patching in initcall phase,
+but you can reproduce by exercising kprobe/ftrace with the IMSIC IPI
+patches.
 
- An example of the last option might be when the lion's share of the
- changes occur in one subsystem and only header files are changed in the
- other.
 
-In an ideal world i.e. when there are no build-time/runtime deps between
-them, changes should be separated out into their own commits.
-
-> > > Why does this need to go in via net?
-> > 
-> > It does not, as far as i'm aware. Christian, do you know of any
-> > reason?
-> > 
-> 
-> This is strictly a fix, no dependency or anything like that. Maybe using
-> net as target would make this faster to merge (since net is for fix only
-> and this has to be backported) than using leds-next?
-
-We have leds-fixes for that.
-
--- 
-Lee Jones [李琼斯]
+Cheers,
+Bj=C3=B6rn
