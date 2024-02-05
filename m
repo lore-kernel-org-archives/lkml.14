@@ -1,94 +1,136 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A595311716;
-	Mon,  5 Feb 2024 08:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C2111197
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 08:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707120259; cv=none; b=A1W72dO1mlhE3rXiiulDgdIMoOkYITKu5Z/PV+FkD62f94GkB3PwpcSvKK9VhFTh6YaHBGcBbadITKEb7NNe3kp84qgKf+3CuY2UeV33T0EOEgxXCLxDgVw5h4ERKFtWyzopyMuBEAU+jHxq9a6+O5/OHy3YaOG8pOwCOcQL4vk=
+	t=1707120258; cv=none; b=nMATO23DaUrioZT/bVba+hW/DJLzQEiLdjDF5IMGShx3zkjASJ048SJQOXrHaJzJii0d2cXmUvJ1GQIeaYNIezJLfn/Hcq05XIshPZdkI+v6OrhoPamdTEsf+jUG4xogQygDFriq21WZ+FTPxcWozaAsnge8x9vTYSoqK/puO/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707120259; c=relaxed/simple;
-	bh=wHJZoqIwYywtidkx1yfqKVvRCuC5bsMb4/F4Nf1VpF0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U4bknvGmMEiFMXL4nE5VcqGR8deJw2K//XVt5eoOz+ia1fhq0tpR/BPKkfeIcCLX7VMiZREBef7MxvbcNeLSERh10IHtk8l1X+eyQlxeI4/7u4O+C4gi7GcXtvL/1NCE1OA2uvk+EszqYxjYwRlNYj9J+rjDM8iGJaNf4les61w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=USsfFyb9; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1707120258; c=relaxed/simple;
+	bh=TrE/p3ttE3stmZdiihuuez4I8ZtTs4vsKSjS4QC8bbA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oJfrgv1EMerHrUMK9G+OtHSI3karPi4LP3vGV1ygm5AffP9ldqqd0u7NnPj+tJZ1ggE8xvTgdeCpSwwR4vNspneRolsleLF1PpWvTQN01nrRXLQn5vEXM2mB409vSMnnZI4/2vqL3V6lP5+golnriz4mtLsh7Uv7j3+6DE2qHSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ajHR7gKq; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="USsfFyb9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707120257; x=1738656257;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wHJZoqIwYywtidkx1yfqKVvRCuC5bsMb4/F4Nf1VpF0=;
-  b=USsfFyb9bUF+ICK/y8uDZC6zFMAzDmJqZ696AtJtYA3GmIfPS7RofaTx
-   KbMNchlW7bIWKMa0C28C7XzeRMrRQhYo4vGKrm7pg+84piIMLExEz4iMm
-   J07qE+4VRTgug3yv4dQCF9+OwVJmhOL83iHmNRngV88/ZHi1FH+qRvUt9
-   ErSZSpx5rocpX8p/TBNfj29vIln9tmESaHjJZZiLeg0P1GhaGCiVmEbnP
-   sywt4R9EenULbuS4AG31cBynN5QNQ9azEMJOUpaBXxqJ4l805M6IKDFaA
-   X2okFnXRVSM5IgWGLFOByC44KbMwS9toQpC31o+F1iEAH5/zNkDLZsWGo
-   w==;
-X-CSE-ConnectionGUID: /sWzmiszTQ2ztYFgEFabog==
-X-CSE-MsgGUID: Mu8PqQLmSz6ZXDJ29R+fmw==
-X-IronPort-AV: E=Sophos;i="6.05,242,1701154800"; 
-   d="scan'208";a="16278235"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Feb 2024 01:01:00 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 01:00:45 -0700
-Received: from virtualbox.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 5 Feb 2024 01:00:42 -0700
-From: Mihai Sain <mihai.sain@microchip.com>
-To: <claudiu.beznea@tuxon.dev>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Mihai Sain <mihai.sain@microchip.com>
-Subject: [PATCH v2 5/8] ARM: dts: microchip: sama5d27_wlsom1_ek: Add power-supply property for sdmmc0 node
-Date: Mon, 5 Feb 2024 10:00:23 +0200
-Message-ID: <20240205080027.4565-6-mihai.sain@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240205080027.4565-1-mihai.sain@microchip.com>
-References: <20240205080027.4565-1-mihai.sain@microchip.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ajHR7gKq"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a358ec50b7cso489171966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 00:04:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707120254; x=1707725054; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ly53AiJS3SoOsXrI7rwMSWndr6ZfowNIwWczf0zRPgE=;
+        b=ajHR7gKqw7Cuv9SrcI9H8/UsB6/Q4xcDabTUkBAxFG19RJAzsFQACJ8varAJKAIToy
+         QP1V6ROBeXLqz2BWeIVc7yiXIauMIk31Tc5tT6VomJil44ZsaxZNtOsButyN+qNAbIiw
+         43gFHNuus28ZFamTN6xc9k6ZIOpz0jforAmXed7YbWgNgFMA517WoJuHms+NTXQJIewQ
+         rmfe7DV6vGILd1CWsA8zfVG5B4kIjsZMX8MvmYsuloMgeR0iHHWWLCv/uJbQfgXiRIOC
+         m/d3Z4+3zLFnOocvx188btnvwlkSfqW7V+ZJE29yRnInyGFLE1JijaIAYiwe4cmcrGnM
+         KUsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707120254; x=1707725054;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ly53AiJS3SoOsXrI7rwMSWndr6ZfowNIwWczf0zRPgE=;
+        b=ahnte8lupkZhZNsBGvCzZpJBbG50x7JK+kIW+Yn885KL7pP49ymnFX+wJqUyoSZxze
+         C4vV03DgSvWY6o5x7MG42hW7/W5d/b6LwsBZ5yBjpTNTUfHaSEqfV2PkGV93fAqlr+mu
+         Gc7bzTgKopqfnAp800Xq0d3MDJ69BxDyw+bo0IXUm1TpIG+CewROL+uoJu8PmHuP7qk5
+         0VC8b33Yi+sRLg54WIntKBTnr5xg4n+QwNhmPtg4bP25TXaDDIk7SFUAvfqKb1abMv4i
+         +YoyddvEmbB2OTseyYxBtJ0fKkRWSEZr5k2LxB/aemxN03ea1yTb0RJBXgNhKq434PL5
+         +Oog==
+X-Gm-Message-State: AOJu0YwyQx0bNRuW+Ms0ELPfBg1xmyaYNO/O7RAqVt1cmaevieyOLiOF
+	W9UGO735Z+PMqOoRggOOqULGC1nZ4YY3TOtE+8kbg0SxPcC7/poRcayCrK8ajmQ=
+X-Google-Smtp-Source: AGHT+IFSigaVXMIkg070FfzpRmT4ZkCo0EOQNsSqGCQz0cCkYGX3PBTgbtEWdEXoN3W/UXXniPCYoA==
+X-Received: by 2002:a17:906:d294:b0:a31:818c:ffe0 with SMTP id ay20-20020a170906d29400b00a31818cffe0mr5072466ejb.19.1707120254210;
+        Mon, 05 Feb 2024 00:04:14 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW/uUJodGhb9aEg7ZFXJMNzZn2x8furlJgVBImMlXUIqNGaA46B1mD23WUP4c+bIEHKdeHXcybt6izRMILO/QNHXMV5oYxgAEkUp409PRVNmr45D40PpwOHV2NueuWwvSSrWx+6i2Fv4hfn8QOnskaRIqVn18Rr8rKlISQjuZiT5jsgu5Kj5DBeDJ61iUv5u7nsGzpdFFqVRyUeH2+egNrh9/imqtrnU7cxRyBL3FuDLk/6gRmymNmZ1hiEwo6zKr01UmNdorZz7r5RZ6UAmgUdSLPP3wZaHkcftRCiO2l/BFPy55qHrUOhhnGcm8alWWSJl/bDNi0bV+W8VIF7ZltOviqfiKl3j5BpIcPWaHzSgpeVnEiF
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id kq8-20020a170906abc800b00a30cd599285sm4004822ejb.223.2024.02.05.00.04.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Feb 2024 00:04:13 -0800 (PST)
+Message-ID: <04fa81b1-e47e-4cf9-8e59-3a1777a13879@linaro.org>
+Date: Mon, 5 Feb 2024 09:04:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/6] soc: qcom: socinfo: add SoC Info support for
+ QCM8550 and QCS8550 platform
+Content-Language: en-US
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ dmitry.baryshkov@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20240119100621.11788-1-quic_tengfan@quicinc.com>
+ <20240119100621.11788-4-quic_tengfan@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240119100621.11788-4-quic_tengfan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The sdmmc0 controller is powered from 3.3V regulator.
-Add vmmc-supply and vqmmc-supply properties to sdmmc0 node.
-The sdmmc controller from SAMA5D2 MPU has support for IO voltage signaling/switching required by the UHS sd-card.
-In order to avoid the issues from the tuning procedure required by the UHS cards,
-keep the vqmmc at 3V3 to use the sd high-speed mode.
+On 19/01/2024 11:06, Tengfei Fan wrote:
+> Add SoC Info support for QCM8550 and QCS8550 platform.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 
-Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
----
- arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts | 2 ++
- 1 file changed, 2 insertions(+)
+NAK.
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
-index 15239834d886..7b36e1970bb7 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
-@@ -199,6 +199,8 @@ &sdmmc0 {
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_sdmmc0_default>;
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&vdd_3v3>;
- 	status = "okay";
- };
- 
--- 
-2.43.0
+Drop my tag.
+
+Best regards,
+Krzysztof
 
