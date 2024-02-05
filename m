@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5DC16E398;
-	Mon,  5 Feb 2024 19:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332BA17112D;
+	Mon,  5 Feb 2024 19:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159844; cv=none; b=AeJgljgNjBYm5s2qNHFvMWu/IrH9Mkvm8W22K4F3qko4Xk0hPwEA3Ume3g2x6U/9I9GyXShqytS+Z9IkqiHyvKydi3MRSxnqUzSo702iYxj18LUohNuC3RmpDVolH9pTqNhpGykvs9xPdqztmPdYPtXWDDaYqukn++CwQ1XkXqI=
+	t=1707159847; cv=none; b=uETEYkwU7rIZiV2Ec/Nb6gwV4uv7Eddg8h425gl64kjAsOu65ggT7pJzdxNXe2Clq9LQ1Pv9Cg5GrXAhizroWg1Vj6x30Vshv5RrNf6BhdOBMU5x5A4S2i0fmdbXhKSJuXy8fFfj/wT4q+N8Zafa+cJ0ZyZLxsDA682v19sbsUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159844; c=relaxed/simple;
-	bh=sZ9TJFqD7g8XKsIhoCMPXGeKJUZSP50HX1EyzPXNSyo=;
+	s=arc-20240116; t=1707159847; c=relaxed/simple;
+	bh=lE5hwhPwL9fmh995uPn3W/2zYsVXs5rlxJNIrnK0Bsw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GwFNtfaSNgwnkarq3r+RnoxEI0R2d5tq/iNjkeC30fwyk9zpD8auai9hmfffAI/Ka4dzO1QNBq92pocTZ2lSDYmIv0hA/dyciphOQ6P79GrSbW4KvrrYW/kRDcC8KFi0MKFHdgMLSWBs4JEwJeXa/BC5sEkLea1rEaeNHX8v9go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WWV4vvbp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rliIW3t5Z13oyDLSmNHp/0RwfRGKA8eVfwdmFn/d6w3b2qQ42JziU4+6rHDrcBFc3v91Rr9+MkUyjWIFy8narJjm6qJJSZCzC40fg5n5CurWCT+hgcTVlDJIf5mWGZyLZZ9JjPpx4zh8Le4M7u0Yy/G24lWUgL7gQht1xnicub0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A3IvZEL3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WWV4vvbp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D77BC43601;
-	Mon,  5 Feb 2024 19:04:04 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A3IvZEL3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC026C43142;
+	Mon,  5 Feb 2024 19:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159844;
-	bh=sZ9TJFqD7g8XKsIhoCMPXGeKJUZSP50HX1EyzPXNSyo=;
+	s=korg; t=1707159847;
+	bh=lE5hwhPwL9fmh995uPn3W/2zYsVXs5rlxJNIrnK0Bsw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WWV4vvbpRDsU37jJ7ZM//vKUuMH2iKRitSCtwsMnu4/cv2Yxt0vjKxRHA/5ygiSSS
-	 T87cOlWtNBTXCM2tmV/UzIDyqbx7rCw1eeS+a1qFmukLYKlSbCV/ePU6wQPzS98CyI
-	 s5HEY3+1bM2/RLeGt53ACpgyeMYWi6tmyKfVZSAI=
-Date: Mon, 5 Feb 2024 04:50:59 -0800
+	b=A3IvZEL3n6TtPUW3M39IuyR4AVXH3p48OjvuxZxtDR00mTQdvoU+knLdlCnWBK/1y
+	 5BWxb5mY23CV7G7OQ51ct7cjodSjz5YAVwO7CJ/O84c5IiyKsT59KHPHiEujqEFFOY
+	 IFRnZaF8DRvPTsnOM8I9upKec1sm8ALki9MS1Obg=
+Date: Mon, 5 Feb 2024 04:51:13 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: sunxi-rsb: make sunxi_rsb_bus const
-Message-ID: <2024020550-stipulate-washbasin-42a4@gregkh>
-References: <20240204-bus_cleanup-bus-v1-1-bda309c4b829@marliere.net>
+Cc: Ilya Dryomov <idryomov@gmail.com>,
+	Dongsheng Yang <dongsheng.yang@easystack.cn>,
+	Jens Axboe <axboe@kernel.dk>, ceph-devel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: rbd: make rbd_bus_type const
+Message-ID: <2024020509-splatter-unframed-4960@gregkh>
+References: <20240204-bus_cleanup-block-v1-1-fc77afd8d7cc@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-bus-v1-1-bda309c4b829@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-block-v1-1-fc77afd8d7cc@marliere.net>
 
-On Sun, Feb 04, 2024 at 12:56:44PM -0300, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 12:31:42PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the sunxi_rsb_bus variable to be a constant structure as well,
+> move the rbd_bus_type variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
