@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CFB2260A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEB61BDD9;
 	Mon,  5 Feb 2024 12:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134974; cv=none; b=F3ZoDOZgxxZZ+HQy82aym9WMtevEHI1Lfh0KL2kze5P0fXWQmea8dqtABSWOFjeT3Ohnyr5l61NxZmICWNg6uWnvGL/pn9PfGKpzhyBkmZeZjmGDT5U3JTy3yjfX1zzkAp5RwJusOkAqFqooK45L2xwMEhNyzvf3x1xvhFBZ65A=
+	t=1707134974; cv=none; b=OhS4X3pp3w7TsXsPc8DVVxNNq9wSZmniK6KCFi4navZyLtKTxLTEJnD8Glqyj0YdpTUgfji4W2/70xX40rKW/lNYMODHHoHcbQ4eI5RbWdLbgBoHCNY3daundtn9NO0HpUYBV669xs2HIEKWZ4VTpKAreF4FTTrSoiC5kZyh+rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707134974; c=relaxed/simple;
-	bh=7e2upngWNO5ntFqCHIcVwMlIz0QAUH3LlE8pQnC8t+Y=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CfZBS57ZM3EwtKsND8mNvnYdi/mM0BgJ9Y2nBZBC80Ri6jVFhYC0FN5KBHjy9VDUAMsW3F0L19X7M0+0pucOWhW0zCb01x8iVhgXqSp9/YhAcvrZNGLzOfTqwUvXwzSRdNFho7VjBsELWdhxQfYGQHMsp+JgMq6a2CnsGIhqW2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJy4dfNX; arc=none smtp.client-ip=10.30.226.201
+	bh=76bLnTFW8hOss6IF1pWTx33Eugtw/u1ls0YA9hmCWJA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ca8Dkl/FhF3QKsk7zml+ZdrALFX534sntgNGbhR3zrqEjCzwDesYjMEFuBQ17CIMvAB6xl5MNic3thf+cUwE+JGVIi++6LOFc/Scua/Sy5XPvqF7mDoyOOWNua4MyXdpMiUGcEHNtq5fAZ6GnDLx17mitDNBnuRJwzNv8v4u5Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BeEkOPAo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJy4dfNX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E39CC433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeEkOPAo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 45979C433B1;
 	Mon,  5 Feb 2024 12:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707134974;
-	bh=7e2upngWNO5ntFqCHIcVwMlIz0QAUH3LlE8pQnC8t+Y=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=QJy4dfNXRqwlBLdK8TFL0Pj+Gq+ssJoVQvERYlyll6RJwTjl/kt8eY700LXbhIZ2o
-	 drjc2PMprsc61PKhieXH3KATA3fQ5Oi3aSk6MBsEiuEZZdu85eAI67kzGkaIhgMeZf
-	 tqYkqPvSu5rdZGcehAZAH7IcRQXrCgfsblsivOai52q5lgq+XslIX1Y7qFJuTnbYf/
-	 LzhBkI4Jdd5bvMr/AzmZCXvTeqBVK1Mxyk4kPcC/HSU+6q+4vn1kVhvW2g0TGRlv03
-	 DmwJbDC/+H9cQIZpUjXb5X97Ltou8eEjW1pemLlxgA5vPxtikgVxpO2W4yUxU9hYfP
-	 GVHC9TKbt+waA==
+	bh=76bLnTFW8hOss6IF1pWTx33Eugtw/u1ls0YA9hmCWJA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=BeEkOPAoDv3chM+cAnfF5sgZRJD+P+xxeL/K+BBHS5at2/1Gi2+l1bWs8aaYvPucf
+	 XcoXBie0Jn+6ZWjon2DIURx5TZvYoGVQSG8d13zNY9HdU+rMJyAUDOehijidCe08s7
+	 goBwyQh8IlalNMRGy8mubR47Se4m+W4BD1MEyxRrI6DG861k4xIiI0xyIZwCsHI+aC
+	 kSYsjcquM/yFejppnINsiPz6ImRnpzE1JMqfdcoCZricpEO84Uuc7ePwsSH/UzpNtx
+	 4Op3VGcVQO+8mpnEQ4CW0rNdz8ZZuvZOOtKxYPhSiXZSV0MpDrETq5mibcvy7wQAE7
+	 s09GZ1V+VXGGg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B69EC48295;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2518FC4828D;
 	Mon,  5 Feb 2024 12:09:34 +0000 (UTC)
 From: Nuno Sa via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>
-Subject: [PATCH v2 0/2] fix DT overlays when device links are released
-Date: Mon, 05 Feb 2024 13:09:31 +0100
-Message-Id: <20240205-fix-device-links-overlays-v2-0-5344f8c79d57@analog.com>
+Date: Mon, 05 Feb 2024 13:09:33 +0100
+Subject: [PATCH v2 2/2] of: dynamic: flush devlinks workqueue before
+ destroying the changeset
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,11 +40,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPvPwGUC/42NQQ7CIBBFr9KwdgxQbKwr72G6mNKhJVYwYIhN0
- 7tLWbkybiZ5k//fX1mkYCmyS7WyQMlG610GeaiYntCNBHbIzCSXigtZg7FvGHJQE8zW3SP4RGH
- GJcJJSUm8rpG3Pcv9Z6AcLu5bl3my8eXDUqaS2L//WJMAAS0p06BG7Bt9RYezH4/aP/aVosjnt
- 4KDac0gFFf6TPJb0W3b9gGZsc3KBgEAAA==
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com>
+References: <20240205-fix-device-links-overlays-v2-0-5344f8c79d57@analog.com>
+In-Reply-To: <20240205-fix-device-links-overlays-v2-0-5344f8c79d57@analog.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Rafael J. Wysocki" <rafael@kernel.org>, 
  Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
@@ -54,11 +54,11 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707134972; l=1080;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707134972; l=1506;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=7e2upngWNO5ntFqCHIcVwMlIz0QAUH3LlE8pQnC8t+Y=;
- b=lKkAAhch2GHEkpX4cOsUW9bnwLAlEHPSBUI1HTZX8tmKTSyyfC5P5dPUij8SGU4FcRHO0V2Ik
- quwrkFmJISoDQ2XWu594h3fXNmUIeLEH3X5hotYu7KZTjvmIb3WASnL
+ bh=YDuksPxVzpgUXsXtMiptrKAHNtqa9E4wT61h67KKExU=;
+ b=+pR9xIxPkbxkT8MxATu4NfCBUJ+zzK6rP+cyMoqKYeDDvSxTJi8Gd3uvMlCO1CEC8rqyBMLCI
+ WWMLTeb8A1LDHRH9Rh6EZ0RqMEszqHesQn9jA8kbQP8zEix/vgTjyD3
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received:
@@ -66,35 +66,50 @@ X-Endpoint-Received:
 X-Original-From: Nuno Sa <nuno.sa@analog.com>
 Reply-To: <nuno.sa@analog.com>
 
-Link to RFC:
- * https://lore.kernel.org/lkml/20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com/
+From: Nuno Sa <nuno.sa@analog.com>
 
-v1:
- * https://lore.kernel.org/r/20240202-fix-device-links-overlays-v1-0-f9fd1404c8e2@analog.com
+Device links will drop their supplier + consumer refcounts
+asynchronously. That means that the refcount of the of_node attached to
+these devices will also be dropped asynchronously and so we cannot
+guarantee the DT overlay assumption that the of_node refcount must be 1 in
+__of_changeset_entry_destroy().
 
-Changes in v2:
- * Don't error out in case alloc_workqueue() fails. Devlinks can still
-   work and we'll then release them synchronously.
+Given the above, call the new fwnode_links_flush_queue() helper to flush
+the devlink workqueue so we can be sure that all links are dropped before
+doing the proper checks.
+
+Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+---
+ drivers/of/dynamic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 3bf27052832f..b7153c72c9c9 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/proc_fs.h>
++#include <linux/fwnode.h>
  
-I'm pasting again the link of the first time I exposed the issue where
-one can see the resulps (big splat) of failing DT assumption:
+ #include "of_private.h"
+ 
+@@ -518,6 +519,13 @@ EXPORT_SYMBOL(of_changeset_create_node);
+ 
+ static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+ {
++	/*
++	 * device links drop their device references (and hence their of_node
++	 * references) asynchronously on a dedicated workqueue. Hence we need
++	 * to flush it to make sure everything is done before doing the below
++	 * checks.
++	 */
++	fwnode_links_flush_queue();
+ 	if (ce->action == OF_RECONFIG_ATTACH_NODE &&
+ 	    of_node_check_flag(ce->np, OF_OVERLAY)) {
+ 		if (kref_read(&ce->np->kobj.kref) > 1) {
 
-https://lore.kernel.org/linux-devicetree/20230511151047.1779841-1-nuno.sa@analog.com/
-
----
-Nuno Sa (2):
-      driver: core: add dedicated workqueue for devlink removal
-      of: dynamic: flush devlinks workqueue before destroying the changeset
-
- drivers/base/core.c    | 32 ++++++++++++++++++++++++++++----
- drivers/of/dynamic.c   |  8 ++++++++
- include/linux/fwnode.h |  1 +
- 3 files changed, 37 insertions(+), 4 deletions(-)
----
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20240123-fix-device-links-overlays-5422e033a09b
---
-
-Thanks!
-- Nuno Sá
+-- 
+2.43.0
 
