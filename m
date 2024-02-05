@@ -1,113 +1,300 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC1013698B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 20:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FF41369AD
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 20:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707165960; cv=none; b=tMCqttSrMEp99qWEUaogKhWQKL1x+dtNP4EWUHT5BdzRDUJrSvbBiBG65KdFeP4XlDoLis1rDuHdt/nTo7rDU8iaD/XpU02qhA8MO4bQnzLvwCHK2mqClLkXlPhcfCn4/CEsY1MeO+4z9wep+U/x5+FwX9zs6/PIkdDURz7EZRQ=
+	t=1707166083; cv=none; b=VXkd3HGbg6aWS+L/CMn+pAhqRDI/0hPwUUUhKOSQqFmDDF/u+KCAiMnuVc/pa+GL6r1Bmd/g5DqsI2RSQJkAYYWp+MezEOFfrgg+gIJCAj/RYDet6nmv+1esLnzBS+wExchdWnGIWBKOGlsSLUe2XFYzOS+0H6SllDeQM0z/pj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707165960; c=relaxed/simple;
-	bh=X4i2QJjT+a4DcevN3hqV/iu9KdJwOXDYjejmyCsHs9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpdDWaiweS7/TQ6spFCFDYCmZLDsyr84Feex5Dt8Vcvc7Fp7elAVKpvjcTdBgIOU9PgRmtbwBzVwOiW6HKoH+l14bj6A3xcjvSXBtvegVi5KexNsgNO2jVCSQ8KNgNIyiTlDsfN1mK8JHU7V1pSsHICYdU/LSDkgFuSUL6n618w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pRcE13el; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707166083; c=relaxed/simple;
+	bh=w/RPe+1TMeAv2q+Knvi6t8U8IdOR8vPpIb0rxw6QTM8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eCOwsRwCUKnUR6s8edifIbDnwApXyULgXBhHPgg5lnokAnFP1ztHRvSMWVxvWlZhZCmKiwIXN3rCtcJR6f+M49EbILmcRjnvD4XYdCIwNTopXz0+HXNH/vKtRRKelOB5sMpVvEJ7M85nE4o0WDbXmmuGl5szv0jf4Cn6pqpqiCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UK+Cl8xk; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRcE13el"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d8aadc624dso36366025ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 12:45:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UK+Cl8xk"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6045a02fb87so13194517b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 12:48:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707165957; x=1707770757; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oj6zERmX/v39V3SsfqElvJNjVKuk5X5kJW4faJdVaIg=;
-        b=pRcE13elHU1XEkyCRbFzSdQvkG3MnVDJE9y7fNihzZZLtis9MYiKwNP5d9uxfutjsK
-         d31oHyVALor3cO5QhbghOOnrRbAGyEiR4znPWgJA2s4MYNZLTTzgB5ApiWCejr7KS6PF
-         aPzE+dVC5ulyc+NA6GYSL+kgSKo5IM9GVa89YSZ+V4SRQ4rHdRTuLpTy5Sr/KaCCUY4W
-         BudNs4+3bOu6XZRBaAOZ9CmtL05WpASpc7D4/yIaykEPxW+9E9dTTzuS9Td8tsNyjNWC
-         Vq1pYho+YNyHnQBOwtK/pVHme+xwFkKuzxcUdDe6O7IK58Kywc8DVoQGeZSy9X0h2ayc
-         sneg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707165957; x=1707770757;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1707166080; x=1707770880; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oj6zERmX/v39V3SsfqElvJNjVKuk5X5kJW4faJdVaIg=;
-        b=H+QLrzWtN4IRuS8N+XbW/3K2WTUdFXpchls9GFRIy4E6fpP2hoCuvxF4+oEDqe7N5x
-         tM/pdo4FSdzxqX/aFmZhomhOBgGTylGaB+LnRuucYzGSTtcDW97tRziZoW4SBGjQXAD2
-         i1rqHG7q7xqKWybSeWp63s83nPl893J6ENyPcNgSn5cw54/uMvH5bAs7dGIw+H9ZDUTx
-         of2xr5v+t3TiMaZ5g2kYlp6l65sEI0AF4xrVCFWoe/ZQtpQLSEEWZ0DnQpj6gmocAt3o
-         M2Mw9dHI2bdSO9PSLB8PkA6suIfyXooiH0GUqrceA24cDswFQsaikMkMsAFN3fQaRsFE
-         5HJw==
-X-Gm-Message-State: AOJu0Ywp7xtXVXEstbxNrJlBVBnbcv6wCoYUYmR2If9DU8EO3k3bhjjg
-	6j9IgAmN5vzK+aqgDOTIa7403GrpV+tI5xaQIIz/ZKCBmxc/SwllV0cFB4hnw6d3mJ8YMQUaBtw
-	1
-X-Google-Smtp-Source: AGHT+IGjX1ytXEAA6Kirm+Njlc+gpnXa8qeD4ZUzvYpYaTr63EQdU4+A5vj1DUVukzfHazPkNMWMPg==
-X-Received: by 2002:a17:903:487:b0:1d9:af60:a7e3 with SMTP id jj7-20020a170903048700b001d9af60a7e3mr661393plb.27.1707165957125;
-        Mon, 05 Feb 2024 12:45:57 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXulepnxquf5u1/JWqyyuXFoN8LbkpPzrTLBWpqxE1kozjGaeWV/SE2KCyBN36X5ADOWNnvns3L0lKhdF6oa6QBE5N3ikr6EX9wpTkP/0MvmpHq/UACFWGCqHPFgoUShyjdso95x8ppKDS/eaHmPlYKKRj+5qvsy9hDXA42I5liL2JYigIBM+T1NPI=
-Received: from p14s ([2604:3d09:148c:c800:c88e:5ce2:4df2:aaa0])
-        by smtp.gmail.com with ESMTPSA id ka5-20020a170903334500b001d8edfec673sm297917plb.214.2024.02.05.12.45.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 12:45:56 -0800 (PST)
-Date: Mon, 5 Feb 2024 13:45:54 -0700
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] rpmsg: core: make rpmsg_bus const
-Message-ID: <ZcFJAggfRqLexzpD@p14s>
-References: <20240204-bus_cleanup-rpmsg-v1-1-1703508c23b7@marliere.net>
+        bh=ev1blGMITnTwTBJjyggVWdClFZ0R3d+SfaHhYV19muU=;
+        b=UK+Cl8xkjjzOOroxld5uMxv5vKPPwHKPUJXcywoAsvWMUI9VZYAR/YmB8tndUVId8h
+         icAJT4cJCafKjIdFgB2ICoWI7wNXQ2NM0KgI8OIF7501g1ZY6OO/qGTeyxb9xnriAkMa
+         T/TdH1+sjYeSjmXNS2+6v2PW/Tal17Xbhz0PlxJvH+g5cK4aIkB45Jwo7OnhW2xZbGUs
+         VpIVF/T4QCNvyafwpT+CbxU7N1RQbaNraWScmTjTv6sUKKShw75dY10rgdmnL4/+eJNC
+         6Yx6I2gnX8sjejXwkKJdJOSJwsKBfAoyhPhGe+3ccv+MhzRv7PmLjj/NqjBmQdqm2SDU
+         Y7og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707166080; x=1707770880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ev1blGMITnTwTBJjyggVWdClFZ0R3d+SfaHhYV19muU=;
+        b=rhEBRurFvGk8OXb7kHwl5dWoHOSTHQljNnF3OXqdAReTqrCguRBZ2tC7JRJmnVFlNH
+         +fk/Z+UOU6otZCMZtzN3LK80kYDpRKi4s7n6QFE2VdnKZ4SJ0Z8C3q1EjywyINJ6Ck70
+         8z/cRBsuHzalSjf+DlmM8kEnrTg4fwQqLIv+/ffRrbPUyENVw8ofdTWH/vgkLpJmit53
+         Q7lTxp2eFVAHH06+1yYm09y8+AbZor6gPw4D0UfmrazZFSuVtMLxe+9fm/f51clStRMO
+         RWeWNJWdiYi4wOQr2HEDFO0WbGUgKUokR+YkbNz0MUARuNZykqtrEK2qckUwC/56ckGT
+         gPYg==
+X-Gm-Message-State: AOJu0YytkgZSeUH4/gSDYGSxxwK6BpmEYiyXFRFhGRuAB9dzy76tPdLp
+	hj8OPKNCYRSN0Q22hcuREZqFYrhl0wKmAvJgQR8Eebg58KWtAyQp5xV5zAbfAvOs1/SjQIsoY7L
+	X+ziT+mYXdrbRfgLzAdjeAGF4laPRWeKWGEf/
+X-Google-Smtp-Source: AGHT+IH6QR8LV9rFRVUdLhRUTE+qgb27qJmjD4J9AAEjrvOxC80Dud1zYKzjjCiCXXn5ykRAFbh3S6rgHlgl7hPp0y4=
+X-Received: by 2002:a0d:d5d0:0:b0:5ff:6264:65c4 with SMTP id
+ x199-20020a0dd5d0000000b005ff626465c4mr843162ywd.0.1707166080283; Mon, 05 Feb
+ 2024 12:48:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-rpmsg-v1-1-1703508c23b7@marliere.net>
+References: <20240202233855.1236422-1-tjmercier@google.com>
+ <ZcC7Kgew3GDFNIux@tiehlicka> <CABdmKX3HbSxX6zLF4z3f+=Ybiq1bA71jckkeHv5QJxAjSexgaA@mail.gmail.com>
+ <ZcE5n9cTdTGJChmq@tiehlicka> <CABdmKX0Du2F+bko=hjLBqdQO-bJSFcG3y1Bbuu2v6J8aVB39sw@mail.gmail.com>
+ <ZcFG2JoXI7i8XzQY@tiehlicka>
+In-Reply-To: <ZcFG2JoXI7i8XzQY@tiehlicka>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Mon, 5 Feb 2024 12:47:47 -0800
+Message-ID: <CABdmKX0t1LXj80Awe20TrmY5gQB6v2E4bGfW8WXr2i84o+k6ow@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: memcg: Use larger batches for proactive reclaim
+To: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Efly Young <yangyifei03@kuaishou.com>, 
+	android-mm@google.com, yuzhao@google.com, mkoutny@suse.com, 
+	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 04, 2024 at 05:32:05PM -0300, Ricardo B. Marliere wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the rpmsg_bus variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> ---
->  drivers/rpmsg/rpmsg_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index 8abc7d022ff7..4295c01a2861 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -605,7 +605,7 @@ static void rpmsg_dev_remove(struct device *dev)
->  		rpmsg_destroy_ept(rpdev->ept);
->  }
->  
-> -static struct bus_type rpmsg_bus = {
-> +static const struct bus_type rpmsg_bus = {
->  	.name		= "rpmsg",
->  	.match		= rpmsg_dev_match,
->  	.dev_groups	= rpmsg_dev_groups,
+On Mon, Feb 5, 2024 at 12:36=E2=80=AFPM Michal Hocko <mhocko@suse.com> wrot=
+e:
 >
+> On Mon 05-02-24 12:26:10, T.J. Mercier wrote:
+> > On Mon, Feb 5, 2024 at 11:40=E2=80=AFAM Michal Hocko <mhocko@suse.com> =
+wrote:
+> > >
+> > > On Mon 05-02-24 11:29:49, T.J. Mercier wrote:
+> > > > On Mon, Feb 5, 2024 at 2:40=E2=80=AFAM Michal Hocko <mhocko@suse.co=
+m> wrote:
+> > > > >
+> > > > > On Fri 02-02-24 23:38:54, T.J. Mercier wrote:
+> > > > > > Before 388536ac291 ("mm:vmscan: fix inaccurate reclaim during p=
+roactive
+> > > > > > reclaim") we passed the number of pages for the reclaim request=
+ directly
+> > > > > > to try_to_free_mem_cgroup_pages, which could lead to significan=
+t
+> > > > > > overreclaim. After 0388536ac291 the number of pages was limited=
+ to a
+> > > > > > maximum 32 (SWAP_CLUSTER_MAX) to reduce the amount of overrecla=
+im.
+> > > > > > However such a small batch size caused a regression in reclaim
+> > > > > > performance due to many more reclaim start/stop cycles inside
+> > > > > > memory_reclaim.
+> > > > >
+> > > > > You have mentioned that in one of the previous emails but it is g=
+ood to
+> > > > > mention what is the source of that overhead for the future refere=
+nce.
+> > > >
+> > > > I can add a sentence about the restart cost being amortized over mo=
+re
+> > > > pages with a large batch size. It covers things like repeatedly
+> > > > flushing stats, walking the tree, evaluating protection limits, etc=
+.
+> > > >
+> > > > > > Reclaim tries to balance nr_to_reclaim fidelity with fairness a=
+cross
+> > > > > > nodes and cgroups over which the pages are spread. As such, the=
+ bigger
+> > > > > > the request, the bigger the absolute overreclaim error. Histori=
+c
+> > > > > > in-kernel users of reclaim have used fixed, small sized request=
+s to
+> > > > > > approach an appropriate reclaim rate over time. When we reclaim=
+ a user
+> > > > > > request of arbitrary size, use decaying batch sizes to manage e=
+rror while
+> > > > > > maintaining reasonable throughput.
+> > > > >
+> > > > > These numbers are with MGLRU or the default reclaim implementatio=
+n?
+> > > >
+> > > > These numbers are for both. root uses the memcg LRU (MGLRU was
+> > > > enabled), and /uid_0 does not.
+> > >
+> > > Thanks it would be nice to outline that in the changelog.
+> >
+> > Ok, I'll update the table below for each case.
+> >
+> > > > > > root - full reclaim       pages/sec   time (sec)
+> > > > > > pre-0388536ac291      :    68047        10.46
+> > > > > > post-0388536ac291     :    13742        inf
+> > > > > > (reclaim-reclaimed)/4 :    67352        10.51
+> > > > > >
+> > > > > > /uid_0 - 1G reclaim       pages/sec   time (sec)  overreclaim (=
+MiB)
+> > > > > > pre-0388536ac291      :    258822       1.12            107.8
+> > > > > > post-0388536ac291     :    105174       2.49            3.5
+> > > > > > (reclaim-reclaimed)/4 :    233396       1.12            -7.4
+> > > > > >
+> > > > > > /uid_0 - full reclaim     pages/sec   time (sec)
+> > > > > > pre-0388536ac291      :    72334        7.09
+> > > > > > post-0388536ac291     :    38105        14.45
+> > > > > > (reclaim-reclaimed)/4 :    72914        6.96
+> > > > > >
+> > > > > > Fixes: 0388536ac291 ("mm:vmscan: fix inaccurate reclaim during =
+proactive reclaim")
+> > > > > > Signed-off-by: T.J. Mercier <tjmercier@google.com>
+> > > > > > Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
+> > > > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > > > >
+> > > > > > ---
+> > > > > > v3: Formatting fixes per Yosry Ahmed and Johannes Weiner. No fu=
+nctional
+> > > > > > changes.
+> > > > > > v2: Simplify the request size calculation per Johannes Weiner a=
+nd Michal Koutn=C3=BD
+> > > > > >
+> > > > > >  mm/memcontrol.c | 6 ++++--
+> > > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > > > > index 46d8d02114cf..f6ab61128869 100644
+> > > > > > --- a/mm/memcontrol.c
+> > > > > > +++ b/mm/memcontrol.c
+> > > > > > @@ -6976,9 +6976,11 @@ static ssize_t memory_reclaim(struct ker=
+nfs_open_file *of, char *buf,
+> > > > > >               if (!nr_retries)
+> > > > > >                       lru_add_drain_all();
+> > > > > >
+> > > > > > +             /* Will converge on zero, but reclaim enforces a =
+minimum */
+> > > > > > +             unsigned long batch_size =3D (nr_to_reclaim - nr_=
+reclaimed) / 4;
+> > > > >
+> > > > > This doesn't fit into the existing coding style. I do not think t=
+here is
+> > > > > a strong reason to go against it here.
+> > > >
+> > > > There's been some back and forth here. You'd prefer to move this to
+> > > > the top of the while loop, under the declaration of reclaimed? It's
+> > > > farther from its use there, but it does match the existing style in
+> > > > the file better.
+> > >
+> > > This is not something I deeply care about but generally it is better =
+to
+> > > not mix styles unless that is a clear win. If you want to save one LO=
+C
+> > > you can just move it up - just couple of lines up, or you can keep th=
+e
+> > > definition closer and have a separate declaration.
+> >
+> > I find it nicer to have to search as little as possible for both the
+> > declaration (type) and definition, but I am not attached to it either
+> > and it's not worth annoying anyone over here. Let's move it up like
+> > Yosry suggested initially.
+> >
+> > > > > > +
+> > > > > >               reclaimed =3D try_to_free_mem_cgroup_pages(memcg,
+> > > > > > -                                     min(nr_to_reclaim - nr_re=
+claimed, SWAP_CLUSTER_MAX),
+> > > > > > -                                     GFP_KERNEL, reclaim_optio=
+ns);
+> > > > > > +                                     batch_size, GFP_KERNEL, r=
+eclaim_options);
+> > > > >
+> > > > > Also with the increased reclaim target do we need something like =
+this?
+> > > > >
+> > > > > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > > > > index 4f9c854ce6cc..94794cf5ee9f 100644
+> > > > > --- a/mm/vmscan.c
+> > > > > +++ b/mm/vmscan.c
+> > > > > @@ -1889,7 +1889,7 @@ static unsigned long shrink_inactive_list(u=
+nsigned long nr_to_scan,
+> > > > >
+> > > > >                 /* We are about to die and free our memory. Retur=
+n now. */
+> > > > >                 if (fatal_signal_pending(current))
+> > > > > -                       return SWAP_CLUSTER_MAX;
+> > > > > +                       return sc->nr_to_reclaim;
+> > > > >         }
+> > > > >
+> > > > >         lru_add_drain();
+> > > > > >
+> > > > > >               if (!reclaimed && !nr_retries--)
+> > > > > >                       return -EAGAIN;
+> > > > > > --
+> > > >
+> > > > This is interesting, but I don't think it's closely related to this
+> > > > change. This section looks like it was added to delay OOM kills due=
+ to
+> > > > apparent lack of reclaim progress when pages are isolated and the
+> > > > direct reclaimer is scheduled out. A couple things:
+> > > >
+> > > > In the context of proactive reclaim, current is not really undergoi=
+ng
+> > > > reclaim due to memory pressure. It's initiated from userspace. So
+> > > > whether it has a fatal signal pending or not doesn't seem like it
+> > > > should influence the return value of shrink_inactive_list for some
+> > > > probably unrelated process. It seems more straightforward to me to
+> > > > return 0, and add another fatal signal pending check to the caller
+> > > > (shrink_lruvec) to bail out early (dealing with OOM kill avoidance
+> > > > there if necessary) instead of waiting to accumulate fake
+> > > > SWAP_CLUSTER_MAX values from shrink_inactive_list.
+> > >
+> > > The point of this code is to bail out early if the caller has fatal
+> > > signals pending. That could be SIGTERM sent to the process performing
+> > > the reclaim for whatever reason. The bail out is tuned for
+> > > SWAP_CLUSTER_MAX as you can see and your patch is increasing the recl=
+aim
+> > > target which means that bailout wouldn't work properly and you wouldn=
+'t
+> > > get any useful work done but not really bail out.
+> >
+> > It's increasing to 1/4 of what it was 6 months ago before 88536ac291
+> > ("mm:vmscan: fix inaccurate reclaim during proactive reclaim") and
+> > this hasn't changed since then, so if anything the bailout should
+> > happen quicker than originally tuned for.
+>
+> Yes, this wasn't handled properly back then either.
+>
+> > > > As far as changing the value, SWAP_CLUSTER_MAX puts the final value=
+ of
+> > > > sc->nr_reclaimed pretty close to sc->nr_to_reclaim. Since there's a
+> > > > loop for each evictable lru in shrink_lruvec, we could end up with =
+4 *
+> > > > sc->nr_to_reclaim in sc->nr_reclaimed if we switched to
+> > > > sc->nr_to_reclaim from SWAP_CLUSTER_MAX... an even bigger lie. So I
+> > > > don't think we'd want to do that.
+> > >
+> > > The actual number returned from the reclaim is not really important
+> > > because memory_reclaim would break out of the loop and userspace woul=
+d
+> > > never see the result.
+> >
+> > This makes sense, but it makes me uneasy. I can't point to anywhere
+> > this would cause a problem currently (except maybe super unlikely
+> > overflow of nr_reclaimed), but it feels like a setup for future
+> > unintended consequences.
+>
+> This of something like
+> timeout $TIMEOUT echo $TARGET > $MEMCG_PATH/memory.reclaim
+> where timeout acts as a stop gap if the reclaim cannot finish in
+> TIMEOUT.
 
-Applied.
+Yeah I get the desired behavior, but using sc->nr_reclaimed to achieve
+it is what's bothering me.
 
-Thanks,
-Mathieu
-
-> ---
-> base-commit: 80255b24efbe83a6a01600484b6959259a30ded5
-> change-id: 20240204-bus_cleanup-rpmsg-1a5f6ab69a24
-> 
-> Best regards,
-> -- 
-> Ricardo B. Marliere <ricardo@marliere.net>
-> 
+It's already wired up that way though, so if you want to make this
+change now then I can try to test for the difference using really
+large reclaim targets.
