@@ -1,87 +1,92 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF73A2C69E;
-	Mon,  5 Feb 2024 14:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B8E2D03D;
+	Mon,  5 Feb 2024 14:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707142431; cv=none; b=R+9o4KYxjgTJvWvDahkX6JZ9TMaJ3bN/lsfhy2XwGEYALz1qAE93bSx5zrAHYaM/Ju9VDJf2MV0iUpiFs1Rwq9JRNchsiCh1lu5wVaUB6vE657S518wxbCy5VmC8knZLjV0ux+k6s6yUO1h/rEnMd3HwNTsh8gqlz+zQp6Wqd58=
+	t=1707142439; cv=none; b=JWhcPeEsjslhLhadyrVcxNHgm7uwZYYfXeKf4L0NdPuYPrhnfL5g395rCz0fdTPcFwleZIy5FDUkT6qXma4KIrZP1xp5A7Y8B4Q3ltfPn23QqDfec2PCpRfULLK/xbvkaRzurP1GibmJAcN7aRI+yl8CDL3ic2mHOUBhufPPx+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707142431; c=relaxed/simple;
-	bh=KUfFaTnVcuPK7F5qH9QCHcEyVuC0AaGY+Jw1pHyJEqg=;
+	s=arc-20240116; t=1707142439; c=relaxed/simple;
+	bh=/AH4OnHyKTveDUxBUINyS6rrfqLk5MnGENRs0ofWJ6Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BG1AULtwwzvF/13OxX7BgDjRRpk1mQLR+K5lGXnYQ7chjisqNQ4W1laFDKXUCCGFw3D3g+kbkg+BoiyTX/inre45zyLAVJDx8Ouj0iPn7OKkR4eclfsfnsZdX78OxoFX6kDEd+4BNIqNG/ikNXNyp3+km2E/HRlxBb+EwnmbwmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51124e08565so6809017e87.3;
-        Mon, 05 Feb 2024 06:13:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707142428; x=1707747228;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QjZklipkmdXJhUNXYZTkvKzntyfYj7woEZ5k2D/zz2g=;
-        b=r/vv+GzicXZVhCNYgJS3EQ1FZV0P5e1Y3R28Fw3HyvSRxNtljmLZkEzoj9d3zytc+9
-         d6iKJmV6YCnP8t8fPvVx5HyekdpfUgYB90mYBISK3dPF9HTqMErM3q1rUGPfCPFdBDoJ
-         jOwct5lXOWV15qPGRtW8y2jIAt9AMIxrfRrssro4MNC1iLayGP4dinJbceve+fH3QW1p
-         AGm0jgylmKq2ICSa+N1TVQHZxLn5W8jvkMnjSkpF2g2IJy1gDGMKDRJ5dzaS2cl2vpuW
-         TgdG9kPJERGM2vMOydvbSvv14GX1cHus7ICMcYKmKilslarMkV77Xu9debfJzRx5VHSA
-         scAA==
-X-Gm-Message-State: AOJu0Yx5FZO56mqqzHXYF75j04ePimHCe+L+IuwWGsr9GH1vIOkaDNtU
-	DAEZMVwc7mDKP+xh0Dj3jc9O7ThBuGKRaEpWetjUGJXUn/y+AY2U
-X-Google-Smtp-Source: AGHT+IFfz7N06CRxAkudHv29g5IbD95knXgAY5otzcmaknrMnsvP1nrc4pifk7LvLhw/WJSBXE9ugQ==
-X-Received: by 2002:ac2:4eca:0:b0:511:5353:2ace with SMTP id p10-20020ac24eca000000b0051153532acemr1285652lfr.22.1707142427564;
-        Mon, 05 Feb 2024 06:13:47 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVZPSlNuCnBtq9VsUUsxRgdYjVaIR64sZyNdi1stJYMIeFlt+p0BgNm4uLZgJ+iSP3IbF+Y8fmyjmPWMJ2LCtGs6lWYsuagUDrP+z6A1boNXhHIWEaVoxcYoUxBdXigwGynxUP8cBdbl3sli6KzXoU/eMaLhuVn4mkmRAECl7ip3PRq0Fy4+3xrk1khwVJDOpJwZxcv0te6a7uFDsUDpnQoO56g8fB6mz4vknBv8z3UABNIHf8AxK+PhzFb5vjsvVuVW9DKK4ssXBw12QeuqJF3OQkird8UX2zgUSvOJqoNW9T1iHoTw6YKD9wYI3kEgxbwk9q8WIguBaCDwbqn5HWuvAFAuJPq88M99Cl+KWaUZw==
-Received: from gmail.com (fwdproxy-cln-017.fbsv.net. [2a03:2880:31ff:11::face:b00c])
-        by smtp.gmail.com with ESMTPSA id j20-20020a170906475400b00a353ca3d907sm4361222ejs.217.2024.02.05.06.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 06:13:47 -0800 (PST)
-Date: Mon, 5 Feb 2024 06:13:40 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
-	edumazet@google.com, Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, horms@kernel.org, andrew@lunn.ch,
-	"open list:IEEE 802.15.4 SUBSYSTEM" <linux-wpan@vger.kernel.org>
-Subject: Re: [PATCH net 08/10] net: fill in MODULE_DESCRIPTION()s for
- ieee802154
-Message-ID: <ZcDs/GFkZ881bJR7@gmail.com>
-References: <20240205101400.1480521-1-leitao@debian.org>
- <20240205101400.1480521-9-leitao@debian.org>
- <20240205144118.12cdc824@xps-13>
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7wLfczrw518+GRK9A51vkXIiVJwVVdSuEVISTrL1TQk9GgJZaHKtbgMzsTwT4JaEd84WfMKIG89uoWxOKbsmyy5E5/XWHhGGgGlZ57m5uvEi4yCAdRrx9lXgdaIh17ULipPvCulwGPTd68ahc9CjY+lu4yKGWIyb2cJ5fu/hlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JEMCT+2a; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JEMCT+2a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707142436;
+	bh=/AH4OnHyKTveDUxBUINyS6rrfqLk5MnGENRs0ofWJ6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JEMCT+2aqsh1QA9Qn2nP/8qvretn4TMikTx9EOmrCveJIo5KSemxXUgChD6uwe8T6
+	 Lb3G8cd+eNQtaDMdFsYVPTfz99Hb2JdDPJ0HLVK0bmNJvexh85F5ELgfzoT/vet21Q
+	 DflQkkDiBJtIdaMe9TR9W4gT23Wl0jj84dqJo3oSXrtzGvYH9jVVJrmH98+Tvoxo/S
+	 E/UrRq6LfgkGT5/IIXCKQUx0KK7mKswn68zwMgd8ikgaR8ZtI6yRjrbPUwpexl+qV4
+	 lSX2+GAlRgOKtNXuTqV2dxMVqP00nj9GpgB0eaLEuAskJaeNQH36YgV8Zc41QlI+bm
+	 3nKXXUtah8yUg==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 954A6378143B;
+	Mon,  5 Feb 2024 14:13:53 +0000 (UTC)
+Date: Mon, 5 Feb 2024 09:13:51 -0500
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Brian Norris <briannorris@chromium.org>,
+	Julius Werner <jwerner@chromium.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	kernel@collabora.com, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] firmware: coreboot: Generate modalias uevent for
+ devices
+Message-ID: <2a2736e5-8788-4643-8d19-a79b9a9ec776@notapiano>
+References: <20240117-coreboot-mod-defconfig-v3-0-049565a27bba@collabora.com>
+ <20240117-coreboot-mod-defconfig-v3-1-049565a27bba@collabora.com>
+ <ZcA72dyYd9ZR8k_J@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240205144118.12cdc824@xps-13>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZcA72dyYd9ZR8k_J@google.com>
 
-Hello Miquel,
-
-On Mon, Feb 05, 2024 at 02:41:18PM +0100, Miquel Raynal wrote:
-> Hi Breno,
+On Mon, Feb 05, 2024 at 09:37:29AM +0800, Tzung-Bi Shih wrote:
+> On Wed, Jan 17, 2024 at 04:03:22PM -0300, Nícolas F. R. A. Prado wrote:
+> > Generate a modalias uevent for devices in the coreboot bus to allow
+> > userspace to automatically load the corresponding modules.
+> >
+> > [...]
 > 
-> Please be more cautious with your titles. It's your second or third
-> e-mail with this content without version number. And you also forgot to
-> collect Stefan Ack.
+> Applied, thanks!
+> 
+> [1/4] firmware: coreboot: Generate modalias uevent for devices
+>       commit: c6b0a4ceb7c9d8bb014d2967c97c8c7cbf60b006
 
-Sorry, in fact, the commit you are referring to is already in landed
-net-next:
+Hi Tzung-Bi,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=6aa89bf8ac9a
+I was going to send a v4 with tag changed into 64 bit long as suggested by Greg:
+https://lore.kernel.org/all/2024020105-dash-antiquity-a56b@gregkh
 
-The problem here is that this commit shouldn't be against net, since it
-is already net-next.
+And that includes this commit, as the modalias field would need to be 16 hex
+long.
 
-This workstream was applied part in net, and part in net-next. I am
-trying to focus in fixing all the warning in "net" and not touch those in
-net-next. This commit is already in net-next, but, and shouldn't be in
-`net`. I will resend the patch without it.
+But since you already merged this, would you prefer a change on top of this
+making it 64 bit long, or do you want to keep it 32 bits?
 
-Sorry if this caused any confusion.
+Thanks,
+Nícolas
