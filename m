@@ -1,123 +1,166 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5816200BA
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1691B943;
+	Mon,  5 Feb 2024 12:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134733; cv=none; b=oAW1Rzuj6e/u0Hm1ELJjaRU/5pBZ9NBTmY9T5Ux+w4liQmGL3AB+w0AysZZNPAnZQsLa0cjvtD8e4b8jrPFvzacz9dUjoEnQmD+w/aFv2lKU7HW6VBuN2wwctjw6hcURoseI9BWCWdj7fMpsPe/UOq9MvTZ7Snn29ufIildDa0U=
+	t=1707134759; cv=none; b=s81H1sAf3ew6o8YKADNQuYTm96YJ0bVI1brNyCqgigp/GtwmnYhTCAIMywGgWVW9ziSdxQhr6jVh56zuYEqyJOm6/5XT+wR70eo+JQ1JLuYTQAGsy1UrtMeNoZ+9Idy/zf0ZAGAqg40ckFLCWnVCmUSPXihlWEVYEKvK3TWF4/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134733; c=relaxed/simple;
-	bh=X1duw1mS6JjQGddQSOLFB42PLLgbnopdVgbbue+brlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A3MOYsATrrs3ksg0/wwsZvburhXLP2q7Uw7dgyAOgcKBesVktlp853tVhjSuKI817ZgwfLuSQPSHmlecfoTncDM7694LApdxG4Efxgzq+VFtnTU/reWGe0MIwPXhROA9yvasJ+DHVYz/uf+iv3Lk9g/3f7EqKP2xDQ3y6tpIZZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=k2aoDXdR reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707134759; c=relaxed/simple;
+	bh=GKb17qTpfFtGwafuxlfpZaDYOiFuRf0lqbATSZhVa5M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VrKKmf3sgMGcE9hox37DOgifvWdwgb8fS5p5Ix71RaXvdu923oa5WXAu+CGE7OBa8LdCyX7UkTESOFLqmllOLVty2yTY0oxDIIrt60VDLiv/ZjDnIBozpSYDUamnnpcerbRZqlzT3W71ywGX5O70Eydx7KZ5nPiFQ6Y0xmA6mLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=i/klmtUX; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="k2aoDXdR"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d7858a469aso30881805ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:05:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707134731; x=1707739531;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from
-         :dkim-signature:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A3KIw4nh0ZlsNY+qMf2ryaKB83r+kLjyKzsK4TQemXc=;
-        b=UOY/WH01M843O5dDU76c9ooLOngThZSEZjF9LWv0cfbEfYirkmhtfe0veF+VfmCQik
-         8le/Hhc2ti7sScReQLYLMvk278pzyr3zQjkA4pZ2BLyA1vST2C2qy/85PIiphCY+kwhI
-         b62KX6j4W5MeyNVGAgWmyKr3mOARdrawWlpnhGdqbNwoXG5HiKLTRuLalfHeDsbbxwCu
-         hL1j/2V/nsv3gAhmCgcgo/rKP/2vdSD9+YFuiHIfoQcfXBXy7h/BENWFuNNCtLtBfoT+
-         xnQiLvMJU3yQW/cmhlinOC5N6+qAsmUaeZb67ykWusEHDYYQEoRE83yQ3V5H4Jgb8eSI
-         zdjA==
-X-Gm-Message-State: AOJu0YwFCHunGj73+StnX4h/mffKU9OoQB9hMyJUxm1kry0wLmwdQnrt
-	8vdDcHanU7Db5/SAdWTosK1ZzXR4okeeiJe1loag1cvwYUM2lg+C
-X-Google-Smtp-Source: AGHT+IH/MR+Xb+PE+qG3lboszaOkHFGeODIFJyO2o1NobN/54wtfQ4lB7cgA6WQ7uxWEu+uehR5OHQ==
-X-Received: by 2002:a17:902:ce8c:b0:1d9:ad4e:55fb with SMTP id f12-20020a170902ce8c00b001d9ad4e55fbmr3836834plg.13.1707134730899;
-        Mon, 05 Feb 2024 04:05:30 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXf8XAuLXTZ/JoFsR7pcdtFH9TpFX+eiJfo7200KDoHTASzOWzG3Y9AxYQxAzjrgXyAz7KTKkQtisNSQP+s4eGw2UCq51TxOfdmBWAMR1U5a06iqNaHyOm+F0zlXF5tZ8iL/70BQzDV1Qrifw1fgB6pjdJ1YVbXZ5QQJKCkcIg1
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id lh4-20020a170903290400b001d8ecf5ff6csm6206117plb.147.2024.02.05.04.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:05:30 -0800 (PST)
-Date: Mon, 5 Feb 2024 09:05:57 -0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1707134728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A3KIw4nh0ZlsNY+qMf2ryaKB83r+kLjyKzsK4TQemXc=;
-	b=k2aoDXdRd6xbec9NNJoScy9F6yMhw1iKs+Ab8pnYQJ99SrNax9mSGhtWAE0UKkXHHHWt+w
-	7HHvjfDKNXMzbV+Qu3Vh0SJJdaSUTo2682HlQDziAr7xbtoIDPGk6zOHAOkatqsZrPsQNY
-	ydydnNXfOi1zDjf3VuGxCMB7AQHpC6BUZ1xqzQVKtngf+CZl6BHGVi1vDORP+6UmHKyWTd
-	x3SFpap9FlM2VBjmrZojBcsgvupCAKu86mTTVq3b74UmnWpo+xbv0D63xxwmWRP6c65E5F
-	1zSCnfhIIsbKgU8sJYtgXosD3/b+jE0aMucQYzeDQJx40J/QBAMZCdbf983Mvg==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thorsten Scherer <t.scherer@eckelmann.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] siox: make siox_bus_type const
-Message-ID: <ysesefska42ctpibulegsfpuaxfr5innla35yrvi7de2llkcwl@dq5hppwwpsxl>
-References: <20240204-bus_cleanup-siox-v2-1-3813a6a55dcc@marliere.net>
- <5zjixnsaylidn7t65thchwg5aa2igpwr34bmlfdtevvn4bgx2e@txzz36fi7rqz>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="i/klmtUX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1707134757; x=1738670757;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=2AUEdbvoftHMg2AkT8RS6u9G56Zx/z0Bmygk8dweA74=;
+  b=i/klmtUXhQUrqDvb4qCuzopKWT/ra9S74iPzNL3XvyoyCKcwmf1zgN4T
+   miLXyPqCx6UXRj23ocW5tiM35DErXD+aCBEoRp0jMNNqmiSaBol5bQGif
+   ZC2YCfK6Dd3qeJdvGBv3PJgo97QbI+tWtNJLMnAJnqpGex+192NyLyvIn
+   c=;
+X-IronPort-AV: E=Sophos;i="6.05,245,1701129600"; 
+   d="scan'208";a="63755948"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 12:05:57 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.17.79:13316]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.45.85:2525] with esmtp (Farcaster)
+ id 596cc4dd-1066-4e32-b40f-00d6ab21896d; Mon, 5 Feb 2024 12:05:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 596cc4dd-1066-4e32-b40f-00d6ab21896d
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 5 Feb 2024 12:05:56 +0000
+Received: from dev-dsk-jgowans-1a-a3faec1f.eu-west-1.amazon.com
+ (172.19.112.191) by EX19D014EUC004.ant.amazon.com (10.252.51.182) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 5 Feb
+ 2024 12:05:49 +0000
+From: James Gowans <jgowans@amazon.com>
+To: <linux-kernel@vger.kernel.org>
+CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
+	"Joerg Roedel" <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	<iommu@lists.linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, "Christian
+ Brauner" <brauner@kernel.org>, <linux-fsdevel@vger.kernel.org>, Paolo Bonzini
+	<pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
+	<kvm@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	<linux-mm@kvack.org>, Alexander Graf <graf@amazon.com>, David Woodhouse
+	<dwmw@amazon.co.uk>, "Jan H . Schoenherr" <jschoenh@amazon.de>, Usama Arif
+	<usama.arif@bytedance.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	<madvenka@linux.microsoft.com>, <steven.sistare@oracle.com>,
+	<yuleixzhang@tencent.com>
+Subject: [RFC 16/18] vfio: support not mapping IOMMU pgtables on live-update
+Date: Mon, 5 Feb 2024 12:02:01 +0000
+Message-ID: <20240205120203.60312-17-jgowans@amazon.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240205120203.60312-1-jgowans@amazon.com>
+References: <20240205120203.60312-1-jgowans@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5zjixnsaylidn7t65thchwg5aa2igpwr34bmlfdtevvn4bgx2e@txzz36fi7rqz>
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D042UWB002.ant.amazon.com (10.13.139.175) To
+ EX19D014EUC004.ant.amazon.com (10.252.51.182)
 
-On  5 Feb 10:03, Uwe Kleine-König wrote:
-> Hello Ricardo,
-> 
-> On Sun, Feb 04, 2024 at 07:26:42PM -0300, Ricardo B. Marliere wrote:
-> > Since commit d492cc2573a0 ("driver core: device.h: make struct bus_type
-> > a const *"), the driver core can properly handle constant struct
-> > bus_type. Move the siox_bus_type variable to be a constant structure as
-> > well, placing it into read-only memory which can not be modified at
-> > runtime.
-> > 
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
-> I currently have no setup to test this, but compilation is fine, and I
-> don't expect any surprises.
-> 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Thanks for your patch,
-> Uwe
-> 
-> PS: b4 gave me:
-> 
->   ✗ [PATCH v2] siox: make siox_bus_type const
->   ✗ No key: openpgp/ricardo@marliere.net
->   ✗ BADSIG: DKIM/marliere.net
-> 
-> when applying your patch. I didn't check the details of the DKIM issue. I
-> quickly tried to find your pgp key, but failed (wks, kernel-pgpkeys
-> repo, keyserver).
+When restoring VMs after live update kexec, the IOVAs for the guest VM
+are already present in the persisted page tables. It is unnecessary to
+clobber the existing pgtable entries and it may introduce races if
+pgtable modifications happen concurrently with DMA.
 
-Thanks for the heads up, I'll go check what's wrong. I think I only
-published the @gmail.com one.!
+Provide a new VFIO MAP_DMA flag which userspace can supply to inform
+VFIO that the IOVAs are already mapped. In this case VFIO will skip over
+the call to the IOMMU driver to do the mapping. VFIO still needs the
+MAP_DMA ioctl to set up its internal data structures about the mapping.
 
-Best regards,
--	Ricardo.
+It would probably be better to move the persistence one layer up and
+persist the VFIO container in pkernfs. That way the whole container
+could be picked up and re-used without needing to do any MAP_DMA ioctls
+after kexec.
+---
+ drivers/vfio/vfio_iommu_type1.c | 24 +++++++++++++-----------
+ include/uapi/linux/vfio.h       |  1 +
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index b36edfc5c9ef..dc2682fbda2e 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -1456,7 +1456,7 @@ static int vfio_iommu_map(struct vfio_iommu *iommu, dma_addr_t iova,
+ }
+ 
+ static int vfio_pin_map_dma(struct vfio_iommu *iommu, struct vfio_dma *dma,
+-			    size_t map_size)
++			    size_t map_size, unsigned int flags)
+ {
+ 	dma_addr_t iova = dma->iova;
+ 	unsigned long vaddr = dma->vaddr;
+@@ -1479,14 +1479,16 @@ static int vfio_pin_map_dma(struct vfio_iommu *iommu, struct vfio_dma *dma,
+ 			break;
+ 		}
+ 
+-		/* Map it! */
+-		ret = vfio_iommu_map(iommu, iova + dma->size, pfn, npage,
+-				     dma->prot);
+-		if (ret) {
+-			vfio_unpin_pages_remote(dma, iova + dma->size, pfn,
+-						npage, true);
+-			vfio_batch_unpin(&batch, dma);
+-			break;
++		if (!(flags & VFIO_DMA_MAP_FLAG_LIVE_UPDATE)) {
++			/* Map it! */
++			ret = vfio_iommu_map(iommu, iova + dma->size, pfn, npage,
++					     dma->prot);
++			if (ret) {
++				vfio_unpin_pages_remote(dma, iova + dma->size, pfn,
++							npage, true);
++				vfio_batch_unpin(&batch, dma);
++				break;
++			}
+ 		}
+ 
+ 		size -= npage << PAGE_SHIFT;
+@@ -1662,7 +1664,7 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+ 	if (list_empty(&iommu->domain_list))
+ 		dma->size = size;
+ 	else
+-		ret = vfio_pin_map_dma(iommu, dma, size);
++		ret = vfio_pin_map_dma(iommu, dma, size, map->flags);
+ 
+ 	if (!ret && iommu->dirty_page_tracking) {
+ 		ret = vfio_dma_bitmap_alloc(dma, pgsize);
+@@ -2836,7 +2838,7 @@ static int vfio_iommu_type1_map_dma(struct vfio_iommu *iommu,
+ 	struct vfio_iommu_type1_dma_map map;
+ 	unsigned long minsz;
+ 	uint32_t mask = VFIO_DMA_MAP_FLAG_READ | VFIO_DMA_MAP_FLAG_WRITE |
+-			VFIO_DMA_MAP_FLAG_VADDR;
++			VFIO_DMA_MAP_FLAG_VADDR | VFIO_DMA_MAP_FLAG_LIVE_UPDATE;
+ 
+ 	minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
+ 
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index fa9676bb4b26..d04d28e52110 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -1536,6 +1536,7 @@ struct vfio_iommu_type1_dma_map {
+ #define VFIO_DMA_MAP_FLAG_READ (1 << 0)		/* readable from device */
+ #define VFIO_DMA_MAP_FLAG_WRITE (1 << 1)	/* writable from device */
+ #define VFIO_DMA_MAP_FLAG_VADDR (1 << 2)
++#define VFIO_DMA_MAP_FLAG_LIVE_UPDATE  (1 << 3) /* IOVAs already mapped in IOMMU before LU */
+ 	__u64	vaddr;				/* Process virtual address */
+ 	__u64	iova;				/* IO virtual address */
+ 	__u64	size;				/* Size of mapping (bytes) */
+-- 
+2.40.1
 
