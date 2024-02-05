@@ -1,37 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C23274E06;
-	Mon,  5 Feb 2024 19:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBAC7F473
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159800; cv=none; b=ikcS2jLQyYtiYDgE+Cju7pmKy8VXmYieWUzhRPWwCPNV4wbyczsQMdZYO9QuCpetIJMpg2ta9ZV5FJAcex3Gv4vBL/sSuHZ0Q8LOxx64w5FqfAMo364357BJ4nBw++Rv7Ul8vFpUTyRxz+8/I+QMib6UWuhdSTkRU0FgCauStbA=
+	t=1707159803; cv=none; b=LC9tgqhSx7IgkXerjk+MewKg4w6WbgyLa47gZEUjh0n7H7cj23mFQ+g2ioZ4G2s8lNqJ1pQndV3+rLGVAPXokRE6vYqyrqWJrAn4XBpsvRyk6JEvU3K1eZH6PREeVJD1F1hhPWdkNCoDvRK8eksU7fFDZ2Lm6uMLyHAa6FxXcQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159800; c=relaxed/simple;
-	bh=XOREM53K6Y8lg+gfOY8PATZMT6V5AF0JLY8nmGpzfj4=;
+	s=arc-20240116; t=1707159803; c=relaxed/simple;
+	bh=pzZpbeAfRWRXcDaTKAmrNezLJqRxqLfisQvtNhqamEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWpNg4kEoskE1htf+vhT3gq8nYEASdmzujOov5vMpCuE/9wNkoOFfKu3r4FOLVJwZEjD4EfZxTeTTG3JLtAueReNTqGzqY106QHG/hrekY2jUwNW6+AEKWK66EXIBS1qNshwTcfWrf8/WR4QZbSD622dB5SkaWdISf0XekYXxZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BctugL3G; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dePCiBowfnIiiPVTj7iTFdGzIwt+iPxKhEe2p4NnldRz0ukW+O8B4meijf6yEu0wWLHCCF9A2Y0uo17m1O37ho0d9FFhjxq0v9J5kwtW16rXwovpyUHuthHntEcw5JLPJpbxpAFnLms7M8fkwauEmGJ8n8IucPkk1wPkxhQAXEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ugpLTutO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BctugL3G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0355DC433C7;
-	Mon,  5 Feb 2024 19:03:19 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ugpLTutO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3B2C43394;
+	Mon,  5 Feb 2024 19:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159800;
-	bh=XOREM53K6Y8lg+gfOY8PATZMT6V5AF0JLY8nmGpzfj4=;
+	s=korg; t=1707159803;
+	bh=pzZpbeAfRWRXcDaTKAmrNezLJqRxqLfisQvtNhqamEg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BctugL3GaKWwsWy+ZYhamc9PedQAqCTk7XkiWvIBsCoZe6wfR+9ZBJNNjhI+kTuET
-	 2fmKsIErOiH/CvnjhN5uGbG56GYkpD/nXMTOepIta9H/ZTNmkznLmD9cFbJHZCcKEI
-	 CptlGITew5HrEduc/s6/mxjV/Gtnsk8qmG6/rGcQ=
-Date: Mon, 5 Feb 2024 04:47:37 -0800
+	b=ugpLTutOtGyPWkEGV1MievlAziIQAkxEGCwdGPbXkLW7UFzPZROzZNl03YKrPCGyb
+	 taOuvQ99lpYVT7jCHgp5t3RZ2O5rTua6iL4WxKNJguFN8W7hFAGbyfEq0zkZV9jo+9
+	 bRlFz4IziM3DXFv56pWk5c+h4y0hNgvHng7LoHg4=
+Date: Mon, 5 Feb 2024 04:48:10 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: gpiolib: make gpio_bus_type const
-Message-ID: <2024020532-shrivel-phrase-c093@gregkh>
-References: <20240204-bus_cleanup-gpio-v1-1-82d91b4ee1de@marliere.net>
+Subject: Re: [PATCH] nvmem: core: make nvmem_bus_type const
+Message-ID: <2024020505-monstrous-shorten-81bb@gregkh>
+References: <20240204-bus_cleanup-nvmem-v1-1-21775783d1d2@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +39,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-gpio-v1-1-82d91b4ee1de@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-nvmem-v1-1-21775783d1d2@marliere.net>
 
-On Sun, Feb 04, 2024 at 01:29:42PM -0300, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 05:22:51PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the gpio_bus_type variable to be a constant structure as well,
+> move the nvmem_bus_type variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
