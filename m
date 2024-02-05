@@ -1,103 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C572D05A;
-	Mon,  5 Feb 2024 15:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11E32CCBA;
+	Mon,  5 Feb 2024 15:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707147116; cv=none; b=dIsIqc9AWeCXDFjCXz2lxhcDDsWK5B6eAqX6fxb4pkDBg50qIgaEOuWzy/pSzqc1xo79L/jlo5I/UUhUrfwJxYDgtVAruZLehJzD//XwxZ1DHoYRn7rCAwHjbr4LZZAuRZWF2yKk4dh7DmlWYmg+ltlAMZnTeRERrhFJbTwaIyY=
+	t=1707147139; cv=none; b=OZznlzDMAmmtP2C4h7nROcVE/Cysyn+VJNWf0Y+a4Q/gMhX32daqjt6ssy+FvtrBonXElkdKbabkpxIg5faqDHfncpmP6KnZ2tbwDHBU2bKbq1gXjqLkAN5GCgnTEGwg10JqPKW2pS7UITFh8NLvADEZiSM3y+O/8YqiuFaoZdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707147116; c=relaxed/simple;
-	bh=8snPz5SG3U7m1WhMLbVGZPjJdXl3YDQbMd0wdwiDQUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PfhFskdR1oKAno/NzW8TW0MPCJHvoIVKON/Oa2K8jsexnNqJhjzeNyuuHXMkS/KLYdhL/AsTIMRoNvNVe1L7sGkZS5+kRR24fNvRHlD7HOQNuUX3MeFJRHi4ZLDzz0hdCbaYU6R1kFQtCFXpLjStcS3HmlIFhOrVE7kOTGQUPNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MLa/SRbB; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707147139; c=relaxed/simple;
+	bh=VyryEeFktouoPtBlGjASqjjuFJfIz/FqEICD23Ug1nI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9DsslKvlejGY7enRHJ3fXA1nr+Xchztu1s2EVCf2XJ0w5N/x8qJNZFa76EuXVdJDVU2XvcoxoOhJ0lzLG6wG2ta0GYPx7pwo1F/e+qaRzBUfzwXXOdzitNVZe+wZ+WNA9GneFPla+4RPUyYIynLsE6jUYsGcj9PoBADQVrereg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRp1Ufoy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MLa/SRbB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707147113;
-	bh=8snPz5SG3U7m1WhMLbVGZPjJdXl3YDQbMd0wdwiDQUI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MLa/SRbB6D+KCjcUqvcFgqX3P6BgkTBZbWRnH0sYReMq04vsIR7XrADyPkdgWN1BV
-	 fVxwZ7qnvAZcsnJntJhIB4Eut7W4zWVh8C6kXd50V1yYaj55xqIDInFJ1BuLfWmfDJ
-	 6pxeHDxi2HxBhY+eHjxp1EpT1UpOjL9XSl7/YY1llLl5EqEpK1aSQd3gTo1nu+hFX6
-	 TmYdHMJpTFlYj7wflYj/WieA9HoHRQYuMgkjDGOChW7wduNE3ZpEGjSq027pvkAmNr
-	 FgBTFIxgFG6/IbWXGYZ11UvX90dFGmIGUvTMEgFbHdFjHOt3Z7kemIt6atJqRiS1dH
-	 LTqV00pOy2ptA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 35B2B37813E4;
-	Mon,  5 Feb 2024 15:31:52 +0000 (UTC)
-Message-ID: <1b2538a1-d85d-4a62-8c9a-24ce93613080@collabora.com>
-Date: Mon, 5 Feb 2024 16:31:51 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRp1Ufoy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0646C433F1;
+	Mon,  5 Feb 2024 15:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707147138;
+	bh=VyryEeFktouoPtBlGjASqjjuFJfIz/FqEICD23Ug1nI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jRp1UfoySFcHnU8OKUHbSECBQs4H+bbZMGQIQ5Qp/RLOcVjMM3wMWxH2lSZdp7OMS
+	 xY+IVFAPDeAEgj9qwEy8f57YjbpXm/KhTVhLIAzdtxZ9a8qOqoDCaKmjf2EVAKX+DY
+	 wZ3rC0+Ti7DbPTJK70IdoIRelIdtFGsWW1rfHUlqPuLYzIj5WRPlSUfx0Q8/MnUwxV
+	 xv7fNGjSAfF96j8rSf1y77C1rhBOTL44owiAwTj4SZmWDa3DP9IIIu4u7h3hSHdpJv
+	 DQozGislNB1Os2a4IQ8fMW5njlUrE5bmgp7QFAQpFycl8Ab7c0sEW63M21dRbCurwf
+	 zfX85Onv8dQIA==
+Date: Mon, 5 Feb 2024 15:32:14 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Liam Beguin <liambeguin@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Maksim Kiselev <bigunclemax@gmail.com>,
+	Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Marius Cristea <marius.cristea@microchip.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Okan Sahin <okan.sahin@analog.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: adc: ti-ads1298: Add driver
+Message-ID: <ZcD/fnVVLdR2TFr1@finisterre.sirena.org.uk>
+References: <ZcDo6QvoE_e5s_f1@smile.fi.intel.com>
+ <7d7ea4e4-fcae-4966-b194-e1d328751b6b@topic.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: Introduce the MT8395 Radxa
- NIO 12L board
-Content-Language: en-US
-To: kernel test robot <lkp@intel.com>, linux-mediatek@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, wenst@chromium.org, hsinyi@chromium.org,
- nfraprado@collabora.com, macpaul.lin@mediatek.com, sean.wang@mediatek.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
- stephen@radxa.com, tom@radxa.com
-References: <20240202114821.79227-3-angelogioacchino.delregno@collabora.com>
- <202402041754.SHJCpnEP-lkp@intel.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <202402041754.SHJCpnEP-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Il 04/02/24 10:31, kernel test robot ha scritto:
-> Hi AngeloGioacchino,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on linus/master v6.8-rc2 next-20240202]
-
-Whoever is reading this... yes that's all expected; this series depends on a commit
-that was already picked in the mediatek trees.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git/commit/?h=v6.8-next/dts64&id=d464e09e60f024aea0de7adb680a8e8582ab8df8
-
-Regards,
-Angelo
-
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/AngeloGioacchino-Del-Regno/dt-bindings-arm64-mediatek-Add-MT8395-Radxa-NIO-12L-board-compatible/20240202-195207
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> patch link:    https://lore.kernel.org/r/20240202114821.79227-3-angelogioacchino.delregno%40collabora.com
-> patch subject: [PATCH v2 2/2] arm64: dts: mediatek: Introduce the MT8395 Radxa NIO 12L board
-> config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240204/202402041754.SHJCpnEP-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240204/202402041754.SHJCpnEP-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202402041754.SHJCpnEP-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->>> Error: arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts:791.1-8 Label or path ssusb0 not found
->>> Error: arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts:804.1-8 Label or path ssusb2 not found
->     FATAL ERROR: Syntax error parsing input tree
-> 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FV/jdPwiWoSPXR4m"
+Content-Disposition: inline
+In-Reply-To: <7d7ea4e4-fcae-4966-b194-e1d328751b6b@topic.nl>
+X-Cookie: You might have mail.
 
 
+--FV/jdPwiWoSPXR4m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Feb 05, 2024 at 04:25:19PM +0100, Mike Looijmans wrote:
+> On 05-02-2024 14:55, Andy Shevchenko wrote:
+
+> > > > +	.cache_type = REGCACHE_RBTREE,
+
+> > Why not MAPPLE TREE?
+
+> Reading the description this driver isn't a good candidate - the map isn't
+> sparse and the hardware can do bulk read/write (though the driver doesn't
+> use it).
+
+If your driver is a good candidate for rbtree it's a good candidate for
+maple tree.  There are very few specialist cases where there's an
+advantage to sticking with rbtree.  The maple cache has no meaningful
+overhead compared to rbtree for non-sparse regmaps and will generate
+bulk writes just fine.
+
+--FV/jdPwiWoSPXR4m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXA/30ACgkQJNaLcl1U
+h9ApSwf+OwSOaTAWvNTxBwn5cVSksk9dF5DFAZBL5mKj9G4dZWY4eJ5VbtBKncbX
+WbsBVkA5dJRmRmwl5hgSBsw0KnnZ624s4JDOXfQ3Aic1Q1n7eFY5RbE02Ba+nk95
+ob+9fsminr/iwZphEJFOO9Xb2B8LXWZAuJ66Y66UaIFm++9eD+tLDbjFOcsFu3Du
+6ZAUt230YdQA8jTu+ZwFRtp3Qb1830MJTx7wsmGEmII/e7j22I5rW0YXkjS81MDj
+LiNGSP5BcuwcIJE/NqYZbO2c3Mx6WKogIeu/7Lktb/Hbjjptne7wSLG10KbaY2By
+mIPP+d/Frr5LsVbR6NLv8CtVMbok2Q==
+=vGvm
+-----END PGP SIGNATURE-----
+
+--FV/jdPwiWoSPXR4m--
