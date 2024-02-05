@@ -1,136 +1,134 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD2818633;
-	Mon,  5 Feb 2024 11:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B983B18AEE;
+	Mon,  5 Feb 2024 11:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707132538; cv=none; b=q4rHfm6H1GqGAT6PpZj4Mw8fzWMiUDF0hU3MKNsFQjgQRAU90xZPg8hQgvCEp5Ds5IB9cua4uC4qIZzbHwDYfQP0f1lCDmIXLRgj+8lRnxnM/a9/Cjd0/1nkJo6wnHA8wSwSpsUhKAQhBaREGYIweVj31fv4OSv95RU6rEtsCmA=
+	t=1707132596; cv=none; b=iSZ+oxHK+nZKm6o+l3LV0NRE/erfmzIDt2vCc3KBzRIER0o1VysFCuSPAoY+9G81ibLwCn+0Ng5KRzkEG0E0mMZicBlb8FyzyM9zru4DQQYAvGsTrlOEHyWOCq7pGnwWTML4t2qouy0wkkBeWZK+XZmAyj4dueXIwyYFQGNHhIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707132538; c=relaxed/simple;
-	bh=Iy7qWAcNmkq6knfxBeo+GhtMBZwWjH+8//v2LemNuss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CWEvho4sN7bDOYbns6fY//Pg6w09h2vtfoTAJrjMT2CtxkOXCG+RpaAR9isXGvKdmHIfPjrrYnMWDBE9klJaZMsky1iKnXAYlWcVGLqwrdBzCD8ergTR7xKeNeAoPRx29gekdNgNT0lGY1ZZmTD99mLe1T+uTSWJcc6DIiTNmj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRajZHSR; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRajZHSR"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5111e5e4e2bso6630153e87.3;
-        Mon, 05 Feb 2024 03:28:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707132534; x=1707737334; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TcnrZiFoKqoviNxRH/t3HUNFg1NWrZniLXis+Ehl3kQ=;
-        b=NRajZHSRMX6yUyusc9qN/PPyLWmixYK7RcADVil/VsBA7MqGOJiIk6dMxIsUcNXdgT
-         XTSKjL1knOgrPp4Dh/Zt9AsdVyEauh30aMcttt4a/4mc1KomjXSXZ7E8vbqlK+jymOuS
-         zoJC1FoP6npsPM80s3/iQkMIImbZ/UciB6kxTp47TLUbTDCf/ID9tXKakobtC2/+zXL3
-         UsiCC/pGihC1aNPCEizeprHIEo462aJIi5X0Eyd0wuU440Tt634LJS4odCidZbSlR+tJ
-         dLt7aO9eS99ezc9WPQT/f7G+NQkQPjCeHK5sSPm+2GnwlqgpsRVTHZzdJ5T9muFJqN79
-         PHxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707132534; x=1707737334;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TcnrZiFoKqoviNxRH/t3HUNFg1NWrZniLXis+Ehl3kQ=;
-        b=QZpsO1iz909316k+Z6RiesBDe3mS5HRij78Zda6W17t7X2egmh/z91iTx/YI4sUQTO
-         NOrdCi/haEyEBa7b1eBH+EnrbYB7LHtxukzbh+Rpw0dpAgbRYFJuZ5QuYUIGhaT1NX1E
-         q5Fhwk/27B1tm1rs94K+H92sf7EpKscc1aAFMk/NCnpOlMlns7ciAgviTuryVOKYxKfL
-         vWFFwCd/Riwm0CsgGk9RJmOegKdb+tUZaqpm407D5lTSsNuePkhqrSOKP9+1+jxfE9Hj
-         Ghwdz/b7k528zXbEPxlcRiBRkYvofZtFXdL08y2pNlB68Pp+BCeMrS/oo4CCY/26tOhC
-         26ng==
-X-Gm-Message-State: AOJu0Ywia4qr3dPMeOoLqp/AyIeoyK64BKWABWPRnnv7NMbFcgH8U7Sn
-	FstcjSCsbXjAMF/0/MXDsIdufKGECgmKNC5xbn/XyTOh2fBg74v5
-X-Google-Smtp-Source: AGHT+IHduzacAbB+gmsJTfUXIU/uuqegqXDQipzDg06tYFlUORm6tm/gFiQIkB2iylDysb5O+TBzgg==
-X-Received: by 2002:ac2:5238:0:b0:511:4943:6066 with SMTP id i24-20020ac25238000000b0051149436066mr3046237lfl.25.1707132534315;
-        Mon, 05 Feb 2024 03:28:54 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUGg9Ncywyi1UvMZFL0Fsb4Xpf05vHlc2PN+5pEVK5/JEIZ2r/ER06DGI0d4oAKnSSJ45cXkUZcLNmG4OHRHhzjmOu3MgfgRPE1+OHBijH+NXixyZwCaXaZq5XziX9zxSppM9UE1Oqy05yad4OsfJHrtfxYQzPlh4poVjjU96rLVdQ8SuPO2beI2AYW7SjCrau8wb1fF4tFNWNalcO5tPFBmHzLxFEf25RKtZepOYKGHPEheTibxZ7ldG5fzoXZuW2JgowWjYR3dwZfEu8=
-Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id bi7-20020a05600c3d8700b0040fdd18f6fasm1448578wmb.39.2024.02.05.03.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 03:28:53 -0800 (PST)
-Message-ID: <db589d23-6e15-4b54-845f-fb719e59949d@gmail.com>
-Date: Mon, 5 Feb 2024 12:28:51 +0100
+	s=arc-20240116; t=1707132596; c=relaxed/simple;
+	bh=q2CLz4M9YdaD+PJ4yP0uf2oAypT2VvZrvWWx9ZEF3Yo=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=Oc5GUc9/lNA/slcyFFzpoXChB7EHd8YzQKg4yyiDOj6Eqdkg0aTv2+wOTr/hIXXMx+kaL40CeLhbgsUD5sC0dlodgjlRBSziAXGAimeRYIOmsRbdwftPfHqOAJcmFwNQOFiG7epWNB1gGV71IHlR5XK2zgSNAR68eo4gV4F3HvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from hamburger.collabora.co.uk (hamburger.collabora.co.uk [IPv6:2a01:4f8:1c1b:c794::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id DD1F83780C21;
+	Mon,  5 Feb 2024 11:29:50 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <13ddf68c-df25-4f5a-8044-33543a726889@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240203035317.354186483@linuxfoundation.org> <13ddf68c-df25-4f5a-8044-33543a726889@linaro.org>
+Date: Mon, 05 Feb 2024 11:29:50 +0000
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, mathias.nyman@linux.intel.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>
+To: =?utf-8?q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>, mathias.nyman@linux.intel.com, "Greg KH" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Add vf reset notification for pf
-Content-Language: en-US
-To: Emily Deng <Emily.Deng@amd.com>, amd-gfx@lists.freedesktop.org,
- bhelgaas@google.com, alex.williamson@redhat.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20240204061257.1408243-1-Emily.Deng@amd.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20240204061257.1408243-1-Emily.Deng@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <7e9f-65c0c680-1-1d70df60@6844130>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E1?= 000/219] 
+ =?utf-8?q?6=2E1=2E77-rc1?= review
+User-Agent: SOGoMail 5.9.1
+Content-Transfer-Encoding: quoted-printable
 
-Am 04.02.24 um 07:12 schrieb Emily Deng:
-> When a vf has been reset, the pf wants to get notification to remove the vf
-> out of schedule.
+On Saturday, February 03, 2024 11:53 IST, Daniel D=C3=ADaz <daniel.diaz=
+@linaro.org> wrote:
+
+> Hello!
+>=20
+> On 02/02/24 10:02 p.=C2=A0m., Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.1.77 release=
+.
+> > There are 219 patches in this series, all will be posted as a respo=
+nse
+> > to this one.  If anyone has any issues with these being applied, pl=
+ease
+> > let me know.
+> >=20
+> > Responses should be made by Mon, 05 Feb 2024 03:51:47 +0000.
+> > Anything received after that time might be too late.
+> >=20
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6=
+.1.77-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git linux-6.1.y
+> > and the diffstat can be found below.
+> >=20
+> > thanks,
+> >=20
+> > greg k-h
+>=20
+> We're seeing lots of build problems and warnings with Clang 17 and Cl=
+ang nightly:
+>=20
+> -----8<-----
+>    /builds/linux/drivers/usb/host/xhci.c:1684:37: error: variable 'sl=
+ot=5Fid' is uninitialized when used here [-Werror,-Wuninitialized]
+>     1684 |                         ret =3D xhci=5Fcheck=5Fmaxpacket(x=
+hci, slot=5Fid,
+>          |                                                          ^=
+~~~~~~
+>    /builds/linux/drivers/usb/host/xhci.c:1652:22: note: initialize th=
+e variable 'slot=5Fid' to silence this warning
+>     1652 |         unsigned int slot=5Fid, ep=5Findex;
+>          |                             ^
+>          |                              =3D 0
+>    1 error generated.
+>    make[5]: *** [/builds/linux/scripts/Makefile.build:250: drivers/us=
+b/host/xhci.o] Error 1
+> ----->8-----
+>=20
+> Bisection points to:
+>=20
+>    commit 37ef029fe9a5639f12250f75f5d1594c6a11e181
+>    Author: Mathias Nyman <mathias.nyman@linux.intel.com>
+>    Date:   Fri Dec 1 17:06:47 2023 +0200
+>=20
+>        xhci: fix possible null pointer deref during xhci urb enqueue
+>       =20
+>        [ Upstream commit e2e2aacf042f52854c92775b7800ba668e0bdfe4 ]
+>=20
+> Reverting the patch makes the build pass.
+>=20
+
+Hi Daniel and Greg,
+
+Reverting this patch causes some boot failures :-
+https://linux.kernelci.org/test/job/stable-rc/branch/linux-6.1.y/kernel=
+/v6.1.76-220-g4f7472958779c/plan/baseline/
+
+Not sure if reverting would be the best way to fix this issue.
+
+
+Thanks,
+Shreeya Patel
+
+
+> The problem manifests as build error in i386 and x86=5F64, and as new=
+ warnings on Arm, Arm64, and RISC-V.
+>=20
+> Some reproducers:
+>=20
+>    tuxmake --runtime podman --target-arch arm --toolchain clang-17 --=
+kconfig omap2plus=5Fdefconfig LLVM=3D1 LLVM=5FIAS=3D1
+>    tuxmake --runtime podman --target-arch x86=5F64 --toolchain clang-=
+17 --kconfig x86=5F64=5Fdefconfig LLVM=3D1 LLVM=5FIAS=3D1
+>=20
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>=20
+>=20
+> Greetings!
+>=20
+> Daniel D=C3=ADaz
+> daniel.diaz@linaro.org
+>=20
 >
-> Solution:
-> Add the callback function in pci_driver sriov_vf_reset_notification. When
-> vf reset happens, then call this callback function.
-
-Well that doesn't make much sense. As other already noted as well a VF 
-should be an encapsulated representation of a physical devices 
-functionality.
-
-AMD implemented that a bit different with a hypervisor to control which 
-PF functionality a VF exposes, but that doesn't mean that we can leak 
-this AMD specific handling into the common Linux PCI subsystem.
-
-Additional to that a technical blocker is that when a VF is passed into 
-a VM you don't have access to the PF any more to make this reset 
-notification.
-
-Regards,
-Christian.
-
->
-> Signed-off-by: Emily Deng <Emily.Deng@amd.com>
-> ---
->   drivers/pci/pci.c   | 8 ++++++++
->   include/linux/pci.h | 1 +
->   2 files changed, 9 insertions(+)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 60230da957e0..aca937b05531 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
->    */
->   int pcie_reset_flr(struct pci_dev *dev, bool probe)
->   {
-> +	struct pci_dev *pf_dev;
-> +
-> +	if (dev->is_virtfn) {
-> +		pf_dev = dev->physfn;
-> +		if (pf_dev->driver->sriov_vf_reset_notification)
-> +			pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
-> +	}
-> +
->   	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
->   		return -ENOTTY;
->   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c69a2cc1f412..4fa31d9b0aa7 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -926,6 +926,7 @@ struct pci_driver {
->   	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
->   	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
->   	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
-> +	void  (*sriov_vf_reset_notification)(struct pci_dev *pf, struct pci_dev *vf);
->   	const struct pci_error_handlers *err_handler;
->   	const struct attribute_group **groups;
->   	const struct attribute_group **dev_groups;
 
