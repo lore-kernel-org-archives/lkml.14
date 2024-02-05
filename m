@@ -1,45 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D00918E0E;
-	Mon,  5 Feb 2024 11:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7495918EB3;
+	Mon,  5 Feb 2024 11:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133375; cv=none; b=ZpYb9fXBwXn624SveXcMS5x7u/ky6YUI2Vmg5EYkTvKPj1vTyA8iFKY4Z4BVww61n73HFQH1hrcPM1gXpAClQk8MlwUl/hdH4TidBABz+rP2Y2cyh8KHSG8xbEZzupfu8bZQULWKCMkZTV1qh1ERsQk/1KoeIasm2zHNH0WbZZk=
+	t=1707133377; cv=none; b=fguzi4bT2EqLgn1qlfrJdezSMOBl4EB5zfdS4CS2G+mKGQZeWx6vTxCDxaQ/ylw3WSsNhwbpJSVFVM2DEyjYBkyKBEKg/T//0ZMjYVRy4euTmUpZnEt5dXhcSoB5p9lbFD2cTJ5XMNFnt5HUXywGFJSALSSFDUC+Tmo1q+mgq1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133375; c=relaxed/simple;
-	bh=6s43kMGZiFeue14Qmd45XyvCrRq/cBRwlW/jGhTvluE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fAA4qDUCu128BpCEKn/TZlsUhNXJfZhbdaCcYAYgRLa1eC9X+vZI7EgFPFL1p6dV6pPWK5+OlQqMf7AqzLF3ls+ll+h/F6/FiYjXC3aqdLWGgIRAsb1oMjJsg84IauJYgnF1FFUqt7iEQLbmBKaYw8wKyuX7Ry9LWkIIzMpY0T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=G/ZcNpkz; arc=none smtp.client-ip=198.47.23.248
+	s=arc-20240116; t=1707133377; c=relaxed/simple;
+	bh=MTADbxmZIc3SttEiefbw0BrHTdJfYlL07Zu83RqUkMU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cqvrMp2Snt+FiYfZ1iv7cGazyxuGdkhAbH3sTRIEnbqNzF4c7rtlaA/EbttExmONufOciyXbwrY5PkMmbMhrsKNFiooiefnKdWF2Z8K0JDzTWGlwMQc5SaRLQ6TzUiLY1oOdBtImGJ9cU5/oGP9hlSU9oXtiu6z2pDZhBN/KWns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H97Ud1WQ; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G/ZcNpkz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H97Ud1WQ"
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415Bgfdw011224;
-	Mon, 5 Feb 2024 05:42:41 -0600
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415Bgi4O116659;
+	Mon, 5 Feb 2024 05:42:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707133361;
-	bh=uST3jK2WI/DTrtPhr9cCrI+PLMnSfDLKgoIV0RlUZa0=;
-	h=From:To:CC:Subject:Date;
-	b=G/ZcNpkzcdTXWvM5vyt5jo+17Kx5wQnSo+ZcuC9VQAQZoTMqDOhVdz4YoQFdtSj9/
-	 gYTFfcEpL2QUNGX+5CX9z84tgeBH8BPOkXuNOP/k3RlFCMnddRjM6PEK4Sb0kab2Jr
-	 4cXaTQUrdo/p7G5yaHpLAfWxefJ80o+trMlHkkqM=
+	s=ti-com-17Q1; t=1707133364;
+	bh=PrR+seXyMxXZI77OzbctRAYDTy/9Fd3UZ1todKCKoJQ=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=H97Ud1WQ3VYiEOo2DzrBtmlbyfWWcs44Ei+C/rNniOkgosmHGhNuJOH0UdVU42ehu
+	 p81dHpkNTLG4hkLrozg15P8fm9YCvuoX15/DVq4y/npIEmq5Qx3KxoVpRxviuC6qG1
+	 z+mMc7fLjG/iTDd8fMUudlnDlgiLSm8XLx5D2lYc=
 Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415BgfQn069657
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415BgiTu069703
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 05:42:41 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
+	Mon, 5 Feb 2024 05:42:44 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
  (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 05:42:40 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 05:42:43 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 05:42:40 -0600
+ Frontend Transport; Mon, 5 Feb 2024 05:42:44 -0600
 Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415Bgej3095143;
-	Mon, 5 Feb 2024 05:42:40 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415BghGF095190;
+	Mon, 5 Feb 2024 05:42:43 -0600
 From: Devarsh Thakkar <devarsht@ti.com>
 To: <mchehab@kernel.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
@@ -50,10 +51,12 @@ CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
         <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
         <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
         <nicolas@ndufresne.ca>
-Subject: [PATCH v4 0/3] Add V4L2 M2M Driver for E5010 JPEG Encoder
-Date: Mon, 5 Feb 2024 17:12:36 +0530
-Message-ID: <20240205114239.924697-1-devarsht@ti.com>
+Subject: [PATCH v4 2/3] media: jpeg: Add reference quantization and huffman tables
+Date: Mon, 5 Feb 2024 17:12:38 +0530
+Message-ID: <20240205114239.924697-3-devarsht@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205114239.924697-1-devarsht@ti.com>
+References: <20240205114239.924697-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,110 +67,161 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This adds support for V4L2 M2M based driver for E5010 JPEG Encoder
-which is a stateful JPEG encoder from Imagination technologies
-and is present in TI AM62A SoC.
+Add reference quantization and huffman tables to a global header file so
+that they can be re-used by other JPEG drivers.
 
-v4l2-compliance test :
-Link: https://gist.github.com/devarsht/867b1d646bca3f3877edb1f3638aae31
+These are example tables provided in ITU-T.81 as reference. The JPEG
+encoders are free to use either these or their own proprietary tables.
 
-E5010 JPEG Encoder Manual tests :
+These tables are being used already by verisilicon driver [1].
 
-Performance:
-Link: https://gist.github.com/devarsht/63d835093195181866ae9a85de880d3c
+Also add necessary prefixes to be used for huffman tables in global header
+file.
 
-Functionality:
-Link: https://gist.github.com/devarsht/253e485e86661a3051e711f97ec3c5ac
+[1] :
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/platform/verisilicon/hantro_jpeg.c?h=v6.8-rc2#n30
 
-Compression Quality:
-Link: https://gist.github.com/devarsht/e16d8b73c8107ac78cc77ad79fd6299f
-
-Multi Instance:
-Link: https://gist.github.com/devarsht/58af9ccf822963d2bf8f0c2f4481438a
-
-Link to previous series:
-https://lore.kernel.org/all/20230816152210.4080779-1-devarsht@ti.com/
-
-Diff w.r.t previous series (git range-diff) :
-https://gist.github.com/devarsht/22a744d999080de6e813bcfb5a596272
-
-Devarsh Thakkar (3):
-  media: dt-bindings: Add Imagination E5010 JPEG Encoder
-  media: jpeg: Add reference quantization and huffman tables
-  media: imagination: Add E5010 JPEG Encoder driver
-
- .../bindings/media/img,e5010-jpeg-enc.yaml    |   75 +
- MAINTAINERS                                   |    7 +
- drivers/media/platform/Kconfig                |    1 +
- drivers/media/platform/Makefile               |    1 +
- drivers/media/platform/imagination/Kconfig    |   12 +
- drivers/media/platform/imagination/Makefile   |    3 +
- .../platform/imagination/e5010-core-regs.h    |  585 +++++++
- .../platform/imagination/e5010-jpeg-enc-hw.c  |  267 +++
- .../platform/imagination/e5010-jpeg-enc-hw.h  |   42 +
- .../platform/imagination/e5010-jpeg-enc.c     | 1552 +++++++++++++++++
- .../platform/imagination/e5010-jpeg-enc.h     |  169 ++
- .../platform/imagination/e5010-mmu-regs.h     |  311 ++++
- include/media/jpeg.h                          |    4 +
- include/media/jpeg_enc_reftables.h            |  112 ++
- 14 files changed, 3141 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
- create mode 100644 drivers/media/platform/imagination/Kconfig
- create mode 100644 drivers/media/platform/imagination/Makefile
- create mode 100644 drivers/media/platform/imagination/e5010-core-regs.h
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.c
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.h
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.c
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.h
- create mode 100644 drivers/media/platform/imagination/e5010-mmu-regs.h
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+V1->V4 : No change (Introduced in v4)
+---
+ include/media/jpeg.h               |   4 ++
+ include/media/jpeg_enc_reftables.h | 112 +++++++++++++++++++++++++++++
+ 2 files changed, 116 insertions(+)
  create mode 100644 include/media/jpeg_enc_reftables.h
 
----
-Changelog:
-V1->V2: 
-No change (sending dt-binding and driver together)
-
-V2->V3:
-- Add DONOTMERGE patches for dts and defconfig
-- Update driver with below changes :
-  - Correct license headers
-  - Use more generic name core instead of jasper for base registers
-  - Add Comment for forward declarations
-  - Simplify quantization table calculations
-  - Use v4l2_apply_frmsize_constraints for updating framesize and remove
-    unrequired functions
-  - Place TODO at top of file and in commit message too
-  - Use dev_err_probe helper in probe function
-  - Fix return value checking for failure scenarios in probe function
-  - Use v4l2_err/info/warn helpers instead of dev_err/info/warn helpers
-  - Fix unexpected indentation
-  - Correct commit message
-- Update dt-bindings with below changes :
-  - Add vendor specific compatible 
-  - Fix commit title and message
-  - Update reg names
-  - Update clocks to 1
-  - Fix dts example with proper naming
-
-V3->V4:
-- Use ti-specific compatible ti,am62a-jpeg-enc as secondary one in
-  dt-binding
-- Remove clock-names as only single clock in dt-binding
-- Fix issue with default params setting
-- Correct v4l2 error prints
-- Simplify register write functions with single statement return values
-- Remove unrequired error checks from get_queue()
-- Drop explicit device_caps setting as it is already taken care by v4l2
-  core
-- Remove unrequired multiplanar checks and memset from s_fmt, g_fmt callback functions
-- Fix try_fmt callback to not update the queues
-- Remove unrequired contiguous format attribute from queue_init
-- Use dynamic allocation for video_device and remove unrequired
-  assignments in probe()
-- Remove unrequired checks from queue_setup function
-- Return queued buffers back if start_streaming fails
-- Use ARRAY_SIZE in place of hard-coding
-- Use huffman and quantization tables from reference header file
+diff --git a/include/media/jpeg.h b/include/media/jpeg.h
+index a01e142e99a7..e07b20ef8665 100644
+--- a/include/media/jpeg.h
++++ b/include/media/jpeg.h
+@@ -16,5 +16,9 @@
+ #define JPEG_MARKER_DHP		0xde
+ #define JPEG_MARKER_APP0	0xe0
+ #define JPEG_MARKER_COM		0xfe
++#define JPEG_LUM_HT		0x00
++#define JPEG_CHR_HT		0x01
++#define JPEG_DC_HT		0x00
++#define JPEG_AC_HT		0x10
+ 
+ #endif /* _MEDIA_JPEG_H_ */
+diff --git a/include/media/jpeg_enc_reftables.h b/include/media/jpeg_enc_reftables.h
+new file mode 100644
+index 000000000000..91959907113f
+--- /dev/null
++++ b/include/media/jpeg_enc_reftables.h
+@@ -0,0 +1,112 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Reference quantization, zig-zag scan and huffman tables as shared in ITU-T.81 */
++
++#ifndef _MEDIA_JPEG_ENC_REF_H_
++#define _MEDIA_JPEG_ENC_REF_H_
++
++/* Luma and chroma qp table to acheive 50% compression quality
++ * This is as per example in Annex K.1 of ITU-T.81
++ */
++static const u8 luma_q_table[64] = {
++	16, 11, 10, 16, 24, 40, 51, 61,
++	12, 12, 14, 19, 26, 58, 60, 55,
++	14, 13, 16, 24, 40, 57, 69, 56,
++	14, 17, 22, 29, 51, 87, 80, 62,
++	18, 22, 37, 56, 68, 109, 103, 77,
++	24, 35, 55, 64, 81, 104, 113, 92,
++	49, 64, 78, 87, 103, 121, 120, 101,
++	72, 92, 95, 98, 112, 100, 103, 99
++};
++
++static const u8 chroma_q_table[64] = {
++	17, 18, 24, 47, 99, 99, 99, 99,
++	18, 21, 26, 66, 99, 99, 99, 99,
++	24, 26, 56, 99, 99, 99, 99, 99,
++	47, 66, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99
++};
++
++/* Zigzag scan pattern */
++static const u8 zigzag[64] = {
++	0,   1,  8, 16,  9,  2,  3, 10,
++	17, 24, 32, 25, 18, 11,  4,  5,
++	12, 19, 26, 33, 40, 48, 41, 34,
++	27, 20, 13,  6,  7, 14, 21, 28,
++	35, 42, 49, 56, 57, 50, 43, 36,
++	29, 22, 15, 23, 30, 37, 44, 51,
++	58, 59, 52, 45, 38, 31, 39, 46,
++	53, 60, 61, 54, 47, 55, 62, 63
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
++ * stream or an abbreviated format table specification data stream.
++ * Specifies the huffman table used for encoding the luminance DC coefficient differences.
++ * The table represents Table K.3 of ITU-T.81
++ */
++static const u8 luma_dc_table[] = {
++	0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01,
++	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
++ * stream or an abbreviated format table specification data stream.
++ * Specifies the huffman table used for encoding the luminance AC coefficients.
++ * The table represents Table K.5 of ITU-T.81
++ */
++static const u8 luma_ac_table[] = {
++	0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03,
++	0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7D,
++	0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61,
++	0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08, 0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52,
++	0xD1, 0xF0, 0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x25,
++	0x26, 0x27, 0x28, 0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44, 0x45,
++	0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64,
++	0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x83,
++	0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99,
++	0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6,
++	0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3,
++	0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8,
++	0xE9, 0xEA, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
++ * stream or an abbreviated format table specification data stream.
++ * Specifies the huffman table used for encoding the chrominance DC coefficient differences.
++ * The table represents Table K.4 of ITU-T.81
++ */
++static const u8 chroma_dc_table[] = {
++	0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
++	0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
++ * stream or an abbreviated format table specification data stream.
++ * Specifies the huffman table used for encoding the chrominance AC coefficients.
++ * The table represents Table K.6 of ITU-T.81
++ */
++static const u8 chroma_ac_table[] = {
++	0x00, 0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04,
++	0x07, 0x05, 0x04, 0x04, 0x00, 0x01, 0x02, 0x77,
++	0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61,
++	0x71, 0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91, 0xA1, 0xB1, 0xC1, 0x09, 0x23, 0x33,
++	0x52, 0xF0, 0x15, 0x62, 0x72, 0xD1, 0x0A, 0x16, 0x24, 0x34, 0xE1, 0x25, 0xF1, 0x17, 0x18,
++	0x19, 0x1A, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44,
++	0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63,
++	0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A,
++	0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
++	0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4,
++	0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA,
++	0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7,
++	0xE8, 0xE9, 0xEA, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
++};
++
++#endif /* _MEDIA_JPEG_ENC_REF_H_ */
 -- 
 2.34.1
 
