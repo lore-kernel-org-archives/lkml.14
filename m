@@ -1,113 +1,142 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B809210F4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E072C859;
+	Mon,  5 Feb 2024 12:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707136541; cv=none; b=Gt68SNX9v+jjXZP3SdeDjDwNLCbcHohZmXL6Kkp+ArfDkK1kEwqjiU0dXAWjMEuuRBrCuB4ZnvDCZYStRNtNdsuFR7a49BbgK/10yS9p47rMcbsord3B+JStDvI0FeQ066xXBGav2ZVXn1ShDior6LInLkSOqFBFp4em5nHPaPI=
+	t=1707136563; cv=none; b=Q039HIxyetQidiyk+auvmGWLw7iWVfJ0n0SnMdVp+yuIDbh7JsgGIbsHGEZVwSPSGQ1kkUgIsg9LTDlywJ/etFfmEtchCvVVKb1VBvzegAubMVUITkPwjupK3bYERsZ2bJF0XYqJrAYsXACVEC86K2I3JFnFzuBzqZv61ibUCoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707136541; c=relaxed/simple;
-	bh=DDCSdXRdjjJGeHjCGYAAVDZnOLHtjFFFD84mk0/1UmQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kOXOz0wTillaeoTO10ZwLSPQ+AlJsIJul1KVkQU0DlVTLTfOjos00KwKJRTvNbmLqnhC/rKHZDJT4oC03HL9waRXbo5IlozjRPlWuxO32Kf05P5cKomvcyulhmdEilMfgIJwetHHg2mHiwIhOF1tDcl6aY80yZaUPCugPPHcgD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=muXv4IwE; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707136563; c=relaxed/simple;
+	bh=W/gM23dRxGIQHhXX9oPXf9/doTEakFPicYrHGjQOU1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAqc8fxcX4EQ9Hwi0WrQOIw82PJebCvNzno++fG7KNEItPNlKk8E4OUlZAtFuJdM0XUSKmsnod0i/17M9UQX+znq4FbpL2bj1Ud2DLOpSXu23NXdGhp0JkBZe3kZeDR0Yo2dIuiKHGgoqfMBXD3HbQERVQyhtkeFVkaE4PzP+os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiq7v3WH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="muXv4IwE"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7d2e1a0337bso2175978241.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:35:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707136539; x=1707741339; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pqINmvXfIdTyRxv3LEyPIo0XoyRMgoEvWKIchHbThYU=;
-        b=muXv4IwEXdMd13Q/9675NEwnYZItdV1w53RvWKHOsurSqEDjeUGm2d2AhsuUynGTf5
-         IpFIWclrSvtjqIz1Vif4hwab/UcWWpKoai9Ktel3XxPk2CxeazqOtEXJ12QbQW95DpdS
-         c6QMICCUOKUoU/EtitnKnznyGJ8mYuEFZ1vl9np76ACyVjOFFOYplOGNtg+PdxgX4OGg
-         VdNq+V5mTzz+EJswhNN5AOmc+8gfOcQj5GTuu3lJctM4QJEb8tA8qZBFHD0tFYtsCg80
-         2lj6gjmmk6ojMk875ammiOACptF4oNH40vW4f2FRl61ZpTNS9ymer/yfk/4+RJvlvSlS
-         +v9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707136539; x=1707741339;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pqINmvXfIdTyRxv3LEyPIo0XoyRMgoEvWKIchHbThYU=;
-        b=sT9E2iOnfqFN+D3iMa6RQna05xEQW1dieIR5QUI6nbsjFGTgBZp59pP7j0jO4n/78T
-         Jrx1ZgYAWTbXZXoPtL77BIBsAzE5pk3VtQQX+b/ioWG+P09UOtPu+zUdK9a0a96YKBor
-         JU91UzDaVgs7q6FoC54MQKB3wvgOyhkmtDHGje32jVkA/TPZAdDBu41JHAone7Js1HVY
-         9zMfGKYKFi+l/9FpM5wCY2lvsIpzZDITvAfHQu4iWuk2P3tPI/h5YGQFdrT8APIIXfVX
-         Azqgk1eDQ8fF9/oXT0dI94zlIN1QcMpdDzWNmIQOBHBCwFzCU0UEm3Wm4UaDD67D/zXS
-         Qnew==
-X-Gm-Message-State: AOJu0YzWEdzfvJr8ks0A3Yub0190//Yla4qFmSBbp5AbWEEvemkixvlC
-	TOVPdAD7nnicF7FKb1xsciX6Ar0Oy9f6sju8D4erOHycAYW6whWtAhnMsdC48HdbtEd5TJRizTa
-	6ZxUeenNMEmL8Gx8wGzjq6xpUvggUOhbWORTJ
-X-Google-Smtp-Source: AGHT+IFpCZQz3iUtLkGRy1heGYq2Y3VsvgfUbeBvfC1uSZoOSni1XaRbWkWCAB/qndpA7PwNfCPVOscJUljWOYkp8Ac=
-X-Received: by 2002:a67:cd87:0:b0:46d:2fb2:337c with SMTP id
- r7-20020a67cd87000000b0046d2fb2337cmr1824167vsl.8.1707136538764; Mon, 05 Feb
- 2024 04:35:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiq7v3WH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E9CC433F1;
+	Mon,  5 Feb 2024 12:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707136563;
+	bh=W/gM23dRxGIQHhXX9oPXf9/doTEakFPicYrHGjQOU1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kiq7v3WH4BXjlBM5da8GhgVzNWrFmT69sXn2Z3kO+XSByinlTm+nldLGPza1A7/ZM
+	 wYC2Gg9vCokYw5fDYx/qQEg2c+CFP8iw+xofOVbNYvnsXNedFxCGd3ufs6VxoNBeXH
+	 50FKZLbJXyju+0fAQ40QoDCyBn6FtSNDMwDjUf/bYITVShxqCLWvtPS6T5UZsH074b
+	 a0LHJ05ccHIX0vYhq4C9uU5ICN03IOzpsz9v1K8Bnll82Jt9fqjDRwilIiy+Cj6O2j
+	 Bj2o/ErTqvL0oT0WwGQ3pMhdwKYHeSpKoUUHqRyRoHtoufMjdrU1igTNgB3FQOIkyG
+	 /jdgN58UpyTUQ==
+Date: Mon, 5 Feb 2024 12:35:53 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
+	"Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+	"H.J. Lu" <hjl.tools@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Florian Weimer <fweimer@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v8 13/38] KVM: arm64: Manage GCS registers for guests
+Message-ID: <825d2b35-fa10-43ad-b3b3-b29a77f3fed0@sirena.org.uk>
+References: <20240203-arm64-gcs-v8-0-c9fec77673ef@kernel.org>
+ <20240203-arm64-gcs-v8-13-c9fec77673ef@kernel.org>
+ <868r3z6y6v.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205060925.15594-1-yangtiezhu@loongson.cn> <20240205060925.15594-3-yangtiezhu@loongson.cn>
-In-Reply-To: <20240205060925.15594-3-yangtiezhu@loongson.cn>
-From: Marco Elver <elver@google.com>
-Date: Mon, 5 Feb 2024 13:35:02 +0100
-Message-ID: <CANpmjNP4gp0k-VpqJferxUAV7Z9M4ROYdq7+mQS57qiYDccw7A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kasan: Rename test_kasan_module_init to kasan_test_module_init
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SWF5NMV/X92Kf8zP"
+Content-Disposition: inline
+In-Reply-To: <868r3z6y6v.wl-maz@kernel.org>
+X-Cookie: No solicitors.
 
-On Mon, 5 Feb 2024 at 07:09, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> After commit f7e01ab828fd ("kasan: move tests to mm/kasan/"),
-> the test module file is renamed from lib/test_kasan_module.c
-> to mm/kasan/kasan_test_module.c, in order to keep consistent,
-> rename test_kasan_module_init to kasan_test_module_init.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Seems reasonable:
+--SWF5NMV/X92Kf8zP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Marco Elver <elver@google.com>
+On Mon, Feb 05, 2024 at 09:46:16AM +0000, Marc Zyngier wrote:
+> On Sat, 03 Feb 2024 12:25:39 +0000,
+> Mark Brown <broonie@kernel.org> wrote:
 
-> ---
->  mm/kasan/kasan_test_module.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/kasan/kasan_test_module.c b/mm/kasan/kasan_test_module.c
-> index 8b7b3ea2c74e..27ec22767e42 100644
-> --- a/mm/kasan/kasan_test_module.c
-> +++ b/mm/kasan/kasan_test_module.c
-> @@ -62,7 +62,7 @@ static noinline void __init copy_user_test(void)
->         kfree(kmem);
->  }
->
-> -static int __init test_kasan_module_init(void)
-> +static int __init kasan_test_module_init(void)
->  {
->         /*
->          * Temporarily enable multi-shot mode. Otherwise, KASAN would only
-> @@ -77,5 +77,5 @@ static int __init test_kasan_module_init(void)
->         return -EAGAIN;
->  }
->
-> -module_init(test_kasan_module_init);
-> +module_init(kasan_test_module_init);
->  MODULE_LICENSE("GPL");
-> --
-> 2.42.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20240205060925.15594-3-yangtiezhu%40loongson.cn.
+> > +++ b/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
+> > @@ -25,6 +25,8 @@ static inline void __sysreg_save_user_state(struct kvm_cpu_context *ctxt)
+> >  {
+> >  	ctxt_sys_reg(ctxt, TPIDR_EL0)	= read_sysreg(tpidr_el0);
+> >  	ctxt_sys_reg(ctxt, TPIDRRO_EL0)	= read_sysreg(tpidrro_el0);
+> > +	if (has_gcs())
+> > +		ctxt_sys_reg(ctxt, GCSPR_EL0) = read_sysreg_s(SYS_GCSPR_EL0);
+
+> We have had this discussion in the past. This must be based on the
+> VM's configuration. Guarding the check with the host capability is a
+> valuable optimisation, but that's nowhere near enough. See the series
+> that I have posted on this very subject (you're on Cc), but you are
+> welcome to invent your own mechanism in the meantime.
+
+Right, which postdates the version you're replying to and isn't merged
+yet - the current code was what you were asking for at the time.  I'm
+expecting to update all these feature series to work with that once it
+gets finalised and merged but it's not there yet, I do see I forgot to
+put a note in v9 about that like I did for dpISA - sorry about that, I
+was too focused on the clone3() rework when rebasing onto the new
+kernel.
+
+This particular series isn't going to get merged for a while yet anyway
+due to the time it'll take for userspace testing, I'm expecting your
+series to be in by the time it becomes an issue.
+
+> > +	if (has_gcs()) {
+> > +		write_sysreg_el1(ctxt_sys_reg(ctxt, GCSPR_EL1),	SYS_GCSPR);
+> > +		write_sysreg_el1(ctxt_sys_reg(ctxt, GCSCR_EL1),	SYS_GCSCR);
+> > +		write_sysreg_s(ctxt_sys_reg(ctxt, GCSCRE0_EL1),
+> > +			       SYS_GCSCRE0_EL1);
+> > +	}
+
+> For the benefit of the unsuspecting reviewers, and in the absence of a
+> public specification (which the XML drop isn't), it would be good to
+> have the commit message explaining the rationale of what gets saved
+> when.
+
+What are you looking for in terms of rationale here?  The KVM house
+style is often very reliant on reader context so it would be good to
+know what considerations you'd like to see explicitly addressed.  These
+registers shouldn't do anything when we aren't running the guest so
+they're not terribly ordering sensitive, the EL2 ones will need a bit
+more consideration in the face of nested virt.
+
+--SWF5NMV/X92Kf8zP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXA1iYACgkQJNaLcl1U
+h9Dczgf8Co+AEsFdqthpdeHca9wZHZrvIV4GyHYFYxQUc2QQcQF8l68f9qpa+7WU
+wwyKL5wu1uARGynhBiI1rGQHAv8lBunf5D4wkD3kJ8X/AtB0wSRFutA2Q35fQDo3
+HcJi94+8UvNTLtAgbLMmiyihG6PxVhpUfwA3SZCuun068j81Zcd1hX4hUlpuSEXr
+hm5Hy73ooZ/T/F5OrYsxxUuEbTRWHYhPq+CXEhWhtyTK9wRAzDes+UK6rXdjfOmj
+iFWAR4jYhFukgcENJvGgwKKvS1YUFxMABGAPJmIfjjX/3eVNriZDeh5DFHyrrp+R
+LPixjIxkXqN9p1+ZfpiReAfH4T+wRQ==
+=7b9C
+-----END PGP SIGNATURE-----
+
+--SWF5NMV/X92Kf8zP--
