@@ -1,112 +1,105 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749C52C1A9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C3C2C684
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707144998; cv=none; b=ai8ION+CdNos5WPUMpdVIKDA8RfXBPTCN/Zkc0XoDs3POtxfcpTYNjliGAd7o8aVatQw6SE9uHHv+kTB7+Kfg7La7D5ce7OP3v6c3XYKG+ERTc5ocozKiZm3jecNI5ItCVyWsYKNVDcurbp7AsUNScRFPCWTm7Hu8wGbJh64GlU=
+	t=1707145017; cv=none; b=HeC0gy+cGTvV2/r9bauSmbmVygcR8PMidCULB1NORqNwWOuTyziE2a/uy11B5S6XjiwGpPC0uT/Fu6D5q3ILB2r/C98Att5fZyKYNHBURADsxpKV3X54xrYeRckIQMjcRShaUSQ5HQK0Kt51mnXHG/iM0Gjict3aVQBMoW+NvJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707144998; c=relaxed/simple;
-	bh=KZQAVKk17hNGCoiNed1olR8PLExPHWy3Xw9IMnmA5bY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ELhKc6QiuLHhnEPJaAGLh5+SXncOBI2tk/1bZEtkJ1AvsWVsw9E+f6YzkYEICTlmLFtEvQfHodr92PHvKt1ghf4pbe8qMw4wNFMZEKH9WZqGs07I6J1m8SjMOFIyZx+LyzC/VZvvFp9wErAL+QAQ31u4MB/agYeuUQ4gCFFu4Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NoptUjVs; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707145017; c=relaxed/simple;
+	bh=yml1g8lIUP8NOhlaf1UJ6FHxeNTEQqWwTozbd2chOzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Z6FWFzUwf9mWH+1H+gqKbkXNoJ6RLg93eZMvfixGQ+3nb9F1NFLJXHZtTfwOEf4KnMWmamBFGlTCCEd7WoORjXFbeReDvrJrpR9/Zgp7n/onegRD78p6XcP1QukMwK1T6+eQcu3s9RPY1tUbb30neBlFJIhHqeEK9RC3IbSHsAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ao+KaV+K; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NoptUjVs"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415EuKM7066929;
-	Mon, 5 Feb 2024 08:56:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707144980;
-	bh=MHcT7cAFsxqyYHFScxuXokkyTjjYaCWV3c5QCurtdVA=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=NoptUjVsXsiLzDNz6exsYq71eHnqjGgY03nv0YqQj0AwiojLX87z/U67MyJhDnX2f
-	 Z5Y8uCdj7ODtwrfHJHG/0eg6eQKTIAleAmogxB345EnvRSya6sFmyQH3sdHTr7r4Wr
-	 ygK3G8GrlWkwTwwviw1Yzq1+DgWDHukllHiTKH7w=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415EuKem015402
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 08:56:20 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 08:56:20 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 08:56:20 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415EuK46000384;
-	Mon, 5 Feb 2024 08:56:20 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Santosh Shilimkar
-	<ssantosh@kernel.org>, Andrew Davis <afd@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ARM: multi_v7_defconfig: Add more TI Keystone support
-Date: Mon, 5 Feb 2024 08:56:18 -0600
-Message-ID: <170714487232.2498590.16765370636323778041.b4-ty@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240125163145.87055-1-afd@ti.com>
-References: <20240125163145.87055-1-afd@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ao+KaV+K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707145013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=3wWFKFwgxakmvKvguQj6wEaI43mBgwyBm4UjoRgLEUY=;
+	b=Ao+KaV+KF1pnbQoNR1x4ZvfaCjtIGQU6oYS62tmeCOwYbaOr26IbBbVIbv1yP8HUZQCZnR
+	h+wi5wGt8ipR3GjcK+ZfeF8FcJ91irvlOUHCSCsl7QZ4EIihmHQWJjmoDu617GAFgLnOW0
+	pPnfKvTLCw+JfgnKMJqrbw6H4d4Jfxc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-220-nvK2DcrVMjCHItX-V9VBBA-1; Mon, 05 Feb 2024 09:56:51 -0500
+X-MC-Unique: nvK2DcrVMjCHItX-V9VBBA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6801C8432A3;
+	Mon,  5 Feb 2024 14:56:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.165])
+	by smtp.corp.redhat.com (Postfix) with SMTP id BC7FB3C2E;
+	Mon,  5 Feb 2024 14:56:48 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  5 Feb 2024 15:55:34 +0100 (CET)
+Date: Mon, 5 Feb 2024 15:55:32 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pidfd: clone: allow CLONE_THREAD | CLONE_PIDFD together
+Message-ID: <20240205145532.GA28823@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Hi Andrew Davis,
+copy_process() just needs to pass PIDFD_THREAD to __pidfd_prepare()
+if clone_flags & CLONE_THREAD.
 
-On Thu, 25 Jan 2024 10:31:45 -0600, Andrew Davis wrote:
-> The Keystone platforms used their own keystone_defconfig mostly to
-> enable CONFIG_ARM_LPAE which could not be added to the multi_v7 config.
-> Now that we have multi_v7_lpae_defconfig/lpae.config target we can and
-> should use that defconfig for Keystone. Add the remaining must-have
-> options for Keystone support to multi_v7_defconfig.
-> 
-> TI_SCI_*:
-> TI_MESSAGE_MANAGER:
->  Allows TI-SCI communication with system control firmware (PMMC) on K2G.
-> 
-> [...]
+We can also add another CLONE_ flag (or perhaps reuse CLONE_DETACHED)
+to enforce PIDFD_THREAD without CLONE_THREAD.
 
-I have applied the following to branch ti-k3-config-next (branch name
-is a bit confusing, but since changes are very infrequent, I didn't
-want to spin off another branch) on [1].
+Originally-from: Tycho Andersen <tycho@tycho.pizza>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/fork.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Thank you!
-
-[1/1] ARM: multi_v7_defconfig: Add more TI Keystone support
-      commit: 69cd52b92782a466b18ea66a1f8b5f9f956e1648
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 8d08a2d1b095..cd61ca87d0e6 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2311,9 +2311,8 @@ __latent_entropy struct task_struct *copy_process(
+ 		/*
+ 		 * - CLONE_DETACHED is blocked so that we can potentially
+ 		 *   reuse it later for CLONE_PIDFD.
+-		 * - CLONE_THREAD is blocked until someone really needs it.
+ 		 */
+-		if (clone_flags & (CLONE_DETACHED | CLONE_THREAD))
++		if (clone_flags & CLONE_DETACHED)
+ 			return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -2536,8 +2535,10 @@ __latent_entropy struct task_struct *copy_process(
+ 	 * if the fd table isn't shared).
+ 	 */
+ 	if (clone_flags & CLONE_PIDFD) {
++		int flags = (clone_flags & CLONE_THREAD) ? PIDFD_THREAD : 0;
++
+ 		/* Note that no task has been attached to @pid yet. */
+-		retval = __pidfd_prepare(pid, 0, &pidfile);
++		retval = __pidfd_prepare(pid, flags, &pidfile);
+ 		if (retval < 0)
+ 			goto bad_fork_free_pid;
+ 		pidfd = retval;
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.25.1.362.g51ebf55
+
 
