@@ -1,46 +1,46 @@
 Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA369745C2;
-	Mon,  5 Feb 2024 19:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99437745E0;
+	Mon,  5 Feb 2024 19:45:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162309; cv=none; b=sha2i4ZZCpfEsl2oMzQpohVB3AcU0L+2Epq/1I7T1u+qVAYbijFGkzQ70C/dbMGlRxtZZvxM5KsIzARe1ubNRzOgXDQ9a2IAKq/76zhApkUyGHfoITIz12LOZMhmGtcrOFiDaoqTPE7o+Z/NyaYWogDYfQKPYSJPjp27fnWvd5Q=
+	t=1707162310; cv=none; b=pDM5swpaM6/p/8n5jV7MUyI5tmkxYXEjPYgGIywYzq4vyOvsdbe5Ab8iB8raS+4EaOKMswiNiH+AXtaqhOUsyhITvLRByH8jHlSaaPOVBut+jp8jTC6nZLTvE+h6qOth0o3IvoZebCBRLG3IVnbu+k8KWR9O23ZGYKjaP/AjkY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162309; c=relaxed/simple;
-	bh=Lm8ufyWOJHp/dqvPwPh3Hgph+gKZYEOGeH+5IYuik28=;
+	s=arc-20240116; t=1707162310; c=relaxed/simple;
+	bh=XmOFZVJS2nbpGNUIJRoCh2m3rWFsAgRF8B1pZ3UaoOo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VFityvmI8Thyc8l6F4niCp7OV7NOtKmb34kZrVEhWIrxHCv8ORgTJLMN1Y5tkz+0dy8L7/b5Q4JAlmA91aOnj1ISp6K4l9QF/0Psv26xtoRj80wgaBYDucTcMHl3DBEv+7bRdw9e443MSNuGb5K3DSVZDFWm07XS1JBDIaoS1Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I6Ct7cod; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=sy2QDPcpE4SHAKty750eEafSStxSqA1Qt63dTXFeXV1SfrQ/c3Ams4ZfsmU6hL3TTcPPtzbR/4+rp98eV3t31/XX34EXckcLITYRAcreh0PJP6t9FiR0M88P7sPHcQFvVuSQ7KlS+EIsmV1LVBLWHHCUu6Ozp4expNNpGoHSQaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=U/TDTDZe; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I6Ct7cod"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U/TDTDZe"
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415JigZ2101183;
-	Mon, 5 Feb 2024 13:44:42 -0600
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415JipUM101215;
+	Mon, 5 Feb 2024 13:44:51 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707162282;
-	bh=WrDlA3MVIblMNMt/x1ENZcDUaj6UX9hq3LACckiD2VI=;
+	s=ti-com-17Q1; t=1707162291;
+	bh=NIThW8dvWRvWMprZfYkUcAv9QvAIjazC0Wh9+WTdW/k=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=I6Ct7cod9fsUB8kCs1mwpqH0/pAWuGaLzBldpsbL8vu/DN8d9j7tGIlqUitfv+yrG
-	 O/G0XDX0vGXV6uM9AtNp7SNhzgUcP9Q64jQla20bYBHih+WuQswX1NdG4tXuEBaKD2
-	 77oVBxhncT0d17q4/mSNnODnLw18Ebc1urZFLSAI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415JigNI071017
+	b=U/TDTDZe48TOZlXKa2/P5bsRemvEkpBf2zyycXeCvsfYIdO+o9EUhYrflRA9TzKi7
+	 ojOnTHFu3wGQ41vLoQCyPhBK4d1tw0pk93aOPmp5SttYKOV3URTAH2ZrJBH0Y0K7SC
+	 gSqacdWWQu2J0Q+d1zPa59WE9cTXWcxMLozZqblg=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415JipKS071105
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 13:44:42 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 5 Feb 2024 13:44:51 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 13:44:42 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 13:44:51 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 13:44:42 -0600
+ Frontend Transport; Mon, 5 Feb 2024 13:44:51 -0600
 Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415JicQS028467;
-	Mon, 5 Feb 2024 13:44:41 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415JicQg028467;
+	Mon, 5 Feb 2024 13:44:50 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Manivannan Sadhasivam
@@ -62,9 +62,9 @@ CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH v2 05/19] power: reset: tps65086-restart: Use devm_register_sys_off_handler(RESTART)
-Date: Mon, 5 Feb 2024 13:44:23 -0600
-Message-ID: <20240205194437.180802-6-afd@ti.com>
+Subject: [PATCH v2 19/19] power: reset: syscon-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
+Date: Mon, 5 Feb 2024 13:44:37 -0600
+Message-ID: <20240205194437.180802-20-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240205194437.180802-1-afd@ti.com>
 References: <20240205194437.180802-1-afd@ti.com>
@@ -83,82 +83,89 @@ exit paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/power/reset/tps65086-restart.c | 35 ++++++--------------------
- 1 file changed, 7 insertions(+), 28 deletions(-)
+ drivers/power/reset/syscon-poweroff.c | 34 ++++++++++++---------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/power/reset/tps65086-restart.c b/drivers/power/reset/tps65086-restart.c
-index ee8e9f4b837ea..82d7a761a0385 100644
---- a/drivers/power/reset/tps65086-restart.c
-+++ b/drivers/power/reset/tps65086-restart.c
-@@ -10,15 +10,12 @@
- #include <linux/reboot.h>
+diff --git a/drivers/power/reset/syscon-poweroff.c b/drivers/power/reset/syscon-poweroff.c
+index 4899a019256e8..203936f4c544f 100644
+--- a/drivers/power/reset/syscon-poweroff.c
++++ b/drivers/power/reset/syscon-poweroff.c
+@@ -13,6 +13,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
++#include <linux/reboot.h>
+ #include <linux/regmap.h>
  
- struct tps65086_restart {
--	struct notifier_block handler;
- 	struct device *dev;
+ struct syscon_poweroff_data {
+@@ -22,23 +23,30 @@ struct syscon_poweroff_data {
+ 	u32 mask;
  };
  
--static int tps65086_restart_notify(struct notifier_block *this,
--				   unsigned long mode, void *cmd)
-+static int tps65086_restart_notify(struct sys_off_data *data)
- {
--	struct tps65086_restart *tps65086_restart =
--		container_of(this, struct tps65086_restart, handler);
-+	struct tps65086_restart *tps65086_restart = data->cb_data;
- 	struct tps65086 *tps65086 = dev_get_drvdata(tps65086_restart->dev->parent);
- 	int ret;
- 
-@@ -46,13 +43,13 @@ static int tps65086_restart_probe(struct platform_device *pdev)
- 	if (!tps65086_restart)
- 		return -ENOMEM;
- 
--	platform_set_drvdata(pdev, tps65086_restart);
+-static struct syscon_poweroff_data *data;
 -
--	tps65086_restart->handler.notifier_call = tps65086_restart_notify;
--	tps65086_restart->handler.priority = 192;
- 	tps65086_restart->dev = &pdev->dev;
+-static void syscon_poweroff(void)
++static int syscon_poweroff(struct sys_off_data *off_data)
+ {
++	struct syscon_poweroff_data *data = off_data->cb_data;
++
+ 	/* Issue the poweroff */
+ 	regmap_update_bits(data->map, data->offset, data->mask, data->value);
  
--	ret = register_restart_handler(&tps65086_restart->handler);
-+	ret = devm_register_sys_off_handler(&pdev->dev,
-+					    SYS_OFF_MODE_RESTART,
-+					    SYS_OFF_PRIO_HIGH,
-+					    tps65086_restart_notify,
-+					    tps65086_restart);
- 	if (ret) {
- 		dev_err(&pdev->dev, "%s: cannot register restart handler: %d\n",
- 			__func__, ret);
-@@ -62,23 +59,6 @@ static int tps65086_restart_probe(struct platform_device *pdev)
- 	return 0;
+ 	mdelay(1000);
+ 
+ 	pr_emerg("Unable to poweroff system\n");
++
++	return NOTIFY_DONE;
  }
  
--static void tps65086_restart_remove(struct platform_device *pdev)
--{
--	struct tps65086_restart *tps65086_restart = platform_get_drvdata(pdev);
--	int ret;
--
--	ret = unregister_restart_handler(&tps65086_restart->handler);
--	if (ret) {
--		/*
--		 * tps65086_restart_probe() registered the restart handler. So
--		 * unregistering should work fine. Checking the error code
--		 * shouldn't be needed, still doing it for completeness.
--		 */
--		dev_err(&pdev->dev, "%s: cannot unregister restart handler: %d\n",
--			__func__, ret);
+ static int syscon_poweroff_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct syscon_poweroff_data *data;
+ 	int mask_err, value_err;
+ 
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
+ 	data->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
+ 	if (IS_ERR(data->map)) {
+ 		data->map = syscon_node_to_regmap(dev->parent->of_node);
+@@ -69,21 +77,10 @@ static int syscon_poweroff_probe(struct platform_device *pdev)
+ 		data->mask = 0xFFFFFFFF;
+ 	}
+ 
+-	if (pm_power_off) {
+-		dev_err(dev, "pm_power_off already claimed for %ps",
+-			pm_power_off);
+-		return -EBUSY;
 -	}
+-
+-	pm_power_off = syscon_poweroff;
+-
+-	return 0;
 -}
 -
- static const struct platform_device_id tps65086_restart_id_table[] = {
- 	{ "tps65086-reset", },
- 	{ /* sentinel */ }
-@@ -90,7 +70,6 @@ static struct platform_driver tps65086_restart_driver = {
- 		.name = "tps65086-restart",
- 	},
- 	.probe = tps65086_restart_probe,
--	.remove_new = tps65086_restart_remove,
- 	.id_table = tps65086_restart_id_table,
- };
- module_platform_driver(tps65086_restart_driver);
+-static void syscon_poweroff_remove(struct platform_device *pdev)
+-{
+-	if (pm_power_off == syscon_poweroff)
+-		pm_power_off = NULL;
++	return devm_register_sys_off_handler(&pdev->dev,
++					     SYS_OFF_MODE_POWER_OFF,
++					     SYS_OFF_PRIO_DEFAULT,
++					     syscon_poweroff, data);
+ }
+ 
+ static const struct of_device_id syscon_poweroff_of_match[] = {
+@@ -93,7 +90,6 @@ static const struct of_device_id syscon_poweroff_of_match[] = {
+ 
+ static struct platform_driver syscon_poweroff_driver = {
+ 	.probe = syscon_poweroff_probe,
+-	.remove_new = syscon_poweroff_remove,
+ 	.driver = {
+ 		.name = "syscon-poweroff",
+ 		.of_match_table = syscon_poweroff_of_match,
 -- 
 2.39.2
 
