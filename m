@@ -1,59 +1,60 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA231C6AF
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632541C6B2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707136529; cv=none; b=GfQb//zv/xZhl1q5GPxkDSWn50emwdlXC1sU2B5+xqQt9URWwxhU60NaHVzEautiomIv8/ayC5AHct7GETro+bIPJMYHsiSzGh03F/ByMcFSU1hio+BVfk0SHfD+SkNcsRT6RrwNjBy9UULxuBxBjre0sdpwz0HP+HyJuOtVhNg=
+	t=1707136530; cv=none; b=Gc2u4YbSprJCYfhQQmt3n2MQPlZj9PN3xF9sUiUbsB2DYOEeTXyl1Q+g+T33PPUA1cAi8tXNsed/HhI4IIvpynP+TOhQ3ygPckD1uL+mwDody8dsCSg9iH+soUhYYEEOMij/Ks18gVYFgKlAuJKay3aWL2L95VExTDdUsBP2IH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707136529; c=relaxed/simple;
-	bh=5d6UiYMglkTbWmRhqsEoPg9BNX2q12MK63EVcZLBafI=;
+	s=arc-20240116; t=1707136530; c=relaxed/simple;
+	bh=TEqXeG3EE5r0HJJI2aXfyZ+mDUoPdveS85d+Fo7JBf4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jOJ3bQ1V0xnilqU5UpOdbCu1ttZi4H6jlYcvPvwxdeXmM9PBipLM7fPLLmzxPGWWHPcH0kz7sc6woXvI6dSeJFCHLZ53QxCh2n9XOeNi1rfJ9A6Vsqo+LXm/XIETa5iJej3uwc3ZtSMW0Oo7PMDne+yeF+khnJWV3Q0z+gpYEHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZtrYtgLE; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=LPiV94GvPd1yXB2OK0PealigD8a7pgiYJFV/IEWmsCu9R14DMZ9/5Hc4fxQl04p8yIx+2dEc8GMFI/f2zxaC2hsNEkMl6JoURLYhlXpUU5IUFUC3pqGwIoAwvjZ9rYo1jZuBkyxVVwzD+kZ4c3zD0jHfZdIHQXrMHrWoWyrqOoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L4VxypKJ; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZtrYtgLE"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d918008b99so31962165ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:35:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L4VxypKJ"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e038bdf6b1so738630b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:35:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707136527; x=1707741327; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707136528; x=1707741328; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a8sipwMRC4Kd6MHj5r1Ne28hNhCgrZv7vPqfbBQ2q0M=;
-        b=ZtrYtgLE4lrp4hep7JNiDbGQt0SinOyw1fqb5W9sqzCg3bEWODfWAHbF/grbhueypU
-         GxZ2fTweRhyPmz8nBXFX1Xx9bdsTemSnC9II1PhocTspmrUyiQMH58+cOtptElaKytKB
-         OUD9jpl5LwJxxqNitFOTHSdwJD32oeDIaf4Hk=
+        bh=FH86lG6MyR7uXWPlPZaZQtj5zclv3S/IDeQNDhD0wsU=;
+        b=L4VxypKJ7KRXVpUCrAk89VOHjkk462r/l9kQsHKwYwuuEVGsndX6FCzgGt7B5sA7zA
+         xHYna+NdYFR9Nunfiz0FwpyIItLQk9yEhuBhj1ZammQoC1LoykfJzlo9f/rx9mJQZJ+0
+         l2yKO0XY/9l96hib65YzYdmMa0NZKlfOnl7P8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707136527; x=1707741327;
+        d=1e100.net; s=20230601; t=1707136528; x=1707741328;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a8sipwMRC4Kd6MHj5r1Ne28hNhCgrZv7vPqfbBQ2q0M=;
-        b=GysnQnWReolSI+eFghALNxYSj8tVNQpY8m01QZXZwxBFRrWoW2TeAn62bd1+NLkMRw
-         yDwT98E5Jbsm8ATEKXvRgQc3rGE0GuaRl67xfn1yn4+E8IWMK/MH9fvlxPDzd9AN7GdR
-         2Iy0OTpCBYBummMl58v05q42LXRNMi9L4xxN8Nk0FO+KLgkN5k+9vD7qRsmYjNLoL34m
-         U/b3uWpO2wEDbRzBXR/u7bfMVir81Ed73Sl1EEC+fKG9CnNvEocW+SP7rgUn0yoQwvgN
-         ZCsgSyCtcuy/PoG1aXWMxUlHyoGhVqzvleNcuxOH/SZtqdwdYYjPNgiYTPAhaJl59Ivk
-         VZ+g==
-X-Gm-Message-State: AOJu0YzTO/+9Trrt+yKzKDhjNWCxSazLmlSlg30N/IK31vaRlccKbjoP
-	rJk24XemSYlgltfpe90F+5w8jsa3B/n6qCsag4sdslBBDLzr2pUOYW4JxBD4ig==
-X-Google-Smtp-Source: AGHT+IHkHiW4eCpoZrH5VS9fL3wKdw7R87tdm2Mzop8u3my/RGXZjyKz1iWzGWMARGlP4o8yTfJaLQ==
-X-Received: by 2002:a17:903:11d0:b0:1d6:f1cb:7a95 with SMTP id q16-20020a17090311d000b001d6f1cb7a95mr17046893plh.57.1707136526725;
-        Mon, 05 Feb 2024 04:35:26 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWByyKi34EiBtuytAcMo6KMj6URrFVZ74/I4YaRUx7jw6ft7ydbHcPrJMa34hmYyUIhs9cH2qnU/xx8FhYaq9HJ0U3MkBMjasin/nW1UcbkS2a7mj1SzmE8BTcYjHDA7AOHT22fZ6eRugXVe6Wi/7kvmoRMWLibqZswU8V70tczIDUzmG0UC+65vvl+/8O1BFB6VGOFye62MbQrrtinDcuyGokYnuGz8v+wbZScio1q/AWhlvG6Wos7OcFTU0oo5aq1W5sjgZP5CnfVqKgNyi9AF2mm5agu8+3qn8u+xENHnq7e0qzvAO+zwRTYWRqvAyId9Ee58YJtv2tSp6QysUWodSAEnx8YCAaXJj6jvEZShKsJWbRXUSMoFbCiJu2BXFJGGykEt9ZXjazuc5b8kPZmaCsdA1dnyEVd8mAxehAYat+/ZuaQMIv88Lgc1EXfOcl6F4SWfULyk2KSIRZSmKsH
+        bh=FH86lG6MyR7uXWPlPZaZQtj5zclv3S/IDeQNDhD0wsU=;
+        b=lDYwtaQwkt9zKo6F4dspDaX8PoUeCr4IKeMlbLoLwHDCwqlNqaavB2T1IC69XoB2eu
+         oNCtYuSKfkh7j8WIYe/DeHnERYRXpuiIhonTYEyCh6DuhMhOrcrDImKJ2KzP5JbJR0vm
+         oosR1HCwvlTcQs5fWvpZGstPsDp5gdpiGXOsqQ+5IlMItUN16ZIRAFbWurJuE6lHo7Be
+         l/6ldqX4wpmscSCzJvcYNR3pak9N+Sl76C731TBx31WJGpVeExNi5qEvxRC2+nGpCuQh
+         TPGLDF64x75e/L7rIaw7cVR4DzoGcuGp9QpY2DnjLncdE2pcEEft4rFw7BKWzKVtU/fY
+         NcAw==
+X-Gm-Message-State: AOJu0YwsvpOSBX4l2c51RPaoSUfFVYiDjoH1T0gKgQ53fL3IrmRk0WBZ
+	+YjGOjf6piL86/rsYEA2/sXVcL7QjfWrRqp88Yome+ebwyvENB4SklYoj1SVbQ==
+X-Google-Smtp-Source: AGHT+IFlfffgYQK5YYez78+IfsArDP07cdit0XksGG6AD/xQaqmTxf1lIWlhL3nllltxLu/AYqTxfA==
+X-Received: by 2002:aa7:87d3:0:b0:6e0:4e58:f21b with SMTP id i19-20020aa787d3000000b006e04e58f21bmr761630pfo.15.1707136528648;
+        Mon, 05 Feb 2024 04:35:28 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWwHha8YxvP2aoIRIZZ8PXriiDHebzEwEPdQS1GCiUmNtMp7csrX2Vw+AKCDxmAxF83WOZEXOVnTruJgzWNTBTfEcH8if2KGpE7zm4SbpGoDOFecCGttc6XrjLdg+cwsWTIBGQh5Rag9UuMLglMTn4D74UUHRXvOc9Lgxs2hHtrGRIksJx1ww110fVmUquqOsQMM6L2QFLzpfH8nI0wGJAuw5Xbe4J2yH9Zc/aKfbVbhNvsAMXOxtfmY+qPqxqsh1/x8z6/VrRBthvrmE5xAbFTX0XoD6rJILJyX5/84ez76SejdmlFWiwS/CfnQ+rizfNNf09XD4CkbEEAICIoGTB+wpJtmAlY8zC5RTRIH9/ypAT7vPEwWXPaQZnPL3l/gXTt2ZjvKM/gh6wI2WUCCrkx5DUphblH+z9OfbXszwBmF4xlPjUvePU6T0W/RaCdgw+0iIb4zBpJ7rkGof6jWgeKjfRGG3D9MPokDa17rA8H6FNyR6Z7cIqpEbhw
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mn16-20020a1709030a5000b001d8aa88f59esm6202642plb.110.2024.02.05.04.35.25
+        by smtp.gmail.com with ESMTPSA id j32-20020a632320000000b005cd821a01d4sm6877508pgj.28.2024.02.05.04.35.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:35:25 -0800 (PST)
+        Mon, 05 Feb 2024 04:35:26 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Andy Shevchenko <andy@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-hardening@vger.kernel.org,
 	Richard Weinberger <richard@nod.at>,
-	linux-um@lists.infradead.org,
 	Justin Stitt <justinstitt@google.com>,
 	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
 	Johannes Berg <johannes@sipsolutions.net>,
@@ -63,10 +64,10 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Azeem Shaikh <azeemshaikh38@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/4] um: Convert strscpy() usage to 2-argument style
-Date: Mon,  5 Feb 2024 04:35:24 -0800
-Message-Id: <20240205123525.1379299-4-keescook@chromium.org>
+	linux-um@lists.infradead.org
+Subject: [PATCH v2 1/4] string: Redefine strscpy_pad() as a macro
+Date: Mon,  5 Feb 2024 04:35:21 -0800
+Message-Id: <20240205123525.1379299-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240205122916.it.909-kees@kernel.org>
 References: <20240205122916.it.909-kees@kernel.org>
@@ -76,158 +77,125 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5346; i=keescook@chromium.org;
- h=from:subject; bh=5d6UiYMglkTbWmRhqsEoPg9BNX2q12MK63EVcZLBafI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwNYLb+R0+gw7GgnI3QI4KGLyNGSb52JGRxet5
- 1XMuj4aUkGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcDWCwAKCRCJcvTf3G3A
- JrXHD/4k2l9SR9HgecqdmGaTxym3IrejezIaI8b5MzIPvoImcFWT0Mf8aXTgXEyxq8uWxUSGeHF
- WbBtFjN5vndp+eT6d7Aau0bKlAgZIyzEb5oh+f4vwVnyErCKtq8eTR2yjy+ki6dPXhZ6yV/6yL/
- GX58ENWMI4OasMu+pLJDYzsdkCia0HyOtB6IYN+UcnWWEdLT4p6q1WN8uLfGUgxAWDif1KgsnHt
- wL1eZTaHu04b3TXgAbUYcHaAT7WdkDwcotPpcAshvhqyhILsV9GaRrkXZIq4mVVw3kn7KAuO8VU
- wmm4YHXaQgZO6P0F3dbT9CVdvBFQ95hne9VsR+LTrnh+eLKUyXYTtBZcE7qo/gC8P6gV7tmFTSn
- tyo0uiKhU1h4ykOlP4qxbmRQXTceEMzGZaWf7PuO8sOeHjfssdyktyPLKxuB+qfDGp5B7DLfel8
- 6kgbcZJ/PgHx45rckxp+K6ea68m6d5S5K3hCpfNcrmAbg3o4N8DCSLcC3cimv9KJtzQxDhYoRsT
- HO7X2O25NJL+WtwX62RvK8qmvioZ4Lxadnhl9DWe6o4Mi/bLK8es5poQg3jOy4wqI0x7F9HnhOX
- vfIrHiKUhhofqwMXaGiv2ZxH4yN/5Q7mUbiv/NPgHVG7c9p7EckxeVDWYw0VSyqUiFM2rTbu0TA qVzP3WSRN66gMAw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3873; i=keescook@chromium.org;
+ h=from:subject; bh=TEqXeG3EE5r0HJJI2aXfyZ+mDUoPdveS85d+Fo7JBf4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwNYLoPV5NTQ5GwRGCijGU/aLTVRbyEZipneuU
+ MRho0SleAeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcDWCwAKCRCJcvTf3G3A
+ JjLlD/977C+XMdrLxO0tkJtnq9nO/lyXGwJ3l1LW0AnI2sQrcE8MvllgCnv8jv/II3aTMd2vN9I
+ xgwhNpMJ4NRgwd/aQT3EcXg7gegX4oXTTo5Cr44s9gCAMWcNouxVQLVO1OFC83tBUNnkVXxNVnN
+ PaATkrRl3yMdrcA2BEP7vtPJ239fB/ZzU0a4wGgIJ/A1+AvNy4L4M2GIYQf0vowoT2g769325Qw
+ u0uXMqpFubwmpTBbFKkQPUb/lNkZKSq87HnXXOmTSFyqvZEa5mrXoTl10VCF86rmQyIN1fwj7GL
+ QbQVjt9Bou0wk8qUR0pkjoRA4q+z95bzhsx4vftom9CzgugBJzNdo0tzZ/4rM/iRIdwanBfUcvg
+ loh2poV/udgDFcMlOiP8J/gM8ty7rRlFIEsc/ZIwTz9qFXFDgQzneRVBfq/pQ5wVAHBHmM3Msts
+ hnz3lXsTCSCyJusPtxPVqqwh1wO/3fIxp+SPqjbTzBucFtG2by68KAuQShhC8LtCFqG690T5h2b
+ mQIU2FZgmjwEzErgF37A6wSigJ1+eQRblZsMQrMVIZej/ALqfadFztxgiF5Qc4SfC8p8YiWUbPN
+ 7s/9oP/Imsnzy24+O1UMvEaRTX4bAVV1nMq05nP7DuB9/Jk4AMp/bY24MWR+3XEdB4leJ4KJbVp fhcKDnAmLXTx9Aw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The ARCH=um build has its own idea about strscpy()'s definition. Adjust
-the callers to remove the redundant sizeof() arguments ahead of treewide
-changes, since it needs a manual adjustment for the newly named
-sized_strscpy() export.
+In preparation for making strscpy_pad()'s 3rd argument optional, redefine
+it as a macro. This also has the benefit of allowing greater FORITFY
+introspection, as it couldn't see into the strscpy() nor the memset()
+within strscpy_pad().
 
-Cc: Richard Weinberger <richard@nod.at>
-Cc: linux-um@lists.infradead.org
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/um/drivers/net_kern.c               | 2 +-
- arch/um/drivers/vector_kern.c            | 2 +-
- arch/um/drivers/vector_user.c            | 4 ++--
- arch/um/include/shared/user.h            | 2 +-
- arch/um/os-Linux/drivers/ethertap_user.c | 2 +-
- arch/um/os-Linux/drivers/tuntap_user.c   | 2 +-
- arch/um/os-Linux/umid.c                  | 6 +++---
- 7 files changed, 10 insertions(+), 10 deletions(-)
+ include/linux/string.h | 33 +++++++++++++++++++++++++++++++--
+ lib/string_helpers.c   | 34 ----------------------------------
+ 2 files changed, 31 insertions(+), 36 deletions(-)
 
-diff --git a/arch/um/drivers/net_kern.c b/arch/um/drivers/net_kern.c
-index cabcc501b448..77c4afb8ab90 100644
---- a/arch/um/drivers/net_kern.c
-+++ b/arch/um/drivers/net_kern.c
-@@ -265,7 +265,7 @@ static void uml_net_poll_controller(struct net_device *dev)
- static void uml_net_get_drvinfo(struct net_device *dev,
- 				struct ethtool_drvinfo *info)
- {
--	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	strscpy(info->driver, DRIVER_NAME);
+diff --git a/include/linux/string.h b/include/linux/string.h
+index ab148d8dbfc1..03f59cf7fe72 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -70,8 +70,37 @@ extern char * strncpy(char *,const char *, __kernel_size_t);
+ ssize_t strscpy(char *, const char *, size_t);
+ #endif
+ 
+-/* Wraps calls to strscpy()/memset(), no arch specific code required */
+-ssize_t strscpy_pad(char *dest, const char *src, size_t count);
++/**
++ * strscpy_pad() - Copy a C-string into a sized buffer
++ * @dest: Where to copy the string to
++ * @src: Where to copy the string from
++ * @count: Size of destination buffer
++ *
++ * Copy the string, or as much of it as fits, into the dest buffer. The
++ * behavior is undefined if the string buffers overlap. The destination
++ * buffer is always %NUL terminated, unless it's zero-sized.
++ *
++ * If the source string is shorter than the destination buffer, zeros
++ * the tail of the destination buffer.
++ *
++ * For full explanation of why you may want to consider using the
++ * 'strscpy' functions please see the function docstring for strscpy().
++ *
++ * Returns:
++ * * The number of characters copied (not including the trailing %NULs)
++ * * -E2BIG if count is 0 or @src was truncated.
++ */
++#define strscpy_pad(dest, src, count)	({			\
++	char *__dst = (dest);						\
++	const char *__src = (src);					\
++	const size_t __count = (count);					\
++	ssize_t __wrote;						\
++									\
++	__wrote = strscpy(__dst, __src, __count);			\
++	if (__wrote >= 0 && __wrote < __count)				\
++		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
++	__wrote;							\
++})
+ 
+ #ifndef __HAVE_ARCH_STRCAT
+ extern char * strcat(char *, const char *);
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 7713f73e66b0..606c3099013f 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -825,40 +825,6 @@ char **devm_kasprintf_strarray(struct device *dev, const char *prefix, size_t n)
  }
+ EXPORT_SYMBOL_GPL(devm_kasprintf_strarray);
  
- static const struct ethtool_ops uml_net_ethtool_ops = {
-diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
-index 131b7cb29576..dc2feae789cb 100644
---- a/arch/um/drivers/vector_kern.c
-+++ b/arch/um/drivers/vector_kern.c
-@@ -1373,7 +1373,7 @@ static void vector_net_poll_controller(struct net_device *dev)
- static void vector_net_get_drvinfo(struct net_device *dev,
- 				struct ethtool_drvinfo *info)
- {
--	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	strscpy(info->driver, DRIVER_NAME);
- }
- 
- static int vector_net_load_bpf_flash(struct net_device *dev,
-diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-index c719e1ec4645..b16a5e5619d3 100644
---- a/arch/um/drivers/vector_user.c
-+++ b/arch/um/drivers/vector_user.c
-@@ -141,7 +141,7 @@ static int create_tap_fd(char *iface)
- 	}
- 	memset(&ifr, 0, sizeof(ifr));
- 	ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_VNET_HDR;
--	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-+	strscpy(ifr.ifr_name, iface);
- 
- 	err = ioctl(fd, TUNSETIFF, (void *) &ifr);
- 	if (err != 0) {
-@@ -171,7 +171,7 @@ static int create_raw_fd(char *iface, int flags, int proto)
- 		goto raw_fd_cleanup;
- 	}
- 	memset(&ifr, 0, sizeof(ifr));
--	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-+	strscpy(ifr.ifr_name, iface);
- 	if (ioctl(fd, SIOCGIFINDEX, (void *) &ifr) < 0) {
- 		err = -errno;
- 		goto raw_fd_cleanup;
-diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user.h
-index 9568cc04cbb7..326e52450e41 100644
---- a/arch/um/include/shared/user.h
-+++ b/arch/um/include/shared/user.h
-@@ -52,7 +52,7 @@ static inline int printk(const char *fmt, ...)
- extern int in_aton(char *str);
- extern size_t strlcat(char *, const char *, size_t);
- extern size_t sized_strscpy(char *, const char *, size_t);
--#define strscpy(dst, src, size)	sized_strscpy(dst, src, size)
-+#define strscpy(dst, src)	sized_strscpy(dst, src, sizeof(dst))
- 
- /* Copied from linux/compiler-gcc.h since we can't include it directly */
- #define barrier() __asm__ __volatile__("": : :"memory")
-diff --git a/arch/um/os-Linux/drivers/ethertap_user.c b/arch/um/os-Linux/drivers/ethertap_user.c
-index 3363851a4ae8..bdf215c0eca7 100644
---- a/arch/um/os-Linux/drivers/ethertap_user.c
-+++ b/arch/um/os-Linux/drivers/ethertap_user.c
-@@ -105,7 +105,7 @@ static int etap_tramp(char *dev, char *gate, int control_me,
- 	sprintf(data_fd_buf, "%d", data_remote);
- 	sprintf(version_buf, "%d", UML_NET_VERSION);
- 	if (gate != NULL) {
--		strscpy(gate_buf, gate, sizeof(gate_buf));
-+		strscpy(gate_buf, gate);
- 		args = setup_args;
- 	}
- 	else args = nosetup_args;
-diff --git a/arch/um/os-Linux/drivers/tuntap_user.c b/arch/um/os-Linux/drivers/tuntap_user.c
-index 2284e9c1cbbb..91f0e27ca3a6 100644
---- a/arch/um/os-Linux/drivers/tuntap_user.c
-+++ b/arch/um/os-Linux/drivers/tuntap_user.c
-@@ -146,7 +146,7 @@ static int tuntap_open(void *data)
- 		}
- 		memset(&ifr, 0, sizeof(ifr));
- 		ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
--		strscpy(ifr.ifr_name, pri->dev_name, sizeof(ifr.ifr_name));
-+		strscpy(ifr.ifr_name, pri->dev_name);
- 		if (ioctl(pri->fd, TUNSETIFF, &ifr) < 0) {
- 			err = -errno;
- 			printk(UM_KERN_ERR "TUNSETIFF failed, errno = %d\n",
-diff --git a/arch/um/os-Linux/umid.c b/arch/um/os-Linux/umid.c
-index 288c422bfa96..e09d65b05d1c 100644
---- a/arch/um/os-Linux/umid.c
-+++ b/arch/um/os-Linux/umid.c
-@@ -40,7 +40,7 @@ static int __init make_uml_dir(void)
- 				__func__);
- 			goto err;
- 		}
--		strscpy(dir, home, sizeof(dir));
-+		strscpy(dir, home);
- 		uml_dir++;
- 	}
- 	strlcat(dir, uml_dir, sizeof(dir));
-@@ -243,7 +243,7 @@ int __init set_umid(char *name)
- 	if (strlen(name) > UMID_LEN - 1)
- 		return -E2BIG;
- 
--	strscpy(umid, name, sizeof(umid));
-+	strscpy(umid, name);
- 
- 	return 0;
- }
-@@ -262,7 +262,7 @@ static int __init make_umid(void)
- 	make_uml_dir();
- 
- 	if (*umid == '\0') {
--		strscpy(tmp, uml_dir, sizeof(tmp));
-+		strscpy(tmp, uml_dir);
- 		strlcat(tmp, "XXXXXX", sizeof(tmp));
- 		fd = mkstemp(tmp);
- 		if (fd < 0) {
+-/**
+- * strscpy_pad() - Copy a C-string into a sized buffer
+- * @dest: Where to copy the string to
+- * @src: Where to copy the string from
+- * @count: Size of destination buffer
+- *
+- * Copy the string, or as much of it as fits, into the dest buffer.  The
+- * behavior is undefined if the string buffers overlap.  The destination
+- * buffer is always %NUL terminated, unless it's zero-sized.
+- *
+- * If the source string is shorter than the destination buffer, zeros
+- * the tail of the destination buffer.
+- *
+- * For full explanation of why you may want to consider using the
+- * 'strscpy' functions please see the function docstring for strscpy().
+- *
+- * Returns:
+- * * The number of characters copied (not including the trailing %NUL)
+- * * -E2BIG if count is 0 or @src was truncated.
+- */
+-ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+-{
+-	ssize_t written;
+-
+-	written = strscpy(dest, src, count);
+-	if (written < 0 || written == count - 1)
+-		return written;
+-
+-	memset(dest + written + 1, 0, count - written - 1);
+-
+-	return written;
+-}
+-EXPORT_SYMBOL(strscpy_pad);
+-
+ /**
+  * skip_spaces - Removes leading whitespace from @str.
+  * @str: The string to be stripped.
 -- 
 2.34.1
 
