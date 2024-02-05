@@ -1,46 +1,46 @@
 Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2075.outbound.protection.outlook.com [40.107.7.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C3F4BA93;
-	Mon,  5 Feb 2024 23:34:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE6A50266;
+	Mon,  5 Feb 2024 23:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707176056; cv=fail; b=H0GTIuRvjy0KaC4rxRdFqdAeMyE1QG1sCE2Tcho5gn+eQAyvVyTpD8emIbDXt5Rf8i0cASn1nlcwf3bexoTYjHMZ6BdtTgJXaOTlEEPdEGHNoer5pAnyXn102dl5FiUEN23zM3IDe8DGx5hcOwyeNrmmacCf3e4hRTaRICvN9xo=
+	t=1707176061; cv=fail; b=F9V3+CbXiKACPITH5NSUsnymsX3HUcf6ZAncyqFtxWT423n6oxGXr2PeQfjQxvNxiQLWPXyYc9mlzS9cNR+ZgOUW3kSpcigOvxnnEv1vvKeeG3oDcOyk5jFUDamTJmIlPvA30w0XT2JXwj6hZaXhejLOmPRqVBSmBXandmISSFQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707176056; c=relaxed/simple;
-	bh=oL+H3dx45DTqLy3vG5zsOJMz4W/AofYYI/tOi5botrY=;
+	s=arc-20240116; t=1707176061; c=relaxed/simple;
+	bh=vr5pSAW8c7Csyy4O0rn+S/fcEcsMxlWKd61zeOMvMZA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ntomN0UmAXp35JDdMo7g8uUNG/K0p6hntN9yHt9lThSC4Y1ykUYdQ+mY4ISBw2A/7S0yyEYKPLDC9NtrtQnWeD2P6KwZgEBcQYTBdUNQEXqjdGQmLJL+aNkOhtF9J/c8N9baN2ALojXt0WkAzurhwifbjWNlkGdV/BtKeNKFR44=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=m/VH0M1T; arc=fail smtp.client-ip=40.107.7.75
+	 Content-Type:MIME-Version; b=HUW5Dp0GYhZpzAW2rPDmdP9eEEdl4QSR3wkHMvQKpE0WAf7x1HH6oZv/tbcMRtLyNkxMLgp7KexKmqWih+adTBZwBtmGbhBrS8LR1W1QtSRAcxdzNc2gZFMbH9DS4gkeTRws+Nex99p2DQ+yA+WgI3MNoAZHWI10jMhvXHWnh6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=daa2JfWc; arc=fail smtp.client-ip=40.107.7.75
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m/VH0M1T"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="daa2JfWc"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lj++qF5kzsVmS3Sjx+t7LvBGYEggku8Fokyew4z7Vqtk3kbYkLkuXwyXY0lVPZJXEJ1khLqV60CohQIR7HV+/oq/RgKK4zsG3EXAc7mEJDLdDq8sq1mNeJxEyVA13uzQXOrxolUE2fjfveclhioKEznmKAM5IgZhYtt+lIXvy6bJQuE4bMC2lujkFpIhZE+4WnvHXw/AjG6my3uIeKYcZmMLVo5TSahuUMsZvV7Rijlr7W30O1DmNWM8c66PFJ3qo7NqoIbeyIAm1SDv6nL4DZg9qE65oS7ZQoH2eRo/kP/KEwiD1jXcpB4vrsAJ3jIBKZ6Jg32X5XCd39jrV57ZAg==
+ b=hcrlatTI+fgfZcDzNSJzvn+UfxlO1nPN+Yjcqz2C3iLHHhGgSbnO44oAboIyc5fXUnV03HSDYbGIJsjcPyOQw7lPitBfKSeelb4MZuFtiDeIK6rP3mXRNDvssCBICEgTN9ma3uTRF9RO7LjF3cKWiZLTixffEsilz8eBoUecehQxgKio3J6k8R1vnXZK6GJ93lse5FQ0E8ooRfTabRXqDZzDairt2PLX0fKUQL95Mo56hKMa+L/0nCDH/RErxC5QLLrDbEeWEhc/uwJc3mAtPAisuhW84I8wutf84rIJ+bQW1t9RNKGLhnC5bRjLfAxBWfrVs3C2lXPHhEhyMeQdfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bBfqdO5HHaFNgPy0YAFfb7aeA0l6qgQTYR8UHnlAJko=;
- b=PRGjLSeNFQnWluq7mk80WjBdEE+HoUiBN0TC+hFsM8uDLuVKEjht2q4yPs+EakSiJfaMosOHGRoT47Xo1NK+qjTduN/uPMNnFZDiY5983wu3r/B5XNhr8oDnuezfcxvCGYDW84AdKRekRiDKOHOUbyIUOvc13MkVVXa13cu4Ir1YPTmq6wq2wo99jYSvSui6iUX8lSlaTu0VGZNHqWMdYb7HmhG5yFc1El17XefIRTHRWfQfkaBwEWwmZm2ekc5AeT5ofAtcfutDB2x/hYg4vTuFrskf1ZN0Fh6EeVMiG9Un1cTiIaDisYkSV+kXNXXKZRRVsuv6NmywarcH26oNQg==
+ bh=kUNGYZl9rJaumeVI5613Nzm3nO+ux+fJe3qYoJmz4wE=;
+ b=cvRPRPXKUPmTDZPr4tMqEE+qmyfDRRIw7lEGaMDdGwY83cT7pbBpHIR0q8XmSXVAsFLPwNM0/2rDrjkaldwCFzWFIdW0ZaPjxc5El2CbkNHTXGdcESZ7uVw0uc3qqzuWFTvR7YTJmcOQyiT+NNeKci3cJYdUICHUnE4I6GH8b+Ff3bvx3ZXx6jNoxfV9VHS8Lzdc2y2/OgieIDYxoq2f5TPG/pfU8KM1kXyMBQPa4AzBJsk9K/Q6JsNJRowStgYmAWBgcb05nAu0zNhZ+XYe96ff0g87oOBEenTpRgPveizDlZ7ttLtX/OG64uZg3PJgzxcGqJSj4YNs/pJIuEXwNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bBfqdO5HHaFNgPy0YAFfb7aeA0l6qgQTYR8UHnlAJko=;
- b=m/VH0M1TAwEcn/iffjdQYFSjc4fyQ/xLByPGVwbtNSwnJaa+tk2pNGzsQk/HcKKEDrmqGp1XyrBfYD7g+x2HZo3dxjfuh5ee4V4CQ3cfq3Lp2j3o/hQvRVIvkjN5kCJqTPqjhpYKsW6arSLBvhpLI0Kx1kgU+txG/LpOdITlbUQ=
+ bh=kUNGYZl9rJaumeVI5613Nzm3nO+ux+fJe3qYoJmz4wE=;
+ b=daa2JfWcjGda1tK/p4mDh8qbmL5xb+HWF5gsFXbvsTpqg5l1dTHoIUt8iyJmgz0OgE2fTMfIZpfgKOhfmBhv6dF4UmQP7zhkYroZaGgOJchmDD5IcLRfqKVFH5s6heD3Z2i1bVanLXDKofzXIxTUgiW4QTRWr8AqZdEbLJqXytc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by AS8PR04MB9205.eurprd04.prod.outlook.com (2603:10a6:20b:44c::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34; Mon, 5 Feb
- 2024 23:34:07 +0000
+ 2024 23:34:16 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
- 23:34:07 +0000
+ 23:34:16 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: frank.li@nxp.com
 Cc: alexandre.belloni@bootlin.com,
@@ -59,9 +59,9 @@ Cc: alexandre.belloni@bootlin.com,
 	miquel.raynal@bootlin.com,
 	robh@kernel.org,
 	zbigniew.lukwinski@linux.intel.com
-Subject: [PATCH v7 6/8] i3c: target: func: add tty driver
-Date: Mon,  5 Feb 2024 18:33:24 -0500
-Message-Id: <20240205233326.552576-7-Frank.Li@nxp.com>
+Subject: [PATCH v7 8/8] tty: i3c: add TTY over I3C master support
+Date: Mon,  5 Feb 2024 18:33:26 -0500
+Message-Id: <20240205233326.552576-9-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240205233326.552576-1-Frank.Li@nxp.com>
 References: <20240205233326.552576-1-Frank.Li@nxp.com>
@@ -78,324 +78,279 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB9205:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24576fae-b3c2-4340-cb78-08dc26a2f29f
+X-MS-Office365-Filtering-Correlation-Id: 3bffcdc8-d1b2-4f76-acfd-08dc26a2f794
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	yITOAniRPkUYQ+XQ1U8EUGD4HESehTBnIGyUWeNxqOieKSqSJn5WscVazCZBLuR1HsfyBDpSD1rA6gaYJoitCSSjbglKPSMF/t572mom2IaxluTwZFiHMq115Of+JmZc+p7zxMLGp9jpy/UjjWYn88L5kB9RE/5SJ+zz3IWyFS9PEIJ6tYVSIdMtMruV494u0OrIoxqzVUm5K9eR4TIAvAranY28Eo99qXZAZoKHuJz7UClyez5mZg+6MpX6O5oHEOptdvscLf41cMCAkTUXRKiVe2jG8+WVl4iS4wHgWEp4NuOTngD8YuV5IYJtff+ES/4rtm6nFYzLZHj+zNYu1GGQX3Q6h3AjqATq+946PIez8HQHtb1FMBNENmInKbBcMlxJZ0zEUl/gFKldyCQI1Zx0u+7W65w/S1x+6CDHSuq3G9DVMZkZGBmd5BOTVuqVvjOk/Fpvn5PWBMFzlHMv829UV3htgyEsKRtEAdHEhycY7a/A3xZ7KoBOFHegJVvTTLEx7kNAZLVa0pRS6Sw/u39EYcQ8cZbMwY0hgCvmOO4NyiIzb26RgZlx+9g532+j5F85FNke8QyRUrn8D+/QLllCU5AbjwstsEyFodROnT0xZ3RZsCtlgErDBDOyw/mX
+	oHGmlKjTpV7dqye0SfGLd6AlqpZi9vJanvanq2zexiDTApFB/EG0oUZqiuwGA/7AHMvyFuIpQYWaRjvbXQNNv5SyVttFJOxS81aLaUvvv+q30X8SEvDR7R4263Y6zWxjwp+Kjti5zXylcadSyxtr4NoOFvkr/uMTAvggXoC1VfETZgmuUeVsyRAQRHiH0RpMiRPjb/Sy8rVtCClHJ9q5ZCpmHdxvFYa3Ngjt8bgSgj21Dk+rtbdhBTLZlpiI/9RKDs09ooL9H7LxrJAzalhr5Y7xtt/SFLdjL1Qa0fnmV04yXKE+aHTXOcu5xOKP57MZw/vqgsqJa+y2mNflddM0E1HDVmCZ4S0wZERtv5zTz4wlrtkV+zOcrkWSzV0A9SPdV88Ja2zL4nFgsNQZuT0fi3uWiJKX8CQa/BSEvx+g54RpH+J2jizrPU4RU/L64ltaK4QtU//fWBOZ0SwnCNxZ5uNXl/wcUXGFjjAU+SmXZcpcFvrniqIzkFQtkXKQLinpFwXjVxaGgso1FSFwz8ZgLo306HmK+1ucH13u9GIBXDr6kakBQ7I2VVk0ldYb4Wxszo9xC2sgTIV3frg3NubWU84w8V12r0UW1iRyKUiH8W0=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(396003)(376002)(366004)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(1076003)(2616005)(26005)(86362001)(41300700001)(7416002)(30864003)(6486002)(5660300002)(2906002)(38350700005)(316002)(37006003)(66476007)(66556008)(66946007)(478600001)(8676002)(34206002)(4326008)(8936002)(36756003)(6512007)(6506007)(52116002)(6666004)(38100700002)(83380400001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(396003)(376002)(366004)(230273577357003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(1076003)(2616005)(26005)(86362001)(41300700001)(7416002)(30864003)(966005)(6486002)(5660300002)(2906002)(38350700005)(316002)(37006003)(66476007)(66556008)(66946007)(478600001)(8676002)(34206002)(4326008)(8936002)(36756003)(6512007)(6506007)(52116002)(6666004)(38100700002)(83380400001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?csPNmYTBK1OcfLlA6xYgebepBU0wR0WKLP3m38xfUUIGVdVaAdR9E9POGA98?=
- =?us-ascii?Q?doOhoFoBp6H4wCo9eNJ6/XCCLEKJw9yuuBzVmzQy6AuuvaqRDDrIV3sPcKqu?=
- =?us-ascii?Q?E3JXz86BU7vfai7N7xV2f86hLPfRiuOYBBssEA4liY8LYPyTCG/VAvxutzyo?=
- =?us-ascii?Q?fgSAzI4tPFWE19eG0JqtFV3IoA6xrzbgdH2Y3ZRHlGMaPRFgYrFCEB+SqiwS?=
- =?us-ascii?Q?IhDMJyhMj6PnZY/3kb/1uvjDuwk3s8nVJVZ3nsYX9Ig+OvVBlDbhx8G4LJqO?=
- =?us-ascii?Q?5dbqPY2n9nmbEIy2t0uwNRwOzevRHtOdlz5uYOqjpDJcHP9dP2HAttVhoUhu?=
- =?us-ascii?Q?F1tDyR9595tEK5YxdXFDXnHd6X9DScNxOMlPznZhu6DNghR7Y/0RaF1o6G2Z?=
- =?us-ascii?Q?0tbgU/mNxfaCmysnAYMctyff2hEwIwKA74cnJsYzB0Y3UgiIRdzHyq1OvI2s?=
- =?us-ascii?Q?68JykvHWrMsO3zt7PlkcFn75CjN5v1iUu7wGTzx7GY0n+d2m54YXq22VL3eS?=
- =?us-ascii?Q?mYweKxMN1grz2MrL2/Th1UDNW0OKad+d135fYyZ1z56eCuve9KrrsjRO9nIA?=
- =?us-ascii?Q?EBs2LPVHQYaD+Ly3xcWaoh4jgj/SCiK3tR+uI3CxpEKfJk45OBtEtbf/Ec03?=
- =?us-ascii?Q?BIkp4tmip1iY/d42eRNS/RtdmmweI0auwTR0GvnK3qwAYiFdUQw2q6bBGCtM?=
- =?us-ascii?Q?npTzYQuLDBOAaz87HhVpCSq/o1IAIuGybo/RrSafUe+nCI/pXSrrbwCng88s?=
- =?us-ascii?Q?ZZnJeICz8043ds3uAU1Fd8roLMSGzsQYJkYkGowFDGYpee7l8RPziOGdDWny?=
- =?us-ascii?Q?fVquIHSIvICr5PmkRNaGiFIfQGCE9YXT733TtI74iTmv4gXmecoCnqK89jk4?=
- =?us-ascii?Q?xx6vCz3UjBJPKHBMFiGwwxL+isDptCzV+f1ZEdW60UOLjwhwT93Z/VkSn30h?=
- =?us-ascii?Q?0dqMkTQnU+vRAU6CoNhCz64YwF/3rZEN6mivjMeU84nB1JE2t1CsyL0TVhOy?=
- =?us-ascii?Q?ZD4LeXMoDdouFgmRqZ3KfJZP+6sRY+dEnc4XZ+Lh7kLQ4gfEJ0MEQQaZVmHI?=
- =?us-ascii?Q?V05G88aSBitXSNOV/Uerd1B0RJ2HNU4MMBK8tKB5n6TuWFCWK1vS5X/NKk07?=
- =?us-ascii?Q?QKZ3iyNjgoR/kkhVFEwMKgy3JJIFO7ZWz1dznF43M3JzCDNdYzqNAHJSTCw8?=
- =?us-ascii?Q?UbWcVxhh70HKt/MUC4nGgIkTbHigygd4+sSb/RfOeyMVrYGvU6TSJZsnIKpu?=
- =?us-ascii?Q?uyYDy2YCC5wYwhMG4xP5mMQEKkceBgRW3WnOedzOP9eSAsIxsMpUllQcBuU+?=
- =?us-ascii?Q?qZNLrrvPHGbRe/Pmx2q7JDPg5hoZjK00G7BScMaCSoDnZq+LIWe490Ea1rkC?=
- =?us-ascii?Q?iPrIgtr3EJo/xpn36BGrFz/uM73Ay1fyOGad9/m2KGLdZcfdyrdybG8CWv4g?=
- =?us-ascii?Q?RZjRkpszvpOKSDFfp8SFuTpVP9EcVm97Z1Eqm149aCt+BnRoeROzLeFI0HSS?=
- =?us-ascii?Q?fzBgcduBkV1ZRe19zmzWPTEz7uCny/FUD4Aji2M8y9Iusdtme0/tduW2RTV7?=
- =?us-ascii?Q?DJXaWSu3i20byTFNJm2mA+MrBYGKPE3mAkMIuYhI?=
+	=?us-ascii?Q?TQQRmcBMuC8CA8G+fsiduULT0odZplRkFe1pm1N/Y29bxClNW8niuis8cT4C?=
+ =?us-ascii?Q?F153sbJoQKEZ13eIWr6xkJVqSJaBuoxYzUlj0BZ40FqfDxPsCvHudPeAUkI1?=
+ =?us-ascii?Q?A5zcCxINPsZSkvK/fXElgVlfGCrLAr9yg7Qeu3teR8Fe9kDLJd2j0rZYIqKA?=
+ =?us-ascii?Q?mIxFcVNHntaoT7NspXRZIPB81Zxz0AO4iUEEBEX6lYSUVHkU71VrZsMCYt5i?=
+ =?us-ascii?Q?RHa8auko8QsxS9wtNhKBftx2bSJJCkDEY0iKRVJtPd76V681pSpvRAkcCKnP?=
+ =?us-ascii?Q?Yd5hShUawVSfxLmJwJ2uzMrlKpqHdQLZHCgou9IZuojcKcNHqB+a/EEyfIKP?=
+ =?us-ascii?Q?F4WFS9OU9veKSjCtddjltCrLBTSldvUuFuVYKKy2OYcxfReZPEHNaLZypKow?=
+ =?us-ascii?Q?Ipl1tefwXdTD8njh2GteNgXwvkLtZI6lzQ1bvVzAky9sOgIakZxobQrM4ajN?=
+ =?us-ascii?Q?njnkHKKMT54RGQSRJkVdNE3NCitwElnD1lk4NOcwhz/4pC1PlhQ/VZuxJMWj?=
+ =?us-ascii?Q?WIVjrrxB3LDrDaJt/J6GfAAnt2FVDtpKY50hK4yo8tvGPP9qF8TosPyca2KY?=
+ =?us-ascii?Q?sq/fjIBIuzuvZCETPlotgFA2PPnxxeXKK28gkL/p0bdvhKkobRVvENDOAjMo?=
+ =?us-ascii?Q?eSiuxKNR9X+vwR0zBUEN60qB3cfLoSD0NwFepfVbl4GmNSEjRmRK1bAswpMP?=
+ =?us-ascii?Q?vN20IyqJZGLYhig+M8GRllmjBQF8D0lZUnfmc4Bz4owJtgOWINNUMw4CMVIb?=
+ =?us-ascii?Q?JvSdUY4KDWpG4TRzzvcfViLLS8y3V/4FQTvsN3CCW178f3vyZy8Y1mTVOC3R?=
+ =?us-ascii?Q?XHVdVuzYRTubFjZIFEiiDW4AneiXx6aZXv9fTZYHzExVfFAbXQSuvKywCird?=
+ =?us-ascii?Q?/RrkLtMgOJsnnhoWuJbF633UW7Ve64HEZkd+xmjYafC+B0ajZOiyRD51D7qA?=
+ =?us-ascii?Q?L/mdZD4GA1TqqB58B7n0U7ZKpJgopupKrqIwGEjL5SNbG9nkzkFpx7mH4Kpy?=
+ =?us-ascii?Q?3T2Nhzp9CZP3bZ8rY+STHcccVwto0wlt/213JpcBv6axLH7QVUPnuBHSL+kQ?=
+ =?us-ascii?Q?foK+sFviGHGNMoeDzpnPUlBEU9JpoNOqThvHJdLfFzTCiurRoD/jnABCey+h?=
+ =?us-ascii?Q?1n8uLBgJHLCGFCd4ar12lmykfkDZ5muVRMxNwheHbMnO/y+W3z3cWCH9aja5?=
+ =?us-ascii?Q?g7F2YU/QhpduaQm9qnbh38Go0GkO28YjLalDzt7RUq3U5TwcI6Of3guNBW20?=
+ =?us-ascii?Q?VuLC2hWdWwq/sXdQRsYE3pOWKDu1h4KL2t8lTbgWaOi4NlAx4tdpfRVOH/uV?=
+ =?us-ascii?Q?U18QFCcbJYk8DgaPdzL2GWeIsyYm30I1quuwWV7a2yMjtdqdBm5YSby5i3su?=
+ =?us-ascii?Q?cLBFM1dG6BMPME3DGNL36IeUbPGWztAljCaDLkXP7Xf9nhn5LpL/hqy0exPM?=
+ =?us-ascii?Q?vOMg6SCYrqEBhaEyrqFDEqF6ecL0ANDT1954M4EA1aG62SXLxkgciee3mcA4?=
+ =?us-ascii?Q?q1t3NROchh14ayADtvZYlD8Wdae2EXZqft3bFoL9Jr8OxTV8lWtuwpCBHKk5?=
+ =?us-ascii?Q?wATKlO1hcLG9aSE7Yi26DzhUK9LSd7zapkfclYE6?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24576fae-b3c2-4340-cb78-08dc26a2f29f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bffcdc8-d1b2-4f76-acfd-08dc26a2f794
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 23:34:07.8244
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 23:34:16.2590
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lPp4JSlM3GfINwESy8fn79Rx4iH+nRhZpsCcCvOzDsAqGEIstWT6Mg+wf3o8F0X41CFe757rtPjiYA1MhGYDcQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: A4A1P4rP6C5SVsBvqgYzkP2a4xRXLm2WKqIx8m8Z6jfjRbzLFpYalnmrE3/EEhs/PrfU4VicAUFnK10S23D2lg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9205
 
-Add tty over I3C target function driver.
+In typical embedded Linux systems, UART consoles require at least two pins,
+TX and RX. In scenarios where I2C/I3C devices like sensors or PMICs are
+present, we can save these two pins by using this driver. Pins is crucial
+resources, especially in small chip packages.
+
+This introduces support for using the I3C bus to transfer console tty data,
+effectively replacing the need for dedicated UART pins. This not only
+conserves valuable pin resources but also facilitates testing of I3C's
+advanced features, including early termination, in-band interrupt (IBI)
+support, and the creation of more complex data patterns. Additionally,
+it aids in identifying and addressing issues within the I3C controller
+driver.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
 
 Notes:
-    Change from v4 to v5
-    - remove void*
-    - include bitfield.h
-    - remove extra ()
-    - oneline for struct ttyi3c_port *sport
+    Notes:
+        Version number use i3c target patches.
+        Change from v6 to v7
+        - try to fixed build warning
+    	https://lore.kernel.org/imx/20240202230925.1000659-1-Frank.Li@nxp.com/T/#m4e35da31a4226186b3dc6bc8f2fba28f58be1188
+        but I can't reproduce this error in my machine with powerpc-linux-gcc (GCC) 13.2.0
+        kernel test robot have not show reproduce step.
+        But anyway, status may not init if code through continue branch. So
+        Move status = I3C_TTY_TARGET_RX_READY; before continue branch.
+    
+        Change from v5 to v6
+        -none
+    
+        Change from v4 to v5
+        - add missed header file
+        - add define for BIT(0)
+        - oneline for struct ttyi3c_port *sport
+    
+        Change from v3 to v4
+        - add static at i3c_remove()
+        Change v2
+        - using system_unbound_wq working queue
+        - fixed accoring to Jiri Slaby's comments
+    
+        Change before send with i3c target support
+    
+        Change from v4 to v5
+        - send in i3c improvememtn patches.
+    
+        Change from v2 to v4
+        - none
+    
+        Change from v1 to v2
+        - update commit message.
+        - using goto for err handle
+        - using one working queue for all tty-i3c device
+        - fixed typo found by js
+        - update kconfig help
+        - using kfifo
+    
+        Still below items not be fixed (according to Jiri Slaby's comments)
+        - rxwork thread: need trigger from two position.
+        - common thread queue: need some suggestion
+    
+    Notes:
+        Version number use i3c target patches.
+        Change from v3 to v4
+        - add static at i3c_remove()
+        Change v2
+        - using system_unbound_wq working queue
+        - fixed accoring to Jiri Slaby's comments
+    
+        Change before send with i3c target support
+    
+        Change from v4 to v5
+        - send in i3c improvememtn patches.
+    
+        Change from v2 to v4
+        - none
+    
+        Change from v1 to v2
+        - update commit message.
+        - using goto for err handle
+        - using one working queue for all tty-i3c device
+        - fixed typo found by js
+        - update kconfig help
+        - using kfifo
+    
+        Still below items not be fixed (according to Jiri Slaby's comments)
+        - rxwork thread: need trigger from two position.
+        - common thread queue: need some suggestion
 
- drivers/i3c/Kconfig       |   3 +
- drivers/i3c/Makefile      |   1 +
- drivers/i3c/func/Kconfig  |   9 +
- drivers/i3c/func/Makefile |   3 +
- drivers/i3c/func/tty.c    | 474 ++++++++++++++++++++++++++++++++++++++
- 5 files changed, 490 insertions(+)
- create mode 100644 drivers/i3c/func/Kconfig
- create mode 100644 drivers/i3c/func/Makefile
- create mode 100644 drivers/i3c/func/tty.c
+ drivers/tty/Kconfig   |  13 ++
+ drivers/tty/Makefile  |   1 +
+ drivers/tty/i3c_tty.c | 428 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 442 insertions(+)
+ create mode 100644 drivers/tty/i3c_tty.c
 
-diff --git a/drivers/i3c/Kconfig b/drivers/i3c/Kconfig
-index d59a7eb83d13a..fca808cda87b3 100644
---- a/drivers/i3c/Kconfig
-+++ b/drivers/i3c/Kconfig
-@@ -48,3 +48,6 @@ config I3C_TARGET_CONFIGFS
- 	  the target function and used to bind the function with a target
- 	  controller.
+diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+index 5646dc6242cd9..9ab4cd480e9f8 100644
+--- a/drivers/tty/Kconfig
++++ b/drivers/tty/Kconfig
+@@ -412,6 +412,19 @@ config RPMSG_TTY
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called rpmsg_tty.
  
-+if I3C_TARGET
-+source "drivers/i3c/func/Kconfig"
-+endif # I3C_TARGET
-diff --git a/drivers/i3c/Makefile b/drivers/i3c/Makefile
-index c275aeae8970c..11f026d6876fe 100644
---- a/drivers/i3c/Makefile
-+++ b/drivers/i3c/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_I3C)		+= i3c.o
- obj-$(CONFIG_I3C_TARGET)                += target.o
- obj-$(CONFIG_I3C_TARGET_CONFIGFS)       += i3c-cfs.o
- obj-$(CONFIG_I3C)		+= master/
-+obj-$(CONFIG_I3C_TARGET)	+= func/
-diff --git a/drivers/i3c/func/Kconfig b/drivers/i3c/func/Kconfig
-new file mode 100644
-index 0000000000000..7115129eb7d5a
---- /dev/null
-+++ b/drivers/i3c/func/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+config I3C_TARGET_FUNC_TTY
-+	tristate "I3C target tty driver"
-+	depends on I3C_TARGET
++config I3C_TTY
++	tristate "TTY over I3C"
++	depends on I3C
 +	help
-+	  I3C Target TTY Function Driver.
++	  Select this option to use TTY over I3C master controller.
 +
-+	  General TTY over I3C target controller function drivers.
-diff --git a/drivers/i3c/func/Makefile b/drivers/i3c/func/Makefile
-new file mode 100644
-index 0000000000000..16b3b9301496b
---- /dev/null
-+++ b/drivers/i3c/func/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
++	  This makes it possible for user-space programs to send and receive
++	  data as a standard tty protocol. I3C provide relatively higher data
++	  transfer rate and less pin numbers, SDA/SCL are shared with other
++	  devices.
 +
-+obj-$(CONFIG_I3C_TARGET_FUNC_TTY)              += tty.o
-diff --git a/drivers/i3c/func/tty.c b/drivers/i3c/func/tty.c
++	  If unsure, say N
++
+ endif # TTY
+ 
+ source "drivers/tty/serdev/Kconfig"
+diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+index 07aca5184a55d..f329f9c7d308a 100644
+--- a/drivers/tty/Makefile
++++ b/drivers/tty/Makefile
+@@ -27,5 +27,6 @@ obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
+ obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
+ obj-$(CONFIG_VCC)		+= vcc.o
+ obj-$(CONFIG_RPMSG_TTY)		+= rpmsg_tty.o
++obj-$(CONFIG_I3C_TTY)		+= i3c_tty.o
+ 
+ obj-y += ipwireless/
+diff --git a/drivers/tty/i3c_tty.c b/drivers/tty/i3c_tty.c
 new file mode 100644
-index 0000000000000..50673bfb6a003
+index 0000000000000..4d57624ae6c8f
 --- /dev/null
-+++ b/drivers/i3c/func/tty.c
-@@ -0,0 +1,474 @@
++++ b/drivers/tty/i3c_tty.c
+@@ -0,0 +1,428 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2023 NXP
++ * Copyright 2023 NXP.
++ *
 + * Author: Frank Li <Frank.Li@nxp.com>
 + */
 +
-+#include <linux/bitfield.h>
-+#include <linux/iopoll.h>
-+#include <linux/i3c/target.h>
-+#include <linux/serial_core.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/i3c/device.h>
++#include <linux/i3c/master.h>
 +#include <linux/slab.h>
++#include <linux/console.h>
++#include <linux/serial_core.h>
++#include <linux/workqueue.h>
 +#include <linux/tty_flip.h>
++#include <linux/tty_port.h>
++#include <linux/spinlock.h>
 +
 +static DEFINE_IDR(i3c_tty_minors);
++static DEFINE_MUTEX(i3c_tty_minors_lock);
 +
 +static struct tty_driver *i3c_tty_driver;
 +
 +#define I3C_TTY_MINORS		8
-+
-+#define I3C_TX_NOEMPTY		BIT(0)
 +#define I3C_TTY_TRANS_SIZE	16
-+#define I3C_TTY_IBI_TX		BIT(0)
++#define I3C_TTY_RX_STOP		0
++#define I3C_TTY_RETRY		20
++#define I3C_TTY_YIELD_US	100
++#define I3C_TTY_TARGET_RX_READY	BIT(0)
 +
 +struct ttyi3c_port {
 +	struct tty_port port;
 +	int minor;
-+	struct i3c_target_func *i3cdev;
++	spinlock_t xlock; /* protect xmit */
++	u8 tx_buff[I3C_TTY_TRANS_SIZE];
++	u8 rx_buff[I3C_TTY_TRANS_SIZE];
++	struct i3c_device *i3cdev;
++	struct work_struct txwork;
++	struct work_struct rxwork;
 +	struct completion txcomplete;
-+	spinlock_t xlock;
-+	void *buffer;
-+	struct work_struct work;
-+	u16 status;
-+	struct i3c_request *req;
++	unsigned long status;
++	u32 buf_overrun;
 +};
 +
-+static void i3c_target_tty_rx_complete(struct i3c_request *req)
-+{
-+	struct ttyi3c_port *port = req->context;
-+
-+	if (req->status == I3C_REQUEST_CANCEL) {
-+		i3c_target_ctrl_free_request(req);
-+		return;
-+	}
-+
-+	tty_insert_flip_string(&port->port, req->buf, req->actual);
-+	tty_flip_buffer_push(&port->port);
-+
-+	req->actual = 0;
-+	req->status = 0;
-+	i3c_target_ctrl_queue(req, GFP_KERNEL);
-+}
-+
-+static void i3c_target_tty_tx_complete(struct i3c_request *req)
-+{
-+	struct ttyi3c_port *sport = req->context;
-+	unsigned long flags;
-+
-+	if (req->status == I3C_REQUEST_CANCEL) {
-+		i3c_target_ctrl_free_request(req);
-+		return;
-+	}
-+
-+	spin_lock_irqsave(&sport->xlock, flags);
-+	kfifo_dma_out_finish(&sport->port.xmit_fifo, req->actual);
-+	sport->req = NULL;
-+
-+	if (kfifo_is_empty(&sport->port.xmit_fifo))
-+		complete(&sport->txcomplete);
-+	else
-+		queue_work(system_unbound_wq, &sport->work);
-+
-+	if (kfifo_len(&sport->port.xmit_fifo) < WAKEUP_CHARS)
-+		tty_port_tty_wakeup(&sport->port);
-+	spin_unlock_irqrestore(&sport->xlock, flags);
-+
-+	i3c_target_ctrl_free_request(req);
-+}
-+
-+static void i3c_target_tty_i3c_work(struct work_struct *work)
-+{
-+	struct ttyi3c_port *sport = container_of(work, struct ttyi3c_port, work);
-+	struct i3c_request *req = sport->req;
-+	struct scatterlist sg[1];
-+	unsigned int nents;
-+	u8 ibi;
-+
-+	if (kfifo_is_empty(&sport->port.xmit_fifo))
-+		return;
-+
-+	if (!req) {
-+		req = i3c_target_ctrl_alloc_request(sport->i3cdev->ctrl, GFP_KERNEL);
-+		if (!req)
-+			return;
-+
-+		sg_init_table(sg, ARRAY_SIZE(sg));
-+		nents = kfifo_dma_out_prepare(&sport->port.xmit_fifo, sg, ARRAY_SIZE(sg),
-+					      UART_XMIT_SIZE);
-+		if (!nents)
-+			goto err;
-+
-+		req->length = sg->length;
-+		req->buf =  sg_virt(sg);
-+
-+		req->complete = i3c_target_tty_tx_complete;
-+		req->context = sport;
-+		req->tx = true;
-+
-+		if (i3c_target_ctrl_queue(req, GFP_KERNEL))
-+			goto err;
-+
-+		sport->req = req;
-+	}
-+
-+	ibi = I3C_TTY_IBI_TX;
-+	i3c_target_ctrl_raise_ibi(sport->i3cdev->ctrl, &ibi, 1);
-+
-+	return;
-+
-+err:
-+	i3c_target_ctrl_free_request(req);
-+}
++static const struct i3c_device_id i3c_ids[] = {
++	I3C_DEVICE(0x011B, 0x1000, NULL),
++	{ /* sentinel */ },
++};
 +
 +static int i3c_port_activate(struct tty_port *port, struct tty_struct *tty)
 +{
 +	struct ttyi3c_port *sport = container_of(port, struct ttyi3c_port, port);
-+	const struct i3c_target_ctrl_features *feature;
-+	struct i3c_target_func *func = sport->i3cdev;
-+	struct i3c_request *req;
-+	int rxfifo_size;
-+	int offset = 0;
 +	int ret;
 +
-+	feature = i3c_target_ctrl_get_features(func->ctrl);
-+	if (!feature)
-+		return -EINVAL;
-+
 +	ret = tty_port_alloc_xmit_buf(port);
-+	if (ret)
++	if (ret < 0)
 +		return ret;
 +
-+	sport->buffer = (void *)get_zeroed_page(GFP_KERNEL);
-+	if (!sport->buffer)
-+		goto err_alloc_rx_buf;
++	sport->status = 0;
 +
-+	rxfifo_size = feature->rx_fifo_sz;
-+
-+	if (!rxfifo_size)
-+		rxfifo_size = I3C_TTY_TRANS_SIZE;
-+
-+	do {
-+		req = i3c_target_ctrl_alloc_request(func->ctrl, GFP_KERNEL);
-+		if (!req)
-+			goto err_alloc_req;
-+
-+		req->buf = sport->buffer + offset;
-+		req->length = rxfifo_size;
-+		req->context = sport;
-+		req->complete = i3c_target_tty_rx_complete;
-+		offset += rxfifo_size;
-+
-+		if (i3c_target_ctrl_queue(req, GFP_KERNEL))
-+			goto err_alloc_req;
-+	} while (req && offset + rxfifo_size < UART_XMIT_SIZE);
-+
-+	reinit_completion(&sport->txcomplete);
++	ret = i3c_device_enable_ibi(sport->i3cdev);
++	if (ret) {
++		tty_port_free_xmit_buf(port);
++		return ret;
++	}
 +
 +	return 0;
-+
-+err_alloc_req:
-+	i3c_target_ctrl_cancel_all_reqs(func->ctrl, false);
-+	free_page((unsigned long)sport->buffer);
-+err_alloc_rx_buf:
-+	tty_port_free_xmit_buf(port);
-+	return -ENOMEM;
 +}
 +
 +static void i3c_port_shutdown(struct tty_port *port)
 +{
 +	struct ttyi3c_port *sport = container_of(port, struct ttyi3c_port, port);
 +
-+	cancel_work_sync(&sport->work);
-+
-+	i3c_target_ctrl_cancel_all_reqs(sport->i3cdev->ctrl, true);
-+	i3c_target_ctrl_cancel_all_reqs(sport->i3cdev->ctrl, false);
-+
-+	i3c_target_ctrl_fifo_flush(sport->i3cdev->ctrl, true);
-+	i3c_target_ctrl_fifo_flush(sport->i3cdev->ctrl, false);
-+
++	i3c_device_disable_ibi(sport->i3cdev);
 +	tty_port_free_xmit_buf(port);
-+	free_page((unsigned long)sport->buffer);
 +}
 +
 +static void i3c_port_destruct(struct tty_port *port)
 +{
 +	struct ttyi3c_port *sport = container_of(port, struct ttyi3c_port, port);
 +
++	mutex_lock(&i3c_tty_minors_lock);
 +	idr_remove(&i3c_tty_minors, sport->minor);
++	mutex_unlock(&i3c_tty_minors_lock);
 +}
 +
 +static const struct tty_port_operations i3c_port_ops = {
@@ -404,110 +359,20 @@ index 0000000000000..50673bfb6a003
 +	.destruct = i3c_port_destruct,
 +};
 +
-+static int i3c_target_tty_bind(struct i3c_target_func *func)
-+{
-+	struct ttyi3c_port *sport;
-+	struct device *tty_dev;
-+	int minor;
-+	int ret;
-+
-+	sport = dev_get_drvdata(&func->dev);
-+
-+	if (i3c_target_ctrl_set_config(func->ctrl, func)) {
-+		dev_err(&func->dev, "failed to set i3c config\n");
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_init(&sport->xlock);
-+	init_completion(&sport->txcomplete);
-+
-+	ret = minor = idr_alloc(&i3c_tty_minors, sport, 0, I3C_TTY_MINORS, GFP_KERNEL);
-+
-+	if (minor < 0)
-+		goto err_idr_alloc;
-+
-+	tty_port_init(&sport->port);
-+	sport->port.ops = &i3c_port_ops;
-+
-+	tty_dev = tty_port_register_device(&sport->port, i3c_tty_driver, minor,
-+					   &func->dev);
-+	if (IS_ERR(tty_dev)) {
-+		ret = PTR_ERR(tty_dev);
-+		goto err_register_port;
-+	}
-+
-+	sport->minor = minor;
-+	ret = i3c_target_ctrl_enable(func->ctrl);
-+	if (ret)
-+		goto err_ctrl_enable;
-+
-+	return 0;
-+
-+err_ctrl_enable:
-+	tty_port_unregister_device(&sport->port, i3c_tty_driver, sport->minor);
-+err_register_port:
-+	idr_remove(&i3c_tty_minors, sport->minor);
-+err_idr_alloc:
-+	i3c_target_ctrl_cancel_all_reqs(func->ctrl, false);
-+	dev_err(&func->dev, "bind failure\n");
-+
-+	return ret;
-+}
-+
-+static void i3c_target_tty_unbind(struct i3c_target_func *func)
-+{
-+	struct ttyi3c_port *sport;
-+
-+	sport = dev_get_drvdata(&func->dev);
-+
-+	cancel_work_sync(&sport->work);
-+
-+	i3c_target_ctrl_disable(func->ctrl);
-+	i3c_target_ctrl_cancel_all_reqs(func->ctrl, 0);
-+	i3c_target_ctrl_cancel_all_reqs(func->ctrl, 1);
-+
-+	tty_port_unregister_device(&sport->port, i3c_tty_driver, sport->minor);
-+
-+	free_page((unsigned long)sport->buffer);
-+}
-+
-+static struct i3c_target_func_ops i3c_func_ops = {
-+	.bind   = i3c_target_tty_bind,
-+	.unbind = i3c_target_tty_unbind,
-+};
-+
-+static int i3c_tty_probe(struct i3c_target_func *func)
-+{
-+	struct device *dev = &func->dev;
-+	struct ttyi3c_port *port;
-+
-+	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-+	if (!port)
-+		return -ENOMEM;
-+
-+	port->i3cdev = func;
-+	dev_set_drvdata(&func->dev, port);
-+
-+	INIT_WORK(&port->work, i3c_target_tty_i3c_work);
-+
-+	return 0;
-+}
-+
 +static ssize_t i3c_write(struct tty_struct *tty, const unsigned char *buf, size_t count)
 +{
 +	struct ttyi3c_port *sport = tty->driver_data;
 +	unsigned long flags;
 +	bool is_empty;
-+	int ret = 0;
++	int ret;
 +
 +	spin_lock_irqsave(&sport->xlock, flags);
 +	ret = kfifo_in(&sport->port.xmit_fifo, buf, count);
 +	is_empty = kfifo_is_empty(&sport->port.xmit_fifo);
-+	i3c_target_ctrl_set_status_format1(sport->i3cdev->ctrl, sport->status | I3C_TX_NOEMPTY);
 +	spin_unlock_irqrestore(&sport->xlock, flags);
 +
 +	if (!is_empty)
-+		queue_work(system_unbound_wq, &sport->work);
++		queue_work(system_unbound_wq, &sport->txwork);
 +
 +	return ret;
 +}
@@ -516,7 +381,7 @@ index 0000000000000..50673bfb6a003
 +{
 +	struct ttyi3c_port *sport = tty->driver_data;
 +	unsigned long flags;
-+	int ret = 0;
++	int ret;
 +
 +	spin_lock_irqsave(&sport->xlock, flags);
 +	ret = kfifo_put(&sport->port.xmit_fifo, ch);
@@ -528,12 +393,8 @@ index 0000000000000..50673bfb6a003
 +static void i3c_flush_chars(struct tty_struct *tty)
 +{
 +	struct ttyi3c_port *sport = tty->driver_data;
-+	unsigned long flags;
 +
-+	spin_lock_irqsave(&sport->xlock, flags);
-+	if (!kfifo_is_empty(&sport->port.xmit_fifo))
-+		queue_work(system_unbound_wq, &sport->work);
-+	spin_unlock_irqrestore(&sport->xlock, flags);
++	queue_work(system_unbound_wq, &sport->txwork);
 +}
 +
 +static unsigned int i3c_write_room(struct tty_struct *tty)
@@ -547,31 +408,23 @@ index 0000000000000..50673bfb6a003
 +{
 +	struct ttyi3c_port *sport = tty->driver_data;
 +
-+	i3c_target_ctrl_cancel_all_reqs(sport->i3cdev->ctrl, false);
++	clear_bit(I3C_TTY_RX_STOP, &sport->status);
 +}
 +
 +static void i3c_unthrottle(struct tty_struct *tty)
 +{
 +	struct ttyi3c_port *sport = tty->driver_data;
 +
-+	i3c_port_activate(&sport->port, tty);
++	set_bit(I3C_TTY_RX_STOP, &sport->status);
++
++	queue_work(system_unbound_wq, &sport->rxwork);
 +}
 +
 +static int i3c_open(struct tty_struct *tty, struct file *filp)
 +{
 +	struct ttyi3c_port *sport = container_of(tty->port, struct ttyi3c_port, port);
-+	int ret;
 +
 +	tty->driver_data = sport;
-+
-+	if (!i3c_target_ctrl_get_addr(sport->i3cdev->ctrl)) {
-+		dev_dbg(&sport->i3cdev->dev, "No target addr assigned, try hotjoin");
-+		ret = i3c_target_ctrl_hotjoin(sport->i3cdev->ctrl);
-+		if (ret) {
-+			dev_err(&sport->i3cdev->dev, "Hotjoin failure, check connection");
-+			return ret;
-+		}
-+	}
 +
 +	return tty_port_open(&sport->port, tty, filp);
 +}
@@ -579,31 +432,6 @@ index 0000000000000..50673bfb6a003
 +static void i3c_close(struct tty_struct *tty, struct file *filp)
 +{
 +	tty_port_close(tty->port, tty, filp);
-+}
-+
-+static void i3c_wait_until_sent(struct tty_struct *tty, int timeout)
-+{
-+	struct ttyi3c_port *sport = tty->driver_data;
-+	int val;
-+	int ret;
-+	u8 ibi = I3C_TTY_IBI_TX;
-+	int retry = 100;
-+
-+	if (!kfifo_is_empty(&sport->port.xmit_fifo)) {
-+		do {
-+			ret = wait_for_completion_timeout(&sport->txcomplete, timeout / 100);
-+			if (ret)
-+				break;
-+			i3c_target_ctrl_raise_ibi(sport->i3cdev->ctrl, &ibi, 1);
-+		} while (retry--);
-+
-+		reinit_completion(&sport->txcomplete);
-+	}
-+
-+	read_poll_timeout(i3c_target_ctrl_fifo_status, val, !val, 100, timeout, false,
-+			  sport->i3cdev->ctrl, true);
-+
-+	i3c_target_ctrl_set_status_format1(sport->i3cdev->ctrl, sport->status & ~I3C_TX_NOEMPTY);
 +}
 +
 +static const struct tty_operations i3c_tty_ops = {
@@ -615,22 +443,213 @@ index 0000000000000..50673bfb6a003
 +	.write_room = i3c_write_room,
 +	.throttle = i3c_throttle,
 +	.unthrottle = i3c_unthrottle,
-+	.wait_until_sent = i3c_wait_until_sent,
 +};
 +
-+DECLARE_I3C_TARGET_FUNC(tty, i3c_tty_probe, NULL, &i3c_func_ops);
++static void i3c_controller_irq_handler(struct i3c_device *dev,
++				       const struct i3c_ibi_payload *payload)
++{
++	struct ttyi3c_port *sport = dev_get_drvdata(&dev->dev);
++
++	/* i3c_unthrottle also queue the work to fetch pending data in target side */
++	queue_work(system_unbound_wq, &sport->rxwork);
++}
++
++static void tty_i3c_rxwork(struct work_struct *work)
++{
++	struct ttyi3c_port *sport = container_of(work, struct ttyi3c_port, rxwork);
++	struct i3c_priv_xfer xfers;
++	u32 retry = I3C_TTY_RETRY;
++	u16 status;
++	int ret;
++
++	memset(&xfers, 0, sizeof(xfers));
++	xfers.data.in = sport->rx_buff;
++	xfers.len = I3C_TTY_TRANS_SIZE;
++	xfers.rnw = 1;
++
++	do {
++		if (test_bit(I3C_TTY_RX_STOP, &sport->status))
++			break;
++
++		i3c_device_do_priv_xfers(sport->i3cdev, &xfers, 1);
++
++		status = I3C_TTY_TARGET_RX_READY;
++
++		if (xfers.actual_len) {
++			ret = tty_insert_flip_string(&sport->port, sport->rx_buff,
++						     xfers.actual_len);
++			if (ret < xfers.actual_len)
++				sport->buf_overrun++;
++
++			retry = I3C_TTY_RETRY;
++			continue;
++		}
++
++		i3c_device_getstatus_format1(sport->i3cdev, &status);
++		/*
++		 * Target side needs some time to fill data into fifo. Target side may not
++		 * have hardware update status in real time. Software update status always
++		 * needs some delays.
++		 *
++		 * Generally, target side have circular buffer in memory, it will be moved
++		 * into FIFO by CPU or DMA. 'status' just show if circular buffer empty. But
++		 * there are gap, especially CPU have not response irq to fill FIFO in time.
++		 * So xfers.actual will be zero, wait for little time to avoid flood
++		 * transfer in i3c bus.
++		 */
++		usleep_range(I3C_TTY_YIELD_US, 10 * I3C_TTY_YIELD_US);
++		retry--;
++
++	} while (retry && (status & I3C_TTY_TARGET_RX_READY));
++
++	tty_flip_buffer_push(&sport->port);
++}
++
++static void tty_i3c_txwork(struct work_struct *work)
++{
++	struct ttyi3c_port *sport = container_of(work, struct ttyi3c_port, txwork);
++	struct i3c_priv_xfer xfers;
++	u32 retry = I3C_TTY_RETRY;
++	unsigned long flags;
++	int ret;
++
++	xfers.rnw = 0;
++	xfers.data.out = sport->tx_buff;
++
++	while (!kfifo_is_empty(&sport->port.xmit_fifo)) {
++		spin_lock_irqsave(&sport->xlock, flags);
++		xfers.len = kfifo_out_peek(&sport->port.xmit_fifo, sport->tx_buff,
++					   I3C_TTY_TRANS_SIZE);
++		spin_unlock_irqrestore(&sport->xlock, flags);
++		ret = i3c_device_do_priv_xfers(sport->i3cdev, &xfers, 1);
++		if (ret) {
++			/*
++			 * Target side may not move data out of FIFO. delay can't resolve problem,
++			 * just reduce some possiblity. Target can't end I3C SDR mode write
++			 * transfer, discard data is reasonable when FIFO overrun.
++			 */
++			usleep_range(I3C_TTY_YIELD_US, 10 * I3C_TTY_YIELD_US);
++			retry--;
++		} else {
++			retry = I3C_TTY_RETRY;
++		}
++
++		if (ret == 0 || retry == 0) {
++			/* when retry == 0, means need discard the data */
++			spin_lock_irqsave(&sport->xlock, flags);
++			ret = kfifo_out(&sport->port.xmit_fifo, sport->tx_buff, xfers.len);
++			spin_unlock_irqrestore(&sport->xlock, flags);
++		}
++	}
++
++	spin_lock_irqsave(&sport->xlock, flags);
++	if (kfifo_len(&sport->port.xmit_fifo) < WAKEUP_CHARS)
++		tty_port_tty_wakeup(&sport->port);
++	spin_unlock_irqrestore(&sport->xlock, flags);
++}
++
++static int i3c_probe(struct i3c_device *i3cdev)
++{
++	struct ttyi3c_port *sport;
++	struct device *tty_dev;
++	struct i3c_ibi_setup req;
++	int minor;
++	int ret;
++
++	sport = devm_kzalloc(&i3cdev->dev, sizeof(*sport), GFP_KERNEL);
++	if (!sport)
++		return -ENOMEM;
++
++	sport->i3cdev = i3cdev;
++
++	dev_set_drvdata(&i3cdev->dev, sport);
++
++	req.max_payload_len = 8;
++	req.num_slots = 4;
++	req.handler = &i3c_controller_irq_handler;
++
++	ret = i3c_device_request_ibi(i3cdev, &req);
++	if (ret)
++		return -EINVAL;
++
++	mutex_lock(&i3c_tty_minors_lock);
++	minor = idr_alloc(&i3c_tty_minors, sport, 0, I3C_TTY_MINORS, GFP_KERNEL);
++	mutex_unlock(&i3c_tty_minors_lock);
++
++	if (minor < 0) {
++		ret = -EINVAL;
++		goto err_idr_alloc;
++	}
++
++	spin_lock_init(&sport->xlock);
++	INIT_WORK(&sport->txwork, tty_i3c_txwork);
++	INIT_WORK(&sport->rxwork, tty_i3c_rxwork);
++	init_completion(&sport->txcomplete);
++
++	tty_port_init(&sport->port);
++	sport->port.ops = &i3c_port_ops;
++
++	tty_dev = tty_port_register_device(&sport->port, i3c_tty_driver, minor,
++					   &i3cdev->dev);
++	if (IS_ERR(tty_dev)) {
++		ret = PTR_ERR(tty_dev);
++		goto err_tty_port_register;
++	}
++
++	sport->minor = minor;
++
++	return 0;
++
++err_tty_port_register:
++	tty_port_put(&sport->port);
++
++	mutex_lock(&i3c_tty_minors_lock);
++	idr_remove(&i3c_tty_minors, minor);
++	mutex_unlock(&i3c_tty_minors_lock);
++
++err_idr_alloc:
++	i3c_device_free_ibi(i3cdev);
++
++	return ret;
++}
++
++static void i3c_remove(struct i3c_device *dev)
++{
++	struct ttyi3c_port *sport = dev_get_drvdata(&dev->dev);
++
++	tty_port_unregister_device(&sport->port, i3c_tty_driver, sport->minor);
++	cancel_work_sync(&sport->txwork);
++
++	tty_port_put(&sport->port);
++
++	mutex_lock(&i3c_tty_minors_lock);
++	idr_remove(&i3c_tty_minors, sport->minor);
++	mutex_unlock(&i3c_tty_minors_lock);
++
++	i3c_device_free_ibi(sport->i3cdev);
++}
++
++static struct i3c_driver i3c_driver = {
++	.driver = {
++		.name = "ttyi3c",
++	},
++	.probe = i3c_probe,
++	.remove = i3c_remove,
++	.id_table = i3c_ids,
++};
 +
 +static int __init i3c_tty_init(void)
 +{
 +	int ret;
 +
-+	i3c_tty_driver = tty_alloc_driver(
-+		I3C_TTY_MINORS, TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV);
++	i3c_tty_driver = tty_alloc_driver(I3C_TTY_MINORS,
++					  TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV);
 +
 +	if (IS_ERR(i3c_tty_driver))
 +		return PTR_ERR(i3c_tty_driver);
 +
-+	i3c_tty_driver->driver_name = "ttySI3C", i3c_tty_driver->name = "ttySI3C",
++	i3c_tty_driver->driver_name = "ttyI3C";
++	i3c_tty_driver->name = "ttyI3C";
 +	i3c_tty_driver->minor_start = 0,
 +	i3c_tty_driver->type = TTY_DRIVER_TYPE_SERIAL,
 +	i3c_tty_driver->subtype = SERIAL_TYPE_NORMAL,
@@ -643,18 +662,18 @@ index 0000000000000..50673bfb6a003
 +
 +	ret = tty_register_driver(i3c_tty_driver);
 +	if (ret)
-+		goto err_register_tty_driver;
++		goto err_tty_register_driver;
 +
-+	ret = i3c_target_func_register_driver(&ttyi3c_func);
++	ret = i3c_driver_register(&i3c_driver);
 +	if (ret)
-+		goto err_register_i3c_driver;
++		goto err_i3c_driver_register;
 +
 +	return 0;
 +
-+err_register_i3c_driver:
++err_i3c_driver_register:
 +	tty_unregister_driver(i3c_tty_driver);
 +
-+err_register_tty_driver:
++err_tty_register_driver:
 +	tty_driver_kref_put(i3c_tty_driver);
 +
 +	return ret;
@@ -662,7 +681,7 @@ index 0000000000000..50673bfb6a003
 +
 +static void __exit i3c_tty_exit(void)
 +{
-+	i3c_target_func_unregister_driver(&ttyi3c_func);
++	i3c_driver_unregister(&i3c_driver);
 +	tty_unregister_driver(i3c_tty_driver);
 +	tty_driver_kref_put(i3c_tty_driver);
 +	idr_destroy(&i3c_tty_minors);
@@ -672,7 +691,6 @@ index 0000000000000..50673bfb6a003
 +module_exit(i3c_tty_exit);
 +
 +MODULE_LICENSE("GPL");
-+
 -- 
 2.34.1
 
