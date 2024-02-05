@@ -1,40 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4806D633FE;
-	Mon,  5 Feb 2024 19:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481F16E2A9
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159795; cv=none; b=PFIjrJIdnrmLhNmwkCEP6648DiBNujC0S3rphxyhLhkskGEuiC9I70F3ZqgCC78fnks21I9Lr5oyuKt2rDPNmw7WT1hsPQz1vE+ZVzPtNSH1tg/5+83sPX+tCOE5iQsoCvugg+8k1YyTXJl8zIMFhH2bl78uZye29R1ES2hvPd8=
+	t=1707159798; cv=none; b=ttJF5V3El/HefBYB9OCdiN6Rhk97eMY2rnIHTctV/gMCeJTfJx1EBVYHlQdfdev5bfzjE5uwmolLQvx3bJza5vedgmWK1/uB9qAuaL85FYPWgzWOn5kVnZ+tIhq3eznBFHUZwD9a2pJOFOB5Cs6Mc9HH76OsZj5nA/Z0OPHYI3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159795; c=relaxed/simple;
-	bh=x9UpyMNf9RClykFARyBh7yW+2jrk9h8lZION24rm8nI=;
+	s=arc-20240116; t=1707159798; c=relaxed/simple;
+	bh=SaE5fyHUUm1NkAMFFfv91SoNo9DgaZQmpck7+KsBLoQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4Y+14wgxGloqchRYRkJ08ve2+2pxLZblnpWsVuBJ2twItGoUQceYHmP2On5uVGqoUherIWSQQUbG+hpB7RrEa7Xn7zwLNSYApnx+f6n74PORl7pwjaCmO1cC87kS4Mtye6o02rQinv9ACp7JCVoRNJs24PIaNtC+VfnHyUn7a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=V2BK15bf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qsNvuYrq8f6mcm8HNuWdNIw73QPHRaUNWI/7K8WnlVFop5UitE6TOxzVl/YOjSHl3CS1mA84rpAf4YBGYdWPVr6a/oeejgdvSap9XDxsNw3G+9Ebn+UiHcWEeQiNdAXb7Az0velGO4h+kI+LZ9RMwbfTUweXlhP4FgTkGI/cXo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=j5++kWgn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="V2BK15bf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5CC3C43390;
-	Mon,  5 Feb 2024 19:03:14 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="j5++kWgn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668ABC433F1;
+	Mon,  5 Feb 2024 19:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159795;
-	bh=x9UpyMNf9RClykFARyBh7yW+2jrk9h8lZION24rm8nI=;
+	s=korg; t=1707159797;
+	bh=SaE5fyHUUm1NkAMFFfv91SoNo9DgaZQmpck7+KsBLoQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V2BK15bfWoizIhVo9InGQm8YPrknjWcEUig3EpaY+6yyLaZEWnoPYB+ORRNQWWMIv
-	 Tix9bWnfIsQR2M6wyE83s9ybAzwLXKiP6iTGRA2+7vx0RZLUsxblJQRYb9YRyclkE+
-	 K+rTHrQWjcbAuh+JXqJpSvMPAjfxWp2U6fPwbgMc=
-Date: Mon, 5 Feb 2024 04:47:08 -0800
+	b=j5++kWgnxaXI2QcoFxVzvNTkk1Mni7jEFGHLP6JvhYnwivwHHZxzeFegvBhrWwbNK
+	 VZmffFwIpQ1yIbO2n3Sau+hFeGKGDR22tBUkHMZD5LDftAcj8dEGxJpRoLHdEqgQBn
+	 ortESrhbeIBw+XCppDuIeK/cmJwCvlXcpPpAfW+c=
+Date: Mon, 5 Feb 2024 04:47:16 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: endpoint: make pci_epf_bus_type const
-Message-ID: <2024020504-unadvised-quizzical-b8c0@gregkh>
-References: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
+Subject: Re: [PATCH] parport: make parport_bus_type const
+Message-ID: <2024020510-october-lividly-83fa@gregkh>
+References: <20240204-bus_cleanup-parport-v1-1-e6a0f756bbb8@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,11 +39,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-parport-v1-1-e6a0f756bbb8@marliere.net>
 
-On Sun, Feb 04, 2024 at 05:28:58PM -0300, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 05:25:51PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the pci_epf_bus_type variable to be a constant structure as well,
+> move the parport_bus_type variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
