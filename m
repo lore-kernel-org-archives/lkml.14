@@ -1,21 +1,21 @@
-Received: from out0-195.mail.aliyun.com (out0-195.mail.aliyun.com [140.205.0.195])
+Received: from out187-18.us.a.mail.aliyun.com (out187-18.us.a.mail.aliyun.com [47.90.187.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683F218EB2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81A21A5BA
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133966; cv=none; b=eqP/ooutg7ky25lFh/9McCsOHbAOyRDEpaXgCNQJdvumVfM67d+OCET/zrKen6RzEiGshHv11TFgppnfzpVtzPk9T9pvWwCfjxdroxqid6KUYCksjjH+OBvGj5BVBTTlNAUCz9QxD1bbsYGzHOF9bXMAemekUBiXX/uxqTzPGdE=
+	t=1707133976; cv=none; b=VhFOd+BYDoL/0Wk3e8zkZazST7D/4fgzsplqljT68exw8XYuWIOlxrszgrQk5ol0gadZWC9rU6eyz+HQFlgo+cybz38oRyjpq29ES6t4tI7BV5xcUNyNb7SCLAcU7lJPGPEHoZI+/e84OboMOZzixRYZK2D66YCUK2ELH8mu7Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133966; c=relaxed/simple;
-	bh=5BvnaK+Q3e30bHwbnZ/Zuza3SgyqFfcHiBGD0cfTfMY=;
+	s=arc-20240116; t=1707133976; c=relaxed/simple;
+	bh=5QDpZzhiE/3GWfDd1mWBtLqh/MBq9MNvFNphZMB8Phc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fRfPy+StFX8L96KhD6NmQJZwnF+seZZ76Lkl1Qo6FCkDJAIbSAUB4+xW+CDrMbpuu0GNBiC2hYOhx+hTZnJuj5hBilLI6Vvcwq1kvi9bMnR1RrETX8GONmPliT/PEJfOAi4ROkoCoG9/sjF0DWhH+KwMMbENfXbzurKFzrLSteo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.195
+	 MIME-Version:Content-Type; b=etcW8Q5UCxHAozX9uOsxCOac4sFA0/HleCCb1TtWBKT8ANZbhtiy33fdvETHGz0xQGYwRnMG+Qy5BWeoC6C0CGAimKMMn9Dk6xCNDHVK07uHx0P92A3L3EbyOPc2la9XPdCbnUFRyiNuGSgqkKR5tC4Y1cKjZHJJMsVTV6AxOFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047203;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WNt.Hm5_1707133638;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WNt.Hm5_1707133638)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047192;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WNt.HmH_1707133639;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WNt.HmH_1707133639)
           by smtp.aliyun-inc.com;
           Mon, 05 Feb 2024 19:47:19 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
@@ -25,9 +25,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 3/6] um: Remove unused functions
-Date: Mon, 05 Feb 2024 19:47:05 +0800
-Message-Id: <20240205114708.25235-4-tiwei.btw@antgroup.com>
+Subject: [PATCH v2 5/6] um: Add missing headers
+Date: Mon, 05 Feb 2024 19:47:07 +0800
+Message-Id: <20240205114708.25235-6-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240205114708.25235-1-tiwei.btw@antgroup.com>
 References: <20240205114708.25235-1-tiwei.btw@antgroup.com>
@@ -40,81 +40,205 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These functions are not used anymore. Removing them will also address
-below -Wmissing-prototypes warnings:
+This will address below -Wmissing-prototypes warnings:
 
-arch/um/kernel/process.c:51:5: warning: no previous prototype for ‘pid_to_processor_id’ [-Wmissing-prototypes]
-arch/um/kernel/process.c:253:5: warning: no previous prototype for ‘copy_to_user_proc’ [-Wmissing-prototypes]
-arch/um/kernel/process.c:263:5: warning: no previous prototype for ‘clear_user_proc’ [-Wmissing-prototypes]
-arch/um/kernel/tlb.c:579:6: warning: no previous prototype for ‘flush_tlb_mm_range’ [-Wmissing-prototypes]
+arch/um/kernel/mem.c:202:8: warning: no previous prototype for ‘pgd_alloc’ [-Wmissing-prototypes]
+arch/um/kernel/mem.c:215:7: warning: no previous prototype for ‘uml_kmalloc’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:207:6: warning: no previous prototype for ‘arch_cpu_idle’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:328:15: warning: no previous prototype for ‘arch_align_stack’ [-Wmissing-prototypes]
+arch/um/kernel/reboot.c:45:6: warning: no previous prototype for ‘machine_restart’ [-Wmissing-prototypes]
+arch/um/kernel/reboot.c:51:6: warning: no previous prototype for ‘machine_power_off’ [-Wmissing-prototypes]
+arch/um/kernel/reboot.c:57:6: warning: no previous prototype for ‘machine_halt’ [-Wmissing-prototypes]
+arch/um/kernel/skas/mmu.c:17:5: warning: no previous prototype for ‘init_new_context’ [-Wmissing-prototypes]
+arch/um/kernel/skas/mmu.c:60:6: warning: no previous prototype for ‘destroy_context’ [-Wmissing-prototypes]
+arch/um/kernel/skas/process.c:36:12: warning: no previous prototype for ‘start_uml’ [-Wmissing-prototypes]
+arch/um/kernel/tlb.c:594:6: warning: no previous prototype for ‘force_flush_all’ [-Wmissing-prototypes]
+arch/x86/um/bugs_32.c:22:6: warning: no previous prototype for ‘arch_check_bugs’ [-Wmissing-prototypes]
+arch/x86/um/bugs_32.c:44:6: warning: no previous prototype for ‘arch_examine_signal’ [-Wmissing-prototypes]
+arch/x86/um/bugs_64.c:9:6: warning: no previous prototype for ‘arch_check_bugs’ [-Wmissing-prototypes]
+arch/x86/um/bugs_64.c:13:6: warning: no previous prototype for ‘arch_examine_signal’ [-Wmissing-prototypes]
+arch/x86/um/elfcore.c:10:12: warning: no previous prototype for ‘elf_core_extra_phdrs’ [-Wmissing-prototypes]
+arch/x86/um/elfcore.c:15:5: warning: no previous prototype for ‘elf_core_write_extra_phdrs’ [-Wmissing-prototypes]
+arch/x86/um/elfcore.c:42:5: warning: no previous prototype for ‘elf_core_write_extra_data’ [-Wmissing-prototypes]
+arch/x86/um/elfcore.c:63:8: warning: no previous prototype for ‘elf_core_extra_data_size’ [-Wmissing-prototypes]
+arch/x86/um/fault.c:18:5: warning: no previous prototype for ‘arch_fixup’ [-Wmissing-prototypes]
+arch/x86/um/os-Linux/mcontext.c:7:6: warning: no previous prototype for ‘get_regs_from_mc’ [-Wmissing-prototypes]
+arch/x86/um/os-Linux/tls.c:22:6: warning: no previous prototype for ‘check_host_supports_tls’ [-Wmissing-prototypes]
 
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/um/kernel/process.c | 21 ---------------------
- arch/um/kernel/tlb.c     |  6 ------
- 2 files changed, 27 deletions(-)
+ arch/um/kernel/mem.c            | 2 ++
+ arch/um/kernel/process.c        | 2 ++
+ arch/um/kernel/reboot.c         | 1 +
+ arch/um/kernel/skas/mmu.c       | 1 +
+ arch/um/kernel/skas/process.c   | 1 +
+ arch/um/kernel/tlb.c            | 1 +
+ arch/x86/um/bugs_32.c           | 1 +
+ arch/x86/um/bugs_64.c           | 1 +
+ arch/x86/um/elfcore.c           | 1 +
+ arch/x86/um/fault.c             | 1 +
+ arch/x86/um/os-Linux/mcontext.c | 1 +
+ arch/x86/um/os-Linux/tls.c      | 1 +
+ 12 files changed, 14 insertions(+)
 
+diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
+index 38d5a71a579b..ca91accd64fc 100644
+--- a/arch/um/kernel/mem.c
++++ b/arch/um/kernel/mem.c
+@@ -12,12 +12,14 @@
+ #include <linux/slab.h>
+ #include <asm/fixmap.h>
+ #include <asm/page.h>
++#include <asm/pgalloc.h>
+ #include <as-layout.h>
+ #include <init.h>
+ #include <kern.h>
+ #include <kern_util.h>
+ #include <mem_user.h>
+ #include <os.h>
++#include <um_malloc.h>
+ #include <linux/sched/task.h>
+ 
+ #ifdef CONFIG_KASAN
 diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-index 20f3813143d8..292c8014aaa6 100644
+index a7607ef1b02f..4235e2ca2664 100644
 --- a/arch/um/kernel/process.c
 +++ b/arch/um/kernel/process.c
-@@ -48,17 +48,6 @@ static inline int external_pid(void)
- 	return userspace_pid[0];
- }
+@@ -15,6 +15,7 @@
+ #include <linux/proc_fs.h>
+ #include <linux/ptrace.h>
+ #include <linux/random.h>
++#include <linux/cpu.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
+@@ -27,6 +28,7 @@
+ #include <asm/current.h>
+ #include <asm/mmu_context.h>
+ #include <asm/switch_to.h>
++#include <asm/exec.h>
+ #include <linux/uaccess.h>
+ #include <as-layout.h>
+ #include <kern_util.h>
+diff --git a/arch/um/kernel/reboot.c b/arch/um/kernel/reboot.c
+index 48c0610d506e..25840eee1068 100644
+--- a/arch/um/kernel/reboot.c
++++ b/arch/um/kernel/reboot.c
+@@ -9,6 +9,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+ #include <linux/oom.h>
++#include <linux/reboot.h>
+ #include <kern_util.h>
+ #include <os.h>
+ #include <skas.h>
+diff --git a/arch/um/kernel/skas/mmu.c b/arch/um/kernel/skas/mmu.c
+index 656fe16c9b63..aeed1c2aaf3c 100644
+--- a/arch/um/kernel/skas/mmu.c
++++ b/arch/um/kernel/skas/mmu.c
+@@ -10,6 +10,7 @@
  
--int pid_to_processor_id(int pid)
--{
--	int i;
--
--	for (i = 0; i < ncpus; i++) {
--		if (cpu_tasks[i].pid == pid)
--			return i;
--	}
--	return -1;
--}
--
- void free_stack(unsigned long stack, int order)
- {
- 	free_pages(stack, order);
-@@ -250,21 +239,11 @@ char *uml_strdup(const char *string)
- }
- EXPORT_SYMBOL(uml_strdup);
+ #include <asm/pgalloc.h>
+ #include <asm/sections.h>
++#include <asm/mmu_context.h>
+ #include <as-layout.h>
+ #include <os.h>
+ #include <skas.h>
+diff --git a/arch/um/kernel/skas/process.c b/arch/um/kernel/skas/process.c
+index f2ac134c9752..fdd5922f9222 100644
+--- a/arch/um/kernel/skas/process.c
++++ b/arch/um/kernel/skas/process.c
+@@ -12,6 +12,7 @@
+ #include <kern.h>
+ #include <os.h>
+ #include <skas.h>
++#include <kern_util.h>
  
--int copy_to_user_proc(void __user *to, void *from, int size)
--{
--	return copy_to_user(to, from, size);
--}
--
- int copy_from_user_proc(void *to, void __user *from, int size)
- {
- 	return copy_from_user(to, from, size);
- }
- 
--int clear_user_proc(void __user *buf, int size)
--{
--	return clear_user(buf, size);
--}
--
- static atomic_t using_sysemu = ATOMIC_INIT(0);
- int sysemu_supported;
+ extern void start_kernel(void);
  
 diff --git a/arch/um/kernel/tlb.c b/arch/um/kernel/tlb.c
-index 7d050ab0f78a..70b5e47e9761 100644
+index 70b5e47e9761..8784f03fa4a6 100644
 --- a/arch/um/kernel/tlb.c
 +++ b/arch/um/kernel/tlb.c
-@@ -576,12 +576,6 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
- }
- EXPORT_SYMBOL(flush_tlb_range);
+@@ -8,6 +8,7 @@
+ #include <linux/sched/signal.h>
  
--void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
--			unsigned long end)
--{
--	fix_range(mm, start, end, 0);
--}
--
- void flush_tlb_mm(struct mm_struct *mm)
+ #include <asm/tlbflush.h>
++#include <asm/mmu_context.h>
+ #include <as-layout.h>
+ #include <mem_user.h>
+ #include <os.h>
+diff --git a/arch/x86/um/bugs_32.c b/arch/x86/um/bugs_32.c
+index 33daff4dade4..d29929efcc07 100644
+--- a/arch/x86/um/bugs_32.c
++++ b/arch/x86/um/bugs_32.c
+@@ -3,6 +3,7 @@
+  * Licensed under the GPL
+  */
+ 
++#include <arch.h>
+ #include <signal.h>
+ #include <kern_util.h>
+ #include <longjmp.h>
+diff --git a/arch/x86/um/bugs_64.c b/arch/x86/um/bugs_64.c
+index 8cc8256c698d..b01295e8a676 100644
+--- a/arch/x86/um/bugs_64.c
++++ b/arch/x86/um/bugs_64.c
+@@ -4,6 +4,7 @@
+  * Licensed under the GPL
+  */
+ 
++#include <arch.h>
+ #include <sysdep/ptrace.h>
+ 
+ void arch_check_bugs(void)
+diff --git a/arch/x86/um/elfcore.c b/arch/x86/um/elfcore.c
+index 650cdbbdaf45..ef50662fc40d 100644
+--- a/arch/x86/um/elfcore.c
++++ b/arch/x86/um/elfcore.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/elf.h>
++#include <linux/elfcore.h>
+ #include <linux/coredump.h>
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+diff --git a/arch/x86/um/fault.c b/arch/x86/um/fault.c
+index 84ac7f7b0257..0dde4d613a87 100644
+--- a/arch/x86/um/fault.c
++++ b/arch/x86/um/fault.c
+@@ -3,6 +3,7 @@
+  * Licensed under the GPL
+  */
+ 
++#include <arch.h>
+ #include <sysdep/ptrace.h>
+ 
+ /* These two are from asm-um/uaccess.h and linux/module.h, check them. */
+diff --git a/arch/x86/um/os-Linux/mcontext.c b/arch/x86/um/os-Linux/mcontext.c
+index 49c3744cac37..e80ab7d28117 100644
+--- a/arch/x86/um/os-Linux/mcontext.c
++++ b/arch/x86/um/os-Linux/mcontext.c
+@@ -3,6 +3,7 @@
+ #define __FRAME_OFFSETS
+ #include <asm/ptrace.h>
+ #include <sysdep/ptrace.h>
++#include <sysdep/mcontext.h>
+ 
+ void get_regs_from_mc(struct uml_pt_regs *regs, mcontext_t *mc)
  {
- 	struct vm_area_struct *vma;
+diff --git a/arch/x86/um/os-Linux/tls.c b/arch/x86/um/os-Linux/tls.c
+index 3e1b1bf6acbc..eed9efe29ade 100644
+--- a/arch/x86/um/os-Linux/tls.c
++++ b/arch/x86/um/os-Linux/tls.c
+@@ -6,6 +6,7 @@
+ #include <sys/syscall.h>
+ #include <unistd.h>
+ 
++#include <os.h>
+ #include <sysdep/tls.h>
+ 
+ #ifndef PTRACE_GET_THREAD_AREA
 -- 
 2.34.1
 
