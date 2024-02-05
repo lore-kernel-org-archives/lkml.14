@@ -1,219 +1,77 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159BC4594D;
-	Mon,  5 Feb 2024 17:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0A34597E;
+	Mon,  5 Feb 2024 17:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707153640; cv=none; b=sbfu21P7ZmVL2wxu4j7ZgiPnvNvdSsV1lLPD1c3kcZiF5fRNAI7rfhyZcty+Q0/+8F9rdvLMiPGsGuVVmSu9ZBH8n1JCADUTMVt061oQLMrJRhmUONiKpsuiRtTsBNUKEJp5BRIzrBd3nuxQ7DXmSelp6OS6ysprzaogz9+rZw0=
+	t=1707153650; cv=none; b=loOTYQ7mbdHZHp1qIcpQIO+eoNmUScA12EnMGhDQYV3xIFqJcM7/pfBCTtPDe+CcHwZjbbykS2f9nKTy3KCfi3OFilKPjaFvRITedM4PvFI/AYuSAtYARAKi+TJ8+kp0znAKjYlAXDNKckwyvMB2/XCd7rxLdzoSpM/We2cJUHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707153640; c=relaxed/simple;
-	bh=LAeHhmBz1VNDE6V0cPKKRwembrMNzST8rAV8CdBI2G8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e32IPUTgqZD/2Ms7QmQii/ukElCeIPY8WQm6n+IiSTjlSbI51mGMHhjB4d8UdzSDFEjkvZSBZnjRvkCRCsSJYfQhZmdK4Fg/d1n6+ZLElciiOzWTMaJnMwbwyr1s4R32wEauhpESIo5haDskVyyTAWhRcmTFCCb3i8zNFL916FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZQSwM3P0; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707153650; c=relaxed/simple;
+	bh=TCImxvkVz5L7wITyguIjWK4mrkFlz9lqMRgQjXWfmrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nRDllu7nV1kKUsii2S8Gz7TTA0JGgmvRg7fsEqge8/wuQHraw7nvaGT9sHFWciSYIDxa0PhdSKR9AHzXrv+SiR4DOwo8F6MY9kYqzRabIltZ1W3qYBcifJTKBjcgw62HFNIYx0MwrfKH5zNoQetS+XJU7nplsF/kFtxRQyRkxiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fprk/LUi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQSwM3P0"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d9b2400910so7227795ad.0;
-        Mon, 05 Feb 2024 09:20:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707153637; x=1707758437; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hS6dIuUOs6IlT69yW9IpIjBL1L09bQr38oFgBY2DWIM=;
-        b=ZQSwM3P01qsTiryaEMNd6A1EQoEASZVN8pjfrVNbTkVLA5w6BzFARXtxlrw0gtQwMQ
-         B5SpIH1W00nOa/XUJmbokmMtFibrWKF8Gda9c9TihNxofY98Ai0eRrmyiS8YXxlBJeZb
-         GruN8Uu5fjdMpDzKmokvqH1v7pcFNwYKS7Ntrx8R7esFkunumC2Gnq2jU8QUFhtTuih4
-         09uVXMishD0r1QOhW4+SDZHyzFqb8xGUg5Zd6mzQRiiPzwZvWDchze/8B12rXhTGrHXD
-         Q1Lca9AJs0CnAcmPjF1nE9wTNXzs3CD6W+PLs+XVhhJAl8an2xt8jKxHGHF1US4JHcru
-         12yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707153637; x=1707758437;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hS6dIuUOs6IlT69yW9IpIjBL1L09bQr38oFgBY2DWIM=;
-        b=nHoCips4DQbqoqk4s3/Zq7mMG5wsopjMu4p5ySRlE4DwQQLvmizgMzJIEvQyQ9pmAC
-         QjZGDAgENTKYPBizCoqo5/A3escCnlgdzkC/LC2oz1ll3DQeFLvu55LagvM6HmDzxZvt
-         gwB9sbQjRTDXJAHeMRXxy7W2JUoYbGsfWHUvz5baage3gM3WpcDTrd1bIlx61835URVs
-         IpAx5NPbiahckFdKbezQmLFyo+vQLTyd+t63qadeOeimGolQeYW5woM11Ad+7uRexmZM
-         4h5ZlohC7xG5nOV0cxmz32eujjmRCNJKlQdsRj0OPSQ7+NnVgFcgrDbDi+dj8ONYX31N
-         G+Sg==
-X-Gm-Message-State: AOJu0Yz2XdVRL8XsgLPGuJivQ5CfiMJN+KQH5flbGQFPhSJGC+hhAozu
-	Nq4jXPphuQ4EwdS1QU/GrIbkijDlVeijGbqqjTYDPIdKZ6GcdoQl
-X-Google-Smtp-Source: AGHT+IEr9WVh5tHKvU1HS2CVHP43BD/DeXPf5QOiaZJtxwQUCZ6uXzC4m2BBtTurEjLkD42+OzPOUg==
-X-Received: by 2002:a17:903:1c2:b0:1d9:4143:5fe1 with SMTP id e2-20020a17090301c200b001d941435fe1mr493718plh.0.1707153637320;
-        Mon, 05 Feb 2024 09:20:37 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXHjBVTNLFu0eYUL+Q+ORdz2rkEuW7AN4pMU/cmyWkcXb4xYBO+XdsypuclxP93NF30wnEhXUaxlpy5FGlZPE5w0cyhpE8f7SxllsREgXg9jgBdWA8aEyFEBtblK86wDEDaIHkzEaWDu6gLO3WM2gOWfbSA5hvsR5CGP/ExrOOmHy7kx7C/Aa6FQr6Ys9GF44yeg92uDc6IvrYGfBN53Cq+XC4SNDPuHm703BAUpv8dm3IJhzDkrtJ+Ie4mmIjq6mnQPQNN7wTGgvTyEzNWPiTZd+5D/cEVWYS7S+N7aljoeMjIkA+m80v79/YYhvAG1YWAA/jkPEMRRqeXubTPiKKITN9e/ekjV16ttM4uQtj+jv3FO2f9fTveftjiobMorBmc8JfVZQWsIUD2U1JUgNybxUUuwZhfHokUgToJnRreFFuDUEfJ1siGzIORSY4MXISg9fph
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id iy15-20020a170903130f00b001d8f3c7fb96sm107518plb.166.2024.02.05.09.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 09:20:36 -0800 (PST)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Rob Herring <robh+dt@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fprk/LUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01565C433F1;
+	Mon,  5 Feb 2024 17:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707153649;
+	bh=TCImxvkVz5L7wITyguIjWK4mrkFlz9lqMRgQjXWfmrU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fprk/LUicnY0aQSxSVaH8TVzk1YshfKS9D7u6WHzElig1x2+tHrRcFJYopgqmy1Pv
+	 9p4TrOR9veOxr8WfNwlQ5m3341Pcbr8OQ04o/rP2dkR2W/TXfkK7e+N/jUEOaXc0/Q
+	 BPfXvmD9hZRoxBb/17gsK6odz3OBdoXT6iB2DsgyT1obZPYGhLEAZbWzaJr0NLfT+U
+	 KyniczLOmh7tEn7EyRyTA1Ci4n8SLmD1aEbOe+5kVsiLdBbljRRWAQ3h7DmNcyHRhL
+	 xtQq8jraZgHKKbNodqLpYfTB+ozz46uS85PAf9Lb6pFuivUQ/f3C+9FfaaVzbX49xj
+	 KpxcYUTgVWYOA==
+Date: Mon, 5 Feb 2024 17:20:46 +0000
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-hwmon@vger.kernel.org, Charles Hsu <ythsu0511@gmail.com>,
+	linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCHv1 4/5] arm64: dts: amlogic: Add cache information to the Amlogic S922X SoC
-Date: Mon,  5 Feb 2024 22:49:22 +0530
-Message-ID: <20240205171930.968-5-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240205171930.968-1-linux.amoon@gmail.com>
-References: <20240205171930.968-1-linux.amoon@gmail.com>
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: trivial-devices: sort entries
+ alphanumerically
+Message-ID: <170715359536.3640223.5160945915604305923.robh@kernel.org>
+References: <20240201075805.7492-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201075805.7492-1-krzysztof.kozlowski@linaro.org>
 
-As per S922X datasheet add missing cache information to the Amlogic
-S922X SoC.
 
-- Each Cortex-A53 core has 32 KB of instruction cache and
-	32 KB of L1 data cache available.
-- Each Cortex-A73 core has 64 KB of L1 instruction cache and
-	64 KB of L1 data cache available.
-- The little (A53) cluster has 512 KB of unified L2 cache available.
-- The big (A73) cluster has 1 MB of unified L2 cache available.
+On Thu, 01 Feb 2024 08:58:05 +0100, Krzysztof Kozlowski wrote:
+> Sort entries alphanumerically.  This was a semi manual job with help of:
+> 
+>   cat Documentation/devicetree/bindings/trivial-devices.yaml | grep '    - ' > old
+>   cat old | sort -n > new
+>   diff -ubB old new
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Cc: Charles Hsu <ythsu0511@gmail.com>
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  .../devicetree/bindings/trivial-devices.yaml  | 73 ++++++++++---------
+>  1 file changed, 37 insertions(+), 36 deletions(-)
+> 
 
-To improve system performance.
+Applied, thanks!
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-[0] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
-[1] https://en.wikipedia.org/wiki/ARM_Cortex-A73
-[2] https://en.wikipedia.org/wiki/ARM_Cortex-A53
----
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 62 ++++++++++++++++++---
- 1 file changed, 55 insertions(+), 7 deletions(-)
+I'll try and pick up all the trivial-devices.yaml changes this cycle to 
+minimize any conflicts.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-index 86e6ceb31d5e..624c6fd763ac 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-@@ -49,7 +49,13 @@ cpu0: cpu@0 {
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <592>;
--			next-level-cache = <&l2>;
-+			d-cache-line-size = <32>;
-+			d-cache-size = <0x8000>;
-+			d-cache-sets = <32>;
-+			i-cache-line-size = <32>;
-+			i-cache-size = <0x8000>;
-+			i-cache-sets = <32>;
-+			next-level-cache = <&l2_cache_l>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -59,7 +65,13 @@ cpu1: cpu@1 {
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <592>;
--			next-level-cache = <&l2>;
-+			d-cache-line-size = <32>;
-+			d-cache-size = <0x8000>;
-+			d-cache-sets = <32>;
-+			i-cache-line-size = <32>;
-+			i-cache-size = <0x8000>;
-+			i-cache-sets = <32>;
-+			next-level-cache = <&l2_cache_l>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -69,7 +81,13 @@ cpu100: cpu@100 {
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
--			next-level-cache = <&l2>;
-+			d-cache-line-size = <64>;
-+			d-cache-size = <0x10000>;
-+			d-cache-sets = <64>;
-+			i-cache-line-size = <64>;
-+			i-cache-size = <0x10000>;
-+			i-cache-sets = <64>;
-+			next-level-cache = <&l2_cache_b>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -79,7 +97,13 @@ cpu101: cpu@101 {
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
--			next-level-cache = <&l2>;
-+			d-cache-line-size = <64>;
-+			d-cache-size = <0x10000>;
-+			d-cache-sets = <64>;
-+			i-cache-line-size = <64>;
-+			i-cache-size = <0x10000>;
-+			i-cache-sets = <64>;
-+			next-level-cache = <&l2_cache_b>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -89,7 +113,13 @@ cpu102: cpu@102 {
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
--			next-level-cache = <&l2>;
-+			d-cache-line-size = <64>;
-+			d-cache-size = <0x10000>;
-+			d-cache-sets = <64>;
-+			i-cache-line-size = <64>;
-+			i-cache-size = <0x10000>;
-+			i-cache-sets = <64>;
-+			next-level-cache = <&l2_cache_b>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -99,14 +129,32 @@ cpu103: cpu@103 {
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
--			next-level-cache = <&l2>;
-+			d-cache-line-size = <64>;
-+			d-cache-size = <0x10000>;
-+			d-cache-sets = <64>;
-+			i-cache-line-size = <64>;
-+			i-cache-size = <0x10000>;
-+			i-cache-sets = <64>;
-+			next-level-cache = <&l2_cache_b>;
- 			#cooling-cells = <2>;
- 		};
- 
--		l2: l2-cache0 {
-+		l2_cache_l: l2-cache-cluster0 {
- 			compatible = "cache";
- 			cache-level = <2>;
- 			cache-unified;
-+			cache-size = <0x80000>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
-+		};
-+
-+		l2_cache_b: l2-cache-cluster1 {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			cache-unified;
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
- 		};
- 	};
- };
--- 
-2.43.0
+Rob
 
