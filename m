@@ -1,236 +1,120 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from out0-195.mail.aliyun.com (out0-195.mail.aliyun.com [140.205.0.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680A2199A2;
-	Mon,  5 Feb 2024 11:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683F218EB2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133898; cv=none; b=HOdKcx6cKtVxBOm1g7nV1vmRU7evXSNG/ml3kf3fLticHWfXcBJZZw89q0tTPbelTq6kT+mq2HhqhSboqgSoTx/XgoGpgC82VEjSq4hFoWu4eDOpvNgxLiVaO5mZnhqpsSB4AcMPyHVsf3Il71Zl56wHZOKnj6OQX/dRKg4//AA=
+	t=1707133966; cv=none; b=eqP/ooutg7ky25lFh/9McCsOHbAOyRDEpaXgCNQJdvumVfM67d+OCET/zrKen6RzEiGshHv11TFgppnfzpVtzPk9T9pvWwCfjxdroxqid6KUYCksjjH+OBvGj5BVBTTlNAUCz9QxD1bbsYGzHOF9bXMAemekUBiXX/uxqTzPGdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133898; c=relaxed/simple;
-	bh=ASfvrXH8e1G8RsxuNNs2S3dZf0mRTg3lWDzFAkWTOyQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5LqWKvj8EAAtTI+AvspRqvHbgmGNla51l1C379sSQWTB/OKipxx3WBnjjbocHIgX5IpQlCA4fMTrWK0pr19jkIQ5D59RSAz+Cd3XKJvAKA57eDXz7VVw5jvDZrLGO2+9/JB/xl2b9KIvZca8bJxVvWDbdPjr71HF/Zr9HHeZbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TT4TL2HX7z1vt2p;
-	Mon,  5 Feb 2024 19:51:02 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 92F551402E0;
-	Mon,  5 Feb 2024 19:51:29 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemd100002.china.huawei.com
- (7.221.188.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Mon, 5 Feb
- 2024 19:51:28 +0800
-Date: Mon, 5 Feb 2024 19:51:11 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-CC: Changbin Du <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, Andi
- Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
-	<changbin.du@gmail.com>
-Subject: Re: [PATCH v5 1/5] perf: build: introduce the libcapstone
-Message-ID: <20240205115111.n6vvi4wvu72e6r5c@M910t>
-References: <20240122112054.1576835-1-changbin.du@huawei.com>
- <20240122112054.1576835-2-changbin.du@huawei.com>
- <fbd131d2-a4c2-4b7a-95ae-6593b7a3a997@intel.com>
+	s=arc-20240116; t=1707133966; c=relaxed/simple;
+	bh=5BvnaK+Q3e30bHwbnZ/Zuza3SgyqFfcHiBGD0cfTfMY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fRfPy+StFX8L96KhD6NmQJZwnF+seZZ76Lkl1Qo6FCkDJAIbSAUB4+xW+CDrMbpuu0GNBiC2hYOhx+hTZnJuj5hBilLI6Vvcwq1kvi9bMnR1RrETX8GONmPliT/PEJfOAi4ROkoCoG9/sjF0DWhH+KwMMbENfXbzurKFzrLSteo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047203;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WNt.Hm5_1707133638;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WNt.Hm5_1707133638)
+          by smtp.aliyun-inc.com;
+          Mon, 05 Feb 2024 19:47:19 +0800
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+To: richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net
+Cc:  <linux-um@lists.infradead.org>,
+   <linux-kernel@vger.kernel.org>,
+  "Tiwei Bie" <tiwei.btw@antgroup.com>
+Subject: [PATCH v2 3/6] um: Remove unused functions
+Date: Mon, 05 Feb 2024 19:47:05 +0800
+Message-Id: <20240205114708.25235-4-tiwei.btw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205114708.25235-1-tiwei.btw@antgroup.com>
+References: <20240205114708.25235-1-tiwei.btw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <fbd131d2-a4c2-4b7a-95ae-6593b7a3a997@intel.com>
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 05, 2024 at 11:21:23AM +0200, Adrian Hunter wrote:
-> On 22/01/24 13:20, Changbin Du wrote:
-> > Later we will use libcapstone to disassemble instructions of samples.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > 
-> > ---
-> > v2:
-> >   - change tools/perf/tests/make also.
-> > ---
-> >  tools/build/Makefile.feature           |  2 ++
-> >  tools/build/feature/Makefile           |  4 ++++
-> >  tools/build/feature/test-all.c         |  4 ++++
-> >  tools/build/feature/test-libcapstone.c | 11 +++++++++++
-> >  tools/perf/Makefile.config             | 21 +++++++++++++++++++++
-> >  tools/perf/Makefile.perf               |  3 +++
-> >  tools/perf/tests/make                  |  2 ++
-> >  7 files changed, 47 insertions(+)
-> >  create mode 100644 tools/build/feature/test-libcapstone.c
-> 
-> Perhaps add it also to display with perf version --build-options
->
-no problem.
+These functions are not used anymore. Removing them will also address
+below -Wmissing-prototypes warnings:
 
-> > 
-> > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> > index 64df118376df..1e2ab148d5db 100644
-> > --- a/tools/build/Makefile.feature
-> > +++ b/tools/build/Makefile.feature
-> > @@ -87,6 +87,7 @@ FEATURE_TESTS_EXTRA :=                  \
-> >           gtk2-infobar                   \
-> >           hello                          \
-> >           libbabeltrace                  \
-> > +         libcapstone                    \
-> >           libbfd-liberty                 \
-> >           libbfd-liberty-z               \
-> >           libopencsd                     \
-> > @@ -134,6 +135,7 @@ FEATURE_DISPLAY ?=              \
-> >           libcrypto              \
-> >           libunwind              \
-> >           libdw-dwarf-unwind     \
-> > +         libcapstone            \
-> >           zlib                   \
-> >           lzma                   \
-> >           get_cpuid              \
-> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> > index 37722e509eb9..ed54cef450f5 100644
-> > --- a/tools/build/feature/Makefile
-> > +++ b/tools/build/feature/Makefile
-> > @@ -54,6 +54,7 @@ FILES=                                          \
-> >           test-timerfd.bin                       \
-> >           test-libdw-dwarf-unwind.bin            \
-> >           test-libbabeltrace.bin                 \
-> > +         test-libcapstone.bin			\
-> >           test-compile-32.bin                    \
-> >           test-compile-x32.bin                   \
-> >           test-zlib.bin                          \
-> > @@ -286,6 +287,9 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
-> >  $(OUTPUT)test-libbabeltrace.bin:
-> >  	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
-> >  
-> > +$(OUTPUT)test-libcapstone.bin:
-> > +	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
-> > +
-> >  $(OUTPUT)test-compile-32.bin:
-> >  	$(CC) -m32 -o $@ test-compile.c
-> >  
-> > diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> > index 6f4bf386a3b5..dd0a18c2ef8f 100644
-> > --- a/tools/build/feature/test-all.c
-> > +++ b/tools/build/feature/test-all.c
-> > @@ -134,6 +134,10 @@
-> >  #undef main
-> >  #endif
-> >  
-> > +#define main main_test_libcapstone
-> > +# include "test-libcapstone.c"
-> > +#undef main
-> > +
-> >  #define main main_test_lzma
-> >  # include "test-lzma.c"
-> >  #undef main
-> > diff --git a/tools/build/feature/test-libcapstone.c b/tools/build/feature/test-libcapstone.c
-> > new file mode 100644
-> > index 000000000000..fbe8dba189e9
-> > --- /dev/null
-> > +++ b/tools/build/feature/test-libcapstone.c
-> > @@ -0,0 +1,11 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <capstone/capstone.h>
-> > +
-> > +int main(void)
-> > +{
-> > +	csh handle;
-> > +
-> > +	cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
-> > +	return 0;
-> > +}
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index aa55850fbc21..3e1072c59757 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -191,6 +191,15 @@ endif
-> >  FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
-> >  FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
-> >  
-> > +# for linking with debug library, run like:
-> > +# make DEBUG=1 LIBCAPSTONE_DIR=/opt/capstone/
-> > +ifdef LIBCAPSTONE_DIR
-> > +  LIBCAPSTONE_CFLAGS  := -I$(LIBCAPSTONE_DIR)/include
-> > +  LIBCAPSTONE_LDFLAGS := -L$(LIBCAPSTONE_DIR)/
-> > +endif
-> > +FEATURE_CHECK_CFLAGS-libcapstone := $(LIBCAPSTONE_CFLAGS)
-> > +FEATURE_CHECK_LDFLAGS-libcapstone := $(LIBCAPSTONE_LDFLAGS) -lcapstone
-> > +
-> >  ifdef LIBZSTD_DIR
-> >    LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
-> >    LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
-> > @@ -1094,6 +1103,18 @@ ifndef NO_LIBBABELTRACE
-> >    endif
-> >  endif
-> >  
-> > +ifndef NO_CAPSTONE
-> > +  $(call feature_check,libcapstone)
-> > +  ifeq ($(feature-libcapstone), 1)
-> > +    CFLAGS += -DHAVE_LIBCAPSTONE_SUPPORT $(LIBCAPSTONE_CFLAGS)
-> > +    LDFLAGS += $(LICAPSTONE_LDFLAGS)
-> > +    EXTLIBS += -lcapstone
-> > +    $(call detected,CONFIG_LIBCAPSTONE)
-> > +  else
-> > +    msg := $(warning No libcapstone found, disables disasm engine support for 'perf script', please install libcapstone-dev/capstone-devel);
-> > +  endif
-> > +endif
-> > +
-> >  ifndef NO_AUXTRACE
-> >    ifeq ($(SRCARCH),x86)
-> >      ifeq ($(feature-get_cpuid), 0)
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index 27e7c478880f..56c2720c1d0f 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -84,6 +84,9 @@ include ../scripts/utilities.mak
-> >  # Define NO_LIBBABELTRACE if you do not want libbabeltrace support
-> >  # for CTF data format.
-> >  #
-> > +# Define NO_CAPSTONE if you do not want libcapstone support
-> > +# for disasm engine.
-> > +#
-> >  # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
-> >  #
-> >  # Define NO_AUXTRACE if you do not want AUX area tracing support
-> > diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> > index 8a4da7eb637a..b08026f5d4e7 100644
-> > --- a/tools/perf/tests/make
-> > +++ b/tools/perf/tests/make
-> > @@ -83,6 +83,7 @@ make_no_libelf      := NO_LIBELF=1
-> >  make_no_libunwind   := NO_LIBUNWIND=1
-> >  make_no_libdw_dwarf_unwind := NO_LIBDW_DWARF_UNWIND=1
-> >  make_no_backtrace   := NO_BACKTRACE=1
-> > +make_no_libcapstone := NO_CAPSTONE=1
-> >  make_no_libnuma     := NO_LIBNUMA=1
-> >  make_no_libaudit    := NO_LIBAUDIT=1
-> >  make_no_libbionic   := NO_LIBBIONIC=1
-> 
-> Also needs to be added to make_minimal
-> 
-okay. thanks!
+arch/um/kernel/process.c:51:5: warning: no previous prototype for ‘pid_to_processor_id’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:253:5: warning: no previous prototype for ‘copy_to_user_proc’ [-Wmissing-prototypes]
+arch/um/kernel/process.c:263:5: warning: no previous prototype for ‘clear_user_proc’ [-Wmissing-prototypes]
+arch/um/kernel/tlb.c:579:6: warning: no previous prototype for ‘flush_tlb_mm_range’ [-Wmissing-prototypes]
 
-> > @@ -152,6 +153,7 @@ run += make_no_libelf
-> >  run += make_no_libunwind
-> >  run += make_no_libdw_dwarf_unwind
-> >  run += make_no_backtrace
-> > +run += make_no_libcapstone
-> >  run += make_no_libnuma
-> >  run += make_no_libaudit
-> >  run += make_no_libbionic
-> 
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+---
+ arch/um/kernel/process.c | 21 ---------------------
+ arch/um/kernel/tlb.c     |  6 ------
+ 2 files changed, 27 deletions(-)
 
+diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
+index 20f3813143d8..292c8014aaa6 100644
+--- a/arch/um/kernel/process.c
++++ b/arch/um/kernel/process.c
+@@ -48,17 +48,6 @@ static inline int external_pid(void)
+ 	return userspace_pid[0];
+ }
+ 
+-int pid_to_processor_id(int pid)
+-{
+-	int i;
+-
+-	for (i = 0; i < ncpus; i++) {
+-		if (cpu_tasks[i].pid == pid)
+-			return i;
+-	}
+-	return -1;
+-}
+-
+ void free_stack(unsigned long stack, int order)
+ {
+ 	free_pages(stack, order);
+@@ -250,21 +239,11 @@ char *uml_strdup(const char *string)
+ }
+ EXPORT_SYMBOL(uml_strdup);
+ 
+-int copy_to_user_proc(void __user *to, void *from, int size)
+-{
+-	return copy_to_user(to, from, size);
+-}
+-
+ int copy_from_user_proc(void *to, void __user *from, int size)
+ {
+ 	return copy_from_user(to, from, size);
+ }
+ 
+-int clear_user_proc(void __user *buf, int size)
+-{
+-	return clear_user(buf, size);
+-}
+-
+ static atomic_t using_sysemu = ATOMIC_INIT(0);
+ int sysemu_supported;
+ 
+diff --git a/arch/um/kernel/tlb.c b/arch/um/kernel/tlb.c
+index 7d050ab0f78a..70b5e47e9761 100644
+--- a/arch/um/kernel/tlb.c
++++ b/arch/um/kernel/tlb.c
+@@ -576,12 +576,6 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ }
+ EXPORT_SYMBOL(flush_tlb_range);
+ 
+-void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+-			unsigned long end)
+-{
+-	fix_range(mm, start, end, 0);
+-}
+-
+ void flush_tlb_mm(struct mm_struct *mm)
+ {
+ 	struct vm_area_struct *vma;
 -- 
-Cheers,
-Changbin Du
+2.34.1
+
