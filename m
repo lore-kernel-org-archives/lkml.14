@@ -1,46 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EB18F44;
-	Mon,  5 Feb 2024 01:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A3F79D8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 02:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707098024; cv=none; b=rY9oOMJbh1BrrnAWDA7K9nRNnlgzBwIn6qxVGvzzX6DgZ72oB2p43tPFJHru/W6/7G3yjR3KPw79OwqhP838iyLRJx3sFlZq6trWnXhiixTL1HyVqKzFZy7y/m3Xx7gTDRCfR0tPsqO73n7WOpP36Tz753BX3LkNdLIhgV9bbsI=
+	t=1707098752; cv=none; b=mju1mQQ8uhWC++fQZUCdbF90N1RcKWtsZ9739s8h+KYWzdsK+9miKgbAe6H990xluNTriFcvOMPQ1nz0nSqhSEORDca6gKMcTFjfK9PSDUsm9J+814rDrf7lKp3o60qyXGB5x0BDndzOS0jXHPq9WLwuv+rxOfgX2+0p483azIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707098024; c=relaxed/simple;
-	bh=fKVOlqy8mzfSHeW8wmy1p4vp5f1UVDHY7UGrIq/S7x0=;
+	s=arc-20240116; t=1707098752; c=relaxed/simple;
+	bh=5XwGgmp3BPmDJ0fpZR5jpmy1vISiDiiwafuKouHj0Wc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F+rkzv5cn5Z6kQDF2nimn0k2uepLw9FbrgG3S5itDRYJ91sM0/NpEs7jHkGXJPEHK8166h5ZCcog7LZ0TcxIErsDA5XcCtNyQIUhxyVqo9y85SJ6MUtp9nyrxycTkpTlN4emxny4ehGMDN9oGmAG9g49NSmsUCXzgdtAvgx3q4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VNhvjSIr; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=jxyQxnydvBewUBONIvN9CNZQiWTyW/1eWv3wpMWFasU7BiCArPBLXHunChzuhE1IbnmqdX1Mm5JWzhxjrSFJv+FyXBmBLNGlPn0g0SROBSZNfCODrFEWKoAfDWvbgsBEI939ka/1OQCF2bkMahX3DTANXPAJYwf994U8I/XnLpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DF8fvztd; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNhvjSIr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707098022; x=1738634022;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fKVOlqy8mzfSHeW8wmy1p4vp5f1UVDHY7UGrIq/S7x0=;
-  b=VNhvjSIrWzGO+kLezGMeEQxAA7NiXnJML0Xdshb30PBAubDxMvumCoaX
-   7XABKtwn3S2Z0s7Y+xp+zzpIMEPjH8M5OHSMV4pwMb+Q0N1NTIFSHfdPk
-   aUTrChBoH61zZcAcyj3N7QJ4zxHjcX7VPfZ1CUVRTBoZob6yKJAD3gD3h
-   BQ40rqfWQ3LFaxmh8nLMl1x95AtCz4wNrRpLlutB60XUOJs2PmkbkKKwh
-   nrhxSUtYoR0ggJffJ8EYzEEqK65deHqBwG2LbE9E2cSpGgDm4cbmxRvRF
-   JaIbRnW+5VTVAJObR9Q7jjGsr7Nkm0ygGULa12J4RsDmxBftkqs0Mb2Yq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="326752"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="326752"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 17:53:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="877649"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.49]) ([10.238.10.49])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 17:53:14 -0800
-Message-ID: <e4d19c5c-9733-4859-8e04-91c86400e904@linux.intel.com>
-Date: Mon, 5 Feb 2024 09:53:11 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DF8fvztd"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5dc13b142ffso418859a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 Feb 2024 18:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1707098749; x=1707703549; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O+8ijc4eH6dLtZNsmA9IMPtPI2LG666HTBs74Wzg/oA=;
+        b=DF8fvztduKDHbwxVElTu+5bf3wh7r1kQ5rK5yvVhkjhMU66RwVhkIHLzFrz0fhnzdz
+         UfAVI/q/J46tRSUr4g3A0roLFeP7ozbj3wdOBN1ZCVyGjp6b1+YsbOzmYbFTtU0eaVVC
+         BNCpPyu7mEVdnJlNIgJSPgtNJOMKaHdRzTYMnw02h1lzBs25pg45+Dy7+Ak2fAHz7iu7
+         QkkMZX2f4I+5Gy2T4rsDI2RBe2ZmtRUrrTZzQW/T5v9iRWZOJhiU7JL8DG5ceOH0Mj3q
+         7LSvO8hoPR2Aybjhfsy9WcIPO0+O2emlpAyNIZgD0pF0ZQu7qu2RQeOOldoWkVt7cfqq
+         +lqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707098749; x=1707703549;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O+8ijc4eH6dLtZNsmA9IMPtPI2LG666HTBs74Wzg/oA=;
+        b=DfKoqjbET6K8IXXAxnt9e5Cxc/GbR88rN1XoHdNlT2eCS+oeJJDkZNd/G5oLAZLtw+
+         Dk9dh7YYb5xvpOIXpgP1hA8q/4gc5A5m7zd1TcKTDZOygp7PKzxLurRXEckufQZs49Xz
+         Ap82oUdsMJu1DQhbsg1+CKXE9t4iaVrPKdrQ8K+uF6TmP1InqTR9OqmP0yhReeNNLJ2F
+         NHYYOln6nasz7PseTAwGwZUB/YB1Zex0+v1P0kfA73En0yKYFa7VTj+Ts4lqXK3nD82g
+         7x5k/0LATUwFItZnkPEkj/OB/orNTX+rU1VdUKaVJsh/xuhrSbrU+ukt78y9waqZGkJm
+         ibhQ==
+X-Gm-Message-State: AOJu0YzCOkQs7rK84CJeBSO+GHvgXePKyRlm9wwUb/XfTemvPqmHbtKB
+	uRXcycXCMM5REQdaVV8+JfbdZeDhsQG2p/OrlVefhtxBNYEnfL+bn/QnTKRivJc=
+X-Google-Smtp-Source: AGHT+IEzhehZjKAhlUs4m4DTV3eBklOKslGHGUkgNKCFL9+Cs4meD2BIvUUhLUS4TWm4vHr3yHWktg==
+X-Received: by 2002:a05:6a20:1441:b0:19e:317c:b353 with SMTP id a1-20020a056a20144100b0019e317cb353mr15150270pzi.2.1707098749629;
+        Sun, 04 Feb 2024 18:05:49 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVspSycYoIEXn4EgPZz7USoAoUFNLMU/8YDPVu6q/bF+OElJehghZkpfpgkoSsXTccwcG7aH9mG22TmU81aGJgC1CzbACMVutQROUUnzkgl+HummRTkXxn+DImzjz4YgmIJM6sT2hOuMKBNi9AxnraUSFPW4Gih3sg2+BZcDSHDqEEsrnbGVk/6EwO+So0Z9RpIi8o2ugDeLG/Kqum/1eTpZ+GYE6W1eRXia+S2qz9JZGCUsJ0=
+Received: from [10.255.134.6] ([139.177.225.228])
+        by smtp.gmail.com with ESMTPSA id mn16-20020a17090b189000b0029696f7f443sm966122pjb.50.2024.02.04.18.05.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Feb 2024 18:05:49 -0800 (PST)
+Message-ID: <7fad74d9-134e-4606-abf7-3969ca01acef@bytedance.com>
+Date: Mon, 5 Feb 2024 10:05:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,141 +61,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 056/121] KVM: TDX: Add accessors VMX VMCS helpers
-To: isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <3a5694739b2d081198f84aaf08d81a746ae46285.1705965635.git.isaku.yamahata@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <3a5694739b2d081198f84aaf08d81a746ae46285.1705965635.git.isaku.yamahata@intel.com>
+Subject: Re: [PATCH 1/2] mm: pgtable: add missing flag and statistics for
+ kernel PTE page
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, muchun.song@linux.dev,
+ david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <f023a6687b9f2109401e7522b727aa4708dc05f1.1706774109.git.zhengqi.arch@bytedance.com>
+ <Zb_cmZByel4cULDP@casper.infradead.org>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <Zb_cmZByel4cULDP@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+Hi Matthew,
 
+On 2024/2/5 02:51, Matthew Wilcox wrote:
+> On Thu, Feb 01, 2024 at 04:05:40PM +0800, Qi Zheng wrote:
+>> For kernel PTE page, we do not need to allocate and initialize its split
+>> ptlock, but as a page table page, it's still necessary to add PG_table
+>> flag and NR_PAGETABLE statistics for it.
+> 
+> No, this is wrong.
+> 
+> We do not account _kernel_ page tables to the _user_.  Just because
+> the kernel, say, called vmalloc() doesn't mean we should charge the
+> task for it.  Moreover, one task may call vmalloc() and a different task
+> would then call vfree().
+> 
 
-On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> TDX defines SEAMCALL APIs to access TDX control structures corresponding to
-> the VMX VMCS.  Introduce helper accessors to hide its SEAMCALL ABI details.
->
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> ---
->   arch/x86/kvm/vmx/tdx.h | 95 ++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 95 insertions(+)
->
-> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-> index d3077151252c..c8a52eedde02 100644
-> --- a/arch/x86/kvm/vmx/tdx.h
-> +++ b/arch/x86/kvm/vmx/tdx.h
-> @@ -58,6 +58,101 @@ static inline struct vcpu_tdx *to_tdx(struct kvm_vcpu *vcpu)
->   	return container_of(vcpu, struct vcpu_tdx, vcpu);
->   }
->   
-> +static __always_inline void tdvps_vmcs_check(u32 field, u8 bits)
-> +{
-> +#define VMCS_ENC_ACCESS_TYPE_MASK	0x1UL
-> +#define VMCS_ENC_ACCESS_TYPE_FULL	0x0UL
-> +#define VMCS_ENC_ACCESS_TYPE_HIGH	0x1UL
-> +#define VMCS_ENC_ACCESS_TYPE(field)	((field) & VMCS_ENC_ACCESS_TYPE_MASK)
-> +
-> +	/* TDX is 64bit only.  HIGH field isn't supported. */
-> +	BUILD_BUG_ON_MSG(__builtin_constant_p(field) &&
-> +			 VMCS_ENC_ACCESS_TYPE(field) == VMCS_ENC_ACCESS_TYPE_HIGH,
-> +			 "Read/Write to TD VMCS *_HIGH fields not supported");
-> +
-> +	BUILD_BUG_ON(bits != 16 && bits != 32 && bits != 64);
-> +
-> +#define VMCS_ENC_WIDTH_MASK	GENMASK(14, 13)
-> +#define VMCS_ENC_WIDTH_16BIT	(0UL << 13)
-> +#define VMCS_ENC_WIDTH_64BIT	(1UL << 13)
-> +#define VMCS_ENC_WIDTH_32BIT	(2UL << 13)
-> +#define VMCS_ENC_WIDTH_NATURAL	(3UL << 13)
-> +#define VMCS_ENC_WIDTH(field)	((field) & VMCS_ENC_WIDTH_MASK)
-> +
-> +	/* TDX is 64bit only.  i.e. natural width = 64bit. */
-> +	BUILD_BUG_ON_MSG(bits != 64 && __builtin_constant_p(field) &&
-> +			 (VMCS_ENC_WIDTH(field) == VMCS_ENC_WIDTH_64BIT ||
-> +			  VMCS_ENC_WIDTH(field) == VMCS_ENC_WIDTH_NATURAL),
-> +			 "Invalid TD VMCS access for 64-bit field");
-> +	BUILD_BUG_ON_MSG(bits != 32 && __builtin_constant_p(field) &&
-> +			 VMCS_ENC_WIDTH(field) == VMCS_ENC_WIDTH_32BIT,
-> +			 "Invalid TD VMCS access for 32-bit field");
-> +	BUILD_BUG_ON_MSG(bits != 16 && __builtin_constant_p(field) &&
-> +			 VMCS_ENC_WIDTH(field) == VMCS_ENC_WIDTH_16BIT,
-> +			 "Invalid TD VMCS access for 16-bit field");
-> +}
-> +
-> +static __always_inline void tdvps_state_non_arch_check(u64 field, u8 bits) {}
-> +static __always_inline void tdvps_management_check(u64 field, u8 bits) {}
+Got it. Thanks for providing this information!
 
-Should this two APIs be added along with for he accessors for MANAGEMENT /
-STATE_NON_ARCH?
+> This is a can of worms you don't want to open.  Why did you want to do
+> this?
 
-> +
-> +#define TDX_BUILD_TDVPS_ACCESSORS(bits, uclass, lclass)				\
-> +static __always_inline u##bits td_##lclass##_read##bits(struct vcpu_tdx *tdx,	\
-> +							u32 field)		\
-> +{										\
-> +	struct tdx_module_args out;						\
-> +	u64 err;								\
-> +										\
-> +	tdvps_##lclass##_check(field, bits);					\
-> +	err = tdh_vp_rd(tdx->tdvpr_pa, TDVPS_##uclass(field), &out);		\
-> +	if (KVM_BUG_ON(err, tdx->vcpu.kvm)) {					\
-> +		pr_err("TDH_VP_RD["#uclass".0x%x] failed: 0x%llx\n",		\
-> +		       field, err);						\
-> +		return 0;							\
-> +	}									\
-> +	return (u##bits)out.r8;							\
-> +}										\
-> +static __always_inline void td_##lclass##_write##bits(struct vcpu_tdx *tdx,	\
-> +						      u32 field, u##bits val)	\
-> +{										\
-> +	struct tdx_module_args out;						\
-> +	u64 err;								\
-> +										\
-> +	tdvps_##lclass##_check(field, bits);					\
-> +	err = tdh_vp_wr(tdx->tdvpr_pa, TDVPS_##uclass(field), val,		\
-> +		      GENMASK_ULL(bits - 1, 0), &out);				\
-> +	if (KVM_BUG_ON(err, tdx->vcpu.kvm))					\
-> +		pr_err("TDH_VP_WR["#uclass".0x%x] = 0x%llx failed: 0x%llx\n",	\
-> +		       field, (u64)val, err);					\
-> +}										\
-> +static __always_inline void td_##lclass##_setbit##bits(struct vcpu_tdx *tdx,	\
-> +						       u32 field, u64 bit)	\
-> +{										\
-> +	struct tdx_module_args out;						\
-> +	u64 err;								\
-> +										\
-> +	tdvps_##lclass##_check(field, bits);					\
-> +	err = tdh_vp_wr(tdx->tdvpr_pa, TDVPS_##uclass(field), bit, bit, &out);	\
-> +	if (KVM_BUG_ON(err, tdx->vcpu.kvm))					\
-> +		pr_err("TDH_VP_WR["#uclass".0x%x] |= 0x%llx failed: 0x%llx\n",	\
-> +		       field, bit, err);					\
-> +}										\
-> +static __always_inline void td_##lclass##_clearbit##bits(struct vcpu_tdx *tdx,	\
-> +							 u32 field, u64 bit)	\
-> +{										\
-> +	struct tdx_module_args out;						\
-> +	u64 err;								\
-> +										\
-> +	tdvps_##lclass##_check(field, bits);					\
-> +	err = tdh_vp_wr(tdx->tdvpr_pa, TDVPS_##uclass(field), 0, bit, &out);	\
-> +	if (KVM_BUG_ON(err, tdx->vcpu.kvm))					\
-> +		pr_err("TDH_VP_WR["#uclass".0x%x] &= ~0x%llx failed: 0x%llx\n",	\
-> +		       field, bit,  err);					\
-> +}
-> +
-> +TDX_BUILD_TDVPS_ACCESSORS(16, VMCS, vmcs);
-> +TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
-> +TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
-> +
->   static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
->   {
->   	struct tdx_module_args out;
+Ah, just because generic {pmd|pud}_alloc_one() has opened it. ;) And
+When I looked through the commits (e.g. commit 1d40a5ea01d5), I couldn't
+find the information you provided above. And that is why I CC'd you to
+double check this, in case I might have overlooked some important
+background information.
 
+So we should actually fix generic {pmd|pud}_alloc_one() (and maybe some
+implementation in the arch), right? And it would be better to add some
+comments to clarify.
+
+Thanks.
