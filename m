@@ -1,125 +1,152 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF661118A;
-	Mon,  5 Feb 2024 02:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2615611701
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 02:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707101822; cv=none; b=XUZgrEdB/iCNvfYI1n7PcgTxytDbITci+oHUhitj8+wjClhNUbGjf/zf8IZZRGhnUy7ZO84d2vjONq+FAscj3GCz9R3QhcUDSscNRRYbZ1VU6hRDtkdNs6Qzfj9dGxqkrJlJbgDCtLMEZJuOBNB3k5G72ZADahpCjbBT2NzMKkE=
+	t=1707101883; cv=none; b=sOifaWuM35eB8oWFDHD+Y/Kax/iA7bPKLhplvwRS3qjeww9mgUwP+sxf8p53siOnjhhVh4mQRJz3+UR5ssJaS6Q3j5VpWElxlW8C+Q0HR0FvQNklNAuUlmltKCSrdkyEphRaBU/ocw3BzJmNPrXRcDCvLYrtoTr52l3Ci0ieJAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707101822; c=relaxed/simple;
-	bh=homk0SBMfTseGCJzG7S17xRuUCucS/WJwV7nHlibeD8=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=MrM3M0azwzmjUUtBaPjFlmPjW0+63xms+MXc7BGj8DX6jy3ddoLWrAyho121tY/0jZ9PgO2mdeavw7c3WdVct1bJ+N81muE5b3Qeg3GdK2Mz7Kb2qmWoRDapvJBGqehEt56KecQx+cH1P0gTb1HQmwPebkm6/27KdrxJsLUeJEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 04D81201B3A;
-	Mon,  5 Feb 2024 03:48:07 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C24F4201E33;
-	Mon,  5 Feb 2024 03:48:06 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1908E18002A2;
-	Mon,  5 Feb 2024 10:48:05 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: shengjiu.wang@gmail.com
-Subject: [PATCH v2 1/2] arm64: dts: imx8mm-evk: Add PDM micphone sound card support
-Date: Mon,  5 Feb 2024 10:04:23 +0800
-Message-Id: <1707098664-23265-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1707101883; c=relaxed/simple;
+	bh=QtqgH51ZBA2W9PA1o3tEExSDvsMBkuJFIerDweVQyWQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CKqjy3XzYVpAUdvlmLH4zF8zRrcyTZAzRy0nn7GlvBZh+G7+axhlioLiTtkWx7RrJuG0VH3hdUovQ+6qUGHjV+LZs43KY4skF5pchKcxws/L5FpxbWTwCq1RYzcZWej60oZCLX8yr24PwLMoAZWRpigkQA2Fm4iWrvl6yMN0MvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YEVuMn+n; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YEVuMn+n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707101881; x=1738637881;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=QtqgH51ZBA2W9PA1o3tEExSDvsMBkuJFIerDweVQyWQ=;
+  b=YEVuMn+nQKKyXCDvZDeFhg2m9ReFqfVYvyqSU4kv7D2Fa7GmnlG8nWan
+   OFUB+XqyEXnudhVb8YwRIaHnQy+hf04/BdSf1Ya7QM/8cikjm7WyHgfQ1
+   wQosN+09L/zyWBA4CcXKpwGJ8PpgajYD1akVyNADQfUBzSn2vtLcmxvZ8
+   mEl+G3UqbykKNVKRCpw+8Kr8jNm8JtEBIJqPm4ThbY3ZEnXe5Nj8nvVAW
+   8XY6RvDAnLHsCtioq2JxQvBmTieUFRYASUaSq8yNoABoaWcdQSSlmFfuP
+   rakkFox1gUiCZd5HhhV5SfUYpsthQNCK3WDekyNKNqnLLflNZeF2IHWFK
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="602419"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="602419"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 18:58:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="652545"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 18:57:57 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Peng Zhang <zhangpeng362@huawei.com>
+Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
+  <akpm@linux-foundation.org>,  <willy@infradead.org>,
+  <fengwei.yin@intel.com>,  <aneesh.kumar@linux.ibm.com>,
+  <shy828301@gmail.com>,  <hughd@google.com>,  <david@redhat.com>,
+  <wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH] filemap: avoid unnecessary major faults in filemap_fault()
+In-Reply-To: <20240204093526.212636-1-zhangpeng362@huawei.com> (Peng Zhang's
+	message of "Sun, 4 Feb 2024 17:35:26 +0800")
+References: <20240204093526.212636-1-zhangpeng362@huawei.com>
+Date: Mon, 05 Feb 2024 10:56:01 +0800
+Message-ID: <87zfwf39ha.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 
-Add PDM micphone sound card support, configure the pinmux.
+Peng Zhang <zhangpeng362@huawei.com> writes:
 
-This sound card supports recording sound from PDM micphone
-and convert the PDM format data to PCM data.
+> From: ZhangPeng <zhangpeng362@huawei.com>
+>
+> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
+> in application, which leading to an unexpected performance issue[1].
+>
+> This caused by temporarily cleared PTE during a read/modify/write update
+> of the PTE, eg, do_numa_page()/change_pte_range().
+>
+> For the data segment of the user-mode program, the global variable area
+> is a private mapping. After the pagecache is loaded, the private anonymous
+> page is generated after the COW is triggered. Mlockall can lock COW pages
+> (anonymous pages), but the original file pages cannot be locked and may
+> be reclaimed. If the global variable (private anon page) is accessed when
+> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
+>
+> At this time, the original private file page may have been reclaimed.
+> If the page cache is not available at this time, a major fault will be
+> triggered and the file will be read, causing additional overhead.
+>
+> Fix this by rechecking the PTE without acquiring PTL in filemap_fault()
+> before triggering a major fault.
+>
+> Testing file anonymous page read and write page fault performance in ext4
+> and ramdisk using will-it-scale[2] on a x86 physical machine. The data
+> is the average change compared with the mainline after the patch is
+> applied. The test results are within the range of fluctuation, and there
+> is no obvious difference. The test results are as follows:
+> 			processes processes_idle threads threads_idle
+> ext4 file write:	-1.14%    -0.08%         -1.87%  0.13%
+> ext4 file read:		 0.03%	  -0.65%         -0.51%	-0.08%
+> ramdisk file write:	-1.21%    -0.21%         -1.12%  0.11%
+> ramdisk file read:	 0.00%    -0.68%         -0.33% -0.02%
+>
+> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
+> [2] https://github.com/antonblanchard/will-it-scale/
+>
+> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Yin Fengwei <fengwei.yin@intel.com>
+> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> RFC->v1:
+> - Add error handling when ptep == NULL per Huang, Ying and Matthew Wilcox
+> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
+>   Huang, Ying and Yin Fengwei
+> - Add pmd_none() check before PTE map
+> - Update commit message and add performance test information
+>
+>  mm/filemap.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 142864338ca4..b29cdeb6a03b 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3238,6 +3238,24 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+>  			mapping_locked = true;
+>  		}
+>  	} else {
+> +		if (!pmd_none(*vmf->pmd)) {
+> +			pte_t *ptep;
+> +
+> +			ptep = pte_offset_map_nolock(vmf->vma->vm_mm, vmf->pmd,
+> +						     vmf->address, &vmf->ptl);
+> +			if (unlikely(!ptep))
+> +				return VM_FAULT_NOPAGE;
+> +			/*
+> +			 * Recheck pte as the pte can be cleared temporarily
+> +			 * during a read/modify/write update.
+> +			 */
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v2:
-- add newline between properties and child node
+I think that we should add some comments here about the racy checking.
 
- arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
+--
+Best Regards,
+Huang, Ying
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-index b53104ed8919..9b39458f3fa5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-@@ -151,6 +151,20 @@ simple-audio-card,codec {
- 			clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
- 		};
- 	};
-+
-+	sound-micfil {
-+		compatible = "fsl,imx-audio-card";
-+		model = "micfil-audio";
-+
-+		pri-dai-link {
-+			link-name = "micfil hifi";
-+			format = "i2s";
-+
-+			cpu {
-+				sound-dai = <&micfil>;
-+			};
-+		};
-+	};
- };
- 
- &A53_0 {
-@@ -434,6 +448,16 @@ &lcdif {
- 	status = "okay";
- };
- 
-+&micfil {
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pdm>;
-+	assigned-clocks = <&clk IMX8MM_CLK_PDM>;
-+	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <196608000>;
-+	status = "okay";
-+};
-+
- &mipi_csi {
- 	status = "okay";
- 
-@@ -636,6 +660,18 @@ MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5       0x41
- 		>;
- 	};
- 
-+	pinctrl_pdm: pdmgrp {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_SAI5_MCLK_SAI5_MCLK        0xd6
-+			MX8MM_IOMUXC_SAI5_RXC_PDM_CLK           0xd6
-+			MX8MM_IOMUXC_SAI5_RXFS_SAI5_RX_SYNC     0xd6
-+			MX8MM_IOMUXC_SAI5_RXD0_PDM_DATA0        0xd6
-+			MX8MM_IOMUXC_SAI5_RXD1_PDM_DATA1        0xd6
-+			MX8MM_IOMUXC_SAI5_RXD2_PDM_DATA2        0xd6
-+			MX8MM_IOMUXC_SAI5_RXD3_PDM_DATA3        0xd6
-+		>;
-+	};
-+
- 	pinctrl_pmic: pmicirqgrp {
- 		fsl,pins = <
- 			MX8MM_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x141
--- 
-2.34.1
-
+> +			if (unlikely(!pte_none(ptep_get_lockless(ptep))))
+> +				ret = VM_FAULT_NOPAGE;
+> +			pte_unmap(ptep);
+> +			if (unlikely(ret))
+> +				return ret;
+> +		}
+> +
+>  		/* No page in the page cache at all */
+>  		count_vm_event(PGMAJFAULT);
+>  		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
