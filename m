@@ -1,278 +1,376 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2067.outbound.protection.outlook.com [40.107.21.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92FE44C8C;
-	Mon,  5 Feb 2024 17:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707154453; cv=none; b=dAT07Yrw/VrW9W1b4zxrPEPVrsdl1Fdf3dMmnzSgV2yLgpjdY3QRiGwGFEg4cWC/QmBfBP0JpU/oVLWbGfRN+2i2okK39X7IuTG5Kjcy37TgsO0PjPo32ITa5+1fTjEOPxEw+c1qYXHjm5yWboU4/rga/wpMN87HsKz0L9P7fDk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707154453; c=relaxed/simple;
-	bh=/jqtcPhqWUeQEj8DqWkxkYkh/jaLAKrAvduwRgOG6No=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NvcCpFryg2lFcSYhq4JbWVOqcKsDcw4wljKt2Ig1+B9DLIwS/uoPfhF4CswNikMBuNmti1U/z7Tj2zqePLq5q7VCiXzhmN/NMSCpPaaFuWK855PIRg46Nri/xssOPgAnKeE/okAmH+hss6NTN+LtcDlv/XZ0yl+ll8npcsOUnD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TsjV7eZ/; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108D844C8D;
+	Mon,  5 Feb 2024 17:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707154455; cv=fail; b=WVdn04Q9IQFxiSIx2sVvpWllWgunxpXlIgV2w0KVIP7pxPN1P0+xl4ZP1uMbW+E0vue4I0NZvX2F6hdOkiSC9L9hdTSlJnICVMtwAjK/kf3GvaL7eg1bqi5VIjQ+ctXMsyiBIfs8ThORd+ozjxrf1ooXy/fY/JIJMXcfapDg6fw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707154455; c=relaxed/simple;
+	bh=maVpXdEKXP1/rHgD6HwoMgc3SltzWJXCWX3DJ9jlYe0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KaamXTkGZmcMcinQHu+lM6RpvAshzdAGP2gBSQkWkcNKSvdmjnH40XQy6Y/lT7enRxjBdM7xtHIq++m19hqxvSto71DsURy6TKEe0NPnwYV6XrP8cmuT45bGMaTyVdFRcR5vtHJK3mMieFBFoznjde6aUvG0YgXTmUZ0WQ4MeJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Hi/e9Gpq; arc=fail smtp.client-ip=40.107.21.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TsjV7eZ/"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415HY3lU098555;
-	Mon, 5 Feb 2024 11:34:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707154443;
-	bh=UrprV1G0cKfS8FbRkXrcvpyNcNC/ZRPQkv4yrO7fSz4=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=TsjV7eZ/Dw9zQRpLbqOk/AEF3ZBMEHDCZOQtGezLmJVVtT4HhoRUzE/raSz/K1W+L
-	 cbWUemi01Ht/Jr3vn/UHfbbYPPUGSouo4IPT5a7M7Z2R/C7wbz+8PfK2O+dPeMnXHE
-	 uJZ1dbSomIT39l0GuLP3q8bys3dPjJ4Or5EV1wFQ=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415HY2Jg078472
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 11:34:03 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 11:34:02 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 11:34:02 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415HY1wk111997;
-	Mon, 5 Feb 2024 11:34:02 -0600
-Message-ID: <45a0ed98-8dd2-4c5b-8e89-40c70e3fe831@ti.com>
-Date: Mon, 5 Feb 2024 11:34:01 -0600
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Hi/e9Gpq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oa5cManJIjGNk/eioyweWnXM+mHlNPcjmhHUAcEj5O/3RFwwLs4nYOcyfxr9da3BFsviveV3Nf/i7EFGLBcj2nE5mvIAIJbBUffa7VCTMdGSni9J/Qc/IEJ7XarPKoM+dCDcvm2fFDq7E/NeMa0UqO2vEJs5ZaS7FgHiJPOH8mVT4aI4Dz1rsGlLNgDysPMKaAST82eqva7MyKCrGTUQF+AwejOtFdV4u5zxKasPXdk38hrvIolxziAnOH5a2C+rRyDEYo1wmDC27MbqEwuqoxyfeFWd3R6/uSKK5LYF2lxXNa2Xs3RyQl18RTTvq1dlsdFc6h7QaJpVtSsfXyvGqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lj7K+8gdShMGp2Z8Wc3euRHjW7FgBWxkTi6eGFSYoBI=;
+ b=VKNnYrnjrVJnvUmYJIQAcjdMbc1e16EOI40O/yFNx09JpcVoUsqS6qAMjf55UbAKH0vShsbDaz7rKEQif5VNRrt1/KHIwjK5G2+0yqNR46elPI2u/be3x5FVknZzQIzsKgsWI8ovYlcx/HQ7ryoo9r/wrdKZ9nRz83vhpZt9Aup4Qohw7YQfprXsByY6aSZMixw34odoV08zWTBHmTfHza+MlDabmdEqAYMkzceCS0z5A+lywGEWaW5HGcvemyDqUb5n8yL724BOXOcIYR/XRIhk12C8CBoHfP1aXFP/G1JsoYBHJl57WZkEy+M9yVQKQN7QMay7urBdKNa5jv40jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lj7K+8gdShMGp2Z8Wc3euRHjW7FgBWxkTi6eGFSYoBI=;
+ b=Hi/e9GpqaJoRHKPDE863OqAYYtTfZJC1UeSgWp0cAC8Rclcwd3th01JgLc12z/WGCChhy6u8Kk87OQ9827ESjQxR+IZx17OSxqSf8m9JgasUxBRDqcPoZaHmyrD/BmUeXDCznmwXX+G9cSJxwfIHw5jzFirUcCudRy2Ssdco7To=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB7733.eurprd04.prod.outlook.com (2603:10a6:20b:288::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34; Mon, 5 Feb
+ 2024 17:34:09 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
+ 17:34:09 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: lpieralisi@kernel.org
+Cc: Frank.li@nxp.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	festevam@gmail.com,
+	helgaas@kernel.org,
+	hongxing.zhu@nxp.com,
+	imx@lists.linux.dev,
+	kernel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org,
+	krzysztof.kozlowski@linaro.org,
+	kw@linux.com,
+	l.stach@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	s.hauer@pengutronix.de,
+	shawnguo@kernel.org
+Subject: [PATCH v10 03/14] PCI: imx6: Simplify reset handling by using by using *_FLAG_HAS_*_RESET
+Date: Mon,  5 Feb 2024 12:33:24 -0500
+Message-Id: <20240205173335.1120469-4-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205173335.1120469-1-Frank.Li@nxp.com>
+References: <20240205173335.1120469-1-Frank.Li@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR07CA0041.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::18) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] arm64: dts: ti: k3-am62p: add the USB sub-system
-Content-Language: en-US
-To: Roger Quadros <rogerq@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <srk@ti.com>, <r-gunasekaran@ti.com>, <b-liu@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240205135908.54656-1-rogerq@kernel.org>
- <20240205135908.54656-4-rogerq@kernel.org>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240205135908.54656-4-rogerq@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7733:EE_
+X-MS-Office365-Filtering-Correlation-Id: 68a1de59-6d2e-4ac2-1182-08dc2670a934
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	3kZ40N3ycA3ie0vVnyngid6qW5MyLGRk5AdGXs+huUHYG0ihN3iAxos+WnHj/nPkZM+/jmRQlx9WsWyV0pheldiT523CJoVPAISNBZgtEd6s+RGHwgI8Zlf2eCxu8WZszf5AbMvyuj0nyDXkcdqkkkge/jchq7RBl/lgqAHfk43GY5WBxRDGjLA8KMErT0ZFoTXw9/nOOWGfA+gzc54N7d2ghhtIALRC0z/zeFjmPzf+ZHuCuh8F5r1l5ToAyUGN5Om+hXLJt/jwMrsmgGrJLvyGHWQ9+MS6F52/sEmKAQx9BTUWVkeeYFRi+226uC48/pc2eVUya/gG1KpskP7CCrLwi67t4io2IOI+AOexRFoLevOrnAQBYNEBm8eEc96zPkH0IphFXg7ORCGx37Zz1TzTEu0dNQNIcc14mcybUV1823PMfKNH0CWVSAyo6WlWqa3srkeDab7Lc8Y0peRbfVnXZTtiS97zDJGPdPRlOsMDqE5s8VL1Qw1/6kNORYF+xSNcxgv8J6jqMKwqOlzSQnquuPxbEWj2VOCfux6H/FAgGHJfzc3XDHi+NYpYVuFo9Ens1Av5pxOj+W4hRJ36lGCpj7K8KdJW/CHYZ3wVbcsTWlo+k01xeo5V7eaEmpVF
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(396003)(39860400002)(346002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(38100700002)(41300700001)(66556008)(66946007)(6666004)(1076003)(478600001)(6486002)(6512007)(52116002)(6506007)(2616005)(2906002)(26005)(4326008)(8676002)(6916009)(316002)(8936002)(86362001)(7416002)(66476007)(5660300002)(83380400001)(36756003)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5qYdLSb2oim0Zf/l/dp+SpBAZQVrqAHbkFcPbETkZ0/4u95h8k/rZW1/JJRH?=
+ =?us-ascii?Q?i3GZtwDQIOungTrIok4VQbvn4rb1VCZDAIj+hwC0feL61NTooiV9bFFkWETm?=
+ =?us-ascii?Q?JH1IC1TWBkpTpb902VNXN0C3jfMJVASAy3XttmgHZb+h/oDRBgtpGz7Cof1X?=
+ =?us-ascii?Q?ja+whM3tEiXDLomjH3RyhI/AdUyNjrE+kbUarPOQ2nIhvA2GCCjOUxAuagPt?=
+ =?us-ascii?Q?6e4ExmpOdwiSetBZRcE5Imut/pw/09o9f/xKSHKwayJOT1N2oFOpZtEyfKYG?=
+ =?us-ascii?Q?QSGHNyMiXs4ay84jc/c0Of2+4jfByjPCcNZ6hUJBP6fJ9AKGLRsA6UjZSMOl?=
+ =?us-ascii?Q?oRNxlBou8WvpAD5ur8nSJ65Xxd3qIcH5qoT4X6QPQ8bqn2sR2TgSRVB2cA6C?=
+ =?us-ascii?Q?BntWH+kBL/6avH3lh9m5EGnnmN+G5CdrOqlz46w5W5h+a+cwF4WV7CjE8sYx?=
+ =?us-ascii?Q?HZF/HvjtMF/lQBNYYvQ5+ab8GbENCDB0+QiOWe+axshYD64VwbYKjKxoNj1N?=
+ =?us-ascii?Q?t0cD29uaf3Le9dRkYGa6kCJksF+w3pwLXNwxez1ZpVOwQUP2QmgzPmstl1mH?=
+ =?us-ascii?Q?eYak8RpCxZMOycSt5iBWjB7Pr28BnUuka3/lppIAgpxHGhhKTMbn+JggHyJL?=
+ =?us-ascii?Q?sgQN/XGZutjEhRs2oCw+wCnjrHfdIXtzjNwT4Plr7AkXtNfSblSihFiEN7ld?=
+ =?us-ascii?Q?A2914yByZErO9aBPGPCtuUIJYpr/nYPtus0WeSs0OXDbSVGeMNp6yUGhkRlx?=
+ =?us-ascii?Q?zP+v1HGMMAJvEyvO+orsD9pNBO/GKUn3Q/dSHqXjy+NbEDRw1Tt183H/QsZ4?=
+ =?us-ascii?Q?J3q27iPnIurJnMTRwZ1V9nP0xLi27TxvHogI2AYAeEOcbwPKGvZCk4L67jlJ?=
+ =?us-ascii?Q?ODytMnTecPh+lf2BVj5V+QWm/Yr5BblmA6viPs4ANUKh2AlCzVDndyS7FGEg?=
+ =?us-ascii?Q?ggT3w1ZGiuoBA/bkcrrh/tBeG+NA+7MeAuN4cxQO/SCNBToeRDmnKBLiE4aZ?=
+ =?us-ascii?Q?u9say9YMkQrGlC9A8Kr7i2rnjCmyH+13OfEDRkUU5PIETWX+DXQ6DcqSDBQM?=
+ =?us-ascii?Q?KoyIqGUTLG4173OMmNadeww902u6SvNrMmKOnp4M2tJ+abhIPVHZDtkVD4Eo?=
+ =?us-ascii?Q?ttkyFheC8nxP+0iAM2dRVv7ZG32tSrsMJDpC1ICBlrFOZLJp80zwmOU62tmP?=
+ =?us-ascii?Q?Jn5rP/F1MBenBAaPiF7GqaIyorV0q7LmZWTa2Gu7L9SkDkZfs71NxQBf7CbY?=
+ =?us-ascii?Q?a/doL55Fg8WKdsGe1vBf0JIA00PC3MRa2MlYpAXFFAWCs4mWpJblOgrgceoo?=
+ =?us-ascii?Q?q+4CAp2IABsq5Xv6lRo4rU1bbZaxLrOS1/pmCt1wXIvB1VUyjQ1B2//jRx67?=
+ =?us-ascii?Q?oHYPqvBxucUlAj+wn0RbY205XZhFJ5j5XoHPyZ2e7Oi4Y/NhTRra+7BWUC5w?=
+ =?us-ascii?Q?CWwjqdHvphrwkTPljoRqbU7SPRF8eOWso4ik7egeUc9DA3KkkU5gfm+j/qiC?=
+ =?us-ascii?Q?8VOhmArjLXalrqYFAzazYRUEmQBT+E2I1GWJeyt5kbDnft7+ZVOlpbQWq4C1?=
+ =?us-ascii?Q?R03Rk28hLCnob9HdfhPS/F/6j+eXcISPpuKcPsR2?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68a1de59-6d2e-4ac2-1182-08dc2670a934
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 17:34:09.7992
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 78gQCe85BnBUImLPRj1sYYGcwnbWPiAXzEWVzM6KN4uTzwoTrO2a1wmpeTGg3sBNuSoEPpwfwzuyDlkGebFXBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7733
 
-On 2/5/24 7:59 AM, Roger Quadros wrote:
-> There are two USB instances available on the am62p5 starter kit. Include
-> and enable them for use on the board.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
-> ---
-> 
-> Notes:
->      Changelog:
->      
->      v4 - no change
->      
->      v3 - no change
->      https://lore.kernel.org/all/20240201120332.4811-4-rogerq@kernel.org/
->      
->      v2:
->      - added USB PHY CTRL node changes here
->      - changed USB wrapper node names to usb@
->      - changed Type-C chip node name to usb-power-control@
-> 
->   arch/arm64/boot/dts/ti/k3-am62p-main.dtsi   | 46 ++++++++++++++
->   arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi | 10 +++
->   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts     | 67 +++++++++++++++++++++
->   3 files changed, 123 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> index 4c51bae06b57..17d28390d587 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> @@ -560,6 +560,52 @@ sdhci2: mmc@fa20000 {
->   		status = "disabled";
->   	};
->   
-> +	usbss0: usb@f900000 {
-> +		compatible = "ti,am62-usb";
-> +		reg = <0x00 0x0f900000 0x00 0x800>;
-> +		clocks = <&k3_clks 161 3>;
-> +		clock-names = "ref";
-> +		ti,syscon-phy-pll-refclk = <&usb0_phy_ctrl 0x0>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		power-domains = <&k3_pds 178 TI_SCI_PD_EXCLUSIVE>;
-> +		ranges;
-> +		status = "disabled";
-> +
-> +		usb0: usb@31000000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x00 0x31000000 0x00 0x50000>;
-> +			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-> +			<GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-> +			interrupt-names = "host", "peripheral";
-> +			maximum-speed = "high-speed";
-> +			dr_mode = "otg";
-> +		};
-> +	};
-> +
-> +	usbss1: usb@f910000 {
-> +		compatible = "ti,am62-usb";
-> +		reg = <0x00 0x0f910000 0x00 0x800>;
-> +		clocks = <&k3_clks 162 3>;
-> +		clock-names = "ref";
-> +		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
-> +		ranges;
-> +		status = "disabled";
-> +
-> +		usb1: usb@31100000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x00 0x31100000 0x00 0x50000>;
-> +			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-> +			<GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-> +			interrupt-names = "host", "peripheral";
-> +			maximum-speed = "high-speed";
-> +			dr_mode = "otg";
-> +		};
-> +	};
-> +
->   	fss: bus@fc00000 {
->   		compatible = "simple-bus";
->   		reg = <0x00 0x0fc00000 0x00 0x70000>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> index 19f42b39394e..00dd38b02a52 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> @@ -18,6 +18,16 @@ chipid: chipid@14 {
->   			reg = <0x14 0x4>;
->   			bootph-all;
->   		};
-> +
-> +		usb0_phy_ctrl: syscon@4008 {
-> +			compatible = "ti,am62-usb-phy-ctrl", "syscon";
-> +			reg = <0x4008 0x4>;
-> +		};
-> +
-> +		usb1_phy_ctrl: syscon@4018 {
-> +			compatible = "ti,am62-usb-phy-ctrl", "syscon";
-> +			reg = <0x4018 0x4>;
-> +		};
->   	};
->   
->   	wkup_uart0: serial@2b300000 {
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> index 1773c05f752c..80be56c0a4e0 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> @@ -27,6 +27,8 @@ aliases {
->   		spi0 = &ospi0;
->   		ethernet0 = &cpsw_port1;
->   		ethernet1 = &cpsw_port2;
-> +		usb0 = &usb0;
-> +		usb1 = &usb1;
->   	};
->   
->   	chosen {
-> @@ -297,6 +299,12 @@ AM62PX_IOPAD(0x01b0, PIN_OUTPUT, 2) /* (G20) MCASP0_ACLKR.UART1_TXD */
->   		bootph-all;
->   	};
->   
-> +	main_usb1_pins_default: main-usb1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62PX_IOPAD(0x0258, PIN_INPUT, 0) /* (G21) USB1_DRVVBUS */
-> +		>;
-> +	};
-> +
->   	main_wlirq_pins_default: main-wlirq-default-pins {
->   		pinctrl-single,pins = <
->   			AM62PX_IOPAD(0x0128, PIN_INPUT, 7) /* (K25) MMC2_SDWP.GPIO0_72 */
-> @@ -340,6 +348,36 @@ AM62PX_IOPAD(0x0124, PIN_INPUT, 7) /* (J25) MMC2_SDCD.GPIO0_71 */
->   	};
->   };
->   
-> +&main_i2c0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c0_pins_default>;
-> +	clock-frequency = <400000>;
-> +
-> +	typec_pd0: usb-power-controller@3f {
-> +		compatible = "ti,tps6598x";
-> +		reg = <0x3f>;
-> +
-> +		connector {
-> +			compatible = "usb-c-connector";
-> +			label = "USB-C";
-> +			self-powered;
-> +			data-role = "dual";
-> +			power-role = "sink";
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				port@0 {
-> +					reg = <0>;
-> +					usb_con_hs: endpoint {
-> +						remote-endpoint = <&usb0_hs_ep>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &main_i2c1 {
->   	status = "okay";
->   	pinctrl-names = "default";
-> @@ -460,6 +498,35 @@ cpsw3g_phy1: ethernet-phy@1 {
->   	};
->   };
->   
-> +&usbss0 {
-> +	status = "okay";
-> +	ti,vbus-divider;
-> +};
-> +
-> +&usbss1 {
-> +	status = "okay";
-> +	ti,vbus-divider;
-> +};
-> +
-> +&usb0 {
-> +	usb-role-switch;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	port@0 {
-> +		reg = <0>;
-> +		usb0_hs_ep: endpoint {
-> +			remote-endpoint = <&usb_con_hs>;
-> +		};
-> +	};
-> +};
-> +
-> +&usb1 {
-> +	dr_mode = "host";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_usb1_pins_default>;
+Refactors the reset handling logic in the imx6 PCI driver by adding
+IMX6_PCIE_FLAG_HAS_*_RESET bitmask define for drvdata::flags.
 
-I'm not super familiar with USB, but I see this pinmux for the
-"DRVVBUS" pin is usually added the the parent USB subsystem node (usbss).
-Does this pin belong to the subsystem or the specific USB instance?
+The drvdata::flags and a bitmask ensures a cleaner and more scalable
+switch-case structure for handling reset.
 
-Andrew
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-> +};
-> +
->   &mcasp1 {
->   	status = "okay";
->   	#sound-dai-cells = <0>;
+Notes:
+    Change from v4 to v5:
+    - Add Mani's Reviewed-by tag
+    - Fixed MQ_EP's flags
+    
+    Chagne from v3 to v4:
+    - none
+    Change from v2 to v3:
+    - add Philipp's Reviewed-by tag
+    Change from v1 to v2:
+    - remove condition check before reset_control_(de)assert() because it is
+      none ops if a NULL pointer pass down.
+    - still keep condition check at probe to help identify dts file mismatch
+      problem.
+    
+    Change from v1 to v2:
+    - remove condition check before reset_control_(de)assert() because it is
+      none ops if a NULL pointer pass down.
+    - still keep condition check at probe to help identify dts file mismatch
+      problem.
+
+ drivers/pci/controller/dwc/pci-imx6.c | 105 ++++++++++----------------
+ 1 file changed, 39 insertions(+), 66 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 59f117f855c26..a1653b58051b7 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -61,6 +61,8 @@ enum imx6_pcie_variants {
+ #define IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE	BIT(1)
+ #define IMX6_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
+ #define IMX6_PCIE_FLAG_HAS_PHYDRV			BIT(3)
++#define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
++#define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+ 
+ #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
+ 
+@@ -661,18 +663,10 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+ 
+ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ {
++	reset_control_assert(imx6_pcie->pciephy_reset);
++	reset_control_assert(imx6_pcie->apps_reset);
++
+ 	switch (imx6_pcie->drvdata->variant) {
+-	case IMX7D:
+-	case IMX8MQ:
+-	case IMX8MQ_EP:
+-		reset_control_assert(imx6_pcie->pciephy_reset);
+-		fallthrough;
+-	case IMX8MM:
+-	case IMX8MM_EP:
+-	case IMX8MP:
+-	case IMX8MP_EP:
+-		reset_control_assert(imx6_pcie->apps_reset);
+-		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
+@@ -693,6 +687,8 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+ 				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
+ 		break;
++	default:
++		break;
+ 	}
+ 
+ 	/* Some boards don't have PCIe reset GPIO. */
+@@ -706,14 +702,10 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	struct dw_pcie *pci = imx6_pcie->pci;
+ 	struct device *dev = pci->dev;
+ 
++	reset_control_deassert(imx6_pcie->pciephy_reset);
++
+ 	switch (imx6_pcie->drvdata->variant) {
+-	case IMX8MQ:
+-	case IMX8MQ_EP:
+-		reset_control_deassert(imx6_pcie->pciephy_reset);
+-		break;
+ 	case IMX7D:
+-		reset_control_deassert(imx6_pcie->pciephy_reset);
+-
+ 		/* Workaround for ERR010728, failure of PCI-e PLL VCO to
+ 		 * oscillate, especially when cold.  This turns off "Duty-cycle
+ 		 * Corrector" and other mysterious undocumented things.
+@@ -745,11 +737,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 
+ 		usleep_range(200, 500);
+ 		break;
+-	case IMX6Q:		/* Nothing to do */
+-	case IMX8MM:
+-	case IMX8MM_EP:
+-	case IMX8MP:
+-	case IMX8MP_EP:
++	default:
+ 		break;
+ 	}
+ 
+@@ -796,16 +784,11 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
+ 				   IMX6Q_GPR12_PCIE_CTL_2,
+ 				   IMX6Q_GPR12_PCIE_CTL_2);
+ 		break;
+-	case IMX7D:
+-	case IMX8MQ:
+-	case IMX8MQ_EP:
+-	case IMX8MM:
+-	case IMX8MM_EP:
+-	case IMX8MP:
+-	case IMX8MP_EP:
+-		reset_control_deassert(imx6_pcie->apps_reset);
++	default:
+ 		break;
+ 	}
++
++	reset_control_deassert(imx6_pcie->apps_reset);
+ }
+ 
+ static void imx6_pcie_ltssm_disable(struct device *dev)
+@@ -819,16 +802,11 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6Q_GPR12_PCIE_CTL_2, 0);
+ 		break;
+-	case IMX7D:
+-	case IMX8MQ:
+-	case IMX8MQ_EP:
+-	case IMX8MM:
+-	case IMX8MM_EP:
+-	case IMX8MP:
+-	case IMX8MP_EP:
+-		reset_control_assert(imx6_pcie->apps_reset);
++	default:
+ 		break;
+ 	}
++
++	reset_control_assert(imx6_pcie->apps_reset);
+ }
+ 
+ static int imx6_pcie_start_link(struct dw_pcie *pci)
+@@ -1287,38 +1265,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 					     "failed to get pcie phy\n");
+ 	}
+ 
++	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_APP_RESET)) {
++		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev, "apps");
++		if (IS_ERR(imx6_pcie->apps_reset))
++			return dev_err_probe(dev, PTR_ERR(imx6_pcie->apps_reset),
++					     "failed to get pcie apps reset control\n");
++	}
++
++	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_PHY_RESET)) {
++		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev, "pciephy");
++		if (IS_ERR(imx6_pcie->pciephy_reset))
++			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pciephy_reset),
++					     "Failed to get PCIEPHY reset control\n");
++	}
++
+ 	switch (imx6_pcie->drvdata->variant) {
+ 	case IMX8MQ:
+ 	case IMX8MQ_EP:
+ 	case IMX7D:
+ 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+ 			imx6_pcie->controller_id = 1;
+-
+-		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev,
+-									    "pciephy");
+-		if (IS_ERR(imx6_pcie->pciephy_reset)) {
+-			dev_err(dev, "Failed to get PCIEPHY reset control\n");
+-			return PTR_ERR(imx6_pcie->pciephy_reset);
+-		}
+-
+-		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
+-									 "apps");
+-		if (IS_ERR(imx6_pcie->apps_reset)) {
+-			dev_err(dev, "Failed to get PCIE APPS reset control\n");
+-			return PTR_ERR(imx6_pcie->apps_reset);
+-		}
+-		break;
+-	case IMX8MM:
+-	case IMX8MM_EP:
+-	case IMX8MP:
+-	case IMX8MP_EP:
+-		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
+-									 "apps");
+-		if (IS_ERR(imx6_pcie->apps_reset))
+-			return dev_err_probe(dev, PTR_ERR(imx6_pcie->apps_reset),
+-					     "failed to get pcie apps reset control\n");
+-
+-		break;
+ 	default:
+ 		break;
+ 	}
+@@ -1448,13 +1414,17 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 	},
+ 	[IMX7D] = {
+ 		.variant = IMX7D,
+-		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
++		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND |
++			 IMX6_PCIE_FLAG_HAS_APP_RESET |
++			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
+ 		.gpr = "fsl,imx7d-iomuxc-gpr",
+ 		.clk_names = imx6q_clks,
+ 		.clks_cnt = ARRAY_SIZE(imx6q_clks),
+ 	},
+ 	[IMX8MQ] = {
+ 		.variant = IMX8MQ,
++		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
++			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
+ 		.gpr = "fsl,imx8mq-iomuxc-gpr",
+ 		.clk_names = imx8mq_clks,
+ 		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
+@@ -1471,13 +1441,16 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 	[IMX8MP] = {
+ 		.variant = IMX8MP,
+ 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND |
+-			 IMX6_PCIE_FLAG_HAS_PHYDRV,
++			 IMX6_PCIE_FLAG_HAS_PHYDRV |
++			 IMX6_PCIE_FLAG_HAS_APP_RESET,
+ 		.gpr = "fsl,imx8mp-iomuxc-gpr",
+ 		.clk_names = imx8mm_clks,
+ 		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+ 	},
+ 	[IMX8MQ_EP] = {
+ 		.variant = IMX8MQ_EP,
++		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
++			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
+ 		.mode = DW_PCIE_EP_TYPE,
+ 		.gpr = "fsl,imx8mq-iomuxc-gpr",
+ 		.clk_names = imx8mq_clks,
+-- 
+2.34.1
+
