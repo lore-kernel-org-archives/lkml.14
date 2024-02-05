@@ -1,222 +1,237 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2042.outbound.protection.outlook.com [40.107.237.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B9B44C60;
-	Mon,  5 Feb 2024 17:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707153909; cv=none; b=dfEfcg1pzC0dUETlOovXKBSDIDsi9vMLtVOiVDXR0veS04kq16xHNgY/dGOO/fs9wyBVCuqHIzOhMTiMEvJ0H9eURB9F+rusMIPu0No4iQFHbEuCB1gxVWx1FV3XYGtV6BlHtnPFrCMqm2UAzEBn2dM/br9FlOSKn6Jf3U6gSSw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707153909; c=relaxed/simple;
-	bh=d19VFgDS03vvtjMyufp38CqLNpLc+fMbtV3FQXMkhhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahYNnLflOEXgbGYPVe80xxqGvQcd5+8S/Dj919wKec2sVCLfkAsUtysf1OIteNVKL71ozWUd0N81OVy7GrcuzxwP3f5yujDhG267yC/8//AopTb3Wa/wST78n6jRVGIiBEEVfs976PUgdTxYamop1wSc3C1W93BTx4fs1siBI84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y5njpc12; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160F8446C1;
+	Mon,  5 Feb 2024 17:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707153954; cv=fail; b=CstohKOu/R1JScRa/i6cHz7Qbh1suwe8ILOy17MqdLmB4+4lufKSzZELrBME3K0lbcxN/AFyXLkqhDVQwP0+lZ2t62Fjb4MCmPfo5ecAyOcNRRz0b0RGULK1kGaAot9S5prpvC5hykDYl6uA/mQ7SLA3f27GuI5Qj4IzVwPgkTU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707153954; c=relaxed/simple;
+	bh=Pq/rjQwilxrak0PZxGaHG1BNq6UqC/VrMbX6wx7c3p4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Dmz81an6TuZZeesTfj3AFlgjjyVczwWIKGN/DwiH2+4uTqSER26zY0xyKvfbCCNWZrne/aIDWGN1X9zM0qthuZOhQf4BbPsCtsoucUU+4fiQlXHJuwWP+MjIs8X15Eix8jqXhjbBLZbsigsVXjNFUnrpcpMHIQlTtyyWdBtFjps=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0fWOz/ZV; arc=fail smtp.client-ip=40.107.237.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5njpc12"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e12b917df2so2918475a34.1;
-        Mon, 05 Feb 2024 09:25:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707153907; x=1707758707; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=K+cat8wRiFE8ayUEL9AAC8rZ9xDFXFmCN5IZ9qalElU=;
-        b=Y5njpc125ADGWk6778kSHCR7Iiiev2bpgP3hPOQ8NuAaaBqJYeoFxtL8qGh6rEv39o
-         TUSgudoeRM4Xrbx39/2mzyIrzckXN+m23G6hThXhA/O1G8G6QrJK8oyyuq3TB7+cGI7Y
-         i2mnwTKwjEejVhAAaSkBQGErruzbKgCuU6N8ycXBrAiPLVVKNz3GktHq5FGGbKJ9ii0L
-         d1MRikkiy40vAV9TIk2DZ54uueIIgxtc0l6sKVPAbBIx8p+N16Z6OMROGa2RnYr34dp9
-         DJdyvzjkKFnOEsBe5iOmDxihOnGWMvw94/UWOrwuEdsxcbDd/rVhTBKdplbDADQyqOG+
-         iQxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707153907; x=1707758707;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K+cat8wRiFE8ayUEL9AAC8rZ9xDFXFmCN5IZ9qalElU=;
-        b=n0yulka1CnHDWe/xbxPBKFrHngqX0zgFM7bVRLIbIYOf3Th4BMe7wKQMWGYKWKKqa9
-         uRIL/MOdG1f4RAp5Ic9pIyPsYhTtGCd0zcdRYTmEX9ZMmkdktYwdakMXeMOzcVHVvwtN
-         oUMBpiy9r+iqaUfeWDgZJbzr6Ju7ECu48u2IBwCvF++J4lJNraUJfBZNl/T4FqRs1ych
-         +FBEMbKy0coiWF/6e8lMqC33ddNKxLgYgynTaxZ2pgGbb3SWUic4XvVw2OFjCHlAsR+C
-         ERIraaoGycYXywXw2N5aaY136nyKpPrUTljLgPhE73eekWdofwjZRJXNhUTSJThcroTK
-         1mBw==
-X-Gm-Message-State: AOJu0YxSr3V/ViWrGSXbGwrK592GphedEV+x37bwZHc0/zesbQOxZTcd
-	db7vjROcV0OK3MCFHcw5x9ARfc2sjfF6JmuqwB+IcGWXKqpnaqFL
-X-Google-Smtp-Source: AGHT+IE2zf0CBtwqYDKHSINkdodmruF5zYLe0Iwxw1I5CLoZnpITPBXNBIEIi5EIs6pSc+YnsorQOA==
-X-Received: by 2002:a05:6870:5692:b0:218:7643:26cf with SMTP id p18-20020a056870569200b00218764326cfmr397934oao.10.1707153906935;
-        Mon, 05 Feb 2024 09:25:06 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVd1jCv1k+pmp2tP5dozwRgkWN3WSpCTmwZy8ZuZKKbPdDZGaiixHmFM8QfDNg1rmiefqgWfz4BFCBsd860M3PuUGMPZuZCRnzLZK0Lxq5YaSLZgIaCWUgciYZKI2W2G9yzbN19+wSwgnP/JYIdiqg3iHKGHOqJxja8v51QeOGU/9G7c3OwNsyxWCNpRNflOcqGCxSkJ+j77XDS7nqP+mGwclNRSkrdBAip300lOFg+04o69Aqy0ARALtyPMpzmh868LoL1AXfoEf5Mt6N/cEOJkIRVtgeANq/uEyjmJhGktrPqxHZvLLWd0gKFcLIpJKo8dn+W1CkIYxSrKmQpzx/KtZakZv8eq32RJlgZ46l8WugKBVG/BQTTh9vFCr8/bzvYllz4dLnk4W2H6uk0eNt2XGTrE3xMwduQbKrs/7hqazvE2f7UkcJ+g7igGxgRY6h5VylwtSQUDzZLkPInScxNk8dyawI81fCHpeZG9c9Mb4lYmWByhyRygmDf/5zTE/UtTr17BPwXLMeOeJG9VEvhV6J2Ge0rA28+5d8V/hHiMDiFAxSwp7yqmvaHuRpY4mkrenkuiHLllSKNgNotSh57+oMHUxVmkMC44D2lEl8o4gaVLOXOpnidKnZSM7+Pn4PSLVqvuoKLdUXJnBu39LcJ58e5epqfqTtyrL1H5cN5CTc2nzT6B7ZUoNKmvM5od0wEsF8ftbiEby98/1lUQdkC9LN9BZE+nOYg+GoU
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id b16-20020ad45190000000b0068ca40389besm162134qvp.101.2024.02.05.09.25.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 09:25:06 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailauth.nyi.internal (Postfix) with ESMTP id 9FAA527C0082;
-	Mon,  5 Feb 2024 12:25:05 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 05 Feb 2024 12:25:05 -0500
-X-ME-Sender: <xms:8BnBZSg7_SDRZG8laUArOl7iVYuvomgKOtIpkUSupOyvW7EklRvjBQ>
-    <xme:8BnBZTA8zg8Owk_LrXR4ljozXOg3PPHrfg0c9ul8f-O6MUIIrrOXLZidSpjS8YLlg
-    CDcb7MTPybVceQ-7w>
-X-ME-Received: <xmr:8BnBZaEYgxhQbDz6qyEDZWbw1UfBKKsyMHc3YXCqxEfEwlcurrdk-nosqZF4JA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedvuddgtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefh
-    gfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:8BnBZbSOQc8ZQc2OIynmbXefMCgjpsFczPyd0AASkvLmCEh0LjVNJQ>
-    <xmx:8BnBZfw-UwdvlSelmWX3LiCHpJdEDF8zO4lhkT7WlwvbejpE1kmQzw>
-    <xmx:8BnBZZ7VPgIaVPAVBZ-XFBJvZOauo_h0QsX0zjYm70zlqUfDOeHoWw>
-    <xmx:8RnBZUjf77aJlmG-8auTd5hV8Fe7wn1LGEgggd_-kwo9qYBXVsFJkQ>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 5 Feb 2024 12:25:04 -0500 (EST)
-Date: Mon, 5 Feb 2024 09:23:46 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Trevor Gross <tmgross@umich.edu>
-Cc: Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Kees Cook <keescook@chromium.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
-Message-ID: <ZcEZosrTCkLXeHh2@boqun-archlinux>
-References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
- <20240124-alice-mm-v1-3-d1abcec83c44@google.com>
- <ZbMA1yiM6Bqv9Sqg@boqun-archlinux>
- <CAH5fLgiNphSebaG82XkQHGFPFp1Mf1egyaiX6MFzsU2X3-Ni8w@mail.gmail.com>
- <ZbP50nEIMqULfVuj@Boquns-Mac-mini.home>
- <CALNs47uy5rQ15wByzQA0_YzORM0nTFdi9-TvwyC4+ZTXVQBj4g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0fWOz/ZV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XpbAK1wAea7o5GTpad2l3bwOO5YnbQrmYCjokWV5LDQSGPGEfrrYInvqSTDFDe5W+ofeUv+k1cyzH0vHIGe7XVFNpT1rpAn1Ob89UXP7E8JARQaJVPCo2O6mcoSnFL+B2u0xWdswIF7wZ1T30pP1TxkHZbkz/WRqMBFkryPiyN/Rf7C5/sqvMXdmVVv9GECFkJjmjtuk+YFG5A5typm6J2azS93PSm+nE01k9855W6reVxaUkGFKkSAujc+K8O7mMzcMe3/TENs/vKpPyktt27jMxLgL0mxfPQ4YXqVIkXgCacWQeVC4cf/WuX10HNZvLkpWEcg64HwAbYizj7SX1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NA6Dc8gcQ9aOG4N3XfLgwme6uEmnzfy50BECLOqOs5k=;
+ b=TE44kzRnZzaTe2qjBcICrtHkEOPG/Od279tztNLogpFRnGt7Dvb7FZ9KtuRN2cD7tM867232zwYs7U9jcE2YR6N4nJb5S6U0i8Y9sKjReRAsFo3Uda8b2tOna46T7rtHklJTvD8LoKL7prZ66akiqOL3HFIBvSwmehHD8/Pf0chjv4EKKRxBEphoqC9IwWTzMhGh75IRhEKJV0kJyRlumENcN5HknlnAvq343OJlnKLq9Um89yfIrWX2R1s3b9xpqzzaBIWfcxktcC4H62nsXMVzk/lhPWNeM82eYC2yIBQ4g9H4Mj+V0Y7V890dfzT4D9+n9y9k5xBcBfRGFlncKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NA6Dc8gcQ9aOG4N3XfLgwme6uEmnzfy50BECLOqOs5k=;
+ b=0fWOz/ZVZSRQWym+IEyJ3W9gwF3FoTCN+sCqzqnPpfrMhwnFLZKm7gkKXe5lO0WORxmK/VJ24Mhwcj3WEzt7NqLAWMz7sK5BCn6dBaBiTJ+syfQZyxRCPFJjPmtQpEbbAMVUmARBmMQWwxdJRYLZ/B0WqBSirJLYiWW9plWAq48=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5)
+ by CH3PR12MB7666.namprd12.prod.outlook.com (2603:10b6:610:152::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Mon, 5 Feb
+ 2024 17:25:49 +0000
+Received: from PH0PR12MB7982.namprd12.prod.outlook.com
+ ([fe80::e9c7:35dd:23f8:74a1]) by PH0PR12MB7982.namprd12.prod.outlook.com
+ ([fe80::e9c7:35dd:23f8:74a1%4]) with mapi id 15.20.7270.016; Mon, 5 Feb 2024
+ 17:25:49 +0000
+Message-ID: <3f30d63a-0919-44a8-b05c-60d130ae1dcd@amd.com>
+Date: Mon, 5 Feb 2024 09:25:47 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH vfio] vfio/pds: Rework and simplify reset flows
+To: "Tian, Kevin" <kevin.tian@intel.com>,
+ Brett Creeley <brett.creeley@amd.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+ "shameerali.kolothum.thodi@huawei.com"
+ <shameerali.kolothum.thodi@huawei.com>,
+ "yishaih@nvidia.com" <yishaih@nvidia.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+Cc: "shannon.nelson@amd.com" <shannon.nelson@amd.com>
+References: <20240126183225.19193-1-brett.creeley@amd.com>
+ <BL1PR11MB52712B162AE5FEC2E24614F98C472@BL1PR11MB5271.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Brett Creeley <bcreeley@amd.com>
+In-Reply-To: <BL1PR11MB52712B162AE5FEC2E24614F98C472@BL1PR11MB5271.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0022.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::27) To PH0PR12MB7982.namprd12.prod.outlook.com
+ (2603:10b6:510:28d::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALNs47uy5rQ15wByzQA0_YzORM0nTFdi9-TvwyC4+ZTXVQBj4g@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR12MB7982:EE_|CH3PR12MB7666:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8969fb84-9495-4c32-4f09-08dc266f7ee9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	29XBsLy8tayyJLayhwAwvNwsdHMJVGcnQ9ohen8n4a4BjMijA1UnVcG3nQftUY0cQeIcOn6y6JGgZLVfjHXRaQZns23fHYwum4kBJo0Jv0r+0w43+EeK/pICO7689RmwtMvtua+jLTzSqNWHiuKAhBYgRmMT/sC7yuEDV0+eGaPci+wtPA65UvMiCKlL1vcp4oTGwX1PbtAganuxWbsjhjdvyGPiaqLhQG/2OVRqYMOOwgVkvH4ZlqTy0ZdS0heBb4DZNtS1uBYOdkZcs0H7GKSbawFg1cx/bydJejYT7TJdiy6t/C4Yh6zDDDXU5jGh61tLFr704uTnYs9qMd1ZblsyEPw8Tpym3LmfgG7Zyf+RFyRZSn6GK2f4i5ILtStUKQN3bnbR3mfl6nIua9mOoybkAauS3yg7XCl58R5tR+m3ypJDB/K7e89lAYcpWCdc55s4izvjAusBDoEMJPyorXy8Q/wa3xFgFx8ChpOeIeUeyQ9Ko+m5pkoPoJ09sDroQrMBdVGGRQ0cBuwaXTOr57iVpbHwCYRMjBFlmS6Y0+i9O0q1oORSglarCWLymzmRx+f6jrZh2Eztx5Z1Jy5shOe8+sd3hqcWYeqZSqCq7fDsXlo86L8e+nB3PaReIfMbuauIX2EnQgttB5nh9J9IZQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7982.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(136003)(346002)(396003)(39860400002)(230273577357003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(36756003)(4326008)(8936002)(2906002)(41300700001)(5660300002)(31696002)(2616005)(6486002)(8676002)(6506007)(83380400001)(66556008)(53546011)(478600001)(66946007)(6512007)(316002)(38100700002)(66476007)(110136005)(26005)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bjBYb3VLWUU2VEhUODBOMUI0eTN3ZFJCUGpsaFRqY2xSeGpZRkk1RHJBQmt1?=
+ =?utf-8?B?WUtSdFRpeXJRc0ZqRm5xenBSMVJ3WWpHTjJxRVJvL0hHR2hYM3VCZ2VoUDEy?=
+ =?utf-8?B?WlV5LytKNlhWeHdyVlVtR3FwTW1XM1pta2lPNjVVYmdTeVByczgvcEZ2c3cr?=
+ =?utf-8?B?TWsrRWJQdlJONUlqNU5ZM3NGZDFHeWJtK0xYdE95QkdSZEhRZFhhbXZDdjZI?=
+ =?utf-8?B?MkNYVjFOVFlmQncvb3lEZmRPSldEc2JBNEZMM1lJT0lXMXFVUHdOS2hhaWRL?=
+ =?utf-8?B?dDJDRDlLYjZBZTZ1dkY4MGcxOW9YYzAvK3BKN3FRU2FQVWRac1FxSHhPSkxt?=
+ =?utf-8?B?UDRjaWYvZVo5RHVTbitSczlrZGN4cERVZ294OW42Vm5VcytYdXNwK3ZzVDdt?=
+ =?utf-8?B?QUhKRjRkOVlWVnBSejY2L3hNa0JyVDk0Sjl6b1puTnZYWW9rbi9KVUFsbis5?=
+ =?utf-8?B?VWZCUnhybWJPV1IwRmsveFFXRURzUTNaNC9oUHdMdW9NUGl6cDlSRkgyd1Ns?=
+ =?utf-8?B?bXY5VUV2N1oxSDJHMmYwTWo2NDNSeFJ4aFhFM1ZXZ1VHM0MxQ2hUQkFpVlpZ?=
+ =?utf-8?B?SFhLNjJ6UktRcWJYVDY5dVluOFVXMVg1UDB6WGQ4RGxhdVQrTlJVQTI3VWxv?=
+ =?utf-8?B?dkhBZTZSVFVTSzVJM2hqdHR6cCs3UW1OYnVXa2FFYlNBSDlrdkxjRElvOW9z?=
+ =?utf-8?B?VUQzSDF1V3BidzV6NCtZMVhvejQ0a0RjdFdGSG1oS2hoT01vRFE2alR4d3NZ?=
+ =?utf-8?B?TWFISnVGaW1tWGVla2NRSW1oNkNKNEQ3VUNCN0lGVGhIWDhRaFVqNldiaXky?=
+ =?utf-8?B?RUh5RmtFem4yblU5eDBrSGovbytYUzJrbTRiMjczMGZESzU0Yk9PQjBhbDBq?=
+ =?utf-8?B?b0hGUktEUzFJb3NNblBUZm9qcmVjdEU3eW05MkszOTlLbGZUWGFYS1pNeXVx?=
+ =?utf-8?B?UEdPc3FJb0lVM2hIZE9KaFd1dXQ1dHpMN3oxYWtEUW1TUTNLUE1taitZbi9X?=
+ =?utf-8?B?SitWelJmYUY5N2pkRFNWelV2ZzdvYkJzbTNmUndjRzRMSWRLL1lvSVU5ZG5V?=
+ =?utf-8?B?RFRFaHF4bTVkMitpN0F1bjdXQ05UVElHbVFyM3VPTFJiZlFBZFhYUEVLWjJP?=
+ =?utf-8?B?TkFRMU5ZUW0vbXhDeXR5K2hya2dnNkt2VDdYY0xKcFhVUUdwNFBSUzI2WVV6?=
+ =?utf-8?B?dlBFejEyVncyeVYvZys3YzRhajBFOWtRN01FSzFLcC9TL0NwcU04UGZnQktv?=
+ =?utf-8?B?K083b0VDQU1MUm9mcGF1UG92dENWKzBkUXVEWjU3d0REZXNvc2FJQ3NsMjll?=
+ =?utf-8?B?amNVWUsrREk2cHIzSHlzL2lwSmh6bmxJMUZONW42bisxTWpWb0lKL1NuL2E5?=
+ =?utf-8?B?NXZWODA4WWdxKzdHL1Jkd0JSWUtIcHg5Mk9HbWg1MHh4bkN6YUtLYmc3ck5U?=
+ =?utf-8?B?MDR4bDFyQXQ1dHBHTDdxeDdHczdKZWtNeXdQNExNRDNFeGhhdC9JbWE2TUNS?=
+ =?utf-8?B?VmhGT0hUYVFrdkFvVVl0N3lIS2IvdkRMYlBGVzhBZTNLdEx3NE5kZXRRY2hM?=
+ =?utf-8?B?QnBUWGNCUmdvU0I2QjVvd1JCaUZ6a3JydzBsVTE5Z2dtajYxNHNuZUl1VlZo?=
+ =?utf-8?B?bXlORTlwQWcraFZCVDVnRVFHUElHcWlNL1Y5TFBSS1ptVWcyaHNqNXk3R1Rz?=
+ =?utf-8?B?YTJQdzU5dXVSbTBEWE9UWEVZNU85bXI3ZWl3dXZMN0d4NU4yZ25QZ3d2MmFB?=
+ =?utf-8?B?bGxrb2YxTmdYNW1nMFJLV3JsQXpTUjV3UWJmNkRzQVY0OEtnKzdYRlBUTWZQ?=
+ =?utf-8?B?TDlHZ28vQnFnSWlqTzRDRm5TbUNESmwwc2p1NTFYUm1ZNGpYajA5SGRaUG9u?=
+ =?utf-8?B?bUZJdVFWYTdqNGtCOTZ3a2RrclFobndkYXdHOUliWm9OSSs5cDkweG43TEE3?=
+ =?utf-8?B?eHFqVkg5ZnBhVHY2MkluQkxrUzFKYzFrbU1WY2lVWVJ2OTRFQ0xHK2VEdFdU?=
+ =?utf-8?B?ZkxMeU1VS1RIYTRUWmFieGU2TUw4elBvRkxuMEE2Rnp4ZTgvVlpaK3NHL3dI?=
+ =?utf-8?B?THM1UE5yQUt4SzE1S3h1YUNwVEUzOHVUcEpycjJMLys1WDgwbXFGaGdWZk53?=
+ =?utf-8?Q?4Mmeer8Ye0B7azEtSBcxXDruH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8969fb84-9495-4c32-4f09-08dc266f7ee9
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7982.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 17:25:49.3344
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6iV426c40MM9AvaS1UkYEMhPo3mb9oEhd3OcFmyqOFyQ9T3phfAMUuBegutIYsMiiyhlLOGIhdf+d3YTy6KMMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7666
 
-On Thu, Feb 01, 2024 at 01:50:53AM -0500, Trevor Gross wrote:
-> On Fri, Jan 26, 2024 at 1:28 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > On Fri, Jan 26, 2024 at 01:33:46PM +0100, Alice Ryhl wrote:
-> > > On Fri, Jan 26, 2024 at 1:47 AM Boqun Feng <boqun.feng@gmail.com> wrote:
-> > > >
-> > > > On Wed, Jan 24, 2024 at 11:20:23AM +0000, Alice Ryhl wrote:
-> > > > > [...]
-> > > > > +    /// Maps the page and writes into it from the given buffer.
-> > > > > +    ///
-> > > > > +    /// # Safety
-> > > > > +    ///
-> > > > > +    /// Callers must ensure that `src` is valid for reading `len` bytes.
-> > > > > +    pub unsafe fn write(&self, src: *const u8, offset: usize, len: usize) -> Result {
-> > > >
-> > > > Use a slice like type as `src` maybe? Then the function can be safe:
-> > > >
-> > > >         pub fn write<S: AsRef<[u8]>>(&self, src: S, offset: usize) -> Result
-> > > >
-> > > > Besides, since `Page` impl `Sync`, shouldn't this `write` and the
-> > > > `fill_zero` be a `&mut self` function? Or make them both `unsafe`
-> > > > because of potential race and add some safety requirement?
-> > >
-> > > Ideally, we don't want data races with these methods to be UB. They
-> >
-> > I understand that, but in the current code, you can write:
-> >
-> >         CPU 0                   CPU 1
-> >         =====                   =====
-> >
-> >         page.write(src1, 0, 8);
-> >                                 page.write(src2, 0, 8);
-> >
-> > and it's a data race at kernel end. So my question is more how we can
-> > prevent the UB ;-)
+On 2/4/2024 10:58 PM, Tian, Kevin wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 > 
-> Hm. Would the following work?
 > 
->     // Change existing functions to work with references, meaning they need an
->     // exclusive &mut self
->     pub fn with_page_mapped<T>(
->         &mut self,
->         f: impl FnOnce(&mut [u8; PAGE_SIZE]) -> T
->     ) -> T
+>> From: Brett Creeley <brett.creeley@amd.com>
+>> Sent: Saturday, January 27, 2024 2:32 AM
+>>
+>> The current logic for handling resets based on
+>> whether they were initiated from the DSC or
+>> host/VMM is slightly confusing and incorrect.
+>> The incorrect behavior can cause the VF device
+>> to be unusable on the destination on failed
+>> migrations due to incompatible configurations.
+>> Fix this by setting the state back to
+>> VFIO_DEVICE_STATE_RUNNING when an FLR is
+>> triggered, so the VF device is put back in
+>> an "initial" pre-configured state after failures.
 > 
->     pub fn with_pointer_into_page<T>(
->         &mut self,
->         off: usize,
->         len: usize,
->         f: impl FnOnce(&mut [u8]) -> Result<T>,
->     ) -> Result<T>
-> 
->     // writing methods now take &mut self
->     pub fn write(&mut self ...)
->     pub fn fill_zero(&mut self ...)
->     pub fn copy_into_page(&mut self ...)
-> 
->     // Add two new functions that take &self, but return shared access
->     pub fn with_page_mapped_raw<T>(
->         &self,
->         f: impl FnOnce(&UnsafeCell<[u8; PAGE_SIZE]>) -> T
->     ) -> T
-> 
->     pub fn with_pointer_into_page_raw<T>(
->         &self,
->         off: usize,
->         len: usize,
->         f: impl FnOnce(&[UnsafeCell<u8>]) -> Result<T>,
->     ) -> Result<T>
-> 
-> This would mean that anyone who can obey rust's mutability rules can
-> use a page without any safety or race conditions to worry about, much
-> better for usability.
-> 
-> But if you do need to allow the data to be shared and racy, such as
-> the userspace example, the `_raw` methods allow for that and you can
-> `.get()` a `*mut u8` from the UnsafeCell. This moves the interior
-> mutability only to the mapped data rather than the Page itself, which
-> I think is more accurate anyway.
-> 
+> any reason for putting short lines (<50 chars) in commit msg?
 
-Looks good to me ;-) Thanks!
+No, I will make the lines longer in the next commits.
 
-Regards,
-Boqun
+> 
+>>
+>> Also, while here clean-up the reset logic to
+>> make the source of the reset more obvious.
+> 
+> as a fix the a 'Fixed' tag is preferred and CC stable
+> 
+> also separate the real fix from the cleanup so stable kernel doesn't need
+> to backport unnecessary code.
 
-> Leveraging UnsafeCell would also make some things with UserSlicePtr
-> more clear too.
+Sure, I can split this into 2 changes as you suggested.
+
 > 
-> - Trevor
+> btw the commit msg is not clear to me. It says fixing the problem
+> by setting the state to _ERROR for the DSC path and to _RUNNING for
+> the FLR path.
 > 
-> > Regards,
-> > Boqun
-> >
-> > > could be mapped into the address space of a userspace process.
-> > >
-> > > Alice
-> >
+> But looks it's already such case with old code:
 > 
+> pds_vfio_recovery()
+>          pds_vfio->deferred_reset = true;
+>          pds_vfio->deferred_reset_state = VFIO_DEVICE_STATE_ERROR;
+> 
+> pds_vfio_reset()
+>          pds_vfio->deferred_reset = true;
+>          pds_vfio->deferred_reset_state = VFIO_DEVICE_STATE_RUNNING;
+> 
+> pds_vfio_state_mutex_unlock()
+>          if (pds_vfio->deferred_reset) {
+>                  ...
+>                  pds_vfio->state = pds_vfio->deferred_reset_state;
+>                  ...
+>          }
+> 
+> it's same as what this patch does:
+> 
+> pds_vfio_recovery()
+>          pds_vfio->deferred_reset_type = PDS_VFIO_DEVICE_RESET;
+> 
+> pds_vfio_reset()
+>          pds_vfio->deferred_reset_state = PDS_VFIO_HOST_RESET;
+> 
+> pds_vfio_state_mutex_unlock()
+>          if (pds_vfio->deferred_reset) {
+>                  ...
+>                  if (pds_vfio->deferred_reset_type == PDS_VFIO_HOST_RESET)
+>                          pds_vfio->state = VFIO_DEVICE_STATE_RUNNING;
+>                  else
+>                          pds_vfio->state = VFIO_DEVICE_STATE_ERROR;
+>                  ...
+>          }
+> 
+> looks the actual functional difference is from below change:
+> 
+>> @@ -32,13 +32,14 @@ void pds_vfio_state_mutex_unlock(struct
+>> pds_vfio_pci_device *pds_vfio)
+>>        mutex_lock(&pds_vfio->reset_mutex);
+>>        if (pds_vfio->deferred_reset) {
+>>                pds_vfio->deferred_reset = false;
+>> -             if (pds_vfio->state == VFIO_DEVICE_STATE_ERROR) {
+>> -                     pds_vfio_put_restore_file(pds_vfio);
+>> -                     pds_vfio_put_save_file(pds_vfio);
+>> +             pds_vfio_put_restore_file(pds_vfio);
+>> +             pds_vfio_put_save_file(pds_vfio);
+> 
+> above two are changed from conditional to always.
+> 
+>> +             if (pds_vfio->deferred_reset_type == PDS_VFIO_HOST_RESET)
+>> {
+>> +                     pds_vfio->state = VFIO_DEVICE_STATE_RUNNING;
+>> +             } else {
+>>                        pds_vfio_dirty_disable(pds_vfio, false);
+> 
+> and this is now only for the DSC path.
+> 
+> need a better explanation here.
+
+I will clean up this patch by separating it into 2 patches and improving 
+the commit descriptions before sending a v2.
+
+Thanks for the review,
+
+Brett
