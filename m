@@ -1,83 +1,105 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBC73FE4F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FB53A1C3;
+	Mon,  5 Feb 2024 16:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.132.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707151424; cv=none; b=U+IzDDNpXUnBz8uuGsB8eGMHbOxiW1vJYWHeyPmievtJhfbCR9C6Jhnf+F1UjsKkLpTywKSzdJxAPlx92RawboOHlL8US1YKtJ87NRsDyw5Y/sj+kAC+9iBpTJrRygG3noNtkXl4Los3p3wNaTdTLhbfKMru1le8fXU3lvXjhjo=
+	t=1707151702; cv=none; b=POJbxcdYO85dfmOmPctM3A73CadGcRBqUUPlMfoRdhSeI0Jhx734eePrxymJpuJb7TV/7wCwy3pxJr+d5/6XFWAuJMJvf4+tRZb9MBHXpzVkQEwqOFsUS9lqbE6DR+wn9ZFNHmRkDp+ils3wCPC41nuuwlz3fWRtsSk+JULjlqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707151424; c=relaxed/simple;
-	bh=BFvZkNV6wb7PoKEUe58zRpeKa5nlGZK65hmeJTAj55s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jUBJ42QSxE+8bXqdmYWFnMTZ/bMspiTKM4qcRmjZEFymVxf3HK9x84CHFakt41EaHjXOPkZxahZMqbzJOMh2Ds0GpDJ5LgxT6lLLDUjHpfo6zDMoPx1Ey8ODHjQ6+gJ5IL2sqOAQUe1F0KZGs8SUus4JV3bfp5yZk+cCUlghgaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1rX240-0004Lp-7a; Mon, 05 Feb 2024 17:43:20 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: gregkh@linuxfoundation.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	linux@roeck-us.net,
-	heikki.krogerus@linux.intel.com
-Cc: linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH 0/4] USB-C TCPM Orientation Support
-Date: Mon,  5 Feb 2024 17:43:12 +0100
-Message-Id: <20240205164316.805408-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707151702; c=relaxed/simple;
+	bh=rypfT/kD5L+1VJyGe4VKW1ttuWQxYs5lhHHbn9d071s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D1dSRRDREtZu4h20oEzkKXWVx9D9qy18xQRpxCfQlJlt1n1lXb1rn5RiwTtxEWwDmUmPCHCWnMZ5vA1SaAva8bo3aBEdmAwhLihaSYJdHtoiy58vHO46kVU8Pm/sQSn0mTNSsM2q/B03anGQ94kZSXgTSvtBEsgRVjhgNrX6Gwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro; spf=pass smtp.mailfrom=subdimension.ro; dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b=XS9v4CKu; arc=none smtp.client-ip=172.104.132.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="XS9v4CKu"
+Received: from sunspire (unknown [188.24.101.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.subdimension.ro (Postfix) with ESMTPSA id 0CC77331873;
+	Mon,  5 Feb 2024 16:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
+	s=skycaves; t=1707151144;
+	bh=rypfT/kD5L+1VJyGe4VKW1ttuWQxYs5lhHHbn9d071s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=XS9v4CKuRQqHcvD5X9jRzINdXBIOSx2cEZNrDjIU4AldWKo0mRSxvJom2hjrPGtyz
+	 tYvB44syszDm3W/VPWnibo/PS9uEn7w7K73xhu+7xpAJMjfcS88gJDnxtdHvSoHZWw
+	 D694Hgdv4HwxOBvuV8rvQw763gomfhHl0GzRAPWE=
+Date: Mon, 5 Feb 2024 18:39:02 +0200
+From: Petre Rodan <petre.rodan@subdimension.ro>
+To: andy.shevchenko@gmail.com
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2 4/4] iio: pressure: hsc030pa add triggered buffer
+Message-ID: <ZcEPJh1i7cc0xyBW@sunspire>
+References: <20240127160405.19696-1-petre.rodan@subdimension.ro>
+ <20240127160405.19696-5-petre.rodan@subdimension.ro>
+ <Zb-1UGJt27OV-vjc@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IYwKfNCRI6ua9wNH"
+Content-Disposition: inline
+In-Reply-To: <Zb-1UGJt27OV-vjc@surfacebook.localdomain>
 
-Hi,
 
-this adds the support to controll the optional connector-orientation
-available on some TCPC from the TCPM.
+--IYwKfNCRI6ua9wNH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I used an custom board with OnSemi FUSB307B TCPC which is spec [1]
-compatible but albeit the spec [1] says that this pin is controlled by
-the TCPC if 'TCPC_CONTROL.DebugAccessoryControl = 0' it isn't at least
-for this device.
 
-I'm unsure if the usb tcpci spec has an copy'n'paste failure since
-'TCPC_CONTROL.DebugAccessoryControl' shouldn't control the state of the
-'connector orientation' pin or if the OnSemi FUSB307B has an HW bug.
-Because on my device the 'TCPC_CONTROL.DebugAccessoryControl' is set to
-0 but the register wasn't updated automatically.
+hello Andy,
 
-Regards,
-  Marco
+On Sun, Feb 04, 2024 at 06:03:28PM +0200, andy.shevchenko@gmail.com wrote:
+[..]
+> > +	memcpy(&data->scan.chan[1], &data->buffer[2], 2);
+>=20
+> Hmm... We don't have fixed-size memcpy() :-(
 
-[1] https://www.usb.org/sites/default/files/documents/usb-port_controller_specification_rev2.0_v1.0_0.pdf
+	__be16 *ptr;
 
-Marco Felsch (4):
-  dt-bindings: usb: typec-tcpci: add tcpci compatible binding
-  usb: typec: tcpci: add generic tcpci compatible
-  usb: typec: tcpm: add support to set tcpc connector orientatition
-  usb: typec: tcpci: add support to set connector orientation
+	ptr =3D (__be16 *) data->buffer;
+	data->scan.chan[0] =3D *ptr;
+	data->scan.chan[1] =3D *++ptr;
 
- .../devicetree/bindings/usb/nxp,ptn5110.yaml  |  4 +-
- drivers/usb/typec/tcpm/tcpci.c                | 44 +++++++++++++++++++
- drivers/usb/typec/tcpm/tcpm.c                 |  6 +++
- include/linux/usb/tcpci.h                     |  8 ++++
- include/linux/usb/tcpm.h                      |  2 +
- 5 files changed, 63 insertions(+), 1 deletion(-)
+is this an acceptable replacement? I do not understand that your concern wa=
+s, my
+intent was to copy exactly 2 bytes over.
 
--- 
-2.39.2
+> > +	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
+> > +					   iio_get_time_ns(indio_dev));
 
+thanks,
+peter
+
+--IYwKfNCRI6ua9wNH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE2Ap/wXYVGTXsPl+pzyaZmYROfzAFAmXBDyEACgkQzyaZmYRO
+fzD5aRAAyEwbN+bRogoQcgxhxBjDkfJFOodGLosVP/2TDfSoS4LpPphpuDORkEcX
+BpIXgVxh4qCyI8nzrXFH01+N9PQvi+ZtC6nw6xBA/64Jf3JJGZPjdlrcwHmCP/H8
+9dVfiZj6n3LcUw5ojzyZZbIsAPMq/BPXiNXdRk+rW4VUH12NNHykA95Wrejk+J6g
+vsoSo/Bz+5Z2uZBzKAX9YOtCegHW5RQ++WnZ/4YKvdWTdHVkXGBoHVfGAuil7RWY
+Q2rORin3ihDOol2KWVgC3zTgZrc9OkBWw+mDT1SD+Z2g1tdnzceMuQFkPBVL8Iti
+tEdVZ8aaXm1yJ7GgpzPEG3rPp5Pig02zBW3jWoz0plIpVDQzJxPhLVCCvpEKCvaL
+nefniFzg9KbK215rFGZKwR5VYla8EK9tSIaz2XFfvzKzSSC5UmFs6Hqtfwew/k7m
+GcPeyKZxcGJGgkbkvdXaBGNgmXpht+1Mg/C8ya2TVaA1ytTs8GO3T8W7bKlo2EGx
+OQkXGCUyXkhNq7PIxdAxngjeBGVby8FgxE9eZqyqvwngDZkZhAuABsalvc80N1jN
+NZvUSgcHXAU3tvj0SpKHWEGJmCBom3D+fV6nn74YVnfRWYoso15EKoF+j/9sPjjj
+qoylAXZL1mavW/DlS5zrAxv9Y/HFmF5M6Ga13NPfnJ+StJNv7Xg=
+=XpUp
+-----END PGP SIGNATURE-----
+
+--IYwKfNCRI6ua9wNH--
