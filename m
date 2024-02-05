@@ -1,160 +1,200 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BBC2263E;
-	Mon,  5 Feb 2024 13:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6F921373
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707141279; cv=none; b=FGMkTqYiGmvKLkphBOe4Uqg/xgF58CC4Ym4PwITaRV7T2YrtAP210ZixRSsg6YeBgIcqwQ8FXLYHu3QqGZ3wqcqIVSQV2T7y99aLnqgDPNQIycLhGBUdIF51vdWA1x8loL+qiiyudvSySBwLqcCM5G/G+4OTPAdqaZY4g+4ZvYk=
+	t=1707141280; cv=none; b=LFewSeQ/Hyvf+dtGMHxx6DwXakTx5xWtdo+Puw5KC8W/6NZ6r4jCqtq+gHfR2HLYOnbCLxGR+YJ/ppSqGPRoBqH+EWxftKS8QzbV3SC5NKLkv7VOitVedmuJz0n088c9LSCqs3TocFUNX3q34jyBfKifOuFVrp32vwhVn+aMHpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707141279; c=relaxed/simple;
-	bh=xY7sIFM80Rbz3G4McrGuT+OINz0NOWltW76ses9f6pM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=L5b7G5x/RNny81zYuBw/9sMtcF7H6MYyUhEjwUkhwq8y0sBprKYnWE78YS5tD65fcWp41E5HVF7N/RokuXEZ6nUJ6ei7BnpKh0oVUb0K0eaqr3CePvlVluRJLcAIqwDaHIYEnw/rivRqu3vjWLqn0YvmKybfs9fKjGuI9SfNdDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UsKyBxQw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RQO/mBUe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UsKyBxQw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RQO/mBUe; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707141280; c=relaxed/simple;
+	bh=JOKHiC6XDnMvCFB+2urHL6ouF/Z2o4GIp6viWvkNhSI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o4giLNx+ETa2c8C6RAMhsPn5iwzLkb7fjP64/4WgwXBY8PmCnPe6Zgf+4AHVokM3UUbuV2lIuyocvJrluaWWLcIJEJOjxrXvtkStFstSMf2lMLRyvD2K7RC+69mV+bzPKB4sD2T6zNojM6bEL294XNHmsKUZZO+QMwPy/j3bMGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h9KzbfW7; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UsKyBxQw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RQO/mBUe";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UsKyBxQw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RQO/mBUe"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 99D80219DA;
-	Mon,  5 Feb 2024 13:54:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707141273; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
-	b=UsKyBxQw21LyQfWqRS0xMqZYRSLQEl5j76mYaTD4EaIz7FQ71hfuhAntMi3PfZ7zbtDfwl
-	wH4nIGAjLyrg0OKkgyj1F4wzufQSZjy+uo5u0cNPWqxcCevh48Tyuc/B0AfW57eF00XRjW
-	m/iwevtE5g5smuCkAoZSZ8CKBWwe6Ts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707141273;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
-	b=RQO/mBUecyRisGHTsrmvIVXTs232vjGtIyhwEAWTtA0UTetQwt2StSE3lID+CiATLiS0za
-	iLmvjPuD5Tb5t8Cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707141273; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
-	b=UsKyBxQw21LyQfWqRS0xMqZYRSLQEl5j76mYaTD4EaIz7FQ71hfuhAntMi3PfZ7zbtDfwl
-	wH4nIGAjLyrg0OKkgyj1F4wzufQSZjy+uo5u0cNPWqxcCevh48Tyuc/B0AfW57eF00XRjW
-	m/iwevtE5g5smuCkAoZSZ8CKBWwe6Ts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707141273;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
-	b=RQO/mBUecyRisGHTsrmvIVXTs232vjGtIyhwEAWTtA0UTetQwt2StSE3lID+CiATLiS0za
-	iLmvjPuD5Tb5t8Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2762E136F5;
-	Mon,  5 Feb 2024 13:54:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KPBuBZTowGWYZQAAD6G6ig
-	(envelope-from <lhenriques@suse.de>); Mon, 05 Feb 2024 13:54:28 +0000
-Received: from localhost (brahms.olymp [local])
-	by brahms.olymp (OpenSMTPD) with ESMTPA id 27a4dd74;
-	Mon, 5 Feb 2024 13:54:11 +0000 (UTC)
-From: Luis Henriques <lhenriques@suse.de>
-To: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,  Eric Biggers
- <ebiggers@kernel.org>,  keyrings@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] keys: update key quotas in key_put()
-In-Reply-To: <3007646.1707134664@warthog.procyon.org.uk> (David Howells's
-	message of "Mon, 05 Feb 2024 12:04:24 +0000")
-References: <20240130101344.28936-1-lhenriques@suse.de>
-	<3007646.1707134664@warthog.procyon.org.uk>
-Date: Mon, 05 Feb 2024 13:54:11 +0000
-Message-ID: <87il33f24c.fsf@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h9KzbfW7"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6040d9e52b9so41281487b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:54:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707141276; x=1707746076; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JtBlYOtJ0skwp1KJO8a8C9zsixZtlwcwqIpjM6PlYiA=;
+        b=h9KzbfW7qoLb5hf3wQ3d5oH7YofrK+B97T664pc2di3yzcZBAYmHgMFmdrug82WEXo
+         1XZDvkTcHXS+RNuxwNeGhTlvLhWGc/XLOlf3BtDR0q+diJm++igKejzBoKKSK62pnoFK
+         Gl/WWh5rBuWoDa056ugOy/L/ENdEUTxsX182lwL6SJe5GShP+Y6cq1FUOfYGPKWNcjtO
+         9WVBpnwyKGKj/8fAtpY0Gw4m1cPaY5eKSumfwk4LUoiebMNqSeiRV/QoOy47cc/0RhaO
+         9jGdqNQcgCPWuF9uXt1evt2NfVchMjzKnYsCW+rKVnJ+aLzKcEVAcyo8aR0WesndseZA
+         hn9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707141276; x=1707746076;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JtBlYOtJ0skwp1KJO8a8C9zsixZtlwcwqIpjM6PlYiA=;
+        b=t7RwF48h7V6NirHN5kkUM5z4+RYq5b+gWQrtAu8AlGBv0MCkbAivP0D1OtIOe3UHap
+         eOYncvbzkuTy0Sz2pJCWPwZCxp5vNpIrNNQfLENihx2f6RZWMxaBJPG7N6WvBnA3AU3a
+         g8jX07qg4rlQs7cMLk1VxRuCPH+IixgIqFyWgmG1uS30yDOv9jQNWpP5KWrUksrlHbun
+         /1OF/Z6ECfmzlVJG/UJVH/xiIOWSCWxGlfjTp529aSy1cORPf/D2ee/EpiaT8vzFR1M4
+         YmwOy3KFXUYcYqaFkUoROAG2aU8Q0hlwlAfX9wSDqskSm1Emq/+TLcS75J484OP3QMW1
+         mu1w==
+X-Gm-Message-State: AOJu0YwSAt0w43PTbPZ9qT7UVpL/icJOz830amMt6Ckfo/b4kssLcGsa
+	aVr/8PV6nnU21Bdom1XIshk2Icd4tTItPX2WF0qAcMJxb5MRMbIj8gp7iCj7m5XnbHs3ATU5FuK
+	HYaoJ1r0eV1qeMnudLyhAk/mykiafyj1goeQ0Wg==
+X-Google-Smtp-Source: AGHT+IGpSzTyt8vbbIqitI5GoUk9JT4XUNcvQrbvqDpIn3MhWnis9GRwj8SDab9bFdb0JISqVskwSvWUEcLPq8Pt5Zo=
+X-Received: by 2002:a81:a18a:0:b0:5fb:c044:f087 with SMTP id
+ y132-20020a81a18a000000b005fbc044f087mr9614980ywg.35.1707141275864; Mon, 05
+ Feb 2024 05:54:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-0.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[4];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_LAST(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-0.00)[16.05%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -0.10
+References: <20240119100621.11788-1-quic_tengfan@quicinc.com>
+ <20240119100621.11788-2-quic_tengfan@quicinc.com> <CAA8EJprpMjK03rKPK6wgfVuDvBikYsKZjMc0Wusa1BxFOBnXhQ@mail.gmail.com>
+ <86672501-206a-49ed-8af7-2b6c332c1697@quicinc.com>
+In-Reply-To: <86672501-206a-49ed-8af7-2b6c332c1697@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 5 Feb 2024 15:48:36 +0200
+Message-ID: <CAA8EJppkDDACV_sLxFW4EqKQLHfo4ivSLwa_jCde8JpeH4YfzA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: arm: qcom: Document QCM8550, QCS8550
+ SoC and board
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-David Howells <dhowells@redhat.com> writes:
+On Mon, 5 Feb 2024 at 12:21, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>
+>
+>
+> On 2/5/2024 12:29 AM, Dmitry Baryshkov wrote:
+> > On Fri, 19 Jan 2024 at 11:07, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+> >>
+> >> Document QCM8550, QCS8550 SoC and the AIM300 AIoT board bindings.
+> >> QCS8550 and QCM8550 processor combines powerful computing, extreme edge
+> >> AI processing, Wi-Fi 7, and robust video and graphics for a wide range
+> >> of use cases for the Internet of Things (IoT). QCS8550 is a QCS version
+> >> for QCM8550. Modem RF only in QCM8550 but not in QCS8550.
+> >> AIM300 Series is a highly optimized family of modules designed to
+> >> support AIoT applications. The module is mounted onto Qualcomm AIoT
+> >> carrier board to support verification, evaluation and development. It
+> >> integrates QCS8550 SoC, UFS and PMIC chip etc.
+> >> AIM stands for Artificial Intelligence Module. AIoT stands for AI IoT.
+> >>
+> >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/arm/qcom.yaml | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> >> index 1a5fb889a444..9cee874a8eae 100644
+> >> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> >> @@ -49,8 +49,10 @@ description: |
+> >>           msm8996
+> >>           msm8998
+> >>           qcs404
+> >> +        qcs8550
+> >>           qcm2290
+> >>           qcm6490
+> >> +        qcm8550
+> >
+> > Drop
+>
+> we want to introduce qcm8550 here.
 
-> Luis Henriques <lhenriques@suse.de> wrote:
->
->> Delaying key quotas update when key's refcount reaches 0 in key_put() has
->> been causing some issues in fscrypt testing, specifically in fstest
->> generic/581.  This commit fixes this test flakiness by dealing with the
->> quotas immediately, and leaving all the other clean-ups to the key garba=
-ge
->> collector.
->
-> Okay, I'll accept this.
->
+What for. It either had to be introduced beforehand, or it should be
+introduced when one adds support for an actual qcm8550 device.
 
-That's awesome, thanks a lot David.  And, as Eric requested, I'll send out
-shortly a follow-up fscrypt-specific patch, which will make generic/581
-fstest finally pass.
+> qcm8550.dtsi has been introduced and qcs8550-aim300.dtsi include
+> qcm8550.dtsi directly.
+>
+> qcs8550 is a QCS version for qcm8550. qcs8550 is a sub-series of
+> qcm8550. qcm8550 will be a firmware release series from qualcomm.
 
-Cheers,
---=20
-Lu=C3=ADs
+All three names refer to the different kinds of the same platform. The
+base chip name is sm8550, so it is the last one. Other than that,
+there is no need to include any SoC compatibles other than the actual
+SoC name. See existing qrb devices for an inspiration.
 
+>
+> here is the qcm8550/qcs8550 detailed spec:
+> https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+>
+> here is the sm8550 detailed spec:
+> https://docs.qualcomm.com/bundle/publicresource/87-71408-1_REV_C_Snapdragon_8_gen_3_Mobile_Platform_Product_Brief.pdf
 
->> This is done by moving the updates to the qnkeys and qnbytes fields in
->> struct key_user from key_gc_unused_keys() into key_put().
->> Unfortunately, this also means that we need to switch to the
->> irq-version of the spinlock that protects these fields and use
->> spin_lock_{irqsave,irqrestore} in all the code that touches these
->> fields.
->
-> ... Which shouldn't be that often.  It only happens when a key is created=
- or
-> finally let go of.
->
->> Signed-off-by: Luis Henriques <lhenriques@suse.de>
->
-> Acked-by: David Howells <dhowells@redhat.com>
->
-> Jarkko - could you pick this up?
->
+Can you please summarise the _actual_ difference between qcm8550,
+qcs8550 and sm8550? Are they fully soft compatible? Soft compatible
+except the modem? Pin compatible?
 
+>
+> >
+> >>           qdu1000
+> >>           qrb2210
+> >>           qrb4210
+> >> @@ -93,6 +95,7 @@ description: |
+> >>     The 'board' element must be one of the following strings:
+> >>
+> >>           adp
+> >> +        aim300-aiot
+> >
+> > We probably need to drop this list, it doesn't surve its purposes.
+>
+> I am a little confused, do you expect to just remove this "aim300-aiot"
+> or do you want to introduce a new patch and remove the whole list?
+
+If you were following the list, you would have seen the patch
+reworking the bindings.
+
+>
+> >
+> >>           cdp
+> >>           dragonboard
+> >>           idp
+> >> @@ -904,6 +907,14 @@ properties:
+> >>             - const: qcom,qcs404-evb
+> >>             - const: qcom,qcs404
+> >>
+> >> +      - items:
+> >> +          - enum:
+> >> +              - qcom,qcs8550-aim300-aiot
+> >> +          - const: qcom,qcs8550-aim300
+> >> +          - const: qcom,qcs8550
+> >> +          - const: qcom,qcm8550
+> >
+> > In the review comments for v3 you have been asked to add qcom,sm8550.
+> > But not the qcom,qcm8550. I don't think that there is any need to
+> > mention qcm8550 here.
+>
+> qcm8550 and sm8550 are different, they have different firmware release.
+>
+> AIM300 AIoT board depend on qcs8550, qcs8550 is a QCS version for
+> qcm8550. Modem RF only in qcm8550 but not in qcs8550.
+
+There are no 'dependecies' here. The thing is about declaring compatibility.
+In my opinion, the qcm8550 is an unnecesary part of the equation. You
+declare compatibility with the board itself,  with the SoM, with the
+actual SoC and with the base of the series. Anybody caring for the
+difference between QCM, QCS and SM will have to check for both
+qcom,qcs8550 and qcom,qcm8550 anyway, as there are differences on the
+modem side.
+
+> >> +          - const: qcom,sm8550
+> >> +
+> >>         - items:
+> >>             - enum:
+> >>                 - qcom,sa8155p-adp
+> >> --
+
+-- 
+With best wishes
+Dmitry
