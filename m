@@ -1,106 +1,119 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BFC11700;
-	Mon,  5 Feb 2024 06:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4A7C133;
+	Mon,  5 Feb 2024 06:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707115925; cv=none; b=Crd720OEtWTl9FpNaGtgYBkLj/xPbh3n+AUCKbvMdmEe2ihqVk473EyD1TJfXsEK+ZBawS++YfbyhlqZ9s/VWFpNowctRIrN7mFunbMBxTzQKCsDsu3O8c/DvZ/rJYEsE0gBV0g5NbK5DIwtZOT21P66VQ65PGfarg7ZRC+f40g=
+	t=1707116031; cv=none; b=Ax5gXQkl5CpHL1i8b50TmxAJn5hyioxlDaRSDenZZzKEpTizxqIYdsTrPBLv8FZ6+6bb1UrHrk2opM1MLeM3JMk3QppCIlyvzBPAjuKb+JouId2DitJaPnZlkZbaSSUpLuc9JEstkWg7HwOgZeeLTu7HWqeI7nIAo5TaS3foWLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707115925; c=relaxed/simple;
-	bh=Qzb8+O36ssVkEdkjB+UK/B3t2NyHsFMLcFyr3s7tPbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fof9wBFrePBA+il2agp5gO5CxofI19cYfH56zqvnB7PA3AVcoabQotc85ncn4u+ggdtY0beOLWeQUEhoxQ+VvHmdlfs7/cZXpcmNHXk9kQCDW0HRriTjxwtOfmd5W3DhxdnLyMXWizJcssQ5RwDuExPgB3ESPMDDOR2CgMcygdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=myYLmNGX; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1707116031; c=relaxed/simple;
+	bh=YNsbjnax4FueQl8gllzJCWfzlO09WtiA6BKPHSKaop4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=G9zfvgGwRQfOKvBWdfAZmy44bmg1i4jHsXKgmCOjqu/dunM4nnh2Dj9QyIJSy0L+JEQVNU59nAnyqq2nJf3vAHt3HKSsA016Dq5noUVx5/cPe346uihbQfLlkjnObgvkr/Mdg0OeOg3trqEl6fQYXOHv+MbstU5ZULCJhTX5XvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lue6JSbc; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="myYLmNGX"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 879B260461;
-	Mon,  5 Feb 2024 06:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707115916;
-	bh=Qzb8+O36ssVkEdkjB+UK/B3t2NyHsFMLcFyr3s7tPbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=myYLmNGXQRXofHJznOANhXBG61lt+U1ZGM3aF49uvUoDcgKuDvhocgvBzEPfaNyS6
-	 5VzFCWwkrVyKxX39fVy03ENjtt9Sde/LfDSA4/SZb5HF01Vf7x7ICtUQBhuogmYhE0
-	 zrF54HKf3vs9yPfLfIEXgtiVdzCyu7FB71WiVYghLDfmVMA3RlOFZ6EzQICHz2teay
-	 qhPYLVoIR4w07y0N74O/pP1Hif0Wyms1h/nXqDFVbk+rckV5qw3WbKTckmACglfiEv
-	 twWZ59xNzNnRxTnGZ56GpyYhyozl8VWc/sD7rsERoH53nNOzv6md0fb5GS/1VoA56S
-	 kLoy/T7x04ypA==
-Date: Mon, 5 Feb 2024 08:51:26 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	john.ogness@linutronix.de, andriy.shevchenko@linux.intel.com,
-	tglx@linutronix.de, yangyicong@hisilicon.com, linuxarm@huawei.com,
-	prime.zeng@hisilicon.com, jonathan.cameron@huawei.com,
-	fanghao11@huawei.com
-Subject: Re: [PATCH] serial: port: Don't suspend if the port is still busy
-Message-ID: <20240205065126.GB5185@atomide.com>
-References: <20240204031957.58176-1-yangyicong@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lue6JSbc"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d99c5f6bfeso6215375ad.1;
+        Sun, 04 Feb 2024 22:53:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707116029; x=1707720829; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=BACST+Lz4LKGuPFXlT0sbTF1G34jn/nGIZ2rEUeJFTI=;
+        b=Lue6JSbcdYOqzmeGyHglC6sN4Po7PorZTqv+rbBPrpL1LWDQCHXE58a520bDYtonWw
+         slr5M6+QGkSNpQXZZjGXH/ZCDkt8lDaFbwvORP77edAWFnFCM9OBYvpn2KVzW8At9Hgu
+         kCVnZ0vY//FMNx78iecCbLzCaCZqvR3/3rIYg56bhp2WMVQOCYy+PJ5FU/7eQ3zD4OP6
+         7a3xokSPSZzBQv3CRl5Jictx5dfZL3iy1mnurYbFvTg5XknskjVFnj6r6mEk6Pjr5vQL
+         XpaAD3jr3fy5Ng1rnLFuoAUSP65Pv2rKXj4aiP5i8392lZPX3OXAGHtuJ8oO+IFn4rlG
+         kcIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707116029; x=1707720829;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BACST+Lz4LKGuPFXlT0sbTF1G34jn/nGIZ2rEUeJFTI=;
+        b=BjsymPzlAsGdXFFUo6UyoqIced3Ko8eO31OOGGnJ2kn7/RHUhPn43cVKl3beCKmPaL
+         AljX6MdgseAEWMTdexteCrAVhk5U8Uhyx36T0ZignhPiTnlmCemeuyEd1CADkFonDL0m
+         yuN1HqKj+BBAWZ3wnkabo5eC1lbSO0nVfvNPKPo/LVw8UgHZE5j1MtK+RqsA3KB4ROKJ
+         Jy3foGajFKmqmRmNDyTw/wf9WTjvpD4K2GHmY92dHvEKI+8ftKIUcIJDGo5CDHANjvjV
+         PgIHslODE+TT9rp8pj9gmhDfHPYDB16fH30kBBTDmiGbUvrZpeEp+7qDjgttR0uZV44j
+         GS0A==
+X-Gm-Message-State: AOJu0YznW6Jbq8KXjsG3Y+CMjJCeA03wDsrEF4FDhXeGVBqZT+AqNK+3
+	WrfYz6VexvKrXUQeRWsqZZOcmFd/H2hJrItbxMPacuJp61s1zBk6
+X-Google-Smtp-Source: AGHT+IHLPMVZtRNSPHafHo488128iwWewz6YFua+FZyYSUl1po29h4xK/zg8Whwu6C12KawKEHCxow==
+X-Received: by 2002:a17:902:da89:b0:1d9:4106:b8b5 with SMTP id j9-20020a170902da8900b001d94106b8b5mr8430625plx.11.1707116028962;
+        Sun, 04 Feb 2024 22:53:48 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVST6ii9ztpUxpcyZ6MV17/78+ojq/iBd9niGDcjP8fl76DQgUu8HZ5LKFY2xZj/9AiGbQinx4sre870CXz3ndEJCX/bMFPs/twS1oMvsSZwDqiH8BXLMnXjncBfXCIldgZAdsp6EdKa3vMOoWMgRPsraaYvY0jYvMn/CxlNkqklP8o22cRBKlk+/g/i1/5utXc2DOEJ9YgynfYDLlKUPtgLsjhVVK5RhVRDjh4FUj6dF7Hwnwm5w==
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id kh3-20020a170903064300b001d8cbdb2a9asm5592057plb.298.2024.02.04.22.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 22:53:48 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sun, 4 Feb 2024 22:53:46 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: James.Bottomley@hansenpartnership.com, Helge Deller <deller@gmx.de>,
+	linux-parisc@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-kernel@vger.kernel.org
+Subject: Kunit test failures with cpumask tests on parisc
+Message-ID: <e6f0ab85-5bbe-41c1-8976-5ba00044998c@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240204031957.58176-1-yangyicong@huawei.com>
 
-* Yicong Yang <yangyicong@huawei.com> [240204 03:24]:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> We accidently met the issue that the bash prompt is not shown after the
-> previous command done and until the next input if there's only one CPU
-> (In our issue other CPUs are isolated by isolcpus=). Further analysis
-> shows it's because the port entering runtime suspend even if there's
-> still pending chars in the buffer and the pending chars will only be
-> processed in next device resuming. We are using amba-pl011 and the
-> problematic flow is like below:
-> 
-> Bash                                         kworker
-> tty_write()
->   file_tty_write()
->     n_tty_write()
->       uart_write()
->         __uart_start()
->           pm_runtime_get() // wakeup waker
->             queue_work()
->                                              pm_runtime_work()
->                                                rpm_resume()
->                                                 status = RPM_RESUMING
->                                                 serial_port_runtime_resume()
->                                                   port->ops->start_tx()
->                                                     pl011_tx_chars()
->                                                       uart_write_wakeup()
->         […]
->         __uart_start()
->           pm_runtime_get() < 0 // because runtime status = RPM_RESUMING
->                                // later data are not commit to the port driver
->                                                 status = RPM_ACTIVE
->                                                 rpm_idle() -> rpm_suspend()
+Hi,
 
-Can you please confirm if this still happens also with commit 6f699743aebf
-("serial: core: Fix runtime PM handling for pending tx")? It adds a check
-for -EINPROGRESS.
+when running cpumask Kunit tests on parisc/parisc64 in qemu,
+I get the following errors.
 
-> This patch tries to fix this by checking the port busy before entering
-> runtime suspending. A runtime_suspend callback is added for the port
-> driver. When entering runtime suspend the callback is invoked, if there's
-> still pending chars in the buffer then request an runtime resume for
-> handling this.
+      KTAP version 1
+      # Subtest: cpumask
+      # module: cpumask_kunit
+      1..6
+      # test_cpumask_weight: EXPECTATION FAILED at lib/cpumask_kunit.c:68
+      Expected nr_cpu_ids == cpumask_weight(((const struct cpumask *)&__cpu_possible_mask)), but
+          nr_cpu_ids == 16 (0x10)
+          cpumask_weight(((const struct cpumask *)&__cpu_possible_mask)) == 1 (0x1)
+  cpu_possible_mask contains CPUs 0
+      not ok 1 test_cpumask_weight
+      # test_cpumask_first: EXPECTATION FAILED at lib/cpumask_kunit.c:79
+      Expected nr_cpu_ids <= cpumask_first_zero(((const struct cpumask *)&__cpu_possible_mask)), but
+          nr_cpu_ids == 16 (0x10)
+          cpumask_first_zero(((const struct cpumask *)&__cpu_possible_mask)) == 1 (0x1)
+  cpu_possible_mask contains CPUs 0
+      not ok 2 test_cpumask_first
+      # test_cpumask_last: EXPECTATION FAILED at lib/cpumask_kunit.c:87
+      Expected nr_cpu_ids - 1 == cpumask_last(((const struct cpumask *)&__cpu_possible_mask)), but
+          nr_cpu_ids - 1 == 15 (0xf)
+          cpumask_last(((const struct cpumask *)&__cpu_possible_mask)) == 0 (0x0)
+  cpu_possible_mask contains CPUs 0
+      not ok 3 test_cpumask_last
+      # test_cpumask_next: EXPECTATION FAILED at lib/cpumask_kunit.c:94
+      Expected nr_cpu_ids <= cpumask_next_zero(-1, ((const struct cpumask *)&__cpu_possible_mask)), but
+          nr_cpu_ids == 16 (0x10)
+          cpumask_next_zero(-1, ((const struct cpumask *)&__cpu_possible_mask)) == 1 (0x1)
+  cpu_possible_mask contains CPUs 0
+      not ok 4 test_cpumask_next
+      ok 5 test_cpumask_iterators
+      ok 6 test_cpumask_iterators_builtin
+  # cpumask: pass:2 fail:4 skip:0 total:6
+  # Totals: pass:2 fail:4 skip:0 total:6
+  not ok 5 cpumask
 
-OK. Let's look at this further after you have checked what happens with
-commit 6f699743aebf.
+It appears that parisc sets __cpu_possible_mask to the number of online CPUs,
+which is limited in qemu and doesn't match CONFIG_NR_CPUS. Is this a problem
+with the unit test or with the parisc architecture, or does the unit test
+simply not apply for parisc ?
 
-If needed, to me it seems that flushing tx and returning -EBUSY from
-serial_port_runtime_suspend() if busy might do the trick though.
-
-Regards,
-
-Tony
+Thanks,
+Guenter
