@@ -1,152 +1,140 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3391758C
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 10:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915FC17580;
+	Mon,  5 Feb 2024 10:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707129965; cv=none; b=ealTVz1mpnw+9dkkLoCMzXNzr2zslqh7BHfVMTwOpd2Gr9Ow7wzs5bI+QJKKXLK41c2OI2X6LqrdkPz2zj7jl08qGAUqBPe5aBe6ilvRb43cTBBUtIQmT/oFhCqcDvvC0i12nKDOj/Jria8qLWJTgJf8spFseBJ5DjsNsFjUnQA=
+	t=1707130091; cv=none; b=mxFi7OJaZ7Yy6P6PEN9g/CwJiXewKyNnibc9CEtGgwqYTDjl/JIxk3Pr7qp1s+wuVkEO5DwEHubAe4NN3nxiYBzBPS0dXAoilcrdkigaenNdoO2yigedbnDagZJz+gFvHIK/f4ioxeY3LYbfFiCNL6MqYnOpzXTvv69/T24S47E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707129965; c=relaxed/simple;
-	bh=77iFNEHKVIXpZJ3WQ9OokaIFb6o7PkbNxntdJkJq64A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N6XokxTUSutevMGSNUquXlyS2fYyJuSPx4UdVOw5pesgu5EnABNxAOa09foPRwEWT0mvGR3TLmo3tjQuENyi/2CJCQS2X2w82AdtPedadLZysMvCpJtVOkVmhXL9kKzRfJh3ChphADgyKXre6fsuDg3TRMM1FswY7RE/OmdV5jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PPJmMYYp; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707130091; c=relaxed/simple;
+	bh=zgdRXtCQVgt2Or41jbGbqOJrId8F/mOhYFJZ0vVkfxs=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=pQxf18H9j7BCMECJDrlcO4FDwhicmeKIhnwiPDgQLXy+NzEs99WEZDb23dOq2dUi08SkH26uywWwyAQomsWo8uAxY4IbahlcNROxIS+Zo7K5kbuHVZONyLIZSqz/HYaIq+Z+JMvD1TvGZttGYVbYXFhuCbaucLZXKeMXZkK+GSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YRY6/qA5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PPJmMYYp"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a293f2280c7so557081266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 02:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707129961; x=1707734761; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ntf6XiJg+uquHuohSeB8m4nTdK6afPOnXLG0uSUyh8M=;
-        b=PPJmMYYpLnHpIaVmoWQmUy7GD4YL6lvxU1HYofCO8CyS7Megkeu7KxXTUoj70lmJYw
-         z+48IFqd+GiGkJU3JQpZsdg8S8VW/5MmSLPV/r6R/RR8c5CeVk7KxSztGu2DtWz7KxGZ
-         n5Mg4PjbWPDCqtFckODaoImiticIcxf+Ry1BYhveZHabQBh+m6eAIgVvC4372oNFMy1n
-         K31GUrxlvx6c9EXzw14kOmWtFMAFaGQh4hJMRzn88o0OnBfbatQG8+iz5Y/bms1s8ciH
-         HqqxwokRGuJTqg3oRcu7eTN5X/nzrn2fiB3YR+EtpmN6DSbHNudGCD0rhhJaBhe3aUDc
-         Kbew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707129961; x=1707734761;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ntf6XiJg+uquHuohSeB8m4nTdK6afPOnXLG0uSUyh8M=;
-        b=vmHPkdMkAIWHV0kgrp4LN9egDeHHULpJIIZqiITX/Vpe9i/stsuV/JEoRXwFZ7YUwx
-         bCgW/38A05QFnh+woqZDOpfE2oXPIJW8S7cXhXMsoWaCQh0lmNpiV8X1XPZwCiYjuTsM
-         SpHzFH4lK4kr/uyWiqtxeW0zID4Q3bZS8OPbyBV2mURRNJU3n8dE+RbBn8aJlb19HDYO
-         cPrLqTrgecNuKZK88J3ZjOm3PqoQn3zYO4IwpxRjHkagQiek/suYK/X3RQBRDMhYcbUI
-         Bt4Ln3Iuv2gH0ARvTiX2xIAXQEGGPW3sptyl33mdPm965hS3tauX1/v080x6MJGbKhMB
-         gfMA==
-X-Gm-Message-State: AOJu0YxxPpitNHq14RUE/8YmLXdjRtMQdjI15uLco+sSX2FjryjYvS1N
-	0a4UBMySlVucpSXEypAD32NaEN4++9AOr5sl3rb1vbDlFTqIAVokmm1Zdwvjr8E=
-X-Google-Smtp-Source: AGHT+IGS2fF+m31bmpTIjSMkYsRkKhrz1pjJz0TSTSvOWj1cBF4mzEkr7PP+m8+N9Ld9ZJPvnjs5qQ==
-X-Received: by 2002:a17:906:6850:b0:a36:436:b188 with SMTP id a16-20020a170906685000b00a360436b188mr12175527ejs.48.1707129961516;
-        Mon, 05 Feb 2024 02:46:01 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUniav8AWoeB0zev9toafaqagXtXc9wwX3Y2pWknITSeHLciNAK6VTsdZ0SUqVfqxVqzj1Fij/JVfZBzQkQE14MLotOEvAczVjwE/EHtxudW/WuwU9QW1tdHXEiZRwuSLsZdoOdFwwDIt6PatL7zN4WwPmH9qoJNzfdUCognN7GhTmwu8nY0KNlQCCZhtxrbo07GC8iOfgyZkVpNBKrwvTYySTrGpx2qP+/CUzM7yR47yrjearqan30U6n3E94tqySBbReMyV4TtKZ+ST4ZdbZ5B/k95FLiln1kPvQ+Cd/IIelf5/tpslerMkjYjZSFLPe67UBPSOUf95QWonaMmphXV7WeW0VxyACr2WhiN8aYXyOmQJYT
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id cu9-20020a170906ba8900b00a37116e2885sm3819603ejd.84.2024.02.05.02.45.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 02:46:00 -0800 (PST)
-Message-ID: <d2313be8-9e89-4ecf-975c-66920168ae89@linaro.org>
-Date: Mon, 5 Feb 2024 11:45:59 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YRY6/qA5"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 415A07w1029161;
+	Mon, 5 Feb 2024 10:48:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=mime-version : date :
+ from : to : cc : subject : reply-to : in-reply-to : references :
+ message-id : content-type : content-transfer-encoding; s=pp1;
+ bh=D7V6wffE7jnUqvHbks/jTIWjjzAJmTZcNtR1eMolikU=;
+ b=YRY6/qA52VcknRqJSxY0v7xVkuXi8/9HtsAHDb20iMmhHati7UxxZmA2SbRuMNc0obaB
+ fF2RXVi0pg7i9EUuXkh+tFXdkP5FTsHka4qChqU0QSE4l4RQfAYsB80eosJd9666OAxB
+ 1S6NFNqGZqh3vNj+jEXIjJWYC+ayaHNJYV+RX97qH5DlNxh1gzgaGzNuhGMpGLqTDyH9
+ HZOWlFwn88BqnSVxr6V3NHsdvyPlJTGsjSysbdt+U2S8SpbAJ1VmIKXzMcLyrfQLUfvl
+ NRwAfdSN+r87l2AxIKVxLDzGxuRXR2V5swBYfyHYtwUPNMH70oSB28rbbaZqnJgPlu7H iw== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w2tx84ty8-6
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 10:47:59 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4159w9HV019996;
+	Mon, 5 Feb 2024 10:36:35 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w1ytsr41m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 10:36:35 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 415AaXUd1049268
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 Feb 2024 10:36:34 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DA19358061;
+	Mon,  5 Feb 2024 10:36:33 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D047858067;
+	Mon,  5 Feb 2024 10:36:32 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  5 Feb 2024 10:36:32 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/6] soc: qcom: socinfo: add SoC Info support for
- QCM8550 and QCS8550 platform
-Content-Language: en-US
-To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- dmitry.baryshkov@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@quicinc.com
-References: <20240119100621.11788-1-quic_tengfan@quicinc.com>
- <20240119100621.11788-4-quic_tengfan@quicinc.com>
- <04fa81b1-e47e-4cf9-8e59-3a1777a13879@linaro.org>
- <f5ab4243-dd74-4b34-87c4-0073f5585151@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <f5ab4243-dd74-4b34-87c4-0073f5585151@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Date: Mon, 05 Feb 2024 11:36:32 +0100
+From: Harald Freudenberger <freude@linux.ibm.com>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter
+ <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic
+ <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] s390: AP: make ap_bus_type const
+Reply-To: freude@linux.ibm.com
+Mail-Reply-To: freude@linux.ibm.com
+In-Reply-To: <20240203-bus_cleanup-s390-v1-5-ac891afc7282@marliere.net>
+References: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
+ <20240203-bus_cleanup-s390-v1-5-ac891afc7282@marliere.net>
+Message-ID: <696c7ded128d46addc16ecafa6128822@linux.ibm.com>
+X-Sender: freude@linux.ibm.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0GLNHfCFchkaM5BLNQwuhdGmU8Ejkfil
+X-Proofpoint-GUID: 0GLNHfCFchkaM5BLNQwuhdGmU8Ejkfil
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_06,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
+ adultscore=0 mlxlogscore=783 bulkscore=0 spamscore=0 clxscore=1011
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402050082
 
-On 05/02/2024 11:10, Tengfei Fan wrote:
+On 2024-02-03 15:58, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the ap_bus_type variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
 > 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> ---
+>  drivers/s390/crypto/ap_bus.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> On 2/5/2024 4:04 PM, Krzysztof Kozlowski wrote:
->> On 19/01/2024 11:06, Tengfei Fan wrote:
->>> Add SoC Info support for QCM8550 and QCS8550 platform.
->>>
->>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->>
->> NAK.
->>
->> Drop my tag.
->>
->> Best regards,
->> Krzysztof
->>
+> diff --git a/drivers/s390/crypto/ap_bus.c 
+> b/drivers/s390/crypto/ap_bus.c
+> index f46dd6abacd7..2ecf4d36e78b 100644
+> --- a/drivers/s390/crypto/ap_bus.c
+> +++ b/drivers/s390/crypto/ap_bus.c
+> @@ -135,7 +135,7 @@ static int ap_max_domain_id = 15;
+>  /* Maximum adapter id, if not given via qci */
+>  static int ap_max_adapter_id = 63;
 > 
-> This patch has been applied by Bjorn.
+> -static struct bus_type ap_bus_type;
+> +static const struct bus_type ap_bus_type;
 > 
-> Should I remove your tag only, or do I need to do other processing?
+>  /* Adapter interrupt definitions */
+>  static void ap_interrupt_handler(struct airq_struct *airq,
+> @@ -1603,7 +1603,7 @@ static struct attribute *ap_bus_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(ap_bus);
+> 
+> -static struct bus_type ap_bus_type = {
+> +static const struct bus_type ap_bus_type = {
+>  	.name = "ap",
+>  	.bus_groups = ap_bus_groups,
+>  	.match = &ap_bus_match,
 
-Nothing to do in such case.
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
