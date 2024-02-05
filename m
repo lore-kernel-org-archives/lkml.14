@@ -1,84 +1,86 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5071119B;
-	Mon,  5 Feb 2024 08:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5651119B;
+	Mon,  5 Feb 2024 08:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707121428; cv=none; b=Xqpv9TLqeLeO3cClhukUTp2Vipo27lTWZZ5S8VwAIVb+MS6jBGR/hzBwkyBaNqqdwuDLu364rMt+Y8H01iM2pkiF15Xmvf9ZT10sbKxlAOdNDTy5WyxFyfF1u9ojrF1SVVQaYajWvTN/Jx035JTl9jukBwyFQFh3Xj1fLu2Nr30=
+	t=1707121478; cv=none; b=tCLluaNBu2Lg0QdNaUYTss8s5g1wEAGcULlRVtEz+n10aWOxsaVg6jfKmAEDL0yh07aVFRV4kvsePkBpE3rKB5nlXtOZNXMO16lo0CugKsG2KozayMFwNO/viM8lBo/FEov8pdSnGMqCPYfE+rCgycUpuMMiRg9FB3AOCbLy2tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707121428; c=relaxed/simple;
-	bh=r50MUdBEVI3L+BkjAcLaYUKqx2sz5zl+bGKMWWXk4UQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ArcQCobEuCXUmm1RJjUGKieEm3viwHJF9I13zy5UsvGxPnXtITRkKJRiknSnmjuVJl9Z3r/DsIcsA+VonMw3ZdgDNKWGfw9LRs0anHL9Dlf4VYVlQlUeVqIuUt0hPZCGSIwjAOsMboXfMpG/FUqGGko+v0F5qgebitpECsQ8J7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yl7hsvJK; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yl7hsvJK"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-511413e52d4so2048999e87.1;
-        Mon, 05 Feb 2024 00:23:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707121424; x=1707726224; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=r50MUdBEVI3L+BkjAcLaYUKqx2sz5zl+bGKMWWXk4UQ=;
-        b=Yl7hsvJK7n9fZyu/LXXDTMyJ/A1IIL+BTDL1/rFMD2dx1gN7r7igg1BEzF3iJiTjBU
-         zHV5tKpkGolu9J2rNn3ObwtPp9TQnAGTdk/jhcQKFT61CQCJsJoiZqpajtNT7vzOYsM0
-         VXQcvxUJExEjf5K/ZlECXrO1pcDGiVoeOMspGBDRr5qxFCyRGRh6SOvM2phupkNUl8wo
-         8HJYkSmId+7xCEI+KuBPp8eNmzhXJDS1ztzm23QLb9auqIspyYxsibLss2jfS0tJGxIL
-         nME6goM7LkNRfy5WYypN6dwjZIpi2sNJg+e0ZCw7ZaBQ8YAR3WQUG5ArMnxhjPIqdnP7
-         X86A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707121424; x=1707726224;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r50MUdBEVI3L+BkjAcLaYUKqx2sz5zl+bGKMWWXk4UQ=;
-        b=RFLbUYGUAM55Q1W5HUI2/M8bdn2SUlXKuTlX/Y0FXngHlOJboOo4Hz8WICkdwxLKIS
-         kyh1EVZodRPLM1+oHjWEEDONwfUA8/34zLvJosBk+kwGBg1NfmSR01T1uXZXRUizduGA
-         PwvV/LvRdC/eyqLNt+Gw6Bo0bPHqRBaWaPikqIDOEZPNslqRuWLXmC53CP/Ty3v8ID3M
-         B2qVCmFfNryT/M1TDATj3/+Whst8cgvS2QBqlany+6zsMxudbkx2M5YA1XDfktxQa/8I
-         jPYJ6NwLPE94NYhArZMKaVjuQC+/HJWSRRsU58ugIF+PQOf29I9Do0UpmOc1itIAmoTa
-         kFlQ==
-X-Gm-Message-State: AOJu0YzMej6/mKp1S1A2WHCh8jOhY7NtPb6bUU4WvwwO7RFXy/puX3k6
-	FPQjs9WBitMqp8vjJBJKuKfL8alJ5BxcB7FWIPrMG0LDjBx6gad9
-X-Google-Smtp-Source: AGHT+IFD14D8N3tmy8vEWSiFWMp1+4bWUi8vnaqG4jhykIspiTc0H4P2KclnQEfZsjKg+BazdHYrwQ==
-X-Received: by 2002:a19:5f0f:0:b0:511:1765:7ed with SMTP id t15-20020a195f0f000000b00511176507edmr7454514lfb.61.1707121424240;
-        Mon, 05 Feb 2024 00:23:44 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVjdJ/5W+fmH81OyjHd/Gk0tGfDMuUi+21Q6KSF1fPRt7GsGdtV1EktaWDHYFP16X6JyJMYeOCou3kN+sn4ScAd6YF87WqVh8FdPnMhxDwWskyHMf0BxRNXiYyQ6wj+dOKJRewLh6dP50bm5MiLkjwtBQxUOLA6L24zP/p/paafF1S2tuVJAverorPgXXS58g==
-Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
-        by smtp.gmail.com with ESMTPSA id f9-20020a05600c4e8900b0040f035bebfcsm7791475wmq.12.2024.02.05.00.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 00:23:43 -0800 (PST)
-Message-ID: <be773836d75d20ac079328d20637dc24a3a15622.camel@gmail.com>
-Subject: Re: [PATCH] spi: axi-spi-engine: use common AXI macros
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 05 Feb 2024 09:23:43 +0100
-In-Reply-To: <20240202213132.3863124-2-dlechner@baylibre.com>
-References: <20240202213132.3863124-2-dlechner@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	s=arc-20240116; t=1707121478; c=relaxed/simple;
+	bh=KQpaPLqSEolF8emsWTskFJOpRGHDfiOKvR6xUfHJThE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KMPQXHdyUCsFdbYZfomFEkezuC8BkLMrMrtCy1tp9f9DNYpjBzz2es41q6Qk9vMksNLSKkSY0s98zLzD7/4Hx+YEN9SSInRCXt8DHXNou1IcRZ+wWjbmOig3tcH2gMFWvD39v5Ld8iVFDHDLJU0+R/x4tafLcfvrC82q6U9/UtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f9bc70ff996c4d7392f84dd422bb2e54-20240205
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:4e29416e-52ab-436f-85b1-2bd53a7c5caf,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.35,REQID:4e29416e-52ab-436f-85b1-2bd53a7c5caf,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:5d391d7,CLOUDID:eb9c86fe-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240205162428F9EWJSI9,BulkQuantity:0,Recheck:0,SF:44|66|38|24|17|19|1
+	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: f9bc70ff996c4d7392f84dd422bb2e54-20240205
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1214818029; Mon, 05 Feb 2024 16:24:26 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id E7E6BE000EBC;
+	Mon,  5 Feb 2024 16:24:25 +0800 (CST)
+X-ns-mid: postfix-65C09B39-75837763
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 41994E000EBC;
+	Mon,  5 Feb 2024 16:24:25 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: chandan.babu@oracle.com,
+	djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] xfs: Simplify the allocation of slab caches in xfs_attr_intent_init_cache
+Date: Mon,  5 Feb 2024 16:24:23 +0800
+Message-Id: <20240205082423.435569-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2024-02-02 at 15:31 -0600, David Lechner wrote:
-> This avoid duplicating the same macros in multiple drivers by reusing
-> the common AXI macros for the version register.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ fs/xfs/libxfs/xfs_attr.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 9976a00a73f9..c8e1c741701f 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -1530,9 +1530,7 @@ xfs_attr_namecheck(
+ int __init
+ xfs_attr_intent_init_cache(void)
+ {
+-	xfs_attr_intent_cache =3D kmem_cache_create("xfs_attr_intent",
+-			sizeof(struct xfs_attr_intent),
+-			0, 0, NULL);
++	xfs_attr_intent_cache =3D KMEM_CACHE(xfs_attr_intent, 0);
+=20
+ 	return xfs_attr_intent_cache !=3D NULL ? 0 : -ENOMEM;
+ }
+--=20
+2.39.2
 
