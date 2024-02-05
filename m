@@ -1,59 +1,21 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FD914017
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24DD12E75;
+	Mon,  5 Feb 2024 09:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707126851; cv=none; b=a+Us6ekrwD5LeposPHHNYq5qSCWUOSEleqqmosRi7Cu5W8HINpWdSpFV0CFyjke25kBBqwQsJIJmjB7HChmO1AwSqGrIc+A3F7++/wzzBQeoxDgroV7C6bpD8or2kxKPpjHJ6X0oJRm3LW+x568yj5QIN/M/X+mwhmVdvTWp7Rs=
+	t=1707126976; cv=none; b=c0/3whFlzsQzqix64aGkIrp9HLp32k2LYyU/NrPmDuk5eu8aVLsve8E1mp5smb0puBgpHpQX9157hiOLNLxgXCT2bGlfEytT3EaajIAikxEbdKf8yMbkk3cgKJl6Vtdx8LSSt7AZhOCKvBj3CkPwy5AzyhTt7W4m+09jXS1BWrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707126851; c=relaxed/simple;
-	bh=psNvAEWE8baTrB1sGbOl50Zzr/iYSp3s6jN5Loc/K40=;
+	s=arc-20240116; t=1707126976; c=relaxed/simple;
+	bh=u3UHw68fN7+IkE23kchq6FnkTdKNYPKXZ66IvYNi2es=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X2BzXpBqB+B/F0Hxy8I3ema3vjqvCBrUkZuaM1xsnfrnYU55Qswr6o6YGAej7AgZ1WqEP5WsU0/7qlDVqa8Ics5ejG9Is2Ihd0VTcaW6SnlKvcuQtu7L7NR1SgC7mjyrMNFw1BB7VvrSFZ7VBoMUI6+LCvzcvynqY8ZrUZp1r7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JR0908qK; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JR0908qK"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33adec41b55so2665105f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:54:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707126848; x=1707731648; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kdDd6iCjxYSugu/r8r8KvZPs9W5M6V3aWJQphhyzw7c=;
-        b=JR0908qKCttck214fnW3VNBymWrmraukQDgo1FIGcK+mq2Ux6YMZvd87r3glO1XSs9
-         2znzPtaiELvVu/0u88h3jfyQoyugLD0FU9PHyqEAxjYs1HcUW7V++Y2QHGeLjNwJo9H7
-         q46/prRnGJoYSYc4rUWoAHVuaiebmSnEHAXlAbxapQc9g25kd9xz0/gP6PpwD9QK/Sx3
-         MJXmkD4684biPalNShyaIBrboj7XXlctcLSSTR0Qaak4nbQ2Tm4KhrbcGGA+q1c9G+rZ
-         cYn/3onDzGib6WcFk/A+4qYmJSGcXXnF+W/1LB9xuMMhjyOFjPNB+Zstjpl+6pJbekjH
-         Q2Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707126848; x=1707731648;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kdDd6iCjxYSugu/r8r8KvZPs9W5M6V3aWJQphhyzw7c=;
-        b=W5n+4A8aykT2DzWo2mJUJDKvqUS8g+UZ5s89iGUAgMZYy/cvwhqOiOGs3uec1Ktf1i
-         cwHtK/BbFSE7MHFu3EaggG4HE1/jrUpKQ/6PlQa9JU9dKngNggYWaaW+6cC8Hi2FwK1Z
-         +4oKH2EP83z2cam70WwSeEhSBt4smHrnkw0GEFCnqEwfWHGDsf35o9Esz2hicbmP4HU0
-         C2nTde4uudisThiG5xRgopisxyjju/V8yoHvE5zK7ZWQi2OqE5ONF1PsS+D4aCN+7NDV
-         TlM4gJoajPJ/DVqmj4vEw54rSM29EB6oxKi06H4iS/4wvijDObGUsN5f22bg8EvnaU1h
-         QmYA==
-X-Gm-Message-State: AOJu0Yz8JeQeMD4n9XhJpKoUXjWnWSHThbpqgvPgwCjSQyNS1tqLceBT
-	F8LGA7qK4oGepqi+nEralQ12yvk6XDjnKeZymJS7HxKsXnfavF2Wrgj4acSCNGQ=
-X-Google-Smtp-Source: AGHT+IGtvkqzyuHRg2AIaNvrcWfI06C3jSQ4JEtyGaxdwwkkfH7T7ama0SR39rz/09fk5t+1uHsxXw==
-X-Received: by 2002:a5d:64c3:0:b0:33b:3adb:c67d with SMTP id f3-20020a5d64c3000000b0033b3adbc67dmr3117079wri.39.1707126847711;
-        Mon, 05 Feb 2024 01:54:07 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXTYFjUwwmWYl+PyUwuMweiAuEpQyf5KVGLhQH6TJBalIW6PIBhnzCYjxjMtpAgvA2KwgpI/q2wYIJxiGebRrTXua9XOB9HUALGWT+pjR3hqRXqoBEWHQfEBB0wUT312Ki/3V0SDJyBmKl0YQwKyM41WHaTS/57ElRPXm2si9a+WmoF7x9m8Cv20iFnlpj+V33uG+u7iVkBlyPXF/aOtVZryjpsVO6yrPz5vFuvVdWWO44CEiFLfjkfuzsNhhq+t3H9Dx1cHhn5wPUu+QJOhb23Uh10PVM5V45hNkcqrp5f94hT+ZVJbiKpLpbBLFQ0Z0HnIp1fQNQsMB6NTAx0JhuVF0kwrp3GlgRaQHbsnlltJ+AQ0hjWYMSmQRshr+mAl1cDdlqpU0Txoh+eRxfm022hFUwz5t1q7PYMJ9sSJ0GOc8D4qq/S7qNlczoV/jk67pVPQohx1zV1bv+bVWETI3RucMqV+ODm7XmKaHCKPSEMOmbVqhOP3NI93fhjgDpjpnuWVXVFNSWaxdyPZWwXuB9nCHo94n8NOT/s2g9/eV4jyzlz7zFoyq/c8czs+GeulG/7tr211QYUQG1ELQd9tlrJBnE5xV3EUpoHSAf8t0fMQSliA/16rBi1EA==
-Received: from [192.168.0.173] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id d15-20020adfe88f000000b0033ae50e2c6asm7706512wrm.83.2024.02.05.01.54.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 01:54:07 -0800 (PST)
-Message-ID: <03f335d6-80ed-4dfd-9bc7-c959431c7420@linaro.org>
-Date: Mon, 5 Feb 2024 11:54:03 +0200
+	 In-Reply-To:Content-Type; b=gn9s3D+XX4Z4yygFl0ETI/q66K9kFin7E/HpjwM8jJnH1WiXfjZvoZGWgYX75VIYzY3lc2RPaRXoPWKH9Wo0+nDvdF7eXlA5oudVK2lJzjSXRaqZi5xvKkVdmCgzlrlsRZI9Xf9nq9JCJO5vwnBgKdnYFF78bxWvlpR1wcI2zAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B14C433F1;
+	Mon,  5 Feb 2024 09:56:15 +0000 (UTC)
+Message-ID: <cffd5052-9314-424d-872c-07796feb7ce9@xs4all.nl>
+Date: Mon, 5 Feb 2024 10:56:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,72 +23,130 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 23/28] spi: s3c64xx: retrieve the FIFO size from the
- device tree
-Content-Language: en-US
-To: Sam Protsenko <semen.protsenko@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Brown <broonie@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh+dt@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Linux-Arch
- <linux-arch@vger.kernel.org>, =?UTF-8?Q?Andr=C3=A9_Draszik?=
- <andre.draszik@linaro.org>, Peter Griffin <peter.griffin@linaro.org>,
- kernel-team@android.com, William McVicker <willmcvicker@google.com>
-References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
- <20240125145007.748295-24-tudor.ambarus@linaro.org>
- <1e117c5c-1e82-47ae-82f4-cdcf0a087f5f@sirena.org.uk>
- <CAPLW+4kTUmG=uPQadJC5pyfDvydvr1dKnJY6UxQva2Ch-x7v3g@mail.gmail.com>
- <e4b76c3d-f710-4b32-aa30-23cb54346d15@app.fastmail.com>
- <CAPLW+4mQ=q1c061Zv=dxnHwMJtjH5sbQsvg25x5uzxL3UCAuTA@mail.gmail.com>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <CAPLW+4mQ=q1c061Zv=dxnHwMJtjH5sbQsvg25x5uzxL3UCAuTA@mail.gmail.com>
+Subject: Re: [PATCH] media: usb: hackrf: add null ptr check in hackrf_ctrl_msg
+Content-Language: en-US, nl
+To: Mingxuan Xiang <mx_xiang@hust.edu.cn>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Dongliang Mu <dzm91@hust.edu.cn>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240122112210.424698-1-mx_xiang@hust.edu.cn>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ xsFNBFQ84W0BEAC7EF1iL4s3tY8cRTVkJT/297h0Hz0ypA+ByVM4CdU9sN6ua/YoFlr9k0K4
+ BFUlg7JzJoUuRbKxkYb8mmqOe722j7N3HO8+ofnio5cAP5W0WwDpM0kM84BeHU0aPSTsWiGR
+ yw55SOK2JBSq7hueotWLfJLobMWhQii0Zd83hGT9SIt9uHaHjgwmtTH7MSTIiaY6N14nw2Ud
+ C6Uykc1va0Wqqc2ov5ihgk/2k2SKa02ookQI3e79laOrbZl5BOXNKR9LguuOZdX4XYR3Zi6/
+ BsJ7pVCK9xkiVf8svlEl94IHb+sa1KrlgGv3fn5xgzDw8Z222TfFceDL/2EzUyTdWc4GaPMC
+ E/c1B4UOle6ZHg02+I8tZicjzj5+yffv1lB5A1btG+AmoZrgf0X2O1B96fqgHx8w9PIpVERN
+ YsmkfxvhfP3MO3oHh8UY1OLKdlKamMneCLk2up1Zlli347KMjHAVjBAiy8qOguKF9k7HOjif
+ JCLYTkggrRiEiE1xg4tblBNj8WGyKH+u/hwwwBqCd/Px2HvhAsJQ7DwuuB3vBAp845BJYUU3
+ 06kRihFqbO0vEt4QmcQDcbWINeZ2zX5TK7QQ91ldHdqJn6MhXulPKcM8tCkdD8YNXXKyKqNl
+ UVqXnarz8m2JCbHgjEkUlAJCNd6m3pfESLZwSWsLYL49R5yxIwARAQABzSFIYW5zIFZlcmt1
+ aWwgPGh2ZXJrdWlsQHhzNGFsbC5ubD7CwZUEEwECACgFAlQ84W0CGwMFCRLMAwAGCwkIBwMC
+ BhUIAgkKCwQWAgMBAh4BAheAACEJEL0tYUhmFDtMFiEEBSzee8IVBTtonxvKvS1hSGYUO0wT
+ 7w//frEmPBAwu3OdvAk9VDkH7X+7RcFpiuUcJxs3Xl6jpaA+SdwtZra6W1uMrs2RW8eXXiq/
+ 80HXJtYnal1Y8MKUBoUVhT/+5+KcMyfVQK3VFRHnNxCmC9HZV+qdyxAGwIscUd4hSlweuU6L
+ 6tI7Dls6NzKRSTFbbGNZCRgl8OrF01TBH+CZrcFIoDgpcJA5Pw84mxo+wd2BZjPA4TNyq1od
+ +slSRbDqFug1EqQaMVtUOdgaUgdlmjV0+GfBHoyCGedDE0knv+tRb8v5gNgv7M3hJO3Nrl+O
+ OJVoiW0G6OWVyq92NNCKJeDy8XCB1yHCKpBd4evO2bkJNV9xcgHtLrVqozqxZAiCRKN1elWF
+ 1fyG8KNquqItYedUr+wZZacqW+uzpVr9pZmUqpVCk9s92fzTzDZcGAxnyqkaO2QTgdhPJT2m
+ wpG2UwIKzzi13tmwakY7OAbXm76bGWVZCO3QTHVnNV8ku9wgeMc/ZGSLUT8hMDZlwEsW7u/D
+ qt+NlTKiOIQsSW7u7h3SFm7sMQo03X/taK9PJhS2BhhgnXg8mOa6U+yNaJy+eU0Lf5hEUiDC
+ vDOI5x++LD3pdrJVr/6ZB0Qg3/YzZ0dk+phQ+KlP6HyeO4LG662toMbFbeLcBjcC/ceEclII
+ 90QNEFSZKM6NVloM+NaZRYVO3ApxWkFu+1mrVTXOwU0EVDzhbQEQANzLiI6gHkIhBQKeQaYs
+ p2SSqF9c++9LOy5x6nbQ4s0X3oTKaMGfBZuiKkkU6NnHCSa0Az5ScRWLaRGu1PzjgcVwzl5O
+ sDawR1BtOG/XoPRNB2351PRp++W8TWo2viYYY0uJHKFHML+ku9q0P+NkdTzFGJLP+hn7x0RT
+ DMbhKTHO3H2xJz5TXNE9zTJuIfGAz3ShDpijvzYieY330BzZYfpgvCllDVM5E4XgfF4F/N90
+ wWKu50fMA01ufwu+99GEwTFVG2az5T9SXd7vfSgRSkzXy7hcnxj4IhOfM6Ts85/BjMeIpeqy
+ TDdsuetBgX9DMMWxMWl7BLeiMzMGrfkJ4tvlof0sVjurXibTibZyfyGR2ricg8iTbHyFaAzX
+ 2uFVoZaPxrp7udDfQ96sfz0hesF9Zi8d7NnNnMYbUmUtaS083L/l2EDKvCIkhSjd48XF+aO8
+ VhrCfbXWpGRaLcY/gxi2TXRYG9xCa7PINgz9SyO34sL6TeFPSZn4bPQV5O1j85Dj4jBecB1k
+ z2arzwlWWKMZUbR04HTeAuuvYvCKEMnfW3ABzdonh70QdqJbpQGfAF2p4/iCETKWuqefiOYn
+ pR8PqoQA1DYv3t7y9DIN5Jw/8Oj5wOeEybw6vTMB0rrnx+JaXvxeHSlFzHiD6il/ChDDkJ9J
+ /ejCHUQIl40wLSDRABEBAAHCwXwEGAECAA8FAlQ84W0CGwwFCRLMAwAAIQkQvS1hSGYUO0wW
+ IQQFLN57whUFO2ifG8q9LWFIZhQ7TA1WD/9yxJvQrpf6LcNrr8uMlQWCg2iz2q1LGt1Itkuu
+ KaavEF9nqHmoqhSfZeAIKAPn6xuYbGxXDrpN7dXCOH92fscLodZqZtK5FtbLvO572EPfxneY
+ UT7JzDc/5LT9cFFugTMOhq1BG62vUm/F6V91+unyp4dRlyryAeqEuISykhvjZCVHk/woaMZv
+ c1Dm4Uvkv0Ilelt3Pb9J7zhcx6sm5T7v16VceF96jG61bnJ2GFS+QZerZp3PY27XgtPxRxYj
+ AmFUeF486PHx/2Yi4u1rQpIpC5inPxIgR1+ZFvQrAV36SvLFfuMhyCAxV6WBlQc85ArOiQZB
+ Wm7L0repwr7zEJFEkdy8C81WRhMdPvHkAIh3RoY1SGcdB7rB3wCzfYkAuCBqaF7Zgfw8xkad
+ KEiQTexRbM1sc/I8ACpla3N26SfQwrfg6V7TIoweP0RwDrcf5PVvwSWsRQp2LxFCkwnCXOra
+ gYmkrmv0duG1FStpY+IIQn1TOkuXrciTVfZY1cZD0aVxwlxXBnUNZZNslldvXFtndxR0SFat
+ sflovhDxKyhFwXOP0Rv8H378/+14TaykknRBIKEc0+lcr+EMOSUR5eg4aURb8Gc3Uc7fgQ6q
+ UssTXzHPyj1hAyDpfu8DzAwlh4kKFTodxSsKAjI45SLjadSc94/5Gy8645Y1KgBzBPTH7Q==
+In-Reply-To: <20240122112210.424698-1-mx_xiang@hust.edu.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 26.01.2024 22:20, Sam Protsenko wrote:
-> On Fri, Jan 26, 2024 at 2:17 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On Fri, Jan 26, 2024, at 20:23, Sam Protsenko wrote:
->>> On Thu, Jan 25, 2024 at 11:33 AM Mark Brown <broonie@kernel.org> wrote:
->>>>
->>>> On Thu, Jan 25, 2024 at 02:50:01PM +0000, Tudor Ambarus wrote:
->>>>
->>>>> Allow SoCs that have multiple instances of the SPI IP with different
->>>>> FIFO sizes to specify their FIFO size via the "samsung,spi-fifosize"
->>>>> device tree property. With this we can break the dependency between the
->>>>> SPI alias, the fifo_lvl_mask and the FIFO size.
->>>>
->>>> OK, so we do actually have SoCs with multiple instances of the IP with
->>>> different FIFO depths (and who knows what else other differences)?
->>>
->>> I think that's why we can see .fifo_lvl_mask[] with different values
->>> for different IP instances. For example, ExynosAutoV9 has this (in
->>> upstream driver, yes):
->>>
->>>     .fifo_lvl_mask = { 0x1ff, 0x1ff, 0x7f, 0x7f, 0x7f, 0x7f, 0x1ff,
->>> 0x7f, 0x7f, 0x7f, 0x7f, 0x7f},
->>>
->>
->> That sounds like the same bug as in the serial port driver,
->> by assuming that the alias values in the devicetree have
->> a particular meaning in identifying instances. This immediately
->> breaks when there is a dtb file that does not use the same
->> alias values, e.g. because it only needs some of the SPI
->> ports.
->>
+On 22/01/2024 12:22, Mingxuan Xiang wrote:
+> If the user yanks out the cable before closing the file,
+> dev->udev would be set to NULL therefore causing a null-ptr-deref
+> in hackrf_ctrl_msg issued by hackrf_stop_streaming.
 > 
-> Exactly. I guess that's exactly what Tudor mentioned in his commit
-> message, and he's trying to fix that very problem by relying on
-> corresponding dts property (in his patch series) rather than on
-> .fifo_lvl_mask.
+> This patch adds a check in hackrf_ctrl_msg before using
+> dev->udev.
 > 
+> Found by modified syzkaller.
+> 
+> BUG: KASAN: null-ptr-deref in hackrf_ctrl_msg+0x6d/0x180 drivers/media/usb/hackrf/hackrf.c:195
+> Read of size 4 at addr 0000000000000000 by task syz-executor/579
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x5e/0x7c lib/dump_stack.c:106
+>  print_report.cold+0x49a/0x6bb mm/kasan/report.c:436
+>  kasan_report+0xa8/0x130 mm/kasan/report.c:495
+>  hackrf_ctrl_msg+0x6d/0x180 drivers/media/usb/hackrf/hackrf.c:195
+>  hackrf_stop_streaming+0x45/0x140 drivers/media/usb/hackrf/hackrf.c:869
+>  __vb2_queue_cancel+0x5c/0x550 drivers/media/common/videobuf2/videobuf2-core.c:1992
+>  vb2_core_streamoff+0x2f/0xb0 drivers/media/common/videobuf2/videobuf2-core.c:2149
+>  __vb2_cleanup_fileio+0x3e/0xa0 drivers/media/common/videobuf2/videobuf2-core.c:2710
+>  vb2_core_queue_release+0x1a/0x50 drivers/media/common/videobuf2/videobuf2-core.c:2430
+>  vb2_queue_release drivers/media/common/videobuf2/videobuf2-v4l2.c:947 [inline]
+>  _vb2_fop_release+0x110/0x140 drivers/media/common/videobuf2/videobuf2-v4l2.c:1132
+>  v4l2_release+0x1b9/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:459
+>  __fput+0x12d/0x4b0 fs/file_table.c:320
+>  task_work_run+0xa8/0xf0 kernel/task_work.c:177
+>  resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
+>  exit_to_user_mode_loop kernel/entry/common.c:169 [inline]
+>  exit_to_user_mode_prepare+0x123/0x130 kernel/entry/common.c:201
+>  __syscall_exit_to_user_mode_work kernel/entry/common.c:283 [inline]
+>  syscall_exit_to_user_mode+0x22/0x50 kernel/entry/common.c:294
+>  do_syscall_64+0x48/0x90 arch/x86/entry/common.c:86
+>  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> 
+> Signed-off-by: Mingxuan Xiang <mx_xiang@hust.edu.cn>
+> ---
+>  drivers/media/usb/hackrf/hackrf.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/media/usb/hackrf/hackrf.c b/drivers/media/usb/hackrf/hackrf.c
+> index 9c0ecd5f056c..9588b8aa6e98 100644
+> --- a/drivers/media/usb/hackrf/hackrf.c
+> +++ b/drivers/media/usb/hackrf/hackrf.c
+> @@ -186,6 +186,11 @@ static int hackrf_ctrl_msg(struct hackrf_dev *dev, u8 request, u16 value,
+>  	unsigned int pipe;
+>  	u8 requesttype;
+>  
+> +	if (!dev->udev) {
+> +		pr_err("udev is null in %s\n", __func__);
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
 
-Yes, all from above are correct. I'll split the FIFO size patches into a
-smaller series to be easier to review.
+Just replace this with:
 
-Cheers,
-ta
+	if (!dev->udev)
+		return -ENODEV;
+
+-ENODEV is the correct error code for this situation, and the error
+message is overkill here, I think.
+
+Regards,
+
+	Hans
+
+>  	switch (request) {
+>  	case CMD_SET_TRANSCEIVER_MODE:
+>  	case CMD_SET_FREQ:
+
