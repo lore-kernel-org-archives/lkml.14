@@ -1,88 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F7163128
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E13634FE;
+	Mon,  5 Feb 2024 19:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162237; cv=none; b=FFEyAFgm2f4x1j6tE9PswejCKBePELYZgxHGTvR+2/B1LW2NUztrHPK2pN4pCLn7oLvD/l7FyyazLYy2qo5/vqhoTltsQolIOohGyJ5n1LatYz2WyiTpEzhZ66w1wwSu7I+jwAcPXAy6YtLmWE6EKGpHNrSyYxJCb4f83eeGzjo=
+	t=1707162299; cv=none; b=H0LGs6JNAbLg6O9v0sLxAmmEZ0STTXWQIufSOcHueq9nckEQjvZPjjVKxU0Uj1MGoQJ7UY3w2K7JOfwt1iRH4rko7Y7sISMH/nfxCea9845CZUfLfF1DPaBYy50JQU6EQiCSQYCs0ruhJAuht9Yc5ScPbgLb6UmFdx3/oZxNKOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162237; c=relaxed/simple;
-	bh=Pj7VY2Giu+inEmjQqEhN8ymRYMC/3tJNKNSk6wehCUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hkNtfPB+qplm7knrxEa9zfen0atqywaMRsmSHMwCQ00/XXjpNelX231CGPdGgv4DAMcyR/1qC8bAyJl22tewoDXorz1jSmMkpwt1ng+FeQBiwsWA9wbNU/38Tt9lJafCCnsfBIHYMBqqltJkeaJ0z9RdMmYZcDsAGC5VeKP8XYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J+gy3rBO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707162299; c=relaxed/simple;
+	bh=F6j/rd2uqE1cUyZDghMq6eHqquIs5sdJYRKTy0Bo8is=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sPHJ/HEmTETdpZa2PP/vqGCXdrUTcRk9OlHAQPvaCi93sFW6/iNuQn+m9t0ZZ0K4YDeVVhM4O9nLjI4Bvy4M0yJAr3j6RVuShoVULui8OtH358Upigzecy9bsa/CJWT0k9Ib0xINQwDo/tHxPhZMagrxNKvGzF+LX/xlytv3LEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Cmuafe8v; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J+gy3rBO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BC4FC433F1;
-	Mon,  5 Feb 2024 19:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707162236;
-	bh=Pj7VY2Giu+inEmjQqEhN8ymRYMC/3tJNKNSk6wehCUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+gy3rBOdUHRQpu3UB5aYQ/Jx8BFzGpi0VhmyQ6qoLumGYiJKUzJcLDW396ujMNQ7
-	 fCy/d6EcnVLjZ8odN4/WkQ/tRRTCvXxOZRwJC5gPl0hYk2KgJGIhsUqDVsywakeZ3V
-	 BtsOQWADSF0dXuqdQcqo7JOlXVm9F7wsEfmsoP14=
-Date: Mon, 5 Feb 2024 19:43:54 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Joy Chakraborty <joychakr@google.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	linux-kernel@vger.kernel.org, manugautam@google.com
-Subject: Re: [PATCH] nvmem: rmem: Fix return value of rmem_read()
-Message-ID: <2024020544-lucid-nervous-2cbd@gregkh>
-References: <20240205114826.39036-1-joychakr@google.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Cmuafe8v"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415JigDQ016347;
+	Mon, 5 Feb 2024 13:44:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707162282;
+	bh=9UwPUx+fSL3rKTkctxFppsbeFk236+6n4WL7g1DOd5Q=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Cmuafe8v4HrVCHgJ53LMs2HBitQNyBfXSdqCm98nQrEBjVtIyeFphsaMxFB99dr3H
+	 hhtBOJvVjD9cO7IPQw4rF9PC+tS21MJS7eab2X4yolSNXCWpVYEs21Y6Mvlz1mosVz
+	 ir3Ash+EGGyN2vRAUhgUhGuxqMEpB7m6p03QNWWg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415JigvJ071002
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 Feb 2024 13:44:42 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ Feb 2024 13:44:41 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 Feb 2024 13:44:41 -0600
+Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415JicQR028467;
+	Mon, 5 Feb 2024 13:44:41 -0600
+From: Andrew Davis <afd@ti.com>
+To: Sebastian Reichel <sre@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Cristian Ciocaltea
+	<cristian.ciocaltea@gmail.com>,
+        Florian Fainelli
+	<florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, Scott Branden
+	<sbranden@broadcom.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad
+ Dybcio <konrad.dybcio@linaro.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
+Subject: [PATCH v2 04/19] power: reset: xgene-reboot: Use devm_register_sys_off_handler(RESTART)
+Date: Mon, 5 Feb 2024 13:44:22 -0600
+Message-ID: <20240205194437.180802-5-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240205194437.180802-1-afd@ti.com>
+References: <20240205194437.180802-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205114826.39036-1-joychakr@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Feb 05, 2024 at 11:48:26AM +0000, Joy Chakraborty wrote:
-> reg_read() callback registered with nvmem core expects an integer error
-> as a return value but rmem_read() returns the number of bytes read, as a
-> result error checks in nvmem core fail even when they shouldn't.
-> 
-> Return 0 on success where number of bytes read match the number of bytes
-> requested and a negative error -EINVAL on all other cases.
-> 
-> Fixes: 5a3fa75a4d9c ("nvmem: Add driver to expose reserved memory as nvmem")
-> Signed-off-by: Joy Chakraborty <joychakr@google.com>
-> ---
->  drivers/nvmem/rmem.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+Use device life-cycle managed register function to simplify probe.
 
-Hi,
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/power/reset/xgene-reboot.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+diff --git a/drivers/power/reset/xgene-reboot.c b/drivers/power/reset/xgene-reboot.c
+index 6b545a83d8889..867162dfe7eae 100644
+--- a/drivers/power/reset/xgene-reboot.c
++++ b/drivers/power/reset/xgene-reboot.c
+@@ -24,15 +24,11 @@ struct xgene_reboot_context {
+ 	struct device *dev;
+ 	void __iomem *csr;
+ 	u32 mask;
+-	struct notifier_block restart_handler;
+ };
+ 
+-static int xgene_restart_handler(struct notifier_block *this,
+-				 unsigned long mode, void *cmd)
++static int xgene_restart_handler(struct sys_off_data *data)
+ {
+-	struct xgene_reboot_context *ctx =
+-		container_of(this, struct xgene_reboot_context,
+-			     restart_handler);
++	struct xgene_reboot_context *ctx = data->cb_data;
+ 
+ 	/* Issue the reboot */
+ 	writel(ctx->mask, ctx->csr);
+@@ -64,9 +60,8 @@ static int xgene_reboot_probe(struct platform_device *pdev)
+ 		ctx->mask = 0xFFFFFFFF;
+ 
+ 	ctx->dev = dev;
+-	ctx->restart_handler.notifier_call = xgene_restart_handler;
+-	ctx->restart_handler.priority = 128;
+-	err = register_restart_handler(&ctx->restart_handler);
++	err = devm_register_sys_off_handler(dev, SYS_OFF_MODE_RESTART, 128,
++					    xgene_restart_handler, ctx);
+ 	if (err)
+ 		dev_err(dev, "cannot register restart handler (err=%d)\n", err);
+ 
+-- 
+2.39.2
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
