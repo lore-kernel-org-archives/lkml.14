@@ -1,86 +1,129 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380EC481D3
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 18:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306FA481AE
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 18:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159118; cv=none; b=IDrhQ3ZPx673aZOyPm6tFU1il/g28xEL6tMHUPt7rMeEEqZ9617cb9NCdeH5Pj1KR8gpAERFh8/MsoOdtEyQviuH9k5VwZ16d09QiSEiqdKRfjQ/PfPNrtZZkyguqX84EskPoNHYfovCC9g6EwGYVbvvUw2tXFhLGdX5jgWAkLE=
+	t=1707159143; cv=none; b=LKmjULdrEnd+K3TL+fn0EBkNfK9Ft6o77UbdA3fbMwuoBxc0FfWhhXzZbjLRZuvLSPLLVrPMIQkHdmckc2lLOicW6n5uqltq9vQDsNYhCJ6RzrM59KinBOuzx2zpwnEtvfjPYWQkoUqDZIDalbRAElZvImf9JJF4/ps1XCqtWjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159118; c=relaxed/simple;
-	bh=5VTygx6qb8sYZukMVdB0Zlh8j66lTNxSLNHqv5bFTEc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sUJxOe30+iVCFZoYXCmzpsR4MTmo6PRZAWDTXyoxJj1bx/FAcqiK6ZpHW8EKpnHInEN/BwjT2BTt3iYLXUXZrChuzydbZFQh15PMQDNvXrImMd9pplZRsBTzbG5q3Q38tDkDq1UCMg9t4EbWnBXU4Nawc8sbMY2kMPh5GDevvI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=Cs2mz9tN reason="key not found in DNS"; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1707159143; c=relaxed/simple;
+	bh=N6bcpMAjEj2Ii2GBiFyYQTkR2a8PxPV9BNCa2EMYar8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TnRJlzpefobb0iMQdVImdaoFSPOAl2VF7ibiWD/yketrHm7mvvxmEEkhd1tL1IPYfCtfkCFAiCDYNttNFbPbvjrAmzeW2sZ25y2R8efWTOs28JB2lLOWnbyOvtiGT/zSXOJ3fWRUNKfelrxFzsvz5x/QOfUej2OpHfgRvMzFbXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=YmBn/Iqd; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="Cs2mz9tN"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a8900bb93so34956921cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 10:51:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="YmBn/Iqd"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d74045c463so37136665ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 10:52:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1707159116; x=1707763916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=fastly.com; s=google; t=1707159141; x=1707763941; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5VTygx6qb8sYZukMVdB0Zlh8j66lTNxSLNHqv5bFTEc=;
-        b=Cs2mz9tNJFCFicdg7ZJYiCt/xazYOO6ofPFmXam6eVLgMsI4Hg1LsU8YfQPG7IKqfp
-         sSGmNUN4DBQUWGLTeh+0234f6G5fOV17Xc3obbc8YNEua7uaV2WVCWGMZf3AYPHvkXX5
-         xG46/PkGgQr+DTldfflzzX/yxxan2ulG56euxequ4QQOM7T2/orhZZ7lKCgOgImDQfcG
-         DHM/jN4ZbewrTAJ8Aaoamnq4MrQjDC5PE7llLqNdKMOgZqFUYg+z4vmw6NoUXfIHtjaL
-         GnKSO0qWM+m2pcGLt5sujzdSWdCSJs1SjK7D3CxqWibdzCkt3GzMAIEkY6pHdSFUzCHR
-         nDAA==
+        bh=Gm5nF+Ib1GZJbXhttQ2EDUkDbPD2meblIVg5Bzrb2Js=;
+        b=YmBn/IqdzV2isIHt513WkVZ+1AAkPDY7cO7hxpEt6nmdTZmzdmqA08hsgfNO9kl4ku
+         DixapFVoaidBHoG9DIh0rGrlv+ThL+vV7eDrpfqgipN/O8B2ikNJkcp5XA7AJoBcv+6g
+         wF6eURN7Fvg4As4X7inYXhpwJ6R0aWS/jAZiw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707159116; x=1707763916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707159141; x=1707763941;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5VTygx6qb8sYZukMVdB0Zlh8j66lTNxSLNHqv5bFTEc=;
-        b=q+H3Jm4NSx8zSbid4+RdcYK3087FTjBK+btvEee6atrwhdv6Rt726tqR+BllBFjVYF
-         ftWo4vAHuVH+LUSqOl2unDVNHxgIJbBNGW87gM6qwHH93WdA2SChF6uDwdbp8j0SDPPD
-         Kf7nDgeJXjydVaI9Ia1schZC6Vt+K5H7JHKLHOOhU3c4yFDDkV+V0gYUmj666L/+dCeE
-         YBQphRcyWM7ERkBZmPM7/Nkj4MQAp2rBaFFaBaD9vvzG1COg8M0nCAkNzHWL9hlmbrmY
-         ZBfjB7JIVnhd2gPxkgZNkSi3vy4O2OCJ3S2WtL72VClWWe55o93XOYcwqvtJ21ufcf+T
-         6tCg==
-X-Gm-Message-State: AOJu0YzAlU1idinXA9BYzrZXz36jRZ8LJO/Ru2/LOvU2cLWN0rNIefTG
-	h9Pn60aiMT131DpmR+3DpkSE+gz8sm0kKN3BT2YY4vtiOOJnklqSsTbIvPAoFrKIsNIAma/X0pp
-	b7mRmK9PeM6cpI7pVylPtvshDVQ5nJH/ki3EAkg==
-X-Google-Smtp-Source: AGHT+IHCtUOUFGkzr8TaBXdeKKOZ0Xp0nyD8dcW0qlThLgsuY3VQrT8RHm+w5NKlMubnehHSEWMT8PuNkDi2wou0sNY=
-X-Received: by 2002:ac8:5f12:0:b0:42a:b410:fa47 with SMTP id
- x18-20020ac85f12000000b0042ab410fa47mr18907qta.17.1707159115882; Mon, 05 Feb
- 2024 10:51:55 -0800 (PST)
+        bh=Gm5nF+Ib1GZJbXhttQ2EDUkDbPD2meblIVg5Bzrb2Js=;
+        b=IYu7JapwH5ZbI0afSgRk00viRNQegzHSclpOa8ybLWTmJhZqOMLu79PYto0dY/BriT
+         viOZGrixEu3TzkK1USUzztXXWbQ3p87gHvZatgF6C+kRCZvI1cL+zTxNiUiZPQqK9ikl
+         oqDbQSZQ7/bAdRgQtnKgHTNWs+M9oemRI0ocweNueMLRDFU/JRDnblwYcyjQSv4ta80t
+         boeHvPq489yQp8tX9IQquoDGVf5EA15qvwUnWQFiB5BpcL7Et5IJAmhqj34FVVmVz0AN
+         PUa13L6pKy3qJumYwO8LxhiFPXUKYUu7eyhkygheKIfiquKjc7T9yj2vsffWaagFrTXz
+         xDxA==
+X-Gm-Message-State: AOJu0YwHnBll4mOUemk7KqhwC6vT40ZjdzCTxSHAWNGN/7UN8ANtq2hX
+	oAiA0DcHq15Fvsba464NooZg0eohV67kCMWGy8cfUTXN0DLguozTls1GKCfFZew=
+X-Google-Smtp-Source: AGHT+IHlCw3Q4N09cK+PMPKqJ0gL6iaZJAqCwUasGmC3wGn4JqNcSkKbWW/HZ8LyGxxMm0MAmM12VQ==
+X-Received: by 2002:a17:903:2344:b0:1d9:a91b:778 with SMTP id c4-20020a170903234400b001d9a91b0778mr389569plh.30.1707159141618;
+        Mon, 05 Feb 2024 10:52:21 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWp05gLEZzPQhZmatIC3ylxldcXYbo9nqi5O50OF2oTkUEzASs2pijAZrDesn4G+hqfs2yjGsYCYAASmC2kLUXmJ/CuYu0TA5VovJfAwWxSTAoDYBRF7vTvDAv7yVbvuMH+vxl5zinuAbEv566ubDiedsjuGIhjYt1AiEeACp3DYt3/8GNlTMyxlFoacsnkaGW7Zf5phfc9IRZcuv8NMwpF3TjPCcNdbNdqDm6fzVnjCrzlFquR6ixj1ccENBp5V1fGPzHyKj7Vk26LuiMhpcUBsyRovJLtjg6l7uG8ASMji3jfKd8fHB0MPVKL9Yae61N/CGVitB7NA17A4X+JRSihYKApsWKanGyI1tkZVTYuA6YxmEcJjNBvFXz3wiFMaBxEm5yr8Hl2l7rNz4IRN7JtsjgiObp2XknylAnum9nSY+bLJMwHD6YhIp4OLL+qVw==
+Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id i6-20020a170902eb4600b001d8ffc059e3sm197995pli.119.2024.02.05.10.52.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Feb 2024 10:52:21 -0800 (PST)
+Date: Mon, 5 Feb 2024 10:52:18 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Stanislav Fomichev <sdf@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, sridhar.samudrala@intel.com,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chuck.lever@oracle.com,
+	jlayton@kernel.org, linux-api@vger.kernel.org, brauner@kernel.org,
+	davem@davemloft.net, alexander.duyck@gmail.com,
+	Wei Wang <weiwan@google.com>,
+	Amritha Nambiar <amritha.nambiar@intel.com>
+Subject: Re: [net-next 0/3] Per epoll context busy poll support
+Message-ID: <20240205185217.GC10463@fastly.com>
+References: <CANn89i+YKwrgpt8VnHrw4eeVpqRamLkTSr4u+g1mRDMZa6b+7Q@mail.gmail.com>
+ <5faf88de-5063-421f-ad78-ad24d931fd17@intel.com>
+ <20240202032806.GA8708@fastly.com>
+ <f0b4d813-d7cb-428b-9c41-a2d86684f3f1@intel.com>
+ <20240202102239.274ca9bb@kernel.org>
+ <20240202193332.GA8932@fastly.com>
+ <20240202115828.6fd125bf@kernel.org>
+ <20240202202344.GA9283@fastly.com>
+ <20240202171539.7347cb01@kernel.org>
+ <ZcEmDz3UvAksHFFG@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1707144953.git.robin.murphy@arm.com> <ae4a3bda2d6a9b738221553c838d30473bd624e7.1707144953.git.robin.murphy@arm.com>
-In-Reply-To: <ae4a3bda2d6a9b738221553c838d30473bd624e7.1707144953.git.robin.murphy@arm.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 5 Feb 2024 13:51:19 -0500
-Message-ID: <CA+CK2bBW08=reuD7UfkJfzumVx3ZFYJuD4ptriW4paBiNKV8Hw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] iommu/iova: Tidy up iova_cache_get() failure
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: joro@8bytes.org, will@kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rientjes@google.com, 
-	yosryahmed@google.com, john.g.garry@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcEmDz3UvAksHFFG@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 
-On Mon, Feb 5, 2024 at 10:32=E2=80=AFAM Robin Murphy <robin.murphy@arm.com>=
- wrote:
->
-> Failure handling in iova_cache_get() is a little messy, and we'd like
-> to add some more to it, so let's tidy up a bit first. By leaving the
-> hotplug handler until last we can take advantage of kmem_cache_destroy()
-> being NULL-safe to have a single cleanup label. We can also improve the
-> error reporting, noting that kmem_cache_create() already screams if it
-> fails, so that one is redundant.
->
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On Mon, Feb 05, 2024 at 10:17:03AM -0800, Stanislav Fomichev wrote:
+> On 02/02, Jakub Kicinski wrote:
+> > On Fri, 2 Feb 2024 12:23:44 -0800 Joe Damato wrote:
+> > > > Did you see SO_PREFER_BUSY_POLL by any chance? (In combination with
+> > > > gro_flush_timeout IIRC). We added it a while back with Bjorn, it seems
+> > > > like a great idea to me at the time but I'm unclear if anyone uses it 
+> > > > in production..  
+> > > 
+> > > I have seen it while reading the code, yes. I think maybe I missed
+> > > something about its interaction with gro_flush_timeout. In my use case,
+> > > the machine has no traffic until after the app is started.
+> > > 
+> > > In this case, I haven't needed to worry about regular NAPI monopolizing the
+> > > CPU and preventing busy poll from working.
+> > > 
+> > > Maybe I am missing something more nuanced, though? I'll have another look
+> > > at the code, just incase.
+> > 
+> > We reused the gro_flush_timeout as an existing "user doesn't care if
+> > packets get delayed by this much in worst case" value. If you set
+> > SO_PREFER_BUSY_POLL the next time you busy pool the NAPI will be marked 
+> > as "already scheduled" and a timer is set (to gro_flush_timeout).
+> > If NIC IRQ fires before gro_flush_timeout it gets ignored, because NAPI
+> > is already marked as scheduled.
+> > If you busy poll again the timer gets postponed for another
+> > gro_flush_timeout nsec.
+> > If timer fires we go back to normal NAPI processing.
+> > 
+> > The idea is that you set gro_flush_timeout to some high value, like 
+> > 10 msec, and expect your app to poll more often than every 10 msec. 
+> > 
+> > Then the normal NAPI processing will never kick in, and there will 
+> > be only 1 NIC IRQ after which the HW IRQ remains masked.
+> > With high coalescing timer you technically still get an IRQ every
+> > so often and interrupt the app. Worst case (UDP flood) you may even
+> > get into an overload where the app gets starved out completely..
+> 
+> Should we also add prefer_busy_poll parameter to EPIOCSPARAMS?
+> napi_busy_loop in ep_busy_loop has its prefer_busy_poll argument
+> hard-coded as false.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+I think making this configurable is a good idea. I can add that in the v6
+in addition to fixing the incorrect commit message in patch 1/3.
 
-Thank you,
-Pasha
+What do you think, Jakub?
