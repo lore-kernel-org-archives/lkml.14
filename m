@@ -1,214 +1,286 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DD018C3A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CE718E00;
+	Mon,  5 Feb 2024 11:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707132822; cv=none; b=mrZjqMQZynmdzqCMe69oUhEARGbi4tQ8c76pO2yIDzox7zzd5bV7j3X6hgCnFoPg4UXezZk8QbNWc2MgxlQffOxDWqFi9RfJC3MGQ1g1QlazK9Ye+8ZTCysCgAZMRrnwANy37QHFfeTUphjAyIMp6RHXWM23oMLtx+PSnaVElYI=
+	t=1707132856; cv=none; b=sBcxdwYNZL3ARQptZALSMuRA6G8bwBgFeo2BJobyAz7fJYHzrE7PbWUyelS6KuF1C+2rPEgEvq6+uFkF2ahbXWw3vlxQ8AuZhwCR5Pu5FqWRVPb8JWJiUE502uO1GlYPI3vzuTmdhO/7pHPDVL/55KvscQLVeUvPrO8AxbyXITY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707132822; c=relaxed/simple;
-	bh=3n8tju5MgjfQBO9+cSnvLd3JT7XF+Z0H9ANnUEk2a04=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gTdBJb/MdYHcDSjYgTCkDKF8qrXRCz0gPa9WvkXy58cHzTz4na/yJT/V0yUluW7B2FhGL9z3FlSOLD2jJzOEa2CJI0grVnJZ/3GEr62FOij4r+xeMOJ26GsPfs96H3se/tbOXqJ2Ay5w19IFQ1PkfkS6tS+GwwmOp8J2VjVNZ7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BPsx4y3I; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7wGwfKYs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707132856; c=relaxed/simple;
+	bh=gf0D6upjqXr6wfjvr+pd9lvlUyDKq+kblrTY2ZtM6vE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CDr9ME9v7mX56ADrrhmgjQLutCdV33RFj5T/+cJ2CDxbPHFgUWNGrFfSZD2RPO1scy7lkg11iX0vMCGQPNQ5dXODAgxsmxydH4GuPx2Ja9aLoHNtkZ5/RFKlzvr6A0Jn566JqHvQDb5zEY+dr9M3TlQMmHIMJqBy4JLQ1XbWxGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nWlGlpjg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rDIaZo/o; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZYJ3k7Ln; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4hfbs10r; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BPsx4y3I";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7wGwfKYs"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707132817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nWlGlpjg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rDIaZo/o";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZYJ3k7Ln";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4hfbs10r"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D2A731F8BD;
+	Mon,  5 Feb 2024 11:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707132853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cZ73q89s5DsAVDwR2ENYw/vxOkP4xwuyDLdeOx9W3zQ=;
-	b=BPsx4y3IrW0kIXkF0e9XAvlNFWHbxfqVQIvEQG5YqhBqYZZvzDPr9mStu+WVQIml8zQkBs
-	EPadBms3lIo0gkpKd6Xty08dM6Y8oViNuPeHer14MRibjqoSiJ5SNiGeuyOWK1Jg0mgdeE
-	7Bsmf2zlPWzi3OClUVRLCCclPS0C9JkN2rYzWUe0HAL+kpukEWdGXSv0Edg+aA+2uDHvx+
-	vcqRMteMxiefn3xeLTWQF54vOG2nsRK4mC9CI14JrAZRvLnlRFIa60vAPWQWQ7joAdiY6s
-	yRAXtr8nOB286jHNrYDpQ2q5o16ttq/42Xm2XCFEC2H8eyg0jleIgyBjQRnEww==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707132817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	bh=m/SxzjtBf487sMzoXkTo79HeTFHw6kYb0uZ9SjI1QhA=;
+	b=nWlGlpjgTnSsdsU/4IcQAUBsJUNt8O2LS7OBMRW/5yB+zMgVMogO2G+6I+vWntP+poRgnm
+	rJEEvOz0fexQj7YIOTCnK1gEBres+5IfiNKztez0kJBxSCZubRQY7oqWlUHl9OyDx08GxV
+	Nz03ign2qpbSzbzEwnVZ2F11yM2fnds=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707132853;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cZ73q89s5DsAVDwR2ENYw/vxOkP4xwuyDLdeOx9W3zQ=;
-	b=7wGwfKYst8OwqBFVtAlVytFuTnr2OEhMi71KF7HUC1gcsjV3lfbGKf0W73muzQz1ik5obn
-	IT6mwUidOA06IwAg==
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt
- <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
- linux-kernel@vger.kernel.org, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: Re: [PATCH printk v3 04/14] printk: ringbuffer: Do not skip
- non-finalized records with prb_next_seq()
-In-Reply-To: <ZaVkqJ-KMRp9mbLR@alley>
-References: <20231214214201.499426-1-john.ogness@linutronix.de>
- <20231214214201.499426-5-john.ogness@linutronix.de>
- <ZaF_eJ_BCddZl5z1@alley> <874jfeg69z.fsf@jogness.linutronix.de>
- <ZaVkqJ-KMRp9mbLR@alley>
-Date: Mon, 05 Feb 2024 12:39:30 +0106
-Message-ID: <871q9rp2lx.fsf@jogness.linutronix.de>
+	bh=m/SxzjtBf487sMzoXkTo79HeTFHw6kYb0uZ9SjI1QhA=;
+	b=rDIaZo/oPFtJBnyilzrNT6NyPncrgL7uudHAAz46rJPOfXzKlJfWp0h67EmRzw9xkWlVmC
+	HVxRsmi3P39nLwBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707132852; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m/SxzjtBf487sMzoXkTo79HeTFHw6kYb0uZ9SjI1QhA=;
+	b=ZYJ3k7LnR8sbw5nxKHiqRmRqE91mDOoDVovLO4nQPFElWqeuESWMWhrS0AtUOcZADAOk5p
+	WhqBGGaMCP30TWpTUlaQDHggmWK25bcY7BmIUu+lbMnxnOvo6MaFQs+bv1zSmYhChgz/f3
+	8eXa9KFGPXdAs/s2cJDz6xXwRqfBf5E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707132852;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m/SxzjtBf487sMzoXkTo79HeTFHw6kYb0uZ9SjI1QhA=;
+	b=4hfbs10r0RNUuNudNYnaEV4nGp5Cc7TlxBs/M1B2a7tinE1tu2CGehJdf1sMy0vBpiYjnY
+	z5Wxwt1PVqxCDIAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C68F8136F5;
+	Mon,  5 Feb 2024 11:34:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6ZR0MLTHwGVeQgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 05 Feb 2024 11:34:12 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7903EA0809; Mon,  5 Feb 2024 12:34:12 +0100 (CET)
+Date: Mon, 5 Feb 2024 12:34:12 +0100
+From: Jan Kara <jack@suse.cz>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/13] writeback: rework the loop termination condition
+ in write_cache_pages
+Message-ID: <20240205113412.ceemxahic7bpodip@quack3>
+References: <20240203071147.862076-1-hch@lst.de>
+ <20240203071147.862076-6-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240203071147.862076-6-hch@lst.de>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ZYJ3k7Ln;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4hfbs10r
+X-Spamd-Result: default: False [-2.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D2A731F8BD
+X-Spam-Level: 
+X-Spam-Score: -2.81
+X-Spam-Flag: NO
 
-On 2024-01-15, Petr Mladek <pmladek@suse.com> wrote:
->> The acquire is with @last_finalized_seq. So the release must also be
->> with @last_finalized_seq. The important thing is that the CPU that
->> updates @last_finalized_seq has actually read the corresponding
->> record beforehand. That is exactly what desc_update_last_finalized()
->> does.
->
-> I probably did not describe it well. The CPU updating
-> @last_finalized_seq does the right thing. I was not sure about the CPU
-> which reads @last_finalized_seq via prb_next_seq().
->
-> To make it more clear:
->
-> u64 prb_next_seq(struct printk_ringbuffer *rb)
-> {
-> 	u64 seq;
->
-> 	seq = desc_last_finalized_seq(rb);
-> 	      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 	      |
-> 	      `-> This includes atomic_long_read_acquire(last_finalized_seq)
->
->
-> 	if (seq != 0)
-> 		seq++;
->
-> 	while (_prb_read_valid(rb, &seq, NULL, NULL))
-> 		seq++;
->
-> 	return seq;
-> }
->
-> But where is the atomic_long_read_release(last_finalized_seq) in
-> this code path?
+On Sat 03-02-24 08:11:39, Christoph Hellwig wrote:
+> Rework the way we deal with the cleanup after the writepage call.
+> 
+> First handle the magic AOP_WRITEPAGE_ACTIVATE separately from real error
+> returns to get it out of the way of the actual error handling path.
+> 
+> The split the handling on intgrity vs non-integrity branches first,
+> and return early using a goto for the non-ingegrity early loop condition
+> to remove the need for the done and done_index local variables, and for
+> assigning the error to ret when we can just return error directly.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-read_release? The counterpart of this load_acquire is a
-store_release. For example:
+Looks good. Feel free to add:
 
-CPU0                     CPU1
-====                     ====
-load(varA)
-store_release(varB)      load_acquire(varB)
-                         load(varA)
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-If CPU1 reads the value in varB that CPU0 stored, then it is guaranteed
-that CPU1 will read the value (or a later value) in varA that CPU0 read.
+								Honza
 
-Translating the above example to this particular patch, we have:
-
-CPU0: desc_update_last_finalized()       CPU1: prb_next_seq()
-====                                     ====
-_prb_read_valid(seq)
-cmpxchg_release(last_finalized_seq,seq)  seq=read_acquire(last_finalized_seq)
-                                         _prb_read_valid(seq)
-
-> IMHO, the barrier provided by the acquire() is _important_ to make
-> sure that _prb_read_valid() would see the valid descriptor.
-
-Correct.
-
-> Now, I think that the related read_release(seq) is hidden in:
->
-> static int prb_read(struct printk_ringbuffer *rb, u64 seq,
-> 		    struct printk_record *r, unsigned int *line_count)
-> {
-> 	/* Get a local copy of the correct descriptor (if available). */
-> 	err = desc_read_finalized_seq(desc_ring, id, seq, &desc);
->
-> 	/* If requested, copy meta data. */
-> 	if (r->info)
-> 		memcpy(r->info, info, sizeof(*(r->info)));
->
-> 	/* Copy text data. If it fails, this is a data-less record. */
-> 	if (!copy_data(&rb->text_data_ring, &desc.text_blk_lpos, info->text_len,
-> 		       r->text_buf, r->text_buf_size, line_count)) {
-> 		return -ENOENT;
-> 	}
->
-> 	/* Ensure the record is still finalized and has the same @seq. */
-> 	return desc_read_finalized_seq(desc_ring, id, seq, &desc);
-> 	       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 	       |
-> 	       `-> This includes a memory barrier /* LMM(desc_read:A) */
-> 		   which makes sure that the data are read before
-> 		   the desc/data could be reused.
-> }
->
-> I consider this /* LMM(desc_read:A) */ as a counter part for that
-> acquire() in prb_next_seq().
-
-desc_read:A is not a memory barrier. It only marks the load of the
-descriptor state. This is a significant load because prb_next_seq() must
-see at least the descriptor state that desc_update_last_finalized() saw.
-
-The memory barrier comments in desc_update_last_finalized() state:
-
-    * If desc_last_finalized_seq:A reads from
-    * desc_update_last_finalized:A, then desc_read:A reads from
-    * _prb_commit:B.
-
-This is referring to a slightly different situation than the example I
-used above because it is referencing where the descriptor state was
-stored (_prb_commit:B). The same general picture is valid:
-
-CPU0                              CPU1
-====                              ====
-_prb_commit:B
-desc_update_last_finalized:A      desc_last_finalized_seq:A
-                                  desc_read:A
-
-desc_read:A is loding the descriptor state that _prb_commit:B stored.
-
-The extra note in the comment clarifies that _prb_commit:B could also be
-denoted as desc_read:A because desc_update_last_finalized() performs a
-read (i.e. must have seen) _prb_commit:B.
-
-    * Note: _prb_commit:B and desc_update_last_finalized:A can be
-    *       different CPUs. However, the desc_update_last_finalized:A
-    *       CPU (which performs the release) must have previously seen
-    *       _prb_commit:B.
-
-Normally the CPU committing the record will also update
-last_finalized_seq. But it is possible that another CPU updates
-last_finalized_seq before the committing CPU because it already sees the
-finalized record. In that case the complete (maximally complex) picture
-looks like this.
-
-CPU0            CPU1                           CPU2
-====            ====                           ====
-_prb_commit:B   desc_read:A
-                desc_update_last_finalized:A   desc_last_finalized_seq:A
-                                               desc_read:A
-
-Any memory barriers in _prb_commit() or desc_read() are irrelevant for
-guaranteeing that a CPU reading a sequence value from
-desc_last_finalized_seq() will always be able to read that record.
-
-> Summary:
->
-> I saw atomic_long_read_acquire(last_finalized_seq) called from
-> prb_next_seq() code path. The barrier looked important to me.
-> But I saw neither the counter-part nor any comment. I wanted
-> to understand it because it might be important for reviewing
-> following patches which depend on prb_next_seq().
-
-desc_update_last_finalized:A is the counterpart to
-desc_last_finalized_seq:A. IMHO there are plenty of comments that are
-formally documenting these memory barriers. Including the new entry in
-the summary of all memory barriers:
-
- *   desc_update_last_finalized:A / desc_last_finalized_seq:A
- *     store finalized record, then set new highest finalized sequence number
-
-John
+> ---
+>  mm/page-writeback.c | 84 ++++++++++++++++++---------------------------
+>  1 file changed, 33 insertions(+), 51 deletions(-)
+> 
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index c7c494526bc650..88b2c4c111c01b 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2396,13 +2396,12 @@ int write_cache_pages(struct address_space *mapping,
+>  		      void *data)
+>  {
+>  	int ret = 0;
+> -	int done = 0;
+>  	int error;
+>  	struct folio_batch fbatch;
+> +	struct folio *folio;
+>  	int nr_folios;
+>  	pgoff_t index;
+>  	pgoff_t end;		/* Inclusive */
+> -	pgoff_t done_index;
+>  	xa_mark_t tag;
+>  
+>  	folio_batch_init(&fbatch);
+> @@ -2419,8 +2418,7 @@ int write_cache_pages(struct address_space *mapping,
+>  	} else {
+>  		tag = PAGECACHE_TAG_DIRTY;
+>  	}
+> -	done_index = index;
+> -	while (!done && (index <= end)) {
+> +	while (index <= end) {
+>  		int i;
+>  
+>  		nr_folios = filemap_get_folios_tag(mapping, &index, end,
+> @@ -2430,11 +2428,7 @@ int write_cache_pages(struct address_space *mapping,
+>  			break;
+>  
+>  		for (i = 0; i < nr_folios; i++) {
+> -			struct folio *folio = fbatch.folios[i];
+> -			unsigned long nr;
+> -
+> -			done_index = folio->index;
+> -
+> +			folio = fbatch.folios[i];
+>  			folio_lock(folio);
+>  
+>  			/*
+> @@ -2469,45 +2463,32 @@ int write_cache_pages(struct address_space *mapping,
+>  
+>  			trace_wbc_writepage(wbc, inode_to_bdi(mapping->host));
+>  			error = writepage(folio, wbc, data);
+> -			nr = folio_nr_pages(folio);
+> -			wbc->nr_to_write -= nr;
+> -			if (unlikely(error)) {
+> -				/*
+> -				 * Handle errors according to the type of
+> -				 * writeback. There's no need to continue for
+> -				 * background writeback. Just push done_index
+> -				 * past this page so media errors won't choke
+> -				 * writeout for the entire file. For integrity
+> -				 * writeback, we must process the entire dirty
+> -				 * set regardless of errors because the fs may
+> -				 * still have state to clear for each page. In
+> -				 * that case we continue processing and return
+> -				 * the first error.
+> -				 */
+> -				if (error == AOP_WRITEPAGE_ACTIVATE) {
+> -					folio_unlock(folio);
+> -					error = 0;
+> -				} else if (wbc->sync_mode != WB_SYNC_ALL) {
+> -					ret = error;
+> -					done_index = folio->index + nr;
+> -					done = 1;
+> -					break;
+> -				}
+> -				if (!ret)
+> -					ret = error;
+> +			wbc->nr_to_write -= folio_nr_pages(folio);
+> +
+> +			if (error == AOP_WRITEPAGE_ACTIVATE) {
+> +				folio_unlock(folio);
+> +				error = 0;
+>  			}
+>  
+>  			/*
+> -			 * We stop writing back only if we are not doing
+> -			 * integrity sync. In case of integrity sync we have to
+> -			 * keep going until we have written all the pages
+> -			 * we tagged for writeback prior to entering this loop.
+> +			 * For integrity writeback we have to keep going until
+> +			 * we have written all the folios we tagged for
+> +			 * writeback above, even if we run past wbc->nr_to_write
+> +			 * or encounter errors.
+> +			 * We stash away the first error we encounter in
+> +			 * wbc->saved_err so that it can be retrieved when we're
+> +			 * done.  This is because the file system may still have
+> +			 * state to clear for each folio.
+> +			 *
+> +			 * For background writeback we exit as soon as we run
+> +			 * past wbc->nr_to_write or encounter the first error.
+>  			 */
+> -			done_index = folio->index + nr;
+> -			if (wbc->nr_to_write <= 0 &&
+> -			    wbc->sync_mode == WB_SYNC_NONE) {
+> -				done = 1;
+> -				break;
+> +			if (wbc->sync_mode == WB_SYNC_ALL) {
+> +				if (error && !ret)
+> +					ret = error;
+> +			} else {
+> +				if (error || wbc->nr_to_write <= 0)
+> +					goto done;
+>  			}
+>  		}
+>  		folio_batch_release(&fbatch);
+> @@ -2524,14 +2505,15 @@ int write_cache_pages(struct address_space *mapping,
+>  	 * of the file if we are called again, which can only happen due to
+>  	 * -ENOMEM from the file system.
+>  	 */
+> -	if (wbc->range_cyclic) {
+> -		if (done)
+> -			mapping->writeback_index = done_index;
+> -		else
+> -			mapping->writeback_index = 0;
+> -	}
+> -
+> +	if (wbc->range_cyclic)
+> +		mapping->writeback_index = 0;
+>  	return ret;
+> +
+> +done:
+> +	folio_batch_release(&fbatch);
+> +	if (wbc->range_cyclic)
+> +		mapping->writeback_index = folio->index + folio_nr_pages(folio);
+> +	return error;
+>  }
+>  EXPORT_SYMBOL(write_cache_pages);
+>  
+> -- 
+> 2.39.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
