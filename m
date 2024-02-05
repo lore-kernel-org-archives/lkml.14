@@ -1,73 +1,60 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99036745DB;
-	Mon,  5 Feb 2024 19:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4067CF18
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162311; cv=none; b=gC8Au7Lujk8wWMFjp+tbTln0zyU9V2MmIZIXu2uo9zAHFuBGfvIBGOdQgyHmCUV9QZG1fiyJ6lsu6ncuFk4RVnzBFygObIdfcNzcUHOQ0K9RBqy1wI93B/MfHxJJcyrCDbBY5MUFYIcHKvsJBa8ZCmmNQEFJt07inPLIr4hPg08=
+	t=1707162401; cv=none; b=dJKdlx72Q85YeRbKCT7xp/1xPzF+fbP/Zn1PAV9o0I/PInFra+7zmsMNMAHBB9bY+zB8sbSzlq3jAtx3Sp3M4EswjCVBR1BEiuGvEbYxoPYJ4nMeAN3JYchae834PMZT7O92KtLwmWJtOh6O56c0mBGlKrMEKbLXSFgqDjMGrXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162311; c=relaxed/simple;
-	bh=TcZggvWPAiMNrDjTaYr88pR3WYNyYJDkk6qpMPNTC3Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iqqY/Meyxxzmc64S719MeOYrEHpFrqJWLlNVJkKiN68+fxp1IUuPzvZrY8Rs7DLWn5Gr88GHbbR8B+igOjEXQsk/cUuhgoSj2cEU1NyqBD3IJdv2HY6fYIMyAQ5i3XCBtsSgnSf8OelL0FsbKBwmLuI7OY1331QKxfyfQJVVy3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Qw5q5B3k; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707162401; c=relaxed/simple;
+	bh=UBgB7wxdCAt+ad7SnQ4VhV8QrVhO4q6rF8Sg0R0cabs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CSnGwhaJ9OpFeUs5+R8/FCOYSzYD6QTLz+GL1xnFaWYD19kyQTWLpsSc9oL4N3WleW3IWzCt3cZQD3sEwChX7QrtGqKrYJUCz6hBATDAhUElIeNrn+9wgBtcZwdDdPIDCXqj17HiOSsNTpU6IBI43Vhkh7OTreb0AHLFV7XEswY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UzUQ9UjJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qw5q5B3k"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415JilnK101200;
-	Mon, 5 Feb 2024 13:44:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707162287;
-	bh=5a2BDxvry/mDEJhidMjtTRkucrmFZYMP54rfoZVMxFg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Qw5q5B3keTde63yHWlZpQ7EVk4tQF9AphT2TKbB0uVKzxcP46i9J1hxwiPkvnhfU6
-	 yx3v/eLF1zvt5mKdeJM+rw+fQHl9Lon2LkZyUxz6YoDK+bNLBBZrYfXipnLDENW0Ig
-	 9naCSq3dVPMP2uMY58c+MhSsfrUKANATzLTuHB0w=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415JilEK073197
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 13:44:47 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 13:44:47 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 13:44:47 -0600
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415JicQa028467;
-	Mon, 5 Feb 2024 13:44:46 -0600
-From: Andrew Davis <afd@ti.com>
-To: Sebastian Reichel <sre@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Cristian Ciocaltea
-	<cristian.ciocaltea@gmail.com>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, Scott Branden
-	<sbranden@broadcom.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH v2 13/19] power: reset: msm-poweroff: Use devm_register_sys_off_handler(RESTART)
-Date: Mon, 5 Feb 2024 13:44:31 -0600
-Message-ID: <20240205194437.180802-14-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240205194437.180802-1-afd@ti.com>
-References: <20240205194437.180802-1-afd@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UzUQ9UjJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707162398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tvk5P0YwhhGGdf9RGAqGeLDJl3BLaezVv7toWoOGyh0=;
+	b=UzUQ9UjJp/jRWZ1FFUih7Koif3FLob+rN6wAGXWblm1rU4JPbnt3HaKE11XEsk+PlfjdFO
+	1JMpQVFOUs68imuQfpyNeD8W0VZqwftDZ4kGYtk10SUyF7YtnUanlTQf3f0MbNteQDKjJG
+	4Ak9fFX4gK/XgH9FEVyAYBp5RXZwoKk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-gnYI3oETNTqqcyFngXnrCg-1; Mon, 05 Feb 2024 14:46:36 -0500
+X-MC-Unique: gnYI3oETNTqqcyFngXnrCg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7A5FA85A58C;
+	Mon,  5 Feb 2024 19:46:36 +0000 (UTC)
+Received: from llong.com (unknown [10.22.17.212])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 055931C060AF;
+	Mon,  5 Feb 2024 19:46:35 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Cestmir Kalina <ckalina@redhat.com>,
+	Alex Gladkov <agladkov@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Costa Shulyupin <cshulyup@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH-wq v3 2/4] workqueue: Thaw frozen pwq in workqueue_apply_unbound_cpumask()
+Date: Mon,  5 Feb 2024 14:46:00 -0500
+Message-Id: <20240205194602.871505-3-longman@redhat.com>
+In-Reply-To: <20240205194602.871505-1-longman@redhat.com>
+References: <20240205194602.871505-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,62 +62,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Use device life-cycle managed register function to simplify probe.
+workqueue_apply_unbound_cpumask() cannot proceed with an ordered
+workqueue if its dfl_pwq is still frozen. Just do a sleep wait for
+it to be thawed may not work in some cases if pwq_release_workfn() is
+somehow prevented from being called due to resources (e.g. wq_pool_mutex)
+that are held by its caller.
 
-Signed-off-by: Andrew Davis <afd@ti.com>
+To break the logjam, we have to actively check if the frozen dfl_pwq
+is ready to be thawed and call thaw_pwq() directly if so.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
 ---
- drivers/power/reset/msm-poweroff.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ kernel/workqueue.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/reset/msm-poweroff.c b/drivers/power/reset/msm-poweroff.c
-index bcf04491e7022..c5831c46f69e2 100644
---- a/drivers/power/reset/msm-poweroff.c
-+++ b/drivers/power/reset/msm-poweroff.c
-@@ -13,35 +13,24 @@
- #include <linux/reboot.h>
- #include <linux/pm.h>
- 
--static void __iomem *msm_ps_hold;
--static int deassert_pshold(struct notifier_block *nb, unsigned long action,
--			   void *data)
-+static int do_msm_poweroff(struct sys_off_data *data)
- {
-+	void __iomem *msm_ps_hold = data->cb_data;
-+
- 	writel(0, msm_ps_hold);
- 	mdelay(10000);
- 
- 	return NOTIFY_DONE;
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 9b107e8a2c15..f453f339f74a 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -6541,6 +6541,33 @@ void thaw_workqueues(void)
  }
+ #endif /* CONFIG_FREEZER */
  
--static struct notifier_block restart_nb = {
--	.notifier_call = deassert_pshold,
--	.priority = 128,
--};
--
--static int do_msm_poweroff(struct sys_off_data *data)
--{
--	deassert_pshold(&restart_nb, 0, NULL);
--
--	return NOTIFY_DONE;
--}
--
- static int msm_restart_probe(struct platform_device *pdev)
++/*
++ * Check the given ordered workqueue to see if its non-default pwq's have
++ * zero reference count and if so thaw the frozen default pwq.
++ *
++ * Return:
++ * %true if dfl_pwq has been thawed or %false otherwise.
++ */
++static bool ordered_workqueue_ref_check(struct workqueue_struct *wq)
++{
++	struct pool_workqueue *dfl_pwq = rcu_access_pointer(wq->dfl_pwq);
++	struct pool_workqueue *pwq;
++	int refs = 0;
++
++	if (!READ_ONCE(dfl_pwq->frozen))
++		return true;
++	mutex_lock(&wq->mutex);
++	for_each_pwq(pwq, wq) {
++		if (pwq == dfl_pwq)
++			continue;
++		refs += pwq->refcnt;
++	}
++	if (!refs)
++		thaw_pwq(dfl_pwq);
++	mutex_unlock(&wq->mutex);
++	return !refs;
++}
++
+ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
  {
--	msm_ps_hold = devm_platform_ioremap_resource(pdev, 0);
-+	void __iomem *msm_ps_hold = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(msm_ps_hold))
- 		return PTR_ERR(msm_ps_hold);
+ 	LIST_HEAD(ctxs);
+@@ -6566,12 +6593,12 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
+ 			dfl_pwq = rcu_access_pointer(wq->dfl_pwq);
+ 			if (!(wq->flags & __WQ_ORDERED_EXPLICIT)) {
+ 				wq->flags &= ~__WQ_ORDERED;
+-			} else if (dfl_pwq && dfl_pwq->frozen) {
++			} else if (dfl_pwq && !ordered_workqueue_ref_check(wq)) {
+ 				int i;
  
--	register_restart_handler(&restart_nb);
-+	devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_RESTART,
-+				      128, do_msm_poweroff, msm_ps_hold);
- 
- 	devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_POWER_OFF,
- 				      SYS_OFF_PRIO_DEFAULT, do_msm_poweroff,
+ 				for (i = 0; i < 10; i++) {
+ 					msleep(10);
+-					if (!dfl_pwq->frozen)
++					if (ordered_workqueue_ref_check(wq))
+ 						break;
+ 				}
+ 				if (WARN_ON_ONCE(dfl_pwq->frozen))
 -- 
-2.39.2
+2.39.3
 
