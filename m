@@ -1,136 +1,159 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2055.outbound.protection.outlook.com [40.107.243.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B638AB666
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 05:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707110895; cv=none; b=fffVfXxRlQgq8+TM8MAnrzIRtiVamYd/TAO5afzmPyUeaywPsLUn8EHBFNOsIacLVU5rbpilCpbSYtZrFTJHrAUn8CKQ6YTA4sZumXzTU9LGmVGnOu4k0VjUWQyNw9/7d3GlEV6WzQBDj59/n2ftK9v1W0NpiMD9EZ7ed1lp0eM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707110895; c=relaxed/simple;
-	bh=KGVIQ7R3XaeYio8DCZDb8cibagzCabv2lV8TzCs3KFA=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=abTnrpY5a4v6DuK6+fv/pZ00FE0wm5hqgFAL1SxTYPSJmXicBTEyIiCxpFcc53OnAe08BLesusZMT+vOuue/MCss8cLlzichQUb3J6bP2ZgTeUiXSyVfFGD4U3IHXPUxlqQXFy+PyvpFtuOovwN1lKCwjL0RM0W8VOWxjp7yK08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=sT4XcYnR; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E28B653;
+	Mon,  5 Feb 2024 05:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707111039; cv=fail; b=TOrtG7HWDKyCUC7Lm1ujhrXEWPuFTfJG//WhLaKBQBdWH4dcg2kpZDD67fYWgypZg6nxQomh361jQdi4/dme07r6BxbQIzcSfek3RFHeub5rps3ZxbYNTJ0uh60yDd+No8Rn4W3j5tXKW/yNP53tBbNp5PrtRoG8Td3XbYbAQfs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707111039; c=relaxed/simple;
+	bh=6zSfL1FykDaalRci1fi4Y/sfW9f9uisz1iicXYn4UeA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JOqPWG70tsLxEgriLyu6RU/C57OBsib915PE3QtMqiFmf1O5cSth4YkXsilTXqa8GIVGWy/w9GweKz0Tou2Ey12Ps+0SRpYcTatKrBUuhUzZz3gUihLy8afQRY/pCcac/qRiKIM+Ah+2mOacejN9AuMJT7iJIMGNxoOwlpClAIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gL09LoDd; arc=fail smtp.client-ip=40.107.243.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sT4XcYnR"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240205052804epoutp04d2d41d71a04afccabcaee6ac488d0bc4~w4E3wfaGn1731117311epoutp04M
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 05:28:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240205052804epoutp04d2d41d71a04afccabcaee6ac488d0bc4~w4E3wfaGn1731117311epoutp04M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707110884;
-	bh=MEXPbxT6P7PtY/XAgzobsSoAFcpyfbHJUxz+fcXZugY=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=sT4XcYnRqTv6T8QOSkyy0jVIa+gdyIMtVGEndwJoGDlTpzQoDSDu//LtkjTgQt3Su
-	 FbXqeB2bbG/Kft7zZ3ODa9EfkNOlnpWZfdmgu1gVdyYufZfMhv635gojfTaDjaHgel
-	 aXIDPgtI2PWl8dOT7IyNJbH2mHnRg3lrOrUG6Eik=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240205052803epcas5p181a5a112b167e7296158fd6e2796483f~w4E3TnOqt1696816968epcas5p1W;
-	Mon,  5 Feb 2024 05:28:03 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4TSvzP6bZgz4x9QK; Mon,  5 Feb
-	2024 05:28:01 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	92.9B.08567.1E170C56; Mon,  5 Feb 2024 14:28:01 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240131070746epcas5p39bf60e36d7d5cea5937cd6f87352ea67~vXNgKvXZw1167111671epcas5p3X;
-	Wed, 31 Jan 2024 07:07:46 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240131070746epsmtrp1ce29d4373d2b26044cb2638fd8556af0~vXNgJWnpf0816808168epsmtrp15;
-	Wed, 31 Jan 2024 07:07:46 +0000 (GMT)
-X-AuditID: b6c32a44-3abff70000002177-6d-65c071e18a24
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1E.4F.18939.2C1F9B56; Wed, 31 Jan 2024 16:07:46 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.53]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240131070744epsmtip2acf436d44ed1e6404aba10c2fc626e2f~vXNeAs9tW2159821598epsmtip2D;
-	Wed, 31 Jan 2024 07:07:44 +0000 (GMT)
-From: Aakarsh Jain <aakarsh.jain@samsung.com>
-To: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: m.szyprowski@samsung.com, andrzej.hajda@intel.com, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org, conor+dt@kernel.org, linux-samsung-soc@vger.kernel.org,
-	gost.dev@samsung.com, alim.akhtar@samsung.com, pankaj.dubey@samsung.com,
-	aakarsh.jain@samsung.com
-Subject: [PATCH] MAINTAINERS: Add entry for Samsung MFC DT Schema
-Date: Wed, 31 Jan 2024 12:37:41 +0530
-Message-Id: <20240131070741.3558-1-aakarsh.jain@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnk+LIzCtJLcpLzFFi42LZdlhTU/dh4YFUg8M3jS2e7pjJavFg3jY2
-	i/uLP7NYrNl7jsli/pFzrBY3D+xksrg48y6LRd+Lh8wWmx5fY7W4vGsOm0XPhq2sFjPO72Oy
-	WHvkLrvFsk1/mCwWbf3CbtG69wi7g4DH4j0vmTw2repk87hzbQ+bx+Yl9R59W1YxenzeJOdx
-	6utn9gD2qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfM
-	HKDjlRTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFJgV6xYm5xaV56Xp5qSVWhgYG
-	RqZAhQnZGY1vP7IUfGWpWPv7N0sD4wyWLkZODgkBE4n1cz6xdzFycQgJ7GaUONr9mgkkISTw
-	iVHiyw5BOLv1qTNMw4tLSxghGnYySqz4tJAFwmllktiwdxKQw8HBJqArcXZ7DkiDiEAjo8Tj
-	jhKQGmaBvUwSe552g60WFnCUuDpzDhuIzSKgKnHv4U12EJtXwEaia/4Zdoht8hKrNxxgBmmW
-	EPjLLtGwcToTyAIJAReJ7tdSEDXCEq+Ob4Gql5J42d8GZSdLPF70khnCzpFYv2cK1Mv2Egeu
-	zAG7k1lAU2L9Ln2IsKzE1FPrwJ5nFuCT6P39hAkiziuxYx6MrSYx584PVghbRuLw6qWMELaH
-	xNy7nWyQwIqVWL96OfMERtlZCBsWMDKuYpRMLSjOTU9NNi0wzEsth0dTcn7uJkZwitRy2cF4
-	Y/4/vUOMTByMhxglOJiVRHgnCO9NFeJNSaysSi3Kjy8qzUktPsRoCgyyicxSosn5wCSdVxJv
-	aGJpYGJmZmZiaWxmqCTO+7p1boqQQHpiSWp2ampBahFMHxMHp1QDU+vcO/V19qeuf2uzvH1T
-	eLE94741ajenbPauu6TteUn97G5Jo/tby+tVX53y274gfFnA6sc7nwTfmjp1+Yzv3FeCHum0
-	p+80nFtkfsd35z/O/X8Xznx+J1hO65wm39Zpe5Juv/VbverrOcMFniyJjrlntunM9/UTLjQ8
-	qxX/UFVbm02L18SyNuSd5QOziLa8Ir09j53lN2//zy+vvKrGmdckmOuIlnUap+C2h/0XWnb6
-	Tp/jv9b8/Ky/VbN/HlO5cyzggFD9Qq7/RnEnH6tHSW30bLwUkFBbWL7ePiJZY/dzkW0xWUFv
-	/h9iDX1vGZoVrn8uKvSXgfF6f4lLhanSllwdamarRS2axZfZPPjrrsRSnJFoqMVcVJwIAA0k
-	078aBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrELMWRmVeSWpSXmKPExsWy7bCSvO6hjztTDdYu0LR4umMmq8WDedvY
-	LO4v/sxisWbvOSaL+UfOsVrcPLCTyeLizLssFn0vHjJbbHp8jdXi8q45bBY9G7ayWsw4v4/J
-	Yu2Ru+wWyzb9YbJYtPULu0Xr3iPsDgIei/e8ZPLYtKqTzePOtT1sHpuX1Hv0bVnF6PF5k5zH
-	qa+f2QPYo7hsUlJzMstSi/TtErgyGt9+ZCn4ylKx9vdvlgbGGSxdjJwcEgImEi8uLWHsYuTi
-	EBLYziixf/YyqISMxP+2Y+wQtrDEyn/P2SGKmpkkmpZ3MXcxcnCwCehKnN2eAxIXEWhllLi+
-	spMJxGEWOM0k8WXHE2aQbmEBR4mrM+ewgdgsAqoS9x7eBJvKK2Aj0TX/DNQGeYnVGw4wT2Dk
-	WcDIsIpRNLWgODc9N7nAUK84Mbe4NC9dLzk/dxMjOFi1gnYwLlv/V+8QIxMH4yFGCQ5mJRHe
-	lXI7U4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzKud0pggJpCeWpGanphakFsFkmTg4pRqYNiby
-	b34T87B62l0/l6AlWfIn7n/9x3NkxtPjTe9aMlgUIsKC21TuftSrzJ37wS1En8NWySTxrPu+
-	Y6rX+tVmu4WdmLH8s/TeBTv3/7dfVroqWutrYqRQ6Nmaj/26rwtOl3nVfLdv2mw+ZQvv5y8V
-	hStYHj7eLChd3bncQtlxpUNTbdEWTqWWRQtZv4lO1+Bna7/EMe+Q/oX59Z1rVZsnXmPi5L01
-	S+RsfpnSmck5P78yth3f45692P3JnxmzFBi4d18KWpmhLMIe9Oyx1PQltfXcD3avDbK/sYqH
-	ZWW92W1zffaumNV3RAq8LHNufbkpsj1i22TXKcmalw7qlj/5nT01sXFW/amo5J1lPTd2K7EU
-	ZyQaajEXFScCAJAMf8fFAgAA
-X-CMS-MailID: 20240131070746epcas5p39bf60e36d7d5cea5937cd6f87352ea67
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240131070746epcas5p39bf60e36d7d5cea5937cd6f87352ea67
-References: <CGME20240131070746epcas5p39bf60e36d7d5cea5937cd6f87352ea67@epcas5p3.samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gL09LoDd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HLB8XLWikbXl9Wda7WEdwct49ksAStnTrmIaY/jJiGOPI8bfj/nfA3TOZYz/OiPqh3TheTULuNnhicc3lLaWGekQiGgSP1+W+89qpg7nwXfE/DzG5CkBgj+9dEtmLRc6Iyqu47lkKGqZ5R6deK6xgZO290UOMljWrF/1U6JA4X9ryO0CsuNYShUaErs5g+VjSa1Xk7RWua4wIXHxhTMlSnzZlxUAcQ6P3qZQjTT2NJB8gTwMjubhku+bM6NvgUeUvHJvKKrJHLYZa3Fa6TnePCOw0jj1MYD3VRgJJYrCQinNH5Fgkdz0lvhjK79dXXlzBN7rp8paZN37wFZnzlc9lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WhySrlN2XHjzD7VPJdOyMrNWb7rDdoHYXtCDKwGRbEE=;
+ b=VTuMnL62OPCYON3E5Zehonre6h5wuZUjIa+zH8ojWMohttLCcuHYQg9EYdEBhC3lTOORrTe4AhQqFYyPU+E5C1BJRUtKFYTelUK0ps/YZcWy6w78SjDTIYrQlJqA3v+rSrQSn8sjn1EN2AUlUQ3Ivs3onYqsg9u7mH+3wBYeKxvcEobdQYNFV6l+wX9NVfrb0yP/bpaV0+qb/ZjvJcxPPRzW2qnxYBHtTs2CQgtyZp4R1zvW48as2haN4bCydxTDteoVR74+BrNIyXngWSw6dUEx1rtuCWnpOTAqsGRu6CGUWlr8voktQRKA3gsg5VB5Gs7a+clLpX/BrGA0byAnGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WhySrlN2XHjzD7VPJdOyMrNWb7rDdoHYXtCDKwGRbEE=;
+ b=gL09LoDdgK5fQCVSigJ9hX+qw3NpsWZEUonqUTfxlNrQQnwj1dj+gu1k3Q8wRrq0DMptEr3tXv+WZrjmZWqTQpXX2M89cyQCvm/5Zgrp8T1PyLhliQ7IH5g7xcXIF+vi9gD/N9fvjvx58Zh+iUPiVsNie+iIrgqmTXmYyeNskcA=
+Received: from DM4PR12MB6351.namprd12.prod.outlook.com (2603:10b6:8:a2::6) by
+ BN9PR12MB5194.namprd12.prod.outlook.com (2603:10b6:408:11b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Mon, 5 Feb
+ 2024 05:30:34 +0000
+Received: from DM4PR12MB6351.namprd12.prod.outlook.com
+ ([fe80::831c:60ba:97df:9720]) by DM4PR12MB6351.namprd12.prod.outlook.com
+ ([fe80::831c:60ba:97df:9720%4]) with mapi id 15.20.7270.012; Mon, 5 Feb 2024
+ 05:30:34 +0000
+From: "Meng, Li (Jassmine)" <Li.Meng@amd.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, "Rafael J. Wysocki"
+	<rjw@rjwysocki.net>
+CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+	<linux-next@vger.kernel.org>
+Subject: RE: linux-next: build warning after merge of the pm tree
+Thread-Topic: linux-next: build warning after merge of the pm tree
+Thread-Index: AQHaV/BL9brK23sCWkqmXDoXQ0ZdcrD7OHQg
+Date: Mon, 5 Feb 2024 05:30:34 +0000
+Message-ID:
+ <DM4PR12MB63510C9924DFF397DC3CC95CF7472@DM4PR12MB6351.namprd12.prod.outlook.com>
+References: <20240205160042.2e1cffb5@canb.auug.org.au>
+In-Reply-To: <20240205160042.2e1cffb5@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ActionId=3060d2e8-f9de-454c-a3f3-1cbc78a1c30a;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ContentBits=0;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Enabled=true;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Method=Standard;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Name=General;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SetDate=2024-02-05T05:28:35Z;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6351:EE_|BN9PR12MB5194:EE_
+x-ms-office365-filtering-correlation-id: 095bad80-37c0-45cf-17f7-08dc260b93cb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ jdQ3+HW0tOWzM2/zjZkNREc3vwP8/G8WBda172u6XLxkVpQZ2wcgEMkr4pY13pMRUTYV6rRG3rxVpyTeS7aOkrdfmHKPBdSZlN97zp7i4+TiZ5A6lzjSsKBkXWHDDyRDXrZwDxzPhwcmjIqsGVE1F+eO2iudfhn9zhHvgBIenQ2SCxzZD4mekytGacSnLBTT4dPg19/tQzw5Y/BDIZw9g7sr37i/ABzv5eKrPMzBzFfcLMuObg9I6BBHWqGdgRKe2nhE0JzcroyFvpSVncc1llFJ5da+dk1J5BdtdoSydZC9j41AhOCeF3arRgsSpPF1DbVO2EiaBftPBTxNXR3Tws8ZYdpD/ny2uY7vvTCyQCVtcOUH53eNz0jclFXSWKdck8TY3guijTtEJX+JO8bWPd6uKwYr9DMIu2bup/tA6/DEzLP/AYLAPwD61R7yDkzD+pwgq64t1ev3JPjbsMBG++8IlUmdLIjs2qznKr1CccIBi8S0dn9kWhDU78qMOk46PL2Ix17W/x45aIgTHJep1kCzTkI04dcwPP/vgxb/FgFoQnvM9La7EjAhLgYz4GlhG0wjvZJP3eJlC89WBhXwHGEzQak25V8w7rqaoVbHJeaI6vbcGBQSbDqTz9VG++GX
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6351.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(366004)(396003)(136003)(376002)(230273577357003)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(55016003)(41300700001)(26005)(83380400001)(53546011)(38070700009)(122000001)(71200400001)(9686003)(6506007)(38100700002)(7696005)(66446008)(478600001)(2906002)(4326008)(316002)(86362001)(66946007)(76116006)(64756008)(54906003)(66476007)(33656002)(5660300002)(66556008)(8676002)(4744005)(8936002)(52536014)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?KNmoi8PdR1QLZi/VCNTVyj8w8qSNp6YV8xRAFLjpdhGXspUbq7IyrMXKYdmj?=
+ =?us-ascii?Q?L44lnPOYaXVOFYOKPO+NANBy+kbiPynZ+zHJZC3eJlNhXjDwd3E4NVHcXVnC?=
+ =?us-ascii?Q?MUIHisF7W+/CVCgjgQh+5K41lBByG8uyQEINEJ/2SmkkG4LHwBVTdT9plCOR?=
+ =?us-ascii?Q?NmtuO3pmcoLjMNmTmiq9yrffYDXt/2fmI4lBgMTePkEhZjVDumrxvxdlUsck?=
+ =?us-ascii?Q?Jmu3sLBZMOxU/WyVA536Timxo5usAVEhnJnHGXlKK5THOvPRkRQ6+2kb8isn?=
+ =?us-ascii?Q?VIwhp/yso8bvHDzQlCfO6PDneOslZtAVF4MPOjosZDL74bFXSKEIkH3bN3G3?=
+ =?us-ascii?Q?yhJgIOzU0hpKJhZfg8fHMHE/5Zs6muC+duS+Bst4eP6bxWG1iV6D7CPmlcSj?=
+ =?us-ascii?Q?V0ahyNSN59d/GXXCc4pBmIOWsqbMvoqybbiyzLs1jChHCLE7rJL8Ba2O8NiJ?=
+ =?us-ascii?Q?q4NjosFF37Nd1Z4ytgSyFQ8t7YhH5DCL586fYdo2c/+QLzU9SiKIMWGXAfHc?=
+ =?us-ascii?Q?y9fAIZXnx+locvUOsleeeYj9kYNAcSNd2jFkBOkQsFJ3cfU01V/otRqFlx86?=
+ =?us-ascii?Q?mNjQkogFSGVjxH0Ki21BouXCw8NHYhbT0knx043ZlrlkGaD994TjtOwAuWJe?=
+ =?us-ascii?Q?BiqvZImkCQRnDCostd74fD5O9CNoydqKjd2hPI0BbM5mnjWachGTxVjiugJO?=
+ =?us-ascii?Q?P9gDXkRRzIHjvHxpMWEWGqBiWcOhGHjFOcRXatkrwql/io76AB2kS96i40wc?=
+ =?us-ascii?Q?OR6Y8+vX+XRFPFQXF1dOx0pZs59ltYGDTM4M77bozlj/2JQGdTqoh2u0q9PA?=
+ =?us-ascii?Q?GCJ9f4cIUng0lQLG+yuGE9H49nrie3sG2P974aCe0DdM75Byi8X+i+VyYP5e?=
+ =?us-ascii?Q?95C9ATKe+lY4S/9nuFy4Ceuz85qV7oU/3QCO8kVF3/wc1K7y5U5Zu//FPNX+?=
+ =?us-ascii?Q?lA5lz0Pof99W/jJjlKwJSZNLycILaLseyI3kpe0zvkjFr6LfyiZUfWLa2G6R?=
+ =?us-ascii?Q?puMCErYxUYmPzsKmGkRvjP81fjIFRbPYgeMt+CSRwS6bykCg654jXhjxDmP+?=
+ =?us-ascii?Q?C/SLIgNu1X/ofwGRb3LtDeSoLrteZUe3LAl+etjGjl5cujSSq5y5dK32AXMv?=
+ =?us-ascii?Q?fTanq9mobYNJZw/1sFe5+D6wBL6AjLfW3BZeTC52rsSGR7cpk0gYeHfr02GS?=
+ =?us-ascii?Q?z8oHoDkidsPoL8H1y5o56axd8UntsyhLbex5gZK/FZooLRqWV+VDRWpe1Arq?=
+ =?us-ascii?Q?NyRLCUmc2mx5AiLazZHc6folXGBbP9f3eOzlHmWFDKSG8QKi5lJY6Ap7n7x0?=
+ =?us-ascii?Q?2kV5ISOcXAT5xy4eShJhlYOcz7LPwUnaVKlKSowRogf8fRTijajl9MF2ODOS?=
+ =?us-ascii?Q?ivL4FHmXMtlFDD2evCPX58wzLYVcLpDiilWxHP+bxNxuu6J/e7Aqh7dt73uN?=
+ =?us-ascii?Q?+6ca6DJKu0Ju24Wy9PMiK3zkHCO+tSJ3epX+V1VByQIQZbKvoWDLJRHpcD6M?=
+ =?us-ascii?Q?8G4OnpVxvvalEnQp8DmNS5E3YWF0qiJzuoan6YYsPzH4Izv5m/onLhofFzJF?=
+ =?us-ascii?Q?kgoIb9i4RSrJSOQd1wU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6351.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 095bad80-37c0-45cf-17f7-08dc260b93cb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2024 05:30:34.5724
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aVusiV1XCIT1JrkQ8RosjpfPjVNlN3cwPDNTIhqa/PQbA1eoIr291PWQxRDqdf+uj/Z5jNGtaI+zeIMiUw7GrQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5194
 
-Add device tree schema entry for Samsung MFC.
+[AMD Official Use Only - General]
 
-Signed-off-by: Aakarsh Jain <aakarsh.jain@samsung.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Hi Stephen:
+Thanks a lot.
+I will fixed this issue as soon as possible.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 32a47aa6aa76..55e9b0ae185b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2752,6 +2752,7 @@ M:	Andrzej Hajda <andrzej.hajda@intel.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-media@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/media/samsung,s5p-mfc.yaml
- F:	drivers/media/platform/samsung/s5p-mfc/
- 
- ARM/SOCFPGA ARCHITECTURE
--- 
-2.17.1
-
+> -----Original Message-----
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Sent: Monday, February 5, 2024 1:01 PM
+> To: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Meng, Li (Jassmine) <Li.Meng@amd.com>; Rafael J. Wysocki
+> <rafael.j.wysocki@intel.com>; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>; Linux Next Mailing List <linux-
+> next@vger.kernel.org>
+> Subject: linux-next: build warning after merge of the pm tree
+>
+> Hi all,
+>
+> After merging the pm tree, today's linux-next build (htmldocs) produced t=
+his
+> warning:
+>
+> Documentation/admin-guide/pm/amd-pstate.rst:384: WARNING: Title
+> underline too short.
+>
+> ``amd-pstate`` Preferred Core Switch
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Introduced by commit
+>
+>   3a004e1fee4b ("Documentation: amd-pstate: introduce amd-pstate
+> preferred core")
+>
+> --
+> Cheers,
+> Stephen Rothwell
