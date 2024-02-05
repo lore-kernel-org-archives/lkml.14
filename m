@@ -1,148 +1,162 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F21862B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9219E17C98;
+	Mon,  5 Feb 2024 11:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707131071; cv=none; b=up3xecHOHag7ZlYOREV9oBPjogouuDMhrWmPUFWhp4JoA+oQ33fxRyjFwvqpdriiXD0FT4dmRd4WdYwB+qmtnWUc1O5VbwS4UaT9JgfpY4J/w/BTJl+sFFlJ0pkCYpkIdJE6u964G/cSdPBlQ8DGMhlVl7aQ72qtWuwxezhU1+g=
+	t=1707131113; cv=none; b=HJznqcOrQZFLreEFJNjMy5u3hKqxqJKkQ2mfYYL86OJBAipmC+wxBCX0GudDixQs1MQfull0Wf3DNTBGZTMg6I0PSMjspBkuCV8mIeWibwgjsOPKE0YLsOuTZXVMQSzOk80ZVGVCZo5KJ2iRPMXpd84pODjzbJWkn/7F1UeJETg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707131071; c=relaxed/simple;
-	bh=GJc/HD3I91CSWrhG1VaX5rx7KU7vffyvnTXbDyE7oOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aEd1mbASl55vwHqPIx1jMGjhUMeAomI6HyK8LTbUJQB0JIXCgrLyTByV59TKHygegHzovuNx640jiRJyr9NuSzY2iz7a8tcpIWGvAoxI3si9yA3DNwaUfEoDtAAeEbxccmBw70wa2dg3xtOB/qOEjY12b3hUAB5WCKlSplh/5Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BDC4N4tL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lHSJ5A72; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BDC4N4tL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lHSJ5A72; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1707131113; c=relaxed/simple;
+	bh=VJyxnHmRqLuTEtU8FAarFurtgv+O3sQGbnrzjvXqxLE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nBtprV6SuKLdHg36ihTqDB2IqfgX8vH7Lpxu8wu6qwrI7k3vXxnxQDLBv402h8bjgDDj3jgUjxJo1inhfTGc5hi8jhsaqFH649Anwlon7/S0iogyBIH1BLMGh/5G0JGcRxzAnJsI/F1eAVGkoeRfcSKnFV3bA/146dFMPe+VdoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AR+4G5fV; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BDC4N4tL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lHSJ5A72";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BDC4N4tL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lHSJ5A72"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9119C22105;
-	Mon,  5 Feb 2024 11:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707131067;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GJc/HD3I91CSWrhG1VaX5rx7KU7vffyvnTXbDyE7oOU=;
-	b=BDC4N4tL77M7wzLYLPAISimsvrYlWFbo0F7ZUEt3zmNdUQ/taqEKloVf6lkhyp8AgBrVfJ
-	j00Q3Y2Rgbo+2or830GQOkfRs8XnbvJAolYJFSEq3yGuCmTBBd7GtHMKevxtcNRRpO/FNV
-	br2OnbT489xEsuow/Vjp+2ndtR8z5fU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707131067;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GJc/HD3I91CSWrhG1VaX5rx7KU7vffyvnTXbDyE7oOU=;
-	b=lHSJ5A72SdjNmwxr4mkb52PY4X2R8H7kQ+vLPvjtkWjsdww1giYMfT/6envWDBX0X1a3/i
-	TbN3Lb4ddAdZ/1AA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707131067;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GJc/HD3I91CSWrhG1VaX5rx7KU7vffyvnTXbDyE7oOU=;
-	b=BDC4N4tL77M7wzLYLPAISimsvrYlWFbo0F7ZUEt3zmNdUQ/taqEKloVf6lkhyp8AgBrVfJ
-	j00Q3Y2Rgbo+2or830GQOkfRs8XnbvJAolYJFSEq3yGuCmTBBd7GtHMKevxtcNRRpO/FNV
-	br2OnbT489xEsuow/Vjp+2ndtR8z5fU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707131067;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GJc/HD3I91CSWrhG1VaX5rx7KU7vffyvnTXbDyE7oOU=;
-	b=lHSJ5A72SdjNmwxr4mkb52PY4X2R8H7kQ+vLPvjtkWjsdww1giYMfT/6envWDBX0X1a3/i
-	TbN3Lb4ddAdZ/1AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1561D132DD;
-	Mon,  5 Feb 2024 11:04:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id C5KCOrrAwGU8OgAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Mon, 05 Feb 2024 11:04:26 +0000
-Date: Mon, 5 Feb 2024 12:04:25 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: Cyril Hrubis <chrubis@suse.cz>, ltp@lists.linux.it,
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
-	lwn@lwn.net, automated-testing@lists.yoctoproject.org
-Cc: Andrea Cervesato <andrea.cervesato@suse.de>
-Subject: Re: [LTP] [ANNOUNCE] The Linux Test Project has been released for
- JANUARY 2024
-Message-ID: <20240205110425.GB201808@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <ZbjZxy4vbxoXUJ-i@yuki>
- <20240203235708.GA164636@pevik>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AR+4G5fV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707131107; x=1738667107;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VJyxnHmRqLuTEtU8FAarFurtgv+O3sQGbnrzjvXqxLE=;
+  b=AR+4G5fVCeyOLUA9Z2hBvuTVJsj6m49pIoAjNnXPSNtzD8eWtO/QYDfd
+   /EDsJSK0e9IYECO8BFTGjg7deASi+AF4wSuziuNEqSR8WF43kpZ8Qa6c6
+   l8lrgW3ZJ7woGrahgNg6eaYHoGTtV/RAsa1X6XFTkEHx6U6ta7Rr6TQdl
+   ixSM9PYTByHTCd20ckOzD4imklNiX9e+x0buKXAgwsUzrLjwBTew8zsEg
+   f+RBofpKMc178NxEUG6JfbfbuNdR6Ho9R6mn3YoOe+YEyoM1LGvRDCyXE
+   Go7pLzAyGh6FOCY4Emb7XLVach3s6uVGUHFOPN1xK79DLZnO81K8YeLJA
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="25945187"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="25945187"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 03:05:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="5327463"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa004.fm.intel.com with ESMTP; 05 Feb 2024 03:05:02 -0800
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Alexander Duyck <alexanderduyck@fb.com>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 0/7] dma: skip calling no-op sync ops when possible
+Date: Mon,  5 Feb 2024 12:04:19 +0100
+Message-ID: <20240205110426.764393-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240203235708.GA164636@pevik>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [0.62 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	 REPLYTO_EQ_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.08)[63.23%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: 0.62
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+The series grew from Eric's idea and patch at [0]. The idea of using the
+shortcut for direct DMA as well belongs to Chris.
 
-> Hi all,
+When an architecture doesn't need DMA synchronization and the buffer is
+not an SWIOTLB buffer, most of times the kernel and the drivers end up
+calling DMA sync operations for nothing.
+Even when DMA is direct, this involves a good non-inline call ladder and
+eats a bunch of CPU time. With IOMMU, this results in calling indirect
+calls on hotpath just to check what is already known and return.
+XSk is been using a custom shortcut for that for quite some time.
+I recently wanted to introduce a similar one for Page Pool. Let's combine
+all this into one generic shortcut, which would cover all DMA sync ops
+and all types of DMA (direct, IOMMU, ...).
 
-> > Good news everyone,
+* #1 adds stub inlines to be able to skip DMA sync ops or even compile
+     them out when not needed.
+* #2 adds the generic shortcut and enables it for direct DMA.
+* #3 adds ability to skip DMA syncs behind an IOMMU.
+* #4-5 are just cleanups for Page Pool to avoid merge conflicts in future.
+* #6 checks for the shortcut as early as possible in the Page Pool code to
+     make sure no cycles wasted.
+* #7 replaces XSk's shortcut with the generic one.
 
-> > the Linux Test Project test suite stable release for *January 2024* has been
-> > released.
+On 100G NIC, the result is +3-5% for direct DMA and +10-11% for IOMMU.
+As a bonus, XSk core now allows batched buffer allocations for IOMMU
+setups.
+If the shortcut is not available on some system, there should be no
+visible performance regressions.
 
-> > Since the last release 315 patches by 34 authors were merged.
+[0] https://lore.kernel.org/netdev/20221115182841.2640176-1-edumazet@google.com
 
-> > Patch review is what most of the projects struggle with and LTP is no
-> > different. If you can spare some effort helping with the patch review is more
-> > than welcomed.
+Alexander Lobakin (7):
+  dma: compile-out DMA sync op calls when not used
+  dma: avoid redundant calls for sync operations
+  iommu/dma: avoid expensive indirect calls for sync operations
+  page_pool: make sure frag API fields don't span between cachelines
+  page_pool: don't use driver-set flags field directly
+  page_pool: check for DMA sync shortcut earlier
+  xsk: use generic DMA sync shortcut instead of a custom one
 
-> > NOTABLE CHANGES
-> > ===============
+ kernel/dma/Kconfig                            |   4 +
+ include/net/page_pool/types.h                 |  21 ++-
+ include/linux/device.h                        |   5 +
+ include/linux/dma-map-ops.h                   |  20 +++
+ include/linux/dma-mapping.h                   | 122 ++++++++++++++----
+ include/net/xdp_sock_drv.h                    |   7 +-
+ include/net/xsk_buff_pool.h                   |  13 +-
+ drivers/base/dd.c                             |   2 +
+ drivers/iommu/dma-iommu.c                     |   3 +-
+ drivers/net/ethernet/engleder/tsnep_main.c    |   2 +-
+ .../net/ethernet/freescale/dpaa2/dpaa2-xsk.c  |   2 +-
+ drivers/net/ethernet/intel/i40e/i40e_xsk.c    |   2 +-
+ drivers/net/ethernet/intel/ice/ice_xsk.c      |   2 +-
+ drivers/net/ethernet/intel/igc/igc_main.c     |   2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c  |   2 +-
+ .../ethernet/mellanox/mlx5/core/en/xsk/rx.c   |   4 +-
+ .../net/ethernet/mellanox/mlx5/core/en_rx.c   |   2 +-
+ drivers/net/ethernet/netronome/nfp/nfd3/xsk.c |   2 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |   2 +-
+ kernel/dma/mapping.c                          |  70 +++++++---
+ kernel/dma/swiotlb.c                          |  14 ++
+ net/core/page_pool.c                          |  67 ++++++----
+ net/xdp/xsk_buff_pool.c                       |  29 +----
+ 23 files changed, 276 insertions(+), 123 deletions(-)
 
-> FYI, there is missing removal of runtest/connectors [1], which can break some
-> tooling.
+---
+From v1[1]:
+* #1:
+  * use static inlines instead of macros (Chris);
+  * move CONFIG_DMA_NEED_SYNC check into dma_skip_sync() (Robin);
+* #2:
+  * use a new dma_map_ops flag instead of new callback, assume the same
+    conditions as for direct DMA are enough (Petr, Robin);
+  * add more code comments to make sure the whole idea and path are
+    clear (Petr, Robin, Chris);
+* #2, #3: correct the Git tags and the authorship a bit.
 
-And we removed also runtest/fsx [2] in this release.
+Not addressed:
+* #1:
+  * dma_sync_*range_*() are still wrapped, as some subsystems may want
+    to call the underscored versions directly (e.g. Page Pool);
+* #2:
+  * the new dev->dma_skip_sync bit is still preferred over checking for
+    READ_ONCE(dev->dma_uses_io_tlb) + dev_is_dma_coherent() on hotpath
+    as a faster solution.
 
-Kind regards,
-Petr
+[1] https://lore.kernel.org/netdev/20240126135456.704351-1-aleksander.lobakin@intel.com
+-- 
+2.43.0
 
-> Kind regards,
-> Petr
-
-> [1] https://github.com/linux-test-project/ltp/commit/9b642d89c0bcf5885b051c2d5768fa94b61d86cb
-[2] https://github.com/linux-test-project/ltp/commit/fb2b6a0b3c840aa80229acf4360b7bdc3ced5edb
-...
