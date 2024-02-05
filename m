@@ -1,143 +1,300 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1742168B9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5937B1AACA;
+	Mon,  5 Feb 2024 12:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134513; cv=none; b=CMULrrKa/5mzypBwtoKeW1qDheJADEV6UOHF4opnOdRY19EfTFFoy0057vx0T2nP5LnzKOdHFP1s1KgxvH6l+iPAUxx9jLXGdedB2k6VEAgg6NzSeCeiSNBBZtpGVv0mQQj2Zo6lX9Odc2FQFz9R1lkjtoAYJslffTV0k/DfttA=
+	t=1707134544; cv=none; b=mZCMKAL3i16hBOzkYph/+sZrzhLfYfR4pG8ZYSUwoWWnq5YkANAbStOdoR7v8ZqVRJAb8xo38o5h+Fr3fL0myFRlk/yW2g6LV3pEdE+a3DLe4sRkyMUBELNFeFDE+1xgyJq9JAP1q4ut3HumiBvL9a7BHxZFh8vifrvlfl2BJbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134513; c=relaxed/simple;
-	bh=wy0r1UGOlI8VWUg4o5WQ5eNOjowjM5g7AjUKiiYZx5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cu7QHOyDQzo7SJz0zx520M/2y/QOGVHamlLGIslU/YwUQkgIvolW1p8R0hSooUbYZGrXVF1D31B4RmbWdKAmq+CsZAiTZrFFdybotkng+wIpNQWrkm6B7Mz7lCaoBcjyzLihUzmDMxo7Bt4MoW6ssMCBZwS8UrywKcHAXXwscYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=ENQ3x8O/; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1707134544; c=relaxed/simple;
+	bh=9cueAwB0LumDfwRgOwQHZBfcrPxpJyw8wAQR4On/8Ck=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nIUkcboiY/yUs1w8JVlIHoXREznAZ5FSSWCodQ9Zb+YLycRUdRVU1pbn40tjI22iFmcPVPblETg1RT0hIFin4DXz0G9qSK0+T7ctd1ul6fu3jGv9ai8kks7byby+BteLPGX/clqv65fR9hHwluxdvqwaL34OiofVh0vt1X0b5zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=XhB2O2wL; arc=none smtp.client-ip=207.171.190.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="ENQ3x8O/"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40fc654a718so25425545e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:01:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XhB2O2wL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1707134510; x=1707739310; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tNUTLRh0uORxgdvQZdWeV7OWpCRm6fjT9p0GI9ATEAA=;
-        b=ENQ3x8O/fiJMJymc7LxtJbwj6H2YWeJcVdeqE44iu1CcFRielLkqV+391oEqW638z+
-         fUa4wgm5UzTtIbd5UzWMWwTRcfjs5eaDVrUSFurjGfULmPrUxpvaty+mgwATNA0kS3Wa
-         Wej6g3i1rHcVtkYNl8igq0GoOzz54iJ9hVRrPbpore4/Hg1LR7I3+UIfl8h9XcQPTVDH
-         PNjtqbx51WZs9sRKdSO6rIk5k4YLF6GxXsFquBCzPV7dtwTMdrSTaZTISonp1xTRthL/
-         p8CpFLvGtnUBeIDZVLeBB0pSlluelcv48HJYlrfWYgQCve8bUFacNrKg3CvJ9sOv6Hvf
-         q6nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707134510; x=1707739310;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tNUTLRh0uORxgdvQZdWeV7OWpCRm6fjT9p0GI9ATEAA=;
-        b=wYrpZyDZfd2FDV/qYqce+64JsX6l52vPX6M6nFt4l9NgUWtKYEfxKdjY1W+84Z7/9S
-         fPV4f4tHD6xohGUQI00c/RMtAwewimMEFJj2acN0SyyAHxOfFUFr70f6t1ZbcVCdnEqz
-         ogc0vcRlrgDoSShiGg7sFH+Ig8WZbNNoYQv31BA3rB0gEiGwz5nmk+JMxLUXjlR46KGV
-         z29rH1uKAbnuf6MwwWtxqH8XLAb5rssU/mxwWs3uwVMDB/hMSwzJqHl25urVE0jq7LKF
-         3xVGbIiBSELXqi+rNRm6eeygWerxReBuXEsvH36WlD/x46wJmk3XCpwjbOIk4MDPaGqb
-         8nmA==
-X-Gm-Message-State: AOJu0YxKUqKw43WN56q9yUd+fLNgoTLMbGrJDnOtnbPYLi5XYWwImFlo
-	ahRlTLhFlaxATNFmopJQ+tVsuq87mLIuQvkgHUglgfnItkuFn37OBathhjdFMOs=
-X-Google-Smtp-Source: AGHT+IHWqNiVcAQK8HVihsJjFtCl6C0gSNKBH/FtbKc34ErpwQ7Bj+kbyDVaKXxEc4JE0pjClnzq6A==
-X-Received: by 2002:a05:600c:468d:b0:40f:dc51:1882 with SMTP id p13-20020a05600c468d00b0040fdc511882mr1359629wmo.8.1707134509374;
-        Mon, 05 Feb 2024 04:01:49 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCW/WeIZaLbIJdUoV2uOi8CtBU7/5uQmbaWjHK4eakyFqOpEUCrvdBLgh2S2jHCdZy4hHmXTSyLfDp3sPFiKh0OdaarA0eYJCMhAlhqZu4IQfYCllpkzEk5vYraCS8T22HotTdcAof9isywvzsSdX9zQZloV3Yfh0+nDo8/T1braAwGHp3UZTuqLGBpaR6dCfAmehzNbHMk3QO7jmUYOrnffOibWHzlCR5Cz0u2WgOij4byGlTla5J3h/I2N/DxDqzXsEh+P2aKYvSWTJY9yXKqSkucoXGVkMorC+q3i9Q==
-Received: from airbuntu (host109-154-238-234.range109-154.btcentralplus.com. [109.154.238.234])
-        by smtp.gmail.com with ESMTPSA id u20-20020a05600c139400b0040ee0abd8f1sm8382027wmf.21.2024.02.05.04.01.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:01:48 -0800 (PST)
-Date: Mon, 5 Feb 2024 12:01:47 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH] cpufreq: Change default transition delay to 2ms
-Message-ID: <20240205120147.ui5zab2b2j4looex@airbuntu>
-References: <20240205022500.2232124-1-qyousef@layalina.io>
- <326b568d-d460-4a69-9336-28da328ffdcf@arm.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1707134543; x=1738670543;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7MMrpZTVfPMVrVGIto5DFnqZuYB6wP8OFtd9k5c3mQY=;
+  b=XhB2O2wLClUkXCGEJqYWZe6UjQdFuuR1nFOsv/WJfODSqA1hNN1s+wQD
+   NVApEX+guwLwKZTUbYWuLrGfeL+CeHRTdbqxKvk2guyj2aokfF0GGiG/5
+   9WUA/JZkAi9YGRVD9UZF+gj8XmqzRnyjK1y8CMCK8Svpv5r9ENL3T/kq2
+   g=;
+X-IronPort-AV: E=Sophos;i="6.05,245,1701129600"; 
+   d="scan'208";a="325148614"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 12:02:16 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.17.79:46990]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.33.186:2525] with esmtp (Farcaster)
+ id 6f950021-4fed-4869-bff9-20388ff33e9a; Mon, 5 Feb 2024 12:02:14 +0000 (UTC)
+X-Farcaster-Flow-ID: 6f950021-4fed-4869-bff9-20388ff33e9a
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 5 Feb 2024 12:02:14 +0000
+Received: from dev-dsk-jgowans-1a-a3faec1f.eu-west-1.amazon.com
+ (172.19.112.191) by EX19D014EUC004.ant.amazon.com (10.252.51.182) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 5 Feb
+ 2024 12:02:07 +0000
+From: James Gowans <jgowans@amazon.com>
+To: <linux-kernel@vger.kernel.org>
+CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
+	"Joerg Roedel" <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	<iommu@lists.linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, "Christian
+ Brauner" <brauner@kernel.org>, <linux-fsdevel@vger.kernel.org>, Paolo Bonzini
+	<pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
+	<kvm@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	<linux-mm@kvack.org>, Alexander Graf <graf@amazon.com>, David Woodhouse
+	<dwmw@amazon.co.uk>, "Jan H . Schoenherr" <jschoenh@amazon.de>, Usama Arif
+	<usama.arif@bytedance.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	<madvenka@linux.microsoft.com>, <steven.sistare@oracle.com>,
+	<yuleixzhang@tencent.com>
+Subject: [RFC 00/18] Pkernfs: Support persistence for live update
+Date: Mon, 5 Feb 2024 12:01:45 +0000
+Message-ID: <20240205120203.60312-1-jgowans@amazon.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <326b568d-d460-4a69-9336-28da328ffdcf@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D045UWA002.ant.amazon.com (10.13.139.12) To
+ EX19D014EUC004.ant.amazon.com (10.252.51.182)
 
-Hi Christian
+This RFC is to solicit feedback on the approach of implementing support for live
+update via an in-memory filesystem responsible for storing all live update state
+as files in the filesystem.
 
-On 02/05/24 09:17, Christian Loehle wrote:
-> On 05/02/2024 02:25, Qais Yousef wrote:
-> > 10ms is too high for today's hardware, even low end ones. This default
-> > end up being used a lot on Arm machines at least. Pine64, mac mini and
-> > pixel 6 all end up with 10ms rate_limit_us when using schedutil, and
-> > it's too high for all of them.
-> > 
-> > Change the default to 2ms which should be 'pessimistic' enough for worst
-> > case scenario, but not too high for platforms with fast DVFS hardware.
-> > 
-> > Signed-off-by: Qais Yousef <qyousef@layalina.io>
-> > ---
-> >  drivers/cpufreq/cpufreq.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 44db4f59c4cc..8207f7294cb6 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -582,11 +582,11 @@ unsigned int cpufreq_policy_transition_delay_us(struct cpufreq_policy *policy)
-> >  		 * for platforms where transition_latency is in milliseconds, it
-> >  		 * ends up giving unrealistic values.
-> >  		 *
-> > -		 * Cap the default transition delay to 10 ms, which seems to be
-> > +		 * Cap the default transition delay to 2 ms, which seems to be
-> >  		 * a reasonable amount of time after which we should reevaluate
-> >  		 * the frequency.
-> >  		 */
-> > -		return min(latency * LATENCY_MULTIPLIER, (unsigned int)10000);
-> > +		return min(latency * LATENCY_MULTIPLIER, (unsigned int)(2*MSEC_PER_SEC));
-> >  	}
-> >  
-> >  	return LATENCY_MULTIPLIER;
-> 
-> Hi Qais,
-> as previously mentioned I'm working on improving iowait boost and while I'm not against
-> this patch per se it does make iowait boosting more aggressive. ((Doubling limited by rate_limit_us)
-> Since the boost is often applied when not useful (for Android e.g. periodic f2fs writebacks),
-> this might have some side effects. Please give me a couple of days for verifying any impact,
-> or did you do that already?
+Hypervisor live update is a mechanism to support updating a hypervisor via kexec
+in a way that has limited impact to running virtual machines. This is done by
+pausing/serialising running VMs, kexec-ing into a new kernel, starting new VMM
+processes and then deserialising/resuming the VMs so that they continue running
+from where they were. Virtual machines can have PCI devices passed through and
+in order to support live update it’s necessary to persist the IOMMU page tables
+so that the devices can continue to do DMA to guest RAM during kexec.
 
-I don't understand the concern, could you elaborate more please?
+This RFC is a follow-on from a discussion held during LPC 2023 KVM MC
+which explored ways in which the live update problem could be tackled;
+this was one of them:
+https://lpc.events/event/17/contributions/1485/
 
-Products already ship with 500us and 1ms which is lower than this 2ms.
+The approach sketched out in this RFC introduces a new in-memory filesystem,
+pkernfs. Pkernfs takes over ownership separate from Linux memory
+management system RAM which is carved out from the normal MM allocator
+and donated to pkernfs. Files are created in pkernfs for a few purposes:
+There are a few things that need to be preserved and re-hydrated after
+kexec to support this:
 
-On my AMD desktop it is already 1ms. And I think I've seen Intel systems
-defaulting to 500us or something low too. Ideally cpufreq drivers should set
-policy->transition_delay_us; so this path is taken if the driver didn't
-populate that. Which seems to be more common than I'd like tbh.
+* Guest memory: to be able to restore the VM its memory must be
+preserved.  This is achieved by using a regular file in pkernfs for guest RAM.
+As this guest RAM is not part of the normal linux core mm allocator and
+has no struct pages, it can be removed from the direct map which
+improves security posture for guest RAM. Similar to memfd_secret.
 
-I never run with 10ms. It's too slow. But I had several tests in the past
-against 2ms posted for those margin and removal of uclamp-max aggregation
-series. Anyway. I ran PCMark storage on Pixel 6 (running mainlinish kernel) and
-I see
+* IOMMU root page tables: for the IOMMU to have any ability to do DMA
+during kexec it needs root page tables to look up per-domain page
+tables. IOMMU root page tables are stored in a special path in pkernfs:
+iommu/root-pgtables.  The intel IOMMU driver is modified to hook into
+pkernfs to get the chunk of memory that it can use to allocate root
+pgtables.
 
-10ms: 27600
-2ms: 29750
+* IOMMU domain page tables: in order for VM-initiated DMA operations to
+continue running while kexec is happening the IOVA to PA address
+translations for persisted devices needs to continue to work. Similar to
+root pgtables the per-domain page tables for persisted devices are
+allocated from a pkernfs file so they they are also persisted across
+kexec. This is done by using pkernfs files for IOMMU domain page
+tables. Not all devices are persistent, so VFIO is updated to support
+defining persistent page tables on passed through devices.
 
-HTH
+* Updates to IOMMU and PCI are needed to make device handover across
+kexec work properly. Although not fully complete some of the changed
+needed around avoiding device re-setting and re-probing are sketched
+in this RFC.
 
-Cheers
+Guest RAM and IOMMU state are just the first two things needed for live update.
+Pkernfs opens the door for other kernel state which can improve kexec or add
+more capabilities to live update to also be persisted as new files.
 
---
-Qais Yousef
+The main aspect we’re looking for feedback/opinions on here is the concept of
+putting all persistent state in a single filesystem: combining guest RAM and
+IOMMU pgtables in one store. Also, the question of a hard separation between
+persistent memory and ephemeral memory, compared to allowing arbitrary pages to
+be persisted. Pkernfs does it via a hard separation defined at boot time, other
+approaches could make the carving out of persistent pages dynamic.
+
+Sign-offs are intentionally omitted to make it clear that this is a
+concept sketch RFC and not intended for merging.
+
+On CC are folks who have sent RFCs around this problem space before, as
+well as filesystem, kexec, IOMMU, MM and KVM lists and maintainers.
+
+== Alternatives ==
+
+There have been other RFCs which cover some aspect of the live update problem
+space. So far, all public approaches with KVM neglected device assignment which
+introduces a new dimension of problems. Prior art in this space includes:
+
+1) Kexec Hand Over (KHO) [0]: This is a generic mechanism to pass kernel state
+across kexec. It also supports specifying persisted memory page which could be
+used to carve out IOMMU pgtable pages from the new kernel’s buddy allocator.
+
+2) PKRAM [1]: Tmpfs-style filesystem which dynamically allocates memory which can
+be used for guest RAM and is preserved across kexec by passing a pointer to the
+root page.
+
+3) DMEMFS [2]: Similar to pkernfs, DMEMFS is a filesystem on top of a reserved
+chunk of memory specified via kernel cmdline parameter. It is not persistent but
+aims to remove the need for struct page overhead.
+
+4) Kernel memory pools [3, 4]: These provide a mechanism for kernel modules/drivers
+to allocate persistent memory, and restore that memory after kexec. They do do
+not attempt to provide the ability to store userspace accessible state or have a
+filesystem interface.
+
+== How to use ==
+
+Use the mmemap and pkernfs cmd line args to carve memory out of system RAM and
+donate it to pkernfs. For example to carve out 1 GiB of RAM starting at physical
+offset 1 GiB:
+  memmap=1G%1G nopat pkernfs=1G!1G
+
+Mount pkernfs somewhere, for example:
+  mount -t pkernfs /mnt/pkernfs
+
+Allocate a file for guest RAM:
+  touch /mnt/pkernfs/guest-ram
+  truncate -s 100M /mnt/pkernfs/guest-ram
+
+Add QEMU cmdline option to use this as guest RAM:
+  -object memory-backend-file,id=pc.ram,size=100M,mem-path=/mnt/pkernfs/guest-ram,share=yes
+  -M q35,memory-backend=pc.ram
+
+Allocate a file for IOMMU domain page tables:
+  touch /mnt/pkernfs/iommu/dom-0
+  truncate -s 2M /mnt/pkernfs/iommu/dom-0
+
+That file must be supplied to VFIO when creating the IOMMU container, via the
+VFIO_CONTAINER_SET_PERSISTENT_PGTABLES ioctl. Example: [4]
+
+After kexec, re-mount pkernfs, re-used those files for guest RAM and IOMMU
+state. When doing DMA mapping specify the additional flag
+VFIO_DMA_MAP_FLAG_LIVE_UPDATE to indicate that IOVAs are set up already.
+Example: [5].
+
+== Limitations ==
+
+This is a RFC design to sketch out the concept so that there can be a discussion
+about the general approach. There are many gaps and hacks; the idea is to keep
+this RFC as simple as possible. Limitations include:
+
+* Needing to supply the physical memory range for pkernfs as a kernel cmdline
+parameter. Better would be to allocate memory for pkernfs dynamically on first
+boot and pass that across kexec. Doing so would require additional integration
+with memblocks and some ability to pass the dynamically allocated ranges
+across. KHO [0] could support this.
+
+* A single filesystem with no support for NUMA awareness. Better would be to
+support multiple named pkernfs mounts which can cover different NUMA nodes.
+
+* Skeletal filesystem code. There’s just enough functionality to make it usable to
+demonstrate the concept of using files for guest RAM and IOMMU state.
+
+* Use-after-frees for IOMMU mappings. Currently nothing stops the pkernfs guest
+RAM files being deleted or resized while IOMMU mappings are set up which would
+allow DMA to freed memory. Better integration with guest RAM files and
+IOMMU/VFIO is necessary.
+
+* Needing to drive and re-hydrate the IOMMU page tables by defining an IOMMU file.
+Really we should move the abstraction one level up and make the whole VFIO
+container persistent via a pkernfs file. That way you’d "just" re-open the VFIO
+container file and all of the DMA mappings inside VFIO would already be set up.
+
+* Inefficient use of filesystem space. Every mappings block is 2 MiB which is both
+wasteful and an hard upper limit on file size.
+
+[0] https://lore.kernel.org/kexec/20231213000452.88295-1-graf@amazon.com/
+[1] https://lore.kernel.org/kexec/1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com/
+[2] https://lkml.org/lkml/2020/12/7/342
+[3] https://lore.kernel.org/all/169645773092.11424.7258549771090599226.stgit@skinsburskii./
+[4] https://lore.kernel.org/all/2023082506-enchanted-tripping-d1d5@gregkh/#t
+[5] https://github.com/jgowans/qemu/commit/e84cfb8186d71f797ef1f72d57d873222a9b479e
+[6] https://github.com/jgowans/qemu/commit/6e4f17f703eaf2a6f1e4cb2576d61683eaee02b0
+
+
+James Gowans (18):
+  pkernfs: Introduce filesystem skeleton
+  pkernfs: Add persistent inodes hooked into directies
+  pkernfs: Define an allocator for persistent pages
+  pkernfs: support file truncation
+  pkernfs: add file mmap callback
+  init: Add liveupdate cmdline param
+  pkernfs: Add file type for IOMMU root pgtables
+  iommu: Add allocator for pgtables from persistent region
+  intel-iommu: Use pkernfs for root/context pgtable pages
+  iommu/intel: zap context table entries on kexec
+  dma-iommu: Always enable deferred attaches for liveupdate
+  pkernfs: Add IOMMU domain pgtables file
+  vfio: add ioctl to define persistent pgtables on container
+  intel-iommu: Allocate domain pgtable pages from pkernfs
+  pkernfs: register device memory for IOMMU domain pgtables
+  vfio: support not mapping IOMMU pgtables on live-update
+  pci: Don't clear bus master is persistence enabled
+  vfio-pci: Assume device working after liveupdate
+
+ drivers/iommu/Makefile           |   1 +
+ drivers/iommu/dma-iommu.c        |   2 +-
+ drivers/iommu/intel/dmar.c       |   1 +
+ drivers/iommu/intel/iommu.c      |  93 +++++++++++++---
+ drivers/iommu/intel/iommu.h      |   5 +
+ drivers/iommu/iommu.c            |  22 ++--
+ drivers/iommu/pgtable_alloc.c    |  43 +++++++
+ drivers/iommu/pgtable_alloc.h    |  10 ++
+ drivers/pci/pci-driver.c         |   4 +-
+ drivers/vfio/container.c         |  27 +++++
+ drivers/vfio/pci/vfio_pci_core.c |  20 ++--
+ drivers/vfio/vfio.h              |   2 +
+ drivers/vfio/vfio_iommu_type1.c  |  51 ++++++---
+ fs/Kconfig                       |   1 +
+ fs/Makefile                      |   3 +
+ fs/pkernfs/Kconfig               |   9 ++
+ fs/pkernfs/Makefile              |   6 +
+ fs/pkernfs/allocator.c           |  51 +++++++++
+ fs/pkernfs/dir.c                 |  43 +++++++
+ fs/pkernfs/file.c                |  93 ++++++++++++++++
+ fs/pkernfs/inode.c               | 185 +++++++++++++++++++++++++++++++
+ fs/pkernfs/iommu.c               | 163 +++++++++++++++++++++++++++
+ fs/pkernfs/pkernfs.c             | 115 +++++++++++++++++++
+ fs/pkernfs/pkernfs.h             |  61 ++++++++++
+ include/linux/init.h             |   1 +
+ include/linux/iommu.h            |   6 +-
+ include/linux/pkernfs.h          |  38 +++++++
+ include/uapi/linux/vfio.h        |  10 ++
+ init/main.c                      |  10 ++
+ 29 files changed, 1029 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/iommu/pgtable_alloc.c
+ create mode 100644 drivers/iommu/pgtable_alloc.h
+ create mode 100644 fs/pkernfs/Kconfig
+ create mode 100644 fs/pkernfs/Makefile
+ create mode 100644 fs/pkernfs/allocator.c
+ create mode 100644 fs/pkernfs/dir.c
+ create mode 100644 fs/pkernfs/file.c
+ create mode 100644 fs/pkernfs/inode.c
+ create mode 100644 fs/pkernfs/iommu.c
+ create mode 100644 fs/pkernfs/pkernfs.c
+ create mode 100644 fs/pkernfs/pkernfs.h
+ create mode 100644 include/linux/pkernfs.h
+
+-- 
+2.40.1
+
