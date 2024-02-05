@@ -1,45 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC0344C64;
-	Mon,  5 Feb 2024 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330953A8FB
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707147198; cv=none; b=iTTt3kanBHdtUHL4LVqYWOc0R4pBNlyUkwsLH+heP5MXKCn0smujHnCLBya8A3W91d8OXHfzLTQnALHvgWMraS8V4dtUmS//Tu0IfmZcmEHn2d3kJt31uXMgkn1NN1BmzXIDqIJrOpESP7/6W9OGbSGXktOSYn/drDpLwUsM8UI=
+	t=1707147212; cv=none; b=roHKO1KC1oNcPync0Htp5wtav4B11Tg2DNtxMeY9bamiJUYYBTBuJHhyYjujYG82WwNbznT1sEWwZpnLQY+UTWkIm94oDHmXM5253vqcoSUChcxDHTLqOLOiZveUcnH7GFRP2mhvptVD0/3F0XZ8iA5Kni5IHRfjJwfXWr5g3cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707147198; c=relaxed/simple;
-	bh=gCOn8lMXqIZY6GPLwFd8/YtzqKXfBD7yFS+3U2224/g=;
+	s=arc-20240116; t=1707147212; c=relaxed/simple;
+	bh=YjybTbiH6+mn+QYS0STDNx5/X3rF3BbV/TwjTuDcDTo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U22xDIwmaJEx5devJoxis2Gczgdkg/A28hMctsG7UCPrrcE0lDp9I1nSvzbtwgUvozhD6ABum6I6kRYW1520yDS+OCQ54PlftyaY6jqs0fSBCMKF+QDok4V5qGLFaNHDPnG2Qv0iZ/mYrYETA5cmWr9NTGNsrQwzZJCA4t+U56I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8eReduE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwSfRmTk/Cg7UteC2F7d2yk1oguiIt4x6AZeCuDJuv8c1L1dEL0CSkYb5XCIRFwFRzYQM1sfKt8JqkBVVE6F9du47aN9XYzYm2duHY4gO0RruJ++4QnDd8pmNwE5Ty7hun9M2XGmwUmx93JGuER7xarcejswByKr+rsouHnq19g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=clsKQU+3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8eReduE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3C7C43143;
-	Mon,  5 Feb 2024 15:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707147197;
-	bh=gCOn8lMXqIZY6GPLwFd8/YtzqKXfBD7yFS+3U2224/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r8eReduEZ+f6KXaR/+jcK39d1YjPp5n+Z8VFfRDNq995dvPbGCVE6/6PdS3nJv0M5
-	 HJrObsU2g/betHwRD6q78rBNyCyc86XOtPMmo5JQy2be8t7EZF/uH2S0A5A4ESbvF4
-	 1Qw0ft7VGLyacKZdwEDLYkGQo6whN61bl7v64Jw6h81R169cgXZwZFfIs8nNc1o1xG
-	 H1nugkQvSYf5tkBObyybrEuHf6IuYJMzMhUtOCeezr+FDx0X98dq/sQBRJFebXjRIu
-	 rulgkgXaYDMam9qYx457W+IYEkJ9bkcPWjLtZCI1i1S9JqXcAvxIiLX1hUYbaOCrLL
-	 XAUT0P/DgeaYg==
-Date: Mon, 5 Feb 2024 09:33:14 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Anjelique Melendez <quic_amelende@quicinc.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, lee@kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	agross@kernel.org, konrad.dybcio@linaro.org, linux-leds@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Subject: Re: Re: [PATCH 1/2] dt-bindings: soc: qcom: Add qcom,pbs bindings
-Message-ID: <jnn5hxa5nj26ocmdectpg5dq6cxrcd5d22x3kffhd4jc7i4nh6@fqgxlcwgj5th>
-References: <20240201204421.16992-2-quic_amelende@quicinc.com>
- <20240201204421.16992-4-quic_amelende@quicinc.com>
- <1de7cfbc-3507-459f-842e-c9349b2f05ac@linaro.org>
- <4a9b6d7b-70ab-cd18-770c-37993b0ccc63@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clsKQU+3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707147210;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CsHOpyyNz6zLdrRHdpKUhlbdO+IltU0fGAYIWwSsnME=;
+	b=clsKQU+3BMMuh0DeUyvmMVtXzbABTKhyN34e/F7NshHyXOG65QkuBbkJRLSkaKl7AMqwrG
+	Lr4q3yyKmTmGFAwxhP1Vu+XLqFk5rZb9XiaWY+XdNZGPnxuiwSkvRyNr2p+NYA1F4RnSbj
+	VqLP+o67k2uo+H1kQZiBClWM5kD0Og4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-217-cs0W5ccaM4ODy2vVK0aelA-1; Mon, 05 Feb 2024 10:32:44 -0500
+X-MC-Unique: cs0W5ccaM4ODy2vVK0aelA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 348C0863018;
+	Mon,  5 Feb 2024 15:32:44 +0000 (UTC)
+Received: from bfoster (unknown [10.22.32.186])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C14982166B31;
+	Mon,  5 Feb 2024 15:32:43 +0000 (UTC)
+Date: Mon, 5 Feb 2024 10:34:02 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/13] writeback: Remove a use of write_cache_pages()
+ from do_writepages()
+Message-ID: <ZcD/6iyU6SR28bf4@bfoster>
+References: <20240203071147.862076-1-hch@lst.de>
+ <20240203071147.862076-14-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,38 +60,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4a9b6d7b-70ab-cd18-770c-37993b0ccc63@quicinc.com>
+In-Reply-To: <20240203071147.862076-14-hch@lst.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On Fri, Feb 02, 2024 at 09:49:21AM -0800, Anjelique Melendez wrote:
+On Sat, Feb 03, 2024 at 08:11:47AM +0100, Christoph Hellwig wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
+> Use the new writeback_iter() directly instead of indirecting
+> through a callback.
 > 
-> On 2/1/2024 11:29 PM, Krzysztof Kozlowski wrote:
-> > On 01/02/2024 21:44, Anjelique Melendez wrote:
-> >> Add binding for the Qualcomm Programmable Boot Sequencer device.
-> >>
-> >> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > 
-> > How is it possible? This is v1, not a resend, and I never give review
-> > tags not in public.
-> > 
-> > Best regards,
-> > Krzysztof
-> > 
-> Sorry for the confusion, this patch was originally in this series:
-> https://lore.kernel.org/all/20231221185838.28440-2-quic_amelende@quicinc.com/,
-> where you gave your reviewed by tag in v3:
-> https://lore.kernel.org/all/102328fa-5699-4731-d639-079bce8863a5@linaro.org/.
-> This was separated into a new series since half of the original
-> patches were already applied. I mentioned this in the cover
-> letter but in future should I keep version the same as the original
-> series?
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> [hch: ported to the while based iter style]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+
+LGTM, modulo Jan's comments:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  mm/page-writeback.c | 31 +++++++++++++++++++------------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 5fe4cdb7dbd61a..53ff2d8219ddb6 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2577,13 +2577,25 @@ int write_cache_pages(struct address_space *mapping,
+>  }
+>  EXPORT_SYMBOL(write_cache_pages);
+>  
+> -static int writepage_cb(struct folio *folio, struct writeback_control *wbc,
+> -		void *data)
+> +static int writeback_use_writepage(struct address_space *mapping,
+> +		struct writeback_control *wbc)
+>  {
+> -	struct address_space *mapping = data;
+> -	int ret = mapping->a_ops->writepage(&folio->page, wbc);
+> -	mapping_set_error(mapping, ret);
+> -	return ret;
+> +	struct folio *folio = NULL;
+> +	struct blk_plug plug;
+> +	int err;
+> +
+> +	blk_start_plug(&plug);
+> +	while ((folio = writeback_iter(mapping, wbc, folio, &err))) {
+> +		err = mapping->a_ops->writepage(&folio->page, wbc);
+> +		mapping_set_error(mapping, err);
+> +		if (err == AOP_WRITEPAGE_ACTIVATE) {
+> +			folio_unlock(folio);
+> +			err = 0;
+> +		}
+> +	}
+> +	blk_finish_plug(&plug);
+> +
+> +	return err;
+>  }
+>  
+>  int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+> @@ -2599,12 +2611,7 @@ int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+>  		if (mapping->a_ops->writepages) {
+>  			ret = mapping->a_ops->writepages(mapping, wbc);
+>  		} else if (mapping->a_ops->writepage) {
+> -			struct blk_plug plug;
+> -
+> -			blk_start_plug(&plug);
+> -			ret = write_cache_pages(mapping, wbc, writepage_cb,
+> -						mapping);
+> -			blk_finish_plug(&plug);
+> +			ret = writeback_use_writepage(mapping, wbc);
+>  		} else {
+>  			/* deal with chardevs and other special files */
+>  			ret = 0;
+> -- 
+> 2.39.2
 > 
 
-Marking the patch(es) v9 makes it clear that they have been on the list
-already. This would be true either if you rebased v8 (and git dropped
-the applied patches from your series), or if you resubmitted some patch
-on it's own.
-
-Regards,
-Bjorn
