@@ -1,89 +1,139 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4032C84C;
-	Mon,  5 Feb 2024 15:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E282D043;
+	Mon,  5 Feb 2024 15:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707146437; cv=none; b=BH5aPoY/cpDReaF6NaokJ8PqLMUPBPlPNR53VDhucFHo2XIIL2BpmQkkT/JT4CPNkObJ/iTJKzt4hkEnktOUEu1E4DMB+baH0X5/xCc5lNJ8Bwhzgc79uPfIUzp/d+uZ2fwlkTpqaAVGIbtikTKoWUQxTWmDDbawWDU8MM7vXcI=
+	t=1707146439; cv=none; b=oAkKpDVMNjvPNtNxcw1vtH5sSoyeSfZ9VO3jad8PBL6MAnts8XDu/ARLkSngP503eGImsGOOpPKu2kKseZx4LcN8QMyQmFGckv9B34Oa8uYhz9WPcgFDaRXEjir+7iuQ4aNhygrJTb5gKiLhGOxq9bv2nn+sRyF4iUT4KD1c1VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707146437; c=relaxed/simple;
-	bh=hpLodnPFTzGDmybN3BEWyUWqwYKKEqaVJLjW6ZG61sY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRUuobislM3FIyyDhaPy7IkF4L5SscKaHz86uide0zABHMc6Z3SlFqY2G52gZAkWNAq5IXmTzXUqzAph58rCCUloczPou6x57HfrY5ceJrCA5ZiC05Hoh+oiKkLo2BNqSAKEUoPLvADcOeVT8P0CE32MYpfNDvmfm1P72m6uhvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TnzMcBJ1; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1707146439; c=relaxed/simple;
+	bh=GGePl5eiEEdPNRh0+sAveAROhsr1GXVAVnMj8eHt2vg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PpEgxheu7iEryG4U2sgAy1nEPYzlBIjgv9psKREYHfSOWwHBVakfVvEkHcVfbGNo+PR9Jbind61vNLlG8A7IWlymLfNMqi3kjg2eXVg4vo3IBRRj+5gJPqV0uzz2TsFjMWzrFdiJtjC3o6VrIJ571U0y8OJ3Bt6Mp2lZi+RK61U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2VWjqL0; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TnzMcBJ1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ybapUfqzuvYYWTklz2FUq3Tu24rh2dOO9XsrfWbS7YY=; b=TnzMcBJ1FcNgRR3WOsGVIUTGQu
-	wsTRA8QaiF3Yhfo9HyugD5whR5g6esiNWH5+KDEozZKCZ7J1/JsCrMUsapyy1dEIyOdmSavTUyahV
-	V2MhL+OCk+UUdgoMUmyOu+aY0nwZczlEyP2G8VylzZjzxrVxzqZDKgwr8/gZXQ3+5jcc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rX0lg-0072dB-IZ; Mon, 05 Feb 2024 16:20:20 +0100
-Date: Mon, 5 Feb 2024 16:20:20 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: David <david@davidv.dev>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH] net: make driver settling time configurable
-Message-ID: <580001e3-17ef-4f24-8fd8-bc14110e874e@lunn.ch>
-References: <20240205114609.440597-1-david@davidv.dev>
- <1e08910b-8ae2-4985-8423-45a1a823cefc@lunn.ch>
- <bfbad418-f8c6-4cdf-97b5-5c13044539e8@davidv.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2VWjqL0"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d953fa3286so31654045ad.2;
+        Mon, 05 Feb 2024 07:20:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707146437; x=1707751237; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=giwgZ4wcf6FmR6qMTFI58iXdRxoX8Uci/OXHw4NZoHQ=;
+        b=W2VWjqL0JIzc04Fr41o0uVYOEoN8cWBFr5PGCo78LTJVRKoO2/TgBSu634jgbhU3BN
+         w8sk3mFJJY7P4gdD9LWSMn0EopZDmqmNf0avb/4R9wHKGT6IR1eWJ4bvNvKgpdjXMohQ
+         vLzH8v921YlQZx1pwIcIQy2VPGNZlPckvq2jnXSnSgn/nKrA3LNSbHp2dF5tZvUjbmcz
+         nN9E5N29mUOAQyJJc8lnMMwr0rkOs4om1CkoWTUeb9TZc8ffP9GS94/LaKs1LyLM3d/l
+         ckD/pi5czQ8BiKbaGsxksIqAcI7e9/czqDQr2ey2nuLkl4WDkshrt1uenRcUGXis10J7
+         yw0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707146437; x=1707751237;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=giwgZ4wcf6FmR6qMTFI58iXdRxoX8Uci/OXHw4NZoHQ=;
+        b=KUtWnzucjYbBx9aOxr81n3Gjn1tFUYOyr61JscUl/eYgbtrZ0U0aihwAnc6VbtmwdU
+         2VLNLZRCVoqEUIn60IAg7N91soc1EFCpZXJHPY5sSGEhoihGC0MKt8E2Lb7oSDgFuLgT
+         igBwjc6Eot0CbI+9ECbuSLRggmtvodvSuTVAb61Pu64R9omzQ9Wv4oXtrWZgKB2BvSQQ
+         wcO3IAH2x+kXvA07sxzxJXt1PDPLytud5E9sFlGIxtfFD4colHas/7E8C8wBhF6/fk3M
+         M860ndbfzqbA5ndaCz4VBj4GrPycRA/vvzYJa41EBLPR+udV46xY+9IqRKDuT0bm85/k
+         r3BQ==
+X-Gm-Message-State: AOJu0YwbwUWUXdzLd5xdFJkmj11hc+pmj6dyg1ljj8ZKOeZl6Ol5NtUo
+	fYnCnaVFzR/YHZM0LFoL0E74NKbpczuksGj6qE4mkOVc/FfTVcbE
+X-Google-Smtp-Source: AGHT+IEGDYq4EfYGE4WQ4F8P9Y0pgjjFCa9OC7ZnaM6cBq6r0ynZIrWRaWacoH1ZFzR7YC4l0OPhEg==
+X-Received: by 2002:a17:903:2452:b0:1d9:af94:9f3d with SMTP id l18-20020a170903245200b001d9af949f3dmr4584960pls.28.1707146437351;
+        Mon, 05 Feb 2024 07:20:37 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVVS1ti89jiT+X2JZbru4oYtoPXaIhsjbjD6tD25wyERqoX7j2hmQYsr9b7lRt4x7Z1wmVaSCiLCgfjHZxgzdVOjH1/JLISqxgz3VjBzg1mpsFQkLy1m/njZTEN7YkP+QFH+vt37Us0awOIhEtXXEgJtWZmYxrlAEMJrew2LHFdTd7VN0tNpi6XtPM5gdDgIjcLtOmtQojCdjCgKnxRQqQDYTBBF2NQeJ1QC+EKbaDudVtlGm96Ah7sOfzPveX46nyNzu2mz5Jpz8oTFGTi+4aTqdDdQi/1HASqctE1bV29qLl7OzxP5vmog1BlBRwy+tqQ+c9iNpvcFH38Cp1YUKxkLG+noQW1Gerg4es/i1RcyZGZuc7x8WVsiDrL4cMWcMri+1znqJ3tpag7K/RxbmIwAKAvfATwwfP0hHjCNoRAHxtESSZ49XEdpNXhgUmOpJrZFC+OiUS/jukXlOr+J2DiOnvtKCnSxLWfV56g2FBx8AOewnM9MDVuwWlPbxOGnXTM+e9I5jlUg0d7stWUFU+j6dZ7dVsmsl0+w9iCy1DvS2y5WTfGU7Tmt4annA7LtWpenBWggENppwj/vn+qJrz3wJWMvrP6r6rJngKtJTglgOub9zRyFcfu4JzkJ+f4k2P6CgnrvzWYesEv6MjMjYnfICpzZsYKRRWpi14hzWjcpfIWL9EOYPo0+r6GwhhJh2PAI4RxebuUmnPWnTD5UrTdgutacjZefthZ9JPRhzTjJcQx4xWtRaZSJmVXDhsDwF/J+EXETnROz/siE1Fq3Wh4PcGbiMag8sdt38vi5TuBoaS3cNTDNWtsubiOq8V3m091LbJcvw==
+Received: from cosmo-ubuntu-2204.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
+        by smtp.gmail.com with ESMTPSA id k21-20020a170902f29500b001d94a3f3987sm6444393plc.184.2024.02.05.07.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 07:20:36 -0800 (PST)
+From: Cosmo Chou <chou.cosmo@gmail.com>
+To: linux@roeck-us.net,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jdelvare@suse.com,
+	corbet@lwn.net,
+	broonie@kernel.org,
+	naresh.solanki@9elements.com,
+	vincent@vtremblay.dev,
+	patrick.rudolph@9elements.com,
+	luca.ceresoli@bootlin.com,
+	bhelgaas@google.com,
+	festevam@denx.de,
+	alexander.stein@ew.tq-group.com,
+	heiko@sntech.de,
+	jernej.skrabec@gmail.com,
+	macromorgan@hotmail.com,
+	forbidden405@foxmail.com,
+	sre@kernel.org,
+	linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	chou.cosmo@gmail.com,
+	cosmo.chou@quantatw.com
+Subject: [PATCH v5 0/1] hwmon: Add driver for Astera Labs PT5161L retimer
+Date: Mon,  5 Feb 2024 23:20:12 +0800
+Message-Id: <20240205152013.3833940-1-chou.cosmo@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bfbad418-f8c6-4cdf-97b5-5c13044539e8@davidv.dev>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 05, 2024 at 03:31:38PM +0100, David wrote:
-> On 2/5/24 15:06, Andrew Lunn wrote:
-> > On Mon, Feb 05, 2024 at 12:44:40PM +0100, David Ventura wrote:
-> > > During IP auto configuration, some drivers apparently need to wait a
-> > > certain length of time to settle; as this is not true for all drivers,
-> > > make this length of time configurable.
-> > Do you see this problem with multiple drivers, or just one in
-> > particular. To me this seems like a driver bug, and you are just
-> > papering over the cracks.
-> > 
-> > 	Andrew
-> I don't know of any drivers that may need to wait -- I noticed
-> this code path being hit when building a minimal kernel that only
-> had a virtio network device.
-> At least for the virtio device, the wait is unnecessary and bloats
-> the time to boot a minimal kernel from 15ms to 33ms.
+This driver implements support for temperature monitoring of Astera Labs
+PT5161L series PCIe retimer chips.
 
-Looking at the code, a delay has been here a long time, since before
-git. However, 2011 the delay was changes from 1 second to 10ms. There
-was a discussion about this at the time:
+LINK: [v1] https://lore.kernel.org/all/20231205074723.3546295-1-chou.cosmo@gmail.com/
 
-https://lore.kernel.org/netdev/1305696161-18277-1-git-send-email-micha@neli.hopto.org/t/
+v5:
+  - Fix warning and check messages of 'checkpatch --strict'
+  - Without resubmitting the applied patches
 
-It was said that ARP and DHCP retries should recover any system where
-the first transmit/receive gets lost with the change from 1s to 10ms.
+v4:
+  - Rebased
 
-Maybe after 12 years, its time to try a default of 0ms? I would
-suggest that is a second patch, which is easy to revert if it all goes
-horribly wrong.
+v3:
+  - Revise pt5161l.rst
+  - Revise the style of comments
+  - Remove unused pec_enable
+  - Add back safe access wide registers
+  - fix build warning
 
-	 Andrew
+v2:
+  - Add "asteralabs,pt5161l" to trivial-devices.yaml
+  - Change naming PT516XX/pt516xx to PT5161L/pt5161l
+  - Separated debugfs files for health status
+  - Revise the style of comments
+  - Remove unused defines
+  - Remove including unused header files
+  - Remove unnecessary debugging messages
+  - Revise the data parsing for a big-endian system
+  - Use read_block_data instead of accessing wide registers
+  - Remove the debugfs files when the device is unloaded
+  - Add acpi_match_table
+
+Cosmo Chou (1):
+  hwmon: Add driver for Astera Labs PT5161L retimer
+
+ Documentation/hwmon/index.rst   |   1 +
+ Documentation/hwmon/pt5161l.rst |  42 ++
+ MAINTAINERS                     |   7 +
+ drivers/hwmon/Kconfig           |  10 +
+ drivers/hwmon/Makefile          |   1 +
+ drivers/hwmon/pt5161l.c         | 673 ++++++++++++++++++++++++++++++++
+ 6 files changed, 734 insertions(+)
+ create mode 100644 Documentation/hwmon/pt5161l.rst
+ create mode 100644 drivers/hwmon/pt5161l.c
+
+-- 
+2.34.1
+
