@@ -1,40 +1,50 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B701112A15B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 20:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B234212A173
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 20:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707163568; cv=none; b=C5GwZP9kbodOZ/S+xSByzHgIj3lMqhdeECsV+yFilrM/FdoyCgiUVwB/kYhFErSsVfTSdZDBFJQGp/oB72Rya9VeqLeyaLtD+J4t/oyDIH2KRc2qKD00FZvGaJUlzfB0RqKSdAOdTlFM0PS1M+4/ei0fqWVU+bq7xoKa7XeeqPU=
+	t=1707163570; cv=none; b=M+BWx3w0pbHh8os6OuJzgVQK6ddSPA/upZS+PFTHig6io3FXwiXHHJmPXvq5FN8nqN7AyuhpWxJ+i8j9IODtt6+8VtAW/Ke8sGB8xhr4ENo2VTu4KjrKKFiBo3bixQr98Mv36rqMDOMRqCLgjzQFXj0SKzoMT85kk61izmLMGdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707163568; c=relaxed/simple;
-	bh=ZzpfRJLNiDFRXBfUCaCz/ALUxgqYKP7yarQNXpLqifw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oSJ9Xa52Db87CrNGfH+zfNjVUzU4IorNVFUetTjIPtkyE3YNONsoFSpy43OWzme/4EQJYm8+jVq4v9duV4l46Z78fqFlINGmd1ARYNXQKGkDSQySELMG5nc2sGQnKxyrAjeH2L122vhuWkZRc3oNtKYOtdkGKjHsSDqwdzG4V5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mxIalyj5; arc=none smtp.client-ip=91.218.175.181
+	s=arc-20240116; t=1707163570; c=relaxed/simple;
+	bh=hPLAUyLLwUKEPrP5CZCmbgyMU8k8zrKbJNl29jrSSdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bQ5JEngN7Vqr33HRs6puw0IAMo7UzXSJWRt7YzFpQRAdmFHwfNgUrhglmWu8OwkC2EetbejiR8rojq/+TqgjLi9j2L88TKYnQRhoNdnKP0bxLSmtz5lZoQjdU6XybjSEiuhIHo4gjxu2y01sT1sY6LaouqHfD9tUUM092/QHG2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wcr8U8fQ; arc=none smtp.client-ip=91.218.175.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mxIalyj5"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wcr8U8fQ"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707163563;
+	t=1707163566;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=y0S45WMR1qJRBOTa9Fq+vJw0l8t2/n0Fhw6eQ4IEkC0=;
-	b=mxIalyj5f8L31oBRKlsLNd/rlDjR6y+USSkDnz53a0/c/mhd3QPBRyo5n/+BZ4dQNWYY3/
-	Jd+FxdxI3gXwetCA9FdGyqd63Sgqiyd6vcSFLH6R+qVp0TUFxI/wwWPD18xSmU57AqLWRY
-	uK/PZfhJ10AFjXwWre9cYCKA9duawQM=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MqXRwSUVpxeinEtP3l48LwjODcmqmNTThZB6l3iXHHM=;
+	b=Wcr8U8fQCqYiiXre7rQymRda8iHSMIpNPM3+OFYG4WDeLA1Xpd1jwEnMK723HJDBKRO5l0
+	g0554M9yp0a1oAe+iJ5UMU98kzaBHHllX6DgrX82A0VDgaLHrEBCg1qxgYvy629vbxAx40
+	HOhKsQ9HMoJfioY7Yt4DCYRG9xNNBNs=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-btrfs@vger.kernel.org,
 	linux-xfs@vger.kernel.org,
 	linux-ext4@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 0/6] filesystem visibility ioctls
-Date: Mon,  5 Feb 2024 15:05:11 -0500
-Message-ID: <20240205200529.546646-1-kent.overstreet@linux.dev>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Dave Chinner <dchinner@redhat.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	linux-fsdevel@vger.kernel.or
+Subject: [PATCH 2/6] fs: FS_IOC_GETUUID
+Date: Mon,  5 Feb 2024 15:05:13 -0500
+Message-ID: <20240205200529.546646-3-kent.overstreet@linux.dev>
+In-Reply-To: <20240205200529.546646-1-kent.overstreet@linux.dev>
+References: <20240205200529.546646-1-kent.overstreet@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,42 +54,97 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Hi all,
+Add a new generic ioctls for querying the filesystem UUID.
 
-this patchset adds a few new ioctls to standardize a few interfaces we
-want
- - get/set UUID
- - get sysfs path
+These are lifted versions of the ext4 ioctls, with one change: we're not
+using a flexible array member, because UUIDs will never be more than 16
+bytes.
 
-The get/set UUID ioctls are lifted versions of the ext4 ioctls with one
-difference, killing the flexible array member - we'll never have UUIDs
-more than 16 bytes, and getting rid of the flexible array member makes
-them easier to use.
+This patch adds a generic implementation of FS_IOC_GETFSUUID, which
+reads from super_block->s_uuid; FS_IOC_SETFSUUID is left for individual
+filesystems to implement.
 
-FS_IOC_GETSYSFSNAME is new, but it addresses something that we've been
-doing in fs specific code for awhile - "given a path on a mounted
-filesystem, tell me where it lives in sysfs".
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dave Chinner <dchinner@redhat.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: linux-fsdevel@vger.kernel.or
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+---
+ fs/ioctl.c              | 16 ++++++++++++++++
+ include/uapi/linux/fs.h | 16 ++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-Cheers,
-Kent
-
-Kent Overstreet (6):
-  fs: super_block->s_uuid_len
-  fs: FS_IOC_GETUUID
-  fat: Hook up sb->s_uuid
-  fs: FS_IOC_GETSYSFSNAME
-  xfs: add support for FS_IOC_GETSYSFSNAME
-  bcachefs: add support for FS_IOC_GETSYSFSNAME
-
- fs/bcachefs/fs.c        |  1 +
- fs/fat/inode.c          |  4 ++++
- fs/ioctl.c              | 33 +++++++++++++++++++++++++++++++++
- fs/super.c              |  1 +
- fs/xfs/xfs_mount.c      |  2 ++
- include/linux/fs.h      |  2 ++
- include/uapi/linux/fs.h | 21 +++++++++++++++++++++
- 7 files changed, 64 insertions(+)
-
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 76cf22ac97d7..858801060408 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -763,6 +763,19 @@ static int ioctl_fssetxattr(struct file *file, void __user *argp)
+ 	return err;
+ }
+ 
++static int ioctl_getfsuuid(struct file *file, void __user *argp)
++{
++	struct super_block *sb = file_inode(file)->i_sb;
++
++	if (WARN_ON(sb->s_uuid_len > sizeof(sb->s_uuid)))
++		sb->s_uuid_len = sizeof(sb->s_uuid);
++
++	struct fsuuid2 u = { .fsu_len = sb->s_uuid_len, };
++	memcpy(&u.fsu_uuid[0], &sb->s_uuid, sb->s_uuid_len);
++
++	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
++}
++
+ /*
+  * do_vfs_ioctl() is not for drivers and not intended to be EXPORT_SYMBOL()'d.
+  * It's just a simple helper for sys_ioctl and compat_sys_ioctl.
+@@ -845,6 +858,9 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+ 	case FS_IOC_FSSETXATTR:
+ 		return ioctl_fssetxattr(filp, argp);
+ 
++	case FS_IOC_GETFSUUID:
++		return ioctl_getfsuuid(filp, argp);
++
+ 	default:
+ 		if (S_ISREG(inode->i_mode))
+ 			return file_ioctl(filp, cmd, argp);
+diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+index 48ad69f7722e..0389fea87db5 100644
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -64,6 +64,20 @@ struct fstrim_range {
+ 	__u64 minlen;
+ };
+ 
++/*
++ * We include a length field because some filesystems (vfat) have an identifier
++ * that we do want to expose as a UUID, but doesn't have the standard length.
++ *
++ * We use a fixed size buffer beacuse this interface will, by fiat, never
++ * support "UUIDs" longer than 16 bytes; we don't want to force all downstream
++ * users to have to deal with that.
++ */
++struct fsuuid2 {
++	__u32       fsu_len;
++	__u32       fsu_flags;
++	__u8        fsu_uuid[16];
++};
++
+ /* extent-same (dedupe) ioctls; these MUST match the btrfs ioctl definitions */
+ #define FILE_DEDUPE_RANGE_SAME		0
+ #define FILE_DEDUPE_RANGE_DIFFERS	1
+@@ -215,6 +229,8 @@ struct fsxattr {
+ #define FS_IOC_FSSETXATTR		_IOW('X', 32, struct fsxattr)
+ #define FS_IOC_GETFSLABEL		_IOR(0x94, 49, char[FSLABEL_MAX])
+ #define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
++#define FS_IOC_GETFSUUID		_IOR(0x94, 51, struct fsuuid2)
++#define FS_IOC_SETFSUUID		_IOW(0x94, 52, struct fsuuid2)
+ 
+ /*
+  * Inode flags (FS_IOC_GETFLAGS / FS_IOC_SETFLAGS)
 -- 
 2.43.0
 
