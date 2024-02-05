@@ -1,58 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E823982D7A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A5A82D7A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162670; cv=none; b=OCatOnhpphimyczcEPg0xjEbz8JG5Qi9GVbU3RIMlfMbP/qlM73LYkT4itWGjFMKyHoUQjct8QDvv2WfoviqPLovqCOroxpIzzz6OZnY6jR0ItByo4TgmnrXfJMAM/26Hlwch4VhSPZYRqcCiTgxFgJJT3VhalC95N/ISX4nnv4=
+	t=1707162792; cv=none; b=efj6GTjconMqA42bzSDIWiLCXmemCQ+4ureOdhPNZSuAj6u3Anzwq/E/OmA5dKlg74XF743VjOYlCvbCxH276/SNJV1993TVPKJlaFUEYGgGTKD8oDWbrQ65rjbo/iPFP/0/LeU6inxvHS75HVKt6p7bAWBgVFGhJQgJVoNq1bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162670; c=relaxed/simple;
-	bh=32IgZ6ko36r/TNs5ZFOUk3nuGoF25Qi3GhszNhaTrPw=;
+	s=arc-20240116; t=1707162792; c=relaxed/simple;
+	bh=kBnNpTKxNHNuN0M481E2J87UdjW7sMvfzwiCfFIQn0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbzlURrvDzzCfO7iWgm2zfxI5cTJeNVbUHF50MRhwnu+PNt6IijoEzFGM2LeVN4CrWuj490KemQpSDB+KScNjs3aKQfgq8313bMIoEulkT5rycXn1SPoqn10YPJa4NpFgrzr66RzjbGJ5zbc65H6/WGdBad0PSzxsK3xt+Bs9CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qju3/fpV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aMuwML48A7Zh1a3ueiTqBFopGHGDZXiRzkjF1MoAJpAXG2VFo+m/NTaIW5rG//Zu6k0jvVc0V774B/aUN9PQS1BJe0Yp5x33x8XkFSbnBtXRd2/mXD8ScgHncmGnnD/KmNubo0IHEPyFa/ecjLriKo/TFLbuedJfIEwiD+y60sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1iHn8oU; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qju3/fpV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707162667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+tpfnxQlLNRm4M5QzduLIpK2iI7KFV9K8AqzkgCNCjM=;
-	b=Qju3/fpVcH5+N06D0jH0rfrjx3r4FvhdfehMY+dbBGVZjdlseSHPwxLlsdx7bHgGrsKb1D
-	IJKpWpPo4oLL7BoX4FUcR4lKhNbY4WPvDtaeZpv/TSDQg6aizauDG2jDuerORDRikCZuk7
-	CXtbxiYEYfiU40QL5vizOxUa8kFGfi4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-125-kdFpPILVOoydeVUitL3Emw-1; Mon, 05 Feb 2024 14:51:04 -0500
-X-MC-Unique: kdFpPILVOoydeVUitL3Emw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0863F868A00;
-	Mon,  5 Feb 2024 19:51:04 +0000 (UTC)
-Received: from rhel-developer-toolbox-latest (unknown [10.2.16.180])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C30A1492BF0;
-	Mon,  5 Feb 2024 19:51:02 +0000 (UTC)
-Date: Mon, 5 Feb 2024 11:51:00 -0800
-From: Chris Leech <cleech@redhat.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nilesh Javali <njavali@marvell.com>, Christoph Hellwig <hch@lst.de>,
-	John Meneghini <jmeneghi@redhat.com>, Lee Duncan <lduncan@suse.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	Hannes Reinecke <hare@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v5 0/4] UIO_MEM_DMA_COHERENT for cnic/bnx2/bnx2x
-Message-ID: <ZcE8JC0o9swkNzmr@rhel-developer-toolbox-latest>
-References: <20240201233400.3394996-1-cleech@redhat.com>
- <5228a235-69f4-4a9b-8142-96d9b4a5a1c8@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1iHn8oU"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2906773c7e9so50138a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 11:53:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707162790; x=1707767590; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pWe/67exXwPWxPIWuf0Zi0TJlQ/QoxoIB5w3IbpqLws=;
+        b=L1iHn8oUAn9Qwe6OTRl551+2tR43jfXgNQcZTgGFN+TUVDCap6Ni0mUw0T43b8thLJ
+         LLx4iKVUEQzvZDIlYo54JxWNNi6DB55/4kIcAZMlkldmbWq7BmGaqo+c1YyuYHQkiaIM
+         3iBEGQ3ukDGmHXLPFwbcE7sU4TC8ywbeEkyFI0/WB9hJ0eqDrk5muwRnDLggmUrOjNbo
+         TZXSm2CYbKnQPQ14hdhs7WtgcFvMk9axvWQ5lav9izno78KnSt4dGXQi2MoNuoD/QHgG
+         DsNaOwJgu1Jh4wW7SnLMhu5Ve6gI7Vv1Jyx9xTVSIaScj8AZBnhTKQdJ6PcaxHsixHZ2
+         QtHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707162790; x=1707767590;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pWe/67exXwPWxPIWuf0Zi0TJlQ/QoxoIB5w3IbpqLws=;
+        b=U4dWC8soh9JixC8bILqpSqaSQJUb6t2xTKPPCIWIx48TtUmXSALT9vz51ubzPujHWm
+         dDm+fpXt4GvDAEUyGdElJ98OAa6XBM+UvwYyXz4uV3VtfvTsebdTkFH+Jkbocxk1Tunj
+         52zM7Z6qPdJiMvvGcCgrPpRjoxiPAsDX4ZvQ93atVFkgem674ES3yyEcHS6BgrXcuB7u
+         QfhPvGc6+uoTK1ZA/Lj+WG8V92rlbfTSGEkahGvy6YEe/u6WvU/6ie/m6dKBuYD3d7SV
+         xdx4S1Mi0YqVc6+iWsplVrDFAMSMTPWG5sfjI7Pk87trv2l22FX7l5JkdKAh8nEp9MLz
+         cgQg==
+X-Gm-Message-State: AOJu0YxoCVtWRYiCj3zMsTl4KqtCJaa8Vlw/nvm4TygPNtvxcpZc7Ixd
+	hVOUHfcFCenVofbIX50BACFl5Vs+dY4wMHIpl0VpOafGHYFh5RaiyCaQOTO+U80=
+X-Google-Smtp-Source: AGHT+IHcKNX+LcLBHOdSfsD/FTF0HVs6KxeDK3GCkTogMd2yNrj08DBi3ElIzqohJY284fiyjanzwA==
+X-Received: by 2002:a17:90a:ad07:b0:295:d223:ad11 with SMTP id r7-20020a17090aad0700b00295d223ad11mr451991pjq.36.1707162790487;
+        Mon, 05 Feb 2024 11:53:10 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVXAoYYmVGC+BXJc/MzRGCRgs+sjoMxxHPuFEfPe5TOULOkfm/8lwk65sXsHruIIFlkzEHfFiFMdloZpqAvfRLcSy6KK68KSLyTydJP80sJfesvQ7RQx+WZmsCmB4tBuPGLwAa07BSQg1UsNyk7+76anXgTqk99XwtB+ZEDrtMOl8yqWgctpJmZFPFOnVBhQKuqb9E6sQ0jo5EZCmK5WQkIw8uKJGABRSqaQRsKvUIB6giT+aaDCVWB0tfVC5R1ZKfGRGDJdA==
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id ju16-20020a170903429000b001d96a0cddccsm243128plb.296.2024.02.05.11.53.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 11:53:10 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 5 Feb 2024 09:53:09 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Cestmir Kalina <ckalina@redhat.com>,
+	Alex Gladkov <agladkov@redhat.com>, Phil Auld <pauld@redhat.com>,
+	Costa Shulyupin <cshulyup@redhat.com>
+Subject: Re: [PATCH-wq v3 0/4] workqueue: Enable unbound cpumask update on
+ ordered workqueues
+Message-ID: <ZcE8pUuHfa7gVZs6@slm.duckdns.org>
+References: <20240205194602.871505-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,26 +73,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5228a235-69f4-4a9b-8142-96d9b4a5a1c8@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+In-Reply-To: <20240205194602.871505-1-longman@redhat.com>
 
-On Mon, Feb 05, 2024 at 05:57:58PM +0100, Alexander Lobakin wrote:
-> From: Chris Leech <cleech@redhat.com>
-> Date: Thu,  1 Feb 2024 15:33:56 -0800
-> 
-> > During bnx2i iSCSI testing we ran into page refcounting issues in the
-> > uio mmaps exported from cnic to the iscsiuio process, and bisected back
-> > to the removal of the __GFP_COMP flag from dma_alloc_coherent calls.
-> 
-> IIRC Jakub mentioned some time ago that he doesn't want to see
-> third-party userspace <-> kernel space communication in the networking
-> drivers, to me this looks exactly like that :z
+On Mon, Feb 05, 2024 at 02:45:58PM -0500, Waiman Long wrote:
+>  v3:
+>   - [v2] https://lore.kernel.org/lkml/20240203154334.791910-1-longman@redhat.com/
+>   - Drop patch 1 as it has been merged into the for-6.9 branch.
+>   - Use rcu_access_pointer() to access wq->dfl_pwq.
+>   - Use RCU protection instead of acquiring wq->mutex in
+>     apply_wqattrs_cleanup().
 
-This isn't something anyone likes, but it's an interface that's been in
-the kernel and in use since 2009.  I'm trying to see if it can be fixed
-"enough" to keep existing users functioning.  If not, maybe the cnic
-interface and the stacking protocol drivers (bnx2i/bnx2fc) should be
-marked as broken.
+Looks like we raced each other. I'll wait for v4.
 
-- Chris
+Thanks.
 
+-- 
+tejun
