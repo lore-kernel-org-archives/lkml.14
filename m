@@ -1,116 +1,102 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF814495F0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 23:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1B54BAA4
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 23:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707177239; cv=none; b=uxOIiKjgNLRCyY+0Lpu9I1OQgUqra8A05dHaSxHcNAqf44IWZcOjWbDjsxi3eVpTp9T72d1BUgcVqS0g0okyAdoW/I4famxYNxsKJwhBLKu3WozncdqiaZ5HP16J1NGtINbmrsdu5vgzACLeys7MYtQL2kj78SblkaZbkTAD5nM=
+	t=1707177317; cv=none; b=C7mHll0O+dSPJ3Q7tEFQRxbMrGrxgE3X0g1YHhdn3DsyoHVrjJxeNQR+TuVkWPef6wzLvBXxorl8Wr4xFN0Y+CdaugiQNKn6lYPB/BOZPhq4zR7Y95chapzWXgg6ijsd8ygaDp3I2mac3WZXbBMyhf2YaGzgUeJlDsVzWkICINc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707177239; c=relaxed/simple;
-	bh=OGoNuHCzozgkC3QL/rGwBky0y/XUcHin0BTqRYK7EaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KZig4OUR118L+wfJ5bWlCCgnEtay9v/+Ri47hJGdF34OWoofUeutmlyqQduPpSdEAyR6aPea9QzFn2xF3uqXVVN7LAx+/jVTIoq+2x/e+gae21NfF+xowWNi/kOKJCsWATdQFYHKBCs99R21gZg0p3xjccDToRzUZWm+4UpN5dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Ril7amsS; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1707177317; c=relaxed/simple;
+	bh=RCeuGw+qfyPj0dL0x8G1g1gkNuFp52X9i7h9BI/DiIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oDGk2LIPxRhNNlNjJrWustf/P/sUTltK+0nG8uQgKUc9EaxRyNF+tp3SHp48U7NVGp+LaB8dxh2FgTie72YUVWI6PuLdE/Su1xwQeNIGF2C4scjRouzMpjLUF8/oHVEaiC+l5q0xPHkPTz8yS129eNfk2HjskMVGeAjaIgdbgHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ggoA92vZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Ril7amsS"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d8b519e438so4835089a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 15:53:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707177237; x=1707782037; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hmrdDifKn+uVsNlfDzCvuZfjS7ayNWNTt2suseO1un4=;
-        b=Ril7amsSFVpyGMslrLzeOzNZVZ551pvW6l4nQD84218B4EyWOJ9nN9Fkag1q9SpWS+
-         nx9W0zmLxISZp9OXNIH+zNGR9NBdEnYo7aRG7iB1qZwEUjAur4mcfqmEF7y20LWSW0lD
-         wi09+5QfPH+g+HsCXnrFaA/9MV7WCTAcLIvlc2/VycQ1II0FLQUsYPUTB3QcboSqXxAR
-         oVDXoz4+poyf9H5o2PImQ8LcijXjjC52MpemYYyU4Cz7tA68CiMp/6trNpRcqCpNtNN1
-         5iGgSe8vgUT8HXihuXODzsyPR/h4/FOWFidA5FOq9c5HQ6MxycRv3mYXbcEK4qmNU6ug
-         wvkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707177237; x=1707782037;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hmrdDifKn+uVsNlfDzCvuZfjS7ayNWNTt2suseO1un4=;
-        b=GkYRW1VN44o28L8qBAmVveexS5wB1U6UWwA384jE5ukBzuJ0RQgxxuVO8w5Moscw7n
-         oQ/riVylNYh0eGJPf048tvY+KKvvI5zFx9PheizB95FHAo4mbXuHMZlWnItFm52tJbDu
-         6ptknEhOKqz816KflShaYLnQQb3n0Tkg7sxJPdY7F0i57GFr5wohVFlSY96q97fWE9gQ
-         1vdZBG6vg6fezee7E0pzvTHTWTl7Lr/3shpyjdugIdTw0q/4fqGMwzR9ae90H9aVarQX
-         +RZ+arl7DWVrGW6Fwjt6W+OCjtlrFzeUwIgZYkkQK0+XR72pcPl8FuudlkPusW0NGQxH
-         l/2w==
-X-Gm-Message-State: AOJu0YzcdtVLNddlXLllkQYYrnfBc4emg3qkVK0etNWLMtIp4RO8Vj4y
-	LhNW34YFbR57Vau8q1HoGwwfw7xB4I36zSWgcmiPvnKH3vNAoGyashzVwsFJyfE=
-X-Google-Smtp-Source: AGHT+IHeI/+Sp824UroO/mDYidk3cFb94YOApkQqYdkLtM9PHmtd5rblgX/GhroclrmfDZVRJjAJvQ==
-X-Received: by 2002:a05:6a21:2785:b0:19e:89ae:9b52 with SMTP id rn5-20020a056a21278500b0019e89ae9b52mr51387pzb.7.1707177237249;
-        Mon, 05 Feb 2024 15:53:57 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVwcZhTk4c0u0np/uhoHXLwPQ/Wcj2MaeQOM9FqkgxTj2vuWoI/YVq71BO5+lhQYk5e3bISfbaGFDwsMYle96R7byvptgPpHlcZishruHbiB2ER4cRLKUlSlSasxMzD1Asz14TVXCdqBFQGhWo0gN5hQcCmHn1noPYecH0xtKK6GttXmIn4v/8Z3JF41HtMi0WjDjq5Gj2Nv/KL4aEAO6D3s3OGA7wAtbIdL04MZdkkF2CmOjQQvL8jlAJQUqHONWA/1DPJdI0imC15vjTHcmrkvgr7TEDqVli0Mlg9oQnxUwoZXAO1VedoHrNEPmI64j11xtnv2+MgUEhwUUjFpcaFUjralvHAUvXcA5fPQc2628t1uCSBbOcw3jy7ESMZhGUDpplvpP7R7VHdhx+GVMTxtl7eE5RKZQfmkoU4KkGTOYG2+pYJWJumzly5fwvjX22/7ZOWnO5JAcWy1+RlzpyruTNclkK+EwLEI6X/GyAOPAFqnt7d5A==
-Received: from ghost ([12.44.203.122])
-        by smtp.gmail.com with ESMTPSA id e12-20020a62aa0c000000b006ddc7de91e9sm444758pff.197.2024.02.05.15.53.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 15:53:57 -0800 (PST)
-Date: Mon, 5 Feb 2024 15:53:54 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nick Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Andrew Jones <ajones@ventanamicro.com>, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -fixes] riscv: Flush the tlb when a page directory is
- freed
-Message-ID: <ZcF1Er55ClKgJtHJ@ghost>
-References: <20240128120405.25876-1-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ggoA92vZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707177314;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LXKNaLAXkFX+4eJ/GmG7ArIMhHKrCdx1mSkfjlmP4rg=;
+	b=ggoA92vZS5aWCZcsgHNJdBVurb6J6T3db22RoJNCBxA69p8HX7Fy65hZsGB5UIXiBfKepS
+	IsRbauCL02GDgwxfU+xvd5I9d7KHD3saO+kNW+e05+hLXFvzwTT2z2g8Mbp05QTKE9Kdr8
+	ycJXtWPIl2Nfb//z1b7bFzpicKl0Vmk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-190-h3rYFVZ5Oze82KcKwYddpg-1; Mon, 05 Feb 2024 18:55:11 -0500
+X-MC-Unique: h3rYFVZ5Oze82KcKwYddpg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC6DC83B82B;
+	Mon,  5 Feb 2024 23:55:10 +0000 (UTC)
+Received: from omen.home.shazbot.org (unknown [10.22.8.77])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8399D40C9444;
+	Mon,  5 Feb 2024 23:55:10 +0000 (UTC)
+From: Alex Williamson <alex.williamson@redhat.com>
+To: alex.williamson@redhat.com
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yishaih@nvidia.com
+Subject: [PATCH] MAINTAINERS: Re-alphabetize VFIO
+Date: Mon,  5 Feb 2024 16:54:18 -0700
+Message-ID: <20240205235427.2103714-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240128120405.25876-1-alexghiti@rivosinc.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Sun, Jan 28, 2024 at 01:04:05PM +0100, Alexandre Ghiti wrote:
-> The riscv privileged specification mandates to flush the TLB whenever a
-> page directory is modified, so add that to tlb_flush().
-> 
-> Fixes: c5e9b2c2ae82 ("riscv: Improve tlb_flush()")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/tlb.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/include/asm/tlb.h b/arch/riscv/include/asm/tlb.h
-> index 1eb5682b2af6..50b63b5c15bd 100644
-> --- a/arch/riscv/include/asm/tlb.h
-> +++ b/arch/riscv/include/asm/tlb.h
-> @@ -16,7 +16,7 @@ static void tlb_flush(struct mmu_gather *tlb);
->  static inline void tlb_flush(struct mmu_gather *tlb)
->  {
->  #ifdef CONFIG_MMU
-> -	if (tlb->fullmm || tlb->need_flush_all)
-> +	if (tlb->fullmm || tlb->need_flush_all || tlb->freed_tables)
->  		flush_tlb_mm(tlb->mm);
->  	else
->  		flush_tlb_mm_range(tlb->mm, tlb->start, tlb->end,
-> -- 
-> 2.39.2
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+The vfio-pci virtio variant entry slipped in out of order.
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+
+I'll plan to take this through the vfio tree.
+
+ MAINTAINERS | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 960512bec428..e0060359a043 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23076,13 +23076,6 @@ L:	kvm@vger.kernel.org
+ S:	Maintained
+ F:	drivers/vfio/pci/mlx5/
+ 
+-VFIO VIRTIO PCI DRIVER
+-M:	Yishai Hadas <yishaih@nvidia.com>
+-L:	kvm@vger.kernel.org
+-L:	virtualization@lists.linux-foundation.org
+-S:	Maintained
+-F:	drivers/vfio/pci/virtio
+-
+ VFIO PCI DEVICE SPECIFIC DRIVERS
+ R:	Jason Gunthorpe <jgg@nvidia.com>
+ R:	Yishai Hadas <yishaih@nvidia.com>
+@@ -23106,6 +23099,13 @@ L:	kvm@vger.kernel.org
+ S:	Maintained
+ F:	drivers/vfio/platform/
+ 
++VFIO VIRTIO PCI DRIVER
++M:	Yishai Hadas <yishaih@nvidia.com>
++L:	kvm@vger.kernel.org
++L:	virtualization@lists.linux-foundation.org
++S:	Maintained
++F:	drivers/vfio/pci/virtio
++
+ VGA_SWITCHEROO
+ R:	Lukas Wunner <lukas@wunner.de>
+ S:	Maintained
+-- 
+2.43.0
 
