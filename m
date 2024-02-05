@@ -1,95 +1,102 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEE6111A2;
-	Mon,  5 Feb 2024 07:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E359611705;
+	Mon,  5 Feb 2024 07:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707117660; cv=none; b=QrVjTvFT31LurIGu3jsTRfrC7Ge2duwrXRGwkau/SbhW7HlAHx+73pXnHiXCqyOfWz3N8nlFr44H+HSB1jpMOuN5d0K2FAwuxzh/2uLIzUvwj9KbcMwHxjVpsAXL4vHjMZQqJtzq6F4ENhxbdKGj8JkrztRAlueA2EaMhe5c6uA=
+	t=1707117736; cv=none; b=Uo3zq6rkfm5QkaSKy6wK/MdcYGW8lDkYJ72apFdGyKUyZgUmI5IpQlPBxwQtLRTB+CfCiPZ/kla/n7k7ZOo4PFMFLDyzk1WAsV+ZQ+HtyubGPrnUZv6s/u+8UEFTWj7BtK3cK4bV72DPcYkW539a659MYSuWVEN5NyunFn9+PHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707117660; c=relaxed/simple;
-	bh=2RPhHIO24rO7DrKNGK166qDpBMo7ED6D9CiaT+aa0kg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=slDNABwoIz4GBxsgzQfZGbg16AW1HvW8dRHKQgf2Mee4xJlsqdjUT2f9yVSEBv1GA9t2xAiFi8ncT7+b9aAoXHI+SlvKfnqh5fFzeZA9CYqqzHFMoAaj8YRxEL6H4LhEboOUzOPzC7KfH9uNm403Lg4M+XTjxR9qdNwZxxzgdqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 3c01047df7ec4e4c9cf90160e14ee212-20240205
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:2fe792de-25ed-4861-8503-5727ad80d150,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.35,REQID:2fe792de-25ed-4861-8503-5727ad80d150,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:5d391d7,CLOUDID:cbb1a083-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:240205152054PAMNL1WR,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 3c01047df7ec4e4c9cf90160e14ee212-20240205
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 2062955715; Mon, 05 Feb 2024 15:20:53 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 123C0E000EBC;
-	Mon,  5 Feb 2024 15:20:53 +0800 (CST)
-X-ns-mid: postfix-65C08C54-87813279
-Received: from kernel.. (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 5B4D9E000EBD;
-	Mon,  5 Feb 2024 15:20:52 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	jiri@resnulli.us
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH net-next 6/6] ipv6: Simplify the allocation of slab caches
-Date: Mon,  5 Feb 2024 15:20:13 +0800
-Message-Id: <20240205072013.427639-7-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240205072013.427639-1-chentao@kylinos.cn>
-References: <20240205072013.427639-1-chentao@kylinos.cn>
+	s=arc-20240116; t=1707117736; c=relaxed/simple;
+	bh=qu+yTx1OVLPWhDo9bCVpMACyMIuspoXRYqNKXMacw9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MA3ouY/ra1ANIgdJNjQpElQXYj6mCY3+CFWriYQigc94DtWRFsnoTY5vZh9+wsNpkdvcrbz/YHxy2PcAuRAli/N0OjnHxteizU6DlGrMkU7f8yoMG72cNI2TwLRRC/ZPd5+OH4ruAy+dRCDOyVLhM3Cz4HS6GmjDcOxOLREsFSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=pWBcYNFV; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="pWBcYNFV"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 2686F60333;
+	Mon,  5 Feb 2024 07:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1707117734;
+	bh=qu+yTx1OVLPWhDo9bCVpMACyMIuspoXRYqNKXMacw9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pWBcYNFVtYgQoLozoCxXXdqjuXmY8SrOQpWPvvfQVI4NKfVju1lTbtitfA9kD6+pG
+	 p2hqjQwgp1ebAl1mEiS5QverZrCmHNxdJP3U948Dn5dyLEWHGFNU+BpEmW6j+ybYoG
+	 yxRRF/fb+DUeMVlUCL37H0DYmNk3a4g7ovSmt1g8DBoCdyyScJ0O/+whc0nTQSJU7Y
+	 d90a9dLdOmsRoQqNlT3oRMX3I4m2hRx61KqX3PfKX6J4saK53FXn8OEyMMU4Q6N8vz
+	 IB9x4MLQWCg3APB3ApqJg7e8593AoRphMOynPw6zlauK0pMR6Fdj50hlxPOPMyLbxk
+	 l1hFnmvFjAN8A==
+Date: Mon, 5 Feb 2024 09:21:11 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v2 02/15] pinctrl: pinctrl-single: move
+ suspend()/resume() callbacks to noirq
+Message-ID: <20240205072111.GD5185@atomide.com>
+References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
+ <20240102-j7200-pcie-s2r-v2-2-8e4f7d228ec2@bootlin.com>
+ <CACRpkdYBnQ6xh2yNsnvquTOq5r7NeDhot6To9myfuNbonKcgzQ@mail.gmail.com>
+ <6hyubhrho6xbki6yxtmqedylc2gpeyj4yu5gtrjrq4nsthcr7g@elfukmqeve2a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6hyubhrho6xbki6yxtmqedylc2gpeyj4yu5gtrjrq4nsthcr7g@elfukmqeve2a>
 
-Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-to simplify the creation of SLAB caches.
+* Andi Shyti <andi.shyti@kernel.org> [240129 22:49]:
+> On Sat, Jan 27, 2024 at 11:31:11PM +0100, Linus Walleij wrote:
+> > On Fri, Jan 26, 2024 at 3:37 PM Thomas Richard
+> > <thomas.richard@bootlin.com> wrote:
+> > 
+> > > The goal is to extend the active period of pinctrl.
+> > > Some devices may need active pinctrl after suspend() and/or before
+> > > resume().
+> > > So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
+> > > have active pinctrl until suspend_noirq() (included), and from
+> > > resume_noirq() (included).
+> > >
+> > > The deprecated API has been removed to use the new one (dev_pm_ops struct).
+> > >
+> > > Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> > 
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > 
+> > Do you want to merge this as a series or is this something I
+> > should just apply?
+> 
+> there is still a comment from me pending.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- net/ipv6/ip6_fib.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+FYI I gave this a brief test and things seem to work fine for me. Sounds
+like there will be another revision though so I'll test again then.
 
-diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
-index 4fc2cae0d116..25d7e6d45e6a 100644
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -2444,10 +2444,8 @@ int __init fib6_init(void)
- {
- 	int ret =3D -ENOMEM;
-=20
--	fib6_node_kmem =3D kmem_cache_create("fib6_nodes",
--					   sizeof(struct fib6_node), 0,
--					   SLAB_HWCACHE_ALIGN | SLAB_ACCOUNT,
--					   NULL);
-+	fib6_node_kmem =3D KMEM_CACHE(fib6_node,
-+				    SLAB_HWCACHE_ALIGN | SLAB_ACCOUNT);
- 	if (!fib6_node_kmem)
- 		goto out;
-=20
---=20
-2.39.2
+Regards,
+
+Tony
 
