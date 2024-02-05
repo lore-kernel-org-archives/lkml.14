@@ -1,123 +1,128 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F762377D;
-	Mon,  5 Feb 2024 14:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE9C28DD5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 14:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707141698; cv=none; b=gu1KaPDVcT0uCqB53lfSYdgkXUzPTfHzOuH+rNMEVj2Y7ck7HzGr/QhYaHh8bh+P9Dzv+cND8a3Ra7eSpS/ccRIzwHMMYqqep9qfj64I4IVWDDl64MicQN9OCgy/mtEEj5DFKyBbtL1NmkW35NkF/Ab1VieZWSRGhPv82+rthRQ=
+	t=1707141702; cv=none; b=C/H9W1zUxDYDn+0ut0CpREUEwiS1fZ5uf3nwa5o44BedBIUo26qGTh6YzJDrhrf8YZyzPlQVGGBXm1kIFNJRSro8rfs3rPdiKDPLSx2l/7UnKAqz0E7e2y5gGQfP+nAnfzG3694Pnirfbfo+8+BCkgYs9815WCZ125WNjpgDGTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707141698; c=relaxed/simple;
-	bh=VjwcTrRbgbQdtBVGJv2qQZZwAnRarTA5v9OzMoyv8EI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pxZ6YD8xShsPCkW+FQzJI1TqAZ+Qu4c5MwxVWGam4TGZP9uYaImrmWi3FdUpjDArflsCV+ceZYQUIIu6BZTpYP79R6f3Lk2zUyN/I9V0lidpnpmcmz3HLbVyyQpPePv7YqNdGN1kwkGr9mAtLpCHUaSvZYss1QWk2gbtgZ0IPBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nz4VkZIP; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707141702; c=relaxed/simple;
+	bh=MyTVmMBQT9yymCwADUCyBGvNYezZ+M55ItXy/0ugLZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szXG50qo1So7Ic5LZIH7GGkL/LnRNG63Ete/tuWwFgBAYqCr2b7oh3xctc+WG/N94m1yqS7ZyQBCY5abrdj+FmZppyHn2qT5oI4INuNQyEuxTCGXfSmUHCfvjmcGRI8wpraQCo0AMD2PSQjjFkQ6u5Q8ObNlccZLWP6A5kiSEkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qUGTWMmG; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nz4VkZIP"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 415DW8lt022589;
-	Mon, 5 Feb 2024 14:01:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=EyHV+D44dUN71LSIbdMpw6Vb/v4sGSMQvbKPjifT+EU=;
- b=nz4VkZIPF6IJKYrn5fiidPYEjvwjOlgHo1kaP+/ZY9V5hDsceOGYBLcIjiCe0iE/GV9f
- o/Ns3ZG470batILXaKs3GW9PnqurkxyZ/D9UFJiePC0MpX8hFsMGGWJyWLx8F0uK/OU7
- Ond56waLmw3kYz7bYiExIyga44sFugWaO+x7L6WCY+QpTzWTQFh181LEtoIsuosrmq/+
- 8KAQZOd5t7Y9eHStmHXeCSvQVrSBx5ZcqHFiMaYQuEvrs+AiCxcXCkqkUpaALbm0BsaS
- mlcvpFxlPv/nBQQxThxdY0JoWOWc5acbSjB5v938V170GIOjxyb6Nb/Lydv11wSe82xS Nw== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w2y4833mt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Feb 2024 14:01:02 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 415BMGWh005458;
-	Mon, 5 Feb 2024 14:00:48 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w21ak8phm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Feb 2024 14:00:48 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 415E0lZT13632104
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 Feb 2024 14:00:47 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1798758043;
-	Mon,  5 Feb 2024 14:00:47 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 39D4658059;
-	Mon,  5 Feb 2024 14:00:46 +0000 (GMT)
-Received: from [9.61.155.228] (unknown [9.61.155.228])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  5 Feb 2024 14:00:46 +0000 (GMT)
-Message-ID: <d1916f5e-8d89-6f94-c562-8ed6d52f706f@linux.ibm.com>
-Date: Mon, 5 Feb 2024 09:00:45 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUGTWMmG"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d74045c463so34245125ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 06:01:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707141700; x=1707746500; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=i3rlc43mBAmmIKSu5xBLrJwDwD6hK6gTpzaGPsgcsxg=;
+        b=qUGTWMmGNBPoB8i9rTw31wfFMWYrAeq02bK68paGUH/CVdiha3qvKTcz/mByhsAm5S
+         7lOVKQhVi7frm1OEW+0AcUClFhAKBVkE+E/wYNXQn+9hmCPL+j9oLSkGG6c6pnzURkfp
+         PdZFBueXfXeWRi/8QgHVwBV/qPtqHcfl9uBrh6NxE63kIQmLK0gQRHTvh8R8Uwdaiul9
+         TShHfY5S3ZBV+IBM74jhn2E+mTJNi0fdz3aZeqyXN7hcZ8r9Q4kYUOkTOUG3uRnb9WK5
+         9IcsDR1wsZqKo0Yl/bpuXdG8EkT6sUcXovAG2u/c2nvjBYUvhuTxhdgmsgKlg+pkioyG
+         34QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707141700; x=1707746500;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3rlc43mBAmmIKSu5xBLrJwDwD6hK6gTpzaGPsgcsxg=;
+        b=X/Sie5sJNLJf3UKiX7nEfeEsmJTJszL4xfHTllRV5WGLFQIlAt64GfvoCCjdmj8eLl
+         AuUSmYe5KhDurpwJmypw9aVbcMBmibEflWTJAnGx8yTx4bTIB3xFXZX2KQ7Aunk+BCEJ
+         k9CKAQb94kg2VVJAFqmpwukDbU8qY5oXEzxDSB6QZas/EtQzRLMMxBATScwjkoNLqUcN
+         awf/R6HSu2AYGM8PU4IS1lY+F0mDNu4XPjfvmJGkhQVBb2/3Zpu+xPBuq4pZCLyjrySY
+         a1xIbna7qyeQUGRW2d0p5XP8X19y/mho8U6fciwgTZKCCbMNm7CCANKD10KOjxh7zS85
+         LYgg==
+X-Gm-Message-State: AOJu0YxiCfTFmVYSz9e5FpyyRyCHvrv5UAtAvq/V0jxTkUXHOE2vvgaS
+	JUKUrovhTi7fd0zsCU5MYZthbzcaMGkEpB8cy0A8KnLQYrqm1khw4Yg/zuatjw==
+X-Google-Smtp-Source: AGHT+IGkD3eNo22b10rbAKAEVpZrr9NRYYGZtbsfRgoJbeWb7EKAAMIWc9ujJ7xFK40zBZ7wNKqtrA==
+X-Received: by 2002:a17:902:e981:b0:1d7:244e:531e with SMTP id f1-20020a170902e98100b001d7244e531emr8689792plb.25.1707141700327;
+        Mon, 05 Feb 2024 06:01:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUfHNwuYa8MJRPrOHempccXKIzbSidWB3DSkhZaf9iZkwjtK1uCNRodO6SV8a/drGuCro1p6/P1EW33Nl1ufCyCGuFJJuCvil5GGiLzRdydeqxf9kq/byI6Z4OJWbGLuSBMPkX17pPmQ6qUu/LslFIFx4KXxmTe08C2aar9LIyFELU1/64zfkBZi0KEKM5viadAvAMxtl6hw5ovumdtzmUju6BZn19LfxqMu7X3I1AXHdvDCUuskjWjRg==
+Received: from thinkpad ([120.138.12.228])
+        by smtp.gmail.com with ESMTPSA id ju15-20020a170903428f00b001d75c26e857sm6349179plb.288.2024.02.05.06.01.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 06:01:39 -0800 (PST)
+Date: Mon, 5 Feb 2024 19:31:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] pci: endpoint: make pci_epf_bus_type const
+Message-ID: <20240205140135.GA9617@thinkpad>
+References: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 6/6] s390: vfio-ap: make matrix_bus const
-To: "Ricardo B. Marliere" <ricardo@marliere.net>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240203-bus_cleanup-s390-v1-0-ac891afc7282@marliere.net>
- <20240203-bus_cleanup-s390-v1-6-ac891afc7282@marliere.net>
-Content-Language: en-US
-From: "Jason J. Herne" <jjherne@linux.ibm.com>
-In-Reply-To: <20240203-bus_cleanup-s390-v1-6-ac891afc7282@marliere.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 1b6_ZgLgjBCaRQxDwVWwHZT2PyKDcg_W
-X-Proofpoint-GUID: 1b6_ZgLgjBCaRQxDwVWwHZT2PyKDcg_W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-05_08,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2402050106
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
 
-On 2/3/24 9:58 AM, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 05:28:58PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the matrix_bus variable to be a constant structure as well,
+> move the pci_epf_bus_type variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
 > ---
->   drivers/s390/crypto/vfio_ap_drv.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/endpoint/pci-epf-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index a5ab03e42ff1..4aeb3e1213c7 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -60,7 +60,7 @@ static void vfio_ap_matrix_dev_release(struct device *dev)
->   	kfree(matrix_dev);
->   }
->   
-> -static struct bus_type matrix_bus = {
-> +static const struct bus_type matrix_bus = {
->   	.name = "matrix",
->   };
->   
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 2c32de667937..bf655383e5ed 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -17,7 +17,7 @@
+>  
+>  static DEFINE_MUTEX(pci_epf_mutex);
+>  
+> -static struct bus_type pci_epf_bus_type;
+> +static const struct bus_type pci_epf_bus_type;
+>  static const struct device_type pci_epf_type;
+>  
+>  /**
+> @@ -507,7 +507,7 @@ static void pci_epf_device_remove(struct device *dev)
+>  	epf->driver = NULL;
+>  }
+>  
+> -static struct bus_type pci_epf_bus_type = {
+> +static const struct bus_type pci_epf_bus_type = {
+>  	.name		= "pci-epf",
+>  	.match		= pci_epf_device_match,
+>  	.probe		= pci_epf_device_probe,
+> 
+> ---
+> base-commit: 1281aa073d3701b03cc6e716dc128df5ba47509d
+> change-id: 20240204-bus_cleanup-pci-f70b6d5a5bcf
+> 
+> Best regards,
+> -- 
+> Ricardo B. Marliere <ricardo@marliere.net>
 > 
 
-Reviewed-by: Jason J. Herne <jjherne@linux.ibm.com>
+-- 
+மணிவண்ணன் சதாசிவம்
