@@ -1,127 +1,203 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E311755E;
-	Mon,  5 Feb 2024 10:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9294F17581;
+	Mon,  5 Feb 2024 10:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707129613; cv=none; b=gTQqE+a3ZqgEGB2YkhJQMOY3hk6mlHBBc5W7Q9TFqkYdM7k4SSaBO0Oq3so0UieIH/bua87FxeNqTSYz6FoH5rdxilLsj0gR7f+saTErDrFyHqYduAP9fElUagKUezkkwjx1dYEuUjWuWMEFG6w0s+rYoqHToFEjQtazivuWYw8=
+	t=1707129647; cv=none; b=CNhLtXEtBe/pkWStFjqm889j42TGa7QenbFlZwTs7NKPPXP3pWxxswpjaP+YrxITnf/TFBmgGwkDW+AQ62dESB+EtWx4pT7CKNXkM3JEgnXReCJBVPylqAE5zNonB3Qq9K7sLVlFNW5DeI7P5VEspP24lrnuygaieNe0TnyMYag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707129613; c=relaxed/simple;
-	bh=Pi6euJLSnj2co6H/IooWtWX35oWGVFQDRFlDcv+0sck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E0WHV88G4rwESDwxbuFdZ9HdNb5SwlpRJoV4LTnIywWUssbQByHbR6Ath3cHw7T9kgh0RUJJrsrppyjcR7rsKrnGDKrdiFpu7l7ZL8lPULFiHrvK6E53ad9DAf2LPxd+gFHDo8nVtuqwhZiXhQ3xmLEoDlrbgjfMY55ElqiqMcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pOXBKu2U; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1707129647; c=relaxed/simple;
+	bh=9YZSEeWXeoLQgpLT/zkhzH4CoQDzzd4C+BWVfb1NVWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RPnH+T0ZPw3zVeDzCVaN83JxbAsZ48r06G8UnYG0fV+03+EAXwhphN8fxu+ea/thgaWDSlNcM+6xNCHanK26NinXTMSLyatuDHVxjmXuD06sr0HGDQQBkXDEdKJ/ji37DQMUFJJVZZ8kh/vsJ9OWv1VtiYcVtUuTrsxGd9jaV1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=RXedL9vU; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=RXedL9vU; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pOXBKu2U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=/XPiUugopTvJyLAW30gfJ0WGytmJrayjsJOj85rr9tA=; b=pOXBKu2U2s9ahudf5rB1rX1L9T
-	nCn5+N8MrXtz+PeaZKjGCZ4EJUpy6oQZKCXwx4AqGkqmEDpNN381D05iUCB2y98Ec2or/6s8vz5YN
-	nIIEvx9xSdl7F/zlMQnA5orfDEtXrAwmOCs+jjhU/Nhgmd8gV3ASuOGqX/YGpVTSB7jkUmSanOUVp
-	hpLhLoNp8xCeqNs9lANdusVHZs0I7Dm1/px7bnjQnHJddXouvQpSqAOg/HHw28yZKeUlkKAAIqNbo
-	Myh4c8TE3eYlndJLUJogiJMUiXBgwLxDaxMXevigd1m1K+eMySJ3khsrqapGoNzNF/9v5vPAZnxRd
-	9aOKIeaw==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rWwOJ-00000002rJF-3GlM;
-	Mon, 05 Feb 2024 10:39:55 +0000
-Message-ID: <8f3bab1f-8697-40c0-91f2-de934b4b9ddb@infradead.org>
-Date: Mon, 5 Feb 2024 02:39:53 -0800
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RXedL9vU";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RXedL9vU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 61E251F8BA;
+	Mon,  5 Feb 2024 10:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707129643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BKBcU6YqpKLkMWFaxv08QTXYXsDD02PgmQ2I1AtJz+o=;
+	b=RXedL9vUcEuWj1kOAGQude6sI1XZvW3JH8Vha6feqQkRxz7fk56UU8KSiB/LhqI32Gcpmf
+	YnUBZy8SMZqfGjJ4m6ejuFCmM4r4xwN5wjnfV+no2W7go7Uz7bna5jsW5Hls/LI2vkkcAF
+	S5vFe2Og5HMOTzYUnm1zUNb49ciJZpQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707129643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BKBcU6YqpKLkMWFaxv08QTXYXsDD02PgmQ2I1AtJz+o=;
+	b=RXedL9vUcEuWj1kOAGQude6sI1XZvW3JH8Vha6feqQkRxz7fk56UU8KSiB/LhqI32Gcpmf
+	YnUBZy8SMZqfGjJ4m6ejuFCmM4r4xwN5wjnfV+no2W7go7Uz7bna5jsW5Hls/LI2vkkcAF
+	S5vFe2Og5HMOTzYUnm1zUNb49ciJZpQ=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 43A1B132DD;
+	Mon,  5 Feb 2024 10:40:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Gv15DSu7wGWUMwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 05 Feb 2024 10:40:43 +0000
+Date: Mon, 5 Feb 2024 11:40:42 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
+	yuzhao@google.com, mkoutny@suse.com,
+	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: memcg: Use larger batches for proactive reclaim
+Message-ID: <ZcC7Kgew3GDFNIux@tiehlicka>
+References: <20240202233855.1236422-1-tjmercier@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 17/17] linux: v4l2-vp9.h: Fix kerneldoc
-Content-Language: en-US
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Ricardo Ribalda <ribalda@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Tiffany Lin <tiffany.lin@mediatek.com>,
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans Verkuil <hverkuil@xs4all.nl>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Bin Liu <bin.liu@mediatek.com>,
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Bingbu Cao <bingbu.cao@intel.com>,
- Tianshu Qiu <tian.shu.qiu@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-amlogic@lists.infradead.org, Sakari Ailus <sakari.ailus@iki.fi>
-References: <20240126-gix-mtk-warnings-v1-0-eed7865fce18@chromium.org>
- <20240126-gix-mtk-warnings-v1-17-eed7865fce18@chromium.org>
- <ZbTTb-SdK-EubGdc@valkosipuli.retiisi.eu>
- <201ae1d1-1e03-40e2-9cc4-49df70abb8da@xs4all.nl>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <201ae1d1-1e03-40e2-9cc4-49df70abb8da@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240202233855.1236422-1-tjmercier@google.com>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=RXedL9vU
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -4.01
+X-Rspamd-Queue-Id: 61E251F8BA
+X-Spam-Flag: NO
 
+On Fri 02-02-24 23:38:54, T.J. Mercier wrote:
+> Before 388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive
+> reclaim") we passed the number of pages for the reclaim request directly
+> to try_to_free_mem_cgroup_pages, which could lead to significant
+> overreclaim. After 0388536ac291 the number of pages was limited to a
+> maximum 32 (SWAP_CLUSTER_MAX) to reduce the amount of overreclaim.
+> However such a small batch size caused a regression in reclaim
+> performance due to many more reclaim start/stop cycles inside
+> memory_reclaim.
 
+You have mentioned that in one of the previous emails but it is good to
+mention what is the source of that overhead for the future reference.
+ 
+> Reclaim tries to balance nr_to_reclaim fidelity with fairness across
+> nodes and cgroups over which the pages are spread. As such, the bigger
+> the request, the bigger the absolute overreclaim error. Historic
+> in-kernel users of reclaim have used fixed, small sized requests to
+> approach an appropriate reclaim rate over time. When we reclaim a user
+> request of arbitrary size, use decaying batch sizes to manage error while
+> maintaining reasonable throughput.
 
-On 2/5/24 02:29, Hans Verkuil wrote:
-> On 27/01/2024 10:57, Sakari Ailus wrote:
->> Hi Ricardo,
->>
->> On Fri, Jan 26, 2024 at 11:16:16PM +0000, Ricardo Ribalda wrote:
->>> Kerneldoc cannot understand arrays defined like
->>> v4l2_frame_symbol_counts.
->>>
->>> Adding an asterisk to the name does do the trick.
->>>
->>> Disable the kerneldoc notation for now, it is already ignored:
->>> https://docs.kernel.org/search.html?q=v4l2_vp9_frame_symbol_counts
->>
->> Wouldn't it be nicer to fix kerneldoc instead? It might not be difficult at
->> all.
->>
->> Feel free to, but I can also give it a try.
->>
+These numbers are with MGLRU or the default reclaim implementation?
+ 
+> root - full reclaim       pages/sec   time (sec)
+> pre-0388536ac291      :    68047        10.46
+> post-0388536ac291     :    13742        inf
+> (reclaim-reclaimed)/4 :    67352        10.51
 > 
-> It would be nice to have this fixed in kerneldoc itself. I'm holding this
-> patch back for two weeks to see if someone wants to work on kerneldoc.
+> /uid_0 - 1G reclaim       pages/sec   time (sec)  overreclaim (MiB)
+> pre-0388536ac291      :    258822       1.12            107.8
+> post-0388536ac291     :    105174       2.49            3.5
+> (reclaim-reclaimed)/4 :    233396       1.12            -7.4
 > 
-> If not, then I'll take this anyway to fix the noise in our build.
+> /uid_0 - full reclaim     pages/sec   time (sec)
+> pre-0388536ac291      :    72334        7.09
+> post-0388536ac291     :    38105        14.45
+> (reclaim-reclaimed)/4 :    72914        6.96
 > 
-> Note that while this header is indeed ignored in the documentation, that
-> is really more a bug and it would be nice to actually include this header
-> somewhere in our documentation. So fixing these kerneldoc warnings one way
-> or another is something that we should do.
+> Fixes: 0388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive reclaim")
+> Signed-off-by: T.J. Mercier <tjmercier@google.com>
+> Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 > 
+> ---
+> v3: Formatting fixes per Yosry Ahmed and Johannes Weiner. No functional
+> changes.
+> v2: Simplify the request size calculation per Johannes Weiner and Michal Koutný
+> 
+>  mm/memcontrol.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 46d8d02114cf..f6ab61128869 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6976,9 +6976,11 @@ static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
+>  		if (!nr_retries)
+>  			lru_add_drain_all();
+>  
+> +		/* Will converge on zero, but reclaim enforces a minimum */
+> +		unsigned long batch_size = (nr_to_reclaim - nr_reclaimed) / 4;
 
-It's just waiting for Jon to apply it: (from Sakari)
+This doesn't fit into the existing coding style. I do not think there is
+a strong reason to go against it here.
 
-https://lore.kernel.org/all/20240131084934.191226-1-sakari.ailus@linux.intel.com/
+> +
+>  		reclaimed = try_to_free_mem_cgroup_pages(memcg,
+> -					min(nr_to_reclaim - nr_reclaimed, SWAP_CLUSTER_MAX),
+> -					GFP_KERNEL, reclaim_options);
+> +					batch_size, GFP_KERNEL, reclaim_options);
 
-Thanks.
+Also with the increased reclaim target do we need something like this?
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4f9c854ce6cc..94794cf5ee9f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1889,7 +1889,7 @@ static unsigned long shrink_inactive_list(unsigned long nr_to_scan,
+ 
+ 		/* We are about to die and free our memory. Return now. */
+ 		if (fatal_signal_pending(current))
+-			return SWAP_CLUSTER_MAX;
++			return sc->nr_to_reclaim;
+ 	}
+ 
+ 	lru_add_drain();
+>  
+>  		if (!reclaimed && !nr_retries--)
+>  			return -EAGAIN;
+> -- 
+> 2.43.0.594.gd9cf4e227d-goog
 
 -- 
-#Randy
+Michal Hocko
+SUSE Labs
