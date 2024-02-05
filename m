@@ -1,207 +1,241 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB9A10A09;
-	Mon,  5 Feb 2024 06:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707116292; cv=none; b=CFzDDa8em1CDlbcYlWXt3PqEazp1B6txOEKyFtTB9RaJkU9oj7NtbFFNa5VfzWp801jACXuYEX08PPyCzrT5u5bLypXtSKqdi6lUdT1wfbU2NK+Rw/iMm9MOcW/qhlm3XK8AaqgtmjTk71rZiGpkMYQaPj3axZi9I5rWxezbrLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707116292; c=relaxed/simple;
-	bh=6Q6hd2SRiPtQucQdUaYCthhGjVgi2HUY2NFE6jWtXXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QynSiTfw3w/UWDFjTiY6Nf/1GB6n2zngm/wLhCxEoKoeUBHB2DatrDS49bxK9g6Z6/XqI3CIF/Wl2Hi4TT/PbSd4Bz0HxLc3PIqtp2KdcveUxfUgaEW9eKtTsbS+mAZ+k6eP2S5vPW1+E79R1mfxP5fjOr1VzGk7zBcJiBUoK4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=atBip1CT; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AAE10A01;
+	Mon,  5 Feb 2024 06:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707116339; cv=fail; b=roYOFBIllmiXQX6D8XKUuinD82uEmPwUOgD7lnJvRSAtCjKDKy8oJrLANORGqiFDXtMo2HKg9rwBF1phwgT38zdl1cQ5ApRDwZbfXUj0Vb1pg41PrKj/lSUNQed29qTdOAFOkbYGiRbXtkwjW8MkSukNymXaderHoM+EIGSJRjU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707116339; c=relaxed/simple;
+	bh=vMCof7zbsmPRNA0ZOzcnxQkQdFxCP6cw5QTjK5PuzdE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aMsepcj4DuTjrdJOUSHalHgn47G3rCSk2wfqm/dhdfH8n7IktxiaGsy9hAuU11DSdgiyBvR4oCR/2EO9u5imMShUcWyX5HtXoMKNld15JdSfd0Bly+Aa7iohWeG1Om+aEYnlRZ400Qu9/+QcQP4RXXHYxJWuz3ilqaxvpCKBXyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ro/JkNMR; arc=fail smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="atBip1CT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ro/JkNMR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707116291; x=1738652291;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6Q6hd2SRiPtQucQdUaYCthhGjVgi2HUY2NFE6jWtXXU=;
-  b=atBip1CTmSa2WxTKdqIrWsDyAysQSKBtNUafVa82wzLOANUta/7bXMd3
-   Xat0Dxmy7/mFMPYnEhv5ZQ/I92IzlvktVehLCd3PXnse/dPt/ZVyHNje+
-   b+UdAWAjxOHTIzCvWY05I2b5HRT1A861SqAo2kiy9KbphQS542VWNX5Ws
-   LCvI0bAe2xDu/2BNQepUKuS+BUzJwURfWG3e/wegv+u8aSh7krm+UoR2j
-   pFfmeBqHG9swtvQ64gZsZ5OI82IogII/uQFfc0u1AL/Mqlw3HGUCIF+KD
-   fy8dyCYW2rBCQj2osdaXAH2z1BWh5ZlzZ4zL8cyWlHzXbFx6tETTQ9tn/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="367946"
+  t=1707116337; x=1738652337;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=vMCof7zbsmPRNA0ZOzcnxQkQdFxCP6cw5QTjK5PuzdE=;
+  b=Ro/JkNMR0bD9WSwnCo6VtAP04HMnqKHSXfEshyEWuDm9YyWNQRH9nrxi
+   UT38yvhsiy/klH2mjq75VW3x5Zlo7ieyJ0/otQQUOtGce6IZ9y/69T9SZ
+   5P/kZipc9+zmQc3r8nDk/mnrSuyz2AJ85mGE0v/+u4OCOnOZviuYLqLaR
+   jTS1LqvzAypbukW40IrqcuYy9Wude+42Ib/rFJRxcZsMBdPJiYGBRMoyy
+   jjWhVOlhk3hhxMJcjWB51tsCj/gRFYzLhwrqZUDNsWz3QmtmASwI4gpdv
+   rFW4rm3E9YXvokf7sTV5L/GJrLaOBYF4j146z03bSqnHNXT12a75Zrz4Z
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="11554688"
 X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="367946"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 22:58:10 -0800
+   d="scan'208";a="11554688"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 22:58:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="964423"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.164])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 22:58:08 -0800
-Message-ID: <046baaea-217f-4ecc-b340-b5f6f1cee0b9@intel.com>
-Date: Mon, 5 Feb 2024 08:58:05 +0200
+   d="scan'208";a="844853"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2024 22:58:55 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 4 Feb 2024 22:58:55 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 4 Feb 2024 22:58:54 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 4 Feb 2024 22:58:54 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 4 Feb 2024 22:58:54 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aXEMakul/L63VX5Yx6TuE07v7SYE6haDrt0ZeLNmtqp6kLehNQTEC0tcUu8u6MUnyDmq2odz7waPAqOfK/pVYcJh9fc9zesqEyPl9S9N8v20zB1wYxBiIVVp5zidBaRdXWy+OjqZTNIoJ3aI3bbEN5tgKFjHooxjCLbZEPZ8OsYee5kwwcWtdT1BtQ74v/7Xtybv+zk69a8f4naopK21hclJQ+5PZA6IDWl5hKr9AKiYPnmxsxRSytx+zOh3e+PK/oVCoKjvq28QJJ1/mocpjd4TyGzqH5bxJ9NY3+iQ6pzdk3MEuZsWSe3VqdYr1uuY6stYf/CwS0H+XIUYShANZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1e/354oLrt6Vd5D8ehfBOanI1BpLS/6zj9l0e9jn8Vg=;
+ b=VnJVXtkgCzDGLYVyKnEekh9ld97yc4+Td1YRwJzBdbP3j3oShUSqjGoYGoLG25e3P7R+WNFO+QRs9Kl1tAC/zYIlbIOFiBK7rbye7TslBHLeFZEo7OIjLxqR0BL26lI/IEMAR0/LEExzjBHcor8yrY8rXND/WzsAlzTUer+yCuFKapN1PaJ+cNIODeO6aW0BsV5Rd37on0t1bzTeS0cQGBmks2zVauYWBwN7C99k8yRssHhEnyZY6p9RDVP6nAPD71sy8l4hDekiZXSJ1s2EPqAYUu3ZBB2kfMTDatkkWtUV1/s63m7wf8HsKPO9DpMXFjl2DN9RIUlFs6oCmAmAaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5271.namprd11.prod.outlook.com (2603:10b6:208:31a::21)
+ by SA2PR11MB4795.namprd11.prod.outlook.com (2603:10b6:806:118::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.33; Mon, 5 Feb
+ 2024 06:58:52 +0000
+Received: from BL1PR11MB5271.namprd11.prod.outlook.com
+ ([fe80::55ed:61f6:bcd3:9e72]) by BL1PR11MB5271.namprd11.prod.outlook.com
+ ([fe80::55ed:61f6:bcd3:9e72%3]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
+ 06:58:51 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Brett Creeley <brett.creeley@amd.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "yishaih@nvidia.com"
+	<yishaih@nvidia.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+CC: "shannon.nelson@amd.com" <shannon.nelson@amd.com>
+Subject: RE: [PATCH vfio] vfio/pds: Rework and simplify reset flows
+Thread-Topic: [PATCH vfio] vfio/pds: Rework and simplify reset flows
+Thread-Index: AQHaUIYcXfafP7iWiUS0/Oox6wrptLD7WkUQ
+Date: Mon, 5 Feb 2024 06:58:51 +0000
+Message-ID: <BL1PR11MB52712B162AE5FEC2E24614F98C472@BL1PR11MB5271.namprd11.prod.outlook.com>
+References: <20240126183225.19193-1-brett.creeley@amd.com>
+In-Reply-To: <20240126183225.19193-1-brett.creeley@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5271:EE_|SA2PR11MB4795:EE_
+x-ms-office365-filtering-correlation-id: 93e20388-26c5-4fd0-eb34-08dc2617e912
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZuaMsSEI6yYlYucjjBqNwRDbNfPzRBku74bX9OGlLZYNfgV58e9B2Zy4im+zir5mA3ZXSq4l68yznPxvfWu8PeQ/mPNiQ5vv9l/Rvw3/dGP52b/W4Olbi65iCll7h6Y+gZFUpRCRw5t8vFduTj6ylCUQ9GQ/IIdKamOrNcMZcJ579Hc+03JWmDVNkbl2B+cFlt9N0D2NlyGUgRzw/b4cISURx7i2dDGyaT9w2Z4d3YQmzk/NhYQqcZlyEk36KkcINfjoTTnL5WXzvhBizMCZG+pXAmwgn4dnk8uX+WTO53ut1cofY+OKU/+R9yVE+1XmMg5HCY4X1K3mSjAkGIw4kal4AcSgfKyv/+MKUbyOQQqrqJfAoLrCEE37wIHc4tfgUYYRXHeRw0qrbIoI9Yb7nEHjEciGSXn0oVlHMCsI+GkurePtzk2CiFaICwlLANR1iuE5aGA2jc8kWHs6YEfqokAiOsNXXX8LQGufVc09pMvntgPYuJFW8lxtgdkbpOlXBC+tNE2USmoABsGABc1Aw0Ot2HTZ6ALFV8PNY3fM4eW45wQP4OCst/8WsegERPkaoD1jRMY45Feu4swlFBayy1bfvPa7XIigzZATE3zTcLVpDxU35iZyZLnsL+G2zTo9
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5271.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(136003)(366004)(39860400002)(396003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(41300700001)(55016003)(33656002)(478600001)(9686003)(38070700009)(86362001)(82960400001)(26005)(83380400001)(52536014)(316002)(71200400001)(66946007)(66446008)(5660300002)(64756008)(66476007)(6506007)(66556008)(110136005)(38100700002)(4326008)(8936002)(76116006)(8676002)(122000001)(2906002)(7696005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?cxa1mYF/Ed4wW/uhgo9EqemgAQ5J6xVKRL3K0JxbVryb3FeN/ygR0XBqwxNe?=
+ =?us-ascii?Q?lXeN715jjm078hh4lw8QXakfnN5sG/XczQz51ecc+ayvpaZPpbpqHiaZ+kSi?=
+ =?us-ascii?Q?ZPpOPLgbCGmMQFaDWXxCR3DsqEDOwFFQzsiUNVTjul5Q4lh9oatfJtlmzCIN?=
+ =?us-ascii?Q?yJYWjlSDNhHnrcxS+B3HeDBkfrblGrQpLu4R+XeqFJ+78vFqma+tXy5mnZx1?=
+ =?us-ascii?Q?36zwCwjMcYZHNuZ7RuWAIXjHfeeO1OzfX9WgP0h5vrn965WWw/0/MDLeCggN?=
+ =?us-ascii?Q?tLxW3BJ5a0xdm6dXsI4ycch8Qg65cANIMGtVEB+oyNnwL9BNS9BHAWpO5j3x?=
+ =?us-ascii?Q?/ITsy00MFoh/6IxJBONSTAyuDukpdjHvfkg4shdC+BgruHTXcgRj6fBANQvl?=
+ =?us-ascii?Q?kI7Trys6MMi7vUL6/uBSV21EXPo0IMOZ/b6iGfpZIsPwZTHuua/NN7PqNNp2?=
+ =?us-ascii?Q?QOSeQ4n9+J3LEK1TBsjBO3X8WqUENjHDvMKdzpGBzHcyqajE48URM984tzNY?=
+ =?us-ascii?Q?9StQ9gMuVE6KiujcwxGYNPssfe/BPlO/ahEorHDmAbEuK4ZaROuH9PyDfALZ?=
+ =?us-ascii?Q?n0imsu5UyU6t00IJv1jPFDbaNtiIHRWoyGD4KLQb10GfvooxJdYPsSDrfgN+?=
+ =?us-ascii?Q?dpjxlu0QxS5+Xmcp5B10KTi7I8YrRSsnplKFMLbaUeGjW6J2oRLFCib3yOHR?=
+ =?us-ascii?Q?r/KtWLwvZGF3fwCujHR6cR8OHFKsRD3i9Fe3FdLfPvyxz6dSv2rq4M3QYB7J?=
+ =?us-ascii?Q?Fpg1pcbAvjK0kuOTbCeUrSrQoBrKuR5iLWzRU5Gr6r9snI6a+jCKXKWKgQ3D?=
+ =?us-ascii?Q?06s18cwUof72h6gNcPlApVUpFeY8pYG6Ln+INshNUDRwyAK5LDVPHnx0QhL+?=
+ =?us-ascii?Q?27h185Q/IG7klgDB8U4IT7/ngE9JBgcvs3l9nGFszKFB4v/80PHZZfBJUfWI?=
+ =?us-ascii?Q?Nmi++Awa0Klqrib80s6GbTDxCeu1UVguSEsvI+LOzTpEddfXl1xAHqbKrFP6?=
+ =?us-ascii?Q?VAwQl7YOSCoN+5IQuzueIC0hmxqWNFFAHKj2JtIznWgrzDAaLjwZ28NmflL0?=
+ =?us-ascii?Q?VMYhp05kaHD4f8lX+gCxtCkWIA99RC8wEJ0TkQ2mjABf80aBxPnTxr82Z5Sb?=
+ =?us-ascii?Q?ivHmprjJ5lSP+WEzx1WJAjM8Gld979DFxMZJ3MEoQup3paA7OWVXMGWyhJdO?=
+ =?us-ascii?Q?up5fvgCl/RitZcPON8ESQ/YdPUg0yXcrjiBibAmdaXVfxkwYFDyLcmtyUp9E?=
+ =?us-ascii?Q?AVc9HthbY965MbtdabrOlSYJAMjxhypHEc5euA3Yoz2rVpwYntf4qaVeEe77?=
+ =?us-ascii?Q?gOEeuLzeKj5ps4hFgJ4wGJCocXr8wrzh5hcSg4QiKKYL+oKsfPdFD8b0WDxn?=
+ =?us-ascii?Q?Z0qV8Rit2GLOpv7czyCGbvXVa4PPo4VJZ4YWc86Uxy8w0bx8Nx47bnjx+G2N?=
+ =?us-ascii?Q?JN2f1C01tX45wf5U4ELUVxYPuFJaDvF/oSMwS7AxsZBzN4HqZ68ZqegYKGbP?=
+ =?us-ascii?Q?aQ8zxJpH7eGvRNevLiS4fABHjI90rItbedi/bgNdM5r56Y+H0xgFzsh87IsP?=
+ =?us-ascii?Q?jqzs0UQHYFWEcc9VqUbtUUTimzH03d+V7jV+uVkT?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf symbols: Slightly improve module file executable
- section mappings
-Content-Language: en-US
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Like Xu <like.xu.linux@gmail.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240202110130.3553-1-adrian.hunter@intel.com>
- <20240202110130.3553-3-adrian.hunter@intel.com> <Zb2akm1MGCv84T-7@google.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Zb2akm1MGCv84T-7@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5271.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93e20388-26c5-4fd0-eb34-08dc2617e912
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2024 06:58:51.6120
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hzwhZbtCdbyKE6cDJ4JZh8ouLo1lNpZxNfPJ7CWxVjs+rq9o2I+WG6x+k4QpFXlJycmsvGbo9ByACyGVrODUsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4795
+X-OriginatorOrg: intel.com
 
-On 3/02/24 03:44, Namhyung Kim wrote:
-> Hi Adrian,
-> 
-> On Fri, Feb 02, 2024 at 01:01:30PM +0200, Adrian Hunter wrote:
->> Currently perf does not record module section addresses except for
->> the .text section. In general that means perf cannot get module section
->> mappings correct (except for .text) when loading symbols from a kernel
->> module file. (Note using --kcore does not have this issue)
->>
->> Improve that situation slightly by identifying executable sections that
->> use the same mapping as the .text section. That happens when an
->> executable section comes directly after the .text section, both in memory
->> and on file, something that can be determined by following the same layout
->> rules used by the kernel, refer kernel layout_sections(). Note whether
->> that happens is somewhat arbitrary, so this is not a final solution.
->>
->> Example from tracing a virtual machine process:
->>
->>  Before:
->>
->>   $ perf script | grep unknown
->>          CPU 0/KVM    1718   203.511270:     318341 cpu-cycles:P:  ffffffffc13e8a70 [unknown] (/lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko)
->>   $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel | grep 'noinstr.text\|ffff'
->>   Map: 0-7e0 41430 [kvm_intel].noinstr.text
->>   Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
->>
->>  After:
->>
->>   $ perf script | grep 203.511270
->>          CPU 0/KVM    1718   203.511270:     318341 cpu-cycles:P:  ffffffffc13e8a70 vmx_vmexit+0x0 (/lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko)
->>   $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel | grep 'noinstr.text\|ffff'
->>   Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
->>
->> Reported-by: Like Xu <like.xu.linux@gmail.com>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>  tools/perf/util/symbol-elf.c | 75 +++++++++++++++++++++++++++++++++++-
->>  1 file changed, 73 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
->> index 9e7eeaf616b8..98bf0881aaf6 100644
->> --- a/tools/perf/util/symbol-elf.c
->> +++ b/tools/perf/util/symbol-elf.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/ctype.h>
->>  #include <linux/kernel.h>
->>  #include <linux/zalloc.h>
->> +#include <linux/string.h>
->>  #include <symbol/kallsyms.h>
->>  #include <internal/lib.h>
->>  
->> @@ -1329,6 +1330,58 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
->>  	return -1;
->>  }
->>  
->> +static bool is_exe_text(int flags)
->> +{
->> +	return (flags & (SHF_ALLOC | SHF_EXECINSTR)) == (SHF_ALLOC | SHF_EXECINSTR);
->> +}
->> +
->> +/*
->> + * Some executable module sections like .noinstr.text might be laid out with
->> + * .text so they can use the same mapping (memory address to file offset).
->> + * Check if that is the case. Refer to kernel layout_sections(). Return the
->> + * maximum offset.
->> + */
->> +static u64 max_text_section(Elf *elf, GElf_Ehdr *ehdr)
->> +{
->> +	Elf_Scn *sec = NULL;
->> +	GElf_Shdr shdr;
->> +	u64 offs = 0;
->> +
->> +	/* Doesn't work for some arch */
->> +	if (ehdr->e_machine == EM_PARISC ||
->> +	    ehdr->e_machine == EM_ALPHA)
->> +		return 0;
->> +
->> +	/* ELF is corrupted/truncated, avoid calling elf_strptr. */
->> +	if (!elf_rawdata(elf_getscn(elf, ehdr->e_shstrndx), NULL))
->> +		return 0;
->> +
->> +	while ((sec = elf_nextscn(elf, sec)) != NULL) {
->> +		char *sec_name;
->> +
->> +		if (!gelf_getshdr(sec, &shdr))
->> +			break;
->> +
->> +		if (!is_exe_text(shdr.sh_flags))
->> +			continue;
->> +
->> +		/* .init and .exit sections are not placed with .text */
->> +		sec_name = elf_strptr(elf, ehdr->e_shstrndx, shdr.sh_name);
->> +		if (!sec_name ||
->> +		    strstarts(sec_name, ".init") ||
->> +		    strstarts(sec_name, ".exit"))
->> +			break;
-> 
-> Do we really need this?  It seems my module has .init.text section
-> next to .text.
-> 
->   $ readelf -SW /lib/modules/`uname -r`/kernel/fs/ext4/ext4.ko
->   There are 77 section headers, starting at offset 0x252e90:
->   
->   Section Headers:
->     [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
->     [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0
->     [ 1] .text             PROGBITS        0000000000000000 000040 079fa7 00  AX  0   0 16
->     [ 2] .rela.text        RELA            0000000000000000 13c348 04f0c8 18   I 74   1  8
->     [ 3] .init.text        PROGBITS        0000000000000000 079ff0 00060c 00  AX  0   0 16
->     ...
-> 
-> 
-> ALIGN(0x40 + 0x79fa7, 16) = 0x79ff0, right?
+> From: Brett Creeley <brett.creeley@amd.com>
+> Sent: Saturday, January 27, 2024 2:32 AM
+>=20
+> The current logic for handling resets based on
+> whether they were initiated from the DSC or
+> host/VMM is slightly confusing and incorrect.
+> The incorrect behavior can cause the VF device
+> to be unusable on the destination on failed
+> migrations due to incompatible configurations.
+> Fix this by setting the state back to
+> VFIO_DEVICE_STATE_RUNNING when an FLR is
+> triggered, so the VF device is put back in
+> an "initial" pre-configured state after failures.
 
-But not in memory e.g.
+any reason for putting short lines (<50 chars) in commit msg?
 
-Section Headers:
-  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
-  [ 3] .text             PROGBITS        0000000000000000 0000a0 071719 00  AX  0   0 16
-  [ 5] .text.unlikely    PROGBITS        0000000000000000 0717b9 000a59 00  AX  0   0  1
-  [ 7] .init.text        PROGBITS        0000000000000000 072212 0004fe 00  AX  0   0  1
-  [ 9] .altinstr_replacement PROGBITS    0000000000000000 072710 000004 00  AX  0   0  1
-  [10] .static_call.text PROGBITS        0000000000000000 072714 000388 00  AX  0   0  4
-  [12] .exit.text        PROGBITS        0000000000000000 072a9c 000078 00  AX  0   0  1
+>=20
+> Also, while here clean-up the reset logic to
+> make the source of the reset more obvious.
 
+as a fix the a 'Fixed' tag is preferred and CC stable
 
-/sys/module/ext4/sections/.text:                 0xffffffffc0453000
-/sys/module/ext4/sections/.text.unlikely:        0xffffffffc04c4719
-/sys/module/ext4/sections/.init.text:            0xffffffffc053e000
-/sys/module/ext4/sections/.altinstr_replacement: 0xffffffffc04c5172
-/sys/module/ext4/sections/.static_call.text:     0xffffffffc04c5178
-/sys/module/ext4/sections/.exit.text:            0xffffffffc04c5500
+also separate the real fix from the cleanup so stable kernel doesn't need
+to backport unnecessary code.
 
-Need to have:
+btw the commit msg is not clear to me. It says fixing the problem
+by setting the state to _ERROR for the DSC path and to _RUNNING for
+the FLR path.
 
-	section address - offset == .text address - .text offset
+But looks it's already such case with old code:
 
-perf does not record the section address, but the kernel
-layout_sections() lays out executable sections in order
-starting with .text *until* it gets to .init* or .exit*.
+pds_vfio_recovery()
+	pds_vfio->deferred_reset =3D true;
+	pds_vfio->deferred_reset_state =3D VFIO_DEVICE_STATE_ERROR;
 
+pds_vfio_reset()
+	pds_vfio->deferred_reset =3D true;
+	pds_vfio->deferred_reset_state =3D VFIO_DEVICE_STATE_RUNNING;
+
+pds_vfio_state_mutex_unlock()
+	if (pds_vfio->deferred_reset) {
+		...
+		pds_vfio->state =3D pds_vfio->deferred_reset_state;
+		...
+	}
+
+it's same as what this patch does:
+
+pds_vfio_recovery()
+	pds_vfio->deferred_reset_type =3D PDS_VFIO_DEVICE_RESET;
+
+pds_vfio_reset()
+	pds_vfio->deferred_reset_state =3D PDS_VFIO_HOST_RESET;
+
+pds_vfio_state_mutex_unlock()
+	if (pds_vfio->deferred_reset) {
+		...
+		if (pds_vfio->deferred_reset_type =3D=3D PDS_VFIO_HOST_RESET)
+			pds_vfio->state =3D VFIO_DEVICE_STATE_RUNNING;
+		else
+			pds_vfio->state =3D VFIO_DEVICE_STATE_ERROR;
+		...
+	}
+
+looks the actual functional difference is from below change:
+
+> @@ -32,13 +32,14 @@ void pds_vfio_state_mutex_unlock(struct
+> pds_vfio_pci_device *pds_vfio)
+>  	mutex_lock(&pds_vfio->reset_mutex);
+>  	if (pds_vfio->deferred_reset) {
+>  		pds_vfio->deferred_reset =3D false;
+> -		if (pds_vfio->state =3D=3D VFIO_DEVICE_STATE_ERROR) {
+> -			pds_vfio_put_restore_file(pds_vfio);
+> -			pds_vfio_put_save_file(pds_vfio);
+> +		pds_vfio_put_restore_file(pds_vfio);
+> +		pds_vfio_put_save_file(pds_vfio);
+
+above two are changed from conditional to always.
+
+> +		if (pds_vfio->deferred_reset_type =3D=3D PDS_VFIO_HOST_RESET)
+> {
+> +			pds_vfio->state =3D VFIO_DEVICE_STATE_RUNNING;
+> +		} else {
+>  			pds_vfio_dirty_disable(pds_vfio, false);
+
+and this is now only for the DSC path.
+
+need a better explanation here.
