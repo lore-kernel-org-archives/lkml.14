@@ -1,57 +1,57 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4472D1C2AC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D12A1CA88
 	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137123; cv=none; b=axurasU/LUkTrkDho2S+lgA9jVIp4nOIqnkbO1OHRtT3LF7arn7yEwyOTVJN6YIqcBcGCC5oc9BJixlpNeXrtYahcARQWMprYRdrY2JtrmBxOYxDEKB/w8ZcVjRh97u4FZzAYl/P2+P2KzkcJIFoO1stMvoY94nyw5C87t7N0wc=
+	t=1707137124; cv=none; b=D6hWrSoshId2LWVjc8brvdwIIDHQfFOnUPXknOHAl2SRJIpMsbr4j8godotFBOxCef5/N7CVDL3F+osXEZj//0huwfKLvVcGkyr/m4WPfpaCEiiOb26ui/S1qscqbZi7ByLnhly83lLDAYAulP22YW+7ekKZ+qxeLdIPeCqdMV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137123; c=relaxed/simple;
-	bh=Z4Ew4nyDpzzGo1pM+lRVxGZLGFkSY7f2fYJqWCwnhYw=;
+	s=arc-20240116; t=1707137124; c=relaxed/simple;
+	bh=F124QJAevKWdFhGb5sj8HrO8muyAjVQUMric9Xoo0PQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tH2QhyEBtNEEQy9uKgPqjyRa+UoN4+8wPHV+LeGKKtwxcbdNTEXwpW9TcsDTX//LRi3KzrkOIzGt8gd5KTud/BO0joaP3URr7oXJ+X6caxGUbNbFPBC9LqPDsFfJvUt0hZdYTcZu4Xw0OAXuER/n0vQMQrqMedl0J14fuHNoxgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S/ec5aA6; arc=none smtp.client-ip=209.85.221.43
+	 MIME-Version; b=TpsO5JUk1GGwE34UBymt86e1kAyjkV/Hs3+ChQ+I9sLBN2N1jO+446PuIu5Lvyv3it/NbwZFyCE64ptn395yHu76wjTuuCv91Ylb7DmY7RJKuIMWqn+qsc+IFWS9MHF+TCmvMAqO41CnNd0Je9hKU6TJGPiI95WozdY479noHu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ytmQxFes; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S/ec5aA6"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33b402116e5so346173f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:45:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ytmQxFes"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33934567777so2926348f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:45:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707137119; x=1707741919; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707137120; x=1707741920; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W0iJZWpnXVMwkvXpPgSJew7EEo1nTNBnfpPHvIQNpUQ=;
-        b=S/ec5aA6xqbeO1ETXeGMa00Wm505ZPWRGAPg52nwg7JZOmu+piZT83yVfeNev9Q71K
-         bJ3wzhL/M3xn1sbrlmz/sDd9Q9PuRKplPTYuts2WVE+zo+bs9+OoMAv7y+2MozG3Wnxw
-         VIHz7AN2NYDfqArq+kOTd1bOC8VvP5QkWMeQkDGSfPNCKZjrVFR1PwxCjBSZrfh9apiZ
-         qvkIN+3nW631VEgCgsHHHZRWStCIToQgGNEC7qX0z/WkZdiwkWbmMFLoN13DBx3KAjjx
-         pQawH0EWQ7X1VHZV4YttzkP99ewrsRT8AbUVhoCRyJdyQI/2hBFsv7A7d+r3jgcZ7Rjc
-         3seQ==
+        bh=eOBjoaorUabw6V0kVhecCBVM+DqJR5V0WfMbUMGzKiM=;
+        b=ytmQxFes1ArYQxU0/WAEZsWB7bHZI+JEABZFpFeehELiXjFZ7O+380widLKzXGvCN1
+         wETkdeQnP++UbhJHoVYpz1ukzxR5f0BLpdGQZ1OaYolbrirexBCGp50q5up+HjOCLljT
+         jLITSDjcWHXAa6SwKz6zeB23p8Io24BbY+69aDdJVW09pp2f360Kl9RwMANXd8wVVg0J
+         O0SMmvvrAsNRZlR5bIWmYZRM1U3sKnyfqyMGGKnUI1vMHy+T++CBuLfSdL4O4u6mFSo/
+         Pd0XGxJ9B3BQ7SWi7Grw5LRKJYUD5JDIBHh+j4MQRN3kaCbWqDIxCooaM3EgL0hkriqB
+         8DQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707137119; x=1707741919;
+        d=1e100.net; s=20230601; t=1707137120; x=1707741920;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W0iJZWpnXVMwkvXpPgSJew7EEo1nTNBnfpPHvIQNpUQ=;
-        b=GOky5TuaUp6Vbnrzm3Qm3YEAcaEyEWH25nxF2pH5y7os7khM77ZfGAaayJJgo8giwa
-         dGSu7xn4ElKhZvN34tYwbRePrLY8V/Ir1uURWjh8bl5WeLPfiNES0uAt7ntNjztFQ+s/
-         6n9m064UQmIvubzYGP4I48Yk0hroGk7LN27or33H30G6Uq0pK6oCPw426XTmWKu6IfhM
-         rPoMvrcVOisRATXH2f42eIsJWOFrM9yEBjtl+U9wc0HqImPQs70wLW1oOIWZGx0WVRK9
-         azMQdXBKzGWNHBJY1xYFTZezj2Xp4+BooT4c0KaUfrqOGQ6IRylqsPnkVygsgiKLhmYf
-         2fIA==
-X-Gm-Message-State: AOJu0YwVwV91rgm4AlYchL0NtrkT5se9BoztizvwEFOBYr1wiL1XwF9G
-	IsVOBjWHKSlCf9lVhGPI0vznQMLt0gmazMcxAe4iS6gTg9O0dpr96Zxqqh0/ldI=
-X-Google-Smtp-Source: AGHT+IEUTeDGMe9y9Io7d7vPFXq0/9oe6SH6ovhiw0963u3mRGK3Ub0ZC51fMHi6OyYN0hVu+gFbCg==
-X-Received: by 2002:a5d:5889:0:b0:33b:421d:bc01 with SMTP id n9-20020a5d5889000000b0033b421dbc01mr937267wrf.69.1707137119533;
-        Mon, 05 Feb 2024 04:45:19 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUahAXSvTsGA1585DKwqXFbQPhNA509hGouEFV78sopzS6Q+jluFeON2uLS/6ymTrU4IdZf56owEpKf/7Xq5dTT2fQTav0F9l/XLuL2m55hmDV1Bo/H4owLu/xUAiXgKIHz3Sy+4cAr4wAKB4ie1RWdUAQC+Y6eTIluyUepqtaPTR5Ip6RuWjdCy5jzQSzEfHOIPPAOOal1XQzCPXaJbtH9N5geE7MB3mjL0MtAL8bNebGI6+HzhEFrAR9+IxbPlAGf78worWYfixaftWPQ+YUogMJy92aAqgos1bmCRmWeyCLrlcsoqr+J9zD62Z1fhET61waZ4kgPlJxq5c8Bl/6PlfsLSDSFnE85zeKOqCrlSbcUN+ztFYZOfid4qeWX9oW6jHVdO0AXMpEFlm/jmiU92IhIw/cwRAB5UXAa/SHFVGDfusu2ZEDM6/75bBZDG0js0t5focKja7CPw+6gyZP5TCdxUf0xszz7mnWypT5jC6PosY5XchFNLKmlUg==
+        bh=eOBjoaorUabw6V0kVhecCBVM+DqJR5V0WfMbUMGzKiM=;
+        b=Qxf3m7bHoQQ39PIWsS3ba/oGVxNCncn5SRtl5B4zDjnvRHbtlBRsiQKJJG12d4OtPU
+         vqrS4Kt1sgSMH/T1yCN4oSueM/9At8XhWsIOJtBT8EfZeyheqUCrrNLgSO+4Er6wCB9A
+         rKURfaSeE/ZrNUxqyQYxua2CMprv6yGIrkRx+PCGWrHzEUFX73v4SJt+9rbLEMoY5Vq1
+         TlkaTUn00boskesZu8ZwDS9fXfHUNdgD5ZHiSWpTDBOzFXOLVL9/9yRC1lZ1VOMUma+0
+         OYzFMmcgTVpGUx12dVwWAG4Yymt5DBPuBcdmrQwg8BZI53EeDCsCrOw8UV4KSI//+AJG
+         FcRw==
+X-Gm-Message-State: AOJu0Yy2vRs27aD+Z0uLX58ymwtM7y1LkOCXXNGkS1zZ9y9emKYqxh4f
+	YC3BCHpexcAV4keS2BL81Uc15CU2dxAi2kKNjtQ40qtSr4VuI2Uj5i3uKBrYFPM=
+X-Google-Smtp-Source: AGHT+IE/R//MpNPylh0UwnhF9YKZR3KGGY4fGA5i2/YHcwiL3Cuz8pM968aVwJ0sUeRb5fLUjg+zTw==
+X-Received: by 2002:a5d:64c8:0:b0:33b:3b96:87b4 with SMTP id f8-20020a5d64c8000000b0033b3b9687b4mr2800257wri.14.1707137120374;
+        Mon, 05 Feb 2024 04:45:20 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVMfIKOUFnj98diFmwBJtthJx6XEcrlECRzI+G2PUYmp9a0qQk6FHpzoZ9Ia24ALKuUN657wE98H7tOGJZHXUA8msOETP4O6LwvEYPkhKFL0nxyBUrL5e2O8PpjE8+a4M9P11ukmFcNBgXZEa5aWKSANDzieilHAieWiKlkvLrl13nCFPWQDtoDpKen60XHXzT8GvyRKD0vD//k+Qg1LxdRN+OAWLXIj1JfNpuN7SLfryV6uFyeKnFgV3lAGAtE909omOuHJ5ZKKnCxJ33RwVeCOHVP1+ZoaQqjUzQ/CMVw80T4NvSdqgiC2OQow6M6qnGiei69Mp7y7alVSVZkJ1ldjTF35HcXRcoCWooaacUQTyzUzMuFslAV2REvXdO+IicsZi5ls10DblwKzyoM1PGP0iWzrmPzgE0Bol6vhVkkb80eWfLhYsJwxLAt+xlvddzVmWCt7BqPk4BIU9IpSbhTdg1EU/O/4BVSuH2MpZeYc7sOZdT093oW1fodyg==
 Received: from ta2.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
-        by smtp.gmail.com with ESMTPSA id n9-20020adff089000000b0033b35da384fsm3650812wro.33.2024.02.05.04.45.18
+        by smtp.gmail.com with ESMTPSA id n9-20020adff089000000b0033b35da384fsm3650812wro.33.2024.02.05.04.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:45:18 -0800 (PST)
+        Mon, 05 Feb 2024 04:45:19 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: broonie@kernel.org,
 	andi.shyti@kernel.org,
@@ -67,9 +67,9 @@ Cc: krzysztof.kozlowski@linaro.org,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v4 03/16] spi: s3c64xx: avoid possible negative array index
-Date: Mon,  5 Feb 2024 12:45:00 +0000
-Message-ID: <20240205124513.447875-4-tudor.ambarus@linaro.org>
+Subject: [PATCH v4 04/16] spi: s3c64xx: fix typo, s/configuartion/configuration
+Date: Mon,  5 Feb 2024 12:45:01 +0000
+Message-ID: <20240205124513.447875-5-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
 In-Reply-To: <20240205124513.447875-1-tudor.ambarus@linaro.org>
 References: <20240205124513.447875-1-tudor.ambarus@linaro.org>
@@ -81,32 +81,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The platform id is used as an index into the fifo_lvl_mask array.
-Platforms can come with a negative device ID, PLATFORM_DEVID_NONE (-1),
-thus we risked a negative array index. Catch such cases and fail to
-probe.
+Fix typo, s/configuartion/configuration.
 
-Fixes: 2b90807549e5 ("spi: s3c64xx: add device tree support")
+Fixes: 6b8d1e4739f4 ("spi: spi-s3c64xx: Add missing entries for structs 's3c64xx_spi_dma_data' and 's3c64xx_spi_dma_data'")
 Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/spi/spi-s3c64xx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/spi/spi-s3c64xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 2b5bb7604526..c3176a510643 100644
+index c3176a510643..3df4906bba34 100644
 --- a/drivers/spi/spi-s3c64xx.c
 +++ b/drivers/spi/spi-s3c64xx.c
-@@ -1189,6 +1189,9 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
- 					     "Failed to get alias id\n");
- 		sdd->port_id = ret;
- 	} else {
-+		if (pdev->id < 0)
-+			return dev_err_probe(&pdev->dev, -EINVAL,
-+					     "Negative platform ID is not allowed\n");
- 		sdd->port_id = pdev->id;
- 	}
- 
+@@ -180,7 +180,7 @@ struct s3c64xx_spi_port_config {
+  * @cur_speed: Current clock speed
+  * @rx_dma: Local receive DMA data (e.g. chan and direction)
+  * @tx_dma: Local transmit DMA data (e.g. chan and direction)
+- * @port_conf: Local SPI port configuartion data
++ * @port_conf: Local SPI port configuration data
+  * @port_id: Port identification number
+  */
+ struct s3c64xx_spi_driver_data {
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
