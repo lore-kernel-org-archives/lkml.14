@@ -1,93 +1,105 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2423134AF;
-	Mon,  5 Feb 2024 10:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB91C134BE;
+	Mon,  5 Feb 2024 10:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707127230; cv=none; b=OjeHRQWzrLl4MvCiZlrKz04ZUxBfLuJ0xXw9OflwdZSzRQVZzt3ZId0or1Q1ECavkP+mLmxFFfJdPaBHw3YqgcbBUsz/9f9UAqFpVRmYfw4ir9vC5prlttLVieKt1z/x6cZmsFcFENyDGuzh40bOc6eybjqWKBSr8ciBui5q6hY=
+	t=1707127281; cv=none; b=YlvS+8bh21EOB6nhvtKWVRy/D6mkl/WAZu2bicqphQ/9bBwnmYUoHQiZ+wLfFP314K94VhR7f1zhWprmCdQ/+lAs9QzPLrWOcIfnLLyKRBu9DUqbZh5S7hf/++ulG/Or8hKJKvon8Os/fFg4ap0DpZSMKPY/+7nfOjad/B4GBhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707127230; c=relaxed/simple;
-	bh=Cr/yrTL+3LqkmxZ8T5EnNgADnSMoayQdEMynTCrmG7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIr39YDiM3wvtF8CBjTddD372FMez42k8SDl2Rpx+uqi9qNB0r1LQgtj0KmyqxshNbrRrhbfIbWRsEO90tN4ORsC0qf7D2mJtoulWC//qrvrun9Uh91lyOHjVTHoYwu55HodyQyqA9J3xls2fKz8a4ujiHl0HNAHG3ourpW/UFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=lNdwvt5O; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1707127281; c=relaxed/simple;
+	bh=BP4cik0zUpqBQFebRvL7UNNHdC8t3H6I8IFcOmMDkhY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=qL/REL4T8cf9jxiaDRGvCuSEvVUNV4lxd/xfotKmlFvwHh0i/7pfB3IyzDUhN66U53oVxxsKNot4UbuaO7dNy27DsIuseYcP5FHo7pzOT5saLBy7i+gePCAjWUxd51rJF5sUnvc0n1JJM3heFw0c5Mki8HIsGzM+tE/UE+U5acM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=svc3ZXBj; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lNdwvt5O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=s0hoRfGIvTGHgneayWfi5kk6Ut6Vdy9Hd25mPOPqEXY=; b=lNdwvt5ORnapXlLrXwXC0cEbRx
-	CuQXfZ+LW7Wq3MUBwK/NIWomquSJLeE1DWdh2k3dmdzcSXLJO3lRSTnmqxv9BPu/gvEPOrO7Fh9Es
-	cPrVBA5Di2KOsNdls+mVh/hY+2AkiEhgwWGPJMvhdG2TPEwNv/vLAaFvxIVwYT3mHfSNOW7uHY2Yh
-	gW0uq2TH/pub2i9bkSAz/3343ee7xbT7JwTsjcxipTNrEfEG49w7NDd+243vavX0Zr3K7Ec8BqKMO
-	CFldWJYDOu8Ter0RTZDU9bEgKvjktPFWZ5nHX5xLp7QldaudUoGGNNr3uShcwFupLagZ+a7iKVtj2
-	7TMF6z4Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54440)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rWvlh-0000LB-0T;
-	Mon, 05 Feb 2024 10:00:01 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rWvlZ-0002bl-QE; Mon, 05 Feb 2024 09:59:53 +0000
-Date: Mon, 5 Feb 2024 09:59:53 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: arinc.unal@arinc9.com
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v4 2/7] net: dsa: mt7530: move XTAL check to
- mt7530_setup()
-Message-ID: <ZcCxmUwxfmKIXh/U@shell.armlinux.org.uk>
-References: <20240204-for-netnext-mt7530-improvements-2-v4-0-02bf0abaadb8@arinc9.com>
- <20240204-for-netnext-mt7530-improvements-2-v4-2-02bf0abaadb8@arinc9.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="svc3ZXBj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1707127262; x=1707732062; i=markus.elfring@web.de;
+	bh=BP4cik0zUpqBQFebRvL7UNNHdC8t3H6I8IFcOmMDkhY=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=svc3ZXBjNL90pRbqGudZ5sLzXrkZVAJdqdLBHVoanakv4xWbtWBVh1YgLxA9wwQg
+	 pNanxujD3FadEe3LD3TBlZ+L++t3miTPa6BPsicradl6DVL5rD5GyXS9lKcQi2+pw
+	 VqjU1cFKDTqRSZrJ98gvv1oH7P+Wi1fwehXitFxVI7sq5y5TSe4OTuS8YStHZPX7k
+	 BQiibfFJ8qlxe7dpyywgsFACf9suZzXTnUtlUWGbWs51hplEaU87EQ9fipjWLe1bU
+	 iBdwerYdz6DixiLjzGnanvWcgrdhx3Ruj8kmyTdpENaTlOb2qul6zzyXOEgJRdOFx
+	 V992XHYUL7qV+hB6EA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M3m5B-1rXkzt2Jmd-0010fC; Mon, 05
+ Feb 2024 11:01:02 +0100
+Message-ID: <c2e4aaa9-731f-4a33-890e-567c466a8885@web.de>
+Date: Mon, 5 Feb 2024 11:01:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240204-for-netnext-mt7530-improvements-2-v4-2-02bf0abaadb8@arinc9.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+To: linux-tegra@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel-janitors@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] drm/tegra: dsi: Use devm_platform_get_and_ioremap_resource()
+ in tegra_dsi_probe()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:l3QYLItjc1kOM4lo7et/2ok0Re/VhuUd9eWBSSYWeFHhcO8vu59
+ zQKhAzcdcqnTWza4xbwztbf0ruOhhqIPbBk8Afas26E+jRmNIqrc1Xp3Vzqk0ZNftgRrYmO
+ /AGZkneQ3k7rA/A8J6voFd38wfVaT+UV4R3Whis4b4lUueunTorgmnJ01RMwZAOh9eEsrI2
+ QTwLNVCpVtLAxRxf8hhXw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:W8KQR2hEAzU=;E1Kg3ilBm7X/538T0AtTOeBfTKJ
+ GVHgoCgABVGMtfnWDgXJZ0BPU93O9QxCrbl5+jWv5HcYcsT6pHHbr4+mu4HZ6EO6f3Y5TxjBs
+ FKz3/mAslNMHthAADDTodH0KdZh16nNlhuJKju61hh33VTnH6KBtjXoh2AqcBbgW8Qvhd9HhG
+ sozsLljBleUrJ5rVIakcFjhXxPOxgCUwGn+SK50uUVWPE6UzJ4FRbSV/aYJCh5MElC/0U/RZE
+ S1TZVT6hNo0AnUone/SrA/k+3OHeABFpBDvgY8M/NlDT1zrOqTa62+8pSe02nMLi4hjq5O0N8
+ 8ID5PWcstHpHjW14N3HHyTzlf+4RmDeMfuzDBcIWtKUIKc1RzJXeah6t5siF/4DmRr+wXdxoi
+ wozxGUtZ2WYlAypoQxaYGFM6Msl+IYBBXVPUmZ2STDqSntUMkj4ndf5SEECur6tfUrA89qpnt
+ duaHh5FSieU96kgc5UwE5zi7DLfWu5X82L25ZK2pACnfGuHyiiYxO6vb8Rf3hnQusRcKLOZgR
+ X85sEns/RkS/MtXgs6ph3H2P9MhIX0RaSzTMIjeG+QibqcYR8FXa9fh90nPpBMn2G2n2G0DBl
+ WEeQbGmbWwRDQSapBaduCypNeILeW7SDYd4OM3P0X/z6m5OdOoBvjfqoNdaOK2UkcQI8fF/MF
+ 3ZoMqca2vO5gPFxgo48Q2bWcIMb++dMcElrYCmPZCyhinxrYPesZpi5+cwCbeMQd5FctSlHbg
+ m55wStkfh7R4ehjz//4iS6eM3IbklS5h/LDcQHXnD5oOeO9e5g/m1pt/0hbxsfnBZGmYhGc1Y
+ d1OyebEFaVUoyGX4Qezuu8MSpkeGQJXDT/aFn2uTLjJbQ=
 
-On Sun, Feb 04, 2024 at 07:34:20PM +0300, Arınç ÜNAL via B4 Relay wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> The crystal frequency concerns the switch core. The frequency should be
-> checked when the switch is being set up so the driver can reject the
-> unsupported hardware earlier and without requiring port 6 to be used.
-> 
-> Move it to mt7530_setup(). Drop the unnecessary function printing.
-> 
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 5 Feb 2024 10:51:36 +0100
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+A wrapper function is available since the commit 890cc39a879906b63912482df=
+c41944579df2dc6
+("drivers: provide devm_platform_get_and_ioremap_resource()").
+Thus reuse existing functionality instead of keeping duplicate source code=
+.
 
-Thanks!
+This issue was detected by using the Coccinelle software.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/gpu/drm/tegra/dsi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index fbfe92a816d4..727c3a7d8d26 100644
+=2D-- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1624,8 +1624,7 @@ static int tegra_dsi_probe(struct platform_device *p=
+dev)
+ 		return err;
+ 	}
+
+-	regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dsi->regs =3D devm_ioremap_resource(&pdev->dev, regs);
++	dsi->regs =3D devm_platform_get_and_ioremap_resource(pdev, 0, &regs);
+ 	if (IS_ERR(dsi->regs))
+ 		return PTR_ERR(dsi->regs);
+
+=2D-
+2.43.0
+
