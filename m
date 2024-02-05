@@ -1,191 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C00D4A99C;
-	Mon,  5 Feb 2024 23:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D3947F71;
+	Mon,  5 Feb 2024 23:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707174671; cv=none; b=Vxog5655FjKEqJP6+rFkD85Jk0mo8ygCWjfo861Q7lTR0QU4/bHA/4Os8siilGCjkk6DWAihqEbwW4xJbX2HmAWIdaL3lyKtzYc6El1rZURsdiu9wSNGC1Da3a2sUjhBeL75RkwBLQTeyjjiO5rMU0cKuv+PKBNNnacECPWToAI=
+	t=1707174680; cv=none; b=UDSCaCOWW/D8koIvF3T5Bvom4UeutsEOf7UGJKqZRQWLKp3tvqnAqPhDrGUDUUCkGMgLTp6LhXq2YFVO1vHH8Lc48UOc7zMpEPJ4c/9qa3repYw8ixFlruBtQU3egD6wXFJHq24vc4Kd/xsQYNBFWPIhHPHB0h5wSa45VVNeUt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707174671; c=relaxed/simple;
-	bh=kKKhcMaqwLfUrQpjENPUNxtz3qXKdR24f6zeijBX9CE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hfX4qUK1cvmFMe7F7H/ACuRkEo0AfAuOxHOUcE9ankoIM7aQIuYd+xV7vF62C6c7bOg1lpDbHcdzSFkzS2Cmf/OLEifQp+o5CwpOF+SKZ6gcbIcr45AMEb8yeda9PnWm0fHv2WkoeLs8kFZBTYEEQ4L6qSDZlbN3dkl7yuMMVDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HB187Jmc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707174680; c=relaxed/simple;
+	bh=pE6MdVN8qRUDubmDe46A7CJY5B3Qr0+bzM13aSgneso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Scp++9RPRIM7OXqP4raypbtKIpe7osKIYe3kaHkrDOVfrWXyANXQIZEymMhPDrXFX0jdMFCKBhhu9nzxG+m0FY6nghGwTK8Bzxq2cei2HtHPTVzRBffZhfSUFbjncKiNiErcP0T34ArWI6TwYvecZPZzGQm51KjIGrg5XSwnAWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sZ5JcpBE; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HB187Jmc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E64C43609;
-	Mon,  5 Feb 2024 23:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707174670;
-	bh=kKKhcMaqwLfUrQpjENPUNxtz3qXKdR24f6zeijBX9CE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HB187Jmc7N7uKVocaYk9dPVnB0bc0p+8iqaeqwMCeBQC0ZqhLdrW5YjLlU9tsfcx4
-	 pgwHPeYFLw0+aHppjkw35gZgsTrwzZEum4uVFCDDyjS6KpxNO0pjSNezg5C0DYSwB9
-	 9on4UE/EAlIFzTxnR1Z1Qd6PE6NFULCjGkN0uV93j0OpObNr3VLvi33C0ossP0j3ke
-	 /CTmygQGpqJmghvmv0/gBordhtTRSZiiRiECkmV8ubfpRSB9Hi+q7sVj7ZthVVjv1b
-	 yAonpdQ6wKRdWVgcXMuCK2PPO2vOr3+7Rg3QWuzSpCK/HHcEKU8/yU4kuS7wKlTIrK
-	 OyfXsaEhsR2sg==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cf4fafa386so63531461fa.1;
-        Mon, 05 Feb 2024 15:11:10 -0800 (PST)
-X-Gm-Message-State: AOJu0YziolENu1FszCFANQIQq4YZ6GRgAeGFAdzha71Q+QJxNm3JdB8k
-	ip14I5hhqIo4E7CZFVj42r16AKpZCr4ak2IrBHdN/+hHJIjogtqBXv4aKzNgURL4nd2XUdXZ4ZO
-	0vgccMY/f010pA23QMpz5NpKCr7s=
-X-Google-Smtp-Source: AGHT+IH/zQJiT8/Oo7PpxCUmoye89gZAefcTyo51dU8Du8JULRbKsx7NuW1HiTmxHkDZc8e1guuf9kncHcYJ5t3C078=
-X-Received: by 2002:a2e:9098:0:b0:2d0:996e:b014 with SMTP id
- l24-20020a2e9098000000b002d0996eb014mr347168ljg.32.1707174669110; Mon, 05 Feb
- 2024 15:11:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sZ5JcpBE"
+Received: from [10.137.106.151] (unknown [131.107.8.87])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D8C2A20B2000;
+	Mon,  5 Feb 2024 15:11:17 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D8C2A20B2000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1707174678;
+	bh=Ndb3q4NxTVGdYAy+TAfeKWikxpySz2s7vTNU2j8oIL0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sZ5JcpBEWZCQFsCouuZivlp8iM7AvQIuNOf+fza8KND4ZizOEY7volAf2PCDH9BaQ
+	 7cf8cK0vRo29gbMz4OlsuWJ0Bt0Yfk3offf/ohotKJrKT3yrNTYNUV2J7GkGcahRnl
+	 b4UXffDncGye8rwlLaTTZQP/4sFhzaImaso64bUw=
+Message-ID: <05cb5f03-9236-47b7-8dd4-1741c289efdc@linux.microsoft.com>
+Date: Mon, 5 Feb 2024 15:11:17 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131104851.2311358-1-john.g.garry@oracle.com>
- <CAK7LNATDMjzmgpBHZFTOJCkTCqpLPq8jEjdrwzEZ3uu7WMG7jg@mail.gmail.com> <23c67ffc-64a5-4e19-8fbd-ecb9bfe9d3ff@oracle.com>
-In-Reply-To: <23c67ffc-64a5-4e19-8fbd-ecb9bfe9d3ff@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 6 Feb 2024 08:10:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASfTW+OMk1cJJWb4E6P+=k0FEsm_=6FDfDF_mTrxJCSMQ@mail.gmail.com>
-Message-ID: <CAK7LNASfTW+OMk1cJJWb4E6P+=k0FEsm_=6FDfDF_mTrxJCSMQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/4] Introduce uts_release
-To: John Garry <john.g.garry@oracle.com>
-Cc: mcgrof@kernel.org, russ.weight@linux.dev, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, keescook@chromium.org, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Feb 5, 2024 at 5:25=E2=80=AFPM John Garry <john.g.garry@oracle.com>=
- wrote:
->
-> On 02/02/2024 15:01, Masahiro Yamada wrote:
-> >> --
-> >> 2.35.3
-> >
-> > As you see, several drivers store UTS_RELEASE in their driver data,
-> > and even print it in debug print.
-> >
-> >
-> > I do not see why it is useful.
->
-> I would tend to agree, and mentioned that earlier.
->
-> > As you discussed in 3/4, if UTS_RELEASE is unneeded,
-> > it is better to get rid of it.
->
-> Jakub replied about this.
->
-> >
-> >
-> > If such version information is useful for drivers, the intention is
-> > whether the version of the module, or the version of vmlinux.
-> > That is a question.
-> > They differ when CONFIG_MODVERSION.
-> >
->
-> I think often this information in UTS_RELEASE is shared as informative
-> only, so the user can conveniently know the specific kernel git version.
->
-> >
-> > When module developers intend to printk the git version
-> > from which the module was compiled from,
-> > presumably they want to use UTS_RELEASE, which
-> > was expanded at the compile time of the module.
-> >
-> > If you replace it with uts_release, it is the git version
-> > of vmlinux.
-> >
-> >
-> > Of course, the replacement is safe for always-builtin code.
-> >
-> >
-> >
-> > Lastly, we can avoid using UTS_RELEASE without relying
-> > on your patch.
-> >
-> >
-> >
-> > For example, commit 3a3a11e6e5a2bc0595c7e36ae33c861c9e8c75b1
-> > replaced  UTS_RELEASE with init_uts_ns.name.release
-> >
-> >
-> > So, is your uts_release a shorthand of init_uts_ns.name.release?
->
-> Yes - well that both are strings containing UTS_RELEASE. Using a struct
-> sub-member is bit ungainly, but I suppose that we should not be making
-> life easy for people using this.
->
-> However we already have init_utsname in:
->
-> static inline struct new_utsname *init_utsname(void)
-> {
->         return &init_uts_ns.name;
-> }
->
-> So could use init_utsname()->release, which is a bit nicer.
->
-> >
-> >
-> >
-> > I think what you can contribute are:
-> >
-> >   - Explore the UTS_RELEASE users, and check if you can get rid of it.
->
-> Unfortunately I expect resistance for this. I also expect places like FW
-> loader it is necessary. And when this is used in sysfs, people will say
-> that it is part of the ABI now.
->
-> How about I send the patch to update to use init_uts_ns and mention also
-> that it would be better to not use at all, if possible? I can cc you.
-
-
-OK.
-
-
-As I mentioned in the previous reply, the replacement is safe
-for builtin code.
-
-When you touch modular code, please pay a little more care,
-because UTS_RELEASE and init_utsname()->release
-may differ when CONFIG_MODVERSIONS=3Dy.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v12 15/20] ipe: add support for dm-verity as a trust
+ provider
+Content-Language: en-US
+To: Paul Moore <paul@paul-moore.com>, corbet@lwn.net, zohar@linux.ibm.com,
+ jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org,
+ axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, eparis@redhat.com
+Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ audit@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Deven Bowers <deven.desai@linux.microsoft.com>
+References: <1706654228-17180-16-git-send-email-wufan@linux.microsoft.com>
+ <6ac3cca9d1d3505f3ed9c7196512f2db@paul-moore.com>
+From: Fan Wu <wufan@linux.microsoft.com>
+In-Reply-To: <6ac3cca9d1d3505f3ed9c7196512f2db@paul-moore.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
+On 2/3/2024 2:25 PM, Paul Moore wrote:
+> On Jan 30, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
+>>
+>> Allows author of IPE policy to indicate trust for a singular dm-verity
+>> volume, identified by roothash, through "dmverity_roothash" and all
+>> signed dm-verity volumes, through "dmverity_signature".
+>>
+>> Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+>> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+>> ---
+>> v2:
+>>    + No Changes
+>>
+>> v3:
+>>    + No changes
+>>
+>> v4:
+>>    + No changes
+>>
+>> v5:
+>>    + No changes
+>>
+>> v6:
+>>    + Fix an improper cleanup that can result in
+>>      a leak
+>>
+>> v7:
+>>    + Squash patch 08/12, 10/12 to [11/16]
+>>
+>> v8:
+>>    + Undo squash of 08/12, 10/12 - separating drivers/md/ from security/
+>>      & block/
+>>    + Use common-audit function for dmverity_signature.
+>>    + Change implementation for storing the dm-verity digest to use the
+>>      newly introduced dm_verity_digest structure introduced in patch
+>>      14/20.
+>>
+>> v9:
+>>    + Adapt to the new parser
+>>
+>> v10:
+>>    + Select the Kconfig when all dependencies are enabled
+>>
+>> v11:
+>>    + No changes
+>>
+>> v12:
+>>    + Refactor to use struct digest_info* instead of void*
+>>    + Correct audit format
+>> ---
+>>   security/ipe/Kconfig         |  18 ++++++
+>>   security/ipe/Makefile        |   1 +
+>>   security/ipe/audit.c         |  37 ++++++++++-
+>>   security/ipe/digest.c        | 120 +++++++++++++++++++++++++++++++++++
+>>   security/ipe/digest.h        |  26 ++++++++
+>>   security/ipe/eval.c          |  90 +++++++++++++++++++++++++-
+>>   security/ipe/eval.h          |  10 +++
+>>   security/ipe/hooks.c         |  67 +++++++++++++++++++
+>>   security/ipe/hooks.h         |   8 +++
+>>   security/ipe/ipe.c           |  15 +++++
+>>   security/ipe/ipe.h           |   4 ++
+>>   security/ipe/policy.h        |   3 +
+>>   security/ipe/policy_parser.c |  26 +++++++-
+>>   13 files changed, 421 insertions(+), 4 deletions(-)
+>>   create mode 100644 security/ipe/digest.c
+>>   create mode 100644 security/ipe/digest.h
+>>
+>> diff --git a/security/ipe/Kconfig b/security/ipe/Kconfig
+>> index ac4d558e69d5..7afb1ce0cb99 100644
+>> --- a/security/ipe/Kconfig
+>> +++ b/security/ipe/Kconfig
+>> @@ -8,6 +8,7 @@ menuconfig SECURITY_IPE
+>>   	depends on SECURITY && SECURITYFS && AUDIT && AUDITSYSCALL
+>>   	select PKCS7_MESSAGE_PARSER
+>>   	select SYSTEM_DATA_VERIFICATION
+>> +	select IPE_PROP_DM_VERITY if DM_VERITY && DM_VERITY_VERIFY_ROOTHASH_SIG
+>>   	help
+>>   	  This option enables the Integrity Policy Enforcement LSM
+>>   	  allowing users to define a policy to enforce a trust-based access
+>> @@ -15,3 +16,20 @@ menuconfig SECURITY_IPE
+>>   	  admins to reconfigure trust requirements on the fly.
+>>   
+>>   	  If unsure, answer N.
+>> +
+>> +if SECURITY_IPE
+>> +menu "IPE Trust Providers"
+>> +
+>> +config IPE_PROP_DM_VERITY
+>> +	bool "Enable support for dm-verity volumes"
+>> +	depends on DM_VERITY && DM_VERITY_VERIFY_ROOTHASH_SIG
+>> +	help
+>> +	  This option enables the properties 'dmverity_signature' and
+>> +	  'dmverity_roothash' in IPE policy. These properties evaluates
+>> +	  to TRUE when a file is evaluated against a dm-verity volume
+>> +	  that was mounted with a signed root-hash or the volume's
+>> +	  root hash matches the supplied value in the policy.
+>> +
+>> +endmenu
+>> +
+>> +endif
+>> diff --git a/security/ipe/Makefile b/security/ipe/Makefile
+>> index 2279eaa3cea3..66de53687d11 100644
+>> --- a/security/ipe/Makefile
+>> +++ b/security/ipe/Makefile
+>> @@ -6,6 +6,7 @@
+>>   #
+>>   
+>>   obj-$(CONFIG_SECURITY_IPE) += \
+>> +	digest.o \
+>>   	eval.o \
+>>   	hooks.o \
+>>   	fs.o \
+>> diff --git a/security/ipe/audit.c b/security/ipe/audit.c
+>> index ed390d32c641..a4ad8e888df0 100644
+>> --- a/security/ipe/audit.c
+>> +++ b/security/ipe/audit.c
+>> @@ -13,6 +13,7 @@
+>>   #include "hooks.h"
+>>   #include "policy.h"
+>>   #include "audit.h"
+>> +#include "digest.h"
+>>   
+>>   #define ACTSTR(x) ((x) == IPE_ACTION_ALLOW ? "ALLOW" : "DENY")
+>>   
+>> @@ -54,8 +55,30 @@ static const char *const audit_prop_names[__IPE_PROP_MAX] = {
+>>   	"boot_verified=FALSE",
+>>   	"boot_verified=TRUE",
+>>   #endif /* CONFIG_BLK_DEV_INITRD */
+>> +#ifdef CONFIG_IPE_PROP_DM_VERITY
+>> +	"dmverity_roothash=",
+>> +	"dmverity_signature=FALSE",
+>> +	"dmverity_signature=TRUE",
+>> +#endif /* CONFIG_IPE_PROP_DM_VERITY */
+>>   };
+>>   
+>> +#ifdef CONFIG_IPE_PROP_DM_VERITY
+>> +/**
+>> + * audit_dmv_roothash - audit a roothash of a dmverity volume.
+>> + * @ab: Supplies a pointer to the audit_buffer to append to.
+>> + * @rh: Supplies a pointer to the digest structure.
+>> + */
+>> +static void audit_dmv_roothash(struct audit_buffer *ab, const void *rh)
+>> +{
+>> +	audit_log_format(ab, "%s", audit_prop_names[IPE_PROP_DMV_ROOTHASH]);
+>> +	ipe_digest_audit(ab, rh);
+>> +}
+>> +#else
+>> +static void audit_dmv_roothash(struct audit_buffer *ab, const void *rh)
+>> +{
+>> +}
+>> +#endif /* CONFIG_IPE_PROP_DM_VERITY */
+> 
+> I talked about this back in my review of the v11 patchset and I'm
+> guessing you may have missed it ... the problem with the above code is
+> that the fields in an audit record should remain constant, even if
+> there is no data for that particular field.  In cases where there is no
+> data to record for a given field, a "?" should be used as the field's
+> value, for example:
+> 
+>    dmverify_roothash=?
+> 
+> My guess is that you would want to do something like this:
+> 
+>    #else  /* !CONFIG_IPE_PROP_DM_VERITY */
+>    static void audit_dmv_roothash(...)
+>    {
+>      audit_log_format(ab, "%s=?", audit_prop_names[...]);
+>    }
+>    #endif /* CONFIG_IPE_PROP_DM_VERITY */
+> 
+> --
+> paul-moore.com
 
+These code are used for auditing a policy rule, which the parser will 
+guarantee the property will always have a valid value. The comments 
+might be misleading which sounds like it's auditing a file's state. I 
+will correct them.
 
+Also as we previously discussed, the policy grammar shouldn't depend on 
+any kernel switch so these preprocessor statement will be removed.
 
+However, as an audit record should remain constant, I guess we should do 
+some special treatment to anonymous files? Like audit record for them 
+should include "path=? dev=? ino=?"
 
->
-> >
-> >   - Where UTS_RELEASE is useful, consider if it is possible
-> >     to replace it with init_uts_ns.name.release
->
-> ok, but, as above, could use init_utsname()->release also
-
-
-I am fine with it.
-
-
-init_utsname()->release is more commonly used
-(but less common than UTS_RELEASE)
-
-
-
-$ git grep   'init_utsname()->release' | wc
-     28      92    2065
-$ git grep   'init_uts_ns.name.release' | wc
-      7      34     587
-$ git grep   'UTS_RELEASE' | wc
-     57     304    4741
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Thanks,
+Fan
