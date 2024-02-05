@@ -1,214 +1,107 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9659960B82
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C92660DF2;
+	Mon,  5 Feb 2024 19:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162078; cv=none; b=T+Vd8P5AUFIeDfK4r/xGU5B6ydiHyhTC5Xa/WxXsifvEaydzbYaZJax0U0q4PeKJWS7kP4J5fke2cJZxBeuXcWuYLqCnciCl7/ch523tt/Ai///mqxbdrynFbw5/FhxSvUr4KzPCUdb0G/Fx4O3k/P6EYPOiIf3J9WH7p6uwYqQ=
+	t=1707162096; cv=none; b=Oh7Gd9v9Jib3+tXFAW6QNLmHQ8miHX095HLtG9H0wUlfkhr6TNeBWxfLdVzr5TwsH8n9WVmUERvqanJ6jCY9JxsR+zwoEA6rAppt9s1SUbGhlscujkS0eXw/WSOLeKx1DomZOHEk6/kh5+y6QaZSTDIaGXGJUF5J8fyZxrdDssY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162078; c=relaxed/simple;
-	bh=3b6oeS+sd5xoZNeIJEQUdkAN1RG5u3Jd70MTpYqp6SQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CG5zbWkPyv3uZlyx6+2CF79ToGYIWzkZd0ZqpdwU0ojVPOjzVISLTjG4uQoW7St8ftSEg4WBkQS5q5vjHfsmG6lfrp4XaPEAfbSqPlvjqt2oUxgozTC6FMaw/6c8iyE4LEmEnT9YDwU9wpy/Z4sxPcqClBVqY5sg9KcETH8V43A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lk3IsXrS; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707162096; c=relaxed/simple;
+	bh=gwNsUaGGaqv8vHcEre9Xj6V4R/eUrjnrSdACMEeFbI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jj8IqB2ovcjrbk2DruwP14uNveA29qM2l2ZDLeHcWu0T0tv+84nOqXnnCncDC0VZ3BvyDQFiUVK38uGzrqnD8lQaQ8C954bZMOQMutsELTVamIldgdQ8S5YeyoMXpnRWsyV9zBqUS9oRX8ylLTcKFeCw+Z3TjC4ByLViS1QCFXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DdgTTn8E; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk3IsXrS"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-295c8b795e2so3531538a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 11:41:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707162076; x=1707766876; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3b6oeS+sd5xoZNeIJEQUdkAN1RG5u3Jd70MTpYqp6SQ=;
-        b=Lk3IsXrSX4wqxMlMk7cri4M6IUXcDa2FnzoZ/TKm30119aM0SuBdhFGEvRboC94oK5
-         kzLhb9t1fAmTyXZY6/yQDXwbkKQkWOkdDka7jMz2D2LQ3Ze6+w1L6GTOXfQgcMxrPyoC
-         04uc2A1UcalW87jBF3R+bq3nkrX3DQz/aw4NgMq8kv70u6hCW1zpPA33VfsYDDpHyiyr
-         zuyk+llMkzLH6qHj7YpJoS4xSEsLfB4M313GJjs51sl7B7khLDE//kRtOQcnCS7W7cfi
-         pjUL9oM+juG+A5yfL7wePr6WrpD+RdT3ics95PNj1zIt4XY7BRVI/LU1898pmHWyLs8q
-         a+Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707162076; x=1707766876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3b6oeS+sd5xoZNeIJEQUdkAN1RG5u3Jd70MTpYqp6SQ=;
-        b=k3EjvpEcUyynmPagrhezzdRTK/HawhTfx7jx+5LHnENhzWTA8qhdW1fcEQjmdHGL7m
-         rIckz08RhoQQYLjFEkDOo7ufbW++A5O8XFSF0Xg81Ffs+nRSt3So5oGVcYJ0rbZyR7R2
-         gIiF001ZqwKiKSAqLeuaItYmFfeyxmLZSGNWKi3jlReOfgv/HscPalvU4kA/mUbpc/Dt
-         O0tYLVglpM8ZXo0sNneVvco/ORH6pdBQhB/Ana/V5Gd1efBEK0M2HMr0Fbp2p22JWlxM
-         BNeSAt25f9SCL1YzvH/fJUgsOnLvYUUdHI2piWONXwkTZfJYqWEIrMhM7aPfVoe9dPmI
-         tkfg==
-X-Gm-Message-State: AOJu0YxSUJvOAaiysvdDb2x/u4iSCE69ydkbb97H9wQ+9NAEZ3zvmiiE
-	HWD1OSQloGUhzaPsOxi5TFWOtAMKus4weyUERBVmMzDDd0nGnJRmD1RSNqYNYCmBwGrMkcePfFj
-	GPImdNaVrbEXL6tEa71rTd9u/K7g=
-X-Google-Smtp-Source: AGHT+IGZcG8Y0PjKAioDsv7aAA6ZG2FjD0D14DE2NUFI5ykKeMGcmCUrJ2PIWDJdVOpxzinNN2Cjm/ZRFPVZGoOahrc=
-X-Received: by 2002:a17:90b:4b41:b0:296:1979:cc61 with SMTP id
- mi1-20020a17090b4b4100b002961979cc61mr492646pjb.0.1707162075750; Mon, 05 Feb
- 2024 11:41:15 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DdgTTn8E"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 82A6540E00B2;
+	Mon,  5 Feb 2024 19:41:29 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id NP_oJnZ5KlIR; Mon,  5 Feb 2024 19:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707162086; bh=R7Pr/RRw/kKo0+V44VWePgEa5COJIWtlsvccbXKuuLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DdgTTn8EhXbDQwcy9aF5OiE0bR9RrAAhcvznERiA54w2FwnBS42Sa93mT/Dn//IWB
+	 CppjyaDnWIk5UIOgrnMPNRnLBFMs+rlCTUPQ1UpZRLLbcUiPJY99tyJ/vcuDVLHQ8O
+	 SNO1mo+4PnS30AMvNbyM6jgEdCUWz1CCCVDJyIu7tW72Ho6e2lN1umiNYruuJT96lo
+	 Is6hTjfDm8GUFG0peMG259zIeRYjR6T3QwNE97tcvHqwXM8gCd9UzFv7aF4fLa3Fg1
+	 vE6Cx2DengLdjS/0GBNupx8HhE+xvwnlmnx0W/OxReEqpN1aYlwah6mMsilk0tCl6H
+	 oSHvFLy3qXGfGVyg7KNLwqvbdrND19JxT6XrYY6v226IGUf2gDd3qhDlgSI4GEgr1m
+	 K7V3sjWmZnN4/eQnPTbfiW/2pDvOUMCz4TOhlzDyEAeXohaZXJa06ROPed4pgWyfcD
+	 WbIPb2EbLEumkjlwHHlFTNPs3gXcozv0su9yGrwDYFKtPWiHeiXxdrk1w0ra+S5JBT
+	 eKIh3WLzb2PxZ1fb2SpCwnUyxQHW0ftKS9kQeheHhZcDX0b3qMZi38V3IYuqgDyxD8
+	 TdcaG8xntoVHxT9QoWCD/hxHRaQgXnkEmoqQhnCQXNlqHefoCqnrx5m6d7U9TdeHwO
+	 ttkkKG0+BzKXQSbA6AWQ0V7k=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2CC9440E01A9;
+	Mon,  5 Feb 2024 19:41:18 +0000 (UTC)
+Date: Mon, 5 Feb 2024 20:41:12 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Tony Luck <tony.luck@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>,
+	Muralidhara M K <muralimk@amd.com>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Muralidhara M K <muralidhara.mk@amd.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation: Begin a RAS section
+Message-ID: <20240205194112.GGZcE52DXtK2lr0-14@fat_crate.local>
+References: <20231102114225.2006878-1-muralimk@amd.com>
+ <20231102114225.2006878-2-muralimk@amd.com>
+ <20231128142049.GTZWX3QQTSaQk/+u53@fat_crate.local>
+ <87a5pes8jy.fsf@meer.lwn.net>
+ <20240109183646.GAZZ2SPiMZv83J3f0a@fat_crate.local>
+ <87wmsiqok6.fsf@meer.lwn.net>
+ <20240109200434.GBZZ2m0vWjm9v795YX@fat_crate.local>
+ <20240124124030.GDZbEFPo4APcggdE33@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201125226.28372-1-ioworker0@gmail.com> <Zby-sHLDlmTRaUcd@tiehlicka>
- <CAK1f24=7sy_Bczpt5YeDbkhfriYUc1=zreSFdGCxfF3R0D6sRQ@mail.gmail.com>
- <ZbzfxNn4AYnTVFLh@tiehlicka> <CAK1f24mvBkc2c=fHL6UxMhL2mgLHVrSwZfE5516bOR0yVdfZpQ@mail.gmail.com>
- <ZbzmvwyTGeW18nJy@tiehlicka> <CAK1f24kdyOnUjcpnrk6j4cF6bSFXQwwzFk9tM+jD4RsO_Hc4hA@mail.gmail.com>
- <Zbz_ao0uBKabzKB1@tiehlicka> <CAK1f24nHmvqm1XD_UkWUB7DmNdH0NEOKzpLgKDJ=UuPWO=rEHw@mail.gmail.com>
- <CAHbLzkpYM3jGVP19hG6LcD0=C=LHgGXqjVhsMYhO4HQufsfy-g@mail.gmail.com> <CAK1f24n_ahUoWvw1zJN3P9W-4cxuQVL=1cOZKNjiBhp-ortc5g@mail.gmail.com>
-In-Reply-To: <CAK1f24n_ahUoWvw1zJN3P9W-4cxuQVL=1cOZKNjiBhp-ortc5g@mail.gmail.com>
-From: Yang Shi <shy828301@gmail.com>
-Date: Mon, 5 Feb 2024 11:41:02 -0800
-Message-ID: <CAHbLzkqMTpja+RuePjy4Oz=0Eq2j7LP8hwApGZWu9v6MkKs+Ag@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/khugepaged: skip copying lazyfree pages on collapse
-To: Lance Yang <ioworker0@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>, David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, 
-	zokeefe@google.com, songmuchun@bytedance.com, peterx@redhat.com, 
-	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240124124030.GDZbEFPo4APcggdE33@fat_crate.local>
 
-On Fri, Feb 2, 2024 at 8:17=E2=80=AFPM Lance Yang <ioworker0@gmail.com> wro=
-te:
->
-> Hey Michal, David, Yang,
->
-> I sincerely appreciate your time!
->
-> I still have two questions that are perplexing me.
->
-> First question:
-> Given that khugepaged doesn't treat MADV_FREE
-> pages as pte_none, why skip the 2M block when all
-> the pages within the range are old and unreferenced,
-> but won't skip if the partial range is MADV_FREE,
-> even if it's not redirtied? Why make this distinction?
-> Would it not be more straightforward to maintain
-> if either all were skipped or not?
+On Wed, Jan 24, 2024 at 01:40:30PM +0100, Borislav Petkov wrote:
+> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+> Date: Wed, 24 Jan 2024 13:37:52 +0100
+> Subject: [PATCH] Documentation: Move RAS section to admin-guide
+> 
+> This is where this stuff should be.
+> 
+> Requested-by: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+> ---
+>  Documentation/RAS/index.rst                        | 14 --------------
+>  .../{ => admin-guide}/RAS/address-translation.rst  |  0
+>  .../{ => admin-guide}/RAS/error-decoding.rst       |  0
+>  Documentation/admin-guide/RAS/index.rst            |  7 +++++++
+>  .../admin-guide/{ras.rst => RAS/main.rst}          | 10 +++++++---
+>  Documentation/admin-guide/index.rst                |  2 +-
+>  Documentation/index.rst                            |  1 -
+>  7 files changed, 15 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/RAS/index.rst
+>  rename Documentation/{ => admin-guide}/RAS/address-translation.rst (100%)
+>  rename Documentation/{ => admin-guide}/RAS/error-decoding.rst (100%)
+>  create mode 100644 Documentation/admin-guide/RAS/index.rst
+>  rename Documentation/admin-guide/{ras.rst => RAS/main.rst} (99%)
 
-It is just some heuristic in the code and may be some arbitrary
-choice. It could controlled in a more fine-grained way if we really
-see some workloads get benefit.
+Now queued.
 
->
-> Second question:
-> Does copying lazyfree pages (not redirtied) to the
-> new huge page during khugepaged collapse
-> undermine the semantics of MADV_FREE?
-> Users mark pages as lazyfree with MADV_FREE,
-> expecting these pages to be eventually reclaimed.
-> Even without subsequent writes, these pages will
-> no longer be reclaimed, even if memory pressure
-> occurs.
+Thx.
 
-Yeah, it just means khugepaged wins the race against page reclaim. I'm
-supposed the delayed free is one of the design goals of MADV_FREE, and
-the risk is the pages may not be freed eventually. If you want
-immediate free or more deterministic behavior, you should use
-MADV_DONTNEED or munmap IIUC.
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> BR,
-> Lance
->
-> On Sat, Feb 3, 2024 at 1:42=E2=80=AFAM Yang Shi <shy828301@gmail.com> wro=
-te:
-> >
-> > On Fri, Feb 2, 2024 at 6:53=E2=80=AFAM Lance Yang <ioworker0@gmail.com>=
- wrote:
-> > >
-> > > How about blocking khugepaged from
-> > > collapsing lazyfree pages? This way,
-> > > is it not better to keep the semantics
-> > > of MADV_FREE?
-> > >
-> > > What do you think?
-> >
-> > First of all, khugepaged doesn't treat MADV_FREE pages as pte_none
-> > IIUC. The khugepaged does skip the 2M block if all the pages are old
-> > and unreferenced pages in the range in hpage_collapse_scan_pmd(), then
-> > repeat the check in collapse_huge_page() again.
-> >
-> > And MADV_FREE pages are just old and unreferenced. This is actually
-> > what your first test case does. The whole 2M range is MADV_FREE range,
-> > so they are skipped by khugepaged.
-> >
-> > But if the partial range is MADV_FREE, khugepaged won't skip them.
-> > This is what your second test case does.
-> >
-> > Secondly, I think it depends on the semantics of MADV_FREE,
-> > particularly how to treat the redirtied pages. TBH I'm always confused
-> > by the semantics. For example, the page contained "abcd", then it was
-> > MADV_FREE'ed, then it was written again with "1234" after "abcd". So
-> > the user should expect to see "abcd1234" or "00001234".
-> >
-> > I'm supposed it should be "abcd1234" since MADV_FREE pages are still
-> > valid and available, if I'm wrong please feel free to correct me. If
-> > so we should always copy MADV_FREE pages in khugepaged regardless of
-> > whether it is redirtied or not otherwise it may incur data corruption.
-> > If we don't copy, then the follow up redirty after collapse to the
-> > hugepage may return "00001234", right?
-> >
-> > The current behavior is copying the page.
-> >
-> > >
-> > > Thanks,
-> > > Lance
-> > >
-> > > On Fri, Feb 2, 2024 at 10:42=E2=80=AFPM Michal Hocko <mhocko@suse.com=
-> wrote:
-> > > >
-> > > > On Fri 02-02-24 21:46:45, Lance Yang wrote:
-> > > > > Here is a part from the man page explaining
-> > > > > the MADV_FREE semantics:
-> > > > >
-> > > > > The kernel can thus free thesepages, but the
-> > > > > freeing could be delayed until memory pressure
-> > > > > occurs. For each of the pages that has been
-> > > > > marked to be freed but has not yet been freed,
-> > > > > the free operation will be canceled if the caller
-> > > > > writes into the page. If there is no subsequent
-> > > > > write, the kernel can free the pages at any time.
-> > > > >
-> > > > > IIUC, if there is no subsequent write, lazyfree
-> > > > > pages will eventually be reclaimed.
-> > > >
-> > > > If there is no memory pressure then this might not
-> > > > ever happen. User cannot make any assumption about
-> > > > their content once madvise call has been done. The
-> > > > content has to be considered lost. Sure the userspace
-> > > > might have means to tell those pages from zero pages
-> > > > and recheck after the write but that is about it.
-> > > >
-> > > > > khugepaged
-> > > > > treats lazyfree pages the same as pte_none,
-> > > > > avoiding copying them to the new huge page
-> > > > > during collapse. It seems that lazyfree pages
-> > > > > are reclaimed before khugepaged collapses them.
-> > > > > This aligns with user expectations.
-> > > > >
-> > > > > However, IMO, if the content of MADV_FREE pages
-> > > > > remains valid during collapse, then khugepaged
-> > > > > treating lazyfree pages the same as pte_none
-> > > > > might not be suitable.
-> > > >
-> > > > Why?
-> > > >
-> > > > Unless I am missing something (which is possible of
-> > > > course) I do not really see why dropping the content
-> > > > of those pages and replacing them with a THP is any
-> > > > difference from reclaiming those pages and then faulting
-> > > > in a non-THP zero page.
-> > > >
-> > > > Now, if khugepaged reused the original content of MADV_FREE
-> > > > pages that would be a slightly different story. I can
-> > > > see why users would expect zero pages to back madvised
-> > > > area.
-> > > > --
-> > > > Michal Hocko
-> > > > SUSE Labs
+https://people.kernel.org/tglx/notes-about-netiquette
