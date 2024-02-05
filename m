@@ -1,136 +1,160 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7CA28DD5
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BBC2263E;
+	Mon,  5 Feb 2024 13:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707141262; cv=none; b=bCZUm5oZ62Hk3V6DNVD4caSVjiT885bgmlzKhKrwo9vpqVohRrZkeyKQgQfSz6qmE0vRFZeMXnF++7//oHe08v+QTlw9DdoSrE3nlVmFRTqBiVMFkjOOxP1zEslfpBA6vxCegqWvg0LLARbIdFjdOBlTOQVwoXaI85f9TT8aHHg=
+	t=1707141279; cv=none; b=FGMkTqYiGmvKLkphBOe4Uqg/xgF58CC4Ym4PwITaRV7T2YrtAP210ZixRSsg6YeBgIcqwQ8FXLYHu3QqGZ3wqcqIVSQV2T7y99aLnqgDPNQIycLhGBUdIF51vdWA1x8loL+qiiyudvSySBwLqcCM5G/G+4OTPAdqaZY4g+4ZvYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707141262; c=relaxed/simple;
-	bh=aux7wipqGSS/b1i8WrSVhnV8xUXmXPnaJ/RFXHy3Ln0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rWZ0ADYzPdEibZaqv0IoY1dFOS99RiK7FfUVgtPks2vDj//WOjmIW+yLNP1KjeVww1tDQZI15ln+fUYHPCAWrq1nkx0qjQo8hS8phNRp3MgoJPklmMieVvlR65ETJy/oQbxo7aCvTS43DVWtI/FX0NwNfavRyyKhDBzn+gIlaK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ivlIrPTN; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1707141279; c=relaxed/simple;
+	bh=xY7sIFM80Rbz3G4McrGuT+OINz0NOWltW76ses9f6pM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=L5b7G5x/RNny81zYuBw/9sMtcF7H6MYyUhEjwUkhwq8y0sBprKYnWE78YS5tD65fcWp41E5HVF7N/RokuXEZ6nUJ6ei7BnpKh0oVUb0K0eaqr3CePvlVluRJLcAIqwDaHIYEnw/rivRqu3vjWLqn0YvmKybfs9fKjGuI9SfNdDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UsKyBxQw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RQO/mBUe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UsKyBxQw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RQO/mBUe; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ivlIrPTN"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4bd45397c17so1399351e0c.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:54:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707141259; x=1707746059; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HYs4Bp7BlQ+p0nhjl4WseQbxPovMzr8cdsX3pUyZGW8=;
-        b=ivlIrPTNfuoTqQn+TYEpuZxyDNf6CL0PYdsdMkbueMxI5gyzZQrqWsmNe8mM0MzOia
-         R3rXCe6Lk6IEBOV8NOrjBP34BzJDy1ew6YGfStyipJo+KpdL5MQvejYW6jJIx9NaCwrT
-         MSuZHbWgRThRyzLgqOJCSHj/zvJ44MqOCmR4XY3NA4GSAW76MGiWZgKF0WCfun4IuN+h
-         lzODmx3DycT/OxVqdFkdjmmL+eH/nw3S9OvXmJ5SHqJOPkHEOjm0pQvEVUqZamXcqqtO
-         Hv+TxB1p4blrFBfT9qpvdgmw/uN6KHs46HQgylU+YoQ2HzarrmxMJpjA9Jb6pORj8hRo
-         9oEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707141259; x=1707746059;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HYs4Bp7BlQ+p0nhjl4WseQbxPovMzr8cdsX3pUyZGW8=;
-        b=hA+XdCkGULOSVoJJLzDKS9Zfl9CfQ8O5sR7rsDnlxcBM1S0Km+DyKHMH6UIE+7mYUV
-         flQnJ2jN/2akJUt4IN8031nQvxslwbMxp+84SybMO5oUk65Y0EsP47YLwxdDMGmvYHzo
-         BRYr15rybUCJKu/tmRanYcborVVR1t/KJnqN7XqLzIw3pFu9A9P3G5UJCKZ6wOCengyK
-         RKAFf6XSNSjPLWORVdkIoLqpLyC2VB41dUYolONY4BLlX6ypIS+9378J1b07/Fop07fX
-         +KgKv5RgWZ6ZXOF7wYEl523TFqCNjH5IBIJsCslmLNolsRm3KvWfYw7SaafIqjL2aVF6
-         rf/Q==
-X-Gm-Message-State: AOJu0YyThibBT8q0tQ2jqEeuYwZZaIYYEkWTDxL4N53+TXmT3IT1wYmH
-	R+LlQDxGAyFlfDxFA0bYqd6co6sepBdIoMMJBitHNe2/1Wh5ln8z5g4e3LpF7nZeOVq+Kl6fJs+
-	wTlbZrMVgohN7YYvm2gIS4AisJhtMa8xVZ9H53Q==
-X-Google-Smtp-Source: AGHT+IH5D+dwNFzazeUh/VWyn8U1gEindORW7ck2av5wi5lt8qVy1Ge+sB2vfSSUy2KP0wd7wAE9dEKJlRdpubN7L6s=
-X-Received: by 2002:ac5:c8b3:0:b0:4c0:3ac7:5e83 with SMTP id
- o19-20020ac5c8b3000000b004c03ac75e83mr815519vkl.3.1707141259423; Mon, 05 Feb
- 2024 05:54:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UsKyBxQw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RQO/mBUe";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UsKyBxQw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RQO/mBUe"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 99D80219DA;
+	Mon,  5 Feb 2024 13:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707141273; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
+	b=UsKyBxQw21LyQfWqRS0xMqZYRSLQEl5j76mYaTD4EaIz7FQ71hfuhAntMi3PfZ7zbtDfwl
+	wH4nIGAjLyrg0OKkgyj1F4wzufQSZjy+uo5u0cNPWqxcCevh48Tyuc/B0AfW57eF00XRjW
+	m/iwevtE5g5smuCkAoZSZ8CKBWwe6Ts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707141273;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
+	b=RQO/mBUecyRisGHTsrmvIVXTs232vjGtIyhwEAWTtA0UTetQwt2StSE3lID+CiATLiS0za
+	iLmvjPuD5Tb5t8Cg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707141273; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
+	b=UsKyBxQw21LyQfWqRS0xMqZYRSLQEl5j76mYaTD4EaIz7FQ71hfuhAntMi3PfZ7zbtDfwl
+	wH4nIGAjLyrg0OKkgyj1F4wzufQSZjy+uo5u0cNPWqxcCevh48Tyuc/B0AfW57eF00XRjW
+	m/iwevtE5g5smuCkAoZSZ8CKBWwe6Ts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707141273;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=91FYVkMXI27dv7DB+mH1AzEVYKDByPJDu/tzLV3zDrs=;
+	b=RQO/mBUecyRisGHTsrmvIVXTs232vjGtIyhwEAWTtA0UTetQwt2StSE3lID+CiATLiS0za
+	iLmvjPuD5Tb5t8Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2762E136F5;
+	Mon,  5 Feb 2024 13:54:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id KPBuBZTowGWYZQAAD6G6ig
+	(envelope-from <lhenriques@suse.de>); Mon, 05 Feb 2024 13:54:28 +0000
+Received: from localhost (brahms.olymp [local])
+	by brahms.olymp (OpenSMTPD) with ESMTPA id 27a4dd74;
+	Mon, 5 Feb 2024 13:54:11 +0000 (UTC)
+From: Luis Henriques <lhenriques@suse.de>
+To: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,  Eric Biggers
+ <ebiggers@kernel.org>,  keyrings@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] keys: update key quotas in key_put()
+In-Reply-To: <3007646.1707134664@warthog.procyon.org.uk> (David Howells's
+	message of "Mon, 05 Feb 2024 12:04:24 +0000")
+References: <20240130101344.28936-1-lhenriques@suse.de>
+	<3007646.1707134664@warthog.procyon.org.uk>
+Date: Mon, 05 Feb 2024 13:54:11 +0000
+Message-ID: <87il33f24c.fsf@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205093418.39755-1-brgl@bgdev.pl> <20240205093418.39755-7-brgl@bgdev.pl>
- <ZcDRuRCT9xE48cYi@smile.fi.intel.com>
-In-Reply-To: <ZcDRuRCT9xE48cYi@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 5 Feb 2024 14:54:08 +0100
-Message-ID: <CAMRc=Mc5=p7tp0r8-MYiHRJ1yXDJLW2Uvm5C1CyoGBAcesdZug@mail.gmail.com>
-Subject: Re: [PATCH v2 06/23] gpio: add SRCU infrastructure to struct gpio_desc
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-0.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[4];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_LAST(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-0.00)[16.05%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -0.10
 
-On Mon, Feb 5, 2024 at 2:48=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Feb 05, 2024 at 10:34:01AM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Extend the GPIO descriptor with an SRCU structure in order to serialize
-> > the access to the label. Initialize and clean it up where applicable.
->
-> ...
->
-> > +     for (i =3D 0; i < gdev->ngpio; i++)
-> > +             cleanup_srcu_struct(&gdev->descs[i].srcu);
->
-> for_each_gpio_desc()?
+David Howells <dhowells@redhat.com> writes:
 
-That works with chips not devices, we'd need to add a variant for
-gpio_device, but see below:
-
+> Luis Henriques <lhenriques@suse.de> wrote:
 >
-> (It might be that the latter should be reworked a bit first, dunno)
+>> Delaying key quotas update when key's refcount reaches 0 in key_put() has
+>> been causing some issues in fscrypt testing, specifically in fstest
+>> generic/581.  This commit fixes this test flakiness by dealing with the
+>> quotas immediately, and leaving all the other clean-ups to the key garba=
+ge
+>> collector.
 >
-> ...
->
-> > +                     for (j =3D 0; j < i; j++)
-> > +                             cleanup_srcu_struct(&desc->srcu);
->
-> What does this loop mean?
-
-I open-coded it because I want to store the value of i to go back and
-destroy the SRCU structs on failure.
-
->
-> > +                     goto err_remove_of_chip;
-> > +             }
->
-> ...
->
-> > +err_cleanup_desc_srcu:
-> > +     for (i =3D 0; i < gdev->ngpio; i++)
-> > +             cleanup_srcu_struct(&gdev->descs[i].srcu);
->
-> As per above (use existing for_each macro),
->
-> ...
->
-> > +     struct srcu_struct      srcu;
-> >  };
->
-> I am wondering if moving it to the top of the struct will give a more
-> performant code.
+> Okay, I'll accept this.
 >
 
-Nah, that would be strictly theoretical. It could matter with
-container_of() but not with a simple pointer dereference.
+That's awesome, thanks a lot David.  And, as Eric requested, I'll send out
+shortly a follow-up fscrypt-specific patch, which will make generic/581
+fstest finally pass.
 
-Bart
+Cheers,
+--=20
+Lu=C3=ADs
 
-> --
-> With Best Regards,
-> Andy Shevchenko
+
+>> This is done by moving the updates to the qnkeys and qnbytes fields in
+>> struct key_user from key_gc_unused_keys() into key_put().
+>> Unfortunately, this also means that we need to switch to the
+>> irq-version of the spinlock that protects these fields and use
+>> spin_lock_{irqsave,irqrestore} in all the code that touches these
+>> fields.
 >
+> ... Which shouldn't be that often.  It only happens when a key is created=
+ or
+> finally let go of.
 >
+>> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+>
+> Acked-by: David Howells <dhowells@redhat.com>
+>
+> Jarkko - could you pick this up?
+>
+
