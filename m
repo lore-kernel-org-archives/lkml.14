@@ -1,83 +1,71 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6761E210E1
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7427520DCB
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707140899; cv=none; b=XSmtrI+MXygJXfJq3WlseytpKVuXQbBwwW+YZgKy1TcWWfqG4fZrcIoWNS5+mb+yr5BbY+yOSpVH84v9ZlmoNU0OihIQGeTTMuPK+Pu1VNfRGGr1v6aX6jRchOqkImVmCQQ1pU4q6KU/8QQ2qHL6Nd4XJ7H/SFZzTKKPj2/+bNI=
+	t=1707140962; cv=none; b=txskNzH4P92iXwruTni3upRAIg2J6Ml4MYCtdDOVSV6XP3Jw9ckeqwfb9BkCM9+JRgMpQ+/BktFZgZTw4n66lggbsbagnJbYcfMsAyMJcJoE7Qtwy1D5ASr9BzFxtP0MRirTxLvy1GHJcDeHzY56cdMzxPS12FRpZrHqVFPkHYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707140899; c=relaxed/simple;
-	bh=3NuNMJq9/U+OvHQ7oCbIc0HQwEjcijjQLPqIhCaiKXQ=;
+	s=arc-20240116; t=1707140962; c=relaxed/simple;
+	bh=uXJZxp5n5dwGpzBxC8nui0Wglon/mdw6pK6qMj//NbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s33ClPDAPgOewfQ5kMzHESlFGZH1BeUMBaznnULZzYwUe7JNRiZadFl/rCmz0hz3pjbReAISCERlvAU1ViLxAoyy/6jzKWUoWXQ6LS7AUdJELajQPyneB+zWWFxmuJvEWU4I2tPnnm9QZY2SD5xXSvA1GXLoziukFRDSPm2PC0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JJ+YYIpG; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lhj7jGykGsYmhaeAPXOLSbgt+MEn9UiP8qXJXhWB3x67ZVUTDoVBIdXlegGDJl7uSXrpaXEGlV1qB4gll8z5RmetEMpe9YEw02LZ4B9n6OIQJsTmTOHo3llRZ7mthKwlXfEYgygTrYJk6OKKhJKtEeCZCBY9nv9kCRcyMh+H1I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4xqhGSZ; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JJ+YYIpG"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a28a6cef709so609546866b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:48:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1707140895; x=1707745695; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BnLD/npCdr1tyW2eRfEXfxLqJrin7ZxFfEREBoHz6j0=;
-        b=JJ+YYIpGzpFMv0Eo5pqmHMJdR2gp5BtvjLY002tC2FoJRL3cQd8iuHxc/+0Mv3Y6F5
-         1+N5gK2OI77eWcLoSwlD6DoyEbi8pprnD23r9uFjDkG8KiYWxnABWG2yOAwfn9xMrp71
-         z1orEVt+j7Olbe+DuVs9n9ztdZFzPU9XC8iUOlKnv9IcasU3mRPQ4pApJ3lP+fia2s1J
-         eOT7g1MotLyaO1urdwm6CI8biuObOO1/zrRgljvtx9Q07YvEgEcNn3MlRLY2Lgrae4a2
-         59BcY0XRlX+86KmrgQGVcFbpiyRlmKS19xiGNPm8AKobPasiiqdgjkJX6LtQSqAxgftH
-         nW0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707140895; x=1707745695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BnLD/npCdr1tyW2eRfEXfxLqJrin7ZxFfEREBoHz6j0=;
-        b=BufLxnryebVzXYM3NIKiWOmUkyiMTfTdNSr0KD0P9Epl9ghBE7LFHX9jsk16HgGc+q
-         2yBJrRPEmLMgrRJ64q7zipwYB28dlGFongPCBEkeB95ft+7y3S4qw7pDo39tXbOHIE1l
-         86v+tMYCKR283I/r6ZsAvu8RlnIgc60KqWNIsEwNTgEouvf/pv1MQjiWlkw3yYV3mu3X
-         5B7cpZYoYoPNgCe0nphc/l5NSuExTZDeuTOrYUMn+clajjYOTgzpHUcgd2Nu60S588bP
-         AlksgrcklrSS24GfLVnqVNBw8rUL2iUEtPlxjD/VoTVUBFxjCJRzB+ofPo63tqhsJzBU
-         aLjg==
-X-Gm-Message-State: AOJu0YwDcsBC7iC+S1DpCQxmy3PjGKfIfr8/8Y3oFnD5txppntt43qPf
-	YvjJyj3a4aeDLYIZ73IxwZnUBiHGvqQN4Pnhvqe1OtxVacBuXXR3jLXOGoKZjj4=
-X-Google-Smtp-Source: AGHT+IFWABZ0qeyCjyQoWq6QAO5OSdVAT3GW2jIOB2V+qxSo9kQyktadwG+z6OKvTR78VHoGHV4oXw==
-X-Received: by 2002:a17:907:762d:b0:a36:c478:32c9 with SMTP id jy13-20020a170907762d00b00a36c47832c9mr7518684ejc.1.1707140895540;
-        Mon, 05 Feb 2024 05:48:15 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXsy4v1BD7fDRmPpnzHDIgnYgYLdFmJBM1XZW7ctqzqxH+21gTjTmePHQ08oJFMkcqSGld1EEGpcVxwpepj79S4qRFPmte4PEDpyADVRD9+DtETXZAcFjX7wJEoHwiwaUwaf29NZpFRkGVdqAAuoJX7qAKgfhOqvnsS9lkbFvgF5MKqBd0u4V+8Ai/9nKTVRQR1hqEbxL5ztg+BuiGIAeqXQLdAJlOgOSsy+cMmPv3S5RLi0aISBDP47u9DV+wA3WxZ8uHYMNlwCwebHcX5/TRfbFtwGmW+wuYDVizVcO1elXCdvkdmEoexBVejXniW06qHH6TrKWZSzbu/C6rnzaJExRpFcWv0uDm5ROcEG94SQ3nKpbwh8KNDD/KlJT4fYOzdRllhqqfCrbOWYi/qhEMcsNSaR+6wCY23p893EIf0KjqbxoB6U6MEGgqR5gCRRZSmWPvo14o7nTXK7g857KKwcQKA+zc+cm7IBZf7mwbHEMS4wENLmvwAe3/RBX9owySiaZpqNwUL0fr3vYYGl27tsNHmhaOMPaLGxMoYMWR1u49R56FtxrSjJqQjD2Q/6MUA6FaajkIYRloUdsAizORTbsFNFjkinNoAZjX8eVMBVQ6Zxxzw9oCpe1dpL1SY5T9x/nHWwNzpQLioMcqP84V5vmRwrYQXUc7YeLVefIqmY7bugrm9tnoGJefVT1D+xXegjEgL0xZv0GkGR1Ahjvo5gEjknNBs91YZ0UGczR7XEzIx1gUhpl8Y40hANCXzWudTdUZj
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id f1-20020a170906560100b00a37b795348fsm1253036ejq.127.2024.02.05.05.48.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 05:48:15 -0800 (PST)
-Date: Mon, 5 Feb 2024 14:48:13 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Yoann Congal <yoann.congal@smile.fr>
-Cc: linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	x86@kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Borislav Petkov <bp@alien8.de>, Darren Hart <dvhart@infradead.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: [PATCH v3 0/2] printk: CONFIG_BASE_SMALL fix for
- LOG_CPU_MAX_BUF_SHIFT and removal
-Message-ID: <ZcDnHfrgq9I4iKLk@alley>
-References: <20240204232945.1576403-1-yoann.congal@smile.fr>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4xqhGSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707140960; x=1738676960;
+  h=resent-from:resent-date:resent-message-id:resent-to:date:
+   from:to:cc:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=uXJZxp5n5dwGpzBxC8nui0Wglon/mdw6pK6qMj//NbE=;
+  b=R4xqhGSZhyDiDZCrF8t0Ei6oDXV/UvYznJ/JAghZL7EltmXNgIig/NL2
+   YmrnmuHqsinh0udxu7pcgEyRouRWcjB1NJkcpr93NxFxk+qeaictn5XmF
+   NCCVrHOa3XUiRjnP3H5sbjyKr8wucbTSvkt/ApFvkHlief/Gptd6B1lTf
+   v1t1dzK2mGKhs/BsImuhkMtahjhrP4+Z1eCtYp/MDuS17BYaSICFlFqlx
+   S6VbbhOFdduVwgwml9cvOm44gEkxyUcVsmmN/IerML+kPJ3MTW1m8M9wq
+   Q96fsMbuUSxGicCQwkfYgkKLBvBBcisN7/a91C8B3KnhMjOTuM27XUqh4
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="431016"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="431016"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:49:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="909300506"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="909300506"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:49:18 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rWzLY-000000025q1-0lnP;
+	Mon, 05 Feb 2024 15:49:16 +0200
+Resent-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Resent-Date: Mon, 5 Feb 2024 15:49:15 +0200
+Resent-Message-ID: <ZcDnWztXAl4OljXP@smile.fi.intel.com>
+Resent-To: nuno.sa@analog.com, linux-kernel@vger.kernel.org
+Date: Mon, 5 Feb 2024 14:35:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: nuno.sa@analog.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] driver: core: add dedicated workqueue for devlink
+ removal
+Message-ID: <ZcDV9epWJf_oTCMK@smile.fi.intel.com>
+References: <20240205-fix-device-links-overlays-v2-0-5344f8c79d57@analog.com>
+ <20240205-fix-device-links-overlays-v2-1-5344f8c79d57@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,23 +74,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204232945.1576403-1-yoann.congal@smile.fr>
+In-Reply-To: <20240205-fix-device-links-overlays-v2-1-5344f8c79d57@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon 2024-02-05 00:29:43, Yoann Congal wrote:
-> This series focuses on CONFIG_BASE_SMALL.
-> The first patch fixes LOG_CPU_MAX_BUF_SHIFT when CONFIG_BASE_SMALL is
-> used.
-> The second patch globally replace CONFIG_BASE_SMALL usages by the
-> equivalent !CONFIG_BASE_FULL.
+On Mon, Feb 05, 2024 at 01:09:32PM +0100, Nuno Sa via B4 Relay wrote:
+> From: Nuno Sa <nuno.sa@analog.com>
+> 
+> Let's use a dedicated queue for devlinks since releasing a link happens
+> asynchronously but some code paths, like DT overlays, have some
+> expectations regarding the of_node when being removed (the refcount must
+> be 1). Given how devlinks are released that cannot be assured. Hence, add a
+> dedicated queue so that it's easy to sync against devlinks removal.
+> 
+> While at it, make sure to explicitly include <linux/workqueue.h>.
 
-Nit: I would personally do it the other way around and get rid of
-     CONFIG_BASE_SMALL.
+...
 
-     CONFIG_BASE_FULL is the default and is used by most users. It is
-     the CONFIG_BASE_SMALL which needs special treating.
+> +++ b/include/linux/fwnode.h
+> @@ -213,5 +213,6 @@ extern bool fw_devlink_is_strict(void);
+>  int fwnode_link_add(struct fwnode_handle *con, struct fwnode_handle *sup);
+>  void fwnode_links_purge(struct fwnode_handle *fwnode);
+>  void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+> +void fwnode_links_flush_queue(void);
 
-     That said, I do not want to block this patchset because
-     of my preferences.
+I am not sure if you have seen my comment against v1.
 
-Best Regards,
-Petr
+I find the namespace a bit messy for devlinks. And to me seems the best place
+for this line is to be before fwnode_links_purge().
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
