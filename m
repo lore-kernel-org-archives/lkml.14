@@ -1,129 +1,118 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B873A21112;
-	Mon,  5 Feb 2024 12:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADD31AAD8;
+	Mon,  5 Feb 2024 12:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134800; cv=none; b=YxJ6wdOQS0TZPvzRInTa1S5d99lTgL89aVwjyXgEE8L+sbQbVWR8cdMY2BdLvhUVOg6G6XZYkehkkd4vHlDHBpqXzir5wcaFGfmOzjd71JSOnLZ1YxjUC6qUCkVkWWbEmPM9Mgd3r5xcn/RgTW7MwLVRoVXFM125TYYXkp7Skw0=
+	t=1707134871; cv=none; b=MkHOetKErh8eceXlJwZF5Ryp12PtoNCHYHJb2EAhlJAdTnxw3xoTKCDD9XPoAzluJDWq7h/1NASZk1qQReYZmG/xPFbMLGZ2pzHGnUE7R7KC7M+hq4jeH2plswuOSMBmfQf3R5k5XdBLSR2dAr80QtIjgnU43U/7xGyGDnb1gVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134800; c=relaxed/simple;
-	bh=yhYdhvkUj66URI+HxR9xU2mALUiQmweSZAQjAWuVHXw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LzgPUhIbuNVAexs0wKTrO0nqm1P+HU2wRm8r/0YBT9wphTVZRnWkGGDrDn49NgI3RmH+IjFj/Cy5iG/uOy9fyEWEYR1pfNR5hB61TcirbB86pRe/1qI50OGpObfLNteAx0wtke33E8dTPYFx6OlzzTFjG6bBjourBaKUL5ZRyiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=KS4I5EHo; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1707134871; c=relaxed/simple;
+	bh=8TcYVXgJSergAPvQdFpI+iJxhTSkJUg1QeMWHvPrR+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a8uiIfKMTS52RKDUjRTQYgTNRZWPr/ryK0YtKsM0BjAAh97ePWOVZdapYqbcTegpVvBwZaOqUvJ2GL9GtQvRwRnLLO6Fyqm/vUQl6WBAKsOIsKprUGx+Z9Bqg/dTskZZ3/POKDWsqwNzznrccM+jEMno3Yw22micHuCCZT1L+fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJ2WLv+O; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KS4I5EHo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1707134799; x=1738670799;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FiBUV1fiPqoy2U4uMejLoWWd/EiydMvzfGCqIJIuYJY=;
-  b=KS4I5EHoPb/GLevhTJXhrqZGA19Gu0J1gr1dLxgNL42X9GGMElWCxcV6
-   TMkSKYaGibsuGrDtJ/BVIk12A5B2F6AeD63lMV41v1myZ+ZGI6khCfgDA
-   KtYbjAX5a0RIQlGh00w6P5OeRBJ1H9xpdzO4LHNt/rm5sA/HwFOxllbTC
-   U=;
-X-IronPort-AV: E=Sophos;i="6.05,245,1701129600"; 
-   d="scan'208";a="378967633"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 12:06:35 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:8094]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.45.85:2525] with esmtp (Farcaster)
- id 26f74936-a3bc-4ca0-9d65-59fbb5471a6c; Mon, 5 Feb 2024 12:06:32 +0000 (UTC)
-X-Farcaster-Flow-ID: 26f74936-a3bc-4ca0-9d65-59fbb5471a6c
-Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 5 Feb 2024 12:06:32 +0000
-Received: from dev-dsk-jgowans-1a-a3faec1f.eu-west-1.amazon.com
- (172.19.112.191) by EX19D014EUC004.ant.amazon.com (10.252.51.182) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 5 Feb
- 2024 12:06:26 +0000
-From: James Gowans <jgowans@amazon.com>
-To: <linux-kernel@vger.kernel.org>
-CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
-	"Joerg Roedel" <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	<iommu@lists.linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, "Christian
- Brauner" <brauner@kernel.org>, <linux-fsdevel@vger.kernel.org>, Paolo Bonzini
-	<pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
-	<kvm@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	<linux-mm@kvack.org>, Alexander Graf <graf@amazon.com>, David Woodhouse
-	<dwmw@amazon.co.uk>, "Jan H . Schoenherr" <jschoenh@amazon.de>, Usama Arif
-	<usama.arif@bytedance.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	<madvenka@linux.microsoft.com>, <steven.sistare@oracle.com>,
-	<yuleixzhang@tencent.com>
-Subject: [RFC 18/18] vfio-pci: Assume device working after liveupdate
-Date: Mon, 5 Feb 2024 12:02:03 +0000
-Message-ID: <20240205120203.60312-19-jgowans@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240205120203.60312-1-jgowans@amazon.com>
-References: <20240205120203.60312-1-jgowans@amazon.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJ2WLv+O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707134869; x=1738670869;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8TcYVXgJSergAPvQdFpI+iJxhTSkJUg1QeMWHvPrR+I=;
+  b=MJ2WLv+OTdyiKOxFAMJYstiCXRmPZkUCqPV/Ire4VBfAvNlvB/WXKCDw
+   AnX3dCzPoNKm2xieeaedvDAAzwwhwK+Mva2rF4pG21JPd1dks8mXZoT3f
+   rVK4gZ5JOwDqkVKDOYgTKaML9nKahX0sLM+dAEWLcWVAbrkHLFP0Gys4t
+   oupd27EGMs635ELKn0q8mqgb2iFEsJ1NrwXP3qHkE0xMTNgvA3k77mwU1
+   cS1eqXkd798q27jCRRr/z8umHZ9/uk94WDVdWs4NMFLTeDuR+fUZAr9jl
+   NcNsjlyTjCUbtW0+gucrHIsp/6ZSIAfUo8KH7V1/KtahJ5pQDRgh1SmyW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="25954393"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="25954393"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:07:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="908403"
+Received: from snestero-mobl.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.21.196])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:07:46 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: fenghua.yu@intel.com,
+	reinette.chatre@intel.com,
+	shuah@kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v4 0/5] selftests/resctrl: Add non-contiguous CBMs in Intel CAT selftest
+Date: Mon,  5 Feb 2024 13:07:32 +0100
+Message-ID: <cover.1707130307.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWB004.ant.amazon.com (10.13.139.134) To
- EX19D014EUC004.ant.amazon.com (10.252.51.182)
 
-When re-creating a VFIO device after liveupdate no desctructive actions
-should be taken on it to avoid interrupting any ongoing DMA.
-Specifically bus mastering should not be cleared and the device should
-not be reset. Assume that reset works properly and skip over bus
-mastering reset.
+Non-contiguous CBM support for Intel CAT has been merged into the kernel
+with Commit 0e3cd31f6e90 ("x86/resctrl: Enable non-contiguous CBMs in
+Intel CAT") but there is no selftest that would validate if this feature
+works correctly.
+The selftest needs to verify if writing non-contiguous CBMs to the
+schemata file behaves as expected in comparison to the information about
+non-contiguous CBMs support.
 
-Ideally this would only be done for persistent devices but in this rough
-RFC there currently is no mechanism at this point to easily tell if a
-device is persisted or not.
----
- drivers/vfio/pci/vfio_pci_core.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+The patch series is based on a rework of resctrl selftests that's
+currently in review [1]. The patch also implements a similar
+functionality presented in the bash script included in the cover letter
+of the original non-contiguous CBMs in Intel CAT series [3].
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 1929103ee59a..a7f56d43e0a4 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -480,19 +480,25 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- 			return ret;
- 	}
- 
--	/* Don't allow our initial saved state to include busmaster */
--	pci_clear_master(pdev);
-+	if (!liveupdate) {
-+		/* Don't allow our initial saved state to include busmaster */
-+		pci_clear_master(pdev);
-+	}
- 
- 	ret = pci_enable_device(pdev);
- 	if (ret)
- 		goto out_power;
- 
--	/* If reset fails because of the device lock, fail this path entirely */
--	ret = pci_try_reset_function(pdev);
--	if (ret == -EAGAIN)
--		goto out_disable_device;
-+	if (!liveupdate) {
-+		/* If reset fails because of the device lock, fail this path entirely */
-+		ret = pci_try_reset_function(pdev);
-+		if (ret == -EAGAIN)
-+			goto out_disable_device;
- 
--	vdev->reset_works = !ret;
-+		vdev->reset_works = !ret;
-+	} else {
-+		vdev->reset_works = 1;
-+	}
- 	pci_save_state(pdev);
- 	vdev->pci_saved_state = pci_store_saved_state(pdev);
- 	if (!vdev->pci_saved_state)
+Changelog v4:
+- Changes to error failure return values in non-contiguous test.
+- Some minor text refactoring without functional changes.
+
+Changelog v3:
+- Rebase onto v4 of Ilpo's series [1].
+- Split old patch 3/4 into two parts. One doing refactoring and one
+  adding a new function.
+- Some changes to all the patches after Reinette's review.
+
+Changelog v2:
+- Rebase onto v4 of Ilpo's series [2].
+- Add two patches that prepare helpers for the new test.
+- Move Ilpo's patch that adds test grouping to this series.
+- Apply Ilpo's suggestion to the patch that adds a new test.
+
+[1] https://lore.kernel.org/all/20231215150515.36983-1-ilpo.jarvinen@linux.intel.com/
+[2] https://lore.kernel.org/all/20231211121826.14392-1-ilpo.jarvinen@linux.intel.com/
+[3] https://lore.kernel.org/all/cover.1696934091.git.maciej.wieczor-retman@intel.com/
+
+Older versions of this series:
+[v1] https://lore.kernel.org/all/20231109112847.432687-1-maciej.wieczor-retman@intel.com/
+[v2] https://lore.kernel.org/all/cover.1702392177.git.maciej.wieczor-retman@intel.com/
+
+Ilpo Järvinen (1):
+  selftests/resctrl: Add test groups and name L3 CAT test L3_CAT
+
+Maciej Wieczor-Retman (4):
+  selftests/resctrl: Add helpers for the non-contiguous test
+  selftests/resctrl: Split validate_resctrl_feature_request()
+  selftests/resctrl: Add resource_info_file_exists()
+  selftests/resctrl: Add non-contiguous CBMs CAT test
+
+ tools/testing/selftests/resctrl/cat_test.c    | 84 ++++++++++++++++-
+ tools/testing/selftests/resctrl/cmt_test.c    |  2 +-
+ tools/testing/selftests/resctrl/mba_test.c    |  2 +-
+ tools/testing/selftests/resctrl/mbm_test.c    |  6 +-
+ tools/testing/selftests/resctrl/resctrl.h     | 10 +-
+ .../testing/selftests/resctrl/resctrl_tests.c | 18 +++-
+ tools/testing/selftests/resctrl/resctrlfs.c   | 94 ++++++++++++++++---
+ 7 files changed, 192 insertions(+), 24 deletions(-)
+
 -- 
-2.40.1
+2.43.0
 
