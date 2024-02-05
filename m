@@ -1,93 +1,102 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E778E182D8;
-	Mon,  5 Feb 2024 10:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BAE1401D;
+	Mon,  5 Feb 2024 10:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707129679; cv=none; b=RLfaEviG9WXhj5XloNPT4jWkFbNvpoFh1J6lZRNWYQcGMZ8jBPxKN5wHnKj1lUo+uh1ckGRqM8HPRQD26oFs7irfyd0qaAf7WxI+c2NDkUaxd2VktO4rNHEcR8/NLEJ+apHre8/1bA4NrZNzZpzm8bOcD0wTJ2kNRfqx5iBYjPk=
+	t=1707129760; cv=none; b=ZZ5nY8vOoUeRrBTYCSjaT+BsJtzQDrvJX4d7RLnMM9Bce7yPJhXVtfuRZjQNqAI2oxvhVcHsCR1T//eUF3pAwtG3AwVG7+5EHSDyFUOWdxx5JmgC3QL7nmcym9X0Tf+UpiFKkzUEU0pE0UD6e079PWQcz1ojvVMnjzwQtSCKh2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707129679; c=relaxed/simple;
-	bh=wssURT5v7um6YcanCz/wfG32MiB35I/5gzvQQspAiwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jxndj2iSc/8LUcedVkGmD8G28xt7hHdOusilj4Wja+wUyKJULPwbbX4zhPqgw93aMZRmo1/2i2G09S6+q732Kp4926oFAgu2sZrvyEDexshvqoQa1ybSofISM8IeK4HVK1jxngOY5l8nDNyeA6HYj4WYppEkzYNIIDpM106tPFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hen6ilYr; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1707129760; c=relaxed/simple;
+	bh=/lTk+9N9Tl9ISnjaDgaHVZl0B7sj4vhWjLvyKn2MSww=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=mFiUxF60VRyl3abBEiZ0sj0lZyB2AmqW5gIMqdyTYNIHAwkAdjGtA6OfpWhq57F/IAYfNKq6VyAAntYYiF6M/7IfHyRcYfmD8T7RN4arnfg6JElSTe0jcDtEMRBf/w3N7khi8m0i1jZ4zKHYeI9qe01UsZ+LcLUfI38SX0VeRJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=b4Qlzh7r; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hen6ilYr"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 03FCF40E023B;
-	Mon,  5 Feb 2024 10:41:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Vy97vtsPc2wl; Mon,  5 Feb 2024 10:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707129666; bh=OmsWebiGN1qyvPWoDA+cPPiX53nBdnIUWelFJrj95ow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hen6ilYr/nMmO0Op77bBmLHDxGwIGP5TzW3PENBHg8qXtm7vv4s8QQwIMjbE68Rri
-	 hdGxQa5sv6ikRzOjZb4XFfY1G2Xi2WwhJcTHZwBm+uDvxqgsCowHPu5mzn6BGP8mEU
-	 G5l2B+yOZ6pjxWbKLfznwOxY/AlfPfYsY1sBYcKj5ziczH1Cbn4aEuZQeoy+XbsuDj
-	 78PXe5+OFPJRU8cZrzzKSrEHzV2eBrH03ULU9JOqPJR4o0ISwivZteEcznkvUN+n5U
-	 DtWhv1UMeSEFOCDu6aSHfvsYuFkng1Hmhpx3+sThg7cPFLbsIb9jUZf2Cr2bKjUlTg
-	 W3yk2kakDCCVuFi0G9fDkqEq6Oe+xmnQS9VNchkpbx1UxYsD6cuHDYlVp5OX8+imOw
-	 5aYTzhQ4uI+XOhtREqCqjG5Cd5tmp1CJJ/YRkuz/WAe2nnV+PsnT/jjRW8yzQQihQy
-	 zZRI4A/NR2Y4PTjTPQ5FI7tuHcCj3PnUEchCmjbxw99iNAWYZvPJOPcrHAHzqDF+xT
-	 e1kqH+q6slm7Rc3J4zQwLBXGbgwuJ14Ke+MSWMHP+qkm/2Dts03BN2jKxBqrBtUy6k
-	 bbWNkrSvCLedHDYsa5mN72aXbq0gvM15szPcN1s+XZJUQn6j4G4fZ/uDxsNZvMcYsb
-	 akKY3eE3Ush9ae87yS1mXAh0=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B16B940E00B2;
-	Mon,  5 Feb 2024 10:40:47 +0000 (UTC)
-Date: Mon, 5 Feb 2024 11:40:41 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
-	linux-arch@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/19] x86/startup_64: Simplify calculation of initial
- page table address
-Message-ID: <20240205104041.GNZcC7KctURKeu_3wf@fat_crate.local>
-References: <20240129180502.4069817-21-ardb+git@google.com>
- <20240129180502.4069817-25-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="b4Qlzh7r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1707129749; x=1707734549; i=markus.elfring@web.de;
+	bh=/lTk+9N9Tl9ISnjaDgaHVZl0B7sj4vhWjLvyKn2MSww=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=b4Qlzh7rW8etxiqQ9lFmx5NbG2L6gB43ieV6ucFBlc4PY/yoE/EAqvhDitmqxorp
+	 7xUMny9yfrpTjl3tQvFeFdzRxpP5S1pyJgDB8FFyHYutm9VfzSzdPoS/49VeBv2Ky
+	 KkLN1X9vpYetfvec1ojdNjkifo6dVdv16gA7YixdCIvklth66i+f0jdKjl5gCgPr0
+	 IBWUZlmhW43hGzzXv3v2ll6xH2qh3fi/7fhBDM1AgyfJpVwEfYo6lUyqgi7CRuNhW
+	 H55+AEHTQfB4KtRaJjgmFAtYyM9VhIEKN+x3YdHP5iOCuHptgJguwWep7W92T4yze
+	 +r1KT/g3tmYvvx8qeQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N5CQh-1qqDeC1oTV-01140j; Mon, 05
+ Feb 2024 11:42:29 +0100
+Message-ID: <e01cdb99-8497-4fec-b423-a0bfb483ac75@web.de>
+Date: Mon, 5 Feb 2024 11:42:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240129180502.4069817-25-ardb+git@google.com>
+User-Agent: Mozilla Thunderbird
+To: iommu@lists.linux.dev, kernel-janitors@vger.kernel.org,
+ =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
+ Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] iommu/ipmmu-vmsa: Use
+ devm_platform_get_and_ioremap_resource() in ipmmu_probe()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pFkITfov5VDizKB661GXtaC2oOZeKctSayG3VAgdcSyTzXkOzU1
+ HmdfJ8l3C9QNGlAT5M6Tn/wfC1X1Orhck5s229OEHQQ4Tco4fRQC+sZ0BxPcC64cE4yDmam
+ 5k3PdgvJ4J3X0D8JVFclnuKepZxQgvuqT0Ql8eOVdiQZlq9HFNVa8/m+SVNug+ioqidd7wP
+ ED9vCEcPL1pZUg7FLFzqw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:kEpDxHbnr7o=;w9Qz3MztgeXwbrCdkYQbthc/jXJ
+ 3U+0P71vSLLNiy5vXIgerarSjIG1qGqfTle8nC9ZRrXqyK1Q2SUA+oi1a1Za24Hk8VZ2fXRKX
+ Bq9kQrsM5rAohCyiehpShGP6KU6siFZ4vqGmTDcyiimM0sOy/32QJ0MeErDc7bXGT8Nen9Mto
+ HEP4eCSVMvO7nByKSULoHEg0Lju1KzI8+LPro93hEclqb4H+fW4tawQ2BG4XpFD0ECW7l8Ece
+ jGxm2xKPAv7rDwVx5CIFvsrJSmbLlJzxicz085EpzqMAOXYCbN3/KQKjm3yErc4PQkO16UP66
+ RiId4r+9g0jhCjfq9nlv5/5eU200aMud3FTdlGNRoWokamIetbJ7u7GQdFibdvU+w5JNfA3Ya
+ vHJ2+jVvpPL2oeUeEb5mgTLJFewZ0slAEUzGtYgZteh1ULNUhYSRrNufHWJBU4vqfhd+dl/0o
+ cjhP9uds+72TzOdAmQ2xk/LCXW4tHffvMlfGdWCqtcSQ34S/3ts6KacJovXixNeOGOaFe/U0A
+ eDDNu26zNEVaZHqmvN/wA98sT52hQGTO6lGd5xH5C/tUvsfmmM+ESSxBcYzpS5PVjS9yOSTvo
+ UyQ8IUsIl4ISkqijr/2g3XWIWlYXE8bbIjrOGAMvUdEuJGc+Oya4KMqg35jbjICgII4ayOuDE
+ bJ1XKtlzlzBt5oEZFIFyEcxykQB60VknmGpIaTgmrErDtAL4Y9aEowUMMxrUNDRO/tgyPa2Tc
+ 025Q/bYTfg9UCV5iRki0befzjPK4bYEGesA/QOT8CprNS1jrH9eP/+Blm4shnZQ7gN16oM9AT
+ G2yFLq0VfLosfLK1eaLV4uuL6thFYahOkvv3B0OxVuSlY=
 
-On Mon, Jan 29, 2024 at 07:05:07PM +0100, Ard Biesheuvel wrote:
-> This is all very straight-forward, but the current code makes a mess of
-> this.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 5 Feb 2024 11:36:51 +0100
 
-That's because of a lot of histerical raisins and us not wanting to
-break this. I'm single-stepping through all these changes very carefully
-to make sure nothing breaks.
+A wrapper function is available since the commit 890cc39a879906b63912482df=
+c41944579df2dc6
+("drivers: provide devm_platform_get_and_ioremap_resource()").
+Thus reuse existing functionality instead of keeping duplicate source code=
+.
 
-Thx.
+This issue was detected by using the Coccinelle software.
 
--- 
-Regards/Gruss,
-    Boris.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/iommu/ipmmu-vmsa.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+index ace1fc4bd34b..12685dd2dd31 100644
+=2D-- a/drivers/iommu/ipmmu-vmsa.c
++++ b/drivers/iommu/ipmmu-vmsa.c
+@@ -1025,8 +1025,7 @@ static int ipmmu_probe(struct platform_device *pdev)
+ 		return ret;
+
+ 	/* Map I/O memory and request IRQ. */
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	mmu->base =3D devm_ioremap_resource(&pdev->dev, res);
++	mmu->base =3D devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(mmu->base))
+ 		return PTR_ERR(mmu->base);
+
+=2D-
+2.43.0
+
