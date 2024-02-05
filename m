@@ -1,23 +1,23 @@
-Received: from out0-193.mail.aliyun.com (out0-193.mail.aliyun.com [140.205.0.193])
+Received: from out0-197.mail.aliyun.com (out0-197.mail.aliyun.com [140.205.0.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0461AACE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B441AAB1
 	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.193
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133650; cv=none; b=muhoiyAFzPcM05/C4pgzaK1Suj92RxkGe/yT19OqBVUDpd7+AfU6iKksVcrJNhQMMfGjuANkepst8ob5WFzYuajywjOnLnjR67Q2iZ8LXCZ4LYE5WXZjIKunaKZDYGt7qPov1JBAE5IZgQyvcu/c2Kyy2/gUt+ad9HI1n3BbmGo=
+	t=1707133651; cv=none; b=BeExNfAOzTXlkM6Fc0mDHm46ZhB9Pcz43z98yeQLQJePRx2PjTnYqAM4PzOhsnQ3MmeS7w42+H5VH94QrmByFkZv5OyhXzF5D7LctnvMVLw727fEd3yzyrfoUohsDxhD/fVivIXEN22RmS5zZ+jr8B0STme9NHlHRuInzDZqvJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133650; c=relaxed/simple;
-	bh=aeIv3sGdCkzoeZ0Sga2roNKU5ZWZgPhlxgVKkJoerUE=;
+	s=arc-20240116; t=1707133651; c=relaxed/simple;
+	bh=e5W/30uahPxnnobqPEw5qPDCHBhsj0fyCzs0F+PD/V8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ot0KaQSIiveJspK9+ho7umyc07K4MH2Wrc/NXGA0XPIrOVY27vxqLmh4qx0nTfPhoVco8TTNLtRA64a52xD4JPQ1/DXIlwVf2UY5Aht+AjQWEmRMvsWybSFO7JynmrRHh97um0CcWC0LqcoqYgActTBZ5t74PuGGLAXNnqLVH2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.193
+	 MIME-Version; b=B0NrkC+TJbfLU1lCHlOhh8K2c8chUTRcXRkyKLMaO4G56j0wDHOnhIzf6pRSiF2n1U9doirHHD1lofVEUDHCjJXQO9JlzGyzVeEbtSB5xpflGDulNKDmm9AywiCbvi/tcjf4eoOvFyuoQS04ol5J1I+juRynPDWascFbIgwGGz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047188;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WNt.HmM_1707133639;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WNt.HmM_1707133639)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047193;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WNt.HmC_1707133639;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WNt.HmC_1707133639)
           by smtp.aliyun-inc.com;
-          Mon, 05 Feb 2024 19:47:20 +0800
+          Mon, 05 Feb 2024 19:47:19 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -25,9 +25,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 6/6] um: Stop tracking host PID in cpu_tasks
-Date: Mon, 05 Feb 2024 19:47:08 +0800
-Message-Id: <20240205114708.25235-7-tiwei.btw@antgroup.com>
+Subject: [PATCH v2 4/6] um: Fix the return type of __switch_to
+Date: Mon, 05 Feb 2024 19:47:06 +0800
+Message-Id: <20240205114708.25235-5-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240205114708.25235-1-tiwei.btw@antgroup.com>
 References: <20240205114708.25235-1-tiwei.btw@antgroup.com>
@@ -39,82 +39,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The host PID tracked in 'cpu_tasks' is no longer used. Stopping
-tracking it will also save some cycles.
+Make it match the declaration in asm-generic/switch_to.h. And
+also include the header to allow the compiler to check it.
 
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/um/include/shared/as-layout.h |  1 -
- arch/um/kernel/process.c           | 12 ++----------
- arch/um/kernel/skas/process.c      |  4 ----
- 3 files changed, 2 insertions(+), 15 deletions(-)
+ arch/um/kernel/process.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/include/shared/as-layout.h b/arch/um/include/shared/as-layout.h
-index 9ec3015bc5e2..c22f46a757dc 100644
---- a/arch/um/include/shared/as-layout.h
-+++ b/arch/um/include/shared/as-layout.h
-@@ -31,7 +31,6 @@
- #include <sysdep/ptrace.h>
- 
- struct cpu_task {
--	int pid;
- 	void *task;
- };
- 
 diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-index 4235e2ca2664..1201c1a79b23 100644
+index 292c8014aaa6..a7607ef1b02f 100644
 --- a/arch/um/kernel/process.c
 +++ b/arch/um/kernel/process.c
-@@ -43,13 +43,7 @@
-  * cares about its entry, so it's OK if another processor is modifying its
-  * entry.
-  */
--struct cpu_task cpu_tasks[NR_CPUS] = { [0 ... NR_CPUS - 1] = { -1, NULL } };
--
--static inline int external_pid(void)
--{
--	/* FIXME: Need to look up userspace_pid by cpu */
--	return userspace_pid[0];
--}
-+struct cpu_task cpu_tasks[NR_CPUS] = { [0 ... NR_CPUS - 1] = { NULL } };
- 
- void free_stack(unsigned long stack, int order)
- {
-@@ -70,8 +64,7 @@ unsigned long alloc_stack(int order, int atomic)
- 
- static inline void set_current(struct task_struct *task)
- {
--	cpu_tasks[task_thread_info(task)->cpu] = ((struct cpu_task)
--		{ external_pid(), task });
-+	cpu_tasks[task_thread_info(task)->cpu] = ((struct cpu_task) { task });
- }
+@@ -26,6 +26,7 @@
+ #include <linux/resume_user_mode.h>
+ #include <asm/current.h>
+ #include <asm/mmu_context.h>
++#include <asm/switch_to.h>
+ #include <linux/uaccess.h>
+ #include <as-layout.h>
+ #include <kern_util.h>
+@@ -73,7 +74,7 @@ static inline void set_current(struct task_struct *task)
  
  extern void arch_switch_to(struct task_struct *to);
-@@ -208,7 +201,6 @@ void um_idle_sleep(void)
  
- void arch_cpu_idle(void)
+-void *__switch_to(struct task_struct *from, struct task_struct *to)
++struct task_struct *__switch_to(struct task_struct *from, struct task_struct *to)
  {
--	cpu_tasks[current_thread_info()->cpu].pid = os_getpid();
- 	um_idle_sleep();
- }
- 
-diff --git a/arch/um/kernel/skas/process.c b/arch/um/kernel/skas/process.c
-index fdd5922f9222..99a5cbb36083 100644
---- a/arch/um/kernel/skas/process.c
-+++ b/arch/um/kernel/skas/process.c
-@@ -18,12 +18,8 @@ extern void start_kernel(void);
- 
- static int __init start_kernel_proc(void *unused)
- {
--	int pid;
--
- 	block_signals_trace();
--	pid = os_getpid();
- 
--	cpu_tasks[0].pid = pid;
- 	cpu_tasks[0].task = current;
- 
- 	start_kernel();
+ 	to->thread.prev_sched = from;
+ 	set_current(to);
 -- 
 2.34.1
 
