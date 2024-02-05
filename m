@@ -1,103 +1,78 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39B028DD1;
-	Mon,  5 Feb 2024 14:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9118D23753;
+	Mon,  5 Feb 2024 14:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707141705; cv=none; b=bqguUDMIsMhnAcCn04wG7RA4p3ulTrMwu1XuTW5/0e/PxOBjJ1XxCkqSQkOcR0QDSqane1B7TPPA9sWKXBsTuWaGIZHQoSjrhRQqzBFPYWZFcRawErb7FYQsdraSO4K2mMBbTbrc+bc+Tm/Oal7dY2iWVLWgX3lyWj+zyE+SiAM=
+	t=1707141838; cv=none; b=TOwLcgwLWB36JwLhOjPWa5dlRF4pa/CSn0tf9JW5MPgSJT+Pvl23HXaNF2l5FOx8crM6MvENTO8qtejTHa+cRjE13nshv398Wxayv0Mfy5lbWuP+HNVsbzRJzkYNguRZAX9QVkJLIGtyOWT92VDzNNMPvkie7/NVW1FzgBMCk88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707141705; c=relaxed/simple;
-	bh=AQ9rJJsSMiX+vo7iSm3VkhpLNuASv5tw8v6zztJtpa8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TjYTv2H38q8ZD/p7fr8O9uJyLFM9Gn53trc0Ebi8jaLeohknm6XfspzxBtp3u2WfxEI+PxmbtvAHLQelNj3WEdpwFzGKOEZUbBnxr9MfnL1dihlAP6uvTnZ6DXjTf56H452nLdostGkL1o5/G4U4oZPVCb3xWMVu4p+DuxPIJ/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nhvuxBxD; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1707141838; c=relaxed/simple;
+	bh=R9m0seibPqVjuMRXRCtFH8OBXcYn9UV3bCtWarP4u4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmfNUKpIO3eTy0zCFqO1bFzrkoHGgA8loee0jROtI11SSfDbapNoBkMJbanGyL0GhdGtIaA3B4cOnfttQ0zBto3vuGXSrxsrfLeOTAYv48z/Xe9GviIMOm1SxpH2DR1khP9he4LFZsbW9IUL82KNdbpLAaT68fLszTw9cxMa/ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Xc02vhhA; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nhvuxBxD"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4155VpcZ002122;
-	Mon, 5 Feb 2024 08:01:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=KkdSVvZBpNy6UICQTjzXbhDmnHH8Se+KrDnsL2G3J/E=; b=
-	nhvuxBxD495qcJk3Dwfn+Er1TmmkZ7aJl4efkUIbbRZgzbGmi15fN6u6L0pQsS8m
-	oizA2n3YqQi918+XB4wYEvGZbCAZERLf6z7PoPWBL6CgeUn6VnT6NmDupNW9GTvT
-	1OutoakT1s0SKSbllebVm5FLZy+RPSpylL3B8goAarXiDQeLi9Yu5opBm006u0vh
-	Rin8D06cqaadWvMwBHLeKHYsAlC1Ai1/JzEvNBGygzmXFKBcMTCXDg34tPFL74JS
-	da4YSkg3HXId+hWhheJZBLCFkmgPuukxddu7ePknDbuGLoiTJSsKW9cZyuuPBjEM
-	GZ4YM+x5ksEclSEt6EyFIg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w1ks29ybc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Feb 2024 08:01:05 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 5 Feb
- 2024 14:01:03 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Mon, 5 Feb 2024 14:01:03 +0000
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 8A88B820241;
-	Mon,  5 Feb 2024 14:01:03 +0000 (UTC)
-Message-ID: <5a2872d4-7eb3-465a-aace-c848919b1f2a@opensource.cirrus.com>
-Date: Mon, 5 Feb 2024 14:01:03 +0000
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Xc02vhhA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=T9hBFBJxGOqEN46Rzq3IDVzYp56XQV1MU7sVARX8R3k=; b=Xc02vhhAaIX2iWZ94yDZOmR6CY
+	Uu5VlriWFu85b//G2mCV1xXSsllr8YEVdKyh5S+ym+eBG3c4j4u9aiSo4zuiRYjQ6zLxHBOt3d+U3
+	0HS69k/gU8sE5I5u9Xa5kCKG/xxCMy8KsqP9ZEkB4O2esPT5lFonAnzdKTMmAfA98U6g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rWzZZ-0072Jq-Ms; Mon, 05 Feb 2024 15:03:45 +0100
+Date: Mon, 5 Feb 2024 15:03:45 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Grant Grundler <grundler@chromium.org>, linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: asix: add 0b95:1790 to AX88179A device list
+Message-ID: <ea413b7f-2086-482c-b2e6-77817acf4168@lunn.ch>
+References: <20240205104049.48900-1-christianshewitt@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: cs35l56: fix reversed if statement in
- cs35l56_dspwait_asp1tx_put()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <0c254c07-d1c0-4a5c-a22b-7e135cab032c@moroto.mountain>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <0c254c07-d1c0-4a5c-a22b-7e135cab032c@moroto.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 5xdR__uDpewbfPRVIWR6S2KgtvLy6a5n
-X-Proofpoint-ORIG-GUID: 5xdR__uDpewbfPRVIWR6S2KgtvLy6a5n
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205104049.48900-1-christianshewitt@gmail.com>
 
-On 05/02/2024 12:44, Dan Carpenter wrote:
-> It looks like the "!" character was added accidentally.  The
-> regmap_update_bits_check() function is normally going to succeed.  This
-> means the rest of the function is unreachable and we don't handle the
-> situation where "changed" is true correctly.
+On Mon, Feb 05, 2024 at 10:40:48AM +0000, Christian Hewitt wrote:
+> Add a generic AX88179A entry for the 0b95:1790 device id:
 > 
-> Fixes: 07f7d6e7a124 ("ASoC: cs35l56: Fix for initializing ASP1 mixer registers")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->>From static analysis and review, not tested.
-> ---
->   sound/soc/codecs/cs35l56.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> kernel: usb 2-1: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 2.00
+> kernel: usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> kernel: usb 2-1: Product: AX88179A
+> kernel: usb 2-1: Manufacturer: ASIX
+> kernel: usb 2-1: SerialNumber: 00D24DC0
+> kernel: asix 2-1:1.0 (unnamed net_device) (uninitialized): Failed to read reg index 0x0000: -32
+> kernel: asix: probe of 2-1:1.0 failed with error -32
+> kernel: ax88179_178a 2-1:1.0 (unnamed net_device) (uninitialized): Failed to read reg index 0x0040: -32
+> kernel: ax88179_178a 2-1:1.0 eth1: register 'ax88179_178a' at usb-0000:01:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 20:7b:d2:d2:4d:c0
 > 
-> diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-> index c23e29da4cfb..ebed5ab1245b 100644
-> --- a/sound/soc/codecs/cs35l56.c
-> +++ b/sound/soc/codecs/cs35l56.c
-> @@ -115,7 +115,7 @@ static int cs35l56_dspwait_asp1tx_put(struct snd_kcontrol *kcontrol,
->   
->   	ret = regmap_update_bits_check(cs35l56->base.regmap, addr,
->   				       CS35L56_ASP_TXn_SRC_MASK, val, &changed);
-> -	if (!ret)
-> +	if (ret)
->   		return ret;
->   
->   	if (changed)
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+> The change is tested by a LibreELEC (distro) user who reports the NIC to be working
+> fine (and logs support this) but the "Failed to read reg index 0x0000: -32" errors
+> suggest ax88178_info might not be the correct choice. I'm not a serious coder so I
+> need to "ask the audience" for suggestions on what more might be needed?
 
-Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+I would probably start by determining what ax88179_read_cmd() is
+causing that print. Maybe print in addition cmd, and value. Or add a
+WARN() so you get a stack trace.
 
+It might be possible to figure it out by just looking at the code. How
+many places actually pass index=0?
+
+       Andrew
