@@ -1,50 +1,69 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF22744C80
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEF744C67;
+	Mon,  5 Feb 2024 17:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707154385; cv=none; b=Cj38ky/HfjZJZLJwRrBW3uT8bLiFCy+yX0vlJOUmHSJXdX/VUrVJLrGH7JlVcVOJUrTWUHUn2B4L7b5pJ1LFTBwXZXCxz+e52SDcT0R4ljhcLi1BwCtGwo0U5jCN93hhS0sZiJOpbJZxH15JDQLmLz4GXsRaBP/v2IHPlhxzbHw=
+	t=1707154425; cv=none; b=jt4Hwc+2k1+/HrNgpQ3//WYJQA3TVjBPYGEzQ0LUBVPg5KYFsGl1wICirKXoNtt18N5v+vM2OR8NigxbeEw67UHexski/JtLBxZbFO2JjbY/Te26H2V1E80ltijfsfOlERHojOQe8r3kvORSIvlAbjjIOtvPhABjz2FPBP+pOZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707154385; c=relaxed/simple;
-	bh=5pjg0q1iZZDUw5lhiZeqbKPckptqUaLfzjykcGLxmBY=;
+	s=arc-20240116; t=1707154425; c=relaxed/simple;
+	bh=6KbzWkkF1SDEdyAjsG6dXdz3BrQZmGWLPdcrJqk38Pg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oC+pfn2i3N0B3Z63vt8nTCy4VL8CAD2gUBgFgHtqbRfE61RaHI7zXn3A13z/lFZV+71Va73mV4fj6OULj3m3adqKtyZw3mW6Y/4/+G7BJwM0tOEojqPEfu0FgkMi+RMLkLHVCIWPhUhbWaRn64eA4+/l9FqFiLlYreF0WS92YaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rX2pn-0008FJ-Sy; Mon, 05 Feb 2024 18:32:43 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rX2pm-004foU-LU; Mon, 05 Feb 2024 18:32:42 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rX2pm-00CpRf-1r;
-	Mon, 05 Feb 2024 18:32:42 +0100
-Date: Mon, 5 Feb 2024 18:32:42 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>,
-	gregkh@linuxfoundation.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 4/4] usb: typec: tcpci: add support to set connector
- orientation
-Message-ID: <20240205173242.z56gbx2agwef3ufu@pengutronix.de>
-References: <20240205164316.805408-1-m.felsch@pengutronix.de>
- <20240205164316.805408-5-m.felsch@pengutronix.de>
- <ZcESKqRTsGNZMMX1@gallifrey>
- <20240205165420.kyujim2takwswzmw@pengutronix.de>
- <8cffdf64-d0ee-4e20-8c43-d3010ddf9839@roeck-us.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FRFg3f3bC5GMRT+7R9eQgu4ksGidBd8O6QgKRF/tGo5OTM38xyGpJid8cQEDGPEoXHpdFmZkcx46vdYaqF/pPJP5Ufs76ToT5ictbMcYVUX0Nr0Cj42GHk5OPVdc9+sP0kWevEgTw0ugl6zI2H8JqJD+AilE3sl3UVECzpjwigI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=O/hSThXo; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="O/hSThXo"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so3159163a12.1;
+        Mon, 05 Feb 2024 09:33:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707154423; x=1707759223;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ElUJ3bFANKcGSpc8Ks9F6N98y85nfwFifeRegxpzAFA=;
+        b=M74dp5yANnEGISbT0+pg8gYnp/Hv42SrPs4im0krsS+6s1DZuPbVB5q8zTPZ4RmTfz
+         mPSddhDx1AD48NFq0qwnMMvQdgSkqK7hpSLt7VTiTtws1Dwxm0NTtuJpbWDXgHZ3fTn9
+         qejwApA09PTdSQM7OO9Zek/WcMNY+tu/U/VB3CkGxRb23UWbMIVVfqQgp+hrKySHaf1i
+         ObdxBIsxyoXQwFMm3CTUas9DdvbpNnL4dYzISksKqk/4lkV1hOMa9kDb6btN904R0NKC
+         tdEJk4ANGIXHvLPIOZFvc7Q/wO0GJ/UF4z3CWz5PHfLd6GRoXgHCzca76IuuYu33dfrz
+         0cIA==
+X-Gm-Message-State: AOJu0Yzk/Y6SioF8H4CeGezRkJoId7oShwjrtHrUS4do4PxE+MRco1DM
+	Da5lyO67LGWNmvVgcwEGYSr+UaBfFN1cQzC/ogbDrbCFFOUr/4NU
+X-Google-Smtp-Source: AGHT+IFw0yFVouEJL7sPQVepmBZ8+P+u2K8PZ8+tyNjbhTF74yqxwdl05WX8PDFwXV5n20fHnPLOxg==
+X-Received: by 2002:a17:903:40c1:b0:1d9:3843:3f07 with SMTP id t1-20020a17090340c100b001d938433f07mr223495pld.61.1707154422854;
+        Mon, 05 Feb 2024 09:33:42 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWnNMQnvG5mDgs0H3SN6PW5gUa00uEW+JZOiih/iG7WgRLvJv6uEuVbdmRlQX7v0Yw+TxkzH4qUisncO9HWV8Jayxt9/eNEoAxHfA9M69EWcxqn5CTOZyJ0RXcgIAGApyVFyYd9MjlWq593++VjGEnkHxchzlyn5M0H9ypKVfscNRfYeNy3zFZPFNiQ1I01iBivsENHQMlaTvZhbf3smtEpM3RAH1K+rC7/tA0BIITd9Pe1gNyDiFLGHAtQz2lQcKbOo6pd24y0
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id e18-20020aa79812000000b006e046a325a4sm103109pfl.7.2024.02.05.09.33.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 09:33:42 -0800 (PST)
+Date: Mon, 5 Feb 2024 14:34:12 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707154421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElUJ3bFANKcGSpc8Ks9F6N98y85nfwFifeRegxpzAFA=;
+	b=O/hSThXogFDYMXAusvstp+yAm5cg8I09Hef199UMvk9dxtn4ZnNOanop4H9lYaOuCEtjnO
+	fLgTpoFP+jrOyYYkPE+CrJyE7XevvpFh3IrG4O+26NXmNxj8Ccht1Y6NlfWK7YzyV7LAaZ
+	teIg4AOksSYLGrMvo3VbsGh1ZcCVvahS4FCm0nPk67h2S8+zFVPOGswHojHMWmhgyEFmy9
+	4uj+X0/DohbUW+7kH2EMZe/Vpy/SKXYUfIORkA6s+Ue/b6OpIyKyqbsRFDvYw2jw6U79HW
+	/khwGkZTOW1CDe1y7DLAJ8ZmHqAVebrGVxXpIRhS29gGjfM9W/6oVz0b5xe/1g==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] hv: vmbus: make hv_bus const
+Message-ID: <vjfokbfk23ck6ndcxyb6gnbqn7qtdg4ynenvnyhlgt7kwvlwvm@3gvq5sttegj7>
+References: <20240204-bus_cleanup-hv-v1-1-521bd4140673@marliere.net>
+ <SN6PR02MB4157130171E614FED60FDC1ED4472@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,172 +72,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8cffdf64-d0ee-4e20-8c43-d3010ddf9839@roeck-us.net>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <SN6PR02MB4157130171E614FED60FDC1ED4472@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On 24-02-05, Guenter Roeck wrote:
-> On 2/5/24 08:54, Marco Felsch wrote:
-> > Hi David,
-> > 
-> > On 24-02-05, Dr. David Alan Gilbert wrote:
-> > > * Marco Felsch (m.felsch@pengutronix.de) wrote:
-> > > > This add the support to set the optional connector orientation bit which
-> > > > is part of the optional CONFIG_STANDARD_OUTPUT register 0x18 [1]. This
-> > > > allows system designers to connect the tcpc orientation pin directly to
-> > > > the 2:1 ss-mux.
-> > > > 
-> > > > [1] https://www.usb.org/sites/default/files/documents/usb-port_controller_specification_rev2.0_v1.0_0.pdf
-> > > > 
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > >   drivers/usb/typec/tcpm/tcpci.c | 43 ++++++++++++++++++++++++++++++++++
-> > > >   include/linux/usb/tcpci.h      |  8 +++++++
-> > > >   2 files changed, 51 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-> > > > index 7118551827f6..7ce9d4923bc7 100644
-> > > > --- a/drivers/usb/typec/tcpm/tcpci.c
-> > > > +++ b/drivers/usb/typec/tcpm/tcpci.c
-> > > > @@ -67,6 +67,18 @@ static int tcpci_write16(struct tcpci *tcpci, unsigned int reg, u16 val)
-> > > >   	return regmap_raw_write(tcpci->regmap, reg, &val, sizeof(u16));
-> > > >   }
-> > > > +static bool tcpci_check_std_output_cap(struct regmap *regmap, u8 mask)
-> > > > +{
-> > > > +	unsigned int reg;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = regmap_read(regmap, TCPC_STD_OUTPUT_CAP, &reg);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > > > +	return (reg & mask) == mask;
-> > > > +}
-> > > > +
-> > > >   static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
-> > > >   {
-> > > >   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> > > > @@ -301,6 +313,27 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
-> > > >   			   TCPC_TCPC_CTRL_ORIENTATION : 0);
-> > > >   }
-> > > > +static int tcpci_set_orientation(struct tcpc_dev *tcpc,
-> > > > +				 enum typec_orientation orientation)
-> > > > +{
-> > > > +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> > > > +	unsigned int reg;
-> > > > +
-> > > > +	switch (orientation) {
-> > > > +	case TYPEC_ORIENTATION_NONE:
-> > > > +		/* We can't put a single output into high impedance */
-> > > 
-> > > Is that intended to be a fallthrough? If so I guess it needs
-> > > marking as such with a
-> > >                  fallthrough;
-> > 
-> > You need to add it if there is code in between. Since there is no code,
-> > just this comment, it shouldn't be necessary.
+Hi Michael,
+
+On  5 Feb 16:40, Michael Kelley wrote:
+> From: Ricardo B. Marliere <ricardo@marliere.net> Sent: Sunday, February 4, 2024 8:38 AM
 > > 
 > 
-> Still, I think it would be desirable here to clarify that this
-> is not a lost return but intentionally sets
-> TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL.
+> NIT:  For consistency, we try to use "Drivers: hv: vmbus:" as the prefix on the
+> Subject line for patches to vmbus_drv.c.
 
-Sure, I will adapt it once the complete patchset is reviewed.
+Thanks for the feedback, I'll keep that in mind in the future. I looked
+into a few commits using `git blame` and 'hv: ' seemed to be sufficient.
 
-Regards,
-  Marco
+All the best,
+-	Ricardo.
 
-> Guenter
+
+
 > 
-> > Regards,
-> >    Marco
+> Otherwise,
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> 
+> > Now that the driver core can properly handle constant struct bus_type,
+> > move the hv_bus variable to be a constant structure as well,
+> > placing it into read-only memory which can not be modified at runtime.
 > > 
-> > > 
-> > > Dave
-> > > 
-> > > > +	case TYPEC_ORIENTATION_NORMAL:
-> > > > +		reg = TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL;
-> > > > +		break;
-> > > > +	case TYPEC_ORIENTATION_REVERSE:
-> > > > +		reg = TCPC_CONFIG_STD_OUTPUT_ORIENTATION_FLIPPED;
-> > > > +		break;
-> > > > +	}
-> > > > +
-> > > > +	return regmap_update_bits(tcpci->regmap, TCPC_CONFIG_STD_OUTPUT,
-> > > > +				  TCPC_CONFIG_STD_OUTPUT_ORIENTATION_MASK, reg);
-> > > > +}
-> > > > +
-> > > >   static void tcpci_set_partner_usb_comm_capable(struct tcpc_dev *tcpc, bool capable)
-> > > >   {
-> > > >   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> > > > @@ -808,6 +841,9 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
-> > > >   	if (tcpci->data->vbus_vsafe0v)
-> > > >   		tcpci->tcpc.is_vbus_vsafe0v = tcpci_is_vbus_vsafe0v;
-> > > > +	if (tcpci->data->set_orientation)
-> > > > +		tcpci->tcpc.set_orientation = tcpci_set_orientation;
-> > > > +
-> > > >   	err = tcpci_parse_config(tcpci);
-> > > >   	if (err < 0)
-> > > >   		return ERR_PTR(err);
-> > > > @@ -851,6 +887,13 @@ static int tcpci_probe(struct i2c_client *client)
-> > > >   	if (err < 0)
-> > > >   		return err;
-> > > > +	err = tcpci_check_std_output_cap(chip->data.regmap,
-> > > > +					 TCPC_STD_OUTPUT_CAP_ORIENTATION);
-> > > > +	if (err < 0)
-> > > > +		return err;
-> > > > +
-> > > > +	chip->data.set_orientation = err;
-> > > > +
-> > > >   	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-> > > >   	if (IS_ERR(chip->tcpci))
-> > > >   		return PTR_ERR(chip->tcpci);
-> > > > diff --git a/include/linux/usb/tcpci.h b/include/linux/usb/tcpci.h
-> > > > index 467e8045e9f8..f2bfb4250366 100644
-> > > > --- a/include/linux/usb/tcpci.h
-> > > > +++ b/include/linux/usb/tcpci.h
-> > > > @@ -47,6 +47,9 @@
-> > > >   #define TCPC_SINK_FAST_ROLE_SWAP	BIT(0)
-> > > >   #define TCPC_CONFIG_STD_OUTPUT		0x18
-> > > > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_MASK		BIT(0)
-> > > > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL	0
-> > > > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_FLIPPED	1
-> > > >   #define TCPC_TCPC_CTRL			0x19
-> > > >   #define TCPC_TCPC_CTRL_ORIENTATION	BIT(0)
-> > > > @@ -127,6 +130,7 @@
-> > > >   #define TCPC_DEV_CAP_2			0x26
-> > > >   #define TCPC_STD_INPUT_CAP		0x28
-> > > >   #define TCPC_STD_OUTPUT_CAP		0x29
-> > > > +#define TCPC_STD_OUTPUT_CAP_ORIENTATION	BIT(0)
-> > > >   #define TCPC_MSG_HDR_INFO		0x2e
-> > > >   #define TCPC_MSG_HDR_INFO_DATA_ROLE	BIT(3)
-> > > > @@ -198,12 +202,16 @@ struct tcpci;
-> > > >    *		Chip level drivers are expected to check for contaminant and call
-> > > >    *		tcpm_clean_port when the port is clean to put the port back into
-> > > >    *		toggling state.
-> > > > + * @set_orientation:
-> > > > + *		Optional; Enable setting the connector orientation
-> > > > + *		CONFIG_STANDARD_OUTPUT (0x18) bit0.
-> > > >    */
-> > > >   struct tcpci_data {
-> > > >   	struct regmap *regmap;
-> > > >   	unsigned char TX_BUF_BYTE_x_hidden:1;
-> > > >   	unsigned char auto_discharge_disconnect:1;
-> > > >   	unsigned char vbus_vsafe0v:1;
-> > > > +	unsigned char set_orientation:1;
-> > > >   	int (*init)(struct tcpci *tcpci, struct tcpci_data *data);
-> > > >   	int (*set_vconn)(struct tcpci *tcpci, struct tcpci_data *data,
-> > > > -- 
-> > > > 2.39.2
-> > > > 
-> > > > 
-> > > -- 
-> > >   -----Open up your eyes, open up your mind, open up your code -------
-> > > / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
-> > > \        dave @ treblig.org |                               | In Hex /
-> > >   \ _________________________|_____ http://www.treblig.org   |_______/
-> > > 
-> 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> > ---
+> >  drivers/hv/vmbus_drv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index edbb38f6956b..c4e6d9f1b510 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -988,7 +988,7 @@ static const struct dev_pm_ops vmbus_pm = {
+> >  };
+> > 
+> >  /* The one and only one */
+> > -static struct bus_type  hv_bus = {
+> > +static const struct bus_type  hv_bus = {
+> >  	.name =		"vmbus",
+> >  	.match =		vmbus_match,
+> >  	.shutdown =		vmbus_shutdown,
+> > 
+> > ---
+> > base-commit: ce9ecca0238b140b88f43859b211c9fdfd8e5b70
+> > change-id: 20240204-bus_cleanup-hv-2ca8a4603ebc
+> > 
+> > Best regards,
+> > --
+> > Ricardo B. Marliere <ricardo@marliere.net>
+> > 
 > 
