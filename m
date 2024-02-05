@@ -1,120 +1,134 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE28B32C93
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CEE2C68C;
+	Mon,  5 Feb 2024 15:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707145256; cv=none; b=NHb4bMslRfDgqz5EgWIYN/gZ4LDZz6oDnS/ShhfqdUpQnqDZJZVfsGU7t3vKqJeTJPc6MemzrOKlRGCuQChE3V1xUESdkpmpCbtnGS7OgfUMnoPvDmn26VHVFdv1E29/BYiwG2Mw1xXONTkkzZ7qsIqYqKBMxh4In7L4s+Zt7pw=
+	t=1707145468; cv=none; b=i65Tlz6kTCWu8HkQcW2LD5YQDwsfCteDojHwSLvz6zW+Dv28r8ZpBMYlygm6rk6H5eDk+AjjSflYq7nyVfhjLYAoCzoXYQ6Dj7n0dldW+JJRnfRfKOIkbYtqdfQrG1OUyg5LsKAdXgni9KdZrrtRJmgnZKzP24S8KEA+j/iN5j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707145256; c=relaxed/simple;
-	bh=4x/pL/LexyK+4wqZZH/6gBXshFnDy2QZXDAbJnIwUqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RW9YQRDwOL/TSFJmM4Luq/Lu9xzqbUWxUTaj+S9yyH2OGXuGxB5uH8DoNT4AZfY84M0cv7DFt8uDJUTa2TKwgaZFXKlT2wi9lcP6/otX8hHqzEwn0p5aMtjO91uf+oTzL/H0aUde3FNVszbnBna/xiVmeW+tid0gMpSJclqwlT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CXv6nVK/; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707145468; c=relaxed/simple;
+	bh=0aZM96cjECYxM3U7ULUcl2ArQahZ2cd3SuFhh6THTnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9h694GObYnMVnDI5uhCbxICuyZ2vkjeevMZnosyhDlaHlJOE1Gkslh3e2MmmsLhNffL5DMGE7XtAAJ3YJ33rQg3fCZi6QfDa51A5v1A2YXQ5Pq9IZ3xveGQvuzc1B8jwqY771ilRllcbytiqfd04BD53OfVPAm0morgBPcS+ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePZvZO6H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CXv6nVK/"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-46d246e1ebfso249588137.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 07:00:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707145254; x=1707750054; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SdJNeue2Wv0xiehiEald+OUh21W9eFlv7KMsoDs8oU8=;
-        b=CXv6nVK/NtQ0TRotQaF8GyMgdPby6UPMK7Y0wkjW56Lx1IpFExmMB4zm2fmO6d2R6B
-         8rCbxnjOsCrQffUh3EZKZh3hHyFUbMV/AvyiuVyhY/JKhEhTQQopu5JgGds2ZPkULBLv
-         Kxfz8GKvQx2SwMTEfPPjuqDft9/toFNQCSy/sBWdX+2+saRIyCtAWEfCN6eWUeIiudwD
-         KIRge7BNSL+AScZd1gh5ZCr/vgCLw8M3H38i+tSfX4KIugGt0h/tGMnlcgJFwqKPzHHO
-         kxhhb3ZdokFnoSUoJ1hSrAoQEWC1L530eaDADN9U1U9opeZv01BJQIPE9wytblQgoGyv
-         PZHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707145254; x=1707750054;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SdJNeue2Wv0xiehiEald+OUh21W9eFlv7KMsoDs8oU8=;
-        b=fUlZGU7+VOAsi5gElQrsy/MfZR3uGS9rn6Shv1PogxLeIvTvOXK0OQKw/0TXxlGz8V
-         ljHgxEtrTe7YuDiKs+UDCJNn5aJlXAv2iTvKklQhlgTr+ZsqT77J4vctGuTuOnOwiw23
-         unUWPKWCNMOmZitlwaWjOjMqYdtIfAlgpW6Lz8Mnwy1ap24VuRBwEjMmG5Hzo/jLIbn/
-         cJPjH2Zz/dEKUnmXOHdJf9h5UITqd4aido9xj3bzdqwgAYMpCTVoXPmPQ3usyxfu2jZe
-         9tfbv/DIY34IIvrwnK/UNlLIbZUf9FDQ6zdbyEZ38XDFpRlljAhsDLDVZT7lrS3+IyH6
-         9KvA==
-X-Gm-Message-State: AOJu0YwiLljVJLbFqYGfOd2ggJ43ejTyddycs9xTPeDC1u8lAYfEdteZ
-	qxlHVJgYRTPrpahs8ERo/X6TFB9zwuIifR0gEx5Gwq88Whfpe7ZlxrX0n9h8yhYNsbGq2ul31pd
-	YWlUo4ftybzwgFiK2NTbKJf8WZISeoUFgh62A
-X-Google-Smtp-Source: AGHT+IGyGdxgsP9UcWiEJx0V/pq8uMBpCddwlbwcThZVJXxE7PBJjn7CzGAgysVY689BVIMKpe8Rx7vH/upebwniUjA=
-X-Received: by 2002:a67:cf8c:0:b0:46d:27ba:526b with SMTP id
- g12-20020a67cf8c000000b0046d27ba526bmr22209vsm.34.1707145252109; Mon, 05 Feb
- 2024 07:00:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePZvZO6H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8834BC433F1;
+	Mon,  5 Feb 2024 15:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707145467;
+	bh=0aZM96cjECYxM3U7ULUcl2ArQahZ2cd3SuFhh6THTnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ePZvZO6HiVSMSEYiqMZFZYdIvJjPVsWrg2FPLETmzjKm46HtuRHhxVB2DyO2hhr+7
+	 0ams6lQXLe4rJ7rwr5PYf4QL5UcAFp0x3Oo8rj5a1q7tXRRPKtfLUOZ3VesLFj4IU9
+	 uPWJiSIkceSIrltOFXfrHbGW4GSMezflVbpc3Z60wzSKgKFlki0AkbDWG9URRXGEub
+	 LH5kWRSddT1ME4Me+3rliFQkbT1V4tMld4SLwPbmUgcDJ5QfT/CdtNQri0LLbwNKru
+	 CC9NSvuFhWBofZUZAcg86Yif0Mn9peeLsMvdnXXGkL8N8ylWm0dNZvQlvzDCpEBk3l
+	 yhCbzK8uZlsMw==
+Date: Mon, 5 Feb 2024 15:04:22 +0000
+From: Lee Jones <lee@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Li Zetao <lizetao1@huawei.com>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] leds: trigger: netdev: Fix kernel panic on interface
+ rename trig notify
+Message-ID: <20240205150422.GC53266@google.com>
+References: <20240203235413.1146-1-ansuelsmth@gmail.com>
+ <8d51f09b-e6d2-4ee1-9e7d-b545d561798a@lunn.ch>
+ <20240205085007.GA19855@google.com>
+ <2cf84815-f9b6-4a0a-a3b4-d23628a89aa4@lunn.ch>
+ <65c0e874.df0a0220.257a.43b1@mx.google.com>
+ <20240205143359.GB53266@google.com>
+ <65c0f2dc.050a0220.63083.8524@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131141858.1149719-1-elver@google.com> <b500bb70-aa3f-41d3-b058-2b634471ffef@linux.dev>
-In-Reply-To: <b500bb70-aa3f-41d3-b058-2b634471ffef@linux.dev>
-From: Marco Elver <elver@google.com>
-Date: Mon, 5 Feb 2024 16:00:15 +0100
-Message-ID: <CANpmjNPKACDwXMnZRw9=CAgWNaMWAyFZ2W7KY2s4ck0s_ue1ag@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Separate bpf_local_storage_lookup() fast and slow paths
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <65c0f2dc.050a0220.63083.8524@mx.google.com>
 
-On Wed, 31 Jan 2024 at 20:52, Martin KaFai Lau <martin.lau@linux.dev> wrote=
-:
-[...]
-> > | num_maps: 1000
-> > |  local_storage cache sequential  get:
-> > |                              <before>                | <after>
-> > |   hits throughput:           0.357 =C2=B1 0.005 M ops/s   | 0.325 =C2=
-=B1 0.005 M ops/s        (-9.0%)
-> > |   hits latency:              2803.738 ns/op          | 3076.923 ns/op=
-               (+9.7%)
->
-> Is it understood why the slow down here? The same goes for the "num_maps:=
- 32"
-> case above but not as bad as here.
+On Mon, 05 Feb 2024, Christian Marangi wrote:
 
-It turned out that there's a real slowdown due to the outlined
-slowpath. If I inline everything except for inserting the entry into
-the cache (cacheit_lockit codepath is still outlined), the results
-look much better even for the case where it always misses the cache.
-
-[...]
-> > diff --git a/tools/testing/selftests/bpf/progs/cgrp_ls_recursion.c b/to=
-ols/testing/selftests/bpf/progs/cgrp_ls_recursion.c
-> > index a043d8fefdac..9895087a9235 100644
-> > --- a/tools/testing/selftests/bpf/progs/cgrp_ls_recursion.c
-> > +++ b/tools/testing/selftests/bpf/progs/cgrp_ls_recursion.c
-> > @@ -21,7 +21,7 @@ struct {
-> >       __type(value, long);
-> >   } map_b SEC(".maps");
+> On Mon, Feb 05, 2024 at 02:33:59PM +0000, Lee Jones wrote:
+> > On Mon, 05 Feb 2024, Christian Marangi wrote:
+> > 
+> > > On Mon, Feb 05, 2024 at 02:41:46PM +0100, Andrew Lunn wrote:
+> > > > > > This should have 'net' in the subject line, to indicate which tree its
+> > > > > > for.
+> > > > > 
+> > > > > No, it shouldn't.
+> > > > > 
+> > > > > Contributors aren't obliged to know anything about merging strategies.
+> > > > 
+> > > > With netdev, we tend to assume they do, or at least can contribute to
+> > > > the discussion. They often know about any dependencies etc which could
+> > > > influence the decision. When there are multiple subsystem maintainers
+> > > > involved, i tend to use To: to indicate the maintainer i think should
+> > > > merge the patch, and Cc: for the rest.
+> > > >
+> > > 
+> > > I'm always a bit confused when I have to send patch to mixed subsystem
+> > > (not the case but for net trigger it's almost that). Sorry for the
+> > > confusion/noise.
+> > 
+> > When you have a truly cross-subsystem patch, it's up to you.
+> > 
+> >  - Mention both e.g. leds/net:
+> >  - Mention neither e.g. <device>:
+> >  - Mention the one that is most relevant
+> > 
+> >  An example of the last option might be when the lion's share of the
+> >  changes occur in one subsystem and only header files are changed in the
+> >  other.
+> > 
+> > In an ideal world i.e. when there are no build-time/runtime deps between
+> > them, changes should be separated out into their own commits.
 > >
-> > -SEC("fentry/bpf_local_storage_lookup")
-> > +SEC("fentry/bpf_local_storage_lookup_slowpath")
->
-> The selftest is trying to catch recursion. The change here cannot test th=
-e same
-> thing because the slowpath will never be hit in the test_progs.  I don't =
-have a
-> better idea for now also.
+> 
+> Thanks a lot for the explaination and the examples!
+> 
+> > > > > Why does this need to go in via net?
+> > > > 
+> > > > It does not, as far as i'm aware. Christian, do you know of any
+> > > > reason?
+> > > > 
+> > > 
+> > > This is strictly a fix, no dependency or anything like that. Maybe using
+> > > net as target would make this faster to merge (since net is for fix only
+> > > and this has to be backported) than using leds-next?
+> > 
+> > We have leds-fixes for that.
+> >
+> 
+> Oh! No idea, should I add a tag to the patch to target that branch
+> specifically?
 
-Trying to prepare a v2, and for the test, the only option I see is to
-introduce a tracepoint ("bpf_local_storage_lookup"). If unused, should
-be a no-op due to static branch.
+You don't need to do anything special.
 
-Or can you suggest different functions to hook to for the recursion test?
+The Fixes: tag is enough to let us know that this is a fix.
 
-Preferences?
+If the commit mentioned in Fixes: was accepted as part of the last
+merge-window, it'll be sent to the -rcs in good time.  If it fixes a
+commit which was introduced in a previous cycle, it'll be submitted
+during the next merge-window.
+
+> Anyway Since we have leds-fixes and this is leds related I think it's ok
+> to use that and don't disturb net subsystem.
+
+There is no reason why this should be merged via netdev.
+
+> (again IT IS a kernel panic but happens only on some specific situation
+> so it's not that critical)
+
+-- 
+Lee Jones [李琼斯]
