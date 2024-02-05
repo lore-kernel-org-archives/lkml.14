@@ -1,171 +1,117 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD42A2C1B9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 22:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CA44D5A7;
+	Mon,  5 Feb 2024 22:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707170752; cv=none; b=f0oFcFZPTp0qtQSPrIkHdCQfYpy9vmKMWGWu2DHkRrtS4k6yyrvjEp2/v1EzjHRAUAoApZg1NI51P8CMGeAuhreN4u8sORzETKtPeYSyEknb/G6hFOTOsTwohgn3GGbfAf8PRq83BbcecBXO5/IsXBIb6JiWApR727rWLnMkySU=
+	t=1707170853; cv=none; b=T4VZStqjjS57Vb/zy/zQ5knoUZ+p+fHBZmmM6tj709JNVOb7kMYdcP0qaJMyxKA6ltn4FmZEjsBT1qow1X/gV12D/0nLZk7r3wcQpIZ8cVcq4CregOzJmaNrII+mI+qwlFXHBLu2myGrAHePrtwU9x0kNjpsOylGuwXJx4oA2zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707170752; c=relaxed/simple;
-	bh=/yC6ukCR6M9OWDOAQofhpPWkpb0+7yFSlv5kx0Xd2yY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EdtJO+7V29ZEXZqxkduGpuE90jgudJovXq+HH1OWTbeKszMOEH9Sg4GbEU1I4sSm68VCivYJ0ndNRhyV3NctM53fdGlYJw2VS4fUXCctuV+KlDkQP5vWbbpcYix/dZO2zFHrbrAwfY8ODiP27Itkcw0W4ZdoiYMul01xwjL/Yus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Qf8DHVmu; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707170853; c=relaxed/simple;
+	bh=K8Wi9nbWh4scyBXEx/WRPqEifNVn6pTOX+L2VOPol0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NbJMGt7JIbxfT9U0uLOIOQFGJyzFaAx9AMEc7dAZ69HKkJPSaE3FRlALOSkou9/+Nuif/4r4cNNq/68165oOgxXH48oAs1LZwyHAXYN6w97nYt/NFzK1bx+80G2R7OFnXMVgtUub5LlTEdmZPDL40GBzDZgsf0rA2oj9rjwr1Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O8391Xi7; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qf8DHVmu"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc6db13f1abso4215800276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 14:05:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707170750; x=1707775550; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+uyM7Qy9ebYgtc0T1FfcjgiWLInu4H67aNLCBp8izTI=;
-        b=Qf8DHVmufNeX4fR9YPGoVxlpcuXXutYOFLjXGtJze/yMGBmlAhiNw1fPPtwioEp1Ib
-         msJPhNHGIzoVfcXNtI43JyTVOfkLRTXZsby/qN1C5Rh84evuFOpa/OzBKe4brYB90wxZ
-         CJX8DSbRxVc1iWzjyw+0GrZN+OEBtq1nWRBoI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707170750; x=1707775550;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+uyM7Qy9ebYgtc0T1FfcjgiWLInu4H67aNLCBp8izTI=;
-        b=cnkrhu2IuxBJz+dmJwuD7qgEewFAqmweMpfiOWxGLuT0DgqNGV8zqvNJioeCbTRH8W
-         hs/2FFBrTOp2fysSBeNuCdT5DTH+csOniQ2o74BSZEib3deHEgvhch8Y8enldut81IEi
-         dW3OiwdeimNF44BwV8Xb8je5ZYgZz5dzFsBwQugEJv8/V0rmtpnIPspyCVUJ69aGNbO2
-         Qn2nnKHsdABHua2han39qsUKXrA9W6HLsfx7/e9Ca0K+5fV0wlGWYANlloPxG3mmt3D6
-         F7yQ/Y28KMO0Ys4b9lQJauDUq6WeuA1BhNkMa/au+apzj7tU15NbsiC33GI0/M+v+aCr
-         fo8Q==
-X-Gm-Message-State: AOJu0YywRrBIl0V0KY975NGDPD7V6gJGsj6ckrfFo23K2DQ0bHyYMIJM
-	5hH14AZFi/06N1MnX6vwYDJxjTH0AuVqB918Ap2gbNkdmSwUpPcnabJq5cO49JOkyfx4oc7+8aD
-	GeJ698KoctwQAqGLJzdw8gm7Nw1wpo5QhEvXI
-X-Google-Smtp-Source: AGHT+IE1dY0Dgu+RNNAwM80SRYg80MTyc6l94UjLiuC8rBB3isPt7AhJZ2B2k3REppaMwM/8wOjM5t6SUG0eRFTfdY4=
-X-Received: by 2002:a25:ace1:0:b0:dc2:28b1:2e8b with SMTP id
- x33-20020a25ace1000000b00dc228b12e8bmr713829ybd.15.1707170749681; Mon, 05 Feb
- 2024 14:05:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O8391Xi7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707170852; x=1738706852;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=K8Wi9nbWh4scyBXEx/WRPqEifNVn6pTOX+L2VOPol0U=;
+  b=O8391Xi7/SuRXbNwW2kggbghhBYcal0z6u90QnLTYBLgcH/Fw5i3hUW0
+   7+8tdpHS4uVI/qNKoYCN0zGdGA285fKqawFoi+ItFctaS5dlrMpHtB7rY
+   7zYUandL6odAxvzZUTIec0JzIu73ZHqYPvflLHMEYUUn/2Psy9FFRH9nB
+   HtfxYAZGyRCKWTCOcHu+sofQ6697hKAybiGlVIRoxkBpfDl73Xn3uCCAJ
+   81D7DTpJKMM1KdP8MIAnpDMahh7+sVMc4WNOVDESN6MPZdfyel1r64RHB
+   o1WgDE0eaBqjDVThaUnoHKe7E4ynJRUwnBINIo+FO2/ORUHGRWcpSkc2K
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="4410175"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="4410175"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 14:07:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="933269717"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="933269717"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.181]) ([10.246.112.181])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 14:07:30 -0800
+Message-ID: <33d241bf-e360-44c5-b63d-550da3cc66d9@intel.com>
+Date: Mon, 5 Feb 2024 15:07:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126183930.1170845-1-abhishekpandit@chromium.org>
- <20240126103859.v3.3.Idf7d373c3cbb54058403cb951d644f1f09973d15@changeid> <CACeCKaeVtU3ckmGU932d-pPn=eOnt6KjAavNY3rSOUgrJNriDg@mail.gmail.com>
-In-Reply-To: <CACeCKaeVtU3ckmGU932d-pPn=eOnt6KjAavNY3rSOUgrJNriDg@mail.gmail.com>
-From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date: Mon, 5 Feb 2024 14:05:38 -0800
-Message-ID: <CANFp7mXOXc6TzLJ+EJ9VYxqGHcjW099oBhDctarUdM5eJGz5bg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] usb: typec: ucsi: Get PD revision for partner
-To: Prashant Malani <pmalani@chromium.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-usb@vger.kernel.org, 
-	jthies@google.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rajaram Regupathy <rajaram.regupathy@intel.com>, 
-	Saranya Gopal <saranya.gopal@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl: remove CONFIG_CXL_PMU entry in drivers/cxl/Kconfig
+Content-Language: en-US
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20240204094613.40687-1-masahiroy@kernel.org>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240204094613.40687-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Heikki,
 
-Friendly ping to review this patch (I see you added Reviewed-by to the
-other two in this series).
 
-Thanks,
-Abhishek
+On 2/4/24 2:46 AM, Masahiro Yamada wrote:
+> Commit 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+> added the config entries for CXL_PMU in drivers/cxl/Kconfig and
+> drivers/perf/Kconfig, so it can be toggled from multiple locations:
+> 
+> [1] Device Drivers
+>      -> PCI support
+>        -> CXL (Compute Expres Link) Devices
+>          -> CXL Performance Monitoring Unit
+> 
+> [2] Device Drivers
+>      -> Performance monitor support
+>        -> CXL Performance Monitoring Unit
+> 
+> This complicates things, and nobody else does this.
+> 
+> I kept the one in drivers/perf/Kconfig because CONFIG_CXL_PMU controls
+> the compilation of drivers/perf/cxl_pmu.c.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-On Fri, Jan 26, 2024 at 12:25=E2=80=AFPM Prashant Malani <pmalani@chromium.=
-org> wrote:
->
-> Hi Abhishek,
->
-> On Fri, Jan 26, 2024 at 10:39=E2=80=AFAM Abhishek Pandit-Subedi
-> <abhishekpandit@chromium.org> wrote:
-> >
-> > PD major revision for the port partner is described in
-> > GET_CONNECTOR_CAPABILITY and is only valid on UCSI 2.0 and newer. Updat=
-e
-> > the pd_revision on the partner if the UCSI version is 2.0 or newer.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > ---
-> > $ cat /sys/class/typec/port2-partner/usb_power_delivery_revision
-> > 3.0
-> >
-> > (no changes since v2)
-> >
-> > Changes in v2:
-> >   - Formatting changes and update macro to use brackets.
-> >   - Fix incorrect guard condition when checking connector capability.
-> >
-> >  drivers/usb/typec/ucsi/ucsi.c | 23 +++++++++++++++++++++++
-> >  drivers/usb/typec/ucsi/ucsi.h |  3 +++
-> >  2 files changed, 26 insertions(+)
-> >
-> > diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucs=
-i.c
-> > index a35056ee3e96..2b7983d2fdae 100644
-> > --- a/drivers/usb/typec/ucsi/ucsi.c
-> > +++ b/drivers/usb/typec/ucsi/ucsi.c
-> > @@ -782,6 +782,7 @@ static int ucsi_register_partner(struct ucsi_connec=
-tor *con)
-> >         }
-> >
-> >         desc.usb_pd =3D pwr_opmode =3D=3D UCSI_CONSTAT_PWR_OPMODE_PD;
-> > +       desc.pd_revision =3D UCSI_CONCAP_FLAG_PARTNER_PD_MAJOR_REV_AS_B=
-CD(con->cap.flags);
-> >
-> >         partner =3D typec_register_partner(con->port, &desc);
-> >         if (IS_ERR(partner)) {
-> > @@ -856,6 +857,27 @@ static void ucsi_partner_change(struct ucsi_connec=
-tor *con)
-> >                         con->num, u_role);
-> >  }
-> >
-> > +static int ucsi_check_connector_capability(struct ucsi_connector *con)
-> > +{
-> > +       u64 command;
-> > +       int ret;
-> > +
-> > +       if (!con->partner || !IS_MIN_VERSION_2_0(con->ucsi))
->
-> I'll reiterate my comment from a previous version, since this series
-> has been revv-ed a few
-> times since and it may have gotten lost; no need to respond to it if
-> you don't want to,
-> since I believe we left it to the maintainer(s) to decide [1]:
->
-> This macro is unnecessary. Since the version is in BCD format and we
-> already have the
-> macros for versions, just a simple comparison is enough:
->          if (!con-partner || con->ucsi->version < UCSI_VERSION_2_0)
->                  return 0;
->
-> I'll add that Patch 1 of this series [2] is also using the same style
-> for comparing version numbers.
->
-> > +               return 0;
-> > +
-> > +       command =3D UCSI_GET_CONNECTOR_CAPABILITY | UCSI_CONNECTOR_NUMB=
-ER(con->num);
-> > +       ret =3D ucsi_send_command(con->ucsi, command, &con->cap, sizeof=
-(con->cap));
-> > +       if (ret < 0) {
-> > +               dev_err(con->ucsi->dev, "GET_CONNECTOR_CAPABILITY faile=
-d (%d)\n", ret);
->
-> nit: I know this is being done elsewhere in this file, but we should
-> avoid putting error
-> numbers in parentheses [3]. Perhaps something for a separate cleanup patc=
-h.
->
-> [1] https://lore.kernel.org/linux-usb/CANFp7mXP=3DaN8bQi4akKKcoMZE8RaCBuF=
-nwTa5hbp0MZvZe0hYQ@mail.gmail.com/
-> [2] https://lore.kernel.org/linux-usb/20240126103859.v3.1.Iacf5570a66b82b=
-73ef03daa6557e2fc0db10266a@changeid/
-> [3] https://www.kernel.org/doc/html/latest/process/coding-style.html#prin=
-ting-kernel-messages
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> 
+>  drivers/cxl/Kconfig | 13 -------------
+>  1 file changed, 13 deletions(-)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67998dbd1d46..5f3c9c5529b9 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -144,17 +144,4 @@ config CXL_REGION_INVALIDATION_TEST
+>  	  If unsure, or if this kernel is meant for production environments,
+>  	  say N.
+>  
+> -config CXL_PMU
+> -	tristate "CXL Performance Monitoring Unit"
+> -	default CXL_BUS
+> -	depends on PERF_EVENTS
+> -	help
+> -	  Support performance monitoring as defined in CXL rev 3.0
+> -	  section 13.2: Performance Monitoring. CXL components may have
+> -	  one or more CXL Performance Monitoring Units (CPMUs).
+> -
+> -	  Say 'y/m' to enable a driver that will attach to performance
+> -	  monitoring units and provide standard perf based interfaces.
+> -
+> -	  If unsure say 'm'.
+>  endif
