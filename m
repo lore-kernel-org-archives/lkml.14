@@ -1,183 +1,149 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10C044C6B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F60481C4;
+	Mon,  5 Feb 2024 15:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707148211; cv=none; b=jj8Hsx09FDlq77YL58cajkGpVt9lzd33o6tTEY09K1Vsis3TtFreClMPqGQWDBsSp/mKFHg9VFeaRvSfh30o5HsjhLjqZy9VIerbfLJ8aBKwWOp84hdX2HN0MfLiAIioSjETiE5V1oaT6J6379ksLFM037o+r1jtdABW/AnSO+M=
+	t=1707148216; cv=none; b=a0hlsn+A3cD1hTF/NQtnQAmgpZsG8KcSylIUjmzwkZqPjfx124MX4fW65KPl2+e8qhg/PBpqLq4P/FdcbN15Xqk2s3IAiR8Ou915DDCuh4M3vSrEXLchd8MRhD3iBxr5rhrCVMBFvLMo8s5+YP0VwyUDtfezKu++Wxzr2MiSez8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707148211; c=relaxed/simple;
-	bh=DVzO7sH9br7pDvZZ99ERESu2r5MxqGc7Jk4Dqa4lhEA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LswUCLemHka+WRglfhceeRidqg+vUSHzW3HIGUjZnvwm/K0zesE2misp11hfh3Wr3js0erOyCu2BiQVkEpcpRiY+TcT5ar3F8yUnd8ZSLtTD8QlGQrvPQDfK88/lZXx70NlBvslOY38WgO1yC/Io55yiqeZS0Azuss+1T0aeRXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rmJ96hhe; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com
+	s=arc-20240116; t=1707148216; c=relaxed/simple;
+	bh=6aaZ8uJ98XEilRCdTFHbcsja0/sHt6JhMUEAjwCNq18=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AS47k0oWEL1p06RORBkWSbCqnhz++L5kvxKEFWhJxzlB5He42/dXmuqnOFMUZNiSzpRXjQIW8hgQpWV7aATpa8U2BrJDtJxKcyXRWjmQeGlhu9RofN8TpueeoNyeCp0CEIql0xCPDo3KavHFdyNTLyIjeL0YoDXSrKjXLEybqRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W854IR28; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rmJ96hhe"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so5014396276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 07:50:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707148209; x=1707753009; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LqF9zLVi16rKyrWpAJ0bhub0WiHD3paBZjfcYyqlQjA=;
-        b=rmJ96hhe7ME3DH4E5j4xu9kXfo5ePa2Y076KjrfzoAHjREOfp3/qEVTRSnLNG6d4XF
-         My7XQLdVTYMhcgmLzM+sOXi9gqik4KadaB/40HH0/qmtLN5nckfk6N8jDjzuyvny/zLa
-         WPqpTpGpsNClkHtmagWqRn8OYYvaZ49heOc41gZZFKboODWCpEWnYWoD28ARGv7En7mF
-         q9wAL6Ab6zB5GZDr7sMbI/0zUBnywe2Ra7mz3Lcjn5b2k9/Z2JhZaVsmCbTrIs+8CoaI
-         QHmdFVL/fP5K4m2Ft8IsiXi53TNvumHWP/kvnAAInAKs7jfmOlEXlpdZNcIAj1EQBTK9
-         hTvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707148209; x=1707753009;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LqF9zLVi16rKyrWpAJ0bhub0WiHD3paBZjfcYyqlQjA=;
-        b=RcnptAOdm3ATa5HepPCDWUKz9i8OAWxUfMtn5JX8jPNbAf3QHlK+iveMs/YvBuxNLZ
-         GrDPkDYTXYSBw6Vk5jsXpkBHNKXsWxcxzWdtbBfYuFjAH8ud++plEbslYYJ0VhG1mpTk
-         dgvEMMVY25c5wJBt0At0ZMRkVO8/HJ6UVZyXuv0U+z1jVvHhFpQoxLhgLNkUi0m1RXtM
-         tDA3uWJFBREsMjw8K0vnjGBjDfgEjQ2EBqoH8FEzMujPDbWfDyWu8RfIPLSTWb1+cSfC
-         zrjFbuhWuxm/HSYk4nSp+5U+ItW2DGg2MNbqoznHqykJ2JB2znXNlE4SX3zanBl3FXOa
-         LAMw==
-X-Gm-Message-State: AOJu0YwoNfLXFf84X6JWcDg/ypoblPZ2IUgRABXcXgUkImxGosPCfVE9
-	PuOlmkMXkJw4bQZg4j4QmnF2rPV8vedhOEmqj9Ek3CUh/g212QZgtPIdqvAWxu+BLfowYJu4M74
-	Vkuypx+pqJefrTlxnFcrDYT5SsA==
-X-Google-Smtp-Source: AGHT+IF6Fis7YrbjmpE2NhJ3s+XZIGQdOXc4JxZ0aS+q/QDNDI/ezUPodv7GcBiAVYfBKU0ROCQDSTmv9hF+DkEZOzA=
-X-Received: from mattgilbride.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:2ac5])
- (user=mattgilbride job=sendgmr) by 2002:a05:6902:993:b0:dc2:25fd:eff1 with
- SMTP id bv19-20020a056902099300b00dc225fdeff1mr454327ybb.4.1707148209024;
- Mon, 05 Feb 2024 07:50:09 -0800 (PST)
-Date: Mon, 05 Feb 2024 15:50:04 +0000
-In-Reply-To: <20240205-b4-rbtree-v1-0-995e3eee38c0@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W854IR28"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C69C433F1;
+	Mon,  5 Feb 2024 15:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707148216;
+	bh=6aaZ8uJ98XEilRCdTFHbcsja0/sHt6JhMUEAjwCNq18=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W854IR28Ybufk1yNVM4FlXNqDu6/4P8n54aADpEZx0fgXT3MIsUNmbHWYMcYlpNoy
+	 PkuhW+dcn9c6vKz+8Bb+BMBQhf1aKmWh3F4zAjsRRBqoYSYVKzKHr30SaJhrEUctek
+	 9W6STI8+TSyx73tVA3/+VjAD6bdDilXom3Y0+aiYVNr5prGZd2faowemSvBS9OWAUs
+	 u//x7a0MvXJru0vxtgY3iu1dyV5f3GFUh7i5mVceOhL5qQCd0ledwkf5qvFiwnDJob
+	 WKs1y9f+ZFunXL1bQdEdY6cbPSVL7UjljY5lTJFGRAL88gWlMG2XioLSWimlJ3XSk0
+	 gnV87k6YMFI3Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rX1Eb-000T9U-6N;
+	Mon, 05 Feb 2024 15:50:13 +0000
+Date: Mon, 05 Feb 2024 15:50:12 +0000
+Message-ID: <861q9q7vwr.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: James Clark <james.clark@arm.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	broonie@kernel.org,
+	suzuki.poulose@arm.com,
+	acme@kernel.org,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Rob Herring
+ <robh@kernel.org>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	Jintack Lim <jintack.lim@linaro.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Kristina Martsenko <kristina.martsenko@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Jing Zhang
+ <jingzhangos@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] arm64: KVM: Use shared area to pass PMU event state to hypervisor
+In-Reply-To: <c773393c-221e-edd1-00b7-0ce6a2481c15@arm.com>
+References: <20240104162714.1062610-1-james.clark@arm.com>
+	<20240104162714.1062610-3-james.clark@arm.com>
+	<Zb1mCCi13AJ_YjFZ@linux.dev>
+	<8a908ee8-620a-d9c2-734b-5a6402950072@arm.com>
+	<ZcDc8-FQo8wKavA4@linux.dev>
+	<867cjj6ohz.wl-maz@kernel.org>
+	<ZcDg1sP3EYZG-i_3@linux.dev>
+	<a7cc7791-c476-fd81-b79d-a151293b8302@arm.com>
+	<864jen6k0i.wl-maz@kernel.org>
+	<c773393c-221e-edd1-00b7-0ce6a2481c15@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240205-b4-rbtree-v1-0-995e3eee38c0@google.com>
-X-Mailer: b4 0.12.3
-Message-ID: <20240205-b4-rbtree-v1-4-995e3eee38c0@google.com>
-Subject: [PATCH 4/6] rust: rbtree: add `RBTreeIteratorMut`
-From: mattgilbride@google.com
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?utf-8?q?Arve_Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Christian Brauner <brauner@kernel.org>
-Cc: Rob Landley <rob@landley.net>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Michel Lespinasse <michel@lespinasse.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Matt Gilbride <mattgilbride@google.com>, 
-	Matt Gilbride <mattgilbride@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: james.clark@arm.com, oliver.upton@linux.dev, coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, broonie@kernel.org, suzuki.poulose@arm.com, acme@kernel.org, james.morse@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, anshuman.khandual@arm.com, robh@kernel.org, miguel.luis@oracle.com, jintack.lim@linaro.org, ardb@kernel.org, mark.rutland@arm.com, arnd@arndb.de, vdonnefort@google.com, kristina.martsenko@arm.com, tabba@google.com, joey.gouly@arm.com, akihiko.odaki@daynix.com, jingzhangos@google.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
+On Mon, 05 Feb 2024 15:37:34 +0000,
+James Clark <james.clark@arm.com> wrote:
+> 
+> 
+> 
+> On 05/02/2024 14:52, Marc Zyngier wrote:
+> > On Mon, 05 Feb 2024 14:17:10 +0000,
+> > James Clark <james.clark@arm.com> wrote:
+> >>
+> >> On 05/02/2024 13:21, Oliver Upton wrote:
+> >>> On Mon, Feb 05, 2024 at 01:15:36PM +0000, Marc Zyngier wrote:
+> >>>> On Mon, 05 Feb 2024 13:04:51 +0000,
+> >>>> Oliver Upton <oliver.upton@linux.dev> wrote:
+> >>>>>
+> >>>>> Unless someone has strong opinions about making this work in protected
+> >>>>> mode, I am happy to see tracing support limited to the 'normal' nVHE
+> >>>>> configuration. The protected feature as a whole is just baggage until
+> >>>>> upstream support is completed.
+> >>>>
+> >>>> Limiting tracing to non-protected mode is a must IMO. Allowing tracing
+> >>>> when pKVM is enabled is a sure way to expose secrets that should
+> >>>> stay... secret. The only exception I can think of is when
+> >>>> CONFIG_NVHE_EL2_DEBUG is enabled, at which point all bets are off.
+> >>>
+> >>> Zero argument there :) I left off the "and PMU" part of what I was
+> >>> saying, because that was a feature that semi-worked in protected mode
+> >>> before VM/VCPU shadowing support landed.
+> >>>
+> >>
+> >> In that case I can hide all this behind CONFIG_NVHE_EL2_DEBUG for pKVM.
+> >> This will also have the effect of disabling PMU again for pKVM because I
+> >> moved that into this new shared area.
+> > 
+> > I'm not sure what you have in mind, but dropping PMU support for
+> > non-protected guests when protected-mode is enabled is not an
+> > acceptable outcome.
+> > 
+> > Hiding the trace behind a debug option is fine as this is a global
+> > setting that has no userspace impact, but impacting guests isn't.
+> > 
+> > 	M.
+> > 
+> 
+> Hmmm in that case if there's currently no way to distinguish between
+> normal VMs and pVMs in protected-mode then what I was thinking of
+> probably won't work.
 
-Add mutable Iterator implementation (`RBTreeIteratorMut`) for `RBTree`,
-allowing iteration over (key, value) pairs in key order. Only values are
-mutable, as mutating keys implies modifying a node's position in the tree.
+Have you looked? kvm_vm_is_protected() has been in for a while, even
+if that's not a lot. The upcoming code will flesh this helper out,
 
-Mutable iteration is used by the binder driver during shutdown to
-clean up the tree maintained by the "range allocator" [1].
-
-Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-6-08ba9197f637@google.com/ [1]
-Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Signed-off-by: Matt Gilbride <mattgilbride@gmail.com>
----
- rust/kernel/rbtree.rs | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-index 29d8c2f6bd7b..db17734b3fa1 100644
---- a/rust/kernel/rbtree.rs
-+++ b/rust/kernel/rbtree.rs
-@@ -221,6 +221,15 @@ pub fn iter(&self) -> RBTreeIterator<'_, K, V> {
-         }
-     }
- 
-+    /// Returns a mutable iterator over the tree nodes, sorted by key.
-+    pub fn iter_mut(&mut self) -> RBTreeIteratorMut<'_, K, V> {
-+        RBTreeIteratorMut {
-+            _tree: PhantomData,
-+            // SAFETY: `root` is valid as it's embedded in `self` and we have a valid `self`.
-+            next: unsafe { bindings::rb_first(&self.root) },
-+        }
-+    }
-+
-     /// Returns an iterator over the keys of the nodes in the tree, in sorted order.
-     pub fn keys(&self) -> impl Iterator<Item = &'_ K> {
-         self.iter().map(|(k, _)| k)
-@@ -230,6 +239,11 @@ pub fn keys(&self) -> impl Iterator<Item = &'_ K> {
-     pub fn values(&self) -> impl Iterator<Item = &'_ V> {
-         self.iter().map(|(_, v)| v)
-     }
-+
-+    /// Returns a mutable iterator over the values of the nodes in the tree, sorted by key.
-+    pub fn values_mut(&mut self) -> impl Iterator<Item = &'_ mut V> {
-+        self.iter_mut().map(|(_, v)| v)
-+    }
- }
- 
- impl<K, V> RBTree<K, V>
-@@ -438,6 +452,53 @@ fn next(&mut self) -> Option<Self::Item> {
-     }
- }
- 
-+impl<'a, K, V> IntoIterator for &'a mut RBTree<K, V> {
-+    type Item = (&'a K, &'a mut V);
-+    type IntoIter = RBTreeIteratorMut<'a, K, V>;
-+
-+    fn into_iter(self) -> Self::IntoIter {
-+        self.iter_mut()
-+    }
-+}
-+
-+/// A mutable iterator over the nodes of a [`RBTree`].
-+///
-+/// Instances are created by calling [`RBTree::iter_mut`].
-+pub struct RBTreeIteratorMut<'a, K, V> {
-+    _tree: PhantomData<&'a RBTree<K, V>>,
-+    next: *mut bindings::rb_node,
-+}
-+
-+// SAFETY: An [`RBTree`] allows the same kinds of access to its values that a struct allows to its
-+// fields, so we use the same Send condition as would be used for a struct with K and V fields.
-+unsafe impl<'a, K: Send, V: Send> Send for RBTreeIteratorMut<'a, K, V> {}
-+
-+// SAFETY: An [`RBTree`] allows the same kinds of access to its values that a struct allows to its
-+// fields, so we use the same Sync condition as would be used for a struct with K and V fields.
-+unsafe impl<'a, K: Sync, V: Sync> Sync for RBTreeIteratorMut<'a, K, V> {}
-+
-+impl<'a, K, V> Iterator for RBTreeIteratorMut<'a, K, V> {
-+    type Item = (&'a K, &'a mut V);
-+
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.next.is_null() {
-+            return None;
-+        }
-+
-+        // SAFETY: All links fields we create are in a `Node<K, V>`.
-+        let cur = unsafe { crate::container_of!(self.next, Node<K, V>, links) }.cast_mut();
-+
-+        // SAFETY: The reference to the tree used to create the iterator outlives the iterator, so
-+        // the tree cannot change (except for the value of previous nodes, but those don't affect
-+        // the iteration process). By the tree invariant, all nodes are valid.
-+        self.next = unsafe { bindings::rb_next(self.next) };
-+
-+        // SAFETY: By the same reasoning above, it is safe to dereference the node. Additionally,
-+        // it is ok to return a reference to members because the iterator must outlive it.
-+        Some(unsafe { (&(*cur).key, &mut (*cur).value) })
-+    }
-+}
-+
- /// A memory reservation for a red-black tree node.
- ///
- /// It contains the memory needed to hold a node that can be inserted into a red-black tree. One
+	M.
 
 -- 
-2.43.0.594.gd9cf4e227d-goog
-
+Without deviation from the norm, progress is not possible.
