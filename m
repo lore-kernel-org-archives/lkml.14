@@ -1,178 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D284C2C848;
-	Mon,  5 Feb 2024 15:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5585524B50;
+	Mon,  5 Feb 2024 15:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707145505; cv=none; b=s/X0UKP6h24xxyULZt5GeotqNCwG3+rU2DX3zovsTIPVRJWXyiBvGD/4sFRqXPiUEKBHjxkBvu1U0JONVyXOLdQRaFAiEUCN/YEK+WWULfov+Zf2oYkU9yK7f3ougbnp+Zmfo0BktMi+BavCKFcp4B272CzzJIcDhAPd7J42qYg=
+	t=1707145720; cv=none; b=JJBINrLxKUiZ6LLum3sVS5VXlg8mHGCTMEAJ5suwgCJN4YZQWxFrWbQdEzHz+0ayjGwmE1gS2/oOKjjGPtaGmQAehCwSGu2QL8GE4/wrDzOgybhjbRosWw6sFIBx9jP/xvQaL2jA5vHWkjU0CD/jYgn4KmAD/sy8fKBsISJsnOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707145505; c=relaxed/simple;
-	bh=Yfk/4+9czy4PCreT5ugg9ESrBcCZP7CYrSDkqcGFwJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X2x4AhYQ0j3KGL+RrSJF3nylu+4VmseY48EUkSXUc52Csl1r6UOectgSZMAQ2C2/Xer8VNSKoJMjcitE+c4OnbJcIZzzVxf5+LXRm9HZYk7XDS85RZn7Edzq0/Q+ZRItYaGGqDK6cU26v5kKWgKdhG0Sout97d8hG20lD4Dqvdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmqBH4uM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707145720; c=relaxed/simple;
+	bh=R1O30Os6ncIReZnfo4sDU46nxhgxKyi/5Cr1MDh1cEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fYzymi06j1zNlrVlDAkNFOWnBFYjuT0IJi7TMStsqGInB46F4xVLNL1SSUDVpGPAYZstm+36FcpkwowFirrzhyelU4zCnLuqsXy3wzTWYZTDy7Q4eFTXnwXTD3mvYBjaY1Zh5t2qw+Hg43kd5eOyDhxOf2q2q/nClS4RFPocnKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K8K0fpAO; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmqBH4uM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178D5C433C7;
-	Mon,  5 Feb 2024 15:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707145505;
-	bh=Yfk/4+9czy4PCreT5ugg9ESrBcCZP7CYrSDkqcGFwJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EmqBH4uM3l0y4S8L/czVQGJzlHiBpNTnZ6i8odDonDEDNBBLlWz8vxea17SptzhIX
-	 BZkqhHIvNIIX89nGFysge/VSytT4gmEjTOsk8U9OxSj9vdMOmt637BsV85TfjxzCjD
-	 zQS3OcXGg+Ps1pkpjZdyitTGjyeGNvJJdmLADxB2sLcUqypoEHAyFv9wTIAWovrvXn
-	 nhs7Bku0G+ZYk9W4x8hNhrKfumASXnwLGEUVc0IqxCPEF8B3wuBHE5DI5Ws3HjgPu1
-	 2tCqFS8MXiBWX1u25XletqA9Q51p3HKziPE7kc/e4qF8hL68HYnmeWzqJl8OD3IGQN
-	 tQUsZAzVbLgcw==
-Date: Mon, 5 Feb 2024 15:05:02 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: conor+dt@kernel.org, krzysztof.kozlowski@linaro.org,
-	devicetree@vger.kernel.org, robh+dt@kernel.org,
-	andriy.shevchenko@linux.intel.com, linux-sound@vger.kernel.org,
-	liam.r.girdwood@intel.com, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, kevin-lu@ti.com, baojun.xu@ti.com,
-	v-po@ti.com, navada@ti.com, perex@perex.cz, j-mcpherson@ti.com,
-	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
-	mohit.chawla@ti.com, soyer@irl.hu, jkhuang3@ti.com, tiwai@suse.de,
-	pdjuandi@ti.com, manisha.agrawal@ti.com, s-hari@ti.com,
-	aviel@ti.com, hnagalla@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v3 1/4] ASoc: PCM6240: Create PCM6240 Family driver code
-Message-ID: <ZcD5HjnxSJkQ6QYT@finisterre.sirena.org.uk>
-References: <20240203030504.1724-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K8K0fpAO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707145718; x=1738681718;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=R1O30Os6ncIReZnfo4sDU46nxhgxKyi/5Cr1MDh1cEI=;
+  b=K8K0fpAOIF7sD0K7iOACkMli20wb3SPQn93E/6UFaU5tcGTKl6HqvBkC
+   pN/slB3pb+aZl2ALE+KGWB05rlYhAJMt7Ih8ZScpdnA5RyaFeZpTDbkeA
+   GT9OmL+/AmuIEXmCpQCKM6iwBBWvgqIx+wekP0Q+36FkL6Jpvu1kQsy5f
+   YdDJwmWPqcGqwj6ZU+56xpRGMX17I6Ju1PJ7ktwb8ugkDqrW9BlRq0MyN
+   I+TSe2TT6ulGS31nosVNFqbENHNGS6i4FEajLVs3LGHbua2lKr7HmCyP4
+   wb0QbkkY8vk68Q/9mvHdHWPI37tx4Rx1fwfCD0Fs9TIS/mbtMoaQ2Ao8G
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="686568"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="686568"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 07:08:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="1048740"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 07:08:30 -0800
+Received: from [10.212.74.66] (kliang2-mobl1.ccr.corp.intel.com [10.212.74.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1A7EC580D9C;
+	Mon,  5 Feb 2024 07:08:28 -0800 (PST)
+Message-ID: <a5e8e3fe-a8c2-45e7-9139-84967cba06eb@linux.intel.com>
+Date: Mon, 5 Feb 2024 10:08:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="GVpQNZhUL4tDuEAO"
-Content-Disposition: inline
-In-Reply-To: <20240203030504.1724-1-shenghao-ding@ti.com>
-X-Cookie: You might have mail.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/uncore: avoid null-ptr-deref on error in
+ pmu_alloc_topology
+To: Fedor Pchelkin <pchelkin@ispras.ru>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
+ Alexander Antonov <alexander.antonov@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20240204134841.80003-1-pchelkin@ispras.ru>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240204134841.80003-1-pchelkin@ispras.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---GVpQNZhUL4tDuEAO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Sat, Feb 03, 2024 at 11:04:59AM +0800, Shenghao Ding wrote:
+On 2024-02-04 8:48 a.m., Fedor Pchelkin wrote:
+> If topology[die] array allocation fails then topology[die][idx] elements
+> can't be accessed on error path.
+> 
+> Checking this on the error path probably looks more readable than
+> decrementing the counter in the allocation loop.
+> 
+> Found by Linux Verification Center (linuxtesting.org).
+> 
+> Fixes: 4d13be8ab5d4 ("perf/x86/intel/uncore: Generalize IIO topology support")
+> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> ---
 
-> +static int pcmdev_dev_update_bits(struct pcmdevice_priv *pcm_dev,
-> +	unsigned int dev_no, unsigned int reg, unsigned int mask,
-> +	unsigned int value)
-> +{
-> +	struct regmap *map = pcm_dev->regmap;
-> +	int ret;
-> +
-> +	if (dev_no >= pcm_dev->ndev) {
-> +		dev_err(pcm_dev->dev, "%s, no such channel(%d)\n", __func__,
-> +			dev_no);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = pcmdev_change_dev(pcm_dev, dev_no);
-> +	if (ret < 0) {
-> +		dev_err(pcm_dev->dev, "%s, E=%d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_update_bits(map, reg, mask, value);
-> +	if (ret < 0)
-> +		dev_err(pcm_dev->dev, "update_bits ERROR, E=%d\n",
-> +			ret);
-> +
-> +	return ret;
-> +}
+It seems the code just jumps to the wrong kfree on the error path.
+Does the below patch work?
 
-retmap_update_bits() will return 0 on a successful write...
+diff --git a/arch/x86/events/intel/uncore_snbep.c
+b/arch/x86/events/intel/uncore_snbep.c
+index 8250f0f59c2b..5481fd00d861 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3808,7 +3808,7 @@ static int pmu_alloc_topology(struct
+intel_uncore_type *type, int topology_type)
+ 	for (die = 0; die < uncore_max_dies(); die++) {
+ 		topology[die] = kcalloc(type->num_boxes, sizeof(**topology), GFP_KERNEL);
+ 		if (!topology[die])
+-			goto clear;
++			goto free_topology;
+ 		for (idx = 0; idx < type->num_boxes; idx++) {
+ 			topology[die][idx].untyped = kcalloc(type->num_boxes,
+ 							     topology_size[topology_type],
+@@ -3827,6 +3827,7 @@ static int pmu_alloc_topology(struct
+intel_uncore_type *type, int topology_type)
+ 			kfree(topology[die][idx].untyped);
+ 		kfree(topology[die]);
+ 	}
++free_topology:
+ 	kfree(topology);
+ err:
+ 	return -ENOMEM;
 
-> +static int pcmdev_put_volsw(struct snd_kcontrol *kcontrol,
-> +	struct snd_ctl_elem_value *ucontrol, int vol_ctrl_type)
-> +{
+Thanks,
+Kan
 
-> +	err = pcmdev_dev_update_bits(pcm_dev, dev_no, reg, val_mask, val);
-> +	if (err)
-> +		dev_err(pcm_dev->dev, "%s:update_bits, ERROR, E=%d\n",
-> +			__func__, err);
-> +
-> +	mutex_unlock(&pcm_dev->codec_lock);
-> +	return err;
-
-...so this and other controls will return 0 when the value changes,
-brekaing event generation.  Please use the mixer-test kselftest to check
-for this and other issues.
-
-> +static int pcmdevice_codec_probe(struct snd_soc_component *codec)
-> +{
-
-> +	/* device-name[defined in pcmdevice_i2c_id]-i2c-bus_id[0,1,...,N]-
-> +	 * sum[1,2,...,4]dev-reg.bin stores the firmware including register
-> +	 * setting and params for different filters inside chips, it must be
-> +	 * copied into firmware folder. The same types of pcmdevices sitting
-> +	 * on the same i2c bus will be aggregated as one single codec,
-> +	 * all of them share the same bin file.
-> +	 */
-> +	scnprintf(pcm_dev->regbin_name, PCMDEVICE_REGBIN_FILENAME_LEN,
-> +		"%s-i2c-%d-%udev-reg.bin", pcm_dev->dev_name, adap->nr,
-> +		pcm_dev->ndev);
-> +
-> +	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_UEVENT,
-> +		pcm_dev->regbin_name, pcm_dev->dev, GFP_KERNEL, pcm_dev,
-> +		pcmdev_regbin_ready);
-> +	if (ret) {
-> +		dev_err(pcm_dev->dev, "load %s error = %d\n",
-> +			pcm_dev->regbin_name, ret);
-> +		goto out;
-> +	}
-
-This does still seem like it'd be better placed in the main probe()
-function with the component registration happening once firmware is
-ready so...
-
-> +static int pcmdevice_startup(struct snd_pcm_substream *substream,
-> +	struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_component *codec = dai->component;
-> +	struct pcmdevice_priv *pcm_priv = snd_soc_component_get_drvdata(codec);
-> +
-> +	if (pcm_priv->fw_state != PCMDEVICE_FW_LOAD_OK) {
-> +		dev_err(pcm_priv->dev, "DSP bin file not loaded\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	return 0;
-> +}
-
-...issues like this can be avoided.  The device is fundamentally reliant
-on the firmware being there AFAICT.
-
-> +
-> +		} else
-> +			dev_err(pcm_dev->dev, "%s: GPIO %d request error\n",
-> +				__func__, pcm_dev->irq_info.gpio);
-> +	} else
-> +		dev_err(pcm_dev->dev, "Looking up irq-gpio failed %d\n",
-> +			pcm_dev->irq_info.gpio);
-
-If one side of the if/else has a braces both should.
-
---GVpQNZhUL4tDuEAO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXA+QYACgkQJNaLcl1U
-h9Baxwf/UwNBAiiC4ati9dw7ukq1Tllnshu6jV0qXya/RRLvUIki4AsbMjqg/W3V
-Qc3e6dtcKLCBYGDxcNqpJRQDCwTjbusYvWvF5ZcXrPoLDVSVeInIctkUALopLlFs
-1T2UY86bZ/ikv/4NJI/qc6r04ibK+cEa1TTjfA1j/GWEtzKBE4AU6qMhwN2BnRm2
-ADElVSM3dbrkM5hC9N+/kef+gc+wc3kfVPuYu/w1UyHLIDb7vIsQ47DKp+VJabvJ
-t6eLFIEu1B+9US29BUEmcrVkK2zA7czWxiD8YpOjX6mMA9X0aPkFfBiV3TNpmECB
-qMPlBr4F3cDcGCioXrh0JkW/badInA==
-=BXQw
------END PGP SIGNATURE-----
-
---GVpQNZhUL4tDuEAO--
+>  arch/x86/events/intel/uncore_snbep.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index a96496bef678..7d4deb9126be 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -3831,9 +3831,11 @@ static int pmu_alloc_topology(struct intel_uncore_type *type, int topology_type)
+>  	return 0;
+>  clear:
+>  	for (; die >= 0; die--) {
+> -		for (idx = 0; idx < type->num_boxes; idx++)
+> -			kfree(topology[die][idx].untyped);
+> -		kfree(topology[die]);
+> +		if (topology[die]) {
+> +			for (idx = 0; idx < type->num_boxes; idx++)
+> +				kfree(topology[die][idx].untyped);
+> +			kfree(topology[die]);
+> +		}
+>  	}
+>  	kfree(topology);
+>  err:
