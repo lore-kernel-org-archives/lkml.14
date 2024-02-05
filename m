@@ -1,157 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B9D125BC;
-	Mon,  5 Feb 2024 09:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A07512E4E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707123674; cv=none; b=EwbM/oX0G691LsOpVQ3oDA0AqP1hVpbzPmkzNvTlXiHkSBdVyMPDrYSKM5Yn/ULl7jHVwC/bkBsJZUsC2JNHP6TO5fOp8Q8P1k9t3ZvJ7TU02WiBEVvv5f0/GrxCAjTRfx8GKDEvoOdtx7jRsTHo72Dv5EryOK1LPFrIu9RhU/8=
+	t=1707123706; cv=none; b=d5VgQCehIdrdHMl/UD5jCiAzseC7azoVXGG02UKkVnYBKAJUdwfdrmB9cQSCsN+jv7/XrPUL/lca4iFVUhROmeD+l8cpe+00VDBeICp3OV80mWZPVo1/8SZ7VPiF0K8z+4k0BJlekYVo/7uoZUOS7Ah1OlVeP1sfcC0a2i80Q5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707123674; c=relaxed/simple;
-	bh=MtCVmkyd73igsHfqhm9GVwH5JT8L8I7oiOceUhAzTic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s6NfbmA0+ZRwO8Qma/ijtP0UFKqsrmFGw1wBVbV1fjPt23VmwwZRr92qHwiImtTcgZDbLMXKXl7qXsyQpqgUlKET3b7RCiD1+Wl43tEK1dDItMLw7hhczekq9ZXxOTNKRaXutz4y831fWhZh4zv4HILkK97cBuL51SPX85iB3qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdKnnOnG; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdKnnOnG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707123672; x=1738659672;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MtCVmkyd73igsHfqhm9GVwH5JT8L8I7oiOceUhAzTic=;
-  b=FdKnnOnGi7I6RLoz9/EUW4nBr2skpAaowep/Wh5vu1v1KVslKXs9vuZy
-   8pGLCL5+bRcIt35a9JJ3ccHMB8qxfxIw3V42e8TyLD5dkTvwGEj1vs33b
-   WHAcfXqznxiZAzZU2cyJ2AkDu5pjNgsIwTdmU//X6Xe2av3hAaruFu1E3
-   x/AvHp6aYzr1Isaz8/Egl/SVyo9+UjiOdW2BBigMFGrzcLqRLvBd/e44t
-   fNRxWbIqlhcVMr2Wv/phUQ7/xdMJftcG6z0MLBM+tP2AGT/h64C22HZoo
-   eXMUFnOcx9xLO3y7t354Z8i0bCv1j/jdww0zl2sW8omTWQyXbxo+b5H20
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="435614850"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="435614850"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 01:01:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="933099575"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="933099575"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 01:01:05 -0800
-Message-ID: <aaa76d7a-4299-4e1c-83f1-cbbea763927f@linux.intel.com>
-Date: Mon, 5 Feb 2024 10:01:03 +0100
+	s=arc-20240116; t=1707123706; c=relaxed/simple;
+	bh=Y1tvMdcD1KcRa8ihdcMDLe2VTaYbBW2VHfg53zzTNxA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qKidPs9heHWuItRHwuqyJnFFAXC+SmAjONymWxQzFK2kHlfHplAl+ZQ7MagtqspS4DXwFAC0n01z3JIacerLdBXTUGH73e/dpZbO6DkJjc23+Rg8bg0oDP2c6bhl0n8lTbF7pS6Z72l/qDFrFBn87rSVc52vuv2Bg/rhp4iLmoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363abe44869so29793035ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:01:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707123703; x=1707728503;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DL7sT0R0lCMePu4/4pnetWzg+tj7VTTtQXhE0cYtBTE=;
+        b=tmZo1llNF1YBSlkzC905wDRLKpFHcBHdcZwK2bEr/ox1N3c8hf/PXG1chsTwvTMvZc
+         KqqcJ3cbn8ZNgDpkKH6aUrGzT4CMBhFVcy/U0H1uYaoSR4Tits5v4jN9gBM/toXDkWXR
+         7vFdUyB0LmAFF5YgNft5u2BkbV9tXnKHXXv6ytu7KEmMZ++xLGVPTTgwkHfuumX/lYpS
+         JWcksLTZuVgaD2GR4K55TLIi1C5ZVVbhqS26vYI09VGe0qZjqKMne9LaiQxn5nLQ0Jqr
+         r6vrZg1Pnb9Nij6qWpaQcI9NZEOt1ZlOtpwRuXcpyTJ1shXGmZ8rmLMwD5HWW4ZrOlRD
+         aYsA==
+X-Gm-Message-State: AOJu0YxouJyYsRpjGREsE/wpOCMb6VWlbkv8EY5sbR2iIiRT56bIP8gi
+	/7Z0MVayUyNH4wTyhIQQeg2kkGxUgEksP1d3uGe2n2Ggjgt5gJmQWPUHJECeWuMz7efsNLf1tbW
+	b20qiATx9BZlaqNoWOS5P0YKyLfOKr5DMx7R75XxNh9ZmVQiFKx2AhqA=
+X-Google-Smtp-Source: AGHT+IGtQjw4M7O1hHR4+f3rLVTV1yft0FTQPoMe0O5W1v3q58JneTGq6ZgeJuRNi5dOMcqrrcyOhHSsvN+fyCo/ZlmlbC7Vcj83
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 50/53] ALSA: usb-audio: Allow for rediscovery of
- connected USB SND devices
-Content-Language: en-US
-To: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
- mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
- corbet@lwn.net, lgirdwood@gmail.com, andersson@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, gregkh@linuxfoundation.org,
- Thinh.Nguyen@synopsys.com, broonie@kernel.org, bgoswami@quicinc.com,
- tiwai@suse.com, robh+dt@kernel.org, konrad.dybcio@linaro.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- alsa-devel@alsa-project.org
-References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
- <20240203023645.31105-51-quic_wcheng@quicinc.com>
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20240203023645.31105-51-quic_wcheng@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:216a:b0:35f:eb20:3599 with SMTP id
+ s10-20020a056e02216a00b0035feb203599mr553015ilv.2.1707123703648; Mon, 05 Feb
+ 2024 01:01:43 -0800 (PST)
+Date: Mon, 05 Feb 2024 01:01:43 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f19a1406109eb5c5@google.com>
+Subject: [syzbot] [ext4?] general protection fault in __block_commit_write
+From: syzbot <syzbot+18df508cf00a0598d9a6@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/3/2024 3:36 AM, Wesley Cheng wrote:
-> In case of notifying SND platform drivers of connection events, some of
-> these use cases, such as offloading, require an ASoC USB backend device to
-> be initialized before the events can be handled.  If the USB backend device
-> has not yet been probed, this leads to missing initial USB audio device
-> connection events.
-> 
-> Expose an API that traverses the usb_chip array for connected devices, and
-> to call the respective connection callback registered to the SND platform
-> driver.
-> 
-> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> ---
->   sound/usb/card.c                  | 19 +++++++++++++++++++
->   sound/usb/card.h                  |  2 ++
->   sound/usb/qcom/qc_audio_offload.c |  2 ++
->   3 files changed, 23 insertions(+)
-> 
-> diff --git a/sound/usb/card.c b/sound/usb/card.c
-> index 11b827b7a2a5..995b2df676ab 100644
-> --- a/sound/usb/card.c
-> +++ b/sound/usb/card.c
-> @@ -202,6 +202,25 @@ struct snd_usb_stream *snd_usb_find_suppported_substream(int card_idx,
->   }
->   EXPORT_SYMBOL_GPL(snd_usb_find_suppported_substream);
->   
-> +/*
-> + * in case the platform driver was not ready at the time of USB SND
-> + * device connect, expose an API to discover all connected USB devices
-> + * so it can populate any dependent resources/structures.
-> + */
-> +void snd_usb_rediscover_devices(void)
-> +{
-> +	int i;
-> +
-> +	mutex_lock(&register_mutex);
-> +	for (i = 0; i < SNDRV_CARDS; i++) {
-> +		if (usb_chip[i])
-> +			if (platform_ops && platform_ops->connect_cb)
-> +				platform_ops->connect_cb(usb_chip[i]);
+Hello,
 
-if inside if, it can just be && or maybe move callback check before 
-mutex lock and just return early if it is not present?
+syzbot found the following issue on:
 
-> +	}
-> +	mutex_unlock(&register_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(snd_usb_rediscover_devices);
-> +
->   /*
->    * disconnect streams
->    * called from usb_audio_disconnect()
-> diff --git a/sound/usb/card.h b/sound/usb/card.h
-> index 6d59995440c3..3a0d68f453a1 100644
-> --- a/sound/usb/card.h
-> +++ b/sound/usb/card.h
-> @@ -222,11 +222,13 @@ int snd_usb_unregister_platform_ops(void);
->   #if IS_ENABLED(CONFIG_SND_USB_AUDIO)
->   struct snd_usb_stream *snd_usb_find_suppported_substream(int card_idx,
->   			struct snd_pcm_hw_params *params, int direction);
-> +void snd_usb_rediscover_devices(void);
->   #else
->   static struct snd_usb_stream *snd_usb_find_suppported_substream(int card_idx,
->   			struct snd_pcm_hw_params *params, int direction)
->   {
->   	return NULL;
->   }
-> +static void snd_usb_rediscover_devices(void) { }
->   #endif /* IS_ENABLED(CONFIG_SND_USB_AUDIO) */
->   #endif /* __USBAUDIO_CARD_H */
-> diff --git a/sound/usb/qcom/qc_audio_offload.c b/sound/usb/qcom/qc_audio_offload.c
-> index 08af82ec22ad..9b0f98600e58 100644
-> --- a/sound/usb/qcom/qc_audio_offload.c
-> +++ b/sound/usb/qcom/qc_audio_offload.c
-> @@ -1867,6 +1867,8 @@ static int __init qc_usb_audio_offload_init(void)
->   	if (ret < 0)
->   		goto release_qmi;
->   
-> +	snd_usb_rediscover_devices();
-> +
->   	return 0;
->   
->   release_qmi:
-> 
+HEAD commit:    56897d51886f Merge tag 'trace-v6.8-rc2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1550b18fe80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b60b985eda147877
+dashboard link: https://syzkaller.appspot.com/bug?extid=18df508cf00a0598d9a6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166f7aa8180000
 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1c0cc47da79d/disk-56897d51.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ef9122f0ce05/vmlinux-56897d51.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8e2856cfcf95/bzImage-56897d51.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/5175bbf40ca7/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+18df508cf00a0598d9a6@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 2048
+general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 0 PID: 6860 Comm: syz-executor.0 Not tainted 6.8.0-rc2-syzkaller-00397-g56897d51886f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:__block_commit_write+0x61/0x270 fs/buffer.c:2165
+Code: ea 03 80 3c 02 00 0f 85 16 02 00 00 48 8b 44 24 18 4c 8b 78 28 48 b8 00 00 00 00 00 fc ff df 49 8d 7f 20 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e4 01 00 00 41 8b 47 20 4c 89 fb 45 31 f6 31 ed
+RSP: 0018:ffffc90008947918 EFLAGS: 00010212
+RAX: dffffc0000000000 RBX: ffffea00019b1180 RCX: ffffffff82086d31
+RDX: 0000000000000004 RSI: ffffffff820823e4 RDI: 0000000000000020
+RBP: 0000000000000040 R08: 0000000000000004 R09: 0000000000000040
+R10: 0000000000000040 R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000040 R14: 0000000000000040 R15: 0000000000000000
+FS:  00007f6f6a4016c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020007640 CR3: 0000000015340000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ block_write_end+0xc8/0x250 fs/buffer.c:2251
+ ext4_write_end+0x277/0xed0 fs/ext4/inode.c:1287
+ ext4_da_write_end+0xa64/0xce0 fs/ext4/inode.c:3020
+ generic_perform_write+0x33b/0x620 mm/filemap.c:3941
+ ext4_buffered_write_iter+0x11f/0x3d0 fs/ext4/file.c:299
+ ext4_file_write_iter+0x819/0x1960 fs/ext4/file.c:698
+ call_write_iter include/linux/fs.h:2085 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0x6e1/0x1110 fs/read_write.c:590
+ ksys_write+0x12f/0x260 fs/read_write.c:643
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd8/0x270 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f6f6967dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6f6a4010c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f6f697abf80 RCX: 00007f6f6967dda9
+RDX: 0000000000000040 RSI: 0000000020002ac0 RDI: 0000000000000005
+RBP: 00007f6f696ca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f6f697abf80 R15: 00007ffc14067c28
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__block_commit_write+0x61/0x270 fs/buffer.c:2165
+Code: ea 03 80 3c 02 00 0f 85 16 02 00 00 48 8b 44 24 18 4c 8b 78 28 48 b8 00 00 00 00 00 fc ff df 49 8d 7f 20 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e4 01 00 00 41 8b 47 20 4c 89 fb 45 31 f6 31 ed
+RSP: 0018:ffffc90008947918 EFLAGS: 00010212
+RAX: dffffc0000000000 RBX: ffffea00019b1180 RCX: ffffffff82086d31
+RDX: 0000000000000004 RSI: ffffffff820823e4 RDI: 0000000000000020
+RBP: 0000000000000040 R08: 0000000000000004 R09: 0000000000000040
+R10: 0000000000000040 R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000040 R14: 0000000000000040 R15: 0000000000000000
+FS:  00007f6f6a4016c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9a064f7000 CR3: 0000000015340000 CR4: 0000000000350ef0
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	03 80 3c 02 00 0f    	add    0xf00023c(%rax),%eax
+   6:	85 16                	test   %edx,(%rsi)
+   8:	02 00                	add    (%rax),%al
+   a:	00 48 8b             	add    %cl,-0x75(%rax)
+   d:	44 24 18             	rex.R and $0x18,%al
+  10:	4c 8b 78 28          	mov    0x28(%rax),%r15
+  14:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  1b:	fc ff df
+  1e:	49 8d 7f 20          	lea    0x20(%r15),%rdi
+  22:	48 89 fa             	mov    %rdi,%rdx
+  25:	48 c1 ea 03          	shr    $0x3,%rdx
+* 29:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
+  2d:	0f 85 e4 01 00 00    	jne    0x217
+  33:	41 8b 47 20          	mov    0x20(%r15),%eax
+  37:	4c 89 fb             	mov    %r15,%rbx
+  3a:	45 31 f6             	xor    %r14d,%r14d
+  3d:	31 ed                	xor    %ebp,%ebp
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
