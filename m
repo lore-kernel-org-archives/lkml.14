@@ -1,61 +1,76 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FB248780;
-	Mon,  5 Feb 2024 18:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCB5482E5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 18:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707157681; cv=none; b=aiB6W/DueJiaIE4Go2aPufYXr4bXP7h68HOULQ3AWJQf90vg/BZkxswCl7749tJRA12t6La4yG/Ju96J0+laqVCt/pNVFYkRInAh0eC/ZR8NyLfCQSGW06wbjFQysWRjg0ZbGWNQv4TGgoq81n7BrbqF3L7GJQvioe39Xh85aVs=
+	t=1707157705; cv=none; b=hOv0jesvGOD8VzMjUFc2oSyCglNs4xxUwy+HX73N7r8G6BDaBV2sQ8cxbeRvTfpexinysYXMU+NYzSU/pprJVMcRJqe5xUjzpOIuRH1G+4Tj6XRwwaDJPySlfo9nYbImU4NhV/1T8t00sHnq1mhN4hL5rJLUroU8rSFvpkPfstM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707157681; c=relaxed/simple;
-	bh=njlR0rO+G4g3TL1gkbOtBkBHGf3Jn2TMwjfojhYgCJE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YY7AsgZluACf5Vzi1DzfTnszn1vfbKPcE+aMdFOyj/IoCN1+hxM3OPXED2S/UHABgvInku0GRvsapVPpx3Aa/iu1wH9OEffrPHg/A23esxU57jha+ibBAAwh8xwMobJwsTZ2NngS7uyLW7uY0tddDAAzGPOkjMrkIfyAwAM9xcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OZMvbcRj; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707157705; c=relaxed/simple;
+	bh=FrgXf5u2mQ9+ou9vmhgfkmqkvim0hM5jWrxZiojnQPI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dbLbl7ZwYGXMa9IHBueVGvk519njKqk2qbhuLIfBkWa09i9rJQ6BVOPXx2PWv2jo3EiCuZfcYgRbgUDg9bFpRZpo9lEw2Z1m5KwJkwxF6EXw0urAA7+erdmaaT54wnhg8qB9dZPygeX3rI5UhmSSHKu8gso7Qp/kfadW/Rzlf2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ez39udAw; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OZMvbcRj"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415IRuL3120261;
-	Mon, 5 Feb 2024 12:27:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707157676;
-	bh=PChh5xsLsnerdCoIJ9CmTZI/Hl/y3vuBaVRnyyN6aKc=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=OZMvbcRjUTPLU6bYtZTrZVUWFyRjR+3PIUPVpjBOgHKRCt3FChySbfNkkOrsmkObg
-	 s2XuRuVlKU6c2+ts9sIyuZ8iS0DTAI3c9pH7y41EanZzQjtichfQSAQ/TWxjyc3ui+
-	 esGCyoTXDEJyLuhNXEqU+vPiMQBqqqM+zym4GuLA=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415IRuaT010269
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 12:27:56 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 12:27:55 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 12:27:55 -0600
-Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415IRsX8058567;
-	Mon, 5 Feb 2024 12:27:55 -0600
-From: Andrew Davis <afd@ti.com>
-To: Jai Luthra <j-luthra@ti.com>, Hari Nagalla <hnagalla@ti.com>,
-        Bjorn
- Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Andrew
- Davis <afd@ti.com>
-Subject: [PATCH v2 4/5] remoteproc: k3-dsp: Use devm_ioremap_wc() helper
-Date: Mon, 5 Feb 2024 12:27:52 -0600
-Message-ID: <20240205182753.36978-5-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240205182753.36978-1-afd@ti.com>
-References: <20240205182753.36978-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ez39udAw"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33adec41b55so3023751f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 10:28:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707157700; x=1707762500; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L9SYY+qgpvvxUhsi9zVed0l424i9mHr1dF1RqnBUnS8=;
+        b=Ez39udAwqru2wBsPkB8vIYm97HafZ536o8ceUAfiJPNAjxMB0RiZWlml0F5AF6hZgI
+         kN9965gfQ3ZPvlq/G4Zyoaek0Hh1lKpI+AyyJa1HsbrLbukiSo46yoCEVfPRLDDBAXiO
+         8TYGjM0A9luqtZ4W1HkwyKH8mEDDuyec5c+1+dgVwbwSM2hze/kWPMN+8s6dCSwCza/w
+         RZEKqHT75L0dGJvaI0XbcLRwLhOzV1VDI4W6x0KEYvigEONMwWKpZ8VCKE8LcoRmlFdP
+         W9RYXmBIimLy4RuP7vu7jrwl8cwkQKa75ade1w5skgl4XJKvtIG24DXjYwmfoxQWmF28
+         wPcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707157700; x=1707762500;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L9SYY+qgpvvxUhsi9zVed0l424i9mHr1dF1RqnBUnS8=;
+        b=n7Hvu7ncFE2ucvpwYEeoCUZRoDarkk/3haqjHzhFhOeOF9JzgSIQsEiC6r1NPtNm+R
+         TfSNgUqqGakTmJfyrOcjgDGN+dQZuE4O0dtCQ0iuSO7RDBAzlUsTbt6jpPn5EHCtQVT5
+         GwOc/a5tbTbJV/c9ZWMJRXKDcJub+P7CGBlW8KErZWiWfu7LyDxCzTE4RvhMh1BJ7QSC
+         bYagrrK3yjmhVqYTkNj57nB4h1bMB9+DJeMrNsuaCoQmNHD12NzJthrr1RjvTq7Lo1uu
+         KLr+TEjoWqq9KOG8zrJSpe/gaavDDhstft+B85RGW1m7Ds+WVFlt7ZNcUsZlpXGhAwFC
+         KqiQ==
+X-Gm-Message-State: AOJu0Yy4psIjbtSo4TwBeD0DxbhEd/D8f5oTlwMtHdneLJyLA/OdwsHw
+	okaLx4gfkEcahRkKK1OLIn/ut7+4HmN3RCnKALgqNZG+uw7A/FiTYeliTRKcJW0=
+X-Google-Smtp-Source: AGHT+IFXKTwFzId4HeD48V0GUEepHR/dav3QLileDXFCLu/lm6sGjYLlaU1mBljSkwZfYSQSpyIiXQ==
+X-Received: by 2002:a05:6000:248:b0:33b:3c79:9182 with SMTP id m8-20020a056000024800b0033b3c799182mr223826wrz.3.1707157699823;
+        Mon, 05 Feb 2024 10:28:19 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUPFThfwYFaIB2slHnICTpsQvB4UcTrsX/f+BFLAnnJdy9c28RIqhda+FuZCwcIlmbcV5/tWKoMvcpm9wRvSqRLQ4v+4ejqRA6DXTQ3X8dPYWedTiM9W+0RToVSi1DLKlvfsPEzHoipmpuyPoXCmC56W0AQyfkbajwY/XkHT4yfXMtQZvQnk6I2IbyweXaN8ap0NEMtHw8sby435OR7ULlT3KE0sGJDpdbpXEXIKj6mcgPv6m6NKkUhfLFiudkduLlzR54wT1tPVG/uQ5QQ8RN4hhMcrpC6LwLQ/3tXFrjyfS9m0TUVU1+2dQa5nKGAviEXyReU5IIOa4aZzBtkJW2mc+n0O2m5mj89mJwe3nxV2Ys7QeCbEQIMcUqiMJIWHWBDCkoX5UhwFapXv1Oxnlfjo9UN2AEFAG4ohn/gNATAAmn54PWeag/r0zg5fWz//Eomq9deTJRzOOC6Hhc1i1/pppRohEYcASGi+vQJox/gu1QAxq2Ye8bC6uYf6UgmGfOspR+v/BdFK8alipI9Nk+186CC/ljtiA==
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d929:10db:5b5c:b49d])
+        by smtp.gmail.com with ESMTPSA id v15-20020a5d678f000000b0033b17e18df8sm203229wru.12.2024.02.05.10.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 10:28:19 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Guru Das Srinagesh <quic_gurus@quicinc.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@quicinc.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v7 00/12] arm64: qcom: add and enable SHM Bridge support
+Date: Mon,  5 Feb 2024 19:27:58 +0100
+Message-Id: <20240205182810.58382-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,130 +78,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Use a device lifecycle managed ioremap helper function. This helps prevent
-mistakes like unmapping out of order in cleanup functions and forgetting
-to unmap on all error paths.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 48 +++++------------------
- 1 file changed, 10 insertions(+), 38 deletions(-)
+We've established the need for using separate secured memory pools for
+SCM and QSEECOM as well as the upcoming scminvoke driver.
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 800c8c6767086..f799f74734b4a 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -598,16 +598,13 @@ static int k3_dsp_reserved_mem_init(struct k3_dsp_rproc *kproc)
- 	/* use remaining reserved memory regions for static carveouts */
- 	for (i = 0; i < num_rmems; i++) {
- 		rmem_np = of_parse_phandle(np, "memory-region", i + 1);
--		if (!rmem_np) {
--			ret = -EINVAL;
--			goto unmap_rmem;
--		}
-+		if (!rmem_np)
-+			return -EINVAL;
- 
- 		rmem = of_reserved_mem_lookup(rmem_np);
- 		if (!rmem) {
- 			of_node_put(rmem_np);
--			ret = -EINVAL;
--			goto unmap_rmem;
-+			return -EINVAL;
- 		}
- 		of_node_put(rmem_np);
- 
-@@ -615,12 +612,11 @@ static int k3_dsp_reserved_mem_init(struct k3_dsp_rproc *kproc)
- 		/* 64-bit address regions currently not supported */
- 		kproc->rmem[i].dev_addr = (u32)rmem->base;
- 		kproc->rmem[i].size = rmem->size;
--		kproc->rmem[i].cpu_addr = ioremap_wc(rmem->base, rmem->size);
-+		kproc->rmem[i].cpu_addr = devm_ioremap_wc(dev, rmem->base, rmem->size);
- 		if (!kproc->rmem[i].cpu_addr) {
- 			dev_err(dev, "failed to map reserved memory#%d at %pa of size %pa\n",
- 				i + 1, &rmem->base, &rmem->size);
--			ret = -ENOMEM;
--			goto unmap_rmem;
-+			return -ENOMEM;
- 		}
- 
- 		dev_dbg(dev, "reserved memory%d: bus addr %pa size 0x%zx va %pK da 0x%x\n",
-@@ -631,19 +627,6 @@ static int k3_dsp_reserved_mem_init(struct k3_dsp_rproc *kproc)
- 	kproc->num_rmems = num_rmems;
- 
- 	return 0;
--
--unmap_rmem:
--	for (i--; i >= 0; i--)
--		iounmap(kproc->rmem[i].cpu_addr);
--	return ret;
--}
--
--static void k3_dsp_reserved_mem_exit(struct k3_dsp_rproc *kproc)
--{
--	int i;
--
--	for (i = 0; i < kproc->num_rmems; i++)
--		iounmap(kproc->rmem[i].cpu_addr);
- }
- 
- static void k3_dsp_release_tsp(void *data)
-@@ -752,10 +735,8 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
- 
- 	ret = kproc->ti_sci->ops.dev_ops.is_on(kproc->ti_sci, kproc->ti_sci_id,
- 					       NULL, &p_state);
--	if (ret) {
--		dev_err_probe(dev, ret, "failed to get initial state, mode cannot be determined\n");
--		goto release_mem;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to get initial state, mode cannot be determined\n");
- 
- 	/* configure J721E devices for either remoteproc or IPC-only mode */
- 	if (p_state) {
-@@ -779,8 +760,7 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
- 		if (data->uses_lreset) {
- 			ret = reset_control_status(kproc->reset);
- 			if (ret < 0) {
--				dev_err_probe(dev, ret, "failed to get reset status\n");
--				goto release_mem;
-+				return dev_err_probe(dev, ret, "failed to get reset status\n");
- 			} else if (ret == 0) {
- 				dev_warn(dev, "local reset is deasserted for device\n");
- 				k3_dsp_rproc_reset(kproc);
-@@ -789,18 +769,12 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = rproc_add(rproc);
--	if (ret) {
--		dev_err_probe(dev, ret, "failed to add register device with remoteproc core\n");
--		goto release_mem;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add register device with remoteproc core\n");
- 
- 	platform_set_drvdata(pdev, kproc);
- 
- 	return 0;
--
--release_mem:
--	k3_dsp_reserved_mem_exit(kproc);
--	return ret;
- }
- 
- static void k3_dsp_rproc_remove(struct platform_device *pdev)
-@@ -820,8 +794,6 @@ static void k3_dsp_rproc_remove(struct platform_device *pdev)
- 	}
- 
- 	rproc_del(kproc->rproc);
--
--	k3_dsp_reserved_mem_exit(kproc);
- }
- 
- static const struct k3_dsp_mem_data c66_mems[] = {
+It's also become clear that in order to be future-proof, the new
+allocator must be an abstraction layer of a higher level as the SHM
+Bridge will not be the only memory protection mechanism that we'll see
+upstream. Hence the rename to TrustZone Memory rather than SCM Memory
+allocator.
+
+Also to that end: the new allocator is its own module now and provides a
+Kconfig choice menu for selecting the mode of operation (currently
+default and SHM Bridge).
+
+Tested on sm8550 and sa8775p with the Inline Crypto Engine and
+remoteproc.
+
+v6 -> v7:
+- fix a Kconfig issue: TZMEM must select GENERIC_ALLOCATOR
+
+v5 -> v6:
+Fixed two issues reported by autobuilders:
+- add a fix for memory leaks in the qseecom driver as the first patch for
+  easier backporting to the v6.6.y branch
+- explicitly cast the bus address stored in a variable of type dma_addr_t
+  to phys_addr_t expected by the genpool API
+
+v4 -> v5:
+- fix the return value from qcom_tzmem_init() if SHM Bridge is not supported
+- remove a comment that's no longer useful
+- collect tags
+
+v3 -> v4:
+- include linux/sizes.h for SZ_X macros
+- use dedicated RCU APIs to dereference radix tree slots
+- fix kerneldocs
+- fix the comment in patch 14/15: it's the hypervisor, not the TrustZone
+  that creates the SHM bridge
+
+v2 -> v3:
+- restore pool management and use separate pools for different users
+- don't use the new allocator in qcom_scm_pas_init_image() as the
+  TrustZone will create an SHM bridge for us here
+- rewrite the entire series again for most part
+
+v1 -> v2:
+- too many changes to list, it's a complete rewrite as explained above
+
+Bartosz Golaszewski (12):
+  firmware: qcom: add a dedicated TrustZone buffer allocator
+  firmware: qcom: scm: enable the TZ mem allocator
+  firmware: qcom: scm: smc: switch to using the SCM allocator
+  firmware: qcom: scm: make qcom_scm_assign_mem() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_ice_set_key() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_lmh_dcvsh() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_qseecom_app_get_id() use the TZ
+    allocator
+  firmware: qcom: qseecom: convert to using the TZ allocator
+  firmware: qcom: scm: add support for SHM bridge operations
+  firmware: qcom: tzmem: enable SHM Bridge support
+  firmware: qcom: scm: clarify the comment in qcom_scm_pas_init_image()
+  arm64: defconfig: enable SHM Bridge support for the TZ memory
+    allocator
+
+ MAINTAINERS                                   |   8 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/firmware/qcom/Kconfig                 |  31 ++
+ drivers/firmware/qcom/Makefile                |   1 +
+ .../firmware/qcom/qcom_qseecom_uefisecapp.c   | 281 +++++---------
+ drivers/firmware/qcom/qcom_scm-smc.c          |  30 +-
+ drivers/firmware/qcom/qcom_scm.c              | 179 +++++----
+ drivers/firmware/qcom/qcom_scm.h              |   6 +
+ drivers/firmware/qcom/qcom_tzmem.c            | 365 ++++++++++++++++++
+ drivers/firmware/qcom/qcom_tzmem.h            |  13 +
+ include/linux/firmware/qcom/qcom_qseecom.h    |   4 +-
+ include/linux/firmware/qcom/qcom_scm.h        |   6 +
+ include/linux/firmware/qcom/qcom_tzmem.h      |  28 ++
+ 13 files changed, 685 insertions(+), 268 deletions(-)
+ create mode 100644 drivers/firmware/qcom/qcom_tzmem.c
+ create mode 100644 drivers/firmware/qcom/qcom_tzmem.h
+ create mode 100644 include/linux/firmware/qcom/qcom_tzmem.h
+
 -- 
-2.39.2
+2.40.1
 
