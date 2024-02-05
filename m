@@ -1,224 +1,224 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00634121B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF22744C80
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707154297; cv=none; b=eFrX81hhXNmuL0xJsIQ2liwlF8QvabnHbtGws2tTcKGiGXR0Kv1KdDYg5DKrfENmhEaRjrEYdcqlWqgvl0hpPf2NHY4Wwrwn1vov7QL82HkkLz9ygWH5qPDhG4ak931iDwZ/Qh7u7GPSEXykhKQowNPG68ZSJLNpJkE3G+3hWaE=
+	t=1707154385; cv=none; b=Cj38ky/HfjZJZLJwRrBW3uT8bLiFCy+yX0vlJOUmHSJXdX/VUrVJLrGH7JlVcVOJUrTWUHUn2B4L7b5pJ1LFTBwXZXCxz+e52SDcT0R4ljhcLi1BwCtGwo0U5jCN93hhS0sZiJOpbJZxH15JDQLmLz4GXsRaBP/v2IHPlhxzbHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707154297; c=relaxed/simple;
-	bh=xEyqyUOvdZboKmHpNCarFdt8jnKerrHqE4MpHsotmFI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cAxv4YeFYEfc6sQpmSNKdjV+fYcRcrI9YOb0ZE52aBbc6Dp+w2renGC7Kq6bBKQW+5HY7tIp86liiOzxk8Zwh3Fw2PdBgJtc7ogqNPoE77mItN3VQV4D67OjNbKmdwUmcpphZtGI+7Lp1MSQqvfsTHvRSHaByIkhyVlegAaUupE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z0bqpZx7; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0bqpZx7"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5dbddee3694so2393274a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 09:31:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707154295; x=1707759095; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xAh+m8NpmmquiTQVj9HnmFfN4D8u5RS8wXiyWZb6U7A=;
-        b=Z0bqpZx7MOs4JrARy9CRfQv6ti8RwYWmFz7ed0E9qSbBPs+UEjCfDjAWWhRjTOPuhx
-         LhenMoN9QzfUKQmihjJl1gPwS+bD1y72hVqoZBgojmDLZYTVnMBAir30NEWpBeURqHln
-         4UWXL5oukkXnoB33Lq2udKKJwxQ+GuByth5II74lxwz1FYH6UvyUauq5CXD6q2kIWSeg
-         /Du/uE9y4D1ygMH5Smj3BxK46HqzSfo7pnx9QDDJGzaVglTXeT0HinsB6VTx6STnn2tu
-         BOszngCnL2VB6+m9Otw/MuLlRq5wXfynNH0kUJE3yv9lAm2taGqoqRXNdVny+K7e9L1r
-         HtKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707154295; x=1707759095;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xAh+m8NpmmquiTQVj9HnmFfN4D8u5RS8wXiyWZb6U7A=;
-        b=BPgyc8P5W87Q7BkjUCZGqzHBVy6bAaPHnkMNEt1r+PhaUWJNc7EN747lkRHexNYqIJ
-         e/f/nmnOuBSGAT0OELPXhriv1nphVwxT2jGVWLs84N/rFKJ8l+wromCExnpzDp8isKU6
-         Ye1PQsqKdwbSwac8P8xRef8+hYFw+EC8n6vNrcQM8SebBqrP2ALL3rRsB2OGHLedszEg
-         02ziNkCgHFQfacxHUqrlOJuRJEBoI7DbmJ+TpecwcrjrlwlI9X90zQby60C07/F46bsH
-         sVxx55sbOWqQjMYeTiSv14B+SZMnSvF+aWeKoDAywbR1CM4bOB1JUUFRLgl6lwj7ACTl
-         Itjw==
-X-Gm-Message-State: AOJu0YwNwznt5+h0xDlVMqmqvBF/2vcaUMPS0ONM4B5AUdliNV0j4oqV
-	HXmGRE56POfAepzPOhW0Dsl4N3o31LLOPi4yHnF2ox222sYSpniaDEcFYX9dn4AbFDJqlxBs7+L
-	8Hw==
-X-Google-Smtp-Source: AGHT+IFVl860tRNXfVokCOJ+o6Ci2XKuNL395E+aTa7wrxYbxHjuwDpIoisRAUqIdRdRieAvjJFc+aKs/50=
-X-Received: from avagin.kir.corp.google.com ([2620:0:1008:10:98af:717c:5f3:596d])
- (user=avagin job=sendgmr) by 2002:a63:7702:0:b0:5dc:229b:6777 with SMTP id
- s2-20020a637702000000b005dc229b6777mr31895pgc.1.1707154294803; Mon, 05 Feb
- 2024 09:31:34 -0800 (PST)
-Date: Mon,  5 Feb 2024 09:31:24 -0800
+	s=arc-20240116; t=1707154385; c=relaxed/simple;
+	bh=5pjg0q1iZZDUw5lhiZeqbKPckptqUaLfzjykcGLxmBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oC+pfn2i3N0B3Z63vt8nTCy4VL8CAD2gUBgFgHtqbRfE61RaHI7zXn3A13z/lFZV+71Va73mV4fj6OULj3m3adqKtyZw3mW6Y/4/+G7BJwM0tOEojqPEfu0FgkMi+RMLkLHVCIWPhUhbWaRn64eA4+/l9FqFiLlYreF0WS92YaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rX2pn-0008FJ-Sy; Mon, 05 Feb 2024 18:32:43 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rX2pm-004foU-LU; Mon, 05 Feb 2024 18:32:42 +0100
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rX2pm-00CpRf-1r;
+	Mon, 05 Feb 2024 18:32:42 +0100
+Date: Mon, 5 Feb 2024 18:32:42 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "Dr. David Alan Gilbert" <linux@treblig.org>,
+	gregkh@linuxfoundation.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH 4/4] usb: typec: tcpci: add support to set connector
+ orientation
+Message-ID: <20240205173242.z56gbx2agwef3ufu@pengutronix.de>
+References: <20240205164316.805408-1-m.felsch@pengutronix.de>
+ <20240205164316.805408-5-m.felsch@pengutronix.de>
+ <ZcESKqRTsGNZMMX1@gallifrey>
+ <20240205165420.kyujim2takwswzmw@pengutronix.de>
+ <8cffdf64-d0ee-4e20-8c43-d3010ddf9839@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240205173124.366901-1-avagin@google.com>
-Subject: [PATCH] kvm/x86: add capability to disable the write-track mechanism
-From: Andrei Vagin <avagin@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, 
-	Andrei Vagin <avagin@google.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Zhi Wang <zhi.a.wang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8cffdf64-d0ee-4e20-8c43-d3010ddf9839@roeck-us.net>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The write-track is used externally only by the gpu/drm/i915 driver.
-Currently, it is always enabled, if a kernel has been compiled with this
-driver.
+On 24-02-05, Guenter Roeck wrote:
+> On 2/5/24 08:54, Marco Felsch wrote:
+> > Hi David,
+> > 
+> > On 24-02-05, Dr. David Alan Gilbert wrote:
+> > > * Marco Felsch (m.felsch@pengutronix.de) wrote:
+> > > > This add the support to set the optional connector orientation bit which
+> > > > is part of the optional CONFIG_STANDARD_OUTPUT register 0x18 [1]. This
+> > > > allows system designers to connect the tcpc orientation pin directly to
+> > > > the 2:1 ss-mux.
+> > > > 
+> > > > [1] https://www.usb.org/sites/default/files/documents/usb-port_controller_specification_rev2.0_v1.0_0.pdf
+> > > > 
+> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > ---
+> > > >   drivers/usb/typec/tcpm/tcpci.c | 43 ++++++++++++++++++++++++++++++++++
+> > > >   include/linux/usb/tcpci.h      |  8 +++++++
+> > > >   2 files changed, 51 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+> > > > index 7118551827f6..7ce9d4923bc7 100644
+> > > > --- a/drivers/usb/typec/tcpm/tcpci.c
+> > > > +++ b/drivers/usb/typec/tcpm/tcpci.c
+> > > > @@ -67,6 +67,18 @@ static int tcpci_write16(struct tcpci *tcpci, unsigned int reg, u16 val)
+> > > >   	return regmap_raw_write(tcpci->regmap, reg, &val, sizeof(u16));
+> > > >   }
+> > > > +static bool tcpci_check_std_output_cap(struct regmap *regmap, u8 mask)
+> > > > +{
+> > > > +	unsigned int reg;
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = regmap_read(regmap, TCPC_STD_OUTPUT_CAP, &reg);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > > > +	return (reg & mask) == mask;
+> > > > +}
+> > > > +
+> > > >   static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+> > > >   {
+> > > >   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> > > > @@ -301,6 +313,27 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+> > > >   			   TCPC_TCPC_CTRL_ORIENTATION : 0);
+> > > >   }
+> > > > +static int tcpci_set_orientation(struct tcpc_dev *tcpc,
+> > > > +				 enum typec_orientation orientation)
+> > > > +{
+> > > > +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> > > > +	unsigned int reg;
+> > > > +
+> > > > +	switch (orientation) {
+> > > > +	case TYPEC_ORIENTATION_NONE:
+> > > > +		/* We can't put a single output into high impedance */
+> > > 
+> > > Is that intended to be a fallthrough? If so I guess it needs
+> > > marking as such with a
+> > >                  fallthrough;
+> > 
+> > You need to add it if there is code in between. Since there is no code,
+> > just this comment, it shouldn't be necessary.
+> > 
+> 
+> Still, I think it would be desirable here to clarify that this
+> is not a lost return but intentionally sets
+> TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL.
 
-Enabling the write-track mechanism adds a two-byte overhead per page across
-all memory slots. It isn't significant for regular VMs. However in gVisor,
-where the entire process virtual address space is mapped into the VM, even
-with a 39-bit address space, the overhead amounts to 256MB.
+Sure, I will adapt it once the complete patchset is reviewed.
 
-This change introduces the new KVM_CAP_PAGE_WRITE_TRACKING capability,
-allowing users to enable/disable the write-track mechanism. It is enabled
-by default for backward compatibility.
+Regards,
+  Marco
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: Zhi Wang <zhi.a.wang@intel.com>
-Signed-off-by: Andrei Vagin <avagin@google.com>
----
- Documentation/virt/kvm/api.rst  | 16 ++++++++++++++++
- arch/x86/include/asm/kvm_host.h |  4 ++++
- arch/x86/kvm/mmu/page_track.c   | 13 +++++++++++--
- arch/x86/kvm/x86.c              | 25 +++++++++++++++++++++++++
- include/uapi/linux/kvm.h        |  1 +
- 5 files changed, 57 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 3ec0b7a455a0..448a96c950e7 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -8791,6 +8791,22 @@ means the VM type with value @n is supported.  Possible values of @n are::
-   #define KVM_X86_DEFAULT_VM	0
-   #define KVM_X86_SW_PROTECTED_VM	1
- 
-+8.38 KVM_CAP_PAGE_WRITE_TRACKING
-+-------------------------------------
-+
-+:Capability: KVM_CAP_PAGE_WRITE_TRACKING
-+:Architectures: x86
-+:Type: system ioctl
-+:Parameters: args[0] defines whether the feature should be enabled or not
-+:Returns: 0 on success, -EINVAL if args[0] isn't 1 or 0, -EINVAL if any memslot
-+          was already created or any users was registered, -EBUSY if write
-+          tracking is used for internal needs and can't be disabled.
-+
-+This capability enables/disables the page write-track mechanism. It is enabled
-+by default for backward compatibility.
-+
-+This capability may only be set before any mem slots are created.
-+
- 9. Known KVM API problems
- =========================
- 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d271ba20a0b2..8a05e3322a59 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1503,6 +1503,10 @@ struct kvm_arch {
- 	 */
- #define SPLIT_DESC_CACHE_MIN_NR_OBJECTS (SPTE_ENT_PER_PAGE + 1)
- 	struct kvm_mmu_memory_cache split_desc_cache;
-+
-+#ifdef CONFIG_KVM_EXTERNAL_WRITE_TRACKING
-+	bool page_write_tracking_disabled;
-+#endif
- };
- 
- struct kvm_vm_stat {
-diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
-index c87da11f3a04..bf8f9ca7b86e 100644
---- a/arch/x86/kvm/mmu/page_track.c
-+++ b/arch/x86/kvm/mmu/page_track.c
-@@ -20,9 +20,15 @@
- #include "mmu_internal.h"
- #include "page_track.h"
- 
-+#ifdef CONFIG_KVM_EXTERNAL_WRITE_TRACKING
-+#define KVM_EXTERNAL_WRITE_TRACKING_ENABLED(kvm) \
-+		(!kvm->arch.page_write_tracking_disabled)
-+#else
-+#define KVM_EXTERNAL_WRITE_TRACKING_ENABLED(kvm) false
-+#endif
-+
- bool kvm_page_track_write_tracking_enabled(struct kvm *kvm)
--{
--	return IS_ENABLED(CONFIG_KVM_EXTERNAL_WRITE_TRACKING) ||
-+{	return KVM_EXTERNAL_WRITE_TRACKING_ENABLED(kvm) ||
- 	       !tdp_enabled || kvm_shadow_root_allocated(kvm);
- }
- 
-@@ -165,6 +171,9 @@ int kvm_page_track_register_notifier(struct kvm *kvm,
- 	if (!kvm || kvm->mm != current->mm)
- 		return -ESRCH;
- 
-+	if (kvm->arch.page_write_tracking_disabled)
-+		return -EINVAL;
-+
- 	kvm_get_kvm(kvm);
- 
- 	head = &kvm->arch.track_notifier_head;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index bf10a9073a09..2f28a1b357dd 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4668,6 +4668,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_VM_DISABLE_NX_HUGE_PAGES:
- 	case KVM_CAP_IRQFD_RESAMPLE:
- 	case KVM_CAP_MEMORY_FAULT_INFO:
-+	case KVM_CAP_PAGE_WRITE_TRACKING:
- 		r = 1;
- 		break;
- 	case KVM_CAP_EXIT_HYPERCALL:
-@@ -6675,6 +6676,30 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		}
- 		mutex_unlock(&kvm->lock);
- 		break;
-+	case KVM_CAP_PAGE_WRITE_TRACKING: {
-+		bool enabling = cap->args[0];
-+
-+		r = -EINVAL;
-+		if (cap->args[0] & ~1)
-+			break;
-+
-+		r = -EBUSY;
-+		if (!enabling && (!tdp_enabled || kvm_shadow_root_allocated(kvm)))
-+			break;
-+#ifdef CONFIG_KVM_EXTERNAL_WRITE_TRACKING
-+		write_lock(&kvm->mmu_lock);
-+		if (!kvm_memslots_empty(kvm_memslots(kvm)) ||
-+		    kvm_page_track_has_external_user(kvm)) {
-+			write_unlock(&kvm->mmu_lock);
-+			r = -EINVAL;
-+			break;
-+		}
-+		kvm->arch.page_write_tracking_disabled = !enabling;
-+		write_unlock(&kvm->mmu_lock);
-+#endif
-+		r = 0;
-+		break;
-+	}
- 	default:
- 		r = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index c3308536482b..0e9ea5a62e38 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1155,6 +1155,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_MEMORY_ATTRIBUTES 233
- #define KVM_CAP_GUEST_MEMFD 234
- #define KVM_CAP_VM_TYPES 235
-+#define KVM_CAP_PAGE_WRITE_TRACKING 236
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
--- 
-2.43.0.594.gd9cf4e227d-goog
-
+> Guenter
+> 
+> > Regards,
+> >    Marco
+> > 
+> > > 
+> > > Dave
+> > > 
+> > > > +	case TYPEC_ORIENTATION_NORMAL:
+> > > > +		reg = TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL;
+> > > > +		break;
+> > > > +	case TYPEC_ORIENTATION_REVERSE:
+> > > > +		reg = TCPC_CONFIG_STD_OUTPUT_ORIENTATION_FLIPPED;
+> > > > +		break;
+> > > > +	}
+> > > > +
+> > > > +	return regmap_update_bits(tcpci->regmap, TCPC_CONFIG_STD_OUTPUT,
+> > > > +				  TCPC_CONFIG_STD_OUTPUT_ORIENTATION_MASK, reg);
+> > > > +}
+> > > > +
+> > > >   static void tcpci_set_partner_usb_comm_capable(struct tcpc_dev *tcpc, bool capable)
+> > > >   {
+> > > >   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> > > > @@ -808,6 +841,9 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
+> > > >   	if (tcpci->data->vbus_vsafe0v)
+> > > >   		tcpci->tcpc.is_vbus_vsafe0v = tcpci_is_vbus_vsafe0v;
+> > > > +	if (tcpci->data->set_orientation)
+> > > > +		tcpci->tcpc.set_orientation = tcpci_set_orientation;
+> > > > +
+> > > >   	err = tcpci_parse_config(tcpci);
+> > > >   	if (err < 0)
+> > > >   		return ERR_PTR(err);
+> > > > @@ -851,6 +887,13 @@ static int tcpci_probe(struct i2c_client *client)
+> > > >   	if (err < 0)
+> > > >   		return err;
+> > > > +	err = tcpci_check_std_output_cap(chip->data.regmap,
+> > > > +					 TCPC_STD_OUTPUT_CAP_ORIENTATION);
+> > > > +	if (err < 0)
+> > > > +		return err;
+> > > > +
+> > > > +	chip->data.set_orientation = err;
+> > > > +
+> > > >   	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
+> > > >   	if (IS_ERR(chip->tcpci))
+> > > >   		return PTR_ERR(chip->tcpci);
+> > > > diff --git a/include/linux/usb/tcpci.h b/include/linux/usb/tcpci.h
+> > > > index 467e8045e9f8..f2bfb4250366 100644
+> > > > --- a/include/linux/usb/tcpci.h
+> > > > +++ b/include/linux/usb/tcpci.h
+> > > > @@ -47,6 +47,9 @@
+> > > >   #define TCPC_SINK_FAST_ROLE_SWAP	BIT(0)
+> > > >   #define TCPC_CONFIG_STD_OUTPUT		0x18
+> > > > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_MASK		BIT(0)
+> > > > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL	0
+> > > > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_FLIPPED	1
+> > > >   #define TCPC_TCPC_CTRL			0x19
+> > > >   #define TCPC_TCPC_CTRL_ORIENTATION	BIT(0)
+> > > > @@ -127,6 +130,7 @@
+> > > >   #define TCPC_DEV_CAP_2			0x26
+> > > >   #define TCPC_STD_INPUT_CAP		0x28
+> > > >   #define TCPC_STD_OUTPUT_CAP		0x29
+> > > > +#define TCPC_STD_OUTPUT_CAP_ORIENTATION	BIT(0)
+> > > >   #define TCPC_MSG_HDR_INFO		0x2e
+> > > >   #define TCPC_MSG_HDR_INFO_DATA_ROLE	BIT(3)
+> > > > @@ -198,12 +202,16 @@ struct tcpci;
+> > > >    *		Chip level drivers are expected to check for contaminant and call
+> > > >    *		tcpm_clean_port when the port is clean to put the port back into
+> > > >    *		toggling state.
+> > > > + * @set_orientation:
+> > > > + *		Optional; Enable setting the connector orientation
+> > > > + *		CONFIG_STANDARD_OUTPUT (0x18) bit0.
+> > > >    */
+> > > >   struct tcpci_data {
+> > > >   	struct regmap *regmap;
+> > > >   	unsigned char TX_BUF_BYTE_x_hidden:1;
+> > > >   	unsigned char auto_discharge_disconnect:1;
+> > > >   	unsigned char vbus_vsafe0v:1;
+> > > > +	unsigned char set_orientation:1;
+> > > >   	int (*init)(struct tcpci *tcpci, struct tcpci_data *data);
+> > > >   	int (*set_vconn)(struct tcpci *tcpci, struct tcpci_data *data,
+> > > > -- 
+> > > > 2.39.2
+> > > > 
+> > > > 
+> > > -- 
+> > >   -----Open up your eyes, open up your mind, open up your code -------
+> > > / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
+> > > \        dave @ treblig.org |                               | In Hex /
+> > >   \ _________________________|_____ http://www.treblig.org   |_______/
+> > > 
+> 
+> 
