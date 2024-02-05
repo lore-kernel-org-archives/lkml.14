@@ -1,81 +1,87 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9870B11702
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 08:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3DA11185;
+	Mon,  5 Feb 2024 08:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707120533; cv=none; b=uVNSWP3L+pWtBJd0FlekQ75EU9yNf482mEysQNUorPMxwlc54zFPimFcm5cesbioujSjH+dN5iruGZ0WGJV6HqS6xdTizn7MdH3vXVz/hqzgWBV5rOemr+3hYUv7Yjrw/CHrfOtP2gNyO1Z/cRAWqY/Gd3EMOM13XjIhrAILBsY=
+	t=1707120590; cv=none; b=r9FAy7cf6a1hltxMuCtYDzDeorDu6IS6aLpVWYygdqMTaBMIO3I+dEpCA4dnq9E29vyhvXkLvYuZlCeJuUEu+NOURD2X2rvfWw54sN7CZ8HSN0jahqFSbMcz3neojoO6jSFbewvesYwyXxl22GCq5L+LUGmeckuWjBxseD9Osko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707120533; c=relaxed/simple;
-	bh=EC44DeqNr8LAwIvt5e63AJ5hgZz9O3zu7ss0PAinqmA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TxqGwcVyPiVL6PiQArSB2+kVHm/bBxmwsMVdMBR3WGNuV7rc9dg6m12GrDq8PqdCHt1+l6bDLdi5v2Uv+uNfaLJF1qqx9AQ66G/5kYo5QCzst+i3eTStJtWpaNwc0tsTcwmMNC9+GNA44sWrnOQFi5xNo8sxI/CADEi/9u0EDW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cEccBrd9; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707120590; c=relaxed/simple;
+	bh=tjnc9TCmrK1oUMDhylwqt1frva0l2latksdf20OLonI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JwnpcobIKXrytyhdeyBeSksnNpeTsm6fgiCWmGnzLw2mYJJPCg1RqBQsB/AurewtIQ7Pp5ZC3dy6CuT6D92ZiFeg4AWm/CEXQJlJ9VgjrOTkiXmhVicLzBjJWu+wQZ4HgtjCSflzZysMy5p2R1dk6BBYEqy+MokYhULDRZaDWgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTiLfbGJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cEccBrd9"
-Message-ID: <3ab3961d-04e5-484d-bc71-2f33ebbefc67@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707120528;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qDHjczhceVjO1MtODZfTIEYCTueKSLyt0SDAh9/KabE=;
-	b=cEccBrd9TGxJ7J54r5l06zjN1IQaCqrAVOQt0NsGOyJDsqA1JEWqA7g3oEbeErkWFy7av7
-	SykP+U5ITW1n4nnnLZVTx2bkpcBMTWzq2BRF34eVDHQtgpJOt4VqsCO5UIOsXli1CaslTN
-	DMgRdV6jaBRoVGJHbut7rvylwlw9eBM=
-Date: Mon, 5 Feb 2024 16:08:37 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTiLfbGJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01ECAC433C7;
+	Mon,  5 Feb 2024 08:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707120590;
+	bh=tjnc9TCmrK1oUMDhylwqt1frva0l2latksdf20OLonI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GTiLfbGJRMd1+e0OKid4AWN6lQY8CEaTyYUIznZQoQ/HwaI7A7XJEM/UCkwSljBGe
+	 GJZPHPVCVSep1ftzfS43KB32fr3Y8bhTqOS/GZbBEtOKsj6oP1QZLr6duyWXbfu+m+
+	 6L7TZ8rLMU7gkilZZPK87QTu2YNqMJ1t0g9Su5bDfXYpPdux2warMTCkKQyMFwdMpQ
+	 iVc+FV69wwiCLUbpXfl3RacrD44tFfD4/SSelZ944Iy0yaiL63wEooW5R7F1AarK28
+	 X4fZoZbpek3tZWnrJIlfFdS5A6fcrSmRbAVzVZ1pOghwRPrx7TfyVDG1pK4gz/W3tj
+	 CC3IJSIMrlEKA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rWu38-000000000W5-0y2L;
+	Mon, 05 Feb 2024 09:09:54 +0100
+Date: Mon, 5 Feb 2024 09:09:54 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Steev Klimaszewski <steev@kali.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc8280xp-x13s: correct analogue
+ microphone route
+Message-ID: <ZcCX0hDGrWqRXr9R@hovoldconsulting.com>
+References: <20240125154531.417098-1-krzysztof.kozlowski@linaro.org>
+ <c34dd7ca-01b5-4424-a8ec-a525b8d722a3@linaro.org>
+ <5497d428-cdc1-4057-afda-6861d2e3860a@linaro.org>
+ <e9b6f790-831c-4df6-b16c-8d7a2f8ddc26@linaro.org>
+ <CAKXuJqjDM3P4wOKz3CaAB9DUyemqQ6ks=FPnfL7OsHnnyoyn=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] hugetlb: fix CONFIG_PADATA dependency for non-SMP
- system
-Content-Language: en-US
-To: Muchun Song <muchun.song@linux.dev>
-Cc: Gang Li <ligang.bdlg@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Randy Dunlap <rdunlap@infradead.org>,
- kernel test robot <lkp@intel.com>
-References: <20240204072525.1986626-1-gang.li@linux.dev>
- <f05f658a-78fa-45cd-ad07-11d87b824702@linux.dev>
- <a749cb06-9495-40fc-9192-b019b48eca92@linux.dev>
- <828f990c-11af-42ad-a030-a66dde97a7f2@linux.dev>
- <7472563F-5C2D-4DCB-ACD6-F86D7A18BDF2@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Gang Li <gang.li@linux.dev>
-In-Reply-To: <7472563F-5C2D-4DCB-ACD6-F86D7A18BDF2@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKXuJqjDM3P4wOKz3CaAB9DUyemqQ6ks=FPnfL7OsHnnyoyn=A@mail.gmail.com>
 
-On 2024/2/5 15:37, Muchun Song wrote:
-> Actually, I did not get it. Why the above code cannot work? The above
-> code already make it serialized in one call, right? What do I miss here?
-> 
-> Thanks.
-> 
+On Sun, Feb 04, 2024 at 11:30:54PM -0600, Steev Klimaszewski wrote:
+> On Mon, Jan 29, 2024 at 8:27 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
 
-PADATA consists of two distinct functionality:
+> > so I will go with that approach. Please ignore this DTS patch. I will
+> > send ASoC changes which won't affect sc8280xp.
 
-One part is `padata_do_multithreaded`, which disregards
-order and simply divides tasks into several groups for parallel
-execution. My patch use `padata_do_multithreaded`.
+> I somehow missed that patchset or conversation; As an owner of an
+> X13s, which is sc8280xp, I can say, neither pre-dts patch, nor post,
+> seem to do much good.  When I attempt to do a voice chat in armcord,
+> the responses I get to how I sound when using the mic on the X13s
+> itself range from "You sound like hot trash" to "You sound like a
+> robot with hiccups".
 
-The other part is composed of a set of APIs that, while handling data in
-an out-of-order parallel manner, can eventually return the data with
-ordered sequence. Only `crypto/pcrypt.c` use them. I guess these APIs
-are designed specifically for `crypto/pcrypt.c`.
-```
-padata_alloc
-padata_alloc_shell
-padata_do_parallel
-padata_do_serial
-padata_free_shell
-padata_free
-```
+That's a separate issue entirely. Both the digital and analog microphone
+(jack) is working on the X13s as long as you use pulseaudio.
+
+As I've mentioned before, there are problems with both playback and
+capture when you use pipewire however ("robot with hiccups" one could
+indeed describe it as).
+
+That suggests a more general problem with the Qualcomm audio drivers,
+but that has nothing to do with the audio routing.
+
+Johan
