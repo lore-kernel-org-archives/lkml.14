@@ -1,35 +1,35 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339B140BEB;
-	Mon,  5 Feb 2024 15:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1224776A;
+	Mon,  5 Feb 2024 15:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707147321; cv=none; b=QzmbKYA9Urz9tC4zIoOmW3YUI5eAunojmHeyRz0scNt6z4gtHOYsG9qMwh/KJutzocoBAt/Cn+V+O2vQMrKg4IXYTkTM5EGmyd5q3/s3IZ2FrQ9EtzsZNNSJEvemvWmclKSowTwjAFlNhKY6JctbYqBAiZ6pzq4hDPDtBndUzVQ=
+	t=1707147322; cv=none; b=b/51aLa/UF5EHNtBtZ8ZG7gOyDVWSe/nWW3iWCHgW7ccQi4hXQdSyGYY0Pn5OFuIhHlDQNSInjligKFwbyoBOlrbALrXbXNunCRgWjEVCeO3GhhLDER5ElJVVl8Yzgoj/BaRpgsH+wNkoR5jZ8crJdWOVrcbnbnV52khHDHgCGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707147321; c=relaxed/simple;
-	bh=9HL/x4Nj/uz8p4t8CXOhsS0Z/OjK0DF1R3RA4ctG+tM=;
+	s=arc-20240116; t=1707147322; c=relaxed/simple;
+	bh=ykTFCWhmo1CcFg+mieS6pNHkMkwN4QV8FPxwm0fymFY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UQido/O6T9i7j9mMnqjiFR+1n4slz6QwvEUoC4oIAnpaantDKsKCOg9CnvRik/3v5IeARbqcv9JpIUXKrxSh6f5vXalDRYeWZkWq4at28oEmvSGukcEyYbQYEo8ZvN5s7dUY2U3cC5P2ukMwN5zuqM+nEl3pjr180hPUqw19QiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jyaDsTDt; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version:Content-Type; b=my+0rfMCOmUBH8ExKVV/pp6xR+zsVuAoKV11dtJ4ioAthsJVX8KrIQjyX6AFveBG8dmT/mxHiakDN15etUCxxLZTmk5HcDToq5t8D98LVei+dWyEoDKzRwo6R9K3ITU1Zl0glY5GHZmpTBjA/GuXYUCQurgeMbmjkgevmNhTWVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OGseCoHX; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jyaDsTDt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9C9E8FF805;
-	Mon,  5 Feb 2024 15:35:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OGseCoHX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F7E324000A;
+	Mon,  5 Feb 2024 15:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707147317;
+	t=1707147318;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2Wk0pf2LEOjDnkraDRWIDqQ91OCoFBDydZfp83yb0pk=;
-	b=jyaDsTDtaEcCfxi8hPZQTaUQj22/lvuqXaHaORad3+otn6iFysGdjUN3h+2TXaM3CzKtNs
-	o3VIoFe5rEow+xgo5hvVBfyBpuz8zg1VjGp43FCFNSh+f8xB0E90PzNA8+YOH5A+24WsDN
-	Dbuz5BptEGagbm10fvmNt46qEqtPiiqX1uYwY1fnvLk2Fm5S36jxqg4AFRGN6K6CR9uRMV
-	Ju1+lYFkDZub/DFKDyCxw12j8BW16y8/lVztTBgNNsWGp60/a2TjzjVALY/2FWycyF9tLc
-	DphsiySOxPYQ2Rv6eqqdxYaSsA22yA9rdOgW5Pk/lA9+N9kmpiHwAfcWxyDQ0A==
+	bh=+yETsBPXWcWY3g53aJQJ3Y4mu+dfHGI3TLEovxztjpk=;
+	b=OGseCoHXU7uAnYuj4c/bj3Biua+cEz5wOWQ7XibIBreFCCcA5YUUVTrHgbZaX09uN6A5NR
+	gf4lfkrilalFQ3vhH1UkrS6bb3j7NshwjnHmVrv2y99UKiEW0kNWQhGy7upfzAoBHm6Rj/
+	AFSxagdD47EM/lPeWsDMkPD0r2yGHNXnPcdDbVibZvPHixEcjL2VCJZqTatKFPcriK0voj
+	I0i3kvfPtTLKWfeggARX57S2MuDMlCF76wSbk4f4NvZyIdPnvJSWQVahUji5/iLkqX9DsR
+	17AgnDsPOG2lU/aicPvFYKBJ2nBbBlJD7SNB+hSPssrQ21LMEiAlUDYqIhyHuw==
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
 To: Paul Burton <paulburton@kernel.org>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -45,9 +45,9 @@ Cc: Vladimir  Kondratiev <vladimir.kondratiev@mobileye.com>,
 	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v7 12/14] MIPS: Share generic kernel code with other architecture
-Date: Mon,  5 Feb 2024 16:34:58 +0100
-Message-ID: <20240205153503.574468-13-gregory.clement@bootlin.com>
+Subject: [PATCH v7 14/14] MAINTAINERS: Add entry for Mobileye MIPS SoCs
+Date: Mon,  5 Feb 2024 16:35:00 +0100
+Message-ID: <20240205153503.574468-15-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240205153503.574468-1-gregory.clement@bootlin.com>
 References: <20240205153503.574468-1-gregory.clement@bootlin.com>
@@ -57,67 +57,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: gregory.clement@bootlin.com
 
-Some architectures might seek to utilize a significant portion of the
-generic kernel code while maintaining independence from the generic
-kernel due to specific peculiarities.
+Add Vlad, Théo and myself as co-maintainers for the Mobileye MIPS
+SoCs.
 
-This patch allows for the reuse of core code, preventing unnecessary
-duplication.
-
-Suggested-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- arch/mips/Kbuild           | 1 +
- arch/mips/Kconfig          | 3 +++
- arch/mips/generic/Makefile | 6 +++---
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ MAINTAINERS | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/mips/Kbuild b/arch/mips/Kbuild
-index af2967bffb73d..d683993ed331c 100644
---- a/arch/mips/Kbuild
-+++ b/arch/mips/Kbuild
-@@ -17,6 +17,7 @@ obj- := $(platform-y)
- # mips object files
- # The object files are linked as core-y files would be linked
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b3444c8c6512e..b18f328ee8ee7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14546,6 +14546,18 @@ W:	https://linuxtv.org
+ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ F:	drivers/media/dvb-frontends/mn88473*
  
-+obj-y += generic/
- obj-y += kernel/
- obj-y += mm/
- obj-y += net/
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797ae590ebdba..5549d26448941 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -109,6 +109,9 @@ config MIPS_FIXUP_BIGPHYS_ADDR
- config MIPS_GENERIC
- 	bool
- 
-+config MACH_GENERIC_CORE
-+	bool
++MOBILEYE MIPS SOCS
++M:	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++M:	Gregory CLEMENT <gregory.clement@bootlin.com>
++M:	Théo Lebrun <theo.lebrun@bootlin.com>
++L:	linux-mips@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/mips/mobileye.yaml
++F:	arch/mips/boot/dts/mobileye/
++F:	arch/mips/configs/eyeq5_defconfig
++F:	arch/mips/mobileye/board-epm5.its.S
++F:	include/dt-bindings/soc/mobileye,eyeq5.h
 +
- config MACH_INGENIC
- 	bool
- 	select SYS_SUPPORTS_32BIT_KERNEL
-diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
-index e37a59bae0a62..56011d738441f 100644
---- a/arch/mips/generic/Makefile
-+++ b/arch/mips/generic/Makefile
-@@ -4,9 +4,9 @@
- # Author: Paul Burton <paul.burton@mips.com>
- #
- 
--obj-y += init.o
--obj-y += irq.o
--obj-y += proc.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += init.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += irq.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += proc.o
- 
- obj-$(CONFIG_YAMON_DT_SHIM)		+= yamon-dt.o
- obj-$(CONFIG_LEGACY_BOARD_SEAD3)	+= board-sead3.o
+ MODULE SUPPORT
+ M:	Luis Chamberlain <mcgrof@kernel.org>
+ L:	linux-modules@vger.kernel.org
 -- 
 2.43.0
 
