@@ -1,107 +1,73 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA85811FE;
-	Mon,  5 Feb 2024 19:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDB081AAA;
+	Mon,  5 Feb 2024 19:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162476; cv=none; b=EvqMOp/UjEKVvkSlFl+d3kBHK2pO5wXee+R5VnFP4efS9Dko1QW5qU5vX1czDY2GOc6s+T/Lhpq5qqTlcstbHi0LRBXFoXiF9ccQaS5HPN9hpTqqUnsDf9detqceDUgx942gil3d1+53eWxYGoVNci8NzZH/mcKypKYiojlIvKU=
+	t=1707162503; cv=none; b=HnnMMNCOVKZE/enlEDMTI4iTSHaAhLU95AeLKu5xNeq5NkWvfNYICfcTTfD1n9Ad5Tik+yV2Wb35na+XCsLlLNFDpoZBHivBYPvtvV63IWvLoWqHHJ1fto6Istjevt6w2yxncY8bqEUX8KjJ+vcLvE8GrbHMVsBMzwwpg/YqQO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162476; c=relaxed/simple;
-	bh=IvDdXoarG9VlDxIH2fq8YBLN0UFAhCkdJDUjBX7ElB0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RTCpQxLJewRpLJ1DFWwOcTvfrYkzYl4aoxvKf17M6Quqw7Cj1k5XKwGh/yT6yhpU4Fp097uOgqimlkRfPjtiwTRkATlZlvefSJc2hdSNWmioUy9GCHrGNE5ljRLIvWxVLyaDnlcdLCRktr2tX87o7FToCG4FCOMf7tyQPByGzLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=r4qkhGub; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707162503; c=relaxed/simple;
+	bh=rd8tMvV8Wq5qfDFvWyiy9t3y/ONGDRXPFbv8vOaEvCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WOPoCBp9XANZJ1uHsVev7RLyet/uyKgq8ixeHb9BDplmi3YFcILFibn4wQh0iheSqbhePPjX/AMNuetuo1FDkWHY4fNYj8y913Q1/e73MzubNZkFg2YSU7VTIxmgMgXAJhtsbd/OhOrYKEe5vYVsdS1u8VWU+GRgdgm2a2+P+NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5jDQp7+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r4qkhGub"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 415JlEMP019777;
-	Mon, 5 Feb 2024 13:47:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707162434;
-	bh=AvCnC5dU1dVgo533jsr7k/qxzOxE/4jL1GMcuwl1Q/c=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=r4qkhGubCD9LgnCLy+imivgC7A0Y0aalkmYrae6QqNyRHDAj6eHkH6MxV86rKRa8j
-	 wVWtLsMVIFhZw/ohxQi82Bx5+akWOluaXKsofDAwyf9w0hV5pCa8zIuUuCft5/Ep47
-	 nZcG4ulBCtUxcGE9hDe5zEngGZBMgup02e/KLJSI=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 415JlEU6006023
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 13:47:14 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 13:47:13 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 13:47:13 -0600
-Received: from udba0500997.dhcp.ti.com (udba0500997.dhcp.ti.com [128.247.81.249])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 415Jl90b037073;
-	Mon, 5 Feb 2024 13:47:13 -0600
-From: Brandon Brnich <b-brnich@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon
-	<will@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Geert
- Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Darren Etheridge <detheridge@ti.com>
-CC: Brandon Brnich <b-brnich@ti.com>
-Subject: [PATCH v4 4/4] arm64: defconfig: Enable Wave5 Video Encoder/Decoder
-Date: Mon, 5 Feb 2024 13:47:06 -0600
-Message-ID: <20240205194706.3605309-5-b-brnich@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240205194706.3605309-1-b-brnich@ti.com>
-References: <20240205194706.3605309-1-b-brnich@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5jDQp7+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460FFC433F1;
+	Mon,  5 Feb 2024 19:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707162502;
+	bh=rd8tMvV8Wq5qfDFvWyiy9t3y/ONGDRXPFbv8vOaEvCA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=m5jDQp7+lowH5sOCzZBMoGSOKvVK98UP0ioloOfh7nxmUasTmOa/RXL5StlzL1zoB
+	 84LLsqP4xC54EJfMzBNKR2D+eefsW4c2r+Qpzp1WOFaG+4mzFZj13ulrXkH7Ewm6he
+	 I9OJ+lQqzQc3U/n3801Gukz/VMuo2u9Z6qFuZb8ZrTcyeaJyAj8ARIoz5qgq85NTIn
+	 q2vDgLT87foyTknoWJzP82hl4pxJKNAD8EN71e9/56NjbbTFdGwaE+Y/DFgUod1zIm
+	 vBlyAYtXQn7lpeTfd8icL7VrRmkouJczIcJT3LDkR3MfkZlczwck9jrBY2GG5YzNhh
+	 BuQRsYAic9cXg==
+Date: Mon, 5 Feb 2024 11:48:21 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joe Damato <jdamato@fastly.com>
+Cc: Stanislav Fomichev <sdf@google.com>, sridhar.samudrala@intel.com, Eric
+ Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+ linux-api@vger.kernel.org, brauner@kernel.org, davem@davemloft.net,
+ alexander.duyck@gmail.com, Wei Wang <weiwan@google.com>, Amritha Nambiar
+ <amritha.nambiar@intel.com>
+Subject: Re: [net-next 0/3] Per epoll context busy poll support
+Message-ID: <20240205114821.4601ea5b@kernel.org>
+In-Reply-To: <20240205185217.GC10463@fastly.com>
+References: <CANn89i+YKwrgpt8VnHrw4eeVpqRamLkTSr4u+g1mRDMZa6b+7Q@mail.gmail.com>
+	<5faf88de-5063-421f-ad78-ad24d931fd17@intel.com>
+	<20240202032806.GA8708@fastly.com>
+	<f0b4d813-d7cb-428b-9c41-a2d86684f3f1@intel.com>
+	<20240202102239.274ca9bb@kernel.org>
+	<20240202193332.GA8932@fastly.com>
+	<20240202115828.6fd125bf@kernel.org>
+	<20240202202344.GA9283@fastly.com>
+	<20240202171539.7347cb01@kernel.org>
+	<ZcEmDz3UvAksHFFG@google.com>
+	<20240205185217.GC10463@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Enable Wave521c video decoder/encoder driver on all TI
-K3 platforms that contain the IP.
+On Mon, 5 Feb 2024 10:52:18 -0800 Joe Damato wrote:
+> > Should we also add prefer_busy_poll parameter to EPIOCSPARAMS?
+> > napi_busy_loop in ep_busy_loop has its prefer_busy_poll argument
+> > hard-coded as false.  
 
-Signed-off-by: Brandon Brnich <b-brnich@ti.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Good catch! We only plumbed it thru to socket read busy poll.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e6cf3e5d63c3..6fe4f2da4aca 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -795,6 +795,7 @@ CONFIG_V4L_MEM2MEM_DRIVERS=y
- CONFIG_VIDEO_CADENCE_CSI2RX=m
- CONFIG_VIDEO_MEDIATEK_JPEG=m
- CONFIG_VIDEO_MEDIATEK_VCODEC=m
-+CONFIG_VIDEO_WAVE_VPU=m
- CONFIG_VIDEO_IMX7_CSI=m
- CONFIG_VIDEO_IMX_MIPI_CSIS=m
- CONFIG_VIDEO_IMX8_ISI=m
--- 
-2.34.1
+> I think making this configurable is a good idea. I can add that in the v6
+> in addition to fixing the incorrect commit message in patch 1/3.
+> 
+> What do you think, Jakub?
 
+SGTM (with the caveat that I'm not epoll expert)
