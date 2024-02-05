@@ -1,125 +1,156 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24661B59B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 11:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF9B1B7F9;
+	Mon,  5 Feb 2024 11:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707131279; cv=none; b=TtMxGUjlf+DKpX3NZQXMn+ItZYR9+jQq8W5VP2cMG7j1jbLEMgR1XCRUvqETxFGNrEbVE8oHTcYr80lJXTLnEUwEzgqFKkXNz0CEhTjNyKHnKRcdOoIBb1PNK00hcvgT72Lig7j0AYG89zt2cBVTc7p55drkfFOsub/6jO1X2WE=
+	t=1707131286; cv=none; b=eW5CbzrrEHGcZbIBuFPoyiH+YmasDTQwwkSSzmA+Gt0/nlI7A5stqCxA5dMGgI8qIK7sg6Fu48GtrLxdH5WFBMZOks+X0vU5AjCa12JaGHWT0esP8QqEOiNdkIYYBpAAJ4z/Gnj6ttMHKpxWf+NIARcAxOCvoF5jXFPsUZu8aHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707131279; c=relaxed/simple;
-	bh=LSXUDuZ3hWNAcz8vkmNgC731XOYklVfnxXuzJDSI/9U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=km4DETVUSfyNYQHMYDPSJLoMaLN6gbhPDXlF/XCe+zEg+EDSxrYfq7w6z7z58MdZndLgy/HzaPyihk8RIt728EUn8CYc3VyJ6Hqvq9ggy04nDuaKzbfSoIj64YYxJCXvggyN/M0psRCZRN4bTj0wEccoXYw5LnmYwDlPGUxRTBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zPN75X/J; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707131286; c=relaxed/simple;
+	bh=7mWEWnxAauLCFNk47f49pAB6QNSuMAx+Qk1dfenkHL8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J4clzdN2VcGA9xfKXD4jc+O7YsXkQHpmp6Ef9flD+UZijuF/d/FWqVa6UYqlbS2Iw3RSRdKHTTgyhqr2mPCQaiiZafdPyoHW7Hx7lp6NBGsMImu7dHfgQdsRq1OYYFJ0IccUb2d4nxIAl+4UKFYAOzFE3H/hY6gBZ03NnnNtnlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=iCkTrKDG; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zPN75X/J"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-467ed334c40so1352434137.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 03:07:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707131276; x=1707736076; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=b2S4QWg5rbsM0zVoer/U9D2xYC6cQRyp0XiaCDO+VCA=;
-        b=zPN75X/JrioyDUMUPP12+FLv0N1fvLfINcgU7LjNOoPJeAssIuDUFF+Dlfbi+M7rzc
-         gAQunAJh1gEvPGqk1htNnXlsijsbAEioIU0ZyX+sftljTjO2unTT13FQWr+aTDCSYX42
-         /VFuB0k2PUVxMrhw5oRT2M0r3CIYxHNLjPm1vq0YtfEOBJ2t3vJ7nN2aKMtD+TedPvOy
-         2s3JOpSQszFKCXG5L/3tSSUhe9C3dCGS+ychrjj52breGZxVLoha0iPksJ1hZet/XfXT
-         HP84MVe+0YIL5jNcLt6507dzlmWRrE/FOxJ0+C4kEgTiInUKwX56YX1Vq85D/UAmLxHs
-         5hxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707131276; x=1707736076;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b2S4QWg5rbsM0zVoer/U9D2xYC6cQRyp0XiaCDO+VCA=;
-        b=CnEL9xEurqvkZ6NtiqnVYXnk6RGFFpY1VEUQM3pBlc069o0KnXqFmdAx4+dVW2DhQR
-         Rt0Z5NpdGi6LDsjh2jaIzt7vkJYnXhPhfbO70sjG+DKrhd+xFdETInsmzYapX6wJBVuU
-         rjXB0iOKHJQlyIuKW21Rdi3yCqQkL4MBHODwf/2/bnBIXx0PuiHJCTxPp6dJFWoWn5Dl
-         jIGiZTo7tQgruab1t5WKv2wFfnfPYnGdr5Erbm6o/Wu55cfDYgn5sOBz3TfNH+zRjWOh
-         8a39cwCqUWNK3zy9cogNRegcveT5HxTub8gkNdvqW6V0mXaAAbbhsfmwOCavVs0cTAlp
-         5bXQ==
-X-Gm-Message-State: AOJu0YyNPxX+OIrUkw7GGDXC7PQnrvrXI6icRoC6271JczquELTYvRKE
-	AnffYZTEGKUcehpXmfkwWpcIeK/Zm/n0DaVnIt906W7XfPzDKRnR6OMNYlsgeMIj7ytjFsV8of9
-	AD977M9TOpZ/Oa2jVx4qbzfgSyWYGWCmYKX5Z
-X-Google-Smtp-Source: AGHT+IHRhimf5DlF5es9JL+ew8WM2cfwIdaMJg21KojI1oyI4onRpBN+2Gc5nqIg0PfsDGvIN3lXdt5v1nJMH2MUxQE=
-X-Received: by 2002:a05:6102:2fa:b0:46c:fd6d:7233 with SMTP id
- j26-20020a05610202fa00b0046cfd6d7233mr7818207vsj.9.1707131276246; Mon, 05 Feb
- 2024 03:07:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="iCkTrKDG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707131284; x=1738667284;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=7mWEWnxAauLCFNk47f49pAB6QNSuMAx+Qk1dfenkHL8=;
+  b=iCkTrKDGJ29LmHya9ZXTMcVdTE0mM0H4Ske/qWym2FgsSDR/M/xj8pKx
+   8IjNbKGZmi+UrNvKHluwjR54kfSid+CmDTpHDGFGFVzsf6mVh4IT5Mmge
+   bTZ6EwHwCF+9WfUdhPjmR8VdQTp5GfkfnfuPk19bDAforO/j6gyc+bAxv
+   HVvjG3mx2ST2LtZ5ZynfjkP38JUk1C2DzdIcMYI+MZnvZ2R02t6oIK4vd
+   b6kskxTkqXW9PyOtRpiOcIZwClFDjucqKulgHBmlR3LLxoHuuFLwpJsyp
+   iWBtUrUJG/x7UvveoYHBWrRie16aJz2FEDSwxq2LIT3/kqkLS8kZD1kFJ
+   A==;
+X-CSE-ConnectionGUID: tvnljXD9ScO2Biw+t+1Jqg==
+X-CSE-MsgGUID: uOaGY4zKTEaXsI2/T8fQgg==
+X-IronPort-AV: E=Sophos;i="6.05,245,1701154800"; 
+   d="scan'208";a="17124179"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Feb 2024 04:07:44 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 5 Feb 2024 04:06:35 -0700
+Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 5 Feb 2024 04:06:24 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <dharma.b@microchip.com>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux@armlinux.org.uk>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <geert+renesas@glider.be>, <arnd@arndb.de>,
+	<hari.prasathge@microchip.com>, <Jason@zx2c4.com>, <rientjes@google.com>,
+	<rdunlap@infradead.org>, <vbabka@suse.cz>, <manikandan.m@microchip.com>
+Subject: [linux][PATCH v2 1/4] dt-bindings: display: bridge: add sam9x75-lvds compatible
+Date: Mon, 5 Feb 2024 16:36:06 +0530
+Message-ID: <20240205110609.217022-2-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240205110609.217022-1-dharma.b@microchip.com>
+References: <20240205110609.217022-1-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205090323.it.453-kees@kernel.org>
-In-Reply-To: <20240205090323.it.453-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Mon, 5 Feb 2024 12:07:20 +0100
-Message-ID: <CANpmjNNMJn7xtpUxwxiUV1KXgMsDmyvGAq+4etFy5aiESdcDxg@mail.gmail.com>
-Subject: Re: [PATCH v2] ubsan: Silence W=1 warnings in self-test
-To: Kees Cook <keescook@chromium.org>
-Cc: kernel test robot <lkp@intel.com>, Andrey Konovalov <andreyknvl@gmail.com>, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Mon, 5 Feb 2024 at 10:03, Kees Cook <keescook@chromium.org> wrote:
->
-> Silence a handful of W=1 warnings in the UBSan selftest, which set
-> variables without using them. For example:
->
->    lib/test_ubsan.c:101:6: warning: variable 'val1' set but not used [-Wunused-but-set-variable]
->      101 |         int val1 = 10;
->          |             ^
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401310423.XpCIk6KO-lkp@intel.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Add the 'sam9x75-lvds' compatible binding, which describes the Low Voltage
+Differential Signaling (LVDS) Controller found on some Microchip's sam9x7
+series System-on-Chip (SoC) devices. This binding will be used to define
+the properties and configuration for the LVDS Controller in DT.
 
-Reviewed-by: Marco Elver <elver@google.com>
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+Changelog
+v1 -> v2
+- Remove '|' in description, as there is no formatting to preserve.
+- Remove 'gclk' from clock-names as there is only one clock(pclk).
+- Remove the unused headers and include only used ones.
+- Change the compatible name specific to SoC (sam9x75) instead of entire series.
+- Change file name to match the compatible name.
+---
+ .../bridge/microchip,sam9x75-lvds.yaml        | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
 
-> ---
-> v2:
->  - add additional "volatile" annotations for potential future proofing (marco)
-> v1: https://lore.kernel.org/all/20240202094550.work.205-kees@kernel.org/
-> ---
->  lib/Makefile     | 1 +
->  lib/test_ubsan.c | 4 ++--
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 6b09731d8e61..bc36a5c167db 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
->  obj-$(CONFIG_TEST_IDA) += test_ida.o
->  obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
->  CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-> +CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
->  UBSAN_SANITIZE_test_ubsan.o := y
->  obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
->  obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
-> diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
-> index 2062be1f2e80..f4ee2484d4b5 100644
-> --- a/lib/test_ubsan.c
-> +++ b/lib/test_ubsan.c
-> @@ -23,8 +23,8 @@ static void test_ubsan_divrem_overflow(void)
->  static void test_ubsan_shift_out_of_bounds(void)
->  {
->         volatile int neg = -1, wrap = 4;
-> -       int val1 = 10;
-> -       int val2 = INT_MAX;
-> +       volatile int val1 = 10;
-> +       volatile int val2 = INT_MAX;
->
->         UBSAN_TEST(CONFIG_UBSAN_SHIFT, "negative exponent");
->         val1 <<= neg;
-> --
-> 2.34.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20240205090323.it.453-kees%40kernel.org.
+diff --git a/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
+new file mode 100644
+index 000000000000..862ef441ac9f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/microchip,sam9x75-lvds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip SAM9X75 LVDS Controller
++
++maintainers:
++  - Dharma Balasubiramani <dharma.b@microchip.com>
++
++description:
++  The Low Voltage Differential Signaling Controller (LVDSC) manages data
++  format conversion from the LCD Controller internal DPI bus to OpenLDI
++  LVDS output signals. LVDSC functions include bit mapping, balanced mode
++  management, and serializer.
++
++properties:
++  compatible:
++    const: microchip,sam9x75-lvds
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Peripheral Bus Clock
++
++  clock-names:
++    items:
++      - const: pclk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/at91.h>
++    lvds-controller@f8060000 {
++      compatible = "microchip,sam9x75-lvds";
++      reg = <0xf8060000 0x100>;
++      interrupts = <56 IRQ_TYPE_LEVEL_HIGH 0>;
++      clocks = <&pmc PMC_TYPE_PERIPHERAL 56>;
++      clock-names = "pclk";
++    };
+-- 
+2.25.1
+
