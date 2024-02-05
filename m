@@ -1,94 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929AB82D7A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10B184A31;
+	Mon,  5 Feb 2024 19:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707162801; cv=none; b=IZ2WEWcE+sEDKFIQZoL+cN3I4uTFSrSHVt87tlAEp2C3twSRmBuN0JLfc0cAoc9F0fCMdhyZxsYYYv8uAVIcNrhSOQ8IJUKCErF+qbtb3N9V+W6NaQvsKVLY3X4A53slDrt23PQcXS2s2ih4/gmL2pKTwcW5YMR2dZwQZe1i/w4=
+	t=1707162803; cv=none; b=bk39IRTfa83CIb4G+RTsZ1bq7FhrXuLHqsesF/nGV1l2PMkkufGVPajGYga0knPApuzejzwVjrwFE6b22c9kliovilDxX9cYzOM/Sy4pg6z4lwDzxjHzsWa2cUQM8XQz67H4dp+0sX5x34A2gDWPZG9xjkSOxX28JVgUHWnH/ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707162801; c=relaxed/simple;
-	bh=u/VKs/3EPpWVrRldc29EujFjC9yGn/bWji2MkiRM3Sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZn7q9vmHkMY0QWWE9n5OI8fYi5L9SFOT/+E4WgTu0jDLZiTRK/9jS2Bb5ZFMgN0KvvZVr56QAIYNRTCUCr+4PH71MdNL4h1DNN5I7K4w9HU6EnSGAEZND2Mo2FGvmTgvwyA97eLmsudcrngthlP2tpuhDrXb06yRQWMUzJfCCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EyOISEu9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707162803; c=relaxed/simple;
+	bh=MKOiCSVybYFLlIPm81ntGadZ+pFtGxCUS8sJplhFQ4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pyv61cB96Qbl9FE2KMotAa7KjRw+aKEiDqvWA4K8GaKTWYsonzzpGClwunWf7dmQtUSU/4s8P5y9S/1+c6DmaxV9q7sQBng6MpwKpyyAy3+bGfB3HPEJMlditM+bUcuBlkUdTk7Ux88WSoc66lKo//tDsgGalJMyRwsfPPFE4/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jEIAfj6h; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyOISEu9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707162798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VNtm/2qBOdXruRpXqj+cGjGSujDgnFJiILWoI+l5br8=;
-	b=EyOISEu9NR4+o5RyddqvwE99BvCJlXLks5sZ6u9Yof7tQGjt3pSrhxNDqmiSb848ilPc4t
-	bhnnoIS202hQrjGzmWDDiD7Y3OFsHUeQdoZVsf+nLIQVhaMJqSW7z/xyRQMk9uuYC+t+Lt
-	gqD7i+2QtzNuaORaqeFTpySGSN1CXoA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-CxRN5HyxPny_tbrKO0hGEg-1; Mon,
- 05 Feb 2024 14:53:14 -0500
-X-MC-Unique: CxRN5HyxPny_tbrKO0hGEg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 940E21C04338;
-	Mon,  5 Feb 2024 19:53:13 +0000 (UTC)
-Received: from rhel-developer-toolbox-latest (unknown [10.2.16.180])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 639DA1C060AF;
-	Mon,  5 Feb 2024 19:53:12 +0000 (UTC)
-Date: Mon, 5 Feb 2024 11:53:10 -0800
-From: Chris Leech <cleech@redhat.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nilesh Javali <njavali@marvell.com>, Christoph Hellwig <hch@lst.de>,
-	John Meneghini <jmeneghi@redhat.com>, Lee Duncan <lduncan@suse.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	Hannes Reinecke <hare@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v5 4/4] uio_dmem_genirq: UIO_MEM_DMA_COHERENT conversion
-Message-ID: <ZcE8phru3Nkp2J0s@rhel-developer-toolbox-latest>
-References: <20240201233400.3394996-1-cleech@redhat.com>
- <20240201233400.3394996-5-cleech@redhat.com>
- <20240204101903.GA916983@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jEIAfj6h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707162802; x=1738698802;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MKOiCSVybYFLlIPm81ntGadZ+pFtGxCUS8sJplhFQ4A=;
+  b=jEIAfj6hhgcvZzO07S/LNJzNgN8Do+HxA7dg5oiIG/7NXN0cutZdgu6N
+   OuxeBbYtlOJ51rmUmciISZY6WQFpD2umhZstLzhXnYYUDA/XYf3xER6mY
+   gSBeqE9CpNyJkXdtDP+fJJ1q7yVE10V6GZsNMo7EwK1To07eykl2pEcCm
+   pLfkbenUJXG3jur2GIkzmLx6YfdEFOfGX5X+qiSY+Tbq8kKn3pACd7oJM
+   yesogDiBZaPSz4GqyU9ETU1YQqqARhiU2usUSvQNoM2ncXnbjOvH/+5Pj
+   li9uIfre8it29eQ87X46+96XoVvlVGo7NSBxmzFHRAYEZWdP7x07TvVQ3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="4410907"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="4410907"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 11:53:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="799661"
+Received: from ckuuniff-mobl.amr.corp.intel.com (HELO [10.212.98.15]) ([10.212.98.15])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 11:53:21 -0800
+Message-ID: <70c54f80-9fb1-4789-b371-eead597423f5@linux.intel.com>
+Date: Mon, 5 Feb 2024 13:52:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240204101903.GA916983@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] soundwire: intel_auxdevice: remove redundant
+ assignment to variable link_flags
+Content-Language: en-US
+To: Colin Ian King <colin.i.king@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, alsa-devel@alsa-project.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240205182436.1843447-1-colin.i.king@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20240205182436.1843447-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 04, 2024 at 10:19:03AM +0000, Simon Horman wrote:
-> On Thu, Feb 01, 2024 at 03:34:00PM -0800, Chris Leech wrote:
-...
-> > @@ -264,7 +257,8 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
-> >  					" dynamic and fixed memory regions.\n");
-> >  			break;
-> >  		}
-> > -		uiomem->memtype = UIO_MEM_PHYS;
-> > +		uiomem->memtype = UIO_MEM_DMA_COHERENT;
-> > +		uiomem->dma_device = &pdev->dev,
-> 
-> Hi Chris,
-> 
-> a nit from my side.
-> 
-> Probably the ',' would be better written as a ';' here.
-> I don't think this is a bug, but using comma like this is
-> somewhat unexpected and confusing.
-> 
-> Flagged by clang-17 with -Wcomma
+Thanks for the clean-up!
 
-That's an embarrassing typo to slip through.
-I'll fix this,and add the kdoc comments for the API additions.
+> The variable link_flags is being initialized with a value that is never
+> read, it is being re-assigned later on. The initialization is
+> redundant and can be removed.
+> 
+> Cleans up clang scan build warning:
+> drivers/soundwire/intel_auxdevice.c:624:2: warning: Value stored
+> to 'link_flags' is never read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/soundwire/intel_auxdevice.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/soundwire/intel_auxdevice.c b/drivers/soundwire/intel_auxdevice.c
+> index 93698532deac..95125cc2fc59 100644
+> --- a/drivers/soundwire/intel_auxdevice.c
+> +++ b/drivers/soundwire/intel_auxdevice.c
+> @@ -621,8 +621,6 @@ static int __maybe_unused intel_resume(struct device *dev)
+>  		return 0;
+>  	}
+>  
+> -	link_flags = md_flags >> (bus->link_id * 8);
+> -
 
-Thanks,
-- Chris
+this redundant line is 3+ years old now, added in a2d9c161db24
+("soundwire: intel: pm_runtime idle scheduling")
 
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+>  	if (pm_runtime_suspended(dev)) {
+>  		dev_dbg(dev, "pm_runtime status was suspended, forcing active\n");
+>  
