@@ -1,131 +1,109 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3189E1D6AE
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6633EA9C;
+	Mon,  5 Feb 2024 12:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137469; cv=none; b=OQh1djMjcBO0DAWQJTOTgxznAwv5aOO8p76NUFUa4dJKqUq9EYhuoCtSzYvistwqtC/IweEFoYdYEb9GTjjZqmFncNRKSXcd1CRhLXBvSA577nLDYQbUOJAzM84sMwTHskbADRE7qTfIJSjeV0QyftZT5DYh/KWjhCFMjLfW5oo=
+	t=1707137481; cv=none; b=E8PUY8frrf/ndNNhIf4pRAcb1s4kWPyltrHSyqo6yv2dePjmPgXToWFoqEb1HkoZ7cWckkeG3GXPmIYYvvFotNIfW0u1/4WXPsHTiycOE6of3dDzdJI2O6xhFywZ6I2qJ3At4/OKNWHppV5WBmA7Ut2aoRS7xmqdctdoqCamF/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137469; c=relaxed/simple;
-	bh=nslXHNI8v0F+oMDNIFeZ05nX7qB4EcFT9zHVVXaoppM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ScWc469y+dgp0LRGsUVR4gNB8LvGMe9rU5Q4fzL0yt1FFjGiJw8LIJ5WVS+tVT12JiCRy9tK//gl9Ed9tOaeXGKAy75wANo3AgoLfYRm/tb7x28WcVV3CFzWTvEdT+IpExr8uWEsOqvFdYX5rnEeY4mmtD4tnmW8SdJxm9AGoMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LEE5vTzE; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1707137481; c=relaxed/simple;
+	bh=kzC+y21TP7jfpyjHZghz3kIfpx76cEBRO1F6nDVMDFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=el+r5S1NfpNPwCTT66pX/MqFOLULOVTd3lUc1Y1nuydhjPfkSHhULjxSk1/m6kfMzkwxH1sXaKqgz87F07jZQlW+CSscwXT5Sn21NAp1BOC0GR2Wa1MzqCC1Pd8XDtAnn/VIwM4t0/yGnyABRpMcYBQMZ5/rd47joOSpJ2KXep0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=NY2nAND6; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LEE5vTzE"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707137459; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=s/Pp95J1WK6GTpmalhMVjkVH/7wA3cd9KPuozZdyxCQ=;
-	b=LEE5vTzElrI4TMZU1TZ5xU/oPSx81vChYf8A5DeD1HJ7cDLJXfg1KtCwLaYeSS/X2318IslOwbK2cWR01Nw7CnwDsBEwSHFBv+VHBGcjOjQ69ILllfSEntPrmsUt/s9KnKanO0DNp+RKwBS5USaYOzKDQ48F1Uu5zFlXyEaZbXA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W0AV717_1707137458;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W0AV717_1707137458)
-          by smtp.aliyun-inc.com;
-          Mon, 05 Feb 2024 20:50:59 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	muchun.song@linux.dev
-Cc: osalvador@suse.de,
-	david@redhat.com,
-	mhocko@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mm: hugetlb: improve the handling of hugetlb allocation failure for freed or in-use hugetlb
-Date: Mon,  5 Feb 2024 20:50:51 +0800
-Message-Id: <23814ccce5dd3cd30fd67aa692fd0bf3514b0166.1707137359.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="NY2nAND6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707137479; x=1738673479;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kzC+y21TP7jfpyjHZghz3kIfpx76cEBRO1F6nDVMDFw=;
+  b=NY2nAND6PPDieg/TwmVSXkvmievUdeyPkxuhg32poajyeXUb7zgGZCkc
+   JfiRLuyqWMSwLXl6P6zUwKZ/it3lFm2MN6yfEM5wofxgpUZ2IIKHCJ2oC
+   hTpfZ4jM/EJ237UmBo5lslzWFA6ieJ4UbCRYE+4xL30WDgb4N2i6SyK0t
+   zy0hBOlKgGMBNHgVTCr4bYLj/EQ42I2jjw1rfJq52XI2KUY9Um8YSNXLM
+   Ts/wQXaTTF56CZEmujOcURgLr/SaM2wyq7LI1905Qf7e6Os5yqo+zlLMV
+   rQK5wy381DzBMbH+wY/zFcQmXPb4mrGjR2WZEZaRI4N/Z//hd/VeVMmpk
+   g==;
+X-CSE-ConnectionGUID: 9VixgTOORmy9tv6DYqUlyA==
+X-CSE-MsgGUID: f2hqAhSKRXS31XIQDqqNVg==
+X-IronPort-AV: E=Sophos;i="6.05,245,1701154800"; 
+   d="scan'208";a="17127398"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Feb 2024 05:51:18 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 5 Feb 2024 05:50:56 -0700
+Received: from [10.159.245.205] (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 5 Feb 2024 05:50:53 -0700
+Message-ID: <399c1ecd-c4fb-481f-b95a-afd71fb2d4fa@microchip.com>
+Date: Mon, 5 Feb 2024 13:50:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: ata: atmel: remove at91 compact flash
+ documentation
+To: Hari Prasath Gujulan Elango <Hari.PrasathGE@microchip.com>,
+	<dlemoal@kernel.org>, <cassel@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<linux-ide@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240205105201.81060-1-Hari.PrasathGE@microchip.com>
+Content-Language: en-US, fr-FR
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <20240205105201.81060-1-Hari.PrasathGE@microchip.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When handling the freed hugetlb or in-use hugetlb, we should ignore the
-failure of alloc_buddy_hugetlb_folio() to dissolve the old hugetlb successfully,
-since we did not use the new allocated hugetlb in this 2 cases. Moreover,
-moving the allocation into the free hugetlb handling branch.
+On 05/02/2024 at 11:52, Hari Prasath G E - I63539 wrote:
+> The compatible "at91rm9200-cf" is not used by any driver,hence remove the
+> corresponding documentation.
+> 
+> Signed-off-by: Hari Prasath Gujulan Elango <Hari.PrasathGE@microchip.com>
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
-Changes from v1:
- - Update the suject line per Muchun.
- - Move the allocation into the free hugetlb handling branch per Michal.
----
- mm/hugetlb.c | 40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 9d996fe4ecd9..4899167d3652 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3031,21 +3031,9 @@ static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
- {
- 	gfp_t gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
- 	int nid = folio_nid(old_folio);
--	struct folio *new_folio;
-+	struct folio *new_folio = NULL;
- 	int ret = 0;
- 
--	/*
--	 * Before dissolving the folio, we need to allocate a new one for the
--	 * pool to remain stable.  Here, we allocate the folio and 'prep' it
--	 * by doing everything but actually updating counters and adding to
--	 * the pool.  This simplifies and let us do most of the processing
--	 * under the lock.
--	 */
--	new_folio = alloc_buddy_hugetlb_folio(h, gfp_mask, nid, NULL, NULL);
--	if (!new_folio)
--		return -ENOMEM;
--	__prep_new_hugetlb_folio(h, new_folio);
--
- retry:
- 	spin_lock_irq(&hugetlb_lock);
- 	if (!folio_test_hugetlb(old_folio)) {
-@@ -3075,6 +3063,24 @@ static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
- 		cond_resched();
- 		goto retry;
- 	} else {
-+		if (!new_folio) {
-+			spin_unlock_irq(&hugetlb_lock);
-+			/*
-+			 * Before dissolving the free hugetlb, we need to allocate
-+			 * a new one for the pool to remain stable.  Here, we
-+			 * allocate the folio and 'prep' it by doing everything
-+			 * but actually updating counters and adding to the pool.
-+			 * This simplifies and let us do most of the processing
-+			 * under the lock.
-+			 */
-+			new_folio = alloc_buddy_hugetlb_folio(h, gfp_mask, nid,
-+							      NULL, NULL);
-+			if (!new_folio)
-+				return -ENOMEM;
-+			__prep_new_hugetlb_folio(h, new_folio);
-+			goto retry;
-+		}
-+
- 		/*
- 		 * Ok, old_folio is still a genuine free hugepage. Remove it from
- 		 * the freelist and decrease the counters. These will be
-@@ -3102,9 +3108,11 @@ static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
- 
- free_new:
- 	spin_unlock_irq(&hugetlb_lock);
--	/* Folio has a zero ref count, but needs a ref to be freed */
--	folio_ref_unfreeze(new_folio, 1);
--	update_and_free_hugetlb_folio(h, new_folio, false);
-+	if (new_folio) {
-+		/* Folio has a zero ref count, but needs a ref to be freed */
-+		folio_ref_unfreeze(new_folio, 1);
-+		update_and_free_hugetlb_folio(h, new_folio, false);
-+	}
- 
- 	return ret;
- }
--- 
-2.39.3
+> ---
+>   .../devicetree/bindings/ata/atmel-at91_cf.txt | 19 -------------------
+>   1 file changed, 19 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/ata/atmel-at91_cf.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/atmel-at91_cf.txt b/Documentation/devicetree/bindings/ata/atmel-at91_cf.txt
+> deleted file mode 100644
+> index c1d22b3ae134..000000000000
+> --- a/Documentation/devicetree/bindings/ata/atmel-at91_cf.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -Atmel AT91RM9200 CompactFlash
+> -
+> -Required properties:
+> -- compatible : "atmel,at91rm9200-cf".
+> -- reg : should specify localbus address and size used.
+> -- gpios : specifies the gpio pins to control the CF device. Detect
+> -  and reset gpio's are mandatory while irq and vcc gpio's are
+> -  optional and may be set to 0 if not present.
+> -
+> -Example:
+> -compact-flash@50000000 {
+> -	compatible = "atmel,at91rm9200-cf";
+> -	reg = <0x50000000 0x30000000>;
+> -	gpios = <&pioC 13 0	/* irq */
+> -		 &pioC 15 0 	/* detect */
+> -		 0		/* vcc */
+> -		 &pioC  5 0	/* reset */
+> -		>;
+> -};
 
