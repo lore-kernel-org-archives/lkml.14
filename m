@@ -1,83 +1,155 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C941B962;
-	Mon,  5 Feb 2024 13:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A905C1C6B8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707138351; cv=none; b=qB7o6xbG5aGoh1u3fmOzgnEDDF5SqwmglPlTiME+7ihbKNYeIspzktKdSEToxAuFqs7iO7QEIwVI4Zh3wj8Th5xPmRDj/tGba33MMJ4CV5o9arpWL52K9rMNkEQkMNmYOtqkMbk6j6A+MlhAeKPbVQODCG+R6i7JjzoZm5XxQKk=
+	t=1707138369; cv=none; b=ZeB9NUi7AsAWXHzsooqcxDjU1rs1sFMeckUvmUZk8sm+xtG5WVCSh4L20YSFAPeEuenDl7Zl+C7pWuIXoiVSssRZE470YOpQykvkfytB/uZvzKfhP3rlZ+F9ZiRPq+DJwiA4vZVx8ZtRLEGuC2xSq0XmifKcChNboGf7XVKj4og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707138351; c=relaxed/simple;
-	bh=6V8uf0N3Xm/UvMoZwTYB06Qu615ajXrJkVS3vh+jkDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e2fzTeaII6f2s1r/U2gxkkYRouyj3R65HeOd0fHZfGbHT7t38C2kPoQsSkNxJXK1sFEUfmTvp1/t061Q2pVxuk8cjNEfTLI0UqD1lbxu2WGqnyFhfZdIo+oBQHqp9FIppqpTMfuYUhcFM8rc//zeWZw5B9ita9Sjydx6RjcblQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VwXgkThs; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1707138369; c=relaxed/simple;
+	bh=y1MzrmTKyQQMIDspxzrWiCyHC2RD/xxzWm2WCEN+Cik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IhaUYVJKZteu3FdRiRmZilcFYma4nJSd5KfbHKyG7bguuLohy76v9rrTUlJlM4AgCNeh+G1v8+lOXg8xIq4lnsPGsqPtvwEBrCj6hzqgLL60zAz2bVzDDgu6WgMAaUXv9+Ocm+Bwj7UkIogKFHF53D0fsgZ/tz9iFMEO7XdpbDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kJQAAakD; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VwXgkThs"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 059A840E00B2;
-	Mon,  5 Feb 2024 13:05:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Z0d7F3KIc62J; Mon,  5 Feb 2024 13:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707138343; bh=enA/cpWfJIAhcvZX1vqODbUKVwndaQoP+ixMrDmiOqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VwXgkThss17myyQa6Obw2oLVAhNHyeox+iAnF3X3Meg8uGX58pRTZtEyWkx51MVYA
-	 6dqSLW02h8ecfIdxO1jpmDHAVi72c2xyEY4i4oGscZDiPcfz1JfKiCXxJhHMvK57/9
-	 62t58SzRoCvCTbnFHUrl2O7yVYNDXGuUm7DEgzJHDbMcvMtevp3D/aUEuxOK/xdoRm
-	 psDYLpjzY6m3cDJxQoXJEfosaQacatIzjF7o1gDS74ZbH1vPlnRBwsTtsfU/UbMfZD
-	 aCpSiAtA2sW3/oTAuYvJS5ot/GX+GAjoEu6oQRjaTMs2vySJLYsOqyehrhJ9r+aa9I
-	 osXT1kCFzc7eWWrnl0ET/qgITp68c4KHxCAG7D37sk9RX9+84iFVpPXq12JjSdDEjt
-	 /I9lWeOfIV+a6gYi6bT2GVyLbt/HAAJi1znbndBbP6SbNE/eheg3BY6rN9/pQCkL++
-	 T9UMtO8/6jzk1Sp+UR7/CQvm1nugLKbg0+kvfDg3gClSLerZ98mVV5mB7GjYXIi1Up
-	 3Mw8bBOaEhSbKPWA58czok00L/H+AYvVQnon5UuHza56sra+VmvvVqC3mVsdmZ4O/R
-	 EZCzzmFmf073IPBcT9SKLcjGew7T6CsLE0DXrz70RuMIWsVWGqphzKKqtotZKwq2Zp
-	 9vQifc8wXDKOQOM9g2jonLv8=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BFE1940E016D;
-	Mon,  5 Feb 2024 13:05:37 +0000 (UTC)
-Date: Mon, 5 Feb 2024 14:05:32 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	avadhut.naik@amd.com, john.allen@amd.com, muralidhara.mk@amd.com
-Subject: Re: [PATCH] EDAC/amd64: Add MI300 row retirement support
-Message-ID: <20240205130532.GDZcDdHLp6GVaNER10@fat_crate.local>
-References: <20240204155106.3110934-1-yazen.ghannam@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kJQAAakD"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1707138364; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=HGoNLv2jRKFKzJDTTarPrBhake1p0+Zm7zJYtCUBCmY=;
+	b=kJQAAakDRvJFUP/eunMdBqWVKgxAjsEp9FsJcilFBXXUO9ftzu+W0laMmOqPhNjYtLMrtE1RFtu6++1IvGv6x2GPlFPW8hN3ki99/2K6LRfpqExpy9B9G8kev54FyXgxDYT1DKE8WuDtgaG5NCto+QbgzkZ3oPqe6wMTQ+B58g0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W0AXnX7_1707138362;
+Received: from 192.168.0.105(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W0AXnX7_1707138362)
+          by smtp.aliyun-inc.com;
+          Mon, 05 Feb 2024 21:06:03 +0800
+Message-ID: <2613b670-84f8-4f97-ab4e-0d480fc1a3f8@linux.alibaba.com>
+Date: Mon, 5 Feb 2024 21:06:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240204155106.3110934-1-yazen.ghannam@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm: hugetlb: remove __GFP_THISNODE flag when
+ dissolving the old hugetlb
+To: Michal Hocko <mhocko@suse.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, osalvador@suse.de,
+ david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <6f26ce22d2fcd523418a085f2c588fe0776d46e7.1706794035.git.baolin.wang@linux.alibaba.com>
+ <Zbu4cD1XLFLfKan8@tiehlicka>
+ <3f31cd89-f349-4f9e-bc29-35f29f489633@linux.alibaba.com>
+ <ZbylJr_bbWCUMjMl@tiehlicka>
+ <f1606912-5bcc-46be-b4f4-666149eab7bd@linux.alibaba.com>
+ <Zby7-dTtPIy2k5pj@tiehlicka>
+ <909cee7d-0201-4429-b85d-7d2662516e45@linux.alibaba.com>
+ <ZcCnNPkNpE7KTHZu@tiehlicka>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <ZcCnNPkNpE7KTHZu@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 04, 2024 at 09:51:06AM -0600, Yazen Ghannam wrote:
-> AMD MI300 systems have on-die High Bandwidth Memory. This memory has a
-> relatively higher error rate, and it is not individually replaceable
-> like DIMMs.
 
-...
 
->  drivers/edac/Kconfig      |  1 +
->  drivers/edac/amd64_edac.c | 48 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 49 insertions(+)
+On 2/5/2024 5:15 PM, Michal Hocko wrote:
+> On Mon 05-02-24 10:50:32, Baolin Wang wrote:
+>>
+>>
+>> On 2/2/2024 5:55 PM, Michal Hocko wrote:
+>>> On Fri 02-02-24 17:29:02, Baolin Wang wrote:
+>>>> On 2/2/2024 4:17 PM, Michal Hocko wrote:
+>>> [...]
+>>>>>> Agree. So how about below changing?
+>>>>>> (1) disallow fallbacking to other nodes when handing in-use hugetlb, which
+>>>>>> can ensure consistent behavior in handling hugetlb.
+>>>>>
+>>>>> I can see two cases here. alloc_contig_range which is an internal kernel
+>>>>> user and then we have memory offlining. The former shouldn't break the
+>>>>> per-node hugetlb pool reservations, the latter might not have any other
+>>>>> choice (the whole node could get offline and that resembles breaking cpu
+>>>>> affininty if the cpu is gone).
+>>>>
+>>>> IMO, not always true for memory offlining, when handling a free hugetlb, it
+>>>> disallows fallbacking, which is inconsistent.
+>>>
+>>> It's been some time I've looked into that code so I am not 100% sure how
+>>> the free pool is currently handled. The above is the way I _think_ it
+>>> should work from the usability POV.
+>>
+>> Please see alloc_and_dissolve_hugetlb_folio().
+> 
+> This is the alloc_contig_range rather than offlining path. Page
+> offlining migrates in-use pages to a _different_ node (as long as there is one
+> available) via do_migrate_range and it disolves free hugetlb pages via
+> dissolve_free_huge_pages. So the node's pool is altered but as this is
+> an explicit offling operation I think there is not choice to go
+> differently.
+>   
+>>>> Not only memory offlining, but also the longterm pinning (in
+>>>> migrate_longterm_unpinnable_pages()) and memory failure (in
+>>>> soft_offline_in_use_page()) can also break the per-node hugetlb pool
+>>>> reservations.
+>>>
+>>> Bad
+>>>
+>>>>> Now I can see how a hugetlb page sitting inside a CMA region breaks CMA
+>>>>> users expectations but hugetlb migration already tries hard to allocate
+>>>>> a replacement hugetlb so the system must be under a heavy memory
+>>>>> pressure if that fails, right? Is it possible that the hugetlb
+>>>>> reservation is just overshooted here? Maybe the memory is just terribly
+>>>>> fragmented though?
+>>>>>
+>>>>> Could you be more specific about numbers in your failure case?
+>>>>
+>>>> Sure. Our customer's machine contains serveral numa nodes, and the system
+>>>> reserves a large number of CMA memory occupied 50% of the total memory which
+>>>> is used for the virtual machine, meanwhile it also reserves lots of hugetlb
+>>>> which can occupy 50% of the CMA. So before starting the virtual machine, the
+>>>> hugetlb can use 50% of the CMA, but when starting the virtual machine, the
+>>>> CMA will be used by the virtual machine and the hugetlb should be migrated
+>>>> from CMA.
+>>>
+>>> Would it make more sense for hugetlb pages to _not_ use CMA in this
+>>> case? I mean would be better off overall if the hugetlb pool was
+>>> preallocated before the CMA is reserved? I do realize this is just
+>>> working around the current limitations but it could be better than
+>>> nothing.
+>>
+>> In this case, the CMA area is large and occupies 50% of the total memory.
+>> The purpose is that, if no virtual machines are launched, then CMA memory
+>> can be used by hugetlb as much as possible. Once the virtual machines need
+>> to be launched, it is necessary to allocate CMA memory as much as possible,
+>> such as migrating hugetlb from CMA memory.
+> 
+> I am afraid that your assumption doesn't correspond to the existing
+> implemntation. hugetlb allocations are movable but they are certainly
+> not as movable as regular pages. So you have to consider a bigger
+> margin and spare memory to achieve a more reliable movability.
+> 
+> Have you tried to handle this from the userspace. It seems that you know
+> when there is the CMA demand to you could rebalance hugetlb pools at
+> that moment, no?
 
-Applied, thanks.
+Maybe this can help, but this just mitigates the issue ...
 
--- 
-Regards/Gruss,
-    Boris.
+>> After more thinking, I think we should still drop the __GFP_THISNODE flag in
+>> alloc_and_dissolve_hugetlb_folio(). Firstly, not only it potentially cause
+>> CMA allocation to fail, but it might also cause memory offline to fail like
+>> I said in the commit message. Secondly, there have been no user reports
+>> complaining about breaking the per-node hugetlb pool, although longterm
+>> pinning, memory failure, and memory offline can potentially break the
+>> per-node hugetlb pool.
+> 
+> It is quite possible that traditional users (like large DBs) do not use
+> CMA heavily so such a problem was not observed so far. That doesn't mean
+> those problems do not really matter.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+CMA is just one case, as I mentioned before, other situations can also 
+break the per-node hugetlb pool now.
+
+Let's focus on the main point, why we should still keep inconsistency 
+behavior to handle free and in-use hugetlb for alloc_contig_range()? 
+That's really confused.
