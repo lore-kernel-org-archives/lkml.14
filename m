@@ -1,76 +1,132 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F52E4CDFD
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 21:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7451AB806;
+	Mon,  5 Feb 2024 21:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707167586; cv=none; b=rSWvOhgzj8jRcxNXjOJJNpXeUam7OmdxAeBaKn28GHalVNH6NRTxYFkJEYfrKV454XsZfycXg/3bZpI3TVTQj0ick1/VJMUi6OjN/EkF3Nc3Qq4x69q91Lt17E2EQR3GIYep/J/4RcG/TKOhDioGqzW/VjctgIJ0DP6CEET/kQY=
+	t=1707167799; cv=none; b=l55TFodvNvHpU+AIfFiBJdfyuY3NRr4x1sNPYz9cZdhHex0csTlMJQLqSs9eZIqE9tcRuY/+ahDGpnXKWNyQxxp0QGBZeyh+2J4EKrM0xHA/bl8jQFZCFT5ypfc6oUPXtl/vr0NkR689iDh6hFWPwr4hWosLUrAHfhaDiPm/tvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707167586; c=relaxed/simple;
-	bh=RERVg0NCmBPsnzb6n/jjfpC8aRmrtHhD3ZlQlxIVfBs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=swonWZ/K+B7c0snD43NuwWzkgt2DGI5DLH0ww57FzfYctZoG/4HyXr+W6gIrITdA8p8C8iyDyBYO5dbaqzK0e65nvIN7MeB6FKIeANj4588CYz5zT9H57oO2ujBUYo0+HC1+riMf6mPyruLrLMLPMcoSxgCOHztM/b0SX2gt/aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-363c3862a93so16777965ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 13:13:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707167584; x=1707772384;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Z0ihoDKUQq9Uqt/80kKGIwkNWhhfnyox0+aJomGQ+c=;
-        b=WEi/gdu/zCFPEdszz3zNFtv56yP/Zro84ahw2594oYB8VU5/+asrZ0i2qw0WdMNHWw
-         PbtMGWPy4zzAjQbnpihTqpojaXQMojtxlbitnV2R1EUFPoa2MmAekvnG+pNC5rr71Jl9
-         omDKzZfl8W5LiGAvXH653B7BfDu31qBDYY/qY4U7jMqpp4/NQ5XnlPtnssV7NvXNmBJL
-         OTgMKY83F30cC8LMqRYokrNnPV8NMWwg6irhJxTPB3y5Ieyai4W3YdbvzfDZponv4jWE
-         5hzHUgDyoQ7YvdAvji5IoGBlWG3aymXVmeEEb+6Wf/xzGKGpOGLdFPhRmHoLYUpybG1k
-         yjFg==
-X-Gm-Message-State: AOJu0YxOrTFTLydQiulv5lRD1tvmf74Ac3zC18Lei2E87zycZAZ5b//P
-	u0WnHJ2Tf2U49FgZI8dXvVW6L69+K1AxyFh05B0k/b3EMlHnixrgG/yMnDIXvODS0TUMg7bPnyT
-	ekeBIYLsLC9fjTABqw/No7wVwIlps6pPbb8Ao0OSZSKKfIe8pc2SGvIE=
-X-Google-Smtp-Source: AGHT+IEUIJq4+NI9WY9amk5S6XGpR/DU60PskU08/wZ5acN0mwT02+7/lbDHKIoPrXocNN1g8Li8iF6NRBWd9DCQRYIGP5il6yiN
+	s=arc-20240116; t=1707167799; c=relaxed/simple;
+	bh=w+LuAn4eMxEN1OrwnjXfkUZofNi+HXJroO9FLryNtL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D4v8WBqwuh/JcQzY9v/cCXx/sR9ShlmsxKgb9891QHFrk//HQMjc/kAkCucbYUow/5SIJt4SsEVzGneuzJp+yahnbrYEQ74KJFIIAJ3d0xh36IKnLdYs6LcmscWFxAoT1ELi9kMEk47vG1IOKYs2rCbGbJdPjWahcKmq5ao1BIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=k2QTPAlp; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=k2QTPAlp; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="k2QTPAlp";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="k2QTPAlp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 52B1021FB3;
+	Mon,  5 Feb 2024 21:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707167795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UqjQ8uzPWkoXvaP3jSmRX0mX+6vg7iSnhNElmOf67RA=;
+	b=k2QTPAlpUZx9xWdcIwXtXXDq0RS18tpEXYVMAwgeXgBnBYJefWMYQ93JLDFkCalSq3ycUy
+	VZAEpeop+Dxd1H2y4UYD/k2bR0lxrH87nVnAGgfJdz4CSRW/671XL7U+K2ActeCA0IKwI6
+	nBokQeUPwfSSneyy/npR/ngpYbv+j+0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707167795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UqjQ8uzPWkoXvaP3jSmRX0mX+6vg7iSnhNElmOf67RA=;
+	b=k2QTPAlpUZx9xWdcIwXtXXDq0RS18tpEXYVMAwgeXgBnBYJefWMYQ93JLDFkCalSq3ycUy
+	VZAEpeop+Dxd1H2y4UYD/k2bR0lxrH87nVnAGgfJdz4CSRW/671XL7U+K2ActeCA0IKwI6
+	nBokQeUPwfSSneyy/npR/ngpYbv+j+0=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2F00A132DD;
+	Mon,  5 Feb 2024 21:16:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tIwCCTNQwWWHUwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 05 Feb 2024 21:16:35 +0000
+Date: Mon, 5 Feb 2024 22:16:34 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
+	yuzhao@google.com, mkoutny@suse.com,
+	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: memcg: Use larger batches for proactive reclaim
+Message-ID: <ZcFQMru5_oATGbuP@tiehlicka>
+References: <20240202233855.1236422-1-tjmercier@google.com>
+ <ZcC7Kgew3GDFNIux@tiehlicka>
+ <CABdmKX3HbSxX6zLF4z3f+=Ybiq1bA71jckkeHv5QJxAjSexgaA@mail.gmail.com>
+ <ZcE5n9cTdTGJChmq@tiehlicka>
+ <CABdmKX0Du2F+bko=hjLBqdQO-bJSFcG3y1Bbuu2v6J8aVB39sw@mail.gmail.com>
+ <ZcFG2JoXI7i8XzQY@tiehlicka>
+ <CABdmKX0t1LXj80Awe20TrmY5gQB6v2E4bGfW8WXr2i84o+k6ow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d9e:b0:363:ca05:c856 with SMTP id
- h30-20020a056e021d9e00b00363ca05c856mr55769ila.6.1707167584313; Mon, 05 Feb
- 2024 13:13:04 -0800 (PST)
-Date: Mon, 05 Feb 2024 13:13:04 -0800
-In-Reply-To: <0000000000009c7eb105f5b88b70@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006f69c90610a8edb3@google.com>
-Subject: Re: [syzbot] [xfs?] INFO: task hung in xfs_buf_item_unpin
-From: syzbot <syzbot+3f083e9e08b726fcfba2@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, chandan.babu@oracle.com, 
-	djwong@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABdmKX0t1LXj80Awe20TrmY5gQB6v2E4bGfW8WXr2i84o+k6ow@mail.gmail.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [0.28 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.12)[66.62%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.28
 
-syzbot suspects this issue was fixed by commit:
+On Mon 05-02-24 12:47:47, T.J. Mercier wrote:
+> On Mon, Feb 5, 2024 at 12:36 PM Michal Hocko <mhocko@suse.com> wrote:
+[...]
+> > This of something like
+> > timeout $TIMEOUT echo $TARGET > $MEMCG_PATH/memory.reclaim
+> > where timeout acts as a stop gap if the reclaim cannot finish in
+> > TIMEOUT.
+> 
+> Yeah I get the desired behavior, but using sc->nr_reclaimed to achieve
+> it is what's bothering me.
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+I am not really happy about this subtlety. If we have a better way then
+let's do it. Better in its own patch, though.
 
-    fs: Block writes to mounted block devices
+> It's already wired up that way though, so if you want to make this
+> change now then I can try to test for the difference using really
+> large reclaim targets.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176f2d7be80000
-start commit:   d2980d8d8265 Merge tag 'mm-nonmm-stable-2023-02-20-15-29' ..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=471a946f0dd5764c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f083e9e08b726fcfba2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a077d8c80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d91c74c80000
+Yes, please. If you want it a separate patch then no objection from me
+of course. If you do no like the nr_to_reclaim bailout then maybe we can
+go with a simple break out flag in scan_control.
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: fs: Block writes to mounted block devices
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
