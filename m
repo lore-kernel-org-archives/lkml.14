@@ -1,92 +1,244 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFD2199B4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1ABF19BBA
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707135223; cv=none; b=HoJpcdbA4+LfmbeL4wkvZrp8SNlpKcSBFrLCkXPPBAI1iI5e1SUG1cbISBnpOPQMuDSQvrdrxWnFoccZHdBN86bmeChH2NHBWLwFF3q6qkfnIA/FPot2n14ak3t4Ujk6xTgHm5VhtDl1EWdC+3Xpbdcg3EfrayeiHtwXbTApXH0=
+	t=1707135277; cv=none; b=QvnEKHEWJ3JLikxMy0S3xyrP7sEMspuZdefAT6+ZjhzQrv0rgGu4QaSo7lOhZ0l3ryjTGbkbgsPXJCVbOy+G/NXiF1+AbCsggC1jFqyegjwGabeeEEDNCRRTG54Hbxpj/Og3M/mg0v0mbSxBGwfUu5UizKiqOrxeNgtWyOBSJGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707135223; c=relaxed/simple;
-	bh=b3zEL90q15hC96NDr4vpP1wxQM33aWn3KdnLk0NMY7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HtAYfpG4147wiLQbMSO6rZocLfSzjCRYPNLrurvXvTEcXeV1mydF+WB7TlCvYvU05StOeCBv9uLYDPCWDJgY6HfY+DhrQJHjVUtD9ti1fRZK0sxIYGyvdUYEIR3NnSLAs2BWyjZNiSNIm0P8yY0+xQSJNCkSeXe7ONvDdcl4RdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=v5L+M9f6; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="v5L+M9f6"
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-40fd72f7125so10715635e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:13:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707135219; x=1707740019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RSQODvxw90qryNiwnQGt89Wiy04U5DyDbCfGw4ywivs=;
-        b=v5L+M9f6uLLzgJ/0MiLCSrmRPPCOoyQNbvXw3q2f9U+eY4dQNG5PmP2DzpY20wMDFf
-         G0GAz/ALacWujIOpvEy3bA4VcUG3UTZGbyAEDLzSEbXW0ZmQcg9wEBWwsNHfJGWhQLiG
-         caEBzg8jTAsh/1W4AtGXZHjEo8Zy3apsToHD4U+KdLAZZtRuW5thYAQGfWCR3PrqQSDB
-         E4mHJ1SA/qX5CTMmIfA/i3CCH5RxAlVimNOp0NHWc4xKmbL3fuBLPMVD1IrGLB8/uce7
-         eUCSQpz/xdB8yjnvxfwZOaf3rWdHP2vnBezAHSWAxU6/i9SzIQ9eTRkBXfKNdeKHXqPs
-         Vb1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707135219; x=1707740019;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RSQODvxw90qryNiwnQGt89Wiy04U5DyDbCfGw4ywivs=;
-        b=xFTr7hp5u8QP3Cx2UrnijI3qxjs2mW4Sy6hrkxcP6TX+TMwT64LcBFLuYQzVb1Zi69
-         Z85s1FH53xanwirjbxD5PRfzBizjBfvX0kXBvFZaHN4m20t3RQ11rSmbIQpfGmLCGOTT
-         Q99RqozzxPD16GYfnbwNo0EH5vidLFGWQD4ETHO549YyqFUVR7pRF2IRlln+i1y7Wb8t
-         Zx1nFASkqzoLz6joL5YIjOAxJHr4Oc+yVkpbL4ZCUetOu17rdQxDbm+WjM9VllpcICz7
-         LNOBqYHTMHcNY+z4krZEafEYZDjS6L3evzCLbYj+DR+hqoSsxl8Q/ABkCLGzF+YoJwAj
-         WGzA==
-X-Gm-Message-State: AOJu0YymxOkFJ97L1kRqNqE6xjk+rldnAy5URVo+duU2A49xN1M9az8/
-	PMidGiLIlyqRVX5AT74hB8gtCw4jXGKpqCiUo8zA21NSB8LP70eq7HVxhj7M3icYSj2iGnf6cBV
-	aKOUI0A==
-X-Google-Smtp-Source: AGHT+IF+6v1/nBFcRGVgzfNCpfbGsAJ1MwumTlPaJ83U33aOvlA6N+lfqbDkUmKrhOcSgb2VVPlznQ==
-X-Received: by 2002:a05:600c:3d87:b0:40f:dd18:a014 with SMTP id bi7-20020a05600c3d8700b0040fdd18a014mr1054623wmb.14.1707135219168;
-        Mon, 05 Feb 2024 04:13:39 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXJFM57T3TxSBmdhYoCX+h0h1AZUSSC4yX/pGaAigQXn2XOqHluxVRfQPlWk1WrLrest6ItIDUTOqlcpFTOz/DVPgw=
-Received: from debian.fritz.box (aftr-82-135-80-180.dynamic.mnet-online.de. [82.135.80.180])
-        by smtp.gmail.com with ESMTPSA id bg8-20020a05600c3c8800b0040fb03f803esm8459779wmb.24.2024.02.05.04.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:13:38 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: linux-kernel@vger.kernel.org,
-	trivial@kernel.org
-Cc: Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] README: Fix spelling/capitalization
-Date: Mon,  5 Feb 2024 13:09:06 +0100
-Message-Id: <20240205120904.1711-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707135277; c=relaxed/simple;
+	bh=HiZhPu5P1nh67cu5QUjJXKuYfIzcokeEWmoVwBDImqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QY6b17j+ez94npnFdVyTB0h5CWYoXV7IfvDmq49U3jJ+i8O5CNy5f6HUgSvIIJy1799HH4EHvErITylAaGGEOqwDImUqkJwirlhXWE9PzdQmc6kiVYfPDaU47XhzwVrrmmHXSvF3YHsFd5EQXYF6hmupG95oqLO6ZkHTT/8HugI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AABD21FB;
+	Mon,  5 Feb 2024 04:15:14 -0800 (PST)
+Received: from [10.57.79.41] (unknown [10.57.79.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1339A3F762;
+	Mon,  5 Feb 2024 04:14:27 -0800 (PST)
+Message-ID: <d4f602db-403b-4b1f-a3de-affeb40bc499@arm.com>
+Date: Mon, 5 Feb 2024 12:14:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] mm: swap: Swap-out small-sized THP without
+ splitting
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, david@redhat.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+ shy828301@gmail.com, wangkefeng.wang@huawei.com, willy@infradead.org,
+ xiang@kernel.org, ying.huang@intel.com, yuzhao@google.com,
+ chrisl@kernel.org, surenb@google.com, hanchuanhua@oppo.com
+References: <20231025144546.577640-5-ryan.roberts@arm.com>
+ <20240205095155.7151-1-v-songbaohua@oppo.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240205095155.7151-1-v-songbaohua@oppo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-- Fix spelling/capitalization s/Restructured/ReStructured/
+On 05/02/2024 09:51, Barry Song wrote:
+> +Chris, Suren and Chuanhua
+> 
+> Hi Ryan,
+> 
+>> +	/*
+>> +	 * __scan_swap_map_try_ssd_cluster() may drop si->lock during discard,
+>> +	 * so indicate that we are scanning to synchronise with swapoff.
+>> +	 */
+>> +	si->flags += SWP_SCANNING;
+>> +	ret = __scan_swap_map_try_ssd_cluster(si, &offset, &scan_base, order);
+>> +	si->flags -= SWP_SCANNING;
+> 
+> nobody is using this scan_base afterwards. it seems a bit weird to
+> pass a pointer.
+> 
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1212,11 +1212,13 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+>>  					if (!can_split_folio(folio, NULL))
+>>  						goto activate_locked;
+>>  					/*
+>> -					 * Split folios without a PMD map right
+>> -					 * away. Chances are some or all of the
+>> -					 * tail pages can be freed without IO.
+>> +					 * Split PMD-mappable folios without a
+>> +					 * PMD map right away. Chances are some
+>> +					 * or all of the tail pages can be freed
+>> +					 * without IO.
+>>  					 */
+>> -					if (!folio_entire_mapcount(folio) &&
+>> +					if (folio_test_pmd_mappable(folio) &&
+>> +					    !folio_entire_mapcount(folio) &&
+>>  					    split_folio_to_list(folio,
+>>  								folio_list))
+>>  						goto activate_locked;
+>> --
+> 
+> Chuanhua and I ran this patchset for a couple of days and found a race
+> between reclamation and split_folio. this might cause applications get
+> wrong data 0 while swapping-in.
+> 
+> in case one thread(T1) is reclaiming a large folio by some means, still
+> another thread is calling madvise MADV_PGOUT(T2). and at the same time,
+> we have two threads T3 and T4 to swap-in in parallel. T1 doesn't split
+> and T2 does split as below,
+> 
+> static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>                                 unsigned long addr, unsigned long end, 
+>                                 struct mm_walk *walk)
+> {
+> 
+>                 /*   
+>                  * Creating a THP page is expensive so split it only if we
+>                  * are sure it's worth. Split it if we are only owner.
+>                  */
+>                 if (folio_test_large(folio)) {
+>                         int err; 
+> 
+>                         if (folio_estimated_sharers(folio) != 1)
+>                                 break;
+>                         if (pageout_anon_only_filter && !folio_test_anon(folio))
+>                                 break;
+>                         if (!folio_trylock(folio))
+>                                 break;
+>                         folio_get(folio);
+>                         arch_leave_lazy_mmu_mode();
+>                         pte_unmap_unlock(start_pte, ptl);
+>                         start_pte = NULL;
+>                         err = split_folio(folio);
+>                         folio_unlock(folio);
+>                         folio_put(folio);
+>                         if (err)
+>                                 break;
+>                         start_pte = pte =
+>                                 pte_offset_map_lock(mm, pmd, addr, &ptl);
+>                         if (!start_pte)
+>                                 break;
+>                         arch_enter_lazy_mmu_mode();
+>                         pte--;
+>                         addr -= PAGE_SIZE;
+>                         continue;
+>                 }    
+> 
+>         return 0;
+> }
+> 
+> 
+> 
+> if T3 and T4 swap-in same page, and they both do swap_read_folio(). the
+> first one of T3 and T4 who gets PTL will set pte, and the 2nd one will
+> check pte_same() and find pte has been changed by another thread, thus
+> goto out_nomap in do_swap_page.
+> vm_fault_t do_swap_page(struct vm_fault *vmf)
+> {
+>         if (!folio) {
+>                 if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
+>                     __swap_count(entry) == 1) {
+>                         /* skip swapcache */
+>                         folio = vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
+>                                                 vma, vmf->address, false);
+>                         page = &folio->page;
+>                         if (folio) {
+>                                 __folio_set_locked(folio);
+>                                 __folio_set_swapbacked(folio);
+>                          
+>                                 /* To provide entry to swap_read_folio() */
+>                                 folio->swap = entry;
+>                                 swap_read_folio(folio, true, NULL);
+>                                 folio->private = NULL;
+>                         }
+>                 } else {
+>                 }
+>         
+>         
+>         /*
+>          * Back out if somebody else already faulted in this pte.
+>          */
+>         vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+>                         &vmf->ptl);
+>         if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte)))
+>                 goto out_nomap;
+> 
+>         swap_free(entry);
+>         pte = mk_pte(page, vma->vm_page_prot);
+> 
+>         set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
+>         return ret;
+> }
+> 
+> 
+> while T1 and T2 is working in parallel, T2 will split folio. this can
+> run into race with T1's reclamation without splitting. T2 will split
+> a large folio into a couple of normal pages and reclaim them.
+> 
+> If T3 finishes swap_read_folio and gets PTL earlier than T4, it calls
+> set_pte and swap_free. this will cause zRAM to free the slot. then
+> t4 will get zero data in swap_read_folio() as the below zRAM code
+> will fill zero for freed slots, 
+> 
+> static int zram_read_from_zspool(struct zram *zram, struct page *page,
+>                                  u32 index)
+> {
+>         ...
+> 
+>         handle = zram_get_handle(zram, index);
+>         if (!handle || zram_test_flag(zram, index, ZRAM_SAME)) {
+>                 unsigned long value;
+>                 void *mem;
+> 
+>                 value = handle ? zram_get_element(zram, index) : 0; 
+>                 mem = kmap_local_page(page);
+>                 zram_fill_page(mem, PAGE_SIZE, value);
+>                 kunmap_local(mem);
+>                 return 0;
+>         }
+> }
+> 
+> usually, after t3 frees swap and does set_pte, t4's pte_same becomes
+> false, it won't set pte again. So filling zero data into freed slot
+> by zRAM driver is not a problem at all. but the race is that T1 and
+> T2 might do set swap to ptes twice as t1 doesn't split but t2 splits
+> (splitted normal folios are also added into reclaim_list), thus, the
+> corrupted zero data will get a chance to be set into PTE by t4 as t4
+> reads the new PTE which is set secondly and has the same swap entry
+> as its orig_pte after T3 has swapped-in and free the swap entry.
+> 
+> we have worked around this problem by preventing T4 from splitting
+> large folios and letting it goto skip the large folios entirely in
+> MADV PAGEOUT once we detect a concurrent reclamation for this large
+> folio.
+> 
+> so my understanding is changing vmscan isn't sufficient to support
+> large folio swap-out without splitting. we have to adjust madvise
+> as well. we will have a fix for this problem in
+> [PATCH RFC 6/6] mm: madvise: don't split mTHP for MADV_PAGEOUT
+> https://lore.kernel.org/linux-mm/20240118111036.72641-7-21cnbao@gmail.com/
+> 
+> But i feel this patch should be a part of your swap-out patchset rather
+> than the swap-in series of Chuanhua and me :-)
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- README | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Barry, Chuanhua,
 
-diff --git a/README b/README
-index 669ac7c32292..026eff0b8e06 100644
---- a/README
-+++ b/README
-@@ -11,7 +11,7 @@ In order to build the documentation, use ``make htmldocs`` or
-     https://www.kernel.org/doc/html/latest/
- 
- There are various text files in the Documentation/ subdirectory,
--several of them using the Restructured Text markup notation.
-+several of them using the ReStructured Text markup notation.
- 
- Please read the Documentation/process/changes.rst file, as it contains the
- requirements for building and running the kernel, and information about
--- 
-2.39.2
+Thanks for the very detailed bug report! I'm going to have to take some time to
+get my head around the details. But yes, I agree the fix needs to be part of the
+swap-out series.
+
+Sorry I haven't progressed this series as I had hoped. I've been concentrating
+on getting the contpte series upstream. I'm hoping I will find some time to move
+this series along by the tail end of Feb (hoping to get it in shape for v6.10).
+Hopefully that doesn't cause you any big problems?
+
+Thanks,
+Ryan
+
+> 
+> Thanks
+> Barry
 
