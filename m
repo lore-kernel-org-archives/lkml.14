@@ -1,118 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADD31AAD8;
-	Mon,  5 Feb 2024 12:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6541AADB
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134871; cv=none; b=MkHOetKErh8eceXlJwZF5Ryp12PtoNCHYHJb2EAhlJAdTnxw3xoTKCDD9XPoAzluJDWq7h/1NASZk1qQReYZmG/xPFbMLGZ2pzHGnUE7R7KC7M+hq4jeH2plswuOSMBmfQf3R5k5XdBLSR2dAr80QtIjgnU43U/7xGyGDnb1gVc=
+	t=1707134873; cv=none; b=VOeB2kBPSohzoXTatREuILbtvzmmvTulYXjwp7n7XR6tyWaUBNdPtiCJEkyt69LSaW/ibU4RNltqjUxu1dR+qXzc+CWvb1IgetQ+oCDVLBhp7D0N3beLO+v4eyMHm7s/FtblyA//wg7fiquP1KUdw4bMUcX0QFO4KB8yFtL3Toc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134871; c=relaxed/simple;
-	bh=8TcYVXgJSergAPvQdFpI+iJxhTSkJUg1QeMWHvPrR+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a8uiIfKMTS52RKDUjRTQYgTNRZWPr/ryK0YtKsM0BjAAh97ePWOVZdapYqbcTegpVvBwZaOqUvJ2GL9GtQvRwRnLLO6Fyqm/vUQl6WBAKsOIsKprUGx+Z9Bqg/dTskZZ3/POKDWsqwNzznrccM+jEMno3Yw22micHuCCZT1L+fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJ2WLv+O; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707134873; c=relaxed/simple;
+	bh=nYYHVcoHYUdNn+h1ISBs7vmeauh5+//ep94UgTFIkZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGZUriSFbMFXredJ2Ii4pEEQ+/YhSsw86WQpYoy8fI6+B457xZ0TKjQnzYrsaQXJkJF5zDRHW6vUY7f7zSODLksG4fjgHWhxOnWexmB81mhDGC4WPjlh7yH63Cx5u4uQUAkZPce1XIP9xm4p17ydA9Wpt23GIAs2KLEG1Xs2UUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=D75Ygvr6 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJ2WLv+O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707134869; x=1738670869;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=8TcYVXgJSergAPvQdFpI+iJxhTSkJUg1QeMWHvPrR+I=;
-  b=MJ2WLv+OTdyiKOxFAMJYstiCXRmPZkUCqPV/Ire4VBfAvNlvB/WXKCDw
-   AnX3dCzPoNKm2xieeaedvDAAzwwhwK+Mva2rF4pG21JPd1dks8mXZoT3f
-   rVK4gZ5JOwDqkVKDOYgTKaML9nKahX0sLM+dAEWLcWVAbrkHLFP0Gys4t
-   oupd27EGMs635ELKn0q8mqgb2iFEsJ1NrwXP3qHkE0xMTNgvA3k77mwU1
-   cS1eqXkd798q27jCRRr/z8umHZ9/uk94WDVdWs4NMFLTeDuR+fUZAr9jl
-   NcNsjlyTjCUbtW0+gucrHIsp/6ZSIAfUo8KH7V1/KtahJ5pQDRgh1SmyW
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="25954393"
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="25954393"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:07:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="908403"
-Received: from snestero-mobl.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.21.196])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:07:46 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: fenghua.yu@intel.com,
-	reinette.chatre@intel.com,
-	shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v4 0/5] selftests/resctrl: Add non-contiguous CBMs in Intel CAT selftest
-Date: Mon,  5 Feb 2024 13:07:32 +0100
-Message-ID: <cover.1707130307.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="D75Ygvr6"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d73066880eso37348885ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:07:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707134871; x=1707739671;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=okcATfsqmM9HdbdR1ZaKAA33LmgfKaKFBGgMV86AS0c=;
+        b=jBJHTm8r566ZTGUlCukIcZpSZZKp39+9rjsXQLVN1LrYuIQiaqyLkyPXrkJxq9za43
+         rLN4dELl6HxGM+1O+fOIZEbcaMxdI2GK3JxzyoZmYEJ8Nv1xL/QpXMuvIyNF1W0Z8usO
+         rFqjas6nnlHhBZuOhmLvT+MMNwhBTqil2MgxoL2qcdzSre3QwBCGcnehOUSlc3+SgZis
+         Npnt5aP9uLXYMUZaKPpuAvHA1jHqwQ8vlC91tRQHdzJB146Q1gukQJ2TK0j/Te98A+yL
+         YHNhnpXN9oDY72Mh1mL0zX0adKuiOsQ+LkE/d1KMECd1bYGwXaN7cRvStvB3huyfaHCL
+         /+OA==
+X-Gm-Message-State: AOJu0YwScw50+GV/bypqRhc5Ro0VKNhkjqbyYaMHx89ZPVrdQ/KwLdXR
+	Kg1CC9EToaMmBm+jQzr8SkcrTolXfMYgcnGIGghuMvz8iT9CUOeQl9xghIcTcEGiEw==
+X-Google-Smtp-Source: AGHT+IFxWHHdGbNMjLSmN4GD9YfAWIeS+hPxkVLgb8d9M27wPDCqlExpu8DXpE2CWyigM2ykSRp0zw==
+X-Received: by 2002:a17:902:f68a:b0:1d9:a2d5:a113 with SMTP id l10-20020a170902f68a00b001d9a2d5a113mr6824734plg.67.1707134870767;
+        Mon, 05 Feb 2024 04:07:50 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUB1kbsydGTq8nzYJchFqkir7awN4E1JkeFqPE4cun8d2klYa1/KnJnwWkmkV1oVjR9ewIu00A4oUItHn2wMcxECKmnkZ72YXHXgw==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id b17-20020a170902ed1100b001d752c4f36asm6128400pld.78.2024.02.05.04.07.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 04:07:50 -0800 (PST)
+Date: Mon, 5 Feb 2024 09:08:20 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707134868;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=okcATfsqmM9HdbdR1ZaKAA33LmgfKaKFBGgMV86AS0c=;
+	b=D75Ygvr6jm39ZXZEeINvuygQHHZJyH2e9QeIB91q1FsMOQfWsB0TcXk8k6DdpeAUOpCyav
+	NYEtLUzqZpuEYUvvkunAcYzefuduqpuOT99H8P5ddzqCkBtGhvxoqA15WlrDJtBIwOb918
+	50T/TZhtJThF0toWQAhjLM3Tc2taIPPJKUhvxwk7UujZG1TYSECJHHNZpZgs38vljh91zH
+	gQ+5VrYollTb7/24ujRtzLKhwMnIGASIEiRlHzuU6euAVfbyRfYfEajVTW59HHyBfM0wj/
+	rJNsMw+1xPPjnapl8FyzXEjrVDsR7NycIwtulThU+Pk2qZAR03O6oMfHfY4ZyQ==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] w1: make w1_bus_type const
+Message-ID: <hk2w5pow3kqhw3vk5hlgeoy3dntbujb2s2xup2vkivtabwwb2k@do5ud3tj33jj>
+References: <20240204-bus_cleanup-w1-v1-1-a0f4c84d7db3@marliere.net>
+ <80d80422-139a-4bfe-9d8b-4ef193e72d8b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80d80422-139a-4bfe-9d8b-4ef193e72d8b@linaro.org>
 
-Non-contiguous CBM support for Intel CAT has been merged into the kernel
-with Commit 0e3cd31f6e90 ("x86/resctrl: Enable non-contiguous CBMs in
-Intel CAT") but there is no selftest that would validate if this feature
-works correctly.
-The selftest needs to verify if writing non-contiguous CBMs to the
-schemata file behaves as expected in comparison to the information about
-non-contiguous CBMs support.
+On  5 Feb 08:34, Krzysztof Kozlowski wrote:
+> On 04/02/2024 21:55, Ricardo B. Marliere wrote:
+> > Now that the driver core can properly handle constant struct bus_type,
+> 
+> Does "Now" means some dependency on other patches?
 
-The patch series is based on a rework of resctrl selftests that's
-currently in review [1]. The patch also implements a similar
-functionality presented in the bash script included in the cover letter
-of the original non-contiguous CBMs in Intel CAT series [3].
+Hi Krzysztof!
 
-Changelog v4:
-- Changes to error failure return values in non-contiguous test.
-- Some minor text refactoring without functional changes.
+Please check:
+https://lore.kernel.org/all/1305850262-9575-5-git-send-email-gregkh@suse.de/
 
-Changelog v3:
-- Rebase onto v4 of Ilpo's series [1].
-- Split old patch 3/4 into two parts. One doing refactoring and one
-  adding a new function.
-- Some changes to all the patches after Reinette's review.
+You can apply as is.
 
-Changelog v2:
-- Rebase onto v4 of Ilpo's series [2].
-- Add two patches that prepare helpers for the new test.
-- Move Ilpo's patch that adds test grouping to this series.
-- Apply Ilpo's suggestion to the patch that adds a new test.
+Thanks for reviewing,
+-	Ricardo
 
-[1] https://lore.kernel.org/all/20231215150515.36983-1-ilpo.jarvinen@linux.intel.com/
-[2] https://lore.kernel.org/all/20231211121826.14392-1-ilpo.jarvinen@linux.intel.com/
-[3] https://lore.kernel.org/all/cover.1696934091.git.maciej.wieczor-retman@intel.com/
 
-Older versions of this series:
-[v1] https://lore.kernel.org/all/20231109112847.432687-1-maciej.wieczor-retman@intel.com/
-[v2] https://lore.kernel.org/all/cover.1702392177.git.maciej.wieczor-retman@intel.com/
-
-Ilpo Järvinen (1):
-  selftests/resctrl: Add test groups and name L3 CAT test L3_CAT
-
-Maciej Wieczor-Retman (4):
-  selftests/resctrl: Add helpers for the non-contiguous test
-  selftests/resctrl: Split validate_resctrl_feature_request()
-  selftests/resctrl: Add resource_info_file_exists()
-  selftests/resctrl: Add non-contiguous CBMs CAT test
-
- tools/testing/selftests/resctrl/cat_test.c    | 84 ++++++++++++++++-
- tools/testing/selftests/resctrl/cmt_test.c    |  2 +-
- tools/testing/selftests/resctrl/mba_test.c    |  2 +-
- tools/testing/selftests/resctrl/mbm_test.c    |  6 +-
- tools/testing/selftests/resctrl/resctrl.h     | 10 +-
- .../testing/selftests/resctrl/resctrl_tests.c | 18 +++-
- tools/testing/selftests/resctrl/resctrlfs.c   | 94 ++++++++++++++++---
- 7 files changed, 192 insertions(+), 24 deletions(-)
-
--- 
-2.43.0
-
+> 
+> > move the w1_bus_type variable to be a constant structure as well,
+> > placing it into read-only memory which can not be modified at runtime.
+> 
+> Best regards,
+> Krzysztof
+> 
