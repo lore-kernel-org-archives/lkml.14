@@ -1,115 +1,87 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C419B11CA9;
-	Mon,  5 Feb 2024 08:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5879611197;
+	Mon,  5 Feb 2024 08:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707120652; cv=none; b=mRLnFeR1u7k9A0LPZwMT0ougQVL9HA4+kyDZm3WQS89wJdmcORqUNhZ3DX9TDqoric7jOFH6G1cK4FPAEtUdBUwY5mGPVUF8di+fe0wOv9YfR+0aB4kG/6p0XJfnLik9NFZQBzrVyjNCQru3rMFE+Oa2fhjEhJIpyeixjFwyYHc=
+	t=1707120769; cv=none; b=m0k3f1LH6x6JbsZMtAeOH+db6e4Nr2GkVZQx0J1Pjj8Fs0abAdtQjde9bgfg6hMu/3N48HG/+vHuQmMte91A8yQ9l5rf6qPb1JZ/rkeNVU28hsbpvdw22uQZX2frh1YuNMtxzxFQ56Y+bj/5e3yg238O2lPCPlDb/f4AztS95Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707120652; c=relaxed/simple;
-	bh=3ucSGTFs8one78Y6iL+BGkNxpmGL9+cLmwl64Uax07E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bvYe3ILkGWJcoEw8PwfAVbdJ8JtZlspa4VO/cjTK5waFkp8YEwzejOnEFwa+ublexsDJKK/4TYf8TzFsDkpID/5scK6TLkINMY7fbZF8uXdvaubXJX3X2TWwM2Mn8legB0pXb2UPK8O+H2qI3cZseVpO7joBMZfeeWZnqbN6/Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=me72vfHR; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="me72vfHR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707120650; x=1738656650;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3ucSGTFs8one78Y6iL+BGkNxpmGL9+cLmwl64Uax07E=;
-  b=me72vfHRYTxo9UtdkkseLaJHowhHB/L3p3dVK9MhyIZlvsvh5SrzjSqb
-   uh++atguJbY7DxMvyLSLattn908pY7DRDndkKnEdyf3JWKYp4u9PU7iRZ
-   U60bk6RfaYWetBovGPhJekpUO/w4tGFF7KYc4DwQVpvRr62YWjZ9FwklD
-   DrzqTtWCLnvj4Wmeoo/uv2VLnVB/pkReJ2H2ohzKp79DWOVGmjjFFCzlC
-   SBcTloNkw6epx6XSlZxSXf9cnRuUoMFPV283WXa9LFHy29T3TuB6/P60i
-   E52PT+UnGcRsFg/ppkyQeQPUAdvrx1TEeUZ+RPmVUiE+4HlbuDjtoUs8+
-   Q==;
-X-CSE-ConnectionGUID: G0jFP2bBRLutVp1LQAF9Lw==
-X-CSE-MsgGUID: +XWcqZs0QeGrs5xxSawVBA==
-X-IronPort-AV: E=Sophos;i="6.05,242,1701154800"; 
-   d="scan'208";a="183027790"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Feb 2024 01:10:49 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 01:10:29 -0700
-Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 5 Feb 2024 01:10:28 -0700
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <UNGLinuxDriver@microchip.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Horatiu Vultur
-	<horatiu.vultur@microchip.com>
-Subject: [PATCH net] lan966x: Fix crash when adding interface under a lag
-Date: Mon, 5 Feb 2024 09:07:56 +0100
-Message-ID: <20240205080756.2134143-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1707120769; c=relaxed/simple;
+	bh=rfUa0HdmE6ij/bFudS3tT0s17llFqfefDKIJnb9AgNE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lAEuOPxdnPpRCmVwHRRitLOA2E1/n/qvs/Vqd4Jnrnm6erDM1kWVQRN325HYPa4O3ugW/6/kFINT10btYeVh7pg0thm9MybrXQkhyMwxirvHW+TDjZK/9NCmlHmOTMfPcN7d0EyoiSGOypEKaga71nr/D/3eexkQgt69aMTr9+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 1ae78dc8005d4e47a8ded7444ee00e25-20240205
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:aee657ed-6156-4f0f-8642-ad02761df660,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.35,REQID:aee657ed-6156-4f0f-8642-ad02761df660,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:5d391d7,CLOUDID:c956a183-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:240205161243P4PVZV2C,BulkQuantity:0,Recheck:0,SF:24|17|19|44|66|38|1
+	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 1ae78dc8005d4e47a8ded7444ee00e25-20240205
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 979480105; Mon, 05 Feb 2024 16:12:40 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 1DB37E000EBC;
+	Mon,  5 Feb 2024 16:12:40 +0800 (CST)
+X-ns-mid: postfix-65C09877-93077738
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id A7178E000EBC;
+	Mon,  5 Feb 2024 16:12:39 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: chandan.babu@oracle.com,
+	djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] xfs: Simplify the allocation of slab caches in xfs_rmap_intent_init_cache
+Date: Mon,  5 Feb 2024 16:12:27 +0800
+Message-Id: <20240205081227.434198-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-There is a crash when adding one of the lan966x interfaces under a lag
-interface. The issue can be reproduced like this:
-ip link add name bond0 type bond miimon 100 mode balance-xor
-ip link set dev eth0 master bond0
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
-The reason is because when adding a interface under the lag it would go
-through all the ports and try to figure out which other ports are under
-that lag interface. And the issue is that lan966x can have ports that are
-NULL pointer as they are not probed. So then iterating over these ports
-it would just crash as they are NULL pointers.
-The fix consists in actually checking for NULL pointers before accessing
-something from the ports. Like we do in other places.
-
-Fixes: cabc9d49333d ("net: lan966x: Add lag support for lan966x")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
 ---
- drivers/net/ethernet/microchip/lan966x/lan966x_lag.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_rmap.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_lag.c b/drivers/net/ethernet/microchip/lan966x/lan966x_lag.c
-index 41fa2523d91d3..89a2c3176f1da 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_lag.c
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_lag.c
-@@ -37,19 +37,24 @@ static void lan966x_lag_set_aggr_pgids(struct lan966x *lan966x)
- 
- 	/* Now, set PGIDs for each active LAG */
- 	for (lag = 0; lag < lan966x->num_phys_ports; ++lag) {
--		struct net_device *bond = lan966x->ports[lag]->bond;
-+		struct lan966x_port *port = lan966x->ports[lag];
- 		int num_active_ports = 0;
-+		struct net_device *bond;
- 		unsigned long bond_mask;
- 		u8 aggr_idx[16];
- 
--		if (!bond || (visited & BIT(lag)))
-+		if (!port || !port->bond || (visited & BIT(lag)))
- 			continue;
- 
-+		bond = lan966x->ports[lag]->bond;
- 		bond_mask = lan966x_lag_get_mask(lan966x, bond);
- 
- 		for_each_set_bit(p, &bond_mask, lan966x->num_phys_ports) {
- 			struct lan966x_port *port = lan966x->ports[p];
- 
-+			if (!port)
-+				continue;
-+
- 			lan_wr(ANA_PGID_PGID_SET(bond_mask),
- 			       lan966x, ANA_PGID(p));
- 			if (port->lag_tx_active)
--- 
-2.34.1
+diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
+index 76bf7f48cb5a..99aac6f6f6b1 100644
+--- a/fs/xfs/libxfs/xfs_rmap.c
++++ b/fs/xfs/libxfs/xfs_rmap.c
+@@ -2931,9 +2931,7 @@ const struct xfs_owner_info XFS_RMAP_OINFO_COW =3D =
+{
+ int __init
+ xfs_rmap_intent_init_cache(void)
+ {
+-	xfs_rmap_intent_cache =3D kmem_cache_create("xfs_rmap_intent",
+-			sizeof(struct xfs_rmap_intent),
+-			0, 0, NULL);
++	xfs_rmap_intent_cache =3D KMEM_CACHE(xfs_rmap_intent, 0);
+=20
+ 	return xfs_rmap_intent_cache !=3D NULL ? 0 : -ENOMEM;
+ }
+--=20
+2.39.2
 
