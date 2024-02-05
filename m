@@ -1,105 +1,105 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6950724A09
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B19B1CD05;
+	Mon,  5 Feb 2024 13:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707139654; cv=none; b=acGY6OJXgAOeaITrEdFtU4Fxq4BCu9TtyZcDJLes1w9gF9P0zGeQo1CpTMmSjOpoIzcGN3ukh/q/7sxLsr63U41nZjNlb1o/036tdZJ410ycxdAE0W7ZnEt6zJxcq86j1pPcYy6XxQF5AFsUYUyvI8IpHDvCG+ElISTl+phTMBY=
+	t=1707139717; cv=none; b=sy5ejbwy8kB+rhZXZUrYnUyOJ/Lw6Xo2//jWg+/zoeiV6MtW0/JH7jTlMPi4PfGQpIUu3QR3SPv8BBxe9nKzUBDZ+We8CgP1hjJ3kHZy7zaMPQh58vJ3W4Q3Y0oz+Ig5Po2qBdDaSnMHmomq6p6UPZOLq8eVQcdXsftqWRNJlvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707139654; c=relaxed/simple;
-	bh=ohd2b4QJUiBI+u2W+/bqlN+cDhKAzefVIpOzmXTVka8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MF02KWOR46FF5llY0kGC6OthvVaP1DGvNSWYK5syFEEdWYPpbI+P9AZBqlNnme3W9gRfFvsCiW/LL2VR1rIOEho6e3bSCjxafjUK57phouiEp9MHaxVWmd7V4ZxC1UGh7vUhGowiLe4JYTqfCCIP3gqgWKWOsnAPjeGu2A/NTbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=iAU5Cygi; arc=none smtp.client-ip=209.85.167.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1707139717; c=relaxed/simple;
+	bh=YOHneSgCtSbbCAEEWSDGu9l2zrgvc3/nDi0e9391Wz0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=l5/03DFgHgvz6gavF0onHEKADJftONKLU3zjcy4oN+Hrnq5oubRWrLS+ZhcTg9Udh5EukJRGi35F/PivRn5CRFwt26e8WMzD5sPl64kF1tl+nZCa0nuBkH0iZdwhEvTzRsQIOiCBOg3yFDLeWa0QG/LzXWeTJSYe8MsYhiJZT7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=g9WM9paX; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="iAU5Cygi"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-5100cb238bcso7934399e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:27:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707139649; x=1707744449; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5n4ydAnPupPd3U6BJzPTr7OuGw8QKp6ux4SyUSisFEA=;
-        b=iAU5CygifKUFaYJGEH3oS0gj7Iva8mcgw/OQiuTgjCEMLRjVqStipxUTkoqBOlYoQY
-         KWsAQsyuTePfB2bU/Hu1pCZVPbDAHeRBlI25qa3vAmtce32nCSjXrFBxcjFHpVcAYLrh
-         Odzq0DozEyMYCsRB90eB6qj3rydRnpctqAb6rwGQhi/eyuKjVkdgQ2+7fdBsE2hylxf4
-         RVesgnoDygat4V4dtH+k6G+HTpson1rBW0sZ0DNz/s34mNAGrKj4s/hfywStUGm2BQv/
-         VWlIRIOzIc9uMGG3KVQ3XQDfDZhlL1AFAr0uTtN0GrB/yKRSCXLdZLgsJWSstPrNJ+Jt
-         V2BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707139649; x=1707744449;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5n4ydAnPupPd3U6BJzPTr7OuGw8QKp6ux4SyUSisFEA=;
-        b=SxZ3t/WmobVcgM65OS4SOulgJ3Hu4J2emEUYIHHDcNQbs3akcelIaqygTckQDMpRaq
-         31l+jJplYD030c+VZB4y3TggUXC/p9qCBNG5WrHaiYJD2genAYf9ojrSgGrFtNP+aTvd
-         er9O0bbp6KO4ze/VKE+7K1acPi5tapchIxAmO3LcKEj50JUspSD1Ib4LJUJVgq4fCTMD
-         k0JxIFOIEnqFX70duEkJe5Ve5gjd7KLOtgYp6Hr7xLEmWm9Omspe043lzqG1mmWILzDT
-         7Eaz4sQy45yUEYZLkD0RYtdEtqS0BlxiUb9F7fhKwPjy/YCJMXevpzOaBFlnXWz8z/t8
-         +6gw==
-X-Gm-Message-State: AOJu0YwvrVWJdeTr7dnaPko3zobCIHqgP+/63A2lINMPu0t1mY9lrUi9
-	e0kRFbCObPNJDtqlUH+yTZY7hzw/sIOwbVhMoc3nfqQdth6SfjtBzaMojSwwYoDtnE0I85MWjAP
-	jEpY1oA==
-X-Google-Smtp-Source: AGHT+IGu2gtE1cUt6AHDOUPwaptcYcsZjSXRvZxIhDCgcRk9JF0x2AihclIRoqRhXs/mFwdgEWbSeA==
-X-Received: by 2002:a05:6512:5d7:b0:511:486d:454a with SMTP id o23-20020a05651205d700b00511486d454amr3380981lfo.39.1707139649198;
-        Mon, 05 Feb 2024 05:27:29 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVNcP7Glt7qtXOYVGsFMgoaRvL0k6QMXQVxeVyrv4j2QCU7c3WomuBcT3v1VM4TcRpJ5K4aE4RfUhHCgSkIXn/wZTgUdO88TVSNTIzP9SKFNnTFyzM8K00nOEuBRVFNw1A1D6+WGp3BFvIcrmxMEy9qFDNfboDMWu7YQg==
-Received: from debian.fritz.box (aftr-82-135-80-180.dynamic.mnet-online.de. [82.135.80.180])
-        by smtp.gmail.com with ESMTPSA id lg25-20020a170907181900b00a3756cb9370sm2872837ejc.91.2024.02.05.05.27.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 05:27:28 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	trivial@kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] Documentation: admin-guide: tainted-kernels.rst: Add missing article and comma
-Date: Mon,  5 Feb 2024 14:24:10 +0100
-Message-Id: <20240205132409.1957-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="g9WM9paX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1707139698; x=1707744498; i=markus.elfring@web.de;
+	bh=YOHneSgCtSbbCAEEWSDGu9l2zrgvc3/nDi0e9391Wz0=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=g9WM9paXjX9wywiuC5nYS8ycoFA8SfmefVc3BzD/de7CgVa5xl428ZKV3T2K/rXR
+	 a3uiJ6giTkCdc1D9V/3Sih5jKBSKoR7VgFXvaplcCgCyTeGI9ML58d8JjWw/UQgRH
+	 YmyvT9Tx4UeAl4VXa/Bp7QNXitL2ynZgr2pAZfUraj0eAmm/wT5Q5lqldor8SZ9Qq
+	 SGpOpdECNvPAPl7KDNpVD+MMJyNO0ANtEKWxlx2EjKR90jm1EJi2QXqYLlWIPWlY7
+	 mrsYWBAUnjwzMMZ/rQFQgDbSs+UCOJNflpSbeUBK92X945/jymU3f2FHHj/C/SRN6
+	 jhcxr1VKT8GzigsTSA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N5lnT-1qwC8P30jj-0170l7; Mon, 05
+ Feb 2024 14:28:18 +0100
+Message-ID: <46f64db3-3f8f-4c6c-8d70-38daeefccac1@web.de>
+Date: Mon, 5 Feb 2024 14:28:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] ethernet: wiznet: Use
+ devm_platform_get_and_ioremap_resource() in w5300_hw_probe()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4kOjvGr+eOI8kHD1c1zu6LXaME5jhgkOkZMJfdQiWaPO+hwI4+V
+ 1c2xPp5WClaUGRqNxb4QwwylZTeYI3ecagsR2nLhEev5Wgk+uR9ef30UbqlRzzbvAltYQUn
+ aR1iGEWAks1T4Rj2kA/Afc8K16tQ24UXK5WjkEZBjDUppBZM57BXAKt/Bsmu8u88kRLc2u8
+ dZ+uNdjSMMSVU7D9/qjlQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:4Ac7b6On9jk=;4ivussFx913jbC6WDFNJonKUDMR
+ RTAavQciVlj3k8PuQ4w9/Nr5QcB+YnV+6crIhImjI3/YeAvQdK5xhu7v/jUbW1lh0mrKJd+LZ
+ DJTBersgp2hQgNZGB0pKdxzsIyEZIDHS/FuUfFIExwzpVkGpiYpMRwp5d7IGe0pyJhanZa7Mf
+ yr/CVeBpfC8+zqYgFksNNsrY6NK3Lr801dJPej85YuNjTRXZgBfZtW8ceQiz2ZFLUhEDTJ3WE
+ rF75wTPgjF17D+jHvIkVHKHb3mz0fdLrKXHgucEtPEsMLDkzAZdhcgvD/bUOAffEP2+YZu8EA
+ QiuL4EjQ3SdElBsTMtFBiimMU+1zpQ/sQzBiHcPuScpKRb9hyYW4Liq5BrX7khyWggIeFz2l5
+ rGg4T9R+Lf2tvh17lOTN9pA6prLqXUW2xVD/eMO2iyauWz1OoXNI4P9RQr/0Ey7DWJGyBgzRz
+ mXAZg02oBQKwlVyE6fAjy6T6xcfuBiFcJCku6IJ7Oy90e7JLot9wGzK5VQzqEhMsoNHPOecCj
+ +L7Z/7FyLi4wz+/LTNnd6e4GBnPYLycTkbPvSAnVsJo0r+6sV5IWR2aio2uqzjsdV9d0DkgZ5
+ Oxd4DPh+0jAmqp5ZLgvXBK1YPZNTif8+idWI0RR1mkknX27WJLKGi9/eZltTorYC1NbBEohVG
+ H/fdzra39ratSLB5h7twMuKip3V9Mfoy9QuKYmueKSHIGdJLV5Ua7rkqAr3ob3GAm4C2A/7hM
+ YVLUtCc/SJF4ygcnQGzyXzSWckd82iDebD+Xwvzg8KqF6SE5OLgYC5MCJsi4fAKqHhlgC0VoX
+ XimXV2409vqXyEenchjP888MTbdx41aJMPtm20bCOejeY=
 
-- Add missing article "the"
-- s/above example/example above/
-- Add missing comma after introductory clause to improve readability
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 5 Feb 2024 14:22:32 +0100
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- Documentation/admin-guide/tainted-kernels.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+A wrapper function is available since the commit 890cc39a879906b63912482df=
+c41944579df2dc6
+("drivers: provide devm_platform_get_and_ioremap_resource()").
+Thus reuse existing functionality instead of keeping duplicate source code=
+.
 
-diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
-index 92a8a07f5c43..f92551539e8a 100644
---- a/Documentation/admin-guide/tainted-kernels.rst
-+++ b/Documentation/admin-guide/tainted-kernels.rst
-@@ -34,7 +34,7 @@ name of the command ('Comm:') that triggered the event::
- 
- You'll find a 'Not tainted: ' there if the kernel was not tainted at the
- time of the event; if it was, then it will print 'Tainted: ' and characters
--either letters or blanks. In above example it looks like this::
-+either letters or blanks. In the example above it looks like this::
- 
- 	Tainted: P        W  O
- 
-@@ -52,7 +52,7 @@ At runtime, you can query the tainted state by reading
- tainted; any other number indicates the reasons why it is. The easiest way to
- decode that number is the script ``tools/debugging/kernel-chktaint``, which your
- distribution might ship as part of a package called ``linux-tools`` or
--``kernel-tools``; if it doesn't you can download the script from
-+``kernel-tools``; if it doesn't, you can download the script from
- `git.kernel.org <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/tools/debugging/kernel-chktaint>`_
- and execute it with ``sh kernel-chktaint``, which would print something like
- this on the machine that had the statements in the logs that were quoted earlier::
--- 
-2.39.2
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/ethernet/wiznet/w5300.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/wiznet/w5300.c b/drivers/net/ethernet/wi=
+znet/w5300.c
+index 3318b50a5911..f165616f36fe 100644
+=2D-- a/drivers/net/ethernet/wiznet/w5300.c
++++ b/drivers/net/ethernet/wiznet/w5300.c
+@@ -539,8 +539,7 @@ static int w5300_hw_probe(struct platform_device *pdev=
+)
+ 		eth_hw_addr_random(ndev);
+ 	}
+
+-	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base =3D devm_ioremap_resource(&pdev->dev, mem);
++	priv->base =3D devm_platform_get_and_ioremap_resource(pdev, 0, &mem);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
+
+=2D-
+2.43.0
 
