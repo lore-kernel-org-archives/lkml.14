@@ -1,55 +1,57 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7DF12B7B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F012B8A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707125669; cv=none; b=rAWSUl7XfOwC6jxTm6st7HvsM9tjt7WXoMaM/gqiMqn2quUHkiygMuxiyiXboIJQgQAhgNC8ruGAgUcEFBqWKwHd+MSydIKX+w7vlU5B2nQqMq/7v99SHMkfdENjKAb9qv/5zupR0+RdCjoRTUZL5qD9vNxrH1PQvlv7sK2ZNtA=
+	t=1707125671; cv=none; b=BQo44hipfdSvd3eWMEFaFmGxHsxgx3RUol+Ghr4wnuMV87rY5wTtsaHdYuqXaLHi4ET2gue732JFGrEevOw0gPG4zG5zXL6eov78n3A6FB5X9zjOQPnbJAbWJ9NMKwa5McB5dcRhNARA6gGAzWD7bxyOMUo2E7LAbhnR2X2eCXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707125669; c=relaxed/simple;
-	bh=K7ZFkCVNfTzkHWT3kyjAxLn7zdwISVDk7B9NBGYhRXg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iDjGf4MHzLjAnMFhtCJ5aEcCmdU1RevcbOSFT2IxclxB57t9JxINtXJo5oeUM+/x8ddnPnPcNDpnvmpMXlkfYj1jQsbjI+Uv+/toHShZ62nvUtxGa33/R/n7mqlKiX3PKwl8COOVl323HhdWFM0aCnuRsN13pr6iyUrESy6cdQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jMM0gX3/; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1707125671; c=relaxed/simple;
+	bh=w9OTZVARMR4Mdnl0o0yhVNJkoS2c5kOcFylZbMhF7Oo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lpGkxsC7tKEyNVCc2HJ4VBBNMFOo9Lvo3QIh6rjhuxAzxPFdFldKDUxnSrR6fqxqJTUXKT5vIEYyQ49viKOUrlzXx8JzM1+CLozC7qIk73jHznj3sPc1e3tV+WGXCbYeofuJzVRZBtiMGvrzXQWmkUDGfijqSc91gv1Jm1fYu3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Hve7TEUn; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jMM0gX3/"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40fd72f71f8so5513195e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:34:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Hve7TEUn"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40fc65783aeso25373165e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:34:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707125665; x=1707730465; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxy6DNRVLVXRfxM53TbL7nhrphReFKWpE9lNLkV9gAU=;
-        b=jMM0gX3/vtn/IFCD96cWlChIOcIUGueDCWhYjVEebs7pkD/rFBNdFnl0kNOJC+ixgR
-         bNsrBZOOrnQCHpPEP7v6QP+moMHLVHyBFjBzas4RjMiL7jDHdT2URwn7OHldLqp8qraN
-         AxvK0HbNw3Nun+jjudZZ3sY2m5iwsEqIWi1dDIFV1Am2ka97BaTRTmP0DdwwgINgQvPn
-         4uj2scnJhDmfFEsKBmSjpKuKU81Pa4Fc74Hc3ugQoMGnLeMcJ77MuK61p2jRIjppH6pT
-         ULt/cbTftjBt/1rk1murmIGrUEWZXmHwh6d1GzPis21GFoOSVcKo/9d6GKbYWphC1YjY
-         RodA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707125667; x=1707730467; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mCe01XgCpcinR2htLJWjY1RLrdRFN2p3/+OpFVj9aQM=;
+        b=Hve7TEUn3MCqrdR7JXdEyuYo2XMGXSIvIlZ3buFYvmDsjzlT4dT5PgKTr7PmY2P2JH
+         tp2bsA7Ih1g0u0B3M0V/hL20E6AFT5olkivyqRw7llPf71cuemaQuwwrfojcs8pEP6ow
+         j2yZ2RGos/QQMckJsbbbB86EIVAXw7xBzeSDYcOx0KlIfWhqYX8BRKXDr9xbivhfM0dJ
+         ZMhdOYCz3O/4zc5PtbSmSFhmNBCZzWc74X+RsEfP5FPFxHMbnRPZPSgyGoBI3Q1Rxp2g
+         IJlJcr1YulUVDhCRMxOlTmYPyKPF0+/l4yESc74/EUbe+cZD/ip2eTAX/7j8o/pXMI1f
+         Y+TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707125665; x=1707730465;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qxy6DNRVLVXRfxM53TbL7nhrphReFKWpE9lNLkV9gAU=;
-        b=SJGE9F/gAoCQhsTbB88PwD1e3kUafk/El5ZsdKciBZjsnKQImGWcB2U4AxxPH43+0K
-         RT5JoMUJFrz9JN043pMf5volTEoZBgLmvYwqr4hHlPZH8ehW/cUMeWSrX0WkHSQt2J7J
-         M0ogXt1X3lKyHJV3SeLT4SiqH3VyM3xxJEE4kUChDP2gaOYeCJm6DQ7BHYmwNShJTfyY
-         eVKHTo29ado1OHH1Pl6MqMI4luWZvPGLi08QCWXPo9tFrW20cLIya7/dY0zfH74MhkGj
-         J/G2wKMrfXiA2Y00rijq+iAF2s2jRYa82R7mOZ3SAOSGgLxiUFYnbS+4sOwMay7oZGHR
-         DFQg==
-X-Gm-Message-State: AOJu0YxNa/IG3bNKA87qdbpFUXGrmoJA29Ny++25ryABpgvdnIFGC1Mw
-	9dbqbGgd8eoJTyJgxiQ8G/bMb6Wq2nK61XspVx2SPpKqN6wj2eLBceAGhEWAngQ=
-X-Google-Smtp-Source: AGHT+IF1nlbXrw8VO/SLXb/ihHKDq2yfvo830q3XioskWWSzVvPBvsB1bYbhmouyNh1XyXVeTS42Gw==
-X-Received: by 2002:a05:600c:1e18:b0:40f:c234:2006 with SMTP id ay24-20020a05600c1e1800b0040fc2342006mr4145538wmb.8.1707125665118;
-        Mon, 05 Feb 2024 01:34:25 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXtqHYpsThXqMf61zoPVLS49pez9IPjY0i6t17B3n+3aStUgeVcC9Tlx/xJg4Wa5F6J8Y/n12/5nI1xQlYSCdUU1H9b0oEMdv7KJpNZIJh7MNj2BbsJUzuTK30QgNNr8VUR3IF3o+R//hvnUz34e6Et+LUbT7Ipu7/h/aZxZsqM6KFO3CjCLE+/D9uI5cmuvONg+LUgR07tEZRimIipYc6f6U5n1hBNOOwUWBy5WFtZO2dJfsBkKqYw8RlceYvka1mapPLZLmd9TxDiHLSe8U28iSCpAwkaiNcPsdFeD+qCygDyl0dL0Jws38w4GT+joclFNDyr2vdd82paS0shaWhxp73LMdISJg==
+        d=1e100.net; s=20230601; t=1707125667; x=1707730467;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mCe01XgCpcinR2htLJWjY1RLrdRFN2p3/+OpFVj9aQM=;
+        b=psKRdzyI6jefeJ8WqmKrwcl4Gow6AwwO71Zt8SXuYnZl/DoJiLXaW9B3eR9jkRHt5J
+         kR2f3TMw8dSz8WhPDVmsJJW3qnQjUSM2oJXfw00KDtdSYqDb12WjnMqGKLwT4jEetKoB
+         LHEWCh8RPYvJAh+BsmiQerF7MBH2O70/5jTNk1so9JMqWNfGuPwZX4lEaEbRE3X3OfAx
+         g4eeuQqr16pSMUP9uuyYh+6rUehBtUfFkZPwYREht7lw69rTkVoajii/f6WIOWWrl1wW
+         S0NT4iHl+5nHUPOVoswim3Db4F/7Fa3QDwUrzHWP0matzLsKFs+cB+Gghd7OQyZZTnXP
+         6UmQ==
+X-Gm-Message-State: AOJu0Yxo6SRkpcLQX3gXIkhUIGj3e5AKG5ZGImM16343CzEKVOFhBFLh
+	PbZKZaAkgUyzUDKN5ZrSI6qKvHgyUB/o7eK4rxJS8D5KXG6PitPO9G3zBpKi/ZY=
+X-Google-Smtp-Source: AGHT+IEL3J9p5BXWGBPz7AI47HRJRAqQdPPdU85CEgl2ZpCxmqbm2bH4OibqUJ9q4vkgL1ejZSG1uQ==
+X-Received: by 2002:a05:600c:1c06:b0:40f:b630:a9cb with SMTP id j6-20020a05600c1c0600b0040fb630a9cbmr4101104wms.6.1707125667557;
+        Mon, 05 Feb 2024 01:34:27 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXxt3LeBVGvnr1P5pPQb4AEa9+llY3je+7jtCjmRAYyLAZngAs/Xcd+Umcj1bz4tdnQ/lTJcXe/qcu7VCvfQ9Vf+884tRivPpIA5/efCz3hMMp4qqTn/Aw+ALXxQhvEmaXvseYnn6EAhRHucSmg3ltSb+J1T3hJ8p9SGAXuLLh2nfCQWDT8Z+ftk096wh/wtd3nxqYaavK4GtiRPIV/fNsXpVV07A/t7R/WD5NjN6u1CyxCnkSBcgKVp1Kg83drGbbDbypO9McRBjJPb4XfgZUUSZwEjXFdh3CYRQnQ4qy99/O0ajhg8D0fnHAOLaL0LU4ycgoKQdgyWyX/3+to3ggmSbJHr92LCw==
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d929:10db:5b5c:b49d])
-        by smtp.gmail.com with ESMTPSA id f15-20020a05600c154f00b0040fc771c864sm7980397wmg.14.2024.02.05.01.34.24
+        by smtp.gmail.com with ESMTPSA id f15-20020a05600c154f00b0040fc771c864sm7980397wmg.14.2024.02.05.01.34.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 01:34:24 -0800 (PST)
+        Mon, 05 Feb 2024 01:34:26 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Kent Gibson <warthog618@gmail.com>,
@@ -61,10 +63,12 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 00/23] gpio: rework locking and object life-time control
-Date: Mon,  5 Feb 2024 10:33:55 +0100
-Message-Id: <20240205093418.39755-1-brgl@bgdev.pl>
+Subject: [PATCH v2 02/23] gpio: of: assign and read the hog pointer atomically
+Date: Mon,  5 Feb 2024 10:33:57 +0100
+Message-Id: <20240205093418.39755-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240205093418.39755-1-brgl@bgdev.pl>
+References: <20240205093418.39755-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,129 +79,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This is a big rework of locking in GPIOLIB. The current serialization is
-pretty much useless. There is one big spinlock (gpio_lock) that "protects"
-both the GPIO device list, GPIO descriptor access and who knows what else.
+The device nodes representing GPIO hogs cannot be deleted without
+unregistering the GPIO chip so there's no need to serialize their access.
+However we must ensure that users can get the right address so write and
+read it atomically.
 
-I'm putting "protects" in quotes as in several places the lock is
-taken, released whenever a sleeping function is called and re-taken
-without regards for the "protected" state that may have changed.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpiolib-of.c | 4 ++--
+ drivers/gpio/gpiolib.c    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-First a little background on what we're dealing with in GPIOLIB. We have
-consumer API functions that can be called from any context explicitly
-(get/set value, set direction) as well as many others which will get
-called in atomic context implicitly (e.g. set config called in certain
-situations from gpiod_direction_output()).
-
-On the other side: we have GPIO provider drivers whose callbacks may or
-may not sleep depending on the underlying protocol.
-
-This makes any attempts at serialization quite complex. We typically
-cannot use sleeping locks - we may be called from atomic - but we also
-often cannot use spinlocks - provider callbacks may sleep. Moreover: we
-have close ties with the interrupt and pinctrl subsystems, often either
-calling into them or getting called from them. They use their own locking
-schemes which are at odds with ours (pinctrl uses mutexes, the interrupt
-subsystem can call GPIO helpers with spinlock taken).
-
-There is also another significant issue: the GPIO device object contains
-a pointer to gpio_chip which is the implementation of the GPIO provider.
-This object can be removed at any point - as GPIOLIB officially supports
-hotplugging with all the dynamic expanders that we provide drivers for -
-and leave the GPIO API callbacks with a suddenly NULL pointer. This is
-a problem that allowed user-space processes to easily crash the kernel
-until we patched it with a read-write semaphore in the user-space facing
-code (but the problem still exists for in-kernel users). This was
-recognized before as evidenced by the implementation of validate_desc()
-but without proper serialization, simple checking for a NULL pointer is
-pointless and we do need a generic solution for that issue as well.
-
-If we want to get it right - the more lockless we go, the better. This is
-why SRCU seems to be the right candidate for the mechanism to use. In fact
-it's the only mechanism we can use our read-only critical sections to be
-called from atomic and protecc contexts as well as call driver callbacks
-that may sleep (for the latter case).
-
-We're going to use it in three places: to protect the global list of GPIO
-devices, to ensure consistency when dereferencing the chip pointer in GPIO
-device struct and finally to ensure that users can access GPIO descriptors
-and always see a consistent state.
-
-We do NOT serialize all API callbacks. This means that provider callbacks
-may be called simultaneously and GPIO drivers need to provide their own
-locking if needed. This is on purpose. First: we only support exclusive
-GPIO usage* so there's no risk of two drivers getting in each other's way
-over the same GPIO. Second: with this series, we ensure enough consistency
-to limit the chance of drivers or user-space users crashing the kernel.
-With additional improvements in handling the flags field in GPIO
-descriptors there's very little to gain, while bitbanging drivers may care
-about the increased performance of going lockless.
-
-This series brings in one somewhat significant functional change for
-in-kernel users, namely: GPIO API calls, for which the underlying GPIO
-chip is gone, will no longer return 0 and emit a log message but instead
-will return -ENODEV.
-
-I know this is a lot of code to go through but the more eyes we get on it
-the better.
-
-Thanks,
-Bartosz
-
-* - This is not technically true. We do provide the
-GPIOD_FLAGS_BIT_NONEXCLUSIVE flag. However this is just another piece of
-technical debt. This is a hack provided for a single use-case in the
-regulator framework which got out of control and is now used in many
-places that should have never touched it. It's utterly broken and doesn't
-even provide any contract as to what a "shared GPIO" is. I would argue
-that it's the next thing we should address by providing "reference counted
-GPIO enable", not just a flag allowing to request the same GPIO twice
-and then allow two drivers to fight over who toggles it as is the case
-now. For now, let's just treat users of GPIOD_FLAGS_BIT_NONEXCLUSIVE like
-they're consciously and deliberately choosing to risk undefined behavior.
-
-v1 -> v2:
-- fix jumping over variable initialization in sysfs code
-- fix RCU-related sparse warnings
-- fix a smatch complaint about uninitialized variables (even though it's
-  a false positive coming from the fact that scoped_guard() is implemented
-  as a for loop
-- fix a potential NULL-pointer dereference in debugfs callbacks
-- improve commit messages
-
-Bartosz Golaszewski (23):
-  gpio: protect the list of GPIO devices with SRCU
-  gpio: of: assign and read the hog pointer atomically
-  gpio: remove unused logging helpers
-  gpio: provide and use gpiod_get_label()
-  gpio: don't set label from irq helpers
-  gpio: add SRCU infrastructure to struct gpio_desc
-  gpio: protect the descriptor label with SRCU
-  gpio: sysfs: use gpio_device_find() to iterate over existing devices
-  gpio: remove gpio_lock
-  gpio: reinforce desc->flags handling
-  gpio: remove unneeded code from gpio_device_get_desc()
-  gpio: sysfs: extend the critical section for unregistering sysfs
-    devices
-  gpio: sysfs: pass the GPIO device - not chip - to sysfs callbacks
-  gpio: cdev: replace gpiochip_get_desc() with gpio_device_get_desc()
-  gpio: cdev: don't access gdev->chip if it's not needed
-  gpio: don't dereference gdev->chip in gpiochip_setup_dev()
-  gpio: reduce the functionality of validate_desc()
-  gpio: remove unnecessary checks from gpiod_to_chip()
-  gpio: add the can_sleep flag to struct gpio_device
-  gpio: add SRCU infrastructure to struct gpio_device
-  gpio: protect the pointer to gpio_chip in gpio_device with SRCU
-  gpio: remove the RW semaphore from the GPIO device
-  gpio: mark unsafe gpio_chip manipulators as deprecated
-
- drivers/gpio/gpiolib-cdev.c  |  92 +++--
- drivers/gpio/gpiolib-of.c    |   4 +-
- drivers/gpio/gpiolib-sysfs.c | 167 +++++---
- drivers/gpio/gpiolib.c       | 760 +++++++++++++++++++----------------
- drivers/gpio/gpiolib.h       |  86 ++--
- 5 files changed, 630 insertions(+), 479 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 77509aa19900..bd6b8702c790 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -800,7 +800,7 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
+ 			return ret;
+ 
+ #ifdef CONFIG_OF_DYNAMIC
+-		desc->hog = hog;
++		WRITE_ONCE(desc->hog, hog);
+ #endif
+ 	}
+ 
+@@ -848,7 +848,7 @@ static void of_gpiochip_remove_hog(struct gpio_chip *chip,
+ 	struct gpio_desc *desc;
+ 
+ 	for_each_gpio_desc_with_flag(chip, desc, FLAG_IS_HOGGED)
+-		if (desc->hog == hog)
++		if (READ_ONCE(desc->hog) == hog)
+ 			gpiochip_free_own_desc(desc);
+ }
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a14eef93ead8..4c18b693d06c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2324,7 +2324,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 		clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+ 		clear_bit(FLAG_IS_HOGGED, &desc->flags);
+ #ifdef CONFIG_OF_DYNAMIC
+-		desc->hog = NULL;
++		WRITE_ONCE(desc->hog, NULL);
+ #endif
+ 		ret = true;
+ 	}
 -- 
 2.40.1
 
