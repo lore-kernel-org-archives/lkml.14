@@ -1,155 +1,98 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EDC01AB807;
-	Mon,  5 Feb 2024 21:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3E945953
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 21:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707167885; cv=none; b=NXr3hwdCHpzIW+fj6a1pQ1myxallHAiuK7AYuVvi0Gk2kXxaQPCdC7QzLCTDiFKhMDHUn91kctFgJCpTL2BH4Hi3U6yOz7uU/EFk7976CtlYEol28YuNCmHiGbjdTDXquPCVS/uUIN7qwaxmM++GMl3PIy/+eym2oj0x1P+Dzu8=
+	t=1707168051; cv=none; b=H0wuiMQ1ZG9089ikgcPYWdz7esdC9Qi9yoWhbgoYvrPvLWC7EyYA0fUraVkO1A5e7buzQedWiPYK2/CGMTbWGiaa0UOJdjO4WwapIHXHLbAUVwOSVNQXRo1hb6njO9ZInZMky2/OLTVW0gfjE2y5qvvQOEWfwvQSWc9zvHnAQcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707167885; c=relaxed/simple;
-	bh=/Enu6bwQmdx49axHA/1lmJJgKYU6G8zyTZPbq9OH+ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CH7Uxpf3Cez8k7ZdIDuPUiiMg1kLZg5cecEHRLfRZ7OEIDG4p/8d5BYOvoOxnO9ebiuiBCez4yzN0H7+C9rP2x9koyqw/0Iz5sRxCbwgnXPwMryetGmJ1XlScJNKjJx/WDTPlDZTPff+sbwZ7Xn7w5VdP6NWOFKbwJOqid+IFX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=W8TAC/No; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1707168051; c=relaxed/simple;
+	bh=M9O3+Ozab6saJ9Z898RaMAf45Ltfzqt72TIxEA7NSds=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=E1ncCwmDct8FKbwmSo9hSdNs4J6J3XXpvTf1VKJcOYk29ObKNwp3+6Gi9Ds/KkwKgvJ30s4yTeL9VU/nPuE0d9FkxTQ9Gxfo9riSmiKWNjKU4XnJyPkuwwBiIvfTjEsdNMgjj3bHkhNuo7d3Tm+LE4/KygqsgfW86V1fbNgyHp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KsDHlM0s; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="W8TAC/No"
-Received: from [10.137.106.151] (unknown [131.107.8.87])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B65FB20B2000;
-	Mon,  5 Feb 2024 13:18:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B65FB20B2000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1707167883;
-	bh=H595nLqKN1iU7O92UiJT9PEuwtk7Rd1yCbWBC1ZA8Dk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W8TAC/No1VdGRZqMNpbRyarbJ0N1ksbo6q9VDwms6JAikfNWLiPh8pBpJItN4CS23
-	 IfusA0S7VmJXlzwz6fInL7nOKKj4xPLnLwKrHbC0DxeKFY9uDlKLJYrmJTNL3IsRxQ
-	 NhwWoikC1Q5N62rvYtOFqHGPmfxebEyKNmpVRN1s=
-Message-ID: <13daca32-ee3f-46f5-a6ca-66bb02726e5c@linux.microsoft.com>
-Date: Mon, 5 Feb 2024 13:18:03 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KsDHlM0s"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6040a34c24bso3478547b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 13:20:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707168049; x=1707772849; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jNIvfpTU2Fpa4ge5KnuIotPD5KC6q3mmjxvezR8AkOo=;
+        b=KsDHlM0soT9qHy72nMp+pmFlQfvY+J2Vy6/RKbSpR0G6RLHY0KWQz/MptMS5UNUdqT
+         eeghsPO7jhE/hNOLf4SLxxfd079JsXVufE5g6B+2GopueuqLnwh2PdF2SUxiAKVw2IuN
+         1DqgUgR1tnOOWsPvqGLdj9yqwGG4xNqThJvH1gac2lln71XFqFYoBz7KVgL8qzyLORyC
+         NflTDKiKwRzUFkFKZIWIYOSPzMwbsyWUfY+jnIYQo2qroOGgK/CBY1uOUml4Qoag3DTU
+         KMZqTdQQayw84vfKhpNNpodPlICJfhcqdb+OeeiJ6U159hZnV4yEdioIS18bsd01GCZ/
+         9iPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707168049; x=1707772849;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jNIvfpTU2Fpa4ge5KnuIotPD5KC6q3mmjxvezR8AkOo=;
+        b=wYN8X/PZIgC+NkPuVL+uD6F2FIspipO2G7HBIJdhpYoGdXTGRNXuCtbRMvABE1u71g
+         afLzfl0o81VFFfu64QR4QzVlYntkfQpxSV68+FKGfS+73RBXrJZsKp0DV0ajKjs2zgOK
+         Shfva4U24T1XAIdQPWMO5nWlFNbmYjfo3bew4eygrMN7BnuWcMUb3Zr35w6IxX5kRsRn
+         7Y9hYupsXAymN94SHwXhGC73XsX9z15MeWOoZHB5ebPo+yLbCnLpQdshpuD+Cqh9kUMt
+         m8EXF/A6hYczWSlpi+Te/+66Jl+hB5nM6cXJmdOHXytS3PSlE13uviMOHZUh/N3cxyim
+         AO/w==
+X-Gm-Message-State: AOJu0Yx4xajkefyjHJhfhdny0qh0xRVTi9jDoyYGKeLbNguM1UeFYpgT
+	IDT7tenETcKDBaWBMHmz1YGoRah9KNsjMmj/GEVtmEM2mYdsetv/WEYZtwieom+B5OcqbDhDp0Z
+	8ewBPlNk5NadsnrW/jg==
+X-Google-Smtp-Source: AGHT+IG3rtxQ30HFoMYrB9CwJEYIFwygob6z+BpBr6JkE2L81EEy5Naj69geg9TJ7LPf+Bv75g4pLQO69lQDNu4M
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a81:4cc7:0:b0:602:d83f:bf36 with SMTP
+ id z190-20020a814cc7000000b00602d83fbf36mr150466ywa.0.1707168048867; Mon, 05
+ Feb 2024 13:20:48 -0800 (PST)
+Date: Mon, 5 Feb 2024 21:20:46 +0000
+In-Reply-To: <20240201-b4-zswap-invalidate-entry-v2-2-99d4084260a0@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v12 5/20] initramfs|security: Add security hook to
- initramfs unpack
-To: Paul Moore <paul@paul-moore.com>, corbet@lwn.net, zohar@linux.ibm.com,
- jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org,
- axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, eparis@redhat.com
-Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-fscrypt@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- audit@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1706654228-17180-6-git-send-email-wufan@linux.microsoft.com>
- <b9ca171301d5abeb78922dd79d65136a@paul-moore.com>
-Content-Language: en-US
-From: Fan Wu <wufan@linux.microsoft.com>
-In-Reply-To: <b9ca171301d5abeb78922dd79d65136a@paul-moore.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240201-b4-zswap-invalidate-entry-v2-0-99d4084260a0@bytedance.com>
+ <20240201-b4-zswap-invalidate-entry-v2-2-99d4084260a0@bytedance.com>
+Message-ID: <ZcFRLiazBrbhm4Gf@google.com>
+Subject: Re: [PATCH v2 2/6] mm/zswap: invalidate zswap entry when swap entry free
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Chengming Zhou <zhouchengming@bytedance.com>
+Cc: Nhat Pham <nphamcs@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
+On Sun, Feb 04, 2024 at 03:06:00AM +0000, Chengming Zhou wrote:
+> During testing I found there are some times the zswap_writeback_entry()
+> return -ENOMEM, which is not we expected:
+> 
+> bpftrace -e 'kr:zswap_writeback_entry {@[(int32)retval]=count()}'
+> @[-12]: 1563
+> @[0]: 277221
+> 
+> The reason is that __read_swap_cache_async() return NULL because
+> swapcache_prepare() failed. The reason is that we won't invalidate
+> zswap entry when swap entry freed to the per-cpu pool, these zswap
+> entries are still on the zswap tree and lru list.
+> 
+> This patch moves the invalidation ahead to when swap entry freed
+> to the per-cpu pool, since there is no any benefit to leave trashy
+> zswap entry on the tree and lru list.
+> 
+> With this patch:
+> bpftrace -e 'kr:zswap_writeback_entry {@[(int32)retval]=count()}'
+> @[0]: 259744
+> 
+> Note: large folio can't have zswap entry for now, so don't bother
+> to add zswap entry invalidation in the large folio swap free path.
+> 
+> Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
 
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
 
-On 2/3/2024 2:25 PM, Paul Moore wrote:
-> On Jan 30, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
->>
->> This patch introduces a new hook to notify security system that the
->> content of initramfs has been unpacked into the rootfs.
->>
->> Upon receiving this notification, the security system can activate
->> a policy to allow only files that originated from the initramfs to
->> execute or load into kernel during the early stages of booting.
->>
->> This approach is crucial for minimizing the attack surface by
->> ensuring that only trusted files from the initramfs are operational
->> in the critical boot phase.
->>
->> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
->> ---
->> v1-v11:
->>    + Not present
->>
->> v12:
->>    + Introduced
->> ---
->>   include/linux/lsm_hook_defs.h |  4 ++++
->>   include/linux/security.h      | 10 ++++++++++
->>   init/initramfs.c              |  3 +++
->>   security/security.c           | 12 ++++++++++++
->>   4 files changed, 29 insertions(+)
->>
->> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
->> index 185924c56378..b247388786a9 100644
->> --- a/include/linux/lsm_hook_defs.h
->> +++ b/include/linux/lsm_hook_defs.h
->> @@ -425,3 +425,7 @@ LSM_HOOK(int, 0, uring_override_creds, const struct cred *new)
->>   LSM_HOOK(int, 0, uring_sqpoll, void)
->>   LSM_HOOK(int, 0, uring_cmd, struct io_uring_cmd *ioucmd)
->>   #endif /* CONFIG_IO_URING */
->> +
->> +#ifdef CONFIG_BLK_DEV_INITRD
->> +LSM_HOOK(void, LSM_RET_VOID, unpack_initramfs_security, void)
->> +#endif /* CONFIG_BLK_DEV_INITRD */
-> 
-> Let's just call it "unpack_initramfs", the "_security" part is somewhat
-> implied since we are talking about a LSM hook ;)
-> 
->> diff --git a/init/initramfs.c b/init/initramfs.c
->> index 76deb48c38cb..075a5794cde5 100644
->> --- a/init/initramfs.c
->> +++ b/init/initramfs.c
->> @@ -18,6 +18,7 @@
->>   #include <linux/init_syscalls.h>
->>   #include <linux/task_work.h>
->>   #include <linux/umh.h>
->> +#include <linux/security.h>
->>   
->>   static __initdata bool csum_present;
->>   static __initdata u32 io_csum;
->> @@ -720,6 +721,8 @@ static void __init do_populate_rootfs(void *unused, async_cookie_t cookie)
->>   #endif
->>   	}
->>   
->> +	security_unpack_initramfs();
-> 
-> Given the caller, what do you think of changing the hook name to
-> "security_initramfs_populated()"?  I think this not only matches up
-> better with the caller, "do_populate_rootfs()", but since in using the
-> past tense we help indicate that this hook happens *after* the rootfs
-> is populated with the initramfs data.
-> 
-
-Yeah, I agree this sounds better. I will update this part.
-
--Fan
->>   done:
->>   	/*
->>   	 * If the initrd region is overlapped with crashkernel reserved region,
->> diff --git a/security/security.c b/security/security.c
->> index ddf2e69cf8f2..2a527d4c69bc 100644
->> --- a/security/security.c
->> +++ b/security/security.c
->> @@ -5581,3 +5581,15 @@ int security_uring_cmd(struct io_uring_cmd *ioucmd)
->>   	return call_int_hook(uring_cmd, 0, ioucmd);
->>   }
->>   #endif /* CONFIG_IO_URING */
->> +
->> +#ifdef CONFIG_BLK_DEV_INITRD
->> +/**
->> + * security_unpack_initramfs() - Notify LSM that initramfs has been loaded
->> + *
->> + * Tells the LSM the initramfs has been unpacked into the rootfs.
->> + */
->> +void security_unpack_initramfs(void)
->> +{
->> +	call_void_hook(unpack_initramfs_security);
->> +}
->> +#endif /* CONFIG_BLK_DEV_INITRD */
->> -- 
->> 2.43.0
-> 
-> --
-> paul-moore.com
