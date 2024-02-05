@@ -1,178 +1,183 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3AD4121B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF1245941
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 17:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707154047; cv=none; b=Ofee90gy5KIY8qBflfAwSv+OABfuBLPCsEDeJtyujaX0k39S6GOosIDzkT9eSoPI1gdODeEyqvBP+shEgSN1TR3aO4x67pKwp346BROIfikxOX2q+4VTrPwHbXBqgnU06Jk0WfD0isecn2Ph3KaBuXO9r50/OWu24RgPhK2iGiU=
+	t=1707154050; cv=none; b=It1XB8Udqoa8JjHXlSxA6NYygFkvNp6N4j2rR3TxuW24lYlewc+BJWibm9lLz4p4olwwCJuUpvZW6/ONoNp6z9bskpu+THf8rtOeWU+w8N5GORKLMNWJYteKK2xvZEJFQ7FmP/nirLSRuouxvz9fLA4tHEiv4kqEZvXGsuqR5jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707154047; c=relaxed/simple;
-	bh=YgyprZMcWh4/hukYYHskhFKA/cj1E4erg92UhA9B0Xs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Zy3Fs1y60wl1fF9XbfFP1sBTI46z9bJZrZcnGLMjhtMW+E6mKJCaWPO1et3UB3Wn5YJVnF3jFrvk3Jh3veuCrN4cKxv2nOsSmOta5BOw/iGR1/T20W2JwM7fHU1nLAbMwOIIamuSH60GOnovzOFUBvBjVFHn3OeOaC2c3Yi4Nzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC626DA7;
-	Mon,  5 Feb 2024 09:28:06 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AA613F5A1;
-	Mon,  5 Feb 2024 09:27:22 -0800 (PST)
-Date: Mon, 5 Feb 2024 17:27:20 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
+	s=arc-20240116; t=1707154050; c=relaxed/simple;
+	bh=HWhC3riTOwXg+yy/60MQ/z+HIxKpqDzEaAK6EfQRCzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CKgBYlOjC3/j2Rv0Wy3Gx0A/DzV6q+StkTzxzV0APPzOp78zImVCJF2YWCxu3xnacYZhPZ35XHqG/sz7/8T0L3jxi4lIL4fgXUwASTiT56Y1rX3TiEVbfV/xmmuvqgiX1TzjgaYuX8+4T8acGQd4T7yI15SZnSLxMw4otv2DLiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gLQb7Ryp; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gLQb7Ryp"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d91397bd22so35670795ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 09:27:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707154048; x=1707758848; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4U+N71xHm4gg+B0aHt1NbcRFqwuGDCVmnH0NzcNhfq4=;
+        b=gLQb7RypR0GkICA5Cqv4+GGOV+bHsY04D8TEzXeSD4I2BAJgEEoDWuwo70gn0AUQEt
+         AiO+/2OLIXKNAdZhejhk1AU8bMhmsKhfsIXBzOsOmNeC9HBcfQVwgVe/aZjzZvWmt4G/
+         vGDUL0SyItjm5xjSbHdTfnr6V3NLZ42YS/Kl4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707154048; x=1707758848;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4U+N71xHm4gg+B0aHt1NbcRFqwuGDCVmnH0NzcNhfq4=;
+        b=eIe3CLNs4M3DYOGH2o4N52ocZqHSPXOl/u1LTgZLXpnJ2ADgNaGlfkt8sBwSg++eBi
+         AkppXECAGugLfVWxeybegrwF46t1EAOC+aUesZuh2hykNxRcZ0Cjic4hSva0Hd/uhafR
+         7JEGemunA2TXj5FUOcO0x0UYiT8WP/rx8BCKiab+bdjK5UCSzn0csGGo80vRcAgVSYpK
+         dj7N39aNz4jzVLcOSx2cHD6IvwIPxIehiwfBmz+BI42t5mqesntvH1Q3eVZhxmB2Rcdb
+         8Zme2mpg+tzXmhtlnlMDLj4vFavz3mtsOzG0b6WDI9V0IhHefIx7YKts/olh2QBsGDqX
+         uv3w==
+X-Gm-Message-State: AOJu0YxHDKrS8ON+ixir+oAScPF3Jftq8Ui9ZLtbjGRUuEifw6ButlAE
+	NGg7tsmV4Mn8x4sRvSjfuNQ/CJ0MKfjpj0ej5K1NJoNUnK+pOKYMl27VUzaoHQ==
+X-Google-Smtp-Source: AGHT+IFUJYXHGIr2LCGI8FKWXE3xOLGI2mYhp7DYexE/TWjuF+OeqNnn4MkzN96+o/X73V7ZYaQWDA==
+X-Received: by 2002:a17:903:181:b0:1d9:3938:40bb with SMTP id z1-20020a170903018100b001d9393840bbmr164878plg.20.1707154048553;
+        Mon, 05 Feb 2024 09:27:28 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVkRLaBMi1cNLgwcJ4gr0SdqkEdQyijwctiuf5LdVVfpVmK0cY3vbrQqxELm4VsUf5Iviie567CjnCp6QpZv2cJZ9qTb8bfFOzwsPSAlJh48jISJ5aEd1JYomsvY9PR9cZx2/SH/22aLo2LrtRfXvQSb2Bh1iuSAKT6xYetCUbxpQ4DFFVfEk7UJMJ1DqEHXhF2UQ+ReydK0bsF1WRihOmbhvch2i16kfzSuBnbaT8FTOs/yaujTj8mQ7QfpkBkp6Pbv7f/gEovrwRk1fsN+HmauyY2TRN4DA0XDpWrv23N7KxjeaOVBouvbOiux/BPvBL/ENUNLXoA3iqUrfDtfX7ZH924Fou+JlW18gHs1XX4HkDX8Bw5WvPK3NZTGnMWnpblMUi56HW33N7QE5JjPqf30PAXfjhzwnnGvCPTjkg0V7+BrDv9nwbIgg0TgeH2EJZ6lj47Nwmd/T1HsnXwnzPsUI46BtJckryogPjZAVY9WQM=
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:95f9:acd:a17b:b759])
+        by smtp.gmail.com with ESMTPSA id v11-20020a170902d08b00b001d942f744f6sm115259plv.157.2024.02.05.09.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 09:27:28 -0800 (PST)
+From: Douglas Anderson <dianders@chromium.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>
-Subject: [RFC PATCH] arm64/sve,sme: Refine scalable regset sizes at boot
-Message-ID: <ZcEaeLeEG8ve+Yp7@e133380.arm.com>
+	Will Deacon <will@kernel.org>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Matthew Wilcox <willy@infradead.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Jan Kara <jack@suse.cz>,
+	Kees Cook <keescook@chromium.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH v2] regset: use kvzalloc() for regset_get_alloc()
+Date: Mon,  5 Feb 2024 09:26:30 -0800
+Message-ID: <20240205092626.v2.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Since [1] and [2], the ptrace core has used the static values in
-struct user_regset to preallocate memory when reading a regset.
-This results in allocating excessive memory for SVE and related
-regsets which are not a fixed size, since the theoretical max size
-of those regsets was deliberately made huge in case of future
-expansion.
+While browsing through ChromeOS crash reports, I found one with an
+allocation failure that looked like this:
 
-In practice, the regsets can be smaller -- usually _much_ smaller.
+  chrome: page allocation failure: order:7,
+          mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
+	  nodemask=(null),cpuset=urgent,mems_allowed=0
+  CPU: 7 PID: 3295 Comm: chrome Not tainted
+          5.15.133-20574-g8044615ac35c #1 (HASH:1162 1)
+  Hardware name: Google Lazor (rev3 - 8) with KB Backlight (DT)
+  Call trace:
+  ...
+  warn_alloc+0x104/0x174
+  __alloc_pages+0x5f0/0x6e4
+  kmalloc_order+0x44/0x98
+  kmalloc_order_trace+0x34/0x124
+  __kmalloc+0x228/0x36c
+  __regset_get+0x68/0xcc
+  regset_get_alloc+0x1c/0x28
+  elf_core_dump+0x3d8/0xd8c
+  do_coredump+0xeb8/0x1378
+  get_signal+0x14c/0x804
+  ...
 
-Since the max possible size of these regsets depends on how big the
-CPUs' registers actually are, clamp the affected regset sizes once
-the kernel has probed all boot-time CPUs.
+An order 7 allocation is (1 << 7) contiguous pages, or 512K. It's not
+a surprise that this allocation failed on a system that's been running
+for a while.
 
-This doesn't make memory allocation failures impossible on the
-affected paths, but at least avoids stupidly large allocations.
+More digging showed that it was fairly easy to see the order 7
+allocation by just sending a SIGQUIT to chrome (or other processes) to
+generate a core dump. The actual amount being allocated was 279,584
+bytes and it was for "core_note_type" NT_ARM_SVE.
 
-[1]: commit b4e9c9549f62 ("introduction of regset ->get() wrappers,
-switching ELF coredumps to those")
+There was quite a bit of discussion [1] on the mailing lists in
+response to my v1 patch attempting to switch to vmalloc. The overall
+conclusion was that we could likely reduce the 279,584 byte allocation
+by quite a bit and Mark Brown has sent a patch to that effect [2].
+However even with the 279,584 byte allocation gone there are still
+65,552 byte allocations. These are just barely more than the 65,536
+bytes and thus would require an order 5 allocation.
 
-[2]: commit 7717cb9bdd04 ("regset: new method and helpers for it")
+An order 5 allocation is still something to avoid unless necessary and
+nothing needs the memory here to be contiguous. Change the allocation
+to kvzalloc() which should still be efficient for small allocations
+but doesn't force the memory subsystem to work hard (and maybe fail)
+at getting a large contiguous chunk.
 
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/lkml/20240201171159.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid/
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+[1] https://lore.kernel.org/r/20240201171159.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid
+[2] https://lore.kernel.org/r/20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
-Only build-tested for now.
+Changes in v2:
+- Use kvzalloc() instead of vmalloc().
+- Update description based on v1 discussion.
 
-If a short-term fix is needed, Mark Brown's patch [3] looks like the
-lower-risk option, but there seems to be outstanding discussion about
-whether this change will actually fix the issue reported above or just
-make it less likely to fire.  See the Link above.
+ fs/binfmt_elf.c | 2 +-
+ kernel/regset.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-This patch duplicates logic between the compiled-in regset->n values and
-those computed after boot.  It might be better to compile in junk
-values, since they should never get used anyway...
-
-[3] https://lore.kernel.org/all/20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org/
-
-
- arch/arm64/include/asm/ptrace.h | 12 ++++++++++++
- arch/arm64/kernel/fpsimd.c      |  3 +++
- arch/arm64/kernel/ptrace.c      | 22 +++++++++++++++++++++-
- 3 files changed, 36 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-index 47ec58031f11..609b963a05e0 100644
---- a/arch/arm64/include/asm/ptrace.h
-+++ b/arch/arm64/include/asm/ptrace.h
-@@ -389,5 +389,17 @@ static inline void procedure_link_pointer_set(struct pt_regs *regs,
- 
- extern unsigned long profile_pc(struct pt_regs *regs);
- 
-+#ifdef CONFIG_ARM64_SVE
-+void __init arch_ptrace_sve_init(unsigned int vq_max);
-+#else
-+static inline void __init arch_ptrace_sve_init(unsigned int vq_max) { }
-+#endif
-+
-+#ifdef CONFIG_ARM64_SME
-+void __init arch_ptrace_sme_init(unsigned int vq_max);
-+#else
-+static inline void __init arch_ptrace_sme_init(unsigned int vq_max) { }
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- #endif
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index a5dc6f764195..5c2f91f84c31 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -1189,6 +1189,7 @@ void __init sve_setup(void)
- 		pr_warn("%s: unvirtualisable vector lengths present\n",
- 			info->name);
- 
-+	arch_ptrace_sve_init(sve_vq_from_vl(info->max_vl));
- 	sve_efi_setup();
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 5397b552fbeb..ac178ad38823 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1928,7 +1928,7 @@ static void free_note_info(struct elf_note_info *info)
+ 		threads = t->next;
+ 		WARN_ON(t->notes[0].data && t->notes[0].data != &t->prstatus);
+ 		for (i = 1; i < info->thread_notes; ++i)
+-			kfree(t->notes[i].data);
++			kvfree(t->notes[i].data);
+ 		kfree(t);
+ 	}
+ 	kfree(info->psinfo.data);
+diff --git a/kernel/regset.c b/kernel/regset.c
+index 586823786f39..b2871fa68b2a 100644
+--- a/kernel/regset.c
++++ b/kernel/regset.c
+@@ -16,14 +16,14 @@ static int __regset_get(struct task_struct *target,
+ 	if (size > regset->n * regset->size)
+ 		size = regset->n * regset->size;
+ 	if (!p) {
+-		to_free = p = kzalloc(size, GFP_KERNEL);
++		to_free = p = kvzalloc(size, GFP_KERNEL);
+ 		if (!p)
+ 			return -ENOMEM;
+ 	}
+ 	res = regset->regset_get(target, regset,
+ 			   (struct membuf){.p = p, .left = size});
+ 	if (res < 0) {
+-		kfree(to_free);
++		kvfree(to_free);
+ 		return res;
+ 	}
+ 	*data = p;
+@@ -71,6 +71,6 @@ int copy_regset_to_user(struct task_struct *target,
+ 	ret = regset_get_alloc(target, regset, size, &buf);
+ 	if (ret > 0)
+ 		ret = copy_to_user(data, buf, ret) ? -EFAULT : 0;
+-	kfree(buf);
++	kvfree(buf);
+ 	return ret;
  }
- 
-@@ -1309,6 +1310,8 @@ void __init sme_setup(void)
- 		info->max_vl);
- 	pr_info("SME: default vector length %u bytes per vector\n",
- 		get_sme_default_vl());
-+
-+	arch_ptrace_sme_init(sve_vq_from_vl(info->max_vl));
- }
- 
- #endif /* CONFIG_ARM64_SME */
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index dc6cf0e37194..466a0eb93123 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/audit.h>
-+#include <linux/cache.h>
- #include <linux/compat.h>
- #include <linux/kernel.h>
- #include <linux/sched/signal.h>
-@@ -1441,7 +1442,7 @@ enum aarch64_regset {
- #endif
- };
- 
--static const struct user_regset aarch64_regsets[] = {
-+static struct user_regset aarch64_regsets[] __ro_after_init = {
- 	[REGSET_GPR] = {
- 		.core_note_type = NT_PRSTATUS,
- 		.n = sizeof(struct user_pt_regs) / sizeof(u64),
-@@ -1596,6 +1597,25 @@ static const struct user_regset_view user_aarch64_view = {
- 	.regsets = aarch64_regsets, .n = ARRAY_SIZE(aarch64_regsets)
- };
- 
-+#ifdef CONFIG_ARM64_SVE
-+void __init arch_ptrace_sve_init(unsigned int vq_max)
-+{
-+	aarch64_regsets[REGSET_SVE].n = DIV_ROUND_UP(
-+		SVE_PT_SIZE(vq_max, SVE_PT_REGS_SVE), SVE_VQ_BYTES);
-+}
-+#endif /* CONFIG_ARM64_SVE */
-+
-+#ifdef CONFIG_ARM64_SME
-+void __init arch_ptrace_sme_init(unsigned int vq_max)
-+{
-+	aarch64_regsets[REGSET_SSVE].n = DIV_ROUND_UP(
-+		SVE_PT_SIZE(vq_max, SVE_PT_REGS_SVE), SVE_VQ_BYTES);
-+
-+	aarch64_regsets[REGSET_ZA].n = DIV_ROUND_UP(
-+		ZA_PT_SIZE(vq_max), SVE_VQ_BYTES);
-+}
-+#endif /* CONFIG_ARM64_SME */
-+
- #ifdef CONFIG_COMPAT
- enum compat_regset {
- 	REGSET_COMPAT_GPR,
-
-base-commit: 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478
 -- 
-2.34.1
+2.43.0.594.gd9cf4e227d-goog
 
