@@ -1,120 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5210C33CD4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42D0F2E62D
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 15:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707147061; cv=none; b=OPGL82rVh1DU4mXdgX6AE4cOs/oKeByqqioocuPnyGpftsEVZsT9p92yry+e0C2taShE8zUyAT9DysGbjykbrHFDTRkkSykAitvnmZ/qt38dz73DKbOv4xm5PkpAgcjv7neI9T/VolZa+nMbIYWAr7WMpxZbCYojaU/lsjBiiU4=
+	t=1707147089; cv=none; b=rfRkeIjW3cZhTX+FDzs/zlnlM4ds90FjrikPHfEDhldsqeL1BxUUsjbXifa6l6OJFoMVLYVQBURJhOIrXbzIQ5Q8pvnkMVUfzM4Sfv2f5xgVhNVlY40JY4eoxFmggPQiii0fTWN+iX3AIazUg/IV/OcBCBTRNTJf3p+AmgnCw3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707147061; c=relaxed/simple;
-	bh=AHlRoEB/SRxV3CHCLl9onAt50PBYe29hjbMuK23GTuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSaPPzKMVeAmTHMJmjJb23XnhlakFJNVmkKy3jTbkhlIjjdU9cjqJUsNuLQLIS64vmcKsBscfAPWnkDzqaHbPtwj6sOFql6m3aXhcl1tUIZlhaMkkgUvmCYGbQqFzOX80VlgqKDCkFr+iN5tMF9j+bSGBTyVJPKiXROiegUcz5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OOJCgcRU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OOJCgcRU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707147057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JTCo85pVLToNTQneWe34tWLYUrb02reZxLGls+V2O1E=;
-	b=OOJCgcRUJ/wMFV95+0RNjiJ20ozHLK7HVNwK8J/4BdytOGZceq6gm9zMMWlU09OangLfNf
-	ih0JHaIDQWPAsRY4am+cAU/8+AS9CL9VBWpX9Ew/TL2tQ+jq1RJyf8hWtLR513iUOtovXh
-	hisI0G4Ih8OQpUjN+SgUhLRoVK2Y4rY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-219-4WPZpIx9PXuaNxqotKV2ZA-1; Mon,
- 05 Feb 2024 10:30:53 -0500
-X-MC-Unique: 4WPZpIx9PXuaNxqotKV2ZA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 44E7A3C11C63;
-	Mon,  5 Feb 2024 15:30:52 +0000 (UTC)
-Received: from bfoster (unknown [10.22.32.186])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D5336112131D;
-	Mon,  5 Feb 2024 15:30:51 +0000 (UTC)
-Date: Mon, 5 Feb 2024 10:32:10 -0500
-From: Brian Foster <bfoster@redhat.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/13] writeback: rework the loop termination condition
- in write_cache_pages
-Message-ID: <ZcD/ekc09A+Z3EHE@bfoster>
-References: <20240203071147.862076-1-hch@lst.de>
- <20240203071147.862076-6-hch@lst.de>
+	s=arc-20240116; t=1707147089; c=relaxed/simple;
+	bh=PAaLfq1+tFXNrEbkJPjr9G9Uf3/OArH2xI/HNdPVMkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HjQZRBg9os84gpTgRMLnn8JLENJEGftB8Y04cL+Eb5KTQo7QOCrI9DpvFa+aCVMXSWaZdFre7qChw5ykK5TtevCim2hfNHE6UJsp10P8ORbe+/5K5wPZ0MRy0CLA8OghaBNG4FdWivIr+mVtIIlEZ7aPib+2hR63hgrnfd7ZvzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 365A01FB;
+	Mon,  5 Feb 2024 07:32:08 -0800 (PST)
+Received: from [10.57.48.140] (unknown [10.57.48.140])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 065C03F5A1;
+	Mon,  5 Feb 2024 07:31:23 -0800 (PST)
+Message-ID: <ab3407c0-da7c-4e80-892d-87b1b31d0b75@arm.com>
+Date: Mon, 5 Feb 2024 15:31:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240203071147.862076-6-hch@lst.de>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] iommu/iova: use named kmem_cache for iova magazines
+Content-Language: en-GB
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, joro@8bytes.org,
+ will@kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, rientjes@google.com, yosryahmed@google.com
+References: <20240202192820.536408-1-pasha.tatashin@soleen.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20240202192820.536408-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 03, 2024 at 08:11:39AM +0100, Christoph Hellwig wrote:
-> Rework the way we deal with the cleanup after the writepage call.
+On 2024-02-02 7:28 pm, Pasha Tatashin wrote:
+> The magazine buffers can take gigabytes of kmem memory, dominating all
+> other allocations. For observability purpose create named slab cache so
+> the iova magazine memory overhead can be clearly observed.
 > 
-> First handle the magic AOP_WRITEPAGE_ACTIVATE separately from real error
-> returns to get it out of the way of the actual error handling path.
+> With this change:
 > 
-> The split the handling on intgrity vs non-integrity branches first,
-> and return early using a goto for the non-ingegrity early loop condition
-> to remove the need for the done and done_index local variables, and for
-> assigning the error to ret when we can just return error directly.
+>> slabtop -o | head
+>   Active / Total Objects (% used)    : 869731 / 952904 (91.3%)
+>   Active / Total Slabs (% used)      : 103411 / 103974 (99.5%)
+>   Active / Total Caches (% used)     : 135 / 211 (64.0%)
+>   Active / Total Size (% used)       : 395389.68K / 411430.20K (96.1%)
+>   Minimum / Average / Maximum Object : 0.02K / 0.43K / 8.00K
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
+> 244412 244239 99%    1.00K  61103       4    244412K iommu_iova_magazine
+>   91636  88343 96%    0.03K    739     124      2956K kmalloc-32
+>   75744  74844 98%    0.12K   2367      32      9468K kernfs_node_cache
+> 
+> On this machine it is now clear that magazine use 242M of kmem memory.
+> 
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
->  mm/page-writeback.c | 84 ++++++++++++++++++---------------------------
->  1 file changed, 33 insertions(+), 51 deletions(-)
+>   drivers/iommu/iova.c | 70 ++++++++++++++++++++++++++------------------
+>   1 file changed, 42 insertions(+), 28 deletions(-)
 > 
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index c7c494526bc650..88b2c4c111c01b 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-...
-> @@ -2524,14 +2505,15 @@ int write_cache_pages(struct address_space *mapping,
->  	 * of the file if we are called again, which can only happen due to
->  	 * -ENOMEM from the file system.
->  	 */
-> -	if (wbc->range_cyclic) {
-> -		if (done)
-> -			mapping->writeback_index = done_index;
-> -		else
-> -			mapping->writeback_index = 0;
-> -	}
-> -
-> +	if (wbc->range_cyclic)
-> +		mapping->writeback_index = 0;
->  	return ret;
+> Changelog:
+> v2: - Use iova_cache_get/iova_cache_put to allocate/free
+>        "iova_magazine_cache" as suggested by Robin Murphy
+>      - Minor fix in the commit log.
+> 
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index d30e453d0fb4..88255f9443b5 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -237,6 +237,35 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
+>   	return -ENOMEM;
+>   }
+>   
+> +/*
+> + * Magazine caches for IOVA ranges.  For an introduction to magazines,
+> + * see the USENIX 2001 paper "Magazines and Vmem: Extending the Slab
+> + * Allocator to Many CPUs and Arbitrary Resources" by Bonwick and Adams.
+> + * For simplicity, we use a static magazine size and don't implement the
+> + * dynamic size tuning described in the paper.
+> + */
 > +
-> +done:
-> +	folio_batch_release(&fbatch);
-> +	if (wbc->range_cyclic)
-> +		mapping->writeback_index = folio->index + folio_nr_pages(folio);
+> +/*
+> + * As kmalloc's buffer size is fixed to power of 2, 127 is chosen to
+> + * assure size of 'iova_magazine' to be 1024 bytes, so that no memory
+> + * will be wasted. Since only full magazines are inserted into the depot,
+> + * we don't need to waste PFN capacity on a separate list head either.
+> + */
+> +#define IOVA_MAG_SIZE 127
+> +
+> +#define IOVA_DEPOT_DELAY msecs_to_jiffies(100)
+> +
+> +struct iova_magazine {
+> +	union {
+> +		unsigned long size;
+> +		struct iova_magazine *next;
+> +	};
+> +	unsigned long pfns[IOVA_MAG_SIZE];
+> +};
+> +
+> +static_assert(!(sizeof(struct iova_magazine) & (sizeof(struct iova_magazine) - 1)));
 
-Shouldn't this release the batch after we're done accessing folio? With
-that addressed:
+Hmm, moving all this lot is a bit nasty, but I can see the current code 
+layout forces you to need sizeof(struct iova_magazine) earlier... :(
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+> +
+> +static struct kmem_cache *iova_magazine_cache;
+>   static struct kmem_cache *iova_cache;
+>   static unsigned int iova_cache_users;
+>   static DEFINE_MUTEX(iova_cache_mutex);
+> @@ -275,6 +304,16 @@ int iova_cache_get(void)
+>   			pr_err("Couldn't create iova cache\n");
+>   			return -ENOMEM;
+>   		}
+> +
+> +		iova_magazine_cache = kmem_cache_create("iommu_iova_magazine",
+> +							sizeof(struct iova_magazine),
+> +							0, SLAB_HWCACHE_ALIGN, NULL);
+> +		if (!iova_magazine_cache) {
+> +			cpuhp_remove_multi_state(CPUHP_IOMMU_IOVA_DEAD);
+> +			mutex_unlock(&iova_cache_mutex);
+> +			pr_err("Couldn't create iova magazine cache\n");
+> +			return -ENOMEM;
 
-> +	return error;
->  }
->  EXPORT_SYMBOL(write_cache_pages);
->  
-> -- 
-> 2.39.2
-> 
-> 
+And you're also strictly missing cleanup of iova_cache here. However 
+again I think that's more the fault of the existing code for being 
+clunky. Rather than drag out this review any more, though, I figured I'd 
+just sort it all out - patches incoming :)
 
+Cheers,
+Robin.
+
+> +		}
+>   	}
+>   
+>   	iova_cache_users++;
+> @@ -295,6 +334,7 @@ void iova_cache_put(void)
+>   	if (!iova_cache_users) {
+>   		cpuhp_remove_multi_state(CPUHP_IOMMU_IOVA_DEAD);
+>   		kmem_cache_destroy(iova_cache);
+> +		kmem_cache_destroy(iova_magazine_cache);
+>   	}
+>   	mutex_unlock(&iova_cache_mutex);
+>   }
+> @@ -612,32 +652,6 @@ reserve_iova(struct iova_domain *iovad,
+>   }
+>   EXPORT_SYMBOL_GPL(reserve_iova);
+>   
+> -/*
+> - * Magazine caches for IOVA ranges.  For an introduction to magazines,
+> - * see the USENIX 2001 paper "Magazines and Vmem: Extending the Slab
+> - * Allocator to Many CPUs and Arbitrary Resources" by Bonwick and Adams.
+> - * For simplicity, we use a static magazine size and don't implement the
+> - * dynamic size tuning described in the paper.
+> - */
+> -
+> -/*
+> - * As kmalloc's buffer size is fixed to power of 2, 127 is chosen to
+> - * assure size of 'iova_magazine' to be 1024 bytes, so that no memory
+> - * will be wasted. Since only full magazines are inserted into the depot,
+> - * we don't need to waste PFN capacity on a separate list head either.
+> - */
+> -#define IOVA_MAG_SIZE 127
+> -
+> -#define IOVA_DEPOT_DELAY msecs_to_jiffies(100)
+> -
+> -struct iova_magazine {
+> -	union {
+> -		unsigned long size;
+> -		struct iova_magazine *next;
+> -	};
+> -	unsigned long pfns[IOVA_MAG_SIZE];
+> -};
+> -static_assert(!(sizeof(struct iova_magazine) & (sizeof(struct iova_magazine) - 1)));
+>   
+>   struct iova_cpu_rcache {
+>   	spinlock_t lock;
+> @@ -658,7 +672,7 @@ static struct iova_magazine *iova_magazine_alloc(gfp_t flags)
+>   {
+>   	struct iova_magazine *mag;
+>   
+> -	mag = kmalloc(sizeof(*mag), flags);
+> +	mag = kmem_cache_alloc(iova_magazine_cache, flags);
+>   	if (mag)
+>   		mag->size = 0;
+>   
+> @@ -667,7 +681,7 @@ static struct iova_magazine *iova_magazine_alloc(gfp_t flags)
+>   
+>   static void iova_magazine_free(struct iova_magazine *mag)
+>   {
+> -	kfree(mag);
+> +	kmem_cache_free(iova_magazine_cache, mag);
+>   }
+>   
+>   static void
