@@ -1,359 +1,208 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9D64B5CA;
-	Mon,  5 Feb 2024 21:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E1213B79A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 21:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707167083; cv=none; b=SfdKgstRMPPVfgRbXA1Kad7BZyLhtx2eRa5eqTL7ZQGBdGMMXN2en9Bc9pVjgv21LIHyr0hh96iu4jatuUovUlfn1KYLse80vugB5olpDVtYjfnykV1UXPq4p2FBgaNqmMmZZ3jCiKhx4inEvk7lCKLh9YP0qXHElWYUq6xkGqA=
+	t=1707167105; cv=none; b=fEFdeyzY+35z7PIN5tHsElgJZpcEMMPlJdR7iYc/jSuEIYcTiV2eS4lECj6ZOO68EvCiwI5ruZGiztDO6f0ePHkQ5j2yup5S3QrC5jrszogEmvaqfK/90dyrFoqviVqjv/srbsP9sFop3sGLeOVm8x4u13/ZgJ4qDj8T1qLO9JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707167083; c=relaxed/simple;
-	bh=2Y5zTYq3JDcBNKrygDZnVvkzgvkx3yeiZP/IvSxcEf8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=av3lddy1KPkTkvsDO2Pr1ucth0I0SLQnYc8cl6nhfF9Yfd/+KGGXf40K9GFkGSfqg3LpDSGmsREU+0j0u76j3hJnpOBY1Ebwj/pPRuzG/ecc5ecX8XWcYWkOikdPlbZnWD64IKSJAU4j1CWgKY6JCftvpzLeeLdoRBi+XW5Nmdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhPmU55p; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707167105; c=relaxed/simple;
+	bh=gQDKvGU/ghxRMfcflvdwZ024OwvFboTrSVuhgGT5PSY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Pga4PgqKfbfcjuFNGAs0dIDFGqTiV0WyW0WKQ+Iei8No2rz6gsXsW8uIjeyr97/WdL7V47sG6jhVWnee2KHN3lM3+tcLkJwgV50RVRZOP34lJt8hTyAHcQMPWNAEwnluI3lWFkqIKWPmGxWDqte/r1sR4kQgUo+VGBlQ+ZwE+9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Z9p1Typm; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhPmU55p"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40f02b8d176so42920535e9.1;
-        Mon, 05 Feb 2024 13:04:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Z9p1Typm"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e055baec89so162568b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 13:05:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707167080; x=1707771880; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=fastly.com; s=google; t=1707167102; x=1707771902; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nqJL7TqpfRwuD6pFCu0aeAbehlV+SJSjj9oqhH2/TvU=;
-        b=XhPmU55pBk6ZYfTQCs4jU7O3BlbP3g3pL7ord6U9qizUt9ceXhwJ37yDE1Ek9o0Dki
-         7fm4AnY+bpvTT153UtUGW871w11ZmXiqL3yr56janBnlZDJisyNTkFFMFN3/FyHK1VEa
-         VoxXUFhqq3jjqOuyv1rco1tN2ZAjeRuZ5l8hxwhb1KYFVdQG9FqFRGlScNVM/p+jH1dz
-         koa5gXFoxSDjfpNkCJpYKVm6PVSlnd1uYf6y/ZbrdgVER9td9oNo7/tVQjDWOkwc0YUO
-         hizBKFJjqvmuF8+KiC3feAQGtMJ+h3iM9Q3/45lLnn2BDQA8W/uhHkCL5ugxJCozRGnC
-         0Kyw==
+        bh=//WWP3LIv7F69f9OvZE6kAJ/ncD/SOZi/tM1IcQuzWk=;
+        b=Z9p1TypmZBncIk3hMD3ssbrfbGNvV//XFL3azhO5lzVQ3E3tzoSmMHONBmlisJZYiG
+         ZMZiiGkgGSxZJjSft0H4/VdeUKNTyPmplMCthd9vrMGOs2hNYy8x5/AiCHv0h+h3s5jp
+         7v9zjyEi+3j6DrJxYtAlokCirPCDmcZDz/T2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707167080; x=1707771880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707167102; x=1707771902;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nqJL7TqpfRwuD6pFCu0aeAbehlV+SJSjj9oqhH2/TvU=;
-        b=TgXwxkbUEWyet+k1/m7WN8KmfWrFM3VRNrYskF6leSH7D+Be427TEdZzMaCjBJY7UR
-         ypDITCa/nZq6m9RuXEsYC9oR1E7zf0xL0+IxA6lzvBV291ZMkuFSqYmvNW/9xCdIF14H
-         n2XOu9O3hmlq/m9ArY3SXt92NRLztHgJA+oihmyCvL4an92aT1+1uWTJzocFkyefWqy9
-         j9i5It31RdtTzmy2SvLOHkSCG9n19TCVx9XQNPGplHUxf4i+5yrRrCsBYDVS538msVYG
-         yBZKIaF3XYl86fojy2F+0RTiwF7KB7L2mVkCYLUCY+1VK51l65FOtqNpwsFXNMaLM0Sy
-         0APw==
-X-Gm-Message-State: AOJu0YxbOw/yBQcJD3K2R0IHDuV7pNWD7upIdt3nOWAlWmfJ7isCpKcP
-	2BCUVFAyQoR8N1w+VKErlZgFHznRYH6utEP+CIEnNZNYPNC6ZCxdo61zntT+375CZCK8FfIlc0x
-	gZG7G2++wR0gUVCz7+YHOvWr7vp0=
-X-Google-Smtp-Source: AGHT+IEP7m1pFNxLpKm57RSiq7BlXeKoOy2/rAnaInBujPX4AtYK02xZ0tLEJdvVcq9o9ngXgRCfMrmSgjFRm3CG6EM=
-X-Received: by 2002:a5d:67d0:0:b0:33b:4164:5fbe with SMTP id
- n16-20020a5d67d0000000b0033b41645fbemr464734wrw.20.1707167079640; Mon, 05 Feb
- 2024 13:04:39 -0800 (PST)
+        bh=//WWP3LIv7F69f9OvZE6kAJ/ncD/SOZi/tM1IcQuzWk=;
+        b=VfaqEuTtrURbFUFe+EkeLiC93KqatTc1OR1Z0kUOqqx1Hje5SKSyOgZIpIYNiNcywb
+         ktwe3elzpz8bqjbv22c5aJBuj2aSzVxZOGAdSHc6T+VFlBoclYEeXLIInH9XzAqkDS46
+         xnuAzOkPygm9tCEoIyg9gxK9pCi/bEHQTDzD0FcPMjwu79FZ/259C2b1T3nLTLFOORDI
+         V1JnFzgixQyvInKhaomwx4EAn7ffhumdFb2AxAf2/e4d5L2CrWzbK5r/xVT3nxNSKO+j
+         PMCCooY5tcCbpzREJ6y0w6ujRV0NpzJTMcs71Ks0uD/0K8FVFULR9V8ME6GndlRzreXx
+         RkYQ==
+X-Gm-Message-State: AOJu0YxyjcVhpSoudthnjHFhNPP5FnXeiNrBhYprQBVqPlz/BU1H8icx
+	wwQqBjBQERmLghuDObuCX2n6XjHUGmQ6yOQLGvBBQY01V3M+r7iSzGNCLnzLeq5XFxfUuUXEVkU
+	OA14LhaEva6mDQvfKQvqB/H/UL8aRXpCCIYmY+DB7dkGEnWDAQhEQMoY3Qt5q4p+mJbX8eWNj2P
+	kL2WabVBXvsQU7P6zCLZs3apBzxprnTf2H1/poZ7QLoGDovw==
+X-Google-Smtp-Source: AGHT+IGGPpScTLwYDVzDc0zc1eW3gIaxrebnnJTEJmL/cDQmZjF0qqfvEPqYHDHZJqzJ82rmQNqbbQ==
+X-Received: by 2002:aa7:88d0:0:b0:6e0:405f:ef8d with SMTP id k16-20020aa788d0000000b006e0405fef8dmr5450050pff.8.1707167101863;
+        Mon, 05 Feb 2024 13:05:01 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV0V7zW2Chf3BKlfYDuPfCvy127acHgLLl/mxXnRfIXqkHQCrQaQCPHdzazH8xfDSiXyKXxDAueYNvzI5Np8XwDPN9VFhyCsI/seiejAqnkBwWYlAIraIZTqvzT1jWdBJjgIYJg+S8qdc+J0padB7TRXlFeO4wU8oN/787VAdH9YX3HjMvC1iTU15fBaj57sOpTXPiLe0gaLgRk+Oyn0hCBygc8JUZPOQCQLCa58l9VRsWqlBWhy0ldc0/xQdKWLedO4A3GZgOAWY8FTZGYhutzcb++BPzwHk8tt509jQHGEA0E4smfPQBmWPK3b6zYUSjNCDkb7s/N0d/A5cTdU/6+/Zc84r4SFUUF7ey9P4dHQbE8oSxdo9/6grXe0IblW1hW28CRUI+KROaAQx2fKD0/BRNzFiShZRS6At7UG1y7RzCxXhEB00PPg4SkrBTf14nbukfvwi8OcCoP6cWk8gPxqPBdafgnzncvXql9bw48+qEi4/SC96wpgrucv6d6tr/9+lvtgLRAEVljlg7OP3N8l8kkGjbHSXTQQM2aSmzw8DrTZUMewHKF+EWZtdugy/VYyeJj7kJXH13ydUAmVmKgir3VjWEg4zW7FrKpSmujyLaJs5Iv9cLIZ4r7ccI=
+Received: from localhost.localdomain ([2620:11a:c018:0:ea8:be91:8d1:f59b])
+        by smtp.gmail.com with ESMTPSA id p9-20020aa79e89000000b006e03efbcb3esm315750pfq.73.2024.02.05.13.04.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 13:05:01 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	linux-api@vger.kernel.org,
+	brauner@kernel.org,
+	edumazet@google.com,
+	davem@davemloft.net,
+	alexander.duyck@gmail.com,
+	sridhar.samudrala@intel.com,
+	kuba@kernel.org,
+	willemdebruijn.kernel@gmail.com,
+	weiwan@google.com,
+	David.Laight@ACULAB.COM,
+	arnd@arndb.de,
+	sdf@google.com,
+	amritha.nambiar@intel.com,
+	Joe Damato <jdamato@fastly.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and infrastructure))
+Subject: [PATCH net-next v6 1/4] eventpoll: support busy poll per epoll instance
+Date: Mon,  5 Feb 2024 21:04:46 +0000
+Message-Id: <20240205210453.11301-2-jdamato@fastly.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240205210453.11301-1-jdamato@fastly.com>
+References: <20240205210453.11301-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205060925.15594-1-yangtiezhu@loongson.cn> <20240205060925.15594-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20240205060925.15594-2-yangtiezhu@loongson.cn>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Mon, 5 Feb 2024 22:04:28 +0100
-Message-ID: <CA+fCnZfDZvcFHG0anZQQKD_GVOfmcKhCmY82U9X2ZKBJp4oRZQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kasan: docs: Update descriptions about test file and module
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Marco Elver <elver@google.com>, kasan-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 5, 2024 at 7:09=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> After commit f7e01ab828fd ("kasan: move tests to mm/kasan/"), the test
-> file is renamed to mm/kasan/kasan_test.c and the test module is renamed
-> to kasan_test.ko, so update the descriptions in the document.
->
-> While at it, update the line number and testcase number when the tests
-> kmalloc_large_oob_right and kmalloc_double_kzfree failed to sync with
-> the current code in mm/kasan/kasan_test.c.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  Documentation/dev-tools/kasan.rst             | 20 +++++++++----------
->  .../translations/zh_CN/dev-tools/kasan.rst    | 20 +++++++++----------
->  .../translations/zh_TW/dev-tools/kasan.rst    | 20 +++++++++----------
->  3 files changed, 30 insertions(+), 30 deletions(-)
->
-> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/=
-kasan.rst
-> index 858c77fe7dc4..a5a6dbe9029f 100644
-> --- a/Documentation/dev-tools/kasan.rst
-> +++ b/Documentation/dev-tools/kasan.rst
-> @@ -169,7 +169,7 @@ Error reports
->  A typical KASAN report looks like this::
->
->      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -    BUG: KASAN: slab-out-of-bounds in kmalloc_oob_right+0xa8/0xbc [test_=
-kasan]
-> +    BUG: KASAN: slab-out-of-bounds in kmalloc_oob_right+0xa8/0xbc [kasan=
-_test]
->      Write of size 1 at addr ffff8801f44ec37b by task insmod/2760
->
->      CPU: 1 PID: 2760 Comm: insmod Not tainted 4.19.0-rc3+ #698
-> @@ -179,8 +179,8 @@ A typical KASAN report looks like this::
->       print_address_description+0x73/0x280
->       kasan_report+0x144/0x187
->       __asan_report_store1_noabort+0x17/0x20
-> -     kmalloc_oob_right+0xa8/0xbc [test_kasan]
-> -     kmalloc_tests_init+0x16/0x700 [test_kasan]
-> +     kmalloc_oob_right+0xa8/0xbc [kasan_test]
-> +     kmalloc_tests_init+0x16/0x700 [kasan_test]
->       do_one_initcall+0xa5/0x3ae
->       do_init_module+0x1b6/0x547
->       load_module+0x75df/0x8070
-> @@ -200,8 +200,8 @@ A typical KASAN report looks like this::
->       save_stack+0x43/0xd0
->       kasan_kmalloc+0xa7/0xd0
->       kmem_cache_alloc_trace+0xe1/0x1b0
-> -     kmalloc_oob_right+0x56/0xbc [test_kasan]
-> -     kmalloc_tests_init+0x16/0x700 [test_kasan]
-> +     kmalloc_oob_right+0x56/0xbc [kasan_test]
-> +     kmalloc_tests_init+0x16/0x700 [kasan_test]
->       do_one_initcall+0xa5/0x3ae
->       do_init_module+0x1b6/0x547
->       load_module+0x75df/0x8070
-> @@ -510,15 +510,15 @@ When a test passes::
->
->  When a test fails due to a failed ``kmalloc``::
->
-> -        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:=
-163
-> +        # kmalloc_large_oob_right: ASSERTION FAILED at mm/kasan/kasan_te=
-st.c:245
->          Expected ptr is not null, but is
-> -        not ok 4 - kmalloc_large_oob_right
-> +        not ok 5 - kmalloc_large_oob_right
->
->  When a test fails due to a missing KASAN report::
->
-> -        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:=
-974
-> +        # kmalloc_double_kzfree: EXPECTATION FAILED at mm/kasan/kasan_te=
-st.c:709
->          KASAN failure expected in "kfree_sensitive(ptr)", but none occur=
-red
-> -        not ok 44 - kmalloc_double_kzfree
-> +        not ok 28 - kmalloc_double_kzfree
->
->
->  At the end the cumulative status of all KASAN tests is printed. On succe=
-ss::
-> @@ -534,7 +534,7 @@ There are a few ways to run KUnit-compatible KASAN te=
-sts.
->  1. Loadable module
->
->     With ``CONFIG_KUNIT`` enabled, KASAN-KUnit tests can be built as a lo=
-adable
-> -   module and run by loading ``test_kasan.ko`` with ``insmod`` or ``modp=
-robe``.
-> +   module and run by loading ``kasan_test.ko`` with ``insmod`` or ``modp=
-robe``.
->
->  2. Built-In
->
-> diff --git a/Documentation/translations/zh_CN/dev-tools/kasan.rst b/Docum=
-entation/translations/zh_CN/dev-tools/kasan.rst
-> index 8fdb20c9665b..2b1e8f74904b 100644
-> --- a/Documentation/translations/zh_CN/dev-tools/kasan.rst
-> +++ b/Documentation/translations/zh_CN/dev-tools/kasan.rst
-> @@ -137,7 +137,7 @@ KASAN=E5=8F=97=E5=88=B0=E9=80=9A=E7=94=A8 ``panic_on_=
-warn`` =E5=91=BD=E4=BB=A4=E8=A1=8C=E5=8F=82=E6=95=B0=E7=9A=84=E5=BD=B1=E5=
-=93=8D=E3=80=82=E5=BD=93=E5=AE=83=E8=A2=AB=E5=90=AF=E7=94=A8
->  =E5=85=B8=E5=9E=8B=E7=9A=84KASAN=E6=8A=A5=E5=91=8A=E5=A6=82=E4=B8=8B=E6=
-=89=80=E7=A4=BA::
->
->      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -    BUG: KASAN: slab-out-of-bounds in kmalloc_oob_right+0xa8/0xbc [test_=
-kasan]
-> +    BUG: KASAN: slab-out-of-bounds in kmalloc_oob_right+0xa8/0xbc [kasan=
-_test]
->      Write of size 1 at addr ffff8801f44ec37b by task insmod/2760
->
->      CPU: 1 PID: 2760 Comm: insmod Not tainted 4.19.0-rc3+ #698
-> @@ -147,8 +147,8 @@ KASAN=E5=8F=97=E5=88=B0=E9=80=9A=E7=94=A8 ``panic_on_=
-warn`` =E5=91=BD=E4=BB=A4=E8=A1=8C=E5=8F=82=E6=95=B0=E7=9A=84=E5=BD=B1=E5=
-=93=8D=E3=80=82=E5=BD=93=E5=AE=83=E8=A2=AB=E5=90=AF=E7=94=A8
->       print_address_description+0x73/0x280
->       kasan_report+0x144/0x187
->       __asan_report_store1_noabort+0x17/0x20
-> -     kmalloc_oob_right+0xa8/0xbc [test_kasan]
-> -     kmalloc_tests_init+0x16/0x700 [test_kasan]
-> +     kmalloc_oob_right+0xa8/0xbc [kasan_test]
-> +     kmalloc_tests_init+0x16/0x700 [kasan_test]
->       do_one_initcall+0xa5/0x3ae
->       do_init_module+0x1b6/0x547
->       load_module+0x75df/0x8070
-> @@ -168,8 +168,8 @@ KASAN=E5=8F=97=E5=88=B0=E9=80=9A=E7=94=A8 ``panic_on_=
-warn`` =E5=91=BD=E4=BB=A4=E8=A1=8C=E5=8F=82=E6=95=B0=E7=9A=84=E5=BD=B1=E5=
-=93=8D=E3=80=82=E5=BD=93=E5=AE=83=E8=A2=AB=E5=90=AF=E7=94=A8
->       save_stack+0x43/0xd0
->       kasan_kmalloc+0xa7/0xd0
->       kmem_cache_alloc_trace+0xe1/0x1b0
-> -     kmalloc_oob_right+0x56/0xbc [test_kasan]
-> -     kmalloc_tests_init+0x16/0x700 [test_kasan]
-> +     kmalloc_oob_right+0x56/0xbc [kasan_test]
-> +     kmalloc_tests_init+0x16/0x700 [kasan_test]
->       do_one_initcall+0xa5/0x3ae
->       do_init_module+0x1b6/0x547
->       load_module+0x75df/0x8070
-> @@ -421,15 +421,15 @@ KASAN=E8=BF=9E=E6=8E=A5=E5=88=B0vmap=E5=9F=BA=E7=A1=
-=80=E6=9E=B6=E6=9E=84=E4=BB=A5=E6=87=92=E6=B8=85=E7=90=86=E6=9C=AA=E4=BD=BF=
-=E7=94=A8=E7=9A=84=E5=BD=B1=E5=AD=90=E5=86=85=E5=AD=98=E3=80=82
->
->  =E5=BD=93=E7=94=B1=E4=BA=8E ``kmalloc`` =E5=A4=B1=E8=B4=A5=E8=80=8C=E5=
-=AF=BC=E8=87=B4=E6=B5=8B=E8=AF=95=E5=A4=B1=E8=B4=A5=E6=97=B6::
->
-> -        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:=
-163
-> +        # kmalloc_large_oob_right: ASSERTION FAILED at mm/kasan/kasan_te=
-st.c:245
->          Expected ptr is not null, but is
-> -        not ok 4 - kmalloc_large_oob_right
-> +        not ok 5 - kmalloc_large_oob_right
->
->  =E5=BD=93=E7=94=B1=E4=BA=8E=E7=BC=BA=E5=B0=91KASAN=E6=8A=A5=E5=91=8A=E8=
-=80=8C=E5=AF=BC=E8=87=B4=E6=B5=8B=E8=AF=95=E5=A4=B1=E8=B4=A5=E6=97=B6::
->
-> -        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:=
-974
-> +        # kmalloc_double_kzfree: EXPECTATION FAILED at mm/kasan/kasan_te=
-st.c:709
->          KASAN failure expected in "kfree_sensitive(ptr)", but none occur=
-red
-> -        not ok 44 - kmalloc_double_kzfree
-> +        not ok 28 - kmalloc_double_kzfree
->
->
->  =E6=9C=80=E5=90=8E=E6=89=93=E5=8D=B0=E6=89=80=E6=9C=89KASAN=E6=B5=8B=E8=
-=AF=95=E7=9A=84=E7=B4=AF=E7=A7=AF=E7=8A=B6=E6=80=81=E3=80=82=E6=88=90=E5=8A=
-=9F::
-> @@ -445,7 +445,7 @@ KASAN=E8=BF=9E=E6=8E=A5=E5=88=B0vmap=E5=9F=BA=E7=A1=
-=80=E6=9E=B6=E6=9E=84=E4=BB=A5=E6=87=92=E6=B8=85=E7=90=86=E6=9C=AA=E4=BD=BF=
-=E7=94=A8=E7=9A=84=E5=BD=B1=E5=AD=90=E5=86=85=E5=AD=98=E3=80=82
->  1. =E5=8F=AF=E5=8A=A0=E8=BD=BD=E6=A8=A1=E5=9D=97
->
->     =E5=90=AF=E7=94=A8 ``CONFIG_KUNIT`` =E5=90=8E=EF=BC=8CKASAN-KUnit=E6=
-=B5=8B=E8=AF=95=E5=8F=AF=E4=BB=A5=E6=9E=84=E5=BB=BA=E4=B8=BA=E5=8F=AF=E5=8A=
-=A0=E8=BD=BD=E6=A8=A1=E5=9D=97=EF=BC=8C=E5=B9=B6=E9=80=9A=E8=BF=87=E4=BD=BF=
-=E7=94=A8
-> -   ``insmod`` =E6=88=96 ``modprobe`` =E5=8A=A0=E8=BD=BD ``test_kasan.ko`=
-` =E6=9D=A5=E8=BF=90=E8=A1=8C=E3=80=82
-> +   ``insmod`` =E6=88=96 ``modprobe`` =E5=8A=A0=E8=BD=BD ``kasan_test.ko`=
-` =E6=9D=A5=E8=BF=90=E8=A1=8C=E3=80=82
->
->  2. =E5=86=85=E7=BD=AE
->
-> diff --git a/Documentation/translations/zh_TW/dev-tools/kasan.rst b/Docum=
-entation/translations/zh_TW/dev-tools/kasan.rst
-> index 979eb84bc58f..ed342e67d8ed 100644
-> --- a/Documentation/translations/zh_TW/dev-tools/kasan.rst
-> +++ b/Documentation/translations/zh_TW/dev-tools/kasan.rst
-> @@ -137,7 +137,7 @@ KASAN=E5=8F=97=E5=88=B0=E9=80=9A=E7=94=A8 ``panic_on_=
-warn`` =E5=91=BD=E4=BB=A4=E8=A1=8C=E5=8F=83=E6=95=B8=E7=9A=84=E5=BD=B1=E9=
-=9F=BF=E3=80=82=E7=95=B6=E5=AE=83=E8=A2=AB=E5=95=93=E7=94=A8
->  =E5=85=B8=E5=9E=8B=E7=9A=84KASAN=E5=A0=B1=E5=91=8A=E5=A6=82=E4=B8=8B=E6=
-=89=80=E7=A4=BA::
->
->      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -    BUG: KASAN: slab-out-of-bounds in kmalloc_oob_right+0xa8/0xbc [test_=
-kasan]
-> +    BUG: KASAN: slab-out-of-bounds in kmalloc_oob_right+0xa8/0xbc [kasan=
-_test]
->      Write of size 1 at addr ffff8801f44ec37b by task insmod/2760
->
->      CPU: 1 PID: 2760 Comm: insmod Not tainted 4.19.0-rc3+ #698
-> @@ -147,8 +147,8 @@ KASAN=E5=8F=97=E5=88=B0=E9=80=9A=E7=94=A8 ``panic_on_=
-warn`` =E5=91=BD=E4=BB=A4=E8=A1=8C=E5=8F=83=E6=95=B8=E7=9A=84=E5=BD=B1=E9=
-=9F=BF=E3=80=82=E7=95=B6=E5=AE=83=E8=A2=AB=E5=95=93=E7=94=A8
->       print_address_description+0x73/0x280
->       kasan_report+0x144/0x187
->       __asan_report_store1_noabort+0x17/0x20
-> -     kmalloc_oob_right+0xa8/0xbc [test_kasan]
-> -     kmalloc_tests_init+0x16/0x700 [test_kasan]
-> +     kmalloc_oob_right+0xa8/0xbc [kasan_test]
-> +     kmalloc_tests_init+0x16/0x700 [kasan_test]
->       do_one_initcall+0xa5/0x3ae
->       do_init_module+0x1b6/0x547
->       load_module+0x75df/0x8070
-> @@ -168,8 +168,8 @@ KASAN=E5=8F=97=E5=88=B0=E9=80=9A=E7=94=A8 ``panic_on_=
-warn`` =E5=91=BD=E4=BB=A4=E8=A1=8C=E5=8F=83=E6=95=B8=E7=9A=84=E5=BD=B1=E9=
-=9F=BF=E3=80=82=E7=95=B6=E5=AE=83=E8=A2=AB=E5=95=93=E7=94=A8
->       save_stack+0x43/0xd0
->       kasan_kmalloc+0xa7/0xd0
->       kmem_cache_alloc_trace+0xe1/0x1b0
-> -     kmalloc_oob_right+0x56/0xbc [test_kasan]
-> -     kmalloc_tests_init+0x16/0x700 [test_kasan]
-> +     kmalloc_oob_right+0x56/0xbc [kasan_test]
-> +     kmalloc_tests_init+0x16/0x700 [kasan_test]
->       do_one_initcall+0xa5/0x3ae
->       do_init_module+0x1b6/0x547
->       load_module+0x75df/0x8070
-> @@ -421,15 +421,15 @@ KASAN=E9=80=A3=E6=8E=A5=E5=88=B0vmap=E5=9F=BA=E7=A4=
-=8E=E6=9E=B6=E6=A7=8B=E4=BB=A5=E6=87=B6=E6=B8=85=E7=90=86=E6=9C=AA=E4=BD=BF=
-=E7=94=A8=E7=9A=84=E5=BD=B1=E5=AD=90=E5=85=A7=E5=AD=98=E3=80=82
->
->  =E7=95=B6=E7=94=B1=E6=96=BC ``kmalloc`` =E5=A4=B1=E6=95=97=E8=80=8C=E5=
-=B0=8E=E8=87=B4=E6=B8=AC=E8=A9=A6=E5=A4=B1=E6=95=97=E6=99=82::
->
-> -        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:=
-163
-> +        # kmalloc_large_oob_right: ASSERTION FAILED at mm/kasan/kasan_te=
-st.c:245
->          Expected ptr is not null, but is
-> -        not ok 4 - kmalloc_large_oob_right
-> +        not ok 5 - kmalloc_large_oob_right
->
->  =E7=95=B6=E7=94=B1=E6=96=BC=E7=BC=BA=E5=B0=91KASAN=E5=A0=B1=E5=91=8A=E8=
-=80=8C=E5=B0=8E=E8=87=B4=E6=B8=AC=E8=A9=A6=E5=A4=B1=E6=95=97=E6=99=82::
->
-> -        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:=
-974
-> +        # kmalloc_double_kzfree: EXPECTATION FAILED at mm/kasan/kasan_te=
-st.c:709
->          KASAN failure expected in "kfree_sensitive(ptr)", but none occur=
-red
-> -        not ok 44 - kmalloc_double_kzfree
-> +        not ok 28 - kmalloc_double_kzfree
->
->
->  =E6=9C=80=E5=BE=8C=E6=89=93=E5=8D=B0=E6=89=80=E6=9C=89KASAN=E6=B8=AC=E8=
-=A9=A6=E7=9A=84=E7=B4=AF=E7=A9=8D=E7=8B=80=E6=85=8B=E3=80=82=E6=88=90=E5=8A=
-=9F::
-> @@ -445,7 +445,7 @@ KASAN=E9=80=A3=E6=8E=A5=E5=88=B0vmap=E5=9F=BA=E7=A4=
-=8E=E6=9E=B6=E6=A7=8B=E4=BB=A5=E6=87=B6=E6=B8=85=E7=90=86=E6=9C=AA=E4=BD=BF=
-=E7=94=A8=E7=9A=84=E5=BD=B1=E5=AD=90=E5=85=A7=E5=AD=98=E3=80=82
->  1. =E5=8F=AF=E5=8A=A0=E8=BC=89=E6=A8=A1=E5=A1=8A
->
->     =E5=95=93=E7=94=A8 ``CONFIG_KUNIT`` =E5=BE=8C=EF=BC=8CKASAN-KUnit=E6=
-=B8=AC=E8=A9=A6=E5=8F=AF=E4=BB=A5=E6=A7=8B=E5=BB=BA=E7=88=B2=E5=8F=AF=E5=8A=
-=A0=E8=BC=89=E6=A8=A1=E5=A1=8A=EF=BC=8C=E4=B8=A6=E9=80=9A=E9=81=8E=E4=BD=BF=
-=E7=94=A8
-> -   ``insmod`` =E6=88=96 ``modprobe`` =E5=8A=A0=E8=BC=89 ``test_kasan.ko`=
-` =E4=BE=86=E9=81=8B=E8=A1=8C=E3=80=82
-> +   ``insmod`` =E6=88=96 ``modprobe`` =E5=8A=A0=E8=BC=89 ``kasan_test.ko`=
-` =E4=BE=86=E9=81=8B=E8=A1=8C=E3=80=82
->
->  2. =E5=85=A7=E7=BD=AE
->
-> --
-> 2.42.0
+Allow busy polling on a per-epoll context basis. The per-epoll context
+usec timeout value is preferred, but the pre-existing system wide sysctl
+value is still supported if it specified.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+---
+ fs/eventpoll.c | 49 +++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 3534d36a1474..ce75189d46df 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -227,6 +227,8 @@ struct eventpoll {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+ 	/* used to track busy poll napi_id */
+ 	unsigned int napi_id;
++	/* busy poll timeout */
++	u64 busy_poll_usecs;
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+@@ -386,12 +388,44 @@ static inline int ep_events_available(struct eventpoll *ep)
+ 		READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+ }
+ 
++/**
++ * busy_loop_ep_timeout - check if busy poll has timed out. The timeout value
++ * from the epoll instance ep is preferred, but if it is not set fallback to
++ * the system-wide global via busy_loop_timeout.
++ *
++ * @start_time: The start time used to compute the remaining time until timeout.
++ * @ep: Pointer to the eventpoll context.
++ *
++ * Return: true if the timeout has expired, false otherwise.
++ */
++static inline bool busy_loop_ep_timeout(unsigned long start_time, struct eventpoll *ep)
++{
++#ifdef CONFIG_NET_RX_BUSY_POLL
++	unsigned long bp_usec = READ_ONCE(ep->busy_poll_usecs);
++
++	if (bp_usec) {
++		unsigned long end_time = start_time + bp_usec;
++		unsigned long now = busy_loop_current_time();
++
++		return time_after(now, end_time);
++	} else {
++		return busy_loop_timeout(start_time);
++	}
++#endif
++	return true;
++}
++
+ #ifdef CONFIG_NET_RX_BUSY_POLL
++static bool ep_busy_loop_on(struct eventpoll *ep)
++{
++	return !!ep->busy_poll_usecs || net_busy_loop_on();
++}
++
+ static bool ep_busy_loop_end(void *p, unsigned long start_time)
+ {
+ 	struct eventpoll *ep = p;
+ 
+-	return ep_events_available(ep) || busy_loop_timeout(start_time);
++	return ep_events_available(ep) || busy_loop_ep_timeout(start_time, ep);
+ }
+ 
+ /*
+@@ -404,7 +438,7 @@ static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
+ {
+ 	unsigned int napi_id = READ_ONCE(ep->napi_id);
+ 
+-	if ((napi_id >= MIN_NAPI_ID) && net_busy_loop_on()) {
++	if ((napi_id >= MIN_NAPI_ID) && ep_busy_loop_on(ep)) {
+ 		napi_busy_loop(napi_id, nonblock ? NULL : ep_busy_loop_end, ep, false,
+ 			       BUSY_POLL_BUDGET);
+ 		if (ep_events_available(ep))
+@@ -430,7 +464,8 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+ 	struct socket *sock;
+ 	struct sock *sk;
+ 
+-	if (!net_busy_loop_on())
++	ep = epi->ep;
++	if (!ep_busy_loop_on(ep))
+ 		return;
+ 
+ 	sock = sock_from_file(epi->ffd.file);
+@@ -442,7 +477,6 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+ 		return;
+ 
+ 	napi_id = READ_ONCE(sk->sk_napi_id);
+-	ep = epi->ep;
+ 
+ 	/* Non-NAPI IDs can be rejected
+ 	 *	or
+@@ -466,6 +500,10 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+ {
+ }
+ 
++static inline bool ep_busy_loop_on(struct eventpoll *ep)
++{
++	return false;
++}
+ #endif /* CONFIG_NET_RX_BUSY_POLL */
+ 
+ /*
+@@ -2058,6 +2096,9 @@ static int do_epoll_create(int flags)
+ 		error = PTR_ERR(file);
+ 		goto out_free_fd;
+ 	}
++#ifdef CONFIG_NET_RX_BUSY_POLL
++	ep->busy_poll_usecs = 0;
++#endif
+ 	ep->file = file;
+ 	fd_install(fd, file);
+ 	return fd;
+-- 
+2.25.1
+
