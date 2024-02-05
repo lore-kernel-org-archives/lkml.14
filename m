@@ -1,57 +1,62 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4799754BCA
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 19:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88AA55C1D;
+	Mon,  5 Feb 2024 19:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707160740; cv=none; b=US4kHOK3UPTW91Fz1UtHEh2MVCJqzEGytuHg146/beN4p838fNNSzXPJmkWVRvbdXPnmUsXEbrvpfD65bdOmAAy2j49cLaYZ3ud+2ssXC+rYcBBts8S9ZEGzIskzsVQQQstlMrtR6gtuTo5OB2k1bcqrcEnDoRp3J8w4adGdb7I=
+	t=1707160743; cv=none; b=Alk0OKZ0dqJAHKI7I2QFO/zPHl2Yhg4Es5GR/Dvg9y6Wym2IaPlxy/3zUe1i5SHK5B2D/s+6XzVZXpgQI6BhIKma3nUF2PN+xK/jtvvZReFAw4z+cr5wDP1z31XWUimYDS5i9OiN2PBkWhjVj9aji8EjDpmb5cde+/eSAocgfxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707160740; c=relaxed/simple;
-	bh=L6H/Zl7UOveGSW+zhT0TTKjxWKJLOO7cOjOFFqFmsoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pA5+RITxDhssENKesrt4AWrBR3Eew3iErFZylFrxWMnjSpQl9AX4bFc3a9SMHGmt882vwSenkHCN84sk+LEH6Jekqw0cnMocqvplwgDeYfA6BxzpXAIWBXu3h7TSrZ7W/ze17kK1fMdifbw8dEOoCsjNOtrTMlYwJsWDw/bcAtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1707160743; c=relaxed/simple;
+	bh=ncRsIdJWU7Fb5w1Y11uJGyPE0DAbtzrze6NkIJGNx7s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SIWcp5Vdk6uCo/dl0x6vkUUb/ZgED9zZHjgAyHND4oj3EDWZcp93Vu/Uw8BfnhPsZj6YNg+ifHM3uvjh7tru4ewLH0hJS0xB4Vsni+k0z7Y0KH89VX1LsPFEuiBzjQGdqshROQ6o74aagYXuZ95bdLsFFcHJ20EKDuSBVBWUh+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a37ce4b2b23so124953366b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 11:18:57 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a359e6fde44so3831766b.3;
+        Mon, 05 Feb 2024 11:19:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707160736; x=1707765536;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dWo//23UNgHLh4YlpYiYx7hMvmjaebYbXFXXNlcC930=;
-        b=kBoLwMhZnU4t4TjoEikWn4Wo6K++EN2noYiyc1agaHvR4unyUzb6om+JAfnaSwk2YY
-         ry9e/ie3PySUs5bn1SLWve3V07d5L0YfSzAW7d4x0iCZclAb4zBz/sm04f9T4/0f+BbJ
-         6Dqr/q6X8Pg1ZTvwFxUYy+vCzAAPXsEwIVtkhBO0PhHof2i8YVQ3ez70P7TK8TdobBs5
-         BGP4+j/K7lTMK9gvoCuBNGMl35VR7PGxgO+Sk1KoifuS3/5m5bAB2t3/XzBOSz4laNTn
-         0nFcsq6FGJ365dCTg2nNzeyENtNZyGwdpPsm8SWq25Kw1Ycc0QLZ30thzNAHvfJ/K9fI
-         J7fg==
-X-Gm-Message-State: AOJu0Yx0vZ3h8UuahoaprlI+q+ovPesmPzc7nApOJa3yda3ol9984Imq
-	agXnnUv14dB+N48Zkrz4kcSJUIp3AkP0a8BJ952saJ0hNwUlyo7W
-X-Google-Smtp-Source: AGHT+IFJVJGFgzRP+JaCEmQBc6TWhCiJzh1skkZ70pPkTz2uMwB7wUZVtWtShQrHjEG7KDUUk9q3Dg==
-X-Received: by 2002:a17:907:2cd8:b0:a37:2c8f:f605 with SMTP id hg24-20020a1709072cd800b00a372c8ff605mr226983ejc.75.1707160736219;
-        Mon, 05 Feb 2024 11:18:56 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVZvlIdAv+MhPs4qzcEzvnoVUzK7+u6M9FOC1fvWg/yZXEkctPC5uNwEIjIvbUvI/Hi7sDpAqGoU9cdH3EKVPoNRrSiqW5qINM/IFETVsbD+uEJRV7E59I45wG40opcJiWt1JtNkea+Hh5e/VjLrAGGQsyFDCttvU/Q60KcVmm/zdQgiZfH9EvXSOHTkq+0wgUI6dzJz+QkVn/EhHRJ+sWwmYBIRd3+mgyjWn7umFJ0C5MouDVD9eTfcWEKZEREaRaAR+NmCO47rcSy0/3xgr3JLEcs39ayGC/AKq1qzU/QzQo20IvtG5Ij
-Received: from localhost (fwdproxy-cln-119.fbsv.net. [2a03:2880:31ff:77::face:b00c])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170906d18100b00a367cf97b40sm156860ejz.131.2024.02.05.11.18.55
+        d=1e100.net; s=20230601; t=1707160740; x=1707765540;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/WC26n55iZnXbww+34MstvyMYAWzNyFy0JnU0QygjqI=;
+        b=fRNVYTUm1EGmkbd5wiEjURxZgyrmAsXeTVzUBylB3K+cPpBynSKzqCyjOOVzW4Iv4w
+         DPstoyI1oPat+xWOb/SDzT9I/Liy7W0FTo3Zayp2RYYEtwVxOjJqzA0c+94NIdT6nEbV
+         qPKLzPh8UKE/GjL1kPQFPHaob/eaDMnlMQDdr68VGtBF6lkL8e2P2Y+3NJ0+It8/72zK
+         XhU0wo3bHCBSRyFXoU0ZzNN+D/jOkjwvJdgGDXYbauVJUFpnCCpW2cxNr8kc4TWn1XLg
+         ppq9i7IEvh9mE928TnQ5oTdw/X1bkxS9HLlNd/e3MSVY3ueZaDVBc3+PGGWC79nsJ1+b
+         y93A==
+X-Gm-Message-State: AOJu0Yw4Koni2auFpfRXqmWlTPyuBONPcnAjMIoYUJJWJzuhAEgDzNH3
+	drEy8ntJ7TC25UwEdH3iXApdthOFPs41IW6fDyNMOKUA9LyLpeZJ
+X-Google-Smtp-Source: AGHT+IHLc0HadsV/eDekFcvJhQSwC9u5/Jfj7dNNksLZBMHsGXWIlh9ubGXg+AAPmWeKyat/93baTg==
+X-Received: by 2002:a17:906:2456:b0:a37:aa39:ea27 with SMTP id a22-20020a170906245600b00a37aa39ea27mr270002ejb.65.1707160739532;
+        Mon, 05 Feb 2024 11:18:59 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUnz2Sd1sNKTlh9XUDSn65VAeg6JyD3s7WLIQ/AfZVc3isM/4jwLTT3rCz6D3aOibuSJbNxTV7xdKsyzl43Jl7nwofsacO+7LrqvYEhR0j/SSA/edgIrR9eynGCSYOZldjwSA11NMQiyCmWZJuBLEuTr66gcE+P7xNWzxcKrQo9yuRIANDY3QaLwr6mtiyuFu1CgPqSvlN7mM8gzwRyEM0TBls1KHITRga7eCqYyEOnsQpel/UgZ9zD7Vm/EY9bO2yHahpVWGtWfPGZ7rkiCEFzMNHm4ia7CWCiGPu/tf3zl9LI1n4odRGBVzdW/dpNiHxhM+J/RkIllH8jstVP5BbLt5Kyk5Ti/IZolE2vlpIaPmq7U0tonZ3nm1Ch
+Received: from localhost (fwdproxy-cln-018.fbsv.net. [2a03:2880:31ff:12::face:b00c])
+        by smtp.gmail.com with ESMTPSA id qb12-20020a1709077e8c00b00a373993b390sm156733ejc.148.2024.02.05.11.18.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 11:18:55 -0800 (PST)
+        Mon, 05 Feb 2024 11:18:59 -0800 (PST)
 From: Breno Leitao <leitao@debian.org>
 To: mike.kravetz@oracle.com,
 	linux-mm@kvack.org,
 	akpm@linux-foundation.org,
-	muchun.song@linux.dev
+	muchun.song@linux.dev,
+	Shuah Khan <shuah@kernel.org>
 Cc: lstoakes@gmail.com,
 	willy@infradead.org,
 	hannes@cmpxchg.org,
 	mhocko@kernel.org,
 	roman.gushchin@linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] mm/hugetlb: Restore the reservation
-Date: Mon,  5 Feb 2024 11:18:40 -0800
-Message-Id: <20240205191843.4009640-1-leitao@debian.org>
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
+Subject: [PATCH v2 2/2] selftests/mm: run_vmtests.sh: add hugetlb_madv_vs_map
+Date: Mon,  5 Feb 2024 11:18:42 -0800
+Message-Id: <20240205191843.4009640-3-leitao@debian.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205191843.4009640-1-leitao@debian.org>
+References: <20240205191843.4009640-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,42 +65,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a fix for a case where a backing huge page could stolen after
-madvise(MADV_DONTNEED).
+hugetlb_madv_vs_map selftest was not part of the mm test-suite since we
+didn't have a fix for the problem it found.
 
-A full reproducer is in selftest. See
-https://lore.kernel.org/all/20240105155419.1939484-1-leitao@debian.org/
+Now that the problem is already fixed (see previous commit), let's
+enable this selftest in the default test-suite.
 
-v1:
-  * https://lore.kernel.org/all/20240117171058.2192286-1-leitao@debian.org/
-v2:
-  * In version 1, there was a lockdep dependency detected by syzbot.
-	* https://lore.kernel.org/all/00000000000050a2fb060fdc478c@google.com/
-	* The lockdep dependency was caused because `vma_add_reservation()` was
-	  called with the pte lock. This is fixed now by deferring the
-	  vma_add_reservation() to after the spinlock.
-  * Version 2 fixes the problem above by setting the restore_reserve bit
-    inside the ptl, but, calling vma_add_reservation() later, after the
-    lock is released.
-	* Reported by a test done by Ryan Roberts.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ tools/testing/selftests/mm/run_vmtests.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-In order to test this patch, I instrumented the kernel with LOCKDEP and
-KASAN, and run the following tests, without any regression:
-  * The self test that reproduces the problem
-  * All mm hugetlb selftests
-	SUMMARY: PASS=9 SKIP=0 FAIL=0
-  * All libhugetlbfs tests
-	PASS:     0     86
-	FAIL:     0      0
-
-Breno Leitao (2):
-  mm/hugetlb: Restore the reservation if needed
-  selftests/mm: run_vmtests.sh: add hugetlb_madv_vs_map
-
- mm/hugetlb.c                              | 25 +++++++++++++++++++++++
- tools/testing/selftests/mm/run_vmtests.sh |  1 +
- 2 files changed, 26 insertions(+)
-
+diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+index 246d53a5d7f2..50e2094ed761 100755
+--- a/tools/testing/selftests/mm/run_vmtests.sh
++++ b/tools/testing/selftests/mm/run_vmtests.sh
+@@ -253,6 +253,7 @@ nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
+ # For this test, we need one and just one huge page
+ echo 1 > /proc/sys/vm/nr_hugepages
+ CATEGORY="hugetlb" run_test ./hugetlb_fault_after_madv
++CATEGORY="hugetlb" run_test ./hugetlb_madv_vs_map
+ # Restore the previous number of huge pages, since further tests rely on it
+ echo "$nr_hugepages_tmp" > /proc/sys/vm/nr_hugepages
+ 
 -- 
 2.34.1
 
