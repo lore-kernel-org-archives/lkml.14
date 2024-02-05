@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657B522EED;
-	Mon,  5 Feb 2024 13:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3222C694;
+	Mon,  5 Feb 2024 13:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707141556; cv=none; b=Pk3RfsrP6BNjtrynoKvxABVBh78NJS+V131x3au9MWOhtNFs351ViWT3sFSk4suR3deZLV4u/v8BCMXzHUqYRwXibRKZ5dowbyQSm2cjBbxCsU+r4cRUYU2geJDKBiKqYlA/t++6cgUBTroLpKMuUYlWZntvSFjuOZYsbl5VyTw=
+	t=1707141560; cv=none; b=BOvElu1HHLSlGJy+5F7WYBVmkIldh828CLWwIMmea20v/lhfFhCpW5fuhlyUQOof2GBLW8yHyhdUKL7NNINbilIXcqDLZAXySd05nimq4l1PfSLmJZBXJpa8t/LpPT80Ipr5gYL7M85nfP4+qM91AqRfQ/ATj/pSS6WY5Ye1KTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707141556; c=relaxed/simple;
-	bh=AnikdZnOTsGXdEyQTau0kuvwl7rNCalpyiI9Ffz36X4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nh747U+z7p23cybZXvhjjrw28rdl9UfKhOyx7DJqEPQ/qNfRI+zeVDp3hysCyVjdQBdjgnRQ/XsnJDveKBazQB3OgS9jpVMloRC+s17sACaXgKSBLCtyGSs04wE9uFxifRD8PDRVja4U6VL0A6nPiDAAU4Vq1w5xMtXRa9Ibyes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9BZvc0T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707141560; c=relaxed/simple;
+	bh=e5Ol44cNhbsUA6CtDEObMa0YcRvE9WJtvaMsnXPBe0I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ILImiFviRBfWeu5/WOCww9OdbrzLtZ06zp147Vsdx1YT4JhCVkBRcn5+DxHGDn/og9isB2nykXZ2Nm3It2WcK8gDyLVEEbEZ6Cc5zar3Tpu23kGxpQ0MnLj14XJLZffHm4xUDPSjGf9i6bH3nMKwXfwhEWFeWlLZ10615VG0oUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao7fJbAS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9BZvc0T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D63C43390;
-	Mon,  5 Feb 2024 13:59:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao7fJbAS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52925C433C7;
+	Mon,  5 Feb 2024 13:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707141555;
-	bh=AnikdZnOTsGXdEyQTau0kuvwl7rNCalpyiI9Ffz36X4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X9BZvc0T0ph4fdgkO5Y7fC7Gr0jtyyTqOQMMKa3se/IvfVMnMq4DKMs91qQBgPUPD
-	 D0QMby3rNvw+nSaCK4oaUiqZzO1QfMuQUWjsdpljbVcl/m5xAIgAq7uW1cRHwwQB/V
-	 js6iJN5U3Ud3C6ZR9wtAG6pNP3sr551jNqJRauGovan+iRE9oQOZ841VvTC6rH4PdE
-	 A6cyJh+mQQUe31o5/uB/B5OGq5pwWRwTm06hHymdkSZ3Y3uR2COu1sOhS91XCpe8ls
-	 n15nd2vFcIq3BlE+S+SpYjNszD4w/frOZmindqnUpGpqgL7KJ0GIHsYe3JTLEnP6ST
-	 xe6UjlhKkyOug==
+	s=k20201202; t=1707141559;
+	bh=e5Ol44cNhbsUA6CtDEObMa0YcRvE9WJtvaMsnXPBe0I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ao7fJbASJoBH9GKzma11WC4oZ4jnlg+TWrWxAdIMkI168FpDcqw4p9ZiE0EmfBF/y
+	 HQsq2YBX8LSMjho2HTtnSuxMzFf5rTLBRPGo+b3KVdfSuv2LmL2xUG+uHRnLioc2dp
+	 dT99AFV1qST8MehPP2v/TLjB6TqjVi418S/Ia2+7d6Sdrh8tvcwcfsj3d4AZrfcGLM
+	 QFxrpFEWVycxtHtEnPZJIirHKvEAJdABRIYJ8aJKEle9YC8v3wvMUK1TxMf4OCCNhb
+	 h0+XuGxogW5WFkTcDhTFNQueOVQJullbt5T9TVxj86UEm+s3yHQXqVHwjgIqI2WpQt
+	 +UJWlLPeUGwpw==
 From: Roger Quadros <rogerq@kernel.org>
 To: nm@ti.com,
 	vigneshr@ti.com
@@ -39,11 +40,14 @@ Cc: afd@ti.com,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Roger Quadros <rogerq@kernel.org>
-Subject: [PATCH v4 0/3] arm64: dts: ti: am62: Add USB support for k3-am62p
-Date: Mon,  5 Feb 2024 15:59:05 +0200
-Message-Id: <20240205135908.54656-1-rogerq@kernel.org>
+	Roger Quadros <rogerq@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 1/3] dt-bindings: mfd: syscon: Add ti,am62-usb-phy-ctrl compatible
+Date: Mon,  5 Feb 2024 15:59:06 +0200
+Message-Id: <20240205135908.54656-2-rogerq@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205135908.54656-1-rogerq@kernel.org>
+References: <20240205135908.54656-1-rogerq@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,39 +56,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Add the compatible for TI AM62 USB PHY Control register. This
+register is found in the TI AM62 WKUP_CTRL_MMR0 space [1]. It
+is used to indicate the USB PHY PLL reference clock rate and
+core voltage level to the USB controller.
 
-This series first adds device nodes for USB0_PHY_CTRL and USB1_PHY_CTRL
-in the wkup_conf node and fixus up the USB nodes to use the newly
-added nodes.
+[1] - https://www.ti.com/lit/pdf/spruiv7
 
-Then it adds USB support for AM62P SoC and AM62P5-SK board.
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-In v4, we drop the 2 new patches that were added in v3 to add the
-missing PHY2 register space to the USB controller wrapper node.
+Notes:
+    Changelog:
+    
+    v4 - no change. Added Rob's Acked-by
+    
+    v3 - add compatibles in alphabetical order
+    https://lore.kernel.org/all/20240201120332.4811-2-rogerq@kernel.org/
+    
+    v2 - New patch
 
-Changelog in each patch.
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-cheers,
--roger
-
-Roger Quadros (3):
-  dt-bindings: mfd: syscon: Add ti,am62-usb-phy-ctrl compatible
-  arm64: dts: ti: k3-am62/a: use sub-node for USB_PHY_CTRL registers
-  arm64: dts: ti: k3-am62p: add the USB sub-system
-
- .../devicetree/bindings/mfd/syscon.yaml       |  1 +
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi      |  4 +-
- arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi    | 10 +++
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi     |  4 +-
- arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi   | 10 +++
- arch/arm64/boot/dts/ti/k3-am62p-main.dtsi     | 46 +++++++++++++
- arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi   | 10 +++
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       | 67 +++++++++++++++++++
- 8 files changed, 148 insertions(+), 4 deletions(-)
-
-
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 084b5c2a2a3c..9437705af92f 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -72,6 +72,7 @@ properties:
+               - rockchip,rk3588-qos
+               - rockchip,rv1126-qos
+               - starfive,jh7100-sysmain
++              - ti,am62-usb-phy-ctrl
+               - ti,am654-dss-oldi-io-ctrl
+ 
+           - const: syscon
 -- 
 2.34.1
 
