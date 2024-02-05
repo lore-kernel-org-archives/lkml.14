@@ -1,146 +1,130 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2086.outbound.protection.outlook.com [40.107.102.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2DD1DA37
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 22:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707171202; cv=none; b=sPZ3rnkcK0AbJfUP9jGKszfPu3wXRB8tpETac6j8nUv1vCmsE/hS07tpjrHUcuTDDOwRmn2Q/YyjEV//kkHJLnQIJLIZXsup+yKFBzkb2TRJbRrTEdkYGo8D287AhzTXFkxnMavOwCkaiYRmJ9t45LFsCSrGPLQy2rcPlLcwRf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707171202; c=relaxed/simple;
-	bh=jdd1RTnsCbK9CBh+Tor3vhucPu9sttBLgqAG8qJCD9Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=AoJbpjDuZCZyQgV7YHEUdDvlGGj+oMKdDhX8e/LUt1wxBCoc6/1yX65ZbZvRAFZZdMY9LeaLxzx1ZSp9GNzb0U44/Fob6+m1wzOO7LbrRJ/6Gg3s9LbH4sV3QfkN0kyGnioaon65mXRwzBIPU4qXRY9OFvDQ3rN7vGfvexU/K3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HGdW1sy9; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12E74C3B3;
+	Mon,  5 Feb 2024 22:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707171407; cv=fail; b=ae3QHCSjGQl506Io0wPZd37lI7W/3mKZruCz+exzntl/FS1hpCpDEJKMOu4T/hiGeHJ0/BJlZY572Ou5cuIld6ddb6qeOpbGfvu9XSc5NFKl2gIkkQqXV31FTTDYb1Q4wV9MtTVneWgL5ZU/CBeX80HNIqg2WtmLNiXxQYo/aMo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707171407; c=relaxed/simple;
+	bh=mxbP3vBviYrpIx+68K7umWrWxjfcR6b6lDEWecf5kOw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c55YQJPS7fB0KhW5KEwKykcuJtS1w9AkL4iheFIEl26BrtS925QBnL1OobIxCsT9iBT66lt2ypEw7X+ysNNQradeJPjNIe6wnEuOZQqzRdA+gAAmZt1MgqRFkHYqVpb9/Oz6cTdM3//EbAztkA64t3KtUFVum7TL+CYYPxDdFls=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yAud9Hz2; arc=fail smtp.client-ip=40.107.102.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HGdW1sy9"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60406f4e1d0so42996117b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 14:13:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707171200; x=1707776000; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l+wc7Sgfr0FX1NUK9lSF8NbngE4sfyd8aYAoXi3MmuY=;
-        b=HGdW1sy94car4fYnXdy3DYt9kTJQqZkFGoDoomMrHTRezfSkMgDOHSIdZZ8+swYV/X
-         uIKTZbzQ9fmiIZykn1fqK2RG5RSRizuNd+vtq5UHWE9GPo7WtWERAWu9qMHputgvVvaF
-         5Ea3pUJYbH0/QrQ8CUF9eB/CWfihWBEsfeQsMomvPrExQ3XqKAqqdauEjmzA3b9HsBFa
-         WerCYgEMTK6smljgIS4dZ4racsB2Past1PVXeWunWwIpyAxdqPxD83A06MXGkH3HHb47
-         CinGTW4xKU93oOkmRUM+R0uX0WYeYW2PbYE86ILcP9IITl3DwH/BuAANWbhjccSF4spN
-         InBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707171200; x=1707776000;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l+wc7Sgfr0FX1NUK9lSF8NbngE4sfyd8aYAoXi3MmuY=;
-        b=BbvnPNy6SoJRcql5OjFcF/0r6mF/TJibIF0dgi5+A0a+crRWqBc62iTD66lHfreSyt
-         su6qKcavz1X5CT8X36syGsyasKPQQptsdRla3MUAgOu2qfVybn81y+trcKVXRYrCe8Gp
-         ymGNdbjVO7z09m9t2smFYgc27xk8GRYNtqTmkTBSesowmiikZT6guhSKM/xVWZ40BWXM
-         Sv3NDAdsVsXIDHzag1F1WrlYsGR6oYs74dse4ntdsD2HpgWLpGaEaNEYxrKxdoT1KiXH
-         +eCSP/p8s16uUX3NnFGD16hia035if0t240UVnJHb4a4BgCw3x+iKHgTz2Z68yDJt24S
-         UsUw==
-X-Gm-Message-State: AOJu0YyUjghIJDQwqWPbQfoT3WyqXnKcJ3hAZ1o0Q1vfLw3zK+pyPGWn
-	Q2XuipXg1wLeJ6SvRYf1CIN0f8X8IPq/l+QQ8C2TTSOulhnTo06ls8nOH/5/+KxK4EYuqI4aY2h
-	dUeSmvZI4flT8WQQWNwZObH3DUv3E4KSGUV/o
-X-Google-Smtp-Source: AGHT+IE3Q8rQ7p44qPRhpPecrcgKN57uf9gFqW1Q2sgeAXqYfYu/n/QNxOLHPNun1c2+nnvHUGp3OOQurFj1SVrbBZ0=
-X-Received: by 2002:a81:b715:0:b0:604:ea3:6525 with SMTP id
- v21-20020a81b715000000b006040ea36525mr1064920ywh.0.1707171199364; Mon, 05 Feb
- 2024 14:13:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yAud9Hz2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OniM0ODB6ux4AVI+BdNgotWO0KRMoX67f2cJjGRKdyeMFEp4VWzDywfov6/N3tDwbuW8SFd808DRy1HOigwgmm08F48iRkaFV/Bjuejh5J951l5W0RGLer8/FnotflPkTWvh/cmuEna/Y7SkqrM9vfireNiu7X5+5WHY5+lGD3c7kxwHw6T3ctI9EjzfpCrZ0TGXRu16Wwhk9ZZQBvYyzb53/hyyU0VUhU1ceQcdfMRFS5Zx8NqP1P0HIdtlP4g3Onib8udSavQoa60Qh11R3mISyrUqIdsN46i+LpPb62Vg//atmC8m08FFdDWVP0KmdyTzNMIvX8sDC46tliRbng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ye7ww5NaX9dwyzgceCVYtHR1cq15Hq41BCuZ6BhLIZ4=;
+ b=bfbzWQTnQxlEtULQ1HAyQS49wuWZoJOqhdgyfQIWbEBnpYvpi2bN0M3MhBP+orC80sqOBt6nOmG49P4DnO6nCTNIQRZTU+tggG/dPulbO9iNUvgvlryXHzpXKAmoWBIxnU49KRyIVCN1JHyURiK6q5T3ziaTDZ6YmvJ/zyGwimUJa1RqLiwbvVNumqmh3lUTZf+OSE6ZuVq8O1VsfiMSZc9qPjdLTn5l9xu0mA4ZOFooRF3f4TdbfkZMqdYS8JraMKF8zuuxMyJ1l4dzL5CZQfZCnO3mpx7+1jjoFttaHwTKcMcgAziz19I0Zm6wQK2hnXk1Ed3rZWM96dGWfDGH4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ye7ww5NaX9dwyzgceCVYtHR1cq15Hq41BCuZ6BhLIZ4=;
+ b=yAud9Hz2bWs0ad4fn3TLCm6rhO/ryFCcvYYckMWqaumdlLZ9OBzAlAI34M9ygS83zxAvTQ1c9rzYk4rgVjKmP0OajC4IFaC+6qmYdBtJzJlNMk9ZbdBWroibTOyiTrrGxwb/xPbnzL/56rmyokosRsNjKfHHdefueh6ezu2DOaw=
+Received: from BN1PR10CA0028.namprd10.prod.outlook.com (2603:10b6:408:e0::33)
+ by DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Mon, 5 Feb
+ 2024 22:16:42 +0000
+Received: from BN2PEPF000044A6.namprd04.prod.outlook.com
+ (2603:10b6:408:e0:cafe::a8) by BN1PR10CA0028.outlook.office365.com
+ (2603:10b6:408:e0::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34 via Frontend
+ Transport; Mon, 5 Feb 2024 22:16:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A6.mail.protection.outlook.com (10.167.243.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Mon, 5 Feb 2024 22:16:41 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 5 Feb
+ 2024 16:16:39 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, Stanislav Petrov
+	<stanislav.i.petrov@gmail.com>, <stable@vger.kernel.org>
+Subject: [PATCH] ASoC: amd: yc: Add DMI quirk for Lenovo Ideapad Pro 5 16ARP8
+Date: Mon, 5 Feb 2024 15:48:53 -0600
+Message-ID: <20240205214853.2689-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
- <20240202151345.kj4nhb5uog4aknsp@revolver> <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
- <20240202192137.6lupguvhtdt72rbr@revolver> <85714.1706902336@cvs.openbsd.org>
- <CAHk-=wjNXcqDVxDBJW8hEVpHHAE0odJEf63+oigabtpU6GoCBg@mail.gmail.com>
- <20240202211807.6sca4ppezma7cyev@revolver> <CAHk-=whhmasHcmaS0MZkBe2NohjF7Wb3F3pdW4vqyaSbSzQ75g@mail.gmail.com>
- <20240203044534.wkyfkxdlnskxctsq@revolver>
-In-Reply-To: <20240203044534.wkyfkxdlnskxctsq@revolver>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 5 Feb 2024 14:13:08 -0800
-Message-ID: <CAJuCfpHPk282ttjwEn0A39cHuUgsVTCDsSGzvG3hnFVV+G7edg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Jeff Xu <jeffxu@chromium.org>, Jeff Xu <jeffxu@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, usama.anjum@collabora.com, rdunlap@infradead.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A6:EE_|DM4PR12MB5070:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d838c5c-c7f1-4e77-3aa1-08dc26982162
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7ewkgPlBixfV6Pp4DhQVA5ilgvDCygD1ddh+V/401sbc1PH+yNF4anQPp3uUGvjeJKM0hz6+8RpzXSaG617tvYP/Mu88XcNukUW8H6iLsag1Bh8udNgVhrzbxreRnuFuEwBaI092KDv+nVCqo+uHk3usCkXEQtwy+ew+a614wAFcLZaWFb8IkKWer7RtS3MPD4NkmMaAuhaCinq6Q4v5oBIHI9bYFPYGXk8qjZGpztHJIyolZMFvYqAiL8oUEfQ+d2boDQTPLBZ8bU8dPGcfoSpCHPKXELek0tFyv6vAfCLBYZ1gDpulR+/S7ERuUAmSeL3urnL7O1k28pbQiYvMA3LVSpoe8Z6qvq02+1vur1OnunhVBNPxe9XmJj9X9ZfvXnb5pYPRMvNz/14ESDQ/3i+6uQnpsDcljsS8tT3JFL52AaDV07n3xaT+nLhmUy9Y99O3nTI3L3dryyRTAbHPxUzxLrPOPZvKAKzsUHMKklLCdXNPgqDj11JUvl5DYFK2tfIESo8L/fYm62XhxgRcoDnISINYIU+noHWRTyjkL1uNWMZI8ggMbJ5ad2lBJPDrZ/kZ+2Jpf5uwTBefSYMBh5yT6AcgrMDUQjOfwVrIkQMbAnV+w0jEEMQ3HVwJFg8QcTmyaHPamw+lXo8/QJ04xMV2t0WGHos8Fi6fYkyfhP1R8I0ee4hVX+Dm/QoB6DIbHhLCWEzKBf2xLSk2OzEfpAkKObMtasGGRc4uoqOfqleaYuv2ua2reYAYetQhAmAGOq3DkYsVknYI7u3xAayo8w==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(136003)(376002)(39860400002)(230922051799003)(1800799012)(64100799003)(451199024)(82310400011)(186009)(40470700004)(36840700001)(46966006)(40460700003)(40480700001)(36756003)(41300700001)(47076005)(356005)(81166007)(82740400003)(2906002)(6666004)(36860700001)(478600001)(336012)(83380400001)(426003)(26005)(16526019)(1076003)(2616005)(86362001)(7696005)(4744005)(4326008)(316002)(54906003)(966005)(70206006)(70586007)(110136005)(8676002)(44832011)(8936002)(5660300002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 22:16:41.6269
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d838c5c-c7f1-4e77-3aa1-08dc26982162
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5070
 
-On Fri, Feb 2, 2024 at 8:46=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> * Linus Torvalds <torvalds@linux-foundation.org> [240202 18:36]:
-> > On Fri, 2 Feb 2024 at 13:18, Liam R. Howlett <Liam.Howlett@oracle.com> =
-wrote:
-> > >
-> > > There will be a larger performance cost to checking up front without
-> > > allowing the partial completion.
-> >
-> > I suspect that for mseal(), the only half-way common case will be
-> > sealing an area that is entirely contained within one vma.
->
-> Agreed.
->
-> >
-> > So the cost will be the vma splitting (if it's not the whole vma), and
-> > very unlikely to be any kind of "walk the vma's to check that they can
-> > all be sealed" loop up-front.
->
-> That's the cost of calling mseal(), and I think that will be totally
-> reasonable.
->
-> I'm more concerned with the other calls that do affect more than one vma
-> that will now have to ensure there is not an mseal'ed vma among the
-> affected area.
->
-> As you pointed out, we don't do atomic updates and so we have to add a
-> loop at the beginning to check this new special case, which is what this
-> patch set does today.  That means we're going to be looping through
-> twice for any call that could fail if one is mseal'ed. This includes
-> munmap() and mprotect().
->
-> The impact will vary based on how many vma's are handled. I'd like some
-> numbers on this so we can see if it is a concern, which Jeff has agreed
-> to provide in the future - Thank you, Jeff.
+The laptop requires a quirk ID to enable its internal microphone. Add
+it to the DMI quirk table.
 
-Yes please. The additional walk Liam points to seems to be happening
-even if we don't use mseal at all. Android apps often create thousands
-of VMAs, so a small regression to a syscall like mprotect might cause
-a very visible regression to app launch times (one of the key metrics
-for Android). Having performance impact numbers here would be very
-helpful.
+Reported-by: Stanislav Petrov <stanislav.i.petrov@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=216925
+Cc: stable@vger.kernel.org
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->
-> It also means we're modifying the behaviour of those calls so they could
-> fail before anything changes (regardless of where the failure would
-> occur), and we could still fail later when another aspect of a vma would
-> cause a failure as we do today.  We are paying the price for a more
-> atomic update, but we aren't trying very hard to be atomic with our
-> updates - we don't have many (virtually no) vma checks before
-> modifications start.
->
-> For instance, we could move the mprotect check for map_deny_write_exec()
-> to the pre-update loop to make it more atomic in nature.  This one seems
-> somewhat related to mseal, so it would be better if they were both
-> checked atomic(ish) together.  Although, I wonder if the user visible
-> changes would be acceptable and worth the risk.
->
-> We will have two classes of updates to vma's: the more atomic view and
-> the legacy view.  The question of what happens when the two mix, or
-> where a specific check should go will get (more) confusing.
->
-> Thanks,
-> Liam
->
+diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
+index 23d44a50d815..80ad60d485ea 100644
+--- a/sound/soc/amd/yc/acp6x-mach.c
++++ b/sound/soc/amd/yc/acp6x-mach.c
+@@ -248,6 +248,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "82YM"),
+ 		}
+ 	},
++	{
++		.driver_data = &acp6x_card,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "83AS"),
++		}
++	},
+ 	{
+ 		.driver_data = &acp6x_card,
+ 		.matches = {
+-- 
+2.34.1
+
