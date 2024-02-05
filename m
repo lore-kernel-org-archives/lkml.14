@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB85814D447;
-	Mon,  5 Feb 2024 19:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7974815B977;
+	Mon,  5 Feb 2024 19:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159837; cv=none; b=tMAQEW7+MLbcmjZX1YnPC9D+Ghw8H2so9mNohTB+aD7EWJr84O0CFWrERXyIueye/5A/OhkXJdD5wHF6TX+q08NJV9whZT+JMTmANh+knHk4dsQPIQ9Jgpq5Gd3gZ8XGY0s40rRu012GeYYVrRyeVvdUfOASPXcW5IqBqKSuPQI=
+	t=1707159839; cv=none; b=Tgty24CWC9GG6mc+/PKPpY7N+03dayrZzhGBGPIjgCiOG7VU2xJ0IGaBvBfKBAsJBzJJpZjgAMXCdVE2loIvFem3bGPhOQiojgxc6xsEMjP5E+q9hxHwqs1ApFgINvIfVa85NoT7EfD7KLo0FnUUX24TaOL5lIbwGh5zsmpCOOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159837; c=relaxed/simple;
-	bh=JS0rLE0gDCoPrvmO8t1oRrM76E6Y2uXxbFDJB1HChLU=;
+	s=arc-20240116; t=1707159839; c=relaxed/simple;
+	bh=ySecDCyg8vuEud4f7aCMlAWM0dO7bI/xCzLq61pslLo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AF4dSB0jOOeC6MUK55e0yVCE9XUbGdrvgI5Z3R89ELcp1Fa6Wg98u1/i0TZuuRNx1wiOSFo8LyL0c18sfQkSscL9hj8g9fDX8u6gsQpXcGQsk7DB7HJHnYoXeHk84jxFUsk1rrUkSEwCC1SLprtyZgmdVWFR9onGJ8gGAXdH2/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wRYGX71x; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ao6MkRCU9aqK7uFSU4JlcB3Snz7zLX41SRssOpCuzvUzf7Ip9YnwD5476MBpzY9IXWTnJB1IXOAavO9XSMm/ZZ3KfjmC0qAYe1+G79SxzLVEcEAGmevuVsDwflrwAl4YKEPZEkvgKPICsUcy3vAcx4JLT1IJc4hxcjhgvm9n1WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XI+gIEYp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wRYGX71x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFD4C4166D;
-	Mon,  5 Feb 2024 19:03:56 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XI+gIEYp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DF38C4166A;
+	Mon,  5 Feb 2024 19:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159836;
-	bh=JS0rLE0gDCoPrvmO8t1oRrM76E6Y2uXxbFDJB1HChLU=;
+	s=korg; t=1707159839;
+	bh=ySecDCyg8vuEud4f7aCMlAWM0dO7bI/xCzLq61pslLo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wRYGX71x+SOJrlrWZUzkzjVusSLzPVtYCKv8DvOJLwZ41gLPWr/ZZWGTasYcOqdXP
-	 n26h0x6e0KdfJMcza1dggXXKBGdBAL5NzmKw5fsKGsftrNN4X/o7Yy1DbvP2OSgIvN
-	 c8DqZq3w+mcpKnt2gJaVWOuvRvzPMC+j2NOp06lM=
-Date: Mon, 5 Feb 2024 04:50:30 -0800
+	b=XI+gIEYpvKrya/N09IPwULRrVAviQwhNmjl29UetKZtwFudBydH8GMkVLl98ML17s
+	 Q/p4QeqycDwFfYuJI1J4zvxLoWZxXcTD7ZBEMKTEfzaJzZWQ5dn56mrNmDgLaymgSm
+	 N0W5UGj5IqT1ddENMtX1BDf/4CvCyEsm0CwJ1d7c=
+Date: Mon, 5 Feb 2024 04:50:38 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: coreboot: make coreboot_bus_type const
-Message-ID: <2024020511-confound-chirping-38f7@gregkh>
-References: <20240204-bus_cleanup-firmware-v1-1-d1bff946606d@marliere.net>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] device-dax: make dax_bus_type const
+Message-ID: <2024020534-stoic-swooned-0985@gregkh>
+References: <20240204-bus_cleanup-dax-v1-1-69a6e4a8553b@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-firmware-v1-1-d1bff946606d@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-dax-v1-1-69a6e4a8553b@marliere.net>
 
-On Sun, Feb 04, 2024 at 01:10:18PM -0300, Ricardo B. Marliere wrote:
+On Sun, Feb 04, 2024 at 01:07:11PM -0300, Ricardo B. Marliere wrote:
 > Now that the driver core can properly handle constant struct bus_type,
-> move the coreboot_bus_type variable to be a constant structure as well,
+> move the dax_bus_type variable to be a constant structure as well,
 > placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
