@@ -1,72 +1,72 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D212C6B4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 12:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743001BDC8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137975; cv=none; b=E2E1ptE9272p/vfcOO7oXUtWJ+vYf1ig4JzA8a3aE8mRBfYaklzao/uwBUo6+ZbjkEUE0VVRNXAsT/JB7juFRVoyh69fy4iJrkzTIllYjO1x+kuPoebIb4UNU5/6RAsYxHoS99xRvN0qVHfAG85VvIultQkZG1Hlcr7ACC7pFwE=
+	t=1707138112; cv=none; b=uJ8Ie8PRCvRIe1FC1/212lGhbCPF++J/dgmGcQwVv1L4ytokRg/E5dJG+sY/dmV3TNwYBvYEKccbLSR2sFH7j34IVrB3I/y3J26cxf4cY/gXfIpi5TSsLGfacfvaiqrYdWFHpJWHVGIBtpRJ4gEkQC3gteH8CIozzmYwkRpSt0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137975; c=relaxed/simple;
-	bh=uhFIx9AVIok+41rhp4wPBkQrIYsfWY6OWQrAj4yf+r0=;
+	s=arc-20240116; t=1707138112; c=relaxed/simple;
+	bh=u7/FoYb551+6GiEJx2PLVrRRol56CFg9Lgrs6ZHrVGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TUSw5S3mfmqvP4n4u2yTK0/zjXf9SyHEiArUBgXhNC0hUHDwtWg4nKu+HJ6WvRkNEt+xDxPBM4OFvdI4h1aTwVAHmGI+IbecGdB5lrIbcxzo61hstLlxOhrIQZRh+sIOoz+6Nv6Bv1shWUQqxK8aZP84sVKEpmUzS8fLRqr3ydY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=J6e69CJj; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXp+Ofa9vjzDvNOamr/FmX+f/7KUwUitEnbRF0KW3ObVg5eoNZrJ2NdYp+KzzFPYSOZNXRol4BhpNykMRxKVe8mNIFI7kr3xCI2o0bHxSM4vrEtJiWg0b3+9vxeftCL/1EtPUncknXhdmqRVsfUtGlt+OxhxzBHL0G0YS9EXcEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SDZwewWG; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J6e69CJj"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e04ea51984so184224b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 04:59:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SDZwewWG"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dc20645871so259396a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 05:01:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707137973; x=1707742773; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707138111; x=1707742911; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pEQX5AABggM2ljP9SXv5rHakiVcpbdiil+FOouwBr5w=;
-        b=J6e69CJjS/IUfmK9Oos4c6q1j7o03TWlBBJwzf/LHjjuQhLb5o9D6eEyT8wEhtJN64
-         gyRmfyoe2grlpKhdFkwBPIU3slCeu96hMQGmD1N3ChTAarm203FkVAhCfhoika5pVWg+
-         akw88kNy6RuorwuFx6D9MXp7mEMSt0BExUE8U=
+        bh=57ai5j/KdXT8Xuudktal72yNjlF1/d5qdT3nTQk3sYc=;
+        b=SDZwewWG+NQIkeC5kHbN5QjrbnCn0YhohNSrRHvUdrvUD2rXWHN9iCXStKdAlJhZ1c
+         N5420yjHUEONYx6VhZlcw7WaXz5yDR6kASxcYEbi86RxdjEA9Zi6dfvtsx17aFCkwfxH
+         ddvWU7cT9PGayuRtYsLJHGvCJXjwsROm9OB6U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707137973; x=1707742773;
+        d=1e100.net; s=20230601; t=1707138111; x=1707742911;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pEQX5AABggM2ljP9SXv5rHakiVcpbdiil+FOouwBr5w=;
-        b=HqvN0QYPfeWCYKalQGkpq+HuRskfw2X8yA2xIec2DcU7hp5j5UpBDS2QU7fAAfaE7H
-         v/HA+P0RTu6C2E2KENhr3MC8+hwIA7ucFtddOlAqmcvRbl/U5qYPOeuZ9NHTp7WiWlhw
-         fQkUhEWKocsyDdfDkytJDqNUNYPiRMx9LO6fX/4EEnfse40rpikstDpNzXC3yoLn41sx
-         Ga1j2D+AHMMCiHUriwBLr8yapfdMebEJsgKFSKhqBb9YxmWrHcsypbQdNUZgKUumbFY3
-         H/KXG05dzScakbPURnhsmoMnS3ZrJcEWeEEDOTAOg1W0eEfTnoGjjRHD66vA0eLJ76Kd
-         MGuA==
-X-Gm-Message-State: AOJu0YxpAkKxURjrE1qIqtXTSdK//ZJg9mLp/OOMmFe5TDa9RAdm9g9R
-	l0POUZhGxcmVe/kaMhpiFI4Y8a87frYhOIUFQDuRlc4IwFwfOoVMqQ9ngmTEeg==
-X-Google-Smtp-Source: AGHT+IH7TRDxNi2WEgGcB1i3d2oWtRwWhybfRytEZQiNCdgIzjYBMwnWPSCbkQGdExjKAlGZJbGBWw==
-X-Received: by 2002:a05:6a00:1d82:b0:6e0:4be0:ab8b with SMTP id z2-20020a056a001d8200b006e04be0ab8bmr1564859pfw.20.1707137973105;
-        Mon, 05 Feb 2024 04:59:33 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWdoon760LIuY5iUr9Hi1uwh8Klg/rh5yNXbpvuhjU1iSvDcI3jtn6GKu0BG9nDz2maou2kIO6N2SUXiKFH60gqsiXSMqdrzhd/XB75C3TRmGl1FTT3s9cQl/oSFe+anrJcpQZJevxFFZZfCQGVcOQ3bPlOJZ8o8QEa0A+EdQ8NwvOhefWaUcn4Hrzg4Dy2RXK0JuqOGz3Ubl+yVGc2a8kwz5g1KryQMA/W9cZOaCmo5bBL3JZSyTR6H8RFu1toDUEKycxhoKWLn8r1oxbqM1h11dkMpheSTbqHKQWT+DsCyhiE6wTcCFWBWDjK+TvNajeRGVFA7XKltL0UAHkKcDzp/iEWn5z5Gbn1qgSA8mqCU2R9YROzvb0n0Ny/xazTsKF/pyYWt8epGa5maZYF+tGbqJ6xVgZvn5J+omKKi8/nnmpIq3c8u5LZycH2FfSC0oyewbiOEZmP/QXB8eqs4FMa0V9P+KJ31ARWiXbHqMRd5Nuwj8jsBp741fDJ3iLMjONrghnCqcBB8zboGm/1jAQLbFMvRjYkpIE=
+        bh=57ai5j/KdXT8Xuudktal72yNjlF1/d5qdT3nTQk3sYc=;
+        b=H/GcdaZH4bTsIdaGYUqqA2ubS62+r7JPMu3ssdeYTsb2O30jvl2mjIA5/p9Zu8qv7P
+         HITe3KO3X0S2YQC4ye4Teys4vnJLujhT2SHfVphJZBa9s6XPqM4TciSDqB75RWnd0yzT
+         1Qldat3IYGeGjrKQUXPmm9HzNA+rqbcQUvBt1KJJwMrWmFLzrl0TY8HKKQAYvrsYGMSy
+         fzAvaa4i0UbD5jX8k0Mdq6UNh90Hurs4YfQBI/7S3OLlcG1u++KY5Yw+6tNWhv9xufRn
+         VSOJHSJPq/7+E0Q43q5ggZY1tK6FcMs8bsWFsZnZtExc5nC9IVosEZtSlfQU55FIEU7c
+         LDKg==
+X-Gm-Message-State: AOJu0YwEkUZhBWxZYCWz0kts9P/YChZnxYkUX1gSXCbB4JAf+I3CI2Pa
+	GvroZ/sZLvIBsoNtowquGzNeC9VsTpbD8ljX0wK47nt37uGJKaJXMwcZZwZw7Q==
+X-Google-Smtp-Source: AGHT+IFe46ojQoH2YselLfpT2gtd5+tRvTVNZVqNDtKHKqs4ZRDAvyBfalg9/6eSbk6JPFFd2KNgDg==
+X-Received: by 2002:a05:6a21:339d:b0:19c:9c76:e9b2 with SMTP id yy29-20020a056a21339d00b0019c9c76e9b2mr8360893pzb.13.1707138110568;
+        Mon, 05 Feb 2024 05:01:50 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUtUWfFSyD5FOGxTMeDCC5sR5gUOAGgcddh8KV/jODNhPn5ACeCKZ3SkqqhVQVpNQraBpC/C1/0tXH2vZKCoyMeSgRjv8RKjZSYXvIGngozhzeSa/rU+CFomNmjTNw8z/lWkx5sC7C8VFqoseDjplggWGRcH7U0J54E28KmSIsCwLP/K6HmevdIjmnwQHT47IHbtlkFVatwH/c18MX95YHvZUWmhxR56RksDd0/ZQfPKkxxPz3sH6mexzOyY+H3hVeuwDE5yeC5Af1o86/PZytEPQ60NHI480KqDdZHH2SaGg1gF3HsPGBqN6dVTRipIvNLrDeCqiK27uPMD7wkobpvF/jZMInY1YW2+2Sir81+QAu2Z6A7VRbZh31vBe2u9NlcWFbRmHdrrqI+aywr5Ca49yqEXBLEjPEis65uNn1MR6zraDeR3OceSvEwQzxRqdoyAt/+OTUDeZu69MrtUNLv
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id it16-20020a056a00459000b006e0416c42c3sm188892pfb.198.2024.02.05.04.59.32
+        by smtp.gmail.com with ESMTPSA id o133-20020a62cd8b000000b006e033804fa8sm3691905pfg.101.2024.02.05.05.01.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:59:32 -0800 (PST)
-Date: Mon, 5 Feb 2024 04:59:32 -0800
+        Mon, 05 Feb 2024 05:01:50 -0800 (PST)
+Date: Mon, 5 Feb 2024 05:01:49 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Justin Stitt <justinstitt@google.com>, Marco Elver <elver@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jason Wang <jasowang@redhat.com>, kernel test robot <lkp@intel.com>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
-Message-ID: <202402050457.0B4D90B1A@keescook>
-References: <20240205093725.make.582-kees@kernel.org>
- <67a842ad-b900-4c63-afcb-63455934f727@gmail.com>
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] string: Allow 2-argument strscpy()
+Message-ID: <202402050459.892907C59C@keescook>
+References: <20240205122916.it.909-kees@kernel.org>
+ <20240205123525.1379299-2-keescook@chromium.org>
+ <CAMuHMdU2c75WDCX+ptQgB7h0taHjG2pwL9db6gE3LKxv5Vz04Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,64 +75,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67a842ad-b900-4c63-afcb-63455934f727@gmail.com>
+In-Reply-To: <CAMuHMdU2c75WDCX+ptQgB7h0taHjG2pwL9db6gE3LKxv5Vz04Q@mail.gmail.com>
 
-On Mon, Feb 05, 2024 at 01:54:24PM +0100, Andrey Ryabinin wrote:
+On Mon, Feb 05, 2024 at 01:47:08PM +0100, Geert Uytterhoeven wrote:
+> > +/*
+> > + * The 2 argument style can only be used when dst is an array with a
+> > + * known size.
+> > + */
+> > +#define __strscpy0(dst, src, ...)      \
+> > +       sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst))
+> > +#define __strscpy1(dst, src, size)     sized_strscpy(dst, src, size)
 > 
-> 
-> On 2/5/24 10:37, Kees Cook wrote:
-> 
-> > ---
-> >  include/linux/compiler_types.h |  9 ++++-
-> >  lib/Kconfig.ubsan              | 14 +++++++
-> >  lib/test_ubsan.c               | 37 ++++++++++++++++++
-> >  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
-> >  lib/ubsan.h                    |  4 ++
-> >  scripts/Makefile.lib           |  3 ++
-> >  scripts/Makefile.ubsan         |  3 ++
-> >  7 files changed, 137 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> > index 6f1ca49306d2..ee9d272008a5 100644
-> > --- a/include/linux/compiler_types.h
-> > +++ b/include/linux/compiler_types.h
-> > @@ -282,11 +282,18 @@ struct ftrace_likely_data {
-> >  #define __no_sanitize_or_inline __always_inline
-> >  #endif
-> >  
-> > +/* Do not trap wrapping arithmetic within an annotated function. */
-> > +#ifdef CONFIG_UBSAN_SIGNED_WRAP
-> > +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
-> > +#else
-> > +# define __signed_wrap
-> > +#endif
-> > +
-> >  /* Section for code which can't be instrumented at all */
-> >  #define __noinstr_section(section)					\
-> >  	noinline notrace __attribute((__section__(section)))		\
-> >  	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
-> > -	__no_sanitize_memory
-> > +	__no_sanitize_memory __signed_wrap
-> >  
-> 
-> Given this disables all kinds of code instrumentations,
-> shouldn't we just add __no_sanitize_undefined here?
+> (dst), (src), (size) etc.
 
-Yeah, that's a very good point.
-
-> I suspect that ubsan's instrumentation usually doesn't cause problems
-> because it calls __ubsan_* functions with all heavy stuff (printk, locks etc)
-> only if code has an UB. So the answer to the question above depends on
-> whether we want to ignore UBs in "noinstr" code or to get some weird side effect,
-> possibly without proper UBSAN report in dmesg.
-
-I think my preference would be to fail safe (i.e. leave in the
-instrumentation), but the intent of noinstr is pretty clear. :P I wonder
-if, instead, we could adjust objtool to yell about cases where calls are
-made in noinstr functions (like it does for UACCESS)... maybe it already
-does?
-
--Kees
+I normally don't do this when macro args are being expanded into
+function arguments. I've only done it for when macro args are used in
+expressions. Am I missing a side-effect here, or is this more about
+stylistic consistency?
 
 -- 
 Kees Cook
