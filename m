@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734F3134747;
-	Tue,  6 Feb 2024 11:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B65C1339A6;
+	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707219212; cv=none; b=eKC8slVqQratL83v4LPgSi3VU9YWjZL3/FbHA/9AoBOMAU2EheSZZM/3GwmpwHsQJcSdEh4a/r0WQkGun7e+eAnpsZErHRCFj7BT0VvBl22szAYv6n8yzJP37Rd/S18tRPT08uFx2uIJi4FfGdWBp9Q2kHh+jtRDecobkMnmTro=
+	t=1707219211; cv=none; b=an8vO7GRstKip+ehyZT2mx3nrI9R2XUM2NP7KJA+PetsvXACkCn8HUeRjBnRDMzLFn0qdydQs1XGSGdH7ObW77WFHDsDVfNWyR+hdyVT294+cO/1k4ji9vgQ2nXF6WTv4x/8aSyDfqLNS8kE1RVqMCMLOtF+MmOCnd61xeBCE54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707219212; c=relaxed/simple;
-	bh=3cuwo8jKNFJ8ZNaRFdtkUgaWTecxRB1l6ECQ5pijtZI=;
+	s=arc-20240116; t=1707219211; c=relaxed/simple;
+	bh=S927KE9dYG/Lzm2Z83o0zTy+NJITK2h/kIEZaYEod3o=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=SU0Q4xoQIxmhdVJp55/zreRVBoqnnJypBwuH4v4gzTUpnonPxqnSwR6Gya4JM6vfSBFTLXnkNtrzPejNd9NIEpy6EBf0KcbeIoWAbf6RWOwDOP8tzvaGkj8rsDuzW31019E5Djn+2Uw4C5F3Ei9+4FDfuufb+s5Z9BWECGnaKGo=
+	 Content-Type; b=sCqYJT54z6FIHdc24IaW/wC9caSfmOuXrghXEbSjRwXecVCSz4S2zeT6j6VJ8Cb+lNLnU1Wt1KSZ6Kq5qpfPjXhqCfgHkW65Lquee75xAz9tQlVgZCBVOScCF3y0KedZu14hClkth3flYysQBIL5O89UD4oN+l/iT476YyVE+ac=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5504C43399;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71994C3278F;
 	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXJiC-00000006aMK-0l4Q;
-	Tue, 06 Feb 2024 06:34:00 -0500
-Message-ID: <20240206113400.036997635@rostedt.homelinux.com>
+	id 1rXJiB-00000006aLJ-3ZBf;
+	Tue, 06 Feb 2024 06:33:59 -0500
+Message-ID: <20240206113359.716264689@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 06:32:10 -0500
+Date: Tue, 06 Feb 2024 06:32:08 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -29,8 +29,10 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Sasha Levin <sashal@kernel.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [v6.7][PATCH v2 12/23] tracefs: remove stale update_gid code
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Erick Archer <erick.archer@gmx.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [v6.7][PATCH v2 10/23] eventfs: Use kcalloc() instead of kzalloc()
 References: <20240206113158.822006147@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,83 +42,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Erick Archer <erick.archer@gmx.com>
 
-The 'eventfs_update_gid()' function is no longer called, so remove it
-(and the helper function it uses).
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Link: https://lore.kernel.org/all/CAHk-=wj+DsZZ=2iTUkJ-Nojs9fjYMvPs1NuoM3yK7aTDtJfPYQ@mail.gmail.com/
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
-Fixes: 8186fff7ab64 ("tracefs/eventfs: Use root and instance inodes as default ownership")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240115181658.4562-1-erick.archer@gmx.com
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 29142dc92c37d3259a33aef15b03e6ee25b0d188)
+(cherry picked from commit 1057066009c4325bb1d8430c9274894d0860e7c3)
 ---
- fs/tracefs/event_inode.c | 38 --------------------------------------
- fs/tracefs/internal.h    |  1 -
- 2 files changed, 39 deletions(-)
+ fs/tracefs/event_inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 6b211522a13e..1c3dd0ad4660 100644
+index 10580d6b5012..6795fda2af19 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -281,44 +281,6 @@ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
- 		inode->i_gid = attr->gid;
- }
+@@ -97,7 +97,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	/* Preallocate the children mode array if necessary */
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+-			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
++			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+ 						  GFP_NOFS);
+ 			if (!ei->entry_attrs) {
+ 				ret = -ENOMEM;
+@@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	}
  
--static void update_gid(struct eventfs_inode *ei, kgid_t gid, int level)
--{
--	struct eventfs_inode *ei_child;
--
--	/* at most we have events/system/event */
--	if (WARN_ON_ONCE(level > 3))
--		return;
--
--	ei->attr.gid = gid;
--
--	if (ei->entry_attrs) {
--		for (int i = 0; i < ei->nr_entries; i++) {
--			ei->entry_attrs[i].gid = gid;
--		}
--	}
--
--	/*
--	 * Only eventfs_inode with dentries are updated, make sure
--	 * all eventfs_inodes are updated. If one of the children
--	 * do not have a dentry, this function must traverse it.
--	 */
--	list_for_each_entry_srcu(ei_child, &ei->children, list,
--				 srcu_read_lock_held(&eventfs_srcu)) {
--		if (!ei_child->dentry)
--			update_gid(ei_child, gid, level + 1);
--	}
--}
--
--void eventfs_update_gid(struct dentry *dentry, kgid_t gid)
--{
--	struct eventfs_inode *ei = dentry->d_fsdata;
--	int idx;
--
--	idx = srcu_read_lock(&eventfs_srcu);
--	update_gid(ei, gid, 0);
--	srcu_read_unlock(&eventfs_srcu, idx);
--}
--
- /**
-  * create_file - create a file in the tracefs filesystem
-  * @name: the name of the file to create.
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 45397df9bb65..91c2bf0b91d9 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -82,7 +82,6 @@ struct inode *tracefs_get_inode(struct super_block *sb);
- struct dentry *eventfs_start_creating(const char *name, struct dentry *parent);
- struct dentry *eventfs_failed_creating(struct dentry *dentry);
- struct dentry *eventfs_end_creating(struct dentry *dentry);
--void eventfs_update_gid(struct dentry *dentry, kgid_t gid);
- void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry);
+ 	if (size) {
+-		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children) {
+ 			kfree_const(ei->name);
+ 			kfree(ei);
+@@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 		goto fail;
  
- #endif /* _TRACEFS_INTERNAL_H */
+ 	if (size) {
+-		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children)
+ 			goto fail;
+ 	}
 -- 
 2.43.0
 
