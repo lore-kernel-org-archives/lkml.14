@@ -1,103 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B63812E1DD;
-	Tue,  6 Feb 2024 11:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C6412D152;
+	Tue,  6 Feb 2024 11:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707218943; cv=none; b=QhuHb46Rz+ymEpIsBWzsdzoWSSF/6bfSUmoHx85T+21ISqgwHHy4OJwBrGYBq6k6hxbPaaoXeMv5kCJ9OZq22bYNZ/aYq/X7Dbu2ru53hNWL6yjrORGbE2KzF/MxQKnk2xCudHG80ihYzgV/dARMNsAJMk/J2EhO870acZZClfE=
+	t=1707218977; cv=none; b=bWr2fVSa/uiW4OfqjDNyUWrzPWCRy6qdpOZTWDdtF/++NjxsmNFtOBk24oWufA8PNPC/NwUSUM8bqXjG5lA2fKYedzIZFZdz/HvhoZwwHL0DkaEVUCe8GzHUPS8Gmbz/0k0b7EWf1syX+sKdq8Trars9uEwYm6u0HI61zK1NgxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707218943; c=relaxed/simple;
-	bh=xItSGKOsHY3nXC2qGy9xvtt+bnUbZopMnd876K04tjk=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=KjOpcMZYTjX4k9ug96m5A1daqv5Y+YTkNnSqI7+AHOh/0F6TKhWAUho5diFeBtkH42BQ9jqZLNbXflTykdRFEXj4BOCpbgHuAReHphbvHkAud8a4BtzcX8D55V6T3kKQbAbiI+RQEVykEuXYskuySFS5WmViXm0l4D5DZXDOoNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsryKiel; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsryKiel"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A18D0C433C7;
-	Tue,  6 Feb 2024 11:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707218942;
-	bh=xItSGKOsHY3nXC2qGy9xvtt+bnUbZopMnd876K04tjk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EsryKielTwcYBcVxuAxMAD0zvVmbPIbLkTrIBNpyeEXJDILMUGxe5VwThjhAPGnyO
-	 rLKJuiVoAMk877bcSrF8uDICB52XvtgnldywkMDYIUPLZfloZfAi3SBNlqPkVA5eMU
-	 rtW7cjWZGmSUlCxcZT3OUAe1pwiQ1NEcz1OoSMpGOOP/MQVUe9ovK2gd20aO9bMxUc
-	 7F6rVhcCMrxY0Lj0hbNT1tJTo6qegUW6e2CN95Dy8UeQd1tfvVavKRMi3A2Rafq7dY
-	 lxatORJk8dJTp3fusXqMAzr6uJHu5gTp95RSwtKKAotz7xRo64bafcCmGPZI/JkC+R
-	 4KjRAVWhH6ezw==
+	s=arc-20240116; t=1707218977; c=relaxed/simple;
+	bh=C6jq6gONzhEHjn/SunkCOAnt+ckT2TxdCHEFn2845Jc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=elHajE6D4Bh90nukovhlc3SiA/c91j9vnNGRc0rxg0igh3fN48083NgRjEik/yNMcMwkKc+GJ1h9Z1LbLzDO0AsiVt7SDpk4EwVnPoJi19Q95HTBo/OuMN3FhwdJ8Nz3k60NORinLcPYLKLK1V8DjcH65srYlbzSnN8DNcI1qxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TTgtK6JCRz67ZCr;
+	Tue,  6 Feb 2024 19:26:17 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id DCF0B140B39;
+	Tue,  6 Feb 2024 19:29:32 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 6 Feb
+ 2024 11:29:32 +0000
+Date: Tue, 6 Feb 2024 11:29:31 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Hojin Nam <hj96.nam@samsung.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Wonjae Lee
+	<wj28.lee@samsung.com>, KyungSan Kim <ks0204.kim@samsung.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH] perf: CXL: fix mismatched cpmu event opcode
+Message-ID: <20240206112931.00004224@Huawei.com>
+In-Reply-To: <20240206102132.00000797@Huawei.com>
+References: <CGME20240206094151epcms2p373ed7f50efa332765e14bff2b5a2abe2@epcms2p3>
+	<20240206094151epcms2p373ed7f50efa332765e14bff2b5a2abe2@epcms2p3>
+	<20240206102132.00000797@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 06 Feb 2024 12:28:58 +0100
-From: Michael Walle <mwalle@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Intel Graphics
- <intel-gfx@lists.freedesktop.org>, DRI <dri-devel@lists.freedesktop.org>,
- Dario Binacchi <dario.binacchi@amarulasolutions.com>, Inki Dae
- <inki.dae@samsung.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Michael Trimarchi
- <michael@amarulasolutions.com>, Robert Foss <rfoss@kernel.org>
-Subject: Re: linux-next: manual merge of the drm-misc tree with Linus' tree
-In-Reply-To: <20240206120643.1d30764c@canb.auug.org.au>
-References: <20240206115956.4570e9b1@canb.auug.org.au>
- <20240206120643.1d30764c@canb.auug.org.au>
-Message-ID: <fe0b21360178348543e662e9d620af9c@kernel.org>
-X-Sender: mwalle@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Stephen and all,
+On Tue, 6 Feb 2024 10:21:32 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
->> Today's linux-next merge of the drm-misc tree got a conflict in:
->> 
->>   drivers/gpu/drm/bridge/samsung-dsim.c
->> 
->> between commit:
->> 
->>   ff3d5d04db07 ("drm: bridge: samsung-dsim: Don't use 
->> FORCE_STOP_STATE")
->> 
->> from Linus' tree and commit:
->> 
->>   b2fe2292624a ("drm: bridge: samsung-dsim: enter display mode in the 
->> enable() callback")
->> 
->> from the drm-misc tree.
->> 
->> I fixed it up (see below, please check) and can carry the fix as
->> necessary. This is now fixed as far as linux-next is concerned, but 
->> any
->> non trivial conflicts should be mentioned to your upstream maintainer
->> when your tree is submitted for merging.  You may also want to 
->> consider
->> cooperating with the maintainer of the conflicting tree to minimise 
->> any
->> particularly complex conflicts.
+> On Tue, 06 Feb 2024 18:41:51 +0900
+> Hojin Nam <hj96.nam@samsung.com> wrote:
 > 
-> I changed my mind and just used the latter version of this file.
+> > S2M NDR BI-ConflictAck opcode is described as 4 in the CXL
+> > 3.0 specification. However, it is defined as 3 in macro definition.
+> >   
+> Please provide a reference to a specific spec section.
+> Ideally from r3.1 as that's the easily available version today.
+> I think this is Table 3-50 S2M NDR Opcodes in r3.1
+> 
+> Looks like s2m_ndr_cmpm should be there for bit 3 so we should probably
+> add that as part of the fix.
+> 
+Also, please add a Fixes tag.
+> 
+> > Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
+> > ---
+> >  drivers/perf/cxl_pmu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> > index 365d964b0f6a..bc0d414a6aff 100644
+> > --- a/drivers/perf/cxl_pmu.c
+> > +++ b/drivers/perf/cxl_pmu.c
+> > @@ -419,7 +419,7 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+> >         CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,                     CXL_PMU_GID_S2M_NDR, BIT(0)),
+> >         CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,                    CXL_PMU_GID_S2M_NDR, BIT(1)),
+> >         CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,                    CXL_PMU_GID_S2M_NDR, BIT(2)),
+> > -       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(3)),
+> > +       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(4)),
+> >         /* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
+> >         CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,                 CXL_PMU_GID_S2M_DRS, BIT(0)),
+> >         CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,              CXL_PMU_GID_S2M_DRS, BIT(1)),
+> > --
+> > 2.34.1  
+> 
+> 
 
-Bug wise, this is the wrong solution. Because it will reintroduce the
-faulty FORCE_STOP_STATE. Also keep in mind, my fixes commit is/was 
-already
-backported to the stable series.
-
-See also the discussion at [1]. Unfortunately, there was no conculusion 
-yet.
-I think [2] is the proper resolution, at least for the commit 
-b2fe2292624a
-("drm: bridge: samsung-dsim: enter display mode in the enable() 
-callback")
-I'm not sure in what state the drm-misc tree is.
-
--michael
-
-[1] 
-https://lore.kernel.org/dri-devel/CAPM=9tytMB9frxNeD08hu1qsusY=wEE3bJOFmUgA1rSpabwDpg@mail.gmail.com/
-[2] 
-https://lore.kernel.org/dri-devel/31e1a38a1d012a32d6f7bc8372b6360e@kernel.org/
