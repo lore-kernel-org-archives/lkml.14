@@ -1,143 +1,138 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6A439AD5
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 07:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04BF128811;
+	Tue,  6 Feb 2024 07:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707206272; cv=none; b=O+YwFgTM7OiSNzitz+L8uDD2yGIQhyC2tTazvvVbDXcrAl0TfA2v87giPxKbdCqcdbzXpFF5c06qKQxZIExlIPXYLzElAWDhDBydDoQO1uc4kCh2PL0McGj542tfDhhmY+A2uPP5OWolpVo6NcTzo7cmC7mQ+oqAaQrDkY+ZRDI=
+	t=1707206320; cv=none; b=HAriFRx3kQi7soApXAT8G1JrLDwedmUOaqFNN83NUWQlIU/y0igfdBaalqHXIWAl/dCf0SCZR53PRdugwar7yWWrCNCGr+qCTBtD45bCdCPcmPnzLpC2+NGK2nxS4DdyBAXq8rFXq0aTcmP7k6rlD9t67eiL+pPiK6cb0VqGM64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707206272; c=relaxed/simple;
-	bh=c18OyalUZ1qVMoHke+pl1er7ELpFT/2Pv/C5wT8/3gw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=O+XaJWRTgu71l2zjhueQO3thdbfvEniVuMlYd9yrUEc2qTS5J5SJKWoMLPDqu4xvD2p0keyzLf+weIJKc1Ah/pFpxgg5CyEYEVGiyDxBTMrPzHOEmte/tmw6BADifKaWijNVgB+ONiWPJlw2Zzb4bbpSI1kkE3Ndrg7liin6H/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 4167vVF0057752;
-	Tue, 6 Feb 2024 15:57:31 +0800 (+08)
-	(envelope-from fangzheng.zhang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TTbFK0nMsz2SDHVM;
-	Tue,  6 Feb 2024 15:57:25 +0800 (CST)
-Received: from BJMBX02.spreadtrum.com (10.0.64.8) by BJMBX01.spreadtrum.com
- (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Tue, 6 Feb 2024
- 15:57:29 +0800
-Received: from BJMBX02.spreadtrum.com ([fe80::f022:2a7c:e5bc:aacd]) by
- BJMBX02.spreadtrum.com ([fe80::f022:2a7c:e5bc:aacd%19]) with mapi id
- 15.00.1497.023; Tue, 6 Feb 2024 15:57:29 +0800
-From: =?utf-8?B?5byg5pa55q2jIChGYW5nemhlbmcgWmhhbmcp?=
-	<fangzheng.zhang@unisoc.com>
-To: "Christoph Lameter (Ampere)" <cl@linux.com>,
-        Vlastimil Babka
-	<vbabka@suse.cz>
-CC: Greg KH <gregkh@linuxfoundation.org>, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin
-	<roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        Fangzheng Zhang
-	<fangzheng.zhang1003@gmail.com>,
-        =?utf-8?B?6Z+p546J5piOIChZdW1pbmcgSGFuKQ==?=
-	<yuming.han@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIG1tL3NsYWI6IEFkZCBzbGFicmVjbGFpbSBmbGFn?=
- =?utf-8?Q?_to_slabinfo?=
-Thread-Topic: [PATCH] mm/slab: Add slabreclaim flag to slabinfo
-Thread-Index: AQHaVCouxTfACJupakedbzUjZG1LvLD5qEcAgAFJ8oCAAJgXAIABa2YQ
-Date: Tue, 6 Feb 2024 07:57:28 +0000
-Message-ID: <f6d4305ac88b440e801d24949aca357d@BJMBX02.spreadtrum.com>
-References: <20240131094442.28834-1-fangzheng.zhang@unisoc.com>
- <2024020441-version-chihuahua-1067@gregkh>
- <2f43774a-16cf-412e-b4b7-840889bb796b@suse.cz>
- <202402060127.4161Ri2X082625@SHSPAM01.spreadtrum.com>
-In-Reply-To: <202402060127.4161Ri2X082625@SHSPAM01.spreadtrum.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1707206320; c=relaxed/simple;
+	bh=Q+1Kf/aWsPJExbeirdCIjchd2AduQGkArNWcfMm4/nY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kn24ftenEytcszNVr58QGHyzXq5/3gigenPBB1e1UjRAefaCIIYHKQwiPZSX7abdUdbpo1F0KPOAdQqq+pJD/p93DQx/Y98XldUYDEe8Wp6e3iuTXsrH1Ppd8Tg8PEFYxk++/P52Xrg8sh+3F1KiOkLLnTd3dXKtmM/kuDWwfII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWq3E8hy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWq3E8hy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24892C433C7;
+	Tue,  6 Feb 2024 07:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707206319;
+	bh=Q+1Kf/aWsPJExbeirdCIjchd2AduQGkArNWcfMm4/nY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MWq3E8hywyaP2tE5+YdfW5FDKgLaRZozOEc6fs+Ac4TMjDqezTQDmzCAhfNcHbZHQ
+	 +VimOgK8jAyBQzfaf6fZKC8j570xRyXrwOcqHwbLTrgG/GwDCsUyno90lwf+/jcZwf
+	 XulR6QD8kuZ+Sd77Al8dSYD/0uXVym6xX3Mb+ZkYWDw859Bh4wFg33vNRpRX+3lW8v
+	 txd6oc0YmJAqI6z/AU4/UaEe4BZkfkU5UeRb5QdBPCxZ5bzS2d9MHN0zXLVOtx4x+q
+	 8SuE37PcG4umTg+Iwbyy5BVp9sprMsJqywiGJyX+cdSSibA+Pm89+E+Z0RtJoA1vS9
+	 n2/ir1dhgkGjw==
+Message-ID: <81a9d08f-b02e-4251-b779-9d619bc31fdd@kernel.org>
+Date: Tue, 6 Feb 2024 08:58:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MAIL:SHSQR01.spreadtrum.com 4167vVF0057752
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] dt-bindings: usb/ti,am62-usb.yaml: Add PHY2
+ register space
+To: Roger Quadros <rogerq@kernel.org>, Thinh.Nguyen@synopsys.com
+Cc: gregkh@linuxfoundation.org, r-gunasekaran@ti.com, b-liu@ti.com,
+ afd@ti.com, nm@ti.com, srk@ti.com, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+References: <20240205141221.56076-1-rogerq@kernel.org>
+ <20240205141221.56076-5-rogerq@kernel.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240205141221.56076-5-rogerq@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-RnJpc3QsIHRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHlvdXIgY29tbWVudHMgYW5kIEkgd291bGQg
-bGlrZSB0byBzYXksIHdoZW4gcGVyZm9ybWluZyBzbGFiIG1lbW9yeSBpbmZvcm1hdGlvbiBtYWlu
-dGVuYW5jZSwgcGVvcGxlIG9mdGVuIGhvcGUgdG8gc2VlIG1vcmUgZGV0YWlsZWQgaW5mb3JtYXRp
-b24gdGhyb3VnaCBhIHNpbXBsZSBzbGFiaW5mbyBjb21tYW5kLiBBcyBWbGFzdGltaWwgbWVudGlv
-bmVkIHRoZSBtZXRob2QsIGJ1dCBpdCBpcyB2ZXJ5IHVuaW50dWl0aXZlIHRvIHRoZSBzdGF0dXMg
-b2YgdGhlIGVudGlyZSBzbGFiLCBzbyB3ZSBhZGQgdGhlIHNsYWJyZWNsYWltIGNvbHVtbiB0byBz
-bGFiaW5mbyBhbmQgZGlyZWN0bHkgb3V0cHV0IGl0IHVzaW5nIGNtZGxpbmUgJyA+IGNhdCBwcm9j
-L3NsYWJpbmZvJy4gQW5kIEkgdGhpbmsgdGhpcyBhcHByb2FjaCB3aWxsIGFsc28gYmUgaGVscGZ1
-bCBmb3IgZnV0dXJlIHdvcmsgb24gbWVtb3J5IHN0YXRpc3RpY3MuIEFuZCBJIGZvdW5kIHRoYXQg
-dGhlcmUgaXMgbm8gY29ycmVzcG9uZGluZyBzbGFiaW5mbyBvdXRwdXQgZXhhbXBsZSBpbiB0aGUg
-cHJvYy5yc3QgZG9jdW1lbnQuIENhbiB3ZSBhZGQgYSBvdXRwdXQgZXhhbXBsZSBzbyB0aGF0IHVz
-ZXJzcGFjZSBrbm93cyBhYm91dCBpdD8gDQoNCkR1ZSB0byBpbnN1ZmZpY2llbnQgdW5kZXJzdGFu
-ZGluZyBvZiB0aGUgY29kZSBmcmFtZXdvcmsgdXNlZCBieSB0aGUgc2xhYmluZm8gdG9vbCwgdGhp
-cyBwYXRjaCB3YXMgbm90IGNvbnNpZGVyZWQuIE9mIGNvdXJzZSwgSSB0aGluayBpbiB0aGUgbmV4
-dCB3ZSB3aWxsIGNvbnNpZGVyIG1hcmtpbmcgL3Byb2Mvc2xhYmluZm8gYXMgZGVwcmVjYXRlZCwg
-YW5kIHRoZW4gdXNlIHRoZSAic2xhYmluZm8iIHRvb2wgdG8gaW1wbGVtZW50IHRoZSBjb3JyZXNw
-b25kaW5nIHByb2Mvc2xhYmluZm8gZnVuY3Rpb25zLg0KDQpUaGFua3MgYWdhaW4hDQotLS0tLemC
-ruS7tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IENocmlzdG9waCBMYW1ldGVyIChBbXBlcmUpIDxj
-bEBsaW51eC5jb20+IA0K5Y+R6YCB5pe26Ze0OiAyMDI05bm0MuaciDbml6UgMTo1NQ0K5pS25Lu2
-5Lq6OiBWbGFzdGltaWwgQmFia2EgPHZiYWJrYUBzdXNlLmN6Pg0K5oqE6YCBOiBHcmVnIEtIIDxn
-cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IOW8oOaWueatoyAoRmFuZ3poZW5nIFpoYW5nKSA8
-ZmFuZ3poZW5nLnpoYW5nQHVuaXNvYy5jb20+OyBQZWtrYSBFbmJlcmcgPHBlbmJlcmdAa2VybmVs
-Lm9yZz47IERhdmlkIFJpZW50amVzIDxyaWVudGplc0Bnb29nbGUuY29tPjsgSm9vbnNvbyBLaW0g
-PGlhbWpvb25zb28ua2ltQGxnZS5jb20+OyBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5k
-YXRpb24ub3JnPjsgUm9tYW4gR3VzaGNoaW4gPHJvbWFuLmd1c2hjaGluQGxpbnV4LmRldj47IEh5
-ZW9uZ2dvbiBZb28gPDQyLmh5ZXlvb0BnbWFpbC5jb20+OyBsaW51eC1tbUBrdmFjay5vcmc7IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEZhbmd6aGVuZyBaaGFuZyA8ZmFuZ3poZW5nLnpo
-YW5nMTAwM0BnbWFpbC5jb20+OyDpn6nnjonmmI4gKFl1bWluZyBIYW4pIDx5dW1pbmcuaGFuQHVu
-aXNvYy5jb20+OyBDaHVueWFuIFpoYW5nIDx6aGFuZy5seXJhQGdtYWlsLmNvbT4NCuS4u+mimDog
-UmU6IFtQQVRDSF0gbW0vc2xhYjogQWRkIHNsYWJyZWNsYWltIGZsYWcgdG8gc2xhYmluZm8NCg0K
-DQrms6jmhI86IOi/meWwgemCruS7tuadpeiHquS6juWklumDqOOAgumZpOmdnuS9oOehruWumumC
-ruS7tuWGheWuueWuieWFqO+8jOWQpuWImeS4jeimgeeCueWHu+S7u+S9lemTvuaOpeWSjOmZhOS7
-tuOAgg0KQ0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUg
-b3JnYW5pemF0aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxl
-c3MgeW91IHJlY29nbml6ZSB0aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUu
-DQoNCg0KDQpPbiBNb24sIDUgRmViIDIwMjQsIFZsYXN0aW1pbCBCYWJrYSB3cm90ZToNCg0KPiBP
-biAyLzQvMjQgMTQ6MDksIEdyZWcgS0ggd3JvdGU6DQo+PiBPbiBXZWQsIEphbiAzMSwgMjAyNCBh
-dCAwNTo0NDo0MlBNICswODAwLCBGYW5nemhlbmcgWmhhbmcgd3JvdGU6DQo+Pj4gSW4gb3JkZXIg
-dG8gZW5oYW5jZSBzbGFiIGRlYnVnZ2luZywgd2UgYWRkIHNsYWJyZWNsYWltIGZsYWcgdG8gDQo+
-Pj4gc2xhYmluZm8uIFNsYWIgdHlwZSBpcyBhbHNvIGFuIGltcG9ydGFudCBhbmFseXNpcyBwb2lu
-dCBpbiBzbGFiaW5mbyANCj4+PiBmb3IgcGVyIHNsYWIsIHdoZW4gdmFyaW91cyBwcm9ibGVtcyBz
-dWNoIGFzIG1lbW9yeSBsZWFrcyBvciBtZW1vcnkgDQo+Pj4gc3RhdGlzdGljcyBvY2N1ci4NCj4+
-Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IEZhbmd6aGVuZyBaaGFuZyA8ZmFuZ3poZW5nLnpoYW5nQHVu
-aXNvYy5jb20+DQo+Pj4gLS0tDQo+Pj4gIG1tL3NsYWJfY29tbW9uLmMgfCA3ICsrKystLS0NCj4+
-PiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4+Pg0K
-Pj4+IGRpZmYgLS1naXQgYS9tbS9zbGFiX2NvbW1vbi5jIGIvbW0vc2xhYl9jb21tb24uYyBpbmRl
-eCANCj4+PiAyMzgyOTNiMWRiZTEuLmFlZWIyYmZlNmRkYSAxMDA2NDQNCj4+PiAtLS0gYS9tbS9z
-bGFiX2NvbW1vbi5jDQo+Pj4gKysrIGIvbW0vc2xhYl9jb21tb24uYw0KPj4+IEBAIC0xMDM4LDcg
-KzEwMzgsNyBAQCBzdGF0aWMgdm9pZCBwcmludF9zbGFiaW5mb19oZWFkZXIoc3RydWN0IHNlcV9m
-aWxlICptKQ0KPj4+ICAgICBzZXFfcHV0cyhtLCAic2xhYmluZm8gLSB2ZXJzaW9uOiAyLjFcbiIp
-Ow0KPj4+ICAgICBzZXFfcHV0cyhtLCAiIyBuYW1lICAgICAgICAgICAgPGFjdGl2ZV9vYmpzPiA8
-bnVtX29ianM+IDxvYmpzaXplPiA8b2JqcGVyc2xhYj4gPHBhZ2VzcGVyc2xhYj4iKTsNCj4+PiAg
-ICAgc2VxX3B1dHMobSwgIiA6IHR1bmFibGVzIDxsaW1pdD4gPGJhdGNoY291bnQ+IDxzaGFyZWRm
-YWN0b3I+Iik7DQo+Pj4gLSAgIHNlcV9wdXRzKG0sICIgOiBzbGFiZGF0YSA8YWN0aXZlX3NsYWJz
-PiA8bnVtX3NsYWJzPiA8c2hhcmVkYXZhaWw+Iik7DQo+Pj4gKyAgIHNlcV9wdXRzKG0sICIgOiBz
-bGFiZGF0YSA8YWN0aXZlX3NsYWJzPiA8bnVtX3NsYWJzPiANCj4+PiArIDxzaGFyZWRhdmFpbD4g
-PHNsYWJyZWNsYWltPiIpOw0KPj4NCj4+IERvZXNuJ3QgdGhpcyBjaGFuZ2UgdGhlIHNsYWJpbmZv
-IHZlcnNpb24gbnVtYmVyIGFib3ZlPyAgV2hlcmUgaXMgdGhpcyANCj4+IGNoYW5nZSBkb2N1bWVu
-dGVkIHNvIHRoYXQgdXNlcnNwYWNlIGtub3dzIGFib3V0IGl0Pw0KDQpJIGhhdmUgbmV2ZXIgc2Vl
-biBzdWNoIGEgZG9jdW1lbnQuIEkgd291bGQgc3VnZ2VzdCBpbmNyZW1lbnRpbmcgdGhlIHZlcnNp
-b24gdG8gMi4yIHNpbmNlIHRoZXJlIGlzIGEgbWlub3IgZXh0ZW5zaW9uIG9mIHRoZSBmb3JtYXQu
-DQoNCkkgdHJpZWQgdG8gcmVtb3ZlIC9wcm9jL3NsYWJpbmZvIGluIHRoZSBwYXN0IGFuZCBoYXZl
-IHBlb3BsZSB1c2UgdGhlIG1vcmUgdmVyc2F0aWxlIC9zeXMva2VybmVsL3NsYWIgaW50ZXJmYWNl
-LiBCdXQgL3Byb2Mvc2xhYmluZm8gaGFzIGEgbG9uZyBsZWdhY3kuDQoNCkNvdWxkIHdlIG1hcmsg
-L3Byb2Mvc2xhYmluZm8gYXMgZGVwcmVjYXRlZCBhbmQgcmVjb21tZW5kIHRoZSB1c2Ugb2YgZWl0
-aGVyIHN5c2ZzIGRpcmVjdGx5IG9yIHVzZSBvZiB0aGUgInNsYWJpbmZvIiB0b29sIHRoYXQgd2Ug
-aGF2ZSBiZWVuIHByb3ZpZGluZyBpbiBsaW51eC90b29scy9tbSBmb3IgYSBsb25nIHRpbWU/DQoN
-Cg==
+On 05/02/2024 15:12, Roger Quadros wrote:
+> Add PHY2 register space to DT binding documentation.
+> 
+> We use minItems: 1 as DT update will come later and we don't
+> want warnings for existing DTs.
+> 
+> So far this register space was not required but due to the
+> newly identified Errata i2409 [1] we need to poke this
+> register space.
+> 
+> [1] https://www.ti.com/lit/er/sprz487d/sprz487d.pdf
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Signed-off-by: Roger Quadros <rogerq@kernel.org>
+
+Not much improved. Still not tested. :(
+
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline), work on fork of kernel
+(don't, instead use mainline) or you ignore some maintainers (really
+don't). Just use b4 and everything should be fine, although remember
+about `b4 prep --auto-to-cc` if you added new patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time, thus I will skip this patch entirely till you follow
+the process allowing the patch to be tested.
+
+Please kindly resend and include all necessary To/Cc entries.
+
+
+Best regards,
+Krzysztof
+
