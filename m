@@ -1,205 +1,137 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797C11B949
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 21:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E511F1BF27;
+	Tue,  6 Feb 2024 21:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707255721; cv=none; b=mMzqJw+gOJ45Q/YMnaGxXfKaBRVJ7Y8wY4utZBqbuVUyXwIwcTsrSi29cqIpWxsjCgpL97TpzlL+TVMgWQ3oSQkcZxBKIv8BL+xmsshRhEk9J+D/MNSFIAIeLhFIKDfHjPYWSqd0ck+An3aZyT2nDo3TO/mlavrZa7U2+nGJXrE=
+	t=1707255742; cv=none; b=BEsRG1aM7jT2oMPq891dESPJQIKEwKwqhZVapBqtg4KGyb8m1Zt9MOaqHErFmgZBtmBm7HJlm0iZovo9B+ASdNu4hXOdsyyuql9Hg0DqGMkBFK7MsA7QUsHJIyRu22GTwgxZVRhoQ84tgCTN1PgCn/rXKhC3CTnd8b4g1QBDWkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707255721; c=relaxed/simple;
-	bh=NbB3Ko8kuYd6dBRFM/prvtAfN4ZYsgWRLM2XWmLJmSc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gYyFd7skyvtrcwdUqfiMfXTBejDPyk4bWt1zEuGboCyPhdvSPO+NM4/tieXPi7J4+enMvXYaOQZTbVyQKa/qoa6brOac0dP39PfXunaB2hN/IUhKHfuqbIbciJ2BkA3Iadt9SeDqGIHTFp7Iu9cnim9qo7H+ZMwNGB0pzSS/arE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JOtPm8AQ; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707255742; c=relaxed/simple;
+	bh=q9fwZBAXTcQtKBv6I5CxylABhvION6OPfRGnEWczYgM=;
+	h=From:To:Cc:Date:Message-Id:In-Reply-To:References:MIME-Version:
+	 Subject; b=hAFDS2Zz1yS/pF95W+XQltKCpr6ym7ca1/zqap9Zs91zURURqRCE1l0dbi2VHAP0zd8ox9b7VvQLmTEYLF/T9cWkywxi6UojRcjHkOV/4du3EI9uPC6FbMB6LBsgl4DkOZml/Bw8U9UcIKS7xATthNbUJtQlfL2aTn0QbCrC9eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=fwsW/SiH; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JOtPm8AQ"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d0aabed735so18508161fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 13:41:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707255716; x=1707860516; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t4NFsgHfx0ZYyVUKp4J+0H9H+3ZFIE+ig3GjqGFu/Ns=;
-        b=JOtPm8AQv+J+ONdUQHJcekW/DA3UiOcxLKHfYFfsGEgwdFskvpnRnONSyilVFcrDYW
-         R12pQBqU+1nVX+pIUzqD8UABWAbfSGR2nKuN9mOiNjF5hKCujtPsJp6YU/0H3y5FYQXI
-         5mHOkHkTgaPSZwtke3Bqba/ikqwHjMzlSP/H8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707255716; x=1707860516;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t4NFsgHfx0ZYyVUKp4J+0H9H+3ZFIE+ig3GjqGFu/Ns=;
-        b=nZXyg8IS7MlsVNAlO0hN1Z5jc0NV9yMBZxaxUVVcd5cBazZWE6QJPzt8riYTaIJ9I+
-         GU5zbqWbv84VIz60ec8Q0MlGgKvtv+QzcAIm8Y98+971jGhbNAYbhxnxTmAGpJT/CKok
-         v09YiiWOecECSeknHo+kO0ZMqJhcqJ6J0LkGAHKO1lvFphByEYVWfl5MR1/sbActvvRO
-         bqnhdLZqD6+xJ0BITvYDrwHajBfc7DXClR5U3/ij7p861ZymziHsAy+3FSci+zCf+x+q
-         1+7DQhZUbcSGt+Hafuq+C81/ssTELGzPowKRNhC9hb3o3yaOGqxQcdBV9Iur75IQG+DI
-         AHdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWi7p10umO+LwqFIk8d+J6FfCxCTgG4nAPf5eDP25RO3YZCYeVc3mzhfaUOWxFSLf+aoUZsG+SrjeCAUkgxMVifmW+VCsP3xBkdwBok
-X-Gm-Message-State: AOJu0Yx8H45LKBbpXqNW1u8XBtoNyLXcncyH0npSLObPothbey4LoYRb
-	X2hYfHFFlnEWDdgXv342jPbhNiDXoGXro/Esij3Y4HKak1KD9GRYHXdiC+6IPyiw5brWPrHDULn
-	cWw==
-X-Google-Smtp-Source: AGHT+IGwYhQ6RZAT3rbpuh5M0T6xoH6eTheZHlhhG6xkVdqC9laJ6ibTmyuvfdxnl+CB/Whbh9xvvQ==
-X-Received: by 2002:a05:6512:12c9:b0:511:54a8:3adb with SMTP id p9-20020a05651212c900b0051154a83adbmr3890527lfg.2.1707255715677;
-        Tue, 06 Feb 2024 13:41:55 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWrR1YFjxgPJ2lNhkuywwr18St69D6oc2YkHhU4ISwEMCiTcKmlR71c0fWdxgl9RfYNd7aNPWrNgHHENXVMFXp/37blqbs6hM6oi4AT
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id x15-20020a170906134f00b00a372b38380csm1610363ejb.13.2024.02.06.13.41.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Feb 2024 13:41:55 -0800 (PST)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40fd15fe6a8so21305e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 13:41:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWzW/9So4nuNlvoqSTToLkyalKdeH5LuwUlYCxUZTLIunFc6U06URIWE/9Kg9iN1CV6lGa5PRyfVgpvsmgXAX5FGX5QSSma4p6RqeFZ
-X-Received: by 2002:a05:600c:3d89:b0:40f:f069:6bd6 with SMTP id
- bi9-20020a05600c3d8900b0040ff0696bd6mr59076wmb.0.1707255713986; Tue, 06 Feb
- 2024 13:41:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="fwsW/SiH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=fRQcONYVjPAuJ2IXtLvfbv954R7Ufy3J7dtvn6r3BZs=; b=fwsW/SiHMdayWibIXMwqX98qqb
+	/ZOySCo2eS5wf4JshM66p90SZT4ETeTQZEGXn7ueG6RaWUL/+jGMyeHsEeKcCslATc3N4nZ3KwVAr
+	cWS25rpAKvnh7QB16RPHhvx3ZgUiTkNQrsIKEANHKFPS59DWgmpLQrPZ+qvKMc5EMNOQ=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:41434 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1rXTCs-0006XX-8A; Tue, 06 Feb 2024 16:42:19 -0500
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	hugo@hugovil.com,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date: Tue,  6 Feb 2024 16:42:07 -0500
+Message-Id: <20240206214208.2141067-4-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240206214208.2141067-1-hugo@hugovil.com>
+References: <20240206214208.2141067-1-hugo@hugovil.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206095902.56406-1-yaoma@linux.alibaba.com> <20240206095902.56406-2-yaoma@linux.alibaba.com>
-In-Reply-To: <20240206095902.56406-2-yaoma@linux.alibaba.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 6 Feb 2024 13:41:37 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=V+mcBdeq8mmH0h41byUtL-G1zFmZQtj341ubwqyPxD1A@mail.gmail.com>
-Message-ID: <CAD=FV=V+mcBdeq8mmH0h41byUtL-G1zFmZQtj341ubwqyPxD1A@mail.gmail.com>
-Subject: Re: [PATCHv5 1/3] watchdog/softlockup: low-overhead detection of interrupt
-To: Bitao Hu <yaoma@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, pmladek@suse.com, kernelfans@gmail.com, 
-	liusong@linux.alibaba.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+Subject: [PATCH 3/4] serial: sc16is7xx: split into core and I2C/SPI parts (sc16is7xx_lines)
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Hi,
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-On Tue, Feb 6, 2024 at 1:59=E2=80=AFAM Bitao Hu <yaoma@linux.alibaba.com> w=
-rote:
->
-> The following softlockup is caused by interrupt storm, but it cannot be
-> identified from the call tree. Because the call tree is just a snapshot
-> and doesn't fully capture the behavior of the CPU during the soft lockup.
->   watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
->   ...
->   Call trace:
->     __do_softirq+0xa0/0x37c
->     __irq_exit_rcu+0x108/0x140
->     irq_exit+0x14/0x20
->     __handle_domain_irq+0x84/0xe0
->     gic_handle_irq+0x80/0x108
->     el0_irq_naked+0x50/0x58
->
-> Therefore=EF=BC=8CI think it is necessary to report CPU utilization durin=
-g the
-> softlockup_thresh period (report once every sample_period, for a total
-> of 5 reportings), like this:
->   watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
->   CPU#28 Utilization every 4s during lockup:
->     #1: 0% system, 0% softirq, 100% hardirq, 0% idle
->     #2: 0% system, 0% softirq, 100% hardirq, 0% idle
->     #3: 0% system, 0% softirq, 100% hardirq, 0% idle
->     #4: 0% system, 0% softirq, 100% hardirq, 0% idle
->     #5: 0% system, 0% softirq, 100% hardirq, 0% idle
->   ...
->
-> This would be helpful in determining whether an interrupt storm has
-> occurred or in identifying the cause of the softlockup. The criteria for
-> determination are as follows:
->   a. If the hardirq utilization is high, then interrupt storm should be
->   considered and the root cause cannot be determined from the call tree.
->   b. If the softirq utilization is high, then we could analyze the call
->   tree but it may cannot reflect the root cause.
->   c. If the system utilization is high, then we could analyze the root
->   cause from the call tree.
->
-> Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
-> ---
->  kernel/watchdog.c | 89 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
+Before, sc16is7xx_lines was checked for a free (zero) bit first, and then
+later it was set only if UART port registration succeeded.
 
-On v4 you got Liu Song's Reviewed-by and I don't think this is
-massively different than v4. I would have expected you to carry the
-tag forward. In any case ,I guess Liu Song can give it again...
+Now that sc16is7xx_lines is shared for the I2C and SPI drivers, make sure
+it is reserved and modified atomically, and use a new variable to hold the
+status of UART port regisration.
 
+Remove need to check for previous port registration in sc16is7xx_remove(),
+because if sc16is7xx_probe() succeeded, we are guaranteed to have
+successfully registered both ports.
 
-> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-> index 81a8862295d6..71d5b6dfa358 100644
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -16,6 +16,8 @@
->  #include <linux/cpu.h>
->  #include <linux/nmi.h>
->  #include <linux/init.h>
-> +#include <linux/kernel_stat.h>
-> +#include <linux/math64.h>
->  #include <linux/module.h>
->  #include <linux/sysctl.h>
->  #include <linux/tick.h>
-> @@ -333,6 +335,90 @@ __setup("watchdog_thresh=3D", watchdog_thresh_setup)=
-;
->
->  static void __lockup_detector_cleanup(void);
->
-> +#ifdef CONFIG_IRQ_TIME_ACCOUNTING
-> +#define NUM_STATS_GROUPS       5
-> +#define NUM_STATS_PER_GROUP    4
-> +enum stats_per_group {
-> +       STATS_SYSTEM,
-> +       STATS_SOFTIRQ,
-> +       STATS_HARDIRQ,
-> +       STATS_IDLE,
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+---
+ drivers/tty/serial/sc16is7xx.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-nit: I still would have left "NUM_STATS_PER_GROUP" here instead of as
-a separate #define.
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 5b53c88b7133..5073ebfc45bf 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -1468,6 +1468,7 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ 	u32 uartclk = 0;
+ 	int i, ret;
+ 	struct sc16is7xx_port *s;
++	bool port_registered[SC16IS7XX_MAX_PORTS];
+ 
+ 	for (i = 0; i < devtype->nr_uart; i++)
+ 		if (IS_ERR(regmaps[i]))
+@@ -1533,8 +1534,10 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ 		     SC16IS7XX_IOCONTROL_SRESET_BIT);
+ 
+ 	for (i = 0; i < devtype->nr_uart; ++i) {
+-		s->p[i].port.line = find_first_zero_bit(sc16is7xx_lines,
+-							SC16IS7XX_MAX_DEVS);
++		port_registered[i] = false;
++
++		s->p[i].port.line = find_and_set_bit(sc16is7xx_lines,
++						     SC16IS7XX_MAX_DEVS);
+ 		if (s->p[i].port.line >= SC16IS7XX_MAX_DEVS) {
+ 			ret = -ERANGE;
+ 			goto out_ports;
+@@ -1584,7 +1587,7 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ 		if (ret)
+ 			goto out_ports;
+ 
+-		set_bit(s->p[i].port.line, sc16is7xx_lines);
++		port_registered[i] = true;
+ 
+ 		/* Enable EFR */
+ 		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_LCR_REG,
+@@ -1642,9 +1645,11 @@ int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+ #endif
+ 
+ out_ports:
+-	for (i = 0; i < devtype->nr_uart; i++)
+-		if (test_and_clear_bit(s->p[i].port.line, sc16is7xx_lines))
++	for (i = 0; i < devtype->nr_uart; i++) {
++		clear_bit(s->p[i].port.line, sc16is7xx_lines);
++		if (port_registered[i])
+ 			uart_remove_one_port(&sc16is7xx_uart, &s->p[i].port);
++	}
+ 
+ 	kthread_stop(s->kworker_task);
+ 
+@@ -1667,8 +1672,8 @@ void sc16is7xx_remove(struct device *dev)
+ 
+ 	for (i = 0; i < s->devtype->nr_uart; i++) {
+ 		kthread_cancel_delayed_work_sync(&s->p[i].ms_work);
+-		if (test_and_clear_bit(s->p[i].port.line, sc16is7xx_lines))
+-			uart_remove_one_port(&sc16is7xx_uart, &s->p[i].port);
++		clear_bit(s->p[i].port.line, sc16is7xx_lines);
++		uart_remove_one_port(&sc16is7xx_uart, &s->p[i].port);
+ 		sc16is7xx_power(&s->p[i].port, 0);
+ 	}
+ 
+-- 
+2.39.2
 
-
-> +static void print_cpustat(void)
-> +{
-> +       int i, group;
-> +       u8 tail =3D __this_cpu_read(cpustat_tail);
-
-Sorry for not noticing before, but why are you using
-"__this_cpu_read()" instead of "this_cpu_read()"? In other words, why
-do you need the double-underscore version everywhere? I don't think
-you do, do you?
-
-
-> +       u64 sample_period_second =3D sample_period;
-> +
-> +       do_div(sample_period_second, NSEC_PER_SEC);
-> +       /*
-> +        * We do not want the "watchdog: " prefix on every line,
-> +        * hence we use "printk" instead of "pr_crit".
-> +        */
-> +       printk(KERN_CRIT "CPU#%d Utilization every %llus during lockup:\n=
-",
-> +               smp_processor_id(), sample_period_second);
-> +       for (i =3D 0; i < NUM_STATS_GROUPS; i++) {
-> +               group =3D (tail + i) % NUM_STATS_GROUPS;
-> +               printk(KERN_CRIT "\t#%d: %3u%% system,\t%3u%% softirq,\t"
-> +                       "%3u%% hardirq,\t%3u%% idle\n", i+1,
-
-nit: though I don't care too much in this case, I think kernel folks
-slightly prefer "i + 1" instead of "i+1". Running
-"./scripts/checkpatch.pl --strict" will give a warning about this, for
-instance. Actually, "./scripts/checkpatch.pl --strict" has a few extra
-style nits that you could consider fixing.
-
-
-> +static void report_cpu_status(void)
-> +{
-> +       print_cpustat();
-> +}
-
-I don't understand why you need the extra wrapper. You didn't have it
-on v3 and I don't see any reason why you introduced it. Ah, I see, in
-the next patch you add something to it. OK, I guess it's fine to
-introduce it here.
-
--Doug
