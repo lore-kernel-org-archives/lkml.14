@@ -1,43 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D911E866;
-	Tue,  6 Feb 2024 14:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132391E538;
+	Tue,  6 Feb 2024 14:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707229917; cv=none; b=JtfM4KbTmr1oKB1yqqW2tLIEcjmKi0mIQtgkUiRpI6kZSpzBQo3Y7QFXvCkpibIpOgkdR/lwWM9RdxSK2DuJmBsYYNDgYM9xhnuUcmSXOB2fOLuB2cFkujnNWDfwz+Ppo1AcOidOnOOxPoErng9gqP/7iagWq6lDGyzyc4aXvNQ=
+	t=1707229928; cv=none; b=prG8n2I2Q08p7idbDVNr4kVEERux9VL8kTUhJ2mYg9PKNP5HDET8ZO/KOGLczbO4Sl6NPPm2mVhQNyryz9SJt0YPxdTvVf2IG5/mNPEPmAIwlIQYAH/anSl1lavrRMBjSZusCnBlSw5+KfsWlxr4Bpmk6B0rfWQqMg7Gk+nB5+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707229917; c=relaxed/simple;
-	bh=aEt/V2OZH7efYZxHVX0OSsx7A33Zpr5Q4epy53wq8hE=;
+	s=arc-20240116; t=1707229928; c=relaxed/simple;
+	bh=FXlLwj57nAJFGF/Vub+i5XUXQg7kTxUUzmFuRuy0jiU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVD3Aq46zGCB8vUbzJC4x6JK57cdDK0d0YrOGQwjJDEQ/3r0LqqdrssrGc7ZdGXf2F28kIZGQLB0qZLRWoy4jyJ4u4jDWYMK/IhAE6BbynERDKjZLXFMGtMTq/uZ8SOr1zjvpnv3FqiEbgnembJ85DNUPYcUFrWpymMV7Ok5Xh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hp0qlIpq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hp0qlIpq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6C2C433F1;
-	Tue,  6 Feb 2024 14:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707229917;
-	bh=aEt/V2OZH7efYZxHVX0OSsx7A33Zpr5Q4epy53wq8hE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hp0qlIpq1DVLQi2q+Xc/hwYGFU2DaMwn+PgQMcIZ00eR3thyNofOGvNiPlpbiGupv
-	 3kikZk8y8CiL5K3dzAYTYsnXlYE84TdSJK0F2E4sWyRMpYXXmqBxlzNoHAZsmCWUrh
-	 0k7ZISpNBVe379I4S1OFwN+1N9JWo7gM/ukIbGU0y/LF+fgFOM/2vsacBWMLO/8NbR
-	 bfMJDFJTTCzK/3GI19c3F+/voK3hFWTvZ0zJ1P1xgDWNpZFvuTMhYM6OmDEGtsMnMy
-	 qsLBbxOqs5NzF7VrBanAUdBr5PLEWBAx9aDrYcJlUdQ5ozfZQyXwf/2jzysXYYEXzo
-	 BiiEDqvchbMOQ==
-Date: Tue, 6 Feb 2024 14:30:23 +0000
-From: Simon Horman <horms@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: krzysztof.kozlowski@linaro.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] nfc: hci: Introduce nfc_llc_del_engine() to
- reduce code duplication
-Message-ID: <20240206143023.GB1104779@kernel.org>
-References: <cover.1706946099.git.christophe.jaillet@wanadoo.fr>
- <6d9a8544b923d92defdf2ab1b9092004cc7b51f1.1706946099.git.christophe.jaillet@wanadoo.fr>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rldLpcChIvJ0L7P4TxEUYVxFX1aIsyRm7MHHQYmhBZraZ55m9fltrCgblCW5VzyYBoPJgKF+NvwQ/WYfieKzDGANmL77/OcMPELTVvktjW8dGuvtwunHGakgzgSeE4/KP0xhZS85ayStEkrVQmavMy7FUxsJ4+TDzzrDiOaorz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from martin by akranes.kaiser.cx with local (Exim 4.96)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1rXM4h-000AXd-1k;
+	Tue, 06 Feb 2024 15:05:23 +0100
+Date: Tue, 6 Feb 2024 15:05:23 +0100
+From: Martin Kaiser <martin@kaiser.cx>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] gpio: vf610: allow disabling the vf610 driver
+Message-ID: <ZcI8oyHzaktJcfNV@v2202401214221251712.nicesrv.de>
+References: <20240124205900.14791-1-martin@kaiser.cx>
+ <20240124205900.14791-2-martin@kaiser.cx>
+ <20240126122719.GA13659@francesco-nb>
+ <ZbgX-HGjM5fdftCG@v2202401214221251712.nicesrv.de>
+ <ZbibA9QbOn19AXcn@gaggiata.pivistrello.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,13 +41,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6d9a8544b923d92defdf2ab1b9092004cc7b51f1.1706946099.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <ZbibA9QbOn19AXcn@gaggiata.pivistrello.it>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-On Sat, Feb 03, 2024 at 08:51:03AM +0100, Christophe JAILLET wrote:
-> Add a new helper to avoid code duplication between nfc_llc_exit() and
-> nfc_llc_unregister().
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Thus wrote Francesco Dolcini (francesco@dolcini.it):
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> On Mon, Jan 29, 2024 at 10:26:16PM +0100, Martin Kaiser wrote:
+> > Thus wrote Francesco Dolcini (francesco@dolcini.it):
 
+> > > On Wed, Jan 24, 2024 at 09:58:57PM +0100, Martin Kaiser wrote:
+> > > > The vf610 gpio driver is enabled by default for all i.MX machines,
+> > > > without any option to disable it in a board-specific config file.
+
+> > > > Most i.MX chipsets have no hardware for this driver. Change the default
+> > > > to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
+
+> > > > Add a text description after the bool type, this makes the driver
+> > > > selectable by make config etc.
+
+> > > > Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
+> > > > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> > > > ---
+
+> > > >  config GPIO_VF610
+> > > > -	def_bool y
+> > > > +	bool "VF610 GPIO support"
+> > > > +	default y if SOC_VF610
+
+> > > any reason for having this default y for SOC_VF610, but not for the
+> > > other SOC that uses the same variant (i.MX7ULP, ... ?).
+
+> > Ok, it's probably not as consistent as it could be.
+
+> ...
+
+> > Does this make sense?
+> sounds fair to me.
+
+Sorry for the delay, other tasks got in the way.
+
+The maintainers have meanwhile merged v4.
+
+Basically, the conclusion of my last mail was that imx7ulp and soc_vf610 could
+be configured in the same way to make things a bit clearer. This wouldn't be
+much of an improvement compared to the v4 set, I'd suggest keeping the current
+state.
+
+Thanks,
+Martin
