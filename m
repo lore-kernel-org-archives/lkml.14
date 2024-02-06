@@ -1,164 +1,90 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8527E12D75F;
-	Tue,  6 Feb 2024 10:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED611E4AE;
+	Tue,  6 Feb 2024 10:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213726; cv=none; b=gDlvrbU0ixsv+cEeZKoHCW6XkXyvOt82s7PaXVZL6E9ouBXjJheIk/tKvEGFMBuwxsLSqXHsjjN6veqQc6vYOArWUSd/05gVSttOvpPgDPQM9NJTIIXOvxeFozWUe7lrb0q9k6zjY7F1waULqqgUlQ8+wsgMZRvrJviKazWu7Oc=
+	t=1707213879; cv=none; b=hPaeQO4M/j4LNhyaOd0GagSrY9rXUYIhNX0ijqFpdyI42xg10zEVU12jbbjvrVtemmNBNme3briSbLPCpn05Nh1n5qwzjtbGzBJcYw7KJAf6c8x/cNFMTOhXNLqFfj4FsTpbg+9jK1MzPMKiEMdBULKRxNbWVjj4RnnCn74fVMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213726; c=relaxed/simple;
-	bh=NTfMPbcLXHzOEzBkAFFoK6F8lJR6D3zYbcL8c4upvs4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=fsJ3HwKjWAn/JfbPir+gzB3qvBXPfPjBpl/rzSuqK8KlFzDFs5jTul38D8Y+bVmrwDba0Q0pkh1kJZM0bIdLukiOlJEFzgkrKb9z/1O7syhYT4yLSCzH1/Aa6nglR76IducY1wl79UcH+IkZmd/CqVx27kqJrz9+6oETjGrT+tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4j3laHXV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PlyAuetE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707213879; c=relaxed/simple;
+	bh=gW7t8hW3imp+PqsXZyr05n6ePuqZalGznC/r4/tBlcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D63hFMIW6FCAJyXRlU3+WEVNPUtP36XFrdubWGHUOI0M+rT1ZyvOlgZEbHzMZ74PPjEXTUnfA1RxN/xEjhe1oyvZH2kV7QEMNketLRzbNYYBu2VYZ5o51x+Nl3rtPGS7n28DEP9nFeFznI7racEPC8n0rbxjFOTSnK+zloG0zIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eH7neTiI; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4j3laHXV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PlyAuetE"
-Date: Tue, 06 Feb 2024 10:01:55 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707213716;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pw8nOl6Xd35BIIwnw4TJPtMp9fLUt9BWbETiOqwVMss=;
-	b=4j3laHXV/SVhfmDa1q8SrWGXQgYi8uEXbmhrEvLm8f3GJVd8RZfHn9Ck0MFDZfjomuwfK7
-	/G2lqJnTaue+IaNUgDxdEGhfeB9t1zrsMbe5WyuF/40v2F37fytKaI1ZOJwTj+wGlke5SM
-	YI9NKduEy9F/u7P5+jQ0i09D28X/2qgQKY8ox4qZC0t0bI3DA/NNDoi4cacyDq5Yx1xPhp
-	3g4UhsV13smS2PcXPvzdfhb16MTT7HLyP8ZHpgK0hm1YD1f4LaoABwyaU/l8yZeVPQ/POG
-	hPZ4xGiB3GpGeh1jbIVGFSP/BKg/1QVvMevk4TCx91P6aD5PXqiK50OldR3zcQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707213716;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pw8nOl6Xd35BIIwnw4TJPtMp9fLUt9BWbETiOqwVMss=;
-	b=PlyAuetE1RmvWeEp7wlRTOajknyHzOEuuY5XKy7rASTWd6s/Y4irdwmQxMUWkQgfa0IUUH
-	ka6/GaZ6y8v/8PBg==
-From: tip-bot2 for NOMURA =?utf-8?b?SlVOSUNISSjph47mnZEg5rez5LiAKQ==?=
- <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/boot: Add a message about ignored early NMIs
-Cc: Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
- "Jun'ichi Nomura" <junichi.nomura@nec.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20231130103339.GCZWhlA196uRklTMNF@fat_crate.local>
-References: <20231130103339.GCZWhlA196uRklTMNF@fat_crate.local>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eH7neTiI"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1DD5B40E00B2;
+	Tue,  6 Feb 2024 10:04:33 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mAzo3U_xm5y6; Tue,  6 Feb 2024 10:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707213870; bh=YQPRmOIMAlWlSmT/Yk/DsVNxBZ/3BBFLfb2NXakTptQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eH7neTiISK8x2qljS9HWtxySFGDAEFJLhsCUMgzUi+nyvbxe61vVKpAVLQQ/Y0Hsz
+	 QbFim+qqKgFGFstfykWBP7HRs+OqtdHjejgsAJbbveZyyEm/cf/ZbIzt58pXpt8wrC
+	 t1yg/KiMm44vvn4iROf6uTyDfVkAb/VkEkkkccUVTGeTWF+54/sStjb1OiTVc/G9vz
+	 z5jqKlo+dGPnbgVTIgq78XmFRMlmVTNKZTs7akZ7pcq4DGJgYVxCWAsmn4WhWuUlly
+	 lCYX0BUrBa+AkdJUD3K9Dsd003Hnk2R1T1gxqh55/ynRZ0o+HMyG+7npPeuVtbH6nz
+	 idZg8oCKMgQrzjLGBZw0NcTz+H2bySzbFwCI9fo4KnZbI8s1zxsk46TcpGTxFnF8FH
+	 R9/9bNuxhw1ymwCI5QARv6lcQaAqtf7nYZT5XG1cec+HDPKUJU1h9O9ePtya8mvk1Z
+	 cliv8WR5y/1ZCQtaLSIJo83sGYhgTu7I/MU0yEWrYgLNNyw/7MVqiOGb80yRf/K750
+	 qvDc/4/vxFBwClc8PoslwGwebaK2A4x2G3X90mS1IlnQ1G46lw/KYPMVOSHl5mI+vN
+	 A5qmze+/2xTTKirUpAQvT1CRGGfIVIrf4UWJtPJ7pwquNh6KTpOMhrbjXr9QN/ih7v
+	 pZnu89Ds9cXfwN6kT2/2qARs=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8947740E016D;
+	Tue,  6 Feb 2024 10:04:18 +0000 (UTC)
+Date: Tue, 6 Feb 2024 11:04:12 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Nikunj A. Dadhania" <nikunj@amd.com>
+Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
+	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, dionnaglaze@google.com,
+	pgonda@google.com, seanjc@google.com, pbonzini@redhat.com
+Subject: Re: [PATCH v7 03/16] virt: sev-guest: Add SNP guest request structure
+Message-ID: <20240206100412.GAZcIEHGET2NfMPHnk@fat_crate.local>
+References: <20231220151358.2147066-1-nikunj@amd.com>
+ <20231220151358.2147066-4-nikunj@amd.com>
+ <20240125115952.GXZbJNOGfxfuiC5WRT@fat_crate.local>
+ <03719b26-9b59-4e88-9e7e-60c6f2617565@amd.com>
+ <20240201102946.GCZbtymsufm3j2KI85@fat_crate.local>
+ <98b23de9-48e4-4599-9e7f-0736055893fc@amd.com>
+ <20240201140727.GDZbuln8aOnCn1Hooz@fat_crate.local>
+ <408e40b4-4428-4bef-bb96-8009194a9633@amd.com>
+ <20240202161455.GCZb0U_9jckCT8loBc@fat_crate.local>
+ <ec2be3f2-b20a-46c1-815c-9065e10f292a@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170721371582.398.17711309093977482776.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ec2be3f2-b20a-46c1-815c-9065e10f292a@amd.com>
 
-The following commit has been merged into the x86/boot branch of tip:
+On Mon, Feb 05, 2024 at 02:53:30PM +0530, Nikunj A. Dadhania wrote:
+> Sure, below is the updated patch. Complete series is pushed here 
+> 
+> https://github.com/AMDESE/linux-kvm/commits/sectsc-guest-latest/
 
-Commit-ID:     ac456ca0af4fe9630cf84e7efd20b7f7bf596aab
-Gitweb:        https://git.kernel.org/tip/ac456ca0af4fe9630cf84e7efd20b7f7bf5=
-96aab
-Author:        NOMURA JUNICHI(=E9=87=8E=E6=9D=91=E3=80=80=E6=B7=B3=E4=B8=80) =
-<junichi.nomura@nec.com>
-AuthorDate:    Fri, 02 Feb 2024 03:51:58=20
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 06 Feb 2024 10:51:11 +01:00
+Yap, that looks more like it.
 
-x86/boot: Add a message about ignored early NMIs
+Thx.
 
-Commit
+-- 
+Regards/Gruss,
+    Boris.
 
-  78a509fba9c9 ("x86/boot: Ignore NMIs during very early boot")
-
-added an empty handler in early boot stage to avoid boot failure due to
-spurious NMIs.
-
-Add a diagnostic message to show that early NMIs have occurred.
-
-  [ bp: Touchups. ]
-
-  [ Committer note: tested by stopping the guest really early and
-    injecting NMIs through qemu's monitor. Result:
-
-    early console in setup code
-    Spurious early NMIs ignored: 13
-    ... ]
-
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Signed-off-by: Jun'ichi Nomura <junichi.nomura@nec.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Link: https://lore.kernel.org/lkml/20231130103339.GCZWhlA196uRklTMNF@fat_crat=
-e.local
----
- arch/x86/boot/compressed/ident_map_64.c | 2 +-
- arch/x86/boot/compressed/misc.c         | 7 +++++++
- arch/x86/boot/compressed/misc.h         | 1 +
- 3 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compress=
-ed/ident_map_64.c
-index d040080..4a029ba 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -389,5 +389,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned lo=
-ng error_code)
-=20
- void do_boot_nmi_trap(struct pt_regs *regs, unsigned long error_code)
- {
--	/* Empty handler to ignore NMI during early boot */
-+	spurious_nmi_count++;
- }
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index bf2aac4..bd6857a 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -52,6 +52,7 @@ struct port_io_ops pio_ops;
-=20
- memptr free_mem_ptr;
- memptr free_mem_end_ptr;
-+int spurious_nmi_count;
-=20
- static char *vidmem;
- static int vidport;
-@@ -506,6 +507,12 @@ asmlinkage __visible void *extract_kernel(void *rmode, u=
-nsigned char *output)
- 	/* Disable exception handling before booting the kernel */
- 	cleanup_exception_handling();
-=20
-+	if (spurious_nmi_count) {
-+		error_putstr("Spurious early NMIs ignored: ");
-+		error_putdec(spurious_nmi_count);
-+		error_putstr("\n");
-+	}
-+
- 	return output + entry_offset;
- }
-=20
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 6502bc6..b353a7b 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -59,6 +59,7 @@ extern char _head[], _end[];
- /* misc.c */
- extern memptr free_mem_ptr;
- extern memptr free_mem_end_ptr;
-+extern int spurious_nmi_count;
- void *malloc(int size);
- void free(void *where);
- void __putstr(const char *s);
+https://people.kernel.org/tglx/notes-about-netiquette
