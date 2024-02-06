@@ -1,165 +1,168 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2131.outbound.protection.outlook.com [40.107.20.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50A13248D;
-	Tue,  6 Feb 2024 15:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707233925; cv=fail; b=NcBGxvl6yeEvbB0WinIea67l6AL2Y16qYl8fHhxB5EdSBV9RUNk9q/py7XLn10sLalmvIRgcED5AVXQzm8bI6U7dDGRtJqx/LLUj9gU8t4akRahi8Z+qjFf7pzy5pdn+OwMtqp0vfeFJAijrF9r4V4p6hkGNnJarCxUQzL4RFxE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707233925; c=relaxed/simple;
-	bh=kxmw3Iifjwi6nPtr26GFMmCb5T+8MjN8o+/fabMOugg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=htEY70fvzBs84fl7BvbNtofygy++LhIcSHdPJVutGAbTkS8WdqWflwDNtsoSBFT8CqcKPczaUkHEcxQqN8c2xRWjd6TOxTxy15tiURERuPTjOeUoHCzF/bLH4aIhk6Z3ztfA8aTDjbG4SPyK+vgjtON/FQGTm7VZ8bHj3uNNWPI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=A0X5EcZY; arc=fail smtp.client-ip=40.107.20.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0136D132C1B;
+	Tue,  6 Feb 2024 15:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707233970; cv=none; b=icMp75xNw98bh0Vco3idyfaEGWxMIaLT1lWpsEC26hH8a4vJNzKx7nvZEJaNlF9BsxvpPy0zoqpwsHeFXmpQyGltlpA5+lT76kpIqvzwvmGD4I3gqMwkuOV1X/508aGc0jWZ0Pwi6XdO0OfF2FugH+TeF+AQ+/71ne4Dpop/a78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707233970; c=relaxed/simple;
+	bh=Sw9sxL8rwotSLvEI0YXtEhgz3yDEvv8z0ArKKOYw20A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rcHJdexD1FMpGrPR3NCETv/iCpUpGuE5Rp8l64BA6tHCoixUVG+t+5KiokktgdqQk6NfwTJIZfxRtJSAw+I9SZxM+yZFt6EH9XTNHZKhp8150isTn0C0alNPCGoloWTkAGWPoXPIrP1Veiapp9NG6G3h1QMWfYdxdYTstnuun/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJwtKpxX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="A0X5EcZY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KGVrC9qKG3k5pGk8BBAnwyqCf2kqJKpiHE0dUnVnNdHjLwLxY/2caukXH6K6OWvEgo9j39MzdSQTlbzmcsan0T+x8fWnkhCdFrFqgboh0ZKFKi+wgXo5o5OMG76hu+NukthzTmR3bf/18uYq7MpgDZ4r//vNaIeyKZ+P5zxXNSgrgsafORznGbIQ0cEIxfigV0HJg4GWXtFmJ/1VBTxHuE8Z0yXeWLkVRnn9lH8Tu1rxiEyqNGMwrs0GY0cXUnTE/Qdmj+uOx/uupbrrxTr6AETj7u1WDyJBDc1b7kEm/uEil431kAFPrZNh2dqVr3KNMqVepyw+k50b4XZUfpSbUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6pjWmqYBSPobbz+fuyObfpLqkcPazZBx26kXlbOVOyo=;
- b=lVwf7/UQWUtKUxpp59//Wzb+HhruOwtMwlAhMYt8Z0dDUqpSihK0DbAel9y60q8F8B8rpfwqDwQvXUAhWQMeQVfr2MiyqyK10kZ/3RGptuIalvt62RjReeINdGUbgrg1okKab677qG4A8ooD393l+IVzNJ9ynT8zZ+/iwMv3GHPJBI7hwhQmbuNQf488mNFfErS6YrI5KCVUYUJiSCSpN+Ewq8JD1rN2h8K2R4TfIfmDTKi1yYeNsl+YycUyn4P0C79QSQu56VR1Ayk36tTifwE1kGx3idJ7csHv6/t9GL68xbDy29jUPMLjJ6CKVebk5zht6wbxWuXlH8RJZe6L7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wolfvision.net; dmarc=pass action=none
- header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6pjWmqYBSPobbz+fuyObfpLqkcPazZBx26kXlbOVOyo=;
- b=A0X5EcZYfPHd54lAAb/krDFuhigfiXVyc1z4fs0mPH4ZC+5HEtB86qTqP2FUR/fnmKmfgNIqlGo+aeVEJtV04p48I/DOYUwvIedH+wNYGeEN43d9ppgkuWFcdabPmcH2W8FQEkbO/XcCMPY1HWpXIor9JHqegAfMOtHsuNPFFxw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wolfvision.net;
-Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
- by GVXPR08MB10763.eurprd08.prod.outlook.com (2603:10a6:150:15c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Tue, 6 Feb
- 2024 15:38:41 +0000
-Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
- ([fe80::c8ee:9414:a0c6:42ab]) by VE1PR08MB4974.eurprd08.prod.outlook.com
- ([fe80::c8ee:9414:a0c6:42ab%7]) with mapi id 15.20.7249.035; Tue, 6 Feb 2024
- 15:38:41 +0000
-Message-ID: <920c2c18-6cf9-4a88-84a5-eb1208ad1d42@wolfvision.net>
-Date: Tue, 6 Feb 2024 16:38:39 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] ASoC: dt-bindings: xmos,xvf3500: add XMOS XVF3500
- voice processor
-Content-Language: en-US
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20240206-onboard_xvf3500-v3-0-f85b04116688@wolfvision.net>
- <20240206-onboard_xvf3500-v3-6-f85b04116688@wolfvision.net>
- <ZcJDFi+iIQOWzgYw@finisterre.sirena.org.uk>
- <7b472cb2-6658-446a-ae47-411d08798cca@wolfvision.net>
- <ZcJR0LrwaS5GAf5h@finisterre.sirena.org.uk>
-From: Javier Carrasco <javier.carrasco@wolfvision.net>
-In-Reply-To: <ZcJR0LrwaS5GAf5h@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1P190CA0037.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:800:1bb::12) To VE1PR08MB4974.eurprd08.prod.outlook.com
- (2603:10a6:803:111::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJwtKpxX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E7AC433C7;
+	Tue,  6 Feb 2024 15:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707233969;
+	bh=Sw9sxL8rwotSLvEI0YXtEhgz3yDEvv8z0ArKKOYw20A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lJwtKpxXCVWyIxGtyzAk0eSe/KWcOkyRdn3p7XKjCgwywfRgQ8tsOII8BjWNLzFTs
+	 Ji7qSCGV0CPwo/29fWHWn/Mzbr79imv4J3RNwrRZtoop0zFb//PQSW5KohvRsfnzvE
+	 +DGqNDQfSQ82lJN3KWz072k4tBvG/P+2dyMgtRMtebmEn+nL9SqPWA2Sf/3ayfZsCL
+	 Yy5YVJDwe0AlvJf943czv4bpftcLc3j7RfU46LfnHsRHRyG2wqcqY2srqJKmJnq2zq
+	 LdEf9ixvxviaBXgYFCla9g55X/j2TvWphZxapvx8Mug3dVohlRQtwwAS0Qmr03NjmQ
+	 BtbzIOzCtdKaw==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
+ <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org,
+ Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>,
+ Anup Patel <anup@brainfault.org>, linux-kernel@vger.kernel.org, Atish
+ Patra <atishp@atishpatra.org>, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, Andrew Jones
+ <ajones@ventanamicro.com>
+Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
+In-Reply-To: <20240127161753.114685-1-apatel@ventanamicro.com>
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+Date: Tue, 06 Feb 2024 16:39:27 +0100
+Message-ID: <87h6ily53k.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|GVXPR08MB10763:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a27da28-a719-4f30-5b3c-08dc2729b1ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	v8otOjXwT1c5M8174mbfnpZ7ObjkD/bQyCP+yYl/0YsycBBsEdvBJyPX98aeJiGfihlv2NuvG1gnc5ivPRUnG9pcH26RaSxAbpDqNzCY0p9txZ7qCGnPGh+zfIhChDgiPQ4SO6h0g0zDKZimr1egSPv1pEWO/tLhwWJkyqG3drpKXtxjvh1RN4loR9EpM3JPY2J3TlzbaR3iNAp/cZA08GYDO8pqBbQfh6piY9zRVKYhVcb6v9524W0CsfdgEh/r+chd/m/Pi5OJmQ9qZPVlh0IUgzIgUOfrJavGK+gS0DKiFSBpsKlo2XzxOYFWGQ2uDDFvJTHFrgpAv0RAFIasMPmUzsEGg+olMGX07ADrjBLt3o2XiYW1XKFcPuc6uUtbSCHthLNyz/yfJBaNwJtVIt/KPRB2LttBSoAl372XvEDwpUveu2HzWRM33IaXdBDuRowFOJx2ZUVSTFJnNAJsYS9TU65ChHGtIRHzVoS0K63hpb2YyehauTHY5ZAtBPOHIqdkXEh3gXWE7LawewsECAbQLQFAE9M48fIPLmOEGcP4woK9d1REH31/3YUq58i/xSe8ZqmYMotayQA2EwP4P8bcjuFDS9igvsnsQYjooceM9oLq7xdWYmqHmGHS4F7QmT4JCybxuQVauQm/fyYPWQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(366004)(376002)(39850400004)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(31686004)(2906002)(83380400001)(38100700002)(66899024)(41300700001)(26005)(6916009)(54906003)(66476007)(66946007)(66556008)(316002)(31696002)(7416002)(86362001)(4326008)(8676002)(8936002)(44832011)(53546011)(2616005)(6506007)(6512007)(5660300002)(36756003)(6486002)(478600001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bnVVcjRMamhXZEIvRUVMOWVMbUgwNnordm42VnhOQ0hsTGZtaEwxNTRwUDAr?=
- =?utf-8?B?aWRLSmU4OWY1UHh5UGZtZnVjdXZiVllCR3FXZ3FPR1o5bHA0US9CQzRlY3d5?=
- =?utf-8?B?ZTV4dXIxWmlqVWpIR01FekJaWm42TjhvUURFbmpJRjNRWUNBa0c1c0cwMk5H?=
- =?utf-8?B?UnIrekFPbkVSWHM3LzJma3d1d0VCaXREbE9WVWFHeEk5MGtSblZCL3pPY2N5?=
- =?utf-8?B?bEJuVVlRNHpVZzNMcUJxZk5jTkk1YnVPdVRLK3Q5eC9zMHU2V25FdGhScG9G?=
- =?utf-8?B?Vm9icnA4OVRyLzBVc2MwQ01kSmZZSEwwRmRmcS8wSzhnekJZQ2pFM3krcXVQ?=
- =?utf-8?B?L042dFRTR3JOTXBXbHVWM3VZQVV1QmdjY0lpTVlLOFBSUXVkYUJ1ek9TU1Vw?=
- =?utf-8?B?emZPQno2N3d4cVgrWVU4R0VWVmFuQklnV29raHE2RHpMaXlwYnhhWk9jMHR5?=
- =?utf-8?B?QlVQdG53OXl2ZFhFczVpQ2EwR3lyb3FadzI0UGJDU0RLOFVIM2Y2Y0lnUDJB?=
- =?utf-8?B?aGI2OGkwUmpwSGdkQm5DaXdUd21LQ3p0Vks3aTJVazRKanoyZ2lBdUJFU0tw?=
- =?utf-8?B?Ty9ERGNIdXlsK1lpaXlZQUVtN1FHZWd0MVBEay9JTUpzUVd4bmZtMVY5T0M5?=
- =?utf-8?B?bTlLQTFWOUx1Q0dQZy80ZWRTVHhoVEM4bDlOaDBFdU9mSmJIN0xET3NDYWtW?=
- =?utf-8?B?OVgvUG5zUnBlTmg4c0UwblJDR3dNY2ZGQk9SQUNwWW9OOEs2L2VtZEg0SzFy?=
- =?utf-8?B?TjEvVXlxaThPanRqTDJXRGtCSEl5MnpBdkZBWmZlaUs5aFZlMFZFNHg3VEF4?=
- =?utf-8?B?VlpkNzV5bnhlWGF1Z1d6ay9aTGNiRng2bHJtRUFLQ0p4OEtmY2tFeVAvMUJL?=
- =?utf-8?B?aXJZQlBucXlIMEl2THNteWgxL2FrVmMvaWdpcENhUTkra2JlQ01rNFlKSWFx?=
- =?utf-8?B?c09BT2R6QUt4cCtVRW9vN05VY2tGRDc0THJweWh3VjhPOWtPeVEwOEJiZStw?=
- =?utf-8?B?dkVyRXd5TlF6bkUwYWVMWHBCUk1HVUxac0RUYWpOdkFkc2lBNGNWR2ErQk42?=
- =?utf-8?B?VUR2aFo2R3Y0VHViQ05FcEptNVdyTFExVFpranVYaHhRUURPSkZGQ1Z0L05k?=
- =?utf-8?B?R1A5N2EvTGQwVDFkSjhzbi9Tb0ZWT29OUWhIbmtLR1ltcmhJbHBBWVduMjVV?=
- =?utf-8?B?ay82WWFxbDcyd0xQcUkyYXFmT05Xc2dKT0U2akdKY1p1dkE0YmwxWTZJc0sx?=
- =?utf-8?B?TDVlRUhDdGhkeGxSdVlQc3R0MERYMzY1SVNRZnhuVXpxQ1J5SVZnNkZiS3Vw?=
- =?utf-8?B?cmFadlRXMXZZdm9IeTBmLzFjbUpRZHRsbmlvdlNkUG8wTFlLTk9DeFVRbUJz?=
- =?utf-8?B?V0lIOWNlUlhSeEh1UVRPYUltL1ZmMCt4RmJIMkluNkNIWE4rWlljMUc0bng0?=
- =?utf-8?B?anZkM3JaTFNwbmgxYldIK2lZaWhhU05HVFNTbHRYem5RYmFjeVFDWE9tS0kv?=
- =?utf-8?B?WFBaYk1ZcXB0cHJZM1p3MVhZWWNuVFBsRmpzZ01DVmh6blN2SkpWRE1ta1RO?=
- =?utf-8?B?cWFUK0o0aUFyRzlZYmZXdFhCaHYwTHRtSjVUYlU5MXRTSS9ZQnBGMWdsT291?=
- =?utf-8?B?cUx6VkcvVzF4elFQNi9kSllQZWdXVUtUelM1b204UXJpNW9MMThZK2F6V2sv?=
- =?utf-8?B?VkdpVjlGYXF5MUZ6N0d6UThRQSt4aS9hUGduQW5IbXh4dHhaWlBvbjl1OVB5?=
- =?utf-8?B?enRRTTk0OGg1Mkh1VE1ZQ3p2blowWWN3WFBsNjVZUjRJdnFtZ0M5cnVaSzRp?=
- =?utf-8?B?VVRGVW9oZFRUQmNNTkJuNmxRakV2a1U1aFU3eTJaRkdKdW5kc3N4SE1idTlr?=
- =?utf-8?B?K3h4WWdQU0pkazdlcUFwSHJKYVVJd0p6OWtxemgxWUFPS0ZrdVlYNXZoSStq?=
- =?utf-8?B?d2tKSkRnMkJ1UnpJbDJ3d2wzYzZUM3dGRldKR0RyVjZqNGJkTGk2a2Q1TW5Q?=
- =?utf-8?B?Y0NiWEZ1Yll1WWJqUTJBSTlqd3VqOGVmclhMZ2VkdFFIcWlYbWFRSnliekRH?=
- =?utf-8?B?NlJPSW9UVElmektDTlZVeEhRVEtsSHhTTElFcUFxS28yZm9ZNitqK2xJWGNE?=
- =?utf-8?B?RHlmRG04T01sWVpsNjV0cGo5TGw4aFJ4VWNFaWJETVBLbXN6dTFRUTg1OGx5?=
- =?utf-8?Q?sdJxkMj6XiydO3u137tq9O8=3D?=
-X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a27da28-a719-4f30-5b3c-08dc2729b1ba
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 15:38:40.9666
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9GSTzWsGcEcH+3go6+lBd9nC4aPDTOmlYe6Ydd4L06oG76/T+uJg7qmv+9cFmO/arAbKYt3chjdmvS7ijf7gvGcQCRQlpW6yOz8fyCIOHM8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB10763
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 06.02.24 16:35, Mark Brown wrote:
-> On Tue, Feb 06, 2024 at 04:05:15PM +0100, Javier Carrasco wrote:
-> 
->> The names in the datasheet are vdd for the 1V0 supply and vddio for the
->> 3V3 supply. I named the latter vdd2 instead because this device does not
->> have its own driver and instead it uses the onboard_usb_hub generic
->> driver, where the supplies are named vdd and vdd2.
-> 
->> Those are the names used for devm_regulator_bulk_get(). Is that not the
->> right way to match them?
-> 
-> The binding should really use vddio instead of vdd2 but if that's an
-> existing binding then it gets more annoying, probably that existing
-> binding is wrong too since vddio does sound like an entirely plausible
-> standard name for a 3.3V supply. :/  At the very least the binding
-> should document the weird mapping, though ideally the driver would be
-> tought to request names matching the datasheet if the compatible is the
-> one for this device.  Doing the better naming might be too much hassle
-> though.
+Hi Anup,
 
-That is in line with my last reply, where the bindings I used as an
-example mention the real names of the supplies as they are defined in
-the datasheet.
+Anup Patel <apatel@ventanamicro.com> writes:
 
-I can add that for the next version.
+> The RISC-V AIA specification is ratified as-per the RISC-V international
+> process. The latest ratified AIA specifcation can be found at:
+> https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-interrupts=
+-1.0.pdf
+>
+> At a high-level, the AIA specification adds three things:
+> 1) AIA CSRs
+>    - Improved local interrupt support
+> 2) Incoming Message Signaled Interrupt Controller (IMSIC)
+>    - Per-HART MSI controller
+>    - Support MSI virtualization
+>    - Support IPI along with virtualization
+> 3) Advanced Platform-Level Interrupt Controller (APLIC)
+>    - Wired interrupt controller
+>    - In MSI-mode, converts wired interrupt into MSIs (i.e. MSI generator)
+>    - In Direct-mode, injects external interrupts directly into HARTs
+>
+> For an overview of the AIA specification, refer the AIA virtualization
+> talk at KVM Forum 2022:
+> https://static.sched.com/hosted_files/kvmforum2022/a1/AIA_Virtualization_=
+in_KVM_RISCV_final.pdf
+> https://www.youtube.com/watch?v=3Dr071dL8Z0yo
 
-Best regards,
-Javier Carrasco
+Thank you for continuing to work on this series! I like this
+direction of the series!
+
+TL;DR: I think we can get rid of most of the id/householding data
+structures, except for the irq matrix.
+
+Most of my comments are more of a design/overview nature, so I'll
+comment here in the cover letter.
+
+I took the series for a spin with and it with Alex' ftrace fix it,
+passes all my tests nicely!
+
+Now some thoughts/comments (I'm coming from the x86 side of things!):
+
+id/enable-tracking: There are a lot of different id/enabled tracking
+with corresponding locks, where there's IMO overlap with what the
+matrix provides.
+
+Let's start with struct imsic_priv:
+
+   | /* Dummy HW interrupt numbers */
+   | unsigned int nr_hwirqs;
+   | raw_spinlock_t hwirqs_lock;
+   | unsigned long *hwirqs_used_bitmap;
+
+These are used to for the domain routing (hwirq -> desc/virq), and not
+needed. Just use the same id as virq (at allocation time), and get rid
+of these data structures/corresponding functions. The lookup in the
+interrupt handler via imsic_local_priv.vectors doesn't care about
+hwirq. This is what x86 does... The imsic_vector roughly corresponds
+to apic_chip_data (nit: imsic_vector could have the chip_data suffix
+as well, at least it would have helped me!)
+
+Moving/affinity changes. The moving of a vector to another CPU
+currently involves:
+
+1. Allocate a new vector from the matrix
+2. Disable/enable the corresponding per-cpu ids_enabled_bitmap (nested
+   spinlocks)
+3. Trigger two IPIs to apply the bitmap
+4. On each CPU target (imsic_local_sync()) loop the bitmap and flip
+   all bits, and potentially rearm
+
+This seems a bit heavy-weight: Why are you explicitly setting/clearing
+all the bits in a loop at the local sync?
+
+x86 does it a bit differently (more lazily): The chip_data has
+prev_{cpu,vector}/move_in_progress fields, and keep both vectors
+enabled until there's an interrupt on the new vector, and then the old
+one is cleaned (irq_complete_move()).
+
+Further; When it's time to remove the old vector, x86 doesn't trigger
+an IPI on the disabling side, but queues a cleanup job on a per-cpu
+list and triggers a timeout. So, the per-cpu chip_data (per-cpu
+"vectors" in your series) can reside in two places during the transit.
+
+I wonder if this clean up is less intrusive, and you just need to
+perform what's in the per-list instead of dealing with the
+ids_enabled_bitmap? Maybe we can even remove that bitmap as well. The
+chip_data/desc has that information. This would mean that
+imsic_local_priv() would only have the local vectors (chip_data), and
+a cleanup list/timer.
+
+My general comment is that instead of having these global id-tracking
+structures, use the matrix together with some desc/chip_data local
+data, which should be sufficient.
+
+Random thought: Do we need to explicitly disable (csr) the vector,
+when we're changing the affinity? What if we just leave it enabled,
+and only when mask/unmask is performed it's actually explicitly masked
+(writes to the csr)?
+
+Missing features (which can be added later):
+* Reservation mode/activate support (allocate many MSI, but only
+  request/activate a subset)
+* Handle managed interrupts
+* There might be some irqd flags are missing, which mostly cpuhp care
+  about (e.g. irqd_*_single_target())...
+
+Finally; Given that the APLIC requires a lot more patches, depending
+on how the review process moves on -- maybe the IMSIC side could go as
+a separate series?
+
+
+Cheers,
+Bj=C3=B6rn
 
