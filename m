@@ -1,125 +1,118 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEC912B9C
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 18:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562FC134A5;
+	Tue,  6 Feb 2024 18:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707242694; cv=none; b=edBwOzbU95WYN0Ok0m6iVe3MRwstIpbB6Gs6aaEN3rrcHevJVXy9ZrEI9MEFoq6/dbjcSnByFm8vS4MZ+9M/g5kAM2d7AIWKXI/ioWBsWVvdVEYgAi4EHody+77ult4TmjPnvo1Uvvtgk+pY+l/AgRjHcyNoPBaAX4lxpcVsEQQ=
+	t=1707242820; cv=none; b=scG+KNJ9TPl3cvG8/XR0wl918ZHfxJXrkA08YaGrc8KQTpf236MXhgXPkPGBNUKGIeMq3+BrFowwgZDzX7AHmVo5MSCcxkp69PorbtHP9ruhhASak4eOSbUJ3NABWJ1T86Aa+uqEnhvWxH+JXoABNCep8MGCxxqa23Tw0siEV2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707242694; c=relaxed/simple;
-	bh=csIGa+rd7lcNnhTQbpItKD6NpMqF39eNVB3gtdBsnA0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eDNz5VmWittqgZiI4aKiXnLG83PT3l58pW65sYLBGKfhKq/XnKeR61bNRC5ySBnsQVsYa3PP2nQzmy/8hdo6N/SUYfo9n5QGXxf/qVMBvoCHxNL5MG/WAoKLdRy51o/hW1l/+s34cMJqN1W2DZj8dB+pQ5PR3/v6cZ0PCgnBM4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=iJ7+Rq+8; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707242820; c=relaxed/simple;
+	bh=HvEv2Kfd6eukGI9whK4yWFO/flKDzwX8BfuUE6HpwbE=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=WPWPI2y8A8tiEaPWJgU3Ygaul0xNElpei8zVfbtdZiLTagf7P+b83cs0xniPU2Q4PmZol2onJadr+ysGXdM9wKkEJ8vA8k0yGGipCKLX9VK324PlhpASMyJXnSVZSGps+1MyvPxYz1LsBoq3rEF9+obuX1CQ80/LthwuOxgne2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7tui5s3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="iJ7+Rq+8"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d7354ba334so51346775ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 10:04:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707242687; x=1707847487;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6/sMfQ4C2LqtKvqqdaWxWMsx/4R6rTjfiNR3jdV33D4=;
-        b=uAO2tFm+vaUiy7yZAu346yuOkVLb6BDbb/DuCFgeHa0RWu4l6hcCclBm1DDEtzAqCK
-         9BgMLlzh4sJY4b8JsiC1EssSekTdYdYs2/aDUFdChrB89BFaxEbhSdguCyVZq8dsdd+4
-         AlmAk6UhKyFObBecQkae00gQxgi1eI6w4jVX82Zmc1+reRISzh+5bgXiueEINrtmoIkO
-         oPCNEuzJDCsbBhhLTtIMXxaeSj903CSBKopHz3OldRBsF62Tjj9YqPLjHJG4CW5ltdPW
-         U6UiTMo3VADXmnSWFRq92nwl5FYfiScOhAzeFsVAJZBwh5+zCEjWaLT3+leDo/isvPRB
-         vscg==
-X-Gm-Message-State: AOJu0Yx0Ryke9d597KmnS0Ohcsp7FDDSl+9spe+t4Hgr8Ca97JLSorjH
-	Wk+KZrBVDRRIPeIc7jQRgX/VbnID0Tj/aKtHqChZexAnW2HSl4iB
-X-Google-Smtp-Source: AGHT+IHSjJorv6QXrPS87peEQAaqIavUR6mhKePHO2aQ8PMY7g+yxHpac9ju+EldK9aQYcfgXMw95g==
-X-Received: by 2002:a17:902:c947:b0:1d9:8082:4573 with SMTP id i7-20020a170902c94700b001d980824573mr3134146pla.2.1707242686937;
-        Tue, 06 Feb 2024 10:04:46 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWxfcDMLUogxRqr60AgcSVAEVfMDX8DLtD+DxKDIy4wagpYhynC42ozQ+xJlGI8S104oshUKFE71P9CVqUHbh/R0XVdX0hjyL1I3pMpFQY89HM7smgwaxFT2Zuc2FjRcqZiLJAB
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id e16-20020a170902cf5000b001d9ce370415sm884579plg.90.2024.02.06.10.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 10:04:46 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707242685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6/sMfQ4C2LqtKvqqdaWxWMsx/4R6rTjfiNR3jdV33D4=;
-	b=iJ7+Rq+8feZu+ukBnYYkMMivm+bNOMEs4M7eabGmy5IiTT36FSD5Y9+u24YUW6gY6eud84
-	HsE+yJmqH2bZrfMQy2ckuwUaK0DYMwThA6rxPU0vmipyXN9V3A95gMuj0VCY/4n21cCUoo
-	JnQPiIcwOGlrZXYLDyIbdkx7V8P4kBiouPd99tdJGfDxqPu+Ymbt9YDo4orr6qqiHWdUhF
-	TSHALQNwM+OrYU+ovJoZw7YQvrUusoRBXKNsXyBAfSMHTTmPbUqajawwJY/PnwH7TGWFPZ
-	2hE/x1YNn+iFTuZNrsxtWPaQM4LVLVtQ+8Y4/q+kCE997coHiWoTFoIo0cjVsg==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Tue, 06 Feb 2024 15:05:06 -0300
-Subject: [PATCH] workqueue: make wq_subsys const
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7tui5s3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8885DC433F1;
+	Tue,  6 Feb 2024 18:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707242819;
+	bh=HvEv2Kfd6eukGI9whK4yWFO/flKDzwX8BfuUE6HpwbE=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=r7tui5s3ZqCJds0HWpLtSd+v77o7tJ1ss/1E0cmi0CeCo/8VTZi5bnc6ekDXZvktQ
+	 +vDF9ds0Q7Uh2J3QKeHWRKtNhfzcyvzUnl5S56hv4OMVYpjN9JBOMnCiUcM66wgvRR
+	 b5CQH73p8n+4Sv3d/HCAd80099qglu+QeZT82carplk8f/daglOXS2ERCNkC89E9iA
+	 yZhnKjj61ukvhHI2xGYCZAn8qBQCL+UbRtSuVM5DEgklsblV3ABl7vfS5Rzxlid33j
+	 NMpia9BqIAYwpYv/8ygVZR8Bs8dofdG0D3np5qOza3KCQk/fbVPEom/qwWNUEibNKF
+	 r6dMZNbKrf8ag==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240206-bus_cleanup-workqueue-v1-1-72b10d282d58@marliere.net>
-X-B4-Tracking: v=1; b=H4sIANF0wmUC/x3M0QpAMBSA4VfRubbaZpvyKpKGgxMNW0PJu1suv
- 4v/fyCgJwxQZQ94PCnQ5hJEnkE/WzchoyEZJJeKS25YF0Pbr2hd3Nm1+eWIGJEJrUqrjC7kICC
- 1u8eR7v9bN+/7AfKWKkdnAAAA
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
- linux-kernel@vger.kernel.org, "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1166; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=csIGa+rd7lcNnhTQbpItKD6NpMqF39eNVB3gtdBsnA0=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlwnTcwzfqVRHqZhUZNfw///fw0r9IwUn5joN6v
- J9nzqTZxf6JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcJ03AAKCRDJC4p8Y4ZY
- psygEACo9A4c81fJKS97/6hziaVq+DgVpPtkloBf5QVMfzsuidx4Zr+l8UEWqlb+jXd+jLtGhzt
- 1rf1RyQaW8U77kcdkx7jLq6kyHSI+A3ZiyZMdM9gCRFaVZ1ejZjniV9NtUXXgcINXp2wz+odFoR
- ulSuD558rj6b33Zw+Uu8luRmbQAqT+6RX8SxpLYMS7pqWWDwlejwJDgy0kGP9Wgwc1hMTtRGrgd
- IQtkMAJtfPZlXMHA9cZhQOiBnQ7dzt2to9q6zEoaFu0MGRxZtGyJTBmpfxKzV4rYFuoIXyvZBdM
- AD3tirU+beEh/3yrhO8Pgq5eQjQmzfc3S4cZMEoal7d44b3i8whe4Na4tgZa7BwKib7LMa4FoNL
- X8THbHsOQSZV0tR0bhdXPhGL+30uQzpQ/9vxTN1W78gTItQW/eI97xQfcTk6Nr1gFVYx6mKxHc7
- A92Hih/jhpPyXH7Q5UJGtE4mqrhg1k6TmcCXIN2BAcxoiVHxs4u1uftsdSeoPLsKokUcB2MwfOi
- KUUfARx/bo/jo5h4eNfK6OV1TEH09Viovqe2sTyHVXZTYC+YgI8MVTcLWcHGBx3pSdDFCC76OSW
- Ei2YPMiszy3DST7ISOVpVxi+lhoJH5kVusp9HHbmis7WQ9n28SadBFhhDrASJfjx0mZt6jxz9p3
- NXC6/tXW6DpsRXw==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] wifi: wfx: fix memory leak when starting AP
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240202164213.1606145-1-jerome.pouiller@silabs.com>
+References: <20240202164213.1606145-1-jerome.pouiller@silabs.com>
+To: =?utf-8?b?SsOpcsO0bWUgUG91aWxsZXI=?= <jerome.pouiller@silabs.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-devel@silabs.com,
+ =?utf-8?b?SsOpcsO0bWUgUG91aWxsZXI=?= <jerome.pouiller@silabs.com>,
+ Ulrich Mohr <u.mohr@semex-engcon.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170724281653.1979906.14756847148616354771.kvalo@kernel.org>
+Date: Tue,  6 Feb 2024 18:06:58 +0000 (UTC)
 
-Now that the driver core can properly handle constant struct bus_type,
-move the wq_subsys variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+Jérôme Pouiller <jerome.pouiller@silabs.com> wrote:
 
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
-The maintainer asked [1] for this patch to be received through the
-driver-core tree.
-[1]: https://lore.kernel.org/all/ZcEeOueCbrltxr_b@slm.duckdns.org/
----
- kernel/workqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Kmemleak reported this error:
+> 
+>     unreferenced object 0xd73d1180 (size 184):
+>       comm "wpa_supplicant", pid 1559, jiffies 13006305 (age 964.245s)
+>       hex dump (first 32 bytes):
+>         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>         00 00 00 00 00 00 00 00 1e 00 01 00 00 00 00 00  ................
+>       backtrace:
+>         [<5ca11420>] kmem_cache_alloc+0x20c/0x5ac
+>         [<127bdd74>] __alloc_skb+0x144/0x170
+>         [<fb8a5e38>] __netdev_alloc_skb+0x50/0x180
+>         [<0f9fa1d5>] __ieee80211_beacon_get+0x290/0x4d4 [mac80211]
+>         [<7accd02d>] ieee80211_beacon_get_tim+0x54/0x18c [mac80211]
+>         [<41e25cc3>] wfx_start_ap+0xc8/0x234 [wfx]
+>         [<93a70356>] ieee80211_start_ap+0x404/0x6b4 [mac80211]
+>         [<a4a661cd>] nl80211_start_ap+0x76c/0x9e0 [cfg80211]
+>         [<47bd8b68>] genl_rcv_msg+0x198/0x378
+>         [<453ef796>] netlink_rcv_skb+0xd0/0x130
+>         [<6b7c977a>] genl_rcv+0x34/0x44
+>         [<66b2d04d>] netlink_unicast+0x1b4/0x258
+>         [<f965b9b6>] netlink_sendmsg+0x1e8/0x428
+>         [<aadb8231>] ____sys_sendmsg+0x1e0/0x274
+>         [<d2b5212d>] ___sys_sendmsg+0x80/0xb4
+>         [<69954f45>] __sys_sendmsg+0x64/0xa8
+>     unreferenced object 0xce087000 (size 1024):
+>       comm "wpa_supplicant", pid 1559, jiffies 13006305 (age 964.246s)
+>       hex dump (first 32 bytes):
+>         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>         10 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+>       backtrace:
+>         [<9a993714>] __kmalloc_track_caller+0x230/0x600
+>         [<f83ea192>] kmalloc_reserve.constprop.0+0x30/0x74
+>         [<a2c61343>] __alloc_skb+0xa0/0x170
+>         [<fb8a5e38>] __netdev_alloc_skb+0x50/0x180
+>         [<0f9fa1d5>] __ieee80211_beacon_get+0x290/0x4d4 [mac80211]
+>         [<7accd02d>] ieee80211_beacon_get_tim+0x54/0x18c [mac80211]
+>         [<41e25cc3>] wfx_start_ap+0xc8/0x234 [wfx]
+>         [<93a70356>] ieee80211_start_ap+0x404/0x6b4 [mac80211]
+>         [<a4a661cd>] nl80211_start_ap+0x76c/0x9e0 [cfg80211]
+>         [<47bd8b68>] genl_rcv_msg+0x198/0x378
+>         [<453ef796>] netlink_rcv_skb+0xd0/0x130
+>         [<6b7c977a>] genl_rcv+0x34/0x44
+>         [<66b2d04d>] netlink_unicast+0x1b4/0x258
+>         [<f965b9b6>] netlink_sendmsg+0x1e8/0x428
+>         [<aadb8231>] ____sys_sendmsg+0x1e0/0x274
+>         [<d2b5212d>] ___sys_sendmsg+0x80/0xb4
+> 
+> However, since the kernel is build optimized, it seems the stack is not
+> accurate. It appears the issue is related to wfx_set_mfp_ap(). The issue
+> is obvious in this function: memory allocated by ieee80211_beacon_get()
+> is never released. Fixing this leak makes kmemleak happy.
+> 
+> Reported-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+> Co-developed-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+> Signed-off-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+> Fixes: 268bceec1684 ("staging: wfx: fix BA when device is AP and MFP is enabled")
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 76e60faed892..f1e062acd091 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -6157,7 +6157,7 @@ static struct device_attribute wq_sysfs_unbound_attrs[] = {
- 	__ATTR_NULL,
- };
- 
--static struct bus_type wq_subsys = {
-+static const struct bus_type wq_subsys = {
- 	.name				= "workqueue",
- 	.dev_groups			= wq_sysfs_groups,
- };
+Patch applied to wireless-next.git, thanks.
 
----
-base-commit: f297a3844aa059c53be3f69be85ebc071b8a6d16
-change-id: 20240206-bus_cleanup-workqueue-1547a46532d1
+b8cfb7c819dd wifi: wfx: fix memory leak when starting AP
 
-Best regards,
 -- 
-Ricardo B. Marliere <ricardo@marliere.net>
+https://patchwork.kernel.org/project/linux-wireless/patch/20240202164213.1606145-1-jerome.pouiller@silabs.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
