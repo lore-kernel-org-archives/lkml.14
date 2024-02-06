@@ -1,139 +1,125 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7292512D765;
-	Tue,  6 Feb 2024 10:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65EB12D76A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213672; cv=none; b=XcDW3kcQl21D3Tmhif/wtOifJAfu1w3yr14G8bycF7BrXj0h97kPSge7NTxgmwQ/Lf4TucSSdGsh7CizeGmSmNPutkg3gMZH7qGYbbRWFduErKCbq7OwJwUA2wnt7Dt50Xv4pjNDtLFQ219kOpKLx3wFTe0oxv8I/yzP898PtmY=
+	t=1707213716; cv=none; b=N9fhzpqD3V4+QG62t/MmCRA5uObzR0COdAwggPCmTHz0LR5q8irfWzw8/00ehIJWPD5a+RJ2Yys8nQUC4fDzO39XkMmH20dWr6tlaemhfce4iNtTQ4Am9PoD0d2Zf2W8N1D7/PJ9fpDuo6o4yKWUq67zsuUpjspVoFHDKUxd4k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213672; c=relaxed/simple;
-	bh=fvkHccuUm3JGOle1s599AZyd3lK2CqLwab+hDW8umO0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a8JF6RwzbRGAuBnZHWM8xHjRaOdvqehS605DuvHUi86Sj1RkAjMAalAAJ0/hL+NMWAXBJZuAgY9ElrgQaSoUykH9Geo+9XMVvjLmjiA1prZ4w9dHl8QOXhV4ajwceYwt6vynVQmF0tGonSYxycQBdZiYd7GW6+RSp6OnEQZDt40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nwoSA4bJ; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1707213716; c=relaxed/simple;
+	bh=9vc9GRSK2R2a0IE6kgxEFThcWt1JUujvnbpMYfq17fM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5VyCkxdZM+woSn/G7+ylq86Eruexj9AVvGTvw1ZApf19zyznJDXQSnVgXnYTTuJVtdE3ASu4yee1bAUeuOsBVSDyyU6GiBRbkWmP/nJwNS3zJr5jRiQ6eA4CtuLd7H89AZRDGqjnigGvBDrfpgEm+DYNxM2HDBwNTyr8fECIlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h+vpCPLE; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nwoSA4bJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CC4BF240003;
-	Tue,  6 Feb 2024 10:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707213661;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2aTvh+3x7oTaNuvvLeVrdbAtX6QCgQlVnVt3J44XGH0=;
-	b=nwoSA4bJrMGSHeTAd29G+6K8AoJwn+qtHmkge70P026yvCy3z9WIjO+FWlp4zz1UnzawwF
-	QaXtxIcRZzn8D2AOSIIiyjt3RlQTAQeVBWXA+L0hyVGRnvK2NVkzpJrGFMRe6347ifbISv
-	lMQUHJKF2Ecs0joapz+gIDnuqLkBcBINdwEPTUKEmerwWC3Q79vyiQ/adZLSr/rmFvODXE
-	0izyPLrnMQSOqBDbwsvZbUGguE/5cok7MQo9RR1sbq0B3DqkMJYfv3BiXsn2DsNQPFSMYC
-	Nk8GRProH10cKCTsdOpJMW2cq2j3utJDu03HsRzGPEULVdMkd/nK8SoUuJe6hA==
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Tue, 06 Feb 2024 11:00:49 +0100
-Subject: [PATCH 1/2] Revert "spi: spi-omap2-mcspi.c: Toggle CS after each
- word"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h+vpCPLE"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d9bd8fa49eso13393235ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:01:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707213714; x=1707818514; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iRhR9jRmXYeiA/qDO4/bNmHTbH+UMMuSM6BsgYcIZAw=;
+        b=h+vpCPLEFoTPPUGp0XBHZnJLPQrk2L3yOFZukJQrwj5Ejhj42aqHzzUiwI7b+FoJGg
+         dTX4Z1JFWzcte+rwtYdOuB99tV6B6q95GICHU4NHDeT8j/YmwcdEo3gyAcsZjzwL32yL
+         NKPyBgQMyBfTvh36fFt/M5QNahPA7iAphs+HM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707213714; x=1707818514;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iRhR9jRmXYeiA/qDO4/bNmHTbH+UMMuSM6BsgYcIZAw=;
+        b=s8SZY21Ccgjt7PIBtc9Hk+VDz/GRRuax1y5/sj7UiIdvgsHAJV4hV2h0iK4dv7tVCn
+         fK90bGzwhvmfJPGD2Y6Ddvb4ajIGe4l81l/onwZeVWjBaqHAZOvuSc8EVg8yKt5Aufu7
+         OIt+dF3iJUuX/DfD6NL6+PQ9MkCZq4Qf39Biic8LN69mDOjkChB4Po+gJQRYmBtAL6m3
+         TY18gsc65Wi5CqwbjItMBHng+qA47v8nKIYDncH8P99RKuvGvir/1OvuO+iHiZxs4PGx
+         lfRwqf1mPbCibayxFdNiE3JX10oHubY/7SVhUA4sVr0fubXIF9EojRs0ECacOFgYYyzG
+         UN2g==
+X-Gm-Message-State: AOJu0YwjtcpcSPNOk1jciapRmcW1Wg8/2NdUA5swHpq1JWBYBUeiBPs3
+	lIky59mnMWfmergbFDiNPAxME0LQHIgggAkXn2+QpkbEC7FDqYvEF0Jcsf0VfA==
+X-Google-Smtp-Source: AGHT+IHWL52WmPm6bNr953sUZX861hGdEh1n7cUglRSPLKTyvnf0g+GZMbpodtXl0TbQgxCD5k7UuQ==
+X-Received: by 2002:a17:902:a3c3:b0:1d9:4d3f:cbf6 with SMTP id q3-20020a170902a3c300b001d94d3fcbf6mr1184238plb.48.1707213714084;
+        Tue, 06 Feb 2024 02:01:54 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUtZ/Q6R13798ruAgfiOliz2pPEk8pHcbZOrpqe+ZlQ1QcA0KXPlNsRmD9cBaPKSx+CPjSCFqYS2QVMPxKhObo25onG72wZnYuzopk3GBTWfgrS7hxKaR53VeYxR3RfiVNyTLL8s4gmOsjoIH1Eo4B+M+myBqn9tFiWIjTQMGRTcnxChejQh+oCVJwDKDDQ1yAsrNj0U/UbHsSA0dW4U/nvhs0CaE1oKtIZfEIoQtzwa5pf4hb4FLuEFn1xH26oNNrG
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q10-20020a17090311ca00b001d9469967e8sm1455367plh.122.2024.02.06.02.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 02:01:53 -0800 (PST)
+Date: Tue, 6 Feb 2024 02:01:53 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and
+ mul_wrap()
+Message-ID: <202402060200.EDE488F8@keescook>
+References: <20240205090854.make.507-kees@kernel.org>
+ <20240205091233.1357377-2-keescook@chromium.org>
+ <20240205202145.GB2220@sol.localdomain>
+ <202402051443.A813E4D@keescook>
+ <20240205231712.GC2220@sol.localdomain>
+ <51025C22-0FEF-4047-BC36-EA7ED7A3BD62@kernel.org>
+ <1ee4bd0f-2a70-4696-bad3-782b5c0887f7@prevas.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240126-spi-omap2-mcspi-multi-mode-v1-1-d143d33f0fe0@bootlin.com>
-References: <20240126-spi-omap2-mcspi-multi-mode-v1-0-d143d33f0fe0@bootlin.com>
-In-Reply-To: <20240126-spi-omap2-mcspi-multi-mode-v1-0-d143d33f0fe0@bootlin.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, Miquel Raynal <miquel.raynal@bootlin.com>, 
- yen-mei.goh@keysight.com, koon-kee.lie@keysight.com, 
- Louis Chauvet <louis.chauvet@bootlin.com>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2350;
- i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=fvkHccuUm3JGOle1s599AZyd3lK2CqLwab+hDW8umO0=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBlwgNb8Ahn/idxoF8xg3jWwqmVsQMCgPHYo0WLPz6U
- Wn95XNOJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZcIDWwAKCRAgrS7GWxAs4s9FD/
- 9vcX2THeOrHEjsMmk6VcQqgWhKvvWUxIZSax4V15PDlYfegV4Tm4/zkFqaiyhoEKwbJDwHaSBEz6Tr
- 9ibfhA2FTXHPEuH2dOX/GCrCrvOYToMULlSFIR/3D111qUdj4RRY9FcEuxGO99nZliHU6fxHIW6ydh
- +2YOSrTwCCjwu/zEpACbx7i0iTCjDOt3+Q3scnjMNZ0Vzyb+XHB93nOAG8cnBCyiTmJzGPSbqXPb66
- 1AtbCByQJ08qymMYFIfXAKBwCnLyOufZ8AvIfppCJ73RDsUC0wW9PrXQIxRtxkMhQoXoTx6k3/wH3r
- FGtmX148V+3HQkEpblfn0YdjCfd9m6SAioyQEfH3iJZavZrMTIyOpkgReyDJhBPYi9h5Kk7xGMfjzl
- KH2jYrso+GELiBkKIU9j5U7Uws3irvnG9t5557ArFB4I/6kJVOqlqn963lTetDgsEsj623bE7yzY2x
- 098Jas1iNDb71jge4qBEou8X+khzJqyywtBdDcWMbeptPF8F6Sw2usZx5Ax6FOcJbn1Yi2hdux+s8r
- Z+XlnbgXva8WHXxbNmMpw9JNF4FuzRcsmqoTI9fe2Q8wfdYs0oyqkjzqpnnOrfhXRQgzbVZlae/Y1x
- 2kIR3IZBl6z7PO1zbWUEf1Gq6+1guCg3/irf8LpNVc1e3kjJNcsT+C3lmVYw==
-X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
- fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ee4bd0f-2a70-4696-bad3-782b5c0887f7@prevas.dk>
 
-Revert commit 5cbc7ca987fb ("spi: spi-omap2-mcspi.c: Toggle CS after each word")
-This commit introduced the toggling of CS after each word for the
-omap2-mcspi controller.
+On Tue, Feb 06, 2024 at 09:42:26AM +0100, Rasmus Villemoes wrote:
+> On 06/02/2024 00.21, Kees Cook wrote:
+> > 
+> > 
+> > On February 5, 2024 11:17:12 PM GMT, Eric Biggers <ebiggers@kernel.org> wrote:
+> >> On Mon, Feb 05, 2024 at 02:44:14PM -0800, Kees Cook wrote:
+> >>> On Mon, Feb 05, 2024 at 12:21:45PM -0800, Eric Biggers wrote:
+> >>>> On Mon, Feb 05, 2024 at 01:12:30AM -0800, Kees Cook wrote:
+> >>>>> Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and mul_wrap()
+> >>>>
+> >>>> Maybe these should be called wrapping_add, wrapping_sub, and wrapping_mul?
+> >>>> Those names are more grammatically correct, and Rust chose those names too.
+> >>>
+> >>> Sure, that works for me. What bout the inc_wrap() and dec_wrap() names?
+> >>> I assume wrapping_inc() and wrapping_dec() ?
+> >>>
+> >>
+> >> Yes, though I'm not sure those should exist at all.  Maybe a += b should just
+> >> become a = wrapping_add(a, b), instead of wrapping_inc(a, b)?
+> >> wrapping_inc(a, b) isn't as self-explanatory.  Likewise for wrapping_dec.
+> > 
+> > It was to avoid repeating type information, as it would go from:
+> > 
+> > var_a += var_b;
+> > 
+> > to:
+> > 
+> > var_a = wrapping_add(typeof(var_a), var_a, var_b);
+> > 
+> > Which repeats "var_a" 3 times. :|
+> 
+> Yeah, I think that's a reasonable rationale. I'm fine with the
+> wrapping_* naming, and then the _inc and _dec helpers should follow.
 
-The implementation does not respect what is indicated in the spi_message
-structure, so the CS can be raised after each word even if the transfer
-structure asks to keep the CS active for the whole operation.
+Sounds good.
 
-As it is not used anyway in the current Linux tree, it can be safely
-removed.
+> However, I now wonder if those should really also return the new value.
+> Yes, that corresponds to the value of the expression (a += b), but
+> nobody would ever write c = (a += b) or otherwise make use of that
+> value, and the naming doesn't immediately imply whether one should think
+> of ++a or a++.
 
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
----
- drivers/spi/spi-omap2-mcspi.c                 | 15 ---------------
- include/linux/platform_data/spi-omap2-mcspi.h |  3 ---
- 2 files changed, 18 deletions(-)
-
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index a0c9fea908f5..fc7f69973334 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -1292,13 +1292,6 @@ static int omap2_mcspi_transfer_one(struct spi_controller *ctlr,
- 		    t->bits_per_word == spi->bits_per_word)
- 			par_override = 0;
- 	}
--	if (cd && cd->cs_per_word) {
--		chconf = mcspi->ctx.modulctrl;
--		chconf &= ~OMAP2_MCSPI_MODULCTRL_SINGLE;
--		mcspi_write_reg(ctlr, OMAP2_MCSPI_MODULCTRL, chconf);
--		mcspi->ctx.modulctrl =
--			mcspi_read_cs_reg(spi, OMAP2_MCSPI_MODULCTRL);
--	}
- 
- 	chconf = mcspi_cached_chconf0(spi);
- 	chconf &= ~OMAP2_MCSPI_CHCONF_TRM_MASK;
-@@ -1361,14 +1354,6 @@ static int omap2_mcspi_transfer_one(struct spi_controller *ctlr,
- 		status = omap2_mcspi_setup_transfer(spi, NULL);
- 	}
- 
--	if (cd && cd->cs_per_word) {
--		chconf = mcspi->ctx.modulctrl;
--		chconf |= OMAP2_MCSPI_MODULCTRL_SINGLE;
--		mcspi_write_reg(ctlr, OMAP2_MCSPI_MODULCTRL, chconf);
--		mcspi->ctx.modulctrl =
--			mcspi_read_cs_reg(spi, OMAP2_MCSPI_MODULCTRL);
--	}
--
- 	omap2_mcspi_set_enable(spi, 0);
- 
- 	if (spi_get_csgpiod(spi, 0))
-diff --git a/include/linux/platform_data/spi-omap2-mcspi.h b/include/linux/platform_data/spi-omap2-mcspi.h
-index 3b400b1919a9..9e3c15b4ac91 100644
---- a/include/linux/platform_data/spi-omap2-mcspi.h
-+++ b/include/linux/platform_data/spi-omap2-mcspi.h
-@@ -16,9 +16,6 @@ struct omap2_mcspi_platform_config {
- 
- struct omap2_mcspi_device_config {
- 	unsigned turbo_mode:1;
--
--	/* toggle chip select after every word */
--	unsigned cs_per_word:1;
- };
- 
- #endif
+They were designed to return the new value, and the selftests validate
+that. I've updated the kern-doc to reflect this.
 
 -- 
-2.43.0
-
+Kees Cook
