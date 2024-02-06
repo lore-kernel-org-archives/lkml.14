@@ -1,155 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8373C1CD1B;
-	Tue,  6 Feb 2024 23:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833B11CD1B;
+	Tue,  6 Feb 2024 23:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707262211; cv=none; b=IqqUDg8WQa1D8Gq5/wbmQEZ1Y/tuuXUU00JBsH0tMzEEOyE99/ysrjrCF4ZR9ombn/K5lWT+AD/SAl7p/hI8pItA7/uDqLnsVZz30/3t/77hYbSHS0257nr/UgloDX8kNqM2itqHfjP9xSxQK0rmsGmjjhvSPUj1DL7BuLHT4oE=
+	t=1707262405; cv=none; b=aupVQrbeRRGdZaU3y4Sl2imzlPJYuUGvL05tvj/mG7+KT1eKflz3sN4sP5ca23JfDe60a5cyYX1I2NANxpTUUZrD/8r0AFhF4LrawC8/4JltNmqmSHaNWcK3U/PhgHc9l8/U/Tb3aI+/3z6yB0wNafSXsTEWyJM97XaYjWWUvto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707262211; c=relaxed/simple;
-	bh=CUW83ZHkPqjX5g7EjjrPYiIZAwsabK+k4Z7EK/jU6fM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H4B2CEOxbO5v2GYfFO2GXL/WJSTbRcQrA0jHwVBLjB/TS/32RU51bue/BbhTWxFSZxDvwMxEzbtI7oo3I6KQppfSvivLi6FLvXLUvMqKSRD1dnfiV877pkLSVVDjzF0wXcRxKI4NEUzubXD5Ffe4F4oMwkaGdbxH3pD+GcsDF1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ve+C9mB9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ve+C9mB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20177C433C7;
-	Tue,  6 Feb 2024 23:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707262209;
-	bh=CUW83ZHkPqjX5g7EjjrPYiIZAwsabK+k4Z7EK/jU6fM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Ve+C9mB9800jx7gx3a8F0bEltkfUd2n5wI1lclSL/Js31dyeEcCKuoVUoDsDr8YYg
-	 KLt1qCQYTGfZNgEbO0s6gGN3US++8HosbYyhDQ96TA4ySNTSn7I/5P94WesPmmZ6f8
-	 wBIhLwgxg0zhoYvfruYzUaUo8LPOiiYXaNj+K9qpFV/XBJ18Z9lJtt/Bci48gvSdoC
-	 TpbkzJ0BoA4hr6gr+Qg+QfxTtd2fadi5Fj6dOz7tvpPhu25P9Z69Yu5OxHFHNpLciR
-	 loZTl2HMa2YoyXEfm40eDVpNTkwfy9DdOpeuQtBmVbCQkoJyc4eOcdbereHInZoQzH
-	 un6qQ/LY6MnHg==
-Date: Tue, 6 Feb 2024 17:30:07 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: puranjay12@gmail.com, Jian-Hong Pan <jhp@endlessos.org>,
-	Johan Hovold <johan@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux@endlessos.org
-Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
- PCIe Root Port and NVMe
-Message-ID: <20240206233007.GA886412@bhelgaas>
+	s=arc-20240116; t=1707262405; c=relaxed/simple;
+	bh=jnKwKyBLwfWp6fRdpiJAMuzoCw4XPssRIE3TQikj8BE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MYzVSU+rvdDYHNFvFkehw45K+j86XybqiHtk8Th6EMWDTyEGH77LJCCcR+5NDUknZ82PHVObxTzrf6LEQ+ulD34wR8Gh7URH5z6W5AHOvE1ndYM+F3PiWBXx75pMVnbh/kWp+Z/Us0suippAhbR6aYX/ng7SQoP2Tuu2U+JUSN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl; spf=pass smtp.mailfrom=v0yd.nl; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4TTzvD1XQGz9sdS;
+	Wed,  7 Feb 2024 00:28:08 +0100 (CET)
+Message-ID: <13f5b50e-94b7-42ea-a47b-7d6270105d1d@v0yd.nl>
+Date: Wed, 7 Feb 2024 00:28:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH v4 0/2] Bluetooth: Improve retrying of connection attempts
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20240206110816.74995-1-verdre@v0yd.nl>
+ <CABBYNZJgKCeGfL+CngEA2QcVZAtf5yEqiX7ccQsuWVtjZhCvjw@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
+In-Reply-To: <CABBYNZJgKCeGfL+CngEA2QcVZAtf5yEqiX7ccQsuWVtjZhCvjw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9cfc65c594deef33f24b60a66b7c78c742da7203.camel@linux.intel.com>
+X-Rspamd-Queue-Id: 4TTzvD1XQGz9sdS
 
-On Tue, Feb 06, 2024 at 01:25:29PM -0800, David E. Box wrote:
-> On Mon, 2024-02-05 at 15:05 -0800, David E. Box wrote:
-> > On Mon, 2024-02-05 at 16:42 -0600, Bjorn Helgaas wrote:
-> > > On Mon, Feb 05, 2024 at 11:37:16AM -0800, David E. Box wrote:
-> > > > On Fri, 2024-02-02 at 18:05 -0600, Bjorn Helgaas wrote:
-> > > > > On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
-> > > > ...
-> > > 
-> > > > > > @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_dev
-> > > > > > *pdev,
-> > > > > > void *userdata)
-> > > > > >         pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
-> > > > > > ltr_reg);
-> > > > > >         pci_info(pdev, "VMD: Default LTR value set by driver\n");
-> > > > > 
-> > > > > You're not changing this part, and I don't understand exactly how LTR
-> > > > > works, but it makes me a little bit queasy to read "set the LTR value
-> > > > > to the maximum required to allow the deepest power management
-> > > > > savings" and then we set the max snoop values to a fixed constant.
-> > > > > 
-> > > > > I don't think the goal is to "allow the deepest power savings"; I
-> > > > > think it's to enable L1.2 *when the device has enough buffering to
-> > > > > absorb L1.2 entry/exit latencies*.
-> > > > > 
-> > > > > The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set this to
-> > > > > the platform's maximum supported latency or less," so it seems like
-> > > > > that value must be platform-dependent, not fixed.
-> > > > > 
-> > > > > And I assume the "_DSM for Latency Tolerance Reporting" is part of the
-> > > > > way to get those platform-dependent values, but Linux doesn't actually
-> > > > > use that yet.
-> > > > 
-> > > > This may indeed be the best way but we need to double check with our
-> > > > BIOS folks.  AFAIK BIOS writes the LTR values directly so there
-> > > > hasn't been a need to use this _DSM. But under VMD the ports are
-> > > > hidden from BIOS which is why we added it here. I've brought up the
-> > > > question internally to find out how Windows handles the DSM and to
-> > > > get a recommendation from our firmware leads.
-> > > 
-> > > We want Linux to be able to program LTR itself, don't we?  We
-> > > shouldn't have to rely on firmware to do it.  If Linux can't do
-> > > it, hot-added devices aren't going to be able to use L1.2,
-> > > right?
-> > 
-> > Agreed. We just want to make sure we are not conflicting with what
-> > BIOS may be doing.
+Hi Luiz,
+
+On 06.02.24 23:22, Luiz Augusto von Dentz wrote:
+> Hi Jonas,
 > 
-> So the feedback is to run the _DSM and just overwrite any BIOS
-> values. Looking up the _DSM I saw there was an attempt to upstream
-> this 4 years ago [1]. I'm not sure why the effort stalled but we can
-> pick up this work again.
+> On Tue, Feb 6, 2024 at 6:08 AM Jonas Dreßler <verdre@v0yd.nl> wrote:
+>>
+>> Since commit 4c67bc74f016 ("[Bluetooth] Support concurrent connect
+>> requests"), the kernel supports trying to connect again in case the
+>> bluetooth card is busy and fails to connect.
+>>
+>> The logic that should handle this became a bit spotty over time, and also
+>> cards these days appear to fail with more errors than just "Command
+>> Disallowed".
+>>
+>> This series refactores the handling of concurrent connection requests
+>> by serializing all "Create Connection" commands for ACL connections
+>> similar to how we do it for LE connections.
+>>
+>> ---
+>>
+>> v1: https://lore.kernel.org/linux-bluetooth/20240102185933.64179-1-verdre@v0yd.nl/
+>> v2: https://lore.kernel.org/linux-bluetooth/20240108183938.468426-1-verdre@v0yd.nl/
+>> v3: https://lore.kernel.org/linux-bluetooth/20240108224614.56900-1-verdre@v0yd.nl/
+>> v4:
+>>    - Removed first two commits since they are already applied
+>>    - Removed a BT_DBG() message in the acl_create_connection() function
+>>      while moving to hci_sync because it seemed out of place in hci_sync
+>>    - Added a mention of the test failure in mgmt-tester to commit message
+>>
+>> Jonas Dreßler (2):
+>>    Bluetooth: hci_conn: Only do ACL connections sequentially
+>>    Bluetooth: Remove pending ACL connection attempts
+>>
+>>   include/net/bluetooth/hci.h      |  1 +
+>>   include/net/bluetooth/hci_core.h |  1 -
+>>   include/net/bluetooth/hci_sync.h |  3 ++
+>>   net/bluetooth/hci_conn.c         | 83 +++-----------------------------
+>>   net/bluetooth/hci_event.c        | 21 ++------
+>>   net/bluetooth/hci_sync.c         | 70 +++++++++++++++++++++++++++
+>>   6 files changed, 86 insertions(+), 93 deletions(-)
+>>
+>> --
+>> 2.43.0
 > 
-> https://patchwork.kernel.org/project/linux-pci/patch/20201015080311.7811-1-puranjay12@gmail.com/
+> 
+> Doesn't seem to work with the new test:
+> 
+> Sequential connect - setup complete
+> Sequential connect - run
+>    Create connection finished
+>    Connect failed for Pair Device
+>    Create connection finished
+> Sequential connect - test timed out
+> Sequential connect - teardown
+> 
 
-There was a PCI SIG discussion about this a few years ago that never
-really seemed to get resolved:
-https://members.pcisig.com/wg/PCIe-Protocol/mail/thread/35064
+Oh you're right, it's because of the increased delay to 5.12 seconds for
+sending the page timeout. We're actually waiting for connections to fail,
+so the test will now take at least 5.12s * 3 instead of 2s * 3, which means
+test timeout needs to be increased from 7 to more like 16 seconds.
 
-Unfortunately that discussion is not public, but the summary is:
+Sorry for not catching this one, should've run the test before submitting
+the patch...
 
-  Q: How is the LTR_L1.2_THRESHOLD value determined?
-
-     PCIe r5.0, sec 5.5.4, says the same value must be programmed into
-     both Ports.
-
-     A: As noted in sec 5.5.4, the value is determined primarily by
-	the amount of time it will take to re-establish the common
-	mode bias on the AC coupling caps, and it is assumed that the
-	BIOS knows this.
-
-  Q: How are the LTR Max Snoop values determined?
-
-     PCI Firmware r3.3, sec 4.6.6, says the LTR _DSM reports the max
-     values for each Downstream Port embedded in the platform, and the
-     OS should calculate latencies along the path between each
-     Downstream Port and any Upstream Port (Switch Upstream Port or
-     Endpoint).
-
-     Of course, Switches not embedded in the platform (e.g., external
-     Thunderbolt hierarchies) will not have this _DSM, but I assume
-     they should contribute to this sum?
-
-     A: The fundamental problem is that there is no practical way for
-	software to discover the AC coupling capacitor sizes and
-	common mode bias circuit impedance.
-
-	Software could compute conservative values, but they would
-	likely be 10x worse than typical, so the L1.2 exit latency
-	would be significantly longer than actually required to be.
-
-	The interoperability issues here were understood when
-	designing L1 Substates, but no viable solution was found.
-
-So the main reason Puranjay's work got stalled is that I didn't feel
-confident enough that we understood how to do this, especially for
-external devices.
-
-It would be great if somebody *did* feel confident about interpreting
-and implementing all this.
-
-Bjorn
+Cheers,
+Jonas
