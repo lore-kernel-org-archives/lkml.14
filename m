@@ -1,137 +1,172 @@
-Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D796D51D;
-	Tue,  6 Feb 2024 17:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F472C15B;
+	Tue,  6 Feb 2024 17:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707239172; cv=none; b=jAMM8IeakMVRUSo35WbIXmfcoFgYbf7W1P4PsYW/HzhA6SPGuFSy9H7HM+2AMr+cjYNTuwKulMRtPgVPlt5Lrx1knGU92q4XpzUPQnG8ACYisEkaZcgjbERbisGz6oGUE4wJXY6B0vWP8LtOhhUCBXCkeoKYb5I9+yI7Ozn3TEU=
+	t=1707239196; cv=none; b=L2aPZaoCK5fOr2jtTpXNmQXnxNNU7z7+/VO2QyfFwSV5dj171Sc1/MZGewsH7s4ZBay/gdTFb65CCgZkVCWQaJjakkSZ1Txmo8peSn79lLiYhA+Uak1WflhxpT1cXxqitHqji5GFMPn2XEVVjE4tC5Uafn5e+bathGHKztsQlxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707239172; c=relaxed/simple;
-	bh=/SJzBE/l9/HRQYdjO25GdAcjKLkwXspjpaOOc+6xQJ0=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=bAK1JITfSoK0vLj1LMzaB4MI/EiISIekz2f3QIwlfZa4pv3kuklGd9lhYgwfH1ycpB7pdDR8niYCY1FdEUOOTjABbLcMoxWEVovQDwRN04OZwxvf0BG2iRqdi6cs0un0DbhAHtniB4hxLJeWAOXChBVOw1tHkomkBH0YobWWEeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
-	by smtpfb2-g21.free.fr (Postfix) with ESMTP id ACA7C4D153;
-	Tue,  6 Feb 2024 18:06:01 +0100 (CET)
-Received: from zimbra-e1-03.priv.proxad.net (unknown [172.20.243.151])
-	by smtp4-g21.free.fr (Postfix) with ESMTP id E894E19F738;
-	Tue,  6 Feb 2024 18:05:53 +0100 (CET)
-Date: Tue, 6 Feb 2024 18:05:53 +0100 (CET)
-From: =?utf-8?Q?Jean-Lo=C3=AFc?= Charroud <lagiraudiere+linux@free.fr>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: =?utf-8?Q?Jean-Lo=C3=AFc?= Charroud <lagiraudiere+linux@free.fr>, 
-	Stefan Binding <sbinding@opensource.cirrus.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	patches@opensource.cirrus.com
-Message-ID: <726559913.576332068.1707239153891.JavaMail.zimbra@free.fr>
-Subject: Re: [PATCH v2] ALSA: hda/realtek: cs35l41: Fix internal speaker
- support for ASUS UM3402 with missing DSD
+	s=arc-20240116; t=1707239196; c=relaxed/simple;
+	bh=Mdibn1Y+5lHSiz0nAb0TK65XaYSoIgSUVDm18PAxxiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bc9+2/XcDzdCHrGwkg1fNjWIS7I3gBtabjb5EZnYSGXsI9SjSzY3Xh4avR1psjUd1Ds33e8Y+rD8eUsv1yAJuzYnpxqdZJC29oGJx4HHEXxhDROy5btGyCdQnZAP0cBNYZMRgkPz52PxpBNGN89NW8DO8qCoGbH1qNhC4dYHhvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPy6ZjEe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPy6ZjEe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA24FC433C7;
+	Tue,  6 Feb 2024 17:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707239195;
+	bh=Mdibn1Y+5lHSiz0nAb0TK65XaYSoIgSUVDm18PAxxiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dPy6ZjEe2Zt+dwxg52XVC8PESSwxzL9L3ptuPJ6WQy4HpT9fqApeYpZdop4T5gNMj
+	 6aBATnFLZ6W4p7mczcRpd79auYTHgZ49jVXrdpBxVsOuYDC0HFKJOdyf0arHhlc+RH
+	 tb5SDUeT9zjDX5Cu3bcnCDLyh4GT6YX8gsFgHim97E++afyN9gC6w9CKuwYI7m/UoN
+	 zIOkHDWilMfEH+XqI95cewE1BiQpQ8JctOVAuXivaLCBLgCgSDpr+MI7WuSHTB43gS
+	 iv1TJJtc6MWR0e1MTdXuRsg4ci1dWiCmb8cyR5Jx99Cvw1o5aXvbJnWOLzzmV2EJWR
+	 CSqH0s0LPflFQ==
+Date: Tue, 6 Feb 2024 10:06:32 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, marex@denx.de,
+	alexander.stein@ew.tq-group.com, frieder.schrempf@kontron.de,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Richard Leitner <richard.leitner@skidata.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Liu Ying <victor.liu@nxp.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pm@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH V8 08/12] drm/bridge: imx: add driver for HDMI TX
+ Parallel Video Interface
+Message-ID: <20240206170632.GA2183819@dev-arch.thelio-3990X>
+References: <20240203165307.7806-1-aford173@gmail.com>
+ <20240203165307.7806-9-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 9.0.0_GA_1337 (ZimbraWebClient - FF122 (Linux)/9.0.0_GA_1337)
-Thread-Index: QSromOq1WhBGWcizfa0FVmBVLqOw2Q==
-Thread-Topic: ALSA: hda/realtek: cs35l41: Fix internal speaker support for ASUS UM3402 with missing DSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240203165307.7806-9-aford173@gmail.com>
 
-Fix device ID for "ASUS UM3402" and "ASUS UM6702RA/RC".
-Add _DSD values for "ASUS UM3402" to cs35l41_config_table[].
-Reorder alc269_fixup_tbl[] by device id and remove duplicate QUIRK
-entry for device {0x1043, 0x1f62, "ASUS UX7602ZM"}.
+Hi all,
 
-Signed-off-by: Jean-Lo=C3=AFc Charroud <lagiraudiere+linux@free.fr>
----
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- sound/pci/hda/patch_realtek.c        | 7 +++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+On Sat, Feb 03, 2024 at 10:52:48AM -0600, Adam Ford wrote:
+> From: Lucas Stach <l.stach@pengutronix.de>
+> 
+> This IP block is found in the HDMI subsystem of the i.MX8MP SoC. It has a
+> full timing generator and can switch between different video sources. On
+> the i.MX8MP however the only supported source is the LCDIF. The block
+> just needs to be powered up and told about the polarity of the video
+> sync signals to act in bypass mode.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com> (v7)
+> Tested-by: Marek Vasut <marex@denx.de> (v1)
+> Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com> (v7)
+> Tested-by: Richard Leitner <richard.leitner@skidata.com> (v2)
+> Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de> (v2)
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com> (v3)
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Tested-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_h=
-da_property.c
-index 923c0813fa08..d8cd62ef6afc 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -102,6 +102,7 @@ static const struct cs35l41_config cs35l41_config_table=
-[] =3D {
- =09{ "10431D1F", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1,=
- -1, 1000, 4500, 24 },
- =09{ "10431DA2", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2,=
- 0, 0, 0, 0 },
- =09{ "10431E02", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2,=
- 0, 0, 0, 0 },
-+=09{ "10431E12", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1,=
- -1, 0, 0, 0 },
- =09{ "10431EE2", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1=
-, -1, 0, 0, 0 },
- =09{ "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1,=
- -1, 1000, 4500, 24 },
- =09{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1=
-, 0, 0, 0, 0 },
-@@ -485,6 +486,7 @@ static const struct cs35l41_prop_model cs35l41_prop_mod=
-el_table[] =3D {
- =09{ "CSC3551", "10431D1F", generic_dsd_config },
- =09{ "CSC3551", "10431DA2", generic_dsd_config },
- =09{ "CSC3551", "10431E02", generic_dsd_config },
-+=09{ "CSC3551", "10431E12", generic_dsd_config },
- =09{ "CSC3551", "10431EE2", generic_dsd_config },
- =09{ "CSC3551", "10431F12", generic_dsd_config },
- =09{ "CSC3551", "10431F1F", generic_dsd_config },
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 7aa88ed04bde..16cb19eee589 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -9893,6 +9893,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] =
-=3D {
- =09SND_PCI_QUIRK(0x1043, 0x1662, "ASUS GV301QH", ALC294_FIXUP_ASUS_DUAL_SP=
-K),
- =09SND_PCI_QUIRK(0x1043, 0x1663, "ASUS GU603ZI/ZJ/ZQ/ZU/ZV", ALC285_FIXUP_=
-ASUS_HEADSET_MIC),
- =09SND_PCI_QUIRK(0x1043, 0x1683, "ASUS UM3402YAR", ALC287_FIXUP_CS35L41_I2=
-C_2),
-+=09SND_PCI_QUIRK(0x1043, 0x16a3, "ASUS UX3402VA", ALC245_FIXUP_CS35L41_SPI=
-_2),
- =09SND_PCI_QUIRK(0x1043, 0x16b2, "ASUS GU603", ALC289_FIXUP_ASUS_GA401),
- =09SND_PCI_QUIRK(0x1043, 0x16d3, "ASUS UX5304VA", ALC245_FIXUP_CS35L41_SPI=
-_2),
- =09SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
-@@ -9936,14 +9937,12 @@ static const struct snd_pci_quirk alc269_fixup_tbl[=
-] =3D {
- =09SND_PCI_QUIRK(0x1043, 0x1d4e, "ASUS TM420", ALC256_FIXUP_ASUS_HPE),
- =09SND_PCI_QUIRK(0x1043, 0x1da2, "ASUS UP6502ZA/ZD", ALC245_FIXUP_CS35L41_=
-SPI_2),
- =09SND_PCI_QUIRK(0x1043, 0x1e02, "ASUS UX3402ZA", ALC245_FIXUP_CS35L41_SPI=
-_2),
--=09SND_PCI_QUIRK(0x1043, 0x16a3, "ASUS UX3402VA", ALC245_FIXUP_CS35L41_SPI=
-_2),
--=09SND_PCI_QUIRK(0x1043, 0x1f62, "ASUS UX7602ZM", ALC245_FIXUP_CS35L41_SPI=
-_2),
- =09SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA=
-502),
--=09SND_PCI_QUIRK(0x1043, 0x1e12, "ASUS UM6702RA/RC", ALC287_FIXUP_CS35L41_=
-I2C_2),
-+=09SND_PCI_QUIRK(0x1043, 0x1e12, "ASUS UM3402", ALC287_FIXUP_CS35L41_I2C_2=
-),
- =09SND_PCI_QUIRK(0x1043, 0x1e51, "ASUS Zephyrus M15", ALC294_FIXUP_ASUS_GU=
-502_PINS),
- =09SND_PCI_QUIRK(0x1043, 0x1e5e, "ASUS ROG Strix G513", ALC294_FIXUP_ASUS_=
-G513_PINS),
- =09SND_PCI_QUIRK(0x1043, 0x1e8e, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA=
-401),
--=09SND_PCI_QUIRK(0x1043, 0x1ee2, "ASUS UM3402", ALC287_FIXUP_CS35L41_I2C_2=
-),
-+=09SND_PCI_QUIRK(0x1043, 0x1ee2, "ASUS UM6702RA/RC", ALC287_FIXUP_CS35L41_=
-I2C_2),
- =09SND_PCI_QUIRK(0x1043, 0x1c52, "ASUS Zephyrus G15 2022", ALC289_FIXUP_AS=
-US_GA401),
- =09SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_GA=
-401),
- =09SND_PCI_QUIRK(0x1043, 0x1f12, "ASUS UM5302", ALC287_FIXUP_CS35L41_I2C_2=
-),
---=20
-2.40.1
+<snip>
+
+> diff --git a/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c b/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c
+> new file mode 100644
+> index 000000000000..a76b7669fe8a
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c
+...
+> +static void imx8mp_hdmi_pvi_bridge_enable(struct drm_bridge *bridge,
+> +					  struct drm_bridge_state *bridge_state)
+> +{
+> +	struct drm_atomic_state *state = bridge_state->base.state;
+> +	struct imx8mp_hdmi_pvi *pvi = to_imx8mp_hdmi_pvi(bridge);
+> +	struct drm_connector_state *conn_state;
+> +	const struct drm_display_mode *mode;
+> +	struct drm_crtc_state *crtc_state;
+> +	struct drm_connector *connector;
+> +	u32 bus_flags, val;
+> +
+> +	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
+> +	conn_state = drm_atomic_get_new_connector_state(state, connector);
+> +	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
+> +
+> +	if (WARN_ON(pm_runtime_resume_and_get(pvi->dev)))
+> +		return;
+> +
+> +	mode = &crtc_state->adjusted_mode;
+> +
+> +	val = FIELD_PREP(PVI_CTRL_MODE_MASK, PVI_CTRL_MODE_LCDIF) | PVI_CTRL_EN;
+> +
+> +	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+> +		val |= PVI_CTRL_OP_VSYNC_POL | PVI_CTRL_INP_VSYNC_POL;
+> +
+> +	if (mode->flags & DRM_MODE_FLAG_PHSYNC)
+> +		val |= PVI_CTRL_OP_HSYNC_POL | PVI_CTRL_INP_HSYNC_POL;
+> +
+> +	if (pvi->next_bridge->timings)
+> +		bus_flags = pvi->next_bridge->timings->input_bus_flags;
+> +	else if (bridge_state)
+> +		bus_flags = bridge_state->input_bus_cfg.flags;
+> +
+> +	if (bus_flags & DRM_BUS_FLAG_DE_HIGH)
+> +		val |= PVI_CTRL_OP_DE_POL | PVI_CTRL_INP_DE_POL;
+> +
+> +	writel(val, pvi->regs + HTX_PVI_CTRL);
+> +}
+
+Apologies if this has already been reported or fixed, I searched lore
+and did not find anything. Clang warns (or errors with CONFIG_WERROR=y)
+for this function:
+
+  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c:81:11: error: variable 'bus_flags' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+     81 |         else if (bridge_state)
+        |                  ^~~~~~~~~~~~
+  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c:84:6: note: uninitialized use occurs here
+     84 |         if (bus_flags & DRM_BUS_FLAG_DE_HIGH)
+        |             ^~~~~~~~~
+  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c:81:7: note: remove the 'if' if its condition is always true
+     81 |         else if (bridge_state)
+        |              ^~~~~~~~~~~~~~~~~
+     82 |                 bus_flags = bridge_state->input_bus_cfg.flags;
+  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c:60:15: note: initialize the variable 'bus_flags' to silence this warning
+     60 |         u32 bus_flags, val;
+        |                      ^
+        |                       = 0
+  1 error generated.
+
+This seems legitimate. If bridge_state can be NULL, should bus_flags be
+initialized to zero like it suggests or should that 'else if' be turned
+into a plain 'else'? I am happy to send a patch with that guidance.
+
+Cheers,
+Nathan
