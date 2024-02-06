@@ -1,163 +1,104 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1E8153BDE
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 12:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F1E12EBE6;
+	Tue,  6 Feb 2024 12:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221386; cv=none; b=EjlsgAEbyLY459xJnvlCstUK9a2k6Iv5ZsJW3x2Q5slOshdtPh6qX7GgnPxBPN5Oo9FwpQiXvyh9x5QMbXwJ7UamL5CXDrUdGoyX7SPoN9dcrKZFmaJPvCHk2m4NadBmsXKSzlj0sZQ1Xeeto07ykPFeIAGf9huaa7Ewhb9puvo=
+	t=1707221593; cv=none; b=sBqABxEq5H+Z5FhZd7PmkYrBF9jBo0IeHaBnjF9KfC1LLJOgn9E+BBC+f/8YZ5SCYE19OvSXpIkyJFZ8SS1kycDo3XkO8tK6oYrzmLlskAnAR7eRraUcGKvBihh0ZQhBUt4T5VVM1ILB1iC/HNikXGfIvyrzJB+4u9EXwTZyMlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221386; c=relaxed/simple;
-	bh=EGtKM5D1Vb04Le+B1pWopgp/oS3U/Hrc4JxPx+8xT5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bt2vzvn56SxxcHnW/gR3oaPHth/KFtIwB6dUk9D7yD/qYBOcTSSUg9YZQtz0TxeDPdc7MCE7Fo/mM3I90RUhGh7MmqwXxKmPAIOuHkOiW68zBBa5Kmrk4McBJBSDgaOaWCliWc7VWJFIVeRxungvrN4RjT8Eo4NHY6Ta93Mls7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 416C4knk001762;
-	Tue, 6 Feb 2024 06:04:46 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 416C4jTD001748;
-	Tue, 6 Feb 2024 06:04:45 -0600
-Date: Tue, 6 Feb 2024 06:04:45 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: "Daniel P. Berrang??" <berrange@redhat.com>
-Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
-Message-ID: <20240206120445.GA1247@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com> <20240130083007.1876787-2-kirill.shutemov@linux.intel.com> <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com> <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com> <20240206011247.GA29224@wind.enjellic.com> <ZcHoKUElwXGPzrWb@redhat.com>
+	s=arc-20240116; t=1707221593; c=relaxed/simple;
+	bh=HNOUf291pv9yr5OMqopIb665gLes2bjCx3QC88n6zX0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQ84sbdclqGeBnB/0YSAeetAfDAmgnrcCvgl36Ui+BG6GSY3A9cMv2akHnsgnTImuYp/qVW60ZSCFuIV2LHjmbtiEOBSA0G4rAztX/foRpQo8Hpmxy3wNbpH6lctEcjJ/5q5Xf0v4kXJ84WN/D0t9/Y5dS9gRJaicflqtnpgxEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UWwnsyTA; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UWwnsyTA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707221592; x=1738757592;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HNOUf291pv9yr5OMqopIb665gLes2bjCx3QC88n6zX0=;
+  b=UWwnsyTA4H3s0cGTt7zg5QiGi1RVwQEijX8lPEC++dJpUtXDd2UEpWDx
+   9BgdS4RyRwSvsqmOPteOd1JDBF/koeYQKR0KjdS9z/WX2Lj8N2Y8Z3K5r
+   3kYgNl7VjiD3gD+pwdjk0D7rSKj7ADZhMHt58S6uDwSu7HnNJqOF7B7O3
+   KMtdR6f6KIIOdZNaLBpMldhcDZ2OY7lTNgjRQyyIQEP3JLIng3S7qI1uh
+   iy8jRPbIwwH/NSvP27At0/QrOQzVGjGuuOb2jQomjjq/TPCutoOx3pHSU
+   KK8fGJvF/VgxrdfO6lfCe5i2TQef9SQoB+HM1LlKwDWfkmY4PXp4fRHEZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="998413"
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="998413"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 04:13:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="24247456"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.Hitronhub.home) ([10.213.2.175])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 04:13:06 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH 0/2 v3] Add cond_guard() to conditional guards
+Date: Tue,  6 Feb 2024 13:12:59 +0100
+Message-ID: <20240206121301.7225-1-fabio.maria.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcHoKUElwXGPzrWb@redhat.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Tue, 06 Feb 2024 06:04:46 -0600 (CST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 06, 2024 at 08:04:57AM +0000, Daniel P. Berrang?? wrote:
+Add cond_guard() macro to conditional guards and use it to replace an
+open-coded up_read() in show_targetN() and remove a block marked by an
+'out' label.
 
-Good morning to everyone.
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+---
 
-> On Mon, Feb 05, 2024 at 07:12:47PM -0600, Dr. Greg wrote:
-> > 
-> > Actually, I now believe there is clear evidence that the problem is
-> > indeed Intel specific.  In light of our testing, it will be
-> > interesting to see what your 'AR' returns with respect to an official
-> > response from Intel engineering on this issue.
-> > 
-> > One of the very bright young engineers collaborating on Quixote, who
-> > has been following this conversation, took it upon himself to do some
-> > very methodical engineering analysis on this issue.  I'm the messenger
-> > but this is very much his work product.
-> > 
-> > Executive summary is as follows:
-> > 
-> > - No RDRAND depletion failures were observable with either the Intel
-> >   or AMD hardware that was load tested.
-> > 
-> > - RDSEED depletion is an Intel specific issue, AMD's RDSEED
-> >   implementation could not be provoked into failure.
+Changes from RFC v4:
+        Changed the interface of cond_guard() to take a variable to store
+        a return code, the succes code and failure code, to enable a
+        later check of the returned code in that variable.
+Changes from RFC v5:
+        Changed the interface of cond_guard() to take a statement or 
+	statement-expression as its second argument to conform to Dan's 
+	suggestion (thanks).
+Changes from v1:
+        Fixed a grammar error in the commit message of 1/2; replaced the
+        name of the second argument of cond_guard() with '_fail'
+        according to Jonathan's comments (thanks). 
+Changes from v2:
+	Changed macro's implementation to add an 'else' to protect
+	against it being used incorrectly within another if() block.
+	Suggested by Dan (thanks). The Reviewed-by tags on 1/2 are not
+	forwarded because the implementation of cond_guard() has changed.
+	Removed a redundant 'else' from show_targetN() in 2/2.
 
-> My colleague ran a multithread parallel stress test program on his
-> 16core/2HT AMD Ryzen (Zen4 uarch) and saw a 80% failure rate in
-> RDSEED.
+Fabio M. De Francesco (2):
+  cleanup: Add cond_guard() to conditional guards
+  cxl/region: Use cond_guard() in show_targetN()
 
-Interesting datapoint, thanks for forwarding it along, so the issue
-shows up on at least some AMD platforms as well.
+ drivers/cxl/core/region.c | 16 ++++------------
+ include/linux/cleanup.h   | 15 +++++++++++++++
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-On the 18 core/socket Intel Skylake platform, the parallelized
-depletion test forces RDSEED success rates down to around 2%.  It
-would appear that your tests suggest that the AMD platform fairs
-better than the Intel platform.
+-- 
+2.43.0
 
-So this is turning into even more of a morass, given that RDSEED
-depletion on AMD may be a function of the micro-architecture the
-platform is based on.  The other variable is that our AMD test
-platform had a substantially higher core count per socket, one would
-assume that would result in higher depletion rates, if the operative
-theory of socket common RNG infrastructure is valid.
-
-Unless AMD engineering understands the problem and has taken some type
-of action on higher core count systems to address the issue.
-
-Of course, the other variable may be how the parallelized stress test
-is conducted.  If you would like to share your implementation source
-we could give it a twirl on the systems we have access to.
-
-The continuing operative question is whether or not any of this ever
-leads to an RDRAND failure.
-
-We've conducted some additional tests on the Intel platform where
-RDSEED depletion was driven low as possible, ~1-2% success rates,
-while RDRAND depletion tests were being run simultaneously.  No RDRAND
-failures have been noted.
-
-So the operative question remains, why worry about this if RDRAND is
-used as the randomness primitive.
-
-We haven't seen anything out of Intel yet on this, maybe AMD has a
-quantifying definition for 'astronomical' when it comes to RDRAND
-failures.
-
-The silence appears to be deafening out of the respective engineering
-camps... :-)
-
-> > - AMD's RDRAND/RDSEED implementation is significantly slower than
-> >   Intel's.
-
-> Yes, we also noticed the AMD impl is horribly slow compared to
-> Intel, had to cut test iterations x100.
-
-The operative question is the impact of 'slow', in the absence of
-artifical stress tests.
-
-It would seem that a major question is what are or were the
-engineering thought processes on the throughput of the hardware
-randomness instructions.
-
-Intel documents the following randomness throughput rates:
-
-RDSEED: 3 Gbit/second
-RDRAND: 6.4 Gbit/second
-
-If there is the possibility of over-harvesting randomness, why not
-design the implementations to be clamped at some per core value such
-as a megabit/second.  In the case of the documented RDSEED generation
-rates, that would allow the servicing of 3222 cores, if my math at
-0530 in the morning is correct.
-
-Would a core need more than 128 kilobytes of randomness, ie. one
-second of output, to effectively seed a random number generator?
-
-A cynical conclusion would suggest engineering acquiesing to marketing
-demands... :-)
-
-> With regards,
-> Daniel
-
-Have a good day.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
