@@ -1,193 +1,279 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3545813AD1;
-	Tue,  6 Feb 2024 18:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19ED413FE0
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 18:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707245507; cv=none; b=qL6d+XaUYEy3zXYheRrk78zcuIAkF9oMwE5+Jb0FsaHbJaIRPQqFlp2mllfm3Uetpk17w8tEZL4ERbCUUTpYXXmXQaVpUULOhXxhc7s8X5/ROooJENJDdJEKZj7Zc95wx5KGDx6H0yMWrrEXMY2awI+HydiaESBa77sQ9dv8XY8=
+	t=1707245509; cv=none; b=R+B3tjHYgW/B6BF4GF7qYEX6H9acbMmWQIMYBwYHgMcmcLr+JMHR8ldrFsMP6TnXV6sMGr8QfB8nk1Ja1BpGIqnE/0EzZxbN71wLYRnsTbNkfDMuhoeXoE+4WJD6jfOWr7Fm2QA1VQxjhb2doOJb/Is+TSKJiodoe2aSk2JuNrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707245507; c=relaxed/simple;
-	bh=hay16AxqH8HVFsFn1EgyuR4OaptbUdgK3gOhx+pIL6c=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 MIME-Version:Date; b=CmzMR1T5X/aJzsvoVNNo61WU4VwNSHywxj8L044Iyo0OsXLgaKChlF9bqwQ9pxutp/P6s/9Nd1PHCeTSZbnYilUFB4m/T7lETx1bteX5apq/5FANh/CZdXZqmddlgslUycqiMv9/bt5Ad9TxgJXdxbi2/e4aOZ6IQ8k24zr9H8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uIPo5FNK; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1707245509; c=relaxed/simple;
+	bh=sxeSx9Y1j+A+rys+MI2e2HonnQNFIKGZ3ziGBBoqahs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gerEY1khAYQMNtcsLeloD01BC9eiOr8rvicwLFNAx3HYc6LyJ2Brhpv0Vo5q6RFMYEKGo402CKr28mFBIdHtxKkMqLlYuuQUZ0vc73absZNbgj/qlAEyBc1G3saxCd8X3sS1Rbs21zPcpkayYVa2OD3v3f6b2G1P49PCU0suBn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sdf.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uTCMx5kw; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sdf.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uIPo5FNK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Date:MIME-Version:Content-Type:
-	References:In-Reply-To:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hay16AxqH8HVFsFn1EgyuR4OaptbUdgK3gOhx+pIL6c=; b=uIPo5FNKSBqMln5KUJBAB4Gg9t
-	C4oKNjue84iSvIruS/KwNRIIXQZbJg/DWRNQHPxOiCmEeSIx/IpYRdwY+wekpNl6FURGObMtb9qDG
-	J+RkItVkosYKTLoDfE6iMuF7eZvQBNlVJPnL/2bfntv9HvdqMw8GZ6Kab0F1gW7K80k7zOmBzGdAT
-	hvIY456VaCiNREF40bg4D9Ct7Ndc4/7YpOKykfh6a8cZrmi/VXvoY5TrCa3iXXeQKGTluFyJ/zcdx
-	JD3SfBAbkuPLphZekPzLBLaAam5+sF6B4n1P1bkqMVcJkcImDvr/hfeb4nJz252Lt7n/tfYqxCZjg
-	x9LgVqxQ==;
-Received: from 72-21-196-67.amazon.com ([72.21.196.67] helo=u3832b3a9db3152.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rXQXe-0000000Cztc-2oSg;
-	Tue, 06 Feb 2024 18:51:36 +0000
-Message-ID: <19a1ac538e6cb1b479122df677909fb49fedbb28.camel@infradead.org>
-Subject: Re: [PATCH v3] KVM: x86: Use fast path for Xen timer delivery
-From: David Woodhouse <dwmw2@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm <kvm@vger.kernel.org>, Paul Durrant <paul@xen.org>, Paolo Bonzini
- <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>,  linux-kernel@vger.kernel.org
-In-Reply-To: <ZcJ9bXxU_Pthq_eh@google.com>
-References: <f21ee3bd852761e7808240d4ecaec3013c649dc7.camel@infradead.org>
-	 <ZcJ9bXxU_Pthq_eh@google.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-jKZpTL4Z9j8xscOjWN5y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uTCMx5kw"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5ca4ee5b97aso5163212a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 10:51:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707245506; x=1707850306; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wB0bIyjTexVpoPlWDy3dgv5MfaYTr9BbpFP01YdCxlI=;
+        b=uTCMx5kwryBKdg9Y0BT6hTEBU1tfVkY1GvfoKtubaGZzbuiGa1gC1eZxHPGZCvLh2r
+         gGNvC+TiH2LrScH3bs8mDoGW1SVYpfaah1GktzAZL2sCwwX+tQuoFVwOoVmjqhBmJUpJ
+         fesHwqmkl5w4p2pNNsgCGXMxij3CM30HXoXcH3dp/ShLg36dww1kq4pJJ6V4mpW7VQq9
+         5THb+3TJkmlnhhzGKqNZC5NJA0CvZ5UPG8f33RY3kDzrzj4gxou/LT9JxQxSeewTpiCz
+         537kmjZ0+GcX7XzEBD+D9tV+wNDXM7cp6SFgVQGbpa7egG6lTSXVuf9FVi/PK15h/k+U
+         a3/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707245506; x=1707850306;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wB0bIyjTexVpoPlWDy3dgv5MfaYTr9BbpFP01YdCxlI=;
+        b=Vhq5NU/WobzgNHavGpOC6fKvmNdq3KZWKvkMkEmcNU0CbbJE0VEkdHyH10qbDIiDtU
+         f4Thj1cqZ3M8wzvMR8QzlBTg7NG8BRr9dKQ+IYsCsWjXbJHMJ+5E5kmCd/LdXKRRZ3Yo
+         XqetvnvdrJIMJinQ9KIbOhcYRv93DTmvCUKIdI+OxpelbB9v/D9+o6IAKel1MeS6chmT
+         gYykOU2B6dbDEGjDy2dMuVvPqiao6tqOUIZQAQBB7G1ogBtmS9/Cna8GO3i5E3UA0nDk
+         vOwk5+ozwVbGYaMXGx+DOIJhF5LLZEPLk9gNMez5HRTfVzKARyC3BG0KU1r8LSHQCyxs
+         BKTw==
+X-Gm-Message-State: AOJu0YwCoIW+R2dMR4n62hMyVUQ+UFZTH5Ep5tX9WLX2SAR5wI4InD1D
+	1mdh0EoCFhcOG3cCaa7LCM5Dj3onOyZLlRgfEORtLVNI2ulwFugVA/+U1kguk/ryFQ==
+X-Google-Smtp-Source: AGHT+IFYjMMt8SrZKakCLvaYCcLiSxUjwxpuneJmEhEOqXBjX9MH2GBxULhvwx0ujdDE77KDYcoZFdw=
+X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
+ (user=sdf job=sendgmr) by 2002:a05:6a02:996:b0:5dc:1099:957f with SMTP id
+ cl22-20020a056a02099600b005dc1099957fmr1437pgb.4.1707245506366; Tue, 06 Feb
+ 2024 10:51:46 -0800 (PST)
+Date: Tue, 6 Feb 2024 10:51:44 -0800
+In-Reply-To: <20240205210453.11301-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Tue, 06 Feb 2024 10:51:28 -0800
-User-Agent: Evolution 3.44.4-0ubuntu2 
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Mime-Version: 1.0
+References: <20240205210453.11301-1-jdamato@fastly.com>
+Message-ID: <ZcJ_wGG_f8wi_rkG@google.com>
+Subject: Re: [PATCH net-next v6 0/4] Per epoll context busy poll support
+From: Stanislav Fomichev <sdf@google.com>
+To: Joe Damato <jdamato@fastly.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	chuck.lever@oracle.com, jlayton@kernel.org, linux-api@vger.kernel.org, 
+	brauner@kernel.org, edumazet@google.com, davem@davemloft.net, 
+	alexander.duyck@gmail.com, sridhar.samudrala@intel.com, kuba@kernel.org, 
+	willemdebruijn.kernel@gmail.com, weiwan@google.com, David.Laight@aculab.com, 
+	arnd@arndb.de, amritha.nambiar@intel.com, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Waterman <waterman@eecs.berkeley.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>, 
+	Jiri Slaby <jirislaby@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Julien Panis <jpanis@baylibre.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Maik Broemme <mbroemme@libmpq.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Nathan Lynch <nathanl@linux.ibm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Steve French <stfrench@microsoft.com>, Thomas Huth <thuth@redhat.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>
+Content-Type: text/plain; charset="utf-8"
 
+On 02/05, Joe Damato wrote:
+> Greetings:
+> 
+> Welcome to v6.
+> 
+> TL;DR This builds on commit bf3b9f6372c4 ("epoll: Add busy poll support to
+> epoll with socket fds.") by allowing user applications to enable
+> epoll-based busy polling, set a busy poll packet budget, and enable or
+> disable prefer busy poll on a per epoll context basis.
+> 
+> This makes epoll-based busy polling much more usable for user
+> applications than the current system-wide sysctl and hardcoded budget.
+> 
+> To allow for this, two ioctls have been added for epoll contexts for
+> getting and setting a new struct, struct epoll_params.
+> 
+> ioctl was chosen vs a new syscall after reviewing a suggestion by Willem
+> de Bruijn [1]. I am open to using a new syscall instead of an ioctl, but it
+> seemed that: 
+>   - Busy poll affects all existing epoll_wait and epoll_pwait variants in
+>     the same way, so new verions of many syscalls might be needed. It
+>     seems much simpler for users to use the correct
+>     epoll_wait/epoll_pwait for their app and add a call to ioctl to enable
+>     or disable busy poll as needed. This also probably means less work to
+>     get an existing epoll app using busy poll.
+> 
+>   - previously added epoll_pwait2 helped to bring epoll closer to
+>     existing syscalls (like pselect and ppoll) and this busy poll change
+>     reflected as a new syscall would not have the same effect.
+> 
+> Note: patch 1/4 as of v4 uses an or (||) instead of an xor. I thought about
+> it some more and I realized that if the user enables both the per-epoll
+> context setting and the system wide sysctl, then busy poll should be
+> enabled and not disabled. Using xor doesn't seem to make much sense after
+> thinking through this a bit.
+> 
+> Longer explanation:
+> 
+> Presently epoll has support for a very useful form of busy poll based on
+> the incoming NAPI ID (see also: SO_INCOMING_NAPI_ID [2]).
+> 
+> This form of busy poll allows epoll_wait to drive NAPI packet processing
+> which allows for a few interesting user application designs which can
+> reduce latency and also potentially improve L2/L3 cache hit rates by
+> deferring NAPI until userland has finished its work.
+> 
+> The documentation available on this is, IMHO, a bit confusing so please
+> allow me to explain how one might use this:
+> 
+> 1. Ensure each application thread has its own epoll instance mapping
+> 1-to-1 with NIC RX queues. An n-tuple filter would likely be used to
+> direct connections with specific dest ports to these queues.
+> 
+> 2. Optionally: Setup IRQ coalescing for the NIC RX queues where busy
+> polling will occur. This can help avoid the userland app from being
+> pre-empted by a hard IRQ while userland is running. Note this means that
+> userland must take care to call epoll_wait and not take too long in
+> userland since it now drives NAPI via epoll_wait.
+> 
+> 3. Optionally: Consider using napi_defer_hard_irqs and gro_flush_timeout to
+> further restrict IRQ generation from the NIC. These settings are
+> system-wide so their impact must be carefully weighed against the running
+> applications.
+> 
+> 4. Ensure that all incoming connections added to an epoll instance
+> have the same NAPI ID. This can be done with a BPF filter when
+> SO_REUSEPORT is used or getsockopt + SO_INCOMING_NAPI_ID when a single
+> accept thread is used which dispatches incoming connections to threads.
+> 
+> 5. Lastly, busy poll must be enabled via a sysctl
+> (/proc/sys/net/core/busy_poll).
+> 
+> Please see Eric Dumazet's paper about busy polling [3] and a recent
+> academic paper about measured performance improvements of busy polling [4]
+> (albeit with a modification that is not currently present in the kernel)
+> for additional context.
+> 
+> The unfortunate part about step 5 above is that this enables busy poll
+> system-wide which affects all user applications on the system,
+> including epoll-based network applications which were not intended to
+> be used this way or applications where increased CPU usage for lower
+> latency network processing is unnecessary or not desirable.
+> 
+> If the user wants to run one low latency epoll-based server application
+> with epoll-based busy poll, but would like to run the rest of the
+> applications on the system (which may also use epoll) without busy poll,
+> this system-wide sysctl presents a significant problem.
+> 
+> This change preserves the system-wide sysctl, but adds a mechanism (via
+> ioctl) to enable or disable busy poll for epoll contexts as needed by
+> individual applications, making epoll-based busy poll more usable.
+> 
+> Note that this change includes an or (as of v4) instead of an xor. If the
+> user has enabled both the system-wide sysctl and also the per epoll-context
+> busy poll settings, then epoll should probably busy poll (vs being
+> disabled). 
+> 
+> Thanks,
+> Joe
+> 
+> v5 -> v6:
+>   - patch 1/3 no functional change, but commit message corrected to explain
+>     that an or (||) is being used instead of xor.
+> 
+>   - patch 3/4 is a new patch which adds support for per epoll context
+>     prefer busy poll setting.
+> 
+>   - patch 4/4 updated to allow getting/setting per epoll context prefer
+>     busy poll setting; this setting is limited to either 0 or 1.
+> 
+> v4 -> v5:
+>   - patch 3/3 updated to use memchr_inv to ensure that __pad is zero for
+>     the EPIOCSPARAMS ioctl. Recommended by Greg K-H [5], Dave Chinner [6],
+>     and Jiri Slaby [7].
+> 
+> v3 -> v4:
+>   - patch 1/3 was updated to include an important functional change:
+>     ep_busy_loop_on was updated to use or (||) instead of xor (^). After
+>     thinking about it a bit more, I thought xor didn't make much sense.
+>     Enabling both the per-epoll context and the system-wide sysctl should
+>     probably enable busy poll, not disable it. So, or (||) makes more
+>     sense, I think.
+> 
+>   - patch 3/3 was updated:
+>     - to change the epoll_params fields to be __u64, __u16, and __u8 and
+>       to pad the struct to a multiple of 64bits. Suggested by Greg K-H [8]
+>       and Arnd Bergmann [9].
+>     - remove an unused pr_fmt, left over from the previous revision.
+>     - ioctl now returns -EINVAL when epoll_params.busy_poll_usecs >
+>       U32_MAX.
+> 
+> v2 -> v3:
+>   - cover letter updated to mention why ioctl seems (to me) like a better
+>     choice vs a new syscall.
+> 
+>   - patch 3/4 was modified in 3 ways:
+>     - when an unknown ioctl is received, -ENOIOCTLCMD is returned instead
+>       of -EINVAL as the ioctl documentation requires.
+>     - epoll_params.busy_poll_budget can only be set to a value larger than
+>       NAPI_POLL_WEIGHT if code is run by privileged (CAP_NET_ADMIN) users.
+>       Otherwise, -EPERM is returned.
+>     - busy poll specific ioctl code moved out to its own function. On
+>       kernels without busy poll support, -EOPNOTSUPP is returned. This also
+>       makes the kernel build robot happier without littering the code with
+>       more #ifdefs.
+> 
+>   - dropped patch 4/4 after Eric Dumazet's review of it when it was sent
+>     independently to the list [10].
+> 
+> v1 -> v2:
+>   - cover letter updated to make a mention of napi_defer_hard_irqs and
+>     gro_flush_timeout as an added step 3 and to cite both Eric Dumazet's
+>     busy polling paper and a paper from University of Waterloo for
+>     additional context. Specifically calling out the xor in patch 1/4
+>     incase it is missed by reviewers.
+> 
+>   - Patch 2/4 has its commit message updated, but no functional changes.
+>     Commit message now describes that allowing for a settable budget helps
+>     to improve throughput and is more consistent with other busy poll
+>     mechanisms that allow a settable budget via SO_BUSY_POLL_BUDGET.
+> 
+>   - Patch 3/4 was modified to check if the epoll_params.busy_poll_budget
+>     exceeds NAPI_POLL_WEIGHT. The larger value is allowed, but an error is
+>     printed. This was done for consistency with netif_napi_add_weight,
+>     which does the same.
+> 
+>   - Patch 3/4 the struct epoll_params was updated to fix the type of the
+>     data field; it was uint8_t and was changed to u8.
+> 
+>   - Patch 4/4 added to check if SO_BUSY_POLL_BUDGET exceeds
+>     NAPI_POLL_WEIGHT. The larger value is allowed, but an error is
+>     printed. This was done for consistency with netif_napi_add_weight,
+>     which does the same.
+> 
+> [1]: https://lore.kernel.org/lkml/65b1cb7f73a6a_250560294bd@willemb.c.googlers.com.notmuch/
+> [2]: https://lore.kernel.org/lkml/20170324170836.15226.87178.stgit@localhost.localdomain/
+> [3]: https://netdevconf.info/2.1/papers/BusyPollingNextGen.pdf
+> [4]: https://dl.acm.org/doi/pdf/10.1145/3626780
+> [5]: https://lore.kernel.org/lkml/2024013001-prison-strum-899d@gregkh/
+> [6]: https://lore.kernel.org/lkml/Zbm3AXgcwL9D6TNM@dread.disaster.area/
+> [7]: https://lore.kernel.org/lkml/efee9789-4f05-4202-9a95-21d88f6307b0@kernel.org/
+> [8]: https://lore.kernel.org/lkml/2024012551-anyone-demeaning-867b@gregkh/
+> [9]: https://lore.kernel.org/lkml/57b62135-2159-493d-a6bb-47d5be55154a@app.fastmail.com/
+> [10]: https://lore.kernel.org/lkml/CANn89i+uXsdSVFiQT9fDfGw+h_5QOcuHwPdWi9J=5U6oLXkQTA@mail.gmail.com/
+> 
+> Joe Damato (4):
+>   eventpoll: support busy poll per epoll instance
+>   eventpoll: Add per-epoll busy poll packet budget
+>   eventpoll: Add per-epoll prefer busy poll option
+>   eventpoll: Add epoll ioctl for epoll_params
+> 
+>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+>  fs/eventpoll.c                                | 136 +++++++++++++++++-
+>  include/uapi/linux/eventpoll.h                |  13 ++
+>  3 files changed, 144 insertions(+), 6 deletions(-)
 
---=-jKZpTL4Z9j8xscOjWN5y
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Coincidentally, we were looking into the same area and your patches are
+super useful :-) Thank you for plumbing in prefer_busy_poll. 
 
-On Tue, 2024-02-06 at 10:41 -0800, Sean Christopherson wrote:
->=20
-> This has an obvious-in-hindsight recursive deadlock bug.=C2=A0 If KVM act=
-ually needs
-> to inject a timer IRQ, and the fast path fails, i.e. the gpc is invalid,
-> kvm_xen_set_evtchn() will attempt to acquire xen.xen_lock, which is alrea=
-dy held
-
-Hm, right. In fact, kvm_xen_set_evtchn() shouldn't actually *need* the
-xen_lock in an ideal world; it's only taking it in order to work around
-the fact that the gfn_to_pfn_cache doesn't have its *own* self-
-sufficient locking. I have patches for that...
-
-I think the *simplest* of the "patches for that" approaches is just to
-use the gpc->refresh_lock to cover all activate, refresh and deactivate
-calls. I was waiting for Paul's series to land before sending that one,
-but I'll work on it today, and double-check my belief that we can then
-just drop xen_lock from kvm_xen_set_evtchn().
-
---=-jKZpTL4Z9j8xscOjWN5y
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMjA2MTg1MDUzWjAvBgkqhkiG9w0BCQQxIgQgABCHWLol
-uQvST6u9tf2LfUjfm7YQwi0CpBU04aiT3Fkwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCwEnzOD0cYRlBITxjcnk68FT+EW4HV2/Ac
-N8o7jTne5par8QwwotLCQmGXdWqsgCu+fw/88K+Ka5qSvGn4HLx7590nENrciEXA9d8HL9AXiA9w
-AXNPxqctKHONdEFhiGSqEybKbpaDOBR8c/YaPTuK2MkwAJvm4fF7YAC570hRr3lE0NRCBqwSwbXJ
-nIB2viEJnNtcaZL2nD03hovwM6UNOGRDaVjlyH45cjb4Sd+yZwGyC1lPG4/409RX2RqVMxvVKwgb
-oQrGUZu01xMJFtb8Be643IqUevc9c3/mieBtbIh7QNsjqayFyCVQcudS/bqPdaLO//Q48G98Qoi1
-bccfCxcZWyDuYXFxYZTTMND3q6P9IcsEBI07cWi2vbtH6wjyfoOska8GYLGvDfrEup328HlKnvAD
-eMXczw68bZ14xn1pXZd1+PBzrTFBAhJ6YxSAU7M1oVXQvbAeEOW/cU3O/cFThR7vURkJLt6kJNiG
-7B69+0uRmOypNw5poy1ZYrWJGVEGDCT+MBwbR5U7S1fUf3cHvqZfLC8Mx03Ev9vleqo0KyA0Df1i
-g/UyY6sdOLtSvZv987sON2tF/AYUuyb/PXNGqBQ4UFLsAUBaaJIgZgN0hVkn2xaesF43BZi7GmrP
-32v2gkLt5O66SCaX3NEwFPlHdj5dKiLDGNV3gloshgAAAAAAAA==
-
-
---=-jKZpTL4Z9j8xscOjWN5y--
+Acked-by: Stanislav Fomichev <sdf@google.com>
