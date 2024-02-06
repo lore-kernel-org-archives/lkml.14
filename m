@@ -1,104 +1,100 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E117995B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 04:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93C57C0A4;
+	Tue,  6 Feb 2024 04:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707194000; cv=none; b=oc4mt1PRMk6IVDald9L1i1PfW/EJQ81WLEKpWotIWVsI9ur4gs17eLYMlAOW+AN5tzdvb8kWtAccRagE+LL2END/CZt3sslH4RjmDogmcZPDZrrEmHB70y+6GEJhZltXACE6VyyrRCMkP3NWAks2t7fhAnNPCNYWKeqVoNe5tao=
+	t=1707194008; cv=none; b=r0YyI86iZdkH05LEqJRXQNkduZ8CryMjYCyAfIWRvL/NtFt+2R4Ly6XDEsFOeBNE4pK0+l2viO+rb2Qikds2ZRln6QgxSufliJh/vd2mweNtp7RTMpNJ/+cpN/oVCa9oWQZ18GIAbx3RW4Gpxx9tJw0yPhDDw8G9eIH7jEtq/rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707194000; c=relaxed/simple;
-	bh=3HMlSFSdCDhMO6gJVMf2WLFfrFcJg3v8tdbkDsERj88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oNesvbpDrQGdOeE8sNsex2fy0SBK1FdQfHd6LntGYXFL6FSZZz6Gnx3kQ27QXhsToxGUUEXi1VMoMzk0pv2uq6HQURTmcy73B5FBJNLDc4Fy5ZwpHSwI0Gb0QX6ErLqBPe1Np4YTTF8ot1+/AloJkY/RJROuEGF4lBCKCuMSknU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xmAr9XdI; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707194008; c=relaxed/simple;
+	bh=OaaGjGJS0/9pYL9p814XKZkw2IYymdVPU/1l12f4t1c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GjyV2pcGEguAB6akQNZbisilwt75xEvHxPf/ZI+ydcivIgBJ4W0Z1RVy1fvC+rl6u4lMc0uhwXJJYFZX4nkIDMAiN87IzXjMLPQXex3sBWTnNe52p2pKrp4xZt66zHHMVsA6P36SgCu/LD2XyhY98IFBTyV5xpuLrynqBiz9Ahs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SRJZQ4qN; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xmAr9XdI"
-Date: Mon, 5 Feb 2024 23:33:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707193996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a66pbZwscvarBnD+4+x9Xp+uM49PnGDOy0Ekbd5y6P0=;
-	b=xmAr9XdIaiuSbg7G524OdopdZGJnXlahP/PlKK610rUry8vhvI3uRZhnqzBjQHAZpQTp6I
-	/r+h+/gVADl7mS675AFIPCt4p/AADQl2Ti8CNyz+h+PJ2+sdCnwTWOBmIyl9tyEylsYrJg
-	oo89TNAKpWJqVHcYMTFSzICDl1ARIbY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: dsterba@suse.cz, "Darrick J. Wong" <djwong@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 4/6] fs: FS_IOC_GETSYSFSNAME
-Message-ID: <xutnab3bbeeyp7gq2wwy36lus275d5tapdclmcg5sl7bfngo6a@ek5u4ja56gut>
-References: <20240205200529.546646-1-kent.overstreet@linux.dev>
- <20240205200529.546646-5-kent.overstreet@linux.dev>
- <20240205222732.GO616564@frogsfrogsfrogs>
- <7si54ajkdqbauf2w64xnzfdglkokifgsjptmkxwdhgymxpk353@zf6nfn53manb>
- <20240206013931.GK355@twin.jikos.cz>
- <ca885dd8-4ac1-43a9-9b0c-79b63cae0620@infradead.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SRJZQ4qN"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4164XGR9017087;
+	Mon, 5 Feb 2024 22:33:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707193996;
+	bh=FZxDQN02GC4AHMWFMEf4txLmiJ+2Oz3f6hT8apWs9+A=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=SRJZQ4qNyyT31yQsjI/PN2aCFzDE5bkuvD6QVtM9uGHxVi8v/4tyRHG3vT4RXCrPh
+	 ml2cTjdoBmsdaffyytxsBaPoefvXNOWKrNtAMzucIXIAACKMzqZAYYOzQpeCdmXP2r
+	 899JezqHpPqPUAycdq319dOxc2upWI0l7g3B/UGc=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4164XGS9104553
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 Feb 2024 22:33:16 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ Feb 2024 22:33:16 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 Feb 2024 22:33:16 -0600
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4164WFp9088075;
+	Mon, 5 Feb 2024 22:33:13 -0600
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: <nm@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        Nathan Morrisson
+	<nmorrisson@phytec.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
+Subject: Re: [PATCH] arm64: dts: ti: phycore-am64: Add ADC
+Date: Tue, 6 Feb 2024 10:02:03 +0530
+Message-ID: <170719349984.2245010.9672098246589016677.b4-ty@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240201001439.3259450-1-nmorrisson@phytec.com>
+References: <20240201001439.3259450-1-nmorrisson@phytec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca885dd8-4ac1-43a9-9b0c-79b63cae0620@infradead.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Feb 05, 2024 at 08:20:10PM -0800, Randy Dunlap wrote:
-> 
-> 
-> On 2/5/24 17:39, David Sterba wrote:
-> > On Mon, Feb 05, 2024 at 05:43:37PM -0500, Kent Overstreet wrote:
-> >> On Mon, Feb 05, 2024 at 02:27:32PM -0800, Darrick J. Wong wrote:
-> >>> On Mon, Feb 05, 2024 at 03:05:15PM -0500, Kent Overstreet wrote:
-> >>>> @@ -231,6 +235,7 @@ struct fsxattr {
-> >>>>  #define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
-> >>>>  #define FS_IOC_GETFSUUID		_IOR(0x94, 51, struct fsuuid2)
-> >>>>  #define FS_IOC_SETFSUUID		_IOW(0x94, 52, struct fsuuid2)
-> >>>> +#define FS_IOC_GETFSSYSFSNAME		_IOR(0x94, 53, struct fssysfsname)
-> >>>
-> >>> 0x94 is btrfs, don't add things to their "name" space.
-> >>
-> >> Can we please document this somewhere!?
-> >>
-> >> What, dare I ask, is the "namespace" I should be using?
-> > 
-> > Grep for _IOCTL_MAGIC in include/uapi:
-> > 
-> > uapi/linux/aspeed-lpc-ctrl.h:#define __ASPEED_LPC_CTRL_IOCTL_MAGIC 0xb2
-> > uapi/linux/aspeed-p2a-ctrl.h:#define __ASPEED_P2A_CTRL_IOCTL_MAGIC 0xb3
-> > uapi/linux/bt-bmc.h:#define __BT_BMC_IOCTL_MAGIC        0xb1
-> > uapi/linux/btrfs.h:#define BTRFS_IOCTL_MAGIC 0x94
-> > uapi/linux/f2fs.h:#define F2FS_IOCTL_MAGIC              0xf5
-> > uapi/linux/ipmi_bmc.h:#define __IPMI_BMC_IOCTL_MAGIC        0xB1
-> > uapi/linux/pfrut.h:#define PFRUT_IOCTL_MAGIC 0xEE
-> > uapi/rdma/rdma_user_ioctl.h:#define IB_IOCTL_MAGIC RDMA_IOCTL_MAGIC
-> > uapi/rdma/rdma_user_ioctl_cmds.h:#define RDMA_IOCTL_MAGIC       0x1b
-> > 
-> > The label ioctls inherited the 0x94 namespace for backward
-> > compatibility but as already said, it's the private namespace of btrfs.
-> > 
-> 
-> or more generally, see Documentation/userspace-api/ioctl/ioctl-number.rst.
-> 
-> For 0x94, it says:
-> 
-> 0x94  all    fs/btrfs/ioctl.h                                        Btrfs filesystem
->              and linux/fs.h                                          some lifted to vfs/generic
+Hi Nathan Morrisson,
 
-You guys keep giving the same info over and over again, instead of
-anything that would be actually helpful...
+On Wed, 31 Jan 2024 16:14:39 -0800, Nathan Morrisson wrote:
+> Add the ADC node to the phyCORE AM64x and enable the ADC.
+> 
+> 
 
-Does anyone know what the proper "namespace" is for new VFS level
-ioctls?
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-...Anyone?
+[1/1] arm64: dts: ti: phycore-am64: Add ADC
+      commit: 61fc6b43f0e321e265164701d3bf65a2e5157720
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
+
