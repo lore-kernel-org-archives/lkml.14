@@ -1,95 +1,105 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDFD1B94A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 21:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1611B949
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 21:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707255507; cv=none; b=mrMlHjl5a0JAjAFwMvVJLO7Y0RVs9Dpimd9QkcSE7TdZA1SRQ+6lj4N80bOK/qLIxZIr9io1d2MdBIJqGvr2vcHvyBRWP3UdYC9+PkNpcMm5/kBuL3Zf2MqqT5VKGIjo125mBht8zC9a5N1H+YhwfvECvBL2HXFXiq09RddyI5k=
+	t=1707255675; cv=none; b=ffH2aeJFz51nHuUodJZwyGGlYClKZgTYzcaGkxzAAMhLy68Yu8hyXBmMA85ED95B77QySlOudbCZP4HW/9Lu+WRQCaRA5MSKz0jaeSstVVEESqOmEEbUVQx+bja5YH3Il6qMG1uTEtGxdtn4uJgsPzWAVTDfRStnLZcSK24HtX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707255507; c=relaxed/simple;
-	bh=rE4YXZTAK8/K6LqNrGEBVaV4tM2xdV6G/bZSYUoWLqo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lLkNxeumY+w0UAe32eVkppUNVxsVis2VZt8P0e1uu11pnX+bZ7Wx2I5yZvpPccEQQPXzEDsRJVcY+OsaOTgXeszCuX4EkUmSL5vBTZ2lShRaTsi3W5ZFhVcDoxA0PFlqUV8Z621bneKfbhGdosSEFgZ4W5saCTD/4h+G2NFldZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YuSsaJyd; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1707255675; c=relaxed/simple;
+	bh=uOxvRZjWNwkxRtu86aHxJDkAO2BjK7XIqVjXIUgiQ5U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=E3JY3X1MMYbuRnrLDd7huo4FwAq4o57GG2jdo43QwTb/gE3vUpJhj2SZbosG9obpBenbuuQl1+Utkyd79ysyltKS0HoCzu/QLfAtdLpKW8i/0SAl6SdbYAFTB4G0yphpmVmh8+84naYzPVp2waozGayKBWgEI3ymnSkc8+AmCUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=fBOh7NY6; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YuSsaJyd"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60484a61250so10594157b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 13:38:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707255505; x=1707860305; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W66wF3cG1Mm+5SO6bdtwwNhlqwZrH3jtwW2DZbOYgAM=;
-        b=YuSsaJyd9Q8Qab03RUZVuq9kMqGgInPwBXESAkt2nTtYjUBwv5qdZRlRYP2qzcDW1x
-         LRAxut0cV1syylJnFneBzu1iL2mDx7JP+abj7/aPLUbzeGyzVYWtduR2xnClvau5a/p4
-         1ZHge+uvpH88EpY1mSngy5iYWi2gX9Y5WbErRmDgzRNwQeCQm3mwOonpzikoPAXINQ3h
-         RmIqTM6deN5NGtUBC9FwX5EMG8ZrzNLwinA6c+zIq8WxQbi2DAFHKb1DNLj/ewRpwr5i
-         t2vlhIpz4Yms2VpNdF9wxUtRjC1pwc+Kha79nrAOdEWZWHE88+AKL8noD4qmzZhYvkHL
-         op+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707255505; x=1707860305;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W66wF3cG1Mm+5SO6bdtwwNhlqwZrH3jtwW2DZbOYgAM=;
-        b=LgQ+WEq7PhjrLmHWN0M4HWOp49BgGFZ2OjfjFt2/SZ0s3frgM2uPmXSRJGSoLfkNW7
-         kbStft6sFlMlENJxmyKILQjNPssYrg4LtQzRnRuWkmqtsXZzsegJLklPScVlxzCJDkAv
-         nLQKspeu/aFsnIbUqfheH9wddGu1A8jScVHY2tptPYxhwWTZRHkySLC9TpleONi4sv9Y
-         KoNLbfNXbtupFksswG8yQ5V3wkrT77hrIYxISnlzH+i8FivbHc8BIAOzhASGBfmjffOU
-         saSxUo1K/ZwAeqcynKBGGtgAccMYQJ5cPsEjQ4sjux+krXDSu12WfsW2571U9upRfQVz
-         J71g==
-X-Forwarded-Encrypted: i=1; AJvYcCXV8PW3vb4VzQWdniRu69eVjqArxSIFL1mozvn3fpFG0xycb06x/jgz/8h4WZyuY+qQuCSQ4EYc3uyokNymHlF7jWe4VdISNHMQ0nko
-X-Gm-Message-State: AOJu0Yzo+HFsF+yq+FJ9VRdqejqMZeZP3T8Yxi8lxzgm6Q4kObUikMhP
-	7Yc7H6SIQaPy7LeUxvm7XwWVCF5lhHNgwEhj1eOr3SPMoM/fouXreB5TCJrelSokn8qmFwPoCjK
-	dSg==
-X-Google-Smtp-Source: AGHT+IHiAeKmFgSzCkoOpBNQOQAxd5iRG0YByzFAF2dlNYCd2mhXEpVl5aBPq6EtET+9y33q9uXgZT4FCpI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:7:b0:5ff:a9fa:2722 with SMTP id
- bc7-20020a05690c000700b005ffa9fa2722mr608095ywb.3.1707255505257; Tue, 06 Feb
- 2024 13:38:25 -0800 (PST)
-Date: Tue,  6 Feb 2024 13:36:19 -0800
-In-Reply-To: <20240131235609.4161407-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="fBOh7NY6"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D5D3A2C03C7;
+	Wed,  7 Feb 2024 10:41:10 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1707255670;
+	bh=uOxvRZjWNwkxRtu86aHxJDkAO2BjK7XIqVjXIUgiQ5U=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=fBOh7NY6wh98aJpdzy+LHWdjP6dmfZ5yr0nuuoelldx6w/bMSnFJZ52GDGBzcmX0a
+	 TiHx03WrCiqXsnwzY8bXFGAmpArRaSFtuOFZQqnAp+1VFuu3nOjU1sI4jDqopRvaik
+	 zl7K6TlsiGOt8K22WKqARPmHi953M3oEeraJAvH/yZx8MqzMlJss5BwcoB8Muumlz2
+	 DTHU8x856z6X9CJ91EC7cf4FzZq0fu+10kDYhqs6Zj6ZtT6hlEdABfgo1tLYRDun0T
+	 qS9ReWYvplzUJ0KEO/eqti+ppZbuDysrsIX8iC47Ux2NRxaYLkl5L3gte1pBZwqLaj
+	 S/ux18Sx37S/w==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65c2a7760001>; Wed, 07 Feb 2024 10:41:10 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 7 Feb 2024 10:41:10 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.040; Wed, 7 Feb 2024 10:41:10 +1300
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "robh+dt@kernel.org"
+	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>,
+	"linux@roeck-us.net" <linux@roeck-us.net>, "antoniu.miclaus@analog.com"
+	<antoniu.miclaus@analog.com>, "noname.nuno@gmail.com"
+	<noname.nuno@gmail.com>, "linux-rtc@vger.kernel.org"
+	<linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, Ibrahim Tilki <Ibrahim.Tilki@analog.com>,
+	Zeynep Arslanbenzer <Zeynep.Arslanbenzer@analog.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: rtc: add max313xx RTCs
+Thread-Topic: [PATCH v6 2/2] dt-bindings: rtc: add max313xx RTCs
+Thread-Index: AQHaVYLoSYVIRNhkz0qX+dhUYUZib7D13rcAgAcP3QCAAA7jgIAAB/mA
+Date: Tue, 6 Feb 2024 21:41:10 +0000
+Message-ID: <e7a21789-9253-4185-98ed-e335d0167df4@alliedtelesis.co.nz>
+References: <20240202025241.834283-1-chris.packham@alliedtelesis.co.nz>
+ <20240202025241.834283-3-chris.packham@alliedtelesis.co.nz>
+ <aecd80a3-a017-405f-b77d-6deda67ef704@linaro.org>
+ <5d4b7fa1-5cc2-4a4a-8fa4-d2c7a8d070b7@alliedtelesis.co.nz>
+ <20240206211237d9192660@mail.local>
+In-Reply-To: <20240206211237d9192660@mail.local>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EE219FA9D6C5E9419656103F92C71157@atlnz.lc>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240131235609.4161407-1-seanjc@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <170724672284.392752.13925879466423785912.b4-ty@google.com>
-Subject: Re: [PATCH v4 0/4] Add support for allowing zero SEV ASIDs
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ashish Kalra <ashish.kalra@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=LZFCFQXi c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=xpRG_LZ1dNQA:10 a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=DibEwSMzcXL41q65tJIA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-On Wed, 31 Jan 2024 15:56:05 -0800, Sean Christopherson wrote:
-> Play nice with systems where SEV and SEV-ES are enabled, but all ASIDs
-> have been carved out for SEV-eS, i.e. where actually running SEV guests
-> is impossible.
-> 
-> v4:
->  - Convert all ASID usage to unsigned integers.
->  - Clean up sev_asid_new() so that it doesn't needlessly overload its
->    return value.
->  - Split out the -EBUSY=>-EINVAL change to a separate patch.
-> 
-> [...]
-
-Applied to kvm-x86 svm, thanks!
-
-[1/4] KVM: SVM: Set sev->asid in sev_asid_new() instead of overloading the return
-      https://github.com/kvm-x86/linux/commit/cc4ce37bed85
-[2/4] KVM: SVM: Use unsigned integers when dealing with ASIDs
-      https://github.com/kvm-x86/linux/commit/466eec4a22a7
-[3/4] KVM: SVM: Add support for allowing zero SEV ASIDs
-      https://github.com/kvm-x86/linux/commit/0aa6b90ef9d7
-[4/4] KVM: SVM: Return -EINVAL instead of -EBUSY on attempt to re-init SEV/SEV-ES
-      https://github.com/kvm-x86/linux/commit/fdd58834d132
-
---
-https://github.com/kvm-x86/linux/tree/next
+DQpPbiA3LzAyLzI0IDEwOjEyLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90ZToNCj4gT24gMDYvMDIv
+MjAyNCAyMDoxOToyMCswMDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4gVGhhdCBpcyBhbiBp
+bmNyZWRpYmx5IGdvb2QgcG9pbnQuIFRoZSBtYXgzMTMzNSBiaW5kaW5nIGNvdmVycyBvbmUgc3Bl
+Y2lmaWMgY2hpcC4gVGhpcyBiaW5kaW5nIGNvdmVycyBtb3JlIGFuZCB3aXRoIHRoYXQgdGhlcmUg
+YXJlIGEgZmV3IG1vcmUgcHJvcGVydGllcyB0aGF0IHRoZSBtYXgzMTMzNSBvbiBpdCdzIG93biBk
+b2Vzbid0IGhhdmUgKGUuZy4gdGhlIGNsb2NrIGNvbnN1bWVyLCB0aGUgYWJpbGl0eSB0byBoYXZl
+IGRpZmZlcmVudCBpMmMgYWRkcmVzc2VzKS4gQmluZGluZyB3aXNlIEkgY291bGQgcHJvYmFibHkg
+cm9sbCBhbGwgb2YgdGhlIG1heDMxMzM1IGludG8gdGhpcyBtYXgzMTN4eCBiaW5kaW5nLg0KPj4N
+Cj4+IERyaXZlciB3aXNlIHRoaW5ncyBhcmUgYSBiaXQgdHJpY2tpZXIuIEkndmUgb25seSBnb3Qg
+YWNjZXNzIHRvIG9uZSBvZg0KPj4gdGhlIHZhcmlhbnRzIHNvIEkgYW0gaG9waW5nIHRvIGxldmVy
+YWdlIHRoZSB3b3JrIElicmFoaW0gaGFkIGFscmVhZHkNCj4+IGRvbmUuIEkgY291bGQgYXR0ZW1w
+dCB0byBpbmNvcnBvcmF0ZSBtYXgzMTMzNSBzdXBwb3J0IGludG8gdGhlDQo+PiBtYXgzMTN4eCBk
+cml2ZXIgYnV0IEkgd291bGRuJ3QgcmVhbGx5IGJlIGFibGUgdG8gdGVzdCBpdCBwcm9wZXJseSBh
+bmQNCj4+IHRoZXJlIGlzIGEgcmVhc29uYWJseSBoaWdoIGNoYW5jZSBvZiByZWdyZXNzaW5nIHNv
+bWV0aGluZy4NCj4gQnV0IEkgd29uJ3QgdGFrZSBhIHNlcGFyYXRlIGRyaXZlci4gRXZlcnl0aGlu
+ZyB3b3VsZCBiZSBiZXR0ZXIgaWYgQW5hbG9nDQo+IHdhcyBzaGFyaW5nIHRoZSBkYXRhc2hlZXRz
+Li4uDQoNClRoZSBkYXRhc2hlZXRzIGFyZSBwcmV0dHkgYWNjZXNzaWJsZSBzbyBJJ2QgZ2l2ZSBB
+bmFsb2cgYSBwYXNzIG9uIHRoYXQgDQoodGhleSdyZSBjZXJ0YWlubHkgYmV0dGVyIHRoYW4gc29t
+ZSB2ZW5kb3JzKS4gSSdsbCBpbmNsdWRlIHNvbWUgbGlua3Mgb24gDQp0aGUgbmV4dCB1cGRhdGUu
+DQoNCkknbGwgYXR0ZW1wdCB0byByb2xsIHRoZSBtYXgzMTMzNSBpbnRvIHRoZSBtYXgzMTN4eCBk
+cml2ZXIuDQo=
