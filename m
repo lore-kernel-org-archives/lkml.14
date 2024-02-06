@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F19613BE82;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A94B13BEA8;
 	Tue,  6 Feb 2024 12:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221367; cv=none; b=madVwKdpydAolG+Hk4HHDzQjFbMnAZHzdKbz0V47OKeN+iG1uMICistydMskwJxW2gdskAhdHjwzdGj4J9mxyw8I8cCG2BypSUmS5vCrWRAzmoLnY3ivc5C4tqpkuZkbe7Myv1XVyMrQuMN+YAEyOwKRLwt5Yn4wrZCSQsw6e6M=
+	t=1707221367; cv=none; b=iDedLZV81DB0aW4gB97tnVwrNINqAd2iy1h7ZdYAIS13AhH8nWrh4Ebty+1gHc5/ou12aK54oHxxwVJ4VOORc/G07hmbEbgUICQ6PPyhVdB8OZZzuRJFAx+ID0YtdYwMjmFaggA+xy1CQBUBN6OJd6EaInD19FS+WhtKYlmWU5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707221367; c=relaxed/simple;
-	bh=TqvI80mt2ZF0Gnam5nEwnKCPn9ZXmcExO8VO54BJ8Dg=;
+	bh=5yqaMUzsL24Xo1kXlS9YCQkGhNmG85TgGVOtLxrgq1g=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=e66sEhClnVpO7/FtNIgYch6DT/ROVjWLF2fb4UsZ5m3zIIO0osSt8gZW22LNEMR1UurEpLlrtUXUfQPAA6gIUGY1VQ5pghvqvHfMummGG9dvTAHeAAzRBYAI4lk7tTQfs5+xJEFHt3iqlkaZzIS2LyTJEklP5Mmgyd/vB4y0wyk=
+	 Content-Type; b=Zww4dqfKknUfiTMIry+SARhCEVqPEwGS08GrtuJX0dUpcBL8GihkBr+BebVe+7/MrOfbCUJOlMBiNATcA35UHWGDWXVsSYtpsmKk4kMCakdy1CBSBRPz3tX2QJu7B/5vxFpjG7G84ac3ln8U4SkvsjZqfvt0zIW0oRZFwxr6iyI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6ADAC43394;
-	Tue,  6 Feb 2024 12:09:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E20C43390;
+	Tue,  6 Feb 2024 12:09:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGx-00000006bSL-1Jh7;
+	id 1rXKGx-00000006bTL-2hfg;
 	Tue, 06 Feb 2024 07:09:55 -0500
-Message-ID: <20240206120955.173872948@rostedt.homelinux.com>
+Message-ID: <20240206120955.500466790@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:59 -0500
+Date: Tue, 06 Feb 2024 07:10:01 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -32,8 +32,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Christian Brauner <brauner@kernel.org>,
  Al Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>
-Subject: [v6.6][PATCH 54/57] eventfs: Warn if an eventfs_inode is freed without is_freed being set
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Al Viro <viro@zeniv.linux.org.uk>
+Subject: [v6.6][PATCH 56/57] eventfs: Remove fsnotify*() functions from lookup()
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,12 +46,14 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-There should never be a case where an evenfs_inode is being freed without
-is_freed being set. Add a WARN_ON_ONCE() if it ever happens. That would
-mean there was one too many put_ei()s.
+The dentries and inodes are created when referenced in the lookup code.
+There's no reason to call fsnotify_*() functions when they are created by
+a reference. It doesn't make any sense.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240201161616.843551963@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20240201002719.GS2087318@ZenIV/
+Link: https://lore.kernel.org/linux-trace-kernel/20240201161617.166973329@goodmis.org
 
+Cc: stable@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -58,70 +61,34 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Christian Brauner <brauner@kernel.org>
 Cc: Al Viro <viro@ZenIV.linux.org.uk>
 Cc: Ajay Kaher <ajay.kaher@broadcom.com>
+Fixes: a376007917776 ("eventfs: Implement functions to create files and dirs when accessed");
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 5a49f996046ba947466bc7461e4b19c4d1daf978)
+(cherry picked from commit 12d823b31fadf47c8f36ecada7abac5f903cac33)
 ---
- fs/tracefs/event_inode.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ fs/tracefs/event_inode.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 515fdace1eea..ca7daee7c811 100644
+index ca7daee7c811..9e031e5a2713 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -73,6 +73,9 @@ enum {
- static void release_ei(struct kref *ref)
- {
- 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
-+
-+	WARN_ON_ONCE(!ei->is_freed);
-+
- 	kfree(ei->entry_attrs);
- 	kfree_const(ei->name);
- 	kfree_rcu(ei, rcu);
-@@ -84,6 +87,14 @@ static inline void put_ei(struct eventfs_inode *ei)
- 		kref_put(&ei->kref, release_ei);
+@@ -366,7 +366,6 @@ static struct dentry *lookup_file(struct eventfs_inode *parent_ei,
+ 	dentry->d_fsdata = get_ei(parent_ei);
+ 
+ 	d_add(dentry, inode);
+-	fsnotify_create(dentry->d_parent->d_inode, dentry);
+ 	return NULL;
+ };
+ 
+@@ -408,7 +407,6 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
+ 	inc_nlink(inode);
+ 	d_add(dentry, inode);
+ 	inc_nlink(dentry->d_parent->d_inode);
+-	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
+ 	return NULL;
  }
  
-+static inline void free_ei(struct eventfs_inode *ei)
-+{
-+	if (ei) {
-+		ei->is_freed = 1;
-+		put_ei(ei);
-+	}
-+}
-+
- static inline struct eventfs_inode *get_ei(struct eventfs_inode *ei)
- {
- 	if (ei)
-@@ -679,7 +690,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
- 
- 	/* Was the parent freed? */
- 	if (list_empty(&ei->list)) {
--		put_ei(ei);
-+		free_ei(ei);
- 		ei = NULL;
- 	}
- 	return ei;
-@@ -770,7 +781,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	return ei;
- 
-  fail:
--	put_ei(ei);
-+	free_ei(ei);
- 	tracefs_failed_creating(dentry);
- 	return ERR_PTR(-ENOMEM);
- }
-@@ -801,9 +812,8 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
- 	list_for_each_entry(ei_child, &ei->children, list)
- 		eventfs_remove_rec(ei_child, level + 1);
- 
--	ei->is_freed = 1;
- 	list_del(&ei->list);
--	put_ei(ei);
-+	free_ei(ei);
- }
- 
- /**
 -- 
 2.43.0
 
