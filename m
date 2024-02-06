@@ -1,78 +1,77 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2CAB58233;
-	Tue,  6 Feb 2024 10:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B1818EB2
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707215847; cv=none; b=Vg54tKt+9QrRtC56cyzPyi/0d/GKyjW658eypfW7Ow1HSPeNa4dXYLuPmOb8NN06PEj9uFReMNGoWkLp3WSVr/GPPT05u1qqtXB7wDmbKbbQeS4uTDsqXhee8PYErVENpM1cjPp8R83EpT/mm+C3iBV27jbBAMNehSJfctIuQcA=
+	t=1707215860; cv=none; b=PRjN1ZTuJScAoWnuActMq/JwSesqoPDr4ujImBdZg0cQLawrP2tJ3LNbwB8tGgeextLTTaSsg2MMbyjb+X9nIGH1uGi8FTl02Hot1ZFYXFcDWADfvc3sdizMpi/FlzAIdcTkSSj4STWARxhk9X1kFmbJC/u9abeXzmSpkSb/rCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707215847; c=relaxed/simple;
-	bh=w/tN9d7EIu2jSrI12Wh7+oQ5SQST786HYLnVHwynRHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPfnItZZJ7kN1asgAfifq/fYyCGh7lIfHDOrJKLNAPIbGMZE8Sc/sKwil7zvHEZveB5mNaTveSGJ2C4O5Xx6CVJk7haIQwL1MzsoUiudrcMBXuFBlhJP2A/ju/NYDXZBypRhHY+n2d0c+5ttDTbHT0tru1kVE5s5zyJMXagDbwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=CGQ00tLW; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="CGQ00tLW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=lk+MQ8SH92shgsFG/IxiegRWkPy95NRGePUeiAe3pG4=;
-	b=CGQ00tLWEIl2sZMfEeT+KNILvnXGZNjR/rhPP7zZeUTbkP/snD3AUz9z7/sGmA
-	bC5rnE5/pF5KAoUdSRj7z0pDGCZ6JAnMpXSGqtWxD5bNdHM0x364H0p7S6qRaDMj
-	3pDVfZzmfPar4pwy5kBxhDZwd29G7kdWmHf3bGSQkE7SU=
-Received: from dragon (unknown [183.213.196.254])
-	by smtp1 (Coremail) with SMTP id ClUQrAB3PCFmC8JlRXf+Ag--.22835S3;
-	Tue, 06 Feb 2024 18:35:19 +0800 (CST)
-Date: Tue, 6 Feb 2024 18:35:17 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Yannic Moog <y.moog@phytec.de>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Primoz Fiser <primoz.fiser@norik.com>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@lists.phytec.de
-Subject: Re: [PATCH RFC for upstream 3/4] arm64: dts:
- imx8mp-phyboard-pollux-rdk: add etml panel support
-Message-ID: <ZcILZSg7ERGza+1p@dragon>
-References: <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-0-8ec5b48eec05@phytec.de>
- <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-3-8ec5b48eec05@phytec.de>
+	s=arc-20240116; t=1707215860; c=relaxed/simple;
+	bh=vYqglejBEbIWhsWJJRgary59v9AvUT3cInJMjawD7nc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hsoHYIMnVIKkSzIeDpQb/yVihYFRccyAX8EOvRzCJHzAQDvhKVpkiUFuK4o+GEjQfCOs3cvT96J9Og7Md7vSxqOj2gNAnjKDZ22kXedqWhKeaip/5cTDHxlL87sdvl8hR2o5cOzfKnUbaLl+DyTyGB6R0GUd9H+dEQvKk5rJhLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-290d59df3f0so4423371a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:37:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707215859; x=1707820659;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vYqglejBEbIWhsWJJRgary59v9AvUT3cInJMjawD7nc=;
+        b=ln3WvuxCzIHXlGV0SC+y/A9DEwPkeh2dpaTTcmasZN5VENljWO27dxipTQmgthjX7l
+         xboQihjdxcS/JY5jTfo/AHnms6nRpobtt+J/bHcfBgF0PGfB/Mkw34q0HbgeVNvQAE7S
+         G85zvqEavAvhuUZZsjZ/ycDfWksXRy0YJyrJvWDOee1Dsg3r+thg9Pf0Bej6WBvkA/1T
+         BaegtVyQkGu/enXCXaY/pDWrLFp+ykb9ottZHLYeUNVODy6FLIqQtqk4o6BpIUVP1VGc
+         3q1tvkscIDRf/P5+4umRoMdW9MG92bppdEtH7AyVSZN4n5WDe9ncugDS7DZupTvdBALV
+         6spQ==
+X-Gm-Message-State: AOJu0YwsAZ8PcHrV8dRsoZoErQXBB3/mVOh2Q0keXvztALkVjR4e0RgQ
+	y4pnkLdKEhSgfROkOcPndHZd8QPWbQk7tDf7mX2kRivpinEtI3sEV6oo+drpXGRYqQ==
+X-Google-Smtp-Source: AGHT+IEtRSGeej+ME2jvYs9A4uZnQmYhV7MqlhSScfDOTwYmlLtelmefEXtHf1H4MOcNiZp83c8AMQ==
+X-Received: by 2002:a17:90a:ea07:b0:296:2d0f:bba8 with SMTP id w7-20020a17090aea0700b002962d0fbba8mr2183021pjy.43.1707215858910;
+        Tue, 06 Feb 2024 02:37:38 -0800 (PST)
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com. [209.85.210.180])
+        by smtp.gmail.com with ESMTPSA id cm17-20020a17090afa1100b00296885dcef7sm1178917pjb.16.2024.02.06.02.37.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Feb 2024 02:37:38 -0800 (PST)
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6da202aa138so3431155b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:37:38 -0800 (PST)
+X-Received: by 2002:aa7:868f:0:b0:6e0:3ef3:db3c with SMTP id
+ d15-20020aa7868f000000b006e03ef3db3cmr2091250pfo.29.1707215858019; Tue, 06
+ Feb 2024 02:37:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-3-8ec5b48eec05@phytec.de>
-X-CM-TRANSID:ClUQrAB3PCFmC8JlRXf+Ag--.22835S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxCztUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDwd8ZVnxccILPgAAs-
+References: <20240204-bus_cleanup-mcb-v1-1-d84b2ef51a0b@marliere.net>
+In-Reply-To: <20240204-bus_cleanup-mcb-v1-1-d84b2ef51a0b@marliere.net>
+From: Johannes Thumshirn <jth@kernel.org>
+Date: Tue, 6 Feb 2024 11:37:26 +0100
+X-Gmail-Original-Message-ID: <CAGH8bx40HJdwf23GFZbbnUa0CsFEXjOod9ea1bWOvm-Uqpt6iQ@mail.gmail.com>
+Message-ID: <CAGH8bx40HJdwf23GFZbbnUa0CsFEXjOod9ea1bWOvm-Uqpt6iQ@mail.gmail.com>
+Subject: Re: [PATCH] mcb: make mcb_bus_type const
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 09:57:25AM +0100, Yannic Moog wrote:
-> The imx8mp-phyboard-pollux has on-board lvds interface connections. An
-> edt,etml1010g3dra panel is supported for this interface. Add device tree
-> nodes for backlight and panel.
-> 
-> Signed-off-by: Yannic Moog <y.moog@phytec.de>
+On Sun, Feb 4, 2024 at 9:02=E2=80=AFPM Ricardo B. Marliere <ricardo@marlier=
+e.net> wrote:
+>
+> Now that the driver core can properly handle constant struct bus_type,
+> move the mcb_bus_type variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-Applied, thanks!
-
+Looks good,
+Reviewed-by: Johannes Thumshirn <jth@kernel.org>
