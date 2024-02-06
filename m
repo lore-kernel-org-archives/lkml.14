@@ -1,169 +1,148 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD14C142
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 18:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D343313AC8
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 18:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707243665; cv=none; b=hWgFS4ux/Y52B2Vx1jwFyZ8Td0Iol2rnmmxI4J0c93htkxugXjw1B6BB7TK/RIAvSGjXXqH9tNc4RANutk1WKW1jK5dvo7mE9DLFRctO+I+wILoSUGea6/wT4xNesN8VAGADTF6v/w+3y74M8OXxrxoyXsv33WR7prLtaEnM6EQ=
+	t=1707243693; cv=none; b=k3kKOQDyYX9zwFHPmG2bApEAkkoq5Zg0LYT7U5oB7bwYpaC/pL+AU+E5lbPdGtlX1Ys71IfzigpkAuO5+KZpszfKj9TZykpI5xOKenxMkV3uK0cia+x5y1AYDwsRPMTduG1xKI48y2QluRvU9BHp00g6rkCrSS5aookjswLxZkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707243665; c=relaxed/simple;
-	bh=/MlM5rAxErSc52f8uAboDn9Px2mtKuGXMTnYEUz69g4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u7qz7G2A0Sc9GxpyTvkgUJi1y0KHxjEawbTQ+d+/HwVu1wd/WWe8RWBEvQ7tVA/HGRnCV1i5HWSB9ny8zTSGzjJ6iGki5NZAChADhqGnl3W+WYStTD9rWkRkTr0H/NzafYJ45jn1eXvRv38pAeh3RbuSDwIrFPklXftDn9M7iDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4fBZle52; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1707243693; c=relaxed/simple;
+	bh=1u8Hb11Lc8orVZldLDqTQXqnEWK1yzdhcMtdUySuf/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ctahZoT/6qhieEyZO8pA13FVVXWuocjwFaTSOIiXWK9h5GpM+YpC5iLXW456cBUgIGZeP/JiP6aBV7JB9HsLWVUgfn4yVhVwFXSTHW7uLziovD/SXuvyyf5TiMdSA+c6j/zjUoSPUesFDXfhUd1XmMNdbzbhJOYA7GrnV9h+1u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X8G1U7Fd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4fBZle52"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60481d2c9d8so12815977b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 10:21:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707243662; x=1707848462; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWkxJlkXZn2XKzfrRn210wVpvl5epIQvB1ytCNVqVwI=;
-        b=4fBZle52k1ZTsQ8Q3ingUJouXzR8PGGblLmjqm6RzuUG4W0ZVXp3+DaQN6gcyP4VPh
-         eFdAlcYllbAeAOr3ZyzGCByoXNY/2Z9t8Fd8mUzWRhvWG94u/+r2sZZ2NpWTj3hjGEEO
-         Q38Z7PdStGh9m+ryqLOS6d5/QrRbeaVUGxAaI5dnC/hgxJOH8Hs0uEes6mzWFOvepmIM
-         cqD0ZiO2AemIxClFff/LUYP7prWT48ooiL9H2jMj7BQvmHfj7jGe+Z2anKiDT0Ebo64t
-         C9lVb5c9nV13a/QbxlRwPRAAugjdnIfHw7uj6ay06eVcAanbMt1aktjFXEN1615bjAKy
-         D74g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707243662; x=1707848462;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWkxJlkXZn2XKzfrRn210wVpvl5epIQvB1ytCNVqVwI=;
-        b=w4AJD+1iws6+Ym0w9Lf6shSSqUta5TknvpOSDKneMwyFa+ooMFyXoC0scLpXCGI+LJ
-         7Cp/tZHyW/KrMRp4ZUKUk7N7YNPNqQSUG7GUNz63QvHSu8viq+ts1e/ijZhIrL2PbaLM
-         TN9SuE0AiV5XXf7b6y7WifeRxC0QQXx2GjpJvXDD0gG/g0vheDuwk2jIT8zxL4y67ijx
-         xMzhms/DEZB7jNzq1VdITor7NfPIzPvHrEMzqbtjW8t7NhPiX7FdTsze8MlI8DW6qedB
-         CS+un+OQsj4qZHV6dAJgIzWrA/UANJWYsHvbrDokE0yF8dPbT9Y24BJe//fpHeHI4sjN
-         S7Qg==
-X-Gm-Message-State: AOJu0Yxhui0a6u02Zi+rJTzP8UwZsj62wIBHaFJH6HPAXrW4gBm6Z9HR
-	/ZarHLszP/E3gztiQQ59XjQjfYIEiJOiAcuLUM1EvFkz6ag74FqQPcorLCEjTOn/CXjHGf+vDY1
-	Jmg==
-X-Google-Smtp-Source: AGHT+IGXCRY9CRGbeWTa8dniGzgzbjU3X1mgUxh9V8P5owxu1shZ410wWmVoq1XhC8hJAT9SL613yOyomMI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:2842:b0:dc6:519b:5425 with SMTP id
- ee2-20020a056902284200b00dc6519b5425mr612720ybb.11.1707243662363; Tue, 06 Feb
- 2024 10:21:02 -0800 (PST)
-Date: Tue, 6 Feb 2024 10:21:00 -0800
-In-Reply-To: <ZcJHYtMZsQHInVEI@yilunxu-OptiPlex-7050>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8G1U7Fd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707243690;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gA2fT1cqxBoDE5ZOq9i+i3xwJmVjEI52qqjkD5raps0=;
+	b=X8G1U7Fd9ToYeD6lUGDT1D/Lsq/YoWYZVYrJV8Y0yO6aFo7Lo4kZXsVjt9GCJ/44qjlxY3
+	tRUj07besVp82oqlbWQz/R4Z6t8W/Jv2yaAV9Hx3ITCkGl38kexgJX3kfPkvE2r7YMl1Xi
+	OQkLjVy+yzo7J8BmCWd/dvtFpLLQFFs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-493-U6f5ku8IOiePTN_WakMDBA-1; Tue, 06 Feb 2024 13:21:29 -0500
+X-MC-Unique: U6f5ku8IOiePTN_WakMDBA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D57E183B7EA;
+	Tue,  6 Feb 2024 18:21:28 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B8032492BC7;
+	Tue,  6 Feb 2024 18:21:28 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for 6.8-rc4
+Date: Tue,  6 Feb 2024 13:21:28 -0500
+Message-Id: <20240206182128.3271452-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240111020048.844847-1-seanjc@google.com> <20240111020048.844847-7-seanjc@google.com>
- <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050> <ZcJHYtMZsQHInVEI@yilunxu-OptiPlex-7050>
-Message-ID: <ZcJ4jBQatw7ti46D@google.com>
-Subject: Re: [PATCH 6/8] KVM: x86/mmu: Check for usable TDP MMU root while
- holding mmu_lock for read
-From: Sean Christopherson <seanjc@google.com>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>, Pattara Teerapong <pteerapong@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On Tue, Feb 06, 2024, Xu Yilun wrote:
-> On Tue, Feb 06, 2024 at 06:09:18PM +0800, Xu Yilun wrote:
-> > On Wed, Jan 10, 2024 at 06:00:46PM -0800, Sean Christopherson wrote:
-> > > When allocating a new TDP MMU root, check for a usable root while holding
-> > > mmu_lock for read and only acquire mmu_lock for write if a new root needs
-> > > to be created.  There is no need to serialize other MMU operations if a
-> > > vCPU is simply grabbing a reference to an existing root, holding mmu_lock
-> > > for write is "necessary" (spoiler alert, it's not strictly necessary) only
-> > > to ensure KVM doesn't end up with duplicate roots.
-> > > 
-> > > Allowing vCPUs to get "new" roots in parallel is beneficial to VM boot and
-> > > to setups that frequently delete memslots, i.e. which force all vCPUs to
-> > > reload all roots.
-> > > 
-> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > > ---
-> > >  arch/x86/kvm/mmu/mmu.c     |  8 ++---
-> > >  arch/x86/kvm/mmu/tdp_mmu.c | 60 +++++++++++++++++++++++++++++++-------
-> > >  arch/x86/kvm/mmu/tdp_mmu.h |  2 +-
-> > >  3 files changed, 55 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > > index 3c844e428684..ea18aca23196 100644
-> > > --- a/arch/x86/kvm/mmu/mmu.c
-> > > +++ b/arch/x86/kvm/mmu/mmu.c
-> > > @@ -3693,15 +3693,15 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
-> > >  	unsigned i;
-> > >  	int r;
-> > >  
-> > > +	if (tdp_mmu_enabled)
-> > > +		return kvm_tdp_mmu_alloc_root(vcpu);
-> > > +
-> > >  	write_lock(&vcpu->kvm->mmu_lock);
-> > >  	r = make_mmu_pages_available(vcpu);
-> > >  	if (r < 0)
-> > >  		goto out_unlock;
-> > >  
-> > > -	if (tdp_mmu_enabled) {
-> > > -		root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
-> > > -		mmu->root.hpa = root;
-> > > -	} else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-> > > +	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-> > >  		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
-> > >  		mmu->root.hpa = root;
-> > >  	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
-> > > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> > > index e0a8343f66dc..9a8250a14fc1 100644
-> > > --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> > > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> > > @@ -223,21 +223,52 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
-> > >  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
-> > >  }
-> > >  
-> > > -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
-> > > +static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
-> > >  {
-> > >  	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
-> > > +	int as_id = kvm_mmu_role_as_id(role);
-> > >  	struct kvm *kvm = vcpu->kvm;
-> > >  	struct kvm_mmu_page *root;
-> > >  
-> > > -	lockdep_assert_held_write(&kvm->mmu_lock);
-> > > -
-> > > -	/* Check for an existing root before allocating a new one. */
-> > > -	for_each_valid_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
-> > > -		if (root->role.word == role.word &&
-> > > -		    kvm_tdp_mmu_get_root(root))
-> > > -			goto out;
-> > > +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
-> > 
-> > No lock yielding attempt in this loop, why change to _yield_safe version?
+Linus,
 
-Because variants that don't allow yielding, i.e. for_each_valid_tdp_mmu_root()
-as of this patch, require mmu_lock be held for write.  Holding mmu_lock for write
-is necessary because that simpler version uses list_for_each_entry() and doesn't
-grab a reference to the root, i.e. entries on the list could be freed, e.g. by
-kvm_tdp_mmu_zap_invalidated_roots().
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
 
-The _yield_safe() versions don't require the user to want to yield.  The naming
-is _yield_safe() because the yield-safe iterators can run with mmu_lock held for
-read *or* right.
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
 
-> Oh, I assume you just want to early exit the loop with the reference to
-> root hold.  But I feel it makes harder for us to have a clear
-> understanding of the usage of _yield_safe and non _yield_safe helpers.
-> 
-> Maybe change it back?
+are available in the Git repository at:
 
-No.  There's even a comment above for_each_tdp_mmu_root() (which is
-for_each_valid_tdp_mmu_root() as of this patch) that explains the difference.
-The rule is essentially, use the yield-safe variant unless there's a good reason
-not to.
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-/*
- * Iterate over all TDP MMU roots.  Requires that mmu_lock be held for write,
- * the implication being that any flow that holds mmu_lock for read is
- * inherently yield-friendly and should use the yield-safe variant above.
- * Holding mmu_lock for write obviates the need for RCU protection as the list
- * is guaranteed to be stable.
- */
+for you to fetch changes up to e459647710070684a48384d67742822379de8c1c:
+
+  x86/coco: Define cc_vendor without CONFIG_ARCH_HAS_CC_PLATFORM (2024-02-06 03:56:04 -0500)
+
+This missed -rc3 due to an issue with clang compilation, which is solved by
+the top commit.
+
+----------------------------------------------------------------
+x86 guest:
+
+* Avoid false positive for check that only matters on AMD processors
+
+x86:
+
+* Give a hint when Win2016 might fail to boot due to XSAVES && !XSAVEC configuration
+
+* Do not allow creating an in-kernel PIT unless an IOAPIC already exists
+
+RISC-V:
+
+* Allow ISA extensions that were enabled for bare metal in 6.8
+  (Zbc, scalar and vector crypto, Zfh[min], Zihintntl, Zvfh[min], Zfa)
+
+S390:
+
+* fix CC for successful PQAP instruction
+
+* fix a race when creating a shadow page
+
+----------------------------------------------------------------
+Anup Patel (14):
+      RISC-V: KVM: Allow Zbc extension for Guest/VM
+      KVM: riscv: selftests: Add Zbc extension to get-reg-list test
+      RISC-V: KVM: Allow scalar crypto extensions for Guest/VM
+      KVM: riscv: selftests: Add scaler crypto extensions to get-reg-list test
+      RISC-V: KVM: Allow vector crypto extensions for Guest/VM
+      KVM: riscv: selftests: Add vector crypto extensions to get-reg-list test
+      RISC-V: KVM: Allow Zfh[min] extensions for Guest/VM
+      KVM: riscv: selftests: Add Zfh[min] extensions to get-reg-list test
+      RISC-V: KVM: Allow Zihintntl extension for Guest/VM
+      KVM: riscv: selftests: Add Zihintntl extension to get-reg-list test
+      RISC-V: KVM: Allow Zvfh[min] extensions for Guest/VM
+      KVM: riscv: selftests: Add Zvfh[min] extensions to get-reg-list test
+      RISC-V: KVM: Allow Zfa extension for Guest/VM
+      KVM: riscv: selftests: Add Zfa extension to get-reg-list test
+
+Christian Borntraeger (1):
+      KVM: s390: vsie: fix race during shadow creation
+
+Eric Farman (1):
+      KVM: s390: fix cc for successful PQAP
+
+Kirill A. Shutemov (1):
+      x86/kvm: Fix SEV check in sev_map_percpu_data()
+
+Maciej S. Szmigiero (1):
+      KVM: x86: Give a hint when Win2016 might fail to boot due to XSAVES erratum
+
+Nathan Chancellor (1):
+      x86/coco: Define cc_vendor without CONFIG_ARCH_HAS_CC_PLATFORM
+
+Paolo Bonzini (2):
+      Merge tag 'kvm-s390-master-6.8-1' of https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD
+      Merge tag 'kvm-riscv-6.8-2' of https://github.com/kvm-riscv/linux into HEAD
+
+Tengfei Yu (1):
+      KVM: x86: Check irqchip mode before create PIT
+
+ arch/riscv/include/uapi/asm/kvm.h                |  27 ++++++
+ arch/riscv/kvm/vcpu_onereg.c                     |  54 ++++++++++++
+ arch/s390/kvm/priv.c                             |   8 +-
+ arch/s390/kvm/vsie.c                             |   1 -
+ arch/s390/mm/gmap.c                              |   1 +
+ arch/x86/include/asm/coco.h                      |   5 +-
+ arch/x86/include/asm/kvm_host.h                  |   2 +
+ arch/x86/kernel/kvm.c                            |   3 +-
+ arch/x86/kvm/hyperv.c                            |  50 +++++++++++
+ arch/x86/kvm/hyperv.h                            |   3 +
+ arch/x86/kvm/x86.c                               |   7 ++
+ tools/testing/selftests/kvm/riscv/get-reg-list.c | 108 +++++++++++++++++++++++
+ 12 files changed, 263 insertions(+), 6 deletions(-)
+
