@@ -1,173 +1,108 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CAD12B9C;
-	Tue,  6 Feb 2024 17:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E289D51A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707240754; cv=none; b=BvYkGs/INv14giJv67Cf6xJRUDFICuKHXkXQ7iKu1hCS3oMiL/vJW9sewD+O9olbloSCgtJsbPY/BdsET1ysEGbTbHbgbqUA5i1sdqPE44pWBsfAJeccMG8LN1VTELDYSNxmdOAw5Zb3xxK4utfF8H9d9uljngM68Jm65oP9rUc=
+	t=1707240769; cv=none; b=UghucO7ukymGh8RelbkW4jSny3JL1zGIH+vFhPN4HsEqYPeVMLZrpwghf78+QE1T7dA+dDOlIWIhzEtULBmvCiNjLdGS/ePiLPXofo0Z28iofdRc4Plc8fjktZJ8ljF62Vaom34RYvSvI5Qkp7UhvCTiI+FeYCDCPPgALYv4jro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707240754; c=relaxed/simple;
-	bh=ilTj5VWnzbXDnAmzljy5yyfGbnvyZnNPzs2eb6s2nj8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YPyjp+bYUfggKtQHKTs9gkaEwUMOy925DRPNbHzH27m6k2E8xWsAU2bsQlz2oqVs0Y+2c/W830j5dGb8y+Mk9Q3le/4CAM5PeWVWLoKxXqgDOyx3c/LUiEHFElxNyxnXlakleshIiKK3nIb/CUy5SzDwfVrm8GcC5qWn0UKGhYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJ9/syYM; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJ9/syYM"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40fd2f7ef55so5342615e9.0;
-        Tue, 06 Feb 2024 09:32:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707240751; x=1707845551; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9hloNsWsZXa6Vf2TLiftzXJ4XARi6FJ1Kn6mZNuM3PA=;
-        b=kJ9/syYMXuy8TjN31Rk8350olIkgfMDeIvS4VfOMoxHCw61GJU+LD+mMWt9dOjXFlr
-         goFkeJScEZf8pCPN0wwwsc26cE2pX6OyeLzXtvx2Eph33Gd7LJgCP0fitNAq36Uu7Lj9
-         w/aJn3pP71BYHc8BbPvbGVqfasdj/O7azqJ5LepEpOOrTVNP7QOD1fd1OjG8W1nY5oSU
-         VJ//HflgeefLF1Wd8knf6eyzAQijzCcAF60vfvftaTGjXc0slngCxRA0u0RCxkKf9O1Q
-         DpJP0D3XydX+jb/m0az7HPQhFC9o23DsEc0BlTe7GnG5/i0dXqpiU/u51vuQvsn/978L
-         qiMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707240751; x=1707845551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9hloNsWsZXa6Vf2TLiftzXJ4XARi6FJ1Kn6mZNuM3PA=;
-        b=Qm1nIu1i1FvFzY63ILdT4gKy7f+ncluty8LG2HJzYk1bz37q2TU8TY5fAq2bkAOsh9
-         vPE2oot3kW3xZGAEl3QeauxDNRS1gXztkpYsfwBfDbsYaqnk+E3wpuurmcfGL2p6ygws
-         S1oGOSNSzTYpA/ihE8HK0bA2YmgJfw+azDeYHHA1b1krONJRcGFwOqQXw+gNFjBm2E1s
-         r6SCKE6sybQ4sxa7N/Uxm3G/TC74hynbMDhOKUi3XC8ROHJSrQqJhZMXz+O9p5A+UFPU
-         Qg9swBFa02YyZJjH1ekOnlbN7mUCYLtf1U/0PgQVtfhPguqH6Vo56Nkk79fUBSF5eN6G
-         MBYA==
-X-Gm-Message-State: AOJu0YznX5MDsy3eQARUyc3+3UPCMuz0eHOSC/LDDiNTde0MOPA1gHfJ
-	YjyB1zVSh051F3+NiTSLq+nzKJs6rpje0DMYguKkMhg9lWmGE1qO
-X-Google-Smtp-Source: AGHT+IEA4QrnnNM/8eK+gYClRi1ppp1d2OpxthfD7v0aXswCDlRC1NXg547xJqw8pQ36v+HQxLemqw==
-X-Received: by 2002:a05:600c:5128:b0:40f:b0d9:632a with SMTP id o40-20020a05600c512800b0040fb0d9632amr8007669wms.14.1707240751116;
-        Tue, 06 Feb 2024 09:32:31 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWgFauZBrcLwuGEQZ+pUc5FPpEwZmhYtSW7xcv5F7v51NwwN+53pqsLhik7Fjd9JMukH1SMkY2X98V3OAoT1VyNK0Dhc48eRNk4KAaeMBVdt44kVL2vGI7ufgBBwMH5IsXPIWNF8o2KTKYSb9iSxbEmkjP5yaOYNYh3fQyhLdLhZKpocvth8SEhZ4J9rIFZepv8PCNOKWZg33H2nOAOJ34Yi+XlMRxup14Y6BicswuXaIeNCyN71TdBWtNPGtRbSaGVhUXdYVHIEj3KgW4R0Q040AmFobIAW0gQivurX+VrEzTitjvHyMKoDqu9dZSNUyZdAy5t5AOJ/BVP/pu+WgCGQxRu5Zv1jytEwYxU9oucjyHrEePGS02uIgu39r0hwcN5cH02F/8bYZizBTC94RvB96/qRcWDc3nDoMAlYi3nByNqCZ/73Kt582xKmEex0CoUxenSL9CulzSBvcEIbr+MRemT1NjLJyZ18FZDUB/lJ2i/es1aL05IxzQD+rfaogZt9sHtEOcWVhzYcH/+H82CHl8Qe56Ir93GDLy7sIfwvLVL4qwJs0RFtqOXTXkpA09Z3sdxakUfJ2/qC+kwmxO1OTlqM9/3lIOBiumTg0TAPCOFx0/ZQov6kZP4w7pqgB6uzcK+LdLesPVM4528wHRVKhDq5DhNWaDBIwSSQnqnE0Wlo0rB9Q==
-Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id l14-20020a05600c4f0e00b0040fc56712e8sm2621215wmq.17.2024.02.06.09.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 09:32:17 -0800 (PST)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Robert Marko <robert.marko@sartura.hr>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [net-next PATCH v7 01/10] dt-bindings: net: document ethernet PHY package nodes
-Date: Tue,  6 Feb 2024 18:31:04 +0100
-Message-ID: <20240206173115.7654-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240206173115.7654-1-ansuelsmth@gmail.com>
-References: <20240206173115.7654-1-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1707240769; c=relaxed/simple;
+	bh=u2gTzZKW8LIxTFCR1r28zEGo/Tnm4g5w9BYkncrJoFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PdkxXMyq41vp3ISC1Hd+C8t6I6ePuo+0pwZOL6Ys8+THY8BGZug892SqYKlqu7vShDCP28WQ8IkSx8UjZsMhzSSZuAl1jAH/E2Wmr9H+d4NwTayQDF+nkTAdRhFPZ8WIQq4yoeI84B186JRF7SJ2EHpE1tNrzwfhvZrPgQ7nuPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 519AE1FB;
+	Tue,  6 Feb 2024 09:33:28 -0800 (PST)
+Received: from [10.1.36.69] (e133649.arm.com [10.1.36.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F25D43F64C;
+	Tue,  6 Feb 2024 09:32:43 -0800 (PST)
+Message-ID: <1cc2b8c4-ea0e-4e98-a1a3-2916cccb1ab1@arm.com>
+Date: Tue, 6 Feb 2024 17:32:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/7] uclamp sum aggregation
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ Christian Loehle <christian.loehle@arm.com>, linux-kernel@vger.kernel.org,
+ David Dai <davidai@google.com>, Saravana Kannan <saravanak@google.com>
+References: <cover.1706792708.git.hongyan.xia2@arm.com>
+ <20240206152054.k3uskf3rhd4icmzt@airbuntu>
+Content-Language: en-US
+From: Hongyan Xia <hongyan.xia2@arm.com>
+In-Reply-To: <20240206152054.k3uskf3rhd4icmzt@airbuntu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Document ethernet PHY package nodes used to describe PHY shipped in
-bundle of 2-5 PHY. The special node describe a container of PHY that
-share common properties. This is a generic schema and PHY package
-should create specialized version with the required additional shared
-properties.
+On 06/02/2024 15:20, Qais Yousef wrote:
+> On 02/01/24 13:11, Hongyan Xia wrote:
+> 
+>> [1]: https://lore.kernel.org/all/20230331014356.1033759-1-davidai@google.com/
+> 
+> Their solution is not acceptable for the same reason yours isn't. Saravana and
+> David know this and we discussed at LPC. uclamp hints are limits and should not
+> be summed.
 
-Example are PHY packages that have some regs only in one PHY of the
-package and will affect every other PHY in the package, for example
-related to PHY interface mode calibration or global PHY mode selection.
+Uclamp is a performance hint and nothing in its definition says it can't 
+be summed. Clearly whether a uclamp approach should be taken should be 
+determined by how well it works as a hint, not by how we calculate it. I 
+would not say I want to reject max aggregation simply because it throws 
+away all other uclamp values except the max. It's because I have real 
+evaluation results showing sum aggregation works as a much better hint.
 
-The PHY package node MUST declare the base address used by the PHY driver
-for global configuration by calculating the offsets of the global PHY
-based on the base address of the PHY package.
+>> [2]: https://android.googlesource.com/kernel/gs/+/refs/heads/android-gs-raviole-5.10-android12-d1/drivers/soc/google/vh/kernel/sched/fair.c#510
+> 
+> I think I clarified several times so far that this is not related to uclamp.
+> Could you please refrain from referring to it again in the future? This is
+> misleading and neither helps your cause nor its cause. The fact that you're
+> relating to it makes me very worried as both links demonstrate lack of
+> understanding/confusion of what uclamp is supposed to be.
 
-Each reg of the PHYs defined in the PHY package node is absolute and
-describe the real address of the Ethernet PHY on the bus.
+The intention of the code is irrelevant. What I'm talking about is what 
+effect the code actually has. The fact that you keep thinking I don't 
+understand what the code does even after me explaining "I know what the 
+intention of the code is, I'm just talking about the actual effect of 
+the code" is an even more worrying sign.
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- .../bindings/net/ethernet-phy-package.yaml    | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ethernet-phy-package.yaml
+> Again, this solution is not acceptable and you're moving things in the wrong
+> direction. We don't want to redesign what uclamp means, but fix some corner
+> cases. And you're doing the former not the latter.
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-phy-package.yaml b/Documentation/devicetree/bindings/net/ethernet-phy-package.yaml
-new file mode 100644
-index 000000000000..e567101e6f38
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ethernet-phy-package.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/ethernet-phy-package.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ethernet PHY Package Common Properties
-+
-+maintainers:
-+  - Christian Marangi <ansuelsmth@gmail.com>
-+
-+description:
-+  PHY packages are multi-port Ethernet PHY of the same family
-+  and each Ethernet PHY is affected by the global configuration
-+  of the PHY package.
-+
-+  Each reg of the PHYs defined in the PHY package node is
-+  absolute and describe the real address of the Ethernet PHY on
-+  the MDIO bus.
-+
-+properties:
-+  $nodename:
-+    pattern: "^ethernet-phy-package@[a-f0-9]+$"
-+
-+  reg:
-+    minimum: 0
-+    maximum: 31
-+    description:
-+      The base ID number for the PHY package.
-+      Commonly the ID of the first PHY in the PHY package.
-+
-+      Some PHY in the PHY package might be not defined but
-+      still occupy ID on the device (just not attached to
-+      anything) hence the PHY package reg might correspond
-+      to a not attached PHY (offset 0).
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+patternProperties:
-+  ^ethernet-phy@[a-f0-9]+$:
-+    $ref: ethernet-phy.yaml#
-+
-+required:
-+  - reg
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+additionalProperties: true
--- 
-2.43.0
+I'm saying max aggregation is not effective and proposing a more 
+effective implementation. In fact, you have sent a series that removes 
+max aggregation. Clearly that does not count as fixing corner cases but 
+is actually a redesign, and I don't understand why you are allowed to do 
+such things and I am not. Also, when something becomes harder and harder 
+to fix, a redesign that solves all the problems is clearly justified.
 
+What I can summarize from sum aggregation is:
+
+Pros:
+1. A more effective implementation, proven by evaluation numbers
+2. Consuming the same or even less power in benchmarks
+3. 350 lines of code in total, less than half of max aggregation
+4. This series shows the entirety and effectiveness of sum aggregation, 
+at this very moment, today. Max aggregation needs further filtering and 
+load balancing patches which we have not seen yet.
+5. Resolves the drawbacks from max aggregation (which you might say is 
+the same as 4)
+6. Significantly reduces uclamp overhead, no bucket operations
+
+Cons:
+1. should not be summed (although the scheduler used to sum up 
+utilization and util_est sums up a processed PELT signal today)
+2. Under-utilization case (which is a problem GROUP_THROTTLE also has, 
+and can be worked around. Please, I know the intention of 
+GROUP_THROTTLE, I'm just talking about its actual effects).
+
+I don't see why the things I listed above is in the wrong direction.
