@@ -1,130 +1,100 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208FEDF56;
-	Tue,  6 Feb 2024 18:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96B1134A5;
+	Tue,  6 Feb 2024 18:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707242941; cv=none; b=HuDN+zEcFc2oPvRAwxn8vo5+ZYT+DO61QymJCGHWQMGnoAclYCG1sVp5V/wCi3PuX7CT7AeuRkoe6yF4gytY+0cjY1A/kAu6SPE5Qe4lDNqsLkpEQmibiAp/Q1IQnMe8iNIqvLG54RXq2WwuU9a/dNHctf96WxNOD91ivgyJ0Ew=
+	t=1707242979; cv=none; b=elk/DYAOfDUrSA18RO9Sr1Y9ovlZe7+Qrf6CwOLmUqY6M+kGTo+7jf1t4bgekCvXP8AJWQsIuVjmKMeshPFvrotYsIWBPQ87d1zBHPvclutxuXLkUdLWDhcJgGQBH4ByZsJVeRS5wlVJrlAPxLPdJOZnyKnNpzlIuefJKsxucDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707242941; c=relaxed/simple;
-	bh=RZqo/CCOLuo6/mBZDZJlacFlaFZNq+k1w2fQRKVHdgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pEA4DHcPgOelw+qHkzjE4UE6e3le29WLsndUqx2wMiJccfMXI4g8Mu9r9+vkXK6QBhOD0Ofgn3yiCmcves5D3J6ouaFE6skBzgn+/g1q8t6ldVd/uA/WG/w75dMRjTdX17qhwIr9xc5D3+SIO7Gjl47XwbTlxgEtM+ASGzEk1Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=ngeSN2ip; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1707242979; c=relaxed/simple;
+	bh=Lkzj1Ayc+R4RiqSI0SS6Fu/wooUtrvulT1004AeJ7Ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ob5D8W8hUJFX1uq6oRCP4f2zZc9RQ/u9dVb0FNadiXLIA0kSDBV7I1p6MdpwJLVWQxsQKSqvXdVCqrqxVTwnMXmN8CWjQeAJw2Zo0ck/cYQnApeX2XHl5qJjfJjiESDf3/txxff7kMVoav+Um5QWiaFIwcMo0TT8qGqAdaSwkhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=Plphh40t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=F5y8dXUx; arc=none smtp.client-ip=66.111.4.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ngeSN2ip"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707242921; x=1707847721; i=wahrenst@gmx.net;
-	bh=RZqo/CCOLuo6/mBZDZJlacFlaFZNq+k1w2fQRKVHdgk=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=ngeSN2ipgNISfo3ot/k7BPYUYbWJackL55ol67WN3oPCxRHgg67/V5GYi49mZhBq
-	 7BQV7UOQgxruT4ui1XmwxPJgGCzERjoEwsWmRp8P5jNuGt/9fE08vVGRfqai7lUuL
-	 ibU9SraTHLohKoygGUiNntwezFw2pVqzugyGtudT7vkt6otrB+bvgVWQCuTDVK3xs
-	 2/LfhZ93Oelz+MJ0F4E02dJeLKNyAt6DSGxW0S1f563OYd1N+/wgizHVqZJNmzSD8
-	 JuOpdv3xd3DNVXySyPB2+O1OQBmYEuOWoyw3cMnt4bwb5fv6a7mFd3luX5kmSJujC
-	 8bun/cAI0jJ4muvBCg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mzyyk-1qlcPn2Eyc-00x5m8; Tue, 06
- Feb 2024 19:08:41 +0100
-Message-ID: <42e760f9-8304-4237-bb68-54c98eb7fcb9@gmx.net>
-Date: Tue, 6 Feb 2024 19:08:40 +0100
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="Plphh40t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F5y8dXUx"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9500D5C01F0;
+	Tue,  6 Feb 2024 13:09:36 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 06 Feb 2024 13:09:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1707242976; x=1707329376; bh=DB8DBh1GEy
+	XCan3X4jjSpE9brtS6cbZs50FHQuPtbpc=; b=Plphh40tfqSto1OziocEInZ/vR
+	QGd3hq3SQij4/SMfcurwsPyR2E7qj8796xDg1dn4TtpIgRdyhPAUquQ5MqMgRe2h
+	XA6hAgZH1RObcm6A3hlHoC2Y3/ReFrnQVnKBm6Ai+nJaS01hwMLRTmHLfchwdZgP
+	lCtZ5WxsKlgOlhlVv4y4U2+PR8wGpwm7Au40tjcQRZd7375mbOGIkrBxOcz4aD1f
+	sLzUfollZfjEy0N6NElyMW34dVkKjpiuKqoWUwk3TCEKi2feEW2EtGloRwK+j+fc
+	4c3uUJZ1XMr1zOdKctJMZrzxRyg8ztSslXLUpnwtmLYL2QV1pBrt5L8EQfZg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707242976; x=1707329376; bh=DB8DBh1GEyXCan3X4jjSpE9brtS6
+	cbZs50FHQuPtbpc=; b=F5y8dXUxDhfEIRxpnPgFsbIZ+30DW0hj8eeB6QjRltRD
+	d8z4yt8NRwG/7O/8aadXfGEmStivn8AEKSXKCGhiexDvswKpEbKblFWcA4Roz8AR
+	9PUbd7cGMhi9KpD1dJ46/OJOwMjkGHuR6JUBmWhDYuyoX+3B+VZ2TmHObe374XqW
+	bjkRpqhkoFV/OluSyk19qymTL/FuWRjaYBZEh0ZF9x1yhle+IkkJp0fl5znD/C36
+	hesOU60ClAKvs2zcwMl4w8lWGFhzKG0gBIzTRqssFn/9g5LeCUh65r8r6V+gaTtt
+	/woOW7bquWXbvvavkEL3VD2iQSysBD8wq9Ldg5EMug==
+X-ME-Sender: <xms:4HXCZVVdeciLSJq9KB1uNeMsgQ4ORMBYJ11zWg_ID1Mj2hNjfPUu-w>
+    <xme:4HXCZVk32W3I4z6ZcYJucZFrNLv53BfLpBzaZUKFyHfZAkcAMaDkHMaNDoow38j6a
+    lvBDnyGhBBiu8EXelw>
+X-ME-Received: <xmr:4HXCZRbfohjaTLqMMX4-tVzdwPq7ciDQgPCCDwKaheOxyllQYtGS5sCm35FwNrncDUdJcJa9Hw-lefTgltYj2aKxe_cv>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtddtgdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigthhho
+    ucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrg
+    htthgvrhhnpeeutedttefgjeefffehffffkeejueevieefudelgeejuddtfeffteeklefh
+    leelteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hthigthhhosehthigthhhordhpihiiiigr
+X-ME-Proxy: <xmx:4HXCZYUs8tLLk3bMCYPIZbmLigHd-_Q9tiDdlqvFVHSbMWSAj3yHdA>
+    <xmx:4HXCZfk2_AF_TtAh1od3Ul9_lCCAHcoKFJAIcmAC_oyAloyWBYWjAg>
+    <xmx:4HXCZVe6OY46kMsFo9j8LeTd_QEI6VPa3OeQ6QwkoVPor7MH8ACBig>
+    <xmx:4HXCZasGNvMLqa4__5XAfRKB4_u7uYSsMC90X3O-8omF8XcipvdHZw>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Feb 2024 13:09:35 -0500 (EST)
+Date: Tue, 6 Feb 2024 11:09:34 -0700
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	Tycho Andersen <tandersen@netflix.com>
+Subject: Re: [PATCH] pidfd: getfd should always report ESRCH if a task is
+ exiting
+Message-ID: <ZcJ13uLxD6rTqqZZ@tycho.pizza>
+References: <20240206164308.62620-1-tycho@tycho.pizza>
+ <20240206173722.GA3593@redhat.com>
+ <20240206180607.GB3593@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/12] bcm2835-dma: Add proper 40-bit DMA support
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Andrea della Porta <andrea.porta@suse.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>,
- Dom Cobley <popcornmix@gmail.com>, Phil Elwell <phil@raspberrypi.com>
-References: <cover.1706948717.git.andrea.porta@suse.com>
- <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
- <8736c115-e11c-41ca-85eb-7cd19a205068@gmx.net>
- <CAPY8ntCEvsTJwoEBYc7JsTaYfdMURhmytvvVMcLVNBkmdTNcZQ@mail.gmail.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <CAPY8ntCEvsTJwoEBYc7JsTaYfdMURhmytvvVMcLVNBkmdTNcZQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:82iQlRV0DZeC1hAWFcigJgICSkiPyPuQqoLMtpl5EGz6/okZ3fE
- I6SidVufMLwq7EC1vruL05BJaE5u0q/VGaSys3AbvrQD8uxR2U+HsJwuTKDo5d3Jp5L3eMs
- HUDAajmfPFfluKH+FrQfUop7UA4q95fLfhJz9IwiXwrmlfh4WuldAkk0RfUs/XNMQIcSjPa
- K6Eu6Kwlz66lDe5rQyf1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rGYYoGkFhs8=;E2CkH0DchG7qHZki2J7Pqf6e/Y9
- O3nyAvJr4ZdrVhtDOWtSV0gngMgbdBULBSXrol6BvL01MoaQe4/QT9yCZm40aSu6voYAuZHIO
- ZqXjplQMVZnxpYbIzb7eL+FJY7vu/f32oMjjCIZRPrlwsdY32Axp8MVdGqWa06gCGB6xsW507
- sqOtxghlNUeAQg59SSY1fnDYY/QfXlwwnobXi9iX4C7ucy+ERlWp+RMZxgjtTA1Oy9NvL7tED
- dtXxZMfHZaMai1TCQ3Nndy2p4GxoryYiXRXeKeW2F+6Rd8i2XsY18iVP3bPjcCXr6nHHfHTd0
- TaKCmnryV8KOdpwH0W3bfmWtHfqbuFLyj4jiPp3VZpDRtWQP1nfh3/RabAxasiyYKqIhdM3T/
- bEaqIjAPBMGzYxnOqsMN36FdboKiQs9BdLAYag0tCRJZcCROQB9VGgEH2WQcX+t9UTK3e888Q
- cmnyjtwKGacbndniuFapznFbuuCq8eKcR57rg2i6AyMoLORYL9CL7KdJgsSRyq/ki4LFptnR/
- BdhCGGaSB9jvcNg6SH2kkaw77h9ilJr88qHQtQ5LHAnL+vBkCLmwoHKYbv4MvdYL3gzt0Y/A+
- +7k0iHQhKzrsayGAPU2UG1YvmpWSSgZeQZ/zPikBWypK6QY70/lmVZDdmSnVf9rO2OfJ+aZpB
- OLCSJWUfFGysEyLGopIqhGKGFuWa1oXXQeIKNyRnb+a2x0Rnmes8J/UljrIb4Gnp3pWMV39I5
- LlYEI0RdK130rVHsUe91Z4I2liPtv5MUTVEfkhIEsBA88plryq3ZRuCfQOBnIO59uM49xbNhm
- xB8k7jy4E6JboWXln/ta28Nm31V+2fM/B0X+WTMNC0zPU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206180607.GB3593@redhat.com>
 
-Hi Dave and Andrea,
+On Tue, Feb 06, 2024 at 07:06:07PM +0100, Oleg Nesterov wrote:
+> Or we can check task->files != NULL rather than PF_EXITING.
+> 
+> To me this looks even better, but looks more confusing without a comment.
+> OTOH, imo this needs a comment anyway ;)
 
-Am 06.02.24 um 17:31 schrieb Dave Stevenson:
-> Hi Stefan and Andrea
->
-> On Mon, 5 Feb 2024 at 18:50, Stefan Wahren <wahrenst@gmx.net> wrote:
->> Hi Andrea,
->>
->> [add Dave]
->>
->> Am 04.02.24 um 07:59 schrieb Andrea della Porta:
->>> From: Phil Elwell <phil@raspberrypi.org>
->>>
->>> BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
->>> to access the full 4GB of memory on a Pi 4.
->>>
->>> Cc: Phil Elwell <phil@raspberrypi.org>
->>> Cc: Maxime Ripard <maxime@cerno.tech>
->>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
->> mainlining isn't that simple by sending just the downstream patches to
->> the mailing list. In many cases there reasons why this hasn't been
->> upstreamed yet.
->>
->> In my opinion just this feature is worth a separate patch series. In
->> 2021 i already send an initial version, which tried to implement it in =
-a
->> cleaner & maintainabler way [1]. In the meantime Dave Stevenson from
->> Raspberry Pi wrote that he also wanted to work on this. Maybe you want
->> to work on this together?
-> Yes, I'm looking at reworking Stefan's series to work on Pi4 & Pi5 as
-> it's needed for HDMI audio (and other things) on those platforms which
-> I'm working to upstream.
->
-> I was getting weirdness from the sdhci block when I was last looking
-> at it, so it was just proving a little trickier than first thought.
-> Hopefully I'll get some time on it in the next couple of weeks.
-i must confess that my series was just a draft to see that the general
-approach would be accepted. Yes, it's possible that there are issues :-(
+I thought about this, but I didn't really understand the null check in
+exit_files(); if it can really be called more than once, are there
+other cases where task->files == NULL that we really should report
+EBADF?
 
-Maybe i can help you a little bit by taking care of first two patches
-(node name fix & YAML conversion)?
-
-Regards
->    Dave
->
->> [1] -
->> https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3ad=
-71146c@i2se.com/T/
-
+Tycho
