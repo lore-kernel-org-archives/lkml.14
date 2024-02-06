@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D30138483;
-	Tue,  6 Feb 2024 12:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A991386BD;
+	Tue,  6 Feb 2024 12:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221362; cv=none; b=pOGe1UM4ahG09RGS38FXETeyaJfKRLtCTWeOfC2BI7W78NmaZ9l3n/ocW6OpGp9GVv21WA/EgNhi9R+dkZbkxw9OAkOzCQCysoAZxhZcyYHDwzYQ/3AYkbPZrP2nWd0jJywU8mD25APcPbDY57dySxl3EaJ+yyvlG2tZQIrc6a0=
+	t=1707221363; cv=none; b=qnRT6Iobxg1lbn32nGnIVCSlBgDHPmaCXBOzUTf+WJ0AqeylxdCB/M0z8g0uFnhqtjKkxaS6ugTjYLqHOIOsfSQZy5Aja20o6xJT/rBOpRZgyiQGEAW81rxyMC+0hn52V7rRxcDOQdVnYQzCxkkYAHjksK/cf+ODjLo33lAH88A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221362; c=relaxed/simple;
-	bh=KWJDRqmuSA25gha7hUXBxRETKbAFvLCSdo+JgHjFgUw=;
+	s=arc-20240116; t=1707221363; c=relaxed/simple;
+	bh=SD2Ctw8XfUaOuPz+cDqcSSEYSx7EhLuOjt5hoKj8zpc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=jd39vp9jKzcOLS384JbeVi1YImJkEvvmaWPDGLiEu9/uYdfxHIeAUQRItr56obtqxPA2reO6KYUrTc9Xkhrbl/jPLuzfYSO1ec3+cddrFCZ7LcUB8qPi49cXKtdVOUpXTFD3jven1Ak+3xF5V1mFDebLRK4jlo+kh7w/j6+ZbXY=
+	 Content-Type; b=qeEQq3REkzClJaKMN7lYX2/Var1q1m1BEBV8mSMuMf9KRKi1yEtq2IwOMdqonFbRn3iSLD75NY8M/YABf221Q1VJ3QTaRG7/UOwsdoZ38yjzwsxvOnnhe/D2+ClKHs7HCP+13W/+oPt1RZBKw3LLDkgqyEfi08UDRaytnzChvtk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 754BBC433F1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A4BC43394;
 	Tue,  6 Feb 2024 12:09:22 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGs-00000006bEq-3oIR;
-	Tue, 06 Feb 2024 07:09:50 -0500
-Message-ID: <20240206120950.772179769@rostedt.homelinux.com>
+	id 1rXKGt-00000006bGL-1eGZ;
+	Tue, 06 Feb 2024 07:09:51 -0500
+Message-ID: <20240206120951.255146556@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:32 -0500
+Date: Tue, 06 Feb 2024 07:09:35 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,9 +30,8 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Josef Bacik <josef@toxicpanda.com>
-Subject: [v6.6][PATCH 27/57] eventfs: Move taking of inode_lock into dcache_dir_open_wrapper()
+ Beau Belgrave <beaub@linux.microsoft.com>
+Subject: [v6.6][PATCH 30/57] eventfs: Fix events beyond NAME_MAX blocking tasks
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,85 +41,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Beau Belgrave <beaub@linux.microsoft.com>
 
-The both create_file_dentry() and create_dir_dentry() takes a boolean
-parameter "lookup", as on lookup the inode_lock should already be taken,
-but for dcache_dir_open_wrapper() it is not taken.
+Eventfs uses simple_lookup(), however, it will fail if the name of the
+entry is beyond NAME_MAX length. When this error is encountered, eventfs
+still tries to create dentries instead of skipping the dentry creation.
+When the dentry is attempted to be created in this state d_wait_lookup()
+will loop forever, waiting for the lookup to be removed.
 
-There's no reason that the dcache_dir_open_wrapper() can't take the
-inode_lock before calling these functions. In fact, it's better if it
-does, as the lock can be held throughout both directory and file
-creations.
+Fix eventfs to return the error in simple_lookup() back to the caller
+instead of continuing to try to create the dentry.
 
-This also simplifies the code, and possibly prevents unexpected race
-conditions when the lock is released.
+Link: https://lore.kernel.org/linux-trace-kernel/20231210213534.497-1-beaub@linux.microsoft.com
 
-Link: https://lkml.kernel.org/r/20231121231112.528544825@goodmis.org
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Fixes: 63940449555e ("eventfs: Implement eventfs lookup, read, open functions")
+Link: https://lore.kernel.org/linux-trace-kernel/20231208183601.GA46-beaub@linux.microsoft.com/
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit bcae32c5632fc0a0dbce46fa731cd23403117e66)
+(cherry picked from commit 5eaf7f0589c0d88178f0fbeebe0e0b7108258707)
 ---
- fs/tracefs/event_inode.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ fs/tracefs/event_inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 56d192f0ead8..590e8176449b 100644
+index 0b90869fd805..43e237864a42 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -347,15 +347,8 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
- 
- 	mutex_unlock(&eventfs_mutex);
- 
--	/* The lookup already has the parent->d_inode locked */
--	if (!lookup)
--		inode_lock(parent->d_inode);
--
- 	dentry = create_file(name, mode, attr, parent, data, fops);
- 
--	if (!lookup)
--		inode_unlock(parent->d_inode);
--
- 	mutex_lock(&eventfs_mutex);
- 
- 	if (IS_ERR_OR_NULL(dentry)) {
-@@ -453,15 +446,8 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
- 	}
- 	mutex_unlock(&eventfs_mutex);
- 
--	/* The lookup already has the parent->d_inode locked */
--	if (!lookup)
--		inode_lock(parent->d_inode);
--
- 	dentry = create_dir(ei, parent);
- 
--	if (!lookup)
--		inode_unlock(parent->d_inode);
--
- 	mutex_lock(&eventfs_mutex);
- 
- 	if (IS_ERR_OR_NULL(dentry) && !ei->is_freed) {
-@@ -693,6 +679,7 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
- 		return -ENOMEM;
- 	}
- 
-+	inode_lock(parent->d_inode);
- 	list_for_each_entry_srcu(ei_child, &ei->children, list,
- 				 srcu_read_lock_held(&eventfs_srcu)) {
- 		d = create_dir_dentry(ei, ei_child, parent, false);
-@@ -725,6 +712,7 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
- 			cnt++;
- 		}
- 	}
-+	inode_unlock(parent->d_inode);
- 	srcu_read_unlock(&eventfs_srcu, idx);
- 	ret = dcache_dir_open(inode, file);
- 
+@@ -546,6 +546,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 		if (strcmp(ei_child->name, name) != 0)
+ 			continue;
+ 		ret = simple_lookup(dir, dentry, flags);
++		if (IS_ERR(ret))
++			goto out;
+ 		create_dir_dentry(ei, ei_child, ei_dentry, true);
+ 		created = true;
+ 		break;
+@@ -568,6 +570,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 			if (r <= 0)
+ 				continue;
+ 			ret = simple_lookup(dir, dentry, flags);
++			if (IS_ERR(ret))
++				goto out;
+ 			create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
+ 					   fops, true);
+ 			break;
 -- 
 2.43.0
 
