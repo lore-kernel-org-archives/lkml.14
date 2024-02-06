@@ -1,320 +1,282 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C945378B6B;
-	Tue,  6 Feb 2024 05:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8537E79D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707196579; cv=none; b=lQE1Tl1kvXdWK9Y+7fZAlY/5Vlbv52Mp1Z/oYpkRYZ93Yn+EH5s0+2VOPam7e8MnGymO2GkknzqfNxUZrr6oqoZ7n1tBc+eJkDlZFsm9byhzGFuLMDMMAXpv5vKkqiq2dUyhvq7EiHdzLafB+a2M+L0MsqkcRrKY9uUouVNFyZ0=
+	t=1707196687; cv=none; b=AVyU5K2DkUO5HjLVNVACWz9nNGDD3m4Ndpp7D9P23mOYSDNfVYkadMwFx9w/Jq08Sp7RbYCzX3LJIpp8ZO26iPeDoM/p7adTijg6XYdaR/ZshNJAzUm10x71wpp0ndVyUXttVh+nui87fx3ZQuIr0B7czS6YQ0Lt+rxdbNhbuN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707196579; c=relaxed/simple;
-	bh=MR41QP/4EPa/N0JJYid3YbXrUwHg4lad8H730sDJQ7E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ooQ19XhfGtqEuBKE7fsdFce50ZPqTlSk2CMz0u4v+vfnFzCIZWsqxbkoaoNfIxo7qhuKEH6XyqpmSQsRLphHueXt+WiOsXI2veKZj3Lr1M22qzexXkLRn5HMmuc8a8AnHBQ6sQhnhShVQ0XhiH9DK2O0OS1trQHUUchd7w9XYLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sNTLGiwf; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707196687; c=relaxed/simple;
+	bh=nNeiNiP3tjJmb4yvijRt/0TWZlIQomBFXUF7FCgmof4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=CQreKnpqyl7rzj27wwW92Z8nLd94G+Lmj7vZlVDEGdjc3UwzBPbeOzEOvBNuHy+CffjhFI7W/VzV0cTkSZMr+6rfLrT1gBDJRdIieWrcTaU6Jr5ub4jCMqwKEj5Yfw031CqsUZKUzEjxRFFcKTvrmJF0nyFGLyU3gp653qAb8+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=e8XGelKa; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sNTLGiwf"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4165G5OA012061;
-	Mon, 5 Feb 2024 23:16:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707196565;
-	bh=aLGkzC9wjwC+NnwhamYtqaOYE8QgwAi84hsw5Xy5m6w=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=sNTLGiwfmcg/eOnq9s46lAJPXo3PRjFbD8n5mn0KfnbV2X4++UruviC4ZCT4NTh9i
-	 hXhkfgBwI6PqMX0s+B5MyAPg3cwF4DmBWrNMNgzk+6s+7GkTvL0hx1UDFEmlZN3bB5
-	 mAmvWGR+4qeb9fjyUw+WZ5HlU+fI8k1fgNnY8mp8=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4165G5hd016512
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 23:16:05 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 23:16:05 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 23:16:05 -0600
-Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4165G0mU029523;
-	Mon, 5 Feb 2024 23:16:00 -0600
-Message-ID: <704316db-cb3f-4069-bf34-8d470b0ab444@ti.com>
-Date: Tue, 6 Feb 2024 10:45:59 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e8XGelKa"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240206051800epoutp01717d281fa25c22255f939b2afe0ea763~xLlYFhmX80678606786epoutp01i
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:18:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240206051800epoutp01717d281fa25c22255f939b2afe0ea763~xLlYFhmX80678606786epoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707196680;
+	bh=+DSJZHkbi32erCjMa1jaWBnuwhUiT1XuJLtRXHt6IiQ=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=e8XGelKa+dw9T3590DAUDh0Yj7WSMTQVcjwBhw5mNlJfycNCOtkZl50gmAk/CjI9+
+	 ttJ0Z+tT4z+Yav/pVkiVf9QO1/BhlpJ4RAyzcM35s3FQdrYhZ57oucrFGLJxwVlMJk
+	 EnWP0IiAG/Ym0mcwit0ctYkOwExlpaSXFIKw9A2A=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240206051800epcas5p337e223055ed64ff864b42bcb43f86a2b~xLlXt_A231300413004epcas5p3F;
+	Tue,  6 Feb 2024 05:18:00 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TTWjL3sbWz4x9Q1; Tue,  6 Feb
+	2024 05:17:58 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	BB.C2.09634.601C1C56; Tue,  6 Feb 2024 14:17:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240206024726epcas5p1d90e29244e62ede67813da5fcd582151~xJh58usjF0334403344epcas5p1U;
+	Tue,  6 Feb 2024 02:47:26 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240206024726epsmtrp17d46a5a1e85430ea5ab68bbc878b11e5~xJh575G0n3103231032epsmtrp1I;
+	Tue,  6 Feb 2024 02:47:26 +0000 (GMT)
+X-AuditID: b6c32a49-159fd700000025a2-7d-65c1c10649ad
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	14.33.08755.DBD91C56; Tue,  6 Feb 2024 11:47:25 +0900 (KST)
+Received: from AHRE124.. (unknown [109.105.118.124]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240206024724epsmtip121b035f45530fd4aca5b365d1ab2558e~xJh4dEj062086820868epsmtip1Q;
+	Tue,  6 Feb 2024 02:47:24 +0000 (GMT)
+From: Xiaobing Li <xiaobing.li@samsung.com>
+To: axboe@kernel.dk, asml.silence@gmail.com
+Cc: linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+	kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
+	kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com,
+	cliang01.li@samsung.com, xue01.he@samsung.com, Xiaobing Li
+	<xiaobing.li@samsung.com>
+Subject: [PATCH v8] io_uring: Statistics of the true utilization of sq
+ threads.
+Date: Tue,  6 Feb 2024 10:39:10 +0800
+Message-Id: <20240206023910.11307-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: dts: ti: k3-am642-evm: add overlay for
- icssg1 2nd port
-Content-Language: en-US
-To: Roger Quadros <rogerq@kernel.org>, "Anwar, Md Danish" <a0501179@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
-CC: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Tero
- Kristo <kristo@kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>
-References: <20240122113045.1711818-1-danishanwar@ti.com>
- <20240122113045.1711818-4-danishanwar@ti.com>
- <33e62844-a148-4374-aba8-481dc7799e15@kernel.org>
- <17d1cfd0-2962-4857-af1d-7f2126b37abf@ti.com>
- <6c5e2ca5-9b47-4a08-817c-e4bb1d10032f@kernel.org>
-From: MD Danish Anwar <danishanwar@ti.com>
-In-Reply-To: <6c5e2ca5-9b47-4a08-817c-e4bb1d10032f@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmpi7bwYOpBtc7JS3mrNrGaLH6bj+b
+	xem/j1ks3rWeY7E4+v8tm8Wv7ruMFlu/fGW1uLxrDpvFs72cFl8Of2e3ODvhA6vF1C07mCw6
+	Wi4zWnRdOMXmwOexc9Zddo/LZ0s9+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUzL91WyTs4
+	3jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6EQlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5x
+	ia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGm46zzAWvVSve9mxhbWDcJ9fFyMkh
+	IWAiMWX9UtYuRi4OIYHdjBJPPl9nh3A+MUpcO3ccyvnGKLF/02kmmJaVk6dBtexllOi7vo8d
+	JCEk8JJR4mFXCojNJqAtcX1dFyuILQJkv348lQWkgVlgCZPE1m+HwSYJCwRK3Dl8Dcjm4GAR
+	UJV4dVIKJMwrYCPx+O9Jdohl8hL7D55lhogLSpyc+YQFxGYGijdvnc0MMlNCoJdD4tDG71DX
+	uUgc2/iUEcIWlnh1fAvUICmJl/1tUHaxxJGe76wQzQ2MEtNvX4VKWEv8u7KHBeQgZgFNifW7
+	9CHCshJTT61jgljMJ9H7+wnULl6JHfNgbFWJ1ZceskDY0hKvG35DxT0kDj3pZIUEUKzEyvt/
+	2SYwys9C8s8sJP/MQti8gJF5FaNkakFxbnpqsWmBYV5qOTxmk/NzNzGCk6qW5w7Guw8+6B1i
+	ZOJgPMQowcGsJMJrtuNAqhBvSmJlVWpRfnxRaU5q8SFGU2AYT2SWEk3OB6b1vJJ4QxNLAxMz
+	MzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamDi7V9z/fmHFlT/nwg2Db16b+zpX
+	i+XvUvX8K9bnlk3TTf0f+9LqbR3Xmt6tpUwzulWFAljkuFVzlt3sXdzYZLvuQt0FZ+OszMWb
+	lzzp6Tma9fLCTKl8NrlT39sWlMlalBc4bHPcdceo9+5t3W0nTsq7PbWpPSwSNPWD1pH/H9b8
+	suFx/8ostivHetfcmm97uY/ueLZZIGPf0Z3bHtz7PjFywo6ZnPyP+3fXhr6efvFdU+JK+V8p
+	00JNs3b85V/+/q+48YpWdr3zc1v69q36ureNv+tZ78fV+yKKzCZudXshOfmV4p2T3449/vOk
+	5GFbfLvQ+jlbpLzUvp/Se3jP3Kh8c/WXHx8Yblq+DHVhLm52VmIpzkg01GIuKk4EAAb8ZsYz
+	BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSnO7euQdTDVr2WlnMWbWN0WL13X42
+	i9N/H7NYvGs9x2Jx9P9bNotf3XcZLbZ++cpqcXnXHDaLZ3s5Lb4c/s5ucXbCB1aLqVt2MFl0
+	tFxmtOi6cIrNgc9j56y77B6Xz5Z69G1ZxejxeZNcAEsUl01Kak5mWWqRvl0CV8abjrPMBa9V
+	K972bGFtYNwn18XIySEhYCKxcvI01i5GLg4hgd2MErtOdjN2MXIAJaQl/vwph6gRllj57zk7
+	RM1zRonJ3/6xgiTYBLQlrq/rYgWpFxHQlWi8qwBSwyywgUli/9N5YHFhAX+Jm/NsQUwWAVWJ
+	VyelQDp5BWwkHv89yQ4xXl5i/8GzzBBxQYmTM5+wgJQzC6hLrJ8nBBJmBipp3jqbeQIj/ywk
+	VbMQqmYhqVrAyLyKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4CrQ0dzBuX/VB7xAj
+	EwfjIUYJDmYlEV6zHQdShXhTEiurUovy44tKc1KLDzFKc7AoifOKv+hNERJITyxJzU5NLUgt
+	gskycXBKNTB5Pzp1Zt3SvZVbW5LL1j7J0dkTcMRlUsjv9asM9Oz4veZEmZWUx6hstwhOaW2Z
+	+nyj8sXbwtF58ecF9uhzfi+/nvU1xvr63AXLI65LTX/k9eSLmLqbxjmpmaZrJ8/4tOSGaqh+
+	73HW2Fq+xa+Dui7l2u1WN724b8U5TdE5KQLeoT/+L5LL3NT2/HnDNtPVLHdvzU9a584yIXO1
+	x77LxzbZGMst+f3JI36ORr18Yd8S7+2a9/2MNZrNXtwxPXRxv9Bh/jkqFgkHzv5O3s+u/r7l
+	ZbTTMseb6QLs3Wei2xeYBJxhyHpQ4PlCPILFXDeh5PSn+F9Ln6Z9lJsomLQjWlb1jJxl1bHd
+	klYLEzzXnTiqxFKckWioxVxUnAgAFtbL3/ECAAA=
+X-CMS-MailID: 20240206024726epcas5p1d90e29244e62ede67813da5fcd582151
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240206024726epcas5p1d90e29244e62ede67813da5fcd582151
+References: <CGME20240206024726epcas5p1d90e29244e62ede67813da5fcd582151@epcas5p1.samsung.com>
 
+Count the running time and actual IO processing time of the sqpoll
+thread, and output the statistical data to fdinfo.
 
+Variable description:
+"work_time" in the code represents the sum of the jiffies of the sq
+thread actually processing IO, that is, how many milliseconds it
+actually takes to process IO. "total_time" represents the total time
+that the sq thread has elapsed from the beginning of the loop to the
+current time point, that is, how many milliseconds it has spent in
+total.
 
-On 05/02/24 6:27 pm, Roger Quadros wrote:
-> 
-> 
-> On 02/02/2024 18:50, Anwar, Md Danish wrote:
->> On 2/2/2024 5:56 PM, Roger Quadros wrote:
->>>
->>>
->>> On 22/01/2024 13:30, MD Danish Anwar wrote:
->>>> The am642-evm doesn't allow to enable 2 x CPSW3g ports and 2 x ICSSG1 ports
->>>> all together, so base k3-am642-evm.dts enables by default 2 x CPSW3g ports
->>>> and 1 x ICSSG1 ports, but it also possible to support 1 x CPSW3g ports and
->>>> 2 x ICSSG1 ports configuration.
->>>
->>> "it is also possible"
->>>
->>> OK so there can only be 3 ethernet ports on this board. There is no "ethernet3" alias.
->>>
->>
->> Yes maximum there can be 3 ports only. By default 2 are cpsw and 1 icssg
->> but this parch introduces overlay to change the muxed port into icssg.
->>
->> By default,
->> 	ethernet0 = &cpsw_port1;
->> 	ethernet1 = &cpsw_port2;
->> 	ethernet2 = &icssg1_emac0;
->>
->> When this overlay is applied, it should be something like this,
->> 	ethernet0 = &cpsw_port1;
->> 	ethernet1 = &icssg1_emac0;
->> 	ethernet2 = &icssg1_emac1;
->>
->> Let me know if this looks ok to you. I will modify the alias accordingly.
-> 
-> ethernet0 is ok
-> 
-> As per schematics: icssg1_emac0 is fixed to J21A port. so I'd call this ethernet1
-> 
-> J21B port can be switched between cpsw_port2 and icssg1_emac1. so I'd call this ethernet2
-> 
-> This way ethernet1 definition is fixed regardless and you are only switching ethernet2
-> definition.
-> 
+The test tool is fio, and its parameters are as follows:
+[global]
+ioengine=io_uring
+direct=1
+group_reporting
+bs=128k
+norandommap=1
+randrepeat=0
+refill_buffers
+ramp_time=30s
+time_based
+runtime=1m
+clocksource=clock_gettime
+overwrite=1
+log_avg_msec=1000
+numjobs=1
 
-So ethernet0 and ethernet1 will be fixed and only ethernet2 will change
-from cpsw_port2 to icssg1_emac1 when this overlay is applied.
+[disk0]
+filename=/dev/nvme0n1
+rw=read
+iodepth=16
+hipri
+sqthread_poll=1
 
-I have posted v4 [1] before your this reply. In v4 I have kept ethernet0
-and ethernet2 fixed to cpsw_port1 and icssg1_emac0 respectively and only
-ethernet1 changes from cpsw_port2 to icssg1_emac1 when this overlay is
-applied. Overlay only changes ethernet1. I think this is also a valid
-approach. eth0 will be fixed to cpsw and eth2 will be fixed to icssg.
-eth1 will toggle between cpsw and icssg. You can have a look at v4.
+---
+The test results are as follows:
+Every 2.0s: cat /proc/9230/fdinfo/6 | grep -E Sq
+SqMask: 0x3
+SqHead: 3197153
+SqTail: 3197153
+CachedSqHead:   3197153
+SqThread:       9231
+SqThreadCpu:    11
+SqTotalTime:    18099614
+SqWorkTime:     16748316
 
-Pls let me know if you are okay with this.
+---
+The test results corresponding to different iodepths are as follows:
+|-----------|-------|-------|-------|------|-------|
+|   iodepth |   1   |   4   |   8   |  16  |  64   |
+|-----------|-------|-------|-------|------|-------|
+|utilization| 2.9%  | 8.8%  | 10.9% | 92.9%| 84.4% |
+|-----------|-------|-------|-------|------|-------|
+|    idle   | 97.1% | 91.2% | 89.1% | 7.1% | 15.6% |
+|-----------|-------|-------|-------|------|-------|
 
-[1] https://lore.kernel.org/all/20240205090546.4000446-1-danishanwar@ti.com/
+changes：
+v8:
+ - Get the work time of the sqpoll thread through getrusage
 
->>
->>>>
->>>> This patch adds overlay to support 1 x CPSW3g ports and 2 x ICSSG1 ports
->>>> configuration:
->>>> - Add label name 'mdio_mux_1' for 'mdio-mux-1' node so that the node
->>>>   'mdio-mux-1' can be disabled in the overlay using the label name.
->>>> - disable 2nd CPSW3g port
->>>> - update CPSW3g pinmuxes to not use RGMII2
->>>> - disable mdio-mux-1 and define mdio-mux-2 to route ICSSG1 MDIO to the
->>>>   shared DP83869 PHY
->>>> - add and enable ICSSG1 RGMII2 pinmuxes
->>>> - enable ICSSG1 MII1 port
->>>>
->>>> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
->>>> ---
->>>>  arch/arm64/boot/dts/ti/Makefile               |  5 ++
->>>>  .../dts/ti/k3-am642-evm-icssg1-dualemac.dtso  | 75 +++++++++++++++++++
->>>>  arch/arm64/boot/dts/ti/k3-am642-evm.dts       |  2 +-
->>>>  3 files changed, 81 insertions(+), 1 deletion(-)
->>>>  create mode 100644 arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac.dtso
->>>>
->>>> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
->>>> index 52c1dc910308..320b2fae5730 100644
->>>> --- a/arch/arm64/boot/dts/ti/Makefile
->>>> +++ b/arch/arm64/boot/dts/ti/Makefile
->>>> @@ -43,6 +43,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
->>>>  dtb-$(CONFIG_ARCH_K3) += k3-am642-tqma64xxl-mbax4xxl.dtb
->>>>  dtb-$(CONFIG_ARCH_K3) += k3-am64-tqma64xxl-mbax4xxl-sdcard.dtbo
->>>>  dtb-$(CONFIG_ARCH_K3) += k3-am64-tqma64xxl-mbax4xxl-wlan.dtbo
->>>> +dtb-$(CONFIG_ARCH_K3) += k3-am642-evm-icssg1-dualemac.dtbo
->>>>  
->>>>  # Boards with AM65x SoC
->>>>  k3-am654-gp-evm-dtbs := k3-am654-base-board.dtb k3-am654-base-board-rocktech-rk101-panel.dtbo
->>>> @@ -105,6 +106,8 @@ k3-am642-tqma64xxl-mbax4xxl-sdcard-dtbs := \
->>>>  	k3-am642-tqma64xxl-mbax4xxl.dtb k3-am64-tqma64xxl-mbax4xxl-sdcard.dtbo
->>>>  k3-am642-tqma64xxl-mbax4xxl-wlan-dtbs := \
->>>>  	k3-am642-tqma64xxl-mbax4xxl.dtb k3-am64-tqma64xxl-mbax4xxl-wlan.dtbo
->>>> +k3-am642-evm-icssg1-dualemac-dtbs := \
->>>> +	k3-am642-evm.dtb k3-am642-evm-icssg1-dualemac.dtbo
->>>>  k3-j721e-evm-pcie0-ep-dtbs := k3-j721e-common-proc-board.dtb \
->>>>  	k3-j721e-evm-pcie0-ep.dtbo
->>>>  k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
->>>> @@ -120,6 +123,7 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
->>>>  	k3-am62a7-sk-csi2-ov5640.dtb \
->>>>  	k3-am642-tqma64xxl-mbax4xxl-sdcard.dtb \
->>>>  	k3-am642-tqma64xxl-mbax4xxl-wlan.dtb \
->>>> +	k3-am642-evm-icssg1-dualemac.dtb \
->>>>  	k3-j721e-evm-pcie0-ep.dtb \
->>>>  	k3-j721s2-evm-pcie1-ep.dtb
->>>>  
->>>> @@ -129,6 +133,7 @@ DTC_FLAGS_k3-am625-sk += -@
->>>>  DTC_FLAGS_k3-am62-lp-sk += -@
->>>>  DTC_FLAGS_k3-am62a7-sk += -@
->>>>  DTC_FLAGS_k3-am642-tqma64xxl-mbax4xxl += -@
->>>> +DTC_FLAGS_k3-am642-evm += -@
->>>>  DTC_FLAGS_k3-am6548-iot2050-advanced-m2 += -@
->>>>  DTC_FLAGS_k3-j721e-common-proc-board += -@
->>>>  DTC_FLAGS_k3-j721s2-common-proc-board += -@
->>>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac.dtso b/arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac.dtso
->>>> new file mode 100644
->>>> index 000000000000..b2b1a6252e73
->>>> --- /dev/null
->>>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac.dtso
->>>> @@ -0,0 +1,75 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>
->>> Don't you need to use updated licensing header like in the series [1]
->>>
->>> [1] https://lore.kernel.org/all/20240110140903.4090946-1-nm@ti.com/
->>>
->>
->> Sure. I will update the header.
->>
->>>> +/**
->>>> + * DT overlay for enabling 2nd ICSSG1 port on AM642 EVM
->>>> + *
->>>> + * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
->>>> + */
->>>> +
->>>> +/dts-v1/;
->>>> +/plugin/;
->>>> +
->>>> +#include <dt-bindings/gpio/gpio.h>
->>>> +#include "k3-pinctrl.h"
->>>> +
->>>> +&{/} {
->>>
->>> You need to fixup alias for ethernet1 to icssg1_emac1?
->>>
->>
->> Yes I will update the aliases accordingly.
->>
->>>> +	mdio-mux-2 {
->>>
->>> this should be mdio-mux@0 ?
->>>
->>
->> The main mux in evm dts is defined as mdio-mux-1 so I was following the
->> same. I will change this to mdio-mux@0
->>
->>>> +		compatible = "mdio-mux-multiplexer";
->>>> +		mux-controls = <&mdio_mux>;
->>>> +		mdio-parent-bus = <&icssg1_mdio>;
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +
->>>> +		mdio@0 {
->>>> +			reg = <0x0>;
->>>> +			#address-cells = <1>;
->>>> +			#size-cells = <0>;
->>>> +
->>>> +			icssg1_phy2: ethernet-phy@3 {
->>>> +				reg = <3>;
->>>> +				tx-internal-delay-ps = <250>;
->>>> +				rx-internal-delay-ps = <2000>;
->>>> +			};
->>>> +		};
->>>> +	};
->>>> +};
->>>> +
->>>> +&main_pmx0 {
->>>> +	icssg1_rgmii2_pins_default: icssg1-rgmii2-default-pins {
->>>> +		pinctrl-single,pins = <
->>>> +			AM64X_IOPAD(0x0108, PIN_INPUT, 2) /* (W11) PRG1_PRU1_GPO0.RGMII2_RD0 */
->>>> +			AM64X_IOPAD(0x010c, PIN_INPUT, 2) /* (V11) PRG1_PRU1_GPO1.RGMII2_RD1 */
->>>> +			AM64X_IOPAD(0x0110, PIN_INPUT, 2) /* (AA12) PRG1_PRU1_GPO2.RGMII2_RD2 */
->>>> +			AM64X_IOPAD(0x0114, PIN_INPUT, 2) /* (Y12) PRG1_PRU1_GPO3.RGMII2_RD3 */
->>>> +			AM64X_IOPAD(0x0120, PIN_INPUT, 2) /* (U11) PRG1_PRU1_GPO6.RGMII2_RXC */
->>>> +			AM64X_IOPAD(0x0118, PIN_INPUT, 2) /* (W12) PRG1_PRU1_GPO4.RGMII2_RX_CTL */
->>>> +			AM64X_IOPAD(0x0134, PIN_OUTPUT, 2) /* (AA10) PRG1_PRU1_GPO11.RGMII2_TD0 */
->>>> +			AM64X_IOPAD(0x0138, PIN_OUTPUT, 2) /* (V10) PRG1_PRU1_GPO12.RGMII2_TD1 */
->>>> +			AM64X_IOPAD(0x013c, PIN_OUTPUT, 2) /* (U10) PRG1_PRU1_GPO13.RGMII2_TD2 */
->>>> +			AM64X_IOPAD(0x0140, PIN_OUTPUT, 2) /* (AA11) PRG1_PRU1_GPO14.RGMII2_TD3 */
->>>> +			AM64X_IOPAD(0x0148, PIN_OUTPUT, 2) /* (Y10) PRG1_PRU1_GPO16.RGMII2_TXC */
->>>> +			AM64X_IOPAD(0x0144, PIN_OUTPUT, 2) /* (Y11) PRG1_PRU1_GPO15.RGMII2_TX_CTL */
->>>> +		>;
->>>> +	};
->>>> +};
->>>> +
->>>> +&cpsw3g {
->>>> +	pinctrl-0 = <&rgmii1_pins_default>;
->>>> +};
->>>> +
->>>> +&cpsw_port2 {
->>>> +	status = "disabled";
->>>> +};
->>>> +
->>>> +&mdio_mux_1 {
->>>> +	status = "disabled";
->>>> +};
->>>> +
->>>> +&icssg1_eth {
->>>> +	pinctrl-0 = <&icssg1_rgmii1_pins_default>, <&icssg1_rgmii2_pins_default>;
->>>> +};
->>>> +
->>>> +&icssg1_emac1 {
->>>> +	status = "okay";
->>>> +	phy-handle = <&icssg1_phy2>;
->>>> +	phy-mode = "rgmii-id";
->>>> +};
->>>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
->>>> index c08b0223be52..6ae43c12419f 100644
->>>> --- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
->>>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
->>>> @@ -200,7 +200,7 @@ mdio_mux: mux-controller {
->>>>  		mux-gpios = <&exp1 12 GPIO_ACTIVE_HIGH>;
->>>>  	};
->>>>  
->>>> -	mdio-mux-1 {
->>>> +	mdio_mux_1: mdio-mux-1 {
->>>
->>> mdio_mux_1: mdio-mux@1
->>>
->>
->> Sure. I will update this.
->>
->>>>  		compatible = "mdio-mux-multiplexer";
->>>>  		mux-controls = <&mdio_mux>;
->>>>  		mdio-parent-bus = <&cpsw3g_mdio>;
->>>
->>
-> 
+v7:
+ - Get the total time of the sqpoll thread through getrusage
+ - The working time of the sqpoll thread is obtained through ktime_get()
 
+v6:
+ - Replace the percentages in the fdinfo output with the actual running
+time and the time actually processing IO
+
+v5：
+ - list the changes in each iteration.
+
+v4：
+ - Resubmit the patch based on removing sq->lock
+
+v3：
+ - output actual working time as a percentage of total time
+ - detailed description of the meaning of each variable
+ - added test results
+
+v2：
+ - output the total statistical time and work time to fdinfo
+
+v1：
+ - initial version
+ - Statistics of total time and work time
+
+Signed-off-by: Xiaobing Li <xiaobing.li@samsung.com>
+---
+ io_uring/fdinfo.c | 8 ++++++++
+ io_uring/sqpoll.c | 8 ++++++++
+ io_uring/sqpoll.h | 1 +
+ 3 files changed, 17 insertions(+)
+
+diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
+index 976e9500f651..18c6f4aa4a48 100644
+--- a/io_uring/fdinfo.c
++++ b/io_uring/fdinfo.c
+@@ -64,6 +64,7 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+ 	unsigned int sq_shift = 0;
+ 	unsigned int sq_entries, cq_entries;
+ 	int sq_pid = -1, sq_cpu = -1;
++	u64 sq_total_time = 0, sq_work_time = 0;
+ 	bool has_lock;
+ 	unsigned int i;
+ 
+@@ -147,10 +148,17 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+ 
+ 		sq_pid = sq->task_pid;
+ 		sq_cpu = sq->sq_cpu;
++		struct rusage r;
++
++		getrusage(sq->thread, RUSAGE_SELF, &r);
++		sq_total_time = r.ru_stime.tv_sec * 1000000 + r.ru_stime.tv_usec;
++		sq_work_time = sq->work_time;
+ 	}
+ 
+ 	seq_printf(m, "SqThread:\t%d\n", sq_pid);
+ 	seq_printf(m, "SqThreadCpu:\t%d\n", sq_cpu);
++	seq_printf(m, "SqTotalTime:\t%llu\n", sq_total_time);
++	seq_printf(m, "SqWorkTime:\t%llu\n", sq_work_time);
+ 	seq_printf(m, "UserFiles:\t%u\n", ctx->nr_user_files);
+ 	for (i = 0; has_lock && i < ctx->nr_user_files; i++) {
+ 		struct file *f = io_file_from_index(&ctx->file_table, i);
+diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
+index 65b5dbe3c850..9155fc0b5eee 100644
+--- a/io_uring/sqpoll.c
++++ b/io_uring/sqpoll.c
+@@ -251,6 +251,9 @@ static int io_sq_thread(void *data)
+ 		}
+ 
+ 		cap_entries = !list_is_singular(&sqd->ctx_list);
++		struct rusage start, end;
++
++		getrusage(current, RUSAGE_SELF, &start);
+ 		list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
+ 			int ret = __io_sq_thread(ctx, cap_entries);
+ 
+@@ -260,6 +263,11 @@ static int io_sq_thread(void *data)
+ 		if (io_run_task_work())
+ 			sqt_spin = true;
+ 
++		getrusage(current, RUSAGE_SELF, &end);
++		if (sqt_spin == true)
++			sqd->work_time += (end.ru_stime.tv_sec - start.ru_stime.tv_sec) *
++					1000000 + (end.ru_stime.tv_usec - start.ru_stime.tv_usec);
++
+ 		if (sqt_spin || !time_after(jiffies, timeout)) {
+ 			if (sqt_spin)
+ 				timeout = jiffies + sqd->sq_thread_idle;
+diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
+index 8df37e8c9149..e99f5423a3c3 100644
+--- a/io_uring/sqpoll.h
++++ b/io_uring/sqpoll.h
+@@ -16,6 +16,7 @@ struct io_sq_data {
+ 	pid_t			task_pid;
+ 	pid_t			task_tgid;
+ 
++	u64					work_time;
+ 	unsigned long		state;
+ 	struct completion	exited;
+ };
 -- 
-Thanks and Regards,
-Danish
+2.34.1
+
