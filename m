@@ -1,146 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4426C12D76A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 09:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ADC12D776
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 09:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213543; cv=none; b=HoFikEeWalR/zNJD+Jhnbpc1vjdKEDYWLLVVu8vwRKWM83OLdag203Ee6KcblAKBUf54T66PXdyqystHSiBJY3LYzlJCjsxBwT6ci0Hj0wvUlbQ5XUmt8FwWDhm+1KRT4/Oj4dtGfYO+ycEzq2uUaFmO7VN6X4Mp2jMabNiKSVs=
+	t=1707213558; cv=none; b=srJKyeWs8x5wjyISQ7gzn+Y21kOKH1EE+j+LjbAtmT1Mk7YV9IeGl21unU1fO/QSQRH+zr5OuF6g+aH7aQ7T5k0hzSgYLe0EKH9C53jT6KxsKfZ6/6jZQqWLXkOPXeHx2+g/KvNHsAnEyp59p544mwyYdK4lDl68kSLj1Be8D/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213543; c=relaxed/simple;
-	bh=3NDFAJucASIsh5QzYnkIWuo5iU/VftF+EdgQ++/3YWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fAfk4n1k5wvYlxrH999mG1X76fJq4uVVlyuKQ7wBiALZLgoHJSBNqA5ruyxhI9/zt2MjTqddkg+xqFhWCLxUjLIWtmunqK846LPuWKt+V9hnZgc7aRrbbgwiS4HaJKB5zleQpADzT/OD8XkUuoYqMNifqRErrAiuu7bbHCjDZOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExekihOX; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707213558; c=relaxed/simple;
+	bh=rgBw88hJolSgSZ/34zK+NzRZplSTArpsDUnxWP5SxIo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=FxpW8Eq+khMJUFPhy/lqiS6jY4lXudgOpK1YBizfhdcE9fxDR7gmca59XtswbUceJpD+a8hQIRykbadQiAfPt9SVPvrBINJaWEwWtT0/umcM3XRTSS5urPKIYiVkgoSaB3r1MvjocM0qIc2Y8+DsPs29+u8zg9/1BZNkHnx++Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Fs8htcWW; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExekihOX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707213538; x=1738749538;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=3NDFAJucASIsh5QzYnkIWuo5iU/VftF+EdgQ++/3YWU=;
-  b=ExekihOXC+dsmrxIhMvCxGXqFWtWykvJuUHQ5yGcV9wqjq0vXXhB+zHm
-   VSFOMdqCafToqRgU2zsd4e+K8mjTnNxGH111G4NnnqYKJA06NZunlKB0P
-   /VFhnvqb50iUB06fbrRt7EWB8AcZuDF3Ktdejl4ihaZbinV/OmEAzoLgb
-   zGY3z/tXrBXs+8hL7Jqu4+L3BR/d0951lH3ANcC3dT0pWszeJXqqbrNcd
-   Sz4sYSj53yPXnxUY8CDIkcaAaLx8+nupJatqgkVdBQrObaT1kX8xeW+si
-   wepZtqCwzIW+oZfakVBhutSs3rO9TZLKJE9ik8gEHEoRA2umSLaCObNfa
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="600398"
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="600398"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:58:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="32043640"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 06 Feb 2024 01:58:57 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXIEB-0001Fs-2U;
-	Tue, 06 Feb 2024 09:58:55 +0000
-Date: Tue, 6 Feb 2024 17:58:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Balsam CHIHI <bchihi@baylibre.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: drivers/thermal/mediatek/lvts_thermal.c:520:2-3: Unneeded semicolon
-Message-ID: <202402061757.2OeFfaWP-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Fs8htcWW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1707213547; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=O+E9jRj6xzPvVoIr+app9sg3ad2aS4jITRcsHfNdvI8=;
+	b=Fs8htcWWAiDFLrDrj1wig1ONFpB+15sRqi3p1lqQ1cI5hT2SIpaNTggEGhCieE3Oc72xH5V1WmERTApPQlRNs2iZZlV7Dc9mA8AOpzrCfgCxR1kcTF9Ie9eVN031ZCQXTSyFRWqb3Skk+//mzLhz47fuZZ8RiABpnTJcO5UVy2Y=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W0DCVLK_1707213545;
+Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W0DCVLK_1707213545)
+          by smtp.aliyun-inc.com;
+          Tue, 06 Feb 2024 17:59:06 +0800
+From: Bitao Hu <yaoma@linux.alibaba.com>
+To: dianders@chromium.org,
+	akpm@linux-foundation.org,
+	pmladek@suse.com,
+	kernelfans@gmail.com,
+	liusong@linux.alibaba.com
+Cc: linux-kernel@vger.kernel.org,
+	yaoma@linux.alibaba.com
+Subject: [PATCHv5 0/3] *** Detect interrupt storm in softlockup ***
+Date: Tue,  6 Feb 2024 17:58:59 +0800
+Message-Id: <20240206095902.56406-1-yaoma@linux.alibaba.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478
-commit: f5f633b18234cecb0e6ee6e5fbb358807dda15c3 thermal/drivers/mediatek: Add the Low Voltage Thermal Sensor driver
-date:   12 months ago
-config: sparc64-randconfig-r064-20240206 (https://download.01.org/0day-ci/archive/20240206/202402061757.2OeFfaWP-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 13.2.0
+Hi, guys.
+I have implemented a low-overhead method for detecting interrupt storm
+in softlockup. Please review it, all comments are welcome.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402061757.2OeFfaWP-lkp@intel.com/
+Changes from v4 to v5:
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/thermal/mediatek/lvts_thermal.c:520:2-3: Unneeded semicolon
+- Rearranging variable placement to make code look neater.
 
-vim +520 drivers/thermal/mediatek/lvts_thermal.c
+Changes from v3 to v4:
 
-   464	
-   465	static int lvts_sensor_init(struct device *dev, struct lvts_ctrl *lvts_ctrl,
-   466						const struct lvts_ctrl_data *lvts_ctrl_data)
-   467	{
-   468		struct lvts_sensor *lvts_sensor = lvts_ctrl->sensors;
-   469		void __iomem *msr_regs[] = {
-   470			LVTS_MSR0(lvts_ctrl->base),
-   471			LVTS_MSR1(lvts_ctrl->base),
-   472			LVTS_MSR2(lvts_ctrl->base),
-   473			LVTS_MSR3(lvts_ctrl->base)
-   474		};
-   475	
-   476		void __iomem *imm_regs[] = {
-   477			LVTS_IMMD0(lvts_ctrl->base),
-   478			LVTS_IMMD1(lvts_ctrl->base),
-   479			LVTS_IMMD2(lvts_ctrl->base),
-   480			LVTS_IMMD3(lvts_ctrl->base)
-   481		};
-   482	
-   483		int i;
-   484	
-   485		for (i = 0; i < lvts_ctrl_data->num_lvts_sensor; i++) {
-   486	
-   487			int dt_id = lvts_ctrl_data->lvts_sensor[i].dt_id;
-   488	
-   489			/*
-   490			 * At this point, we don't know which id matches which
-   491			 * sensor. Let's set arbitrally the id from the index.
-   492			 */
-   493			lvts_sensor[i].id = i;
-   494	
-   495			/*
-   496			 * The thermal zone registration will set the trip
-   497			 * point interrupt in the thermal controller
-   498			 * register. But this one will be reset in the
-   499			 * initialization after. So we need to post pone the
-   500			 * thermal zone creation after the controller is
-   501			 * setup. For this reason, we store the device tree
-   502			 * node id from the data in the sensor structure
-   503			 */
-   504			lvts_sensor[i].dt_id = dt_id;
-   505	
-   506			/*
-   507			 * We assign the base address of the thermal
-   508			 * controller as a back pointer. So it will be
-   509			 * accessible from the different thermal framework ops
-   510			 * as we pass the lvts_sensor pointer as thermal zone
-   511			 * private data.
-   512			 */
-   513			lvts_sensor[i].base = lvts_ctrl->base;
-   514	
-   515			/*
-   516			 * Each sensor has its own register address to read from.
-   517			 */
-   518			lvts_sensor[i].msr = lvts_ctrl_data->mode == LVTS_MSR_IMMEDIATE_MODE ?
-   519				imm_regs[i] : msr_regs[i];
- > 520		};
-   521	
-   522		lvts_ctrl->num_lvts_sensor = lvts_ctrl_data->num_lvts_sensor;
-   523	
-   524		return 0;
-   525	}
-   526	
+- Renaming some variable and function names to make the code logic
+more readable.
+
+- Change the code location to avoid predeclaring.
+
+- Just swap rather than a double loop in tabulate_irq_count.
+
+- Since nr_irqs has the potential to grow at runtime, bounds-check
+logic has been implemented.
+
+- Add SOFTLOCKUP_DETECTOR_INTR_STORM Kconfig knob.
+
+Changes from v2 to v3:
+
+- From Liu Song, using enum instead of macro for cpu_stats, shortening
+the name 'idx_to_stat' to 'stats', adding 'get_16bit_precesion' instead
+of using right shift operations, and using 'struct irq_counts'.
+
+- From kernel robot test, using '__this_cpu_read' and '__this_cpu_write'
+instead of accessing to an per-cpu array directly, in order to avoid
+this warning.
+'sparse: incorrect type in initializer (different modifiers)'
+
+Changes from v1 to v2:
+
+- From Douglas, optimize the memory of cpustats. With the maximum number
+of CPUs, that's now this.
+2 * 8192 * 4 + 1 * 8192 * 5 * 4 + 1 * 8192 = 237,568 bytes.
+
+- From Liu Song, refactor the code format and add necessary comments.
+
+- From Douglas, use interrupt counts instead of interrupt time to
+determine the cause of softlockup.
+
+- Remove the cmdline parameter added in PATCHv1.
+
+Bitao Hu (3):
+  watchdog/softlockup: low-overhead detection of interrupt
+  watchdog/softlockup: report the most frequent interrupts
+  watchdog/softlockup: add SOFTLOCKUP_DETECTOR_INTR_STORM Kconfig knob
+
+ kernel/watchdog.c | 245 ++++++++++++++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug |  13 +++
+ 2 files changed, 258 insertions(+)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.37.1 (Apple Git-137.1)
+
