@@ -1,118 +1,220 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37C2131E40
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75FD131E40;
+	Tue,  6 Feb 2024 14:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231195; cv=none; b=SOeGf1oBqh+SDVoapYVXyA9KSMBlrYUry29jsR5NxY34s1i6yqDts5NIAyKLmd/otbv4zBnbUo3XnNWszes2X4TNDGxj65igJla+jHVQXodRy54XzWDALhdiJpiQH8J2h8BHShk8YrJ/+yLnd3MW+OJ1CiKYEmTLDQLcIoP2ktI=
+	t=1707231228; cv=none; b=bOheV+cEtcACrHeEY02/BeBb7Z6fSETI7TucQOUvqWFGBBg3pOjpVR+ojav6qWVyFZyTwcYLWSc0vMI/RN0b5d8oVI0OoGTRzjNWHNHAg9ipLmk7JDm3iyXIE6vMBP6co8gDoaJaauf3lWL7ysRccaRmhACV9ofWSkkHvPM+x5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231195; c=relaxed/simple;
-	bh=D35/E2FHCU24dgs4Ty+rcDXPBktIfZ1jyU2574rY6J4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UD5t87wm8s8b0KU09twOFb1DKEPQoniHTrmEy1D+rhldnCt6EW6iD7dod7Oc5VJ2cgAqZwSRnTaiOzYLifnQoTDcYPw54HRQfVzTquDcqIdPsxHi6XtM1PDG9qDpMXnUnIIRJThnzdNPUKyK9EoCMjBq6bT+eU749VxncYIaDmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=H97xngnq; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1707231228; c=relaxed/simple;
+	bh=6imiZNz13DtNsVm7OhjM91Tu6n6+upch3RjcbTaBXbo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xo0s8OlMXUSr3/VFrf7GUAHVWrnDJ5Sg36Im770oJdFgQcpZRi1bKj6kMO3cJ9CtzrlPOkZo1gsp9EXDq0oS68sB8AX10gRo9ulbSRXVVaRCcXnP6M5HvYo7JqUKPqY4baLaVev3V4DXwDjYOQZxczQW7jLuIaInVyhRbaYdMBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Gd8XC4jH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KlIBRPwB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Gd8XC4jH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KlIBRPwB; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="H97xngnq"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7bff2f6080aso40315739f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 06:53:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1707231193; x=1707835993; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/RZRnLtReRSjHaUzZeYCw5gGOm6jFVdruT7LPbqwewI=;
-        b=H97xngnqC3zj/gw0St/5tBaYKzpvOfvyRzbSqbXV37lY/MOt6FLZyQC5Nf6VwjBBqm
-         shXqnYgs1a4eU5tnzbnqP64x2wCitPe1vbgiYc/tji4yjnyPbe0lUaiamBfAqCLuGq61
-         H4Brmzxe8usrIYgnWTLy2Qgj/1fnV4ampxwCyrcqG/UXzcgEwyInNfVH0fKQeREo2dM3
-         gnF/PPB4XMn19BCQAj65HWumBirNs2+6X55aiQiAkGQqoqYNduRhJPQ6QTCbsyUl+l4j
-         IyMSRoVl6kDX3B4leLmoQStU95VsDElsyc2blxEhPQBzt8Q+GEIM3XJDaCkWSQAgJPo5
-         Bl4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707231193; x=1707835993;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/RZRnLtReRSjHaUzZeYCw5gGOm6jFVdruT7LPbqwewI=;
-        b=R+vJ+O7Q75bQc7Mo31AzbdUyYM3DPnCWs4jjgm3FV2r77EP1NrOHdfof2bnDjyQ30X
-         gQvVq53OHj1ZtwCkIc7eprZCUGs/IsYT4e9gPrcb0lYqeLrns7/pX57P+d8C7bF5zki5
-         7jeZJQyD6u8qscxacq0OgGG1ycwG8u9zJBEUaWFaejy912oBBISIRO4nu/oP06qmVTkT
-         J7HfzUMxJ7W8d9AdkgidcpJWT/Q5KtJnpSbzbkTkj8s648t4oD+Orfh5i9Z6VLMIUZaK
-         Jp5OzND2id9Y8zuvLx3uZpJW4ESvPl9kxvSB6PXdU/ftAJqUAx22+ZV3D7scaGjYHbC8
-         wTGg==
-X-Gm-Message-State: AOJu0YwsCbmCawh2YAO44RxcmpONsgxp20mYnCYIOZSUvKw+NZVlOAaB
-	OuveuClhtJWO9XFUSK5wF9MdXyNLMUxYBtijERziPLY5HNYbALta0r5WD/N3LAVR81FDJdwN9KO
-	Tn6s=
-X-Google-Smtp-Source: AGHT+IFkHEcNVJgsmx/JrCZ/vJcgCrBhCvfNvstVEh1lA4SXD33kt+u5VVvHbGTfsV9Sow3BPWZDeA==
-X-Received: by 2002:a5d:938a:0:b0:7c3:f631:a18f with SMTP id c10-20020a5d938a000000b007c3f631a18fmr899973iol.1.1707231192965;
-        Tue, 06 Feb 2024 06:53:12 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVG5Yo9X9qz852Tts0zLw91gtWD2fAd7d3MiZvqRPOZWstZ3sSRChpejZH81PST3lyaDhMJQMzvJJ6gvPbe/fGICAHzdE9aaK0Xvn3Rn/RmwUQe7K1BJDTEEH67x8DjsFw=
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id d65-20020a0285c7000000b004713a339311sm561194jai.8.2024.02.06.06.53.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Feb 2024 06:53:12 -0800 (PST)
-Message-ID: <0149019c-4562-426b-bcb1-fb8376ba0839@kernel.dk>
-Date: Tue, 6 Feb 2024 07:53:11 -0700
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Gd8XC4jH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KlIBRPwB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Gd8XC4jH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KlIBRPwB"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 890D8220AD;
+	Tue,  6 Feb 2024 14:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707231224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AEGImGG0Ff6z25ekPfLY3b5KTypKA7hNz0dlcxRASQs=;
+	b=Gd8XC4jHmAO2wIh9frwlto9XxCy5MYvJewPaeif1JTc76zhIL49XXS+ftX3Nrk5y5F+0Ib
+	kb8zevdT/b2sOVr+QUkTw6EwrWVxuckdhiafBvDzV0N9OaXfGzC/QBrFNDJJRGXPG3Gu2Q
+	6w5NhzyGSL+gLom0GAbnm4gRoV5pe20=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707231224;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AEGImGG0Ff6z25ekPfLY3b5KTypKA7hNz0dlcxRASQs=;
+	b=KlIBRPwBqPNyqo9m1MMtV8YIVgZTYkqY4/WYuTbYOsetUNgX+vC8/51oPkoo8pHPgzYyZX
+	CNIYGmYF15FKqCCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707231224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AEGImGG0Ff6z25ekPfLY3b5KTypKA7hNz0dlcxRASQs=;
+	b=Gd8XC4jHmAO2wIh9frwlto9XxCy5MYvJewPaeif1JTc76zhIL49XXS+ftX3Nrk5y5F+0Ib
+	kb8zevdT/b2sOVr+QUkTw6EwrWVxuckdhiafBvDzV0N9OaXfGzC/QBrFNDJJRGXPG3Gu2Q
+	6w5NhzyGSL+gLom0GAbnm4gRoV5pe20=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707231224;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AEGImGG0Ff6z25ekPfLY3b5KTypKA7hNz0dlcxRASQs=;
+	b=KlIBRPwBqPNyqo9m1MMtV8YIVgZTYkqY4/WYuTbYOsetUNgX+vC8/51oPkoo8pHPgzYyZX
+	CNIYGmYF15FKqCCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46FC3139D8;
+	Tue,  6 Feb 2024 14:53:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id K0myEPhHwmUiVwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 06 Feb 2024 14:53:44 +0000
+Date: Tue, 06 Feb 2024 15:53:43 +0100
+Message-ID: <87sf25wsnc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Wesley Cheng <quic_wcheng@quicinc.com>,
+	srinivas.kandagatla@linaro.org,
+	mathias.nyman@intel.com,
+	perex@perex.cz,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	lgirdwood@gmail.com,
+	andersson@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	Thinh.Nguyen@synopsys.com,
+	broonie@kernel.org,
+	bgoswami@quicinc.com,
+	tiwai@suse.com,
+	robh+dt@kernel.org,
+	konrad.dybcio@linaro.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	alsa-devel@alsa-project.org
+Subject: Re: [PATCH v13 32/53] ALSA: usb-audio: Check for support for requested audio format
+In-Reply-To: <2024020617-limb-name-f852@gregkh>
+References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
+	<20240203023645.31105-33-quic_wcheng@quicinc.com>
+	<87wmrhvir7.wl-tiwai@suse.de>
+	<2024020617-limb-name-f852@gregkh>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build warnings after merge of the block tree
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20240206131050.0e86d882@canb.auug.org.au>
- <CAMuHMdWjAKbt_bne8Mjpg3N_7R8TcKvAoVV8T4VrwTC2apAr_g@mail.gmail.com>
- <CAMuHMdXMexzzkj=pSdGOPhGncZ3BO8PFCrtfeh2XPoWsZ9-+kw@mail.gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CAMuHMdXMexzzkj=pSdGOPhGncZ3BO8PFCrtfeh2XPoWsZ9-+kw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Gd8XC4jH;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=KlIBRPwB
+X-Spamd-Result: default: False [2.11 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 BAYES_HAM(-0.08)[63.26%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[dt];
+	 MIME_GOOD(-0.10)[text/plain];
+	 R_RATELIMIT(0.00)[to_ip_from(RLe67txhfobum3fqdb5xx8e3au)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[23];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[quicinc.com,linaro.org,intel.com,perex.cz,kernel.org,lwn.net,gmail.com,synopsys.com,suse.com,vger.kernel.org,alsa-project.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 2.11
+X-Rspamd-Queue-Id: 890D8220AD
+X-Spam-Level: **
+X-Spam-Flag: NO
+X-Spamd-Bar: ++
 
-On 2/6/24 6:42 AM, Geert Uytterhoeven wrote:
-> On Tue, Feb 6, 2024 at 12:12 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> On Tue, Feb 6, 2024 at 3:11 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>> After merging the block tree, today's linux-next build (arm
->>> multi_v7_defconfig) produced these warnings:
->>>
->>> In file included from /home/sfr/next/next/include/linux/bits.h:6,
->>>                  from /home/sfr/next/next/include/linux/bitops.h:6,
->>>                  from /home/sfr/next/next/include/linux/kernel.h:23,
->>>                  from /home/sfr/next/next/io_uring/nop.c:2:
->>> /home/sfr/next/next/include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
->>>     7 | #define BIT(nr)                 (UL(1) << (nr))
->>>       |                                        ^~
->>> /home/sfr/next/next/include/linux/io_uring_types.h:538:35: note: in expansion of macro 'BIT'
->>>   538 |         REQ_F_CAN_POLL          = BIT(REQ_F_CAN_POLL_BIT),
->>>       |                                   ^~~
->>>
->>> (and mny more similar)
->>>
->>> Introduced by commit
->>>
->>>   d964e8440442 ("io_uring: add io_file_can_poll() helper")
->>>
->>> REQ_F_CAN_POLL_BIT is 32.
->>
->> All of these BIT() have to be changed to BIT_ULL().
->> And let's hope all variables used for storing these flags have been
->> changed from unsigned long to u64...
+On Tue, 06 Feb 2024 15:50:21 +0100,
+Greg KH wrote:
 > 
-> I have sent a fix
-> https://lore.kernel.org/1960190f37b94276df50d382b9f1488cd6b6e662.1707226862.git.geert+renesas@glider.be
+> On Tue, Feb 06, 2024 at 02:12:44PM +0100, Takashi Iwai wrote:
+> > On Sat, 03 Feb 2024 03:36:24 +0100,
+> > Wesley Cheng wrote:
+> > > 
+> > > Allow for checks on a specific USB audio device to see if a requested PCM
+> > > format is supported.  This is needed for support when playback is
+> > > initiated by the ASoC USB backend path.
+> > > 
+> > > Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> > 
+> > Just cosmetic:
+> > 
+> > > +struct snd_usb_stream *snd_usb_find_suppported_substream(int card_idx,
+> > > +			struct snd_pcm_hw_params *params, int direction)
+> > > +{
+> > > +	struct snd_usb_audio *chip;
+> > > +	struct snd_usb_substream *subs;
+> > > +	struct snd_usb_stream *as;
+> > > +	const struct audioformat *fmt;
+> > > +
+> > > +	/*
+> > > +	 * Register mutex is held when populating and clearing usb_chip
+> > > +	 * array.
+> > > +	 */
+> > > +	mutex_lock(&register_mutex);
+> > > +	chip = usb_chip[card_idx];
+> > > +	if (!chip) {
+> > > +		mutex_unlock(&register_mutex);
+> > > +		return NULL;
+> > > +	}
+> > > +
+> > > +	if (enable[card_idx]) {
+> > > +		list_for_each_entry(as, &chip->pcm_list, list) {
+> > > +			subs = &as->substream[direction];
+> > > +			fmt = snd_usb_find_substream_format(subs, params);
+> > > +			if (fmt) {
+> > > +				mutex_unlock(&register_mutex);
+> > > +				return as;
+> > > +			}
+> > > +		}
+> > > +	}
+> > > +	mutex_unlock(&register_mutex);
+> > 
+> > I prefer having the single lock/unlock call pair, e.g.
+> > 
+> > 	struct snd_usb_stream *as, *ret;
+> > 
+> > 	ret = NULL;
+> > 	mutex_lock(&register_mutex);
+> > 	chip = usb_chip[card_idx];
+> > 	if (chip && enable[card_idx]) {
+> > 		list_for_each_entry(as, &chip->pcm_list, list) {
+> > 			subs = &as->substream[direction];
+> > 			if (snd_usb_find_substream_format(subs, params)) {
+> > 				ret = as;
+> > 				break;
+> > 			}
+> > 		}
+> > 	}
+> > 	mutex_unlock(&register_mutex);
+> > 	return ret;
+> > }
+> > 
+> > In this case, we shouldn't reuse "as" for the return value since it
+> > can be non-NULL after the loop end.
+> 
+> Why not just use guard(mutex) for this, making it all not an issue?
 
-It needs a bit more than that, just because there's one helper that
-also returns flags to be set. I've sorted it out and amended the commit,
-should be fine now. I'll check on 32-bit as well.
-
--- 
-Jens Axboe
+Heh, it's too new ;)
+That should work gracefully, yes.
 
 
+Takashi
