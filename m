@@ -1,72 +1,72 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BCA134727
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 15:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EBF13398B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 15:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707234539; cv=none; b=rvMVujx8HSPxVqHpV4nbPKqXDSXKDd7SD0AYRi4M06JnCGjDtae4Rz14fH3cbK/A92ZeggrECqzEehmVmrLeWHt/96AyRKw+nRNBQGcYJOKiCLg9dMiNpGs2UV9fAT4k56YulnerLN10ZO+OAuFGStmxxaiFYnjhV/NVD8ZOLv0=
+	t=1707234579; cv=none; b=KQFJoVpOj7T/33Uzwboxi6r7He+xt9k2HG9DpgWNdC2+bhQFUvL96szeGrqICfw80/puJgET1aHCaJbxA/nUPFdOrr3LUMDfD2pTGk1vu9E4bPwp7/OLor5mlUsH036T511ZMjGGooM5QXD5t53D8gaO/lpzmapokfy04UQmjtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707234539; c=relaxed/simple;
-	bh=MugGYJDT5X739etuU4UniyS6U+N4eqHCT3QeU0paadg=;
+	s=arc-20240116; t=1707234579; c=relaxed/simple;
+	bh=bdl37jmtCEivilMOrqGrJq6Jlst6fkKekum2b0E0mjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VeCJUB/A5Qy0TeUzBkNYCkhlt3vcAxuUjf3i1ZzngCy6vjuyvvg5Nfwf9nyzwIWQ4YHpwXNjxgc/+c42EqHqjetyGOMMO5nQYYJalMAJyFnCwcOIHiYnAx+SOya3Scw9WtBVbV5yiLAbkz2lvnaMsW2Ruv6O0HrgT76I+cejq60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aTvOsg48; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=CX1v9PKxQmbYCORILHS254QEGi0V1UWxO2A1KjQZ846Pu1QZwnZze5cqiBcUJUVhQCEX+W8vik6qcSYJZlkcxcqJePNXhnVOSMfs6Jdq7hlhp8ylmkE/jGOyxqJ1jn4mC/klGDkhLbcLfYE7PpPahB4aHPnLtgpuXnvfVNl5LHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h5fqMoi6; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aTvOsg48"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 44F0940E023B;
-	Tue,  6 Feb 2024 15:48:55 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id nwBFDjxXf8_Q; Tue,  6 Feb 2024 15:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707234532; bh=smDVek07in+ATqnFthIVLRadHZFIZTvXW9ELQwnkFeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aTvOsg48RVf4L+M8MlO88ubUVBZUexbKgPPIxzyltRUkpBuAENQQPvSTPCfZgNP6k
-	 zrgx9M12UwGNnftwk2mGvZN1OIaenTkhgYwZNPZm7ORcmdOr/pNSqfCf74jatpDl3f
-	 unIWLdmLNI8E90WUFfHjm3X/vZ6TnT0DXGurWuS6ZkXYU8wOjtk+4U4xvUtMt8ygkV
-	 DzTTvE+a+sQOY/KwskmDF+ZBLQQcETboSv0jvDE0IK2ujMotlYmfpdssqN0nSFPiy7
-	 HNQP2/gyoc4aa8kMFIr0ylQYbEtEQsdFa163aMYiDXeIqTqt8nVuS5AfysnIQg0zsK
-	 mafId/VoY3Pgl9+1pJfTHLdmnO0yp3IyQBNV8tBpf1S6u9ZKXBjhVkpJF60ouLsMHL
-	 r+NJPgmg9Pq6RmL57D9fBTrgLySxLtb3VXD10BFyiVW6xOoNCqREH1vxlaDCkYd70u
-	 2V+Z1Mj1hOEK7z2K+/9Z0O6nP+GCvDOx6N6ktfQORgqcDLpdo+Kv2zoHLuVsyfLcJt
-	 Bk1hVJdbd9B2VSzi/qpuDKeIcUSGf1ZFGhZUcgAC04tKeJaU0egNUIM1QQkKNct+FY
-	 VvTDhrlUEyMbBO9ESDzuLow97ejI676qkbSV9cir7pe65Be0xeUdN5EQVd0oVJzKDF
-	 rQVLIwT702Ewp2oOud4t1PVM=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A562D40E00B2;
-	Tue,  6 Feb 2024 15:48:34 +0000 (UTC)
-Date: Tue, 6 Feb 2024 16:48:29 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Arjan van de Ven <arjan@linux.intel.com>,
-	Huang Rui <ray.huang@amd.com>, Juergen Gross <jgross@suse.com>,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Feng Tang <feng.tang@intel.com>,
-	Andy Shevchenko <andy@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch v5 10/19] x86/smpboot: Teach it about topo.amd_node_id
-Message-ID: <20240206154829.GOZcJUzRbfv7WUsKdI@fat_crate.local>
-References: <20240117115752.863482697@linutronix.de>
- <20240117115908.946275828@linutronix.de>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h5fqMoi6"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-363b5ce4260so14102395ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 07:49:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707234576; x=1707839376; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zCqPj3GZFJlmXLFLaYfVOm5VLNMuP0812vX0CpyGkb8=;
+        b=h5fqMoi65rZvMyPbhKq1SyUhBIHoyXhy5BUXfUr2B8LMfMkQtXvZu7Oo4AaLA7ctHD
+         9bFXRn1zS5dZD426J9L2jXm0t2dACzUQoCw/pv72t+M6IPQR3tWOsm5SF2FYiER8MJHI
+         EnQdFEq3RkgmNxCpbWOkNs4AyXWuKHHR0mNMo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707234576; x=1707839376;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zCqPj3GZFJlmXLFLaYfVOm5VLNMuP0812vX0CpyGkb8=;
+        b=gFa+l+BWUc4mI+wM18uGO2PxKACAtHAYAi6SPktqAh+/PWrEwtSYlXkZPyw889wf91
+         tGpiYYudWuuC0ih5Tp4K4Kr3DDqqrKQFHCmLsbAuAog6xrFNgyepRISZUcFxstCxRXTX
+         XBpeHmhXnDzlYXT68OZqJjD3jGzG58C25LXU3d3JOKmZZ6Ocx0dE5lj0hMih8VC/8SzK
+         vhsYTw4BGB7qJ64blIvZ60aq3nTZLno3oSYjuYm87lLXdUdtq8wF97b7BdpFUX6/8AbF
+         HBwKX5ntLuhrOkwmXfKfAY/wTUKPxuIwK32U5L9+1EnphXKzshZjRQSxYxPNbH2i0AWh
+         IC7g==
+X-Gm-Message-State: AOJu0YzqrV+Wb+GO6SxISCvhtnCjhiqaobFQXR3rLJ8lJN5BHFbP1OqO
+	gYJssgqx826Rp/X8MRrx2lYcfA08jGpxzky+zRafPJiKQV+bEemiDdtXpODjvA==
+X-Google-Smtp-Source: AGHT+IFIEPMtHymxpfWYxcgZHzqkoP18uLj2m3G0KSirljW2704g78xPq+vrE/pwaTgUYtR+AfppAA==
+X-Received: by 2002:a05:6e02:318b:b0:363:9f50:9715 with SMTP id cb11-20020a056e02318b00b003639f509715mr3945451ilb.31.1707234576759;
+        Tue, 06 Feb 2024 07:49:36 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW/L96TBq5qchBhAn0e6I03zaNcO4TTP3E7jPFQqVTVF4Xw7sqIMfXoYxWFZSVxC0LF9fReknnkcM1CdGcu9VDCGKfdNrWFv2WY8R0Dx6sIHC/wvEur6toWcSiuGiujz+d2GwvENcuzSH7Jp62GsdfM9OMxUD9beAjwYPmPs06TJyE2y6FMlF7jcGcgyyPMXOcXD3s0e0GeLZcM/kclZS+m+/mOoZPFKgHPL9qVP9fWK2oKNSqYDd7x5KE+CMsSeF3/zYCaj2Dk+mYSixB/InDUxDTB6sv9g0uquZg1N8my4gzoN5vTlIehSM5FkesArKUaSflAOoBdwIWdJGW4D/MJ6jqeFuKtAxILkcqad5fRf+6YNkpP15mOWh+SnqzJEjQy6hlPonNbUuZhYn3u
+Received: from localhost (147.220.222.35.bc.googleusercontent.com. [35.222.220.147])
+        by smtp.gmail.com with UTF8SMTPSA id fo10-20020a056638648a00b0047136dd0dabsm568883jab.158.2024.02.06.07.49.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Feb 2024 07:49:36 -0800 (PST)
+Date: Tue, 6 Feb 2024 15:49:35 +0000
+From: Matthias Kaehlcke <mka@chromium.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Javier Carrasco <javier.carrasco@wolfvision.net>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] ASoC: dt-bindings: xmos,xvf3500: add XMOS XVF3500
+ voice processor
+Message-ID: <ZcJVD4CGhlWRwgfM@google.com>
+References: <20240206-onboard_xvf3500-v3-0-f85b04116688@wolfvision.net>
+ <20240206-onboard_xvf3500-v3-6-f85b04116688@wolfvision.net>
+ <ZcJDFi+iIQOWzgYw@finisterre.sirena.org.uk>
+ <7b472cb2-6658-446a-ae47-411d08798cca@wolfvision.net>
+ <ZcJR0LrwaS5GAf5h@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,24 +75,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240117115908.946275828@linutronix.de>
+In-Reply-To: <ZcJR0LrwaS5GAf5h@finisterre.sirena.org.uk>
 
-On Tue, Jan 23, 2024 at 01:53:45PM +0100, Thomas Gleixner wrote:
->  static bool match_die(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
->  {
-> -	if (c->topo.pkg_id == o->topo.pkg_id &&
-> -	    c->topo.die_id == o->topo.die_id)
-> -		return true;
-> -	return false;
-> +	if (c->topo.pkg_id != o->topo.pkg_id || c->topo.die_id != o->topo.die_id)
-> +		return false;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_TOPOEXT) && topology_amd_nodes_per_pkg() > 1)
+On Tue, Feb 06, 2024 at 03:35:44PM +0000, Mark Brown wrote:
+> On Tue, Feb 06, 2024 at 04:05:15PM +0100, Javier Carrasco wrote:
+> 
+> > The names in the datasheet are vdd for the 1V0 supply and vddio for the
+> > 3V3 supply. I named the latter vdd2 instead because this device does not
+> > have its own driver and instead it uses the onboard_usb_hub generic
+> > driver, where the supplies are named vdd and vdd2.
+> 
+> > Those are the names used for devm_regulator_bulk_get(). Is that not the
+> > right way to match them?
+> 
+> The binding should really use vddio instead of vdd2 but if that's an
+> existing binding then it gets more annoying, probably that existing
+> binding is wrong too since vddio does sound like an entirely plausible
+> standard name for a 3.3V supply. :/  At the very least the binding
+> should document the weird mapping, though ideally the driver would be
+> tought to request names matching the datasheet if the compatible is the
+> one for this device.  Doing the better naming might be too much hassle
+> though.
 
-check_for_deprecated_apis: WARNING: arch/x86/kernel/smpboot.c:516: Do not use boot_cpu_has() - use cpu_feature_enabled() instead.
+Initially the driver targeted a device with a single supply, the name
+'vdd' was kept generic since it was expected that other devices would be
+supported (except for a couple of minor bits the driver is not device
+specific). Later support for a device with two supplies was added, with
+the generic name 'vdd2' to support other devices with multiple regulators.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Using the correct naming would be doable, with the caveat that the old
+naming still needs to be supported for backwards compatibility.
