@@ -1,96 +1,105 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B560956B6D;
-	Tue,  6 Feb 2024 02:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AD05677B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 02:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707185012; cv=none; b=NwtvOVg/uSRvXttVIf1iP0L/sa0QWKaf2U7kououobA2udmt84k/C5V5hKnbhbZxmgsXCrDU4dVvSLgNEYeMcxdE0Gal/wVxgEKfX7LtYqV8r5vGuL/09cUOBfayTyhq4i3jWY9Kn3z9y3zHeQzRpRaDHNjG3lkv9JHpgTISr7k=
+	t=1707185249; cv=none; b=f7x7ekVxI2GleR5V21DFRtCrQ7N/LcYOzio0AK4bXbw6C8rWN/5U1MEzHwbSi3QHCHkCyDV9hbvHIwV7woxjwbYkpd2A/ULMx4xDTty7TN1Wk4KrSPzGfD1hX0t1uWBO9yygFDmYgQxcJ1txgl/++0LqitbyfPeLr3iNfTUAXuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707185012; c=relaxed/simple;
-	bh=HCHH0zlG8Okh9pH+9a449X/wcy1iGT612BVT0ULldVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iFiKLaVIIbhCrnm4NhCIPhuw6GrPhjFA5nB7xHUjfLxsfegzdjrPWEDtqg3k0gr2MG3UVsBrL22PS9knF4/6HYRlcZBcFGxQNRC8EOHtVer/66i+k7O5vtaAFCbBMRt+XKiW3uzgpNargmGu7m6rWi40pv7ohMZGoOz+xcyAm88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from lijuan-ubuntu-04.home.arpa (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowADX36OzkcFl3IMSAQ--.8824S2;
-	Tue, 06 Feb 2024 09:56:03 +0800 (CST)
-From: lilijuan@iscas.ac.cn
-To: clm@fb.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com
-Cc: linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pengpeng@iscas.ac.cn,
-	Lijuan Li <lilijuan@iscas.ac.cn>
-Subject: [PATCH] btrfs: mark __btrfs_add_free_space static
-Date: Tue,  6 Feb 2024 09:56:00 +0800
-Message-Id: <20240206015600.115756-1-lilijuan@iscas.ac.cn>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1707185249; c=relaxed/simple;
+	bh=mqZDvLVTP8VLg8Z0roufiMafcQM1Hvn1MKVhNCmazPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K1nd8Hk9NG7ezoGVTHr5Iy15GWqLnbHZBydpBZalHeCbkL8dOHL/ipLdxAfjuZ9oAM1CZ0emQUtT6xVxlrdEC0hTb9SHgw04Bke4DJV9riyrY6+cl0w8VO9O/0Jl6+Je5q1+9fJNb9t7a486kPTwa9KOFQ4I6CuEQNwCFcHvkos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LV73bJJY; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LV73bJJY"
+Message-ID: <38dae4da-7afe-4405-9545-294efc18fb8f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707185245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eIJijInYFu0cUG/tmLajV3LIHwabmz8bTWiDitWtQ+k=;
+	b=LV73bJJYq+BC3YGCCBAWgfDKtcFLErH41Ml9O9zbPiFRre+qDKQcXllfi1XubWXUBEvFDH
+	KwuK1d1z4y8kBULaXqi8ehf+wTFSQwz4MmtNl/FK+QWr/hw+o+72dUCpbYpwbyoXfze0tm
+	NmFxfyNHo1Qf/tEcRKhOcVB7M0Kmu90=
+Date: Tue, 6 Feb 2024 10:07:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADX36OzkcFl3IMSAQ--.8824S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFyDAFW5JF4fZFW5uFy5twb_yoW8Xw1kpF
-	n3AFsxtw1UArsYvFWvgw4qv34Sga4vqa1Uu3s8A3yfXrZxGr1DXFyqv3W8A3W3trWkJr4x
-	Xas09ryUArsIyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAKzVCY07xG64k0F24l
-	c2xSY4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
-	6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0J
-	UfnYwUUUUU=
-X-CM-SenderInfo: poloxyxxdqqxpvfd2hldfou0/
+Subject: Re: [PATCH] mm/swap_state: update zswap LRU's protection range with
+ the folio locked
+Content-Language: en-US
+To: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org, yosryahmed@google.com, linux-mm@kvack.org,
+ kernel-team@meta.com, linux-kernel@vger.kernel.org
+References: <20240205232442.3240571-1-nphamcs@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20240205232442.3240571-1-nphamcs@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Lijuan Li <lilijuan@iscas.ac.cn>
+On 2024/2/6 07:24, Nhat Pham wrote:
+> Move the zswap LRU protection range update above the swap_read_folio()
+> call, and only when a new page is allocated. This is the case where
+> (z)swapin could happen, which is a signal that the zswap shrinker should
+> be more conservative with its reclaiming action.
+> 
+> It also prevents a race, in which folio migration can clear the
+> memcg_data of the now unlocked folio, resulting in a warning in the
+> inlined folio_lruvec() call.
+> 
+> Reported-by: syzbot+17a611d10af7d18a7092@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/000000000000ae47f90610803260@google.com/
+> Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 
-__btrfs_add_free_space is only used in free-space-cache.c,
-so mark it static.
+LGTM, thanks!
 
-Signed-off-by: Lijuan Li <lilijuan@iscas.ac.cn>
----
- fs/btrfs/free-space-cache.c | 2 +-
- fs/btrfs/free-space-cache.h | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+Reviewed-by: Chengming Zhou <zhouchengming@bytedance.com>
 
-diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
-index d372c7ce0e6b..812994f456e4 100644
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2621,7 +2621,7 @@ static void steal_from_bitmap(struct btrfs_free_space_ctl *ctl,
- 	}
- }
- 
--int __btrfs_add_free_space(struct btrfs_block_group *block_group,
-+static int __btrfs_add_free_space(struct btrfs_block_group *block_group,
- 			   u64 offset, u64 bytes,
- 			   enum btrfs_trim_state trim_state)
- {
-diff --git a/fs/btrfs/free-space-cache.h b/fs/btrfs/free-space-cache.h
-index 33b4da3271b1..d9b7fbc2008a 100644
---- a/fs/btrfs/free-space-cache.h
-+++ b/fs/btrfs/free-space-cache.h
-@@ -114,8 +114,6 @@ int btrfs_write_out_cache(struct btrfs_trans_handle *trans,
- 
- void btrfs_init_free_space_ctl(struct btrfs_block_group *block_group,
- 			       struct btrfs_free_space_ctl *ctl);
--int __btrfs_add_free_space(struct btrfs_block_group *block_group, u64 bytenr,
--			   u64 size, enum btrfs_trim_state trim_state);
- int btrfs_add_free_space(struct btrfs_block_group *block_group,
- 			 u64 bytenr, u64 size);
- int btrfs_add_free_space_unused(struct btrfs_block_group *block_group,
--- 
-2.40.1
-
+> ---
+>  mm/swap_state.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/swap_state.c b/mm/swap_state.c
+> index e671266ad772..7255c01a1e4e 100644
+> --- a/mm/swap_state.c
+> +++ b/mm/swap_state.c
+> @@ -680,9 +680,10 @@ struct folio *swap_cluster_readahead(swp_entry_t entry, gfp_t gfp_mask,
+>  	/* The page was likely read above, so no need for plugging here */
+>  	folio = __read_swap_cache_async(entry, gfp_mask, mpol, ilx,
+>  					&page_allocated, false);
+> -	if (unlikely(page_allocated))
+> +	if (unlikely(page_allocated)) {
+> +		zswap_folio_swapin(folio);
+>  		swap_read_folio(folio, false, NULL);
+> -	zswap_folio_swapin(folio);
+> +	}
+>  	return folio;
+>  }
+>  
+> @@ -855,9 +856,10 @@ static struct folio *swap_vma_readahead(swp_entry_t targ_entry, gfp_t gfp_mask,
+>  	/* The folio was likely read above, so no need for plugging here */
+>  	folio = __read_swap_cache_async(targ_entry, gfp_mask, mpol, targ_ilx,
+>  					&page_allocated, false);
+> -	if (unlikely(page_allocated))
+> +	if (unlikely(page_allocated)) {
+> +		zswap_folio_swapin(folio);
+>  		swap_read_folio(folio, false, NULL);
+> -	zswap_folio_swapin(folio);
+> +	}
+>  	return folio;
+>  }
+>  
+> 
+> base-commit: 91f3daa1765ee4e0c89987dc25f72c40f07af34d
