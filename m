@@ -1,563 +1,120 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A14171B6
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1A6BA50
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707240523; cv=none; b=kq1eJDJH+W20uyv3vYnOofuWP16CAbMdoFjjyYp2vkrt04rZ+vl8QnE2rDROm2qobbaJ5c2GtRMOZbmi/wggiVG/ZPNkUJ/3cdbRodioTBPC90IxpWTTY623tsD+X2CwraxvHoHTDiqL/erIgJOLNPxrTZ7Cm2FtY2rZUl6ybA8=
+	t=1707240678; cv=none; b=sfHNWFqTrXV+zs4pXjg6tLd3f1vE7L21ml/TiBPSpHtjLlGxyAq19a9HX/E6UIdGeJztOjRJH/iwjGRdrz1lQb8XNzUqE/GK69K4cPe92wEQ6ltERsV8t7qOOtlAYM+Xu0dnMS5Y2fMNjdxYX1QY2AqhHE2DmvtIU+REjnXyyXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707240523; c=relaxed/simple;
-	bh=9sWdUEEWM2Tfs46jkgabpwtU9BiakYankMPthmg7kM4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Wh3Yp4f8PlzlAz8WE/Efm5QAFjwPVpBOhhhjdKZBheKdA5OpTJYiRoKMqo4RL6mFLPPGrv4544BfWWbGB1sYgUFvgcCBCK0MQQUc8fQRd1j/D7kxm1k6Cd22phUjFnvvigiWsXrqCrNssQwVPuOSjb6uXnVSdIN7hQZf3h89ImI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=N0V6+Fi0; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707240678; c=relaxed/simple;
+	bh=tr6m+R2THwf3zvHVbBb44TsmN3M31ERvqZA3x4Ing70=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=icv2F7H9MqC3nl/9x2BDwKyLbucGXURDh9dxOzfG3TIu9KyzUWBwSI90UZLSi2//RkVTe0wVbFG3EFC4HM6JiELdJ7BCIeeMXxATYoe0QzOUbRFHTwrIDEOd8rtluWx5GB/ACrsKc7IgeWHXpYRp8okmFgo+Q6Vrj7VTGxbMOQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKCcp7q4; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="N0V6+Fi0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707240519;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IuDNXHrtfsKiiCQUnd7vhGhnPyKVBJ6ejLgzQPnQqMM=;
-	b=N0V6+Fi0RXnwW3dJ4Ogl6JoBR1dfoPD69CvJuAXnCmi2BDy5JBAQQAgh2/PYYk1r/bN1EI
-	cqXzKgVUMld365VCGyYlVUt0mWI6geHRc8QIDSAlBox1Aqa+CTeTj58RsMUo1vKw7FsA3f
-	p0UeLuGV+nWcZ7KvDoEp9gEYIKRinNc=
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Russell King <linux+etnaviv@armlinux.org.uk>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org,
-	etnaviv@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [etnaviv-next v13 7/7] drm/etnaviv: Add support for vivante GPU cores attached via PCI(e)
-Date: Wed,  7 Feb 2024 01:27:59 +0800
-Message-Id: <20240206172759.421737-8-sui.jingfeng@linux.dev>
-In-Reply-To: <20240206172759.421737-1-sui.jingfeng@linux.dev>
-References: <20240206172759.421737-1-sui.jingfeng@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKCcp7q4"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7c00cfd7156so238704639f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 09:31:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707240676; x=1707845476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oPcqdTOG7hsb6OetsSk6gwLuDAB08ptM/Ebrl9LX+uc=;
+        b=UKCcp7q4/8YDZM2OrSGBRdmzum3D7HLixr9FaphZklaA+pV9PipaLpGTRY0ZaAbuHA
+         Dca3InrmGLW3A72ma/A9HaP6StRX2NQ0J7hV18KqMpAg/57/cKwszgl4FqJXu+3790op
+         lsuZPIkUafGnQUOBvEc3ksPBtI7kqYoo7V2WV9auEd+mOwsTnSP/jK4xHPZ0XKTAAc9u
+         Dsn/6oeuDekffjlJL084Lfuyx9Z5Ed0XHPeL1Pc0pkEcHGE+uf9R9a0zMx15rOb5//Vr
+         1E5TD/lzF+BP2SbaQaFX8tgLdWlY+fki2fn2fbuD00QCpigOrcNlp4qWdczeIRIhw/SL
+         28qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707240676; x=1707845476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oPcqdTOG7hsb6OetsSk6gwLuDAB08ptM/Ebrl9LX+uc=;
+        b=gIrhSVTaDe0Sg4uMxK/Xz1KCTqHz9VKauitwzQAUo1+HK5zSrnB1BAqsnyfmNDQx+N
+         uSrFlSuGQ8JeA1HvlVblXKXP+FfmDNAMgUpLO/oZrvv2o6dKj9oRksEclzhpEF4Vw+7O
+         TzP/FamYoSwl2skGOJMBV2qQbfFE2fRGTQHEJhL3XyyMLiabDb1yneIdbNwec9xsKiXW
+         A0V9UZ++z7zLCVR6VW8AgISAXW4a/+3aGWTeGBTrWRJkd3gOGv6E6hEpPKnlUJ4F8cQy
+         95LwiiXKN7j31xrCb6UTmNnrV3bJ8E4nMTbKg6eChOq5ElIWX9uvlLuN+eaZ3mQpz/y/
+         EIrA==
+X-Gm-Message-State: AOJu0Yzm+KEfKwQIpp6W1Dd+Wk3+WzCZ1nsC4Ho1ptfwzNjndwtxhGtS
+	D1ouI7z8D4UKK+wrAzisAmK3zGkwNXVf0lo/xmUulSzMxwi2wj1GTJ1yDwBs1QmrIIXe15mdw5t
+	E4l6YnPtFbAbBMTLsC2NTgXDdJT4=
+X-Google-Smtp-Source: AGHT+IHwZvUC74P4q/l1EaSnsg7ta7gOlVu/FmAfqhuEXq0gxrEH6mxcei45FQXey0KBh+cOaM345ptlFi+YwfS3W3Q=
+X-Received: by 2002:a05:6602:17c6:b0:7c3:f303:e274 with SMTP id
+ z6-20020a05660217c600b007c3f303e274mr2201238iox.8.1707240676003; Tue, 06 Feb
+ 2024 09:31:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240205232442.3240571-1-nphamcs@gmail.com> <20240206151523.GB54958@cmpxchg.org>
+In-Reply-To: <20240206151523.GB54958@cmpxchg.org>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 6 Feb 2024 09:31:04 -0800
+Message-ID: <CAKEwX=NxY+MsTO9vxrpSPHu-i4fJ+m=9=_U5beo5XLAtbADivw@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap_state: update zswap LRU's protection range with
+ the folio locked
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: akpm@linux-foundation.org, chengming.zhou@linux.dev, yosryahmed@google.com, 
+	linux-mm@kvack.org, kernel-team@meta.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The component helper functions are the glue, which is used to bind multiple
-GPU cores to a virtual master platform device. Which is fine and works well
-for the SoCs who contains multiple GPU cores.
+On Tue, Feb 6, 2024 at 7:15=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org>=
+ wrote:
+>
+> On Mon, Feb 05, 2024 at 03:24:42PM -0800, Nhat Pham wrote:
+> > Move the zswap LRU protection range update above the swap_read_folio()
+> > call, and only when a new page is allocated. This is the case where
+> > (z)swapin could happen, which is a signal that the zswap shrinker shoul=
+d
+> > be more conservative with its reclaiming action.
+> >
+> > It also prevents a race, in which folio migration can clear the
+> > memcg_data of the now unlocked folio, resulting in a warning in the
+> > inlined folio_lruvec() call.
+>
+> The warning is the most probable outcome, and it will cause the update
+> to go against the root cgroup which is safe at least.
+>
+> But AFAICS there is no ordering guarantee to rule out a UAF if the
+> lookup succeeds but the memcg and lruvec get freed before the update.
 
-The problem is that usperspace programs (such as X server and Mesa) will
-search the PCIe device to use if it is exist. In other words, usperspace
-programs open the PCIe device with higher priority. Creating a virtual
-master platform device for PCI(e) GPUs is unnecessary, as the PCI device
-has been created by the time drm/etnaviv is loaded.
+Ah nice. I didn't consider that. IIUC, having the folio locked should
+prevent this too. Based on the documentation:
 
-we create virtual platform devices as a representation for the vivante GPU
-ip core. As all of subcomponent are attached via the PCIe master device,
-we reflect this hardware layout by binding all of the virtual child to the
-the real master.
+ * For a non-kmem folio any of the following ensures folio and memcg bindin=
+g
+ * stability:
+ *
+ * - the folio lock
 
-Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
----
- drivers/gpu/drm/etnaviv/Kconfig           |   8 +
- drivers/gpu/drm/etnaviv/Makefile          |   2 +
- drivers/gpu/drm/etnaviv/etnaviv_drv.c     |  12 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c     |  75 ++++++--
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h     |   4 +
- drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c | 224 ++++++++++++++++++++++
- drivers/gpu/drm/etnaviv/etnaviv_pci_drv.h |  18 ++
- 7 files changed, 327 insertions(+), 16 deletions(-)
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_pci_drv.h
+I'll rework the commit log to include this, and make this more prominent :)
 
-diff --git a/drivers/gpu/drm/etnaviv/Kconfig b/drivers/gpu/drm/etnaviv/Kconfig
-index faa7fc68b009..38c251585ec1 100644
---- a/drivers/gpu/drm/etnaviv/Kconfig
-+++ b/drivers/gpu/drm/etnaviv/Kconfig
-@@ -15,6 +15,14 @@ config DRM_ETNAVIV
- 	help
- 	  DRM driver for Vivante GPUs.
- 
-+config DRM_ETNAVIV_PCI_DRIVER
-+	bool "enable ETNAVIV PCI driver support"
-+	depends on DRM_ETNAVIV
-+	depends on PCI
-+	help
-+	  Compile in support for Vivante GPUs attached via PCI(e).
-+	  Say Y if you have such hardwares.
-+
- config DRM_ETNAVIV_THERMAL
- 	bool "enable ETNAVIV thermal throttling"
- 	depends on DRM_ETNAVIV
-diff --git a/drivers/gpu/drm/etnaviv/Makefile b/drivers/gpu/drm/etnaviv/Makefile
-index 46e5ffad69a6..6829e1ebf2db 100644
---- a/drivers/gpu/drm/etnaviv/Makefile
-+++ b/drivers/gpu/drm/etnaviv/Makefile
-@@ -16,4 +16,6 @@ etnaviv-y := \
- 	etnaviv_perfmon.o \
- 	etnaviv_sched.o
- 
-+etnaviv-$(CONFIG_DRM_ETNAVIV_PCI_DRIVER) += etnaviv_pci_drv.o
-+
- obj-$(CONFIG_DRM_ETNAVIV)	+= etnaviv.o
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 5f65f2dead44..48e2402adbe3 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -24,6 +24,7 @@
- #include "etnaviv_gpu.h"
- #include "etnaviv_gem.h"
- #include "etnaviv_mmu.h"
-+#include "etnaviv_pci_drv.h"
- #include "etnaviv_perfmon.h"
- 
- /*
-@@ -566,6 +567,10 @@ static int etnaviv_bind(struct device *dev)
- 	if (ret < 0)
- 		goto out_free_priv;
- 
-+	ret = etnaviv_register_irq_handler(dev, priv);
-+	if (ret)
-+		goto out_unbind;
-+
- 	load_gpu(drm);
- 
- 	ret = drm_dev_register(drm, 0);
-@@ -594,7 +599,7 @@ static void etnaviv_unbind(struct device *dev)
- 	etnaviv_private_fini(priv);
- }
- 
--static const struct component_master_ops etnaviv_master_ops = {
-+const struct component_master_ops etnaviv_master_ops = {
- 	.bind = etnaviv_bind,
- 	.unbind = etnaviv_unbind,
- };
-@@ -740,6 +745,10 @@ static int __init etnaviv_init(void)
- 	if (ret != 0)
- 		goto unregister_gpu_driver;
- 
-+	ret = etnaviv_register_pci_driver();
-+	if (ret != 0)
-+		goto unregister_platform_driver;
-+
- 	/*
- 	 * If the DT contains at least one available GPU device, instantiate
- 	 * the DRM platform device.
-@@ -769,6 +778,7 @@ module_init(etnaviv_init);
- static void __exit etnaviv_exit(void)
- {
- 	etnaviv_destroy_platform_device(&etnaviv_drm);
-+	etnaviv_unregister_pci_driver();
- 	platform_driver_unregister(&etnaviv_platform_driver);
- 	platform_driver_unregister(&etnaviv_gpu_driver);
- }
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index 3fd637c17797..221020e98900 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -10,6 +10,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
-@@ -29,6 +30,7 @@
- 
- static const struct platform_device_id gpu_ids[] = {
- 	{ .name = "etnaviv-gpu,2d" },
-+	{ .name = "etnaviv-gpu,3d" },
- 	{ },
- };
- 
-@@ -1555,14 +1557,22 @@ static void dump_mmu_fault(struct etnaviv_gpu *gpu)
- 
- static irqreturn_t irq_handler(int irq, void *data)
- {
--	struct etnaviv_gpu *gpu = data;
-+	struct etnaviv_drm_private *priv = data;
- 	irqreturn_t ret = IRQ_NONE;
-+	int i;
- 
--	u32 intr = gpu_read(gpu, VIVS_HI_INTR_ACKNOWLEDGE);
--
--	if (intr != 0) {
-+	for (i = 0; i < priv->num_gpus; i++) {
-+		struct etnaviv_gpu *gpu = priv->gpu[i];
-+		u32 intr;
- 		int event;
- 
-+		if (!gpu)
-+			continue;
-+
-+		intr = gpu_read(gpu, VIVS_HI_INTR_ACKNOWLEDGE);
-+		if (!intr)
-+			continue;
-+
- 		pm_runtime_mark_last_busy(gpu->dev);
- 
- 		dev_dbg(gpu->dev, "intr 0x%08x\n", intr);
-@@ -1893,10 +1903,44 @@ static const struct of_device_id etnaviv_gpu_match[] = {
- };
- MODULE_DEVICE_TABLE(of, etnaviv_gpu_match);
- 
-+/*
-+ * dev point to the master. For platform device, it is virtual.
-+ * For PCI(e) device, it is real.
-+ */
-+int etnaviv_register_irq_handler(struct device *dev,
-+				 struct etnaviv_drm_private *priv)
-+{
-+	bool is_pci = dev_is_pci(dev);
-+	int ret = 0;
-+
-+	if (is_pci) {
-+		struct pci_dev *pdev = to_pci_dev(dev);
-+
-+		ret = request_irq(pdev->irq, irq_handler, IRQF_SHARED,
-+				  dev_name(dev), priv);
-+	} else {
-+		int i;
-+
-+		for (i = 0; i < priv->num_gpus; i++) {
-+			struct etnaviv_gpu *gpu = priv->gpu[i];
-+
-+			ret = devm_request_irq(gpu->dev, gpu->irq, irq_handler,
-+					       0, dev_name(dev), priv);
-+			if (ret) {
-+				dev_err(dev, "failed to request IRQ handler: %d\n", ret);
-+				break;
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct etnaviv_gpu *gpu;
-+	bool is_pci;
- 	int err;
- 
- 	gpu = devm_kzalloc(dev, sizeof(*gpu), GFP_KERNEL);
-@@ -1912,22 +1956,23 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
- 	if (IS_ERR(gpu->mmio))
- 		return PTR_ERR(gpu->mmio);
- 
-+	is_pci = dev->parent ? dev_is_pci(dev->parent) : false;
-+
- 	/* Get Interrupt: */
--	gpu->irq = platform_get_irq(pdev, 0);
-+	if (is_pci)
-+		gpu->irq = to_pci_dev(dev->parent)->irq;
-+	else
-+		gpu->irq = platform_get_irq(pdev, 0);
-+
- 	if (gpu->irq < 0)
- 		return gpu->irq;
- 
--	err = devm_request_irq(dev, gpu->irq, irq_handler, 0,
--			       dev_name(dev), gpu);
--	if (err) {
--		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, err);
--		return err;
--	}
--
- 	/* Get Clocks: */
--	err = etnaviv_gpu_clk_get(gpu);
--	if (err)
--		return err;
-+	if (!is_pci) {
-+		err = etnaviv_gpu_clk_get(gpu);
-+		if (err)
-+			return err;
-+	}
- 
- 	/* TODO: figure out max mapped size */
- 	dev_set_drvdata(dev, gpu);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-index 7d5e9158e13c..d354e096652c 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -208,6 +208,10 @@ static inline u32 gpu_read_power(struct etnaviv_gpu *gpu, u32 reg)
- int etnaviv_gpu_get_param(struct etnaviv_gpu *gpu, u32 param, u64 *value);
- 
- int etnaviv_gpu_init(struct etnaviv_gpu *gpu);
-+
-+int etnaviv_register_irq_handler(struct device *dev,
-+				 struct etnaviv_drm_private *priv);
-+
- bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu);
- 
- #ifdef CONFIG_DEBUG_FS
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c
-new file mode 100644
-index 000000000000..ec5039866eda
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c
-@@ -0,0 +1,224 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/component.h>
-+#include <linux/pci.h>
-+
-+#include "etnaviv_drv.h"
-+#include "etnaviv_pci_drv.h"
-+
-+enum etnaviv_pci_gpu_chip_id {
-+	GC_CORE_UNKNOWN = 0,
-+	JM9100 = 1,
-+	JD9230P = 2,
-+	GP102 = 3,
-+	GC1000_IN_LS7A1000 = 4,
-+	GC1000_IN_LS2K1000 = 5,
-+	GC_CORE_PCI_LAST,
-+};
-+
-+struct etnaviv_pci_gpu_data {
-+	enum etnaviv_pci_gpu_chip_id chip_id;
-+	u32 num_core;
-+	u32 num_vram;
-+	u32 vram_bars[2];
-+	u32 mmio_bar;
-+	struct {
-+		u32 id;
-+		u32 offset;
-+		u32 size;
-+		char compatible[20];
-+	} cores[ETNA_MAX_PIPES];
-+
-+	bool has_dedicated_vram;
-+	char market_name[24];
-+};
-+
-+static const struct etnaviv_pci_gpu_data
-+gc_core_plaform_data[GC_CORE_PCI_LAST] = {
-+	{
-+		.chip_id = GC_CORE_UNKNOWN,
-+	},
-+	{
-+		.chip_id = JM9100,
-+		.num_core = 1,
-+		.num_vram = 2,
-+		.vram_bars = {0, 2},
-+		.mmio_bar = 1,
-+		.cores = {{0, 0x00900000, 0x00010000, "etnaviv-gpu,3d"},},
-+		.has_dedicated_vram = true,
-+		.market_name = "JingJia Micro JM9100",
-+	},
-+	{
-+		.chip_id = JD9230P,
-+		.num_core = 2,
-+		.num_vram = 2,
-+		.vram_bars = {0, 2},
-+		.mmio_bar = 1,
-+		.cores = {{0, 0x00900000, 0x00010000, "etnaviv-gpu,3d"},
-+			  {1, 0x00910000, 0x00010000, "etnaviv-gpu,3d"},},
-+		.has_dedicated_vram = true,
-+		.market_name = "JingJia Micro JD9230P",
-+	},
-+	{
-+		.chip_id = GP102,
-+		.num_core = 2,
-+		.num_vram = 1,
-+		.vram_bars = {0,},
-+		.mmio_bar = 2,
-+		.cores = {{0, 0x00040000, 0x00010000, "etnaviv-gpu,3d"},
-+			  {0, 0x000C0000, 0x00010000, "etnaviv-gpu,2d"},},
-+		.has_dedicated_vram = true,
-+		.market_name = "LingJiu GP102",
-+	},
-+	{
-+		.chip_id = GC1000_IN_LS7A1000,
-+		.num_core = 1,
-+		.num_vram = 1,
-+		.vram_bars = {2,},
-+		.mmio_bar = 0,
-+		.cores = {{0, 0, 0x00010000, "etnaviv-gpu,3d"}, {}, {}, {}},
-+		.has_dedicated_vram = true,
-+		.market_name = "GC1000 in LS7A1000",
-+	},
-+	{
-+		.chip_id = GC1000_IN_LS2K1000,
-+		.num_core = 1,
-+		.num_vram = 0,
-+		.mmio_bar = 0,
-+		.cores = {{0, 0, 0x00010000, "etnaviv-gpu,3d"}, {}, {}, {}},
-+		.has_dedicated_vram = false,
-+		.market_name = "GC1000 in LS2K1000",
-+	},
-+};
-+
-+static const struct etnaviv_pci_gpu_data *
-+etnaviv_pci_get_platform_data(const struct pci_device_id *entity)
-+{
-+	enum etnaviv_pci_gpu_chip_id chip_id = entity->driver_data;
-+	static const struct etnaviv_pci_gpu_data *pdata;
-+
-+	pdata = &gc_core_plaform_data[chip_id];
-+	if (!pdata || pdata->chip_id == GC_CORE_UNKNOWN)
-+		return NULL;
-+
-+	return pdata;
-+}
-+
-+extern const struct component_master_ops etnaviv_master_ops;
-+
-+static int etnaviv_pci_probe(struct pci_dev *pdev,
-+			     const struct pci_device_id *ent)
-+{
-+	const struct etnaviv_pci_gpu_data *pdata;
-+	struct device *dev = &pdev->dev;
-+	struct component_match *matches = NULL;
-+	unsigned int i;
-+	unsigned int num_core;
-+	int ret;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret) {
-+		dev_err(dev, "failed to enable\n");
-+		return ret;
-+	}
-+
-+	pci_set_master(pdev);
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+	if (ret)
-+		return ret;
-+
-+	pdata = etnaviv_pci_get_platform_data(ent);
-+	if (!pdata)
-+		return -ENODEV;
-+
-+	num_core = pdata->num_core;
-+
-+	dev_info(dev, "%s has %u GPU cores\n", pdata->market_name, num_core);
-+
-+	/*
-+	 * Create a virtual platform device for the sub-component,
-+	 * a sub-component is refer to a single vivante GPU core.
-+	 * But it can also be extended to stand for a display controller
-+	 * or any other IP core attached via the same PCIe master.
-+	 */
-+	for (i = 0; i < num_core; i++) {
-+		struct platform_device *virtual_child;
-+		resource_size_t start, offset, size;
-+		struct resource res;
-+
-+		start = pci_resource_start(pdev, pdata->mmio_bar);
-+		offset = pdata->cores[i].offset;
-+		size = pdata->cores[i].size;
-+
-+		memset(&res, 0, sizeof(res));
-+		res.flags = IORESOURCE_MEM;
-+		res.name = "reg";
-+		res.start = start + offset;
-+		res.end = start + offset + size - 1;
-+
-+		ret = etnaviv_create_platform_device(dev,
-+						     pdata->cores[i].compatible,
-+						     pdata->cores[i].id,
-+						     &res,
-+						     (void *)pdata,
-+						     &virtual_child);
-+		if (ret)
-+			return ret;
-+
-+		component_match_add(dev, &matches, component_compare_dev,
-+				    &virtual_child->dev);
-+	}
-+
-+	ret = component_master_add_with_match(dev, &etnaviv_master_ops, matches);
-+
-+	return ret;
-+}
-+
-+static int platform_device_remove_callback(struct device *dev, void *data)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	etnaviv_destroy_platform_device(&pdev);
-+
-+	return 0;
-+}
-+
-+static void etnaviv_pci_remove(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	component_master_del(dev, &etnaviv_master_ops);
-+
-+	device_for_each_child(dev, NULL, platform_device_remove_callback);
-+
-+	pci_clear_master(pdev);
-+}
-+
-+static const struct pci_device_id etnaviv_pci_id_lists[] = {
-+	{0x0731, 0x9100, PCI_ANY_ID, PCI_ANY_ID, 0, 0, JM9100},
-+	{0x0731, 0x9230, PCI_ANY_ID, PCI_ANY_ID, 0, 0, JD9230P},
-+	{0x0709, 0x0001, PCI_ANY_ID, PCI_ANY_ID, 0, 0, GP102},
-+	{0x0014, 0x7A15, PCI_ANY_ID, PCI_ANY_ID, 0, 0, GC1000_IN_LS7A1000},
-+	{0x0014, 0x7A05, PCI_ANY_ID, PCI_ANY_ID, 0, 0, GC1000_IN_LS2K1000},
-+	{ }
-+};
-+
-+static struct pci_driver etnaviv_pci_driver = {
-+	.name = "etnaviv",
-+	.id_table = etnaviv_pci_id_lists,
-+	.probe = etnaviv_pci_probe,
-+	.remove = etnaviv_pci_remove,
-+};
-+
-+int etnaviv_register_pci_driver(void)
-+{
-+	return pci_register_driver(&etnaviv_pci_driver);
-+}
-+
-+void etnaviv_unregister_pci_driver(void)
-+{
-+	pci_unregister_driver(&etnaviv_pci_driver);
-+}
-+
-+MODULE_DEVICE_TABLE(pci, etnaviv_pci_id_lists);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_pci_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_pci_drv.h
-new file mode 100644
-index 000000000000..1db559ee5e9b
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_pci_drv.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ETNAVIV_PCI_DRV_H__
-+#define __ETNAVIV_PCI_DRV_H__
-+
-+#ifdef CONFIG_DRM_ETNAVIV_PCI_DRIVER
-+
-+int etnaviv_register_pci_driver(void);
-+void etnaviv_unregister_pci_driver(void);
-+
-+#else
-+
-+static inline int etnaviv_register_pci_driver(void) { return 0; }
-+static inline void etnaviv_unregister_pci_driver(void) { }
-+
-+#endif
-+
-+#endif
--- 
-2.34.1
-
+>
+> I think that part should be more prominent in the changelog. It's more
+> important than the first paragraph. Consider somebody scrolling
+> through the git log and trying to decide whether to backport or not;
+> it's helpful to describe the bug and its impact first thing, then put
+> the explanation of the fix after.
+>
+> > Reported-by: syzbot+17a611d10af7d18a7092@syzkaller.appspotmail.com
+> > Closes: https://lore.kernel.org/all/000000000000ae47f90610803260@google=
+.com/
+> > Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure=
+")
+> > Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+>
+> Would it make sense to add
+>
+>         VM_WARN_ON_ONCE(!folio_test_locked(folio));
+>
+> to zswap_folio_swapin() as well?
