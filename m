@@ -1,57 +1,57 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4868F7D;
-	Tue,  6 Feb 2024 17:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B177513FEB;
+	Tue,  6 Feb 2024 17:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707240781; cv=none; b=IZTKYALQNMCkb+AD5/pLu45JfG2H4/h8EJ6fIRwZ14igxU4828m2WeFHfpnISYnZyvCabU8hXj8cQf8nBjoLtgAreXG0+C0i1tRBd1Z+ctxJJ2IqxZYa0Ac7h8V5lM7qQgJFCit8zuMZt0dttOn0lOKfvrH1mvjlAXOlvBQk/Ng=
+	t=1707240785; cv=none; b=ru0G1Yz2TbOMVhPJXzy2gt0Ow8X6HDcwLOmWVM2MFP4nEl0CjekZ60KTAVkewFMHHuKn0SNpyRkokogJrAw+HBbANFdVWfxz8lRhAYSWBJJPnPfRTp7q/d++aomHdQPBp8Ay9YU7ieqCobW4DRpKjBMBATZ8CEYCh/yYGwLRPSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707240781; c=relaxed/simple;
-	bh=J78yXE5qwS90R4EgpQlY1uiAZERyB7nhqi/EFAgqCCk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YRm32180BK9RRg6jdnzTDn02sv4aa58tqIGoCuNUKgGZWt490jA8A44VbtYQ75tr/3BRHia3A0N9vdLoFit2HQCFpfq86M8ywcGHia+8QL3aGOaeeIwW5sTmzZ+Uu9vYXKeXXxpkahCMFAEapCLBlsfvYM4CJt4ZNUF/PMHc7CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OedQnV7k; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1707240785; c=relaxed/simple;
+	bh=jyM0CHznvQWMvjL8i2pVQYft4g2oYeiCv4EYtUJLp6A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g9SKTU9rlzQT26B9rxw0IxccK1XffIc8cvWYsPnVSxJDgm1Yohv79lgiGY5yx2nfydT4/ajjpQq1nk5x7rJ+5vVepPbOalRujxcbkhr17Uzh09bMMIFWxT/DoCyH3t9ItCIqkyW5HnXov+x6e8+DEWx+z0qAjdtmwMeLvcdnoR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mYraO9tY; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OedQnV7k"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40ffce2ceffso1264875e9.2;
-        Tue, 06 Feb 2024 09:32:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYraO9tY"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-337cc8e72f5so4438530f8f.1;
+        Tue, 06 Feb 2024 09:33:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707240778; x=1707845578; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707240782; x=1707845582; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vvEq+NsiNLdpqkcur7fcDxX3BE0a2LiFsPz8eCkRlBo=;
-        b=OedQnV7k8e7/zr7s4ciBPgBTBB+m7AICc/7IOG/01lBzPfzT6ZC+WybrvVJiN3AJfs
-         n/dIZlLe4MnJoWaD+BUU2QuJeqQXi7HKmEnzEtPTmKVZs3871GWwDdRQ0jrWGBwG8/Ct
-         58HnGr7UqJscSZ8geBf+5ZVKt5iaKpGPMnIFvCTniVmoU63cSmXQCK7hpju16BwrrRug
-         sTUqThNgvKh1AJdTi52FD6LXxYRjWOdU9HKZmdCL2pYsOr5txV2jXlfbPRlWtST2V8pd
-         X6/PoAAO/plNG7KAnG6jLU6aB6YCe9ntChD3qxza0mgaW5JoLzNB1W6eausXT5AZN94I
-         pXKQ==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bUmCO360MsO9JwRC/7FCAnzALXs5wMt0yoX0PpFvJIY=;
+        b=mYraO9tYRpBMd77ANgg9cntTtmmEXkE6ZAiJKifnREfcI7SEF/uY0kt70L6H1wHpK8
+         aBNQEa4Mqpx3uNZFIEYpV9xKci1zmYaSFhtj5ZB6n69Uey6wsHNfG+BsDbQyj4y8YP5c
+         UVuMp2/qD3jsKrCbQLQrb4LcP60E6HryB/PLR5LDS8eUF4OtAc1+S0KyoYWaRbRp8HYv
+         oZudVJ9Z8EEvuUaXYAMg4TPl9zX8K4P7cFo12DNievMAZ26w/uFufCwBjAMlMFBWUsVX
+         N5eRREZjEJJPfhqPUZgadVVsVrE8tDoP/Ft9PdCGO1ep5M0eWRkzxmoYFwWlBcNAjyuO
+         md8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707240778; x=1707845578;
+        d=1e100.net; s=20230601; t=1707240782; x=1707845582;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vvEq+NsiNLdpqkcur7fcDxX3BE0a2LiFsPz8eCkRlBo=;
-        b=a5Kgjh9y2Hhro1PGkpszL0RuWpcrexx1z/dnsNMdzvS8VECOZs3qEzMlzQlHTD6NoZ
-         /gstdj7EICdzF1uearL8nyVFgGCFU6k5HSVLqjWWkbN9GXjDvkxEMkOq3L1Mnh0dtNXR
-         rXrzdzb4MkLoN2HWNl58BD+VXu3/bEyVMOUAz23bhyyGLorZMcjyFv4qQfceCAV1flUv
-         /1s7ySRpfYMh24iU6f/PsyGbCXtaxmv1TQdvPnwm9PONT11uVVV9OpaBPDANcktNH5QQ
-         cVkD5XIRNapYMvqEWOCu0+2OUrLRzpQ2ZPNsOAz9lqIrwPWObzeA8M5mAd/lVyBZZooB
-         Yy5w==
-X-Gm-Message-State: AOJu0Yzpgmm83h/1gf+d9023vN4F4KSEWsjF3a6XY7VaQINCuvgQosN1
-	TWluZGOtzHqhqHhJ8vknWlM1hZTfOgxwyN5WguRyv8rmSO0a+tJv
-X-Google-Smtp-Source: AGHT+IFA+ihnfwGzQ5lwjMeITLI9ICJOubGxAayNdeBL4PPr1dASByyJ6iNLwwDS+TIgDe9lqlAbRQ==
-X-Received: by 2002:a05:600c:4f0e:b0:40f:dde8:1663 with SMTP id l14-20020a05600c4f0e00b0040fdde81663mr2935082wmq.19.1707240777897;
-        Tue, 06 Feb 2024 09:32:57 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXlA35Uq5N1Nys7Xu67Fa9mPzf3mhp/AXnH7iE2VN7PZO7oPKHnCPkdteXwzbMr7qPwz0sOtgsbs/gHTrfpl5Qzegr77KvWSiiBOToICtNxvzSDzwVlWJMv92zJW6KcpvQYl2GsM4DH4S/NwSZbF9YaJpGOS2g0TXpH3gL0Z0xxkopxmB8FrmXJQMHjc7qBTbVyJrcq6Zxt8L6sj91IXI0U+GpR4BEdIeSDbLd79DBmyeXzpVHPVvOLdXPQ8Q7ftKnpldwRkZVhEaRtIL132BAxYaZXofJgUHPLDAuAxMEZHMxz+tlYWDemF1WC86Wh7f0dfdOuZBTEGmIV9L4jZrDD1x09FncsX7s8bwmDpGQw0JWKOzWpGFOFAJS5guV3wjbOqy3HeAWJohDsYUUyAtjR4m4Kozj305Hj3TaYbBrcoIaoxZzQCzKUN5UVqBgVlTUsZGyICcYKl0QzpmDTsgQgqeOPvwZKOt90PBGWBYHElzt6iJjMy5V1z44mFgp0goN08X311Zr8++Q5pKevUwVzKW2thdYv4YzfGO9Du8CwLY2eKbbSJClzezOGSbD236XgljgB0CQx4kwQmwcos1OOKSNBARNTR+J+QrlB9bTJuJUCsm3SoPu7Oyhxihzn9XuYgwALF2DjbMx9DDtSZAdlageTT9T2CpPe3tdw3rc0Iksp0EqjYg==
+        bh=bUmCO360MsO9JwRC/7FCAnzALXs5wMt0yoX0PpFvJIY=;
+        b=qQj2WAxVV8H4yZyIKCjI2kRma9Vtno/1+7M5uShRWCHq/wjw+HJC1MGY+PhEfqa6fa
+         NQQRtOJSAssZx4LNi0I9DQ+/fB3lO/o8LVuzHON80xRy87K8nCiYKB2znPWu/uCbzRXC
+         S6aEm4a+K1cg/WDMvof3mgtVY1ST/CMDTjaomIqmMgi1RPMVtMIEfudZV+z3Pz3HD0B+
+         uIijIcl/P3cVnVdf9ZQTP/DLlUJ5qbP3R88mfxgVvfStuFSa0r8qyZQRjbmkaPPbwP0J
+         m7+Qg5nkTjbT/820RFlMiMDXlugwnluSaEMYWUPdR40oyWDEIiMeJXXT5HYrRe/zmpD0
+         XXjw==
+X-Gm-Message-State: AOJu0YwQ+7pQaN7zpl1cZlJBHwd4wBa+2Lb/TPJr7ZntGiE2cKrmraQf
+	MWWN/1dMuFjDjzkAvHZkXVGz6yWgigk9j2pX/nRgM/nA4RsI+V3p
+X-Google-Smtp-Source: AGHT+IHQ25b8pHbMCRzU0RlrrHTuPeHh8SPAIjfmfRNSvM9KyJ8xn2r2pkf/PWkfOIY6Pwn3KTDlfQ==
+X-Received: by 2002:a5d:678d:0:b0:33b:1577:a2d1 with SMTP id v13-20020a5d678d000000b0033b1577a2d1mr1401188wru.1.1707240781987;
+        Tue, 06 Feb 2024 09:33:01 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUvkE6eU+hGhupY2V0J0OGIrCKJLP8PAqF8LlWaNyocxW+0ts+d2UlYoavbzeDD6M0V0Abv21nL4RHBl8CbbibEbjleYvacc//1M/yXNMXZZaEh+uKKa3dRYTZsPMx64jiUvHSTmw+utW1MrWy0Ynlc0lHpxOQHTmBydoaoBAoxlc4DyWTknl7w4rQtE+KEENVT8ThbeU4Oe6FrHf680GaJehPXXxksjEf3eWkOps3Stb2kaJR2rlyRTBtgKlJc3/MrtbxYiGeRmFwguWBNI7vBr0KG1OytBVlvz8Wlc6XtzvzzZ0fUBYqg5DPowoj5UuTVAM/ol30VcFzV107IO+Rh600MT3YkH74pMRUX4ZUE/npUcV8/M/Wpr0C5w2yR0Hfa4WSDaJ2caPMLS11CQfJjYWRiWBe3O2AlgP8g5ohp5JjzuZFy3sn7pa6mQ6nfFLBMtP/TnFdq86/NwivcVz6A4WXdA+dJPvZGcN0aPQ9xhQIMVqZ4VkLlx11o57LqjecYqIrQhC7SSUapXS8YEjxhUhyfJnrqlVcMBbqtVIrTVhEcpgbTVGlXGPC+5LElTgIn0Cq6eocUrhnnc6NXIA+zoP9rP/pQfe7aJrcsFWitZFgATqpS/DEvaM2v8hUIi2FTIl2jCrYl78cUmsfcHDhsVgIGfih0t2f4AqLPt3ePEayChUoh7Q==
 Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id l14-20020a05600c4f0e00b0040fc56712e8sm2621215wmq.17.2024.02.06.09.32.48
+        by smtp.googlemail.com with ESMTPSA id l14-20020a05600c4f0e00b0040fc56712e8sm2621215wmq.17.2024.02.06.09.33.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 09:32:56 -0800 (PST)
+        Tue, 06 Feb 2024 09:33:00 -0800 (PST)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -73,9 +73,10 @@ To: "David S. Miller" <davem@davemloft.net>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org
-Subject: [net-next PATCH v7 03/10] net: phy: add devm/of_phy_package_join helper
-Date: Tue,  6 Feb 2024 18:31:06 +0100
-Message-ID: <20240206173115.7654-4-ansuelsmth@gmail.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>
+Subject: [net-next PATCH v7 05/10] dt-bindings: net: Document Qcom QCA807x PHY package
+Date: Tue,  6 Feb 2024 18:31:08 +0100
+Message-ID: <20240206173115.7654-6-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240206173115.7654-1-ansuelsmth@gmail.com>
 References: <20240206173115.7654-1-ansuelsmth@gmail.com>
@@ -87,188 +88,212 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add devm/of_phy_package_join helper to join PHYs in a PHY package. These
-are variant of the manual phy_package_join with the difference that
-these will use DT nodes to derive the base_addr instead of manually
-passing an hardcoded value.
+Document Qcom QCA807x PHY package.
 
-An additional value is added in phy_package_shared, "np" to reference
-the PHY package node pointer in specific PHY driver probe_once and
-config_init_once functions to make use of additional specific properties
-defined in the PHY package node in DT.
+Qualcomm QCA807X Ethernet PHY is PHY package of 2 or 5
+IEEE 802.3 clause 22 compliant 10BASE-Te, 100BASE-TX and
+1000BASE-T PHY-s.
 
-The np value is filled only with of_phy_package_join if a valid PHY
-package node is found. A valid PHY package node must have the node name
-set to "ethernet-phy-package".
+Document the required property to make the PHY package correctly
+configure and work.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/net/phy/phy_device.c | 96 ++++++++++++++++++++++++++++++++++++
- include/linux/phy.h          |  6 +++
- 2 files changed, 102 insertions(+)
+ .../devicetree/bindings/net/qcom,qca807x.yaml | 184 ++++++++++++++++++
+ 1 file changed, 184 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,qca807x.yaml
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 2eed8f03621d..9014ac3c0fc8 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1708,6 +1708,7 @@ int phy_package_join(struct phy_device *phydev, int base_addr, size_t priv_size)
- 			shared->priv_size = priv_size;
- 		}
- 		shared->base_addr = base_addr;
-+		shared->np = NULL;
- 		refcount_set(&shared->refcnt, 1);
- 		bus->shared[base_addr] = shared;
- 	} else {
-@@ -1730,6 +1731,63 @@ int phy_package_join(struct phy_device *phydev, int base_addr, size_t priv_size)
- }
- EXPORT_SYMBOL_GPL(phy_package_join);
- 
-+/**
-+ * of_phy_package_join - join a common PHY group in PHY package
-+ * @phydev: target phy_device struct
-+ * @priv_size: if non-zero allocate this amount of bytes for private data
-+ *
-+ * This is a variant of phy_package_join for PHY package defined in DT.
-+ *
-+ * The parent node of the @phydev is checked as a valid PHY package node
-+ * structure (by matching the node name "ethernet-phy-package") and the
-+ * base_addr for the PHY package is passed to phy_package_join.
-+ *
-+ * With this configuration the shared struct will also have the np value
-+ * filled to use additional DT defined properties in PHY specific
-+ * probe_once and config_init_once PHY package OPs.
-+ *
-+ * Returns < 0 on error, 0 on success. Esp. calling phy_package_join()
-+ * with the same cookie but a different priv_size is an error. Or a parent
-+ * node is not detected or is not valid or doesn't match the expected node
-+ * name for PHY package.
-+ */
-+int of_phy_package_join(struct phy_device *phydev, size_t priv_size)
-+{
-+	struct device_node *node = phydev->mdio.dev.of_node;
-+	struct device_node *package_node;
-+	u32 base_addr;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/net/qcom,qca807x.yaml b/Documentation/devicetree/bindings/net/qcom,qca807x.yaml
+new file mode 100644
+index 000000000000..7290024024f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,qca807x.yaml
+@@ -0,0 +1,184 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,qca807x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!node)
-+		return -EINVAL;
++title: Qualcomm QCA807x Ethernet PHY
 +
-+	package_node = of_get_parent(node);
-+	if (!package_node)
-+		return -EINVAL;
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++  - Robert Marko <robert.marko@sartura.hr>
 +
-+	if (!of_node_name_eq(package_node, "ethernet-phy-package")) {
-+		ret = -EINVAL;
-+		goto exit;
-+	}
++description: |
++  Qualcomm QCA8072/5 Ethernet PHY is PHY package of 2 or 5
++  IEEE 802.3 clause 22 compliant 10BASE-Te, 100BASE-TX and
++  1000BASE-T PHY-s.
 +
-+	if (of_property_read_u32(package_node, "reg", &base_addr)) {
-+		ret = -EINVAL;
-+		goto exit;
-+	}
++  They feature 2 SerDes, one for PSGMII or QSGMII connection with
++  MAC, while second one is SGMII for connection to MAC or fiber.
 +
-+	ret = phy_package_join(phydev, base_addr, priv_size);
-+	if (ret)
-+		goto exit;
++  Both models have a combo port that supports 1000BASE-X and
++  100BASE-FX fiber.
 +
-+	phydev->shared->np = package_node;
++  Each PHY inside of QCA807x series has 4 digitally controlled
++  output only pins that natively drive LED-s for up to 2 attached
++  LEDs. Some vendor also use these 4 output for GPIO usage without
++  attaching LEDs.
 +
-+	return 0;
-+exit:
-+	of_node_put(package_node);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(of_phy_package_join);
++  Note that output pins can be set to drive LEDs OR GPIO, mixed
++  definition are not accepted.
 +
- /**
-  * phy_package_leave - leave a common PHY group
-  * @phydev: target phy_device struct
-@@ -1746,6 +1804,10 @@ void phy_package_leave(struct phy_device *phydev)
- 	if (!shared)
- 		return;
- 
-+	/* Decrease the node refcount on leave if present */
-+	if (shared->np)
-+		of_node_put(shared->np);
++$ref: ethernet-phy-package.yaml#
 +
- 	if (refcount_dec_and_mutex_lock(&shared->refcnt, &bus->shared_lock)) {
- 		bus->shared[shared->base_addr] = NULL;
- 		mutex_unlock(&bus->shared_lock);
-@@ -1798,6 +1860,40 @@ int devm_phy_package_join(struct device *dev, struct phy_device *phydev,
- }
- EXPORT_SYMBOL_GPL(devm_phy_package_join);
- 
-+/**
-+ * devm_of_phy_package_join - resource managed of_phy_package_join()
-+ * @dev: device that is registering this PHY package
-+ * @phydev: target phy_device struct
-+ * @priv_size: if non-zero allocate this amount of bytes for private data
-+ *
-+ * Managed of_phy_package_join(). Shared storage fetched by this function,
-+ * phy_package_leave() is automatically called on driver detach. See
-+ * of_phy_package_join() for more information.
-+ */
-+int devm_of_phy_package_join(struct device *dev, struct phy_device *phydev,
-+			     size_t priv_size)
-+{
-+	struct phy_device **ptr;
-+	int ret;
++properties:
++  compatible:
++    enum:
++      - qcom,qca8072-package
++      - qcom,qca8075-package
 +
-+	ptr = devres_alloc(devm_phy_package_leave, sizeof(*ptr),
-+			   GFP_KERNEL);
-+	if (!ptr)
-+		return -ENOMEM;
++  qcom,package-mode:
++    description: |
++      PHY package can be configured in 3 mode following this table:
 +
-+	ret = of_phy_package_join(phydev, priv_size);
++                    First Serdes mode       Second Serdes mode
++      Option 1      PSGMII for copper       Disabled
++                    ports 0-4
++      Option 2      PSGMII for copper       1000BASE-X / 100BASE-FX
++                    ports 0-4
++      Option 3      QSGMII for copper       SGMII for
++                    ports 0-3               copper port 4
 +
-+	if (!ret) {
-+		*ptr = phydev;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
++      PSGMII mode (option 1 or 2) is configured dynamically based on
++      the presence of a connected SFP device.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum:
++      - qsgmii
++      - psgmii
++    default: psgmii
 +
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_of_phy_package_join);
++  qcom,tx-drive-strength-milliwatt:
++    description: set the TX Amplifier value in mv.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [140, 160, 180, 200, 220,
++           240, 260, 280, 300, 320,
++           400, 500, 600]
++    default: 600
 +
- /**
-  * phy_detach - detach a PHY device from its network device
-  * @phydev: target phy_device struct
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index ad93f8b1b128..f8ce8a757ed0 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -329,6 +329,7 @@ struct mdio_bus_stats {
-  * struct phy_package_shared - Shared information in PHY packages
-  * @base_addr: Base PHY address of PHY package used to combine PHYs
-  *   in one package and for offset calculation of phy_package_read/write
-+ * @np: Pointer to the Device Node if PHY package defined in DT
-  * @refcnt: Number of PHYs connected to this shared data
-  * @flags: Initialization of PHY package
-  * @priv_size: Size of the shared private data @priv
-@@ -340,6 +341,8 @@ struct mdio_bus_stats {
-  */
- struct phy_package_shared {
- 	u8 base_addr;
-+	/* With PHY package defined in DT this points to the PHY package node */
-+	struct device_node *np;
- 	refcount_t refcnt;
- 	unsigned long flags;
- 	size_t priv_size;
-@@ -1999,9 +2002,12 @@ int phy_ethtool_set_link_ksettings(struct net_device *ndev,
- 				   const struct ethtool_link_ksettings *cmd);
- int phy_ethtool_nway_reset(struct net_device *ndev);
- int phy_package_join(struct phy_device *phydev, int base_addr, size_t priv_size);
-+int of_phy_package_join(struct phy_device *phydev, size_t priv_size);
- void phy_package_leave(struct phy_device *phydev);
- int devm_phy_package_join(struct device *dev, struct phy_device *phydev,
- 			  int base_addr, size_t priv_size);
-+int devm_of_phy_package_join(struct device *dev, struct phy_device *phydev,
-+			     size_t priv_size);
- 
- int __init mdio_bus_init(void);
- void mdio_bus_exit(void);
++patternProperties:
++  ^ethernet-phy@[a-f0-9]+$:
++    $ref: ethernet-phy.yaml#
++
++    properties:
++      qcom,dac-full-amplitude:
++        description:
++          Set Analog MDI driver amplitude to FULL.
++
++          With this not defined, amplitude is set to DSP.
++          (amplitude is adjusted based on cable length)
++
++          With this enabled and qcom,dac-full-bias-current
++          and qcom,dac-disable-bias-current-tweak disabled,
++          bias current is half.
++        type: boolean
++
++      qcom,dac-full-bias-current:
++        description:
++          Set Analog MDI driver bias current to FULL.
++
++          With this not defined, bias current is set to DSP.
++          (bias current is adjusted based on cable length)
++
++          Actual bias current might be different with
++          qcom,dac-disable-bias-current-tweak disabled.
++        type: boolean
++
++      qcom,dac-disable-bias-current-tweak:
++        description: |
++          Set Analog MDI driver bias current to disable tweak
++          to bias current.
++
++          With this not defined, bias current tweak are enabled
++          by default.
++
++          With this enabled the following tweak are NOT applied:
++          - With both FULL amplitude and FULL bias current: bias current
++            is set to half.
++          - With only DSP amplitude: bias current is set to half and
++            is set to 1/4 with cable < 10m.
++          - With DSP bias current (included both DSP amplitude and
++            DSP bias current): bias current is half the detected current
++            with cable < 10m.
++        type: boolean
++
++      gpio-controller: true
++
++      '#gpio-cells':
++        const: 2
++
++    if:
++      required:
++        - gpio-controller
++    then:
++      properties:
++        leds: false
++
++    unevaluatedProperties: false
++
++required:
++  - compatible
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ethernet-phy-package@0 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            compatible = "qcom,qca8075-package";
++            reg = <0>;
++
++            qcom,package-mode = "qsgmii";
++
++            ethernet-phy@0 {
++                reg = <0>;
++
++                leds {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    led@0 {
++                        reg = <0>;
++                        color = <LED_COLOR_ID_GREEN>;
++                        function = LED_FUNCTION_LAN;
++                        default-state = "keep";
++                    };
++                };
++            };
++
++            ethernet-phy@1 {
++                reg = <1>;
++            };
++
++            ethernet-phy@2 {
++                reg = <2>;
++
++                gpio-controller;
++                #gpio-cells = <2>;
++            };
++
++            ethernet-phy@3 {
++                reg = <3>;
++            };
++
++            ethernet-phy@4 {
++                reg = <4>;
++            };
++        };
++    };
 -- 
 2.43.0
 
