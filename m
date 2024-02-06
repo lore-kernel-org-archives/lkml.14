@@ -1,130 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292C9132470
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20408131E53;
+	Tue,  6 Feb 2024 14:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231123; cv=none; b=JhO9WQL4hxBuFFYrTkK2Y5OFTBcCu9I2Qdw1jBVStbsPK0rqalCcvOS7ElSffxlo3bwgMLC3rrBYYnl3HTc+uVwnEvJZLSb9sJsUIzlNbNgXBZnZmCKS/ASjQOtZeMQX2jVrkazL+XMlU0vNNkEvvAYimlXpAVLbUwqOQNOSIYM=
+	t=1707231164; cv=none; b=FBMk2PVSUVsP/qmPphUFC6NmGaVrMKkXH0v740YSHrZwcpnyvsBA1keOhoy+Z6SkmhnlNrIiwzxkXQ8nb5rA3AURtN1WKsp+2MFGh70jlLhudyVbHc2WLd7YYqETe9hG9Ty23I9JGQ/4Ef80ECD5ry5dJcsmhxpndC5+hCEiSF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231123; c=relaxed/simple;
-	bh=R/o5EP7C+JnoxFgZaYwDA4ls6GyyKFxMVhJAZddFp0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=aS2GzO+zuWBY1jM3f2/cz1PVH54pDda4btbEqp2E/yltdo/xn4Zlso8cvfqD9Rqgf5QSJYM5CJbDeXMMLbTafimNb9vjihTF06cjU7nD4BL+E6BQFjJydOWvWWyT9dK14W1TibDk7uLh1S8Y4Yvm40xCV/aiXMD15Y+QGUMam+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ErNxu78E; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707231164; c=relaxed/simple;
+	bh=R/742LRkouuAuethox2x2vtIJsIKE4T+HK1LMPu93+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VBCbwrF/FcxWrBFMQkgCLye6iAhYC3skKHEgsICaOJn0OZZvksV1oXDCCgVgv0hWSLmCkUzmDhkhd7VBK437oK4Cr3/Jtyk7XtL384QWrRfNp/UXnm4Pdvwaj4YoImx3RzOq0AQRx27mSGudNycEW/Nh2FNIqSRlThbqykktkno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=2hNU11hz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PxhQtply; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErNxu78E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707231120;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dQIKoNOJmX8VRVk5/I0n1vx+OMQlaoxl3aigw5zkfn8=;
-	b=ErNxu78EpxHSqhM5CYw0jPtNlWw05ftYLVIjAlcCr4GZcQkdFgoF1fQceNOlq95Piwbx2O
-	nMHAS3njwJLTy+Bm4IlXBilw/P9+sZmXVbPuCiS6ol/P7YHJ9+qhNwcM/pOpTxCcNHZwoQ
-	wsNECiexjIPv1r7tQpW3mzB1yL6AQ+4=
-Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
- [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-401-txHBQnjYOTupBFY5jqw8Fg-1; Tue, 06 Feb 2024 09:51:59 -0500
-X-MC-Unique: txHBQnjYOTupBFY5jqw8Fg-1
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-2195a9a8efaso3588867fac.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 06:51:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707231119; x=1707835919;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dQIKoNOJmX8VRVk5/I0n1vx+OMQlaoxl3aigw5zkfn8=;
-        b=f8KnH67cCA/IcOPQWi6GS52kmNQ0YqQIpfLcaV6MWMz4Ou3ka8itMMCIhleKFsNY4p
-         uTKxQ0PCQGMbRQkCmhv4KL4nL7IkfbxgEvEcPazVwk/IqS61KnNNDq2hrS/XiBTjcUoZ
-         9zsb8BGVvbDXUwWn2yCD8wk3jXEJBnIf1fo3B0agWvqCbHYMzp2ZRIVNBYBnSiCUgtjp
-         GM3ClMtaXRlr0CeHsUa1h1a+5fev2MuhlQIO+eM7u+t6G3Mlx4WQltTbNQaj5WaXQ660
-         XEx/2+xSru0aJ6FbnAXnn2IN1nSIT4pKH/xueuzdiK+4bBiRhZsFLacWYZnTNw2zVHjw
-         UeAA==
-X-Gm-Message-State: AOJu0Yyjs6hUG49PC8nLRanRqAurt6VkI8kDriX/7vn9TqyevVk6FwYQ
-	LFdnK8AY2GNNC2bWwkbNvfXyaUL49PNeeQoPzgS0GCMN7ckys+bkCUDQ4FDZd8TD2k5Ampgezyu
-	shZJVRigdasXY+XNs6JzVeZfrUn/ZG4c9yedrJMM6cT6meNeTOtnM0jxQFupGeA==
-X-Received: by 2002:a05:6870:164d:b0:210:8802:786a with SMTP id c13-20020a056870164d00b002108802786amr3275741oae.53.1707231118960;
-        Tue, 06 Feb 2024 06:51:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFLCyho5u5y4dZMOsWQV1AaVbjSFpDdh6YZMYgsdjNzX2ck/ywfHH/5T/kc/2KHsZrayoPM0A==
-X-Received: by 2002:a05:6870:164d:b0:210:8802:786a with SMTP id c13-20020a056870164d00b002108802786amr3275728oae.53.1707231118721;
-        Tue, 06 Feb 2024 06:51:58 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV6YVTF3BXfxD7oGuNc/5i4fJi9lzUP0v2EuV9vQ2uYj3WVgVJCvsEX8TROSCzAqDs5ebrmUOfU/S/j7kp3jXPim8rxZSbJKSJVXStktmV2oqMTXILCaFK8Q7/Dm4SdzEV1oi2ax7XvIFESMcCV8iCOJSstM1x0ffCK9wzkBPAe4UiZZyES5vihMsa0sRYoqZu0wDySrdl+bWTxhpQjZZsre7Rw5ZHednIiXPP1W399e2EE8jsT8XU9D+7TeQhQE87br0/am75tATSNqLHpbPwm+dZTE8klIcCGRw==
-Received: from step1.redhat.com (host-87-12-25-87.business.telecomitalia.it. [87.12.25.87])
-        by smtp.gmail.com with ESMTPSA id k19-20020ac84793000000b0042a9b28733fsm930742qtq.89.2024.02.06.06.51.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 06:51:58 -0800 (PST)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: virtualization@lists.linux.dev
-Cc: Shannon Nelson <shannon.nelson@amd.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	kvm@vger.kernel.org,
-	Kevin Wolf <kwolf@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH] vhost-vdpa: fail enabling virtqueue in certain conditions
-Date: Tue,  6 Feb 2024 15:51:54 +0100
-Message-ID: <20240206145154.118044-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="2hNU11hz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PxhQtply"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 0DDF5114008D;
+	Tue,  6 Feb 2024 09:52:41 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Tue, 06 Feb 2024 09:52:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1707231161; x=1707317561; bh=Fd2EgqbFxv
+	tE/GJ2R79t8CbsMl7dcUlSu6Hik69SEuI=; b=2hNU11hze/lK2HnZ81Yq+0e3X0
+	WzYn3FVaMIa8MOVt9PNrgJxS7KJ/VR+q+bTlfHfw0ZoAcaHapXgEDeMNnjq7nfyK
+	Doa09EyBz+2cuF4H/uHe6I6C2Oum8CPQ/Kug75/foHx4h7aRgidAjpBmbw60lmdr
+	4QO5inVfGlDaX0aWe9qDiKAqb8RcsRIK5NFcZIRWTDAXD5ifRacv1IYYBWFwyLvz
+	JD4x/UuKP4ECVVq9HIXl7WzpNFXa16afqWJyDZi8A1X5HBqxdb6/3Elarm7zQqhf
+	yyjC27G9NVVb86aHVhOx0ML6l2AF2CxVI0xz5qig+kSFsqN1g0KWW9Ks7W5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707231161; x=1707317561; bh=Fd2EgqbFxvtE/GJ2R79t8CbsMl7d
+	cUlSu6Hik69SEuI=; b=PxhQtplyTcojFzSGgmYlbpBx7uOUQyhGtdJG/0ttwfeO
+	qUB2ekHR9YirbggSssgFSi3i1xTDho8n0hT4OMZDfVII9ps+yhIb8w5j8lG69FF1
+	J+/+GuRqOZnqiLwXEQqIPdqBnqT2e7h4EouoX9A+E7915tBLPVG8xvRuwWAxXSF3
+	O7sc8ukp/zA1EKA4N3tl0Vrsn8ObCpgi8lThdidM/NgC/fPGU9WwVZr+U/mbY2Fn
+	6Amak1Bl7cF6qxaiX+2F0cD4G1ZQDgUEo3808F//jI+y83oC8ycg19PWNW4ELmTT
+	cuFtEg4MZtCC6twI91NOleCKhncYwVANcyv/vifaLw==
+X-ME-Sender: <xms:uEfCZQstBdf7ESZL-l7RypKCL9D5fPr2K0oQDzh2EHR1fPHKxnxxlg>
+    <xme:uEfCZdcrxouWN6N-CkTVKCHruUWXxU426wYRxigOT-vQ4zRi0v7SdWgf2bqymBTaV
+    tPTG4IPkgy4_VPJAo8>
+X-ME-Received: <xmr:uEfCZbwsWGJXLxsADBFggu0Ox0-O5UAMjF63gPibNRShusdsgIpDs2T2PFHazFweFWi7too7Fa2Z9f7BWB-a-OYXSwAv>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtddtgdegtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdortddttddvnecuhfhrohhmpefvhigthhho
+    ucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrg
+    htthgvrhhnpeelffekveduvefftdejkefhtefhgeduhffghfejtdehieevjedtkeejveej
+    keeuieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hthigthhhosehthigthhhordhpihiiiigr
+X-ME-Proxy: <xmx:uEfCZTNg76HajRWw_mXDbHKTr18PHxW1MD238fZjPQg_nwl8wazqvw>
+    <xmx:uEfCZQ-MoSgqVKPN1xpnnJHI3aOrf9v4vfF8bXTD0MtxstzO65PRyA>
+    <xmx:uEfCZbW4WBElWaAQXCT8NnMUM0DJp313g2Tdd4kfG60Owjne_VdY9g>
+    <xmx:uUfCZQzrE9cKwfPLQw8jf3ruscWAyMtdEMvQt9K9FvtbUfA_cBpQYQ>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Feb 2024 09:52:39 -0500 (EST)
+Date: Tue, 6 Feb 2024 07:52:38 -0700
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pidfd: clone: allow CLONE_THREAD | CLONE_PIDFD together
+Message-ID: <ZcJHtqqvxUoBJLRo@tycho.pizza>
+References: <20240205145532.GA28823@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205145532.GA28823@redhat.com>
 
-If VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK is not negotiated, we expect
-the driver to enable virtqueue before setting DRIVER_OK. If the driver
-tries anyway, better to fail right away as soon as we get the ioctl.
-Let's also update the documentation to make it clearer.
+On Mon, Feb 05, 2024 at 03:55:32PM +0100, Oleg Nesterov wrote:
+> copy_process() just needs to pass PIDFD_THREAD to __pidfd_prepare()
+> if clone_flags & CLONE_THREAD.
+> 
+> We can also add another CLONE_ flag (or perhaps reuse CLONE_DETACHED)
+> to enforce PIDFD_THREAD without CLONE_THREAD.
+> 
+> Originally-from: Tycho Andersen <tycho@tycho.pizza>
 
-We had a problem in QEMU for not meeting this requirement, see
-https://lore.kernel.org/qemu-devel/20240202132521.32714-1-kwolf@redhat.com/
+Goes without saying I suppose, but,
 
-Fixes: 9f09fd6171fe ("vdpa: accept VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK backend feature")
-Cc: eperezma@redhat.com
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- include/uapi/linux/vhost_types.h | 3 ++-
- drivers/vhost/vdpa.c             | 4 ++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Reviewed-by: Tycho Andersen <tandersen@netflix.com>
 
-diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhost_types.h
-index d7656908f730..5df49b6021a7 100644
---- a/include/uapi/linux/vhost_types.h
-+++ b/include/uapi/linux/vhost_types.h
-@@ -182,7 +182,8 @@ struct vhost_vdpa_iova_range {
- /* Device can be resumed */
- #define VHOST_BACKEND_F_RESUME  0x5
- /* Device supports the driver enabling virtqueues both before and after
-- * DRIVER_OK
-+ * DRIVER_OK. If this feature is not negotiated, the virtqueues must be
-+ * enabled before setting DRIVER_OK.
-  */
- #define VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK  0x6
- /* Device may expose the virtqueue's descriptor area, driver area and
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index bc4a51e4638b..1fba305ba8c1 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -651,6 +651,10 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 	case VHOST_VDPA_SET_VRING_ENABLE:
- 		if (copy_from_user(&s, argp, sizeof(s)))
- 			return -EFAULT;
-+		if (!vhost_backend_has_feature(vq,
-+			VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK) &&
-+		    (ops->get_status(vdpa) & VIRTIO_CONFIG_S_DRIVER_OK))
-+			return -EINVAL;
- 		ops->set_vq_ready(vdpa, idx, s.num);
- 		return 0;
- 	case VHOST_VDPA_GET_VRING_GROUP:
--- 
-2.43.0
+as well.
 
+Tycho
