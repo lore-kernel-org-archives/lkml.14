@@ -1,162 +1,118 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BA5129A77;
-	Tue,  6 Feb 2024 08:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836BB12AADF
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707207095; cv=none; b=nCasxB7gYF4Uy1nkLNOtFyQM8GL+yt8ATEFAUgBDNFO1iPMehCHs84AHwOFsUgoKaVWbBbdvVe2BwMq7vbwivNGQZUUCIt1Cl9IX483KdRUYxsWEy0JsledzgClHuhoDo0YWqGnL7uFw7xv+W4Go63wO8c6BOS4sA+J+OfvoMtE=
+	t=1707207314; cv=none; b=dMDRMEXpho8BnnL38dmjR9q/mzVt4tkYQ/PomsO8MxslZqo3hkWHpAuEAU5lZE2y4kr4W11HnO7oJLFWlZBKvEX0ME57TDuTM/37zn7pF0qG6MMQC/KHoLZbANTzwrgeokREwjVd170iImJ7SZgOW409HY2bFR5T0Yr1bIZeuOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707207095; c=relaxed/simple;
-	bh=bzaP4tS/Ihj8LOtcdwRdIJBniTBCeSCXqbR0BrYvcI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gR8fhS5GxRSJaaPstOI5rie5P1dwjw6rSFSWtzWudV81ZqUhC46loa2HrBflCJ5ZtmgDo/2z574v/JirClPtNsdNP5a9T3CTrdUjn6A4WKbo0dhUxeVF5A/xTDxPTShCIg9Dlq0lyKTsNtxgEmrd1okEhPWwrbBAdoredmpwR78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TSJvVd+G; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707207314; c=relaxed/simple;
+	bh=k80mLjIvTze9I4g8rX1exSAm7QAJel1Yb7apaCxak3g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TURWj/iMSJODtoU9lf8vAnIv2920OgziaJbgBVoa+i++AMTpanpsGij0EBwzWH9dAgTZzVye93shhWq2GPhfHKjmpaTn11yI9ASSbC1zUgQzylvsZycHFRPVBtDSBJbG2ocK9US+OHr0NQ8wFPkYIHvCydKrs3SriGmp/esHHlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SifXzZME; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSJvVd+G"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5114fa38434so724997e87.0;
-        Tue, 06 Feb 2024 00:11:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SifXzZME"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fc22f372cso41381345e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 00:15:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707207091; x=1707811891; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4gcF4s0kU7RHAT/txtIoRwLQVX+W9y2wHrbaZEyuOrY=;
-        b=TSJvVd+GtkY9urhRWUuWW6Vk3DV5Q4UCy/Y5O2TfDQmOS2zjxE4fOHDb+VjcqFVKM8
-         ghyAQToo2RUvTjZmaftgqPv4VD04h8z4QU5T12hUZpkOz6BO6nZVmSpXYP3nfLgI90pH
-         AkVY0z6YqqHmvNh25NxAt62qoyLBrshYGgm2xfy9oIe5Je2uIQEJLKVdEH7JUG9X4cry
-         Un7StFNw0thoxVFibCjKqD2y6F1gT4mnmFKk9ImsPNjHV1j6pUtFBdVQKmv9R/6Btkb+
-         NqJZIZKfxWT/fUaF9KRo9O0knnecPW5kpQbOBZ9UduGMqpjMRtCwOA5v65Rj9uPbHa/h
-         Sbzw==
+        d=linaro.org; s=google; t=1707207309; x=1707812109; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=btHhwGxbZA6ve4BPec76cdv8nujipODBvqRCy/GsxP0=;
+        b=SifXzZMEgqsxESslbijXO52LSFbWRVYOQI4KGhtAki2cc/Rln9YkJTH3Izke976QCq
+         bVpGTQMhnWgGfUug2BvBYglrY5V5udpdI13x08Lzne/nh1CFxUfWHmcIdkv9RPRgxOYQ
+         2nnRLH1VmZPNhz8QDPMO8z30MfIC1tNBRwj9AkQcE6eKgx8XH/3Zibg+Xzi46lX7I6oM
+         gXaJNcYpaPbkxxHTQKJExUzGCU0fKAXUDN7eSUD1VrELI7hyl2lfElGHJ+2LPaxlYsCs
+         mTjjfrx063k0zMfAunY4+dIg+gqGCzICemTz9q0j+xNmSgnPpQt+Vxe6MVvgyurItn81
+         JTFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707207091; x=1707811891;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4gcF4s0kU7RHAT/txtIoRwLQVX+W9y2wHrbaZEyuOrY=;
-        b=NYJNgvuvVMkGDVAMCpmX24b7352R+rS0pPP5LRjTPCpAwuWezjkPascwURv+LrNInM
-         GNn6wL+7E/cBZzCTK4OHSzynF/MBEIIbNHIKu/XF2X9vND7Qt05u9EOOdhwTg6Bhbnid
-         I/izP0pvYA2DDvEFGv3hNz9XsLag7oqNVROsVn464ka0thXLqrNBA61/Nj5HOVJan/no
-         dBh8ppullA+nx2fMqP6ff53UVqQfDgSo4oNHXCcQ6apyQGBIzCzFB/fG0Vn3aLS9kz2/
-         1bbNqDPm+pac7+0YcH1JStj4j7A1fjDvfi7Fx/PUVoMUG/A3JjwKMf5OUZAt9b+Kt/dy
-         ySfw==
-X-Gm-Message-State: AOJu0Ywjx/pc1HSsP6/B+qtH4vwkFdcHTAS7ic8p/nlXgXeOvu0yE8lD
-	r09P6/QEe7Rs8avuiZxMh+JrVArpLIvDldz8mNUBXjBDSL5t17bn
-X-Google-Smtp-Source: AGHT+IFHw6eoEuoqTi2YiCwoM3MF79h0S/QvtI+RHeekpeDQDm2GrgBgmMZus27A/ylIr1LmGLHbBA==
-X-Received: by 2002:ac2:52a3:0:b0:511:3164:3f3e with SMTP id r3-20020ac252a3000000b0051131643f3emr1296691lfm.29.1707207091035;
-        Tue, 06 Feb 2024 00:11:31 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUVGAMplA8ghrbV48Vq6tuyeriAdjNTE6ipxuwt4ZAmzfj9j91M09euhIn8Nl5tJdJfvyOjGnF1o3oZbz/GACmdP7FzWWCci941xhSIDPxkXy0J0ezfL/1ibR9vOPoBPJme+uLl8olNwB3IGvmPKz16+bspVi+qYxi0IwQOx6DT+hfpoB6Cd+dzFXOQ8tfSkmVGSwaGIGCgM43AVQ0KF6aYYoPq8+hz9eMIIwanzvl14bh1aDnitNdAbj6Hrn/dMCpZG+vRH8kD/QH90rrgNQ4TG2Vcua5TEoBdYutO0rl6lsOWj1TvWCi/VaiEKhOHQ5Oaov/sdKetx5TQr/mjs0RneTFBe6N455b4G+Y2CfWE1EN26QSy4G6gZEM=
-Received: from [172.27.55.67] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id bi18-20020a05600c3d9200b0040ebf340759sm1151605wmb.21.2024.02.06.00.11.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Feb 2024 00:11:30 -0800 (PST)
-Message-ID: <7e338c2a-6091-4093-8ca2-bb3b2af3e79d@gmail.com>
-Date: Tue, 6 Feb 2024 10:11:28 +0200
+        d=1e100.net; s=20230601; t=1707207309; x=1707812109;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=btHhwGxbZA6ve4BPec76cdv8nujipODBvqRCy/GsxP0=;
+        b=Kb+kMCcGviMjPOdgHD40YsQfHD2EE2SjnahktOdRMoDCrnKT1f2rOSXboYXD3ZwAsn
+         MmX3dkkmsyMB4maNNAb6mbbSeMjRo269wNREzZmgC7aTqz1Xcl3cIE1/1g0hIC2Cjm0u
+         /plKSFPxdlGSAMRoCwBirRqD4hE4umXwRKQXthvXHq1Krt8C8Sga3vBrM2TXCfdSwLn9
+         1WkE+Rpmh529hEFK1Pz+voCobwmiG0omti6sefZ9PRUkzQv6ijc++xToXY7/b5Pb/P3Q
+         V683qNzZ0TH/vn2WJghH9QfL/N3rSmw+VJOTPdwTqCA2LZW/X5tF0YjUBwoBxSMqIEN2
+         EUgQ==
+X-Gm-Message-State: AOJu0YynWgvmFo6rnQmF5Q6OfZLVwPuTsd2yE84lYPshkxgKFGVduLyX
+	3ShLKhDjtNa6cLdXCgJH+5DdjmiUDMnTGRwRQc9ugKPJmMEWS53iLCZJ5K/z+0M=
+X-Google-Smtp-Source: AGHT+IHAY0id2rUAFIshnMoMYXgfIfqBfIbwnjGvIxqn8bUK+f7tCiKlPakrEgJpmh+5BOErZSPgrA==
+X-Received: by 2002:a05:600c:5117:b0:40f:de5c:d283 with SMTP id o23-20020a05600c511700b0040fde5cd283mr957164wms.26.1707207308987;
+        Tue, 06 Feb 2024 00:15:08 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX1hmKw70FzD7bJf7uUXsOKOKjCezkhFYawWz6xg07SYsxhvKv3q3I7MdZBhoJFAtFibPiY+lppQGWokiuhvJpriSDPCGWWvg9GaF5G7QtZAswh1dEJFg8W8CcMgLw1dSmZ7sXXdA/IfouRf7ndIcKbhlB1R8nIejdD7QFT2AuLEXE3QDRtu4Oi4rYDYAk4k0IDcxox5bzKqjI0HOIviksCiIkJYLHVrSo3nhX4vS6IVy1fKzFtFNMSlXsoM56I4rvi+O2xbGRj9kz3KHgEnYGW7BG/cV3dB8Ev9PwSfbQRIl9P27ThziXC2FZVj3+Jlge2Usk9R5sB807bUlqWsXWwVSOiA+sMVqobqtncNIZ7tlODknzocIf9K4Pin07cszcfsLJbcYxqSbHzjY0c2KXCuCElKyD5DbvxRvQth5ycDvE7GscwUWLpoMiCXYRVIqAsx9h1v5Y/xqvcGNdkra6z/tLvTUAGvo+QyfPCuxycSdJTyS8AYc47n3pa0WWh3uDgkfnfNC/HwE59mKN/BA33LBuxc+QNqaNaSnoPU7V56hOr9I8kkJbvLbZgJsa5Cqxe2jlspVAv1UUyjfXZIKAcaOCxtYPOtLxrfQATN8KauuCbNdn3Cm2rIgvzQ79N+KRpG/pYVbHUBQJPMN930iVtdqPu6BgzQo/5vadtYiABOIaTkDm9dxEWzDQ9gc/+UldTJhR77/lR/ab3nMd0CMaqhfoUDxpEm9UR5ywWQkLRcxzPNG9XG+Dtxoc1rqzY2HrQO0GkQQSoccVqaT2mSKOcmKsTnK5UAjicWvXQ+5nzh43HHTJVmXkmCgTn1Jh02bViz58Zh5/ZRwyEZ0FVR+dxOBpX3MuMDv2oTrc9nQullGCLh4UceAncr2COOFpejrRnrvdtoVdbEHEtkwBT9/T1eKNSQFZM9EvfufhNl9ATj7yb93zB3NW1ktFAneBRykJD1w
+ huBWIWIirQQa/D77hagZ/LhIx3be1dMivkRxQWPWPFYjSmgBBx4KXysvRNuq0bi2acJDpi+BTqzK+7e5ufYEtNI1pXT54aVeY3fWAnDBMYVlXw1jxRAVFS3xEjM4URX69Ievl8tEmPTD5waLJpGY+w5LuYeqi+2NGkJ0XJkgDLdQY55mg7/dIs0m9u3A==
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id o28-20020adfa11c000000b0033b3ceda5dbsm1440140wro.44.2024.02.06.00.15.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 00:15:08 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: linux-arm-kernel@lists.infradead.org, Adam Ford <aford173@gmail.com>
+Cc: marex@denx.de, alexander.stein@ew.tq-group.com, 
+ frieder.schrempf@kontron.de, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Liu Ying <victor.liu@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Lucas Stach <l.stach@pengutronix.de>, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-pm@vger.kernel.org
+In-Reply-To: <20240203165307.7806-1-aford173@gmail.com>
+References: <20240203165307.7806-1-aford173@gmail.com>
+Subject: Re: (subset) [PATCH V8 00/12] soc: imx8mp: Add support for HDMI
+Message-Id: <170720730748.2682504.5723443718654255772.b4-ty@linaro.org>
+Date: Tue, 06 Feb 2024 09:15:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] eth: mlx5: link NAPI instances to queues and
- IRQs
-Content-Language: en-US
-To: Joe Damato <jdamato@fastly.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Gal Pressman <gal@nvidia.com>
-Cc: tariqt@nvidia.com, rrameshbabu@nvidia.com,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>
-References: <20240206010311.149103-1-jdamato@fastly.com>
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20240206010311.149103-1-jdamato@fastly.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
+Hi,
 
-
-On 06/02/2024 3:03, Joe Damato wrote:
-> Make mlx5 compatible with the newly added netlink queue GET APIs.
+On Sat, 03 Feb 2024 10:52:40 -0600, Adam Ford wrote:
+> The i.MX8M Plus has an HDMI controller, but it depends on two
+> other systems, the Parallel Video Interface (PVI) and the
+> HDMI PHY from Samsung. The LCDIF controller generates the display
+> and routes it to the PVI which converts passes the parallel video
+> to the HDMI bridge.  The HDMI system has a corresponding power
+> domain controller whose driver was partially written, but the
+> device tree for it was never applied, so some changes to the
+> power domain should be harmless because they've not really been
+> used yet.
 > 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> [...]
 
-+ Gal
+Thanks, Applied to https://anongit.freedesktop.org/git/drm/drm-misc.git (drm-misc-next)
 
-Hi Joe,
-Thanks for your patch.
+[09/12] dt-bindings: display: imx: add binding for i.MX8MP HDMI TX
+        https://cgit.freedesktop.org/drm/drm-misc/commit/?id=8933d29e7703f6f905bc84186b915b0ab4fe03bb
+[10/12] drm/bridge: imx: add bridge wrapper driver for i.MX8MP DWC HDMI
+        https://cgit.freedesktop.org/drm/drm-misc/commit/?id=1f36d634670d8001a45fe2f2dcae546819f9c7d8
 
-We have already prepared a similar patch, and it's part of our internal 
-submission queue, and planned to be submitted soon.
+-- 
+Neil
 
-Please see my comments below, let us know if you're welling to respin a 
-V2 or wait for our patch.
-
-> ---
->   drivers/net/ethernet/mellanox/mlx5/core/en.h      | 1 +
->   drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 8 ++++++++
->   2 files changed, 9 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> index 55c6ace0acd5..3f86ee1831a8 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> @@ -768,6 +768,7 @@ struct mlx5e_channel {
->   	u16                        qos_sqs_size;
->   	u8                         num_tc;
->   	u8                         lag_port;
-> +	unsigned int		   irq;
->   
->   	/* XDP_REDIRECT */
->   	struct mlx5e_xdpsq         xdpsq;
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index c8e8f512803e..e1bfff1fb328 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -2473,6 +2473,9 @@ static void mlx5e_close_queues(struct mlx5e_channel *c)
->   	mlx5e_close_tx_cqs(c);
->   	mlx5e_close_cq(&c->icosq.cq);
->   	mlx5e_close_cq(&c->async_icosq.cq);
-> +
-> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_TX, NULL);
-> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, NULL);
->   }
->   
->   static u8 mlx5e_enumerate_lag_port(struct mlx5_core_dev *mdev, int ix)
-> @@ -2558,6 +2561,7 @@ static int mlx5e_open_channel(struct mlx5e_priv *priv, int ix,
->   	c->stats    = &priv->channel_stats[ix]->ch;
->   	c->aff_mask = irq_get_effective_affinity_mask(irq);
->   	c->lag_port = mlx5e_enumerate_lag_port(priv->mdev, ix);
-> +	c->irq		= irq;
->   
->   	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll);
->   
-> @@ -2602,6 +2606,10 @@ static void mlx5e_activate_channel(struct mlx5e_channel *c)
->   		mlx5e_activate_xsk(c);
->   	else
->   		mlx5e_activate_rq(&c->rq);
-> +
-> +	netif_napi_set_irq(&c->napi, c->irq);
-
-Can be safely moved to mlx5e_open_channel without interfering with other 
-existing mapping. This would save the new irq field in mlx5e_channel.
-
-> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_TX, &c->napi);
-
-In some configurations we have multiple txqs per channel, so the txq 
-indices are not 1-to-1 with their channel index.
-
-This should be called per each txq, with the proper txq index.
-
-It should be done also for feture-dedicated SQs (like QOS/HTB).
-
-> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, &c->napi);
-
-For consistency, I'd move this one as well, to match the TX handling.
-
->   }
->   
->   static void mlx5e_deactivate_channel(struct mlx5e_channel *c)
