@@ -1,50 +1,59 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A92231EB24;
-	Tue,  6 Feb 2024 10:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15E4EB46;
+	Tue,  6 Feb 2024 10:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707216751; cv=none; b=KBXR1zgIsCMCeSVP7tGIz203adSDJSs4zKjP4lAO1+UEWTY2QS4jQu5T2piepb+Mz8bMbodkvEf9e8ZdENaM+ct4ylGyYR2r2OQvbnWM46ZdZAdIbUqXIWf6pDtUvP0z+yelr0t4N48jvup6zZkYqEmHI6Fb0qxQvE4plIHmu7g=
+	t=1707216784; cv=none; b=mLqhjMSIVjtzO8D+cT0jdQkUD9cPN9Eqq7PFp+6/rhsEuqhzQK7IgU7thFDSRsIp7XuPHoYHSKHVMknqJfC3PNpfbg1ds45YfvbE1LTY1M3f/rSCI7ErTTmYBFWG93X+Ml3rqw/Sovwe19qlNZ5pCxjVVQzoYiR0SSzO1OHwQbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707216751; c=relaxed/simple;
-	bh=CnNyJAVVaeaFUmGNhrIfwMWD9WAzXcrMYWAxBqjZww0=;
+	s=arc-20240116; t=1707216784; c=relaxed/simple;
+	bh=9uQDvmNZjkwnGeIFN5mlmGI1UDGBBxNEzfYtOgWxsmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VgJsxAImtBCanLmC7+iG5UGRWfGZr6lxciVty6p9hlsIbmfOfSFqXyneKHF4049A0Kig2n8cP10Lshhdfq4lqczhZoELIhKR789Gkz0VM2zEzaXJWyXKmx/crDDSH1T5rhTqzj4mAiZvc3xRzm25OXoxfQ8dd3lHky3B0Vi85Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=X8OVrjJk; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKHMi7E1KZERRKvKF30LYHGLWUPXomqv2YrZ20GtvoqzPunAB5DadTMqYyrJBcfrzyYcpVA6qWQGtJrP8z29O2+faiUxS0cGLq24OyNc0XnU5RKns3mGA7gU1O+sgtZ332utOux3uFWQQD3+twaBxAJe7ngu70TzINg2pL4JrcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BcT+27MJ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="X8OVrjJk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=MHHejNAVONdEtgJmkJVwsH6HrCDumM8nH7LqCCxZ7eQ=;
-	b=X8OVrjJkddRgwxnjpFow6Anb58NYAgdX7yMrfngAqPnrWELTlxsh4PPfG9i4ac
-	P4kipXRuSHqCCS7KtxXDUlgLTwxXsHUGo8DRyy3RTB2H9ZtN55OHLIACL+PsUr5r
-	V+axX6J9Q18nJTDhy3a27Lqzra8qm3Il2JP/cLEYpH0pg=
-Received: from dragon (unknown [183.213.196.254])
-	by smtp1 (Coremail) with SMTP id ClUQrAAHBucLD8Jlqaz+Ag--.16066S3;
-	Tue, 06 Feb 2024 18:50:52 +0800 (CST)
-Date: Tue, 6 Feb 2024 18:50:51 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, Wei Fang <wei.fang@nxp.com>,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 0/4] Add 8qm SMMU information
-Message-ID: <ZcIPCxgO3Gxc/aXh@dragon>
-References: <20240201-8qm_smmu-v2-0-3d12a80201a3@nxp.com>
- <20240202110511.135d26b7@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BcT+27MJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707216782; x=1738752782;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9uQDvmNZjkwnGeIFN5mlmGI1UDGBBxNEzfYtOgWxsmM=;
+  b=BcT+27MJsnwSiVbfwzsT9ugDRD8J0k7ocl07M8w0iro6OWJQkH4d/yyD
+   xGRg38enTHGOxpYey2DR9A0LkpRV0VvJiktrG8TaB3P72NDakcgm618am
+   YOaX4hykr7W0J1pEwNPqtoWZ7F4DlDc5WKoDIHHSf3aXHYycN+eqFxBFn
+   08mZglcxXk+XsziV6gFwax7vLpyiLbi7xl8lkOjfEv2LOQRKRSTl2UT81
+   B33ZlXBPCDYuVTTREXUKpnA0DTQCofU+p3aFhQfFN35OXBAg9kWZaaz6n
+   XOckbAciZmG4Z6QDnELYnmxFK4o5RKMDML/5AnCQc8c8LWhbdbCXGQxlu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="631470"
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="631470"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:53:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="38410556"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 06 Feb 2024 02:53:01 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rXJ4T-0001II-1W;
+	Tue, 06 Feb 2024 10:52:57 +0000
+Date: Tue, 6 Feb 2024 18:52:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH v14 4/6] tracing: Allow user-space mapping of the
+ ring-buffer
+Message-ID: <202402061809.T2cv9J8W-lkp@intel.com>
+References: <20240205163410.2296552-5-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,32 +62,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240202110511.135d26b7@kernel.org>
-X-CM-TRANSID:ClUQrAAHBucLD8Jlqaz+Ag--.16066S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw45uw4kJFyrWFW7ur47twb_yoWfGrbEqr
-	18uFWkGw4kJFnrJayFyrsrG345GrWqkr18WanxXanrA343AF1UtFWkXws5uF18Jr4fCFWD
-	Ar9Ygrs29r13KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8_MaUUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDgx8ZVszYTExnwAAsN
+In-Reply-To: <20240205163410.2296552-5-vdonnefort@google.com>
 
-On Fri, Feb 02, 2024 at 11:05:11AM -0800, Jakub Kicinski wrote:
-> On Thu, 01 Feb 2024 15:22:40 -0500 Frank Li wrote:
-> >       dt-bindings: mmc: fsl-imx-esdhc: add iommus property
-> >       dt-bindings: net: fec: add iommus property
-> >       arm64: dts: imx8qm: add smmu node
-> >       arm64: dts: imx8qm: add smmu stream id information
-> > 
-> >  .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     |  3 ++
-> >  Documentation/devicetree/bindings/net/fsl,fec.yaml |  3 ++
-> >  arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi  |  6 ++++
-> >  arch/arm64/boot/dts/freescale/imx8qm.dtsi          | 41 ++++++++++++++++++++++
-> 
-> Any preference on whether all these go via a platform tree,
-> or should we pick up the net patch to netdev? I guess taking
-> the DTB via netdev would be the usual way to handle this?
+Hi Vincent,
 
-No, it's not.  Taking DTS changes through arch/platform tree is the
-usual way.
+kernel test robot noticed the following build warnings:
 
-Shawn
+[auto build test WARNING on e2412e51fdea837b50ce31fea8e5dfc885237f3a]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Donnefort/ring-buffer-Zero-ring-buffer-sub-buffers/20240206-004413
+base:   e2412e51fdea837b50ce31fea8e5dfc885237f3a
+patch link:    https://lore.kernel.org/r/20240205163410.2296552-5-vdonnefort%40google.com
+patch subject: [PATCH v14 4/6] tracing: Allow user-space mapping of the ring-buffer
+config: arc-defconfig (https://download.01.org/0day-ci/archive/20240206/202402061809.T2cv9J8W-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240206/202402061809.T2cv9J8W-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402061809.T2cv9J8W-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   kernel/trace/trace.c: In function 'tracing_buffers_mmap_close':
+>> kernel/trace/trace.c:8722:29: warning: unused variable 'tr' [-Wunused-variable]
+    8722 |         struct trace_array *tr = iter->tr;
+         |                             ^~
+   kernel/trace/trace.c: In function 'tracing_buffers_mmap':
+   kernel/trace/trace.c:8752:29: warning: unused variable 'tr' [-Wunused-variable]
+    8752 |         struct trace_array *tr = iter->tr;
+         |                             ^~
+
+
+vim +/tr +8722 kernel/trace/trace.c
+
+  8717	
+  8718	static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
+  8719	{
+  8720		struct ftrace_buffer_info *info = vma->vm_file->private_data;
+  8721		struct trace_iterator *iter = &info->iter;
+> 8722		struct trace_array *tr = iter->tr;
+  8723	
+  8724		ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
+  8725	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
