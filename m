@@ -1,170 +1,315 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C265D51E;
-	Tue,  6 Feb 2024 17:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4468D51D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707241180; cv=none; b=iegEd2WtIUEZkWwyLYCD1GUssueKkF+Xf68/n3Fk5NV2rWAXYDbtl7ICXB2kucsq7Ui7Gf/4+OT8/jGpS32uoxrYAe0Ngchc6laTjDJ6ztr+LepwV2w4DEzrqIMwUh7IxSCIeH5WyOoc3OPPxmAouVbHoMWvDeCqlOAIq8EvqJg=
+	t=1707241182; cv=none; b=dI807HwjhqKFHWimttQz3/UpnA0mln6RVBCUQIZXLzuuRw1Qxhdhsxq2UMbkNMhex7XGY3GL1U9LL0kBEvijBdhhE8m7op19aHfwnABHfGckFKYSVEry3Gc1ehzl9oTIWmt3MjI9q+JP4Sas5Bidtr5UkeFkywgGEvhDCV2zjO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707241180; c=relaxed/simple;
-	bh=WWwZvRC7leIgoRx3cVsCE5ZZDk1l0qoJfM+AQd5L5IE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QHiFaKClovMxUBlsV61hoAY3YWkCx8OGZQO0Ne56JaVWPAmB1uDeX4oJZR0f+JHM7cVNiI+8u1n7doUI+vPAivx3/khqNyZlaIOaKXLWn+KUgOkGOl4S2qpEHiNbmhEB7qvttH4eoTQ3E4cdQVgxSZDJMV4RKroQQnY3ibvj80w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from rbta-msk-lt-156703.astralinux.ru (unknown [10.177.20.15])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4TTr915VGbzfYwR;
-	Tue,  6 Feb 2024 20:39:33 +0300 (MSK)
-From: Alexey Panov <apanov@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexey Panov <apanov@astralinux.ru>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mohamed Khalfella <mkhalfella@purestorage.com>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Kees Cook <keescook@chromium.org>,
-	Liang Chen <liangchen.linux@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Willem de Bruijn <willemb@google.com>
-Subject: [PATCH 5.10/5.15/6.1 1/1] net: prevent mss overflow in skb_segment()
-Date: Tue,  6 Feb 2024 20:38:44 +0300
-Message-Id: <20240206173844.30271-2-apanov@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240206173844.30271-1-apanov@astralinux.ru>
-References: <20240206173844.30271-1-apanov@astralinux.ru>
+	s=arc-20240116; t=1707241182; c=relaxed/simple;
+	bh=VVhzDt1nzxBLlkryootH7gB0a0OIdkDAPabVbkIWJxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3GDxblx4gwATJ9tqzAvnMpTmPejq5IKuUX7w1jpZEO9eXNgekRx9Htxok5Ztv7+15VEJnVXYtjCu3LDTKMJjnKphHGxPHM88B8mp8al0Z7QvSws4dD2KHUV8X6cZ8LUK064TJ3UlQV1O3GQ+9P44LTOS90dboImU7ucnretW28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NLgJ5XHh; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLgJ5XHh"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e02fa257eeso633960b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 09:39:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707241178; x=1707845978; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rb9xEyirtGCsTVMLq3WXEVsBdomE7xpr3Gl07IaIp9Y=;
+        b=NLgJ5XHh4AM2IGUouqqFKmoERVPw22jAiHWpGGz1p+NaOUNxXt4lnTjtoxZViAHJgd
+         9/lGYnkLdzTkfY4Abyz+kl1kqerKTnOKvwJisCRCTpCddC6HzDsH0YsmtN15vr4LbepS
+         mXfcymXaDLvDe50uPENtJQLLLdzMZ+Y+o63pcJ/cK5TLGJ9bi7qvYMZ1mwx4mL+8bfCc
+         5bf/f8jWX4ZnbG+7TE7TSgHuYhg0azyJN1xGfYcIyMyOOb6HgIOqzqpIGIyIqbUQvOWZ
+         mDYZsmNNCrZtQhNgOTP8kWsCzA9M/0M3KTzxCpnHGmLPWTvrx4F0L4LA/wejBMDFDjSt
+         b0CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707241178; x=1707845978;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rb9xEyirtGCsTVMLq3WXEVsBdomE7xpr3Gl07IaIp9Y=;
+        b=COXDEHeKzmm/0dqvM/0SHKzjhSZg2FjCKQSBIcOnsx9K3uM/bO1WuxYBL9v5h1PpEz
+         q2rklyoyloJNQorG9JyMb1DjTt38Q28FWtolhZrdPE4y3+K3XbQlHIUxM4zbmOHokcgr
+         uwmTr0M86CHbeuZwImer+hbtJvBbkqgJB9KgfxCWnp+TeDiZF715ZM4K2ArwRHZE2Gvb
+         shES6PxFS+30tgAE6JMrf/Wnk7r6H2kGMJW9t+Tpn0mall1tKgWeq3J0m+CNAkffFeSm
+         KI0Ig+eKOjhyTL9Mt8N+BuWgn+yb78GG2MKDsvW+mu/GPNFjuUIR5IhM4haSXAHXAWFt
+         AHFA==
+X-Gm-Message-State: AOJu0YwV14JSjphlYu/RuO1X2exvQlHIyo7k9lvt5LiOfnrKRSFSzCiF
+	r3GZxNq5eTyZz88vir9VEqCL6j+XAyExmrpkmI333BTaPOMnXPNXqde8L9NHyoWN7bN0l/+EDrd
+	D
+X-Google-Smtp-Source: AGHT+IEi/8CfW9wDHyEA2OHQP6EePASJl1jizXwsc41zLMMs2c3n0jD1ZcH8FWiqgRxsqI02AF9mSA==
+X-Received: by 2002:a05:6a00:13a6:b0:6df:ee93:570 with SMTP id t38-20020a056a0013a600b006dfee930570mr216558pfg.6.1707241177800;
+        Tue, 06 Feb 2024 09:39:37 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVbO66R4TOpmw2ZmlS3Fyp5Baz/4XtRIsg/bhQYV5FusHW7Xai8QXnA009TZVYEJ5O84/RAgTQ1ApRvxTGjgjXsvyKT7WZ9KYrN1ieff/P+aHcnidvtfzqOsC854JRhqVJrVD6E7chZ4KXRN5ckqA==
+Received: from p14s ([2604:3d09:148c:c800:628f:df28:fb60:e513])
+        by smtp.gmail.com with ESMTPSA id d22-20020aa78696000000b006e04a659ed6sm2244047pfo.67.2024.02.06.09.39.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 09:39:37 -0800 (PST)
+Date: Tue, 6 Feb 2024 10:39:35 -0700
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: zynqmp: fix lockstep mode memory region
+Message-ID: <ZcJu10CIVYF9iodF@p14s>
+References: <20240201004812.1471407-1-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: -100
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigvhicurfgrnhhovhcuoegrphgrnhhovhesrghsthhrrghlihhnuhigrdhruheqnecuggftrfgrthhtvghrnhepteeigfefledvueefgfdvieejgefgieeiiefggeekueejheefvdekvdefhfduudetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddtrddujeejrddvtddrudehnecurfgrrhgrmhephhgvlhhopehrsghtrgdqmhhskhdqlhhtqdduheeijedtfedrrghsthhrrghlihhnuhigrdhruhdpihhnvghtpedutddrudejjedrvddtrdduheemgeehjeegvddpmhgrihhlfhhrohhmpegrphgrnhhovhesrghsthhrrghlihhnuhigrdhruhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghprghnohhvsegrshhtrhgrlhhinhhugidrrhhupdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpth
- htohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehsrghshhgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhunhhihihusegrmhgriihonhdrtghomhdprhgtphhtthhopehmkhhhrghlfhgvlhhlrgesphhurhgvshhtohhrrghgvgdrtghomhdprhgtphhtthhopehpthihrggurghvsegrmhgriihonhdruggvpdhrtghpthhtohepkhgvvghstghoohhksegthhhrohhmihhumhdrohhrghdprhgtphhtthhopehlihgrnhhgtghhvghnrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrhgtvghlohdrlhgvihhtnhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrghdprhgtphhtthhopeifihhllhgvmhgssehgohhoghhlvgdrtghomh
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.61.08090, Virus records: 12326436, Updated: 2024-Feb-06 16:36:35 UTC]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201004812.1471407-1-tanmay.shah@amd.com>
 
-From: Eric Dumazet <edumazet@google.com>
+On Wed, Jan 31, 2024 at 04:48:12PM -0800, Tanmay Shah wrote:
+> In lockstep mode, r5 core0 uses TCM of R5 core1. Following is lockstep
+> mode memory region as per hardware reference manual.
+> 
+>     |      *TCM*         |   *R5 View* | *Linux view* |
+>     | R5_0 ATCM (128 KB) | 0x0000_0000 | 0xFFE0_0000  |
+>     | R5_0 BTCM (128 KB) | 0x0002_0000 | 0xFFE2_0000  |
+> 
+> However, driver shouldn't model it as above because R5 core0 TCM and core1
+> TCM has different power-domains mapped to it.
+> Hence, TCM address space in lockstep mode should be modeled as 64KB
+> regions only where each region has its own power-domain as following:
+> 
+>     |      *TCM*         |   *R5 View* | *Linux view* |
+>     | R5_0 ATCM0 (64 KB) | 0x0000_0000 | 0xFFE0_0000  |
+>     | R5_0 BTCM0 (64 KB) | 0x0002_0000 | 0xFFE2_0000  |
+>     | R5_0 ATCM1 (64 KB) | 0x0001_0000 | 0xFFE1_0000  |
+>     | R5_0 BTCM1 (64 KB) | 0x0003_0000 | 0xFFE3_0000  |
+> 
+> This fix makes driver maintanance easy and makes design robust for future
+> platorms as well.
+> 
+> Fixes: 9af45bbdcbbb ("remoteproc: zynqmp: fix TCM carveouts in lockstep mode")
 
-[ Upstream commit 23d05d563b7e7b0314e65c8e882bc27eac2da8e7 ]
+This patch doesn't fix a bug, i.e users won't see any changes once this patch
+gets applied.  As such there is no need for a "Fixes" tag.  When you resend this
+patch (see below), please remove the line.
 
-Once again syzbot is able to crash the kernel in skb_segment() [1]
+> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+> ---
+>  drivers/remoteproc/xlnx_r5_remoteproc.c | 145 ++----------------------
+>  1 file changed, 12 insertions(+), 133 deletions(-)
+>
 
-GSO_BY_FRAGS is a forbidden value, but unfortunately the following
-computation in skb_segment() can reach it quite easily :
+I am happy with this patch but won't apply it because I want to see what comes
+next.  Please include it in your next patchet.
 
-	mss = mss * partial_segs;
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-65535 = 3 * 5 * 17 * 257, so many initial values of mss can lead to
-a bad final result.
-
-Make sure to limit segmentation so that the new mss value is smaller
-than GSO_BY_FRAGS.
-
-[1]
-
-general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
-CPU: 1 PID: 5079 Comm: syz-executor993 Not tainted 6.7.0-rc4-syzkaller-00141-g1ae4cd3cbdd0 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
-RIP: 0010:skb_segment+0x181d/0x3f30 net/core/skbuff.c:4551
-Code: 83 e3 02 e9 fb ed ff ff e8 90 68 1c f9 48 8b 84 24 f8 00 00 00 48 8d 78 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 8a 21 00 00 48 8b 84 24 f8 00
-RSP: 0018:ffffc900043473d0 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000010046 RCX: ffffffff886b1597
-RDX: 000000000000000e RSI: ffffffff886b2520 RDI: 0000000000000070
-RBP: ffffc90004347578 R08: 0000000000000005 R09: 000000000000ffff
-R10: 000000000000ffff R11: 0000000000000002 R12: ffff888063202ac0
-R13: 0000000000010000 R14: 000000000000ffff R15: 0000000000000046
-FS: 0000555556e7e380(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020010000 CR3: 0000000027ee2000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-<TASK>
-udp6_ufo_fragment+0xa0e/0xd00 net/ipv6/udp_offload.c:109
-ipv6_gso_segment+0x534/0x17e0 net/ipv6/ip6_offload.c:120
-skb_mac_gso_segment+0x290/0x610 net/core/gso.c:53
-__skb_gso_segment+0x339/0x710 net/core/gso.c:124
-skb_gso_segment include/net/gso.h:83 [inline]
-validate_xmit_skb+0x36c/0xeb0 net/core/dev.c:3626
-__dev_queue_xmit+0x6f3/0x3d60 net/core/dev.c:4338
-dev_queue_xmit include/linux/netdevice.h:3134 [inline]
-packet_xmit+0x257/0x380 net/packet/af_packet.c:276
-packet_snd net/packet/af_packet.c:3087 [inline]
-packet_sendmsg+0x24c6/0x5220 net/packet/af_packet.c:3119
-sock_sendmsg_nosec net/socket.c:730 [inline]
-__sock_sendmsg+0xd5/0x180 net/socket.c:745
-__sys_sendto+0x255/0x340 net/socket.c:2190
-__do_sys_sendto net/socket.c:2202 [inline]
-__se_sys_sendto net/socket.c:2198 [inline]
-__x64_sys_sendto+0xe0/0x1b0 net/socket.c:2198
-do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
-entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7f8692032aa9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 d1 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff8d685418 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f8692032aa9
-RDX: 0000000000010048 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 00000000000f4240 R08: 0000000020000540 R09: 0000000000000014
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fff8d685480
-R13: 0000000000000001 R14: 00007fff8d685480 R15: 0000000000000003
-</TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:skb_segment+0x181d/0x3f30 net/core/skbuff.c:4551
-Code: 83 e3 02 e9 fb ed ff ff e8 90 68 1c f9 48 8b 84 24 f8 00 00 00 48 8d 78 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 8a 21 00 00 48 8b 84 24 f8 00
-RSP: 0018:ffffc900043473d0 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000010046 RCX: ffffffff886b1597
-RDX: 000000000000000e RSI: ffffffff886b2520 RDI: 0000000000000070
-RBP: ffffc90004347578 R08: 0000000000000005 R09: 000000000000ffff
-R10: 000000000000ffff R11: 0000000000000002 R12: ffff888063202ac0
-R13: 0000000000010000 R14: 000000000000ffff R15: 0000000000000046
-FS: 0000555556e7e380(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020010000 CR3: 0000000027ee2000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-Fixes: 3953c46c3ac7 ("sk_buff: allow segmenting based on frag sizes")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Link: https://lore.kernel.org/r/20231212164621.4131800-1-edumazet@google.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Alexey Panov <apanov@astralinux.ru>
----
- net/core/skbuff.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 8a819d0a7bfb..d4bd10f8723d 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -4213,8 +4213,9 @@ struct sk_buff *skb_segment(struct sk_buff *head_skb,
- 		/* GSO partial only requires that we trim off any excess that
- 		 * doesn't fit into an MSS sized block, so take care of that
- 		 * now.
-+		 * Cap len to not accidentally hit GSO_BY_FRAGS.
- 		 */
--		partial_segs = len / mss;
-+		partial_segs = min(len, GSO_BY_FRAGS - 1U) / mss;
- 		if (partial_segs > 1)
- 			mss *= partial_segs;
- 		else
--- 
-2.30.2
-
+> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> index 4395edea9a64..42b0384d34f2 100644
+> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
+> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> @@ -84,12 +84,12 @@ static const struct mem_bank_data zynqmp_tcm_banks_split[] = {
+>  	{0xffeb0000UL, 0x20000, 0x10000UL, PD_R5_1_BTCM, "btcm1"},
+>  };
+>  
+> -/* In lockstep mode cluster combines each 64KB TCM and makes 128KB TCM */
+> +/* In lockstep mode cluster uses each 64KB TCM from second core as well */
+>  static const struct mem_bank_data zynqmp_tcm_banks_lockstep[] = {
+> -	{0xffe00000UL, 0x0, 0x20000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 128KB each */
+> -	{0xffe20000UL, 0x20000, 0x20000UL, PD_R5_0_BTCM, "btcm0"},
+> -	{0, 0, 0, PD_R5_1_ATCM, ""},
+> -	{0, 0, 0, PD_R5_1_BTCM, ""},
+> +	{0xffe00000UL, 0x0, 0x10000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 64KB each */
+> +	{0xffe20000UL, 0x20000, 0x10000UL, PD_R5_0_BTCM, "btcm0"},
+> +	{0xffe10000UL, 0x10000, 0x10000UL, PD_R5_1_ATCM, "atcm1"},
+> +	{0xffe30000UL, 0x30000, 0x10000UL, PD_R5_1_BTCM, "btcm1"},
+>  };
+>  
+>  /**
+> @@ -540,14 +540,14 @@ static int tcm_mem_map(struct rproc *rproc,
+>  }
+>  
+>  /*
+> - * add_tcm_carveout_split_mode()
+> + * add_tcm_banks()
+>   * @rproc: single R5 core's corresponding rproc instance
+>   *
+> - * allocate and add remoteproc carveout for TCM memory in split mode
+> + * allocate and add remoteproc carveout for TCM memory
+>   *
+>   * return 0 on success, otherwise non-zero value on failure
+>   */
+> -static int add_tcm_carveout_split_mode(struct rproc *rproc)
+> +static int add_tcm_banks(struct rproc *rproc)
+>  {
+>  	struct rproc_mem_entry *rproc_mem;
+>  	struct zynqmp_r5_core *r5_core;
+> @@ -580,10 +580,10 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
+>  					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+>  		if (ret < 0) {
+>  			dev_err(dev, "failed to turn on TCM 0x%x", pm_domain_id);
+> -			goto release_tcm_split;
+> +			goto release_tcm;
+>  		}
+>  
+> -		dev_dbg(dev, "TCM carveout split mode %s addr=%llx, da=0x%x, size=0x%lx",
+> +		dev_dbg(dev, "TCM carveout %s addr=%llx, da=0x%x, size=0x%lx",
+>  			bank_name, bank_addr, da, bank_size);
+>  
+>  		rproc_mem = rproc_mem_entry_init(dev, NULL, bank_addr,
+> @@ -593,7 +593,7 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
+>  		if (!rproc_mem) {
+>  			ret = -ENOMEM;
+>  			zynqmp_pm_release_node(pm_domain_id);
+> -			goto release_tcm_split;
+> +			goto release_tcm;
+>  		}
+>  
+>  		rproc_add_carveout(rproc, rproc_mem);
+> @@ -601,7 +601,7 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
+>  
+>  	return 0;
+>  
+> -release_tcm_split:
+> +release_tcm:
+>  	/* If failed, Turn off all TCM banks turned on before */
+>  	for (i--; i >= 0; i--) {
+>  		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
+> @@ -610,127 +610,6 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
+>  	return ret;
+>  }
+>  
+> -/*
+> - * add_tcm_carveout_lockstep_mode()
+> - * @rproc: single R5 core's corresponding rproc instance
+> - *
+> - * allocate and add remoteproc carveout for TCM memory in lockstep mode
+> - *
+> - * return 0 on success, otherwise non-zero value on failure
+> - */
+> -static int add_tcm_carveout_lockstep_mode(struct rproc *rproc)
+> -{
+> -	struct rproc_mem_entry *rproc_mem;
+> -	struct zynqmp_r5_core *r5_core;
+> -	int i, num_banks, ret;
+> -	phys_addr_t bank_addr;
+> -	size_t bank_size = 0;
+> -	struct device *dev;
+> -	u32 pm_domain_id;
+> -	char *bank_name;
+> -	u32 da;
+> -
+> -	r5_core = rproc->priv;
+> -	dev = r5_core->dev;
+> -
+> -	/* Go through zynqmp banks for r5 node */
+> -	num_banks = r5_core->tcm_bank_count;
+> -
+> -	/*
+> -	 * In lockstep mode, TCM is contiguous memory block
+> -	 * However, each TCM block still needs to be enabled individually.
+> -	 * So, Enable each TCM block individually.
+> -	 * Although ATCM and BTCM is contiguous memory block, add two separate
+> -	 * carveouts for both.
+> -	 */
+> -	for (i = 0; i < num_banks; i++) {
+> -		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
+> -
+> -		/* Turn on each TCM bank individually */
+> -		ret = zynqmp_pm_request_node(pm_domain_id,
+> -					     ZYNQMP_PM_CAPABILITY_ACCESS, 0,
+> -					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+> -		if (ret < 0) {
+> -			dev_err(dev, "failed to turn on TCM 0x%x", pm_domain_id);
+> -			goto release_tcm_lockstep;
+> -		}
+> -
+> -		bank_size = r5_core->tcm_banks[i]->size;
+> -		if (bank_size == 0)
+> -			continue;
+> -
+> -		bank_addr = r5_core->tcm_banks[i]->addr;
+> -		da = r5_core->tcm_banks[i]->da;
+> -		bank_name = r5_core->tcm_banks[i]->bank_name;
+> -
+> -		/* Register TCM address range, TCM map and unmap functions */
+> -		rproc_mem = rproc_mem_entry_init(dev, NULL, bank_addr,
+> -						 bank_size, da,
+> -						 tcm_mem_map, tcm_mem_unmap,
+> -						 bank_name);
+> -		if (!rproc_mem) {
+> -			ret = -ENOMEM;
+> -			zynqmp_pm_release_node(pm_domain_id);
+> -			goto release_tcm_lockstep;
+> -		}
+> -
+> -		/* If registration is success, add carveouts */
+> -		rproc_add_carveout(rproc, rproc_mem);
+> -
+> -		dev_dbg(dev, "TCM carveout lockstep mode %s addr=0x%llx, da=0x%x, size=0x%lx",
+> -			bank_name, bank_addr, da, bank_size);
+> -	}
+> -
+> -	return 0;
+> -
+> -release_tcm_lockstep:
+> -	/* If failed, Turn off all TCM banks turned on before */
+> -	for (i--; i >= 0; i--) {
+> -		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
+> -		zynqmp_pm_release_node(pm_domain_id);
+> -	}
+> -	return ret;
+> -}
+> -
+> -/*
+> - * add_tcm_banks()
+> - * @rproc: single R5 core's corresponding rproc instance
+> - *
+> - * allocate and add remoteproc carveouts for TCM memory based on cluster mode
+> - *
+> - * return 0 on success, otherwise non-zero value on failure
+> - */
+> -static int add_tcm_banks(struct rproc *rproc)
+> -{
+> -	struct zynqmp_r5_cluster *cluster;
+> -	struct zynqmp_r5_core *r5_core;
+> -	struct device *dev;
+> -
+> -	r5_core = rproc->priv;
+> -	if (!r5_core)
+> -		return -EINVAL;
+> -
+> -	dev = r5_core->dev;
+> -
+> -	cluster = dev_get_drvdata(dev->parent);
+> -	if (!cluster) {
+> -		dev_err(dev->parent, "Invalid driver data\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	/*
+> -	 * In lockstep mode TCM banks are one contiguous memory region of 256Kb
+> -	 * In split mode, each TCM bank is 64Kb and not contiguous.
+> -	 * We add memory carveouts accordingly.
+> -	 */
+> -	if (cluster->mode == SPLIT_MODE)
+> -		return add_tcm_carveout_split_mode(rproc);
+> -	else if (cluster->mode == LOCKSTEP_MODE)
+> -		return add_tcm_carveout_lockstep_mode(rproc);
+> -
+> -	return -EINVAL;
+> -}
+> -
+>  /*
+>   * zynqmp_r5_parse_fw()
+>   * @rproc: single R5 core's corresponding rproc instance
+> 
+> base-commit: 99f59b148871dadb9104366e3d25b120a97f897b
+> -- 
+> 2.25.1
+> 
