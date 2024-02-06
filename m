@@ -1,60 +1,85 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 631CA1EA76;
-	Tue,  6 Feb 2024 10:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A701AB810;
+	Tue,  6 Feb 2024 10:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707215632; cv=none; b=Nilsxr+i/GSHMP1t1MD8ofTzWr/13HqWIujO4gMnP01ARu65IeKOOD9VC/Uu3QhHEIXOoIOyyVaP0z2R6d2R4hIHdmTKvvVbdFWuQkqSXTQp7bIpDs0wne7pCvHUuLGr5/UA5Ow9zPgZXAnx8zEyUsSotk2d4nnsvqr0/bsZMNk=
+	t=1707215715; cv=none; b=ikzkYur0bE/L+hOycmxmtmh1PhQ2KDCKJrPRkrvBLmzK+4zijrLIZhiCtuFeNVkGwuIbfzEp27vcZ1BM0kYLzKR2IvRAoVNtio5LypS0Dze8kbQTJm/x4qkDJEjBaXkkRGM7wP3A97IxHZPB6Vhi/HBUlV8P4Y0BYWI0J7oh/9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707215632; c=relaxed/simple;
-	bh=HHY4bhdN73SL/2Fqw/lzFjTOJ67Mh8SjdXshSo3e+ys=;
+	s=arc-20240116; t=1707215715; c=relaxed/simple;
+	bh=3c5PNyqEGTv1ShH7PDfncWm8E3oj2yIaY/8aKD+F4Hc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UvlAMHYTDqI68V5k+AwkrOKNiOM2S3bYMWY1S9OgERsnu2zxGPQFMlZvD5npFCDU7/xTzo4F9C76Tai7x+3sRWOfnoLBW2YuMeplNNBUzbu9aREFR/88Dkxb602pI0g+9xFwZfkScBjL35oEKGawGqVHkjP1YXZKSIPE8Dr4KBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=p13So/pZ; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=AoUFshmuY1tqJlB3rT8hLsFvSvR+tnvmobiDNdClZRF3ohuJM1PS+q4LAl73/WTkuCmng1f1QKbw587+ueXywbv3lExP/V53DZqxZVQgCjVSe8q948d89qojaH6RMstrNkBXlTq6iXXXExJwl4dDA86AoQziCpSi12YHLhtYgVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmID3Hp2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="p13So/pZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=1LM6ZCgi9/9FxX5GU9EoatoU0andrc/FxDxfy6wmO3E=;
-	b=p13So/pZ76cSBNtyUzfNFNsbGWn+k7pz+XIA31XwrLmAsTR3+GHbNAxVeZC3xK
-	jB9n23838zND+DwxQXyWBDnI5KtIHzOUKWFK/5V7Br/jExvRBquY/kTnbtcqcQ+0
-	AQYGmjxp+xdFRAM19ECaRfvSYt2FolJbI5NVhPm0fzS5M=
-Received: from dragon (unknown [183.213.196.254])
-	by smtp1 (Coremail) with SMTP id ClUQrAAnJ+jJCsJlkm7+Ag--.16149S3;
-	Tue, 06 Feb 2024 18:32:42 +0800 (CST)
-Date: Tue, 6 Feb 2024 18:32:40 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-	leoyang.li@nxp.com, hvilleneuve@dimonoff.com,
-	krzysztof.kozlowski@linaro.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	andy.shevchenko@gmail.com
-Subject: Re: [PATCH v3 0/2] board: imx8mn-rve-gateway: fix compatible
- description
-Message-ID: <ZcIKyL7l2bIN3KeK@dragon>
-References: <20240125165935.886992-1-hugo@hugovil.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmID3Hp2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C97C433C7;
+	Tue,  6 Feb 2024 10:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707215714;
+	bh=3c5PNyqEGTv1ShH7PDfncWm8E3oj2yIaY/8aKD+F4Hc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JmID3Hp2rCViqbulMK+0TZTIic7I+aL8OH7r4vok0IY74BMh4kkpLyw6qUzouGRkw
+	 GrfY5+NqmV6SdLrQI+1XyxinOUwkxrRBQ0qn+YiS5NUyNPLqyqNj1nG0wSs8YwcgVL
+	 DTN/IGYwwLO68yAL+0PBTjXcjF/94nYr4CeGgunpAtia3EUCBe59ACmxsc/s5iK784
+	 TczoddAZCVLMp3JNN8MbfjsGi/KHWe3vBC+y+bNB8NSwEU480sHq008K6ppIhYuwtY
+	 0HkQroYlE0y5nv5y220QIxdtFuTVesUiS5KHVYvBlefWtkgx+mLYF8yy1ccHouE4Sh
+	 WON6q44+gU3kA==
+Date: Tue, 6 Feb 2024 10:35:11 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Miquel Raynal <miquel.raynal@bootlin.com>, yen-mei.goh@keysight.com,
+	koon-kee.lie@keysight.com
+Subject: Re: [PATCH 1/2] Revert "spi: spi-omap2-mcspi.c: Toggle CS after each
+ word"
+Message-ID: <ZcILX84KZpGKgpgl@finisterre.sirena.org.uk>
+References: <20240126-spi-omap2-mcspi-multi-mode-v1-0-d143d33f0fe0@bootlin.com>
+ <20240126-spi-omap2-mcspi-multi-mode-v1-1-d143d33f0fe0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="azcLN1ODoDsB9Bpu"
+Content-Disposition: inline
+In-Reply-To: <20240126-spi-omap2-mcspi-multi-mode-v1-1-d143d33f0fe0@bootlin.com>
+X-Cookie: You might have mail.
+
+
+--azcLN1ODoDsB9Bpu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240125165935.886992-1-hugo@hugovil.com>
-X-CM-TRANSID:ClUQrAAnJ+jJCsJlkm7+Ag--.16149S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUIzB-DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiFQp8ZV6Nm3UP8wAAsH
 
-On Thu, Jan 25, 2024 at 11:59:33AM -0500, Hugo Villeneuve wrote:
-> Hugo Villeneuve (2):
->   dt-bindings: arm: fsl: remove redundant company name
->   arm64: dts: imx8mn-rve-gateway: remove redundant company name
+On Tue, Feb 06, 2024 at 11:00:49AM +0100, Louis Chauvet wrote:
 
-Applied both, thanks!
+> Revert commit 5cbc7ca987fb ("spi: spi-omap2-mcspi.c: Toggle CS after each word")
+> This commit introduced the toggling of CS after each word for the
+> omap2-mcspi controller.
 
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--azcLN1ODoDsB9Bpu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXCC18ACgkQJNaLcl1U
+h9CFPgf+Nzd4M6GNRWfxi5aN6tQuav9R23DvP/f+fald06ePtIKSmAE/E+ibjvZ8
+aNKSzYLZtP5jMvadm0s+ySmYZ3Q66OvL5UarJRJo8oiLTt9ULtYvu10xXmLLpvn2
+9sjtYniFp700x53wz/7E+ixz23dBmMoO7nXmP5eHk5LMpW8yr2Ct7qe7CvvbhLGd
+PdZNp3Zeko7BR4xPF2DcSoOEVIBVu16RV3QiMMlVVxdP9gYKx1wv3Uqy4hVR6z3L
+DYqiCbl9wwIQZQIb0mpWh7zCReHxLszElRle48qYgFOwG0zAGGkPzJAA65KicvUZ
+uTGQABpF7+AGuD1Wdq01Z76liRLtkQ==
+=h/jM
+-----END PGP SIGNATURE-----
+
+--azcLN1ODoDsB9Bpu--
