@@ -1,143 +1,96 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56A78F54;
-	Tue,  6 Feb 2024 12:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E4F12FF9F;
+	Tue,  6 Feb 2024 12:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707224087; cv=none; b=KwsmGRkIIt5pqVaG3hhctVb5p5ozmJCLS35/t1eH68uO5UlHkbAdsf6j4jI9mjsIkfkkfCXTsUZGaEvbU7+Acd58OFeJiAmcdh9X8wxvBKMSJc0+/7OKHUah+0X99jAbwrUNaSUKr06kwZy+vFOJMDNjLjSkLs8TS/rIPzz5zh0=
+	t=1707224092; cv=none; b=jtzTs/YHE/YQd0FynmsG7wAAwNPdVdkYnL6M5XB5KwXGnIIe1codoxbrRmsDSjjIBhWeaAf0zy1SKjp3wdEiUGBQw7zzQCU5kg67/pLbGm4Y6AXQ5nuR7ZyIoPaY8B+0fYYsAyopDDa9F98UkcTD0Aahf70THaT9t9NY0i+Spn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707224087; c=relaxed/simple;
-	bh=UJK9GaRRL6kPl4S1uDuZgmL4Sfxeyuf4N9Zx7KregaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BPKpqlyZm6r0IEoj9x/EgZewF6uc1ejcPdFKgnD0LZgJ/kqq1V04GYb+P1OboCETmg+fq0r9d2I2rYyNOPI/4WrVapRNQIAtD/BzfxJ45FXMw9CEBL2UPtWUQR4L9pEu54M8ij0utiJxJRYN+7QOI1FtIo6hLTA6EYGoajK0tjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIZwU5YA; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707224092; c=relaxed/simple;
+	bh=5zDs4bCJCg9fhWhJufayFel6oMRJyIadeFkzq2VZtnM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JjNC59RIwmKbDKIkXySV4Pt1uQWeY5q6XIuzNB6UUh7KNpzJCyGSfZd9sc8masd8IKwZQkyWyNVhEDbBN3QD5tAo0mOmPczKwntqKguzJ8kkKvHzQUza3u0mh6jn2my/Fy6tKojkT5ZpwGLRgCLjLJSsGuxF8EfB2i2Iy42J3i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU+oRkTq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIZwU5YA"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5dc20645871so381918a12.1;
-        Tue, 06 Feb 2024 04:54:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707224085; x=1707828885; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0eqgiERDvSpiSPKxHB5iRsf+0A8lyd+pOORVaquNyS8=;
-        b=PIZwU5YAWUy4moHX3hLNVgYEVRBma7p0s15BPWfVV9R9KBOfLWzOHeJkXUxuS+lJhm
-         ivNo4GBiofbgSG6znqTQ7SzN4zm82zu8KhnGp8O67quURPIobD8sPvDuVpIVXqa5ViQS
-         0vEpa5ZeBp+ipAS7GSLr1LVpJ8AOA7yD0DLmWAE3SGlHkriZWIFM6sbrhrK+eGCgNLlU
-         gMX2S+TNRoEPU7La4doBfhyvNSv4+J3mSpTTNTf/akIiB4OckJqh8/cgKpRb7GCYk8ay
-         uTR+hqmhoG6ox/AgCNdhdllvqlG91jSQZVFd3zOAdGDDmKaNykS7UynYxQGAZ1mYmEUe
-         08yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707224085; x=1707828885;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0eqgiERDvSpiSPKxHB5iRsf+0A8lyd+pOORVaquNyS8=;
-        b=oP7yfxRbIWD+Wb5rzhbW1/dr/Cx1wzn7ZVIgkA0aTpIpQyp2MtVslQ2dpSHEbm2zjS
-         KYbYxgueiNQ7U1Xsj8ltU+nreBmSohS4fp6wpssgjAipkgExsCFWncWnt2+yqHrizE7W
-         UiXjk/7ZUzrRAuVhD5j8V6BYQ+ZfbmcZTPnKag4aoJ6IGbC2t9UPNyOXDQ6bNenh/5iu
-         3S4znnc8hTsbtsh5oV8anXxTSRm3x6UfNTS611nMDBkI9XowLi3nGmwldomew4ej5cYa
-         1TApL/F+J9VfcfwcQUFXJvsX+0cDxXCrsiaEup5yzHwt1MWU5tHWWsWeSZwT3NYD+CC4
-         S8mg==
-X-Gm-Message-State: AOJu0YywryI0A2+AM+cYCGf8gp2LH0fL/uJr7iT2lW/Aon8mw2oo+aUN
-	HTsWp8Pows0TW4mc6EA3feYxwA4Nhy1vgFbwCeGF18R7/zmpNWMw
-X-Google-Smtp-Source: AGHT+IE6L3CJfxfSxtvuYXs2E1wg/gin9wFyGLDNWpoQxHLmvyHWnH6GtHWi4lgGQlaDgGEXHrAZAg==
-X-Received: by 2002:a62:ce0c:0:b0:6e0:44fd:687c with SMTP id y12-20020a62ce0c000000b006e044fd687cmr3697847pfg.6.1707224084394;
-        Tue, 06 Feb 2024 04:54:44 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXR8oib6yggmJvpyZigTsA0Wi4OrDybUkU8+YBb9gaWRJXqYqywO0vE0hbEcTrPtqB5hnxTOEkqkdH37r8sle/v1RVs0JNvTf5LwFNFnyuskQ5phXZ0aHLz+UEHOF5ms7ZPOkQOoUW5p+hU/mfMudS0Ds6x/jsjLnyz1Hs6Be5XzWaNzBMgqK+yPgewtNA7iVvMasvGOeemAWXpkE7kXHS7y0V72NG8fJLyeNWfXxbGJ/8aaDI4eDE+e9JGpDuge+2YoiG3eH+sKpQLHHkn5xjuxx8l0zn4wtvI14gbNvLcMkkQYLhDKaGu2yS6qv/IT2dIy8aoZUuvOp5qy1lccW4mi3Kn+uY+OlrlTc4iyMJtKAqwXH1IA75lze43U+3991LaR7gwEp/mqK+Xq2UkXseIkbgxcWorQOgXqAGjuc/sbRwisYpCANpvr38MmabaGp3ZhSFWeoptQjnBuux3tzsckN7tTxCQ3yjVWuuEXmdm6fMRoAqb0tMmthQCIt5rCDLqAAuC2d2fm20lP1bq7Ybo7mwFG4w+2QHcIgiqsW+ry0Bp3ZSVxRP5EvZkINHoGFvXPpV/nSETb/HTu9AU8Gz24NjAa1vf7jidRaeU/0X7DskAFiIl+lysCB1h1POCPSQ9Dzppo3SkwU+cWz12oyLpPD+vQ2WSZjDzxJHqYMC2VRG4Y8rxxK4RnoDu1BaBBtrVnz98poma5JS9K9oSX1byuBO3jXuvqfZ6pYySanfeFYeb/o1/bS42fT7nRcPRNVTXrwqIDXZPv7OvhsZ7E9m/f8EH6WDWaYRppsjRNd9kYh62eMCJ0roKy26wyEnnYwYiX3B1og==
-Received: from cosmo-ubuntu-2204.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id f10-20020a056a001aca00b006dae568baedsm1795590pfv.24.2024.02.06.04.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 04:54:43 -0800 (PST)
-From: Cosmo Chou <chou.cosmo@gmail.com>
-To: linux@roeck-us.net,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jdelvare@suse.com,
-	corbet@lwn.net,
-	broonie@kernel.org,
-	naresh.solanki@9elements.com,
-	vincent@vtremblay.dev,
-	patrick.rudolph@9elements.com,
-	luca.ceresoli@bootlin.com,
-	bhelgaas@google.com,
-	festevam@denx.de,
-	alexander.stein@ew.tq-group.com,
-	heiko@sntech.de,
-	jernej.skrabec@gmail.com,
-	macromorgan@hotmail.com,
-	forbidden405@foxmail.com,
-	sre@kernel.org,
-	linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU+oRkTq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2464C433F1;
+	Tue,  6 Feb 2024 12:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707224091;
+	bh=5zDs4bCJCg9fhWhJufayFel6oMRJyIadeFkzq2VZtnM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bU+oRkTqb1zaIpJ1yo9/YCK+2iXPfc+d0U0jKNJWzCFE7GnIfe9Bji/nrJiiNoUSo
+	 4bzbxjgsemqG4MJ4P3/4XQLnxl9qlgNlMkbq8f9kCgQIVCgcDwa4lj3UbbxsmX/7Ja
+	 Vz16y745ziRgIcvNkGuUdTTDHgvAcvxF/mqcgfdEh4rpzX0ezNXhH7upMoYirEXuT0
+	 6/kop5ZKomX9TAJs5jVVESQZojkmH+mfFxku4dgU1WTmjj67coF1utCvXsM28WcX5z
+	 SQSle5w+ShMKQTzhwnBFsHbFfp70z5Jsqvspw1ZfC0xDwSz9K9Tg7tyP+Ewo4Ek1JY
+	 36/KQutHmdwkA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rXKyP-000ocS-He;
+	Tue, 06 Feb 2024 12:54:49 +0000
+Date: Tue, 06 Feb 2024 12:54:48 +0000
+Message-ID: <86ttml69d3.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Sumit Gupta <sumitg@nvidia.com>,
+	treding@nvidia.com,
+	krzysztof.kozlowski@linaro.org,
+	mark.rutland@arm.com,
 	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	chou.cosmo@gmail.com,
-	cosmo.chou@quantatw.com
-Subject: [PATCH v6 0/1] hwmon: Add driver for Astera Labs PT5161L retimer
-Date: Tue,  6 Feb 2024 20:54:19 +0800
-Message-Id: <20240206125420.3884300-1-chou.cosmo@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	linux-tegra@vger.kernel.org,
+	amhetre@nvidia.com,
+	bbasu@nvidia.com
+Subject: Re: [Patch] memory: tegra: Skip SID override from Guest VM
+In-Reply-To: <c7e71e7e-ef01-4539-b481-9f4a95e6a444@nvidia.com>
+References: <20240206114852.8472-1-sumitg@nvidia.com>
+	<86wmrh6b2n.wl-maz@kernel.org>
+	<252d6094-b2d6-496d-b28f-93507a193ede@nvidia.com>
+	<c7e71e7e-ef01-4539-b481-9f4a95e6a444@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: jonathanh@nvidia.com, sumitg@nvidia.com, treding@nvidia.com, krzysztof.kozlowski@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, amhetre@nvidia.com, bbasu@nvidia.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-This driver implements support for temperature monitoring of Astera Labs
-PT5161L series PCIe retimer chips.
+On Tue, 06 Feb 2024 12:51:35 +0000,
+Jon Hunter <jonathanh@nvidia.com> wrote:
+>=20
+>=20
+> On 06/02/2024 12:28, Jon Hunter wrote:
+>=20
+> ...
+>=20
+> >> - My own tegra186 HW doesn't have VHE, since it is ARMv8.0, and this
+> >> =C2=A0=C2=A0 helper will always return 'false'. How could this result =
+in
+> >> =C2=A0=C2=A0 something that still works? Can I get a free CPU upgrade?
+> >=20
+> > I thought this API just checks to see if we are in EL2?
+>=20
+>=20
+> Sorry to add a bit more info, I see EL2 is used for hypervisor [0],
+> but on my Tegra186 with no hypervisor I see ...
+>=20
+>  CPU: All CPU(s) started at EL2
 
-LINK: [v1] https://lore.kernel.org/all/20231205074723.3546295-1-chou.cosmo@gmail.com/
+Yes. and yet the kernel runs at EL1 (on ARMv8.0, we can't run the
+kernel at EL2 at all).
 
-v6:
-  - Remove unnecessary return value checking
-  - Correct the available size for simple_read_from_buffer()
+	M.
 
-v5:
-  - Fix warning and check messages of 'checkpatch --strict'
-  - Without resubmitting the applied patches
-
-v4:
-  - Rebased
-
-v3:
-  - Revise pt5161l.rst
-  - Revise the style of comments
-  - Remove unused pec_enable
-  - Add back safe access wide registers
-  - fix build warning
-
-v2:
-  - Add "asteralabs,pt5161l" to trivial-devices.yaml
-  - Change naming PT516XX/pt516xx to PT5161L/pt5161l
-  - Separated debugfs files for health status
-  - Revise the style of comments
-  - Remove unused defines
-  - Remove including unused header files
-  - Remove unnecessary debugging messages
-  - Revise the data parsing for a big-endian system
-  - Use read_block_data instead of accessing wide registers
-  - Remove the debugfs files when the device is unloaded
-  - Add acpi_match_table
-
-Cosmo Chou (1):
-  hwmon: Add driver for Astera Labs PT5161L retimer
-
- Documentation/hwmon/index.rst   |   1 +
- Documentation/hwmon/pt5161l.rst |  42 ++
- MAINTAINERS                     |   7 +
- drivers/hwmon/Kconfig           |  10 +
- drivers/hwmon/Makefile          |   1 +
- drivers/hwmon/pt5161l.c         | 667 ++++++++++++++++++++++++++++++++
- 6 files changed, 728 insertions(+)
- create mode 100644 Documentation/hwmon/pt5161l.rst
- create mode 100644 drivers/hwmon/pt5161l.c
-
--- 
-2.34.1
-
+--=20
+Without deviation from the norm, progress is not possible.
