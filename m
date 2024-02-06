@@ -1,124 +1,202 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529A21426F;
-	Tue,  6 Feb 2024 18:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B4171A7;
+	Tue,  6 Feb 2024 18:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707243710; cv=none; b=TNEWQcP9dVsfhzEbrC1AU11ACKBkIvu+c8tPySgK9aKmD0Ld6xwQuETjVpA8rIJ565xUCIJGTpsiNICX+nDcLTiYP2HlJvEt+QGDq+VtT+rvTCt2g4ltpBebfZnkJolJsCl/XYdTH1r6wLxWqFTd3TxIKzVbHOhSGkEjo2xptOU=
+	t=1707243802; cv=none; b=LvbIb+fgLNXyyRulAfKTKh8a1qNusiLC3uGQ9FixkTpIDisTFn3IE43WCpkMCSlLGQaaN7ggs3jnFN1XEDQdcyES5DnQUcAC4Q9FNJUNv5hyg6zJikac2LDZtt1yqob3jaqj7vMVr2nfB9qtnBZQ8+7B/ea8m35JQD2q9UQQGPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707243710; c=relaxed/simple;
-	bh=yOMecqKjKz7wRgRDV+g/dHefsMm6IJp/Jb++ls3LbmM=;
+	s=arc-20240116; t=1707243802; c=relaxed/simple;
+	bh=KTit+aWgJvVP7m+gfVMXWeOWNPCtM6Grpruq+iW3l9Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eLCRrGhcyN1YaPuXsrBqBz6URtkHrVkUImNlnS8TuWoQ7dwweCHDlGIUx2E51qrK2ZSePA80zJKWzVdHQdH2xCmeUpno1Mi3VMvn5Z3y4XOMN8IhV7drqTcyWD3k7201L6S1ikp7EHBWijMxo9MCXybSAE+rODtk9d9IIX1Tm0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=O/hqT4W3; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6dpKQBPjQhCQPMKs4i+nUGWi4htPxzLAUuvrzxOtbTCjTzvrvaQJLu/AyhFU+lZ1e2I3yX7bKQfZGPAzZnSTvZOzPN3JdaSvdVJIorhAnd9W7bi8FOtSOI3Vfbn64fSLJRJ6wFjDZ/CC+GA4L5n9b+DljOoz+dB1A7d39K5ONA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hqbM+Q+r; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="O/hqT4W3"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9527F40E016D;
-	Tue,  6 Feb 2024 18:21:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FillHEpEmEEU; Tue,  6 Feb 2024 18:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707243703; bh=wCS6yqrfKCvebslKneG37AHrq0CxVqghInimrV/pRjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O/hqT4W3uY4QRLCtLw8xDlsRyZAWqBvfqxS4n7dMpZz6Nt8AU79Lw9th33Vmn+ffN
-	 TjBLR0czJCO/z5VB+Kx2iHJYJHGoJPCyt2X7UurJpSZoR3lhWpfbzLEPCJ7tzwR75z
-	 lGJ1K61txaOKljvJxXFBUVClWKGU1Zh6rH8C/j7aKmKGNqKZbTAAm21rrRfMt7Q29y
-	 QxlRClU0JICH4PQ9YkZvObNm1pYZmwZmpgqtInkzZqJSOTW+tlM06F1bJ+5XPgNTBd
-	 Asnl3KGnY6OmdU03ETOZxEqt/K9d1OAY9xLa2BQzqARlTxhO9E3nmVYQPNFuyEnnzi
-	 xh/py0fuuSk/fv0CqVYGRmAVeuptsOIaRZnSGGtehFGdvtQvCI2XZ+z+8/jmlr37zZ
-	 D64GJOx245qIiquB5P2hlaK1W9I03JXRuXphh289wUJ+pfkDMQB3zGKEWszRqFmDQF
-	 1l8bRDU+ogIfqy7sP/ZBSU00QqxmskHqGHGszNQu3qPy5/cWE40M1rqEqU1XuKrktf
-	 FOSjSUxLDfbqWX3hTbyYVKEGhoUEslfewfkh0o5Eo437bGyZgCvP5jTa++NFSDfp02
-	 ZvN7IAJ1eb72bQP+GSMq8ylglvBvY3Zfm2upg+E873C2MZsZYF09xRP92Ul9lyQXzK
-	 PFdjIyg1fqCBJcRDRwpbdvaY=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 415CC40E0177;
-	Tue,  6 Feb 2024 18:21:25 +0000 (UTC)
-Date: Tue, 6 Feb 2024 19:21:15 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
-	linux-arch@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 05/19] x86/startup_64: Simplify CR4 handling in
- startup code
-Message-ID: <20240206182115.GQZcJ4m6amwGCc7D4Z@fat_crate.local>
-References: <20240129180502.4069817-21-ardb+git@google.com>
- <20240129180502.4069817-26-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hqbM+Q+r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707243800; x=1738779800;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KTit+aWgJvVP7m+gfVMXWeOWNPCtM6Grpruq+iW3l9Q=;
+  b=hqbM+Q+rjqHVJZ+vKuX5gM9/BiqMjW9EZ8k4J5Iiom4ydmyC0glO/u7O
+   nPIpRQEzQDeO4es5QNf6JyriZBBM2yaLDRAnp9qp6dLx2TC2DzValxK1C
+   +4NhR/dRsqvBpk7nnr41aYYHSqtCUAmD4OPn0gSEsfD6sd5HLXa68+p9m
+   qtVk+xEdm28wQP/sL6X/AXPf6cSlZFzZoSINmQoGhuEb6RV6yBTY51nwj
+   GdEs+knYsr+ilMfkDmln+35ZVgG8EKeXM48ktBePePV4lGyX7U/eErqkj
+   Hphq1QbVAgdEQAXtvGiNu/9FxN/p5cY6DtDLe5h1JObZgLw+p8i2hWhTb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="435948257"
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="435948257"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 10:23:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="38507988"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 06 Feb 2024 10:23:16 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rXQ6D-0001gG-1H;
+	Tue, 06 Feb 2024 18:23:13 +0000
+Date: Wed, 7 Feb 2024 02:22:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-unionfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+	zohar@linux.ibm.com, roberto.sassu@huawei.com, amir73il@gmail.com,
+	brauner@kernel.org, miklos@szeredi.hu,
+	Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v2 5/9] evm: Use the inode holding the metadata to
+ calculate metadata hash
+Message-ID: <202402070220.eYpQ6zcm-lkp@intel.com>
+References: <20240205182506.3569743-6-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240129180502.4069817-26-ardb+git@google.com>
+In-Reply-To: <20240205182506.3569743-6-stefanb@linux.ibm.com>
 
-On Mon, Jan 29, 2024 at 07:05:08PM +0100, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> When executing in long mode, the CR4.PAE and CR4.LA57 control bits
-> cannot be updated,
+Hi Stefan,
 
-"Long mode requires PAE to be enabled in order to use the 64-bit
-page-translation data structures to translate 64-bit virtual addresses
-to 52-bit physical addresses."
+kernel test robot noticed the following build errors:
 
-which is actually already enabled at that point:
+[auto build test ERROR on zohar-integrity/next-integrity]
+[also build test ERROR on pcmoore-selinux/next linus/master v6.8-rc3 next-20240206]
+[cannot apply to mszeredi-vfs/overlayfs-next mszeredi-vfs/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-cr4            0x20                [ PAE ]
+url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Berger/ima-Rename-backing_inode-to-real_inode/20240206-022848
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+patch link:    https://lore.kernel.org/r/20240205182506.3569743-6-stefanb%40linux.ibm.com
+patch subject: [PATCH v2 5/9] evm: Use the inode holding the metadata to calculate metadata hash
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20240207/202402070220.eYpQ6zcm-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240207/202402070220.eYpQ6zcm-lkp@intel.com/reproduce)
 
-"5-Level paging is enabled by setting CR4[LA57]=1 when EFER[LMA]=1.
-CR4[LA57] is ignored when long mode is not active (EFER[LMA]=0)."
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402070220.eYpQ6zcm-lkp@intel.com/
 
-and if I had a 5-level guest, it would have LA57 already set too.
+All errors (new ones prefixed by >>):
 
-So I think you mean "When paging is enabled" as dhansen correctly points
-out.
+   security/integrity/evm/evm_crypto.c: In function 'evm_calc_hmac_or_hash':
+>> security/integrity/evm/evm_crypto.c:226:54: error: 'D_REAL_METADATA' undeclared (first use in this function)
+     226 |         struct inode *inode = d_inode(d_real(dentry, D_REAL_METADATA));
+         |                                                      ^~~~~~~~~~~~~~~
+   security/integrity/evm/evm_crypto.c:226:54: note: each undeclared identifier is reported only once for each function it appears in
 
-> and so they can simply be preserved rather than reason about whether
-> or not they need to be set. CR4.PSE has no effect in long mode so it
-> can be omitted.
 
-f4c5ca985012 ("x86_64: Show CR4.PSE on auxiliaries like on BSP")
+vim +/D_REAL_METADATA +226 security/integrity/evm/evm_crypto.c
 
-Please don't forget about git history before doing changes here.
-
-> CR4.PGE is used to flush the TLBs, by clearing it if it was set, and
-
-... to flush TLB entries with the global bit set.
-
-And just like the above commit says, I think the CR4 settings across all
-CPUs on the machine should be the same. So we want to keep PSE.
-
-Removing the CONFIG_X86_5LEVEL ifdeffery is nice, OTOH.
-
-Thx.
+   212	
+   213	/*
+   214	 * Calculate the HMAC value across the set of protected security xattrs.
+   215	 *
+   216	 * Instead of retrieving the requested xattr, for performance, calculate
+   217	 * the hmac using the requested xattr value. Don't alloc/free memory for
+   218	 * each xattr, but attempt to re-use the previously allocated memory.
+   219	 */
+   220	static int evm_calc_hmac_or_hash(struct dentry *dentry,
+   221					 const char *req_xattr_name,
+   222					 const char *req_xattr_value,
+   223					 size_t req_xattr_value_len,
+   224					 uint8_t type, struct evm_digest *data)
+   225	{
+ > 226		struct inode *inode = d_inode(d_real(dentry, D_REAL_METADATA));
+   227		struct xattr_list *xattr;
+   228		struct shash_desc *desc;
+   229		size_t xattr_size = 0;
+   230		char *xattr_value = NULL;
+   231		int error;
+   232		int size, user_space_size;
+   233		bool ima_present = false;
+   234	
+   235		if (!(inode->i_opflags & IOP_XATTR) ||
+   236		    inode->i_sb->s_user_ns != &init_user_ns)
+   237			return -EOPNOTSUPP;
+   238	
+   239		desc = init_desc(type, data->hdr.algo);
+   240		if (IS_ERR(desc))
+   241			return PTR_ERR(desc);
+   242	
+   243		data->hdr.length = crypto_shash_digestsize(desc->tfm);
+   244	
+   245		error = -ENODATA;
+   246		list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+   247			bool is_ima = false;
+   248	
+   249			if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
+   250				is_ima = true;
+   251	
+   252			/*
+   253			 * Skip non-enabled xattrs for locally calculated
+   254			 * signatures/HMACs.
+   255			 */
+   256			if (type != EVM_XATTR_PORTABLE_DIGSIG && !xattr->enabled)
+   257				continue;
+   258	
+   259			if ((req_xattr_name && req_xattr_value)
+   260			    && !strcmp(xattr->name, req_xattr_name)) {
+   261				error = 0;
+   262				crypto_shash_update(desc, (const u8 *)req_xattr_value,
+   263						     req_xattr_value_len);
+   264				if (is_ima)
+   265					ima_present = true;
+   266	
+   267				dump_security_xattr(req_xattr_name,
+   268						    req_xattr_value,
+   269						    req_xattr_value_len);
+   270				continue;
+   271			}
+   272			size = vfs_getxattr_alloc(&nop_mnt_idmap, dentry, xattr->name,
+   273						  &xattr_value, xattr_size, GFP_NOFS);
+   274			if (size == -ENOMEM) {
+   275				error = -ENOMEM;
+   276				goto out;
+   277			}
+   278			if (size < 0)
+   279				continue;
+   280	
+   281			user_space_size = vfs_getxattr(&nop_mnt_idmap, dentry,
+   282						       xattr->name, NULL, 0);
+   283			if (user_space_size != size)
+   284				pr_debug("file %s: xattr %s size mismatch (kernel: %d, user: %d)\n",
+   285					 dentry->d_name.name, xattr->name, size,
+   286					 user_space_size);
+   287			error = 0;
+   288			xattr_size = size;
+   289			crypto_shash_update(desc, (const u8 *)xattr_value, xattr_size);
+   290			if (is_ima)
+   291				ima_present = true;
+   292	
+   293			dump_security_xattr(xattr->name, xattr_value, xattr_size);
+   294		}
+   295		hmac_add_misc(desc, inode, type, data->digest);
+   296	
+   297		/* Portable EVM signatures must include an IMA hash */
+   298		if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
+   299			error = -EPERM;
+   300	out:
+   301		kfree(xattr_value);
+   302		kfree(desc);
+   303		return error;
+   304	}
+   305	
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
