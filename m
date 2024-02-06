@@ -1,59 +1,21 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973E312882A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 07:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F70128833;
+	Tue,  6 Feb 2024 07:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707205119; cv=none; b=I1XNQnUA//Jr44cOUgR6gan+4qBlqN/RdOMNMGnRF6rXnJULoQny9zFg6/FwtCfKmaxnetm80/7IhYa1ruJK2gi5aTcgNTFn0x/Gt23298KAg00QJtpLAqgXFTbQGFPFADxOwZ/0hOV+9q0Qp3Fkh4V6Ib1LlXDLcQpiP3+Bq3E=
+	t=1707205143; cv=none; b=fQbflNArZq8GQpvfTmYenptEMegOLFhfNkSNZZmleY1157PPgGUn8JJBkLmYMhj5k79CvoiyUFRubGuq/LiWJhXSnS9FMFA1CvaFKPXLJZhB0erXJngPeho6kSwFCXt2s4spc7Mod42TIXc9893jIyBG/VQiXm4aLVLAGC3/kcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707205119; c=relaxed/simple;
-	bh=Efz1Ai0Yhcde9iMs11/ENKsG71OZOemWJ3eBjAqiIn4=;
+	s=arc-20240116; t=1707205143; c=relaxed/simple;
+	bh=CLBSsXpLFwXgVGHcFk5IYEud4mRKbYRtZ92O1B4ULrA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZQjsDphQaOrKyjVUy/qZNscGACv544nrHiPNjHrk9Vf4gBQmtks/HXqpXn7uLR8UJJKewFK3nxCafwafk90XIaMZVJK1So/ltw8ALIBKaQLd1/x14eZnHXn6KtxDjUHL1vuZlxXWYKAyAcSVcOd4++s8PvI/eXRlUSn/5Ad1h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zzu5gxRo; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzu5gxRo"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33b18099411so1329028f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 23:38:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707205116; x=1707809916; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6w15fge9TXp5Hcr8qk7hKXgjlXRpBtatQoDLixUJTMM=;
-        b=zzu5gxRossMByEyEM4ugD6Vx6ARAclA/jWyA/LWbMkANx61VFihs0/4Hy4mDkdteZX
-         F16GjQ1k3ygj8uLqz+8RklxI3GvDwFu7jW3luFF6u57Gat+mY+eEI2B8I/ktr5NRmqxM
-         fVaYfDwvUDK6qrIKsTnj7KkY+hahUKWjDo7fI9q3g1WUv6HXcSc8iyDLt8NgPr0rKQx+
-         KYLySiFbeo7aql/bdLs8EKiluhJnCvSuC+IvtyP3bmQHIG7Mlt5qXmZXucgWAiV4dkCk
-         whLGmtY9RQ89r6V1hi8WskYb++neBQKJT+9RXx9d2LZbHqlTvzZAVa/mRMZPLotjuFf1
-         LaPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707205116; x=1707809916;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6w15fge9TXp5Hcr8qk7hKXgjlXRpBtatQoDLixUJTMM=;
-        b=VPfqp4ceSasBs/vVzVrp+vwTY+trdKCigk9BGo773kCxp5QGmO7Wtv6Q4Wq6VIEASK
-         WBNIkpcO1k7q4Umr2GaWKVgUroEIDu8nVDBhoVWCXd4QgmRSBAyIO4yk1HMwZ7/iUNk5
-         jLXmFP9voCijgCCUv8e5wRAe1pIuyWigPggoUDpRL4e4EoILUTonwoLzBa4iFA1wMBht
-         BSMYl0Xjm+0vbgLPrQOB4uzGfofv0KVexyTnXNCBS535n7Yp6/1XitXT3hfYh7y+RpoJ
-         F6GpbpSDIb7rZdb5h1mApLXmQG9bTJyhjzGMtXg4Xrkwtkl7GqGawAY7DBxuBigG8geN
-         +tRg==
-X-Gm-Message-State: AOJu0YwKHqEkKbEhnRXNZlvbojouhLk3WN1BFOV/rD559L+f7vnMg4kn
-	9NGZY4FEOkrUSTCm1UDDWXhTb5jkO2UQHQBC5Gsh6yTUq15ktpvsNWR7YYLBFJs=
-X-Google-Smtp-Source: AGHT+IEm2a5u66l1x8uPT0tLZYfF5LSs4ryYitD3OhZxnZe0axcDQkMX451FcMr0gIMQmniotWC09w==
-X-Received: by 2002:a5d:558e:0:b0:33a:fe3b:b2ae with SMTP id i14-20020a5d558e000000b0033afe3bb2aemr543985wrv.66.1707205115802;
-        Mon, 05 Feb 2024 23:38:35 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUYk2zmAyRUTGvg2tDlzw3DmjozGkhcA5/RNY0rncp3qzW6D/KA282NtCFv0xb8HVlZCIUYpFVfO9MnF3dSnRNq5uQbxDnK4h9Q5eOm47JqwDaezALO0ueCA/xi2R8SDNU6XBFe4ZYdYY1mq83MVmzcsLf3z97K64BDyYTioiQ4RNL6g7H4GtFVNCrCRtzL8YXy+ohB3tyfqGvA3jOoghC7rISyOxgnEfUD2GastFXXc4IPe7JQRglBlZm2xjo/I0sfc30VqCZKCio/nxa6y7YpqA0x7+BXpF5hs0MMjx4dwWH/u3A22BXPuk42ML6KT+3nyR6t+d+wrNneEDs4CxHOkLmPaSW6Yq0mtws3Ho4cw+j2nnOE5gbCZ6n9m/SCgxQQPWpKfPGe/1GuFp8HZzPIpDTaNezB6JcWsFbEoCSoj3ukjiSy5gBtIw0TE6vU5ubWExbsmLagzfzSRZfNaEnpske0DemKdth7tJNB58hPZ/5kacqKklvHdN+Yv1nk6kEVA7aRHDG785ZWyZysxOdBp2RC7oxV21J2PvoIciUu8k+WSplowaYBPdVzBcPtIA9IWpRbg/ok2JzlG7nuxv+BZvIA7Ksys0XSnjoeJb+MwksHTULmj8Cob9u/Gx53+/mnXM9TGjnStj/FVC94lDPu15RXh8XtvcbTudL4uA3yJNCUe0P7X7HRx/azBWqyjKLki93vHpU2GnWdpLOXjKZ/UXJDubFH/oPfcb9y4+rt0RdfQqe01Fp3v14=
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id r15-20020a5d694f000000b0033b0d2ba3a1sm1343752wrw.63.2024.02.05.23.38.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 23:38:34 -0800 (PST)
-Message-ID: <0c6e1f4e-a548-46df-93f0-0fea9daa9784@linaro.org>
-Date: Tue, 6 Feb 2024 08:38:32 +0100
+	 In-Reply-To:Content-Type; b=WasiwR50wMDcljc1/3e0fnGOYICBaREU0QSNQg5lhrILwn0QapSkqy2EXFLolQHbZGiCJFbZRGW35LRThkxleOR/b8ZG2uup2rv7xk9zRzppYjqaX+/E3PMlriOs6x4ZgAIssbj4hC8MdLvZfBGIruF2WuUAJuqjCnWQUYxLIcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12340C433F1;
+	Tue,  6 Feb 2024 07:39:00 +0000 (UTC)
+Message-ID: <ae539786-f73a-41ba-97a4-ea409fb88e2f@xs4all.nl>
+Date: Tue, 6 Feb 2024 08:38:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,83 +23,234 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] dt-bindings: msm: qcom,mdss: Include ommited fam-b
- compatible
-Content-Language: en-US
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krishna Manikandan <quic_mkrishn@quicinc.com>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240121194221.13513-1-a39.skl@gmail.com>
- <20240121194221.13513-4-a39.skl@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240121194221.13513-4-a39.skl@gmail.com>
+Subject: Re: [PATCH v2] media: adv7180: Fix cppcheck warnings
+Content-Language: en-US, nl
+To: Bhavin Sharma <bhavin.sharma@siliconsignals.io>,
+ "mchehab@kernel.org" <mchehab@kernel.org>,
+ "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240102142729.1743421-1-bhavin.sharma@siliconsignals.io>
+ <16ef7746-d038-4607-8e2f-8f7cef5a8b48@xs4all.nl>
+ <MAZPR01MB695711E70CEDFC41DE5C2C8DF2462@MAZPR01MB6957.INDPRD01.PROD.OUTLOOK.COM>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <MAZPR01MB695711E70CEDFC41DE5C2C8DF2462@MAZPR01MB6957.INDPRD01.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 21/01/2024 20:41, Adam Skladowski wrote:
-> During conversion 28nm-hpm-fam-b compat got lost, add it.
+On 06/02/2024 06:05, Bhavin Sharma wrote:
+> Hi Hans,
 > 
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
+>> Hi Bhavin,
+> 
+>> On 02/01/2024 15:27, Bhavin Sharma wrote:
+>>> WARNING: Missing a blank line after declarations
+>>>
+>>> Signed-off-by: Bhavin Sharma <bhavin.sharma@siliconsignals.io>
+>>> ---
+>>>   drivers/media/i2c/adv7180.c | 27 ++++++++++++++++++---------
+>>>   1 file changed, 18 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
+>>> index 54134473186b..0023a546b3c9 100644
+>>> --- a/drivers/media/i2c/adv7180.c
+>>> +++ b/drivers/media/i2c/adv7180.c
+>>> @@ -335,8 +335,9 @@ static u32 adv7180_status_to_v4l2(u8 status1)
+>>>   static int __adv7180_status(struct adv7180_state *state, u32 *status,
+>>>                            v4l2_std_id *std)
+>>>   {
+>>> -     int status1 = adv7180_read(state, ADV7180_REG_STATUS1);
+>>> +     int status1;
+>>>
+>>> +     status1 = adv7180_read(state, ADV7180_REG_STATUS1);
+>>>        if (status1 < 0)
+>>>                return status1;
+>>>
+>>> @@ -356,7 +357,9 @@ static inline struct adv7180_state *to_state(struct v4l2_subdev *sd)
+>>>   static int adv7180_querystd(struct v4l2_subdev *sd, v4l2_std_id *std)
+>>>   {
+>>>        struct adv7180_state *state = to_state(sd);
+>>> -     int err = mutex_lock_interruptible(&state->mutex);
+>>> +     int err;
+>>> +
+>>> +     err = mutex_lock_interruptible(&state->mutex);
+> 
+>> The problem here is the missing empty line, not that 'int err = <something>;' part.
+>> So just add the empty line and don't split up the variable assignment.
+> 
+> Yes, the error is of missing empty line and I only resolved that particular error in the first version
+> of this patch.
+> 
+> But I was recommended to keep the conditional statement close to the line it is associated with
+> and to make changes in the code wherever similar format is followed. 
+> 
+> So I followed the advise of Kieran Bingham and made changes accordingly. 
+> 
+> Below is the link of the full discussion : https://lore.kernel.org/lkml/MAZPR01MB695752E4ADB0110443EA695CF2432@MAZPR01MB6957.INDPRD01.PROD.OUTLOOK.COM/T/
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Kieran said this:
 
-Best regards,
-Krzysztof
+>> @@ -357,6 +357,7 @@ static int adv7180_querystd(struct v4l2_subdev *sd, v4l2_std_id *std)
+>>  {
+>>         struct adv7180_state *state = to_state(sd);
+> 
+> Personally, I would keep the if (err) hugging the line it's associated
+> with.
+> 
+> 
+>>         int err = mutex_lock_interruptible(&state->mutex);
+>> +
+>>         if (err)
+>>                 return err;
+>>  
+
+which I interpret as saying that he doesn't like adding the extra empty line.
+
+> 
+>>>        if (err)
+>>>                return err;
+>>>
+>>> @@ -388,8 +391,9 @@ static int adv7180_s_routing(struct v4l2_subdev *sd, u32 input,
+>>>                             u32 output, u32 config)
+>>>   {
+>>>        struct adv7180_state *state = to_state(sd);
+>>> -     int ret = mutex_lock_interruptible(&state->mutex);
+>>> +     int ret;
+>>>
+>>> +     ret = mutex_lock_interruptible(&state->mutex);
+
+I don't believe he meant doing this.
+
+In any case, none of this is worth the effort, just leave this driver as-is.
+
+Regards,
+
+	Hans
+
+>>>        if (ret)
+>>>                return ret;
+>>>
+>>> @@ -399,7 +403,6 @@ static int adv7180_s_routing(struct v4l2_subdev *sd, u32 input,
+>>>        }
+>>>
+>>>        ret = state->chip_info->select_input(state, input);
+>>> -
+> 
+>> Why remove this empty line? It has nothing to do with what you are trying
+>> to fix.
+> 
+>>>        if (ret == 0)
+>>>                state->input = input;
+>>>   out:
+>>> @@ -410,7 +413,9 @@ static int adv7180_s_routing(struct v4l2_subdev *sd, u32 input,
+>>>   static int adv7180_g_input_status(struct v4l2_subdev *sd, u32 *status)
+>>>   {
+>>>        struct adv7180_state *state = to_state(sd);
+>>> -     int ret = mutex_lock_interruptible(&state->mutex);
+>>> +     int ret;
+>>> +
+>>> +     ret = mutex_lock_interruptible(&state->mutex);
+>>>        if (ret)
+>>>                return ret;
+>>>
+>>> @@ -436,8 +441,9 @@ static int adv7180_program_std(struct adv7180_state *state)
+>>>   static int adv7180_s_std(struct v4l2_subdev *sd, v4l2_std_id std)
+>>>   {
+>>>        struct adv7180_state *state = to_state(sd);
+>>> -     int ret = mutex_lock_interruptible(&state->mutex);
+>>> +     int ret;
+>>>
+>>> +     ret = mutex_lock_interruptible(&state->mutex);
+>>>        if (ret)
+>>>                return ret;
+>>>
+>>> @@ -466,8 +472,9 @@ static int adv7180_g_std(struct v4l2_subdev *sd, v4l2_std_id *norm)
+>>>   static int adv7180_g_frame_interval(struct v4l2_subdev *sd,
+>>>                                    struct v4l2_subdev_frame_interval *fi)
+>>>   {
+>>> -     struct adv7180_state *state = to_state(sd);
+>>> +     struct adv7180_state *state;
+>>>
+>>> +     state = to_state(sd);
+> 
+>> And I am sure this never produced a cppcheck warning since there is an
+>> empty line. If cppcheck DOES produce a warning on this, then it is a
+>> useless application.
+> 
+>>>        if (state->curr_norm & V4L2_STD_525_60) {
+>>>                fi->interval.numerator = 1001;
+>>>                fi->interval.denominator = 30000;
+>>> @@ -828,8 +835,9 @@ static int adv7180_get_mbus_config(struct v4l2_subdev *sd,
+>>>                                   unsigned int pad,
+>>>                                   struct v4l2_mbus_config *cfg)
+>>>   {
+>>> -     struct adv7180_state *state = to_state(sd);
+>>> +     struct adv7180_state *state;
+>>>
+>>> +     state = to_state(sd);
+>>>        if (state->chip_info->flags & ADV7180_FLAG_MIPI_CSI2) {
+>>>                cfg->type = V4L2_MBUS_CSI2_DPHY;
+>>>                cfg->bus.mipi_csi2.num_data_lanes = 1;
+>>> @@ -857,8 +865,9 @@ static int adv7180_get_skip_frames(struct v4l2_subdev *sd, u32 *frames)
+>>>
+>>>   static int adv7180_g_pixelaspect(struct v4l2_subdev *sd, struct v4l2_fract *aspect)
+>>>   {
+>>> -     struct adv7180_state *state = to_state(sd);
+>>> +     struct adv7180_state *state;
+>>>
+>>> +     state = to_state(sd);
+>>>        if (state->curr_norm & V4L2_STD_525_60) {
+>>>                aspect->numerator = 11;
+>>>                aspect->denominator = 10;
+> 
+>> Honestly, none of these changes are worth the effort, so I just reject this.
+> 
+> Kindly give your suggestions.
+> 
+> Regards,
+> Bhavin Sharma
 
