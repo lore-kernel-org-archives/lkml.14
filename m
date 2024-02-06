@@ -1,106 +1,144 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FED1373
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 00:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C353C1373;
+	Tue,  6 Feb 2024 00:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707179220; cv=none; b=mdI731TKdPsyEVc99pCatwexjro5w58WAkpvZDbuEI3TE3TL99B7YzCHqkYm3HEEIBEnz5w+EOeUYBeynqN5bCOQmfzX/UQg0UuRvnhEUjPTgfDAM45TIbM2dJ4DiXxkjXrZ7T7CDPnsxaa51Bw6tqpRgNAqWAFYa9Wvnf2Fxm8=
+	t=1707179715; cv=none; b=f35Tqt2G9/tlIAwq5grIVTmYPO5Pzix0UWFMAZMWiEh2WY2Osr0ujmqTFipd/e/xUZWmcexyruB2tsYRgQAAKtNHOYQemnwnS3recBclE6yCxCY2UKYyCZN1HEI0Qf3hTAYsKdZfeWY87HsFPmf0ONjN7jPZFT5x578SdJl1bWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707179220; c=relaxed/simple;
-	bh=3TwmDwJT/rL3DMMvAVgIO7o1HJINmVPwu07+FNLBODw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jecv9dtXJG86eTz65zF/SLT0kdO/fewSD2dSn+7hIhJC43J7F9U9dRNPN41GmemA3X4aPHSXdGzQ98FbC5TzvC20bd2akC76e2SKpmXPb5e9KzrNjj5LAcEa98G8oPX6k3BMNnhMeB5f3kkEA3L0TB9IZa2eKroSbyaCAMliVe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=RDRX1Rs2; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1707179715; c=relaxed/simple;
+	bh=i6IgYdSK47NjqrE0DfFtF9g60c6Y3zPVvJqi8tx5m+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iPlzyhGjYIg1rpslk0/qam37up9RIwVSnCPMmFH8zl2V10GG4SL8Wd5HwfXPORrVSrm/XF+G6uV/PNKqmfUYy8R5E0o7o+dqo4+c5seoLnW0U/stynAYsxI9kWLVuHZGCt97CFqEg9/J3/S/BB5TK98rZqAPVrhkahnOYN03ox0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SaTdpMxy; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RDRX1Rs2"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6de2f8d6fb9so3776088b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 16:26:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707179217; x=1707784017; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fiVjpSDFqDkt9XNvIzkLrXyeTIMkWHM8SqfmdeXNea0=;
-        b=RDRX1Rs2GyzGS448zwA5HB/8kjkxBe200nVU6eeKiUN0Kcv3/NkCDYu6SdOdj7bZBp
-         vfrwasNDy/Qhb6FBDGVMgUcubCqtLCGv+7b3L8vShWFIcBN2JPc9J8NLqMiGFq2b597h
-         Sp2bp8HCwrKn+3t2Ur3mynLq0caXbImwDzDw9Q+WGB6kvPDmDP27JaqaRcZv9qDERfjm
-         QR3RLy86sf7aPzk9K6cN/V+2NPjjjmifAN3lbISlh4MC9hwn2lOQuxrB/obsg9SJ6Ivi
-         /tIjq+Ikk3xYcdwUluG0k/r33SAAOOn+qmQ6TDlzK1WT2tCfhLVnVZxes8azfpOWFjoQ
-         0wlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707179217; x=1707784017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fiVjpSDFqDkt9XNvIzkLrXyeTIMkWHM8SqfmdeXNea0=;
-        b=Bq2Hqo5wOl2ZwJtBu7m76rDHvEQnqWrpcayJcxWJ78+B2gr94YTmiwn+d8EpDjKCdQ
-         JkX4L6VgKl7wTtxF9m/OLNcSJnSyGePVTj8NpshrS5UAqNbSrFp4cWWfTgMVRcpWrueH
-         lMgODm5hhYEmJcuovEj1OWtfMbCzbwD0+TirTnF2CVk/v9QgGH50O5NYaoDAShKmPqxz
-         QOSMBQ3ybLJLEa4NoB+52cuKll5zXecsLSpW/F37S3COqIZYIeijABg4mecttFrYM4d5
-         pess0qKVVTUOOIqq7GuvZ6qRR68Y2zGFjrqqWucua6ZZb8FIbVqCZp5W5aJGKIiwCNQr
-         nyZQ==
-X-Gm-Message-State: AOJu0Ywx9UQhVf+6zRLp0dsJviuCOq9Cmz7iK3yfrcEiXkpnQNkvMbij
-	tOsH4aUg/oTh1xAoC8pxxVWu91eqUCSddps9BAgOiPMNO78xVPkzW7w1f1eqL+g=
-X-Google-Smtp-Source: AGHT+IGYCi0+X1+vaJBNc0l8Gs1SpiPv6m18ULzOlpD7Sl4SzHbj0qBqx6SGNAXHukFrXAy7Mux6kw==
-X-Received: by 2002:a05:6a21:788e:b0:19e:367a:2ca9 with SMTP id bf14-20020a056a21788e00b0019e367a2ca9mr143337pzc.8.1707179217597;
-        Mon, 05 Feb 2024 16:26:57 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXuxl7fvNMncJzVpzTszUz0jVy3RKrVSRFq9HMCATFeYqQ2K4Xs8LZ/kTazqhiy1ELGqU/PG1WZ8jG+JNbM0l2kGIOnOZBEiwfxm4NgppMD5ZTW0fvTyMOlVS5hhFI4CyWG+rrdacWNcMMTf0c9tTrq3cOSWH15M2jCROPLOO/n/A85UD4n5jVgfa9iSFhuoDUguU2inNzIHXdQmoXOF7W+sx1AYGdfYRaMd8xv
-Received: from ghost ([12.44.203.122])
-        by smtp.gmail.com with ESMTPSA id y32-20020a056a00182000b006d98ae070c3sm485463pfa.135.2024.02.05.16.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 16:26:57 -0800 (PST)
-Date: Mon, 5 Feb 2024 16:26:55 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -fixes] riscv: Fix arch_tlbbatch_flush() by clearing the
- batch cpumask
-Message-ID: <ZcF8z18dwnGsw0Ix@ghost>
-References: <20240130115508.105386-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SaTdpMxy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707179714; x=1738715714;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=i6IgYdSK47NjqrE0DfFtF9g60c6Y3zPVvJqi8tx5m+o=;
+  b=SaTdpMxytShS0hzLyK0I1xvmXReVXUpSSwrT4rSFOpqEejPnN31aVkFr
+   iERyEh+VlKIA5uliMbUmGexNj8mWUHqon2zxffukab26A+cmBALR78vql
+   FZNGX9M0G5wxAfpwkzvM0G9nmb8l1Uwngb496eOfEsZMfRI08wOCub9cZ
+   F9fpXeUmnuKLmJXKOXtq69/ZzP/CVF3SlBkT5yeeUpSnVKM36PaSAOaCg
+   AFNY7dG4Oskza97cdy8Y+3XVDBCz3Z1Xf1jFt2LIGqtfjuinqICXK82uo
+   IgQKmAXtg59jXv5ClqDDs5xjCeuJgV0dgt/x4hIItcZKrO9pPEMRTPuxC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="802967"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="802967"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 16:35:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="5466919"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 16:35:11 -0800
+Date: Mon, 5 Feb 2024 16:40:35 -0800
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
+ <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
+ kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
+ <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
+ <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Paul Luse
+ <paul.e.luse@intel.com>, Dan Williams <dan.j.williams@intel.com>, Jens
+ Axboe <axboe@kernel.dk>, Raj Ashok <ashok.raj@intel.com>, Kevin Tian
+ <kevin.tian@intel.com>, maz@kernel.org, Robin Murphy
+ <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 03/15] x86/irq: Use bitfields exclusively in posted
+ interrupt descriptor
+Message-ID: <20240205164035.79d10122@jacob-builder>
+In-Reply-To: <Zbmm1DZPmbFm8gan@google.com>
+References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
+	<20240126234237.547278-4-jacob.jun.pan@linux.intel.com>
+	<Zbmm1DZPmbFm8gan@google.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130115508.105386-1-alexghiti@rivosinc.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 12:55:08PM +0100, Alexandre Ghiti wrote:
-> We must clear the cpumask once we have flushed the batch, otherwise cpus
-> get accumulated and we end sending IPIs to more cpus than needed.
-> 
-> Fixes: 54d7431af73e ("riscv: Add support for BATCHED_UNMAP_TLB_FLUSH")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/mm/tlbflush.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-> index 99c3e037f127..c8efc3f87a0f 100644
-> --- a/arch/riscv/mm/tlbflush.c
-> +++ b/arch/riscv/mm/tlbflush.c
-> @@ -240,4 +240,5 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
->  {
->  	__flush_tlb_range(NULL, &batch->cpumask,
->  			  0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
-> +	cpumask_clear(&batch->cpumask);
->  }
-> -- 
-> 2.39.2
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Hi Sean,
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+On Tue, 30 Jan 2024 17:48:04 -0800, Sean Christopherson <seanjc@google.com>
+wrote:
 
+> On Fri, Jan 26, 2024, Jacob Pan wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> > 
+> > Mixture of bitfields and types is weird and really not intuitive, remove
+> > types and use bitfields exclusively.  
+> 
+> I agree it's weird, and maybe not immediately intuitive, but that doesn't
+> mean there's no a good reason for the code being the way it is, i.e.
+> "it's weird" isn't sufficient justification for touching this type of
+> code.
+> 
+> Bitfields almost always generate inferior code when accessing a subset of
+> the overall thing.  And even worse, there are subtle side effects that I
+> really don't want to find out whether or not they are benign.
+> 
+> E.g. before this change, setting the notification vector is:
+> 
+> 	movb   $0xf2,0x62(%rsp)
+> 
+> whereas after this change it becomes:
+> 
+> 	mov    %eax,%edx
+>    	and    $0xff00fffd,%edx
+> 	or     $0xf20000,%edx
+>    	mov    %edx,0x60(%rsp)
+> 
+hmm, that is weird. However, my kernel build with the patch does not
+exhibit such code. I am getting the same as before for setting up NV:
+ 112:   75 06                   jne    11a <vmx_vcpu_pi_load+0xaa>
+...
+ 135:   c6 44 24 22 f2          movb   $0xf2,0x22(%rsp)
+
+However, I do agree having types is more robust, we can also use
+this_cpu_write() and friends if needed.
+
+> Writing extra bytes _shouln't_ be a problem, as KVM needs to atomically
+> write the entire control chunk no matter what, but changing this without
+> very good cause scares me.
+> 
+> If we really want to clean things up, my very strong vote is to remove the
+> bitfields entirely.  SN is the only bit that's accessed without going
+> through an accessor, and those should be easy enough to fixup one by one
+> (and we can add more non-atomic accessors/mutators if it makes sense to
+> do so).
+> 
+> E.g. end up with
+> 
+> /* Posted-Interrupt Descriptor */
+> struct pi_desc {
+> 	u32 pir[8];     /* Posted interrupt requested */
+> 	union {
+> 		struct {
+> 			u16	notification_bits;
+> 			u8	nv;
+> 			u8	rsvd_2;
+> 			u32	ndst;
+> 		};
+> 		u64 control;
+> 	};
+> 	u32 rsvd[6];
+> } __aligned(64);
+
+Sounds good to me.
+
+Thanks,
+
+Jacob
