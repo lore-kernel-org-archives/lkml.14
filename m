@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507701426F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 19:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0554B134D7
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 19:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707246034; cv=none; b=D12j/W/W+lp785RMWWubA5kY0aNBKSotB1bvTmi8MeeZOr4tCE8gJb7AtY35dVZzm813EiE1I5BFH9ZvmWCW/O9V6y4TR1Cf7jbDoXM7LpwJ1nFwl/a1CnDCbjq19sbvspYLBn2Mg8CGWz8CQXcClvfL6lHuynjA8DzcMW4lbfk=
+	t=1707246034; cv=none; b=AltdgEpUFlwFSgoj1B2SHspA/murzuS553mLP7xpZR11A/d2AulTPbOVADU0cY5LqiJumnSmsedsPoeghob4FS9ZLWkKObIkdT9w/vUo22irgoWx7WRsJu1O/u1A3anXGRf6wwS+IW+8RWXWVg9W2jVmlJttWwb3M0lZld7+isI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707246034; c=relaxed/simple;
-	bh=daz3lcICgKm4ORgHnwPvFe7sWvQh/KVh8kswKSeKAW0=;
+	bh=eLiM7F0NYaYwEZdIKULrX5PquxR5xdCAZWcTr3ag9Ik=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=RNz3z6vUpIibPJsDkQzZis+RU1lCR9NwVUmbsQeewIaHZM6ZCaM4PkT4RuiMMVQRCFflNdB036qed8+7eoRgbLyggKrsmk0yz7/kKRJeIu7K11kBfRLn1zeAphocqHG2xmOU1DSTH/ii6CA1stIu07LvFcE5fw4sZRMNEo3QCys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HHHhdJTw; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type; b=byk0BwZCn1sWqSwNWb+cpP0t7Q3EcGgkh3dj9ZiaOsG2jFFPDY35tXK5A1y2dviCScxaByjHXM1F5KKuS062FlfoGe3KlB1PESqw9VnY1oh2xrLwUf2AftOqpMy/ejC9fiZAfmgDuOYioYx8aJBACfIS/13fV4OrbP6wAvRnKLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WPw2AFI2; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HHHhdJTw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WPw2AFI2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707246026;
+	s=mimecast20190719; t=1707246027;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=XLGveArYXH+nDRK2eZvc/caQl6NFDd9KJm+PgMdFiUY=;
-	b=HHHhdJTwKqyyMvQHJ9l7F2bTxNnPejgTj8QH7wNiZrQpHEziwGxtegGtVMln5cvEFYet2R
-	9hMmEdAd+7UjB+mRvtBrPzxXKdUJJH53IPOuVi1WkUDp8CJajYKqNH7niAxF5psNgr+Cxq
-	vYaTQ9rhADEyZdiD2+c38FgXeBARlVg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-613-gLlXglagPQe6S18qGbwUog-1; Tue,
- 06 Feb 2024 14:00:24 -0500
-X-MC-Unique: gLlXglagPQe6S18qGbwUog-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	 references:references; bh=0tiqWczwl5gDbY1ngK0gOH79fYCUh1b4q8ALen4EPQo=;
+	b=WPw2AFI2E07SLeC6A+RSTSGbk/v2sc3R5UDiDSc9GF/Z1/0sWkMx8HYCX3SqJ71npMOVxp
+	MLYkpuJREYXPUUfshzLV0+ThplKGJJf7X1krqF2UABNmfnU/z0uHDdk4hHUeSp/nU3muLp
+	Q9Ym5K59oVnB4igCzt5LeKX7OfpTIXo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-318-zKnh0DFhPey1tSZHQ2dJkg-1; Tue, 06 Feb 2024 14:00:26 -0500
+X-MC-Unique: zKnh0DFhPey1tSZHQ2dJkg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB69938212C8;
-	Tue,  6 Feb 2024 19:00:23 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8FE63185A788;
+	Tue,  6 Feb 2024 19:00:25 +0000 (UTC)
 Received: from tpad.localdomain (unknown [10.96.133.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 688B4C1596E;
-	Tue,  6 Feb 2024 19:00:23 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 31769112132A;
+	Tue,  6 Feb 2024 19:00:25 +0000 (UTC)
 Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 5BD34401E140A; Tue,  6 Feb 2024 15:58:07 -0300 (-03)
-Message-ID: <20240206185710.142514323@redhat.com>
+	id 29FE0401E1202; Tue,  6 Feb 2024 15:58:07 -0300 (-03)
+Message-ID: <20240206185709.955049547@redhat.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 15:49:23 -0300
+Date: Tue, 06 Feb 2024 15:49:16 -0300
 From: Marcelo Tosatti <mtosatti@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
@@ -53,7 +53,7 @@ Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [patch 12/12] x86/cacheinfo.c: check for block interference CPUs
+Subject: [patch 05/12] timekeeping_notify: use stop_machine_fail when appropriate
 References: <20240206184911.248214633@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -62,97 +62,203 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Change amd_set_l3_disable_slot to check for block interference
-cpumask, and avoid the IPI if set.
-
-Also change wbinvd_on_cpu to use smp_call_function_single_fail.
+Change timekeeping_notify to use stop_machine_fail when appropriate,
+which will fail in case the target CPU is tagged as block interference CPU.
 
 Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
-Index: linux-isolation/arch/x86/include/asm/smp.h
+Index: linux-isolation/include/linux/clocksource.h
 ===================================================================
---- linux-isolation.orig/arch/x86/include/asm/smp.h
-+++ linux-isolation/arch/x86/include/asm/smp.h
-@@ -118,7 +118,7 @@ int native_cpu_disable(void);
- void __noreturn hlt_play_dead(void);
- void native_play_dead(void);
- void play_dead_common(void);
--void wbinvd_on_cpu(int cpu);
-+int wbinvd_on_cpu(int cpu);
- int wbinvd_on_all_cpus(void);
+--- linux-isolation.orig/include/linux/clocksource.h
++++ linux-isolation/include/linux/clocksource.h
+@@ -267,7 +267,7 @@ extern void clocksource_arch_init(struct
+ static inline void clocksource_arch_init(struct clocksource *cs) { }
+ #endif
  
- void smp_kick_mwait_play_dead(void);
-Index: linux-isolation/arch/x86/kernel/cpu/cacheinfo.c
+-extern int timekeeping_notify(struct clocksource *clock);
++extern int timekeeping_notify(struct clocksource *clock, bool fail);
+ 
+ extern u64 clocksource_mmio_readl_up(struct clocksource *);
+ extern u64 clocksource_mmio_readl_down(struct clocksource *);
+Index: linux-isolation/kernel/time/clocksource.c
 ===================================================================
---- linux-isolation.orig/arch/x86/kernel/cpu/cacheinfo.c
-+++ linux-isolation/arch/x86/kernel/cpu/cacheinfo.c
-@@ -17,6 +17,7 @@
- #include <linux/sysfs.h>
- #include <linux/pci.h>
- #include <linux/stop_machine.h>
-+#include <linux/sched/isolation.h>
+--- linux-isolation.orig/kernel/time/clocksource.c
++++ linux-isolation/kernel/time/clocksource.c
+@@ -125,7 +125,7 @@ static u64 suspend_start;
  
- #include <asm/cpufeature.h>
- #include <asm/cacheinfo.h>
-@@ -396,6 +397,7 @@ static void amd_l3_disable_index(struct
- 	 *  disable index in all 4 subcaches
- 	 */
- 	for (i = 0; i < 4; i++) {
-+		int ret;
- 		u32 reg = idx | (i << 20);
+ #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
+ static void clocksource_watchdog_work(struct work_struct *work);
+-static void clocksource_select(void);
++static int clocksource_select(bool fail);
  
- 		if (!nb->l3_cache.subcaches[i])
-@@ -409,6 +411,7 @@ static void amd_l3_disable_index(struct
- 		 * is not sufficient.
- 		 */
- 		ret = wbinvd_on_cpu(cpu);
-+		WARN_ON(ret == -EPERM);
- 
- 		reg |= BIT(31);
- 		pci_write_config_dword(nb->misc, 0x1BC + slot * 4, reg);
-@@ -428,7 +431,7 @@ static void amd_l3_disable_index(struct
- static int amd_set_l3_disable_slot(struct amd_northbridge *nb, int cpu,
- 			    unsigned slot, unsigned long index)
+ static LIST_HEAD(watchdog_list);
+ static struct clocksource *watchdog;
+@@ -679,7 +679,7 @@ static int clocksource_watchdog_kthread(
  {
--	int ret = 0;
-+	int idx, ret = 0;
- 
- 	/*  check if @slot is already used or the index is already disabled */
- 	ret = amd_get_l3_disable_slot(nb, slot);
-@@ -442,7 +445,15 @@ static int amd_set_l3_disable_slot(struc
- 	if (index == amd_get_l3_disable_slot(nb, !slot))
- 		return -EEXIST;
- 
--	amd_l3_disable_index(nb, cpu, slot, index);
-+	ret = 0;
-+	idx = block_interf_srcu_read_lock();
-+
-+	if (block_interf_cpu(cpu))
-+		ret = -EPERM;
-+	else
-+		amd_l3_disable_index(nb, cpu, slot, index);
-+
-+	block_interf_srcu_read_unlock(idx);
- 
+ 	mutex_lock(&clocksource_mutex);
+ 	if (__clocksource_watchdog_kthread())
+-		clocksource_select();
++		clocksource_select(false);
+ 	mutex_unlock(&clocksource_mutex);
  	return 0;
  }
-Index: linux-isolation/arch/x86/lib/cache-smp.c
-===================================================================
---- linux-isolation.orig/arch/x86/lib/cache-smp.c
-+++ linux-isolation/arch/x86/lib/cache-smp.c
-@@ -7,9 +7,9 @@ static void __wbinvd(void *dummy)
- 	wbinvd();
+@@ -976,7 +976,7 @@ static struct clocksource *clocksource_f
+ 	return NULL;
  }
  
--void wbinvd_on_cpu(int cpu)
-+int wbinvd_on_cpu(int cpu)
+-static void __clocksource_select(bool skipcur)
++static int __clocksource_select(bool skipcur, bool fail)
  {
--	smp_call_function_single(cpu, __wbinvd, NULL, 1);
-+	return smp_call_function_single_fail(cpu, __wbinvd, NULL, 1);
- }
- EXPORT_SYMBOL(wbinvd_on_cpu);
+ 	bool oneshot = tick_oneshot_mode_active();
+ 	struct clocksource *best, *cs;
+@@ -984,7 +984,7 @@ static void __clocksource_select(bool sk
+ 	/* Find the best suitable clocksource */
+ 	best = clocksource_find_best(oneshot, skipcur);
+ 	if (!best)
+-		return;
++		return 0;
  
+ 	if (!strlen(override_name))
+ 		goto found;
+@@ -1021,10 +1021,16 @@ static void __clocksource_select(bool sk
+ 	}
+ 
+ found:
+-	if (curr_clocksource != best && !timekeeping_notify(best)) {
++	if (curr_clocksource != best) {
++		int ret;
++
++		ret = timekeeping_notify(best, fail);
++		if (ret)
++			return ret;
+ 		pr_info("Switched to clocksource %s\n", best->name);
+ 		curr_clocksource = best;
+ 	}
++	return 0;
+ }
+ 
+ /**
+@@ -1035,14 +1041,14 @@ found:
+  * Select the clocksource with the best rating, or the clocksource,
+  * which is selected by userspace override.
+  */
+-static void clocksource_select(void)
++static int clocksource_select(bool fail)
+ {
+-	__clocksource_select(false);
++	return __clocksource_select(false, fail);
+ }
+ 
+-static void clocksource_select_fallback(void)
++static int clocksource_select_fallback(void)
+ {
+-	__clocksource_select(true);
++	return __clocksource_select(true, true);
+ }
+ 
+ /*
+@@ -1061,7 +1067,7 @@ static int __init clocksource_done_booti
+ 	 * Run the watchdog first to eliminate unstable clock sources
+ 	 */
+ 	__clocksource_watchdog_kthread();
+-	clocksource_select();
++	clocksource_select(false);
+ 	mutex_unlock(&clocksource_mutex);
+ 	return 0;
+ }
+@@ -1209,7 +1215,7 @@ int __clocksource_register_scale(struct
+ 	clocksource_enqueue_watchdog(cs);
+ 	clocksource_watchdog_unlock(&flags);
+ 
+-	clocksource_select();
++	clocksource_select(false);
+ 	clocksource_select_watchdog(false);
+ 	__clocksource_suspend_select(cs);
+ 	mutex_unlock(&clocksource_mutex);
+@@ -1238,7 +1244,7 @@ void clocksource_change_rating(struct cl
+ 	__clocksource_change_rating(cs, rating);
+ 	clocksource_watchdog_unlock(&flags);
+ 
+-	clocksource_select();
++	clocksource_select(false);
+ 	clocksource_select_watchdog(false);
+ 	clocksource_suspend_select(false);
+ 	mutex_unlock(&clocksource_mutex);
+@@ -1260,8 +1266,12 @@ static int clocksource_unbind(struct clo
+ 	}
+ 
+ 	if (cs == curr_clocksource) {
++		int ret;
++
+ 		/* Select and try to install a replacement clock source */
+-		clocksource_select_fallback();
++		ret = clocksource_select_fallback();
++		if (ret)
++			return ret;
+ 		if (curr_clocksource == cs)
+ 			return -EBUSY;
+ 	}
+@@ -1352,17 +1362,17 @@ static ssize_t current_clocksource_store
+ 					 struct device_attribute *attr,
+ 					 const char *buf, size_t count)
+ {
+-	ssize_t ret;
++	ssize_t ret, err;
+ 
+ 	mutex_lock(&clocksource_mutex);
+ 
+ 	ret = sysfs_get_uname(buf, override_name, count);
+ 	if (ret >= 0)
+-		clocksource_select();
++		err = clocksource_select(true);
+ 
+ 	mutex_unlock(&clocksource_mutex);
+ 
+-	return ret;
++	return err ? err : ret;
+ }
+ static DEVICE_ATTR_RW(current_clocksource);
+ 
+Index: linux-isolation/kernel/time/timekeeping.c
+===================================================================
+--- linux-isolation.orig/kernel/time/timekeeping.c
++++ linux-isolation/kernel/time/timekeeping.c
+@@ -13,6 +13,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/loadavg.h>
+ #include <linux/sched/clock.h>
++#include <linux/sched/isolation.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/clocksource.h>
+ #include <linux/jiffies.h>
+@@ -1497,13 +1498,24 @@ static int change_clocksource(void *data
+  * This function is called from clocksource.c after a new, better clock
+  * source has been registered. The caller holds the clocksource_mutex.
+  */
+-int timekeeping_notify(struct clocksource *clock)
++int timekeeping_notify(struct clocksource *clock, bool fail)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
+ 
+ 	if (tk->tkr_mono.clock == clock)
+ 		return 0;
+-	stop_machine(change_clocksource, clock, NULL);
++
++	if (!fail)
++		stop_machine(change_clocksource, clock, NULL);
++	else {
++		int ret, idx;
++
++		idx = block_interf_srcu_read_lock();
++		ret = stop_machine_fail(change_clocksource, clock, NULL);
++		block_interf_srcu_read_unlock(idx);
++		if (ret)
++			return ret;
++	}
+ 	tick_clock_notify();
+ 	return tk->tkr_mono.clock == clock ? 0 : -1;
+ }
 
 
