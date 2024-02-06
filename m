@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C691A1353F6;
-	Tue,  6 Feb 2024 12:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B824135A61;
+	Tue,  6 Feb 2024 12:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221359; cv=none; b=j10sjl/smn0N9a0Dq5uXHp7TIP2NIxB5SuimRFe73cwtsQoifQzV2qw2zkIBgG1H2luZXCWxbxcVgW9IE/vJL52q9CNA30Ly5sanN3uIU1uiWgxFsU/lLEJCeBQlkRwAIFJu1pe23k13JLVg1p7rHrXSZ8WkfMPB0WU61+GyNIw=
+	t=1707221360; cv=none; b=WumV4EodnpFHY+lkv7miLHPAF3NsybNJEOu34aOCgtQklZ+N5zgcZMNOUIglSITEvYQXPXLiCdmZosGKVyKEpdIXpycN49FVVaylfoxbM2j9FnzdUEB/RDa8hfS1LYE+wupGyDABjkT5MEPLfMNo6DFizY7RzmUxOFF6PNjFFEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221359; c=relaxed/simple;
-	bh=rJbSuvhtLipDc17VpOUCoHRbi16A8mbSZ9ZCLhURrio=;
+	s=arc-20240116; t=1707221360; c=relaxed/simple;
+	bh=22GR3qyx19RyNEnG9roHdEAwdkUh1gVC4hPoWy80m34=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=nC/NKnTaV3MMCJa0VmLVPtN/TU1X9gdWosO9wEtfwUOd+HYTnI+AP1DVmtt5dmpHX9dkwhA0D460Mdb9Ddw7CYUpvonUbon9RT5AwDxsJQPgph1gW5VvaEhqidC86PAfgjxHg3Ncymw7H4VjQiKvLZ7qZuKTBFbCMCDRv9tNPJw=
+	 Content-Type; b=jp0kJzQCX9qHL3r8zrEM2BaXNdtVn73o/PMLdp5/n+NbSdy+LkwgE2NvsY3OK7bwfE4FdH6SyeIMa+JcHI4nra2s3ZhhnUKvGRdJr7THEMrRVDWLdr1fLL2H1Hcx9CezDFNEMWGUWyFTDBrgJyj08OSvDJvuufHacJ7g6acQ1H8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C93C43394;
-	Tue,  6 Feb 2024 12:09:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86588C43394;
+	Tue,  6 Feb 2024 12:09:20 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGp-00000006b5L-3Rzc;
-	Tue, 06 Feb 2024 07:09:47 -0500
-Message-ID: <20240206120947.686070579@rostedt.homelinux.com>
+	id 1rXKGq-00000006b8p-41Lr;
+	Tue, 06 Feb 2024 07:09:48 -0500
+Message-ID: <20240206120948.816153049@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:13 -0500
+Date: Tue, 06 Feb 2024 07:09:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -31,7 +31,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  kernel test robot <lkp@intel.com>
-Subject: [v6.6][PATCH 08/57] eventfs: Use eventfs_remove_events_dir()
+Subject: [v6.6][PATCH 15/57] eventfs: Fix kerneldoc of eventfs_remove_rec()
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,89 +43,41 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The update to removing the eventfs_file changed the way the events top
-level directory was handled. Instead of returning a dentry, it now returns
-the eventfs_inode. In this changed, the removing of the events top level
-directory is not much different than removing any of the other
-directories. Because of this, the removal just called eventfs_remove_dir()
-instead of eventfs_remove_events_dir().
+The eventfs_remove_rec() had some missing parameters in the kerneldoc
+comment above it. Also, rephrase the description a bit more to have a bit
+more correct grammar.
 
-Although eventfs_remove_dir() does the clean up, it misses out on the
-dget() of the ei->dentry done in eventfs_create_events_dir(). It makes
-more sense to match eventfs_create_events_dir() with a specific function
-eventfs_remove_events_dir() and this specific function can then perform
-the dput() to the dentry that had the dget() when it was created.
+Link: https://lore.kernel.org/linux-trace-kernel/20231030121523.0b2225a7@gandalf.local.home
 
-Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode");
 Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202310051743.y9EobbUr-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202310052216.4SgqasWo-lkp@intel.com/
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 2819f23ac12ce93ff79ca7a54597df9a4a1f6331)
+(cherry picked from commit 9037caa09ed345b35325200f0e4acf5a94ae0a65)
 ---
- fs/tracefs/event_inode.c    | 19 +++++++------------
- include/linux/tracefs.h     |  1 +
- kernel/trace/trace_events.c |  2 +-
- 3 files changed, 9 insertions(+), 13 deletions(-)
+ fs/tracefs/event_inode.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index eab18b157ef5..1ccd100bc565 100644
+index 5536860eb2ff..9f612a8f009d 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -901,22 +901,17 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
- }
- 
+@@ -796,9 +796,11 @@ static void free_ei(struct rcu_head *head)
  /**
-- * eventfs_remove_events_dir - remove eventfs dir or file from list
-- * @dentry: events's dentry to be removed.
-+ * eventfs_remove_events_dir - remove the top level eventfs directory
-+ * @ei: the event_inode returned by eventfs_create_events_dir().
+  * eventfs_remove_rec - remove eventfs dir or file from list
+  * @ei: eventfs_inode to be removed.
++ * @head: the list head to place the deleted @ei and children
++ * @level: prevent recursion from going more than 3 levels deep.
   *
-- * This function remove events main directory
-+ * This function removes the events main directory
+- * This function recursively remove eventfs_inode which
+- * contains info of file or dir.
++ * This function recursively removes eventfs_inodes which
++ * contains info of files and/or directories.
   */
--void eventfs_remove_events_dir(struct dentry *dentry)
-+void eventfs_remove_events_dir(struct eventfs_inode *ei)
+ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head, int level)
  {
--	struct tracefs_inode *ti;
--
--	if (!dentry || !dentry->d_inode)
--		return;
-+	struct dentry *dentry = ei->dentry;
- 
--	ti = get_tracefs(dentry->d_inode);
--	if (!ti || !(ti->flags & TRACEFS_EVENT_INODE))
--		return;
-+	eventfs_remove_dir(ei);
- 
--	d_invalidate(dentry);
-+	/* Matches the dget() from eventfs_create_events_dir() */
- 	dput(dentry);
- }
-diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
-index 0c39704455d9..13359b1a35d1 100644
---- a/include/linux/tracefs.h
-+++ b/include/linux/tracefs.h
-@@ -41,6 +41,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
- 					 const struct eventfs_entry *entries,
- 					 int size, void *data);
- 
-+void eventfs_remove_events_dir(struct eventfs_inode *ei);
- void eventfs_remove_dir(struct eventfs_inode *ei);
- 
- struct dentry *tracefs_create_file(const char *name, umode_t mode,
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 6595317c3830..697163f8f670 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3893,7 +3893,7 @@ int event_trace_del_tracer(struct trace_array *tr)
- 
- 	down_write(&trace_event_sem);
- 	__trace_remove_event_dirs(tr);
--	eventfs_remove_dir(tr->event_dir);
-+	eventfs_remove_events_dir(tr->event_dir);
- 	up_write(&trace_event_sem);
- 
- 	tr->event_dir = NULL;
 -- 
 2.43.0
 
