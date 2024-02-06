@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846D413329F;
-	Tue,  6 Feb 2024 12:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188B8134CC5;
+	Tue,  6 Feb 2024 12:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221352; cv=none; b=OY7QhXmMKvnU3APmaOMj/jkzfQvMsrVUYloMy30o8GTJFcwLEpQnwXbQp36Mi2xvHHzrgsZXXvwFRFtEI01bFeHYo9Y4ynJIstOP+ZoInRSqr4Ku0w4kfrHOc24Q4z6yaTqVq1Wj2jVAoNDWj/0xVCFnzlor/9JYx0/hd6TRlbs=
+	t=1707221355; cv=none; b=uk1Y9LTbTwglayyBj4yWnhwjNcV8F4qoGz+BAPTGLaPqPOgwv8OCWIbOOf/n2Yo/TGLQuL4B8Wjm0ccR+Bpz1SexqOgKA3e1A16SkoNYqf8rvq2fqSxtlWVtbjKhxERlmwMf/SWsH8n+AsPKe6UUo7Lx3FAZI6aKxvg08MohsI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221352; c=relaxed/simple;
-	bh=qQim4pSiLZXeeio4DYXf7rA0VHmdXdFAs9UDtVEQTeo=;
+	s=arc-20240116; t=1707221355; c=relaxed/simple;
+	bh=T+6mtzRx975G9vZcGMt5Mg+MAazPc5UIQRcEY/W6Cfc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sOsxTyoOFpn4a+Ud9iV/43020HIyFdP1uXbOKoW4VfZ08g30FkQL2sQB+Yvgj75PGSL+g6ytiAH7vReKMnhuiWCVueCOuNv3STC8hBLoG3PaLSkb8vlb2dVBQR0moVZ1HyT19enBwyZ/LkrCgqSQONa/cn8jyTAFKpQEQhU6ZoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OO88s14R; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HSJ6MJx7QLnF3YBSYVmvOZp9zP4eIz4+nSdSVxLRzyMdVHZYRd3DVPgnajFdlHDlq8CLETvSfCrncJKNFDWUiSSCH+/c42i1nGC6D4VTWU/Zyie+kNTcvWeLVW5tdhKauafluzviRJxChM580wKmfv14PLFO83ifKL31uJbuczg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1wIAVQS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OO88s14R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEEC5C43390;
-	Tue,  6 Feb 2024 12:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1wIAVQS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0770C43399;
+	Tue,  6 Feb 2024 12:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707221352;
-	bh=qQim4pSiLZXeeio4DYXf7rA0VHmdXdFAs9UDtVEQTeo=;
+	s=k20201202; t=1707221354;
+	bh=T+6mtzRx975G9vZcGMt5Mg+MAazPc5UIQRcEY/W6Cfc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OO88s14RXh0E5xwSk3HZmLtz6JvnbW9riemPyKSSISDOivblznBv2Gn+H3rsjVBx7
-	 yIOmJ94fk7tR2X/pWPHFevhk+35BgA+W/h/piuqGkcBzEIEOax9oeLIPKo3XcVnsra
-	 /1IceEdoFq9xz93LrwSAjsloI8V3bDTgV1jT8RSSBV6FUbCfqW0wNC8uTdNb668jri
-	 206ruEgS7jTYSFas+4sKRJtt9DrrT2Lr6H5XTD6c1OaWW8f4ZR2SV7jVQEZYnQAty1
-	 LhCN0weLzt8YiNR0WX2pRESzwhbcQbTZTlxGVGs0gNdrm5mVA8AY/JAEdOM1cE8qtA
-	 60SXzZgBr2ibw==
+	b=g1wIAVQShOEFR33uhqw7FoHyLxnOCzfP+bvJi/qVA25KdprZLhR6y55rcX5ZtSoW6
+	 UlTlmQhppBhg6U9urJH8BTsMeMTayy6X4siGrl294OTp851ejk4mgIiHHAZ1QTaZw2
+	 6Z8PxBBB1Ft+KLG2VTFF4iToFfZZS6F53C07K44SA+px6qK8lhH8Hpz+gwueA7dOpF
+	 RnfnPXE7qJvap3XVCOkZJJNOQhT62FByjeo4LdCC4aRd4CstHDj8QZXIEsV/ycz0jW
+	 ZY30yMG3QBrR7qnL4JgOPHuDtxSt6AGQQhkl0sap18d5EirxsZoOxG3cJVwhbFkw8G
+	 UaRwx+MFuJS9Q==
 From: Mark Brown <broonie@kernel.org>
 To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240202213132.3863124-2-dlechner@baylibre.com>
-References: <20240202213132.3863124-2-dlechner@baylibre.com>
-Subject: Re: [PATCH] spi: axi-spi-engine: use common AXI macros
-Message-Id: <170722135045.992289.1961001625365540188.b4-ty@kernel.org>
-Date: Tue, 06 Feb 2024 12:09:10 +0000
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240126212358.3916280-2-dlechner@baylibre.com>
+References: <20240126212358.3916280-2-dlechner@baylibre.com>
+Subject: Re: [PATCH] spi: move split xfers for CS_WORD emulation
+Message-Id: <170722135351.992289.8405956770330505412.b4-ty@kernel.org>
+Date: Tue, 06 Feb 2024 12:09:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,11 +44,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13-dev-0438c
 
-On Fri, 02 Feb 2024 15:31:32 -0600, David Lechner wrote:
-> This avoid duplicating the same macros in multiple drivers by reusing
-> the common AXI macros for the version register.
+On Fri, 26 Jan 2024 15:23:57 -0600, David Lechner wrote:
+> This moves splitting transfers for CS_WORD software emulation to the
+> same place where we split transfers for controller-specific reasons.
 > 
+> This fixes a few subtle bugs.
 > 
+> The calculation for maxsize was wrong for bit sizes between 17 and 24.
+> This is fixed by making use of spi_split_transfers_maxwords() which
+> already has the correct calculation.
+> 
+> [...]
 
 Applied to
 
@@ -58,8 +62,8 @@ Applied to
 
 Thanks!
 
-[1/1] spi: axi-spi-engine: use common AXI macros
-      commit: 88c2b56c2690061121cad03f0f551db465287575
+[1/1] spi: move split xfers for CS_WORD emulation
+      commit: c8bec3355f08ddb887d5c13b7095dfa79e6db108
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
