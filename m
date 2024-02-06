@@ -1,352 +1,158 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04F9131724
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4323131727;
+	Tue,  6 Feb 2024 14:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707228251; cv=none; b=s/9tFMRCBU8d5vW4raGFVXAD1dbo5f9g/9EeGNz6CkPjnpnJK7/vvMHmw++cHqD3NiRQbN2sT6LgD7a8P/63vB2pCUP9wcLT+oEtqggxazGhEG9vEatExjy9Pb//R+rVXCe7D53din6Lr9AVonfLM98LlyQMIaEcnkVxJkJ6TR4=
+	t=1707228435; cv=none; b=C6EBTnvRIBFPwWfpVQblpE2vgdNcuovFWGYgpwrSJe6m1JfWC9aDT63EG7jL43jx8XDtB69N6boB9OPJKjqdannx58B5wKs2CHC+HEVlkbSLm1GBzKJpLheP0wovFfD4Y9Vc9zb/OAoOTw9LPgqrF7zdV1n7bOORg1xbB76SUys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707228251; c=relaxed/simple;
-	bh=lZquMLmrGxAv0t7rzyW73sNQjjRh4WbV++BVeQAinI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YzkotMl7gZ9SmNMbSRKdbPtLXe8xYQDZfXjuHFUlrL6GEPzHzMdCkyLZhAjogvJfwzU+Qj06AhZULEbv56XdLxstDzYiW0lZh89zmneQ9rr4OhJS8s+u6jm1abjFF7NCmG/XKAD+8debnuQ1Bg7UwLvSVig0MFtvtNnFTk9ICpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Yrktoror; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1707228435; c=relaxed/simple;
+	bh=q2wNq7y5zjR7zAn2na8XIo5UOuQ5bQiWtaEkyUGvvxM=;
+	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=A/WBYhnJxjBGAHCJTAws6puogHd3XXQnzyJ3v7BmMUCesf2DqSRbbe/Y75bEbrQuSSYzglJyUigkSqZZk8ZguDt8Y/cXOi3nEb9cl7dxxhY7+HZVd8Rh4bYht/R4OejGpXuWd4NejNPze0eGAf7ZlhgKj9YNhY2ND+YKSnWOJ+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDlGHzHs; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Yrktoror"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40f030bf978so9856365e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 06:04:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDlGHzHs"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso126597166b.2;
+        Tue, 06 Feb 2024 06:07:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707228247; x=1707833047; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NKWoarfobpKyGtCpM9eTO32HQXDHwnoM3X9MJI3e2No=;
-        b=YrktororJ4UwFHCHvrUeTtwhaHe3cHwxsLZ4lLAOcFqTohtJmtdN3MggvTdfLvWNUS
-         cdMQ+ar0Y2kWzMWkeTIY1qxunIRuYgfMStxB1s8loEE48PJ1/v/8XHMVVKEt0Bm5sgBe
-         PJQKVnKsZlbTa1OiExhrfn2qik71pDuZGwFP48wYpAXh6Yj1DfXqGyQ+TA78sUaBsT3K
-         C2DGiRe91eAERtOsB+ZL3z0DtqrOJVY5XRm2rYXpDOAf+JTzO1Ly0Iz8jLNwqCWS4FzQ
-         YMBvxiSbni9sP0HrdKNpGe8leHN0c3S/Hx1k1P32T/qIBKnX01R6h76oC21CHtfrPqie
-         svRw==
+        d=gmail.com; s=20230601; t=1707228432; x=1707833232; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KJpUKC6j6AC0vU6wV4VW+IEIUWwwFLgFCR86lJPnIQU=;
+        b=dDlGHzHsd+iVBz4d8H8jU8iko/CCdhNNb1ieGY6x2/Od/h+K71P6NTR1XHfVfX+8k+
+         p4vEstF8gwIQxVwk6aYxTGlzOLpXPyp8/odYoAe83wCAwI8ze6D46NHQZbyL2SFhT0NT
+         77eGIPsGCW1LTcLuIZLexauxUnoErfXoefGabe6o4/EyoA+1qWbgpORAzUsJkYGj/rjY
+         0swA/aF/KLMQ2ne8Vfx2LogdgatD3fwlBJ9zXbtj1/UDZRZze0wWmqCJsHZYe08DD+pr
+         xU6ZvSmU38l7nNLIchiNKqvuLRVW1GdZtVIlkklg5QNxQNSKoL8eor7h91kwnkBBZiAG
+         N+TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707228247; x=1707833047;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NKWoarfobpKyGtCpM9eTO32HQXDHwnoM3X9MJI3e2No=;
-        b=SrvZjoV4jd0sonMYjSjhRuwHkbF6/I79sLHNu4353ei8zFavC3dAbnmutxxPPIKRQJ
-         OAV/+sUIuUKxHW0Y8UUnM6W2hZfIS8GmHCssQtizpCHlvsQoYTmJWP0zLQAFr8M13nED
-         Maat1kYMtqx+oaFafb3xMhzoBxOPdxl9wqcPvX+zGbXA3aMJ2pOed7+J6xXh7bEvRlhl
-         b08etYhJgSuPJ/avlERrXYn51zGi1wxPfVKH/8Vc4cEwRfx15R4ETe9MsBmduZkojwE3
-         ERFet4/ld/yDwgXSazO7xD0S3XGWWeev4ynEWvfr/J4e4YHEPfWOJEJoqzWAFHw5HP2q
-         0TVg==
-X-Gm-Message-State: AOJu0Yyxmbt1z3CNV3ZZVyQM0//5MEP7iRzS1ll3WmmXWzG51GbZnmS5
-	FuadRAOvy9i3xiK5U5P5wUolYdjIajKGF5o7KZbZCmheYZm11mV3YY8eeCDSmQM=
-X-Google-Smtp-Source: AGHT+IGdY2ysYd9v/jru4nS0+Rf05r4hG4rRcUVGmBgMYKc+Z1JU32zV4h+/J+2szgKl5TsjOzu99w==
-X-Received: by 2002:a05:600c:1d07:b0:40f:dd10:180f with SMTP id l7-20020a05600c1d0700b0040fdd10180fmr2188781wms.3.1707228246657;
-        Tue, 06 Feb 2024 06:04:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV/yQfQtY4heRilZc+jxeORQ5S6ks+8nh4kKeNsu5YVZm55NIHizx6nboz9gvf8pPrIycr43RV5uccWxa+IFhta45baId3gq94rW4g0yke6eKaMqj3+zoLU1wII+LmooA+RmL9tkH/1KM6yj98c6QTUUXWiWe/dJHrsgaqXqebkOnPIkVXySIvMb8IkCwSby69x4sJX5dI/R8374rRFeO/WpY7PXa/EJY2PYS8HqJMVkMa2eFSYqW88R2OzeKRLLw748vFEwHMEd+L1mQUfd+fqD8cV4Zl0dc3BowVqrnhQ
-Received: from ?IPV6:2a01:e0a:999:a3a0:20a2:d2ee:941a:156e? ([2a01:e0a:999:a3a0:20a2:d2ee:941a:156e])
-        by smtp.gmail.com with ESMTPSA id d22-20020a05600c34d600b0040e3bdff98asm2189842wmq.23.2024.02.06.06.04.05
+        d=1e100.net; s=20230601; t=1707228432; x=1707833232;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KJpUKC6j6AC0vU6wV4VW+IEIUWwwFLgFCR86lJPnIQU=;
+        b=iBxTNsl9CyG/zX1N9wmZOkKebNaLTDWZ/GDFdcflTbwfi9m0KN60QzWuOQL2AM2bVK
+         EvWPB8FB6glaXEYoUnrtljxuJPShluJzHFdHzSn0Y46PvXALMt02PhkRbwCy4CCBBcAf
+         fsTUDmGatoOzr/b3iLWn5PiIylDd+8WQvkwKQ99NtA3pRjgNLGD+zf2RHTGzsufNCRB3
+         hoyF6UL3TiUqO/hElvwJaGUFyy6F98aG4KDpAKvzAtDwqGUl7+/g/6OiyZ0wCNwu9xWA
+         dKGB3UMZPLT5q5lIrJyb0UVaYT/FB9n+hQZoVWdcKRcmfmjrtiSZWH6dr7LufXXA502V
+         rKiA==
+X-Gm-Message-State: AOJu0Yw6OX6u1H67s2kVFtzfp5lAz/qYdTkb6Alm+k4UEHAKAnbA0Bxa
+	Yv2xQQfWarxzJMKid37wOby5sWOfTfN/zUpxlKDgHa8ypox0fVqq
+X-Google-Smtp-Source: AGHT+IE/QybOw6uj6bLI+Ru49AYLlR1hq5HimT9v3C509yFpaajgpFQUQCfVIbDf2OhBKk6dV8GDPA==
+X-Received: by 2002:a17:906:bc94:b0:a36:fb2c:8701 with SMTP id lv20-20020a170906bc9400b00a36fb2c8701mr2326547ejb.55.1707228431319;
+        Tue, 06 Feb 2024 06:07:11 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXh0yc71LykZC9JSWb5oekCf0lhF0643l3OUVNsNNG2We6Bp8OZ/c5AHsz7OdNKaVwmMUJX55L0GbTkAah7WZC4byEf7H8rm3TUSzd1fKTkvNcprfXXXGHzjfbCcepOwOGzMnmwptHwpXRGFlWooQPdXx9z+bfILOFmT3MJFvnU07K6SpM596UdCVFCoHuGEjSALZc2jrZUSmK25M+YxtAphr7n/ggZkRNaP5RmOToxDti+w3lvKH1xV463jeXvdDK8HMveN1Hj5U5Lw+DXOG8gvmzdjRh7yXSGKHHapxEdlyAWMKvSkgDhsXu5xrmIsw==
+Received: from localhost (p200300e41f147f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f14:7f00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id vi11-20020a170907d40b00b00a3807aa93e1sm1165636ejc.222.2024.02.06.06.07.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Feb 2024 06:04:06 -0800 (PST)
-Message-ID: <b15ac1d0-a5dd-4b4e-83e5-86c706b095ea@rivosinc.com>
-Date: Tue, 6 Feb 2024 15:04:05 +0100
+        Tue, 06 Feb 2024 06:07:10 -0800 (PST)
+Content-Type: multipart/signed;
+ boundary=a57af45cc5955d68bdbf93fbe21e37380f2864359968660b19cc3d7e95c6;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: misaligned: remove CONFIG_RISCV_M_MODE specific
- code
-Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Christoph Hellwig <hch@infradead.org>, Ben Dooks
- <ben.dooks@codethink.co.uk>, David Laight <David.Laight@aculab.com>
-References: <20231128165206.589240-1-cleger@rivosinc.com>
- <ZcGPWrGRi92Chtj8@ghost>
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <ZcGPWrGRi92Chtj8@ghost>
+Mime-Version: 1.0
+Date: Tue, 06 Feb 2024 15:07:10 +0100
+Message-Id: <CYY1YXL0FWK2.1L5CRNMKUF22J@gmail.com>
+Cc: "Sumit Gupta" <sumitg@nvidia.com>, <treding@nvidia.com>,
+ <krzysztof.kozlowski@linaro.org>, <mark.rutland@arm.com>,
+ <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+ <amhetre@nvidia.com>, <bbasu@nvidia.com>
+Subject: Re: [Patch] memory: tegra: Skip SID override from Guest VM
+From: "Thierry Reding" <thierry.reding@gmail.com>
+To: "Marc Zyngier" <maz@kernel.org>, "Jon Hunter" <jonathanh@nvidia.com>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <20240206114852.8472-1-sumitg@nvidia.com>
+ <86wmrh6b2n.wl-maz@kernel.org>
+ <252d6094-b2d6-496d-b28f-93507a193ede@nvidia.com>
+ <86v87169g2.wl-maz@kernel.org>
+In-Reply-To: <86v87169g2.wl-maz@kernel.org>
+
+--a57af45cc5955d68bdbf93fbe21e37380f2864359968660b19cc3d7e95c6
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+On Tue Feb 6, 2024 at 1:53 PM CET, Marc Zyngier wrote:
+> On Tue, 06 Feb 2024 12:28:27 +0000, Jon Hunter <jonathanh@nvidia.com> wro=
+te:
+> > On 06/02/2024 12:17, Marc Zyngier wrote:
+[...]
+> > > - My own tegra186 HW doesn't have VHE, since it is ARMv8.0, and this
+> > >    helper will always return 'false'. How could this result in
+> > >    something that still works? Can I get a free CPU upgrade?
+> >=20
+> > I thought this API just checks to see if we are in EL2?
+>
+> It does. And that's the problem. On ARMv8.0, we run the Linux kernel
+> at EL1. Tegra186 is ARMv8.0 (Denver + A57). So as written, this change
+> breaks the very platform it intends to support.
 
+To clarify, the code that accesses these registers is shared across
+Tegra186 and later chips. Tegra194 and later do support ARMv8.1 VHE.
 
-On 06/02/2024 02:46, Charlie Jenkins wrote:
-> On Tue, Nov 28, 2023 at 05:52:06PM +0100, Clément Léger wrote:
->> While reworking code to fix sparse errors, it appears that the
->> RISCV_M_MODE specific could actually be removed and use the one for
->> normal mode. Even though RISCV_M_MODE can do direct user memory access,
->> using the user uaccess helpers is also going to work. Since there is no
->> need anymore for specific accessors (load_u8()/store_u8()), we can
->> directly use memcpy()/copy_{to/from}_user() and get rid of the copy
->> loop entirely. __read_insn() is also fixed to use an unsigned long
->> instead of a pointer which was cast in __user address space. The
->> insn_addr parameter is now cast from unsigned long to the correct
->> address space directly.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->>
->> ---
->>
->> Notes: This patch is a complete rework of a previous one [1] and thus is
->> not a V3.
->>
->> [1] https://lore.kernel.org/linux-riscv/d156242a-f104-4925-9736-624a4ba8210d@rivosinc.com/
->> ---
->>  arch/riscv/kernel/traps_misaligned.c | 108 +++++----------------------
->>  1 file changed, 18 insertions(+), 90 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
->> index 5eba37147caa..38af97f4819c 100644
->> --- a/arch/riscv/kernel/traps_misaligned.c
->> +++ b/arch/riscv/kernel/traps_misaligned.c
->> @@ -264,86 +264,14 @@ static unsigned long get_f32_rs(unsigned long insn, u8 fp_reg_offset,
->>  #define GET_F32_RS2C(insn, regs) (get_f32_rs(insn, 2, regs))
->>  #define GET_F32_RS2S(insn, regs) (get_f32_rs(RVC_RS2S(insn), 0, regs))
->>  
->> -#ifdef CONFIG_RISCV_M_MODE
->> -static inline int load_u8(struct pt_regs *regs, const u8 *addr, u8 *r_val)
->> -{
->> -	u8 val;
->> -
->> -	asm volatile("lbu %0, %1" : "=&r" (val) : "m" (*addr));
->> -	*r_val = val;
->> -
->> -	return 0;
->> -}
->> -
->> -static inline int store_u8(struct pt_regs *regs, u8 *addr, u8 val)
->> -{
->> -	asm volatile ("sb %0, %1\n" : : "r" (val), "m" (*addr));
->> -
->> -	return 0;
->> -}
->> -
->> -static inline int get_insn(struct pt_regs *regs, ulong mepc, ulong *r_insn)
->> -{
->> -	register ulong __mepc asm ("a2") = mepc;
->> -	ulong val, rvc_mask = 3, tmp;
->> -
->> -	asm ("and %[tmp], %[addr], 2\n"
->> -		"bnez %[tmp], 1f\n"
->> -#if defined(CONFIG_64BIT)
->> -		__stringify(LWU) " %[insn], (%[addr])\n"
->> -#else
->> -		__stringify(LW) " %[insn], (%[addr])\n"
->> -#endif
->> -		"and %[tmp], %[insn], %[rvc_mask]\n"
->> -		"beq %[tmp], %[rvc_mask], 2f\n"
->> -		"sll %[insn], %[insn], %[xlen_minus_16]\n"
->> -		"srl %[insn], %[insn], %[xlen_minus_16]\n"
->> -		"j 2f\n"
->> -		"1:\n"
->> -		"lhu %[insn], (%[addr])\n"
->> -		"and %[tmp], %[insn], %[rvc_mask]\n"
->> -		"bne %[tmp], %[rvc_mask], 2f\n"
->> -		"lhu %[tmp], 2(%[addr])\n"
->> -		"sll %[tmp], %[tmp], 16\n"
->> -		"add %[insn], %[insn], %[tmp]\n"
->> -		"2:"
->> -	: [insn] "=&r" (val), [tmp] "=&r" (tmp)
->> -	: [addr] "r" (__mepc), [rvc_mask] "r" (rvc_mask),
->> -	  [xlen_minus_16] "i" (XLEN_MINUS_16));
->> -
->> -	*r_insn = val;
->> -
->> -	return 0;
->> -}
->> -#else
->> -static inline int load_u8(struct pt_regs *regs, const u8 *addr, u8 *r_val)
->> -{
->> -	if (user_mode(regs)) {
->> -		return __get_user(*r_val, addr);
->> -	} else {
->> -		*r_val = *addr;
->> -		return 0;
->> -	}
->> -}
->> -
->> -static inline int store_u8(struct pt_regs *regs, u8 *addr, u8 val)
->> -{
->> -	if (user_mode(regs)) {
->> -		return __put_user(val, addr);
->> -	} else {
->> -		*addr = val;
->> -		return 0;
->> -	}
->> -}
->> -
->> -#define __read_insn(regs, insn, insn_addr)		\
->> +#define __read_insn(regs, insn, insn_addr, type)	\
->>  ({							\
->>  	int __ret;					\
->>  							\
->> -	if (user_mode(regs)) {				\
->> -		__ret = __get_user(insn, insn_addr);	\
->> +	if (user_mode(regs)) { \
-> Nit: formatting was changed here (previous indentation seems better)
+Granted, if it always returns false on Tegra186 that's not what we
+want.
 
-Acked.
+> > > - If you assign this device to a VM and that the hypervisor doesn't
+> > >    correctly virtualise it, then it is a different device and you
+> > >    should simply advertise it something else. Or even better, fix you=
+r
+> > >    hypervisor.
+> >=20
+> > Sumit can add some more details on why we don't completely disable the
+> > device for guest OSs.
+>
+> It's not about disabling it. It is about correctly supporting it
+> (providing full emulation for it), or advertising it as something
+> different so that SW can handle it differently.
 
-> 
->> +		__ret = __get_user(insn, (type __user *) insn_addr); \
->>  	} else {					\
->> -		insn = *insn_addr;			\
->> +		insn = *(type *)insn_addr;		\
->>  		__ret = 0;				\
->>  	}						\
->>  							\
->> @@ -356,9 +284,8 @@ static inline int get_insn(struct pt_regs *regs, ulong epc, ulong *r_insn)
->>  
->>  	if (epc & 0x2) {
->>  		ulong tmp = 0;
->> -		u16 __user *insn_addr = (u16 __user *)epc;
->>  
->> -		if (__read_insn(regs, insn, insn_addr))
->> +		if (__read_insn(regs, insn, epc, u16))
->>  			return -EFAULT;
->>  		/* __get_user() uses regular "lw" which sign extend the loaded
->>  		 * value make sure to clear higher order bits in case we "or" it
->> @@ -369,16 +296,14 @@ static inline int get_insn(struct pt_regs *regs, ulong epc, ulong *r_insn)
->>  			*r_insn = insn;
->>  			return 0;
->>  		}
->> -		insn_addr++;
->> -		if (__read_insn(regs, tmp, insn_addr))
->> +		epc += sizeof(u16);
->> +		if (__read_insn(regs, tmp, epc, u16))
->>  			return -EFAULT;
->>  		*r_insn = (tmp << 16) | insn;
->>  
->>  		return 0;
->>  	} else {
->> -		u32 __user *insn_addr = (u32 __user *)epc;
->> -
->> -		if (__read_insn(regs, insn, insn_addr))
->> +		if (__read_insn(regs, insn, epc, u32))
->>  			return -EFAULT;
->>  		if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) {
->>  			*r_insn = insn;
->> @@ -390,7 +315,6 @@ static inline int get_insn(struct pt_regs *regs, ulong epc, ulong *r_insn)
->>  		return 0;
->>  	}
->>  }
->> -#endif
->>  
->>  union reg_data {
->>  	u8 data_bytes[8];
->> @@ -409,7 +333,7 @@ int handle_misaligned_load(struct pt_regs *regs)
->>  	unsigned long epc = regs->epc;
->>  	unsigned long insn;
->>  	unsigned long addr = regs->badaddr;
->> -	int i, fp = 0, shift = 0, len = 0;
->> +	int fp = 0, shift = 0, len = 0;
->>  
->>  	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, addr);
->>  
->> @@ -490,9 +414,11 @@ int handle_misaligned_load(struct pt_regs *regs)
->>  		return -EOPNOTSUPP;
->>  
->>  	val.data_u64 = 0;
->> -	for (i = 0; i < len; i++) {
->> -		if (load_u8(regs, (void *)(addr + i), &val.data_bytes[i]))
->> +	if (user_mode(regs)) {
->> +		if (raw_copy_from_user(&val, (u8 __user *)addr, len))
->>  			return -1;
->> +	} else {
->> +		memcpy(&val, (u8 *)addr, len);
->>  	}
->>  
->>  	if (!fp)
->> @@ -513,7 +439,7 @@ int handle_misaligned_store(struct pt_regs *regs)
->>  	unsigned long epc = regs->epc;
->>  	unsigned long insn;
->>  	unsigned long addr = regs->badaddr;
->> -	int i, len = 0, fp = 0;
->> +	int len = 0, fp = 0;
->>  
->>  	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, addr);
->>  
->> @@ -588,9 +514,11 @@ int handle_misaligned_store(struct pt_regs *regs)
->>  	if (!IS_ENABLED(CONFIG_FPU) && fp)
->>  		return -EOPNOTSUPP;
->>  
->> -	for (i = 0; i < len; i++) {
->> -		if (store_u8(regs, (void *)(addr + i), val.data_bytes[i]))
->> +	if (user_mode(regs)) {
->> +		if (raw_copy_to_user((u8 __user *)addr, &val, len))
->>  			return -1;
->> +	} else {
->> +		memcpy((u8 *)addr, &val, len);
->>  	}
->>  
->>  	regs->epc = epc + INSN_LEN(insn);
->> -- 
->> 2.42.0
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-> The changes here logically make sense but I don't know how to test this
-> misaligned access code on M-mode or in S-mode. Can you provide how this
-> was tested?
+It's really not a different device. It's exactly the same device except
+that accessing some registers isn't permitted. We also can't easily
+remove parts of the register region from device tree because these are
+intermixed with other registers that we do want access to.
 
-The test used to validate these changes is the one used originally for
-S-mode misaligned support:
+> Poking into the internals of how the kernel is booted for a driver
+> that isn't tied to the core architecture (because it would need to
+> access system registers, for example) is not an acceptable outcome.
 
-https://github.com/clementleger/unaligned_test
+So what would be the better option? Use a different compatible string to
+make the driver handle the device differently? Or adding a custom
+property to the device tree node to mark this as running in a
+virtualized environment?
 
-This test exercise (almost) all the supported instructions, all the
-registers for FPU instructions and is compiled with and without
-compressed instructions.
+Perhaps we can reuse the top-level hypervisor node? That seems to only
+ever have been used for Xen on 32-bit ARM, so not sure if that'd still
+be appropriate.
 
-For S-mode, you simply need a classic toolchain and export CROSS_COMPILE
-to match it.
+Thierry
 
-For M-mode validation, I used the following commands:
+--a57af45cc5955d68bdbf93fbe21e37380f2864359968660b19cc3d7e95c6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Buildroot toolchain:
-$ make O=build_nommu qemu_riscv64_nommu_virt_defconfig
+-----BEGIN PGP SIGNATURE-----
 
-Test:
-$ git clone https://github.com/clementleger/unaligned_test.git
-$ cd unaligned_test
-$ make CFLAGS="-fPIC -Wl,-elf2flt=-r"
-CROSS_COMPILE=<buildroot>/build_nommu/host/bin/riscv64-buildroot-linux-uclibc-
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmXCPQ4ACgkQ3SOs138+
+s6FwlQ//VXIIRE1nFoDgCaZ79DgjEg3oOeQn6S/vAx4tfVMtsRrkpmxy4y56+/ft
+lOjQ7mmXqYJiMVIoNVdxDEcZfwVsE740IDjsuJpMmI10BmZ4siqVc6Mj3ZmVwwKo
+g46SrmLzXDMmhhT+YSdc0IoHhrDSU7XJTxig0cKaGRv44YQrsrKAjyRxtUVblHTg
+wO7Ybxq1c+z2AKlhTEBUNgcaxUcQ9jBze6Gki3kuHOVpkxtRrZdxmHz41CtBkhim
+cVVCufxKtrcBkGY0iYlF7I8eZhL1xaXQtdoIzPZ9A6Bla2LVx/fICkwHqH2aCzjg
+9RrzH5tuHvv46vFC70BK2VK0fwdlxvvUMZJPZUqtFMTagz/JdyG3FredDhaPPp3Z
+LN5xAoDiqOLucBlygGSOhBd4002KOowMtDN6fYDXVFN+nUJc0g5xUJPBUXoUwYDb
+kr/Gh/RtaKdE4/4hcdHITNrPCUgv4TKkBMqMOynkTSEzwF24nHA6gHuLNd6E9ntB
+2TpldvhxZaUfEeKGxtdGV0AVTIrxgZvBFUxINhbrJWW8W8pijh2iM/D4q9vBdT4R
+mkE8ResmkedMQo8pYx4boSI9whZdt0bC8s/KSoTWuvEoM7BSsVZ1ibnLKOEQC6fu
+PdYvbal6LrrRUlNAUlum8gCz7nXmPbKctnRHt2x6JKD0Tz/Cj/I=
+=Ow9u
+-----END PGP SIGNATURE-----
 
-Copy the resulting elf files (unaligned & unaligned_c) to buildroot
-rootfs and rebuild it.
-
-Kernel:
-$ make O=build_nommu nommu_virt_defconfig
-$ make O=build_nommu loader
-
-Either set the kernel initramfs or provide one on spike command line
-using the one built with buildroot
-
-Then to run it on spike (QEMU always emulate misaligned accesses and
-won't generate any misaligned exception):
-
-$ spike <kernel>/build_nommu/loader
-
-And finally execute the tests.
-
-Clément
-
-
-> 
-> There are also some merge conflicts that were introduced in 6.8-rc1.
-> 
-> - Charlie
-> 
+--a57af45cc5955d68bdbf93fbe21e37380f2864359968660b19cc3d7e95c6--
