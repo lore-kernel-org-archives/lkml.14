@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B02B745E9
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 03:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE32F73197
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 03:21:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707189408; cv=none; b=UPDcJXwW0CqDxNU/51nLlf2+TbbM1uv4DRsHw7yjDShB/KLBOOgfL5xfWVF170s/kYME/doQ81fZI3kebw3MaiRhqIWIXI2ZDvODEgFSuV+yjnHLULSzsDmsAco8+3iTb52RL99Dzouet4jzdfsN2U57EDbKXbar3wzI3OcTdhQ=
+	t=1707189670; cv=none; b=Y3NaX4KuMJwBL7q+ffZB56OzRP8enV5BmhvcrNtrTGXbGFiB4xGQUDWCI4XQvOPJa2VtvKKG65rMnrjig4q8jtznQBRjxQobL1OZWbRC+CSmelpViyHAXxoUniM45ecnoSHGh23vRIqZKotAV5cgd6NjgNBRpWa7m0Pgse0dvRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707189408; c=relaxed/simple;
-	bh=XlT/oFXhFBECcFABqd/c6XAVL8ZjWF+z5VrLDcUku2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ir93Lbme5VnU6xLkCBXhooOacpELj+02MjDC2wb2/pQMgQPrAnDQLT5U5OOdzpdOUV/EPN7FWCh6VpT3EXwdA2OjXUA1O7417OHTLWS+nZvEEmqBXzZphOd8zEPJoY98E6vDeP/ChnwVHaVdqI9oMMQ+rhxgetvedH9NCOLN6V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fLjFp1gP; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1707189670; c=relaxed/simple;
+	bh=D45sGI79V7I3jog6iYTL/qw664zIgKIyT8rlsh4HhjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TsGPBHWZW1q4ioYKRPwf7XueLGlDw840pXNFqpEe5Re5Hts76ImOQ46so3XgqYH7nfL8h4Qa9jZtV5tg0WZBybvp+BIr3pLzL5S1TUq6hE/j8ew1ZZ4J2S6Cq7fclvdR+xJc3vAlGWPu05bQEr4HLmFEIDT9pt/97Pj5BpKGHM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z8+ouXCj; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fLjFp1gP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z8+ouXCj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707189406;
+	s=mimecast20190719; t=1707189667;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lNKnKIcGVgRey+WDdSS1pYfQz/TNzPFoLWEek88f+c0=;
-	b=fLjFp1gPXyFzxzchdA2BA5EN/FqJfsjtUcPnyym4RR6zbhiEKBu9+7nRiVCHJFwnKfGFHV
-	V6fOrlBZUdGBgJZXrZwop81Wlo1mUtzWeGgWO49wvGz+HUHyNd3kVIXD8PCt88reY6pyCZ
-	McMDn2S4l1382QRj0EGXYqwMHoBP9l0=
+	bh=FcVv/5RBXXyL4uRMPvuDyJl99xGfle/eegK32/iguR8=;
+	b=Z8+ouXCjMi0vgF4Pl+kUdR3MJUSiRu/xrk646Dh+c+xg5rMLSqABcCh2WEQpfNFuURTdf7
+	JDBHOdZe7jbJkZ6CU0H+JBwSwV8/DOH5AT+ifg6f5sl9/C5TD2/nnIJKEuZ9a3Cvf4r1CL
+	wR0ihuvnlo16g859GaBKTuikX8tVJtg=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-K45c_6kFP7iWy58RcRhdfQ-1; Mon, 05 Feb 2024 22:16:42 -0500
-X-MC-Unique: K45c_6kFP7iWy58RcRhdfQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+ us-mta-286-q1G3jI78OEeWv3sa_NGZqQ-1; Mon, 05 Feb 2024 22:20:59 -0500
+X-MC-Unique: q1G3jI78OEeWv3sa_NGZqQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 97904800074;
-	Tue,  6 Feb 2024 03:16:41 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9138D83B86B;
+	Tue,  6 Feb 2024 03:20:58 +0000 (UTC)
 Received: from [10.22.17.212] (unknown [10.22.17.212])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8716B492BF0;
-	Tue,  6 Feb 2024 03:16:40 +0000 (UTC)
-Message-ID: <da2417c0-49f1-4674-95f9-297d6cd9e0fa@redhat.com>
-Date: Mon, 5 Feb 2024 22:16:39 -0500
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7CC0F1121313;
+	Tue,  6 Feb 2024 03:20:57 +0000 (UTC)
+Message-ID: <2efa10b2-6732-4aa5-98ae-34053a5838ee@redhat.com>
+Date: Mon, 5 Feb 2024 22:20:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,6 +51,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Do we still need SLAB_MEM_SPREAD (and possibly others)?
 Content-Language: en-US
+From: Waiman Long <longman@redhat.com>
 To: "Song, Xiongwei" <Xiongwei.Song@windriver.com>,
  "Christoph Lameter (Ampere)" <cl@linux.com>,
  Zefan Li <lizefan.x@bytedance.com>
@@ -72,46 +73,54 @@ References: <20240131172027.10f64405@gandalf.local.home>
  <PH0PR11MB519280092AA66FAE6BB3FACEEC402@PH0PR11MB5192.namprd11.prod.outlook.com>
  <fb8161d9-16c0-da8c-09ee-905e39ae199b@linux.com>
  <PH0PR11MB5192FC6A7AA3CB84BA3BC7E6EC462@PH0PR11MB5192.namprd11.prod.outlook.com>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <PH0PR11MB5192FC6A7AA3CB84BA3BC7E6EC462@PH0PR11MB5192.namprd11.prod.outlook.com>
+ <da2417c0-49f1-4674-95f9-297d6cd9e0fa@redhat.com>
+In-Reply-To: <da2417c0-49f1-4674-95f9-297d6cd9e0fa@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
 
-On 2/5/24 20:46, Song, Xiongwei wrote:
-> Adding the maintainers of cpuset of cgroup.
+On 2/5/24 22:16, Waiman Long wrote:
 >
->> On Sun, 4 Feb 2024, Song, Xiongwei wrote:
+> On 2/5/24 20:46, Song, Xiongwei wrote:
+>> Adding the maintainers of cpuset of cgroup.
 >>
->>> Once SLAB_MEM_SPREAD is removed, IMO, cpuset.memory_spread_slab is useless.
->> SLAB_MEM_SPREAD does not do anything anymore. SLUB relies on the
->> "spreading" via the page allocator memory policies instead of doing its
->> own like SLAB used to do.
+>>> On Sun, 4 Feb 2024, Song, Xiongwei wrote:
+>>>
+>>>> Once SLAB_MEM_SPREAD is removed, IMO, cpuset.memory_spread_slab is 
+>>>> useless.
+>>> SLAB_MEM_SPREAD does not do anything anymore. SLUB relies on the
+>>> "spreading" via the page allocator memory policies instead of doing its
+>>> own like SLAB used to do.
+>>>
+>>> What does FILE_SPREAD_SLAB do? Dont see anything there either.
+>> The FILE_SPREAD_SLAB flag is used by cpuset.memory_spread_slab with 
+>> read/write operations:
 >>
->> What does FILE_SPREAD_SLAB do? Dont see anything there either.
-> The FILE_SPREAD_SLAB flag is used by cpuset.memory_spread_slab with read/write operations:
+>> In kernel/cgroup/cpuset.c,
+>> static struct cftype legacy_files[] = {
+>> ... snip ...
+>>          {
+>>                  .name = "memory_spread_slab",
+>>                  .read_u64 = cpuset_read_u64,
+>>                  .write_u64 = cpuset_write_u64,
+>>                  .private = FILE_SPREAD_SLAB,
+>>          },
+>> ... snip ...
+>> };
 >
-> In kernel/cgroup/cpuset.c,
-> static struct cftype legacy_files[] = {
-> ... snip ...
->          {
->                  .name = "memory_spread_slab",
->                  .read_u64 = cpuset_read_u64,
->                  .write_u64 = cpuset_write_u64,
->                  .private = FILE_SPREAD_SLAB,
->          },
-> ... snip ...
-> };
+> It looks like that memory_spread_slab may have effect only on the slab 
+> allocator. With the removal of the slab allocator, memory_spread_slab 
+> is now a no-op. However, the memory_spread_slab cgroupfs file is an 
+> externally visible API. So we can't just remove it as it may break 
+> existing applications. We can certainly deprecate it and advise users 
+> not to use it.
 
-It looks like that memory_spread_slab may have effect only on the slab 
-allocator. With the removal of the slab allocator, memory_spread_slab is 
-now a no-op. However, the memory_spread_slab cgroupfs file is an 
-externally visible API. So we can't just remove it as it may break 
-existing applications. We can certainly deprecate it and advise users 
-not to use it.
+BTW, cpuset doesn't use SLAB_MEM_SPREAD directly. Instead it set the 
+task's PFA_SPREAD_SLAB and let other subsystems test it to act 
+appropriately. Other than cpuset, the latest upstream kernel doesn't 
+check or use this flag at all.
 
 Cheers,
 Longman
-
 
