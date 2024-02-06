@@ -1,86 +1,101 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C576312DD8B;
-	Tue,  6 Feb 2024 09:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32E512DDA7
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 09:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213560; cv=none; b=nlvgnr96YilrNzphjW/Tt9VUn4Hf9Odv7SHr83/xRvGXQMZVt9HIpuzp1JSI2zepHht7Mj5i+sI3kYgDldokEhmgrilgA0YEHigir44fZ9kLlq6Jm3XN3kAkxwR76noP9gODyS5Pv8l3lVtmwjl4PhRU8VqCbpYoJPp6cIwEggc=
+	t=1707213562; cv=none; b=DzIUXSAB5OGNVEvVej2EZWHLflo+3gszDPUs0fCBcPVgynqWJUsX/C6dr+0B297ft44FsjhBOD8u6Yj392Y6mkk4qLjK9mApwHB2mUqge33+EmURN3Ys0aRAKXAOq6Qr/gnioEDYYCLxSbUnLHHN3Ih6jp4HYKTkc7iN+/lG1hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213560; c=relaxed/simple;
-	bh=LATC3GHoWk4vcKrr195GbFLPo1L9HxJmDR8iymTwdaM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ApS87gg10NV+9CRBxhN2T0V2ZFY45kB+aboLYOT8I8gG0rxWjHuDZzxPU2ivwvmdpDjq/eKPqv2xig1OahIPMpr8k+ffwNyZ0FJVfES+AcrhaXl/R7OMSTqfauVL487d84zJ/o3KRleuY7pygIjhXh5tu/y/p+bQbqUDTlvOyLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=CN8aUZeq; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1707213562; c=relaxed/simple;
+	bh=lY3UreGu6G+vvfhJz/FqnK6WY0i5hwoDMZGsAleCfxU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WjYRS3izBHm9rVV605C8+uu5XhEbBwA8xZDJ+EySW9cEaNwimRQEZTObDkS5WEoKZ+4XO/AsY3QK42O0Ri/IS9cRABk6IntunPtwprryV0e9KuD2fBJzPS3PwxxoRUTbZPPO6blY7Q0PIacpL43kUAofZisRFA4jIfoAW5qaFu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VC6gUytf; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="CN8aUZeq"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4166xSAC022910;
-	Tue, 6 Feb 2024 03:58:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=v5p55IOITpqmhF7
-	sZSnOxfOy/BsQIdVVFm5xhqj7f9s=; b=CN8aUZeqvFd31h49unpgQ89je93VaRH
-	rrRbjFcRdvJI7Wgt+s6nVW5BCmZk3kbVOwu/CNVLRLufi+5MpG0xYDqxTb+6FGR1
-	o9Z5Tgj1grqrrtHgHitQltAZFv+FlcF78BNTWogNQGy0jcjoRvRBTMp+qYGKcyKV
-	XNDICT/OwcoiEoN5lqMTQvkzBMfp+afdgbGJ3JbvaGKz8NqjjJWipW4mj1Jxnuzl
-	zV/KdBSpOsXYlEhP/chL66QeINs8nWkqGzvCzBvxVMGhAB+swBUB0wHEydjeg+4f
-	DUmUgJYKr9SezvgEgFSr8PTmX+JsuzS5ZkVX/kvEhcim+tQrksQp1zg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w1ks2b7fk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 Feb 2024 03:58:53 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 6 Feb
- 2024 09:58:51 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Tue, 6 Feb 2024 09:58:51 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id E135E820241;
-	Tue,  6 Feb 2024 09:58:50 +0000 (UTC)
-Date: Tue, 6 Feb 2024 09:58:49 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Bo Liu <liubo03@inspur.com>
-CC: <lee@kernel.org>, <wens@csie.org>, <marek.vasut+renesas@gmail.com>,
-        <support.opensource@diasemi.com>, <neil.armstrong@linaro.org>,
-        <rf@opensource.cirrus.com>, <mazziesaccount@gmail.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>, <patches@opensource.cirrus.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 09/18] mfd: lochnagar-i2c: convert to use maple tree
- register cache
-Message-ID: <ZcIC2V/hM8nnekJr@ediswmail9.ad.cirrus.com>
-References: <20240206071314.8721-1-liubo03@inspur.com>
- <20240206071314.8721-10-liubo03@inspur.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VC6gUytf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1707213557; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=6zRZKE0vH1TwxswhlMHg1RYdvnXr9dlTNvD5V78xCRQ=;
+	b=VC6gUytfbuX5/QVx7io51/lrfhgMz97eTODlXW9ayw53PxuySBoWn1wNUl4ILz2ADdyclW9d4SEn7GivFy3rgJyD1xUzaUV3bT3onm6Vm7jeTunnCviiCVUETsMIT1h0IHOFRjsymYmP5+cGCnFe03EYJl6PvdG5UgSPnE7p4VM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W0DCVOe_1707213551;
+Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W0DCVOe_1707213551)
+          by smtp.aliyun-inc.com;
+          Tue, 06 Feb 2024 17:59:16 +0800
+From: Bitao Hu <yaoma@linux.alibaba.com>
+To: dianders@chromium.org,
+	akpm@linux-foundation.org,
+	pmladek@suse.com,
+	kernelfans@gmail.com,
+	liusong@linux.alibaba.com
+Cc: linux-kernel@vger.kernel.org,
+	yaoma@linux.alibaba.com
+Subject: [PATCHv5 3/3] watchdog/softlockup: add SOFTLOCKUP_DETECTOR_INTR_STORM Kconfig knob
+Date: Tue,  6 Feb 2024 17:59:02 +0800
+Message-Id: <20240206095902.56406-4-yaoma@linux.alibaba.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
+In-Reply-To: <20240206095902.56406-1-yaoma@linux.alibaba.com>
+References: <20240206095902.56406-1-yaoma@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240206071314.8721-10-liubo03@inspur.com>
-X-Proofpoint-GUID: VCnUsQ6Tbcxl1dxM9nGNsPvgd74iHvZt
-X-Proofpoint-ORIG-GUID: VCnUsQ6Tbcxl1dxM9nGNsPvgd74iHvZt
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 06, 2024 at 02:13:05AM -0500, Bo Liu wrote:
-> The maple tree register cache is based on a much more modern data structure
-> than the rbtree cache and makes optimisation choices which are probably
-> more appropriate for modern systems than those made by the rbtree cache.
-> 
-> Signed-off-by: Bo Liu <liubo03@inspur.com>
-> ---
+The interrupt storm detection mechanism we implemented requires a
+considerable amount of global storage space when configured for
+the maximum number of CPUs.
+Therefore, adding a SOFTLOCKUP_DETECTOR_INTR_STORM Kconfig knob that
+defaults to "yes" if the max number of CPUs is <= 128.
 
-Tested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
+---
+ kernel/watchdog.c |  2 +-
+ lib/Kconfig.debug | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-Thanks,
-Charles
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 26dc1ad86276..1595e4a94774 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -338,7 +338,7 @@ __setup("watchdog_thresh=", watchdog_thresh_setup);
+ 
+ static void __lockup_detector_cleanup(void);
+ 
+-#ifdef CONFIG_IRQ_TIME_ACCOUNTING
++#ifdef CONFIG_SOFTLOCKUP_DETECTOR_INTR_STORM
+ #define NUM_STATS_GROUPS	5
+ #define NUM_STATS_PER_GROUP	4
+ enum stats_per_group {
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 975a07f9f1cc..74002ba7c42d 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1029,6 +1029,19 @@ config SOFTLOCKUP_DETECTOR
+ 	  chance to run.  The current stack trace is displayed upon
+ 	  detection and the system will stay locked up.
+ 
++config SOFTLOCKUP_DETECTOR_INTR_STORM
++	bool "Detect Interrupt Storm in Soft Lockups"
++	depends on SOFTLOCKUP_DETECTOR && IRQ_TIME_ACCOUNTING
++	default y if NR_CPUS <= 128
++	help
++	  Say Y here to enable the kernel to detect interrupt storm
++	  during "soft lockups".
++
++	  "soft lockups" can be caused by a variety of reasons. If one is caused by
++	  an interrupt storm, then the storming interrupts will not be on the
++	  callstack. To detect this case, it is necessary to report the CPU stats
++	  and the interrupt counts during the "soft lockups".
++
+ config BOOTPARAM_SOFTLOCKUP_PANIC
+ 	bool "Panic (Reboot) On Soft Lockups"
+ 	depends on SOFTLOCKUP_DETECTOR
+-- 
+2.37.1 (Apple Git-137.1)
+
