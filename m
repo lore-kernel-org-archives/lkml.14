@@ -1,95 +1,160 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7B038D;
-	Tue,  6 Feb 2024 00:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F379223D0
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 00:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707178426; cv=none; b=rM+Rerlc04aTFV/QxLRfKijtXMv7PwxqQMqTXZppA3vZDMsiq1McPoFem4oVSHUf+GhBa11MTyHWWBoOsIiK//7Zfyu19lgrKKXm6SaJxzyXYMMCzR7pdVKQ8BWONtFc/6G8zv4NgZYpFgOkjEj0dzdapTG4uZQB7H/utWVsjGA=
+	t=1707178435; cv=none; b=VvPo6E+F0z+p2k5UyvDiP0zh8M5bPiiaOrV1wLsAEjCGWKfRzzW274pFIVsDgpUM8FqoMohHNzedSgJesTZ2sgbAzgrPcscDDmQmGUx7RsmwY5QXpZHlJp/JPrZzggNzSgrWND+qN8J+vWY5HWB546JRnsecKf+EmiQgM0pmZRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707178426; c=relaxed/simple;
-	bh=wVoOc7tXbiz0JhSMMYV6nNNHF10fB0vLJK8KhFXOa0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMp3/mrupYpWbpSh5i7Bej6oZny2g8uWBErvgsjuwtlfoMBF75GlOAwy07W39aVC9HbzjIWUEvrAX7jiA55oHibTAbwIAioW9AVAt/2VX0aIH14+EAYLMUaQPeilBRZC69OCsPDWrgkg+NBlr2oHyjILxlKqF5u8HsL8AXCEmuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFmrFKbu; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707178435; c=relaxed/simple;
+	bh=PZg3QWq+/GKgfZZA2qyqx39P/kRDLKfoOfmCw8uE3uc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KUkDIHci8eX1u8LNOp732UlvLCovbMSe93uPHa29eEhCx7hNYXNBX7LA4FESXyAu5qakZJKZPg9qDVVvaKcju/H491Qeb/Vq9jjrQpnUQqIOBp4SGu3Y660MPRJ/Nm0iDIbWvTEnX3mmLNaeCTuMQf3uR76zC/fG0KWqwA2ymXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b=PElaE5FL; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smile.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFmrFKbu"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bd884146e9so3985237b6e.0;
-        Mon, 05 Feb 2024 16:13:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b="PElaE5FL"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-337cc8e72f5so3719017f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 16:13:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707178424; x=1707783224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=98cWYkQ6MbAJUoSKUpZHTfrV4NmGt6n3dGfyyLHqfaI=;
-        b=nFmrFKbumGdtfhyyluA76OBLt19Lv7+35hcBK7M1sbXKdn3clz52uZiKEWXTNP3QU6
-         Z4DzqUQZzcm+InvvO13hfQNUBojWZBKblySnKZKSmAnmIzjdrL3TOhQ2SvPlY7exPfrc
-         HUb+nI++oqmEyk1GJh2n8T7f33d4PNDdxDvPHjt2TNcswj/hegjqngT2T6QG/afqTFkR
-         kyTJatOql52qdF/dZgTqC3LgNPgu35KdHT15l/V1ufj+WgXtO15G6xhOfxRTSv0YKQ6s
-         6hKIxvi/OnmZEyuNj/bB1ndrYgEGsNRNVS7eCjinj96diezzYVHyCKQvn1W5+xO40zBT
-         x7xw==
+        d=smile-fr.20230601.gappssmtp.com; s=20230601; t=1707178431; x=1707783231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JGAprqtgwfmvAPo8XwmHq4MOLLyHp0qoLOC+fnp28mc=;
+        b=PElaE5FLEeILIlVeSxLGe4wVM5aEf37u5b3k2Qcauh07I6v6rK2PfXkoxmdkooKxcN
+         AZFOqSANlvjAbO5Wl4FMgfKUHAqErEbdLs0CY2M20hvIZmc/+n97TGqQ/LYvw2Pay62Z
+         5AHjAM64kvfbJ5x/96v0FNbqoBPtpQv+VYijhob1gEWUYFiBg4A4qMHckPET7u2ADGXO
+         uZdIyj9Q+ZClFGOvg3KBuqej2KVXvk5zd3B822rEBOhz00mcHT7tCOzKDI1zTqcT9fJa
+         aR1GgriaiZOxe5iifa9EKAx5k3lfnoxAVqegvVB7EUZtnJoaVfj4Jfv/be6eRjD+h4cO
+         9JiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707178424; x=1707783224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707178431; x=1707783231;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=98cWYkQ6MbAJUoSKUpZHTfrV4NmGt6n3dGfyyLHqfaI=;
-        b=oZU2DuQV6QvpzTxjXwBEIYxGUVd+jQ6dqOq8/OiBOFTWi9NDYOBoW36JU2AfvQPUXg
-         vHIyFwIMlnVGEC6qE43qtTt2KBcNzPq9UHIBXyiGuOtRZGKjIMRAtxTe6hJSt9pDfRP5
-         u15uqZXrWADq75Ny3lq1tvpRuU0VrbSOnl9ifNDZaMpvxEkv4vMUBcook0C3x0XLXKaN
-         dmC6sb2lOq8iS7REhbcWuaDC9rmlOTAGH8o7aGgiZFXs7Q0GbmaXnbaQCVeme+mhTgT9
-         V0htvF4GwcCcYP4hT1qNg5qzuGGuMy098ekKnZX25Ph62ldwgKUdTX/VpXy17WlGKGdh
-         mclg==
-X-Gm-Message-State: AOJu0Yzsf1aPoYiKL/NFM5U1HMUTif+8wXxpZq0z4f94ziZEslRma6eH
-	oYBRhYbSBKEIsRbLfg5yjkayr8lnwBMgn6h04r4y3ORuIxYaa6qi
-X-Google-Smtp-Source: AGHT+IHLUR+sBwjDr6IOm1zDoDAON4oNTIGY9LMTcemysoH13cqXI49AucLFmhVmc38zQ+c6K/xdlA==
-X-Received: by 2002:a05:6358:290d:b0:178:fe3e:1e35 with SMTP id y13-20020a056358290d00b00178fe3e1e35mr236386rwb.13.1707178423964;
-        Mon, 05 Feb 2024 16:13:43 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVyiXIEPlCl9kH9g5Q6KP568yzf3dLpU+37lr8nKGWWDIMOQhkdiFTYzoxjOsd+7uGCJMTatPWmPtzs7cNXWIGci+W6lg+PPlTiSNsKgdmFuC0jmuie5esKcL0sQB0lcEJNc1I1Y/8Ghv0r7tiYdgOTnbUWQNJrMh/6MnmpfKw=
-Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
-        by smtp.gmail.com with ESMTPSA id w20-20020aa78594000000b006e046c04b81sm481143pfn.147.2024.02.05.16.13.43
+        bh=JGAprqtgwfmvAPo8XwmHq4MOLLyHp0qoLOC+fnp28mc=;
+        b=LHnhisiy1ErGnrnS77uYTyyQ15U90FJO/OHVgXcTWoswtp6vhaqsY8vd4twd5CLmsu
+         cJeYNre6LY7kNKjgEOpNRBi89cvRKQzwuoZKMasqzgk1RGAuJZKaF8RLOEHc46sXuWR/
+         pv/Va1EB2Zzo5OTdGMzVAYeUnK5A9oGSMwNe77ODHnTSQheirXLlPegy0Tx5PS8ty0CC
+         jNsozkmQTG9gKijp/u19PgqNIC2jt9FiSrhDDKnpirfz+VesTGxAE6ijqi2/ihj21VN5
+         pgkV5SwqNXuL6p6/B7aRClSSk29GEqvqjy5A5/AOtngOo9ecDEVQbR36/Xw0suBHVtXk
+         XefQ==
+X-Gm-Message-State: AOJu0YwR6GgTV2CANGZ9GDwpqQg4Kw0JE9ENIBtmzVcq7vpmOlBFJV2R
+	ooJVKkSf83gLPaevkuzzLitfAU1qXyu/OUwwEbBKxfcdQKjUgZWKcUSV7vO/FOU=
+X-Google-Smtp-Source: AGHT+IFVdveHEmqxwMT4/lrRvnliU1C6woy6CYFET1Y1uqw/pAcuN254xpaVv8itNDA24IGtf/7z3g==
+X-Received: by 2002:adf:f342:0:b0:33a:ec79:f923 with SMTP id e2-20020adff342000000b0033aec79f923mr42991wrp.54.1707178431092;
+        Mon, 05 Feb 2024 16:13:51 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXSkm+KM6a//GM/zt8jAHlWsL+R+s9l4YXJWg1ms9wE3bjkViT7qTUvsy7b5e5PiupkD2cg693R32UTsr918zPuNWNygjG+uFSovIBuPxd5Xm7lK2IijJ2BZaSurM3ygYbTl+DotuZr2x6cWpTPXZNLyJb8/OI1MHQRo2Ghheug212Tbf6xxTZBkpMoAylnuIwCCECEsubpc09Jntn/OM89NdVfKWA3+p/ywO1gWdanNHX05R3kPNp9tFvc0P7HnuwEixWBjJX+iR3KSUD7XUrbFN6oMuhAC3uzEUTnkocCLQNsopJ3RiUcgeCAjC+Kqf8r5ORhxmxKs6nvX94tkKsvoJZBvL/rRS2V/9fmv+rg9u0A+xpyGFNPxEGRXvm1k2Y/xAcXZMlP44j9FZESuS0up5toeSJNMu1cZJ6/ggWx7n3p/ucG/mFjYeXCAM8AJDCsccm1phCeQTjjcPlgKo4jfk6EVJN0pZK2KKJpZmK0e5EvIYQ7FjcStkmYMqz00z8dmX5YR1pth/yFfrHAIch64lGYkAIMifoFVLcviHFaJ9KHw6E8/7fATdGDugocyjUvuykyXJF8ENryYOBMe7c6lkiKGYUMDp3miQX8Mgbwqp5oTYXKV9uNa6z/ANe1VjvGnwT0u1LV02nZzE11Hl84MmT5Aqgijx05nV0MLtnPuQgUHIqcXWUnqB7AwLeIIQAhAiyDEHlmhXZRxWTsboWbiDgBZksbBHmBtpJ6eEfzTHBP6/GFSaD/6Vfh1kdSf7gQdL48+HB8FBzM2VqRr0Jj6rNqZhvXiRPeQx8rcq5C/lg/qgOf9ldIZP6Tk3z8tQ==
+Received: from P-ASN-ECS-830T8C3.local ([89.159.1.53])
+        by smtp.gmail.com with ESMTPSA id b17-20020a5d40d1000000b0033ae7d768b2sm686959wrq.117.2024.02.05.16.13.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 16:13:43 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Mon, 5 Feb 2024 14:13:42 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: Use alloc_ordered_workqueue() to create
- ordered workqueues
-Message-ID: <ZcF5tm8b9XaljHf-@slm.duckdns.org>
-References: <ZcF2JaEuwMdg9kYi@slm.duckdns.org>
- <kksa5w6lgxu66h223quzkw33523zgoltqvl74lmthb4aaj7iat@rss6cnpn3t2p>
+        Mon, 05 Feb 2024 16:13:50 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: linux-fsdevel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	x86@kernel.org
+Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	Vegard Nossum <vegard.nossum@oracle.com>
+Subject: [PATCH v4 1/3] printk: Fix LOG_CPU_MAX_BUF_SHIFT when BASE_SMALL is enabled
+Date: Tue,  6 Feb 2024 01:13:31 +0100
+Message-Id: <20240206001333.1710070-2-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240206001333.1710070-1-yoann.congal@smile.fr>
+References: <20240206001333.1710070-1-yoann.congal@smile.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <kksa5w6lgxu66h223quzkw33523zgoltqvl74lmthb4aaj7iat@rss6cnpn3t2p>
+Content-Transfer-Encoding: 8bit
 
-Hello, Kent.
+LOG_CPU_MAX_BUF_SHIFT default value depends on BASE_SMALL:
+  config LOG_CPU_MAX_BUF_SHIFT
+  	default 12 if !BASE_SMALL
+  	default 0 if BASE_SMALL
+But, BASE_SMALL is a config of type int and "!BASE_SMALL" is always
+evaluated to true whatever is the value of BASE_SMALL.
 
-On Mon, Feb 05, 2024 at 07:10:25PM -0500, Kent Overstreet wrote:
-> This one doesn't actually need to be ordered - if anything, we might
-> want to bump up max_active.
-> 
-> Tejun, can you drop this patch? If you're trying to get rid of all
+This patch fixes this by using the correct conditional operator for int
+type : BASE_SMALL != 0.
 
-Will drop it.
+Note: This changes CONFIG_LOG_CPU_MAX_BUF_SHIFT=12 to
+CONFIG_LOG_CPU_MAX_BUF_SHIFT=0 for BASE_SMALL defconfigs, but that will
+not be a big impact due to this code in kernel/printk/printk.c:
+  /* by default this will only continue through for large > 64 CPUs */
+  if (cpu_extra <= __LOG_BUF_LEN / 2)
+          return;
+Systems using CONFIG_BASE_SMALL and having 64+ CPUs should be quite
+rare.
 
-> WQ_UNBOUND with max_active=1 workqueues for your own auditing, either
-> you or I could change that to 8.
+John Ogness <john.ogness@linutronix.de> (printk reviewer) wrote:
+> For printk this will mean that BASE_SMALL systems were probably
+> previously allocating/using the dynamic ringbuffer and now they will
+> just continue to use the static ringbuffer. Which is fine and saves
+> memory (as it should).
 
-Yeah, can you please either add a comment saying that it doesn't require
-ordered execution or bump max_active?
+Petr Mladek <pmladek@suse.com> (printk maintainer) wrote:
+> More precisely, it allocated the buffer dynamically when the sum
+> of per-CPU-extra space exceeded half of the default static ring
+> buffer. This happened for systems with more than 64 CPUs with
+> the default config values.
 
-Thanks.
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Closes: https://lore.kernel.org/all/CAMuHMdWm6u1wX7efZQf=2XUAHascps76YQac6rdnQGhc8nop_Q@mail.gmail.com/
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Closes: https://lore.kernel.org/all/f6856be8-54b7-0fa0-1d17-39632bf29ada@oracle.com/
+Fixes: 4e244c10eab3 ("kconfig: remove unneeded symbol_empty variable")
 
+---
+v3->v4:
+* Fix BASE_SMALL usage instead of switching to BASE_FULL because
+  BASE_FULL will be removed in the next patches of this series.
+---
+ init/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index deda3d14135bb..d50ebd2a2ce42 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -734,8 +734,8 @@ config LOG_CPU_MAX_BUF_SHIFT
+ 	int "CPU kernel log buffer size contribution (13 => 8 KB, 17 => 128KB)"
+ 	depends on SMP
+ 	range 0 21
+-	default 12 if !BASE_SMALL
+-	default 0 if BASE_SMALL
++	default 0 if BASE_SMALL != 0
++	default 12
+ 	depends on PRINTK
+ 	help
+ 	  This option allows to increase the default ring buffer size
 -- 
-tejun
+2.39.2
+
