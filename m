@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32BF12D75F;
-	Tue,  6 Feb 2024 09:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8312D75F;
+	Tue,  6 Feb 2024 09:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707212266; cv=none; b=H2dX/Ddw+Vh9Ka9+pZAT1tgT+LvV6Oghv/Ug6hVSH1H9JUPCyeqxBurlLiMbfHd7rHcrBygATI74P0nKfAdtW4LkyX+eEC/kepLg55BKeHAJOmbRAkvsbet28B4Mxh87MXzjLzD9bZrCMPgPMbd5f5OAgqYWR9GLN3MXrkgNYFo=
+	t=1707212269; cv=none; b=AX7Gh9OV9GBiRHvd2L9JqMrWRSusuz9dA5r0zq2Tp3sdW2yiC+Cv4XlTstidqCAJzwLPUUNJE9G6dbzD90R0bqYDWUdbE8Z4C7kEgI9eY5uGv/Faa58iwg1CY/QX9ABRUsxfeCAtxZ2MBet0OcmqvDZpRx1uIM8aX5VogRKjYt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707212266; c=relaxed/simple;
-	bh=ey/KtjqK4Luic175rFym94Q389ddvbeiHhTJCzGxn5E=;
+	s=arc-20240116; t=1707212269; c=relaxed/simple;
+	bh=Zux+7GM6pvRfkdpOcbEA1PKkpVrCV94PVDnGGBqnzZo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Qms3tcw+31vhNdx+CDeYuga1lcMGeaTcnXKnf/+pwTQuqmLsxGJhDTD/d0hmMfDYQMuG05Ym2oNZebj4U0sXmT3eieKAcI7BWO6aed5+r3IzDa+5rcwCzLuJjwJ2DxosRZdKsa35hiXsQG2ubC0qb6A8JpzujSKj27B5Hde4Kio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPlwOkxI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=RlYRLiGnU977gsYyU414oAmLwHfyIt8JntSPBnlS58OPD4YwNIu8s1zegIWxmtos3qWx50W0zi5aJNpJ5835cTV8GfGwFKbCz4XhtaowfdI6vV+IJxw1W+qwKdIIBdakbXbW7FXzhruSz4z22Zio27It2mCyLcwi85KNmztcH1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSoSGJ8R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPlwOkxI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE808C43394;
-	Tue,  6 Feb 2024 09:37:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSoSGJ8R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FDC1C433F1;
+	Tue,  6 Feb 2024 09:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707212265;
-	bh=ey/KtjqK4Luic175rFym94Q389ddvbeiHhTJCzGxn5E=;
+	s=k20201202; t=1707212269;
+	bh=Zux+7GM6pvRfkdpOcbEA1PKkpVrCV94PVDnGGBqnzZo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=tPlwOkxI80fYnUhabLFCowUT4kfZuNuI3s/5fw/IsdFWfh+vAXCobRxeOIdiXZgvr
-	 ewKFTWAO8YNzfj+NEFEf0S1FWZzaNbal3rAxlMu1DqlfMLP7cT7uy9IqNvBNOCkn71
-	 yiDcEO3E7FvfYxzXFo6uJt69SNdPysCxTiz3tppi2TX9yPAkfARsAfbOE2Eemp9UNa
-	 jNS/Ywy+nHEmJU39JtBUAv77aomj2BI8im2kUAmLT99bHNh87z0/b+vpdIlYJKCwX3
-	 0GUvIP+Qy4LiN9WEnpAhUpM+gZ9xJIyXL7wJSabFHXeL5KRObx3BSn7u38cO8fLCFC
-	 RkPJh1lI5rYEg==
+	b=JSoSGJ8RWrID5TCGXynrgnhPWiPPzQIUkMSgFFx5wo0McLSsgnYgkVVSUFQd/PIid
+	 2tZ4jZYeu1DLppKNSDbAlAUATKWXm0cGh11ZA+9Uzls796zNwhsNe8gfgVlDsNWCj1
+	 lAY9oeG/tGFR3gWFxoFqJUK+yqb0lAqvFyErCyhrP1JZNjEWb9nYeNKpOvvbf2a2Su
+	 WizBkQahNswJ9alfaAWRkWRSovvPrxXvEHIppjnHzxTzKLqiOvmTkHSh5t8ZseXmH3
+	 cA9dv3YIiNNYy4skLgQ6OcuSgX2TFvRbI92YUOCDXNE0OdSlRPtmEpwhru/wyWS9YD
+	 eJzZTRmMxt0yA==
 From: Mark Brown <broonie@kernel.org>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- linux-sound@vger.kernel.org, Daniel Mack <daniel@zonque.org>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, 
- linux-arm-kernel@lists.infradead.org, 
- Masahiro Yamada <masahiroy@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20240204091424.38306-1-masahiroy@kernel.org>
-References: <20240204091424.38306-1-masahiroy@kernel.org>
-Subject: Re: [PATCH v2] ASoC: pxa: remove duplicated CONFIG_SND_PXA2XX_AC97
- entry
-Message-Id: <170721226176.850647.15506347741778971521.b4-ty@kernel.org>
-Date: Tue, 06 Feb 2024 09:37:41 +0000
+To: R SUNDAR <prosunofficial@gmail.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240204154506.3561-1-prosunofficial@gmail.com>
+References: <20240204154506.3561-1-prosunofficial@gmail.com>
+Subject: Re: [PATCH] Remove the @multi_cs_cap to prevent kernel-doc
+ warnings
+Message-Id: <170721226718.850647.2636169047428281316.b4-ty@kernel.org>
+Date: Tue, 06 Feb 2024 09:37:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,16 +45,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13-dev-0438c
 
-On Sun, 04 Feb 2024 18:14:24 +0900, Masahiro Yamada wrote:
-> 'config SND_PXA2XX_AC97' is already present in sound/arm/Kconfig with
-> a prompt.
+On Sun, 04 Feb 2024 21:15:06 +0530, R SUNDAR wrote:
+> ./include/linux/spi/spi.h:778: warning: Excess struct member 'multi_cs_cap' description in 'spi_controller'
 > 
-> Commit 734c2d4bb7cf ("[ALSA] ASoC pxa2xx build support") redundantly
-> added the second one to sound/soc/pxa/Kconfig.
 > 
-> Remove it.
-> 
-> [...]
 
 Applied to
 
@@ -67,8 +56,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: pxa: remove duplicated CONFIG_SND_PXA2XX_AC97 entry
-      commit: 8f501d29c7a6a03303c1a085fd27948e1edb0c90
+[1/1] Remove the @multi_cs_cap to prevent kernel-doc warnings
+      commit: c5d74fe6a7f4240f6060dc51dd113b8a45f6cb56
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
