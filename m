@@ -1,114 +1,91 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCD6130AC9;
-	Tue,  6 Feb 2024 11:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F76132489
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 11:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707219137; cv=none; b=eJ7iraAJsAYlQh6KR9C7HUP8kDwx6CIEaCtAipipFaLUxoM1mgic8TgRH9E7OJbP1PIwThB7cXPIg/nOlpLab9g3POC969VD5V7/GNeFEoFU8lSKkKo8HuqMyo/zsQW/w85bgo8+a17XsNeUgmvISTVRlhahqx6rMKx3cPqqSdM=
+	t=1707219142; cv=none; b=NYNCwH81uXQ31ykEyxKpv8tSHWPhXHw28uWArCYigpnBQyaX5bvfQk0qUsd/b/So8w6Np8/H8GQqoLJW+ZA2GoOqNbpOBVx5ld7PcNa5I1uG3s0nDljOlTyhZdGDXWhnLpSGPJ6O/eFw+RCDlLM/q2iR2niQnggAQ+xCb2xEnDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707219137; c=relaxed/simple;
-	bh=RgiiVTkv2UIw5nxUPD/uiphokqDs+9ojkYcvt1/ntAk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EC4JPBN7IKPYc0RtaIj6s90H0uefTv3SsNsx6xQB9uHMAIKuNxBKgLB+AMboeBq/BcZZRi1OLFPWT6qzCDPRREGIluTY3IPIvl5r9yiTQZTAptCzRVyzzejaruiU0MOo56D9khK2lrYyHekaEocmR0e93xKpAhUDI1CREThonBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kc/eAhyA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kc/eAhyA"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 416AcWYD007766;
-	Tue, 6 Feb 2024 11:32:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=CVHcz0b
-	NbywadoMU6fGB649MjS2WWGGq8j42V2DdIMU=; b=Kc/eAhyA+0VMqJkwEehQkM4
-	bi9lULZt1Q3S+gsmtU60Rk0AJ/BVkF1tbtZTXZGtsRx/nydJ0XEENpWoWzWoiky2
-	U5/s6r2HCy2iA5prjPMCS2V/SMX3fTApPlQDhIaguPsqgfcw5+ZM0WmXOC4Cu5YI
-	Dgli6S/V4bvIL2NYdtkQ0LESDWv4uwYgXrfyGl4IRfqDb9aIxk6Ta8Wz3j+dC/ae
-	7Ir12dFLPUuPG4DNvtYQfX+txemJLaEV0PQKKg2S4M8Xe1O2Rx/L279wKuxZVE8u
-	/5Ayyf7tHI2pfJ7OJxOAwrZ+iLOCNSDQACzMeTx26c8sncvS5+HO4pMpJdRI3bg=
-	=
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w3k6g83jp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 Feb 2024 11:32:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 416BWAxW000920
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 Feb 2024 11:32:10 GMT
-Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 6 Feb 2024 03:32:05 -0800
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Ajit Pandey" <quic_ajipan@quicinc.com>,
-        Jagadeesh Kona
-	<quic_jkona@quicinc.com>
-Subject: [PATCH 0/5] Add support for videocc and camcc on SM8650
-Date: Tue, 6 Feb 2024 17:01:40 +0530
-Message-ID: <20240206113145.31096-1-quic_jkona@quicinc.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1707219142; c=relaxed/simple;
+	bh=/IMGTCxErD0wgwGqZAwjLejE+uSkhLispC8aFwiGNqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lDFrr33XEo86xGsyCP4FjzaP5WJ4XFbD/KfYNpn0hjGv8amPAGPMOdoPsDipwhIsVmE1xDMk7EXtv0RiIDa1Ykh/PHDdxEISFJ5fCqTe9zGZhbMW3yDlpRThZTHWMuovBFLcKRdDO1dI+s4A0nWidNJBSWpDFaqb2PVlQXuxVek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2CE51FB;
+	Tue,  6 Feb 2024 03:33:02 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 306B03F762;
+	Tue,  6 Feb 2024 03:32:19 -0800 (PST)
+Message-ID: <0d1f81a8-999e-459d-9e5c-7efff665646e@arm.com>
+Date: Tue, 6 Feb 2024 11:32:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] iommu/iova: use named kmem_cache for iova
+ magazines
+Content-Language: en-GB
+To: John Garry <john.g.garry@oracle.com>, joro@8bytes.org
+Cc: will@kernel.org, pasha.tatashin@soleen.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, rientjes@google.com,
+ yosryahmed@google.com
+References: <cover.1707144953.git.robin.murphy@arm.com>
+ <dc5c51aaba50906a92b9ba1a5137ed462484a7be.1707144953.git.robin.murphy@arm.com>
+ <83a0aafc-8a9c-48ce-a203-96b901489d41@oracle.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <83a0aafc-8a9c-48ce-a203-96b901489d41@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: TMnJ34t1gw1M_8IL81zplxQuv_hO_cma
-X-Proofpoint-GUID: TMnJ34t1gw1M_8IL81zplxQuv_hO_cma
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-06_04,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=608
- lowpriorityscore=0 phishscore=0 priorityscore=1501 clxscore=1011
- impostorscore=0 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
- suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402060081
 
-Add support for video and camera clock controllers on Qualcomm
-SM8650 platform.
+On 06/02/2024 11:24 am, John Garry wrote:
+> On 05/02/2024 15:32, Robin Murphy wrote:
+>> From: Pasha Tatashin <pasha.tatashin@soleen.com>
+>>
+>> The magazine buffers can take gigabytes of kmem memory, dominating all
+>> other allocations. For observability purpose create named slab cache so
+>> the iova magazine memory overhead can be clearly observed.
+>>
+>> With this change:
+>>
+>>> slabtop -o | head
+>>   Active / Total Objects (% used)    : 869731 / 952904 (91.3%)
+>>   Active / Total Slabs (% used)      : 103411 / 103974 (99.5%)
+>>   Active / Total Caches (% used)     : 135 / 211 (64.0%)
+>>   Active / Total Size (% used)       : 395389.68K / 411430.20K (96.1%)
+>>   Minimum / Average / Maximum Object : 0.02K / 0.43K / 8.00K
+>>
+>> OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
+>> 244412 244239 99%    1.00K  61103       4    244412K iommu_iova_magazine
+>>   91636  88343 96%    0.03K    739     124      2956K kmalloc-32
+>>   75744  74844 98%    0.12K   2367      32      9468K kernfs_node_cache
+>>
+>> On this machine it is now clear that magazine use 242M of kmem memory.
+> 
+> Those caches could do with a trimming ...
 
-Jagadeesh Kona (5):
-  dt-bindings: clock: qcom: Add video clock bindings for SM8650
-  clk: qcom: videocc-sm8550: Add support for SM8650 videocc
-  dt-bindings: clock: qcom: Add SM8650 camera clock controller
-  clk: qcom: camcc-sm8650: Add camera clock controller driver for SM8650
-  arm64: dts: qcom: sm8650: Add video and camera clock controllers
+See the discussion on v1 for more details:
 
- .../bindings/clock/qcom,sm8450-camcc.yaml     |    3 +
- .../bindings/clock/qcom,sm8450-videocc.yaml   |    4 +-
- arch/arm64/boot/dts/qcom/sm8650.dtsi          |   28 +
- drivers/clk/qcom/Kconfig                      |    8 +
- drivers/clk/qcom/Makefile                     |    1 +
- drivers/clk/qcom/camcc-sm8650.c               | 3601 +++++++++++++++++
- drivers/clk/qcom/videocc-sm8550.c             |  160 +-
- .../dt-bindings/clock/qcom,sm8450-videocc.h   |    8 +-
- include/dt-bindings/clock/qcom,sm8650-camcc.h |  195 +
- 9 files changed, 4002 insertions(+), 6 deletions(-)
- create mode 100644 drivers/clk/qcom/camcc-sm8650.c
- create mode 100644 include/dt-bindings/clock/qcom,sm8650-camcc.h
+https://lore.kernel.org/linux-iommu/20240201193014.2785570-1-tatashin@google.com/
 
--- 
-2.43.0
+but it seems this really is the idle baseline for lots of CPUs * lots of 
+domains - if all those devices get going in anger it's likely that 
+combined iova + iova_magazine usage truly will blow up into gigabytes.
 
+Cheers,
+Robin.
+
+> 
+>>
+>> Acked-by: David Rientjes <rientjes@google.com>
+>> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+>> [ rm: adjust to rework of iova_cache_{get,put} ]
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+> 
+> FWIW:
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
