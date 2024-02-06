@@ -1,120 +1,95 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F14E391
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 00:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7B038D;
+	Tue,  6 Feb 2024 00:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707178351; cv=none; b=jOeyHfH8GN1kfGPxe4Qqri/+ZVv1DUdrawxYEqKh4mjEQrykO71RM/ePun33JhyPz/8raMQRZqaBHGWcVTzGhpQqDZxGylOPuUC08PCzQXMFuN+5lyAyiJHoZowLyWSxsH/JaiF7qIMw8K4ct5CE9DsFBhbXILcsMoO4MsBSo7c=
+	t=1707178426; cv=none; b=rM+Rerlc04aTFV/QxLRfKijtXMv7PwxqQMqTXZppA3vZDMsiq1McPoFem4oVSHUf+GhBa11MTyHWWBoOsIiK//7Zfyu19lgrKKXm6SaJxzyXYMMCzR7pdVKQ8BWONtFc/6G8zv4NgZYpFgOkjEj0dzdapTG4uZQB7H/utWVsjGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707178351; c=relaxed/simple;
-	bh=U7p1iFE6ywvljPJognZaN8unEMxJXmtola9t/S0saE0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BtvdbgXwrAatayMfB2M87sdeuYrTM7hN3eBy+n7LIkfIvkXxSdPxqH+Uinv7oQHkADEXumLTElRkulmAvtyzDCFBGbt7LwrIyK+RawYeIMkBNfpE/BfDYndOgIxv3B6/Qelezz0XK7M1La3DUp84hgFb41m8UpNHTAhJEXnPEF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sA7uDE+p; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1707178426; c=relaxed/simple;
+	bh=wVoOc7tXbiz0JhSMMYV6nNNHF10fB0vLJK8KhFXOa0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMp3/mrupYpWbpSh5i7Bej6oZny2g8uWBErvgsjuwtlfoMBF75GlOAwy07W39aVC9HbzjIWUEvrAX7jiA55oHibTAbwIAioW9AVAt/2VX0aIH14+EAYLMUaQPeilBRZC69OCsPDWrgkg+NBlr2oHyjILxlKqF5u8HsL8AXCEmuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFmrFKbu; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sA7uDE+p"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1d94eeacec4so484945ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 16:12:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFmrFKbu"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bd884146e9so3985237b6e.0;
+        Mon, 05 Feb 2024 16:13:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707178349; x=1707783149; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1707178424; x=1707783224; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2aHBcot/2NqMYA7ZGuWe5JuLCcnyjFV+ziaoOKAd19I=;
-        b=sA7uDE+p+Au52Gr59NBaIRz8K9RyvlI4tf6Tys6SP2l2xwq/ndA5cisuoDeoKPnSgr
-         BavVl4oTvJdoFP04y/aLvvtCBG6vun3c13SVJhm7DMTIpxEFU/1i5OjGGrGGFHrsT5zp
-         8IaKrXYgMA6RFXPcRemSQSNAIBPzPZgDl2gr/BLVJr+bUdRh2r9o+twViZhKVbiMaZ/Y
-         804r6L7y8ImuXPY1ut/ZItCT7cpawXV9SXI7IwD3cIi7AQKF3zCJvyu/BG56rS+oVDTg
-         SSCcu4kJvFLQhEKyIJf9/EaJW20RG0ULkZHLIe4HpLWri1AEka3k5shpznmCAjOsEbiA
-         9pxg==
+        bh=98cWYkQ6MbAJUoSKUpZHTfrV4NmGt6n3dGfyyLHqfaI=;
+        b=nFmrFKbumGdtfhyyluA76OBLt19Lv7+35hcBK7M1sbXKdn3clz52uZiKEWXTNP3QU6
+         Z4DzqUQZzcm+InvvO13hfQNUBojWZBKblySnKZKSmAnmIzjdrL3TOhQ2SvPlY7exPfrc
+         HUb+nI++oqmEyk1GJh2n8T7f33d4PNDdxDvPHjt2TNcswj/hegjqngT2T6QG/afqTFkR
+         kyTJatOql52qdF/dZgTqC3LgNPgu35KdHT15l/V1ufj+WgXtO15G6xhOfxRTSv0YKQ6s
+         6hKIxvi/OnmZEyuNj/bB1ndrYgEGsNRNVS7eCjinj96diezzYVHyCKQvn1W5+xO40zBT
+         x7xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707178349; x=1707783149;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2aHBcot/2NqMYA7ZGuWe5JuLCcnyjFV+ziaoOKAd19I=;
-        b=w5xHQAYrPkTp3LdMC1QAaHMQE5bniS0aDxnAxYeuqudxxmgdf1enbGUo+TTaCMZAc8
-         MKzq/l120G67NzNgdJZU1iGS6QkhUSmTAUF3eoIX8zCnMC6pT8uwdtW5gWyy6EJUtqMw
-         F1Uc4Q8aw3hKazwHkD/s4ljKdpUnkgvR9sQk7vqazwUG/ulx/SL0IO2lT+w+Fpta09pt
-         YiVMcpSlmJci01HqV5gOnvpSKySQtTWxMRK0hSFtfU3iY7uFhyZCIVmUu/LOfbFORp0L
-         XiEl+lpQy4kswxgSz2g9mo3HwVKaTAjAJw3BrXi1eE9UYBoA4v2KMP+v8XjXUPn2qhty
-         uHPw==
-X-Gm-Message-State: AOJu0Yz4y/JnjFXd+EGAe44pZ9/q4pPfulhSW2bNxg8QAeZwSzANozem
-	/K8hfXFltkNqpZ3Pah4YzEYto8JICu8TG7HbqIhYrGTDKm2c/b4kMRchuEqnRYZspfXyX61+bSm
-	BIg==
-X-Google-Smtp-Source: AGHT+IGrtWHSBFbmlk1OGbAiCKrrldxhM8yAJ86BBSoQJD/eK75NBEnbVI50mHb+WvJO+r3RBjcBOSJoxps=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:ced1:b0:1d9:5778:f923 with SMTP id
- d17-20020a170902ced100b001d95778f923mr87plg.5.1707178348825; Mon, 05 Feb 2024
- 16:12:28 -0800 (PST)
-Date: Mon, 5 Feb 2024 16:12:27 -0800
-In-Reply-To: <CANaxB-yAJf4wFyRgkc+XzAdkC9JUKtx-BoZ=eCV7jRSagjsv0g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1707178424; x=1707783224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=98cWYkQ6MbAJUoSKUpZHTfrV4NmGt6n3dGfyyLHqfaI=;
+        b=oZU2DuQV6QvpzTxjXwBEIYxGUVd+jQ6dqOq8/OiBOFTWi9NDYOBoW36JU2AfvQPUXg
+         vHIyFwIMlnVGEC6qE43qtTt2KBcNzPq9UHIBXyiGuOtRZGKjIMRAtxTe6hJSt9pDfRP5
+         u15uqZXrWADq75Ny3lq1tvpRuU0VrbSOnl9ifNDZaMpvxEkv4vMUBcook0C3x0XLXKaN
+         dmC6sb2lOq8iS7REhbcWuaDC9rmlOTAGH8o7aGgiZFXs7Q0GbmaXnbaQCVeme+mhTgT9
+         V0htvF4GwcCcYP4hT1qNg5qzuGGuMy098ekKnZX25Ph62ldwgKUdTX/VpXy17WlGKGdh
+         mclg==
+X-Gm-Message-State: AOJu0Yzsf1aPoYiKL/NFM5U1HMUTif+8wXxpZq0z4f94ziZEslRma6eH
+	oYBRhYbSBKEIsRbLfg5yjkayr8lnwBMgn6h04r4y3ORuIxYaa6qi
+X-Google-Smtp-Source: AGHT+IHLUR+sBwjDr6IOm1zDoDAON4oNTIGY9LMTcemysoH13cqXI49AucLFmhVmc38zQ+c6K/xdlA==
+X-Received: by 2002:a05:6358:290d:b0:178:fe3e:1e35 with SMTP id y13-20020a056358290d00b00178fe3e1e35mr236386rwb.13.1707178423964;
+        Mon, 05 Feb 2024 16:13:43 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVyiXIEPlCl9kH9g5Q6KP568yzf3dLpU+37lr8nKGWWDIMOQhkdiFTYzoxjOsd+7uGCJMTatPWmPtzs7cNXWIGci+W6lg+PPlTiSNsKgdmFuC0jmuie5esKcL0sQB0lcEJNc1I1Y/8Ghv0r7tiYdgOTnbUWQNJrMh/6MnmpfKw=
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id w20-20020aa78594000000b006e046c04b81sm481143pfn.147.2024.02.05.16.13.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 16:13:43 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 5 Feb 2024 14:13:42 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Use alloc_ordered_workqueue() to create
+ ordered workqueues
+Message-ID: <ZcF5tm8b9XaljHf-@slm.duckdns.org>
+References: <ZcF2JaEuwMdg9kYi@slm.duckdns.org>
+ <kksa5w6lgxu66h223quzkw33523zgoltqvl74lmthb4aaj7iat@rss6cnpn3t2p>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240205173124.366901-1-avagin@google.com> <ZcErs9rPqT09nNge@google.com>
- <CANaxB-yAJf4wFyRgkc+XzAdkC9JUKtx-BoZ=eCV7jRSagjsv0g@mail.gmail.com>
-Message-ID: <ZcF5a72HihKkLGVx@google.com>
-Subject: Re: [PATCH] kvm/x86: add capability to disable the write-track mechanism
-From: Sean Christopherson <seanjc@google.com>
-To: Andrei Vagin <avagin@gmail.com>
-Cc: Andrei Vagin <avagin@google.com>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, kvm@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Zhi Wang <zhi.a.wang@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <kksa5w6lgxu66h223quzkw33523zgoltqvl74lmthb4aaj7iat@rss6cnpn3t2p>
 
-On Mon, Feb 05, 2024, Andrei Vagin wrote:
-> On Mon, Feb 5, 2024 at 10:41=E2=80=AFAM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> >
-> > On Mon, Feb 05, 2024, Andrei Vagin wrote:
-> > > The write-track is used externally only by the gpu/drm/i915 driver.
-> > > Currently, it is always enabled, if a kernel has been compiled with t=
-his
-> > > driver.
-> > >
-> > > Enabling the write-track mechanism adds a two-byte overhead per page =
-across
-> > > all memory slots. It isn't significant for regular VMs. However in gV=
-isor,
-> > > where the entire process virtual address space is mapped into the VM,=
- even
-> > > with a 39-bit address space, the overhead amounts to 256MB.
-> > >
-> > > This change introduces the new KVM_CAP_PAGE_WRITE_TRACKING capability=
-,
-> > > allowing users to enable/disable the write-track mechanism. It is ena=
-bled
-> > > by default for backward compatibility.
-> >
-> > I would much prefer to allocate the write-tracking metadata on-demand i=
-n
-> > kvm_page_track_register_notifier(), i.e. do the same as mmu_first_shado=
-w_root_alloc(),
-> > except for just gfn_write_track.
-> >
-> > The only potential hiccup would be if taking slots_arch_lock would dead=
-lock, but
-> > it should be impossible for slots_arch_lock to be taken in any other pa=
-th that
-> > involves VFIO and/or KVMGT *and* can be coincident.  Except for kvm_arc=
-h_destroy_vm()
-> > (which deletes KVM's internal memslots), slots_arch_lock is taken only =
-through
-> > KVM ioctls(), and the caller of kvm_page_track_register_notifier() *mus=
-t* hold
-> > a reference to the VM.
-> >
-> > That way there's no need for new uAPI and no need for userspace changes=
-.
->=20
-> I think it is a good idea, I don't know why I didn't consider it.
+Hello, Kent.
 
-Because you wanted to make me look smart ;-)
+On Mon, Feb 05, 2024 at 07:10:25PM -0500, Kent Overstreet wrote:
+> This one doesn't actually need to be ordered - if anything, we might
+> want to bump up max_active.
+> 
+> Tejun, can you drop this patch? If you're trying to get rid of all
+
+Will drop it.
+
+> WQ_UNBOUND with max_active=1 workqueues for your own auditing, either
+> you or I could change that to 8.
+
+Yeah, can you please either add a comment saying that it doesn't require
+ordered execution or bump max_active?
+
+Thanks.
+
+-- 
+tejun
