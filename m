@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07924130E44;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1A3130E59;
 	Tue,  6 Feb 2024 11:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707219211; cv=none; b=JMIy7SN1/iVX4fyB066M/6W3NhrMbM/0F1bIKycKRJwbPzHGx7NZUvmgjR6fN83jR9EGxuSqu4Jm/qlM/CMPB1uxFNEEXc9Cu4e9uVe0HpqCndpctxuYpo3ujkGCvBQ0Rgcwu5VjPpUUER6XHKym0XU7WABjZstXpYYZqjtiBFg=
+	t=1707219210; cv=none; b=LrymI5q36fTlBnjb4oT9MK+op7o9aEMssTYrja29RXlokNKp5KdzFgxqSDXpf3oOgJJLmpY6m+S9ju9m/8pdFIOMGLEg3PhpItyqhCG5pStpHfdid6umzrNPFcxbCI7H/Hk2EfgoPYwG/grxwzTMYLRcwqtjHNT3hQK27sZ3F2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707219211; c=relaxed/simple;
-	bh=1TOxKL8RRnNxulvXK50DzgvXwAnmOluv224Nju/yrew=;
+	s=arc-20240116; t=1707219210; c=relaxed/simple;
+	bh=PY2TEAkLo+5aq9G2jZ7fftRc6t/u8z0IYGwANgHoKpU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=A5CURwFB8zw/bOT+k/+44NQKkOfsdQS8nye+LyPe2NywbsxNGt/DmLPC27+shGB24ioM1W6sYSxSEqdzKfIrgd7CXq52UruTLynqa8p8ktBf7MOPTksZ/8LVMq9i8rLnfNydEVGEn9i989S7ZrbyJRym4JuNMrytBum9ib7bgLw=
+	 Content-Type; b=nGaSx5cJUj+hW9BRZt8Dc59SX87P9SICxThxhVQ+IjdVkdQuuNYlDQYCJmexdfRDwMAKe1AAaKKV7yL00tFWnr08RA64G3tR4QWs9BwOQgKIok1H+bVpRN1tRH11NTwrNgaZKn9fkHtpcknRzhzVBi6F5JCfoB5HpZdjFmyUgkE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BD5C41674;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C427C433C7;
 	Tue,  6 Feb 2024 11:33:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXJiB-00000006aIr-0AN3;
-	Tue, 06 Feb 2024 06:33:59 -0500
-Message-ID: <20240206113358.897028018@rostedt.homelinux.com>
+	id 1rXJiA-00000006aHN-2G87;
+	Tue, 06 Feb 2024 06:33:58 -0500
+Message-ID: <20240206113358.399057730@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 06:32:03 -0500
+Date: Tue, 06 Feb 2024 06:32:00 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,10 +30,10 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Al Viro <viro@zeniv.linux.org.uk>,
+ Ajay Kaher <akaher@vmware.com>,
+ Al Viro <viro@ZenIV.linux.org.uk>,
  Christian Brauner <brauner@kernel.org>
-Subject: [v6.7][PATCH v2 05/23] eventfs: Do ctx->pos update for all iterations in eventfs_iterate()
+Subject: [v6.7][PATCH v2 02/23] eventfs: Stop using dcache_readdir() for getdents()
 References: <20240206113158.822006147@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,201 +45,292 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The ctx->pos was only updated when it added an entry, but the "skip to
-current pos" check (c--) happened for every loop regardless of if the
-entry was added or not. This inconsistency caused readdir to be incorrect.
+The eventfs creates dynamically allocated dentries and inodes. Using the
+dcache_readdir() logic for its own directory lookups requires hiding the
+cursor of the dcache logic and playing games to allow the dcache_readdir()
+to still have access to the cursor while the eventfs saved what it created
+and what it needs to release.
 
-It was due to:
+Instead, just have eventfs have its own iterate_shared callback function
+that will fill in the dent entries. This simplifies the code quite a bit.
 
-	for (i = 0; i < ei->nr_entries; i++) {
-
-		if (c > 0) {
-			c--;
-			continue;
-		}
-
-		mutex_lock(&eventfs_mutex);
-		/* If ei->is_freed then just bail here, nothing more to do */
-		if (ei->is_freed) {
-			mutex_unlock(&eventfs_mutex);
-			goto out;
-		}
-		r = entry->callback(name, &mode, &cdata, &fops);
-		mutex_unlock(&eventfs_mutex);
-
-		[..]
-		ctx->pos++;
-	}
-
-But this can cause the iterator to return a file that was already read.
-That's because of the way the callback() works. Some events may not have
-all files, and the callback can return 0 to tell eventfs to skip the file
-for this directory.
-
-for instance, we have:
-
- # ls /sys/kernel/tracing/events/ftrace/function
-format  hist  hist_debug  id  inject
-
-and
-
- # ls /sys/kernel/tracing/events/sched/sched_switch/
-enable  filter  format  hist  hist_debug  id  inject  trigger
-
-Where the function directory is missing "enable", "filter" and
-"trigger". That's because the callback() for events has:
-
-static int event_callback(const char *name, umode_t *mode, void **data,
-			  const struct file_operations **fops)
-{
-	struct trace_event_file *file = *data;
-	struct trace_event_call *call = file->event_call;
-
-[..]
-
-	/*
-	 * Only event directories that can be enabled should have
-	 * triggers or filters, with the exception of the "print"
-	 * event that can have a "trigger" file.
-	 */
-	if (!(call->flags & TRACE_EVENT_FL_IGNORE_ENABLE)) {
-		if (call->class->reg && strcmp(name, "enable") == 0) {
-			*mode = TRACE_MODE_WRITE;
-			*fops = &ftrace_enable_fops;
-			return 1;
-		}
-
-		if (strcmp(name, "filter") == 0) {
-			*mode = TRACE_MODE_WRITE;
-			*fops = &ftrace_event_filter_fops;
-			return 1;
-		}
-	}
-
-	if (!(call->flags & TRACE_EVENT_FL_IGNORE_ENABLE) ||
-	    strcmp(trace_event_name(call), "print") == 0) {
-		if (strcmp(name, "trigger") == 0) {
-			*mode = TRACE_MODE_WRITE;
-			*fops = &event_trigger_fops;
-			return 1;
-		}
-	}
-[..]
-	return 0;
-}
-
-Where the function event has the TRACE_EVENT_FL_IGNORE_ENABLE set.
-
-This means that the entries array elements for "enable", "filter" and
-"trigger" when called on the function event will have the callback return
-0 and not 1, to tell eventfs to skip these files for it.
-
-Because the "skip to current ctx->pos" check happened for all entries, but
-the ctx->pos++ only happened to entries that exist, it would confuse the
-reading of a directory. Which would cause:
-
- # ls /sys/kernel/tracing/events/ftrace/function/
-format  hist  hist  hist_debug  hist_debug  id  inject  inject
-
-The missing "enable", "filter" and "trigger" caused ls to show "hist",
-"hist_debug" and "inject" twice.
-
-Update the ctx->pos for every iteration to keep its update and the "skip"
-update consistent. This also means that on error, the ctx->pos needs to be
-decremented if it was incremented without adding something.
-
-Link: https://lore.kernel.org/all/20240104150500.38b15a62@gandalf.local.home/
-Link: https://lore.kernel.org/linux-trace-kernel/20240104220048.172295263@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20240104015435.682218477@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ajay Kaher <akaher@vmware.com>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
 Cc: Christian Brauner <brauner@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: 493ec81a8fb8e ("eventfs: Stop using dcache_readdir() for getdents()")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 1e4624eb5a0ecaae0d2c4e3019bece119725bb98)
+(cherry picked from commit 493ec81a8fb8e4ada6f223b8b73791a1280d4774)
 ---
- fs/tracefs/event_inode.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ fs/tracefs/event_inode.c | 194 +++++++++++++--------------------------
+ 1 file changed, 64 insertions(+), 130 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 0aca6910efb3..c73fb1f7ddbc 100644
+index c360300fb866..41af56f44f0a 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -760,6 +760,8 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 			continue;
- 		}
+@@ -52,9 +52,7 @@ enum {
+ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 					  struct dentry *dentry,
+ 					  unsigned int flags);
+-static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
+-static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
+-static int eventfs_release(struct inode *inode, struct file *file);
++static int eventfs_iterate(struct file *file, struct dir_context *ctx);
  
-+		ctx->pos++;
+ static void update_attr(struct eventfs_attr *attr, struct iattr *iattr)
+ {
+@@ -148,11 +146,9 @@ static const struct inode_operations eventfs_file_inode_operations = {
+ };
+ 
+ static const struct file_operations eventfs_file_operations = {
+-	.open		= dcache_dir_open_wrapper,
+ 	.read		= generic_read_dir,
+-	.iterate_shared	= dcache_readdir_wrapper,
++	.iterate_shared	= eventfs_iterate,
+ 	.llseek		= generic_file_llseek,
+-	.release	= eventfs_release,
+ };
+ 
+ /* Return the evenfs_inode of the "events" directory */
+@@ -643,128 +639,87 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	return ret;
+ }
+ 
+-struct dentry_list {
+-	void			*cursor;
+-	struct dentry		**dentries;
+-};
+-
+-/**
+- * eventfs_release - called to release eventfs file/dir
+- * @inode: inode to be released
+- * @file: file to be released (not used)
+- */
+-static int eventfs_release(struct inode *inode, struct file *file)
+-{
+-	struct tracefs_inode *ti;
+-	struct dentry_list *dlist = file->private_data;
+-	void *cursor;
+-	int i;
+-
+-	ti = get_tracefs(inode);
+-	if (!(ti->flags & TRACEFS_EVENT_INODE))
+-		return -EINVAL;
+-
+-	if (WARN_ON_ONCE(!dlist))
+-		return -EINVAL;
+-
+-	for (i = 0; dlist->dentries && dlist->dentries[i]; i++) {
+-		dput(dlist->dentries[i]);
+-	}
+-
+-	cursor = dlist->cursor;
+-	kfree(dlist->dentries);
+-	kfree(dlist);
+-	file->private_data = cursor;
+-	return dcache_dir_close(inode, file);
+-}
+-
+-static int add_dentries(struct dentry ***dentries, struct dentry *d, int cnt)
+-{
+-	struct dentry **tmp;
+-
+-	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_NOFS);
+-	if (!tmp)
+-		return -1;
+-	tmp[cnt] = d;
+-	tmp[cnt + 1] = NULL;
+-	*dentries = tmp;
+-	return 0;
+-}
+-
+-/**
+- * dcache_dir_open_wrapper - eventfs open wrapper
+- * @inode: not used
+- * @file: dir to be opened (to create it's children)
+- *
+- * Used to dynamic create file/dir with-in @file, all the
+- * file/dir will be created. If already created then references
+- * will be increased
++/*
++ * Walk the children of a eventfs_inode to fill in getdents().
+  */
+-static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
++static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ {
+ 	const struct file_operations *fops;
++	struct inode *f_inode = file_inode(file);
+ 	const struct eventfs_entry *entry;
+ 	struct eventfs_inode *ei_child;
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
+-	struct dentry_list *dlist;
+-	struct dentry **dentries = NULL;
+-	struct dentry *parent = file_dentry(file);
+-	struct dentry *d;
+-	struct inode *f_inode = file_inode(file);
+-	const char *name = parent->d_name.name;
++	struct dentry *ei_dentry = NULL;
++	struct dentry *dentry;
++	const char *name;
+ 	umode_t mode;
+-	void *data;
+-	int cnt = 0;
+ 	int idx;
+-	int ret;
+-	int i;
+-	int r;
++	int ret = -EINVAL;
++	int ino;
++	int i, r, c;
 +
- 		if (ei_child->is_freed)
- 			continue;
++	if (!dir_emit_dots(file, ctx))
++		return 0;
  
-@@ -767,13 +769,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	ti = get_tracefs(f_inode);
+ 	if (!(ti->flags & TRACEFS_EVENT_INODE))
+ 		return -EINVAL;
  
- 		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
- 		if (!dentry)
--			goto out;
-+			goto out_dec;
- 		ino = dentry->d_inode->i_ino;
- 		dput(dentry);
+-	if (WARN_ON_ONCE(file->private_data))
+-		return -EINVAL;
++	c = ctx->pos - 2;
  
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
--			goto out;
--		ctx->pos++;
-+			goto out_dec;
+ 	idx = srcu_read_lock(&eventfs_srcu);
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	ei = READ_ONCE(ti->private);
++	if (ei && !ei->is_freed)
++		ei_dentry = READ_ONCE(ei->dentry);
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (!ei) {
+-		srcu_read_unlock(&eventfs_srcu, idx);
+-		return -EINVAL;
+-	}
+-
+-
+-	data = ei->data;
++	if (!ei || !ei_dentry)
++		goto out;
+ 
+-	dlist = kmalloc(sizeof(*dlist), GFP_KERNEL);
+-	if (!dlist) {
+-		srcu_read_unlock(&eventfs_srcu, idx);
+-		return -ENOMEM;
+-	}
++	ret = 0;
+ 
+-	inode_lock(parent->d_inode);
++	/*
++	 * Need to create the dentries and inodes to have a consistent
++	 * inode number.
++	 */
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+-		d = create_dir_dentry(ei, ei_child, parent);
+-		if (d) {
+-			ret = add_dentries(&dentries, d, cnt);
+-			dput(d);
+-			if (ret < 0)
+-				break;
+-			cnt++;
++
++		if (c > 0) {
++			c--;
++			continue;
+ 		}
++
++		if (ei_child->is_freed)
++			continue;
++
++		name = ei_child->name;
++
++		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
++		if (!dentry)
++			goto out;
++		ino = dentry->d_inode->i_ino;
++		dput(dentry);
++
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++			goto out;
++		ctx->pos++;
  	}
  
  	for (i = 0; i < ei->nr_entries; i++) {
-@@ -784,6 +785,8 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 			continue;
- 		}
- 
-+		ctx->pos++;
+-		void *cdata = data;
++		void *cdata = ei->data;
++
++		if (c > 0) {
++			c--;
++			continue;
++		}
 +
  		entry = &ei->entries[i];
  		name = entry->name;
- 
-@@ -791,7 +794,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		/* If ei->is_freed then just bail here, nothing more to do */
- 		if (ei->is_freed) {
- 			mutex_unlock(&eventfs_mutex);
--			goto out;
-+			goto out_dec;
- 		}
- 		r = entry->callback(name, &mode, &cdata, &fops);
- 		mutex_unlock(&eventfs_mutex);
-@@ -800,19 +803,23 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
- 		if (!dentry)
--			goto out;
-+			goto out_dec;
- 		ino = dentry->d_inode->i_ino;
- 		dput(dentry);
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
--			goto out;
--		ctx->pos++;
-+			goto out_dec;
- 	}
- 	ret = 1;
-  out:
- 	srcu_read_unlock(&eventfs_srcu, idx);
- 
- 	return ret;
 +
-+ out_dec:
-+	/* Incremented ctx->pos without adding something, reset it */
-+	ctx->pos--;
-+	goto out;
+ 		mutex_lock(&eventfs_mutex);
+ 		/* If ei->is_freed, then the event itself may be too */
+ 		if (!ei->is_freed)
+@@ -774,42 +729,21 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
+ 		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+-		d = create_file_dentry(ei, i, parent, name, mode, cdata, fops);
+-		if (d) {
+-			ret = add_dentries(&dentries, d, cnt);
+-			dput(d);
+-			if (ret < 0)
+-				break;
+-			cnt++;
+-		}
+-	}
+-	inode_unlock(parent->d_inode);
+-	srcu_read_unlock(&eventfs_srcu, idx);
+-	ret = dcache_dir_open(inode, file);
+ 
+-	/*
+-	 * dcache_dir_open() sets file->private_data to a dentry cursor.
+-	 * Need to save that but also save all the dentries that were
+-	 * opened by this function.
+-	 */
+-	dlist->cursor = file->private_data;
+-	dlist->dentries = dentries;
+-	file->private_data = dlist;
+-	return ret;
+-}
++		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++		if (!dentry)
++			goto out;
++		ino = dentry->d_inode->i_ino;
++		dput(dentry);
+ 
+-/*
+- * This just sets the file->private_data back to the cursor and back.
+- */
+-static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx)
+-{
+-	struct dentry_list *dlist = file->private_data;
+-	int ret;
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
++			goto out;
++		ctx->pos++;
++	}
++	ret = 1;
++ out:
++	srcu_read_unlock(&eventfs_srcu, idx);
+ 
+-	file->private_data = dlist->cursor;
+-	ret = dcache_readdir(file, ctx);
+-	dlist->cursor = file->private_data;
+-	file->private_data = dlist;
+ 	return ret;
  }
  
- /**
 -- 
 2.43.0
 
