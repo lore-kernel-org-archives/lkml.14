@@ -1,55 +1,57 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981C31B800
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 20:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FFE1B807
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 20:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707251608; cv=none; b=aUpUsXbYCU71MVkfyy7VuRxwMwYeURjCFfdLLfP/6aoCIPB8BkJoQiRWWv0SmbdA/JxJoUxHBsb+Gs7tCzq2Dp4NnLNwNUvguSyhQ/Iy1sqAPiad5FQpfPMqxSlStIF7rGk6TMLJ6MQM7lILkQ2FtyDCTClPL+sZiGXkU5Y69Xs=
+	t=1707251609; cv=none; b=qyk5iqdZy9jSWjqYFAa4ySfc/6B1VrNMl/4sMzm+AJYLPOmMQakyfKZ5FeB4T+IpjyNB84V/CjRw01oN/wagbmVoXkrxXR+obHEgiyCy+iU3G4o8xyUfOFgrPWmwB3plZr5GJ6SEaNIi1ElgfIMN95q/SsO13mIa2pbkMd7neek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707251608; c=relaxed/simple;
-	bh=MPYoHxeKPCnc9gpbdDoN3NGU8IjyGGLHn+vuIM5QKh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rAd3nu7uccijYKrqiTOFR3pHD+CeNoDiqVAGjEqvqkLBvYLRT6n5BGjRxNqPE5TeylqsBWoqttVudYJhG3VhB3REvCnYSaBCPdOoM9Tysar2cVYZsfrW4uIuLSAXGYLMFAk8/A7iTGgZmgpfkXBeppUyz3edOvQam/kcmDe6iSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=K0UR7+ei; arc=none smtp.client-ip=209.85.210.46
+	s=arc-20240116; t=1707251609; c=relaxed/simple;
+	bh=zV6UMa6KGS3460hptBgo8h2zveZj4vaThxc5kbb1euc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A8VOgSoW7JcnNlH4W/LJOGNHOt/EnmgQtYlogaBtHaHa+402805RRhx65d+VMyChlKzU5B1CP5wRO5pbzjzlT4pOy36+tBx0/quEWIBefn3mnqrULI0nIWCCEGA+i6TBM1PSXHrIhQCMzxVYl9owXGVYn0zHvDKCFo4fPcSyOM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uNXpjRXu; arc=none smtp.client-ip=209.85.210.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="K0UR7+ei"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e12b58a3beso564101a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 12:33:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uNXpjRXu"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6e1149c16d4so2164552a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 12:33:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707251604; x=1707856404; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ubZDa4GWwL/GMCOFFCbm4p521hfLHa5fIJTQTEH+mC4=;
-        b=K0UR7+eiRyU6G3jpRDUeWqAu7iC/OISFVgQBtg7w2V5NI4mzdkIw3y0MBNU3an8chS
-         ki36mByrOjRfjDvrGWFaWGgueP2sx3eo0JkibrmTDKSfPYkf6oAOWLSv7yEAuvcx86fM
-         r41SCGdSF4bQd5Gnu7jWXp0EGODdjAcnZ7v5g940zhUSdwFRPQUqs6P1FTmNAqzR35oR
-         a9WL1phrDOH5Sjcgdm9PWEbrawM7KMlIkhy/vkjSd060SLZ5v/BJCPmHRHTNYWYHcxBM
-         bizAp8pZ/RowrZ4XdJ4TCAO6F6T/Ryk+Gkby3iARdUm+n7bAQk1qGvH9UoyMmsqUwHO3
-         aEew==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707251606; x=1707856406; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YfTOMRIgy5yUmp1Zi1mrOXV6NTegVTcyJrqWrXnDXfo=;
+        b=uNXpjRXuSdTOAMczG5ehg8nEJRUSsmBl2egbaAmgfkpCErvlAYEHr8b352FcupFRI/
+         UXhBA9Jw1SM+ofjnymnO95qugGdn/douklZiU/AcaOt7QvX1D4FxgzC8J9GxM3TKGPqd
+         Iw7rHvETzE/pV1pb0F4PilII5vCVOeFJTjV71wdJFsIme6QI9m8QwskF/tTqaN17Snrf
+         JXdfZd57ksGUUTL2GzeWjl02CBleHt/O2vhPfRb+q3nJN/EwMWAMJx72ji2bjgifdL5j
+         cAOUHOvXBRzD59dZGGTIyw0nwJ8I04xSJt0menMljtiN/qUxrASKhVspGuA7HvNTSq3v
+         JhwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707251604; x=1707856404;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ubZDa4GWwL/GMCOFFCbm4p521hfLHa5fIJTQTEH+mC4=;
-        b=lzwumuyvbe//0R8ZYTTCTZpTIPqO/OqMoXc8J0FhkGGHlvitGe0MpmTrYoFMMjbW7O
-         LlNwS6HbrQPRwJuFkT4dG7yFU2PJJUquxl1Ynfh9oJktxln5oyYoTuw/nDZsrEJ1u4mn
-         qIVwDWH2ZYXMvPgk4QQ5nDTe84/0GVCQgY0OygVlqBmr0ID6tnIspwSjjliUeCInwh6j
-         sSs3UWvuzEQ374x4rwq8SzV/n2BvT2IiKTtgVxJMuBiVRhF+J/o5Xep+EOK3xEvhxlBv
-         eAjQkku7nca11bndF91BB8tkG9vjRaS8JRo9tHHAQ4osu3NMSrPs3CDnYxUSNs4oDgYO
-         rpNg==
-X-Gm-Message-State: AOJu0YzGUhEQkxHCpbnJskxicXxgUoF+okUB8c/WElbSiOAB+WfKzI/j
-	jElYhPJP0sW92mj5tm8g0/9KnxkOWU90m+C2G99PYrtkVodgQ6KATAOFKzf8zuA=
-X-Google-Smtp-Source: AGHT+IF0MmuI1nUFe/V6BG088Po9XJTU/8bWeJ/mJ+JIYIErtoYQg1qL7uENnk68DxBaPoLm840gHA==
-X-Received: by 2002:a05:6830:2b07:b0:6dd:e52e:1f53 with SMTP id l7-20020a0568302b0700b006dde52e1f53mr4437162otv.11.1707251604638;
-        Tue, 06 Feb 2024 12:33:24 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUc4QlC/D04/jFnLNY7nLmAqLbKweCSCNCkkSvJLolyaHb2T9nN3NySWtiFf98CM5bizcVXIkRpJ5ju+e4aKC/BUwjYjtiS+hFiXyY+Ssi2QCiXvux8G46o3V9eXGaqeCPosPvinboR3YCxzR22EfPPRimG/cP0Rg11U4+C9opdgaIkukQ6yFYV1MeTNyz6PyRJ8w==
+        d=1e100.net; s=20230601; t=1707251606; x=1707856406;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YfTOMRIgy5yUmp1Zi1mrOXV6NTegVTcyJrqWrXnDXfo=;
+        b=vW/8a8/b5+C3P3t6EYoxPX8QNVscqhFI8ovT/VNxrX3nNkQ2xAXX1P0NKfpaVEqOch
+         1NazcziA4tidJolu2p/3wh+E/jQIt01/GReNmcyTUyEyCmqPS8uij3Ofxg65+IYIM88R
+         YMoFkOF+MOXskNgwprczvqmwzADm1qNFnKpJmn20AWLRWaAD3lTpjiF146jbH0iDjy8B
+         iGX4A7phcrzfQac9jEsN8MuipT3yRxfBUo8vQ1Zz2s8J1cvXRE6Y6uS/JpF+QiBNcdjL
+         rsvXylmAhdUP4Y2uUGD0m/QyyrweL9tty8ErROqrr2Mw3RGCiAR80C1ukJxFmQqxBnqk
+         tLxw==
+X-Gm-Message-State: AOJu0YxRWiTFVoaq8pd6DCc7AN7peFx0FzDh+L3AMHW3EvDvT/Ks6qDe
+	H5NsA0xkQoGfS+jE3xmIM8s043dXrBjevZhbNzPA29isNlzE8oeL9ZL/3sVU6H4=
+X-Google-Smtp-Source: AGHT+IGJf9ep/lPbbuizFAQfco/oZLYeI9cVSfpniFdRh+hPnl269EOax256xe26Om84BuZyOssTWQ==
+X-Received: by 2002:a9d:77d2:0:b0:6e0:f903:f7a6 with SMTP id w18-20020a9d77d2000000b006e0f903f7a6mr4073222otl.36.1707251606042;
+        Tue, 06 Feb 2024 12:33:26 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV+uanjprraKmO3BJdbA8N8V3mZg3/e56x/S+A6o4ojIU2WsGbOoQVl0I9ozFPnU5QepvkfdTSsww7u4InLod8SgXN3j2jrCTvp2CLa+HMZhFUdVj22pGJIxuMYMU+JUEki6KNLWwe01zeKUHEF+s99igBfSGrU4txJtszHp+ndQ3XwYO7lwQ1Tmh/CM7n3+tKIXQ==
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id l2-20020a05683016c200b006e11d93ff09sm429581otr.72.2024.02.06.12.33.23
+        by smtp.gmail.com with ESMTPSA id l2-20020a05683016c200b006e11d93ff09sm429581otr.72.2024.02.06.12.33.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 12:33:24 -0800 (PST)
+        Tue, 06 Feb 2024 12:33:25 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: linux-spi@vger.kernel.org
 Cc: David Lechner <dlechner@baylibre.com>,
@@ -57,10 +59,12 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	Michael Hennerich <michael.hennerich@analog.com>,
 	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] spi: axi-spi-engine: performance improvements
-Date: Tue,  6 Feb 2024 14:31:26 -0600
-Message-ID: <20240206-axi-spi-engine-round-2-1-v1-0-ea6eeb60f4fb@baylibre.com>
+Subject: [PATCH 2/2] spi: axi-spi-engine: move msg finalization out of irq handler
+Date: Tue,  6 Feb 2024 14:31:28 -0600
+Message-ID: <20240206-axi-spi-engine-round-2-1-v1-2-ea6eeb60f4fb@baylibre.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240206-axi-spi-engine-round-2-1-v1-0-ea6eeb60f4fb@baylibre.com>
+References: <20240206-axi-spi-engine-round-2-1-v1-0-ea6eeb60f4fb@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,17 +75,122 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-While researching potential performance improvements in the core SPI
-code, we found a few low-hanging opportunities for improvements in the
-AXI SPI Engine driver.
+As a general principal, it is best to do as little as possible in an
+interrupt handler. This patch reworks the AXI SPI Engine driver to move
+timer_delete_sync() and spi_finalize_current_message() out of the
+interrupt handler. Instead, spi_finalize_current_message() is moved to
+the transfer_one_message function (similar to nearly all other SPI
+controllers). A completion is now used to wait for the sync interrupt
+that indicates that the message is complete. The watchdog timer is no
+longer needed since we can use the wait_for_completion_timeout()
+function to wait for the message to complete with the same effect.
 
----
-David Lechner (2):
-      spi: axi-spi-engine: remove use of ida for sync id
-      spi: axi-spi-engine: move msg finalization out of irq handler
+As a bonus, these changes also improve throughput of the SPI controller.
+For example, this was tested on a ZynqMP with a 80MHz SCLK reading 4
+byte samples from an ADC. The max measured throughput increased from
+26k to 28k samples per second.
 
- drivers/spi/spi-axi-spi-engine.c | 67 +++++++++++++---------------------------
- 1 file changed, 21 insertions(+), 46 deletions(-)
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
-base-commit: 80fa6a033ac8c395a3de4840e204638e92b8b371
-change-id: 20240206-axi-spi-engine-round-2-1-bb73990abac3
+ drivers/spi/spi-axi-spi-engine.c | 40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
+index 9cc602075c17..3c96aa9232b3 100644
+--- a/drivers/spi/spi-axi-spi-engine.c
++++ b/drivers/spi/spi-axi-spi-engine.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/completion.h>
+ #include <linux/fpga/adi-axi-common.h>
+ #include <linux/idr.h>
+ #include <linux/interrupt.h>
+@@ -14,7 +15,6 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
+-#include <linux/timer.h>
+ 
+ #define SPI_ENGINE_REG_RESET			0x40
+ 
+@@ -110,9 +110,7 @@ struct spi_engine {
+ 	spinlock_t lock;
+ 
+ 	void __iomem *base;
+-	struct timer_list watchdog_timer;
+-	struct spi_controller *controller;
+-
++	struct completion msg_complete;
+ 	unsigned int int_enable;
+ };
+ 
+@@ -484,11 +482,9 @@ static irqreturn_t spi_engine_irq(int irq, void *devid)
+ 
+ 	if (pending & SPI_ENGINE_INT_SYNC && msg) {
+ 		if (completed_id == AXI_SPI_ENGINE_CUR_MSG_SYNC_ID) {
+-			if (timer_delete_sync(&spi_engine->watchdog_timer)) {
+-				msg->status = 0;
+-				msg->actual_length = msg->frame_length;
+-				spi_finalize_current_message(host);
+-			}
++			msg->status = 0;
++			msg->actual_length = msg->frame_length;
++			complete(&spi_engine->msg_complete);
+ 			disable_int |= SPI_ENGINE_INT_SYNC;
+ 		}
+ 	}
+@@ -559,7 +555,7 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+ 	unsigned int int_enable = 0;
+ 	unsigned long flags;
+ 
+-	mod_timer(&spi_engine->watchdog_timer, jiffies + msecs_to_jiffies(5000));
++	reinit_completion(&spi_engine->msg_complete);
+ 
+ 	spin_lock_irqsave(&spi_engine->lock, flags);
+ 
+@@ -581,21 +577,16 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+ 	spi_engine->int_enable = int_enable;
+ 	spin_unlock_irqrestore(&spi_engine->lock, flags);
+ 
+-	return 0;
+-}
+-
+-static void spi_engine_timeout(struct timer_list *timer)
+-{
+-	struct spi_engine *spi_engine = from_timer(spi_engine, timer, watchdog_timer);
+-	struct spi_controller *host = spi_engine->controller;
+-
+-	if (WARN_ON(!host->cur_msg))
+-		return;
++	if (!wait_for_completion_timeout(&spi_engine->msg_complete,
++					 msecs_to_jiffies(5000))) {
++		dev_err(&host->dev,
++			"Timeout occurred while waiting for transfer to complete. Hardware is probably broken.\n");
++		msg->status = -ETIMEDOUT;
++	}
+ 
+-	dev_err(&host->dev,
+-		"Timeout occurred while waiting for transfer to complete. Hardware is probably broken.\n");
+-	host->cur_msg->status = -ETIMEDOUT;
+ 	spi_finalize_current_message(host);
++
++	return msg->status;
+ }
+ 
+ static void spi_engine_release_hw(void *p)
+@@ -626,8 +617,7 @@ static int spi_engine_probe(struct platform_device *pdev)
+ 	spi_engine = spi_controller_get_devdata(host);
+ 
+ 	spin_lock_init(&spi_engine->lock);
+-	timer_setup(&spi_engine->watchdog_timer, spi_engine_timeout, TIMER_IRQSAFE);
+-	spi_engine->controller = host;
++	init_completion(&spi_engine->msg_complete);
+ 
+ 	spi_engine->clk = devm_clk_get_enabled(&pdev->dev, "s_axi_aclk");
+ 	if (IS_ERR(spi_engine->clk))
+
+-- 
+2.43.0
+
