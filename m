@@ -1,107 +1,79 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1061312EBD6;
-	Tue,  6 Feb 2024 13:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BBD12FF97;
+	Tue,  6 Feb 2024 13:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707225717; cv=none; b=BBgAXwafqLacaQ6ODLf+ZMy3KkWrk3/1nF9oqOHVU9+afZZUdzlnt8wES7rjyNTiGF5BSQpgBhhcsNEwzl8QvUkcKpfDgoLbneNfEJDLR889xj6ubHKLFLwSfDj8PBiqIzPmuWNU6TjTn5AEuLqLXg8PYC5i5brce0TmmMEAtbM=
+	t=1707225747; cv=none; b=Ss4VPSqsCLgY/S9tps+d92j9888qy+1uHXBDGEn6V3v2fg2meezAQ/8Raclny61Dlg0FdoX4Im8ONrmy0nBQ9i/nXbg6Rtx+ptmerMaVqGgdkiGHhTjkUWYD9mDcS52s50KvyI+CJQ0J8gYJjPwMVePdyq2ZjxxA4smg4ecmrzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707225717; c=relaxed/simple;
-	bh=wSWjtqqjivUoa0CG3qdFK79yHE097JXhev5z205E/nc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HZ1V28bqx0T/4I507/daq181E8vwKW/gZN+Tw1WiH+YpEpCEPeWh3xJ+jUgOeVm6qE5gViMBvVVeRh5JIZAV9eA64J5rjiFGZEW4a7DN8jrp9hbQvwWIOU6hW45nSa+cvduNmvea79iOCf/P8ccCxuOZniM5EJUaCbMZvCy4vPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vzqgb0zg; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707225747; c=relaxed/simple;
+	bh=iWQ751Umn75UfafL9LXPbsEQPtgj8ZyLiC5Gw52znGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a2SOha+hjx3UZYuGY5jO2gHfQzLr2QFnzbjxOOtIwG665+UjZvqRJq3Bg3k8AswoOXB/Fq81lc1GNccoSEQi0bIeHoo+DxuPV9HaDRRN9as5hZgnLFO2YX58e4M7cjiXt+GHK/ZVHEL9Q6+nblGmEcw/A8bKF7pWc5saGI12E08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=kyRXYNsP; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vzqgb0zg"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a34c5ca2537so764806966b.0;
-        Tue, 06 Feb 2024 05:21:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707225714; x=1707830514; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xt2AM3jB+7aIDuoutfkr3xbhDhpMe4Sp5icdbuMaEx0=;
-        b=Vzqgb0zgo87YdC2P19qBl56Tl2NKwjlpxyi9L86OSWPtuw70F9KiDE22vqHavrj0JA
-         aPbu9P2Aw5q6IyfaLz8bS3/6DQ/8SZgGe6GYKqt14+EQJMoDd/rupZHDToR34Bf/ecKR
-         PtDuONihut42AygT0NhaK4cqMy926JXMCUj5t+8pzRhO/hw0L+d9NsmqEauoLYjkbZqr
-         5ZHz0C1mT7piKNOrBje1fTMdSIb0aVBreQHGBpb1UPYH5g4QVzOrkkDXteRCgPJaUFOR
-         UzixM2ym/qalQYRm3iSSG9X8C81GCgUnfcyn8hpu1Po5uk7jCuer/G+VUypsJlHbLEcp
-         bTQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707225714; x=1707830514;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xt2AM3jB+7aIDuoutfkr3xbhDhpMe4Sp5icdbuMaEx0=;
-        b=UzWuGgzNr/51yP/dYCbTLZTkqnqRIAfQIRipvFdoQsvyboN8Lww2ogaM7gR1QeTnkP
-         oN+VPWDiqpVfCEIAY6YxURpA1Z7Htx0O9VIt7BFlO3sfhRgC5gLQrdCw2BViJEsGasqK
-         GBfRv7g1Vngh7Qx28iz+84UezHwIEf3nXhKd1bTzWsxgKfaqATCxPla2Y9toVez/iD0e
-         PqRmD9pZkEuxN1BqdnyVmvR06RmjcLFhiNBkjoAukVwwjdlmaV8v25Vz6TnVKk6X5VO0
-         DTUw7nOc5dKRcwvagHUsKapQ96XOg6w70nVxeswiHvoly4Geeyq1w4wljKggNHs469xt
-         lU4A==
-X-Gm-Message-State: AOJu0YxxeuSc0CWyeMrjsg89Ilq+zOEk3mkVMiw6t9iOFhix7th5pl/S
-	fXM3hjPepuRINa6/xTVtzKB0TBkP5AvrPW5tyYz3a/hzg4ActkU=
-X-Google-Smtp-Source: AGHT+IFJw+4SBTi+R5DKuxC03GF1O4wOugIW2lEICA03wRZnEmo42vW2LCWLCF52KKqKKJVOm5//OA==
-X-Received: by 2002:a17:906:53d4:b0:a38:15ba:32f5 with SMTP id p20-20020a17090653d400b00a3815ba32f5mr1585096ejo.56.1707225714041;
-        Tue, 06 Feb 2024 05:21:54 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCU4rAg9QgsmazXfYYhcTq9zgajQTc57l9Lo7Ip/zdPBbotdyI8C/MjIslwkRmyZR3I7BoTMfzY0XenTO0Or16XGMoqbbhKHXjYpkcKBOWzcdY/ygkzKIG+3og2XZbzu4JpsEqI4ApbMcspD/IEo7a9IoT2OX6zuiVta31jjskLs3gBt7CfcFhNgYZDV0Q8RPkaWoP8Tiyagz3dt8ySobBTO9KTg3ZHxj5iuJlUK9RliPmOoi1c5I5aHm8q1pNBHJU9XQHKZ0BhW4I3TQt2aYg/nIb/3ZydRM1hOjr3PPXZoYmPiQbnZ/UFOmCxrJLdgSbDyMN0LFZoFNqjbzoOJa4VmgQA7KC6WJfmJa/f3lToP+7i5i9jN0An8U+NVE2up8c5rfXLeDPqG8/R8U2oRZXXZ1FBaYa2e3o9igUVWVgUoMrtpQajsTMo401dnxcKezA1T8yGFz816MpX/VxkVlY9Ka2iFEZENZilasrkCH063TY638/ttEVxy6KyrkzUwNzgGLyEs+Ncg0ZJCeOq9ze8O95Xyza/GxZeThaamr9BsX74FT8tdcMiVs7Tp0I1zZ7iiPGHZxS7li9xfhi0PYbsJ2IxOLAowfhDM/5kaBWvzWEri
-Received: from frutis-latitude7490.lan (public-gprs393011.centertel.pl. [37.47.166.116])
-        by smtp.googlemail.com with ESMTPSA id st6-20020a170907c08600b00a37210f1e92sm1147096ejc.205.2024.02.06.05.21.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 05:21:53 -0800 (PST)
-From: =?UTF-8?q?Pawe=C5=82=20Owoc?= <frut3k7@gmail.com>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Pawe=C5=82=20Owoc?= <frut3k7@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Peter Yin <peteryin.openbmc@gmail.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Andre Werner <andre.werner@systec-electronic.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Fabio Estevam <festevam@denx.de>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	devicetree@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: trivial-devices: Add qca,spidev
-Date: Tue,  6 Feb 2024 14:21:04 +0100
-Message-ID: <20240206132111.1772867-1-frut3k7@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="kyRXYNsP"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 073DD6050D;
+	Tue,  6 Feb 2024 13:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1707225744;
+	bh=iWQ751Umn75UfafL9LXPbsEQPtgj8ZyLiC5Gw52znGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kyRXYNsPAQNClbcvX9psK+p4JTHYkaBWtnFBDwjQvcS/aQLak0g6khRvcqbypFOyF
+	 +fqEFG+nHaNy4+EwIaLtgyTKDoZXw07mCgxKnhC80OkyksrJC3CzVKUWToqa02eT5u
+	 hSqF+jdpLZRxMhNv+40y+j/zif/Mp/4Puhrbjl+sDrNiy+V5UNVMtjCVgYrvXTQXKR
+	 ZdUnjtAbC0hLL2qZ++IuFS/Qyfh3998L+cuAVIBUhPxqcQJQH1VlfPM9LxilZjIVhd
+	 UGH787yC0HKXmdxqVnA2kYN0CF3Le+QbqKcccaH3qHRIdq+H7Bwi66NMZ+wrRToXDj
+	 WKQUy8XOPE3/g==
+Date: Tue, 6 Feb 2024 15:21:55 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yicong Yang <yangyicong@huawei.com>, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, john.ogness@linutronix.de,
+	tglx@linutronix.de, yangyicong@hisilicon.com, linuxarm@huawei.com,
+	prime.zeng@hisilicon.com, jonathan.cameron@huawei.com,
+	fanghao11@huawei.com
+Subject: Re: [PATCH v2] serial: port: Don't suspend if the port is still busy
+Message-ID: <20240206132155.GH5185@atomide.com>
+References: <20240206073322.5560-1-yangyicong@huawei.com>
+ <ZcIvjC1qzD4atwlT@smile.fi.intel.com>
+ <ZcIwGm-W4A2rupOi@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcIwGm-W4A2rupOi@smile.fi.intel.com>
 
-Add Qualcomm QCA4024 to trivial devices.
+* Andy Shevchenko <andriy.shevchenko@linux.intel.com> [240206 13:12]:
+> > static int serial_port_runtime_suspend(struct device *dev)
+> > {
+> > 	int ret;
+> > 	...
+> > 	uart_port_lock_irqsave(port, &flags);
+> > 	ret = __serial_port_busy(port);
+> > 	if (ret)
+> > 		port->ops->start_tx(port);
+> > 	uart_port_unlock_irqrestore(port, flags);
+> 
+> > 	if (ret)
+> > 		pm_runtime_mark_last_busy(dev);
+> 
+> And obvious question here: why in case of 0 we can't mark this as busy as well?
+> I.o.w. why do we need to mark it only when error is set?
 
-Signed-off-by: Paweł Owoc <frut3k7@gmail.com>
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+No need to call in the 0 case. The last time driver was busy
+was when pm_runtime_mark_last_busy() was called, and in the 0 case
+we just runtime suspend based on the autosuspend timeout value.
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 79dcd92c4a43..50efbdf2a735 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -309,6 +309,8 @@ properties:
-           - plx,pex8648
-             # Pulsedlight LIDAR range-finding sensor
-           - pulsedlight,lidar-lite-v2
-+            # Qualcomm QCA4024 Multi-mode Bluetooth and 802.15.4 SoC
-+          - qca,spidev
-             # Renesas HS3001 Temperature and Relative Humidity Sensors
-           - renesas,hs3001
-             # Renesas ISL29501 time-of-flight sensor
--- 
-2.43.0
+Regards,
 
+Tony
