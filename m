@@ -1,144 +1,152 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692771DDC8
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9782C33EE
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707215479; cv=none; b=iWJM52nenl5SUosD848CU3IKyKBlhUTZ5ivJePu7TCM4BrMNhKorvG1pyJmnlsZK2hveeBgp3RrfV3ln8yY+IUXJB/cUk1iUGY7zhGHqCrn6HRCS1t8unGF9d21vhPc8Tt3bPJHNts1hcqLgBgp5sblR3ydZt5aYedFSDQRT9Gc=
+	t=1707215525; cv=none; b=UE49bkU6sxEYD/wfwafTYIGuiPZ5oz2rhpVOrzfvGQFKP1wt7fDdkpBQqif0jO1p2PK0ssgidHhFUAjw4MzbljHgJt9c+oCg9EHT73TfsxO5pHA0/0NSfzdb49+4Wa+LcdvWmwP+GkYKlLklhsUNjRGODw0YMkkh0EMl2mf2ALQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707215479; c=relaxed/simple;
-	bh=sLPxnJl6On4z7dGAfTxIzz69n4+dJ+EJJhrxmcXYPWo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pfi1+JxCnLnt/S18D+VUTY+C0FNBxwVhQ6oiSeQtzDwplGtxtIHIg9a04Jmpt4BRKoCag3c0QJ71eexsde6qJePkXJzMTiDi/cTPlJTBnznBUf5ngHmcUuIm+713iYnKVd7WYASQ6lEQ9IoPXgIkvyeNqKtvAPDXfHlovB0CFUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m7qGRSAs; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707215525; c=relaxed/simple;
+	bh=6Jgp3vxxK3Vk/XDvje4qMUZMER6LkaJQhb8c5Sf9IQw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ciuA66VJJuw2HIhcIdlWdUiOKtUHY/3mfNYNdHO0j93l5cV823IW4QHd0iEqMN6NMiz+SBbxI1d7v1s6wq9KyZVwDLyO77xEoKHw46opZd46yVWCQuOi8JTDiOXpTYqexTsnfjCD21ZRG3k0HI7Xqr3QxTHNukeA2gOQlSNovEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e7Fe3LiJ; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7qGRSAs"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56002e7118dso4283759a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:31:17 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e7Fe3LiJ"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so5229245a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:32:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707215475; x=1707820275; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1707215523; x=1707820323; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UyJeOO1MPwusvT1qEwWipYJ8Xhu38so/v3dEFLAabcU=;
-        b=m7qGRSAsGprTwYCekIhFbM7L8RoUJqO2Xs+7Qnnln0EZUQIvhrM3OzYG5cmWmVdZNw
-         YBA6oz2ERoOQEnV2kwp+A1v4K1C2d7Na9N20Dlb/RczNDta2wFDg+v20PbjEJPFzc83Y
-         ERDjzmYRdVmoV7feSWzC4lrnbllOdl+Rc0PzdlOa+huEaiaLjOUoP3EZ9DBXSoKFGIJJ
-         ozuO2hNXKV/1XGoUSi1+ty5J/UIRnT8Py8Y8VAOn6E7UKtavXkyYFuuyvsr32wyWvpD/
-         gwkV4Y1dtIq94U/vJhrBYFQT920WlHKbBXO85xpV5QxWi0cVCteFyGZYNadGpLjVDHF9
-         J8LA==
+        bh=QphZTJ2YkJ63c2lk2h3jm8PAaMKsJdXhMlN0zVjn/Jc=;
+        b=e7Fe3LiJ+u+HN07QeS+PBl4pdMYJdzrp9SYc5hKp5068XOjOCROeyucoUivJAv/2jg
+         YeaMQ1U+SSzXcWgWs/rL0tMoz3HI6Gs6AQYSgVHS+W0msQlUpELBY+h+Ca8Hr4oUi1LR
+         9Fo1NwN1+ho/G7+aKRtqUTPeA0f7bfaRfywOo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707215475; x=1707820275;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707215523; x=1707820323;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UyJeOO1MPwusvT1qEwWipYJ8Xhu38so/v3dEFLAabcU=;
-        b=fWqtvOg6PVUTY/aAd07vDfJmcJZd8iFwgs7jmv1eHeco+9UI2kfyDjFAZSWmCNHykq
-         2foHlHiMuV2DWilhhNu+dSa2pvicRJReGGsTfp4K337twsRQmHU9Ipww7ThqvKAhLLMw
-         d7J4v9wDtHLaaAxcXmat9VKoHhJRUIbhb8L8LDchykaRVOfSZkzQT+3ObWT5CXjA1ZXy
-         oBLkHfYfoNbGKtHvLsXpdMhMQb9/2xVnKS3Cex9DsaW0fcb2vHcAOPATMhoToDRWSS4y
-         y2w4iMBUntPY7qTjFAtzDld0qvtjx5E3kQBjfTIbcPrRqjyG+si5c6EwQ5zzElA+UcLo
-         j0HQ==
-X-Gm-Message-State: AOJu0YyvY3upujo2vS9zUQNkIMLT3E93G4BxZQF87gG2xLs8vfoQwcqH
-	3vgrLDOp9YopXf1+ZFRs92gOMfqgrdvHSTtiKtrODLgYHWbQxFp9E/Ud1wL8luAjQS6wJxPihzo
-	+F2/JEEVsLAz/blgKUTnIJjyfFO2vRPYLKYum
-X-Google-Smtp-Source: AGHT+IELkC+goHTay/L6aZIeLG35J/aSat3BU8Tyv4DxCEDvedGzdB0WQm8pepzYh11TepbFZVKEL4j6tCyUon48bvA=
-X-Received: by 2002:a17:906:bc94:b0:a37:87e1:5929 with SMTP id
- lv20-20020a170906bc9400b00a3787e15929mr1592434ejb.54.1707215475447; Tue, 06
- Feb 2024 02:31:15 -0800 (PST)
+        bh=QphZTJ2YkJ63c2lk2h3jm8PAaMKsJdXhMlN0zVjn/Jc=;
+        b=aMZos4Pva5dBSwz6dhMtsMEZw1wKBxdZ2YwTxpMCHvSbbMi9KUNZCAcHTT6QLzh34e
+         qD0JN+sddyKnQyIgiSqEcjepM+aH6S+ONgXfS3SmMnkhi8J0GEE6ZZQA6W6tBzqP/jYz
+         tLc9xv4dnX4KSAo3qVdBteBQkAncb9ssjVL8whZBMzlhcmIpmDZ2fFE7Hzt1vX0oQYdv
+         egA2Vv+vKOgTCDhd/o+qH76tGaxvPQVCqcMdiPGIn2gjReDsRQFwtLJD9YhzezEleKA5
+         mH2sjy0rGYPP+cNNmxR/65shS9SeJ5noO6gX6+4mn6YfJqh+wJbAq00LgVRTwCIJGEnb
+         nuhA==
+X-Gm-Message-State: AOJu0Yx7SP82VTRFVfDQElIoHBKWSWPzGGSYagl689Zyle+SmluDSPfy
+	ADU2EGbbZRM2NdzRRt3GQCFYfdUy/6Bg8In/R6oj2fVlUy8PURsOPuD1r9ik5Q==
+X-Google-Smtp-Source: AGHT+IGnNcxzPIbgqnBw46Vcy6cSy+rHKyDhyh+6nEHAskrzfXSk8Pba+caqTs8eFtX82lVoc0UkSQ==
+X-Received: by 2002:a05:6a20:4294:b0:19c:8bc7:c82d with SMTP id o20-20020a056a20429400b0019c8bc7c82dmr1281941pzj.40.1707215522983;
+        Tue, 06 Feb 2024 02:32:02 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVZ08SRVjb0/BRWQtEe0sMgtIsd0pJXgjb1JJOKV/fs8H8l2wXG5WzYVMiQNiW4XOV7ukVKqVdSrnlZSST5gwYsI9tthgnKdzhrOzNjIpQd8GntKZ7g6fKl3GDmAJ1N34U3n05S+DTKk25mEMfnt7Hc1Ll+vBqX0Oqj+WFDlVeb/F1EA97PJU4N9nKU9387uMQPpwefA66sVj7Ah3S2U6/OQLJVUVUlsXhz/I6RtG5+zG+YQAYX6vpv1TsVW8h8DbEMLfsj8+qD9V1ZSsAfT4Z/tBwF+ASbfLaJT4k8
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id y28-20020aa793dc000000b006e033804fa8sm1497952pff.101.2024.02.06.02.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 02:32:01 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Marco Elver <elver@google.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] overflow: Adjust check_*_overflow() kern-doc to reflect results
+Date: Tue,  6 Feb 2024 02:31:54 -0800
+Message-Id: <20240206103201.2013060-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240206102354.make.081-kees@kernel.org>
+References: <20240206102354.make.081-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206042408.224138-1-joychakr@google.com> <2024020647-submarine-lucid-ea7b@gregkh>
-In-Reply-To: <2024020647-submarine-lucid-ea7b@gregkh>
-From: Joy Chakraborty <joychakr@google.com>
-Date: Tue, 6 Feb 2024 16:01:02 +0530
-Message-ID: <CAOSNQF3jk+85-P+NB-1w=nQwJr1BBO9OQuLbm6s8PiXrFMQdjg@mail.gmail.com>
-Subject: Re: [PATCH v2] nvmem: rmem: Fix return value of rmem_read()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, linux-kernel@vger.kernel.org, manugautam@google.com, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2673; i=keescook@chromium.org;
+ h=from:subject; bh=6Jgp3vxxK3Vk/XDvje4qMUZMER6LkaJQhb8c5Sf9IQw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwgqcMG0B/D0l8I3Zre9ccIWewGWghw7fRDA6+
+ Ex6geHfWP6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcIKnAAKCRCJcvTf3G3A
+ Joz+D/0cfyydT7lF4BjFsEbIOJCxDYkkLmOjtUQN7/LCKYtVZm+DLMpe3xQlqQ5642hnqrHlwvW
+ vbBhB4FtiAAmcgYL1tSSVzwAKiYZHRjg9/TGsZzYfHuCx7IZmw+bjwONCr0xGQQ7ECB1/9owrH2
+ DBesL91WSyxI+bxbU6d1oPB+8xsJ1QG1FPLRJAqAlmD0reEby+mINShrJTMfzvwG7KGUWK9MaCE
+ 5idH7bzvD3u23dl6N5X/Gk83T3JNAcQbSZN/PCmcASTFABWLJeMRzhbnoZrqdEyAnU/GVRrmkH+
+ 7UQHA75exvR8iRTk699l61Kfvl+iT6ieWXV3zgw7mluq5BzKRlav6YRy9hECMP3DAiD40WkFnsV
+ 1wZB2B2doRYnAN99/20Woo0U+F0qG7L2xEvNXdkk/luDZSF19iGV4C1PvzmXlWakqmTD21WgEBn
+ QBZIINqi7eDUime2W+T7JDAmNlIPRjD+8GrVsGZ0KOJ5oG5SZfwk98JGI08tWyrF2LD62r0Uzh4
+ kVUzw5clpopb7ORRQ90x5ldF8N8UE2bnVBJF5pFUQOcx1wzds1rm6bR/WWIgKCFK/hZRgBrH7PZ
+ /+FNbKQba2rqh+XHg+My84GC3PYtbU/1raU3g9lx1d2zDVe5EzthoHelVjcU8GhAPTtWTmRQ6yF VUBItL7K5+oHnbQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 6, 2024 at 3:00=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Feb 06, 2024 at 04:24:08AM +0000, Joy Chakraborty wrote:
-> > reg_read() callback registered with nvmem core expects an integer error
-> > as a return value but rmem_read() returns the number of bytes read, as =
-a
-> > result error checks in nvmem core fail even when they shouldn't.
-> >
-> > Return 0 on success where number of bytes read match the number of byte=
-s
-> > requested and a negative error -EINVAL on all other cases.
-> >
-> > Fixes: 5a3fa75a4d9c ("nvmem: Add driver to expose reserved memory as nv=
-mem")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Joy Chakraborty <joychakr@google.com>
-> > ---
-> >  drivers/nvmem/rmem.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/nvmem/rmem.c b/drivers/nvmem/rmem.c
-> > index 752d0bf4445e..a74dfa279ff4 100644
-> > --- a/drivers/nvmem/rmem.c
-> > +++ b/drivers/nvmem/rmem.c
-> > @@ -46,7 +46,12 @@ static int rmem_read(void *context, unsigned int off=
-set,
-> >
-> >       memunmap(addr);
-> >
-> > -     return count;
-> > +     if (count !=3D bytes) {
-> > +             dev_err(priv->dev, "Failed read memory (%d)\n", count);
-> > +             return -EINVAL;
->
-> Why is a "short read" somehow illegal here?  What internal changes need
-> to be made now that this has changed?
+The check_*_overflow() helpers will return results with potentially
+wrapped-around values. These values have always been checked by the
+selftests, so avoid the confusing language in the kern-doc. The idea of
+"safe for use" was relative to the expectation of whether or not the
+caller wants a wrapped value -- the calculation itself will always follow
+arithmetic wrapping rules.
 
-In my opinion "short read" should be illegal for cases where if the
-nvmem core is unable to read the required size of data to fill up a
-nvmem cell then data returned might have truncated value.
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/overflow.h | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-No internal changes should be made since the registered reg_read() is
-called from  __nvmem_reg_read() which eventually passes on the error
-code to nvmem_reg_read() whose return code is already checked and
-passed to nvmem consumers.
-Currently rmem driver is incorrectly passing a positive value for success.
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 7b5cf4a5cd19..4e741ebb8005 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -57,11 +57,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+  * @b: second addend
+  * @d: pointer to store sum
+  *
+- * Returns 0 on success.
++ * Returns 0 on success, 1 on wrap-around.
+  *
+- * *@d holds the results of the attempted addition, but is not considered
+- * "safe for use" on a non-zero return value, which indicates that the
+- * sum has overflowed or been truncated.
++ * *@d holds the results of the attempted addition, which may wrap-around.
+  */
+ #define check_add_overflow(a, b, d)	\
+ 	__must_check_overflow(__builtin_add_overflow(a, b, d))
+@@ -72,11 +70,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+  * @b: subtrahend; value to subtract from @a
+  * @d: pointer to store difference
+  *
+- * Returns 0 on success.
++ * Returns 0 on success, 1 on wrap-around.
+  *
+- * *@d holds the results of the attempted subtraction, but is not considered
+- * "safe for use" on a non-zero return value, which indicates that the
+- * difference has underflowed or been truncated.
++ * *@d holds the results of the attempted subtraction, which may wrap-around.
+  */
+ #define check_sub_overflow(a, b, d)	\
+ 	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+@@ -87,11 +83,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+  * @b: second factor
+  * @d: pointer to store product
+  *
+- * Returns 0 on success.
++ * Returns 0 on success, 1 on wrap-around.
+  *
+- * *@d holds the results of the attempted multiplication, but is not
+- * considered "safe for use" on a non-zero return value, which indicates
+- * that the product has overflowed or been truncated.
++ * *@d holds the results of the attempted multiplication, which may wrap-around.
+  */
+ #define check_mul_overflow(a, b, d)	\
+ 	__must_check_overflow(__builtin_mul_overflow(a, b, d))
+-- 
+2.34.1
 
->
-> And what will userspace do with this error message in the kernel log?
-
-User space currently is not seeing this error for nvmem device/eeprom
-reads due to the following code at nvmem/core.c in
-bin_attr_nvmem_read():
-"
-    rc =3D nvmem_reg_read(nvmem, pos, buf, count);
-
-    if (rc)
-        return rc;
-
-    return count;
-"
-since it expects to return the number of bytes.
-
-Userspace will see a false error with nvmem cell reads from
-nvmem_cell_attr_read() in current code, which should be fixed on
-returning 0 for success.
-
-> thanks,
->
-> greg k-h
-
-Thanks
-Joy
