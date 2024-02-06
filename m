@@ -1,40 +1,25 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D13212D74F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 11:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA3E912EBEB
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 11:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707218695; cv=none; b=YyI4c5HybOeJbREQbqKeF5uuuQPXS+ghcmrKImi0yDIjy+uIwOJnz+Jvw6/qMvvz2+lVGMYbllCqJpaIdOkqiXZWNodwcGxJMoj8Jtk11SqVu4QdC+dc/vUtYWY1cKM+QlPIM3AEuh8T0JplRjfEgT3GJI+6fkVgsz1bhIfhXwA=
+	t=1707218709; cv=none; b=a37uW8eTybJAguu5POKA6nhmgRlpZ5ghbjv+ysocmeqX+ETG2wdUAStZyA3rBOEhB9444EGhLzZpw1AVLkY5ZPfNviZXObrdcQwzWLZYs4SG6ZiW8v9Q3rzi9/5txmxk4F7Mue5ZfIGVK1SC0ykNxjX8z0EnGwAuoO/hufSRi5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707218695; c=relaxed/simple;
-	bh=W9eVxM9U4SL9Oval+gIwwmjbVA2ob2C9cUlB+OFaVvA=;
+	s=arc-20240116; t=1707218709; c=relaxed/simple;
+	bh=UqecmSij6jUkv/J1hyJQV+i6fQZsP3djMdtLCY2IesY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EYm2ms0u1DXg2xg2tMBDX/nqyUtIlepVK0wDz5dFf7XhoZ1vpBocvUnER8f8xLGBR2bZpkG/fktRUZ54NwuBbEq7uB2wg0wHFKzW2xX3HPYucz0v1MMZAY4OrQpvAflUkfsaafAuEm4bURThkgABqhkmBETHcY8n2q7WAG7qGkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=e5f64p7g; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="e5f64p7g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707218691;
-	bh=W9eVxM9U4SL9Oval+gIwwmjbVA2ob2C9cUlB+OFaVvA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e5f64p7gND16GTg1YhhbvoMrXWlljuooWsiJ1nAVQstieLhpfDpYss7vxXOCcukp9
-	 bqU3DHZiB5K9jtpWwUdjLDLQGvncm2gGYIW7qoWVJ3kczytkd/NusXDThTFNngZp2C
-	 6gu6gCU1OTL1tRKVsuaEprn48G5HRMYgzKz4+Mp3pdAwRXXz7SSSAi0gA88P1SjDGT
-	 f8MNgqJ4ZcxRnET/5TnaWwoGVWOBD9Dfk4Leilb9+nL314aoIJg1rqOraAU3+qX6a+
-	 pJ4/SDii/b/xKagaKT1GzoTzdvUAM08ExKWQKtN6dKtQIzROnYqJGBROW5tfzIj5Kr
-	 aKdW8EzqnJTtw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E37003781F8E;
-	Tue,  6 Feb 2024 11:24:50 +0000 (UTC)
-Message-ID: <1d6b4a7d-4107-4880-858a-ecd565eee124@collabora.com>
-Date: Tue, 6 Feb 2024 12:24:50 +0100
+	 In-Reply-To:Content-Type; b=AI4jhnQ15MESoXqZIOtPQLhI01BcCa4L9G+61Eo28dMxP0f2oittr9jF2VgdJGXkCjPvqyGerNLLhePW+3wqy9SKRGk9rBH88sUSID4oIyb1ap3JmBzY7hCOM6/QM9KNLZ7Z2kUeT74bzSCShr6FXywHI1f4GKdVfy88cC2RAEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB9CD1FB;
+	Tue,  6 Feb 2024 03:25:48 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02F873F762;
+	Tue,  6 Feb 2024 03:25:04 -0800 (PST)
+Message-ID: <879751d4-486c-4d5e-b9b3-60e8822ff3fb@arm.com>
+Date: Tue, 6 Feb 2024 11:25:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,191 +27,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] drm/mediatek: dsi: Cleanup functions
- mtk_dsi_ps_control{_vact}()
-Content-Language: en-US
-To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
- "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "kernel@collabora.com" <kernel@collabora.com>,
- "daniel@ffwll.ch" <daniel@ffwll.ch>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
-References: <20240131113434.241929-1-angelogioacchino.delregno@collabora.com>
- <20240131113434.241929-3-angelogioacchino.delregno@collabora.com>
- <14e124f02d82ff151974f99d042c4197e4dd5dd7.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <14e124f02d82ff151974f99d042c4197e4dd5dd7.camel@mediatek.com>
+Subject: Re: [PATCH v3 1/3] iommu/iova: Tidy up iova_cache_get() failure
+Content-Language: en-GB
+To: John Garry <john.g.garry@oracle.com>, joro@8bytes.org
+Cc: will@kernel.org, pasha.tatashin@soleen.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, rientjes@google.com,
+ yosryahmed@google.com
+References: <cover.1707144953.git.robin.murphy@arm.com>
+ <ae4a3bda2d6a9b738221553c838d30473bd624e7.1707144953.git.robin.murphy@arm.com>
+ <6041982e-3c65-497f-b7bf-3ac444fa3623@oracle.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <6041982e-3c65-497f-b7bf-3ac444fa3623@oracle.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Il 06/02/24 10:50, CK Hu (胡俊光) ha scritto:
-> Hi, Angelo:
-> 
-> On Wed, 2024-01-31 at 12:34 +0100, AngeloGioacchino Del Regno wrote:
->> Function mtk_dsi_ps_control() is a subset of
->> mtk_dsi_ps_control_vact():
->> merge the two in one mtk_dsi_ps_control() function by adding one
->> function parameter `config_vact` which, when true, writes the VACT
->> related registers.
+On 06/02/2024 11:01 am, John Garry wrote:
+> On 05/02/2024 15:32, Robin Murphy wrote:
+>> Failure handling in iova_cache_get() is a little messy, and we'd like
+>> to add some more to it, so let's tidy up a bit first. By leaving the
+>> hotplug handler until last we can take advantage of kmem_cache_destroy()
+>> being NULL-safe to have a single cleanup label. We can also improve the
+>> error reporting, noting that kmem_cache_create() already screams if it
+>> fails, so that one is redundant.
 >>
->> Reviewed-by: Fei Shao <fshao@chromium.org>
->> Signed-off-by: AngeloGioacchino Del Regno <
->> angelogioacchino.delregno@collabora.com>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> Regardless of a couple of minor comments, below, FWIW:
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+
+Thanks!
+
 >> ---
->>   drivers/gpu/drm/mediatek/mtk_dsi.c | 76 +++++++++-------------------
->> --
->>   1 file changed, 23 insertions(+), 53 deletions(-)
+>>   drivers/iommu/iova.c | 33 ++++++++++++++++-----------------
+>>   1 file changed, 16 insertions(+), 17 deletions(-)
 >>
->> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c
->> b/drivers/gpu/drm/mediatek/mtk_dsi.c
->> index 3b7392c03b4d..8414ce73ce9f 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
->> @@ -351,40 +351,6 @@ static void mtk_dsi_set_vm_cmd(struct mtk_dsi
->> *dsi)
->>   	mtk_dsi_mask(dsi, DSI_VM_CMD_CON, TS_VFP_EN, TS_VFP_EN);
->>   }
->>   
->> -static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
->> -{
->> -	struct videomode *vm = &dsi->vm;
->> -	u32 dsi_buf_bpp, ps_wc;
->> -	u32 ps_bpp_mode;
->> -
->> -	if (dsi->format == MIPI_DSI_FMT_RGB565)
->> -		dsi_buf_bpp = 2;
->> -	else
->> -		dsi_buf_bpp = 3;
->> -
->> -	ps_wc = vm->hactive * dsi_buf_bpp;
->> -	ps_bpp_mode = ps_wc;
->> -
->> -	switch (dsi->format) {
->> -	case MIPI_DSI_FMT_RGB888:
->> -		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
->> -		break;
->> -	case MIPI_DSI_FMT_RGB666:
->> -		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
->> -		break;
->> -	case MIPI_DSI_FMT_RGB666_PACKED:
->> -		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
->> -		break;
->> -	case MIPI_DSI_FMT_RGB565:
->> -		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
->> -		break;
->> -	}
->> -
->> -	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->> -	writel(ps_bpp_mode, dsi->regs + DSI_PSCTRL);
->> -	writel(ps_wc, dsi->regs + DSI_HSTX_CKL_WC);
->> -}
->> -
->>   static void mtk_dsi_rxtx_control(struct mtk_dsi *dsi)
->>   {
->>   	u32 tmp_reg;
->> @@ -416,36 +382,40 @@ static void mtk_dsi_rxtx_control(struct mtk_dsi
->> *dsi)
->>   	writel(tmp_reg, dsi->regs + DSI_TXRX_CTRL);
->>   }
->>   
->> -static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
->> +static void mtk_dsi_ps_control(struct mtk_dsi *dsi, bool
->> config_vact)
->>   {
->> -	u32 dsi_tmp_buf_bpp;
->> -	u32 tmp_reg;
->> +	struct videomode *vm = &dsi->vm;
->> +	u32 dsi_buf_bpp, ps_wc;
->> +	u32 ps_bpp_mode;
+>> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+>> index d30e453d0fb4..cf95001d85c0 100644
+>> --- a/drivers/iommu/iova.c
+>> +++ b/drivers/iommu/iova.c
+>> @@ -254,26 +254,20 @@ static void free_iova_mem(struct iova *iova)
+>>   int iova_cache_get(void)
+>>   {
+>> +    int err = -ENOMEM;
 >> +
->> +	if (dsi->format == MIPI_DSI_FMT_RGB565)
->> +		dsi_buf_bpp = 2;
->> +	else
->> +		dsi_buf_bpp = 3;
->> +
->> +	ps_wc = vm->hactive * dsi_buf_bpp;
->> +	ps_bpp_mode = ps_wc;
->>   
->>   	switch (dsi->format) {
->>   	case MIPI_DSI_FMT_RGB888:
->> -		tmp_reg = PACKED_PS_24BIT_RGB888;
->> -		dsi_tmp_buf_bpp = 3;
->> +		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
->>   		break;
->>   	case MIPI_DSI_FMT_RGB666:
->> -		tmp_reg = LOOSELY_PS_18BIT_RGB666;
->> -		dsi_tmp_buf_bpp = 3;
->> +		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
->>   		break;
->>   	case MIPI_DSI_FMT_RGB666_PACKED:
->> -		tmp_reg = PACKED_PS_18BIT_RGB666;
->> -		dsi_tmp_buf_bpp = 3;
->> +		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
+>>       mutex_lock(&iova_cache_mutex);
+>>       if (!iova_cache_users) {
+>> -        int ret;
+>> +        iova_cache = kmem_cache_create("iommu_iova", sizeof(struct 
+>> iova), 0,
+>> +                           SLAB_HWCACHE_ALIGN, NULL);
 > 
-> You change the original logic here. If it is a fixup, separate to a
-> independent patch not hiding in a clean up patch. So we could backport
-> the fixup patch.
+> Maybe can use KMEM_CACHE(), but it would mean that the name would change.
+
+Oh, I never came across that before. On reflection, I am inclined to 
+think that the "iommu_" names are usefully informative to userspace, and 
+it's not worth churning the structure names themselves just to save a 
+couple of lines here.
+
+>> +        if (!iova_cache)
+>> +            goto out_err;
+>> -        ret = cpuhp_setup_state_multi(CPUHP_IOMMU_IOVA_DEAD, 
+>> "iommu/iova:dead", NULL,
+>> -                    iova_cpuhp_dead);
+>> -        if (ret) {
+>> -            mutex_unlock(&iova_cache_mutex);
+>> -            pr_err("Couldn't register cpuhp handler\n");
+>> -            return ret;
+>> -        }
+>> -
+>> -        iova_cache = kmem_cache_create(
+>> -            "iommu_iova", sizeof(struct iova), 0,
+>> -            SLAB_HWCACHE_ALIGN, NULL);
+>> -        if (!iova_cache) {
+>> -            cpuhp_remove_multi_state(CPUHP_IOMMU_IOVA_DEAD);
+>> -            mutex_unlock(&iova_cache_mutex);
+>> -            pr_err("Couldn't create iova cache\n");
+>> -            return -ENOMEM;
+>> +        err = cpuhp_setup_state_multi(CPUHP_IOMMU_IOVA_DEAD, 
+>> "iommu/iova:dead",
+>> +                          NULL, iova_cpuhp_dead);
+>> +        if (err) {
+>> +            pr_err("IOVA: Couldn't register cpuhp handler: %pe\n", 
+>> ERR_PTR(err));
 > 
+> Maybe can use pr_fmt with "iova".
 
-Thank you CK! Thanks to you noticing that, I've discovered that actually
-besides the two functions not agreeing on the bit to set, the definitions
-of those bits are actually wrong (as you can verify on datasheets for
-multiple SoCs, including MT8195, MT8188, MT8186, MT8183).
-
-v4 will fix that by adding a fixup commit to rectify the whole thing.
+That one I did consider, but since we now have just this one print and 
+no imminent reason to add more, I figured I'd just stick it inline, and 
+we can factor out a pr_fmt in future if we ever have cause to.
 
 Cheers,
-Angelo
+Robin.
 
-> Regards,
-> CK
 > 
->>   		break;
->>   	case MIPI_DSI_FMT_RGB565:
->> -		tmp_reg = PACKED_PS_16BIT_RGB565;
->> -		dsi_tmp_buf_bpp = 2;
->> -		break;
->> -	default:
->> -		tmp_reg = PACKED_PS_24BIT_RGB888;
->> -		dsi_tmp_buf_bpp = 3;
->> +		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
->>   		break;
->>   	}
->>   
->> -	tmp_reg += dsi->vm.hactive * dsi_tmp_buf_bpp & DSI_PS_WC;
->> -	writel(tmp_reg, dsi->regs + DSI_PSCTRL);
->> +	if (config_vact) {
->> +		writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->> +		writel(ps_wc, dsi->regs + DSI_HSTX_CKL_WC);
->> +	}
->> +	writel(ps_bpp_mode, dsi->regs + DSI_PSCTRL);
->>   }
->>   
->>   static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->> @@ -521,7 +491,7 @@ static void mtk_dsi_config_vdo_timing(struct
->> mtk_dsi *dsi)
->>   	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
->>   	writel(horizontal_frontporch_byte, dsi->regs + DSI_HFP_WC);
->>   
->> -	mtk_dsi_ps_control(dsi);
->> +	mtk_dsi_ps_control(dsi, false);
->>   }
->>   
->>   static void mtk_dsi_start(struct mtk_dsi *dsi)
->> @@ -666,7 +636,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->>   	mtk_dsi_reset_engine(dsi);
->>   	mtk_dsi_phy_timconfig(dsi);
->>   
->> -	mtk_dsi_ps_control_vact(dsi);
->> +	mtk_dsi_ps_control(dsi, true);
->>   	mtk_dsi_set_vm_cmd(dsi);
->>   	mtk_dsi_config_vdo_timing(dsi);
->>   	mtk_dsi_set_interrupt_enable(dsi);
-
-
+>> +            goto out_err;
+>>           }
+>>       }
+>> @@ -281,6 +275,11 @@ int iova_cache_get(void)
+>>       mutex_unlock(&iova_cache_mutex);
+>>       return 0;
+>> +
+>> +out_err:
+>> +    kmem_cache_destroy(iova_cache);
+>> +    mutex_unlock(&iova_cache_mutex);
+>> +    return err;
+>>   }
+>>   EXPORT_SYMBOL_GPL(iova_cache_get);
+> 
