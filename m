@@ -1,28 +1,29 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3F212BF0C;
-	Tue,  6 Feb 2024 08:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD7B12BF0F;
+	Tue,  6 Feb 2024 08:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707208652; cv=none; b=CopzsllwKlSbkOsfdW6fl02iQBkctbJBAkvOd/pjcQq/lKaolAHBeZzEMwjaDq9BJ+WR2bdu7hjbwhYGLRLCftbVnoB4xJYLXchNGyD2YLTeyGXl3ke+xNywaqMLc9mWRjgpyGVhvoW1uMcjgzzd8+vl0SW1wOxnetgD+nDlFnY=
+	t=1707208652; cv=none; b=ZE3Ty9Py6tGF2SKR4dQGgI2hZzK/d/KkStcqCe15Bsg+UzpHPlbU+3WB+bKeHPJrR7wx545Ipwnm6ZfX683Yju1ZUUd91KqBEJqlWtTg/2honQtE7O+xaqcVaTHi7y3b5STT8fX0J0rJ/D2ngCmMDM/MAHSbRtw+wnEzH+JTd3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707208652; c=relaxed/simple;
-	bh=GD182B84c75sEn+FAFQpkVm/e1Dq6ZO4k6F2hsOQWsA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uVr9iLgNApiPzS3VJrtEzUeVSEE7gDI7UKOh1GVwuyNe9DWDEMzxjv3tze88HIJmYc/R8zygWsiwf3InbIkmK5d7RVYPIropSJiqCvZguEbjCb0x0Xj3pWNnMOT0euthgF0LGUmfzBLFjo248HfT6Kdy9w8b0DULI8E9eb7KR/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	bh=zdWxmqTwFrfRIDgAj0sfZeAbu8v57sL5+EShC9x6of8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gWWuRudfE0NHDPGUTvMq74ncv6LYCawIlvKt9BN6BMG1eGG/+Zfa4gLnrbJGWxWOX1sOxD7i79ZLfCy1ptApqjHaG7ESXq/Z0tZfDfnLuBcD5teWtkRATIPiVwa1hM4rKARZZ0IRZkyP4dya5mH+aIBXDa8z4g4qmNdz3vIrQgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TTc2B2BhDz1FK8K;
-	Tue,  6 Feb 2024 16:32:50 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TTc6F23Nzz1xmt7;
+	Tue,  6 Feb 2024 16:36:21 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id BB2551A016B;
-	Tue,  6 Feb 2024 16:37:25 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 9C31F140382;
+	Tue,  6 Feb 2024 16:37:27 +0800 (CST)
 Received: from ubuntu2204.huawei.com (10.67.174.22) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 6 Feb 2024 16:37:25 +0800
+ 15.1.2507.35; Tue, 6 Feb 2024 16:37:27 +0800
 From: Yang Jihong <yangjihong1@huawei.com>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<namhyung@kernel.org>, <mark.rutland@arm.com>,
@@ -30,10 +31,12 @@ To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<irogers@google.com>, <adrian.hunter@intel.com>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <yangjihong1@huawei.com>
-Subject: [PATCH v2 0/5] perf sched: Minor optimizations for resource initialization
-Date: Tue, 6 Feb 2024 08:32:23 +0000
-Message-ID: <20240206083228.172607-1-yangjihong1@huawei.com>
+Subject: [PATCH v2 4/5] perf sched: Move curr_pid and cpu_last_switched initialization to perf_sched__{lat|map|replay}()
+Date: Tue, 6 Feb 2024 08:32:27 +0000
+Message-ID: <20240206083228.172607-5-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240206083228.172607-1-yangjihong1@huawei.com>
+References: <20240206083228.172607-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,12 +48,10 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 
-start_work_mutex, work_done_wait_mutex, curr_thread, curr_pid, and
-cpu_last_switched are initialized together in cmd_sched(),
-but for different perf sched subcommands, some actions are unnecessary,
-especially perf sched record.
-This series of patches initialize only required resources for different
-subcommands.
+The curr_pid and cpu_last_switched are used only for the
+'perf sched replay/latency/map'. Put their initialization in
+perf_sched__{lat|map|replay () to reduce unnecessary actions in other
+commands.
 
 Simple functional testing:
 
@@ -59,133 +60,286 @@ Simple functional testing:
   # 20 sender and receiver processes per group
   # 10 groups == 400 processes run
 
-       Total time: 0.204 [sec]
+       Total time: 0.209 [sec]
   [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 14.868 MB perf.data (133947 samples) ]
+  [ perf record: Captured and wrote 16.456 MB perf.data (147907 samples) ]
 
-  # perf sched latency
+  # perf sched lat
 
    -------------------------------------------------------------------------------------------------------------------------------------------
     Task                  |   Runtime ms  | Switches | Avg delay ms    | Max delay ms    | Max delay start           | Max delay end          |
    -------------------------------------------------------------------------------------------------------------------------------------------
-    qemu-system-x86:(3)   |      2.753 ms |       10 | avg:   0.963 ms | max:   8.526 ms | max start: 457541.695704 s | max end: 457541.704230 s
-    sched-messaging:(401) |   2995.481 ms |    36312 | avg:   0.944 ms | max: 111.551 ms | max start: 457541.645349 s | max end: 457541.756900 s
-    rcu_sched:14          |      0.402 ms |       32 | avg:   0.266 ms | max:   7.996 ms | max start: 457541.581363 s | max end: 457541.589359 s
-    sshd:48125            |      0.461 ms |        2 | avg:   0.033 ms | max:   0.036 ms | max start: 457541.584374 s | max end: 457541.584410 s
-    perf:112408           |      2.321 ms |        2 | avg:   0.031 ms | max:   0.032 ms | max start: 457541.846874 s | max end: 457541.846906 s
+    sched-messaging:(401) |   2990.699 ms |    38705 | avg:   0.661 ms | max:  67.046 ms | max start: 456532.624830 s | max end: 456532.691876 s
+    qemu-system-x86:(7)   |    179.764 ms |     2191 | avg:   0.152 ms | max:  21.857 ms | max start: 456532.576434 s | max end: 456532.598291 s
+    sshd:48125            |      0.522 ms |        2 | avg:   0.037 ms | max:   0.046 ms | max start: 456532.514610 s | max end: 456532.514656 s
   <SNIP>
-    ksoftirqd/1:22        |      0.704 ms |        3 | avg:   0.005 ms | max:   0.005 ms | max start: 457541.845388 s | max end: 457541.845393 s
-    kworker/15:0-mm:61886 |      0.227 ms |       21 | avg:   0.005 ms | max:   0.006 ms | max start: 457541.739187 s | max end: 457541.739193 s
-    kworker/13:1-ev:92643 |      0.249 ms |       22 | avg:   0.005 ms | max:   0.006 ms | max start: 457541.768695 s | max end: 457541.768701 s
-    kworker/12:1-ev:61202 |      0.418 ms |       40 | avg:   0.005 ms | max:   0.007 ms | max start: 457541.739679 s | max end: 457541.739687 s
+    ksoftirqd/11:82       |      0.063 ms |        1 | avg:   0.005 ms | max:   0.005 ms | max start: 456532.769366 s | max end: 456532.769371 s
+    kworker/9:0-mm_:34624 |      0.233 ms |       20 | avg:   0.004 ms | max:   0.007 ms | max start: 456532.690804 s | max end: 456532.690812 s
+    migration/13:93       |      0.000 ms |        1 | avg:   0.004 ms | max:   0.004 ms | max start: 456532.512669 s | max end: 456532.512674 s
    -----------------------------------------------------------------------------------------------------------------
-    TOTAL:                |   3007.424 ms |    36776 |
+    TOTAL:                |   3180.750 ms |    41368 |
    ---------------------------------------------------
 
   # echo $?
   0
 
   # perf sched map
-    *A0                                                               457541.580856 secs A0 => migration/0:15
-    *.                                                                457541.580886 secs .  => swapper:0
-     .  *B0                                                           457541.581018 secs B0 => migration/1:21
-     .  *.                                                            457541.581050 secs
-     .   .  *C0                                                       457541.581147 secs C0 => migration/2:27
-     .   .  *.                                                        457541.581174 secs
-     .   .   .  *D0                                                   457541.581259 secs D0 => migration/3:33
+    *A0                                                               456532.510141 secs A0 => migration/0:15
+    *.                                                                456532.510171 secs .  => swapper:0
+     .  *B0                                                           456532.510261 secs B0 => migration/1:21
+     .  *.                                                            456532.510279 secs
   <SNIP>
-     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .   .   .   .    457541.847783 secs
-     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .   .   .    457541.847873 secs
-     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .   .    457541.847954 secs
-     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .    457541.848034 secs
-     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7   457541.848108 secs
+     L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7 *L7  .   .   .   .    456532.785979 secs
+     L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7 *L7  .   .   .    456532.786054 secs
+     L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7 *L7  .   .    456532.786127 secs
+     L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7 *L7  .    456532.786197 secs
+     L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7  L7 *L7   456532.786270 secs
   # echo $?
   0
 
   # perf sched replay
   run measurement overhead: 108 nsecs
-  sleep measurement overhead: 65244 nsecs
+  sleep measurement overhead: 66473 nsecs
   the run test took 1000002 nsecs
-  the sleep test took 1079677 nsecs
-  nr_run_events:        40700
-  nr_sleep_events:      41415
-  nr_wakeup_events:     31601
-  target-less wakeups:  15
-  multi-target wakeups: 805
-  task      0 (             swapper:         0), nr_events: 7307
+  the sleep test took 1082686 nsecs
+  nr_run_events:        49334
+  nr_sleep_events:      50054
+  nr_wakeup_events:     34701
+  target-less wakeups:  165
+  multi-target wakeups: 766
+  task      0 (             swapper:         0), nr_events: 15419
   task      1 (             swapper:         1), nr_events: 1
   task      2 (             swapper:         2), nr_events: 1
   <SNIP>
-  task    713 (     sched-messaging:    112809), nr_events: 987
-  task    714 (     sched-messaging:    112810), nr_events: 2706
+  task    715 (     sched-messaging:    110248), nr_events: 1438
+  task    716 (     sched-messaging:    110249), nr_events: 512
+  task    717 (     sched-messaging:    110250), nr_events: 500
+  task    718 (     sched-messaging:    110251), nr_events: 537
+  task    719 (     sched-messaging:    110252), nr_events: 823
   ------------------------------------------------------------
-  #1  : 1298.443, ravg: 1298.44, cpu: 8281.74 / 8281.74
-  #2  : 1316.426, ravg: 1300.24, cpu: 7577.61 / 8211.32
-  #3  : 1323.864, ravg: 1302.60, cpu: 7932.48 / 8183.44
-  #4  : 1329.423, ravg: 1305.29, cpu: 7646.17 / 8129.71
-  #5  : 1321.419, ravg: 1306.90, cpu: 7669.90 / 8083.73
-  #6  : 1322.082, ravg: 1308.42, cpu: 7755.66 / 8050.92
-  #7  : 1324.330, ravg: 1310.01, cpu: 7361.51 / 7981.98
-  #8  : 1312.489, ravg: 1310.26, cpu: 7170.11 / 7900.80
-  #9  : 1312.002, ravg: 1310.43, cpu: 7176.40 / 7828.36
-  #10 : 1311.737, ravg: 1310.56, cpu: 7121.14 / 7757.63
+  #1  : 1325.288, ravg: 1325.29, cpu: 7823.35 / 7823.35
+  #2  : 1363.606, ravg: 1329.12, cpu: 7655.53 / 7806.56
+  #3  : 1349.494, ravg: 1331.16, cpu: 7544.80 / 7780.39
+  #4  : 1311.488, ravg: 1329.19, cpu: 7495.13 / 7751.86
+  #5  : 1309.902, ravg: 1327.26, cpu: 7266.65 / 7703.34
+  #6  : 1309.535, ravg: 1325.49, cpu: 7843.86 / 7717.39
+  #7  : 1316.482, ravg: 1324.59, cpu: 7854.41 / 7731.09
+  #8  : 1366.604, ravg: 1328.79, cpu: 7955.81 / 7753.57
+  #9  : 1326.286, ravg: 1328.54, cpu: 7466.86 / 7724.90
+  #10 : 1356.653, ravg: 1331.35, cpu: 7566.60 / 7709.07
   # echo $?
   0
 
-  # perf sched script
-              perf  112408 [000] 457541.580826: sched:sched_stat_runtime: comm=perf pid=112408 runtime=53050 [ns] vruntime=621244222333 [ns]
-              perf  112408 [000] 457541.580831:       sched:sched_waking: comm=migration/0 pid=15 prio=0 target_cpu=000
-              perf  112408 [000] 457541.580853: sched:sched_stat_runtime: comm=perf pid=112408 runtime=24379 [ns] vruntime=621244246712 [ns]
-              perf  112408 [000] 457541.580856:       sched:sched_switch: prev_comm=perf prev_pid=112408 prev_prio=120 prev_state=R+ ==> next_comm=migration/0 next_pid=15 next_prio=0
-  <SNIP>
-           swapper       0 [012] 457541.847873:       sched:sched_switch: prev_comm=swapper/12 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
-           swapper       0 [013] 457541.847954:       sched:sched_switch: prev_comm=swapper/13 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
-           swapper       0 [014] 457541.848034:       sched:sched_switch: prev_comm=swapper/14 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
-           swapper       0 [015] 457541.848108:       sched:sched_switch: prev_comm=swapper/15 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
-  # echo $?
-  0
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-sched.c | 94 +++++++++++++++++++++++++-------------
+ 1 file changed, 61 insertions(+), 33 deletions(-)
 
-  # perf sched timehist
-  Samples do not have callchains.
-             time    cpu  task name                       wait time  sch delay   run time
-                          [tid/pid]                          (msec)     (msec)     (msec)
-  --------------- ------  ------------------------------  ---------  ---------  ---------
-    457541.580856 [0000]  perf[112408]                        0.000      0.000      0.000
-    457541.580886 [0000]  migration/0[15]                     0.000      0.024      0.029
-    457541.581018 [0001]  perf[112408]                        0.000      0.000      0.000
-    457541.581050 [0001]  migration/1[21]                     0.000      0.006      0.032
-    457541.581147 [0002]  perf[112408]                        0.000      0.000      0.000
-    457541.581174 [0002]  migration/2[27]                     0.000      0.005      0.026
-  <SNIP>
-    457541.847623 [0009]  <idle>                              0.010      0.000      1.489
-    457541.847704 [0010]  <idle>                              0.012      0.000      1.777
-    457541.847783 [0011]  <idle>                              0.233      0.000      1.213
-    457541.847873 [0012]  <idle>                              0.008      0.000     24.188
-    457541.847954 [0013]  <idle>                              0.009      0.000      1.734
-    457541.848034 [0014]  <idle>                              0.009      0.000      2.969
-    457541.848108 [0015]  <idle>                              0.220      0.000      1.205
-  # echo $?
-  0
-
-Changes since v1:
- - Change goto labels name to out_put_xxx in perf_sched__map().
- - Use zfree to replace free.
- - Add fixes tag and reviewed-by tag for Arnaldo.
-
-Yang Jihong (5):
-  perf sched: Move start_work_mutex and work_done_wait_mutex
-    initialization to perf_sched__replay()
-  perf sched: Fix memory leak in perf_sched__map()
-  perf sched: Move curr_thread initialization to perf_sched__map()
-  perf sched: Move curr_pid and cpu_last_switched initialization to
-    perf_sched__{lat|map|replay}()
-  perf thread_map: Free strlist on normal path in
-    thread_map__new_by_tid_str()
-
- tools/perf/builtin-sched.c   | 163 ++++++++++++++++++++++-------------
- tools/perf/util/thread_map.c |   2 +-
- 2 files changed, 105 insertions(+), 60 deletions(-)
-
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index b56a573ed06c..b248c433529a 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3167,14 +3167,44 @@ static void perf_sched__merge_lat(struct perf_sched *sched)
+ 	}
+ }
+ 
++static int setup_cpus_switch_event(struct perf_sched *sched)
++{
++	unsigned int i;
++
++	sched->cpu_last_switched = calloc(MAX_CPUS, sizeof(*(sched->cpu_last_switched)));
++	if (!sched->cpu_last_switched)
++		return -1;
++
++	sched->curr_pid = malloc(MAX_CPUS * sizeof(*(sched->curr_pid)));
++	if (!sched->curr_pid) {
++		zfree(&sched->cpu_last_switched);
++		return -1;
++	}
++
++	for (i = 0; i < MAX_CPUS; i++)
++		sched->curr_pid[i] = -1;
++
++	return 0;
++}
++
++static void free_cpus_switch_event(struct perf_sched *sched)
++{
++	zfree(&sched->curr_pid);
++	zfree(&sched->cpu_last_switched);
++}
++
+ static int perf_sched__lat(struct perf_sched *sched)
+ {
++	int rc = -1;
+ 	struct rb_node *next;
+ 
+ 	setup_pager();
+ 
++	if (setup_cpus_switch_event(sched))
++		return rc;
++
+ 	if (perf_sched__read_events(sched))
+-		return -1;
++		goto out_free_cpus_switch_event;
+ 
+ 	perf_sched__merge_lat(sched);
+ 	perf_sched__sort_lat(sched);
+@@ -3203,7 +3233,11 @@ static int perf_sched__lat(struct perf_sched *sched)
+ 	print_bad_events(sched);
+ 	printf("\n");
+ 
+-	return 0;
++	rc = 0;
++
++out_free_cpus_switch_event:
++	free_cpus_switch_event(sched);
++	return rc;
+ }
+ 
+ static int setup_map_cpus(struct perf_sched *sched)
+@@ -3270,9 +3304,12 @@ static int perf_sched__map(struct perf_sched *sched)
+ 	if (!sched->curr_thread)
+ 		return rc;
+ 
+-	if (setup_map_cpus(sched))
++	if (setup_cpus_switch_event(sched))
+ 		goto out_free_curr_thread;
+ 
++	if (setup_map_cpus(sched))
++		goto out_free_cpus_switch_event;
++
+ 	if (setup_color_pids(sched))
+ 		goto out_put_map_cpus;
+ 
+@@ -3296,6 +3333,9 @@ static int perf_sched__map(struct perf_sched *sched)
+ 	zfree(&sched->map.comp_cpus);
+ 	perf_cpu_map__put(sched->map.cpus);
+ 
++out_free_cpus_switch_event:
++	free_cpus_switch_event(sched);
++
+ out_free_curr_thread:
+ 	zfree(&sched->curr_thread);
+ 	return rc;
+@@ -3309,6 +3349,10 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 	mutex_init(&sched->start_work_mutex);
+ 	mutex_init(&sched->work_done_wait_mutex);
+ 
++	ret = setup_cpus_switch_event(sched);
++	if (ret)
++		goto out_mutex_destroy;
++
+ 	calibrate_run_measurement_overhead(sched);
+ 	calibrate_sleep_measurement_overhead(sched);
+ 
+@@ -3316,7 +3360,7 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 
+ 	ret = perf_sched__read_events(sched);
+ 	if (ret)
+-		goto out_mutex_destroy;
++		goto out_free_cpus_switch_event;
+ 
+ 	printf("nr_run_events:        %ld\n", sched->nr_run_events);
+ 	printf("nr_sleep_events:      %ld\n", sched->nr_sleep_events);
+@@ -3342,6 +3386,9 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 	sched->thread_funcs_exit = true;
+ 	destroy_tasks(sched);
+ 
++out_free_cpus_switch_event:
++	free_cpus_switch_event(sched);
++
+ out_mutex_destroy:
+ 	mutex_destroy(&sched->start_work_mutex);
+ 	mutex_destroy(&sched->work_done_wait_mutex);
+@@ -3580,21 +3627,7 @@ int cmd_sched(int argc, const char **argv)
+ 		.switch_event	    = replay_switch_event,
+ 		.fork_event	    = replay_fork_event,
+ 	};
+-	unsigned int i;
+-	int ret = 0;
+-
+-	sched.cpu_last_switched = calloc(MAX_CPUS, sizeof(*sched.cpu_last_switched));
+-	if (!sched.cpu_last_switched) {
+-		ret = -ENOMEM;
+-		goto out;
+-	}
+-	sched.curr_pid = malloc(MAX_CPUS * sizeof(*sched.curr_pid));
+-	if (!sched.curr_pid) {
+-		ret = -ENOMEM;
+-		goto out;
+-	}
+-	for (i = 0; i < MAX_CPUS; i++)
+-		sched.curr_pid[i] = -1;
++	int ret;
+ 
+ 	argc = parse_options_subcommand(argc, argv, sched_options, sched_subcommands,
+ 					sched_usage, PARSE_OPT_STOP_AT_NON_OPTION);
+@@ -3605,9 +3638,9 @@ int cmd_sched(int argc, const char **argv)
+ 	 * Aliased to 'perf script' for now:
+ 	 */
+ 	if (!strcmp(argv[0], "script")) {
+-		ret = cmd_script(argc, argv);
++		return cmd_script(argc, argv);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+-		ret = __cmd_record(argc, argv);
++		return __cmd_record(argc, argv);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
+ 		sched.tp_handler = &lat_ops;
+ 		if (argc > 1) {
+@@ -3616,7 +3649,7 @@ int cmd_sched(int argc, const char **argv)
+ 				usage_with_options(latency_usage, latency_options);
+ 		}
+ 		setup_sorting(&sched, latency_options, latency_usage);
+-		ret = perf_sched__lat(&sched);
++		return perf_sched__lat(&sched);
+ 	} else if (!strcmp(argv[0], "map")) {
+ 		if (argc) {
+ 			argc = parse_options(argc, argv, map_options, map_usage, 0);
+@@ -3625,7 +3658,7 @@ int cmd_sched(int argc, const char **argv)
+ 		}
+ 		sched.tp_handler = &map_ops;
+ 		setup_sorting(&sched, latency_options, latency_usage);
+-		ret = perf_sched__map(&sched);
++		return perf_sched__map(&sched);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("replay", argv[0])) {
+ 		sched.tp_handler = &replay_ops;
+ 		if (argc) {
+@@ -3633,7 +3666,7 @@ int cmd_sched(int argc, const char **argv)
+ 			if (argc)
+ 				usage_with_options(replay_usage, replay_options);
+ 		}
+-		ret = perf_sched__replay(&sched);
++		return perf_sched__replay(&sched);
+ 	} else if (!strcmp(argv[0], "timehist")) {
+ 		if (argc) {
+ 			argc = parse_options(argc, argv, timehist_options,
+@@ -3649,21 +3682,16 @@ int cmd_sched(int argc, const char **argv)
+ 				parse_options_usage(NULL, timehist_options, "w", true);
+ 			if (sched.show_next)
+ 				parse_options_usage(NULL, timehist_options, "n", true);
+-			ret = -EINVAL;
+-			goto out;
++			return -EINVAL;
+ 		}
+ 		ret = symbol__validate_sym_arguments();
+ 		if (ret)
+-			goto out;
++			return ret;
+ 
+-		ret = perf_sched__timehist(&sched);
++		return perf_sched__timehist(&sched);
+ 	} else {
+ 		usage_with_options(sched_usage, sched_options);
+ 	}
+ 
+-out:
+-	free(sched.curr_pid);
+-	free(sched.cpu_last_switched);
+-
+-	return ret;
++	return 0;
+ }
 -- 
 2.34.1
 
