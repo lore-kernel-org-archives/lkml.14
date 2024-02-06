@@ -1,150 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B53B12FF7C;
-	Tue,  6 Feb 2024 14:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C43F1339A2;
+	Tue,  6 Feb 2024 14:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231256; cv=none; b=RtZ2hJ6aB6X1wd6v6uIYn7IAk/62Rr4AORNH1KT3h9Yex5b7t78pO+igkSLKh/L8gkGNodSGZww7TSVlDcLEd4JI2pRgpk+xscpljddM38zzV8OZqZcnVFTcdFilZzbl4w2ii+mhWRnfdvw/mxf6sd2PPKWSMBHbzzrGViWw18w=
+	t=1707231297; cv=none; b=XHis8+ps0njDvKxH3BCYYFZ4zezfazuMzAI+CSCqS2E4KXeWnkY0xlY0SEco1IOm1g7wJwURcE475ekV0O+ibJzqeAFSQqeTjbpj6QidShAG620GpIACzp/K5IAwfeLx4pjOeufEUgTmJ4cjkAKzY2Y2IDgCsFuy/d7VuuQrQ4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231256; c=relaxed/simple;
-	bh=FZykc25Fgh62KQdzm9gVnouNp94N7q0i9r9a3bxaxdA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qhaw9DMJZiZCNBN+tsa9/gkfVv31zQL9uDf9A58RZmkvqosbTvZ4WY31zg7vcvFb+piwqXvmCM0Zo4wKAjZLe4FfB7NMWd+D3gUFkosd+LBtiR29khIE68Z+HwE+iJmeuIONSqHLOW7MIe4fV7cZh8guVwTWIj5zSCIefApjlnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOj7ThV4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707231297; c=relaxed/simple;
+	bh=lOr+XGR2hJml6WGSq7dut5XfAyTVuZ4y58BVDSiEjas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dx44NmUNbghg81i12tqjwjJqWgCrVqJKKqDqS8ymgdaAqi+BtDe/VIofwoPkc+Uo4BaaH4Hodu3nRyQuX4OdUkwAcXEPZLsAbiGuKX4I+ulolRiTBrlk5sn5D6E8K6UBe2OeHufAA/MbOa8O0eVxjknmCZKbxAjT9AxCLC9I/VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jA8jF/7M; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOj7ThV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E799DC433F1;
-	Tue,  6 Feb 2024 14:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707231255;
-	bh=FZykc25Fgh62KQdzm9gVnouNp94N7q0i9r9a3bxaxdA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TOj7ThV4fk/3L3nP95TbiUIzZXXq/Md4A46Nqfcaf11sbfkRO1CYUYRvvlf07WhaJ
-	 vMMxDcdk/yaI0EpwSiWT0Vb0HLeXiEFd1MSTrn28FU3/TpTpxWYTACtOWI8ojUGCuT
-	 6+pugD2r9R+8HKoc+xRTFY+3FGz30hor1Wq9gp3wM2pKQM3eq6NqwZ2T0cHxXwzEPB
-	 e8quUcleAeaktBziCfNzYad/NvLs8uHuIffdXEgmjgxxzDIrHF/aVXyJXjJUNptuz1
-	 UIgquNUXAJM2Q6+YZZI4yHtBFxpPvNECUmURepE+MBq8IdY80XWUH/1z6Fh13s/wXP
-	 3GXEIs93OgDIg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rXMpx-000qjP-L4;
-	Tue, 06 Feb 2024 14:54:13 +0000
-Date: Tue, 06 Feb 2024 14:54:12 +0000
-Message-ID: <86sf2563u3.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Thierry Reding" <thierry.reding@gmail.com>
-Cc: "Jon Hunter" <jonathanh@nvidia.com>,
-	"Sumit Gupta" <sumitg@nvidia.com>,
-	<treding@nvidia.com>,
-	<krzysztof.kozlowski@linaro.org>,
-	<mark.rutland@arm.com>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>,
-	<amhetre@nvidia.com>,
-	<bbasu@nvidia.com>
-Subject: Re: [Patch] memory: tegra: Skip SID override from Guest VM
-In-Reply-To: <CYY1YXL0FWK2.1L5CRNMKUF22J@gmail.com>
-References: <20240206114852.8472-1-sumitg@nvidia.com>
-	<86wmrh6b2n.wl-maz@kernel.org>
-	<252d6094-b2d6-496d-b28f-93507a193ede@nvidia.com>
-	<86v87169g2.wl-maz@kernel.org>
-	<CYY1YXL0FWK2.1L5CRNMKUF22J@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jA8jF/7M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707231296; x=1738767296;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lOr+XGR2hJml6WGSq7dut5XfAyTVuZ4y58BVDSiEjas=;
+  b=jA8jF/7ME2N9ead1vl+9g0/PtcsbYnGBpxzkFF+GFmUaLaGlQQ5BOIUn
+   m415YyPfB05LXzZeqvtr5F/jbdBjNUo2ctzfSvL4mKJfwTzv9eSpjeKBg
+   wfJEHCHoYBCqXA9UDDgYU34KnQFHt7Mzd1f+NTwzH28o+9J/XCOBLMKGG
+   tXJAQZUKGoudxcykkpflvTofb28EV9v8b4cmGtgkmW2sdLrujcA8kK7WH
+   R6yy2lJjFMKPp70qUZrUHE42JG2jpL/mKk8VlKMqpNjHU/D5gQtX4gY9p
+   II0NjEYysKxEXaYEoH4xwTEOBBvBLIwodajbqpIyciNhjOYS06sSSKheM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="435901069"
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="435901069"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 06:54:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
+   d="scan'208";a="1067177"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa010.jf.intel.com with ESMTP; 06 Feb 2024 06:54:50 -0800
+Date: Tue, 6 Feb 2024 22:51:14 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pattara Teerapong <pteerapong@google.com>
+Subject: Re: [PATCH 6/8] KVM: x86/mmu: Check for usable TDP MMU root while
+ holding mmu_lock for read
+Message-ID: <ZcJHYtMZsQHInVEI@yilunxu-OptiPlex-7050>
+References: <20240111020048.844847-1-seanjc@google.com>
+ <20240111020048.844847-7-seanjc@google.com>
+ <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: thierry.reding@gmail.com, jonathanh@nvidia.com, sumitg@nvidia.com, treding@nvidia.com, krzysztof.kozlowski@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, amhetre@nvidia.com, bbasu@nvidia.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
 
-On Tue, 06 Feb 2024 14:07:10 +0000,
-"Thierry Reding" <thierry.reding@gmail.com> wrote:
+On Tue, Feb 06, 2024 at 06:09:18PM +0800, Xu Yilun wrote:
+> On Wed, Jan 10, 2024 at 06:00:46PM -0800, Sean Christopherson wrote:
+> > When allocating a new TDP MMU root, check for a usable root while holding
+> > mmu_lock for read and only acquire mmu_lock for write if a new root needs
+> > to be created.  There is no need to serialize other MMU operations if a
+> > vCPU is simply grabbing a reference to an existing root, holding mmu_lock
+> > for write is "necessary" (spoiler alert, it's not strictly necessary) only
+> > to ensure KVM doesn't end up with duplicate roots.
+> > 
+> > Allowing vCPUs to get "new" roots in parallel is beneficial to VM boot and
+> > to setups that frequently delete memslots, i.e. which force all vCPUs to
+> > reload all roots.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/kvm/mmu/mmu.c     |  8 ++---
+> >  arch/x86/kvm/mmu/tdp_mmu.c | 60 +++++++++++++++++++++++++++++++-------
+> >  arch/x86/kvm/mmu/tdp_mmu.h |  2 +-
+> >  3 files changed, 55 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index 3c844e428684..ea18aca23196 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -3693,15 +3693,15 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+> >  	unsigned i;
+> >  	int r;
+> >  
+> > +	if (tdp_mmu_enabled)
+> > +		return kvm_tdp_mmu_alloc_root(vcpu);
+> > +
+> >  	write_lock(&vcpu->kvm->mmu_lock);
+> >  	r = make_mmu_pages_available(vcpu);
+> >  	if (r < 0)
+> >  		goto out_unlock;
+> >  
+> > -	if (tdp_mmu_enabled) {
+> > -		root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
+> > -		mmu->root.hpa = root;
+> > -	} else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
+> > +	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
+> >  		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
+> >  		mmu->root.hpa = root;
+> >  	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
+> > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> > index e0a8343f66dc..9a8250a14fc1 100644
+> > --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> > @@ -223,21 +223,52 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
+> >  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
+> >  }
+> >  
+> > -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
+> > +static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
+> >  {
+> >  	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
+> > +	int as_id = kvm_mmu_role_as_id(role);
+> >  	struct kvm *kvm = vcpu->kvm;
+> >  	struct kvm_mmu_page *root;
+> >  
+> > -	lockdep_assert_held_write(&kvm->mmu_lock);
+> > -
+> > -	/* Check for an existing root before allocating a new one. */
+> > -	for_each_valid_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
+> > -		if (root->role.word == role.word &&
+> > -		    kvm_tdp_mmu_get_root(root))
+> > -			goto out;
+> > +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
 > 
-> [1  <text/plain; UTF-8 (quoted-printable)>]
-> On Tue Feb 6, 2024 at 1:53 PM CET, Marc Zyngier wrote:
-> > On Tue, 06 Feb 2024 12:28:27 +0000, Jon Hunter <jonathanh@nvidia.com> wrote:
-> > > On 06/02/2024 12:17, Marc Zyngier wrote:
-> [...]
-> > > > - My own tegra186 HW doesn't have VHE, since it is ARMv8.0, and this
-> > > >    helper will always return 'false'. How could this result in
-> > > >    something that still works? Can I get a free CPU upgrade?
-> > > 
-> > > I thought this API just checks to see if we are in EL2?
-> >
-> > It does. And that's the problem. On ARMv8.0, we run the Linux kernel
-> > at EL1. Tegra186 is ARMv8.0 (Denver + A57). So as written, this change
-> > breaks the very platform it intends to support.
-> 
-> To clarify, the code that accesses these registers is shared across
-> Tegra186 and later chips. Tegra194 and later do support ARMv8.1 VHE.
+> No lock yielding attempt in this loop, why change to _yield_safe version?
 
-But even on these machines that are VHE-capable, not running at EL2
-doesn't mean we're running as a guest. The user can force the kernel
-to stick to EL1, using a command-line option such as kvm-arm.mode=nvhe
-which will force the kernel to stay at EL1 while deploying KVM at EL2.
+Oh, I assume you just want to early exit the loop with the reference to
+root hold.  But I feel it makes harder for us to have a clear
+understanding of the usage of _yield_safe and non _yield_safe helpers.
 
-> Granted, if it always returns false on Tegra186 that's not what we
-> want.
-
-I'm glad we agree here.
-
-> > > > - If you assign this device to a VM and that the hypervisor doesn't
-> > > >    correctly virtualise it, then it is a different device and you
-> > > >    should simply advertise it something else. Or even better, fix your
-> > > >    hypervisor.
-> > > 
-> > > Sumit can add some more details on why we don't completely disable the
-> > > device for guest OSs.
-> >
-> > It's not about disabling it. It is about correctly supporting it
-> > (providing full emulation for it), or advertising it as something
-> > different so that SW can handle it differently.
-> 
-> It's really not a different device. It's exactly the same device except
-> that accessing some registers isn't permitted. We also can't easily
-> remove parts of the register region from device tree because these are
-> intermixed with other registers that we do want access to.
-
-But that's the definition of being a different device. It has a
-different programming interface, hence it is different. The fact that
-it is the same HW block mediated by a hypervisor doesn't really change
-that.
-
-> > Poking into the internals of how the kernel is booted for a driver
-> > that isn't tied to the core architecture (because it would need to
-> > access system registers, for example) is not an acceptable outcome.
-> 
-> So what would be the better option? Use a different compatible string to
-> make the driver handle the device differently? Or adding a custom
-> property to the device tree node to mark this as running in a
-> virtualized environment?
-
-A different compatible string would be my preferred option. An extra
-property would work as well. As far as I am concerned, these two
-options are the right way to express the fact that you have something
-that isn't quite like the real thing.
-
-> Perhaps we can reuse the top-level hypervisor node? That seems to only
-> ever have been used for Xen on 32-bit ARM, so not sure if that'd still
-> be appropriate.
-
-I'd shy away from this. You would be deriving properties from a
-hypervisor implementation, instead of expressing those properties
-directly. In my experience, the direct method is always preferable.
+Maybe change it back?
 
 Thanks,
+Yilun
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> 
+> Thanks,
+> Yilun
+> 
+> > +		if (root->role.word == role.word)
+> > +			return root;
+> >  	}
+> >  
+> > +	return NULL;
+> > +}
+> > +
+> > +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
+> > +{
+> > +	struct kvm_mmu *mmu = vcpu->arch.mmu;
+> > +	union kvm_mmu_page_role role = mmu->root_role;
+> > +	struct kvm *kvm = vcpu->kvm;
+> > +	struct kvm_mmu_page *root;
+> > +
+> > +	/*
+> > +	 * Check for an existing root while holding mmu_lock for read to avoid
+> > +	 * unnecessary serialization if multiple vCPUs are loading a new root.
+> > +	 * E.g. when bringing up secondary vCPUs, KVM will already have created
+> > +	 * a valid root on behalf of the primary vCPU.
+> > +	 */
+> > +	read_lock(&kvm->mmu_lock);
+> > +	root = kvm_tdp_mmu_try_get_root(vcpu);
+> > +	read_unlock(&kvm->mmu_lock);
+> > +
+> > +	if (root)
+> > +		goto out;
+> > +
+> > +	write_lock(&kvm->mmu_lock);
+> > +
+> > +	/*
+> > +	 * Recheck for an existing root after acquiring mmu_lock for write.  It
+> > +	 * is possible a new usable root was created between dropping mmu_lock
+> > +	 * (for read) and acquiring it for write.
+> > +	 */
+> > +	root = kvm_tdp_mmu_try_get_root(vcpu);
+> > +	if (root)
+> > +		goto out_unlock;
+> > +
+> >  	root = tdp_mmu_alloc_sp(vcpu);
+> >  	tdp_mmu_init_sp(root, NULL, 0, role);
+> >  
+> > @@ -254,8 +285,17 @@ hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
+> >  	list_add_rcu(&root->link, &kvm->arch.tdp_mmu_roots);
+> >  	spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
+> >  
+> > +out_unlock:
+> > +	write_unlock(&kvm->mmu_lock);
+> >  out:
+> > -	return __pa(root->spt);
+> > +	/*
+> > +	 * Note, KVM_REQ_MMU_FREE_OBSOLETE_ROOTS will prevent entering the guest
+> > +	 * and actually consuming the root if it's invalidated after dropping
+> > +	 * mmu_lock, and the root can't be freed as this vCPU holds a reference.
+> > +	 */
+> > +	mmu->root.hpa = __pa(root->spt);
+> > +	mmu->root.pgd = 0;
+> > +	return 0;
+> >  }
+> >  
+> >  static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
+> > @@ -917,7 +957,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
+> >   * the VM is being destroyed).
+> >   *
+> >   * Note, kvm_tdp_mmu_zap_invalidated_roots() is gifted the TDP MMU's reference.
+> > - * See kvm_tdp_mmu_get_vcpu_root_hpa().
+> > + * See kvm_tdp_mmu_alloc_root().
+> >   */
+> >  void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
+> >  {
+> > diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
+> > index 20d97aa46c49..6e1ea04ca885 100644
+> > --- a/arch/x86/kvm/mmu/tdp_mmu.h
+> > +++ b/arch/x86/kvm/mmu/tdp_mmu.h
+> > @@ -10,7 +10,7 @@
+> >  void kvm_mmu_init_tdp_mmu(struct kvm *kvm);
+> >  void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm);
+> >  
+> > -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu);
+> > +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
+> >  
+> >  __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
+> >  {
+> > -- 
+> > 2.43.0.275.g3460e3d667-goog
+> > 
+> > 
+> 
