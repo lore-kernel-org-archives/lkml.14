@@ -1,126 +1,155 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A0E134A5
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 18:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5665BDF42
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 18:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707243007; cv=none; b=n2P2dec922svhenIoMJuiTmvi459Wa2E5PZeZe5NoheOK+dWGcMMK5XbA89Bjw/8DULAo+NRRQ4pHdTWEuR4vuHu4HyvG8nm+9/ymTQ6YW1q6aFtExgNuMOk4w+NYrQoREGpr8srAYypOtbYMGVLtdNnrrbOdMSleffpFhOekBk=
+	t=1707243047; cv=none; b=a07XImC1kunEVCtGDvnGPMz5zIK/HZDSJQGh/LBqAgAFBhmy5if2DCgCAc9XWoOUUptI0CGBjKJOypRcQki5Hk7jTftCoxnIPYWW7wszqAL4CfiZlFtn32EYmQgcAjtP6ZqQ7XLzhz8SAcJp83ptuOA22tPzzsBLgmnU4oBVtxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707243007; c=relaxed/simple;
-	bh=Kxq4sAvN5Fs2sIsPglHruFBuErxB15QsWcASPc5lT0Q=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=fZdIgBNa0PbKStpvhaD1v+f8RIFU1NH+nyzIan7lMuoyUqKpkJPT87WkDzg365OnHPPK7YMwnx/3A4MSsor17LA7Hz4PBJGS0W5kdnmJDYxOwZNQuF0A4goKRxk/OCvqo7SJQJesVZ8htr/OowVvlsxLZZKHk0Kokv9P1z0fQks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=permerror (0-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=dHBKmQ4B; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1707243047; c=relaxed/simple;
+	bh=+K4hkLAVOGFO0w9WP+eWJkb0HlQJo+4K5nbl+fFFDd0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=T4+7lolLD/9JnmvF+G95ZYgvCCh68Uau1rZrU0+l3k0RTEy+05KGc2J96nEQ1NtsFsduiL43TupwNjhEoc9f11/lnr6kHcfmuQPBFjmGMkSYh0W3Adzxyf3pw09RJKZzlgSFlqn6Lufu7jb0Hm0SG+6bV49CSNadq27vz7JzK+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FgvvNVaG; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="dHBKmQ4B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1707242999;
-	bh=Kxq4sAvN5Fs2sIsPglHruFBuErxB15QsWcASPc5lT0Q=;
-	h=Date:From:To:cc:Subject:From;
-	b=dHBKmQ4BHy52GP3uyL/6OewvtDCvQAl73DQsCoM3ERD4Zt3W7zQRZ27bJRXFJI5Eg
-	 VxeVaHDzouRpY2ewEI0xXRnrTP9FzGyA3S9hx4GEjc8KRBozUMvFtnso8CTQ7VpZUK
-	 K1zSEx7Q4+RYHO7sR23yOjTRfUNo68EIjhXI8hDx/V20gjUG2bDjM5L6zApYfo//pA
-	 k5DaKUu0lrD3RJCqSgFZ6M4/YnoHVWiXDLoNiSbV8QE1EfaUie4Q8t1cLskKuicRY2
-	 js6kn6JI9WFsohDyHKW8tdZn3p8PMGxVV6m2Q5upOLldNy113gSO/vRCZA4ENtK8S5
-	 yAs6BEbzEfbBA==
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 8475940A93; Tue,  6 Feb 2024 10:09:59 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id 83AC940788;
-	Tue,  6 Feb 2024 10:09:59 -0800 (PST)
-Date: Tue, 6 Feb 2024 10:09:59 -0800 (PST)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: catalin.marinas@arm.com, Will Deacon <will@kernel.org>
-cc: Jonathan.Cameron@huawei.com, Matteo.Carlini@arm.com, 
-    Valentin.Schneider@arm.com, akpm@linux-foundation.org, 
-    anshuman.khandual@arm.com, Eric Mackay <eric.mackay@oracle.com>, 
-    dave.kleikamp@oracle.com, linux-arm-kernel@lists.infradead.org, 
-    linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@armlinux.org.uk, 
-    robin.murphy@arm.com, vanshikonda@os.amperecomputing.com, 
-    yang@os.amperecomputing.com
-Subject: [PATCH REPOST v2] ARM64: Dynamically allocate cpumasks and increase
- supported CPUs to 512
-Message-ID: <e0d41efb-a74e-6bb5-f325-63d42358c802@gentwo.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FgvvNVaG"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5ca5b61c841so4213989a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 10:10:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707243045; x=1707847845; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5PpeFFqdP626r1RWYoCpd0vGeqNqbDwh/mrIllBBs0=;
+        b=FgvvNVaGjmIXER1pWm0mJz7IZdvsjRiBc9IijX8SzzB5iXmJxhRuVTtQ96w0lkrBBN
+         rkt4C9H9+nYzsWpbuSOIEhuwRW1egFwyWTwx/+MyddsDqR5OKHKqweN3ryWaGxx2elBZ
+         RW00EZFQdTIkOwQRmCJRxdQEGO21sqaTsoi25wHt71o5XtkCBQnC3p1qPk0GJHcItP0S
+         YCkV7VVOh5QTexBKz/x2rXYpd9+/POp/bT2eeNWhaE61+znQCAkwVLmH1px/OVeJ7doP
+         9Fj4XLU5tyMuWNQnwWT1jbkdrA69rwoiqMYiEV4pFTto1Xe/+H660r1V0GHf/MTaBH+Q
+         1PdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707243045; x=1707847845;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5PpeFFqdP626r1RWYoCpd0vGeqNqbDwh/mrIllBBs0=;
+        b=XnVPHmvsA1xgaSUUHPSWHsJMjbQ+ynMEVw7UKXnKCbAc1v62ooOLcXjs5sBLTERi2e
+         cDywT5U25tuTtaF68eCWzP0EuL3B0FVmhOOq5j+dY6vHKgy1lMH7w+s5Ov62o4qyz8nc
+         PYgwi7rnqoYRtzxwhd+x3wxRzcdSK978TXXQM8lQdddu+e02wJkqxYcPJYpBLLfGpsKq
+         w3bIIwiyv3k1ySsC/uXlsAq6M78d98sumR29JoFaT/JPXdFes0yGABaH35Y3W/Phwlmv
+         NZ+WwuNUMR0yLBvavPvD7+iX0HU7ecLwzIkVgEbbefqW/I7ZVz+lEDvMrtPgJj5KKzRE
+         Oc+A==
+X-Gm-Message-State: AOJu0YxEVjQhmkciSPUX7AQQdjxueykDeo3+CmtaMSdrf9/Tqjly7xrA
+	4aIqCoX41yJNKo9VkPEDdnMk+1qXbtj8ZUxOfJMuzH0dB0psCzWyWPisoCGawfyLm25C6mwhRZT
+	SRA==
+X-Google-Smtp-Source: AGHT+IHv/cfRhAxqlasS5Lb0Ej71aI4uOvnC4FgqsJn62AiiXiLOJkXlvzZYOYZ1hv3zAcbaNW4EBX3qdYM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:4e8d:b0:295:c117:d9e9 with SMTP id
+ sr13-20020a17090b4e8d00b00295c117d9e9mr597pjb.4.1707243045534; Tue, 06 Feb
+ 2024 10:10:45 -0800 (PST)
+Date: Tue, 6 Feb 2024 10:10:44 -0800
+In-Reply-To: <ZcJSmNRLbKacPfoq@yilunxu-OptiPlex-7050>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Mime-Version: 1.0
+References: <20240111020048.844847-1-seanjc@google.com> <20240111020048.844847-8-seanjc@google.com>
+ <ZcJSmNRLbKacPfoq@yilunxu-OptiPlex-7050>
+Message-ID: <ZcJ2JG54O0g07e-P@google.com>
+Subject: Re: [PATCH 7/8] KVM: x86/mmu: Alloc TDP MMU roots while holding
+ mmu_lock for read
+From: Sean Christopherson <seanjc@google.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pattara Teerapong <pteerapong@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Can we get this merged for 6.9? The patch has been around for awhile now.
+On Tue, Feb 06, 2024, Xu Yilun wrote:
+> On Wed, Jan 10, 2024 at 06:00:47PM -0800, Sean Christopherson wrote:
+> > ---
+> >  arch/x86/kvm/mmu/tdp_mmu.c | 55 +++++++++++++++-----------------------
+> >  1 file changed, 22 insertions(+), 33 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> > index 9a8250a14fc1..d078157e62aa 100644
+> > --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> > @@ -223,51 +223,42 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
+> >  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
+> >  }
+> >  
+> > -static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
+> > -{
+> > -	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
+> > -	int as_id = kvm_mmu_role_as_id(role);
+> > -	struct kvm *kvm = vcpu->kvm;
+> > -	struct kvm_mmu_page *root;
+> > -
+> > -	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
+> > -		if (root->role.word == role.word)
+> > -			return root;
+> > -	}
+> > -
+> > -	return NULL;
+> > -}
+> > -
+> >  int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
+> >  {
+> >  	struct kvm_mmu *mmu = vcpu->arch.mmu;
+> >  	union kvm_mmu_page_role role = mmu->root_role;
+> > +	int as_id = kvm_mmu_role_as_id(role);
+> >  	struct kvm *kvm = vcpu->kvm;
+> >  	struct kvm_mmu_page *root;
+> >  
+> >  	/*
+> > -	 * Check for an existing root while holding mmu_lock for read to avoid
+> > +	 * Check for an existing root before acquiring the pages lock to avoid
+> >  	 * unnecessary serialization if multiple vCPUs are loading a new root.
+> >  	 * E.g. when bringing up secondary vCPUs, KVM will already have created
+> >  	 * a valid root on behalf of the primary vCPU.
+> >  	 */
+> >  	read_lock(&kvm->mmu_lock);
+> > -	root = kvm_tdp_mmu_try_get_root(vcpu);
+> > -	read_unlock(&kvm->mmu_lock);
+> >  
+> > -	if (root)
+> > -		goto out;
+> > +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
+> > +		if (root->role.word == role.word)
+> > +			goto out_read_unlock;
+> > +	}
+> >  
+> > -	write_lock(&kvm->mmu_lock);
+> 
+> It seems really complex to me...
+> 
+> I failed to understand why the following KVM_BUG_ON() could be avoided
+> without the mmu_lock for write. I thought a valid root could be added
+> during zapping.
+> 
+>   void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
+>   {
+> 	struct kvm_mmu_page *root;
+> 
+> 	read_lock(&kvm->mmu_lock);
+> 
+> 	for_each_tdp_mmu_root_yield_safe(kvm, root) {
+> 		if (!root->tdp_mmu_scheduled_root_to_zap)
+> 			continue;
+> 
+> 		root->tdp_mmu_scheduled_root_to_zap = false;
+> 		KVM_BUG_ON(!root->role.invalid, kvm);
 
+tdp_mmu_scheduled_root_to_zap is set only when mmu_lock is held for write, i.e.
+it's mutually exclusive with allocating a new root.
 
+And tdp_mmu_scheduled_root_to_zap is cleared if and only if kvm_tdp_mmu_zap_invalidated_roots
+is already set, and is only processed by kvm_tdp_mmu_zap_invalidated_roots(),
+which runs under slots_lock (a mutex).
 
-Ampere Computing develops high end ARM processor that support an ever
-increasing number of processors. The default 256 processors are
-not enough for our newer products. The default is used by
-distros and therefore our customers cannot use distro kernels because
-the number of processors is not supported.
-
-One of the objections against earlier patches to increase the limit
-was that the memory use becomes too high. There is a feature called
-CPUMASK_OFFSTACK that configures the cpumasks in the kernel to be
-dynamically allocated. This was used in the X86 architecture in the
-past to enable support for larger CPU configurations up to 8k cpus.
-
-With that is becomes possible to dynamically size the allocation of
-the cpu bitmaps depending on the quantity of processors detected on
-bootup.
-
-This patch enables that logic if more than 256 processors
-are configured and increases the default to 512 processors.
-
-Further increases may be needed if ARM processor vendors start
-supporting more processors. Given the current inflationary trends
-in core counts from multiple processor manufacturers this may occur.
-
-Tested-by: Eric Mackay <eric.mackay@oracle.com>
-Signed-off-by: Christoph Lameter (Ampere) <cl@linux.com>
-
----
-
-Original post: https://www.spinics.net/lists/linux-mm/msg369701.html
-
-V1->V2
-
-- Keep quotation marks
-- Remove whiltespace damage
-- Add tested by
-
-
-Index: linux/arch/arm64/Kconfig
-===================================================================
---- linux.orig/arch/arm64/Kconfig
-+++ linux/arch/arm64/Kconfig
-@@ -1407,7 +1407,21 @@ config SCHED_SMT
-   config NR_CPUS
-   	int "Maximum number of CPUs (2-4096)"
-   	range 2 4096
--	default "256"
-+	default "512"
-+
-+#
-+# Determines the placement of cpumasks.
-+#
-+# With CPUMASK_OFFSTACK the cpumasks are dynamically allocated.
-+# Useful for machines with lots of core because it avoids increasing
-+# the size of many of the data structures in the kernel.
-+#
-+# If this is off then the cpumasks have a static sizes and are
-+# embedded within data structures.
-+#
-+config CPUMASK_OFFSTACK
-+	def_bool y
-+	depends on NR_CPUS > 256
-
-   config HOTPLUG_CPU
-   	bool "Support for hot-pluggable CPUs"
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+So a new, valid root can be added, but it won't have tdp_mmu_scheduled_root_to_zap
+set, at least not until the current "fast zap" completes and a new one beings,
+which as above requires taking mmu_lock for write.
