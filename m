@@ -1,137 +1,92 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380B67EEE0;
-	Tue,  6 Feb 2024 07:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1320C2C877;
+	Tue,  6 Feb 2024 07:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707205060; cv=none; b=AawgMmZRUModxbWHqFg55GZE++scZ0292SBvZ4rzeneSY46oR5KHSSrdKh+MW3SUGXlmnSTBTEKJdyEl2lVpuO0A/fPpMthw73J5xYnLhlwl5Q4xZ2v2zhFlpw0LY1fCIC9nEoU11Mi9bA6iGHL6+OriWPrK8i8M5HER1k3no0E=
+	t=1707205101; cv=none; b=s/q3w0W/48EnrOwadBXBLnex8XP/TYwMaQfcI5WH6StqQHieWylXC6D6aQQ9nbuQgDafSTIj/bgopMekFy3Ax8+hn4WtSEI9Sp5X92yVFVZy7oLaYx19+0DjONbYCvxB4V4AJFbXdWyoFezC60Rk9lEZEuvKBaCykBnlxVTDJNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707205060; c=relaxed/simple;
-	bh=IxrNPNPtjGZn3RxttgDRL2Vy8atvYyynJNHIEF2IW9U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fg3pCyV8X6NUs1/P79ImpXPwnNkTa7EClWAHHSjBGXTUS+bwr3pN3G8i9+IhjqGaj0FmZ5/98AfVmLdT+8DyZHYb6kZvdVwzURIcN42Tj9RMpgorUOCzFzH5zTyo1mM5GDSoMJ1Wyz2L4XMKrJ3J1CSZ8EpUyMi9rTMauF+eqn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TTZmC0092z29lMf;
-	Tue,  6 Feb 2024 15:35:38 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9887B1A0172;
-	Tue,  6 Feb 2024 15:37:34 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 6 Feb 2024 15:37:34 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <tony@atomide.com>,
-	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>
-CC: <john.ogness@linutronix.de>, <andriy.shevchenko@linux.intel.com>,
-	<tglx@linutronix.de>, <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
-	<prime.zeng@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<fanghao11@huawei.com>
-Subject: [PATCH v2] serial: port: Don't suspend if the port is still busy
-Date: Tue, 6 Feb 2024 15:33:22 +0800
-Message-ID: <20240206073322.5560-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1707205101; c=relaxed/simple;
+	bh=TY6CKuc56ilxCQShfvIczFkUwQACgH40x6+RS1ysuBE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eK08ke+/TTFmsdSO2DQF2i8crpYBCAxhhri+OS8eQpPcdg2WF/ldMbe+fZ4kywqBZAz2nn28mnPC5pGB75FC/7Kai1LaTSdQTNZGOdiq056yqjOKOuv7/AJrS2OPncsY96K0Aby7DQLwjNPX/deu1qyMK+iWJdZcHKrkZELBLbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [115.200.229.48])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHCang4cFlG2tnAQ--.21117S2;
+	Tue, 06 Feb 2024 15:38:09 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Yu Zhe <yuzhe@nfschina.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: ttpci: fix two memleaks in budget_av_attach
+Date: Tue,  6 Feb 2024 15:37:10 +0800
+Message-Id: <20240206073719.3133481-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
+X-CM-TRANSID:by_KCgDHCang4cFlG2tnAQ--.21117S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4xKF13Ww4UAr1DKrW8tFb_yoW8XF1fpa
+	yFqa4rAryUXrW0vr1DX3WYk3W5t3ZagFW3WrsYgw4avFyfZw1Dt348X34UAFn5Ga9rAa4U
+	Kwn09r1jgw1jkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUbYLvtUUUUU==
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
+should free the resources it allocates, like the error-handling of
+ttpci_budget_init does. Besides, there are two fixme comment refers to
+such deallocations.
 
-We accidently met the issue that the bash prompt is not shown after the
-previous command done and until the next input if there's only one CPU
-(In our issue other CPUs are isolated by isolcpus=). Further analysis
-shows it's because the port entering runtime suspend even if there's
-still pending chars in the buffer and the pending chars will only be
-processed in next device resuming. We are using amba-pl011 and the
-problematic flow is like below:
-
-Bash                                         kworker
-tty_write()
-  file_tty_write()
-    n_tty_write()
-      uart_write()
-        __uart_start()
-          pm_runtime_get() // wakeup waker
-            queue_work()
-                                             pm_runtime_work()
-                                               rpm_resume()
-                                                status = RPM_RESUMING
-                                                serial_port_runtime_resume()
-                                                  port->ops->start_tx()
-                                                    pl011_tx_chars()
-                                                      uart_write_wakeup()
-        […]
-        __uart_start()
-          pm_runtime_get() < 0 // because runtime status = RPM_RESUMING
-                               // later data are not commit to the port driver
-                                                status = RPM_ACTIVE
-                                                rpm_idle() -> rpm_suspend()
-
-This patch tries to fix this by checking the port busy before entering
-runtime suspending. A runtime_suspend callback is added for the port
-driver. When entering runtime suspend the callback is invoked, if there's
-still pending chars in the buffer then flush the buffer.
-
-Cc: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 ---
-Change since v1:
-- Use port lock wrapper per John
-- Flush the pending chars and return -EBUSY per Tony.
-Thanks.
-Link: https://lore.kernel.org/all/20240204031957.58176-1-yangyicong@huawei.com/
+ drivers/media/pci/ttpci/budget-av.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- drivers/tty/serial/serial_port.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/serial_port.c b/drivers/tty/serial/serial_port.c
-index 88975a4df306..0617d5158235 100644
---- a/drivers/tty/serial/serial_port.c
-+++ b/drivers/tty/serial/serial_port.c
-@@ -46,8 +46,32 @@ static int serial_port_runtime_resume(struct device *dev)
- 	return 0;
- }
+diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
+index 230b104a7cdf..4f897f848581 100644
+--- a/drivers/media/pci/ttpci/budget-av.c
++++ b/drivers/media/pci/ttpci/budget-av.c
+@@ -1463,7 +1463,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		budget_av->has_saa7113 = 1;
+ 		err = saa7146_vv_init(dev, &vv_data);
+ 		if (err != 0) {
+-			/* fixme: proper cleanup here */
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
+ 			ERR("cannot init vv subsystem\n");
+ 			return err;
+ 		}
+@@ -1472,7 +1473,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
  
-+static int serial_port_runtime_suspend(struct device *dev)
-+{
-+	struct serial_port_device *port_dev = to_serial_base_port_device(dev);
-+	struct uart_port *port;
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	port = port_dev->port;
-+
-+	if (port->flags & UPF_DEAD)
-+		return ret;
-+
-+	uart_port_lock_irqsave(port, &flags);
-+	if (__serial_port_busy(port)) {
-+		port->ops->start_tx(port);
-+		pm_runtime_mark_last_busy(dev);
-+		ret = -EBUSY;
-+	}
-+	uart_port_unlock_irqrestore(port, flags);
-+
-+	return ret;
-+}
-+
- static DEFINE_RUNTIME_DEV_PM_OPS(serial_port_pm,
--				 NULL, serial_port_runtime_resume, NULL);
-+				 serial_port_runtime_suspend,
-+				 serial_port_runtime_resume, NULL);
- 
- static int serial_port_probe(struct device *dev)
- {
+ 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
+-			/* fixme: proper cleanup here */
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
+ 			ERR("cannot register capture v4l2 device\n");
+ 			saa7146_vv_release(dev);
+ 			return err;
 -- 
-2.24.0
+2.34.1
 
