@@ -1,241 +1,251 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964CE19470
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9CB1AAAE
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707241198; cv=none; b=K2X0W9v1EnYTh7ptN7YxHiYj7wWj0KA+ggn1ZPOj1+s6UlCZtNtd1TvU4P2naaK2WX8F16YZyocOWIMKa2zvHtUJu+SOl+yLaWrem+ewdTg69GMfOfk0gO3+M4a7vJEL+oOYzHIQDtIAXKQs2RLE35E1ee6l5bklMQQGd30E8aQ=
+	t=1707241199; cv=none; b=P+qPziUrn7PZoCqdfftBxfTijcQqdG9dR/LpQOwTbjhKJ/xjjJME4qct1kp/5QUlp3uZayaK33tspiSd5v/U0mCbcvuvgpFlRM6lbLVjrTPXrWHIEq5NZtkP/CFo3c2anCyTWw0I22UPhtP4Tl0vaHrYdcGsf+OziOwz4FLDIF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707241198; c=relaxed/simple;
-	bh=ZMQTWbcCGrR/agcFVkVVEI05vXn0HszebfL8x+q/HRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=adADQ9qIN8MFHAT8U8wxRWfo4UVni/O/DV+71gpnUQk04GsrmKrPScA3r91s8ZBrKZecrJLFOF9Xb2sqGlEGAJL3X1yDvQCBzYehAXl9YSAEnqxNn94wjfRblRnUoj/8rez4BmaZXcoW3/piUrDEdaSDeHtB7HuauFAY1/emZl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SQM2rshg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707241199; c=relaxed/simple;
+	bh=muU83VQwgdQrXuKRFa0wK3OfDInPsZQktGHV8MIhSHE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MHbtB1qEsC0y8EczdSpIIfNRK3ECmQu2ZACmI1ixOrX0dc5e0Jgpp/Ty1zdYkRhZn/EOgx/SmrYUZ8HWHF6IGqg2tP+/sX6gwgH6xRg388HCXbvVJtJYAvmV4H+4MdDGxBKiy5a6i+I1hXLaYDpiqCRkIawpH1zzNys1MhfPjlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=W7KIvb2M; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQM2rshg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707241195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zQJi5lVSKToVYNDb/xc3D9ULA1cJ8DD0UMSW58V8ctw=;
-	b=SQM2rshgahd4zFYb7iSQWBd+XxXNgdCDmCkhxm0kep9pyL6d/VYwFVXNYRLgoqAGNYKS1p
-	zLDfCKeOG2rPXUTHcZQ1VlvVANvWu3UW46qjcbxk819US/1DjYI65fb8EBhxM8b5/MGcg2
-	MedAjoyV2Hk0owHRm8m0Sd1idt0UoFY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-652-ZIz0_IVqNuCeGd0hcpWWmQ-1; Tue,
- 06 Feb 2024 12:39:52 -0500
-X-MC-Unique: ZIz0_IVqNuCeGd0hcpWWmQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 613AD1C29EA3;
-	Tue,  6 Feb 2024 17:39:51 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB6A02026D06;
-	Tue,  6 Feb 2024 17:39:46 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Feng Tang <feng.tang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Hildenbrand <david@redhat.com>,
-	"ndesaulniers@google.com" <ndesaulniers@google.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Subject: [PATCH v2 1/5] jump_label,module: Don't alloc static_key_mod for __ro_after_init keys
-Date: Tue,  6 Feb 2024 18:39:07 +0100
-Message-ID: <20240206173911.4131670-2-vschneid@redhat.com>
-In-Reply-To: <20240206173911.4131670-1-vschneid@redhat.com>
-References: <20240206173911.4131670-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="W7KIvb2M"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7c00cfd7156so239151839f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 09:39:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1707241196; x=1707845996; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HvfgmunFGFtkyRTL3y0u1hUwzBDb/t5fOC1RyGSPoBE=;
+        b=W7KIvb2M9D0hj3+690bm9XEthiJ/NAVXLi4QrVnoUFk4QsaKkR3dsrOij5E3kRSWrL
+         1wZckZLthNcMBBezvp26twpdtsyopvLAZLsnIOr9mX6tV9CEo98+KfwUjS6JIyyXRgSj
+         ubdRP2lLG97GvDMr1TBZSdTmPphE8RYj+ZmIOWQkR0Fg/qdJv5MU221Z8cGIk+mViCFF
+         in9RHuNm38NhM2VITWUySmm2k7oz14zj68TaeNQ6IWyur8S+pK8pVaYN/lZPSW0+m/uQ
+         udYW66P1QqGta6CMcFJIp28586f/6fygOFApq/kEXRqd8nwBN5LuiYwQJM/J9pzihEqf
+         jksA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707241196; x=1707845996;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HvfgmunFGFtkyRTL3y0u1hUwzBDb/t5fOC1RyGSPoBE=;
+        b=KjeL7I2H6BwSqmt72ZI4mPIpHpR9q+yFfXu1onLkcXAJ9ITQnS9yLwgaKe4gWkexlI
+         AOK2dj++XxbCmwuTOrh2+1FpUDlghmSPCGwNSsPfJp4iPrvwdH5bqcDIYwb7zORkHn9m
+         ye48tKp+VNZz5KbaGfcGyvOZaxr1uvghqyHmAIJ1Re4989OaDQ8Ctx+cT3K9ZpC5luI0
+         ws5JbohC//y3c0reYbs1CjU9KTn+mYPewEl5b9KnTCe5uy5pmNm/J6HFenYCoR8bP/iB
+         A95wzp5LODUs6GTlLPr0ym8dXezoGVc4tQIKw2icX9SqfnD3lLDijzQexGB4vSvWgbqe
+         +t8Q==
+X-Gm-Message-State: AOJu0YzCo2ZtoGpsLGThPfIZ4gl6oLvucLQQ8SIEnHJ3HvZsFmXDWLyQ
+	P1yYvGpu0ql94xGgpOXsIYSrR5ln9I88RKy4YUVhRlQlmXqAtC+ohx+zROGfH5URBgfuVSu/s06
+	n78jCoKKayDObJXshsrg/V3mtXGcu1GuGILwZKw==
+X-Google-Smtp-Source: AGHT+IHPc2cBADHjssHhxrSRF6tDOtzD6+RerOAu4zsdDVok37467SYLbs4n4+eGFMyAky2qmsk1zAWzM0ufxw7kOUw=
+X-Received: by 2002:a92:c64f:0:b0:363:76dd:9d37 with SMTP id
+ 15-20020a92c64f000000b0036376dd9d37mr3453665ill.27.1707241196423; Tue, 06 Feb
+ 2024 09:39:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+References: <20240127161753.114685-1-apatel@ventanamicro.com> <87h6ily53k.fsf@all.your.base.are.belong.to.us>
+In-Reply-To: <87h6ily53k.fsf@all.your.base.are.belong.to.us>
+From: Anup Patel <anup@brainfault.org>
+Date: Tue, 6 Feb 2024 23:09:44 +0530
+Message-ID: <CAAhSdy2PPjS6++Edh8NkgiBmcovTUjS5oXE2eR5ZwPfAfVA0ng@mail.gmail.com>
+Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, Andrew Jones <ajones@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peter Zijlstra <peterz@infradead.org>
+On Tue, Feb 6, 2024 at 9:09=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.=
+org> wrote:
+>
+> Hi Anup,
+>
+> Anup Patel <apatel@ventanamicro.com> writes:
+>
+> > The RISC-V AIA specification is ratified as-per the RISC-V internationa=
+l
+> > process. The latest ratified AIA specifcation can be found at:
+> > https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-interrup=
+ts-1.0.pdf
+> >
+> > At a high-level, the AIA specification adds three things:
+> > 1) AIA CSRs
+> >    - Improved local interrupt support
+> > 2) Incoming Message Signaled Interrupt Controller (IMSIC)
+> >    - Per-HART MSI controller
+> >    - Support MSI virtualization
+> >    - Support IPI along with virtualization
+> > 3) Advanced Platform-Level Interrupt Controller (APLIC)
+> >    - Wired interrupt controller
+> >    - In MSI-mode, converts wired interrupt into MSIs (i.e. MSI generato=
+r)
+> >    - In Direct-mode, injects external interrupts directly into HARTs
+> >
+> > For an overview of the AIA specification, refer the AIA virtualization
+> > talk at KVM Forum 2022:
+> > https://static.sched.com/hosted_files/kvmforum2022/a1/AIA_Virtualizatio=
+n_in_KVM_RISCV_final.pdf
+> > https://www.youtube.com/watch?v=3Dr071dL8Z0yo
+>
+> Thank you for continuing to work on this series! I like this
+> direction of the series!
+>
+> TL;DR: I think we can get rid of most of the id/householding data
+> structures, except for the irq matrix.
+>
+> Most of my comments are more of a design/overview nature, so I'll
+> comment here in the cover letter.
+>
+> I took the series for a spin with and it with Alex' ftrace fix it,
+> passes all my tests nicely!
+>
+> Now some thoughts/comments (I'm coming from the x86 side of things!):
+>
+> id/enable-tracking: There are a lot of different id/enabled tracking
+> with corresponding locks, where there's IMO overlap with what the
+> matrix provides.
 
-When a static_key is marked ro_after_init, its state will never change
-(after init), therefore jump_label_update() will never need to iterate
-the entries, and thus module load won't actually need to track this --
-avoiding the static_key::next write.
+The matrix allocator does not track the enabled/disabled state of
+the per-CPU IDs. This is why we have a separate per-CPU
+ids_enabled_bitmap which is also used for remote synchronization
+across CPUs.
 
-Therefore, mark these keys such that jump_label_add_module() might
-recognise them and avoid the modification.
+>
+> Let's start with struct imsic_priv:
+>
+>    | /* Dummy HW interrupt numbers */
+>    | unsigned int nr_hwirqs;
+>    | raw_spinlock_t hwirqs_lock;
+>    | unsigned long *hwirqs_used_bitmap;
 
-Use the special state: 'static_key_linked(key) && !static_key_mod(key)'
-to denote such keys.
+The matrix allocator manages actual IDs for each CPU whereas
+the Linux irq_data expects a fixed hwirq which does not change.
 
-jump_label_add_module() does not exist under CONFIG_JUMP_LABEL=n, so the
-newly-introduced jump_label_ro() can be defined as a nop for that
-configuration.
+Due to this, we have a dummy hwirq space which is always
+fixed. The only thing that is changed under-the-hood by the
+IMSIC driver is the dummy hwirq to actual HW vector (cpu, id)
+mapping.
 
-Link: http://lore.kernel.org/r/20230705204142.GB2813335@hirez.programming.kicks-ass.net
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-[Added comments and build fix]
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- include/asm-generic/sections.h |  5 ++++
- include/linux/jump_label.h     |  3 +++
- init/main.c                    |  1 +
- kernel/jump_label.c            | 49 ++++++++++++++++++++++++++++++++++
- 4 files changed, 58 insertions(+)
+>
+> These are used to for the domain routing (hwirq -> desc/virq), and not
+> needed. Just use the same id as virq (at allocation time), and get rid
+> of these data structures/corresponding functions. The lookup in the
+> interrupt handler via imsic_local_priv.vectors doesn't care about
+> hwirq. This is what x86 does... The imsic_vector roughly corresponds
+> to apic_chip_data (nit: imsic_vector could have the chip_data suffix
+> as well, at least it would have helped me!)
 
-diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
-index db13bb620f527..c768de6f19a9a 100644
---- a/include/asm-generic/sections.h
-+++ b/include/asm-generic/sections.h
-@@ -180,6 +180,11 @@ static inline bool is_kernel_rodata(unsigned long addr)
- 	       addr < (unsigned long)__end_rodata;
- }
- 
-+static inline bool is_kernel_ro_after_init(unsigned long addr)
-+{
-+	return addr >= (unsigned long)__start_ro_after_init &&
-+	       addr < (unsigned long)__end_ro_after_init;
-+}
- /**
-  * is_kernel_inittext - checks if the pointer address is located in the
-  *                      .init.text section
-diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-index f0a949b7c9733..3b103d88c139e 100644
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -216,6 +216,7 @@ extern struct jump_entry __start___jump_table[];
- extern struct jump_entry __stop___jump_table[];
- 
- extern void jump_label_init(void);
-+extern void jump_label_ro(void);
- extern void jump_label_lock(void);
- extern void jump_label_unlock(void);
- extern void arch_jump_label_transform(struct jump_entry *entry,
-@@ -265,6 +266,8 @@ static __always_inline void jump_label_init(void)
- 	static_key_initialized = true;
- }
- 
-+static __always_inline void jump_label_ro(void) { }
-+
- static __always_inline bool static_key_false(struct static_key *key)
- {
- 	if (unlikely_notrace(static_key_count(key) > 0))
-diff --git a/init/main.c b/init/main.c
-index e24b0780fdff7..5f51d8b910dc1 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1407,6 +1407,7 @@ static void mark_readonly(void)
- 		 * insecure pages which are W+X.
- 		 */
- 		rcu_barrier();
-+		jump_label_ro();
- 		mark_rodata_ro();
- 		rodata_test();
- 	} else
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index d9c822bbffb8d..25a5ed1147841 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -530,6 +530,45 @@ void __init jump_label_init(void)
- 	cpus_read_unlock();
- }
- 
-+static inline bool static_key_sealed(struct static_key *key)
-+{
-+	return (key->type & JUMP_TYPE_LINKED) && !(key->type & ~JUMP_TYPE_MASK);
-+}
-+
-+static inline void static_key_seal(struct static_key *key)
-+{
-+	unsigned long type = key->type & JUMP_TYPE_TRUE;
-+	key->type = JUMP_TYPE_LINKED | type;
-+}
-+
-+void jump_label_ro(void)
-+{
-+	struct jump_entry *iter_start = __start___jump_table;
-+	struct jump_entry *iter_stop = __stop___jump_table;
-+	struct jump_entry *iter;
-+
-+	if (WARN_ON_ONCE(!static_key_initialized))
-+		return;
-+
-+	cpus_read_lock();
-+	jump_label_lock();
-+
-+	for (iter = iter_start; iter < iter_stop; iter++) {
-+		struct static_key *iterk = jump_entry_key(iter);
-+
-+		if (!is_kernel_ro_after_init((unsigned long)iterk))
-+			continue;
-+
-+		if (static_key_sealed(iterk))
-+			continue;
-+
-+		static_key_seal(iterk);
-+	}
-+
-+	jump_label_unlock();
-+	cpus_read_unlock();
-+}
-+
- #ifdef CONFIG_MODULES
- 
- enum jump_label_type jump_label_init_type(struct jump_entry *entry)
-@@ -650,6 +689,15 @@ static int jump_label_add_module(struct module *mod)
- 			static_key_set_entries(key, iter);
- 			continue;
- 		}
-+
-+		/*
-+		 * If the key was sealed at init, then there's no need to keep a
-+		 * reference to its module entries - just patch them now and be
-+		 * done with it.
-+		 */
-+		if (static_key_sealed(key))
-+			goto do_poke;
-+
- 		jlm = kzalloc(sizeof(struct static_key_mod), GFP_KERNEL);
- 		if (!jlm)
- 			return -ENOMEM;
-@@ -675,6 +723,7 @@ static int jump_label_add_module(struct module *mod)
- 		static_key_set_linked(key);
- 
- 		/* Only update if we've changed from our initial state */
-+do_poke:
- 		if (jump_label_type(iter) != jump_label_init_type(iter))
- 			__jump_label_update(key, iter, iter_stop, true);
- 	}
--- 
-2.43.0
+Yes, imsic_vector corresponds to apic_chip_data in the x86 world.
 
+>
+> Moving/affinity changes. The moving of a vector to another CPU
+> currently involves:
+>
+> 1. Allocate a new vector from the matrix
+> 2. Disable/enable the corresponding per-cpu ids_enabled_bitmap (nested
+>    spinlocks)
+> 3. Trigger two IPIs to apply the bitmap
+> 4. On each CPU target (imsic_local_sync()) loop the bitmap and flip
+>    all bits, and potentially rearm
+>
+> This seems a bit heavy-weight: Why are you explicitly setting/clearing
+> all the bits in a loop at the local sync?
+
+This can be certainly optimized by introducing another
+ids_dirty_bitmap. I will add this in the next revision.
+
+>
+> x86 does it a bit differently (more lazily): The chip_data has
+> prev_{cpu,vector}/move_in_progress fields, and keep both vectors
+> enabled until there's an interrupt on the new vector, and then the old
+> one is cleaned (irq_complete_move()).
+>
+> Further; When it's time to remove the old vector, x86 doesn't trigger
+> an IPI on the disabling side, but queues a cleanup job on a per-cpu
+> list and triggers a timeout. So, the per-cpu chip_data (per-cpu
+> "vectors" in your series) can reside in two places during the transit.
+
+We can't avoid IPIs when moving vectors from one CPU to another
+CPU because IMSIC id enable/disable is only possible through
+CSRs. Also, keep in-mind that irq affinity change might be initiated
+on CPU X for some interrupt targeting CPU Y which is then changed
+to target CPU Z.
+
+In the case of x86, they have memory mapped registers which
+allows one CPU to enable/disable the ID of another CPU.
+
+>
+> I wonder if this clean up is less intrusive, and you just need to
+> perform what's in the per-list instead of dealing with the
+> ids_enabled_bitmap? Maybe we can even remove that bitmap as well. The
+> chip_data/desc has that information. This would mean that
+> imsic_local_priv() would only have the local vectors (chip_data), and
+> a cleanup list/timer.
+>
+> My general comment is that instead of having these global id-tracking
+> structures, use the matrix together with some desc/chip_data local
+> data, which should be sufficient.
+
+The "ids_enabled_bitmap", "dummy hwirqs" and private imsic_vectors
+are required since the matrix allocator only manages allocation of
+per-CPU IDs.
+
+>
+> Random thought: Do we need to explicitly disable (csr) the vector,
+> when we're changing the affinity? What if we just leave it enabled,
+> and only when mask/unmask is performed it's actually explicitly masked
+> (writes to the csr)?
+
+We should not leave it enabled because some rough/buggy device
+can inject spurious interrupts using MSI writes to unused enabled
+interrupts.
+
+>
+> Missing features (which can be added later):
+> * Reservation mode/activate support (allocate many MSI, but only
+>   request/activate a subset)
+
+I did not see any PCIe or platform device requiring this kind of
+reservation. Any examples ?
+
+> * Handle managed interrupts
+
+Any examples of managed interrupts in the RISC-V world ?
+
+> * There might be some irqd flags are missing, which mostly cpuhp care
+>   about (e.g. irqd_*_single_target())...
+
+Okay, let me check and update.
+
+>
+> Finally; Given that the APLIC requires a lot more patches, depending
+> on how the review process moves on -- maybe the IMSIC side could go as
+> a separate series?
+>
+
+The most popular implementation choice across RISC-V platforms
+will be IMSIC + APLIC so both drivers should go together. In fact,
+we need both drivers for the QEMU virt machine as well because
+UART interrupt (and other wired interrupts) on the QEMU virt
+machine goes through APLIC.
+
+Regards,
+Anup
