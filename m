@@ -1,24 +1,25 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE53E12F5A4;
-	Tue,  6 Feb 2024 11:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF989130AD3;
+	Tue,  6 Feb 2024 11:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707217706; cv=none; b=IMI1UOk9H14eUrpPQLV6I01paFq74L0qoyHL0InoIZFyEtnvSmrlYe0HPBFc+Y8Psf88v75wwJjPMpOMP76U2zWiQM7LZrGFthHszwkxERky4XyyE6gu76eQXJB1+VDvZWclyg+L9jgSz4XOgLcgKgpZGhr+nwPAOCCETODksKw=
+	t=1707217710; cv=none; b=ICBV5RZ6QXaKQK4knTQPbncmlelyAh2Db3h5bjkH3fM0Ix5sPQ7b3zs1nlxbbz42qUdreUxkJoYPPwgA12AISY9xnNRvF8lahIqObEIExbe5Lq4Sub5NwYl907q7GxDCjX95pklAzZTDQH6KnDmPdkQip8QoLXv7sUdLCHTiymE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707217706; c=relaxed/simple;
-	bh=H0qiN5y21fJHbc3Gsib/vVUqbIRS/mAwqCfl/lTb+XQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kulBcB0QG4p9SHR7ddU8sWSE4XlC2zpBHEJ0umKZmw32GzHhAkr2XZRUt3F4Fd6OuvyIkX4M44d2d6/VBFNo41Yce6bKJ9kkICB7vXfwfmoJCJry15rX8WppNNxZG1E5UEydbqMEHmss8SRFmvyzSqbL8v69aG9RzvX3hZo8vNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl; spf=pass smtp.mailfrom=v0yd.nl; arc=none smtp.client-ip=80.241.56.151
+	s=arc-20240116; t=1707217710; c=relaxed/simple;
+	bh=4oIPZpDeoZVGe7GmWnId7XVlTWi57XyHUKaP1aysZog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=a7HJNr/Ispd95LggADMwyUoSqmhpdKK5RW5ucX2UDvuXinNjx7z5g5pAeBTk9QaUxRU3tHxtQi1vardjdUX6gn5uIDqr+7scXFCQmNT7XelRhldNNj5ukmTGjss6dSU4BuPy2798rqPOkcLUMfWpQfHb4cvJujaKuubYR/IrI9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl; spf=pass smtp.mailfrom=v0yd.nl; arc=none smtp.client-ip=80.241.56.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
 Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4TTgTb2ztYz9sX2;
-	Tue,  6 Feb 2024 12:08:19 +0100 (CET)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4TTgTg6L9qz9skM;
+	Tue,  6 Feb 2024 12:08:23 +0100 (CET)
 From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
 To: Marcel Holtmann <marcel@holtmann.org>,
 	Johan Hedberg <johan.hedberg@gmail.com>,
@@ -27,53 +28,151 @@ Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
 	linux-bluetooth@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH v4 0/2] Bluetooth: Improve retrying of connection attempts
-Date: Tue,  6 Feb 2024 12:08:12 +0100
-Message-ID: <20240206110816.74995-1-verdre@v0yd.nl>
+Subject: [PATCH v4 2/2] Bluetooth: Remove pending ACL connection attempts
+Date: Tue,  6 Feb 2024 12:08:14 +0100
+Message-ID: <20240206110816.74995-3-verdre@v0yd.nl>
+In-Reply-To: <20240206110816.74995-1-verdre@v0yd.nl>
+References: <20240206110816.74995-1-verdre@v0yd.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Since commit 4c67bc74f016 ("[Bluetooth] Support concurrent connect
-requests"), the kernel supports trying to connect again in case the
-bluetooth card is busy and fails to connect.
+With the last commit we moved to using the hci_sync queue for "Create
+Connection" requests, removing the need for retrying the paging after
+finished/failed "Create Connection" requests and after the end of
+inquiries.
 
-The logic that should handle this became a bit spotty over time, and also
-cards these days appear to fail with more errors than just "Command
-Disallowed".
+hci_conn_check_pending() was used to trigger this retry, we can remove it
+now.
 
-This series refactores the handling of concurrent connection requests
-by serializing all "Create Connection" commands for ACL connections
-similar to how we do it for LE connections.
+Note that we can also remove the special handling for COMMAND_DISALLOWED
+errors in the completion handler of "Create Connection", because "Create
+Connection" requests are now always serialized.
 
+This is somewhat reverting commit 4c67bc74f016 ("[Bluetooth] Support
+concurrent connect requests").
+
+With this, the BT_CONNECT2 state of ACL hci_conn objects should now be
+back to meaning only one thing: That we received a "Connection Request"
+from another device (see hci_conn_request_evt), but the response to that
+is going to be deferred.
 ---
-
-v1: https://lore.kernel.org/linux-bluetooth/20240102185933.64179-1-verdre@v0yd.nl/
-v2: https://lore.kernel.org/linux-bluetooth/20240108183938.468426-1-verdre@v0yd.nl/
-v3: https://lore.kernel.org/linux-bluetooth/20240108224614.56900-1-verdre@v0yd.nl/
-v4:
-  - Removed first two commits since they are already applied
-  - Removed a BT_DBG() message in the acl_create_connection() function
-    while moving to hci_sync because it seemed out of place in hci_sync
-  - Added a mention of the test failure in mgmt-tester to commit message
-
-Jonas Dreßler (2):
-  Bluetooth: hci_conn: Only do ACL connections sequentially
-  Bluetooth: Remove pending ACL connection attempts
-
- include/net/bluetooth/hci.h      |  1 +
  include/net/bluetooth/hci_core.h |  1 -
- include/net/bluetooth/hci_sync.h |  3 ++
- net/bluetooth/hci_conn.c         | 83 +++-----------------------------
- net/bluetooth/hci_event.c        | 21 ++------
- net/bluetooth/hci_sync.c         | 70 +++++++++++++++++++++++++++
- 6 files changed, 86 insertions(+), 93 deletions(-)
+ net/bluetooth/hci_conn.c         | 16 ----------------
+ net/bluetooth/hci_event.c        | 21 ++++-----------------
+ 3 files changed, 4 insertions(+), 34 deletions(-)
 
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 8f8dd91737..34aa9d0290 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -1480,7 +1480,6 @@ struct hci_conn *hci_conn_add_unset(struct hci_dev *hdev, int type,
+ 				    bdaddr_t *dst, u8 role);
+ void hci_conn_del(struct hci_conn *conn);
+ void hci_conn_hash_flush(struct hci_dev *hdev);
+-void hci_conn_check_pending(struct hci_dev *hdev);
+ 
+ struct hci_chan *hci_chan_create(struct hci_conn *conn);
+ void hci_chan_del(struct hci_chan *chan);
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index 816be7667a..a4beed8587 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -2592,22 +2592,6 @@ void hci_conn_hash_flush(struct hci_dev *hdev)
+ 	}
+ }
+ 
+-/* Check pending connect attempts */
+-void hci_conn_check_pending(struct hci_dev *hdev)
+-{
+-	struct hci_conn *conn;
+-
+-	BT_DBG("hdev %s", hdev->name);
+-
+-	hci_dev_lock(hdev);
+-
+-	conn = hci_conn_hash_lookup_state(hdev, ACL_LINK, BT_CONNECT2);
+-	if (conn)
+-		hci_acl_create_connection_sync(hdev, conn);
+-
+-	hci_dev_unlock(hdev);
+-}
+-
+ static u32 get_link_mode(struct hci_conn *conn)
+ {
+ 	u32 link_mode = 0;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 271c007928..e7887bae33 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -118,8 +118,6 @@ static u8 hci_cc_inquiry_cancel(struct hci_dev *hdev, void *data,
+ 		hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
+ 	hci_dev_unlock(hdev);
+ 
+-	hci_conn_check_pending(hdev);
+-
+ 	return rp->status;
+ }
+ 
+@@ -150,8 +148,6 @@ static u8 hci_cc_exit_periodic_inq(struct hci_dev *hdev, void *data,
+ 
+ 	hci_dev_clear_flag(hdev, HCI_PERIODIC_INQ);
+ 
+-	hci_conn_check_pending(hdev);
+-
+ 	return rp->status;
+ }
+ 
+@@ -2312,10 +2308,8 @@ static void hci_cs_inquiry(struct hci_dev *hdev, __u8 status)
+ {
+ 	bt_dev_dbg(hdev, "status 0x%2.2x", status);
+ 
+-	if (status) {
+-		hci_conn_check_pending(hdev);
++	if (status)
+ 		return;
+-	}
+ 
+ 	if (hci_sent_cmd_data(hdev, HCI_OP_INQUIRY))
+ 		set_bit(HCI_INQUIRY, &hdev->flags);
+@@ -2340,12 +2334,9 @@ static void hci_cs_create_conn(struct hci_dev *hdev, __u8 status)
+ 
+ 	if (status) {
+ 		if (conn && conn->state == BT_CONNECT) {
+-			if (status != HCI_ERROR_COMMAND_DISALLOWED || conn->attempt > 2) {
+-				conn->state = BT_CLOSED;
+-				hci_connect_cfm(conn, status);
+-				hci_conn_del(conn);
+-			} else
+-				conn->state = BT_CONNECT2;
++			conn->state = BT_CLOSED;
++			hci_connect_cfm(conn, status);
++			hci_conn_del(conn);
+ 		}
+ 	} else {
+ 		if (!conn) {
+@@ -3035,8 +3026,6 @@ static void hci_inquiry_complete_evt(struct hci_dev *hdev, void *data,
+ 
+ 	bt_dev_dbg(hdev, "status 0x%2.2x", ev->status);
+ 
+-	hci_conn_check_pending(hdev);
+-
+ 	if (!test_and_clear_bit(HCI_INQUIRY, &hdev->flags))
+ 		return;
+ 
+@@ -3258,8 +3247,6 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, void *data,
+ 
+ unlock:
+ 	hci_dev_unlock(hdev);
+-
+-	hci_conn_check_pending(hdev);
+ }
+ 
+ static void hci_reject_conn(struct hci_dev *hdev, bdaddr_t *bdaddr)
 -- 
 2.43.0
 
