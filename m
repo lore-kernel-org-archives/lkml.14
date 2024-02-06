@@ -1,269 +1,249 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B771361
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 01:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA9D310F4
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 01:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707182148; cv=none; b=mW270iPoHtsyuFcG5ZMWAdrZJ1Y+yjSKjtChsrAt3w+0fvPkvw0NJXuRJiZJndO95CBASWh/lr7Zz0ZHF2tIQGvyjUcD0eVcpb8CjqOlrXxqEr91WC0Ea/AYIapBnJOGqmt3JZ3lS8QR+FLTDTlb8jLWZ+YYj3T3UNlw5aZwiv4=
+	t=1707182294; cv=none; b=qPg4Kv1O5ycRzmVoTIFu2KNVnrXGxSue6YyHOBvCBtg69b+msjJ5QaoY+Fc7lEc1/56TvCUpAtiUhSrcO9qiHtn61oznDVrUJRCRMzNSKTQadpfMwcFzM4NNpXOONybKB2n1fDi9gfmvbgVxii0YuITlHc4RMXszeUnCSavzea4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707182148; c=relaxed/simple;
-	bh=M6bMxtBYUTNQzAPCE9SXwB3+1J8pM4V9rwYYjVrY6rk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YH8urWjBfXIYEAvUduONR4F0rVRG8GEdWdXMxH6Uya5tGtiLjjWWnZ71mDiP47QGS3gX2Vya/gyzG6xIcPolMAVaytMJChuiOVHAKMWN+to+oYqiZhv98gOLTE/yBJSwiHkPwo39qtxLGNofi1Hz+1tncP+snkJWHbU6M+kDtGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=woK79TxY; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="woK79TxY"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6da9c834646so4064828b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 17:15:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707182146; x=1707786946; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=abZROUiS5HfPGfxSfOXxk9xMII3VljT9ZrpiGO2Q9Sg=;
-        b=woK79TxY/gB/sDEm51e8MLusRcIM2l9uqpwEXo6E9yreA06gFLcfAyzRYAeWi8LkAp
-         Ke590dZn7UEh8vj6UcJGA/Xf0RpHLwdauPZ0xrUqtVXFt790x51VLAQAoTR7CudKeYYy
-         LPWNpVRf93ZqO4wz26B5ocy+lA0a64lnJKgdAniQP9Z3AsbT403rHCheY1Gglmv6lic1
-         jeylsvwtyIi1Zm3gbNOlSfRDvkjSzRAtzt6/RAes8kiWXO7XRjE7g7x0aTOdT62XT4E2
-         e/oSNUIImG1hCtUxcgh5Lp7sXaCUmfdPSKz44/e66LHto8iuMcSBlfpo5M1g9tT6Bx1z
-         mmNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707182146; x=1707786946;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=abZROUiS5HfPGfxSfOXxk9xMII3VljT9ZrpiGO2Q9Sg=;
-        b=sFvIq+MNFQINCRb323Yy54JRqQSz47JbwoWeGmc1yymuqNakJnAyqICF1g7KsVD6f1
-         gspz6wLzjLGIXAdTYgWbYnOjGKdbYyGNJ4aOJl/rZRTYr+d3EpOSZpnznRK1muNcsJAW
-         D6JtSBL0aLy3X2vdv1/NVbDJJrfKxtFFbHVzlM7Iet8f9INspDsnDWiwroQx39kJgKRZ
-         /xJFGz1TSVePlG4iH31zebRKC6IcfBKJw+6BPtiGEnAsPVQYOrEmQjfo9xn7iNadyVts
-         T9Lw1oBBgNbdoKvIBcWAm4Xt+0TNIImyIPyE1fQooZmcHTr7bsU4LDgdNPuFZCdjrXfR
-         ApgA==
-X-Gm-Message-State: AOJu0Yx846HXnsIym/vZ85BvOh8OQD53SuJuZEpH9Q9NV/tIcZup/O7B
-	co9U5BXzNQOo5jsceB1NHr5aYd3fi4kNh7o7/LkkW8ikHoAsnYF6B8D1KWX0WAM=
-X-Google-Smtp-Source: AGHT+IGr96vb75ghoHuo2nxwcsq/KpIfXgfqhzHECuOhcjZyvVOWZIpNmpzN4t3j+olVGfeJ8/iEcQ==
-X-Received: by 2002:a05:6a00:80c:b0:6dd:c43e:fb5e with SMTP id m12-20020a056a00080c00b006ddc43efb5emr1331580pfk.8.1707182145710;
-        Mon, 05 Feb 2024 17:15:45 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXGN7hRM7vfDA3eju+s9+PnCNEx9dgUXK52BE0vquXZRqLWpw/WZriRFEp/RR05kBTScm6YezwUjmlEzlqE+f5TezyGQfpq6xnSkQ911IIJCC4KQnAteZnA2cuqr4eJTKW9pr4pmrD6h9GO+d+45GHPzZjPTHxWe0OE3iC08Y8fqbb+ZDRw2nYZBrFrHlzHBAvJ6G4TQzyWRX3RYD93MdkpCx8LmG3ver1T9ZTixjYTQJECo3iFXjPrIz1TmfGqvMHjIKNgUcMawCc/0koX6aUQZu9gUUwaLE98VxtQPcy/D8Dyi9xXbEWI3mInNNwegBkNrj/VK2RwILFXR6CuBfc21eqqJWQcLTWPK3LKQEBMsvC+1PkPhMPcTYh2U2TpKGBfPT3FAm7eOLXt+6uVUMcPVkw6EiSYQ6Xr1vZQbIW+eICuVY7jNvpQwZvgA1JzLQCT
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id x4-20020a056a00188400b006d9b35b2602sm541964pfh.3.2024.02.05.17.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 17:15:45 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rXA3q-002cWD-1H;
-	Tue, 06 Feb 2024 12:15:42 +1100
-Date: Tue, 6 Feb 2024 12:15:42 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, hch@lst.de,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, chandan.babu@oracle.com, martin.petersen@oracle.com,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	ojaswin@linux.ibm.com
-Subject: Re: [PATCH RFC 5/6] fs: xfs: iomap atomic write support
-Message-ID: <ZcGIPlNCkL6EDx3Z@dread.disaster.area>
-References: <20240124142645.9334-1-john.g.garry@oracle.com>
- <20240124142645.9334-6-john.g.garry@oracle.com>
- <20240202184758.GA6226@frogsfrogsfrogs>
- <e61cf382-66bd-4091-b49c-afbb5ce67d8f@oracle.com>
+	s=arc-20240116; t=1707182294; c=relaxed/simple;
+	bh=1OAsjmGWHUQHaPAdnmgD2EvriyaiRbFvOT6jgGrn8SE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jv9iSFNsK5UPFnJRSYw09ONXHTkQIMLXdKO21y1ZW1uzHAdmvtveBkwfu27u1XEoCa/wnw0w5yvNSErCrL1AsthkiV7QpL8A6jigLwTBv55N1nQlzNNB38ZEPoWjeEarLbVMPHLoD/SZyWwjM1dEY0pU1V/f7tZCXFsx/2+qXOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 4161CmKi029258;
+	Mon, 5 Feb 2024 19:12:48 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 4161ClJZ029257;
+	Mon, 5 Feb 2024 19:12:47 -0600
+Date: Mon, 5 Feb 2024 19:12:47 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Daniel P. Berrang??" <berrange@redhat.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Nakajima, Jun" <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
+Message-ID: <20240206011247.GA29224@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com> <20240130083007.1876787-2-kirill.shutemov@linux.intel.com> <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com> <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e61cf382-66bd-4091-b49c-afbb5ce67d8f@oracle.com>
+In-Reply-To: <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 05 Feb 2024 19:12:48 -0600 (CST)
 
-On Mon, Feb 05, 2024 at 01:36:03PM +0000, John Garry wrote:
-> On 02/02/2024 18:47, Darrick J. Wong wrote:
-> > On Wed, Jan 24, 2024 at 02:26:44PM +0000, John Garry wrote:
-> > > Ensure that when creating a mapping that we adhere to all the atomic
-> > > write rules.
-> > > 
-> > > We check that the mapping covers the complete range of the write to ensure
-> > > that we'll be just creating a single mapping.
-> > > 
-> > > Currently minimum granularity is the FS block size, but it should be
-> > > possibly to support lower in future.
-> > > 
-> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > ---
-> > > I am setting this as an RFC as I am not sure on the change in
-> > > xfs_iomap_write_direct() - it gives the desired result AFAICS.
-> > > 
-> > >   fs/xfs/xfs_iomap.c | 41 +++++++++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 41 insertions(+)
-> > > 
-> > > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> > > index 18c8f168b153..758dc1c90a42 100644
-> > > --- a/fs/xfs/xfs_iomap.c
-> > > +++ b/fs/xfs/xfs_iomap.c
-> > > @@ -289,6 +289,9 @@ xfs_iomap_write_direct(
-> > >   		}
-> > >   	}
-> > > +	if (xfs_inode_atomicwrites(ip))
-> > > +		bmapi_flags = XFS_BMAPI_ZERO;
+On Wed, Jan 31, 2024 at 08:16:56AM +0000, Reshetova, Elena wrote:
 
-We really, really don't want to be doing this during allocation
-unless we can avoid it. If the filesystem block size is 64kB, we
-could be allocating up to 96GB per extent, and that becomes an
-uninterruptable write stream inside a transaction context that holds
-inode metadata locked.
+Good evening, I hope the week has started well for everyone.
 
-IOWs, if the inode is already dirty, this data zeroing effectively
-pins the tail of the journal until the data writes complete, and
-hence can potentially stall the entire filesystem for that length of
-time.
-
-Historical note: XFS_BMAPI_ZERO was introduced for DAX where
-unwritten extents are not used for initial allocation because the
-direct zeroing overhead is typically much lower than unwritten
-extent conversion overhead.  It was not intended as a general
-purpose "zero data at allocation time" solution primarily because of
-how easy it would be to DOS the storage with a single, unkillable
-fallocate() call on slow storage.
-
-> > Why do we want to write zeroes to the disk if we're allocating space
-> > even if we're not sending an atomic write?
+> > On Tue, Jan 30, 2024 at 06:49:15PM +0100, Jason A. Donenfeld wrote:
+> > > On Tue, Jan 30, 2024 at 6:32???PM Dave Hansen <dave.hansen@intel.com> wrote:
+> > > >
+> > > > On 1/30/24 05:45, Reshetova, Elena wrote:
+> > > > >> You're the Intel employee so you can find out about this with much
+> > > > >> more assurance than me, but I understand the sentence above to be _way
+> > > > >> more_ true for RDRAND than for RDSEED. If your informed opinion is,
+> > > > >> "RDRAND failing can only be due to totally broken hardware"
+> > > > > No, this is not the case per Intel SDM. I think we can live under a simple
+> > > > > assumption that both of these instructions can fail not just due to broken
+> > > > > HW, but also due to enough pressure put into the whole DRBG construction
+> > > > > that supplies random numbers via RDRAND/RDSEED.
+> > > >
+> > > > I don't think the SDM is the right thing to look at for guidance here.
+> > > >
+> > > > Despite the SDM allowing it, we (software) need RDRAND/RDSEED failures
+> > > > to be exceedingly rare by design.  If they're not, we're going to get
+> > > > our trusty torches and pitchforks and go after the folks who built the
+> > > > broken hardware.
+> > > >
+> > > > Repeat after me:
+> > > >
+> > > >         Regular RDRAND/RDSEED failures only occur on broken hardware
+> > > >
+> > > > If it's nice hardware that's gone bad, then we WARN() and try to make
+> > > > the best of it.  If it turns out that WARN() was because of a broken
+> > > > hardware _design_ then we go sharpen the pitchforks.
+> > > >
+> > > > Anybody disagree?
+> > >
+> > > Yes, I disagree. I made a trivial test that shows RDSEED breaks easily
+> > > in a busy loop. So at the very least, your statement holds true only
+> > > for RDRAND.
+> > >
+> > > But, anyway, if the statement "RDRAND failures only occur on broken
+> > > hardware" is true, then a WARN() in the failure path there presents no
+> > > DoS potential of any kind, and so that's a straightforward conclusion
+> > > to this discussion. However, that really hinges on  "RDRAND failures
+> > > only occur on broken hardware" being a true statement.
 > > 
-> > (This might want an explanation for why we're doing this at all -- it's
-> > to avoid unwritten extent conversion, which defeats hardware untorn
-> > writes.)
-> 
-> It's to handle the scenario where we have a partially written extent, and
-> then try to issue an atomic write which covers the complete extent.
-
-When/how would that ever happen with the forcealign bits being set
-preventing unaligned allocation and writes?
-
-> In this
-> scenario, the iomap code will issue 2x IOs, which is unacceptable. So we
-> ensure that the extent is completely written whenever we allocate it. At
-> least that is my idea.
-
-So return an unaligned extent, and then the IOMAP_ATOMIC checks you
-add below say "no" and then the application has to do things the
-slow, safe way....
-
-> > I think we should support IOCB_ATOMIC when the mapping is unwritten --
-> > the data will land on disk in an untorn fashion, the unwritten extent
-> > conversion on IO completion is itself atomic, and callers still have to
-> > set O_DSYNC to persist anything.
-> 
-> But does this work for the scenario above?
-
-Probably not, but if we want the mapping to return a single
-contiguous extent mapping that spans both unwritten and written
-states, then we should directly code that behaviour for atomic
-IO and not try to hack around it via XFS_BMAPI_ZERO.
-
-Unwritten extent conversion will already do the right thing in that
-it will only convert unwritten regions to written in the larger
-range that is passed to it, but if there are multiple regions that
-need conversion then the conversion won't be atomic.
-
-> > Then we can avoid the cost of
-> > BMAPI_ZERO, because double-writes aren't free.
-> 
-> About double-writes not being free, I thought that this was acceptable to
-> just have this write zero when initially allocating the extent as it should
-> not add too much overhead in practice, i.e. it's one off.
-
-The whole point about atomic writes is they are a performance
-optimisation. If the cost of enabling atomic writes is that we
-double the amount of IO we are doing, then we've lost more
-performance than we gained by using atomic writes. That doesn't
-seem desirable....
-
-> 
+> > There's a useful comment here from an Intel engineer
 > > 
-> > > +
-> > >   	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write, dblocks,
-> > >   			rblocks, force, &tp);
-> > >   	if (error)
-> > > @@ -812,6 +815,44 @@ xfs_direct_write_iomap_begin(
-> > >   	if (error)
-> > >   		goto out_unlock;
-> > > +	if (flags & IOMAP_ATOMIC) {
-> > > +		xfs_filblks_t unit_min_fsb, unit_max_fsb;
-> > > +		unsigned int unit_min, unit_max;
-> > > +
-> > > +		xfs_get_atomic_write_attr(ip, &unit_min, &unit_max);
-> > > +		unit_min_fsb = XFS_B_TO_FSBT(mp, unit_min);
-> > > +		unit_max_fsb = XFS_B_TO_FSBT(mp, unit_max);
-> > > +
-> > > +		if (!imap_spans_range(&imap, offset_fsb, end_fsb)) {
-> > > +			error = -EINVAL;
-> > > +			goto out_unlock;
-> > > +		}
-> > > +
-> > > +		if ((offset & mp->m_blockmask) ||
-> > > +		    (length & mp->m_blockmask)) {
-> > > +			error = -EINVAL;
-> > > +			goto out_unlock;
-> > > +		}
-
-That belongs in the iomap DIO setup code, not here. It's also only
-checking the data offset/length is filesystem block aligned, not
-atomic IO aligned, too.
-
-> > > +
-> > > +		if (imap.br_blockcount == unit_min_fsb ||
-> > > +		    imap.br_blockcount == unit_max_fsb) {
-> > > +			/* ok if exactly min or max */
-
-Why? Exact sizing doesn't imply alignment is correct.
-
-> > > +		} else if (imap.br_blockcount < unit_min_fsb ||
-> > > +			   imap.br_blockcount > unit_max_fsb) {
-> > > +			error = -EINVAL;
-> > > +			goto out_unlock;
-
-Why do this after an exact check?
-
-> > > +		} else if (!is_power_of_2(imap.br_blockcount)) {
-> > > +			error = -EINVAL;
-> > > +			goto out_unlock;
-
-Why does this matter? If the extent mapping spans a range larger
-than was asked for, who cares what size it is as the infrastructure
-is only going to do IO for the sub-range in the mapping the user
-asked for....
-
-> > > +		}
-> > > +
-> > > +		if (imap.br_startoff &&
-> > > +		    imap.br_startoff & (imap.br_blockcount - 1)) {
+> > https://web.archive.org/web/20190219074642/https://software.intel.com/en-
+> > us/blogs/2012/11/17/the-difference-between-rdrand-and-rdseed
 > > 
-> > Not sure why we care about the file position, it's br_startblock that
-> > gets passed into the bio, not br_startoff.
-> 
-> We just want to ensure that the length of the write is valid w.r.t. to the
-> offset within the extent, and br_startoff would be the offset within the
-> aligned extent.
+> >   "RDRAND is, indeed, faster than RDSEED because it comes
+> >    from a hardware-based pseudorandom number generator.
+> >    One seed value (effectively, the output from one RDSEED
+> >    command) can provide up to 511 128-bit random values
+> >    before forcing a reseed"
+> > 
+> > We know we can exhaust RDSEED directly pretty trivially. Making your
+> > test program run in parallel across 20 cpus, I got a mere 3% success
+> > rate from RDSEED.
+> > 
+> > If RDRAND is reseeding every 511 values, RDRAND output would have
+> > to be consumed significantly faster than RDSEED in order that the
+> > reseed will happen frequently enough to exhaust the seeds.
+> > 
+> > This looks pretty hard, but maybe with a large enough CPU count
+> > this will be possible in extreme load ?
+> > 
+> > So I'm not convinced we can blindly wave away RDRAND failures as
+> > guaranteed to mean broken hardware.
 
-I'm not sure why the filesystem extent mapping code needs to care
-about IOMAP_ATOMIC like this - the extent allocation behaviour is
-determined by the inode forcealign flag, not IOMAP_ATOMIC.
-Everything else we have to do is just mapping the offset/len that
-was passed to it from the iomap DIO layer. As long as we allocate
-with correct alignment and return a mapping that spans the start
-offset of the requested range, we've done our job here.
+> This matches both my understanding (I do have cryptography
+> background and understanding how cryptographic RNGs work) and
+> official public docs that Intel published on this matter.  Given
+> that the physical entropy source is limited anyhow, and by giving
+> enough pressure on the whole construction you should be able to make
+> RDRAND fail because if the intermediate AES-CBC MAC extractor/
+> conditioner is not getting its min entropy input rate, it wont
+> produce a proper seed for AES CTR DRBG.  Of course exact
+> details/numbers can wary between different generations of Intel DRNG
+> implementation, and the platforms where it is running on, so be
+> careful to sticking to concrete numbers.
 
-Actually determining if the mapping returned for IO is suitable for
-the type of IO we are doing (i.e. IOMAP_ATOMIC) is the
-responsibility of the iomap infrastructure. The same checks will
-have to be done for every filesystem that implements atomic writes,
-so these checks belong in the generic code, not the filesystem
-mapping callouts.
+In the spirit of that philosophy we proffer the response below.
 
--Dave
--- 
-Dave Chinner
-david@fromorbit.com
+> That said, I have taken an AR to follow up internally on what can be
+> done to improve our situation with RDRAND/RDSEED. But I would still
+> like to finish the discussion on what people think should be done in
+> the meanwhile keeping in mind that the problem is not intel
+> specific, despite us intel people bringing it for public discussion
+> first. The old saying is still here: "Please don't shoot the
+> messenger" )) We are actually trying to be open about these things
+> and create a public discussion.
+
+Actually, I now believe there is clear evidence that the problem is
+indeed Intel specific.  In light of our testing, it will be
+interesting to see what your 'AR' returns with respect to an official
+response from Intel engineering on this issue.
+
+One of the very bright young engineers collaborating on Quixote, who
+has been following this conversation, took it upon himself to do some
+very methodical engineering analysis on this issue.  I'm the messenger
+but this is very much his work product.
+
+Executive summary is as follows:
+
+- No RDRAND depletion failures were observable with either the Intel
+  or AMD hardware that was load tested.
+
+- RDSEED depletion is an Intel specific issue, AMD's RDSEED
+  implementation could not be provoked into failure.
+
+- AMD's RDRAND/RDSEED implementation is significantly slower than
+  Intel's.
+
+Here are the engineer's lab notes verbatim:
+
+---------------------------------------------------------------------------
+I tested both the single-threaded and OMP-multithreaded versions of
+the RDSEED/RDRAND depletion loop on each of the machines below.
+
+AMD: 2X AMD EPYC 7713 (Milan) 64-Core Processor @ 2.0 GHz, 128
+physical cores total
+
+Intel: 2X Intel Xeon Gold 6140 (Skylake) 18-Core Processor @ 2.3 GHz,
+36 physical cores total
+
+Single-threaded results:
+
+Test case: 1,000,000 iterations each for RDRAND and RDSEED, n=100
+tests, single-threaded.
+
+AMD: 100% success rate for both RDRAND and RDSEED for all tests,
+runtime 0.909-1.055s (min-max).
+
+Intel: 100% success rate for RDRAND for all tests, 20.01-20.12%
+(min-max) success rate for RSEED, runtime 0.256-0.281s (min-max)
+
+OMP multithreaded results:
+
+Test case: 1,000,000 iterations per thread, for both RDRAND and
+RDSEED, n=100 tests, OMP multithreaded with OMP_NUM_THREADS=<total
+physical cores> (i.e. 128 for AMD and 36 for Intel)
+
+AMD: 100% success rate for both RDRAND and RDSEED for all tests,
+runtime 47.229-47.603s (min-max).
+
+Intel: 100% success rate for RDRAND for all tests, 1.77-5.62%
+(min-max) success rate for RSEED, runtime 0.562-0.595s (min-max)
+
+CONCLUSION
+
+RDSEED failure was reproducibly induced on the Intel Skylake platform,
+for both single- and multithreaded tests, whereas RDSEED failure could
+not be induced on the AMD platform for either test. RDRAND did not
+fail on either platform for either test.
+
+AMD execution time was roughly 4x slower than Intel (1s vs 0.25s) for
+the single-threaded test, and almost 100x slower than Intel (47s vs
+0.5s) for the multithreaded test. The difference in clock rates (2.0
+GHz for AMD vs 2.3 GHz for Intel) is not sufficient to explain these
+runtime differences. So it seems likely that AMD is gating the rate at
+which a new RDSEED value can be requested.
+---------------------------------------------------------------------------
+
+Speaking now with my voice:
+
+Unless additional information shows up, despite our collective
+handwringing, as long as the RDRAND instruction is used as the
+cryptographic primitive, there appears to be little likelihood of a
+DOS randomness attack against a TDX based CoCo virtual machine.
+
+While it is highly unlikely we will ever get an 'official' readout on
+this issue, I suspect there is a high probability that Intel
+engineering favored performance with their RDSEED/RDRAND
+implementation.
+
+AMD 'appears', and without engineering feedback from AMD I would
+emphasize the notion of 'appears', to have embraced the principal of
+taking steps to eliminate the possibility of a socket based adversary
+attack against their RNG infrastructure.
+
+> Elena.
+
+Hopefully the above is useful for everyone interested in this issue.
+
+Once again, a thank you to our version of 'Sancho' for his legwork on
+this, who has also read Cervantes at length... :-)
+
+Have a good remainder of the week.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
