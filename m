@@ -1,38 +1,58 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1342E552;
-	Tue,  6 Feb 2024 16:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978338F4E;
+	Tue,  6 Feb 2024 16:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707237332; cv=none; b=Sl1aPlLkxJUBEnbrUgJQ3Mu+cNE3xKAAWihXtL9zVBZuZ9dlWGINhXvDh9blYE5eP0Rtp5RhfkvTyueKdPIosKYAX6Xu+SE8x8s/OEgWJqaWL7ZtTV1xo/UATFSVBuFTrL2E06N9Ms6LyUZmOQNu2A+MMfqkFQqB05sohZjrzKs=
+	t=1707237341; cv=none; b=YFiHDXnu0hFq34h4EoQ9dXrZfj6D7BXdNPRJk/IMyuNMK6M2MAy05sAGntiM6zDtnGOeRzIjmJK8WtvXyy9BwoRwouD6KwZfidUO9mVOnsMy0Q60fZ3JPjuzWUZozBTKOyfrUVdGpnxxPBolf6a7Y3cbWoDbPI04OiZUSzXlzt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707237332; c=relaxed/simple;
-	bh=JM/dM6wGVgOsNpN99AnBS8S4uISuXxo9JPeocMSYoto=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MxR1dU0V5ONRhVWkbh7oht/w5skTXHyWapXWRS663eYotNq8knsLFqwXFvbxgEMEzl7HyN9/amsVeVGw4vLKSLoXpJ/IqA8o+nv8SkwJTfss6/k1BjISby6tpZ1Ab5BQ2etsJPsdZLUkjnIiBiosALR/8oQjUMeIDqnrr4i04x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wm2GeNKk; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1707237341; c=relaxed/simple;
+	bh=2jaTxy897HSNhvuo0scMIqWlSeWhphdBTeyqW2FVe8c=;
+	h=Message-ID:Date:MIME-Version:From:Subject:Cc:To:Content-Type; b=IYTNivN49zfMO3xLlTrFHeQUXj05UKNaDpCccG/w/io41fwyev3JCzg3DJJLzNMDWp60HyEXLLnWCTYxzPMxD/KMvJEGrF3yJpzKUUIZRqb9gi6nS8R9I2hqyQsrfOmeEm+1merWa/mXa2kanlJoGp57pGSm3NaNPQ2cSQaNIds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ECQqCXpv; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wm2GeNKk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1707237302; x=1707842102; i=markus.elfring@web.de;
-	bh=JM/dM6wGVgOsNpN99AnBS8S4uISuXxo9JPeocMSYoto=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=wm2GeNKkzOndkNz/FtcaFa4S9HHjec3kDslAkK3GraBiGHrAmC00TncNVhbeqBDk
-	 dI1i1sB69oHbVdYiHHSchrj9LrCVHAbTbNNk7nWefWQQkT2dHDB4cSNsZZLVRejnR
-	 y0TgGNQb3ZPou/oJ6mfKrKpU1cWirhDQhv4tL3qtjEMuOns6zeHCmeknH2GyPEeah
-	 qkIufCXsWWFi9+uQzCmj+a40Kba5FHwRvlbDV+NSkKCYvFwBEvn5/phnclWvdjtZb
-	 0dZt3Yd7WDZt/0zjDefOQ1i7mic/Yiyi1GzIqZ/hZcFA+tRk5EHp496fzC7c0mVa+
-	 XOVult7M7Rlgdp1nqw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbCI8-1r0WVC29Yu-00bZlD; Tue, 06
- Feb 2024 17:35:02 +0100
-Message-ID: <6e6ce5f8-b701-4660-a71b-478b29197a21@web.de>
-Date: Tue, 6 Feb 2024 17:34:59 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ECQqCXpv"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 416FqRtR008291;
+	Tue, 6 Feb 2024 16:35:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : from : subject : cc : to : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=mF1bxTg83JCcbT2p2VNjnSZdKXCMHgjUucY1HXSBHp4=;
+ b=ECQqCXpvGIsdxNYSso/q56Ake+eF2U2THTENgPB6fP/yIAPTqxuH2UXxeBrmZtiWSVX7
+ 5hkWFgbphxRWWr7OsvtoPNs9NxuYC5hgXpZ2XrW7jveVuThfnb1lJsBXizcQPg+9h3Bj
+ f8nIYyoUnP/dsnkdHGZ1Kttqs1QkTWDm2GDo5mMSChOiVY3V7gzmVxMMfT8wUY6d93Ut
+ fZ5u2NVeeRTbUS+8C9m5rAxGRs11PZwMJv7oTypv1kGrGKdj+jVJtO8R15UCPX6FWIx7
+ ZLENj8XpLYEn/xY+NfUlFb0qsKe5iOoS6gCnLL+LJSZ7ZKmW0DtQF3cU3dBu28hpFjxa Cg== 
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w3qsw98jx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Feb 2024 16:35:26 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 416EtUPZ008770;
+	Tue, 6 Feb 2024 16:35:25 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w206ygbyx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Feb 2024 16:35:25 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 416GZO4H2622116
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 Feb 2024 16:35:25 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DC1865805D;
+	Tue,  6 Feb 2024 16:35:24 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CF2E958057;
+	Tue,  6 Feb 2024 16:35:21 +0000 (GMT)
+Received: from [9.43.109.155] (unknown [9.43.109.155])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  6 Feb 2024 16:35:21 +0000 (GMT)
+Message-ID: <a54c8860-18c7-474d-95e2-a0153a2da885@linux.vnet.ibm.com>
+Date: Tue, 6 Feb 2024 22:05:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,94 +60,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] EDAC/xgene: Use devm_platform_ioremap_resource() in
- xgene_edac_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: linux-edac@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
- Khuong Dinh <khuong@os.amperecomputing.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter
- <rric@kernel.org>, Tony Luck <tony.luck@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <0b255d17-deab-4d6e-bf44-d950b512dc14@web.de>
-In-Reply-To: <0b255d17-deab-4d6e-bf44-d950b512dc14@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hVEeAHWZkLBabGliku9TpAcPPUlMuNPVJGnTqc1ncndDJaWdiqz
- YkXhK1xHsPme+wPdYtE5z5VFxNbLpIa6lUSqXKzTxukevtlGSwPDKU8GaJfbE4+xK1ilUm9
- l4QodqIrM8Pc9YiHhoVkzkywvzjFktTpCw/HSRW9OGmg24lFh70VVurOGHjPrY4UYqLmLk+
- bgoWGL8r+og8Qow6uBrAQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:oJf/jY8IscE=;Q+dSKDZhB+CRZBgbdhZB6FGd8+h
- lZ4qQNrVgZ+UFYwLfo7r4KNrViFvHZE0po8IlJ5SFcT62UUivK3MYd1LPpkyY1MtsvKNfLxHi
- yEY8GM8dJro0FmRJJW4DwmWYcLciEVnVjlhgahgKZTCTgeS1hM7J773mBZuxJtNGzPlvqnEWM
- 8xIrbvQm+I5qJU3QPCxy/YiDlkToKOH3ZPeKPYk/9BGQ1GXUhXYD9+ODA99S+lAjj88ZD8s9O
- 78rzvWfPPFm5EKr4NUsttFqZ3tzM2x6Og+jwMs939+OV1MEQC0+BEeCKKQJYilh42i0KfM6Gk
- dwvqk53uqmXWcMURgq1xYrUPeeOEczS3UOwdb0i7VQE83bfFYz/OTpOQ8TuhyWmvGGjfzTxYa
- D4fkVJTKt7oR3INknULpqlrn9lGJYcHpaqiNqh8m4Dx4SqUPVrtoQD03VXVWS6keBhs+alSC+
- DSnn4PJ/9jyH1Cypg9DK39u9f3M9h+M1uSvWfhEqpTh4V22G3LPIcDxT1yOfG1CrDn4e5HG/+
- hKdDw2um0ilxPMG4y+9hcLTno6kxW30c8xrtT5wl5Srd57hDagJX9HmNQTNchh1CZ4rOr3uFK
- OImKxLGnDdR5MRaRbCxMKm4UvkNUnjL4xlQP2+3Rbe63tq+3bQZqKo6Luo5Jb3J3PCK/I2Fly
- Pr0pNEpiR9hM7QUOwyfJC0mYx25qcqMkPJAZkwl009TIzwh1x4to/MgsFjwyEt19aaZCTKy++
- z1HSWt3Ipakixy8V3vYm+sKPXxemyCebs56anaIa5OR13Yr90lAs/RVGSneZNPoiSgC2wfyjy
- M9h7ere6ST0hrdNh5w2+vM9H4GRFiToE9adw0RSiXKdjs=
+Content-Language: en-US
+From: Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com>
+Subject: [revert commit 9f079dda1433] [mainline] [6.8.0-rc3] [NVME] OOPS
+ kernel crash while booting
+Cc: alan.adamson@oracle.com, kch@nvidia.com, hch@lst.de, kbusch@kernel.org,
+        "sachinp@linux.vnet.com" <sachinp@linux.vnet.com>,
+        "mputtash@linux.vnet.com" <mputtash@linux.vnet.com>,
+        "abdhalee@linux.vnet.ibm.com" <abdhalee@linux.vnet.ibm.com>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: eRSAn1IgLACeoIXaugRY1X-ApsOlxI6z
+X-Proofpoint-ORIG-GUID: eRSAn1IgLACeoIXaugRY1X-ApsOlxI6z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-06_10,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ spamscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=635 priorityscore=1501 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402060116
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 6 Feb 2024 17:30:11 +0100
+Greetings,
 
-A wrapper function is available since the commit 7945f929f1a77a1c8887a97ca=
-07f87626858ff42
-("drivers: provide devm_platform_ioremap_resource()").
+[revert commit 9f079dda1433] [mainline] [6.8.0-rc3] [NVME] OOPS kernel 
+crash while booting to kernel
 
-* Thus reuse existing functionality instead of keeping duplicate source co=
-de.
+Reverting below commit fixes the problem
 
-* Delete a local variable which became unnecessary with this refactoring.
+commit 9f079dda14339ee87d864306a9dc8c6b4e4da40b
+     nvme: allow passthru cmd error logging
 
+--- Traces ---
 
-This issue was transformed by using the Coccinelle software.
+[   15.639835] BUG: Kernel NULL pointer dereference on read at 0x000003d8
+[   15.639840] Faulting instruction address: 0xc0080000215b01dc
+[   15.639845] Oops: Kernel access of bad area, sig: 11 [#1]
+[   15.639849] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=8192 NUMA pSeries
+[   15.639855] Modules linked in: xsk_diag bonding tls nft_compat 
+nf_tables nfnetlink rfkill binfmt_misc dm_multipath dm_mod pseries_rng 
+dax_pmem drm drm_panel_orientation_quirks ext4 mbcache jbd2 ibmvfc 
+nd_pmem nd_btt scsi_transport_fc ibmveth nvme papr_scm bnx2x nvme_core 
+t10_pi vmx_crypto libnvdimm crc64_rocksoft_generic crc64_rocksoft mdio 
+crc64 libcrc32c fuse
+[   15.639901] CPU: 1 PID: 3289 Comm: udevadm Not tainted 
+6.8.0-rc3-auto-g99bd3cb0d12e #1
+[   15.639907] Hardware name: IBM,9009-42A POWER9 (raw) 0x4e0202 
+0xf000005 of:IBM,FW950.A0 (VL950_141) hv:phyp pSeries
+[   15.639913] NIP:  c0080000215b01dc LR: c000000000a197bc CTR: 
+c0080000215b01b8
+[   15.639918] REGS: c00000006f3177f0 TRAP: 0300   Not tainted 
+(6.8.0-rc3-auto-g99bd3cb0d12e)
+[   15.639923] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 
+84888480  XER: 20040000
+[   15.639936] CFAR: c00000000000dbbc DAR: 00000000000003d8 DSISR: 
+40000000 IRQMASK: 0
+[   15.639936] GPR00: c000000000a197bc c00000006f317a90 c0080000215d8200 
+c000000092810000
+[   15.639936] GPR04: c0080000215d2570 c000000092810000 c000000092820000 
+0000000000000000
+[   15.639936] GPR08: c000000092810000 0000000000000000 0000000000010000 
+0000000022888482
+[   15.639936] GPR12: c0080000215b01b8 c00000000f8cf300 0000000000000000 
+0000000000000000
+[   15.639936] GPR16: 0000000000000000 0000000000000000 0000000000000000 
+0000000000000001
+[   15.639936] GPR20: 0000000000000000 0000000000400cc0 c000000086d14c28 
+000000007fff0000
+[   15.639936] GPR24: fffffffffffff000 0000000000000000 c000000086d14c18 
+0000000000010000
+[   15.639936] GPR28: c00000007509c180 c000000005bc1448 c0080000215d2570 
+c000000086d14bf0
+[   15.639999] NIP [c0080000215b01dc] 
+nvme_io_passthru_err_log_enabled_show+0x24/0x80 [nvme_core]
+[   15.640013] LR [c000000000a197bc] dev_attr_show+0x40/0xac
+[   15.640020] Call Trace:
+[   15.640023] [c00000006f317a90] [c00000006f317b10] 0xc00000006f317b10 
+(unreliable)
+[   15.640030] [c00000006f317af0] [c000000000a197bc] dev_attr_show+0x40/0xac
+[   15.640037] [c00000006f317b60] [c0000000006c11a0] 
+sysfs_kf_seq_show+0xcc/0x1f0
+[   15.640045] [c00000006f317bf0] [c0000000006be224] 
+kernfs_seq_show+0x44/0x58
+[   15.640052] [c00000006f317c10] [c00000000060882c] 
+seq_read_iter+0x254/0x69c
+[   15.640060] [c00000006f317cf0] [c0000000006bed60] 
+kernfs_fop_read_iter+0x4c/0x60
+[   15.640067] [c00000006f317d10] [c0000000005bf61c] vfs_read+0x2bc/0x390
+[   15.640074] [c00000006f317dc0] [c0000000005c040c] ksys_read+0x84/0x144
+[   15.640081] [c00000006f317e10] [c000000000033358] 
+system_call_exception+0x138/0x330
+[   15.640088] [c00000006f317e50] [c00000000000d05c] 
+system_call_vectored_common+0x15c/0x2ec
+[   15.640096] --- interrupt: 3000 at 0x7fff87d342e4
+[   15.640101] NIP:  00007fff87d342e4 LR: 0000000000000000 CTR: 
+0000000000000000
+[   15.640106] REGS: c00000006f317e80 TRAP: 3000   Not tainted 
+(6.8.0-rc3-auto-g99bd3cb0d12e)
+[   15.640110] MSR:  800000000280f033 
+<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 42884482  XER: 00000000
+[   15.640126] IRQMASK: 0
+[   15.640126] GPR00: 0000000000000003 00007fffea617e80 00007fff87e47200 
+0000000000000003
+[   15.640126] GPR04: 0000010009494f20 0000000000010008 00007fff87e40e18 
+00000100094a4f20
+[   15.640126] GPR08: 0000000000010008 0000000000000000 0000000000000000 
+0000000000000000
+[   15.640126] GPR12: 0000000000000000 00007fff88434ba0 0000000000000000 
+0000000000000000
+[   15.640126] GPR16: 0000000000000000 000000013e082f48 00007fffea618290 
+00007fffea617ee8
+[   15.640126] GPR20: 00000000003ffffe 00007fffea618108 00007fffea618110 
+0000000000008000
+[   15.640126] GPR24: 0000000000000000 0000000000000002 00000000003ffffe 
+ffffffffffffffff
+[   15.640126] GPR28: 0000000000010007 0000000000010008 0000010009494f20 
+0000000000000003
+[   15.640185] NIP [00007fff87d342e4] 0x7fff87d342e4
+[   15.640189] LR [0000000000000000] 0x0
+[   15.640193] --- interrupt: 3000
+[   15.640196] Code: e8410018 00028048 00000000 3c4c0003 38428048 
+7c0802a6 60000000 7c0802a6 f8010010 f821ffa1 e9230078 7ca32b78 
+<892903d8> 2c090000 4082002c 3d220000
+[   15.640217] ---[ end trace 0000000000000000 ]---
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-v2:
-The transformation pattern was adjusted based on advices by known contribu=
-tors.
-
-Examples:
-* Doug Anderson
-* Geert Uytterhoeven
-* Robin Murphy
-
-
- drivers/edac/xgene_edac.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
-index 1b50f8160013..59eb0e97adef 100644
-=2D-- a/drivers/edac/xgene_edac.c
-+++ b/drivers/edac/xgene_edac.c
-@@ -1845,7 +1845,6 @@ static int xgene_edac_probe(struct platform_device *=
-pdev)
- {
- 	struct xgene_edac *edac;
- 	struct device_node *child;
--	struct resource *res;
- 	int rc;
-
- 	edac =3D devm_kzalloc(&pdev->dev, sizeof(*edac), GFP_KERNEL);
-@@ -1903,8 +1902,7 @@ static int xgene_edac_probe(struct platform_device *=
-pdev)
- 		edac->rb_map =3D NULL;
- 	}
-
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	edac->pcp_csr =3D devm_ioremap_resource(&pdev->dev, res);
-+	edac->pcp_csr =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(edac->pcp_csr)) {
- 		dev_err(&pdev->dev, "no PCP resource address\n");
- 		rc =3D PTR_ERR(edac->pcp_csr);
-=2D-
-2.43.0
+-- 
+Regards,
+Tasmiya Nalatwad
+IBM Linux Technology Center
 
