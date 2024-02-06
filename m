@@ -1,35 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3F3131727;
-	Tue,  6 Feb 2024 14:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AEA131757;
+	Tue,  6 Feb 2024 14:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707228447; cv=none; b=K1zZNMXNWcVceVrQN4kT05ai1HR1c1/hYzqjVExz4B/UBdNiG1N1baruAE9WltQUugU0mLvhXpDjPSGjt+cYfmQq81ge35DJKTbZl5eE1lGb76EA1bPGK9NE/6BQr/BwDXu/l6Rp4CmlTMhrlT9DTMoeMHZNM0jRJuy6xPxR5Jo=
+	t=1707228448; cv=none; b=dtT95+kwTFY5m15PgizL9FgO/xhh0n9qPWGgvXkNekxhiM+YoBYA4cObqALMo1gZ0ysy2eqIuo/1gehNGNT5rNHGV4ltgXyAu5MlcRtNB0AKilca/tHDscGgysdzDZfHly4HlN77cbcqaHLOtsvoWwmXppLzEL6p4Y3l/WN8hZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707228447; c=relaxed/simple;
-	bh=Qvy5YIlLldiX0R7wIDqtJBVKHeubDCELaurFbpCFnp8=;
+	s=arc-20240116; t=1707228448; c=relaxed/simple;
+	bh=o3GCbQ0HDcwCxhsdiMaIWoSqnIsvjGA8R22JTLCknSY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lqFWtkMvNOj0vEXJyubI7aepypWlCUDODP1n/7//0zQ5SUlhTlDNG50cYLU52jR+QuX0Yn541HO31sdtVhBO/k/iBfAYl1iPTbLaHoCEoyJEmOhzzjpK1bQhncoFyNDDanOnJrOHgu22ZlFcSt/QohebtLh8gesnKW5fnbyiReo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MDA631be; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=aDx0jaQsQBSHLSupdWNogwyQkGtaZ1qTF0H1CG3R5rXMwrcoV3It72DiNxZIWqDPGvM287i4RyP7/Sn+bdVFwUCNXWVqUFMeg6VTzHBURgKBZqUdRk1cQsq0toMOAkLI5VjjhFJVaRU5OYNJhuB9Dit/4p+yoZpQKGBx5GQuoUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TL7MHqnQ; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MDA631be"
-Received: by mail.gandi.net (Postfix) with ESMTPA id C39451C000A;
-	Tue,  6 Feb 2024 14:07:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TL7MHqnQ"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 55B6A1C0005;
+	Tue,  6 Feb 2024 14:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707228442;
+	t=1707228444;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=opmB03pxVbtCj6pvCgp5nhczC3sDrqxdKFiEeY7PEsQ=;
-	b=MDA631be1T0gcEwzcr/HZPx8J62e58SpUYwKzHqXGssHKTwRpRYjmGctuzQpG6NKmoa5g0
-	Mz8Ruzf1cUW00/ltDSOdQYiz1VwVG+a+zaQVQKygGD8SHtDMxz9BGkZy+qSp/2PTedo5x5
-	Vp1UO1Oq14uZzUIqL1mpfUUitBZC9JtdJg0w76kvBKQHRGVdgL1RC4ADoEaczhOTPimnl4
-	3TgzEOy6aDF6Haw0dNVGqxYpqezmaQUIeNyoXRhYBY1mCZP94suIu/ib2QK6+/HCXXCt1F
-	hQXUrkvcBu3SiUy1LKq38D13J8KK5CPle9+71x/VPHfP+beRkfupNE14XuasSw==
+	bh=dO1lu7mTt2Z5I540dnIACd6uZE/pOpssk6saKJ+PaEA=;
+	b=TL7MHqnQ0+uB5N7+X/6hGEH5W6RVRcamg9X8+7ETWscpnRHcpj73bczSJMtNWsOwJgPtmy
+	M71+fHKZL6Fe4b3gCxV+ROY/+aRdyURUnpSI3HyXZrkdmzCvlcFGiuN8idSNtvaDQdhI2m
+	7SKV1aevvSxQQqFrlvFtO3SEznXN9cMLnxILuoQUkiw0SUj9iOMTQbmRpOFWQZLK2qc8EM
+	7iW9PPgDEJ2c/cVsIisLCb8sgCapKgw1zeKfLsSA7A3uleAsCSnzTPDERmcXoL6Z5jtY4M
+	lmD+/04gOoso1QQtetWGa2h0eR03q/KFpEfWL8m0WgBy9Tt/MMRcD5h24qZkWQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -44,9 +44,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 2/6] MAINTAINERS: Add the Freescale QMC HDLC driver entry
-Date: Tue,  6 Feb 2024 15:07:12 +0100
-Message-ID: <20240206140717.107930-3-herve.codina@bootlin.com>
+Subject: [PATCH v3 4/6] bitmap: Introduce bitmap_off()
+Date: Tue,  6 Feb 2024 15:07:14 +0100
+Message-ID: <20240206140717.107930-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240206140717.107930-1-herve.codina@bootlin.com>
 References: <20240206140717.107930-1-herve.codina@bootlin.com>
@@ -59,32 +59,91 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-After contributing the driver, add myself as the maintainer for the
-Freescale QMC HDLC driver.
+The bitmap_onto() function translates one bitmap relative to another but
+no function are present to perform the reverse translation.
+
+Introduce bitmap_off() to fill this hole.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/bitmap.h |  3 +++
+ lib/bitmap.c           | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d1052fa6a69..15cd3a8e5866 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8584,6 +8584,13 @@ F:	Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
- F:	drivers/soc/fsl/qe/qmc.c
- F:	include/soc/fsl/qe/qmc.h
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 99451431e4d6..5ecfcbbc91f4 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -65,6 +65,7 @@ struct device;
+  *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
+  *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
+  *  bitmap_onto(dst, orig, relmap, nbits)       *dst = orig relative to relmap
++ *  bitmap_off(dst, orig, relmap, nbits)        *dst = bitmap_onto() reverse operation
+  *  bitmap_fold(dst, orig, sz, nbits)           dst bits = orig bits mod sz
+  *  bitmap_parse(buf, buflen, dst, nbits)       Parse bitmap dst from kernel buf
+  *  bitmap_parse_user(ubuf, ulen, dst, nbits)   Parse bitmap dst from user buf
+@@ -208,6 +209,8 @@ int bitmap_bitremap(int oldbit,
+ 		const unsigned long *old, const unsigned long *new, int bits);
+ void bitmap_onto(unsigned long *dst, const unsigned long *orig,
+ 		const unsigned long *relmap, unsigned int bits);
++void bitmap_off(unsigned long *dst, const unsigned long *orig,
++		const unsigned long *relmap, unsigned int bits);
+ void bitmap_fold(unsigned long *dst, const unsigned long *orig,
+ 		unsigned int sz, unsigned int nbits);
  
-+FREESCALE QUICC ENGINE QMC HDLC DRIVER
-+M:	Herve Codina <herve.codina@bootlin.com>
-+L:	netdev@vger.kernel.org
-+L:	linuxppc-dev@lists.ozlabs.org
-+S:	Maintained
-+F:	drivers/net/wan/fsl_qmc_hdlc.c
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 2feccb5047dc..71343967335e 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -682,6 +682,48 @@ void bitmap_onto(unsigned long *dst, const unsigned long *orig,
+ }
+ EXPORT_SYMBOL(bitmap_onto);
+ 
++/**
++ * bitmap_off - revert operation done by bitmap_onto()
++ *     @dst: resulting translated bitmap
++ *     @orig: original untranslated bitmap
++ *     @relmap: bitmap relative to which translated
++ *     @bits: number of bits in each of these bitmaps
++ *
++ * Suppose onto computed using bitmap_onto(onto, src, relmap, n)
++ * The operation bitmap_off(result, onto, relmap, n) leads to a
++ * result equal or equivalent to src.
++ *
++ * The result can be 'equivalent' because bitmap_onto() and
++ * bitmap_off() are not bijective.
++ * The result and src values are equivalent in that sense that a
++ * call to bitmap_onto(onto, src, relmap, n) and a call to
++ * bitmap_onto(onto, result, relmap, n) will lead to the same onto
++ * value.
++ *
++ * If either of @orig or @relmap is empty (no set bits), then @dst
++ * will be returned empty.
++ *
++ * All bits in @dst not set by the above rule are cleared.
++ */
++void bitmap_off(unsigned long *dst, const unsigned long *orig,
++		const unsigned long *relmap, unsigned int bits)
++{
++	unsigned int n, m;      /* same meaning as in above comment */
 +
- FREESCALE QUICC ENGINE TSA DRIVER
- M:	Herve Codina <herve.codina@bootlin.com>
- L:	linuxppc-dev@lists.ozlabs.org
++	if (dst == orig)        /* following doesn't handle inplace mappings */
++		return;
++	bitmap_zero(dst, bits);
++
++	m = 0;
++	for_each_set_bit(n, relmap, bits) {
++		/* m == bitmap_pos_to_ord(relmap, n, bits) */
++		if (test_bit(n, orig))
++			set_bit(m, dst);
++		m++;
++	}
++}
++EXPORT_SYMBOL(bitmap_off);
++
+ #ifdef CONFIG_NUMA
+ /**
+  * bitmap_fold - fold larger bitmap into smaller, modulo specified size
 -- 
 2.43.0
 
