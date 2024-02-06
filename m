@@ -1,212 +1,114 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADE9EDE;
-	Tue,  6 Feb 2024 00:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4D11362;
+	Tue,  6 Feb 2024 00:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707179881; cv=none; b=sjrDM2GZEmeb1lnR8/+OL4r+/Z/fkY3S/6shEB5g3H/6DjV7tNKZayuB0lzHsjKbYCDetpj4bBM/5rBjrsPcc8qArOSKmT34fOGSTCgaUTg7Zn9MOkroFhhPHc9sJ+FIoGij+P7+FoOpG5WUguyPMUd/WUc4xEAfSDmPVSWWhlc=
+	t=1707180264; cv=none; b=OVmTDbTE584WxTdcpjOCbucsGmmgBvU1SAtNrS2aFUdJUBjyTV9GushPc9mhz/qgUO6sdM4H9wlUfh2jF6Z4zNhtPY30sy7RwEh0eYGaVxb6ULKOuctTmc4DLgFT9lKDjpjVVmb+g9BBB5Ml06i8bLTYTeosDzmtVg+1v7Dfx/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707179881; c=relaxed/simple;
-	bh=cgDHhAokoJ3JI9GUvK2dmNMWiCipmG7oxT8Xy10ZKZ8=;
+	s=arc-20240116; t=1707180264; c=relaxed/simple;
+	bh=/yyAqzHQD4b67rx9jlayctNJKLPz13q9fnIllnfVOC8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9mypZjzWpEFVPffiBml1afPnmP6+T7oSk9T+2CFWOH/qIzHtY0PU5jXFPnhVPBFHTpHlJXE2c8cL/8Wjt539txQUvdYNG3QvBp5WD2zthLdD8xBUqUfaF+t3SEiJEqQoMDSLG48hvlSZIOhYIZJnyLfe3rM+KmB0r4y/RD/+zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=tn7Qlb0x1g/sJYYv2yiSMgr8vEly8xFB1OzlZcuTgPRGCiJ8vtX00m9SkJByseOnXuaGBF8eLfchRXtdnce2SSGQLTd2jkr/exh48eeBEBPx9Esy4iUAYz/nzmsBkLtzCiwq/8bFnDRkRvmfH+s6FUJU8eYY1gZ4e0RTvadNHnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILDeD9bl; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d93b525959so544415ad.0;
-        Mon, 05 Feb 2024 16:37:59 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILDeD9bl"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d09faadba5so27947441fa.1;
+        Mon, 05 Feb 2024 16:44:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707180261; x=1707785061; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8OFn31jen0blVfvFsWJzTrRwpe7OQng5QeVgbQtEl5o=;
+        b=ILDeD9bl1rcHHwEgAvs8ELVaduxaTW8pHSi8ansRG4k5aAOKhUmw9nbLOzyrVScZEC
+         KglZ0D/sHP1B8ujRgpzDWmPCPRRKZw/Ge1z6Q7g2RalmCHRT3rQ3ZSRD2tOmtVcM7N++
+         SuhoEUstEkGwYhtpG4QdvCyY9Gc3kAKdt0cwJUJ7Lv9EETnkHGINXZzQkwXnxSaOgLME
+         eYDbsZSYYEfNMIo80NrQd0rtiDR23Z96brXc20stISggIPl82Fsvag3lNHNLfBCcyUIG
+         7fiqhAiuRePxsai2G/oxIjWnrfj2WOzj2cgcDELMAHps4kNzWfXtHtVC4WaIRMZfuLVc
+         d2qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707179879; x=1707784679;
+        d=1e100.net; s=20230601; t=1707180261; x=1707785061;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eLXwxn1c+Kh9cKSsiilLIy3CGMCH0CX3Zb7/Ic0eQqk=;
-        b=R5K2I0sn3g5NAgogBi6G4f0Z05Ce0uUUjNQ15vEJ5MhHoTJiMEX2C0FgN9F/Vlu2Yl
-         uwT36mmYJY3FoRmm+4i1gsWnqbcmWubWLJEFMn1sqGM/cDB8FBIBUK9QBImbP1/MViJ4
-         alcntY9lD6Bs+47GDnId8DeABacqtH071HsZ3HZ4RsuokhwIDY7NCssHPVIOuFQ13+JH
-         mC4lqj8r97JTbCEUMgRVsIRsNSI5YP/cm0Is8Z1EoZliHnph7SnBVjIDhqhzsu/0FP39
-         C2LtxeIAJo2455ijVLmnvPkFpBZvPmvpZvetr0wbIzz4ZlEHSIhiD1/Lg4CY6Cu5VYoE
-         3/bw==
-X-Gm-Message-State: AOJu0Yw6Gn3V9KF1FhNE0vg3UObjt6bIc/TA4fKcdQi5JIPzi+EFUwdk
-	vdSDbQPIKWD0a25BCNm+GiQfV5x3mb/ntJ1SiL46qOGYf2oifB5kNf9LcwBjqosag/ihUV9ShpF
-	otnWFxFXA+ONLKODWanAjjlsTc9w=
-X-Google-Smtp-Source: AGHT+IFp1eH0CudRkd67FClesiqk67dHCbRBCSTvf8gCvbZ2DsT8aZGwH0U2cPR7SqahS797Ubeaz4ENyWpnXLeHoz8=
-X-Received: by 2002:a05:6a20:4310:b0:19c:9a00:1351 with SMTP id
- h16-20020a056a20431000b0019c9a001351mr211155pzk.25.1707179878934; Mon, 05 Feb
- 2024 16:37:58 -0800 (PST)
+        bh=8OFn31jen0blVfvFsWJzTrRwpe7OQng5QeVgbQtEl5o=;
+        b=ZNdB9eDM7rck0NvMuTILwSomlGMt99/5PTutmH8PtkywYFioeDKHOBedqyUVvtCAs0
+         1YTJk+MQZDlpPzhX3CkdENZxf5oG+olS7EpaeryJf4YR+bIgPXz6AAV6MeHHYSbUbAIn
+         6h9F82DM8htQY6xbrZDxNtcTcpbVMAgYC+9M2OXp8hqYj36+sTLbWsYoc1o3jtYEBW0f
+         2CvpUtqCG1B2NEKiI7E09qnXwmMvHJAqxdxrzjuEMzJUM1NgthDysDX1kxeRQKG9dT4S
+         ndhZjhQIGU2UPjnvuGBNllrBBYkH4PL3kMU7ct7KiouNckjjhVrMnuH4eboMl+E7sitD
+         q3BA==
+X-Gm-Message-State: AOJu0Yx2CTuCObeeAkGG36pyMVd31vw/ZmDYCz8X5akMOVe1fnk6/o+a
+	znZBULp1VSfCsaw+jgxFUYuYdPHJh+6fvvfKYb+L9MffDLyoNJlrfbPfg+zmWXlLA/b7DQLby/L
+	STkQRCoskWq7qaocE25Hy0XSyeSU=
+X-Google-Smtp-Source: AGHT+IEVdSuNJJf4BhE+PzKe7H+47Ni2/ANUXOeqBOiT89cpWJWmEd3e6PND6g24dphWUU51GE8YqFTE8DlfLcxRYlc=
+X-Received: by 2002:a2e:700e:0:b0:2d0:a2bd:2a3c with SMTP id
+ l14-20020a2e700e000000b002d0a2bd2a3cmr776621ljc.26.1707180260465; Mon, 05 Feb
+ 2024 16:44:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103050635.391888-1-irogers@google.com> <20240103050635.391888-2-irogers@google.com>
- <CAM9d7chUnXOFXsz-gdK4V=RX4DfJMdBOzfzso_uKSj=00xNeZg@mail.gmail.com> <CAP-5=fW=Ov8hZ3qfYnTVAqV87bzYpS6jrPpxstdY3JdHx=pBGw@mail.gmail.com>
-In-Reply-To: <CAP-5=fW=Ov8hZ3qfYnTVAqV87bzYpS6jrPpxstdY3JdHx=pBGw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 5 Feb 2024 16:37:47 -0800
-Message-ID: <CAM9d7cgZbc2yTxi+7raw_sc=sSZASA2XEnLTPU4gZaAp9ceXig@mail.gmail.com>
-Subject: Re: [PATCH v7 01/25] perf maps: Switch from rbtree to lazily sorted
- array for addresses
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+References: <20240205090552.40567-1-zhaoyang.huang@unisoc.com> <ZcFbl0zP2pK6vEmh@casper.infradead.org>
+In-Reply-To: <ZcFbl0zP2pK6vEmh@casper.infradead.org>
+From: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date: Tue, 6 Feb 2024 08:44:09 +0800
+Message-ID: <CAGWkznGzWW6yORWvKt5p=2O4S1FtkNe4W42SwYduE70hVkiuBg@mail.gmail.com>
+Subject: Re: [PATCHv8 1/1] block: introduce content activity based ioprio
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Jens Axboe <axboe@kernel.dk>, 
+	Yu Zhao <yuzhao@google.com>, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	steve.kang@unisoc.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
-
-Sorry for the late reply.
-
-On Thu, Feb 1, 2024 at 8:21=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Thu, Feb 1, 2024 at 6:48=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+On Tue, Feb 6, 2024 at 6:05=E2=80=AFAM Matthew Wilcox <willy@infradead.org>=
  wrote:
-[SNIP]
-> > > +int maps__copy_from(struct maps *dest, struct maps *parent)
-> > > +{
-> > > +       /* Note, if struct map were immutable then cloning could use =
-ref counts. */
-> > > +       struct map **parent_maps_by_address;
-> > > +       int err =3D 0;
-> > > +       unsigned int n;
-> > > +
-> > > +       down_write(maps__lock(dest));
-> > >         down_read(maps__lock(parent));
-> > >
-> > > -       maps__for_each_entry(parent, rb_node) {
-> > > -               struct map *new =3D map__clone(rb_node->map);
-> > > +       parent_maps_by_address =3D maps__maps_by_address(parent);
-> > > +       n =3D maps__nr_maps(parent);
-> > > +       if (maps__empty(dest)) {
-> > > +               /* No existing mappings so just copy from parent to a=
-void reallocs in insert. */
-> > > +               unsigned int nr_maps_allocated =3D RC_CHK_ACCESS(pare=
-nt)->nr_maps_allocated;
-> > > +               struct map **dest_maps_by_address =3D
-> > > +                       malloc(nr_maps_allocated * sizeof(struct map =
-*));
-> > > +               struct map **dest_maps_by_name =3D NULL;
-> > >
-> > > -               if (new =3D=3D NULL) {
-> > > +               if (!dest_maps_by_address)
-> > >                         err =3D -ENOMEM;
-> > > -                       goto out_unlock;
-> > > +               else {
-> > > +                       if (maps__maps_by_name(parent)) {
-> > > +                               dest_maps_by_name =3D
-> > > +                                       malloc(nr_maps_allocated * si=
-zeof(struct map *));
-> > > +                       }
-> > > +
-> > > +                       RC_CHK_ACCESS(dest)->maps_by_address =3D dest=
-_maps_by_address;
-> > > +                       RC_CHK_ACCESS(dest)->maps_by_name =3D dest_ma=
-ps_by_name;
-> > > +                       RC_CHK_ACCESS(dest)->nr_maps_allocated =3D nr=
-_maps_allocated;
-> > >                 }
-> > >
-> > > -               err =3D unwind__prepare_access(maps, new, NULL);
-> > > -               if (err)
-> > > -                       goto out_unlock;
-> > > +               for (unsigned int i =3D 0; !err && i < n; i++) {
-> > > +                       struct map *pos =3D parent_maps_by_address[i]=
-;
-> > > +                       struct map *new =3D map__clone(pos);
-> > >
-> > > -               err =3D maps__insert(maps, new);
-> > > -               if (err)
-> > > -                       goto out_unlock;
-> > > +                       if (!new)
-> > > +                               err =3D -ENOMEM;
-> > > +                       else {
-> > > +                               err =3D unwind__prepare_access(dest, =
-new, NULL);
-> > > +                               if (!err) {
-> > > +                                       dest_maps_by_address[i] =3D n=
-ew;
-> > > +                                       if (dest_maps_by_name)
-> > > +                                               dest_maps_by_name[i] =
-=3D map__get(new);
-> > > +                                       RC_CHK_ACCESS(dest)->nr_maps =
-=3D i + 1;
-> > > +                               }
-> > > +                       }
-> > > +                       if (err)
-> > > +                               map__put(new);
-> > > +               }
-> > > +               maps__set_maps_by_address_sorted(dest, maps__maps_by_=
-address_sorted(parent));
-> > > +               if (!err) {
-> > > +                       RC_CHK_ACCESS(dest)->last_search_by_name_idx =
-=3D
-> > > +                               RC_CHK_ACCESS(parent)->last_search_by=
-_name_idx;
-> > > +                       maps__set_maps_by_name_sorted(dest,
-> > > +                                               dest_maps_by_name &&
-> > > +                                               maps__maps_by_name_so=
-rted(parent));
-> > > +               } else {
-> > > +                       RC_CHK_ACCESS(dest)->last_search_by_name_idx =
-=3D 0;
-> > > +                       maps__set_maps_by_name_sorted(dest, false);
-> > > +               }
-> > > +       } else {
-> > > +               /* Unexpected copying to a maps containing entries. *=
-/
-> > > +               for (unsigned int i =3D 0; !err && i < n; i++) {
-> > > +                       struct map *pos =3D parent_maps_by_address[i]=
-;
-> > > +                       struct map *new =3D map__clone(pos);
-> > >
-> > > -               map__put(new);
-> > > +                       if (!new)
-> > > +                               err =3D -ENOMEM;
-> > > +                       else {
-> > > +                               err =3D unwind__prepare_access(dest, =
-new, NULL);
-> > > +                               if (!err)
-> > > +                                       err =3D maps__insert(dest, ne=
-w);
-> >
-> > Shouldn't it be __maps__insert()?
 >
-> On entry the read lock is taken on parent but no lock is taken on dest
-> so the locked version is used.
-
-I think you added the writer lock on dest.
-
-Thanks,
-Namhyung
-
+> On Mon, Feb 05, 2024 at 05:05:52PM +0800, zhaoyang.huang wrote:
+> > +void bio_set_active_ioprio(struct bio *bio)
 >
-> > > +                       }
-> > > +                       map__put(new);
-> > > +               }
-> > >         }
-> > > -
-> > > -       err =3D 0;
-> > > -out_unlock:
-> > >         up_read(maps__lock(parent));
-> > > +       up_write(maps__lock(dest));
-> > >         return err;
-> > >  }
+> why does this still exist?  i said no.
+I supplied two sets of APIs in v8, this one is for iterating the bio.
+The reason is bio_add_page/folio could return success without adding a
+page which can not be dealt with bio_set_active_ioprio_folio
+>
+> > +void bio_set_active_ioprio_page(struct bio *bio, struct page *page)
+>
+> this function should not exist.
+>
+> > +void bio_set_active_ioprio_folio(struct bio *bio, struct folio *folio)
+>
+> this is the only one which should.  did you even look at the
+> implementation of PageWorkingset?
+>
+> > +extern void bio_set_active_ioprio(struct bio *bio);
+> > +extern void bio_set_active_ioprio_folio(struct bio *bio, struct folio =
+*folio);
+> > +extern void bio_set_active_ioprio_page(struct bio *bio, struct page *p=
+age);
+>
+> do not mark function prototypes with extern.
+>
+> > +#ifdef CONFIG_BLK_CONT_ACT_BASED_IOPRIO
+> > +     /*
+> > +      * bi_cont_act record total activities of bi_io_vec->pages
+> > +      */
+> > +     u64                     bi_cont_act;
+> > +#endif
+>
+> what?
+>
+> look, you just don't understand.  i've spent too much time replying to
+> you trying to help you.  i give up.  everything to do with this idea is
+> NAKed.  go away.
+Sorry for the confusion, but I have to find a place to record the
+historic bio's activities for bio_set_active_ioprio_folio. There could
+be many bio_add_folios before submit_bio
