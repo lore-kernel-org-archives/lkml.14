@@ -1,430 +1,354 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E15138485;
-	Tue,  6 Feb 2024 15:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E9A133428
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 15:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707232277; cv=none; b=fOkg8UOgILzQKZcsSF70s9OLVmF6vwLOrcvAl0NNOqmqKdiGWbc/6ptSZB8dpT0/Z9Hl+RQHJqo5o3EwaWCTmuJ71uFzt4FDtWkFxdxLToLpUprZagTlVrjM0hLEp21yToVVuI/qDF5IEvpIWuniOTitL3ZaS0aOxOCLl7ySV5I=
+	t=1707232287; cv=none; b=ZIcxp9S7E19fkHVwLZsFuc9Or+KXexzTfzRYEySFyp/yKnb09CiSo9YQcvEMBH6ZFBAh4mk7GCEI4Knk54Dgv2MZe/Msq3Rb1Cdx9lq0fTfM5nMhPREjmhIX6NspLM46ePlegP3p++R11Sppk7MgRMZwXQU/dU/mGkrfJ50JM2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707232277; c=relaxed/simple;
-	bh=1uNXOkEFaClbT5CkblJsYzFpCC7+iCA37jndjn78mY0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dey8dRg+lvL0BDJyCcIJbfg111TJWgd/lUHbb/6nU+sbKMvNihnUPV4Ek4cLRk/LHtQjE8ijtUXu/kSwYJS0ZT8xKNzggFs76704moCNd4W5v8gHuq3Ul6GHmaCy2P60ul8hHjdX9CQv8jCTziLx2DPLsX3JtPF3roSqQxhRQVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxhC6RWD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707232287; c=relaxed/simple;
+	bh=V+h7kNIOIk7uxK3ZmXxaIRjARIX9Tv14EifdrQQ3Fcg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gE5he1Xaf/kX3PM7nyqcqSnQ8rLDQFAOj7MC86rwR3hxwrG6VJ0mM7hxLVybdpOzkkv/JgvEcxCt0CgMg49czIsyGJNlsI7smeJMNMBQnkVVFyZTagvWU3lc+GS+GUfxco3IHfGQ1N8zdDKy4RG8pVrKaNk2Tu1HfXVrvvPPONk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iD/wbw8z; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxhC6RWD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50236C43390;
-	Tue,  6 Feb 2024 15:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707232276;
-	bh=1uNXOkEFaClbT5CkblJsYzFpCC7+iCA37jndjn78mY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RxhC6RWDPPrgl/x17Eod24up9sOf87T7J7nVxw8FNzw8wV31olhxwTIh/FCfR9/Ad
-	 qOrQsHGSdNDD0/f41Fkz3Q6kz1wBdyvSdIvowEgFAN1kTRqAo8riEDCsJSNDa/Jgv1
-	 mAiw9ePJz/cJo34sl4VYvuDT4GaaNPP++iptX33hF65fgfqdTa8N5nbApHxW2FBAlw
-	 RinuCfBnJ/3QmMhakAqgWPdYshJiBy6dpp75IokkZ/peBsR0CHZfjnJ4kk6PS2fo7M
-	 PnlIOnV/6mzOL0+yIQ1Ix2El5QcLGukf6Q5Wfr9HiEESk7Kaj+zRqS/Ao35yVzV/fw
-	 V8HApTmO4XXOw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v7 20/36] function_graph: Improve push operation for several interrupts
-Date: Wed,  7 Feb 2024 00:11:12 +0900
-Message-Id: <170723227198.502590.10431025573751489041.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170723204881.502590.11906735097521170661.stgit@devnote2>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iD/wbw8z"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d051fb89fbso13831041fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 07:11:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707232283; x=1707837083; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QQL4UgN2a82rxpcDP6lB1rkWj5e7indUsz81vK5JM04=;
+        b=iD/wbw8z2mhR7I6FU/scMrmfVUDANdzsvvavy8lmH7/v5eOcO+F3oRN3ouQODlWw+h
+         Br1wAMDcJ2ul/LFzeOQG/7n1RiF1PzSdMyScdnyBQSJAK5djtM0uMM4bJxu9tU7dam8l
+         Nl8JIAQzzq3Z10f13B+zks9YRZ6uMWEUIqTY5K1k4LzORpaxJxI92NdLXIqDpQ00eQnQ
+         HjWmI33txOyn5k7EB+BvsPAy1rl4pHanGGXmbs9hEPAknMh8ZOAl9iUz3uX8R5mOyAtm
+         bPP+EBvPtJpn5xx2/ayf4r01jQxAgntd72o4r8KbfJaQbllWtW16eQrYWjQBtHFstYjB
+         pR/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707232283; x=1707837083;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QQL4UgN2a82rxpcDP6lB1rkWj5e7indUsz81vK5JM04=;
+        b=QRqDTb9GppPwgRdqR9nSSV6z04R71At/o7H1Bp9uNEi0Xs0weDr8jlkKfWUyHfM9QW
+         OcE8t7Vye8+vo55v5zM9wn9iqn40+z8/d5Z4+Cy9jiJru6R2AzraDYdwy0MUSKy7Yz4x
+         67KLU0WvJI2qHns/tyssmFqOYNPpEpFjk0dTRUzzFs2rH4GTNDuRzsW0lIoHJiHPHy5K
+         ax8uuIm9uouHgXy0cpdDO7H1tt7GTTtnLyAbDzPM1ygK7ukh875c2irfz1u24dkutQuS
+         nOb5Qzf204TYVGiTQBprWMKmtuZt6t0/NcUXutWhwvjvkaupkVLBsgtpkIkTECp0BxHP
+         /6uQ==
+X-Gm-Message-State: AOJu0Yy7Izrc2auuaplV+Wi7wrYaWl3BvdmqhyN6H8dflKqH3D7tAeOb
+	e1gP7XKAWAjeLd42of2bSQs8Thxfzgc5vJVNfS+2Q3+FDeWWZWNMHGfXjp/FI8zE/ZNz5pw27xl
+	aTiatm+kXzL1Tv5BI+m23JzNvQMWa19YJSiV1mA==
+X-Google-Smtp-Source: AGHT+IGBymJiPh8IHxokFPKYJFl5q2mdO6HeoFmrzMiiXCKkrRy/rFturaAsejiOyFaxvXsHX1lkkjPbtf6A3yyZOGE=
+X-Received: by 2002:a05:651c:c1:b0:2d0:aaa8:da8b with SMTP id
+ 1-20020a05651c00c100b002d0aaa8da8bmr2403372ljr.8.1707232282948; Tue, 06 Feb
+ 2024 07:11:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240131174347.510961-1-jens.wiklander@linaro.org>
+ <20240131174347.510961-2-jens.wiklander@linaro.org> <CAPDyKFqNhGWKm=+7niNsjXOjEJE3U=o7dRNG=JqpptUSo9G-ug@mail.gmail.com>
+In-Reply-To: <CAPDyKFqNhGWKm=+7niNsjXOjEJE3U=o7dRNG=JqpptUSo9G-ug@mail.gmail.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Tue, 6 Feb 2024 17:10:46 +0200
+Message-ID: <CAC_iWj+k_Vsz4ot=9pv-Gv7r11=vCunH5TSyOMTK4z-NZ2TeTA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] rpmb: add Replay Protected Memory Block (RPMB) subsystem
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, 
+	Jerome Forissier <jerome.forissier@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi Ulf,
 
-Improve push and data reserve operation on the shadow stack for
-several sequencial interrupts.
+On Tue, 6 Feb 2024 at 14:34, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 31 Jan 2024 at 18:44, Jens Wiklander <jens.wiklander@linaro.org> =
+wrote:
+> >
+> > A number of storage technologies support a specialised hardware
+> > partition designed to be resistant to replay attacks. The underlying
+> > HW protocols differ but the operations are common. The RPMB partition
+> > cannot be accessed via standard block layer, but by a set of specific
+> > RPMB commands: WRITE, READ, GET_WRITE_COUNTER, and PROGRAM_KEY. Such a
+> > partition provides authenticated and replay protected access, hence
+> > suitable as a secure storage.
+> >
+> > The initial aim of this patch is to provide a simple RPMB Driver which
+> > can be accessed by the optee driver to facilitate early RPMB access to
+> > OP-TEE OS (secure OS) during the boot time.
+>
+> How early do we expect OP-TEE to need RPMB access?
 
-To push a ret_stack or data entry on the shadow stack, we need to
-prepare an index (offset) entry before updating the stack pointer
-(curr_ret_stack) so that unwinder from interrupts can find the
-next return address from the shadow stack. Currently we do write index,
-update the curr_ret_stack, and rewrite it again. But that is not enough
-for the case if two interrupts happens and the first one breaks it.
-For example,
+It depends on the requested services. I am currently aware of 2
+services that depend on the RPMB
+- FirmwareTPM
+- UEFI variables stored there via optee.
 
- 1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
- 2. interrupt comes.
-    2.1. push new index and ret addr on ret_stack.
-    2.2. pop it. (corrupt entries on new_index - 1)
- 3. return from interrupt.
- 4. update curr_ret_stack = new_index
- 5. interrupt comes again.
-    5.1. unwind <------ may not work.
+For the FirmwareTPM it depends on when you want to use it. This
+typically happens when the initramfs is loaded or systemd requests
+access to the TPM. I guess this is late enough to not cause problems?
 
-To avoid this issue, this introduces a new rsrv_ret_stack stack
-reservation pointer and a new push code (slow path) to commit
-previous reserved code forcibly.
+For the latter, we won't need the supplicant until a write is
+requested. This will only happen once the userspace is up and running.
+The UEFI driver that sits behind OP-TEE has an in-memory cache of the
+variables, so all the reads (the kernel invokes get_next_variable
+during boot) are working without it.
 
- 0. update rsrv_ret_stack = new_index.
- 1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
- 2. interrupt comes.
-    2.0. if rsrv_ret_stack != curr_ret_stack, add reserved index
-        entry on ret_stack[rsrv_ret_stack - 1] to point the previous
-	ret_stack pointed by ret_stack[curr_ret_stack - 1]. and
-	update curr_ret_stack = rsrv_ret_stack.
-    2.1. push new index and ret addr on ret_stack.
-    2.2. pop it. (corrupt entries on new_index - 1)
- 3. return from interrupt.
- 4. update curr_ret_stack = new_index
- 5. interrupt comes again.
-    5.1. unwind works, because curr_ret_stack points the previously
-        saved ret_stack.
-    5.2. this can do push/pop operations too.
-6. return from interrupt.
-7. rewrite reserved index entry at ret_stack[new_index] again.
-
-This maybe a bit heavier but safer.
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v7:
-  - Handle interrupting pop case correctly not only push.
-  - Always update rsrv_ret_stack before curr_ret_stack.
- Changes in v6:
-  - Newly added.
----
- include/linux/sched.h |    1 
- kernel/trace/fgraph.c |  166 +++++++++++++++++++++++++++++++++++--------------
- 2 files changed, 118 insertions(+), 49 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 1cfabb44dcbb..12666b640c22 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1390,6 +1390,7 @@ struct task_struct {
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	/* Index of current stored address in ret_stack: */
- 	int				curr_ret_stack;
-+	int				rsrv_ret_stack;
- 	int				curr_ret_depth;
- 
- 	/* Stack of return addresses for return function tracing: */
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 5cc7f44037cd..269ea458c57a 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -298,31 +298,47 @@ void *fgraph_reserve_data(int idx, int size_bytes)
- 	unsigned long val;
- 	void *data;
- 	int curr_ret_stack = current->curr_ret_stack;
-+	int rsrv_ret_stack = current->rsrv_ret_stack;
- 	int data_size;
- 
- 	if (size_bytes > FGRAPH_MAX_DATA_SIZE)
- 		return NULL;
- 
-+	/*
-+	 * Since this API is used after pushing ret_stack, curr_ret_stack
-+	 * should be synchronized with rsrv_ret_stack.
-+	 */
-+	if (WARN_ON_ONCE(curr_ret_stack != rsrv_ret_stack))
-+		return NULL;
-+
- 	/* Convert to number of longs + data word */
- 	data_size = DIV_ROUND_UP(size_bytes, sizeof(long));
- 
- 	val = get_fgraph_entry(current, curr_ret_stack - 1);
- 	data = &current->ret_stack[curr_ret_stack];
- 
--	curr_ret_stack += data_size + 1;
--	if (unlikely(curr_ret_stack >= SHADOW_STACK_MAX_INDEX))
-+	rsrv_ret_stack += data_size + 1;
-+	if (unlikely(rsrv_ret_stack >= SHADOW_STACK_MAX_INDEX))
- 		return NULL;
- 
- 	val = make_fgraph_data(idx, data_size, __get_index(val) + data_size + 1);
- 
--	/* Set the last word to be reserved */
--	current->ret_stack[curr_ret_stack - 1] = val;
--
--	/* Make sure interrupts see this */
-+	/* Extend the reserved-ret_stack at first */
-+	current->rsrv_ret_stack = rsrv_ret_stack;
-+	/* And sync with interrupts, to see the new rsrv_ret_stack */
- 	barrier();
--	current->curr_ret_stack = curr_ret_stack;
--	/* Again sync with interrupts, and reset reserve */
--	current->ret_stack[curr_ret_stack - 1] = val;
-+	/*
-+	 * The same reason as the push, this entry must be here before updating
-+	 * the curr_ret_stack. But any interrupt comes before updating
-+	 * curr_ret_stack, it may commit it with different reserve entry.
-+	 * Thus we need to write the data entry after update the curr_ret_stack
-+	 * again. And these operations must be ordered.
-+	 */
-+	current->ret_stack[rsrv_ret_stack - 1] = val;
-+	barrier();
-+	current->curr_ret_stack = rsrv_ret_stack;
-+	barrier();
-+	current->ret_stack[rsrv_ret_stack - 1] = val;
- 
- 	return data;
- }
-@@ -403,7 +419,16 @@ get_ret_stack(struct task_struct *t, int offset, int *index)
- 		return NULL;
- 
- 	idx = get_ret_stack_index(t, --offset);
--	if (WARN_ON_ONCE(idx <= 0 || idx > offset))
-+	/*
-+	 * This can happen if an interrupt comes just before the first push
-+	 * increments the curr_ret_stack, and that interrupt pushes another
-+	 * entry. In that case, the frist push is forcibly committed with a
-+	 * reserved entry which points -1 stack index.
-+	 */
-+	if (unlikely(idx > offset))
-+		return NULL;
-+
-+	if (WARN_ON_ONCE(idx <= 0))
- 		return NULL;
- 
- 	offset -= idx;
-@@ -473,7 +498,7 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	struct ftrace_ret_stack *ret_stack;
- 	unsigned long long calltime;
- 	unsigned long val;
--	int index;
-+	int index, rindex;
- 
- 	if (unlikely(ftrace_graph_is_dead()))
- 		return -EBUSY;
-@@ -481,18 +506,42 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	if (!current->ret_stack)
- 		return -EBUSY;
- 
--	/*
--	 * At first, check whether the previous fgraph callback is pushed by
--	 * the fgraph on the same function entry.
--	 * But if @func is the self tail-call function, we also need to ensure
--	 * the ret_stack is not for the previous call by checking whether the
--	 * bit of @fgraph_idx is set or not.
--	 */
--	ret_stack = get_ret_stack(current, current->curr_ret_stack, &index);
--	if (ret_stack && ret_stack->func == func &&
--	    get_fgraph_type(current, index + FGRAPH_RET_INDEX) == FGRAPH_TYPE_BITMAP &&
--	    !is_fgraph_index_set(current, index + FGRAPH_RET_INDEX, fgraph_idx))
--		return index + FGRAPH_RET_INDEX;
-+	index = READ_ONCE(current->curr_ret_stack);
-+	rindex = READ_ONCE(current->rsrv_ret_stack);
-+	if (unlikely(index < rindex)) {
-+		/*
-+		 * This interrupts the push operation. Commit previous push
-+		 * temporarily with reserved entry.
-+		 */
-+		if (unlikely(index <= 0))
-+			/* This will make ret_stack[index - 1] points -1 */
-+			val = rindex - index;
-+		else
-+			val = get_ret_stack_index(current, index - 1) +
-+			      rindex - index;
-+		current->ret_stack[rindex - 1] = val;
-+		/* Forcibly commit it */
-+		current->curr_ret_stack = index = rindex;
-+	} else {
-+		/*
-+		 * This is normal path OR interrupting in the pop commit operation.
-+		 * In both way, @rindex should point correct next index. So use it.
-+		 * Check whether the previous fgraph callback is pushed by the fgraph
-+		 * on the same function entry.
-+		 * But if @func is the self tail-call function, we also need to ensure
-+		 * the ret_stack is not for the previous call by checking whether the
-+		 * bit of @fgraph_idx is set or not.
-+		 */
-+		if (likely(rindex == index)) {
-+			ret_stack = get_ret_stack(current, index, &index);
-+			if (ret_stack && ret_stack->func == func &&
-+			    get_fgraph_type(current, index + FGRAPH_RET_INDEX) == FGRAPH_TYPE_BITMAP &&
-+			    !is_fgraph_index_set(current, index + FGRAPH_RET_INDEX, fgraph_idx))
-+				return index + FGRAPH_RET_INDEX;
-+		}
-+		/* Since get_ret_stack() overwrites 'index', recover it. */
-+		index = rindex;
-+	}
- 
- 	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_RET_INDEX;
- 
-@@ -504,46 +553,53 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	 */
- 	smp_rmb();
- 
-+	ret_stack = RET_STACK(current, index);
-+	index += FGRAPH_RET_INDEX + 1;
-+
- 	/* The return trace stack is full */
--	if (current->curr_ret_stack + FGRAPH_RET_INDEX + 1 >= SHADOW_STACK_MAX_INDEX) {
-+	if (index >= SHADOW_STACK_MAX_INDEX) {
- 		atomic_inc(&current->trace_overrun);
- 		return -EBUSY;
- 	}
- 
- 	calltime = trace_clock_local();
- 
--	index = READ_ONCE(current->curr_ret_stack);
--	ret_stack = RET_STACK(current, index);
--	index += FGRAPH_RET_INDEX;
-+	/*
-+	 * At first, reserve the ret_stack. Beyond this point, any interrupt
-+	 * will only overwrite ret_stack[index - 1] by a reserved entry which
-+	 * points the previous ret_stack or -1.
-+	 */
-+	current->rsrv_ret_stack = index;
-+	/* And ensure that the following happens after reserved */
-+	barrier();
- 
--	/* ret offset = FGRAPH_RET_INDEX ; type = reserved */
--	current->ret_stack[index] = val;
-+	current->ret_stack[index - 1] = val;
- 	ret_stack->ret = ret;
- 	/*
- 	 * The unwinders expect curr_ret_stack to point to either zero
--	 * or an index where to find the next ret_stack. Even though the
--	 * ret stack might be bogus, we want to write the ret and the
--	 * index to find the ret_stack before we increment the stack point.
--	 * If an interrupt comes in now before we increment the curr_ret_stack
--	 * it may blow away what we wrote. But that's fine, because the
--	 * index will still be correct (even though the 'ret' won't be).
--	 * What we worry about is the index being correct after we increment
--	 * the curr_ret_stack and before we update that index, as if an
--	 * interrupt comes in and does an unwind stack dump, it will need
--	 * at least a correct index!
-+	 * or an index where to find the next ret_stack which has actual ret
-+	 * address. Thus we want to write the ret and the index to find the
-+	 * ret_stack before we increment the curr_ret_stack.
- 	 */
- 	barrier();
--	current->curr_ret_stack = index + 1;
-+	current->curr_ret_stack = index;
- 	/*
-+	 * There are two possibilities here.
-+	 * - More than one interrupts push/pop their entry between update
-+	 *   rsrv_ret_stack and curr_ret_stack. In this case, curr_ret_stack
-+	 *   is already equal to the rsrv_ret_stack and
-+	 *   current->ret_stack[index] is overwritten by reserved entry which
-+	 *   points the previous ret_stack. But ret_stack->ret is not.
-+	 * - Or, no interrupts push/pop. So current->ret_stack[index - 1] keeps
-+	 *   its value.
- 	 * This next barrier is to ensure that an interrupt coming in
--	 * will not corrupt what we are about to write.
-+	 * will not overwrite what we are about to write anymore.
- 	 */
- 	barrier();
- 
--	/* Still keep it reserved even if an interrupt came in */
--	current->ret_stack[index] = val;
-+	/* Rewrite the entry again in case it was overwritten. */
-+	current->ret_stack[index - 1] = val;
- 
--	ret_stack->ret = ret;
- 	ret_stack->func = func;
- 	ret_stack->calltime = calltime;
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
-@@ -555,6 +611,14 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	return index;
- }
- 
-+static void __ftrace_commit_pop(int new_index)
-+{
-+	current->rsrv_ret_stack = new_index;
-+	/* Ensure the rsrv_ret_stack always updated first */
-+	barrier();
-+	current->curr_ret_stack = current->rsrv_ret_stack;
-+}
-+
- /*
-  * Not all archs define MCOUNT_INSN_SIZE which is used to look for direct
-  * functions. But those archs currently don't support direct functions
-@@ -624,7 +688,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 
- 	return 0;
-  out_ret:
--	current->curr_ret_stack -= FGRAPH_RET_INDEX + 1;
-+	__ftrace_commit_pop(current->rsrv_ret_stack - FGRAPH_RET_INDEX + 1);
-  out:
- 	current->curr_ret_depth--;
- 	return -EBUSY;
-@@ -667,7 +731,7 @@ int function_graph_enter_ops(unsigned long ret, unsigned long func,
- 		current->curr_ret_stack = save_curr_ret_stack;
- 
- 	if (type == FGRAPH_TYPE_RESERVED) {
--		current->curr_ret_stack -= FGRAPH_RET_INDEX + 1;
-+		__ftrace_commit_pop(current->rsrv_ret_stack - FGRAPH_RET_INDEX + 1);
- 		current->curr_ret_depth--;
- 	}
- 	return -EBUSY;
-@@ -806,10 +870,10 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
- 	/*
- 	 * The ftrace_graph_return() may still access the current
- 	 * ret_stack structure, we need to make sure the update of
--	 * curr_ret_stack is after that.
-+	 * curr_ret_stack is after that. __ftrace_commit_pop() does
-+	 * barrier() before updating curr_ret_stack.
- 	 */
--	barrier();
--	current->curr_ret_stack = index - FGRAPH_RET_INDEX;
-+	__ftrace_commit_pop(index - FGRAPH_RET_INDEX);
- 
- 	current->curr_ret_depth--;
- 	return ret;
-@@ -997,6 +1061,7 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
- 		if (t->ret_stack == NULL) {
- 			atomic_set(&t->trace_overrun, 0);
- 			ret_stack_init_task_vars(ret_stack_list[start]);
-+			t->rsrv_ret_stack = 0;
- 			t->curr_ret_stack = 0;
- 			t->curr_ret_depth = -1;
- 			/* Make sure the tasks see the 0 first: */
-@@ -1059,6 +1124,7 @@ graph_init_task(struct task_struct *t, unsigned long *ret_stack)
- 	atomic_set(&t->trace_overrun, 0);
- 	ret_stack_init_task_vars(ret_stack);
- 	t->ftrace_timestamp = 0;
-+	t->rsrv_ret_stack = 0;
- 	t->curr_ret_stack = 0;
- 	t->curr_ret_depth = -1;
- 	/* make curr_ret_stack visible before we add the ret_stack */
-@@ -1072,6 +1138,7 @@ graph_init_task(struct task_struct *t, unsigned long *ret_stack)
-  */
- void ftrace_graph_init_idle_task(struct task_struct *t, int cpu)
- {
-+	t->rsrv_ret_stack = 0;
- 	t->curr_ret_stack = 0;
- 	t->curr_ret_depth = -1;
- 	/*
-@@ -1100,6 +1167,7 @@ void ftrace_graph_init_task(struct task_struct *t)
- {
- 	/* Make sure we do not use the parent ret_stack */
- 	t->ret_stack = NULL;
-+	t->rsrv_ret_stack = 0;
- 	t->curr_ret_stack = 0;
- 	t->curr_ret_depth = -1;
- 
-
+Thanks
+/Ilias
+>
+> The way things work for mmc today, is that the eMMC card gets
+> discovered/probed via a workqueue. The work is punted by the mmc host
+> driver (typically a module-platform-driver), when it has probed
+> successfully.
+>
+> The point is, it looks like we need some kind of probe deferral
+> mechanism too. Whether we want the OP-TEE driver to manage this itself
+> or whether we should let rpmb_dev_find_device() deal with it, I don't
+> know.
+>
+> >
+> > A TEE device driver can claim the RPMB interface, for example, via
+> > class_interface_register() or rpmb_dev_find_device(). The RPMB driver
+> > provides a callback to route RPMB frames to the RPMB device accessible
+> > via rpmb_route_frames().
+>
+> By looking at the design of the interface, I do like it. It's simple
+> and straightforward.
+>
+> However, I wonder if you considered avoiding using a class-device
+> altogether? Even if it helps with lifecycle problems and the
+> ops-lookup, we really don't need another struct device with a sysfs
+> node, etc.
+>
+> To deal with the lifecycle issue, we could probably just add reference
+> counting for the corresponding struct device that we already have at
+> hand, which represents the eMMC/UFS/NVME card. That together with a
+> simple list that contains the registered rpmb ops. But I may be
+> overlooking something, so perhaps it's more complicated than that?
+>
+> >
+> > The detailed operation of implementing the access is left to the TEE
+> > device driver itself.
+> >
+> > Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> > Signed-off-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+> > Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > ---
+> >  MAINTAINERS              |   7 ++
+> >  drivers/misc/Kconfig     |   9 ++
+> >  drivers/misc/Makefile    |   1 +
+> >  drivers/misc/rpmb-core.c | 247 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/rpmb.h     | 184 +++++++++++++++++++++++++++++
+> >  5 files changed, 448 insertions(+)
+> >  create mode 100644 drivers/misc/rpmb-core.c
+> >  create mode 100644 include/linux/rpmb.h
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 8999497011a2..e83152c42499 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19012,6 +19012,13 @@ T:     git git://linuxtv.org/media_tree.git
+> >  F:     Documentation/devicetree/bindings/media/allwinner,sun8i-a83t-de=
+2-rotate.yaml
+> >  F:     drivers/media/platform/sunxi/sun8i-rotate/
+> >
+> > +RPMB SUBSYSTEM
+> > +M:     Jens Wiklander <jens.wiklander@linaro.org>
+> > +L:     linux-kernel@vger.kernel.org
+> > +S:     Supported
+> > +F:     drivers/misc/rpmb-core.c
+> > +F:     include/linux/rpmb.h
+> > +
+> >  RPMSG TTY DRIVER
+> >  M:     Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+> >  L:     linux-remoteproc@vger.kernel.org
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > index 4fb291f0bf7c..891aa5763666 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -104,6 +104,15 @@ config PHANTOM
+> >           If you choose to build module, its name will be phantom. If u=
+nsure,
+> >           say N here.
+> >
+> > +config RPMB
+> > +       tristate "RPMB partition interface"
+>
+> Should we add a "depends on MMC"? (We can add the other NVME and UFS
+> later on too).
+>
+> > +       help
+> > +         Unified RPMB unit interface for RPMB capable devices such as =
+eMMC and
+> > +         UFS. Provides interface for in kernel security controllers to=
+ access
+> > +         RPMB unit.
+> > +
+> > +         If unsure, select N.
+> > +
+> >  config TIFM_CORE
+> >         tristate "TI Flash Media interface support"
+> >         depends on PCI
+> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> > index ea6ea5bbbc9c..8af058ad1df4 100644
+> > --- a/drivers/misc/Makefile
+> > +++ b/drivers/misc/Makefile
+> > @@ -15,6 +15,7 @@ obj-$(CONFIG_LKDTM)           +=3D lkdtm/
+> >  obj-$(CONFIG_TIFM_CORE)        +=3D tifm_core.o
+> >  obj-$(CONFIG_TIFM_7XX1)        +=3D tifm_7xx1.o
+> >  obj-$(CONFIG_PHANTOM)          +=3D phantom.o
+> > +obj-$(CONFIG_RPMB)             +=3D rpmb-core.o
+> >  obj-$(CONFIG_QCOM_COINCELL)    +=3D qcom-coincell.o
+> >  obj-$(CONFIG_QCOM_FASTRPC)     +=3D fastrpc.o
+> >  obj-$(CONFIG_SENSORS_BH1770)   +=3D bh1770glc.o
+> > diff --git a/drivers/misc/rpmb-core.c b/drivers/misc/rpmb-core.c
+> > new file mode 100644
+> > index 000000000000..a3c289051687
+> > --- /dev/null
+> > +++ b/drivers/misc/rpmb-core.c
+> > @@ -0,0 +1,247 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright(c) 2015 - 2019 Intel Corporation. All rights reserved.
+> > + * Copyright(c) 2021 - 2024 Linaro Ltd.
+> > + */
+> > +#include <linux/device.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/list.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/rpmb.h>
+> > +#include <linux/slab.h>
+> > +
+> > +static DEFINE_IDA(rpmb_ida);
+> > +static DEFINE_MUTEX(rpmb_mutex);
+> > +
+> > +/**
+> > + * rpmb_dev_get() - increase rpmb device ref counter
+> > + * @rdev: rpmb device
+> > + */
+> > +struct rpmb_dev *rpmb_dev_get(struct rpmb_dev *rdev)
+> > +{
+> > +       if (rdev)
+> > +               get_device(&rdev->dev);
+> > +       return rdev;
+> > +}
+> > +EXPORT_SYMBOL_GPL(rpmb_dev_get);
+> > +
+> > +/**
+> > + * rpmb_dev_put() - decrease rpmb device ref counter
+> > + * @rdev: rpmb device
+> > + */
+> > +void rpmb_dev_put(struct rpmb_dev *rdev)
+> > +{
+> > +       if (rdev)
+> > +               put_device(&rdev->dev);
+> > +}
+> > +EXPORT_SYMBOL_GPL(rpmb_dev_put);
+> > +
+> > +/**
+> > + * rpmb_route_frames() - route rpmb frames to rpmb device
+> > + * @rdev:      rpmb device
+> > + * @req:       rpmb request frames
+> > + * @req_len:   length of rpmb request frames in bytes
+> > + * @rsp:       rpmb response frames
+> > + * @rsp_len:   length of rpmb response frames in bytes
+> > + *
+> > + * @return < 0 on failure
+> > + */
+> > +int rpmb_route_frames(struct rpmb_dev *rdev, u8 *req,
+> > +                     unsigned int req_len, u8 *rsp, unsigned int rsp_l=
+en)
+> > +{
+> > +       struct rpmb_frame *frm =3D (struct rpmb_frame *)req;
+>
+> Is there a reason why we are passing an u8 *req, in favor of a
+> "rpmb_frame *frame" directly as the in-parameter?
+>
+> > +       u16 req_type;
+> > +       bool write;
+> > +
+> > +       if (!req || req_len < sizeof(*frm) || !rsp || !rsp_len)
+> > +               return -EINVAL;
+> > +
+> > +       req_type =3D be16_to_cpu(frm->req_resp);
+> > +       switch (req_type) {
+> > +       case RPMB_PROGRAM_KEY:
+> > +               if (req_len !=3D sizeof(struct rpmb_frame) ||
+> > +                   rsp_len !=3D sizeof(struct rpmb_frame))
+> > +                       return -EINVAL;
+> > +               write =3D true;
+> > +               break;
+> > +       case RPMB_GET_WRITE_COUNTER:
+> > +               if (req_len !=3D sizeof(struct rpmb_frame) ||
+> > +                   rsp_len !=3D sizeof(struct rpmb_frame))
+> > +                       return -EINVAL;
+> > +               write =3D false;
+> > +               break;
+> > +       case RPMB_WRITE_DATA:
+> > +               if (req_len % sizeof(struct rpmb_frame) ||
+> > +                   rsp_len !=3D sizeof(struct rpmb_frame))
+> > +                       return -EINVAL;
+> > +               write =3D true;
+> > +               break;
+> > +       case RPMB_READ_DATA:
+> > +               if (req_len !=3D sizeof(struct rpmb_frame) ||
+> > +                   rsp_len % sizeof(struct rpmb_frame))
+> > +                       return -EINVAL;
+> > +               write =3D false;
+> > +               break;
+> > +       default:
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return rdev->ops->route_frames(rdev->dev.parent, write,
+> > +                                      req, req_len, rsp, rsp_len);
+> > +}
+> > +EXPORT_SYMBOL_GPL(rpmb_route_frames);
+>
+> [...]
+>
+>
+> > +
+> > +/**
+> > + * enum rpmb_type - type of underlaying storage technology
+> > + *
+> > + * @RPMB_TYPE_EMMC  : emmc (JESD84-B50.1)
+> > + * @RPMB_TYPE_UFS   : UFS (JESD220)
+> > + * @RPMB_TYPE_NVME  : NVM Express
+> > + */
+> > +enum rpmb_type {
+> > +       RPMB_TYPE_EMMC,
+> > +       RPMB_TYPE_UFS,
+> > +       RPMB_TYPE_NVME,
+> > +};
+>
+> In what way do we expect these to be useful?
+>
+> Perhaps we should add some information about this, because currently
+> in the series they seem not to be used. Maybe the OP-TEE driver needs
+> it when extending support to NVME and UFS?
+>
+> [...]
+>
+> Kind regards
+> Uffe
