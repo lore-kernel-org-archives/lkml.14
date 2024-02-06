@@ -1,233 +1,255 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AEE38D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 15:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A4C1E866;
+	Tue,  6 Feb 2024 15:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707232020; cv=none; b=br8dN+w4tLndbK4W6QWf3ab5/iLH0ROnM2zRd/PztyanqHJpwPYKtCp6otzLE5Z3jWAnr13HTPJqSeX+MF3IlK7CiNa7JfJVOaWUL8XqBd628H9O7xY4IUSu8HcWfrW4MSQFCx+YUo67aeIBbHx57ugqnhAZ/P23O3RdAUJaGls=
+	t=1707232055; cv=none; b=S/erOGjnsYdSZmazgyPfs7SSwmgo9MbzjUoR11G6BLmwCeKmo8OCLof7IWzp55Xa6iLK5b6uDrCE2e61P2jGFqWR7TgUx/V0HTPkuNcw2KPFy6Rkxstpp8kdKQ3kk9YnGq/Hmt4j9FzlWDPGil8wiaYWpRUNpQKoDZ65QqjDhP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707232020; c=relaxed/simple;
-	bh=jQEYv3jIAy4MqZMCKc+hokmr2pwdSZDR8UEHWdNGDiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W5egd2NKa6SidYB8I0d4I8ptjCoaGR9nPq44IKF1g6/EvLr07d/xcc1hofMzCP/LwwwixA+LLM58fUGP1J+/mtY8Sbzn1CpKQEGTpJSJn7An7tBoTzWl2A7N3pOKSHmATad/bWY1pWywrxW58vncoJocTvTGbOp/j1fVOIXK4p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=DhvpJd1u; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1707232055; c=relaxed/simple;
+	bh=Ii+WcqZDg5A6lf9RNiCFYTT3chrvRJ8xzBmAEQd/9x4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=LJBiOrlfKW/ZJoXoflSSqWZhqTNtGeqnt27kuYwbbPilXrNEA1QldB5xYBKBLC0RyXRORYgd74GGeDIsDZFaJ6DrSZsHFBmqdzcHZOsQsSzQAFP3kGAy8u4tRuwLMepkWBCE0IjvNdlhN9dDyUGA79VqQ8elppgQHvlUBWUVixQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1+n6vfa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="DhvpJd1u"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33b401fd72bso1486431f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 07:06:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1707232016; x=1707836816; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dQ7y3Y7lXB7e+rY0LpFvOr02gZDXpOWLyRQYElaW0F8=;
-        b=DhvpJd1uCuJzV6OhB861n2VtjYXLlgRbWNjAMZnDRQuRQtgyY2Z0noOX92+TuJtc/7
-         tlwsIXjhf2PLSdVlPLxNLwiW9Ua4iTTFw59XRb8j5crxQOlnQyBXPypwsa8srBiY2YCQ
-         uzpJWxCd13w61QrjSsydZU2c9LEs3vZJpCA8Lm7L0YN1XBMi80j06k7L+6//kmF2yaSJ
-         zVo6NuouELeG4JCeSDWUBIXyLJipuXlYCYENgd+5AhNms/5caWaykmMYqwCBBT7a0BC+
-         tUT6yE/d8GplGbntU3zgvYw6fLs99aPBhBMcEfFsVu7omRHeBsRbY/wC5SlOFv2py44g
-         AUBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707232016; x=1707836816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dQ7y3Y7lXB7e+rY0LpFvOr02gZDXpOWLyRQYElaW0F8=;
-        b=IgZoI6yO2TUkRlo81Sx9j8Y9uXxNSGWR10qN7LR5tGVYhi60WF0UVb80Kehut/ZQjN
-         0OKHViyeAKP0ZCMLifK/axf1dUwXEIdYBucAlD9Hq1UCyFGg7U4gE4iFcuAztjTwcPr/
-         Fw3cTAHsdJQLNCKA5ACzv7xmkRDU1GtCVKmj/b0ObJrwW/YzlhkGV8i2fv4PKNsEYvLD
-         2MzzKSLcLtrhtZhJjheojBrStGw9m9YWPmtsZ0YTqSuEqXpM3AWmE86gCh87Ecv+YllL
-         tZ3p43D5Kg9k4xlm0KAg3xg3XLqzYHovpdqcJkSCGpGPWANTIxSeXfoLV7l+cpFc3UUq
-         UNag==
-X-Gm-Message-State: AOJu0YydZvlYxxxpus2MGN4bBZ1eVeLlnNm9TF3iSGAtot3Z5rB9SIhi
-	YAEv/gCYHr8CL5Et+caw1S+UV+3PeClQNgzc4gDwYNsSfUFW2mn9JNqQOHgGq8o=
-X-Google-Smtp-Source: AGHT+IEN/8cQ0Z0MASmXqjo9YCJ2D9uX3HFp9lPHKp/WN84VlCwUisWDaCbHBh3sIPcH5EjSWveeAQ==
-X-Received: by 2002:adf:9bd1:0:b0:33b:28b0:752a with SMTP id e17-20020adf9bd1000000b0033b28b0752amr1579439wrc.4.1707232015880;
-        Tue, 06 Feb 2024 07:06:55 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVY7LC4FbWJph26Fi0xFYdlrL6mgK4G76Sr2/Y49Brg4veedUVJtm6ycgkouT2JjGqsgI5q8hjPlPo77VNit4jZv3p2atzyEZRpKWku9XNua0m70lXzqRdDLh5cqSSZSgI3F6SAyXeZZUre8wByzE3bs2Tcx77Abd5EBzFfYwI8x1lMDwtWPl45Bf+DLA==
-Received: from airbuntu (host109-154-238-234.range109-154.btcentralplus.com. [109.154.238.234])
-        by smtp.gmail.com with ESMTPSA id n8-20020a5d4c48000000b0033afe816977sm2296404wrt.66.2024.02.06.07.06.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 07:06:55 -0800 (PST)
-Date: Tue, 6 Feb 2024 15:06:53 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Pierre Gondois <Pierre.Gondois@arm.com>
-Subject: Re: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when
- updating misfit
-Message-ID: <20240206150653.34ouqhbt4yz2cmgo@airbuntu>
-References: <20240105222014.1025040-1-qyousef@layalina.io>
- <20240105222014.1025040-2-qyousef@layalina.io>
- <CAKfTPtBYcVWxYOhWZjzcQUB1ebUBA-B30hvToqGBq6JnfRUZNg@mail.gmail.com>
- <20240124222959.ikwnbxkcjaxuiqp2@airbuntu>
- <CAKfTPtDxqcrf0kaBQG_zpFx-DEZTMKfyxBu_bzCuZ_UZhJwOnA@mail.gmail.com>
- <20240126014602.wdcro3ajffpna4fp@airbuntu>
- <5249d534-d7ac-4cbc-a696-f269cb61c7d1@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1+n6vfa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9F9C433F1;
+	Tue,  6 Feb 2024 15:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707232055;
+	bh=Ii+WcqZDg5A6lf9RNiCFYTT3chrvRJ8xzBmAEQd/9x4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i1+n6vfa9B4C/ZJl6O5oTNDHwfvjMdNbYgxpglUy3EuYORgKfoWQyGZpxp9LnEcRG
+	 AwzuARqxy4YK6RdbcJwl62sJZThPo40QqqWxHoMirpOz55GvzqbX7WnOaf17OL+yWa
+	 zFp2kNn7+q4u30ZeRcF0ROP04JTd3GycggfG7ZSE+xyG6N3WvytzfZIsaoN8RNwqj4
+	 FfVYIFikrYYOsB18HZ4DmH1m9+zIWGA26Ho6fjC4nMBJYUrn1g76ncqwF3YVM5moNa
+	 u4bBJHE/uU177BwIEhoRzdcoUSJcrUv+zCI20FaEY4L+vMnBMQzOWt64OfOZ0Bqpix
+	 zDqn5DNINSKCQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v7 00/36] tracing: fprobe: function_graph: Multi-function graph and fprobe on fgraph
+Date: Wed,  7 Feb 2024 00:07:29 +0900
+Message-Id: <170723204881.502590.11906735097521170661.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5249d534-d7ac-4cbc-a696-f269cb61c7d1@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 02/05/24 20:49, Dietmar Eggemann wrote:
-> On 26/01/2024 02:46, Qais Yousef wrote:
-> > On 01/25/24 18:40, Vincent Guittot wrote:
-> >> On Wed, 24 Jan 2024 at 23:30, Qais Yousef <qyousef@layalina.io> wrote:
-> >>>
-> >>> On 01/23/24 09:26, Vincent Guittot wrote:
-> >>>> On Fri, 5 Jan 2024 at 23:20, Qais Yousef <qyousef@layalina.io> wrote:
-> >>>>>
-> >>>>> From: Qais Yousef <qais.yousef@arm.com>
-> 
-> [...]
-> 
-> >>> And to be honest I am not sure if flattening of topology matters too since
-> >>> I first noticed this, which was on Juno which doesn't have flat topology.
-> >>>
-> >>> FWIW I can still reproduce this, but I have a different setup now. On M1 mac
-> >>> mini if I spawn a busy task affined to littles then expand the mask for
-> >>> a single big core; I see big delays (>500ms) without the patch. But with the
-> >>> patch it moves in few ms. The delay without the patch is too large and I can't
-> >>> explain it. So the worry here is that generally misfit migration not happening
-> >>> fast enough due to this fake misfit cases.
-> >>
-> >> I tried a similar scenario on RB5 but I don't see any difference with
-> >> your patch. And that could be me not testing it correctly...
-> >>
-> >> I set the affinity of always running task to cpu[0-3] for a few
-> >> seconds then extend it to [0-3,7] and the time to migrate is almost
-> >> the same.
-> > 
-> > That matches what I do.
-> > 
-> > I write a trace_marker when I change affinity to help see when it should move.
-> > 
-> >>
-> >> I'm using tip/sched/core + [0]
-> >>
-> >> [0] https://lore.kernel.org/all/20240108134843.429769-1-vincent.guittot@linaro.org/
-> > 
-> > I tried on pinebook pro which has a rk3399 and I can't reproduce there too.
-> > 
-> > On the M1 I get two sched domains, MC and DIE. But on the pine64 it has only
-> > MC. Could this be the difference as lb has sched domains dependencies?
-> > 
-> > It seems we flatten topologies but not sched domains. I see all cpus shown as
-> > core_siblings. The DT for apple silicon sets clusters in the cpu-map - which
-> > seems the flatten topology stuff detect LLC correctly but still keeps the
-> > sched-domains not flattened. Is this a bug? I thought we will end up with one
-> > sched domain still.
-> 
-> IMHO, if you have a cpu_map entry with > 1 cluster in your dtb, you end
-> up with MC and PKG (former DIE) Sched Domain (SD) level. And misfit load
+Hi,
 
-Hmm, okay. I thought the detection of topology where we know the LLC is shared
-will cause the sched domains to collapse too.
+Here is the 7th version of the series to re-implement the fprobe on
+function-graph tracer. The previous version is;
 
-> balance takes potentially longer on PKG than to MC.
+https://lore.kernel.org/all/170505424954.459169.10630626365737237288.stgit@devnote2/
 
-Why potentially longer? We iterate through the domains the CPU belong to. If
-the first iteration (at MC) pulled something, then once we go to PKG then we're
-less likely to pull again?
+This version fixes max-limitation check[8/36] and interrupt while commiting
+pop operation bugs [20/36]. Also, I decided to move the FGRAPH_TYPE_BITMAP
+part from [13/36] to [8/36] so that it will introduce bitmap type from
+the beginning, instead of replacing the FGRAPH_TYPE_ARRAY.
+This also updates ftrace_graph_func() on loongarch and powerpc so that
+it will call function_graph_enter_ops() directly with fgraph_ops [13/36].
 
-Anyway. I think I am hitting a bug here. The behavior doesn't look right to me
-given the delays I'm seeing and the fact we do the ilb but for some reason fail
-to pull
+TODOs:
+ - Add s390x support to fprobe (this means implementing fgraph call from
+   ftrace support).
 
-> 
-> (1) Vanilla Juno-r0 [L b b L L L)
-> 
-> root@juno:~# echo 1 > /sys/kernel/debug/sched/verbose
-> root@juno:~# cat /sys/kernel/debug/sched/domains/cpu0/domain*/name
-> MC
-> PKG
-> 
-> root@juno:~# cat /proc/schedstat | head -5 | grep ^[cd]
-> cpu0 0 0 0 0 0 0 2441100800 251426780 6694
-> domain0 39 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> domain1 3f 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> 
-> (2) flattened topology (including SDs):
-> 
-> Remove cluster1 from cpu_map and A57_L2 $ entry.
-> 
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -44,19 +44,16 @@ core0 {
->                                 core1 {
->                                         cpu = <&A57_1>;
->                                 };
-> -                       };
-> -
-> -                       cluster1 {
-> -                               core0 {
-> +                               core2 {
->                                         cpu = <&A53_0>;
->                                 };
-> -                               core1 {
-> +                               core3 {
->                                         cpu = <&A53_1>;
->                                 };
-> -                               core2 {
-> +                               core4 {
->                                         cpu = <&A53_2>;
->                                 };
-> -                               core3 {
-> +                               core5 {
->                                         cpu = <&A53_3>;
->                                 };
->                         };
-> @@ -95,7 +92,7 @@ A57_0: cpu@0 {
->                         d-cache-size = <0x8000>;
->                         d-cache-line-size = <64>;
->                         d-cache-sets = <256>;
-> -                       next-level-cache = <&A57_L2>;
-> +                       next-level-cache = <&A53_L2>;
->                         clocks = <&scpi_dvfs 0>;
->                         cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->                         capacity-dmips-mhz = <1024>;
-> @@ -113,7 +110,7 @@ A57_1: cpu@1 {
->                         d-cache-size = <0x8000>;
->                         d-cache-line-size = <64>;
->                         d-cache-sets = <256>;
-> -                       next-level-cache = <&A57_L2>;
-> +                       next-level-cache = <&A53_L2>;
->                         clocks = <&scpi_dvfs 0>;
->                         cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->                         capacity-dmips-mhz = <1024>;
-> @@ -192,15 +189,6 @@ A53_3: cpu@103 {
->                         dynamic-power-coefficient = <140>;
->                 };
->  
-> -               A57_L2: l2-cache0 {
-> -                       compatible = "cache";
-> -                       cache-unified;
-> -                       cache-size = <0x200000>;
-> -                       cache-line-size = <64>;
-> -                       cache-sets = <2048>;
-> -                       cache-level = <2>;
-> -               };
-> -
->                 A53_L2: l2-cache1 {
->                         compatible = "cache";
->                         cache-unified;
-> 
-> root@juno:~#  echo 1 > /sys/kernel/debug/sched/verbose
-> root@juno:~# cat /sys/kernel/debug/sched/domains/cpu0/domain*/name
-> MC
-> 
-> root@juno:~# cat /proc/schedstat | head -4 | grep ^[cd]
-> cpu0 0 0 0 0 0 0 2378087600 310618500 8152
-> domain0 3f 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> 
-> [...]
-> 
+Overview
+--------
+This series does major 2 changes, enable multiple function-graphs on
+the ftrace (e.g. allow function-graph on sub instances) and rewrite the
+fprobe on this function-graph.
+
+The former changes had been sent from Steven Rostedt 4 years ago (*),
+which allows users to set different setting function-graph tracer (and
+other tracers based on function-graph) in each trace-instances at the
+same time.
+
+(*) https://lore.kernel.org/all/20190525031633.811342628@goodmis.org/
+
+The purpose of latter change are;
+
+ 1) Remove dependency of the rethook from fprobe so that we can reduce
+   the return hook code and shadow stack.
+
+ 2) Make 'ftrace_regs' the common trace interface for the function
+   boundary.
+
+1) Currently we have 2(or 3) different function return hook codes,
+ the function-graph tracer and rethook (and legacy kretprobe).
+ But since this  is redundant and needs double maintenance cost,
+ I would like to unify those. From the user's viewpoint, function-
+ graph tracer is very useful to grasp the execution path. For this
+ purpose, it is hard to use the rethook in the function-graph
+ tracer, but the opposite is possible. (Strictly speaking, kretprobe
+ can not use it because it requires 'pt_regs' for historical reasons.)
+
+2) Now the fprobe provides the 'pt_regs' for its handler, but that is
+ wrong for the function entry and exit. Moreover, depending on the
+ architecture, there is no way to accurately reproduce 'pt_regs'
+ outside of interrupt or exception handlers. This means fprobe should
+ not use 'pt_regs' because it does not use such exceptions.
+ (Conversely, kprobe should use 'pt_regs' because it is an abstract
+  interface of the software breakpoint exception.)
+
+This series changes fprobe to use function-graph tracer for tracing
+function entry and exit, instead of mixture of ftrace and rethook.
+Unlike the rethook which is a per-task list of system-wide allocated
+nodes, the function graph's ret_stack is a per-task shadow stack.
+Thus it does not need to set 'nr_maxactive' (which is the number of
+pre-allocated nodes).
+Also the handlers will get the 'ftrace_regs' instead of 'pt_regs'.
+Since eBPF mulit_kprobe/multi_kretprobe events still use 'pt_regs' as
+their register interface, this changes it to convert 'ftrace_regs' to
+'pt_regs'. Of course this conversion makes an incomplete 'pt_regs',
+so users must access only registers for function parameters or
+return value. 
+
+Design
+------
+Instead of using ftrace's function entry hook directly, the new fprobe
+is built on top of the function-graph's entry and return callbacks
+with 'ftrace_regs'.
+
+Since the fprobe requires access to 'ftrace_regs', the architecture
+must support CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS, which enables to
+call function-graph entry callback with 'ftrace_regs', and also
+CONFIG_HAVE_FUNCTION_GRAPH_FREGS, which passes the ftrace_regs to
+return_to_handler.
+
+All fprobes share a single function-graph ops (means shares a common
+ftrace filter) similar to the kprobe-on-ftrace. This needs another
+layer to find corresponding fprobe in the common function-graph
+callbacks, but has much better scalability, since the number of
+registered function-graph ops is limited.
+
+In the entry callback, the fprobe runs its entry_handler and saves the
+address of 'fprobe' on the function-graph's shadow stack as data. The
+return callback decodes the data to get the 'fprobe' address, and runs
+the exit_handler.
+
+The fprobe introduces two hash-tables, one is for entry callback which
+searches fprobes related to the given function address passed by entry
+callback. The other is for a return callback which checks if the given
+'fprobe' data structure pointer is still valid. Note that it is
+possible to unregister fprobe before the return callback runs. Thus
+the address validation must be done before using it in the return
+callback.
+
+This series can be applied against the linux-trace/trace/urgent 
+(based on v6.8-rc1) kernel.
+
+This series can also be found below branch.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/fprobe-on-fgraph
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (21):
+      ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
+      tracing: Add a comment about ftrace_regs definition
+      tracing: Rename ftrace_regs_return_value to ftrace_regs_get_return_value
+      x86: tracing: Add ftrace_regs definition in the header
+      function_graph: Use a simple LRU for fgraph_array index number
+      function_graph: Improve push operation for several interrupts
+      function_graph: Add a new entry handler with parent_ip and ftrace_regs
+      function_graph: Add a new exit handler with parent_ip and ftrace_regs
+      x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
+      arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
+      fprobe: Use ftrace_regs in fprobe entry handler
+      fprobe: Use ftrace_regs in fprobe exit handler
+      tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs
+      tracing: Add ftrace_fill_perf_regs() for perf event
+      tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+      bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
+      fprobe: Rewrite fprobe on function-graph tracer
+      tracing/fprobe: Remove nr_maxactive from fprobe
+      selftests: ftrace: Remove obsolate maxactive syntax check
+      selftests/ftrace: Add a test case for repeating register/unregister fprobe
+      Documentation: probes: Update fprobe on function-graph tracer
+
+Steven Rostedt (VMware) (15):
+      function_graph: Convert ret_stack to a series of longs
+      fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+      function_graph: Add an array structure that will allow multiple callbacks
+      function_graph: Allow multiple users to attach to function graph
+      function_graph: Remove logic around ftrace_graph_entry and return
+      ftrace/function_graph: Pass fgraph_ops to function graph callbacks
+      ftrace: Allow function_graph tracer to be enabled in instances
+      ftrace: Allow ftrace startup flags exist without dynamic ftrace
+      function_graph: Have the instances use their own ftrace_ops for filtering
+      function_graph: Add "task variables" per task for fgraph_ops
+      function_graph: Move set_graph_function tests to shadow stack global var
+      function_graph: Move graph depth stored data to shadow stack global var
+      function_graph: Move graph notrace bit to shadow stack global var
+      function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
+      function_graph: Add selftest for passing local variables
+
+
+ Documentation/trace/fprobe.rst                     |   42 +
+ arch/arm64/Kconfig                                 |    2 
+ arch/arm64/include/asm/ftrace.h                    |   24 
+ arch/arm64/kernel/entry-ftrace.S                   |   28 +
+ arch/arm64/kernel/ftrace.c                         |   21 
+ arch/loongarch/Kconfig                             |    1 
+ arch/loongarch/include/asm/ftrace.h                |    2 
+ arch/loongarch/kernel/ftrace_dyn.c                 |    9 
+ arch/powerpc/include/asm/ftrace.h                  |    9 
+ arch/powerpc/kernel/trace/ftrace.c                 |    3 
+ arch/powerpc/kernel/trace/ftrace_64_pg.c           |   10 
+ arch/s390/Kconfig                                  |    1 
+ arch/s390/include/asm/ftrace.h                     |    7 
+ arch/x86/Kconfig                                   |    4 
+ arch/x86/include/asm/ftrace.h                      |   17 
+ arch/x86/kernel/ftrace.c                           |   51 +
+ arch/x86/kernel/ftrace_64.S                        |   37 +
+ include/linux/fprobe.h                             |   58 +
+ include/linux/ftrace.h                             |  167 +++
+ include/linux/sched.h                              |    3 
+ include/linux/trace_recursion.h                    |   39 -
+ kernel/trace/Kconfig                               |   19 
+ kernel/trace/bpf_trace.c                           |   14 
+ kernel/trace/fgraph.c                              | 1078 ++++++++++++++++----
+ kernel/trace/fprobe.c                              |  631 ++++++++----
+ kernel/trace/ftrace.c                              |   21 
+ kernel/trace/ftrace_internal.h                     |    2 
+ kernel/trace/trace.h                               |   94 +-
+ kernel/trace/trace_fprobe.c                        |  114 +-
+ kernel/trace/trace_functions.c                     |    8 
+ kernel/trace/trace_functions_graph.c               |   96 +-
+ kernel/trace/trace_irqsoff.c                       |   10 
+ kernel/trace/trace_probe_tmpl.h                    |    2 
+ kernel/trace/trace_sched_wakeup.c                  |   10 
+ kernel/trace/trace_selftest.c                      |  178 +++
+ lib/test_fprobe.c                                  |   51 -
+ samples/fprobe/fprobe_example.c                    |    4 
+ .../test.d/dynevent/add_remove_fprobe_repeat.tc    |   19 
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
+ 39 files changed, 2190 insertions(+), 700 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_repeat.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
