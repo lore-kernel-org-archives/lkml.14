@@ -1,728 +1,175 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417301C69C;
-	Tue,  6 Feb 2024 22:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAF61BF37;
+	Tue,  6 Feb 2024 22:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707257681; cv=none; b=qWEo0N7PBHSYD0rqvPjgg6+lwCWjcE+yxHoIZ/7b6Q61t1g742Wf1F3pQE3Dm30bUiYYzkHIPBuyxNpWwJD3pZLPbW58O2DqTDZJ541Poeal6gN5qKDUebvTv82ADenvh9dVuX48J+NWFQGbLnoxN+iWxQEgCGsxk6Tt9rdZ0A4=
+	t=1707257745; cv=none; b=XyvhN3DHfg+5mEwVlGrQ6EkiX1bxCWUhyLyujykhvu8DiQBZNS5C/12WG4c2yVh+gq0QsoKMREsEYTUi+jS628R0zxcp56DsPurNKx5Q+eskyaaQKKV6ahwV8Dqs8EJXab2AgFqOn71IU2J0hFWhJ35QCEoVFWX/wWtODU0nzF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707257681; c=relaxed/simple;
-	bh=4wcsiogy5GuT23oFHQg43T5PE/N7FkEccJv3pheAc3A=;
-	h=From:To:Cc:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	 Subject; b=ioAPQQpGO30rJm3mO0kK57CFn+LsQOOgk2ox8H5oTwcv0bHz7MVDM+Fzzrcebwgjzry9TEUOUHpJ3uc7XV00E+z4x5aNuFIx/kSbDwocsLpL+TnarO6kKU2rUR6jcQqT+fXmsAvN1gJbyo1DBlbNfpNw9NTD2d5nl4Yo+JZse5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=fg2Yng19; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1707257745; c=relaxed/simple;
+	bh=pNOvyJzuQeqsakt9aKOjJ4ZIQm/Pu1dcPBieRGr2pfY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JquZTGxddezq5+6uxPbrYdo8OlWyt9cqXkLQTYIhjlQJXkINjo3veAjMfPBM10qazqUagDlY2tizNNyh7r3VvLSiy/S8YsQNCh7IKc105aXzPaPJzUQCT1XaONoigZWa0iXQRHNIW4JhSvLXMPcum1b4fd+DXsY0vhY0fm2/WwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cKsvKrw9; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="fg2Yng19"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
-	:From:subject:date:message-id:reply-to;
-	bh=6RD4RJOYd6dXTQ3nh6scgF6n1Uy+4SPZ1fVgqYq83Ds=; b=fg2Yng19J12rbTKVLLQyPEHQCU
-	JBKAjKlYiW7dEJ8rrO6vdjEaIRPu4nZ8Z8xgA8CsfdaUEmO2cqYv4Dr9E9zzhMUITYH9arSp0pq2m
-	xS8gn5qg5t5f1dNwg3GfZuPManJM3RGC7tn+HT2u3HxDv5xxySCNmFTpRVEOn09YesIQ=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:41434 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1rXTCo-0006XX-LM; Tue, 06 Feb 2024 16:42:17 -0500
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	hugo@hugovil.com,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue,  6 Feb 2024 16:42:06 -0500
-Message-Id: <20240206214208.2141067-3-hugo@hugovil.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240206214208.2141067-1-hugo@hugovil.com>
-References: <20240206214208.2141067-1-hugo@hugovil.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cKsvKrw9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707257744; x=1738793744;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=pNOvyJzuQeqsakt9aKOjJ4ZIQm/Pu1dcPBieRGr2pfY=;
+  b=cKsvKrw9A0ya1sjn9KhwKu0A/Sabb5be5vBwQAB2K21K/JJ62pHLsIZT
+   kfwtz0A7rngV7EbUqYnG+rKfla68STZiCM79Brs/FFHzoUyJFS9L1FZkE
+   HV/VpdavsuCoEB4A50dsni6bK6//RP+e89d1OGEWek/G5sYZPn9GaU8e8
+   Bmw56bSKiShgGzJZbCxWskZlTPDld7BiZDttK3h5XHLPGJRitiiRyY1he
+   HuznZ95MTVcl7sKNrLpActCZWPRLPOaZUg7FtLmp8Mw5PqcRFoJz9fSs3
+   ES3jTGMIO7JCl7UiE8Al3of9m99VvzVwgdS3Gcph7CAdqA9ZbPiFvX+M+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="752032"
+X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
+   d="scan'208";a="752032"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 14:15:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
+   d="scan'208";a="31961892"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.212.121.225])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 14:15:41 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Tue, 06 Feb 2024 14:15:32 -0800
+Subject: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-Subject: [PATCH 2/4] serial: sc16is7xx: split into core and I2C/SPI parts (core)
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
+X-B4-Tracking: v=1; b=H4sIAIOvwmUC/2WNzQrCMBCEX6Xs2ZVkjbT11PeQHmLc2oX+kYRSK
+ Xl3Y8GTMJdvYL7ZIbAXDnArdvC8SpB5ykCnAlxvpxejPDMDKTKKlEa3DegW9hhGG12PFT001aa
+ uciCvFs+dbIfx3mbuJcTZv4+DVX/bn4v+XKtGjaU1Wl1c2V2tamSKPJzdPEKbUvoA/Vifua4AA
+ AA=
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Jonathan Cameron <jonathan.cameron@Huawei.com>, 
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>, 
+ Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707257741; l=3430;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=pNOvyJzuQeqsakt9aKOjJ4ZIQm/Pu1dcPBieRGr2pfY=;
+ b=zulniw+JGONEhhR3l9xf9ERy4LztcTPp0L7Czo1Q81GvydQm3+3uD4h0r22IytdFlLkj27dIH
+ 98npAckYuUsAiANciy2AeJqOMBeToAPJ1iFaRScYD0fwtg/rclcUvXl
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Smatch caught that cxl_cper_post_event() is called with a spinlock held
+or preemption disabled.[1]  The callback takes the device lock to
+perform address translation and therefore might sleep.  The record data
+is released back to BIOS in ghes_clear_estatus() which requires it to be
+copied for use in the workqueue.
 
-Split the common code from sc16is7xx driver and move the I2C and SPI bus
-parts into interface-specific source files.
+Copy the record to a lockless list and schedule a work item to process
+the record outside of atomic context.
 
-sc16is7xx becomes the core functions which can support multiple bus
-interfaces like I2C and SPI.
+[1] https://lore.kernel.org/all/b963c490-2c13-4b79-bbe7-34c6568423c7@moroto.mountain/
 
-No functional change intended.
-
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- drivers/tty/serial/Kconfig         |  19 +--
- drivers/tty/serial/Makefile        |   4 +-
- drivers/tty/serial/sc16is7xx.c     | 223 +++++------------------------
- drivers/tty/serial/sc16is7xx.h     |  41 ++++++
- drivers/tty/serial/sc16is7xx_i2c.c |  71 +++++++++
- drivers/tty/serial/sc16is7xx_spi.c |  94 ++++++++++++
- 6 files changed, 248 insertions(+), 204 deletions(-)
- create mode 100644 drivers/tty/serial/sc16is7xx.h
- create mode 100644 drivers/tty/serial/sc16is7xx_i2c.c
- create mode 100644 drivers/tty/serial/sc16is7xx_spi.c
+Changes in v2:
+- djbw: device_lock() sleeps so we need to call the callback in process context
+- iweiny: create work queue to handle processing the callback
+- Link to v1: https://lore.kernel.org/r/20240202-cxl-cper-smatch-v1-1-7a4103c7f5a0@intel.com
+---
+ drivers/acpi/apei/ghes.c | 44 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 48087e34ff52..40343fdf7896 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1020,13 +1020,10 @@ config SERIAL_SCCNXP_CONSOLE
- 	help
- 	  Support for console on SCCNXP serial ports.
- 
--config SERIAL_SC16IS7XX_CORE
--	tristate
--
- config SERIAL_SC16IS7XX
- 	tristate "SC16IS7xx serial support"
- 	select SERIAL_CORE
--	depends on (SPI_MASTER && !I2C) || I2C
-+	depends on SPI_MASTER || I2C
- 	help
- 	  Core driver for NXP SC16IS7xx serial ports.
- 	  Supported ICs are:
-@@ -1042,22 +1039,18 @@ config SERIAL_SC16IS7XX
- 	  drivers below.
- 
- config SERIAL_SC16IS7XX_I2C
--	bool "SC16IS7xx for I2C interface"
-+	tristate "SC16IS7xx for I2C interface"
- 	depends on SERIAL_SC16IS7XX
- 	depends on I2C
--	select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
--	select REGMAP_I2C if I2C
--	default y
-+	select REGMAP_I2C
- 	help
--	  Enable SC16IS7xx driver on I2C bus,
--	  enabled by default to support oldconfig.
-+	  Enable SC16IS7xx driver on I2C bus.
- 
- config SERIAL_SC16IS7XX_SPI
--	bool "SC16IS7xx for spi interface"
-+	tristate "SC16IS7xx for SPI interface"
- 	depends on SERIAL_SC16IS7XX
- 	depends on SPI_MASTER
--	select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
--	select REGMAP_SPI if SPI_MASTER
-+	select REGMAP_SPI
- 	help
- 	  Enable SC16IS7xx driver on SPI bus.
- 
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index b25e9b54a660..9f51b933915a 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -75,7 +75,9 @@ obj-$(CONFIG_SERIAL_SA1100)		+= sa1100.o
- obj-$(CONFIG_SERIAL_SAMSUNG)		+= samsung_tty.o
- obj-$(CONFIG_SERIAL_SB1250_DUART)	+= sb1250-duart.o
- obj-$(CONFIG_SERIAL_SCCNXP)		+= sccnxp.o
--obj-$(CONFIG_SERIAL_SC16IS7XX_CORE)	+= sc16is7xx.o
-+obj-$(CONFIG_SERIAL_SC16IS7XX_SPI)	+= sc16is7xx_spi.o
-+obj-$(CONFIG_SERIAL_SC16IS7XX_I2C)	+= sc16is7xx_i2c.o
-+obj-$(CONFIG_SERIAL_SC16IS7XX)		+= sc16is7xx.o
- obj-$(CONFIG_SERIAL_SH_SCI)		+= sh-sci.o
- obj-$(CONFIG_SERIAL_SIFIVE)		+= sifive.o
- obj-$(CONFIG_SERIAL_SPRD)		+= sprd_serial.o
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 929206a9a6e1..5b53c88b7133 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1,19 +1,19 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * SC16IS7xx tty serial driver - Copyright (C) 2014 GridPoint
-- * Author: Jon Ringle <jringle@gridpoint.com>
-+ * SC16IS7xx tty serial driver - common code
-  *
-- *  Based on max310x.c, by Alexander Shiyan <shc_work@mail.ru>
-+ * Copyright (C) 2014 GridPoint
-+ * Author: Jon Ringle <jringle@gridpoint.com>
-+ * Based on max310x.c, by Alexander Shiyan <shc_work@mail.ru>
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 7b7c605166e0..aa41e9128118 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -679,6 +679,12 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
   */
+ static DECLARE_RWSEM(cxl_cper_rw_sem);
+ static cxl_cper_callback cper_callback;
++static LLIST_HEAD(cxl_cper_rec_list);
++struct cxl_cper_work_item {
++	struct llist_node node;
++	enum cxl_event_type event_type;
++	struct cxl_cper_event_rec rec;
++};
  
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/bitops.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/export.h>
- #include <linux/gpio/driver.h>
--#include <linux/i2c.h>
-+#include <linux/kthread.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/property.h>
-@@ -22,14 +22,13 @@
- #include <linux/serial.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
--#include <linux/spi/spi.h>
- #include <linux/uaccess.h>
- #include <linux/units.h>
- #include <uapi/linux/sched/types.h>
+ /* CXL Event record UUIDs are formatted as GUIDs and reported in section type */
  
--#define SC16IS7XX_NAME			"sc16is7xx"
-+#include "sc16is7xx.h"
+@@ -706,9 +712,34 @@ static cxl_cper_callback cper_callback;
+ 	GUID_INIT(0xfe927475, 0xdd59, 0x4339,				\
+ 		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74)
+ 
++static void cxl_cper_work_fn(struct work_struct *work)
++{
++	struct llist_node *entries, *cur, *n;
++	struct cxl_cper_work_item *wi;
 +
- #define SC16IS7XX_MAX_DEVS		8
--#define SC16IS7XX_MAX_PORTS		2 /* Maximum number of UART ports per IC. */
- 
- /* SC16IS7XX register definitions */
- #define SC16IS7XX_RHR_REG		(0x00) /* RX FIFO */
-@@ -302,16 +301,9 @@
- 
- 
- /* Misc definitions */
--#define SC16IS7XX_SPI_READ_BIT		BIT(7)
- #define SC16IS7XX_FIFO_SIZE		(64)
- #define SC16IS7XX_GPIOS_PER_BANK	4
- 
--struct sc16is7xx_devtype {
--	char	name[10];
--	int	nr_gpio;
--	int	nr_uart;
--};
--
- #define SC16IS7XX_RECONF_MD		(1 << 0)
- #define SC16IS7XX_RECONF_IER		(1 << 1)
- #define SC16IS7XX_RECONF_RS485		(1 << 2)
-@@ -492,35 +484,40 @@ static void sc16is7xx_stop_rx(struct uart_port *port)
- 	sc16is7xx_ier_clear(port, SC16IS7XX_IER_RDI_BIT);
- }
- 
--static const struct sc16is7xx_devtype sc16is74x_devtype = {
-+const struct sc16is7xx_devtype sc16is74x_devtype = {
- 	.name		= "SC16IS74X",
- 	.nr_gpio	= 0,
- 	.nr_uart	= 1,
- };
-+EXPORT_SYMBOL_GPL(sc16is74x_devtype);
- 
--static const struct sc16is7xx_devtype sc16is750_devtype = {
-+const struct sc16is7xx_devtype sc16is750_devtype = {
- 	.name		= "SC16IS750",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 1,
- };
-+EXPORT_SYMBOL_GPL(sc16is750_devtype);
- 
--static const struct sc16is7xx_devtype sc16is752_devtype = {
-+const struct sc16is7xx_devtype sc16is752_devtype = {
- 	.name		= "SC16IS752",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 2,
- };
-+EXPORT_SYMBOL_GPL(sc16is752_devtype);
- 
--static const struct sc16is7xx_devtype sc16is760_devtype = {
-+const struct sc16is7xx_devtype sc16is760_devtype = {
- 	.name		= "SC16IS760",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 1,
- };
-+EXPORT_SYMBOL_GPL(sc16is760_devtype);
- 
--static const struct sc16is7xx_devtype sc16is762_devtype = {
-+const struct sc16is7xx_devtype sc16is762_devtype = {
- 	.name		= "SC16IS762",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 2,
- };
-+EXPORT_SYMBOL_GPL(sc16is762_devtype);
- 
- static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
++	guard(rwsem_read)(&cxl_cper_rw_sem);
++
++	entries = llist_del_all(&cxl_cper_rec_list);
++	if (!entries)
++		return;
++
++	/* Process oldest to newest */
++	entries = llist_reverse_order(entries);
++	llist_for_each_safe(cur, n, entries) {
++		wi = llist_entry(cur, struct cxl_cper_work_item, node);
++
++		if (cper_callback)
++			cper_callback(wi->event_type, &wi->rec);
++		kfree(wi);
++	}
++}
++static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
++
+ static void cxl_cper_post_event(enum cxl_event_type event_type,
+ 				struct cxl_cper_event_rec *rec)
  {
-@@ -1463,9 +1460,8 @@ static const struct serial_rs485 sc16is7xx_rs485_supported = {
- 	.delay_rts_after_send = 1,	/* Not supported but keep returning -EINVAL */
- };
- 
--static int sc16is7xx_probe(struct device *dev,
--			   const struct sc16is7xx_devtype *devtype,
--			   struct regmap *regmaps[], int irq)
-+int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
-+		    struct regmap *regmaps[], int irq)
- {
- 	unsigned long freq = 0, *pfreq = dev_get_platdata(dev);
- 	unsigned int val;
-@@ -1657,8 +1653,9 @@ static int sc16is7xx_probe(struct device *dev,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(sc16is7xx_probe);
- 
--static void sc16is7xx_remove(struct device *dev)
-+void sc16is7xx_remove(struct device *dev)
- {
- 	struct sc16is7xx_port *s = dev_get_drvdata(dev);
- 	int i;
-@@ -1680,8 +1677,9 @@ static void sc16is7xx_remove(struct device *dev)
- 
- 	clk_disable_unprepare(s->clk);
- }
-+EXPORT_SYMBOL_GPL(sc16is7xx_remove);
- 
--static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
-+const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
- 	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },
-@@ -1690,9 +1688,10 @@ static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
- 	{ .compatible = "nxp,sc16is762",	.data = &sc16is762_devtype, },
- 	{ }
- };
-+EXPORT_SYMBOL_GPL(sc16is7xx_dt_ids);
- MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
- 
--static struct regmap_config regcfg = {
-+struct regmap_config sc16is7xx_regcfg = {
- 	.reg_bits = 5,
- 	.pad_bits = 3,
- 	.val_bits = 8,
-@@ -1705,8 +1704,9 @@ static struct regmap_config regcfg = {
- 	.max_raw_write = SC16IS7XX_FIFO_SIZE,
- 	.max_register = SC16IS7XX_EFCR_REG,
- };
-+EXPORT_SYMBOL_GPL(sc16is7xx_regcfg);
- 
--static const char *sc16is7xx_regmap_name(u8 port_id)
-+const char *sc16is7xx_regmap_name(u8 port_id)
- {
- 	switch (port_id) {
- 	case 0:	return "port0";
-@@ -1716,184 +1716,27 @@ static const char *sc16is7xx_regmap_name(u8 port_id)
- 		return NULL;
++	struct cxl_cper_work_item *wi;
++
+ 	if (rec->hdr.length <= sizeof(rec->hdr) ||
+ 	    rec->hdr.length > sizeof(*rec)) {
+ 		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
+@@ -721,9 +752,16 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+ 		return;
  	}
- }
-+EXPORT_SYMBOL_GPL(sc16is7xx_regmap_name);
  
--static unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id)
-+unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id)
- {
- 	/* CH1,CH0 are at bits 2:1. */
- 	return port_id << 1;
- }
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--static int sc16is7xx_spi_probe(struct spi_device *spi)
--{
--	const struct sc16is7xx_devtype *devtype;
--	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
--	unsigned int i;
--	int ret;
--
--	/* Setup SPI bus */
--	spi->bits_per_word	= 8;
--	/* For all variants, only mode 0 is supported */
--	if ((spi->mode & SPI_MODE_X_MASK) != SPI_MODE_0)
--		return dev_err_probe(&spi->dev, -EINVAL, "Unsupported SPI mode\n");
--
--	spi->mode		= spi->mode ? : SPI_MODE_0;
--	spi->max_speed_hz	= spi->max_speed_hz ? : 4 * HZ_PER_MHZ;
--	ret = spi_setup(spi);
--	if (ret)
--		return ret;
--
--	devtype = spi_get_device_match_data(spi);
--	if (!devtype)
--		return dev_err_probe(&spi->dev, -ENODEV, "Failed to match device\n");
--
--	for (i = 0; i < devtype->nr_uart; i++) {
--		regcfg.name = sc16is7xx_regmap_name(i);
--		/*
--		 * If read_flag_mask is 0, the regmap code sets it to a default
--		 * of 0x80. Since we specify our own mask, we must add the READ
--		 * bit ourselves:
--		 */
--		regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i) |
--			SC16IS7XX_SPI_READ_BIT;
--		regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
--	}
--
--	return sc16is7xx_probe(&spi->dev, devtype, regmaps, spi->irq);
--}
--
--static void sc16is7xx_spi_remove(struct spi_device *spi)
--{
--	sc16is7xx_remove(&spi->dev);
--}
--
--static const struct spi_device_id sc16is7xx_spi_id_table[] = {
--	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
--	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
--	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
--	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
--	{ }
--};
--
--MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
--
--static struct spi_driver sc16is7xx_spi_uart_driver = {
--	.driver = {
--		.name		= SC16IS7XX_NAME,
--		.of_match_table	= sc16is7xx_dt_ids,
--	},
--	.probe		= sc16is7xx_spi_probe,
--	.remove		= sc16is7xx_spi_remove,
--	.id_table	= sc16is7xx_spi_id_table,
--};
--#endif
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--static int sc16is7xx_i2c_probe(struct i2c_client *i2c)
--{
--	const struct sc16is7xx_devtype *devtype;
--	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
--	unsigned int i;
--
--	devtype = i2c_get_match_data(i2c);
--	if (!devtype)
--		return dev_err_probe(&i2c->dev, -ENODEV, "Failed to match device\n");
--
--	for (i = 0; i < devtype->nr_uart; i++) {
--		regcfg.name = sc16is7xx_regmap_name(i);
--		regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regmaps[i] = devm_regmap_init_i2c(i2c, &regcfg);
--	}
--
--	return sc16is7xx_probe(&i2c->dev, devtype, regmaps, i2c->irq);
--}
--
--static void sc16is7xx_i2c_remove(struct i2c_client *client)
--{
--	sc16is7xx_remove(&client->dev);
--}
--
--static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
--	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
--	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
--	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
--	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
--
--static struct i2c_driver sc16is7xx_i2c_uart_driver = {
--	.driver = {
--		.name		= SC16IS7XX_NAME,
--		.of_match_table	= sc16is7xx_dt_ids,
--	},
--	.probe		= sc16is7xx_i2c_probe,
--	.remove		= sc16is7xx_i2c_remove,
--	.id_table	= sc16is7xx_i2c_id_table,
--};
--
--#endif
-+EXPORT_SYMBOL_GPL(sc16is7xx_regmap_port_mask);
- 
- static int __init sc16is7xx_init(void)
- {
--	int ret;
--
--	ret = uart_register_driver(&sc16is7xx_uart);
--	if (ret) {
--		pr_err("Registering UART driver failed\n");
--		return ret;
--	}
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
--	if (ret < 0) {
--		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
--		goto err_i2c;
--	}
--#endif
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
--	if (ret < 0) {
--		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
--		goto err_spi;
--	}
--#endif
--	return ret;
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--err_spi:
--#endif
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
--err_i2c:
--#endif
--	uart_unregister_driver(&sc16is7xx_uart);
--	return ret;
-+	return uart_register_driver(&sc16is7xx_uart);
- }
- module_init(sc16is7xx_init);
- 
- static void __exit sc16is7xx_exit(void)
- {
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
--#endif
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--	spi_unregister_driver(&sc16is7xx_spi_uart_driver);
--#endif
- 	uart_unregister_driver(&sc16is7xx_uart);
- }
- module_exit(sc16is7xx_exit);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Jon Ringle <jringle@gridpoint.com>");
--MODULE_DESCRIPTION("SC16IS7XX serial driver");
-+MODULE_DESCRIPTION("SC16IS7xx tty serial core driver");
-diff --git a/drivers/tty/serial/sc16is7xx.h b/drivers/tty/serial/sc16is7xx.h
-new file mode 100644
-index 000000000000..410f34b1005c
---- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* SC16IS7xx SPI/I2C tty serial driver */
-+
-+#ifndef _SC16IS7XX_H_
-+#define _SC16IS7XX_H_
-+
-+#include <linux/device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/regmap.h>
-+#include <linux/serial_core.h>
-+#include <linux/types.h>
-+
-+#define SC16IS7XX_NAME		"sc16is7xx"
-+#define SC16IS7XX_MAX_PORTS	2 /* Maximum number of UART ports per IC. */
-+
-+struct sc16is7xx_devtype {
-+	char	name[10];
-+	int	nr_gpio;
-+	int	nr_uart;
-+};
-+
-+extern struct regmap_config sc16is7xx_regcfg;
-+
-+extern const struct of_device_id __maybe_unused sc16is7xx_dt_ids[];
-+
-+extern const struct sc16is7xx_devtype sc16is74x_devtype;
-+extern const struct sc16is7xx_devtype sc16is750_devtype;
-+extern const struct sc16is7xx_devtype sc16is752_devtype;
-+extern const struct sc16is7xx_devtype sc16is760_devtype;
-+extern const struct sc16is7xx_devtype sc16is762_devtype;
-+
-+const char *sc16is7xx_regmap_name(u8 port_id);
-+
-+unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id);
-+
-+int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
-+		    struct regmap *regmaps[], int irq);
-+
-+void sc16is7xx_remove(struct device *dev);
-+
-+#endif /* _SC16IS7XX_H_ */
-diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
-new file mode 100644
-index 000000000000..70f0c329cc13
---- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx_i2c.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* SC16IS7xx I2C interface driver */
-+
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include "sc16is7xx.h"
-+
-+static int sc16is7xx_i2c_probe(struct i2c_client *i2c)
-+{
-+	const struct sc16is7xx_devtype *devtype;
-+	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
-+	unsigned int i;
-+
-+	devtype = i2c_get_match_data(i2c);
-+	if (!devtype)
-+		return dev_err_probe(&i2c->dev, -ENODEV, "Failed to match device\n");
-+
-+	for (i = 0; i < devtype->nr_uart; i++) {
-+		sc16is7xx_regcfg.name = sc16is7xx_regmap_name(i);
-+		sc16is7xx_regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		sc16is7xx_regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regmaps[i] = devm_regmap_init_i2c(i2c, &sc16is7xx_regcfg);
+-	guard(rwsem_read)(&cxl_cper_rw_sem);
+-	if (cper_callback)
+-		cper_callback(event_type, rec);
++	wi = kmalloc(sizeof(*wi), GFP_ATOMIC);
++	if (!wi) {
++		pr_err(FW_WARN "CXL CPER failed to allocate work item\n");
++		return;
 +	}
 +
-+	return sc16is7xx_probe(&i2c->dev, devtype, regmaps, i2c->irq);
-+}
-+
-+static void sc16is7xx_i2c_remove(struct i2c_client *client)
-+{
-+	sc16is7xx_remove(&client->dev);
-+}
-+
-+static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
-+	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
-+	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
-+	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
-+	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
-+
-+static struct i2c_driver sc16is7xx_i2c_driver = {
-+	.driver = {
-+		.name		= SC16IS7XX_NAME,
-+		.of_match_table	= sc16is7xx_dt_ids,
-+	},
-+	.probe		= sc16is7xx_i2c_probe,
-+	.remove		= sc16is7xx_i2c_remove,
-+	.id_table	= sc16is7xx_i2c_id_table,
-+};
-+
-+static int __init sc16is7xx_i2c_init(void)
-+{
-+	return i2c_add_driver(&sc16is7xx_i2c_driver);
-+}
-+module_init(sc16is7xx_i2c_init);
-+
-+static void __exit sc16is7xx_i2c_exit(void)
-+{
-+	i2c_del_driver(&sc16is7xx_i2c_driver);
-+}
-+module_exit(sc16is7xx_i2c_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SC16IS7xx I2C interface driver");
-diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
-new file mode 100644
-index 000000000000..3942fc1b7455
---- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx_spi.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* SC16IS7xx SPI interface driver */
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+#include <linux/units.h>
-+
-+#include "sc16is7xx.h"
-+
-+/* SPI definitions */
-+#define SC16IS7XX_SPI_READ_BIT	BIT(7)
-+
-+static int sc16is7xx_spi_probe(struct spi_device *spi)
-+{
-+	const struct sc16is7xx_devtype *devtype;
-+	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
-+	unsigned int i;
-+	int ret;
-+
-+	/* Setup SPI bus */
-+	spi->bits_per_word	= 8;
-+	/* For all variants, only mode 0 is supported */
-+	if ((spi->mode & SPI_MODE_X_MASK) != SPI_MODE_0)
-+		return dev_err_probe(&spi->dev, -EINVAL, "Unsupported SPI mode\n");
-+
-+	spi->mode		= spi->mode ? : SPI_MODE_0;
-+	spi->max_speed_hz	= spi->max_speed_hz ? : 4 * HZ_PER_MHZ;
-+	ret = spi_setup(spi);
-+	if (ret)
-+		return ret;
-+
-+	devtype = spi_get_device_match_data(spi);
-+	if (!devtype)
-+		return dev_err_probe(&spi->dev, -ENODEV, "Failed to match device\n");
-+
-+	for (i = 0; i < devtype->nr_uart; i++) {
-+		sc16is7xx_regcfg.name = sc16is7xx_regmap_name(i);
-+		/*
-+		 * If read_flag_mask is 0, the regmap code sets it to a default
-+		 * of 0x80. Since we specify our own mask, we must add the READ
-+		 * bit ourselves:
-+		 */
-+		sc16is7xx_regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i) |
-+			SC16IS7XX_SPI_READ_BIT;
-+		sc16is7xx_regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regmaps[i] = devm_regmap_init_spi(spi, &sc16is7xx_regcfg);
-+	}
-+
-+	return sc16is7xx_probe(&spi->dev, devtype, regmaps, spi->irq);
-+}
-+
-+static void sc16is7xx_spi_remove(struct spi_device *spi)
-+{
-+	sc16is7xx_remove(&spi->dev);
-+}
-+
-+static const struct spi_device_id sc16is7xx_spi_id_table[] = {
-+	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
-+	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
-+	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
-+	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
-+
-+static struct spi_driver sc16is7xx_spi_driver = {
-+	.driver = {
-+		.name		= SC16IS7XX_NAME,
-+		.of_match_table	= sc16is7xx_dt_ids,
-+	},
-+	.probe		= sc16is7xx_spi_probe,
-+	.remove		= sc16is7xx_spi_remove,
-+	.id_table	= sc16is7xx_spi_id_table,
-+};
-+
-+static int __init sc16is7xx_spi_init(void)
-+{
-+	return spi_register_driver(&sc16is7xx_spi_driver);
-+}
-+module_init(sc16is7xx_spi_init);
-+
-+static void __exit sc16is7xx_spi_exit(void)
-+{
-+	spi_unregister_driver(&sc16is7xx_spi_driver);
-+}
-+module_exit(sc16is7xx_spi_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SC16IS7xx SPI interface driver");
++	wi->event_type = event_type;
++	memcpy(&wi->rec, rec, sizeof(wi->rec));
++	llist_add(&wi->node, &cxl_cper_rec_list);
++	schedule_work(&cxl_cper_work);
+ }
+ 
+ int cxl_cper_register_callback(cxl_cper_callback callback)
+
+---
+base-commit: 99bd3cb0d12e85d5114425353552121ec8f93adc
+change-id: 20240201-cxl-cper-smatch-82b129498498
+
+Best regards,
 -- 
-2.39.2
+Ira Weiny <ira.weiny@intel.com>
 
