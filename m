@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B824135A61;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD8F135A49;
 	Tue,  6 Feb 2024 12:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221360; cv=none; b=WumV4EodnpFHY+lkv7miLHPAF3NsybNJEOu34aOCgtQklZ+N5zgcZMNOUIglSITEvYQXPXLiCdmZosGKVyKEpdIXpycN49FVVaylfoxbM2j9FnzdUEB/RDa8hfS1LYE+wupGyDABjkT5MEPLfMNo6DFizY7RzmUxOFF6PNjFFEc=
+	t=1707221360; cv=none; b=gqWOfjL7NhsNP8hYNCXR9rwmmBI76v5TKWVYX6uBiEPpZyrZMoMLMdwav1w89AqpsKFI9slXiluAfYajuzu14ih2jdWtfO7n1UyegZhUcLsTGVwLouKCP4qCK8lht+1yF0Sn8Kmtgwb4AT1plXX+8b4sYGYoqnQBp1zpBt1eqAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707221360; c=relaxed/simple;
-	bh=22GR3qyx19RyNEnG9roHdEAwdkUh1gVC4hPoWy80m34=;
+	bh=ag23ZLNHvKwtbUtFEFGHSFqm7C64xgRkm1HvLw4xCCI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=jp0kJzQCX9qHL3r8zrEM2BaXNdtVn73o/PMLdp5/n+NbSdy+LkwgE2NvsY3OK7bwfE4FdH6SyeIMa+JcHI4nra2s3ZhhnUKvGRdJr7THEMrRVDWLdr1fLL2H1Hcx9CezDFNEMWGUWyFTDBrgJyj08OSvDJvuufHacJ7g6acQ1H8=
+	 Content-Type; b=ud4DNtBHsIUPXjWVUDE3IdsvGNTccqYyZaIuYAZWjjiDv/T07Ee6vNp3CQtwFvbnM2+SNYQeJQFISeHnGy4kpnHPwewbl6Jn7PdURJ0+6YN/V+1faMuYSvbVqqq80l2FeScdOpoJvzksNTNLe3C/eZc+rexYnkK93L/YRRCzGmE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86588C43394;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A394C433C7;
 	Tue,  6 Feb 2024 12:09:20 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGq-00000006b8p-41Lr;
+	id 1rXKGq-00000006b7K-1zWt;
 	Tue, 06 Feb 2024 07:09:48 -0500
-Message-ID: <20240206120948.816153049@rostedt.homelinux.com>
+Message-ID: <20240206120948.331907337@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:20 -0500
+Date: Tue, 06 Feb 2024 07:09:17 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -29,9 +29,8 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Sasha Levin <sashal@kernel.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- kernel test robot <lkp@intel.com>
-Subject: [v6.6][PATCH 15/57] eventfs: Fix kerneldoc of eventfs_remove_rec()
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [v6.6][PATCH 12/57] eventfs: Fix WARN_ON() in create_file_dentry()
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,41 +42,48 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The eventfs_remove_rec() had some missing parameters in the kerneldoc
-comment above it. Also, rephrase the description a bit more to have a bit
-more correct grammar.
+As the comment right above a WARN_ON() in create_file_dentry() states:
 
-Link: https://lore.kernel.org/linux-trace-kernel/20231030121523.0b2225a7@gandalf.local.home
+  * Note, with the mutex held, the e_dentry cannot have content
+  * and the ei->is_freed be true at the same time.
+
+But the WARN_ON() only has:
+
+  WARN_ON_ONCE(ei->is_free);
+
+Where to match the comment (and what it should actually do) is:
+
+  dentry = *e_dentry;
+  WARN_ON_ONCE(dentry && ei->is_free)
+
+Also in that case, set dentry to NULL (although it should never happen).
+
+Link: https://lore.kernel.org/linux-trace-kernel/20231024123628.62b88755@gandalf.local.home
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode");
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202310052216.4SgqasWo-lkp@intel.com/
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 9037caa09ed345b35325200f0e4acf5a94ae0a65)
+(cherry picked from commit a9de4eb15ad430fe45747c211e367da745a90093)
 ---
- fs/tracefs/event_inode.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/tracefs/event_inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 5536860eb2ff..9f612a8f009d 100644
+index 09ab93357957..4d2da7480e5f 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -796,9 +796,11 @@ static void free_ei(struct rcu_head *head)
- /**
-  * eventfs_remove_rec - remove eventfs dir or file from list
-  * @ei: eventfs_inode to be removed.
-+ * @head: the list head to place the deleted @ei and children
-+ * @level: prevent recursion from going more than 3 levels deep.
-  *
-- * This function recursively remove eventfs_inode which
-- * contains info of file or dir.
-+ * This function recursively removes eventfs_inodes which
-+ * contains info of files and/or directories.
-  */
- static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head, int level)
- {
+@@ -264,8 +264,9 @@ create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
+ 		 * Note, with the mutex held, the e_dentry cannot have content
+ 		 * and the ei->is_freed be true at the same time.
+ 		 */
+-		WARN_ON_ONCE(ei->is_freed);
+ 		dentry = *e_dentry;
++		if (WARN_ON_ONCE(dentry && ei->is_freed))
++			dentry = NULL;
+ 		/* The lookup does not need to up the dentry refcount */
+ 		if (dentry && !lookup)
+ 			dget(dentry);
 -- 
 2.43.0
 
