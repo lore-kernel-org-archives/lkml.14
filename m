@@ -1,125 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7ED31E4BE;
-	Tue,  6 Feb 2024 14:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416BA12BF3B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231024; cv=none; b=ZLq5JClHXDOvF1O4Phd791iZAht+njlIPCDlOY+ehsD3ylI/X/0mQ+ItgNPZcfvDz7O6mao99iddl8yNnfRrhstupKLT5oFcsOnu1DLu2EauVPobJm14cmodz+2WaJPW27tGZpxGqiYlvfvhSD6ieSF7dcQPdgsT02SAvkZuuWw=
+	t=1707231104; cv=none; b=Ka2yMNQOQibJ7t4X2vHZKglDCKTNle24V3XD8s+/puEhKtsicaLCYxdNkbj9Re27gxSSldq4pU9xIKCNl/09C13wpMpc6QPT05cWy4tjOiorxAj+rTdC6ARyDUCIl+gxTVOXepSoMQK2jfFBTenyEtQN0TdXslnvXmo+NhmMpm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231024; c=relaxed/simple;
-	bh=TRNOZ2E0jVFr1j4Jk3WeOB19Tmkl0WCO11cXpH5xx0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLehfM0Tm/ri9VGKbGbGne2qY3konLpMXzCtKnFbP9yzWeW0U0FzFJxCWO66irpNJkCcjfDyygqDAwn/qIP+50BiBOmG8pjNAM8SehKqoX9T+a3NaDuqpyaE7Bji0aCzRlMDD5fC6JW6TKxyuWWVGRGTxU0xKrVXzjiyJVE053w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kLFOOydV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707231104; c=relaxed/simple;
+	bh=RX9h8Gk2Az9Z2xtuxoRpWQXcmWahlB3msZHC4F0rGAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CHLJHxXOxyw79yrPK2t93IU7ejYZ0TovhZ+NN3qreWzBYyLB8CwH2F/CSGQEJNPfgrA2yHAtmO+CyMbYg+bQf1/WQ98DkZzAnvVV9OGy2REwfxSfpzi5LsxGH3nEEBmuLGV3HTaTf+AHP/rcjLz8HA0iTjYEcRNz2xpUkCtN+4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=scbHvk29; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kLFOOydV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742AAC433C7;
-	Tue,  6 Feb 2024 14:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707231024;
-	bh=TRNOZ2E0jVFr1j4Jk3WeOB19Tmkl0WCO11cXpH5xx0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kLFOOydVz8hY/tZlvFGGUr5yxRLIh5a3MMj5zIRocdMkLDC1jdALkpy9OA3M9F8lD
-	 uRpBnMXQLY+8ovJ86Mu/N+WBHiVZCawbZRCXM749gkLpVYkyUjNoqP4OZx2B7X+6le
-	 95uqhpXCNWzr+Hy9rLJ6CQwMVmoMMdIisEZbF31o=
-Date: Tue, 6 Feb 2024 14:50:21 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
-	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
-	corbet@lwn.net, lgirdwood@gmail.com, andersson@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, Thinh.Nguyen@synopsys.com,
-	broonie@kernel.org, bgoswami@quicinc.com, tiwai@suse.com,
-	robh+dt@kernel.org, konrad.dybcio@linaro.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
-	alsa-devel@alsa-project.org
-Subject: Re: [PATCH v13 32/53] ALSA: usb-audio: Check for support for
- requested audio format
-Message-ID: <2024020617-limb-name-f852@gregkh>
-References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
- <20240203023645.31105-33-quic_wcheng@quicinc.com>
- <87wmrhvir7.wl-tiwai@suse.de>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="scbHvk29"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55783b7b47aso1295461a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 06:51:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707231100; x=1707835900; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vXiKICFUMp4cupYFDlAs4KtUHT8wkU7NDkai+RaSVpk=;
+        b=scbHvk29dRkW/Ykn9mmtkR4yAlDt56dAQu6XyQwxOubWUsnfXuhudD1VVaE15KO0c8
+         2GZluGkQ8VEvn6mz0hLKHwMxNMf5qDMXjepZ9o5JxCdzpbzd0TTZsKpXAfMG6kfk/A9F
+         /qOSJxDQoa/dKowErB+DN+tuFt5dFpQGTvk5DDy/Wjc4px2wFEMHyaAa/8WYAdPmNjku
+         MQcztNs0zdZzB38wI14UuSn2JfDjZfNCgETeUdz/H157PnGbALIYk9hMDUF3SpL8nkwN
+         UygEr6t/qmugUyTP7W+sZxaxvgbRNJgPAlzf2tkCWHjMqIG9pcWYNzzaqGwZPmCmHpSq
+         vD1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707231100; x=1707835900;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vXiKICFUMp4cupYFDlAs4KtUHT8wkU7NDkai+RaSVpk=;
+        b=CJoU+2RNWSfXuVecn/u4ss5pHsSENtECeFRAgftp2B39uN2DzJdDytPBrb1jPx/YdP
+         CnQ0cOOzh2jsQ0hfrUgjo4wmeGoljhXKPrJqJuLXV86061/TTdKLJO6ik6YOBMTRuMyB
+         8gl7s0zNatUbUeNk8aFXGdwZVuDQaDgkr4esAELSo3QSDZbM/d9RcCIhjqWmOZZavDNN
+         N/vtK19LENqXFZkLNEGb3UJW6WUof+3iF4tau68hxwoAd8iKPBxmvRJrCfLBNhOfGPdu
+         AmThPzkUrZ/Cv5sjgIQkNbfb1+Lh2DF/IEp5pfEnBIOVH8dHnVbIxvalUCO3oTdDPLu1
+         DSHw==
+X-Gm-Message-State: AOJu0Yx778tn9xKjjj9xhiXBEJ5rkpxs6wpao3H1LrTBHmvMX7iVbLOn
+	3AHjYyduF95o1DccGb1382H6U65/+cO51TUkXV2IVz6E1+qOWL9JZ8ebsd2I+Lw=
+X-Google-Smtp-Source: AGHT+IGk/qAzmQdexrg//Spd63iGrgIA/GzcXA+iMKVhkBJiYtjxKIuf/ZU7NrSaSJk3CzFARyyORA==
+X-Received: by 2002:a17:906:b30b:b0:a37:28e9:bfdc with SMTP id n11-20020a170906b30b00b00a3728e9bfdcmr2112593ejz.27.1707231100398;
+        Tue, 06 Feb 2024 06:51:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWTqHSLrCXjFvE9Ul/QpJL+/GDuRyHitBIP/6fB8Teb21BawmrIMsaAkLtWbVD/1fuSeIp4tnlbj1FlEtNcsDjBZBuuCxRpdqv4Rbw1/0BlH1POEjjfMjbqqmc8pZcg5l1hc8E3Y0DpZ3vMXowY0gRoW0vRDePzr22Bty2PWPDkN64BgBK3OMnWBmVknsdGSzEGWt+mpapQ2N17qgZ7G3cNyo2+dEAHJ6Mwd5OAsWe/leT2nGe2b1wabbjziFMgWfjCwtt3GvX01vw69jTZwI1k0Z9gBLQcK4flOn3WgSObajdEcI+/de7T99EmBurySdMF9gt+e9F5hChjCaVGU5FHGgcqhp9MjWxHSnc35kUR9mKHW8UZg85Vyvx70N1RZdzt5/buyVJnjycYl1OTgtZ/SC83U1f4QQ2bSA==
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id d20-20020a1709061f5400b00a3785efe1c4sm1231091ejk.85.2024.02.06.06.51.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Feb 2024 06:51:39 -0800 (PST)
+Message-ID: <06d0f56f-c27f-4d6a-9a88-e2932de29bf3@baylibre.com>
+Date: Tue, 6 Feb 2024 15:51:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wmrhvir7.wl-tiwai@suse.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/9] drm/mediatek: dsi: Fix DSI RGB666 formats and
+ definitions
+Content-Language: en-US
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ chunkuang.hu@kernel.org
+Cc: fshao@chromium.org, p.zabel@pengutronix.de, airlied@gmail.com,
+ daniel@ffwll.ch, matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+References: <20240206120748.136610-1-angelogioacchino.delregno@collabora.com>
+ <20240206120748.136610-3-angelogioacchino.delregno@collabora.com>
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <20240206120748.136610-3-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 06, 2024 at 02:12:44PM +0100, Takashi Iwai wrote:
-> On Sat, 03 Feb 2024 03:36:24 +0100,
-> Wesley Cheng wrote:
-> > 
-> > Allow for checks on a specific USB audio device to see if a requested PCM
-> > format is supported.  This is needed for support when playback is
-> > initiated by the ASoC USB backend path.
-> > 
-> > Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> 
-> Just cosmetic:
-> 
-> > +struct snd_usb_stream *snd_usb_find_suppported_substream(int card_idx,
-> > +			struct snd_pcm_hw_params *params, int direction)
-> > +{
-> > +	struct snd_usb_audio *chip;
-> > +	struct snd_usb_substream *subs;
-> > +	struct snd_usb_stream *as;
-> > +	const struct audioformat *fmt;
-> > +
-> > +	/*
-> > +	 * Register mutex is held when populating and clearing usb_chip
-> > +	 * array.
-> > +	 */
-> > +	mutex_lock(&register_mutex);
-> > +	chip = usb_chip[card_idx];
-> > +	if (!chip) {
-> > +		mutex_unlock(&register_mutex);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	if (enable[card_idx]) {
-> > +		list_for_each_entry(as, &chip->pcm_list, list) {
-> > +			subs = &as->substream[direction];
-> > +			fmt = snd_usb_find_substream_format(subs, params);
-> > +			if (fmt) {
-> > +				mutex_unlock(&register_mutex);
-> > +				return as;
-> > +			}
-> > +		}
-> > +	}
-> > +	mutex_unlock(&register_mutex);
-> 
-> I prefer having the single lock/unlock call pair, e.g.
-> 
-> 	struct snd_usb_stream *as, *ret;
-> 
-> 	ret = NULL;
-> 	mutex_lock(&register_mutex);
-> 	chip = usb_chip[card_idx];
-> 	if (chip && enable[card_idx]) {
-> 		list_for_each_entry(as, &chip->pcm_list, list) {
-> 			subs = &as->substream[direction];
-> 			if (snd_usb_find_substream_format(subs, params)) {
-> 				ret = as;
-> 				break;
-> 			}
-> 		}
-> 	}
-> 	mutex_unlock(&register_mutex);
-> 	return ret;
-> }
-> 
-> In this case, we shouldn't reuse "as" for the return value since it
-> can be non-NULL after the loop end.
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Why not just use guard(mutex) for this, making it all not an issue?
+On 06/02/2024 13:07, AngeloGioacchino Del Regno wrote:
+> The register bits definitions for RGB666 formats are wrong in multiple
+> ways: first, in the DSI_PS_SEL bits region, the Packed 18-bits RGB666
+> format is selected with bit 1, while the Loosely Packed one is bit 2,
+> and second - the definition name "LOOSELY_PS_18BIT_RGB666" is wrong
+> because the loosely packed format is 24 bits instead!
+> 
+> Either way, functions mtk_dsi_ps_control_vact() and mtk_dsi_ps_control()
+> do not even agree on the DSI_PS_SEL bit to set in DSI_PSCTRL: one sets
+> loosely packed (24) on RGB666, the other sets packed (18), and the other
+> way around for RGB666_PACKED.
+> 
+> Fixing this entire stack of issues is done in one go:
+>   - Use the correct bit for the Loosely Packed RGB666 definition
+>   - Rename LOOSELY_PS_18BIT_RGB666 to LOOSELY_PS_24BIT_RGB666
+>   - Change ps_bpp_mode in mtk_dsi_ps_control_vact() to set:
+>      - Loosely Packed, 24-bits for MIPI_DSI_FMT_RGB666
+>      - Packed, 18-bits for MIPI_DSI_FMT_RGB666_PACKED
 
-thanks,
-
-greg k-h
+-- 
+Regards,
+Alexandre
