@@ -1,308 +1,121 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D098C6E2AF
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 02:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899696E2BB;
+	Tue,  6 Feb 2024 02:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707188058; cv=none; b=owogRcuZjJYnFzALXgHwAqxyb0uhIuzX5cluNtNyIzx/Z7VdcQasMs1SqLyeaij7lY0QC8tEKJJeAVMWi0BatVnCq2D/utjqS28cXjFIjtiKMK8DzYjun1ufpVLbwwVS9B+HEoxUi6fqllV8LEyfKJo2SltoI0N18pULPbFlskY=
+	t=1707188144; cv=none; b=sAXeIAx7zo9N+hTkdH+FvwtNPvYsXtjLXpVbSGyojxxo4Uy2cBElKiqn6xELBEJop0FvDPEsvwgB/5vay2H6Eck0EkvDf1GymsrEQeSd/O+vGgc0sRL4NaXJCAY5/BQ5gQO+jY31B/fG+jkf0NxO0RyeWr85/7r4WbKhtox9no8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707188058; c=relaxed/simple;
-	bh=D2q0b2o4Z7APki3fn4YvD4ddqaMhZR/spymtio8X6wQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UeAkyH9YULwXoG123HFiwhzI/MfgLUJf37ZjqDbtstFuXjlZhzkGkEjyQ+ikhkzoHc5edmqNq+x7q5AdSNQ12R1pTI7vJ7O6LAov3GfGxQtDNEsUZkOvfCJBek5k8BcKaSbW1zVdSsXC7PPrSwH+BxnOyC0R2IVSxhuThe/2mAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V+de5hb8; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1707188144; c=relaxed/simple;
+	bh=7Aqk5ndLhvDUprO0Hw4S1pB5ktqjj/XziT32F4EOvF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bagr21Z2vXBRBFq9O5oOqePhN1bRBYGx18gnGPGOzMFQ4Kya1ptgKS7BvzT0NxgDzFQtMKt2BecG2gjhU3gdY0jGVN7SgomT8z9I5BUWU886dOkMJhZqyZSW+FE28gZJ3WcqttQN86cOTqwgsCE2TrQmafb+jVBMsx1BV+zGqFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R5vGTawF; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V+de5hb8"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e04e162d4cso1182947b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 18:54:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707188055; x=1707792855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BxnDC9PEjh2Qaq1re7GgqS1U0z2T5fJxN7gaOqoJ4CQ=;
-        b=V+de5hb8w9zg3BeTfo6MPug76mBSF87FYPJuG724dxM+l8xeJsdlKj9cd+ZrM5uDUo
-         AX/60wQmlMhOrqnoWVL4fz24A6jFZtcWiVGeaamsTBCUzXvxogYWPKu7/73Aq4p3D3wD
-         9B1u9ixiAwhDcRGUQXsDMaJCOVhCAqXs3k5JkL8P5Hl2v/oV/w59Z1lT5h2JLs7+Eps1
-         aYMZqK9tOoUT7BMN42YYvoQMnva+neKuigGVyrJ71iTZlHxdoSu6vP5zyqqMwDv8xkKT
-         8v7oYXoPBk7wBJqNftHVuHHuYvx/Ni/AIBHw6SNynThKhp/XUAmZrBFpQOR+EbcKtW6R
-         RweQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707188055; x=1707792855;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BxnDC9PEjh2Qaq1re7GgqS1U0z2T5fJxN7gaOqoJ4CQ=;
-        b=ZQugG1GBGPuxvfkxFOX5K2DUPYdyNIg5I4rasVWwsWxZpvWpN4JJJfHfQDQvqEETU0
-         4f54vxk7FiXgeTkbJ3/HvSTa1adi+pqDubET0y6DDVBIOHyz+/0ccTrn6/Jedo5mbgCZ
-         GaH9i3HyWDR/eagvD28dc+JJ/UweZuuIEmxeVqRJZ75kSE36XpT04BQVyXFDCmfjF+u/
-         0PbUAqRwzScqGCdYvrCuFGpPJopQfhOsfmLc7oZKDaJc6M7/xu5buo5Opi3bxCsxlTVL
-         1sUz3lzO8Wek0+9xddypEi3ZbjWlO81gmGaBxSOyZKzYG1jDvIhCXFh9gS2/76qO6stU
-         mYVg==
-X-Gm-Message-State: AOJu0YyLzHhRAaxDDGQ1OOoOkQlp/DbFKd8s2zhTdBYfV0MI62YPTarT
-	hbMArl/7Onwvbf87hlDEyrwLrf2IbcWg/UPbA290coPCWHjlWFbHAV8tAwQhz7BtGEtG2EeBVvv
-	GwQ==
-X-Google-Smtp-Source: AGHT+IHSYeFR6s+Vr1FAbsEgBRv1jPSIvn/jfhYNPnvMF5ySJNTuzlbNCgmGA/LEAVQ2w75wt3mkYNdAwJc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:93a6:b0:6df:e45b:3ef8 with SMTP id
- ka38-20020a056a0093a600b006dfe45b3ef8mr93164pfb.3.1707188055193; Mon, 05 Feb
- 2024 18:54:15 -0800 (PST)
-Date: Mon, 5 Feb 2024 18:54:13 -0800
-In-Reply-To: <91b97ed81a70c778352b2f569001820ea8b1c48b.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5vGTawF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707188143; x=1738724143;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7Aqk5ndLhvDUprO0Hw4S1pB5ktqjj/XziT32F4EOvF4=;
+  b=R5vGTawFjd60fyLxGp6+z3J66SZvG5yoj1sKdtoc+vTxv6KZ2l58Jgia
+   4q1EbUFAHWXKT/0Poov/m8tZu0i6KJU8bx6YuAUEcRZV38JZ8f7pqBGOc
+   NESYpcXJC/sq0cTzmP+X+0P3JS1qC8j7TcMUroPhqA/Dy8jQ8VM/bEd2p
+   MAidXzX4vhA9cWVD/dAlWBC0FWeYO5FF0TxV6IOLV93TsurbJwgtlQeq5
+   qT1vCiyYo2e92YKh6EIHj0co8/5x5MBdqFKQ2h/F2at+4iAeKaWT0wmEy
+   1pXe/4NhgT8zc7TI10mX4M8I69PJCRA0mDMdLQhGsSwjxU254AZHdrGox
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="26097981"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="26097981"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 18:55:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="31957401"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 18:55:40 -0800
+Date: Mon, 5 Feb 2024 18:57:00 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <len.brown@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Zhao Liu <zhao1.liu@intel.com>,
+	Zhuocheng Ding <zhuocheng.ding@intel.com>, x86@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Zhao Liu <zhao1.liu@linux.intel.com>
+Subject: Re: [PATCH 6/9] thermal: intel: hfi: Enable Intel Thread Director
+Message-ID: <20240206025700.GE17602@ranerica-svr.sc.intel.com>
+References: <20240203040515.23947-1-ricardo.neri-calderon@linux.intel.com>
+ <20240203040515.23947-7-ricardo.neri-calderon@linux.intel.com>
+ <ZcC4Xy9xBtBsCDLq@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230911021637.1941096-1-stevensd@google.com> <20230911021637.1941096-4-stevensd@google.com>
- <91b97ed81a70c778352b2f569001820ea8b1c48b.camel@redhat.com>
-Message-ID: <ZcGfVRhp2WmCsyhi@google.com>
-Subject: Re: [PATCH v9 3/6] KVM: mmu: Improve handling of non-refcounted pfns
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: David Stevens <stevensd@chromium.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
-	Isaku Yamahata <isaku.yamahata@gmail.com>, Zhi Wang <zhi.wang.linux@gmail.com>, 
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcC4Xy9xBtBsCDLq@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Tue, Oct 03, 2023, Maxim Levitsky wrote:
-> =D0=A3 =D0=BF=D0=BD, 2023-09-11 =D1=83 11:16 +0900, David Stevens =D0=BF=
-=D0=B8=D1=88=D0=B5:
-> > From: David Stevens <stevensd@chromium.org>
-> > The fact that non-refcounted pfns can no longer be accessed without mmu
-> > notifier protection is a breaking change. Since there is no timeline fo=
-r
-> > updating everything in KVM to use mmu notifiers, this change adds an
-> > opt-in module parameter called allow_unsafe_mappings to allow such
-> > mappings. Systems which trust userspace not to tear down such unsafe
-> > mappings while KVM is using them can set this parameter to re-enable th=
-e
-> > legacy behavior.
->=20
-> Do you have a practical example of a VM that can break with this change?
-> E.g will a normal VM break? will a VM with VFIO devices break? Will a VM =
-with
-> hugepages mapped into it break?
->=20
-> Will the trick of limiting the kernel memory with 'mem=3DX', and then use=
- the=20
-> extra 'upper memory' for VMs still work?
+On Mon, Feb 05, 2024 at 11:28:47AM +0100, Stanislaw Gruszka wrote:
+> On Fri, Feb 02, 2024 at 08:05:12PM -0800, Ricardo Neri wrote:
+> > Enable Intel Thread Director (ITD) from the CPU hotplug callback: globally
+> > from CPU0 and then enable the thread-classification hardware in each
+> > logical processor individually.
+> > 
+> > Also, initialize the number of classes supported.
+> > 
+> > Currently, a bare-metal machine does not use ITD, but KVM uses the
+> > attributes of the bare-metal machine to virtualize HFI.
+> > 
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > Cc: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+> > Cc: Zhao Liu <zhao1.liu@linux.intel.com>
+> > Cc: Zhuocheng Ding <zhuocheng.ding@intel.com>
+> > Cc: x86@kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com> # intel_hfi.c
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > ---
+> > Discussion:
+> > 
+> > This patch conflicts with a patchset from Stanislaw Gruszka to enable HFI
+> > only if there are user space entities listening to the thermal netlink
+> > events. ITD requires that HFI is enabled to function. ITD needs to be
+> > unconditionally enabled for virtual machines.
+> 
+> Why unconditionally? From what I can tell from KVM patches (please correct
+> me if I'm wrong) guests need to be modified to utilize HFI/ITD. Do we
+> also have to enable HFI/ITD if no such guest run on virtual machine ?
 
-This is the trick that will require an opt-in from the admin.  Anything whe=
-re KVM
-is effectively relying on userspace to pinky swear that the memory won't be
-migrated, freed, etc.
+You are correct. ITD needs to be enabled unconditionally iff we can't know
+when a guest machine is running.
 
-It's unlikely, but theoretically possible that it might break existing setu=
-ps for
-"normal" VMs.  E.g. if a VM is using VM_PFNMAP'd memory for a nested VMCS. =
- But
-such setups are already wildly broken, their users just don't know it.  The=
- proposal
-here is to require admins for such setups to opt-in to the "unsafe" behavio=
-r,
-i.e. give backwards compatibility, but make the admin explicitly acknowledg=
-e that
-what they are doing may have unwanted consequences.
+> 
+> > Options to resolve this conflict include a command-line argument for users
+> > wanting to virtualize HFI or a CONFIG_ option for the same effect. QEMU
+> > could also learn to listen to thermal netlink event. A blunter option is
+> > to unconditionally enable HFI when KVM is enabled at build time.
+> 
+> In general similar principle should be applied - do not enable if not
+> needed. We should be able to get information from KVM when there is
+> actual need.
 
-> > +	/*
-> > +	 * True if the returned pfn is for a page with a valid refcount. Fals=
-e
-> > +	 * if the returned pfn has no struct page or if the struct page is no=
-t
-> > +	 * being refcounted (e.g. tail pages of non-compound higher order
-> > +	 * allocations from IO/PFNMAP mappings).
-> >=20
-> Aren't all tail pages not-refcounted (e.g tail page of a hugepage?)
-> I haven't researched this topic yet.
+Agreed, Zhao had suggested to enable/disable when virtual machines are
+built/destroyed.
 
-Nope.  As Christoph stated, they are most definitely "weird" allocations th=
-ough.
-In this case, IIRC, it's the DRM's Translation Table Manager (TTM) code tha=
-t
-kmalloc's a large chunk of memory, and then stuffs the pfn into the page ta=
-bles
-courtesy of the vmf_insert_pfn_prot() in ttm_bo_vm_fault_reserved().
+> QEMU registering to thermal events seems to be odd for
+> me, and I think there must be better solution.
 
-The head page has a non-zero refcount, but it's not really refcounted.  And=
- the
-tail pages have nothing, which IIRC, results in KVM inadvertantly causing p=
-ages
-to be freed due to putting the last refeferences.
-
-[*] https://lore.kernel.org/all/ZRZeaP7W5SuereMX@infradead.org
-
-
-> > +	 *
-> > +	 * When this output flag is false, callers should not try to convert
-> > +	 * the pfn to a struct page.
-
-This should explain what the flag tracks, not what callers should or should=
-n't
-do with the flag.  E.g. strictly speaking, there's no danger in grabbing th=
-e
-corresponding "struct page" if the caller verifies it's a valid PFN.  Tryin=
-g to
-use the page outside of mmu_notifier protection is where things would get d=
-icey.
-
-> > +	 */
-> > +	bool is_refcounted_page;
-> >  };
-> > =20
-> >  kvm_pfn_t __kvm_follow_pfn(struct kvm_follow_pfn *foll);
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 9b33a59c6d65..235c5cb3fdac 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -96,6 +96,10 @@ unsigned int halt_poll_ns_shrink;
-> >  module_param(halt_poll_ns_shrink, uint, 0644);
-> >  EXPORT_SYMBOL_GPL(halt_poll_ns_shrink);
-> > =20
-> > +/* Allow non-struct page memory to be mapped without MMU notifier prot=
-ection. */
-> > +static bool allow_unsafe_mappings;
-> > +module_param(allow_unsafe_mappings, bool, 0444);
-> > +
-> >  /*
-> >   * Ordering of locks:
-> >   *
-> > @@ -2507,6 +2511,15 @@ static inline int check_user_page_hwpoison(unsig=
-ned long addr)
-> >  	return rc =3D=3D -EHWPOISON;
-> >  }
-> > =20
-> > +static kvm_pfn_t kvm_follow_refcounted_pfn(struct kvm_follow_pfn *foll=
-,
-> > +					   struct page *page)
-> > +{
-> > +	kvm_pfn_t pfn =3D page_to_pfn(page);
-> > +
-> > +	foll->is_refcounted_page =3D true;
-> > +	return pfn;
-> > +}
->=20
-> Just a matter of taste but to me this function looks confusing.
-> IMHO, just duplicating these two lines of code is better.
-> However if you prefer I won't argue over this.
-
-Hrm, when I suggested this, there was also a put_page() and a comment about=
- hacky
-code in there:
-
-static kvm_pfn_t kvm_follow_refcounted_pfn(struct kvm_follow_pfn *foll,
-                                          struct page *page)
-{
-       kvm_pfn_t pfn =3D page_to_pfn(page);
-
-       foll->is_refcounted_page =3D true;
-
-       /*
-        * FIXME: Ideally, KVM wouldn't pass FOLL_GET to gup() when the call=
-er
-        * doesn't want to grab a reference, but gup() doesn't support getti=
-ng
-        * just the pfn, i.e. FOLL_GET is effectively mandatory.  If that ev=
-er
-        * changes, drop this and simply don't pass FOLL_GET to gup().
-        */
-       if (!(foll->flags & FOLL_GET))
-               put_page(page);
-
-       return pfn;
-}
-
-
-More below.
-
-> > -	/*
-> > -	 * Get a reference here because callers of *hva_to_pfn* and
-> > -	 * *gfn_to_pfn* ultimately call kvm_release_pfn_clean on the
-> > -	 * returned pfn.  This is only needed if the VMA has VM_MIXEDMAP
-> > -	 * set, but the kvm_try_get_pfn/kvm_release_pfn_clean pair will
-> > -	 * simply do nothing for reserved pfns.
-> > -	 *
-> > -	 * Whoever called remap_pfn_range is also going to call e.g.
-> > -	 * unmap_mapping_range before the underlying pages are freed,
-> > -	 * causing a call to our MMU notifier.
-> > -	 *
-> > -	 * Certain IO or PFNMAP mappings can be backed with valid
-> > -	 * struct pages, but be allocated without refcounting e.g.,
-> > -	 * tail pages of non-compound higher order allocations, which
-> > -	 * would then underflow the refcount when the caller does the
-> > -	 * required put_page. Don't allow those pages here.
-> > -	 */
->=20
-> Why the comment is removed? as far as I see the code still grabs a refere=
-nce
-> to the page.
-
-Because what the above comment is saying is effectively obsoleted by is_ref=
-counted_page.
-The old comment is essentially saying, "grab a reference because KVM expect=
-s to
-put a reference", whereas as the new code grabs a reference because it's ne=
-cessary
-to honor allow_unsafe_mappings.
-
-So I agree with David that the existing comment should go away, but I agree=
- with
-you in that kvm_follow_refcounted_pfn() really needs a comment, e.g. to exp=
-lain
-how KVM manages struct page refcounts.
-
-> > -	if (!kvm_try_get_pfn(pfn))
-> > -		r =3D -EFAULT;
-> > +	if (get_page_unless_zero(page))
-> > +		WARN_ON_ONCE(kvm_follow_refcounted_pfn(foll, page) !=3D pfn);
->=20
-> Once again, the kvm_follow_refcounted_pfn usage is confusing IMHO.  It se=
-ts
-> the 'foll->is_refcounted_page', and yet someone can think that it's only
-> there for the WARN_ON_ONCE.
->=20
-> That IMHO would read better:
->=20
-> if (get_page_unless_zero(page))
-> 	foll->is_refcounted_page =3D true;
->=20
-> WARN_ON_ONCE(page_to_pfn(page) !=3D pfn);
->=20
-> Note that I moved the warn out of the 'get_page_unless_zero' condition
-> because I think that this condition should be true for non refcounted pag=
-es
-> as well.
-
-Yeah, let me see if I can piece together what happened to the put_page() ca=
-ll.
-
-> Also I don't understand why 'get_page_unless_zero(page)' result is ignore=
-d.
-> As I understand it, it will increase refcount of a page unless it is zero=
-.=20
->=20
-> If a refcount of a refcounted page is 0 isn't that a bug?
-
-Yes, the problem is that KVM doesn't know if a page is refcounted or not, w=
-ithout
-actually trying to acquire a reference.  See the TTM mess mentioned above.
-
-Note, Christoph is suggesting that KVM instead refuse to play nice and forc=
-e the
-TTM code to properly refcount things.  I very much like that idea in theory=
-, but
-I have no idea how feasible it is (that code is all kinds of twisty).
-
-> The page was returned from kvm_pfn_to_refcounted_page which supposed only=
- to
-> return pages that are refcounted.
->=20
-> I might not understand something in regard to 'get_page_unless_zero(page)=
-'
-> usage both in old and the new code.
-
+Right.
