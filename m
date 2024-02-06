@@ -1,69 +1,40 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177526FD7
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 01:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D4CED9;
+	Tue,  6 Feb 2024 01:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707183173; cv=none; b=eV7T+F6T1Qb/7ahW5MUftTMzwALCRhhhdtizqtiKT8pQlAhWoMC7ft6khY6T2Jys4Jl+6EeJU2/GRuMW/TDwKNXwh3hvEKlRPnIi7vDiVDTarOCnxDj+hAfou79KoknvfslhFGD4A9wh8v7gMy0/ofdITbp5ZiALzRDSLU2RSYE=
+	t=1707183311; cv=none; b=BZK7SSEj3mL0zVlAZIpiLVBuRsNLw2+BtXk0GPD3KmqKD4LcLZgZYJL6MHqf92+rI9mThXIST2RJWNheazXxaqiciZhOObkY9xFIvriM8LP68qCVlbeyfLmBgYHYiy8QjmVEcDecuImjw7IJ4wkpdPqC1Mm+fG7DgLYU8fs3P6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707183173; c=relaxed/simple;
-	bh=pBkCYd7B0CYbCUsFx1V+bQ/EoKILx+Ug6j39eib3yNw=;
+	s=arc-20240116; t=1707183311; c=relaxed/simple;
+	bh=nxiuL3ikLLQlErz9ldxF1gm9uIpqXguVlOjsCUXQYjk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVCH95agVm03g7zDjS7LhaMOlCMJl5sVTQTOJmDjOpgGcLKLPkEsUtQfGf8UHng/IKwGUJN+EqFv++Fp8Zl6n3IkW9fi4ob1fjk04MikcdwEMS+q1YheTG1Tyu/RPWJQBLrb1cQujUUBOFiKOWMaI3ks8M7sb8PVWP1aOqcxlK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=i3wfo3O7; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QAGgUIeqvC0EnXyhIKKXWM9jUwQ7gksK2ze7ENkgu6i7vjqLMEARHlSttvjLnHLQ7SoT0/uaWTbiVb9BO7x9OjQmI9G9pZ2pyD5qgsupibdrdzSvH1okYv/Hd8Imi4k+xrYdNnREn312/OV86CspGQCCzZQTXZOD0K6l9CPQfL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtM5IkFT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="i3wfo3O7"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59a6f2eecf6so2329151eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 17:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1707183170; x=1707787970; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WHuOPEoYQA+w2xuM98mJBf47nO7PTxDkSYQ4f4HqMbQ=;
-        b=i3wfo3O7ujfvOnFQ8iUYnkD8BGhx2lz1AIqqU/cDsJwukfbePa+PQJQO8KQtXQVbeo
-         NaPbynDWLtb40dkbfq+SqyECXU9PKiN0PTVSewTiDn3KrwGFf2uzUgSYcLCSmTd6flU2
-         N0mg/0ynm5IIbfHFg6QwuhnFIp/ifMlrVO5Yw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707183170; x=1707787970;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WHuOPEoYQA+w2xuM98mJBf47nO7PTxDkSYQ4f4HqMbQ=;
-        b=CmF11JgNvijAnLPWEMMPyw67wNFZBEr+VsdGh8g7aHwJGBYRf2gv1RXMYl72O8Cmz6
-         n6o2P9duj1TV9AdiGN0dF96H48IZos7TjDhQqFEeWtCJShpbxJp6ANtw+MEiZ5CQWOa2
-         viYb78K8h8uIoX++bbu45EDcADmrHGnABeF2wwflYRUghsUL3UDJHc4izr0AC3SB3OxQ
-         boaJWwkWYum+JMjNG7y/O3Adn2mr/TK8byaQ4IwB4J5Iwa5WCuGjkJZ5WvjFj64/ELiS
-         /fHyU1Ops6G+W6K7zTO5uTft/purQeaY2buegg9Ycbb8Dz9WoFL+jAux2ov9jRyPAmbW
-         l4xQ==
-X-Gm-Message-State: AOJu0YyZ6JldliY7XnxFnyyQs1UlwQGSFEyHkdHP912+B2eEoEzpRhqA
-	r6z+rm6TakeRgsHF9x0WB6vHhyNp4XGXAPBScf4owucKTRt8CjeWhXCScdD6paw=
-X-Google-Smtp-Source: AGHT+IEfUdobcaRYKtUSizm1hySV21NrDxUEoJ4N7Mo8m0VLv1K2M5EQHQwZUtLidkFEp9q1hOWDnw==
-X-Received: by 2002:a05:6358:719:b0:175:cfa7:953d with SMTP id e25-20020a056358071900b00175cfa7953dmr1872310rwj.2.1707183170011;
-        Mon, 05 Feb 2024 17:32:50 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWztDuxk32cFuyDyhLEKLkKPT490E0I7gmkTVzjmDoSKJnp28RU+Dy8Y5itHl3on59Xm0/r2yd5B83SbO2D9uhReh989XI620M1TSaNFpohO7me7+2C2KuPjuJa7j7I1KiYa9zZyQ/r1vrvtfD2HPXq7jAYDvnmx+4o1mKQrB06cCiHlLfMR48cx2A+nDt/T1ImI0XRo7XBzG1RKrjptLzvSELC/WU9ndVfTrxph4tK076ILZZ9zDhAAScFNE/8DnhFBlSHmCri/g3/lH3aWkMmf67urd/KhgTceFZVXX7KvwMXwKJCH5c=
-Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id v18-20020aa799d2000000b006e0414d7cf8sm554769pfi.95.2024.02.05.17.32.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Feb 2024 17:32:49 -0800 (PST)
-Date: Mon, 5 Feb 2024 17:32:47 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, tariqt@nvidia.com,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH net-next] eth: mlx5: link NAPI instances to queues and
- IRQs
-Message-ID: <20240206013246.GA11217@fastly.com>
-References: <20240206010311.149103-1-jdamato@fastly.com>
- <878r3ymlnk.fsf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtM5IkFT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D705C433F1;
+	Tue,  6 Feb 2024 01:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707183310;
+	bh=nxiuL3ikLLQlErz9ldxF1gm9uIpqXguVlOjsCUXQYjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FtM5IkFTnjk5ZpDHC788Rxt38lwYYMfr/VRkFbM3m/CepnPLZmp9tzM+HBbk5jBSa
+	 RZtCHE52oMUBQ13Kog7H2s7k1noO3CulClCMA+lQlvHu5j6zp2PvlDLBdSad2usOaV
+	 QC/+zlUYn2AqL6RHJIa3zlO6oNjbreiKjUl1Hc1nIIx2rw7evrcxOFzACaBqo9AYuR
+	 mSw5x2NeJKuFST0GKLRpMMcziAMOqsr9ZgCOjQor6N9sD8jIHFaEobfBuAK5YKl2lc
+	 qKyJl8z/cz0/aYUVFgeZAqQtNgJg5WcJvLBQfCZfEVIYwTdYWPmLwSowg53DGAivu9
+	 LD80M3+6rzq2g==
+Date: Mon, 5 Feb 2024 18:35:08 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] kbuild: rpm-pkg: do not include depmod-generated
+ files
+Message-ID: <20240206013508.GA3151678@dev-arch.thelio-3990X>
+References: <20240202133520.302738-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,78 +43,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <878r3ymlnk.fsf@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20240202133520.302738-1-masahiroy@kernel.org>
 
-On Mon, Feb 05, 2024 at 05:09:09PM -0800, Rahul Rameshbabu wrote:
-> On Tue, 06 Feb, 2024 01:03:11 +0000 Joe Damato <jdamato@fastly.com> wrote:
-> > Make mlx5 compatible with the newly added netlink queue GET APIs.
-> >
-> > Signed-off-by: Joe Damato <jdamato@fastly.com>
-> > ---
-> >  drivers/net/ethernet/mellanox/mlx5/core/en.h      | 1 +
-> >  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 8 ++++++++
-> >  2 files changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> > index 55c6ace0acd5..3f86ee1831a8 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> > @@ -768,6 +768,7 @@ struct mlx5e_channel {
-> >  	u16                        qos_sqs_size;
-> >  	u8                         num_tc;
-> >  	u8                         lag_port;
-> > +	unsigned int		   irq;
-> >  
-> >  	/* XDP_REDIRECT */
-> >  	struct mlx5e_xdpsq         xdpsq;
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > index c8e8f512803e..e1bfff1fb328 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > @@ -2473,6 +2473,9 @@ static void mlx5e_close_queues(struct mlx5e_channel *c)
-> >  	mlx5e_close_tx_cqs(c);
-> >  	mlx5e_close_cq(&c->icosq.cq);
-> >  	mlx5e_close_cq(&c->async_icosq.cq);
-> > +
-> > +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_TX, NULL);
-> > +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, NULL);
+On Fri, Feb 02, 2024 at 10:35:17PM +0900, Masahiro Yamada wrote:
+> Installing the kernel package is fine, but when uninstalling it, the
+> following warnings are shown:
 > 
-> This should be set to NULL *before* actually closing the rqs, sqs, and
-> related cqs right? I would expect these two lines to be the first ones
-> called in mlx5e_close_queues. Btw, I think this should be done in
-> mlx5e_deactivate_channel where the NAPI is disabled.
+>   warning: file modules.symbols.bin: remove failed: No such file or directory
+>   warning: file modules.symbols: remove failed: No such file or directory
+>   warning: file modules.softdep: remove failed: No such file or directory
+>   warning: file modules.devname: remove failed: No such file or directory
+>   warning: file modules.dep.bin: remove failed: No such file or directory
+>   warning: file modules.dep: remove failed: No such file or directory
+>   warning: file modules.builtin.bin: remove failed: No such file or directory
+>   warning: file modules.builtin.alias.bin: remove failed: No such file or directory
+>   warning: file modules.alias.bin: remove failed: No such file or directory
+>   warning: file modules.alias: remove failed: No such file or directory
 > 
-> >  }
-> >  
-> >  static u8 mlx5e_enumerate_lag_port(struct mlx5_core_dev *mdev, int ix)
-> > @@ -2558,6 +2561,7 @@ static int mlx5e_open_channel(struct mlx5e_priv *priv, int ix,
-> >  	c->stats    = &priv->channel_stats[ix]->ch;
-> >  	c->aff_mask = irq_get_effective_affinity_mask(irq);
-> >  	c->lag_port = mlx5e_enumerate_lag_port(priv->mdev, ix);
-> > +	c->irq		= irq;
-> >  
-> >  	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll);
-> >  
-> > @@ -2602,6 +2606,10 @@ static void mlx5e_activate_channel(struct mlx5e_channel *c)
-> >  		mlx5e_activate_xsk(c);
-> >  	else
-> >  		mlx5e_activate_rq(&c->rq);
-> > +
-> > +	netif_napi_set_irq(&c->napi, c->irq);
-> > +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_TX, &c->napi);
-> > +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, &c->napi);
+> The %preun scriptlet runs 'kernel-install remove', which in turn invokes
+> /usr/lib/kernel/install.d/50-depmod.install to remove those files before
+> the actual package removal.
 > 
-> It's weird that netlink queue API is being configured in
-> mlx5e_activate_channel and deconfigured in mlx5e_close_queues. This
-> leads to a problem where the napi will be falsely referred to even when
-> we deactivate the channels in mlx5e_switch_priv_channels and may not
-> necessarily get to closing the channels due to an error.
+> RPM-based distributions do not ship files generated by depmod. Mark them
+> as %ghost in order to exclude them from the package, but still claim the
+> ownership on them.
 > 
-> Typically, we use the following clean up patterns.
-> 
-> mlx5e_activate_channel -> mlx5e_deactivate_channel
-> mlx5e_open_queues -> mlx5e_close_queues
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-OK, I'll move it to mlx5e_deactivate_channel before the NAPI is disabled.
-That makes sense to me.
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+> ---
+> 
+>  scripts/package/kernel.spec | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+> index f58726671fb3..aaedb6d1b26f 100644
+> --- a/scripts/package/kernel.spec
+> +++ b/scripts/package/kernel.spec
+> @@ -66,6 +66,20 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEA
+>  %{make} %{makeflags} run-command KBUILD_RUN_COMMAND='${srctree}/scripts/package/install-extmod-build %{buildroot}/usr/src/kernels/%{KERNELRELEASE}'
+>  %endif
+>  
+> +{
+> +	for x in System.map config kernel modules.builtin \
+> +			modules.builtin.modinfo modules.order vmlinuz; do
+> +		echo "/lib/modules/%{KERNELRELEASE}/${x}"
+> +	done
+> +
+> +	for x in alias alias.bin builtin.alias.bin builtin.bin dep dep.bin \
+> +					devname softdep symbols symbols.bin; do
+> +		echo "%ghost /lib/modules/%{KERNELRELEASE}/modules.${x}"
+> +	done
+> +
+> +	echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
+> +} > %{buildroot}/kernel.list
+> +
+>  %clean
+>  rm -rf %{buildroot}
+>  
+> @@ -78,6 +92,9 @@ for file in vmlinuz System.map config; do
+>  		cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"
+>  	fi
+>  done
+> +if [ ! -e "/lib/modules/%{KERNELRELEASE}/modules.dep" ]; then
+> +	/usr/sbin/depmod %{KERNELRELEASE}
+> +fi
+>  
+>  %preun
+>  if [ -x /sbin/new-kernel-pkg ]; then
+> @@ -91,10 +108,9 @@ if [ -x /sbin/update-bootloader ]; then
+>  /sbin/update-bootloader --remove %{KERNELRELEASE}
+>  fi
+>  
+> -%files
+> +%files -f %{buildroot}/kernel.list
+>  %defattr (-, root, root)
+> -/lib/modules/%{KERNELRELEASE}
+> -%exclude /lib/modules/%{KERNELRELEASE}/build
+> +%exclude /kernel.list
+>  
+>  %files headers
+>  %defattr (-, root, root)
+> -- 
+> 2.40.1
+> 
