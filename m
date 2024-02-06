@@ -1,176 +1,162 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2062.outbound.protection.outlook.com [40.107.105.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DBE1C697
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 23:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707260717; cv=none; b=h/7KKrhFM+HJ97rOx6PDmrqVckmVTliA8wfqtZ7Gmr46UxluhsK+FNQBPjcW71cqRroAAlJYK67gdtv/V61FZirPGzpFbyC+VubHo6XsGxlRn5sBCdq69psDzYHIFUMJ2jBpDdVG96v3bTFiLZ9i27nwKUHUOeH3cNyWh7aEAdE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707260717; c=relaxed/simple;
-	bh=7QPoO7PifBqJV8sy2/s5zmKco4E+SsITAiGa1p+M0P0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=hbNRTssKhz8/G9+Yu0b/4TSR8hnxAFoPnfAm19ugeIZ6hV08k30iU8NmwTLNu7iFA9tVxvaTwPS5sbRzHQ+tpWGXt/LK4iddQf5T76bxBAZ8M25v2m/yowPPhNNHh8TIM5LSzIX7DpXpi3Avt+LjdtKpPrwS97n6IyNgSLrvmnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pfa8rj8d; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B43E1CD1E;
+	Tue,  6 Feb 2024 23:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707260743; cv=fail; b=HKmPYbVVwdbbIu0K+jFf1qXQGUuk8gab6zxQTkk6gSOTW/NN8jzmI/tpSjnmn9nuGsyv86Dxk3s5y91C6MTRRazyGC76Hw0jmJfR5l45QJPeWZhP8FHI4+psx64lIUr6ytVhhN5JKOUmGW/zvQtZoN3hem3pzQ9xl9mOpWpBxnc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707260743; c=relaxed/simple;
+	bh=pXylXQe/bGEhiBRotm1yb/RdwObM8/D++Aa6gTgSamU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=MK+oBZmeRplpcuW38+e/Gb/t+i/ex2aju6VbTWUzK6VPPdsZGE+yvHSq5f+5qBu45PeuhG/SPygZKBl+OG44T3G2+ZtcJXOvnuQgpC8ddk060LNeICF4dIhMPm0UhzvUgA/B3oO3K6QV5bHUPasVqnDEu8vlX6pYGGBoVjpZ0cc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=mIl2RvR4; arc=fail smtp.client-ip=40.107.105.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pfa8rj8d"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240206230506euoutp02f13e300ea889ba0f152bd7a782a44844~xaJFGuOM61358113581euoutp02h
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 23:05:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240206230506euoutp02f13e300ea889ba0f152bd7a782a44844~xaJFGuOM61358113581euoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707260706;
-	bh=D4NpkGWJwWN6KnAZDRStVR1XHUjwfMp1ZAHQ8qzkVao=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=pfa8rj8dbIwzK+cyaHBQw651DYw0zn2wQAB/v0T+a20uPePX/SoOAUoNUQn4TOOp7
-	 GcvKTqjxKF4+5H33n9gNoCnw/yfnJ9zBgkeiadTha7oweTqpsiOlgZYr0ioy564/6e
-	 p++ptNojMCe55bYb4oR7n86XHWS92BIDMoDluoxQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240206230505eucas1p2ca96067cf9ce25b9432df241865ccfeb~xaJD59HbV1545315453eucas1p2D;
-	Tue,  6 Feb 2024 23:05:05 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id E0.3A.09539.12BB2C56; Tue,  6
-	Feb 2024 23:05:05 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240206230505eucas1p1b952da8c57de5dea32339b22e3c98b94~xaJDfaVsD1596415964eucas1p1l;
-	Tue,  6 Feb 2024 23:05:05 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240206230505eusmtrp1b65b0d431452d003e4821a4d574ce28b~xaJDe1ijJ0618706187eusmtrp1W;
-	Tue,  6 Feb 2024 23:05:05 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-f8-65c2bb219805
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 0B.A7.10702.02BB2C56; Tue,  6
-	Feb 2024 23:05:05 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240206230504eusmtip1e06c0fdfbc890e18793aae24260a5951~xaJCxAlLA1460514605eusmtip1h;
-	Tue,  6 Feb 2024 23:05:04 +0000 (GMT)
-Message-ID: <65bedd1f-2dd4-49e3-8865-0e6082129e78@samsung.com>
-Date: Wed, 7 Feb 2024 00:05:03 +0100
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mIl2RvR4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hBf0N1Ovw5f3uxnTho8sChIT7mxI5AiUoLrthR/J+5hBFr0nU/gK39I56ThiKdydWJ2Igm8w7ALKYSPqrFpqbISATiW2lbI4TNRpjqNyuXwUk7W5pl4nY1PTHFgZzDW306Mdk6F59HqIbXe+rFamLXDEJ6v39dkV+LuKSR/Sr3W0IT+q479nClEEB8cboajmBhv2w9MQIREjNRhKl2LHepiXGv6j+bCPMnRm9IXMfCrph5qaY+JU6MQXfqhtkNOaubcDDc87p4CyNS+i76DoF7sou9iaaSICReeyqsPsIKpLF6GM/vYwLIRdZ6WRFljslVr0ygprndArJqn2M8h/3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ffra0ksB8iUKBwhjRBTwhhKH0QPNZxkfJmFuEDlfSO0=;
+ b=KTCYiXm7lCmP/ypWWm4yTetsQVDzRX+ME1ljLOslu2/zbfBOI80IeUisQsZRXkWzypNNTmSNNNwizKXFgMEG+93E/jqY9Af8jqxlS+VaujaulY4Oayt+xbGR+hhAN1D6HK1jaVT+CQKlUNPFFWpPgA9JJSvgWWzTxlEQaThiZoggBoQKotq6zADJem7XltrJmzdRoh9V8t87l9psNqaAkY1AiYPN8eYPThTkv57Q9ZU2t0Rf52lENJQSHrOhKaynfYUGLAi9+Coyu3KGHBNxJGZYTUipCXSTOOtw5KzN1oPr6uqPABzx527JFOP5qmFymK9wmC4Jz1y68HpiwgsXAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ffra0ksB8iUKBwhjRBTwhhKH0QPNZxkfJmFuEDlfSO0=;
+ b=mIl2RvR4NUplKe/2cl7f2dVTPDq7pjxeIgRrG2xf4XDzNnsffZ3tLtXUZHawrwdtntZI5Ir+8rUKObrqyh8jZvkLXa1rHynJEvC6H+ESiDO0M7xMDrgNLhIbw/uKaDkRsS/gMFKFRUrLftRUBMdVM+WRQK06d9NuO2AnSTRSh0o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7988.eurprd04.prod.outlook.com (2603:10a6:20b:24e::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Tue, 6 Feb
+ 2024 23:05:39 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7249.035; Tue, 6 Feb 2024
+ 23:05:38 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Li Yang <leoyang.li@nxp.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE LAYERSCAPE ARM ARCHITECTURE),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] arm64: dts: ls1088a: Add the PME interrupt for PCIe EP node
+Date: Tue,  6 Feb 2024 18:05:25 -0500
+Message-Id: <20240206230525.3578868-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR10CA0028.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next: /dev/root: Can't open blockdev
-Content-Language: en-US
-To: Christian Brauner <brauner@kernel.org>, Naresh Kamboju
-	<naresh.kamboju@linaro.org>
-Cc: Jan Kara <jack@suse.cz>, linux-block <linux-block@vger.kernel.org>,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, Linux Regressions
-	<regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org,
-	lkft-triage@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>, Dan Carpenter
-	<dan.carpenter@linaro.org>, Al Viro <viro@zeniv.linux.org.uk>, Anders Roxell
-	<anders.roxell@linaro.org>
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20240206-haarpracht-teehaus-8c3d56b411ea@brauner>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsWy7djP87qKuw+lGtz8L2dxa8pvJou/k46x
-	W7w+/InR4sO8VnaL2dObmSz23tK22LP3JIvF5V1z2CwOLmxjtNh6bxq7xa1P/BYb33awW5z/
-	e5zVgdfj969JjB6bVnWyedy5tofN4/a/x8weLzbPZPQ4s+AIu8fnTXIem568ZQrgiOKySUnN
-	ySxLLdK3S+DK+L9+JkvBbZ6K9bcusjQw/ubqYuTkkBAwkfh3+xtTFyMXh5DACkaJbbP62SGc
-	L4wSy47vgMp8ZpS4emQ5I0zLulnLWSASyxklfv2+wgbhfGSUmNL3iQmkilfATuJF3z12EJtF
-	QEWiY+kCdoi4oMTJmU9YQGxRAXmJ+7dmgMWFBQwltrbNArOZBcQlbj2ZDzZHRCBCYvaFRYwg
-	C5gFtjFLfD7fwgaSYANq6HrbBWZzCthLfG9+zQTRLC/RvHU2M8Sp8zklPl8NhbBdJB48eQ/1
-	grDEq+Nb2CFsGYnTk3vA3pEQaGeUWPD7PhOEM4FRouH5LagOa4k7534BbeMA2qApsX6XPogp
-	IeAo8fCrI4TJJ3HjrSDECXwSk7ZNZ4YI80p0tAlBzFCTmHV8HdzWgxcuMU9gVJqFFCqzkHw/
-	C8kzsxDWLmBkWcUonlpanJueWmyYl1quV5yYW1yal66XnJ+7iRGY2k7/O/5pB+PcVx/1DjEy
-	cTAeYpTgYFYS4TXbcSBViDclsbIqtSg/vqg0J7X4EKM0B4uSOK9qinyqkEB6YklqdmpqQWoR
-	TJaJg1OqgclS2aglZlHwSr7PC07r1WSrBhvnZ594aaSSLjPzbHnJv+8/vz1cbbOLPf1Yjpi4
-	D7OO6THLb34Xpq/Mq3xsdGvar/rthonvcxLc5JNf7FPd6uQcX+UUfdbVuyb67vWy7vsr1+X9
-	fz9jwrfd90TD5+pHTVkq/vHBrEc5BvOsLhp8X6gTq73yO9vtRYeqnwoeCvDb2BngfsjMTPXH
-	xhkcC4Mb91wRmH3slvXRxx2OvwrDDdh5GvSnzXt54WdZ5r1gExvuon/zTu6rvzVN/Y70Z5tg
-	D+ULRatattw52yLzqoepKIdvudTqRfcmX/5SLp0mfWzX9r2lTSsmMDTvPBB+6+3nur05mabP
-	RPfk1vy//kxWiaU4I9FQi7moOBEA3ElHgNwDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsVy+t/xu7qKuw+lGrQdZrK4NeU3k8XfScfY
-	LV4f/sRo8WFeK7vF7OnNTBZ7b2lb7Nl7ksXi8q45bBYHF7YxWmy9N43d4tYnfouNbzvYLc7/
-	Pc7qwOvx+9ckRo9NqzrZPO5c28PmcfvfY2aPF5tnMnqcWXCE3ePzJjmPTU/eMgVwROnZFOWX
-	lqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehl/F8/k6XgNk/F
-	+lsXWRoYf3N1MXJySAiYSKybtZwFxBYSWMooMX2JMkRcRuLktAZWCFtY4s+1LrYuRi6gmveM
-	EmenHwBL8ArYSbzou8cOYrMIqEh0LF3ADhEXlDg58wnYUFEBeYn7t2aAxYUFDCW2ts0Cs5kF
-	xCVuPZnPBGKLCERIdM06zQqygFlgG7PEqsZ/TBDbZjFLzLkxC2wbG1B311uQMzg5OAXsJb43
-	v2aCmGQm0bW1ixHClpdo3jqbeQKj0Cwkh8xCsnAWkpZZSFoWMLKsYhRJLS3OTc8tNtIrTswt
-	Ls1L10vOz93ECIzmbcd+btnBuPLVR71DjEwcjIcYJTiYlUR4zXYcSBXiTUmsrEotyo8vKs1J
-	LT7EaAoMjYnMUqLJ+cB0klcSb2hmYGpoYmZpYGppZqwkzutZ0JEoJJCeWJKanZpakFoE08fE
-	wSnVwFS4u2nehjPxZUdVX3uWVvJvszr0hsljk+HPv7LfthWFt19vnLCSIWM127f253PFz/id
-	b5h5Y7ra1D3uB2xObn6cmdr9/tp+XV+dg/yvOU0iupj+PdkXE6Tx62+V/sSAGq6phtcuXr05
-	02DPuo5diWGW0TyKrKfmaRpPFlmivUDlxK5rGxN6RAWWLT9ccflqQ95684C83reHU9W/Su0T
-	UFGxDmC6fcbR2bNxsd/a05KqPLOOnon7PKHuxmFjt1dVO10WM67myM2b+tZ3KlOa55YvOYkP
-	lAWva2q1Ndl+2hfjK7G+YmJS4SRjyblM4kHG7MzM515f158WaNWnXFQyb9fFyMlfnRlddNNE
-	meR/vFBiKc5INNRiLipOBAB/HpkRbwMAAA==
-X-CMS-MailID: 20240206230505eucas1p1b952da8c57de5dea32339b22e3c98b94
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20240206230505eucas1p1b952da8c57de5dea32339b22e3c98b94
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240206230505eucas1p1b952da8c57de5dea32339b22e3c98b94
-References: <CA+G9fYttTwsbFuVq10igbSvP5xC6bf_XijM=mpUqrJV=uvUirQ@mail.gmail.com>
-	<20240206101529.orwe3ofwwcaghqvz@quack3>
-	<CA+G9fYup=QzTAhV2Bh_p8tujUGYNzGYKBHXkcW7jhhG6QFUo_g@mail.gmail.com>
-	<20240206122857.svm2ptz2hsvk4sco@quack3>
-	<CA+G9fYvKfeRHfY3d_Df+9V+4tE_ZcvMGVJ-acewmgfjxb1qtpg@mail.gmail.com>
-	<20240206-ahnen-abnahmen-73999e173927@brauner>
-	<20240206-haarpracht-teehaus-8c3d56b411ea@brauner>
-	<CGME20240206230505eucas1p1b952da8c57de5dea32339b22e3c98b94@eucas1p1.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7988:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4d45548-c027-4a2e-266c-08dc27682240
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OpDdjNjAH0uV2fcEEHMHjD1UZV9SIOu9LBo3bKxUKQPz9MUtwuu3KHaAVYX59GUeXaRL9wmnshO6umDU3A/vY/rHq258FN5SSWzdUKkKsjNhjMuJaSXFMI13fQIU6myFhbXo3Sxdh4cWBDYXxXO7OsLN1PWloGr/oB/6ClxYx6bQXVb4nhGQadHlsQR86t0fWfZdoWQEk8ewOnZxdnNuvZq7VixZe8rF8bNabJVwY5+LKpb7Hdl60gWMYUmOXNyOVzHdTmS1OmryyXrYvvOA28NXNFCoU1yvkWyjZewyQx6Tn9LSqo6nwLx8plDwNsOs5/yaNGg1sGm54pBBu07DNjH+hdihKvisaEvn3GrBR2K7Kk1zf7W/HR8mdiP6pEB92k8TeQtuAykoWgAgdNX7dubrqILlLHsW4/WNyJ4N6XsxWtm+zirIF97vukmH61pv8xxVkaRp+yjyZo8ku8v2elEooH7zyg1G426Dvl1CQiJYQyhHg8rHjPQRHJ85DeES5a59KmepEp1EkNno1a0KoMVlJzzx2IChptXsq7A5yV+qcLlUyjNDOFSsG16pRxtC3nbOyiJ6qtJs0Pz36n+mCQL0uA/UUKD54JZTgJIiqOCOZi8qoZ9R7f7sKJ5u6/N4
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(376002)(366004)(396003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(41300700001)(110136005)(38350700005)(66476007)(66556008)(66946007)(316002)(5660300002)(36756003)(4326008)(8676002)(2906002)(8936002)(83380400001)(38100700002)(6512007)(6666004)(52116002)(86362001)(6486002)(26005)(6506007)(478600001)(2616005)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JKuEuoBltbn1aUunYveRg8PvaKlAjQtNMKCSknhVmg3ppMCpkKmwnPcYqu3z?=
+ =?us-ascii?Q?jNkM2LB8M2t+Zg8ZYZuE/8JCwaMTaeRSw4RnR2Q0cO+T8MlXZ5ndr/IEXsOV?=
+ =?us-ascii?Q?bgVOCHnduP6YvefeqRhqRyIri8VT9nnJ+5dmzvKu1bsKi9QkwmC4nTisMx3X?=
+ =?us-ascii?Q?v/V7P0Sy2UsiSnPkCZKVCp/5wCl13ok7TYMe89oZUoEZZ0dYNJhGuKQzMJa+?=
+ =?us-ascii?Q?oojYl+e9cfJTptG1eWBjoxUc2xoMBBaT8kVDUc5z2Uld6i/kyYCqfcwpwCD4?=
+ =?us-ascii?Q?dLmjXD583HmumqxoiBtP9Bzi6vAAEvqfKqE5F6GAG31V8X7x+HVEnvFMCXUe?=
+ =?us-ascii?Q?C/W4Uhdn7BDPsKZsLclypscpMimb2dyNlkO3hVgVfaGJ/PSMRm10e54+MnLW?=
+ =?us-ascii?Q?YPxSwtyHPxkmvoOsFBJGZzYj6HD4StMOd5Tp0PhuHIknTCQ5cQjXDqemFSHm?=
+ =?us-ascii?Q?izaTxo7xn5DjOFtPxKhGjsbGrl9fpzm4TROeTTejtrYJvjpdAwtu0VJf1fDc?=
+ =?us-ascii?Q?sjaKT974GRJjrBgxYugnChvwnL8pM5LBoYNQsqtOkfUXp66S03XEmw62IDvE?=
+ =?us-ascii?Q?6eDE3T5pmDvvdSCnkHUHxclRvVg4blWXWQfK5MM2mTXCKNDvgjk9HsyGKkpJ?=
+ =?us-ascii?Q?5JS8KU7bbP5wj84bG2CACr9N+Ca9lzdHaVOBUlFk4vGKUmo+ibZPO9PlrEYC?=
+ =?us-ascii?Q?H5Q+aS0ZibYXhHh2hkvLpb9HTtMU4AmZaSRmVO0HIhOiE4LLwVjpQ4T6nhhx?=
+ =?us-ascii?Q?kzDXA9Pf0fzHgxytvpmwh+UHYM6upVsGJAO+x/c96Y5oNUiQ/r0Ek+QqRKbw?=
+ =?us-ascii?Q?61/eUdIBmArZ36OgyxDQt19RPnyJVFgys35AGDotEtOQW552kEVFtcUD6wDy?=
+ =?us-ascii?Q?vOqPS8KSZYVmbau7IrmDOR1dNapNu82uAZf6itTKMkASaP74mNIx3wieCsYg?=
+ =?us-ascii?Q?39yWxVny8uHXaVCH1fVI2Fnmolw51MUwAMfE/0x0nuxpzPsXcV0ky6mdiQad?=
+ =?us-ascii?Q?E/TbF74dGNEQp6sxfESMn0q0VX9FU2mSNu2pxJDBsD0fmck/r21sfJzaf8S8?=
+ =?us-ascii?Q?vRgUsEeE9KSml2CmmzyJyyaB5QIKTDLKcJ3udFF+it8QXIT3smwYCCNDpgdK?=
+ =?us-ascii?Q?EMr54M9rR0Abjvau2vpmCBtpwDVDkacXrrnqVpiiSjSMtN9QX4L6Q8szJx+L?=
+ =?us-ascii?Q?czKzSS5E5VG0bccw/6482mfQ+jphwtDmwwFNLUf0PVLTCEng40LkTc77LF4m?=
+ =?us-ascii?Q?FkcyoJnV2hd89hqRV5yyzywpj/xZdEZEe/SnyYlHTwPgTBBfZXTO4AK4x13+?=
+ =?us-ascii?Q?nycxml35ejE/ZgANPpc2gc/9jQc/EEXCW6OX2diSS8K7F+TpCZHdZ3tDsYwp?=
+ =?us-ascii?Q?9vTF6qy5e2d8g0ooUrDt25f3xd3LzWyvbkVd7F3jBMny0gwJFkYJZ2FH+bad?=
+ =?us-ascii?Q?8e9XV5scvTUzJQ+l3pf5QOoeTVh+pEBZP7QEf5wuHpYAOkuOe1yjik9KST6B?=
+ =?us-ascii?Q?0A+2x7Yv9gnN/hh4YIoqtSxI9TbqXZOt7T6/JqS9tKTyq3D0lajvb+oAAEyv?=
+ =?us-ascii?Q?IDhZBp24vZExSAhdbZy4lz+mxqQngge51NPyeFql?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4d45548-c027-4a2e-266c-08dc27682240
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 23:05:38.6612
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xf4VmvS4l/pg3PP3Obbm2N4saPGPcMXAl3wAYKxoj1SHMN2eSUzSAZo5KFQsL+uqDYBTg5Qf739Anbq/mfby4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7988
 
-Hi Christian,
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-On 06.02.2024 16:53, Christian Brauner wrote:
->> On it.
-> Ok, can you try:
-> git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.super.debug
-> please?
+Add the PME interrupt porperty in PCIe EP node.
 
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I've also encountered this issue during my linux-next daily tests and I 
-confirm that the above branch works fine.
-
-
-I've applied the diff between e3bfad989976^2 and the above branch 
-(bc7cb6c829e2), which looks following:
-
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 279ad28bf4fb..d8ea839463a5 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -19,6 +19,7 @@
-  #include <linux/ramfs.h>
-  #include <linux/shmem_fs.h>
-  #include <linux/ktime.h>
-+#include <linux/task_work.h>
-
-  #include <linux/nfs_fs.h>
-  #include <linux/nfs_fs_sb.h>
-@@ -208,6 +209,10 @@ void __init mount_root_generic(char *name, char 
-*pretty_name, int flags)
-                                 goto out;
-                         case -EACCES:
-                         case -EINVAL:
-+#ifdef CONFIG_BLOCK
-+                               flush_delayed_fput();
-+                               task_work_run();
-+#endif
-                                 continue;
-                 }
-                 /*
-
-
-onto next-20240206 and it fixed all boot problems I've observed on my 
-test farm. :)
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-Best regards
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 8616d5e0c3884..604bf88d70b3a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -591,6 +591,8 @@ pcie_ep1: pcie-ep@3400000 {
+ 			reg = <0x00 0x03400000 0x0 0x00100000>,
+ 			      <0x20 0x00000000 0x8 0x00000000>;
+ 			reg-names = "regs", "addr_space";
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
++			interrupt-names = "pme";
+ 			num-ib-windows = <24>;
+ 			num-ob-windows = <256>;
+ 			max-functions = /bits/ 8 <2>;
+@@ -628,6 +630,8 @@ pcie_ep2: pcie-ep@3500000 {
+ 			reg = <0x00 0x03500000 0x0 0x00100000>,
+ 			      <0x28 0x00000000 0x8 0x00000000>;
+ 			reg-names = "regs", "addr_space";
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
++			interrupt-names = "pme";
+ 			num-ib-windows = <6>;
+ 			num-ob-windows = <6>;
+ 			status = "disabled";
+@@ -664,6 +668,8 @@ pcie_ep3: pcie-ep@3600000 {
+ 			reg = <0x00 0x03600000 0x0 0x00100000>,
+ 			      <0x30 0x00000000 0x8 0x00000000>;
+ 			reg-names = "regs", "addr_space";
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
++			interrupt-names = "pme";
+ 			num-ib-windows = <6>;
+ 			num-ob-windows = <6>;
+ 			status = "disabled";
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.34.1
 
