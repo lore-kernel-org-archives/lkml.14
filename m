@@ -1,214 +1,87 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC511B807
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 20:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981C31B800
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 20:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707251566; cv=none; b=Ryvg2QLmlG6HVp9H6z6oHfhE02v29PHpxuzK3ngfJhO4HCd4i8bH4/CjqCcKYLBMpXAOAAdRaIZXDJ8BaIHARFQTFkc/CA0gcwnIZ5ZmMHdnrF78XjbJifp6GdjODBdsuTvVfs3ZnKZcrFp/l2UFCv5qfFMNFTvcxhRsQWmicC4=
+	t=1707251608; cv=none; b=aUpUsXbYCU71MVkfyy7VuRxwMwYeURjCFfdLLfP/6aoCIPB8BkJoQiRWWv0SmbdA/JxJoUxHBsb+Gs7tCzq2Dp4NnLNwNUvguSyhQ/Iy1sqAPiad5FQpfPMqxSlStIF7rGk6TMLJ6MQM7lILkQ2FtyDCTClPL+sZiGXkU5Y69Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707251566; c=relaxed/simple;
-	bh=zTX2u1hoRPQcMQPKj5Ece+F9DX0/+16099nKCTz+ggY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LVipgzigF6keUbz7hDkA2+YhMh/bpegduign0BL8VMJ71I73jPOOluqYeuvTrsmG7UL02s7vTbJSZPJTVT5Ojo9miv+FBGq7kHqIPpzi2ODekwRcK31TTvl9Stg8waweb/BqJ4GQB1uMAVhlieGgZIqmuvwmyl4Lw6r4jyQh8EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ruoixArX; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1707251608; c=relaxed/simple;
+	bh=MPYoHxeKPCnc9gpbdDoN3NGU8IjyGGLHn+vuIM5QKh4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rAd3nu7uccijYKrqiTOFR3pHD+CeNoDiqVAGjEqvqkLBvYLRT6n5BGjRxNqPE5TeylqsBWoqttVudYJhG3VhB3REvCnYSaBCPdOoM9Tysar2cVYZsfrW4uIuLSAXGYLMFAk8/A7iTGgZmgpfkXBeppUyz3edOvQam/kcmDe6iSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=K0UR7+ei; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ruoixArX"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id XKpur4ydL9gG6XS7SrZC8R; Tue, 06 Feb 2024 20:32:38 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id XS7RrxYAkOmWYXS7Srq4fU; Tue, 06 Feb 2024 20:32:38 +0000
-X-Authority-Analysis: v=2.4 cv=T/MvTOKQ c=1 sm=1 tr=0 ts=65c29766
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=vaJtXVxTAAAA:8 a=QyXUC8HyAAAA:8
- a=KS6gg5_tAAAA:8 a=i0EeH86SAAAA:8 a=iqgMOriEywssfaGR4noA:9 a=QEXdDO2ut3YA:10
- a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22 a=hZ4L7c2QG0rhM108vGPe:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KbvZVHNUxJAyFSSXDQTy9du7K8PY4t9oyk36I6Z3RzY=; b=ruoixArXBrzejUnF5nEmrIJ+vU
-	1CS7vGqxi3ro/tP/pvgZo+u8vJn8wNVLYvoy3cPTEuscmEkqh7Q1W+X4GsnLUwDSUDKn1ChMz+PjO
-	7NWcgikxivgr1PKIqATJwqX01o32myrrcxbTH+TUzh4/S3InQZrZViKMnfAV9RzSE/J6DR3NVQLqs
-	oazIwd4Duzg8DEooIN+fKc1ujztYdVf+ladzPfq13X9P25OudlLanEnPQIWm+gKFUdBitEfuXNZ4E
-	MbXJ9JGdNvE6shyKEeR08L8Vf139px3MPH5Hi5hGbYTe2kCPfnEvwrJEuoKYWG6x27qioiQaWJb9t
-	ogA889LQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:51298 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rXS7P-002bZx-0r;
-	Tue, 06 Feb 2024 14:32:35 -0600
-Message-ID: <fb9ec7de-7c8a-4e94-94c2-eeea6369550e@embeddedor.com>
-Date: Tue, 6 Feb 2024 14:32:32 -0600
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="K0UR7+ei"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e12b58a3beso564101a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 12:33:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707251604; x=1707856404; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubZDa4GWwL/GMCOFFCbm4p521hfLHa5fIJTQTEH+mC4=;
+        b=K0UR7+eiRyU6G3jpRDUeWqAu7iC/OISFVgQBtg7w2V5NI4mzdkIw3y0MBNU3an8chS
+         ki36mByrOjRfjDvrGWFaWGgueP2sx3eo0JkibrmTDKSfPYkf6oAOWLSv7yEAuvcx86fM
+         r41SCGdSF4bQd5Gnu7jWXp0EGODdjAcnZ7v5g940zhUSdwFRPQUqs6P1FTmNAqzR35oR
+         a9WL1phrDOH5Sjcgdm9PWEbrawM7KMlIkhy/vkjSd060SLZ5v/BJCPmHRHTNYWYHcxBM
+         bizAp8pZ/RowrZ4XdJ4TCAO6F6T/Ryk+Gkby3iARdUm+n7bAQk1qGvH9UoyMmsqUwHO3
+         aEew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707251604; x=1707856404;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ubZDa4GWwL/GMCOFFCbm4p521hfLHa5fIJTQTEH+mC4=;
+        b=lzwumuyvbe//0R8ZYTTCTZpTIPqO/OqMoXc8J0FhkGGHlvitGe0MpmTrYoFMMjbW7O
+         LlNwS6HbrQPRwJuFkT4dG7yFU2PJJUquxl1Ynfh9oJktxln5oyYoTuw/nDZsrEJ1u4mn
+         qIVwDWH2ZYXMvPgk4QQ5nDTe84/0GVCQgY0OygVlqBmr0ID6tnIspwSjjliUeCInwh6j
+         sSs3UWvuzEQ374x4rwq8SzV/n2BvT2IiKTtgVxJMuBiVRhF+J/o5Xep+EOK3xEvhxlBv
+         eAjQkku7nca11bndF91BB8tkG9vjRaS8JRo9tHHAQ4osu3NMSrPs3CDnYxUSNs4oDgYO
+         rpNg==
+X-Gm-Message-State: AOJu0YzGUhEQkxHCpbnJskxicXxgUoF+okUB8c/WElbSiOAB+WfKzI/j
+	jElYhPJP0sW92mj5tm8g0/9KnxkOWU90m+C2G99PYrtkVodgQ6KATAOFKzf8zuA=
+X-Google-Smtp-Source: AGHT+IF0MmuI1nUFe/V6BG088Po9XJTU/8bWeJ/mJ+JIYIErtoYQg1qL7uENnk68DxBaPoLm840gHA==
+X-Received: by 2002:a05:6830:2b07:b0:6dd:e52e:1f53 with SMTP id l7-20020a0568302b0700b006dde52e1f53mr4437162otv.11.1707251604638;
+        Tue, 06 Feb 2024 12:33:24 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUc4QlC/D04/jFnLNY7nLmAqLbKweCSCNCkkSvJLolyaHb2T9nN3NySWtiFf98CM5bizcVXIkRpJ5ju+e4aKC/BUwjYjtiS+hFiXyY+Ssi2QCiXvux8G46o3V9eXGaqeCPosPvinboR3YCxzR22EfPPRimG/cP0Rg11U4+C9opdgaIkukQ6yFYV1MeTNyz6PyRJ8w==
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id l2-20020a05683016c200b006e11d93ff09sm429581otr.72.2024.02.06.12.33.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 12:33:24 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+To: linux-spi@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] spi: axi-spi-engine: performance improvements
+Date: Tue,  6 Feb 2024 14:31:26 -0600
+Message-ID: <20240206-axi-spi-engine-round-2-1-v1-0-ea6eeb60f4fb@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: mwifiex: Refactor 1-element array into flexible
- array in struct mwifiex_ie_types_chan_list_param_set
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Brian Norris <briannorris@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Dmitry Antipov <dmantipov@yandex.ru>,
- Johannes Berg <johannes.berg@intel.com>, zuoqilin <zuoqilin@yulong.com>,
- Ruan Jinjie <ruanjinjie@huawei.com>, Thomas Gleixner <tglx@linutronix.de>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- linux-wireless@vger.kernel.org, Dan Carpenter <error27@gmail.com>,
- Rafael Beims <rafael.beims@toradex.com>, David Lin <yu-hao.lin@nxp.com>,
- Lukas Wunner <lukas@wunner.de>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240206183857.it.362-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240206183857.it.362-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rXS7P-002bZx-0r
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:51298
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCoYbCWXt9S1ozTGSidq+ig6Hp1I8FrS1bL/xliRDwCQd/Ei0XXWA5hHaBw79pIKbdxHdXiA/9UlgQta4cd/0+sMmLsc8m5iDhxED6bl7HGan4Anmnpd
- 0KYMJjyoGepZxmYFALM8EsDJfWUe4onzK7/z5T5+MVvR4P+bgwfL1B+KOjefwHX4xJXgdxEPQUENyrvP9McnnhhNdxHINKF2lyL1uSRastJDHHnStGBMdghZ
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
+While researching potential performance improvements in the core SPI
+code, we found a few low-hanging opportunities for improvements in the
+AXI SPI Engine driver.
 
+---
+David Lechner (2):
+      spi: axi-spi-engine: remove use of ida for sync id
+      spi: axi-spi-engine: move msg finalization out of irq handler
 
-On 2/6/24 12:39, Kees Cook wrote:
-> struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
-> as a flexible array, so convert it into one so that it doesn't trip the
-> array bounds sanitizer[1]. Only once place was using sizeof() on the
-> whole struct (in 11n.c), so adjust it to follow the calculation pattern
-> used by scan.c to avoid including the trailing single element.
-> 
-> Link: https://github.com/KSPP/linux/issues/51 [1]
-> Cc: Brian Norris <briannorris@chromium.org>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Dmitry Antipov <dmantipov@yandex.ru>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: zuoqilin <zuoqilin@yulong.com>
-> Cc: Ruan Jinjie <ruanjinjie@huawei.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   drivers/net/wireless/marvell/mwifiex/11n.c  |  8 +++-----
->   drivers/net/wireless/marvell/mwifiex/fw.h   |  2 +-
->   drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
->   3 files changed, 10 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
-> index 90e401100898..9ed90da4dfcf 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/11n.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/11n.c
-> @@ -392,12 +392,10 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
->   
->   		chan_list =
->   			(struct mwifiex_ie_types_chan_list_param_set *) *buffer;
-> -		memset(chan_list, 0,
-> -		       sizeof(struct mwifiex_ie_types_chan_list_param_set));
-> +		memset(chan_list, 0, struct_size(chan_list, chan_scan_param, 1));
->   		chan_list->header.type = cpu_to_le16(TLV_TYPE_CHANLIST);
-> -		chan_list->header.len = cpu_to_le16(
-> -			sizeof(struct mwifiex_ie_types_chan_list_param_set) -
-> -			sizeof(struct mwifiex_ie_types_header));
-> +		chan_list->header.len =
-> +			cpu_to_le16(sizeof(struct mwifiex_chan_scan_param_set));
->   		chan_list->chan_scan_param[0].chan_number =
->   			bss_desc->bcn_ht_oper->primary_chan;
->   		chan_list->chan_scan_param[0].radio_type =
-This probably still needs a bit more work.
-
-There are a couple more instances of `sizeof()` that should probably be
-audited and adjusted:
-
-drivers/net/wireless/marvell/mwifiex/11n.c:414:         *buffer += sizeof(struct mwifiex_ie_types_chan_list_param_set);
-drivers/net/wireless/marvell/mwifiex/11n.c:415:         ret_len += sizeof(struct mwifiex_ie_types_chan_list_param_set);
-
---
-Gustavo
-
-> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-> index 62f3c9a52a1d..3adc447b715f 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-> @@ -770,7 +770,7 @@ struct mwifiex_chan_scan_param_set {
->   
->   struct mwifiex_ie_types_chan_list_param_set {
->   	struct mwifiex_ie_types_header header;
-> -	struct mwifiex_chan_scan_param_set chan_scan_param[1];
-> +	struct mwifiex_chan_scan_param_set chan_scan_param[];
->   } __packed;
->   
->   struct mwifiex_ie_types_rxba_sync {
-> diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-> index a2ddac363b10..0326b121747c 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/scan.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-> @@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
->   
->   			/* Copy the current channel TLV to the command being
->   			   prepared */
-> -			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
-> +			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
->   			       tmp_chan_list,
-> -			       sizeof(chan_tlv_out->chan_scan_param));
-> +			       sizeof(*chan_tlv_out->chan_scan_param));
->   
->   			/* Increment the TLV header length by the size
->   			   appended */
->   			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
-> -					       sizeof(
-> -						chan_tlv_out->chan_scan_param));
-> +					       sizeof(*chan_tlv_out->chan_scan_param));
->   
->   			/*
->   			 * The tlv buffer length is set to the number of bytes
-> @@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
->   		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
->   		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
->   		     chan_idx++) {
-> -			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
-> +			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
->   
->   			/* Increment the TLV header length by size appended */
->   			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
-> -					       sizeof(
-> -					       chan_list_tlv->chan_scan_param));
-> +					       sizeof(*chan_list_tlv->chan_scan_param));
->   
->   			temp_chan->chan_number =
->   				bgscan_cfg_in->chan_list[chan_idx].chan_number;
-> @@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
->   							   chan_scan_param);
->   		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
->   				       chan_num *
-> -			     sizeof(chan_list_tlv->chan_scan_param[0]));
-> +			     sizeof(*chan_list_tlv->chan_scan_param));
->   	}
->   
->   	tlv_pos += (sizeof(chan_list_tlv->header)
+ drivers/spi/spi-axi-spi-engine.c | 67 +++++++++++++---------------------------
+ 1 file changed, 21 insertions(+), 46 deletions(-)
+---
+base-commit: 80fa6a033ac8c395a3de4840e204638e92b8b371
+change-id: 20240206-axi-spi-engine-round-2-1-bb73990abac3
