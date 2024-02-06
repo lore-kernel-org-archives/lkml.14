@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB0B1353E2;
-	Tue,  6 Feb 2024 12:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A318135A48;
+	Tue,  6 Feb 2024 12:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221359; cv=none; b=JPKlCowuhEJYgsDuDfQjSEw7maJkUABSzQIZZFDiHpO3GvBPaOsKkMxunVleiIl+3uTfx90gxp3Wz5hWrtkkzG3thmC831cmhPcZpNt58NmyR82dncJ4Wkpbyo5MhGT7oc5akC6nJHz2TPuhb3/rL0CFQFjVQOGiPV/dWsM+8Ao=
+	t=1707221360; cv=none; b=NxpmgoEQw1/FDCVamYN1EiWL+Skkv719a1dB9qySkzNifx1bVcW4kztA9DpCA1ZxvA3NsNKG6nmwi40S6xISzbkyRSlVmxe/eQbt4wPvCDEy9vk0U/Q3zGnW6oAv8tWMxn9dwtvm6cMTtIHPTnhK126izGKUUKIwXP++uJrB8qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221359; c=relaxed/simple;
-	bh=U8O8HbXTyCH85fzphuPj2gzKXQlZuOW81DY3SFrBp6U=;
+	s=arc-20240116; t=1707221360; c=relaxed/simple;
+	bh=XeV1VUlwi1FILGXqC+sGicaJJYQTw6C1fAun/XWmlNM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=lMqlO1EERJ/qxICVaJXvGVCP27hy+3GlQu7YsshPtEMkniIa+BFbVgCzpKPX4Pi+2QfNOoBDHvG5p2T7bCycXNPrrzYBGRINvTRpIhqZmwiG+qjbbMQM80UWHtBK9nXcF2JbUR7igd9MVyGZEnGWOqbufFeRuBCNm04pECVyIrI=
+	 Content-Type; b=BnX746K1P/68WAxBGvM2OuTecLdSoDH29ZCNN4ZPQ1JwjAq+wBRrlz9BughYX3jG4Iy6Gcp1tKS/75QLgYs0r1/nyFMOMUx50eqA+MgulCyB10p412B1sVjNjcFPeA+/NobXrKRYyofLnV9HRGK9u/6tQD5PpJJYaF+7MFG7VKQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 891EBC4166B;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E168CC43394;
 	Tue,  6 Feb 2024 12:09:19 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGp-00000006b5q-47OS;
-	Tue, 06 Feb 2024 07:09:47 -0500
-Message-ID: <20240206120947.843106843@rostedt.homelinux.com>
+	id 1rXKGq-00000006b6p-1Iig;
+	Tue, 06 Feb 2024 07:09:48 -0500
+Message-ID: <20240206120948.165080330@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:14 -0500
+Date: Tue, 06 Feb 2024 07:09:16 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,9 +30,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Kees Cook <keescook@chromium.org>,
- Nathan Chancellor <nathan@kernel.org>
-Subject: [v6.6][PATCH 09/57] eventfs: Use ERR_CAST() in eventfs_create_events_dir()
+ Abaci Robot <abaci@linux.alibaba.com>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Subject: [v6.6][PATCH 11/57] tracefs/eventfs: Modify mismatched function name
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,44 +42,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-When building with clang and CONFIG_RANDSTRUCT_FULL=y, there is an error
-due to a cast in eventfs_create_events_dir():
+No functional modification involved.
 
-  fs/tracefs/event_inode.c:734:10: error: casting from randomized structure pointer type 'struct dentry *' to 'struct eventfs_inode *'
-    734 |                 return (struct eventfs_inode *)dentry;
-        |                        ^
-  1 error generated.
+fs/tracefs/event_inode.c:864: warning: expecting prototype for eventfs_remove(). Prototype was for eventfs_remove_dir() instead.
 
-Use the ERR_CAST() function to resolve the error, as it was designed for
-this exact situation (casting an error pointer to another type).
+Link: https://lore.kernel.org/linux-trace-kernel/20231019031353.73846-1-jiapeng.chong@linux.alibaba.com
 
-Link: https://lore.kernel.org/linux-trace-kernel/20231018-ftrace-fix-clang-randstruct-v1-1-338cb214abfb@kernel.org
-
-Closes: https://github.com/ClangBuiltLinux/linux/issues/1947
-Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=6939
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit b8a555dc31e5aa18d976de0bc228006e398a2e7d)
+(cherry picked from commit 64bf2f685c795e75dd855761c75a193ee5998731)
 ---
  fs/tracefs/event_inode.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 1ccd100bc565..9f19b6608954 100644
+index 1885f1f1f339..09ab93357957 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -731,7 +731,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 		return NULL;
- 
- 	if (IS_ERR(dentry))
--		return (struct eventfs_inode *)dentry;
-+		return ERR_CAST(dentry);
- 
- 	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
- 	if (!ei)
+@@ -856,7 +856,7 @@ static void unhook_dentry(struct dentry **dentry, struct dentry **list)
+ 	}
+ }
+ /**
+- * eventfs_remove - remove eventfs dir or file from list
++ * eventfs_remove_dir - remove eventfs dir or file from list
+  * @ei: eventfs_inode to be removed.
+  *
+  * This function acquire the eventfs_mutex lock and call eventfs_remove_rec()
 -- 
 2.43.0
 
