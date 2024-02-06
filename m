@@ -1,138 +1,132 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25493133420
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1721332B2
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231362; cv=none; b=TnGT/Vnrgg4fFBurtXK3THacd+QgCxFIHoPUY0X1jd1ZnDrP57HVFATUbRpr5V6it54GXM/Io0bmaMaRy9FEnCsl4QgCnohgN+YapimvRi/2eUG+oGslfULfWikF6u7bPH4uoremUhY/1yNzVSOnwwcb48DuGDOQt1GZPk+Nbus=
+	t=1707231459; cv=none; b=tamTtyTeat98dFDs82Nv86bFSI4VR75hvz2sTBh22JxGoTSZwb0WM+GIkFkIA1nOZv29hVa0+Pk4GbTZo8sx4duX+EiSjDViUne/iNV0aanGTHuAxiOnoOlcjbUa9L7RAkJJjTdGARBGKVDgR3GRMoDG+xpe4LkoPlTtHgRkXKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231362; c=relaxed/simple;
-	bh=hXolM7uNjrqi4kvTV1pVtTTaI60yBGc/tHdLQl6Jd68=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qpH80O8s1k89am0kLvq18FLVPMU2VQWb3BLKPadI69dCKFOVRZnNJ3PtzFdS7UeViaDHLq16IwT0UqeTBc54xEmvPPHmCxj7Jdw9iLFiYYX889BP7qSFWX94+QNJOPTilSayo125L0udcAZ1HRzHedYzyxw3jXsOirldqOr+4h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SWXIoCxE; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707231459; c=relaxed/simple;
+	bh=n/iIoTt4CdIC7Z7PYC2xA5OpZKG1rRXfvCAELL/uC3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N7UnNyF/yrlWnCoT7cSbL8+ZfLWc8NZFXX9xCWJzs9S1LG9Z6dLWbay4j6qVs9gN/6KErHWIAPCdFGW122wmygEsLK1K4/G4ggu3F2rEvhLv1pBpYlgAt21WDEf1enO2jNkuEIc1Ad60q7tWvp2rC6qiaSqn5GdBmz7iHgE6Tl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QYeXOGuO; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SWXIoCxE"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5961a2726aaso3293559eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 06:56:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QYeXOGuO"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40fe2744e5cso4311575e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 06:57:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707231360; x=1707836160; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JKCZke1KMPopQ9RKPdCxdFTkVP9U+Bz1cnxAljvkmYE=;
-        b=SWXIoCxEkE7gxoZcd8yCWS72shPdnhLgjxYmrAxh70zJq6Zs1JgzBCAdIkaR/biSgI
-         ywQFPM5Y6+jBqrWmro71jC/IJc+wxykVMpO3flRlJuK25WD2ommgk2PZqyXjCjnWCY1R
-         Hbf7gB6yG2liZyOIlwZiC/AModrZ2tkV8PkpzPb3/xe3chWfScZPrqCEEPCFkW5sOUjD
-         BfPvMw743aVPDaUEOaQ0opBMlZXofY2aOEymKPaSfB2im/pALYen31TL1w9yYCxN14sv
-         WW9thKxlSxszgcBlFd6Ay9OC5WWNjbGhweW1fLsIE2u2HQ7Qfbbp8k4mzEYTtIK4kUq0
-         0k0A==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707231455; x=1707836255; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eDuw9+ziqpp2LTPkuprkw43SW7UlWl5m+opLAnRrync=;
+        b=QYeXOGuOB+0w1ioXBqOiwSSD2CtWuGnRrxSgxzINS/veJLsF9uKsa1d7mMpCTtWhsL
+         z7SkoWVRsGmsjaGwTNkYFabIZF05pYYBguzz49LizpTaFfN5EVJeLKlNIVeh74sp9wCX
+         sFfqrAZC+TkTExGTp4E7piFJYQvdmBfFoRzEw95G5+MflhWnHUFRBB5YygBBKBNoKYvE
+         QoTH0gS/0edGMzBD/LPeNz/121FvAfQcAjd2tKLDsRP8ggcMlv6FEGpeSrEUG3EjK9Sm
+         VJl7n0s+Gqpn2Ks8iRx32IN3vgvt835lu6iXf9U1ATdpTQhpTPcf9IRzu8aW+MCdS6DY
+         AKyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707231360; x=1707836160;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JKCZke1KMPopQ9RKPdCxdFTkVP9U+Bz1cnxAljvkmYE=;
-        b=fxApoILLAc5KituSI8OoMyShLBUHYfmDEJrQi+C1ESqyQT1A0I2v7KP577I2msvdiT
-         pM/0iLCUBwCXCJNz3M0MwVsKsnY5eyy4lydd8j+1Kj3G/Hgb+8T70SVWbgpq43zDmjYT
-         uTcNtlwW+l8s083HEsNCD8DmPCdMQ+Um6jXqMgQdOdTbvvV1pc5bFkvyiraYJjKR6C5M
-         khnVdpSZInKR2LcxDY9AJoda9BUgB4tzqgoMYPRLi/UI6kya1zCOWZkXEnOS8gzRaZv+
-         1Oqp3BZ/16ZwrzRXjoEDj/5m+IvSbY18ulVaM4f+eMakMpqx8xGuitI8c3iEzQX3gAzn
-         Qe3w==
-X-Gm-Message-State: AOJu0YwJW/hraU3iDnCFopnkHeT/yEPkZGORykq60rnt3XDBKbIn1ynZ
-	jo0Ay1s8TdZHv5skoCOM3pste67HL2Q33vZFFyTSWVj717xv3WdK6FOIZ4/36QUQxwCKXEC7cqS
-	K8nckDChkjYHm3rfwgQJ+av2/v9DbvgezWvmfJw==
-X-Google-Smtp-Source: AGHT+IEjZNrhvqIStbF4U44ytlGPmSnzsLH2enASrVkowIdVD2zLnzSWnYbwn6i/81EJzWZPXL1iPryIbri0vd8KjCI=
-X-Received: by 2002:a05:6359:4113:b0:176:40fb:cf3a with SMTP id
- kh19-20020a056359411300b0017640fbcf3amr2357172rwc.14.1707231360167; Tue, 06
- Feb 2024 06:56:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707231455; x=1707836255;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eDuw9+ziqpp2LTPkuprkw43SW7UlWl5m+opLAnRrync=;
+        b=F5fTYmo/2Dwr6psVeULXIMvYAAbnZpu4SCQ2MqNCYDjKHZf1sKjJW2uRa7ubv2dGWk
+         qR4jAA0hYpmMou3IArf1ZipIFkYo981bqSOOXj42FnwLRYRlUsdqLU8UdA3M1p2YBvDJ
+         fNqHQXlACEfwjD8HiLx2P+7moK29ZPfbzVJ0mplYXW5CIJ0ZkveL9GWw12tyQdKs/AWY
+         L/+cio80CHA+7AMATymbXSlPA9LAGiDafVnq5HDEX24iCOOdKyWtpvd5fcarJtAaUAFY
+         1cdkUwgciQyvKjS3NAkSPWjR+vgOFHbzmm8ez2lkFulstZDKpX5ZYEnu1lbCzCelOu/n
+         oZrA==
+X-Gm-Message-State: AOJu0YyH2Os6uwpTU6Zrh6hLVHd8iiEADJm3Jwebrr8ls4mikc5Xk3Sa
+	C0KxQSOSvzvfy4+TLryknkpStXqwDaF02Fql7qmcGauHLb7ymm+fT63z7qkbDIQ=
+X-Google-Smtp-Source: AGHT+IFWUZhvu1Op3ONCs8HKFh7ZnxQTqJbptHCczEPX0pwjlbH/88Vtvj3qlhtauOBQnzW/yDQfnQ==
+X-Received: by 2002:a05:600c:4f04:b0:40f:d242:a2d2 with SMTP id l4-20020a05600c4f0400b0040fd242a2d2mr2128630wmq.12.1707231455728;
+        Tue, 06 Feb 2024 06:57:35 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVKwo1WacIy9JzhNBPozyAsTwJu42VbiXVrShxEmsJ+b1dtuf5ptoyQ6WNCuGK9OSuUIdQwZf7mgkn40vCCv7+mDIH7y010+gQUAsPFthaYQAW9bya+1AeY+zfQC4HCkEM2Cz4p0PXA/buzoPlMlhI/6ghVIw/53ddMH9CtqxSXBYe2B3fqh0fVtpnCrc/E8suY0fdZBko1Ikz7wk8TuK8v+Celc+q+JMyQkBGb0aq3F0iHMECbtnsdm85SWUI222v8vS7j8iorWTFKyqDVtzx+SlvArOaX2CFmJXgW2wB9cRKiMRbp5bJ0IiSEzsGX2MkNp3+RdWXe9UxqPubsQdP5NyMpp16q2HmAdbd4kFTlXIgh+Rc+q996g3NuG2Vt+NPl7mqY/K1yCfEuG6zTw5UQuOQG+QmDB43zMnXu7OQ+WqoBkfKREbpPutmma3UyEzW8Z6MJPXdYggJj5f5ctJ1j3wEniQ9MziAi
+Received: from blmsp.fritz.box ([2001:4091:a246:821e:6f3b:6b50:4762:8343])
+        by smtp.gmail.com with ESMTPSA id l14-20020a05600c4f0e00b0040fc56712e8sm2257896wmq.17.2024.02.06.06.57.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 06:57:35 -0800 (PST)
+From: Markus Schneider-Pargmann <msp@baylibre.com>
+To: Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Andrew Davis <afd@ti.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Markus Schneider-Pargmann <msp@baylibre.com>
+Subject: [PATCH 1/3] dt-bindings: cpufreq: Add nvmem-cells for chip information
+Date: Tue,  6 Feb 2024 15:57:19 +0100
+Message-ID: <20240206145721.2418893-2-msp@baylibre.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240206145721.2418893-1-msp@baylibre.com>
+References: <20240206145721.2418893-1-msp@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <da6af483-5ee9-45cd-922e-d9d5364674dc@web.de> <CAMuHMdUxn4Ne7kmEfONz8Uk3Why3m9r83GdM5RzTxm_4Gj_a6g@mail.gmail.com>
- <6e397bf2-1d45-434f-8619-58a737a138e3@web.de>
-In-Reply-To: <6e397bf2-1d45-434f-8619-58a737a138e3@web.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 6 Feb 2024 15:55:24 +0100
-Message-ID: <CAPDyKFrVgHKXrps5wB3yhOK6JFdBeW8zzYHcQJC1RVs8PXJgOw@mail.gmail.com>
-Subject: Re: [PATCH v2] pmdomain: mediatek: Use devm_platform_ioremap_resource()
- in init_scp()
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, 
-	Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	=?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 6 Feb 2024 at 10:21, Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 6 Feb 2024 10:05:34 +0100
-> Subject: [PATCH v2] pmdomain: mediatek: Use devm_platform_ioremap_resource() in init_scp()
->
-> A wrapper function is available since the commit 7945f929f1a77a1c8887a97ca07f87626858ff42
-> ("drivers: provide devm_platform_ioremap_resource()").
->
-> * Thus reuse existing functionality instead of keeping duplicate source code.
->
-> * Delete a local variable which became unnecessary with this refactoring.
->
->
-> This issue was transformed by using the Coccinelle software.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Add nvmem-cells to describe chip information like chipvariant and
+chipspeed. If nvmem-cells are used, the syscon property is not necessary
+anymore.
 
-Applied for next, thanks!
+Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+Acked-by: Andrew Davis <afd@ti.com>
+---
+ .../bindings/opp/operating-points-v2-ti-cpu.yaml | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml b/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml
+index 02d1d2c17129..b1881a0834fe 100644
+--- a/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml
++++ b/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml
+@@ -34,6 +34,14 @@ properties:
+       points to syscon node representing the control module
+       register space of the SoC.
+ 
++  nvmem-cells:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++
++  nvmem-cell-names:
++    items:
++      - const: chipvariant
++      - const: chipspeed
++
+   opp-shared: true
+ 
+ patternProperties:
+@@ -55,7 +63,13 @@ patternProperties:
+ 
+ required:
+   - compatible
+-  - syscon
++
++oneOf:
++  - required:
++      - syscon
++  - required:
++      - nvmem-cells
++      - nvmem-cell-names
+ 
+ additionalProperties: false
+ 
+-- 
+2.43.0
 
-
-> ---
->
-> v2:
-> The transformation pattern was adjusted based on advices by known contributors.
->
-> Examples:
-> * Doug Anderson
-> * Geert Uytterhoeven
-> * Robin Murphy
->
->
->  drivers/pmdomain/mediatek/mtk-scpsys.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/pmdomain/mediatek/mtk-scpsys.c b/drivers/pmdomain/mediatek/mtk-scpsys.c
-> index b374d01fdac7..59a7a8c261ed 100644
-> --- a/drivers/pmdomain/mediatek/mtk-scpsys.c
-> +++ b/drivers/pmdomain/mediatek/mtk-scpsys.c
-> @@ -425,7 +425,6 @@ static struct scp *init_scp(struct platform_device *pdev,
->                         bool bus_prot_reg_update)
->  {
->         struct genpd_onecell_data *pd_data;
-> -       struct resource *res;
->         int i, j;
->         struct scp *scp;
->         struct clk *clk[CLK_MAX];
-> @@ -441,8 +440,7 @@ static struct scp *init_scp(struct platform_device *pdev,
->
->         scp->dev = &pdev->dev;
->
-> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       scp->base = devm_ioremap_resource(&pdev->dev, res);
-> +       scp->base = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(scp->base))
->                 return ERR_CAST(scp->base);
->
-> --
-> 2.43.0
->
