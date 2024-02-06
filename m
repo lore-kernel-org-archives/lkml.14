@@ -1,175 +1,264 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E67533D1;
-	Tue,  6 Feb 2024 10:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5031EA7D;
+	Tue,  6 Feb 2024 10:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707215939; cv=none; b=HwJrJD5Q4KdEgHKNXaGMV8zx/qb45JH10EYIuJrf9Gmfr4fOJaDkGUUxMSjxNF5zM0R5V8qqTFlwz0VEExjpkA2Y2fQ2Fyy0HKilI3nIX/N8Oxfcb8R8DOyfhsvB77d32gGwr0mm8REY82VIaw4CH/nrxL8/ANcFH2aU96fF+Xg=
+	t=1707216220; cv=none; b=LyeckqmWV5yd7GXNXCh353UjzWfUoKE+OCV38g7E7YfrpBVAWy3durIk+AK4gY8ezRhWv80PFJJQuGZSDS9A5Hp+uBjat5PTlR91Rql4zOV+3WfIVWd07/ou7ctdKUeaWh5GAOONYEi4C0ZWempJLFQ/9QEEyagGydUUQLRljKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707215939; c=relaxed/simple;
-	bh=jIDetKdqCHcAy2PHqpROZugyHayLlJ1AtCGMh46V4os=;
+	s=arc-20240116; t=1707216220; c=relaxed/simple;
+	bh=eLDBoAWHndMbGf27s8TgD2Jw68rJIJDhNz9sDl9B2dc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sd2+QX86FzRNZYiSPDywjYa3XZiMmrOVH1SUMNzTSF6j+4y4YxYJI5kgEYzpWx4fwiUh1lrXj68SCwtrpbRnh4+XJuommCtCp5MyaSZ5ka9KmMrrwZTA5NzaYmDsyMpS2i+WuhXF49hrzMefilsnHXpwoCkC0o3TP11DnNsnB6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=TVbV6ANW; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9Gu6aBGIfpMwoLxX0Af7yDvzeD3JPZCZg2Q6Iucv3GAJY0A3tHBysixfOQveh/r78AHPK2p+MfW7lPGxyElmB7XMyCBH/SLcJut2CJcBjdZTpZJy1DMm/fZ2d0MuCBedJyzGWG7oq+BAVtWz6D/L7b4mxl3Kl5jqgo8b9ZBUsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bqx/HFnG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DdqX2+OR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dMNap4FK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ITzOJ/hM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="TVbV6ANW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=rMy70T7bGq+86zodkiE5SnCSlDJcdq4HaQVB8APMukQ=;
-	b=TVbV6ANWNZ3RER6wPjOEzpUZ/iX8Lucs4azd6YiPVzSuGCjCyatDNwMXh9WZsz
-	6zqtFyzqR02KMp36N+dRLg1KkHq5jnRw4rBBWzlrywi8i+YNhOxw01eDtpayztth
-	vr16iVDFiF+XElF5KitojBEGEX3K1VpSF/A4XD66vfXQY=
-Received: from dragon (unknown [183.213.196.254])
-	by smtp2 (Coremail) with SMTP id C1UQrADn7wgmDMJlAEACAw--.34613S3;
-	Tue, 06 Feb 2024 18:38:31 +0800 (CST)
-Date: Tue, 6 Feb 2024 18:38:29 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 2/2] arm64: dts: imx8dxl update edma0 information
-Message-ID: <ZcIMJWKBrPW4Y5R8@dragon>
-References: <20240129201633.234255-1-Frank.Li@nxp.com>
- <20240129201633.234255-2-Frank.Li@nxp.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bqx/HFnG";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DdqX2+OR";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dMNap4FK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ITzOJ/hM"
+Received: from lion.mk-sys.cz (unknown [10.100.225.114])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E009A220EC;
+	Tue,  6 Feb 2024 10:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707216217; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e29oyO37i95pTLMkje0Wsv+5pthrbUWw/AkjX6REjE4=;
+	b=bqx/HFnGa6rFB+PJh/7nh88ao1vE8d2/4JQbltclyvqL1JVzOeiuoWz7r2JJb4NK9XGYPq
+	ADXe6qA+gj33RudVy1C+3PbbWajtItxY3DJPnjd+RZSKpItAAm5BfKA892ChLc+JhvvV2l
+	CZs5Nmkqb4MooGGB44+bSI2AGM+QH5M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707216217;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e29oyO37i95pTLMkje0Wsv+5pthrbUWw/AkjX6REjE4=;
+	b=DdqX2+ORP3cG6Wgm8M7yiImK3L28QrCZcuzObqHfThMsvUPcCeLICFTyFdCAhGrpeze5WG
+	uBYtS3P5neXt5fDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707216216; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e29oyO37i95pTLMkje0Wsv+5pthrbUWw/AkjX6REjE4=;
+	b=dMNap4FKk/3n47Zg49pbHUVQTGj88ZGC3b6fbWkvwJnmDAyLhm/aNbw/e9rypNAZ27u1kg
+	ft726zjNqRzVjRkAJQv6KSJCAuPsamOrW4YcpTYYBjciRwhyy0Gk4mZHgDOAIJoj1WMdLr
+	cDcou/LeOTYjbWd/1eIHuLq48VsQTuM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707216216;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e29oyO37i95pTLMkje0Wsv+5pthrbUWw/AkjX6REjE4=;
+	b=ITzOJ/hMNM9ANK132FE87xw5jJujEq96OXlg7Av//nN6JH+JmeNW7ygoQ3n7ochGRJAYCn
+	tprx7S7MbvpPk2CA==
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+	id CAD0820147; Tue,  6 Feb 2024 11:43:36 +0100 (CET)
+Date: Tue, 6 Feb 2024 11:43:36 +0100
+From: Michal Kubecek <mkubecek@suse.cz>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Florian Westphal <fw@strlen.de>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, andrea.mattiazzo@suse.com
+Subject: Re: [PATCH net] netfilter: nf_tables: fix pointer math issue in
+ nft_byteorder_eval()
+Message-ID: <20240206104336.ctigqpkunom2ufmn@lion.mk-sys.cz>
+References: <15fdceb5-2de5-4453-98b3-cfa9d486e8da@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vuphuwffpatba3uh"
+Content-Disposition: inline
+In-Reply-To: <15fdceb5-2de5-4453-98b3-cfa9d486e8da@moroto.mountain>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [2.90 / 50.00];
+	 ARC_NA(0.00)[];
+	 BAYES_SPAM(5.10)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 SIGNED_PGP(-2.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_COUNT_ZERO(0.00)[0];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+,1:+,2:~]
+X-Spam-Level: **
+X-Spam-Score: 2.90
+X-Spam-Flag: NO
+
+
+--vuphuwffpatba3uh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240129201633.234255-2-Frank.Li@nxp.com>
-X-CM-TRANSID:C1UQrADn7wgmDMJlAEACAw--.34613S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFyrXr48CF4UZr4UJw43ZFb_yoWrXr43p3
-	4UCF4DX3sag3W2v3Waga1xAryfGrn2kr4Ygr90k3y8JF92gFyIvF47Kr1vkF13Gr48XFy5
-	XFsrCry8A3W3XrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jz4E_UUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDwd8ZVnxccILPgACs9
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2024 at 03:16:32PM -0500, Frank Li wrote:
-> edma0 of iMX8DXL is difference with other imx8 chips. Update register's
-> size, channel number and power-domain.
-> Update i2c[0-3] channel number information.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Fri, Nov 03, 2023 at 09:42:51AM +0300, Dan Carpenter wrote:
+> The problem is in nft_byteorder_eval() where we are iterating through a
+> loop and writing to dst[0], dst[1], dst[2] and so on...  On each
+> iteration we are writing 8 bytes.  But dst[] is an array of u32 so each
+> element only has space for 4 bytes.  That means that every iteration
+> overwrites part of the previous element.
+>=20
+> I spotted this bug while reviewing commit caf3ef7468f7 ("netfilter:
+> nf_tables: prevent OOB access in nft_byteorder_eval") which is a related
+> issue.  I think that the reason we have not detected this bug in testing
+> is that most of time we only write one element.
+>=20
+> Fixes: ce1e7989d989 ("netfilter: nft_byteorder: provide 64bit le/be conve=
+rsion")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  .../boot/dts/freescale/imx8dxl-ss-adma.dtsi   | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi
-> index 0a477f6318f15..f8fca86babda7 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi
-> @@ -15,6 +15,63 @@ &adc0 {
->  	interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
->  };
->  
-> +&edma0 {
-> +	reg = <0x591f0000 0x1a0000>;
-> +	#dma-cells = <3>;
-> +	dma-channels = <25>;
-> +	dma-channel-mask = <0x1c0cc0>;
-> +	interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>, /* asrc 0 */
-> +		<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
-> +		<GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
-> +		<GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
-> +		<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>, /* sai2 */
-> +		<GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>, /* sai3 */
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>, /* gpt0 */
-> +		<GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>, /* gpt1 */
-> +		<GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>, /* gpt2 */
-> +		<GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>; /* gpt3 */
-> +	power-domains = <&pd IMX_SC_R_DMA_0_CH0>,
-> +			<&pd IMX_SC_R_DMA_0_CH1>,
-> +			<&pd IMX_SC_R_DMA_0_CH2>,
-> +			<&pd IMX_SC_R_DMA_0_CH3>,
-> +			<&pd IMX_SC_R_DMA_0_CH4>,
-> +			<&pd IMX_SC_R_DMA_0_CH5>,
-> +			<&pd IMX_SC_R_DMA_0_CH6>,
-> +			<&pd IMX_SC_R_DMA_0_CH7>,
-> +			<&pd IMX_SC_R_DMA_0_CH8>,
-> +			<&pd IMX_SC_R_DMA_0_CH9>,
-> +			<&pd IMX_SC_R_DMA_0_CH10>,
-> +			<&pd IMX_SC_R_DMA_0_CH11>,
-> +			<&pd IMX_SC_R_DMA_0_CH12>,
-> +			<&pd IMX_SC_R_DMA_0_CH13>,
-> +			<&pd IMX_SC_R_DMA_0_CH14>,
-> +			<&pd IMX_SC_R_DMA_0_CH15>,
-> +			<&pd IMX_SC_R_DMA_0_CH16>,
-> +			<&pd IMX_SC_R_DMA_0_CH17>,
-> +			<&pd IMX_SC_R_DMA_0_CH18>,
-> +			<&pd IMX_SC_R_DMA_0_CH19>,
-> +			<&pd IMX_SC_R_DMA_0_CH20>,
-> +			<&pd IMX_SC_R_DMA_0_CH21>,
-> +			<&pd IMX_SC_R_DMA_0_CH22>,
-> +			<&pd IMX_SC_R_DMA_0_CH23>,
-> +			<&pd IMX_SC_R_DMA_0_CH24>;
-> +};
-> +
->  &edma2 {
->  	interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>,
->  		     <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
-> @@ -48,21 +105,29 @@ &edma3 {
->  &i2c0 {
->  	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
->  	interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-> +	dma-names = "tx","rx";
-> +	dmas = <&edma3 1 0 0>, <&edma3 0 0 FSL_EDMA_RX>;
->  };
->  
->  &i2c1 {
->  	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
->  	interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-> +	dma-names = "tx","rx";
-> +	dmas = <&edma3 3 0 0>, <&edma3 2 0 FSL_EDMA_RX>;
+>  include/net/netfilter/nf_tables.h | 4 ++--
+>  net/netfilter/nft_byteorder.c     | 5 +++--
+>  net/netfilter/nft_meta.c          | 2 +-
+>  3 files changed, 6 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf=
+_tables.h
+> index 3bbd13ab1ecf..b157c5cafd14 100644
+> --- a/include/net/netfilter/nf_tables.h
+> +++ b/include/net/netfilter/nf_tables.h
+> @@ -178,9 +178,9 @@ static inline __be32 nft_reg_load_be32(const u32 *sre=
+g)
+>  	return *(__force __be32 *)sreg;
+>  }
+> =20
+> -static inline void nft_reg_store64(u32 *dreg, u64 val)
+> +static inline void nft_reg_store64(u64 *dreg, u64 val)
+>  {
+> -	put_unaligned(val, (u64 *)dreg);
+> +	put_unaligned(val, dreg);
+>  }
+> =20
+>  static inline u64 nft_reg_load64(const u32 *sreg)
+> diff --git a/net/netfilter/nft_byteorder.c b/net/netfilter/nft_byteorder.c
+> index e596d1a842f7..f6e791a68101 100644
+> --- a/net/netfilter/nft_byteorder.c
+> +++ b/net/netfilter/nft_byteorder.c
+> @@ -38,13 +38,14 @@ void nft_byteorder_eval(const struct nft_expr *expr,
+> =20
+>  	switch (priv->size) {
+>  	case 8: {
+> +		u64 *dst64 =3D (void *)dst;
+>  		u64 src64;
+> =20
+>  		switch (priv->op) {
+>  		case NFT_BYTEORDER_NTOH:
+>  			for (i =3D 0; i < priv->len / 8; i++) {
+>  				src64 =3D nft_reg_load64(&src[i]);
+> -				nft_reg_store64(&dst[i],
+> +				nft_reg_store64(&dst64[i],
+>  						be64_to_cpu((__force __be64)src64));
+>  			}
+>  			break;
+> @@ -52,7 +53,7 @@ void nft_byteorder_eval(const struct nft_expr *expr,
+>  			for (i =3D 0; i < priv->len / 8; i++) {
+>  				src64 =3D (__force __u64)
+>  					cpu_to_be64(nft_reg_load64(&src[i]));
+> -				nft_reg_store64(&dst[i], src64);
+> +				nft_reg_store64(&dst64[i], src64);
+>  			}
+>  			break;
+>  		}
 
-No FSL_EDMA_TX for "tx"?
+I stumbled upon this when the issue got a CVE id (sigh) and I share
+Andrea's (Cc-ed) concern that the fix is incomplete. While the fix,
+commit c301f0981fdd ("netfilter: nf_tables: fix pointer math issue in
+nft_byteorder_eval()") now, fixes the destination side, src is still
+a pointer to u32, i.e. we are reading 64-bit values with relative
+offsets which are multiples of 32 bits.
 
-Shawn
+Shouldn't we fix this as well, e.g. like indicated below?
 
->  };
->  
->  &i2c2 {
->  	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
->  	interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
-> +	dma-names = "tx","rx";
-> +	dmas = <&edma3 5 0 0>, <&edma3 4 0 FSL_EDMA_RX>;
->  };
->  
->  &i2c3 {
->  	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
->  	interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-> +	dma-names = "tx","rx";
-> +	dmas = <&edma3 7 0 0>, <&edma3 6 0 FSL_EDMA_RX>;
->  };
->  
->  &lpuart0 {
-> -- 
-> 2.34.1
-> 
+Michal
 
+---------------------------------------------------------------------------=
+---
+diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_t=
+ables.h
+index 001226c34621..bb4b83ea2908 100644
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -183,9 +183,9 @@ static inline void nft_reg_store64(u64 *dreg, u64 val)
+ 	put_unaligned(val, dreg);
+ }
+=20
+-static inline u64 nft_reg_load64(const u32 *sreg)
++static inline u64 nft_reg_load64(const u64 *sreg)
+ {
+-	return get_unaligned((u64 *)sreg);
++	return get_unaligned(sreg);
+ }
+=20
+ static inline void nft_data_copy(u32 *dst, const struct nft_data *src,
+diff --git a/net/netfilter/nft_byteorder.c b/net/netfilter/nft_byteorder.c
+index f6e791a68101..2a64c69ed507 100644
+--- a/net/netfilter/nft_byteorder.c
++++ b/net/netfilter/nft_byteorder.c
+@@ -39,21 +39,22 @@ void nft_byteorder_eval(const struct nft_expr *expr,
+ 	switch (priv->size) {
+ 	case 8: {
+ 		u64 *dst64 =3D (void *)dst;
+-		u64 src64;
++		u64 *src64 =3D (void *)src;
++		u64 val64;
+=20
+ 		switch (priv->op) {
+ 		case NFT_BYTEORDER_NTOH:
+ 			for (i =3D 0; i < priv->len / 8; i++) {
+-				src64 =3D nft_reg_load64(&src[i]);
++				val64 =3D nft_reg_load64(&src64[i]);
+ 				nft_reg_store64(&dst64[i],
+-						be64_to_cpu((__force __be64)src64));
++						be64_to_cpu((__force __be64)val64));
+ 			}
+ 			break;
+ 		case NFT_BYTEORDER_HTON:
+ 			for (i =3D 0; i < priv->len / 8; i++) {
+-				src64 =3D (__force __u64)
+-					cpu_to_be64(nft_reg_load64(&src[i]));
+-				nft_reg_store64(&dst64[i], src64);
++				val64 =3D (__force __u64)
++					cpu_to_be64(nft_reg_load64(&src64[i]));
++				nft_reg_store64(&dst64[i], val64);
+ 			}
+ 			break;
+ 		}
+---------------------------------------------------------------------------=
+---
+
+--vuphuwffpatba3uh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmXCDVMACgkQ538sG/LR
+dpVLYwf/SKJnMxraCQMxRMfJwRCMRFwIdmxy7ROUbMnL2jE+tTYbGSuezhnRDq5v
+nws0SeWQtoztU+s9Uq15xeaBf25S0bAVcJluXL+8rz2cka4Rr/T9C+ZkyoqDg3va
+Nd4f5l6GGSP3HhnQpD5XBH/H1UUyj+I3o1sFsyo7FSTEBD4BvjkMy4qGExuTVNgy
+En42gfsDykiLAQJ+Sopw8uk1A4e6FWSg6mkP9qn+gN328MFTQya/VossxCE9w5fn
+L80MUqY54jsgiNGOtDMGxWOdxk44WYa4CYGmGuRslrAMS476Bu0+Ulsq+d15uGvh
+XTCUggn8Bi7DttIMf2jUoC7y8TsqKw==
+=YriJ
+-----END PGP SIGNATURE-----
+
+--vuphuwffpatba3uh--
