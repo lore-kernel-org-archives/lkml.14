@@ -1,133 +1,282 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82011132C1B;
-	Tue,  6 Feb 2024 15:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707234054; cv=none; b=OgXF71P9YXdLfg6bDJIrZA9J40i/hNw6OzJpE9NsljBYl9vjKQ7tJfmRNgVC/CGYEqyw7TNNukwiW2neBcBtED23KUV3YuKGmKyrZujWmCISNRecmbJaasHsmzcVdt8Er9ZK/Z/0h4pSsUt+OsCjxDcLr2AjPe51LG6vbcEdaxk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707234054; c=relaxed/simple;
-	bh=7eaZzjz+wMCUEjnyDUB3tK901K9kXxGQ/BL0sTc923A=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rKYrivgI24lk0nav2VKfUEnnlBHM9dogJKEiwVV9B76MNQ7Pl8vj+/9qahipx5njmBYs1uXqqmfJ8wD7VI5Yet6/waYX/0bLKaSSUbg1zLb9PoEzXHDJoVK3N5Cy+Zm13e580zIBGLQAwWB5t6qfo45hxc1fWZeEkgdgFc+CtBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cOQ0SDQJ; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070DD13398B;
+	Tue,  6 Feb 2024 15:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707234095; cv=fail; b=I2njEzE8Sx9mOemTIv3kBd4CtiS10Mez9eFOLh0tjaNzf8yx+0i5b4uUQ4SMeL82lYQQoqouRAbvGO8CE6XhOpXUDk8ex/4Kqv8JC9cktOlerqHo5wHxYydtjK+cLZ2WC4QL9zoTI7EmU3w+xEX6j68rgcxO6v930GETqZ4IifI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707234095; c=relaxed/simple;
+	bh=SS36S5csg1vXQu9OvCXT3QYPyv6yBzydKqnWCFBxd6U=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=eJlaFF38S7vjEwISoYiO4dkXXmOZ/hWZbubuRjGSy4d8URt5+WbcnToSfMIH1xARXNmi+DqqmczzhtVHaKHd19+4kzGs1QXm9jGEbt559VKd56xtHlwlkvz6S/Lg4itmXNNyMNM/S4l6LChDkD38w20hosxmMZpnOgtamkMgVq8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p47jcIjT; arc=fail smtp.client-ip=40.107.244.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cOQ0SDQJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1707234025; x=1707838825; i=markus.elfring@web.de;
-	bh=7eaZzjz+wMCUEjnyDUB3tK901K9kXxGQ/BL0sTc923A=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=cOQ0SDQJMGw6cB+eoiYjY1HUTQgSn/XZm/c0ffcAKYO5cFpdpIRopiIc8CLezkIW
-	 7jnl73aWjDtJ/Up4KHDhjdUTlel1Dl85PpeYWTqIyLnrUs8pvGaG8R3gmGneBuiHZ
-	 5ZaWUr0xVRIePqmvbWd3JQCPaUoQ7DIWlnp+dBie9NuNjUyXXz5phD46iixCzn8gm
-	 jPO0wKzm2Ar7JEMx+Xs3KEDn9AHCkd19keNOzsfPyoceOz5803tj3dk5cV1quUmgc
-	 WQ+ZWgC+KRcC0+ATkdH4sVI57ZZLXjqWVFscTA4jddnVM3Ch9PJtDMJYHFr/qspjM
-	 SUZ8WLRLuFqCUek6uA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MkElZ-1r9dVw33mL-00kNmR; Tue, 06
- Feb 2024 16:40:25 +0100
-Message-ID: <e4585b03-3629-4bd7-a349-f5471ebd8685@web.de>
-Date: Tue, 6 Feb 2024 16:40:24 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p47jcIjT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kTwzaBSR0PXwkr1XRHQ5vHCL+hXwr9v6ZhbHheFI6nPBSLp656nZqt4223+pxW4PTKzOtbRVnlTlXpinQRABdLWyYD8usti069F6antO/8ey3s4XZrdX1w5kD1IYXWo1vdJA12eK/A0Sk0rvBgzxIn9/ril0vboAoImrrXgc8a6gQLAzko+fc5/ZNULKl+7271MjiYLsaiuKxWH1xUTP0bway0ir/T8HT3wEl9oKkiTYE5qUoMTnFRSAWNGqYyWirGycOG3VWQLvZHEFoJEVOA9Nb+jmL/VgUc2ouSrkl6DBh9Oh1U8Ub4nBncPYfTyHsxwhk+91ad+USalVbdQFJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BABUTrbv+RW+c3AQ7L7r8IgpZ5jRk5/tpMWK9EC6Q7g=;
+ b=L/8KUK2Trc0FSGsPwHSxagUgtMtgiqYqckcGy99yoYJiHnQxir2aq9mRILrp9fGmmCkSo0GkgEjte09nxHrgKogxPmaarf09pg8C98GfZ6q+pPXws6fFnDgsJZrqC9WJ/0LBIGvlQnhg9hYPzl2aL0WPjUxY6ULvBz7ABhEmsjwtOlT6fNotRVPapp2sqsCbWHhOARc4MSs/mdbmnyGEatZJCrAC2YG6CIlhNH6E2NncofMgMSgBaUlR/8C9BqsbPHSvTgTKug/RgWOqnP8cvOVvgG6+GohmOZLhcl+u6ywn2NF/4DhwlHSiZJnJrDnU5xZ0HuEgHjaGv7xkAh1hYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BABUTrbv+RW+c3AQ7L7r8IgpZ5jRk5/tpMWK9EC6Q7g=;
+ b=p47jcIjTg1sDYeb0sMhW6M3q3OGFx/Vd4EBtBaXxI7aU1YxbTkls6rDa7HGvX2f3RDWKUKPtpzTpcfPaXpmxCQqD7XrQoBn6mMa9SkUSznrSTbE1yivcFqJo/VNzwEETydVdyeo7pkp9En1+pEfEd/Nja1HfeH+P6d+72z9C+eM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by IA1PR12MB8261.namprd12.prod.outlook.com (2603:10b6:208:3f7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.16; Tue, 6 Feb
+ 2024 15:41:31 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::f6d2:541d:5eda:d826]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::f6d2:541d:5eda:d826%5]) with mapi id 15.20.7270.016; Tue, 6 Feb 2024
+ 15:41:30 +0000
+Message-ID: <e4fc61ae-97f5-4fa1-bfed-1312466a2a22@amd.com>
+Date: Tue, 6 Feb 2024 09:41:29 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] fbcon: Defer console takeover for splash screens
+ to first switch
+To: Daniel van Vugt <daniel.van.vugt@canonical.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Helge Deller
+ <deller@gmx.de>, Jani Nikula <jani.nikula@intel.com>,
+ Danilo Krummrich <dakr@redhat.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <f037df4a-8a97-4fcd-b196-43f484b63d8d@amd.com>
+ <20240206101100.25536-1-daniel.van.vugt@canonical.com>
+ <20240206101100.25536-2-daniel.van.vugt@canonical.com>
+ <ZcJAVSyH3gRYx3EG@phenom.ffwll.local>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <ZcJAVSyH3gRYx3EG@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0089.namprd12.prod.outlook.com
+ (2603:10b6:802:21::24) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] sparc: leon: grpci1: Use devm_platform_ioremap_resource()
- in grpci1_of_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: sparclinux@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Andreas Larsson <andreas@gaisler.com>, "David S. Miller"
- <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
- Sam Ravnborg <sam@ravnborg.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <4fc017e4-c695-40d3-aed4-cbf34d44e6fa@web.de>
-In-Reply-To: <4fc017e4-c695-40d3-aed4-cbf34d44e6fa@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:delG0OP3p85cu5vnIQwdHsvL/LKQZkLgZh9jHMmoyj2Z2ieh6lG
- 8/dT9mLr/M+pNYBTkNChAYflEc1ItFeq/D/kvRuf2/e7N2j4GeZPqwlb1hQwHbq4FwMjBxe
- Zv94gYPqjexmo5puO4ySl7u3KZJt71vLMpUNFMN8eptVvmi4NbWiYtCO+yqTcQ4HqVftt2A
- UIoUZ1FDZ8dWPhidHpnZA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cWb4CakeEFE=;GWpIyvQCZXa8OBC1L6tHGGyQvDw
- fDypwyDhiClo+6+q47h+fOgversLTaVVeehc+0ELLDL9++VJIyKswhBM1mUGSEpWrJUubT6o/
- WTzi+bUpwz1zEA75WEeay9M05+d4Cz8sUVVYKF3aZLhL+9CiCyw4dMD0L763LvwEc8h74efm9
- PcjzOGDqAeqK7H8LZ3KrFOLcK45/sG+lCGaCNord8Lb7zOAGbRpqyTd+q6yte8ylOUInuuuiq
- Se/IlSLj9GP12mbQcF3NfeBk2Z68s57jCDwGelr8JoU0X2VPa84ZZjKuJjUOulzsVm2O/IK0p
- oBUbjHSsXYqjuV6T4qcLpLxs+XND/XSPSGuCHVLwx42z4F/8tnoMCz2DQ6QGJN8XVdXrQk6A/
- Ex4FcP7g39r/EC+Xc92BZIm6D9kRt3cHecBVzFEmonkyu2ocTv21K9JfZgvnGASoEBm2MLR+8
- Vgv3+iLSlrkym48EJAksrk3FCI6u/gj+rUv/RtXZZTsVaD+QONe2LRhzDcAn5SdIdenvGho1I
- dYlp61T1r+qRLqBXXlnN7HRS3eK1bX6R9U9CAWOq3nC3ByakMQRIqh9EZgWhiDT2vhfsdNbGc
- V4HrY0QTVd3PXO1nSlPh7biirEpMUF18thxjPLkYh5PQh0EgKEOscb14VkxYPFn6N+/D1ZOzq
- Jg69j7PAgVvmciKwmSzUczSChUUimbmurLoqRNNa1oWlNjLPhuqUlN9AUG+kuNkJAOd5I7qsm
- sOxlRJulUAcMShIg3BKw0nbkDJBADdYqmnZFW7V6zAW61nBcimWPiZqjH9HCZ1nPIB5ZY1Xvi
- ecnrJtTgzansC4SlW3h/KqBRlN+l/scmcwp2JVDFUIIyo=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB8261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8283c294-3f38-4dd3-0f94-08dc272a16f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	PZV8/4XFDFAQ9qaaiilFL8GqUmk03dtrHrw+VatPKZy02/8KJ0mAF0zCbMRohM+NHwMMrczlYzaxut3oxcJvGtdRPAKyP/7akkOG05tsIP2rWiMcaBr7xeH1lHin1/n+ESPJhGIG/WOH69kbze8stsRAsgDF2Yii+0A1rySKXTabbSKO0NQiZWB7NDJ+bZ2NHgCzh/TVQJpDZz6HTWAIiuz73RjEeD0Tl0OOxdXA9PUFzx9N6gfo6NYt//KYSIe8TBQwJdsNVAstkVIirLLYOFY2D4P14z/XDfvvek1FOR4h45/G6Vh2lO46mlFoyq4FftWiCblL7uM6tIYQpYvT/87JebN3ZhPYHO+hu7uHWE5mNxwVtCUG/NVDgPCEOvy8w4hSsivuWJ31+cjOnEX31tcHwKiRoffgn3a7woSWRmyUWb+zSXVGPkJVMvC5Q4vmL04Xi9cKJ+nvj5oZNqaTHXtxs2EIW5Ry9hm2c4IHGiRqnghaEG3WK8fjuSj4quLTnoBeuSwaupjGqlxB8Oe38NxnjAxhWDmlzX5wRhhpBowBTrOmoAdbNvNW2cLKDfBgFhPsb89gEuHOGyhpViEVNT47FpshskrQO1fSc2uRo6DFndNxkxLeTQj5VDdec02h
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(396003)(136003)(39860400002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(36756003)(44832011)(2906002)(5660300002)(41300700001)(26005)(2616005)(83380400001)(6512007)(478600001)(6486002)(966005)(6506007)(86362001)(31696002)(53546011)(31686004)(38100700002)(66476007)(66946007)(66556008)(8936002)(110136005)(8676002)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cVVCT3oveDR4SjJHK28wR1RnR2hQVytVVU9yamhwT2Nsak1IdzBRcTA1N3hz?=
+ =?utf-8?B?eDhUc0kzeGxrWHhhWWxPaDRrZUxoa0RzR2p4clh5dUN4djMwSWUxL21MTmU0?=
+ =?utf-8?B?ZEdWVzVzUEhaQU50S2htOVJHUHo0QUhDaFVDdkhMZEljWndSdTJWY3FvNGpK?=
+ =?utf-8?B?UHIwd2haNmZiN1ZHM0N5S2VHbmxxZG0rK3hRVG8xcmdtQ1BBelVMY3BaL3VT?=
+ =?utf-8?B?OG55NENuNFJ5bFprbS8zOWwybU5LRUdLQUVSNUhRRnRNSDVyTzJSYVVPVkVL?=
+ =?utf-8?B?QW40ckJqUUxFbjJlamlkbmZmdkI1bU1xeEZ1R25neFA4c01nRW5MQW8xOFNz?=
+ =?utf-8?B?bkZCcngxV2NCMVJ5V0ZTeWFhK1hjaDV1am9FUmZwWnh4NUxVbFVGNTlGUkJ0?=
+ =?utf-8?B?MXpDUjBvMjhCZkJxd0c0NnV3ZWdxMFAxUCtjV3BwVW01WDJja3AvV1MwTzB4?=
+ =?utf-8?B?eFA3TnR2Tk1zckdiZEdQYUwxcWUrYXVyTEV0bnFaQzU5QmwxN1VJYWd6Yno2?=
+ =?utf-8?B?K3dHcXdGZmtRWGsvbDFzcnVLL2ZVS3pyczlGaGtHOHlrVFB3Tys1UUxQZ3M0?=
+ =?utf-8?B?R1M1OFROREh5c2Rzczh1R3dROGU0TXdEcmV1Rm0xU3lMOHYzOHhzcWJwSjQ4?=
+ =?utf-8?B?UGNQT3hPWGZiZytEVG5TWHNFei9haXlsM3BvMkV0VzZjcTJiK0hSais5QjlX?=
+ =?utf-8?B?RktSM3hnd05UVDhGWkRoWDRlcVJtd1BKZ3RaWWpRY3dhTXc3US8xY2RYVEx3?=
+ =?utf-8?B?YlFoam9hdmVITit6RGVGcEI0THlGeDZvaTVBdTBDaTBQYVZmcVQ5RlBqTnJF?=
+ =?utf-8?B?dCswRktKYUx1WlZtbVA2eHBkUUdDR2t5Q1BDTzBWU2lmT2hTem1zZXA5azdW?=
+ =?utf-8?B?ZjRSMjV5Y1VvUXVzak1tTGZxbWZKSTRYVzNKTmZLOVdxZ3FUZXVweU9qRWQy?=
+ =?utf-8?B?Z0NZVWd1c3FNSTB5QUNNbkRvdnBZZ2Q4cVNnODdoZS9hL3VsT2hta045Vno0?=
+ =?utf-8?B?dnhLQ3AvQXhzOXd3THJndjBGM0wxUmFVVTd2b0NYaldSWndYaVFQNk10cHEy?=
+ =?utf-8?B?aUdsRHJrd1FmRFkvRmRPK1VCZUJFUFZPY3VRUHAyR1BQdi9WM05BNHMra1ZV?=
+ =?utf-8?B?dkdYSVk0ay85a2J1cm9wdlFaa0xjYit6dVVNaE9lMm9MSWpLakJITUl3N29x?=
+ =?utf-8?B?M3Y5bTZPRjVFNDRRN0MvL0N0Wjc3UURnelNLNEpJS3o3REJ6a0gxdmpjYkVo?=
+ =?utf-8?B?NWFSbGhrQWtlTUc5V0Njc0Y2TGZWaXRvMm9IUVIxcjZTQU9BWkh5M1lxcDJE?=
+ =?utf-8?B?di9UUUk3NTk2R0c0TzhqWlY5ZGFlNVVSbE9sTzIzSGwvMkJ1bWUwcTI0N053?=
+ =?utf-8?B?YS9JUlR3c3B1VEdxYmVjUWlnMURtNzNhdndQQzd1RDRwc0lmcm1jVGRVZGRJ?=
+ =?utf-8?B?UmFlSnllTWcxdUZFMFpzVkt4TUVxRXlGT2lwYWFqdkdiNGh1VjRBZDZ2a1Fa?=
+ =?utf-8?B?M1luSzV4WXlrUzRWNXVHTDdQdXJLZ0w1dEF1TFIwKytTdWorSGI2c3dzMG9k?=
+ =?utf-8?B?dUxFT0l3NWcrMGVnUXhLRzNjUDlwMjRGU3lQWFZXUzhzZXJIait4VTFVS0dl?=
+ =?utf-8?B?Q0NPMS9IMEdXbzllOEJ2TnBGK25xdndJRTdPVlpYUTlERFQwUTRFTWY3dmZF?=
+ =?utf-8?B?SjJERFFoQ2swZVhmaDZocmh5OW9DQlE1MGZMbFZuREUva3dJMnZEQjVHUEFT?=
+ =?utf-8?B?d3dFRGE0c3lJRGNrb3BOdUw1Q2wvLzB1L2hENXRRZDdqTFQwYVg3Q2FCMVFo?=
+ =?utf-8?B?RjVhTittajN4R2pKNUttRDFzRThaOUJvYXd5RGZ6VDZiaDQ3S3RQV0F3YlBU?=
+ =?utf-8?B?c1RPQXpWY0RXeVRGR05JTVpHejV0MnlHZklUOC9xbnJpbTdmOC92RXA2ZzlK?=
+ =?utf-8?B?MEs3aDc0SWs2N1NoU3o4MWVMcW9QRks5UFEzbTFaY0swc3JmU3MzcTBGRlNG?=
+ =?utf-8?B?NDVkdEs3b1FlSGNwUlpoSmxJT01iWkk1aEh0Zy9ZYXEva3ZKTlFGbHo5ZnFv?=
+ =?utf-8?B?T29vc3hOb0FsMjY0Mm1UL1I1QWxTUTdqOVVmM21NOGlSZlVmbkZFT2hNaUV3?=
+ =?utf-8?Q?GFzpxjAOqa3VBbTKA63kUZ7SY?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8283c294-3f38-4dd3-0f94-08dc272a16f4
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 15:41:30.8568
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J4wL7F47exmAEGTYoweMJGqkTDxSWUSS/olLvyTxR3A+g0HKwvkJV5SVpe2ceN0s2ImHVimwocJ1+uCPxeBSdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8261
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 6 Feb 2024 16:30:15 +0100
+On 2/6/2024 08:21, Daniel Vetter wrote:
+> On Tue, Feb 06, 2024 at 06:10:51PM +0800, Daniel van Vugt wrote:
+>> Until now, deferred console takeover only meant defer until there is
+>> output. But that risks stepping on the toes of userspace splash screens,
+>> as console messages may appear before the splash screen. So check the
+>> command line for the expectation of userspace splash and if present then
+>> extend the deferral until after the first switch.
+>>
+>> V2: Added Kconfig option instead of hard coding "splash".
+>>
+>> Closes: https://bugs.launchpad.net/bugs/1970069
+>> Cc: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Daniel van Vugt <daniel.van.vugt@canonical.com>
+>> ---
+>>   drivers/video/console/Kconfig    | 13 +++++++++++
+>>   drivers/video/fbdev/core/fbcon.c | 38 ++++++++++++++++++++++++++++++--
+>>   2 files changed, 49 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/video/console/Kconfig b/drivers/video/console/Kconfig
+>> index bc31db6ef7..a6e371bfb4 100644
+>> --- a/drivers/video/console/Kconfig
+>> +++ b/drivers/video/console/Kconfig
+>> @@ -138,6 +138,19 @@ config FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+>>   	  by the firmware in place, rather then replacing the contents with a
+>>   	  black screen as soon as fbcon loads.
+>>   
+>> +config FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
+>> +	string "Framebuffer Console Deferred Takeover Condition"
+>> +	depends on FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+>> +	default "splash"
+>> +	help
+>> +	  If enabled this defers further the framebuffer console taking over
+>> +	  until the first console switch has occurred. And even then only if
+>> +	  text has been output, and only if the specified parameter is found
+>> +	  on the command line. This ensures fbcon does not interrupt userspace
+>> +	  splash screens such as Plymouth which may be yet to start rendering
+>> +	  at the time of the first console output. "splash" is the simplest
+>> +	  distro-agnostic condition for this that Plymouth checks for.
+> 
+> Hm this seems a bit strange since a lot of complexity that no one needs,
+> also my impression is that it's rather distro specific how you want this
+> to work. So why not just a Kconfig option that lets you choose how much
+> you want to delay fbcon setup, with the following options:
+> 
+> - no delay at all
+> - dely until first output from the console (which then works for distros
+>    which set a log-level to suppress unwanted stuff)
+> - delay until first vt-switch. In that case I don't think we also need to
+>    delay for first output, since vt switch usually means you'll get first
+>    output right away (if it's a vt terminal) or you switch to a different
+>    graphical console (which will keep fbcon fully suppressed on the drm
+>    side).
+> 
 
-A wrapper function is available since the commit 7945f929f1a77a1c8887a97ca=
-07f87626858ff42
-("drivers: provide devm_platform_ioremap_resource()").
+IIUC there is an "automatic" VT switch that happens with Ubuntu GRUB + 
+Ubuntu kernels.
 
-* Thus reuse existing functionality instead of keeping duplicate source co=
-de.
+Why?
 
-* Delete a local variable which became unnecessary with this refactoring.
+Couldn't this also be suppressed by just not doing that?
 
-
-This issue was transformed by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-v2:
-The transformation pattern was adjusted based on advices by known contribu=
-tors.
-
-Examples:
-* Doug Anderson
-* Geert Uytterhoeven
-* Robin Murphy
-
-
- arch/sparc/kernel/leon_pci_grpci1.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/sparc/kernel/leon_pci_grpci1.c b/arch/sparc/kernel/leon_=
-pci_grpci1.c
-index 8700a0e3b0df..a01ecee18e1e 100644
-=2D-- a/arch/sparc/kernel/leon_pci_grpci1.c
-+++ b/arch/sparc/kernel/leon_pci_grpci1.c
-@@ -516,7 +516,6 @@ static int grpci1_of_probe(struct platform_device *ofd=
-ev)
- 	int err, len;
- 	const int *tmp;
- 	u32 cfg, size, err_mask;
--	struct resource *res;
-
- 	if (grpci1priv) {
- 		dev_err(&ofdev->dev, "only one GRPCI1 supported\n");
-@@ -537,8 +536,7 @@ static int grpci1_of_probe(struct platform_device *ofd=
-ev)
- 	priv->dev =3D &ofdev->dev;
-
- 	/* find device register base address */
--	res =3D platform_get_resource(ofdev, IORESOURCE_MEM, 0);
--	regs =3D devm_ioremap_resource(&ofdev->dev, res);
-+	regs =3D devm_platform_ioremap_resource(ofdev, 0);
- 	if (IS_ERR(regs))
- 		return PTR_ERR(regs);
-
-=2D-
-2.43.0
+> I think you could even reuse the existing
+> CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER for this, and then just
+> compile-time select which kind of notifier to register (well plus the
+> check for "splash" on the cmdline for the vt switch one I guess).
+> 
+> Thoughts?
+> 
+> Cheers, Sima
+> 
+> 
+>> +
+>>   config STI_CONSOLE
+>>   	bool "STI text console"
+>>   	depends on PARISC && HAS_IOMEM
+>> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+>> index 63af6ab034..98155d2256 100644
+>> --- a/drivers/video/fbdev/core/fbcon.c
+>> +++ b/drivers/video/fbdev/core/fbcon.c
+>> @@ -76,6 +76,7 @@
+>>   #include <linux/crc32.h> /* For counting font checksums */
+>>   #include <linux/uaccess.h>
+>>   #include <asm/irq.h>
+>> +#include <asm/cmdline.h>
+>>   
+>>   #include "fbcon.h"
+>>   #include "fb_internal.h"
+>> @@ -3358,6 +3359,26 @@ static int fbcon_output_notifier(struct notifier_block *nb,
+>>   
+>>   	return NOTIFY_OK;
+>>   }
+>> +
+>> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
+>> +static int initial_console;
+>> +static struct notifier_block fbcon_switch_nb;
+>> +
+>> +static int fbcon_switch_notifier(struct notifier_block *nb,
+>> +				 unsigned long action, void *data)
+>> +{
+>> +	struct vc_data *vc = data;
+>> +
+>> +	WARN_CONSOLE_UNLOCKED();
+>> +
+>> +	if (vc->vc_num != initial_console) {
+>> +		dummycon_unregister_switch_notifier(&fbcon_switch_nb);
+>> +		dummycon_register_output_notifier(&fbcon_output_nb);
+>> +	}
+>> +
+>> +	return NOTIFY_OK;
+>> +}
+>> +#endif
+>>   #endif
+>>   
+>>   static void fbcon_start(void)
+>> @@ -3370,7 +3391,16 @@ static void fbcon_start(void)
+>>   
+>>   	if (deferred_takeover) {
+>>   		fbcon_output_nb.notifier_call = fbcon_output_notifier;
+>> -		dummycon_register_output_notifier(&fbcon_output_nb);
+>> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
+>> +		if (cmdline_find_option_bool(boot_command_line,
+>> +		      CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION)) {
+>> +			initial_console = fg_console;
+>> +			fbcon_switch_nb.notifier_call = fbcon_switch_notifier;
+>> +			dummycon_register_switch_notifier(&fbcon_switch_nb);
+>> +		} else
+>> +#endif
+>> +			dummycon_register_output_notifier(&fbcon_output_nb);
+>> +
+>>   		return;
+>>   	}
+>>   #endif
+>> @@ -3417,8 +3447,12 @@ void __exit fb_console_exit(void)
+>>   {
+>>   #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+>>   	console_lock();
+>> -	if (deferred_takeover)
+>> +	if (deferred_takeover) {
+>>   		dummycon_unregister_output_notifier(&fbcon_output_nb);
+>> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
+>> +		dummycon_unregister_switch_notifier(&fbcon_switch_nb);
+>> +#endif
+>> +	}
+>>   	console_unlock();
+>>   
+>>   	cancel_work_sync(&fbcon_deferred_takeover_work);
+>> -- 
+>> 2.43.0
+>>
+> 
 
