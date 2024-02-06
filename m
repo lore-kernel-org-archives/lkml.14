@@ -1,102 +1,123 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B74B1CD2D;
-	Tue,  6 Feb 2024 23:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C5F1C6A8
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 23:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707262439; cv=none; b=Wp+kPyXC9/ocS+26FExWNj6hsFCo2JZtMTevWwMxR73sQEcI6MtN6wGkLScNia0/DH17Oi7VP3vQpzURiZx3Pu2G9EyPlq7MAxT6EqJC8hfU4PsyAY5LFjJRa7gEs/ASg4AbWNoDARHtTTHoqplBECMZRj4qusGYzbjTs9uXm74=
+	t=1707262437; cv=none; b=kT/OQjBq9u1YsiM8ZJKRUaMX1ZeRCtOkpQ/t5sQnjy9bke0SJTmU3D5Vt7Fz09yyihM2HPE9jnA81r5ZeRaprJUk/SHvjDTC5OcnBk5ZxsCEj+9aly1oU32WN+VDlLsV87pi0hOHc5WEfdIuDT0a4fBqgrknvaoDR2YTmRkrsEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707262439; c=relaxed/simple;
-	bh=2ujnuBthhHC/WoSoD6QQnKnumAsVCVROyse7z/cd2Sk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aF8ijqeXeJWedsx4I4J9xdTzauUxkCSodJkBjin6O0WLbAFEROlnfRqwgQIJ64I1Yq5WgD49UWN1fiTgvA+++S5LQw3X0NIvARc3LVQqG5nafN0mE6osI14GjRBXoataVSMxXLDbbwAc0i+bGvvnVUVHjCNvF41Jv3TSKP5/hZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DqohHpns; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1707262437; c=relaxed/simple;
+	bh=uUa/Ho3Wm4SxUj+BbGgsm/fyqzW+5eMAhtSXlwrvm0M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t2b6L3biJW/c5mhd80sU/q68RnVMlLr6XtLTMJ71r/Ukyv03vLSiOQWmyk/mcHLp//EXx0rTjOOMRDLkAogR5ZXzEwoKxwb7EU72BJL4/gLiNPe69rlkbaeeL63aIDmma6jeK+SGcqEw3HLv1hufH21gwd2Oso3XNlxGZo1pfbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PxjrHLUr; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DqohHpns"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8/qSJOR+zkPPH2i9c8ryKssFXsF/wlJRBdyNQ7Hk1aE=; b=DqohHpnsHhxigSOb2sDDtK0Fhc
-	fyh+uGH2Fco/NlpE7qCu1h0/QL08p7YxPsuyrr82HitYHg6Wl50QXE2uT6iPlhiH8TG+3oGbvJTlN
-	Q2tM0egXmVzf8Cq2CKFxaPIwHE6GHtD6rc9vs5lJ34/ALMtAKvYB0XomAiNX97VaykYZH+PilsDL4
-	g/g3eMmOauaS3wMA5ZNZ9wQqGJhIFxATgaihdzr1DPe9v6ITphy1NzysdvfqhkZDvsE3sYE7Ohn9k
-	ZvQ2EzS7RqqmpLIyHYMtgJpHtE3wtyaMSjmMmuVZAa+NQ/6dEylc3uMbVwOcdBnsfaNinNliG2KP0
-	9QDf7r/w==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rXUwo-0000000DaA9-1Twe;
-	Tue, 06 Feb 2024 23:33:50 +0000
-Date: Tue, 6 Feb 2024 23:33:50 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: JonasZhou-oc <JonasZhou-oc@zhaoxin.com>, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, CobeChen@zhaoxin.com,
-	LouisQi@zhaoxin.com, JonasZhou@zhaoxin.com
-Subject: Re: [PATCH] fs/address_space: move i_mmap_rwsem to mitigate a false
- sharing with i_mmap.
-Message-ID: <ZcLB3pCSFRXRodzN@casper.infradead.org>
-References: <20240202093407.12536-1-JonasZhou-oc@zhaoxin.com>
- <Zb0EV8rTpfJVNAJA@casper.infradead.org>
- <Zb1DVNGaorZCDS7R@casper.infradead.org>
- <ZcBUat4yjByQC7zg@dread.disaster.area>
- <ZcFvHfYGH7EwGBRK@casper.infradead.org>
- <ZcKmP3zVdBwJVxGd@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PxjrHLUr"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3510d79ae9so5896266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 15:33:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707262432; x=1707867232; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J3t/dCk69ENxLEtiFl6GrgXJweCO07ULmDgCmo0QZh4=;
+        b=PxjrHLUrxUCNnGAcER0Beix+E3hGnNHyG4frZbI7umIFj2Xx61uFT8EygK4c0tH5hf
+         7vJAyfI4iQxa1oUC+gSugV65SgpvGbGSbDxG6fhgc8GoMrrdtCk/25leDP1pqlUpuYwR
+         FDA7xFNs8SlbJS8hi0vwuRFjFTVgk3vFMplC7XxIMT2sNgiBDp4qjVc7HGk3tf7tpdPS
+         ooz2/J7pAyzc6rssAp6HqoXiCEfQPlX3tYNd2VOYqJ5pI8Iu/B5HBYUMEDZioKwKyR/1
+         MWF3Edok2l39symWv0QduFymrIk9L0wWNEiUyrT2a60L3Tx/axm0/CG7fGPxXSErNevi
+         7F4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707262432; x=1707867232;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J3t/dCk69ENxLEtiFl6GrgXJweCO07ULmDgCmo0QZh4=;
+        b=R96Rk6Kg3Nxruvbke/hRHS6Zhtb3LPc4TK4nvnONord+f2NyGdvJQS5ty+fxklYAU6
+         hyLhFBs9Fb3zVR1Z6z76UYomRt5MU53tRjqT5q27ORUKXNjSi97xiEIy8zAbmWbxT3DD
+         /24NUG/7t0r9L2cPbHnijGoOJtwr9jrMulLwkhNm2qbp/G7quU9u+/HbRxEGEl1BuXnk
+         2e1oNGcLvPnbyZYY+fpQNgclrOe3tlYPK2zC+X+vd1xASUKTk5Ie+SONzkVUHOlTorfZ
+         I4mVThGTuI41UdF9fgY8xjQL4hwB7FlPKjGSUFtXlVS6I5WkJsN4NrRJ46L8p4z7sYtU
+         p3ww==
+X-Gm-Message-State: AOJu0Yw2PoNehTKIOSLPjlQjI85cFhMqJKM9wyR12yHKX5/bcZ6blw5H
+	X/IJPC5XHZpNiejQse2O4NPcNA3dBcImP6691pDCaXbw6fyATcASMGlhIqcFTBg=
+X-Google-Smtp-Source: AGHT+IHChQ4b8HUl5ZWL3mUPsNr4TOqpEOvJqMc5tmddRtG1OJQD1z/pv6D8ttNAMEN6b8MIDkzaUA==
+X-Received: by 2002:a17:906:301b:b0:a38:2694:46f9 with SMTP id 27-20020a170906301b00b00a38269446f9mr2007544ejz.71.1707262432016;
+        Tue, 06 Feb 2024 15:33:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVSQTuvLi1jJ2nPud0S4+sepdTgNa2Nigx8K+PbWd4I4nELkynhotStbXMK3XK4l1oPPAlzspPSo7I5EUjyxzeYGtsOJ446PZEfG6TICWzDQKVYHF1VPjs7PKAps+L4kNOzIyuyGyaZ7Xc57+/I6qhT5nID5ty6ydEM5ssVOgApdNVxl7Y8rANft9+lA27/gn52HSi25F5H3Cz0zd0sbjeoZXTXww/rlOJRjY99QCdElgPMIIvVFP/E5NbmYqpuDPsC2safVHqDZfZM6h4SB8+s5jzhIjCBIQ0O9zHgiVMsg+ARJkCDHpEpFo/E1cQlddUr8/SbuUxuAW5f3uBoZ896CZHmM4frx0S/o60mN3K11X9oTCU39WxHPWOneUWS
+Received: from [127.0.1.1] ([62.231.97.49])
+        by smtp.gmail.com with ESMTPSA id un9-20020a170907cb8900b00a36ed37683fsm72404ejc.215.2024.02.06.15.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 15:33:51 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH RFC 0/2] spmi: Add multi master support
+Date: Wed, 07 Feb 2024 01:33:41 +0200
+Message-Id: <20240207-spmi-multi-master-support-v1-0-ce57f301c7fd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcKmP3zVdBwJVxGd@dread.disaster.area>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANXBwmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDIwNz3eKC3Ezd3NKcEiCZWFySWqRbXFpQkF9UomthbJRobmCSZG5umaQ
+ E1F9QlJqWWQE2O1opyM1ZKba2FgBmdoGrcAAAAA==
+To: Stephen Boyd <sboyd@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1122; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=uUa/Ho3Wm4SxUj+BbGgsm/fyqzW+5eMAhtSXlwrvm0M=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlwsHXBTBDUHkw22LNTcEGnFGBZ3ed0WbfJnF1y
+ niQsAL7VQWJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZcLB1wAKCRAbX0TJAJUV
+ VnnLD/9XlbcGQXYnjM2J4ynDwPwRpDPDYJJrZSrHKt8dkZozLK0uEUvFivSsgRF0Oa2MrJNyeh9
+ i4ixNnZwvFa4jB5SFVFJuFvwgja1dJwPLwCzdqIm+voss5v9XYt254D+N5uuCxcVcrfHQAPE78m
+ pTBy6rnrXPVYzDjp2jJByWbXPZwPp2GdCQeBGrffVWQOqVfpGQZuU1/MnuDOD/3Lwv6qukgVTHP
+ PrXx012Ts341rhufybu/z9dKotXDjg0kRPL0gdhoxxLpn2/lD3Dt/k2GSnHGutcTft2VPTRIzV2
+ IGBwztmXS/ACt2EqGFNqEYxnFwu16buKMsusbjPB0fd8pdhXCle+2yHTUGQ3lzcjeBk9i99o+cc
+ BD+dQqVlRWmpvTSmibrAbpGQWdc41TuOW+YAmE443hK3g1/mPrX6GQqooXF15+PMgYshkU0vPNE
+ xZmFp7ilYWRRH9MiuxZfELbYURWAyiFIRxYKhka6XvT1KFD018ttajfW1gqcgY4F1rCfuhIPobq
+ 5bvuBXl3cgQbH2baq5QmIVI0nu5EWjwtMoqIqcZR5xcrECQ4gRl1aLVM5k0iLwdpDdpdDWrLeRJ
+ SfmhNv233g7TsVX9ZE+Zffge/GXh6lfbb7vw8vbVBqEw+a1AfFEF0tGmven58863MIMLeJapq84
+ W2uCzVA1cmdE42A==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-On Wed, Feb 07, 2024 at 08:35:59AM +1100, Dave Chinner wrote:
-> > The solution to this problem is to change the interval tree data structure
-> > from an Red-Black tree to a B-tree, or something similar where we use
-> > an array of pointers instead of a single pointer.
-> 
-> .... B-trees are not immune to pointer chasing problems, either.
-> Most use binary searches within the nodes, and so we have the
-> problem of unpredictable cacheline misses within the nodes as well
-> as being unable to do depth based prefetch similar to rbtrees.
-> 
-> Perhaps we should be looking at something like this:
-> 
-> https://lore.kernel.org/linux-fsdevel/20240126220655.395093-2-kent.overstreet@linux.dev/
+Newer SPMI controller (v7) found on Qualcomm platforms
+provide support for multiple bus master. So add support
+for multiple masters in both the generic framework and
+the Qualcomm SPMI PMIC Arbiter driver.
 
-I need more data (and maybe Kent has it!)
+Currently, the DT child nodes of the spmi controller node
+are the slave devices connected to the bus. This patchset
+proposes another layer of nodes in between. They would be
+the master bus nodes. They will not be populated as separate
+devices as they need to share register regions with the controller.
 
-Without any data, I believe that Eytzinger layout is an idea that was
-a really good one in the 1990s/2000s and has now passed its expiration
-date because of the changed nature of hardware.
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+Abel Vesa (2):
+      spmi: Add support for multi-master
+      spmi: pmic-arb: Add support for multi-master
 
-In the mid-90s, we could do O(10) instructions in the time it took to
-service a LLC miss.  Today, it's more like O(2500).  That means it is
-far more important to be predictable than it is to execute the minimum
-number of instructions.  If your B-tree nodes are 256kB in size (I believe
-that's what bacachefs is using?), then Eytzinger layout may make some
-sense, but if you're using smaller nodes (which I further believe is
-appropriate for an in-memory B-tree), then a straight 'load each index
-and compare it' may outperform a search that jumps around inside a node.
+ drivers/spmi/spmi-mtk-pmif.c |   6 +-
+ drivers/spmi/spmi-pmic-arb.c | 711 +++++++++++++++++++++++++++----------------
+ drivers/spmi/spmi.c          |  76 +++--
+ include/linux/spmi.h         |  10 +-
+ 4 files changed, 506 insertions(+), 297 deletions(-)
+---
+base-commit: ac139fc7db67968e5061715508b5fc4aa7c40c56
+change-id: 20240207-spmi-multi-master-support-832a704b779b
 
-I'm pontificating and will happily yield to someone who has data.
-I've tried to mark my assumptions clearly above.
+Best regards,
+-- 
+Abel Vesa <abel.vesa@linaro.org>
 
-
-Something else I'm not aware of (and filesystem B-trees will not have
-any experience of) is what research exists on efficiently adding new
-entries to a balanced tree so as to minimise rebalances.  Filesystems
-are like the Maple Tree in that for every logical offset inside a file,
-there is precisely one answer to "what physical block does this map to".
-
-For the i_mmap tree, we want instead to answer the question "Which VMAs
-have an intersection with this range of the file", and for the benchmark
-in question, we will have a large number of entries that compare equal to
-each other (they have the same start, and same end, but different values).
-So they could be inserted at many different points in the tree.  We'd like
-to choose the point which causes the least amount of rebalancing.
