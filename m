@@ -1,94 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A021E88D;
-	Tue,  6 Feb 2024 14:32:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE11133402;
+	Tue,  6 Feb 2024 14:32:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707229957; cv=none; b=ZpWDl8wjQbh2qFKR5/rtGpGsw0h/fAOPAfBPfmp0kq2VtdwY/i9h6fVNq0sq7AZL3ekT4teETKYMhmogTFHGxjKFjQohczBPHn0qBbuqDsepnwioIVYxYa1MdyIWL2T/V/8EO9v48AEEqEMZamezo029jCeGOZ8Pco8JPY6RK3c=
+	t=1707229978; cv=none; b=m3LQZREYKsPivkYW8Vy9FgdWYtCKebFfXk5oxmIefkqlX7QAvPklHEFSlsK4qkKnnF88nt3I8MZxrmNXwbBwkaM2k9CxqXfTsxZOhEhZe5wTOS1SSWV5MvtOOHpJfejZBKpgi1IoCWWt+4h3EkQnpXnOx6IjuAy+kiss93uv1SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707229957; c=relaxed/simple;
-	bh=et5rRptvkGz54dS+7a+fsl6EJMUrV2qa3AEGOsdAEDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k7Ud7lfrYII2yhqU5O8ZGL6jiShDhrMDvpH1YIYPy5Ba/7vphniuCdBQ21s82P6TW02iwE7JnjrnR1BwdMHFPQepvGCCq+sQRg2ryW+ly/EGONnZmajAMABQ0CRhP3/K5kKBxihPnbMlh6jj5kYs1n7pOWwlS+0t3mcPKqOeeVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaD+yq5Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707229978; c=relaxed/simple;
+	bh=9UD8b+TFEEK4uaC9hJArAphziHujlpaWwwUyIgLBMxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WhlpqjEEjE4emdEyizvScn+xMxS8q8vK24Z+Lva08VObi57BBxBPQhcWASFQtpMa9QjEl7sEI69IwIrjvAC/Tbhdxbp5f5+M5am5TAcxbZOfqMSzfT5eT55ZtcGOZbO1YD8LKTXOgc0j2GO8Ne5seoQ6JkslE+yP/bR6IP96qII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7jNBJ38; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaD+yq5Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A905EC433A6;
-	Tue,  6 Feb 2024 14:32:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7jNBJ38"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91ADC433C7;
+	Tue,  6 Feb 2024 14:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707229956;
-	bh=et5rRptvkGz54dS+7a+fsl6EJMUrV2qa3AEGOsdAEDo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iaD+yq5ZruiFRajM7YMGHPc08vRN62xdbsOlWGbncKdXd9Y0kW5yIoUvSqxvqWU0G
-	 DtRmudIUIzt4M1k+hBzo4tebFxyJc2r8HJQXsTfp37p3XHJ8eyfRTEftjVhzf+9bnh
-	 C2vT11JrIiqflalCujkazoXl8IoRq4ZniS969b+YDKes9/YWlHm0fzPo0gjzvrolB8
-	 jUGR8zIMbBRT8y8AUbywGA5SNVzIaUdIrgQRNNQ1Pwewl5YgI228C/BsvE+O0oLoAJ
-	 qhyLVAl12LupY9z8VksULiRIz9LaRu4Iuqm+lHRYnTMsnB9T+4peTzZB8ybhw/+VVJ
-	 S/Gu/wBSSCbaQ==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org,
-	Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Wolfgang Grandegger <wg@grandegger.com>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
+	s=k20201202; t=1707229978;
+	bh=9UD8b+TFEEK4uaC9hJArAphziHujlpaWwwUyIgLBMxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q7jNBJ38XIV3H3zCuCxJsKOiGWqCQhJwh2J4ojbgeQQlLzZ9I39+4pY+LK5QR5UJD
+	 KVk6U7n6+3DRXpTHA4fzjgSdepmDinVheDwDpOKJM50iSKlp27Fw5WH9KfztmuPae0
+	 i4Wc8DUZMspWmB2dIn0ZTmtSxbtxASicKnXisYz+/GNTTCAb1mncM7lrhR39vA/jA/
+	 qQE8r/wWcI+/1a9ALjyMFhCJ6oRsGps1mmNAiscAAfwI7WTBxENuVYlu7wAzZ/ixJW
+	 tr54XmjUxaB8ymcwokWfi8gMDLuVU5fjAzlUSAm58lE3rK/1rQUdxeh50sWfmwGYug
+	 YWVifAk5sTWsw==
+Date: Tue, 6 Feb 2024 14:32:54 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Javier Carrasco <javier.carrasco@wolfvision.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-can@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 0/7] MPFS clock fixes required for correct CAN clock modeling
-Date: Tue,  6 Feb 2024 14:27:31 +0000
-Message-ID: <20240206-cloud-subduing-cb42cc496621@spud>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122-catty-roast-d3625dbb02fe@spud>
-References: <20240122-catty-roast-d3625dbb02fe@spud>
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] ASoC: dt-bindings: xmos,xvf3500: add XMOS XVF3500
+ voice processor
+Message-ID: <ZcJDFi+iIQOWzgYw@finisterre.sirena.org.uk>
+References: <20240206-onboard_xvf3500-v3-0-f85b04116688@wolfvision.net>
+ <20240206-onboard_xvf3500-v3-6-f85b04116688@wolfvision.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=960; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=hnKnUQMm2IjOwpyCk+YzqyIAY3kVJ7l3mv8OoK5FHck=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDKmHHC/9F6+WlmxxPu61ZmpR1NEDe7K/cHvbRwltUvp2b NtE53vMHaUsDGIcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZiI92pGhl+uiQFJX799K4hb 8n9Vztpd6zgE2KMPBn5Zu7bg9rM1YUkM/x09FapepGZnvi+/ujzZXafzgkfXOXtvnajnIaZxG2Y eYgAA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="09qaS/n52Yq+UYa2"
+Content-Disposition: inline
+In-Reply-To: <20240206-onboard_xvf3500-v3-6-f85b04116688@wolfvision.net>
+X-Cookie: You might have mail.
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-On Mon, 22 Jan 2024 12:19:48 +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> While reviewing a CAN driver internally for MPFS [1], I realised
-> that the modeling of the MSSPLL such that only one of its outputs could
-> be used was not correct. The CAN controllers on MPFS take 2 input
-> clocks - one that is the bus clock, acquired from the main MSSPLL and
-> a second clock for the AHB interface to the result of the SoC.
-> Currently the binding for the CAN controllers and the represetnation
-> of the MSSPLL only allows for one of these clocks.
-> Modify the binding and devicetree to expect two clocks and rework the
-> main clock controller driver for MPFS such that it is capable of
-> providing multiple outputs from the MSSPLL.
-> 
-> [...]
+--09qaS/n52Yq+UYa2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-And this one is applied to riscv-dt-for-next. I don't think sending this
-for the -rcs is needed as there's no impact until the CAN driver shows up.
+On Tue, Feb 06, 2024 at 02:59:34PM +0100, Javier Carrasco wrote:
 
-[7/7] riscv: dts: microchip: add missing CAN bus clocks
-      https://git.kernel.org/conor/c/6c7353836a91
+> The XMOS XVF3500 VocalFusion Voice Processor[1] is a low-latency, 32-bit
+> multicore controller for voice processing.
 
-Thanks,
-Conor.
+Acked-by: Mark Brown <broonie@kernel.org>
+
+though...
+
+> +  vdd-supply:
+> +    description:
+> +      Regulator for the 1V0 supply.
+> +
+> +  vdd2-supply:
+> +    description:
+> +      Regulator for the 3V3 supply.
+
+...it's a bit weird that the supplies are named like this, usually
+there'd be some sort of meaningful name (even if it's just VDD_1V0 and
+VDD_3V3 or something).  Are you sure these are the actual names?
+
+--09qaS/n52Yq+UYa2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXCQxYACgkQJNaLcl1U
+h9BNHgf+JiPymHHAj2dWCTh3dcHIcsDDkVwzN5R4Ue5BSiQ+iVD4G0zQZHA9KlEc
+7TNtUN+LdLUnPZ9DldK5GMEfoNJAflLR5MSyICkP3YPJl+9pcMaT98l9asluFMqS
+Qex5uI3PwAMH9vqgj+xvk2OJM0Bp8LvTD9thGRXXh6N0QukDwovKqtVTLEVSUTkb
+/v5VhN6YhrOGy6Mlo27m0otmD2ERRhK2uGMHbf5Ghgp8qObCCHXVmEeRNRs8fulC
+WKjunt8FUP48V18SRPNKAxZl6bFJPzPer/IAF2CXd/crpUP5EdBxTbke8aJwe0vm
+JHzm5NTNpB9v+Ou15VrdXNWi1iPXHA==
+=6G9h
+-----END PGP SIGNATURE-----
+
+--09qaS/n52Yq+UYa2--
