@@ -1,135 +1,121 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22AC405DE
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492712E3F0;
+	Tue,  6 Feb 2024 08:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707209275; cv=none; b=UBlIoG0jtDDhVfEeDihuFLcFNT9iAFf8W10/ilhYyzn7Jfb1NApx67abU5MPw940GnyYvmL/jNdcZn0DyDfphrt72rKtJ4WR7zF+rY7b7qrbxUFuTTh+V0zEHZ/E8Rs6Z5bc33h1niaISbmE4d6F3sZYgtC2xc8F+4a8MNs9Ddw=
+	t=1707209311; cv=none; b=BJuEY0beoRzFkQ2/JKSNuxDJEQvmmZXp07i+CLRefoTpQZvkGHd+1k/Jjx48Y2c7ozVXv/EW5wCEkj0PdfU7kyzGtqMpDwDgXgkCSjoUhEss0QNDqXJEO5PrduyzaUafh4Rju0famu4uQ+Xc92jtV+DJBdC051xcnlQPCMMlocs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707209275; c=relaxed/simple;
-	bh=EsUbLCPxJMLTFoNAM1YzIwDW0MB37aZp3I+uJnzPFJw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=B0OYgLIKyr+m7Knlv7mrZLvYL8ub7/fTpeHxCFY8zCZUb7+RzDfrJJ00R9/1l2xajenMxTMI/cEQ82sURP3c5zFME9X7MYrA6fVx17YZBkz52tYvZ1yFzwfyeJiKvLwgwp5MbXqZ7nOepRW7kkBYSMzV/Qhr/Yr/ab1Vavjw6M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tGkw3ZSw; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707209311; c=relaxed/simple;
+	bh=+WjsFcTceA8X8B+jIsmK4AkVAO3quMUcgY/eCwA0gnA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KLMbVqX1UEi03kcak8efPR5ZJx4Q6Km5NGjzbHzDdaEcqdcYPFgMG9S8X/3HUw0xUDPwDmsUMEcFuOqs6Bnn6sSMyprFrWB5l92/rJdsQp4k9qC73Lsu+Z2cnK34dgb3zn5GpwvlkPbxd5eEmVKymph7R3iCuqmLtk8BgBdNii4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=foVtXMmx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tGkw3ZSw"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40fd55c7f93so5097755e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 00:47:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707209272; x=1707814072; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cgswh97JThtSZc+MWkKLL/sOqrjScM78TS+JiOIKCEY=;
-        b=tGkw3ZSw3dUjfD8rX10QZYPVcfZ54vxW3M6UC4z+ILSSAySg/6GrE7ivEzZzewHoGL
-         a5ES3AqMbWLwFWnsOn6PWgUzqJ++3ukJh+9hwUjoB2ENTnS2EUiz2QqRECmyUBMPGJv5
-         W3S26iowVwHRBbkZkT4Ln8MWrQJYMFVqGVhZcO5eAO8NOzsgTYILSiKRek/tkFv9/wov
-         nRr7x0W0/2NeNmXnxuWm0o6C4Ot6dKpK4XdxOU+tLypV7WF2ncVLeHAiW1B6NcgMEP3b
-         8hi+D/m6wpuRTCyIp3E7JiNNTmAfNJcJ0IxmFlAENGnoSQZ9+NH8iYUZoOo/tZLO5UHS
-         LBsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707209272; x=1707814072;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Cgswh97JThtSZc+MWkKLL/sOqrjScM78TS+JiOIKCEY=;
-        b=H+yigpc4wi/wMD1oKI+dao8y7NSsyYHVNJWPTyoOAdZzxg0G864oN9upAQVTt2AhFS
-         Z0atpEpLYkgQ94IWib7WopwUayBChiBbr2Q1mfzvfxD71RRxKE5ZkvyiNXGlOxUH79Wf
-         Q1L20XTBLg/SiyCoHrb738bvZYzvzuTfTaeT3+boZ7n7LsgFIWlBGFNfw1z0KREGw5sx
-         5PmBFIG9zwVIjLkZhcp5aKGpRBsGPPwNJKoJi7rmQ+C3+O7feHz8yJiD4W43C+JI/SX2
-         U8AK3buxpJx8BGxWq21oCKqG38N5nmPH8WyvUPwuwYk1GCq17eAsjtkS7OpDXSd/m2rI
-         M5EA==
-X-Gm-Message-State: AOJu0YyY5LFx0rmtepEpY7ZBgxeSs7gm7pZ9FBozE3YMGTTTU/6psk+G
-	y04FxMRuqPS5AEC7MGPDVXTko/E/EwwcIAXjFvQPyXxaY/LuDQV7nxZ7at/8Pbg=
-X-Google-Smtp-Source: AGHT+IGhYB7S/j7lcNzeBzGO6RKkAL5j0F4BGe7lMnfxVZSyyt0yaNgwR3CzP3SL1KkRGHmCS6IleQ==
-X-Received: by 2002:a05:600c:5204:b0:40f:bdf3:3426 with SMTP id fb4-20020a05600c520400b0040fbdf33426mr2050471wmb.31.1707209271941;
-        Tue, 06 Feb 2024 00:47:51 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX161gOqgvdRv10X26uunEqBIdx6lmer6jebnO8ie7WB84hoaVNdkmlbFSJ5LjujcMzuSzR/xphCn25giI+Q9UXCOpzU0SYElVmWIQHgdF1py1U6L8WklwZZ3QCMEX5nHAOzbJ9xizUKNmRG7qouRrbJUW2H0ChFld4lhcQ1KE9rJ+70wxfDZBjS2Kc0VxqLZOAGYnfch42/wyj5QYcH8ntahvUVFDmk41fpL5rXhGVE0BbfZWgTNwPSj9wZMcSWF77C2AruITJSKqyiP1Go4J5m1tT1or2ugXqOOxrXzTQ7YDRBGl1iKaBRVIiXD6ZaV+DyjcjKv5cvRVdxCt+od9xKcOV6F3/VQr3bdL2enneL+g0fOryGLlMbyAjDVZkC9jBg3EDHyoUXjj03kT0z561HwcXCTD6FBYlDJfH5VxhCQ7lVPLqsGVNUuEXexKOKhaEBxfYQHceEq7+1Ca4rKDHI5JfApLifcobxpRZNIZRb47N+wmvsTtdfZg4sc9kWkJD3GZshjCLZt+YeEjY/a3k8X4emne7fSNi6nAfvkxYgs12WG8iNGcsJjCA3i0mkA7UCH+6Wp8IcF80TAwq9ZrMZVn8Lmo9ggVYYDUb6g==
-Received: from ?IPV6:2a01:e0a:982:cbb0:ba23:8574:fa8:28dd? ([2a01:e0a:982:cbb0:ba23:8574:fa8:28dd])
-        by smtp.gmail.com with ESMTPSA id l16-20020a5d5610000000b0033b3ca3a255sm1511899wrv.19.2024.02.06.00.47.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Feb 2024 00:47:51 -0800 (PST)
-Message-ID: <0e47aa27-b28d-4672-a2eb-f906e0e6a5ac@linaro.org>
-Date: Tue, 6 Feb 2024 09:47:49 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="foVtXMmx"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4168gE9h008383;
+	Tue, 6 Feb 2024 08:48:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : in-reply-to : references : date : message-id : mime-version :
+ content-type; s=pp1; bh=j0CHLrBCXuZm2/lScCN+j8B7uj/p62qacpZ+jr+ClZs=;
+ b=foVtXMmx/ORrN7NqDA02NJI/eRI0o91FUUG/X4r3keeVKQw9k3Lwi4iw/fblBQKoANlY
+ Z3s9LrCJ9+MRssoCrxM5fkUYxQ/Wb30y8sz0qVeR7OkzOuqfLr84xrDyJ5ctPmjhyADX
+ c06brdscJKO2iB/lemCA28WQ85JgA7zMI4MkWDAc1nBDn+I6riwbzErIVGxAT0CKDE7y
+ nNg8AFQ/uZh3bw6388r+RUOIfmPsmSDXxb3Wjm56tlCC1DPGDVFppnuxwARckI/+X5mb
+ BT3Qx48fFxyl3z/o641TC4QgYR/CGz5bpgnVkpI7RoDpK8BQZtvMhLOUa2qRrRRVolay Aw== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w3hg6g62x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Feb 2024 08:48:21 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4165jXJ7014724;
+	Tue, 6 Feb 2024 08:48:20 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w20tnnvrt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Feb 2024 08:48:19 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4168mHFo12386936
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 Feb 2024 08:48:17 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5951F20043;
+	Tue,  6 Feb 2024 08:48:17 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2C3E220040;
+	Tue,  6 Feb 2024 08:48:17 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  6 Feb 2024 08:48:17 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mete Durlu <meted@linux.ibm.com>
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+In-Reply-To: <yt9d34u63xxz.fsf@linux.ibm.com> (Sven Schnelle's message of
+	"Tue, 06 Feb 2024 07:32:08 +0100")
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+	<yt9djznj3vbl.fsf@linux.ibm.com>
+	<20240205092353.523cc1ef@rorschach.local.home>
+	<yt9d34u63xxz.fsf@linux.ibm.com>
+Date: Tue, 06 Feb 2024 09:48:16 +0100
+Message-ID: <yt9dsf262d2n.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 08/18] mfd: khadas-mcu: convert to use maple tree register
- cache
-Content-Language: en-US, fr
-To: Bo Liu <liubo03@inspur.com>, lee@kernel.org, wens@csie.org,
- marek.vasut+renesas@gmail.com, support.opensource@diasemi.com,
- ckeepax@opensource.cirrus.com, rf@opensource.cirrus.com,
- mazziesaccount@gmail.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com
-Cc: linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-amlogic@lists.infradead.org, patches@opensource.cirrus.com,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20240206071314.8721-1-liubo03@inspur.com>
- <20240206071314.8721-9-liubo03@inspur.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20240206071314.8721-9-liubo03@inspur.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Fn1fDA3yR4AlgQT39UDWfGUeDdOdEdlK
+X-Proofpoint-ORIG-GUID: Fn1fDA3yR4AlgQT39UDWfGUeDdOdEdlK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-06_02,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=720 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402060061
 
-On 06/02/2024 08:13, Bo Liu wrote:
-> The maple tree register cache is based on a much more modern data structure
-> than the rbtree cache and makes optimisation choices which are probably
-> more appropriate for modern systems than those made by the rbtree cache.
-> 
-> Signed-off-by: Bo Liu <liubo03@inspur.com>
-> ---
->   drivers/mfd/khadas-mcu.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/khadas-mcu.c b/drivers/mfd/khadas-mcu.c
-> index 61396d824f16..ba981a788692 100644
-> --- a/drivers/mfd/khadas-mcu.c
-> +++ b/drivers/mfd/khadas-mcu.c
-> @@ -72,7 +72,7 @@ static const struct regmap_config khadas_mcu_regmap_config = {
->   	.max_register	= KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
->   	.volatile_reg	= khadas_mcu_reg_volatile,
->   	.writeable_reg	= khadas_mcu_reg_writeable,
-> -	.cache_type	= REGCACHE_RBTREE,
-> +	.cache_type	= REGCACHE_MAPLE,
->   };
->   
->   static struct mfd_cell khadas_mcu_fan_cells[] = {
+Sven Schnelle <svens@linux.ibm.com> writes:
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Looking at trace_save_cmdline():
+>
+> tpid = tsk->pid & (PID_MAX_DEFAULT - 1); where PID_MAX_DEFAULT = 0x8000
+>
+> so this is basically
+>
+> tpid = tsk->pid & 0x7fff;
+>
+> further on:
+>
+>         // might clash with other pid if (otherpid & 0x7fff) == (tsk->pid & 0x7fff)
+> 	idx = savedcmd->map_pid_to_cmdline[tpid];
+> 	if (idx == NO_CMDLINE_MAP) {
+>                 // This will pick an existing entry if there are
+>                 // more than cmdline_num entries present
+> 		idx = (savedcmd->cmdline_idx + 1) % savedcmd->cmdline_num;      
+> 		savedcmd->map_pid_to_cmdline[tpid] = idx;
+> 		savedcmd->cmdline_idx = idx;
+> 	}
+>
+> So i think the problem that sometimes '<...>' instead of the correct
+> comm is logged is just expected behaviour given the code above. 
+
+I added some logging, and the test is not triggering this issue. So i
+assume the default of 128 cmdline entries is just to small. Sorry for
+the noise. Lets see whether we're still triggering some failures with
+the other fix applied in CI. If we do, maybe we want to increase the
+saved_cmdline_size for the ftrace test suite.
