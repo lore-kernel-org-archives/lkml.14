@@ -1,137 +1,308 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5001350DE;
-	Tue,  6 Feb 2024 15:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A914D13A26F;
+	Tue,  6 Feb 2024 15:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707232301; cv=none; b=jGBbQSfVcnFxH5ANmuOplpNwZGUwLr8dkNlzX01iZv8HJFnC0rIBS8KkyhAvwMy6pf27E/WHMlRPnZMi9R2XUvoptAcKHpR7aF/4w/6lkarScEE3tzzZ+xCIcq8j9M+ElGMB3G1cnRmJOrNqFNsjsCuf86T4lFoFcw/tN1wCeOU=
+	t=1707232310; cv=none; b=q6oOfE0Go7kwiqFKOxzBfJZodzqXo10dnq+BcVuE0542A5uNRAPmRvYaTCRJvJDW5u7Pugv58GlkqlGLCBCZB83UxgBrjt1f2EMsTMXbeuZRK6Fgp0xNGqEqJHz83Gfvpyaw5N8W/dUGIeSHjvTlgfXHr5hDuYiZFCJ3Qxa429o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707232301; c=relaxed/simple;
-	bh=kfaxoQeNpM0J7vzhMmPAFIpiSCm9y9dHMnMLrGb5m+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ghc5FTZV7My1n6paG1Dvavkn7+JtIAW3tgmeZ7XhgeKEtkIa9PW1NHcmbYjZshBy4XAWmNDLYhIKwaMZ4hVysKaqDK657T9y0CV+hEHodXnUU/FNYbziFui1y/NRBXji9LvoVF9P/JLLSX69bKFai1PYDimCQa7IDnUGDqkREA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwgtWICZ; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707232310; c=relaxed/simple;
+	bh=u1Sp9EDLtJjdUxY7aOcPZzg2Alw+OmlWu8uSNJvvkPE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R6y+eyBXMRTvslrXPFHH4juGSAjgwaaGut77GLNUw8gzZa1zAzBJtqqNsL9oB4LHZYQBptfkXbGWonUVJPaTEMHRn52ovvtzUAaCo8d831Uy6TR1cnxskYjOHBzV4OCHuw9frEofSjH5u3agarLtgEBkI4O8x5v/F0OtSDTFKN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfLlcw/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwgtWICZ"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2185d368211so2878457fac.3;
-        Tue, 06 Feb 2024 07:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707232299; x=1707837099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H7m3nN4KaHdD/C3S03al8GMlkoTP/nChFRL53bv18L8=;
-        b=DwgtWICZRF0WDR5aYRfPQCwqE0J579IkYjqknrPt0TWJdQj4/NRUq3Hc+xboqIWadH
-         pHAtyqwVqVIExXMA0PSmbQA3jG+WvArafr9qni3sTyvbZ7XMeG9uG5iE6JhRxXaeyx3U
-         l5yzIGlpsJFst1mY5OQRfFzmUB4WdimC8h3r38fHfm6U1Zj2Vc1G3Idj3dy6NJq9Zw7w
-         p3RRlfb5TOAr6AT4QemTw4e0b38v7bBOfRuOpYLSXfMwbdrHqocDMuaRDF8CGoNiZRhi
-         K5DoL57fpaUUydSunN/TSbYD3pbv03r/l5CskFOHIth2XHYSUTTCAmJr8i5mxxDtHqoZ
-         VDlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707232299; x=1707837099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H7m3nN4KaHdD/C3S03al8GMlkoTP/nChFRL53bv18L8=;
-        b=ThtfG4Qd06SidGPFiA8QUFkbnmMmspusnPKXhJWbxTSG1Ls9myVPeaMvlsA8GmYC7Q
-         AKs9N1JCd6GU9TxTSV2H15zaGh9BXfdqCZTd938k88KpeR+qHLjDCmwxM+hi5rDOoani
-         N0Msd3kIngIw/Dhdt8KMnnrCSPXTgqDd6zqoRqAmJyi63CX8au04UfFhYk/cSEgOmKIN
-         6EKkMbGEwPMDAbLRwYOXpeNKMZGbFjtv3aOs4HiESgSsbsXsvNNvmvl2g6h0zDjeDA0F
-         s4RhvT6OED8Inx0HHYGVGeyo2V8QeUM3C6SEBSgCzdhX/BtOVRxzxTNpFTYb7p+aNg0h
-         fu3A==
-X-Gm-Message-State: AOJu0YwgK5WgXJkOVQb1ZbOes15SBmHsCZI/ZPQ+KKLGW43jkMIW3Ir6
-	QAdTd5H5sX7GKssthEpTipBEmLOBEtfEBsRSd+PstspFtZgOj1IUPGrL+vMMuy/98WHZ3HjfAH5
-	4889dn+PtKFC7hsNQYZMTPF5pfY0=
-X-Google-Smtp-Source: AGHT+IFNScXBAMLrh/yGM17A4GNHZl8dQGspF49hLjDE1iYzOhRUEUmY+/RycFhZ6yr0/xr6ujyLAw9TigmODs0sPb4=
-X-Received: by 2002:a05:6871:5813:b0:219:9253:e5aa with SMTP id
- oj19-20020a056871581300b002199253e5aamr3318308oac.8.1707232299128; Tue, 06
- Feb 2024 07:11:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfLlcw/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACA1C433F1;
+	Tue,  6 Feb 2024 15:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707232310;
+	bh=u1Sp9EDLtJjdUxY7aOcPZzg2Alw+OmlWu8uSNJvvkPE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HfLlcw/v8IKgVgBYWYpRq8Fg20EtApyFESL8y+YtfOK/QmeWmRA132OtXqU+wCnga
+	 N/RhFalCNaTlRaC7L0uPd/EG6Sjb9NKdNFnd/9KHQs95x53VpqOEuDYd4r6aroV89U
+	 m1gE4A4Ye6ahnNN9azCBKEMDGEDUKppppAS3uibPdW/hscDTCcTzMnSjsotLhY2Yl4
+	 Twnbo5mLxfXFvMrtN0/9f5RmTx3O6eFRb8Bs6Wk0OrhNLNOEk7SUX/IzULz7pQVn1Q
+	 gjboLnUirFA+qHQzQn3ZoNgq/6NGzdrvUlrmVq2iqHPgFSCyg44kw9EplRUnSpjPzN
+	 oDsM9p1yg/jtQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v7 23/36] function_graph: Add a new exit handler with parent_ip and ftrace_regs
+Date: Wed,  7 Feb 2024 00:11:44 +0900
+Message-Id: <170723230476.502590.16817817024423790038.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <170723204881.502590.11906735097521170661.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205182506.3569743-1-stefanb@linux.ibm.com> <20240205182506.3569743-8-stefanb@linux.ibm.com>
-In-Reply-To: <20240205182506.3569743-8-stefanb@linux.ibm.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 6 Feb 2024 17:11:28 +0200
-Message-ID: <CAOQ4uxj0jQz64KArFM3q85N7QKPgJ1RazmeW2NnY6GFDace4Qg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] fs: Rename SB_I_EVM_UNSUPPORTED to SB_I_EVM_HMAC_UNSUPPORTED
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
-	roberto.sassu@huawei.com, brauner@kernel.org, miklos@szeredi.hu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 5, 2024 at 8:25=E2=80=AFPM Stefan Berger <stefanb@linux.ibm.com=
-> wrote:
->
-> Now that EVM supports RSA signatures for previously completely
-> unsupported filesystems rename the flag SB_I_EVM_UNSUPPORTED to
-> SB_I_EVM_HMAC_UNSUPPORTED to reflect that only HMAC is not supported.
->
-> Suggested-by: Amir Goldstein <amir73il@gmail.com>
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Acked-by: Amir Goldstein <amir73il@gmail.com>
+Add a new return handler to fgraph_ops as 'retregfunc'  which takes
+parent_ip and ftrace_regs instead of ftrace_graph_ret. This handler
+is available only if the arch support CONFIG_HAVE_FUNCTION_GRAPH_FREGS.
+Note that the 'retfunc' and 'reregfunc' are mutual exclusive.
+You can set only one of them.
 
-> ---
->  fs/overlayfs/super.c              | 2 +-
->  include/linux/fs.h                | 2 +-
->  security/integrity/evm/evm_main.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-> index 460126b7e1cd..db132d437e14 100644
-> --- a/fs/overlayfs/super.c
-> +++ b/fs/overlayfs/super.c
-> @@ -1445,7 +1445,7 @@ int ovl_fill_super(struct super_block *sb, struct f=
-s_context *fc)
->          * lead to unexpected results.
->          */
->         sb->s_iflags |=3D SB_I_NOUMASK;
-> -       sb->s_iflags |=3D SB_I_EVM_UNSUPPORTED;
-> +       sb->s_iflags |=3D SB_I_EVM_HMAC_UNSUPPORTED;
->
->         err =3D -ENOMEM;
->         root_dentry =3D ovl_get_root(sb, ctx->upper.dentry, oe);
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 1823a93202bd..37306a09b4dc 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1177,7 +1177,7 @@ extern int send_sigurg(struct fown_struct *fown);
->  #define SB_I_USERNS_VISIBLE            0x00000010 /* fstype already moun=
-ted */
->  #define SB_I_IMA_UNVERIFIABLE_SIGNATURE        0x00000020
->  #define SB_I_UNTRUSTED_MOUNTER         0x00000040
-> -#define SB_I_EVM_UNSUPPORTED           0x00000080
-> +#define SB_I_EVM_HMAC_UNSUPPORTED      0x00000080
->
->  #define SB_I_SKIP_SYNC 0x00000100      /* Skip superblock at global sync=
- */
->  #define SB_I_PERSB_BDI 0x00000200      /* has a per-sb bdi */
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/e=
-vm_main.c
-> index c3bd88aba78c..ff659e622f4a 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -155,7 +155,7 @@ static int is_unsupported_fs(struct dentry *dentry)
->  {
->         struct inode *inode =3D d_backing_inode(dentry);
->
-> -       if (inode->i_sb->s_iflags & SB_I_EVM_UNSUPPORTED) {
-> +       if (inode->i_sb->s_iflags & SB_I_EVM_HMAC_UNSUPPORTED) {
->                 pr_info_once("%s not supported\n", inode->i_sb->s_type->n=
-ame);
->                 return 1;
->         }
-> --
-> 2.43.0
->
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v6:
+  - update to use ftrace_regs_get_return_value() because of reordering
+    patches.
+ Changes in v3:
+  - Update for new multiple fgraph.
+  - Save the return address to instruction pointer in ftrace_regs.
+---
+ arch/x86/include/asm/ftrace.h |    2 +
+ include/linux/ftrace.h        |   10 +++++-
+ kernel/trace/Kconfig          |    5 ++-
+ kernel/trace/fgraph.c         |   70 ++++++++++++++++++++++++++++-------------
+ 4 files changed, 63 insertions(+), 24 deletions(-)
+
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index c88bf47f46da..a061f8832b20 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -72,6 +72,8 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
+ 	override_function_with_return(&(fregs)->regs)
+ #define ftrace_regs_query_register_offset(name) \
+ 	regs_query_register_offset(name)
++#define ftrace_regs_get_frame_pointer(fregs) \
++	frame_pointer(&(fregs)->regs)
+ 
+ struct ftrace_ops;
+ #define ftrace_graph_func ftrace_graph_func
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 65d4d4b68768..da2a23f5a9ed 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -43,7 +43,9 @@ struct dyn_ftrace;
+ 
+ char *arch_ftrace_match_adjust(char *str, const char *search);
+ 
+-#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
++#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
++unsigned long ftrace_return_to_handler(struct ftrace_regs *fregs);
++#elif defined(CONFIG_HAVE_FUNCTION_GRAPH_RETVAL)
+ struct fgraph_ret_regs;
+ unsigned long ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs);
+ #else
+@@ -157,6 +159,7 @@ struct ftrace_regs {
+ #define ftrace_regs_set_instruction_pointer(fregs, ip) do { } while (0)
+ #endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
+ 
++
+ static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+ {
+ 	if (!fregs)
+@@ -1067,6 +1070,10 @@ typedef int (*trace_func_graph_regs_ent_t)(unsigned long func,
+ 					   unsigned long parent_ip,
+ 					   struct ftrace_regs *fregs,
+ 					   struct fgraph_ops *); /* entry w/ regs */
++typedef void (*trace_func_graph_regs_ret_t)(unsigned long func,
++					    unsigned long parent_ip,
++					    struct ftrace_regs *,
++					    struct fgraph_ops *); /* return w/ regs */
+ 
+ extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
+ 
+@@ -1076,6 +1083,7 @@ struct fgraph_ops {
+ 	trace_func_graph_ent_t		entryfunc;
+ 	trace_func_graph_ret_t		retfunc;
+ 	trace_func_graph_regs_ent_t	entryregfunc;
++	trace_func_graph_regs_ret_t	retregfunc;
+ 	struct ftrace_ops		ops; /* for the hash lists */
+ 	void				*private;
+ 	int				idx;
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..308b3bec01b1 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -34,6 +34,9 @@ config HAVE_FUNCTION_GRAPH_TRACER
+ config HAVE_FUNCTION_GRAPH_RETVAL
+ 	bool
+ 
++config HAVE_FUNCTION_GRAPH_FREGS
++	bool
++
+ config HAVE_DYNAMIC_FTRACE
+ 	bool
+ 	help
+@@ -232,7 +235,7 @@ config FUNCTION_GRAPH_TRACER
+ 
+ config FUNCTION_GRAPH_RETVAL
+ 	bool "Kernel Function Graph Return Value"
+-	depends on HAVE_FUNCTION_GRAPH_RETVAL
++	depends on HAVE_FUNCTION_GRAPH_RETVAL || HAVE_FUNCTION_GRAPH_FREGS
+ 	depends on FUNCTION_GRAPH_TRACER
+ 	default n
+ 	help
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 459912ca72e0..12e5f108e242 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -752,8 +752,8 @@ int function_graph_enter_ops(unsigned long ret, unsigned long func,
+ 
+ /* Retrieve a function return address to the trace stack on thread info.*/
+ static struct ftrace_ret_stack *
+-ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+-			unsigned long frame_pointer, int *index)
++ftrace_pop_return_trace(unsigned long *ret, unsigned long frame_pointer,
++			int *index)
+ {
+ 	struct ftrace_ret_stack *ret_stack;
+ 
+@@ -798,10 +798,6 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+ 
+ 	*index += FGRAPH_RET_INDEX;
+ 	*ret = ret_stack->ret;
+-	trace->func = ret_stack->func;
+-	trace->calltime = ret_stack->calltime;
+-	trace->overrun = atomic_read(&current->trace_overrun);
+-	trace->depth = current->curr_ret_depth;
+ 	/*
+ 	 * We still want to trace interrupts coming in if
+ 	 * max_depth is set to 1. Make sure the decrement is
+@@ -840,21 +836,42 @@ static struct notifier_block ftrace_suspend_notifier = {
+ /* fgraph_ret_regs is not defined without CONFIG_FUNCTION_GRAPH_RETVAL */
+ struct fgraph_ret_regs;
+ 
++static void fgraph_call_retfunc(struct ftrace_regs *fregs,
++				struct fgraph_ret_regs *ret_regs,
++				struct ftrace_ret_stack *ret_stack,
++				struct fgraph_ops *gops)
++{
++	struct ftrace_graph_ret trace;
++
++	trace.func = ret_stack->func;
++	trace.calltime = ret_stack->calltime;
++	trace.overrun = atomic_read(&current->trace_overrun);
++	trace.depth = current->curr_ret_depth;
++	trace.rettime = trace_clock_local();
++#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
++	if (fregs)
++		trace.retval = ftrace_regs_get_return_value(fregs);
++	else
++		trace.retval = fgraph_ret_regs_return_value(ret_regs);
++#endif
++	gops->retfunc(&trace, gops);
++}
++
+ /*
+  * Send the trace to the ring-buffer.
+  * @return the original return address.
+  */
+-static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs,
++static unsigned long __ftrace_return_to_handler(struct ftrace_regs *fregs,
++						struct fgraph_ret_regs *ret_regs,
+ 						unsigned long frame_pointer)
+ {
+ 	struct ftrace_ret_stack *ret_stack;
+-	struct ftrace_graph_ret trace;
+ 	unsigned long bitmap;
+ 	unsigned long ret;
+ 	int index;
+ 	int i;
+ 
+-	ret_stack = ftrace_pop_return_trace(&trace, &ret, frame_pointer, &index);
++	ret_stack = ftrace_pop_return_trace(&ret, frame_pointer, &index);
+ 
+ 	if (unlikely(!ret_stack)) {
+ 		ftrace_graph_stop();
+@@ -863,10 +880,8 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
+ 		return (unsigned long)panic;
+ 	}
+ 
+-	trace.rettime = trace_clock_local();
+-#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+-	trace.retval = fgraph_ret_regs_return_value(ret_regs);
+-#endif
++	if (fregs)
++		ftrace_regs_set_instruction_pointer(fregs, ret);
+ 
+ 	bitmap = get_fgraph_index_bitmap(current, index);
+ 	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
+@@ -877,7 +892,10 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
+ 		if (gops == &fgraph_stub)
+ 			continue;
+ 
+-		gops->retfunc(&trace, gops);
++		if (gops->retregfunc)
++			gops->retregfunc(ret_stack->func, ret, fregs, gops);
++		else
++			fgraph_call_retfunc(fregs, ret_regs, ret_stack, gops);
+ 	}
+ 
+ 	/*
+@@ -892,20 +910,22 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
+ 	return ret;
+ }
+ 
+-/*
+- * After all architecures have selected HAVE_FUNCTION_GRAPH_RETVAL, we can
+- * leave only ftrace_return_to_handler(ret_regs).
+- */
+-#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
++#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
++unsigned long ftrace_return_to_handler(struct ftrace_regs *fregs)
++{
++	return __ftrace_return_to_handler(fregs, NULL,
++				ftrace_regs_get_frame_pointer(fregs));
++}
++#elif defined(CONFIG_HAVE_FUNCTION_GRAPH_RETVAL)
+ unsigned long ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs)
+ {
+-	return __ftrace_return_to_handler(ret_regs,
++	return __ftrace_return_to_handler(NULL, ret_regs,
+ 				fgraph_ret_regs_frame_pointer(ret_regs));
+ }
+ #else
+ unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
+ {
+-	return __ftrace_return_to_handler(NULL, frame_pointer);
++	return __ftrace_return_to_handler(NULL, NULL, frame_pointer);
+ }
+ #endif
+ 
+@@ -1262,9 +1282,15 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	int ret = 0;
+ 	int i;
+ 
+-	if (gops->entryfunc && gops->entryregfunc)
++	if ((gops->entryfunc && gops->entryregfunc) ||
++	    (gops->retfunc && gops->retregfunc))
+ 		return -EINVAL;
+ 
++#ifndef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
++	if (gops->retregfunc)
++		return -EOPNOTSUPP;
++#endif
++
+ 	mutex_lock(&ftrace_lock);
+ 
+ 	if (!gops->ops.func) {
+
