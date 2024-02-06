@@ -1,192 +1,142 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66CC12AAF5
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F020C129A88
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707207475; cv=none; b=HuZlket3NtHAUotgqTjn446Xh/Duy3gck8oBMCGCmnEN/PHNjpeR2wboDqPiSRc/bNR8PUiYim/cEDq51fuQVv93KBI/gumGyqOj55ONv4IzqkfgiHf/drGZDGymTph9k7vN3PDtod56OF0Ry6UPYYeHqv6pAFXzKbJ7WVp/yuw=
+	t=1707207484; cv=none; b=ZOhzHNj3flSdxw+GM8c+iNfLlmxjz+GJiNlR3P66mKsBWqLJP9d/iS1sp+3wthkkTZeQ6appDH9nz4oRuK6UIrPgYAS3VRP1G44kRJM84Jsdt+rDapvzXGBS29nveK0T8eAXHPZuSYHhJ/fgfu22VqazUQKmZr3dM1rDB+LxjCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707207475; c=relaxed/simple;
-	bh=s450wOfvSBSteTUkLqao8mIdQacIljDGHpPnabtnEdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AE+qcbCznw2AqomCoc5xXyN+qinAlc17T0DntNQT9+4VsQTrfLdNLbXn7Bz7AK/yaff8V3i3lNRSqNeDQ5Xn2gn3zkVKyOEwc3YG2pgpmISp+X60wjKTdMWu2c2wiS9jX/D12U5RzOv2cGRKDaXNCGskfV4CJHZXAvJQoPp90eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rXGeE-0002Xs-AM; Tue, 06 Feb 2024 09:17:42 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rXGe9-004mrs-2o; Tue, 06 Feb 2024 09:17:37 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rXGe8-00EA9b-38;
-	Tue, 06 Feb 2024 09:17:36 +0100
-Date: Tue, 6 Feb 2024 09:17:36 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Alexander Graf <graf@amazon.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
-Message-ID: <ZcHrIJ7lxpbkm5sc@pengutronix.de>
-References: <20240117144704.602-1-graf@amazon.com>
+	s=arc-20240116; t=1707207484; c=relaxed/simple;
+	bh=R69uSibx/lm4G0LccNc4x+Ypc8MXfBEoFVAyT1Kwd3g=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jh+LM+Yp57282TKVlbXNjSQFKWtmRALXgZx6ZybjDnXjIkBhVoRFVzeC2+pvtWDttjfdsbOxEWt5PUZh7uFvcbxytrezaSHYCZeIJmhCKPjfpIilA9wyUd5DG/I7/kXTKjs0lyFLFyqIxxKcZ/sKnMpJgSjngRkCb8mxTFaf4as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pLA5Ens/; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLA5Ens/"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33b466bc363so236154f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 00:18:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707207481; x=1707812281; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ecxK0OeSx8DU/V9lxqcdeUM2UFGv78q9j2Mxgkb5Lhg=;
+        b=pLA5Ens/yqmPbkXeEdKhETLN/yEYmqj2AKomIiL66GRCOO6hoZAZKG4nc04W9FIuyb
+         8qsOjs0SvWzheUL9UlNTkbs1uRj7nFNg66rPijwumURwd2TK1MySEBOpa5ILXQ8OtJ9h
+         JIcEuC6b2paOnKdhgWP+vh+U1FbdmVwHL+4xLvrV+ObR+7eBLZAf5RHcOmzYb+pzy000
+         ys9yC7DIcHuGPLU8ione82SNIGd3FtbphdBkT0BINb5PUmt6aLeTnPoON/i5bL3i2Vzm
+         wKR9H0W4PjlBXvBGM++6+ikfexU+CP7A4FiEwpOOSdTfb8f1joZwM+wFA22cAvy4/CO8
+         L4SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707207481; x=1707812281;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ecxK0OeSx8DU/V9lxqcdeUM2UFGv78q9j2Mxgkb5Lhg=;
+        b=mDEM+x/vFgtaALwUysOAn1R5iGUSCeca5QtP9+K581Wttuty1O8yAjh/HTMHohg+my
+         feYP3E/UqQxCjBr8RsaZ9vjKN03shBIr5S5lKqMrRWqYovn/ps9TiWwpZw8nwH2JjfIK
+         yNskGn9RR7sAWhv9Cd5dAbS58ZhIeWB+Fr0i+L3dvDzK/TE61DP+xjAQDQR3EbdSGWui
+         Bq54wsbgQQMes5elpVgvD5oflvtIBTYInjFR3oFMHb9kEreCYNqNIeSyD+HLkpHKvwYm
+         JR+RfoCAiyLK+WSuWR0+gX8+WEeymYS1qWpUTvQ3bWCsiZZ0BER52+O0O1b0uS0xVXfk
+         Q3Tg==
+X-Gm-Message-State: AOJu0YzRfEqUik/k+P12P4uP4vgShfRK5+xLJ6FEdiFLgy+Wa8C8Dg0P
+	REFpICooRgv+4z8p3nqmNHMCw6q12IdXMJMC2jJ+/1RRGqN/A1x1T+q8p7sfHrQ=
+X-Google-Smtp-Source: AGHT+IEpMcoa6cfEkFvIfvzpfuQ8Yx+dGDw/vR+l5ulMZgEDkKNzC9S0nuR1ItidAKgMFW7/sDqpmA==
+X-Received: by 2002:a5d:55c6:0:b0:33b:287d:412c with SMTP id i6-20020a5d55c6000000b0033b287d412cmr598635wrw.43.1707207481106;
+        Tue, 06 Feb 2024 00:18:01 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWHbtH0YjwFLURKvvaj4m5/n5NPHSzvgoPcHOJvao8oQ289AiAyaZ5GlNthURTVrfwvxHGKwF/HByeoEpD+uZMQpctXoCfGsgiAyaEyYsTs6LfLhec/hMJIhdvM8RXPV+7wCwtHd8sZZgDd4GXS1jAHF5aui6uCObLAEYXcNNqdPt7J9g7TkUH/rxmx1DhYLT8uSV/U/hqzSL72p1q/aKrsVnkOXT7g8wHC1X7FkLKguFAX18M/M9Y62UGCDBCXsQaGxayBlRjZfLAfNfKon+27TgHHviOPrgxIyqs4hV+EekHxC8x5no4M0zewRa1C+jist3lT6cKCEGVn8HdYdujWfObaAUDD5wJz5kp/iEP6LSZ3hNfrXrTSlXcpfrrJhCAlqScMB3qMlxsf87phYRMPGVn4dUiydThdQmv21/QTuS03MvLDuTgufP3V8rsjNunlMsRUCF3He1FMwwC/nlBT1ttm5APCq6KNQy/rmWrRgJ4yWZUcGMYD31PLCggD2R2e0dxSEdgKUf40GI/sb4Na0qpZUpQdBMg/YGbf7UwG9Y3JawmduQdwiiNK3mEhXj3M0uJdPc96IrJsckfaO5aTaDfyWrkSqSoA1na0Ff6a0ipo/klDRxmO7jjBMZ0lYw==
+Received: from ?IPV6:2a01:e0a:982:cbb0:ba23:8574:fa8:28dd? ([2a01:e0a:982:cbb0:ba23:8574:fa8:28dd])
+        by smtp.gmail.com with ESMTPSA id n2-20020a5d67c2000000b0033b4335dce5sm1418976wrw.85.2024.02.06.00.17.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Feb 2024 00:18:00 -0800 (PST)
+Message-ID: <b78d2ca4-9516-4d7e-9ec0-3fe93894523b@linaro.org>
+Date: Tue, 6 Feb 2024 09:17:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240117144704.602-1-graf@amazon.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 4/5] drm/panel: simple: fix flags on RK043FN48H
+Content-Language: en-US, fr
+To: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20240205-ltdc_mp13-v1-0-072d24bf1b36@foss.st.com>
+ <20240205-ltdc_mp13-v1-4-072d24bf1b36@foss.st.com>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <20240205-ltdc_mp13-v1-4-072d24bf1b36@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Alexander,
+On 05/02/2024 10:06, Raphael Gallais-Pou wrote:
+> DISPLAY_FLAGS_SYNC_POSEDGE is missing in the flags on the default
+> timings. When overriding the default mode with one described in the
+> device tree, the mode does not get acked because of this missing flag.
+> Moreover since the panel is driven by the positive edge it makes sense
+> to add it here.
+> 
+> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+> ---
+>   drivers/gpu/drm/panel/panel-simple.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 2214cb09678c..7b286382ffb4 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -3523,7 +3523,8 @@ static const struct display_timing rocktech_rk043fn48h_timing = {
+>   	.vfront_porch = { 1, 4, 4 },
+>   	.vsync_len = { 1, 10, 10 },
+>   	.flags = DISPLAY_FLAGS_VSYNC_LOW | DISPLAY_FLAGS_HSYNC_LOW |
+> -		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE,
+> +		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
+> +		 DISPLAY_FLAGS_SYNC_POSEDGE,
+>   };
+>   
+>   static const struct panel_desc rocktech_rk043fn48h = {
+> 
 
-Nice work!
-
-On Wed, Jan 17, 2024 at 02:46:47PM +0000, Alexander Graf wrote:
-> Kexec today considers itself purely a boot loader: When we enter the new
-> kernel, any state the previous kernel left behind is irrelevant and the
-> new kernel reinitializes the system.
-> 
-> However, there are use cases where this mode of operation is not what we
-> actually want. In virtualization hosts for example, we want to use kexec
-> to update the host kernel while virtual machine memory stays untouched.
-> When we add device assignment to the mix, we also need to ensure that
-> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
-> need to do the same for the PCI subsystem. If we want to kexec while an
-> SEV-SNP enabled virtual machine is running, we need to preserve the VM
-> context pages and physical memory. See James' and my Linux Plumbers
-> Conference 2023 presentation for details:
-> 
->   https://lpc.events/event/17/contributions/1485/
-> 
-> To start us on the journey to support all the use cases above, this
-> patch implements basic infrastructure to allow hand over of kernel state
-> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
-> With this patch set applied, you can read ftrace records from the
-> pre-kexec environment in your post-kexec one. This creates a very powerful
-> debugging and performance analysis tool for kexec. It's also slightly
-> easier to reason about than full blown VFIO state preservation.
-> 
-> == Alternatives ==
-> 
-> There are alternative approaches to (parts of) the problems above:
-> 
->   * Memory Pools [1] - preallocated persistent memory region + allocator
->   * PRMEM [2] - resizable persistent memory regions with fixed metadata
->                 pointer on the kernel command line + allocator
->   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
->                   address location on the kernel command line
->   * PKRAM [4] - handover of user space pages using a fixed metadata page
->                 specified via command line
-> 
-> All of the approaches above fundamentally have the same problem: They
-> require the administrator to explicitly carve out a physical memory
-> location because they have no mechanism outside of the kernel command
-> line to pass data (including memory reservations) between kexec'ing
-> kernels.
-> 
-> KHO provides that base foundation. We will determine later whether we
-> still need any of the approaches above for fast bulk memory handover of for
-> example IOMMU page tables. But IMHO they would all be users of KHO, with
-> KHO providing the foundational primitive to pass metadata and bulk memory
-> reservations as well as provide easy versioning for data.
-> 
-> == Overview ==
-> 
-> We introduce a metadata file that the kernels pass between each other. How
-> they pass it is architecture specific. The file's format is a Flattened
-> Device Tree (fdt) which has a generator and parser already included in
-> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
-> kernel invokes callbacks to every driver that supports KHO to serialize
-> its state. When the actual kexec happens, the fdt is part of the image
-> set that we boot into. In addition, we keep a "scratch region" available
-> for kexec: A physically contiguous memory region that is guaranteed to
-> not have any memory that KHO would preserve.  The new kernel bootstraps
-> itself using the scratch region and sets all handed over memory as in use.
-> When drivers initialize that support KHO, they introspect the fdt and
-> recover their state from it. This includes memory reservations, where the
-> driver can either discard or claim reservations.
-> 
-> == Limitations ==
-> 
-> I currently only implemented file based kexec. The kernel interfaces
-> in the patch set are already in place to support user space kexec as well,
-> but I have not implemented it yet inside kexec tools.
-> 
-> == How to Use ==
-> 
-> To use the code, please boot the kernel with the "kho_scratch=" command
-> line parameter set: "kho_scratch=512M". KHO requires a scratch region.
-> 
-> Make sure to fill ftrace with contents that you want to observe after
-> kexec.  Then, before you invoke file based "kexec -l", activate KHO:
-> 
->   # echo 1 > /sys/kernel/kho/active
->   # kexec -l Image --initrd=initrd -s
->   # kexec -e
-> 
-> The new kernel will boot up and contain the previous kernel's trace
-> buffers in /sys/kernel/debug/tracing/trace.
-
-Assuming:
-- we wont to start tracing as early as possible, before rootfs
-  or initrd would be able to configure it.
-- traces are stored on a different device, not RAM. For example NVMEM.
-- Location of NVMEM is different for different board types, but
-  bootloader is able to give the right configuration to the kernel.
-
-What would be the best, acceptable for mainline, way to provide this
-kind of configuration? At least part of this information do not
-describes devices or device states, this would not fit in to devicetree
-universe. Amount of possible information would not fit in to bootconfig
-too.
-
-Other more or less overlapping use case I have in mind is a netbootable
-embedded system with a requirement to boot as fast as possible. Since
-bootloader already established a link and got all needed ip
-configuration, it would be able to hand over etherent controller and ip
-configuration states. Wille be the KHO the way to go for this use case?
-
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
