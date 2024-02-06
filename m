@@ -1,80 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D1483CC6;
-	Tue,  6 Feb 2024 06:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AFC83CA3
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 06:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707199353; cv=none; b=jj4opvWnaj+MPWwC3Mi3kit/xNdMjfLTfH+WEAmpTk27QfyyzIPSMNzZwgnIw586Yyk6UK2RhRfcshkXbLV5PF/7FRww/8UN0Qt0KjJ4if7xc8FwYBi6teEJZw8IsreCDfy2Wh/pVt79XpSkBuqkobK+uvtn7P4hYZNhg1fTX+A=
+	t=1707199410; cv=none; b=e60v56PZQ2uoeQyI/tQM6YuOw39PC5k5GDlpoKE+PRdGwLgABfiu9btovuAyLhBVDKxDo/3bLoXfGQYfTl2mamY44nY861Uzd1wgwQpPLo3ynp1C6t3p/bBho2I334NzzEhRIuemFhTE5RBthty+fsv+QTqDampzxyVe9nESLI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707199353; c=relaxed/simple;
-	bh=hB05gtlxMlHze26xB4Tioi2Ammlau2ihD4ZXFEPKVAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxziqh6gS5C1a1qA7xcRzBFfaKhjDp1wQIhGTUBWLTN+oQe2QUvjhKMPJ/tFwCmv5/QFhhny1BUuqlqKn5ZOHgSMbf80vN6KCMBWZJOyxF7MVreSZwiMb/6o/Sjg3xtmqa/cxUB4mDm/WoB7jIja395W43yLYX3g8jKqZls2V8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+1z29Ik; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707199410; c=relaxed/simple;
+	bh=qE4jXBKDVxmzKu5TuMJNlE+KfnbUmz1DhmtgM/TzPyE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cO5in3MLVe2yde3uXLsuyzkyUsXawssnusB33YhkHbGouG/Zhm+QpniAMqguszxxj68swLgQ4LgzfuhrdZvbOtVFbIBWnsaIADT8H2+G5MKEfFSdxRiBvFtwN24d6vOE6k+1rSFiJOVQuIxaGwcVPHteXEwRLjjhiLnCkTyNvaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p8pNrKbt; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+1z29Ik"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707199351; x=1738735351;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hB05gtlxMlHze26xB4Tioi2Ammlau2ihD4ZXFEPKVAo=;
-  b=T+1z29IkIsE8/CRVJzozNU55ECfw/isE4gocjk2cdvSzDFX0WKMjxE6c
-   VUNs1W24//avasWEXikVozpg0FPHW8C12wlf+xq3FO+y/Ghi/F+eFbZjY
-   2S4gSOPWdwuvRJscHXWFgeBjUs3ztMG0nqXeE8aKT6xhs9rYOcs9AHEme
-   KubdubKZ63zCiIHl9gQHT2s2Dlz75IJkP7DD7dKEjm9/5iOw+bA7ADsx8
-   1bN9+3pk5nk83eDgDE+icyp4tL+qInbSiZu5uNRGCqWM05mntUVsxbpyT
-   VBGBc5S6OiBA/Oy22TfJ7dA4TRN552QiGg+Hu0zaGDmdIMB38fOgqH2QK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="395096941"
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="395096941"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 22:02:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="5524021"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Feb 2024 22:02:28 -0800
-Date: Tue, 6 Feb 2024 13:58:53 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Ricardo B. Marliere" <ricardo@marliere.net>, Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>, linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fpga: dfl: make dfl_bus_type const
-Message-ID: <ZcHKnTlPYmqUt+QO@yilunxu-OptiPlex-7050>
-References: <20240204-bus_cleanup-fpga-v1-1-dae8b5bf7220@marliere.net>
- <2024020559-floss-appear-5f4d@gregkh>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p8pNrKbt"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40f00adacfeso26345e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 22:03:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707199407; x=1707804207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kjFH8fbG0Ckyf4Y0Lr6C3ppBK8/hdbSaW/tDrqzlhi8=;
+        b=p8pNrKbtzZ0L1saEtWwi55ZNH4CCOJAhfca1t9r5GwWwcl831OfYPONHQBUg5+P9Ke
+         0DPXd3A+s0rx97K6VdZm/hxt1DrSFxY7WOyqyMoNL6JhWFfC9ScUBIkV41r0p+xvEFP5
+         yrFsWy0iv3+/PPXRc6vvGcfbrS6IR1BWcsF82HX18+2M5NmjlV4z1XMK5byx0xR21YZC
+         gP61gRoYsp8kUpPC4ZOmJEq1+SGJ3k99CQNII4itD5g/241u8+/dGmoaVAv5ahgHYTgK
+         yXqM1YfkiLFYlm6pxun51h3yXfHbVpWoEdQ6LKbdZxlOxCImhI45egPTTa9j9xXN3HnR
+         bvKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707199407; x=1707804207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kjFH8fbG0Ckyf4Y0Lr6C3ppBK8/hdbSaW/tDrqzlhi8=;
+        b=XqSASycvjHRi3d5zTsVOpD+ZcUpISia/ITGK/543b9yhuHr/Jb3yIJwDbpX+sqcGjF
+         AeKL5HZ7Ik9zIbcIchIrBRPMrVFltWjNZCA7xKPhbsq8yNoKvKdjFsQ8WBw3V2I26Fma
+         cilz/9YJ97jss4D2OLVYv6+jGz/zEiUJHdSJYwWXdSTGSsMlmiA41oqjGfj/75c2p5/p
+         HngRjh5hHTFgy4SSJBoxpqBu2gMs5fK/k49CKt9u5koJyaWWB0xeljo9W+u3Ng7kkpNA
+         S8GljdP9iuOzTj5OgG993yDFpFYWEInsdBRBfsopwO8E29iwh+m1W4MgK7bZuXjaDQzh
+         D9SQ==
+X-Gm-Message-State: AOJu0Yyw6oobA+NUN+1gxUrDD4AkcVruOMl2m7NKbPe65Z0oMAodGA/Y
+	F3routs6UKdk4iIvK3FoV9wfm8GvKc5oaiQsk/pqydL8rt67ty1kOQ184FOVhset9gjr8KSiIrL
+	pfyBj/+d2u/i62wVs3CH2dr6+UQLYR63sxPo0
+X-Google-Smtp-Source: AGHT+IEEW3JbfMzW7WyrRJQVHFCdE7tui9MBRHxUgJxt8SfSAJRDiSJgaaNfFo8POz1iaNq0F9cDwueTtNqwrGbmWVo=
+X-Received: by 2002:a05:600c:3d8a:b0:40e:f5c6:738a with SMTP id
+ bi10-20020a05600c3d8a00b0040ef5c6738amr134041wmb.0.1707199406818; Mon, 05 Feb
+ 2024 22:03:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024020559-floss-appear-5f4d@gregkh>
+References: <20240205110959.4021-1-ryncsn@gmail.com>
+In-Reply-To: <20240205110959.4021-1-ryncsn@gmail.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Mon, 5 Feb 2024 23:02:48 -0700
+Message-ID: <CAOUHufYYoW6Nn26YsdBwxDw8iNLRf2c6ZLoF530YCgYZ2uvikQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap: fix race condition in direct swapin path
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	"Huang, Ying" <ying.huang@intel.com>, Chris Li <chrisl@kernel.org>, 
+	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 05, 2024 at 04:50:05AM -0800, Greg Kroah-Hartman wrote:
-> On Sun, Feb 04, 2024 at 01:14:05PM -0300, Ricardo B. Marliere wrote:
-> > Now that the driver core can properly handle constant struct bus_type,
-> > move the dfl_bus_type variable to be a constant structure as well,
-> > placing it into read-only memory which can not be modified at runtime.
-> > 
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Mon, Feb 5, 2024 at 4:10=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrote=
+:
+>
+> From: Kairui Song <kasong@tencent.com>
+>
+> In the direct swapin path, when two or more threads swapin the same entry
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+There is no other places referring to that path as "direct" swapin.
 
-Applied to for-next.
+I'd rephrase it as: "When skipping swapcache for SWP_SYNCHRONOUS_IO,
+...", and similarly for the subject: "mm: fix race when skipping
+swapcache".
 
-Thanks.
-> 
+> at the same time, they get different pages (A, B) because swap cache is
+> skipped. Before one thread (T0) finishes the swapin and installs page (A)
+> to the PTE, another thread (T1) could finish swapin of page (B),
+> swap_free the entry, then modify and swap-out the page again, using the
+> same entry. It break the pte_same check because PTE value is unchanged,
+> causing ABA problem. Then thread (T0) will then install the stalled page
+> (A) into the PTE so new data in page (B) is lost, one possible callstack
+> is like this:
+>
+> CPU0                                CPU1
+> ----                                ----
+> do_swap_page()                      do_swap_page() with same entry
+> <direct swapin path>                <direct swapin path>
+> <alloc page A>                      <alloc page B>
+> swap_readpage() <- read to page A   swap_readpage() <- read to page B
+> <slow on later locks or interrupt>  <finished swapin first>
+> ...                                 set_pte_at()
+>                                     swap_free() <- Now the entry is freed=
+.
+>                                     <write to page B, now page A stalled>
+>                                     <swap out page B using same swap entr=
+y>
+> pte_same() <- Check pass, PTE seems
+>               unchanged, but page A
+>               is stalled!
+> swap_free() <- page B content lost!
+> set_pte_at() <- staled page A installed!
+>
+> To fix this, reuse swapcache_prepare which will pin the swap entry using
+> the cache flag, and allow only one thread to pin it. Release the pin
+> after PT unlocked. Racers will simply busy wait since it's a rare
+> and very short event.
+>
+> Other methods like increasing the swap count don't seem to be a good
+> idea after some tests, that will cause racers to fall back to the
+> cached swapin path, two swapin path being used at the same time
+> leads to a much more complex scenario.
+>
+> Reproducer:
+>
+> This race issue can be triggered easily using a well constructed
+> reproducer and patched brd (with a delay in read path) [1]:
+>
+> With latest 6.8 mainline, race caused data loss can be observed easily:
+> $ gcc -g -lpthread test-thread-swap-race.c && ./a.out
+>   Polulating 32MB of memory region...
+>   Keep swapping out...
+>   Starting round 0...
+>   Spawning 65536 workers...
+>   32746 workers spawned, wait for done...
+>   Round 0: Error on 0x5aa00, expected 32746, got 32743, 3 data loss!
+>   Round 0: Error on 0x395200, expected 32746, got 32743, 3 data loss!
+>   Round 0: Error on 0x3fd000, expected 32746, got 32737, 9 data loss!
+>   Round 0 Failed, 15 data loss!
+>
+> This reproducer spawns multiple threads sharing the same memory region
+> using a small swap device. Every two threads updates mapped pages one by
+> one in opposite direction trying to create a race, with one dedicated
+> thread keep swapping out the data out using madvise.
+>
+> The reproducer created a reproduce rate of about once every 5 minutes,
+> so the race should be totally possible in production.
+>
+> After this patch, I ran the reproducer for over a few hundred rounds
+> and no data loss observed.
+>
+> Performance overhead is minimal, microbenchmark swapin 10G from 32G
+> zram:
+>
+> Before:     10934698 us
+> After:      11157121 us
+> Non-direct: 13155355 us (Dropping SWP_SYNCHRONOUS_IO flag)
+>
+> Fixes: 0bcac06f27d7 ("mm, swap: skip swapcache for swapin of synchronous =
+device")
+> Link: https://github.com/ryncsn/emm-test-project/tree/master/swap-stress-=
+race [1]
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+
+Cc: stable@vger.kernel.org
+
+Acked-by: Yu Zhao <yuzhao@google.com>
