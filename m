@@ -1,24 +1,24 @@
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83CC12D164;
-	Tue,  6 Feb 2024 09:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D5612D74F;
+	Tue,  6 Feb 2024 09:19:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707211175; cv=none; b=u88ylkjkO6w6UgaivNg7UH3RD89la/KLN94+cKcFJwedtm0iGqR1jxwv/hhOqkNlAayEDRQYyLuFmyNygskSId9kAmyw+jpmSb3bEHN30yt1qdJ9Zds7gETipyBuAIx4HFghQyKEFrVYAVY7CvCnYAk5BMfWPGDJeW4Y28SixnM=
+	t=1707211177; cv=none; b=QK2ztsMcEznqP32UswGmd0KpDd9QLulY9ZYhhLOUJt4s59YZyl+6bYTAt5qlCydITHtGQI3a52mciV9XpaeyKbkMh2zHMIcgkXZhyNPBebuA4cXpLQztI93MgRyjMNCfCXpFiQu0jabfDtJ5lb+nMT7Menawpo78N04igl3YrRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707211175; c=relaxed/simple;
-	bh=+nLdJAeGVZo7YdSrELcAYK8JRq4WJ5ippaKl609J+3I=;
+	s=arc-20240116; t=1707211177; c=relaxed/simple;
+	bh=VWwAkeNIRheV+jEp3hBBLEU6AH3N4DBzBzaCBZMZS6M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OZmXMA8pl9cTt8B1mpsrMYib1hC7LVw9VzQHegCXBkhB6GlVf/peBEY/uvdI6RExPeWsNA+Vfphh/lTUkU68OfU/DjjnSr6+wQ34+ZyMZasSnhIdcbnocFOYXEYHihl+EseSQnIsQZbVSXhejzEYzq49tuemylTJg9wIDoBsDnY=
+	 MIME-Version; b=O0ZprxTQ/ctNV5v817EFeOVpEQQN+TViw4X4CS8xxIzfybh/U6jaMmab2xh6zhNHlegOf6gzY/Y6VQWRoX5E17O84JMixJQUM1JNVTfe6NkQoN3e3E/1aEyGpytWieGKboXKkCzqlm3ZR8ll6PsEcEKFifAJY8YZ9tC4p43xRiM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 X-IronPort-AV: E=Sophos;i="6.05,246,1701097200"; 
-   d="scan'208";a="196934627"
+   d="scan'208";a="196934640"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 06 Feb 2024 18:19:26 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 06 Feb 2024 18:19:34 +0900
 Received: from GBR-5CG2373LKG.adwin.renesas.com (unknown [10.226.93.63])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id BA8EE41B8EF7;
-	Tue,  6 Feb 2024 18:19:22 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 46C3D41B8EF7;
+	Tue,  6 Feb 2024 18:19:31 +0900 (JST)
 From: Paul Barker <paul.barker.ct@bp.renesas.com>
 To: Sergey Shtylyov <s.shtylyov@omp.ru>,
 	"David S . Miller" <davem@davemloft.net>,
@@ -31,9 +31,9 @@ Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
 	netdev@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH net-next v2 2/7] net: ravb: Count packets instead of descriptors in RX path
-Date: Tue,  6 Feb 2024 09:19:04 +0000
-Message-Id: <20240206091909.3191-3-paul.barker.ct@bp.renesas.com>
+Subject: [RFC PATCH net-next v2 4/7] net: ravb: Always update error counters
+Date: Tue,  6 Feb 2024 09:19:06 +0000
+Message-Id: <20240206091909.3191-5-paul.barker.ct@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240206091909.3191-1-paul.barker.ct@bp.renesas.com>
 References: <20240206091909.3191-1-paul.barker.ct@bp.renesas.com>
@@ -45,101 +45,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The units of "work done" in the RX path should be packets instead of
-descriptors, as large packets can be spread over multiple descriptors.
+The error statistics should be updated each time the poll function is
+called, even if the full RX work budget has been consumed. This prevents
+the counts from becoming stuck when RX bandwidth usage is high.
+
+This also ensures that error counters are not updated after we've
+re-enabled interrupts as that could result in a race condition.
+
+Also drop an unnecessary space.
 
 Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index b18026575a2d..20193944c143 100644
+index 10f11141569f..2136600d60dd 100644
 --- a/drivers/net/ethernet/renesas/ravb_main.c
 +++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -830,6 +830,7 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
- 	struct ravb_rx_desc *desc;
- 	struct sk_buff *skb;
- 	dma_addr_t dma_addr;
-+	int rx_packets = 0;
- 	u8  desc_status;
- 	u16 pkt_len;
- 	u8  die_dt;
-@@ -841,9 +842,8 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
- 	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
- 	stats = &priv->stats[q];
+@@ -1358,6 +1358,15 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+ 	netif_wake_subqueue(ndev, q);
+ 	spin_unlock_irqrestore(&priv->lock, flags);
  
--	limit = min(limit, budget);
- 	desc = &priv->gbeth_rx_ring[entry];
--	for (i = 0; i < limit && desc->die_dt != DT_FEMPTY; i++) {
-+	for (i = 0; i < limit && rx_packets < budget && desc->die_dt != DT_FEMPTY; i++) {
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
-@@ -876,7 +876,7 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
- 				if (ndev->features & NETIF_F_RXCSUM)
- 					ravb_rx_csum_gbeth(skb);
- 				napi_gro_receive(&priv->napi[q], skb);
--				stats->rx_packets++;
-+				rx_packets++;
- 				stats->rx_bytes += pkt_len;
- 				break;
- 			case DT_FSTART:
-@@ -906,7 +906,7 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
- 					ravb_rx_csum_gbeth(skb);
- 				napi_gro_receive(&priv->napi[q],
- 						 priv->rx_1st_skb);
--				stats->rx_packets++;
-+				rx_packets++;
- 				stats->rx_bytes += pkt_len;
- 				break;
- 			}
-@@ -945,7 +945,8 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
- 		desc->die_dt = DT_FEMPTY;
++	/* Receive error message handling */
++	priv->rx_over_errors = priv->stats[RAVB_BE].rx_over_errors;
++	if (info->nc_queues)
++		priv->rx_over_errors += priv->stats[RAVB_NC].rx_over_errors;
++	if (priv->rx_over_errors != ndev->stats.rx_over_errors)
++		ndev->stats.rx_over_errors = priv->rx_over_errors;
++	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
++		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
++
+ 	if (work_done == budget)
+ 		goto out;
+ 
+@@ -1374,14 +1383,6 @@ static int ravb_poll(struct napi_struct *napi, int budget)
  	}
+ 	spin_unlock_irqrestore(&priv->lock, flags);
  
--	return i;
-+	stats->rx_packets += rx_packets;
-+	return rx_packets;
+-	/* Receive error message handling */
+-	priv->rx_over_errors =  priv->stats[RAVB_BE].rx_over_errors;
+-	if (info->nc_queues)
+-		priv->rx_over_errors += priv->stats[RAVB_NC].rx_over_errors;
+-	if (priv->rx_over_errors != ndev->stats.rx_over_errors)
+-		ndev->stats.rx_over_errors = priv->rx_over_errors;
+-	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
+-		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
+ out:
+ 	return work_done;
  }
- 
- /* Packet receive function for Ethernet AVB */
-@@ -960,14 +961,14 @@ static int ravb_rx_rcar(struct net_device *ndev, int budget, int q)
- 	struct sk_buff *skb;
- 	dma_addr_t dma_addr;
- 	struct timespec64 ts;
-+	int rx_packets = 0;
- 	u8  desc_status;
- 	u16 pkt_len;
- 	int limit;
- 	int i;
- 
--	limit = min(limit, budget);
- 	desc = &priv->rx_ring[q][entry];
--	for (i = 0; i < limit && desc->die_dt != DT_FEMPTY; i++) {
-+	for (i = 0; i < limit && rx_packets < budget && desc->die_dt != DT_FEMPTY; i++) {
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
-@@ -1018,7 +1019,7 @@ static int ravb_rx_rcar(struct net_device *ndev, int budget, int q)
- 			if (ndev->features & NETIF_F_RXCSUM)
- 				ravb_rx_csum(skb);
- 			napi_gro_receive(&priv->napi[q], skb);
--			stats->rx_packets++;
-+			rx_packets++;
- 			stats->rx_bytes += pkt_len;
- 		}
- 
-@@ -1054,7 +1055,8 @@ static int ravb_rx_rcar(struct net_device *ndev, int budget, int q)
- 		desc->die_dt = DT_FEMPTY;
- 	}
- 
--	return i;
-+	stats->rx_packets += rx_packets;
-+	return rx_packets;
- }
- 
- /* Packet receive function for Ethernet AVB */
 -- 
 2.39.2
 
