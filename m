@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFA2133996;
-	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08CC130E5E;
+	Tue,  6 Feb 2024 11:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707219211; cv=none; b=XxSnr0bpili+3m3l2kYGdd/SBb5v06Q1/5JcFNyj/EGHk/6/U4XTkqkLINLoD+7Qhul4A4nluRugVbe9WYHQbBybbzXtzQVmfmnbLRCQ4WZdm0s2ViHLYQgZH4laPxJO+TUViYJXoYJ6UM8XT8mJFU/idmnHDXjM62NUPpDFIHM=
+	t=1707219210; cv=none; b=oX3uIM9FqLno8wdZUJHfsT4lzdch1XbKd1gGdgT5VxBzY3QQ8T1bQg5jygc8JMtGhYJhrKzWbbKQqZQRoSS56TJdc/z6FIpB+xB+THFiDuKMAJYyPBVgoERWxq/IAaQMwphlraKXt93ZrKpyyJPxGeq5+YKWBOqO8unPX5/QYDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707219211; c=relaxed/simple;
-	bh=YUUc7FFaa9HA/Wrq9PqkW6ZnyUXTUbapztqNh4bOejI=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=mAGs714cPzI7rFtDmRGajJ7gEuRkb0YCPXnRzMO1kFBwG0+CERhYAIfz11LlEf752stk98h1tn8rtIAgUsbm4MZyvSXh12DySgLW5di0Mx3QTmrdRfCInXeMIywWI/LfdgDZeGToFJnbTZ0Ig++RqCNfbvDooyduIedqOIN8HMc=
+	s=arc-20240116; t=1707219210; c=relaxed/simple;
+	bh=2py7fgnyWKSs78aFz5LfqcwX0ZSbePLjoJxU6WYULo4=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=kQiBGc3TDw5Th3UdAxxCbEUvOuHwpBcN80BUCnXUW8uZonZJ2eu9YzA7ETAOXZb0mtr3Z4YfDwlk1JyQni8W3ihWjPwgUH7rnYiMW00r+L8jELo+vSiEmsKOB/8i5NU72QzcSo/3VRY+TSM50bt6lJ5BfuaBITH3/ibT7Y/5Ky4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49120C32788;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C66CC43394;
 	Tue,  6 Feb 2024 11:33:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXJiA-00000006aGP-0r6z;
+	id 1rXJiA-00000006aHt-2xN5;
 	Tue, 06 Feb 2024 06:33:58 -0500
-Message-ID: <20240206113158.822006147@rostedt.homelinux.com>
+Message-ID: <20240206113358.560456584@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 06:31:58 -0500
+Date: Tue, 06 Feb 2024 06:32:01 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -28,66 +29,498 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Sasha Levin <sashal@kernel.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [v6.7][PATCH v2 00/23] eventfs: Linus's updates for 6.7
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Al Viro <viro@ZenIV.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>
+Subject: [v6.7][PATCH v2 03/23] tracefs/eventfs: Use root and instance inodes as default ownership
+References: <20240206113158.822006147@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+Instead of walking the dentries on mount/remount to update the gid values of
+all the dentries if a gid option is specified on mount, just update the root
+inode. Add .getattr, .setattr, and .permissions on the tracefs inode
+operations to update the permissions of the files and directories.
+
+For all files and directories in the top level instance:
+
+ /sys/kernel/tracing/*
+
+It will use the root inode as the default permissions. The inode that
+represents: /sys/kernel/tracing (or wherever it is mounted).
+
+When an instance is created:
+
+ mkdir /sys/kernel/tracing/instance/foo
+
+The directory "foo" and all its files and directories underneath will use
+the default of what foo is when it was created. A remount of tracefs will
+not affect it.
+
+If a user were to modify the permissions of any file or directory in
+tracefs, it will also no longer be modified by a change in ownership of a
+remount.
+
+The events directory, if it is in the top level instance, will use the
+tracefs root inode as the default ownership for itself and all the files and
+directories below it.
+
+For the events directory in an instance ("foo"), it will keep the ownership
+of what it was when it was created, and that will be used as the default
+ownership for the files and directories beneath it.
+
+Link: https://lore.kernel.org/linux-trace-kernel/CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240103215016.1e0c9811@gandalf.local.home
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+(cherry picked from commit 8186fff7ab649085e2c60d032d9a20a85af1d87c)
+---
+ fs/tracefs/event_inode.c |  79 +++++++++++++++-
+ fs/tracefs/inode.c       | 198 ++++++++++++++++++++++-----------------
+ fs/tracefs/internal.h    |   3 +
+ 3 files changed, 190 insertions(+), 90 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 41af56f44f0a..72912b5f9a90 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -45,6 +45,7 @@ enum {
+ 	EVENTFS_SAVE_MODE	= BIT(16),
+ 	EVENTFS_SAVE_UID	= BIT(17),
+ 	EVENTFS_SAVE_GID	= BIT(18),
++	EVENTFS_TOPLEVEL	= BIT(19),
+ };
+ 
+ #define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
+@@ -115,10 +116,17 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		 * The events directory dentry is never freed, unless its
+ 		 * part of an instance that is deleted. It's attr is the
+ 		 * default for its child files and directories.
+-		 * Do not update it. It's not used for its own mode or ownership
++		 * Do not update it. It's not used for its own mode or ownership.
+ 		 */
+-		if (!ei->is_events)
++		if (ei->is_events) {
++			/* But it still needs to know if it was modified */
++			if (iattr->ia_valid & ATTR_UID)
++				ei->attr.mode |= EVENTFS_SAVE_UID;
++			if (iattr->ia_valid & ATTR_GID)
++				ei->attr.mode |= EVENTFS_SAVE_GID;
++		} else {
+ 			update_attr(&ei->attr, iattr);
++		}
+ 
+ 	} else {
+ 		name = dentry->d_name.name;
+@@ -136,9 +144,66 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return ret;
+ }
+ 
++static void update_top_events_attr(struct eventfs_inode *ei, struct dentry *dentry)
++{
++	struct inode *inode;
++
++	/* Only update if the "events" was on the top level */
++	if (!ei || !(ei->attr.mode & EVENTFS_TOPLEVEL))
++		return;
++
++	/* Get the tracefs root inode. */
++	inode = d_inode(dentry->d_sb->s_root);
++	ei->attr.uid = inode->i_uid;
++	ei->attr.gid = inode->i_gid;
++}
++
++static void set_top_events_ownership(struct inode *inode)
++{
++	struct tracefs_inode *ti = get_tracefs(inode);
++	struct eventfs_inode *ei = ti->private;
++	struct dentry *dentry;
++
++	/* The top events directory doesn't get automatically updated */
++	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
++		return;
++
++	dentry = ei->dentry;
++
++	update_top_events_attr(ei, dentry);
++
++	if (!(ei->attr.mode & EVENTFS_SAVE_UID))
++		inode->i_uid = ei->attr.uid;
++
++	if (!(ei->attr.mode & EVENTFS_SAVE_GID))
++		inode->i_gid = ei->attr.gid;
++}
++
++static int eventfs_get_attr(struct mnt_idmap *idmap,
++			    const struct path *path, struct kstat *stat,
++			    u32 request_mask, unsigned int flags)
++{
++	struct dentry *dentry = path->dentry;
++	struct inode *inode = d_backing_inode(dentry);
++
++	set_top_events_ownership(inode);
++
++	generic_fillattr(idmap, request_mask, inode, stat);
++	return 0;
++}
++
++static int eventfs_permission(struct mnt_idmap *idmap,
++			      struct inode *inode, int mask)
++{
++	set_top_events_ownership(inode);
++	return generic_permission(idmap, inode, mask);
++}
++
+ static const struct inode_operations eventfs_root_dir_inode_operations = {
+ 	.lookup		= eventfs_root_lookup,
+ 	.setattr	= eventfs_set_attr,
++	.getattr	= eventfs_get_attr,
++	.permission	= eventfs_permission,
+ };
+ 
+ static const struct inode_operations eventfs_file_inode_operations = {
+@@ -174,6 +239,8 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 	} while (!ei->is_events);
+ 	mutex_unlock(&eventfs_mutex);
+ 
++	update_top_events_attr(ei, dentry);
++
+ 	return ei;
+ }
+ 
+@@ -887,6 +954,14 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	uid = d_inode(dentry->d_parent)->i_uid;
+ 	gid = d_inode(dentry->d_parent)->i_gid;
+ 
++	/*
++	 * If the events directory is of the top instance, then parent
++	 * is NULL. Set the attr.mode to reflect this and its permissions will
++	 * default to the tracefs root dentry.
++	 */
++	if (!parent)
++		ei->attr.mode = EVENTFS_TOPLEVEL;
++
+ 	/* This is used as the default ownership of the files and directories */
+ 	ei->attr.uid = uid;
+ 	ei->attr.gid = gid;
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index bc86ffdb103b..e1b172c0e091 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -91,6 +91,7 @@ static int tracefs_syscall_mkdir(struct mnt_idmap *idmap,
+ 				 struct inode *inode, struct dentry *dentry,
+ 				 umode_t mode)
+ {
++	struct tracefs_inode *ti;
+ 	char *name;
+ 	int ret;
+ 
+@@ -98,6 +99,15 @@ static int tracefs_syscall_mkdir(struct mnt_idmap *idmap,
+ 	if (!name)
+ 		return -ENOMEM;
+ 
++	/*
++	 * This is a new directory that does not take the default of
++	 * the rootfs. It becomes the default permissions for all the
++	 * files and directories underneath it.
++	 */
++	ti = get_tracefs(inode);
++	ti->flags |= TRACEFS_INSTANCE_INODE;
++	ti->private = inode;
++
+ 	/*
+ 	 * The mkdir call can call the generic functions that create
+ 	 * the files within the tracefs system. It is up to the individual
+@@ -141,10 +151,76 @@ static int tracefs_syscall_rmdir(struct inode *inode, struct dentry *dentry)
+ 	return ret;
+ }
+ 
+-static const struct inode_operations tracefs_dir_inode_operations = {
++static void set_tracefs_inode_owner(struct inode *inode)
++{
++	struct tracefs_inode *ti = get_tracefs(inode);
++	struct inode *root_inode = ti->private;
++
++	/*
++	 * If this inode has never been referenced, then update
++	 * the permissions to the superblock.
++	 */
++	if (!(ti->flags & TRACEFS_UID_PERM_SET))
++		inode->i_uid = root_inode->i_uid;
++
++	if (!(ti->flags & TRACEFS_GID_PERM_SET))
++		inode->i_gid = root_inode->i_gid;
++}
++
++static int tracefs_permission(struct mnt_idmap *idmap,
++			      struct inode *inode, int mask)
++{
++	set_tracefs_inode_owner(inode);
++	return generic_permission(idmap, inode, mask);
++}
++
++static int tracefs_getattr(struct mnt_idmap *idmap,
++			   const struct path *path, struct kstat *stat,
++			   u32 request_mask, unsigned int flags)
++{
++	struct inode *inode = d_backing_inode(path->dentry);
++
++	set_tracefs_inode_owner(inode);
++	generic_fillattr(idmap, request_mask, inode, stat);
++	return 0;
++}
++
++static int tracefs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
++			   struct iattr *attr)
++{
++	unsigned int ia_valid = attr->ia_valid;
++	struct inode *inode = d_inode(dentry);
++	struct tracefs_inode *ti = get_tracefs(inode);
++
++	if (ia_valid & ATTR_UID)
++		ti->flags |= TRACEFS_UID_PERM_SET;
++
++	if (ia_valid & ATTR_GID)
++		ti->flags |= TRACEFS_GID_PERM_SET;
++
++	return simple_setattr(idmap, dentry, attr);
++}
++
++static const struct inode_operations tracefs_instance_dir_inode_operations = {
+ 	.lookup		= simple_lookup,
+ 	.mkdir		= tracefs_syscall_mkdir,
+ 	.rmdir		= tracefs_syscall_rmdir,
++	.permission	= tracefs_permission,
++	.getattr	= tracefs_getattr,
++	.setattr	= tracefs_setattr,
++};
++
++static const struct inode_operations tracefs_dir_inode_operations = {
++	.lookup		= simple_lookup,
++	.permission	= tracefs_permission,
++	.getattr	= tracefs_getattr,
++	.setattr	= tracefs_setattr,
++};
++
++static const struct inode_operations tracefs_file_inode_operations = {
++	.permission	= tracefs_permission,
++	.getattr	= tracefs_getattr,
++	.setattr	= tracefs_setattr,
+ };
+ 
+ struct inode *tracefs_get_inode(struct super_block *sb)
+@@ -183,87 +259,6 @@ struct tracefs_fs_info {
+ 	struct tracefs_mount_opts mount_opts;
+ };
+ 
+-static void change_gid(struct dentry *dentry, kgid_t gid)
+-{
+-	if (!dentry->d_inode)
+-		return;
+-	dentry->d_inode->i_gid = gid;
+-}
+-
+-/*
+- * Taken from d_walk, but without he need for handling renames.
+- * Nothing can be renamed while walking the list, as tracefs
+- * does not support renames. This is only called when mounting
+- * or remounting the file system, to set all the files to
+- * the given gid.
+- */
+-static void set_gid(struct dentry *parent, kgid_t gid)
+-{
+-	struct dentry *this_parent;
+-	struct list_head *next;
+-
+-	this_parent = parent;
+-	spin_lock(&this_parent->d_lock);
+-
+-	change_gid(this_parent, gid);
+-repeat:
+-	next = this_parent->d_subdirs.next;
+-resume:
+-	while (next != &this_parent->d_subdirs) {
+-		struct tracefs_inode *ti;
+-		struct list_head *tmp = next;
+-		struct dentry *dentry = list_entry(tmp, struct dentry, d_child);
+-		next = tmp->next;
+-
+-		/* Note, getdents() can add a cursor dentry with no inode */
+-		if (!dentry->d_inode)
+-			continue;
+-
+-		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
+-
+-		change_gid(dentry, gid);
+-
+-		/* If this is the events directory, update that too */
+-		ti = get_tracefs(dentry->d_inode);
+-		if (ti && (ti->flags & TRACEFS_EVENT_INODE))
+-			eventfs_update_gid(dentry, gid);
+-
+-		if (!list_empty(&dentry->d_subdirs)) {
+-			spin_unlock(&this_parent->d_lock);
+-			spin_release(&dentry->d_lock.dep_map, _RET_IP_);
+-			this_parent = dentry;
+-			spin_acquire(&this_parent->d_lock.dep_map, 0, 1, _RET_IP_);
+-			goto repeat;
+-		}
+-		spin_unlock(&dentry->d_lock);
+-	}
+-	/*
+-	 * All done at this level ... ascend and resume the search.
+-	 */
+-	rcu_read_lock();
+-ascend:
+-	if (this_parent != parent) {
+-		struct dentry *child = this_parent;
+-		this_parent = child->d_parent;
+-
+-		spin_unlock(&child->d_lock);
+-		spin_lock(&this_parent->d_lock);
+-
+-		/* go into the first sibling still alive */
+-		do {
+-			next = child->d_child.next;
+-			if (next == &this_parent->d_subdirs)
+-				goto ascend;
+-			child = list_entry(next, struct dentry, d_child);
+-		} while (unlikely(child->d_flags & DCACHE_DENTRY_KILLED));
+-		rcu_read_unlock();
+-		goto resume;
+-	}
+-	rcu_read_unlock();
+-	spin_unlock(&this_parent->d_lock);
+-	return;
+-}
+-
+ static int tracefs_parse_options(char *data, struct tracefs_mount_opts *opts)
+ {
+ 	substring_t args[MAX_OPT_ARGS];
+@@ -336,10 +331,8 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
+ 	if (!remount || opts->opts & BIT(Opt_uid))
+ 		inode->i_uid = opts->uid;
+ 
+-	if (!remount || opts->opts & BIT(Opt_gid)) {
+-		/* Set all the group ids to the mount option */
+-		set_gid(sb->s_root, opts->gid);
+-	}
++	if (!remount || opts->opts & BIT(Opt_gid))
++		inode->i_gid = opts->gid;
+ 
+ 	return 0;
+ }
+@@ -573,6 +566,26 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
+ 	return dentry;
+ }
+ 
++/* Find the inode that this will use for default */
++static struct inode *instance_inode(struct dentry *parent, struct inode *inode)
++{
++	struct tracefs_inode *ti;
++
++	/* If parent is NULL then use root inode */
++	if (!parent)
++		return d_inode(inode->i_sb->s_root);
++
++	/* Find the inode that is flagged as an instance or the root inode */
++	while (!IS_ROOT(parent)) {
++		ti = get_tracefs(d_inode(parent));
++		if (ti->flags & TRACEFS_INSTANCE_INODE)
++			break;
++		parent = parent->d_parent;
++	}
++
++	return d_inode(parent);
++}
++
+ /**
+  * tracefs_create_file - create a file in the tracefs filesystem
+  * @name: a pointer to a string containing the name of the file to create.
+@@ -603,6 +616,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 				   struct dentry *parent, void *data,
+ 				   const struct file_operations *fops)
+ {
++	struct tracefs_inode *ti;
+ 	struct dentry *dentry;
+ 	struct inode *inode;
+ 
+@@ -621,7 +635,11 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 	if (unlikely(!inode))
+ 		return tracefs_failed_creating(dentry);
+ 
++	ti = get_tracefs(inode);
++	ti->private = instance_inode(parent, inode);
++
+ 	inode->i_mode = mode;
++	inode->i_op = &tracefs_file_inode_operations;
+ 	inode->i_fop = fops ? fops : &tracefs_file_operations;
+ 	inode->i_private = data;
+ 	inode->i_uid = d_inode(dentry->d_parent)->i_uid;
+@@ -634,6 +652,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ static struct dentry *__create_dir(const char *name, struct dentry *parent,
+ 				   const struct inode_operations *ops)
+ {
++	struct tracefs_inode *ti;
+ 	struct dentry *dentry = tracefs_start_creating(name, parent);
+ 	struct inode *inode;
+ 
+@@ -651,6 +670,9 @@ static struct dentry *__create_dir(const char *name, struct dentry *parent,
+ 	inode->i_uid = d_inode(dentry->d_parent)->i_uid;
+ 	inode->i_gid = d_inode(dentry->d_parent)->i_gid;
+ 
++	ti = get_tracefs(inode);
++	ti->private = instance_inode(parent, inode);
++
+ 	/* directory inodes start off with i_nlink == 2 (for "." entry) */
+ 	inc_nlink(inode);
+ 	d_instantiate(dentry, inode);
+@@ -681,7 +703,7 @@ struct dentry *tracefs_create_dir(const char *name, struct dentry *parent)
+ 	if (security_locked_down(LOCKDOWN_TRACEFS))
+ 		return NULL;
+ 
+-	return __create_dir(name, parent, &simple_dir_inode_operations);
++	return __create_dir(name, parent, &tracefs_dir_inode_operations);
+ }
+ 
+ /**
+@@ -712,7 +734,7 @@ __init struct dentry *tracefs_create_instance_dir(const char *name,
+ 	if (WARN_ON(tracefs_ops.mkdir || tracefs_ops.rmdir))
+ 		return NULL;
+ 
+-	dentry = __create_dir(name, parent, &tracefs_dir_inode_operations);
++	dentry = __create_dir(name, parent, &tracefs_instance_dir_inode_operations);
+ 	if (!dentry)
+ 		return NULL;
+ 
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 42bdeb471a07..12b7d0150ae9 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -5,6 +5,9 @@
+ enum {
+ 	TRACEFS_EVENT_INODE		= BIT(1),
+ 	TRACEFS_EVENT_TOP_INODE		= BIT(2),
++	TRACEFS_GID_PERM_SET		= BIT(3),
++	TRACEFS_UID_PERM_SET		= BIT(4),
++	TRACEFS_INSTANCE_INODE		= BIT(5),
+ };
+ 
+ struct tracefs_inode {
+-- 
+2.43.0
 
 
-This is a backport of all the work that lead up to the work that Linus made
-on eventfs. I trust Linus's version more so than the versions in 6.6 and
-6.7. There may be plenty of hidden issues due to the design.
-
-This is the update for 6.7. It includes Linus's updates as well as all the
-patches leading up to them.
-
-I ran these through my full test suite that I use before sending anyting to
-Linus, althouh I did not run my "bisect" test that walks through the
-patches. The tests were just run on the end result. I'm currently running my
-6.6 version through my tests.
-
-This was created with the following command against v6.7.3:
-
-git log --reverse --no-merges --pretty=oneline v6.7..origin/master fs/tracefs/ | cut -d' ' -f1 |
-   while read a; do if ! git cherry-pick -x $a; then break; fi ; done
-
-Which adds -x to the cherry pick to add the upstream commit SHAs.
-
-
-Erick Archer (1):
-      eventfs: Use kcalloc() instead of kzalloc()
-
-Linus Torvalds (7):
-      tracefs: remove stale 'update_gid' code
-      eventfs: Initialize the tracefs inode properly
-      tracefs: Avoid using the ei->dentry pointer unnecessarily
-      tracefs: dentry lookup crapectomy
-      eventfs: Remove unused d_parent pointer field
-      eventfs: Clean up dentry ops and add revalidate function
-      eventfs: Get rid of dentry pointers without refcounts
-
-Steven Rostedt (Google) (15):
-      eventfs: Remove "lookup" parameter from create_dir/file_dentry()
-      eventfs: Stop using dcache_readdir() for getdents()
-      tracefs/eventfs: Use root and instance inodes as default ownership
-      eventfs: Have eventfs_iterate() stop immediately if ei->is_freed is set
-      eventfs: Do ctx->pos update for all iterations in eventfs_iterate()
-      eventfs: Read ei->entries before ei->children in eventfs_iterate()
-      eventfs: Shortcut eventfs_iterate() by skipping entries already read
-      eventfs: Have the inodes all for files and directories all be the same
-      eventfs: Do not create dentries nor inodes in iterate_shared
-      eventfs: Save directory inodes in the eventfs_inode structure
-      tracefs: Zero out the tracefs_inode when allocating it
-      eventfs: Warn if an eventfs_inode is freed without is_freed being set
-      eventfs: Restructure eventfs_inode structure to be more condensed
-      eventfs: Remove fsnotify*() functions from lookup()
-      eventfs: Keep all directory links at 1
-
-----
- fs/tracefs/event_inode.c | 905 ++++++++++++++++-------------------------------
- fs/tracefs/inode.c       | 286 +++++++--------
- fs/tracefs/internal.h    |  48 ++-
- 3 files changed, 451 insertions(+), 788 deletions(-)
