@@ -1,93 +1,108 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C761C691;
-	Tue,  6 Feb 2024 23:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6CA1CD13
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 23:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707262807; cv=none; b=p3d/lDqiutR+ByWBY1En/CHm9d+TxyrO3CsLQdAcJmB5BwoBqt3+zyd8nbNDpZt0slUyLl0Zk6EqdsXQIOyjQTOQGr3GDhIX/XxrQnL/zdbGzEe9yYsiNEH1x1gWOW5SkglKy48wC8Sm1yx0IXTun95a/UEIRcVzPjVIZstdvtQ=
+	t=1707262843; cv=none; b=Ga6jYe0+r9bnBF8cfEWy19/Wbey454PrYlnmYwel5QeKDL09osmpLWHQS8QhU+h9AoL3PX08Dhlx6dJf1Xd+q1A/wO+1Xcd0gF/1NNxpWHqAt/qzKuGUk9BV8LqQ/AJQaT2Ad+r1iKFt7nEk3yAC6JFh4jp9pIRgaBa0D0dVl18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707262807; c=relaxed/simple;
-	bh=kC4HEKcherQTH9APDWQEGrUJPkCM85Qz70jzRLglUIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lf2TA64+s4JqXXLw/c8Q5PjxAZ6F+CGwjPRAiwZqqT6BBQOaLUEPGoUvCrGk/q1MbQbI5a+NlCJI1EsbTrPpPXPQvY8Ah1GtRbncXqWJ1QG0qO5weeG56YBQdw15XJ9GJrMP6WEpXdRnDMqjFGAg1iH1K4RaNIq+9UpOZ+3Wp/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dJveVRbb; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1707262843; c=relaxed/simple;
+	bh=SMfV3zP9TAVxc9qHJ5pF8CYvegtpia1rL9pv1jbHIgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=USLiqegJPTfTlDRf1PxKfbA3UEKlBI88v8Mt4BUPtRknQqp4/6CZnRIWM5Hy9EqC7Rsqi8lAwVwjbfP0iSMI4hWuOXO2TTMlj98nBK/7296NTczhUrKrUVf9MlDRYppyrxDd15puQR1FqxCrN1uL+Uf/aJv6SV1mIgF/+4vPbPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TGbk96Ew; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dJveVRbb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1707262801;
-	bh=xb7CcD9AjvI8TrkcjBFIrC+paFho9/OcaytUo9CJn+4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=dJveVRbbIA4+/4zV2Uq65d4e4cPnb2LPSXzAymKcd9qFOsO3di/gViG9riVcv4iLf
-	 DSKtK2i42m5RGtvmHQK31ARwW+cWzG/rcCPrDSna11vGzy2oRC+frY1Mc+hBRMDTZv
-	 pghCugFQbF2R2yFbxoLnr7f1c80fAZiYrMX1Ho/LpLN1VFDQgqYYmvnqyt3iBM2wBe
-	 4fBjB7Rn90jRyfbYjsIfa+vbZQXjgX80Rztlc8NSjiT23wSuLNGOutLi+fG4eQxyUi
-	 alo9jdvcnRBrcLIbdgc75sqVP7LPsn1w1qQWIZa2bq79JVlS6h0pxFskMC4eI2iPhq
-	 l7op0sYRh1L5Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TV08x4SSwz4wcB;
-	Wed,  7 Feb 2024 10:40:01 +1100 (AEDT)
-Date: Wed, 7 Feb 2024 10:40:00 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
- <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the perf tree
-Message-ID: <20240207104000.40367799@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TGbk96Ew"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d89f0ab02bso22545ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 15:40:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707262841; x=1707867641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uMZl2B6r90pWxe6d/UAGhzRXMHrchHR7+niCYeN7Fhg=;
+        b=TGbk96Ewq1REq9s2z/x5LddL5yHfbjQmeDEawV+AMUxdZx6zdXgPF+EmoSXDlF2nLR
+         YHnEvdafzHcNEbgdQGDpHyqyyNYmxmCjMZktu5MV6/+bb8AiP1hI3ZI7NVnniIzYiTVE
+         miZBP3zSyzstobqL6S7Y3u1zT0Sw3GOvbP4ezDTiTr6Uxq9iQuoz+j67s4B4UniNcHSc
+         Sm+dFigggiGJeAKowvLoU4lRCs6AqjwqR4lTS+V8qZzeJwFgHuGHYPPdCeFegMMJcvIb
+         gCa8d3wQFS/MkyPXD4/2T/qAr9a33XjGzyjIRSbwxmEiLY/5a15+zG6ZGcA9Kn0gRgYP
+         iUtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707262841; x=1707867641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uMZl2B6r90pWxe6d/UAGhzRXMHrchHR7+niCYeN7Fhg=;
+        b=J3VeMNPdoSm/vbGMCFDmEGkj6M4mYX0VheQISgJhgnMNNFFA/2yMSolXPiNQaOk2KS
+         oONu24ISxCkKBUAs8WbzmLUUBT9T+okst7NmUyK0WrBmxhto6EUbynlrjNgHZvq1oSO7
+         niZTR+KKCKv5GgX1Nwku+OszWYvb61B3YtqAKLg+qtoIr8C9m7wfhwf9TPoMAEuD3c+r
+         XaKrMtd9QBxUNbsQg3kXdvPtX1ox0kDoDyFpmaatANCfcsRsip6L60mH+YOZqOKetHpC
+         H2SZp17Vc1Zy64S4stkVS3SetcXpWSnMLZ30RhERVpz0fvQp3D70t6zcKmBMDJ261jr7
+         IYVQ==
+X-Gm-Message-State: AOJu0Yxhrftn7rDtM0JGITv/sNENEnijh13IuExSGWb76u8/9HYV3w4P
+	/gYoTrDOhSdpyOZ8M1awS6M9hekq9XA50/D1ywJ2UH540qudGrvZUqEvMudZyAc3afFhZV3qcYn
+	Lk0LYen+QxY33umeixDrNZcmThkwZsvVKMtlM
+X-Google-Smtp-Source: AGHT+IHk0GZQ2blDgfVf+w1vAv7QhoskH4BtElhsBkxqHLSk2Tcp1LsvWXMaotUCkZJtfW8YHpS5xDLHn+e73DW4hrM=
+X-Received: by 2002:a17:902:dac6:b0:1d8:d6bf:145b with SMTP id
+ q6-20020a170902dac600b001d8d6bf145bmr46775plx.15.1707262840823; Tue, 06 Feb
+ 2024 15:40:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yP6/0_5_zjAgwZFMEA/.5GW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/yP6/0_5_zjAgwZFMEA/.5GW
-Content-Type: text/plain; charset=US-ASCII
+References: <20240202220459.527138-1-namhyung@kernel.org> <20240202220459.527138-15-namhyung@kernel.org>
+ <CAP-5=fUWaKW7d6_YkET0o26=fjBwX6PPJ1gXQ9wndQM_Oi2O3A@mail.gmail.com> <CAM9d7cgF_PYm2fG1Vgu25u1hVZUK0wmFBqY7DHW2eVpRV=iERA@mail.gmail.com>
+In-Reply-To: <CAM9d7cgF_PYm2fG1Vgu25u1hVZUK0wmFBqY7DHW2eVpRV=iERA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 6 Feb 2024 15:40:29 -0800
+Message-ID: <CAP-5=fV7fWHM53roUJOU+0vAYQJAbhdE1EkgzHLv7jPgeLc2HQ@mail.gmail.com>
+Subject: Re: [PATCH 14/14] perf annotate-data: Add stack canary type
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Tue, Feb 6, 2024 at 3:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Fri, Feb 2, 2024 at 7:21=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > On Fri, Feb 2, 2024 at 2:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > When the stack protector is enabled, compiler would generate code to
+> > > check stack overflow with a special value called 'stack carary' at
+> > > runtime.  On x86_64, GCC hard-codes the stack canary as %gs:40.
+> > >
+> > > While there's a definition of fixed_percpu_data in asm/processor.h,
+> > > it seems that the header is not included everywhere and many places
+> > > it cannot find the type info.  As it's in the well-known location (at
+> > > %gs:40), let's add a pseudo stack canary type to handle it specially.
+> >
+> > I wonder if cases like this can be handled by debug info rather than
+> > special cases in the tool. Special cases are fine too, but are
+> > potentially less portable.
+>
+> Agreed, but I couldn't find anything special in DWARF.
 
-After merging the perf tree, today's linux-next build (native perf)
-failed like this:
+The fs and gs selectors are commonly used for thread local storage, so
+could something like DW_OP_form_tls_address be used?
+https://dwarfstd.org/issues/110803.1.html
 
-arch/powerpc/util/kvm-stat.c: In function 'is_tracepoint_available':
-arch/powerpc/util/kvm-stat.c:117:16: error: 'struct parse_events_error' has=
- no member named 'str'
-  117 |         if (err.str)
-      |                ^
+Thanks,
+Ian
 
-Caused by commit
-
-  fd7b8e8fb20f ("perf parse-events: Print all errors")
-
-I have used the perf tree from next-20240206 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/yP6/0_5_zjAgwZFMEA/.5GW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXCw1AACgkQAVBC80lX
-0GwV2gf/YNnxmeS1myqb5LqhOP9D2XJdXL9bslIcm2zWm226/bZDGwaIQe9wABAX
-VyyyQWICPWuaIAGG3UK/pJWb9a1Nu5dFZBV6fMQ6Bzx+ntHvewVTSdyqczRwP4/F
-8HLCe2H8rT6xDjDjTsShg3sHFerX2S/vFpaZImAgkgzm7BJH/8/9qPUo73EdTvuy
-rFvh8+3jmavJB71dL6FW4DSR12ZEIv09kk3+sQdFoZgGMU1R89eRUkhNy6HNJ1oR
-JmvYGqLNmFegpU6NAYNUhlq3OXnfWt4aYluONuEDDVt9cLEiD4+TvIsjRyt6HZIG
-SheyD8bl0/qSsC5O0OqDejDgJcmnCw==
-=sXbi
------END PGP SIGNATURE-----
-
---Sig_/yP6/0_5_zjAgwZFMEA/.5GW--
+> Thanks,
+> Namhyung
