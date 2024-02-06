@@ -1,74 +1,76 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFB5128802;
-	Tue,  6 Feb 2024 07:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27341128804;
+	Tue,  6 Feb 2024 07:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707203407; cv=none; b=RFlsW4bcpTFjXfKPBjvESeKfn8ENoNvbvVI1H4elHUbqegHWGJ7LH6H7ox3R84+lp3HubVItxJyFu2L3bLdrdaleB6l2JcPUPZtkjHof4mYHaWeo0UG5IVO4ez4Hij4gU+laqcIu+UBSTQ+WOlgkku51l0X4ptmFEQOv8n/qLlA=
+	t=1707203622; cv=none; b=Q/Y2RQUCtIThhTujEt1DAQF9n+mmC3VmGXycOJvlKHsrRxvCwIDlV/NvEF8/K7EiTkzHDHMrfIC3Lm2SeqbOJaBjtCwea2D45euxgihcTQBy0cg1Y366ZKsFp8s11/61DgZJ+0OmgML2Xbst4ZGb+15NgNBgVBpeCYMyAnMmJhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707203407; c=relaxed/simple;
-	bh=sP0+3IoatM5rxJCdyOt8aV9I1XKx8tCRXkDH41UfBmI=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=W4LUJRcgxkj7qcfIaAl+dMXTbt/9BhURuxQRK+k978tbblLAA+IfzpO0cUCmtw0foeAe/uDqInVSYu/vmo5mTO4leT/qrwKFeDFUpyMpEVJ5EbbNparawta2leyk977ek8U6A54QoVfujzYfw7n2zQg/UD8JNThuK6lPg3RPc2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TTZ8Q1MNjz1Q8l9;
-	Tue,  6 Feb 2024 15:08:06 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C795140390;
-	Tue,  6 Feb 2024 15:10:02 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 6 Feb 2024 15:10:01 +0800
-Subject: Re: [PATCH 5/5] perf thread_map: Free strlist on normal path in
- thread_map__new_by_tid_str()
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240205104616.132417-1-yangjihong1@huawei.com>
- <20240205104616.132417-6-yangjihong1@huawei.com> <ZcEybM9bV6vP9n7K@x1>
-From: Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <7081618d-eb64-3eda-dc1a-2719b6ac5194@huawei.com>
-Date: Tue, 6 Feb 2024 15:10:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+	s=arc-20240116; t=1707203622; c=relaxed/simple;
+	bh=DiaHYmNc6bF7PygFJrnRHF0LPWs4SCQMsw8gKMZvi90=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ft4K5VzbYHCZEIOt5yO2Uhzfa4FxJK/m8nB8hZqmrKTeMF51u4AkJ3Th9oytpPml6Un4WmUjVwGyT7QGXpdPyRhe+0oCkTJUY4DF52WyHkwLront3QsiErbKKzp1qJloPRVN2AGFm+Zf18CbFRqotF9AIctRWwQPZWebEYbWNH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from ssh248.corpemail.net
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id CZT00132;
+        Tue, 06 Feb 2024 15:13:32 +0800
+Received: from localhost.localdomain.com (10.73.45.222) by
+ jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server id
+ 15.1.2507.34; Tue, 6 Feb 2024 15:13:32 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <lee@kernel.org>, <wens@csie.org>, <marek.vasut+renesas@gmail.com>,
+	<support.opensource@diasemi.com>, <neil.armstrong@linaro.org>,
+	<ckeepax@opensource.cirrus.com>, <rf@opensource.cirrus.com>,
+	<mazziesaccount@gmail.com>, <mcoquelin.stm32@gmail.com>,
+	<alexandre.torgue@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-amlogic@lists.infradead.org>, <patches@opensource.cirrus.com>,
+	<linux-stm32@st-md-mailman.stormreply.com>,
+	<linux-arm-kernel@lists.infradead.org>, Bo Liu <liubo03@inspur.com>
+Subject: [PATCH 01/18] mfd: ac100: convert to use maple tree register cache
+Date: Tue, 6 Feb 2024 02:12:57 -0500
+Message-ID: <20240206071314.8721-2-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20240206071314.8721-1-liubo03@inspur.com>
+References: <20240206071314.8721-1-liubo03@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZcEybM9bV6vP9n7K@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: text/plain
+tUid: 20242061513323aabcb358b26888c73e9f44d39c0d4b0
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Hello,
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
-On 2024/2/6 3:09, Arnaldo Carvalho de Melo wrote:
-> On Mon, Feb 05, 2024 at 10:46:16AM +0000, Yang Jihong wrote:
->> slist needs to be freed in both error path and normal path in
->> thread_map__new_by_tid_str().
-> 
-> Please add:
-> 
-> Fixes: b52956c961be3a04 ("perf tools: Allow multiple threads or processes in record, stat, top")
-> 
-OK, will add fixes tag in v2.
+Signed-off-by: Bo Liu <liubo03@inspur.com>
+---
+ drivers/mfd/ac100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-Thanks for the reviewed-by tag
+diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
+index 6d49d7fb5f14..8f47c392cbd1 100644
+--- a/drivers/mfd/ac100.c
++++ b/drivers/mfd/ac100.c
+@@ -72,7 +72,7 @@ static const struct regmap_config ac100_regmap_config = {
+ 	.wr_table	= &ac100_writeable_table,
+ 	.volatile_table	= &ac100_volatile_table,
+ 	.max_register	= AC100_RTC_GP(15),
+-	.cache_type	= REGCACHE_RBTREE,
++	.cache_type	= REGCACHE_MAPLE,
+ };
+ 
+ static struct mfd_cell ac100_cells[] = {
+-- 
+2.18.2
 
-> - Arnaldo
-
-Thanks,
-Yang
