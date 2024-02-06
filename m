@@ -1,156 +1,75 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D92812C538;
-	Tue,  6 Feb 2024 08:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0112C541;
+	Tue,  6 Feb 2024 08:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707209925; cv=none; b=VRAv1kX6jLSZT2Qp5KjVf1EXNTJLBqCdt60TaD7ZAzm5r4N6O+6Vpo+vQeKsIGTPxzVXuYkR5mGtFvthnuVTVGTL5VE4OuDd/8jPJzvSd0obwXb6bOXZIDJUw4u518lbNt/0KXfNGKfn3tQJ6Vm32O4dCX/2tlSWbxz21hUcfaE=
+	t=1707209993; cv=none; b=mTo9+/bXK+MEA30xBpz7o9VadJYZvurtH9hNVxho8GQOp/zX3XMQsZ8h8/w/qMtEzPZXb+yBphz8nv/DWEHjwGuW3djYXS+U76NCGHSROl3/h4H7XWD1YRV46lMW6lyFxjKjQXIe14eLvIXBL2rT1NYGAFsFb2c6vEa1F+9ryR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707209925; c=relaxed/simple;
-	bh=GhZB8MN/jd5rTRHj0DErlvHSNihnZ3jPXL9QMYPstpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gi7sZJZ/iogPxGe8HEfL9YhUHPubdugH7VWImBLU7GU6seo7+iRtsbk8sx61YMqA6xNVtPq8aUs3NQR3bwRiHZJb1hSyDC4WJDkkaeDPmx1n0LGZz0HnC2sUOUU1Jcm5TJk4lSNcn1mxyVD0uht1IvzrgvLlkTHwJDevdUHkuLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tXJmadX2; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tXJmadX2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1707209993; c=relaxed/simple;
+	bh=JZWoZl8RGgLWPx+gK8cXes8dw9X6gICGMEVTHwFXxmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=APFJg8RP5Tll+VKc6CY0ZCHAIBxPkCCRa35GqAcb4/X5ZPF0YYUyNLAzXw3MCi20GhHC0evI1aYl38XJDm2rPJJ2B17wXpfkx1BrhuZwa9zv4T25fdbjnmY31UXKhFiR15DUU7lLoGLg+UJ+t6RKIVWUtgKqwz5otWNZORwymII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PptRUyWm; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tXJmadX2";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tXJmadX2"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3A32F1FB6B;
-	Tue,  6 Feb 2024 08:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1707209921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PptRUyWm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DB9B8FF80D;
+	Tue,  6 Feb 2024 08:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707209983;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A19HvsSlZRV6QduTgVW8TcpDaBKxWRM0Xot5i4qzE0M=;
-	b=tXJmadX2byQ/sbSCUCGRX3aZkTvS2BjlHRhsfjYi1TOHpj4L+WYRv1Ptla30H5k7DdKbJG
-	9J054vqsOiojUF5z3H/WAVc3ySDzUtjImRvC4/zFXI/lC7pPuoyZekO3ocsrKNSg+n2O/V
-	vGTLBsJdJMtbNFGHeyCDosm+ZnqIfbI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1707209921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A19HvsSlZRV6QduTgVW8TcpDaBKxWRM0Xot5i4qzE0M=;
-	b=tXJmadX2byQ/sbSCUCGRX3aZkTvS2BjlHRhsfjYi1TOHpj4L+WYRv1Ptla30H5k7DdKbJG
-	9J054vqsOiojUF5z3H/WAVc3ySDzUtjImRvC4/zFXI/lC7pPuoyZekO3ocsrKNSg+n2O/V
-	vGTLBsJdJMtbNFGHeyCDosm+ZnqIfbI=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30900132DD;
-	Tue,  6 Feb 2024 08:58:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BrHZC8H0wWWUZQAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Tue, 06 Feb 2024 08:58:41 +0000
-Date: Tue, 6 Feb 2024 09:58:40 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
-	yuzhao@google.com, mkoutny@suse.com,
-	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm: memcg: Use larger batches for proactive reclaim
-Message-ID: <ZcH0wBPvOjqayjAD@tiehlicka>
-References: <20240202233855.1236422-1-tjmercier@google.com>
- <ZcC7Kgew3GDFNIux@tiehlicka>
- <CABdmKX3HbSxX6zLF4z3f+=Ybiq1bA71jckkeHv5QJxAjSexgaA@mail.gmail.com>
- <ZcE5n9cTdTGJChmq@tiehlicka>
- <CABdmKX0Du2F+bko=hjLBqdQO-bJSFcG3y1Bbuu2v6J8aVB39sw@mail.gmail.com>
- <ZcFG2JoXI7i8XzQY@tiehlicka>
- <CABdmKX0t1LXj80Awe20TrmY5gQB6v2E4bGfW8WXr2i84o+k6ow@mail.gmail.com>
- <ZcFQMru5_oATGbuP@tiehlicka>
- <CABdmKX35GV3VFar0_pNR_vAXLpvxo+APALXMharsXh6TO+0mrQ@mail.gmail.com>
+	bh=JZWoZl8RGgLWPx+gK8cXes8dw9X6gICGMEVTHwFXxmw=;
+	b=PptRUyWmO7ox0PRxfN/ZpDEoxOZV7PAbsJKx7Hhj1pTuY7N2DlPLCByN+1uJhckt+zdTGF
+	HP0w0NCPtHRnu5ATO6JpHrlkwZGEn2dkMhixEbGf4pGa9bN92flDK/uLASmlzA1FUNshhT
+	ylJH63kzmbqQuIzKHlqAryLLLuCMyqcs7rz2hjnKj+w4ql6cWKXy/twchByZrgsz0yzKc7
+	aaJeO3Y7ddz1emEN0kX3f4p3kiKRRcWyz3LvhL0hNf2d0lTnLeBnbRkDWIMk6Gxwj9f2yd
+	Ro/6cYsL12dpwlAIidDXFQgdtgKhryK8kuCi/EFrCqzjvCOtfjX5YJabLxmqSg==
+Date: Tue, 6 Feb 2024 09:59:40 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt
+ <stefan@datenfreihafen.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, linux-wpan@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ieee802154: ca8210: Drop spurious WQ_UNBOUND from
+ alloc_ordered_workqueue() call
+Message-ID: <20240206095940.66e17802@xps-13>
+In-Reply-To: <ZcF1El7fn5xkeoB1@slm.duckdns.org>
+References: <ZcF1El7fn5xkeoB1@slm.duckdns.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABdmKX35GV3VFar0_pNR_vAXLpvxo+APALXMharsXh6TO+0mrQ@mail.gmail.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon 05-02-24 20:01:40, T.J. Mercier wrote:
-> On Mon, Feb 5, 2024 at 1:16 PM Michal Hocko <mhocko@suse.com> wrote:
-> >
-> > On Mon 05-02-24 12:47:47, T.J. Mercier wrote:
-> > > On Mon, Feb 5, 2024 at 12:36 PM Michal Hocko <mhocko@suse.com> wrote:
-> > [...]
-> > > > This of something like
-> > > > timeout $TIMEOUT echo $TARGET > $MEMCG_PATH/memory.reclaim
-> > > > where timeout acts as a stop gap if the reclaim cannot finish in
-> > > > TIMEOUT.
-> > >
-> > > Yeah I get the desired behavior, but using sc->nr_reclaimed to achieve
-> > > it is what's bothering me.
-> >
-> > I am not really happy about this subtlety. If we have a better way then
-> > let's do it. Better in its own patch, though.
-> >
-> > > It's already wired up that way though, so if you want to make this
-> > > change now then I can try to test for the difference using really
-> > > large reclaim targets.
-> >
-> > Yes, please. If you want it a separate patch then no objection from me
-> > of course. If you do no like the nr_to_reclaim bailout then maybe we can
-> > go with a simple break out flag in scan_control.
-> >
-> > Thanks!
-> 
-> It's a bit difficult to test under the too_many_isolated check, so I
-> moved the fatal_signal_pending check outside and tried with that.
-> Performing full reclaim on the /uid_0 cgroup with a 250ms delay before
-> SIGKILL, I got an average of 16ms better latency with
-> sc->nr_to_reclaim across 20 runs ignoring one 1s outlier with
-> SWAP_CLUSTER_MAX.
+Hi Tejun,
 
-This will obviously scale with the number of memcgs in the hierarchy but
-you are right that too_many_isolated makes the whole fatal_signal_pending
-check rather inefficient. I haven't missed that. The reclaim path is
-rather convoluted so this will likely be more complex than I
-anticipated. I will think about that some more.
+tj@kernel.org wrote on Mon, 5 Feb 2024 13:53:54 -1000:
 
-In order to not delay your patch, please repost with suggested updates
-to the changelog. This needs addressing IMO but I do not think this is
-critical at this stage.
+> Workqueue is in the process of cleaning up the distinction between unbound
+> workqueues w/ @nr_active=3D=3D1 and ordered workqueues. Explicit WQ_UNBOU=
+ND
+> isn't needed for alloc_ordered_workqueue() and will trigger a warning in =
+the
+> future. Let's remove it. This doesn't cause any functional changes.
+>=20
 
--- 
-Michal Hocko
-SUSE Labs
+Looks okay to me.
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+Miqu=C3=A8l
