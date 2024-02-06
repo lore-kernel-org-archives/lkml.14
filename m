@@ -1,114 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA7014017
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09BA1426B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707241128; cv=none; b=IVZGF/WLZo12+9XxE+Wm1deCfE6XT73HBATmUX9I/W5A/kDG62NIlFe5fc+XBZ/R4sJkrzswUpOAWdJoS/M/FpWw3qYJreTN14G+oauHqEcWVT1ThAluuFSDo5jm5VAd02/43I0gTGkIpJ30A99TbS4QeEL3Fs2/0w+D2liFTiE=
+	t=1707241139; cv=none; b=NnkZRwTvFmzPotUdmq4A70Ei4kaojBNXXuwS6T9XF5P9iNOEpyzhFWtd2ab/L/VyTJJBYKzyJDomgrxUNbZ9eQUbkz3xSyA0baN22SQCPukf/n57sT1KiTXAtW+I03Lh4GIGJWi9ky3NV5Uqbf+dAejs8AA0WZ60t9zR5zf7h5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707241128; c=relaxed/simple;
-	bh=yQUOCOFxQ1trgskQ6RJ5rgvYAiOivGJSqWUAZbzNQlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTiv4qIUO+bNNDD/SHgvsal0qeCeaYamliyngJu1CUSSUubzCFVCtfVwpAE7zRJ+eSpRTG2Ly3hsNkb2DPRMwWWpSOVUzGzasRmxhiTfB269Cj/ZIeYeNvTiYpWIakeAFMxrSmKLyhxj3DutiCzeJtJdJgGL3Fb12s/WsnVuwnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b2YLMP+i; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707241139; c=relaxed/simple;
+	bh=rb8APAK/NFsWkjSw2CEJHSFqUkeP73aN71SPR67A7Ck=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=GXGfetu46r7FTApI72lorztrUocnUVt1lCf3sKznolJLB49nI2yEC2TuhtG9Enegj5ppyenbYoEKKMARELsQBt4cjw4qT1HKp2zFTKfsvtSewkjFV1BEDgkE4ejGd8aKTNJbotPzoXqGvYAAE7M/vq8UTOnL9HscdsyKdxZQJnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=lciMhFVw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2YLMP+i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707241126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9eKVsLWwsKPgnzmmex/I3IzcymtKT43xKlS15bvI8Q8=;
-	b=b2YLMP+i/sfWlLKggjJ5fSkHJ9l8/LVd3iMbrW6dMe+jt+AJ5tT8ZR0kQrr4ElJ3WUY3e4
-	gDTGkYos3HqMwjgXuVEcwdTkKfK8WiQag92usRtLkkYSh3PgSjgTqUmlK/AldVRhuL8ERW
-	E1AGEzXciehbBROr8I3rYQVBWzosqkQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-480-rJ6TbiRxOUynthcBAac81A-1; Tue, 06 Feb 2024 12:38:41 -0500
-X-MC-Unique: rJ6TbiRxOUynthcBAac81A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D605879842;
-	Tue,  6 Feb 2024 17:38:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.46])
-	by smtp.corp.redhat.com (Postfix) with SMTP id A2383111F9;
-	Tue,  6 Feb 2024 17:38:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  6 Feb 2024 18:37:25 +0100 (CET)
-Date: Tue, 6 Feb 2024 18:37:22 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	Tycho Andersen <tandersen@netflix.com>
-Subject: Re: [PATCH] pidfd: getfd should always report ESRCH if a task is
- exiting
-Message-ID: <20240206173722.GA3593@redhat.com>
-References: <20240206164308.62620-1-tycho@tycho.pizza>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="lciMhFVw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244A1C433F1;
+	Tue,  6 Feb 2024 17:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1707241138;
+	bh=rb8APAK/NFsWkjSw2CEJHSFqUkeP73aN71SPR67A7Ck=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lciMhFVwD8spj2zXqwGFIForrObq2F8BJkxbrdxDdYKg1fqbP5VAtqDJQUwue4+18
+	 DItyjrNq9uxFdW2im98TsjO377IO4W5VqyMC915WTZkqw+Bcft2n+PVPZvdbs5uY3o
+	 Qv7TvTU/TNfcgzvgW8xsYVdhfUp+yQrigOvQyjRk=
+Date: Tue, 6 Feb 2024 09:38:57 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, alexandru.elisei@arm.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/cma: Add sysfs file 'release_pages_success'
+Message-Id: <20240206093857.d834af4f96d643c53e29e02d@linux-foundation.org>
+In-Reply-To: <20240206045731.472759-1-anshuman.khandual@arm.com>
+References: <20240206045731.472759-1-anshuman.khandual@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206164308.62620-1-tycho@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 02/06, Tycho Andersen wrote:
->
-> From: Tycho Andersen <tandersen@netflix.com>
->
-> We can get EBADF from __pidfd_fget() if a task is currently exiting, which
-> might be confusing.
+On Tue,  6 Feb 2024 10:27:31 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-agreed, because EBADF looks as if the "fd" argument was wrong,
+> This adds the following new sysfs file tracking the number of successfully
+> released pages from a given CMA heap area. Also like before - this will be
+> available via CONFIG_CMA_SYSFS, and help in determining active CMA pages
+> available on the system.
 
-> Let's check PF_EXITING, and just report ESRCH if so.
+"like before" is mysterious.  Is this referring to some other patch? 
+To existing code?  Please be explicit and complete.
 
-agreed, we can pretend that the task has already exited,
+> /sys/kernel/mm/cma/<cma-heap-area>/release_pages_success
+> 
+> It adds an element 'nr_pages_released' (with CONFIG_CMA_SYSFS config) into
+> 'struct cma' which gets updated during cma_release().
 
-But:
+The changelog doesn't explain why Linux needs this feature.  The value
+to our users.  Perhaps that info is buried in the link which is buried
+below the ^---$, but as this is the most important part of a changelog,
+it really should be spelled out here, completely and carefully please.
 
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -688,7 +688,7 @@ static int pidfd_getfd(struct pid *pid, int fd)
->  	int ret;
->  
->  	task = get_pid_task(pid, PIDTYPE_PID);
-> -	if (!task)
-> +	if (!task || task->flags & PF_EXITING)
->  		return -ESRCH;
-
-This looks racy. Suppose that pidfd_getfd() races with the exiting task.
-
-It is possible that this task sets PF_EXITING and does exit_files()
-after the "task->flags & PF_EXITING" check above and before pidfd_getfd()
-does __pidfd_fget(), in this case pidfd_getfd() still returns the same
-EBADF we want to avoid.
-
-Perhaps we can change pidfd_getfd() to do
-
-	if (IS_ERR(file))
-		return (task->flags & PF_EXITING) ? -ESRCH : PTR_ERR(file);
-
-instead?
-
-This needs a comment to explain the PF_EXITING check. And perhaps another
-comment to explain that we can't miss PF_EXITING if the target task has
-already passed exit_files, both exit_files() and fget_task() take the same
-task_lock(task).
-
-What do you think?
-
-Oleg.
-
+> ---
+> This patch applies on v6.8-rc3
+> 
+> Some earlier relevant discussions regarding arm64 MTE dynamic tag storage
+> in this regard can be found here.
+> 
+> https://lore.kernel.org/all/ZbpKyNVHfhf1-AAv@raptor/
