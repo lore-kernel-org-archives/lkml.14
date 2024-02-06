@@ -1,80 +1,115 @@
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.65.254])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C9579DC6
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 04:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.155.65.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E8677F12;
+	Tue,  6 Feb 2024 04:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707194576; cv=none; b=AAixQWQhsk4ySzxfYWcnRoNqBE5+4c8SbKM3YW/9mCVPEQxsrDyUySpo4M8Ppyo3iHOjCCE5NVCqLqF5Eb7dz1gboq3q+6ynTiLsVrnwFI4rcPcibDCJlQsLdxOuPB1FmW2UdorK0r26WQpbgVFNwf0Qj2jokwLdCS8jeGPBixY=
+	t=1707194616; cv=none; b=J4NvqqEeeahDeJucPh6KOfAt7PGDVeL1YX/Rkk62IULWGVEtebfhFgWtGW9I7N7kKtEL4Oyv1RYOmjaBLSKB16lnNxutyQUSX5MyQrGtErz/2eRoyK3/4GD/aI/yUe/cY7Xhpwszh064bvp1R523Qtb6umQdF/T6WyXEjYORKpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707194576; c=relaxed/simple;
-	bh=nc0jLkuc57sYljrMKMUObIFnwLlI3hm99D6/F9t3tXQ=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Lu3CW3RtB4bZLD+MgFa93Y1zVXxPhg9L6Eyy6SO+X/XEnMVpEgRbgTwn1mTiyDIe11gOL7iS4Au3nt0l/YYhd/kdv9tQXiKLjebUu6azy1kuka8rcVbmlTYQo4zNewzJIVMZiXlJ/RVpjQl7vAfeIqGyqsM+N4gq5axjxn/P4RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org; spf=pass smtp.mailfrom=tinylab.org; arc=none smtp.client-ip=43.155.65.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tinylab.org
-X-QQ-mid: bizesmtp91t1707194541t9xd589g
-X-QQ-Originating-IP: pMzahIqg6H5dlPo+vAhyxexMUr3RLOXUZCog16Pyj2M=
-Received: from ubuntu1.. ( [221.226.144.218])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 06 Feb 2024 12:42:19 +0800 (CST)
-X-QQ-SSF: 01200000000000B0B000000A0000000
-X-QQ-FEAT: 0vfWcIgh24yhEjsGKgTjDSuqmFqO91+wU93WDdBJmkdGhNU+EQTKp6T9wFfHE
-	olJfbkXSl/UD1IDL1lpyYWuZoBKR2L2POs7sSK6FcxK1VX9S/a9GHCXPvGihUkjQxrXQfpL
-	qqUVUzZFca0MGPliNtXrVYcMSvNVHq1WbP7lxKqLNyR21PSIi+AvS/32OST/Zj+5jt7DNng
-	nkRODrT+5JhpFwTTafFJEzFmj8NBCOWbaZbY/46bYa6LWKMFSg+SHcf6JqYY42pj7QRkH05
-	2tjOmG/3g55LOROKes7bYsuSxZL5+VMzrCv+1pZ8JOSc4NB7xBzPbWZPV/Kv7JkxRBo6hon
-	lcEUggmWI7xYFQel30=
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11924492051614252062
-From: Song Shuai <songshuaishuai@tinylab.org>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	andy.chiu@sifive.com,
-	ebiggers@google.com,
-	vincent.chen@sifive.com,
-	songshuaishuai@tinylab.org,
-	greentime.hu@sifive.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: vector: Fix a typo of preempt_v
-Date: Tue,  6 Feb 2024 12:42:17 +0800
-Message-Id: <20240206044217.1283849-1-songshuaishuai@tinylab.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707194616; c=relaxed/simple;
+	bh=LS1KrxtP59Fb91vkMh5NAIuixfILIL/8DogIfqJBR0c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s1T3F9NmqxivkHDd+y2Ht7rawOfyhEuvdzh4kBWFK5FzzMrqGQwf0RfxE1IO/9Z9aIZJ/psaVONxApqM5IUz+++EYvHc3aS8wh6IUSsQtzXEWo21WhWMVtwr4wejSfcpHntCWpkpwd3aXihw8uRVoAIX+gPMGF+3nSeoAy54qBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tDAgollU; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tDAgollU"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4164hPNa025424;
+	Mon, 5 Feb 2024 22:43:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707194605;
+	bh=P9Brm4oSTXiiBclrcVJ3PCSaz+EcMSnBjpIYP2cMhlY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=tDAgollU6CsHtb4OxsYg0ES60kT+RcAsaOHdLrRpb+gF/84CrpJHRnOMlpCs+xMpk
+	 2SJTKTYnhY2OC5g4xxEzZLq97yaRC9vwTXUylzMbUcIBR+Q6kiVpyb8IblmPOUTk/2
+	 xO0cIHwNiiWF17VjHcM2GAPiAdJJdmwy7BW6Q3DI=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4164hPMw003726
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 Feb 2024 22:43:25 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ Feb 2024 22:43:25 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 Feb 2024 22:43:25 -0600
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4164hJQx117444;
+	Mon, 5 Feb 2024 22:43:20 -0600
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Tony
+ Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Thomas Richard
+	<thomas.richard@bootlin.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+        <thomas.petazzoni@bootlin.com>, <gregory.clement@bootlin.com>,
+        <theo.lebrun@bootlin.com>, <u-kumar1@ti.com>
+Subject: Re: (subset)[PATCH 0/3] pinctrl: pinctrl-single: fix suspend/resume on j7200
+Date: Tue, 6 Feb 2024 10:13:03 +0530
+Message-ID: <170719349987.2245010.13900750309896394285.b4-ty@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
+References: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-2
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The term "preempt_v" represents the RISCV_PREEMPT_V field of riscv_v_flags
-and is used in lots of comments.
+Hi Thomas Richard,
 
-Here corrects the miss-spelling "prempt_v".
+On Tue, 28 Nov 2023 16:34:58 +0100, Thomas Richard wrote:
+> On j7200, during suspend to ram the SoC is powered-off. So the pinctrl
+> contexts are lost.
+> The flag PCS_CONTEXT_LOSS_OFF shall be set to restore the pinctrl
+> contexts.
+> 
+> A new compatible (ti,j7200-padconf) was created to enable this flag only
+> for j7200.
+> 
+> [...]
 
-Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
----
- arch/riscv/include/asm/simd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-diff --git a/arch/riscv/include/asm/simd.h b/arch/riscv/include/asm/simd.h
-index 54efbf523d49..04baee713eff 100644
---- a/arch/riscv/include/asm/simd.h
-+++ b/arch/riscv/include/asm/simd.h
-@@ -36,7 +36,7 @@ static __must_check inline bool may_use_simd(void)
- 	/*
- 	 * Nesting is acheived in preempt_v by spreading the control for
- 	 * preemptible and non-preemptible kernel-mode Vector into two fields.
--	 * Always try to match with prempt_v if kernel V-context exists. Then,
-+	 * Always try to match with preempt_v if kernel V-context exists. Then,
- 	 * fallback to check non preempt_v if nesting happens, or if the config
- 	 * is not set.
- 	 */
--- 
-2.39.2
+[3/3] arm64: dts: ti: k3-j7200: use ti,j7200-padconf compatible
+      commit: 4eb42afed5d488c4707be5362e8e0f0771f5218e
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
 
