@@ -1,134 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342D212CD97
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 09:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7FE12D148;
+	Tue,  6 Feb 2024 09:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707212276; cv=none; b=BckYJSWZRR5S+1Ek+ooMtgVS4gN9bJv4HlGK7ibx5RTGtYmG1zAxir71aDxNAx9Khv6o9O5NBME3z/jwoCWLJj2ARkpkQ1447bPBybUsaQz93sygWuXFIne6rIc0K9ZUQ8jaIII6W4JTAdqlrhX/T4C1oXwv+WZ3BB3UbCvLvk0=
+	t=1707212327; cv=none; b=GgoN7f/HqddlxvYCgnxbf6LNeqtJr8ge6zXSul483yItAA81zgMXECvZb600LtFFhhr9HHxsigLmHUi0kgdB5FEPYNn5bhq5xhE1X5exuWx1+ijy2sKNGhm7bJNR98jTiND8qfopzNK5t00thHi5t2JlojlnrcAyv8OL/dQwLoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707212276; c=relaxed/simple;
-	bh=UFw0/tki7MzcuGpQDjCWPan97sbo8eZxmh34JYGWwvw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FEzy7oH31jOyzca6E2LFGcNswCSwcfDKG1KUc1s6aSoM0/KFgt2kFwpKKxM31kUHSmEJ3ftcfGQbGx+wcH4eVpzuYKwKdWtq2bYLfEyb2JIR4QGan5Rgs+kEuMG531MZOkdXDxE8Dx8YyKVX1p/V9dWdq6kZh7aM+AGP3iNYRh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g05AKgIC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707212327; c=relaxed/simple;
+	bh=R1JkbkHYZjBJccdGuVGW2VQafUHeELVUbK2T3y/y9DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NmeyYu621HewxSKlRSi80Ey6KEvpAplVjFC7o+eRQNxeJGY3gnqaNOF3L7sEs6joXb0et4+x93IKSnYj/QN3F1NsGeyA9E+I8I4aDrX7HhRFIbyTT58RPbX6IDhhhX6/F/9y+yS4KIKiDN+lPDw7C48gcIZPGELn3MgJse2sD5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dKXLtGPR; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g05AKgIC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707212274;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dKXLtGPR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 26B2E1C0004;
+	Tue,  6 Feb 2024 09:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707212323;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UFw0/tki7MzcuGpQDjCWPan97sbo8eZxmh34JYGWwvw=;
-	b=g05AKgICNqTkFjgWbcfI1jPw3/I4Hqw7d4kwgTCI433HoChVEnnjln+IyFTD+wr/VTh1FP
-	5OCDSQPZiwwdIy19ls7IIW4tsT242vHPCqDPyEjjX0TBDt7x8atUGtKNNGkK8TaVCSRe4q
-	JBXlNORQe/J8FfrPv3NPtfQxPUTo5w8=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441--HOCGMJfMjCo3i3yHAR7-Q-1; Tue, 06 Feb 2024 04:37:52 -0500
-X-MC-Unique: -HOCGMJfMjCo3i3yHAR7-Q-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-78552f73660so90549485a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 01:37:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707212272; x=1707817072;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UFw0/tki7MzcuGpQDjCWPan97sbo8eZxmh34JYGWwvw=;
-        b=pj1iVREnYTNwG06FajiE3GYOBjZIduztZe73u17uK/Zf1VqJSzVgcNPndkAUtsCBAb
-         f9UCEbK2fIX63G/0jfDNGxyKZvDv9lrNSP6BGc/I7Uv00HqSZJintXdIPnro46/eMpKS
-         O6Jxp6lAHExUtsqUeCL51gpVV6x9bcx5dZR5WVaQ20/3An6T7pORqfSPDRl8PwTAH7Or
-         76TFZ8BbDmL8EOVZ4J3nJo17EWSHA5kGZlIQagxzKPd1nOdJ7VZVikKHZPcntjC0Y9HG
-         9bSBhKsPMNAHhMpvUgDdYeHq2LEXNaaIT27Esf19uXpMFscRdl/LkeR72k4x6AcbkHdO
-         5cbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMGxUIjsGlpLJa/D8s/gKHtj41SsoAqrKOl0JcsRp00bmwd0uRhHycGDZktPg/CfjZi7dUBTlhN8llNwbX+GSvhJaISSGAySE5Ktjr
-X-Gm-Message-State: AOJu0YznCBLFbeIfe4ghAIvfA27rt2oApppUYwia2d6n44ZIUwVDMMC3
-	ThG2ZsWCeyaZd2DboCuXYKKCfDZln6QbzvVgA9+kvGMty3gQWzWQmbzw54JkvX5wJqPP8R6oLf/
-	EZvocrtSn5oq5lUgZdjuT6Xo4ziEbUsteDLswVnZ2iyW8+e/82Xd62Lg+ey+48A==
-X-Received: by 2002:a0c:fd81:0:b0:68c:892d:3580 with SMTP id p1-20020a0cfd81000000b0068c892d3580mr1906097qvr.2.1707212272264;
-        Tue, 06 Feb 2024 01:37:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFf8jMGPfr9HK+wkVYLwf6cn8LeUVvvC77sfjQ9swGgq33sBn/RFP3wypkxfuqD7DIvGYoWnw==
-X-Received: by 2002:a0c:fd81:0:b0:68c:892d:3580 with SMTP id p1-20020a0cfd81000000b0068c892d3580mr1906059qvr.2.1707212271977;
-        Tue, 06 Feb 2024 01:37:51 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWfUoaFEr7eaRe5ycg1DbG6mUeacI7DqXnDEQAqR/uOtVZi5iFHBIfAHWtmdID07LMES9Vqtbf3/fDfcaZBNv9q/LKcJCvpZ+uQgCEVeMTU7NVUBYA6uY3aLynfiw2uUhE6tdAOuqYInOKJAQMomBkV5l/VJHC3+6tIX1TH85D9DfaFx4gpu4oHJ9rLu6wOO0BQ0v7WkpB66r/8MT495M3IZvXMbKXAho54eYMqxSohWmzS4Zd18vYFR4tA84odtM96MQSFKSOl66yhSwJICX8VzbMZ86CzFpYkQOtXuq4de74sUrDbH2gwURZHiKSoRT+JAmDyPQmqGzsTWGvejl0gWUwHvuLSpEMqIhBpD0ajsqFXhituE+IuAVn9KzdCPnsmVJsflajKjmzFfzx68lxghXJEfEVQcBMshWKP+AkEELVUdAv396VdpP5cA1WWIjG78Eo70CI60B+/VpjL+S7Gd66bOCtvZNl1TF8bp6nsW/g7ptgrScj9NXW78jFSRoABrhjp6hePZSYF5zjuX/QCUCpgLIh/t/9sqHaAjQ3eLvBVeYWIl6Q3glSL6Z2/hF7z65mnsPfgT0Q1j2b/ZRVPyzV0wIt+YyUirpjo5VPamlgylLEZoE52w/gYK37P7Tz/dx3lm+IGXJl/voSUee/Jo89OYHX2E9Tg2064/fHk9rU2p93kU70XkZ0op6YcaD5MRTq8NgaDFjOfnUEOGsKHwv0WaugrX0/jDwkA8bmBGJuaYo+1TM+wHVksIRvhJJ+G+MLpXKZOgqyPD16p8gvlfK2Lc81+EI4sm4Ef2kz7Oz2nXhnO3UB1jo36t2eCbozlgmx4xz7ijA==
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id bo14-20020a05621414ae00b0068c67a3647dsm846048qvb.76.2024.02.06.01.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 01:37:51 -0800 (PST)
-Message-ID: <20c967ffac2cec6c9d89017d606967551b30d20d.camel@redhat.com>
-Subject: Re: [PATCH v6 4/4] PCI: Move devres code from pci.c to devres.c
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
- Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
- <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
- <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
- Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
- <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
- Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
- Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
- dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, stable@vger.kernel.org
-Date: Tue, 06 Feb 2024 10:37:47 +0100
-In-Reply-To: <20240131211235.GA599807@bhelgaas>
-References: <20240131211235.GA599807@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	bh=R1JkbkHYZjBJccdGuVGW2VQafUHeELVUbK2T3y/y9DU=;
+	b=dKXLtGPRXyrAMOrPTXbdEyI20UREUIhUzE+Mf1Z5vpipNPJdGYMVPkrsUQeoigC1hwWnkb
+	+sM/Si7s/HdqTv9NJGKDnsV0uLZobsBHMzgjmbD4K2wnudQJXaLBCBra8zBnv8j0xNA7kC
+	8vGEoiOuRG5cnA6VA9PtfySl3RUAvBpgybPSqe+1fsUeivB74y2RiRnOcRwyMSPcRb032N
+	hOtgA17p2NVRic19T0+WnJSj06W4R2W6/zdYQQ1bcLS98kh3PkmcXJdgUjfn03M3Zfql6B
+	Kb1Rtjq5ghJdvaH+4DpXNXzP2XvEKZl5yXAe4j3mW0eXFWOMNUP9ZRiKbIWvbg==
+Date: Tue, 6 Feb 2024 10:38:42 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Ariel Elior <aelior@marvell.com>, Manish Chopra
+ <manishc@marvell.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony
+ Nguyen <anthony.l.nguyen@intel.com>, linux-usb@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH 0/8] drivers: net: Convert EEE handling to use linkmode
+ bitmaps
+Message-ID: <20240206103842.0a72ed27@device-28.home>
+In-Reply-To: <20240204-keee-u32-cleanup-v1-0-fb6e08329d9a@lunn.ch>
+References: <20240204-keee-u32-cleanup-v1-0-fb6e08329d9a@lunn.ch>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Wed, 2024-01-31 at 15:12 -0600, Bjorn Helgaas wrote:
-> On Wed, Jan 31, 2024 at 10:00:23AM +0100, Philipp Stanner wrote:
-> > The file pci.c is very large and contains a number of devres-
-> > functions.
-> > These functions should now reside in devres.c
-> > ...
->=20
-> > +struct pci_devres *find_pci_dr(struct pci_dev *pdev)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pci_is_managed(pdev))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return devres_find(&pdev->dev, pcim_release, NULL,
-> > NULL);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
-> > +}
-> > +EXPORT_SYMBOL(find_pci_dr);
->=20
-> find_pci_dr() was not previously exported, and I don't think it needs
-> to be exported now, so I dropped the EXPORT_SYMBOL.=C2=A0 It's still
-> usable
-> inside drivers/pci since it's declared in drivers/pci/pci.h; it's
-> just
-> not usable from modules.=C2=A0 Let me know if I missed something.
+Hello Andrew,
 
-No, ACK, you are right.
-I forgot this since find_pci_dr() is removed later anyways.
+On Sun, 04 Feb 2024 17:40:17 -0600
+Andrew Lunn <andrew@lunn.ch> wrote:
 
+> EEE has until recently been limited to lower speeds due to the use of
+> the legacy u32 for link speeds. This restriction has been lifted, with
+> the use of linkmode bitmaps. This patchset convert some MAC drivers
+> still using the old _u32 to link modes, with the aim of soon being
+> able to remove the legacy _u32 members in the keee structure.
 
-P.
+Although I don't have proper hardware to test all these, I've read
+the patches and I didn't find any obvious issues besides the typo in
+patch 7.
 
+Regards,
 
->=20
-> > -static struct pci_devres *find_pci_dr(struct pci_dev *pdev)
-> > -{
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pci_is_managed(pdev))
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return devres_find(&pdev->dev, pcim_release, NULL,
-> > NULL);
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
-> > -}
->=20
-
+Maxime
