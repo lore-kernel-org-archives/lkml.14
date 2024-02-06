@@ -1,131 +1,117 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3FB131E55;
-	Tue,  6 Feb 2024 14:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBFB131E44;
+	Tue,  6 Feb 2024 14:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707228966; cv=none; b=cLzkBqZFSn5/j0a7qNbRf3fsCuJHfH4uQf6Ij5sA+5NgRwMpMxFyY+WsgbSX8a9VRWWmPKFBrb0UDEeeQVupzp08xKUbMc9Em25i74eLKBDGM22N3tS2jVmO1m2hRsGH2C2yIg87JAOG++Ca/wQPpx1Qs38Nu5nemqmPeumAxzg=
+	t=1707229181; cv=none; b=ndKk16MNrPiw0vLWF4p7w8dXVoq6Js/SH34tPIGwd+xkDk4wT+ygkRSG7+HhA15GvGO6SdiufTQ+8o8dmSHH9ZdctA/RVaKMjNsIumBVyX0lbjDAwr/zSOzhoBI8Mpa/k86vHase6L88cs5fMzWUFRtT32yFs2xr+zF8BYOwoEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707228966; c=relaxed/simple;
-	bh=3i1pZdvo2r3BXMaevJFKXByzHrypyI04neeHTBdO3m4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BQXt3/Kvhzb1arHeRPSLyrbJbpdF1hppZRRKz8e5HkTA3Y2z3ynQMddLNKcdt1UiszY24tHTNc7yi3jXn3h03mF2424IC7y810GPQv3xz4SvjIgdOF1LAIq7YdmlNtjb37IVsuK4Oc6Gxsaj+KnrfNJFE7NEawPPxjg9tPdHWFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Ykd65aBQ; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1707229181; c=relaxed/simple;
+	bh=1MnTEbxeUsGA7HMcn2eRPHhXYWih9ZllJehloa4wpsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S52rviG5FewOV0w2x8v3Rpx0LCna1+d58BnHpcVAL3a8sKm5bsu3hdhjDCdFkPzJDImAExN4rvAE1bvvpJcp4fK+PInTayzuBQACEOeoXOV7gvr4a4i3nogcnqWqqF5yD1eK/jbRbyz7VzqEpzWD5qlqH5MVH91MLzQqNk9c3WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W38Z4H0q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Ykd65aBQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1707228943; x=1707833743; i=markus.elfring@web.de;
-	bh=3i1pZdvo2r3BXMaevJFKXByzHrypyI04neeHTBdO3m4=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=Ykd65aBQh90DaRZO1x3btzWdGHH7FW88bZSoxGx3JNJVxxPkZt/OotK0KT5QVCPe
-	 n9KByG8wCtMRcit5S64oEJuhVMM8mcK8GmBywydIUdbN8K0la+pc8zHA8Mg+d0WBk
-	 JCbPObBs2E9RTvA1ZAr0NCYbLxCTV3Ax4+2EGHcT9uBfIRzple0RoL1AwEe6wO6rL
-	 4XjZfQIJUNRWAgSfPL0KE/KYLluvS3NEk/ZEy6kmBbTjF67U+y3JsNf4z0/TA/Mix
-	 oUbNxUWzGYnrv7Z2YPne5T9GKnWG2pbKj21sV/WsXW3E/aqHONEfIfgzMsU1gPxRN
-	 FDt5RKtNvtQtduXvqQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N3ouw-1qpX7n2Zl2-00zq1o; Tue, 06
- Feb 2024 15:15:43 +0100
-Message-ID: <596b3bda-3bef-4e28-b9dd-08b96da97097@web.de>
-Date: Tue, 6 Feb 2024 15:15:23 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W38Z4H0q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C92C433C7;
+	Tue,  6 Feb 2024 14:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707229181;
+	bh=1MnTEbxeUsGA7HMcn2eRPHhXYWih9ZllJehloa4wpsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W38Z4H0qdYqSxhn84T7haOHArqaXgeHjfaoKy44OX19ZDhSftyULq0r/FMg70Ayyg
+	 e7xwz0dqu7rFdptm5oHyeXQbqIlKCTw2IHPb8ifn0IWhpuVUdjUtd1/vqHYHiskKus
+	 emdg0gItkGetPQPwjMbX3W3fHloS4plorEAOZb4jp8m6WWubTwO7C7KUNEfmuWtWJd
+	 zDY6/0HI6/GQqpBuO8do0WL0/4o+XXYwSsg8BKoJsCU5N+SjQ257MPnim1lXkUHSj8
+	 ZK/ph766zwqJpWxF6v4UD+bEzWaUrTNjU17rOna6yYGAL3WbiXN7oAf1vGxX8Vd7MR
+	 Shtxv60zYzbrg==
+Date: Tue, 6 Feb 2024 14:19:34 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Wolfgang Grandegger <wg@grandegger.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: can: mpfs: add missing required clock
+Message-ID: <20240206-parole-cinnamon-2fe369f6ca74@spud>
+References: <20240122-catty-roast-d3625dbb02fe@spud>
+ <20240122-breeder-lying-0d3668d98886@spud>
+ <20240122-surely-crimp-ba4a8c55106d-mkl@pengutronix.de>
+ <20240122-cruelly-dainty-002081f0beb2@spud>
+ <20240122-smokeless-ion-63e4148c22e5-mkl@pengutronix.de>
+ <20240122-uncoated-cherub-a29cba1c0035@spud>
+ <20240122-pogo-reputable-b1d06ae1f1f1-mkl@pengutronix.de>
+ <20240130-narrow-lyricism-8b25baac7bb2@wendy>
+ <20240130-fragrance-disinfect-22cc1911bf48-mkl@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] iommu/ipmmu-vmsa: Use devm_platform_ioremap_resource() in
- ipmmu_probe()
-To: Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
- kernel-janitors@vger.kernel.org, =?UTF-8?B?SsO2cmcgUsO2ZGVs?=
- <joro@8bytes.org>, Will Deacon <will@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <e01cdb99-8497-4fec-b423-a0bfb483ac75@web.de>
- <324d4e02-6a5a-4112-a3a7-d7aeb5876acc@arm.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <324d4e02-6a5a-4112-a3a7-d7aeb5876acc@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5oAuP6RxMdm00jg7"
+Content-Disposition: inline
+In-Reply-To: <20240130-fragrance-disinfect-22cc1911bf48-mkl@pengutronix.de>
+
+
+--5oAuP6RxMdm00jg7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1GavO/jqMcqRN1BtjZgAUfaF8zQP8ZZ6HX5WMwrlBEsJoGeDJVY
- IKXoCa9LumD5e+pjiU6GG6lQSgDPGG2FoL1UZsWwoGv3DPlNtv9Pe7X/ad8kaLXP8ihE+pO
- nnPCEo1NH32sPL24Obk2n5hjxETQSjWguVujlm8Dv52pPeA9N4TzfI1N/s3VlcVTN0PXMui
- Uq4v54OwpuJeRL2SxK4ug==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Skb7Gp/BNDw=;4qnmnNiFDllDhJDPdwsxIUfqFhS
- a+iiDCkpzoIM6diumPEtrCekaGiHtQa0fH7Q5qXo2UwBMqMwpRHeX78I71hkgzoxf//BXoHK+
- fTgLXm6tzovAPHkRhtuTxjH4ZCMZM41J1C87zJd63cwQhN4Va3/DI2uluhC+OvwpT2VBUMnzD
- FpSSb9d0O0+iY1ILHEk8sObLEloKkSBmY9ujxwG7QLUIftRo3lnzBKs6W8PehsxMOFRcuP7Ge
- sWK9TVkZw1IIA3oibgLKd6wVT4nhRKSVp2WE62HNbouV/js423TUnYH/oP8T/1gLEC431Ve0K
- riL0IMPsP+OYegM6mJAONo9uEc0hZiEa1kCuQJxDR8t2pKvkeC0fpfvuJsro22cQJ+2mnGLwp
- GhYv0KBI8CaxTbZOYDrFgjtqiFVY984GJm57SCWLM9hgkF5xJmXT+99RlDzuNj2r560W1Faqz
- HoUjYhf8OOmNaz8VRJR190X6EGKo74PREYpJaJhopuaSmrmV8ylC7GfC1JJx7aHygpc5S7acr
- 8BydEO3F3qzkIyFqCG9TdKzt1+H/zbR3T0435sYeX0XnO2bKWu9Juo4fyvG+kzYRX9O27oB+q
- 70H4cNEhLtlKo+gzvCSoiqIVsylhEueqBODnC1HjsdR1t7ddpb09dSC3oRb+/l7RcXWLfCH63
- +4hrY6J6zZerZYVgQ5Jgn0QFQSY1jDb2is3MO5x205su3+feRbboVTC6/hs+anh36lphAM19X
- FBigUf9YLFyCdgux1Z6bEdrx3IUsEAb4tBbv15jDWDLz5LJVdp09PLZVrku+vFVy9VAh/Ofps
- aX4iYownoQSS8h7HKqQ0pTgrE7xsqge38K02Mszg+vabI=
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 6 Feb 2024 15:00:23 +0100
+On Tue, Jan 30, 2024 at 02:01:09PM +0100, Marc Kleine-Budde wrote:
+> On 30.01.2024 12:11:44, Conor Dooley wrote:
+> > On Mon, Jan 22, 2024 at 04:31:32PM +0100, Marc Kleine-Budde wrote:
+> > > On 22.01.2024 14:56:09, Conor Dooley wrote:
+> >=20
+> > > > I think we already had this discussion on v1, where I said that the
+> > > > binding requires the clocks to be in that order, regardless of whet=
+her
+> > > > or not clock-names is provided. You feel more strongly about it tha=
+n I
+> > > > do, so I will add them when I get around to sending a v3.
+> > >=20
+> > > Yes, this discussion sounded very familiar to me, never mind. Keep it=
+ as
+> > > is, and let's get this binding and the CAN driver upstream!
+> >=20
+> > BTW, I didn't see an ack on this nor do I see it in linux-next (yet).
+> > Are you expecting the patch to go with the rest via the clock tree,
+> > via the DT tree or will you be taking it with CAN stuff via netdev?
+> >=20
+> > I can resend this one patch with a netdev appropriate subject prefix
+> > if you like.
+>=20
+> Feel free to take the whole series via the clock tree.
 
-A wrapper function is available since the commit 7945f929f1a77a1c8887a97ca=
-07f87626858ff42
-("drivers: provide devm_platform_ioremap_resource()").
-
-* Thus reuse existing functionality instead of keeping duplicate source co=
-de.
-
-* Delete a local variable which became unnecessary with this refactoring.
+Okay, I've gone and applied all of the binding and driver patches to the
+branch we will send to Stephen. Thanks!
 
 
-This issue was transformed by using the Coccinelle software.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
+--5oAuP6RxMdm00jg7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-v2:
-The transformation pattern was adjusted based on advices by known contribu=
-tors.
+-----BEGIN PGP SIGNATURE-----
 
-Examples:
-* Doug Anderson
-* Geert Uytterhoeven
-* Robin Murphy
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcI/9gAKCRB4tDGHoIJi
+0kHUAP0e+rt2LDSpTC952WOfj4vXNDY3wh2XgO1MsZQXw131LQEA1UPbV0N5gf+J
+ALoxbvkmhHo0E10iiUy+SgrU+qL5yAM=
+=rlvY
+-----END PGP SIGNATURE-----
 
-
- drivers/iommu/ipmmu-vmsa.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index ace1fc4bd34b..7e28aac1e383 100644
-=2D-- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -1005,7 +1005,6 @@ static const struct of_device_id ipmmu_of_ids[] =3D =
-{
- static int ipmmu_probe(struct platform_device *pdev)
- {
- 	struct ipmmu_vmsa_device *mmu;
--	struct resource *res;
- 	int irq;
- 	int ret;
-
-@@ -1025,8 +1024,7 @@ static int ipmmu_probe(struct platform_device *pdev)
- 		return ret;
-
- 	/* Map I/O memory and request IRQ. */
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mmu->base =3D devm_ioremap_resource(&pdev->dev, res);
-+	mmu->base =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mmu->base))
- 		return PTR_ERR(mmu->base);
-
-=2D-
-2.43.0
-
+--5oAuP6RxMdm00jg7--
