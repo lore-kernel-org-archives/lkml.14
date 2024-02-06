@@ -1,92 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8634A06
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 01:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B474A06
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 01:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707181672; cv=none; b=iShUNS70bVSRpQzM3y7i7g/mGIfutAuDz/qdUcxcFfn1FejEEutkAqR6b05A7Ddtqyiwja3t5/K8DAmAUK5x4+bjLQJovFXOg0hE8MIkjai/x01LCnLd3GKTmUOBenjtJ7KmqabSBFFWqji/Un2GGajE56VTA75FkM/KWN9mgM8=
+	t=1707181774; cv=none; b=oh5n7D06UmQwT/tFDWsP85AUMKvvi1qbL0Bg29HPNqSoXYzmfAlluM1jiGMWxd2VaYxHxkXZUknY9T5Z1bpxrRGzxQOwo3Rp4GeD5DRNwEDaeH5j7kXekEGVnyypALZQl25ViXFfGxJdrG33pYx0q+l0pjF5MpIYU6IR8qcmWLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707181672; c=relaxed/simple;
-	bh=DP4FmgXcccO+rK4IKEraucp1wQntMzDreh9T6ETZ8oU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EBlPz23Qt4PmVbTaxQ/CdBQFnWmWGxi6Q9wljDDRrxlLAzK+ARvegPK9KADiizhYrOwQSip/VaprYJlrDJbe2mA0DLkQFXfdaX1vH2B9TjFuX1S+UyIBkeK+bYrWyT3bk6wwhdCtoeuwEPBvmrtXEh6reU0LeyDGVMplWk2idl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QeAa6s+R; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707181774; c=relaxed/simple;
+	bh=GdHdniQnbMOXtlmLfBAIzFnjtasDR34ui/wEy9tYr8s=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VguWZVE5xi/y81Ud5BQ0LlWU3rbDPdSxGEEnTFGK9AlTEVPlY15I3U6N3Vwq8IoliXH0uw58OuVcj2UTqHWPRk0HZBkcELTWsAmFBQTXjhhSBd1GR2YI5Qj3K2G0RSgykr1tgrTLOWoBzMkuh12gua0ISF1IY2qdUSuaF5XrHQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--lokeshgidra.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vuBnNS2D; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--lokeshgidra.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QeAa6s+R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707181669;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qx0YFEsgX9UDCD0E+Npx4uOUY3x3FOt3qs6zB+rlWnE=;
-	b=QeAa6s+R9TbrX50hVSrrPBfE9Mcfstrrl6CRMRbzRlKdDsaxi4Gtlu5/6+8DYPKNSHq+YA
-	L/nBsfJQYndg0zyiTN0RUnb6dnvEyBcrZMGFxSMSpyegoms8cpNPOnVTiug8/8jlEEmIMd
-	VCatpFLvQ+5MjbAYXumJK4JfBAwB810=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-114-Hp_jRAt_OQqpQogeRMuzng-1; Mon,
- 05 Feb 2024 20:07:45 -0500
-X-MC-Unique: Hp_jRAt_OQqpQogeRMuzng-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 491113C11C62;
-	Tue,  6 Feb 2024 01:07:45 +0000 (UTC)
-Received: from [10.22.17.212] (unknown [10.22.17.212])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D17DBC0FDEF;
-	Tue,  6 Feb 2024 01:07:44 +0000 (UTC)
-Message-ID: <166aca9d-d4f2-4057-9fc4-e551114e97b8@redhat.com>
-Date: Mon, 5 Feb 2024 20:07:44 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vuBnNS2D"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso8490240276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 17:09:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707181772; x=1707786572; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zFHBvxcNZW2HfjsGIsVhZk87PaG1v642sbVGsClWfxY=;
+        b=vuBnNS2DuUXlqVJ15g75711OjVR9EqNrUnrFoy4+vDmz1KxfJipACqokd3EEMtYFOB
+         M5L949iLtPgfaTpdv/s6ybOCrPn63NCdgkj+WRLJwKB1WYaDFtJVdmnuW8WH/t7BMv5v
+         wDARcLSIRKiiZCCUo0BDJP0mRe44kv9PWKi4BGvd6K4KqOQhZ82UYdHzRG0iuabDfHsN
+         qDbk7B4YVgqfffm2iYoqbngLvu94GKcw5lBcHffBzaeJlO4ciKgs9QkrsC5nuWPnBIif
+         j1JrnSnQXzTU1ugBJx5Qr5QQdONZPI7M0+q5M47CrT8bVd3raBNa6NGigsEyaXNmo5B9
+         SyAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707181772; x=1707786572;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zFHBvxcNZW2HfjsGIsVhZk87PaG1v642sbVGsClWfxY=;
+        b=d7nAMFe9l03YvgyIkuraTuLwWY38miAte5fjyQDfV+i+mqC7ep4BlE8w7LAUHIMEV8
+         lZuu7DdmAz2wx7WMdPZvcNWx4GcWdck2YPJ+FaE86aWGsds2rhAVAs8Y/iAC7o6qbY+W
+         YxOj+sCeYl2+4hT2UgT7J3k0wcVHWZmd6pTWrRpszM9UjNMrC7tpWD4ffcSMJkMe85fn
+         hwoidDqlahRJhOkMub0VmO0MUmsCjMXYgDlt89z8223yHsYRYgZKdVAVzVCbFOH0x4Nm
+         9veM8V0vRjbQWvOY4G3Gbm9aJ6eEbffbJ/qSV7Es6HFfFFySfYemqpyKyCz7FRrahjA6
+         /sfg==
+X-Gm-Message-State: AOJu0YwF6423712JKREl7P2W4rswDH/LOPl8E/99PhB+vVLrsTbDiPqy
+	/e0Wds68qrItwpfZU43Nlx6tNXJS+fXtQj1g2bmBfOPVohg4ciCXKnbUXdw4kkwKCv39KAhekaV
+	0inxIahMsYe0COrpPj691mA==
+X-Google-Smtp-Source: AGHT+IH1RhvmxdMgiLN/uYEOr6sr5Ko2uXZynT5hRnaY5hwDi5R6HBD+SHyb78d2LA94Xo7Ale0nQeBJWCfcO1Y4yQ==
+X-Received: from lg.mtv.corp.google.com ([2620:15c:211:202:713:bb2c:e0e8:becb])
+ (user=lokeshgidra job=sendgmr) by 2002:a05:6902:2842:b0:dc6:519b:5425 with
+ SMTP id ee2-20020a056902284200b00dc6519b5425mr38783ybb.11.1707181772174; Mon,
+ 05 Feb 2024 17:09:32 -0800 (PST)
+Date: Mon,  5 Feb 2024 17:09:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH-wq v3 0/4] workqueue: Enable unbound cpumask update on
- ordered workqueues
-Content-Language: en-US
-To: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org,
- Juri Lelli <juri.lelli@redhat.com>, Cestmir Kalina <ckalina@redhat.com>,
- Alex Gladkov <agladkov@redhat.com>, Phil Auld <pauld@redhat.com>,
- Costa Shulyupin <cshulyup@redhat.com>
-References: <20240205194602.871505-1-longman@redhat.com>
- <ZcE8pUuHfa7gVZs6@slm.duckdns.org> <ZcF3qmion7H6qyYY@slm.duckdns.org>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <ZcF3qmion7H6qyYY@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Message-ID: <20240206010919.1109005-1-lokeshgidra@google.com>
+Subject: [PATCH v3 0/3] per-vma locks in userfaultfd
+From: Lokesh Gidra <lokeshgidra@google.com>
+To: akpm@linux-foundation.org
+Cc: lokeshgidra@google.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, surenb@google.com, 
+	kernel-team@android.com, aarcange@redhat.com, peterx@redhat.com, 
+	david@redhat.com, axelrasmussen@google.com, bgeffon@google.com, 
+	willy@infradead.org, jannh@google.com, kaleshsingh@google.com, 
+	ngeoffray@google.com, timmurray@google.com, rppt@kernel.org, 
+	Liam.Howlett@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+
+Performing userfaultfd operations (like copy/move etc.) in critical
+section of mmap_lock (read-mode) causes significant contention on the
+lock when operations requiring the lock in write-mode are taking place
+concurrently. We can use per-vma locks instead to significantly reduce
+the contention issue.
+
+Android runtime's Garbage Collector uses userfaultfd for concurrent
+compaction. mmap-lock contention during compaction potentially causes
+jittery experience for the user. During one such reproducible scenario,
+we observed the following improvements with this patch-set:
+
+- Wall clock time of compaction phase came down from ~3s to <500ms
+- Uninterruptible sleep time (across all threads in the process) was
+  ~10ms (none in mmap_lock) during compaction, instead of >20s
 
 
-On 2/5/24 19:04, Tejun Heo wrote:
-> On Mon, Feb 05, 2024 at 09:53:09AM -1000, Tejun Heo wrote:
->> On Mon, Feb 05, 2024 at 02:45:58PM -0500, Waiman Long wrote:
->>>   v3:
->>>    - [v2] https://lore.kernel.org/lkml/20240203154334.791910-1-longman@redhat.com/
->>>    - Drop patch 1 as it has been merged into the for-6.9 branch.
->>>    - Use rcu_access_pointer() to access wq->dfl_pwq.
->>>    - Use RCU protection instead of acquiring wq->mutex in
->>>      apply_wqattrs_cleanup().
->> Looks like we raced each other. I'll wait for v4.
-> BTW, please don't bother to handle __WQ_ORDERED being cleared. We are very
-> close to removing the implicit ORDERED promotion, so we should be able to
-> apply the patch to remove the distinction between explicitly and implicitly
-> ordered workqueues.
+Changes since v2 [2]:
+- Implement and use lock_vma() which uses mmap_lock critical section
+  to lock the VMA using per-vma lock if lock_vma_under_rcu() fails,
+  per Liam R. Howlett. This helps simplify the code and also avoids
+  performing the entire userfaultfd operation under mmap_lock.
 
-OK, I saw your new commit 3bc1e711c26b ("workqueue: Don't implicitly 
-make UNBOUND workqueues w/ @max_active==1 ordered") in the for-6.9 
-branch. Will rebase my patch series on top of that and make the 
-necessary modification.
+Changes since v1 [1]:
+- rebase patches on 'mm-unstable' branch
 
-Thanks,
-Longman
+[1] https://lore.kernel.org/all/20240126182647.2748949-1-lokeshgidra@google.com/
+[2] https://lore.kernel.org/all/20240129193512.123145-1-lokeshgidra@google.com/
 
+Lokesh Gidra (3):
+  userfaultfd: move userfaultfd_ctx struct to header file
+  userfaultfd: protect mmap_changing with rw_sem in userfaulfd_ctx
+  userfaultfd: use per-vma locks in userfaultfd operations
+
+ fs/userfaultfd.c              |  86 +++-------
+ include/linux/mm.h            |  16 ++
+ include/linux/userfaultfd_k.h |  75 +++++++--
+ mm/memory.c                   |  48 ++++++
+ mm/userfaultfd.c              | 300 +++++++++++++++++++++-------------
+ 5 files changed, 331 insertions(+), 194 deletions(-)
+
+-- 
+2.43.0.594.gd9cf4e227d-goog
 
