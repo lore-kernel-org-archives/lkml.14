@@ -1,86 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188B8134CC5;
-	Tue,  6 Feb 2024 12:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E17134CF6;
+	Tue,  6 Feb 2024 12:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221355; cv=none; b=uk1Y9LTbTwglayyBj4yWnhwjNcV8F4qoGz+BAPTGLaPqPOgwv8OCWIbOOf/n2Yo/TGLQuL4B8Wjm0ccR+Bpz1SexqOgKA3e1A16SkoNYqf8rvq2fqSxtlWVtbjKhxERlmwMf/SWsH8n+AsPKe6UUo7Lx3FAZI6aKxvg08MohsI4=
+	t=1707221358; cv=none; b=e/exCOCJksjG/gMh4PwkwFJzGkvAmguelspSiKkQsl2sWx2xRNnVNl3EaYso8vU20j2pJu/FLjtZY95B6ki8+NddTU/JS7x7lECs/ST+0PR6yXGmiTI2kPsoRlHESvnlZi8/oWtLbeFupWVSSSCDdtsTeXCq3MVZsGs0vG8g0ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221355; c=relaxed/simple;
-	bh=T+6mtzRx975G9vZcGMt5Mg+MAazPc5UIQRcEY/W6Cfc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HSJ6MJx7QLnF3YBSYVmvOZp9zP4eIz4+nSdSVxLRzyMdVHZYRd3DVPgnajFdlHDlq8CLETvSfCrncJKNFDWUiSSCH+/c42i1nGC6D4VTWU/Zyie+kNTcvWeLVW5tdhKauafluzviRJxChM580wKmfv14PLFO83ifKL31uJbuczg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1wIAVQS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1wIAVQS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0770C43399;
-	Tue,  6 Feb 2024 12:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707221354;
-	bh=T+6mtzRx975G9vZcGMt5Mg+MAazPc5UIQRcEY/W6Cfc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=g1wIAVQShOEFR33uhqw7FoHyLxnOCzfP+bvJi/qVA25KdprZLhR6y55rcX5ZtSoW6
-	 UlTlmQhppBhg6U9urJH8BTsMeMTayy6X4siGrl294OTp851ejk4mgIiHHAZ1QTaZw2
-	 6Z8PxBBB1Ft+KLG2VTFF4iToFfZZS6F53C07K44SA+px6qK8lhH8Hpz+gwueA7dOpF
-	 RnfnPXE7qJvap3XVCOkZJJNOQhT62FByjeo4LdCC4aRd4CstHDj8QZXIEsV/ycz0jW
-	 ZY30yMG3QBrR7qnL4JgOPHuDtxSt6AGQQhkl0sap18d5EirxsZoOxG3cJVwhbFkw8G
-	 UaRwx+MFuJS9Q==
-From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240126212358.3916280-2-dlechner@baylibre.com>
-References: <20240126212358.3916280-2-dlechner@baylibre.com>
-Subject: Re: [PATCH] spi: move split xfers for CS_WORD emulation
-Message-Id: <170722135351.992289.8405956770330505412.b4-ty@kernel.org>
-Date: Tue, 06 Feb 2024 12:09:13 +0000
+	s=arc-20240116; t=1707221358; c=relaxed/simple;
+	bh=HpCoj+t+vi2LdeF+PL28Fdd1rrAU/roBtR4tfXwNtSQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=E6g4UOilSYcux9lIczgGtniWZ7TP+58KMOX4B/+voQ8GrSGk0HXT0crw0eHKwxhHkBm2Kmy0oFNxvYn9eQB3sVoJIJP2SF7qXQgKQRdxgZe5CbW2JLAosA7e1qGicNUjc2UCE9OosH7ZaspG6tRNUEBTyk6uUb/xjFXpcXM/NrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68486C43399;
+	Tue,  6 Feb 2024 12:09:18 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@rostedt.homelinux.com>)
+	id 1rXKGo-00000006b2P-3XxX;
+	Tue, 06 Feb 2024 07:09:46 -0500
+Message-ID: <20240206120946.700644630@rostedt.homelinux.com>
+User-Agent: quilt/0.67
+Date: Tue, 06 Feb 2024 07:09:07 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [v6.6][PATCH 02/57] Revert "eventfs: Check for NULL ef in eventfs_set_attr()"
+References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, 26 Jan 2024 15:23:57 -0600, David Lechner wrote:
-> This moves splitting transfers for CS_WORD software emulation to the
-> same place where we split transfers for controller-specific reasons.
-> 
-> This fixes a few subtle bugs.
-> 
-> The calculation for maxsize was wrong for bit sizes between 17 and 24.
-> This is fixed by making use of spi_split_transfers_maxwords() which
-> already has the correct calculation.
-> 
-> [...]
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Applied to
+This reverts commit d8f492a059728bbd397defbc9b8d2f4159d869b5.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+The eventfs was not designed properly and may have some hidden bugs in it.
+Linus rewrote it properly and I trust his version more than this one. Revert
+the backported patches for 6.6 and re-apply all the changes to make it
+equivalent to Linus's version.
 
-Thanks!
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[1/1] spi: move split xfers for CS_WORD emulation
-      commit: c8bec3355f08ddb887d5c13b7095dfa79e6db108
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index efbdc47c74dc..5fcfb634fec2 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -113,14 +113,14 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	ef = dentry->d_fsdata;
+-	if (ef && ef->is_freed) {
++	if (ef->is_freed) {
+ 		/* Do not allow changes if the event is about to be removed. */
+ 		mutex_unlock(&eventfs_mutex);
+ 		return -ENODEV;
+ 	}
+ 
+ 	ret = simple_setattr(idmap, dentry, iattr);
+-	if (!ret && ef)
++	if (!ret)
+ 		update_attr(ef, iattr);
+ 	mutex_unlock(&eventfs_mutex);
+ 	return ret;
+-- 
+2.43.0
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
 
