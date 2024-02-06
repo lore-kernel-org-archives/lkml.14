@@ -1,272 +1,234 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D5313A883;
-	Tue,  6 Feb 2024 15:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52457133998;
+	Tue,  6 Feb 2024 15:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707232337; cv=none; b=aKVM9KIyR4yK50vqm8ctanmOs5z4wzEWyRxnvYADSvdtSwNwd2inK19OPk6D4uJ5x//3Kj3R942B9SmhsPPfxC/l94weRUMu/XQV8N3Eea3F8UFWXe8m1XrUbolTkEFN6usmo5ilRpVJpq5fL2ghk9i3W5gry6L+TlT/NBhvyqY=
+	t=1707232344; cv=none; b=OzPYczuBEDhWGWMq25AP07YLyMHeM93cNVMtmyYXdrL/0xwsckGKUd/v64j/83EK19ssbUWTAyRdnm/HxBKIA5puC7MO2ZECmCeA4ie4XNo8q93GS3vxQYOdk5uWJpU4K0nOVhxbMwjW0SWPHJXtC1EuOsr06gf+K+n7jQUtu7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707232337; c=relaxed/simple;
-	bh=oYEWehvFMJ9pwDF4l/eISgFkLfERvZLJKloD31RHQww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YhPh67M8lTgAKDWuLj3uCeeBUdgFzZszqB+cBiyxW3mgrHJnHBVSeZUEzhjWvv6oNsaWt2aYufCoj9W15DxtSgOQttX9Py2Xd5zD1CSIkmLE1wbgO6m4bx7ORWT/FqJ1pgOEq3HcivMAUOSM0pY6Tqkoi2PQm1m+qtmksM+osZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HXzMsPXz; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707232344; c=relaxed/simple;
+	bh=ZyaGBADclB4HCEQB+TOYvV5WEXyDzVOHprlRpBN2is0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M09bEkIFwzjC/je3i+Dh0q3FuU/I8oQrP5X8zTDt7Hb1vRvvdDHwZw0z+Syvx9EXnDHkDLzKFmpXhgEv3qhVDxoJu9AnIMO8GNiODkSIsq+GA/baT5y5NdSyly2xg4gI/k+3AWHI6eV77CZVwi1/BJ6gEh++PRGYzT56I8BeHpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqQlrqOc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXzMsPXz"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-68c7a26a5cbso5278636d6.1;
-        Tue, 06 Feb 2024 07:12:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707232334; x=1707837134; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMA6OtoS96Zf+GkoCGJn556i+luGg4v6HW8Cwy5kkeY=;
-        b=HXzMsPXzD2XG3rufHjk0otiwLpelFQrGpLPlVjZA6Jgi0wB6U5Q3ONKaa1XMZca7rV
-         FZGRpfNhDL6S6AYCuYnIfS+ZW6XGWFZATeELqWp08hWYeYn//1nwUYs3BEJjcCrHi/c8
-         UqBt2Pu9R4onqhhDCTRvVZxfPiKCZSqoBSIqdkNVNVxS3f7sFhyHHskPh8fwKxZWJUGQ
-         UwpnBt4gBP83BOAp64Z8EfEvfvIXJeHpysMGez4Tu6W/5CZI2niMDU3w7TkiVfvkad08
-         p/DVxAi+ZnYJI8kxr96ago6WI78PBvVhRHLacan6k3NjMTL3PIpyrZRuzToTpnPTVhjT
-         4o/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707232334; x=1707837134;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AMA6OtoS96Zf+GkoCGJn556i+luGg4v6HW8Cwy5kkeY=;
-        b=AMDy3Q4btY1yOuF3EHkzON1bzjLR3UX4fr+frqPYM5n1KITZu5H3AAKV3Vv2HImC0B
-         taK7rOCBqZ7r32uqaXQVto3ziJRxqP6VpHaDBOXJdnwKEWYDulyO/BHETBOd+1Yhxo3Y
-         WtYvwukSdFvwnCp8THr3nIxum9Kd5uT8xJKRmc7icopTaw0ZgCvoIhul/3hFcGOQxODG
-         6TTjYLFHRlvY7zqlc9vvkbXC092lj4Q/vEUduOgMG3rnNZjsG99JJi7LBWKjqO/7Btno
-         v4l2UJ/vM0Sh3nGkbxq7CrqHrpFaybkJl7e6XBUqbfVvyy4TcSJldE1v8zaX8hJfG29W
-         mJkg==
-X-Gm-Message-State: AOJu0YyQF7MoF64G2hM+8lBMJbzk3FhhvByRgtob4oUj4xb/es9uaP+j
-	Th8GpDoyoK4ex5TRMsbgyXB52clQCMPF8/Byzvo1V0AXrhv1EFjXcadn2j/6fe7/OFMDaJr/IGL
-	V51rA9ea0BhPsBd9ALZbCRMxfyzs=
-X-Google-Smtp-Source: AGHT+IFgX6Kscb6kSDKa8HOGT2SMWHo1VbDYPIkFmBOocSq5uIw/IqPcHyfBt8SQxsU8CBLdLkg5u+NoumkL0jm/3Xo=
-X-Received: by 2002:ad4:5881:0:b0:68c:a2c9:9a7 with SMTP id
- dz1-20020ad45881000000b0068ca2c909a7mr10465946qvb.13.1707232334509; Tue, 06
- Feb 2024 07:12:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqQlrqOc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353EDC433C7;
+	Tue,  6 Feb 2024 15:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707232344;
+	bh=ZyaGBADclB4HCEQB+TOYvV5WEXyDzVOHprlRpBN2is0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qqQlrqOcG8LD4faQWfExTdWWhcE/MAZAej4vWEu208f6U55Gn/TFlJtSNYDAIyOiF
+	 w73Wp0GUg0470UjO/boL0YNfCRTpv5FmFFOJt3NSotcduGzAQa5qofdMZ59AGYOVRu
+	 mAPChT6rfF5pPverCMNPpFHgUSb7V0gV7ZYIYgebPpIUJuxj7suw66jF9V/uQK/Rbz
+	 Yy59tKcCjI+mASGMGrNVj82c1gFrBuEdP5LMROkrTAr9UOw2Si2F0K4ODDryeqjIXj
+	 TSsnrRnN+ze5dPC+pvDbcKdEoniP6SEjn3IZaNwWfmW+ZyrvqQg3ghUduziu+8yWLf
+	 jZ4cCTtms2Pkg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v7 26/36] fprobe: Use ftrace_regs in fprobe entry handler
+Date: Wed,  7 Feb 2024 00:12:18 +0900
+Message-Id: <170723233804.502590.2340080684397116910.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <170723204881.502590.11906735097521170661.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205182506.3569743-1-stefanb@linux.ibm.com> <20240205182506.3569743-3-stefanb@linux.ibm.com>
-In-Reply-To: <20240205182506.3569743-3-stefanb@linux.ibm.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 6 Feb 2024 17:12:03 +0200
-Message-ID: <CAOQ4uxhTVaHpo6NgoA6q3bBH+-JSY3in1bEzYMviBHO7N15Kow@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] security: allow finer granularity in permitting
- copy-up of security xattrs
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
-	roberto.sassu@huawei.com, brauner@kernel.org, miklos@szeredi.hu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 5, 2024 at 8:25=E2=80=AFPM Stefan Berger <stefanb@linux.ibm.com=
-> wrote:
->
-> Copying up xattrs is solely based on the security xattr name. For finer
-> granularity add a dentry parameter to the security_inode_copy_up_xattr
-> hook definition, allowing decisions to be based on the xattr content as
-> well.
->
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-For ovl part
+This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
+on arm64.
 
-Acked-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Florent Revest <revest@chromium.org>
+---
+ Changes in v6:
+  - Keep using SAVE_REGS flag to avoid breaking bpf kprobe-multi test.
+---
+ include/linux/fprobe.h          |    2 +-
+ kernel/trace/Kconfig            |    3 ++-
+ kernel/trace/bpf_trace.c        |   10 +++++++---
+ kernel/trace/fprobe.c           |    3 ++-
+ kernel/trace/trace_fprobe.c     |    6 +++++-
+ lib/test_fprobe.c               |    4 ++--
+ samples/fprobe/fprobe_example.c |    2 +-
+ 7 files changed, 20 insertions(+), 10 deletions(-)
 
-> ---
->  fs/overlayfs/copy_up.c            | 2 +-
->  include/linux/evm.h               | 5 +++--
->  include/linux/lsm_hook_defs.h     | 3 ++-
->  include/linux/security.h          | 4 ++--
->  security/integrity/evm/evm_main.c | 2 +-
->  security/security.c               | 7 ++++---
->  security/selinux/hooks.c          | 2 +-
->  security/smack/smack_lsm.c        | 2 +-
->  8 files changed, 15 insertions(+), 12 deletions(-)
->
-> diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-> index 8586e2f5d243..de20fe9333c0 100644
-> --- a/fs/overlayfs/copy_up.c
-> +++ b/fs/overlayfs/copy_up.c
-> @@ -114,7 +114,7 @@ int ovl_copy_xattr(struct super_block *sb, const stru=
-ct path *oldpath, struct de
->                 if (ovl_is_private_xattr(sb, name))
->                         continue;
->
-> -               error =3D security_inode_copy_up_xattr(name);
-> +               error =3D security_inode_copy_up_xattr(old, name);
->                 if (error < 0 && error !=3D -EOPNOTSUPP)
->                         break;
->                 if (error =3D=3D 1) {
-> diff --git a/include/linux/evm.h b/include/linux/evm.h
-> index 36ec884320d9..840ffbdc2860 100644
-> --- a/include/linux/evm.h
-> +++ b/include/linux/evm.h
-> @@ -31,7 +31,7 @@ extern void evm_inode_post_setxattr(struct dentry *dent=
-ry,
->                                     const char *xattr_name,
->                                     const void *xattr_value,
->                                     size_t xattr_value_len);
-> -extern int evm_inode_copy_up_xattr(const char *name);
-> +extern int evm_inode_copy_up_xattr(struct dentry *dentry, const char *na=
-me);
->  extern int evm_inode_removexattr(struct mnt_idmap *idmap,
->                                  struct dentry *dentry, const char *xattr=
-_name);
->  extern void evm_inode_post_removexattr(struct dentry *dentry,
-> @@ -118,7 +118,8 @@ static inline void evm_inode_post_setxattr(struct den=
-try *dentry,
->         return;
->  }
->
-> -static inline int  evm_inode_copy_up_xattr(const char *name)
-> +static inline int evm_inode_copy_up_xattr(struct dentry *dentry,
-> +                                         const char *name)
->  {
->         return 0;
->  }
-> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.=
-h
-> index 185924c56378..7dd61f51d84a 100644
-> --- a/include/linux/lsm_hook_defs.h
-> +++ b/include/linux/lsm_hook_defs.h
-> @@ -163,7 +163,8 @@ LSM_HOOK(int, 0, inode_listsecurity, struct inode *in=
-ode, char *buffer,
->          size_t buffer_size)
->  LSM_HOOK(void, LSM_RET_VOID, inode_getsecid, struct inode *inode, u32 *s=
-ecid)
->  LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
-> -LSM_HOOK(int, -EOPNOTSUPP, inode_copy_up_xattr, const char *name)
-> +LSM_HOOK(int, -EOPNOTSUPP, inode_copy_up_xattr, struct dentry *src,
-> +        const char *name)
->  LSM_HOOK(int, 0, kernfs_init_security, struct kernfs_node *kn_dir,
->          struct kernfs_node *kn)
->  LSM_HOOK(int, 0, file_permission, struct file *file, int mask)
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index d0eb20f90b26..9fc9ca6284d6 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -387,7 +387,7 @@ int security_inode_setsecurity(struct inode *inode, c=
-onst char *name, const void
->  int security_inode_listsecurity(struct inode *inode, char *buffer, size_=
-t buffer_size);
->  void security_inode_getsecid(struct inode *inode, u32 *secid);
->  int security_inode_copy_up(struct dentry *src, struct cred **new);
-> -int security_inode_copy_up_xattr(const char *name);
-> +int security_inode_copy_up_xattr(struct dentry *src, const char *name);
->  int security_kernfs_init_security(struct kernfs_node *kn_dir,
->                                   struct kernfs_node *kn);
->  int security_file_permission(struct file *file, int mask);
-> @@ -980,7 +980,7 @@ static inline int security_kernfs_init_security(struc=
-t kernfs_node *kn_dir,
->         return 0;
->  }
->
-> -static inline int security_inode_copy_up_xattr(const char *name)
-> +static inline int security_inode_copy_up_xattr(struct dentry *src, const=
- char *name)
->  {
->         return -EOPNOTSUPP;
->  }
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/e=
-vm_main.c
-> index cc7956d7878b..2555aa4501ae 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -896,7 +896,7 @@ void evm_inode_post_setattr(struct dentry *dentry, in=
-t ia_valid)
->                 evm_update_evmxattr(dentry, NULL, NULL, 0);
->  }
->
-> -int evm_inode_copy_up_xattr(const char *name)
-> +int evm_inode_copy_up_xattr(struct dentry *src, const char *name)
->  {
->         if (strcmp(name, XATTR_NAME_EVM) =3D=3D 0)
->                 return 1; /* Discard */
-> diff --git a/security/security.c b/security/security.c
-> index 0144a98d3712..ee63863c1dc0 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -2596,6 +2596,7 @@ EXPORT_SYMBOL(security_inode_copy_up);
->
->  /**
->   * security_inode_copy_up_xattr() - Filter xattrs in an overlayfs copy-u=
-p op
-> + * @src: union dentry of copy-up file
->   * @name: xattr name
->   *
->   * Filter the xattrs being copied up when a unioned file is copied up fr=
-om a
-> @@ -2606,7 +2607,7 @@ EXPORT_SYMBOL(security_inode_copy_up);
->   *         if the security module does not know about attribute, or a ne=
-gative
->   *         error code to abort the copy up.
->   */
-> -int security_inode_copy_up_xattr(const char *name)
-> +int security_inode_copy_up_xattr(struct dentry *src, const char *name)
->  {
->         struct security_hook_list *hp;
->         int rc;
-> @@ -2618,12 +2619,12 @@ int security_inode_copy_up_xattr(const char *name=
-)
->          */
->         hlist_for_each_entry(hp,
->                              &security_hook_heads.inode_copy_up_xattr, li=
-st) {
-> -               rc =3D hp->hook.inode_copy_up_xattr(name);
-> +               rc =3D hp->hook.inode_copy_up_xattr(src, name);
->                 if (rc !=3D LSM_RET_DEFAULT(inode_copy_up_xattr))
->                         return rc;
->         }
->
-> -       return evm_inode_copy_up_xattr(name);
-> +       return evm_inode_copy_up_xattr(src, name);
->  }
->  EXPORT_SYMBOL(security_inode_copy_up_xattr);
->
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index a6bf90ace84c..ebb8876837c6 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -3530,7 +3530,7 @@ static int selinux_inode_copy_up(struct dentry *src=
-, struct cred **new)
->         return 0;
->  }
->
-> -static int selinux_inode_copy_up_xattr(const char *name)
-> +static int selinux_inode_copy_up_xattr(struct dentry *dentry, const char=
- *name)
->  {
->         /* The copy_up hook above sets the initial context on an inode, b=
-ut we
->          * don't then want to overwrite it by blindly copying all the low=
-er
-> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-> index 0fdbf04cc258..bffca165f07f 100644
-> --- a/security/smack/smack_lsm.c
-> +++ b/security/smack/smack_lsm.c
-> @@ -4873,7 +4873,7 @@ static int smack_inode_copy_up(struct dentry *dentr=
-y, struct cred **new)
->         return 0;
->  }
->
-> -static int smack_inode_copy_up_xattr(const char *name)
-> +static int smack_inode_copy_up_xattr(struct dentry *src, const char *nam=
-e)
->  {
->         /*
->          * Return 1 if this is the smack access Smack attribute.
-> --
-> 2.43.0
->
+diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
+index 3e03758151f4..36c0595f7b93 100644
+--- a/include/linux/fprobe.h
++++ b/include/linux/fprobe.h
+@@ -35,7 +35,7 @@ struct fprobe {
+ 	int			nr_maxactive;
+ 
+ 	int (*entry_handler)(struct fprobe *fp, unsigned long entry_ip,
+-			     unsigned long ret_ip, struct pt_regs *regs,
++			     unsigned long ret_ip, struct ftrace_regs *regs,
+ 			     void *entry_data);
+ 	void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
+ 			     unsigned long ret_ip, struct pt_regs *regs,
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 308b3bec01b1..805d72ab77c6 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -290,7 +290,7 @@ config DYNAMIC_FTRACE_WITH_ARGS
+ config FPROBE
+ 	bool "Kernel Function Probe (fprobe)"
+ 	depends on FUNCTION_TRACER
+-	depends on DYNAMIC_FTRACE_WITH_REGS
++	depends on DYNAMIC_FTRACE_WITH_REGS || DYNAMIC_FTRACE_WITH_ARGS
+ 	depends on HAVE_RETHOOK
+ 	select RETHOOK
+ 	default n
+@@ -675,6 +675,7 @@ config FPROBE_EVENTS
+ 	select TRACING
+ 	select PROBE_EVENTS
+ 	select DYNAMIC_EVENTS
++	depends on DYNAMIC_FTRACE_WITH_REGS
+ 	default y
+ 	help
+ 	  This allows user to add tracing events on the function entry and
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 7ac6c52b25eb..2f04777330e0 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2577,7 +2577,7 @@ static int __init bpf_event_init(void)
+ fs_initcall(bpf_event_init);
+ #endif /* CONFIG_MODULES */
+ 
+-#ifdef CONFIG_FPROBE
++#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
+ struct bpf_kprobe_multi_link {
+ 	struct bpf_link link;
+ 	struct fprobe fp;
+@@ -2807,10 +2807,14 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 
+ static int
+ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
+-			  unsigned long ret_ip, struct pt_regs *regs,
++			  unsigned long ret_ip, struct ftrace_regs *fregs,
+ 			  void *data)
+ {
+ 	struct bpf_kprobe_multi_link *link;
++	struct pt_regs *regs = ftrace_get_regs(fregs);
++
++	if (!regs)
++		return 0;
+ 
+ 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+ 	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
+@@ -3084,7 +3088,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	kvfree(cookies);
+ 	return err;
+ }
+-#else /* !CONFIG_FPROBE */
++#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ {
+ 	return -EOPNOTSUPP;
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index 6cd2a4e3afb8..a932c3a79e8f 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -46,7 +46,7 @@ static inline void __fprobe_handler(unsigned long ip, unsigned long parent_ip,
+ 	}
+ 
+ 	if (fp->entry_handler)
+-		ret = fp->entry_handler(fp, ip, parent_ip, ftrace_get_regs(fregs), entry_data);
++		ret = fp->entry_handler(fp, ip, parent_ip, fregs, entry_data);
+ 
+ 	/* If entry_handler returns !0, nmissed is not counted. */
+ 	if (rh) {
+@@ -182,6 +182,7 @@ static void fprobe_init(struct fprobe *fp)
+ 		fp->ops.func = fprobe_kprobe_handler;
+ 	else
+ 		fp->ops.func = fprobe_handler;
++
+ 	fp->ops.flags |= FTRACE_OPS_FL_SAVE_REGS;
+ }
+ 
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index 7d2ddbcfa377..ef6b36fd05ae 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -320,12 +320,16 @@ NOKPROBE_SYMBOL(fexit_perf_func);
+ #endif	/* CONFIG_PERF_EVENTS */
+ 
+ static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
+-			     unsigned long ret_ip, struct pt_regs *regs,
++			     unsigned long ret_ip, struct ftrace_regs *fregs,
+ 			     void *entry_data)
+ {
+ 	struct trace_fprobe *tf = container_of(fp, struct trace_fprobe, fp);
++	struct pt_regs *regs = ftrace_get_regs(fregs);
+ 	int ret = 0;
+ 
++	if (!regs)
++		return 0;
++
+ 	if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
+ 		fentry_trace_func(tf, entry_ip, regs);
+ #ifdef CONFIG_PERF_EVENTS
+diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
+index 24de0e5ff859..ff607babba18 100644
+--- a/lib/test_fprobe.c
++++ b/lib/test_fprobe.c
+@@ -40,7 +40,7 @@ static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
+ 
+ static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
+ 				    unsigned long ret_ip,
+-				    struct pt_regs *regs, void *data)
++				    struct ftrace_regs *fregs, void *data)
+ {
+ 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+ 	/* This can be called on the fprobe_selftest_target and the fprobe_selftest_target2 */
+@@ -81,7 +81,7 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
+ 
+ static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
+ 				      unsigned long ret_ip,
+-				      struct pt_regs *regs, void *data)
++				      struct ftrace_regs *fregs, void *data)
+ {
+ 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+ 	return 0;
+diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
+index 64e715e7ed11..1545a1aac616 100644
+--- a/samples/fprobe/fprobe_example.c
++++ b/samples/fprobe/fprobe_example.c
+@@ -50,7 +50,7 @@ static void show_backtrace(void)
+ 
+ static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
+ 				unsigned long ret_ip,
+-				struct pt_regs *regs, void *data)
++				struct ftrace_regs *fregs, void *data)
+ {
+ 	if (use_trace)
+ 		/*
+
