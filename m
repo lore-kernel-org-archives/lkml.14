@@ -1,85 +1,124 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D9A12B169
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC7912AAD9
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707207515; cv=none; b=L0jqPW+4hZnP4Eb4aKQ0jO/7UD618zoP8suqKhAS/9hmVYYS6J7KqC1Gbo8AdrZzz6yYlje4lYxHnMl7qBpbjdu/ukIjU9m86x4w/YDMsB9AhTQYovtNM7pNEXqY7NUkufxf3CB8kpzTgrl05PtTyFupvRkpCbi9LK0dJp70/1I=
+	t=1707207684; cv=none; b=epJb8/uk1ix7wirQ4+a/FxPdZtzAoJ+C4gllbnVyyAZt3PuJjbe9djuKErKz81NgKSgx1vwgZlUrezssX3EXsesfTZMPvseCULkMzTYxtDK4o1nPLyygqRvI5/Hmq4BTMiCyLAIo7OP8xxpJsWq44mVCpIDnrU5MKXmMBRNNKmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707207515; c=relaxed/simple;
-	bh=V+or0CGYqI/j+yVcolyQTN6SWKGZbzOrLpDMheqhgoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bx6KOZ0cHrLB0bt+zGHWn+k3L/KTxWI58xCGoG1qZm/AGSTTLu25suRCYUB13rgbc2Ex0MDXlUUq4/iManJL1kmmqRVGVGUrXAgRDDLVq9PBBTf9dq3Q9oWr+8Q1ashB5ojyS2BS4RvyzauNujD2MhiP1m3zpJ5+bgdS+HyfjgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=as48I4e6; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="as48I4e6"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707207504; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=n4L712Wu1atDoWRSzGANCoeLDJJJ+/sOVHYz/0n8058=;
-	b=as48I4e6lOZVB1c5zIx1hULRCIt2645ZSkGQc/pFnXDI7YiwVbCuRG+UK+NCJkl1T0eTo2X+V1fEBacMzgzTZpMz2wDLPt6ifsTLPu85zT7zlh3lHQHk+kRprs/EqMoF9C8miuLdjJ2MMM1RstPCL7JkpnOfWOZ9RrvXJQd89nE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W0CysvU_1707207502;
-Received: from 30.97.56.127(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W0CysvU_1707207502)
-          by smtp.aliyun-inc.com;
-          Tue, 06 Feb 2024 16:18:23 +0800
-Message-ID: <67e0d81f-7125-455c-b02f-a9e675d55c6c@linux.alibaba.com>
-Date: Tue, 6 Feb 2024 16:18:22 +0800
+	s=arc-20240116; t=1707207684; c=relaxed/simple;
+	bh=qK+6gsbdbhaMWLT2zAP4/bSvk0MWrDRejO/dlXF6JJw=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RLNvgb2fQ6ERGAewLV4elfzbHyhIOHFI/2MbDny8+66D5Yw3QLMBG+e1I3dqD6VBrcQLoBPeje9E8NLruOEjzuKhN9d+2N6W5oYS9vpGx9rl2C08AP8UL2AorMMiUdIwda//MqkcSUb7og6meXAzb2fDHxTiznOEksjTOK+oxQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TTbkf6X3Qz1gy8r;
+	Tue,  6 Feb 2024 16:19:22 +0800 (CST)
+Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C7771A0172;
+	Tue,  6 Feb 2024 16:21:18 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 6 Feb 2024 16:21:17 +0800
+CC: <yangyicong@hisilicon.com>
+Subject: Re: [PATCH v3 1/4] sched/fair: add SD_CLUSTER in comments
+To: Valentin Schneider <vschneid@redhat.com>, <alexs@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Daniel Bristot de
+ Oliveira <bristot@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<ricardo.neri-calderon@linux.intel.com>, <sshegde@linux.ibm.com>
+References: <20240201115447.522627-1-alexs@kernel.org>
+ <xhsmhzfwjgcvf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <36ca372f-5f08-5c1a-e468-4db026051e17@huawei.com>
+Date: Tue, 6 Feb 2024 16:21:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm: hugetlb: remove __GFP_THISNODE flag when
- dissolving the old hugetlb
-To: Michal Hocko <mhocko@suse.com>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, osalvador@suse.de,
- david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <6f26ce22d2fcd523418a085f2c588fe0776d46e7.1706794035.git.baolin.wang@linux.alibaba.com>
- <Zbu4cD1XLFLfKan8@tiehlicka>
- <3f31cd89-f349-4f9e-bc29-35f29f489633@linux.alibaba.com>
- <ZbylJr_bbWCUMjMl@tiehlicka>
- <f1606912-5bcc-46be-b4f4-666149eab7bd@linux.alibaba.com>
- <Zby7-dTtPIy2k5pj@tiehlicka>
- <909cee7d-0201-4429-b85d-7d2662516e45@linux.alibaba.com>
- <ZcCnNPkNpE7KTHZu@tiehlicka>
- <2613b670-84f8-4f97-ab4e-0d480fc1a3f8@linux.alibaba.com>
- <ZcDvVA84s9-Azr33@tiehlicka>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <ZcDvVA84s9-Azr33@tiehlicka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <xhsmhzfwjgcvf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
 
-
-
-On 2024/2/5 22:23, Michal Hocko wrote:
-> On Mon 05-02-24 21:06:17, Baolin Wang wrote:
-> [...]
->>> It is quite possible that traditional users (like large DBs) do not use
->>> CMA heavily so such a problem was not observed so far. That doesn't mean
->>> those problems do not really matter.
+On 2024/2/2 22:27, Valentin Schneider wrote:
+> 
+> Subject nit: the prefix should be sched/topology
+> 
+> On 01/02/24 19:54, alexs@kernel.org wrote:
+>> From: Alex Shi <alexs@kernel.org>
 >>
->> CMA is just one case, as I mentioned before, other situations can also break
->> the per-node hugetlb pool now.
+>> The description of SD_CLUSTER is missing. Add it.
+>>
+>> Signed-off-by: Alex Shi <alexs@kernel.org>
+>> To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+>> To: Valentin Schneider <vschneid@redhat.com>
+>> To: Vincent Guittot <vincent.guittot@linaro.org>
+>> To: Juri Lelli <juri.lelli@redhat.com>
+>> To: Peter Zijlstra <peterz@infradead.org>
+>> To: Ingo Molnar <mingo@redhat.com>
+>> ---
+>>  kernel/sched/topology.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+>> index 10d1391e7416..8b45f16a1890 100644
+>> --- a/kernel/sched/topology.c
+>> +++ b/kernel/sched/topology.c
+>> @@ -1554,6 +1554,7 @@ static struct cpumask		***sched_domains_numa_masks;
+>>   * function:
+>>   *
+>>   *   SD_SHARE_CPUCAPACITY   - describes SMT topologies
+>> + *   SD_CLUSTER             - describes CPU Cluster topologies
 > 
-> Is there any other case than memory hotplug which is arguably different
-> as it is a disruptive operation already.
-
-Yes, like I said before the longterm pinning, memory failure and the 
-users of alloc_contig_pages() may also break the per-node hugetlb pool.
-
->> Let's focus on the main point, why we should still keep inconsistency
->> behavior to handle free and in-use hugetlb for alloc_contig_range()? That's
->> really confused.
+> So I know this is the naming we've gone for the "Cluster" naming, but this
+> comment isn't really explaining anything.
 > 
-> yes, this should behave consistently. And the least surprising way to
-> handle that from the user configuration POV is to not move outside of
-> the original NUMA node.
+> include/linux/sched/sd_flags.h has a bit more info already:
+>  * Domain members share CPU cluster (LLC tags or L2 cache)
+> 
 
-So you mean we should also add __GFP_THISNODE flag in 
-alloc_migration_target() when allocating a new hugetlb as the target for 
-migration, that can unify the behavior and avoid breaking the per-node pool?
+Cluster topology in scheduler should mean CPUs beyond the SMT which are sharing
+some cache resources (currently L2 on some Intel platforms or L3 Tag on our platforms)
+but not the LLC.
+
+A drawing in c5e22feffdd7 ("topology: Represent clusters of CPUs within a die") has
+a good illustration and comment of cpus_share_resources() also illustrate this a bit:
+
+/*
+ * Whether CPUs are share cache resources, which means LLC on non-cluster
+ * machines and LLC tag or L2 on machines with clusters.
+ */
+bool cpus_share_resources(int this_cpu, int that_cpu)
+
+> I had to go through a bit of git history to remember what the CLUSTER thing
+> was about, how about this:
+> 
+> * SD_CLUSTER             - describes shared shared caches, cache tags or busses
+> * SD_SHARE_PKG_RESOURCES - describes shared LLC cache
+> 
+> And looking at this it would make sense to:
+>   rename SD_CLUSTER into SD_SHARE_PKG_RESOURCES
+>   rename SD_SHARE_PKG_RESOURCES into SD_SHARE_LLC
+> but that's another topic...
+> 
+>>   *   SD_SHARE_PKG_RESOURCES - describes shared caches
+>>   *   SD_NUMA                - describes NUMA topologies
+>>   *
+>> --
+>> 2.43.0
+> 
+> 
+> .
+> 
