@@ -1,111 +1,102 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833B11CD1B;
-	Tue,  6 Feb 2024 23:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B74B1CD2D;
+	Tue,  6 Feb 2024 23:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707262405; cv=none; b=aupVQrbeRRGdZaU3y4Sl2imzlPJYuUGvL05tvj/mG7+KT1eKflz3sN4sP5ca23JfDe60a5cyYX1I2NANxpTUUZrD/8r0AFhF4LrawC8/4JltNmqmSHaNWcK3U/PhgHc9l8/U/Tb3aI+/3z6yB0wNafSXsTEWyJM97XaYjWWUvto=
+	t=1707262439; cv=none; b=Wp+kPyXC9/ocS+26FExWNj6hsFCo2JZtMTevWwMxR73sQEcI6MtN6wGkLScNia0/DH17Oi7VP3vQpzURiZx3Pu2G9EyPlq7MAxT6EqJC8hfU4PsyAY5LFjJRa7gEs/ASg4AbWNoDARHtTTHoqplBECMZRj4qusGYzbjTs9uXm74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707262405; c=relaxed/simple;
-	bh=jnKwKyBLwfWp6fRdpiJAMuzoCw4XPssRIE3TQikj8BE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MYzVSU+rvdDYHNFvFkehw45K+j86XybqiHtk8Th6EMWDTyEGH77LJCCcR+5NDUknZ82PHVObxTzrf6LEQ+ulD34wR8Gh7URH5z6W5AHOvE1ndYM+F3PiWBXx75pMVnbh/kWp+Z/Us0suippAhbR6aYX/ng7SQoP2Tuu2U+JUSN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl; spf=pass smtp.mailfrom=v0yd.nl; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4TTzvD1XQGz9sdS;
-	Wed,  7 Feb 2024 00:28:08 +0100 (CET)
-Message-ID: <13f5b50e-94b7-42ea-a47b-7d6270105d1d@v0yd.nl>
-Date: Wed, 7 Feb 2024 00:28:06 +0100
+	s=arc-20240116; t=1707262439; c=relaxed/simple;
+	bh=2ujnuBthhHC/WoSoD6QQnKnumAsVCVROyse7z/cd2Sk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aF8ijqeXeJWedsx4I4J9xdTzauUxkCSodJkBjin6O0WLbAFEROlnfRqwgQIJ64I1Yq5WgD49UWN1fiTgvA+++S5LQw3X0NIvARc3LVQqG5nafN0mE6osI14GjRBXoataVSMxXLDbbwAc0i+bGvvnVUVHjCNvF41Jv3TSKP5/hZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DqohHpns; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DqohHpns"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8/qSJOR+zkPPH2i9c8ryKssFXsF/wlJRBdyNQ7Hk1aE=; b=DqohHpnsHhxigSOb2sDDtK0Fhc
+	fyh+uGH2Fco/NlpE7qCu1h0/QL08p7YxPsuyrr82HitYHg6Wl50QXE2uT6iPlhiH8TG+3oGbvJTlN
+	Q2tM0egXmVzf8Cq2CKFxaPIwHE6GHtD6rc9vs5lJ34/ALMtAKvYB0XomAiNX97VaykYZH+PilsDL4
+	g/g3eMmOauaS3wMA5ZNZ9wQqGJhIFxATgaihdzr1DPe9v6ITphy1NzysdvfqhkZDvsE3sYE7Ohn9k
+	ZvQ2EzS7RqqmpLIyHYMtgJpHtE3wtyaMSjmMmuVZAa+NQ/6dEylc3uMbVwOcdBnsfaNinNliG2KP0
+	9QDf7r/w==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rXUwo-0000000DaA9-1Twe;
+	Tue, 06 Feb 2024 23:33:50 +0000
+Date: Tue, 6 Feb 2024 23:33:50 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: JonasZhou-oc <JonasZhou-oc@zhaoxin.com>, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, CobeChen@zhaoxin.com,
+	LouisQi@zhaoxin.com, JonasZhou@zhaoxin.com
+Subject: Re: [PATCH] fs/address_space: move i_mmap_rwsem to mitigate a false
+ sharing with i_mmap.
+Message-ID: <ZcLB3pCSFRXRodzN@casper.infradead.org>
+References: <20240202093407.12536-1-JonasZhou-oc@zhaoxin.com>
+ <Zb0EV8rTpfJVNAJA@casper.infradead.org>
+ <Zb1DVNGaorZCDS7R@casper.infradead.org>
+ <ZcBUat4yjByQC7zg@dread.disaster.area>
+ <ZcFvHfYGH7EwGBRK@casper.infradead.org>
+ <ZcKmP3zVdBwJVxGd@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/2] Bluetooth: Improve retrying of connection attempts
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20240206110816.74995-1-verdre@v0yd.nl>
- <CABBYNZJgKCeGfL+CngEA2QcVZAtf5yEqiX7ccQsuWVtjZhCvjw@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
-In-Reply-To: <CABBYNZJgKCeGfL+CngEA2QcVZAtf5yEqiX7ccQsuWVtjZhCvjw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4TTzvD1XQGz9sdS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcKmP3zVdBwJVxGd@dread.disaster.area>
 
-Hi Luiz,
+On Wed, Feb 07, 2024 at 08:35:59AM +1100, Dave Chinner wrote:
+> > The solution to this problem is to change the interval tree data structure
+> > from an Red-Black tree to a B-tree, or something similar where we use
+> > an array of pointers instead of a single pointer.
+> 
+> .... B-trees are not immune to pointer chasing problems, either.
+> Most use binary searches within the nodes, and so we have the
+> problem of unpredictable cacheline misses within the nodes as well
+> as being unable to do depth based prefetch similar to rbtrees.
+> 
+> Perhaps we should be looking at something like this:
+> 
+> https://lore.kernel.org/linux-fsdevel/20240126220655.395093-2-kent.overstreet@linux.dev/
 
-On 06.02.24 23:22, Luiz Augusto von Dentz wrote:
-> Hi Jonas,
-> 
-> On Tue, Feb 6, 2024 at 6:08 AM Jonas Dreßler <verdre@v0yd.nl> wrote:
->>
->> Since commit 4c67bc74f016 ("[Bluetooth] Support concurrent connect
->> requests"), the kernel supports trying to connect again in case the
->> bluetooth card is busy and fails to connect.
->>
->> The logic that should handle this became a bit spotty over time, and also
->> cards these days appear to fail with more errors than just "Command
->> Disallowed".
->>
->> This series refactores the handling of concurrent connection requests
->> by serializing all "Create Connection" commands for ACL connections
->> similar to how we do it for LE connections.
->>
->> ---
->>
->> v1: https://lore.kernel.org/linux-bluetooth/20240102185933.64179-1-verdre@v0yd.nl/
->> v2: https://lore.kernel.org/linux-bluetooth/20240108183938.468426-1-verdre@v0yd.nl/
->> v3: https://lore.kernel.org/linux-bluetooth/20240108224614.56900-1-verdre@v0yd.nl/
->> v4:
->>    - Removed first two commits since they are already applied
->>    - Removed a BT_DBG() message in the acl_create_connection() function
->>      while moving to hci_sync because it seemed out of place in hci_sync
->>    - Added a mention of the test failure in mgmt-tester to commit message
->>
->> Jonas Dreßler (2):
->>    Bluetooth: hci_conn: Only do ACL connections sequentially
->>    Bluetooth: Remove pending ACL connection attempts
->>
->>   include/net/bluetooth/hci.h      |  1 +
->>   include/net/bluetooth/hci_core.h |  1 -
->>   include/net/bluetooth/hci_sync.h |  3 ++
->>   net/bluetooth/hci_conn.c         | 83 +++-----------------------------
->>   net/bluetooth/hci_event.c        | 21 ++------
->>   net/bluetooth/hci_sync.c         | 70 +++++++++++++++++++++++++++
->>   6 files changed, 86 insertions(+), 93 deletions(-)
->>
->> --
->> 2.43.0
-> 
-> 
-> Doesn't seem to work with the new test:
-> 
-> Sequential connect - setup complete
-> Sequential connect - run
->    Create connection finished
->    Connect failed for Pair Device
->    Create connection finished
-> Sequential connect - test timed out
-> Sequential connect - teardown
-> 
+I need more data (and maybe Kent has it!)
 
-Oh you're right, it's because of the increased delay to 5.12 seconds for
-sending the page timeout. We're actually waiting for connections to fail,
-so the test will now take at least 5.12s * 3 instead of 2s * 3, which means
-test timeout needs to be increased from 7 to more like 16 seconds.
+Without any data, I believe that Eytzinger layout is an idea that was
+a really good one in the 1990s/2000s and has now passed its expiration
+date because of the changed nature of hardware.
 
-Sorry for not catching this one, should've run the test before submitting
-the patch...
+In the mid-90s, we could do O(10) instructions in the time it took to
+service a LLC miss.  Today, it's more like O(2500).  That means it is
+far more important to be predictable than it is to execute the minimum
+number of instructions.  If your B-tree nodes are 256kB in size (I believe
+that's what bacachefs is using?), then Eytzinger layout may make some
+sense, but if you're using smaller nodes (which I further believe is
+appropriate for an in-memory B-tree), then a straight 'load each index
+and compare it' may outperform a search that jumps around inside a node.
 
-Cheers,
-Jonas
+I'm pontificating and will happily yield to someone who has data.
+I've tried to mark my assumptions clearly above.
+
+
+Something else I'm not aware of (and filesystem B-trees will not have
+any experience of) is what research exists on efficiently adding new
+entries to a balanced tree so as to minimise rebalances.  Filesystems
+are like the Maple Tree in that for every logical offset inside a file,
+there is precisely one answer to "what physical block does this map to".
+
+For the i_mmap tree, we want instead to answer the question "Which VMAs
+have an intersection with this range of the file", and for the benchmark
+in question, we will have a large number of entries that compare equal to
+each other (they have the same start, and same end, but different values).
+So they could be inserted at many different points in the tree.  We'd like
+to choose the point which causes the least amount of rebalancing.
