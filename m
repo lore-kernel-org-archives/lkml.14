@@ -1,179 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB0A133401
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 13:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96E313172D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 13:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707226864; cv=none; b=jVk70hqqN0KIU5ILZgrmzR3MEunbfMUxbIjjymCrjkw3klM69np1LifIb5UOqNL9gsDefe8WWWaQLAyAQ9qzyO8dfmIThDOmf8WE74cBJz2F0V+vmmABMzd++wYQcN4QEP1jpwuYL64jybq2x1Cp8co6O+LF0MegDLM+LPRZAMs=
+	t=1707226909; cv=none; b=Q8js1ca4S/LGHgzsTRtlj2P+pSq1UkbZegAoZ27WJi4PGJsfw1LYFj50QPXqKGCWB8RlQ1SRY/knCQ3AVnszFAuqW8HGSIVV6idWjwGPRpM2GF0iVZno2Xwto/572LLJ5+/RWryVg7YCHYBbf5MGrHNG3mPOyhFpaikjo460wXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707226864; c=relaxed/simple;
-	bh=TeuRzMDENTP+mrbhGHtQfvvCYg0RN9gxYq3N6G/Xkt4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qMgEDVyhSX1cvDfYZlyFBP2vMIFBh/hrIZAeB/LAai1XKPAhO6keyZO/3g6HI1rG5xzqXN6pWeyizyxMVsNQ+i9SESgCwOXs/vv4AHcgxRW9MCJEm/2HFCgVlQfo1EVCGKoGOopicwM9F4qRbhwgd+MuO94jhH6xrYMwO4Fy87I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JaCwSqEH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JaCwSqEH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707226862;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nDrBrW1QyBkIZW9XXC7FxnbgE53QwXCFFfi0uuWv0Ls=;
-	b=JaCwSqEHUGKTx68twpIU6PrIKE/Ae8iZn+Ayh7Z4ALyjG7qfNPJoyQlh2Fl8yiu8vcTY8K
-	q4h0r1dP39fPrcad9Eo0/kbjRq6M5cy59HUAGYxqQh4QCrOYawxtmEWZ/lFGE2RzcA9k43
-	PMK0UZy5QQHFrFSFPfa84Bc0hcKYOxk=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-QzTy7-gnPsiLvNh33mBz9w-1; Tue, 06 Feb 2024 08:40:56 -0500
-X-MC-Unique: QzTy7-gnPsiLvNh33mBz9w-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78130939196so253319685a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 05:40:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707226856; x=1707831656;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nDrBrW1QyBkIZW9XXC7FxnbgE53QwXCFFfi0uuWv0Ls=;
-        b=BV4a1Jqo5VVlKUTaXFe8L93/tgKEeL4OB/tPDZG+mFOfj52s+hbPEtUSWle99+8abR
-         h1jhJjrVi4n7SqEkgYBmzPuqxgrJjwHfmWa7rWY17Qdhek7U62nQDEdyZFfh7TkUDKXm
-         ilvxC+VoG7TnWnQ73vSeZHS8QTdTS30NoFAgs/WcCj8d07C/aQpU2Tlach1ZrX3xQZ5s
-         bgjcf0KfGSm2OI68l+kok2aNYr3DGlcTwEIyTUemZs6lOaYWv3Uc3RtPQ5yANxYWBvvv
-         jv3QN06bmnHl0jCdDfXXUfbOud7EBPcwis3Yr2rEiYheqesSp2tjUzE+Fr1wTeOsND+s
-         6cKg==
-X-Gm-Message-State: AOJu0YwsMk2T13Qh955QTREsaBC5GBtxPFp5ckfbZQ3MvSyKOAe150/3
-	T5ADHqDYs4XLC+IcvmkvBM5Whs9el2I+GJm6m0bI2TdmeI0mZqrT/ilvRYQgaC94B5Fo1RyG2Q1
-	KDOZK1mzDKPQ8Oxj1BLuDzfR0wUtMf+G3ltZRc8YyL7aXraQUU/DXEXtGg/I4gw==
-X-Received: by 2002:a05:620a:4722:b0:785:4588:7a09 with SMTP id bs34-20020a05620a472200b0078545887a09mr2762772qkb.3.1707226856086;
-        Tue, 06 Feb 2024 05:40:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHV1JhLewj2WzyuV6mJbjtKqCzdBMh7UJ+3tI4Yg38PSz9EUg3UpxjFWaNX43CrNpj4fEFLiA==
-X-Received: by 2002:a05:620a:4722:b0:785:4588:7a09 with SMTP id bs34-20020a05620a472200b0078545887a09mr2762751qkb.3.1707226855798;
-        Tue, 06 Feb 2024 05:40:55 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXY73u7g+juzT4qNhBv3adaHj4fe+28SURqOK6AMlIWi7SNnZKGhEb2SSunmcFOciqesjrdctJWePLgX61nFQtGT5DaHz6Drpqx3G76kNq/mJa5K3DoJrAWl6f6g4DFCZF0ILo9JChZ4/clq2pplqhGRQMKv+BDBiNhFo86TN0jVsQ0QNTSA6pXfzo/lV39SDF7eXdr0HLEdQW8DLwItLzDNvPVqbSGxXWzQmvii1m9FK8AvubZrpLmdghe10es0xS+rE+5D09CNNgsmtT/eZjDpF1Pbzdgh0a3oxdS5CUX+UBfXjFLQWbZ8iPUzFmXBwQhDDVav0ymM1W7urvifsSe2K0KvynAiVS3TjOJqMuTG/VdoSvxMAAzsrZG9Gk6tkYfCuMm
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id vu4-20020a05620a560400b0078544c8be9asm903791qkn.87.2024.02.06.05.40.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 05:40:54 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
+	s=arc-20240116; t=1707226909; c=relaxed/simple;
+	bh=4wIZ2jTwtVGOUJGF0vRSAy0R6gYVisVKKtOkbt/2Z/U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=iEFp5D/USuc1EwVABqEabvsnl2K7n4DQSzYC6wHerwMhqK91vOTNfDZ7aXoblLzxI2buPhVQifuUDqC4jFKZw/ThuMXfCXTh4KkpLMnLIiIegXtYeUV0KgpkLuEkZHnpavUVrhDDlZ5pEGv6JStg49VGBZDPSBTfg6WpMQnwwIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:1289:761a:478e:8420])
+	by laurent.telenet-ops.be with bizsmtp
+	id jphf2B00C1XjtVL01phfgc; Tue, 06 Feb 2024 14:41:39 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rXLhg-00HNlB-Dt;
+	Tue, 06 Feb 2024 14:41:39 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rXLhj-002Hce-1x;
+	Tue, 06 Feb 2024 14:41:39 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>
+Cc: io-uring@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v3 09/10] PCI: Remove legacy pcim_release()
-Date: Tue,  6 Feb 2024 14:39:55 +0100
-Message-ID: <20240206134000.23561-11-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240206134000.23561-2-pstanner@redhat.com>
-References: <20240206134000.23561-2-pstanner@redhat.com>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH -next] io_uring: switch struct io_kiocb flag definitions to BIT_ULL()
+Date: Tue,  6 Feb 2024 14:41:37 +0100
+Message-Id: <1960190f37b94276df50d382b9f1488cd6b6e662.1707226862.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Thanks to preceding cleanup steps, pcim_release() is now not needed
-anymore and can be replaced by pcim_disable_device(), which is the exact
-counterpart to pcim_enable_device().
+When building for 32-bit platforms:
 
-This permits removing further parts of the old devres API.
+    In file included from include/linux/bits.h:6,
+		     from include/linux/bitops.h:6,
+		     from include/linux/kernel.h:23,
+		     from io_uring/io_uring.c:42:
+    include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+	7 | #define BIT(nr)                 (UL(1) << (nr))
+	  |                                        ^~
+    include/linux/io_uring_types.h:538:35: note: in expansion of macro ‘BIT’
+      538 |         REQ_F_CAN_POLL          = BIT(REQ_F_CAN_POLL_BIT),
+	  |                                   ^~~
+    include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+	7 | #define BIT(nr)                 (UL(1) << (nr))
+	  |                                        ^~
+    include/linux/io_uring_types.h:540:35: note: in expansion of macro ‘BIT’
+      540 |         REQ_F_CANCEL_SEQ        = BIT(REQ_F_CANCEL_SEQ_BIT),
+	  |                                   ^~~
 
-Replace pcim_release() with pcim_disable_device().
-Remove the now surplus function get_pci_dr().
+The io_kiocb.flags variable was expanded to 64 bits, but none of the
+existing or newly-added flag definitions were updated, causing build
+issues on 32-bit platforms, where unsigned long is a 32-bit value.
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Fix this by switching all flag definitions from BIT() (32 or 64 bits) to
+BIT_ULL() (always 64 bits).
+
+Fixes: e247b2bea90786fb ("io_uring: expand main struct io_kiocb flags to 64-bits")
+Fixes: d964e844044278bf ("io_uring: add io_file_can_poll() helper")
+Fixes: 3bdfba1b2a1fc23a ("io_uring/cancel: don't default to setting req->work.cancel_seq")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pci/devres.c | 49 +++++++++++++++++++-------------------------
- 1 file changed, 21 insertions(+), 28 deletions(-)
+Boot-tested on arm32 and arm64.
+---
+ include/linux/io_uring_types.h | 66 +++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 8a643f15140a..3e567773c556 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -463,48 +463,41 @@ int pcim_intx(struct pci_dev *pdev, int enable)
- 	return 0;
- }
+diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
+index 431e099bb2c07682..f99330b177171003 100644
+--- a/include/linux/io_uring_types.h
++++ b/include/linux/io_uring_types.h
+@@ -472,72 +472,72 @@ enum {
  
--static void pcim_release(struct device *gendev, void *res)
-+static void pcim_disable_device(void *pdev_raw)
- {
--	struct pci_dev *dev = to_pci_dev(gendev);
--
--	if (!dev->pinned)
--		pci_disable_device(dev);
--}
--
--static struct pci_devres *get_pci_dr(struct pci_dev *pdev)
--{
--	struct pci_devres *dr, *new_dr;
--
--	dr = devres_find(&pdev->dev, pcim_release, NULL, NULL);
--	if (dr)
--		return dr;
-+	struct pci_dev *pdev = pdev_raw;
+ enum {
+ 	/* ctx owns file */
+-	REQ_F_FIXED_FILE	= BIT(REQ_F_FIXED_FILE_BIT),
++	REQ_F_FIXED_FILE	= BIT_ULL(REQ_F_FIXED_FILE_BIT),
+ 	/* drain existing IO first */
+-	REQ_F_IO_DRAIN		= BIT(REQ_F_IO_DRAIN_BIT),
++	REQ_F_IO_DRAIN		= BIT_ULL(REQ_F_IO_DRAIN_BIT),
+ 	/* linked sqes */
+-	REQ_F_LINK		= BIT(REQ_F_LINK_BIT),
++	REQ_F_LINK		= BIT_ULL(REQ_F_LINK_BIT),
+ 	/* doesn't sever on completion < 0 */
+-	REQ_F_HARDLINK		= BIT(REQ_F_HARDLINK_BIT),
++	REQ_F_HARDLINK		= BIT_ULL(REQ_F_HARDLINK_BIT),
+ 	/* IOSQE_ASYNC */
+-	REQ_F_FORCE_ASYNC	= BIT(REQ_F_FORCE_ASYNC_BIT),
++	REQ_F_FORCE_ASYNC	= BIT_ULL(REQ_F_FORCE_ASYNC_BIT),
+ 	/* IOSQE_BUFFER_SELECT */
+-	REQ_F_BUFFER_SELECT	= BIT(REQ_F_BUFFER_SELECT_BIT),
++	REQ_F_BUFFER_SELECT	= BIT_ULL(REQ_F_BUFFER_SELECT_BIT),
+ 	/* IOSQE_CQE_SKIP_SUCCESS */
+-	REQ_F_CQE_SKIP		= BIT(REQ_F_CQE_SKIP_BIT),
++	REQ_F_CQE_SKIP		= BIT_ULL(REQ_F_CQE_SKIP_BIT),
  
--	new_dr = devres_alloc(pcim_release, sizeof(*new_dr), GFP_KERNEL);
--	if (!new_dr)
--		return NULL;
--	return devres_get(&pdev->dev, new_dr, NULL, NULL);
-+	if (!pdev->pinned)
-+		pci_disable_device(pdev);
- }
+ 	/* fail rest of links */
+-	REQ_F_FAIL		= BIT(REQ_F_FAIL_BIT),
++	REQ_F_FAIL		= BIT_ULL(REQ_F_FAIL_BIT),
+ 	/* on inflight list, should be cancelled and waited on exit reliably */
+-	REQ_F_INFLIGHT		= BIT(REQ_F_INFLIGHT_BIT),
++	REQ_F_INFLIGHT		= BIT_ULL(REQ_F_INFLIGHT_BIT),
+ 	/* read/write uses file position */
+-	REQ_F_CUR_POS		= BIT(REQ_F_CUR_POS_BIT),
++	REQ_F_CUR_POS		= BIT_ULL(REQ_F_CUR_POS_BIT),
+ 	/* must not punt to workers */
+-	REQ_F_NOWAIT		= BIT(REQ_F_NOWAIT_BIT),
++	REQ_F_NOWAIT		= BIT_ULL(REQ_F_NOWAIT_BIT),
+ 	/* has or had linked timeout */
+-	REQ_F_LINK_TIMEOUT	= BIT(REQ_F_LINK_TIMEOUT_BIT),
++	REQ_F_LINK_TIMEOUT	= BIT_ULL(REQ_F_LINK_TIMEOUT_BIT),
+ 	/* needs cleanup */
+-	REQ_F_NEED_CLEANUP	= BIT(REQ_F_NEED_CLEANUP_BIT),
++	REQ_F_NEED_CLEANUP	= BIT_ULL(REQ_F_NEED_CLEANUP_BIT),
+ 	/* already went through poll handler */
+-	REQ_F_POLLED		= BIT(REQ_F_POLLED_BIT),
++	REQ_F_POLLED		= BIT_ULL(REQ_F_POLLED_BIT),
+ 	/* buffer already selected */
+-	REQ_F_BUFFER_SELECTED	= BIT(REQ_F_BUFFER_SELECTED_BIT),
++	REQ_F_BUFFER_SELECTED	= BIT_ULL(REQ_F_BUFFER_SELECTED_BIT),
+ 	/* buffer selected from ring, needs commit */
+-	REQ_F_BUFFER_RING	= BIT(REQ_F_BUFFER_RING_BIT),
++	REQ_F_BUFFER_RING	= BIT_ULL(REQ_F_BUFFER_RING_BIT),
+ 	/* caller should reissue async */
+-	REQ_F_REISSUE		= BIT(REQ_F_REISSUE_BIT),
++	REQ_F_REISSUE		= BIT_ULL(REQ_F_REISSUE_BIT),
+ 	/* supports async reads/writes */
+-	REQ_F_SUPPORT_NOWAIT	= BIT(REQ_F_SUPPORT_NOWAIT_BIT),
++	REQ_F_SUPPORT_NOWAIT	= BIT_ULL(REQ_F_SUPPORT_NOWAIT_BIT),
+ 	/* regular file */
+-	REQ_F_ISREG		= BIT(REQ_F_ISREG_BIT),
++	REQ_F_ISREG		= BIT_ULL(REQ_F_ISREG_BIT),
+ 	/* has creds assigned */
+-	REQ_F_CREDS		= BIT(REQ_F_CREDS_BIT),
++	REQ_F_CREDS		= BIT_ULL(REQ_F_CREDS_BIT),
+ 	/* skip refcounting if not set */
+-	REQ_F_REFCOUNT		= BIT(REQ_F_REFCOUNT_BIT),
++	REQ_F_REFCOUNT		= BIT_ULL(REQ_F_REFCOUNT_BIT),
+ 	/* there is a linked timeout that has to be armed */
+-	REQ_F_ARM_LTIMEOUT	= BIT(REQ_F_ARM_LTIMEOUT_BIT),
++	REQ_F_ARM_LTIMEOUT	= BIT_ULL(REQ_F_ARM_LTIMEOUT_BIT),
+ 	/* ->async_data allocated */
+-	REQ_F_ASYNC_DATA	= BIT(REQ_F_ASYNC_DATA_BIT),
++	REQ_F_ASYNC_DATA	= BIT_ULL(REQ_F_ASYNC_DATA_BIT),
+ 	/* don't post CQEs while failing linked requests */
+-	REQ_F_SKIP_LINK_CQES	= BIT(REQ_F_SKIP_LINK_CQES_BIT),
++	REQ_F_SKIP_LINK_CQES	= BIT_ULL(REQ_F_SKIP_LINK_CQES_BIT),
+ 	/* single poll may be active */
+-	REQ_F_SINGLE_POLL	= BIT(REQ_F_SINGLE_POLL_BIT),
++	REQ_F_SINGLE_POLL	= BIT_ULL(REQ_F_SINGLE_POLL_BIT),
+ 	/* double poll may active */
+-	REQ_F_DOUBLE_POLL	= BIT(REQ_F_DOUBLE_POLL_BIT),
++	REQ_F_DOUBLE_POLL	= BIT_ULL(REQ_F_DOUBLE_POLL_BIT),
+ 	/* request has already done partial IO */
+-	REQ_F_PARTIAL_IO	= BIT(REQ_F_PARTIAL_IO_BIT),
++	REQ_F_PARTIAL_IO	= BIT_ULL(REQ_F_PARTIAL_IO_BIT),
+ 	/* fast poll multishot mode */
+-	REQ_F_APOLL_MULTISHOT	= BIT(REQ_F_APOLL_MULTISHOT_BIT),
++	REQ_F_APOLL_MULTISHOT	= BIT_ULL(REQ_F_APOLL_MULTISHOT_BIT),
+ 	/* recvmsg special flag, clear EPOLLIN */
+-	REQ_F_CLEAR_POLLIN	= BIT(REQ_F_CLEAR_POLLIN_BIT),
++	REQ_F_CLEAR_POLLIN	= BIT_ULL(REQ_F_CLEAR_POLLIN_BIT),
+ 	/* hashed into ->cancel_hash_locked, protected by ->uring_lock */
+-	REQ_F_HASH_LOCKED	= BIT(REQ_F_HASH_LOCKED_BIT),
++	REQ_F_HASH_LOCKED	= BIT_ULL(REQ_F_HASH_LOCKED_BIT),
+ 	/* don't use lazy poll wake for this request */
+-	REQ_F_POLL_NO_LAZY	= BIT(REQ_F_POLL_NO_LAZY_BIT),
++	REQ_F_POLL_NO_LAZY	= BIT_ULL(REQ_F_POLL_NO_LAZY_BIT),
+ 	/* file is pollable */
+-	REQ_F_CAN_POLL		= BIT(REQ_F_CAN_POLL_BIT),
++	REQ_F_CAN_POLL		= BIT_ULL(REQ_F_CAN_POLL_BIT),
+ 	/* cancel sequence is set and valid */
+-	REQ_F_CANCEL_SEQ	= BIT(REQ_F_CANCEL_SEQ_BIT),
++	REQ_F_CANCEL_SEQ	= BIT_ULL(REQ_F_CANCEL_SEQ_BIT),
+ };
  
- /**
-  * pcim_enable_device - Managed pci_enable_device()
-  * @pdev: PCI device to be initialized
-  *
-- * Managed pci_enable_device().
-+ * Returns: 0 on success, negative error code on failure.
-+ *
-+ * Managed pci_enable_device(). Device will automatically be disabled on
-+ * driver detach.
-  */
- int pcim_enable_device(struct pci_dev *pdev)
- {
--	struct pci_devres *dr;
--	int rc;
-+	int ret;
- 
--	dr = get_pci_dr(pdev);
--	if (unlikely(!dr))
--		return -ENOMEM;
-+	ret = devm_add_action(&pdev->dev, pcim_disable_device, pdev);
-+	if (ret != 0)
-+		return ret;
- 
--	rc = pci_enable_device(pdev);
--	if (!rc)
--		pdev->is_managed = 1;
-+	/*
-+	 * We prefer removing the action in case of an error over
-+	 * devm_add_action_or_reset() because the later could theoretically be
-+	 * disturbed by users having pinned the device too soon.
-+	 */
-+	ret = pci_enable_device(pdev);
-+	if (ret != 0)
-+		devm_remove_action(&pdev->dev, pcim_disable_device, pdev);
- 
--	return rc;
-+	return ret;
- }
- EXPORT_SYMBOL(pcim_enable_device);
- 
+ typedef void (*io_req_tw_func_t)(struct io_kiocb *req, struct io_tw_state *ts);
 -- 
-2.43.0
+2.34.1
 
