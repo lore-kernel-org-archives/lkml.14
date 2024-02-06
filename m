@@ -1,55 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFE212E1C5;
-	Tue,  6 Feb 2024 10:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB2B12EBCE
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707214380; cv=none; b=YuXzwwQb5fC7FnQvSgUBlfozJl31AP3UySqoYLJlhxmdqkpAbwDLwOvTNzdNSzCICuQHjkDslbmCgObCmFrPc3dz4WPaxWzfJ/4pxG0pWgTxsdpOz/+KsanpAeszwzjdsf7Pacz3lyC+W+3IE5tiXjaFUOFO0MDDu1QPxSoYpV0=
+	t=1707214384; cv=none; b=jNGsfteYtXhDS1ID3pvFK83OFOBQbf//QJwPD1R0p8el2bukkyKHNWXlOvo25Zt6CGp2oPkr314SNF2HhumMsa8L+sHQ8YC47NzGmgEmOwWO4Y7dndzzGrbGTB5De7HvKJ26NiLTfF44JDeVdH5BU4bn8oD41TCdqOgmdMZ4Fr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707214380; c=relaxed/simple;
-	bh=Rpxj+E/7yrI4tdi5qskpk5pPVzgjrp8YqDARkU2+exc=;
+	s=arc-20240116; t=1707214384; c=relaxed/simple;
+	bh=v4XVMsXqCjDb4FoYvAxW909zIoiT+8uQw/E9lIX5SpI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NRxHKO3HHGEJU5ci/1H93fNOJKQRyaqnz5KhIkrd6KD34V+cK/wFpgj4VDVZ2tsTjxy4HVotsLH6Y9jMufyztS0SkoYq/s3HO7BJOWyINKbH0pZ3cUJhMsU+TzoLGpgncqCj6Cv5nnhEnDFRbcB+euY3nSDwwWf1t2viy/8q4bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UJD8UDKi; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJh7QubKxLGAYbXLN6Yp8lQ7s9E9GwppVvez4J2ZwIzFTrnqNQU0LPnIYsY+aXH0btRb8KwWsA0X160uxI8fqYIkwjtsIpOtr8LbPtKAHdsvpytpnDYw9H1D293N08WjyLizzVCaXiQ8G2Q124sevg1F2ljYDAOlN4elzI0WXQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N+4pxnhs; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UJD8UDKi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707214379; x=1738750379;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Rpxj+E/7yrI4tdi5qskpk5pPVzgjrp8YqDARkU2+exc=;
-  b=UJD8UDKiOWKT3UHWxVsppua1SUYeDz/WZNSpEurW+Y0tyA+3gHcCCBWJ
-   C9tjDRqNJeqppeAw7z+MTupY1QNps0KqJTtBSi4O1YSAQPfUBcEdnCofk
-   A35kVXXRUqD6lSJYXzHP5kv7tVOsSXX2WtYUuf01ziZFjRuWMhgy0B5hp
-   r5gdZUY9MBL5Dz5J0vtkvMrfChzKOFBjfjZmbt3AEy/FuwdlP4JG4UhiP
-   emLDbYrVD9GYexls5cawZCbsighR4cKEDQyqiBOltcXCtkT9okton9WB/
-   lC/myxTtbQNj5dpWQ9N/z8XVoFaJygRg91WMQFrnyXD5GPYiSLNCjkN5L
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="18232952"
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="18232952"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:12:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="1214880"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa008.fm.intel.com with ESMTP; 06 Feb 2024 02:12:53 -0800
-Date: Tue, 6 Feb 2024 18:09:18 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Pattara Teerapong <pteerapong@google.com>
-Subject: Re: [PATCH 6/8] KVM: x86/mmu: Check for usable TDP MMU root while
- holding mmu_lock for read
-Message-ID: <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
-References: <20240111020048.844847-1-seanjc@google.com>
- <20240111020048.844847-7-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N+4pxnhs"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a30f7c9574eso721836866b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:13:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1707214380; x=1707819180; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rIfhGveLVdv928TlKPqq3OWj/gTbC/K8X3iijI8040k=;
+        b=N+4pxnhsWKrQX1waQoGYgs2XFBroVjxXLg/uvgoN/9F5N+Q/hXJcSpckAxziQxv2pm
+         ds5JEW2PfMrTTMIc8pRhg7afwGfJfRCDsZ+lZm4hjWUQyWuLOTA/JBkqHUmEUqx86AnJ
+         jmlmR+MGnkooEvdDEw+jQ4hROJF4UZTOYAW2+wzebIv1phbOCyWtxjoeQQ/M5gjq5pYG
+         /2dD5TLMEBtYM7ZSsy9dHQWKU29cDgjGcDudAz35hyoRkuZ/gsNnZysODX0dpngTMMK1
+         atcmyMUxWx+Azq1HaWoiPt4JMngTBWDq2wRjaDb2XrnXZ4Q9puQFivE5YqmbfcU/ddDH
+         XgWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707214380; x=1707819180;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rIfhGveLVdv928TlKPqq3OWj/gTbC/K8X3iijI8040k=;
+        b=OIacs4nWeQhpOH0KacM5p3N4MvnmkdkYPj9FgbQlB+nyjua10tk641NfFgBBsxbdRh
+         1dv5g2pRZQGanKCAO4xqFcMao77kGT8l8H9IrL3Flgjq1jP7QkFLFiJS00I5t7JAKqJ6
+         i7PS+ytckr3kSqzY8BdI4sAmSsQgS3wBab1ylCPo7iAUZUX9Gat+4sADEGm6F6fBCDt2
+         +8+vij64FO7QbiVk39X0PgSHv417jXU2wi0Y8hLJ8LSzbGMjLUT6jUIDpB29m6X0/s9j
+         gSMRqXatsAYmoyEtpu66hbeqSdAw9LVlhJQxpRPDokzIk6xnSC+OTfE9pyUOejSaOj7k
+         9E7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVP74rMnkksvIlrM3cXBg+PN3reNmlfa0dU87ii1/fF90sVB2tAzAqSQkdqbA64vBn/5U0ELBpKzafxUh1TZKzC0pRGQyOgJH+RE+3C
+X-Gm-Message-State: AOJu0Yy0Ni3sCEn/XmxG1/2P1p0raPtUAN2C0FMTiYyKvCD1FYhq1Vdc
+	LGTf01OYRuUat2v0YtaNT+XhX6A4CLRkaAHVwSWCU55dX3qBGzYo1L/BEQcrlK8=
+X-Google-Smtp-Source: AGHT+IGHiczDYT0Fj3srrsFORzXQif6ghHUW7eFeyAMs4WpqfygdfzWKB4GaNfaWpBQKbMRq+dqelg==
+X-Received: by 2002:a17:906:74b:b0:a36:569a:1bd8 with SMTP id z11-20020a170906074b00b00a36569a1bd8mr1431283ejb.28.1707214379843;
+        Tue, 06 Feb 2024 02:12:59 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX75Jh68E1OukAAD//0AvSGpnbb7nG9pOLBb1WgUQqZkztpu2sL0ZYc9UnVyYwOptTAvXTzClFdV6N/jWGqJcDkTJFvgtYe1Rfx7EC2RiZaBY9mJ542u+s6EWYQxWShhpm3atQmjsyT4Bx+lJ4U7E4UgVAkrg8yQsFufHLgQzdyKecTn6eojXQ0YIhSo4gWjAThIWJJ7K4inTLleMoFLsu6ftx/msKGz6Ie4BhmOjB9FBw=
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id e23-20020a17090681d700b00a3717f96e6esm977330ejx.171.2024.02.06.02.12.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 02:12:59 -0800 (PST)
+Date: Tue, 6 Feb 2024 11:12:57 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Li Zhe <lizhe.67@bytedance.com>, Pingfan Liu <kernelfans@gmail.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Lecopzer Chen <lecopzer.chen@mediatek.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] watchdog: Better handling of concurrent lockups
+Message-ID: <ZcIGKU8sxti38Kok@alley>
+References: <20231220211640.2023645-1-dianders@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,164 +71,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240111020048.844847-7-seanjc@google.com>
+In-Reply-To: <20231220211640.2023645-1-dianders@chromium.org>
 
-On Wed, Jan 10, 2024 at 06:00:46PM -0800, Sean Christopherson wrote:
-> When allocating a new TDP MMU root, check for a usable root while holding
-> mmu_lock for read and only acquire mmu_lock for write if a new root needs
-> to be created.  There is no need to serialize other MMU operations if a
-> vCPU is simply grabbing a reference to an existing root, holding mmu_lock
-> for write is "necessary" (spoiler alert, it's not strictly necessary) only
-> to ensure KVM doesn't end up with duplicate roots.
-> 
-> Allowing vCPUs to get "new" roots in parallel is beneficial to VM boot and
-> to setups that frequently delete memslots, i.e. which force all vCPUs to
-> reload all roots.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c     |  8 ++---
->  arch/x86/kvm/mmu/tdp_mmu.c | 60 +++++++++++++++++++++++++++++++-------
->  arch/x86/kvm/mmu/tdp_mmu.h |  2 +-
->  3 files changed, 55 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 3c844e428684..ea18aca23196 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -3693,15 +3693,15 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
->  	unsigned i;
->  	int r;
->  
-> +	if (tdp_mmu_enabled)
-> +		return kvm_tdp_mmu_alloc_root(vcpu);
-> +
->  	write_lock(&vcpu->kvm->mmu_lock);
->  	r = make_mmu_pages_available(vcpu);
->  	if (r < 0)
->  		goto out_unlock;
->  
-> -	if (tdp_mmu_enabled) {
-> -		root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
-> -		mmu->root.hpa = root;
-> -	} else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-> +	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
->  		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
->  		mmu->root.hpa = root;
->  	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
-> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> index e0a8343f66dc..9a8250a14fc1 100644
-> --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> @@ -223,21 +223,52 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
->  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
->  }
->  
-> -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
-> +static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
->  {
->  	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
-> +	int as_id = kvm_mmu_role_as_id(role);
->  	struct kvm *kvm = vcpu->kvm;
->  	struct kvm_mmu_page *root;
->  
-> -	lockdep_assert_held_write(&kvm->mmu_lock);
-> -
-> -	/* Check for an existing root before allocating a new one. */
-> -	for_each_valid_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
-> -		if (root->role.word == role.word &&
-> -		    kvm_tdp_mmu_get_root(root))
-> -			goto out;
-> +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
+Hi,
 
-No lock yielding attempt in this loop, why change to _yield_safe version?
-
-Thanks,
-Yilun
-
-> +		if (root->role.word == role.word)
-> +			return root;
->  	}
->  
-> +	return NULL;
-> +}
-> +
-> +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_mmu *mmu = vcpu->arch.mmu;
-> +	union kvm_mmu_page_role role = mmu->root_role;
-> +	struct kvm *kvm = vcpu->kvm;
-> +	struct kvm_mmu_page *root;
-> +
-> +	/*
-> +	 * Check for an existing root while holding mmu_lock for read to avoid
-> +	 * unnecessary serialization if multiple vCPUs are loading a new root.
-> +	 * E.g. when bringing up secondary vCPUs, KVM will already have created
-> +	 * a valid root on behalf of the primary vCPU.
-> +	 */
-> +	read_lock(&kvm->mmu_lock);
-> +	root = kvm_tdp_mmu_try_get_root(vcpu);
-> +	read_unlock(&kvm->mmu_lock);
-> +
-> +	if (root)
-> +		goto out;
-> +
-> +	write_lock(&kvm->mmu_lock);
-> +
-> +	/*
-> +	 * Recheck for an existing root after acquiring mmu_lock for write.  It
-> +	 * is possible a new usable root was created between dropping mmu_lock
-> +	 * (for read) and acquiring it for write.
-> +	 */
-> +	root = kvm_tdp_mmu_try_get_root(vcpu);
-> +	if (root)
-> +		goto out_unlock;
-> +
->  	root = tdp_mmu_alloc_sp(vcpu);
->  	tdp_mmu_init_sp(root, NULL, 0, role);
->  
-> @@ -254,8 +285,17 @@ hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
->  	list_add_rcu(&root->link, &kvm->arch.tdp_mmu_roots);
->  	spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
->  
-> +out_unlock:
-> +	write_unlock(&kvm->mmu_lock);
->  out:
-> -	return __pa(root->spt);
-> +	/*
-> +	 * Note, KVM_REQ_MMU_FREE_OBSOLETE_ROOTS will prevent entering the guest
-> +	 * and actually consuming the root if it's invalidated after dropping
-> +	 * mmu_lock, and the root can't be freed as this vCPU holds a reference.
-> +	 */
-> +	mmu->root.hpa = __pa(root->spt);
-> +	mmu->root.pgd = 0;
-> +	return 0;
->  }
->  
->  static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
-> @@ -917,7 +957,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
->   * the VM is being destroyed).
->   *
->   * Note, kvm_tdp_mmu_zap_invalidated_roots() is gifted the TDP MMU's reference.
-> - * See kvm_tdp_mmu_get_vcpu_root_hpa().
-> + * See kvm_tdp_mmu_alloc_root().
->   */
->  void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
->  {
-> diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-> index 20d97aa46c49..6e1ea04ca885 100644
-> --- a/arch/x86/kvm/mmu/tdp_mmu.h
-> +++ b/arch/x86/kvm/mmu/tdp_mmu.h
-> @@ -10,7 +10,7 @@
->  void kvm_mmu_init_tdp_mmu(struct kvm *kvm);
->  void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm);
->  
-> -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu);
-> +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
->  
->  __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
->  {
-> -- 
-> 2.43.0.275.g3460e3d667-goog
+On Wed 2023-12-20 13:15:33, Douglas Anderson wrote:
 > 
+> When we get multiple lockups at roughly the same time, the output in
+> the kernel logs can be very confusing since the reports about the
+> lockups end up interleaved in the logs. There is some code in the
+> kernel to try to handle this but it wasn't that complete.
 > 
+> Li Zhe recently made this a bit better for softlockups (specifically
+> for the case where `kernel.softlockup_all_cpu_backtrace` is not set)
+> in commit 9d02330abd3e ("softlockup: serialized softlockup's log"),
+> but that only handled softlockup reports. Hardlockup reports still had
+> similar issues.
+> 
+> This series also has a small fix to avoid dumping all stacks a second
+> time in the case of a panic. This is a bit unrelated to the
+> interleaving fixes but it does also improve the clarity of lockup
+> reports.
+
+Just for record. This patchset has finally got on top of my queue
+(after Christmas and a sick leave). And it looks good from my POV.
+
+I was slightly afraid to use printk_cpu_sync_get_irqsave() on more
+locations. It has to be used with care to avoid deadlock.
+
+But the patchset looks good. It takes the lock only around code
+proceed on the same CPU. And it always releases the lock before
+triggering backtrace on another CPU.
+
+
+Idea:
+
+I have just got an idea how to make printk_cpu_sync_get_irqsave()
+less error prone for deadlock on the panic() CPU. The idea is
+to ignore the lock or give up locking after a timeout on
+the panic CPU.
+
+AFAIK, the lock is currently used only to serialize related
+printk() calls. The only risk is that some messages might be
+interleaved when it is ignored.
+
+I am not sure if this is a good idea though. It might create
+another risk when the lock gets used to serialize more
+things in the future and a race might create a real problem.
+
+Best Regards,
+Petr
