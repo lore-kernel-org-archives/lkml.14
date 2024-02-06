@@ -1,136 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC86013328A;
-	Tue,  6 Feb 2024 15:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819CE134CC2;
+	Tue,  6 Feb 2024 15:08:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707232120; cv=none; b=Suyrc69GgZ0iysh3tmdT4VUri4Fgsd4zDeurId9ugjdnU+5LmSF91zjZTwlNcRd9YPUoDTctoNWOB9lI16GA2GDgZAsc/+D9mA4xWFeUCn29Ajirvpy5FUI9Y8HE9RGsrjiDXrBY2lWDULGANscX7a5LtgNC+rTV1E+xD+OIjgM=
+	t=1707232122; cv=none; b=g7IOv0L98FYjR93FZS7NdLHeWHoOnK5irUzvrPoX4rxiZ3lgtp3pJPwaKecuyA/WcvBclx15QlyBXXmej18HbswFf98zYRk8E++Z+LhncNwyCqzPtJFl/diJP/Yar0N5fLraSTTZChshfg3pex7s9yDEM9jmhgXq9ci19H0FGn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707232120; c=relaxed/simple;
-	bh=y0RNzdVJndYWSP0vGgdOxK1NMGHChFiuRWotjCrpl0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MXVLakBmOB7V2UeMyJ+UNhW+y5gEuBO8ruRI6/Oz2G9dytldbqeVEVjzqxyp9et+Zk72zJ/KbiIFWWpvyRC6izI6b1omhEApQ7YS2rutHGQ5lCHRqP/hvWXSZx++jIHW9pqazWy9i87wAl+IaKo3MaaMnn3JK9GYsXdKjWkiQqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1qyTm/0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707232122; c=relaxed/simple;
+	bh=v6a8A4n/NQNVvl6IUBlyb4ncY6wKsPnocwxI4QmL7G4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RxYrAgHFY/XMTShB4tEbeYzU5CCJqiRfSElOu7FEficjBzOUaSOcnRW1kITOo6Hg8BWW+4FGAIBdW4ca1q/a7hXYf+1iVhjJbj3H7pn9Yeq5E3jGIMb5axo40tE1EJTw4G9NgeCyPbFJ+Sqk3eVqkODon3fHgdURsIeITw3emk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQnVhub6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1qyTm/0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94A01C433C7;
-	Tue,  6 Feb 2024 15:08:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQnVhub6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9719CC43390;
+	Tue,  6 Feb 2024 15:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707232119;
-	bh=y0RNzdVJndYWSP0vGgdOxK1NMGHChFiuRWotjCrpl0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X1qyTm/0U+yzlb1K9Uzww22xl2BagUxKRr4E8pXRsIdKwRSutYO3C14gDCXxpMJ/d
-	 mPOgS/R5rdvmKhQPQqWgN6jB7CDkL8nbolZ2Qy/dVFSlBpc02UqkxXnh7lru3JQ6R+
-	 FHexHrssJkeJ0Fd0gepitxGMeB4XtUeU2WGxGWqZ3zdiPdsxBL08iYXnB8ZViIjSxA
-	 dIWYMhwbfW8ZcorLnhgSnUkLUOhsgtkMEZW26ZLWcZm+/Zd/OfuBb1lKum6H/aHwQE
-	 L/6ijl3lLIUQXQtXH+qlWsgLKPeSGfGP7TDQBtNzbBsFUoIx0ta5PUN+LzABn/gHKU
-	 RmXipacSQ1HGg==
-Date: Tue, 6 Feb 2024 15:07:04 +0000
-From: Simon Horman <horms@kernel.org>
-To: Pavel Sakharov <p.sakharov@ispras.ru>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>
-Subject: Re: [PATCH] stmmac: Fix incorrect dereference in stmmac_*_interrupt()
-Message-ID: <20240206150704.GD1104779@kernel.org>
-References: <20240203150323.1041736-1-p.sakharov@ispras.ru>
+	s=k20201202; t=1707232122;
+	bh=v6a8A4n/NQNVvl6IUBlyb4ncY6wKsPnocwxI4QmL7G4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MQnVhub6V+x9VzaS4J+qqX7sfnUSbbornWCaLcO3hsFS+ImOvdng9znvsrF0imNj2
+	 A4VKH1ng2FtNeyUZxdr822jTEUVpGZUQQfzbgMA5A8G+qJNI356PCOTZAn7wLasmub
+	 h4gGripv/GYAmh1BJrnI9JTIARJQZ9XwBx6Z3GCZf8eBxHnk1voVrESy+g6Y8Vqvdg
+	 pQe1DGQEi2UAaOKC4z4Hzsw5Ob72m2R8dTNqqlEfwKHea11gbf5hM5iArPtJKK+vfX
+	 9kvl2G0FyEUVJYUjKRDEdBQ2a1fenhSY79OpQcp6kQUXLMlZBiRmjGUi6ztJ9xmlKd
+	 SQ30nxW1lKKqw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v7 06/36] fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+Date: Wed,  7 Feb 2024 00:08:36 +0900
+Message-Id: <170723211649.502590.2604541564082439754.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <170723204881.502590.11906735097521170661.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240203150323.1041736-1-p.sakharov@ispras.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 03, 2024 at 06:03:21PM +0300, Pavel Sakharov wrote:
-> If 'dev' is NULL, the 'priv' variable has an incorrect address when
-> dereferencing calling netdev_err().
-> 
-> Pass 'dev' instead of 'priv->dev" to the function.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Signed-off-by: Pavel Sakharov <p.sakharov@ispras.ru>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Thanks Pavel,
+Instead of using "ALIGN()", use BUILD_BUG_ON() as the structures should
+always be divisible by sizeof(long).
 
-I agree with your analysis that this can result in a NULL dereference.
-And that your proposed fix is good: netdev_err() can handle a NULL
-dev argument.
+Link: http://lkml.kernel.org/r/20190524111144.GI2589@hirez.programming.kicks-ass.net
 
-As this seems to be a fix I suggest it should be for net.
-And that it should be based on that tree and designated as such
-in the subject:
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v7:
+  - Use DIV_ROUND_UP() to calculate FGRAPH_RET_INDEX
+---
+ kernel/trace/fgraph.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Subject: [PATCH net] ...
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 30edeb6d4aa9..6f8d36370994 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -26,10 +26,9 @@
+ #endif
+ 
+ #define FGRAPH_RET_SIZE sizeof(struct ftrace_ret_stack)
+-#define FGRAPH_RET_INDEX (ALIGN(FGRAPH_RET_SIZE, sizeof(long)) / sizeof(long))
++#define FGRAPH_RET_INDEX DIV_ROUND_UP(FGRAPH_RET_SIZE, sizeof(long))
+ #define SHADOW_STACK_SIZE (PAGE_SIZE)
+-#define SHADOW_STACK_INDEX			\
+-	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
++#define SHADOW_STACK_INDEX (SHADOW_STACK_SIZE / sizeof(long))
+ /* Leave on a buffer at the end */
+ #define SHADOW_STACK_MAX_INDEX (SHADOW_STACK_INDEX - FGRAPH_RET_INDEX)
+ 
+@@ -91,6 +90,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	if (!current->ret_stack)
+ 		return -EBUSY;
+ 
++	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
++
+ 	/*
+ 	 * We must make sure the ret_stack is tested before we read
+ 	 * anything else.
+@@ -325,6 +326,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ {
+ 	int index = task->curr_ret_stack;
+ 
++	BUILD_BUG_ON(FGRAPH_RET_SIZE % sizeof(long));
++
+ 	index -= FGRAPH_RET_INDEX * (idx + 1);
+ 	if (index < 0)
+ 		return NULL;
 
-Also if it is a fix, it should have a fixes tag.
-Perhaps this one:
-
-Fixes: 8532f613bc78 ("net: stmmac: introduce MSI Interrupt routines for mac, safety, RX & TX")
-
-
-I don't think there is a need to respin for the above, though please
-keep this in mind when posting Networking patches in future.
-
-
-Looking at the patch above, and stmmac_main.c, it seems that the following
-functions also suffer from a similar problem:
-
-static irqreturn_t stmmac_msi_intr_tx(int irq, void *data)
-{
-	struct stmmac_tx_queue *tx_q = (struct stmmac_tx_queue *)data;
-	...
-	dma_conf = container_of(tx_q, struct stmmac_dma_conf, tx_queue[chan]);
-	priv = container_of(dma_conf, struct stmmac_priv, dma_conf);
-
-	if (unlikely(!data)) {
-		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
-		...
-
-And stmmac_msi_intr_rx(), which follows a similar pattern
-to stmmac_msi_intr_tx().
-
-I also note that in those functions "invalid dev pointer" seems misleading,
-perhaps it ought to be "invalid queue" pointer.
-
-As these problems seem to all have been introduced at the same time,
-perhaps it is appropriate to fix them all in one patch?
-
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 4727f7be4f86..5ab5148013cd 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -5848,7 +5848,7 @@ static irqreturn_t stmmac_mac_interrupt(int irq, void *dev_id)
->  	struct stmmac_priv *priv = netdev_priv(dev);
-> 
->  	if (unlikely(!dev)) {
-> -		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
-> +		netdev_err(dev, "%s: invalid dev pointer\n", __func__);
->  		return IRQ_NONE;
->  	}
-> 
-> @@ -5868,7 +5868,7 @@ static irqreturn_t stmmac_safety_interrupt(int irq, void *dev_id)
->  	struct stmmac_priv *priv = netdev_priv(dev);
-> 
->  	if (unlikely(!dev)) {
-> -		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
-> +		netdev_err(dev, "%s: invalid dev pointer\n", __func__);
->  		return IRQ_NONE;
->  	}
-> 
-> 
