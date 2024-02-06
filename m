@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B136133987;
-	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3706C133980;
+	Tue,  6 Feb 2024 11:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707219211; cv=none; b=PBJwj2CcHbU3Qsc2uLHuio2wxfLDKOR+bISjr4W6Rlgo9TFYRVjihSvNQPCO9wy/ZSEPPlGuAkTZuzsmaFkCu6AKvOjnqKosHhFZXfpFvBTgtTVFl7pnEkOfiHAqhH9IxQjAO7zva6kHUOaX3eaiZ4zcF4f3rgCR1igS6bocz1E=
+	t=1707219211; cv=none; b=ZqzBA6vIrI10RRV5CODRgnrtyuprFJuZM+bk4Wr4/GUhPiccX7/anuER+iKb97UiH2jsf+naEDjMiiR0a4PND06tHId+wCf+SLxoKVadQGHArn+TeZNh48dOWMtkRHRLkhtLA2lWBJJ9djnSz/t+51+kzLyNY40bmtsIuOIxWwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707219211; c=relaxed/simple;
-	bh=JSygnlx6+56lX3XXzthIgsNjw4j5XL26vPR3L/z2tEs=;
+	bh=msUlAhKaN43vF7JsX1xwBfcdPGlDn+EyYYaBimHJa/8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=aNHJpennxOWhSmaLTPRnq8Jd5WX9qI7JzeT/ryWz5eDLa7h9pLVmzERqmx6kY8LKI0DYF0BrbvzojNd1VImkrhKE6G/gxVYIcHoWH7wJuGRKbtqm0ycDNBlmQa8NM+ERVCzzWx+Hq26FyUAotuibgIGnxb7TJN4M73Gay3Jdxm0=
+	 Content-Type; b=EXN0IfK9sgLcsgKLzAA0b4mlAZJTHTXCe4zr4n5AvFbYoOFxT4bTi0PtgxTtkBNFowPY6gstlCzmvwhJu6VmSZBvSum8uGghhMf2dFxM8zTNSXj/XTCAxbm8QHKP8Vp9DielsrQXLOO2t3HBxff+GHDOyyUjLsHbbCm6ei0DOHo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EEF0C43330;
-	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC1D4C433B1;
+	Tue,  6 Feb 2024 11:33:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXJiB-00000006aKJ-2Ejb;
+	id 1rXJiB-00000006aJL-0sJS;
 	Tue, 06 Feb 2024 06:33:59 -0500
-Message-ID: <20240206113359.393228331@rostedt.homelinux.com>
+Message-ID: <20240206113359.062398719@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 06:32:06 -0500
+Date: Tue, 06 Feb 2024 06:32:04 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,11 +30,10 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Christian Brauner <brauner@kernel.org>,
- Al  Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>
-Subject: [v6.7][PATCH v2 08/23] eventfs: Have the inodes all for files and directories all be the
- same
+ Andrew Morton <akpm@linux-foundation.org>,
+ Al Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>
+Subject: [v6.7][PATCH v2 06/23] eventfs: Read ei->entries before ei->children in eventfs_iterate()
 References: <20240206113158.822006147@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,65 +45,116 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The dentries and inodes are created in the readdir for the sole purpose of
-getting a consistent inode number. Linus stated that is unnecessary, and
-that all inodes can have the same inode number. For a virtual file system
-they are pretty meaningless.
+In order to apply a shortcut to skip over the current ctx->pos
+immediately, by using the ei->entries array, the reading of that array
+should be first. Moving the array reading before the linked list reading
+will make the shortcut change diff nicer to read.
 
-Instead use a single unique inode number for all files and one for all
-directories.
-
-Link: https://lore.kernel.org/all/20240116133753.2808d45e@gandalf.local.home/
-Link: https://lore.kernel.org/linux-trace-kernel/20240116211353.412180363@goodmis.org
+Link: https://lore.kernel.org/all/CAHk-=wiKwDUDv3+jCsv-uacDcHDVTYsXtBR9=6sGM5mqX+DhOg@mail.gmail.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240104220048.333115095@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Christian Brauner <brauner@kernel.org>
-Cc: Al  Viro <viro@ZenIV.linux.org.uk>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 53c41052ba3121761e6f62a813961164532a214f)
+(cherry picked from commit 704f960dbee2f1634f4b4e16f208cb16eaf41c1e)
 ---
- fs/tracefs/event_inode.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/tracefs/event_inode.c | 46 ++++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index fdff53d5a1f8..5edf0b96758b 100644
+index c73fb1f7ddbc..a1934e0eea3b 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -32,6 +32,10 @@
-  */
- static DEFINE_MUTEX(eventfs_mutex);
+@@ -752,8 +752,8 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	 * Need to create the dentries and inodes to have a consistent
+ 	 * inode number.
+ 	 */
+-	list_for_each_entry_srcu(ei_child, &ei->children, list,
+-				 srcu_read_lock_held(&eventfs_srcu)) {
++	for (i = 0; i < ei->nr_entries; i++) {
++		void *cdata = ei->data;
  
-+/* Choose something "unique" ;-) */
-+#define EVENTFS_FILE_INODE_INO		0x12c4e37
-+#define EVENTFS_DIR_INODE_INO		0x134b2f5
+ 		if (c > 0) {
+ 			c--;
+@@ -762,23 +762,32 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ctx->pos++;
+ 
+-		if (ei_child->is_freed)
+-			continue;
++		entry = &ei->entries[i];
++		name = entry->name;
+ 
+-		name = ei_child->name;
++		mutex_lock(&eventfs_mutex);
++		/* If ei->is_freed then just bail here, nothing more to do */
++		if (ei->is_freed) {
++			mutex_unlock(&eventfs_mutex);
++			goto out_dec;
++		}
++		r = entry->callback(name, &mode, &cdata, &fops);
++		mutex_unlock(&eventfs_mutex);
++		if (r <= 0)
++			continue;
+ 
+-		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
++		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
+ 		if (!dentry)
+ 			goto out_dec;
+ 		ino = dentry->d_inode->i_ino;
+ 		dput(dentry);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
+ 			goto out_dec;
+ 	}
+ 
+-	for (i = 0; i < ei->nr_entries; i++) {
+-		void *cdata = ei->data;
++	list_for_each_entry_srcu(ei_child, &ei->children, list,
++				 srcu_read_lock_held(&eventfs_srcu)) {
+ 
+ 		if (c > 0) {
+ 			c--;
+@@ -787,27 +796,18 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ctx->pos++;
+ 
+-		entry = &ei->entries[i];
+-		name = entry->name;
+-
+-		mutex_lock(&eventfs_mutex);
+-		/* If ei->is_freed then just bail here, nothing more to do */
+-		if (ei->is_freed) {
+-			mutex_unlock(&eventfs_mutex);
+-			goto out_dec;
+-		}
+-		r = entry->callback(name, &mode, &cdata, &fops);
+-		mutex_unlock(&eventfs_mutex);
+-		if (r <= 0)
++		if (ei_child->is_freed)
+ 			continue;
+ 
+-		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++		name = ei_child->name;
 +
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-  * its parent's list and will have is_freed set (under eventfs_mutex).
-@@ -352,6 +356,9 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 	inode->i_fop = fop;
- 	inode->i_private = data;
++		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
+ 		if (!dentry)
+ 			goto out_dec;
+ 		ino = dentry->d_inode->i_ino;
+ 		dput(dentry);
  
-+	/* All files will have the same inode number */
-+	inode->i_ino = EVENTFS_FILE_INODE_INO;
-+
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
- 	d_instantiate(dentry, inode);
-@@ -388,6 +395,9 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 	inode->i_op = &eventfs_root_dir_inode_operations;
- 	inode->i_fop = &eventfs_file_operations;
- 
-+	/* All directories will have the same inode number */
-+	inode->i_ino = EVENTFS_DIR_INODE_INO;
-+
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
- 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+ 			goto out_dec;
+ 	}
+ 	ret = 1;
 -- 
 2.43.0
 
