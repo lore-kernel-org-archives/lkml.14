@@ -1,170 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19951134CFC;
-	Tue,  6 Feb 2024 15:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DA2134CFB
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 15:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707232256; cv=none; b=R/R9BpCVKrfSv+OzCTjsqCjweRSzldzyRpylR7oQCHExiqvthbwsQzUPT6hvJLhmcBbuWNV0CE8RSAJhqW4D3sgYDjCitBba241Sve1+yZeVGS9uL1Ml9m/cceEIdJnJ0mT1boeW7iUqFgHVdMmA18FP1R4i7sHdVMUJpghGvuo=
+	t=1707232258; cv=none; b=uhQTgpr9f/EnaYxew4wMUJ8i9chqwsp4v8ui8Vr8BMChWqxoAjFhifeczHJw/xgrlZ2H6/krJUYRXRO5hbN/3+qbab0V5WjiZl7Pepgp9wnMUzY9hS2TIzZaB1ngnNh9zxTcWMpwz6csdoFugqRq757nRJf6mLrSM+ptsrBqPfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707232256; c=relaxed/simple;
-	bh=XT8mAO5U8kYBF5nHzre3NP4S7gGsaqfcEiXyQTVrS+w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZTxsAHiVgw/dEPExONl1Qxts0eVsK3ptKWTs9QObO20H6ftGZyHYO2/Wcwfrls9qS5PWg6esTg7za4nOvu33bw6N6GmVCgWH7IIWi2J80buEBbkaw4+FPMuZmvVX7MBSWvA5W8spfrUS7QZdvS3KiErABF9suRw+Yad5RnpDWtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/4N5YOC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707232258; c=relaxed/simple;
+	bh=osnqFI0ZtxEkvRbQ0EWBH7BL7X2o86yrUG9y9rOwtI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AKz801q9qD6lQCWaWw8Y8u+JQOHuv4qF7D+/A6pJvfBREJuPRg4IXeepoA9rgADs0uNzpMDsXPQxH7AnaFntEQYOhhMJtE2C4lzZ7grBG+9dJXCsASjh6s+h8GkbViRazs75hDk+Q03ghDICbX1H5HKGf4XCUdL1YL2K9FbuZ/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hefring.com; spf=none smtp.mailfrom=hefring.com; dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b=P4ty6tuF; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hefring.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hefring.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/4N5YOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAC7C433C7;
-	Tue,  6 Feb 2024 15:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707232255;
-	bh=XT8mAO5U8kYBF5nHzre3NP4S7gGsaqfcEiXyQTVrS+w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T/4N5YOCnRDcLX/JjZRuT1ZrzMUhmlwFugMIeQXUi+cmemubEX/Ty40c0JklpMR9O
-	 a9M3+BBrmqjP6scM2QbsIaxkeCHi1p1lQuTgROaAPgE+ld3TN/ZnV+AD7zngU+RegR
-	 dv//Y3DkIRvv7zIgigLFMI1YWuJs0WLOgQWw3Hr8U5LmxphN/Dlkne9z2Ae7UMPh4a
-	 FMKJQItEN5BEAAnu4cWsNyhgqQvXa64IEXypv0uQI7tAMnHQt8rjR7pRqJz8Rl2Eh7
-	 b1NnkwdKvwvZ+kMz+DbL/+42tOXXsXQMXAnSzL667XKN84o15Gw8AjjJ3PJp/mlyLK
-	 z5TeeA2Is6aqg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v7 18/36] function_graph: Move graph notrace bit to shadow stack global var
-Date: Wed,  7 Feb 2024 00:10:50 +0900
-Message-Id: <170723225020.502590.2063430645806603064.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170723204881.502590.11906735097521170661.stgit@devnote2>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b="P4ty6tuF"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-68c4300518bso26197086d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 07:10:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hefring-com.20230601.gappssmtp.com; s=20230601; t=1707232254; x=1707837054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sYfFNAiageIfuh4cpngMOun9DVS7g39fafIbd6OpWGY=;
+        b=P4ty6tuF3lnD/vP2lHwLsaYqiyTrK09sHgAeX9FAbdghmUbaHsi9sybwdouYgPGbDF
+         93aU3aPWWFi2H5ii56tK36hc4K5y5T1u9uK0jIO/rrkuaRiuwpDGL/M83t7qklOVmBhG
+         h3e+OAOShTVkzGmmmM/ULlUEkCMn278lS583FeQqjTEpeBHk6+fUFfZ+KfLbkf4VqAel
+         s2I0KHSgKb8rx91ekhjQ3HxIPJ5m8kEmEHDqn2Rk/kYegR6BielkF8XuF7Wj3Pw61bjb
+         jLIIVNuyHkkLq3jJqpjDJEh47lXS07qjslnyq8mMfs1D227eHW+S40N8KGIJcRE52ZsY
+         c1Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707232254; x=1707837054;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sYfFNAiageIfuh4cpngMOun9DVS7g39fafIbd6OpWGY=;
+        b=Oa3GR1GQ0Wwg2KWTjc8lkxQhUwse7oZy9NMJxTuk1zUo/7Y9e6QwZNHLWCFu6J73h2
+         EPrb8CUUK1Xgfjl2t7tz05T6WToAPgO3hN8t4XHfN1Qr2mZthQIm8DWpPiNIuJbr4yzK
+         r56uH7FNP4j5AprbcxI2fToFyg8n6/iPHUUDs4E3a8OVOzJlHkeADg8gTc+QHc7tUj4x
+         PJJmkApHJkhsr5qnx31qEExDce00Jsip2O8tKJobTBcLFFwPXMhU6VrSHKfZ17OjUCon
+         9T1ZvFD+tRl2eC9477VUe1FLaP61nQUv1R+58qha8Hc1GbGrX3fiqsUS572XwRdttooD
+         +3ww==
+X-Gm-Message-State: AOJu0Ywhi00SfpJnQdn/SQGM6z3jLXvKuWNTJUxd4rQKw86Ez6mx/S1D
+	+eKUJU+SCFGprcjTSLL3JSRC1qDApqahN8lNRuO6E1svwzW6IWxTEpnWtjd5cHtej5B5Vk8pX5x
+	7iPk=
+X-Google-Smtp-Source: AGHT+IFd2Cwl2Ki6XrgGXh9DfcDLR1Dl/x4H6+7N97GLFsJK4P3ngm8vBHQ8ekDm1Fc/SQwcG1IZ4g==
+X-Received: by 2002:a05:6214:2262:b0:68c:a7f6:12b2 with SMTP id gs2-20020a056214226200b0068ca7f612b2mr3736640qvb.8.1707232254207;
+        Tue, 06 Feb 2024 07:10:54 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWpxvvPlLKxDbC6P8YYRRL2v77MAgpJ3Xwr2pa35c4v0MFlgGUgk3Oz70gojR8ZlTNx4Albf4/vEBVcLo7na/+3ha3bx7dJGwlkc7WsgKouh+xYj7riiNc7ndIdv19qyVnvPj1hnOJRyV6B6w9hhgW6hRfQuDNJ0tSIjUqpkh0yXpvujo0DbDl5vOMwQOc=
+Received: from localhost.localdomain ([50.212.55.90])
+        by smtp.gmail.com with ESMTPSA id i11-20020ad44bab000000b0068c3a7e4789sm1074190qvw.103.2024.02.06.07.10.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 07:10:53 -0800 (PST)
+From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Ben Wolsieffer <ben.wolsieffer@hefring.com>
+Subject: [PATCH] regmap: kunit: fix raw noinc write test wrapping
+Date: Tue,  6 Feb 2024 10:10:05 -0500
+Message-ID: <20240206151004.1636761-2-ben.wolsieffer@hefring.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+The raw noinc write test places a known value in the register following
+the noinc register to verify that it is not disturbed by the noinc
+write. This test ensures this value is distinct by adding 100 to the
+second element of the noinc write data.
 
-The use of the task->trace_recursion for the logic used for the function
-graph no-trace was a bit of an abuse of that variable. Now that there
-exists global vars that are per stack for registered graph traces, use
-that instead.
+The regmap registers are 16-bit, while the test value is stored in an
+unsigned int. Therefore, adding 100 may cause the register to wrap while
+the test value does not, causing the test to fail. This patch fixes this
+by changing val_test and val_last from unsigned int to u16.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/linux-kernel/745d3a11-15bc-48b6-84c8-c8761c943bed@roeck-us.net/T/
 ---
- Changes in v2:
-  - Make description lines shorter than 76 chars.
----
- include/linux/trace_recursion.h      |    7 -------
- kernel/trace/trace.h                 |    9 +++++++++
- kernel/trace/trace_functions_graph.c |   10 ++++++----
- 3 files changed, 15 insertions(+), 11 deletions(-)
+ drivers/base/regmap/regmap-kunit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
-index 00e792bf148d..cc11b0e9d220 100644
---- a/include/linux/trace_recursion.h
-+++ b/include/linux/trace_recursion.h
-@@ -44,13 +44,6 @@ enum {
-  */
- 	TRACE_IRQ_BIT,
+diff --git a/drivers/base/regmap/regmap-kunit.c b/drivers/base/regmap/regmap-kunit.c
+index 026bdcb45127..4eb18f5d3265 100644
+--- a/drivers/base/regmap/regmap-kunit.c
++++ b/drivers/base/regmap/regmap-kunit.c
+@@ -1202,7 +1202,8 @@ static void raw_noinc_write(struct kunit *test)
+ 	struct regmap *map;
+ 	struct regmap_config config;
+ 	struct regmap_ram_data *data;
+-	unsigned int val, val_test, val_last;
++	unsigned int val;
++	u16 val_test, val_last;
+ 	u16 val_array[BLOCK_TEST_SIZE];
  
--	/*
--	 * To implement set_graph_notrace, if this bit is set, we ignore
--	 * function graph tracing of called functions, until the return
--	 * function is called to clear it.
--	 */
--	TRACE_GRAPH_NOTRACE_BIT,
--
- 	/* Used to prevent recursion recording from recursing. */
- 	TRACE_RECORD_RECURSION_BIT,
- };
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d8cdcbb4e5a6..029a80a38c23 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -918,8 +918,17 @@ enum {
- 
- 	TRACE_GRAPH_DEPTH_START_BIT,
- 	TRACE_GRAPH_DEPTH_END_BIT,
-+
-+	/*
-+	 * To implement set_graph_notrace, if this bit is set, we ignore
-+	 * function graph tracing of called functions, until the return
-+	 * function is called to clear it.
-+	 */
-+	TRACE_GRAPH_NOTRACE_BIT,
- };
- 
-+#define TRACE_GRAPH_NOTRACE		(1 << TRACE_GRAPH_NOTRACE_BIT)
-+
- static inline unsigned long ftrace_graph_depth(unsigned long *task_var)
- {
- 	return (*task_var >> TRACE_GRAPH_DEPTH_START_BIT) & 3;
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 66cce73e94f8..13d0387ac6a6 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -130,6 +130,7 @@ static inline int ftrace_graph_ignore_irqs(void)
- int trace_graph_entry(struct ftrace_graph_ent *trace,
- 		      struct fgraph_ops *gops)
- {
-+	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
- 	struct trace_array_cpu *data;
- 	unsigned long flags;
-@@ -138,7 +139,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	int ret;
- 	int cpu;
- 
--	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT))
-+	if (*task_var & TRACE_GRAPH_NOTRACE)
- 		return 0;
- 
- 	/*
-@@ -149,7 +150,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	 * returning from the function.
- 	 */
- 	if (ftrace_graph_notrace_addr(trace->func)) {
--		trace_recursion_set(TRACE_GRAPH_NOTRACE_BIT);
-+		*task_var |= TRACE_GRAPH_NOTRACE_BIT;
- 		/*
- 		 * Need to return 1 to have the return called
- 		 * that will clear the NOTRACE bit.
-@@ -240,6 +241,7 @@ void __trace_graph_return(struct trace_array *tr,
- void trace_graph_return(struct ftrace_graph_ret *trace,
- 			struct fgraph_ops *gops)
- {
-+	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
- 	struct trace_array_cpu *data;
- 	unsigned long flags;
-@@ -249,8 +251,8 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 
- 	ftrace_graph_addr_finish(gops, trace);
- 
--	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
--		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
-+	if (*task_var & TRACE_GRAPH_NOTRACE) {
-+		*task_var &= ~TRACE_GRAPH_NOTRACE;
- 		return;
- 	}
- 
+ 	config = raw_regmap_config;
+-- 
+2.43.0
 
