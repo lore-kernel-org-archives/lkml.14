@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF9F13399D;
-	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFDA134742;
+	Tue,  6 Feb 2024 11:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707219211; cv=none; b=KVDfZGkyJDJsBZQxdY25OgvqKHJDlyRTTy+iqUjf8UB/W1+xoFXE+W9nua+bRGJD4O/nkU3bGWxBtROn1hYQoK3z5a/1itYAE5WA1HExltIUDUJVMItK//1NeQJOX776xVmMPG7trtfqomhIezV0Pie0hUsvz2xy8D7uhutxQsM=
+	t=1707219212; cv=none; b=Bf4mnMQ10pqkr9Gfb5McnQAAT2VvHTVinKtCQ2wjdkLtsyxreNAo8rtMuQdY5ALGEccEYs8mWtTTcU1j9h1l5SlrWj34oZcJAh+q6kdqWSMUCP83nZbBrA5VHeJmiGhIQtwdlZ5HfOHYlfblEEZql3AONBy4+rQ5PKmfQAZMeDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707219211; c=relaxed/simple;
-	bh=iFY7n9Vhp/1z36GCtxu4sEAjzXxFREHW/cV48tOlaOw=;
+	s=arc-20240116; t=1707219212; c=relaxed/simple;
+	bh=gW8Qs5dhqv8o0qe0O7sTx8CGnoF40JWC8ay85t0nh1E=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=N1C0I2XVTIRK7a+hXA0K+5uyWQ6KCvvPbZBNFYN07v7gzqKclkMC+svMY+pSrdEhEFIi43a42bY3w2CsAVDHeyFIzrekp5t3hUs8k5Y7z8muOLlijj2FQDwmL58MIX/N1yeEV8WBJMi2jYDME6lVTKn3r9MfGu48ZG96lmIZpjA=
+	 Content-Type; b=nyLod5wHtFJe3hFL0Yk3eH32WM+eElEj8VnRunAyNPnvbLEgYxyUVLLxBz6lKe2w9XR4qH0beZ5MyIhNXTblzRoiyoE583YuEQ6uYSDg79nFifPmc0juh39J8p+1QJzLrs/ki26p7wOJgKDY2By35ejnsUIovhzLf9OUAo7YKLA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589ABC43390;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B01C433B1;
 	Tue,  6 Feb 2024 11:33:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXJiB-00000006aKn-2upQ;
-	Tue, 06 Feb 2024 06:33:59 -0500
-Message-ID: <20240206113359.552951427@rostedt.homelinux.com>
+	id 1rXJiC-00000006aLp-042z;
+	Tue, 06 Feb 2024 06:34:00 -0500
+Message-ID: <20240206113359.872124971@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 06:32:07 -0500
+Date: Tue, 06 Feb 2024 06:32:09 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,11 +30,10 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Christian Brauner <brauner@kernel.org>,
- Al  Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- kernel test robot <oliver.sang@intel.com>
-Subject: [v6.7][PATCH v2 09/23] eventfs: Do not create dentries nor inodes in iterate_shared
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Kees Cook <keescook@chromium.org>
+Subject: [v6.7][PATCH v2 11/23] eventfs: Save directory inodes in the eventfs_inode structure
 References: <20240206113158.822006147@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,140 +45,117 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The original eventfs code added a wrapper around the dcache_readdir open
-callback and created all the dentries and inodes at open, and increment
-their ref count. A wrapper was added around the dcache_readdir release
-function to decrement all the ref counts of those created inodes and
-dentries. But this proved to be buggy[1] for when a kprobe was created
-during a dir read, it would create a dentry between the open and the
-release, and because the release would decrement all ref counts of all
-files and directories, that would include the kprobe directory that was
-not there to have its ref count incremented in open. This would cause the
-ref count to go to negative and later crash the kernel.
+The eventfs inodes and directories are allocated when referenced. But this
+leaves the issue of keeping consistent inode numbers and the number is
+only saved in the inode structure itself. When the inode is no longer
+referenced, it can be freed. When the file that the inode was representing
+is referenced again, the inode is once again created, but the inode number
+needs to be the same as it was before.
 
-To solve this, the dentries and inodes that were created and had their ref
-count upped in open needed to be saved. That list needed to be passed from
-the open to the release, so that the release would only decrement the ref
-counts of the entries that were incremented in the open.
+Just making the inode numbers the same for all files is fine, but that
+does not work with directories. The find command will check for loops via
+the inode number and having the same inode number for directories triggers:
 
-Unfortunately, the dcache_readdir logic was already using the
-file->private_data, which is the only field that can be used to pass
-information from the open to the release. What was done was the eventfs
-created another descriptor that had a void pointer to save the
-dcache_readdir pointer, and it wrapped all the callbacks, so that it could
-save the list of entries that had their ref counts incremented in the
-open, and pass it to the release. The wrapped callbacks would just put
-back the dcache_readdir pointer and call the functions it used so it could
-still use its data[2].
+  # find /sys/kernel/tracing
+find: File system loop detected;
+'/sys/kernel/debug/tracing/events/initcall/initcall_finish' is part of the same file system loop as
+'/sys/kernel/debug/tracing/events/initcall'.
+[..]
 
-But Linus had an issue with the "hijacking" of the file->private_data
-(unfortunately this discussion was on a security list, so no public link).
-Which we finally agreed on doing everything within the iterate_shared
-callback and leave the dcache_readdir out of it[3]. All the information
-needed for the getents() could be created then.
+Linus pointed out that the eventfs_inode structure ends with a single
+32bit int, and on 64 bit machines, there's likely a 4 byte hole due to
+alignment. We can use this hole to store the inode number for the
+eventfs_inode. All directories in eventfs are represented by an
+eventfs_inode and that data structure can hold its inode number.
 
-But this ended up being buggy too[4]. The iterate_shared callback was not
-the right place to create the dentries and inodes. Even Christian Brauner
-had issues with that[5].
+That last int was also purposely placed at the end of the structure to
+prevent holes from within. Now that there's a 4 byte number to hold the
+inode, both the inode number and the last integer can be moved up in the
+structure for better cache locality, where the llist and rcu fields can be
+moved to the end as they are only used when the eventfs_inode is being
+deleted.
 
-An attempt was to go back to creating the inodes and dentries at
-the open, create an array to store the information in the
-file->private_data, and pass that information to the other callbacks.[6]
-
-The difference between that and the original method, is that it does not
-use dcache_readdir. It also does not up the ref counts of the dentries and
-pass them. Instead, it creates an array of a structure that saves the
-dentry's name and inode number. That information is used in the
-iterate_shared callback, and the array is freed in the dir release. The
-dentries and inodes created in the open are not used for the iterate_share
-or release callbacks. Just their names and inode numbers.
-
-Linus did not like that either[7] and just wanted to remove the dentries
-being created in iterate_shared and use the hard coded inode numbers.
-
-[ All this while Linus enjoyed an unexpected vacation during the merge
-  window due to lack of power. ]
-
-[1] https://lore.kernel.org/linux-trace-kernel/20230919211804.230edf1e@gandalf.local.home/
-[2] https://lore.kernel.org/linux-trace-kernel/20230922163446.1431d4fa@gandalf.local.home/
-[3] https://lore.kernel.org/linux-trace-kernel/20240104015435.682218477@goodmis.org/
-[4] https://lore.kernel.org/all/202401152142.bfc28861-oliver.sang@intel.com/
-[5] https://lore.kernel.org/all/20240111-unzahl-gefegt-433acb8a841d@brauner/
-[6] https://lore.kernel.org/all/20240116114711.7e8637be@gandalf.local.home/
-[7] https://lore.kernel.org/all/20240116170154.5bf0a250@gandalf.local.home/
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240116211353.573784051@goodmis.org
+Link: https://lore.kernel.org/all/CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240122152748.46897388@gandalf.local.home
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Al  Viro <viro@ZenIV.linux.org.uk>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>
-Fixes: 493ec81a8fb8 ("eventfs: Stop using dcache_readdir() for getdents()")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202401152142.bfc28861-oliver.sang@intel.com
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 53c41052ba31 ("eventfs: Have the inodes all for files and directories all be the same")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 852e46e239ee6db3cd220614cf8bce96e79227c2)
+Reviewed-by: Kees Cook <keescook@chromium.org>
+(cherry picked from commit 834bf76add3e6168038150f162cbccf1fd492a67)
 ---
- fs/tracefs/event_inode.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+ fs/tracefs/event_inode.c | 14 +++++++++++---
+ fs/tracefs/internal.h    |  7 ++++---
+ 2 files changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 5edf0b96758b..10580d6b5012 100644
+index 6795fda2af19..6b211522a13e 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -727,8 +727,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	struct eventfs_inode *ei_child;
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
--	struct dentry *ei_dentry = NULL;
--	struct dentry *dentry;
- 	const char *name;
- 	umode_t mode;
- 	int idx;
-@@ -749,11 +747,11 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+@@ -34,7 +34,15 @@ static DEFINE_MUTEX(eventfs_mutex);
  
- 	mutex_lock(&eventfs_mutex);
- 	ei = READ_ONCE(ti->private);
--	if (ei && !ei->is_freed)
--		ei_dentry = READ_ONCE(ei->dentry);
-+	if (ei && ei->is_freed)
-+		ei = NULL;
- 	mutex_unlock(&eventfs_mutex);
+ /* Choose something "unique" ;-) */
+ #define EVENTFS_FILE_INODE_INO		0x12c4e37
+-#define EVENTFS_DIR_INODE_INO		0x134b2f5
++
++/* Just try to make something consistent and unique */
++static int eventfs_dir_ino(struct eventfs_inode *ei)
++{
++	if (!ei->ino)
++		ei->ino = get_next_ino();
++
++	return ei->ino;
++}
  
--	if (!ei || !ei_dentry)
-+	if (!ei)
- 		goto out;
+ /*
+  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
+@@ -396,7 +404,7 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
+ 	inode->i_fop = &eventfs_file_operations;
  
- 	/*
-@@ -780,11 +778,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		if (r <= 0)
- 			continue;
+ 	/* All directories will have the same inode number */
+-	inode->i_ino = EVENTFS_DIR_INODE_INO;
++	inode->i_ino = eventfs_dir_ino(ei);
  
--		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
--		if (!dentry)
--			goto out;
--		ino = dentry->d_inode->i_ino;
--		dput(dentry);
-+		ino = EVENTFS_FILE_INODE_INO;
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
- 			goto out;
-@@ -808,11 +802,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+@@ -802,7 +810,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
  
  		name = ei_child->name;
  
--		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
--		if (!dentry)
--			goto out_dec;
--		ino = dentry->d_inode->i_ino;
--		dput(dentry);
-+		ino = EVENTFS_DIR_INODE_INO;
+-		ino = EVENTFS_DIR_INODE_INO;
++		ino = eventfs_dir_ino(ei_child);
  
  		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
  			goto out_dec;
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 12b7d0150ae9..45397df9bb65 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -55,6 +55,10 @@ struct eventfs_inode {
+ 	struct eventfs_attr		*entry_attrs;
+ 	struct eventfs_attr		attr;
+ 	void				*data;
++	unsigned int			is_freed:1;
++	unsigned int			is_events:1;
++	unsigned int			nr_entries:30;
++	unsigned int			ino;
+ 	/*
+ 	 * Union - used for deletion
+ 	 * @llist:	for calling dput() if needed after RCU
+@@ -64,9 +68,6 @@ struct eventfs_inode {
+ 		struct llist_node	llist;
+ 		struct rcu_head		rcu;
+ 	};
+-	unsigned int			is_freed:1;
+-	unsigned int			is_events:1;
+-	unsigned int			nr_entries:30;
+ };
+ 
+ static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
 -- 
 2.43.0
 
