@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6AD1384B1;
-	Tue,  6 Feb 2024 12:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85ADF1386DD;
+	Tue,  6 Feb 2024 12:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221363; cv=none; b=ggMc1hE9s3NFUWRBl15kA3ZW65H9sdirQecUcWyGdrwgh48eDy1w98yuPR0UtyA4aTQ6CtSj0IyBTfg9y6lBjZncwA7ES+EAKieVU56ROIDlwuMNcJc+CAwkiPPpx0LkT8XZpUXX+3r7JnkZtcTu4smEGN/h8QgM6WdyTuV2Kks=
+	t=1707221363; cv=none; b=exv13tten1F/yXmIzNi6zOU0f/JDQw+bXw9z5QKSSiaQjSGXO+Sx8LQOEYSbX3SMAlGdgKm3km3f0n0kEGuND/fykv5Cip35DZE+LR9bXIRfo66U0CtzsfDbBZXKfatbxPIlhoHxIPC3tH7PPdlxz84XkbuKxn+Cn2a1KOL30BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707221363; c=relaxed/simple;
-	bh=3SwXKn69jqhTzyrSfRqMAzadq7iwgEqhvz0y/eDGZkM=;
+	bh=uCRKBFI8oZi6Z1Cps+YjkEugAUzD0pvOcGwAbYn4DiE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=We/dMSdZ0RscfLli4/aLeah+CEeqHaI+M/YwDr3HzXhSr/2podkLi87AJR3lOqeNCMrKrSG/Ggm7TrjiOE8AlJxBuBvsJ4gT9yZ9qNl1nVx2t4AJWCTsrmkNEcLj7Zsel0bbdJD+BjNssGDOLq+7AO71OqLys8UX6ZTK30u7xos=
+	 Content-Type; b=qXo+yvNaZXZlfi6rEv0QYuVHh/oi1zXrJZ4xiiGI1sWkZX0i1RiRJieTJAzjQ449o4eSOTU++ox0EaINzewYKNwMWQQ/vym/x8snUAxU5XczQhcMhBG1sAXNtk8E1gvprywFyzq5K3iHdw3+OasS72MMbILKHE6xnt3tAoJvK00=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9779BC43390;
-	Tue,  6 Feb 2024 12:09:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A2AC433C7;
+	Tue,  6 Feb 2024 12:09:23 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGt-00000006bFL-0JBS;
+	id 1rXKGt-00000006bHq-3giE;
 	Tue, 06 Feb 2024 07:09:51 -0500
-Message-ID: <20240206120950.930155940@rostedt.homelinux.com>
+Message-ID: <20240206120951.738927603@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:33 -0500
+Date: Tue, 06 Feb 2024 07:09:38 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,9 +30,8 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Josef Bacik <josef@toxicpanda.com>
-Subject: [v6.6][PATCH 28/57] eventfs: Do not allow NULL parent to eventfs_start_creating()
+ "Ubisectech Sirius" <bugreport@ubisectech.com>
+Subject: [v6.6][PATCH 33/57] tracefs: Check for dentry->d_inode exists in set_gid()
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,52 +43,79 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The eventfs directory is dynamically created via the meta data supplied by
-the existing trace events. All files and directories in eventfs has a
-parent. Do not allow NULL to be passed into eventfs_start_creating() as
-the parent because that should never happen. Warn if it does.
+If a getdents() is called on the tracefs directory but does not get all
+the files, it can leave a "cursor" dentry in the d_subdirs list of tracefs
+dentry. This cursor dentry does not have a d_inode for it. Before
+referencing tracefs_inode from the dentry, the d_inode must first be
+checked if it has content. If not, then it's not a tracefs_inode and can
+be ignored.
 
-Link: https://lkml.kernel.org/r/20231121231112.693841807@goodmis.org
+The following caused a crash:
 
+ #define getdents64(fd, dirp, count) syscall(SYS_getdents64, fd, dirp, count)
+ #define BUF_SIZE 256
+ #define TDIR "/tmp/file0"
+
+ int main(void)
+ {
+	char buf[BUF_SIZE];
+	int fd;
+       	int n;
+
+       	mkdir(TDIR, 0777);
+	mount(NULL, TDIR, "tracefs", 0, NULL);
+       	fd = openat(AT_FDCWD, TDIR, O_RDONLY);
+       	n = getdents64(fd, buf, BUF_SIZE);
+       	ret = mount(NULL, TDIR, NULL, MS_NOSUID|MS_REMOUNT|MS_RELATIME|MS_LAZYTIME,
+		    "gid=1000");
+	return 0;
+ }
+
+That's because the 256 BUF_SIZE was not big enough to read all the
+dentries of the tracefs file system and it left a "cursor" dentry in the
+subdirs of the tracefs root inode. Then on remounting with "gid=1000",
+it would cause an iteration of all dentries which hit:
+
+	ti = get_tracefs(dentry->d_inode);
+	if (ti && (ti->flags & TRACEFS_EVENT_INODE))
+		eventfs_update_gid(dentry, gid);
+
+Which crashed because of the dereference of the cursor dentry which had a NULL
+d_inode.
+
+In the subdir loop of the dentry lookup of set_gid(), if a child has a
+NULL d_inode, simply skip it.
+
+Link: https://lore.kernel.org/all/20240102135637.3a21fb10@gandalf.local.home/
+Link: https://lore.kernel.org/linux-trace-kernel/20240102151249.05da244d@gandalf.local.home
+
+Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Fixes: 7e8358edf503e ("eventfs: Fix file and directory uid and gid ownership")
+Reported-by: "Ubisectech Sirius" <bugreport@ubisectech.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit fc4561226feaad5fcdcb55646c348d77b8ee69c5)
+(cherry picked from commit ad579864637af46447208254719943179b69d41a)
 ---
- fs/tracefs/inode.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ fs/tracefs/inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 34ffb2f8114e..b9ed8db4f6b9 100644
+index 7b0ba379d6d7..c27b0cfff70c 100644
 --- a/fs/tracefs/inode.c
 +++ b/fs/tracefs/inode.c
-@@ -509,20 +509,15 @@ struct dentry *eventfs_start_creating(const char *name, struct dentry *parent)
- 	struct dentry *dentry;
- 	int error;
+@@ -215,6 +215,10 @@ static void set_gid(struct dentry *parent, kgid_t gid)
+ 		struct dentry *dentry = list_entry(tmp, struct dentry, d_child);
+ 		next = tmp->next;
  
-+	/* Must always have a parent. */
-+	if (WARN_ON_ONCE(!parent))
-+		return ERR_PTR(-EINVAL);
++		/* Note, getdents() can add a cursor dentry with no inode */
++		if (!dentry->d_inode)
++			continue;
 +
- 	error = simple_pin_fs(&trace_fs_type, &tracefs_mount,
- 			      &tracefs_mount_count);
- 	if (error)
- 		return ERR_PTR(error);
+ 		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
  
--	/*
--	 * If the parent is not specified, we create it in the root.
--	 * We need the root dentry to do this, which is in the super
--	 * block. A pointer to that is in the struct vfsmount that we
--	 * have around.
--	 */
--	if (!parent)
--		parent = tracefs_mount->mnt_root;
--
- 	if (unlikely(IS_DEADDIR(parent->d_inode)))
- 		dentry = ERR_PTR(-ENOENT);
- 	else
+ 		change_gid(dentry, gid);
 -- 
 2.43.0
 
