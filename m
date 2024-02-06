@@ -1,80 +1,176 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D412C1C6A8
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 23:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BAD1CD1F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 23:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707261847; cv=none; b=utPH38L5Nq6rlVFO2ksJs+KSboQlAyHRjM9QBlecWj92wDMrcJBQBurd0u7GkuvGQHkimWsiNKb7/kdJMOE3FkokOvVPVV11Ww3Wmr246g1JALcSsCu2tt29fiDYp/p3m8clfhd3yn+stcC8FVqsxpd7Q9ZWNpZIgW3mYxqRbfs=
+	t=1707262179; cv=none; b=Sk+jB8hynxYt9Mv5U35H2QqYzPUeoL8is6o7mGVqCP4axg8PNURqdgtz4gu1UiVIDDolviWlGayZxJE4r0UPyE7KJ/53+8lRrZDF1DA5ZtYn8sdIs80nziA9KMd0k+1r3XWMmY7v//BjYSEqZl3/MhXgL3WvGH+f71LBQZ3O7tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707261847; c=relaxed/simple;
-	bh=avaOUcgWWADF6KLGwzoW9QsC+X9ueBhEDEJuX1SutnY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=YEdDfY44y7Q4IyTQZEGgDPwi1A96EXkWDYb6ms0Ho7mjZqZecQbDh9EXygjWXwVYXQ/v0qE7zz5EyAXis7LgvbPh4zoF8Un05FwKeK0F/Ef5ebJ1r9viQykQynjZOIXeDYpoHeOa6402hI42sk8EmJc475V1HUjPBeq+jYgD6qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-363c88eff5aso142125ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 15:24:05 -0800 (PST)
+	s=arc-20240116; t=1707262179; c=relaxed/simple;
+	bh=tqwLPes11lygGwOT+EnjRVwLn4nZH90wJ7US1Neh49A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNLuFDwBiZ5iWE6fw4WohKsJ3m+KTU62DsggTmV6JDanJEdqamYUP0ltJd3/EvrLmfHc83kIC13oK81D2Sgqet/FFg3wzS2h+JCDLThNkXGdxkgfu4fN7sgbV45jq7fETucjGE6Di+Lrop096fGRGoZ86vtcLTCMWWmOTxLE+oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WNl7ytcO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNl7ytcO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707262176;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kGuKJfCI04HqdOMRiRGUxI5yLSI9wasd/RUKvuSvTE8=;
+	b=WNl7ytcO5ya3UI3YYBV+l5KKHC9z45BgusDZeVTk9hn8d3jzuXYliKsBulIsgEwBDmErD+
+	YcJf7GVKvWG4DdWeIcOgMpA4czD9NyUGlsTO5dO+61AsBl7ePeBImC+EWL/189dstyePhU
+	KOR2b32DYC0jceO2q7soPIpyGBbrYeI=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-534-GQ-vvZ6HNdeJ-Hza6OBX7Q-1; Tue, 06 Feb 2024 18:29:35 -0500
+X-MC-Unique: GQ-vvZ6HNdeJ-Hza6OBX7Q-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-785947d659cso98697485a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 15:29:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707261845; x=1707866645;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dyU9aBXxURAl9A5KuV1JqmHm0E55rA4SNAlAUuaADxs=;
-        b=fDUzzl4iScZ/JnpohSkt/+lVIrbjv61lJwO9MdwFt1FTmWeJe8NJKsbTozJ2ONHOvj
-         v+qq3qFE7jpgnUDBuHkvDfTcJHPqFZFxaJAKE2mCqxvynIey4E9AdeMAKnqbZocKzc9y
-         y16qUt+68KHsxAtZJvsfcNCj5N/JZU/IrRpOI4I2T6Y602DVdOei6lnwV6G6CAoQ2WoJ
-         z21LDnE3matYZ+JVTIYMWDKpwXj5P1/jjnDm4qXfid0RB273yXe+o+vYDpMad70Ulit1
-         /VrWUYgPdg0Qngd0VFfUzy9TW2vuWBF5KjwCUD/Vxaeo/vDagPsAy3SMFKwFG7Cm5pB3
-         wAmw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5Vo3XrkzBX3rlvVJyMsxyGpZZGuSPEDDYlxxB0Zlu3Yv0WQBFJtlTJ5kZbdUsjx8i9XT2BcJxfVju9av32byFaqUngeG9riF5aq2C
-X-Gm-Message-State: AOJu0YxrZFNspUIcAKaFnBttJiDjFzrK4u4W6Z+9lWkTgm1ePHVvPanc
-	QRygD5AlofoDusiASXSBRcXvKj3CoVsc1uiffF/v+F7W5yQ1S+a3clXz/Y9uj9W3QV8Ag2gI6zf
-	qKY+Bo73mDUsfTVtkTkTwZe+2XfbtPhFkL0lZW4VS1YUKhl0hC3MUp3U=
-X-Google-Smtp-Source: AGHT+IGSXSHoJP49btDMUUbQR8POUN20RhhYPv9Heu/t1qcOYXiDcq7JQgRofse+fmN8ylccOMewqdmAQJFGKKPWHm8kVCz6GLrK
+        d=1e100.net; s=20230601; t=1707262175; x=1707866975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kGuKJfCI04HqdOMRiRGUxI5yLSI9wasd/RUKvuSvTE8=;
+        b=YRGmPYGqDytzu42jghWMCKqCEFPTfUvSKPdElZ+tzT3b7NtRW5fJ5druQGYqb1LaRx
+         lgJTpNNjJeEeAcsjcAIQ0efiEtGVTasR1cBTsAjSj5Nq90GenQw6mHtQts5wkC2Px0Cv
+         /qKnqGprfyfrx/PqSxSa9RWOS9xIcoDO4czdYJrzSz4y12GCglQ8NkG6SsooNJEM58Ea
+         BAk7nkig922ZRNJKzTWhiTP8/eT5OQBGUHsRDGH3ZklOXanE43VwjmtNC34lBRvkBP4D
+         Q/F+S1o8PyVypx3FFCGRduN0XppeFY3fe/7z8mKSr2mDfOhaOCG46jQHAPwccTPqZjW/
+         hxzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUm+X6Ig98r7cQdzNCNH0VxyJRfEKFnOj5VTBVZLqYoKXmvxnabMWbfyVkMqWTTu6fnGX5fi0WdVgeEhoAjXO8KH7K4aRtiT65tT4tt
+X-Gm-Message-State: AOJu0YxfdGdYw1LWr1KQrsiV4Bc1Pn9qFEjiCeDsidyO015aVGi+dSdh
+	7qmWtKfIxRIrihMa75N8sTdhCrvMKk5H2EyVy4kGcJBOy41FjDH9PrJNCMuMj5KDrQIA17v05Es
+	YULUHaLrIkM5jgjwskxi7r0e96IjGHSaS/CPqNwx1uDAqx7zWyFqIbcZgs0edOA==
+X-Received: by 2002:a05:620a:954:b0:783:6943:26d9 with SMTP id w20-20020a05620a095400b00783694326d9mr3538731qkw.72.1707262174748;
+        Tue, 06 Feb 2024 15:29:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGzxDP7R0yen2yo1PCk013ut+Q4BlMwWCQioC3aozlnsOonH4eG8xY5gzlWpshjgLrV00I1Ow==
+X-Received: by 2002:a05:620a:954:b0:783:6943:26d9 with SMTP id w20-20020a05620a095400b00783694326d9mr3538704qkw.72.1707262174447;
+        Tue, 06 Feb 2024 15:29:34 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWn7QpGTl7tuRLSbSHbLtGrThhE2QQZsdD9HxTI/kAsC/lMTLONidoD6JCzM4ob3KPWP151kUMo+jzEzuM+UC8wdgldgzf37xpaeBke52O5TawY5b38PM0mGH3xDU2b6JWiYFdqnSod3g7qxsgqhq9mU5ElK0F+N0/QSvBRu0NOauUzVM/YI3xwAe0GAk8g5IXS6k6mXVmta5VKDZWRNdPl5eNHryvxOfFf2RL3LsIi/GrN8CkwJuzj4tWlzKgeiWQdDiC1lrVe1V7mTd+f0FqAYx8ZMSNj8EYdfyvyfiGXRDJI+JBBIC7h6iKFM3Js0FdA67hhhvAOv3uCfc7PBPZyI/0U22PR6z/HqKjTFVc5vwuVl1L173g0YV21h1qV0wU0fscwC9//3ZVFw34sQ2ZnxH9Ptqtr827WwoHmAygiQTQSuYO/KILvWvDHQdZ1KnVE5LEXsM3tbyXiO5tTaoCjWk0OcDYa5CFSJoFIvBw07fIbb0D5Duw8edAqEPvNa3jGXCJpTwm9BE09RW7sXLnFQUS1NMj9iDeg9x1TjH1gy1LaV4P/20jN6MseX+boOnNIIoHhfBD4IVdNJjVg+7rRHT3ltUwFkaT97uvZfcLAu6mUtC+T9vRpIACKvkkNYGn/6gUyUfl1x6LlErTZZM82rT7yBYgU2Tfp/SvtgzwQN5E5P6f0cQfVqCiwmIG1ZwCLKlXJa62ZfAkqLb+LqoDHAi6Bhqd3APWP4thGNPOIOyAm3csqM9bL
+Received: from fedora ([2600:1700:1ff0:d0e0::37])
+        by smtp.gmail.com with ESMTPSA id d24-20020a05620a167800b00783e1590ebasm1357761qko.82.2024.02.06.15.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 15:29:34 -0800 (PST)
+Date: Tue, 6 Feb 2024 17:29:31 -0600
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Abhishek Chauhan <quic_abchauha@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Bhupesh Sharma <bhupesh.sharma@linaro.org>, Andy Gross <agross@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, Prasad Sodagudi <psodagud@quicinc.com>, 
+	Rob Herring <robh@kernel.org>, kernel@quicinc.com
+Subject: Re: [PATCH v1] TSO and TBS cannot co-exist. TBS requires special
+ descriptor to be allocated at bootup. Initialising Tx queues at probe to
+ support TSO and TBS can help in allocating those resources at bootup.
+Message-ID: <uihm7fwg5s6vqdmkz3poasuukdhuc4ztep7doqxnvhhsbfmfop@iikjtrb4jwoi>
+References: <20240206212734.1209920-1-quic_abchauha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d9e:b0:363:ca65:7d12 with SMTP id
- h30-20020a056e021d9e00b00363ca657d12mr207768ila.6.1707261845064; Tue, 06 Feb
- 2024 15:24:05 -0800 (PST)
-Date: Tue, 06 Feb 2024 15:24:05 -0800
-In-Reply-To: <0000000000009655270610aafce1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d053f20610bedf3b@google.com>
-Subject: Re: [syzbot] [netfilter?] WARNING: suspicious RCU usage in hash_netportnet6_destroy
-From: syzbot <syzbot+bcd44ebc3cd2db18f26c@syzkaller.appspotmail.com>
-To: 00107082@163.com, coreteam@netfilter.org, davem@davemloft.net, 
-	edumazet@google.com, fw@strlen.de, justinstitt@google.com, 
-	kadlec@netfilter.org, kuba@kernel.org, kuniyu@amazon.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, pabeni@redhat.com, pablo@netfilter.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206212734.1209920-1-quic_abchauha@quicinc.com>
 
-syzbot has bisected this issue to:
+Hey Abhishek,
 
-commit 97f7cf1cd80eeed3b7c808b7c12463295c751001
-Author: Jozsef Kadlecsik <kadlec@netfilter.org>
-Date:   Mon Jan 29 09:57:01 2024 +0000
+Thanks for the patch!
 
-    netfilter: ipset: fix performance regression in swap operation
+This is a new feature for netdev, so the Subject should have "net-next"
+in it: https://docs.kernel.org/process/maintainer-netdev.html#tl-dr
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15790a38180000
-start commit:   021533194476 Kconfig: Disable -Wstringop-overflow for GCC ..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=17790a38180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13790a38180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f204e0b6490f4419
-dashboard link: https://syzkaller.appspot.com/bug?extid=bcd44ebc3cd2db18f26c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16329057e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b8fe7be80000
+Another thing, the kernel is very particular about the commit messages.
+I thought checkpatch.pl would complain about the subject line, but
+surprisingly it didn't.
 
-Reported-by: syzbot+bcd44ebc3cd2db18f26c@syzkaller.appspotmail.com
-Fixes: 97f7cf1cd80e ("netfilter: ipset: fix performance regression in swap operation")
+Usually going with a "when in rome" approach is good (i.e. take a look
+at the git log). So here something like:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+    "net: stmmac: dwmac-qcom-ethqos: Enable TBS on all queues but 0"
+
+would be better. Its a short one line subject, that has the appropriate
+prefix, etc. You could then embed the information about TSO and TBS
+being exclusive, and maybe explain your reasoning on why this allocation
+of queues (TSO on 0, TBS on the rest) was done.. etc in the body. Maybe even
+pointing to the similar NXP related patch Esben posted recently would be
+smart since your motivation is the same:
+
+    commit 3b12ec8f618ebaccfe43ea4621a6f5fb586edef8
+    Author: Esben Haabendal <esben@geanix.com>
+    Date:   Fri Jan 26 10:10:42 2024 +0100
+
+        net: stmmac: dwmac-imx: set TSO/TBS TX queues default settings
+
+        TSO and TBS cannot coexist. For now we set i.MX Ethernet QOS controller to
+        use the first TX queue with TSO and the rest for TBS.
+
+        TX queues with TBS can support etf qdisc hw offload.
+
+        Signed-off-by: Esben Haabendal <esben@geanix.com>
+        Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
+        Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+        Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+
+i.e. something like (please make it your own):
+
+    In a similar vein to 3b12ec8f618e
+    ("net: stmmac: dwmac-imx: set TSO/TBS TX queues default settings"),
+    let's leave TSO enabled on queue 0 and enable TBS on all other queues.
+    This allows using the etf qdisc with hw offload on the TBS enabled
+    queues.
+
+On Tue, Feb 06, 2024 at 01:27:34PM -0800, Abhishek Chauhan wrote:
+> TX queues with TBS can support etf qdisc hw offload.
+> 
+> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> index 31631e3f89d0..d2f9b8f6c027 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> @@ -728,7 +728,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
+>  	struct stmmac_resources stmmac_res;
+>  	struct device *dev = &pdev->dev;
+>  	struct qcom_ethqos *ethqos;
+> -	int ret;
+> +	int ret, i;
+>  
+>  	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+>  	if (ret)
+> @@ -822,6 +822,10 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
+>  		plat_dat->serdes_powerdown  = qcom_ethqos_serdes_powerdown;
+>  	}
+>  
+> +	/*Enable TSO on queue0 and enable TBS on rest of the queues*/
+
+nitpicky: Please put spaces between the comments
+
+> +	for (i = 1; i < plat_dat->tx_queues_to_use; i++)
+> +		plat_dat->tx_queues_cfg[i].tbs_en = 1;
+> +
+>  	return devm_stmmac_pltfr_probe(pdev, plat_dat, &stmmac_res);
+>  }
+>  
+> -- 
+> 2.25.1
+> 
+> 
+
