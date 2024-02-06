@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A51113AE0
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 19:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B94413AD9
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 19:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707246036; cv=none; b=upT2KrnDEMqQV6xEFqdlJZltpNW+6RjitRPL+bWCFRpTSoX+GZVaWsmahCVIibLSZ+HrNQft5GkG6xtp9YSKcvR6rMfnIQOtVm/CGOlMpbCTjPcRXH3bCAWnJftwbytEyvUsBPtkoZQWp4KtS87+5/YjMUSKTLCMVbNX70qxx3A=
+	t=1707246036; cv=none; b=tt3BC/36Ft4pqWW9BAXR/qWs4VOUeeR7v+Z8y5qHlPWsxOLpgiLWtNGWySzhlx6cjEqGsw7vU7sl8qxfH7jNNTH3Cy9FcaayjntvZuNSCUM3cRBT9/q+9MNYdqDSaMD0o85Baz+PkAUtz6jxGUs9QajnoBCHT8nbJ9Ui+I8Kvfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707246036; c=relaxed/simple;
-	bh=icPewUcb2uBXgi4rZb0hGb6xeddJDSC0Pp7yA5HYgmQ=;
+	bh=iYscZKrjzq/VJEK3uGeFUSm3luENc+9pjzqH3KmL/aA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=a8Xtamo93yjaMuNXLA0H1L3kR73WWfJYD40SflhEeSrtjx+REmpfdZtXRxNwPjiaSr1SYsGg8JNByQu1WhzHdl86YlIFmIuahqgozT32Uf7q0o+teAH9KGoQTmc8lHTOYVRLBjVQGrtI0y3ILJHar+DW+0a+ffZghGmplciheLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DcaL1ltr; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type; b=Pa4A0I56F3SJ5xsxMK4/9mKxU6GcDZBnOGjSg85fOwCO78B69m/sf307mNPP261mJfne/Qvmz/m5yNojCzrJ4NQBNdhrvxsB8WuutPPhfesmXYV5rbV3LJZ8EoFK1sFhMunb60jOvA5ZKY8jJGOPFTwBs0VJzdviE4FdqcGYzRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hwCpZaN0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DcaL1ltr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwCpZaN0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707246029;
+	s=mimecast20190719; t=1707246028;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=QzKKL7qGPdseF9/lZMuCLlvRdCnkIvTUaMYeYBwSpPA=;
-	b=DcaL1ltr+NIIkSct8kOvbEnVhMC3TIS4fcAc1g0eY3GnZp9hMG7VXoZ0OPEBsEmMAvOvii
-	0jjmQA2ayVxOZOy+vGPpf1p0Y03fIeQgzeW08oGNAPHGwDfKcci+xGqXYtQlEVqUfLrd2p
-	fgckXG5TTTz7jby4YYrW/4aySpKvCeE=
+	 references:references; bh=k/0Yk/GxZoG+c8QW/AJpba3YgbiqoE294HEaLbyeDao=;
+	b=hwCpZaN07MckGbMME2oaHU1zf8z3mNp0oJYcSivLIlj3aVFfzOomQSNE8iMuKfW5daRyGj
+	CDjx4Hx/8f9g2B2fGhG+rvViV7bPQNJZYGf+UqG1SHgkD6kXH1ew2qKhLjQ1bQfP5DySrs
+	JOSTyl03wQExmTON7kjzD1O9RhrkTc4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-472-oKlgPp8xMzy1OkOBzLNl5Q-1; Tue, 06 Feb 2024 14:00:26 -0500
-X-MC-Unique: oKlgPp8xMzy1OkOBzLNl5Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-639-gj3_c91fPQq4lZqKhhmmNA-1; Tue, 06 Feb 2024 14:00:25 -0500
+X-MC-Unique: gj3_c91fPQq4lZqKhhmmNA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3FDE6101FA2C;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E512881C85;
 	Tue,  6 Feb 2024 19:00:25 +0000 (UTC)
 Received: from tpad.localdomain (unknown [10.96.133.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 09E071C060B2;
-	Tue,  6 Feb 2024 19:00:25 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F36EB2026D06;
+	Tue,  6 Feb 2024 19:00:24 +0000 (UTC)
 Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 3678E401E12BF; Tue,  6 Feb 2024 15:58:07 -0300 (-03)
-Message-ID: <20240206185710.008903181@redhat.com>
+	id 19650401E0C72; Tue,  6 Feb 2024 15:58:07 -0300 (-03)
+Message-ID: <20240206185709.849294306@redhat.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 15:49:18 -0300
+Date: Tue, 06 Feb 2024 15:49:12 -0300
 From: Marcelo Tosatti <mtosatti@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
@@ -53,7 +53,7 @@ Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [patch 07/12] mtrr_add_page/mtrr_del_page: check for block interference CPUs
+Subject: [patch 01/12] cpu isolation: basic block interference infrastructure
 References: <20240206184911.248214633@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -62,86 +62,165 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Check if any online CPU in the system is tagged as
-a block interference CPU, and if so return an error
-to mtrr_add_page/mtrr_del_page. 
+There are a number of codepaths in the kernel that interrupt
+code execution in remote CPUs. A subset of such codepaths are
+triggered from userspace and can therefore return errors.
 
-This can avoid interference to such CPUs (while allowing
-userspace to handle the failures).
+Introduce a cpumask named "block interference", writable from userspace.
+
+This cpumask (and associated helpers) can be used by code that executes
+code on remote CPUs to optionally return an error.
 
 Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
-
-Index: linux-isolation/arch/x86/kernel/cpu/mtrr/mtrr.c
+Index: linux-isolation/include/linux/sched/isolation.h
 ===================================================================
---- linux-isolation.orig/arch/x86/kernel/cpu/mtrr/mtrr.c
-+++ linux-isolation/arch/x86/kernel/cpu/mtrr/mtrr.c
-@@ -45,6 +45,7 @@
- #include <linux/smp.h>
- #include <linux/syscore_ops.h>
- #include <linux/rcupdate.h>
-+#include <linux/sched/isolation.h>
- 
- #include <asm/cacheinfo.h>
- #include <asm/cpufeature.h>
-@@ -226,7 +227,7 @@ int mtrr_add_page(unsigned long base, un
- 		  unsigned int type, bool increment)
- {
- 	unsigned long lbase, lsize;
--	int i, replace, error;
-+	int i, replace, error, idx;
- 	mtrr_type ltype;
- 
- 	if (!mtrr_enabled())
-@@ -261,6 +262,13 @@ int mtrr_add_page(unsigned long base, un
- 	error = -EINVAL;
- 	replace = -1;
- 
-+	idx = block_interf_srcu_read_lock();
-+
-+	if (cpumask_intersects(block_interf_cpumask, cpu_online_mask)) {
-+		block_interf_srcu_read_unlock(idx);
-+		return -EPERM;
-+	}
-+
- 	/* No CPU hotplug when we change MTRR entries */
- 	cpus_read_lock();
- 
-@@ -325,6 +333,7 @@ int mtrr_add_page(unsigned long base, un
-  out:
- 	mutex_unlock(&mtrr_mutex);
- 	cpus_read_unlock();
-+	block_interf_srcu_read_unlock(idx);
- 	return error;
+--- linux-isolation.orig/include/linux/sched/isolation.h
++++ linux-isolation/include/linux/sched/isolation.h
+@@ -72,4 +72,28 @@ static inline bool cpu_is_isolated(int c
+ 	       cpuset_cpu_is_isolated(cpu);
  }
  
-@@ -405,11 +414,17 @@ int mtrr_del_page(int reg, unsigned long
- 	mtrr_type ltype;
- 	unsigned long lbase, lsize;
- 	int error = -EINVAL;
-+	int idx;
- 
- 	if (!mtrr_enabled())
- 		return -ENODEV;
- 
- 	max = num_var_ranges;
-+	idx = block_interf_srcu_read_lock();
-+	if (cpumask_intersects(block_interf_cpumask, cpu_online_mask)) {
-+		block_interf_srcu_read_unlock(idx);
-+		return -EPERM;
-+	}
- 	/* No CPU hotplug when we change MTRR entries */
- 	cpus_read_lock();
- 	mutex_lock(&mtrr_mutex);
-@@ -446,6 +461,7 @@ int mtrr_del_page(int reg, unsigned long
-  out:
- 	mutex_unlock(&mtrr_mutex);
- 	cpus_read_unlock();
-+	block_interf_srcu_read_unlock(idx);
- 	return error;
++#ifdef CONFIG_CPU_ISOLATION
++extern cpumask_var_t block_interf_cpumask;
++extern bool block_interf_cpumask_active;
++
++int block_interf_srcu_read_lock(void);
++void block_interf_srcu_read_unlock(int idx);
++
++void block_interf_assert_held(void);
++
++#else
++int block_interf_srcu_read_lock(void) { return 0; }
++void block_interf_srcu_read_unlock(int idx) { }
++void block_interf_assert_held(void) { }
++#endif
++
++static inline bool block_interf_cpu(int cpu)
++{
++#ifdef CONFIG_CPU_ISOLATION
++	if (block_interf_cpumask_active)
++		return cpumask_test_cpu(cpu, block_interf_cpumask);
++#endif
++	return false;
++}
++
+ #endif /* _LINUX_SCHED_ISOLATION_H */
+Index: linux-isolation/kernel/sched/isolation.c
+===================================================================
+--- linux-isolation.orig/kernel/sched/isolation.c
++++ linux-isolation/kernel/sched/isolation.c
+@@ -239,3 +239,109 @@ static int __init housekeeping_isolcpus_
+ 	return housekeeping_setup(str, flags);
  }
- 
+ __setup("isolcpus=", housekeeping_isolcpus_setup);
++
++struct srcu_struct block_interf_srcu;
++EXPORT_SYMBOL_GPL(block_interf_srcu);
++
++cpumask_var_t block_interf_cpumask;
++EXPORT_SYMBOL_GPL(block_interf_cpumask);
++
++bool block_interf_cpumask_active;
++EXPORT_SYMBOL_GPL(block_interf_cpumask_active);
++
++int block_interf_srcu_read_lock(void)
++{
++	return srcu_read_lock(&block_interf_srcu);
++}
++EXPORT_SYMBOL(block_interf_srcu_read_lock);
++
++void block_interf_srcu_read_unlock(int idx)
++{
++	srcu_read_unlock(&block_interf_srcu, idx);
++}
++EXPORT_SYMBOL(block_interf_srcu_read_unlock);
++
++void block_interf_assert_held(void)
++{
++	WARN_ON_ONCE(!srcu_read_lock_held(&block_interf_srcu));
++}
++EXPORT_SYMBOL(block_interf_assert_held);
++
++static ssize_t
++block_interf_cpumask_read(struct file *filp, char __user *ubuf,
++		     size_t count, loff_t *ppos)
++{
++	char *mask_str;
++	int len;
++
++	len = snprintf(NULL, 0, "%*pb\n",
++		       cpumask_pr_args(block_interf_cpumask)) + 1;
++	mask_str = kmalloc(len, GFP_KERNEL);
++	if (!mask_str)
++		return -ENOMEM;
++
++	len = snprintf(mask_str, len, "%*pb\n",
++		       cpumask_pr_args(block_interf_cpumask));
++	if (len >= count) {
++		count = -EINVAL;
++		goto out_err;
++	}
++	count = simple_read_from_buffer(ubuf, count, ppos, mask_str, len);
++
++out_err:
++	kfree(mask_str);
++
++	return count;
++}
++
++static ssize_t
++block_interf_cpumask_write(struct file *filp, const char __user *ubuf,
++			   size_t count, loff_t *ppos)
++{
++	cpumask_var_t block_interf_cpumask_new;
++	int err;
++
++	if (!zalloc_cpumask_var(&block_interf_cpumask_new, GFP_KERNEL))
++		return -ENOMEM;
++
++	err = cpumask_parse_user(ubuf, count, block_interf_cpumask_new);
++	if (err)
++		goto err_free;
++
++	cpumask_copy(block_interf_cpumask, block_interf_cpumask_new);
++	synchronize_srcu(&block_interf_srcu);
++	free_cpumask_var(block_interf_cpumask_new);
++
++	return count;
++
++err_free:
++	free_cpumask_var(block_interf_cpumask_new);
++
++	return err;
++}
++
++static const struct file_operations block_interf_cpumask_fops = {
++	.read		= block_interf_cpumask_read,
++	.write		= block_interf_cpumask_write,
++};
++
++static int __init block_interf_cpumask_init(void)
++{
++	int ret;
++
++	ret = init_srcu_struct(&block_interf_srcu);
++	if (ret)
++		return ret;
++
++	if (!zalloc_cpumask_var(&block_interf_cpumask, GFP_KERNEL))
++		return -ENOMEM;
++
++	debugfs_create_file_unsafe("block_interf_cpumask", 0644, NULL, NULL,
++				   &block_interf_cpumask_fops);
++
++	block_interf_cpumask_active = true;
++	return 0;
++}
++
++late_initcall(block_interf_cpumask_init);
++
 
 
