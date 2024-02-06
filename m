@@ -1,130 +1,161 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FC015D1;
-	Tue,  6 Feb 2024 16:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107BCC133
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 16:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707237304; cv=none; b=tiWWRO4DZvBQRlZGZmEndOKlyRt/LJpoOa+KvncCt0moPyUNYNSjpojfgz4noIFcHxK9ad7bZK3BDKX7n5kzt6xYeMTCnXUL+RQkw3O509defBnRSy440z0CErzonjBMKaP6AUogRTd9UwVebgKr9PVZoyPn2Czjuot7PK3FgNE=
+	t=1707237309; cv=none; b=PvD6KrOAYWcvn/02e3KdKL1F4u+/WRAhFRAKkrD4nMH1StPc+WLUV3bEm0S26wstOyCzCzQw7rEt+eiaEAW4kUZRUWEO4sitxAriu14fGGZ2uYl6TYRzHkUpxKBZgsvgu4vF+hFzZFbtuPTmQYRDkj76NIqvCCxPDA1POSzjVfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707237304; c=relaxed/simple;
-	bh=xeB57moN2ck9rUx+Ka2oPpkM6UMOj51QtdPLL4OQPnI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GUVd9GFwDKvxCSkSlYNUrSIz+0wuX/4OV91sFBjfY4FcbsdUEdgBnQ9LwLcepRMS4KEWLjp7EebCConocxqqPYfAKObc8qIYV3IqLLvOYlZQBKoFc3Z1OBdBdn2r8odJdn6IHdVnQYvHfxTu+1JDv1oNosLHbDPTGrvfg+f+MY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U0YTxoJQ; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707237309; c=relaxed/simple;
+	bh=I1MfE6AhaDeVgzj4aA9PyyPGYZWM6AIX3a3/cMVgTaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nmLofkN+9z3FHeXdeTKH0IDxYvhMuHcd5A8AIh+gmFIo6SoK5HoPovlAPu38FbgZvWpuvmuZhEJdHabQvjRswBJYCTMir3FlznDXBDc6pNHSE//kU+4PpC6hlMCevwQYeWvl3i7LC+AfumOSLuTz5Tyn9AvBldZ/kAe4Wy/f32Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EeRA6zSb; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0YTxoJQ"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so4792211a12.1;
-        Tue, 06 Feb 2024 08:35:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EeRA6zSb"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d98fc5ebceso16242935ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 08:35:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707237302; x=1707842102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SrnMHxcXOIjSaTL3B2HtdyCEmoJwBUba5veBY3jO5xo=;
-        b=U0YTxoJQz3blKuGJK3i4pJlZNch+CaND35cld73GzbpYUpKHLvweBBN/KsgfsY1hNt
-         75CAwyz9wM7eNIgAYzguJVJFW9oBNANyCmg3Y1TnUgZx/8u/ZHsiKeoCalt+j1eop6WU
-         WRI1bKU2QO/NJ5ZU0DNb1dmfgIb9LBO7gT+QMcCJw8e1Sqe3biK9O+r/o+xwg8OhbMET
-         cB5cNvi85JsYb07yJBLvbipJ8mxYL1PsAAMTn35fvnFb6IluublML1DX7Yroaa8biQWT
-         UOzJFU+PMlZqJV4JuUjW6mQKjkenxGkkQDVtrL9UeZfMzVP/b/+qyn0CD+XxJIs+t7y7
-         CvZg==
+        d=chromium.org; s=google; t=1707237307; x=1707842107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l9k8qmh5FtuqJT0VlM3e5bdRxi2TqKIV+Oi2Qsz4LGI=;
+        b=EeRA6zSbxkQuNXdyLY3C5+++uJrEXJzDiD2Hs/eQ3woDOTwVKsUYtmr1uQ+jPoV9TI
+         RRpQNkocwFMaxUBrCzDU8bvsMdnhqmPEe8qu8hbWjtEWwk9J9BiwQ967+opu/L9PMTsD
+         6odQiI2HQtfsqdMilID04vqiQoC98SYtAbbCM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707237302; x=1707842102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SrnMHxcXOIjSaTL3B2HtdyCEmoJwBUba5veBY3jO5xo=;
-        b=ic3wVspvjU4PfPz3sHiUHMnKwKWnpwrQFit1sFOg1gytseOLzKjPbSorecdkSIg2Uh
-         l22XaGUmow+yd5wJDE3gV0M5BegNWBOWA5dtGsSA7JrMLs9kGwWeoU2Wy6nZLMS4J3qm
-         pUhwIwZgoZLFImVFXPTiBUewZc7iqc46ivq9d6IYh3sJUmms7bydn98yxJqah1try4Ma
-         3HEDJZO8KU7jbOU3J9X5yZ8gwJ1/r5aVTCaysKV3Cdlp4hh1h0z602GXAPwV/lh/e6vP
-         KGTjRFovm45n6suhJAaNDOhDOxLoKEpESC/T12TX+ndgmhlYU/UMKtBaiPdcUam6Jrul
-         Q3Nw==
-X-Gm-Message-State: AOJu0Yy7VnI84Ioy5yhS0LeFlf8HRMzMWwWvLmIYJSv30LkcWjG06f0q
-	KPIfa1qmm2XjxUyXOizSarwN0IYFGdzSo+euEYorwIGUeBlE0i4URyXaCHAe066bbuK/F/bjeSz
-	Le0fKEl7GG7Lspg83CdCpTZlocg==
-X-Google-Smtp-Source: AGHT+IEMKxaH+2qvq1R/fkW7tWR6Mi2syjsk1OUdXAsGlQ2WzoPOQN7loOSd+vQshjuyL9NJvS0jXTkk3roThkNqvNs=
-X-Received: by 2002:a05:6a20:93a5:b0:19e:9a58:fb2a with SMTP id
- x37-20020a056a2093a500b0019e9a58fb2amr2459034pzh.15.1707237301975; Tue, 06
- Feb 2024 08:35:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707237307; x=1707842107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l9k8qmh5FtuqJT0VlM3e5bdRxi2TqKIV+Oi2Qsz4LGI=;
+        b=vfRSmOm61nwDjzrPXPozBMuGj37grgbsnUyXaHUDfnRePIiFxjkbB25ket/ARX2gbT
+         sa9iOwFRnQQv3rrK/FmNGmGZr1CLxffgUwFEiVZlYmhEandS6Ki7KqsZ/uKLKpX9Sj+p
+         ZVq9KFzyly1ZKPhofOgV3IvBY8Niro2ZQkuJbn1R9lHXNwjvX1gY0QZki6pfug5FDj7x
+         c1Ku+z5MeC78/jyrqaEtHpomPWzM8ACEjgk/cgZehkNzhdBdZfWlHATYb4jQvrC/76J5
+         t9uefm1vB6SoUTDnhjIVDS6UtwuEi3LQmozYflYkIYtCU35M1WJZbYlgifVTDTztyyjX
+         dLzA==
+X-Gm-Message-State: AOJu0YzQ31sgN8+DRHfN934/q2PG4LmF7rotPo/2/B/i80D5W1skpPjv
+	BqrQEHiY7O/Ssk/ZNPnQ9GvgX3Kns6bK9DqBR2V9a5ot1HJK7piFT/yCoC0/HA==
+X-Google-Smtp-Source: AGHT+IG8UBzgoFf0n/CYjiadrh9Keq0fKG2KclHIN6IbzHjapSkd7T5jS0c/GDpxVFGoQoKnhSVs/A==
+X-Received: by 2002:a17:902:7842:b0:1d9:c01a:dee6 with SMTP id e2-20020a170902784200b001d9c01adee6mr2028518pln.44.1707237307417;
+        Tue, 06 Feb 2024 08:35:07 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW5fumqxc1sH0MT/vwOXV2DI8bT3uU6YjbFErJAbqcnzXatDTQZA8UvmAQpn3MsO5TYa8t2ydZ5E7QAyfKaKjRBHmqs2qx9tGgj5OeJ6pRk9/CfUWTJ9wVbRwywVPp08C2Nz0lDEjiYP29tR+I7FErOnCh5DdrkGRO8T/i1YNI5HrjiZRCg6wzD3Zi1oJLZY4Xbp49ngh+pUWLvyE9zWQOZbhKlbTr+4+L1klJ74sj2y9Dwhvy2qgPQNFZbWyY/lFJrhXmB+MQd1JpFN2xgNuTGMHaHatWPrIeSTMNAGr02qkgjzZWaR3qIXHW59DlFoIV6jqLavP4FVl+QjkX9kzcjwWKyvD7M48MBHWCbOYvzH9jk7psJuuedBjanbpGG/hSC02PvBXGI2rlZfx8hsGFuVGz9ZcH5e+iJOzwWIx4zKflXlg==
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k196-20020a6284cd000000b006e02f222c2esm2224188pfd.30.2024.02.06.08.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 08:35:06 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Johannes Berg <johannes.berg@intel.com>,
+	zuoqilin <zuoqilin@yulong.com>,
+	Ruan Jinjie <ruanjinjie@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: mwifiex: Refactor 1-element array into flexible array in struct mwifiex_ie_types_chan_list_param_set
+Date: Tue,  6 Feb 2024 08:35:04 -0800
+Message-Id: <20240206163501.work.158-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205191828.998783-1-frut3k7@gmail.com> <fb9767e0-c5a8-448f-b3f7-e6f81ef008e6@linaro.org>
- <CAKEyCaAXqhzMbTQL8WhLze39cey_DuE-LYOrK+oitD=NiZMuTQ@mail.gmail.com> <7e2d927b-ce84-4939-8d0f-adfad2a3ef70@linaro.org>
-In-Reply-To: <7e2d927b-ce84-4939-8d0f-adfad2a3ef70@linaro.org>
-From: frut3k7 <frut3k7@gmail.com>
-Date: Tue, 6 Feb 2024 17:34:50 +0100
-Message-ID: <CAKEyCaBADYxbU3XkJYv3WkZpJZ93nvfg+Zg2bvaViHCg47=9zw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: trivial-devices: Add qca,spidev
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Naresh Solanki <Naresh.Solanki@9elements.com>, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, Peter Yin <peteryin.openbmc@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@amd.com>, 
-	Lakshmi Yadlapati <lakshmiy@us.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, Fabio Estevam <festevam@denx.de>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2956; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=I1MfE6AhaDeVgzj4aA9PyyPGYZWM6AIX3a3/cMVgTaw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwl+4Lx4aPOoiEcILogqM539VTMsu2tv0D/daM
+ eRXD6FTw+aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcJfuAAKCRCJcvTf3G3A
+ JolcD/4yGn/OpLY/UrZ49y0DuN14RPalUzJvqINjBVH38HNl0YSWy2Rfpj9047GXuyUUMFFLHHx
+ QfEAYxSwu8rRhq3w1YjGVVOEOv0/QAMDghDgUwT2q8SRD/XsU/WS3jgjBcz8XZnyv050u2m3Gr8
+ a+8E+X9y7Mzf7XSetpEbknoE+CeWCfyMc/6wWHYOCbzhXXW8EY0AyJe6JgqAPEAaUw+XehXUSLD
+ EwFdq3dC0zKmBCzLrXC+zbIJvlG7z/CQIbYTodjvcAFGNBXlrjC8S3kqB74Fu2E1JobMDuPgX9O
+ dFKHJ6bPPNKVueX/dovLXiM7ESte1OMN1s0U/pOQz9feafcPSg6E8aEulB54RMsMbTfcXxFgWiP
+ dnmVDjQ9Dpv3NkwUZlY1zYB3BEciX9O4PwhwObEcF8gmY4LLaXSI6HP/mrr6tf/jKZ5S/4ksfuM
+ c2oouHiKEXQunEXv3nloSvYIN6cOycT1uyO997pesTbC8Z7TwGLZVEmJo+rW1McKlPe23Y6V92b
+ tywErVOd+98zGQPNz2v+AjwObBw79yyikxe4DzMj//96A1EPgSOPtnZHWaHFsl6fKp2xTHm0A55
+ 3KU2wEnoVlVgcP2tcnWD42CrVBPR62sT9IISncwlDrZ2b4kwRx38I1zw1aObyIBYt0QgcPStKtG
+ M+Hd05+ LE24MRPQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 6, 2024 at 5:19=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 06/02/2024 17:11, frut3k7 wrote:
-> > On Tue, Feb 6, 2024 at 8:44=E2=80=AFAM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 05/02/2024 20:18, Pawe=C5=82 Owoc wrote:
-> >>> Add Qualcomm QCA4024 to trivial devices.
-> >>>
-> >>> Signed-off-by: Pawe=C5=82 Owoc <frut3k7@gmail.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b=
-/Documentation/devicetree/bindings/trivial-devices.yaml
-> >>> index 79dcd92c4a43..50efbdf2a735 100644
-> >>> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> >>> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> >>> @@ -309,6 +309,8 @@ properties:
-> >>>            - plx,pex8648
-> >>>              # Pulsedlight LIDAR range-finding sensor
-> >>>            - pulsedlight,lidar-lite-v2
-> >>> +            # Qualcomm QCA4024 Multi-mode Bluetooth and 802.15.4 SoC
-> >>> +          - qca,spidev
-> >>
-> >> There is no such hardware as spidev and you even mentioned it is calle=
-d
-> >> QCA4024, not spidev. Please don't use that name but a real name.
-> >>
-> > The compatibility will be changed to "qca4024" and a new patch version
-> > will be prepared.
->
-> That would be ok except:
->
-> >
-> >> Also, I have doubts that Bluetooth is a trivial device. Such devices
-> >> need supplies, have reset/powerdown GPIOs.
->
-> this is not resolved. Bluetooth chips are not trivial devices. This one
-> particular exposes several interfaces to the host, needs a clock and
-> power supply.
->
-Device is used over QUP4 SPI controller inside of IPQ8074:
-https://lore.kernel.org/all/20231123121324.1046164-1-robimarko@gmail.com/
-I'm not sure if these pin settings should be upstreamed as they are
-specific to this platform:
-https://github.com/openwrt/openwrt/pull/14051/files#diff-ed3fbf0226fbdc76c9=
-c160f2f2b9e988120df472480b9861abe7a46796558115R81-R111
+struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
+as a flexible array, so convert it into one so that it doesn't trip the
+array bounds sanitizer[1]. The code was already calculating sizes by not
+including the trailing single element, so no sizeof() change are needed.
 
-> Best regards,
-> Krzysztof
->
+Link: https://github.com/KSPP/linux/issues/51 [1]
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: zuoqilin <zuoqilin@yulong.com>
+Cc: Ruan Jinjie <ruanjinjie@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index a2ddac363b10..0326b121747c 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
+ 
+ 			/* Copy the current channel TLV to the command being
+ 			   prepared */
+-			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
++			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
+ 			       tmp_chan_list,
+-			       sizeof(chan_tlv_out->chan_scan_param));
++			       sizeof(*chan_tlv_out->chan_scan_param));
+ 
+ 			/* Increment the TLV header length by the size
+ 			   appended */
+ 			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
+-					       sizeof(
+-						chan_tlv_out->chan_scan_param));
++					       sizeof(*chan_tlv_out->chan_scan_param));
+ 
+ 			/*
+ 			 * The tlv buffer length is set to the number of bytes
+@@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
+ 		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
+ 		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
+ 		     chan_idx++) {
+-			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
++			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
+ 
+ 			/* Increment the TLV header length by size appended */
+ 			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
+-					       sizeof(
+-					       chan_list_tlv->chan_scan_param));
++					       sizeof(*chan_list_tlv->chan_scan_param));
+ 
+ 			temp_chan->chan_number =
+ 				bgscan_cfg_in->chan_list[chan_idx].chan_number;
+@@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
+ 							   chan_scan_param);
+ 		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
+ 				       chan_num *
+-			     sizeof(chan_list_tlv->chan_scan_param[0]));
++			     sizeof(*chan_list_tlv->chan_scan_param));
+ 	}
+ 
+ 	tlv_pos += (sizeof(chan_list_tlv->header)
+-- 
+2.34.1
+
