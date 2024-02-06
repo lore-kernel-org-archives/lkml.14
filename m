@@ -1,111 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F11A1BDE6
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A8FD52B;
+	Tue,  6 Feb 2024 17:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707241217; cv=none; b=F/xgr62nrKPodjlw7WsWbWmXekLkkkkN0ohGxwU5IPAb6CxQJe5GPPYqf3do7B1HSMUpyfxNI743VWt869KEP7RTSbacHFEXXatMHbOdwQ0JBlVxCsFsJDSh7uzH1Nt3cvkEZNTxV24O3CCxKpPK/h/gOxLZe/AaAg9mNIFU8Ek=
+	t=1707241294; cv=none; b=di0XamKQ4V5nDt580ciwfazzD3m5lFrj0Pg5tCR9JCDI7Dlqq9IZCWLfdpMwJ1eFgwHmNFwsRZSOttoiT4nHl/y828m0FiuSQi1kP5q1Auy5pJns3lhkLjnsDqLuRsu7rMrvR+nv9wxTnKmzGw2HXbAZfWgTf8qWt0QgtqHKmIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707241217; c=relaxed/simple;
-	bh=Pj/Lvr3RhnSeb3N65sWQi1MGfOlxf0VpQWQY8/5A14E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Thu0xPpHSCGqqH+GdGMR4/DdNGV50b+4FvUmNfD9eE+UH3PSfUwap5DL1IKNJw12mZddFLAamAt1IRvrdeW4gLgnghHjix9o5D5q4ImWbagQ0yt46bpLUBs1jks7nUH/28M2k21LeJ6vS4a7KxKvFAzARw7Pm9ggzo+Pnew4/UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hbBEgWvg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707241294; c=relaxed/simple;
+	bh=5Gy+tuV3cfqrHMBsMU3iVRWGOH7JO7iDYWB46agyCjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s9exam0baBzJkSN5DrPnK0iPZTdzU17p7tqicAZ3T2EgE1BOmTHQu73QzzhgkDgEW4F6LbHaEqHqPxz+yQ0uL0cil6G+Xm/XJMJEMQznIbnFQ7exTbeenQVh382PGQlJxowKzjQkjn46O+FLtOllt6hvejpynQ2LCQhr9bheT0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDKvgOJM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hbBEgWvg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707241214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0DIKSVQAHIC80NxjvBA7Hf0Rcwayb35T2JV1uGe0svE=;
-	b=hbBEgWvgl0H+uf92GdKA2xkba7MWfqNY5KTmg1/IzCeDQuBvfU7wtIUNjPprRDbKbsRKKJ
-	4qXeaqfA5aB0cBdXXcn9rnCk09rJ4Ydy4IGiMZTLsRQ1ZgOCddq5Vz1mDrNjyB3HS3OZHk
-	xXhBCyUl6fjJUDzS3TPy3fUI65yrfrA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-21-YsH3nB9OOKS4VDnNf5PLTQ-1; Tue,
- 06 Feb 2024 12:40:10 -0500
-X-MC-Unique: YsH3nB9OOKS4VDnNf5PLTQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51ACC1C29EA3;
-	Tue,  6 Feb 2024 17:40:09 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 241C62026D06;
-	Tue,  6 Feb 2024 17:40:05 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	x86@kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Feng Tang <feng.tang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Hildenbrand <david@redhat.com>,
-	"ndesaulniers@google.com" <ndesaulniers@google.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Subject: [PATCH v2 5/5] x86/tsc: Make __use_tsc __ro_after_init
-Date: Tue,  6 Feb 2024 18:39:11 +0100
-Message-ID: <20240206173911.4131670-6-vschneid@redhat.com>
-In-Reply-To: <20240206173911.4131670-1-vschneid@redhat.com>
-References: <20240206173911.4131670-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDKvgOJM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B27C433C7;
+	Tue,  6 Feb 2024 17:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707241294;
+	bh=5Gy+tuV3cfqrHMBsMU3iVRWGOH7JO7iDYWB46agyCjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IDKvgOJMUtHhIQorsPE/w7pjsfJBicF+amIeobEhIepdEQgzyA4z6bsFb23n/73P1
+	 aBr0rwOQ+Gee7l36LfkxCvPiK2fBbq3mHNXM/SuImZO9N9rstXrv3OY1wKVW6fJ5vV
+	 I8dXrT566JmuiPkp8X8ZRtUUhJEqOU7mjB16gNgo+HGbftiZJsC0M+/OQJ7xtOfgOE
+	 hJjJJhQXnqXTG41DOORWCNyi+QTkoAMsg3QCEJRqGfkqXQ0vf2JihN7VCohWo5dx7a
+	 mJJBQgHbqMDsQ4Te2VLq16CtLyK3dn3sdxHnBqozap82s1YP4xxXWHO6re3lh+4Fxb
+	 4Qnup/Zi/SAjw==
+Date: Tue, 6 Feb 2024 17:41:30 +0000
+From: Simon Horman <horms@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: ethernet: remove duplicated CONFIG_SUNGEM_PHY entry
+Message-ID: <20240206174130.GF1104779@kernel.org>
+References: <20240204123151.55005-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240204123151.55005-1-masahiroy@kernel.org>
 
-__use_tsc is only ever enabled in __init tsc_enable_sched_clock(), so mark
-it as __ro_after_init.
+On Sun, Feb 04, 2024 at 09:31:51PM +0900, Masahiro Yamada wrote:
+> Both drivers/net/Kconfig and drivers/net/ethernet/Kconfig contain the
+> same config entry:
+> 
+>   config SUNGEM_PHY
+>           tristate
+> 
+> Commit f860b0522f65 ("drivers/net: Kconfig and Makefile cleanup") moved
+> SUNGEM_PHY from drivers/net/Kconfig to drivers/net/ethernet/Kconfig.
+> 
+> Shortly after it was applied, commit 19e2f6fe9601 ("net: Fix sungem_phy
+> sharing.") added the second one to drivers/net/Kconfig.
+> 
+> I kept the one in drivers/net/Kconfig because this CONFIG option controls
+> the compilation of drivers/net/sungem_phy.c.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- arch/x86/kernel/tsc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks Yamada-san,
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 15f97c0abc9d0..f19b42ea40573 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -44,7 +44,7 @@ EXPORT_SYMBOL(tsc_khz);
- static int __read_mostly tsc_unstable;
- static unsigned int __initdata tsc_early_khz;
- 
--static DEFINE_STATIC_KEY_FALSE(__use_tsc);
-+static DEFINE_STATIC_KEY_FALSE_RO(__use_tsc);
- 
- int tsc_clocksource_reliable;
- 
--- 
-2.43.0
+This looks good to me as-is,
+but I guess a follow-up question is if sungem_phy.c
+should move to drivers/net/phy.
 
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+> ---
+> 
+>  drivers/net/ethernet/Kconfig | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
+> index 5a274b99f299..6a19b5393ed1 100644
+> --- a/drivers/net/ethernet/Kconfig
+> +++ b/drivers/net/ethernet/Kconfig
+> @@ -15,9 +15,6 @@ if ETHERNET
+>  config MDIO
+>  	tristate
+>  
+> -config SUNGEM_PHY
+> -	tristate
+> -
+>  source "drivers/net/ethernet/3com/Kconfig"
+>  source "drivers/net/ethernet/actions/Kconfig"
+>  source "drivers/net/ethernet/adaptec/Kconfig"
+> -- 
+> 2.40.1
+> 
+> 
