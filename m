@@ -1,137 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B9E179BE
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A391AD51A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 17:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707240982; cv=none; b=QtOmQrUgl3rH/W4cCeVT43koLu1mtvnfJcP0MuUH5qZYzKGUjZS7Uyy+F2jFdhg15VWQj9BOxxiVDA7gXXBmvNdeHNGczMHvH3xQjjkGhGm4yuFl3Xcg8l1BV9YfJrX3/dZhrLbYo8C4Z2/j95F+P0VWjiE/8ZCcG94k1yrNTqw=
+	t=1707241057; cv=none; b=LwDvy86MzOr2FcgL6xHIaJdnce+ni05D/tHTJEp/PQgYG3/s2Txbws0zknQAFzlSK0OHeODeBHeSqB7keqvQ8pBSZlGBL9uCPFMDp6ahSVKJAVZAVTD3Du7EBOEzpuC4y6LVSyg3MCRD6B9uenHUhT+s1H5P7XUsA9jaa9V+Cpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707240982; c=relaxed/simple;
-	bh=EgGDBbZ8+lAAJFJm66AGG91meRlr6iHc9QtL3E559gU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OUhxcLHDdtb1ZI9bTVSv+Z67MX8NBCO2NkLxXgHpLj7+7CZYZCXOJ+GoX4x2K91bn5Unxd933WFZBImiiVYAjTenIhAfQwxGW4DKVZBEFNjRrPws3+cJDCvUFyZTwoJokT0CpvNx0h4uxH+LiTSoj0LuCg8HlkT7dTuF0ubr2Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L0Z0NEg4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707241057; c=relaxed/simple;
+	bh=0ulRdwAfllDKwrIAOGdtjw0COs1yGyS4qGnSte2NhnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q+SSQyxIpHww1D8xMgv7yVOP7m3z8gn98++CobTFihevAKLAEwvnLaWi6CsnHWi/52tiF9DnLyYq4P/2RfCTIvWxqcp8S3o996y3nV1zLl2yeENJHdHXp+lBCffvBaKmjuCODYe3xc5M9blDV86gLfow13stpKTX6HXXdwx1Gvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnUFg8FJ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L0Z0NEg4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707240979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZENp1XRarjD9Kp7owUS6q4NwHgfnf3F2xZAxgOWi78s=;
-	b=L0Z0NEg47ehNMa5KYzqzpbIDHk7Rxzg5Y/J63ZFr0HLR+swQix5zhfPJc+JnL9Utron8ct
-	pySBNPYrF8IzLZw/jervWUtjZOI3mOStfniJTxcdGuO02CYybj+xwkkXgAmeFxbNPwHCnG
-	0xmk1On5VYtMLgGmqSGZLn9MGxAtqIk=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-653-jUfp8L9_PTORD2Fww8LF7g-1; Tue, 06 Feb 2024 12:36:17 -0500
-X-MC-Unique: jUfp8L9_PTORD2Fww8LF7g-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-5f38d676cecso9178877b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 09:36:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnUFg8FJ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d93ddd76adso8846455ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 09:37:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707241055; x=1707845855; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=MzKq1zG/Z0d8fnc6YSb0Nhx3iwiy0dFsmrhm9qNiyfk=;
+        b=EnUFg8FJjCR5XQSgPA+VXG3jnakUTHjpxhwGo1ysKy5YgaxRmzWa0MfNXTS00LULKT
+         sPgj9zmqn7YNsZ68BEL3iFG4PmQUiEBDjksJfGyKxs/N0U4DwvTN86FnW5OHaKZ7k+Th
+         HlccpxGp48knt1ZvV7VbxKmWqrVb0eoX7umPA2WzQ632uu5vOXd9ecH/7s0jpPWAAo1+
+         Hp/i3OCnbIoDe7Hedq9CvPvX60RkVFuEfzllwH/ZVy5xk5PCYzTgSpr4x+2kwwL6Qi2g
+         4Pb2BBTB5vuhapq8seW5hfQVOMz9jA4rw/xLm5yqeVbhJJwv+JddHpZwoCCQ5Z1QU7aI
+         Lb/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707240977; x=1707845777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZENp1XRarjD9Kp7owUS6q4NwHgfnf3F2xZAxgOWi78s=;
-        b=uJ/wUNVkfJGy8/CdRqFE7hC2AUyt+zSt81vPMlvCSwmDgWB6uqJHe9jZcHrmCEgCFP
-         L2G303OAD1WSCa9tOdyXerIkDL0RVoGQJnEmp4AI9aj8elrULhHo3YOrCOfrlQvZIIRb
-         7ZctxuEzhJ93HdwFoZ5L1VOo8EebmavRGWoR/AAhUF+smBaSrUIJUyxrJ3XL+Mds41MT
-         NB9vrnCjytk1f3JsR1SLdiCrZ+VKIsFo1ip9oaY8rat6Fu2+dQBoeNkh+PRZH65f+5+L
-         kZPTNQilX2L5DkzKcyOsriq3gnGSuLRZ/+F8peodVpEkDlMOzku9Cjc3f8+50RlQar+U
-         PT5A==
-X-Gm-Message-State: AOJu0YwSRWYKIvFAVI1po02k7Jq+uXjOnnh4eYNVSnoaw0IxNEqFTn1i
-	dTZw7pytZZqfvhxaFa3MC6nfIBGxxMJfUxJpQC4IXfj7TbUGRCnVpLU+6N3Hqn7EWcHUSepzmMa
-	CMRGiNqJjGr8Jh3w0svl35RGKfOYpaeq6FtHcz7BH0u5Snx/O4K7OF6vtXb4hPDHq1Z4LxbYHdr
-	HpKVWhlvO4D7xi1FYcoGnfoYeilePGJXRaddCX
-X-Received: by 2002:a81:4ccb:0:b0:604:1e7:ed34 with SMTP id z194-20020a814ccb000000b0060401e7ed34mr1902292ywa.8.1707240976839;
-        Tue, 06 Feb 2024 09:36:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxsoLYqSSMbCU77v90TG/WTQz3YG6Xm36n5Tc/zJRrQZ98F/A62FMnndvspiR9Sa5128FVBYVrznfqUq5khHM=
-X-Received: by 2002:a81:4ccb:0:b0:604:1e7:ed34 with SMTP id
- z194-20020a814ccb000000b0060401e7ed34mr1902267ywa.8.1707240976523; Tue, 06
- Feb 2024 09:36:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707241055; x=1707845855;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MzKq1zG/Z0d8fnc6YSb0Nhx3iwiy0dFsmrhm9qNiyfk=;
+        b=a67f3ISx5bWsPp9Vw3MzwSLGUrESsn6GJMX576Ke1qekjpqXF6qv5wJcP2adLvoEKm
+         q/mKhvc6iyN+UFVG1NDTDpB5og9/EKjAoTX73sEE0OQefOVQeihN5Wag7wH5Cm1RMvsG
+         5y4tdMqLdFzdHAInceqN5o4JXI0q7gpX/sYxM5Hbc4PJ4hZ/PFoAg4y9alIa54cfJCpn
+         ZqQKjP9NrCO/wI8TgLHDVJDXwS39m3raXDYlc2hdtgXeWSjO7vSSBSri1EtNYXXVWRtk
+         rmZnpr1tRyrk6YIkt5OcrT5q9ojcyV6CJMF5IRuijFoJpX3VyV1OY5GgBHH9IgKrSkPm
+         xMXQ==
+X-Gm-Message-State: AOJu0YzcNHz1TREz90Eh7z/F9oYODMLFdcgILwgWPqfokyjS7cXUdVgW
+	dYvP19GV7S24HRjz8pIH37BaErltXThMAp9Y2Z0Fm33s0K8c7kqS
+X-Google-Smtp-Source: AGHT+IGia33hKROOZE1YgOZ008vsCXov/AuKLvpV6J8BQVODf2QW5M4fq2WVOEqzCgTurPVy9xfI5w==
+X-Received: by 2002:a17:90a:68c5:b0:296:d85:d3d2 with SMTP id q5-20020a17090a68c500b002960d85d3d2mr210322pjj.34.1707241054641;
+        Tue, 06 Feb 2024 09:37:34 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWYlIiJBJmPFi7ncmj8remTEffZ3y5WCyYq3Zv83+mHlJ0jLFLwUpCCJNBOJt1nfLfZi0/UEWIheNqi0BHA4+nlDh1TSZdjEOlQnjKPC8uw2kda4PyCTI/tVwkxOoIbVAO9DxdABDlOaN6pLY2nHy83Vg/CefSmjORaGfw=
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id bk7-20020a17090b080700b00296b2f99946sm1949517pjb.30.2024.02.06.09.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Feb 2024 09:37:33 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <a93ca301-243a-4e75-afa5-fdf80b20eb8f@roeck-us.net>
+Date: Tue, 6 Feb 2024 09:37:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206145154.118044-1-sgarzare@redhat.com>
-In-Reply-To: <20240206145154.118044-1-sgarzare@redhat.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Tue, 6 Feb 2024 18:35:40 +0100
-Message-ID: <CAJaqyWc2GuTk4dKW98qPunKpOMVGZwWYZ4zpjp4KrGoAoqRwNw@mail.gmail.com>
-Subject: Re: [PATCH] vhost-vdpa: fail enabling virtqueue in certain conditions
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, Shannon Nelson <shannon.nelson@amd.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org, Kevin Wolf <kwolf@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] regmap: kunit: fix raw noinc write test wrapping
+Content-Language: en-US
+To: Ben Wolsieffer <ben.wolsieffer@hefring.com>, linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20240206151004.1636761-2-ben.wolsieffer@hefring.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240206151004.1636761-2-ben.wolsieffer@hefring.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 6, 2024 at 3:52=E2=80=AFPM Stefano Garzarella <sgarzare@redhat.=
-com> wrote:
->
-> If VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK is not negotiated, we expect
-> the driver to enable virtqueue before setting DRIVER_OK. If the driver
-> tries anyway, better to fail right away as soon as we get the ioctl.
-> Let's also update the documentation to make it clearer.
->
-> We had a problem in QEMU for not meeting this requirement, see
-> https://lore.kernel.org/qemu-devel/20240202132521.32714-1-kwolf@redhat.co=
-m/
->
-> Fixes: 9f09fd6171fe ("vdpa: accept VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK=
- backend feature")
-> Cc: eperezma@redhat.com
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+On 2/6/24 07:10, Ben Wolsieffer wrote:
+> The raw noinc write test places a known value in the register following
+> the noinc register to verify that it is not disturbed by the noinc
+> write. This test ensures this value is distinct by adding 100 to the
+> second element of the noinc write data.
+> 
+> The regmap registers are 16-bit, while the test value is stored in an
+> unsigned int. Therefore, adding 100 may cause the register to wrap while
+> the test value does not, causing the test to fail. This patch fixes this
+> by changing val_test and val_last from unsigned int to u16.
+> 
+> Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Closes: https://lore.kernel.org/linux-kernel/745d3a11-15bc-48b6-84c8-c8761c943bed@roeck-us.net/T/
 
-Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+I no longer see the problem with this patch applied.
 
-Thanks!
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-> ---
->  include/uapi/linux/vhost_types.h | 3 ++-
->  drivers/vhost/vdpa.c             | 4 ++++
->  2 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhost_=
-types.h
-> index d7656908f730..5df49b6021a7 100644
-> --- a/include/uapi/linux/vhost_types.h
-> +++ b/include/uapi/linux/vhost_types.h
-> @@ -182,7 +182,8 @@ struct vhost_vdpa_iova_range {
->  /* Device can be resumed */
->  #define VHOST_BACKEND_F_RESUME  0x5
->  /* Device supports the driver enabling virtqueues both before and after
-> - * DRIVER_OK
-> + * DRIVER_OK. If this feature is not negotiated, the virtqueues must be
-> + * enabled before setting DRIVER_OK.
->   */
->  #define VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK  0x6
->  /* Device may expose the virtqueue's descriptor area, driver area and
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index bc4a51e4638b..1fba305ba8c1 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -651,6 +651,10 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa=
- *v, unsigned int cmd,
->         case VHOST_VDPA_SET_VRING_ENABLE:
->                 if (copy_from_user(&s, argp, sizeof(s)))
->                         return -EFAULT;
-> +               if (!vhost_backend_has_feature(vq,
-> +                       VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK) &&
-> +                   (ops->get_status(vdpa) & VIRTIO_CONFIG_S_DRIVER_OK))
-> +                       return -EINVAL;
->                 ops->set_vq_ready(vdpa, idx, s.num);
->                 return 0;
->         case VHOST_VDPA_GET_VRING_GROUP:
-> --
-> 2.43.0
->
+Thanks,
+Guenter
 
