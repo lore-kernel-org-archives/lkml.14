@@ -1,107 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBC51EA7A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D0E127B7B;
+	Tue,  6 Feb 2024 10:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707217015; cv=none; b=d/FKptAJH0AlR499vtISzuOv1Q5jaQloENMwGL8o/1EB8NWiSPOm2FeNtIHgfe8gHyYMn5e11mCoK1BauPDrVTihk3n9zAecCGSjBNab3Sn1UxRjNnxS5+FrSQNWGJePz+d0PMmfhf2NNjaD+kWW6d5nywvyfVqARjX50/+yG6I=
+	t=1707217021; cv=none; b=ifkWQrwL+VXzQXn9WuouPgoFJnHtpNtgSHfPw8Lg14Lw5xdK/ZCdx1AyL4VZEAv8O49Gzo8/EUsRNbWwOYCRmGLiO7IWIMfLjXKlDbANrJCNsmvdNokCbCHPTz13jU6X4T2OazfcyXlH/in75aCvfaVqeU+Tki4H8uLHUK90b4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707217015; c=relaxed/simple;
-	bh=8vOg9PtERGFIzxGfr1uQ777xA4qgfnvqvPqJZtaB7dA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QmdZhzsLjvKgMzOoLEV0H81XgMFK7pygtyGuaVPrWCPeRa7lsKHDYQlj+8uogkZXBxHy3fnGukExgii1MdjeSu3yiJX2U2XHkoyZtFVPSshbgcW5mNLvGJ88oBcQxRlJJ2RszcAlbKCCduXToxShNFabQcQZMioTwoY2C8l9E4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RVjKdDIs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707217021; c=relaxed/simple;
+	bh=3Lhq9mSmpgCBq52pk4XzYDiys11ugzbO0gtwPHiuULc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i0GtDiyHawgZcunJJGgGjwQhuWsNiPbeXiwlqwXVjrJiOnGwn1nxnhFr8cu4eoFUUov2D2ELAKtKkxbqJhNnQlZS/9IYCMt1lP+rah1+1NWOJyBuekc5llc6/d5VXmNOiVLj6lPgCgJqLIUvRNi74e91M1uRPVdAWvFKib3HNXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vXym/VY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RVjKdDIs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707217012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NOcDAAfRrdOruM3vQufk8xXSJsuXJBYipbiUl5Fyob4=;
-	b=RVjKdDIsSP0Q7OmBmNbtiO0JJ/ddL7gbF4tIuUVu58JvPlUy0SMNco+Y0PpWXFts19m9Jm
-	uV8E3oMqcWf5HKL0kqmnHwx+JCcpFgOC7Bvjn7EdKw4HGsBsQak7ek6dCCs/CbYhBrNUYk
-	SCVbIpIausJ+ok7Lk2phoncseslXF44=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-66-uPxI6AnQOc6Z9eg0kV6pog-1; Tue, 06 Feb 2024 05:56:51 -0500
-X-MC-Unique: uPxI6AnQOc6Z9eg0kV6pog-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-68c4f2aca5dso95047336d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:56:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707217011; x=1707821811;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NOcDAAfRrdOruM3vQufk8xXSJsuXJBYipbiUl5Fyob4=;
-        b=BEx+yXNE6grtFCWM9BFgth7dhXQep7Cp8GKXQufNyKCNSIjBb1l1nhqImed1s+vFEq
-         iDyzz1FlNu756EP4vpC5I25iViPHcNuoZQzOd5D4ebLNJLXKRuobCrldkE3O9LRP0h91
-         W9OS7Y4cnpxEQIDFXDnFAVlF5uMlzSoUdJ3kA4kFEmKiHvhKOJ1APy1aX+ed5MuDkU+K
-         jaieI072aZokNlz8D771RUk4jobdWzkTZYLoVyZgjt3rKi6JIDPKvHSSlu0MyBHKNmbP
-         Nea9WCgphuO4DPUfNuqgjEltfODXrIRSYOWTyIXv+GsoXSovlHNw0HauFQAfnOsUsKo5
-         jcVg==
-X-Gm-Message-State: AOJu0YzW7/JVz6jIHZpUvLdzn998fxDxihEc7OPWPE4FAB1TYJhgc66z
-	vqHnRDLso99zMOzx1Imyi0RZX9CBMlRAD0I0E5Y/SWHq227ebqE9x3yjGilBA2hEVBbWbVADUpe
-	vZFDlD+Q6wLzF4j+s55Uh3MjH3rFdoDsfg7tdLbM/nYBlHOqrd3xg8s9mIlHx
-X-Received: by 2002:a05:6214:21e9:b0:680:f8d2:c828 with SMTP id p9-20020a05621421e900b00680f8d2c828mr2323851qvj.16.1707217010851;
-        Tue, 06 Feb 2024 02:56:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGhff2DlHZd/ZEK5FY5fiFC/T9Pyc4sJSO0MZ/TglPCHuCL3o0cMWVg9QtToY7v6Z+KW8fOWg==
-X-Received: by 2002:a05:6214:21e9:b0:680:f8d2:c828 with SMTP id p9-20020a05621421e900b00680f8d2c828mr2323839qvj.16.1707217010625;
-        Tue, 06 Feb 2024 02:56:50 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUy6sn6pHYdmwklCBeIPLcmA1sdU6HtNEqv2vI89wRaRuOTRoeDVvkMZSTi8k4LvKuQ+uw3wya3VWjclc935+MWSLQ1FLMXeUPsNKCqJwqo0N6g9CaWIXEbpHIvFW4hY7hdrx/83/UaLEwREYUxlSfIj5OurBwqw55BcvAuQ+neLuoy4C+Z+fIT9uVzHZvhMc9Sz4UEcu6C+LqYKemieSEGBzAP8IaKN126K1tr1tdC4NdMTGdm8oh6aM6Phr+EB36wRQfo/rv0tJjtyfcAZEnIX73Z08xwdYPfFImmhKT+pjVQWpQmPMlEnwVxqnnVrD4ZhbO4AMKT0PFYi1Oki6vJ+bbj
-Received: from klayman.redhat.com (net-2-34-24-75.cust.vodafonedsl.it. [2.34.24.75])
-        by smtp.gmail.com with ESMTPSA id hf15-20020a0562140e8f00b0068c95b634d3sm909547qvb.11.2024.02.06.02.56.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 02:56:50 -0800 (PST)
-From: Marco Pagani <marpagan@redhat.com>
-To: Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Tull <atull@opensource.altera.com>
-Cc: Marco Pagani <marpagan@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-fpga@vger.kernel.org
-Subject: [RFC PATCH 0/1] fpga: bridge improve protection against low-level control module unloading
-Date: Tue,  6 Feb 2024 11:56:43 +0100
-Message-ID: <20240206105644.41185-1-marpagan@redhat.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vXym/VY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF61C433C7;
+	Tue,  6 Feb 2024 10:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707217020;
+	bh=3Lhq9mSmpgCBq52pk4XzYDiys11ugzbO0gtwPHiuULc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vXym/VY/EBHnj6gxYyEiMG/bZ4fM9VgXCQgX++/KO/wikCDxJOL3IWreWxMcR0ove
+	 AUDpMH4z5cK6FLXQY7tt/kEWlmbHbPWan21E2eUyrWIKG3eMj1EeU7Qijk0dMFOGRb
+	 0QS7aLaAnaE3RCY+KydKS/ZJ3Z1oGbZaxSVyR9tU=
+Date: Tue, 6 Feb 2024 10:56:58 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Joy Chakraborty <joychakr@google.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	linux-kernel@vger.kernel.org, manugautam@google.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] nvmem: rmem: Fix return value of rmem_read()
+Message-ID: <2024020637-handpick-pamphlet-bacb@gregkh>
+References: <20240206042408.224138-1-joychakr@google.com>
+ <2024020647-submarine-lucid-ea7b@gregkh>
+ <CAOSNQF3jk+85-P+NB-1w=nQwJr1BBO9OQuLbm6s8PiXrFMQdjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOSNQF3jk+85-P+NB-1w=nQwJr1BBO9OQuLbm6s8PiXrFMQdjg@mail.gmail.com>
 
-This RFC proposes a solution to keep protecting the fpga bridge against
-the unloading of the low-level control modules while addressing the
-limitations of the current implementation. Currently, the code assumes
-that the low-level module registers a driver for the parent device that
-is later used to take the module's refcount. This proposal removes this
-limitation by adding a module owner field to the fpga_bridge struct that
-can be set while registering the bridge.
+On Tue, Feb 06, 2024 at 04:01:02PM +0530, Joy Chakraborty wrote:
+> On Tue, Feb 6, 2024 at 3:00 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Feb 06, 2024 at 04:24:08AM +0000, Joy Chakraborty wrote:
+> > > reg_read() callback registered with nvmem core expects an integer error
+> > > as a return value but rmem_read() returns the number of bytes read, as a
+> > > result error checks in nvmem core fail even when they shouldn't.
+> > >
+> > > Return 0 on success where number of bytes read match the number of bytes
+> > > requested and a negative error -EINVAL on all other cases.
+> > >
+> > > Fixes: 5a3fa75a4d9c ("nvmem: Add driver to expose reserved memory as nvmem")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Joy Chakraborty <joychakr@google.com>
+> > > ---
+> > >  drivers/nvmem/rmem.c | 7 ++++++-
+> > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/nvmem/rmem.c b/drivers/nvmem/rmem.c
+> > > index 752d0bf4445e..a74dfa279ff4 100644
+> > > --- a/drivers/nvmem/rmem.c
+> > > +++ b/drivers/nvmem/rmem.c
+> > > @@ -46,7 +46,12 @@ static int rmem_read(void *context, unsigned int offset,
+> > >
+> > >       memunmap(addr);
+> > >
+> > > -     return count;
+> > > +     if (count != bytes) {
+> > > +             dev_err(priv->dev, "Failed read memory (%d)\n", count);
+> > > +             return -EINVAL;
+> >
+> > Why is a "short read" somehow illegal here?  What internal changes need
+> > to be made now that this has changed?
+> 
+> In my opinion "short read" should be illegal for cases where if the
+> nvmem core is unable to read the required size of data to fill up a
+> nvmem cell then data returned might have truncated value.
 
-The RFC patch is based on top of ("fpga: remove redundant checks for
-bridge ops").
+But that's kind of against what a read() call normally expects.
 
-https://lore.kernel.org/linux-fpga/20240201155713.82898-1-marpagan@redhat.com/
+> No internal changes should be made since the registered reg_read() is
+> called from  __nvmem_reg_read() which eventually passes on the error
+> code to nvmem_reg_read() whose return code is already checked and
+> passed to nvmem consumers.
+> Currently rmem driver is incorrectly passing a positive value for success.
 
-Marco Pagani (1):
-  fpga: bridge: improve protection against low-level control module
-    unloading
+So this is an internal api issue and not a general issue?  Unwinding the
+read callbacks here is hard.
 
- Documentation/driver-api/fpga/fpga-bridge.rst |  7 ++-
- drivers/fpga/fpga-bridge.c                    | 61 +++++++++++--------
- include/linux/fpga/fpga-bridge.h              | 10 ++-
- 3 files changed, 47 insertions(+), 31 deletions(-)
+Also, in looking at the code, how can this ever be a short read?  You
+are using memory_read_from_buffer() which unless the values passed into
+it are incorrect, will always return the expected read amount.
 
--- 
-2.43.0
+> > And what will userspace do with this error message in the kernel log?
+> 
+> User space currently is not seeing this error for nvmem device/eeprom
+> reads due to the following code at nvmem/core.c in
+> bin_attr_nvmem_read():
+> "
+>     rc = nvmem_reg_read(nvmem, pos, buf, count);
+> 
+>     if (rc)
+>         return rc;
+> 
+>     return count;
+> "
+> since it expects to return the number of bytes.
+> 
+> Userspace will see a false error with nvmem cell reads from
+> nvmem_cell_attr_read() in current code, which should be fixed on
+> returning 0 for success.
 
+So maybe fix this all up to allow the read to return the actual amount
+read?  That feels more "correct" to me.
+
+thanks,
+
+greg k-h
