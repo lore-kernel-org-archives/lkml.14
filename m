@@ -1,139 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359651429A;
-	Tue,  6 Feb 2024 18:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE81168DD;
+	Tue,  6 Feb 2024 18:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707245450; cv=none; b=FPr9YGMloOmCmQ6Kxme3F1m52Me3cCuziXbrDt/0Vcb0nW7Tt4omdUaCNEQQ0TLL2pN/eJ8eK/ggHSoPqxoI7db7CdMOm/sI9CTRP2gsbcN5K/HnH1GZTnZ0iC1GHeKqpxWpq9GcWD4ABl1DFCCBEk4GQBhFVqzZVe3jdZrGKSQ=
+	t=1707245459; cv=none; b=lpK6FBQmd3bkq81Jg2NgoE98nMVqv0KQ/NQQ2siSeV/P7xcY/+QwiJhnydnq9md1tBi8NzVkK08rAML2iQZ4dUg0sCtg6a65lrx5nmnY8+2L6+4bacDwcZJ9mez9mFAbg5KDXszQSt21DUaGbQyBZliw6kGNgN8kOs35w2/Gej0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707245450; c=relaxed/simple;
-	bh=CJTu1gcSgcqV+1ze9f2bKci6UuBLQcJSCQq4p57Llm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pDOJqKQzfYiR5rR1pQNwClafcZgk2AyDdCsY0waDQV924Ua6WIymt3JUFn8slHqXWOICtkCe3PgFeoYRMdSCSugATUgeHAvxyFNTNODBHWmqW6mR/GdPOla8fX6kkxv3xoB+tWFDm3mK/W+hSXKdJlRKA/9nx3gjbTKEKAh58I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4QsKIKj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707245459; c=relaxed/simple;
+	bh=Vr/Q4qfwvGJrydQHPnsIop8KV5TVqh0RZULrvzhraFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=n00oIm0g+rgAhn/o0eRyjw2dh32AtB1LgCRlep29WqJghDBn6F9CmQpH6oYKcvLBVWOX3OXRvby3ZqYbXk4bfiXkxduJqZzwW54CeSnU+UT9kDgdsfFPud0PdUfpdBeK2DZTIV5GIvxtArz/Q3oAXjCJnOGBmI6uK+oJny05BEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xqh2WmC1; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4QsKIKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A905C433C7;
-	Tue,  6 Feb 2024 18:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707245449;
-	bh=CJTu1gcSgcqV+1ze9f2bKci6UuBLQcJSCQq4p57Llm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a4QsKIKjshNuYvgVC/ZqgLol9oeVTbNZsur+CJXgKw+Zp+fo3eBiFpBelQGE5gwmn
-	 EFVlyfrWn3VOt99VG6V4o4Sco+7lvyOuRHL/LrodMeNZ0CpNLqQavWZJD3YGuODy81
-	 N2y47+xTJ2Xg0fKam1lV8e2M23Z8nLtB9wXu6FcnBFrUaB+xdXHId3EqcsfWD2SamR
-	 nNobb0joXzLhs3zXzgOotvQ5XhZ87hkARlSkxMkiKLz8ZxgtLowRX0nHQtaGeizXvV
-	 SOkla9kWVuCqdxobNkQeTF8PXnYddIbd3IkXkGZE8f4N7aJpl7OZJaJ2iQPPEE3rxh
-	 dV1aos3wHsorQ==
-Date: Tue, 6 Feb 2024 10:55:21 -0800
-From: Bjorn Andersson <andersson@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, linux-remoteproc@vger.kernel.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 70/82] remoteproc: Refactor intentional wrap-around test
-Message-ID: <nfxldxqon7xfzqvxhhspzfoueebgczjbner67vtibeeukxd4oa@xgeaofdfgezz>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-70-keescook@chromium.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xqh2WmC1"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 416IodJv046178;
+	Tue, 6 Feb 2024 12:50:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707245439;
+	bh=jW5SdOE3WyIMKBSfBWIvIauASsolGdLvD8Pbpcc1dQk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=xqh2WmC1g3vctyVP9kXUSfO/jFugnzYdAJs6EE3aKG9eD3brYzYEOhI3nCUbc1j4Q
+	 zR3UewsfOIL3LsYRv0iJOljmZUnCUf+D/7fQ8Hn+QeMPIoAVsjmacj16OFw1qkwoOv
+	 19khursHfDW4HuYaMUpK2Ry4GfHCBXTh8aNOV1dA=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 416Iodbf104944
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 6 Feb 2024 12:50:39 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
+ Feb 2024 12:50:39 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 6 Feb 2024 12:50:39 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 416Iocwt005084;
+	Tue, 6 Feb 2024 12:50:38 -0600
+Message-ID: <b5b70049-81f6-455e-b2bf-d03431e5b27b@ti.com>
+Date: Tue, 6 Feb 2024 12:50:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-70-keescook@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64: dts: ti: verdin-am62: mallow: add TPM device
+Content-Language: en-US
+To: Francesco Dolcini <francesco@dolcini.it>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob
+ Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Francesco Dolcini <francesco.dolcini@toradex.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240126165136.28543-1-francesco@dolcini.it>
+ <65a24f21-4cc6-4843-b838-b1c7020ca45d@ti.com>
+ <26F9C286-606C-40C6-994E-EABDFFCDFDC4@dolcini.it>
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <26F9C286-606C-40C6-994E-EABDFFCDFDC4@dolcini.it>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Jan 22, 2024 at 04:27:45PM -0800, Kees Cook wrote:
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
+On 2/6/24 12:36 PM, Francesco Dolcini wrote:
 > 
-> 	VAR + value < VAR
 > 
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
+> Il 6 febbraio 2024 19:29:13 CET, Andrew Davis <afd@ti.com> ha scritto:
+>> On 1/26/24 10:51 AM, Francesco Dolcini wrote:
+>>> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+>>>
+>>> Add TPM device to Mallow device tree file, the device is connected to
+>>> the SoC with SPI1/CS1, the same SPI interface is also available on an
+>>> extension header together with an additional CS0 signal.
+>>>
+>>> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+>>> ---
+>>>    arch/arm64/boot/dts/ti/k3-am62-verdin-mallow.dtsi | 10 ++++++++++
+>>>    1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin-mallow.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin-mallow.dtsi
+>>> index 17b93534f658..77b1beb638ad 100644
+>>> --- a/arch/arm64/boot/dts/ti/k3-am62-verdin-mallow.dtsi
+>>> +++ b/arch/arm64/boot/dts/ti/k3-am62-verdin-mallow.dtsi
+>>> @@ -127,6 +127,16 @@ &main_spi1 {
+>>>    		    <&pinctrl_qspi1_cs2_gpio>;
+>>>    	cs-gpios = <0>, <&main_gpio0 12 GPIO_ACTIVE_LOW>;
+>>>    	status = "okay";
+>>> +
+>>> +	tpm@1 {
+>>> +		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
+>>> +		reg = <1>;
+>>> +		pinctrl-names = "default";
+>>> +		pinctrl-0 = <&pinctrl_qspi1_dqs_gpio>;
+>>> +		interrupt-parent = <&main_gpio1>;
+>>> +		interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+>>
+>> Just a heads-up, the SLB9670 datasheet says this device uses
+>> an active low interrupt (IRQ_TYPE_LEVEL_LOW). Using TYPE_EDGE
+>> here can cause missed interrupts if the line stays low for
+>> multiple interrupts.
 > 
-> Refactor open-coded wrap-around addition test to use add_would_overflow().
-> This paves the way to enabling the wrap-around sanitizers in the future.
 > 
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Bjorn Andersson <andersson@kernel.org>
+> The driver interrupt handler would need to take care of it, if needed.
+> 
+> The SOC does not support level interrupt, so there is no other solution, am I wrong?
 
-Acked-by: Bjorn Andersson <andersson@kernel.org>
+Correct, our K3 SoCs do not support level interrupts and so are not compatible
+with most hardware that uses interrupts (unless you are okay with missing
+some interrupts every now and then..).
 
-Regards,
-Bjorn
+As you say, our interrupt driver needs to be modified to handle that. Possibly
+by re-checking the line level after the interrupt handlers have all run to see
+if it is still high/low, then manually re-triggering the interrupt if so.
 
+The heads-up is just that you should be aware of this in case you have issues.
+When(if) our interrupt driver is ever fixed you will need to update the DT here
+to take advantage of the level handler.
 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: linux-remoteproc@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/remoteproc/pru_rproc.c             | 2 +-
->  drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
->  drivers/remoteproc/remoteproc_virtio.c     | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/pru_rproc.c b/drivers/remoteproc/pru_rproc.c
-> index 327f0c7ee3d6..834249ee3dd3 100644
-> --- a/drivers/remoteproc/pru_rproc.c
-> +++ b/drivers/remoteproc/pru_rproc.c
-> @@ -893,7 +893,7 @@ pru_rproc_find_interrupt_map(struct device *dev, const struct firmware *fw)
->  			continue;
->  
->  		/* make sure we have the entire irq map */
-> -		if (offset + size > fw->size || offset + size < size) {
-> +		if (offset + size > fw->size || add_would_overflow(size, offset)) {
->  			dev_err(dev, ".pru_irq_map section truncated\n");
->  			return ERR_PTR(-EINVAL);
->  		}
-> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-> index 94177e416047..b9231cf46d68 100644
-> --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> @@ -278,7 +278,7 @@ find_table(struct device *dev, const struct firmware *fw)
->  		table = (struct resource_table *)(elf_data + offset);
->  
->  		/* make sure we have the entire table */
-> -		if (offset + size > fw_size || offset + size < size) {
-> +		if (offset + size > fw_size || add_would_overflow(size, offset)) {
->  			dev_err(dev, "resource table truncated\n");
->  			return NULL;
->  		}
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-> index 83d76915a6ad..58742c666e35 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -298,7 +298,7 @@ static void rproc_virtio_get(struct virtio_device *vdev, unsigned int offset,
->  	rsc = (void *)rvdev->rproc->table_ptr + rvdev->rsc_offset;
->  	cfg = &rsc->vring[rsc->num_of_vrings];
->  
-> -	if (offset + len > rsc->config_len || offset + len < len) {
-> +	if (offset + len > rsc->config_len || add_would_overflow(len, offset)) {
->  		dev_err(&vdev->dev, "rproc_virtio_get: access out of bounds\n");
->  		return;
->  	}
-> @@ -316,7 +316,7 @@ static void rproc_virtio_set(struct virtio_device *vdev, unsigned int offset,
->  	rsc = (void *)rvdev->rproc->table_ptr + rvdev->rsc_offset;
->  	cfg = &rsc->vring[rsc->num_of_vrings];
->  
-> -	if (offset + len > rsc->config_len || offset + len < len) {
-> +	if (offset + len > rsc->config_len || add_would_overflow(len, offset)) {
->  		dev_err(&vdev->dev, "rproc_virtio_set: access out of bounds\n");
->  		return;
->  	}
-> -- 
-> 2.34.1
+Andrew
+
+>   
+> Francesco
 > 
