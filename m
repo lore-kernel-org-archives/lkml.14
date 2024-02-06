@@ -1,160 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8556D57300
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 02:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707186294; cv=fail; b=JDyPoiiAwNPKQ18ybyhIR5mfovfo2qbJwLqycQ8oEeECinNlyjM03pHhu2ffQ+C1xjZOKpQ+p/J7BH4GHGfLVGJa4uMqeZsB9ulo0KX5y1uevEMV2hiym+25xPE23xwFGHFOo+Q3SdDslumd8uJzXCZQqVWzAvmAcxqLE5HRM7U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707186294; c=relaxed/simple;
-	bh=Ec2bgXs56Gwkqcm0cHYqmRya3GpVDbV1Jaojd6Q4qng=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RwQRY9H8eLc31nNSfde82GNsMNX2YzST/QV0h5bsdb5LpF22Q5zqbI7ZRJrB7lf0++IaYLmLlY3zhFHmMkk2ebkNejXdTr/7qt57HCM0MqAg8qhV41x3AyGt+LBbuK7w/fZdKWHOVjUiaXuacYMDXz7kGGRLLTGGiBMKYCUT1ow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZPqDp7G; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BDA56B65;
+	Tue,  6 Feb 2024 02:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707186322; cv=none; b=NjpaSBlTyKZk3atKIISugFzYMooJdh4aWhiSIeaX2vbtDMISCyzb5cVrls/X1kjs1CCGU2NymfUEHUF5QICqqGXE4lYXV5YQoURnMyKsI/ambGkyIm5FhnfhFd9uHmiSDdbAgtVZ4fJk4DyIP+RLgJOeexR9UrBLfrlLVCgMB34=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707186322; c=relaxed/simple;
+	bh=2yKBIlxETrljLtG8bUmHtTTra33h6dhwXZ0T/s0QsmQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qcSjylwcr5BfDfxYu4NojkqZT26p3fI8Xgl29o39RQcCQouBdTHRdL4t8IM8S7bQo2AzoLc8qRTqppF54AeqLNj57f8Fybvn50H4b7V+b/7QDosSsnQTaozm8Huuizw5XI2cN/0OHJ5dnD2icez9ocSpX2jeN40xYTKW6L74jok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eulvNua2; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZPqDp7G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707186293; x=1738722293;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Ec2bgXs56Gwkqcm0cHYqmRya3GpVDbV1Jaojd6Q4qng=;
-  b=iZPqDp7GG0tPBFSCJXWXz4TczvmTkjEyJlt7pSzRtNt/gYVL9ZpGo7vR
-   alCm+Vmg/1RV+ernqMgW5wT5GYU95Mej05hWqi+SqsZNj6rL0dnkoEIyb
-   XA/8DKNns+iNwALVrDKKvBKm/CVsMEC+zcsAorBzza+zrV3xxBNBzsRRU
-   UUtA2ywuBIts8nCBMJFU5Pr4gIHfpjBpNoNz1v3KLTDs7tW9GZIuVnGlF
-   xJKe2Z112S3Ot3WD00VuPPaxopyT+8E0tfDL501XDrlOIE8oWxC5n5NC8
-   3S+GCijYFWYjxCoIt90z7FYdbKL4QDUCayN4y8wfVh6vr/OaXOVAt86Y9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="556930"
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="556930"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 18:24:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="824030678"
-X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="824030678"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2024 18:24:51 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 18:24:50 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 18:24:50 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 5 Feb 2024 18:24:50 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 5 Feb 2024 18:24:50 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iog01Ne5q8gXk1lDuoq2oWip62iBr9aOWLF6NLCyB3SVqYNeUPmPXIFJfPbcBMh1b1jUP29xaYDHv/fVakMYOrJ6E/VrEf/tvwauZLCXI7nsmv052qnaS6yhGujKpFp9nd4lG9WJfRe9Cvu9Q7X/muV+XhZPgWyISMOOmbheP/+ZAg5Opa0iLSnPc2w0GT0qJ2R0O23RuxvK6yx8ibhm2hPmfO7xk83f/ZjxnC7ITD9XZpxT4iipVIgJBlFWPCbSdz9ZBVURLoPimB29IdQAQzieV9Kxvhd8Y1RDnLerTNHZS3IaZNhjLofwVBya3xpN34r7ZZs8NJzAl85p7/pWfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ec2bgXs56Gwkqcm0cHYqmRya3GpVDbV1Jaojd6Q4qng=;
- b=c/OS2g88YVLF9nuffT0hXr+9NKLabIR2S7oGnrxATbPzM7Z3njjU2plPQvBhltK4olcyAUnbWtdgFAxHTdnZnUOeKYALvxcFbiBpgyTM/sQ51FDqPfcwjBEPVnVxzannPWhASt33pUnk9vR6/QJp+SdxWfpzZGBRjDIOmpfj1kx45Mef6UqYGRuWAiTrKlR7ZDbjScddDNUrNGaOetH+0+lyjI3tIjT6dkSid5TbqK7ez3qIjbiIA1OTnMhgeDB7G04nrkDmhPmMp0R9Lg4yNAcqWgE16j8N4/yKsGSOEq9ZnhMpTP5phk4LDHebeobOL+RXnjKtz4Xtmeg/OMnPtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Tue, 6 Feb
- 2024 02:24:43 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7249.035; Tue, 6 Feb 2024
- 02:24:07 +0000
-Date: Mon, 5 Feb 2024 18:24:01 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@vger.kernel.org>
-CC: Jerome Glisse <jglisse@google.com>, Christoph Hellwig <hch@infradead.org>,
-	John Groves <John@groves.net>, John Groves <jgroves@micron.com>, John Groves
-	<John@jagalactic.com>
-Subject: Re: [PATCH 1/1] memremap.h: correct an error in a comment
-Message-ID: <65c1984161c44_d4122947c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <cover.1707179960.git.john@groves.net>
- <dba0f5f01162d6fa16e4da2a9fede7f97080e92d.1707179960.git.john@groves.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <dba0f5f01162d6fa16e4da2a9fede7f97080e92d.1707179960.git.john@groves.net>
-X-ClientProxiedBy: MW4PR04CA0339.namprd04.prod.outlook.com
- (2603:10b6:303:8a::14) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eulvNua2"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bfcbfbfd92so192855b6e.2;
+        Mon, 05 Feb 2024 18:25:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707186319; x=1707791119; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ri1YQ2hEkTssAKG3opIAud0Ytbj1JVk5Pa/2THbXMCI=;
+        b=eulvNua2W/TazGjHfr5iCCkP5eMGc/mYdI/tLOM7LjOe0a8dcC4YzDfY790JjLuzjC
+         8k8nF3oX9QkD3DBPTD+/xE/qXWKEQOJ65EliXMc/jwyDNZfWfFN+nXeyexw1w01kEnsA
+         gYODTBo8JWVsG5wTQu0NDKbJ5yt8ZI2C6RaGWmqP3OEpElArm0uqmVmnm9kwZVj1hfqJ
+         kAtfJy5D2XL5qGMMfLuaIflc212ZXGpLxfTT2aQ9u7U7sUFTQKWqPxnrLNFdu3EzbDMq
+         yKy9UNQYhza+2APhIGAUE/eHe0rdyFH1VpQhP9CdzzAkJYYAigu4TbeqElsPlragXn4q
+         IUow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707186319; x=1707791119;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ri1YQ2hEkTssAKG3opIAud0Ytbj1JVk5Pa/2THbXMCI=;
+        b=cN/tW8BzNsyKVsMT1D8JKqyQyEqTNivJwKphlmhaEkUnf0uA2QeTRADmJdmYGh54Kx
+         GeOoSAGb/txB3xSWGM+64EhsBxKcqUGDOBgot941GQVT9lsii+NWGZW6B/SFIs4qF/NP
+         73UZZo8RqfEMYo6X4FkNnUAPKqn5LQLRAXqcDEGxTcdJ/+SjKTvLvBe+15UNDFGSrCEJ
+         DO+Puq3H3ymXX9BYuQrHPVf2fBXCN3IJCnuJ5ZtnhPyqpXN7bjd+CheU5NSAlhB5guNJ
+         qS9v2phhwFfp5crk2ZYeSxhy8n6U6EUwGP89LFtk4+XZzWR/L5RRhyUEENXUgkorvvXF
+         4msg==
+X-Gm-Message-State: AOJu0Yybciqbx9EmS8REkdZl5qDEI920uvtN4zJYta3lBANb+C1JNnvW
+	L2bD1MCr8I1GL/3Yh6dxMcoC1Sr4YaiJxz5zIIRtBXgiebqb6rRKVu8Dva9eFoN+H40/HurnwrM
+	XfbRBZ0ctQcg+PawgYWfEE6kuU+c=
+X-Google-Smtp-Source: AGHT+IEVsuie2ylzQj0kySZ8nRKieVfkGo33FysFNzbB3nzkZJlRBk3LZIRL0PZ4oMIKZNDj5ZH6MnaaktdvbHDH3JA=
+X-Received: by 2002:a05:6808:11c8:b0:3be:c4df:6ccf with SMTP id
+ p8-20020a05680811c800b003bec4df6ccfmr1892265oiv.5.1707186319364; Mon, 05 Feb
+ 2024 18:25:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6392:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5258f847-161d-4df8-6d82-08dc26bab057
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FcNIrRGrD83E+JA0CH32N3MI5sp3693FVVWQEUPxADrgptuFfqosRMV1WPDBxA5rE6udOmGUiIedgE7peHv0wvtxL/4Xc6EhENY2iOA8lmkak4eZPSW2cVAAqXYassav7WwoXGtHCtXgbQpVDa7KDHo7wy8VAYWzGRmkzWbafML594tTlC4EdZfOqUFOYDO8IthQFBhjIEkgknTwqs01Y5b4/My7qcBxLPQPkE1zn9eA7cptXVftK2H27tFfW0PcfdjIaATKnfgsRjIsLgPeWFB6evzGbdgiC+AbPe1Yae9s19ZEmILHPm61tXtROZx4cyUhMZNRhQzhJ4BCRhZwHVg/eqp7ahZIoa3FNnJnx3rMrez9PV6yzegnwNdmbaY2EnRzHVfl7pevzMDInqrwguTzI63wMSq9FAXYbgEHti2DYMdxDDfNYSiY5NXscGvwzHYsEgcBFinKS5XgzU5q7ROyKamH9+kgDTI2FGv58ehwhJNku/P5pCEuR2CkTLA+awTbCxCLxo2c/65TqE/RcHKTnKo+8olwQlUWVNesLECfrIozHn16j2ig+FH6oHfi
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(376002)(346002)(396003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(26005)(86362001)(41300700001)(6486002)(5660300002)(2906002)(478600001)(110136005)(66556008)(54906003)(66476007)(66946007)(316002)(8676002)(8936002)(4326008)(6512007)(558084003)(9686003)(6506007)(6666004)(82960400001)(38100700002)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+xaqFh7T6REDtC314/VDL10Kev2aiVxw2bYzvTc/yP59yE1k8ZdhC+lnxKPq?=
- =?us-ascii?Q?oo/EMh1WF2Ffo2ECUC++Fyr+9DSuc+52cUAngWSvl+p9MOhv5p3H8DHtvkVM?=
- =?us-ascii?Q?e1AnwgB7zJ5xgSXj1py9HiRuqmzs9FLCMzv/bEpg3L506kjcRFtaQqqzIfHC?=
- =?us-ascii?Q?hdOOBrTb22izzJpq4EP5u5kT376ZatgPTmobHPCDuzc0hKdN1BYae5Kudjen?=
- =?us-ascii?Q?s3L72nCEnFiW8LOTpiUM6xKXULN++Ay3f19JysPwK1L5NCa7z+8vRMj7bK5u?=
- =?us-ascii?Q?NAMRxkfIv2e80uBU+C+TUv7fMZt/cSzauXon48ZiN+hQEqhZ1aMGDYAwTkow?=
- =?us-ascii?Q?CgRkwHU4H2IAYQBWnFwbAZnk0VPUvcu4te1yFugaIxzV73Mqp7hZ+ceaTaS2?=
- =?us-ascii?Q?l7iAzJ3qMNXQjICZt7tg0LRw6rLIpy2E0+nbNplMF7Sa4GFvqUC8rf8rMlWp?=
- =?us-ascii?Q?2lTQ5PtSxTiWK+XIgLPfjGIztK9MvYfUYAKCyz/cR4FLxiRs10L3rpM0shGV?=
- =?us-ascii?Q?eZe9HjLXS7OKc7jPpM89QDsO1ZvDAGXJauBqbN5LyLFQ6EgTwY9kEHzBjfsx?=
- =?us-ascii?Q?2/WIGQlJCPD9DGXH6t7BwDurlKZok3FV7KVbIs/z7Mz2flNOr4+BPTOP2MXk?=
- =?us-ascii?Q?rSsh4ZsmqMEiBMpCtcZ/HTpg9Wgn1woh275D89jB6vh2fibgapWQet7R6lvJ?=
- =?us-ascii?Q?WXujUPn8JjfJtf33UwF4miEg4SrFxDvD9SRDgU2jxMe7KHyAHHhc+reJja4P?=
- =?us-ascii?Q?z/DgS9W4Z6+VgVlJMDbTGdq5FbEsOSskl/lBM2dHQ3HxcpiQ+fqGAp7YM7tN?=
- =?us-ascii?Q?bSqMMiKz/4RKbTRQ/LRHNBObbthE/Su0P0P8+ADJyMMypAyVA2wUCaCnv2Ek?=
- =?us-ascii?Q?mVb7Nuc3U1xU86V1YMg5p8crwx5KIoDA3eTLBpswuakRtpojeHWszkwGF1nK?=
- =?us-ascii?Q?u09PtSFHR4O5/6D3O+lG4zsYalns3lT8oorJLzntNCM3+Hu3O0XRsx1JDeAI?=
- =?us-ascii?Q?vx7NsMrKdVmOwF9G6xe8pKqYCi50+ZrTLkgrqKJS471nnggiUJZTVgm6/eDb?=
- =?us-ascii?Q?6AOzXmWSkPR16omfIvGJGG7XgqXZbL59ZjH663DMYjNaYgFtVMtPOHLt4/Zk?=
- =?us-ascii?Q?jw5HRJ1Ln8kC9aAlkW4jEx2pckFSB5izHYnZrkp3KlvBSdXm8pFoBaiL3/fP?=
- =?us-ascii?Q?ebhwwvqrHapeld8uzkmf9tQxiCfiImFDgkSmAxM5tBgHBwEprtBVhBi3hhO8?=
- =?us-ascii?Q?R+3ojGwfmJ05M8/zWv5IJhmOfZPQScvPN82NmDTcGt4v5QuRTzC4RIPj3uZg?=
- =?us-ascii?Q?3UKl1SbX+vZleMOJBQEO5EiT/kgtWZ8FkwvaIWtFF17hIYM+SE6Wz3DsxPHg?=
- =?us-ascii?Q?iIPkEXJ/KV857tHLXsfOTDZnJbXlD0BcmsBOMxYnxeF3QQvVlLtCuPklZSWL?=
- =?us-ascii?Q?SCMuFn+IdWM0ssdmlGEvRLi4LIwW8DsIkkZBUnY1snkW4RTHzlCZNPi4DKje?=
- =?us-ascii?Q?XIvyfXtv8M4aUlALJRkl25T0Oj1tqd8gJXGFMXL4MWupKZf1542iQtYJPumI?=
- =?us-ascii?Q?b65Q1iXJFG5CD7blYp251O63Vm3KSzjZ8bI+Cta79xuO9OEFJTBjtw7b2t9v?=
- =?us-ascii?Q?/Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5258f847-161d-4df8-6d82-08dc26bab057
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 02:24:05.9249
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TzP82am7z4uq6bCpXzv5p4NOmsoY5fiKqWr11MNweOt5/rFIehWXlHvpveho1LHAQLRiOCdfP03XhQmMtH42mSSCBtUobZg0gi9Pb0ZSC18=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6392
-X-OriginatorOrg: intel.com
+References: <20240203165307.7806-1-aford173@gmail.com> <20240203165307.7806-6-aford173@gmail.com>
+ <1880028.tdWV9SEqCh@steina-w>
+In-Reply-To: <1880028.tdWV9SEqCh@steina-w>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 5 Feb 2024 20:25:08 -0600
+Message-ID: <CAHCN7xJZ5m1kZwx_9whx7Bv3B4N8mhB1feZUO4PpcosBXe5R2g@mail.gmail.com>
+Subject: Re: [PATCH V8 05/12] arm64: dts: imx8mp: add HDMI power-domains
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: linux-arm-kernel@lists.infradead.org, marex@denx.de, 
+	frieder.schrempf@kontron.de, Lucas Stach <l.stach@pengutronix.de>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Liu Ying <victor.liu@nxp.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-John Groves wrote:
-> It tried to send me off to memory_hotplug.h for an enum that is a few
-> lines above...
+On Mon, Feb 5, 2024 at 1:26=E2=80=AFAM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+>
+> Hi Adam,
+>
+> thanks for working on this.
+>
+> Am Samstag, 3. Februar 2024, 17:52:45 CET schrieb Adam Ford:
+> > From: Lucas Stach <l.stach@pengutronix.de>
+> >
+> > This adds the PGC and HDMI blk-ctrl nodes providing power control for
+> > HDMI subsystem peripherals.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > ---
+> > V2:  Add missing power-domains hdcp and hrv
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 38 +++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8mp.dtsi index
+> > 76c73daf546b..5c54073de615 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > @@ -836,6 +836,23 @@ pgc_mediamix: power-domain@10 {
+> >                                                        <&clk
+> IMX8MP_CLK_MEDIA_APB_ROOT>;
+> >                                       };
+> >
+> > +                                     pgc_hdmimix: power-
+> domains@14 {
+>
 
-You have passed the first of many trials.
+Alexander,
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Thanks for the feedback.
+
+> As per Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml the nod=
+e
+> should be called power-domain@.
+>
+> > +                                             #power-domain-
+> cells =3D <0>;
+> > +                                             reg =3D
+> <IMX8MP_POWER_DOMAIN_HDMIMIX>;
+> > +                                             clocks =3D <&clk
+> IMX8MP_CLK_HDMI_ROOT>,
+> > +                                                      <&clk
+> IMX8MP_CLK_HDMI_APB>;
+> > +                                             assigned-clocks =3D
+> <&clk IMX8MP_CLK_HDMI_AXI>,
+> > +
+>   <&clk IMX8MP_CLK_HDMI_APB>;
+> > +                                             assigned-clock-
+> parents =3D <&clk IMX8MP_SYS_PLL2_500M>,
+> > +
+>          <&clk IMX8MP_SYS_PLL1_133M>;
+> > +                                             assigned-clock-
+> rates =3D <500000000>, <133000000>;
+> > +                                     };
+> > +
+> > +                                     pgc_hdmi_phy: power-
+> domains@15 {
+>
+> As per Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml the nod=
+e
+> should be called power-domain@.
+
+Whoops.  I totally missed these when I applied them.  I'll have them
+fixed on the next spin.
+>
+> > +                                             #power-domain-
+> cells =3D <0>;
+> > +                                             reg =3D
+> <IMX8MP_POWER_DOMAIN_HDMI_PHY>;
+> > +                                     };
+> > +
+> >                                       pgc_mipi_phy2: power-
+> domain@16 {
+> >                                               #power-domain-
+> cells =3D <0>;
+> >                                               reg =3D
+> <IMX8MP_POWER_DOMAIN_MIPI_PHY2>;
+> > @@ -1361,6 +1378,27 @@ eqos: ethernet@30bf0000 {
+> >                               intf_mode =3D <&gpr 0x4>;
+> >                               status =3D "disabled";
+> >                       };
+> > +
+> > +                     hdmi_blk_ctrl: blk-ctrl@32fc0000 {
+> > +                             compatible =3D "fsl,imx8mp-hdmi-blk-
+> ctrl", "syscon";
+> > +                             reg =3D <0x32fc0000 0x23c>;
+> > +                             clocks =3D <&clk IMX8MP_CLK_HDMI_APB>,
+> > +                                      <&clk
+> IMX8MP_CLK_HDMI_ROOT>,
+> > +                                      <&clk
+> IMX8MP_CLK_HDMI_REF_266M>,
+> > +                                      <&clk IMX8MP_CLK_HDMI_24M>,
+> > +                                      <&clk
+> IMX8MP_CLK_HDMI_FDCC_TST>;
+> > +                             clock-names =3D "apb", "axi",
+> "ref_266m", "ref_24m", "fdcc";
+> > +                             power-domains =3D <&pgc_hdmimix>,
+> <&pgc_hdmimix>,
+> > +                                             <&pgc_hdmimix>,
+> <&pgc_hdmimix>,
+> > +                                             <&pgc_hdmimix>,
+> <&pgc_hdmimix>,
+> > +                                             <&pgc_hdmimix>,
+> <&pgc_hdmi_phy>,
+> > +                                             <&pgc_hdmimix>,
+> <&pgc_hdmimix>;
+> > +                             power-domain-names =3D "bus",
+> "irqsteer", "lcdif",
+> > +                                                  "pai", "pvi",
+> "trng",
+> > +                                                  "hdmi-tx",
+> "hdmi-tx-phy",
+> > +                                                  "hdcp",
+> "hrv";
+> > +                             #power-domain-cells =3D <1>;
+> > +                     };
+> >               };
+> >
+>
+> According to RM this block is part of AIPS4, so it should be below
+> hsio_blk_ctrl.
+
+This is how it was when I got it, but I should have caught it.  Thanks
+for that.  It looks like the subsequent HDMI, IRQ_steerting, LCDIF and
+PHY ones are also out of place.
+
+adam
+>
+> Best regards,
+> Alexander
+>
+> >               aips5: bus@30c00000 {
+>
+>
+> --
+> TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Ge=
+rmany
+> Amtsgericht M=C3=BCnchen, HRB 105018
+> Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan S=
+chneider
+> http://www.tq-group.com/
+>
+>
