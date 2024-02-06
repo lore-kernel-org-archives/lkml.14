@@ -1,79 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B5473195
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 13:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33E7130ADC;
+	Tue,  6 Feb 2024 13:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707226713; cv=none; b=nIE5s3Tsu733ayaECgg0QkMMbwRogFLoJh49k7JFZxQdgR8VrLoGBqftj7ilj9G0sZF9sK0xXYq4WcKClNt4G/kDYS6+8+brE6lKq1gWjIFX/07duDqyc/gcitjl2xgFHBSRy+aGeDMPLkdIlfAjW79RSe05I/55ijMqsevBAic=
+	t=1707226812; cv=none; b=sSA66zoxzrAmbS/hXJt/ko7soBgQN5EGF5ZJQEdec1IDy5F38YxNT7HDKeugGr86pwsUTPgx28J/rBr8RLIayaQi8pkkYFCx8JRyiaI+j1dB+dcS+kd76vTzdtSrdmFUdUusj2TA9NGZV1IUQ6zG8OqsPzOFOJSvvn6Nh8NktCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707226713; c=relaxed/simple;
-	bh=Fb1RR5YKjdb++HKdFCbp1Gw0EkAjp8M6VBIziUToSwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UXWAB4EEUEW3JHniTCGOhJG+Ba/IOb4YzkTAy9lNuIl2bV+U/b5vkTY8tONjvZJBCoBE7Dg8O5NkxJLI+KYSXDJz+7idE9Sd4SrxrqXJRs6et/Bqy4RfIVRXyOHMsl2gWhVHHUDP0GeTbMraAOJBhL+oqnoStHNZ1Q+psPtacHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbN7uTfZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707226812; c=relaxed/simple;
+	bh=YkVNUHuBGk93qbvqheqr1gUUEeEU4IZP6E7rtwwMssw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pRpqmkPFJtPwnvgefH+f0q0eXe/XojhBUZeORUkRhLFwF+4Rn8h9qtefuDGZtYxwM/2w7yuVT/p+7M3Y/XWJsZ3tgHZhTu6l1pnnX2ub7t/btFiPpE9BTvci0YZxhsn8u5kt9oU+pzd5TGlwUpgNuWsngnXQ9TShZwvFnANuBRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVPpRnZn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbN7uTfZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17472C433F1;
-	Tue,  6 Feb 2024 13:38:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVPpRnZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FC7CC433F1;
+	Tue,  6 Feb 2024 13:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707226712;
-	bh=Fb1RR5YKjdb++HKdFCbp1Gw0EkAjp8M6VBIziUToSwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WbN7uTfZXwr134Sf3PejpCzdftQv7Bju4pbmqRNmVB8cm0Si1/6QSOj7OpJVPVglf
-	 +TBuluksaWSHVZcwVRPJeAfgRPkxLYRma2Ds8NCDjvPOgoM0ZKm7IDwWi9lmaohYzf
-	 3jKzja2+ibFv6rhPRBkriY/bRsv+diPEuOWFVZYPAt073JnKzAmvKMjuy3afg/JSrp
-	 vc4mFs55R/oiGViAyPi+e2M8dU5/9KsyEHHxn7moLy9qFOhj8n+05Bzq6hXd04j4zQ
-	 sQalc5QtlxCz52mgGI2DL+LhKDEm4y+zRP7gNyO3v2dLp8znwa6ObM/YElHCoB3FS5
-	 m6nurpyFmEGkQ==
-Date: Tue, 6 Feb 2024 14:38:28 +0100
+	s=k20201202; t=1707226812;
+	bh=YkVNUHuBGk93qbvqheqr1gUUEeEU4IZP6E7rtwwMssw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kVPpRnZnFtaMxwTo8tHP0GHU5KnSJoDoIVOn6UGPTSTCzxJguSke6MAk+bPKpO0YY
+	 RrbJ3L00/ms7jmrUjIbBDBnY9H/vXRJoByaJa1c2eIPqWu+5Y240H46zeuEgAnIT80
+	 O5CBY6HIa/H6KKDiK9+CiY2VY7KGfYnea07JBJlskSjPeGWhKOh7FoVLHQVRZ4QiG1
+	 Ddni2WOGkHoWohaVyyzsVPImmtVWsMajireA9OBal8YCQmJSnX1fvyZHDas4JAQ+eU
+	 MV+aDDK0rFK5Ca0RN7mU4XmYqNm5WjMCyehNhNdfz77GhF5CKBmXZOrBNDhyns9aTh
+	 cCSRgyrDSoV5g==
 From: Christian Brauner <brauner@kernel.org>
 To: Oleg Nesterov <oleg@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, 
-	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] pidfd: implement PIDFD_THREAD flag for
- pidfd_open()
-Message-ID: <20240206-beatmen-lehrling-440dc305b070@brauner>
-References: <20240131132541.GA23632@redhat.com>
- <20240131132602.GA23641@redhat.com>
- <20240202-helium-eurem-f63c0f9328c0@brauner>
- <20240205152241.GB15853@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>,
+	linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pidfd: clone: allow CLONE_THREAD | CLONE_PIDFD together
+Date: Tue,  6 Feb 2024 14:40:01 +0100
+Message-ID: <20240206-gelandet-einrichten-6d3365011635@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240205145532.GA28823@redhat.com>
+References: <20240205145532.GA28823@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240205152241.GB15853@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1076; i=brauner@kernel.org; h=from:subject:message-id; bh=YkVNUHuBGk93qbvqheqr1gUUEeEU4IZP6E7rtwwMssw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQeMts8Qc3IyzLieEj6g6O5HrKVNaUPJYIjHTZdV3Zpu +d5eWlwRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwET45jEy/HezC+RY/Ga5KG+f f120Y379Frew8AQViRmHZwreKEz/yvA/s37GmiuCVheuMvnyxd1zP251Qv/Ow7wXT6cJzRSytS5 lBwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 05, 2024 at 04:22:41PM +0100, Oleg Nesterov wrote:
-> On 02/02, Christian Brauner wrote:
-> >
-> > > @@ -2050,6 +2051,8 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
-> > >
-> > >  	seq_put_decimal_ll(m, "Pid:\t", nr);
-> > >
-> > > +	/* TODO: report PIDFD_THREAD */
-> >
-> > So I think we don't need to do anything here. Since PIDFD_THREAD sets
-> > O_EXCL in file->f_flags and in contrast to do_dentry_open() it isn't
-> > dropped. So userspace can already detect PIDFD_NONBLOCK as O_NONBLOCK
-> > and PIDFD_THREAD as O_EXCL.
+On Mon, 05 Feb 2024 15:55:32 +0100, Oleg Nesterov wrote:
+> copy_process() just needs to pass PIDFD_THREAD to __pidfd_prepare()
+> if clone_flags & CLONE_THREAD.
 > 
-> Ah, indeed, I didn't know that fs/proc/fd.c:seq_show() reports ->f_flags.
-> Thanks.
+> We can also add another CLONE_ flag (or perhaps reuse CLONE_DETACHED)
+> to enforce PIDFD_THREAD without CLONE_THREAD.
 > 
 > 
-> 
-> OK, what about another TODO in sys_pidfd_send_signal() ?
-> 
-> I mean, should I send a simple patch which changes pidfd_send_signal()
-> to use do_send_specific() if PIDFD_THREAD ? Or do you think this should
+> [...]
 
-Yes, by default the type of pidfd should determine the scope of the
-signal as discussed elsewhere.
+Applied to the vfs.pidfd branch of the vfs/vfs.git tree.
+Patches in the vfs.pidfd branch should appear in linux-next soon.
 
-(And later we can add flags that allow the caller to change the scope of
-the signal. So that Andy's use-cases are covered as well.)
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.pidfd
+
+[1/1] pidfd: clone: allow CLONE_THREAD | CLONE_PIDFD together
+      https://git.kernel.org/vfs/vfs/c/572a94c5290e
