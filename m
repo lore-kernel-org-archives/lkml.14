@@ -1,106 +1,135 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC491E49B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 15:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C5313248D;
+	Tue,  6 Feb 2024 15:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231823; cv=none; b=G3H/kxSqp2QDklTqBLg2oJ9jWPaeYea2TDNU19r3K8Yq86wQOWPaE0RKjFy5TIy2d2OrVKqCgykFaeKapvDdZ4p4+VBFN10jqQVrRHcu29nZ+quuCgY4j8qZclpUS6HoBt805eENWE2ILdCe4YV46ZV9SHOT2AXQuuWxj8oYz44=
+	t=1707231912; cv=none; b=HuS0Z3dTLn4b+GbtsgdZRgjy1uvJWqGzp1Vqro6S/qC6hf9VfdKa/eAb6GJdusQyQOEpIvFFwDm8z86Bg35qtygDEjQwwUvPfmubrcb8a0uhrXHlx1n4gosGmIzliYQHkKRZpZHzhOl/hKXk+YenDczViNKD6kpI+kAP3eBBtWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231823; c=relaxed/simple;
-	bh=j7tkzKcF5D4hjFwC2+hXqQYUUT01a4RtgVGSHaxJ6Cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/UTdVDBV9raDCMf9xUG7zqxfW53ctqmm0TihmaeMStUjdT2tDnntYnUCArPU2UCRXqrb/jlBE/mKQ8QZLy/DpxQc8Ls0lKVOpPXxA8V13/g+7HWn87fq8UY+1Ia9a+IU8pGn30t74Pjinapl5bDOQi3q7+eSg6ii3XHaXTLEaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=WlO6KkSn; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1707231912; c=relaxed/simple;
+	bh=bVno8WQTGbHurQQwnhVu0vijufkiMDbLKRAxnxjC3Js=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=maZS37Pahv4c3K4BEx2+FGOkUrMnpFt3dP0CRbdri7YIVahO2y64MU8TWkDizRICIFtiK1QUmQktXOB+8oWoxjFqD3nVralQ6npDEq83tgf4Cku3nZDhmzZiwOo+ubBGqsb7T1zRAWwzH+ES8qGq+xWl7w0+pxpY0wC6Y3D+UeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gr0Ql/Fu; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WlO6KkSn"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40fc4363a0aso12672895e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 07:03:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr0Ql/Fu"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e125818649so3001591a34.1;
+        Tue, 06 Feb 2024 07:05:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1707231819; x=1707836619; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RKfohJUroV976tglmTRMxraev0qNxAZBgWfmujjqUq4=;
-        b=WlO6KkSnkgjbgasLNswv6ByN0KBQ73+KN/yFjzh99M+475OWR/ZhKEUDwjAb59oDnL
-         VvhiirGXCW2zDMrRtJL6RNxNbkkJIktom1gz4t3aBExG12FPSXjXkRcSF6C3mRk1Ym+F
-         oybV93CzD8BUdmDgYpQLAaXkrqcfoTP4QE/XM=
+        d=gmail.com; s=20230601; t=1707231908; x=1707836708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ioIvR4LsMaW6xA6i7+EQnV42R5bTHmknBpHkYqe7Uv8=;
+        b=gr0Ql/FuruA7uGX+Lr5gM8RFh5zuQqngDZ8NEwprk94/w6uRosssVwl/txD3osnLvQ
+         U+d5D0UsOrmS+tauC7JDB9oPuFbV0/45bJyzDxUVfN13yRqsC+nhV03ZK9Y4eCB1GHUz
+         MvfZD6ysXn2PJ+7HfRTCpy9IhR7i0EdTHA31pxHXzWmyk+22FMzNJ6JrhPyl05RtVMDc
+         DSZHZUQEVtPbs8KlIwgDJg8aPMq6FC8L/9kyUrxv4NDzmEXXsdFC9m3bfsPw+GycR+cB
+         By1aGZiZavYftP15uSUWN0VrJmjbMuLlFYtuhcqgiMUD94HzvO2xkdNHFT5AqRJFCUVD
+         aFmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707231819; x=1707836619;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RKfohJUroV976tglmTRMxraev0qNxAZBgWfmujjqUq4=;
-        b=i1Uc21/QJfduZdvfjC19ZPMhs0ycRX7uuokjDrFcLFlvoV++jYVc/1FSiEqWG3rPbd
-         jPsKPCIo890E1C7r33aSMSmH1SNcfP6FefbB4Qznbx1ArCL47UZzJLmdzLHyRxl6/Xaq
-         bKwE8UnR0kYKcCzQ00LBcsopoReLQdpX2llFukKdoX5fUWhGpVW/MQEmg93n+tnZCUq7
-         Ko3ZU5rD+Cp1Hqvy5wipXNJRZss4PKeI14aK8jXWB/DIexY0wR7aVwUcTLZE2VCB3KMB
-         GmkUMIoRvlZakGc81spae9K+1U9BhDL4zG7sbAHUdEFfZTik0gVRGUsNQkpaoTh4tMuZ
-         iLKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPNhulR09ShhYh+Da2q0EGhSf41wvmuNr/f2elScG8u4NDUM+iEpkI+om0A+8ZSI5ENADzdqho6C8jAzlaRbBL5hJUJdpxXbJO8cZv
-X-Gm-Message-State: AOJu0YzMNnDF3Yj7NtGAwXzMM/bk8t2FXhC+pb/fy84s51Ih40ouN1+/
-	LJxAyTbNfVZSH2A6QCdl6Y15eAMGWuiJ6nTXgPvbOu9RpGP2HHGm/cfG6KKHH2w=
-X-Google-Smtp-Source: AGHT+IET7mjYFC9IH5aIFSvUtIwuTpQ4KqBl4fIzq/2q8Y3bCp52T9n2MyZNeBpz2yX0aOfURAq+VA==
-X-Received: by 2002:a05:6000:12c3:b0:33b:39bd:a78b with SMTP id l3-20020a05600012c300b0033b39bda78bmr1961940wrx.6.1707231818921;
-        Tue, 06 Feb 2024 07:03:38 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWCm44wgTJzNGFJ6SWGW0pCEdc2rUx6nCHTz84pimuYdcQlXPfUYwsXtTv9S+iTBRUO59hmDPFshqy//WnXns0sD4WysblA2zD6gFzOImvirbSSgET/2ijRXh+XnvCNfGAqiGOgBk2TBfq3zAaLjpZ873p6v/WZ+PSivDj5nfzfuTphZ5LjW+L1wOJ84jNhzRDWgEzov4oJcNBMJUxK/UaMI/ROE4HZjpn1xgffol987k0TuU6JWzNTVC37oLpvEI21cB78xnwAqM8KXmn7vI8/lsR/X4ljBXwQ1WerTbEvj4G7ljjS/P4M/ukb1IvSWzi+wOkPNSXxIo0=
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id u13-20020a5d6dad000000b0033b1b01e4fcsm2336097wrs.96.2024.02.06.07.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 07:03:38 -0800 (PST)
-Date: Tue, 6 Feb 2024 16:03:36 +0100
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] drm: display: make dp_aux_bus_type const
-Message-ID: <ZcJKSCbAwm7SYx4v@phenom.ffwll.local>
-Mail-Followup-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20240203-bus_cleanup-gpu-v1-0-1b6ecdb5f941@marliere.net>
- <20240203-bus_cleanup-gpu-v1-1-1b6ecdb5f941@marliere.net>
- <CAA8EJpqYH3CM8exv68S7KU-CK5r=jM81UPjiW09qOiqrg1ThKg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1707231908; x=1707836708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ioIvR4LsMaW6xA6i7+EQnV42R5bTHmknBpHkYqe7Uv8=;
+        b=Q+Ve6RCJWdO0mEZjZpDEZfQOMWcaAi3wBdtlyFQO0bn0+UYKcMfwKYRbxaTj0JsCDR
+         Knhk3gvDsP8tO7HdpS5vYnyRFaFRiEiU90qltvBx9PNTtSibJgQUsUtk/7/TmVUNkUNv
+         JmP8hQ4yGBSFn6DBjU9P2JNqGQ8s/3fwfBp3wkEsmD3lzGxoS1+I1GbWYdkYTqYp7qSk
+         Hx10nUFvNbnMSfWQRLPsvpqmsCifEgRc/AyCDI8ZTmF+ksFmSfuPOqsMMClRZVTp15Xw
+         kGLDRMUHG0u3Y12p/YHAQ7ZQvWRoLNHDRNpGRXm3oRJPBsxkGpd22Yr6CU6wcneRIjNn
+         WevA==
+X-Gm-Message-State: AOJu0YwsstVjALus1sGpm/LtgYtLj210fQsQCnmIkGSxWDpbugtdcura
+	KbpOb/L1G+btsLBLdE6acjFC5Z7u+sI4vFklTPHwjmIsomXpRToGTjO+F0KkDW78mihVtH5rWgX
+	ygzE/kEu8bKTvk5NXgx5jdM3Fv/nFJ2wS3ow=
+X-Google-Smtp-Source: AGHT+IFWVTl6mm2CDlJsEbStomZ4IAGwkcu/Joc866MJc31wLxOcsv3DEJmL9yHTk+0ChG99yqhy1/iteBtcWJn+H6M=
+X-Received: by 2002:a05:6870:5251:b0:204:f0b:3bfd with SMTP id
+ o17-20020a056870525100b002040f0b3bfdmr3094700oai.43.1707231908476; Tue, 06
+ Feb 2024 07:05:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpqYH3CM8exv68S7KU-CK5r=jM81UPjiW09qOiqrg1ThKg@mail.gmail.com>
-X-Operating-System: Linux phenom 6.6.11-amd64 
+References: <202401312229.eddeb9a6-oliver.sang@intel.com> <CAOQ4uxiwCGxBBbz3Edsu-aeJbNzh5b-+gvTHwtBFnCvbto2v-g@mail.gmail.com>
+ <CAOQ4uxgAaApTVxxPLKH69PMP-5My=1vS_c6TGqvV5MizMKoaiw@mail.gmail.com> <Zb8vk1Psust0ODrs@xsang-OptiPlex-9020>
+In-Reply-To: <Zb8vk1Psust0ODrs@xsang-OptiPlex-9020>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 6 Feb 2024 17:04:56 +0200
+Message-ID: <CAOQ4uxjFA=P8ZiPjaqP-4Ka35GdqEtKaTTG1XMnts6rOswchCA@mail.gmail.com>
+Subject: Re: [linus:master] [remap_range] dfad37051a: stress-ng.file-ioctl.ops_per_sec
+ -11.2% regression
+To: Oliver Sang <oliver.sang@intel.com>, Christian Brauner <brauner@kernel.org>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, ying.huang@intel.com, feng.tang@intel.com, 
+	fengwei.yin@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 04, 2024 at 10:24:46AM +0100, Dmitry Baryshkov wrote:
-> On Sat, 3 Feb 2024 at 22:20, Ricardo B. Marliere <ricardo@marliere.net> wrote:
+On Sun, Feb 4, 2024 at 8:33=E2=80=AFAM Oliver Sang <oliver.sang@intel.com> =
+wrote:
+>
+> hi, Amir,
+>
+> On Fri, Feb 02, 2024 at 11:13:56AM +0200, Amir Goldstein wrote:
+> > On Wed, Jan 31, 2024 at 5:47=E2=80=AFPM Amir Goldstein <amir73il@gmail.=
+com> wrote:
+> > >
+> > > On Wed, Jan 31, 2024 at 4:13=E2=80=AFPM kenel test robot <oliver.sang=
+@intel.com> wrote:
+> > > >
+> > > >
+> > > >
+> > > > Hello,
+> > > >
+> > > > kernel test robot noticed a -11.2% regression of stress-ng.file-ioc=
+tl.ops_per_sec on:
+> > > >
+> > > >
+> > > > commit: dfad37051ade6ac0d404ef4913f3bd01954ee51c ("remap_range: mov=
+e permission hooks out of do_clone_file_range()")
+> > > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git mas=
+ter
+> > > >
+> > >
+> > > Can you please try this fix:
+> > >
+> > >  7d4213664bda remap_range: move sanity checks out of do_clone_file_ra=
+nge()
+> > >
+> > > from:
+> > >
+> > > https://github.com/amir73il/linux ovl-fixes
+> > >
 > >
-> > Now that the driver core can properly handle constant struct bus_type,
-> > move the dp_aux_bus_type variable to be a constant structure as well,
-> > placing it into read-only memory which can not be modified at runtime.
+> > Sorry, Oliver, this was a buggy commit.
+> > I pushed this fixes version to ovl-fixes branch:
 > >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> >  1c5e7db8e1b2 remap_range: merge do_clone_file_range() into
+> > vfs_clone_file_range()
+> >
+> > Can you please test.
+>
+> the regression disappeared by above commit in our tests.
+>
+> I noticed this branch is based on v6.8-rc2, so I directly tested upon it =
+and its
+> parent (3f01e53bf6). I found 3f01e53bf6 has same data as dfad37051a we re=
+ported.
+>
+> and on 1c5e7db8e1b2, the performance back to the same level before dfad37=
+051a.
+>
 
-Just to make sure this doesn't fall through cracks, I'm assuming you'll
-push this to drm-misc-next too, right?
--Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thanks for testing!
+
+Christian, can you please amend the fix commit to
+Reported-and-tested-by: kernel test robot <oliver.sang@intel.com>
+
+Thanks,
+Amir.
