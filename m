@@ -1,95 +1,62 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0D912E1FE;
-	Tue,  6 Feb 2024 10:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4571112D749;
+	Tue,  6 Feb 2024 10:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213998; cv=none; b=qPjRym37PZsoebgMXj2YJYCcqIvhcP1pnEZn2cwNG9au2Op/uVwwsHU2Eb+0/fn0C/0LBRsnpzn69j/mCawD19srrUBJ/tJjKqX9/v+NCsQ4B6Hvrt0rZQolDdPta2dbG3R3JyUNYDBskDY3vGOSLVchGsMkSoPvNB/nO3rjKAI=
+	t=1707214109; cv=none; b=jzqLXvrAYZKXmKJWodIJuipj9MwRMeMION7eaUaTUVuBVbrD0KHm4WIfkI5fg3zc7csGkNauANDEFQq79v5YC8Dzzu89nxc/6dIEErLettZTuP9opsp83lb99HKkHDW78xxSmT9+4ADn3WA6DqhVC6T0JdacwQbOJeIhVGVe3fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213998; c=relaxed/simple;
-	bh=jy+CTHxTh3htkW55zq0VUBrKvIQaZUrkwYvPniW7+yM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OONepeXMeGmyTj2rgt6RJFbOElddlUksTmgJSVhnDxSgS8cjaSl1dXys79EhPpMXecGaco/ssIqAtq27+8xASsXeS9dRi0bARWwjQLaOXH/T7R7t4HYCyx+rVUH41kVrTiLMVDuBBpxcVRq/OB2BNzLL5HWxjSNLbyv4TwjPVbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hvRxKf3V; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707214109; c=relaxed/simple;
+	bh=DgHtCUiW6ZsBt2sAYyOKbE+8rBUgi6bTVLDkiRHKlUg=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=dWQoHchpGb+fDdZz6HIQ2fniNnC21mUFhxlDLHBx1xVm+ofiQ4wtTROaPrXNeV/udxj3+ELWPCwkkfnNXVIvsMilCcnddKn3+V7oBcqk1PVXz8Vdi5qUSrnnyGU+7txzuk58xsj17EH5tGQxLX5W0AJFM4Y4/GKBGJd3UtPpQ1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfJoUFmO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hvRxKf3V"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 416A6HI2092352;
-	Tue, 6 Feb 2024 04:06:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707213977;
-	bh=H7cmjPVH/f5QjQuNq4Da1Xprb+MgQGf7YJDPgHZhd0o=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=hvRxKf3V2wuASyQuKoVCN9QaTymZYVp+uCXI3Y/A4ByJTIxJJAu6kIGvcBTLr/HBR
-	 Wn9gx42v4gSwD9YvMaLkUS6kHylGBN63I4UpjGXsuZeSjPImWrQhRua4U1S0E13KWA
-	 qkF1gkW472GiPy9h24wao3X1Z4FOhfxNFXXYlVw8=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 416A6Hrq014073
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 Feb 2024 04:06:17 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- Feb 2024 04:06:16 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 Feb 2024 04:06:16 -0600
-Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 416A68qt054893;
-	Tue, 6 Feb 2024 04:06:13 -0600
-From: Vaishnav Achath <vaishnav.a@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <kristo@kernel.org>,
-        <robh+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <vaishnav.a@ti.com>,
-        <j-choudhary@ti.com>
-Subject: [PATCH v2 1/3] dt-bindings: arm: ti: Add bindings for J722S SoCs
-Date: Tue, 6 Feb 2024 15:36:06 +0530
-Message-ID: <20240206100608.127702-2-vaishnav.a@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240206100608.127702-1-vaishnav.a@ti.com>
-References: <20240206100608.127702-1-vaishnav.a@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfJoUFmO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AEDC43390;
+	Tue,  6 Feb 2024 10:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707214108;
+	bh=DgHtCUiW6ZsBt2sAYyOKbE+8rBUgi6bTVLDkiRHKlUg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=MfJoUFmOXFeaOhUTa7247CzftLkeWIE46aHpDWfK7f7Vh7JFfyuDlSg01fd/SFIek
+	 JuR3oEioLyJmjzXH4UyFHSHqn2CBmEzyyQ8JH3gjYLUoKaL1eBll9K6M62KuWZa1TJ
+	 0JX6R3YAifNFB9p/ZebuT8XyghdJjGmBNt9PjC2HkcxoyiL/Mtjcd59B2n1BXo6jO2
+	 e8n4cuCwJFGS5y9c2QUmvlfiyHBXIG0w6u7kRC5EFlA55InxuCWSygbxKcZk0R3qSZ
+	 UKzy8LrxYtZiRA8oCHw9MRK4ZPWjvaftE8ld1KDgAJFTPuO+bFeg2vMCb6p4l/J4Wb
+	 Pv/KGtp48mV+g==
+Message-ID: <00a81be6-7dd7-4959-b1dc-eb94022bf0e5@kernel.org>
+Date: Tue, 6 Feb 2024 11:08:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>
+Content-Language: en-US
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Subject: MediaTek for-next: Replace matthias.bgg tree with mediatek
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add bindings for TI J722S family of devices.
+Hello Stephen,
 
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+A while ago we migrated the MediaTek SoC trees from Matthias' GIT repo to the new
+MediaTek collaborative one. I just noticed that the linux-next branch didn't get
+replaced (we didn't tell you anything about it, so that's our bad!).
 
-diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-index c6506bccfe88..d52672348424 100644
---- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
-+++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-@@ -123,6 +123,12 @@ properties:
-               - ti,j721s2-evm
-           - const: ti,j721s2
- 
-+      - description: K3 J722S SoC and Boards
-+        items:
-+          - enum:
-+              - ti,j722s-evm
-+          - const: ti,j722s
-+
-       - description: K3 J784s4 SoC
-         items:
-           - enum:
--- 
-2.34.1
+Can you please replace the tracked for-next branch?
 
+...The old one, to remove, is:
+git://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.git#for-next
+
+...the new one, to add, is:
+git://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git#for-next
+
+Thanks!
+Angelo
