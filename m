@@ -1,143 +1,191 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2069.outbound.protection.outlook.com [40.107.220.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39ADA7F481
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707198056; cv=none; b=h7jZ5UDftcC2b869xPtMbNHMteHSszRJjIdlqE9D6iQhE3LC26fgNtcrk/RifRZ3IPB0sxhPLtdqNvAso7k8B9a9t3LATJ8FquolPlKWtP+5luoTiZebO2T0QSp5UppzhwVL58Hm+mjTp9EU2AsqMFH9/1zhsQ5f6pgwSIirvUw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707198056; c=relaxed/simple;
-	bh=7kqaAO5rz0MEVvOXWXpuWW96op5KATV3atJvwKX3jyE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=MKm8h7hDD1PP1HEFT3mGvsCBPn+z3zLEXCI0MBgefn8oVn4oqhu5CX1oE1+QB56FAEpy/vf9bx8oBpACq5w2f7TZBSVU8APRcKS6LAMXu+s5Vnp+pXyxbUm0nvwvcGb5FjeFqL86kW0EgxfjYqoZbApBV90x3QNR4p5bMgHq6/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fqmBHa2e; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4551F77F12;
+	Tue,  6 Feb 2024 05:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707198639; cv=fail; b=oVMnXsKP1XXwOhG2qYeVOtdCBdFqfe3k67tbWPt6rm68MeiW46HCDTkEpaWXQbMtrBrfRkVgFjKXUtF8M9BrVip+q7QvfOUSKrRKBcRzzvusgpyZz5623hFXxP65ZuUolmTL98mF1ycJA9L+S427isVj8mKDUpSKojblAdj4wEs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707198639; c=relaxed/simple;
+	bh=hMPGh2TmVGvYcpcGrKGa0gKbQKzHa16Lmqq+HEPcZ9M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Tn8DgUNMvz/p62W1G+mfv1KCJy3DM0lZiJAuKqyLcySgBkJUkUZk3vlt1JRefp0R1fPLMXqQFsG66tGvD6rXnqW6rBSA0ExTZj7Y58R+wn1luVx+epJufKTGS0qq3thi/qnnWx5ROt14k1bvqtKZKQabjlybKR5bEDBUuAO8MR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=HITDulDh; arc=fail smtp.client-ip=40.107.220.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fqmBHa2e"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240206054046epoutp0329a739335f61796a2a1b6ab9bca4040d~xL5QZ9Ngh2568425684epoutp03E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:40:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240206054046epoutp0329a739335f61796a2a1b6ab9bca4040d~xL5QZ9Ngh2568425684epoutp03E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707198046;
-	bh=CC2djjTAEnwzIDHn32zkRPNrPPr+7uiinCUTrzq6knI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fqmBHa2eqPQRK4hP6YyVGHLO8kfqovIkqZwKXQS4Qi4IXt7WubXGGwtAW9kBBV9T2
-	 kE+zxwWgJl9+78nxH38ZZnowFuI77aIeduDJJZ/22eTOXp4DNqxW/cOgPC34P9IXkS
-	 uW0ZvCCTYCV5xGmEh1VKTO4kYujDwsh0rfTF9WvA=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240206054046epcas5p17a49d75ee048c41f92d09fea50eae215~xL5PwKSX-1405414054epcas5p1M;
-	Tue,  6 Feb 2024 05:40:46 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C1.14.10009.E56C1C56; Tue,  6 Feb 2024 14:40:46 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240206051402epcas5p2ae3737fc0d71ba1d7a7f8bee90438ff2~xLh6J0uhi2514425144epcas5p2j;
-	Tue,  6 Feb 2024 05:14:02 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240206051402epsmtrp1e846e1dc8329b4db9a0c630751b964a5~xLh6IkgN_1680416804epsmtrp1G;
-	Tue,  6 Feb 2024 05:14:02 +0000 (GMT)
-X-AuditID: b6c32a4a-261fd70000002719-f4-65c1c65e2b6f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	67.64.18939.A10C1C56; Tue,  6 Feb 2024 14:14:02 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.109.224.44]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240206051358epsmtip2d28793c007873284be3cf44a8dffc8e0~xLh2oJEDX1683016830epsmtip2E;
-	Tue,  6 Feb 2024 05:13:58 +0000 (GMT)
-From: Onkarnarth <onkarnath.1@samsung.com>
-To: rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-	viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-	r.thapliyal@samsung.com, maninder1.s@samsung.com, Onkarnath
-	<onkarnath.1@samsung.com>
-Subject: [PATCH 2/2] kernel: sched: print errors with %pe for better
- readability of logs
-Date: Tue,  6 Feb 2024 10:41:20 +0530
-Message-Id: <20240206051120.4173475-2-onkarnath.1@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240206051120.4173475-1-onkarnath.1@samsung.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="HITDulDh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VZd4j4iLsgGdKNmOGO1JPQ/KM3TTO2J/oZYPoXitqT25E4XdwyGklxZKVVcRNq78POSwhFe4PhMRVh6zUbCG0pzKsz9DOgou+jr15C2W1OXTLMAqD8WnFOZG8vKcKG8DcVG6X9qtrEM8OFD3kyFGStOvYUXBiGrPjzPPi1xtEsCGB3ouk1C+pK5KB1kBvLKYqO4/Sno/ltuLPlcvJXcXBhHcUdozK8HJZmrylO99jrAocJYa+TxDdOx80MzzdZV0jm60GdH6gBol5Y3G2rsdF0WsRw5rLa3SFPDNfqzhDMYCRWNpB8DCSi0/TtaqEmVkFEA/UfaC/iowQ7qxRQOUPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4HmSOA9QXnrOZ31kw3UPynyhq7Y5ryOR5jvMSo+wP60=;
+ b=PiQ2/SLua5d/R2KtdcfExpU1fla59DM3a7/DYjDsQ24aJqQ5LZg+fLCRKiQzMV3yS+UwBnI8EXts970sWNPR7d2Z4aEzbvzprsKeo3xJVeff+DYLkXcywf5sWtHta/lhd/aPFp3OBQMkcAOXujcZIn7dR8Q71S0zM9sqshKq2cTjWAa3OLARI96iM3Wc7WDGXx9q+T7Iad/4x3Z1IrzwXVXauVcql3xX/JK+XyUs2e7B59rhqI/vdb9GvzQKyFNQYBPCQtIvUWPwe1SJ1a+gpPRkFFj/CosFP1seXlAahPjFt9WIzhf3mLYUCqykvP4T8YZmYFKEfpAHSyRO4PFsjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4HmSOA9QXnrOZ31kw3UPynyhq7Y5ryOR5jvMSo+wP60=;
+ b=HITDulDh5MaziPZNUevgnZh/HMxxMJTHibSFdASeQJyI834AOtabZ0gXeNzBDJ+NSWa+vMbZgA0/vu94oEwpBJIt4s5fviGDp+Xr6h1DU3cHhM3lmE2Re6qvydwCinIDt5CctQLeSBYt5Ws+ZMU0twxPl3A4JLFamHke5lV9+USG6na+AKCTE6RxdqdZbqlJSXGBiPbe/JlroeW6/6l1FyYKm9fzHSCvWLjsWjueQe56LS42lHcekBGt4111iSt3y+4UENAJnoFqpIF9T4kBYzAoPk2mazyySmAIyxUcl0rvzCEH1eQ2/RtVb9qG97o2TPUU03N+eL0M6FGdGNfE8Q==
+Received: from SJ1PR12MB6339.namprd12.prod.outlook.com (2603:10b6:a03:454::10)
+ by BY5PR12MB5511.namprd12.prod.outlook.com (2603:10b6:a03:1d8::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Tue, 6 Feb
+ 2024 05:50:35 +0000
+Received: from SJ1PR12MB6339.namprd12.prod.outlook.com
+ ([fe80::f013:4a74:215f:1127]) by SJ1PR12MB6339.namprd12.prod.outlook.com
+ ([fe80::f013:4a74:215f:1127%5]) with mapi id 15.20.7270.016; Tue, 6 Feb 2024
+ 05:50:33 +0000
+From: Akhil R <akhilrajeev@nvidia.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org"
+	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, Mikko
+ Perttunen <mperttunen@nvidia.com>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "krzk@kernel.org" <krzk@kernel.org>
+Subject: RE: [PATCH v4 3/5] crypto: tegra: Add Tegra Security Engine driver
+Thread-Topic: [PATCH v4 3/5] crypto: tegra: Add Tegra Security Engine driver
+Thread-Index: AQHaTqDynERkn6GX3k+4bkJs49N3a7D2234AgARfRgA=
+Date: Tue, 6 Feb 2024 05:50:33 +0000
+Message-ID:
+ <SJ1PR12MB6339E195387767AC3BE74F0EC0462@SJ1PR12MB6339.namprd12.prod.outlook.com>
+References: <20240124083846.46487-1-akhilrajeev@nvidia.com>
+ <20240124083846.46487-4-akhilrajeev@nvidia.com>
+ <Zby5bLEgz/UktarE@gondor.apana.org.au>
+In-Reply-To: <Zby5bLEgz/UktarE@gondor.apana.org.au>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR12MB6339:EE_|BY5PR12MB5511:EE_
+x-ms-office365-filtering-correlation-id: 6ca41358-5c81-464d-c502-08dc26d78911
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ u8HBASLAeHAgCxKcetOZaNvWho0XwaRljd0VC3PiYNUytBQVxMGeQBcTgik4zBmJ6qwp6RFfkcTgFPLZHGQ+rdDH/AT4kpSLGnSR9B5O+/Uh9Fyz9jboQY5yLlJu+8F9lNb0y1ML7RzVZS1ahLUWn2Du4Ph6l6SZyn7mhlk6ogy7zYmDYe+Ibv+EqAKaCLxGwN2nEqrrQloJhPhn38qtM3nXTguNzUXvNi8AFk1BTS01GYNt6XZoF9g8UbN0BMfvHlG5T1gEKW1oudxNkjx/JvgApzgQUQIUqve0MvPWpPSYDf6RjLGLGWcNAr4nm3dQBu7hv02rOkZ/UrDbchhv4DsJeHeJ/QASj+g3KAb9W5KexTzPREtLRcKHXvIUgYZqNpwnfTOdmbCwSwlsoyjVq3tnxZne9GMeaWwTbjMEpaxGR3dKkBjRlNZW0PUreSbAbRO71wH2WzxEtiO8V1ZS/2PWn6kXRKbY2es1xn5KxgaeGHGvigHQHIlt7DemF96HBjnAzKMnAOaaQidcoQZzIn3KcLT1/DqhXDKfbkSEYm09WU4dO3TUM0AQFyDLcC77f/7OWyhwuZx4405oaXLjqD+gyMUL3zXSNTUPaZVaBbRFvJ60b7Gd01tUYmbCyJKJ
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR12MB6339.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(39860400002)(136003)(376002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(86362001)(83380400001)(66556008)(26005)(4326008)(6916009)(7416002)(122000001)(76116006)(38100700002)(8676002)(8936002)(54906003)(66446008)(7696005)(64756008)(15650500001)(66946007)(6506007)(66476007)(316002)(71200400001)(2906002)(5660300002)(52536014)(9686003)(478600001)(38070700009)(33656002)(41300700001)(55016003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?m+G2dmR5jWeivSdFpWGHV1b/dgv7N1qgs5Th/rb5LQaVA2cDzA8UP2/qy+XX?=
+ =?us-ascii?Q?x+7L0ujX102EgZ7TCJwHjOIRpqTRU0Hx3sd9Qyg3S1kVI8c9zVPyohS6H09k?=
+ =?us-ascii?Q?KPLcY28NtF1lJn/qG1m6EiV9m6HHEc4ws6glwXxxDQAmlSgAylrONYyC3Wbc?=
+ =?us-ascii?Q?YWqLke6SzV6Y/Z5yiRtlhDh37deyO+DksmaFql3GERFHe1Vdo7RMcRq3lHYB?=
+ =?us-ascii?Q?sLnT9dvKNgX+p2CXi/VrvouzoXZiyfpitr+0CeyU5ZocF6mdiK/5l/x8Bigf?=
+ =?us-ascii?Q?9Bc5JAONMKLMJ7G0I37zMDfVCGLwySrNwa6sJa3PEiogTK7GWarMkVJbRJDr?=
+ =?us-ascii?Q?mqqFymvrYS9ACA7JGuzZDz12Dd5+6W7evQGD9OtG29ED4Y/zzduA/qHJvBtt?=
+ =?us-ascii?Q?QYwiNMgcL64jcyU2yBo7p/QZK4EHOPmDPDHsr55dAL5TWrHC5WYknn/eaRMz?=
+ =?us-ascii?Q?gHSx/vsRqosjzEYwu7FCBhin+lhVgN/zAsOgKT6+GE9G6Q011f3PrJcgfMyG?=
+ =?us-ascii?Q?iO1EIQ+UzANsJ2AttXBcC+7KQ20mM5H9GVcYsG/ewjHyZ7lwAPTaOzQw+KZ0?=
+ =?us-ascii?Q?Nk0ztCBtyXWkiyJNVW30i0WlSM36wgw+m9wzErp6NiDzSM+b0aQZAC2Fm7Us?=
+ =?us-ascii?Q?hx8H4esjGUrCT/nJIa6mnDqbW2b329aESYdfgs94QG1qfUMpPHp7AZf4oEfA?=
+ =?us-ascii?Q?IQW3zFwfp9BYfLHMXqPERLK74sWdb12YLLRCRiMzPSWRmDTYZcXl8FUKIBg3?=
+ =?us-ascii?Q?LX4R1R5mY10Csw7v2dMMz2fxZNXxh6zUqrMBe7h6rfxsCQn0JbXHXBayE6b2?=
+ =?us-ascii?Q?dYGKeongUh8bWJKygW8dPAzbFvpgkQW10r1hR4X9DJmO7trQWhXnXbq4AE9S?=
+ =?us-ascii?Q?G8CvC+h6fqy/gUX3YQLn9IKz4IILJFWWqoNlGfdNqxK1EPAG+8EXkeGPj6tC?=
+ =?us-ascii?Q?kCbq6YwazbWXqUL0hS/h408gPka2yR3Y7XiNYcNdgWqLtAwJ+MapxWIwpC03?=
+ =?us-ascii?Q?l4/D0+YqjlHtGdlvMuAh/7MNwQ/gHCfPYQDh4OFZxN4hVB0HSAlw8bvsRYoc?=
+ =?us-ascii?Q?WzeystSio5A/S4G6FuZkslrmXun2CTqNobwPnXNqxvjFyKRiLsI1nWpBVbgY?=
+ =?us-ascii?Q?wej6uWjQWUwPnjnrFo4slZmCm/9hDITt7HiiCfAnjcjjfM5rDdmTAn/Ssi8q?=
+ =?us-ascii?Q?eraOO7YB2rfIXaaEZ8i9GkpTf/l9+wtV2ggWHQr7NmAF4JSnOkKp0BYTlLz0?=
+ =?us-ascii?Q?GvNZJPhomFsRoc+GtW9HTBdjWqCGXyN7lythCdAGU5nqKv+VmcyLqytnp/Hl?=
+ =?us-ascii?Q?Cp6tkwVoNlfb/UF3OKhy9gnZKcUPtVL56jwHFzdQelDTic80+DMihQppEkLm?=
+ =?us-ascii?Q?E3BLV1E44PDLrq1/apUNDvii+6xhprsQFTpOB8uzh1Ny836AGKO+AA/4zKaQ?=
+ =?us-ascii?Q?yQ8fPmPU2x43j6Cf9r+ZOl7mwC+1S8LZn/9PoWpBKGSbUIlPqUOPOSZe7jTV?=
+ =?us-ascii?Q?0heTDW8b3WgtBBcSJHDlgK0hMeLudgE51vGA0r151nEB6snTVunwrN2TwAYi?=
+ =?us-ascii?Q?ZrOmCbALdjVvqCieD69xpOwKYbEI/D2gZoS0c61W?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFKsWRmVeSWpSXmKPExsWy7bCmum7csYOpBie6OSyWNGVYXHp8lc1i
-	+stGFounE7YyW9ztn8pisfPhWzaL5fv6GS0u75rDZnF23nE2i8+9RxgtDs9vY7GY/O4Zo8Wl
-	AwuYLFb0fGC1ON57gMli471si7lfpjJb7Ot4wGTRceQbs8XGrx4WW49+Z3cQ9Vgzbw2jR8u+
-	W+weCzaVemxeoeWxaVUnm8eda3vYPN7vu8rm0bdlFaPH5tPVHp83yQVwRXHZpKTmZJalFunb
-	JXBlnN/qUfCEreL7hPUsDYy3WbsYOTgkBEwkrl8s6GLk4hAS2M0o8WbbFeYuRk4g5xOjxLLF
-	LhAJIPvboUVsIAmQholPu6GKdjJK/NpoA1H0hVHi8+1VLCAJNgEtiRl3DjCBJEQEtjBJLLl0
-	kB3EYRY4xyhxY/IWsN3CAlESZzZEgzSwCKhKnJuwhB3E5hWwk3jzo4EFYpu8xMxL39lByjkF
-	7CWmbuaEKBGUODnzCVgJM1BJ89bZzCDjJQSecEj8v/sP6lIXiW27/rFD2MISr45vgbKlJF72
-	t0HZ+RIts2cxQ4KiRuLqU1WIsL3Ek4sLwa5kFtCUWL9LHyIsKzH11DomiLV8Er2/nzBBxHkl
-	dsyDsVUlfk2ZCnW9tMT933OhrvGQ6Lx9mA0SVpMYJf4ufMM2gVFhFpJ3ZiF5ZxbC6gWMzKsY
-	JVMLinPTU4tNC4zyUsv1ihNzi0vz0vWS83M3MYKTo5bXDsaHDz7oHWJk4mA8xCjBwawkwmu2
-	40CqEG9KYmVValF+fFFpTmrxIUZpDhYlcd7XrXNThATSE0tSs1NTC1KLYLJMHJxSDUz+/oey
-	ZfLaHs1JMhJedTm/jPvymd9Fkdt1djSsPlz0UdHByqKhIzxO91LKI1bTqalJ7fXnF1m1qiny
-	vWaQW7j21/a+Qvk7+oEL5NYnZ2vwmratPv353jTRpyuuSMruEXikyVwVeLFHQWTiwTNX/1za
-	KT7JPVQyo/a6kuWkvdZ5n8r+/204/Hs9c8+2tGMvdhxJfsc/9XyGaVbGTedpknUbatfc4Jt7
-	/uXy9dMPV0pw7fed9OsD998lecvefN23vfSFd3Dt60QdN1tGn16+ngV1LpJMYTybe1bvjtA7
-	Zbt9W9kUh6Rl/nXTLKsPyE00+cXjbSj5hv8n1xwtyfnrWnw3/prCePfIme/RMst/8bgosRRn
-	JBpqMRcVJwIAiVfevf0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvK7UgYOpBif+CFgsacqwuPT4KpvF
-	9JeNLBZPJ2xltrjbP5XFYufDt2wWy/f1M1pc3jWHzeLsvONsFp97jzBaHJ7fxmIx+d0zRotL
-	BxYwWazo+cBqcbz3AJPFxnvZFnO/TGW22NfxgMmi48g3ZouNXz0sth79zu4g6rFm3hpGj5Z9
-	t9g9Fmwq9di8Qstj06pONo871/awebzfd5XNo2/LKkaPzaerPT5vkgvgiuKySUnNySxLLdK3
-	S+DKOL/Vo+AJW8X3CetZGhhvs3YxcnJICJhITHzazQxiCwlsZ5Q42qoIEZeW+HR5DjuELSyx
-	8t9zIJsLqOYTo8SjmxvZQBJsAloSM+4cYAJJiAgcY5KY1r+RBcRhFrjCKDHr9DawKmGBCIkD
-	S54zgdgsAqoS5yYsARvLK2An8eZHAwvECnmJmZe+A8U5ODgF7CWmbuaEuMhOovfqNKhyQYmT
-	M5+AlTMDlTdvnc08gVFgFpLULCSpBYxMqxhFUwuKc9NzkwsM9YoTc4tL89L1kvNzNzGC408r
-	aAfjsvV/9Q4xMnEwHmKU4GBWEuE123EgVYg3JbGyKrUoP76oNCe1+BCjNAeLkjivck5nipBA
-	emJJanZqakFqEUyWiYNTqoEpq/NmM5OftMz/pw867l7Kf3x/1fwlpgmF+9fZexnp65TnXOjc
-	0re8VGTX61yT/J3dW7J/TM3U7fl6/WbgjZexYnuNrq6pbBCUD2HZkGa7rtF9WbTjo2QJ6Zat
-	l4u/385/oDAx665bPuORBdvj3M2/Kqxm57eTmZVzyMlxxr3FaRtVF/8Skfcs1j+xS31azuae
-	DXnveAzktzxmY3c+8PSJ47ur20/ObFU+dl8y8YH//Kmf/0ie6Y4TbQpWW++30vmb9DRXycD+
-	M2tbPimmdzvqOPfoVktfEWxn9f7b/vXQGuZnW//GHFpeUt+m9LdVPqaraErArEXr89bEP995
-	4da3xvT+r39FBOLeLp/x+kOnEktxRqKhFnNRcSIANHpWqC4DAAA=
-X-CMS-MailID: 20240206051402epcas5p2ae3737fc0d71ba1d7a7f8bee90438ff2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20240206051402epcas5p2ae3737fc0d71ba1d7a7f8bee90438ff2
-References: <20240206051120.4173475-1-onkarnath.1@samsung.com>
-	<CGME20240206051402epcas5p2ae3737fc0d71ba1d7a7f8bee90438ff2@epcas5p2.samsung.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR12MB6339.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ca41358-5c81-464d-c502-08dc26d78911
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2024 05:50:33.8887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 74NTKW/unE8cahq98gv/KuE1e4Rd9ZTnbhsBBkcTqzp/OFoWOtwthd+uvFBQjoreDfsAazL9rBDNOG/8HbNfBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5511
 
-From: Onkarnath <onkarnath.1@samsung.com>
+> On Wed, Jan 24, 2024 at 02:08:44PM +0530, Akhil R wrote:
+> >
+> > +static void tegra_sha_init_fallback(struct tegra_sha_ctx *ctx, const c=
+har
+> *algname)
+> > +{
+> > +     ctx->fallback_tfm =3D crypto_alloc_ahash(algname, 0, CRYPTO_ALG_A=
+SYNC |
+> > +                                             CRYPTO_ALG_NEED_FALLBACK)=
+;
+> > +
+> > +     if (IS_ERR(ctx->fallback_tfm)) {
+> > +             dev_warn(ctx->se->dev, "failed to allocate fallback for %=
+s %ld\n",
+> > +                      algname, PTR_ERR(ctx->fallback_tfm));
+> > +             ctx->fallback_tfm =3D NULL;
+> > +     }
+> > +}
+>=20
+> This should check that the fallback state size is smaller than
+> that of tegra.  As otherwise the fallback export/import will break.
 
-instead of printing errros as a number(%ld), it's better to print in string
-format for better readability of logs.
+Okay. Got it. Will update.
+=20
+> > +static int tegra_sha_import(struct ahash_request *req, const void *in)
+> > +{
+> > +     struct tegra_sha_reqctx *rctx =3D ahash_request_ctx(req);
+> > +     struct crypto_ahash *tfm =3D crypto_ahash_reqtfm(req);
+> > +     struct tegra_sha_ctx *ctx =3D crypto_ahash_ctx(tfm);
+> > +     int i;
+> > +
+> > +     if (ctx->fallback)
+> > +             return tegra_sha_fallback_import(req, in);
+> > +
+> > +     memcpy(rctx, in, sizeof(*rctx));
+> > +
+> > +     /* Paste all intermediate results */
+> > +     for (i =3D 0; i < HASH_RESULT_REG_COUNT; i++)
+> > +             writel(rctx->result[i],
+> > +                    ctx->se->base + ctx->se->hw->regs->result + (i * 4=
+));
+>=20
+> What happens when multiple requests of the same tfm import at
+> the same time?  Normally we don't actually touch the hardware
+> in the import function.  Instead, all the hard work happens at
+> the end of the update function, which moves hardware state into
+> the request object.
+>=20
+> The import/export function then simply copies the request object
+> state to the in/out buffer.
 
-Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
----
- kernel/sched/cpufreq_schedutil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Understood the issue. But I feel it will be a bit overburden for the update=
+()
+to copy/paste these for every call. Let me explore more on the hardware and
+come back with a better approach.
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index eece6244f9d2..2c42eaa56fa3 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -671,7 +671,7 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
- 				"sugov:%d",
- 				cpumask_first(policy->related_cpus));
- 	if (IS_ERR(thread)) {
--		pr_err("failed to create sugov thread: %ld\n", PTR_ERR(thread));
-+		pr_err("failed to create sugov thread: %pe\n", thread);
- 		return PTR_ERR(thread);
- 	}
- 
--- 
-2.25.1
+Thanks for the comments.
+
+Regards,
+Akhil
 
