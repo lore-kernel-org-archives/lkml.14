@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4446B137C37;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63376137C50;
 	Tue,  6 Feb 2024 12:09:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221362; cv=none; b=TWE1YE9Agu/20iI1ayjN7/64yN0EagVrPbMHQA9AqVnB4EOCv6y2SLjpsaUAk1tFg360tQ+OBnC8clYYG28B7mbNG2dyUMTW0WakE+kU7j6wch3GwMavk9le4nsyxY2rtDWTclR3O4NLBlMH0QMCgV0J7ayOJk396iOsWCUVqOw=
+	t=1707221362; cv=none; b=tVK6AdJ3G/zmj3OJL2IPFPsXOnFykIxBix/c9qbm6gaMiiq/MLr6H+pNaEcn548dnObYaq2SD+A/58ipWjAFOeaZKIa+kAwNwAyxkZJB/vWMBrCDzCLKKADsJQA2igWUBqFPQTLgMcwJlxBjd0S+w1Cm6sGOfSU8IHjcDGdGSEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707221362; c=relaxed/simple;
-	bh=PbQrblDeR9F0JgOw4gGsVCF/2xvBxqNknZ0wT0MnC+M=;
+	bh=hnDief3HS3NBM6ZKYIfuGnDzLR4JMdJjWA5KdzPNiEA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=dnLdyaz2fELQKPO8Sl9lPqwra8UqiB7WvSLTX2tWBS6zhSKwY3Mv9rNDcSY6kOS/PT7RklMXsX7efPiv991nza+n/sACDjswwbrmH+2hxbBzhVvzrspw6UJk4kpU4FEbq2frtHX37P1t+7i2Nj9gvHILYzd9V7P0a54zNxC4I9g=
+	 Content-Type; b=ZuGZOJ6BGESYHJOJEkRPGwZA/WW6WkeR+RyOkmGKx+udkrpJpKaLl9GEy+kq321qqrnRMbIabVRegGpT1lQrFgpg525PZHm79zHs9AymxEfMezITI5K7pHBLJl/EX6MRGukRJiD5oNr3mFLEhJ7D7a/jGFJ7+xj5ZOUICwdsODk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A80C433F1;
-	Tue,  6 Feb 2024 12:09:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51081C43390;
+	Tue,  6 Feb 2024 12:09:22 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGs-00000006bDL-1mZY;
+	id 1rXKGs-00000006bEL-39Zw;
 	Tue, 06 Feb 2024 07:09:50 -0500
-Message-ID: <20240206120950.284520771@rostedt.homelinux.com>
+Message-ID: <20240206120950.611237633@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:29 -0500
+Date: Tue, 06 Feb 2024 07:09:31 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,9 +30,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [v6.6][PATCH 24/57] eventfs: Remove expectation that ei->is_freed means ei->dentry ==
- NULL
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josef Bacik <josef@toxicpanda.com>
+Subject: [v6.6][PATCH 26/57] eventfs: Use GFP_NOFS for allocation when eventfs_mutex is held
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,84 +44,47 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The logic to free the eventfs_inode (ei) use to set is_freed and clear the
-"dentry" field under the eventfs_mutex. But that changed when a race was
-found where the ei->dentry needed to be cleared when the last dput() was
-called on it. But there was still logic that checked if ei->dentry was not
-NULL and is_freed is set, and would warn if it was.
+If memory reclaim happens, it can reclaim file system pages. The file
+system pages from eventfs may take the eventfs_mutex on reclaim. This
+means that allocation while holding the eventfs_mutex must not call into
+filesystem reclaim. A lockdep splat uncovered this.
 
-But since that situation was changed and the ei->dentry isn't cleared
-until the last dput() is called on it while the ei->is_freed is set, do
-not test for that condition anymore, and change the comments to reflect
-that.
-
-Link: https://lkml.kernel.org/r/20231120235154.265826243@goodmis.org
+Link: https://lkml.kernel.org/r/20231121231112.373501894@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Fixes: 020010fbfa20 ("eventfs: Delete eventfs_inode when the last dentry is freed")
+Fixes: 28e12c09f5aa0 ("eventfs: Save ownership and mode")
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
 Reported-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 88903daecacf03b1e5636e1b5f18bda5b07030fc)
+(cherry picked from commit 4763d635c907baed212664dc579dde1663bb2676)
 ---
- fs/tracefs/event_inode.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ fs/tracefs/event_inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index f8a594a50ae6..f239b2b507a4 100644
+index 3eb6c622a74d..56d192f0ead8 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -27,16 +27,16 @@
- /*
-  * eventfs_mutex protects the eventfs_inode (ei) dentry. Any access
-  * to the ei->dentry must be done under this mutex and after checking
-- * if ei->is_freed is not set. The ei->dentry is released under the
-- * mutex at the same time ei->is_freed is set. If ei->is_freed is set
-- * then the ei->dentry is invalid.
-+ * if ei->is_freed is not set. When ei->is_freed is set, the dentry
-+ * is on its way to being freed after the last dput() is made on it.
-  */
- static DEFINE_MUTEX(eventfs_mutex);
+@@ -95,7 +95,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+ 			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
+-						  GFP_KERNEL);
++						  GFP_NOFS);
+ 			if (!ei->entry_attrs) {
+ 				ret = -ENOMEM;
+ 				goto out;
+@@ -627,7 +627,7 @@ static int add_dentries(struct dentry ***dentries, struct dentry *d, int cnt)
+ {
+ 	struct dentry **tmp;
  
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-  * its parent's list and will have is_freed set (under eventfs_mutex).
-- * After the SRCU grace period is over, the ei may be freed.
-+ * After the SRCU grace period is over and the last dput() is called
-+ * the ei is freed.
-  */
- DEFINE_STATIC_SRCU(eventfs_srcu);
- 
-@@ -365,12 +365,14 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
- 		 * created the dentry for this e_dentry. In which case
- 		 * use that one.
- 		 *
--		 * Note, with the mutex held, the e_dentry cannot have content
--		 * and the ei->is_freed be true at the same time.
-+		 * If ei->is_freed is set, the e_dentry is currently on its
-+		 * way to being freed, don't return it. If e_dentry is NULL
-+		 * it means it was already freed.
- 		 */
--		dentry = *e_dentry;
--		if (WARN_ON_ONCE(dentry && ei->is_freed))
-+		if (ei->is_freed)
- 			dentry = NULL;
-+		else
-+			dentry = *e_dentry;
- 		/* The lookup does not need to up the dentry refcount */
- 		if (dentry && !lookup)
- 			dget(dentry);
-@@ -473,8 +475,8 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
- 		 * created the dentry for this e_dentry. In which case
- 		 * use that one.
- 		 *
--		 * Note, with the mutex held, the e_dentry cannot have content
--		 * and the ei->is_freed be true at the same time.
-+		 * If ei->is_freed is set, the e_dentry is currently on its
-+		 * way to being freed.
- 		 */
- 		dentry = ei->dentry;
- 		if (dentry && !lookup)
+-	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_KERNEL);
++	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_NOFS);
+ 	if (!tmp)
+ 		return -1;
+ 	tmp[cnt] = d;
 -- 
 2.43.0
 
