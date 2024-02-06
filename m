@@ -1,178 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2938914276
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 19:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A6F17BC5;
+	Tue,  6 Feb 2024 19:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707247782; cv=none; b=CFZ/mQvTOVEZ9vRGzjGiotq8s/J2w5ZmzU1za19fBGS4WHylnvKGheI3PtJkwI3IWOo8btEJAIU/tKj1NCg5QpcFFlkLuVK06mCBRGTbgYLL157Fn/OqHWn3W7R0k0KvvGEbt+geezCGo/Nrs452POrc0yhwB9FlzvOAUsja5B4=
+	t=1707247827; cv=none; b=G5lobi1Js6tlEfyippMNgayw889S1qnsMG81qYhtSnY/h/3S52LpyDrHSOJlxpWMpmFPt6/Gki52kZlmcXLJaY8PYCPwRFDyJa6c4PapO+e0DyemuXWi/fVbF9H7kK9jm90+N4FSSi6W6WomUg4BHJ4R7XtY1aLTiR7IxelFnhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707247782; c=relaxed/simple;
-	bh=XZkQUMsfnvjrmuHhGG32XgueQTUnlS3+DOH+pSVZ9V8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P0FX4UKbbDWGUPaSZBmkiM/MYaScLipWsCf+4Up9iY8yqaO69gBVQBDWf0J11SNOnlCrdcegGYmkbKLu81LOHmWgwSQYbZqhjpSM3kOACDeKCA0xZZTy0w3cC0UMEhPlCnOon01+yAGaa56p8IF/HgY3SL0cSgudZsl1s7nPj9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=elWmJSmz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707247827; c=relaxed/simple;
+	bh=hi0BT47m6ZyBheedy6RSpVulWOf5VI5WWIZe5wNvktc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SIsowqx7S+m99U5Liu2Vp+RACWpMFR2kKaYrMEc4ZsiSOMBa7t0uWQQtFMRr2zdR1ikY3J1wOUevqYLpeqhRi53uODl/VPwMe6dEiYXIFl9rjl4UDOvBpQbO2XwI+oUxX7kdxkzIUinbiv5oMYyvQEW1CAGciJ3vIY9jIu9aWAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=AFdOzT0h; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elWmJSmz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707247780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0cVRs7KeAPV1Z6Jd/uVlTNTCTsZbLZD+HLSKeeEyC2I=;
-	b=elWmJSmzT5SO2YQC1A/yzPoCtSVSnOalZxSjS9AJjbLTZFtc8pR2M81e8RxEempblKgGFT
-	Hw5vNr9e2pn26UzbgqYZCavd5a7JaLWtdT2s1CdU3xbkxJV7flQI6VdZuL9bmyxQsaTEEO
-	Z7+nCP8oIUsp7M9Q08CWzTpYWs0drfg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-35--OZ5BSJwN7SNOU60aDZ1nA-1; Tue,
- 06 Feb 2024 14:29:37 -0500
-X-MC-Unique: -OZ5BSJwN7SNOU60aDZ1nA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C9F401C060CE;
-	Tue,  6 Feb 2024 19:29:35 +0000 (UTC)
-Received: from tpad.localdomain (unknown [10.96.133.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 634C02026D08;
-	Tue,  6 Feb 2024 19:29:33 +0000 (UTC)
-Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 8DA37401E0C72; Tue,  6 Feb 2024 16:15:18 -0300 (-03)
-Date: Tue, 6 Feb 2024 16:15:18 -0300
-From: Marcelo Tosatti <mtosatti@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>,
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Mrunal Patel <mpatel@redhat.com>,
-	Ryan Phillips <rphillips@redhat.com>,
-	Brent Rowsell <browsell@redhat.com>, Peter Hunt <pehunt@redhat.com>,
-	Cestmir Kalina <ckalina@redhat.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Alex Gladkov <agladkov@redhat.com>, Phil Auld <pauld@redhat.com>,
-	Paul Gortmaker <paul.gortmaker@windriver.com>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Costa Shulyupin <cshulyup@redhat.com>
-Subject: Re: [RFC PATCH 0/8] cgroup/cpuset: Support RCU_NOCB on isolated
- partitions
-Message-ID: <ZcKFRqrUh5tTbsaJ@tpad>
-References: <20240117163511.88173-1-longman@redhat.com>
- <ZagJPoEsLZ6Dg-NG@mtj.duckdns.org>
- <5ee5bf79-6cdc-4d1b-a19f-f0d5165a5f16@redhat.com>
- <ZcIsd6fjgmsb2dxr@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="AFdOzT0h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1707247816; x=1707852616; i=markus.elfring@web.de;
+	bh=hi0BT47m6ZyBheedy6RSpVulWOf5VI5WWIZe5wNvktc=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=AFdOzT0h3oqTBgn00LiRwdbL/4B+PXCN6St4kmqNToB1MrhUnPK5dvBUnKiqymOb
+	 1wzbmqpWAvwjp24ju4Vqcgyor9jionuE/QOtHte9DIwfUynb5ka1NNHck9UerwCEQ
+	 63+q4xBeKju/PQ0P63PY5EsSAVj5Ju+NV/O0u/ZS7G9jgK5xiq9ktffoJzYk/iCp4
+	 pz0/6uSN2cDr6ae39vPcLqrcGRQcKLgQyjtacRslevRNhwwFIbtJvrVtici7H4DwI
+	 WT+Y3wgZ6S7x+p+/l1DVOw4C2KFXupJJJufURY12BkFNwG9rePraY1SkFhIIdv64m
+	 szZ/90HEK6dZ2YUjMw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MHmq2-1rlFCY0P3O-00EsQQ; Tue, 06
+ Feb 2024 20:30:16 +0100
+Message-ID: <2ee2acc5-dce4-4e79-8f4c-f64f806f2e40@web.de>
+Date: Tue, 6 Feb 2024 20:30:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZcIsd6fjgmsb2dxr@localhost.localdomain>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v2] drm/tegra: dsi: Use devm_platform_ioremap_resource() in
+ tegra_dsi_probe()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: linux-tegra@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel-janitors@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <c2e4aaa9-731f-4a33-890e-567c466a8885@web.de>
+In-Reply-To: <c2e4aaa9-731f-4a33-890e-567c466a8885@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:P0c1I0GGVWIPRIqGbF/0oVUMwLjd5lT+AEWpvtbuRHfrDaVev3s
+ 9waL07qfdivt9+Kme3XYPma+E4Cbil0jtMr8m6RuEkW4T757xIKBdY7eP47OGByZswOAhgq
+ kHJNDHWs2T5TPlJpvuB2RnkAAC+K+qCyIcdfHjlof+zbiGfHSE1qJAcEPrt7MoK+bpDMHQw
+ MNMKjUWS+w+kBr5zV9HFw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:AIcDvYb5rFc=;e/6xf5MXkUbbLJSuBtz57g4YovD
+ 6xRXcUIUwUTbTkjvldGqX19asM26PXdTkgODzuKSRaapUS0OYYwpT1dyPq7qTNlqckMEtJXvF
+ ULYGlxLSjFMpAQ461esEvH2Vrd2V20rDjDv6Fc/vxctrQVkPi2cwbg3LhIR6xDlbbZDN3J9Un
+ INoXUGPTt0PBf4c1DYaZM91+feIzMuhiA1VG8m18NdffzkPmtNkYRX/5JJ8cwwOBsxKjJ00u5
+ pGJTvncnF94ix7H74tz2pM+UeUTGytap4bH7mONlYo0d+mfV9clgF+g5AYXGfNec75OEpFjnb
+ f8yr/AY1u5aIgQBPpjYC9fOulVNqMn9zHX6cyV7J+s+nIZLBnHIB9mPWXlmv9+I4KetLJX/pY
+ 0r7DJr2l7RLByMK/Ys3MR9d4T2blss/9VrexUXa6vqdSh/7dVOwiU0x+blDdZJ1ifkKPYKbGh
+ vnix+N6LZMHjsq7lFKVdiAfY+FE4vcL3bgXuW9BADtdFpo2Xr/4MrcimVePWYcRFxwbTK6GGe
+ FhifFGQ6tarQCv0AgTpjevobHrGsd6HxUntumJkPv6a4D7wtfgn31ApoH2nPYgPE/yFECiG+o
+ JvoMTFduECrVmuZwSK8pl+XyfCPcNGD/PunZPrkka+UjLF34ZyOaCusWt7cXHTBxwKo7rhnSN
+ pl9E2D8nbWaqUX8SRce1NviWvOL1AwKowormyZJlP908HI2+//vDvkgJwwqt03Y5RHJNpWe4d
+ FCcg4neLOxCNoZEKWMfpWZ3xnyITZkb0HvgN06wP86MsrQlfp81Sm+NtbP1+/apJTnz1HNQG4
+ sfBEduy8Vo6329GMOdjXecTB2c/sRvm6BtmIE5sMDC5d0=
 
-On Tue, Feb 06, 2024 at 01:56:23PM +0100, Frederic Weisbecker wrote:
-> Le Wed, Jan 17, 2024 at 12:15:07PM -0500, Waiman Long a écrit :
-> > 
-> > On 1/17/24 12:07, Tejun Heo wrote:
-> > > Hello,
-> > > 
-> > > On Wed, Jan 17, 2024 at 11:35:03AM -0500, Waiman Long wrote:
-> > > > The first 2 patches are adopted from Federic with minor twists to fix
-> > > > merge conflicts and compilation issue. The rests are for implementing
-> > > > the new cpuset.cpus.isolation_full interface which is essentially a flag
-> > > > to globally enable or disable full CPU isolation on isolated partitions.
-> > > I think the interface is a bit premature. The cpuset partition feature is
-> > > already pretty restrictive and makes it really clear that it's to isolate
-> > > the CPUs. I think it'd be better to just enable all the isolation features
-> > > by default. If there are valid use cases which can't be served without
-> > > disabling some isolation features, we can worry about adding the interface
-> > > at that point.
-> > 
-> > My current thought is to make isolated partitions act like isolcpus=domain,
-> > additional CPU isolation capabilities are optional and can be turned on
-> > using isolation_full. However, I am fine with making all these turned on by
-> > default if it is the consensus.
-> 
-> Right it was the consensus last time I tried. Along with the fact that mutating
-> this isolation_full set has to be done on offline CPUs to simplify the whole
-> picture.
-> 
-> So lemme try to summarize what needs to be done:
-> 
-> 1) An all-isolation feature file (that is, all the HK_TYPE_* things) on/off for
->   now. And if it ever proves needed, provide a way later for more finegrained
->   tuning.
-> 
-> 2) This file must only apply to offline CPUs because it avoids migrations and
->   stuff.
-> 
-> 3) I need to make RCU NOCB tunable only on offline CPUs, which isn't that much
->    changes.
-> 
-> 4) HK_TYPE_TIMER:
->    * Wrt. timers in general, not much needs to be done, the CPUs are
->      offline. But:
->    * arch/x86/kvm/x86.c does something weird
->    * drivers/char/random.c might need some care
->    * watchdog needs to be (de-)activated
->    
-> 5) HK_TYPE_DOMAIN:
->    * This one I fear is not mutable, this is isolcpus...
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 6 Feb 2024 20:22:56 +0100
 
-Except for HK_TYPE_DOMAIN, i have never seen anyone use any of this
-flags.
+A wrapper function is available since the commit 7945f929f1a77a1c8887a97ca=
+07f87626858ff42
+("drivers: provide devm_platform_ioremap_resource()").
 
-> 
-> 6) HK_TYPE_MANAGED_IRQ:
->    * I prefer not to think about it :-)
-> 
-> 7) HK_TYPE_TICK:
->    * Maybe some tiny ticks internals to revisit, I'll check that.
->    * There is a remote tick to take into consideration, but again the
->      CPUs are offline so it shouldn't be too complicated.
-> 
-> 8) HK_TYPE_WQ:
->    * Fortunately we already have all the mutable interface in place.
->      But we must make it live nicely with the sysfs workqueue affinity
->      files.
-> 
-> 9) HK_FLAG_SCHED:
->    * Oops, this one is ignored by nohz_full/isolcpus, isn't it?
->    Should be removed?
-> 
-> 10) HK_TYPE_RCU:
->     * That's point 3) and also some kthreads to affine, which leads us
->      to the following in HK_TYPE_KTHREAD:
-> 
-> 11) HK_FLAG_KTHREAD:
->     * I'm guessing it's fine as long as isolation_full is also an
->       isolated partition. Then unbound kthreads shouldn't run there.
-> 
-> 12) HK_TYPE_MISC:
->     * Should be fine as ILB isn't running on offline CPUs.
-> 
-> Thanks.
-> 
-> 
+* Thus reuse existing functionality instead of keeping duplicate source co=
+de.
+
+* Delete a local variable which became unnecessary with this refactoring.
+
+
+This issue was transformed by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+
+v2:
+The transformation pattern was adjusted based on advices by known contribu=
+tors.
+
+Examples:
+* Douglas Anderson
+* Geert Uytterhoeven
+* Robin Murphy
+
+
+ drivers/gpu/drm/tegra/dsi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index fbfe92a816d4..f9b6b5428b66 100644
+=2D-- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1562,7 +1562,6 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *=
+dsi)
+ static int tegra_dsi_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_dsi *dsi;
+-	struct resource *regs;
+ 	int err;
+
+ 	dsi =3D devm_kzalloc(&pdev->dev, sizeof(*dsi), GFP_KERNEL);
+@@ -1624,8 +1623,7 @@ static int tegra_dsi_probe(struct platform_device *p=
+dev)
+ 		return err;
+ 	}
+
+-	regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dsi->regs =3D devm_ioremap_resource(&pdev->dev, regs);
++	dsi->regs =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dsi->regs))
+ 		return PTR_ERR(dsi->regs);
+
+=2D-
+2.43.0
 
