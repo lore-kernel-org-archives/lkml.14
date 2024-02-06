@@ -1,249 +1,196 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA9D310F4
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 01:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707182294; cv=none; b=qPg4Kv1O5ycRzmVoTIFu2KNVnrXGxSue6YyHOBvCBtg69b+msjJ5QaoY+Fc7lEc1/56TvCUpAtiUhSrcO9qiHtn61oznDVrUJRCRMzNSKTQadpfMwcFzM4NNpXOONybKB2n1fDi9gfmvbgVxii0YuITlHc4RMXszeUnCSavzea4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707182294; c=relaxed/simple;
-	bh=1OAsjmGWHUQHaPAdnmgD2EvriyaiRbFvOT6jgGrn8SE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jv9iSFNsK5UPFnJRSYw09ONXHTkQIMLXdKO21y1ZW1uzHAdmvtveBkwfu27u1XEoCa/wnw0w5yvNSErCrL1AsthkiV7QpL8A6jigLwTBv55N1nQlzNNB38ZEPoWjeEarLbVMPHLoD/SZyWwjM1dEY0pU1V/f7tZCXFsx/2+qXOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 4161CmKi029258;
-	Mon, 5 Feb 2024 19:12:48 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 4161ClJZ029257;
-	Mon, 5 Feb 2024 19:12:47 -0600
-Date: Mon, 5 Feb 2024 19:12:47 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "Daniel P. Berrang??" <berrange@redhat.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
-Message-ID: <20240206011247.GA29224@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com> <20240130083007.1876787-2-kirill.shutemov@linux.intel.com> <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com> <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616D71367;
+	Tue,  6 Feb 2024 01:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707182567; cv=fail; b=JyrnjQKTeanxbGaS37MvzbmS+Ze2bNbXbop1iX+8b/Aacd4m/Q4jDQMtl8TvONZTh0HhhcuiNTsNyFyfLzs3DN61XY5vD7Hl80M/MHXRPfKLWQjnw83I9i9fk5GdYa+szw/jQP3F00SzJ8/Y4XHWFztvFR0AKuZ+ceiaq8AtOY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707182567; c=relaxed/simple;
+	bh=KPxH932D5aarZagsSvsU+T6kmmt2NqApFbHRPTg8eWA=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=CLin55E6rdE+wXOpFOQfL0+imNnkNzKavwV3EOWggzCp+/4nLJizP24IdGNsk+Top0oOPldv0TUoqezdQg7MMCgaSBDiS0/qt7DV9rdKrSJlKPp3CW3Z1RGmyPg3/lZL0d2nED4gG3nyQ+0CrBIu0THecVPmuTYhbZxPYDH6JoI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ne+iUHiZ; arc=fail smtp.client-ip=40.107.243.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ne+iUHiZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YE8JB/Sdi/xZTwLSAHQApVzJlg6Q3GJldXaz24fhLWL6zlanJ/9ueNhumqHGrDtLN3p0YG6MojnTaqrXgZKRgvWsoIaC2kJdKvjY1ItCBMs2ZFwKHv9idqzMKkelI4DVYhKpm2N2etdlyTKWdR2TkivxOlPCzlL7Kw48QiCbZStu12aVmLV+o4gJaz0Ct5w/wgJneZ1Vj7e4bAnGqyoeYTYLXxIdrEWJ66tLLUFuXv0Z4l5GwswaMbmZKIiym1OLIRKu0ABQCVRkj4bA9qNr+rb/CBb7mCI5AFvXMSNvIgIQ+CUjiyNJBFHcx+g8AaJDv6jYWjOEzqsYImyARiLRtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rvB/IEHbVFkI3qckMxqWc4Lu08MrfPu+XDhHl0ORfB4=;
+ b=Qw+UlaPm9RE43hFuGOKDHXXD+7r4M6de4Xr5MLrAHWA3QZHGlfUr/z8Uydp1kfSWN+9Z0oGjJyb20jyMuZ4iViKSrHX+kncq7lVPj4nZpCPSa9QqO4khXxk1jVkWmeCDXDUP82eqBuCRHgSeHu5TvtaiLT8gdbB2XkahDKIzHKuO08gr4+4WpjPT1C3FugFkL09XtE87UobqclQE/tC2LfEyzFnzDvt1YRTb6ZS96IlAWr5lO+xRQsde8vU/ct/7xtfaqaMlU8ens80UuUzrGjTaLqPDA3P/H13lYYfcM+o4qJRJsTu/yAQFfVNUXHYaXeDqspOWK5QU00XKWlWr9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rvB/IEHbVFkI3qckMxqWc4Lu08MrfPu+XDhHl0ORfB4=;
+ b=ne+iUHiZX7vHbOK7MzVW6Gx+fOSieg+DXHbXH8JYlrFBLPljnqQhGdjJBYE3kjTs2wI4evgFxt1TWwKYZHNEX8dAJWtIj9cOHzXWaIfChJp1YozLTpBWTxaWxd/rV1gWhCQuCdB+gFiCm2S2npm8ElwAazDTVyOeaeune7KkUoVsk5YsfmjcbHYDHZDQUmGl18RKZqCAvxgmkEYhLO+Atk+ZF9yMaC91jAd+pNeWXaoDFL0xEFX9nJXAbtCXBkwAW7Cc73MUWLprO7Uk/ExRP31kfnkcPk6Td/bQGRHqRyxAAiEgFStBO25oBSnRwKSbVUcmnOZDm9IbbJGK0eAbaA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by CY8PR12MB7684.namprd12.prod.outlook.com (2603:10b6:930:87::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.16; Tue, 6 Feb
+ 2024 01:22:42 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670%7]) with mapi id 15.20.7270.012; Tue, 6 Feb 2024
+ 01:22:40 +0000
+References: <20240206010311.149103-1-jdamato@fastly.com>
+User-agent: mu4e 1.10.8; emacs 28.2
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: Joe Damato <jdamato@fastly.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, tariqt@nvidia.com,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, "open list:MELLANOX MLX5 core VPI driver"
+ <linux-rdma@vger.kernel.org>
+Subject: Re: [PATCH net-next] eth: mlx5: link NAPI instances to queues and IRQs
+Date: Mon, 05 Feb 2024 17:09:09 -0800
+In-reply-to: <20240206010311.149103-1-jdamato@fastly.com>
+Message-ID: <878r3ymlnk.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR01CA0032.prod.exchangelabs.com (2603:10b6:a02:80::45)
+ To BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 05 Feb 2024 19:12:48 -0600 (CST)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|CY8PR12MB7684:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0987e9a8-e730-4ff7-eb9e-08dc26b21c56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4DUujeejiqkoH6DKoKHw/1Y0aUFgdTy+/5mpD27/XY1bnTMtRlHW2CJ2MS8W2/W1Qi8kinPOEVz4vxavGj3Ssun9aeHFmFr4fYh1BVKpnBwOvUGR8IATFjx0LXJtNKuAOK4bD4r6cIey6+QHc/yzH+OiM8iqzg8umtj0lKOtqO+aLkHQi7wwzFiZNNg7b3rYlc/Vxp5wRBnPBI7zrDFz/5JiAskY+xu7GMeEZswRV6CipW30YBaO2rq3gUGX+qCwhbWjnC0bR1qVazch04XgWG0xI85UwrxUYii1Q7fWNIGmHp8cmxNcfKuAxjr1yG3d8jwOw4Kr6C1YMvfn/QfNtUbyqHJnWTXSIoGMQJc5hPrQSK6KU5hDN6RuR4ZZbRy0UyrDp5pwDSkcUPUxwgR6/BvKS9iDXjXpsjsSoKLVp34IASd68vhhkehQlY9lfuUI65ABHV0Cxc6jyuW7Tewv7DQIXQ8Rl0PIp0wzFMT030LnXZfseJQ5949NuOCuQOuXGg59G9xKKGqljDGmhOD9LcbcuI8GStNOhrY3EZ2tHjRmR1wMXnWnag9m5wsuG/Om
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(346002)(136003)(366004)(376002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(36756003)(6506007)(6512007)(26005)(38100700002)(86362001)(83380400001)(41300700001)(2616005)(6486002)(478600001)(4326008)(8676002)(8936002)(6666004)(2906002)(66946007)(6916009)(316002)(66476007)(66556008)(54906003)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5Fhp2xbuTfPnDg6lZdx+HF/zWsbML2wlxLd1i7NvtL8CBSZBHYkisYeHC4iU?=
+ =?us-ascii?Q?3qbYA5q5B3D2wQYTNkco9Jf3mt7+i2eSVPcR/8eyFKxWoGzuWKsoJyvrgG39?=
+ =?us-ascii?Q?yhQApMBjxLh4lqHCsMcvDy2+Fm4ZETJz7ECz97x5MN8XAQdlGOuyWyZVRsHn?=
+ =?us-ascii?Q?19SjJZVL1Ij7FnLtEQKEf7lM9PfBAZrw+X94zc3Xul9sPdzdzRBxTwimsFiV?=
+ =?us-ascii?Q?tmnCitaESeko4tNjzmTrZY/WQ/cndv5uncL7WEhwo+vIFPV8UIoZPEXUSGeI?=
+ =?us-ascii?Q?/UncGb0dWfVBeRKZLM+oftqRb9RjjaWjNFpD40HXHfVTQ06qFANd9MmXeXA4?=
+ =?us-ascii?Q?MUcjzt/03S2ufFCpJq0cM2HCUawmA4n8Z+QhW677XTPaY2V3tuNM+mLUVrrZ?=
+ =?us-ascii?Q?AxrYHn6RMmhd8QWGGPoz67TP2zjOnkBDDOKmdM5V4cdIYM6zmPb55/srT/Ag?=
+ =?us-ascii?Q?5pg65nYT9PY//Ro+mNn4749xk9BlXcT/bm8cm3C84Ual8vT111pSxridOvMg?=
+ =?us-ascii?Q?Sb4S5W+TWZiN2oRaPzIVP5cBrxwKWKClfwT/s+Klx5DaQZMGT2Xr1oEp8E/q?=
+ =?us-ascii?Q?DeRyzNMxb4MiyrXUZXBfRsjr48CBCsZkzA6ChOANM5e64+6kuqE0KMHM1SCY?=
+ =?us-ascii?Q?HiqTyNJITpPZjgzBr0MFqNOc+KjhPUCDaXx7BuMLJRpDWQXIQ8SOwzDCjrik?=
+ =?us-ascii?Q?c7WFN7mV4SFomytksbEF1rjfeyJRHLYxnyp1oZaBzzjwcMWggcd5sEsUZ/L+?=
+ =?us-ascii?Q?4VOZBh4tzT49o8Rlt1QGhM0sZq9XI8nc2wVlefEkrjocBRr7iO7STPgg64zv?=
+ =?us-ascii?Q?7ElsY2jckF0fZfZAVpe4K6t5Z3C9/lVkEWQQzFFWGf9NUOlVVwYV6yZRwAXM?=
+ =?us-ascii?Q?JV1rpkVd6WxCd8SqeMO0U9S8mgqgNx1uEC9i2yOQxSZHtJzr8CG5rb5Lfvj2?=
+ =?us-ascii?Q?q31LofXhP+nJDWAP9DXXDFJ+Rr8qm3qE4Ep5oiJy9Zt0IFMLIPmsx84ITcl6?=
+ =?us-ascii?Q?fWb+q8RDw9H/qKS2cKNlmJOaFBUoeCBk48Tgv72n1sWFCXZ2+xIZwECNtjXV?=
+ =?us-ascii?Q?XJXXrckXaKjQ26ZQeRweTLav7bERySQknzlYgNz41bQ8ToaENbr/kMFWvTYs?=
+ =?us-ascii?Q?E4/ncQjSM5KLePnGoBE+9rf0NXhSQsz36nr4zc+06nmURBsfVi6I26Db+IqP?=
+ =?us-ascii?Q?snlNb7+qp2AmzRWirCAHjIV3NQkxg2pcDgmNoa6+c6wnZkt3tSase6j/Ti2J?=
+ =?us-ascii?Q?RXSvKvZKfUAml9nyeu3X4HeT/6Z3zmSYTsw7Qhoo17JkR82ooPdCegWKFG0i?=
+ =?us-ascii?Q?zWySuLYJE2zV+8e0QiNDIy7HJ5vyE9myTs8Gxpaz968zuzQ33SKZ5WPsgNTM?=
+ =?us-ascii?Q?FCty6EUgUIet3WB3T32eU2EX5ajYRrEM2cLMCjxCYlNidDgjLvH9xqZ9RZh8?=
+ =?us-ascii?Q?uDEYwQ7LUHv4+KEpGOi8cRocu35fkT7hSbPYNediNSen+AvRCmiFumkJm2P5?=
+ =?us-ascii?Q?qZci3zuQTLkX0QIIsScaClea7WAIHm1CL5ZFiiaffldLj7NLechqn2id25gh?=
+ =?us-ascii?Q?Gs8cDZAf8XMjX9WGXdi/KntECEQHABCTBGfvHk1T?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0987e9a8-e730-4ff7-eb9e-08dc26b21c56
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 01:22:40.2612
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GDNw44zH2N3wBIbk143MpCN0RUogN9QoKJ+Y194NaVUag8T2FzG5yRZsYBe9QQB0AROopJQXb10LLD8kvJRmog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7684
 
-On Wed, Jan 31, 2024 at 08:16:56AM +0000, Reshetova, Elena wrote:
+On Tue, 06 Feb, 2024 01:03:11 +0000 Joe Damato <jdamato@fastly.com> wrote:
+> Make mlx5 compatible with the newly added netlink queue GET APIs.
+>
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en.h      | 1 +
+>  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 8 ++++++++
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> index 55c6ace0acd5..3f86ee1831a8 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> @@ -768,6 +768,7 @@ struct mlx5e_channel {
+>  	u16                        qos_sqs_size;
+>  	u8                         num_tc;
+>  	u8                         lag_port;
+> +	unsigned int		   irq;
+>  
+>  	/* XDP_REDIRECT */
+>  	struct mlx5e_xdpsq         xdpsq;
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> index c8e8f512803e..e1bfff1fb328 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> @@ -2473,6 +2473,9 @@ static void mlx5e_close_queues(struct mlx5e_channel *c)
+>  	mlx5e_close_tx_cqs(c);
+>  	mlx5e_close_cq(&c->icosq.cq);
+>  	mlx5e_close_cq(&c->async_icosq.cq);
+> +
+> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_TX, NULL);
+> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, NULL);
 
-Good evening, I hope the week has started well for everyone.
+This should be set to NULL *before* actually closing the rqs, sqs, and
+related cqs right? I would expect these two lines to be the first ones
+called in mlx5e_close_queues. Btw, I think this should be done in
+mlx5e_deactivate_channel where the NAPI is disabled.
 
-> > On Tue, Jan 30, 2024 at 06:49:15PM +0100, Jason A. Donenfeld wrote:
-> > > On Tue, Jan 30, 2024 at 6:32???PM Dave Hansen <dave.hansen@intel.com> wrote:
-> > > >
-> > > > On 1/30/24 05:45, Reshetova, Elena wrote:
-> > > > >> You're the Intel employee so you can find out about this with much
-> > > > >> more assurance than me, but I understand the sentence above to be _way
-> > > > >> more_ true for RDRAND than for RDSEED. If your informed opinion is,
-> > > > >> "RDRAND failing can only be due to totally broken hardware"
-> > > > > No, this is not the case per Intel SDM. I think we can live under a simple
-> > > > > assumption that both of these instructions can fail not just due to broken
-> > > > > HW, but also due to enough pressure put into the whole DRBG construction
-> > > > > that supplies random numbers via RDRAND/RDSEED.
-> > > >
-> > > > I don't think the SDM is the right thing to look at for guidance here.
-> > > >
-> > > > Despite the SDM allowing it, we (software) need RDRAND/RDSEED failures
-> > > > to be exceedingly rare by design.  If they're not, we're going to get
-> > > > our trusty torches and pitchforks and go after the folks who built the
-> > > > broken hardware.
-> > > >
-> > > > Repeat after me:
-> > > >
-> > > >         Regular RDRAND/RDSEED failures only occur on broken hardware
-> > > >
-> > > > If it's nice hardware that's gone bad, then we WARN() and try to make
-> > > > the best of it.  If it turns out that WARN() was because of a broken
-> > > > hardware _design_ then we go sharpen the pitchforks.
-> > > >
-> > > > Anybody disagree?
-> > >
-> > > Yes, I disagree. I made a trivial test that shows RDSEED breaks easily
-> > > in a busy loop. So at the very least, your statement holds true only
-> > > for RDRAND.
-> > >
-> > > But, anyway, if the statement "RDRAND failures only occur on broken
-> > > hardware" is true, then a WARN() in the failure path there presents no
-> > > DoS potential of any kind, and so that's a straightforward conclusion
-> > > to this discussion. However, that really hinges on  "RDRAND failures
-> > > only occur on broken hardware" being a true statement.
-> > 
-> > There's a useful comment here from an Intel engineer
-> > 
-> > https://web.archive.org/web/20190219074642/https://software.intel.com/en-
-> > us/blogs/2012/11/17/the-difference-between-rdrand-and-rdseed
-> > 
-> >   "RDRAND is, indeed, faster than RDSEED because it comes
-> >    from a hardware-based pseudorandom number generator.
-> >    One seed value (effectively, the output from one RDSEED
-> >    command) can provide up to 511 128-bit random values
-> >    before forcing a reseed"
-> > 
-> > We know we can exhaust RDSEED directly pretty trivially. Making your
-> > test program run in parallel across 20 cpus, I got a mere 3% success
-> > rate from RDSEED.
-> > 
-> > If RDRAND is reseeding every 511 values, RDRAND output would have
-> > to be consumed significantly faster than RDSEED in order that the
-> > reseed will happen frequently enough to exhaust the seeds.
-> > 
-> > This looks pretty hard, but maybe with a large enough CPU count
-> > this will be possible in extreme load ?
-> > 
-> > So I'm not convinced we can blindly wave away RDRAND failures as
-> > guaranteed to mean broken hardware.
+>  }
+>  
+>  static u8 mlx5e_enumerate_lag_port(struct mlx5_core_dev *mdev, int ix)
+> @@ -2558,6 +2561,7 @@ static int mlx5e_open_channel(struct mlx5e_priv *priv, int ix,
+>  	c->stats    = &priv->channel_stats[ix]->ch;
+>  	c->aff_mask = irq_get_effective_affinity_mask(irq);
+>  	c->lag_port = mlx5e_enumerate_lag_port(priv->mdev, ix);
+> +	c->irq		= irq;
+>  
+>  	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll);
+>  
+> @@ -2602,6 +2606,10 @@ static void mlx5e_activate_channel(struct mlx5e_channel *c)
+>  		mlx5e_activate_xsk(c);
+>  	else
+>  		mlx5e_activate_rq(&c->rq);
+> +
+> +	netif_napi_set_irq(&c->napi, c->irq);
+> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_TX, &c->napi);
+> +	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, &c->napi);
 
-> This matches both my understanding (I do have cryptography
-> background and understanding how cryptographic RNGs work) and
-> official public docs that Intel published on this matter.  Given
-> that the physical entropy source is limited anyhow, and by giving
-> enough pressure on the whole construction you should be able to make
-> RDRAND fail because if the intermediate AES-CBC MAC extractor/
-> conditioner is not getting its min entropy input rate, it wont
-> produce a proper seed for AES CTR DRBG.  Of course exact
-> details/numbers can wary between different generations of Intel DRNG
-> implementation, and the platforms where it is running on, so be
-> careful to sticking to concrete numbers.
+It's weird that netlink queue API is being configured in
+mlx5e_activate_channel and deconfigured in mlx5e_close_queues. This
+leads to a problem where the napi will be falsely referred to even when
+we deactivate the channels in mlx5e_switch_priv_channels and may not
+necessarily get to closing the channels due to an error.
 
-In the spirit of that philosophy we proffer the response below.
+Typically, we use the following clean up patterns.
 
-> That said, I have taken an AR to follow up internally on what can be
-> done to improve our situation with RDRAND/RDSEED. But I would still
-> like to finish the discussion on what people think should be done in
-> the meanwhile keeping in mind that the problem is not intel
-> specific, despite us intel people bringing it for public discussion
-> first. The old saying is still here: "Please don't shoot the
-> messenger" )) We are actually trying to be open about these things
-> and create a public discussion.
+mlx5e_activate_channel -> mlx5e_deactivate_channel
+mlx5e_open_queues -> mlx5e_close_queues
 
-Actually, I now believe there is clear evidence that the problem is
-indeed Intel specific.  In light of our testing, it will be
-interesting to see what your 'AR' returns with respect to an official
-response from Intel engineering on this issue.
 
-One of the very bright young engineers collaborating on Quixote, who
-has been following this conversation, took it upon himself to do some
-very methodical engineering analysis on this issue.  I'm the messenger
-but this is very much his work product.
+>  }
+>  
+>  static void mlx5e_deactivate_channel(struct mlx5e_channel *c)
 
-Executive summary is as follows:
+--
+Thanks,
 
-- No RDRAND depletion failures were observable with either the Intel
-  or AMD hardware that was load tested.
-
-- RDSEED depletion is an Intel specific issue, AMD's RDSEED
-  implementation could not be provoked into failure.
-
-- AMD's RDRAND/RDSEED implementation is significantly slower than
-  Intel's.
-
-Here are the engineer's lab notes verbatim:
-
----------------------------------------------------------------------------
-I tested both the single-threaded and OMP-multithreaded versions of
-the RDSEED/RDRAND depletion loop on each of the machines below.
-
-AMD: 2X AMD EPYC 7713 (Milan) 64-Core Processor @ 2.0 GHz, 128
-physical cores total
-
-Intel: 2X Intel Xeon Gold 6140 (Skylake) 18-Core Processor @ 2.3 GHz,
-36 physical cores total
-
-Single-threaded results:
-
-Test case: 1,000,000 iterations each for RDRAND and RDSEED, n=100
-tests, single-threaded.
-
-AMD: 100% success rate for both RDRAND and RDSEED for all tests,
-runtime 0.909-1.055s (min-max).
-
-Intel: 100% success rate for RDRAND for all tests, 20.01-20.12%
-(min-max) success rate for RSEED, runtime 0.256-0.281s (min-max)
-
-OMP multithreaded results:
-
-Test case: 1,000,000 iterations per thread, for both RDRAND and
-RDSEED, n=100 tests, OMP multithreaded with OMP_NUM_THREADS=<total
-physical cores> (i.e. 128 for AMD and 36 for Intel)
-
-AMD: 100% success rate for both RDRAND and RDSEED for all tests,
-runtime 47.229-47.603s (min-max).
-
-Intel: 100% success rate for RDRAND for all tests, 1.77-5.62%
-(min-max) success rate for RSEED, runtime 0.562-0.595s (min-max)
-
-CONCLUSION
-
-RDSEED failure was reproducibly induced on the Intel Skylake platform,
-for both single- and multithreaded tests, whereas RDSEED failure could
-not be induced on the AMD platform for either test. RDRAND did not
-fail on either platform for either test.
-
-AMD execution time was roughly 4x slower than Intel (1s vs 0.25s) for
-the single-threaded test, and almost 100x slower than Intel (47s vs
-0.5s) for the multithreaded test. The difference in clock rates (2.0
-GHz for AMD vs 2.3 GHz for Intel) is not sufficient to explain these
-runtime differences. So it seems likely that AMD is gating the rate at
-which a new RDSEED value can be requested.
----------------------------------------------------------------------------
-
-Speaking now with my voice:
-
-Unless additional information shows up, despite our collective
-handwringing, as long as the RDRAND instruction is used as the
-cryptographic primitive, there appears to be little likelihood of a
-DOS randomness attack against a TDX based CoCo virtual machine.
-
-While it is highly unlikely we will ever get an 'official' readout on
-this issue, I suspect there is a high probability that Intel
-engineering favored performance with their RDSEED/RDRAND
-implementation.
-
-AMD 'appears', and without engineering feedback from AMD I would
-emphasize the notion of 'appears', to have embraced the principal of
-taking steps to eliminate the possibility of a socket based adversary
-attack against their RNG infrastructure.
-
-> Elena.
-
-Hopefully the above is useful for everyone interested in this issue.
-
-Once again, a thank you to our version of 'Sancho' for his legwork on
-this, who has also read Cervantes at length... :-)
-
-Have a good remainder of the week.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+Rahul Rameshbabu
