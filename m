@@ -1,234 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C43F1339A2;
-	Tue,  6 Feb 2024 14:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D317C132C3E;
+	Tue,  6 Feb 2024 14:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231297; cv=none; b=XHis8+ps0njDvKxH3BCYYFZ4zezfazuMzAI+CSCqS2E4KXeWnkY0xlY0SEco1IOm1g7wJwURcE475ekV0O+ibJzqeAFSQqeTjbpj6QidShAG620GpIACzp/K5IAwfeLx4pjOeufEUgTmJ4cjkAKzY2Y2IDgCsFuy/d7VuuQrQ4I=
+	t=1707231309; cv=none; b=sgET03IKZcBUebVNjkJHuTiALdihPMw3mhBNPwJ38jlH2oi33+MnlHyb7EJ/sDKd0pfjJyv7+QOP1LAKOvYWP/oI6OXpx3Vy05gvrxB2+SVmepdb9hTB3EAncM3cg5aAaAWe84huf/6bFTT+TsHRwK5ru+ttVt/Z1AYgMXLlxNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231297; c=relaxed/simple;
-	bh=lOr+XGR2hJml6WGSq7dut5XfAyTVuZ4y58BVDSiEjas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dx44NmUNbghg81i12tqjwjJqWgCrVqJKKqDqS8ymgdaAqi+BtDe/VIofwoPkc+Uo4BaaH4Hodu3nRyQuX4OdUkwAcXEPZLsAbiGuKX4I+ulolRiTBrlk5sn5D6E8K6UBe2OeHufAA/MbOa8O0eVxjknmCZKbxAjT9AxCLC9I/VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jA8jF/7M; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707231309; c=relaxed/simple;
+	bh=j+QFNeS/VO2zFOn+mhfOZ8s4Z3+3GdEFXPxdJoZ9jT0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AUAqlvx+lN9dxttDjpORaeVk7nnSYTuwY7veElkSi0rRZQbGu7kTNr5R9Y44oHnYu2cDqKI3GyWC3TyJ3aqJ8Swbx8+gBvH1B8tW0ETPCekuPB2xEQieJSTysFQg1UuoRXLZIsLhsQGoOnHsbJ1lPSl+Kt87Y7SOd05nTK7hAac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mIiycjwX; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jA8jF/7M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707231296; x=1738767296;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lOr+XGR2hJml6WGSq7dut5XfAyTVuZ4y58BVDSiEjas=;
-  b=jA8jF/7ME2N9ead1vl+9g0/PtcsbYnGBpxzkFF+GFmUaLaGlQQ5BOIUn
-   m415YyPfB05LXzZeqvtr5F/jbdBjNUo2ctzfSvL4mKJfwTzv9eSpjeKBg
-   wfJEHCHoYBCqXA9UDDgYU34KnQFHt7Mzd1f+NTwzH28o+9J/XCOBLMKGG
-   tXJAQZUKGoudxcykkpflvTofb28EV9v8b4cmGtgkmW2sdLrujcA8kK7WH
-   R6yy2lJjFMKPp70qUZrUHE42JG2jpL/mKk8VlKMqpNjHU/D5gQtX4gY9p
-   II0NjEYysKxEXaYEoH4xwTEOBBvBLIwodajbqpIyciNhjOYS06sSSKheM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="435901069"
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="435901069"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 06:54:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="1067177"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa010.jf.intel.com with ESMTP; 06 Feb 2024 06:54:50 -0800
-Date: Tue, 6 Feb 2024 22:51:14 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Pattara Teerapong <pteerapong@google.com>
-Subject: Re: [PATCH 6/8] KVM: x86/mmu: Check for usable TDP MMU root while
- holding mmu_lock for read
-Message-ID: <ZcJHYtMZsQHInVEI@yilunxu-OptiPlex-7050>
-References: <20240111020048.844847-1-seanjc@google.com>
- <20240111020048.844847-7-seanjc@google.com>
- <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mIiycjwX"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 416Esx6J022544;
+	Tue, 6 Feb 2024 08:54:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707231299;
+	bh=KxPl/+O74D4htbdgdG6JBwM6O+fMVv+uOVakC/1OfI0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=mIiycjwXHOcLORQLuuXS0aof7E2uzVw6L3ZQfrj6dMiWPTeJBM57x+eHvs73gLc0k
+	 nExuQ3vIqc+Q1hFKY0hFMwii2lWmVd+OQ1KsGbwWohMINp23mdUTgbfEQl/mdFJc/S
+	 cFSn+rR6xqVqT50saYwTS2qTRbCimIc77lMAd6JA=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 416Esxa9108092
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 6 Feb 2024 08:54:59 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
+ Feb 2024 08:54:59 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 6 Feb 2024 08:54:59 -0600
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 416EsvQ8050924;
+	Tue, 6 Feb 2024 08:54:57 -0600
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Tero Kristo <kristo@kernel.org>, Nishanth Menon <nm@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH V2 00/16] arm64: dts: ti: Additional licensing and clarification
+Date: Tue, 6 Feb 2024 20:24:40 +0530
+Message-ID: <170723117278.3216299.12458152939034721597.b4-ty@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122145539.194512-1-nm@ti.com>
+References: <20240122145539.194512-1-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Feb 06, 2024 at 06:09:18PM +0800, Xu Yilun wrote:
-> On Wed, Jan 10, 2024 at 06:00:46PM -0800, Sean Christopherson wrote:
-> > When allocating a new TDP MMU root, check for a usable root while holding
-> > mmu_lock for read and only acquire mmu_lock for write if a new root needs
-> > to be created.  There is no need to serialize other MMU operations if a
-> > vCPU is simply grabbing a reference to an existing root, holding mmu_lock
-> > for write is "necessary" (spoiler alert, it's not strictly necessary) only
-> > to ensure KVM doesn't end up with duplicate roots.
-> > 
-> > Allowing vCPUs to get "new" roots in parallel is beneficial to VM boot and
-> > to setups that frequently delete memslots, i.e. which force all vCPUs to
-> > reload all roots.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/kvm/mmu/mmu.c     |  8 ++---
-> >  arch/x86/kvm/mmu/tdp_mmu.c | 60 +++++++++++++++++++++++++++++++-------
-> >  arch/x86/kvm/mmu/tdp_mmu.h |  2 +-
-> >  3 files changed, 55 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index 3c844e428684..ea18aca23196 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -3693,15 +3693,15 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
-> >  	unsigned i;
-> >  	int r;
-> >  
-> > +	if (tdp_mmu_enabled)
-> > +		return kvm_tdp_mmu_alloc_root(vcpu);
-> > +
-> >  	write_lock(&vcpu->kvm->mmu_lock);
-> >  	r = make_mmu_pages_available(vcpu);
-> >  	if (r < 0)
-> >  		goto out_unlock;
-> >  
-> > -	if (tdp_mmu_enabled) {
-> > -		root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
-> > -		mmu->root.hpa = root;
-> > -	} else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-> > +	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-> >  		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
-> >  		mmu->root.hpa = root;
-> >  	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
-> > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> > index e0a8343f66dc..9a8250a14fc1 100644
-> > --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> > @@ -223,21 +223,52 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
-> >  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
-> >  }
-> >  
-> > -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
-> > +static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
-> >  {
-> >  	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
-> > +	int as_id = kvm_mmu_role_as_id(role);
-> >  	struct kvm *kvm = vcpu->kvm;
-> >  	struct kvm_mmu_page *root;
-> >  
-> > -	lockdep_assert_held_write(&kvm->mmu_lock);
-> > -
-> > -	/* Check for an existing root before allocating a new one. */
-> > -	for_each_valid_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
-> > -		if (root->role.word == role.word &&
-> > -		    kvm_tdp_mmu_get_root(root))
-> > -			goto out;
-> > +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
+Hi Nishanth Menon,
+
+On Mon, 22 Jan 2024 08:55:23 -0600, Nishanth Menon wrote:
+> Thank you all for the detailed acks on various patches on V1,
+> consolidated all of these with V2 and noted some missing acks below.
+> Since it has been 12 days since I posted v1 and v6.8-rc1 is now
+> tagged, looks like a good time to refresh the series.
 > 
-> No lock yielding attempt in this loop, why change to _yield_safe version?
-
-Oh, I assume you just want to early exit the loop with the reference to
-root hold.  But I feel it makes harder for us to have a clear
-understanding of the usage of _yield_safe and non _yield_safe helpers.
-
-Maybe change it back?
-
-Thanks,
-Yilun
-
+> As part of my 2023 LPC talk[1] about the difficulty in ensuring
+> device tree is same across multiple s/w ecosystems, I mentioned about
+> Licensing, and Rob had indicated that other SoC vendors have MIT
+> license option that allows co-existance with Apache.
 > 
-> Thanks,
-> Yilun
-> 
-> > +		if (root->role.word == role.word)
-> > +			return root;
-> >  	}
-> >  
-> > +	return NULL;
-> > +}
-> > +
-> > +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
-> > +{
-> > +	struct kvm_mmu *mmu = vcpu->arch.mmu;
-> > +	union kvm_mmu_page_role role = mmu->root_role;
-> > +	struct kvm *kvm = vcpu->kvm;
-> > +	struct kvm_mmu_page *root;
-> > +
-> > +	/*
-> > +	 * Check for an existing root while holding mmu_lock for read to avoid
-> > +	 * unnecessary serialization if multiple vCPUs are loading a new root.
-> > +	 * E.g. when bringing up secondary vCPUs, KVM will already have created
-> > +	 * a valid root on behalf of the primary vCPU.
-> > +	 */
-> > +	read_lock(&kvm->mmu_lock);
-> > +	root = kvm_tdp_mmu_try_get_root(vcpu);
-> > +	read_unlock(&kvm->mmu_lock);
-> > +
-> > +	if (root)
-> > +		goto out;
-> > +
-> > +	write_lock(&kvm->mmu_lock);
-> > +
-> > +	/*
-> > +	 * Recheck for an existing root after acquiring mmu_lock for write.  It
-> > +	 * is possible a new usable root was created between dropping mmu_lock
-> > +	 * (for read) and acquiring it for write.
-> > +	 */
-> > +	root = kvm_tdp_mmu_try_get_root(vcpu);
-> > +	if (root)
-> > +		goto out_unlock;
-> > +
-> >  	root = tdp_mmu_alloc_sp(vcpu);
-> >  	tdp_mmu_init_sp(root, NULL, 0, role);
-> >  
-> > @@ -254,8 +285,17 @@ hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
-> >  	list_add_rcu(&root->link, &kvm->arch.tdp_mmu_roots);
-> >  	spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
-> >  
-> > +out_unlock:
-> > +	write_unlock(&kvm->mmu_lock);
-> >  out:
-> > -	return __pa(root->spt);
-> > +	/*
-> > +	 * Note, KVM_REQ_MMU_FREE_OBSOLETE_ROOTS will prevent entering the guest
-> > +	 * and actually consuming the root if it's invalidated after dropping
-> > +	 * mmu_lock, and the root can't be freed as this vCPU holds a reference.
-> > +	 */
-> > +	mmu->root.hpa = __pa(root->spt);
-> > +	mmu->root.pgd = 0;
-> > +	return 0;
-> >  }
-> >  
-> >  static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
-> > @@ -917,7 +957,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
-> >   * the VM is being destroyed).
-> >   *
-> >   * Note, kvm_tdp_mmu_zap_invalidated_roots() is gifted the TDP MMU's reference.
-> > - * See kvm_tdp_mmu_get_vcpu_root_hpa().
-> > + * See kvm_tdp_mmu_alloc_root().
-> >   */
-> >  void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
-> >  {
-> > diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-> > index 20d97aa46c49..6e1ea04ca885 100644
-> > --- a/arch/x86/kvm/mmu/tdp_mmu.h
-> > +++ b/arch/x86/kvm/mmu/tdp_mmu.h
-> > @@ -10,7 +10,7 @@
-> >  void kvm_mmu_init_tdp_mmu(struct kvm *kvm);
-> >  void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm);
-> >  
-> > -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu);
-> > +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
-> >  
-> >  __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
-> >  {
-> > -- 
-> > 2.43.0.275.g3460e3d667-goog
-> > 
-> > 
-> 
+> [...]
+
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
+
+[01/16] arm64: dts: ti: Use https for urls
+        commit: 01e886c4dfdacc2956d9857a3b5c985ea74e9ddd
+[02/16] arm64: dts: ti: k3-am62a7: Add MIT license along with GPL-2.0
+        commit: 89bd4c373649b81d4255d9c5a3e49d3fd10df708
+[03/16] arm64: dts: ti: k3-am625: Add MIT license along with GPL-2.0
+        commit: 7e614b5394f06c7ff5e9ef570bb1d40af08c6449
+[04/16] arm64: dts: ti: k3-am62p: Add MIT license along with GPL-2.0
+        commit: 20f8173afaac90dd9dca11be4aa602a47776077f
+[05/16] arm64: dts: ti: k3-am64: Add MIT license along with GPL-2.0
+        commit: 6248b20e3203c5f255efe6c330b5c871ca4e8033
+[06/16] arm64: dts: ti: k3-am65: Add MIT license along with GPL-2.0
+        commit: 2822c791af4d98ca469485dacde9ea4f13c905af
+[07/16] arm64: dts: ti: k3-j7200: Add MIT license along with GPL-2.0
+        commit: b87c44dd974e13aab1d0a9a01a5f94f1fe5fd1fb
+[08/16] arm64: dts: ti: k3-j721e: Add MIT license along with GPL-2.0
+        commit: 111f6dac6c08471888da49389f63174f3717bfbd
+[09/16] arm64: dts: ti: k3-j721s2: Add MIT license along with GPL-2.0
+        commit: 25aec8a64a2413f6b16e33ecbc0334bd7075ba49
+[10/16] arm64: dts: ti: k3-j784s4: Add MIT license along with GPL-2.0
+        commit: 33e089bd1e136f1e2c58e6b44455de55f4fe4bae
+[11/16] arm64: dts: ti: k3-pinctrl: Add MIT license along with GPL-2.0
+        commit: 67fdcf08cd76a7d81e64343b2f0730f554245840
+[12/16] arm64: dts: ti: k3-serdes: Add MIT license along with GPL-2.0
+        commit: 3feda6a0cf7d9a82d820032033ae7e600e9dca66
+[13/16] arm64: dts: ti: beagle*: Add MIT license along with GPL-2.0
+        commit: 380f1ffd281b6f33a6e03220921be2750c6fd8ce
+[14/16] arm64: dts: ti: phycore*: Add MIT license along with GPL-2.0
+        commit: 049010c9604f87568ae59ee5ea1b885ece19e6c6
+[15/16] arm64: dts: ti: iot2050*: Clarify GPL-2.0 as GPL-2.0-only
+        commit: c32953cf00a5ab9059483d825f866a528ad80460
+[16/16] arm64: dts: ti: Makefile: Clarify GPL-2.0 as GPL-2.0-only
+        commit: 1e6bbc5185bcd113c8d2f7aa0a02f588a6bdbe5d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
+
