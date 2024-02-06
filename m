@@ -1,246 +1,90 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2108.outbound.protection.partner.outlook.cn [139.219.17.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F0D128810;
-	Tue,  6 Feb 2024 07:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.108
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707204659; cv=fail; b=ii79MGWt3Pp+xsVkSfjaBBItxwL3rvATQF8mHK4O8ZA8Cr5SPBPa8nP4HrYMQIwiVJqb2hKbldWQOUb42nSKI9wcbIQ/hSgiXE6IEL9NM8b/YlwnMsA8wIHzTZkuf9HsK4NuaiMU9qYuqOO6hKWOPwZpYDV7/WdLgr7oQoLdHCU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707204659; c=relaxed/simple;
-	bh=h0iQo4dmFKffTvmFpueb821mAm04K38nqxZ64XqmNdA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RuOYwHgpJKy+3DlmQhO36Hv+WPVEN0KOip9NFNNwC1wAvIMk2EUU2XZ3hyNcLhLxwColCV0Q/J7vnaR3ieAaVCcXiaJOPYAPRjv89kK/tTwlJoGuwXYClbZ0z3k3sv6dsgJtB0YMCEtYmv0jfEOjJi/25xX5D+7k4qSIq3lxDLA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M3glP+96ZfrQL/kgd9AV8Xy1nhU1QcIRBFskwye4j2QqPDeeB57aqxFlhweykWyfr/Vd6EbIDgX2wDJOb37RUqbzVh6SoW/eHCOVyQU6tPm4PDL5bVdmid5+2Tgmdh+OZ5EoWbdNO/evJk/3/6zcEAJKUbDKJY5BNi0PDKZ+lIHWmZ+hRWE8vFHw2bW3yBTc7c/xJCjt7xgncCgdoNBkPnFNiMg7Irkfoa8tv1JMEfn+B/qEb91hJbY1W4gGdQ9XdO0EKrcFukcKsnfyvSz+ZY/QuZ+pUiXt3FG5E1wbewEbDw0BEhErNCI1mcBZYLbKKoD+QQruA7yr3tTvwaR7sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YlP8BD48O4texInCX0LN2s8VYj/6VdWDP+lqTUeWMJ8=;
- b=Vx1f1rJfBvn5z8FJQW2DUDIWP2leVnLcCckL6Bqpd+i3umlxBKnrrb1MFG3kGvQ2Cbt9jSPIIsxoPyHqbAtNjFeVYYEUT/x6JiQFK0GsdCsf2TLM421lL3Z+na46MSgwXf45mlzIU+Qhq+fRyiZRzNfP7xDqS2cZ5ukyxqGU9Rtt0oLwwWBe/MFDXgTzDTz29qm5pLw5tpxlnl4KqLh1Nm8yQPQksvTNtvdQsrFNsGNFcaaoO8kv52bqUIsxmHjSK7KrggT2WuNwWifFSPPnDBQ6w6KNP+j1z+CpDIpUIy9enmu0WvzKzRvD/chI6H8pTuo+w6enfGWtFWOCZZcTUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6) by NT0PR01MB0974.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:7::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.19; Tue, 6 Feb
- 2024 06:57:27 +0000
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- ([fe80::57c1:eb9d:c4e0:71af]) by
- NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::57c1:eb9d:c4e0:71af%4])
- with mapi id 15.20.7249.017; Tue, 6 Feb 2024 06:57:27 +0000
-From: Shengyang Chen <shengyang.chen@starfivetech.com>
-To: devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	tomi.valkeinen@ideasonboard.com,
-	r-ravikumar@ti.com,
-	aford173@gmail.com,
-	agx@sigxcpu.org,
-	rdunlap@infradead.org,
-	u.kleine-koenig@pengutronix.de,
-	sam@ravnborg.org,
-	bbrezillon@kernel.org,
-	changhuang.liang@starfivetech.com,
-	keith.zhao@starfivetech.com,
-	shengyang.chen@starfivetech.com,
-	jack.zhu@starfivetech.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] dt-bindings: display: bridge: cdns: Add display bridge support for dsi on StarFive JH7110 SoC
-Date: Tue,  6 Feb 2024 14:57:08 +0800
-Message-Id: <20240206065709.108684-2-shengyang.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240206065709.108684-1-shengyang.chen@starfivetech.com>
-References: <20240206065709.108684-1-shengyang.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SHXPR01CA0014.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1b::23) To NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02572128810;
+	Tue,  6 Feb 2024 07:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707204704; cv=none; b=UYmUNC4rRM1qbJYnCciNSEg55XRVlSH1w8o1lZ6LB/o8w3/9mz7HQ1e1pdwGbWOUYjP+dS2PpwQi+0N841XSO2JG6hWVa2pUP4qX0RQp+K+WVf+r25auBmJKe3hkuu3dsFS/6EUxVTTuvYosl2wzEsWOvqHDdNb2NdQ/yjWmbFE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707204704; c=relaxed/simple;
+	bh=aHeN/DwCZTyWaeZkbZFCrZMKkRuzmVdTS/3KetyGM1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGLaG563jCI4e1T59QfTxqMIWiikINbR7+0TfGCqIqx73ISmb9jCfPwo5T0bWfB4SSR6YmWLpw+mwGTDJBNDSTMnWLbrXUPA3/X5G+5B+0ZYv7ai3RRmjX6G+EqevPaAM8KDi09C6ratLseHEXIoLrAOjFEe3q4uqTinMP6RSVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KZzwKrVA; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZzwKrVA"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d8b276979aso498899a12.2;
+        Mon, 05 Feb 2024 23:31:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707204702; x=1707809502; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Opj+msIKIr4Yxj2sekXGXxbXzMPQ6JIm/gk0Yx1cPE=;
+        b=KZzwKrVAygCqyWN8xHs1d8jTOgK3VMsgYHB/+BogVPGtS5zXO5sD8J7/4bySCN1Gls
+         I9EtUwHCAorFBGSiXwsT5MGSTl3eeNmNttmws4647t5VZO581nm0QWxDOr3IdNjvFu+U
+         A2BbkZofG9rBLEgSa+SmxSfvB9jhmY0gu0jcVqaa7q/2+NqSbU88lAPNz3fOdPYgnZGi
+         QbKczTa8urYObLoaTFpMo3WQegRgRmSS73h9BVRUaHn0+knNzWnzm2SH7PhzoYsAmbgZ
+         YQsFX63rxx1PhFY8Wpa+/47YOy220fcJfVHLXg11KQZ3/3jA3bB07jaO8wFiBx89TiSG
+         DMOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707204702; x=1707809502;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Opj+msIKIr4Yxj2sekXGXxbXzMPQ6JIm/gk0Yx1cPE=;
+        b=v3im/F2KKvwXQnopbRlk35OIAhA6XDbk/XqZ1U3j65i8KStcE8GZpfXbEmL+jcZDe9
+         6t5d/TZJZkL20+4ptBV9nozHvJhQt7tr9MxbtwQQl/p4CXp0n0x5lmlyYibhuduXUnPf
+         jBtl25NnRKijLvR5m+8jXzfkbe9PkUjOeMzi50JZ/0SwXNiYy80ZhLaaZALFpcja+I80
+         YsixFaF22WYnGTQBHKNQZ1U2NcL/7f0KheunwUmDD82G7wmFfMRtXErx3do6anzKzQzT
+         z7EYpBealZO9Yb5lN9YbiBM6aplMmSKFtQU8jt+LJETChBQbapYsXWWGPSz0mRHypStG
+         VQ0g==
+X-Gm-Message-State: AOJu0YzFlNu/YNHF+Tkl4zE8uPlRHpPAmiWQn39ASe42/DQMVK+h75e+
+	4MM9KF1Pj3XiAeiUEHHqTiDnTSMkpQ4RXBf+in9ZTB197i5nBok+
+X-Google-Smtp-Source: AGHT+IGyrHZMnTucglCSl0HBBj6AIOfaTXmstzhAMRvYlX4LHgIhB8uVz6BfLLh0Xb2Z702wGKxpTg==
+X-Received: by 2002:a05:6a20:8f25:b0:19e:34e4:818e with SMTP id b37-20020a056a208f2500b0019e34e4818emr908605pzk.8.1707204702287;
+        Mon, 05 Feb 2024 23:31:42 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUxEtYTb3qTAZ4JM+Eg7KRh+oKOphwcu5V8MmWfGrlDHCa2Pf3KzK9shVY7b5SzxxCgMIilVmE0c9qSG5v6nLI7FPfthdBjB46zZZN5DfGXFsPDmPfFrjEFmi0hZtKDmgMTkcifOCOPrUn4or6W7jB9Ztpz8X3bITlf8yi6gSqQ/SA5kzXSyhTW/SHAZoPC4T6chUt3CokppqbiGVWfI6xplC1U6WM7Ac5u4mXn9FNIlEQLzsL8UaxRXNAWqpqtgofW/GdXSa6Tk4OTCuZawikPq9oEZJ06zUciIyBAnu0PmXPZJFlnFrPDtq7JVn+YlDKMOv1MBxmxeLc0n3zSIPqUjgpXnHGdnQ9va2Gu9/Hw8PGfmuHawyig/tLm04WRDALgNMi9HuTDja3LGYmm+dXx+FyZfCjmK0g0Yzdcw0pZtz80SKAbtwOj1eRF+RVX4PLpm85FmN0M9tGWX4haTaNS8flwLULhqRykecevqtjf+JmziVBMacb1EJ7Wd45zRQ0l52ToA5Fl2MrP3+sawfRPCwlgHo/qknyABtDVmNpjPxZ2PXM+cBbNLjrxAVd9gaf/kO1/Yw==
+Received: from dragon (144.34.186.27.16clouds.com. [144.34.186.27])
+        by smtp.gmail.com with ESMTPSA id mi14-20020a170902fcce00b001d8fe502661sm1143349plb.19.2024.02.05.23.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 23:31:41 -0800 (PST)
+Date: Tue, 6 Feb 2024 15:31:25 +0800
+From: Shawn Guo <shawn.gsc@gmail.com>
+To: Mathieu Othacehe <othacehe@gnu.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+	Primoz Fiser <primoz.fiser@norik.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Christoph Stoidner <c.stoidner@phytec.de>,
+	Wadim Egorov <w.egorov@phytec.de>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: arm: fsl: Add phyBOARD-Segin-i.MX93
+Message-ID: <ZcHdc73ys6TCaUom@dragon>
+References: <20240124074930.26101-1-othacehe@gnu.org>
+ <20240124074930.26101-2-othacehe@gnu.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NT0PR01MB1070:EE_|NT0PR01MB0974:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a189221-e15a-4f52-5569-08dc26e0e17f
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2mVuGnWhglo2IjheUDfqwpvVUxrNS5bEhYsVCcM4zAbmrJaxBpnYKlZF2sGkh/OKNyzhROrQtUo/1TYFs/rYaUmIrda7lWsNcUV50XfApiCIxVmBSlHknXV8MS2hqjchDg1aWRqj9jSgz2bIs3SbkMw6ttQevIgtfkn6MJ1gvnQezwX3FGHgpnFUIwTzUwbsp3LtSJYCp0CZAv0e6Em3LLZT13ZKejJWV/sMZrAYkTiK2DlZKrLq9il7ocj40hWxe83leVeY8Eq4HsLe6/d3whmw3OqpGxp6xR5T+NXGpCGGY+GhGE5ctv0GlXKmp6yhIVRc2MX/Y3Gl3guvLaw1kNT4mb/3CCw+jiV5kIjoI7taChCe0YsRZgE32Tc0k+rsOFfk8asYH1NxFOAKrv1Td8gVOgEzVAu/BTxAt6eAUD+JUVrqUKedoHyI1CeU4bjl6T71W4DCRxWBWKAsldc60ZRQNQH6X9XsQAXJdlWo1aDi6nSrUqUH3j8YZPm3ek7lododVL0DJUWjTYas1FfCQ5UYsz2wt/3RbTrmD0JL6gvtSA+QgSK440/YguqdkKVH
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(366004)(39830400003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(40160700002)(41300700001)(83380400001)(66946007)(6666004)(8676002)(7416002)(2906002)(8936002)(5660300002)(4326008)(44832011)(40180700001)(86362001)(38350700005)(66556008)(38100700002)(66476007)(36756003)(41320700001)(508600001)(52116002)(2616005)(1076003)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yMvOO79wxk7sw+cGjWU17mXT96JmCIjC8pq/hk+Zb7rO8FCP09oh9X7szIkz?=
- =?us-ascii?Q?R1Ksyuvas89pU6DvjMLuRsC9JCLAMrY7C1GI2moAMXzA9mIzceono30+7xJS?=
- =?us-ascii?Q?pH1lXwdoLA1tHEi003CwjG81ouOWO3UJmMMRnzpDRNxPFf3qc2PEkmqaqhrA?=
- =?us-ascii?Q?iDTp3hj4MziRP8VpX7ph5Uhowae0ltGkDxy9Pj62uP0PlObNHhQWbVxDYM97?=
- =?us-ascii?Q?noozn1t5+dlmdfg+lFDSVrlNHHKPAHpi14o4rcDyNQqLqYBt3XuhUbbgpRYV?=
- =?us-ascii?Q?wxfLTTrT7oy1yCWBZUNrBNGwefPf4uyoIEhPiHZFMW/3kWylmrsv8EuUUlde?=
- =?us-ascii?Q?qbIuSzOZmPdMt8NEUgLInpw2kWc2wV3vxZ/vZJJMMjERFXEEw5IeQJvuZYMl?=
- =?us-ascii?Q?4LfU7DnRrErgYpZQT/cZUCQ4rwX9QyLA6N3yBmJfhKxkOEcZKioM0eb8Lcw3?=
- =?us-ascii?Q?ec6jt2ObQkuaxPzkbC0E8IUgLQYB55Vyj6QPYTaRH9WNHWFH/aB1uBMny9XD?=
- =?us-ascii?Q?83IvsnpLPAkDlWY04Qe/Kj/6+yh38bafSR7SDzfWBufSpxYNCsn5zVhv7GoH?=
- =?us-ascii?Q?6OuKaQhs9ZZN8Tk+pmoozuZ2rb3EwVNoJ7nE+f7kDLVy20hCGSzuU4cZpkRS?=
- =?us-ascii?Q?mmH+8+8mIneg6ROHF3gFntMDPeOX3RRz7ec9+atd4xZPxD30U4KEdft1+dHH?=
- =?us-ascii?Q?dIHuzU07L3OAuE8rsRIjoQdjcdojNGgxzJbx9J/Rw0QsNN95ojXNUwjzFwUp?=
- =?us-ascii?Q?t7JsITudqaGJhsQBxwbzIRW22G/9d47+DhXR1Si3fHqF0uwuXAYzOQ9v3tN6?=
- =?us-ascii?Q?z94SGXw3bW8kr8VVjYuT5X/ajsLBVc1uKZ9noVJ4a1gqmLpOg+v7faDMO9Ia?=
- =?us-ascii?Q?APTkSTbl/HnUSCrNYnts+IRG7N7P7FvG9BnHKJJP8S9OwocE/oSpTK1YR9mz?=
- =?us-ascii?Q?FM7dYG2+SGs7XFWOEm82pvGtXxv9IU0Oh8Uv+tr8WHtgo/PxPtfdkekPDLdP?=
- =?us-ascii?Q?wA5Xcq059lIz6pswD+TruNADZB13MHEr0ITKiz14eM1bvzhDGV+AGi6z/iJW?=
- =?us-ascii?Q?NIvyFfO1BO9V5jedQ0Cfo5sFKZoioG88o2XnqSg8igPqeev8mGfAyE+c5ya9?=
- =?us-ascii?Q?MBoyIstLu4HacpOYR+i8A3ZxgR4FdqLOkjwIxEvviwbKOujt4J52AacE9eYV?=
- =?us-ascii?Q?ENI2QBeolNS4rAszK1i+Du3g+AoDT7YVIbi2wMgUzcs3qgPHLRsBpBi1b1+N?=
- =?us-ascii?Q?ifNZZ5lUwe8jTi96w3yoDH5E7tALL7wRbJc1T8UVKrGhBVsWCGJTFV3la7tO?=
- =?us-ascii?Q?AH9SCZhbPd/v8TstdyLprab44rv86TDzZrs3qK6AvcdlKOW5Cn0y0xEErG6v?=
- =?us-ascii?Q?RI17QcFXxtUPjyj+VGzrXqrMz5rkb1namVXaOaOBwk0CM5gbJqKZLfh6yREg?=
- =?us-ascii?Q?0FwvZ6BJ3MFe+kAx+Lz3VMv1WgGpJ52kxVjac+0NEsFwsaI9bBLh1yyys044?=
- =?us-ascii?Q?jSFgl/egse/wdve1oEZDrYQ3ns1a2pV6TmQc8iVii+w8+YN3b2tBQ5t6kkgB?=
- =?us-ascii?Q?vun8Mfirz/xM1oVlP39RGHbvFzTllnQx+/e3hLoTfd1EvA1ZNZr36XiKgca0?=
- =?us-ascii?Q?Myvp8kntR1RTWGNnDarR9UY=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a189221-e15a-4f52-5569-08dc26e0e17f
-X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 06:57:27.8449
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cj6nPZ/9WDYNQ1xwmIXIzVyG7oWhR3mtO61/Glei6MUaQ1CXIwjBHSfIP2reRXspC80y61RfBSI6vHvUelM2rB70FncP8ifWwsfAFNu6xDg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB0974
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124074930.26101-2-othacehe@gnu.org>
 
-From: Keith Zhao <keith.zhao@starfivetech.com>
+On Wed, Jan 24, 2024 at 08:49:28AM +0100, Mathieu Othacehe wrote:
+> Add support for phyBOARD-Segin-i.MX93 board.
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
 
-Add compatible to support dsi bridge on StarFive JH7110 SoC
-
-Signed-off-by: Keith Zhao <keith.zhao@starfivetech.com>
-Signed-off-by: Shengyang Chen <shengyang.chen@starfivetech.com>
----
- .../bindings/display/bridge/cdns,dsi.yaml     | 56 ++++++++++++++++++-
- 1 file changed, 54 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,dsi.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.yaml
-index 23060324d16e..4ad0ecaacaae 100644
---- a/Documentation/devicetree/bindings/display/bridge/cdns,dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.yaml
-@@ -16,6 +16,7 @@ properties:
-   compatible:
-     enum:
-       - cdns,dsi
-+      - starfive,jh7110-dsi
-       - ti,j721e-dsi
- 
-   reg:
-@@ -27,14 +28,20 @@ properties:
-           Register block for wrapper settings registers in case of TI J7 SoCs.
- 
-   clocks:
-+    minItems: 2
-     items:
-       - description: PSM clock, used by the IP
-       - description: sys clock, used by the IP
-+      - description: dpi clock, used by the IP
-+      - description: txesc clock, used by the IP
- 
-   clock-names:
-+    minItems: 2
-     items:
-       - const: dsi_p_clk
-       - const: dsi_sys_clk
-+      - const: dpi
-+      - const: txesc
- 
-   phys:
-     maxItems: 1
-@@ -46,10 +53,22 @@ properties:
-     maxItems: 1
- 
-   resets:
--    maxItems: 1
-+    minItems: 1
-+    items:
-+      - description: apb reset, associated to dsi_p_clk
-+      - description: sys reset, associated to sys clock
-+      - description: dpi reset, associated to dpi clock
-+      - description: txesc reset, associated to txesc clock
-+      - description: txbytehs reset, associated to txbytehs clock
- 
-   reset-names:
--    const: dsi_p_rst
-+    minItems: 1
-+    items:
-+      - const: dsi_p_rst
-+      - const: sys
-+      - const: dpi
-+      - const: txesc
-+      - const: txbytehs
- 
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
-@@ -90,6 +109,39 @@ allOf:
-         reg:
-           maxItems: 1
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: starfive,jh7110-dsi
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 4
-+          maxItems: 4
-+        clock-names:
-+          minItems: 4
-+          maxItems: 4
-+        resets:
-+          minItems: 5
-+          maxItems: 5
-+        reset-names:
-+          minItems: 5
-+          maxItems: 5
-+      required:
-+        - resets
-+        - reset-names
-+    else:
-+      properties:
-+        clocks:
-+          maxItems: 2
-+        clock-names:
-+          maxItems: 2
-+        resets:
-+          maxItems: 1
-+        reset-names:
-+          maxItems: 1
-+
- required:
-   - compatible
-   - reg
--- 
-2.17.1
-
+Applied, thanks!
