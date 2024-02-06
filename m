@@ -1,128 +1,170 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE60745D1
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A867D7F464
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707197585; cv=none; b=rRNfgnSB5g66VLzrI07VhITVOlY6hTtf3W0AFCvNG0YRHm9RijUbE5VhDftHJL4J6GQcu35PBcnEbi30XHWUTvT/ZvcImtpOZ+Ach9mgfquhFqHjITVcoJ6kKrsonxYhKld+ozQ916fWQGze2LEidMYlA91luEIGSKA6s9HQWo0=
+	t=1707198053; cv=none; b=GbB91Ip6d9wb3EceF02FPBdbdLa9nltImikNbGgfYomqiq8udsWXMvs1dDM3P8qF9IcjMqL85t3ZqofR/GEleFhEM8MbVtnHTPWG8wQ0mOLNpKoadSGJbIiNneCRGrLZp/VcVaEYMnPJnf3wXhzIasjetnV1ihQHyI84Q8rT8kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707197585; c=relaxed/simple;
-	bh=Ui+JUqgpTROVByU1PNqr7sknWrjQ+hS/sSnSZVf0fhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DzBMUIINJEzbL7UzIO7Pz3NvzbAkstNwJgKz/zBZyGYc6HY4dlBQsx5kaMj03uAEBR6gUh7uMTqISK1S6kYqxnKMo4j85yBE0a0Mw7Lq/w+PmFRsloVsAV2McPDsypqtHYakWJe2h3haODaKTBQD1ux9GUyT1pxMWxujHh7/3hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hVrHILVe; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707198053; c=relaxed/simple;
+	bh=12JV3s2dxhUtF8cvsihJ6B9DhYtAGxdVgGWKspDgLfM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=X3UGaYR+YHWKQ67U5Tv2pKSuxuojKG/7mADMJk8IfaPgtp/48HFt060+vFcNKPsTCmUD93xh9bArWYDHyepFpFbCimSG/QXa9xzLLhQ9LWdjD/LE1kH5FDzxdFlx3SMrxq/+nvUNWQQgjC+RZ3yEMeinPu0f2K9LUWk/WcekSqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eSLvK2AX; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVrHILVe"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bfcf606936so1483731b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Feb 2024 21:33:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707197582; x=1707802382; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ydU6BbxwzhKtYby2dXMvJri2N0Iv1xyu+D32zjFW9Fo=;
-        b=hVrHILVeJ+JF1zUONEv6gQu+YgcRtL5Dy/sMogpI3zMzmAjoPAVGvQnCr7Zt8XGMJd
-         ctF8OSa5wcvP6cYEOU6ujcQX3Fu731eeJEtbDmMcXzcRm2l8nBYSMZMu4SOYIT0BGss6
-         MpK1/IOg2hXglbQcOl39uJsBzyqVhXKCNKpFjK+/4UBK/2gfrFwIF6JJ6gD5LGXwbtRH
-         OL86u3w625T/+eRBPSfcakxDtVmUJNPDp3peESL7qORRYHv343ZIY8fwZ1uclwQi9oVY
-         csoB5GIuMAgGwXLJEsdEIsn8quZjnRjn3/d7Lrb51VEhAmwa3aeRdcfBMxnE1GEQhvaI
-         G7vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707197582; x=1707802382;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ydU6BbxwzhKtYby2dXMvJri2N0Iv1xyu+D32zjFW9Fo=;
-        b=Hrk1myXj//AcfCLCe8gGPFDHyr4dfTWEJUuZjFb8KP/E+SO9OgJP2HNA5xwvtcK1cf
-         xOPpFNyO/ApuI8t0F2vkLXsqnPRinZgIu7LKlbae2jO6xOxhGT2jV4aLR+wTWiNl5em5
-         PH/iEr4YR8T3P7jnqTzUkHb9MmMzWXt7AkXf1+hBIWdCTzC6/vc0jz7J4s2pMi6/c/a0
-         4NQHUbYhxH6+9LxX0VZDYnkfSAFS/TllrvU+R6sd55vwrbxcZhxLS5/rfmKN0uxk7Ivz
-         YrDzemPssh7MIL8UBEU597r/pim0adqbl1X3lVQJweqkOIMQmN0XxBFUV0oUhpBKnRXv
-         HKLA==
-X-Gm-Message-State: AOJu0Ywrdp3EB7LUme/kHXXAP+XEoG8MAgI9tYCDhUrlmxdGAXKmHqx4
-	HYO4V4C/A8l0Ac9njKVHkDuUWK+ka8vnyJQmZydPkavmLTiXAOJsa5QxmzRuiA==
-X-Google-Smtp-Source: AGHT+IG3C0afHDBZwdkrvhFt478xwoB+XQ/Bi2elhj/RlkQqEjBD3zrZSRKNEhbEZ38Dzl5IL9OEpA==
-X-Received: by 2002:a05:6808:f8e:b0:3bf:e451:2c05 with SMTP id o14-20020a0568080f8e00b003bfe4512c05mr1077265oiw.43.1707197582466;
-        Mon, 05 Feb 2024 21:33:02 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCU/IZHrFGLasi2jG1XOdy47tNQMPT7dhgSZibT+eZ1lfXCBvG5rp9H+wgyZ9f2ektNGqOKGC//wkDZHQaTO38vku+DRl6MiTuwXcgm3ngsTmM/MPUGjv24nx7KJ64g/E3KvwooCKI2pN57wgf0X5szf6L/A3EiNimTiseA7ptYJVpxpw0M7k1zjEYXU3v3+wmSUSnssVvht49WlkiRb6mHMIrBtf7heBv/Y4/rgOsNGHRaqP/Ofjv133g==
-Received: from thinkpad ([120.138.12.234])
-        by smtp.gmail.com with ESMTPSA id q14-20020a62ae0e000000b006e0472fd7d1sm863952pff.130.2024.02.05.21.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 21:33:02 -0800 (PST)
-Date: Tue, 6 Feb 2024 11:02:58 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] pci: endpoint: make pci_epf_bus_type const
-Message-ID: <20240206053258.GA3644@thinkpad>
-References: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eSLvK2AX"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240206054042epoutp03beccb0e0a29e2764b7aea4eed15b5661~xL5MXUYA22587225872epoutp03r
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 05:40:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240206054042epoutp03beccb0e0a29e2764b7aea4eed15b5661~xL5MXUYA22587225872epoutp03r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707198042;
+	bh=aBBrxem7ddlekW/Lr8VprMBnc1yCIETVUD5Mt9UJ6mI=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=eSLvK2AXHTEnJcbkVSWa0FX5QO38bMKeHya4eQ/S0A7k/w9PKjNHI+yZGefJONLAc
+	 BTcJQNuDG5iSB9/86APECX7qLQS52aQ01smt/32zD+MIUUMKmyjaBE9226g1PKl2V6
+	 v9bwv1NGXqJYaWKBY9aGDU3qrFreb9acDmz6J++c=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240206054041epcas5p129aa02776cb689022cfa956bb540b871~xL5LyoY621405414054epcas5p1D;
+	Tue,  6 Feb 2024 05:40:41 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3E.04.10009.956C1C56; Tue,  6 Feb 2024 14:40:41 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240206051218epcas5p3fddd971ec73f6ee6a2b0a5ec2709c0f7~xLgZNqanZ1031110311epcas5p31;
+	Tue,  6 Feb 2024 05:12:18 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240206051218epsmtrp190e9b1ff2b400c54052add3c10ffcfd4~xLgZMtrm01605616056epsmtrp1b;
+	Tue,  6 Feb 2024 05:12:18 +0000 (GMT)
+X-AuditID: b6c32a4a-ff1ff70000002719-e9-65c1c659c701
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	65.60.08817.2BFB1C56; Tue,  6 Feb 2024 14:12:18 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.44]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240206051212epsmtip225e82b14faef9cafd015458eb690d8a8~xLgTgNi6z1683216832epsmtip2s;
+	Tue,  6 Feb 2024 05:12:11 +0000 (GMT)
+From: Onkarnarth <onkarnath.1@samsung.com>
+To: rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
+	viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+	r.thapliyal@samsung.com, maninder1.s@samsung.com, Onkarnath
+	<onkarnath.1@samsung.com>
+Subject: [PATCH 1/2] drivers: acpi: use %pe for better readability of errors
+ while printing
+Date: Tue,  6 Feb 2024 10:41:19 +0530
+Message-Id: <20240206051120.4173475-1-onkarnath.1@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAKsWRmVeSWpSXmKPExsWy7bCmlm7ksYOpBitOGlssacqwuPT4KpvF
+	9JeNLBZPJ2xltrjbP5XFYufDt2wWy/f1M1pc3jWHzeLsvONsFp97jzBaHJ7fxmIx+d0zRotL
+	BxYwWazo+cBqcbz3AJPFxnvZFnO/TGW22NfxgMmi48g3ZouNXz0sth79zu4g6rFm3hpGj5Z9
+	t9g9Fmwq9di8Qstj06pONo871/awebzfd5XNo2/LKkaPzaerPT5vkgvgiuKySUnNySxLLdK3
+	S+DK6Pv8lLFghkBFZ8sO5gbGO7xdjJwcEgImEs/77zJ3MXJxCAnsZpS4u2UNM0hCSOATo8T2
+	eSoQiW+MEn8nHmSD6dg3bwM7RGIvo8TVvR3sEB1fGCXe7NcFsdkEtCRm3DnABFIkIrCFSWLJ
+	pYNgHcwC5xglbkzewtrFyMEhLBArcbuzFKSBRUBVovPdJFYQm1fATmLjj3OsENvkJWZe+s4O
+	EReUODnzCQuIzQwUb946G+xuCYEbHBL3Zixjh2hwkXjW2cACYQtLvDq+BSouJfGyvw3Kzpdo
+	mT2LGeQGCYEaiatPVSHC9hJPLi4EO41ZQFNi/S59iLCsxNRT65gg1vJJ9P5+wgQR55XYMQ/G
+	VpX4NWUq1FZpifu/50IDy0Pi3dI+aIjGSty4uI5xAqP8LCTfzELyzSyEzQsYmVcxSqYWFOem
+	pxabFhjlpZbrFSfmFpfmpesl5+duYgQnQi2vHYwPH3zQO8TIxMF4iFGCg1lJhNdsx4FUId6U
+	xMqq1KL8+KLSnNTiQ4zSHCxK4ryvW+emCAmkJ5akZqemFqQWwWSZODilGpgSf6yxyTacPenE
+	vOAi8cCpHHmLemUvvDPxX3p805xDc0xmdF9d1Jaj0m10nUO8Vtv9wfltj45O/J1ftLfwieNt
+	afVezqvPUwLmvbmqNWnTm0di3TN0oo+syPtueijWVN4v9wBLfu51lWULi7lruTbYzz2y7XD5
+	iZCkwv1frvf0xXJdTljCUHHllknHjcWXeg7YxE1Nt+6ffWl+85JdBz0mrZzY7N63fEOb01S1
+	wLl1klnBM97NFd8UtuyvbYrXgi4jm6e2i8Ouek6fOtH/tuCZPdWX1vFLh+vrveyQLur84TTD
+	MSaoP+7RrKbX2cKRX77tV/vMmHT71LRZQVu/ZISdMlhavqTTiKtcyptJPvyJEktxRqKhFnNR
+	cSIAKbYiX/MDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXnfT/oOpBuunc1ssacqwuPT4KpvF
+	9JeNLBZPJ2xltrjbP5XFYufDt2wWy/f1M1pc3jWHzeLsvONsFp97jzBaHJ7fxmIx+d0zRotL
+	BxYwWazo+cBqcbz3AJPFxnvZFnO/TGW22NfxgMmi48g3ZouNXz0sth79zu4g6rFm3hpGj5Z9
+	t9g9Fmwq9di8Qstj06pONo871/awebzfd5XNo2/LKkaPzaerPT5vkgvgiuKySUnNySxLLdK3
+	S+DK6Pv8lLFghkBFZ8sO5gbGO7xdjJwcEgImEvvmbWDvYuTiEBLYzShxt3siC0RCWuLT5Tns
+	ELawxMp/z6GKPjFKfJz1mRkkwSagJTHjzgEmkISIwDEmiWn9G1lAHGaBK4wSs05vYwOpEhaI
+	lnj98xXYKBYBVYnOd5NYQWxeATuJjT/OsUKskJeYeek7O0RcUOLkzCdgZzADxZu3zmaewMg3
+	C0lqFpLUAkamVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwdGlpbWDcc+qD3qHGJk4
+	GA8xSnAwK4nwmu04kCrEm5JYWZValB9fVJqTWnyIUZqDRUmc99vr3hQhgfTEktTs1NSC1CKY
+	LBMHp1QD0+LUolbBTd8kal9JrvtaMmOm6YZFS8/dWfjs+yqtiovaz1SfXtDyWHJAiS9Mt47p
+	yJfvnj+m5Z4vMHQr2Z0/O/ND7GJhZW3Bi89YvbzN/1U3TG0TbdZ/zKe79cEzl7ctYbPWnVsl
+	vMTf+V+5gda5xLtaG/wUM64tvuBhef3rFqvOa01nf23PFV058dajf6UHd3VLN3098XHlC79d
+	jB4fK5UUPBZMidY8P/Xr9zIRzp8pBd8NLc8aBHbm9SqYHDTbHXO0RLJqD2f87LmGK+4Wp+mI
+	yN8uXRAaXqnyb17+581rDpxseZ9RK37k5Y4VMt1r/kiLy3c9/LB2Rve73ZN1XsXfzTE4/0Dn
+	mG5zIZtoi4sSS3FGoqEWc1FxIgAp3TP+HQMAAA==
+X-CMS-MailID: 20240206051218epcas5p3fddd971ec73f6ee6a2b0a5ec2709c0f7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20240206051218epcas5p3fddd971ec73f6ee6a2b0a5ec2709c0f7
+References: <CGME20240206051218epcas5p3fddd971ec73f6ee6a2b0a5ec2709c0f7@epcas5p3.samsung.com>
 
-On Sun, Feb 04, 2024 at 05:28:58PM -0300, Ricardo B. Marliere wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the pci_epf_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+From: Onkarnath <onkarnath.1@samsung.com>
 
-Applied to pci/endpoint!
+As %pe is already introduced, its better to use it inplace of (%ld) for
+printing errors in logs. It would enhance redability of logs.
 
-- Mani
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
+---
+ drivers/acpi/acpi_processor.c | 2 +-
+ drivers/acpi/acpi_watchdog.c  | 2 +-
+ drivers/acpi/pci_slot.c       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-> ---
->  drivers/pci/endpoint/pci-epf-core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index 2c32de667937..bf655383e5ed 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -17,7 +17,7 @@
->  
->  static DEFINE_MUTEX(pci_epf_mutex);
->  
-> -static struct bus_type pci_epf_bus_type;
-> +static const struct bus_type pci_epf_bus_type;
->  static const struct device_type pci_epf_type;
->  
->  /**
-> @@ -507,7 +507,7 @@ static void pci_epf_device_remove(struct device *dev)
->  	epf->driver = NULL;
->  }
->  
-> -static struct bus_type pci_epf_bus_type = {
-> +static const struct bus_type pci_epf_bus_type = {
->  	.name		= "pci-epf",
->  	.match		= pci_epf_device_match,
->  	.probe		= pci_epf_device_probe,
-> 
-> ---
-> base-commit: 1281aa073d3701b03cc6e716dc128df5ba47509d
-> change-id: 20240204-bus_cleanup-pci-f70b6d5a5bcf
-> 
-> Best regards,
-> -- 
-> Ricardo B. Marliere <ricardo@marliere.net>
-> 
-
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 4fe2ef54088c..2ddd36a21850 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -161,7 +161,7 @@ static void cpufreq_add_device(const char *name)
+ 
+ 	pdev = platform_device_register_simple(name, PLATFORM_DEVID_NONE, NULL, 0);
+ 	if (IS_ERR(pdev))
+-		pr_info("%s device creation failed: %ld\n", name, PTR_ERR(pdev));
++		pr_info("%s device creation failed: %pe\n", name, pdev);
+ }
+ 
+ #ifdef CONFIG_X86
+diff --git a/drivers/acpi/acpi_watchdog.c b/drivers/acpi/acpi_watchdog.c
+index 8e9e001da38f..14b24157799c 100644
+--- a/drivers/acpi/acpi_watchdog.c
++++ b/drivers/acpi/acpi_watchdog.c
+@@ -179,7 +179,7 @@ void __init acpi_watchdog_init(void)
+ 	pdev = platform_device_register_simple("wdat_wdt", PLATFORM_DEVID_NONE,
+ 					       resources, nresources);
+ 	if (IS_ERR(pdev))
+-		pr_err("Device creation failed: %ld\n", PTR_ERR(pdev));
++		pr_err("Device creation failed: %pe\n", pdev);
+ 
+ 	kfree(resources);
+ 
+diff --git a/drivers/acpi/pci_slot.c b/drivers/acpi/pci_slot.c
+index d6cb2c27a23b..741bcc9d6d6a 100644
+--- a/drivers/acpi/pci_slot.c
++++ b/drivers/acpi/pci_slot.c
+@@ -111,7 +111,7 @@ register_slot(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 	snprintf(name, sizeof(name), "%llu", sun);
+ 	pci_slot = pci_create_slot(pci_bus, device, name, NULL);
+ 	if (IS_ERR(pci_slot)) {
+-		pr_err("pci_create_slot returned %ld\n", PTR_ERR(pci_slot));
++		pr_err("pci_create_slot returned %pe\n", pci_slot);
+ 		kfree(slot);
+ 		return AE_OK;
+ 	}
 -- 
-மணிவண்ணன் சதாசிவம்
+2.25.1
+
