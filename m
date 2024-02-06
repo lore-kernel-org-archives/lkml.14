@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BB313698A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE3B136986;
 	Tue,  6 Feb 2024 12:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221361; cv=none; b=VX5x0xl6o7GzuzjAWlZSP42PTEmCCMPqBYN6tJub8RQ3oqjuckNTn68cccWw9Lnm+RWCPUQ0omhjZXcUYSil5lOGZjNfy5cQH7NVGnCUsduHgGo6b60kmBXLPzCmPBUs7tSQvTZlnbGb4lviwjw8OKYlwoqZM+ZCLDiN4dVosuc=
+	t=1707221361; cv=none; b=YUQscIpj1iFd6tpLoYmeQ22iusLVcY/3/8F/YfUIpySS9ohTHHgk0egi2ErkUuZemc5ROtr+j8tO/lF8ZF2IpwmJp0/49tSzW5443Qcf6MuctvZf6c2YGAR6v6PkaJ5IPFQFs3jXX7Laze4fYe2T1/hVaofZXPOqKbjNLM910OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707221361; c=relaxed/simple;
-	bh=EX62FCliiicp1Ebv2cbXuAVT6VCGkHG/rJaEKHec0Co=;
+	bh=LPHCUC+XOE6a+rTOOpSZFitJzU53rMUz6survkIA3Ss=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=gXgmkjSoiNrwK1R6wS2+9eySybwrPX5KcqmBRDebSmLr8MLg/N1x7xJoT1tUqXIglSDIZNP6JS2kgtKKjTd+s6ToVKO8eX2oFBZ6PJNPdlfenygLiaxAkUwhwQM4MRCNs0RrWIkvNr7zqEZ3rR5xIhFrrr536XBCe4VyR3N9oOo=
+	 Content-Type; b=rMYNjOFtnbwAPJtTe6pfzzAklTRJG066nU5uTpcigs1s0CmvMFKmMpcnnc2F3FodAEu5pcxVu4TVJZDCO8BfLL91GpJVmgRpudXmirOXYE19hZcG3rmoLE8d3yCtKifT8HEz9pH5CFMWvn/mkNxXOITKu9LRW8rfZJdC0TBxexY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70897C433F1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A1F5C43601;
 	Tue,  6 Feb 2024 12:09:21 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@rostedt.homelinux.com>)
-	id 1rXKGr-00000006bBq-3v6a;
+	id 1rXKGr-00000006bAq-2Y1s;
 	Tue, 06 Feb 2024 07:09:49 -0500
-Message-ID: <20240206120949.792406858@rostedt.homelinux.com>
+Message-ID: <20240206120949.464245650@rostedt.homelinux.com>
 User-Agent: quilt/0.67
-Date: Tue, 06 Feb 2024 07:09:26 -0500
+Date: Tue, 06 Feb 2024 07:09:24 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
@@ -30,9 +30,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Ajay Kaher <akaher@vmware.com>
-Subject: [v6.6][PATCH 21/57] eventfs: Delete eventfs_inode when the last dentry is freed
+ Ajay Kaher <akaher@vmware.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [v6.6][PATCH 19/57] eventfs: Save ownership and mode
 References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,280 +44,345 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-There exists a race between holding a reference of an eventfs_inode dentry
-and the freeing of the eventfs_inode. If user space has a dentry held long
-enough, it may still be able to access the dentry's eventfs_inode after it
-has been freed.
+Now that inodes and dentries are created on the fly, they are also
+reclaimed on memory pressure. Since the ownership and file mode are saved
+in the inode, if they are freed, any changes to the ownership and mode
+will be lost.
 
-To prevent this, have he eventfs_inode freed via the last dput() (or via
-RCU if the eventfs_inode does not have a dentry).
+To counter this, if the user changes the permissions or ownership, save
+them, and when creating the inodes again, restore those changes.
 
-This means reintroducing the eventfs_inode del_list field at a temporary
-place to put the eventfs_inode. It needs to mark it as freed (via the
-list) but also must invalidate the dentry immediately as the return from
-eventfs_remove_dir() expects that they are. But the dentry invalidation
-must not be called under the eventfs_mutex, so it must be done after the
-eventfs_inode is marked as free (put on a deletion list).
-
-Link: https://lkml.kernel.org/r/20231101172650.123479767@goodmis.org
+Link: https://lkml.kernel.org/r/20231101172649.691841445@goodmis.org
 
 Cc: stable@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Ajay Kaher <akaher@vmware.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ajay Kaher <akaher@vmware.com>
-Fixes: 5bdcd5f5331a2 ("eventfs: Implement removal of meta data from eventfs")
+Fixes: 63940449555e7 ("eventfs: Implement eventfs lookup, read, open functions")
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-(cherry picked from commit 020010fbfa202aa528a52743eba4ab0da3400a4e)
+(cherry picked from commit 28e12c09f5aa081b2d13d1340e3610070b6c624d)
 ---
- fs/tracefs/event_inode.c | 146 ++++++++++++++++++---------------------
- fs/tracefs/internal.h    |   2 +
- 2 files changed, 69 insertions(+), 79 deletions(-)
+ fs/tracefs/event_inode.c | 148 +++++++++++++++++++++++++++++++++++----
+ fs/tracefs/internal.h    |  16 +++++
+ 2 files changed, 151 insertions(+), 13 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 8ac9abf7a3d5..0a04ae0ca8c8 100644
+index e9625732c52d..93d08e552483 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -85,8 +85,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -40,6 +40,15 @@ static DEFINE_MUTEX(eventfs_mutex);
+  */
+ DEFINE_STATIC_SRCU(eventfs_srcu);
  
- 	mutex_lock(&eventfs_mutex);
- 	ei = dentry->d_fsdata;
--	/* The LSB is set when the eventfs_inode is being freed */
--	if (((unsigned long)ei & 1UL) || ei->is_freed) {
-+	if (ei->is_freed) {
- 		/* Do not allow changes if the event is about to be removed. */
- 		mutex_unlock(&eventfs_mutex);
- 		return -ENODEV;
-@@ -276,35 +275,17 @@ static void free_ei(struct eventfs_inode *ei)
- void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- {
- 	struct tracefs_inode *ti_parent;
--	struct eventfs_inode *ei_child, *tmp;
- 	struct eventfs_inode *ei;
- 	int i;
- 
- 	/* The top level events directory may be freed by this */
- 	if (unlikely(ti->flags & TRACEFS_EVENT_TOP_INODE)) {
--		LIST_HEAD(ef_del_list);
--
- 		mutex_lock(&eventfs_mutex);
--
- 		ei = ti->private;
--
--		/* Record all the top level files */
--		list_for_each_entry_srcu(ei_child, &ei->children, list,
--					 lockdep_is_held(&eventfs_mutex)) {
--			list_add_tail(&ei_child->del_list, &ef_del_list);
--		}
--
- 		/* Nothing should access this, but just in case! */
- 		ti->private = NULL;
--
- 		mutex_unlock(&eventfs_mutex);
- 
--		/* Now safely free the top level files and their children */
--		list_for_each_entry_safe(ei_child, tmp, &ef_del_list, del_list) {
--			list_del(&ei_child->del_list);
--			eventfs_remove_dir(ei_child);
--		}
--
- 		free_ei(ei);
- 		return;
- 	}
-@@ -319,14 +300,6 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- 	if (!ei)
- 		goto out;
- 
--	/*
--	 * If ei was freed, then the LSB bit is set for d_fsdata.
--	 * But this should not happen, as it should still have a
--	 * ref count that prevents it. Warn in case it does.
--	 */
--	if (WARN_ON_ONCE((unsigned long)ei & 1))
--		goto out;
--
- 	/* This could belong to one of the files of the ei */
- 	if (ei->dentry != dentry) {
- 		for (i = 0; i < ei->nr_entries; i++) {
-@@ -336,6 +309,8 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- 		if (WARN_ON_ONCE(i == ei->nr_entries))
- 			goto out;
- 		ei->d_children[i] = NULL;
-+	} else if (ei->is_freed) {
-+		free_ei(ei);
- 	} else {
- 		ei->dentry = NULL;
- 	}
-@@ -962,13 +937,65 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	return ERR_PTR(-ENOMEM);
- }
- 
-+static LLIST_HEAD(free_list);
++/* Mode is unsigned short, use the upper bits for flags */
++enum {
++	EVENTFS_SAVE_MODE	= BIT(16),
++	EVENTFS_SAVE_UID	= BIT(17),
++	EVENTFS_SAVE_GID	= BIT(18),
++};
 +
-+static void eventfs_workfn(struct work_struct *work)
++#define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
++
+ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 					  struct dentry *dentry,
+ 					  unsigned int flags);
+@@ -47,8 +56,89 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
+ static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
+ static int eventfs_release(struct inode *inode, struct file *file);
+ 
++static void update_attr(struct eventfs_attr *attr, struct iattr *iattr)
 +{
-+        struct eventfs_inode *ei, *tmp;
-+        struct llist_node *llnode;
++	unsigned int ia_valid = iattr->ia_valid;
 +
-+	llnode = llist_del_all(&free_list);
-+        llist_for_each_entry_safe(ei, tmp, llnode, llist) {
-+		/* This dput() matches the dget() from unhook_dentry() */
-+		for (int i = 0; i < ei->nr_entries; i++) {
-+			if (ei->d_children[i])
-+				dput(ei->d_children[i]);
-+		}
-+		/* This should only get here if it had a dentry */
-+		if (!WARN_ON_ONCE(!ei->dentry))
-+			dput(ei->dentry);
-+        }
++	if (ia_valid & ATTR_MODE) {
++		attr->mode = (attr->mode & ~EVENTFS_MODE_MASK) |
++			(iattr->ia_mode & EVENTFS_MODE_MASK) |
++			EVENTFS_SAVE_MODE;
++	}
++	if (ia_valid & ATTR_UID) {
++		attr->mode |= EVENTFS_SAVE_UID;
++		attr->uid = iattr->ia_uid;
++	}
++	if (ia_valid & ATTR_GID) {
++		attr->mode |= EVENTFS_SAVE_GID;
++		attr->gid = iattr->ia_gid;
++	}
 +}
 +
-+static DECLARE_WORK(eventfs_work, eventfs_workfn);
-+
- static void free_rcu_ei(struct rcu_head *head)
- {
- 	struct eventfs_inode *ei = container_of(head, struct eventfs_inode, rcu);
- 
-+	if (ei->dentry) {
-+		/* Do not free the ei until all references of dentry are gone */
-+		if (llist_add(&ei->llist, &free_list))
-+			queue_work(system_unbound_wq, &eventfs_work);
-+		return;
-+	}
-+
-+	/* If the ei doesn't have a dentry, neither should its children */
-+	for (int i = 0; i < ei->nr_entries; i++) {
-+		WARN_ON_ONCE(ei->d_children[i]);
-+	}
-+
- 	free_ei(ei);
- }
- 
-+static void unhook_dentry(struct dentry *dentry)
++static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
++			    struct iattr *iattr)
 +{
-+	if (!dentry)
-+		return;
++	const struct eventfs_entry *entry;
++	struct eventfs_inode *ei;
++	const char *name;
++	int ret;
 +
-+	/* Keep the dentry from being freed yet (see eventfs_workfn()) */
-+	dget(dentry);
-+
-+	dentry->d_fsdata = NULL;
-+	d_invalidate(dentry);
 +	mutex_lock(&eventfs_mutex);
-+	/* dentry should now have at least a single reference */
-+	WARN_ONCE((int)d_count(dentry) < 1,
-+		  "dentry %px (%s) less than one reference (%d) after invalidate\n",
-+		  dentry, dentry->d_name.name, d_count(dentry));
++	ei = dentry->d_fsdata;
++	/* The LSB is set when the eventfs_inode is being freed */
++	if (((unsigned long)ei & 1UL) || ei->is_freed) {
++		/* Do not allow changes if the event is about to be removed. */
++		mutex_unlock(&eventfs_mutex);
++		return -ENODEV;
++	}
++
++	/* Preallocate the children mode array if necessary */
++	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
++		if (!ei->entry_attrs) {
++			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
++						  GFP_KERNEL);
++			if (!ei->entry_attrs) {
++				ret = -ENOMEM;
++				goto out;
++			}
++		}
++	}
++
++	ret = simple_setattr(idmap, dentry, iattr);
++	if (ret < 0)
++		goto out;
++
++	/*
++	 * If this is a dir, then update the ei cache, only the file
++	 * mode is saved in the ei->m_children, and the ownership is
++	 * determined by the parent directory.
++	 */
++	if (dentry->d_inode->i_mode & S_IFDIR) {
++		update_attr(&ei->attr, iattr);
++
++	} else {
++		name = dentry->d_name.name;
++
++		for (int i = 0; i < ei->nr_entries; i++) {
++			entry = &ei->entries[i];
++			if (strcmp(name, entry->name) == 0) {
++				update_attr(&ei->entry_attrs[i], iattr);
++				break;
++			}
++		}
++	}
++ out:
 +	mutex_unlock(&eventfs_mutex);
++	return ret;
++}
++
+ static const struct inode_operations eventfs_root_dir_inode_operations = {
+ 	.lookup		= eventfs_root_lookup,
++	.setattr	= eventfs_set_attr,
++};
++
++static const struct inode_operations eventfs_file_inode_operations = {
++	.setattr	= eventfs_set_attr,
+ };
+ 
+ static const struct file_operations eventfs_file_operations = {
+@@ -59,10 +149,30 @@ static const struct file_operations eventfs_file_operations = {
+ 	.release	= eventfs_release,
+ };
+ 
++static void update_inode_attr(struct inode *inode, struct eventfs_attr *attr, umode_t mode)
++{
++	if (!attr) {
++		inode->i_mode = mode;
++		return;
++	}
++
++	if (attr->mode & EVENTFS_SAVE_MODE)
++		inode->i_mode = attr->mode & EVENTFS_MODE_MASK;
++	else
++		inode->i_mode = mode;
++
++	if (attr->mode & EVENTFS_SAVE_UID)
++		inode->i_uid = attr->uid;
++
++	if (attr->mode & EVENTFS_SAVE_GID)
++		inode->i_gid = attr->gid;
 +}
 +
  /**
-  * eventfs_remove_rec - remove eventfs dir or file from list
-  * @ei: eventfs_inode to be removed.
-@@ -1006,33 +1033,6 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head,
- 	list_add_tail(&ei->del_list, head);
- }
- 
--static void unhook_dentry(struct dentry **dentry, struct dentry **list)
--{
--	if (*dentry) {
--		unsigned long ptr = (unsigned long)*list;
--
--		/* Keep the dentry from being freed yet */
--		dget(*dentry);
--
--		/*
--		 * Paranoid: The dget() above should prevent the dentry
--		 * from being freed and calling eventfs_set_ei_status_free().
--		 * But just in case, set the link list LSB pointer to 1
--		 * and have eventfs_set_ei_status_free() check that to
--		 * make sure that if it does happen, it will not think
--		 * the d_fsdata is an eventfs_inode.
--		 *
--		 * For this to work, no eventfs_inode should be allocated
--		 * on a odd space, as the ef should always be allocated
--		 * to be at least word aligned. Check for that too.
--		 */
--		WARN_ON_ONCE(ptr & 1);
--
--		(*dentry)->d_fsdata = (void *)(ptr | 1);
--		*list = *dentry;
--		*dentry = NULL;
--	}
--}
- /**
-  * eventfs_remove_dir - remove eventfs dir or file from list
-  * @ei: eventfs_inode to be removed.
-@@ -1043,40 +1043,28 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+  * create_file - create a file in the tracefs filesystem
+  * @name: the name of the file to create.
+  * @mode: the permission that the file should have.
++ * @attr: saved attributes changed by user
+  * @parent: parent dentry for this file.
+  * @data: something that the caller will want to get to later on.
+  * @fop: struct file_operations that should be used for this file.
+@@ -72,6 +182,7 @@ static const struct file_operations eventfs_file_operations = {
+  * call.
+  */
+ static struct dentry *create_file(const char *name, umode_t mode,
++				  struct eventfs_attr *attr,
+ 				  struct dentry *parent, void *data,
+ 				  const struct file_operations *fop)
  {
- 	struct eventfs_inode *tmp;
- 	LIST_HEAD(ei_del_list);
--	struct dentry *dentry_list = NULL;
--	struct dentry *dentry;
--	int i;
+@@ -95,7 +206,10 @@ static struct dentry *create_file(const char *name, umode_t mode,
+ 	if (unlikely(!inode))
+ 		return eventfs_failed_creating(dentry);
  
- 	if (!ei)
- 		return;
+-	inode->i_mode = mode;
++	/* If the user updated the directory's attributes, use them */
++	update_inode_attr(inode, attr, mode);
++
++	inode->i_op = &eventfs_file_inode_operations;
+ 	inode->i_fop = fop;
+ 	inode->i_private = data;
  
-+	/*
-+	 * Move the deleted eventfs_inodes onto the ei_del_list
-+	 * which will also set the is_freed value. Note, this has to be
-+	 * done under the eventfs_mutex, but the deletions of
-+	 * the dentries must be done outside the eventfs_mutex.
-+	 * Hence moving them to this temporary list.
-+	 */
- 	mutex_lock(&eventfs_mutex);
- 	eventfs_remove_rec(ei, &ei_del_list, 0);
-+	mutex_unlock(&eventfs_mutex);
- 
- 	list_for_each_entry_safe(ei, tmp, &ei_del_list, del_list) {
--		for (i = 0; i < ei->nr_entries; i++)
--			unhook_dentry(&ei->d_children[i], &dentry_list);
--		unhook_dentry(&ei->dentry, &dentry_list);
-+		for (int i = 0; i < ei->nr_entries; i++)
-+			unhook_dentry(ei->d_children[i]);
-+		unhook_dentry(ei->dentry);
-+		list_del(&ei->del_list);
- 		call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
- 	}
--	mutex_unlock(&eventfs_mutex);
--
--	while (dentry_list) {
--		unsigned long ptr;
--
--		dentry = dentry_list;
--		ptr = (unsigned long)dentry->d_fsdata & ~1UL;
--		dentry_list = (struct dentry *)ptr;
--		dentry->d_fsdata = NULL;
--		d_invalidate(dentry);
--		mutex_lock(&eventfs_mutex);
--		/* dentry should now have at least a single reference */
--		WARN_ONCE((int)d_count(dentry) < 1,
--			  "dentry %px (%s) less than one reference (%d) after invalidate\n",
--			  dentry, dentry->d_name.name, d_count(dentry));
--		mutex_unlock(&eventfs_mutex);
--		dput(dentry);
--	}
- }
+@@ -108,19 +222,19 @@ static struct dentry *create_file(const char *name, umode_t mode,
  
  /**
+  * create_dir - create a dir in the tracefs filesystem
+- * @name: the name of the file to create.
++ * @ei: the eventfs_inode that represents the directory to create
+  * @parent: parent dentry for this file.
+  *
+  * This function will create a dentry for a directory represented by
+  * a eventfs_inode.
+  */
+-static struct dentry *create_dir(const char *name, struct dentry *parent)
++static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent)
+ {
+ 	struct tracefs_inode *ti;
+ 	struct dentry *dentry;
+ 	struct inode *inode;
+ 
+-	dentry = eventfs_start_creating(name, parent);
++	dentry = eventfs_start_creating(ei->name, parent);
+ 	if (IS_ERR(dentry))
+ 		return dentry;
+ 
+@@ -128,7 +242,9 @@ static struct dentry *create_dir(const char *name, struct dentry *parent)
+ 	if (unlikely(!inode))
+ 		return eventfs_failed_creating(dentry);
+ 
+-	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
++	/* If the user updated the directory's attributes, use them */
++	update_inode_attr(inode, &ei->attr, S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
++
+ 	inode->i_op = &eventfs_root_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+@@ -146,6 +262,7 @@ static void free_ei(struct eventfs_inode *ei)
+ {
+ 	kfree_const(ei->name);
+ 	kfree(ei->d_children);
++	kfree(ei->entry_attrs);
+ 	kfree(ei);
+ }
+ 
+@@ -231,7 +348,7 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+ /**
+  * create_file_dentry - create a dentry for a file of an eventfs_inode
+  * @ei: the eventfs_inode that the file will be created under
+- * @e_dentry: a pointer to the d_children[] of the @ei
++ * @idx: the index into the d_children[] of the @ei
+  * @parent: The parent dentry of the created file.
+  * @name: The name of the file to create
+  * @mode: The mode of the file.
+@@ -244,10 +361,12 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+  * just do a dget() on it and return. Otherwise create the dentry and attach it.
+  */
+ static struct dentry *
+-create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
++create_file_dentry(struct eventfs_inode *ei, int idx,
+ 		   struct dentry *parent, const char *name, umode_t mode, void *data,
+ 		   const struct file_operations *fops, bool lookup)
+ {
++	struct eventfs_attr *attr = NULL;
++	struct dentry **e_dentry = &ei->d_children[idx];
+ 	struct dentry *dentry;
+ 	bool invalidate = false;
+ 
+@@ -264,13 +383,18 @@ create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
+ 		mutex_unlock(&eventfs_mutex);
+ 		return *e_dentry;
+ 	}
++
++	/* ei->entry_attrs are protected by SRCU */
++	if (ei->entry_attrs)
++		attr = &ei->entry_attrs[idx];
++
+ 	mutex_unlock(&eventfs_mutex);
+ 
+ 	/* The lookup already has the parent->d_inode locked */
+ 	if (!lookup)
+ 		inode_lock(parent->d_inode);
+ 
+-	dentry = create_file(name, mode, parent, data, fops);
++	dentry = create_file(name, mode, attr, parent, data, fops);
+ 
+ 	if (!lookup)
+ 		inode_unlock(parent->d_inode);
+@@ -378,7 +502,7 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 	if (!lookup)
+ 		inode_lock(parent->d_inode);
+ 
+-	dentry = create_dir(ei->name, parent);
++	dentry = create_dir(ei, parent);
+ 
+ 	if (!lookup)
+ 		inode_unlock(parent->d_inode);
+@@ -495,8 +619,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 			if (r <= 0)
+ 				continue;
+ 			ret = simple_lookup(dir, dentry, flags);
+-			create_file_dentry(ei, &ei->d_children[i],
+-					   ei_dentry, name, mode, cdata,
++			create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
+ 					   fops, true);
+ 			break;
+ 		}
+@@ -629,8 +752,7 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
+ 		r = entry->callback(name, &mode, &cdata, &fops);
+ 		if (r <= 0)
+ 			continue;
+-		d = create_file_dentry(ei, &ei->d_children[i],
+-				       parent, name, mode, cdata, fops, false);
++		d = create_file_dentry(ei, i, parent, name, mode, cdata, fops, false);
+ 		if (d) {
+ 			ret = add_dentries(&dentries, d, cnt);
+ 			if (ret < 0)
 diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 5f60bcd69289..06a1f220b901 100644
+index 5a98e87dd3d1..5f60bcd69289 100644
 --- a/fs/tracefs/internal.h
 +++ b/fs/tracefs/internal.h
-@@ -54,10 +54,12 @@ struct eventfs_inode {
+@@ -13,6 +13,18 @@ struct tracefs_inode {
+ 	struct inode            vfs_inode;
+ };
+ 
++/*
++ * struct eventfs_attr - cache the mode and ownership of a eventfs entry
++ * @mode:	saved mode plus flags of what is saved
++ * @uid:	saved uid if changed
++ * @gid:	saved gid if changed
++ */
++struct eventfs_attr {
++	int				mode;
++	kuid_t				uid;
++	kgid_t				gid;
++};
++
+ /*
+  * struct eventfs_inode - hold the properties of the eventfs directories.
+  * @list:	link list into the parent directory
+@@ -22,6 +34,8 @@ struct tracefs_inode {
+  * @dentry:     the dentry of the directory
+  * @d_parent:   pointer to the parent's dentry
+  * @d_children: The array of dentries to represent the files when created
++ * @entry_attrs: Saved mode and ownership of the @d_children
++ * @attr:	Saved mode and ownership of eventfs_inode itself
+  * @data:	The private data to pass to the callbacks
+  * @is_freed:	Flag set if the eventfs is on its way to be freed
+  *                Note if is_freed is set, then dentry is corrupted.
+@@ -35,6 +49,8 @@ struct eventfs_inode {
+ 	struct dentry			*dentry; /* Check is_freed to access */
+ 	struct dentry			*d_parent;
+ 	struct dentry			**d_children;
++	struct eventfs_attr		*entry_attrs;
++	struct eventfs_attr		attr;
  	void				*data;
  	/*
  	 * Union - used for deletion
-+	 * @llist:	for calling dput() if needed after RCU
- 	 * @del_list:	list of eventfs_inode to delete
- 	 * @rcu:	eventfs_inode to delete in RCU
- 	 */
- 	union {
-+		struct llist_node	llist;
- 		struct list_head	del_list;
- 		struct rcu_head		rcu;
- 	};
 -- 
 2.43.0
 
