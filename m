@@ -1,90 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93863134CE1;
-	Tue,  6 Feb 2024 12:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF71134CF7;
+	Tue,  6 Feb 2024 12:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221357; cv=none; b=lxAb1rDD8GfN8MxA1QthOoss7PdmrGiym5gO+P+0CW1+MaoEaW6TovCxwovc/4NScDoFvNHEcVDqMeXaJ13hXJxxaGEko8tCnYqtSHp3QUN6afVmily2IhMZZoTFBkYK5MqO2ewWIZhrqrvKe/CNxAQ9VqfzZLLnnrkOTgY1F5Y=
+	t=1707221358; cv=none; b=P5z+6gnCHm327WLYdmw20869BGkQl/PnftlJbb5Lg5oSrhdiLUA8K4vZoxHBcpkYZ+FcGb3bdcAz/KolXs3rh5mD6R3iNZDTb/XwKpRwnXRQpiX9Ybtk+OjfoUKO74FPH0hHR/dbf2hqlCO7w3rMR2NQZmJ+T4bl2Wp7VDr0hE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221357; c=relaxed/simple;
-	bh=lgnDT6IX8ujr8/X8b2kq1ukegHZdLHErPgmImXn6Cog=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iIXb8YS5wKtgq5yhsgFyywvfA3Gzfj78R1QBQNhYOWov7Zfo3+mXFfeb+nDYFFqfUwutW/Xnb6eDtu/dKYKQkQyUobsx1Ow77xn8xYLIDTGGUS8IClNQfKFxh8LWI7Omewl5wtesKMoLRsx4RzekcLK5IG7FzkXcP5P2BWp+meo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fu/Luobd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fu/Luobd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5A6C433C7;
-	Tue,  6 Feb 2024 12:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707221357;
-	bh=lgnDT6IX8ujr8/X8b2kq1ukegHZdLHErPgmImXn6Cog=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Fu/Luobdvz2M8E+75ha/tnKhqTJwCAX+GGDs8FB5MyuX7Tys3j5jIz8mHgfUwAYZJ
-	 Ze48vql7vnc6nQbkeigXafDQpy5wjPnlzD0d9o+pnu3YrJUwtYX3FcaT+IFt/LkZTn
-	 KNJn2PCw6BlgXHwMK6arMqo9njZSR4wQ/FR75LmyBBCQELbQRxEQxsz3v8yQdQloeW
-	 u9ETCHBithWqBxLxILvjvUZG6Jev9+Zf1u3bKtuLYHcJbcGI9fAf7mjTuTVaDBltoG
-	 +ZNGeqKPTrklaZS5tlq2GnJ86oZncbqtMr+X0sXKn/YCWU7vRX6SfGYf/jmmcDTdMK
-	 leLl2NrvGqegg==
-From: Mark Brown <broonie@kernel.org>
-To: Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- David Lechner <dlechner@baylibre.com>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- linux-spi@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240126220024.3926403-2-dlechner@baylibre.com>
-References: <20240126220024.3926403-2-dlechner@baylibre.com>
-Subject: Re: [PATCH] spi: bcm2835: implement ctlr->max_transfer_size
-Message-Id: <170722135486.992289.5399586153021617257.b4-ty@kernel.org>
-Date: Tue, 06 Feb 2024 12:09:14 +0000
+	s=arc-20240116; t=1707221358; c=relaxed/simple;
+	bh=336aSR/98foY6hsKIaBZqloDqDtb5wcfOnRkQgXQYHI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=ikkcMQtQFknMBObDnDF2PibeUdct/mK71yEj/cWi6BOScWDcLJAvM39NrZxKxj57ZrkoGdsIrsGB+iIt4v/a/LF9lqxUt9jQu4n/hR+UAhLetd0xOzB4shW0hWaWEpdjzZLSeY+G2Lq8/8X1syQ8cMIz1mdMXhTHf0j936HkMtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38060C433F1;
+	Tue,  6 Feb 2024 12:09:18 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@rostedt.homelinux.com>)
+	id 1rXKGo-00000006b1v-2qVQ;
+	Tue, 06 Feb 2024 07:09:46 -0500
+Message-ID: <20240206120946.536298441@rostedt.homelinux.com>
+User-Agent: quilt/0.67
+Date: Tue, 06 Feb 2024 07:09:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [v6.6][PATCH 01/57] Revert "eventfs: Do not allow NULL parent to
+ eventfs_start_creating()"
+References: <20240206120905.570408983@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, 26 Jan 2024 16:00:23 -0600, David Lechner wrote:
-> The core SPI code will handle splitting transfers if needed as long
-> as ctlr->max_transfer_size is implemented. It does this in
-> __spi_pump_transfer_message() immediately before calling
-> ctlr->prepare_message. So effectively, this change does not
-> alter the behavior of the driver.
-> 
-> Also, several peripheral drivers make use of spi_max_transfer_size(),
-> so this should improve compatibility with those drivers.
-> 
-> [...]
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Applied to
+This reverts commit 6abb8c223ce12078a0f2c129656a13338dfe960b.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+The eventfs was not designed properly and may have some hidden bugs in it.
+Linus rewrote it properly and I trust his version more than this one. Revert
+the backported patches for 6.6 and re-apply all the changes to make it
+equivalent to Linus's version.
 
-Thanks!
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-[1/1] spi: bcm2835: implement ctlr->max_transfer_size
-      commit: 2733092baa3e8a1f05fd16088808be17c98990b4
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 0292c6a2bed9..891653ba9cf3 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -509,15 +509,20 @@ struct dentry *eventfs_start_creating(const char *name, struct dentry *parent)
+ 	struct dentry *dentry;
+ 	int error;
+ 
+-	/* Must always have a parent. */
+-	if (WARN_ON_ONCE(!parent))
+-		return ERR_PTR(-EINVAL);
+-
+ 	error = simple_pin_fs(&trace_fs_type, &tracefs_mount,
+ 			      &tracefs_mount_count);
+ 	if (error)
+ 		return ERR_PTR(error);
+ 
++	/*
++	 * If the parent is not specified, we create it in the root.
++	 * We need the root dentry to do this, which is in the super
++	 * block. A pointer to that is in the struct vfsmount that we
++	 * have around.
++	 */
++	if (!parent)
++		parent = tracefs_mount->mnt_root;
++
+ 	if (unlikely(IS_DEADDIR(parent->d_inode)))
+ 		dentry = ERR_PTR(-ENOENT);
+ 	else
+-- 
+2.43.0
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
 
