@@ -1,138 +1,221 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8ED12DDBB
-	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 10:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFE212E1C5;
+	Tue,  6 Feb 2024 10:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707214365; cv=none; b=qeQy8njioHrERFgDmaqou5pJOZla1ci9lqlC3nuAmRcNuaulHHLRUcZD+0jUcZthQ3BQ7lRjQ987ij1Tfg4+4JmXLyVfT0greIzV6IMORnOgU2YtscZC409I04tN0wCfg80zTh6VgAkRA16k0JgDwqIYL85TdqVav5wdDdMuQmM=
+	t=1707214380; cv=none; b=YuXzwwQb5fC7FnQvSgUBlfozJl31AP3UySqoYLJlhxmdqkpAbwDLwOvTNzdNSzCICuQHjkDslbmCgObCmFrPc3dz4WPaxWzfJ/4pxG0pWgTxsdpOz/+KsanpAeszwzjdsf7Pacz3lyC+W+3IE5tiXjaFUOFO0MDDu1QPxSoYpV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707214365; c=relaxed/simple;
-	bh=Av25SvJY+VoNb8IAXb8ten2tW6yMRrOZ0ZoYKecDGM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jypyS+vRn76Z0aab0M2O1P81zvh19zw7MM1RMzjGzfn22p7vrti8EqAcz8/g10hoFN/t+dRoGjq3RKTj/yLWCfA5VwvKBEjEGPjiN6fmx0Bs+6Q4cpOcTo/yOnR25kP1AteQY5UjjYwWcpcCSVNe7QU3sw+D9z3Vk7ct43S6QYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p+JzJVH1; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707214380; c=relaxed/simple;
+	bh=Rpxj+E/7yrI4tdi5qskpk5pPVzgjrp8YqDARkU2+exc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRxHKO3HHGEJU5ci/1H93fNOJKQRyaqnz5KhIkrd6KD34V+cK/wFpgj4VDVZ2tsTjxy4HVotsLH6Y9jMufyztS0SkoYq/s3HO7BJOWyINKbH0pZ3cUJhMsU+TzoLGpgncqCj6Cv5nnhEnDFRbcB+euY3nSDwwWf1t2viy/8q4bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UJD8UDKi; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p+JzJVH1"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-68873473ce6so2805346d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 02:12:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707214362; x=1707819162; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RtzBJx6wCZPpOqlih50m+fMwaDQ7Jnq2Nn6LSXNODY0=;
-        b=p+JzJVH1MM/61FUBQqjrKL7WO2ltkZzIAQZoZWOfibzETc1Q1OQlaxFvqGWVYnKblf
-         7X+aURNckWXmKKQBqwDR7zLPHjrlo8sssVZJmJoCzWa9U0RxwC46LM5dl4VAluWz0KeB
-         OVx642kKk1rEKYlsx0up7aDaJ2hdOhk8Cf0u6wkljugoTzocPCm29Yier56EIv7qaito
-         qwcA6Sc6LCwa+183PN6/FmgCMGwHQxxZ/4lyRj3g1Necr57zVzCpoGSevwIAFN4qyPhQ
-         /M0RXhuzckxpp7MA9tpVO5q9M+A0GjuZ25aoz42JhIoIBY3AYYxdPQ89KkBi+Mq0ldaC
-         HLqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707214362; x=1707819162;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RtzBJx6wCZPpOqlih50m+fMwaDQ7Jnq2Nn6LSXNODY0=;
-        b=vxJAXXdlK+eQOYMq99WySfqeIjnORKBhAhvJHTzLC5zH6RwR7V9HJpR4BWEMi4PquM
-         dkTSsOgcmSTmTA59bIYTjLOyn3E/UDmbjquoblMIt0HWeEYqEa6Li7MWWtGqKheudtXD
-         HzhlVe+RBfmRHzLvfm89mycUS9TeVWCF3RoLhrWjVXWcZ4RyIONRuYZ9CgagkUsgIkjY
-         iPzD4Xg5Ni1YwxiPq2hZO1n+Aq/I3iPcN0QjlUhq/lok5rgRpyw0qSn/TB1VXqH3r6E0
-         sEdskwhEP+qRqYdqQYgpNCR1VpNyycR7GXAc3RzaoY5LTHn457C5Bz0qb4NHjjK5fNtu
-         Ovtw==
-X-Gm-Message-State: AOJu0Yzjg0KWPytOsHLPj/QPSabtppW5+ieDtH0xBKC9adiIGuX2i4Ja
-	cS90C+zxQAd3ZiUUE9dLbEDeRviQiab/eqOVlMSKKo3WvL/yh9dkZfAb8q5Mjn2cfn3WHicsK+B
-	GgpFe8WMY+Z1zzO6fNPf8hNmnjoiTEBg85NE2Eg==
-X-Google-Smtp-Source: AGHT+IGMnZCoArTwWYltdog0J5CuS3/WLyIEtaUP+2kn+xaLD0CqS4Ik67E9lGPDKQvE0SR3tqrIbbn5FwyITbeWlxE=
-X-Received: by 2002:a05:6214:4107:b0:681:7ba3:3649 with SMTP id
- kc7-20020a056214410700b006817ba33649mr1703512qvb.63.1707214362070; Tue, 06
- Feb 2024 02:12:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UJD8UDKi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707214379; x=1738750379;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Rpxj+E/7yrI4tdi5qskpk5pPVzgjrp8YqDARkU2+exc=;
+  b=UJD8UDKiOWKT3UHWxVsppua1SUYeDz/WZNSpEurW+Y0tyA+3gHcCCBWJ
+   C9tjDRqNJeqppeAw7z+MTupY1QNps0KqJTtBSi4O1YSAQPfUBcEdnCofk
+   A35kVXXRUqD6lSJYXzHP5kv7tVOsSXX2WtYUuf01ziZFjRuWMhgy0B5hp
+   r5gdZUY9MBL5Dz5J0vtkvMrfChzKOFBjfjZmbt3AEy/FuwdlP4JG4UhiP
+   emLDbYrVD9GYexls5cawZCbsighR4cKEDQyqiBOltcXCtkT9okton9WB/
+   lC/myxTtbQNj5dpWQ9N/z8XVoFaJygRg91WMQFrnyXD5GPYiSLNCjkN5L
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="18232952"
+X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
+   d="scan'208";a="18232952"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:12:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
+   d="scan'208";a="1214880"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa008.fm.intel.com with ESMTP; 06 Feb 2024 02:12:53 -0800
+Date: Tue, 6 Feb 2024 18:09:18 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pattara Teerapong <pteerapong@google.com>
+Subject: Re: [PATCH 6/8] KVM: x86/mmu: Check for usable TDP MMU root while
+ holding mmu_lock for read
+Message-ID: <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
+References: <20240111020048.844847-1-seanjc@google.com>
+ <20240111020048.844847-7-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206085238.1208256-1-tudor.ambarus@linaro.org> <20240206085238.1208256-5-tudor.ambarus@linaro.org>
-In-Reply-To: <20240206085238.1208256-5-tudor.ambarus@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Tue, 6 Feb 2024 10:12:30 +0000
-Message-ID: <CADrjBPqaE9Mmbr+zkHOAadr3aLSu3GMjS4nPPd4VZY4s2DTznA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] spi: s3c64xx: add support for google,gs101-spi
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: broonie@kernel.org, andi.shyti@kernel.org, semen.protsenko@linaro.org, 
-	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
-	linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com, 
-	robh+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111020048.844847-7-seanjc@google.com>
 
-Hi Tudor,
-
-On Tue, 6 Feb 2024 at 08:52, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->
-> Add support for GS101 SPI. GS101 integrates 16 SPI nodes, all with 64
-> bytes FIFOs. GS101 allows just 32 bit register accesses, otherwise a
-> Serror Interrupt is raised. Do the write reg accesses in 32 bits.
->
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+On Wed, Jan 10, 2024 at 06:00:46PM -0800, Sean Christopherson wrote:
+> When allocating a new TDP MMU root, check for a usable root while holding
+> mmu_lock for read and only acquire mmu_lock for write if a new root needs
+> to be created.  There is no need to serialize other MMU operations if a
+> vCPU is simply grabbing a reference to an existing root, holding mmu_lock
+> for write is "necessary" (spoiler alert, it's not strictly necessary) only
+> to ensure KVM doesn't end up with duplicate roots.
+> 
+> Allowing vCPUs to get "new" roots in parallel is beneficial to VM boot and
+> to setups that frequently delete memslots, i.e. which force all vCPUs to
+> reload all roots.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
-
-The patch ordering seems a bit off with this series..I believe it should be
-1) dt-bindings patch (docs first)
-2) Add the use_32bit_io flag / functionality
-3) gs101 support (this patch) that uses the use_32bit_io functionality
-
-Peter.
-
->  drivers/spi/spi-s3c64xx.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index cb45ad615f3d..9ad0d513fb30 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -19,7 +19,7 @@
->  #include <linux/spi/spi.h>
->  #include <linux/types.h>
->
-> -#define MAX_SPI_PORTS          12
-> +#define MAX_SPI_PORTS          16
->  #define S3C64XX_SPI_QUIRK_CS_AUTO      (1 << 1)
->  #define AUTOSUSPEND_TIMEOUT    2000
->
-> @@ -1538,6 +1538,19 @@ static const struct s3c64xx_spi_port_config fsd_spi_port_config = {
->         .quirks         = S3C64XX_SPI_QUIRK_CS_AUTO,
->  };
->
-> +static const struct s3c64xx_spi_port_config gs101_spi_port_config = {
-> +       .fifo_lvl_mask  = { 0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f,
-> +                           0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f},
-> +       .rx_lvl_offset  = 15,
-> +       .tx_st_done     = 25,
-> +       .clk_div        = 4,
-> +       .high_speed     = true,
-> +       .clk_from_cmu   = true,
-> +       .has_loopback   = true,
-> +       .use_32bit_io   = true,
-> +       .quirks         = S3C64XX_SPI_QUIRK_CS_AUTO,
-> +};
+>  arch/x86/kvm/mmu/mmu.c     |  8 ++---
+>  arch/x86/kvm/mmu/tdp_mmu.c | 60 +++++++++++++++++++++++++++++++-------
+>  arch/x86/kvm/mmu/tdp_mmu.h |  2 +-
+>  3 files changed, 55 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 3c844e428684..ea18aca23196 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -3693,15 +3693,15 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+>  	unsigned i;
+>  	int r;
+>  
+> +	if (tdp_mmu_enabled)
+> +		return kvm_tdp_mmu_alloc_root(vcpu);
 > +
->  static const struct platform_device_id s3c64xx_spi_driver_ids[] = {
->         {
->                 .name           = "s3c2443-spi",
-> @@ -1550,6 +1563,9 @@ static const struct platform_device_id s3c64xx_spi_driver_ids[] = {
->  };
->
->  static const struct of_device_id s3c64xx_spi_dt_match[] = {
-> +       { .compatible = "google,gs101-spi",
-> +                       .data = &gs101_spi_port_config,
-> +       },
->         { .compatible = "samsung,s3c2443-spi",
->                         .data = &s3c2443_spi_port_config,
->         },
-> --
-> 2.43.0.594.gd9cf4e227d-goog
->
+>  	write_lock(&vcpu->kvm->mmu_lock);
+>  	r = make_mmu_pages_available(vcpu);
+>  	if (r < 0)
+>  		goto out_unlock;
+>  
+> -	if (tdp_mmu_enabled) {
+> -		root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
+> -		mmu->root.hpa = root;
+> -	} else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
+> +	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
+>  		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
+>  		mmu->root.hpa = root;
+>  	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> index e0a8343f66dc..9a8250a14fc1 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> @@ -223,21 +223,52 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
+>  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
+>  }
+>  
+> -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
+> +static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
+>  {
+>  	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
+> +	int as_id = kvm_mmu_role_as_id(role);
+>  	struct kvm *kvm = vcpu->kvm;
+>  	struct kvm_mmu_page *root;
+>  
+> -	lockdep_assert_held_write(&kvm->mmu_lock);
+> -
+> -	/* Check for an existing root before allocating a new one. */
+> -	for_each_valid_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
+> -		if (root->role.word == role.word &&
+> -		    kvm_tdp_mmu_get_root(root))
+> -			goto out;
+> +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
+
+No lock yielding attempt in this loop, why change to _yield_safe version?
+
+Thanks,
+Yilun
+
+> +		if (root->role.word == role.word)
+> +			return root;
+>  	}
+>  
+> +	return NULL;
+> +}
+> +
+> +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_mmu *mmu = vcpu->arch.mmu;
+> +	union kvm_mmu_page_role role = mmu->root_role;
+> +	struct kvm *kvm = vcpu->kvm;
+> +	struct kvm_mmu_page *root;
+> +
+> +	/*
+> +	 * Check for an existing root while holding mmu_lock for read to avoid
+> +	 * unnecessary serialization if multiple vCPUs are loading a new root.
+> +	 * E.g. when bringing up secondary vCPUs, KVM will already have created
+> +	 * a valid root on behalf of the primary vCPU.
+> +	 */
+> +	read_lock(&kvm->mmu_lock);
+> +	root = kvm_tdp_mmu_try_get_root(vcpu);
+> +	read_unlock(&kvm->mmu_lock);
+> +
+> +	if (root)
+> +		goto out;
+> +
+> +	write_lock(&kvm->mmu_lock);
+> +
+> +	/*
+> +	 * Recheck for an existing root after acquiring mmu_lock for write.  It
+> +	 * is possible a new usable root was created between dropping mmu_lock
+> +	 * (for read) and acquiring it for write.
+> +	 */
+> +	root = kvm_tdp_mmu_try_get_root(vcpu);
+> +	if (root)
+> +		goto out_unlock;
+> +
+>  	root = tdp_mmu_alloc_sp(vcpu);
+>  	tdp_mmu_init_sp(root, NULL, 0, role);
+>  
+> @@ -254,8 +285,17 @@ hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
+>  	list_add_rcu(&root->link, &kvm->arch.tdp_mmu_roots);
+>  	spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
+>  
+> +out_unlock:
+> +	write_unlock(&kvm->mmu_lock);
+>  out:
+> -	return __pa(root->spt);
+> +	/*
+> +	 * Note, KVM_REQ_MMU_FREE_OBSOLETE_ROOTS will prevent entering the guest
+> +	 * and actually consuming the root if it's invalidated after dropping
+> +	 * mmu_lock, and the root can't be freed as this vCPU holds a reference.
+> +	 */
+> +	mmu->root.hpa = __pa(root->spt);
+> +	mmu->root.pgd = 0;
+> +	return 0;
+>  }
+>  
+>  static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
+> @@ -917,7 +957,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
+>   * the VM is being destroyed).
+>   *
+>   * Note, kvm_tdp_mmu_zap_invalidated_roots() is gifted the TDP MMU's reference.
+> - * See kvm_tdp_mmu_get_vcpu_root_hpa().
+> + * See kvm_tdp_mmu_alloc_root().
+>   */
+>  void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
+>  {
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
+> index 20d97aa46c49..6e1ea04ca885 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.h
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.h
+> @@ -10,7 +10,7 @@
+>  void kvm_mmu_init_tdp_mmu(struct kvm *kvm);
+>  void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm);
+>  
+> -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu);
+> +int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
+>  
+>  __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
+>  {
+> -- 
+> 2.43.0.275.g3460e3d667-goog
+> 
+> 
