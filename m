@@ -1,138 +1,159 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACCE12D17F;
-	Tue,  6 Feb 2024 08:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C9912B14B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707208656; cv=none; b=dP9hAw2f+DJy2RK6WhSXaeNS14KPcPtd5eObLMa2BYagY7GJjh8a0NricBUm8X2/n7XlDwqINJbgC3cCLYjbMx80VEvdalXCH8ojKItFfyTSAFBgVLtVqOpQCenc2EQ2KGdy3CVw+Ct54/s6cv/M74PQq+GGfQ/bL905OrP6L8c=
+	t=1707208750; cv=none; b=BW1lXhBZPUCeeoLsvEk6E5LpR93iilFIpP5FIFeA+OY1qUmehW43Z/6p/y4YjuCfWOVeg73i3I1/ETCVgjg2jyxoKMHqdPSXgZlJRLx03tfpk0KNSQ0P6MV02d/UfG25BMFpV3bkDF5LIMDk77NDa02n2YXrZ/p0uAsDbyi5H54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707208656; c=relaxed/simple;
-	bh=KD6XdYRpKTdS6+uyeil6KtGFbsdwckMxsTa/vEY6iDM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JtT2RM6JlcoD2jpQPrGpX+V+ifIspRmw6d4dFUR32KmUA9kkIOeGXaUi7SGqTlovakKXqHLx60Z3K8Jz/R0GA63IIQuDtpAArMSGcesMVMyKF4rr6B9eO0Bi5X+/1w5HeAB2Ahv4RbkfSF459LGSnbX8Evua0Zn2R/4fKZlw21w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TTc5y6WZKzsWk2;
-	Tue,  6 Feb 2024 16:36:06 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id ADF9018006C;
-	Tue,  6 Feb 2024 16:37:26 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 6 Feb 2024 16:37:26 +0800
-From: Yang Jihong <yangjihong1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <yangjihong1@huawei.com>
-Subject: [PATCH v2 2/5] perf sched: Fix memory leak in perf_sched__map()
-Date: Tue, 6 Feb 2024 08:32:25 +0000
-Message-ID: <20240206083228.172607-3-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240206083228.172607-1-yangjihong1@huawei.com>
-References: <20240206083228.172607-1-yangjihong1@huawei.com>
+	s=arc-20240116; t=1707208750; c=relaxed/simple;
+	bh=l+JMszkFYy6lH6a9tczp4WqafiooarXArqiBuWtq2nA=;
+	h=From:In-Reply-To:References:Cc:Subject:MIME-Version:Content-Type:
+	 Date:Message-ID; b=UIkHQUSb++r7hFUr8yzh7DdS3S8CHMs5hYGmJGPNuajClmvuFsjYbqiCUipAdb1iVy2McXyQ+TBzWwl4LJvHedrhk2nErMZmEpHu6nwKXXyuI9WI4QwauopXJ1ePk6t+I5WKARMhjCgKCfvDheHgjtDsHu9JUqMt4reirUoy4IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kn57VMLd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kn57VMLd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707208748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zVAaAYx+uRJrIVM9VYECDgmw/4CaprkfGNuPI6DSTlw=;
+	b=Kn57VMLdPa5ezyHuJ4Rw7j3q6HVtf+MfyQfje5pnfpsTX5bXUkLEUqDWojyJNOAzLd6kpk
+	5Pfs6/6VJfi7gVzZTlqcWE3+n/oToUip+tKp45D77RVF7IV8lHWU22Ym9NGVDvziKAtcol
+	+KdobRn7RvwhgIAHaKra8gNXPRLXZks=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-343-cq73PueiM7GdY63RPfS8Fg-1; Tue, 06 Feb 2024 03:39:04 -0500
+X-MC-Unique: cq73PueiM7GdY63RPfS8Fg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1158383B7E6;
+	Tue,  6 Feb 2024 08:39:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.245])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 61BE3492BF0;
+	Tue,  6 Feb 2024 08:39:02 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <520668.1706191347@warthog.procyon.org.uk>
+References: <520668.1706191347@warthog.procyon.org.uk>
+Cc: dhowells@redhat.com, Gao Xiang <xiang@kernel.org>,
+    Jeff Layton <jlayton@kernel.org>,
+    Christian Brauner <brauner@kernel.org>,
+    Matthew Wilcox <willy@infradead.org>,
+    Eric Sandeen <esandeen@redhat.com>, v9fs@lists.linux.dev,
+    linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+    linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: Roadmap for netfslib and local caching (cachefiles)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3114773.1707208741.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 06 Feb 2024 08:39:01 +0000
+Message-ID: <3114774.1707208741@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-perf_sched__map() needs to free memory of map_cpus, color_pids and
-color_cpus in normal path and rollback allocated memory in error path.
+David Howells <dhowells@redhat.com> wrote:
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/builtin-sched.c | 41 ++++++++++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 15 deletions(-)
+> Disconnected Operation
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 08dec557e6be..1513e87ce4f2 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3208,8 +3208,6 @@ static int perf_sched__lat(struct perf_sched *sched)
- 
- static int setup_map_cpus(struct perf_sched *sched)
- {
--	struct perf_cpu_map *map;
--
- 	sched->max_cpu.cpu  = sysconf(_SC_NPROCESSORS_CONF);
- 
- 	if (sched->map.comp) {
-@@ -3218,16 +3216,15 @@ static int setup_map_cpus(struct perf_sched *sched)
- 			return -1;
- 	}
- 
--	if (!sched->map.cpus_str)
--		return 0;
--
--	map = perf_cpu_map__new(sched->map.cpus_str);
--	if (!map) {
--		pr_err("failed to get cpus map from %s\n", sched->map.cpus_str);
--		return -1;
-+	if (sched->map.cpus_str) {
-+		sched->map.cpus = perf_cpu_map__new(sched->map.cpus_str);
-+		if (!sched->map.cpus) {
-+			pr_err("failed to get cpus map from %s\n", sched->map.cpus_str);
-+			zfree(&sched->map.comp_cpus);
-+			return -1;
-+		}
- 	}
- 
--	sched->map.cpus = map;
- 	return 0;
- }
- 
-@@ -3267,20 +3264,34 @@ static int setup_color_cpus(struct perf_sched *sched)
- 
- static int perf_sched__map(struct perf_sched *sched)
- {
-+	int rc = -1;
-+
- 	if (setup_map_cpus(sched))
--		return -1;
-+		return rc;
- 
- 	if (setup_color_pids(sched))
--		return -1;
-+		goto out_put_map_cpus;
- 
- 	if (setup_color_cpus(sched))
--		return -1;
-+		goto out_put_color_pids;
- 
- 	setup_pager();
- 	if (perf_sched__read_events(sched))
--		return -1;
-+		goto out_put_color_cpus;
-+
-+	rc = 0;
- 	print_bad_events(sched);
--	return 0;
-+
-+out_put_color_cpus:
-+	perf_cpu_map__put(sched->map.color_cpus);
-+
-+out_put_color_pids:
-+	perf_thread_map__put(sched->map.color_pids);
-+
-+out_put_map_cpus:
-+	zfree(&sched->map.comp_cpus);
-+	perf_cpu_map__put(sched->map.cpus);
-+	return rc;
- }
- 
- static int perf_sched__replay(struct perf_sched *sched)
--- 
-2.34.1
+> I'm working towards providing support for disconnected operation, so tha=
+t,
+> provided you've got your working set pinned in the cache, you can contin=
+ue to
+> work on your network-provided files when the network goes away and resyn=
+c the
+> changes later.
+> =
+
+> This is going to require a number of things:
+> =
+
+>  (1) A user API by which files can be preloaded into the cache and pinne=
+d.
+> =
+
+>  (2) The ability to track changes in the cache.
+> =
+
+>  (3) A way to synchronise changes on reconnection.
+> =
+
+>  (4) A way to communicate to the user when there's a conflict with a thi=
+rd
+>      party change on reconnect.  This might involve communicating via sy=
+stemd
+>      to the desktop environment to ask the user to indicate how they'd l=
+ike
+>      conflicts recolved.
+> =
+
+>  (5) A way to prompt the user to re-enter their authentication/crypto ke=
+ys.
+> =
+
+>  (6) A way to ask the user how to handle a process that wants to access =
+data
+>      we don't have (error/wait) - and how to handle the DE getting stuck=
+ in
+>      this fashion.
+
+Some further thoughts stemming from a discussion with Willy:
+
+ - Would need to store the pre-disconnection metadata as well as any updat=
+ed
+   metadata.  When performing conflict resolution, userspace would need to=
+ be
+   able to access these in addition to the current state (local) and curre=
+nt
+   state (server).
+
+ - Would need the ability to include extra stats, such as the AFS data
+   version, that are used for cache coherency management.
+
+ - Would need to provide an API by which userspace can access both states =
+of
+   the data, possibly including the original data if we still have it in t=
+he
+   cache.  That could be a number of ioctls on the target file.
+
+ - Would need a range of resolution options in userspace, not limited to k=
+eep
+   local, keep remote, but also the option to stash one/both somewhere.  M=
+ay
+   also need to provide app-specific resolvers - merging git trees for
+   example, but also what do you do about sqlite databases, say?
+
+ - There may be bulk changes that the user would want to resolve in bulk,
+   perhaps by "everything in the subtree" or pattern matching rules,
+   e.g. "disard all .o files" or "take the .o file matching the newest .c =
+file
+   in the same directory".
+
+ - May need to change how expired keys are handled so that they aren't alr=
+eady
+   garbage collected, but can continue to be used as a token off which to =
+hang
+   cached access rights.
+
+David
 
