@@ -1,63 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CE812BF09;
-	Wed,  7 Feb 2024 18:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C9D12BF02;
+	Wed,  7 Feb 2024 18:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707329335; cv=none; b=XHoxsbOfXMwuEQ1xs8Q3WuCFminIIWWsZVvU9X4hvA780g3mhDQNn8ytR9tM5f8eM33SYXY50CVWNpZ/fBguAXaiSY1je8yLC7xFO+w47XQ86NWXp6CXCs2NyufJ/m+EQ6LDY7K3lOrfYK4qxVNA+mDWY4pxtB2HP/sKsCruznI=
+	t=1707329357; cv=none; b=PlmKJSHdV+7oLfH1KqvUw/EoEYYJk6gd6WY/lrv7TFpLA+OyDa9mw6fyQhISNFSa0i82Z7Jr9YmbEQOry6jlUyv8nkGxKYpnU371uF6nxoqyJTIyum0dCYbx/P8In5e5cZ/PTfwBkvSQCqnJN9Ylydq6sO4G1GF2J3UT6nYyM1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707329335; c=relaxed/simple;
-	bh=SRSTjQU25Si5Mc82OIFI1VgoL9ylA6hpOqje8jabBRA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ONsEtNwPJmLFu/UstqEuldg/fV3FioWSD8fssXWrLTId9qnU52hyWZ3/0URCcnVlLxXNOOsKygozIahN4Ph12VnhCSgwZprYwp0XhsoRGz1CIdm5QiAL1loiJZG/jqmZJ5tex9yTskJdgqW0iBcSy3DAavmB9C8JnKvUFrTpVyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5GcXBiJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707329357; c=relaxed/simple;
+	bh=Iw2OhQ4vRHvcS/H+wxcRu+ckAc5Xk3cTSuO2GCfdZWg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Z01vVO5U9a0IrdGDHwkbnbrsYt992LeuBim2pYZhWock9I1+LdsWA2p6Db+The5nesAECTBljAYGwtCgwtag7f4ZkukCgV4bThq/t1/7Vvvzjq6dbid8zDJgyvUtwFg6Wz0DTHraKYpl2+oYVPp79/1QNdsnReTa/ZseMDHKHpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPbfB17t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5GcXBiJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5AF84C43390;
-	Wed,  7 Feb 2024 18:08:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPbfB17t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95800C433C7;
+	Wed,  7 Feb 2024 18:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707329335;
-	bh=SRSTjQU25Si5Mc82OIFI1VgoL9ylA6hpOqje8jabBRA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Y5GcXBiJ0YFK3yBfjRwcTTn/4ZkpV4iK3gh9KNNkw84g2ibTY8hgW22diNpGrKVm3
-	 WKv2HWnFJZu/l2ejFjWPBLZ8NIgY1spSTlboCcRqW1WPV5NaaRhGvwkCLe6BoCjCH7
-	 NxBB2WnB4rv9Zk9RPz+awJURK8RzPNFEH3cnnz1EuIxtFOQ06XsmtpRd/qz+d4/286
-	 q7xNpn0EM9p1zD8Kb1usPxtaOlZV65O1GUcu9kkF+F5Fp6kKsyzlsUisDAhYtocqWw
-	 kEegJ7t+kTiRuFR+TU9Xq8aU6DWZciC7GpQuDP9bwyYoJheBOgTjOnSZBmGm1nRk0p
-	 DH6Q4+DAj7sRQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3FD64E2F2F1;
-	Wed,  7 Feb 2024 18:08:55 +0000 (UTC)
-Subject: Re: [GIT PULL] another NFSD fix for 6.8-rc
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <EE8DFAAF-C9CF-4D82-B946-739F2D1AA390@oracle.com>
-References: <EE8DFAAF-C9CF-4D82-B946-739F2D1AA390@oracle.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <EE8DFAAF-C9CF-4D82-B946-739F2D1AA390@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.8-3
-X-PR-Tracked-Commit-Id: 5ea9a7c5fe4149f165f0e3b624fe08df02b6c301
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c8d80f83de47fd183a0eef2d6b1085d4fdecea37
-Message-Id: <170732933525.14404.8579635684203844209.pr-tracker-bot@kernel.org>
-Date: Wed, 07 Feb 2024 18:08:55 +0000
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Layton <jlayton@kernel.org>
+	s=k20201202; t=1707329356;
+	bh=Iw2OhQ4vRHvcS/H+wxcRu+ckAc5Xk3cTSuO2GCfdZWg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=DPbfB17t7tMrqCOZ/LA3JzUSyjBvuCWHEgm1GoG6ueWeX/R/M/OP9/DOyEN8sUyLu
+	 B/UimGa2VdwUiCWX01e3jtyn2sHU0SPHM8ZkdkCES2IOClKb6ww84+ZUX6G9l8ClkQ
+	 VXAzFKfAAJye0kzAJ4vlKu9WQUPKmv2uZDUGC25dVlufbqWkOuZ43adojlOWpnirQe
+	 Q8PdLCLnNaIzeTlTyOCODFk4Byp9hKLI1iMmOn3PEaCNOqCwOdkkwUJmceo6I48TeK
+	 LQtO4716Rg7Ybk3Q7nn2Mi5xj/JZHsme22VoakEineyDAwRK3qQMcg9ScJZ8NO/5u7
+	 jc63jc9rimLkw==
+From: Mark Brown <broonie@kernel.org>
+To: claudiu.beznea@tuxon.dev, lgirdwood@gmail.com, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: hari.prasathge@microchip.com
+In-Reply-To: <20240207094144.195397-1-dharma.b@microchip.com>
+References: <20240207094144.195397-1-dharma.b@microchip.com>
+Subject: Re: [PATCH] ASoC: dt-bindings: atmel,asoc-wm8904: Convert to
+ json-schema
+Message-Id: <170732935198.1089483.14612569471427120930.b4-ty@kernel.org>
+Date: Wed, 07 Feb 2024 18:09:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-0438c
 
-The pull request you sent on Wed, 7 Feb 2024 14:21:04 +0000:
+On Wed, 07 Feb 2024 15:11:44 +0530, Dharma Balasubiramani wrote:
+> Convert atmel,asoc-wm8904 devicetree binding to json-schema.
+> 
+> 
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.8-3
+Applied to
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c8d80f83de47fd183a0eef2d6b1085d4fdecea37
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Thank you!
+Thanks!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+[1/1] ASoC: dt-bindings: atmel,asoc-wm8904: Convert to json-schema
+      commit: 565abf586f3554c94c81027b1f0af1f6a6beea1b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
