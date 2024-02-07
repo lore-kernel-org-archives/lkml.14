@@ -1,57 +1,58 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F4059B7F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 12:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E523D5A11C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 12:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707307490; cv=none; b=D0KVyn6gRjx4CjoJclm6Ha0CvqAZEFOzQa+WCDtnU5e8TRySTXZiorObhTc2Y35L1Jnw3zdaf9AnZI+sitnkJWL7Te5YL4TGIatpKqdsun4Pf4prUru+pxafGOMDHruAmBFGOmwvupcjVTB4Myc57GPDeuhWDOA9+nAsAovuB7Y=
+	t=1707307490; cv=none; b=Zn2MYlYm442F6e+BKNpPar6EjAiZfKU2c7i8A8cEbjgs0Au/L2ZwRZSldAGy9MR8N1EhAHFbVAnywD/ZcIjEcIZ4Mjh4KKtco9IBUjNV30GFhqpinKApm5GEbW9+MV/Ne/St8S0y2kNjJf7S8pxjSTlQn1aHZPFsHboeGTPpHrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707307490; c=relaxed/simple;
-	bh=OAR+jflIcBL2EHFTipuv3y92m5gNFedEiIr1Hts137I=;
+	bh=TBx1M+Fba6cWfMz81SybTjKqSJmQaQpPFiDkoNL5c9Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=un5rgzVjL7F34lQo+XBPKAq8yhWtDrrN86Gl+ESxrCXKlEupTyNPZSqvs2xrOtolppWiZBk4C45Z2Cr90rT3DSjZta8Caluf+9vtAWDIppBis7KlMRz7DQ9PCcq8cjawXxA3I29Vd2/XnnjUc5PKWukggGUvamKp26+JJpXnE3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Thho7Im7; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=FUrtPK3zoVUe1MOLnx6lA4l1nX0x2MZ/55OKs2++HEdlMovfw+9bXa+WwawmeuJP2JjlVHxfRQzCH4HdMkpM0nHSgF75Z9cD61qmmeruATCFxmfS2S2xaoLsE544hSF1qjD854o58hp8xHhBCw6DvU/yjtMggwtBIJloZIZSJsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wXlCH8nK; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Thho7Im7"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33b4e06c239so421042f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 04:04:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wXlCH8nK"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-511538be947so596846e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 04:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707307480; x=1707912280; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707307482; x=1707912282; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LKeYZPmRarVNrSgEJ2RA2bfdFMbY5j4/f0z54RK04Ro=;
-        b=Thho7Im7CV0D5HeaNOtLVl6Msqh1VKkHacS+mDqfYO/Or/kCGh9TYlR3DAQl/w7QUZ
-         3pD+0M710NDNtmQ6bwvgVb8Zjw8ueG61lR7zGmKM2Cxd+NkxBPGxsYY+1ASbPqIK/fZL
-         TE9wpkd0FxGf1E2RShTJuCfCPfCaq1t1GLAJyzQUqOV4M9yX+ydQPbOmUr0SZcOxFJKA
-         hYAdNpS7sd2SU9auiuMbXpIUyP9IA3cx1k/RfEPRGtpoliN3Mj6TjraHZxmWiJeQx7Gd
-         8U8vRVXHQR/aCy266xtWMuY5bF5vribM3x8zIKxvMit4pyRoGTBTeD+wjXNhi/MVdi3p
-         kcVw==
+        bh=9Bzl1XVd4VG7OC9yiL2j94dw6vCN8qDUED8GxJICOsA=;
+        b=wXlCH8nK5Yl5vB4XKNY/dWd3KeZVR6MMkS8/lD0GxEEtHrDVawK+aKAq0/fAdOWZn+
+         6q/yqJNva0DsXG4vtdGnJ5meu25e6LZAbT/aFYfSyQm+geLVmCEWvQ+mFTWXkjS72niv
+         OB+5xGdImj5QvkPvFGbBQU2qX08q6SHLiKbtNI+lQDlKzb5PPbPpG9ZuXU+QiyafuIu2
+         z2w7tdsfTFWl2cJhRKA5i6+kiIUr1xvCtEGCGCF1c+rh1BUJUKKoyrCupaFYB3cPZ6jF
+         G9+5Kc3Y06zMv8Vn9D3YBvawWJ3e89T8fJU4Wb7RuXCHfLTFbPSclihB67cu1yQXo3s8
+         +l/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707307480; x=1707912280;
+        d=1e100.net; s=20230601; t=1707307482; x=1707912282;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LKeYZPmRarVNrSgEJ2RA2bfdFMbY5j4/f0z54RK04Ro=;
-        b=xSc5tez+bu0Iaq37VnhpoGv13kYpdnfGfLmPTX9Hm+aMuRPReHQdogFhTjzGvH8RTf
-         N4TANhsT5hffu8U6zhR44f7dUwpDgZEASshtIPiRqHQ6O+98WlKkBVZfij0bzRRXtPF/
-         BzHlGPdsPWspTAmc/yzSo0C5mfnuFjyMUIrJoIxjImm8SwqeSUD1LMlh/z2UQpyMvjnZ
-         nGxTvhhDrhF3NN/sj9oOlLXWvLVaes3zGug9ETiTeOYOWa4N7Aqk301DFtri3r0VeyV/
-         tcWPQAnrICtSzb8mSi5oLs71XWIbXbB37TZpLVMNRuY/PRrtPfxzKnyYMaDY8xwsE7oq
-         VD9w==
-X-Gm-Message-State: AOJu0YzeJ9q90aWthJ1lO5RysVvNR3pYun7WnWFTSRUgjSLg3YG29igQ
-	DwiLO1kPXSkQFH3RVk8ZW1K/UJWronLti3Frob9AwJHt1LU4PI1g4NX/9wgGtHA=
-X-Google-Smtp-Source: AGHT+IG16uBtP/M/WcNTRS4NKYzE2Pqd80TW+6h6PqJHRZbcdctP+Xdid+Q2vkXyjtwIFRC0HIeXWw==
-X-Received: by 2002:a5d:4e85:0:b0:33b:21f9:cd9a with SMTP id e5-20020a5d4e85000000b0033b21f9cd9amr4166717wru.19.1707307479786;
-        Wed, 07 Feb 2024 04:04:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWJZLqXZGprlWHssMRP5fdnmrfhy0M3YUKVltJCl9cXKPIU9OH+nkcpmuG08whVcjYfQ44PPKJAvTP8e+z3Yfas0wMg/pZWw2jt9F0DI1xNx4m1TV6VZp9pUzsU33UB1xX90TYpm3d5vaqja8oBWLprftGrR346L09q1s+DXi7RZ0UkD/cYVQTdgrMSZRYap048Tr8yqGKW2xY9rg/tWivX5UY4wS39DFTBeYCyl2anxhZ2SIEd8GOAw5lmj47RbUrPWaNBO00RZiGhoUJwI5pAeWXvWufKfTLeRAgqG7ces6Xna0W3ASwxZ34KILqu8swr8N3OE9AqcVOnjM/9JpJf6YI2oReXixhyeOBUMPnqY+LhglZrz6RsoKKCUUhiJkCLW1Q0lnRDjcQo+QMR0u1F+UvVe7PejgtSgaVrxhctqUqPH8kbwQvoXOZ0sqex/PLXYcY0lM6QhMBVA+1Yt5Xj9J211Olk05G+O5K+JDfR1msfhlCZD7q/+W4YXg==
+        bh=9Bzl1XVd4VG7OC9yiL2j94dw6vCN8qDUED8GxJICOsA=;
+        b=FXnFzc+MAxWLZ18vCKL+FxKkkvBxWj1Q9v7Cr7nNHI188bwNCt9ki1Mbw5cGDyPvpl
+         nA/CoODiILOcy83jndWLt9nOFaLDSWghlSqvOu8IGtIp33uUrPGR2UNV5MfUf0cEsAwY
+         59xwOWBHZiXd9KlutMQsPExh9wl/DosAIrdd7/RuRlk41t1mggOyA2Y565PvYHIXbpFg
+         2Lw5VrIDmW4h26bR/+q7YTRWnrrSmxcog487bQ59+hKz+gEwnkdpcB5i2Hg9+F2gxbZz
+         BoGsXL5pcf1NGq6mHqE/YJTN3TsohyRXZgBL4ynTfM9IOaKIy6ndLq+7LiO0bouG9JkU
+         GD0g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8MudkeTr3zx/HfUgMSz6+FQkXtvRvfh7cCSt56W1FGTLNfqYHTZvnIsryB4zMMHqnHE4HJRDu5aCH1+xb3ZoHqDm56Kg9J390YkZV
+X-Gm-Message-State: AOJu0Yx14UQo5r+/TV3BFaXZnPdeHqxXuvtyfa10tNLCBJMiFlv3PXQL
+	E4LnYaalOfdeZ6YRE+nPaGM6QnfAWXIz8Zzp2qTKTkrSNSbEKA0mDwpx+bvqELc=
+X-Google-Smtp-Source: AGHT+IGcck/xmUicyK/uSuRdySCd6lMKVJAEjrg4NVjjnDTt9057DOq1RhPNTzrfhuYWeIgmMq9WnA==
+X-Received: by 2002:a05:6512:31c7:b0:511:4e64:fe09 with SMTP id j7-20020a05651231c700b005114e64fe09mr4393588lfe.43.1707307481710;
+        Wed, 07 Feb 2024 04:04:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUQv6Y3rp8ha8/1pYWIrhm+SSEwXtyTCHxObJ+7Ec7urGBGiCErba4U9qGVl0fQMRgdootm7T/BpCm8MPhq9X3a1QZ2sw4/eiosfzFJsXtPDeLqGwIPX2yskvLe2RtPMU7yi/h+PWaU7yVpqnIIyBwGnOgrEYlXe9De1jQ/vWs6raG/hjYtUeofYZ4BQ2pY9Ks3MwWtmU976uew+KP7gBsqzCk1DuXFUlo60/csbqywTZcB7vBeJ2s8YXn0g8nIfphWKpuqkkbiI4UlK7D/A2TJX1KgsnaFpnGue9dXTTrLTRGX0Rt5LeQ5p1MMX7mbttA81TfmAsq8neWBmTI09soUUih5hy/fZWx8xN3N6y2vbCXQZ9ZGCbi8sofdpmry0WflT+B6QLaw250aN0bLXZTGjzdu6uYboFTjuTH5GJFrZ0ZsBA/ScVlfzAJnNpF4r/OF6RoRgbpbchVl/u4syxaWTf2Z3MWkjAadY3Z+xUVwoFpcRsjgm+z9t5T+VQ==
 Received: from ta2.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
-        by smtp.gmail.com with ESMTPSA id d15-20020a5d644f000000b0033b44a349e1sm1349967wrw.38.2024.02.07.04.04.38
+        by smtp.gmail.com with ESMTPSA id d15-20020a5d644f000000b0033b44a349e1sm1349967wrw.38.2024.02.07.04.04.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 04:04:38 -0800 (PST)
+        Wed, 07 Feb 2024 04:04:40 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: broonie@kernel.org,
 	andi.shyti@kernel.org,
@@ -67,9 +68,9 @@ Cc: krzysztof.kozlowski@linaro.org,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v5 03/17] spi: s3c64xx: explicitly include <linux/bits.h>
-Date: Wed,  7 Feb 2024 12:04:17 +0000
-Message-ID: <20240207120431.2766269-4-tudor.ambarus@linaro.org>
+Subject: [PATCH v5 05/17] spi: s3c64xx: avoid possible negative array index
+Date: Wed,  7 Feb 2024 12:04:19 +0000
+Message-ID: <20240207120431.2766269-6-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 In-Reply-To: <20240207120431.2766269-1-tudor.ambarus@linaro.org>
 References: <20240207120431.2766269-1-tudor.ambarus@linaro.org>
@@ -81,32 +82,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The driver uses GENMASK() but does not include <linux/bits.h>.
+The platform id is used as an index into the fifo_lvl_mask array.
+Platforms can come with a negative device ID, PLATFORM_DEVID_NONE (-1),
+thus we risked a negative array index. Catch such cases and fail to
+probe.
 
-It is good practice to directly include all headers used, it avoids
-implicit dependencies and spurious breakage if someone rearranges
-headers and causes the implicit include to vanish.
-
-Include the missing header.
-
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/spi/spi-s3c64xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-s3c64xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 9882eb0f4bea..b1564a447a6e 100644
+index 0a30d034e288..dfe78ddfa233 100644
 --- a/drivers/spi/spi-s3c64xx.c
 +++ b/drivers/spi/spi-s3c64xx.c
-@@ -3,6 +3,7 @@
- // Copyright (c) 2009 Samsung Electronics Co., Ltd.
- //      Jaswinder Singh <jassi.brar@samsung.com>
+@@ -1228,6 +1228,9 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 					     "Failed to get alias id\n");
+ 		sdd->port_id = ret;
+ 	} else {
++		if (pdev->id < 0)
++			return dev_err_probe(&pdev->dev, -EINVAL,
++					     "Negative platform ID is not allowed\n");
+ 		sdd->port_id = pdev->id;
+ 	}
  
-+#include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
 -- 
 2.43.0.687.g38aa6559b0-goog
 
