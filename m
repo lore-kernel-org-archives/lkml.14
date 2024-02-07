@@ -1,103 +1,118 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8342577C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 10:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52148802;
+	Wed,  7 Feb 2024 10:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707301786; cv=none; b=j5oh1spihGgzT5zUcq6CcewszOKPu82H2Dt2wb3F7y6gQFiXOWkMDeIw+pQb8Hv7ea+Dk6enpSAd4fJRSdCftWmQYZWPbuqazmEFOum6FgdMv30Q1MIBnpZf5p/09eI/gbgJzAG3c7HOOqsv7b16rQMTehwJuOOoKM1zn6yKgF0=
+	t=1707301813; cv=none; b=CFx4o/B+cK+d/+qQ2avOr2QMmXbEiWelwYeTOBGODb5qDcmrNbigpLzDcJ/snnahbypPyVgxwla2akdrOSdDDYZ+F4y+MmAeRhV3cOKuQ/u4U7udHN24kSVE+ytYngd+KPzMjzSTh7xyAtrV5d8xFm9A1iB635uXEThEpogAjiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707301786; c=relaxed/simple;
-	bh=R7H9cs6DbGLpBH+H9RkszszDtlqmhCAJkD+Ax/F7B3Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ixY0V/KwVlbDBy0ws103OQ3CFFfaCrqYUxDH9hfzY3jBj19ARJ231jt9ymHome+ECdxXJN1o7fh3L3oUY4UzLglPishk+JpWKHhjfs2+QT2PgXkQcyTVPiRmVV05ZNWg06zHicnSLjRVp4S/KcFSlr0V0oRKAQQsa6QmRwklPpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Rs13nRfU; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Rs13nRfU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707301785; x=1738837785;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R7H9cs6DbGLpBH+H9RkszszDtlqmhCAJkD+Ax/F7B3Y=;
-  b=Rs13nRfUxIw/eVpl36DLb2Mk/vJSEwFvrF5HK2wbYv1KKHNDXLTpiUae
-   pakzxzAdyjXOceX1Hge1msTFf9awOvYNYTiuQ5giRFVzEjRf4J+PiD1eP
-   5u281nDpLRfILh1UVk/W2ioDUfX7tlXfQ5DaGJvdvKfoSsMvzv8X7VR3y
-   7Wm0F9ApjjAUlxMnwMG58sVODi9eHjFyu2kx1/u64F+gs0ZPFSgVYnnom
-   85yIidaSAWFYwGM/5Gi2Xc0rkfVJEddZUMK7sIkscMMH8kYsyd4Ck2NHH
-   NC/AEa85SyhawThdpG5WUg6qUnYYYcyArS/par58KNztwqb6eOXqUUqNz
-   Q==;
-X-CSE-ConnectionGUID: j4AD8RfGT+KjBzGzRGPXfg==
-X-CSE-MsgGUID: yxQHXMHUTNu7ReuQRkJiUw==
-X-IronPort-AV: E=Sophos;i="6.05,250,1701154800"; 
-   d="scan'208";a="16412544"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Feb 2024 03:29:43 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 7 Feb 2024 03:29:03 -0700
-Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 7 Feb 2024 03:28:51 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <dharma.b@microchip.com>,
-	<manikandan.m@microchip.com>, <linux-kernel@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux@armlinux.org.uk>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <geert+renesas@glider.be>, <arnd@arndb.de>,
-	<palmer@rivosinc.com>, <akpm@linux-foundation.org>, <gerg@linux-m68k.org>,
-	<rdunlap@infradead.org>, <vbabka@suse.cz>,
-	<linux-arm-kernel@lists.infradead.org>
-CC: Hari Prasath Gujulan Elango <hari.prasathge@microchip.com>
-Subject: [PATCH v3 4/4] ARM: configs: at91: Enable LVDS serializer support
-Date: Wed, 7 Feb 2024 15:58:02 +0530
-Message-ID: <20240207102802.200220-5-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240207102802.200220-1-dharma.b@microchip.com>
-References: <20240207102802.200220-1-dharma.b@microchip.com>
+	s=arc-20240116; t=1707301813; c=relaxed/simple;
+	bh=GwEJ9oyxbx9mr+/VCOBMPM5kJ2HpN/1sW2GbMEbIYIc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bbS0BF99OWdls5OH6Jkqm73Snpz+mcKiQUudpOfxBLBGZbXEHbrJZqNbJfrqwhmQ9q7sT0WMsChth8KkYFtOg1iclj3U/6jITKdGkNMWZxlFZ+AY6t4T2vrdfmwo2KZdtQb61rc5Y7unqr7O4s5x/5Sx57xqCWU8UileUhoh1VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59584f41f1eso184009eaf.1;
+        Wed, 07 Feb 2024 02:30:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707301810; x=1707906610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PaYs/0OBSn9a9M48gFnsjQUey6x4AH+ip/nGvUcn8J0=;
+        b=bP2wHTchBkB98TWRiXvUO4q4FK/UJJEMUi5MgnqGF9Z+2RenQu0H93KLoQ5wbe+Pi1
+         0SyLaJBn3YF+1q9YdugY5pohMhiR+/8C/ylbwyWEr0IUJsMLfPLmq+q0HkVGz32s+NwE
+         hpihg5QKrUOuSYPBN90GbUDCDsRXZ/YI3DY4vCjiiePl9zo4B3sfrcjz8QMoeTcq9qmp
+         A1QtGM86pFbn9QCamai0TLDyxUGch8S6dhOGRE8hkbv4C5OQ7NTe4ikOUZfDNHVjeow9
+         3s6x41wtUUmoZhCoqZKJIT0VHyXxbD7lIhU9MJ1eDVxwXw0R83gF1mlW0EZC3iUC/W3R
+         MNfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtKAAlJWWQc3YIp3zFpBdcLVNlYg+V6hM/IG7+gYyKtIijUiaBJWDOpvys8QonZI182atadBhr1RLVKFdCLRMrJIcu7MlOV2PTMlVEDz3teL4QB6tKkOv+qOQXNk5+LRyVuXHEMMzmVGghdaH05Z+w2uC+vf/q1/W2wiTbkyu29zr/8A==
+X-Gm-Message-State: AOJu0YzuRmfsf4YUsKxOvJ2cD8LHW94H7XXfvSoYWly1A6LlJLRLOYea
+	vwyTEGzZ3nkikgfAgRTWQLVQFbc0rH83eil8xt8WXNtDHJnffCmxmr4xmsf5Y5xmZvis8jwKfMr
+	Awoc4ogcRzt8+dqmUSFg9p+0z9gs=
+X-Google-Smtp-Source: AGHT+IEZxeEmw8De5mcKtWQJEUZooNnQq9vhZEXf9W7OnNSsUBsGt70iBjLGluAEfu9O4CRDr1S1Bk7qXSdlamnS4KI=
+X-Received: by 2002:a05:6820:82b:b0:59c:eb7b:c04e with SMTP id
+ bg43-20020a056820082b00b0059ceb7bc04emr4451074oob.1.1707301810143; Wed, 07
+ Feb 2024 02:30:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240207084452.9597-1-drake@endlessos.org> <20240207084452.9597-2-drake@endlessos.org>
+ <CAPpJ_edoG0dD4aHZiZShcFMoD2JLQhbh7nuUPzgMT_ZMySJ=VQ@mail.gmail.com>
+In-Reply-To: <CAPpJ_edoG0dD4aHZiZShcFMoD2JLQhbh7nuUPzgMT_ZMySJ=VQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 Feb 2024 11:29:57 +0100
+Message-ID: <CAJZ5v0ikxjoJz7FDQ4dpCuY70w3LvAT5Tjitfzm9MDLdNyPF1g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] Revert "ACPI: PM: Block ASUS B1400CEAE from
+ suspend to idle by default"
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Daniel Drake <drake@endlessos.org>, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, 
+	david.e.box@linux.intel.com, mario.limonciello@amd.com, rafael@kernel.org, 
+	lenb@kernel.org, linux-acpi@vger.kernel.org, linux@endlessos.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable LVDS serializer support for display pipeline.
+On Wed, Feb 7, 2024 at 10:09=E2=80=AFAM Jian-Hong Pan <jhp@endlessos.org> w=
+rote:
+>
+> Daniel Drake <drake@endlessos.org> =E6=96=BC 2024=E5=B9=B42=E6=9C=887=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:45=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > This reverts commit d52848620de00cde4a3a5df908e231b8c8868250, which
+> > was originally put in place to work around a s2idle failure on this
+> > platform where the NVMe device was inaccessible upon resume.
+> >
+> > After extended testing, we found that the firmware's implementation of
+> > S3 is buggy and intermittently fails to wake up the system. We need
+> > to revert to s2idle mode.
+> >
+> > The NVMe issue has now been solved more precisely in the commit titled
+> > "PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge"
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215742
+> > Signed-off-by: Daniel Drake <drake@endlessos.org>
+>
+> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-Acked-by: Hari Prasath Gujulan Elango <hari.prasathge@microchip.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
-Changelog
-v2 -> v3
-- No Changes.
----
- arch/arm/configs/at91_dt_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+What is this tag supposed to mean?
 
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index 71b5acc78187..6a7714beb099 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -143,6 +143,7 @@ CONFIG_VIDEO_OV2640=m
- CONFIG_VIDEO_OV7740=m
- CONFIG_DRM=y
- CONFIG_DRM_ATMEL_HLCDC=y
-+CONFIG_DRM_MICROCHIP_LVDS_SERIALIZER=y
- CONFIG_DRM_PANEL_SIMPLE=y
- CONFIG_DRM_PANEL_EDP=y
- CONFIG_FB_ATMEL=y
--- 
-2.25.1
+In a reply to a patch, you can give Acked-by, Reviewed-by or
+Tested-by.  Which one do you mean?
 
+> > ---
+> >  drivers/acpi/sleep.c | 12 ------------
+> >  1 file changed, 12 deletions(-)
+> >
+> > diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> > index 808484d112097..728acfeb774d8 100644
+> > --- a/drivers/acpi/sleep.c
+> > +++ b/drivers/acpi/sleep.c
+> > @@ -385,18 +385,6 @@ static const struct dmi_system_id acpisleep_dmi_ta=
+ble[] __initconst =3D {
+> >                 DMI_MATCH(DMI_PRODUCT_NAME, "20GGA00L00"),
+> >                 },
+> >         },
+> > -       /*
+> > -        * ASUS B1400CEAE hangs on resume from suspend (see
+> > -        * https://bugzilla.kernel.org/show_bug.cgi?id=3D215742).
+> > -        */
+> > -       {
+> > -       .callback =3D init_default_s3,
+> > -       .ident =3D "ASUS B1400CEAE",
+> > -       .matches =3D {
+> > -               DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> > -               DMI_MATCH(DMI_PRODUCT_NAME, "ASUS EXPERTBOOK B1400CEAE"=
+),
+> > -               },
+> > -       },
+> >         {},
+> >  };
+> >
+> > --
