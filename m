@@ -1,141 +1,106 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE4B1D54A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 19:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6058984FB4;
+	Wed,  7 Feb 2024 19:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707332519; cv=none; b=Vpd45WYK3lDC+MLnhkXTKZEPyRgo8Gpgtp5LSNqN8stgFd+T1mk/7RyjJMb7mDjRHkxgUBVLI8wi0MPt+qhqEoCCFcbDa4ZKKAo+UK11rNV/203PlQrfvYtlIHgExGC3DjIsVnM7l0rIDKtrHyHAT/++pH1/x+Z7RIlaua/ABlY=
+	t=1707332572; cv=none; b=cw6TQdgD+dPkx89YS1NpIYtzh4Hr1e6eLnx1OyVfhE45a+bzYv/iV6CRYC8cdCsRadVlSY7rQTiElGIW3B7Pxc2LNxFTVRXa2CB9IThJWmykzBvCzEZ6PDa8mBuWsRk8u5UMmzUEvb8YkHMbX7RI9ogQswd9YDP9SQsl3SMMnvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707332519; c=relaxed/simple;
-	bh=w000UkAU+4sCDykj3/3sg9oncRCfqOlnXkz069WB1eg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=oRmPL5rVvOHWWiWb8nkl25di1j3CMkZHjLDrdmZclcONYetWydernKFYBowAhT0TfraYlYOEHv2tsUZbTzAIxc3NRO03OHYmQZk+PAIcGDdSFgUU3xqrIJqvfuuRDu7ufPs8pNU206Yal0BJUsntZ/6rDFghLmpLhvFTZNGNRTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ulJ/1lr2; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1707332572; c=relaxed/simple;
+	bh=0WP3GhnoPTDV0+joY1N49lbD3qna4WrhBLUKcV4NQ7I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VFo9IYavE+xDSFpwERMWw35hoAeCCsneLe9qWsAlEZ33tkGb81YKp3yrSEOtgyDceD96EwqFYMMAl+JaFKg/hbnhEB9CSDKebPWf2E31/9E2sCpliM3SQnBljCQwyR+D6kKA82CX50m4XMrvbLAredtSJHDnUileC6B88T3xh0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJXMG0tg; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ulJ/1lr2"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240207185553euoutp01be80c65d9cbfd7b6e8655da6c71cf8a1~xqYwt48Fl2163521635euoutp01E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:55:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240207185553euoutp01be80c65d9cbfd7b6e8655da6c71cf8a1~xqYwt48Fl2163521635euoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707332153;
-	bh=5rpQabQArO6WrFeRKp9w0RIl8t36d0/Om1vvb7sR6SA=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ulJ/1lr227gb1SZmBwJsgtwRhlBc++284Wi0ltD4P9alGJyJQPTQ9L+VqrZQhykFr
-	 mCtjPWFNnh9JNvfZI2Krif975NuU65ChHihD75OXifJetchXFhZLjzoK5pXHmuvSFk
-	 fwoRf8YIBDfcHSpugCz+Xqajr2GAFfAV0D7t6W9s=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240207185552eucas1p2f150f638d00653fde9f00900a8a578f9~xqYwZj1MH3210732107eucas1p2w;
-	Wed,  7 Feb 2024 18:55:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 74.4D.09539.832D3C56; Wed,  7
-	Feb 2024 18:55:52 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240207185552eucas1p1c58470c4076af2ec22456285ade3cbef~xqYwDTMRF3234232342eucas1p16;
-	Wed,  7 Feb 2024 18:55:52 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240207185552eusmtrp259ee4a41328bbb5ced1c69805f886db6~xqYwCtiSs0864308643eusmtrp2V;
-	Wed,  7 Feb 2024 18:55:52 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-2a-65c3d238f609
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id F1.32.10702.832D3C56; Wed,  7
-	Feb 2024 18:55:52 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240207185551eusmtip1c30f337cefb866dcde349cf82500225b~xqYvVXJSU1256712567eusmtip1g;
-	Wed,  7 Feb 2024 18:55:51 +0000 (GMT)
-Message-ID: <2f125955-8c7c-465c-938c-8768f7ca360b@samsung.com>
-Date: Wed, 7 Feb 2024 19:55:51 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJXMG0tg"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4c02be905beso345136e0c.0;
+        Wed, 07 Feb 2024 11:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707332570; x=1707937370; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ujAb35RnTLt8ZUbzta1x6PdsdJ+WhetZSVI49IXzaL4=;
+        b=TJXMG0tgr90Y/gti2h7kNxMOgy9AGBY7/WDOaipS0/hDPOUr19A3kCnrx5bqqD90tu
+         jgXryeJtdCobqpc1z6vn5fw69MgiBNAdkZgbnqfSwULXiag5Ku/LvfYO0f9XhXc2Y6y1
+         6qasx3Y4I5+ehPkZ+qUI3OLw1W+f97waWKaiAd4nz3tHtfdMPqBBtlojdWHXWiTGXQlM
+         LWqo+H8MIPs0W7rfG1DaZ1R+xj3CQE7RYNpZPjFmxPQI1JfjfeO9Xa9Fww8KOjRbuiXg
+         YC6HcC5rumzhAcd2LjjlIPtig4SPStHPLCKs8SnENH22xj5E4lZa0FLjHqkJ8SdoMgeo
+         kFxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707332570; x=1707937370;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ujAb35RnTLt8ZUbzta1x6PdsdJ+WhetZSVI49IXzaL4=;
+        b=V9PpW6Z6RmwbtFXBx8Kbuermy0LZqc2OvtTkfBLbbccTx3Zprcekby8Cjj2l87UATP
+         aZsnSQuQr+xwRa0dynK1yQAplsEFZ7zCr50GVavF/6g2duUba8hQZDA6dUyvZC0wW5Ds
+         7OCq8XLiysehHrKvPhF4JatcHPSTeBEek1OCVFHp+d9uqnoQctkQlkW9X5qrd1XAXDJO
+         S2CUYizNooae8IF3+oiInBU/l1/PnJoW02F2VR8VOYSE+0+84IYGoiAOvIaLh7hrNNcX
+         BOhxUTN5gb+JA1V4nQEmSQkrK8dPgu7317Q/w8PGMQck+UzfeBhNmfXqA48xrjEMDLQK
+         WHdw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2Nr45Qa1IyU3DaJNqzz41oyhUKGx2kKHV/bmC/V+sB1zLMb6fIR0BC04e0BbB0UHIQsTNf/hTxnRcel0KrmVqMffV16bU9gZMS25wUhCUqtCqeqNqZeqRKdy6hLVZhRAI9qtJ
+X-Gm-Message-State: AOJu0YzjP2pfecmNPBJu1PFTjAE8aUUqroiG7dpX/ZndC+AKQdfdDsxy
+	gwTczIO4JHvnAlzAtHiO6scemMlnnLFH8NPVwqS3lh+e0iuLUOoHb2sCmG/j/GCPAS4XLdPW5fs
+	vr/wC751ohhM8Z48jHO56rZJI6AM=
+X-Google-Smtp-Source: AGHT+IEGjaS2wfaJL/3N0IjNMSRVZR1yOOmxYjAVKnt3O04KW4cnozm5HRpUgMBIQTf4a+F1nGQe1OZy405NekISujs=
+X-Received: by 2002:a05:6122:1699:b0:4c0:2553:3b19 with SMTP id
+ 25-20020a056122169900b004c025533b19mr3739687vkl.13.1707332569959; Wed, 07 Feb
+ 2024 11:02:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] PM: sleep: Restore asynchronous device resume
- optimization
-Content-Language: en-US
-To: Tejun Heo <tj@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
-	<linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Nathan
-	Chancellor <nathan@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, Lai Jiangshan
-	<jiangshanlai@gmail.com>, Naohiro.Aota@wdc.com, kernel-team@meta.com
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <ZcOyW_Q1FC35oxob@slm.duckdns.org>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFKsWRmVeSWpSXmKPExsWy7djP87oWlw6nGmxcb2Ixde1uJot9F9ew
-	WVzeNYfN4nPvEUaLicc3s1q0r3zKZjH3y1RmizOnL7FafNyzgdHi1/KjjBbH14Y7cHvsnHWX
-	3WPTqk42jzvX9rB5zDsZ6HHuYoXHlqvtLB6fN8l5tB/oZgrgiOKySUnNySxLLdK3S+DKmLO/
-	uOAXW8W2X6/ZGhjPs3YxcnBICJhIzJpj0MXIySEksIJR4tcFGwj7C6PEh8PMEPZnRomWdQkg
-	Nkj5oi272bsYuYDiyxklljb0sUAUfWSU+DEzFsTmFbCTOLh9IVgzi4CKxPnXO5kg4oISJ2c+
-	AasXFZCXuH9rBjuILSwQIvH67FFWEJtZQFzi1pP5YPUiAm4Sc6dvZwJZxixwlUnizKfFYAk2
-	AUOJrrddbCA2p4C+xOJfe5khmuUltr+dwwzSICHQzSmx69JaNoizXSTeLj/ICmELS7w6voUd
-	wpaR+L9zPhNEQzujxILf96GcCYwSDc9vMUJUWUvcOfeLDRRezAKaEut36UOEHSVal2yABiOf
-	xI23ghBH8ElM2jadGSLMK9HRJgRRrSYx6/g6uLUHL1xinsCoNAspXGYh+X8WkndmIexdwMiy
-	ilE8tbQ4Nz212DAvtVyvODG3uDQvXS85P3cTIzB5nf53/NMOxrmvPuodYmTiYDzEKMHBrCTC
-	a7bjQKoQb0piZVVqUX58UWlOavEhRmkOFiVxXtUU+VQhgfTEktTs1NSC1CKYLBMHp1QDk7v9
-	jJIXxcel/b3PP31o61DVIW82W7ot7MkkhRuHmrXtvn/sP3BwQUEFY+mqGsFzB5kuxX5XFC47
-	x923qi0wl1fBlbV796SZdpFpu56si1qY7DSTN3B/0Po9N3VFxMRWiV7jsV3iksNleIpHcIvV
-	rgZmpWk7ZSes/6/nt/D+VVWOct/lj1dsvi7xj+3RMfNH2XWTQ9m2+1UwXTWTdd5vXDbf6kpQ
-	2AupDeUHhPfM3nHPQV7zhXnrxEub7l41m/np9fRlHzbPDD9p/9zc7Nyi3asWB4l53mN5sf8g
-	o+cx2adbOI949ljt4wn5aL7EsjhsC1+reTXb9jm5Aa+DHf4es+/yyC93M9a++u7bnqY7cUos
-	xRmJhlrMRcWJALwxxOzNAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xu7oWlw6nGiz9LWcxde1uJot9F9ew
-	WVzeNYfN4nPvEUaLicc3s1q0r3zKZjH3y1RmizOnL7FafNyzgdHi1/KjjBbH14Y7cHvsnHWX
-	3WPTqk42jzvX9rB5zDsZ6HHuYoXHlqvtLB6fN8l5tB/oZgrgiNKzKcovLUlVyMgvLrFVija0
-	MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLmLO/uOAXW8W2X6/ZGhjPs3YxcnJI
-	CJhILNqym72LkYtDSGApo8SsLzMYIRIyEienNUAVCUv8udbFBlH0nlFiw/uFbCAJXgE7iYPb
-	FzKD2CwCKhLnX+9kgogLSpyc+YQFxBYVkJe4f2sGO4gtLBAi8frsUbChzALiEreezAerFxFw
-	k5g7fTsTRPw6k0TfWzuIZbOZJeaffAd2EZuAoUTX2y6wxZwC+hKLf+1lhmgwk+ja2sUIYctL
-	bH87h3kCo9AsJHfMQrJvFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiM2m3H
-	fm7Zwbjy1Ue9Q4xMHIyHGCU4mJVEeM12HEgV4k1JrKxKLcqPLyrNSS0+xGgKDIyJzFKiyfnA
-	tJFXEm9oZmBqaGJmaWBqaWasJM7rWdCRKCSQnliSmp2aWpBaBNPHxMEp1cBU/ShK3aD/hnlV
-	ZLJovpTQPF6JFisL3u/TFy375tJ7sL7xXdOD8D8Wy64+Kqi6uuDCnmN2ZplSG2S/x77ZXPPr
-	Hf+CDvHaSGlzJVn9NfMzX68xmtR+U6Cryv9+xinuR7+UpYru3XvEkbds86n0eyZ/7XfwOoSf
-	uHWusn97gNfW25dUzZTb5r8uP3JkgdvrAB6GIL7E/8mfVmzqef2nc4mUIu+O6qMiyh3G13Kv
-	6DEGJCXrCVw4e0G/UXTDppI/p2Zxb/yZbhNy4JH7qtZrMlJLb+X8y4p0s5rkHfUu42/i9c5f
-	jUt9by49vuBsskPY+sOtm779yZjTqMpffC7bdNmO+y8z83vK1Fl5/n9Zz/hEiaU4I9FQi7mo
-	OBEA0At4A2MDAAA=
-X-CMS-MailID: 20240207185552eucas1p1c58470c4076af2ec22456285ade3cbef
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20240207103144eucas1p16b601a73ff347d2542f8380b25921491
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240207103144eucas1p16b601a73ff347d2542f8380b25921491
-References: <CGME20240207103144eucas1p16b601a73ff347d2542f8380b25921491@eucas1p1.samsung.com>
-	<10423008.nUPlyArG6x@kreacher>
-	<708a65cc-79ec-44a6-8454-a93d0f3114c3@samsung.com>
-	<CAJZ5v0hn=KgaWn9pwtLsH2a8n61BNxzb1xrNoxUfEi3o9OAZGw@mail.gmail.com>
-	<4a043533-009f-4db9-b107-c8374be28d2b@samsung.com>
-	<CAJZ5v0hDmwaFEtLc8yDc4cXn2wODXAqATe0+_Hpm9QPODUPMQw@mail.gmail.com>
-	<ZcOyW_Q1FC35oxob@slm.duckdns.org>
+References: <20240130091300.2968534-1-tj@kernel.org> <ZcACvVz83QFuSLR6@slm.duckdns.org>
+ <CAOMdWSLNMqsZNJ-oCLN2RjckZmJSvdU_Yq0F0frmqMqa67Oy1g@mail.gmail.com>
+ <ZcFPKaWwxJhgy8HQ@slm.duckdns.org> <CAOMdWSKQC4UWXp57qubcSOHmPj0E7wHZWWbCz+yCZqROhoPSGw@mail.gmail.com>
+In-Reply-To: <CAOMdWSKQC4UWXp57qubcSOHmPj0E7wHZWWbCz+yCZqROhoPSGw@mail.gmail.com>
+From: Allen <allen.lkml@gmail.com>
+Date: Wed, 7 Feb 2024 11:02:37 -0800
+Message-ID: <CAOMdWSLF9AaQF0ux03-tonw-Jy+4rXdKEZGzPrp_v+fnas6SnQ@mail.gmail.com>
+Subject: Re: [PATCHSET wq/for-6.9] workqueue: Implement BH workqueue and
+ convert several tasklet users
+To: Tejun Heo <tj@kernel.org>
+Cc: torvalds@linux-foundation.org, mpatocka@redhat.com, 
+	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev, msnitzer@redhat.com, 
+	ignat@cloudflare.com, damien.lemoal@wdc.com, bob.liu@oracle.com, 
+	houtao1@huawei.com, peterz@infradead.org, mingo@kernel.org, 
+	netdev@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 07.02.2024 17:39, Tejun Heo wrote:
-> On Wed, Feb 07, 2024 at 12:25:46PM +0100, Rafael J. Wysocki wrote:
->> The other one is that what happens during async resume does not meet
->> the assumptions of commit 5797b1c18919 (for example, it can easily
->> produce a chain of interdependent work items longer than 8) and so it
->> breaks things.
-> Ah, that's fascinating. But aren't CPUs all brought up online before devices
-> are resumed? If so, the max_active should already be way higher than the
-> WQ_DFL_MIN_ACTIVE. Also, are these multi node NUMA machines? Otherwise, it
-> really shouldn't affect anything. One easy way to verify would be just
-> bumping up WQ_DFL_MIN_ACTIVE and see what happens.
+Tejun,
 
-I've increased WQ_DFL_MIN_ACTIVE from 8 to 32 and all the system 
-suspend/resume issues went away. :)
+> > On Mon, Feb 05, 2024 at 12:50:28PM -0800, Allen wrote:
+> > > Thank you. I am basing my work on the branch you have
+> > > pushed.(or-6.9-bh-conversions)
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/log/?h=for-6.9-bh-conversions
+> > >
+> > > In the order of priority, I have started converting drivers/media/*,
+> > > drivers/dma/* followed by drivers/net/*
+> > > which constitutes the majority. Putting my plan out here so that the
+> > > work is not duplicated.
+> > > I will write back in a day and share the branch for review.
+> >
+> > That's great. Thanks.
+> >
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+  I have the first set of conversions ready. Kindly review the patchset
+before I post it to the list. These convert drivers/dma/* to use the new
+Atomic WQ mechanism.
 
+Based on
+https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.9-bh-conversions
+
+
+https://github.com/allenpais/for-6.9-bh-conversions
+
+ I am holding on to the patch that converts drivers/media/*, as I haven't found
+a right way to replace tasklet_[disable/enable] api's. The rest should be ready
+in a day or two.
+
+Thanks,
+  - Allen
