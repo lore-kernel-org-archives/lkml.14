@@ -1,141 +1,129 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D5F1AACD
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD569182A7;
+	Wed,  7 Feb 2024 11:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707305144; cv=none; b=OUQXWCn2ZMzMZIyWmpRfckaDCxxBiBRYWevqERCpUAGY2HVJ/o2yJIrN4sRSQH9KhGUm2CknKps191XnNQ/ybRR1l/S9TPC5/dnCT0UCdWGYQ/jyV+T1WJqRLn0Dah6fTc0teiGRJnHuC2f61TQfywFKvlhXZ5GeQAmIrZwJ8yE=
+	t=1707305160; cv=none; b=roBBLbWIeRfgpyh3CpWsP3kyqngu3Uu+3QrlTgjpA5GdUbduIldbRoTJCoxkTYaLzj6VbK1Xu4i6Cnx/PtNCED+jmIBxApbtJDjfbxZQho5xStADPTU01fH/gC+KrmZCgUx3FHwWWGjyfRP5yggldonCmjPJC2Qv4LLXwiDzgSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707305144; c=relaxed/simple;
-	bh=//WupjhxZ/daA1c3+E7b3f7GJj8YlnHRfnguy6tToSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fPdsvj0/QJYGkCXz1jJVfpGH4yMfJ34VVwOdZEn34BGwCf+NKYs6UthRjrZpd2pkM7rEAMfpYlzgq0RODFcWpoi245rjHjkUGjXomTukCI0YR3mXG0XhIzA/hTUAiEtDoYD2bkcBnG5xhVEo7zG4Ih2/WFxcuh1sADn4QBuBsac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=eLNvsA3A; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="eLNvsA3A"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-296a79e6295so366313a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:25:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1707305142; x=1707909942; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eW2spjim+pJByd3Mxg/0ijFrCYtfv6oEIqERAXXxYdQ=;
-        b=eLNvsA3Avb+46PvHWLNMLCkNShKwWj6n4PuYqqN0uiNDupKx/m3Fp2SfKpaTE7uvdq
-         tUpx0gvPyDIUzvDD7Z054+UX//5tldp+XhnX75CZi+hQQFgNPpblbqN4+0BhCicFQYSq
-         S1xFcQ30PLysq4L3gymxAObEsNbx9YEezYt+i7iG83ezCYRmykI6wJPQLDla2akLKY5w
-         jzTsnNS8+J13m4aOqkVbM/OykzIi5GGBQJkJ1EuOz3qrcSH9ydFXCMN4RNwnxazdhT9L
-         t9OjXsw5wIqB4lQiL+6YuK/SfK6HP9odCrztcyYj6gnKND8kvjAZJby2LtscHBiAvEdh
-         y93w==
+	s=arc-20240116; t=1707305160; c=relaxed/simple;
+	bh=DEqwGMp8n98ZhsW4wwr7QH/Pkj0zYA0yYxgzS+mhMXU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gE4ghiY1YpiR3RPxIr5szUaLTpcqLkXNYt0me4krs02qby9V24s2wDOs4OXrGZP0e4ZjnA//oRmN/HhQIFN2csrFLAjgObBTdMNgFaO3C2uc/1oIcGyxCPbhsUVIOfsdnwWXgHlQsHxG+UkOU4OoJ9tyCuulWtra6sQFc3UaylQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59a134e29d2so82342eaf.0;
+        Wed, 07 Feb 2024 03:25:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707305142; x=1707909942;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eW2spjim+pJByd3Mxg/0ijFrCYtfv6oEIqERAXXxYdQ=;
-        b=LpXyMNnms1kfMgs+DV8gDjB7Kre9hC91NG0oL0lnZ1GZbVHcqq3fbgUUGeWljDn1Re
-         5l/GokIq/RpJ+aN5ZdD1aSrNJfANA6Wx5msfK/yV81C+0edgL6GgnnXfFNdm4UI9dDGH
-         /TUFqXPKH2BGZV1HpYMREfdnPOYU81Mw20i2wLigPcfJN+w61C66N3opCTDHoJaL6YCV
-         Wf8+wihf787KnWSu5bTxefZWRILl0OttGIZ4nXSFjC0QlrtNewsU2A7xuoOTKtSuLpaq
-         gKU6aTa9wNrgOGmshbCXV5g89iFRTDDBsSTn73fnqfPZrdAE99vuIPgPKzVLtoag/h1P
-         WO/g==
-X-Forwarded-Encrypted: i=1; AJvYcCW7WFsfcbyUIACnu9UfFfd7EbcOpGIWmD09Ln7VGdnklacqKl7AE7zT/B8iJVX/vabb6R24++HJyvIB1U0LF/B16MFlMB4wfDT2X4dI
-X-Gm-Message-State: AOJu0YwVBlDZcE9NVLxGdMwWRHgEA/t7CzKtCRoF2hY9DzEgxkrh9fk5
-	XIlfikq++wfrA8gkXT7uLJ106xGR39Ndref+M3c27Xtx5cSmsNbewLFwRtt1LVc=
-X-Google-Smtp-Source: AGHT+IGfhBWi96Xsjmb84UU38Fpf2+ni1FJ2iaJ3cnv/Yalixy3TYd0oC6MObc6Eo/qdms50zPpG0Q==
-X-Received: by 2002:a17:90a:bc81:b0:296:2f9b:8c2f with SMTP id x1-20020a17090abc8100b002962f9b8c2fmr2189952pjr.40.1707305142616;
-        Wed, 07 Feb 2024 03:25:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVIisq+tGMyhVpZ9LDjBzRIZZcB5Q9SCQYewSSZMV2gFGKenIM3PXJNuD9TbM6qt8JIu0BzkyrMAbXxtG9VprJB7PrQWlfWSFyz69e7STaloVeJtsqc0z9I3XCzSPAU0lrye50BLmTpbrLyCun6MI8Y3giaL3P8zy9SXVT2/RUSyS7f6acELfmwf21i+MrVarMRIZg29iQv9f6YULANXvE1P5v4QWWEnmsyVrVdLGrTQzc1FkUvTmwTSf2t6Vy2Fqk5NM5ZyAaQU1pT+KEgBfj2EMoxFL8xE7oGMlbg0Z6ajFEP+G4krgTjglyuYMFN1DqTZNwKFFN418hK2MmlYP1ROGhAmb0uPu1f+X5+tX8X36klLgrVeWc=
-Received: from starnight.endlessm-sf.com ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id st7-20020a17090b1fc700b00296c018f070sm1348428pjb.52.2024.02.07.03.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 03:25:42 -0800 (PST)
-From: Jian-Hong Pan <jhp@endlessos.org>
-To: Bjorn Helgaas <helgaas@kernel.org>,
-	Johan Hovold <johan@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	David Box <david.e.box@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@endlessos.org,
-	Jian-Hong Pan <jhp@endlessos.org>
-Subject: [PATCH v3 3/3] PCI/ASPM: Fix L1SS parameters & only enable supported features when enable link state
-Date: Wed,  7 Feb 2024 19:18:55 +0800
-Message-ID: <20240207111854.576402-2-jhp@endlessos.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1707305158; x=1707909958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xF7A8Ou4hLvdrXlxlvRR6oVHQoHgxTK0xBDoHtLPjsE=;
+        b=grhE64AEwHh9sqP7PjDceIYc0Buzpyg9zsc/gKlzo6ZG7eVI2kcanvwSiV7MZojkSL
+         nTSPPwHLrmWp7VqYEwEVNWSpAPisM8x8IrUyfrn3ruNWjDFlJ/srIW4buiDUwQhs5Dna
+         3gCCKckpVxWR1VYTo4psLyn2XtyylWKvr+cnYgeXPg3kEJPcwUE4rpcAzFhqKNZfMSPR
+         oBcB3szqomQt2Mf4hJr9Jy6I+mI9i/Y2PAtJcs3cTKsUOzDu/2EaA6+RNT/gDzmbdddJ
+         8IiuRdMqWYxAJyQamnm03GEC7n8hA0MmpJ8H3KsaCtdVFMsVsbwRnTULB8mQse8Tghns
+         J05A==
+X-Gm-Message-State: AOJu0Yzjp55/jU0iyp/TcCejCICPrUmAx7vsJTmixAp1Vpva4YGbumu6
+	SXXlT0dVMFhh/W3GP7mANkgv1NnIsaKvsBF0phGq50SFWBpltwY23W7HyRLzxRG3NryfLFjF5YO
+	76w45zB3fe29koKcUZGl+0Y7myH0=
+X-Google-Smtp-Source: AGHT+IEDDn9W+5izm2ttSOZ/C/FhVUXLZIt0B9qRcxRbpr+Ckhn3ZjH2ObSmgN6ODIkt97iDorlOyHwbO+HrwwU3oO4=
+X-Received: by 2002:a4a:e3d5:0:b0:599:fbcc:1c75 with SMTP id
+ m21-20020a4ae3d5000000b00599fbcc1c75mr5667681oov.0.1707305157791; Wed, 07 Feb
+ 2024 03:25:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20240207103144eucas1p16b601a73ff347d2542f8380b25921491@eucas1p1.samsung.com>
+ <10423008.nUPlyArG6x@kreacher> <708a65cc-79ec-44a6-8454-a93d0f3114c3@samsung.com>
+ <CAJZ5v0hn=KgaWn9pwtLsH2a8n61BNxzb1xrNoxUfEi3o9OAZGw@mail.gmail.com> <4a043533-009f-4db9-b107-c8374be28d2b@samsung.com>
+In-Reply-To: <4a043533-009f-4db9-b107-c8374be28d2b@samsung.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 Feb 2024 12:25:46 +0100
+Message-ID: <CAJZ5v0hDmwaFEtLc8yDc4cXn2wODXAqATe0+_Hpm9QPODUPMQw@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: Restore asynchronous device resume optimization
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Tejun Heo <tj@kernel.org>, Nathan Chancellor <nathan@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Naohiro.Aota@wdc.com, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The original __pci_enable_link_state() configs the links directly without:
-* Check the L1 substates features which are supported, or not
-* Calculate & program related parameters for L1.2, such as T_POWER_ON,
-  Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD
+On Wed, Feb 7, 2024 at 12:16=E2=80=AFPM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> On 07.02.2024 11:38, Rafael J. Wysocki wrote:
+> > On Wed, Feb 7, 2024 at 11:31=E2=80=AFAM Marek Szyprowski
+> > <m.szyprowski@samsung.com>  wrote:
+> >> On 09.01.2024 17:59, Rafael J. Wysocki wrote:
+> >>>    From: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
+> >>>
+> >>> Before commit 7839d0078e0d ("PM: sleep: Fix possible deadlocks in cor=
+e
+> >>> system-wide PM code"), the resume of devices that were allowed to res=
+ume
+> >>> asynchronously was scheduled before starting the resume of the other
+> >>> devices, so the former did not have to wait for the latter unless
+> >>> functional dependencies were present.
+> >>>
+> >>> Commit 7839d0078e0d removed that optimization in order to address a
+> >>> correctness issue, but it can be restored with the help of a new devi=
+ce
+> >>> power management flag, so do that now.
+> >>>
+> >>> Signed-off-by: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
+> >>> ---
+> >> This patch finally landed in linux-next some time ago as 3e999770ac1c
+> >> ("PM: sleep: Restore asynchronous device resume optimization"). Recent=
+ly
+> >> I found that it causes a non-trivial interaction with commit
+> >> 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement
+> >> for unbound workqueues"). Since merge commit 954350a5f8db in linux-nex=
+t
+> >> system suspend/resume fails (board doesn't wake up) on my old Samsung
+> >> Exynos4412-based Odroid-U3 board (ARM 32bit based), which was rock
+> >> stable for last years.
+> >>
+> >> My further investigations confirmed that the mentioned commits are
+> >> responsible for this issue. Each of them separately (3e999770ac1c and
+> >> 5797b1c18919) doesn't trigger any problems. Reverting any of them on t=
+op
+> >> of linux-next (with some additional commit due to code dependencies)
+> >> also fixes/hides the problem.
+> >>
+> >> Let me know if You need more information or tests on the hardware. I'm
+> >> open to help debugging this issue.
+> > If you echo 0 to /sys/power/pm_async before suspending the system,
+> > does it still fail?
+>
+> In such case it works fine.
 
-This leads some supported L1 PM substates of the link between VMD remapped
-PCIe Root Port and NVMe get wrong configs when a caller tries to enabled
-them.
+Thanks for the confirmation.
 
-Here is a failed example on ASUS B1400CEAE with enabled VMD:
+ It doesn't rely on unbound workqueues then, so that's expected.
 
-Capabilities: [900 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
-                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-                   T_CommonMode=0us LTR1.2_Threshold=0ns
-        L1SubCtl2: T_PwrOn=10us
+Now, I think that there are two possibilities.
 
-This patch initializes the link's L1 PM substates to get the supported
-features and programs relating paramters, if some of them are going to be
-enabled in __pci_enable_link_state(). Then, enables the L1 PM substates if
-the caller intends to enable them and they are supported.
+One is that commit 3e999770ac1c is generally overoptimistic for your
+board and there is a dependency between devices which is not
+represented by a device link, and it causes things to go south when
+they are not done in a specific order.  If that is the case and commit
+5797b1c18919 changes that order, breakage ensues.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
-Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
----
-v2:
-- Prepare the PCIe LTR parameters before enable L1 Substates
+The other one is that what happens during async resume does not meet
+the assumptions of commit 5797b1c18919 (for example, it can easily
+produce a chain of interdependent work items longer than 8) and so it
+breaks things.
 
-v3:
-- Only enable supported features for the L1 Substates part
-
- drivers/pci/pcie/aspm.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index a39d2ee744cb..c866971cae70 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1389,14 +1389,16 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
- 		link->aspm_default |= ASPM_STATE_L0S;
- 	if (state & PCIE_LINK_STATE_L1)
- 		link->aspm_default |= ASPM_STATE_L1;
--	/* L1 PM substates require L1 */
--	if (state & PCIE_LINK_STATE_L1_1)
-+	if (state & ASPM_STATE_L1_2_MASK)
-+		aspm_l1ss_init(link);
-+	/* L1 PM substates require L1 and should be in supported list */
-+	if (state & link->aspm_support & PCIE_LINK_STATE_L1_1)
- 		link->aspm_default |= ASPM_STATE_L1_1 | ASPM_STATE_L1;
--	if (state & PCIE_LINK_STATE_L1_2)
-+	if (state & link->aspm_support & PCIE_LINK_STATE_L1_2)
- 		link->aspm_default |= ASPM_STATE_L1_2 | ASPM_STATE_L1;
--	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
-+	if (state & link->aspm_support & PCIE_LINK_STATE_L1_1_PCIPM)
- 		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
--	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
-+	if (state & link->aspm_support & PCIE_LINK_STATE_L1_2_PCIPM)
- 		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
- 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
- 
--- 
-2.43.0
-
+I would still try to use a non-unbound workqueue for the async thing,
+because if it works reliably then, the second possibility will be more
+likely.
