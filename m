@@ -1,82 +1,72 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCB017BCB;
-	Wed,  7 Feb 2024 11:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254FF17BCF
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707303648; cv=none; b=FbmB6Eh426Q7hjprX1wJqxgqLWEwER89AG4W9hhOa7zCkrY8x/n0fFB6JgA9YL8PLAVVzNt5iTwn+R+pmO+iB3Xzm0eXVgcPKioCAp+ifJCxKZbvnSbIfXG6p/G/Q3rRu1VQ8GGBN41SzXWZOp4HdLbk0N8nEFDksTAfzeeP2gI=
+	t=1707303860; cv=none; b=me9cHlf0mglNXEpY9VVTSKZ2oFzp8FDSu+74LQKeQUF38NqpTZswih5nN6c5WgF+F/QBxLGaqaynKWd4FH9WNjz7B552af7glj0d+ervnjzYG5gNAKPVIbSQgih+ViwdAY0GYCOt/BMg8FLTApNQbUyyDCKlvkPh6s2pR86Ob+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707303648; c=relaxed/simple;
-	bh=FFSAnBd5Se93bT02HPMvL2EH82+uilSJf/jAlwQuULE=;
+	s=arc-20240116; t=1707303860; c=relaxed/simple;
+	bh=CgYyRmc6Z59PnXZh+5ZKWs0+Cbn8qJv1WXKrOV0Or9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTUCHyYiaFbgxufYSBNdpNBFOYo2pn3kBAhtI/D8o0Qd3eO9ircNs8s/nhyN5riorUXrnNOS9Xm0zQiZ0sTWJlOubmuP9cX1szZYCJa6vig0NUmg5ZHSLJz69o23tZGQZH1cZvbskHTw2UU5miA63fdhMqi9PWFNFBI3935qd4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGf89IfT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TYvli/OI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGf89IfT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TYvli/OI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sk91bdRtvEr9Xf447UJlKnqXdGbu8xRiXgX1TagpOjzdwiAO9T1QNuyx+gsO9cXA/+jZrgFrcA5L08CHRIZdisvpMBWKXQvERJPgQWNr8yqmhU0SmI3vsxV7fVycRplBfYN+1y7ImovNlkb6NRBIVnJeFena/TVrqHYIWALbbwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RNBtpq1M; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGf89IfT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TYvli/OI";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGf89IfT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TYvli/OI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BDFE51F74D;
-	Wed,  7 Feb 2024 11:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707303644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eyUiwpFluA7WcMFlIVSpAKe54wAT0z8+m/oRT7nE+0Q=;
-	b=LGf89IfTA4RVcerXsbYRkgZvIaDnx484T5e21bRXDAxjPZ1Rj5njN4gOw2gf3Q/1Ma0Z/B
-	lcgkvOTxmn5AATSG3UusBAqGNblM+oJQoUPtkBYhDWwU9z3NATXxFmfJNro1hx3k+oE7xm
-	fhv76d0M5AAparRnA4c4TKnB/z9/0AE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707303644;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eyUiwpFluA7WcMFlIVSpAKe54wAT0z8+m/oRT7nE+0Q=;
-	b=TYvli/OIyXnEaUcCET9zbyUu8hu+WhCALgJU8+TvZEJSTslC16szgwtHE/P0B90QfwfBmK
-	0HCbcgpDxcRq80DQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707303644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eyUiwpFluA7WcMFlIVSpAKe54wAT0z8+m/oRT7nE+0Q=;
-	b=LGf89IfTA4RVcerXsbYRkgZvIaDnx484T5e21bRXDAxjPZ1Rj5njN4gOw2gf3Q/1Ma0Z/B
-	lcgkvOTxmn5AATSG3UusBAqGNblM+oJQoUPtkBYhDWwU9z3NATXxFmfJNro1hx3k+oE7xm
-	fhv76d0M5AAparRnA4c4TKnB/z9/0AE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707303644;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eyUiwpFluA7WcMFlIVSpAKe54wAT0z8+m/oRT7nE+0Q=;
-	b=TYvli/OIyXnEaUcCET9zbyUu8hu+WhCALgJU8+TvZEJSTslC16szgwtHE/P0B90QfwfBmK
-	0HCbcgpDxcRq80DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B29C0139D8;
-	Wed,  7 Feb 2024 11:00:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oz2TK9xiw2UscQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 07 Feb 2024 11:00:44 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id BBE1EA0809; Wed,  7 Feb 2024 12:00:41 +0100 (CET)
-Date: Wed, 7 Feb 2024 12:00:41 +0100
-From: Jan Kara <jack@suse.cz>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: lsf-pc <lsf-pc@lists.linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC] tracing the source of errors
-Message-ID: <20240207110041.fwypjtzsgrcdhalv@quack3>
-References: <CAJfpegtw0-88qLjy0QDLyYFZEM7PJCG3R-mBMa9s8TNSVZmJTA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RNBtpq1M"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-363c7d490d1so777095ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:04:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707303856; x=1707908656; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MkHJEMhdHIEDISZVoKhCE9ifS1ot8NgYUDuuTg1ODbU=;
+        b=RNBtpq1MRPESx57cDJ2wvt+fsfxaz6FtCznbReN75Ij/Ise8wkzw5yJuMiajsv14vq
+         Ih8R64zS87/5xpfjgnzqnRwLse0rigqN+Qam00rj56JRkgt7I6gGiXb1xDdRrCFXelCx
+         u4hAza/gL9vD8O41sEJ114ZzZui3d+yph9NSY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707303856; x=1707908656;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MkHJEMhdHIEDISZVoKhCE9ifS1ot8NgYUDuuTg1ODbU=;
+        b=YhJLtBcK+a6DnPM7jwqpxf7Q7a4EMU3irCbsZGMTIO58xzIc8ZU/JN1JTEOvoPgjdn
+         zL7TjrQoRtmO1W65H7TP8q0of6dQnspdJ0raGffTOvMlj1fWCS+nim8qotBab9F8uwSj
+         C76ztseT8H7oYotY/NJ9+Q8GGs3BNdWHcdutSqOaxw9oAJMUkQanihnER9fXYGdjX8BW
+         lTOIfwHrjfiLAVlr2moSs8g3QMhcXWINfPSw3UuhtX3XfhzXoJHdQf4d8kNaEfCFu2F4
+         I6j7n3Z5uKSxoefC1jVtKwEjY8FfBC5MYmY93tsxFuGJRNLe6E0KGr6GajdXoWxvZhBD
+         tBzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjjUEBs8bS/lBuaxox+o5NfAXq7jJNba7mnuUSgAIorkOwD4bcCo+yiLaL5p8nYm6uMzGyYTrJKO0pli8/8GgjFBQb4Nhqj7tNo8Ma
+X-Gm-Message-State: AOJu0YwjNODh4RL5brTmY9Rx4IMRXQBnoat1VYMHXjyDdakhtrUAvbHF
+	h/jW4WpTCXtz2/wT/zB6aOtPIvMfyGbBQe78Ornhj6EnIDXrzCe9/+ucJ1iqGA==
+X-Google-Smtp-Source: AGHT+IFsYYm7hJGs5m67HBsC49sVaunlIdTZxtC+l0udvR2oLwzFexMXoEljKEGwE1VAc90ijtD/5w==
+X-Received: by 2002:a92:c20f:0:b0:363:ad00:106d with SMTP id j15-20020a92c20f000000b00363ad00106dmr5585505ilo.4.1707303856225;
+        Wed, 07 Feb 2024 03:04:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrtNEYtrYrUbd3WCx5d+Vo2gSvxdEHF0BNGt6ximizf7qYe7T5H46Ie55fL2VWgxMxlWduhoOX6KlMOKtsxeFyYCjnhIkE3L6KvmtJVxIpjw7kXgW5qPN+w4huuzEm3qwVbp0AVgQ1ZkASW5U90p88VrUkWp6nk5vR49oEi+InXGOlVot97XzK5pkmLoC/C2lIuxSGPyqlv0uv7XGoAEMGG6mOD7CY9rcJB8pP2E8YKfhqP27o1FFSVoC5YBVbtY5PZ9MkHM2h+wYCchXO4Cb0F8vo8CHqj9008WFYSz/M028lVxfT3MffozMwCJI64UcjTuNhYeBexPzgZrEmQuSK3FMTUJHePjnEMG8JGdN/epYhO8fGrZcF43GqGd7MGSkLs0TQbrG7Y1g3GzzCBrKf8uLtRggideexU9Q0w5aJ/L4dwMQvoBR9qCjBvFyTRh6Icke/q+ziPbcKh2mMkoOp3unEJyA0N6zOTMm/dlbK9WvXl3hPgy+yY0O9wlGZ62HqyqCbYDs=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ck4-20020a056a02090400b0059b2316be86sm1109248pgb.46.2024.02.07.03.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 03:04:15 -0800 (PST)
+Date: Wed, 7 Feb 2024 03:04:14 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Marco Elver <elver@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
+Message-ID: <202402070255.36699AE147@keescook>
+References: <20240205093725.make.582-kees@kernel.org>
+ <20240207014528.5byuufi5f33bl6e2@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,62 +75,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegtw0-88qLjy0QDLyYFZEM7PJCG3R-mBMa9s8TNSVZmJTA@mail.gmail.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.82
-X-Spamd-Result: default: False [-0.82 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.02)[53.73%]
-X-Spam-Flag: NO
+In-Reply-To: <20240207014528.5byuufi5f33bl6e2@google.com>
 
-On Wed 07-02-24 10:54:34, Miklos Szeredi via Lsf-pc wrote:
-> [I'm not planning to attend LSF this year, but I thought this topic
-> might be of interest to those who will.]
+On Wed, Feb 07, 2024 at 01:45:28AM +0000, Justin Stitt wrote:
+> I wouldn't mind also seeing a test_ubsan_div_overflow test case here.
 > 
-> The errno thing is really ancient and yet quite usable.  But when
-> trying to find out where a particular EINVAL is coming from, that's
-> often mission impossible.
+> It has some quirky behavior and it'd be nice to test that the sanitizers
+> properly capture it.
 > 
-> Would it make sense to add infrastructure to allow tracing the source
-> of errors?  E.g.
+> Check out this Godbolt: https://godbolt.org/z/qG5f1j6n1
 > 
-> strace --errno-trace ls -l foo
-> ...
-> statx(AT_FDCWD, "foo", ...) = -1 ENOENT [fs/namei.c:1852]
-> ...
+> tl;dr: with -fsanitize=signed-integer-overflow division (/) and
+> remainder (%) operators still instrument arithmetic even with
+> -fno-strict-overflow on.
 > 
-> Don't know about others, but this issue comes up quite often for me.
+> This makes sense as division by 0 and INT_MIN/-1 are UBs that are not
+> influenced by -fno-strict-overflow.
 
-Yes, having this available would be really useful at times. Sometimes I
-had to resort to kprobes or good old printks.
+There is actually already a test_ubsan_divrem_overflow, but because the
+failure modes result in a trap even without the sanitizer, it's disabled
+in the test. For testing a crashing mode, it might be interesting to add
+it to LKDTM, which is the crash tester...
 
-> I would implement this with macros that record the place where a
-> particular error has originated, and some way to query the last one
-> (which wouldn't be 100% accurate, but good enough I guess).
+> 
+> Really though, the patch is fine and the above test case is optional and
+> can be shipped later -- as such:
+> 
+> Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-The problem always has been how to implement this functionality in a
-transparent way so the code does not become a mess. So if you have some
-idea, I'd say go for it :)
+Thanks!
 
-								Honza
+-Kees
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Kees Cook
