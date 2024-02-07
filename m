@@ -1,92 +1,89 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0D0200D1;
-	Wed,  7 Feb 2024 08:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A17A1F95D;
+	Wed,  7 Feb 2024 08:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707293237; cv=none; b=ewFP561VCtdUnAnl+SFBAg4hN/4EOE+ug/EQJuSEI2YXtvDqJzck2yTEJKxT6+e/iIMs74YbxX6SLj5fV48zr+XSIvemwrgjbgxNs/glVUROw95Q6CEOwZI1bZup6tzLysmVc2JqzXCf6QtgugRrVD9HKsytVdlTpupE051/v2g=
+	t=1707293304; cv=none; b=mKfYTBBBUixbuh2oI6s7ICIFhvkii7O6lI30jKINKB6sQcwFUh/JNW1WV1kQ2T8odyJtZQU4/NWRu1+YNnyd0uwISIOqO1NjhlpEgq5D1+kNBmXyd5fjMBQK4b9QSD6HQQMWcaTsutEd6q7xLA6dDOzHUpz1pcwllTC+V5x1xmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707293237; c=relaxed/simple;
-	bh=VSFXVUDt9KdC/Osnmmt5+KR0XBJec4bQdzZfkYDwffU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5juu1eYmMPcdwrufKCR4cA2+iFuRfSxo0zl1tfFhVQD+d/8PFS0gJ3QQjqCvFafobwtzsymNi8Vu/w43A1i20S7AtypcY3Jn/qY23V9wOaP10rO4xREaovrIH7wMPT/doQmZm3yUJkh5B8/uzwjdtM/DhpucDWsyZiJAu4K1ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rXcxa-00022T-Dd; Wed, 07 Feb 2024 09:07:10 +0100
-Message-ID: <4e9e5ec1-e040-49e0-84a4-9f86c0fcec1b@leemhuis.info>
-Date: Wed, 7 Feb 2024 09:07:09 +0100
+	s=arc-20240116; t=1707293304; c=relaxed/simple;
+	bh=daxL9NbNrv0PKQ73ESMe3FJq0wGSeI2kdG2Mz5x2tlE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SND3NqPisztGKFy59/OAkhTFZmE9h7AIztF0qarVoErvaXV4TNxwYl8OUkuVILTfdkbBw0cKMikDLJgJ6aLeZo8UgH/Txw95B8Gop7kVxy0XjeSt+a8o9K16COJzi+7boj86XkNi/rhPSsM+R5CbOU7unRi6yXPSnj0czCCgML0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=IhAw7k4G; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="IhAw7k4G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707293297; x=1738829297;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=daxL9NbNrv0PKQ73ESMe3FJq0wGSeI2kdG2Mz5x2tlE=;
+  b=IhAw7k4GE5StfZJP7LoITZW5wmm3xyKBp6QB5Ta22Ap8URlTb1A8WEcb
+   HDQCCxJKPii3lStyh00hkwc2wGEMwu+62Y27zbgBlMdXfZ6Y7kAQzSICT
+   2Z2Wzz5eK51sRthEGHILEHkyV7sFSowYULy6tVl2Wu7MyHfTt8DxOAFUI
+   RMkLzMJXUv5DjxY3SAeWmAW2KGlxKC8C6JayOGPILeOPRiGgUaLmCz1Dw
+   fSnlq0gyJauSfSaIziZOYuAG9hoDEIIq+116IebGLndg39lSDhUmIl65y
+   V7t2VEGKNvrKIcNfYPjXX2+Hj5Ij1yA2g/0U6t5x6jShfveDgxVimfkv3
+   w==;
+X-CSE-ConnectionGUID: vQt9zdwKTaaiPaLrbSvDLw==
+X-CSE-MsgGUID: x7VZntY8TZGwL8MFJYQ+zQ==
+X-IronPort-AV: E=Sophos;i="6.05,250,1701154800"; 
+   d="scan'208";a="17266354"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Feb 2024 01:08:16 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 7 Feb 2024 01:08:14 -0700
+Received: from che-dk-ungapp03lx.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 7 Feb 2024 01:08:11 -0700
+From: Thangaraj Samynathan <thangaraj.s@microchip.com>
+To: <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <UNGLinuxDriver@microchip.com>, <kumaravel.thiagarajan@microchip.com>,
+	<tharunkumar.pasumarthi@microchip.com>
+Subject: [PATCH v3 SPI for-next 0/3] DMA Support for SPI in PCI1xxxx
+Date: Wed, 7 Feb 2024 13:36:19 +0530
+Message-ID: <20240207080621.30742-1-thangaraj.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-Content-Language: en-US, de-DE
-To: Linus Walleij <linus.walleij@linaro.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Christian Heusel <christian@heusel.eu>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240123180818.3994-1-mario.limonciello@amd.com>
- <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707293235;2a1c4c85;
-X-HE-SMSGID: 1rXcxa-00022T-Dd
+Content-Type: text/plain
 
-On 31.01.24 10:06, Linus Walleij wrote:
-> On Tue, Jan 23, 2024 at 7:08 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
-> 
->> On some systems the interrupt is shared between GPIO controller
->> and ACPI SCI. When the interrupt is shared with the ACPI SCI the
->> flags need to be identical.
->>
->> This should fix the GPIO controller failing to work after commit
->> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
->> ```
->> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
->> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
->> ```
->>
->> Cc: Rafael J. Wysocki <rafael@kernel.org>
->> Reported-by: Christian Heusel <christian@heusel.eu>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218407
->> Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
->> Link: https://lore.kernel.org/linux-acpi/CAJZ5v0iRqUXeuKmC_+dAJtDBLWQ3x15n4gRH48y7MEaLoXF+UA@mail.gmail.com/T/#mc5506014141b61e472b24e095889535a04458083
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> Patch applied for fixes!
+This series of patch is to add DMA Support that improves SPI Performance
+in PCI1xxxx. With DMA Support in 20MHz clock, the performance is
+improved from 6Mbps to 17Mbps.
 
-Hmm, Linus, that was a week ago and I still can't spot the fix in -next
-or
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-; am I missing something or did something come up?
+v3:
+-Merged Tx and Rx DMA patches into one to avoid unidirectional dma.
+-Changed naming from DMA read and write functions to from_io and to_io
+to avoid confusion between DMA and SPI Controller operations.
 
-Furthermore Christian seems to grow impatient -- and I do as well, as I
-recently couldn't wake up my laptop due to this while on the road. :-/
-As at least one of the affected machines is quite popular in Linux
-community, I'd prefer if we can fix this rather sooner than later.
-Linus, if you are busy, I could ask the other Linus to pick this up
-straight from the list if that's okay for you.
+v2:
+-Added can_dma operation, so that the core can do all DMA mapping and
+switch between, DMA and PIO operation by itself.
+-Added error messages for syslock acquire failure and DMA init failures.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+v1:
+-Initial Submission
+
+Thangaraj Samynathan (2):
+  spi: mchp-pci1xxxx: Add support for DMA in SPI
+  spi: mchp-pci1xxxx: DMA support for copying data to and from  SPI Buf
+
+ drivers/spi/spi-pci1xxxx.c | 510 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 483 insertions(+), 27 deletions(-)
+
+-- 
+2.25.1
+
