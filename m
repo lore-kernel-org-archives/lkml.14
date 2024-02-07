@@ -1,85 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E417FBD9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 15:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF271E4BD;
+	Wed,  7 Feb 2024 15:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707321148; cv=none; b=FMWrsjBgM2qVBdjg3fKCI5zkjRAqbggv8NMXtEJbB6uxKV0F5f2fNhDvVEIvTBDxXKKe4uBtzQEu76Hkj+jrhXTKAUjVFF+fuuZtnwDugrJqA73hyK3QmhLYBAfpb9SlZ1H9hT3fnejZHM9ftvVeH+mweuFUfECtqsGnSw3R/Vg=
+	t=1707321491; cv=none; b=bImMJqG9Lqf4BZnFWqjLMEMaMcEjBGmW/alys7LKPAAL5vZ2XIRRdHI+55qQgL8K2mF5FniJCVnuIbHKjX1QxYSF5RZ3AePdh3cLSi5kWh5DDonLnM9NiMIPlAlMEvnSfq9+wPCWFbYRbX2P/EFBYi4Ssq9HH9o7ckn/Y9Hpxu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707321148; c=relaxed/simple;
-	bh=cHYNDEi3WlHG4angWaXSJlNb7gbznKoIJltmiX4Cfa4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iX+fqKPiNHre/P2HWQukkoTu8yHG5PTd2JgpbcHiZQTQD4wwdalfElTIRGjs1jmXaXKOpMYvLUjJlU/Feess9PzT/eahOf9b+3DyFbCOMogQ4kn7k3J7k3K1kIQEn/1b3F1g43zef42I0yeOnMFRAMcYyGTKVbLzTIqi7UMGfHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmzJMu7c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707321491; c=relaxed/simple;
+	bh=/+tRVDx02BW/hh+PutujEBFR9dzXkl6Wjap5CTdPXPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CXFt83v0ck1ld6rzoan6zkxPsfMsZCKEw1TGzEL5sy4m9ekjswzInnytR5YiGbIqeexD+zjYjUtGmbF5BYM/3+/SH9TSJxNRwCr6rWuxbBVFgCdxTV6MmyZkECBWtwRmKup/LuX9ijEXH7FqBrZGoaKCKXYESnio7bNUmmgHCYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwoswSA9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmzJMu7c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF34C433F1;
-	Wed,  7 Feb 2024 15:52:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwoswSA9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E54E3C433F1;
+	Wed,  7 Feb 2024 15:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707321148;
-	bh=cHYNDEi3WlHG4angWaXSJlNb7gbznKoIJltmiX4Cfa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HmzJMu7cKmZvdytEdbGNsrv/J2EM5eMY7C8ep99MQMYPXPSfn5RXk6Pl+W5hxQjgj
-	 5cLwXKOmxQ/tmKF1MbH05iRh3y/HS4iLUc5HifLrxW9uA3yXZNRc6eNEPyJgqVc0Gv
-	 9yzu21BUaTqV+u7tAOPY/QHvCFi6V+H4WOkZl2Tk7KNGGAuokp6i37yNSprn5+qaR5
-	 ZQ7BWDjoMTCfchTu6lEgIg+r7D5wm+Jw9AhbuJk1UszZ0E8mXr/LNG0YrnarhABAiH
-	 kzb6YDDJUpErLBcGRtQRMLk4K/6nvS9ickaC2GYnuW/6jWuefkwskvwVmUoOOSkWcL
-	 3WEGQiJt7qE0g==
-Date: Wed, 7 Feb 2024 15:52:19 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	daniel@ffwll.ch, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	manikandan.m@microchip.com, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux@armlinux.org.uk,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, geert+renesas@glider.be, arnd@arndb.de,
-	palmer@rivosinc.com, akpm@linux-foundation.org, gerg@linux-m68k.org,
-	rdunlap@infradead.org, vbabka@suse.cz,
-	linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: display: bridge: add sam9x75-lvds
- compatible
-Message-ID: <20240207-raving-chatty-7961fb5c5d43@spud>
-References: <20240207102802.200220-1-dharma.b@microchip.com>
- <20240207102802.200220-2-dharma.b@microchip.com>
+	s=k20201202; t=1707321489;
+	bh=/+tRVDx02BW/hh+PutujEBFR9dzXkl6Wjap5CTdPXPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UwoswSA9DHdlkgDOhoW0q+dEwthdJfdOr9W5gBiE+Ljpp7m7tCG3X6hC0Uxij+Mri
+	 XnkOny1SvYfw2Wvh622ZCPwwIdgcCkwdOAHnFCDbRSVi2gAZx7RxRNfrtcbwVWQmKD
+	 GXLQaJovT15U7tfaEH5mKFeyQlzffZ9mLZwhQwoUNHxEtIblmHv5/fNC2IDqL77ONS
+	 gjQRbXhETF1v/lHL9NvivtgC3/M64y7u8L/w6z+7QxIOYkJX6cSQ/uKRoBG6VmmCcn
+	 vLG3L7BhaJLUJ5dZ6TkcIES+av/DSDyf1s1gMsTYyx138HQDmXS2Mo/K+NnhKSGWed
+	 qhDM8Z5NCSaAw==
+Date: Wed, 7 Feb 2024 07:58:07 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Ventura <david@davidv.dev>
+Cc: Jonathan Corbet <corbet@lwn.net>, "David S. Miller"
+ <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Xiongwei Song
+ <xiongwei.song@windriver.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] net: Change default delay on IP autoconfig to 0ms
+Message-ID: <20240207075807.5eeed93f@kernel.org>
+In-Reply-To: <20240205155717.484198-1-david@davidv.dev>
+References: <580001e3-17ef-4f24-8fd8-bc14110e874e@lunn.ch>
+	<20240205155717.484198-1-david@davidv.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tvxf/pUyWbuFS5ma"
-Content-Disposition: inline
-In-Reply-To: <20240207102802.200220-2-dharma.b@microchip.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon,  5 Feb 2024 16:55:43 +0100 David Ventura wrote:
+> As suggested, I'm updating the default to 0ms. 
+> 
+> This patch depends on 1f0aa0c947eeb4edb60add141a5bc2309f2dc8dd ("
+> net: make driver settling time configurable").
 
---tvxf/pUyWbuFS5ma
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-$subject: dt-bindings: display: bridge: add sam9x75-lvds compatible
-
-If there's a respin for some reason, please update the subject to match
-what the commit is actually doing (adding a whole binding).
-
-Cheers,
-Conor.
-
---tvxf/pUyWbuFS5ma
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcOnMwAKCRB4tDGHoIJi
-0ue9AQC+O1AcM535fj1ORbNpOe2LbZVdJ/keOqbM5p7WIHcV8gD/aJgptEm38mUu
-e4pTQU4ClUkiAFbmRHcNmXKC7rhfiww=
-=057J
------END PGP SIGNATURE-----
-
---tvxf/pUyWbuFS5ma--
+Please post a v2, in a new thread, and proper commit description
+with a link to the discussion with Andrew.
