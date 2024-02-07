@@ -1,156 +1,126 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1781A76044;
-	Wed,  7 Feb 2024 12:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF28768F6
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 12:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707310003; cv=none; b=QPgLHmVh/rLzbYGK77v7P4O8cI+w1TBOrT4av2wd97p5Zqd/TdHtVgf5PxiZ3J2QEvgGSnSFVQRLilSyULCVsMohFlX145z6OTAS2FAODOsFeo8Ac501mCVO09NbeA06Qc81O+4IcYzwYu1p8edQGuqAOIaTittzdCKlrFkhtYo=
+	t=1707310141; cv=none; b=g20GtMUrmtMUhQDR9WiAvgaxZqZ0Ypuqss3Lg9/4OG1n5f6FpEoLP0hIS7E8Rrax8fDsJ1upmRA/2NPZ01cmaadkibkbkZTgNuChCp+0G3fqD+YbGTqemflFqu0XFG4WOKJx1DMY10O9MQV9P8jwoRujHpKyD99zaeGbiJ0oGFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707310003; c=relaxed/simple;
-	bh=iTpYch75tcd9ZP7LW6ilopgE85q/9ga/hzmsirOsblg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cVijszrHqIc39gG20lMMlM4JbaAxUJsC0rV4IwpFGQa1O8QcS15okrL2zj0cYQ94S8mS2F+uW2ZeDIiJn4D4UjV5lpz81VIJSNjPAfdshwGCO8PaSVrO8lMbToZ6348QQrI0OWdkHCVG4SZ8K7nG4jqVqJgUu4hWDALS4Bu3d9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VQGTaYAO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707310141; c=relaxed/simple;
+	bh=kpCKC3B/98YpyoP171CggRXhut1sdettn+WPRc7jzQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r5hES3I/IQWo+f6s6HV65D4F8+Jtp/vosnylMmE8IqLvvRVqsDuppXM3y8ythSSIUo5otI5cm/Mxkd537JVyEfqnsvI30RD8ylFqQVvXEXFLKJRbPrVq4JqfT6qi8F+jeC8qlzaCRCAnIveX3S8DTymc6re8NDYOS1Ww6rYIpds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLGJNQQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VQGTaYAO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707310000;
-	bh=iTpYch75tcd9ZP7LW6ilopgE85q/9ga/hzmsirOsblg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VQGTaYAO4UXkiE0SOdaExAt58ciEwIUI3p9ZgpZEu+eCNSJxgbpxPs2NOIfFTeiR7
-	 Ejg7EiYSdzzI7FECNLfqmcv/vDBRoa6nYNtgdrqgiAiurXxYo16CKpsK30eiU5OGIE
-	 1azFEDU2fWDxFLpi35B9jYhbGZjIQ+navGvU6rIG+6e6KL13IVN3C/BNIJtEP22Ydh
-	 PmVnuxsbLojV6DqTRizND8lKy+tTq4Y6EXiLCkIwy3HBsAINd3sb8TRnv+apYRwDG/
-	 Nntuj2uPQfgUbo/DRbXnW43pjmZUE8B+61OjrxN9RGSPsIw3GPMKYmrxuTEBiqbLrZ
-	 JxSBt4tZRxDQw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 933E337809D0;
-	Wed,  7 Feb 2024 12:46:39 +0000 (UTC)
-Message-ID: <b4018932-2fcb-4a15-9ec4-e29e5761d3e0@collabora.com>
-Date: Wed, 7 Feb 2024 13:46:38 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLGJNQQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB8DC433C7;
+	Wed,  7 Feb 2024 12:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707310141;
+	bh=kpCKC3B/98YpyoP171CggRXhut1sdettn+WPRc7jzQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RLGJNQQ5EaQggFyKDJZDZ+vFCX0Le2fYgcxiSMcrU5YTTdBL5yjnpocSDH+eIBNl1
+	 3/3dRI9h3b04yEcdwS6h9gJFDXc1vXCaABN0PjpHlE3Alm8Bwwk+LW1VHm1mLiuaCQ
+	 9H8T64fcEiRriX+krSy18+3zXpt+zJqCexBSabV63gDPM+da6jIk2WUdl4e7itxmM1
+	 1TbSwS5BuniBUdzGzrIL7c92yzJrRzVA54ETJYu7NE+9w52DlcnZXasV0/nWYFX6P9
+	 nxXRC6HWZxt1V1yrvgc4NLaSl7mrFTdjvz0RRBgUZU0NxcJDPJISH5UTzbtp/+9D8S
+	 OTh4DGVQFml9g==
+Date: Wed, 7 Feb 2024 12:48:58 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/sve: Document that __SVE_VQ_MAX is much larger
+ than needed
+Message-ID: <ZcN8OltRDUlDlTHQ@finisterre.sirena.org.uk>
+References: <20240206-arm64-sve-vl-max-comment-v1-1-dddf16414412@kernel.org>
+ <ZcNxJ56+bvcUTGlT@e133380.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/2] spmi: Add support for multi-master
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Abel Vesa <abel.vesa@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- linux-mediatek@lists.infradead.org
-References: <20240207-spmi-multi-master-support-v1-0-ce57f301c7fd@linaro.org>
- <20240207-spmi-multi-master-support-v1-1-ce57f301c7fd@linaro.org>
- <CAA8EJpqsJmv36=o1aTjVH6eMHXMg8BHNpiDvs+Q8YB23ezVGtQ@mail.gmail.com>
- <ZcMvFtAwQQjAZhk6@linaro.org>
- <CAA8EJprqWLX7_yWZzKp3FAKFGkSkk041f9hj1uXuRBrbH5APyQ@mail.gmail.com>
- <ZcNIddeG6VHxBEOQ@linaro.org>
- <CAA8EJpo-16u34Yc6MLmHSqFrQ0VrZAq6TwGeVc5WFwMmhruqoA@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <CAA8EJpo-16u34Yc6MLmHSqFrQ0VrZAq6TwGeVc5WFwMmhruqoA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Il 07/02/24 12:45, Dmitry Baryshkov ha scritto:
-> On Wed, 7 Feb 2024 at 11:08, Abel Vesa <abel.vesa@linaro.org> wrote:
->>
->> On 24-02-07 09:23:09, Dmitry Baryshkov wrote:
->>> On Wed, 7 Feb 2024 at 09:19, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>>
->>>> On 24-02-07 01:55:39, Dmitry Baryshkov wrote:
->>>>> On Wed, 7 Feb 2024 at 01:34, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>>>>
->>>>>> Some newer SPMI controllers support multiple bus masters.
->>>>>> Such a master can control multiple slave devices. The generic
->>>>>> framework needs to be able to pass on the master id to the
->>>>>> controller-specific driver. So do that. The framework will
->>>>>> check if the devicetree child nodes are actually bus masters
->>>>>> and will register the devices for each master. The legacy
->>>>>> approach will still be supported for backwards compatibility.
->>>>>
->>>>> Please remind me, are those two actual bus musters driving a single
->>>>> bus in parallel or two SPMI buses being handled by a single device? In
->>>>> the latter case this implementation is incorrect. There should be
->>>>> multiple spmi_controller instances, one for each bus. Allocate them in
->>>>> a loop and set ctrl->dev.of_node after allocating.
->>>>
->>>> It's two SPMI buses (two sets of wires) handled by the same controller,
->>>> HW-wise.
->>>>
->>>> If we register two spmi controllers with the kernel framework, it will
->>>> be HW inaccurate, because there is just one controller which has
->>>> multiple masters.
->>>
->>> struct spmi_controller is a controller for a single bus. Inside your
->>> device you have two SPMI buses, each can be controlled by its own
->>> struct spmi_controller. Just like devices that control multiple I2C,
->>> SPI or USB busses register a separate instance of the bus controller.
->>
->> Well, this is what this patchset is trying to do in the generic part.
->> The SPMI controller supports multiple buses (HW-wise) and therefore SW
->> implementation shouldn't be tied to single bus requirement.
-> 
-> So, after the off-line discussion:
-> - add new compatible string for sm8450+
-> - register two spmi controller instances
-
-Well, I don't know about the actual hardware that you're trying to implement
-but, in my opinion, the "idea" of this series does actually make sense.
-
-The SPMI specification says that SPMI supports up to 4 masters, and up to
-16 slaves.
-
-Just my two cents.
-
-Cheers,
-Angelo
-
-> - drop the master-id from the SPMI interface
-> - optionally: think about having a new separate driver for v7 SPMI.
-> 
->>
->>>
->>>>
->>>> I'm not saying it might not work. But, to me, it looks more like a hack.
->>>>
->>>> Basically, we would be mapping HW bus masters to kernel controllers.
->>>
->>> Buses, not just masters.
->>>
->>>>
->>>>>
->>>>>>
->>>>>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->>>>>> ---
->>>>>>   drivers/spmi/spmi-mtk-pmif.c |  6 ++--
->>>>>>   drivers/spmi/spmi-pmic-arb.c | 10 +++---
->>>>>>   drivers/spmi/spmi.c          | 76 ++++++++++++++++++++++++++++++--------------
->>>>>>   include/linux/spmi.h         | 10 +++---
->>>>>>   4 files changed, 67 insertions(+), 35 deletions(-)
->>>>>
->>>>> --
->>>>> With best wishes
->>>>> Dmitry
->>>
->>>
->>>
->>> --
->>> With best wishes
->>> Dmitry
-> 
-> 
-> 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ELNIFKK91+/JknQx"
+Content-Disposition: inline
+In-Reply-To: <ZcNxJ56+bvcUTGlT@e133380.arm.com>
+X-Cookie: You might have mail.
 
 
+--ELNIFKK91+/JknQx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Feb 07, 2024 at 12:01:43PM +0000, Dave Martin wrote:
+> On Tue, Feb 06, 2024 at 04:27:01PM +0000, Mark Brown wrote:
+
+> > +/*
+> > + * Note that for future proofing __SVE_VQ_MAX is defined much larger
+> > + * than the actual architecture maximum of 16.
+> > + */
+
+> I think that putting shadow #defines in comments in UAPI headers is a
+> really bad idea...  is this a normative statement about the user API,
+> or what?
+
+Well, the only reason I'm mentioning the constant here is that
+__SVE_VQ_MIN is defined too and has a perfectly good value, things look
+a bit neater with a shared comment block.  I'm not sure there's a hugely
+meaingful difference between having a comment adjacent to a named
+constant in a header and one a couple of lines away that mentions the
+constant by name.
+
+> My concern is that if we muddy the waters here different bits of
+> software will do different things and we will get a mess with no
+> advantages.
+
+> Portability issues may ensue if userspace software feels it can
+> substitute some other value for this constant, since we can't control
+> what userspace uses it for.
+
+I don't think we want people using this at all, ideally we'd remove it
+but it's in the uapi.
+
+> Would it be sufficient to say something like:
+
+> /*
+>  * Yes, this is 512 QUADWORDS.
+>  * Never allocate memory or size structures based on the value of this
+>  * constant.
+>  */
+> >  #define __SVE_VQ_MAX		512
+
+I think the fact that this vector length is more than an order of
+magnitude more than is architecturally supported at present needs to be
+conveyed, it's perfectly reasonable for people to not want to do dynamic
+allocation/sizing of buffers in some applications and the above sounds
+more like stylistic guidance about using dynamic sizing to improve
+memory usage.
+
+> Though comments might be better placed alongsize SVE_VQ_MAX at al., in
+> ptrace.h and sigcontext.h rather than here.  The leading __ should at
+> least be a hint that __SVE_VQ_MAX shouldn't be used directly by
+> anyone...
+
+Yeah, the multiple layers of indirection aren't helpful here.  We
+probably need to comment it in both places TBH.
+
+--ELNIFKK91+/JknQx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXDfDQACgkQJNaLcl1U
+h9DuvQf+P75jQ/P+a7LiKl/CWZZ9nAD7CK6hy2bySrvt3Cc6OPiHNPErFwrAEApn
+5uJ5WxuYCKGm5+FlxXUUMXffizaKRe2J4P3kyoBl1gKyODDAY/Iz8HrsOuLZr0YB
+pU5datvOip8ppZ+P1CcKU3+xn3moyENmTdDW0b3wxOR8d5pGoTacE4MPt526Nh3X
+1Jh9/fIjFhWq3RN6wbZ6XdWMaowcvol59tphB/lhubOO04yoAm6q8MhZUfXB9h1X
+1KEaw/4AbLW1OJOqEjdpOp5GJFpwhyq8m5V3hjK377TezXhlreytXc0SXhS0p4Ln
+yPt4cehy5zjHbNi8//mQVmWN35YHEg==
+=B1CU
+-----END PGP SIGNATURE-----
+
+--ELNIFKK91+/JknQx--
