@@ -1,89 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3244E1CD30
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 06:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B541CF90;
+	Wed,  7 Feb 2024 06:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707288204; cv=none; b=HabAsfnMv5wwJ6NkLyM1oElIg0wev3SCcBpEGB4Kaa7G/5i2X5q1Pwf6RJ6xC2FXQVvGClciXBZB5uwK7pllo5eDZTwGAyP9nM9RSWtmWUGP5UBfWVMWO6ilrU3ybxHIjwO1IX0gu+7+efFkS12wqNPtjUQ+F17dYyIcBe12PEs=
+	t=1707288224; cv=none; b=Ri5VXsagrk0a65Oqj5xkNKDFpJpu4x1eK3YQNEauK7nW5toQJl8yHUqiA3oRFSZ84e2QAgXxkfv6quSaTFH95W3po0wFBpp/x88M9D46/BkPy66DaIoCr2gxWV9vypOAxBXNTyR6bDc33HtCMLu0Cxx2VwVS+ZHfJFcMX8IIwMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707288204; c=relaxed/simple;
-	bh=Q+Syr8uWq4Bq9a8aaQxkFdYoFqJmdNHkFFakLvaozYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o4foKb/KAA4EaL40H1LhTNtD7HKGRQnjDirE2jtP4Eyc+qe9T+qNdWOm8MmjiJ2LLAter7b+fGcX5vDDPiTZnVWJ5GdhIMitdO8wFvzEmtkOOhgTHQoIKW2aj4By+63YPoCtrLORfhppYoxMC31gl/UqgNV1VHcBii06i79WaAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4fEAf4k; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707288224; c=relaxed/simple;
+	bh=A2Koex6RA/Pnpr/3Zxy4fTLH4zSUL1TGk+vIg6Cqh1Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OdVKmFCDJx/saW0gu6Pq/7hWNrCSGL2TqaG+xff9yBfbgmqnfeIVY0WTL9429lffAS67M978FXreuQ5V2KntdOq35ELffzOIfN0Ly2CcVZEW8Zp6MEzI63SDI5zffHVbdXUoXW5RyA9wv70aWJbXtnKM4d5qHQQzAgXhnzv/ZKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BqVpIOAa; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4fEAf4k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707288201; x=1738824201;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q+Syr8uWq4Bq9a8aaQxkFdYoFqJmdNHkFFakLvaozYw=;
-  b=M4fEAf4kyR+Pfu9ebnsxUzBJPj71qsJJuZsny8esWqFoVm4Ind1NV4t+
-   Rz0hYyvJnt7XDQUY28ZG8jWhvwyZo4IAbrvUFXK7+bWZ7QUxynv9zWFQg
-   iJui0u7FTrejzRDnk2Nbv404sGCIuf5x5VQ7vuLE8H24x50YgicyWCrYm
-   AhjmD/CnK6rn3w8+XWxko6NW3nD+QXW4wTY/nKjq82YIQdgtEdK/bOOiQ
-   3bIeAdo3DbrUWVwdTP+rFaDzisIkP7XtSdLhghdDI9/o8PNzcAvTpvius
-   /X1jcfNnQjlEAOKkOyppUlGBsZaE/AFUfVqw4Wx7KbCHw/7/jg5wysYpB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="4735683"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="4735683"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 22:43:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="824414451"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="824414451"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 22:43:18 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id A52A611F89A;
-	Wed,  7 Feb 2024 08:43:15 +0200 (EET)
-Date: Wed, 7 Feb 2024 06:43:15 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Wentong Wu <wentong.wu@intel.com>
-Cc: gregkh@linuxfoundation.org, tomas.winkler@intel.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mei: Add Meteor Lake support for IVSC device
-Message-ID: <ZcMmg1f8975whpno@kekkonen.localdomain>
-References: <20240207004304.31862-1-wentong.wu@intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BqVpIOAa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707288216;
+	bh=A2Koex6RA/Pnpr/3Zxy4fTLH4zSUL1TGk+vIg6Cqh1Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BqVpIOAaQXPuUL3DeSNCsgpCJCi/TzAqROL98jFRr0oHyIilvynJxxKXWtkhou7FU
+	 BeA/Xdhli16LJvEQ49XlrjWC5T/iBZ6W+kRBgc2XQsjMarI4kBWuTye5orvu5zzvMV
+	 GDeU8RX3RnpkRUhs0Nx6+I8w+Vv7LXor09Z5guvflJR/JrZBh5A6TRuAGDoQXT2OsF
+	 ORZvzA0nFPWQ/RWOEzV5lFe8l+GjFxD4+9skeuTe6hy/CK+vmK4AT9ZiW34IvNbf5j
+	 t4EU808xGX+mIsjPxVPr29dizixel/w2wMilmgVqchJarPuFr5Ercrd/nzOn0OcuOS
+	 IKKOfvFGlT3Nw==
+Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ehristev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2FCB73780C22;
+	Wed,  7 Feb 2024 06:43:32 +0000 (UTC)
+From: Eugen Hristev <eugen.hristev@collabora.com>
+To: tytso@mit.edu,
+	jaegeuk@kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Cc: chao@kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	eugen.hristev@collabora.com
+Subject: [RESEND PATCH v9 0/2] Minor cleanup for case insensitive path
+Date: Wed,  7 Feb 2024 08:43:00 +0200
+Message-Id: <20240207064302.221060-1-eugen.hristev@collabora.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240207004304.31862-1-wentong.wu@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 07, 2024 at 08:43:04AM +0800, Wentong Wu wrote:
-> Add IVSC device support on Meteor Lake platform.
-> 
-> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+Hello,
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+I am trying to respin the series here :
+https://www.spinics.net/lists/linux-ext4/msg85081.html
 
-> ---
->  drivers/misc/mei/vsc-tp.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-> index 6f4a4be6ccb5..55f7db490d3b 100644
-> --- a/drivers/misc/mei/vsc-tp.c
-> +++ b/drivers/misc/mei/vsc-tp.c
-> @@ -535,6 +535,7 @@ static const struct acpi_device_id vsc_tp_acpi_ids[] = {
->  	{ "INTC1009" }, /* Raptor Lake */
->  	{ "INTC1058" }, /* Tiger Lake */
->  	{ "INTC1094" }, /* Alder Lake */
-> +	{ "INTC10D0" }, /* Meteor Lake */
->  	{}
->  };
->  MODULE_DEVICE_TABLE(acpi, vsc_tp_acpi_ids);
+To make it easier to apply I split it into smaller chunks which address
+one single thing.
+This series will just convert to qstr the storage of the filename
+currently using fscrypt_str .
+
+Gabriel Krisman Bertazi (2):
+  ext4: Simplify the handling of cached insensitive names
+  f2fs: Simplify the handling of cached insensitive names
+
+ fs/ext4/ext4.h     |  2 +-
+ fs/ext4/namei.c    | 23 ++++++++++----------
+ fs/f2fs/dir.c      | 53 ++++++++++++++++++++++++++--------------------
+ fs/f2fs/f2fs.h     | 16 +++++++++++++-
+ fs/f2fs/recovery.c |  5 +----
+ 5 files changed, 58 insertions(+), 41 deletions(-)
 
 -- 
-Sakari Ailus
+2.34.1
+
