@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4A77C08C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 13:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E5879DB5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 13:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707313283; cv=none; b=ePSyF8JRSfQkQjo+27qk0w/KqJUuAXkcg/2QyDtLFkJ+wrLCUhgB1GhYrHW1JguwZmIww95oj6SpivIBDxzSA5e6DA6/sjj9jF4lgr5dW7WKO3JE/6JvUd/nHR9sZE8OvwQ/ZtW3+bmmICsl521dTYO5z8hMK34yhTFim9TM57A=
+	t=1707313284; cv=none; b=IIzg8Tm5ng1Uh/BxbwlLZXwjGLGIN2QJ4uajTaOozttR3fwZfuDOGJzbBg7gDV/upJxtoExyXSR9fEQeLFOVWMH8zsFT3BXpSREHSSfwX5gZwwByzo142Qez5vdWsRsAJTrjXtSanwe4dr0An42K0baOfGaitqZA9zDNnzvxf18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707313283; c=relaxed/simple;
-	bh=Bn8TIXFNy3nrR6EMlKeOogQoD3nNIaQmPzKytNHWvfg=;
+	s=arc-20240116; t=1707313284; c=relaxed/simple;
+	bh=rCdB1Pa4Tv7uSe3TR4FRXyAZD0vHyhOKHq0ldmSv8k8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lQbX/6WSTR4KHKb5BzR+eRq1oeT/cReYJNjVmCnGiAdiyFvbdL8iB9ZxGnEn/JxUnOUQnpt0k/w4fpzsu5LKCAcZeea1445zPAn7UlywwiYAEPDidL64cNDGqjcBjhUrf/FAj3KvJmL456n7lxBNUPA3WPRPJubcLNaasEa3Z3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MJVAYK/8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VeaaC2Sa; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=F/B3krhaaehSr6dtC2Dk3qH15OiAqyUNcvXv10tlaqkR6fLpiMtle1aCvatBwOYZmyNp4yBu2/uZijreTNj0ajSBjoHAO2/4fPPHWzdxSgFeYDdUcSStV4vUe5JWAOHimmzpWOApK7KJqiu3WmpjU/CoKyArZQ2BYKNiI3QzsPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zayr+TMU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KEnRLdtz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MJVAYK/8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VeaaC2Sa"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zayr+TMU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KEnRLdtz"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707313277;
+	s=2020; t=1707313278;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8cOMblqM1UqBk6IDY0+aDtpsYhEPmwBpENMB0j8kk28=;
-	b=MJVAYK/8B8rWBhPLduCIXQaBtKp9vcnlN9io5mD5r2rJxwFngbFDMi/th0WOB1+9Vz/hpa
-	IVmVjklkR8lOyIRxbqBZ+sShA2MavoAVu3yb4sJv9HVG9rGQIIVYxVW1Fs3Y9lOIaOJ+dp
-	4ojca3GCz4a755r4SevT3vT9Xj96UcVWOLq9kDCXjnXYY5qI/dQrFsyfn+WxFEpHUKSEDi
-	nkEFwjdnH18wwJvtBKeJU3dXBXtACBjlBpvFJVjvXmlsDV7wAJlJSHJikzWI9ROv3padVj
-	HqBN+zcZ7KXYoQQHksqEbn+xx07Z/+Frfcr7SdRYICmDKNI5UOnhv9DfAh+ucg==
+	bh=3tOC9aXvX0QnLyHAZSaZBIUXi3xE4WWmBQ6mB2/+B2Y=;
+	b=Zayr+TMUy9c3T9cpC6eEj8Guy8iVZTBL0nRC/wsEBkxwClxISj9Y0K7hevXpYyXb9mSEfs
+	fEa5b1XLAks7cSplbX1mKiPG9xRCkrGQhUrIa8vWkMlaCOedn43B018fDlF3Q3Kgwl6sWw
+	yrghjQydHqV7B2GXQ05yMYMGS93JIOCOrxQiIWT+2xLgjVdqJ7NP4fJ9au+F/WrCZ6k86I
+	rrrj4G138i+eKrdzhWfsBFrbyNe4PI8AMukgM5T0yYpyoSCpQm7KOgqz2A13ZzOHMyrCpB
+	8LzxmahywVV2coZTzWbZsW8Y7ARLSAY4/wpbrddoIr23kY4QZ4QGO+X3K0Dwxw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707313277;
+	s=2020e; t=1707313278;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8cOMblqM1UqBk6IDY0+aDtpsYhEPmwBpENMB0j8kk28=;
-	b=VeaaC2SaSkOlJC7NiQORzUvNwmblPlIYafvBsfBZW5GZJyphx67eE865Bel0XHeYayVX0F
-	wSO8A8uUFhEKEzAQ==
+	bh=3tOC9aXvX0QnLyHAZSaZBIUXi3xE4WWmBQ6mB2/+B2Y=;
+	b=KEnRLdtzeybX5PwNYbgVrbGJe7LkxghZpjkKSvisgJ7mF5EhQRLRsx9T2aUMrRL7OkBTMU
+	hd61myZeEmQTN/Ag==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v4 10/14] printk: ringbuffer: Skip non-finalized records in panic
-Date: Wed,  7 Feb 2024 14:46:59 +0106
-Message-Id: <20240207134103.1357162-11-john.ogness@linutronix.de>
+Subject: [PATCH printk v4 14/14] dump_stack: Do not get cpu_sync for panic CPU
+Date: Wed,  7 Feb 2024 14:47:03 +0106
+Message-Id: <20240207134103.1357162-15-john.ogness@linutronix.de>
 In-Reply-To: <20240207134103.1357162-1-john.ogness@linutronix.de>
 References: <20240207134103.1357162-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,69 +57,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Normally a reader will stop once reaching a non-finalized
-record. However, when a panic happens, writers from other CPUs
-(or an interrupted context on the panic CPU) may have been
-writing a record and were unable to finalize it. The panic CPU
-will reserve/commit/finalize its panic records, but these will
-be located after the non-finalized records. This results in
-panic() not flushing the panic messages.
+dump_stack() is called in panic(). If for some reason another CPU
+is holding the printk_cpu_sync and is unable to release it, the
+panic CPU will be unable to continue and print the stacktrace.
 
-Extend _prb_read_valid() to skip over non-finalized records if
-on the panic CPU.
+Since non-panic CPUs are not allowed to store new printk messages
+anyway, there is no need to synchronize the stacktrace output in
+a panic situation.
 
-Fixes: 896fbe20b4e2 ("printk: use the lockless ringbuffer")
+For the panic CPU, do not get the printk_cpu_sync because it is
+not needed and avoids a potential deadlock scenario in panic().
+
+Link: https://lore.kernel.org/lkml/ZcIGKU8sxti38Kok@alley
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/printk_ringbuffer.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ include/linux/printk.h   |  2 ++
+ kernel/printk/internal.h |  1 -
+ lib/dump_stack.c         | 16 +++++++++++++---
+ 3 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 24b484c221e8..88e8f3a61922 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -2099,6 +2099,10 @@ u64 prb_next_reserve_seq(struct printk_ringbuffer *rb)
-  *
-  * On failure @seq is updated to a record that is not yet available to the
-  * reader, but it will be the next record available to the reader.
-+ *
-+ * Note: When the current CPU is in panic, this function will skip over any
-+ *       non-existent/non-finalized records in order to allow the panic CPU
-+ *       to print any and all records that have been finalized.
-  */
- static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			    struct printk_record *r, unsigned int *line_count)
-@@ -2121,8 +2125,28 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			(*seq)++;
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 8ef499ab3c1e..955e31860095 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -273,6 +273,8 @@ static inline void printk_trigger_flush(void)
+ }
+ #endif
  
- 		} else {
--			/* Non-existent/non-finalized record. Must stop. */
--			return false;
-+			/*
-+			 * Non-existent/non-finalized record. Must stop.
-+			 *
-+			 * For panic situations it cannot be expected that
-+			 * non-finalized records will become finalized. But
-+			 * there may be other finalized records beyond that
-+			 * need to be printed for a panic situation. If this
-+			 * is the panic CPU, skip this
-+			 * non-existent/non-finalized record unless it is
-+			 * at or beyond the head, in which case it is not
-+			 * possible to continue.
-+			 *
-+			 * Note that new messages printed on panic CPU are
-+			 * finalized when we are here. The only exception
-+			 * might be the last message without trailing newline.
-+			 * But it would have the sequence number returned
-+			 * by "prb_next_reserve_seq() - 1".
-+			 */
-+			if (this_cpu_in_panic() && ((*seq + 1) < prb_next_reserve_seq(rb)))
-+				(*seq)++;
-+			else
-+				return false;
- 		}
- 	}
++bool this_cpu_in_panic(void);
++
+ #ifdef CONFIG_SMP
+ extern int __printk_cpu_sync_try_get(void);
+ extern void __printk_cpu_sync_wait(void);
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index ac2d9750e5f8..6c2afee5ef62 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -130,7 +130,6 @@ struct printk_message {
+ };
+ 
+ bool other_cpu_in_panic(void);
+-bool this_cpu_in_panic(void);
+ bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
+ 			     bool is_extended, bool may_supress);
+ 
+diff --git a/lib/dump_stack.c b/lib/dump_stack.c
+index 83471e81501a..222c6d6c8281 100644
+--- a/lib/dump_stack.c
++++ b/lib/dump_stack.c
+@@ -96,15 +96,25 @@ static void __dump_stack(const char *log_lvl)
+  */
+ asmlinkage __visible void dump_stack_lvl(const char *log_lvl)
+ {
++	bool in_panic = this_cpu_in_panic();
+ 	unsigned long flags;
+ 
+ 	/*
+ 	 * Permit this cpu to perform nested stack dumps while serialising
+-	 * against other CPUs
++	 * against other CPUs, unless this CPU is in panic.
++	 *
++	 * When in panic, non-panic CPUs are not permitted to store new
++	 * printk messages so there is no need to synchronize the output.
++	 * This avoids potential deadlock in panic() if another CPU is
++	 * holding and unable to release the printk_cpu_sync.
+ 	 */
+-	printk_cpu_sync_get_irqsave(flags);
++	if (!in_panic)
++		printk_cpu_sync_get_irqsave(flags);
++
+ 	__dump_stack(log_lvl);
+-	printk_cpu_sync_put_irqrestore(flags);
++
++	if (!in_panic)
++		printk_cpu_sync_put_irqrestore(flags);
+ }
+ EXPORT_SYMBOL(dump_stack_lvl);
  
 -- 
 2.39.2
