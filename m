@@ -1,64 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D6925601;
-	Wed,  7 Feb 2024 11:09:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0145C19BA5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707304170; cv=none; b=ICSCClr7k0wRfvnci9qab8ceDHfrR5v9y4zpLBlsvXfNWv0/3UIcLmEV0b5aiw5rD4/FhRRjvLnyjytzpbGoj5CFIxyAXsWN4h83ivRDMUDCnL8dFTearTj46Xvt/UTP5aQWaPOMxsPMm0YU1xODtEfNA/kXeO+OsjRGistjsjA=
+	t=1707304379; cv=none; b=ta2pBt3YRo5aT4e6Uc05KxpU2XBQXx82VN3MUL9lGHjUmoY/3Q015idf98PZ722qlef9A2VNoPIsr7t5vnvRWUmUw0COrHl3uAvWZB1wFQh+JsX1tn4Hh1AkOvKvDwJ88ctqsatAtpfu26itR2FpB3qn/JJnWqsxhrHgRSw8M8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707304170; c=relaxed/simple;
-	bh=3d920/gg0NJob19M4Cyq7mli11h+3maiACOkvHgQw6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ktjqs3QwqvYHsmw926cvaPkqRobGBO/LjcdHF/5GimeJ1NMw5KV43ojaQq94v4V58JQT9RqoaoYtwj9ncYMboV7IPlwWPjcs00CMuN64Yq77XBsikH5uUsmHcTSP3HW/5CaYpnrsof8x0q04RONyG92sujr8hX2j114Qm8U2mM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 945EEC43390;
-	Wed,  7 Feb 2024 11:09:28 +0000 (UTC)
-Date: Wed, 7 Feb 2024 06:09:23 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mete Durlu <meted@linux.ibm.com>
-Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
- tracer_tracing_is_on()
-Message-ID: <20240207060923.182ecb55@rorschach.local.home>
-In-Reply-To: <yt9deddovn3w.fsf@linux.ibm.com>
-References: <20240205065340.2848065-1-svens@linux.ibm.com>
-	<20240205075504.1b55f29c@rorschach.local.home>
-	<yt9djznj3vbl.fsf@linux.ibm.com>
-	<20240205092353.523cc1ef@rorschach.local.home>
-	<yt9d34u63xxz.fsf@linux.ibm.com>
-	<yt9dsf262d2n.fsf@linux.ibm.com>
-	<20240206060113.39c0f5bc@rorschach.local.home>
-	<yt9deddovn3w.fsf@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707304379; c=relaxed/simple;
+	bh=Wdwlj8End667TasRIp745gWvCi1r+Z+ho/QV9RjE1iM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VlWy7tQW+yUV05WcXm4gOG5EBLYT3OxE0Ql+Mwx2wCE6/NPq27k51nA3pun85KXV00xbySP7q8/93WM/sbzC2xFiMbSmbzRR+iAOGc14cc8b4WCfcG7gbqiiBz3WyGg4oX/gmLy1A/e/qyqVvvkLuXKVjO4WTaF8XVii36g4Oy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BR7gVvcB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BR7gVvcB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D42EC433F1;
+	Wed,  7 Feb 2024 11:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707304378;
+	bh=Wdwlj8End667TasRIp745gWvCi1r+Z+ho/QV9RjE1iM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BR7gVvcBwGGbvbZfh7xizzOqoGFPTI0JQWsV7ndm9o6m3Ea8vwZVbv/9ygor6Vx4W
+	 qZU5i/hgHxS9F7vgiKb3m/YM9C/JQbILhIG58u0xr8GwjEynXC2o3FUpkX47vTzBi8
+	 RT9oYPYnBzc0lcB6QUQLHD0HHuF3CLlRn8+0pMlp4pHpTrSzJvCK8c833CQRRJocLl
+	 GFhSagN7yVuG0QqORcjvg+FhmUtwd9Sj+LddWIN4v+MloroBcWy7FADQHVWahafU0g
+	 G3+NbfE6o/szBGOVSMw+nHdIA2eEeqzrlm5STgTFp38hcoaDdLcmo9CWKbu4rEa89X
+	 xaS/xIlnSDqzg==
+Date: Wed, 7 Feb 2024 11:12:52 +0000
+From: Will Deacon <will@kernel.org>
+To: Nanyong Sun <sunnanyong@huawei.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, mike.kravetz@oracle.com,
+	muchun.song@linux.dev, akpm@linux-foundation.org,
+	anshuman.khandual@arm.com, willy@infradead.org,
+	wangkefeng.wang@huawei.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
+Message-ID: <20240207111252.GA22167@willie-the-truck>
+References: <20240113094436.2506396-1-sunnanyong@huawei.com>
+ <ZbKjHHeEdFYY1xR5@arm.com>
+ <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, 07 Feb 2024 06:50:59 +0100
-Sven Schnelle <svens@linux.ibm.com> wrote:
+On Sat, Jan 27, 2024 at 01:04:15PM +0800, Nanyong Sun wrote:
+> 
+> On 2024/1/26 2:06, Catalin Marinas wrote:
+> > On Sat, Jan 13, 2024 at 05:44:33PM +0800, Nanyong Sun wrote:
+> > > HVO was previously disabled on arm64 [1] due to the lack of necessary
+> > > BBM(break-before-make) logic when changing page tables.
+> > > This set of patches fix this by adding necessary BBM sequence when
+> > > changing page table, and supporting vmemmap page fault handling to
+> > > fixup kernel address translation fault if vmemmap is concurrently accessed.
+> > I'm not keen on this approach. I'm not even sure it's safe. In the
+> > second patch, you take the init_mm.page_table_lock on the fault path but
+> > are we sure this is unlocked when the fault was taken?
+> I think this situation is impossible. In the implementation of the second
+> patch, when the page table is being corrupted
+> (the time window when a page fault may occur), vmemmap_update_pte() already
+> holds the init_mm.page_table_lock,
+> and unlock it until page table update is done.Another thread could not hold
+> the init_mm.page_table_lock and
+> also trigger a page fault at the same time.
+> If I have missed any points in my thinking, please correct me. Thank you.
 
-> Hi Steven,
+It still strikes me as incredibly fragile to handle the fault and trying
+to reason about all the users of 'struct page' is impossible. For example,
+can the fault happen from irq context?
 
-> Not sure whether that is enough, have to test. However, it's not really
-> a fix, it would just require a bit more load and the test would fail
-> again. The fundamental problem is that even after disabling tracing
-> there might be some tracing line added due to the lockless nature of
-> the ringbuffer. This might then replace some existing cmdline entry.
-> So maybe we should change the test to ignore the program name when
-> calculating the checksums.
+If we want to optimise the vmemmap mapping for arm64, I think we need to
+consider approaches which avoid the possibility of the fault altogether.
+It's more complicated to implement, but I think it would be a lot more
+robust.
 
-Have you figured out what caused the cmdlines to change when tracing is
-off. It shouldn't be updated even with just 128 entries.
+Andrew -- please can you drop these from -next?
 
-I'm also looking into a way to keep more of a LRU command lines around,
-but nothing concrete yet.
+Thanks,
 
--- Steve
+Will
