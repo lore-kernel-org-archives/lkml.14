@@ -1,270 +1,193 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B5225CC
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 09:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF63023745;
+	Wed,  7 Feb 2024 09:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707299483; cv=none; b=qCR45h2vWpzPoXmp1ImnrwG4o4EJGkWXJBmNFdxIMxEWgPQxwzDZrWi+xQHLKri0Rqwd+9aAhXSCCJv/CD7DY8n8ZurOcqpmRN7gSikQ8FIyH7+DMuBkyuq0f264W3PqSmWmzKUPWFKNznYRayvzCjrOpTLsfaLGA/651hWWBCM=
+	t=1707299504; cv=none; b=Rp9VLBch3TO/Fbp5eEVLTB1cjUWue6oONTf7E8YTdaOFPqPGFtnJJa6ZUN5xRcIX4n3WNJJKW/g2ZOPg8wFzUF8CimT0VNz9clVCfCCK7yeOxDWuzuPZJii5oksJGMx1L675mjVmCeQaOsDXd1hgnMqmIk0bfjthCLmrYUPeVq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707299483; c=relaxed/simple;
-	bh=+wLfjivlnDC/nRMpk/ta4RN6xFv0zswj9bBhqdzUxdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IYO91y3XwCRCMlCLuTIO4BVc/NIpDUT07Y6nOGCFfm3VOpJa8dozlXsnnF9OyVWrrOOibaNKeIliU6LaQzoo3M7C3oS452JhKetsyGObij9CU0kWAs0JYSgSPab8g+YEoEp86ARCFWYa5gs6vXrRSuPZ9YcELe8NS0N7o4zqglA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=PgECd6Mf; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1707299504; c=relaxed/simple;
+	bh=nxBqeWL0d1U1qVe7h+N5GcZWZBAxhmQuqYyK6pjO2bQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bno/xNcYhIOgonSLYIhh+yQzvSdSLn+L46jWD5casKs+VMkcxPNC1czRqMwHsdWGJgapzLqlhhxzPizI8Pw3enCb1F0bXzBnXyDr1H3icGC+50RacepmHH5cx09iAQHR2YUiREUCW4jn99mDuUR9opZxWcCSK8ro5KRGvIcaa6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FBqN7qxN; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PgECd6Mf"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33b1c33b9c9so99964f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 01:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1707299480; x=1707904280; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EkQyZ0MI8wRFHDASNpaqF76TZwJQiavWYlONDY7LM2I=;
-        b=PgECd6MfriRo2Mudrjw1IiMFjLwHgEuwqhVLj7lzgEpWxSwzCbMYur3Miy4dRkDiIn
-         JUD80egbOIu1PAuL5qNBJgC4hBrIfH9gzPcxjiORIHjK5aa4Jds8EmjntMfFMSIAZ7Ja
-         ec4KeZoqA8PozGFVlin+lXC7tE99NThcscyiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707299480; x=1707904280;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EkQyZ0MI8wRFHDASNpaqF76TZwJQiavWYlONDY7LM2I=;
-        b=DgT+YlR80nthrvj6VB5s4YPy63vMsv4F0rcSlkayeiKk3RZqekiUBIpVQ7B+5vtyx9
-         0zKjPr3MjBdk6A5v9D7uGOmde1t7XR27LjKb8Al6FgismajP5IdYtmBEW44Lqzyaq594
-         biXaPeD8iWf3n2VuaHKiG7exdOywOcFyy84tvbXQ1AlPrQxlX1lIq/5eTYMzpHXqw0pZ
-         CWAl7dNc+4q7mC0hmt2aa7cZUirOkKFJUiaAXpewvDVvFwJ9jOpkHCfZRW8JwNjY/HyX
-         tX58c6vSNbD1GB13/oeaX8DS6eFVhckV8wb2V0MuhZokUVgLVdXeKx6rdW7FPwG8ZydX
-         Fwbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ9kChHuJwI50OFVaSgFXz2Ck1bOjPxoAmYIgLm6kkAwkAyIJtwcBIiw//1Oq+YKp/5DA2n85+Wyf67ot9h3GJySmcxcZyx8CR1XIU
-X-Gm-Message-State: AOJu0YwHgDunXgmrY14fziP85hofiX1OOXUFjx6et/aawcxU5z2m1DNU
-	2AVjsY8uEnznMAk4vUdXmPVREBdw84tkoF6Vkw3vET36XSF43gNE1Sb0agbkQmY=
-X-Google-Smtp-Source: AGHT+IHzZD0/QGe4QfxJf2FGQ+9awumjnvEMUAE5C8QxyXTwcil3ikG8lIlJkOybUxWfoeEKCUpSnQ==
-X-Received: by 2002:adf:e481:0:b0:33b:50e9:738 with SMTP id i1-20020adfe481000000b0033b50e90738mr326080wrm.7.1707299479636;
-        Wed, 07 Feb 2024 01:51:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUN+wH4FMpYY1KvrFGNMyc5TEF8rohsy3qqHObc/Mx0XKUvKZvceDJDWvcdR35GH3U42vZP3qkGdnM/yZfV7gWl+L1fyFhthC/1glV0IAzfr1E83jrD9Fy8wkbNVgKaen2KcXeWOE2rwSvY7FPUgv86bUJvTroJaLLwyXKgy66gpZTyG0w3VSgRHUDEQQcgDrQTrG3sfukcb6+VEgnMjQJxDjB6u7vkTF16ZdJiv5SD+mBW2rBHzq288HDIVnhGys3ht2RV6oeuVMzWUckWmbJEat7SVtRrht0oCHsymBhZOqlvFzEnZR25ZqXyX04q
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id a6-20020a056000100600b0033b3c03053esm1062568wrx.78.2024.02.07.01.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 01:51:19 -0800 (PST)
-Date: Wed, 7 Feb 2024 10:51:17 +0100
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Daniel van Vugt <daniel.van.vugt@canonical.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Helge Deller <deller@gmx.de>, Jani Nikula <jani.nikula@intel.com>,
-	Danilo Krummrich <dakr@redhat.com>, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] fbcon: Defer console takeover for splash screens
- to first switch
-Message-ID: <ZcNSleQOrBtSn3uM@phenom.ffwll.local>
-Mail-Followup-To: Daniel van Vugt <daniel.van.vugt@canonical.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Helge Deller <deller@gmx.de>, Jani Nikula <jani.nikula@intel.com>,
-	Danilo Krummrich <dakr@redhat.com>, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <f037df4a-8a97-4fcd-b196-43f484b63d8d@amd.com>
- <20240206101100.25536-1-daniel.van.vugt@canonical.com>
- <20240206101100.25536-2-daniel.van.vugt@canonical.com>
- <ZcJAVSyH3gRYx3EG@phenom.ffwll.local>
- <e4fc61ae-97f5-4fa1-bfed-1312466a2a22@amd.com>
- <26893900-2d0d-4624-94f1-c4aa88386e9c@canonical.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FBqN7qxN"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4179oqUD014863;
+	Wed, 7 Feb 2024 03:50:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707299452;
+	bh=nxBqeWL0d1U1qVe7h+N5GcZWZBAxhmQuqYyK6pjO2bQ=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=FBqN7qxNgtUXypruSROzFl0cIEBMTPJyy/LpyyfykjW2X2YJLjAvD3TSgm0W813a2
+	 npjkBPis8AJVVnIQ9vjQfAsay9S3HPw1a+wcvWVCfEBzdqveFLBCByHan9JdiJSwKY
+	 dXNBQPKr/ePE0smKIflhpgKEox1wFqgNXJdHk1pQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4179oqVQ015094
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 Feb 2024 03:50:52 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ Feb 2024 03:50:52 -0600
+Received: from DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c]) by
+ DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c%18]) with mapi id
+ 15.01.2507.023; Wed, 7 Feb 2024 03:50:52 -0600
+From: "Ding, Shenghao" <shenghao-ding@ti.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: "Lu, Kevin" <kevin-lu@ti.com>, "Xu, Baojun" <baojun.xu@ti.com>,
+        "P O,
+ Vijeth" <v-po@ti.com>, "Navada Kanyana, Mukund" <navada@ti.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "McPherson, Jeff" <j-mcpherson@ti.com>,
+        "pierre-louis.bossart@linux.intel.com"
+	<pierre-louis.bossart@linux.intel.com>,
+        "13916275206@139.com"
+	<13916275206@139.com>,
+        "Chawla, Mohit" <mohit.chawla@ti.com>, "soyer@irl.hu"
+	<soyer@irl.hu>,
+        "Huang, Jonathan" <jkhuang3@ti.com>, "tiwai@suse.de"
+	<tiwai@suse.de>,
+        "Djuandi, Peter" <pdjuandi@ti.com>,
+        "Agrawal, Manisha"
+	<manisha.agrawal@ti.com>,
+        "Hari, Raj" <s-hari@ti.com>, "Yashar, Avi"
+	<aviel@ti.com>,
+        "Nagalla, Hari" <hnagalla@ti.com>,
+        "Bajjuri, Praneeth"
+	<praneeth@ti.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+        "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v3 4/4] ASoc: dt-bindings: PCM6240: Add
+ initial DT binding
+Thread-Topic: [EXTERNAL] Re: [PATCH v3 4/4] ASoc: dt-bindings: PCM6240: Add
+ initial DT binding
+Thread-Index: AQHaVk3kv2C9l+KpeUSliV0WealeY7D9v3qAgADk+SCAAAT5YA==
+Date: Wed, 7 Feb 2024 09:50:51 +0000
+Message-ID: <0a1f20ae254746b1adbfbdf7b4027518@ti.com>
+References: <20240203030504.1724-1-shenghao-ding@ti.com>
+ <20240203030504.1724-4-shenghao-ding@ti.com>
+ <ac4b73f6-0c2c-4586-98d6-e97c575b3df7@linaro.org>
+ <8fe0b2d1990346efa056d6c2245412c3@ti.com>
+In-Reply-To: <8fe0b2d1990346efa056d6c2245412c3@ti.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26893900-2d0d-4624-94f1-c4aa88386e9c@canonical.com>
-X-Operating-System: Linux phenom 6.6.11-amd64 
 
-On Wed, Feb 07, 2024 at 10:03:10AM +0800, Daniel van Vugt wrote:
-> On 6/2/24 23:41, Mario Limonciello wrote:
-> > On 2/6/2024 08:21, Daniel Vetter wrote:
-> >> On Tue, Feb 06, 2024 at 06:10:51PM +0800, Daniel van Vugt wrote:
-> >>> Until now, deferred console takeover only meant defer until there is
-> >>> output. But that risks stepping on the toes of userspace splash screens,
-> >>> as console messages may appear before the splash screen. So check the
-> >>> command line for the expectation of userspace splash and if present then
-> >>> extend the deferral until after the first switch.
-> >>>
-> >>> V2: Added Kconfig option instead of hard coding "splash".
-> >>>
-> >>> Closes: https://bugs.launchpad.net/bugs/1970069
-> >>> Cc: Mario Limonciello <mario.limonciello@amd.com>
-> >>> Signed-off-by: Daniel van Vugt <daniel.van.vugt@canonical.com>
-> >>> ---
-> >>>   drivers/video/console/Kconfig    | 13 +++++++++++
-> >>>   drivers/video/fbdev/core/fbcon.c | 38 ++++++++++++++++++++++++++++++--
-> >>>   2 files changed, 49 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/video/console/Kconfig b/drivers/video/console/Kconfig
-> >>> index bc31db6ef7..a6e371bfb4 100644
-> >>> --- a/drivers/video/console/Kconfig
-> >>> +++ b/drivers/video/console/Kconfig
-> >>> @@ -138,6 +138,19 @@ config FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
-> >>>         by the firmware in place, rather then replacing the contents with a
-> >>>         black screen as soon as fbcon loads.
-> >>>   +config FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
-> >>> +    string "Framebuffer Console Deferred Takeover Condition"
-> >>> +    depends on FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
-> >>> +    default "splash"
-> >>> +    help
-> >>> +      If enabled this defers further the framebuffer console taking over
-> >>> +      until the first console switch has occurred. And even then only if
-> >>> +      text has been output, and only if the specified parameter is found
-> >>> +      on the command line. This ensures fbcon does not interrupt userspace
-> >>> +      splash screens such as Plymouth which may be yet to start rendering
-> >>> +      at the time of the first console output. "splash" is the simplest
-> >>> +      distro-agnostic condition for this that Plymouth checks for.
-> >>
-> >> Hm this seems a bit strange since a lot of complexity that no one needs,
-> >> also my impression is that it's rather distro specific how you want this
-> >> to work. So why not just a Kconfig option that lets you choose how much
-> >> you want to delay fbcon setup, with the following options:
-> >>
-> >> - no delay at all
-> >> - dely until first output from the console (which then works for distros
-> >>    which set a log-level to suppress unwanted stuff)
-> >> - delay until first vt-switch. In that case I don't think we also need to
-> >>    delay for first output, since vt switch usually means you'll get first
-> >>    output right away (if it's a vt terminal) or you switch to a different
-> >>    graphical console (which will keep fbcon fully suppressed on the drm
-> >>    side).
-> >>
-> 
-> I had similar thoughts, and had prototyped some of this already. But in the end
-> it felt like extra complexity there was no demand for.
-
-For me this one is a bit too complex, since if you enable the vt switch
-delay you also get the output delay on top. That seems one too much and I
-can't come up with a use-case where you actually want that. So just a
-choice of one or the other or none feels cleaner.
-
-> If you would like to specify the preferred Kconfig design then I can implement
-> it. Though I don't think there is an enumeration type. It could also be a
-> runtime enumeration (deferred_takeover) controlled by fbcon=something.
-
-There's a choice in Kconfig, see e.g. kernel/Kconfig.hz for an example.
-
-> > IIUC there is an "automatic" VT switch that happens with Ubuntu GRUB + Ubuntu
-> > kernels.
-> > 
-> > Why?
-> > 
-> > Couldn't this also be suppressed by just not doing that?
-> 
-> I have not seen any automatic VT switches in debugging but now that you mention
-> it I was probably only debugging on drm-misc-next and not an Ubuntu kernel.
-
-Hm but I don't see how the output delay would paper over a race (if there
-is one) reliable for this case? If you do vt switch for boot splash or
-login screen and don't yet have drm opened for display or something like
-that, then fbcon can sneak in anyway ...
-
-Cheers, Sima
-> 
-> - Daniel
-> 
-> > 
-> >> I think you could even reuse the existing
-> >> CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER for this, and then just
-> >> compile-time select which kind of notifier to register (well plus the
-> >> check for "splash" on the cmdline for the vt switch one I guess).
-> >>
-> >> Thoughts?
-> >>
-> >> Cheers, Sima
-> >>
-> >>
-> >>> +
-> >>>   config STI_CONSOLE
-> >>>       bool "STI text console"
-> >>>       depends on PARISC && HAS_IOMEM
-> >>> diff --git a/drivers/video/fbdev/core/fbcon.c
-> >>> b/drivers/video/fbdev/core/fbcon.c
-> >>> index 63af6ab034..98155d2256 100644
-> >>> --- a/drivers/video/fbdev/core/fbcon.c
-> >>> +++ b/drivers/video/fbdev/core/fbcon.c
-> >>> @@ -76,6 +76,7 @@
-> >>>   #include <linux/crc32.h> /* For counting font checksums */
-> >>>   #include <linux/uaccess.h>
-> >>>   #include <asm/irq.h>
-> >>> +#include <asm/cmdline.h>
-> >>>     #include "fbcon.h"
-> >>>   #include "fb_internal.h"
-> >>> @@ -3358,6 +3359,26 @@ static int fbcon_output_notifier(struct
-> >>> notifier_block *nb,
-> >>>         return NOTIFY_OK;
-> >>>   }
-> >>> +
-> >>> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
-> >>> +static int initial_console;
-> >>> +static struct notifier_block fbcon_switch_nb;
-> >>> +
-> >>> +static int fbcon_switch_notifier(struct notifier_block *nb,
-> >>> +                 unsigned long action, void *data)
-> >>> +{
-> >>> +    struct vc_data *vc = data;
-> >>> +
-> >>> +    WARN_CONSOLE_UNLOCKED();
-> >>> +
-> >>> +    if (vc->vc_num != initial_console) {
-> >>> +        dummycon_unregister_switch_notifier(&fbcon_switch_nb);
-> >>> +        dummycon_register_output_notifier(&fbcon_output_nb);
-> >>> +    }
-> >>> +
-> >>> +    return NOTIFY_OK;
-> >>> +}
-> >>> +#endif
-> >>>   #endif
-> >>>     static void fbcon_start(void)
-> >>> @@ -3370,7 +3391,16 @@ static void fbcon_start(void)
-> >>>         if (deferred_takeover) {
-> >>>           fbcon_output_nb.notifier_call = fbcon_output_notifier;
-> >>> -        dummycon_register_output_notifier(&fbcon_output_nb);
-> >>> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
-> >>> +        if (cmdline_find_option_bool(boot_command_line,
-> >>> +              CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION)) {
-> >>> +            initial_console = fg_console;
-> >>> +            fbcon_switch_nb.notifier_call = fbcon_switch_notifier;
-> >>> +            dummycon_register_switch_notifier(&fbcon_switch_nb);
-> >>> +        } else
-> >>> +#endif
-> >>> +            dummycon_register_output_notifier(&fbcon_output_nb);
-> >>> +
-> >>>           return;
-> >>>       }
-> >>>   #endif
-> >>> @@ -3417,8 +3447,12 @@ void __exit fb_console_exit(void)
-> >>>   {
-> >>>   #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
-> >>>       console_lock();
-> >>> -    if (deferred_takeover)
-> >>> +    if (deferred_takeover) {
-> >>>           dummycon_unregister_output_notifier(&fbcon_output_nb);
-> >>> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER_CONDITION
-> >>> +        dummycon_unregister_switch_notifier(&fbcon_switch_nb);
-> >>> +#endif
-> >>> +    }
-> >>>       console_unlock();
-> >>>         cancel_work_sync(&fbcon_deferred_takeover_work);
-> >>> -- 
-> >>> 2.43.0
-> >>>
-> >>
-> > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGluZywgU2hlbmdoYW8g
+PHNoZW5naGFvLWRpbmdAdGkuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDcsIDIw
+MjQgNTo0OCBQTQ0KPiBUbzogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6eXN6dG9mLmtvemxvd3Nr
+aUBsaW5hcm8ub3JnPjsNCj4gYnJvb25pZUBrZXJuZWwub3JnOyBjb25vcitkdEBrZXJuZWwub3Jn
+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBhbmRy
+aXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb207IGxpbnV4LQ0KPiBzb3VuZEB2Z2VyLmtlcm5l
+bC5vcmc7IGxpYW0uci5naXJkd29vZEBpbnRlbC5jb207IGxnaXJkd29vZEBnbWFpbC5jb207DQo+
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IEx1LCBLZXZpbiA8a2V2aW4tbHVA
+dGkuY29tPjsgWHUsIEJhb2p1biA8YmFvanVuLnh1QHRpLmNvbT47IFAgTywgVmlqZXRoDQo+IDx2
+LXBvQHRpLmNvbT47IE5hdmFkYSBLYW55YW5hLCBNdWt1bmQgPG5hdmFkYUB0aS5jb20+Ow0KPiBw
+ZXJleEBwZXJleC5jejsgTWNQaGVyc29uLCBKZWZmIDxqLW1jcGhlcnNvbkB0aS5jb20+OyBwaWVy
+cmUtDQo+IGxvdWlzLmJvc3NhcnRAbGludXguaW50ZWwuY29tOyAxMzkxNjI3NTIwNkAxMzkuY29t
+OyBDaGF3bGEsIE1vaGl0DQo+IDxtb2hpdC5jaGF3bGFAdGkuY29tPjsgc295ZXJAaXJsLmh1OyBI
+dWFuZywgSm9uYXRoYW4NCj4gPGpraHVhbmczQHRpLmNvbT47IHRpd2FpQHN1c2UuZGU7IERqdWFu
+ZGksIFBldGVyIDxwZGp1YW5kaUB0aS5jb20+Ow0KPiBBZ3Jhd2FsLCBNYW5pc2hhIDxtYW5pc2hh
+LmFncmF3YWxAdGkuY29tPjsgSGFyaSwgUmFqIDxzLWhhcmlAdGkuY29tPjsNCj4gWWFzaGFyLCBB
+dmkgPGF2aWVsQHRpLmNvbT47IE5hZ2FsbGEsIEhhcmkgPGhuYWdhbGxhQHRpLmNvbT47IEJhamp1
+cmksDQo+IFByYW5lZXRoIDxwcmFuZWV0aEB0aS5jb20+DQo+IFN1YmplY3Q6IFJFOiBbRVhURVJO
+QUxdIFJlOiBbUEFUQ0ggdjMgNC80XSBBU29jOiBkdC1iaW5kaW5nczogUENNNjI0MDoNCj4gQWRk
+IGluaXRpYWwgRFQgYmluZGluZw0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLSA+
+IEZyb206IEtyenlzenRvZiBLb3psb3dza2kgPGtyenlzenRvZi7igIoNCj4gPiBrb3psb3dza2lA
+4oCKbGluYXJvLuKAim9yZz4gPiBTZW50OiBUdWVzZGF5LCBGZWJydWFyeSA2LCAyMDI0IDk64oCK
+NTMgUE0gPg0KPiA+IFRvOiBEaW5nLCBTaGVuZ2hhbyA8c2hlbmdoYW8tZGluZ0DigIp0aS7igIpj
+b20+OyBicm9vbmllQOKAimtlcm5lbC7igIpvcmc7ID4NCj4gPiBjb25vcitkdEDigIprZXJuZWwu
+4oCKb3JnOw0KPiBaalFjbVFSWUZwZnB0QmFubmVyU3RhcnQNCj4gVGhpcyBtZXNzYWdlIHdhcyBz
+ZW50IGZyb20gb3V0c2lkZSBvZiBUZXhhcyBJbnN0cnVtZW50cy4NCj4gRG8gbm90IGNsaWNrIGxp
+bmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSByZWNvZ25pemUgdGhlIHNvdXJjZSBv
+Zg0KPiB0aGlzIGVtYWlsIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQo+IA0KPiBaalFj
+bVFSWUZwZnB0QmFubmVyRW5kDQo+IA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPiA+IEZyb206IEtyenlzenRvZiBLb3psb3dza2kgPGtyenlzenRvZi5rb3psb3dza2lAbGlu
+YXJvLm9yZz4NCj4gPiBTZW50OiBUdWVzZGF5LCBGZWJydWFyeSA2LCAyMDI0IDk6NTMgUE0NCj4g
+PiBUbzogRGluZywgU2hlbmdoYW8gPHNoZW5naGFvLWRpbmdAdGkuY29tPjsgYnJvb25pZUBrZXJu
+ZWwub3JnOw0KPiA+IGNvbm9yK2R0QGtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gYW5kcml5LnNoZXZjaGVua29AbGludXguaW50
+ZWwuY29tOyBsaW51eC1zb3VuZEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gbGlhbS5yLmdpcmR3b29k
+QGludGVsLmNvbTsgbGdpcmR3b29kQGdtYWlsLmNvbTsgbGludXgtDQo+ID4ga2VybmVsQHZnZXIu
+a2VybmVsLm9yZw0KPiA+IENjOiBMdSwgS2V2aW4gPGtldmluLWx1QHRpLmNvbT47IFh1LCBCYW9q
+dW4gPGJhb2p1bi54dUB0aS5jb20+OyBQIE8sDQo+ID4gVmlqZXRoIDx2LXBvQHRpLmNvbT47IE5h
+dmFkYSBLYW55YW5hLCBNdWt1bmQgPG5hdmFkYUB0aS5jb20+Ow0KPiA+IHBlcmV4QHBlcmV4LmN6
+OyBNY1BoZXJzb24sIEplZmYgPGotbWNwaGVyc29uQHRpLmNvbT47IHBpZXJyZS0NCj4gPiBsb3Vp
+cy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbTsgMTM5MTYyNzUyMDZAMTM5LmNvbTsgQ2hhd2xhLCBN
+b2hpdA0KPiA+IDxtb2hpdC5jaGF3bGFAdGkuY29tPjsgc295ZXJAaXJsLmh1OyBIdWFuZywgSm9u
+YXRoYW4NCj4gPiA8amtodWFuZzNAdGkuY29tPjsgdGl3YWlAc3VzZS5kZTsgRGp1YW5kaSwgUGV0
+ZXIgPHBkanVhbmRpQHRpLmNvbT47DQo+ID4gQWdyYXdhbCwgTWFuaXNoYSA8bWFuaXNoYS5hZ3Jh
+d2FsQHRpLmNvbT47IEhhcmksIFJhaiA8cy1oYXJpQHRpLmNvbT47DQo+ID4gWWFzaGFyLCBBdmkg
+PGF2aWVsQHRpLmNvbT47IE5hZ2FsbGEsIEhhcmkgPGhuYWdhbGxhQHRpLmNvbT47IEJhamp1cmks
+DQo+ID4gUHJhbmVldGggPHByYW5lZXRoQHRpLmNvbT4NCj4gPiBTdWJqZWN0OiBbRVhURVJOQUxd
+IFJlOiBbUEFUQ0ggdjMgNC80XSBBU29jOiBkdC1iaW5kaW5nczogUENNNjI0MDogQWRkDQo+ID4g
+aW5pdGlhbCBEVCBiaW5kaW5nDQo+ID4NCj4gPiBPbiAwMy8wMi8yMDI0IDA0OuKAijA1LCBTaGVu
+Z2hhbyBEaW5nIHdyb3RlOiA+ICsgPiArIHRpLHRhZDUyMTI6DQo+ID4gTG93LXBvd2VyIHN0ZXJl
+byBhdWRpbyBEQUMgd2l0aCAxMjAtZEIgZHluYW1pYyByYW5nZS4gPiArIG9uZU9mOiA+ICsgLQ0K
+PiA+IGl0ZW1zOiA+ICsgLQ0KPiA+IGVudW06ID4gKyAtIHRpLGFkYzMxMjAgPiArIC0gdGksYWRj
+NTEyMCA+ICsgLSB0aSxwY20zMTIwID4gKyAtDQo+ID4gdGkscGNtNTEyMCBaalFjbVFSWUZwZnB0
+QmFubmVyU3RhcnQgVGhpcyBtZXNzYWdlIHdhcyBzZW50IGZyb20NCj4gb3V0c2lkZQ0KPiA+IG9m
+IFRleGFzIEluc3RydW1lbnRzLg0KPiA+IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFj
+aG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzb3VyY2UNCj4gPiBvZiB0aGlzIGVtYWls
+IGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQo+ID4NCj4gPiBaalFjbVFSWUZwZnB0QmFu
+bmVyRW5kDQo+ID4gT24gMDMvMDIvMjAyNCAwNDowNSwgU2hlbmdoYW8gRGluZyB3cm90ZToNCj4g
+PiA+ICsNCj4gPiA+ICsgICAgICB0aSx0YWQ1MjEyOiBMb3ctcG93ZXIgc3RlcmVvIGF1ZGlvIERB
+QyB3aXRoIDEyMC1kQiBkeW5hbWljIHJhbmdlLg0KPiA+ID4gKyAgICBvbmVPZjoNCj4gPiA+ICsg
+ICAgICAtIGl0ZW1zOg0KPiA+ID4gKyAgICAgICAgICAtIGVudW06DQo+ID4gPiArICAgICAgICAg
+ICAgICAtIHRpLGFkYzMxMjANCj4gPiA+ICsgICAgICAgICAgICAgIC0gdGksYWRjNTEyMA0KPiA+
+ID4gKyAgICAgICAgICAgICAgLSB0aSxwY20zMTIwDQo+ID4gPiArICAgICAgICAgICAgICAtIHRp
+LHBjbTUxMjANCj4gPiA+ICsgICAgICAgICAgICAgIC0gdGkscGNtNjEyMA0KPiA+ID4gKyAgICAg
+ICAgICAtIGNvbnN0OiB0aSxhZGM2MTIwDQo+ID4gPiArICAgICAgLSBpdGVtczoNCj4gPiA+ICsg
+ICAgICAgICAgLSBlbnVtOg0KPiA+ID4gKyAgICAgICAgICAgICAgLSB0aSxwY202MjYwDQo+ID4g
+PiArICAgICAgICAgICAgICAtIHRpLHBjbTYxNDANCj4gPiA+ICsgICAgICAgICAgICAgIC0gdGks
+cGNtMzE0MA0KPiA+ID4gKyAgICAgICAgICAgICAgLSB0aSxwY201MTQwDQo+ID4gPiArICAgICAg
+ICAgIC0gY29uc3Q6IHRpLHBjbTYyNDANCj4gPiA+ICsgICAgICAtIGl0ZW1zOg0KPiA+ID4gKyAg
+ICAgICAgICAtIGNvbnN0OiB0aSxkaXg0MTkyDQo+ID4gPiArICAgICAgICAgIC0gY29uc3Q6IHRp
+LHBjbTYyNDANCj4gPg0KPiA+IFdoeSBkaXg0MTkyIGlzIG5vdCBwYXJ0IG9mIHByZXZpb3VzIGVu
+dW0/DQo+IA0KPiBkaXg0MTkyIGlzIG5vdCB0cmFkaXRpb25hbCBBREMgb3IgREFDLCBidXQgYW4g
+SW50ZWdyYXRlZCBEaWdpdGFsIEF1ZGlvDQo+IEludGVyZmFjZSBSZWNlaXZlciBhbmQgVHJhbnNt
+aXR0ZXIsIGxpa2UgYW4gYXVkaW8gYnJpZGdlIHRvIGNvbm5lY3QgZGlmZmVyZW50DQo+IGRpZ2l0
+YWwgYXVkaW8gcHJvdG9jb2wsIGNvbXBhdGlibGUgd2l0aCB0aGUgQUVTMywgUy9QRElGLCBJRUMg
+NjA5NTgsIGFuZCBFSUFKDQo+IENQLTEyMDEgaW50ZXJmYWNlIHN0YW5kYXJkcywgTGVmdC1KdXN0
+aWZpZWQsIFJpZ2h0LUp1c3RpZmllZCwgYW5kIFBoaWxpcHMgSTJT4oSiDQo+IERhdGEgRm9ybWF0
+cy4NCj4gU28ga2VlcCBpdCBhbG9uZSBmb3IgcHJvZmVzc2lvbmFsIHB1cnBvc2UuDQpJIHdpbGwg
+YWRkIGRldGFpbCBkaXg0MTkxIGRlc2NyaXB0aW9uIGluIG5leHQgcGF0Y2guDQo+IA0KPiA+DQo+
+ID4gPiArICAgICAgLSBpdGVtczoNCj4gPiA+ICsgICAgICAgICAgLSBjb25zdDogdGksYWRjNjEy
+MA0KPiA+ID4gKyAgICAgICAgICAtIGNvbnN0OiB0aSxwY21kNTEyeA0KPiA+ID4gKyAgICAgIC0g
+aXRlbXM6DQo+ID4gPiArICAgICAgICAgIC0gY29uc3Q6IHRpLHBjbTE2OTANCj4gPiA+ICsgICAg
+ICAgICAgLSBjb25zdDogdGkscGNtOTIxMQ0KPiA+ID4gKyAgICAgIC0gaXRlbXM6DQo+ID4gPiAr
+ICAgICAgICAgIC0gZW51bToNCj4gPiA+ICsgICAgICAgICAgICAgIC0gdGkscGNtZDMxODANCj4g
+PiA+ICsgICAgICAgICAgLSBjb25zdDogdGkscGNtZDMxNDANCj4gPiA+ICsgICAgICAtIGl0ZW1z
+Og0KPiA+ID4gKyAgICAgICAgICAtIGVudW06DQo+ID4gPiArICAgICAgICAgICAgICAtIHRpLHRh
+YTU0MTINCj4gPiA+ICsgICAgICAgICAgLSBjb25zdDogdGksdGFhNTIxMg0KPiA+ID4gKyAgICAg
+IC0gaXRlbXM6DQo+ID4gPiArICAgICAgICAgIC0gZW51bToNCj4gPiA+ICsgICAgICAgICAgICAg
+IC0gdGksdGFkNTQxMg0KPiA+ID4gKyAgICAgICAgICAtIGNvbnN0OiB0aSx0YWQ1MjEyDQo+ID4g
+PiArICAgICAgLSBlbnVtOg0KPiA+ID4gKyAgICAgICAgICAtIHRpLHBjbTYyNDANCj4gPiA+ICsg
+ICAgICAgICAgLSB0aSxwY21kMzE0MA0KPiA+ID4gKyAgICAgICAgICAtIHRpLHRhYTUyMTINCj4g
+PiA+ICsgICAgICAgICAgLSB0aSx0YWQ1MjEyDQo+ID4gPiArICAgICAgICAgIC0gdGkscGNtZDMx
+ODANCj4gPg0KPiA+IFRoaXMgb25lIGlzIGR1cGxpY2F0ZWQuDQo+IGFjY2VwdA0KPiA+DQo+ID4g
+PiArDQo+ID4NCj4gPg0KPiA+IEJlc3QgcmVnYXJkcywNCj4gPiBLcnp5c3p0b2YNCg0K
