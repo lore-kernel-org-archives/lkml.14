@@ -1,98 +1,162 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40118127B58
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 20:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9091272A8;
+	Wed,  7 Feb 2024 20:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707337409; cv=none; b=Lle69z3h0QDvsko0fenu+Cx5V71LTNYeKPwQT/7U1gkR3+gC/KpU20agjqj07mF5u409m1lzOLR1tblgayRw+V5tcmsI1iKLiXLAqkZSVhfA8GLJVurU2SYcq9wuMIDxIBvGedFnVShX+GPDDsrFACMw5KofiTw8tPOSIynQNSs=
+	t=1707337413; cv=none; b=ZL8ovN0Lm4HNe87QD/oZOE/5tBfo5DbG564YxgWoMfJoYCNjN0i6xeIOX5imbzf7aGPwaH93chDie3KS0zgq1PDlyd3wkev8kMLERmgZbPulPp91b2sw8e6FUGIH+8kPs63pPjA+bbdPI0YJ02NWqFablMzXvGkVmTJO8OoWHC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707337409; c=relaxed/simple;
-	bh=52gKcX+UmVuwAMUKbS3chE8siFn6XrLd+UQ4CKtpUJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmI7dRdX3iifEMUAy8WOV53JgGmZx7U4wTuB7jf2J+MUrfMnnQWEn0D7q4Ibc35p1Dddt0uqMVIgZfaAv6YRQNbZGmMcSEXVOvs+ZNJ9tQAYw4sck4sK3LLZfNKX8a7qUv9uQaXr5lwdhCxJJwQze5QIjSopu3OSn/e8+e46pWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=k4xrhElc; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1707337413; c=relaxed/simple;
+	bh=dD5CiEBNHUt0N9vBp3Iuh/sIzIg6rQGjDXZDEISTQvk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=U0u7jIPS7tsn1yZn+gjXJLbjSaIgf/4oe2C433/XsBrD6ymW4n4DT+2k6jPXjLwRZzaYjxsw2NDCFEyBD6JIpsQt//x0Gx2OQfFnMI28ODoIwxinR0uBSZuWh9n9n0kHBnqanF+as7TEtrw3e8am4PrN2nfzW41fMXa0eHC5go8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=j+L+Xr5u; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="k4xrhElc"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e0523fbc27so554512b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 12:23:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1707337407; x=1707942207; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pUv7lvVM6VkpceK/tQ/gnRd5CGoChU/5Uxt3s4/vCy0=;
-        b=k4xrhElcjgnpwa5nBq+3uihGvCEv71F1cbBkJpr8cbJnbMbU8X2GhBWg6+ebz5FU31
-         m8RzIgDggcwWxzcNWpO1Qv0Az28VVfuPR1mhCtwRovxx/wTMCctDgKMLX94OKGHX+A48
-         XVN1TdsRZmbTH8Jx4QeLsZYAOILAvQaaCLeAU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707337407; x=1707942207;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pUv7lvVM6VkpceK/tQ/gnRd5CGoChU/5Uxt3s4/vCy0=;
-        b=kErzVdmmfucwB4/2AwuADJNRbmvURPyHv6RAnHzz5d2z5cAtzmzv8EK71y+SNuENzp
-         8vuleJEGu82CD0/UMhLH6lXj6u9nyjq1doSpNldwznmBUKgETOO5yRPfj04TEsgJRTRW
-         DTok08ZwAL+iheR2gN5bMy/eNRfdY3rnusZnr5F0CFj9mYLjT2dVHRge8YNjEQXDfvJu
-         8LgflnqIx2WiBlIDarKnehCNHlF7A/bo/yN/9c0bcZpDs3W0CZEX8/puAf3M4xyF/yQu
-         g2LQ0IVdQUnZQU5d22fLcRZdATSy9BXDUqtr6AvNKMmE+A8/SeEaAzaYCi4hMaU0s9QE
-         8w1w==
-X-Gm-Message-State: AOJu0YxgHPjbKx+cEn+NX5ImnrUI7jy0WtkQ5X8HwI8tSq1Ol1TNlcS9
-	1SmQmdHYfMeNPBAwBPJ8ybz5zie48zla3e7EEoBX6X6fEb8Fx2k8rMWAhtwlanc=
-X-Google-Smtp-Source: AGHT+IEqzeS299vkOadTe30zptDF57rACEt8HtEWFtpkIBhx8ucnYYZK4I3R+U+qqJwKLVgcRhOAZw==
-X-Received: by 2002:a05:6a00:418f:b0:6e0:5ebe:89f1 with SMTP id ca15-20020a056a00418f00b006e05ebe89f1mr5023588pfb.13.1707337407486;
-        Wed, 07 Feb 2024 12:23:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUCqUE1ygMi5QRm+bprEdVdWJwdWoU7OckQ7HYlQsSwxfrRQ0w1+Q0hpe0/+qzeRc/q+6TlwYqyhmoi4bEJEJAlnHlFDdWGggJFPayc3yYYqjVKrqu62dWm6HcYGrTnk0y5pr1QN42ubb2OzUcBklB5HhZEvkvtPGRKMaxzkDRxJGoEgnTwPOH7rkEGKgU9wLZAqdDHUldk8x+o5bDcTFvl3RA/wwaUfQna0EyzJ1oFge3JzOolnxycEx/8yypvjMXKlz8hXK9+vXwCY8uXzTmJg7yxBskkHf+rslkVZeCJG/xK0d7xowOx5MgOHK5snYF5YwQuxLCB6/FqktgX93hCk7k070E9ePSO9MnXEvOd2tc0rpMB/a2O5pepImHDhG98WmBdRBSedlHuX/80/MAW4FKVpQ9ov3MboTl9SFJr8ftv9rs89G0Di+LaoNaO8FgvcRci4srlT7gzzyfMtv6PU22/C1tpIcqnozgVaYkexZmdM7I0OqPu+7BCJggqnf54LtX/g+g8MKl8hJT3+piYHRj6emQu65mTCirCQdJZo/Ewpm47/9xtFPw9iMOzPfuZTT8b89ARKX48K0G9mQ77QUlamjrDBSuilDsrb9jAMw==
-Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id cl13-20020a056a02098d00b005d34cf68664sm1874233pgb.25.2024.02.07.12.23.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Feb 2024 12:23:27 -0800 (PST)
-Date: Wed, 7 Feb 2024 12:23:23 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	chuck.lever@oracle.com, jlayton@kernel.org,
-	linux-api@vger.kernel.org, brauner@kernel.org, edumazet@google.com,
-	davem@davemloft.net, alexander.duyck@gmail.com,
-	sridhar.samudrala@intel.com, willemdebruijn.kernel@gmail.com,
-	weiwan@google.com, David.Laight@ACULAB.COM, arnd@arndb.de,
-	sdf@google.com, amritha.nambiar@intel.com,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 1/4] eventpoll: support busy poll per epoll
- instance
-Message-ID: <20240207202323.GA1283@fastly.com>
-References: <20240205210453.11301-1-jdamato@fastly.com>
- <20240205210453.11301-2-jdamato@fastly.com>
- <20240207110413.0cfedc37@kernel.org>
- <20240207191407.GA1313@fastly.com>
- <20240207121124.12941ed9@kernel.org>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="j+L+Xr5u"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 1AE71C0000EA;
+	Wed,  7 Feb 2024 12:23:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 1AE71C0000EA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1707337404;
+	bh=dD5CiEBNHUt0N9vBp3Iuh/sIzIg6rQGjDXZDEISTQvk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=j+L+Xr5u5YndSrR2wOyMNOhK7B/MmGQXbh9Bfpn2CU/l57PH0ocqBmRVUbSeBvEK4
+	 O6NHVXs9CQ3os+3gVuuqteEpWkswLyzs/62d7Z0wBLcRdnvmrTZ3szKxYrUxMbXuVI
+	 jV58wuEvooE537rPfKq6i8ruIuxumwpiGNNSuE/A=
+Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 751F518041CAC4;
+	Wed,  7 Feb 2024 12:23:22 -0800 (PST)
+From: William Zhang <william.zhang@broadcom.com>
+To: Linux MTD List <linux-mtd@lists.infradead.org>,
+	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
+Cc: f.fainelli@gmail.com,
+	kursad.oney@broadcom.com,
+	joel.peshkin@broadcom.com,
+	anand.gore@broadcom.com,
+	dregan@mail.com,
+	kamal.dasu@broadcom.com,
+	tomer.yacoby@broadcom.com,
+	dan.beygelman@broadcom.com,
+	William Zhang <william.zhang@broadcom.com>,
+	David Regan <dregan@broadcom.com>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org,
+	Brian Norris <computersforpeace@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Kamal Dasu <kdasu.kdev@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v5 01/12] dt-bindings: mtd: brcmnand: Updates for bcmbca SoCs
+Date: Wed,  7 Feb 2024 12:22:46 -0800
+Message-Id: <20240207202257.271784-2-william.zhang@broadcom.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20240207202257.271784-1-william.zhang@broadcom.com>
+References: <20240207202257.271784-1-william.zhang@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240207121124.12941ed9@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 07, 2024 at 12:11:24PM -0800, Jakub Kicinski wrote:
-> On Wed, 7 Feb 2024 11:14:08 -0800 Joe Damato wrote:
-> > > Why do we need u64 for usecs? I think u16 would do, and u32 would give
-> > > a very solid "engineering margin". If it was discussed in previous
-> > > versions I think it's worth explaining in the commit message.  
-> > 
-> > In patch 4/4 the value is limited to U32_MAX, but if you prefer I use a u32
-> > here instead, I can make that change.
-> 
-> Unless you have a clear reason not to, I think using u32 would be more
-> natural? If my head math is right the range for u32 is 4096 sec,
-> slightly over an hour? I'd use u32 and limit it to S32_MAX.
+Update the descriptions to reflect different families of broadband SoC and
+use the general name bcmbca for ARM based SoC.
 
-OK, that seems fine. Sorry for the noob question, but since that represents
-a fucntional change to patch 4/4, I believe I would need to drop Jiri's
-Reviewed-by, is that right?
+Remove the requirement of interrupts property to reflect the driver
+code and only require interrupt-names when interrupts property present.
+
+Also add myself to the list of maintainers.
+
+Signed-off-by: William Zhang <william.zhang@broadcom.com>
+Reviewed-by: David Regan <dregan@broadcom.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+---
+
+Changes in v5:
+- Add reviewed-by tag
+
+Changes in v4:
+- Split the yaml changes into three patches. This is the first one
+
+Changes in v3:
+- Update brcm,nand-use-wp description
+- Revert the description change to BCM63168 SoC-specific NAND controller
+
+Changes in v2:
+- Revert the new compatible string nand-bcmbca
+- Drop the BCM63168 compatible fix to avoid any potential ABI
+incompatibility issue
+- Simplify the explanation for brcm,nand-use-wp
+- Keep the interrupt name requirement when interrupt number is specified
+
+ .../devicetree/bindings/mtd/brcm,brcmnand.yaml      | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
+index f57e96374e67..e54ca08a798a 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
+@@ -9,6 +9,7 @@ title: Broadcom STB NAND Controller
+ maintainers:
+   - Brian Norris <computersforpeace@gmail.com>
+   - Kamal Dasu <kdasu.kdev@gmail.com>
++  - William Zhang <william.zhang@broadcom.com>
+ 
+ description: |
+   The Broadcom Set-Top Box NAND controller supports low-level access to raw NAND
+@@ -18,9 +19,10 @@ description: |
+   supports basic PROGRAM and READ functions, among other features.
+ 
+   This controller was originally designed for STB SoCs (BCM7xxx) but is now
+-  available on a variety of Broadcom SoCs, including some BCM3xxx, BCM63xx, and
+-  iProc/Cygnus. Its history includes several similar (but not fully register
+-  compatible) versions.
++  available on a variety of Broadcom SoCs, including some BCM3xxx, MIPS based
++  Broadband SoC (BCM63xx), ARM based Broadband SoC (BCMBCA) and iProc/Cygnus.
++  Its history includes several similar (but not fully register compatible)
++  versions.
+ 
+   -- Additional SoC-specific NAND controller properties --
+ 
+@@ -53,7 +55,7 @@ properties:
+               - brcm,brcmnand-v7.2
+               - brcm,brcmnand-v7.3
+           - const: brcm,brcmnand
+-      - description: BCM63138 SoC-specific NAND controller
++      - description: BCMBCA SoC-specific NAND controller
+         items:
+           - const: brcm,nand-bcm63138
+           - enum:
+@@ -177,6 +179,8 @@ allOf:
+             - const: iproc-idm
+             - const: iproc-ext
+   - if:
++      required:
++        - interrupts
+       properties:
+         interrupts:
+           minItems: 2
+@@ -189,7 +193,6 @@ unevaluatedProperties: false
+ required:
+   - reg
+   - reg-names
+-  - interrupts
+ 
+ examples:
+   - |
+-- 
+2.37.3
+
