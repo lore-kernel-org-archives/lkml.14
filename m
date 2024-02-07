@@ -1,43 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72B53C460;
-	Wed,  7 Feb 2024 09:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5CD224EF
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 09:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707298755; cv=none; b=NzyMtA4w5+XSXS1S5/N2PDl2mkZWqTL3lOYLlj+SlioxdFDeQM5SiOj3qKqjShqIubbw5KRFn8KNQQlTBd7OpyDMfAwgkM+uf9O6ywnxdp+SDE1ZDZ/NZuO/HKl6+tSGe/VkG5J7m/4UfZCgNJLKUUH77xONBBRiMmDqzuXTRFg=
+	t=1707298891; cv=none; b=rULCPD8Rtrol/Q1TNZmsrj5DeKaTQ8I+NSILIKXrQ0zbYlxSXCE1rfGWN+ObUGWBwyoUAwArQE0PN0QdyJPLZh3WSvSM+hlyStU2qtHS6k43yR//4ynz9sXgbju44ay3HyZUMQfol3RpavXrrTuK8SGYcYR+4pRWs4Qq78p5Xqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707298755; c=relaxed/simple;
-	bh=xE7Hz8F4hPX3o7n+0ziBG/3UXfOJKIOA4LqMsgXK5Ks=;
+	s=arc-20240116; t=1707298891; c=relaxed/simple;
+	bh=NbPgDHMBh3FUdfqTAdcQlpI4OiOyGv4F3zqlMC49YxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6pSNzJck5Yge4ijnow/AwuBfL48F6X4nvHrc+tMSr0HonNPSL16/5ZDYVuDX5jQafqXOXgcgygzyEhTPtIvlw8jjkmue0wjMHg8NEZjVanRbrih1EaiSiD2+i1B77p7HkWPeY+O5Z13T7EZDWU1UbD98X2t4OhN73oq3tJb0BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fW/bou7Z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ia3IFYJmfHQ5rLasyN5rdRvm+JpxbXDZeSpZYBna17T5ZvHODLlO2jjvRj7NQwrHLoGlvAi2rTuHHRrukgHawoDawKqW+38xCHiB9brP43dtyx8SmgQOlQTiN8Bqpx/JyMRGQgtuzjHasbnBIZ2C9/Gz8L4wKEERm+ROXGL4nPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WyyYKhIE; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fW/bou7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4F2C433F1;
-	Wed,  7 Feb 2024 09:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707298755;
-	bh=xE7Hz8F4hPX3o7n+0ziBG/3UXfOJKIOA4LqMsgXK5Ks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fW/bou7ZEYs8/2v+B73j30Rh/fwJXq1Gkak+lf3dxbe2M7BJRUXDPpRs6uUhBqSLd
-	 m+EsSQV3KKen2D7FvJb5L216olYvMe8ldV0MFV2wiMtxusVwIPcy0FpLFTZm1naOAj
-	 TgGi8VcE4/iQQrwbvxbkq93bFseruKH95e9UzwJBicgcgpd6LCeBsCMNZ9S+dn/S7q
-	 /exzuxAUsrkUpYOYoOXtcFlfUASXhqIGg7Hyy9NLSxQTYGPmihY6/3+C2VnfkDUXr/
-	 jJ1fz6VvAusHUkyzR8evvl5o0HhDCp+l38eTfc6izPCw9kdAYlQLUVth+cIRS2fPX5
-	 MLK1MUfwoDW4Q==
-Date: Wed, 7 Feb 2024 09:39:11 +0000
-From: Simon Horman <horms@kernel.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Ariel Elior <aelior@marvell.com>, Manish Chopra <manishc@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WyyYKhIE"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40ef64d8955so3421475e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 01:41:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707298887; x=1707903687; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nJcQua4beKi5Q7c6WQ4fkxE+hTunNvGHG1uvhFXmM7E=;
+        b=WyyYKhIEQVAUgP3ao0C+xSXUyLq+klYHbbi/pQEWs30VoMovgsB7Mt98KN+YloKatJ
+         Bnn55A7xilL14dLRfrUpHmxPtwu9zOhxjbMJcccbsZY85KNG6HY3q1c45zUg7+HS+R8m
+         iaX1ojdh0ltGxPzLMT8os58dEPntIOXGLjJAe2eMxNPhZUN2RI7sd4f8QNnL/NdpMN/q
+         9TcchM40xUw4NBaylOqIeYLBiC0qESX4iS0Rg/3U2DjkwtERdmglGL5Mic1hOa86RiJY
+         JhPwsZqFJCVUwv9zl/UC4Jp5aD6pYajBA3vWNnyeTP94HVFU+310TEyHA1oJMAQ0YKBu
+         yMjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707298887; x=1707903687;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nJcQua4beKi5Q7c6WQ4fkxE+hTunNvGHG1uvhFXmM7E=;
+        b=ZQL8H1kDi3cn/a95AeRBhg4vWWg/ZPbYPf2nis+m+Fe7bK7b6TwCtZKuXhPjzmruzq
+         eXxyO+UjMPQBJAm+iRQbgWZtJEeNcPn7a5DneE725ybpJDH0vlD5WPQqf8dZMJ1J7f0h
+         bPO/tDKe09d7ggKAfUTaLZ3fj4FCq93pIRy0XlRRI23iVX2jzEtgPp0YCYeW2ziefC/Q
+         6F1lp78nS7FJ1kTeYCTkOkQyK/33Ml7Pq3K2oqfi4NNE57zPhLhlcag1Vv+rQE1ySzzE
+         mpZ/PXKC7oWtXOhMCs9Y6fSs+WjHAT0QU9VuyfREUGSFXXYL8hoWbtgVS9Ki0LlwlvFz
+         KrCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmxLS1bWYepYRjf1eiSt78MBc0SvVALz0KuY9wTiq2jVR9uQ3LpDnOLGAxyDC+d5L8WEb1C8qAk8H17Oka4kZ1N+V+1sgaWRn9kq3+
+X-Gm-Message-State: AOJu0YzPhCaGOGP435kLjoNrJ0SP6TIYpg9XeBj2cBqTTVscksOm1Wlk
+	UshcP8I1sfn/ICiR1sCnjkgUOX+xPNV62+DQdfAhCCiHwdnBeZFjAGo/o3X6v+s=
+X-Google-Smtp-Source: AGHT+IE20vw+DGyUgaFh2+PusZg0M3tzgwfUl7M4aCVMH8JlS57IagVjAAokJEc9q+vbj9wA0X1WkA==
+X-Received: by 2002:a05:600c:5782:b0:40f:df2d:870f with SMTP id jx2-20020a05600c578200b0040fdf2d870fmr4685383wmb.41.1707298887344;
+        Wed, 07 Feb 2024 01:41:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWeF+6CVSJPghSLPHwnbJR/9GtW3yaOq26rnr1j+FWYU/htOGgZyubHmRuckeAJ0ew0JU+/beTTHiGM9SlKA+U9OBPXzxlQjt48B1sTEokJW7Av4hTTWUADV5QSUuWXF4usFskRUL7Vy5AoMhxFCz/imHznv7KlZK/n0bLGg0drcFDYlRgzqlvcu34FtCb3yztbHAqQ7FsSgXQ333/PNi1ot/qYRNnLYYsEWjYdPJ1Ebm1ivKwmvbSvs5Kw2P3iSPyL4JSn3c3Pot+npagmYrVpCthhBg7j6Fm4UVfFYqmoqTos+eYbRnSAfjl7p3IXTzxA9Q8Z1BDw4ThQHSxFSGh6qyvkCaFzb2xRd0BxTP//Ydh1y8VTeA5ogyytMGZ+fDUnymosPFe6t8WCIzXE/QqX/HizTsWFwqY/suznxCsvCmCbtwTS2fWYSgeOqaf5H8dvLoPYwk1imInriygOOp2D
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id o14-20020a05600c4fce00b0040fdd7cbc8dsm4661402wmq.47.2024.02.07.01.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 01:41:26 -0800 (PST)
+Date: Wed, 7 Feb 2024 09:41:24 +0000
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: lee@kernel.org, jingoohan1@gmail.com, pavel@ucw.cz, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	andersson@kernel.org, quic_kgunda@quicinc.com,
+	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] qed: remove duplicated assignment to variable opaque_fid
-Message-ID: <20240207093911.GM1104779@kernel.org>
-References: <20240205215530.1851115-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH] dt-bindings: backlight: qcom-wled: Fix bouncing email
+ addresses
+Message-ID: <20240207094124.GA7924@aspen.lan>
+References: <20240202180151.4116329-1-quic_jhugo@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,20 +73,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240205215530.1851115-1-colin.i.king@gmail.com>
+In-Reply-To: <20240202180151.4116329-1-quic_jhugo@quicinc.com>
 
-On Mon, Feb 05, 2024 at 09:55:30PM +0000, Colin Ian King wrote:
-> Variable opaque_fid is being assigned twice with the same value
-> in two identical statements. Remove the redundant first assignment.
-> 
-> Cleans up clang scan build warnin:
+On Fri, Feb 02, 2024 at 11:01:51AM -0700, Jeffrey Hugo wrote:
+> Bjorn is no longer at Linaro.  Update his email address to @kernel to
+> match the .mailmap entry.
+>
+> The servers for @codeaurora are long retired and messages sent there
+> will bounce.  Update Kiran's email address to match the .mailmap entry.
+>
+> This will help anyone that is looking to reach out about this binding
+> and is not using .mailmap to pre-process their message.
+>
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
 
-warning :)
-
-> drivers/net/ethernet/qlogic/qed/qed_rdma.c:1796:2: warning: Value
-> stored to 'opaque_fid' is never read [deadcode.DeadStores]
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
