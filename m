@@ -1,45 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F731B7E3;
-	Wed,  7 Feb 2024 11:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BC71AADD;
+	Wed,  7 Feb 2024 11:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707305595; cv=none; b=o2W0y1plV8AS9bu/3mL4PibacUb+k+HpjjrTkFtrbnNT7djptWcW7+l5W/xklwf6FtS2FGHHnOiZ6FqQzoG+8DWt/h0bUYyonEB/GebN61JwmDFEZivlOz60YEiVNw0eBUjEb1U+JEp9U/mdR1hzlPUpzWSRZ1fDece9PmU4Chs=
+	t=1707305682; cv=none; b=QbvOzpTI2qQbWP1U/cnt/JYf4V5OzCeMHlG5gu4SB2l9SmsAjGk2T8NlfWtsoDm0qLqOQkwHpmQFzH6J8LvYd5H+RsHLaN4lX03S5aUTZzoRRQr3f9YUUwQGn82z/BVGNr3qQ8nQkqdXqF0xm51Kwt9OXG31X4F5aLeNU2umsgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707305595; c=relaxed/simple;
-	bh=gyo235aVjYRC8Ovs+OpeW93VAIBVmWCkzUNg5AzcKdI=;
+	s=arc-20240116; t=1707305682; c=relaxed/simple;
+	bh=fHEmx2+YD6aSghPKIzxTl0lTC3dy/fynUqTivLKdpsA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYMFoJVgFOKq4TQJh2a9KCFLawAIeM8GPAXL9UiiVOwH4iLvSMUGwe7mdXD41nSGPsaZenI1boLU+2MC70PlyKkw1t0lwjEZercEjbayx4Mcp9wVkAM2CTWqr8pfA2K+Vml53o1Sa8C2ggsZutSOT78KRNyQtT0pom/N1QeOE7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJDQcUvN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NCDIA9c7W90BsLL9/tu76IZQLoSwIoZ30nNDzynmX2/Nf+rwDx6lVaYCqfolHLakdGh5nq2MGctZIFl/u/pkWzczeQJPLdhaIZX6+aUTcAWcIksbSGhC2mBK1zTAoqf/NetQKtHHOfhZ4VkQlbpAjFHMm2VFtUJ0C1cyMW68Wsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NEznwrhH; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJDQcUvN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE73BC433F1;
-	Wed,  7 Feb 2024 11:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707305595;
-	bh=gyo235aVjYRC8Ovs+OpeW93VAIBVmWCkzUNg5AzcKdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FJDQcUvNMSiZKwfV3rUCNm+SBPvaChR9vz6jg+V3OXMgkDZOflWgwJKWXltXsoZiI
-	 Inp2SU+sfh7n3lQmqxIH7JQe7BglD+sxDMG/oFV5EBCXUrpaBoGjsD03E6X+DbUdSl
-	 kw7rrAHbUPxsy7tfDREpIJf0ND2Tt73vQBRV4gKgDDLKvkTD0pSz09QZWqs+m5ta/z
-	 WagrgrNvX3fOyyDk8Y7YWh+t13O7mnTaTsTO/I7B5WY90M+TlXVWJrq+S1xiemIcpK
-	 JAnHAx/i/chC5vsQRSvvbT/DEIWwq07gyTh699/5YwZTm8EjbbMf0XCPCj+Ni9/R/4
-	 lxpDK8A7BTCfQ==
-Date: Wed, 7 Feb 2024 11:33:10 +0000
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
-	edumazet@google.com,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, andrew@lunn.ch
-Subject: Re: [PATCH net v2 5/9] net: fill in MODULE_DESCRIPTION()s for ipv6
- modules
-Message-ID: <20240207113310.GC1297511@kernel.org>
-References: <20240207101929.484681-1-leitao@debian.org>
- <20240207101929.484681-6-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEznwrhH"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d09b21a8bbso5667411fa.3;
+        Wed, 07 Feb 2024 03:34:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707305679; x=1707910479; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nPQzZxl5bE1RItDITVNujm+ZmvjYJeoOtU5sHIw4Szs=;
+        b=NEznwrhHXDPNAAxvvge/J5bYcF4/ZEYGwbyWrKIJnhfgjCf3JnqiWyikdnEyGa/taM
+         RL1XTjjxeRXJsQEhjIELibcuX9LvO31sowufNZL83MlZk5prHjAFyYeP9dE16VcGRky6
+         HDfiTd2RYgmru8tptbBYc1lztVpH2PDr3HYpgbumQ8wViKXEAndzKc8588tyOtX6Q+vd
+         dbi3wdRIFsiJGGZT3aKQyxytOfj+LodP32HqClf2Hi6Qp7PWVAmPnBox51LyeczNYJQo
+         ZZM76+heNUfga+GCMOx+BZyxbmQylAnmG8XI3/xV3ahjikHCAuxJib12n1WIlS4BeO6n
+         ICFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707305679; x=1707910479;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nPQzZxl5bE1RItDITVNujm+ZmvjYJeoOtU5sHIw4Szs=;
+        b=WRO7qD9qFpNB5kUhcUIEVTZMA+9F6oKiyJTzmyWWp6x4emEXCCfqlXhPNoxmZzThq8
+         PqtnvosYlWVlJ9D6tjvDTMp1J1spFgqNCUraA8vifqToR8ZHjh7raTf2StBz2OyX4PGq
+         JofWq/rfVT/M694zkw4zkgFY+vDZs4khO/IqbPPs++IzcdopEx31zX5tMb3meptsHuxk
+         21YG+GazF1gMJHcd2rLrUOaaXRSnyKcnHEn1Wo2FFBJzbfRJ3RE9lVaKiRtFQo67o+dz
+         YOxowdh2PWK1f8T1HG3xiPqZdiVEeFNrnwEde5d3WsGoR3SUfGctpOlEuKL2IxrjrCHi
+         Hqbw==
+X-Gm-Message-State: AOJu0YyvX4eyMF2dg2xB8FJVCNuxHZfLeywiVe6RdD5xwWpyAa0jAn30
+	glA4nZ097UVseGUhZs0xDqVqhSLfa8s5z3Bbw8CVFlUWoxNN7Jc3
+X-Google-Smtp-Source: AGHT+IFtHTL1sJ/QvAt+78/YRYABzfZKnDNRbo56DjDqklw/3Z6EPdqKy3AIocI3PHi8NhHTSurcFg==
+X-Received: by 2002:a2e:9992:0:b0:2d0:9076:e9cc with SMTP id w18-20020a2e9992000000b002d09076e9ccmr4268383lji.29.1707305678385;
+        Wed, 07 Feb 2024 03:34:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXPe5zFF9e6iqt4dBN6yTi7bU1Mk4W5dqeCN8tJ8xEbbnrz8Gc7cE2oCKwiHti8Gx/YzrcsG5BP0GT+OD+3SPL7hrhSNYfN2cMZ+dhbteqMsmeSVdRvQ8ED4C+NR0zJuO/zgFBHu1k6/CA7leb1eAO3OsvjdwJbgYTjQ+tompJjlsypzA1bZN8g8RnY46/H1MTgrHlDuEnbsnC1aBK+SOipw6QqbqRExkYsWKIZ9u8gGucNRpuJrVQeQ/1pdgnYl/3UDXE6VPZeRuB0p6TxVsbKkIBbXt30aR1JqHgDXn51fdn6pTxk84G1N/zXFL1mwNEoKnu57/1ude+sA/RSXrVyo/JD2G2XB4vAH0Le8bZjfYjtgrEydQn03O9JR7Zx+m3TTyDoj9XM8AFweb5P+YPDD7r75FZURhL4ingHlDtsbCHNYgmkrus/lvQIur4m8IULurTLu6c5svaOEwl5cAWd59WtRSVeFyikZO5v34Bkcu89QD6G7qNrYKNK7nTU
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id t1-20020a2e7801000000b002d0a6b9d0casm145443ljc.67.2024.02.07.03.34.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 03:34:38 -0800 (PST)
+Date: Wed, 7 Feb 2024 14:34:33 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Simon Horman <horms@kernel.org>, Pavel Sakharov <p.sakharov@ispras.ru>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
+	Alexey Khoroshilov <khoroshilov@ispras.ru>
+Subject: Re: [PATCH] stmmac: Fix incorrect dereference in stmmac_*_interrupt()
+Message-ID: <tg2au3a524douxq6k37aa73zuotlx5sl6hbcokm7xwy3bumqxc@lothlyjh6ksg>
+References: <20240203150323.1041736-1-p.sakharov@ispras.ru>
+ <20240206150704.GD1104779@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,39 +73,148 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240207101929.484681-6-leitao@debian.org>
+In-Reply-To: <20240206150704.GD1104779@kernel.org>
 
-On Wed, Feb 07, 2024 at 02:19:24AM -0800, Breno Leitao wrote:
-> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> Add descriptions to the IPv6 modules.
+On Tue, Feb 06, 2024 at 03:07:04PM +0000, Simon Horman wrote:
+> On Sat, Feb 03, 2024 at 06:03:21PM +0300, Pavel Sakharov wrote:
+> > If 'dev' is NULL, the 'priv' variable has an incorrect address when
+> > dereferencing calling netdev_err().
+> > 
+> > Pass 'dev' instead of 'priv->dev" to the function.
+> > 
+> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> > 
+> > Signed-off-by: Pavel Sakharov <p.sakharov@ispras.ru>
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Thanks Pavel,
+> 
+> I agree with your analysis that this can result in a NULL dereference.
+> And that your proposed fix is good: netdev_err() can handle a NULL
+> dev argument.
+> 
+> As this seems to be a fix I suggest it should be for net.
+> And that it should be based on that tree and designated as such
+> in the subject:
+> 
+> Subject: [PATCH net] ...
+> 
+> Also if it is a fix, it should have a fixes tag.
+> Perhaps this one:
+> 
+> Fixes: 8532f613bc78 ("net: stmmac: introduce MSI Interrupt routines for mac, safety, RX & TX")
+> 
+> 
+> I don't think there is a need to respin for the above, though please
+> keep this in mind when posting Networking patches in future.
+> 
+> 
+> Looking at the patch above, and stmmac_main.c, it seems that the following
+> functions also suffer from a similar problem:
+> 
+> static irqreturn_t stmmac_msi_intr_tx(int irq, void *data)
+> {
+> 	struct stmmac_tx_queue *tx_q = (struct stmmac_tx_queue *)data;
+> 	...
+> 	dma_conf = container_of(tx_q, struct stmmac_dma_conf, tx_queue[chan]);
+> 	priv = container_of(dma_conf, struct stmmac_priv, dma_conf);
+> 
+> 	if (unlikely(!data)) {
+> 		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+> 		...
+> 
+> And stmmac_msi_intr_rx(), which follows a similar pattern
+> to stmmac_msi_intr_tx().
+> 
+> I also note that in those functions "invalid dev pointer" seems misleading,
+> perhaps it ought to be "invalid queue" pointer.
+> 
+> As these problems seem to all have been introduced at the same time,
+> perhaps it is appropriate to fix them all in one patch?
 
-...
+IMO we can just drop these and the noted in the patch checks. Before
+actually making a decision about that there are three general
+questions we'd need to answer to:
 
-> index a7bf0327b380..8820bf5b101a 100644
-> --- a/net/ipv6/ip6_udp_tunnel.c
-> +++ b/net/ipv6/ip6_udp_tunnel.c
-> @@ -182,4 +182,5 @@ struct dst_entry *udp_tunnel6_dst_lookup(struct sk_buff *skb,
->  }
->  EXPORT_SYMBOL_GPL(udp_tunnel6_dst_lookup);
->  
-> +MODULE_DESCRIPTION("IPv6 UDP tunnel driver");
->  MODULE_LICENSE("GPL");
+1. Do we trust the IRQ-subsystem to supply a correct cookie pointer
+specified during the IRQ request procedure?
 
-Hi Breno,
+2. Do we trust the driver code for correctly performing the IRQs
+request?
 
-I don't feel strongly about this,
-but looking at NET_UDP_TUNNEL and NET_FOU in net/ipv4/Kconfig, maybe:
+3. If we don't trust to any of that then what is caused if the problem
+happens and there is no sanity checks implemented?
 
-	IPv6 Foo over UDP tunnel driver
+Here are my thoughts regarding that:
 
-Likewise for the change to net/ipv4/udp_tunnel_core.c
-in the following patch.
+1. If no dev_id sanity checks implemented in the handlers then having
+the IRQ requested with NULL argument passed even though the handlers
+imply the netdev pointer will for sure cause troubles right away since
+the driver won't work and the system will likely crash. So it will be
+spotted during the initial test/debug stage of the respective change.
 
+2. If for some reason the IRQ subsystem supplied a NULL pointer
+instead of the cookie pointer, then something is really wrong and the
+entire system likely won't work correctly. If this case is possible
+to happen then all the kernel IRQ handlers should have been
+implemented with such sanity check, which I don't see in practice.
 
-The above not withstanding, this looks good to me.
+3. If IRQ was caused by the DW *MAC controller, but NULL pointer is
+passed and the handler returns IRQ_NONE state, then the actual IRQ
+won't be handled AFAICS causing the spurious IRQs detected. Eventually
+the IRQ will be effectively disabled. In anyway the driver will stop
+working. But even if this happens see points 1. and 2. for the
+problem cause implications.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+4. The common IRQ handler doesn't have such check in the driver.
+Though unlike the rest of the handlers it's assigned with the
+IRQF_SHARED flag which requires the cookie pointer passed. Anyway the
+sanity check was removed from the common IRQ handler in the commit
+f42234ffd531 ("stmmac: fix pointer check after utilization in
+stmmac_interrupt") with a justification as being _paranoidal_ and
+pointless in the respective context. But in about a year afterwards
+the individual IRQ handlers were introduced with the same check but
+this time in a bit more reasonable context. Still it doesn't make
+the check existence less paranoidal.
 
-...
+5. I took a look at first 20 Ethernet device drivers. None of them has
+such checks implemented even though about half of them request IRQs as
+non-shared (so the cookie pointer is optional).
+
+6. Finally the checks are implemented in the hard IRQ handlers for
+which the less code the better.
+
+To sum all the above up from my point of view the checks are redundant
+of course unless we turn on the paranoidal mode and stop trusting the
+driver code and the IRQ subsystem.
+
+-Serge(y)
+
+> 
+> > ---
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > index 4727f7be4f86..5ab5148013cd 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > @@ -5848,7 +5848,7 @@ static irqreturn_t stmmac_mac_interrupt(int irq, void *dev_id)
+> >  	struct stmmac_priv *priv = netdev_priv(dev);
+> > 
+> >  	if (unlikely(!dev)) {
+> > -		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+> > +		netdev_err(dev, "%s: invalid dev pointer\n", __func__);
+> >  		return IRQ_NONE;
+> >  	}
+> > 
+> > @@ -5868,7 +5868,7 @@ static irqreturn_t stmmac_safety_interrupt(int irq, void *dev_id)
+> >  	struct stmmac_priv *priv = netdev_priv(dev);
+> > 
+> >  	if (unlikely(!dev)) {
+> > -		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+> > +		netdev_err(dev, "%s: invalid dev pointer\n", __func__);
+> >  		return IRQ_NONE;
+> >  	}
+> > 
+> > 
+> 
