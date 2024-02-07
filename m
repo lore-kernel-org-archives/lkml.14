@@ -1,141 +1,99 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84ED8289A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F156682D82
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707329517; cv=none; b=Rbic7K50VanqDIizXNDXEVpKPKIHPJ+//IBLLoQt8BX5TyId0TMOLHCbn8XNEhDf63s19tLxb12JxUl2lVDiaCss3JtvDLzJjgPKFLgFJcvNQ+53q/7WDvUnaABZdh9BTxDoxJdoPquT8xViI67XuB/PqSKlsy16ZtCVoHV7V8E=
+	t=1707329547; cv=none; b=itA/EjCcI0iqWUN1L7jCZusaaA8vUrb6gQP3nv0sIReOsS8vDqx7iDhizkW6CerwYfkU8mnj7HKO999OeWjfsTojZod+gei0XjIJO7+ci7jAW/PaYOPAPjLO3E+mTFfkgJuWBaqfRP6vKu8mjK/jywc3qUm+Sj6NFhdhFZJHl+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707329517; c=relaxed/simple;
-	bh=qR8GKpuuZaW4F6S0+Bd8OP3wU4IAuXpMl7pvAL9xLUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XyKaR8IY2jcEbjv+tUQMfQtbPEF9dYJ5ViiesgneJWSAHqVF0gi8EzjgiOB5Xe0gqsBOMyuiuQho3SIJ25bxysYm0onbNrUrj1RcM3ZXAfGvg9/pSmVvoNpw85ofgQHTP7s90pXlkhD8Pc7tjGpPOIGwrbcr1AFEazd349odsKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Z+yFOxzq; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1707329547; c=relaxed/simple;
+	bh=HemVGK6zZne3B0GajBNYqVima/P4OLJW7RPvot4BnIc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ciKbL1CJAADo0k+XxaN7nTtA1/QoeudgdGE2DosoQNLbHW0l5pO2v9n1XpTKvwC+JuuWC5o5QDa8xlh8JgbU00bFFjYcrPStZpcQVZADVg2U56f7dMiwPThqRmHn2Ecjym63+gca6exvOCt44R+cgymHCBsw2o646Sbww5pXT+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SWReDU48; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z+yFOxzq"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc6e4a55a71so910160276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 10:11:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SWReDU48"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso926957276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 10:12:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1707329511; x=1707934311; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fsW74Q1+T1mksmXsIbj29+DJwVSribZJe7h8Y37ezZ8=;
-        b=Z+yFOxzqvXorHX722BXwXXLCwnw/qrHzV68HOTRTlo81VM2v8Ffr6bB4dsy7i0gnd8
-         Xb+J18XdDHvcRcjbyrCEphK1WW7sbsq+bV6r8hOFFPzu9wSphgG4yqOf0xJ0y3M1djwl
-         qVEJnlOMI+tE3FYIfv64GE2XI8O8bLzZ/ddw9HQBwRL/M/AdbXxICSy5qLjRbXQGrL98
-         vYzsbUWkBf+hw8VLP+y1QLeRkQHx7z3LaoMnHgc02/CmagTxhnS60NO/bl/GAHuyyT9f
-         LWrnN+ZH5zphyPU9wviRUQZ+uZHiyPuwJ7d7wxzkJYbBmeGGm6T+YElIIvHWcgdZdsWG
-         7Xbg==
+        d=paul-moore.com; s=google; t=1707329545; x=1707934345; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9hHXbmrv3ps1sMVSmLFG15zm3/Plob5tS/368EqKz5w=;
+        b=SWReDU48FE7BclzS2BxrGrfX+g+CGjiVq0wUg09cuz9SyES6ugYQ7Lm6UvTijviwcO
+         tSkY9hIEDdWyIdw0VWpCZLPduw5Uxtrn6aLpU2VScppiocx0+zKxTVby62emzn8JcOth
+         yFRa0KaCzlOjDXa8L7VecFSlHMKb4eG/N/zaZJyQxcpoVAN3wH+Rf0pDiWsfTTLVdW6D
+         6js/jtMKe06gp35Nziyib/+X8yA7wazlz0VXWZddYfeQPgiYvx9ziTvG47XTWvvI5nby
+         L8t+zNZ/XYGWX1B7kG7BWW9yE5D03ZoJIw2BoavzC5rh1s5UORbC+XfkdQ7jchiRNCZn
+         L/wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707329511; x=1707934311;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fsW74Q1+T1mksmXsIbj29+DJwVSribZJe7h8Y37ezZ8=;
-        b=oi2FqkXHtlEeJ9j+JGRyotsuKUSVaMDF8BWk5fA/zlcH6oYG3EjiYm9X2+KT3jtq7K
-         Xe/GMDXuw2S3rjBtwjMxSeTkyg2fVv82Cz3GNZQxgZQY1jkSGRI8dQQRjpM6NCaSM6Ch
-         +x+GA3CuZY1DLGBCgtbKLPGmso2zCpD5vKXBcEhILbce8OE6TuLq/Kg333hCb8U9Njzf
-         lIyPQWrDE0mnFxQYtfaVtyPEdrnde6AJ/uUdn006sVzZuzmHUvfCKO8ezjQaNP52VpN1
-         gbJECy5v9n5p0fY0+qb9dmJS6Nf27feNeOQlwHV2JB+9APX6nHV0zMi8Beb4o9SNb2SY
-         G/ww==
-X-Gm-Message-State: AOJu0YyQGwbStiE9x5yFx8f9lLsodHp26Mt14oTT3hfYQibqkUwaeFy0
-	2r2ju4RYdZOzRGxyX1tn0FU3ci7ySeOKs+lWHkQUMFBqaUD9qeiNGnO6HEZ15Dk=
-X-Google-Smtp-Source: AGHT+IGqZ0PdGpZMTBV9zF8UO5NAGQRLPRdqGQhiGhIPGCtJUZIMcIORIqQV5b1hc7bjtFSOILoTUA==
-X-Received: by 2002:a25:9304:0:b0:dc6:ae82:ed36 with SMTP id f4-20020a259304000000b00dc6ae82ed36mr5929066ybo.40.1707329510906;
-        Wed, 07 Feb 2024 10:11:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXcQ5OWT4CCOH/PP3Db4QUMkXA+yDlW1mbkX17EfCnXO5gK8WOP/Xozf7ihPYcix4koure7BaQW5jT+ar6hA8rU17AbGDtV9covzDt1yNLSG1P4laJoHR0ntUhk99ZUWbfKqm1YcNQqULJ7eQVL29wLgObNrVDkiLAvQdf+eFAwVvHPODwymRFSbyhAkiecQm7NU/yWYul68ExHWOfZVCb2tfBlPnAHZtfglgzEMwc35w1Oc+/TSnmVvH1MHnuSKrc8LZwgCDwwCYsb6KDShzTJWPNbkQVMLbcYNjFafFVuFJ0WiN631bsWhNTiTBkQKnUF/lsOjBbj8vrqDVTrB7EJhC2Rb2k+J2fxVJDrRj7AfQ==
-Received: from [100.64.0.1] ([170.85.8.192])
-        by smtp.gmail.com with ESMTPSA id f6-20020a5b0c06000000b00dc6da5dbe1csm292874ybq.39.2024.02.07.10.11.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 10:11:50 -0800 (PST)
-Message-ID: <22d7dcc9-a14a-4e96-bfee-dd358af0afd5@sifive.com>
-Date: Wed, 7 Feb 2024 12:11:48 -0600
+        d=1e100.net; s=20230601; t=1707329545; x=1707934345;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9hHXbmrv3ps1sMVSmLFG15zm3/Plob5tS/368EqKz5w=;
+        b=V/a6emN+U3rhZX2Yzk35BHr1Fn2WE8au0KS2ALWSstoqsAq/hPa6JVLaFHWARXhn3L
+         ts6rUPAsf05PQOTV1ePDr7eIBnUUl9ojJsQ+/0gUMPIdUG+HRkIeAvWfRi0wPF8ONBQ0
+         XqEClzFaMuV5yDGegqcrMXhcS9Nkj6oSxuOPAm6g/s9tKxroBYp+JD69z+OKrOxw5Ux8
+         yEfdewlE1WAa3LHa8xpz1lZruOKXYnfxwUlzX9D0DJRhgVmQCsmYgkxqT7gCc38AJyNw
+         eK0g1S4ZfRZauMfEI2lKDwpN8vWlfqd0Tg4jTySmnSJUfogBv7W67TTn/rrSK7aMlPc4
+         3l2w==
+X-Gm-Message-State: AOJu0YzfT0OSfqej8Q/PG1gzfzz4H/jyhnYpvzxWAM1UKZLCdBkK3ZEX
+	8fOA6NJcmNmkVpfBWbR2Uhh14d+cHlJ40BXUr2714vSF87aghYrfkNvTac8a2gLNew7lrvk768D
+	npKJnocLzLhIs+SFNgy9VjzxkEx6EDYnqP9DS
+X-Google-Smtp-Source: AGHT+IHxnQ5vAEAJSNuMes3+eXgpNC1vkbsCULnqxfu1b77zpdub65nMVS21AFiTfVqgPjNJ25GA/1LSAKxOdxXqZY4=
+X-Received: by 2002:a25:ec0e:0:b0:dc7:1d:5db4 with SMTP id j14-20020a25ec0e000000b00dc7001d5db4mr5835418ybh.34.1707329544772;
+ Wed, 07 Feb 2024 10:12:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] clocksource: timer-riscv: Clear timer interrupt on
- timer initialization
-Content-Language: en-US
-To: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: atishp@rivosinc.com, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Ley Foon Tan <lftan.linux@gmail.com>,
- stable@vger.kernel.org
-References: <20240129072625.2837771-1-leyfoon.tan@starfivetech.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <20240129072625.2837771-1-leyfoon.tan@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <8fafb8e1-b6be-4d08-945f-b464e3a396c8@I-love.SAKURA.ne.jp>
+ <999a4733-c554-43ca-a6e9-998c939fbeb8@I-love.SAKURA.ne.jp>
+ <202402070622.D2DCD9C4@keescook> <CAHC9VhTJ85d6jBFBMYUoA4CrYgb6i9yHDC_tFce9ACKi7UTa6Q@mail.gmail.com>
+ <202402070740.CFE981A4@keescook> <CAHC9VhT+eORkacqafT_5KWSgkRS-QLz89a2LEVJHvi7z7ts0MQ@mail.gmail.com>
+ <CAHk-=whSMoFWCw=p1Nyu5DJ2hP2k=dYmPp-WjeY8xuc7O=ts7g@mail.gmail.com>
+In-Reply-To: <CAHk-=whSMoFWCw=p1Nyu5DJ2hP2k=dYmPp-WjeY8xuc7O=ts7g@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 7 Feb 2024 13:12:13 -0500
+Message-ID: <CAHC9VhQ4UZGOJg=DCEokKEP7e5S62pSax+XOgiBB-qQ=WGCbOA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] LSM: add security_execve_abort() hook
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Eric Biederman <ebiederm@xmission.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	linux-security-module <linux-security-module@vger.kernel.org>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-01-29 1:26 AM, Ley Foon Tan wrote:
-> In the RISC-V specification, the stimecmp register doesn't have a default
-> value. To prevent the timer interrupt from being triggered during timer
-> initialization, clear the timer interrupt by writing stimecmp with a
-> maximum value.
-> 
-> Fixes: 9f7a8ff6391f ("RISC-V: Prefer sstc extension if available")
-> Cc:  <stable@vger.kernel.org>
-> Signed-off-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
-> 
-> ---
-> v2:
-> Resolved comments from Anup.
-> - Moved riscv_clock_event_stop() to riscv_timer_starting_cpu().
-> - Added Fixes tag
-> ---
->  drivers/clocksource/timer-riscv.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
-> index e66dcbd66566..672669eb7281 100644
-> --- a/drivers/clocksource/timer-riscv.c
-> +++ b/drivers/clocksource/timer-riscv.c
-> @@ -116,6 +116,9 @@ static int riscv_timer_starting_cpu(unsigned int cpu)
->  		ce->rating = 450;
->  	clockevents_config_and_register(ce, riscv_timebase, 100, 0x7fffffff);
->  
-> +	/* Clear timer interrupt */
-> +	riscv_clock_event_stop();
+On Wed, Feb 7, 2024 at 12:57=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, 7 Feb 2024 at 16:45, Paul Moore <paul@paul-moore.com> wrote:
+> >
+> > Okay, let's get confirmation from Tetsuo on the current state of
+> > TOMOYO in Linus' tree.  If it is currently broken [..]
+>
+> As far as I understand, the current state is working, just the horrid
+> random flag.
+>
+> So I think the series is a cleanup and worth doing, but also not
+> hugely urgent. But it would probably be good to just get this whole
+> thing over and done with, rather than leave it lingering for another
+> release for no reason.
 
-This change breaks boot on Unmatched. The bug is that the above call to
-clockevents_config_and_register() sets the timer (see below), but the timer
-interrupt never fires due to the added call to riscv_clock_event_stop(). You
-need to move this line earlier in the function.
+I've always operated under a policy of "just fixes" during the -rcX
+period of development, but you're the boss.  Once we get something
+suitable for merging I'll send it up to you after it has soaked in
+linux-next for a bit.
 
-Here's the stack trace from the initial call to riscv_clock_next_event():
-riscv_clock_next_event+0x12/0x3c
-clockevents_program_event+0x9c/0x1c6
-tick_setup_periodic+0x82/0x9e
-tick_setup_device+0xa0/0xbe
-tick_check_new_device+0x96/0xc6
-clockevents_register_device+0xbe/0x128
-clockevents_config_and_register+0x20/0x30
-riscv_timer_starting_cpu+0xa2/0xec
-cpuhp_invoke_callback+0x160/0x61e
-cpuhp_issue_call+0x140/0x16e
-__cpuhp_setup_state_cpuslocked+0x186/0x2b0
-__cpuhp_setup_state+0x3a/0x60
-riscv_timer_init_common+0xea/0x184
-riscv_timer_init_dt+0xbe/0xc2
-timer_probe+0x70/0xdc
-time_init+0x74/0xa0
-start_kernel+0x194/0x35e
-
-Regards,
-Samuel
-
-> +
->  	enable_percpu_irq(riscv_clock_event_irq,
->  			  irq_get_trigger_type(riscv_clock_event_irq));
->  	return 0;
-
+--=20
+paul-moore.com
