@@ -1,164 +1,179 @@
-Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0585F20B0E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 08:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7088A208C5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 08:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707295468; cv=none; b=PdCuQFMcv5jBFJhnn55nAzZLGEkkWVnILq08+LCGCVcvFSzWsMS7km0L8Ur1syhg6g+z7SOfSgWxJek24MwqzUUWSdsTwg5fKffOOtBZ2Z7ySzpmrrSA9vFIUZ3zaKFPILieOcKLTDccEMAI8A/uMl9Jmv2Q4HHimpT5Tiyv/tA=
+	t=1707295501; cv=none; b=ZK5yotztXw4A04mZ8jtW9bwreVsQD/nB4PUQptA20pLB93ICdGcILbjTnOCWKgnG2JU7tsES9txXZny0ZKD+uVKXujzzLPKLz7OxtzWaAUeFNdaYqrpe9w+UvpKHT4R5ZLCdtllk1UHpxbCw/FlLt1uzqS7N6TuR0D1v8HMCVBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707295468; c=relaxed/simple;
-	bh=PLWVHtXp1su+keqeAZfr5JdA50OHHDttPlQGFKWS0q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8dACBIx9B6lHRJ1deSmWiJp814J1mlKqvfBkuaXz6i4DC5mEaIVXdS7Ol4Hk4dyzZnwmYVXc2ZPwKQOIYYIak5OOBjNCQcQImlioFyp12T45Ycnnas4b4EGcEDzVp+CBIujQy90MadPlaMq5lnbQo0k/SiH07dTdrFsp7W/kTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=Yj5qMK8F; arc=none smtp.client-ip=77.240.19.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
+	s=arc-20240116; t=1707295501; c=relaxed/simple;
+	bh=H2Xrmgvl+SM8bD81WrtzhSJbxFmN+3cpc89YY2RXfaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i3znl7cwLrUPf3f3wBYaUxiLOLscjinNaFopyIIxHuGLQlzYSOAqMhrxRI9IZPm7Gk7UqcQhziAHg+1sKi5wypxSBiZCff95JO6lWpvlumlFxQm1Wfy0le6EecvoE8TWSveKs3x6cbhN2v8DbHGQgiU0HSYNbltEUM1ck4iqtZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=vSAAENbS; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="Yj5qMK8F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PLWVHtXp1su+keqeAZfr5JdA50OHHDttPlQGFKWS0q0=; b=Yj5qMK8Ff40MlGMbZXtV4xxuUa
-	C2ESwpngeeC9mvEVI8EseU+/oubJEKJxV35tYX0+pXK8vjyLS878XglqJ5yFAjKdLNr0/7RdHTdhG
-	x4bYGCsG1anmihKeLrPtSPLsnHciffgIkBAS3RF+RAOfc8SOAf++LtTI420ZWugjvr6NOshL/NCjr
-	LZUSOgUkTjq2M34AYtJSM7b8iN7+xVU0XH6bLt33TLh1cgKqyQ/Hf4B7ml4zS3XSAu2lb/kxQnJMr
-	wNq5D3+kA2hMtbWFIfQR1KxtAIbrg8C40dnYlc+lWIGtQVisNfEAqzPwhyWLyakkRMjZk66/1elPV
-	dKGvQlLQ==;
-Received: from [194.136.85.206] (port=41242 helo=eldfell)
-	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <pekka.paalanen@haloniitty.fi>)
-	id 1rXdXU-0002TR-2b;
-	Wed, 07 Feb 2024 10:44:16 +0200
-Date: Wed, 7 Feb 2024 10:44:07 +0200
-From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-To: Arthur Grillo <arthurgrillo@riseup.net>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, =?UTF-8?B?TWHDrXJh?= Canal
- <mairacanal@riseup.net>, Maxime Ripard <mripard@kernel.org>, Louis Chauvet
- <louis.chauvet@bootlin.com>, Rodrigo Siqueira
- <rodrigosiqueiramelo@gmail.com>, Melissa Wen <melissa.srw@gmail.com>,
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- marcheu@google.com, seanpaul@google.com, nicolejadeyee@google.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 2/2] drm/vkms: Use a simpler composition function
-Message-ID: <20240207104407.7b06bac2@eldfell>
-In-Reply-To: <d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net>
-References: <20240201-yuv-v1-0-3ca376f27632@bootlin.com>
-	<20240201-yuv-v1-2-3ca376f27632@bootlin.com>
-	<20240202105522.43128e19@eldfell>
-	<20240202102601.70b6d49c@xps-13>
-	<3nofkwzgnf4yva2wfogdbii47ohpi2wm5vp6aijtg3emxyoowt@twyreqz7ai3g>
-	<20240202131322.5471e184@xps-13>
-	<20240202174913.789a9db9@eldfell>
-	<20240202170734.3176dfe4@xps-13>
-	<20240202214527.1d97c881@ferris.localdomain>
-	<d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="vSAAENbS"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a27e7b70152so15442566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 00:44:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1707295497; x=1707900297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAeXDExjFp8LIE+XwnvVYSsXych5ypTHEBtl908GHMU=;
+        b=vSAAENbS7Ku2Cqif8kivUKMCOsd2sJ6WRog0B7TL9tw14zwYyeGsdJiioa9HcpxjYH
+         yFYKzcUmiOgF3shyP8ydFwJdundQFs+w7cg1WHkh/v3EsFa1j0I7J7fR8FFixarJakIM
+         e/TmlquDXXR+gW75yxBoqmayaaM8FZLxWZM4iXxTf+Et2HOgCgwRMfYx51U61re5lgLk
+         68lBmBqWHaxRyWxOTpcVz7zv1ApCIglTkaK1ymGvDeudkwFlpYZqITNQH3tLXzGjBx3j
+         SKsTEMZ8BLClFY9A60YrZzZ197omQAHirIw3gnjnjVDJO+l3si1m9O1FbMYmkmyVxAyL
+         rosw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707295497; x=1707900297;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NAeXDExjFp8LIE+XwnvVYSsXych5ypTHEBtl908GHMU=;
+        b=UP0dS+S4ZMbwu7fPxK9WCSo0VkY0USMEAfX36GWFR0Z1okz88xJDdRAHC+SvBWAzh0
+         9gwU9xcOpusZ6UTKX87DeHxApTCE++NHOfqGMt1/F2Ct/yIF8gWOqf3XWC0VunQ1rCG2
+         BNva56kyyOgf1kMyc0x3NSXW7m1OrBj6tXbuomPEyq/leg4V88U1C/lRs9UbQRSB1tvi
+         6og7merWkkjtMrzBTJK4SxfkPMP4pI+OpUjIVXCrLgWKwGOpxCjw6HP09e3r7h/Prncm
+         fRAoIkfvwvJxF7S7TCm4QwdNdY4FeTb5FEw3iaQrmIsMy2e7gAc5KO1GqKJdZXIDYYPX
+         dszA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzAVRld0ieSoTJPWKAxYPpNIY9GaKPNTBhe0r/kfTaknUVNRtw6qDWrSPtKXQ121n92HUUESp8FLPS4a6yuh/JTR4W+ORUTLQOCPLf
+X-Gm-Message-State: AOJu0YyWMCLx+OWNPZX0dXGqUwwaXIT5h6uZGsMi1Lx2g0sQlfL7RMVv
+	MiqXXGUljLyErNCNiRYRAuJkKp27STuNskKhvutas5NGBVKw0AXgPqMjPd/+Jek=
+X-Google-Smtp-Source: AGHT+IHJH5b5XooA6vxYl/ux0hGtgIEdFNhaZyz2JiJVHAJXfPzU9wQ/SBYAIGJZBWwVpFZM4e6MpA==
+X-Received: by 2002:a17:907:7e9b:b0:a38:4eae:b129 with SMTP id qb27-20020a1709077e9b00b00a384eaeb129mr2455655ejc.3.1707295496181;
+        Wed, 07 Feb 2024 00:44:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXD4y+Ezus4AOUzHyJWgh6A6hXrLCrVZBKoWkE0W3oEF/JTD27sbTQK6xQyoJWrBnAUfEZWhID+7mlpMNEKd0kkmQ8o77b4Y4bmYcPaw/sBKUTPNwC+HeAFtFCLPfQ1Xopv4i9LgSzYqZym2Mh9140t6KoFQ0PyOxXiph2KN2ByJAQxH6tvOwNzJMJ5Xkg7LVrG1z7K+HI7sicNl2P0uvx85Xi8vsUDv4Q+m7Ub+TQIEY2rXUtq+PIDrqGbLrq60Gf1xTCtKlwncMj3Cwlnfn8tA4jqgSPeuRjIvvB1eMhsJ1jisXpgeRm+z6/C2DftlpuYaNrrv6M2qY0q4k3L67RYdQRoyu1blHhC+8GDzTLMUyBhe68ONUhSjwSvWaFWt4cDJZplbpJgFCPDfY2Fb/XgSa5RGwSlY9sXuaDwH9Swb69jpyiYR8Fn5exbH1LCzPMw47UFUas=
+Received: from limbo.local ([2a00:1bb8:11e:cb8d:24dc:94bb:6d8:7d12])
+        by smtp.gmail.com with ESMTPSA id u25-20020a1709060b1900b00a370a76d3a0sm493921ejg.123.2024.02.07.00.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 00:44:55 -0800 (PST)
+From: Daniel Drake <drake@endlessos.org>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org
+Cc: hpa@zytor.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bhelgaas@google.com,
+	david.e.box@linux.intel.com,
+	mario.limonciello@amd.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux@endlessos.org
+Subject: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
+Date: Wed,  7 Feb 2024 09:44:51 +0100
+Message-ID: <20240207084452.9597-1-drake@endlessos.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7U02RGhYx/VlMaBtD=1CoDj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - whm50.louhi.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - haloniitty.fi
-X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
-X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 
---Sig_/7U02RGhYx/VlMaBtD=1CoDj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The Asus B1400 with original shipped firmware versions and VMD disabled
+cannot resume from suspend: the NVMe device becomes unresponsive and
+inaccessible.
 
-On Tue, 6 Feb 2024 14:57:48 -0300
-Arthur Grillo <arthurgrillo@riseup.net> wrote:
+This is because the NVMe device and parent PCI bridge get put into D3cold
+during suspend, and this PCI bridge cannot be recovered from D3cold mode:
 
-> On 02/02/24 16:45, Pekka Paalanen wrote:
+  echo "0000:01:00.0" > /sys/bus/pci/drivers/nvme/unbind
+  echo "0000:00:06.0" > /sys/bus/pci/drivers/pcieport/unbind
+  setpci -s 00:06.0 CAP_PM+4.b=03 # D3hot
+  acpidbg -b "execute \_SB.PC00.PEG0.PXP._OFF"
+  acpidbg -b "execute \_SB.PC00.PEG0.PXP._ON"
+  setpci -s 00:06.0 CAP_PM+4.b=0 # D0
+  echo "0000:00:06.0" > /sys/bus/pci/drivers/pcieport/bind
+  echo "0000:01:00.0" > /sys/bus/pci/drivers/nvme/bind
+  # NVMe probe fails here with -ENODEV
 
-...
+This appears to be an untested D3cold transition by the vendor; Intel
+socwatch shows that Windows leaves the NVMe device and parent bridge in D0
+during suspend, even though these firmware versions have StorageD3Enable=1.
 
-> > Would it be possible to have a standardised benchmark specifically
-> > for performance rather than correctness, in IGT or where-ever it
-> > would make sense? Then it would be simple to tell contributors to
-> > run this and report the numbers before and after.
-> >=20
-> > I would propose this kind of KMS layout:
-> >=20
-> > - CRTC size 3841 x 2161
-> > - primary plane, XRGB8888, 3639 x 2161 @ 101,0
-> > - overlay A, XBGR2101010, 3033 x 1777 @ 201,199
-> > - overlay B, ARGB8888, 1507 x 1400 @ 1800,250
-> >=20
-> > The sizes and positions are deliberately odd to try to avoid happy
-> > alignment accidents. The planes are big, which should let the pixel
-> > operations easily dominate performance measurement. There are
-> > different pixel formats, both opaque and semi-transparent. There is
-> > lots of plane overlap. The planes also do not cover the whole CRTC
-> > leaving the background visible a bit.
-> >=20
-> > There should be two FBs per each plane, flipped alternatingly each
-> > frame. Writeback should be active. Run this a number of frames, say,
-> > 100, and measure the kernel CPU time taken. It's supposed to take at
-> > least several seconds in total.
-> >=20
-> > I think something like this should be the base benchmark. One can
-> > add more to it, like rotated planes, YUV planes, etc. or switch
-> > settings on the existing planes. Maybe even FB_DAMAGE_CLIPS. Maybe
-> > one more overlay that is very tall and thin.
-> >=20
-> > Just an idea, what do you all think? =20
->=20
-> Hi Pekka,
->=20
-> I just finished writing this proposal using IGT.
->=20
-> I got pretty interesting results:
->=20
-> The mentioned commit 8356b97906503a02125c8d03c9b88a61ea46a05a took
-> around 13 seconds. While drm-misc/drm-misc-next took 36 seconds.
->=20
-> I'm currently bisecting to be certain that the change to the
-> pixel-by-pixel is the culprit, but I don't see why it wouldn't be.
->=20
-> I just need to do some final touches on the benchmark code and it
-> will be ready for revision.
+Experimenting with the DSDT, the _OFF method calls DL23() which sets a L23E
+bit at offset 0xe2 into the PCI configuration space for this root port.
+This is the specific write that the _ON routine is unable to recover from.
+This register is not documented in the public chipset datasheet.
 
-Awesome, thank you very much for doing that!
-pq
+Disallow D3cold on the PCI bridge to enable successful suspend/resume.
 
---Sig_/7U02RGhYx/VlMaBtD=1CoDj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215742
+Signed-off-by: Daniel Drake <drake@endlessos.org>
+---
+ arch/x86/pci/fixup.c | 45 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+v2:
+Match only specific BIOS versions where this quirk is required.
+Add subsequent patch to this series to revert the original S3 workaround
+now that s2idle is usable again.
 
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmXDQtcACgkQI1/ltBGq
-qqfDMA/+OHdgULaTTkKq/qKGNggOmqKIsJHFC7spImj86x3TGqtux3BPoJx0AjfC
-DhvbCtp1lB95QdtPxDNn6IOxVLP2OEXwaqYtx7+xh3E8p+Ih4IgxeyDg+1N+jEga
-h8PEp6nq4oWC86QCv4wfe4q6fXOtS78zsSXwXaJFlc+m9LNmAfHhlfmIlEc5TUFI
-ZiaPWeRi6e6GbnAlRlMdeUlA24hnDgoDXJRy3ofADb8+zDCL5OCieCjiln3DGjH4
-qlwSVt2pi5qW3syELecQIMDfJ6m3n6eAmdaRTiRurkVniO9RFASSR0d7q9OtFHHP
-KLtzIJmDhk2i8O3dmCrVIZTK4IvOiTadSkLcZLXBct19y0v/Bj3PDcIt1vt4lwpT
-+lpxOuXs+lKXm5fleoPgW+8w/uwsLxR7JYXJ71EFLVZeFMQVOjxI+H34oivauMew
-N5pP+RSbaqIDkghCvJ2Ef1kBeUfqmce9G8rip7oPQSYgNNnozczLsXX67o+/VFOB
-m/w/5853A4kKBwgzXugSYQTA/cmPlGmtJvj6Qy3VMl7jkk13S3rtiodx5SWL2fPP
-gcZPhIBW2BFJNQjEoRgygL9FkWWyppWs0BkGIm+SjqfQnwqWifBEhdlmPKAzDj+s
-/kgrM8kx0Z0r5Q874ZwlhCKXk7RrqkbzWCtTsLS9Niyf8ZqZcjE=
-=x6Do
------END PGP SIGNATURE-----
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index f347c20247d30..6b0b341178e4f 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -907,6 +907,51 @@ static void chromeos_fixup_apl_pci_l1ss_capability(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_save_apl_pci_l1ss_capability);
+ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_fixup_apl_pci_l1ss_capability);
+ 
++/*
++ * Disable D3cold on Asus B1400 PCIe bridge at 00:06.0.
++ *
++ * On this platform with VMD off, the NVMe's parent PCI bridge cannot
++ * successfully power back on from D3cold, resulting in unresponsive NVMe on
++ * resume. This appears to be an untested transition by the vendor: Windows
++ * leaves the NVMe and parent bridge in D0 during suspend.
++ * This is only needed on BIOS versions before 308; the newer versions flip
++ * StorageD3Enable from 1 to 0.
++ */
++static const struct dmi_system_id asus_nvme_broken_d3cold_table[] = {
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.304"),
++		},
++	},
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.305"),
++		},
++	},
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.306"),
++		},
++	},
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.307"),
++		},
++	},
++	{}
++};
++
++static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
++{
++	if (dmi_check_system(asus_nvme_broken_d3cold_table) > 0)
++		pci_d3cold_disable(pdev);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
++
+ #ifdef CONFIG_SUSPEND
+ /*
+  * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
+-- 
+2.43.0
 
---Sig_/7U02RGhYx/VlMaBtD=1CoDj--
