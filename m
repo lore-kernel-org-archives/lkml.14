@@ -1,214 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8C8F9E0
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06BB1095C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707273814; cv=none; b=hV4Nfl6CqDI3DDKCPo0571IzAGHVHwex/q6GtttxPzfLmsSdZzcu5NQYDNJREd6A8uPeYhq/74W6ZpZC6UxO0c18iI/jpAAtF8RuRpqg/WrwSufeHbsi31caWvYhVunneOgg1njQsk+Jj5sFDUp8T00MQoh9bFT8peA02hjtYdU=
+	t=1707273822; cv=none; b=uTNUhxeZIekX8KaOoOz57+tS7ghLQ1OIv76tWt6LFDwZM6RFqxANv9K1PPzbGKg7ykvOR2IDk3MBbTru8xi06krXtyys0FfECX138WC/iWmRpAUSephRO4dvX7hHS30HaQfIbacJUWjCuOadyOGN05KRNcH9hmZ5eKys8C9Qi7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707273814; c=relaxed/simple;
-	bh=lBbq+SKFIMDkavFWlLpMRvpWCsSN2FTxyTyK71Ph82A=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=k3CpHqI4k9R+Qsu52z2x9smHrF6oG3CgIS87i63gP7WtibAxfRNR7AARt3abcUuvP2S+y/Di8WtiTbIrrT1agifXlFpq+LtUim3yB1YDO6U4tCZMdB9fP9Firh3/KaFz56XW5UI4SWjwKKi/eAZigRZ5dO2dkXP4dyrmy+Ul5NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Icq2GSWB; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707273822; c=relaxed/simple;
+	bh=yAc2qDg86yKSHh+BWfG2RTtPpu6Cksg1ErI8pCgZ7jE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Qsz5mdFEdNH7pUxh53+O4HeUfN2TrZeefGe8BWvWtaTzbIXjNa/FeJL7YZpqIE0p5VBVCcQ0mQluE9fl9KVxSqFSG09/7b0hArFxv5SuFQ7cvPbB0+Dkc9KiJtH2Dju8WxtfvYm/ZHovHk2F5R1JU3Ionoskpi5EA42tqsIbDao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=grFK2SFK; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Icq2GSWB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707273812; x=1738809812;
-  h=date:from:to:cc:subject:message-id;
-  bh=lBbq+SKFIMDkavFWlLpMRvpWCsSN2FTxyTyK71Ph82A=;
-  b=Icq2GSWBGvhgkAlevBTqcjBeRXnVldsFHAx0dQGpLdVCFcYfRfklDjmA
-   j6KeUW0VJH8V8vLDuEeID+zP4lJxtyskERwfWETxTi7On+WYdh4B5HaKY
-   OcC2A8b3/tgNGpkh41D/PRG1t3STHQg0PVxvy1R95ufTROGzCzATHk47x
-   4C+X9GZtlOpVhAd4us0CAM+JeYgaSTE4ai4ol/K4T8SzuL3jBncZf36rC
-   Xy7FGOtJi94vnZ0Y+JgeukpTQQNUBJdCmhnBcHvWtkMSbwB9qP8tqaHkT
-   9/ERd2DaXq5+bqBgUA8NTHgPZlPA70alkNY5+Nsabb3plwiC0hcr/31zp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="11478972"
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="11478972"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 18:43:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="909840851"
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="909840851"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Feb 2024 18:43:30 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXXuJ-00020C-2N;
-	Wed, 07 Feb 2024 02:43:27 +0000
-Date: Wed, 07 Feb 2024 10:42:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/boot] BUILD SUCCESS
- ac456ca0af4fe9630cf84e7efd20b7f7bf596aab
-Message-ID: <202402071043.bcIEhpsq-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grFK2SFK"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf216080f5so236056276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 18:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707273820; x=1707878620; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g7guOO3K6cZeccVPYodTSSR3CLbTuFzc0JepOhwBqf8=;
+        b=grFK2SFKZqLTXSDLVLI4bcvE0N08jdaLe1SI3FOpqQ0ljetYoTLDld5EdWLBmT/LbW
+         0eINMxXXSg3F9w4BlsaXm7IRfS6/gBFePOjaGmLOOBk8K2dgvImHNZoihGK05rhzS9EM
+         sd2OSZ6Fwd372IpKtvHh44VzMFVSoIqQuLQKtLJ+4oHPMwBnmPAU2x8m49+RFnt3lMb8
+         QibJ+olqqhcCADpriEKFktx1v0WeIG7zqS7K0juyRfpMBGPWadCBeuB/b2QlrQRFTBUU
+         V/d1UhftHn1nmFNSyhSn7AQbvrW3HF+5wmzWYsyPhg3QmSSeBRM2nHzZ2byyjFMNfceA
+         Ccqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707273820; x=1707878620;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g7guOO3K6cZeccVPYodTSSR3CLbTuFzc0JepOhwBqf8=;
+        b=YvEaVPPYFqJYSKvtevhaiGl1FVsQguka85lkXzDQ1Vlj/HZJXcV77/4AEmgKk2BCqK
+         gKoeGzWLCoksQ4RQqZFPTmPWvNOyeg6f1wkb1+TTV5T9UPP9M/YhcPo9IAg6O9Hr45Ak
+         vrtY5ukAhrmWdFTcCHwHLkMAWpP+z7Zw0lxikoWIEqieDF78Eou4zl9lmk9gnTmjnPDm
+         RGQmeObvk/G5siA405XpfoVA6smK4UwBiHSeSznrU5lW2mHqTLRYhp0y9PER5bvNgNsB
+         vTma5hSgYJi06AnMJW/HpYkBCvvuPcJtxPm/gwI9f2gSz02LlrWm/Y5Ois8Trwbr4hzn
+         SPGQ==
+X-Gm-Message-State: AOJu0YwEjHglB0AYqmWP2FiIq6B9ky+Jd9DRapamtHld+xQwoZc7un9P
+	Kc15nr8KyFlueW0FxX7NxKrkZ6f24u86JKkqk55Jv4jgf+TWGKuC2fiDZu+bVBcRkMhP9Gj7aqc
+	3ZQ==
+X-Google-Smtp-Source: AGHT+IHFKn95FP8tDKGyeHSLkuyZnMtdrnlqEFcDN45UncE4QphOeyXOIkcKI10ZFatjnFxEnz3hwTc5JAw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2485:b0:dc2:550b:a4f4 with SMTP id
+ ds5-20020a056902248500b00dc2550ba4f4mr906756ybb.1.1707273820039; Tue, 06 Feb
+ 2024 18:43:40 -0800 (PST)
+Date: Tue, 6 Feb 2024 18:43:38 -0800
+In-Reply-To: <CABgObfa_PbxXdj9v7=2ZXfqQ_tJgdQTrO9NHKOQ691TSKQDY2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20231230172351.574091-1-michael.roth@amd.com> <20231230172351.574091-19-michael.roth@amd.com>
+ <ZZ67oJwzAsSvui5U@google.com> <20240116041457.wver7acnwthjaflr@amd.com>
+ <Zb1yv67h6gkYqqv9@google.com> <CABgObfa_PbxXdj9v7=2ZXfqQ_tJgdQTrO9NHKOQ691TSKQDY2A@mail.gmail.com>
+Message-ID: <ZcLuGxZ-w4fPmFxd@google.com>
+Subject: Re: [PATCH v11 18/35] KVM: SEV: Add KVM_SEV_SNP_LAUNCH_UPDATE command
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-mm@kvack.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, 
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
+	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
+	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com, 
+	Brijesh Singh <brijesh.singh@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
-branch HEAD: ac456ca0af4fe9630cf84e7efd20b7f7bf596aab  x86/boot: Add a message about ignored early NMIs
+On Wed, Feb 07, 2024, Paolo Bonzini wrote:
+> On Fri, Feb 2, 2024 at 11:55=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> > > It doesn't really matter if the attributes are set before or after
+> > > KVM_SNP_LAUNCH_UPDATE, only that by the time the guest actually launc=
+hes
+> > > they pages get set to private so they get faulted in from gmem. We co=
+uld
+> > > document our expectations and enforce them here if that's preferable
+> > > however. Maybe requiring KVM_SET_MEMORY_ATTRIBUTES(private) in advanc=
+e
+> > > would make it easier to enforce that userspace does the right thing.
+> > > I'll see how that looks if there are no objections.
+> >
+> > Userspace owns whether a page is PRIVATE or SHARED, full stop.  If KVM =
+can't
+> > honor that, then we need to come up with better uAPI.
+>=20
+> Can you explain more verbosely what you mean?
 
-elapsed time: 1004m
+As proposed, snp_launch_update_gfn_handler() doesn't verify the state of th=
+e
+gfns' attributes.  But that's a minor problem and probably not a sticking p=
+oint.
 
-configs tested: 140
-configs skipped: 135
+My overarching complaint is that the code is to be wildly unsafe, or at the=
+ very
+least brittle.  Without guest_memfd's knowledge, and without holding any lo=
+cks
+beyond kvm->lock, it=20
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+ 1) checks if a pfn is shared in the RMP
+ 2) copies data to the page
+ 3) converts the page to private in the RMP
+ 4) does PSP stuff
+ 5) on failure, converts the page back to shared in RMP
+ 6) conditionally on failure, writes to the page via a gfn
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              alldefconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                            hsdk_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                          sp7021_defconfig   gcc  
-arm                           spitz_defconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                          allyesconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240206   clang
-i386         buildonly-randconfig-002-20240206   clang
-i386         buildonly-randconfig-003-20240206   gcc  
-i386         buildonly-randconfig-004-20240206   clang
-i386         buildonly-randconfig-005-20240206   gcc  
-i386         buildonly-randconfig-006-20240206   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240206   clang
-i386                  randconfig-001-20240207   gcc  
-i386                  randconfig-002-20240206   clang
-i386                  randconfig-003-20240206   clang
-i386                  randconfig-003-20240207   gcc  
-i386                  randconfig-004-20240206   clang
-i386                  randconfig-004-20240207   gcc  
-i386                  randconfig-005-20240206   clang
-i386                  randconfig-005-20240207   gcc  
-i386                  randconfig-006-20240206   clang
-i386                  randconfig-011-20240206   clang
-i386                  randconfig-011-20240207   gcc  
-i386                  randconfig-012-20240206   gcc  
-i386                  randconfig-012-20240207   gcc  
-i386                  randconfig-013-20240206   clang
-i386                  randconfig-013-20240207   gcc  
-i386                  randconfig-014-20240206   gcc  
-i386                  randconfig-014-20240207   gcc  
-i386                  randconfig-015-20240206   gcc  
-i386                  randconfig-015-20240207   gcc  
-i386                  randconfig-016-20240206   gcc  
-i386                  randconfig-016-20240207   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   gcc  
-mips                     decstation_defconfig   gcc  
-mips                 decstation_r4k_defconfig   gcc  
-mips                      fuloong2e_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-powerpc                          allyesconfig   clang
-riscv                            allmodconfig   clang
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                           sh2007_defconfig   gcc  
-sh                   sh7770_generic_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                                  defconfig   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240206   gcc  
-x86_64       buildonly-randconfig-001-20240207   clang
-x86_64       buildonly-randconfig-002-20240206   clang
-x86_64       buildonly-randconfig-002-20240207   clang
-x86_64       buildonly-randconfig-003-20240206   gcc  
-x86_64       buildonly-randconfig-004-20240206   gcc  
-x86_64       buildonly-randconfig-004-20240207   clang
-x86_64       buildonly-randconfig-005-20240206   gcc  
-x86_64       buildonly-randconfig-005-20240207   clang
-x86_64       buildonly-randconfig-006-20240206   gcc  
-x86_64       buildonly-randconfig-006-20240207   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240206   clang
-x86_64                randconfig-001-20240207   clang
-x86_64                randconfig-002-20240206   clang
-x86_64                randconfig-003-20240206   gcc  
-x86_64                randconfig-004-20240206   gcc  
-x86_64                randconfig-005-20240206   gcc  
-x86_64                randconfig-005-20240207   clang
-x86_64                randconfig-006-20240206   clang
-x86_64                randconfig-006-20240207   clang
-x86_64                randconfig-011-20240206   gcc  
-x86_64                randconfig-011-20240207   clang
-x86_64                randconfig-012-20240206   clang
-x86_64                randconfig-013-20240206   gcc  
-x86_64                randconfig-013-20240207   clang
-x86_64                randconfig-014-20240206   clang
-x86_64                randconfig-014-20240207   clang
-x86_64                randconfig-015-20240206   gcc  
-x86_64                randconfig-016-20240206   clang
-x86_64                randconfig-071-20240206   gcc  
-x86_64                randconfig-072-20240206   gcc  
-x86_64                randconfig-072-20240207   clang
-x86_64                randconfig-073-20240206   gcc  
-x86_64                randconfig-073-20240207   clang
-x86_64                randconfig-074-20240206   gcc  
-x86_64                randconfig-075-20240206   clang
-x86_64                randconfig-076-20240206   gcc  
-x86_64                randconfig-076-20240207   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                           allyesconfig   gcc  
+I'm not at all confident that 1-4 isn't riddled with TOCTOU bugs, and that'=
+s
+before KVM gains support for intrahost migration, i.e. before KVM allows mu=
+ltiple
+VM instances to bind to a single guest_memfd.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+But I _think_ we mostly sorted this out at PUCK.  IIRC, the plan is to have=
+ guest_memfd
+provide (kernel) APIs to allow arch/vendor code to initialize a guest_memfd=
+ range.
+That will give guest_memfd complete control over the state of a given page,=
+ will
+allow guest_memfd to take the appropriate locks, and if we're lucky, will b=
+e reusable
+by other CoCo flavors beyond SNP.
+
+> > > > > +                  * When invalid CPUID function entries are dete=
+cted, the firmware
+> > > > > +                  * corrects these entries for debugging purpose=
+ and leaves the
+> > > > > +                  * page unencrypted so it can be provided users=
+ for debugging
+> > > > > +                  * and error-reporting.
+> > > >
+> > > > Why?  IIUC, this is basically backdooring reads/writes into guest_m=
+emfd to avoid
+> > > > having to add proper mmap() support.
+> >
+> > Yes, I am specifically complaining about writing guest memory on failur=
+e, which is
+> > all kinds of weird.
+>=20
+> It is weird but I am not sure if you are complaining about firmware
+> behavior or something else.
+
+This proposed KVM code:
+
++                               host_rmp_make_shared(pfns[i], PG_LEVEL_4K, =
+true);
++
++                               ret =3D kvm_write_guest_page(kvm, gfn, kvad=
+dr, 0, PAGE_SIZE);
++                               if (ret)
++                                       pr_err("Failed to write CPUID page =
+back to userspace, ret: 0x%x\n",
++                                              ret);
+
+
+I have no objection to propagating error/debug information back to userspac=
+e,
+but it needs to be routed through the source page (or I suppose some dedica=
+ted
+error page, but that seems like overkill).  Shoving the error information i=
+nto
+guest memory is gross.
+
+But this should naturally go away when the requirement that the source be
+covered by the same memslot also goes away.
