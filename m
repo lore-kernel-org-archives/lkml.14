@@ -1,407 +1,197 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3C3320A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 00:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154EE28E8
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 00:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707264393; cv=none; b=nyIOlAKQEBFcV9X7deecxBeGkfMwhjv/OfC6hbSwM7zqfvni+6NnCoCfKyKuuYVeYt5dDNdCdFuModE+4QB4B+pvKTShKdbr9mPync5YmtVhbYDRDj2gsZAD/aI0nMOVlvjzrLas4JOameWrtmSr90yaWRWcKViVe2cMHgB4k3U=
+	t=1707264451; cv=none; b=R0RbQkySTkwxVZ9hR9SyjUGS6SaVitGsb+SKGdwk3/5ByGt5RdpnnFKxQp/8MPiDy/SCULU5tJPB5/Oqdo+5wYz45zMwsYCSHxKdauSqcybM933cb9esDL1h1sPQLbgq9yMRl9aWevB+W+5ZjKPKWcZ8FvMU1GNnbXrbVVyArpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707264393; c=relaxed/simple;
-	bh=zgzRCRc6PlQ0xAur3EaDCOu3AFffom7foEopcrYHzuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UkpWDE1c9iJzQ1nNVWFDYgM6D8eQC6QozAQdM7UpeY9Tz+mC8qyQblL7nCpr109/3jmvGyXvrruCAHI+tjvw7govOjVJpfR5ha3SucSjuL4omrSdeqPVQ/Fukm+X8wH5sIXQfpXmmki1tZVezev4i1QBTg90gcDSoG2dVsZ7rH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=HRFUHUKg; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="HRFUHUKg"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59a1a03d09aso10180eaf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 16:06:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707264390; x=1707869190; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=omRTyCmAM7jJxEImrpnKGb2D944Dl743CEPuxVsxa5E=;
-        b=HRFUHUKgFWzpHPAk2UYxwxrA7+jwrMrfHrK5Qe0ehAO/CUO4A8foOZORcaQ3rbTCC3
-         vXAHuLCti+fDNLbu2RP/HjheIUl0PUcUIfbfmOhV4EQPoF6SwRUHHjDFSRGsd/BoFvsc
-         Vnq4g3FziB99BZoxreAEVuOhlmOVTYmpesK43Q6kpJYq9cTm1cY5jtoKSBFcx0/vDxYh
-         DW3+05Ed3y/2rHTQA1Moa0wT0MA/5BD0pvjYPFLOP/ArbAEuPrYdZ9N4eAPFDJEWp3CP
-         16Xb6l5dGRVfIpcvTbxFxER5FUiDl/85ZffbSBoMQfc/Y5KpoGkPmRylfI9ZCt/K04We
-         p4Cw==
+	s=arc-20240116; t=1707264451; c=relaxed/simple;
+	bh=fzBMwjP3R+a5R2HdhiIMhtmDSAFyjPs7cnyLs+nLCOU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PYwnPX6l3Xog3RAuvSFrhmoCEnM7diOagg5LzzSocAV2kcQDGwa85wPc6uHOH/M5USAyMOVOng8GJOPLCDpREMTrpYx3gPWr1Qn2uXW814PjQGG5afRhPTA8Rr74Mlrp2TOfunfJ47gaFKZ7CanQPZMuIBFc4WNcFIU4f90Qw1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7becfc75cd4so5886239f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 16:07:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707264390; x=1707869190;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=omRTyCmAM7jJxEImrpnKGb2D944Dl743CEPuxVsxa5E=;
-        b=DBY7HCuHhZg2ntDAifeW7IlK2CfsRq+j28AAlKTh1cJ5EmaKtrPGs5Zmv9DgrvcKFO
-         VYphbQ9fPEgjkG74k67RUd0bC+W/QFLd7lj0lDo9rUTDugjTsCQFzIxUYxMfp7oKQUWB
-         JKeIzFmVXnjV1q7aTr/AffCpT79fmBr2oJZTwRO7Jdo74gaWcQGzaaFBtFjYoTf/BNGr
-         lNLEwWYllyQ3zQCM5JU1emeho6wCXGMs0GLHsN+P7Hszvv6/hfU7egD7Qh+gsw/RBC/x
-         Goa3ntu6633mf67bIAyaFYBcLU8oVZiBOMGihAhxxrID9ah/Efr4Uk1oCqgn3esqpfx/
-         HPBg==
-X-Gm-Message-State: AOJu0YxrXU7OPsUCSgFiQfLDvcMoXNHp+vedvZG8vjHThF/uIF8Vpdjl
-	VBmli/wqI1grELErvR+EC8mR7rQgVJxilSTIFOumZxINFRSCRITNE5qCrvlA5AM=
-X-Google-Smtp-Source: AGHT+IHiEV0kPrsYCZ5D4idtfD/y3CYew0/pD//7f+VRvKHiVIONBEgAn8yWDtGOGxC8Y3YI9LQrEg==
-X-Received: by 2002:a05:6358:72aa:b0:178:6211:871 with SMTP id w42-20020a05635872aa00b0017862110871mr1250737rwf.0.1707264389674;
-        Tue, 06 Feb 2024 16:06:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXlFPrCqm45GRCKDup0Jl3jQtxKZOIXJnGfPbYnwZsm3dOzxzuQlyklUaEcnOlll+fFIW9ta343vcUOy+YqzXGcn6BowzOMxhB18Hee1+5tMEHEt7pwQgqkgfnN8Y/eX2om/1uQKlyMwTvZkayp8I3Atf9gHtalxDTY8G78rnKfzdHEkUxES49wY34tTHvqL+2exoa7raCQzsua4l3qmLWiZL+uvV6kNyHppkq8beGxOLpJMM6kogpMciUr6mlcxqcfHCIN5XXktmr68b0WFbd6AYJnZX+pbdhsrRVsmzx6Brou7hHuYEHIi1FTTLaT/15UmyhckKhbSCcIAKrS4T2YWsmduX9Hew+0Q0IaBZRp3eiak1mqNzUiEVM0BQ/cdKZ3fGrkE/dHiD7GqoV16xXueGm4cqwy/ghcMJuzwvusbnjycRmFLWlE329i18d9pr4a
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id j18-20020a056a00235200b006e0350189f0sm80668pfj.91.2024.02.06.16.06.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 16:06:29 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rXVSL-0032pa-2w;
-	Wed, 07 Feb 2024 11:06:25 +1100
-Date: Wed, 7 Feb 2024 11:06:25 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, hch@lst.de,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, chandan.babu@oracle.com, martin.petersen@oracle.com,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	ojaswin@linux.ibm.com
-Subject: Re: [PATCH RFC 5/6] fs: xfs: iomap atomic write support
-Message-ID: <ZcLJgVu9A3MsWBI0@dread.disaster.area>
-References: <20240124142645.9334-1-john.g.garry@oracle.com>
- <20240124142645.9334-6-john.g.garry@oracle.com>
- <20240202184758.GA6226@frogsfrogsfrogs>
- <e61cf382-66bd-4091-b49c-afbb5ce67d8f@oracle.com>
- <ZcGIPlNCkL6EDx3Z@dread.disaster.area>
- <434c570e-39b2-4f1c-9b49-ac5241d310ca@oracle.com>
+        d=1e100.net; s=20230601; t=1707264449; x=1707869249;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OEF1tKQoR2J3woTag73sOwwH7baxXxEr34WqP9038pg=;
+        b=NsA+8Btwyldq72koh2qXCH0twbpQje5DF4wbMftlXRG2AlPggdXzk+ZyMzRx0Ya/Qh
+         6CyeL+5sdjGGjSbCO93rPKfon+4y9nkaw/pwQOBx2JTngMgx2OsbYu7KgyDRBMsUMTJS
+         VEDaq3GYkDDPZBs2pVKs2bgEUPN27nWg+AII8L0tigjtEePDXUAC9t5F2+k0dej+rGG/
+         Sh6/71aZErTzHng3PhWr0i8gOD6YJ6peEw8ETSAFrC6SGOTARcEu7PRlNLGD3Dgom9fx
+         kgdU+Y4DntFqbJMDDusJaWqaztc7NxsA9XNTVHq8shhmtcA6VRj+vnCdeX3ZyfhmPyCU
+         0YAg==
+X-Gm-Message-State: AOJu0Yy67EzDYxANaesDhiF3CEYNfa0QbHZL4Obne3EqKdOSHvBWOfUT
+	1MnhqHzZ2AfHYDETyYFeOp0+tNwFOahsT5Edzs6tNlFKJ5m52O4lxT/h6zrzRgIwTenacZk0bag
+	3fkQD+SJhUvoLBg1T9ZQbUJKh9Xr2gLIUPTKxlOQKyerS2b2pVU7xsZI=
+X-Google-Smtp-Source: AGHT+IFG5NSDC+h42rp1GTbwW/E6K5b3F2dv0r7w0pkLfSL+5ZlsjoFnWtxwdMjaBhcrohwkoPjYFWEfTOMWyHaK4e9ZY8sx5o/e
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <434c570e-39b2-4f1c-9b49-ac5241d310ca@oracle.com>
+X-Received: by 2002:a05:6638:35ac:b0:471:cde:78e with SMTP id
+ v44-20020a05663835ac00b004710cde078emr75269jal.3.1707264449265; Tue, 06 Feb
+ 2024 16:07:29 -0800 (PST)
+Date: Tue, 06 Feb 2024 16:07:29 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000946190610bf7bd5@google.com>
+Subject: [syzbot] [dri?] [media?] inconsistent lock state in valid_state (2)
+From: syzbot <syzbot+a225ee3df7e7f9372dbe@syzkaller.appspotmail.com>
+To: christian.koenig@amd.com, dri-devel@lists.freedesktop.org, 
+	gustavo@padovan.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	sumit.semwal@linaro.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 06, 2024 at 09:53:11AM +0000, John Garry wrote:
-> Hi Dave,
-> 
-> > > > > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> > > > > index 18c8f168b153..758dc1c90a42 100644
-> > > > > --- a/fs/xfs/xfs_iomap.c
-> > > > > +++ b/fs/xfs/xfs_iomap.c
-> > > > > @@ -289,6 +289,9 @@ xfs_iomap_write_direct(
-> > > > >    		}
-> > > > >    	}
-> > > > > +	if (xfs_inode_atomicwrites(ip))
-> > > > > +		bmapi_flags = XFS_BMAPI_ZERO;
-> > 
-> > We really, really don't want to be doing this during allocation
-> > unless we can avoid it. If the filesystem block size is 64kB, we
-> > could be allocating up to 96GB per extent, and that becomes an
-> > uninterruptable write stream inside a transaction context that holds
-> > inode metadata locked.
-> 
-> Where does that 96GB figure come from?
+Hello,
 
-My inability to do math. The actual number is 128GB.
+syzbot found the following issue on:
 
-Max extent size = XFS_MAX_BMBT_EXTLEN * fs block size.
-	        = 2^21 * fs block size.
+HEAD commit:    021533194476 Kconfig: Disable -Wstringop-overflow for GCC ..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10a82db0180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=457249c250b93697
+dashboard link: https://syzkaller.appspot.com/bug?extid=a225ee3df7e7f9372dbe
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-So for a 4kB block size filesystem, that's 8GB max extent length,
-and that's the most we will allocate in a single transaction (i.e.
-one new BMBT record).
+Unfortunately, I don't have any reproducer for this issue yet.
 
-For 64kB block size, we can get 128GB of space allocated in a single
-transaction.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/da8c6426660d/disk-02153319.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a866aaa09be9/vmlinux-02153319.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4a5680d805d7/bzImage-02153319.xz
 
-> > > > Why do we want to write zeroes to the disk if we're allocating space
-> > > > even if we're not sending an atomic write?
-> > > > 
-> > > > (This might want an explanation for why we're doing this at all -- it's
-> > > > to avoid unwritten extent conversion, which defeats hardware untorn
-> > > > writes.)
-> > > 
-> > > It's to handle the scenario where we have a partially written extent, and
-> > > then try to issue an atomic write which covers the complete extent.
-> > 
-> > When/how would that ever happen with the forcealign bits being set
-> > preventing unaligned allocation and writes?
-> 
-> Consider this scenario:
-> 
-> # mkfs.xfs -r rtdev=/dev/sdb,extsize=64K -d rtinherit=1 /dev/sda
-> # mount /dev/sda mnt -o rtdev=/dev/sdb
-> # touch  mnt/file
-> # /test-pwritev2 -a -d -l 4096 -p 0 /root/mnt/file # direct IO, atomic
-> write, 4096B at pos 0
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a225ee3df7e7f9372dbe@syzkaller.appspotmail.com
 
-Please don't write one-off custom test programs to issue IO - please
-use and enhance xfs_io so the test cases can then be put straight
-into fstests without adding yet another "do some minor IO variant"
-test program. This also means you don't need a random assortment of
-other tools.
+================================
+WARNING: inconsistent lock state
+6.8.0-rc2-syzkaller-00199-g021533194476 #0 Not tainted
+--------------------------------
+inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+syz-executor.4/9508 [HC0[0]:SC0[0]:HE0:SE1] takes:
+ffffffff8ea8c5d8 (sync_timeline_list_lock){?...}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:376 [inline]
+ffffffff8ea8c5d8 (sync_timeline_list_lock){?...}-{2:2}, at: sync_info_debugfs_show+0x94/0x4d0 drivers/dma-buf/sync_debug.c:147
+{IN-HARDIRQ-W} state was registered at:
+  lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+  sync_timeline_debug_remove+0x2c/0x150 drivers/dma-buf/sync_debug.c:31
+  sync_timeline_free drivers/dma-buf/sw_sync.c:125 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  sync_timeline_put drivers/dma-buf/sw_sync.c:137 [inline]
+  timeline_fence_release+0x204/0x250 drivers/dma-buf/sw_sync.c:165
+  kref_put include/linux/kref.h:65 [inline]
+  dma_fence_put include/linux/dma-fence.h:297 [inline]
+  dma_fence_array_release+0x13e/0x240 drivers/dma-buf/dma-fence-array.c:120
+  irq_work_single+0xe1/0x240 kernel/irq_work.c:221
+  irq_work_run_list kernel/irq_work.c:252 [inline]
+  irq_work_run+0x18b/0x350 kernel/irq_work.c:261
+  __sysvec_irq_work+0xa8/0x3e0 arch/x86/kernel/irq_work.c:22
+  sysvec_irq_work+0x8f/0xb0 arch/x86/kernel/irq_work.c:17
+  asm_sysvec_irq_work+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
+  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:160 [inline]
+  _raw_spin_unlock_irq+0x29/0x50 kernel/locking/spinlock.c:202
+  spin_unlock_irq include/linux/spinlock.h:401 [inline]
+  sw_sync_debugfs_release+0x14b/0x1d0 drivers/dma-buf/sw_sync.c:359
+  __fput+0x429/0x8a0 fs/file_table.c:376
+  task_work_run+0x24e/0x310 kernel/task_work.c:180
+  exit_task_work include/linux/task_work.h:38 [inline]
+  do_exit+0xa2c/0x2740 kernel/exit.c:871
+  do_group_exit+0x206/0x2c0 kernel/exit.c:1020
+  __do_sys_exit_group kernel/exit.c:1031 [inline]
+  __se_sys_exit_group kernel/exit.c:1029 [inline]
+  __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1029
+  do_syscall_64+0xf9/0x240
+  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+irq event stamp: 364
+hardirqs last  enabled at (363): [<ffffffff8b710daf>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
+hardirqs last  enabled at (363): [<ffffffff8b710daf>] _raw_spin_unlock_irqrestore+0x8f/0x140 kernel/locking/spinlock.c:194
+hardirqs last disabled at (364): [<ffffffff8b710bdd>] __raw_spin_lock_irq include/linux/spinlock_api_smp.h:117 [inline]
+hardirqs last disabled at (364): [<ffffffff8b710bdd>] _raw_spin_lock_irq+0xad/0x120 kernel/locking/spinlock.c:170
+softirqs last  enabled at (0): [<ffffffff8156a0f3>] rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+softirqs last  enabled at (0): [<ffffffff8156a0f3>] rcu_read_lock include/linux/rcupdate.h:750 [inline]
+softirqs last  enabled at (0): [<ffffffff8156a0f3>] copy_process+0x9c3/0x3fc0 kernel/fork.c:2366
+softirqs last disabled at (0): [<0000000000000000>] 0x0
 
-i.e.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-# xfs_io -dc "pwrite -VA 0 4096" /root/mnt/file
+       CPU0
+       ----
+  lock(sync_timeline_list_lock);
+  <Interrupt>
+    lock(sync_timeline_list_lock);
 
-Should do an RWF_ATOMIC IO, and
+ *** DEADLOCK ***
 
-# xfs_io -dc "pwrite -VAD 0 4096" /root/mnt/file
+3 locks held by syz-executor.4/9508:
+ #0: ffff888086cd7748 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x258/0x320 fs/file.c:1191
+ #1: ffff88801f9c8448 (&p->lock){+.+.}-{3:3}, at: seq_read_iter+0xb7/0xd60 fs/seq_file.c:182
+ #2: ffffffff8ea8c5d8 (sync_timeline_list_lock){?...}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:376 [inline]
+ #2: ffffffff8ea8c5d8 (sync_timeline_list_lock){?...}-{2:2}, at: sync_info_debugfs_show+0x94/0x4d0 drivers/dma-buf/sync_debug.c:147
 
-should do an RWF_ATOMIC|RWF_DSYNC IO...
+stack backtrace:
+CPU: 0 PID: 9508 Comm: syz-executor.4 Not tainted 6.8.0-rc2-syzkaller-00199-g021533194476 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ valid_state+0x13a/0x1c0 kernel/locking/lockdep.c:4013
+ mark_lock_irq+0xbb/0xc20 kernel/locking/lockdep.c:4216
+ mark_lock+0x223/0x350 kernel/locking/lockdep.c:4678
+ mark_held_locks kernel/locking/lockdep.c:4274 [inline]
+ __trace_hardirqs_on_caller kernel/locking/lockdep.c:4292 [inline]
+ lockdep_hardirqs_on_prepare+0x281/0x780 kernel/locking/lockdep.c:4359
+ trace_hardirqs_on+0x28/0x40 kernel/trace/trace_preemptirq.c:61
+ __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:159 [inline]
+ _raw_spin_unlock_irq+0x23/0x50 kernel/locking/spinlock.c:202
+ spin_unlock_irq include/linux/spinlock.h:401 [inline]
+ sync_print_obj drivers/dma-buf/sync_debug.c:118 [inline]
+ sync_info_debugfs_show+0x158/0x4d0 drivers/dma-buf/sync_debug.c:153
+ seq_read_iter+0x445/0xd60 fs/seq_file.c:230
+ seq_read+0x3a3/0x4f0 fs/seq_file.c:162
+ vfs_read+0x204/0xb70 fs/read_write.c:474
+ ksys_read+0x1a0/0x2c0 fs/read_write.c:619
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7fc881e7dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fc882b390c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00007fc881fabf80 RCX: 00007fc881e7dda9
+RDX: 0000000000002020 RSI: 0000000020001b00 RDI: 0000000000000006
+RBP: 00007fc881eca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007fc881fabf80 R15: 00007fc8820cfa48
+ </TASK>
 
 
-> # filefrag -v mnt/file
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-xfs_io -c "fiemap" mnt/file
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-> Filesystem type is: 58465342
-> File size of mnt/file is 4096 (1 block of 4096 bytes)
->   ext:     logical_offset:        physical_offset: length:   expected:
-> flags:
->     0:        0..       0:         24..        24:      1:
-> last,eof
-> mnt/file: 1 extent found
-> # /test-pwritev2 -a -d -l 16384 -p 0 /root/mnt/file
-> wrote -1 bytes at pos 0 write_size=16384
-> #
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Whole test as one repeatable command:
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-# xfs_io -d -c "truncate 0" -c "chattr +r" \
-	-c "pwrite -VAD 0 4096" \
-	-c "fiemap" \
-	-c "pwrite -VAD 0 16384" \
-	/mnt/root/file
-> 
-> For the 2nd write, which would cover a 16KB extent, the iomap code will iter
-> twice and produce 2x BIOs, which we don't want - that's why it errors there.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Yes, but I think that's a feature.  You've optimised the filesystem
-layout for IO that is 64kB sized and aligned IO, but your test case
-is mixing 4kB and 16KB IO. The filesystem should be telling you that
-you're doing something that is sub-optimal for it's configuration,
-and refusing to do weird overlapping sub-rtextsize atomic IO is a
-pretty good sign that you've got something wrong.
-
-The whole reason for rtextsize existing is to optimise the rtextent
-allocation to the typical minimum IO size done to that volume. If
-all your IO is sub-rtextsize size and alignment, then all that has
-been done is forcing the entire rt device IO into a corner it was
-never really intended nor optimised for.
-
-Why should we jump through crazy hoops to try to make filesystems
-optimised for large IOs with mismatched, overlapping small atomic
-writes?
-
-> With the change in this patch, instead we have something like this after the
-> first write:
-> 
-> # /test-pwritev2 -a -d -l 4096 -p 0 /root/mnt/file
-> wrote 4096 bytes at pos 0 write_size=4096
-> # filefrag -v mnt/file
-> Filesystem type is: 58465342
-> File size of mnt/file is 4096 (1 block of 4096 bytes)
->   ext:     logical_offset:        physical_offset: length:   expected:
-> flags:
->     0:        0..       3:         24..        27:      4:
-> last,eof
-> mnt/file: 1 extent found
-> #
-> 
-> So the 16KB extent is in written state and the 2nd 16KB write would iter
-> once, producing a single BIO.
-
-Sure, I know how it works. My point is that it's a terrible way to
-go about allowing that second atomic write to succeed.
-
-> > > In this
-> > > scenario, the iomap code will issue 2x IOs, which is unacceptable. So we
-> > > ensure that the extent is completely written whenever we allocate it. At
-> > > least that is my idea.
-> > 
-> > So return an unaligned extent, and then the IOMAP_ATOMIC checks you
-> > add below say "no" and then the application has to do things the
-> > slow, safe way....
-> 
-> We have been porting atomic write support to some database apps and they
-> (database developers) have had to do something like manually zero the
-> complete file to get around this issue, but that's not a good user
-> experience.
-
-Better the application zeros the file when it is being initialised
-and doesn't have performance constraints rather than forcing the
-filesystem to do it in the IO fast path when IO performance and
-latency actually matters to the application.
-
-There are production databases that already do this manual zero
-initialisation to avoid unwritten extent conversion overhead during
-runtime operation. That's because they want FUA writes to work, and
-that gives 25% better IO performance over the same O_DSYNC writes
-doing allocation and/or unwritten extent conversion after
-fallocate() which requires journal flushes with O_DSYNC writes.
-
-Using atomic writes is no different.
-
-> Note that in their case the first 4KB write is non-atomic, but that does not
-> change things. They do these 4KB writes in some DB setup phase.
-
-And therein lies the problem.
-
-If you are doing sub-rtextent IO at all, then you are forcing the
-filesystem down the path of explicitly using unwritten extents and
-requiring O_DSYNC direct IO to do journal flushes in IO completion
-context and then performance just goes down hill from them.
-
-The requirement for unwritten extents to track sub-rtextsize written
-regions is what you're trying to work around with XFS_BMAPI_ZERO so
-that atomic writes will always see "atomic write aligned" allocated
-regions.
-
-Do you see the problem here? You've explicitly told the filesystem
-that allocation is aligned to 64kB chunks, then because the
-filesystem block size is 4kB, it's allowed to track unwritten
-regions at 4kB boundaries. Then you do 4kB aligned file IO, which
-then changes unwritten extents at 4kB boundaries. Then you do a
-overlapping 16kB IO that *requires* 16kB allocation alignment, and
-things go BOOM.
-
-Yes, they should go BOOM.
-
-This is a horrible configuration - it is incomaptible with 16kB
-aligned and sized atomic IO. Allocation is aligned to 64kB, written
-region tracking is aligned to 4kB, and there's nothing to tell the
-filesystem that it should be maintaining 16kB "written alignment" so
-that 16kB atomic writes can always be issued atomically.
-
-i.e. if we are going to do 16kB aligned atomic IO, then all the
-allocation and unwritten tracking needs to be done in 16kB aligned
-chunks, not 4kB. That means a 4KB write into an unwritten region or
-a hole actually needs to zero the rest of the 16KB range it sits
-within.
-
-The direct IO code can do this, but it needs extension of the
-unaligned IO serialisation in XFS (the alignment checks in
-xfs_file_dio_write()) and the the sub-block zeroing in
-iomap_dio_bio_iter() (the need_zeroing padding has to span the fs
-allocation size, not the fsblock size) to do this safely.
-
-Regardless of how we do it, all IO concurrency on this file is shot
-if we have sub-rtextent sized IOs being done. That is true even with
-this patch set - XFS_BMAPI_ZERO is done whilst holding the
-XFS_ILOCK_EXCL, and so no other DIO can map extents whilst the
-zeroing is being done.
-
-IOWs, anything to do with sub-rtextent IO really has to be treated
-like sub-fsblock DIO - i.e. exclusive inode access until the
-sub-rtextent zeroing has been completed.
-
-> > > > I think we should support IOCB_ATOMIC when the mapping is unwritten --
-> > > > the data will land on disk in an untorn fashion, the unwritten extent
-> > > > conversion on IO completion is itself atomic, and callers still have to
-> > > > set O_DSYNC to persist anything.
-> > > 
-> > > But does this work for the scenario above?
-> > 
-> > Probably not, but if we want the mapping to return a single
-> > contiguous extent mapping that spans both unwritten and written
-> > states, then we should directly code that behaviour for atomic
-> > IO and not try to hack around it via XFS_BMAPI_ZERO.
-> > 
-> > Unwritten extent conversion will already do the right thing in that
-> > it will only convert unwritten regions to written in the larger
-> > range that is passed to it, but if there are multiple regions that
-> > need conversion then the conversion won't be atomic.
-> 
-> We would need something atomic.
-> 
-> > 
-> > > > Then we can avoid the cost of
-> > > > BMAPI_ZERO, because double-writes aren't free.
-> > > 
-> > > About double-writes not being free, I thought that this was acceptable to
-> > > just have this write zero when initially allocating the extent as it should
-> > > not add too much overhead in practice, i.e. it's one off.
-> > 
-> > The whole point about atomic writes is they are a performance
-> > optimisation. If the cost of enabling atomic writes is that we
-> > double the amount of IO we are doing, then we've lost more
-> > performance than we gained by using atomic writes. That doesn't
-> > seem desirable....
-> 
-> But the zero'ing is a one off per extent allocation, right? I would expect
-> just an initial overhead when the database is being created/extended.
-
-So why can't the application do that manually like others already do
-to enable FUA optimisations for O_DSYNC writes?
-
-FWIW, we probably should look to extend fallocate() to allow
-userspace to say "write real zeroes, not fake ones" so the
-filesystem can call blkdev_issue_zeroout() after preallocation to
-offload the zeroing to the hardware and then clear the unwritten
-bits on the preallocated range...
-
-> > > > >    	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write, dblocks,
-> > > > >    			rblocks, force, &tp);
-> > > > >    	if (error)
-> > > > > @@ -812,6 +815,44 @@ xfs_direct_write_iomap_begin(
-> > > > >    	if (error)
-> > > > >    		goto out_unlock;
-> > > > > +	if (flags & IOMAP_ATOMIC) {
-> > > > > +		xfs_filblks_t unit_min_fsb, unit_max_fsb;
-> > > > > +		unsigned int unit_min, unit_max;
-> > > > > +
-> > > > > +		xfs_get_atomic_write_attr(ip, &unit_min, &unit_max);
-> > > > > +		unit_min_fsb = XFS_B_TO_FSBT(mp, unit_min);
-> > > > > +		unit_max_fsb = XFS_B_TO_FSBT(mp, unit_max);
-> > > > > +
-> > > > > +		if (!imap_spans_range(&imap, offset_fsb, end_fsb)) {
-> > > > > +			error = -EINVAL;
-> > > > > +			goto out_unlock;
-> > > > > +		}
-> > > > > +
-> > > > > +		if ((offset & mp->m_blockmask) ||
-> > > > > +		    (length & mp->m_blockmask)) {
-> > > > > +			error = -EINVAL;
-> > > > > +			goto out_unlock;
-> > > > > +		}
-> > 
-> > That belongs in the iomap DIO setup code, not here. It's also only
-> > checking the data offset/length is filesystem block aligned, not
-> > atomic IO aligned, too.
-> 
-> hmmm... I'm not sure about that. Initially XFS will only support writes
-> whose size is a multiple of FS block size, and this is what we are checking
-> here, even if it is not obvious.
-
-Which means, initially, iomap only supposed writes that are a
-multiple of filesystem block size. regardless, this should be
-checked in the submission path, not in the extent mapping callback.
-
-FWIW, we've already established above that iomap needs to handle
-rtextsize chunks rather than fs block size for correct zeroing
-behaviour for atomic writes, so this probably just needs to go away.
-
-> The idea is that we can first ensure size is a multiple of FS blocksize, and
-> then can use br_blockcount directly, below.
-
-Yes, and we can do all these checks on the iomap that we return to
-the iomap layer. All this is doing is running the checks on the XFS
-imap before it is formatted into the iomap iomap and returned to the
-iomap layer. These checks can be done on the returned iomap in the
-iomap layer if IOMAP_ATOMIC is set....
-
-> However, the core iomap code does not know FS atomic write min and max per
-> inode, so we need some checks here.
-
-So maybe we should pass them down to iomap in the iocb when
-IOCB_ATOMIC is set, or reject the IO at the filesytem layer when
-checking atomic IO alignment before we pass the IO to the iomap
-layer...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+If you want to undo deduplication, reply with:
+#syz undup
