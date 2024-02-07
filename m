@@ -1,34 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26EE5A785
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 12:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37ED659B67
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 12:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707308428; cv=none; b=tKxfPR+Vs8dZFFW+kTd/DQUpuM4oIAVSK9fQC3F4gCMxRhbV4k/Vxz9yoP/mE4+NhRPeP7H0qzpXj9uGctsT8X1No3Z9pelhM7cMxwFm0j74IxAw32fnxx5XGKCBMApPiBw5lF2kol9GGQ7k3FbyxAwd5DovgnS5OYKR9eS8e5w=
+	t=1707308520; cv=none; b=LRYeNhilDVodKBZFsD+3J3bSEhIf/dIyKCJ7x316Kwi3rStD5lruVcxmr+PRUzUc5u5FPUYJctq57KiQIAhBJETXIWlfrnl3On2Sesj1T6wkEHTV3L5n0yoIEzFA7pa+bwNvAwQqxUPaw/9EbULMEWXqisbur8x/fL2rN2rE4Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707308428; c=relaxed/simple;
-	bh=Pn7tOMM6QU+EjDKvoXtQ6tV+upxMGu1a0ytn1xCKq+c=;
+	s=arc-20240116; t=1707308520; c=relaxed/simple;
+	bh=eMJutKtmerpdPbuovV6ZFxtOucjF2WaQzNswyU+ASvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3I6T85CD+Y8RbhwK34GKeGqa3bwb+/tZQNMofDB79wjuZhTrKPEBP4Fz2L9TYLCrzsKdi1MnpZS/0i+e89GjbUSY5tEJNu4VdEWet1vYmWw04AlD9mUfp5BUZTNnupvUYpJT8OQkXwZkcuyfD7OXscPI7XyXp3fPRKa1lAhjPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F91C433C7;
-	Wed,  7 Feb 2024 12:20:23 +0000 (UTC)
-Date: Wed, 7 Feb 2024 12:20:21 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Will Deacon <will@kernel.org>, Nanyong Sun <sunnanyong@huawei.com>,
-	mike.kravetz@oracle.com, muchun.song@linux.dev,
-	akpm@linux-foundation.org, anshuman.khandual@arm.com,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mk/KJ/4895mMYepIhrUGAaPLkWIFYUfjI6cgMta1jYzCv0QJ9oA6HmXWeM4vrcUTN3jxVl6AAIMLWtTbfIF0ziQzq0AlNpCDAzThhTdcmgGSww7x8+WiR1c7bprKoLRRWsEywtmVGwYqZRzie828PrsY0EwK1YJJy6wK/U18nKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C27C1FB;
+	Wed,  7 Feb 2024 04:22:40 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.26.150])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13C873F5A1;
+	Wed,  7 Feb 2024 04:21:55 -0800 (PST)
+Date: Wed, 7 Feb 2024 12:21:49 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Nanyong Sun <sunnanyong@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mike.kravetz@oracle.com,
+	muchun.song@linux.dev, akpm@linux-foundation.org,
+	anshuman.khandual@arm.com, willy@infradead.org,
 	wangkefeng.wang@huawei.com, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
-Message-ID: <ZcN1hTrAhy-B1P2_@arm.com>
+Subject: Re: [PATCH v3 2/3] arm64: mm: HVO: support BBM of vmemmap pgtable
+ safely
+Message-ID: <ZcN13R1L1CYu9gs1@FVFF77S0Q05N.cambridge.arm.com>
 References: <20240113094436.2506396-1-sunnanyong@huawei.com>
- <ZbKjHHeEdFYY1xR5@arm.com>
- <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
- <20240207111252.GA22167@willie-the-truck>
- <ZcNnrdlb3fe0kGHK@casper.infradead.org>
+ <20240113094436.2506396-3-sunnanyong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,42 +39,266 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZcNnrdlb3fe0kGHK@casper.infradead.org>
+In-Reply-To: <20240113094436.2506396-3-sunnanyong@huawei.com>
 
-On Wed, Feb 07, 2024 at 11:21:17AM +0000, Matthew Wilcox wrote:
-> On Wed, Feb 07, 2024 at 11:12:52AM +0000, Will Deacon wrote:
-> > On Sat, Jan 27, 2024 at 01:04:15PM +0800, Nanyong Sun wrote:
-> > > On 2024/1/26 2:06, Catalin Marinas wrote:
-> > > > On Sat, Jan 13, 2024 at 05:44:33PM +0800, Nanyong Sun wrote:
-> > > > > HVO was previously disabled on arm64 [1] due to the lack of necessary
-> > > > > BBM(break-before-make) logic when changing page tables.
-> > > > > This set of patches fix this by adding necessary BBM sequence when
-> > > > > changing page table, and supporting vmemmap page fault handling to
-> > > > > fixup kernel address translation fault if vmemmap is concurrently accessed.
-> > > > I'm not keen on this approach. I'm not even sure it's safe. In the
-> > > > second patch, you take the init_mm.page_table_lock on the fault path but
-> > > > are we sure this is unlocked when the fault was taken?
-> > > I think this situation is impossible. In the implementation of the second
-> > > patch, when the page table is being corrupted
-> > > (the time window when a page fault may occur), vmemmap_update_pte() already
-> > > holds the init_mm.page_table_lock,
-> > > and unlock it until page table update is done.Another thread could not hold
-> > > the init_mm.page_table_lock and
-> > > also trigger a page fault at the same time.
-> > > If I have missed any points in my thinking, please correct me. Thank you.
-> > 
-> > It still strikes me as incredibly fragile to handle the fault and trying
-> > to reason about all the users of 'struct page' is impossible. For example,
-> > can the fault happen from irq context?
+On Sat, Jan 13, 2024 at 05:44:35PM +0800, Nanyong Sun wrote:
+> Implement vmemmap_update_pmd and vmemmap_update_pte on arm64 to do
+> BBM(break-before-make) logic when change the page table of vmemmap
+> address, they will under the init_mm.page_table_lock.
+> If a translation fault of vmemmap address concurrently happened after
+> pte/pmd cleared, vmemmap page fault handler will acquire the
+> init_mm.page_table_lock to wait for vmemmap update to complete,
+> by then the virtual address is valid again, so PF can return and
+> access can continue.
+
+Is that wait bounded? ... and is it event guaranteed to make progress?
+
+Under a hypervisor, the vCPU doing the BBM could be preempted between the break
+and the make, so the thread waiting might be waiting a long time for that to
+come back and finish the make step.
+
+Further, under PREEMPT_RT regular spinlocks don't inhibit preemption, and I suspect
+that means this can deadlock on RT -- the thread doing the BBM could be
+preempted, the newly-scheduled thread could try to access the vmemmap, and then
+get stuck in the fault handler (e.g. on a single CPU system). There's nothing
+below describing how that's prevented.
+
+I've concerned this may be subtly broken, and it feels like this is going to be
+*very* painful to maintain and test. IMO this is trying to be overly clever and
+I'd much rather that we avoided the transient broken step. On CPUs with
+FEAT_BBM level 2 we can avoid that broken step, can we make this depend
+dynamically on whether the CPU has FEAT_BBM?
+
+> In other case, do the traditional kernel fault.
 > 
-> The pte lock cannot be taken in irq context (which I think is what
-> you're asking?)
+> Implement vmemmap_flush_tlb_all/range on arm64 with nothing
+> to do because tlb already flushed in every single BBM.
+> 
+> Signed-off-by: Nanyong Sun <sunnanyong@huawei.com>
+> ---
+>  arch/arm64/include/asm/esr.h      |  4 ++
+>  arch/arm64/include/asm/pgtable.h  |  8 ++++
+>  arch/arm64/include/asm/tlbflush.h | 16 +++++++
+>  arch/arm64/mm/fault.c             | 78 +++++++++++++++++++++++++++++--
+>  arch/arm64/mm/mmu.c               | 28 +++++++++++
+>  5 files changed, 131 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+> index ae35939f395b..1c63256efd25 100644
+> --- a/arch/arm64/include/asm/esr.h
+> +++ b/arch/arm64/include/asm/esr.h
+> @@ -116,6 +116,10 @@
+>  #define ESR_ELx_FSC_SERROR	(0x11)
+>  #define ESR_ELx_FSC_ACCESS	(0x08)
+>  #define ESR_ELx_FSC_FAULT	(0x04)
+> +#define ESR_ELx_FSC_FAULT_L0    (0x04)
+> +#define ESR_ELx_FSC_FAULT_L1    (0x05)
+> +#define ESR_ELx_FSC_FAULT_L2    (0x06)
+> +#define ESR_ELx_FSC_FAULT_L3    (0x07)
+>  #define ESR_ELx_FSC_PERM	(0x0C)
+>  #define ESR_ELx_FSC_SEA_TTW0	(0x14)
+>  #define ESR_ELx_FSC_SEA_TTW1	(0x15)
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 79ce70fbb751..b50270107e2f 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1124,6 +1124,14 @@ extern pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
+>  extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
+>  				    unsigned long addr, pte_t *ptep,
+>  				    pte_t old_pte, pte_t new_pte);
+> +
+> +#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+> +void vmemmap_update_pmd(unsigned long addr, pmd_t *pmdp, pte_t *ptep);
+> +#define vmemmap_update_pmd vmemmap_update_pmd
+> +void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte);
+> +#define vmemmap_update_pte vmemmap_update_pte
+> +#endif
+> +
+>  #endif /* !__ASSEMBLY__ */
+>  
+>  #endif /* __ASM_PGTABLE_H */
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index 1deb5d789c2e..79e932a1bdf8 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -504,6 +504,22 @@ static inline void __flush_tlb_kernel_pgtable(unsigned long kaddr)
+>  	dsb(ish);
+>  	isb();
+>  }
+> +
+> +#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+> +static inline void vmemmap_flush_tlb_all(void)
+> +{
+> +	/* do nothing, already flushed tlb in every single BBM */
+> +}
+> +#define vmemmap_flush_tlb_all vmemmap_flush_tlb_all
+> +
+> +static inline void vmemmap_flush_tlb_range(unsigned long start,
+> +					   unsigned long end)
+> +{
+> +	/* do nothing, already flushed tlb in every single BBM */
+> +}
+> +#define vmemmap_flush_tlb_range vmemmap_flush_tlb_range
+> +#endif
+> +
+>  #endif
+>  
+>  #endif
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 55f6455a8284..13189322a38f 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -368,6 +368,75 @@ static bool is_el1_mte_sync_tag_check_fault(unsigned long esr)
+>  	return false;
+>  }
+>  
+> +#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+> +static inline bool vmemmap_fault_may_fixup(unsigned long addr,
+> +					   unsigned long esr)
+> +{
+> +	if (addr < VMEMMAP_START || addr >= VMEMMAP_END)
+> +		return false;
+> +
+> +	/*
+> +	 * Only try to handle translation fault level 2 or level 3,
+> +	 * because hugetlb vmemmap optimize only clear pmd or pte.
+> +	 */
+> +	switch (esr & ESR_ELx_FSC) {
+> +	case ESR_ELx_FSC_FAULT_L2:
+> +	case ESR_ELx_FSC_FAULT_L3:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +/*
+> + * PMD mapped vmemmap should has been split as PTE mapped
+> + * by HVO now, here we only check this case, other cases
+> + * should fail.
 
-With this patchset, I think it can: IRQ -> interrupt handler accesses
-vmemmap -> faults -> fault handler in patch 2 takes the
-init_mm.page_table_lock to wait for the vmemmap rewriting to complete.
-Maybe it works if the hugetlb code disabled the IRQs but, as Will said,
-such fault in any kernel context looks fragile.
+Sorry, I can't parse what this is trying to say.
 
--- 
-Catalin
+> + * Also should check the addr is healthy enough that will not cause
+> + * a level2 or level3 translation fault again after page fault
+> + * handled with success, so we need check both bits[1:0] of PMD and
+> + * PTE as ARM Spec mentioned below:
+
+Which spec? Iassume you mean the ARM ARM? Are you referring to a specific part
+within that?
+
+> + * A Translation fault is generated if bits[1:0] of a translation
+> + * table descriptor identify the descriptor as either a Fault
+> + * encoding or a reserved encoding.
+> + */
+> +static inline bool vmemmap_addr_healthy(unsigned long addr)
+> +{
+> +	pmd_t *pmdp, pmd;
+> +	pte_t *ptep, pte;
+> +
+> +	pmdp = pmd_off_k(addr);
+> +	pmd = pmdp_get(pmdp);
+> +	if (!pmd_table(pmd))
+> +		return false;
+
+Is a block (i.e. hugetlb) entry not considered healthy? I thought the whole
+point of this optimization was that you'd use a block PMD entry?
+
+> +
+> +	ptep = pte_offset_kernel(pmdp, addr);
+> +	pte = ptep_get(ptep);
+> +	return (pte_val(pte) & PTE_TYPE_MASK) == PTE_TYPE_PAGE;
+> +}
+> +
+> +static bool vmemmap_handle_page_fault(unsigned long addr,
+> +				      unsigned long esr)
+> +{
+> +	bool ret;
+> +
+> +	if (likely(!vmemmap_fault_may_fixup(addr, esr)))
+> +		return false;
+> +
+> +	spin_lock(&init_mm.page_table_lock);
+> +	ret = vmemmap_addr_healthy(addr);
+> +	spin_unlock(&init_mm.page_table_lock);
+
+As above, I'm pretty sure this is only safe is the code doing the BBM has IRQs
+disabled, otherwise the thread can be preempted, and we can get stuck in here
+while the entry is broken.
+
+So at minimum this needs some explanation of why that doesn't happen in a
+comment.
+
+> +
+> +	return ret;
+> +}
+> +#else
+> +static inline bool vmemmap_handle_page_fault(unsigned long addr,
+> +					     unsigned long esr)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP */
+> +
+>  static bool is_translation_fault(unsigned long esr)
+>  {
+>  	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_FAULT;
+> @@ -405,9 +474,12 @@ static void __do_kernel_fault(unsigned long addr, unsigned long esr,
+>  	} else if (addr < PAGE_SIZE) {
+>  		msg = "NULL pointer dereference";
+>  	} else {
+> -		if (is_translation_fault(esr) &&
+> -		    kfence_handle_page_fault(addr, esr & ESR_ELx_WNR, regs))
+> -			return;
+> +		if (is_translation_fault(esr)) {
+> +			if (kfence_handle_page_fault(addr, esr & ESR_ELx_WNR, regs))
+> +				return;
+> +			if (vmemmap_handle_page_fault(addr, esr))
+> +				return;
+> +		}
+>  
+>  		msg = "paging request";
+>  	}
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 1ac7467d34c9..d794b2f4b5a3 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1146,6 +1146,34 @@ int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
+>  	return 1;
+>  }
+>  
+> +#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+> +/*
+> + * In the window between the page table entry is cleared and filled
+> + * with a new value, other threads have the opportunity to concurrently
+> + * access the vmemmap area then page translation fault occur.
+> + * Therefore, we need to ensure that the init_mm.page_table_lock is held
+> + * to synchronize the vmemmap page fault handling which will wait for
+> + * this lock to be released to ensure that the page table entry has been
+> + * refreshed with a new valid value.
+> + */
+> +void vmemmap_update_pmd(unsigned long addr, pmd_t *pmdp, pte_t *ptep)
+> +{
+> +	lockdep_assert_held(&init_mm.page_table_lock);
+> +	pmd_clear(pmdp);
+> +	flush_tlb_kernel_range(addr, addr + PMD_SIZE);
+> +	pmd_populate_kernel(&init_mm, pmdp, ptep);
+> +}
+> +
+> +void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte)
+> +{
+> +	spin_lock(&init_mm.page_table_lock);
+> +	pte_clear(&init_mm, addr, ptep);
+> +	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+> +	set_pte_at(&init_mm, addr, ptep, pte);
+> +	spin_unlock(&init_mm.page_table_lock);
+> +}
+
+As above, if this happens with IRQs unmasked, the thread can potentially be
+preempted and we can get stuck in the fault handler (at least on RT).
+
+I can't tell whether this is safe, and I think that at minimum this needs
+comments and/or lockdep assertions, but I'd much rather we didn't try to play
+this sort of game.
+
+Mark.
