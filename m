@@ -1,98 +1,101 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9A619BBA;
-	Wed,  7 Feb 2024 11:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67F719BBA;
+	Wed,  7 Feb 2024 11:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707305855; cv=none; b=KXjAXvIzBf1j+l5EZyDm3fLtApSP6FIs+zLycXyWuVf0O1fN3nBsDeKtuyW6yGkVCfBIpe+ndKKlDfSLKdPcF1neV1FnlFXcYUWUfN9Z+YRBNjgqAt8NYzMvmlM97o8ju+qQZCgqVJxllMNKnFheYkJTPlPOzLNBrz1cNUvTjo0=
+	t=1707306015; cv=none; b=CKV/gds3KbB1VeZAnd5goStomhwAs4jdqdiJcMMffMNlK9Ih7HJYxwwv8+meRFaowyG57Jy9a1FvEVJJupG7yDP4FY7tq+L6v0r24Xdm0xhWDbwJLym3lDXmjTLokq2Z7Aiq0MNiicFnDCL69tokAI0M+e1gkhOc26khoiwQie0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707305855; c=relaxed/simple;
-	bh=83PVRJcxzAA2WbczYT0DNaElV8eyxg5A/J+MvaxcW0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=gUQRu8WzDqLUoP12cNIJXHnHvQh85LSjXN6ai3BiM7vasGfcwacd7qCoBrPy19EPHwtEEItvcb1ky0RMnvV8/ZbboDoPSmCczMvUFY1waO9XhiKimMAnWI2dRx87xXaDJYuksw5hfcksUmYBpHzT9oRDuYCK1ngqfl0AGhilmMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qm1HqhDw; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qm1HqhDw"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fe79f1aaaso4342495e9.0;
-        Wed, 07 Feb 2024 03:37:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707305852; x=1707910652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dlcGl3niyrqEgqteXegO7t1b/+0Yl2m8/0ksFX1JNYk=;
-        b=Qm1HqhDwCr5wOIQQ69zC1Zo3ORDg280cjli0YjypQKw2NoT95LTPuDj1DxYP0K7EsP
-         tsvnF/cxDopBdaWcrYoLEIMIKgoogeSAB6HrXheCMFLPL+I9g8s0+vX5khS+8bvn7CD0
-         iR9m80UDF8yNK4ewlaTRQwzpyEAGinKFPv/0jL6p5qkmzxO8sjdlyWrdZgkebjD+5jlq
-         DZVCEjeN8YDvNmS1jFQFt7oxzp3ChObc1wLCUjg9Gpbvh44TNXoDC6X+fwNqBKVkkhPc
-         daDHT/q8saSiFmfwmUgWFK14B72xrRGHF6CA944oeDYcGbImFYYqyhzNIbS/w6wv+qeF
-         lYbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707305852; x=1707910652;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dlcGl3niyrqEgqteXegO7t1b/+0Yl2m8/0ksFX1JNYk=;
-        b=ctQqzXeixRFgIeXkBeDuA7H2719+jX5zPGCVFcIqS0TB3lbcgvT3u/weaWlPpWshGo
-         Eobua6pgNaLNbKMfpwyasmNUHVM6jdvHvHuRR7KctySKgwTHDJentB/bEKMH+3neUF/l
-         SE+aAYvSVgsY2lwxBwoIh5iZ//CchjkuBK+iSRDcfW3QHt9aTRshD0vNwwPQ4wBFWe0Y
-         mY/T8iu58uAjaRtTaIYIybmBiCvo4+ePqFqEZjFofb+78oaVVXNLgKu+fE5q2uRuNLFA
-         OwAKFZmLEYyHQ9lfU8v0FCnQcUTyic8hirzbTLmpUMhWd0MyAYLkjJqg2pLbAYcnLNWa
-         RdYg==
-X-Gm-Message-State: AOJu0YwSz6W1BODeuJDQ9A71bVNaWIKXKmS46zVivYYkdBCDG+zrhWG0
-	VDIjhoqHtHaXfq+LCCmVGgM29emgut7H+HQkbVUNLEPIg6NKfOga
-X-Google-Smtp-Source: AGHT+IHhCUX2jjAkPgubFzMyy76hD0Xxlq2ESogbUyYzpNFEBgb67F+Ta6WRyJY0bGIudfZoiE7p+A==
-X-Received: by 2002:a05:600c:4fce:b0:40e:fc20:b574 with SMTP id o14-20020a05600c4fce00b0040efc20b574mr4281438wmq.10.1707305851884;
-        Wed, 07 Feb 2024 03:37:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVXfFqoZvMNzjNtuEk2FBBeq/zo+aauQxSicOM2td9a+tz8NUXIwEzc8t4NV/BC+ZYMZoGmlcHTt54JzNMAPsTA5WD7Yb5q6FPdrW+63d+see3Dp91Yfn2agcmN48l6WmXvz5zidUzed4YyDsWXhY6ZpQPdNSgyXj8a0tWRbeFj
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id bd24-20020a05600c1f1800b0041004826669sm2081907wmb.42.2024.02.07.03.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 03:37:31 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] usb: image: mdc800: Remove redundant assignment to variable retval
-Date: Wed,  7 Feb 2024 11:37:30 +0000
-Message-Id: <20240207113730.2444296-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707306015; c=relaxed/simple;
+	bh=3RxULCQqTCej+mKyEk8otgcgo4i+w98owSqN13Hn9aQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kwfvRJqkzbWwuy6WLxLxIP/6t75Rj0kdrRbx4lLumYeV4DjDcs3di2Hww3fD+QIJIO3KV6K1BQJmnfEA12phl/Qu2agRf9nPuHQyROOooolMpE3t4jTn7sDPUwAleY2fxuxnt/9L6Xp+aAziOQFt4JWjrtaTAd+69QHMOlo102Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8802A1FB;
+	Wed,  7 Feb 2024 03:40:48 -0800 (PST)
+Received: from [10.1.30.29] (e133649.arm.com [10.1.30.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F5803F762;
+	Wed,  7 Feb 2024 03:40:04 -0800 (PST)
+Message-ID: <8e969ccb-888d-43c8-a9a2-d46bad4bf5e8@arm.com>
+Date: Wed, 7 Feb 2024 11:40:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 15/23] PM: EM: Optimize em_cpu_energy() and remove
+ division
+To: Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, rafael@kernel.org
+Cc: dietmar.eggemann@arm.com, rui.zhang@intel.com,
+ amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
+ daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
+ pavel@ucw.cz, mhiramat@kernel.org, qyousef@layalina.io, wvw@google.com,
+ xuewen.yan94@gmail.com
+References: <20240117095714.1524808-1-lukasz.luba@arm.com>
+ <20240117095714.1524808-16-lukasz.luba@arm.com>
+Content-Language: en-US
+From: Hongyan Xia <hongyan.xia2@arm.com>
+In-Reply-To: <20240117095714.1524808-16-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The variable retval is being assigned a value that is not being read
-and is being re-assigned a new value a couple of statements later.
-The assignment is redundant and can be removed.
+On 17/01/2024 09:57, Lukasz Luba wrote:
+> The Energy Model (EM) can be modified at runtime which brings new
+> possibilities. The em_cpu_energy() is called by the Energy Aware Scheduler
+> (EAS) in its hot path. The energy calculation uses power value for
+> a given performance state (ps) and the CPU busy time as percentage for that
+> given frequency.
+> 
+> It is possible to avoid the division by 'scale_cpu' at runtime, because
+> EM is updated whenever new max capacity CPU is set in the system.
+> 
+> Use that feature and do the needed division during the calculation of the
+> coefficient 'ps->cost'. That enhanced 'ps->cost' value can be then just
+> multiplied simply by utilization:
+> 
+> pd_nrg = ps->cost * \Sum cpu_util
+> 
+> to get the needed energy for whole Performance Domain (PD).
+> 
+> With this optimization and earlier removal of map_util_freq(), the
+> em_cpu_energy() should run faster on the Big CPU by 1.43x and on the Little
+> CPU by 1.69x (RockPi 4B board).
+> 
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>   include/linux/energy_model.h | 54 ++++++++++--------------------------
+>   kernel/power/energy_model.c  |  7 ++---
+>   2 files changed, 17 insertions(+), 44 deletions(-)
+> 
+> diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
+> index 689d71f6b56f..aabfc26fcd31 100644
+> --- a/include/linux/energy_model.h
+> +++ b/include/linux/energy_model.h
+> [...]
+> @@ -208,8 +206,9 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
+>   				return -EINVAL;
+>   			}
+>   		} else {
+> -			power_res = table[i].power;
+> -			cost = div64_u64(fmax * power_res, table[i].frequency);
+> +			/* increase resolution of 'cost' precision */
+> +			power_res = table[i].power * 10;
 
-Cleans up clang scan warning:
-drivers/usb/image/mdc800.c:634:2: warning: Value stored to 'retval'
-is never read [deadcode.DeadStores]
+NIT: Does this have to be 10, or something simple like << 3 (* 8) also 
+does the job?
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/usb/image/mdc800.c | 1 -
- 1 file changed, 1 deletion(-)
+Although compiler these days often are clever enough to convert x * 10 
+into (x << 3) + (x << 1), and this is not on the hot path anyway, so 
+just a NIT.
 
-diff --git a/drivers/usb/image/mdc800.c b/drivers/usb/image/mdc800.c
-index 67f098579fb4..7b7e1554ea20 100644
---- a/drivers/usb/image/mdc800.c
-+++ b/drivers/usb/image/mdc800.c
-@@ -631,7 +631,6 @@ static int mdc800_device_open (struct inode* inode, struct file *file)
- 	mdc800->camera_busy=0;
- 	mdc800->camera_request_ready=0;
- 
--	retval=0;
- 	mdc800->irq_urb->dev = mdc800->dev;
- 	retval = usb_submit_urb (mdc800->irq_urb, GFP_KERNEL);
- 	if (retval) {
--- 
-2.39.2
+> +			cost = power_res / table[i].performance;
+>   		}
+>   
+>   		table[i].cost = cost;
 
+Reviewed-by: Hongyan Xia <hongyan.xia2@arm.com>
