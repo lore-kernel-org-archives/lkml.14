@@ -1,185 +1,149 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C437F48C;
-	Wed,  7 Feb 2024 15:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8990577658;
+	Wed,  7 Feb 2024 15:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707318580; cv=none; b=N6bpS7SqTbmiMrbuxRsA2Ns5DgRhCpbCy/PsddzTKEABc51qBwycun3D4VRJ2PAWqVSD/KqxXT2bgso8EbgvOojzjkXXkY6sV3aifQA2YZa1eI3Gn4OR+CZP569h63UL777PbUk2vCPiWjdqS08URCcAUMD92F7DCe62KDUieEo=
+	t=1707318617; cv=none; b=IBjE3fQ2gqW9WXnViyi7hrfbzkigcyBBE7uIvLz1nkjXIFw1gyxRAejqUBpMWJbhBHv8LGeK8e4EyGAP+x4FELoY3SBCZ2lwhbprN+3rpoK8LcbcUt22g/QmL1pX3QpwjYpbo9gnpnVlSGEB6KhqMDyXupxmYxZnJoMHbKG8nl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707318580; c=relaxed/simple;
-	bh=n7jy2nTYCPBPjsSwlsWFPIf9aO2YXgMF4OPIJJOQ1o4=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=SircrNCCLeWPjQWNhJfuLlbzJu9nMk2a0CkKmQQ4eHpzntzYV0hmhaLZvt84D88yKU/rZWL6YGjFrXY2Qz/whFAUA6rVc9Jc32bOGwL8/Jkyr3FhZII0cbUPEgai0MjKQ4U9/5d62p//A/SZhv+GDMUhDhvhrSxgdUToqsAMufY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K5AUXcxQ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1707318617; c=relaxed/simple;
+	bh=Jv1RJVQSa+s6LkiGweYVwWUnmBEVv5H8dA9b/E7cFxc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xuv5IzV/6/G+qo9/3xR69IrJblYX8tHYPTMd1H6xzLSmT6S6N0FDn9AlOMgejm17BCEds7H0Wj7ZThiaYLFYM30o+B32e0Iwo6QN/cYKyneI4BbslJym5j+8z5uduxMxRSRNng93lc5ILjhQeRGDgpRoRY0cucoYiNuVG2tEsec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=X7DSmwWw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OWw2wAUI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=X7DSmwWw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OWw2wAUI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K5AUXcxQ"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 76A7520B2000;
-	Wed,  7 Feb 2024 07:09:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76A7520B2000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1707318573;
-	bh=D9DfkN7+KkkF6zbewlp+XiEGcytqhfnDeuYo9IZEKTY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K5AUXcxQ7gvu8moeVaO4Kwa0bGmyjDq8KhDUq2WNraKxQOPLfEwaxJcrcSEsgPo7+
-	 U2Ie3oMqm2kyVVRUR2+Y4i9cFmvM7Wsn6LJ9dgLkvYBJild/B3DSGgRzb82be6SvWO
-	 kx6VNnoy1+9x9gX93Rt6d3xKknrT9VcGxXAFLuCw=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v1 1/1] RDMA/mana_ib: Fix bug in creation of dma regions
-Date: Wed,  7 Feb 2024 07:09:26 -0800
-Message-Id: <1707318566-3141-1-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="X7DSmwWw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OWw2wAUI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="X7DSmwWw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OWw2wAUI"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6188E1F78A;
+	Wed,  7 Feb 2024 15:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707318613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZDQEipVTzee4WgFsB2xE+sJDZ6njATigmiLm4iw2r7I=;
+	b=X7DSmwWwfzJB57r5y+p/fUCE2Gxo/P8LsynUfmA2PkWKLKVsBDC5O50ecjjb+x7xRLnP/v
+	zzf14eQSkPusj3o6Ieknx4UjJpLzWqkig3D4QTwmMjneWVahBX9JgMvmkohkonDy7FIWPj
+	U+Dl8t6FxQ+Ul0/UvCJG52ceHhVS0sc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707318613;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZDQEipVTzee4WgFsB2xE+sJDZ6njATigmiLm4iw2r7I=;
+	b=OWw2wAUIJl6L4hWSfEepo5y4UZuXpgcHIRf8oLIcxr2hmZeCEMnxdleQaPWXIabF9ZVBtv
+	bSoO9a1r3MT6gWCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707318613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZDQEipVTzee4WgFsB2xE+sJDZ6njATigmiLm4iw2r7I=;
+	b=X7DSmwWwfzJB57r5y+p/fUCE2Gxo/P8LsynUfmA2PkWKLKVsBDC5O50ecjjb+x7xRLnP/v
+	zzf14eQSkPusj3o6Ieknx4UjJpLzWqkig3D4QTwmMjneWVahBX9JgMvmkohkonDy7FIWPj
+	U+Dl8t6FxQ+Ul0/UvCJG52ceHhVS0sc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707318613;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZDQEipVTzee4WgFsB2xE+sJDZ6njATigmiLm4iw2r7I=;
+	b=OWw2wAUIJl6L4hWSfEepo5y4UZuXpgcHIRf8oLIcxr2hmZeCEMnxdleQaPWXIabF9ZVBtv
+	bSoO9a1r3MT6gWCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 17F97139B9;
+	Wed,  7 Feb 2024 15:10:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0JprBFWdw2UJOQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 07 Feb 2024 15:10:13 +0000
+Date: Wed, 07 Feb 2024 16:10:12 +0100
+Message-ID: <87jzng5mzv.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: =?ISO-8859-1?Q?Jean-Lo=EFc?= Charroud <lagiraudiere+linux@free.fr>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Stefan Binding <sbinding@opensource.cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	linux-sound <linux-sound@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	patches <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2] ALSA: hda/realtek: cs35l41: Fix internal speaker support for ASUS UM3402 with missing DSD
+In-Reply-To: <1366935939.585144512.1707316246651.JavaMail.zimbra@free.fr>
+References: <726559913.576332068.1707239153891.JavaMail.zimbra@free.fr>
+	<87o7cs5r29.wl-tiwai@suse.de>
+	<1366935939.585144512.1707316246651.JavaMail.zimbra@free.fr>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: 0.86
+X-Spamd-Result: default: False [0.86 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-0.34)[76.09%];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[free.fr];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[linux];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-0.997];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FREEMAIL_TO(0.00)[free.fr];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+On Wed, 07 Feb 2024 15:30:46 +0100,
+Jean-Loïc Charroud wrote:
+> 
+> Fix device ID for "ASUS UM3402" and "ASUS UM6702RA/RC".
 
-Dma registration was ignoring virtual addresses by setting it to 0.
-As a result, mana_ib could only register page-aligned memory.
-As well as, it could fail to produce dma regions with zero offset
-for WQs and CQs (e.g., page size is 8192 but address is only 4096
-bytes aligned), which is required by hardware.
+This change is only about the string in the table, not the actual
+behavior, right?  The name string there is only for debug info, so
+it's no big problem even if it's not 100% right.
+That is, this can be again split to another patch -- with the
+additional Fixes tag to the commit that introduced the entries.
 
-This patch takes into account the virtual address, allowing to create
-a dma region with any offset. For queues (e.g., WQs, CQs) that require
-dma regions with zero offset we add a flag to ensure zero offset.
+> Add DSD values for "ASUS UM3402" to cs35l41_config_table[].
 
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/cq.c      |  3 ++-
- drivers/infiniband/hw/mana/main.c    | 16 +++++++++++++---
- drivers/infiniband/hw/mana/mana_ib.h |  2 +-
- drivers/infiniband/hw/mana/mr.c      |  2 +-
- drivers/infiniband/hw/mana/qp.c      |  4 ++--
- drivers/infiniband/hw/mana/wq.c      |  3 ++-
- 6 files changed, 21 insertions(+), 9 deletions(-)
+... and this one is the mandatory fix for your device.  It should be
+the patch 1.  Then we'll have two more, one for correcting the entry
+names, and another for sorting the entries.
 
-diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
-index 83d20c3f0..e35de6b92 100644
---- a/drivers/infiniband/hw/mana/cq.c
-+++ b/drivers/infiniband/hw/mana/cq.c
-@@ -48,7 +48,8 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		return err;
- 	}
- 
--	err = mana_ib_gd_create_dma_region(mdev, cq->umem, &cq->gdma_region);
-+	err = mana_ib_gd_create_dma_region(mdev, cq->umem, &cq->gdma_region,
-+					   ucmd.buf_addr, true);
- 	if (err) {
- 		ibdev_dbg(ibdev,
- 			  "Failed to create dma region for create cq, %d\n",
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 29dd2438d..13a4d5ab4 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -302,7 +302,7 @@ mana_ib_gd_add_dma_region(struct mana_ib_dev *dev, struct gdma_context *gc,
- }
- 
- int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
--				 mana_handle_t *gdma_region)
-+				 mana_handle_t *gdma_region, u64 virt, bool force_zero_offset)
- {
- 	struct gdma_dma_region_add_pages_req *add_req = NULL;
- 	size_t num_pages_processed = 0, num_pages_to_handle;
-@@ -324,11 +324,21 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 	hwc = gc->hwc.driver_data;
- 
- 	/* Hardware requires dma region to align to chosen page size */
--	page_sz = ib_umem_find_best_pgsz(umem, PAGE_SZ_BM, 0);
-+	page_sz = ib_umem_find_best_pgsz(umem, PAGE_SZ_BM, virt);
- 	if (!page_sz) {
- 		ibdev_dbg(&dev->ib_dev, "failed to find page size.\n");
- 		return -ENOMEM;
- 	}
-+
-+	if (force_zero_offset) {
-+		while (ib_umem_dma_offset(umem, page_sz) && page_sz > PAGE_SIZE)
-+			page_sz /= 2;
-+		if (ib_umem_dma_offset(umem, page_sz) != 0) {
-+			ibdev_dbg(&dev->ib_dev, "failed to find page size to force zero offset.\n");
-+			return -ENOMEM;
-+		}
-+	}
-+
- 	num_pages_total = ib_umem_num_dma_blocks(umem, page_sz);
- 
- 	max_pgs_create_cmd =
-@@ -348,7 +358,7 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 			     sizeof(struct gdma_create_dma_region_resp));
- 
- 	create_req->length = umem->length;
--	create_req->offset_in_page = umem->address & (page_sz - 1);
-+	create_req->offset_in_page = ib_umem_dma_offset(umem, page_sz);
- 	create_req->gdma_page_type = order_base_2(page_sz) - PAGE_SHIFT;
- 	create_req->page_count = num_pages_total;
- 
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 6a03ae645..0a5a8f3f8 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -161,7 +161,7 @@ static inline struct net_device *mana_ib_get_netdev(struct ib_device *ibdev, u32
- int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq);
- 
- int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
--				 mana_handle_t *gdma_region);
-+				 mana_handle_t *gdma_region, u64 virt, bool force_zero_offset);
- 
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev,
- 				  mana_handle_t gdma_region);
-diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
-index ee4d4f834..856d73ea2 100644
---- a/drivers/infiniband/hw/mana/mr.c
-+++ b/drivers/infiniband/hw/mana/mr.c
-@@ -127,7 +127,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
- 		goto err_free;
- 	}
- 
--	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle);
-+	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle, iova, false);
- 	if (err) {
- 		ibdev_dbg(ibdev, "Failed create dma region for user-mr, %d\n",
- 			  err);
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index 5d4c05dcd..02de90317 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -357,8 +357,8 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 	}
- 	qp->sq_umem = umem;
- 
--	err = mana_ib_gd_create_dma_region(mdev, qp->sq_umem,
--					   &qp->sq_gdma_region);
-+	err = mana_ib_gd_create_dma_region(mdev, qp->sq_umem, &qp->sq_gdma_region,
-+					   ucmd.sq_buf_addr, true);
- 	if (err) {
- 		ibdev_dbg(&mdev->ib_dev,
- 			  "Failed to create dma region for create qp-raw, %d\n",
-diff --git a/drivers/infiniband/hw/mana/wq.c b/drivers/infiniband/hw/mana/wq.c
-index 372d36151..d9c1a2d5d 100644
---- a/drivers/infiniband/hw/mana/wq.c
-+++ b/drivers/infiniband/hw/mana/wq.c
-@@ -46,7 +46,8 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
- 	wq->wq_buf_size = ucmd.wq_buf_size;
- 	wq->rx_object = INVALID_MANA_HANDLE;
- 
--	err = mana_ib_gd_create_dma_region(mdev, wq->umem, &wq->gdma_region);
-+	err = mana_ib_gd_create_dma_region(mdev, wq->umem, &wq->gdma_region,
-+					   ucmd.wq_buf_addr, true);
- 	if (err) {
- 		ibdev_dbg(&mdev->ib_dev,
- 			  "Failed to create dma region for create wq, %d\n",
+I'm a bit picky, but now you see how the things work.
+Divide-and-conquer is the basic strategy.
 
-base-commit: aafe4cc5096996873817ff4981a3744e8caf7808
--- 
-2.43.0
 
+Takashi
