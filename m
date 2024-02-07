@@ -1,103 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784215CB72;
-	Wed,  7 Feb 2024 21:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248BF15CB8E;
+	Wed,  7 Feb 2024 21:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341155; cv=none; b=T2K0O/sLdWEfIWwg5JKSj5tj9PuIitUxeAybXCfOxih1gKjrWEzEsIj7hdNoOscKAKxBLB5zXUpUIRWKqiF8pDG9IaZJl9NGYOiBcmyv+oqaFuDKMXEcDPfWKzQhgpc6DblyHf73766kFLEsV7vfyVRsIbBCnsmttgQlMgFm6ko=
+	t=1707341156; cv=none; b=KCYmrsFLIvA3BkikUSwsd0X/gElTmWBixscVg9ADmnN8zd9IbCXs0dtUE8FiHbSn4zXgkOaNpDEiPlcEnbboYyxEl1w77BQwR0U7BbMwpuAXgndVWOwcWUSRMBtshpl4Qcivoo08Ty5qnpWCQifSx9UHvCQypKFSOrpNYUe4hHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341155; c=relaxed/simple;
-	bh=8DgjKcNwoJ0gbR303YsGNUiN+N+KYeLLmrDtZWXZQi4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g9zzTMdeUUS3hazIrMn8rI3NKnZuezT2Up6xBBQXKoYXoc+ysSdw87aymaRALJIUpjKDDCtJJ+FbV3oUs8XPfIKzNoqpd5O+dWpxKzJTh8hS3yEm5cjqIj38Jg0GYWIHOAySDnJbj1XJj5iNZeoc58GegnXi3TYeDrng7X/cSGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wz9AlSiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707341156; c=relaxed/simple;
+	bh=o8H4o09pkLeXy0frODGluKudoPi9PzNvii1yKYW0Lj0=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=p+g+EA7jiO2bhIAtplg8e2ft8fwifKa0s6rP9AYMyUqPzNWLhHAIsDO3rlZ8Ib1GUUJ/rMJ8hsiQP3q/WauQijA8h6IP4bfsrCWUo6rf7ySLpj0/fXnSGptrC3O1RI2TOzxEg1rot5IU8oDgiYnMKiO+OlDjCxylX5c8CvszE+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJlCtETy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wz9AlSiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D48C433B1;
-	Wed,  7 Feb 2024 21:25:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJlCtETy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779B8C433A6;
+	Wed,  7 Feb 2024 21:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707341155;
-	bh=8DgjKcNwoJ0gbR303YsGNUiN+N+KYeLLmrDtZWXZQi4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wz9AlSiKW/qheRJoZCRIamy/CmGNQUfg0/DysFE/8nLts1vdkU4uzOi2qF5WTnxM8
-	 p2iqatESf/N2oUKKEujqem6BPfKHdXqaN3rGoPMF9z3imsxg4JqawrZmF7Lja3W+mp
-	 j2bhkOjPLwYfSYjJv6qg3UYKij3vf24FhynolIGu33yBXYfxxMG9WeYWw28Ee6K+Ml
-	 nsvWKVubaGPnr7deAb/SGczmI0kg05Oto+hNvWd+lysNxvyI4k4izNmhWBxuY2wn5k
-	 2i6avxuJOcIi9Vt+QYYY3JJMfLSXRispEo+S3IuRlFBbKAl3QNOB0WflRcA6GY4PYY
-	 lkcnFBk32F9kQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Daniel Wagner <dwagner@suse.de>,
-	Hannes Reinecke <hare@suse.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	james.smart@broadcom.com,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 24/29] nvmet-fc: abort command when there is no binding
-Date: Wed,  7 Feb 2024 16:24:49 -0500
-Message-ID: <20240207212505.3169-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207212505.3169-1-sashal@kernel.org>
-References: <20240207212505.3169-1-sashal@kernel.org>
+	s=k20201202; t=1707341156;
+	bh=o8H4o09pkLeXy0frODGluKudoPi9PzNvii1yKYW0Lj0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=WJlCtETyglI9CUyxAiNpStKaFOkznG4fLAhkcnYvWPyUx+NxNcee6IJe7iomn2NvO
+	 9iOGfbTdAqrj+eGjS0mhBhkmW1h96EqDclNYMHjQT67YbHIaXUOs9HDPEsjpxmxmdx
+	 hDkjNALZIPL7j1Ko4fCH3pGL8Yk/rqRECsQd72uxQBWNpgBTCWE0uwYROCvz6QKzxe
+	 J7JEC4TzxR/12ND3tr4VOo8XJ/XJe1FgZ5rZxiwZhXO0zxgAaIUeFWN6saFIMgV217
+	 dbag2poBlAKhjuMPEzqK9Nivc4AHks2ZlTsll3eyMmrz021A3wFKgJaqgprYBDJz90
+	 l1IqlucNJ1Hyw==
+Date: Wed, 07 Feb 2024 21:25:53 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.77
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: linux-iio@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Li peiyu <579lpy@gmail.com>, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
+ linux-kernel@vger.kernel.org, Nuno Sa <nuno.sa@analog.com>
+In-Reply-To: <20240207074758.4138724-3-dima.fedrau@gmail.com>
+References: <20240207074758.4138724-1-dima.fedrau@gmail.com>
+ <20240207074758.4138724-3-dima.fedrau@gmail.com>
+Message-Id: <170734115194.3199410.700483085044705042.robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: humidity: hdc3020: add
+ interrupt bindings in example
 
-From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit 3146345c2e9c2f661527054e402b0cfad80105a4 ]
+On Wed, 07 Feb 2024 08:47:52 +0100, Dimitri Fedrau wrote:
+> Add interrupt bindings in example.
+> 
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/iio/humidity/ti,hdc3020.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-When the target port has not active port binding, there is no point in
-trying to process the command as it has to fail anyway. Instead adding
-checks to all commands abort the command early.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/target/fc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+yamllint warnings/errors:
 
-diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
-index 64c26b703860..b4b2631eb530 100644
---- a/drivers/nvme/target/fc.c
-+++ b/drivers/nvme/target/fc.c
-@@ -1101,6 +1101,9 @@ nvmet_fc_alloc_target_assoc(struct nvmet_fc_tgtport *tgtport, void *hosthandle)
- 	int idx;
- 	bool needrandom = true;
- 
-+	if (!tgtport->pe)
-+		return NULL;
-+
- 	assoc = kzalloc(sizeof(*assoc), GFP_KERNEL);
- 	if (!assoc)
- 		return NULL;
-@@ -2523,8 +2526,9 @@ nvmet_fc_handle_fcp_rqst(struct nvmet_fc_tgtport *tgtport,
- 
- 	fod->req.cmd = &fod->cmdiubuf.sqe;
- 	fod->req.cqe = &fod->rspiubuf.cqe;
--	if (tgtport->pe)
--		fod->req.port = tgtport->pe->port;
-+	if (!tgtport->pe)
-+		goto transport_error;
-+	fod->req.port = tgtport->pe->port;
- 
- 	/* clear any response payload */
- 	memset(&fod->rspiubuf, 0, sizeof(fod->rspiubuf));
--- 
-2.43.0
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/iio/humidity/ti,hdc3020.example.dts:33.34-35 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/iio/humidity/ti,hdc3020.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240207074758.4138724-3-dima.fedrau@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
