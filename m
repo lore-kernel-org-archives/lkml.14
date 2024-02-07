@@ -1,77 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6280E1CFB9;
-	Wed,  7 Feb 2024 06:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E671D549;
+	Wed,  7 Feb 2024 06:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707286158; cv=none; b=mbx/8gbyKWoGlqWgatD7dVW1ZBzvCsdTIHBa3xIA7O9RXpDZY04MO8vOH4836IDwcNUvv99LOgZ5huvMKnJ085lozwo6zP4aAGkM4mUXGBICSdZTpPSBJaXSveMxDLcco1FuyYsYPYKtKdbBr1cBpirB4RlZeOjSkZt3FiO3pH4=
+	t=1707286161; cv=none; b=ngOObbv9fhXu80RRzCE+Ze3WaBZ7xgwkvv27+VtYw3yp/NOCPU6mXnKEyCZ1HeWiPWBGGaPo6JwDruW7RzoE4xm50gtRjjTNjfE/0xoPz+5hnzWx2ZLyVzRDK8eN5J0rLRBT5PUZzdHYgQf/TiQ9PkMFako+vHc1WVh2AokJhF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707286158; c=relaxed/simple;
-	bh=Ime50F3RKb2m1VV+ZMtTLz8M9K+YfMpKUU6CJBgWeTE=;
+	s=arc-20240116; t=1707286161; c=relaxed/simple;
+	bh=A/DJHmh0XJOvuah/D5lZPVfH+nS9+ETgI/RcbKawubM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q/PG0GEDSJsS0KVx786FsoJUP3jETR+/iGQmoSswyeAUV1+bFjVIIxiHk3GzO5IULEY1o0YuAMqMFtTUatfrrEplxZIy6MwtBoG0UWaiv/srVfv8hZLvrutgLUhLK5h2X2rd6N0S0LzWQSJbkiRM055feiVxlujakxPVEwOeh9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kzONTKUO; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version; b=msGnDtQMsMzMCk9G1peCUFHj63OUKRxWy0NA1Chjf0vEyqozRwQDVJihVw6MM4TDLmXTrZYGSb+L4MvjUhkKdLeLpY133sAgq1hNLbfEYCWjmH9yXzRC/c5ewYy8IgxcHuvrSNyNem1GtyWxLrwqhRQJpj5s/1R3Mp8whI0w+7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITOLueP6; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kzONTKUO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707286156; x=1738822156;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ime50F3RKb2m1VV+ZMtTLz8M9K+YfMpKUU6CJBgWeTE=;
-  b=kzONTKUOi+Z17NPfYeq6Ad+PbLvIwjVnkHGn0EeWUnmaOi61sczXeW8x
-   yIREfTbK86/U2Pw4xxkUAJ4E8fFdd9xAM/RqXYozWC0LVpKxU9XwT8ajs
-   4xJykyw3B5Y6s9ZwqNAkgmDF0T6ch9dWMAkcZf+sqqTaAIR65IJJjtPZH
-   b/lJ5ULfOtVhQiZ4Wy5BhGiHCANegp6UchHL/yolCQq2Wb9F2rsV1LZiK
-   GhJIgWYygLnQVYwFDcvdBSL0VOymx7KaAD4c2Gb1OexAIK6YyMKugPko/
-   Gm0F8zEbGTlhznUVpz4rW/SYRGpjQHurg9JFzjNZ20ENxBW3qwtvrs3rv
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="436053956"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="436053956"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 22:09:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="5849731"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmviesa004.fm.intel.com with ESMTP; 06 Feb 2024 22:09:09 -0800
-From: lakshmi.sowjanya.d@intel.com
-To: tglx@linutronix.de,
-	jstultz@google.com,
-	giometti@enneenne.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	andriy.shevchenko@linux.intel.com,
-	eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	jesse.brandeburg@intel.com,
-	davem@davemloft.net,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	mcoquelin.stm32@gmail.com,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	anthony.l.nguyen@intel.com,
-	peter.hilber@opensynergy.com,
-	pandith.n@intel.com,
-	mallikarjunappa.sangannavar@intel.com,
-	subramanian.mohan@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	lakshmi.sowjanya.d@intel.com
-Subject: [PATCH v4 02/11] timekeeping: Add function to convert realtime to base clock
-Date: Wed,  7 Feb 2024 11:38:45 +0530
-Message-Id: <20240207060854.6524-3-lakshmi.sowjanya.d@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240207060854.6524-1-lakshmi.sowjanya.d@intel.com>
-References: <20240207060854.6524-1-lakshmi.sowjanya.d@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITOLueP6"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3bd72353d9fso226738b6e.3;
+        Tue, 06 Feb 2024 22:09:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707286158; x=1707890958; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UOCigBVBBBspIi0p1lxtYszF6WmD5xOXo1RR8ILaV44=;
+        b=ITOLueP6yf0oZL/oGM9YObyUR4sq7Fv9BMOLF1nePEaWqbLB1QeauTfPGGgC9FSvY7
+         YlikTXWaIL76a67ebtxFOdNlCAfZ47KumIj/0DeakKI1/5086m6CCII5cR7jUs7FFcXS
+         rHnPo00V7IyC4ctuVkhEm1IDEgJrFkxmLzL0IgUMLJdDe2sC5BNiOyv+bh9Oz1aVojft
+         cJtKIqRB6zz+OAFcrJezjHAreFGRDLVI0IG4ERfHWpxSgIgXSPCBFCpYS2nudONnIhds
+         h1k3kv/mNHvidu2GgiEPvtty24q2Hw81ol4Du0XA7p9502i93oABSgVNE0ujS2Aj2ehl
+         22Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707286158; x=1707890958;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UOCigBVBBBspIi0p1lxtYszF6WmD5xOXo1RR8ILaV44=;
+        b=QJ33mqVDmMRG9BUR9vRDc8PXGprDbM0VZ6+aVjnoqasDdqu88rwxHHsDXOrzuXBi+9
+         xp8hsFgH/Xn/A+lZ5SdzaGTZsYZ0mjKzfUJk0cTXMiE8Ht6L6wP/NOdM7AD5wXRYeay2
+         YnB6z4QiXN26whn4x0jEVAeVu5obqWA9CLZlIwtOBoG985QL+CWvUu3AkAHaxS2NbtAP
+         1F/1XkLGSMWXz9ZYibvQCSRNu4RfQwvPU2Fb79P6HK+v2mdFGAyQhyQb/rl7HGebfIGq
+         aXwXwcMQCMhK2GIZmAKhx9HRrOA/Eic5phlDyYjoVcQ3Dk4wKQRALXFKoG/MvkX6E32a
+         DcoA==
+X-Gm-Message-State: AOJu0Yyy0nNS8TQVtRtsb0nrY1PNYa6wsB+XDsjLRK/ukDu/O+/M8WOC
+	9XGYRvqLbrW+K43XtODMIwnuHF8bpZkbiTG8RT0E5P5tqAQSOBuj
+X-Google-Smtp-Source: AGHT+IHjcSRNhjdpiDizYjB5tVnNmWy+hv7bqmHg5NK4M1lB7uQCHWXSjX79eFWSxoNbmechVTucEQ==
+X-Received: by 2002:a05:6808:238e:b0:3bd:db8e:b1d8 with SMTP id bp14-20020a056808238e00b003bddb8eb1d8mr5063741oib.31.1707286157690;
+        Tue, 06 Feb 2024 22:09:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5Z/IPm1PzlvZ/4DoLoupXpww8RtUS6z8HvQbyiN7ng0X4zFS3SdNz4Jq9y4Gni8dbDCPC9kPJKRkgpnj1A1SVquB3JXvIwTvE/EA07sczOr/9cJPVZq0nVwxPkF2FPIRx6dzfjSieCWUkuYHWJq27xY2/oh4uZJEz+zUG5yuHng588d9OoCg4vnIi6SCAFMbQGUlQ55OOPz3Kj4n4VTnqEDV6E48aXw6efEQWV0pg8RqiFlowPpkJUzy1Gtjw0uSvv2qYhDbN/sN4i90dtENREYyJ/Z+hERJkLndUwErphE1Fuw3z6CltU83lCNF427bpO73pqxVBgHPpUDzhj++crlGa3kcu+3bZR4XCrQZqrKrKEIfSD79gyxF15CuazRvj9RFec9CwIA+hV9PY8f/tZ3yuqNUIacLGdgnZXdJfnORJptRdHEa/dDRCzV4ihBBTotO5ed0POFNFMF4Q
+Received: from localhost ([46.3.240.101])
+        by smtp.gmail.com with ESMTPSA id r18-20020aa78b92000000b006d9c216a9e6sm577543pfd.56.2024.02.06.22.09.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 22:09:17 -0800 (PST)
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+To: u.kleine-koenig@pengutronix.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	dlan@gentoo.org,
+	inochiama@outlook.com,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Subject: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Date: Wed,  7 Feb 2024 14:09:13 +0800
+Message-Id: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
+References: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,187 +81,273 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+Implement the PWM driver for CV1800.
 
-Introduce an interface, ktime_real_to_base_clock() to convert realtime
-to base clock.
-
-Convert the base clock to the system clock using convert_base_to_cs() in
-get_device_system_crosststamp().
-
-Add the helper function timekeeping_clocksource_has_base(), to check
-whether the current clocksource has the same base clock.
-
-Co-developed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Co-developed-by: Christopher S. Hall <christopher.s.hall@intel.com>
-Signed-off-by: Christopher S. Hall <christopher.s.hall@intel.com>
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 ---
- include/linux/timekeeping.h |   6 ++
- kernel/time/timekeeping.c   | 112 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 116 insertions(+), 2 deletions(-)
+ drivers/pwm/Kconfig      |  10 ++
+ drivers/pwm/Makefile     |   1 +
+ drivers/pwm/pwm-cv1800.c | 218 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 229 insertions(+)
+ create mode 100644 drivers/pwm/pwm-cv1800.c
 
-diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-index 7e50cbd97f86..1b2a4a37bf93 100644
---- a/include/linux/timekeeping.h
-+++ b/include/linux/timekeeping.h
-@@ -275,12 +275,18 @@ struct system_device_crosststamp {
-  *		timekeeping code to verify comparability of two cycle values.
-  *		The default ID, CSID_GENERIC, does not identify a specific
-  *		clocksource.
-+ * @nsecs:	@cycles is in nanoseconds.
-  */
- struct system_counterval_t {
- 	u64			cycles;
- 	enum clocksource_ids	cs_id;
-+	bool			nsecs;
- };
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 4b956d661755..455f07af94f7 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -186,6 +186,16 @@ config PWM_CROS_EC
+ 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
+ 	  Controller.
  
-+extern bool ktime_real_to_base_clock(ktime_t treal,
-+				     enum clocksource_ids base_id, u64 *cycles);
-+extern bool timekeeping_clocksource_has_base(enum clocksource_ids id);
++config PWM_CV1800
++	tristate "Sophgo CV1800 PWM driver"
++	depends on ARCH_SOPHGO || COMPILE_TEST
++	help
++	  Generic PWM framework driver for the Sophgo CV1800 series
++	  SoCs.
 +
- /*
-  * Get cross timestamp between system clock and device clock
-  */
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 0ff065c5d25b..e68ecd77ee34 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1191,6 +1191,89 @@ static bool cycle_between(u64 before, u64 test, u64 after)
- 	return false;
- }
- 
-+static bool convert_clock(u64 *val, u32 numerator, u32 denominator)
-+{
-+	u64 rem, res;
++	  To compile this driver as a module, build the dependecies
++	  as modules, this will be called pwm-cv1800.
 +
-+	if (numerator == 0 || denominator == 0)
-+		return false;
-+
-+	res = div64_u64_rem(*val, denominator, &rem) * numerator;
-+	*val = res + div_u64(rem * numerator, denominator);
-+	return true;
-+}
-+
-+static bool convert_base_to_cs(struct system_counterval_t *scv)
-+{
-+	struct clocksource *cs = tk_core.timekeeper.tkr_mono.clock;
-+	struct clocksource_base *base = cs->base;
-+
-+	/* The timestamp was taken from the time keeper clock source */
-+	if (cs->id == scv->cs_id)
-+		return true;
-+
-+	/* Check whether cs_id matches the base clock */
-+	if (!base || base->id != scv->cs_id)
-+		return false;
-+
-+	/* Avoid conversion to a less precise clock */
-+	if (scv->nsecs && cs->freq_khz != 0 && base->freq_khz < cs->freq_khz) {
-+		if (!convert_clock(&scv->cycles, cs->freq_khz, USEC_PER_SEC))
-+			return false;
-+	} else {
-+		if (scv->nsecs) {
-+			if (!convert_clock(&scv->cycles, base->freq_khz, USEC_PER_SEC))
-+				return false;
-+		}
-+		if (!convert_clock(&scv->cycles, base->numerator, base->denominator))
-+			return false;
-+	}
-+	scv->cycles += base->offset;
-+	return true;
-+}
-+
-+static bool convert_cs_to_base(u64 *cycles, enum clocksource_ids base_id)
-+{
-+	struct clocksource *cs = tk_core.timekeeper.tkr_mono.clock;
-+	struct clocksource_base *base = cs->base;
-+
-+	/* Check whether base_id matches the base clock */
-+	if (!base || base->id != base_id)
-+		return false;
-+
-+	*cycles -= base->offset;
-+	if (!convert_clock(cycles, base->denominator, base->numerator))
-+		return false;
-+	return true;
-+}
-+
-+static u64 convert_ns_to_cs(u64 delta)
-+{
-+	struct tk_read_base *tkr = &tk_core.timekeeper.tkr_mono;
-+
-+	return div_u64((delta << tkr->shift) - tkr->xtime_nsec, tkr->mult);
-+}
-+
-+bool ktime_real_to_base_clock(ktime_t treal, enum clocksource_ids base_id, u64 *cycles)
-+{
-+	struct timekeeper *tk = &tk_core.timekeeper;
-+	unsigned int seq;
-+	u64 delta;
-+
-+	do {
-+		seq = read_seqcount_begin(&tk_core.seq);
-+		delta = (u64)treal - tk->tkr_mono.base_real;
-+		if (delta > tk->tkr_mono.clock->max_idle_ns)
-+			return false;
-+		*cycles = tk->tkr_mono.cycle_last + convert_ns_to_cs(delta);
-+		if (!convert_cs_to_base(cycles, base_id))
-+			return false;
-+	} while (read_seqcount_retry(&tk_core.seq, seq));
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(ktime_real_to_base_clock);
-+
- /**
-  * get_device_system_crosststamp - Synchronously capture system/device timestamp
-  * @get_time_fn:	Callback to get simultaneous device time and
-@@ -1236,8 +1319,7 @@ int get_device_system_crosststamp(int (*get_time_fn)
- 		 * system counter value is the same as for the currently
- 		 * installed timekeeper clocksource
- 		 */
--		if (system_counterval.cs_id == CSID_GENERIC ||
--		    tk->tkr_mono.clock->id != system_counterval.cs_id)
-+		if (!convert_base_to_cs(&system_counterval))
- 			return -ENODEV;
- 		cycles = system_counterval.cycles;
- 
-@@ -1304,6 +1386,32 @@ int get_device_system_crosststamp(int (*get_time_fn)
- }
- EXPORT_SYMBOL_GPL(get_device_system_crosststamp);
- 
-+/**
-+ * timekeeping_clocksource_has_base - Check whether the current clocksource
-+ *	has a base clock
-+ * @id:		The clocksource ID to check for
+ config PWM_DWC_CORE
+ 	tristate
+ 	depends on HAS_IOMEM
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index c5ec9e168ee7..6c3c4a07a316 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
+ obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
+ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
+ obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
++obj-$(CONFIG_PWM_CV1800)	+= pwm-cv1800.o
+ obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
+ obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
+ obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
+diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
+new file mode 100644
+index 000000000000..4d4f233c9087
+--- /dev/null
++++ b/drivers/pwm/pwm-cv1800.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * rtc-cv1800.c: PWM driver for Sophgo cv1800 RTC
 + *
-+ * Note:	The return value is a snapshot which can become invalid right
-+ *	after the function returns.
-+ *
-+ * Return:	true if the timekeeper clocksource has a base clock with @id,
-+ *	false otherwise
++ * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 + */
-+bool timekeeping_clocksource_has_base(enum clocksource_ids id)
++
++#include <linux/clk.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++
++#define HLPERIOD_BASE  0x00
++#define PERIOD_BASE    0x04
++#define POLARITY       0x040
++#define PWMSTART       0x044
++#define PWMDONE        0x048
++#define PWMUPDATE      0x4c
++#define PWM_OE         0xd0
++#define HLPERIOD_SHIFT 0x08
++#define PERIOD_SHIFT   0x08
++
++#define HLPERIOD(n)    (HLPERIOD_BASE + ((n) * HLPERIOD_SHIFT))
++#define PERIOD(n)      (PERIOD_BASE + ((n) * PERIOD_SHIFT))
++#define UPDATE(n)      (BIT(0) << (n))
++#define OE_MASK(n)     (BIT(0) << (n))
++#define START_MASK(n)  (BIT(0) << (n))
++
++#define PERIOD_RESET   0x02
++#define HLPERIOD_RESET 0x1
++#define REG_DISABLE    0x0U
++#define REG_ENABLE     BIT(0)
++
++struct soc_info {
++	unsigned int num_pwms;
++};
++
++struct cv1800_pwm {
++	struct pwm_chip chip;
++	struct regmap *map;
++	struct clk *clk;
++};
++
++static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
 +{
-+	unsigned int seq;
-+	bool ret;
-+
-+	do {
-+		seq = read_seqcount_begin(&tk_core.seq);
-+		ret = tk_core.timekeeper.tkr_mono.clock->base ?
-+		tk_core.timekeeper.tkr_mono.clock->base->id == id : false;
-+	} while (read_seqcount_retry(&tk_core.seq, seq));
-+
-+	return ret;
++	return container_of(chip, struct cv1800_pwm, chip);
 +}
-+EXPORT_SYMBOL_GPL(timekeeping_clocksource_has_base);
 +
- /**
-  * do_settimeofday64 - Sets the time of day.
-  * @ts:     pointer to the timespec64 variable containing the new time
++static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
++			     u32 enable)
++{
++	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
++	u32 pwm_enable;
++
++	regmap_read(priv->map, PWMSTART, &pwm_enable);
++	pwm_enable >>= pwm->hwpwm;
++
++	if (enable)
++		clk_prepare_enable(priv->clk);
++	else
++		clk_disable_unprepare(priv->clk);
++
++	/*
++	 * If the parameters are changed during runtime, Register needs
++	 * to be updated to take effect.
++	 */
++	if (pwm_enable) {
++		regmap_update_bits(priv->map, PWMUPDATE, UPDATE(pwm->hwpwm),
++				   REG_ENABLE << pwm->hwpwm);
++		regmap_update_bits(priv->map, PWMUPDATE, UPDATE(pwm->hwpwm),
++				   REG_DISABLE << pwm->hwpwm);
++	} else {
++		regmap_update_bits(priv->map, PWM_OE, OE_MASK(pwm->hwpwm),
++				   enable << pwm->hwpwm);
++		regmap_update_bits(priv->map, PWMSTART, START_MASK(pwm->hwpwm),
++				   enable << pwm->hwpwm);
++	}
++
++	return 0;
++}
++
++static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			    const struct pwm_state *state)
++{
++	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
++	u64 period_ns, duty_ns;
++	u32 period_val, hlperiod_val;
++	unsigned long long rate, div;
++
++	period_ns = state->period;
++	duty_ns = state->duty_cycle;
++
++	rate = (unsigned long long)clk_get_rate(priv->clk);
++
++	div = rate * period_ns;
++	do_div(div, NSEC_PER_SEC);
++	period_val = div;
++
++	div = rate * (period_ns - duty_ns);
++	do_div(div, NSEC_PER_SEC);
++	hlperiod_val = div;
++
++	regmap_write(priv->map, PERIOD(pwm->hwpwm), period_val);
++	regmap_write(priv->map, HLPERIOD(pwm->hwpwm), hlperiod_val);
++
++	cv1800_pwm_enable(chip, pwm, state->enabled);
++
++	return 0;
++}
++
++static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
++{
++	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
++	u32 period_val, hlperiod_val, tem;
++	u64 rate;
++	u64 period_ns = 0;
++	u64 duty_ns = 0;
++	u32 enable = 0;
++
++	regmap_read(priv->map, PERIOD(pwm->hwpwm), &period_val);
++	regmap_read(priv->map, HLPERIOD(pwm->hwpwm), &hlperiod_val);
++
++	if (period_val != PERIOD_RESET || hlperiod_val != HLPERIOD_RESET) {
++		rate = (u64)clk_get_rate(priv->clk);
++
++		tem = NSEC_PER_SEC * period_val;
++		do_div(tem, rate);
++		period_ns = tem;
++
++		tem = period_val * period_ns;
++		do_div(tem, hlperiod_val);
++		duty_ns = tem;
++
++		regmap_read(priv->map, PWMSTART, &enable);
++		enable >>= pwm->hwpwm;
++	}
++
++	state->period = period_ns;
++	state->duty_cycle = duty_ns;
++	state->enabled = enable;
++
++	return 0;
++}
++
++static const struct pwm_ops cv1800_pwm_ops = {
++	.apply = cv1800_pwm_apply,
++	.get_state = cv1800_pwm_get_state,
++};
++
++static const struct regmap_config cv1800_pwm_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++};
++
++static int cv1800_pwm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cv1800_pwm *cv_pwm;
++	void __iomem *base;
++	const struct soc_info *info;
++
++	info = device_get_match_data(dev);
++	if (!info)
++		return -EINVAL;
++
++	cv_pwm = devm_kzalloc(dev, sizeof(*cv_pwm), GFP_KERNEL);
++	if (!cv_pwm)
++		return -ENOMEM;
++
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	cv_pwm->map = devm_regmap_init_mmio(&pdev->dev, base,
++					    &cv1800_pwm_regmap_config);
++	if (IS_ERR(cv_pwm->map))
++		return PTR_ERR(cv_pwm->map);
++
++	cv_pwm->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(cv_pwm->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(cv_pwm->clk),
++				     "clk not found\n");
++
++	cv_pwm->chip.dev = dev;
++	cv_pwm->chip.ops = &cv1800_pwm_ops;
++	cv_pwm->chip.npwm = info->num_pwms;
++
++	return devm_pwmchip_add(dev, &cv_pwm->chip);
++}
++
++static const struct soc_info cv1800b_soc_info = {
++	.num_pwms = 4,
++};
++
++static const struct of_device_id cv1800_pwm_dt_ids[] = {
++	{ .compatible = "sophgo,cv1800-pwm", .data = &cv1800b_soc_info },
++	{},
++};
++MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
++
++static struct platform_driver cv1800_pwm_driver = {
++	.driver = {
++		.name = "cv1800-pwm",
++		.of_match_table = cv1800_pwm_dt_ids,
++	},
++	.probe = cv1800_pwm_probe,
++};
++module_platform_driver(cv1800_pwm_driver);
++
++MODULE_ALIAS("platform:cv1800-pwm");
++MODULE_AUTHOR("Jingbao Qiu");
++MODULE_DESCRIPTION("Sophgo cv1800 RTC Driver");
++MODULE_LICENSE("GPL");
 -- 
-2.35.3
+2.25.1
 
