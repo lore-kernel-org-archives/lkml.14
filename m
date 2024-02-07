@@ -1,211 +1,306 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FD8149DF9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 21:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64F5823B8;
+	Wed,  7 Feb 2024 21:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341288; cv=none; b=dgHZF7/8ws7byPKTVBwXQpwlpvZ+Y0XftLj+PvdM2AF2JHQJr69A3wd2Tguin7yrdRCFNO4+RsWOenvpHZGCJ6i3Oe9aUoBExaWi6L+NECtBJmEcGzKuJxHPHV6tvpckmsPIlvPRbI8TavqOS2Bsv5hlJJh63/jqF3iKK3H3AxQ=
+	t=1707341413; cv=none; b=dJGTj30RDf7BmzYxkI9EPhxSDssXzmzWkBuKDQRjvYldxDWE2BGhMk2Y5cydHZh+mE4rTSL+sLPJQ8hzov6bjLV9UdittUpE6mMVnxKqolZNPIGks+iG0frwT2qZnfwlgxiBNIZ0IgWR+sqPDFsVHeeehBe1BFRTKfixa8U9J9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341288; c=relaxed/simple;
-	bh=TcuoTBYzJOyVKpA/NOdorcJZuoBN+Bx+mnRuQV92i2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K07r7qom5idzmC1jHtCJvn89OA0a6B5SSqCKXW2mGlSFEEUexkHZEcL0vAEYXowefWWTA8dptGVv1RbHNbLFC6wBqUFwdpReAaNwUD/V6FZPYVR9wx0KqKjzbAjKQPPIuLtCW6uJGpVHSmOBk/lFlSYZDUiGR25HYPWNtm7COkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SLe2ii8k; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707341413; c=relaxed/simple;
+	bh=g0gLIVsTVlzEVgXEZE5VyWYUAXSY6iiynaTgHHjaG2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mdZZ0x6sZ6m98ZbnDHbzj0I8/ct8jEGT5DYLc4QKnVzM9z290RaAVqZful4K8HqhlJFMoruheBeykl5oyPEF2Avr6lqqjA+83dvb0/s5GLRB3BSUMSco/j5VSLiXdoXxoFB/8nXjWwwf1jBAnH6swPF3zY6olIhfuy9loURAFa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=T72Bcz8g; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZvrIiZoW; arc=none smtp.client-ip=66.111.4.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SLe2ii8k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707341285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rsF5scQbGC/NKEqVyzUdcfrlWaBsz3GB8A3Ix6fxwJM=;
-	b=SLe2ii8k7kKcFBqUGf6uDUX9qtXHL2zLZVwwUbnSevIw5uUhz8yjDXCIhgD8KOWy4zIGeJ
-	czqBTDPFZmkST8Ip/EJ0aAzCVJ+LZMtrXzHkmmVSS4+7I3IILzAPdOXUl3PO/Or73wfnNt
-	JbrTmBtrdBqDP2/ocd0R4u7cOlvVnf8=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-IlAHsi9YN8S_qxyIx9Z9rw-1; Wed, 07 Feb 2024 16:28:01 -0500
-X-MC-Unique: IlAHsi9YN8S_qxyIx9Z9rw-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2d0a329e86cso10155081fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 13:28:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707341280; x=1707946080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rsF5scQbGC/NKEqVyzUdcfrlWaBsz3GB8A3Ix6fxwJM=;
-        b=UMSLTonz0KhWySs+E9Ora3Fs7IObIHoPObMAhNWKQbvZanHqRIbahgMjmJkemvb58/
-         HZI3XzpPJy36AU9DaNwgsXOUAKzZ1hDT/59UwsNPctJOmnXciZRh2lQpujjvaZg80B/o
-         92sMKnorggIUR8AT/3RomTMJPL+tluw0+NbggyNYnPZmxl6lFy4NUcsl292uLPqZj6UN
-         67r6sws65jrJ4vcscJklV6rAJytC38Iqkne9UQL/kzdiCIHBA+FRb7Et1ec2W4oOe4R/
-         vHOKce4+9xLlTcSlwYe4p1NgVUwGOiHQ/DdBqMfeCfZ/G8kSpgH9HLje3T175f8RIN38
-         YaWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdeJCKRzrvfJ4QtF3smD5N83MnpxaQDIlwygjW+XX1vgGgK6L699utzQciM7/URk3ueBkbl0XWDK32fnwy3m44WK1+zsZt8VzMso+b
-X-Gm-Message-State: AOJu0YzUvBFZDJeslK89FQ+lvkh9R/JMgOVoCSXLSGpZV9RdoNMdWysj
-	XojOZJ+PQdd0MdUcxiJMwIVdmYMRey5eeQ+3UgZBH0+CdUzL6/BBiu5Yjf/vdI732t5HaaQ7Gxz
-	N9/jDbiqwhL5/S22er2ljljJUkija9FxYU1s3EM3zD3JRG+IMkDEPuI2RdCn1yYHPW2/eIBsidD
-	uMmt++rRSRUzonX0tX/o6XPuk0l5fzE+a8zr9+
-X-Received: by 2002:a05:651c:211c:b0:2d0:c176:ebcc with SMTP id a28-20020a05651c211c00b002d0c176ebccmr5145860ljq.18.1707341280228;
-        Wed, 07 Feb 2024 13:28:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFn1f4xD8ODxbeXjM0ldAqf8jj+ZejpBEaAt+zqZ446U/CEMk1rYJTD5iEcL9px/pawkKbLVveasSpw7fcHSDI=
-X-Received: by 2002:a05:651c:211c:b0:2d0:c176:ebcc with SMTP id
- a28-20020a05651c211c00b002d0c176ebccmr5145847ljq.18.1707341279916; Wed, 07
- Feb 2024 13:27:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="T72Bcz8g";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZvrIiZoW"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9EF555C00C6;
+	Wed,  7 Feb 2024 16:30:08 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Wed, 07 Feb 2024 16:30:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1707341408;
+	 x=1707427808; bh=Vilm1ec4KJ+cVj/DgCBF0t8G880tQw9jQT+O9WGH1A0=; b=
+	T72Bcz8gyrFrOLWjwX11/7ujKoPMWZQvm2oyQ/7El/MmrBVn8sodwkYXlUg5KU02
+	bs6zMbLuiTWy3LRQ3Gjl2xALYSK/REGtqbZMY96endXINadRuliXIjKHrtH1whhn
+	58QgxHHfKqZQIer8e2K9pq0go4erqAYhGTzGoR42E5/fVUIGcM9pRe9Xuj8MpZtW
+	Iy2Yi+Mj9XR7htpZxnlE30+VzolEKNwUaYUkwXmX6g/Jgjhx3mYA2fxPObjb2jSH
+	zOa2buUnr2LZ6WF2oW6+cY04ZNeHDiDuq+Y3hGUaG2xz5Fa9LBDh4UbSJJfSj4vx
+	A5Na8jZfocv1FhByzhBKfg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707341408; x=
+	1707427808; bh=Vilm1ec4KJ+cVj/DgCBF0t8G880tQw9jQT+O9WGH1A0=; b=Z
+	vrIiZoWEyRe4Ac3TP+/yEzsdIdC9IxSmc1I+EtMixQKv5o7chm6NQv3yQmsS/z4J
+	csb7UJB626+AeBcg5FaSJxqc4d7Fw9qDVpKb7aq6w/ite0IBRqM1K0g5ek2QG4TL
+	Ep/Slge7Ws/DxLmt1ppaFtxata6sC+XlkRQYcYZVg7nmv5av3JLGZS+cYddTQ2oW
+	jo5HkBOmlg1fIVUsMUXYSBk88bfZj4D2KeFDfFnRfPs6OvxYb9InnxcM4XLP15W7
+	Zhq9LOoSAOxMEzcj7cQI+sCRH8X+3YFMm7Csxg/ErxXN7RJg0zlv7bbREt5jkCD7
+	cH7qetKzzAzmhL9TvGLpQ==
+X-ME-Sender: <xms:X_bDZdjOGTxUoAD5EA0fRE_MSljYhIG-U1qv0w8iKD_LS5ijXQEzGA>
+    <xme:X_bDZSA-6Q0puZq7ifhZ5Jii_rBAZhA9WOwGUepK3Y5cWKhTBD1z-hvSBqVyZ12hU
+    yRASjy7MsCZ7pYI6bM>
+X-ME-Received: <xmr:X_bDZdGLAHcKyid5Tu4S6jmlOnnWryEt1RkezthHFXAFZLeDzs1DCT394g2fBb_zzK0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtddvgddugeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeftrghf
+    rggvlhcuuegvihhmshcuoehrrghfrggvlhessggvihhmshdrmhgvqeenucggtffrrghtth
+    gvrhhnpedutdfgjeeitddtkedthffhvdevteefgedutdefhfelueeiledviefhffefudel
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrg
+    hfrggvlhessggvihhmshdrmhgv
+X-ME-Proxy: <xmx:X_bDZSS6aJD8xMKyYbLHmonu3gaZ1iO5OvT4oMfQJGfuVq3mKejQGA>
+    <xmx:X_bDZaxdR6G_xp2aKWsdpRrLjvLDGDXlX64lQr2IWQp95aU2Qx3lzA>
+    <xmx:X_bDZY4GAs0bdP6G7sEnRZSo0DwEA1RKDHZH5lrkFtQHLH73dU0mFg>
+    <xmx:YPbDZRpSwEy17DkhVBWO5kOPxFNQB8h1ONQeafpOgj_YBfLvsrKRsg>
+Feedback-ID: idc214666:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 7 Feb 2024 16:30:06 -0500 (EST)
+Message-ID: <48364f66-99b4-40ca-b4b2-4adf1071960f@beims.me>
+Date: Wed, 7 Feb 2024 18:30:03 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
- <ZcNdzZVPD76uSbps@eldamar.lan> <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
-In-Reply-To: <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
-From: Alexander Aring <aahringo@redhat.com>
-Date: Wed, 7 Feb 2024 16:27:48 -0500
-Message-ID: <CAK-6q+hza9yXb5KpBS2VJMNHJa805nXqiYPTovnf9G-JFadBsg@mail.gmail.com>
-Subject: Re: [regression 6.1.67] dlm: cannot start dlm midcomms -97 after
- backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
-To: Jordan Rife <jrife@google.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, Valentin Kleibel <valentin@vrvis.at>, 
-	David Teigland <teigland@redhat.com>, 1063338@bugs.debian.org, gfs2@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to support host
+ mlme
+Content-Language: pt-BR
+To: David Lin <yu-hao.lin@nxp.com>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "briannorris@chromium.org" <briannorris@chromium.org>,
+ "kvalo@kernel.org" <kvalo@kernel.org>,
+ "francesco@dolcini.it" <francesco@dolcini.it>,
+ Pete Hsieh <tsung-hsien.hsieh@nxp.com>
+References: <20231222032123.1036277-1-yu-hao.lin@nxp.com>
+ <97bb3869-3b82-4b64-87cd-9b63d4516649@beims.me>
+ <PA4PR04MB96389A5DDB41DFF80CBB4738D17D2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+From: Rafael Beims <rafael@beims.me>
+In-Reply-To: <PA4PR04MB96389A5DDB41DFF80CBB4738D17D2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 30/01/2024 04:19, David Lin wrote:
+>> From: Rafael Beims <rafael@beims.me>
+>> Sent: Friday, January 19, 2024 1:09 AM
+>> To: David Lin <yu-hao.lin@nxp.com>; linux-wireless@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org; briannorris@chromium.org;
+>> kvalo@kernel.org; francesco@dolcini.it; Pete Hsieh
+>> <tsung-hsien.hsieh@nxp.com>
+>> Subject: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to support host mlme
+>>
+>> Caution: This is an external email. Please take care when clicking links or
+>> opening attachments. When in doubt, report the message using the 'Report
+>> this email' button
+>>
+>>
+>> On 22/12/2023 00:21, David Lin wrote:
+>>
+>>> This series add host based MLME support to the mwifiex driver, this
+>>> enables WPA3 support in both client and AP mode.
+>>> To enable WPA3, a firmware with corresponding V2 Key API support is
+>>> required.
+>>> The feature is currently only enabled on NXP IW416 (SD8978), and it
+>>> was internally validated by the NXP QA team. Other NXP Wi-Fi chips
+>>> supported in current mwifiex are not affected by this change.
+>>>
+>>> v8:
+>>>      - Separate 6/12 from patch v7.
+>>>        As it's a bug fix not part of host MLME feature.
+>>>      - Rearrnage MLME feature into 2 patches:
+>>>        a. Add host based MLME support for STA mode.
+>>>        b. Add host based MLME support for AP mode.
+>>>
+>>> v7:
+>>>      - Fix regression: Downlink throughput degraded by 70% in AP mode.
+>>>      - Fix issue: On STAUT, kernel Oops occurs when there is no association
+>>>        response from AP.
+>>>      - Fix issue: On STAUT, if AP leaves abruptly and deauth is missing,
+>>>        STA can't connect to AP anymore.
+>>>      - Fix regression: STA can't connect to AP when host_mlme is disabled
+>>>        (impact all chips).
+>>>      - Address reviewer comments.
+>>>
+>>> v6:
+>>>      - Correct mailing sequence.
+>>>
+>>> v5:
+>>>      - Add host base MLME support to enable WPA3 functionalities for both
+>>>        STA and AP mode.
+>>>      - This feature (WPA3) required a firmware with corresponding Key API
+>> V2
+>>>        support.
+>>>      - QA validation and regression have been covered for IW416.
+>>>      - This feature (WPA3) is currently enabled and verified only for IW416.
+>>>      - Changelogs since patch V4:
+>>>        a. Add WPA3 support for AP mode.
+>>>        b. Bug fix: In WPA3 STA mode, deice gets disconnected from AP
+>>>           when group rekey occurs.
+>>>        c. Bug fix: STAUT doesn't send WMM IE in association request when
+>>>           associate to a WMM-AP.
+>>>
+>>> v4:
+>>>      - Refine code segment per review comment.
+>>>      - Add API to check firmware encryption key command version when
+>>>        host_mlme is enabled.
+>>>
+>>> v3:
+>>>      - Cleanup commit message.
+>>>
+>>> v2:
+>>>      - Fix checkpatch error (pwe[1] -> pwe[0]).
+>>>      - Move module parameter 'host_mlme' to mwifiex_sdio_device
+>> structure.
+>>>        Default only enable for IW416.
+>>>      - Disable advertising NL80211_FEATURE_SAE if host_mlme is not
+>> enabled.
+>>> David Lin (2):
+>>>     wifi: mwifiex: add host mlme for client mode
+>>>     wifi: mwifiex: add host mlme for AP mode
+>>>
+>>>    .../net/wireless/marvell/mwifiex/cfg80211.c   | 394
+>> +++++++++++++++++-
+>>>    drivers/net/wireless/marvell/mwifiex/cmdevt.c |  27 ++
+>>>    drivers/net/wireless/marvell/mwifiex/decl.h   |  22 +
+>>>    drivers/net/wireless/marvell/mwifiex/fw.h     |  54 +++
+>>>    drivers/net/wireless/marvell/mwifiex/init.c   |   6 +
+>>>    drivers/net/wireless/marvell/mwifiex/ioctl.h  |   5 +
+>>>    drivers/net/wireless/marvell/mwifiex/join.c   |  66 ++-
+>>>    drivers/net/wireless/marvell/mwifiex/main.c   |  54 +++
+>>>    drivers/net/wireless/marvell/mwifiex/main.h   |  17 +
+>>>    drivers/net/wireless/marvell/mwifiex/scan.c   |   6 +
+>>>    drivers/net/wireless/marvell/mwifiex/sdio.c   |  13 +
+>>>    drivers/net/wireless/marvell/mwifiex/sdio.h   |   2 +
+>>>    .../wireless/marvell/mwifiex/sta_cmdresp.c    |   2 +
+>>>    .../net/wireless/marvell/mwifiex/sta_event.c  |  36 +-
+>>>    .../net/wireless/marvell/mwifiex/sta_ioctl.c  |   3 +-
+>>>    drivers/net/wireless/marvell/mwifiex/sta_tx.c |   9 +-
+>>>    .../net/wireless/marvell/mwifiex/uap_cmd.c    | 171 ++++++++
+>>>    drivers/net/wireless/marvell/mwifiex/util.c   | 104 +++++
+>>>    18 files changed, 974 insertions(+), 17 deletions(-)
+>>>
+>>>
+>>> base-commit: 783004b6dbda2cfe9a552a4cc9c1d168a2068f6c
+>> I applied the two commits of this series on top of v6.7 but unfortunately the AP
+>> is failing to start with the patches. I get this output from "hostapd -d" (running
+>> on a Verdin AM62 with IW416):
+>>
+>> nl80211: kernel reports: Match already configured
+>> nl80211: Register frame command failed (type=176): ret=-114 (Operation
+>> already in progress)
+>> nl80211: Register frame match - hexdump(len=0): [NULL]
+>>
+>> If I run the same hostapd on v6.7 without the patches, the AP is started with no
+>> issues.
+>>
+>>
+>> Is there anything else that should be done in order to test this?
+>>
+>>
+>> Rafael
+> I applied patch v8 (mbox from patch work) to Linux stable repository (tag v6.7.2).
+>
+> Both client and AP mode can work with and without WPA3.
+>
+> David
+>
+I went back and executed the tests again. I re-applied the pach on top 
+of tag v6.7.2 to make sure we're seeing exactly the same thing.
 
-On Wed, Feb 7, 2024 at 1:33=E2=80=AFPM Jordan Rife <jrife@google.com> wrote=
-:
->
-> On Wed, Feb 7, 2024 at 2:39=E2=80=AFAM Salvatore Bonaccorso <carnil@debia=
-n.org> wrote:
-> >
-> > Hi Valentin, hi all
-> >
-> > [This is about a regression reported in Debian for 6.1.67]
-> >
-> > On Tue, Feb 06, 2024 at 01:00:11PM +0100, Valentin Kleibel wrote:
-> > > Package: linux-image-amd64
-> > > Version: 6.1.76+1
-> > > Source: linux
-> > > Source-Version: 6.1.76+1
-> > > Severity: important
-> > > Control: notfound -1 6.6.15-2
-> > >
-> > > Dear Maintainers,
-> > >
-> > > We discovered a bug affecting dlm that prevents any tcp communication=
-s by
-> > > dlm when booted with debian kernel 6.1.76-1.
-> > >
-> > > Dlm startup works (corosync-cpgtool shows the dlm:controld group with=
- all
-> > > expected nodes) but as soon as we try to add a lockspace dmesg shows:
-> > > ```
-> > > dlm: Using TCP for communications
-> > > dlm: cannot start dlm midcomms -97
-> > > ```
-> > >
-> > > It seems that commit "dlm: use kernel_connect() and kernel_bind()"
-> > > (e9cdebbe) was merged to 6.1.
-> > >
-> > > Checking the code it seems that the changed function dlm_tcp_listen_b=
-ind()
-> > > fails with exit code 97 (EAFNOSUPPORT)
-> > > It is called from
-> > >
-> > > dlm/lockspace.c: threads_start() -> dlm_midcomms_start()
-> > > dlm/midcomms.c: dlm_midcomms_start() -> dlm_lowcomms_start()
-> > > dlm/lowcomms.c: dlm_lowcomms_start() -> dlm_listen_for_all() ->
-> > > dlm_proto_ops->listen_bind() =3D dlm_tcp_listen_bind()
-> > >
-> > > The error code is returned all the way to threads_start() where the e=
-rror
-> > > message is emmitted.
-> > >
-> > > Booting with the unsigned kernel from testing (6.6.15-2), which also
-> > > contains this commit, works without issues.
-> > >
-> > > I'm not sure what additional changes are required to get this working=
- or if
-> > > rolling back this change is an option.
-> > >
-> > > We'd be happy to test patches that might fix this issue.
-> >
-> > Thanks for your report. So we have a 6.1.76 specific regression for
-> > the backport of e9cdebbe23f1 ("dlm: use kernel_connect() and
-> > kernel_bind()") .
-> >
-> > Let's loop in the upstream regression list for tracking and people
-> > involved for the subsystem to see if the issue can be identified. As
-> > it is working for 6.6.15 which includes the commit backport as well it
-> > might be very well that a prerequisite is missing.
-> >
-> > # annotate regression with 6.1.y specific commit
-> > #regzbot ^introduced e11dea8f503341507018b60906c4a9e7332f3663
-> > #regzbot link: https://bugs.debian.org/1063338
-> >
-> > Any ideas?
-> >
-> > Regards,
-> > Salvatore
->
->
-> Just a quick look comparing dlm_tcp_listen_bind between the latest 6.1
-> and 6.6 stable branches,
-> it looks like there is a mismatch here with the dlm_local_addr[0] paramet=
-er.
->
-> 6.1
-> ----
->
-> static int dlm_tcp_listen_bind(struct socket *sock)
-> {
-> int addr_len;
->
-> /* Bind to our port */
-> make_sockaddr(dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
->    addr_len);
-> }
->
-> 6.6
-> ----
-> static int dlm_tcp_listen_bind(struct socket *sock)
-> {
-> int addr_len;
->
-> /* Bind to our port */
-> make_sockaddr(&dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
->    addr_len);
-> }
->
-> 6.6 contains commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on heap)=
- which
-> changed
->
-> static struct sockaddr_storage *dlm_local_addr[DLM_MAX_ADDR_COUNT];
->
-> to
->
-> static struct sockaddr_storage dlm_local_addr[DLM_MAX_ADDR_COUNT];
->
-> It looks like kernel_bind() in 6.1 needs to be modified to match.
->
+At first, the behavior I was seeing was exactly the same I reported 
+before. Upon starting hostapd with our basic example configuration, it 
+would fail to start the AP with the error:
 
-makes sense. I tried to cherry-pick e9cdebbe23f1 ("dlm: use
-kernel_connect() and kernel_bind()") on v6.1.67 as I don't see it
-there. It failed and does not apply cleanly.
+nl80211: kernel reports: Match already configured
+nl80211: Could not configure driver mode
 
-Are we talking here about a debian kernel specific backport? If so,
-maybe somebody missed to modify those parts you mentioned.
+After some investigation of what could cause this error, I found out 
+that it was connman that was interfering with this somehow. After 
+killing the connman service, the AP would start correctly.
 
-- Alex
+I want to point out that this behavior is different from the unpatched 
+driver. With that one we don't need to kill connman in order to start 
+the AP with hostapd.
+
+
+After seeing the AP starting up, I did a quick series of tests (Toradex 
+Verdin AM62 with 1GB of RAM and two antennas connected via SMA adapter):
+
+1) AP test: I was able to use the simple AP configuration with two 
+clients connected simultaneously. I executed simple ping tests and also 
+a quick run of iperf3 with the following results
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  16.8 MBytes  14.1 Mbits/sec 11             sender
+[  5]   0.00-10.05  sec  16.4 MBytes  13.7 Mbits/sec                  
+receiver
+
+I repeated the same iperf3 test several times with similar results.
+
+Comparing the iperf3 results with what I get on the unpatched driver 
+(v6.7.2), there seems to be a difference in average bandwidth:
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  20.2 MBytes  17.0 Mbits/sec 0             sender
+[  5]   0.00-10.04  sec  19.7 MBytes  16.4 Mbits/sec                  
+receiver
+
+
+2) Client test: I also executed a similar test but now with the AM62 as 
+the client. It was possible to connect to an AP and do the ping tests 
+without problems.
+
+The iperf3 results are in line with what we see on the AP:
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  19.3 MBytes  16.2 Mbits/sec 32             sender
+[  5]   0.00-10.01  sec  19.0 MBytes  15.9 Mbits/sec                  
+receiver
+
+Comparing with the unpatched v6.7.2 we can also see a difference:
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  23.4 MBytes  19.6 Mbits/sec 0             sender
+[  5]   0.00-10.01  sec  20.7 MBytes  17.3 Mbits/sec                  
+receiver
+
+
+3) Simple WPA3 AP test: to finish this round of tests, I started an AP 
+with a configuration enabling SAE. The AP was started successfully and I 
+could connect a client with wpa_supplicant. Ping tests were also 
+succesful here.
+
+The iperf3 result shows a bigger bandwidth than all the previous tests:
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  20.6 MBytes  17.3 Mbits/sec 35             sender
+[  5]   0.00-10.04  sec  19.8 MBytes  16.6 Mbits/sec                  
+receiver
+
+
+To summarize the results, it seems that the basic functionality is 
+working and also WPA3 support.
+
+We have a different behavior when starting the AP, where now we need to 
+stop connman (blacklisting the uap0 interface will probably also work) 
+beforehand.
+
+I don't know if the bandwidth results are something to be worried about, 
+I saw some variation between iperf3 runs, but the results I posted show 
+an average of what I was seeing.
+
+
+Rafael
 
