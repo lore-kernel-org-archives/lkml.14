@@ -1,108 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E51524B2C;
-	Wed,  7 Feb 2024 06:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCCD1CD19
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 06:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707286219; cv=none; b=lTIHc9A84j+YsAaY8TRnRjkFkgZmLC1GmBtCJbi32XwOiclJ54PeWa4AibNeDvHsiG/tAz8c1S+xGtY5upfDQO6LmredQWjvDCznGeSYHZ8BcCcbYEyBDAOX6jTn4FpKbJEWgE8tY6Cb1INW3DlLEI64q6DTaL3AZphxl2Ybj+8=
+	t=1707286315; cv=none; b=mkjAZhQzJI6ph9sf1SehRL8m+HM8Jz4lB0t7wInlFVbnKF8/wBOitstWY3OqGvW4CFISkrz7FiLgHJq5vP9tYloLih4tzUO/mRiOT1StMj3inmqbGNkCzXbM0p2LTtj/lf2JRZNe6XZoMoBmzD+ttJl1r3tl+PSwwqICKv4zwlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707286219; c=relaxed/simple;
-	bh=h5RpRwAivJEkMgOQGPSE31O4QbdHWmr5WM+YPfbxP60=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q84qk5Az/16ylgFku4keNv7rKR3wa13mY2SLmaCMDW7gbLgTitgIfszk1mCP6DQT5dxAoPfUiHlFkRzWKOR65h/mq8dAdxoBlGhW1OaaRKt+foSbrA5xfb3UjtxWEiKRR2ppDK2etMRw4a30QmonsifTp+kgCD3mURTD0FCDQBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R/QGJuhJ; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707286315; c=relaxed/simple;
+	bh=MXcOIfQoNRO5ZjYXIjrOev1qoj5neivD/X754LViIHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AV0wE5py7LUMPphUCrbAmXUcbI0HPicIl9rFSi3JryaLfT6TIxzxSdvuKkruuU+2FWbT7Ea2rVSlf3CBD/EyHy7kfX8RUAaRoHBGrDkPgY1OFKh2BbEkWSs3JOgJ/nP+DCdL4XEulFh26EcH6IyME4G6cBjFQEY7GRJxHI41OAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qzUPNkOW; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R/QGJuhJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707286217; x=1738822217;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=h5RpRwAivJEkMgOQGPSE31O4QbdHWmr5WM+YPfbxP60=;
-  b=R/QGJuhJeH6vyZzDlQ586EVPCWAifHvtjB3ViCDvQdJvr+nE3UZGUEbg
-   /wXJhUxDRc7esyM9g+VUimKnfkL7SCywKNshUe5/1NElsmWQQmWri3nkp
-   ItR+N7NyRrCWz4rxR+9QZgWgJjEG/I/dJeX51OLSUk5ihR/SUI3M7MNVh
-   5A/ex+jxK3XMKOyFs/0G2uGb/zJkn2MoZloonIkXAyjTR78zz0xrtoaYz
-   NK7ABAdpHNJnK/6Fyv/ElElJ2o1gUr3DEi1nUtEokBvhmUaU5YJUhqgFy
-   Hg+3RQtmJv+550p8TnFkrkKZ71hEI6CfvGjuy7WoD+J5lKVYYZ5MWNbIk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="436054113"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="436054113"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 22:10:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="5849952"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmviesa004.fm.intel.com with ESMTP; 06 Feb 2024 22:10:10 -0800
-From: lakshmi.sowjanya.d@intel.com
-To: tglx@linutronix.de,
-	jstultz@google.com,
-	giometti@enneenne.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	andriy.shevchenko@linux.intel.com,
-	eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	jesse.brandeburg@intel.com,
-	davem@davemloft.net,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	mcoquelin.stm32@gmail.com,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	anthony.l.nguyen@intel.com,
-	peter.hilber@opensynergy.com,
-	pandith.n@intel.com,
-	mallikarjunappa.sangannavar@intel.com,
-	subramanian.mohan@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	lakshmi.sowjanya.d@intel.com
-Subject: [PATCH v4 11/11] ABI: pps: Add ABI documentation for Intel TIO
-Date: Wed,  7 Feb 2024 11:38:54 +0530
-Message-Id: <20240207060854.6524-12-lakshmi.sowjanya.d@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240207060854.6524-1-lakshmi.sowjanya.d@intel.com>
-References: <20240207060854.6524-1-lakshmi.sowjanya.d@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qzUPNkOW"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-46d2d20c923so46487137.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 22:11:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707286312; x=1707891112; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MXcOIfQoNRO5ZjYXIjrOev1qoj5neivD/X754LViIHw=;
+        b=qzUPNkOWmgGL1OZbA8XJQr8kBaHDPd1ezjOLQD2WHCPwCDPLuj+UdAKAS937JTNmZR
+         l5ottFFaprHTxxoXoOa2HPzhpV4tx7Zf1cbz5MypYnugDLpnjPLTOtzvf8Ol9vCqxjgM
+         YrgCCJEiK3ijp3q6UL00jlqvOWEsFx3DiW1QtyMSmRiO8s0ImX6gxGL/jTqxvusl6N5M
+         BSd2SQUZ4xUbZf/vN8iwIAXbam/KWzaYM3iIcISgCwgnQKcl8xvOMAoeRhkBoHONMUoq
+         Qmgbwos+iJTcGqAVcv1695NAQYpCFVa/85zvrYxyEFXG6HIdYbZS//LtGw5iP3Yvd/1w
+         pfMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707286312; x=1707891112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MXcOIfQoNRO5ZjYXIjrOev1qoj5neivD/X754LViIHw=;
+        b=Xq7/RcFhlKD7oRNgQ+mKpqNp8JSoyHsrTLih7KRikN7umIfqtjfH8x63gG/rVmRJTR
+         ha8pCOativkXuwD3tzmt3twqw0wCsvp5aGcYFp4eT+wev5oORiSh1rTUh98fHVYqzkzK
+         vv75xh84t8AuUI/DZKJSjHSgRQsJhBiF3LJYt8FrBtXpcVW2/yxTeIksuY7d4sO4WtuA
+         v6Fmc6CoKl3FY9kyBg56zNt6TN1bC2dY4CZcvI+lrjaShM+b6CVQNF887ocA1v7R6vqO
+         GLERZPOwch3Ma/0kg5Y/jXu7XKSBG/pSVA0KAxNlTQk1T998G34V5WiWS+0E5c1NhRjg
+         JA6Q==
+X-Gm-Message-State: AOJu0Yz+l6TSZ6SSeICm0n6At2Y5Ldn/ehLj63PmptEWhlt2OOh3AFwE
+	XrKTl90anH3i0jBGFh/oWMXg/OIXUAIqiiztW6faxUdkQa0Q9tvMNhXhf5IAZdsbHU6nmAdzlL6
+	Kdz5CpI4ASeVeakqMkfdojKkkhfH1VCch3evwtA==
+X-Google-Smtp-Source: AGHT+IEOnPi0xHT1TQovo4uWsauFx9V82/RzzdzP1M9V7J3e1++Dvktqp/6DKtdbBO8XPPLtj6qRcdQEMQWfIzDQL3g=
+X-Received: by 2002:a05:6102:236f:b0:468:6b0:ef95 with SMTP id
+ o15-20020a056102236f00b0046806b0ef95mr1635936vsa.24.1707286312499; Tue, 06
+ Feb 2024 22:11:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240131174347.510961-1-jens.wiklander@linaro.org>
+ <20240131174347.510961-2-jens.wiklander@linaro.org> <CAPDyKFqNhGWKm=+7niNsjXOjEJE3U=o7dRNG=JqpptUSo9G-ug@mail.gmail.com>
+ <CAC_iWj+k_Vsz4ot=9pv-Gv7r11=vCunH5TSyOMTK4z-NZ2TeTA@mail.gmail.com>
+In-Reply-To: <CAC_iWj+k_Vsz4ot=9pv-Gv7r11=vCunH5TSyOMTK4z-NZ2TeTA@mail.gmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Wed, 7 Feb 2024 11:41:41 +0530
+Message-ID: <CAFA6WYNQoRg0PWgr1oCzrkMens7e0=m_zkBSXKvp8JVjmn2OZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] rpmb: add Replay Protected Memory Block (RPMB) subsystem
+To: Ilias Apalodimas <ilias.apalodimas@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, 
+	Jerome Forissier <jerome.forissier@linaro.org>, Bart Van Assche <bvanassche@acm.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+Hi Ilias, Ulf,
 
-Document sysfs interface for Intel Timed I/O PPS driver.
+On Tue, 6 Feb 2024 at 20:41, Ilias Apalodimas
+<ilias.apalodimas@linaro.org> wrote:
+>
+> Hi Ulf,
+>
+> On Tue, 6 Feb 2024 at 14:34, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Wed, 31 Jan 2024 at 18:44, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+> > >
+> > > A number of storage technologies support a specialised hardware
+> > > partition designed to be resistant to replay attacks. The underlying
+> > > HW protocols differ but the operations are common. The RPMB partition
+> > > cannot be accessed via standard block layer, but by a set of specific
+> > > RPMB commands: WRITE, READ, GET_WRITE_COUNTER, and PROGRAM_KEY. Such a
+> > > partition provides authenticated and replay protected access, hence
+> > > suitable as a secure storage.
+> > >
+> > > The initial aim of this patch is to provide a simple RPMB Driver which
+> > > can be accessed by the optee driver to facilitate early RPMB access to
+> > > OP-TEE OS (secure OS) during the boot time.
+> >
+> > How early do we expect OP-TEE to need RPMB access?
+>
+> It depends on the requested services. I am currently aware of 2
+> services that depend on the RPMB
+> - FirmwareTPM
+> - UEFI variables stored there via optee.
+>
+> For the FirmwareTPM it depends on when you want to use it. This
+> typically happens when the initramfs is loaded or systemd requests
+> access to the TPM. I guess this is late enough to not cause problems?
 
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
----
- Documentation/ABI/testing/sysfs-platform-pps-tio | 7 +++++++
- 1 file changed, 7 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-pps-tio
+Actually RPMB access is done as early as during fTPM probe, probably
+to cache NVRAM from RPMB during fTPM init. Also, there is a kernel
+user being IMA which would require fTPM access too. So we really need
+to manage dependencies here.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-pps-tio b/Documentation/ABI/testing/sysfs-platform-pps-tio
-new file mode 100644
-index 000000000000..b9b8c97a7840
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-pps-tio
-@@ -0,0 +1,7 @@
-+What:		/sys/devices/platform/INTCxxxx/enable
-+Date:		March 2024
-+KernelVersion	6.9
-+Contact:	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-+Description:
-+		(RW) Enable or disable PPS TIO generator output, read to
-+		see the status of hardware (Enabled/Disabled).
--- 
-2.35.3
+>
+> For the latter, we won't need the supplicant until a write is
+> requested. This will only happen once the userspace is up and running.
+> The UEFI driver that sits behind OP-TEE has an in-memory cache of the
+> variables, so all the reads (the kernel invokes get_next_variable
+> during boot) are working without it.
+>
+> Thanks
+> /Ilias
+> >
+> > The way things work for mmc today, is that the eMMC card gets
+> > discovered/probed via a workqueue. The work is punted by the mmc host
+> > driver (typically a module-platform-driver), when it has probed
+> > successfully.
 
+It would be nice if RPMB is available as early as possible but for the
+time being we can try to see if probe deferral suffices for all
+use-cases.
+
+> >
+> > The point is, it looks like we need some kind of probe deferral
+> > mechanism too. Whether we want the OP-TEE driver to manage this itself
+> > or whether we should let rpmb_dev_find_device() deal with it, I don't
+> > know.
+
+I wouldn't like to see the OP-TEE driver probe being deferred due to
+this since there are other kernel drivers like OP-TEE RNG (should be
+available as early as we can) etc. which don't have any dependency on
+RPMB.
+
+How about for the time being we defer fTPM probe until RPMB is available?
+
+-Sumit
