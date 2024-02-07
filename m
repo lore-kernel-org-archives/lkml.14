@@ -1,561 +1,233 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF4776C99;
-	Wed,  7 Feb 2024 14:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEAA7D3E6
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707316959; cv=none; b=rgyHc8EC1DZw5TPyKV7Pnx6G9IF5JtA56pXMeHiFjwaq2+KAdoWOfY6fJyhxH71Rpa+yotRIkpePNoSQDyyIbax718wCVJyaDoF6vPRvOo4Acdx6ItgrzhodjwpKefAnVmVYXk+B6F9zFT1RrJAmEN80qM5jEaLLkDTv8VfyI0s=
+	t=1707317039; cv=none; b=SEoxe7Nwe8wCN3NZIcWrqkrhTMAkyTmgpl7d3cnM7tRhdbeBUiQoyeQdn1Gj3lWipmx+hAsFAIkz/5SmVSRL2EE+u3q3r2NTK67essUz0gQackXC8Ad2zXHe5L6/jb4BLkblrcph7poBOhCR5na1YVaSqfm1vgub0fY6fgEQ1DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707316959; c=relaxed/simple;
-	bh=kuERJraCKv9ZhGewJ2NiUH0D14LvqIopll4/IHjU9qc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t2tSQEqORGuukyFDKjG+oBvM31PkpBSBd/3w6BHfy0o5oMCFxbysK/0nbhocNVpTCJWcl4tSG1yZ1l2aem7ECDV102jyf61M75nYCm+8w5V9DEprKlEZhMKBsKLXgS+RcWp/swYrv7rmI7pAD5P8r+Th9tOW0DTOlAoos02e3oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nqeMgcuy; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707317039; c=relaxed/simple;
+	bh=fg1vK03qeyEYh8aWYY7ojoH+m10tqr1lJD/50h6YUrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELZs4PnpV/taivfiJj+hca628eDnzplZNhceLN/txnpQfI7anCjblaVq4ZFRHRZJVtBnGQ/peHgUF/TEt0AvtpqUpNtjjLZQvldrqMImeNqMlRcUONq0QyVRgfROP9is6W+IbraoT5aG4h+TxwU5OsHH7kzFWLtT+Us40MdbJ6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WIWcj1Sv; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nqeMgcuy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707316954;
-	bh=kuERJraCKv9ZhGewJ2NiUH0D14LvqIopll4/IHjU9qc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nqeMgcuyuPSrSJhnRD5HiTpzAfi+DG0BAcmfGih/fsOnH8xFLT/NJtJnxbXIO4uF3
-	 KFLZzsFx3T32OY8YpJCyjKWhyjGvdfdVCl2LREqYVrCwV/iflM8+oVg8aFhkq5m0NA
-	 2hcriGFVC30C1s6gHfmEsIoRHlEAGsPln8HLRfBhLgnFvquU1e3ICfRuLGNaYwJZpM
-	 ogf2Mtzv/DKBLrQMv/HP1mpEjuGiChNfgC6L30kyUnB/VPTGmZBZMcHWm+e1CZ/YOl
-	 JW87CYUiNa8XQdDEAwf+5zyG24QrPRF/yq/mylbIDA26n3PslmGrF3XxHd7UayUDbo
-	 C6tdB+uL4ACcg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AE3D23782072;
-	Wed,  7 Feb 2024 14:42:32 +0000 (UTC)
-Message-ID: <21370bd8-502b-4b4e-8c9b-6d13c60685d5@collabora.com>
-Date: Wed, 7 Feb 2024 15:42:31 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WIWcj1Sv"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cf3a095ba6so6468861fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:43:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1707317034; x=1707921834; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ze9ZwLHA6Efy82qUcNxqthaSY7UMqDGuf7DhJv5BY3o=;
+        b=WIWcj1SvKlfzyaDRbb2cI/SL7OQAySx4g3jeiDUE5ld95631J0EO5nMCo8OTsu+xus
+         Cj7eqN+OAm2WgjmFZIHIvpTkvPH/wBbxKA9cPa8eIMo2jUxTwe1axS2hDTN7E6ONkhxs
+         U7Eyw/KLJDE7Z6J14RvirB5e7/va89EHvCygjSRN2Kww5TqjVJm8TN9GoqFU+Ty+vtzC
+         29twFWeGUSCGU9fvfcxeXk/eP6V25LXoZTLWvXSiTpuBOxO2THlEpnoujyEMaJuyknVM
+         qT7JTOT+HdPwE5NMvb5XpsFbxnZu6BoRMBVOtDI/9+jWZsQY4zGN20m4EKXAr+GxqhzR
+         nICg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707317034; x=1707921834;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ze9ZwLHA6Efy82qUcNxqthaSY7UMqDGuf7DhJv5BY3o=;
+        b=f6NzBu7mf3Gn+fJvZAxU9ZY/c/JZFzKQ88g/Det7or1zXvbfNvgiQb/0O+j6OWH38c
+         hwkI6GbubqiI8sfFwQt69WGIG7rmdgyqb5jX+vmmrmgRt98av1V9/ggG8HVSKo7rk7eX
+         /heUpDpgpVHGUHDUZuTJ71+oxXpfd36UVDGB05x1kno7tMemepiK3AK/zcMkMCsfkzSk
+         v8FTKtxvRQMS3x9Sg68oVgCuW4qY0i/1dIPw8iQKl8uezvxx9ZJJrPz6Gsa5WZiXL9N4
+         Ea8dmIqGe6PDOp2i3xnQ3Fbs1VaLriarpX3A1VeIcQiSBwGkOOV3lsF5F5xtJihh0C6x
+         jVag==
+X-Forwarded-Encrypted: i=1; AJvYcCVnnegzzYmSuxD8EeS3xlcM378CLpzUdQabosDXm5YFaqV3nuMliyTtR27im7YZny5eDys5dQJCEcZWdSk2jvSKGeII/G6qQmlpchaU
+X-Gm-Message-State: AOJu0YxchqVEiPvqkOHAONmvNJN0Un/shyP8kIl+N6GF/KM2kXovc1TK
+	DxnuFyY6x0bUfrEnOlmcA06W8PE04ON4NpMLeyyqjdDEf9VMJn+NulGT1AsnCEo=
+X-Google-Smtp-Source: AGHT+IG5pkdkXWGfV8yAdTjYMkiAYADdm/5219hi0EkLm9dapJXsvHjrWMaM24YHXyYPuiHR4deIvA==
+X-Received: by 2002:a05:6512:3a8c:b0:511:3c06:9369 with SMTP id q12-20020a0565123a8c00b005113c069369mr5636045lfu.12.1707317034249;
+        Wed, 07 Feb 2024 06:43:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUachyilhvlHEjsVwJMeBzkiDQhENc3Bye+vX++KgSwJ84OZvU6Yn2hYl1d131eryb7VCWC3dLn/rNctAbYxItdn4C60J1cyShJBqrN91EZkS/qPUX85NIjsPJxGVlyMLSs+FWpx9TgPzx3Rxm/La4SJoxYts6rog0uyZpIp1AEj9VmTGNx17blpL0Wr9wgyUbvg9GQQYVMrItn8pVSrr8D65SIqBVZ4EThM8Off2VwBX7PkONCdEsFPLg5kIHI11sumNlLDcvCGaH8akvJ8LpcN2AxCEkHNcIPP+0kzetbtKj+7WriWpcX4DcEGRm28LDjgHaIPKRfIfLiZ3sCgEwsU4cdF0sCUysAGWDlxVL+yB1MLQKSphVzhOUYqr1Kbq4BoRvpzedEGsZk0aJkI9iGNE67D4bMsQ+VTRrfztC+f//9b8dDhAlmxzQoC2Wy6XqPX6AOJKEn+xy9U3SJAG233ZOLsuYjptbU
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id yr2-20020a170907334200b00a379ef08ecbsm830951ejb.74.2024.02.07.06.43.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 06:43:53 -0800 (PST)
+Date: Wed, 7 Feb 2024 15:43:52 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Sreenath Vijayan <sreenath.vijayan@sony.com>
+Cc: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
+	senozhatsky@chromium.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
+	anandakumar.balasubramaniam@sony.com
+Subject: Re: [PATCH v4 1/2] printk: Add function to dump printk buffer
+ directly to consoles
+Message-ID: <ZcOXEyPsRnfewb4Y@alley>
+References: <cover.1706772349.git.sreenath.vijayan@sony.com>
+ <8cb5936021c5811bd03a6bc18300b1384009ac26.1706772349.git.sreenath.vijayan@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] media: i2c: Add GC08A3 image sensor driver
-Content-Language: en-US
-To: Zhi Mao <zhi.mao@mediatek.com>, mchehab@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, sakari.ailus@linux.intel.com
-Cc: laurent.pinchart@ideasonboard.com, shengnan.wang@mediatek.com,
- yaya.chang@mediatek.com, 10572168@qq.com,
- Project_Global_Chrome_Upstream_Group@mediatek.com, yunkec@chromium.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com, jacopo.mondi@ideasonboard.com,
- hverkuil-cisco@xs4all.nl, heiko@sntech.de, jernej.skrabec@gmail.com,
- macromorgan@hotmail.com, linus.walleij@linaro.org, hdegoede@redhat.com,
- tomi.valkeinen@ideasonboard.com, gerald.loacker@wolfvision.net,
- andy.shevchenko@gmail.com, bingbu.cao@intel.com,
- dan.scally@ideasonboard.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20240204061538.2105-1-zhi.mao@mediatek.com>
- <20240204061538.2105-3-zhi.mao@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240204061538.2105-3-zhi.mao@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8cb5936021c5811bd03a6bc18300b1384009ac26.1706772349.git.sreenath.vijayan@sony.com>
 
-Il 04/02/24 07:15, Zhi Mao ha scritto:
-> Add a V4L2 sub-device driver for Galaxycore GC08A3 image sensor.
-> 
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
-> ---
->   drivers/media/i2c/Kconfig  |   10 +
->   drivers/media/i2c/Makefile |    1 +
->   drivers/media/i2c/gc08a3.c | 1448 ++++++++++++++++++++++++++++++++++++
->   3 files changed, 1459 insertions(+)
->   create mode 100644 drivers/media/i2c/gc08a3.c
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 56f276b920ab..e4da68835683 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -70,6 +70,16 @@ config VIDEO_GC0308
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called gc0308.
->   
-> +config VIDEO_GC08A3
-> +	tristate "GalaxyCore gc08a3 sensor support"
-> +	select V4L2_CCI_I2C
-> +	help
-> +	  This is a Video4Linux2 sensor driver for the GalaxyCore gc08a3
-> +	  camera.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called gc08a3.
-> +
->   config VIDEO_GC2145
->   	select V4L2_CCI_I2C
->   	tristate "GalaxyCore GC2145 sensor support"
-> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> index dfbe6448b549..b82e99ca7578 100644
-> --- a/drivers/media/i2c/Makefile
-> +++ b/drivers/media/i2c/Makefile
-> @@ -38,6 +38,7 @@ obj-$(CONFIG_VIDEO_DW9768) += dw9768.o
->   obj-$(CONFIG_VIDEO_DW9807_VCM) += dw9807-vcm.o
->   obj-$(CONFIG_VIDEO_ET8EK8) += et8ek8/
->   obj-$(CONFIG_VIDEO_GC0308) += gc0308.o
-> +obj-$(CONFIG_VIDEO_GC08A3) += gc08a3.o
->   obj-$(CONFIG_VIDEO_GC2145) += gc2145.o
->   obj-$(CONFIG_VIDEO_HI556) += hi556.o
->   obj-$(CONFIG_VIDEO_HI846) += hi846.o
-> diff --git a/drivers/media/i2c/gc08a3.c b/drivers/media/i2c/gc08a3.c
-> new file mode 100644
-> index 000000000000..3fc7fffb815c
-> --- /dev/null
-> +++ b/drivers/media/i2c/gc08a3.c
-> @@ -0,0 +1,1448 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * gc08a3.c - gc08a3 sensor driver
-> + *
-> + * Copyright 2023 MediaTek
-> + *
-> + * Zhi Mao <zhi.mao@mediatek.com>
-> + */
-> +
+On Thu 2024-02-01 15:53:40, Sreenath Vijayan wrote:
+> It is useful to be able to dump the printk buffer directly to
+> consoles in some situations so as to not flood the buffer.
 
-..snip..
+This is not longer true. I think that it was valid for
+the previous versions which used separate buffers with
+the kmsg_dump API.
 
-> +
-> +static const struct gc08a3_link_freq_config gc08a3_link_freq_336m_configs = {
-> +	.reg_list = {
-> +		.num_of_regs = ARRAY_SIZE(mode_table_common),
-> +		.regs = mode_table_common,
-> +	}
-> +};
-> +
-> +static const struct gc08a3_link_freq_config gc08a3_link_freq_207m_configs = {
-> +	.reg_list = {
-> +		.num_of_regs = ARRAY_SIZE(mode_table_common),
-> +		.regs = mode_table_common,
-> +	}
-> +};
-> +
+> To do this, we reuse the CONSOLE_REPLAY_ALL mode code in
+> console_flush_on_panic() by moving the code to a helper function
+> console_rewind_all(). This is done because console_flush_on_panic()
+> sets console_may_schedule to 0 but this should not be done in our
+> case.
 
-Since you're documenting this structure anyway, why not kerneldoc? :-)
+Also the "c->seq = seq;" is not safe in the panic version.
+But it will be safe when called under the console_lock.
 
-> +struct gc08a3_mode {
-> +	u32 width;
-> +	u32 height;
-> +	const struct gc08a3_reg_list reg_list;
-> +
-> +	u32 hts; /* Horizontal timining size */
-> +	u32 vts_def; /* Default vertical timining size */
-> +	u32 vts_min; /* Min vertical timining size */
-> +	u32 max_framerate;
-> +	const struct gc08a3_link_freq_config *link_freq_configs;
-> +};
-> +
-> +/*
-> + * Declare modes in order, from biggest
-> + * to smallest height.
-> + */
+> Then console_rewind_all() is called from the new function
+> dump_printk_buffer() with console lock held to set the console
+> sequence number to oldest record in the buffer for all consoles.
+> Releasing the console lock will flush the contents of printk buffer
+> to the consoles.
 
-one line is enough for this comment.
+My proposed commit message is:
 
-> +static const struct gc08a3_mode gc08a3_modes[] = {
-> +	{
-> +		.width = GC08A3_NATIVE_WIDTH,
-> +		.height = GC08A3_NATIVE_HEIGHT,
-> +		.reg_list = {
-> +			.num_of_regs = ARRAY_SIZE(mode_3264x2448),
-> +			.regs = mode_3264x2448,
-> +		},
-> +		.link_freq_configs = &gc08a3_link_freq_336m_configs,
-> +
-> +		.hts = GC08A3_HTS_30FPS,
-> +		.vts_def = GC08A3_VTS_30FPS,
-> +		.vts_min = GC08A3_VTS_30FPS_MIN,
-> +		.max_framerate = 300,
-> +	},
-> +	{
-> +		.width = 1920,
-> +		.height = 1080,
-> +		.reg_list = {
-> +			.num_of_regs = ARRAY_SIZE(mode_1920x1080),
-> +			.regs = mode_1920x1080,
-> +		},
-> +		.link_freq_configs = &gc08a3_link_freq_207m_configs,
-> +
-> +		.hts = GC08A3_HTS_60FPS,
-> +		.vts_def = GC08A3_VTS_60FPS,
-> +		.vts_min = GC08A3_VTS_60FPS_MIN,
-> +		.max_framerate = 600,
-> +	},
-> +};
-> +
-> +static u64 to_pixel_rate(u32 f_index)
+<proposal>
+Add a generic function for replaying the kernel log on consoles.
+It would allow seeing the the log on an unresponsive terminal
+via sysrq interface.
+
+Reuse the existing code from console_flush_on_panic() for
+reseting the sequence numbers. It will be safe when called
+under console_lock(). Also the console_unlock() will
+automatically flush the messages on the consoles.
+
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -3134,6 +3134,32 @@ void console_unblank(void)
+>  		pr_flush(1000, true);
+>  }
+>  
+
+I would call this function __console_rewind_all(void)
+because it is not safe on its own. Also It would
+deserve a comment, something like:
+
+/*
+ * Rewind all consoles to the oldest available record.
+ *
+ * IMPORTANT: The function is safe only when called under
+ *            console_lock(). It is not enforced because
+ *	      it is used as a best effort in panic().
+ */
+static void __console_rewind_all(void)
+
+
+This would deserve a comment because it is not safe by
+default.
+
+> +static void console_rewind_all(void)
 > +{
-> +	u64 pixel_rate = link_freq_menu_items[f_index] * 2 * GC08A3_DATA_LANES;
+> +	struct console *c;
+> +	short flags;
+> +	int cookie;
+> +	u64 seq;
 > +
-> +	do_div(pixel_rate, GC08A3_RGB_DEPTH);
-
-The divisor is (less than) 32 bits and the dividend is always 64 bits: that will
-break on builds for 32-bits CPUs.
-
-Just do....
-
-	return div_u64(pixel_rate, GB08A3_RGB_DEPTH);
-
+> +	seq = prb_first_valid_seq(prb);
 > +
-> +	return pixel_rate;
-> +}
+> +	cookie = console_srcu_read_lock();
+> +	for_each_console_srcu(c) {
+> +		flags = console_srcu_read_flags(c);
 > +
-> +static int gc08a3_identify_module(struct gc08a3 *gc08a3)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&gc08a3->sd);
-> +	u64 val = 0;
-
-u64 val;
-
-> +	int ret;
-> +
-
-Either log here or in the probe function, otherwise it's just redudant.
-
-> +	ret = cci_read(gc08a3->regmap, GC08A3_REG_CHIP_ID, &val, NULL);
-> +	if (ret) {
-> +		dev_err(&client->dev,
-> +			"failed to read chip id: 0x%x", GC08A3_CHIP_ID);
-> +		return ret;
-> +	}
-> +
-> +	if (val != GC08A3_CHIP_ID) {
-> +		dev_err(&client->dev, "chip id mismatch: 0x%x!=0x%llx",
-> +			GC08A3_CHIP_ID, val);
-> +		return -ENXIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static inline struct gc08a3 *to_gc08a3(struct v4l2_subdev *sd)
-> +{
-> +	return container_of(sd, struct gc08a3, sd);
-> +}
-> +
-
-..snip..
-
-> +
-> +static int gc08a3_update_cur_mode_controls(struct gc08a3 *gc08a3,
-> +					   const struct gc08a3_mode *mode)
-> +{
-> +	s64 exposure_max, h_blank;
-> +	int ret = 0;
-> +
-> +	ret = __v4l2_ctrl_modify_range(gc08a3->vblank,
-> +				       mode->vts_min - mode->height,
-> +				       GC08A3_VTS_MAX - mode->height, 1,
-> +				       mode->vts_def - mode->height);
-> +	if (ret)
-> +		dev_err(gc08a3->dev, "VB ctrl range update failed\n");
-> +
-> +	h_blank = mode->hts - mode->width;
-> +	ret = __v4l2_ctrl_modify_range(gc08a3->hblank, h_blank, h_blank, 1,
-> +				       h_blank);
-> +	if (ret)
-> +		dev_err(gc08a3->dev, "HB ctrl range update failed\n");
-> +
-> +	exposure_max = mode->vts_def - GC08A3_EXP_MARGIN;
-> +	ret = __v4l2_ctrl_modify_range(gc08a3->exposure, GC08A3_EXP_MIN,
-> +				       exposure_max, GC08A3_EXP_STEP,
-> +				       exposure_max);
-> +	if (ret)
-> +		dev_err(gc08a3->dev, "exposure ctrl range update failed\n");
-
-No. You're not returning anywhere for error. That's not okay.
-Besides...
-
-	if (ret) {
-		dev_err..
-		return ret;
-	}
-
-	return 0;
-
-> +
-> +	return ret;
-> +}
-> +
-> +static void gc08a3_update_pad_format(struct gc08a3 *gc08a3,
-> +				     const struct gc08a3_mode *mode,
-> +				     struct v4l2_mbus_framefmt *fmt)
-> +{
-> +	fmt->width = mode->width;
-> +	fmt->height = mode->height;
-> +	fmt->code = GC08A3_MBUS_CODE;
-> +	fmt->field = V4L2_FIELD_NONE;
-> +	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-> +	fmt->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(fmt->colorspace);
-> +	fmt->quantization =
-> +		V4L2_MAP_QUANTIZATION_DEFAULT(true,
-> +					      fmt->colorspace,
-> +					      fmt->ycbcr_enc);
-> +	fmt->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(fmt->colorspace);
-> +}
-> +
-> +static int gc08a3_set_format(struct v4l2_subdev *sd,
-> +			     struct v4l2_subdev_state *state,
-> +			     struct v4l2_subdev_format *fmt)
-> +{
-> +	struct gc08a3 *gc08a3 = to_gc08a3(sd);
-> +	struct v4l2_mbus_framefmt *mbus_fmt;
-> +	struct v4l2_rect *crop;
-> +	const struct gc08a3_mode *mode;
-> +
-> +	mode = v4l2_find_nearest_size(gc08a3_modes, ARRAY_SIZE(gc08a3_modes),
-> +				      width, height, fmt->format.width,
-> +				      fmt->format.height);
-> +
-> +	/*update crop info to subdev state*/
-> +	crop = v4l2_subdev_state_get_crop(state, 0);
-> +	crop->width = mode->width;
-> +	crop->height = mode->height;
-> +
-> +	/*update fmt info to subdev state*/
-> +	gc08a3_update_pad_format(gc08a3, mode, &fmt->format);
-> +	mbus_fmt = v4l2_subdev_state_get_format(state, 0);
-> +	*mbus_fmt = fmt->format;
-> +
-> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
-> +		return 0;
-> +
-> +	gc08a3->cur_mode = mode;
-> +	gc08a3_update_cur_mode_controls(gc08a3, mode);
-> +
-> +	return 0;
-> +}
-> +
-> +static int gc08a3_get_selection(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_state *state,
-> +				struct v4l2_subdev_selection *sel)
-> +{
-> +	struct gc08a3 *gc08a3 = to_gc08a3(sd);
-> +
-> +	switch (sel->target) {
-> +	case V4L2_SEL_TGT_CROP:
-> +		sel->r = *v4l2_subdev_state_get_crop(state, 0);
-> +		break;
-> +	case V4L2_SEL_TGT_CROP_BOUNDS:
-> +		sel->r.top = 0;
-> +		sel->r.left = 0;
-> +		sel->r.width = GC08A3_NATIVE_WIDTH;
-> +		sel->r.height = GC08A3_NATIVE_HEIGHT;
-> +		break;
-> +	case V4L2_SEL_TGT_CROP_DEFAULT:
-> +		if (gc08a3->cur_mode->width == GC08A3_NATIVE_WIDTH) {
-> +			sel->r.top = 0;
-> +			sel->r.left = 0;
-> +			sel->r.width = gc08a3_modes[0].width;
-> +			sel->r.height = gc08a3_modes[0].height;
+> +		if (flags & CON_NBCON) {
+> +			nbcon_seq_force(c, seq);
 > +		} else {
-> +			sel->r.top = 0;
-> +			sel->r.left = 0;
-> +			sel->r.width = gc08a3_modes[1].width;
-> +			sel->r.height = gc08a3_modes[1].height;
+> +			/*
+> +			 * This is an unsynchronized assignment. On
+> +			 * panic legacy consoles are only best effort.
+> +			 */
+
+We should change this to something like:
+
+			/*
+			 * This assigment is safe only when called under
+			 * console_lock(). */
+			 */
+
+> +			c->seq = seq;
 > +		}
-> +		break;
-> +	default:
-> +		return -EINVAL;
 > +	}
-> +
-> +	return 0;
+> +	console_srcu_read_unlock(cookie);
 > +}
 > +
-> +static int gc08a3_init_state(struct v4l2_subdev *sd,
-> +			     struct v4l2_subdev_state *state)
+>  /**
+>   * console_flush_on_panic - flush console content on panic
+>   * @mode: flush all messages in buffer or just the pending ones
+> @@ -3162,30 +3188,8 @@ void console_flush_on_panic(enum con_flush_mode mode)
+>  	 */
+>  	console_may_schedule = 0;
+>  
+> -	if (mode == CONSOLE_REPLAY_ALL) {
+> -		struct console *c;
+> -		short flags;
+> -		int cookie;
+> -		u64 seq;
+> -
+> -		seq = prb_first_valid_seq(prb);
+> -
+> -		cookie = console_srcu_read_lock();
+> -		for_each_console_srcu(c) {
+> -			flags = console_srcu_read_flags(c);
+> -
+> -			if (flags & CON_NBCON) {
+> -				nbcon_seq_force(c, seq);
+> -			} else {
+> -				/*
+> -				 * This is an unsynchronized assignment. On
+> -				 * panic legacy consoles are only best effort.
+> -				 */
+> -				c->seq = seq;
+> -			}
+> -		}
+> -		console_srcu_read_unlock(cookie);
+> -	}
+> +	if (mode == CONSOLE_REPLAY_ALL)
+> +		console_rewind_all();
+>  
+>  	console_flush_all(false, &next_seq, &handover);
+>  }
+> @@ -4259,6 +4263,15 @@ void kmsg_dump_rewind(struct kmsg_dump_iter *iter)
+>  }
+>  EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
+>  
+> +/**
+> + * Dump the printk ring buffer directly to consoles
+> + */
+> +void dump_printk_buffer(void)
+
+I would call this function console_replay_all(). IMHO, it better describes
+what it does.
+
 > +{
-> +	struct v4l2_subdev_format fmt = {
-> +		.which = V4L2_SUBDEV_FORMAT_TRY,
-> +		.pad = 0,
-> +		.format = {
-> +			.code = GC08A3_MBUS_CODE,
-> +			.width = gc08a3_modes[0].width,
-> +			.height = gc08a3_modes[0].height,
-> +		},
-> +	};
-> +
-> +	gc08a3_set_format(sd, state, &fmt);
-> +
-> +	return 0;
+> +	console_lock();
+> +	console_rewind_all();
+
+I would add a comment:
+
+	/* Consoles are flushed as part of console_unlock(). */
+
+> +	console_unlock();
 > +}
-> +
-> +static int gc08a3_set_ctrl_hflip(struct gc08a3 *gc08a3, u32 ctrl_val)
-> +{
-> +	int ret;
-> +	u64 val;
-> +
-> +	ret = cci_read(gc08a3->regmap, GC08A3_FLIP_REG, &val, NULL);
-> +	if (ret) {
-> +		dev_err(gc08a3->dev, "read hflip register failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	val = ctrl_val ? (val | GC08A3_FLIP_H_MASK) :
-> +			   (val & ~GC08A3_FLIP_H_MASK);
-> +	ret = cci_write(gc08a3->regmap, GC08A3_FLIP_REG, val, NULL);
-> +	if (ret < 0)
-> +		dev_err(gc08a3->dev, "Error %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int gc08a3_set_ctrl_vflip(struct gc08a3 *gc08a3, u32 ctrl_val)
-> +{
-> +	int ret;
-> +	u64 val;
-> +
-> +	ret = cci_read(gc08a3->regmap, GC08A3_FLIP_REG, &val, NULL);
-> +	if (ret) {
-> +		dev_err(gc08a3->dev, "read vflip register failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	val = ctrl_val ? (val | GC08A3_FLIP_V_MASK) :
-> +			   (val & ~GC08A3_FLIP_V_MASK);
-> +	ret = cci_write(gc08a3->regmap, GC08A3_FLIP_REG, val, NULL);
-> +	if (ret < 0)
-> +		dev_err(gc08a3->dev, "Error %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int gc08a3_test_pattern(struct gc08a3 *gc08a3, u32 pattern_menu)
-> +{
-> +	u32 pattern = 0;
-> +	int ret;
+>  #endif
 
-ret not initialized is ok here;
-
-> +
-> +	if (pattern_menu) {
-> +		switch (pattern_menu) {
-> +		case 1:
-> +			pattern = 0x00;
-> +			break;
-> +		case 2:
-> +			pattern = 0x10;
-> +			break;
-> +		case 3:
-> +		case 4:
-> +		case 5:
-> +		case 6:
-> +		case 7:
-> +			pattern = pattern_menu + 1;
-> +			break;
-> +		}
-> +
-> +		ret = cci_write(gc08a3->regmap, GC08A3_REG_TEST_PATTERN_EN,
-> +				GC08A3_TEST_PATTERN_EN, NULL);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = cci_write(gc08a3->regmap, GC08A3_REG_TEST_PATTERN_IDX,
-> +				pattern, NULL);
-
-if (ret)
-	return ret;
-
-> +
-> +	} else {
-> +		ret = cci_write(gc08a3->regmap, GC08A3_REG_TEST_PATTERN_EN,
-> +				0x00, NULL);
-
-if (ret)
-	return ret;
-
-> +	}
-> +
-
-	return 0;
-
-> +	return ret;
-> +}
-> +
-> +static int gc08a3_set_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct gc08a3 *gc08a3 =
-> +		container_of(ctrl->handler, struct gc08a3, ctrls);
-> +	int ret = 0;
-
-int ret;
-
-> +	s64 exposure_max;
-> +
-> +	if (ctrl->id == V4L2_CID_VBLANK) {
-> +		/* Update max exposure while meeting expected vblanking */
-> +		exposure_max = gc08a3->cur_mode->height + ctrl->val -
-> +			       GC08A3_EXP_MARGIN;
-> +		__v4l2_ctrl_modify_range(gc08a3->exposure,
-> +					 gc08a3->exposure->minimum,
-> +					 exposure_max, gc08a3->exposure->step,
-> +					 exposure_max);
-> +	}
-> +
-> +	/*
-> +	 * Applying V4L2 control value only happens
-> +	 * when power is on for streaming
-> +	 */
-> +	if (!pm_runtime_get_if_in_use(gc08a3->dev))
-> +		return 0;
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_EXPOSURE:
-> +		ret = cci_write(gc08a3->regmap, GC08A3_EXP_REG,
-> +				ctrl->val, NULL);
-> +		break;
-> +
-> +	case V4L2_CID_ANALOGUE_GAIN:
-> +		ret = cci_write(gc08a3->regmap, GC08A3_AGAIN_REG,
-> +				ctrl->val, NULL);
-> +		break;
-> +
-> +	case V4L2_CID_VBLANK:
-> +		ret = cci_write(gc08a3->regmap, GC08A3_FRAME_LENGTH_REG,
-> +				gc08a3->cur_mode->height + ctrl->val, NULL);
-> +		break;
-> +
-> +	case V4L2_CID_HFLIP:
-> +		ret = gc08a3_set_ctrl_hflip(gc08a3, ctrl->val);
-> +		break;
-> +
-> +	case V4L2_CID_VFLIP:
-> +		ret = gc08a3_set_ctrl_vflip(gc08a3, ctrl->val);
-> +		break;
-> +
-> +	case V4L2_CID_TEST_PATTERN:
-> +		ret = gc08a3_test_pattern(gc08a3, ctrl->val);
-> +		break;
-> +
-> +	default:
-> +		break;
-> +	}
-> +
-> +	pm_runtime_put(gc08a3->dev);
-
-if (ret)
-	return ret;
-
-return 0;
-
-> +
-> +	return ret;
-> +}
-> +
-
-...and I've ignored some more stuff as other reviewers already gave you feedback.
-
-Regards,
-Angelo
-
+Best Regards,
+Petr
