@@ -1,436 +1,144 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7261D559
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 06:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707289086; cv=none; b=UWKZzZjRF6CAlr2t5BjKGp06Me9ffY6x1APG/8LolSgmPcyrchM339ybMJhtrRkSNkTQDnCjvlX6cX2xxtqjmBHveGfLXlBbk0qZIJn6sumjQjBiqZNENbZ/ZDczcydqoCqx4YA5rnb6sX5hFqrV2hgiP+P5DBPs//EWzuXzb8w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707289086; c=relaxed/simple;
-	bh=V7uFFpe8w3EF9zEsXHJZNarBHBrm8Ar/llgSi0z+4Z4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UGZ/xl9f8DKGRu+qjfO2QzXqnWmBP1EUwEPi27t3hj/JhEfQNq4BgEyeAAWcSWGXhqH7wKnP7mvFwxQRumRhh5NY+3y8+LPzCINw1H2JSCjYE27brouNFyukSlOLQ55j8OqP7ht/DITI4E3UURRkroEaigM0hzQE2rXNukvUILg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HcYw0PGK; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32ECD1CF83;
+	Wed,  7 Feb 2024 06:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707289169; cv=fail; b=Tre7gxvqTHFaUaRjskCsLoBuyKwbkYGBmS5FLdetZprAXqx8RtRhGR+5gXHjFhlJz8vSjkiAKTMVXaFYkKAgjI/yiAao+wl5dSGgTXJfEBbsODB+lMNXh9Xbr8SnVvAsNCM7JDF3vLvCpj4R1B05MD3pHHclvCr9/YkONl3JGZ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707289169; c=relaxed/simple;
+	bh=QMDI5FabLCLRNj/B0PtjQttCQrktV0Bs7d1jTQ/U6WM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RYCvXGjHtwFlw9fXjwovXytncpbfwtEzUTaShI4DGZnlOzqkAtF2JpbUy6GjxkSq4APX8lebRfk1n5aJ5zLkw7Wg34XzZ3sE3G0HBzu7Fk76xnJrlfiMPiL+EICMHliBZ4u41pK8ND7fR0jdItN/HplHI9F4/xNswF1VWKoC3lY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YO/Xr7MB; arc=fail smtp.client-ip=40.107.220.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HcYw0PGK"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e04fd5e05aso246059b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 22:58:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707289083; x=1707893883; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aecUI82Iy+XbHEXIEO1CZlXO6PZH5PAtjcYNmz1mNEQ=;
-        b=HcYw0PGKQ8pnFpijdZeCpDJMuTfQALfqKcCd4oR3+NKI+8KYyZC6r69Sjkw2O5AT6b
-         QJZTEHSvKf4sVTPcFlXmwXKq7NBxtmYn6tea4msSqxA41z5nGneVpSubS/m9v/qDORtO
-         hLVaCeMykfZjUkSXiZOFe1PDCW2Fc7zVeELyM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707289083; x=1707893883;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aecUI82Iy+XbHEXIEO1CZlXO6PZH5PAtjcYNmz1mNEQ=;
-        b=ZRkGW/8Q7lyX+9mA3Y6lDxOPmFFmxZiE5K7XnUxd5P8xr+V8AdwPZjO3Lqfi01BW3q
-         6YNhVWJRH0iA8FqsR/R+zUmkIIXwNmsLaIQX/0ws+pRubh0LjHTWp3NvrmOxRoA7JppA
-         3lFzcji2lkvrPsPWzc95p3soaDRKwODNSnclUKwfhQEsgDODtHnJzv9uQsuco2plvp7Q
-         CjwMYPxC1JSTWAI9Vhh237jdlbxrtBYmrdWRYFkxe1PG4B+Mwr3cPFiE+OqNvxWT62Aj
-         SxtsJB/sDGM9dPikak+QzU4NFC/PCMH1pTSx4BaMqFvMPSuP2X/5tLKZAjwDPeuaDMOg
-         Vj5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUyB+dVV3PrUJ0GvQwAYdKBieTRqBQ558FkqAiGukTXhLEYBJctyDb73HG7KmHRu6KXiwnjqzWrkh91rDFG19IgYqITrKQKyam6f48+
-X-Gm-Message-State: AOJu0YwPq5ods9o0+23HTU5OW0Xj1iCsYKmyiqEBmYD2PAnuU5NQ16Gi
-	2JrUZrWLbONN4NMDropggqBJ1JSiY9CHQevEVwBzQaVjlQi36Q4E7+u+dzZ1Rw==
-X-Google-Smtp-Source: AGHT+IFELJwXkmY3OunMAIgQO/2tw+BOike8Ofqjzzk59xcmSBvDqnBhvRvwNn0Eu2+00jvLhins+Q==
-X-Received: by 2002:a05:6a00:4f96:b0:6da:c9e8:486f with SMTP id ld22-20020a056a004f9600b006dac9e8486fmr2959491pfb.3.1707289083519;
-        Tue, 06 Feb 2024 22:58:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1FLAWtv16oNS8EQOb71JFwYbqgXmxQrqvEc+LjnWZCmoy75DdllOOmj+Vv1vpivueRCKXUfvQF4qa2HEbP97C0forU4DFKVCF0DkzHdFyxGh7GaE8oJD3iJSLDEsOso2iHI0LOLRmxbeIPp6/n8AD1QddxYikULAb8v35JH/+wbs=
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:aa4c:2868:935:7ac6])
-        by smtp.gmail.com with ESMTPSA id jw15-20020a056a00928f00b006e03ac84d53sm672576pfb.193.2024.02.06.22.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 22:58:03 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Minchan Kim <minchan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [RFC][PATCH 2/2] zram: move comp buffer to a dedicate per-CPU area
-Date: Wed,  7 Feb 2024 15:57:12 +0900
-Message-ID: <20240207065751.1908939-3-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-In-Reply-To: <20240207065751.1908939-1-senozhatsky@chromium.org>
-References: <20240207065751.1908939-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YO/Xr7MB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PWTVWb2aJf9bx1gY9IVu7i2vhFrqc98cLanGPTFywUT8kUKlKxQCqGyOTc5G/XvqIxdQBxqPrWJOgmgI5vJnnO/XRJtXE3Cjo0/ToarttewjOF3FsuH/2bt3FdMLPsmZMEzWYIrBmiJkVZOjDQWNZzBm6AMbJmueC705spGpe1FOPQdD5eIyC6cEJFWqaoSrWObNYe1qb4eutG8pYoXgSuxPgxFc3L7ReSwMUb6ROoPyVznemIIqoTOTy0Uw9PG+coquGywy7wVeftnojz9+DGs6NI4okZkPKi6WRDhxcYcF8H9yo7eR6EBzYrBjTnZotgmroR/esC8R6koAAVSQug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cz78NVS5D47nogtUdgUrqoOMWnCAMfRraEHzqarZ5U8=;
+ b=QgGEuH0VprBAqALthx+SrRvWaTOnxJhumYKOUdM+Wg3S42Eby20scCq8KJzx0U94Vnpn7WU5trYhVzdMw1Vxz1RtFtbgmw78LLcRM7pc5u3vuVBxq7LfvpD1usUCXHziDFG/RJSnC5xlQtaaCD9xVwsMMsuuSpb2poilHYbt47p7HiKDlY/EnujSuIb1CJJctwPtkJ+MWSWAYgJ3K83KLhosLlGazs9SRZXrtejZcrmGttcqyCAHGA32TjbKn1cn4Q4FNEZolquygtSKFklzug6NHxnOJxED7DlKRH7K2lLmzgg36QPijgyQNgZdmChhjXqBIL9IUwkWrOeoxES2Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cz78NVS5D47nogtUdgUrqoOMWnCAMfRraEHzqarZ5U8=;
+ b=YO/Xr7MBiegsyOUlklI6bPeK3IZwCklS+ZwZVusXVpuXC59U50xv3tkNU7qYpWUmp4SnE0FmQBPHyJDZ0mJB5YWBrSPguwXueqhzrwyUrikwrc7N+NfYtNKphh/6atCIp17fUJC2A9WSrImAqy54XWmJiGT5iAudCQimRptjYoX62rQGv5xf9iM+CQ/GqNy3koTA+RLEp8UqZTob/7YVLAfsUQXWrw28zId7rTR+S0yDG0GLyHm0tGcQ8/cjOYaNdwtG0LR6K/RrJ6MIhb+k46ye8NaH2uP6CjmAANetnlJWLtxBczhPgY70r+RA0VojfO02gwrIuuQtxQ2pCfJk0Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB6288.namprd12.prod.outlook.com (2603:10b6:8:93::7) by
+ SJ1PR12MB6292.namprd12.prod.outlook.com (2603:10b6:a03:455::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.15; Wed, 7 Feb
+ 2024 06:59:25 +0000
+Received: from DS7PR12MB6288.namprd12.prod.outlook.com
+ ([fe80::bddb:8ace:1d63:205b]) by DS7PR12MB6288.namprd12.prod.outlook.com
+ ([fe80::bddb:8ace:1d63:205b%5]) with mapi id 15.20.7270.016; Wed, 7 Feb 2024
+ 06:59:25 +0000
+Message-ID: <b3c595d8-b30a-41ac-bb82-c1264678b3c4@nvidia.com>
+Date: Wed, 7 Feb 2024 08:59:18 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] eth: mlx5: link NAPI instances to queues and
+ IRQs
+To: Joe Damato <jdamato@fastly.com>, Tariq Toukan <tariqt@nvidia.com>
+Cc: Tariq Toukan <ttoukan.linux@gmail.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, rrameshbabu@nvidia.com,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>
+References: <20240206010311.149103-1-jdamato@fastly.com>
+ <7e338c2a-6091-4093-8ca2-bb3b2af3e79d@gmail.com>
+ <20240206171159.GA11565@fastly.com>
+ <44d321bf-88a0-4d6f-8572-dfbda088dd8f@nvidia.com>
+ <20240206192314.GA11982@fastly.com>
+Content-Language: en-US
+From: Gal Pressman <gal@nvidia.com>
+In-Reply-To: <20240206192314.GA11982@fastly.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0031.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:c7::15) To DS7PR12MB6288.namprd12.prod.outlook.com
+ (2603:10b6:8:93::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6288:EE_|SJ1PR12MB6292:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ae26252-30f3-40f1-fafc-08dc27aa520f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	9LfWv37KLUycPxRieXkhibw/dwe1vNYVKrDQH1WJcvYA2rUWz02hhh4V9lHKuVIeumfYUv/h3upOjL1A3fSmSEBKDF46c7PnkR67g6lxo+xyhO7/0ECjkTIGat3maswIBdnC6JXNU1B10f21vyIobHyUW/eWb92AnxIWDK2Z7jKFbkV5HGpgLUfv/GKxsYZryz6ZryyC4+BBLXAbBoJ1158929iGMs5I2Ua27Bs03ecp4/mk0rb0vqJ1Sx9uaVufd3N50KQ0eOQ6S/CedoMwrSuawiuAuvOdPinLtBC738UxiyEDNnSq8y/To/aS2FNxBy5DRJ97hgWIcMaSXWhJDBRP/MfNFnzgmVcaDkBryYh99KVIuUsqhpg5wYSHv5rR/v+03hPKgjgIVQ93//BeJP70VVECGqSbeqIofveP87s5/jRqDVQb1sdWnWG4TL9t2ZhAXJifgnlRzgxhrKDaOyC1VOtABagr9xQV1xh4L4GRDCfzGJqb84nqlIpUetBBsJCur7TujTR5tIDvuIvwRo4YcEkbCTW9uheiQB8fdzTOiXPyf+9IcT3J4ykkwr2oqFWu498m2S8aLrrx7t2/KVFeZ2qO9Oge2R666yKw0neVjEwnaCDlWwNqewgFBI2PUMHRpwp0864suncKPvLqRQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6288.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(136003)(376002)(346002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(316002)(478600001)(7416002)(5660300002)(66476007)(6636002)(110136005)(4326008)(8676002)(8936002)(66946007)(66556008)(6666004)(2616005)(38100700002)(4744005)(6506007)(54906003)(2906002)(53546011)(26005)(31696002)(6512007)(6486002)(36756003)(86362001)(31686004)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZWltNzVjdGt5c2Q4V2xJRHVkYThSa0psZVFYSy9JMEFGWnFkTkZiM0s5dEJk?=
+ =?utf-8?B?Q29TbkExZUJEQWswa1hEZzc2bzIreVNoOFg3R1dhK0FJM3ZWV1RNTG03SFky?=
+ =?utf-8?B?STF0MVUvY0U5eWJBTkkzc0NuSGg5ZU9ycVp2bVA1ekxqWHVlMTRyeXF0YWNj?=
+ =?utf-8?B?ZTBmbFZENG9FNDRrMUdJYnhUTmptVUJScGtaYU9OY2ViMXdIUmlzdWF1Ritz?=
+ =?utf-8?B?UjA1TkVPVnBscGtQMTI1OWhoQXpFc2tXaHpLNU45SE9wdVdnRHY1ZjY1ODNo?=
+ =?utf-8?B?QzFVUFBJdGs3WStCZlJick9OREhDRlV2OEFDbEhGM3VITGt6clJTajlEMmhq?=
+ =?utf-8?B?M3FyUVEyd3oyTmRjM3k2MmdteTNZK3h4bnJFRnZGSFFXc3dTZFB6aTErcHZF?=
+ =?utf-8?B?MmJZOWJ2S0JTY1hEUVpMbzMzR0o1enUwNTA3Q0VVWVd6dVkrWFBNMGZIbEx1?=
+ =?utf-8?B?djgraTlvM2h1RktPbXdkN0VzWEU3cWN0UnlNcnlRaXFaaXhjZEZSVTJoN2tB?=
+ =?utf-8?B?UlF6RDl3QTdhbmppRmtuY21CbDI2em1tZXNUMDFnWGNuZ0QxaDQ5cmc4bkxt?=
+ =?utf-8?B?dVMzUkRLdU8zNFN0RUFhRFRDS1p4a0JFWFRBZEZtdXBoY2paa1h6MzBUc21K?=
+ =?utf-8?B?ZlZpc0N2RHNMaTNORExBZ205QUFVVEVkNXBmd1RDKytpZ3lGc1hnSWlQVjVI?=
+ =?utf-8?B?MVB6bDdnQUl1M1VVZCtiNHhHREl4WDRTdityWVpuREVjN3JPYjdFZS9xL2Nq?=
+ =?utf-8?B?UTJCY1BWSVdXeGlyMEVFajlFZGpYekI5VGRpbWRmUXVlc3gvSm5UV2hiRkJN?=
+ =?utf-8?B?bnZvOU0rakRsZnZSQ3AySVF0L0s1QXczNmYzMm9XK0VHR0VCREZVZnlyVVBl?=
+ =?utf-8?B?YnhPL2FBOEQrcFRpaUthMHVUVlRlSm5zaS8vOTFqdHhIMmNCbmpGRWVuR1Ir?=
+ =?utf-8?B?SWFrSzhmMmFZQWhycFhhazYxRHBkWnlaVXRiaGppeSsyYmk3aDlOQWYySE1U?=
+ =?utf-8?B?OFo4aDVIZWR3c3dPZ2w0MFUwSTNzUURMbmUxL0srWHFxazFDSm9pdWdtQ0ND?=
+ =?utf-8?B?WjJybG9ETFZoSG5oVExKQzAzRUxSdDdMTXorYnpkaXpEd3N3Qjd0M0M2c1hz?=
+ =?utf-8?B?ZlpNNmowRnMveU40Y290WHg0ZEVGRFduM1Y0N2R4MWpIY3NIcitLaGRGUjFO?=
+ =?utf-8?B?enoycDNHUkRpOG16K0lvQ1J5dm04djBWUU9tM0M3MjdWQUhjcTZGOHlCdEov?=
+ =?utf-8?B?STh4emVIcUNtemlaSldyaFd3bVlvSXEyU0Q1bEhNNnAyTzZPaUV4V0J3bG1v?=
+ =?utf-8?B?bkpBK25xM1Vya21zK1lXSEUrOEtmRVJzRlRFaGZ3a0xtWFJKMUJJMjE4SXFK?=
+ =?utf-8?B?MjZyUzN5Mm0xUGJWOUJZckJ5bHArSU1aNWdobnBFZVhNNHptQy9qaFRNQWMx?=
+ =?utf-8?B?ZUpZT1R0VElrT2ZuNXpsUFhwZjlDb01vdU10bitvLzlKMVVnM1FhTlZyaVVT?=
+ =?utf-8?B?TUNPd1o5RURmT1Y5SVFZc3RuVkdkRm9PUXhzWXViUEhYRkhmQkZ5VjI5ZlpT?=
+ =?utf-8?B?YTN6dThMNjRkN1hYMU84SW94MFg2aWVBZVNiWERVdW9uZ295VUJwSmhKUExD?=
+ =?utf-8?B?NHFCZUlpYkVHSEU4VEYxT0I3MXVWdjFTZ0tZVnJZaVcwbWlveWlQQzNnMUZT?=
+ =?utf-8?B?Vngya1dyUmlrYkQwVk50N0R4S2tSM2VXNGJTVm9yS0RsbS82S2FhZGN3bXN0?=
+ =?utf-8?B?RzlEMCtjR2JLbVBCcVRGMTRDUDlsQ3ZQTk9JamRxQ3hENUM3WUtmeWYwcmJn?=
+ =?utf-8?B?bmdvd04wVkt0Q2xFbGd2TjEwS2RlRXgyQzdzQmc1UmdIcU14UzVZSnFacHVq?=
+ =?utf-8?B?QUZPTkNvbGg0Tkp0ZklneEdMbWpiVkd1UmFrallZcVJqNStqRmVPTnZlTEFE?=
+ =?utf-8?B?WHBxekhHR1pZKzJYMDMwSTBsTzN5aHRwRE5pRzFjNTdrOFBRdXBOM0JpS0Vk?=
+ =?utf-8?B?dGI3Wm5IaTZtZ0lFZWh6ak41SkNnYWt3S25BVjFlM2ZQZTBpa3dHR3NlSWl3?=
+ =?utf-8?B?M2I1R3NmbWx3amNrZVpGKzRSamp1SnpCU2tmRGZWeVB6VWRVWkZwL1A2QzVR?=
+ =?utf-8?Q?KB7M/KNlnQ4zlgws0UbFqiep7?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ae26252-30f3-40f1-fafc-08dc27aa520f
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6288.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2024 06:59:25.6792
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wkCy26JsbkZwr1Mb4e95InldL3ntZXbb5egeeLJm1capz0HkU6UVpaKamsw6ukPT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6292
 
-We currently keep compression work buffer (2 physical pages)
-in each per-CPU zcomp_stream structure. In some cases this
-results in increased memory usage (or even wastage), e.g.
-when we have multiple compression streams enabled.
+On 06/02/2024 21:23, Joe Damato wrote:
+>> The per queue coalesce series is going through internal code review, and is
+>> expected to also be ready in a matter of a few weeks.
+> 
+> OK, great. Thanks for letting me know; we are definitely interested in
+> using this feature.
 
-In fact, all we need is one compression work buffer per-CPU
-per-device, because we never have several compression backends
-being active on any given CPU. Compression backends use that
-buffer exclusively so one per-CPU buffer is enough.
-
-Ideally, we don't even need to allocate those buffers per-CPU
-and per-device. Just per-CPU should suffice, because zram
-compression/decompression runs with preemption and cpu-hotplug
-disabled.
-
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zcomp.c    | 115 +++++++++++++++++++++++++++++-----
- drivers/block/zram/zcomp.h    |  24 +++++--
- drivers/block/zram/zram_drv.c |  32 ++++++++--
- drivers/block/zram/zram_drv.h |   1 +
- include/linux/cpuhotplug.h    |   1 +
- 5 files changed, 148 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index d88954e8c7bf..fa6019fb0969 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -34,13 +34,41 @@ static const char * const backends[] = {
- #endif
- };
- 
-+static void zcomp_buf_free(struct zcomp_buf *buf)
-+{
-+	vfree(buf->ptr);
-+	buf->ptr = NULL;
-+}
-+
-+static int zcomp_buf_init(struct zcomp_buf *buf)
-+{
-+	/*
-+	 * allocate 2 pages. 1 for compressed data, plus 1 extra for the
-+	 * case when compressed size is larger than the original one
-+	 */
-+	buf->ptr = vzalloc(2 * PAGE_SIZE);
-+	if (!buf->ptr)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+void *zcomp_mem_buffer(struct zcomp_mem *mem)
-+{
-+	struct zcomp_buf *buf = this_cpu_ptr(mem->buf);
-+
-+	/*
-+	 * Note that this should be called after zstrm_get(), which
-+	 * should disable CPU-hotplug and preemption.
-+	 */
-+	return buf->ptr;
-+}
-+
- static void zcomp_strm_free(struct zcomp_strm *zstrm)
- {
- 	if (!IS_ERR_OR_NULL(zstrm->tfm))
- 		crypto_free_comp(zstrm->tfm);
--	vfree(zstrm->buffer);
- 	zstrm->tfm = NULL;
--	zstrm->buffer = NULL;
- }
- 
- /*
-@@ -53,15 +81,6 @@ static int zcomp_strm_init(struct zcomp_strm *zstrm, struct zcomp *comp)
- 	if (IS_ERR_OR_NULL(zstrm->tfm))
- 		return -EINVAL;
- 
--	/*
--	 * allocate 2 pages. 1 for compressed data, plus 1 extra for the
--	 * case when compressed size is larger than the original one
--	 */
--	zstrm->buffer = vzalloc(2 * PAGE_SIZE);
--	if (!zstrm->buffer) {
--		zcomp_strm_free(zstrm);
--		return -ENOMEM;
--	}
- 	return 0;
- }
- 
-@@ -118,8 +137,8 @@ void zcomp_stream_put(struct zcomp *comp)
- 	local_unlock(&comp->stream->lock);
- }
- 
--int zcomp_compress(struct zcomp_strm *zstrm,
--		const void *src, unsigned int *dst_len)
-+int zcomp_compress(struct zcomp_strm *zstrm, struct zcomp_mem *mem,
-+		   const void *src, unsigned int *dst_len)
- {
- 	/*
- 	 * Our dst memory (zstrm->buffer) is always `2 * PAGE_SIZE' sized
-@@ -137,9 +156,8 @@ int zcomp_compress(struct zcomp_strm *zstrm,
- 	 */
- 	*dst_len = PAGE_SIZE * 2;
- 
--	return crypto_comp_compress(zstrm->tfm,
--			src, PAGE_SIZE,
--			zstrm->buffer, dst_len);
-+	return crypto_comp_compress(zstrm->tfm, src, PAGE_SIZE,
-+				    zcomp_mem_buffer(mem), dst_len);
- }
- 
- int zcomp_decompress(struct zcomp_strm *zstrm,
-@@ -235,3 +253,68 @@ struct zcomp *zcomp_create(const char *alg)
- 	}
- 	return comp;
- }
-+
-+int zcomp_mem_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct zcomp_mem *mem = hlist_entry(node, struct zcomp_mem, node);
-+	struct zcomp_buf *buf;
-+	int ret;
-+
-+	buf = per_cpu_ptr(mem->buf, cpu);
-+	ret = zcomp_buf_init(buf);
-+	if (ret)
-+		pr_err("Can't allocate compression buffer\n");
-+	return ret;
-+}
-+
-+int zcomp_mem_cpu_dead(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct zcomp_mem *mem = hlist_entry(node, struct zcomp_mem, node);
-+	struct zcomp_buf *buf;
-+
-+	buf = per_cpu_ptr(mem->buf, cpu);
-+	zcomp_buf_free(buf);
-+	return 0;
-+}
-+
-+static int zcomp_mem_init(struct zcomp_mem *mem)
-+{
-+	int ret;
-+
-+	mem->buf = alloc_percpu(struct zcomp_buf);
-+	if (!mem->buf)
-+		return -ENOMEM;
-+
-+	ret = cpuhp_state_add_instance(CPUHP_ZCOMP_MEM_PREPARE, &mem->node);
-+	if (ret < 0)
-+		goto cleanup;
-+	return 0;
-+
-+cleanup:
-+	free_percpu(mem->buf);
-+	return ret;
-+}
-+
-+void zcomp_mem_destroy(struct zcomp_mem *mem)
-+{
-+	cpuhp_state_remove_instance(CPUHP_ZCOMP_MEM_PREPARE, &mem->node);
-+	free_percpu(mem->buf);
-+	kfree(mem);
-+}
-+
-+struct zcomp_mem *zcomp_mem_create(void)
-+{
-+	struct zcomp_mem *mem;
-+	int ret;
-+
-+	mem = kzalloc(sizeof(struct zcomp_mem), GFP_KERNEL);
-+	if (!mem)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ret = zcomp_mem_init(mem);
-+	if (ret) {
-+		kfree(mem);
-+		return ERR_PTR(ret);
-+	}
-+	return mem;
-+}
-diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index cdefdef93da8..93645cdabb89 100644
---- a/drivers/block/zram/zcomp.h
-+++ b/drivers/block/zram/zcomp.h
-@@ -8,10 +8,7 @@
- #include <linux/local_lock.h>
- 
- struct zcomp_strm {
--	/* The members ->buffer and ->tfm are protected by ->lock. */
- 	local_lock_t lock;
--	/* compression/decompression buffer */
--	void *buffer;
- 	struct crypto_comp *tfm;
- };
- 
-@@ -22,6 +19,25 @@ struct zcomp {
- 	struct hlist_node node;
- };
- 
-+/*
-+ * zcomp_buf should be accessed only after zcomp_stream_get() and should
-+ * not be accessed after zcomp_stream_get()
-+ */
-+struct zcomp_buf {
-+	void *ptr;
-+};
-+
-+struct zcomp_mem {
-+	struct zcomp_buf __percpu *buf;
-+	struct hlist_node node;
-+};
-+
-+void *zcomp_mem_buffer(struct zcomp_mem *mem);
-+int zcomp_mem_cpu_up_prepare(unsigned int cpu, struct hlist_node *node);
-+int zcomp_mem_cpu_dead(unsigned int cpu, struct hlist_node *node);
-+void zcomp_mem_destroy(struct zcomp_mem *mem);
-+struct zcomp_mem *zcomp_mem_create(void);
-+
- int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node);
- int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node);
- ssize_t zcomp_available_show(const char *comp, char *buf);
-@@ -33,7 +49,7 @@ void zcomp_destroy(struct zcomp *comp);
- struct zcomp_strm *zcomp_stream_get(struct zcomp *comp);
- void zcomp_stream_put(struct zcomp *comp);
- 
--int zcomp_compress(struct zcomp_strm *zstrm,
-+int zcomp_compress(struct zcomp_strm *zstrm, struct zcomp_mem *mem,
- 		const void *src, unsigned int *dst_len);
- 
- int zcomp_decompress(struct zcomp_strm *zstrm,
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 6772e0c654fa..5e7b86660166 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1429,7 +1429,7 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- compress_again:
- 	zstrm = zcomp_stream_get(zram->comps[ZRAM_PRIMARY_COMP]);
- 	src = kmap_local_page(page);
--	ret = zcomp_compress(zstrm, src, &comp_len);
-+	ret = zcomp_compress(zstrm, zram->comp_mem, src, &comp_len);
- 	kunmap_local(src);
- 
- 	if (unlikely(ret)) {
-@@ -1492,7 +1492,7 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 
- 	dst = zs_map_object(zram->mem_pool, handle, ZS_MM_WO);
- 
--	src = zstrm->buffer;
-+	src = zcomp_mem_buffer(zram->comp_mem);
- 	if (comp_len == PAGE_SIZE)
- 		src = kmap_local_page(page);
- 	memcpy(dst, src, comp_len);
-@@ -1615,7 +1615,7 @@ static int zram_recompress(struct zram *zram, u32 index, struct page *page,
- 		num_recomps++;
- 		zstrm = zcomp_stream_get(zram->comps[prio]);
- 		src = kmap_local_page(page);
--		ret = zcomp_compress(zstrm, src, &comp_len_new);
-+		ret = zcomp_compress(zstrm, zram->comp_mem, src, &comp_len_new);
- 		kunmap_local(src);
- 
- 		if (ret) {
-@@ -1683,7 +1683,7 @@ static int zram_recompress(struct zram *zram, u32 index, struct page *page,
- 	}
- 
- 	dst = zs_map_object(zram->mem_pool, handle_new, ZS_MM_WO);
--	memcpy(dst, zstrm->buffer, comp_len_new);
-+	memcpy(dst, zcomp_mem_buffer(zram->comp_mem), comp_len_new);
- 	zcomp_stream_put(zram->comps[prio]);
- 
- 	zs_unmap_object(zram->mem_pool, handle_new);
-@@ -1979,6 +1979,8 @@ static void zram_destroy_comps(struct zram *zram)
- 		zcomp_destroy(comp);
- 		zram->num_active_comps--;
- 	}
-+
-+	zcomp_mem_destroy(zram->comp_mem);
- }
- 
- static void zram_reset_device(struct zram *zram)
-@@ -2047,6 +2049,13 @@ static ssize_t disksize_store(struct device *dev,
- 		zram->comps[prio] = comp;
- 		zram->num_active_comps++;
- 	}
-+
-+	zram->comp_mem = zcomp_mem_create();
-+	if (!zram->comp_mem) {
-+		err = PTR_ERR(zram->comp_mem);
-+		goto out_free_comps;
-+	}
-+
- 	zram->disksize = disksize;
- 	set_capacity_and_notify(zram->disk, zram->disksize >> SECTOR_SHIFT);
- 	up_write(&zram->init_lock);
-@@ -2390,6 +2399,7 @@ static void destroy_devices(void)
- 	idr_destroy(&zram_index_idr);
- 	unregister_blkdev(zram_major, "zram");
- 	cpuhp_remove_multi_state(CPUHP_ZCOMP_PREPARE);
-+	cpuhp_remove_multi_state(CPUHP_ZCOMP_MEM_PREPARE);
- }
- 
- static int __init zram_init(void)
-@@ -2398,15 +2408,26 @@ static int __init zram_init(void)
- 
- 	BUILD_BUG_ON(__NR_ZRAM_PAGEFLAGS > BITS_PER_LONG);
- 
--	ret = cpuhp_setup_state_multi(CPUHP_ZCOMP_PREPARE, "block/zram:prepare",
-+	ret = cpuhp_setup_state_multi(CPUHP_ZCOMP_PREPARE,
-+				      "block/zram:zcomp_prepare",
- 				      zcomp_cpu_up_prepare, zcomp_cpu_dead);
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = cpuhp_setup_state_multi(CPUHP_ZCOMP_MEM_PREPARE,
-+				      "block/zram:zcomp_mem_prepare",
-+				      zcomp_mem_cpu_up_prepare,
-+				      zcomp_mem_cpu_dead);
-+	if (ret < 0) {
-+		cpuhp_remove_multi_state(CPUHP_ZCOMP_PREPARE);
-+		return ret;
-+	}
-+
- 	ret = class_register(&zram_control_class);
- 	if (ret) {
- 		pr_err("Unable to register zram-control class\n");
- 		cpuhp_remove_multi_state(CPUHP_ZCOMP_PREPARE);
-+		cpuhp_remove_multi_state(CPUHP_ZCOMP_MEM_PREPARE);
- 		return ret;
- 	}
- 
-@@ -2416,6 +2437,7 @@ static int __init zram_init(void)
- 		pr_err("Unable to get major number\n");
- 		class_unregister(&zram_control_class);
- 		cpuhp_remove_multi_state(CPUHP_ZCOMP_PREPARE);
-+		cpuhp_remove_multi_state(CPUHP_ZCOMP_MEM_PREPARE);
- 		return -EBUSY;
- 	}
- 
-diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-index 3b94d12f41b4..bdb3d5e07ec0 100644
---- a/drivers/block/zram/zram_drv.h
-+++ b/drivers/block/zram/zram_drv.h
-@@ -107,6 +107,7 @@ struct zram {
- 	struct zram_table_entry *table;
- 	struct zs_pool *mem_pool;
- 	struct zcomp *comps[ZRAM_MAX_COMPS];
-+	struct zcomp_mem *comp_mem;
- 	struct gendisk *disk;
- 	/* Prevent concurrent execution of device init */
- 	struct rw_semaphore init_lock;
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 172d0a743e5d..0fc72eb6fc02 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -121,6 +121,7 @@ enum cpuhp_state {
- 	CPUHP_MM_ZSWP_POOL_PREPARE,
- 	CPUHP_KVM_PPC_BOOK3S_PREPARE,
- 	CPUHP_ZCOMP_PREPARE,
-+	CPUHP_ZCOMP_MEM_PREPARE,
- 	CPUHP_TIMERS_PREPARE,
- 	CPUHP_MIPS_SOC_PREPARE,
- 	CPUHP_BP_PREPARE_DYN,
--- 
-2.43.0.594.gd9cf4e227d-goog
-
+Hi Joe,
+Can you please share some details about your usecase for this feature?
