@@ -1,237 +1,201 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2074.outbound.protection.outlook.com [40.107.92.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2206D1CF94;
-	Wed,  7 Feb 2024 06:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707289171; cv=none; b=O54Npmyo529kP37pGRZG6ChM2qqI7odljGwAo4hYy0axu9vVXeT3o9hgekcc5pZD89uWoqisBNnnROsqwYccG7c6NI0r+OA4JnO+OoPXmEOlCuAsfe8T22krn7uArXT+ILYEohNgZ8liEAD1Chc6eAAXgOgG0/Q1uFEntzhmhXg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707289171; c=relaxed/simple;
-	bh=nKzsRMvhOPzjRr5dXRryXqwDxv3hbcjahpFvvOCo1Lg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZpXNxKCYGK6HxPvVEpQvFc105yiJV01pmJZdbvWEDHo8JkghPQPBR3/JM6CtMOy4z54o3/x6/pFZnRcTDCWiNtbTFqY29fpxffPEh4WhHCB9rnTgyTMlIkkKUZEotBgZhArb9Bp8uS2yTG+FArbYjs/CAOfbQI72Hyxq8TDjHNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hfanaPzl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C91200C7;
+	Wed,  7 Feb 2024 06:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707289183; cv=fail; b=oB4JBfGm9exUIwozF4gCZmRg0BN2t16j8LH9W7zyTt96MfLy07NN1PKsXQWnJEAzdZD+q50EKEA8aT80nZq6dYKyO9t24d2peKhGPJBwF8HZRjZ07zLCtpN4qemKMDAA0MZPXM0g8U6zZde9jccHUejFBZJ3OuAKLu/GDpDm+jo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707289183; c=relaxed/simple;
+	bh=tK2lzvh0a9cfTmRTqOnKXtJ2Ki7/NQDSwv6rQSSI7Bo=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VlTg1dccgpoNis1l4U29B1280QBc+yzk/zfpWjia2dZ8ZUbRab/aT1eoxdbUg7y7++6m7ggojR/ixpyLJxPUzHUa42XKuldzRyTbzcV/jlt5y5geYyAB8VB22QA50ZHqOUOGPzU7c8vnciqrW3xTac+G2pDqyZfXEE+s4j3wZHI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tFpilawa; arc=fail smtp.client-ip=40.107.92.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hfanaPzl"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4175oSFN011466;
-	Wed, 7 Feb 2024 06:59:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=DG/J8ta9Ra8NQoxjCsWNjWq3m66l9UKT7KaIyxuGgbI=; b=hf
-	anaPzlxYLIG6QzAaOkn/FCr1OcZgnKykKE4vTzA2TbCdK6mtHU5vYMQ+c5oiPPEf
-	KdmjDVAjF7o+axF7umknfjdIQRyPm/z7XaOXo90cNNSrLwByv4IhnLUkZp6/kZHv
-	/cDkw/PztHpHpjlTwBI3sSPMC4r4H/k3+agjW40DYudNyqSUiSkYKHO/efjFYx4W
-	HXw4zF/sjUTau9rZe2qAb+6QjPj8gRFBm0XhGZhdYIq+z4B+s9POxc0E/4S9jW/K
-	YTYBqPFcOJWqJXX/xyFfSGKw4nYG2ov1gpPEt2hB2cVetxt4ktR8Ul0s0nf48OCW
-	0CVPkgY3tX554bjKWMLA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4425r3xe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 Feb 2024 06:59:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4176xO1r016368
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 Feb 2024 06:59:24 GMT
-Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 6 Feb
- 2024 22:59:19 -0800
-Message-ID: <e90522c1-7a2d-40ff-bf4e-c8f974722ddf@quicinc.com>
-Date: Wed, 7 Feb 2024 12:28:57 +0530
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tFpilawa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ioiKqrNxOjyhG4dXDlLUB1ByrpCYQc/nYoVe3N9vQlYwQI61N1Q+KDcFBk/dyP+jGfiYZKe79rqxn7GuWRVuJdPMdEScjiDGQlaxA583QjZkX6ax+TdTqbkXsrbGRHVIFf1vqHT6MHMQ7RwAGgT2oyHFmlzE1p0zh9JNlBLZzmp2TRX2mNaoYOrAm6LGXQnAi8pmJRCoORS/q40tWktYwp8v1+esRDQnDrPcJsVW4tbLXHwJyAZ/PisiYAoYXICPja8oCdLQnjVk2gNGhI/CKsKFqxfcz0sDHdIn6tbheSTmN8wpr8Pun0TUntIJdzeQxQvssu/Pys7VqCTM28GztQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5OTNsUhAJLxuwSJWTTf+VxosVOISkM1YC9HoFncuvTI=;
+ b=Cf02DFIyvFREGPT4qtzfj6V0Fj5yoSABI4XQqoP0iljD5pb0ztWeF18fxhznKl/OJx78iaAam/iwXYa5jVVDoxTdCMeHWlpO+tPqjmbjjmP/Ur4cjS+bdqhaQ2LvwjFUk4FP808m1dB6mLO4IYYeikckGpgx917v1qBOY+I/7nXwwjov9j56XJQXXS6KS9QagiCxnRwNCtxLPJcyF3aXom4DkCenxkn++nnQDZjbdSEKT52E6Tdrcej99C/uXLj1TwsJCu6MSyfoEbFRtxocebqw0dlQhtS/bp8dDEQEaNL5M1kzmekDD28/wjPGM25uoc/nq4TG+lpnkvoJHQqCvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5OTNsUhAJLxuwSJWTTf+VxosVOISkM1YC9HoFncuvTI=;
+ b=tFpilawalkH5XvQoyt13yQx6IppFziMrKcHQqDmIv/jJ9rLvTXz8DwwMvwWXu+u33xw5sn8SwkLqb2Yg9m9B/n1C1zUPEZgv7Ly7etmHKkW9ohSTCMdaqeyxwMTRyoF8GU1nDgqrWWdMy4IvwRQgXDFMbj608iN13Y2nG4HdVIc7/gwRLK23i3xRXFX3D9uqkBu6e6egtqtxTJLC+nj5g1AouHvh61QoR7AqxTCDTg1YQSf8MKTaSO3/v8rDmMk12zKjoh5E92O8qWOqS7xCbb9F9DoVarzEhhTQNuiupL0fqSczse8I4ulI4BvBcLflZr2d5fUWKZG8kVO9cVsNAA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
+ by DM4PR12MB6278.namprd12.prod.outlook.com (2603:10b6:8:a4::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Wed, 7 Feb
+ 2024 06:59:38 +0000
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::e85f:6a24:436f:5594]) by PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::e85f:6a24:436f:5594%3]) with mapi id 15.20.7270.015; Wed, 7 Feb 2024
+ 06:59:38 +0000
+Message-ID: <cfa789a0-5433-4e17-957f-a3e021a97eed@nvidia.com>
+Date: Wed, 7 Feb 2024 12:29:29 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4] PCI/MSI: Fix MSI hwirq truncation
+From: Vidya Sagar <vidyas@nvidia.com>
+To: bhelgaas@google.com, rdunlap@infradead.org,
+ ilpo.jarvinen@linux.intel.com, tglx@linutronix.de
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ treding@nvidia.com, jonathanh@nvidia.com, sdonthineni@nvidia.com,
+ kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20240111052814.713016-1-vidyas@nvidia.com>
+ <20240115135649.708536-1-vidyas@nvidia.com>
+ <23c5fac1-ebf1-4e5d-9691-7b87060b0df3@nvidia.com>
+ <0c9d7bab-1da7-4ac5-891a-62e28db8d60a@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <0c9d7bab-1da7-4ac5-891a-62e28db8d60a@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MA0PR01CA0031.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:b8::18) To PH8PR12MB6674.namprd12.prod.outlook.com
+ (2603:10b6:510:1c1::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] clk: qcom: videocc-sm8550: Add support for SM8650
- videocc
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Taniya Das <quic_tdas@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Ajit Pandey" <quic_ajipan@quicinc.com>
-References: <20240206113145.31096-1-quic_jkona@quicinc.com>
- <20240206113145.31096-3-quic_jkona@quicinc.com>
- <CAA8EJpqbKQS7Bp28xNZ0twu7BFLdOES9qS5xBvoonux8Ma4q6Q@mail.gmail.com>
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <CAA8EJpqbKQS7Bp28xNZ0twu7BFLdOES9qS5xBvoonux8Ma4q6Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UtmxEYq6CMrtIKj1Duy308MrIS7Fe3Uj
-X-Proofpoint-GUID: UtmxEYq6CMrtIKj1Duy308MrIS7Fe3Uj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-06_16,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 spamscore=0 malwarescore=0 phishscore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=999 clxscore=1011 lowpriorityscore=0
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402070051
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6674:EE_|DM4PR12MB6278:EE_
+X-MS-Office365-Filtering-Correlation-Id: d73f55c6-efa1-4f85-20d4-08dc27aa5990
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	YxCw018hLPiM5/VEdiLJtWdQa8iVigS8lLkJkvG7XDP6mTn0tDWkf1P9Bd7hRdCN1zwMi4WuUNXLt0NL5ZdXmDXThiCVm3Frx5CMyHjPIvR9UPF9w6USS3ipEuNksUH4N0gTwl5h47T+U7PfZYU+LWGH4ei1abrZl3a20M7XfuLQ0jJUnvU9tTxGnCULmr6LEL159exdVbCXWwjzrOlqL8K5s+cg0q7QZ72dKUamEAGzhH1Zh0D5ZbmLUDnTMNU65qgRJ9nPgJuOb9ejZn2RE+QwX7VGmtHML8nXPjaZzuJE9XIh8xJzDFZdhjwKFa3HwjPfoy/9mQvw081SA1GJZFTh2c6vEI1heJ7Ju5FfLnYeUHfPULq5sq/o5vSnTBn/lv+TQbtELMqo6VeUSVAtsQeyKyBYzjb4nAncgJ22bha+ENxn95CVKSCLJuAcNFAJ6q9lWrDEBQZ++iQq1hAnh4cSd8yaExWrerOSDofTU9La8BOciKwJFvQnOTPbobAogTiOeGbpU27unjD9E0VDfp+j0Msq+zt4nPBEUHhxyLMVf6GJZjXlURZp15fStPUHCB/weu+0aksluPtQpr/9o3mocHa8uHJR4n88sAVccnnhpAlNhmmFN+tsxN2yUe0nFWQ9MC0Qm022Fp5/rbpF3g==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(376002)(136003)(346002)(366004)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(316002)(6486002)(86362001)(2616005)(31696002)(478600001)(26005)(31686004)(6506007)(6512007)(83380400001)(6666004)(66556008)(53546011)(66476007)(66946007)(38100700002)(8676002)(4326008)(8936002)(36756003)(5660300002)(2906002)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZzFiUldJS05uN2NWWDU1K2d0M2NvNWtlOGxNeEl5Yy9ZNHpCTkM4aWRPbjhu?=
+ =?utf-8?B?Zk1rckY5NkhoUi9vaW5MYUFneW1MWDFiS3pCdVNUbUZZcStNYmx4cTBlaVhn?=
+ =?utf-8?B?VFVSYTJMWG5aZW5jR2JtUjhqVWFGRjc4eW40ZjFQV3V3d0ZVWEt0YlVNVVdC?=
+ =?utf-8?B?Z1hxOG1QVTJzVk8yZi9ycTV1clRjbWtaOGUxYmFtZGJhT3hmRi85OUl3WDkx?=
+ =?utf-8?B?RnZSWnBLVzF5SGdkci9nUXd2ZzV4UWh4UW0zcnV0QWdsajFkdmVzdE5odW9n?=
+ =?utf-8?B?N2NjbUVyenVocC9Sd1pzRUI2RWpDM1c2QnRkSnZlNkRscFhIMVRMZ1JvdWo2?=
+ =?utf-8?B?MURYOUxMNGdtTHBZc00wNFY0d1pHcmptU3pLWHZyczhOdlRJVGcyYlk5ZTd1?=
+ =?utf-8?B?OUlGdktrZ1FJRk1lZXpRQmJCMEhHWEE4QnZGLytyeW9JVkhKQi9saHRIREJn?=
+ =?utf-8?B?Y2pMVU9XTjMydTZhbys2RkUzbVF0SmtVZG5ZbnkzMVNZYzU3by9BTXdybWFl?=
+ =?utf-8?B?c0tnM2cxSzdsaWZpT00yaVRWZ2hZWTJ6V2tjV29KVzZsbzgySEdjZTZaZ1lY?=
+ =?utf-8?B?bklwazVBOHVEZWFBRVpTM0VPeklhODdrU0FkMGxiZERPWDNCUVdyYzVkeDNM?=
+ =?utf-8?B?WXhRTkVkQkhsblo1YU1nMTNsQUdBTi9vR3Z4bjBvcWpsWEdqSG1xS1VseGRK?=
+ =?utf-8?B?bXdxdHdDbkFjc0hpN3FWR3d2aU9KRFBTK2hlL1dYb2hNWmlOTVhoclY1Vkxx?=
+ =?utf-8?B?eDc3MnkxWnpIZU54bXNLaXlISEpmK1hYQzJ2SWpJbStEejZ1bU1iKzFKWUt6?=
+ =?utf-8?B?Y2N4MERjUkJZRFZ1Qm1FWWNuTHU1TkxKMlFXc1Y2RmFzMWs1bzZPTDdjQnUz?=
+ =?utf-8?B?bG5HYjhycnBwUHR1azZDdWJqYjdzaTNaQ2hwZ3VscFF2VDNXbDBOU295YTNX?=
+ =?utf-8?B?anl0Nk5DQ1dpbHdGcUlaekE1V3lDT2Ntc0JaMUZMbks4bW5HWUU3SFFDa3FR?=
+ =?utf-8?B?eTgxeU9ZMmhIdUZZMFpVL1MzRkZERXdRQjArTWY0V3R3ek1CODc1aklRb0Jr?=
+ =?utf-8?B?d0ljblpoSFBhWEJoRGNLbVVhM01IVFlLTFAxRmNaU2RnekdNVnV5RkdTUXor?=
+ =?utf-8?B?eEhxTGZwMFFmZTJzdVl4QldTTkk2bnZZKytOZWJHalQzM2Vpd3l5dnhuQ29q?=
+ =?utf-8?B?TjNnbDl2UStYNnBVSWtuMldFczNCREpnM3hzanlVLzFxaHRZZWFxblQ5L0xp?=
+ =?utf-8?B?QmtMNHo0MHVnekRuU3ZFOXZzY0RLSWx0SHFmT0NCdHhhSWlBSk4rUlJVd1k1?=
+ =?utf-8?B?Nm9kMG1nVmp0N1p6UmZ2MVlNRGMrVm9Ddzhici9TYldkOWU2WUZrTHpzSHZD?=
+ =?utf-8?B?SGdwNEpMY3VPeForQUpNeFhnak9SSlcyY0ZnS1RhUEZ1Mnd5UzFzTGhOZXM0?=
+ =?utf-8?B?THdaU21LU0F0WUNDMnc3bGRCUnc5UWRtYU84cWJ4emNSRDBFeU9hVVljaHll?=
+ =?utf-8?B?eTJHMW1FRm5mSHlkL3NRQ01jYnJVdGdXdC95VzJ5SHJsTWFSVFlRMTRMdEMw?=
+ =?utf-8?B?OXBnOE5GdGhoQ3hhZlBlaHErcDZQbVNHTGdZQ3NseDhuOWI5NUJRVHQ1c1o0?=
+ =?utf-8?B?Wm5IVld6c09TTGVIRVJnb1FvUlFZc0xVcGRKZEMyNi9vN2RoZ0FWUFlIN3Z0?=
+ =?utf-8?B?eXhvN3FPN1g5VzYyVmN6TEZjOHJrRm02ZnJxckxWSlI1dXA2ZTJVWk9acVB3?=
+ =?utf-8?B?VGVXTzFaSXBhclZNdUVkM1MxZFFPbFAyb09KSXc2eVUrdzduSEVrWHl1WUNw?=
+ =?utf-8?B?WEZNSkRRc0EyZnBLNGFrVDd1eHpZUTV0Y2lUaTUyTDJYdHBTeTVDM0YzRmN1?=
+ =?utf-8?B?NDR6a3VaVkdiV3Bob2M3b0RoMDF1VDNtQVM4TjFBc253ZitQdUFmOGFxK3dP?=
+ =?utf-8?B?Qll5TXBNVDBhK2JEektYZ2Z5VHBwejlvdTU3WU8zNXRDVWZUVjlwTlYxeElv?=
+ =?utf-8?B?OWZqZ0JLenR1WWI2S1B6YWowWWcrdDVKdTRMTThPWVAyV1ZNYlExQTVsa3hw?=
+ =?utf-8?B?STBOVXdmbjNYdUpJY095SXVJSW1tUnB0MzlxNDJnSlFEajBWRmxMVVYxRERa?=
+ =?utf-8?Q?V4UklFCX3dH54r4AGIlRtohMk?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d73f55c6-efa1-4f85-20d4-08dc27aa5990
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2024 06:59:38.3694
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VcVVbHv/bNTfjR/VvYbV7g8G7ohYW//0iYF2o9k7o5Ti0hdzo6Y5Q3Xf8O4DHo3/d4YfG55a9wQRjWIosR+qYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6278
 
-
-
-On 2/6/2024 5:24 PM, Dmitry Baryshkov wrote:
-> On Tue, 6 Feb 2024 at 13:39, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
->>
->> Add support to the SM8650 video clock controller by extending the
->> SM8550 video clock controller, which is mostly identical but SM8650
->> has few additional clocks and minor differences.
-> 
-> In the past we tried merging similar clock controllers. In the end
-> this results in the ugly source code. Please consider submitting a
-> separate driver.
-> 
-
-Thanks Dmitry for your review. SM8650 has only few clock additions and 
-minor changes compared to SM8550, so I believe it is better to reuse 
-this existing driver and extend it.
-
->>
->> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->> ---
->>   drivers/clk/qcom/videocc-sm8550.c | 160 +++++++++++++++++++++++++++++-
->>   1 file changed, 156 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc-sm8550.c
->> index f3c9dfaee968..cdc08f5900fc 100644
->> --- a/drivers/clk/qcom/videocc-sm8550.c
->> +++ b/drivers/clk/qcom/videocc-sm8550.c
->> @@ -1,6 +1,6 @@
->>   // SPDX-License-Identifier: GPL-2.0-only
->>   /*
->> - * Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.
->> + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
->>    */
->>
->>   #include <linux/clk-provider.h>
-> 
-> [skipping]
-> 
->>   static struct gdsc video_cc_mvs0c_gdsc = {
->>          .gdscr = 0x804c,
->>          .en_rest_wait_val = 0x2,
->> @@ -354,15 +481,20 @@ static struct clk_regmap *video_cc_sm8550_clocks[] = {
->>          [VIDEO_CC_MVS0_CLK] = &video_cc_mvs0_clk.clkr,
->>          [VIDEO_CC_MVS0_CLK_SRC] = &video_cc_mvs0_clk_src.clkr,
->>          [VIDEO_CC_MVS0_DIV_CLK_SRC] = &video_cc_mvs0_div_clk_src.clkr,
->> +       [VIDEO_CC_MVS0_SHIFT_CLK] = &video_cc_mvs0_shift_clk.clkr,
->>          [VIDEO_CC_MVS0C_CLK] = &video_cc_mvs0c_clk.clkr,
->>          [VIDEO_CC_MVS0C_DIV2_DIV_CLK_SRC] = &video_cc_mvs0c_div2_div_clk_src.clkr,
->> +       [VIDEO_CC_MVS0C_SHIFT_CLK] = &video_cc_mvs0c_shift_clk.clkr,
->>          [VIDEO_CC_MVS1_CLK] = &video_cc_mvs1_clk.clkr,
->>          [VIDEO_CC_MVS1_CLK_SRC] = &video_cc_mvs1_clk_src.clkr,
->>          [VIDEO_CC_MVS1_DIV_CLK_SRC] = &video_cc_mvs1_div_clk_src.clkr,
->> +       [VIDEO_CC_MVS1_SHIFT_CLK] = &video_cc_mvs1_shift_clk.clkr,
->>          [VIDEO_CC_MVS1C_CLK] = &video_cc_mvs1c_clk.clkr,
->>          [VIDEO_CC_MVS1C_DIV2_DIV_CLK_SRC] = &video_cc_mvs1c_div2_div_clk_src.clkr,
->> +       [VIDEO_CC_MVS1C_SHIFT_CLK] = &video_cc_mvs1c_shift_clk.clkr,
->>          [VIDEO_CC_PLL0] = &video_cc_pll0.clkr,
->>          [VIDEO_CC_PLL1] = &video_cc_pll1.clkr,
->> +       [VIDEO_CC_XO_CLK_SRC] = &video_cc_xo_clk_src.clkr,
->>   };
->>
->>   static struct gdsc *video_cc_sm8550_gdscs[] = {
->> @@ -380,6 +512,7 @@ static const struct qcom_reset_map video_cc_sm8550_resets[] = {
->>          [CVP_VIDEO_CC_MVS1C_BCR] = { 0x8074 },
->>          [VIDEO_CC_MVS0C_CLK_ARES] = { 0x8064, 2 },
->>          [VIDEO_CC_MVS1C_CLK_ARES] = { 0x8090, 2 },
->> +       [VIDEO_CC_XO_CLK_ARES] = { 0x8124, 2 },
-> 
-> Is this reset applicable to videocc-sm8550?
-> 
-
-SM8550 also has above reset support in hardware, hence it is safe to 
-model above reset for both SM8550 and SM8650.
-
->>   };
->>
->>   static const struct regmap_config video_cc_sm8550_regmap_config = {
->> @@ -402,6 +535,7 @@ static struct qcom_cc_desc video_cc_sm8550_desc = {
->>
->>   static const struct of_device_id video_cc_sm8550_match_table[] = {
->>          { .compatible = "qcom,sm8550-videocc" },
->> +       { .compatible = "qcom,sm8650-videocc" },
->>          { }
->>   };
->>   MODULE_DEVICE_TABLE(of, video_cc_sm8550_match_table);
->> @@ -410,6 +544,7 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
->>   {
->>          struct regmap *regmap;
->>          int ret;
->> +       u32 offset;
->>
->>          ret = devm_pm_runtime_enable(&pdev->dev);
->>          if (ret)
->> @@ -425,6 +560,23 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
->>                  return PTR_ERR(regmap);
->>          }
->>
->> +       if (of_device_is_compatible(pdev->dev.of_node, "qcom,sm8550-videocc")) {
->> +               video_cc_sm8550_clocks[VIDEO_CC_MVS0_SHIFT_CLK] = NULL;
->> +               video_cc_sm8550_clocks[VIDEO_CC_MVS0C_SHIFT_CLK] = NULL;
->> +               video_cc_sm8550_clocks[VIDEO_CC_MVS1_SHIFT_CLK] = NULL;
->> +               video_cc_sm8550_clocks[VIDEO_CC_MVS1C_SHIFT_CLK] = NULL;
->> +               video_cc_sm8550_clocks[VIDEO_CC_XO_CLK_SRC] = NULL;
-> 
-> Please invert the logic. Make video_cc_sm8550_clocks reflect SM8550
-> and patch in new clocks in the SM8650-specific branch below.
-> 
-
-Sure, will add these clocks as NULL in video_cc_sm8550_clocks and patch 
-in new clocks here for SM8650. Then we can remove above check for SM8550.
+Hi Thomas / Bjorn,
+Can you please guide me on getting this patch merged?
 
 Thanks,
-Jagadeesh
+Vidya Sagar
 
->> +               offset = 0x8140;
->> +       } else  if (of_device_is_compatible(pdev->dev.of_node, "qcom,sm8650-videocc")) {
->> +               video_cc_pll0_config.l = 0x1e;
->> +               video_cc_pll0_config.alpha = 0xa000;
->> +               video_cc_pll1_config.l = 0x2b;
->> +               video_cc_pll1_config.alpha = 0xc000;
->> +               video_cc_mvs0_clk_src.freq_tbl = ftbl_video_cc_mvs0_clk_src_sm8650;
->> +               video_cc_mvs1_clk_src.freq_tbl = ftbl_video_cc_mvs1_clk_src_sm8650;
->> +               offset = 0x8150;
->> +       }
->> +
->>          clk_lucid_ole_pll_configure(&video_cc_pll0, regmap, &video_cc_pll0_config);
->>          clk_lucid_ole_pll_configure(&video_cc_pll1, regmap, &video_cc_pll1_config);
->>
->> @@ -435,7 +587,7 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
->>           *      video_cc_xo_clk
->>           */
->>          regmap_update_bits(regmap, 0x80f4, BIT(0), BIT(0));
->> -       regmap_update_bits(regmap, 0x8140, BIT(0), BIT(0));
->> +       regmap_update_bits(regmap, offset, BIT(0), BIT(0));
->>          regmap_update_bits(regmap, 0x8124, BIT(0), BIT(0));
->>
->>          ret = qcom_cc_really_probe(pdev, &video_cc_sm8550_desc, regmap);
->> --
->> 2.43.0
->>
->>
+On 1/31/2024 8:45 AM, Vidya Sagar wrote:
+> Hi Thomas,
+> Sorry to bother you.
+> Would you mind giving an Ack to this patch?
 > 
+> Thanks,
+> Vidya Sagar
 > 
+> On 1/23/2024 9:31 PM, Vidya Sagar wrote:
+>> Hi Thomas,
+>> Does this patch look fine to you?
+>> If yes, would you mind giving an Ack?
+>>
+>> Thanks,
+>> Vidya Sagar
+>>
+>> On 1/15/2024 7:26 PM, Vidya Sagar wrote:
+>>> While calculating the hwirq number for an MSI interrupt, the higher
+>>> bits (i.e. from bit-5 onwards a.k.a domain_nr >= 32) of the PCI domain
+>>> number gets truncated because of the shifted value casting to return
+>>> type of pci_domain_nr() which is 'int'. This for example is resulting
+>>> in same hwirq number for devices 0019:00:00.0 and 0039:00:00.0.
+>>>
+>>> So, cast the PCI domain number to 'irq_hw_number_t' before left shifting
+>>> it to calculate hwirq number. Please note that this fixes the issue only
+>>> on 64-bit systems and doesn't change the behavior in 32-bit systems i.e.
+>>> the 32-bit systems continue to have the issue. Since the issue surfaces
+>>> only if there are too many PCIe controllers in the system which usually
+>>> is the case in modern server systems and they don't tend to run 32-bit
+>>> kernels.
+>>>
+>>> Fixes: 3878eaefb89a ("PCI/MSI: Enhance core to support hierarchy 
+>>> irqdomain")
+>>> Tested-by: Shanker Donthineni <sdonthineni@nvidia.com>
+>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>> ---
+>>> V4:
+>>> * Added extra information in the change log about the impact of this 
+>>> patch
+>>>    in a 32-bit system as suggested by Thomas
+>>>
+>>> V3:
+>>> * Addressed review comments from Thomas Gleixner
+>>> * Added Tested-By: Shanker Donthineni <sdonthineni@nvidia.com>
+>>>
+>>> V2:
+>>> * Added Fixes tag
+>>>
+>>>   drivers/pci/msi/irqdomain.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+>>> index c8be056c248d..cfd84a899c82 100644
+>>> --- a/drivers/pci/msi/irqdomain.c
+>>> +++ b/drivers/pci/msi/irqdomain.c
+>>> @@ -61,7 +61,7 @@ static irq_hw_number_t 
+>>> pci_msi_domain_calc_hwirq(struct msi_desc *desc)
+>>>       return (irq_hw_number_t)desc->msi_index |
+>>>           pci_dev_id(dev) << 11 |
+>>> -        (pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
+>>> +        ((irq_hw_number_t)(pci_domain_nr(dev->bus) & 0xFFFFFFFF)) << 
+>>> 27;
+>>>   }
+>>>   static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
