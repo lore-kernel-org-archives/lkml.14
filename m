@@ -1,79 +1,123 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77091CD31
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 06:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689401CF8C;
+	Wed,  7 Feb 2024 06:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707288607; cv=none; b=AXhx/YMnqJ2TO/atJfxfAMcgTXfsFGrpzOHN6F+WtgvszWB5OvVnWEtlys9ORvfb2ClXcC53sZEM+/yTTVxbY5ehtE8k0JGM95EvIzpvaRqsyTM2uYMZbQK3flyLEURHM4rHvZdHoRARgFgQC6zM4RO1+zOlvkTp9MrYI93a3nQ=
+	t=1707288711; cv=none; b=STtiU67VuNx8bIAZJlOisZxDFsMvoS9EL/xbYSTrKNeOlWyaQtR9DkiUjCaIHwCQ04EuHBYR3aMWAc57TTD39D9IoMkt/t0HE9xxXkdC4KwrmhXIA+PqVaiwDo4Ojag6L95gvmGgA3pQdbkGDwyVL30hozeNBUDSkLkJy46e6r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707288607; c=relaxed/simple;
-	bh=txwgru8ukqwseSHIc0ZyhJJEtXFoGOV/G4cX6j4bgyc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=s9ohrTGbBAXcSvYXQ5mBN+FSu12L67ZciE4xGFm7gWaRZYXEwQFPSzMCF+9+/CrtaB81GZIpqGg8dZAx8LW1E1p6dgaLfCa/gQso5o+VIimLGPCF5fd0AfV28KD9hurODB8oTIIeD9Ys2DDOIdX1MCCBGH1pgfVZayeTONE/4Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bef5e512b6so30283239f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 22:50:05 -0800 (PST)
+	s=arc-20240116; t=1707288711; c=relaxed/simple;
+	bh=Un6imQ0Se89xJmzC2upsuqaudSRJIPKdgjRiCf+0kis=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AlvixN1OQpij8lEwqNOi9pRGe3Mt5SsnohnCNQYJPHA1EVGbhIf1UR7ByAgZh88He6q244uP/JKKtWHQtOmlM5izbnIcqnJZGbowgNe0fUeAz5rjIBL8ukhppRrivKnW4OKU6hT0DjrWckdP4CpFV2ktl0iYXryKMLgWE94NOZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RB9K4zZf; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RB9K4zZf"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e06bc288d2so57817b3a.2;
+        Tue, 06 Feb 2024 22:51:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707288710; x=1707893510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OsVhk4/iw8m5jCa9vNBoAYCL/UoZmovw6VE82rLNyc0=;
+        b=RB9K4zZfBoGVz4AuXlO63JCVNrakqL6VeRfAJfETsfqcmnEeydn+vyqkmsIGoE2Z+/
+         R0SV1OfNTO0eWEKhZjD6nsSjgWPXpC0LuCvgjO//pbUlm9SSUWLx5C4Nin03ROCXRqar
+         8qK0is7J4cz2KhU9ug5qEIehXD9Ju2i4nIyQUNEcfbSaCfU9799oxCvNs5npC0t2mDQl
+         txOKyHJoqrIl2yFOeV+uGb8LOnvw1f0BTK+YwfdlX8EMnTkwakHBEhPXYqSE2eP1dM1r
+         q60uH05gAqqJf5jVhkrguwp0iWF26QLQB48TeLvxj0czMVlw4Zj9QwgYctk69n56M0Gl
+         C1Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707288605; x=1707893405;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JJp9PiIxbgAEsE0ISqJs+jF6VAx9STrKEpa7F04AncM=;
-        b=k2o4d3thqUXDi7W/0mdW6U5hfAI5YDE9rqbZrLcEdyh2iVDZlidpTnobpg/0KkDCaN
-         /PfV4LXjT6VUtIBIaQLt8vjALMB6spN/1a6uOBj/QXR8EEFVD8xTVdRU8hc91pgypWoT
-         II28uKut8BT8bK7NYLLOvAZbJl1QXkU+MeJfhlSKyay4796NPwl6Y+XuYbTrtUDFuenJ
-         tbx8bGNyjAaH6ZEWsJiv3Z/l6VpOurfO76+KTIGDbIXf44OXGP6S0vJfwzisPzVCp+cM
-         ZpJjjeFiOdCqolYcOy1QI4yTnkysEqc6yov1JkWInifweLTnquDXnnrAoZyv08847Esx
-         3MTQ==
-X-Gm-Message-State: AOJu0YzT1qT/J2GBxHwg7NemTMeVgOYoJMc+HHeKSvg2D+bRkqvUVGlw
-	B/1U0VlXwrAZAwfEJqcbZBC55Y/bpY22tbOWcpJiJFP4R2y5cXEOC3ze0MvqZKvp4S9a+XeqK7j
-	xlTCjAId3mLz3J+z1542773cGwhb4K9D1XdgmjE4oy1rldGp7iQQAAIY=
-X-Google-Smtp-Source: AGHT+IHIQD5e5Ra5jnAc0Lil23mYT3rezE8/io/0zI23XRimBC6ndhE/lGbLe2e9vRJfEQFrO/zPDUHLra9PuBS5SabQnmstnc37
+        d=1e100.net; s=20230601; t=1707288710; x=1707893510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OsVhk4/iw8m5jCa9vNBoAYCL/UoZmovw6VE82rLNyc0=;
+        b=OaovGNhpyQKPesyyHul6YtMZjsTSFghKZHdhFGGvyxLhej/f0XHxaGPisdufgHGhj/
+         XqTlX47fnvTHm/4Dc0W2pGWNzDm8Hpjr/I2XKntdTQD120gwImsqn8OQB10tTGs9NLlD
+         QXOq5ZqtmoO+Rl/Pr1IAM1r1ahg2h6A7laLL1nn5T2UFv1mrUCto/P6muZsiLLX50lP0
+         srSBoI//dWdXMx7CaKdwawYBet261iChWuozMcnTjerBSH2vZgf50QC627WsOghT6BwN
+         uEkkr/IQcQOPOr2O9Dh91U1dg8HgjsMSa4ZwDF0FWgVJEXRmiLxTsXZ7qibpYMhfcQkD
+         85rw==
+X-Gm-Message-State: AOJu0YynM9j1TarfLiyDAuYqQSDyLj4N6KwMm6Lt2KaWpHwTCczTTsE1
+	Vian9m0jCnrbwIt0BE/SPLWAk3L0hMozN0TBmCYn+HEqXlhjmvmq
+X-Google-Smtp-Source: AGHT+IFXCjaaXWIUPJylAzcJmmD6TFWtc5MdJatF19jt16Hh1DeFrpb5C+u9VUpBkyHf8OOEParMgA==
+X-Received: by 2002:a05:6a00:2315:b0:6db:b267:aee2 with SMTP id h21-20020a056a00231500b006dbb267aee2mr2144940pfh.17.1707288709697;
+        Tue, 06 Feb 2024 22:51:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWe/AFTayeeqZNW74XOOicW7Ed3RdqFhCElLMg6DYeuJ1vTOCHL3xGTVaFJU9HqiD2LVleotB+9TAeN8CFsOGcvRBjd1B3/zLbirXGAITSB9LzmfyHCg6z3RSDUSTptBBjslruIWe0TRzKF9w9S4N5ioGwLOaTim2dtIBsVcfqfD845JeiCzrFZSqtAa1xG9akzyfYbNv5viSMftZjUG7oBDfpeUuDrvxidyZGFySltS+poCE1xBhaOOzr/Fz1G0iiV8pK/eYJNv39L7lSpBk5TcBfaeflOlJ0I/unfBnrzir4iGjGln0x6Y8xmqlx7lJrl
+Received: from localhost.localdomain (014136220210.static.ctinets.com. [14.136.220.210])
+        by smtp.gmail.com with ESMTPSA id z2-20020a62d102000000b006e0651ec052sm687274pfg.32.2024.02.06.22.51.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 22:51:49 -0800 (PST)
+From: limingming3 <limingming890315@gmail.com>
+X-Google-Original-From: limingming3 <limingming3@lixiang.com>
+To: bristot@kernel.org,
+	rostedt@goodmis.org,
+	colin.i.king@gmail.com,
+	corbet@lwn.net
+Cc: juri.lelli@redhat.com,
+	williams@redhat.com,
+	bagasdotme@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	limingming3@lixiang.com
+Subject: [PATCH] tools/rtla: Replace setting prio with nice for SCHED_OTHER
+Date: Wed,  7 Feb 2024 14:51:42 +0800
+Message-Id: <20240207065142.1753909-1-limingming3@lixiang.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:160d:b0:363:ab40:78c7 with SMTP id
- t13-20020a056e02160d00b00363ab4078c7mr314018ilu.6.1707288605030; Tue, 06 Feb
- 2024 22:50:05 -0800 (PST)
-Date: Tue, 06 Feb 2024 22:50:05 -0800
-In-Reply-To: <000000000000ecb4750610659876@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d5018e0610c51a8e@google.com>
-Subject: Re: [syzbot] [netfilter?] WARNING: ODEBUG bug in hash_netiface4_destroy
-From: syzbot <syzbot+52bbc0ad036f6f0d4a25@syzkaller.appspotmail.com>
-To: 00107082@163.com, coreteam@netfilter.org, davem@davemloft.net, 
-	edumazet@google.com, fw@strlen.de, hdanton@sina.com, justinstitt@google.com, 
-	kadlec@netfilter.org, kuba@kernel.org, kuniyu@amazon.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, pabeni@redhat.com, pablo@netfilter.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+Since the sched_priority for SCHED_OTHER is always 0, it makes no
+sence to set it.
+Setting nice for SCHED_OTHER seems more meaningful.
 
-commit 97f7cf1cd80eeed3b7c808b7c12463295c751001
-Author: Jozsef Kadlecsik <kadlec@netfilter.org>
-Date:   Mon Jan 29 09:57:01 2024 +0000
+Signed-off-by: limingming3 <limingming3@lixiang.com>
+---
+ tools/tracing/rtla/src/utils.c | 6 +++---
+ tools/tracing/rtla/src/utils.h | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-    netfilter: ipset: fix performance regression in swap operation
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index c769d7b3842c..159de175ebcc 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -479,13 +479,13 @@ int parse_prio(char *arg, struct sched_attr *sched_param)
+ 		if (prio == INVALID_VAL)
+ 			return -1;
+ 
+-		if (prio < sched_get_priority_min(SCHED_OTHER))
++		if (prio < MIN_NICE)
+ 			return -1;
+-		if (prio > sched_get_priority_max(SCHED_OTHER))
++		if (prio > MAX_NICE)
+ 			return -1;
+ 
+ 		sched_param->sched_policy   = SCHED_OTHER;
+-		sched_param->sched_priority = prio;
++		sched_param->sched_nice = prio;
+ 		break;
+ 	default:
+ 		return -1;
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 04ed1e650495..d44513e6c66a 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -9,6 +9,8 @@
+  */
+ #define BUFF_U64_STR_SIZE	24
+ #define MAX_PATH		1024
++#define MAX_NICE		20
++#define MIN_NICE		-19
+ 
+ #define container_of(ptr, type, member)({			\
+ 	const typeof(((type *)0)->member) *__mptr = (ptr);	\
+-- 
+2.25.1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=179ff138180000
-start commit:   6897cea71837 Merge tag 'for-6.8/dm-fixes' of git://git.ker..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=145ff138180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=105ff138180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=457249c250b93697
-dashboard link: https://syzkaller.appspot.com/bug?extid=52bbc0ad036f6f0d4a25
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174bd5d3e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16fcf5b0180000
-
-Reported-by: syzbot+52bbc0ad036f6f0d4a25@syzkaller.appspotmail.com
-Fixes: 97f7cf1cd80e ("netfilter: ipset: fix performance regression in swap operation")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
