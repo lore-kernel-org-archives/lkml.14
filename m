@@ -1,77 +1,70 @@
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494008593E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 20:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E0A5A0EB;
+	Wed,  7 Feb 2024 20:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707339317; cv=none; b=Ui87RR41fpmxraN1cSNqKnHX0rPCBMwflfiG/Sq77pJJncHQCGmkFVS97eZAI0JJza1Z/K/R08AX8Zceur8lv9lEpGGz+FeszCPab69wd00Q82Hu9ESbBEtEp1OWZhQ94ry6GXjk0Ft2tmO9edoF9fSo24MllM7w5EifJIQu19M=
+	t=1707339391; cv=none; b=rZCcbH5wWd1k8Ze8CpscUuKEXpssKuc9F5qT6H5C+74Sj7yVGJ1r5eopYGY34JGFKZiJV7HpOi1JijRaDf3dRN7JAzigtCoI/aw3VaVT1XSKb5SNakhcOATj/oq7OqFkw2kTNcx1nojziN8BZtEr3L9/lg8l4OYs3vYy+vWqNDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707339317; c=relaxed/simple;
-	bh=0eve9TSICHlgGWraOmtO+lqctetBC9VEkOfBIvtM2+w=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lR8Y6+K2qCMWRue7oMV4t+jLw3CV5M9duq7QM2ktF9PhMTXofGFVGYn8eULJsM7/P3cBg+X1pDw4Blp2N7DPO9Ykfrztje/n6zR5NOCarorFY5NH0sQZG5rw9Mq+9kSsRLD18HcSaTgWq+tg91HoJR97zgNVF8qD0oTyVgSGvAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=104iJj7N; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+	s=arc-20240116; t=1707339391; c=relaxed/simple;
+	bh=O9TU/DdbGeLFdubQoNlLF1Trt2IeopsApf3EemlHi6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QcArXmIok18WyXr4SytssJyKFAEuiV7OJcjHyQQZ+G32FIqhXgbuUCMHO6ScZPBBZBHPRh/4/vZ/3NK8DZ5BpkXhrM17+1So2O27LawZZEdFOaR0ieZw7DkVdn4g6daVWYtFv6LHz3bjSglh0Rh6OHy+0pNfIRQ5ltvBArmhvL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYut+V7K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="104iJj7N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=Message-ID:To:From:Date:CC;
-	bh=0eve9TSICHlgGWraOmtO+lqctetBC9VEkOfBIvtM2+w=; b=104iJj7NyFHC09OKYx7sqURpGn
-	LoAqNeSHp6PT1d7ICxQkKqgtjjbew25Lbk3+Fwwhouej7+jtN9Tw94BFpJXMGGbPhZnPD4+LOdEts
-	0jxM+qkYiJrKOh8Yu08xn4GNffUjccjRTncdjY4iCu5dq1wLLcDoV5djIVMmkqmXIDfyNPqPvDS4Z
-	+snKttQnRYfPazWWE9TndLaee4kF9ZdgJttm50Ys36fL74zyEpseC05kk2gvA4iCAEMpWxrbUEHfD
-	qi76KTNHtamhZv2MhtYMjzlYMKNmPyX6nFahCWFCPfZt6+6t5Hbn77NnyfPGzWcczY/Mo2Q9ke3jn
-	w5Y9A/pZ+TasKLn8ZPaJp88sdCFFTzRESmLnRhiCGqwNbanpPm5LSRT5agAGgfSgC7LOPGaoqSYIc
-	oWrfX7sOCzoMxkdYPFfBrxzjlZe7YQQF1ioShzIcMWhyWuZAED4SJ0GSid9/kdY4WAxslROPW8RWT
-	g7R4wb4vhUwHGDmf0mPMNWlL;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1rXoiR-00C0sD-1i;
-	Wed, 07 Feb 2024 20:40:20 +0000
-Date: Wed, 7 Feb 2024 12:40:15 -0800
-From: Jeremy Allison <jra@samba.org>
-To: jallison@ciq.com, jra@samba.org, rafael@kernel.org,
-	tansuresh@google.com, linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org, djeffery@redhat.com, hch@lst.de,
-	gregkh@linuxfoundation.org
-Subject: Re: [RFC PATCH 0/6] async device shutdown support
-Message-ID: <ZcPqr+9hqH1UXdwr@jeremy-HP-Z840-Workstation>
-Reply-To: Jeremy Allison <jra@samba.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYut+V7K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96A5AC433C7;
+	Wed,  7 Feb 2024 20:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707339390;
+	bh=O9TU/DdbGeLFdubQoNlLF1Trt2IeopsApf3EemlHi6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kYut+V7KhMj1sRThLMAxbOr3ZEjyRsnXLexMXFD7K9mPevhW7o4xU+pjGquYXHx5G
+	 SXrQkIL9faPgy5DgiOzV/Iz8yUin1c7ruI0qLvomSJq10HTjZ93tqPT0+C88g8vLDf
+	 e3KKoEsbfCwMDjWggS6+imu99xHx9aA082xeW/vW1ZQOsIwTb6kJcgUtqUgGjS3SFQ
+	 seCQSVN2HjpFt0SEyrxiEw5rq9qlURCgDqO5qQz1C9v2hncxVYu6J3l8Otu1mMJdk4
+	 81G2h8skksL3mIfLwwLtHX3izqkg92hwKoVESIkdMKbU3FMkNB7U2E0L85PTdZT81h
+	 0lnLScoQH0AyA==
+Date: Wed, 7 Feb 2024 12:56:28 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joe Damato <jdamato@fastly.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ chuck.lever@oracle.com, jlayton@kernel.org, linux-api@vger.kernel.org,
+ brauner@kernel.org, edumazet@google.com, davem@davemloft.net,
+ alexander.duyck@gmail.com, sridhar.samudrala@intel.com,
+ willemdebruijn.kernel@gmail.com, weiwan@google.com,
+ David.Laight@ACULAB.COM, arnd@arndb.de, sdf@google.com,
+ amritha.nambiar@intel.com, Alexander Viro <viro@zeniv.linux.org.uk>, Jan
+ Kara <jack@suse.cz>, "open list:FILESYSTEMS (VFS and infrastructure)"
+ <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH net-next v6 1/4] eventpoll: support busy poll per epoll
+ instance
+Message-ID: <20240207125628.44c5d732@kernel.org>
+In-Reply-To: <20240207202323.GA1283@fastly.com>
+References: <20240205210453.11301-1-jdamato@fastly.com>
+	<20240205210453.11301-2-jdamato@fastly.com>
+	<20240207110413.0cfedc37@kernel.org>
+	<20240207191407.GA1313@fastly.com>
+	<20240207121124.12941ed9@kernel.org>
+	<20240207202323.GA1283@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> This is another attempt to implement an acceptable implementation of async
-> device shutdown, inspired by a previous attempt by Tanjore Suresh. For
-> systems with many disks, async shutdown can greatly reduce shutdown times
-> from having slow operations run in parallel. The older patches were rejected,
-> with this new implementation attempting to fix my understanding of the flaws
-> in the older patches
+On Wed, 7 Feb 2024 12:23:23 -0800 Joe Damato wrote:
+> > Unless you have a clear reason not to, I think using u32 would be more
+> > natural? If my head math is right the range for u32 is 4096 sec,
+> > slightly over an hour? I'd use u32 and limit it to S32_MAX.  
+> 
+> OK, that seems fine. Sorry for the noob question, but since that represents
+> a fucntional change to patch 4/4, I believe I would need to drop Jiri's
+> Reviewed-by, is that right?
 
-Hi David,
-
-It may have escaped your notice that I was shepherding a newer version
-of Tanjore's original patchset through the nvme lists already. Please
-look at version 5 here (I am working on version 6 currently).
-
-https://lore.kernel.org/linux-nvme/20240129181953.1183084-1-jallison@ciq.com/
-
-As your work is very similar (although has some of the same problems
-that people already asked me to fix in earlier versions of the code)
-maybe we can collaborate on getting a unified version of this work
-reviewed.
-
-Please take a look at the link above, and see if we can merge our efforts.
-
-Thanks !
-
-Jeremy Allison / CIQ.
-Samba Team.
+I'd default to keeping it. But the review tag retention rules are one
+of the more subjective things in kernel developments.
