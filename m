@@ -1,233 +1,122 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEAA7D3E6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244F07D3E6
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707317039; cv=none; b=SEoxe7Nwe8wCN3NZIcWrqkrhTMAkyTmgpl7d3cnM7tRhdbeBUiQoyeQdn1Gj3lWipmx+hAsFAIkz/5SmVSRL2EE+u3q3r2NTK67essUz0gQackXC8Ad2zXHe5L6/jb4BLkblrcph7poBOhCR5na1YVaSqfm1vgub0fY6fgEQ1DA=
+	t=1707317046; cv=none; b=naIXfuk9QvfbY9IrqJ+m5u0Z8rbwpecrl+77dnojaZWoXBVudwNXQCpISJ/BOmjpA4oaYMjT2mHIQ4Du1kXLjyU9HgoBqaRZsHJnWcHoqTDI1P/jSvQ1uHb8zKrloretcwpKNf6pVj9MC1U4Fm6boSk3VFpnqtPJcAOc8E6QT2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707317039; c=relaxed/simple;
-	bh=fg1vK03qeyEYh8aWYY7ojoH+m10tqr1lJD/50h6YUrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ELZs4PnpV/taivfiJj+hca628eDnzplZNhceLN/txnpQfI7anCjblaVq4ZFRHRZJVtBnGQ/peHgUF/TEt0AvtpqUpNtjjLZQvldrqMImeNqMlRcUONq0QyVRgfROP9is6W+IbraoT5aG4h+TxwU5OsHH7kzFWLtT+Us40MdbJ6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WIWcj1Sv; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1707317046; c=relaxed/simple;
+	bh=yu3kruoJPnY3VnyFFiTKqHdjvyDwreXWFSWpG6/xubI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=emnNTXRXtK6GEHRCMXQqfrOYd50JlLNFWeDYbKEn/UQRe09A9Wg5LunUH8VJEgSHlp+55l29qEYYmp7AQEBQ3p+1wwzYD9mrhwH+aNn1hOznjqZnezgDN+LFl7lVM07gGllEU3apeclSf7fCvL52Msulh3EenUp61kN7JGQDfC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FXvKNZp9; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WIWcj1Sv"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cf3a095ba6so6468861fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:43:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1707317034; x=1707921834; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ze9ZwLHA6Efy82qUcNxqthaSY7UMqDGuf7DhJv5BY3o=;
-        b=WIWcj1SvKlfzyaDRbb2cI/SL7OQAySx4g3jeiDUE5ld95631J0EO5nMCo8OTsu+xus
-         Cj7eqN+OAm2WgjmFZIHIvpTkvPH/wBbxKA9cPa8eIMo2jUxTwe1axS2hDTN7E6ONkhxs
-         U7Eyw/KLJDE7Z6J14RvirB5e7/va89EHvCygjSRN2Kww5TqjVJm8TN9GoqFU+Ty+vtzC
-         29twFWeGUSCGU9fvfcxeXk/eP6V25LXoZTLWvXSiTpuBOxO2THlEpnoujyEMaJuyknVM
-         qT7JTOT+HdPwE5NMvb5XpsFbxnZu6BoRMBVOtDI/9+jWZsQY4zGN20m4EKXAr+GxqhzR
-         nICg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707317034; x=1707921834;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ze9ZwLHA6Efy82qUcNxqthaSY7UMqDGuf7DhJv5BY3o=;
-        b=f6NzBu7mf3Gn+fJvZAxU9ZY/c/JZFzKQ88g/Det7or1zXvbfNvgiQb/0O+j6OWH38c
-         hwkI6GbubqiI8sfFwQt69WGIG7rmdgyqb5jX+vmmrmgRt98av1V9/ggG8HVSKo7rk7eX
-         /heUpDpgpVHGUHDUZuTJ71+oxXpfd36UVDGB05x1kno7tMemepiK3AK/zcMkMCsfkzSk
-         v8FTKtxvRQMS3x9Sg68oVgCuW4qY0i/1dIPw8iQKl8uezvxx9ZJJrPz6Gsa5WZiXL9N4
-         Ea8dmIqGe6PDOp2i3xnQ3Fbs1VaLriarpX3A1VeIcQiSBwGkOOV3lsF5F5xtJihh0C6x
-         jVag==
-X-Forwarded-Encrypted: i=1; AJvYcCVnnegzzYmSuxD8EeS3xlcM378CLpzUdQabosDXm5YFaqV3nuMliyTtR27im7YZny5eDys5dQJCEcZWdSk2jvSKGeII/G6qQmlpchaU
-X-Gm-Message-State: AOJu0YxchqVEiPvqkOHAONmvNJN0Un/shyP8kIl+N6GF/KM2kXovc1TK
-	DxnuFyY6x0bUfrEnOlmcA06W8PE04ON4NpMLeyyqjdDEf9VMJn+NulGT1AsnCEo=
-X-Google-Smtp-Source: AGHT+IG5pkdkXWGfV8yAdTjYMkiAYADdm/5219hi0EkLm9dapJXsvHjrWMaM24YHXyYPuiHR4deIvA==
-X-Received: by 2002:a05:6512:3a8c:b0:511:3c06:9369 with SMTP id q12-20020a0565123a8c00b005113c069369mr5636045lfu.12.1707317034249;
-        Wed, 07 Feb 2024 06:43:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUachyilhvlHEjsVwJMeBzkiDQhENc3Bye+vX++KgSwJ84OZvU6Yn2hYl1d131eryb7VCWC3dLn/rNctAbYxItdn4C60J1cyShJBqrN91EZkS/qPUX85NIjsPJxGVlyMLSs+FWpx9TgPzx3Rxm/La4SJoxYts6rog0uyZpIp1AEj9VmTGNx17blpL0Wr9wgyUbvg9GQQYVMrItn8pVSrr8D65SIqBVZ4EThM8Off2VwBX7PkONCdEsFPLg5kIHI11sumNlLDcvCGaH8akvJ8LpcN2AxCEkHNcIPP+0kzetbtKj+7WriWpcX4DcEGRm28LDjgHaIPKRfIfLiZ3sCgEwsU4cdF0sCUysAGWDlxVL+yB1MLQKSphVzhOUYqr1Kbq4BoRvpzedEGsZk0aJkI9iGNE67D4bMsQ+VTRrfztC+f//9b8dDhAlmxzQoC2Wy6XqPX6AOJKEn+xy9U3SJAG233ZOLsuYjptbU
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id yr2-20020a170907334200b00a379ef08ecbsm830951ejb.74.2024.02.07.06.43.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 06:43:53 -0800 (PST)
-Date: Wed, 7 Feb 2024 15:43:52 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Sreenath Vijayan <sreenath.vijayan@sony.com>
-Cc: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
-	senozhatsky@chromium.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
-	anandakumar.balasubramaniam@sony.com
-Subject: Re: [PATCH v4 1/2] printk: Add function to dump printk buffer
- directly to consoles
-Message-ID: <ZcOXEyPsRnfewb4Y@alley>
-References: <cover.1706772349.git.sreenath.vijayan@sony.com>
- <8cb5936021c5811bd03a6bc18300b1384009ac26.1706772349.git.sreenath.vijayan@sony.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FXvKNZp9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707317044; x=1738853044;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yu3kruoJPnY3VnyFFiTKqHdjvyDwreXWFSWpG6/xubI=;
+  b=FXvKNZp9j/E7Jy/FY7ctTDwuMl3MmxxUvK+Y8oRDobBZ3L/ltKSm2npU
+   SMU+bDGgb1KpA+xwsRp3shjB/+oPIr/YZlrp8jS6GsGWaqNtjsQhP3LPI
+   N3ObftyyK34ZsJUE/VI06x/1JxHN3K9NueVMj7gbl10UGhS/lh5d+QG4A
+   YkbOI03TjfOiyPMfln3HV0OJYaLQz/4K9ZchKpIm4LGtsKve6/GaD5fp/
+   DLIiLlyd+kNwDY75bfnQ6Un10sHeiKhl+B4aJjafoa2ylGlO/fbXMbnp1
+   JuBKjwdwIfPme4neGGD43pxUc1RRlKE317QkWowo+bssF4rfTf66vFaiz
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="1135003"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="1135003"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 06:43:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="38788916"
+Received: from feng-clx.sh.intel.com ([10.239.159.50])
+  by orviesa001.jf.intel.com with ESMTP; 07 Feb 2024 06:43:50 -0800
+From: Feng Tang <feng.tang@intel.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Feng Tang <feng.tang@intel.com>
+Subject: [PATCH v2] sched/debug: Dump end of stack when detected corrupted
+Date: Wed,  7 Feb 2024 22:35:23 +0800
+Message-Id: <20240207143523.438816-1-feng.tang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8cb5936021c5811bd03a6bc18300b1384009ac26.1706772349.git.sreenath.vijayan@sony.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu 2024-02-01 15:53:40, Sreenath Vijayan wrote:
-> It is useful to be able to dump the printk buffer directly to
-> consoles in some situations so as to not flood the buffer.
+When debugging a kernel hang during suspend/resume [1], there were random
+memory corruptions in different places like being reported by
+slub_debug+KASAN, or detected by scheduler with error message:
 
-This is not longer true. I think that it was valid for
-the previous versions which used separate buffers with
-the kmsg_dump API.
+  "Kernel panic - not syncing: corrupted stack end detected inside scheduler"
 
-> To do this, we reuse the CONSOLE_REPLAY_ALL mode code in
-> console_flush_on_panic() by moving the code to a helper function
-> console_rewind_all(). This is done because console_flush_on_panic()
-> sets console_may_schedule to 0 but this should not be done in our
-> case.
+So dump the corrupted memory around the stack end to give more direct
+hints about how the memory is corrupted:
 
-Also the "c->seq = seq;" is not safe in the panic version.
-But it will be safe when called under the console_lock.
+ "
+ Corrupted Stack: ff11000122770000: ff ff ff ff ff ff 14 91 82 3b 78 e8 08 00 45 00  .........;x...E.
+ Corrupted Stack: ff11000122770010: 00 1d 2a ff 40 00 40 11 98 c8 0a ef 30 2c 0a ef  ..*.@.@.....0,..
+ Corrupted Stack: ff11000122770020: 30 ff a2 00 22 3d 00 09 9a 95 2a 00 00 00 00 00  0..."=....*.....
+ ...
+ Kernel panic - not syncing: corrupted stack end detected inside scheduler
+ "
 
-> Then console_rewind_all() is called from the new function
-> dump_printk_buffer() with console lock held to set the console
-> sequence number to oldest record in the buffer for all consoles.
-> Releasing the console lock will flush the contents of printk buffer
-> to the consoles.
+And with it, the culprit was quickly identified to be ethernet driver
+that it frees RX related memory back to kernel in suspend hook, but
+its HW is not really stopped, and still send RX data to those old
+buffer through DMA.
 
-My proposed commit message is:
+[1]. https://bugzilla.kernel.org/show_bug.cgi?id=217854
 
-<proposal>
-Add a generic function for replaying the kernel log on consoles.
-It would allow seeing the the log on an unresponsive terminal
-via sysrq interface.
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+---
+Changlog:
 
-Reuse the existing code from console_flush_on_panic() for
-reseting the sequence numbers. It will be safe when called
-under console_lock(). Also the console_unlock() will
-automatically flush the messages on the consoles.
+  since v1:
+    * Refine the commit log with more info, and rebase againt 6.8-rc3
 
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -3134,6 +3134,32 @@ void console_unblank(void)
->  		pr_flush(1000, true);
->  }
->  
+ kernel/sched/core.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-I would call this function __console_rewind_all(void)
-because it is not safe on its own. Also It would
-deserve a comment, something like:
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9116bcc90346..1344ac42e6d2 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5950,8 +5950,18 @@ static noinline void __schedule_bug(struct task_struct *prev)
+ static inline void schedule_debug(struct task_struct *prev, bool preempt)
+ {
+ #ifdef CONFIG_SCHED_STACK_END_CHECK
+-	if (task_stack_end_corrupted(prev))
++	if (task_stack_end_corrupted(prev)) {
++		unsigned long *ptr = end_of_stack(prev);
++
++		/* Dump 16 ulong words around the corruption point */
++#ifdef CONFIG_STACK_GROWSUP
++		ptr -= 15;
++#endif
++		print_hex_dump(KERN_ERR, "Corrupted Stack: ",
++			DUMP_PREFIX_ADDRESS, 16, 1, ptr, 16 * sizeof(*ptr), 1);
++
+ 		panic("corrupted stack end detected inside scheduler\n");
++	}
+ 
+ 	if (task_scs_end_corrupted(prev))
+ 		panic("corrupted shadow stack detected inside scheduler\n");
+-- 
+2.34.1
 
-/*
- * Rewind all consoles to the oldest available record.
- *
- * IMPORTANT: The function is safe only when called under
- *            console_lock(). It is not enforced because
- *	      it is used as a best effort in panic().
- */
-static void __console_rewind_all(void)
-
-
-This would deserve a comment because it is not safe by
-default.
-
-> +static void console_rewind_all(void)
-> +{
-> +	struct console *c;
-> +	short flags;
-> +	int cookie;
-> +	u64 seq;
-> +
-> +	seq = prb_first_valid_seq(prb);
-> +
-> +	cookie = console_srcu_read_lock();
-> +	for_each_console_srcu(c) {
-> +		flags = console_srcu_read_flags(c);
-> +
-> +		if (flags & CON_NBCON) {
-> +			nbcon_seq_force(c, seq);
-> +		} else {
-> +			/*
-> +			 * This is an unsynchronized assignment. On
-> +			 * panic legacy consoles are only best effort.
-> +			 */
-
-We should change this to something like:
-
-			/*
-			 * This assigment is safe only when called under
-			 * console_lock(). */
-			 */
-
-> +			c->seq = seq;
-> +		}
-> +	}
-> +	console_srcu_read_unlock(cookie);
-> +}
-> +
->  /**
->   * console_flush_on_panic - flush console content on panic
->   * @mode: flush all messages in buffer or just the pending ones
-> @@ -3162,30 +3188,8 @@ void console_flush_on_panic(enum con_flush_mode mode)
->  	 */
->  	console_may_schedule = 0;
->  
-> -	if (mode == CONSOLE_REPLAY_ALL) {
-> -		struct console *c;
-> -		short flags;
-> -		int cookie;
-> -		u64 seq;
-> -
-> -		seq = prb_first_valid_seq(prb);
-> -
-> -		cookie = console_srcu_read_lock();
-> -		for_each_console_srcu(c) {
-> -			flags = console_srcu_read_flags(c);
-> -
-> -			if (flags & CON_NBCON) {
-> -				nbcon_seq_force(c, seq);
-> -			} else {
-> -				/*
-> -				 * This is an unsynchronized assignment. On
-> -				 * panic legacy consoles are only best effort.
-> -				 */
-> -				c->seq = seq;
-> -			}
-> -		}
-> -		console_srcu_read_unlock(cookie);
-> -	}
-> +	if (mode == CONSOLE_REPLAY_ALL)
-> +		console_rewind_all();
->  
->  	console_flush_all(false, &next_seq, &handover);
->  }
-> @@ -4259,6 +4263,15 @@ void kmsg_dump_rewind(struct kmsg_dump_iter *iter)
->  }
->  EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
->  
-> +/**
-> + * Dump the printk ring buffer directly to consoles
-> + */
-> +void dump_printk_buffer(void)
-
-I would call this function console_replay_all(). IMHO, it better describes
-what it does.
-
-> +{
-> +	console_lock();
-> +	console_rewind_all();
-
-I would add a comment:
-
-	/* Consoles are flushed as part of console_unlock(). */
-
-> +	console_unlock();
-> +}
->  #endif
-
-Best Regards,
-Petr
