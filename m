@@ -1,189 +1,98 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889238286B;
-	Wed,  7 Feb 2024 20:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40118127B58
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 20:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707337404; cv=none; b=LScyIK+l22bzpF9jgcChePc63A9nfMD56oqSAgNwrZ5CjVIVspEYZaRsGH8YL+lxfV+MUNmGoZSv2gr5QwK4IxI6ur3jMWDap4dtCEuv3/1aDU/+0b84bdxR9rh3AGIUNPN0wYCIeKpA/03/h9MKX5TQhWc1q+u3JCe7fS/CvJ4=
+	t=1707337409; cv=none; b=Lle69z3h0QDvsko0fenu+Cx5V71LTNYeKPwQT/7U1gkR3+gC/KpU20agjqj07mF5u409m1lzOLR1tblgayRw+V5tcmsI1iKLiXLAqkZSVhfA8GLJVurU2SYcq9wuMIDxIBvGedFnVShX+GPDDsrFACMw5KofiTw8tPOSIynQNSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707337404; c=relaxed/simple;
-	bh=t5MTZ6h/uF6MK783sntQUSeREsibdAMo9MkPq0iXWVc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=STsK64UDRf+V5Ks/CuLEXtYZGDUR3x77dbSvvLYTrl2Yh6T0TLfUE3bihaJ+hONU8QUAQMRK1KPs8X2Qd3fk2JK1QaM3tMgCAQh10ZGOJ9AhLTcZzscNpHGR59Am2dmbywmqwb9vNCSU6tbrWqCM4OGso3JHZUnCnQ+lXa3zTsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VIZvOC2i; arc=none smtp.client-ip=192.19.166.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1707337409; c=relaxed/simple;
+	bh=52gKcX+UmVuwAMUKbS3chE8siFn6XrLd+UQ4CKtpUJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmI7dRdX3iifEMUAy8WOV53JgGmZx7U4wTuB7jf2J+MUrfMnnQWEn0D7q4Ibc35p1Dddt0uqMVIgZfaAv6YRQNbZGmMcSEXVOvs+ZNJ9tQAYw4sck4sK3LLZfNKX8a7qUv9uQaXr5lwdhCxJJwQze5QIjSopu3OSn/e8+e46pWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=k4xrhElc; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VIZvOC2i"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 3FA82C0000DB;
-	Wed,  7 Feb 2024 12:23:16 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 3FA82C0000DB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1707337396;
-	bh=t5MTZ6h/uF6MK783sntQUSeREsibdAMo9MkPq0iXWVc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VIZvOC2i/YjF/sD+9YF/0dVttV2NUp0AJm5wOUJ5AGqICArHyc+J+vXktZDpYzPLl
-	 SYC39A1Kcb5bz6UbtdPh4iDfbAqgv9da316SnbMqSVAP5JwLoF+Z5E/9I/QCSqlpCP
-	 0yArxykypBhmgCDGONW6Fhv7kLMznW5Ukh2wXx50=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id B4A2318041CAC4;
-	Wed,  7 Feb 2024 12:23:14 -0800 (PST)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com,
-	kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com,
-	anand.gore@broadcom.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com,
-	William Zhang <william.zhang@broadcom.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Kamal Dasu <kdasu.kdev@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Shawn Guo <shawnguo@kernel.org>,
-	David Regan <dregan@broadcom.com>,
-	devicetree@vger.kernel.org,
-	Alexandre TORGUE <alexandre.torgue@st.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Brian Norris <computersforpeace@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-kernel@vger.kernel.org,
-	Richard Weinberger <richard@nod.at>
-Subject: [PATCH v5 00/12] mtd: rawnand: brcmnand: driver and doc updates
-Date: Wed,  7 Feb 2024 12:22:45 -0800
-Message-Id: <20240207202257.271784-1-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="k4xrhElc"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e0523fbc27so554512b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 12:23:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1707337407; x=1707942207; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pUv7lvVM6VkpceK/tQ/gnRd5CGoChU/5Uxt3s4/vCy0=;
+        b=k4xrhElcjgnpwa5nBq+3uihGvCEv71F1cbBkJpr8cbJnbMbU8X2GhBWg6+ebz5FU31
+         m8RzIgDggcwWxzcNWpO1Qv0Az28VVfuPR1mhCtwRovxx/wTMCctDgKMLX94OKGHX+A48
+         XVN1TdsRZmbTH8Jx4QeLsZYAOILAvQaaCLeAU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707337407; x=1707942207;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pUv7lvVM6VkpceK/tQ/gnRd5CGoChU/5Uxt3s4/vCy0=;
+        b=kErzVdmmfucwB4/2AwuADJNRbmvURPyHv6RAnHzz5d2z5cAtzmzv8EK71y+SNuENzp
+         8vuleJEGu82CD0/UMhLH6lXj6u9nyjq1doSpNldwznmBUKgETOO5yRPfj04TEsgJRTRW
+         DTok08ZwAL+iheR2gN5bMy/eNRfdY3rnusZnr5F0CFj9mYLjT2dVHRge8YNjEQXDfvJu
+         8LgflnqIx2WiBlIDarKnehCNHlF7A/bo/yN/9c0bcZpDs3W0CZEX8/puAf3M4xyF/yQu
+         g2LQ0IVdQUnZQU5d22fLcRZdATSy9BXDUqtr6AvNKMmE+A8/SeEaAzaYCi4hMaU0s9QE
+         8w1w==
+X-Gm-Message-State: AOJu0YxgHPjbKx+cEn+NX5ImnrUI7jy0WtkQ5X8HwI8tSq1Ol1TNlcS9
+	1SmQmdHYfMeNPBAwBPJ8ybz5zie48zla3e7EEoBX6X6fEb8Fx2k8rMWAhtwlanc=
+X-Google-Smtp-Source: AGHT+IEqzeS299vkOadTe30zptDF57rACEt8HtEWFtpkIBhx8ucnYYZK4I3R+U+qqJwKLVgcRhOAZw==
+X-Received: by 2002:a05:6a00:418f:b0:6e0:5ebe:89f1 with SMTP id ca15-20020a056a00418f00b006e05ebe89f1mr5023588pfb.13.1707337407486;
+        Wed, 07 Feb 2024 12:23:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUCqUE1ygMi5QRm+bprEdVdWJwdWoU7OckQ7HYlQsSwxfrRQ0w1+Q0hpe0/+qzeRc/q+6TlwYqyhmoi4bEJEJAlnHlFDdWGggJFPayc3yYYqjVKrqu62dWm6HcYGrTnk0y5pr1QN42ubb2OzUcBklB5HhZEvkvtPGRKMaxzkDRxJGoEgnTwPOH7rkEGKgU9wLZAqdDHUldk8x+o5bDcTFvl3RA/wwaUfQna0EyzJ1oFge3JzOolnxycEx/8yypvjMXKlz8hXK9+vXwCY8uXzTmJg7yxBskkHf+rslkVZeCJG/xK0d7xowOx5MgOHK5snYF5YwQuxLCB6/FqktgX93hCk7k070E9ePSO9MnXEvOd2tc0rpMB/a2O5pepImHDhG98WmBdRBSedlHuX/80/MAW4FKVpQ9ov3MboTl9SFJr8ftv9rs89G0Di+LaoNaO8FgvcRci4srlT7gzzyfMtv6PU22/C1tpIcqnozgVaYkexZmdM7I0OqPu+7BCJggqnf54LtX/g+g8MKl8hJT3+piYHRj6emQu65mTCirCQdJZo/Ewpm47/9xtFPw9iMOzPfuZTT8b89ARKX48K0G9mQ77QUlamjrDBSuilDsrb9jAMw==
+Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id cl13-20020a056a02098d00b005d34cf68664sm1874233pgb.25.2024.02.07.12.23.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Feb 2024 12:23:27 -0800 (PST)
+Date: Wed, 7 Feb 2024 12:23:23 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	chuck.lever@oracle.com, jlayton@kernel.org,
+	linux-api@vger.kernel.org, brauner@kernel.org, edumazet@google.com,
+	davem@davemloft.net, alexander.duyck@gmail.com,
+	sridhar.samudrala@intel.com, willemdebruijn.kernel@gmail.com,
+	weiwan@google.com, David.Laight@ACULAB.COM, arnd@arndb.de,
+	sdf@google.com, amritha.nambiar@intel.com,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH net-next v6 1/4] eventpoll: support busy poll per epoll
+ instance
+Message-ID: <20240207202323.GA1283@fastly.com>
+References: <20240205210453.11301-1-jdamato@fastly.com>
+ <20240205210453.11301-2-jdamato@fastly.com>
+ <20240207110413.0cfedc37@kernel.org>
+ <20240207191407.GA1313@fastly.com>
+ <20240207121124.12941ed9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207121124.12941ed9@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 
-This patch series is an update from the previous version [1] after
-exex_op support and fixes (patch 1 to 4 from the previous version.)
+On Wed, Feb 07, 2024 at 12:11:24PM -0800, Jakub Kicinski wrote:
+> On Wed, 7 Feb 2024 11:14:08 -0800 Joe Damato wrote:
+> > > Why do we need u64 for usecs? I think u16 would do, and u32 would give
+> > > a very solid "engineering margin". If it was discussed in previous
+> > > versions I think it's worth explaining in the commit message.  
+> > 
+> > In patch 4/4 the value is limited to U32_MAX, but if you prefer I use a u32
+> > here instead, I can make that change.
+> 
+> Unless you have a clear reason not to, I think using u32 would be more
+> natural? If my head math is right the range for u32 is 4096 sec,
+> slightly over an hour? I'd use u32 and limit it to S32_MAX.
 
-It updates all the BCMBCA SoC to support the nand controller and add
-functions to handle BCMBCA specific needs on ECC and Write Protection
-usage. The device tree document is also updated accordingly with the new
-properties needed by the driver.
-
-In addition there is a bug fix for exec_op helper functions and log
-level adjustment on uncorrectable ECC error.
-
-[1] https://lore.kernel.org/lkml/20230606231252.94838-1-william.zhang@broadcom.com/
-
-Changes in v5:
-- Add reviewed-by tag for the first patch of the yaml change
-- Update the description for the WP connection and strap ecc properties
-  based on the feedbacks
-- Add check in dts binding to ensure the strap ecc property and core 
-  nand ecc property can not be used at the same time
-- Update the commit message for the log level change patch
-
-Changes in v4:
-- Split the yaml changes into three patches.
-- Move the WP pin property to a new patch and change it to boolean type.
-- Move ecc strap property to a new patch and remove some non-binding 
-  related text from the description
-- Add a new patch for bcm4908 based router board dts update
-- Move the board related dts setting from SoC dtsi to board dts
-- Update the comments for ecc setting selection
-- Use the new brcm,wp-not-connected property based on the dts binding
-  change
-- Fix the commit id in the fixes tag
-- Revert the log level change for correctable ecc error
-
-Changes in v3:
-- Update brcm,nand-use-wp description
-- Revert the description change to BCM63168 SoC-specific NAND controller
-- Updated bcmbca_read_data_bus comment
-
-Changes in v2:
-- Revert the new compatible string nand-bcmbca
-- Drop the BCM63168 compatible fix to avoid any potential ABI
-  incompatibility issue
-- Simplify the explanation for brcm,nand-use-wp
-- Keep the interrupt name requirement when interrupt number is specified
-- Add nand controller node label for 4908 so it is consistent with other
-  SoC's and can be referenced by board dts file
-- Drop the is_param argument to the read data bus function now that we
-  have the exec_op API to read the parameter page and ONFI data
-- Minor cosmetic fixes
-- Added patches 8, 9, 10 to patch series
-
-David Regan (2):
-  mtd: rawnand: brcmnand: exec_op helper functions return type fixes
-  mtd: rawnand: brcmnand: update log level messages
-
-William Zhang (10):
-  dt-bindings: mtd: brcmnand: Updates for bcmbca SoCs
-  dt-bindings: mtd: brcmnand: Add WP pin connection property
-  dt-bindings: mtd: brcmnand: Add ecc strap property
-  ARM: dts: broadcom: bcmbca: Add NAND controller node
-  arm64: dts: broadcom: bcmbca: Add NAND controller node
-  arm64: dts: broadcom: bcmbca: Update router boards
-  mtd: rawnand: brcmnand: Rename bcm63138 nand driver
-  mtd: rawnand: brcmnand: Add BCMBCA read data bus interface
-  mtd: rawnand: brcmnand: Add support for getting ecc setting from strap
-  mtd: rawnand: brcmnand: Support write protection setting from dts
-
- .../bindings/mtd/brcm,brcmnand.yaml           |  39 +++++-
- arch/arm/boot/dts/broadcom/bcm47622.dtsi      |  14 ++
- arch/arm/boot/dts/broadcom/bcm63138.dtsi      |   7 +-
- arch/arm/boot/dts/broadcom/bcm63148.dtsi      |  14 ++
- arch/arm/boot/dts/broadcom/bcm63178.dtsi      |  14 ++
- arch/arm/boot/dts/broadcom/bcm6756.dtsi       |  14 ++
- arch/arm/boot/dts/broadcom/bcm6846.dtsi       |  14 ++
- arch/arm/boot/dts/broadcom/bcm6855.dtsi       |  14 ++
- arch/arm/boot/dts/broadcom/bcm6878.dtsi       |  14 ++
- arch/arm/boot/dts/broadcom/bcm947622.dts      |  10 ++
- arch/arm/boot/dts/broadcom/bcm963138.dts      |  10 ++
- arch/arm/boot/dts/broadcom/bcm963138dvt.dts   |  14 +-
- arch/arm/boot/dts/broadcom/bcm963148.dts      |  10 ++
- arch/arm/boot/dts/broadcom/bcm963178.dts      |  10 ++
- arch/arm/boot/dts/broadcom/bcm96756.dts       |  10 ++
- arch/arm/boot/dts/broadcom/bcm96846.dts       |  10 ++
- arch/arm/boot/dts/broadcom/bcm96855.dts       |  10 ++
- arch/arm/boot/dts/broadcom/bcm96878.dts       |  10 ++
- .../bcmbca/bcm4906-netgear-r8000p.dts         |   5 +
- .../bcmbca/bcm4906-tplink-archer-c2300-v1.dts |   5 +
- .../bcmbca/bcm4908-asus-gt-ac5300.dts         |   6 +-
- .../boot/dts/broadcom/bcmbca/bcm4908.dtsi     |   4 +-
- .../boot/dts/broadcom/bcmbca/bcm4912.dtsi     |  14 ++
- .../boot/dts/broadcom/bcmbca/bcm63146.dtsi    |  14 ++
- .../boot/dts/broadcom/bcmbca/bcm63158.dtsi    |  14 ++
- .../boot/dts/broadcom/bcmbca/bcm6813.dtsi     |  14 ++
- .../boot/dts/broadcom/bcmbca/bcm6856.dtsi     |  14 ++
- .../boot/dts/broadcom/bcmbca/bcm6858.dtsi     |  14 ++
- .../boot/dts/broadcom/bcmbca/bcm94908.dts     |  10 ++
- .../boot/dts/broadcom/bcmbca/bcm94912.dts     |  10 ++
- .../boot/dts/broadcom/bcmbca/bcm963146.dts    |  10 ++
- .../boot/dts/broadcom/bcmbca/bcm963158.dts    |  10 ++
- .../boot/dts/broadcom/bcmbca/bcm96813.dts     |  10 ++
- .../boot/dts/broadcom/bcmbca/bcm96856.dts     |  10 ++
- .../boot/dts/broadcom/bcmbca/bcm96858.dts     |  10 ++
- drivers/mtd/nand/raw/brcmnand/Makefile        |   2 +-
- drivers/mtd/nand/raw/brcmnand/bcm63138_nand.c |  99 --------------
- drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c   | 126 ++++++++++++++++++
- drivers/mtd/nand/raw/brcmnand/brcmnand.c      | 126 +++++++++++++++---
- drivers/mtd/nand/raw/brcmnand/brcmnand.h      |   2 +
- 40 files changed, 633 insertions(+), 134 deletions(-)
- delete mode 100644 drivers/mtd/nand/raw/brcmnand/bcm63138_nand.c
- create mode 100644 drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c
-
--- 
-2.37.3
-
+OK, that seems fine. Sorry for the noob question, but since that represents
+a fucntional change to patch 4/4, I believe I would need to drop Jiri's
+Reviewed-by, is that right?
