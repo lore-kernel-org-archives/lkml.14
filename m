@@ -1,258 +1,362 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A691A25567
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 10:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FDE28DB3;
+	Wed,  7 Feb 2024 10:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707300400; cv=none; b=RdxmrI8K3LaJZtCr9Y8rAYfQk8BMszQAIK6BzPJVEUBRQNpx1k9REIohNJoVUuV6S23f57NwqUmmwR/+6aEPYSkfLewSqZZe5P77AT2ywTCPTE8+Lsv0NGCDxYSn6JXfY67DgPxJox2vC+xxCYFAmqzs13iZ6fUMHacTQtWsgrM=
+	t=1707300449; cv=none; b=GHbCOhrQHC0Dg46a/FEgolsO3Bg+Lt9gPCVeqbRTC3Pqt4ttt74LXgYqU4BVAkmg4Tab7EJdBIKDPU3U5BtJwDYF2LHcDtN3faNJ2A+i+RKqxIdW6V6QagqiBAydGn3EI+i3q5qfdXuo+TXKx7Z1EkbMP9hm4FRUMxc717GInUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707300400; c=relaxed/simple;
-	bh=9L1TGEU45Ux6IE1/28h+r8bLolg1IHUK0dCIu0KT0ik=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=L82nJYtihlAcMWaeJfMyHmfcG77zGaR7nN8SaKYsJZun5mX6DUAjd+815jx4DPbdtrXlwaUasQ9cdM0iloMjrTpMXBXo2xyNHz7wr092fMeauWavtYB4NCkEiaOdgTF4ZQWhgyTVTKfxPmaReO0L38qnd1aF3lixcKCFEEb2j64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pranavpp.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kezZJ3r3; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pranavpp.bounces.google.com
+	s=arc-20240116; t=1707300449; c=relaxed/simple;
+	bh=YU4n9ZID1r/Mh8EPIjWaqePEReRmpswBCgTPXNg96T8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tmhYNws/FEgV5VUU9qiTDnmbAh6fgAerm9gRRmW2+EMPbAN5tS9WvGZ6fNI4Jn3OYClnhsUIJSCLRyYACu4jecNMzQn5KrmDx2hQHfWM2SUjKekinJ09gX8j1QDkDufvnCPWr0td9MdnOJuLXVcvk2LLaJzI0VGH37p96z2brL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKFKh2K1; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kezZJ3r3"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e05118feabso511725b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 02:06:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKFKh2K1"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a29c4bbb2f4so56489066b.1;
+        Wed, 07 Feb 2024 02:07:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707300398; x=1707905198; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hibLsU9VPwJifCjSyfxgS+Y2Xj9FySfn0enbUMWfKnM=;
-        b=kezZJ3r3EhXxvyw9YTGY+R3TpSjpEjguPToaXVL4I6ffe+TeteVPTpaxio1Xku3eUB
-         TR7LhdgNCKIpFnW8CsJUp1BHPTk0V1jwFyXfmAJazDcxJcLDbm2FYUGj76MoZveBWtL8
-         ZHqsHPtQ5nVaoj8yxlhlRV7S5C8PifpW9Ymt/TraC7lmAKWjCzPlCVoMeMmAS6HBKE1B
-         X9bvX4hWc7T0UGlfe04VZ5/Gqd4o3OJ6GRKQCfpZWocy2vZnXgR8fMyRJuU3H2rqU/OW
-         PMj+M/m2FHCMs0IGJcwMbZ5Clr2WHzpKArRP82wE/V9ASDedWYjvbvJOIGmvkMLYVzvo
-         gUGw==
+        d=gmail.com; s=20230601; t=1707300446; x=1707905246; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qtFJspFDeXXLXa8scsO4YdjHmItQbAvcjZq/GbcC1VM=;
+        b=NKFKh2K1221wplJ1m/VXbmEBcQ4NTjI8ly4qMY7vPHE1k1TN+Eq6FqZ0nJKtZG72cw
+         82+/SU8NqT4TCNRhh5zMxP0WYM+NLoGtgxnkGnAvouiNBhH6bjI8EaZ3cM0w6ZWThvLV
+         Uv03CThM9DlmfpiXT3HBOtH/RmJNCK5JTZz0a582KAZSN8o0pFigGZoK75tfX6EYvGnC
+         sCPhSR4zfEH+CNmupSBJMDnVmxfKYBn01oL9CImmnWgXoktjO5A+1dJLXWBXx8FMNSVV
+         GXveGWvN2k2Egqr9P/2XXZGktC9qkUzj/5ZzawvPseE6B40kJkvQfpkqpiTJppK/2XcP
+         UbDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707300398; x=1707905198;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hibLsU9VPwJifCjSyfxgS+Y2Xj9FySfn0enbUMWfKnM=;
-        b=o7zYLmS1VKWZlyHpo6gfg6eH/UYyU30n+dpoZNTctFkR/k5snYX+91VGeopHAe5FIA
-         /99BpnGpFtWColV3UUXdrmEy/NkzriUJndJJuMk5DF/0jbWfp2Ki5DtrQjkE4WjUW/9l
-         vxEKi6JOOI63OcutIhfApdY48WhcefiE5LjXiI4B10UWm6IGxBFMzHtmnMNFOH37tH02
-         UHC+p68j8GVtB5wiw3k2RcRUd/y5Yy1fC2oHi2PewenPrbrixLrADaLPQ4bDoNkXqC9m
-         9FHy7+/WyTcWdyA1/HjgqvWzaFy4xlDYFWqn0P1qp8e5lGU9aavOGSdrks+HdHQ5t4b1
-         d/rA==
-X-Gm-Message-State: AOJu0YxP35qQtIrXtC/ye4B0UInRgzwo5opXpLnDo1bNQ19bsRP/kdEZ
-	AJcthlN/S4AvONgI7Hn/WJ1DQGLhinmfIv3piLQsUqbsLVk3OaaPyniDR/E3tNbgDCbLtW3LDKE
-	5AFtbTSmMgA==
-X-Google-Smtp-Source: AGHT+IEk7gp7F6zx3HLFDVJcA/l0MKImgisNE12doNqdMuCQ88ZyEQfsss+eKg8IX9Z8YJ3BIoXAZFBbdvTsKg==
-X-Received: from pranav-first.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:390b])
- (user=pranavpp job=sendgmr) by 2002:a05:6a00:228a:b0:6e0:2d2c:d2ec with SMTP
- id f10-20020a056a00228a00b006e02d2cd2ecmr82970pfe.0.1707300397931; Wed, 07
- Feb 2024 02:06:37 -0800 (PST)
-Date: Wed,  7 Feb 2024 10:06:19 +0000
-In-Reply-To: <20240207100619.3947442-1-pranavpp@google.com>
+        d=1e100.net; s=20230601; t=1707300446; x=1707905246;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qtFJspFDeXXLXa8scsO4YdjHmItQbAvcjZq/GbcC1VM=;
+        b=ib61IhFrbCCrguH23R9oCVe12Ld5UbRYo4ZOFxMMg2ZE05Q2HNw5LwD01elVsBXJhm
+         9C3opFWfXumKV0wcCxTl6x7rACHq2LlYBmyRrtUxpStzUnOFShjT72gYbIegD40rk9/n
+         0Uy6aruPUkVMgJMzo5tay0E8J/9WSSyllqTmXc6zLk+bCE+qj3BV+E2v/KfOeKXHUVLg
+         kmXWTEDouKV1qh5ROHdD+bbqM/gG20mscU+Gy9JnRxoo8k/9KxGQp10+aFPi5m8wmkly
+         NBFxd/jncL3HiukZjDdS0IRxuFaqU5DZRmbLIBl4H5pkNzIo05ovzwUbnmV4D01ebhtN
+         NPzQ==
+X-Gm-Message-State: AOJu0Yxj6GXEBYKBMksjJVGe4X2pjl7xq7SPpTWr19WcTOBRf/WTXxV1
+	M0a+76nb5PouLMbrNQLecNMzQoG5q3L6ciCO09P6XNNbVHuuxwAi
+X-Google-Smtp-Source: AGHT+IHMl/UPTHa4mVeLcTCzXQ+AmZdTD8+M+8f+hv0XChV/FRAqeQeB51pKChqHX4+oTdCMFtdWbg==
+X-Received: by 2002:a17:906:6d4e:b0:a31:805b:4172 with SMTP id a14-20020a1709066d4e00b00a31805b4172mr3559951ejt.9.1707300445937;
+        Wed, 07 Feb 2024 02:07:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXo+W5KxMp0Kab+jBDX0/COO+302oPsMS8drIsnuZ5ziUCuunBIXkcfStDzmEp4PfEpnrt5AN5GI9U5/T0IfGX5VVZuF8tyEZZv2a9pSBRJNYWi3/seZxZ6u4HbTXu5OKP8cgRwRcfsI1pjGeTkRluuL8/aEWf1yyhi3RcXV4j7JqE89i6fnRF1IHThOWaumKARphdN4pp2lLD8cI4zwjarwtnwGP1nY5z8BwfDdKr7n/41ObIJakMOJjhJkstsTMCNmp4gjkCA3xZ19sfpXwEGdzt1FYy0zBV77ISKD2NUq6bK3a38H4h+zXMOazHTpMwNX0rYxWd5yCAfAsNw/n9Aw5HJbXS4vi8zwJXGo2XVeBnKSbfmmXOGdDdf9/A9
+Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
+        by smtp.gmail.com with ESMTPSA id un1-20020a170907cb8100b00a3758a1ca48sm569530ejc.218.2024.02.07.02.07.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 02:07:25 -0800 (PST)
+Message-ID: <5fd17b66eab1989b9cfb874445c18480a2282809.camel@gmail.com>
+Subject: Re: [PATCH 2/2] iio: adc: ad7944: add driver for
+ AD7944/AD7985/AD7986
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 07 Feb 2024 11:10:44 +0100
+In-Reply-To: <20240206-ad7944-mainline-v1-2-bf115fa9474f@baylibre.com>
+References: <20240206-ad7944-mainline-v1-0-bf115fa9474f@baylibre.com>
+	 <20240206-ad7944-mainline-v1-2-bf115fa9474f@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240207100619.3947442-1-pranavpp@google.com>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240207100619.3947442-3-pranavpp@google.com>
-Subject: [PATCH 2/2] alarmtimer: Modify alarmtimer suspend callback to
-From: Pranav Prasad <pranavpp@google.com>
-To: tglx@linutronix.de, jstultz@google.com, sboyd@kernel.org
-Cc: linux-kernel@vger.kernel.org, Pranav Prasad <pranavpp@google.com>, 
-	Kelly Rossmoyer <krossmo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
 
-The alarmtimer driver currently fails suspend attempts when there is an
-alarm pending within the next suspend_check_duration_ns nanoseconds, since
-the system is expected to wake up soon anyway. The entire suspend process
-is initiated even though the system will immediately awaken. This process
-includes substantial work before the suspend fails and additional work
-afterwards to undo the failed suspend that was attempted. Therefore on
-battery-powered devices that initiate suspend attempts from userspace, it
-may be advantageous to be able to fail the suspend earlier in the suspend
-flow to avoid power consumption instead of unnecessarily doing extra work.
-As one data point, an analysis of a subset of Android devices showed that
-imminent alarms account for roughly 40% of all suspend failures on average
-leading to unnecessary power wastage.
+Hi David,
 
-To facilitate this, register a PM notifier in the alarmtimer subsystem
-that checks if an alarm is imminent during the prepare stage of kernel
-suspend denoted by the event PM_SUSPEND_PREPARE. If an alarm is imminent,
-it returns the errno code ETIME instead of EBUSY to userspace in order to
-make it easily diagnosable.
+The driver It's in pretty good shape... Just some comments from me
+=20
+On Tue, 2024-02-06 at 11:26 -0600, David Lechner wrote:
+> This adds a driver for the Analog Devices Inc. AD7944, AD7985, and
+> AD7986 ADCs. These are a family of pin-compatible ADCs that can sample
+> at rates up to 2.5 MSPS.
+>=20
+> The initial driver adds support for sampling at lower rates using the
+> usual IIO triggered buffer and can handle all 3 possible reference
+> voltage configurations.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0 10 ++
+> =C2=A0drivers/iio/adc/Makefile |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/ad7944.c | 397
+> +++++++++++++++++++++++++++++++++++++++++++++++
+> =C2=A04 files changed, 409 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4f1e658e1e0d..83d8367595f1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -458,6 +458,7 @@ R:	David Lechner <dlechner@baylibre.com>
+> =C2=A0S:	Supported
+> =C2=A0W:	https://ez.analog.com/linux-software-drivers
+> =C2=A0F:	Documentation/devicetree/bindings/iio/adc/adi,ad7944.yaml
+> +F:	drivers/iio/adc/ad7944.c
+> =C2=A0
+> =C2=A0ADAFRUIT MINI I2C GAMEPAD
+> =C2=A0M:	Anshul Dalal <anshulusr@gmail.com>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 59ae1d17b50d..93fbe6f8e306 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -280,6 +280,16 @@ config AD7923
+> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the
+> =C2=A0	=C2=A0 module will be called ad7923.
+> =C2=A0
+> +config AD7944
+> +	tristate "Analog Devices AD7944 and similar ADCs driver"
+> +	depends on SPI
+> +	help
+> +	=C2=A0 Say yes here to build support for Analog Devices
+> +	=C2=A0 AD7944, AD7985, AD7986 ADCs.
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the
+> +	=C2=A0 module will be called ad7944
+> +
+> =C2=A0config AD7949
+> =C2=A0	tristate "Analog Devices AD7949 and similar ADCs driver"
+> =C2=A0	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 5a26ab6f1109..52d803b92cd7 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_AD7780) +=3D ad7780.o
+> =C2=A0obj-$(CONFIG_AD7791) +=3D ad7791.o
+> =C2=A0obj-$(CONFIG_AD7793) +=3D ad7793.o
+> =C2=A0obj-$(CONFIG_AD7887) +=3D ad7887.o
+> +obj-$(CONFIG_AD7944) +=3D ad7944.o
+> =C2=A0obj-$(CONFIG_AD7949) +=3D ad7949.o
+> =C2=A0obj-$(CONFIG_AD799X) +=3D ad799x.o
+> =C2=A0obj-$(CONFIG_AD9467) +=3D ad9467.o
+> diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
+> new file mode 100644
+> index 000000000000..67b525fb8e59
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7944.c
+> @@ -0,0 +1,397 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Analog Devices AD7944/85/86 PulSAR ADC family driver.
+> + *
+> + * Copyright 2024 Analog Devices, Inc.
+> + * Copyright 2024 Baylibre, SAS
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +#define AD7944_INTERNAL_REF_MV		4096
+> +
+> +struct ad7944_timing_spec {
+> +	/* Normal mode minimum CNV pulse width in nanoseconds. */
+> +	unsigned int cnv_ns;
+> +	/* TURBO mode minimum CNV pulse width in nanoseconds. */
+> +	unsigned int turbo_cnv_ns;
+> +};
+> +
+>=20
 
-Signed-off-by: Pranav Prasad <pranavpp@google.com>
-Signed-off-by: Kelly Rossmoyer <krossmo@google.com>
----
- kernel/time/alarmtimer.c | 121 ++++++++++++++++++++++++++++-----------
- 1 file changed, 88 insertions(+), 33 deletions(-)
+...
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index e5d2e560b4c1..229de937c266 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -27,6 +27,7 @@
- #include <linux/compat.h>
- #include <linux/module.h>
- #include <linux/time_namespace.h>
-+#include <linux/suspend.h>
- 
- #include "posix-timers.h"
- 
-@@ -115,6 +116,87 @@ static int alarmtimer_sysfs_add(void)
- 	return ret;
- }
- 
-+/**
-+ * alarmtimer_init_soonest - Initializes parameters to find soonest alarm.
-+ * @min: ptr to relative time to the soonest alarm to expire
-+ * @expires: ptr to absolute time of the soonest alarm to expire
-+ * @type: ptr to alarm type
-+ *
-+ */
-+static void alarmtimer_init_soonest(ktime_t *min, ktime_t *expires, int *type)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&freezer_delta_lock, flags);
-+	*min = freezer_delta;
-+	*expires = freezer_expires;
-+	*type = freezer_alarmtype;
-+	freezer_delta = 0;
-+	spin_unlock_irqrestore(&freezer_delta_lock, flags);
-+}
-+
-+/**
-+ * alarmtimer_get_soonest - Finds the soonest alarm to expire among the alarm bases.
-+ * @min: ptr to relative time to the soonest alarm to expire
-+ * @expires: ptr to absolute time of the soonest alarm to expire
-+ * @type: ptr to alarm type
-+ *
-+ */
-+static void alarmtimer_get_soonest(ktime_t *min, ktime_t *expires, int *type)
-+{
-+	int i;
-+	unsigned long flags;
-+
-+	/* Find the soonest timer to expire */
-+	for (i = 0; i < ALARM_NUMTYPE; i++) {
-+		struct alarm_base *base = &alarm_bases[i];
-+		struct timerqueue_node *next;
-+		ktime_t delta;
-+
-+		spin_lock_irqsave(&base->lock, flags);
-+		next = timerqueue_getnext(&base->timerqueue);
-+		spin_unlock_irqrestore(&base->lock, flags);
-+		if (!next)
-+			continue;
-+		delta = ktime_sub(next->expires, base->get_ktime());
-+		if (!(*min) || (delta < *min)) {
-+			*expires = next->expires;
-+			*min = delta;
-+			*type = i;
-+		}
-+	}
-+}
-+
-+static int alarmtimer_pm_callback(struct notifier_block *nb,
-+			    unsigned long mode, void *_unused)
-+{
-+	ktime_t min, expires;
-+	int type;
-+
-+	switch (mode) {
-+	case PM_SUSPEND_PREPARE:
-+		/* Initialize parameters to find soonest timer */
-+		alarmtimer_init_soonest(&min, &expires, &type);
-+
-+		/* Find the soonest timer to expire */
-+		alarmtimer_get_soonest(&min, &expires, &type);
-+
-+		if (min == 0)
-+			return NOTIFY_DONE;
-+
-+		if (ktime_to_ns(min) < suspend_check_duration_ns) {
-+			pr_warn("[%s] Suspend abort due to imminent alarm\n", __func__);
-+			return notifier_from_errno(-ETIME);
-+		}
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block alarmtimer_pm_notifier = {
-+	.notifier_call = alarmtimer_pm_callback,
-+};
-+
- /**
-  * alarmtimer_get_rtcdev - Return selected rtcdevice
-  *
-@@ -181,6 +263,7 @@ static int alarmtimer_rtc_add_device(struct device *dev)
- static inline void alarmtimer_rtc_timer_init(void)
- {
- 	rtc_timer_init(&rtctimer, NULL, NULL);
-+	register_pm_notifier(&alarmtimer_pm_notifier);
- }
- 
- static struct class_interface alarmtimer_rtc_interface = {
-@@ -296,48 +379,20 @@ EXPORT_SYMBOL_GPL(alarm_expires_remaining);
- static int alarmtimer_suspend(struct device *dev)
- {
- 	ktime_t min, now, expires;
--	int i, ret, type;
-+	int ret, type;
- 	struct rtc_device *rtc;
--	unsigned long flags;
- 	struct rtc_time tm;
- 
--	spin_lock_irqsave(&freezer_delta_lock, flags);
--	min = freezer_delta;
--	expires = freezer_expires;
--	type = freezer_alarmtype;
--	freezer_delta = 0;
--	spin_unlock_irqrestore(&freezer_delta_lock, flags);
-+	/* Initialize parameters to find soonest timer */
-+	alarmtimer_init_soonest(&min, &expires, &type);
- 
- 	rtc = alarmtimer_get_rtcdev();
- 	/* If we have no rtcdev, just return */
- 	if (!rtc)
- 		return 0;
- 
--	/* Find the soonest timer to expire*/
--	for (i = 0; i < ALARM_NUMTYPE; i++) {
--		struct alarm_base *base = &alarm_bases[i];
--		struct timerqueue_node *next;
--		ktime_t delta;
--
--		spin_lock_irqsave(&base->lock, flags);
--		next = timerqueue_getnext(&base->timerqueue);
--		spin_unlock_irqrestore(&base->lock, flags);
--		if (!next)
--			continue;
--		delta = ktime_sub(next->expires, base->get_ktime());
--		if (!min || (delta < min)) {
--			expires = next->expires;
--			min = delta;
--			type = i;
--		}
--	}
--	if (min == 0)
--		return 0;
--
--	if (ktime_to_ns(min) < suspend_check_duration_ns) {
--		pm_wakeup_event(dev, suspend_check_duration_ns/NSEC_PER_MSEC);
--		return -EBUSY;
--	}
-+	/* Find the soonest timer to expire */
-+	alarmtimer_get_soonest(&min, &expires, &type);
- 
- 	trace_alarmtimer_suspend(expires, type);
- 
--- 
-2.43.0.594.gd9cf4e227d-goog
+> +}
+> +
+> +static int ad7944_single_conversion(struct ad7944_adc *adc,
+> +				=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec *chan,
+> +				=C2=A0=C2=A0=C2=A0 int *val)
+> +{
+> +	int ret;
+> +
+> +	ret =3D ad7944_4_wire_mode_conversion(adc, chan);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (chan->scan_type.storagebits > 16)
+> +		*val =3D adc->sample.raw.u32;
+> +	else
+> +		*val =3D adc->sample.raw.u16;
+> +
+
+Will this work both in big vs little endian archs? I don't think so but may=
+be
+I'm missing something. At a first glance, it seems we get big endian from s=
+pi so
+shouldn't we have __be16 and __be32?
+=20
+> +	if (chan->scan_type.sign =3D=3D 's')
+> +		*val =3D sign_extend32(*val, chan->scan_type.realbits - 1);
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int ad7944_read_raw(struct iio_dev *indio_dev,
+> +			=C2=A0=C2=A0 const struct iio_chan_spec *chan,
+> +			=C2=A0=C2=A0 int *val, int *val2, long info)
+> +{
+> +	struct ad7944_adc *adc =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret =3D iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +
+
+I'm not totally sure but I think Jonathan already merged his series for the
+cleanup stuff for the claim direct mode. Maybe take a look and use it? Not =
+a big
+win in here but I guess we could still reduce some LOC.
+
+> +		ret =3D ad7944_single_conversion(adc, chan, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			*val =3D adc->ref_mv;
+> +			*val2 =3D chan->scan_type.realbits;
+> +
+> +			return IIO_VAL_FRACTIONAL_LOG2;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ad7944_iio_info =3D {
+> +	.read_raw =3D &ad7944_read_raw,
+> +};
+> +
+> +static irqreturn_t ad7944_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf =3D p;
+> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	struct ad7944_adc *adc =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret =3D ad7944_4_wire_mode_conversion(adc, &indio_dev->channels[0]);
+> +	if (ret)
+> +		goto out;
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, &adc->sample.raw,
+> +					=C2=A0=C2=A0 indio_dev->scan_timestamp);
+> +
+> +out:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const char * const ad7944_power_supplies[] =3D {
+> +	"avdd",	"dvdd",	"bvdd", "vio"
+> +};
+> +
+> +static void ad7944_ref_disable(void *ref)
+> +{
+> +	regulator_disable(ref);
+> +}
+> +
+> +static int ad7944_probe(struct spi_device *spi)
+> +{
+> +	const struct ad7944_chip_info *chip_info;
+> +	struct iio_dev *indio_dev;
+> +	struct ad7944_adc *adc;
+> +	struct regulator *ref;
+> +	const char *str_val;
+> +	int ret;
+> +
+> +	/* adi,spi-mode property defaults to "4-wire" if not present */
+> +	if (device_property_read_string(&spi->dev, "adi,spi-mode", &str_val)
+> < 0)
+> +		str_val =3D "4-wire";
+> +
+> +	if (strcmp(str_val, "4-wire"))
+> +		return dev_err_probe(&spi->dev, -EINVAL,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "only \"4-wire\" mode is currently
+> supported\n");
+
+Did you looked at spi core? I guess the chain mode is not available but IIR=
+C spi
+already has spi-3wire. So maybe you could just have a boolean property for =
+the
+chain mode and check both that and 3wire?
+
+> +
+> +	indio_dev =3D devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	adc =3D iio_priv(indio_dev);
+> +	adc->spi =3D spi;
+> +
+> +	chip_info =3D spi_get_device_match_data(spi);
+> +	if (!chip_info)
+> +		return dev_err_probe(&spi->dev, -EINVAL, "no chip info\n");
+> +
+> +	adc->t =3D chip_info->t;
+> +
+> +	/*
+> +	 * Some chips use unusual word sizes, so check now instead of waiting
+> +	 * for the first xfer.
+> +	 */
+> +	if (!spi_is_bpw_supported(spi, chip_info-
+> >channels[0].scan_type.realbits))
+> +		return dev_err_probe(&spi->dev, -EINVAL,
+> +				"SPI host does not support %d bits per
+> word\n",
+> +				chip_info->channels[0].scan_type.realbits);
+> +
+> +	ret =3D devm_regulator_bulk_get_enable(&spi->dev,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0
+> ARRAY_SIZE(ad7944_power_supplies),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 ad7944_power_supplies);
+> +	if (ret)
+> +		return dev_err_probe(&spi->dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get and enable supplies\n");
+> +
+> +	/* adi,reference property defaults to "internal" if not present */
+> +	if (device_property_read_string(&spi->dev, "adi,reference", &str_val)
+> < 0)
+> +		str_val =3D "internal";
+> +
+> +	/* sort out what is being used for the reference voltage */
+> +	if (strcmp(str_val, "internal") =3D=3D 0) {
+
+Maybe you can make the code neater with match_string() and some enum...
+
+- Nuno S=C3=A1
 
