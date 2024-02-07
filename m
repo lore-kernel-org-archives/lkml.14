@@ -1,213 +1,185 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080720B37;
-	Wed,  7 Feb 2024 09:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BBA20DF5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 09:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707298198; cv=none; b=bJ6pERYyNJKnlp6yrjuG2B9vmyVx2ImUohdTkQcJdhDlqAkyBtrMB2blNe5PTPtdcBcR1SCQhAuthOp2t5zCnXgXFmmhtvIjmTSvvFmxQyzpHaSt8uwkM5BW6s9d2R7UzAWtqre8I+TT6jCHhh8q/bTDvsEI8buAFqUtgaUzV6E=
+	t=1707298232; cv=none; b=Li994ZLIqv5k8VsnENTi31brUMW+FhFvg/l671RhS/o2qH1VtE5/1Tz/C0VnRzBdi0equTnIsD2QR0mS0Wtoqb7Kgh3GttvtqAj7VzyS9UgYPBes00IO53okU2a4VI0IHD50Xu5W/pWBl/Yocow8XAGeXybAExIUrApGFoRSFyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707298198; c=relaxed/simple;
-	bh=MiIUUkgOurUD6m7nycDs8ZFVTmYyIlFn3pQokgM0Fiw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jNWSMUlA19KpSDTcW7ZAD3C4whlJRGB4mU+3slGPK2qyY6SvEKIzdvsSMie7OGp7qUYCR8jeOftqeMsVgguRR1g41To8mIogDtBSBO7zvkiojDX5gLIXqOEEVs8IV9cdWpVhNse7XfRjgmk7g6AiJpRMBluVeE5LDXZLh+O7Yn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjL/+eZH; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707298232; c=relaxed/simple;
+	bh=YGtZYhJCfM5pYqP2p4P2ioqSd2yPXhH8tEbXC5C53q4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aV9+e8hFIV/v+kO2ErYCD721RT4yWKjbl3K3pi/29t7961cqrJB10U/EDnHTbn+vsri40hgDsFtQAhYwp90XXmDsJ8h5nnK22M1D8f0ox5NDCDQ+jBwZLNYcX4+K3CJycBqy5GPgHxjkWMkCwPwEyDBKY70E5Bl4vNqWy0yyA0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cI/AR/Jx; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjL/+eZH"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a370e63835cso47345866b.1;
-        Wed, 07 Feb 2024 01:29:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cI/AR/Jx"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40fe3141e1cso3825895e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 01:30:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707298193; x=1707902993; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=V1ZzVwcYFWNZCpenXU++NhwKm0k1ManT0kvG1W9T6Lc=;
-        b=cjL/+eZHnE0TJHU3VshiRfify8S7T+fgHbgZRoUsen/jxJhnysKKwLtXXHcRw9NR73
-         VqWEM9y7/lO8Q+c4exNa/KoL+OepM475zsDozNAC6CbSbLP6n8yew9zQ3W1zUhDh7y7H
-         duKueR3N1m9z2sI2vh66KKqG384egCjXlPNYJliXaqJ0RwdPTOAupchByxz/T4pzPABp
-         47EhbNkunSjc8l9jcqPOolNkuIcx1KrEcIjEvySj6e020X3EzyRvwO92yhicnNThRNMV
-         j7qx+GF9jau0awmXCjhsfMDnL7FPsLsoXeX9iJbgmRd2hcZoNa9U1dKjNrNfGbkwzqNa
-         dPFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707298193; x=1707902993;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1707298229; x=1707903029; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=V1ZzVwcYFWNZCpenXU++NhwKm0k1ManT0kvG1W9T6Lc=;
-        b=injTh1TmQd6Lvy8dIzKq/LW5aAdl7E6r00Rmt887cZDvSog/hx4numH8voE8KFnjpP
-         X2S4tcAphzgiDLRZmwp2IlHm1gsYP/UBz00QXg0XRwn7s2YTDhsXKY73Pz/Yl6BJCtRF
-         g+0NMixho2Sa+zdSsJ1QXOx+OIrB6wBHjkUW8dUkn9Tey7QiJMFoFxk6JDA5mNoU4mWp
-         jR9bERQlXSyhxBJ6dEIxRuWSOFViC9/6lmkLVHGsDgsAWgc5O3lXTZ9/+jqcDmZq6nSl
-         NA13NDmOjuftXBbPgF4D/2qUooNsoMOXDv8wPOCNJUu1SMKJiIX/KxTC4baoiiN6PLC6
-         BUbw==
-X-Gm-Message-State: AOJu0YxXuwaef/F0k61w5b2gTId4z7rNAX716bLhzN29XViPLYCuexwi
-	wayv+fXiBbms+m+suqLarDmCzWvr4YaH4rnRWkhAeUrdPHHa2pd1
-X-Google-Smtp-Source: AGHT+IGIVTu8jI5zC4yFz4+oApJFcqTFJIDJcFbMbEQbX7rhLyWEGagntNKaOHTgeQyk/Ty+RpMHKQ==
-X-Received: by 2002:a17:906:bc94:b0:a37:87e1:5929 with SMTP id lv20-20020a170906bc9400b00a3787e15929mr3856705ejb.54.1707298192178;
-        Wed, 07 Feb 2024 01:29:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUXwSUdRyCG3/PyNResm95wk1K06K3IOtBxNwZa0LW5uWpW+xRjglBL7YNSKHpbLLCZL4qUk4Du+gpOUys25eEcucda0hMlQGlstxuL/ztMEGNcAvgpW+fZDQkahbXM5GqpEF8YTEJEHYHXhLQmbwbhzKKXMJcjFZ0ZWeSWpik5CwjDIlDS43OjP1bOzSZIw0D9N/3Du2eU0lI=
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id w24-20020a170906131800b00a3826954486sm549138ejb.53.2024.02.07.01.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 01:29:51 -0800 (PST)
-Message-ID: <07371805d3ec96d803a98b5735a114b3af56365a.camel@gmail.com>
-Subject: Re: [PATCH 2/2] spi: axi-spi-engine: move msg finalization out of
- irq handler
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, linux-spi@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Michael Hennerich
- <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  linux-kernel@vger.kernel.org
-Date: Wed, 07 Feb 2024 10:33:11 +0100
-In-Reply-To: <20240206-axi-spi-engine-round-2-1-v1-2-ea6eeb60f4fb@baylibre.com>
-References: 
-	<20240206-axi-spi-engine-round-2-1-v1-0-ea6eeb60f4fb@baylibre.com>
-	 <20240206-axi-spi-engine-round-2-1-v1-2-ea6eeb60f4fb@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+        bh=IXrAYS0UnRqCz6HcnK2V1Gsfy2gmBA+8A64IxzHSNPk=;
+        b=cI/AR/JxJkrceOZU2DnlwUyKCYMmj8S5muufBkO0OOtZWCPGFc+00yoWv9O268S03u
+         0opRKaMkq6ulG7Tcn/h7jsPkI/v6A7PCHvIikHe6VeDm/ZoYrvo5odFJdWLZjYCoRprj
+         RUBEP38KaUlWpOa2TnJ6LzfaQdDX7lFRJxeAsqH8s5M3kyCsorAarv5HR8dSDvQZptpL
+         MccW9HgY5rsK7e2GGBr/q4rar8QiRbgdj0t1WNYWueFsTJHtjsp6AA7By0wlMsUYfWId
+         2gH/9PuUfr2a/n3qVpjbqyxBHBg3zwiO9K9KIlR5ooY5Pln9WPdfdOxhl+r0UEFkPmDI
+         fYlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707298229; x=1707903029;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IXrAYS0UnRqCz6HcnK2V1Gsfy2gmBA+8A64IxzHSNPk=;
+        b=u/ZNyDAks9ju2A3rZaXb6pb1h9SinswwAsk+HbuN0cBfxdIppf58o3+9zs31UEFCRF
+         ErDooxX0nI7ThmxnFGoER7R7N+pOC7Me++Jucp5GCsZOaa+wI+gveQgKpM9jwaWMn49s
+         YOY/wJ2tOF2t7Pym9XhAXE46NlpdHM/tjRQRGOOmfG0o9xLIraLcRkkSlcYCagAh5KxN
+         7vbq7/IJKfL+U/6sYv4UfSyvVRYry2kb9MUmv9Fu6wH7oGyvIwa+K/jF7fQaoWW72LAo
+         zaZC+U+2z+LGjL7vcnI5kBUrgmYfEyYU1oLKrs6O3rDAOTqchpLDC/bVoyC6uWbeRpfI
+         3oSw==
+X-Gm-Message-State: AOJu0Yy23oQoRvIk11Qn8NfDui4l7c68r5IkfwZzgw/OmdIym4R8ViGT
+	1zaCWWMWSUaHIfZpHtIaZmnBdPo4Vlvs0nX93AQEsdRCz4Garod5/dJKG4D1I+8=
+X-Google-Smtp-Source: AGHT+IE9vY2FNzT3x5cjXW4ZpsGuGIjXWSoYtxeKH9m6EHcgEGaQhy2yUXM51FjqePQavj5rhUSZ5g==
+X-Received: by 2002:a5d:588d:0:b0:33b:1545:fe6b with SMTP id n13-20020a5d588d000000b0033b1545fe6bmr3609108wrf.32.1707298228941;
+        Wed, 07 Feb 2024 01:30:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXCWunHCo40PehRFqk6QmCpOWgGzWbdgtDF0pml9YuxksYw9lUpByGeFwOL9utF3PPm5iJ923O94Pm/JILW1v4uEG15dBpoQJisL+mOo+ZQpHC3hQqWZY148FRBJ+P0jIwqdAahNMCyj0+u8SmqfqMPaCuzqnsKtF4pwWrcEqZEQDWOx9b4CE9aSAxpuh4/Xv8s3Bt7z+A0ksCJKS941UI=
+Received: from [192.168.43.244] ([213.215.212.194])
+        by smtp.googlemail.com with ESMTPSA id j1-20020a5d6041000000b0033b4f752b62sm702189wrt.33.2024.02.07.01.30.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Feb 2024 01:30:28 -0800 (PST)
+Message-ID: <feff8e48-c974-447a-99bb-21d5beda1dd1@linaro.org>
+Date: Wed, 7 Feb 2024 09:30:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nvmem: rmem: Fix return value of rmem_read()
+Content-Language: en-US
+To: Joy Chakraborty <joychakr@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ linux-kernel@vger.kernel.org, manugautam@google.com, stable@vger.kernel.org
+References: <20240206042408.224138-1-joychakr@google.com>
+ <1ecb3744-7baf-4bdd-a01c-8c87fa0a42b3@linaro.org>
+ <CAOSNQF2TpA1QXKQBEZXsjXojGcfRKZDjCtLhRUGwLPVfhNWmgA@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <CAOSNQF2TpA1QXKQBEZXsjXojGcfRKZDjCtLhRUGwLPVfhNWmgA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-02-06 at 14:31 -0600, David Lechner wrote:
-> As a general principal, it is best to do as little as possible in an
-> interrupt handler. This patch reworks the AXI SPI Engine driver to move
-> timer_delete_sync() and spi_finalize_current_message() out of the
-> interrupt handler. Instead, spi_finalize_current_message() is moved to
-> the transfer_one_message function (similar to nearly all other SPI
-> controllers). A completion is now used to wait for the sync interrupt
-> that indicates that the message is complete. The watchdog timer is no
-> longer needed since we can use the wait_for_completion_timeout()
-> function to wait for the message to complete with the same effect.
->=20
-> As a bonus, these changes also improve throughput of the SPI controller.
-> For example, this was tested on a ZynqMP with a 80MHz SCLK reading 4
-> byte samples from an ADC. The max measured throughput increased from
-> 26k to 28k samples per second.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
 
-Nice one...
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+On 07/02/2024 06:35, Joy Chakraborty wrote:
+> On Wed, Feb 7, 2024 at 4:06 AM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>>
+>>
+>>
+>> On 06/02/2024 04:24, Joy Chakraborty wrote:
+>>> reg_read() callback registered with nvmem core expects an integer error
+>>> as a return value but rmem_read() returns the number of bytes read, as a
+>>> result error checks in nvmem core fail even when they shouldn't.
+>>>
+>>> Return 0 on success where number of bytes read match the number of bytes
+>>> requested and a negative error -EINVAL on all other cases.
+>>>
+>>> Fixes: 5a3fa75a4d9c ("nvmem: Add driver to expose reserved memory as nvmem")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Joy Chakraborty <joychakr@google.com>
+>>> ---
+>>>    drivers/nvmem/rmem.c | 7 ++++++-
+>>>    1 file changed, 6 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/nvmem/rmem.c b/drivers/nvmem/rmem.c
+>>> index 752d0bf4445e..a74dfa279ff4 100644
+>>> --- a/drivers/nvmem/rmem.c
+>>> +++ b/drivers/nvmem/rmem.c
+>>> @@ -46,7 +46,12 @@ static int rmem_read(void *context, unsigned int offset,
+>>>
+>>>        memunmap(addr);
+>>>
+>>> -     return count;
+>>> +     if (count != bytes) {
+>>
+>> How can this fail unless the values set in priv->mem->size is incorrect
+>>
+> 
+> That should be correct since it would be fetched from the reserved
+> memory definition in the device tree.
+> 
+>> Only case I see this failing with short reads is when offset cross the
+>> boundary of priv->mem->size.
+>>
+>>
+>> can you provide more details on the failure usecase, may be with actual
+>> values of offsets, bytes and priv->mem->size?
+>>
+> 
+> This could very well happen if a fixed-layout defined for the reserved
+> memory has a cell which defines an offset and size greater than the
+> actual size of the reserved mem.
 
-> =C2=A0drivers/spi/spi-axi-spi-engine.c | 40 +++++++++++++++--------------=
-----------
-> -
-> =C2=A01 file changed, 15 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-
-> engine.c
-> index 9cc602075c17..3c96aa9232b3 100644
-> --- a/drivers/spi/spi-axi-spi-engine.c
-> +++ b/drivers/spi/spi-axi-spi-engine.c
-> @@ -6,6 +6,7 @@
-> =C2=A0 */
-> =C2=A0
-> =C2=A0#include <linux/clk.h>
-> +#include <linux/completion.h>
-> =C2=A0#include <linux/fpga/adi-axi-common.h>
-> =C2=A0#include <linux/idr.h>
-> =C2=A0#include <linux/interrupt.h>
-> @@ -14,7 +15,6 @@
-> =C2=A0#include <linux/module.h>
-> =C2=A0#include <linux/platform_device.h>
-> =C2=A0#include <linux/spi/spi.h>
-> -#include <linux/timer.h>
-> =C2=A0
-> =C2=A0#define SPI_ENGINE_REG_RESET			0x40
-> =C2=A0
-> @@ -110,9 +110,7 @@ struct spi_engine {
-> =C2=A0	spinlock_t lock;
-> =C2=A0
-> =C2=A0	void __iomem *base;
-> -	struct timer_list watchdog_timer;
-> -	struct spi_controller *controller;
-> -
-> +	struct completion msg_complete;
-> =C2=A0	unsigned int int_enable;
-> =C2=A0};
-> =C2=A0
-> @@ -484,11 +482,9 @@ static irqreturn_t spi_engine_irq(int irq, void *dev=
-id)
-> =C2=A0
-> =C2=A0	if (pending & SPI_ENGINE_INT_SYNC && msg) {
-> =C2=A0		if (completed_id =3D=3D AXI_SPI_ENGINE_CUR_MSG_SYNC_ID) {
-> -			if (timer_delete_sync(&spi_engine->watchdog_timer)) {
-> -				msg->status =3D 0;
-> -				msg->actual_length =3D msg->frame_length;
-> -				spi_finalize_current_message(host);
-> -			}
-> +			msg->status =3D 0;
-> +			msg->actual_length =3D msg->frame_length;
-> +			complete(&spi_engine->msg_complete);
-> =C2=A0			disable_int |=3D SPI_ENGINE_INT_SYNC;
-> =C2=A0		}
-> =C2=A0	}
-> @@ -559,7 +555,7 @@ static int spi_engine_transfer_one_message(struct
-> spi_controller *host,
-> =C2=A0	unsigned int int_enable =3D 0;
-> =C2=A0	unsigned long flags;
-> =C2=A0
-> -	mod_timer(&spi_engine->watchdog_timer, jiffies +
-> msecs_to_jiffies(5000));
-> +	reinit_completion(&spi_engine->msg_complete);
-> =C2=A0
-> =C2=A0	spin_lock_irqsave(&spi_engine->lock, flags);
-> =C2=A0
-> @@ -581,21 +577,16 @@ static int spi_engine_transfer_one_message(struct
-> spi_controller *host,
-> =C2=A0	spi_engine->int_enable =3D int_enable;
-> =C2=A0	spin_unlock_irqrestore(&spi_engine->lock, flags);
-> =C2=A0
-> -	return 0;
-> -}
-> -
-> -static void spi_engine_timeout(struct timer_list *timer)
-> -{
-> -	struct spi_engine *spi_engine =3D from_timer(spi_engine, timer,
-> watchdog_timer);
-> -	struct spi_controller *host =3D spi_engine->controller;
-> -
-> -	if (WARN_ON(!host->cur_msg))
-> -		return;
-> +	if (!wait_for_completion_timeout(&spi_engine->msg_complete,
-> +					 msecs_to_jiffies(5000))) {
-> +		dev_err(&host->dev,
-> +			"Timeout occurred while waiting for transfer to
-> complete. Hardware is probably broken.\n");
-> +		msg->status =3D -ETIMEDOUT;
-> +	}
-> =C2=A0
-> -	dev_err(&host->dev,
-> -		"Timeout occurred while waiting for transfer to complete.
-> Hardware is probably broken.\n");
-> -	host->cur_msg->status =3D -ETIMEDOUT;
-> =C2=A0	spi_finalize_current_message(host);
-> +
-> +	return msg->status;
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void spi_engine_release_hw(void *p)
-> @@ -626,8 +617,7 @@ static int spi_engine_probe(struct platform_device *p=
-dev)
-> =C2=A0	spi_engine =3D spi_controller_get_devdata(host);
-> =C2=A0
-> =C2=A0	spin_lock_init(&spi_engine->lock);
-> -	timer_setup(&spi_engine->watchdog_timer, spi_engine_timeout,
-> TIMER_IRQSAFE);
-> -	spi_engine->controller =3D host;
-> +	init_completion(&spi_engine->msg_complete);
-> =C2=A0
-> =C2=A0	spi_engine->clk =3D devm_clk_get_enabled(&pdev->dev, "s_axi_aclk")=
-;
-> =C2=A0	if (IS_ERR(spi_engine->clk))
->=20
+No that should just be blocked from core layer, atleast which is what is 
+checked bin_attr_nvmem_read(), if checks are missing in other places 
+then that needs fixing.
 
+
+> For E.g. if the device tree node is as follows
+> reserved-memory {
+>      #address-cells = <1>;
+>      #size-cells = <1>;
+>      ranges;
+>      nvmem@1000 {
+>          compatible = "nvmem-rmem";
+>          reg = <0x1000 0x400>;
+>          no-map;
+>          nvmem-layout {
+>              compatible = "fixed-layout";
+>              #address-cells = <1>;
+>              #size-cells = <1>;
+>              calibration@13ff {
+>                  reg = <0x13ff 0x2>;
+
+this is out of range, core should just err out.
+
+--srini
+
+>              };
+>          };
+>      };
+> };
+> If we try to read the cell "calibration" which crosses the boundary of
+> the reserved memory then it will lead to a short read.
+> Though, one might argue that the protection against such cell
+> definition should be there during fixed-layout parsing in core itself
+> but that is not there now and would not be a fix.
+> 
+> What I am trying to fix here is not exactly short reads but how the
+> return value of rmem_read() is treated by the nvmem core, where it
+> treats a non-zero return from read as an error currently. Hence
+> returning the number of bytes read leads to false failures if we try
+> to read a cell.
+> 
+> 
+>>
+>>> +             dev_err(priv->dev, "Failed read memory (%d)\n", count);
+>>> +             return -EINVAL;
+>>> +     }
+>>> +
+>>
+>>> +     return 0;
+>>
+>> thanks,
+>> srini
+>>
+>>>    }
+>>>
+>>>    static int rmem_probe(struct platform_device *pdev)
