@@ -1,118 +1,113 @@
-Received: from smtp1.math.uni-bielefeld.de (smtp1.math.uni-bielefeld.de [129.70.45.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C079E1EB49
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 20:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704548563F;
+	Wed,  7 Feb 2024 20:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707338976; cv=none; b=RMb8CS+UJVjVLZEQhARX08iIvvvPz109Uf6Bxj9c4TpkxXB3P5YCxlvr842Jr+F+jHxBBcnKsotfJEY+oYzB7lkyOD7oNUvb8tgn8uB6GfyLw3DvOkiLKyFQpE4zd+ybAtb8LPfKsAFR1GCDlusexH6V1B4FB9F2Z1dEPlQavSM=
+	t=1707339030; cv=none; b=mqYuvdKxEtHipNy0yyvLFheAt6FeHb295KwLsAlP+NJllc0gFUpiwFHFyxLLublpA0NKYPukIGi8k9xrTUyupYm/koFMCD/NgxJDro2dDqDSUIdNuR5rEb2OngbGQQ4ZQkC0bxP5Ud09SL1V41X7Y5by5lOmyPi6n3r3D7/yTnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707338976; c=relaxed/simple;
-	bh=R47pBXrMkcgccNc624V7QB0PVH7o6eckSMxWr8zH5Oc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z5h0Jc/lBQeU/rSuctZ0NZiRVo4KTJhqT8p9i1lyiwdYwJ6jV8JbYTGGfCS33NSNWY7/rv60b/4FDfuwV6NUHCq6SrSGv7/h8Wx3z5CiWN259CVyq9utvBgMj7x/YQfo6KHSDqwjOwmaHXBvrrEDHzPpbp6SJGj4OGLlc2B9aVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=DpYW5j1v; arc=none smtp.client-ip=129.70.45.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=math.uni-bielefeld.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="DpYW5j1v"
-Received: from [192.168.0.100] (dslb-084-060-118-105.084.060.pools.vodafone-ip.de [84.60.118.105])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp1.math.uni-bielefeld.de (Postfix) with ESMTPSA id C485660FF7;
-	Wed,  7 Feb 2024 21:40:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=math.uni-bielefeld.de; s=default; t=1707338412;
-	bh=R47pBXrMkcgccNc624V7QB0PVH7o6eckSMxWr8zH5Oc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DpYW5j1v20zFrslT4tljFdH7bgbjAktssNMWEifa/s5gvMV3JKFIteSZUcv/cVc58
-	 MixeJ93kOLqaLY2dqP0cTkfg0r59rvrb45I7raE4Uk5cGIxwOrr600k5luXA70mOi8
-	 fsUMTbcrWJ0CPlniOsiLYzmlEUNpjqIXViTN62jgj8SqMLc3bKdeNOVp0zwSKqzQUF
-	 Ezanb0hDx53YV5ftu5yd8MTbb0WJQdtqMhOEsIWzjS3Ge6mW5dea5NA/2D6OyBt1La
-	 KF1f3yb9k1pMXcrKcFAIwSzbtcdNWS5OLFkwHW6+8bHVN2aVP6ZHbsIGehC/ajFs75
-	 R050bm6S8w4Sw==
-Message-ID: <0e681952-58f4-48f8-9cd3-e0cb26a138b6@math.uni-bielefeld.de>
-Date: Wed, 7 Feb 2024 21:40:07 +0100
+	s=arc-20240116; t=1707339030; c=relaxed/simple;
+	bh=TWvMx84K4Fa8daMtVvMNIksPwUbQuSlfg6JIQVy8JiM=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=j+gbEXWOVYC3vuCz3xgje1aQY0epSm7m0bV/k6dO1rRDXmcKmADrrwD9GekgEJktCw/Eq+TvgCcqJ6QgwFW/6jRJ1ech0dsGCvBuWIg37wVhNL58lOsnQtj9BSEhTWKrLf0FPwLemfJYaL3cgAav5SKoZf6jAmKUJg4II1AoiNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.76.58) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 7 Feb
+ 2024 23:50:16 +0300
+Subject: Re: [PATCH net-next 4/5] net: ravb: Do not apply RX checksum settings
+ to hardware if the interface is down
+To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>
+References: <20240207120733.1746920-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240207120733.1746920-5-claudiu.beznea.uj@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <82a95cae-29bc-06c1-0fab-5fa6302b4654@omp.ru>
+Date: Wed, 7 Feb 2024 23:50:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm: panel-orientation-quirks: Add quirk for Aya Neo KUN
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240205222556.299481-1-tjakobi@math.uni-bielefeld.de>
- <CAA8EJpqv2moyu6XUtCHb_EK-HLKSCgTa8CgchEVBg06PQKMM+w@mail.gmail.com>
+In-Reply-To: <20240207120733.1746920-5-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Autocrypt: addr=tjakobi@math.uni-bielefeld.de; keydata=
- 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
- JRHWPGCL3BhOxQ==
-In-Reply-To: <CAA8EJpqv2moyu6XUtCHb_EK-HLKSCgTa8CgchEVBg06PQKMM+w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 02/07/2024 20:37:16
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 183286 [Feb 07 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.76.58 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.76.58 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.76.58
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 02/07/2024 20:42:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 2/7/2024 5:40:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Hi Dmitry,
+On 2/7/24 3:07 PM, Claudiu wrote:
 
-On 2/7/24 12:00, Dmitry Baryshkov wrote:
-> On Tue, 6 Feb 2024 at 01:57, <cubic2k@gmail.com> wrote:
->> From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->>
->> Similar to the other Aya Neo devices this one features
->> again a portrait screen, here with a native resolution
->> of 1600x2560.
->>
->> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> As you don't seem to be the author of the patch, this needs your sign-off too.
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Do not apply the RX checksum settings to hardware if the interface is down.
+> In case runtime PM is enabled, and while the interface is down, the IP will
+> be in reset mode (as for some platforms disabling the clocks will switch
+> the IP to reset mode, which will lead to losing registers content) and
 
-I'm not sure what you mean. Patch is by me, and signed off by me.
+   The register contents? I thought I'd pointed out all of these...
 
-- Tobias
+> applying settings in reset mode is not an option. Instead, cache the RX
+> checksum settings and apply them in ravb_open() through ravb_emac_init().
+> This has been solved by introducing pm_runtime_active() check. The device
+> runtime PM usage counter has been incremented to avoid disabling the device
+> clocks while the check is in progress (if any).
+> 
+> Commit prepares for the addition of runtime PM.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+
+   I'm afraid such check now needs to be added to ravb_set_features_gbeth()
+that's populated by Biju Das' checksum patches (which I've already ACKed)...
+
+[...]
+
+MBR, Sergey
