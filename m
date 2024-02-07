@@ -1,124 +1,100 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA0A610B;
-	Wed,  7 Feb 2024 16:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D591181AA2
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 16:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707323655; cv=none; b=jgBZUlBw3kkavPfoiw/QiVPwbJwBveaTWtH6RMkGOvcqr768LVSKhFIshklHoo1Qq60c88nGmCaYYdkQfnS/QyrI/dquUh3O+ZCqTbEpRdr/74Tx+xeV+0CkGCLjXQ2nz/v5XbdwBAVpxYMbcj/O2I/xl/2wfFob7jUKCsLacro=
+	t=1707323672; cv=none; b=YwuZTYpf42DAsmgGNp29eErUsArsoei2XQEeS6dNTcKiM87t01DmFrGW2TvrVEsiKszjgn7j4A0xJk947ewXq8H3zYZE5a+eAj67MJHa0JmUSvpl7mbnMKjxSjr9wObquhQKzryypIH05xquyNqEfBsEf5eMLcvhIVXv5dB//jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707323655; c=relaxed/simple;
-	bh=1KmexGjyy3Rb9e+8hKvUS8Tyik0iJdqTgZcCXMDSJsk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GzzLpXmmhL2HGWRRdl3r6hGgGwjFw8I4QXXyJch8LSgLF03dEzEKKCHOZm/kUgMxOeTqHm3iY+Nhsp0AaZtcMNvPHMaWEs4XcMT905WzKk/SJVPPaZCH7TFZSjveZQwI1usWZ72xhKcUxbFmCFZI9p3HzKd2WEgc3y/xCftKoBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=huCXfLWQ; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707323672; c=relaxed/simple;
+	bh=oag201Dwg2R1YiuFTZ3pJhwIjzZHqggc69L2jZaITxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tjI3LexfsZ0mIglD1oEUZ+XdSqXUTphX6XvZNV/pHqYZfnZIxDZkH9drCENccTUtqru2/Dvv0Z2RLdlT+jyxbNTNuaZEpfm56m2/TWH1eyjGWfUIpiDcUxLjc4wj+neREEVgsQpmXWmnxZGpb95oTUq6RHTWlJhKNHIsicnedjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c153YLC8; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huCXfLWQ"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5116063585aso992575e87.1;
-        Wed, 07 Feb 2024 08:34:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c153YLC8"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e06725a08dso549452b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 08:34:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707323652; x=1707928452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/01Ta/FgtGQKqXggzl01PlQ4TYNsQiYYdgsvvx6IqHo=;
-        b=huCXfLWQsBNS7KnGSpGCv5HZizKLos1wGrJ2oryXP2AbE4akdOAgkX0K2/nXdf+1bp
-         r+gKavet4huAr03mQsHWThw0KnD6C/m6wPCbp0FAn0gJ0Q9t/IC71nl82C9XQsRIwr2j
-         i+I6wrv6zPVxrjMGvwz5Xcij/Cw67geur1lHKAmHEzu34RJVESzG+H7JqEIFusNyoBbC
-         93oscACxyaQh99TH20g1EElJrsuoRfHhL/9Yk6xJGP62BU/BVgWsj6mcBkMeq3+aL7DE
-         yRwrBEgEi88tDLstl2p+ELPROon8C2emSGZfFjsG5MyomXTZchnfHmYbfg9s9fRIx3GY
-         bCMA==
+        d=gmail.com; s=20230601; t=1707323670; x=1707928470; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+qWJfZs5obAhPKW/hvHK9EKHhgFJrOCu3nsb0TTXjds=;
+        b=c153YLC8K0VLA9ww0qPgttt/R81XOQPLuwBWm1bHm/xGlVxUNto+GWFH6KQdT+lrvg
+         t2MC++EJbl1sSFX5GVgHLa85DG9dD/k6rpclsKGPLPLywr/XS8SRIMHKOeIYgsasqQvu
+         c1wtD4W33mySvA8NlOZYT4APKIXUheeS9Ra1NpYMsG53/iNqcPs431sGi3VNIfGE4+kB
+         gBSdZjOb9PEHtx8E0p0P0sfu74ihPZfAUzoH2Ms/IQi+uLu0DGR8KUJM79/B9VyY1RoM
+         EWT4+a+GT8101l2YieLy8IOeyYSMlxj2BYQyiullggU2QdjVOv1vSjXNFpcDkGKlffTt
+         YVeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707323652; x=1707928452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707323670; x=1707928470;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/01Ta/FgtGQKqXggzl01PlQ4TYNsQiYYdgsvvx6IqHo=;
-        b=MXXzLep7jarUttYJQsaHyC3/eR5Ri6FEFvV1B5u/T50AFvY17j5aOmgXEx11eXLdsK
-         mOFpszVN+6JPtYdQPVJG/ZFMPktX6n3bDlK6One39ntjALqw2vo5LVG3dN1o75TAQY4S
-         KwZgHa7wiEAlFH1C8B1WeJ8PfUGfV9TrYRitJz0yQuOG0lxmmG68AElEm5KBZXXdhyW+
-         WCeF29izR+c+pQjoja122HOr79ASf/MGegKQrnM9DtrydbQStrj5Zu0+3AEu2rFIzwWb
-         kwfjBG5L1O75hk3U//FsTl2U4q7xCUbL6PdZDAZj+IRIVews40LKJgDZDRCByLJOE6fx
-         Qs5w==
-X-Gm-Message-State: AOJu0YwCOgW0Kh4cPtOQAH4qKHBZEpJwyXo7VaT1EMANj6/vUuz7pkSk
-	vhXaWNt25Dfk4/nDxVz+DUbm7k+pfh18Uy40utzwxAoUn4Gwi1DxSqtvY9u6EYdPmsjMnmqjt3b
-	5378o4YkQYLlcU6L1m4UxfXbzXXmJIQVu20Y=
-X-Google-Smtp-Source: AGHT+IFbtBRdRjdgnF47BaPIdc8LarwlW0BzEOe7itqtCRh2ZsqDkxBon3ndtMaIBv0Rj2NssIbH2OpTb0r3qovX+wc=
-X-Received: by 2002:a2e:9b1a:0:b0:2d0:b2ce:a90f with SMTP id
- u26-20020a2e9b1a000000b002d0b2cea90fmr4592043lji.43.1707323651658; Wed, 07
- Feb 2024 08:34:11 -0800 (PST)
+        bh=+qWJfZs5obAhPKW/hvHK9EKHhgFJrOCu3nsb0TTXjds=;
+        b=DZv2bl1RVQ7Fh2JZdOLxlZ21s6e6S7xcKnTdtzV2qtIvWVgB21uRJ3scR/9QKQNuJg
+         mqS8DboGls2aFKMfdufAx0p/pypbsl/Rn4yE14uq3nVV+HI3Azlh/V8nAT72cREB8say
+         OjGiliB22EhNXwAX5AVapz562MA3/yCxbXKIvrsVVAbiuqcN4EM3RDFg89wXq+ZLV2mU
+         pQ68TvWEl8p/TP0H/iuVGRE+NXcT7nMl3bY1g97OEJDdgDyZ+AHsgZ4SPAGgxkOpKODF
+         FI0NbE09Mx1Os7EKBhRS2GlZgddorQLJL+j7k7rlLFPRiSCnzLWChgLrvicMr1APrEl1
+         XWCw==
+X-Gm-Message-State: AOJu0YxbtRYmffbHr6lZQS/S3ksFgmwptSrKdkb+BBTv6cat92Yhc9IM
+	j+KEka5e0+hhJ1RBj65kpcpVc3a5E6fsxk7FMOnmGE639M6I/XKL3Xa9pUHYDuA=
+X-Google-Smtp-Source: AGHT+IHzISXcDhzxb3uxSLeubLzvHSYCuz5U73OLZbGdn1XxCYfBWHIVlY+XBHlSSbk7QwjNU9+cvg==
+X-Received: by 2002:a05:6a20:d390:b0:19e:99f9:a91a with SMTP id iq16-20020a056a20d39000b0019e99f9a91amr6682175pzb.43.1707323669941;
+        Wed, 07 Feb 2024 08:34:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUTGPhBcSbwQ+NlNeDJuIDhKCNAJsdMLbEgPKKXkWZbNPo7sAqaHHM0shhIablUiK9LZSe0SsgbioTmm5KDQiIXp2eEzIyrWf1syfZyIXVSBhAKmRIwYhLgwMzVAkM2mTAfMS7wkSrT3ZLHHNsxRSITPZcsSl+4
+Received: from localhost ([2620:10d:c090:400::4:3c45])
+        by smtp.gmail.com with ESMTPSA id ku8-20020a170903288800b001d949e663d5sm1655342plb.31.2024.02.07.08.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 08:34:29 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 7 Feb 2024 06:34:27 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: make wq_subsys const
+Message-ID: <ZcOxE2nznfq7dcNh@slm.duckdns.org>
+References: <20240206-bus_cleanup-workqueue-v1-1-72b10d282d58@marliere.net>
+ <2024020752-tannery-frozen-04ea@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206110816.74995-1-verdre@v0yd.nl> <170732222621.9598.18285805408891036019.git-patchwork-notify@kernel.org>
-In-Reply-To: <170732222621.9598.18285805408891036019.git-patchwork-notify@kernel.org>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 7 Feb 2024 11:33:59 -0500
-Message-ID: <CABBYNZLtbEnU3wfnym0P8gamh1_5GcUHKvAnxh4GpcBC3G56uQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] Bluetooth: Improve retrying of connection attempts
-To: patchwork-bot+bluetooth@kernel.org
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024020752-tannery-frozen-04ea@gregkh>
 
-Hi Jonas,
+On Wed, Feb 07, 2024 at 10:12:34AM +0000, Greg Kroah-Hartman wrote:
+> On Tue, Feb 06, 2024 at 03:05:06PM -0300, Ricardo B. Marliere wrote:
+> > Now that the driver core can properly handle constant struct bus_type,
+> > move the wq_subsys variable to be a constant structure as well,
+> > placing it into read-only memory which can not be modified at runtime.
+> > 
+> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> > ---
+> > The maintainer asked [1] for this patch to be received through the
+> > driver-core tree.
+> > [1]: https://lore.kernel.org/all/ZcEeOueCbrltxr_b@slm.duckdns.org/
+> 
+> There is no cross-tree dependency at all, but hey, I'll take it, no
+> worries...
 
-On Wed, Feb 7, 2024 at 11:10=E2=80=AFAM <patchwork-bot+bluetooth@kernel.org=
-> wrote:
->
-> Hello:
->
-> This series was applied to bluetooth/bluetooth-next.git (master)
-> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
->
-> On Tue,  6 Feb 2024 12:08:12 +0100 you wrote:
-> > Since commit 4c67bc74f016 ("[Bluetooth] Support concurrent connect
-> > requests"), the kernel supports trying to connect again in case the
-> > bluetooth card is busy and fails to connect.
-> >
-> > The logic that should handle this became a bit spotty over time, and al=
-so
-> > cards these days appear to fail with more errors than just "Command
-> > Disallowed".
-> >
-> > [...]
->
-> Here is the summary with links:
->   - [v4,1/2] Bluetooth: hci_conn: Only do ACL connections sequentially
->     https://git.kernel.org/bluetooth/bluetooth-next/c/456561ba8e49
->   - [v4,2/2] Bluetooth: Remove pending ACL connection attempts
->     https://git.kernel.org/bluetooth/bluetooth-next/c/8e14d581d125
->
-> You are awesome, thank you!
-> --
-> Deet-doot-dot, I am a bot.
-> https://korg.docs.kernel.org/patchwork/pwbot.html
+Ah, my bad. I branched out wq/for-6.9 before rc1 and was assuming the
+dependent commit was still in the driver core branch. I should have just
+pulled linus#master. That said, that patch going through driver-core should
+still be fine.
 
-Something is not quite right with these changes:
+Thanks.
 
-L2CAP BR/EDR Client - Timeout - test passed
-L2CAP BR/EDR Client - Timeout - teardown
-Bluetooth: hci0: command 0x0408 tx timeout
-  Index Removed callback
-    Index: 0x0000
-L2CAP BR/EDR Client - Timeout - teardown complete
-L2CAP BR/EDR Client - Timeout - done
-L2CAP BR/EDR Client - Timeout                        Passed      22.329 sec=
-onds
-
-The test seems to be blocked on teardown then the command times out,
-0x0408 is HCI_OP_CREATE_CONN_CANCEL so I wonder why it would be timing
-out. Anyway the test uses SO_SNDTIMEO to set a timeout at the socket
-level but it doesn't seem it is used while creating the connection so
-it probably needs to be passed down or something.
-
-
---=20
-Luiz Augusto von Dentz
+-- 
+tejun
