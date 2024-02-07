@@ -1,178 +1,174 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE96222F1E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 09:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF05225DD;
+	Wed,  7 Feb 2024 09:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707299515; cv=none; b=GB62To91a2xNpeyVzlgq3gXtLcfytFMMLSF/QezhLSxRPAvnkM3YHQRcfIvHpOSYMklW33m1U0tsWovV26h/JO6ukTs0HD8m7U/5JZ8tOuHDCJQB7Hny2OIjRahI8fAURlwZBBXT0JsibC49maiD9sh3QwjZHWIki/atPxXYMp4=
+	t=1707299518; cv=none; b=cIuOWd/HoglG2GEp29lGYu+jMKPnK9Ao8sKTy3jiXwpxHD/M9wGM+JIbmQj+lBfgmyK+Daq/ocbtvPKd+lExetC7hon+Q7eGuIetFf6pnSE/4++qlUu2opWifkEdPMN/K/39mMWvS6r+K/UYbDX55jzaqcQJ9S+sLzGrGQAnUIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707299515; c=relaxed/simple;
-	bh=KR2sG7J4c3ofHOmeepSU9gMmPKLoScOYxX43x3M1eFw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bVpJQtF8dPyXhBYdRK7blpKXE2cgZnFRn3TIK2UWZJILBaC2BD3tLtkGrd1imrlZiIDW+eFpW2ESALcC7NH8krvLQ14fahBGCmPxsgSyCXiC9A7bZzcWFXCQEdRYCHjqtzFdPuxEGI2JA0DH0umJYXh0N4jU1OUa2IdlfW1X25w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ky96FDE7; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ky96FDE7"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-604966eaf6eso1963327b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 01:51:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707299512; x=1707904312; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tL/r8AXFGxGMMcyM8KcarAKkFwTyeEeSx1AZSjKfuYU=;
-        b=ky96FDE7ziHgnLqlev77pd2UHXgEW/4rprecDW8MHgXeQm1ekDj+ud4MYzDUSCQKYf
-         hphTkXd/Dv8GneMsGkuv3lli+ylZ1o6efp3GBgg012nkDM4a0FqkgIrX4PDf3oyPlVlk
-         4KcXLYiUcGaYQC9wULjrHWmkEjyaFXTsbOalkZx7ZXTzQJFh9OIVRT+xiaIbhpdSy5Ro
-         za7r+XDZz8hp7etUYtCPzIHrruOHzj1Q6GdtfNGOYlsK9UwJzMO5Osk0LHs6mI1ui5dH
-         WYABlA5yxnPulYmBONbLUZ9A7CpPEv8Rckyi3xCOj1pOGm8vIaUMhBsJzdZiZ3/cSaTY
-         p6wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707299512; x=1707904312;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tL/r8AXFGxGMMcyM8KcarAKkFwTyeEeSx1AZSjKfuYU=;
-        b=UWAaTNxxuE7ZQFW0q/8VLtRvyb8B0SgkidJmGvBeVcsnS2LuvHCRLMRH/yhkNDpA1p
-         8LdY2lUYReUv48moZoohaGdwz28HZytOvHPB1Wt/qD1LAQONL1AbHDvIvmIB+X1EHnv3
-         4LnNfq7KSzc8pYihbAvOCQ1h+5yygCe9G1Ywdk4/XsCXmZE5HJfobZKjU8aG8BHog6uq
-         gVtPrFdT54ve4gx1SMaYA4JjpOmqDIxnwhO8sVThD1LbQwyjpFe9jH3NKBOhsyzhVUqL
-         FRG3pWlbehBfFA5UZc62rJ92unjjF8UI6nvPrEDrDOQYslUVsWN2L/4xuweOytYrlPez
-         2X9g==
-X-Gm-Message-State: AOJu0YzQxXPCutwACLY3ss/TwJI+1hdJAjzP2CE8HCSNzu/xiaVV1yiL
-	/SCS96X2S0dioS61zPPiKK2fqhk3IUbKTXv+Bs1bkiEX7B69Ztu2PcYIKOqaulpVvbD3UIq1MVo
-	KbDUgkVKiJ0IRkMTGdWmkYCykUZvw1M1JmBOfwA==
-X-Google-Smtp-Source: AGHT+IHijGzj8uRjINoynUtKvsODzePDZYI2IRClC5jIBfJbvgeat7fp8n2svTrjS5gczDAdT1OcKNi6CZuwYdJnwps=
-X-Received: by 2002:a81:cf08:0:b0:604:5415:b204 with SMTP id
- u8-20020a81cf08000000b006045415b204mr3872325ywi.33.1707299512595; Wed, 07 Feb
- 2024 01:51:52 -0800 (PST)
+	s=arc-20240116; t=1707299518; c=relaxed/simple;
+	bh=adMdrd33BWAncTlu9FqQSrWBDalVJlLFUuqtc5QT7uo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=klaym+3iV+zBmVnlibeEKlJCkib8RukA+yaVxyrD/DomdVWKeYjq5+eAVSu0xAJ8zTxaYdexgQDbNLdzO5mST8t1Skx5AOOd0UcyLUIVm9ThJFPxTUyLFSHvkIpOb6maH/4fA7G3KVIC3g1AqEsc26qGXq/XBqe3aVUFfu25kJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TVFkM6bbVz1vtGg;
+	Wed,  7 Feb 2024 17:51:23 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0A7AB14025A;
+	Wed,  7 Feb 2024 17:51:52 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 7 Feb 2024 17:51:51 +0800
+From: Weili Qian <qianweili@huawei.com>
+To: <herbert@gondor.apana.org.au>
+CC: <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liulongfang@huawei.com>
+Subject: [PATCH v2 1/3] crypto: hisilicon/qm - add stop function by hardware
+Date: Wed, 7 Feb 2024 17:50:59 +0800
+Message-ID: <20240207095101.37280-2-qianweili@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20240207095101.37280-1-qianweili@huawei.com>
+References: <20240207095101.37280-1-qianweili@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202064039.15505-1-quic_ekangupt@quicinc.com>
- <d8e32f3d-1658-4dcd-a1dd-e37b664986ae@linaro.org> <41703424-f711-420e-bcb8-290f68a0aec9@quicinc.com>
-In-Reply-To: <41703424-f711-420e-bcb8-290f68a0aec9@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 7 Feb 2024 11:51:41 +0200
-Message-ID: <CAA8EJpqB4OG1n9maGuwo4BLRPctD6-nHJBvzauxoodS_Xji86g@mail.gmail.com>
-Subject: Re: [PATCH v1 00/16] Add missing features to FastRPC driver
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: neil.armstrong@linaro.org, srinivas.kandagatla@linaro.org, 
-	linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
 
-On Wed, 7 Feb 2024 at 10:30, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
->
->
-> On 2/2/2024 1:41 PM, neil.armstrong@linaro.org wrote:
-> > Hi,
-> >
-> > On 02/02/2024 07:40, Ekansh Gupta wrote:
-> >> This patch series adds the listed features that have been missing
-> >> in upstream fastRPC driver.
-> >>
-> >> - Redesign and improve remote heap management.
-> >> - Add static PD restart support for audio and sensors PD using
-> >>    PDR framework.
-> >> - Add changes to support multimode invocation ioctl request. This
-> >>    ioctl call facilitates multiple types of requests from user including
-> >>    CRC check, performance counters, shared context bank usage, etc.
-> >>    This series also carries patch to save and restore interrupted
-> >>    context.
-> >> - Add early wakeup support to allow DSP user to send early response
-> >>    to CPU and improve fastrpc performance.
-> >> - Add polling mode support with which driver polls on memory to avoid
-> >>    CPU from going to low power modes.
-> >> - Add notifications frameworks to provide users with the DSP PD status
-> >>    notifications.
-> >> - Add a control mechanism to allow users to clean up DSP user PD
-> >> - Add wakelock management support
-> >> - Add DSP signalling support
-> >> - Add check for untrusted applications and allow trusted processed to
-> >>    offload to system unsigned PD.
-> >
-> > Could you precise:
-> > - Which workload are you fixing
-> > - Which platforms are concerned
-> > - Which platforms were tested
-> >
-> 1. This patch mostly consists of missing features from fastrpc driver and it doesn't
-> carry any bug fixes.
-> 2. We are not targeting these changes for any specific platform. These features are
-> applicable for most of the recent platforms .
+Hardware V3 could be able to drain function by sending mailbox
+to hardware which will trigger tasks in device to be flushed out.
+When the function is reset, the function can be stopped by this way.
 
-Please define 'recent'. The upstream kernel supports a wide set of
-platforms. We have fastrpc supported since msm8916. Please make sure
-that your patches will not break on such platforms.
+Signed-off-by: Weili Qian <qianweili@huawei.com>
+---
+ drivers/crypto/hisilicon/qm.c | 40 ++++++++++++++++++++++++++++-------
+ include/linux/hisi_acc_qm.h   |  2 ++
+ 2 files changed, 34 insertions(+), 8 deletions(-)
 
-> 3. These changes were tested on SM8650 and QCM6490 platforms.
->
-> > So far I've been trying to run the "getserial" on SM8550-QRD and
-> > SM8650-QRD without
-> > success, would those changes fix this ?
->
-> Can you please help me with the "getserial" failure details? Or the steps that you are
-> running to get to the failure? I can have a look at that to understand the reason for
-> failure.
->
-> > Is there any chance we could get an open-source minimal implementation
-> > of a fastRPC SDK using
-> > the open-source Hexagon LLVM like we have for the AIC100 ?
-> > It would definitely help validating the upstream fastRPC implementation.
->
-> Generally Hexagon SDK is used to write and test fastRPC use-cases which is well documented.
-> Is there anything else that you can suggest would help here?
-
-Hexagon SDK is a closed source toolkit. Both in terms of toolchain,
-library code and generated code.
-The fastrpc_shell_N, which is used to handle loaded code, is also
-closed source. As such, it is nearly impossible to verify the code.
-Please consider the requirements for the drivers/accel/ subsystem: to
-have complete open source userspace. Qualcomm AIC100, for example,
-fulfills those requirements.
-
->
-> >
-> > Thanks,
-> > Neil
-> >
-> Hi Neil, added my comments.
->
-> --ekansh
->
-> >>
-> >> Ekansh Gupta (16):
-> >>    misc: fastrpc: Redesign remote heap management
-> >>    misc: fastrpc: Add support for unsigned PD
-> >>    misc: fastrpc: Add static PD restart support
-> >>    misc: fastrpc: Add fastrpc multimode invoke request support
-> >>    misc: fastrpc: Add CRC support for remote buffers
-> >>    misc: fastrpc: Capture kernel and DSP performance counters
-> >>    misc: fastrpc: Add support to save and restore interrupted
-> >>    misc: fastrpc: Add support to allocate shared context bank
-> >>    misc: fastrpc: Add early wakeup support for fastRPC driver
-> >>    misc: fastrpc: Add polling mode support for fastRPC driver
-> >>    misc: fastrpc: Add DSP PD notification support
-> >>    misc: fastrpc: Add support for users to clean up DSP user PD
-> >>    misc: fastrpc: Add wakelock management support
-> >>    misc: fastrpc: Add DSP signal support
-> >>    misc: fastrpc: Restrict untrusted apk to spawn privileged PD
-> >>    misc: fastrpc: Add system unsigned PD support
-> >>
-> >>   drivers/misc/fastrpc.c      | 1949 +++++++++++++++++++++++++++++++----
-> >>   include/uapi/misc/fastrpc.h |  112 ++
-> >>   2 files changed, 1844 insertions(+), 217 deletions(-)
-> >>
-> >
->
-
-
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index 4b20b94e6371..3b015482b4e6 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -312,6 +312,7 @@ static const struct hisi_qm_cap_info qm_cap_info_comm[] = {
+ 	{QM_SUPPORT_DB_ISOLATION, 0x30,   0, BIT(0),  0x0, 0x0, 0x0},
+ 	{QM_SUPPORT_FUNC_QOS,     0x3100, 0, BIT(8),  0x0, 0x0, 0x1},
+ 	{QM_SUPPORT_STOP_QP,      0x3100, 0, BIT(9),  0x0, 0x0, 0x1},
++	{QM_SUPPORT_STOP_FUNC,     0x3100, 0, BIT(10), 0x0, 0x0, 0x1},
+ 	{QM_SUPPORT_MB_COMMAND,   0x3100, 0, BIT(11), 0x0, 0x0, 0x1},
+ 	{QM_SUPPORT_SVA_PREFETCH, 0x3100, 0, BIT(14), 0x0, 0x0, 0x1},
+ };
+@@ -1674,6 +1675,11 @@ static int qm_ping_pf(struct hisi_qm *qm, u64 cmd)
+ 	return ret;
+ }
+ 
++static int qm_drain_qm(struct hisi_qm *qm)
++{
++	return hisi_qm_mb(qm, QM_MB_CMD_FLUSH_QM, 0, 0, 0);
++}
++
+ static int qm_stop_qp(struct hisi_qp *qp)
+ {
+ 	return hisi_qm_mb(qp->qm, QM_MB_CMD_STOP_QP, 0, qp->qp_id, 0);
+@@ -2088,7 +2094,8 @@ static int qm_drain_qp(struct hisi_qp *qp)
+ 
+ static int qm_stop_qp_nolock(struct hisi_qp *qp)
+ {
+-	struct device *dev = &qp->qm->pdev->dev;
++	struct hisi_qm *qm = qp->qm;
++	struct device *dev = &qm->pdev->dev;
+ 	int ret;
+ 
+ 	/*
+@@ -2104,11 +2111,14 @@ static int qm_stop_qp_nolock(struct hisi_qp *qp)
+ 
+ 	atomic_set(&qp->qp_status.flags, QP_STOP);
+ 
+-	ret = qm_drain_qp(qp);
+-	if (ret)
+-		dev_err(dev, "Failed to drain out data for stopping!\n");
++	/* V3 supports direct stop function when FLR prepare */
++	if (qm->ver < QM_HW_V3 || qm->status.stop_reason == QM_NORMAL) {
++		ret = qm_drain_qp(qp);
++		if (ret)
++			dev_err(dev, "Failed to drain out data for stopping qp(%u)!\n", qp->qp_id);
++	}
+ 
+-	flush_workqueue(qp->qm->wq);
++	flush_workqueue(qm->wq);
+ 	if (unlikely(qp->is_resetting && atomic_read(&qp->qp_status.used)))
+ 		qp_stop_fail_cb(qp);
+ 
+@@ -3112,16 +3122,29 @@ int hisi_qm_stop(struct hisi_qm *qm, enum qm_stop_reason r)
+ 
+ 	down_write(&qm->qps_lock);
+ 
+-	qm->status.stop_reason = r;
+ 	if (atomic_read(&qm->status.flags) == QM_STOP)
+ 		goto err_unlock;
+ 
+ 	/* Stop all the request sending at first. */
+ 	atomic_set(&qm->status.flags, QM_STOP);
++	qm->status.stop_reason = r;
+ 
+-	if (qm->status.stop_reason == QM_SOFT_RESET ||
+-	    qm->status.stop_reason == QM_DOWN) {
++	if (qm->status.stop_reason != QM_NORMAL) {
+ 		hisi_qm_set_hw_reset(qm, QM_RESET_STOP_TX_OFFSET);
++		/*
++		 * When performing soft reset, the hardware will no longer
++		 * do tasks, and the tasks in the device will be flushed
++		 * out directly since the master ooo is closed.
++		 */
++		if (test_bit(QM_SUPPORT_STOP_FUNC, &qm->caps) &&
++		    r != QM_SOFT_RESET) {
++			ret = qm_drain_qm(qm);
++			if (ret) {
++				dev_err(dev, "failed to drain qm!\n");
++				goto err_unlock;
++			}
++		}
++
+ 		ret = qm_stop_started_qp(qm);
+ 		if (ret < 0) {
+ 			dev_err(dev, "Failed to stop started qp!\n");
+@@ -3141,6 +3164,7 @@ int hisi_qm_stop(struct hisi_qm *qm, enum qm_stop_reason r)
+ 	}
+ 
+ 	qm_clear_queues(qm);
++	qm->status.stop_reason = QM_NORMAL;
+ 
+ err_unlock:
+ 	up_write(&qm->qps_lock);
+diff --git a/include/linux/hisi_acc_qm.h b/include/linux/hisi_acc_qm.h
+index 5f4c74facf6a..720f10874a66 100644
+--- a/include/linux/hisi_acc_qm.h
++++ b/include/linux/hisi_acc_qm.h
+@@ -43,6 +43,7 @@
+ #define QM_MB_CMD_CQC_BT                0x5
+ #define QM_MB_CMD_SQC_VFT_V2            0x6
+ #define QM_MB_CMD_STOP_QP               0x8
++#define QM_MB_CMD_FLUSH_QM		0x9
+ #define QM_MB_CMD_SRC                   0xc
+ #define QM_MB_CMD_DST                   0xd
+ 
+@@ -151,6 +152,7 @@ enum qm_cap_bits {
+ 	QM_SUPPORT_DB_ISOLATION = 0x0,
+ 	QM_SUPPORT_FUNC_QOS,
+ 	QM_SUPPORT_STOP_QP,
++	QM_SUPPORT_STOP_FUNC,
+ 	QM_SUPPORT_MB_COMMAND,
+ 	QM_SUPPORT_SVA_PREFETCH,
+ 	QM_SUPPORT_RPM,
 -- 
-With best wishes
-Dmitry
+2.33.0
+
