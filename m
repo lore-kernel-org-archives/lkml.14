@@ -1,58 +1,58 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EA685C49
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 17:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33F482D84
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 17:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707327682; cv=none; b=uODuOVBU0VGN3e1sxQLX487acFHyXuAF1fy9nOT9rGX7jUgPo6440iazgf7dCj+ijQxtJcHrKG6Wa6rgT8btCAxk8e63OKn4+OuGyKgXhlPut3/GOb9Xwv1Wltvd6VWivzRMeblW6wEhbSv2+YgJNpDQuDircCnd8vbtSgZFgtI=
+	t=1707327685; cv=none; b=NfDFbs/TO8tNNzA6LAqn30yV48bytvOrDKk4MTw5k9sZvFpYTe2cF+Bv/EPCPGgJQwnnAUpRfmIidGx5kjzE5PCl24Q7RpF3hcUbGOjwkfQy09JeHcRv5F+t7UPMLohT93UzYDCKtdDNhVTUdnfZcOFAcQBlFAlbNoCLOdlQYkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707327682; c=relaxed/simple;
-	bh=Kc1wEn9YL3T9SCiwN78gVUKQ50UDSkeNUv7CMUuPgKk=;
+	s=arc-20240116; t=1707327685; c=relaxed/simple;
+	bh=PHns6xqLyHWVS2RFXaEsGlNTnkb0vFPfE2pekEJ/kfI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uLRrIkNiDVBLAWInxKrtBQRrloxP8pAlOHXbaiodIp2s+rK5oSyeogZRi5rRp1zUZ9TEnT8sOB8ZKQG9lJbxDfq8ij6CSDRu7jGILobCTuPAr5bY4TjLN6r7mcohzn5n/5ahU7e1T+TGi7xwzFEazyslN+uRrHJ2x4TYtoD+RsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=NNgvslP1 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=LUonKjjZqg3ukW/CcO3YtJVHK0cdPpdgAuJWiJH3lWJvyE91EPg6m1Lr/s0P//DWlWmE09I/X0T9k4Aaa0LAscgNkzusADMDzAC0rnrZkvVgzQCRkS51xW0akcItZpw49XHzVkiWg94rVzn96voBhUcA4a/PtdP7LWA5n3rofTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=arnOFxU5 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="NNgvslP1"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-783d84ecb13so53928285a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 09:41:18 -0800 (PST)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="arnOFxU5"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-783d4b3a026so49337185a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 09:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1707327677; x=1707932477; darn=vger.kernel.org;
+        d=soleen.com; s=google; t=1707327680; x=1707932480; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xWt6Kj9gOwsVhKnLqI4ecc+RWbgSNCQCfN6SnKHrmRU=;
-        b=NNgvslP1DQGKO7timQgv6qnsJBxvwZQ0UQv+q5L+cSonb0m8KQdmaOpujvPMm1FTTT
-         OBTfvazY7USMsmc51NioAkPLh2GDHO+EcT8DWwMQlKUf2PdhduI0A9jmA5mrfcll4paI
-         9AgU/u+siWtcUBzcJjbHA+hIzf9+mXTPZ87IwJyikRL6Qm3bdouJElwa9nc+5gADSZNM
-         8hFfAsQHn0XT2/xGjPpBlMz3vlJ26TME2yfJ3vzeXYgdma7Y0bdn36IotYvF6s5QBExN
-         6x9QDK6fxfXVcZjujSsXYOVbmkw+TDW8AXf3KqEqGktdCcCA6r71Jlu/hntSwQZabr6o
-         Hy8g==
+        bh=HrRTSlkta7nD8c1SJPx3AxPn1tn9y9LkFmhcOlF4lks=;
+        b=arnOFxU5cn85jYFGkJUyCJxEvYG2g4lb29V0lw7lYx6dhVbOMMj1ZJLlqlx++DPplJ
+         iilZAVjOvPgm///IjM6he5GyyUZ7k3FcvE1QswXro+J9VEWwR1FGRxzCU6YM1IfibVR4
+         YrLd3Uzl+fzzLH/OijQWbSNVnurl9YVsX9kotUtzYq11B+3sbIrdtPD1c3vE8qIvxeHj
+         m3+G8hf4JtneUetc3xoxy4KLQzIMQFKKPE2tnD4nga1XRdrJaxP8+zoWuFrqGuEs9wgn
+         vDi7CaXbMmWjW5JPft9hlCObEl5wpy78Zo/G3gbKEUbekgswPzzmphP7LisVOoqurr6t
+         8Tnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707327677; x=1707932477;
+        d=1e100.net; s=20230601; t=1707327680; x=1707932480;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xWt6Kj9gOwsVhKnLqI4ecc+RWbgSNCQCfN6SnKHrmRU=;
-        b=cj3mpQNf0iRfqRkq/y/qfrVR7jZrt7vUQdpvhVdYvD+KyR8Riiml6odw/Ln7fuxl3r
-         ESa7IJTkflOPiNJoWxkDZ6OciXKSaZOepa+OpKP3YxFfa1swNMLylRncNKSQnmuEjwIo
-         lSkK33kaGVg/46mkMTPK0jnf3aC63LPfQdRxyxtg9+Q3CXPP60ekz0yl4h/9WLBRFjod
-         r7gu/+h9c0HL0tMmo8My/+T4S8q5QyUmYM5xsF3gNWdGWMXbcJjJhDwDdaUwB/bjmIpN
-         P7iy3JoU/ed+slrffIdoboK7r4jsUdjCIrfO3nyx9Ml95HtRIAE6Udrk5tJ8TT4O48cx
-         kHVA==
-X-Gm-Message-State: AOJu0YyK3ablcL5CxcXXQHv7eGYwSMPzbTI3g1S6czstYopvzfvmnRLe
-	jexT8PXIFCkqEQAEpu0ed4OU/Fs0VVAzTOKbklOoz/Uxif9jBWCq4dMkPAC+TyU=
-X-Google-Smtp-Source: AGHT+IHeQy+PfPTf7nBSLMGCvJMntsBufk0Si/3gJdM+srJ22A2iBif8tXuqrNfbof1VrQoYmJ+haw==
-X-Received: by 2002:a05:620a:24c7:b0:783:4c2b:cd31 with SMTP id m7-20020a05620a24c700b007834c2bcd31mr7624063qkn.44.1707327677315;
-        Wed, 07 Feb 2024 09:41:17 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV07MGvI4Ypo2h445jSLHybue8b/Jl//KnDW5a0waD/mCyzQoo4zwqN1ovns4RyMBF7dWelEXf+y/BMce8UTxxq3OAOyEJdx84aMHu3Xj3LNN0h8+PWnMFEE+z2yOaWBuE59sMW37SvqeY2r+eddvdkbwQQ0visKlJywOwTrMUf8bZCr+C97H8x5rJJN90UubbobWaZA/xY1wS0vWPAquvxEg1hW1l28JQ53ZJx95HU0khGFmoTf79lupjMXxqjmuiNshSoarMoqYJlkOScCqu+AzutOUb3hemyHowzfJt4oQ5vEa1AqDVWJc5qq9GwVhdBQpQ1bjwh/41lfRAoS+zdREj8QtB0yC8Yf3fqjP0bV/AQWGDWDl7AfxCGkqvXaWAi3c0FFJ8LHhlIOPCAfJXSiFfWf6hJY4gnlh1zdcTkDpX5vHjlux7o9mLm8xCEuso7GlAvyaCahljtfdJ3n9He1HG2A1JKk14Dp91svBMy4ACi4YjPBYxU5G6arqfc9Aa9ID46kIFxHAabnsJdGUmoWrSiLJ37J4zqxIFPKteeDOU74RPNvqXXZbrh+kwbVkpkNyZe+ausHvzpbhe53+69z5xvpe5yz9LDtoptdeoq/e95bHyxU06s9O4xJWgegjHXaE/TG9CVzS7e8EQ6S+o3PSzjPJiw2FxqV7XKMv5fNqsaq3ZnMqYOZquy2m+v/zhJILWFJWBJQYb1rEPYtmsadOpw3HuDIXjsc7+VkSguFrWGSWLv8KpJD9KFIRW3LI+MvaImrkmCSzDiSVZ6RDudqEFvZYSmqwS7dR+c9ojQ39rqDcRoUTVPgcq9hYxerx4Zb0hKQlrxZdYZlaeEYtvs70TKIyQjNh/90ivUw0nvVBM979zJloyZT0luhm0T77jolZ/+DUh8NcXLhU99yGpN0jycxaJdWQ/XTPQ3YblLvB/JYpeG6+dinfywPfndj0evBQ
- cjwGWfxcAlsvta7HagMoAKkZDmGrKu6IQAXTkfceEaOFQjobeyFL7uPcD9WqPNUuTcinn6O2hVSaDE3sB91Fe25TnZxotHh7OfdDU6pVyT5VjN5xHg8ym4Qy8zTk7FhXznhJubrj5oIYVZd7dTTCR6P0f+WG/aKlC2Uv1CpzhAUn5GH/Bc11h/mtj4gUypoq0KQEevPp5E+tw4JPNQGTKi05iYJiEoXJXGCV167QIg4d8lnRnJM41YFlpwAVduF39jQYyREhtCqzsX9O5lpM4WNzt5CxhwcXH3TL905ZjPt804cwe+TFZc+HM/tZC5gRtjBtVeZb/l/cV0C8UVs2UJsWZqdeH83YNXz6q/p4t7x9MRhw58c7FqTjP4PppYzx7DQGiI/8b7Yz5uKM+/NZUCMppthUMAdoId8salBi+S/s5S9pMfWNkj6O/yEOAkekKT1ezCkB+lRuTIX+hjVWjWA4AxIqA8e/PiDfl4OamSHsHK
+        bh=HrRTSlkta7nD8c1SJPx3AxPn1tn9y9LkFmhcOlF4lks=;
+        b=uL3PY/SDoEAxIe9eyXMS2pZKtpPdVgPfqIDaDNRGCU7FE4x5Pbe5SHif0BAnDlfGfU
+         9P5NPmbTXh9YTB21wH3HZbFJxLXkD5obMYy4vjkVV45h/4wv1gEW6wUYwIFyG8WqwltD
+         JrfRtcZYslc5d6gM1T8fjW09GXO037+pPFiRIl6oeN3u+CBX2w5VF1QWmlNOuxu10lIK
+         hr2XY4kWPFsSbYxTgoOh3X+SYqffiQX2KbTkAOes/fGt84JA5PIY8XI0Pw2DZ1N0OBOO
+         /4tgKNVFEH660V1iKx2FKqR/yonXtKbpkW/1fkLk/9NGMM8HUKGucQ2J172mBL+cDczE
+         WKPw==
+X-Gm-Message-State: AOJu0YzJPXKO+jiqoOhR32dWL+6HN5Ns+I0NNVUeWwkMN/ZHxgrn/+Uj
+	UyzOr++38JIRqIqULmL0hD4OyYgGslp4eAMaHTvTpbJoW4xPg/zmb5dCXzcNtcA=
+X-Google-Smtp-Source: AGHT+IHhb+pueaISZV6Y8tJp2t2CFo0mWlpmACo7IYuyoV1N2oy7KZrIG0XVhtVG+SmB5cwuhpqy+Q==
+X-Received: by 2002:a05:620a:12c8:b0:785:3887:de18 with SMTP id e8-20020a05620a12c800b007853887de18mr6401324qkl.65.1707327679899;
+        Wed, 07 Feb 2024 09:41:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUCDfKWFIl6QUubNKHOK+J/TQZfBk6GOATQV7+UROelHHizxj2bMScNb5yjy+7wEKvrKAVO938EhFK3MDp4QvVuIEMns3aJNEfZ4lLhVczSUx4hYdn3X7Qx8HTpAiobpDi+dY9UU0JFYWP3sxFQVS1xxl7fcBVSx0blttAqIQWkGbtG/8OFxy5YJX+xNhtsJb3t9pvZsef+YcrlQh+9z7K1HEh5YIvRBqpPod3dD8oKW9DDybH9+3HAaHHBY8iiIHdHyvvhg/Qqh/tY8U66rdo6r4QvsxgmBFMyxznrxlOPKUwMUFVhM2YvFghVr6hKgb6KzPzIvg28q6LrAw8lD7weD0eI2MrfirCmooqnAA/zgK7D0KurMOIDpabn9VkUHuhE88OEKQ8h62/Wa2gdcl4YDdMkJY4DDjELGulQmsDVBCrUtil9loYc5aX8Gh2jq/ztHo3kv5ymJnfZ/h7e7WZdfaZvxSbUL64wc23AYR/EczgayCdZpmGXX2jQE3/KPfSIPAL6DXV6qvHIwUWL4vG18mc7tiVYDE//uM4hJo7eMbISiBgH4sundju5RQWqxyjeA3VcVHj+VPU4vBDpsrZVdnHRZeaGTV3rwC8oZXb19D/7KR1Wm7euJ76N5bgFnA7vjZhfsEp+F03DZsEUpCkkLYMsxrQWrLbAZIy488QP+Zdz41QqcwwktLByJIdIxAeRSxHxin8RRSgrxaqXRKius9NFl4oDbRCD6svZoHMd4UnX0vfYrQ0s8umvFi83/7gbRVCzXY4TP8NJFByhRuhTVTALB1EBu6ny+PtNXEQLdFexeijpQwT5/ahI+mpZ9ajMM7oM3At8FGk5pnU/BL1Nonz5Y8fjdV6tPG/C5Zk6RhURg9qAf+9R8Omad1eFWXxT9K6yqaix3pq9xGAZ8o3pF+xFI149xhPQNCmvLnHRgEmJUeIIm7boC4KgdrC5bBoaux
+ c6ozrLySOAxoy5JAAUBKnlhPctpWnwmvtfHeBXAM+mRt1+c/cu3MhP0MSUMt9WZHns3r/985c1KNIPq0blR6t+yh5SOQk7YDqh0wPxUpt4Kax6NjryE1iCgR1+E5QeDElNdAVf+hiKcPe5+DO4dGivJK8C2DQW1E5U+dX94X2hiWwHcHd0IHOFqpQBMw3MYyXVibLuxNZq6E5ml+47r+bMOyL/Bqfi3ViLUhztHQ6nikGjlZcsJYY7JUssc0W5vg58IiiHspK92+rwN2jGd4sH3ALx4bgyCF0SF9flcBEtXUjRUNSmob4ETrVkz7HKMS7If6nnJcyM0Vbo0UMoOZmd5knYt1xz+hu+YULQesXnetGwV4BBbVo0WA5dRc2eIzIsQXmdql1aXqiSjGCn5mug3+d3TEVV9PvmDpKEou6WN731U4KQNAZjHoQUf6UFZNlFysQJQPL4NE73c76duMdmUXiGxzZFehKgNvB7y4Wu+1/j
 Received: from soleen.c.googlers.com.com (249.240.85.34.bc.googleusercontent.com. [34.85.240.249])
-        by smtp.gmail.com with ESMTPSA id e10-20020a37db0a000000b007854018044bsm696310qki.134.2024.02.07.09.41.16
+        by smtp.gmail.com with ESMTPSA id e10-20020a37db0a000000b007854018044bsm696310qki.134.2024.02.07.09.41.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 09:41:16 -0800 (PST)
+        Wed, 07 Feb 2024 09:41:19 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	alim.akhtar@samsung.com,
@@ -100,9 +100,9 @@ To: akpm@linux-foundation.org,
 	rientjes@google.com,
 	bagasdotme@gmail.com,
 	mkoutny@suse.com
-Subject: [PATCH v4 08/10] iommu/tegra-smmu: use page allocation function provided by iommu-pages.h
-Date: Wed,  7 Feb 2024 17:41:00 +0000
-Message-ID: <20240207174102.1486130-9-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 10/10] iommu: account IOMMU allocated memory
+Date: Wed,  7 Feb 2024 17:41:02 +0000
+Message-ID: <20240207174102.1486130-11-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
 In-Reply-To: <20240207174102.1486130-1-pasha.tatashin@soleen.com>
 References: <20240207174102.1486130-1-pasha.tatashin@soleen.com>
@@ -114,101 +114,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert iommu/tegra-smmu.c to use the new page allocation functions
-provided in iommu-pages.h.
+In order to be able to limit the amount of memory that is allocated
+by IOMMU subsystem, the memory must be accounted.
+
+Account IOMMU as part of the secondary pagetables as it was discussed
+at LPC.
+
+The value of SecPageTables now contains mmeory allocation by IOMMU
+and KVM.
+
+There is a difference between GFP_ACCOUNT and what NR_IOMMU_PAGES shows.
+GFP_ACCOUNT is set only where it makes sense to charge to user
+processes, i.e. IOMMU Page Tables, but there more IOMMU shared data
+that should not really be charged to a specific process.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
 Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- drivers/iommu/tegra-smmu.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ Documentation/admin-guide/cgroup-v2.rst | 2 +-
+ Documentation/filesystems/proc.rst      | 4 ++--
+ drivers/iommu/iommu-pages.h             | 2 ++
+ include/linux/mmzone.h                  | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 310871728ab4..5e0730dc1b0e 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -19,6 +19,8 @@
- #include <soc/tegra/ahb.h>
- #include <soc/tegra/mc.h>
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 17e6e9565156..15f80fea8df7 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1432,7 +1432,7 @@ PAGE_SIZE multiple when read back.
+ 	  sec_pagetables
+ 		Amount of memory allocated for secondary page tables,
+ 		this currently includes KVM mmu allocations on x86
+-		and arm64.
++		and arm64 and IOMMU page tables.
  
-+#include "iommu-pages.h"
-+
- struct tegra_smmu_group {
- 	struct list_head list;
- 	struct tegra_smmu *smmu;
-@@ -282,7 +284,7 @@ static struct iommu_domain *tegra_smmu_domain_alloc_paging(struct device *dev)
+ 	  percpu (npn)
+ 		Amount of memory used for storing per-cpu kernel
+diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+index 104c6d047d9b..604b2dccdc5a 100644
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@ -1110,8 +1110,8 @@ KernelStack
+ PageTables
+               Memory consumed by userspace page tables
+ SecPageTables
+-              Memory consumed by secondary page tables, this currently
+-              currently includes KVM mmu allocations on x86 and arm64.
++              Memory consumed by secondary page tables, this currently includes
++              KVM mmu and IOMMU allocations on x86 and arm64.
+ NFS_Unstable
+               Always zero. Previous counted pages which had been written to
+               the server, but has not been committed to stable storage.
+diff --git a/drivers/iommu/iommu-pages.h b/drivers/iommu/iommu-pages.h
+index 7336f976b641..e3eb93857a73 100644
+--- a/drivers/iommu/iommu-pages.h
++++ b/drivers/iommu/iommu-pages.h
+@@ -27,6 +27,7 @@ static inline void __iommu_alloc_account(struct page *page, int order)
+ 	const long pgcnt = 1l << order;
  
- 	as->attr = SMMU_PD_READABLE | SMMU_PD_WRITABLE | SMMU_PD_NONSECURE;
- 
--	as->pd = alloc_page(GFP_KERNEL | __GFP_DMA | __GFP_ZERO);
-+	as->pd = __iommu_alloc_page(GFP_KERNEL | __GFP_DMA);
- 	if (!as->pd) {
- 		kfree(as);
- 		return NULL;
-@@ -290,7 +292,7 @@ static struct iommu_domain *tegra_smmu_domain_alloc_paging(struct device *dev)
- 
- 	as->count = kcalloc(SMMU_NUM_PDE, sizeof(u32), GFP_KERNEL);
- 	if (!as->count) {
--		__free_page(as->pd);
-+		__iommu_free_page(as->pd);
- 		kfree(as);
- 		return NULL;
- 	}
-@@ -298,7 +300,7 @@ static struct iommu_domain *tegra_smmu_domain_alloc_paging(struct device *dev)
- 	as->pts = kcalloc(SMMU_NUM_PDE, sizeof(*as->pts), GFP_KERNEL);
- 	if (!as->pts) {
- 		kfree(as->count);
--		__free_page(as->pd);
-+		__iommu_free_page(as->pd);
- 		kfree(as);
- 		return NULL;
- 	}
-@@ -599,14 +601,14 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
- 		dma = dma_map_page(smmu->dev, page, 0, SMMU_SIZE_PT,
- 				   DMA_TO_DEVICE);
- 		if (dma_mapping_error(smmu->dev, dma)) {
--			__free_page(page);
-+			__iommu_free_page(page);
- 			return NULL;
- 		}
- 
- 		if (!smmu_dma_addr_valid(smmu, dma)) {
- 			dma_unmap_page(smmu->dev, dma, SMMU_SIZE_PT,
- 				       DMA_TO_DEVICE);
--			__free_page(page);
-+			__iommu_free_page(page);
- 			return NULL;
- 		}
- 
-@@ -649,7 +651,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
- 		tegra_smmu_set_pde(as, iova, 0);
- 
- 		dma_unmap_page(smmu->dev, pte_dma, SMMU_SIZE_PT, DMA_TO_DEVICE);
--		__free_page(page);
-+		__iommu_free_page(page);
- 		as->pts[pde] = NULL;
- 	}
+ 	mod_node_page_state(page_pgdat(page), NR_IOMMU_PAGES, pgcnt);
++	mod_lruvec_page_state(page, NR_SECONDARY_PAGETABLE, pgcnt);
  }
-@@ -688,7 +690,7 @@ static struct page *as_get_pde_page(struct tegra_smmu_as *as,
- 	if (gfpflags_allow_blocking(gfp))
- 		spin_unlock_irqrestore(&as->lock, *flags);
  
--	page = alloc_page(gfp | __GFP_DMA | __GFP_ZERO);
-+	page = __iommu_alloc_page(gfp | __GFP_DMA);
+ /**
+@@ -39,6 +40,7 @@ static inline void __iommu_free_account(struct page *page, int order)
+ 	const long pgcnt = 1l << order;
  
- 	if (gfpflags_allow_blocking(gfp))
- 		spin_lock_irqsave(&as->lock, *flags);
-@@ -700,7 +702,7 @@ static struct page *as_get_pde_page(struct tegra_smmu_as *as,
- 	 */
- 	if (as->pts[pde]) {
- 		if (page)
--			__free_page(page);
-+			__iommu_free_page(page);
+ 	mod_node_page_state(page_pgdat(page), NR_IOMMU_PAGES, -pgcnt);
++	mod_lruvec_page_state(page, NR_SECONDARY_PAGETABLE, -pgcnt);
+ }
  
- 		page = as->pts[pde];
- 	}
+ /**
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index bb6bc504915a..a18edcf12d53 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -202,7 +202,7 @@ enum node_stat_item {
+ 	NR_KERNEL_SCS_KB,	/* measured in KiB */
+ #endif
+ 	NR_PAGETABLE,		/* used for pagetables */
+-	NR_SECONDARY_PAGETABLE, /* secondary pagetables, e.g. KVM pagetables */
++	NR_SECONDARY_PAGETABLE, /* secondary pagetables, KVM & IOMMU */
+ #ifdef CONFIG_IOMMU_SUPPORT
+ 	NR_IOMMU_PAGES,		/* # of pages allocated by IOMMU */
+ #endif
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
