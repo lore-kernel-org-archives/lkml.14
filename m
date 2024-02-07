@@ -1,214 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2088.outbound.protection.outlook.com [40.107.220.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF98713666F;
-	Wed,  7 Feb 2024 17:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707328769; cv=none; b=I6cVb0ZrSHFCKZphI/Wc5NXta+qs5duu/XT9teNBcT4jbZnxP1AD7GubBnZXEF8PO6jsj22NBfgddfcdaF5x4geJtjaWnMwFQ6FTfrXiLQIvgMCjLlCufuduEFiL8za3LF4vTmdNC1iFNPPW6IbBG0OfVWSVZio76mLDBoxAM8o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707328769; c=relaxed/simple;
-	bh=WIt9o4OjjawnuBTk8GUkaHPSrfrC5St66G3/Ao7RYxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dH2wJurC6EWjhQnfYXovyck33UiMvvLMCqjFfy0EcYBfzr+UF87jv50AatL25z93yB0kUPjHYDFO1WB0bJDqs3hI/gJI09fGyCLX7D7/zInsufuvE8FvBX7kb0XghykObddvgNBhIgByJY40T6dlEswmYyXUy+X0Sk4srv5JQc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=chL9Ufci; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB8783CDC;
+	Wed,  7 Feb 2024 17:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707328805; cv=fail; b=tuBk+TOHQBczaW70JjqeOIyMd9vpSm9hxW4vOqW4248GzsITkRUYlpZojEIju2kZM4SE/xlEfMPQ7/R1VAEkqjPYZZqK3nZQ9aR1DpAWGdDRIMS/13Ng7MOdfcgEC3dY/fkGCLJVdcxIt7TuH9MpyWUhj9ztgkI+00b3/noSi6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707328805; c=relaxed/simple;
+	bh=xKuvp6X64oBAe4zQlzvBKfyyZqbwkjq8EEQLZ4Ztnn8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FV8nO8PP1uMWzYsFrlQ2YPApkQo8AIH6jfE4ZHnyllN+SSQDBM21EwdHY+O/Su45HLh76eO2eQNFvyYYBexvKovNjzZIPVzdpZZ5CWymx6Uf0bWAUA4fVAAcRqh0p3C5QckzRR6nsTKtAa9b69kgApMr1Y1MKkNYN72UAWHOwFI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RBvo2Yab; arc=fail smtp.client-ip=40.107.220.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="chL9Ufci"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707328764; x=1738864764;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WIt9o4OjjawnuBTk8GUkaHPSrfrC5St66G3/Ao7RYxg=;
-  b=chL9UfciYEARhNzX3RpIWqvj6D4+Cnpcafj3AB/BPc3oxcDptRjjl6cu
-   guPU1fd9LGA6Cl1RRETA9EmbOf8cXnPE0WvRPyIltZgTMmjcyIXsE9Fe1
-   Jr+sT/aJStSvzJQkTtpsOIwktbE5Da2x4cbGthkhLRV+srKU0BpCfwuIq
-   Q5eBOoTPKmqGUBoXN+IoOTtpRSN8KgiRnxrCVbHWfpsfewxtYxcs+TA8l
-   plkWyXqB7o335G2i7E1kAImTYsjH0GwMp2HyNXx23bXIDT983fN6fPMN1
-   lMv7yQ8OHis7KzyhuOgxUfauGSyD4kp7jNWyn/aMqgQS8M/dblou0BKOl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="11622692"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="11622692"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 09:59:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="6020771"
-Received: from unknown (HELO fred..) ([172.25.112.68])
-  by fmviesa004.fm.intel.com with ESMTP; 07 Feb 2024 09:58:59 -0800
-From: Xin Li <xin3.li@intel.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: seanjc@google.com,
-	pbonzini@redhat.com,
-	corbet@lwn.net,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	shuah@kernel.org,
-	vkuznets@redhat.com,
-	peterz@infradead.org,
-	ravi.v.shankar@intel.com,
-	xin@zytor.com
-Subject: [PATCH v2 24/25] KVM: selftests: Add a new VM guest mode to run user level code
-Date: Wed,  7 Feb 2024 09:26:44 -0800
-Message-ID: <20240207172646.3981-25-xin3.li@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207172646.3981-1-xin3.li@intel.com>
-References: <20240207172646.3981-1-xin3.li@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RBvo2Yab"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hTEXeodrgCV3y18d77mj+8JB9fWpKxgo8tHhfTuHm9UynKSwqUEbeCu/kjvh6loiolz+XxOgA2XBo33vHW6Ll3n3pSayCCf94H0XFTb3k8YCz3U+YB7A7RxvCZS248kFbS8O4DCpkacz6phc4m1T+dQGhbawr00NEhk8ViBlnyMan9E2rOCJIp4FGb7s50mAE3wD3tbz7zFUDq3KCa4kHvZxTY11inBiGcbovuawdSyDwNUWnWTwWr2w+pLH/VUladp5MJyA3+/x+HZJReEyliPjKVbC+Cc8Mb4zJEr2WJKiVD0dc0ufP2aBA0WOdP8HIkUMZQFk7K/Z0PFs5tQCDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ImiVMFt948d3gY1NzF9bQQLwBaR3CM/YJKO522Xv5os=;
+ b=Tnv5LQoLidnICnnd4as+B75WnGeXeImfLzALkB0M2yyoYOzUXBOTqnlSKzONYpY87wr09eKdnxwUvrQRYVSLMYIZsAKl9tJEW7cNcvX9W2KeSjvtJrlR68CIwDWEmeGDYEPrW+XlREVv/vOeRKP6eOaNs2Ft1iHs6tay4UIrtgwfrrteuUi/2EbV3ZIG/tNVHX211cXjR8WXi0ZAdpDY7/xXE0o4CyMnoMRZDQYorKZ5IcEe/Wd52eV3jB6WaP+IhXtGfInyAj1ZPnxXINaH0aLF6h/JWCAO3egH/aiXrj5caRWCLuwMaUjd602f9E8XGfJGzJaHbpJogGXPKivbyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ImiVMFt948d3gY1NzF9bQQLwBaR3CM/YJKO522Xv5os=;
+ b=RBvo2YabSzZWd/UdkU+NYqAlQT9koAh73gWl+cZwTgSyzC3X3JkQTE0S62PFn9tYiUnqx2YIoJ0vCIb/qQaXZJr3Yb9AEa/0CHHaLbaFcsNw6e1TB96MrwAyNPcXRYCsRWX8TnNxKOYjRQqy3uC1FG6JOE56iwIZSTmJaaKX5qQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ CH0PR12MB5123.namprd12.prod.outlook.com (2603:10b6:610:be::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7270.17; Wed, 7 Feb 2024 17:59:56 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::481d:7627:c485:9cb]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::481d:7627:c485:9cb%2]) with mapi id 15.20.7270.012; Wed, 7 Feb 2024
+ 17:59:56 +0000
+Message-ID: <f856519f-419c-1901-b8bc-3e338873157f@amd.com>
+Date: Wed, 7 Feb 2024 23:29:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v12 13/16] iommu: Improve iopf_queue_remove_device()
+Content-Language: en-US
+To: Baolu Lu <baolu.lu@linux.intel.com>, "Tian, Kevin"
+ <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>
+Cc: "Liu, Yi L" <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Longfang Liu <liulongfang@huawei.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20240207013325.95182-1-baolu.lu@linux.intel.com>
+ <20240207013325.95182-14-baolu.lu@linux.intel.com>
+ <BN9PR11MB527603AB5685FF3ED21647958C452@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <693ee23d-30c6-4824-9bb2-1cfbf2eccfef@linux.intel.com>
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <693ee23d-30c6-4824-9bb2-1cfbf2eccfef@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0060.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:22::35) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|CH0PR12MB5123:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bc3b249-834e-4ea0-72b9-08dc280697d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	qK3+YFt4Yj3J1XiMPpze5TTiX3P3piZBtL2WCE/FDHVGWNnGLfqboJWzvcLXmOTZ3FiidGYnxhWKNM/CKzhJxcp31y5gdqGxMttpFeLL5xMXWxrDoTOuoOHoyoPlI3pfy5acalKIK3Olw2z3L8m+tNGCpHy4I5XXhn77Yp0/BMkx8qSG1vV38SMHBCXYpOlQSGzzK/q/2fcP3UVdtSpgCI7x1weUM9Fqu9d95IA2nVf32ZE62l0xsb38Jj1uC5rMbxhvl3JHjoOc+q3UcBuh1JptKDjJ7oDsI8x7bS5lhAXi8p65yYEQ0KOIwZBdACQtTnh9duKXcQFW+WEn+wnzn/S/I+TK1+0AO0JHba+OKV1f3bZxZ4Anq516t7/ukJr1KaaqSJCGyktaeerZQ+VGQQ5Int/l8SQs/7ZPceZQiqCmjxrV1QtwHizpvwG9qJDSyM0iEszuwb2yTKqVux8M8LHePLT5VE6yNsmA5RdHFYViC+tgbgX4oXWS5nWeC/PubGa3jO98IuauIlESq9bmJ+tx4VoBYfWlI+aHzlFNFqhcxwKDf6rXJPL7skr6EZ4OS2tcD8VEHwAHyp2PIzyZQWnIWE6sfMh4MR9MV1HEoSqAZ7zhbS32X9vjAFGzDCDh8FObUNreIQFgUV+HdXr2Gw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(396003)(366004)(376002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(6666004)(26005)(316002)(53546011)(54906003)(66476007)(66946007)(2616005)(6506007)(6512007)(83380400001)(31686004)(38100700002)(110136005)(8676002)(66556008)(8936002)(4326008)(44832011)(36756003)(7416002)(5660300002)(2906002)(478600001)(6486002)(31696002)(86362001)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TTVjSDIwSytLaEhhVFhlMEU0RnVWRWxXKzVEOGk4bERmMVM2dU9VbFdITXpF?=
+ =?utf-8?B?VHJWQ2J4RzlOcHFuOFcwUXZJYTZMbStNQXFYYWt3dXdqUTFqRHFCQUMzYTJt?=
+ =?utf-8?B?eDdYODRMcDNGclIxaEMwZWM1cUVhMjh2ci9MTjI4S3NFZXB4bTFYbVFNOUky?=
+ =?utf-8?B?RTRWOGgzUUpsbVRpY1lCZ2dBaytvSi9LN1c4T0FjTW1nUHBZMDc3d3VSNjQv?=
+ =?utf-8?B?ME5DbGJsR2ViV3Z6VkFCZzRqK1I4ZjJCY1krWW9oTlFkdnJHOVJWWGovcUFX?=
+ =?utf-8?B?eE96dXljVXgrUHZoaStKUU9wcGs0Q2doOEdOK3loMWRBcktPcTBEOEVMcWEv?=
+ =?utf-8?B?TStzNWN5aGZpZzFLSGVlTThrUUlyTzZSSmN3TWZkN0JrKzdEcDZGL2I1aTJw?=
+ =?utf-8?B?VDVxK29CZXJvSUsvMTJGc1d2SFN0bUdXTWNZQWw3Z3pRYU0wRFJWOXh1MXBw?=
+ =?utf-8?B?QUVRWmVUbXh3VW1Bdks0OUdZMXFiSHBvZkg0enRvZllnOVlNS0dQU2F2WHFG?=
+ =?utf-8?B?OXZzaXd2VjBKa0RzY0VKLzhoRGdRMGZDY3d4d3FoMDRUQ0p4eEtWUmZaVnVT?=
+ =?utf-8?B?VUdSRzduRmNHdnlFbEZCMWpGaFh0TGFHOXlqeENXZk1yNFg4eE5HVDdjT3h5?=
+ =?utf-8?B?TG00RjJOVmttbEZpalRhNFplQ3JyVHlYdnVZR0Z4V1h6Tk1ia2ZRTDNIbHFr?=
+ =?utf-8?B?NGZHVEJIYjk3MnlKRG9SSW85elpLZTdnSko4a1hzbWpoMlpLSWxnREc3UGRT?=
+ =?utf-8?B?WkhicWx6WDhlS1hyNjdmaVlPY2Z4VmtRZE5KRE84dVFKZWYwdUZ5b3ZuajJH?=
+ =?utf-8?B?dEVqdHh2RDgwWnRsTmZXcURFMlFIcGFYRmVicUg2K1BGRDZJbDVmNzNpZE95?=
+ =?utf-8?B?UTVFTE1DdEJzZktUdTFob2VReDBlci9xU1N5Y3V5Uy8zUUFneExzYUYvRU12?=
+ =?utf-8?B?VlZ3Rm1GNFhOa09nRHNhZndjWllZbTBKMjN1SG0rdFJWckVtaHA4V2YwY0Zr?=
+ =?utf-8?B?OGVodktGVm1GSStYTEE4Ykhza2tFZWN5VUdJdDhUU0xxOUJ2cCtZaURZN0o0?=
+ =?utf-8?B?cWV1aHFHRGl4Sno1TjZ4QW54Tkw3TjVFUU1sTUVRZ0QveVByMkllS053bUxl?=
+ =?utf-8?B?dVc1d0ttR0xRVWdmOVZodzd1RGMwc1MyT0ZuUWdFRmM4QW5QT3FDamdYQlZy?=
+ =?utf-8?B?UkZ4RkpFLzVnenpDZnZqMHVuc2RDMWxINWQ2OVNPQmxnOGhMTXBGTlAvb1ln?=
+ =?utf-8?B?YlF6K2hSMVBweTdrNlVSZTFwR3hzcGN3M21TWWZDdlZRS2tiSzNBcWhSZERD?=
+ =?utf-8?B?c1YyUUErczhITjk0R2NRZGZTczFTbUx6Wk1mZFd3dFdncjFZRUJQQjVJZzFx?=
+ =?utf-8?B?b0dBV0RPRUJoQjVZbjVJaWNya1RZdWJrRHlHRlJRUXdIcC9tYnk0eVNtbmhH?=
+ =?utf-8?B?Y2pCb09KNVVialUzWG10Nk9sV0E1aDFDcVJaY3FmU04raXoxWVN4YlNSZ2Q0?=
+ =?utf-8?B?bktqOEFKaldlVm1HRkVnWHFvRHVHVnlVZVhGV244SGhzb2llUlp2ME1oYXFk?=
+ =?utf-8?B?a2VsRFM4em44bCtsN2pOM3YvZVhHRWZqSXU4OGQzVmdOU1NQTmhSejNtVnY5?=
+ =?utf-8?B?R005aW95dTlnZStjVm1lRkVWSGZtclk5K2dkaFdHNU5Hd082ZXk0cWRENEJp?=
+ =?utf-8?B?Qm1OOHBIQWs3dmdib0ZDdEdCM2JpeVhvTUNEaWdJMzlxZk5qNE95L3pXOUJq?=
+ =?utf-8?B?bGRpSEZ5bllSUmVJMTJoWWxjRE9vRUVWR1lZRDJBeWwvS2k4dHgyY0drbnNY?=
+ =?utf-8?B?cm5lVjM1MDZDcmR6TXdIbkh4SkptTldoSlNNTmFPVTdUbTFNdHVjUmFCak9o?=
+ =?utf-8?B?NGNIVXh0OVYzOTlMYmNqV2E0Z1IrVlp4SDRxNlJLUzJjU0ZyeWVkTXh5VmZL?=
+ =?utf-8?B?VU9YSS93a0xNb2NEUnkxczJiL1RJa2hSN21qU1pvNlpLSUVoZXJvWm5ucnAr?=
+ =?utf-8?B?VGQ2SGxVdFlYUWlhdnFpRk5vcjhPbDZHUk82eXR6ekgvZ0FzZERkU2dWNXJk?=
+ =?utf-8?B?eUlQSStxbnBXT3pOUTF3a3d1dmdzTmsxcmxWUk9hb2ttQVk5TWdreElNeE4x?=
+ =?utf-8?Q?ccODzAMAuM4JGY0NqHX3MeV8K?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bc3b249-834e-4ea0-72b9-08dc280697d6
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2024 17:59:56.5717
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SHthocRSebv26qI3414ozSrwBJ1tjRM1w7DUj1ZC3boJoUHLXWnlbtM6T6LNMLVQ3deCLgpG5+YLexzmczPxsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5123
 
-Add a new VM guest mode VM_MODE_PXXV48_4K_USER to set the user bit of
-guest page table entries, thus allow user level code to run in guests.
+Hi Baolu,
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Xin Li <xin3.li@intel.com>
----
- .../testing/selftests/kvm/include/kvm_util_base.h |  1 +
- tools/testing/selftests/kvm/lib/kvm_util.c        |  5 ++++-
- .../testing/selftests/kvm/lib/x86_64/processor.c  | 15 ++++++++++-----
- tools/testing/selftests/kvm/lib/x86_64/vmx.c      |  4 ++--
- 4 files changed, 17 insertions(+), 8 deletions(-)
+On 2/7/2024 5:59 PM, Baolu Lu wrote:
+> On 2024/2/7 10:50, Tian, Kevin wrote:
+>>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>>> Sent: Wednesday, February 7, 2024 9:33 AM
+>>>
+>>> Convert iopf_queue_remove_device() to return void instead of an error code,
+>>> as the return value is never used. This removal helper is designed to be
+>>> never-failed, so there's no need for error handling.
+>>>
+>>> Ack all outstanding page requests from the device with the response code of
+>>> IOMMU_PAGE_RESP_INVALID, indicating device should not attempt any retry.
+>>>
+>>> Add comments to this helper explaining the steps involved in removing a
+>>> device from the iopf queue and disabling its PRI. The individual drivers
+>>> are expected to be adjusted accordingly. Here we just define the expected
+>>> behaviors of the individual iommu driver from the core's perspective.
+>>>
+>>> Suggested-by: Jason Gunthorpe<jgg@nvidia.com>
+>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>>> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+>>> Tested-by: Yan Zhao<yan.y.zhao@intel.com>
+>> Reviewed-by: Kevin Tian<kevin.tian@intel.com>, with one nit:
+>>
+>>> + * Removing a device from an iopf_queue. It's recommended to follow
+>>> these
+>>> + * steps when removing a device:
+>>>    *
+>>> - * Return: 0 on success and <0 on error.
+>>> + * - Disable new PRI reception: Turn off PRI generation in the IOMMU
+>>> hardware
+>>> + *   and flush any hardware page request queues. This should be done
+>>> before
+>>> + *   calling into this helper.
+>>> + * - Acknowledge all outstanding PRQs to the device: Respond to all
+>>> outstanding
+>>> + *   page requests with IOMMU_PAGE_RESP_INVALID, indicating the device
+>>> should
+>>> + *   not retry. This helper function handles this.
+>> this implies calling iopf_queue_remove_device() here.
+>>
+>>> + * - Disable PRI on the device: After calling this helper, the caller could
+>>> + *   then disable PRI on the device.
+>>> + * - Call iopf_queue_remove_device(): Calling iopf_queue_remove_device()
+>>> + *   essentially disassociates the device. The fault_param might still exist,
+>>> + *   but iommu_page_response() will do nothing. The device fault parameter
+>>> + *   reference count has been properly passed from
+>>> iommu_report_device_fault()
+>>> + *   to the fault handling work, and will eventually be released after
+>>> + *   iommu_page_response().
+>>>    */
+>> but here it suggests calling iopf_queue_remove_device() again. If the comment
+>> is just about to detail the behavior with that invocation shouldn't it be merged
+>> with the previous one instead of pretending to be the final step for driver
+>> to call?
+> 
+> Above just explains the behavior of calling iopf_queue_remove_device().
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-index 9e5afc472c14..ea1a585ef6f4 100644
---- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-@@ -187,6 +187,7 @@ enum vm_guest_mode {
- 	VM_MODE_P36V48_16K,
- 	VM_MODE_P36V48_64K,
- 	VM_MODE_P36V47_16K,
-+	VM_MODE_PXXV48_4K_USER,	/* For 48bits VA but ANY bits PA with USER bit set */
- 	NUM_VM_MODES,
- };
- 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index e066d584c656..8b4761836b3e 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -163,6 +163,7 @@ const char *vm_guest_mode_string(uint32_t i)
- 		[VM_MODE_P36V48_16K]	= "PA-bits:36,  VA-bits:48, 16K pages",
- 		[VM_MODE_P36V48_64K]	= "PA-bits:36,  VA-bits:48, 64K pages",
- 		[VM_MODE_P36V47_16K]	= "PA-bits:36,  VA-bits:47, 16K pages",
-+		[VM_MODE_PXXV48_4K_USER]	= "PA-bits:ANY, VA-bits:48,  4K user pages",
- 	};
- 	_Static_assert(sizeof(strings)/sizeof(char *) == NUM_VM_MODES,
- 		       "Missing new mode strings?");
-@@ -189,6 +190,7 @@ const struct vm_guest_mode_params vm_guest_mode_params[] = {
- 	[VM_MODE_P36V48_16K]	= { 36, 48,  0x4000, 14 },
- 	[VM_MODE_P36V48_64K]	= { 36, 48, 0x10000, 16 },
- 	[VM_MODE_P36V47_16K]	= { 36, 47,  0x4000, 14 },
-+	[VM_MODE_PXXV48_4K_USER]	= {  0,  0,  0x1000, 12 },
- };
- _Static_assert(sizeof(vm_guest_mode_params)/sizeof(struct vm_guest_mode_params) == NUM_VM_MODES,
- 	       "Missing new mode params?");
-@@ -263,6 +265,7 @@ struct kvm_vm *____vm_create(struct vm_shape shape)
- 		vm->pgtable_levels = 3;
- 		break;
- 	case VM_MODE_PXXV48_4K:
-+	case VM_MODE_PXXV48_4K_USER:
- #ifdef __x86_64__
- 		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
- 		/*
-@@ -278,7 +281,7 @@ struct kvm_vm *____vm_create(struct vm_shape shape)
- 		vm->pgtable_levels = 4;
- 		vm->va_bits = 48;
- #else
--		TEST_FAIL("VM_MODE_PXXV48_4K not supported on non-x86 platforms");
-+		TEST_FAIL("VM_MODE_PXXV48_4K(_USER) not supported on non-x86 platforms");
- #endif
- 		break;
- 	case VM_MODE_P47V64_4K:
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index d8288374078e..a8e60641df53 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -124,8 +124,8 @@ bool kvm_is_tdp_enabled(void)
- 
- void virt_arch_pgd_alloc(struct kvm_vm *vm)
- {
--	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
--		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
-+	TEST_ASSERT((vm->mode == VM_MODE_PXXV48_4K) || (vm->mode == VM_MODE_PXXV48_4K_USER),
-+		"Attempt to use unknown or unsupported guest mode, mode: 0x%x", vm->mode);
- 
- 	/* If needed, create page map l4 table. */
- 	if (!vm->pgd_created) {
-@@ -159,6 +159,8 @@ static uint64_t *virt_create_upper_pte(struct kvm_vm *vm,
- 
- 	if (!(*pte & PTE_PRESENT_MASK)) {
- 		*pte = PTE_PRESENT_MASK | PTE_WRITABLE_MASK;
-+		if (vm->mode == VM_MODE_PXXV48_4K_USER)
-+			*pte |= PTE_USER_MASK;
- 		if (current_level == target_level)
- 			*pte |= PTE_LARGE_MASK | (paddr & PHYSICAL_PAGE_MASK);
- 		else
-@@ -185,7 +187,7 @@ void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
- 	uint64_t *pml4e, *pdpe, *pde;
- 	uint64_t *pte;
- 
--	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K,
-+	TEST_ASSERT((vm->mode == VM_MODE_PXXV48_4K) || (vm->mode == VM_MODE_PXXV48_4K_USER),
- 		    "Unknown or unsupported guest mode, mode: 0x%x", vm->mode);
- 
- 	TEST_ASSERT((vaddr % pg_size) == 0,
-@@ -222,6 +224,8 @@ void __virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr, int level)
- 	TEST_ASSERT(!(*pte & PTE_PRESENT_MASK),
- 		    "PTE already present for 4k page at vaddr: 0x%lx\n", vaddr);
- 	*pte = PTE_PRESENT_MASK | PTE_WRITABLE_MASK | (paddr & PHYSICAL_PAGE_MASK);
-+	if (vm->mode == VM_MODE_PXXV48_4K_USER)
-+		*pte |= PTE_USER_MASK;
- }
- 
- void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
-@@ -268,8 +272,8 @@ uint64_t *__vm_get_page_table_entry(struct kvm_vm *vm, uint64_t vaddr,
- 	TEST_ASSERT(*level >= PG_LEVEL_NONE && *level < PG_LEVEL_NUM,
- 		    "Invalid PG_LEVEL_* '%d'", *level);
- 
--	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
--		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
-+	TEST_ASSERT((vm->mode == VM_MODE_PXXV48_4K) || (vm->mode == VM_MODE_PXXV48_4K_USER),
-+		"Attempt to use unknown or unsupported guest mode, mode: 0x%x", vm->mode);
- 	TEST_ASSERT(sparsebit_is_set(vm->vpages_valid,
- 		(vaddr >> vm->page_shift)),
- 		"Invalid virtual address, vaddr: 0x%lx",
-@@ -536,6 +540,7 @@ static void vcpu_setup(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
- 
- 	switch (vm->mode) {
- 	case VM_MODE_PXXV48_4K:
-+	case VM_MODE_PXXV48_4K_USER:
- 		sregs.cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
- 		sregs.cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
- 		sregs.efer |= (EFER_LME | EFER_LMA | EFER_NX);
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index 59d97531c9b1..65147de6f9c0 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -403,8 +403,8 @@ void __nested_pg_map(struct vmx_pages *vmx, struct kvm_vm *vm,
- 	struct eptPageTableEntry *pt = vmx->eptp_hva, *pte;
- 	uint16_t index;
- 
--	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
--		    "unknown or unsupported guest mode, mode: 0x%x", vm->mode);
-+	TEST_ASSERT((vm->mode == VM_MODE_PXXV48_4K) || (vm->mode == VM_MODE_PXXV48_4K_USER),
-+		    "Attempt to use unknown or unsupported guest mode, mode: 0x%x", vm->mode);
- 
- 	TEST_ASSERT((nested_paddr >> 48) == 0,
- 		    "Nested physical address 0x%lx requires 5-level paging",
--- 
-2.43.0
+Can you please leave a line -OR- move this to previous para? Otherwise we will
+get confused.
 
+-Vasant
