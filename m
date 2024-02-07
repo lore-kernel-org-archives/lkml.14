@@ -1,90 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDEE15DF1D;
-	Wed,  7 Feb 2024 21:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CD5157047;
+	Wed,  7 Feb 2024 21:26:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341159; cv=none; b=c4KJODKMHCt7mDBrgiRAULtMsheFtL1pinEJL4n5AEZs8cG/UGOB9278fIhvcJ0ogPDyL02R5upYuOJjUSxAUR2IhdUHtWyi4kvJk7zjsUqAbqs1oKUPXeosFjzOfoa7oXQS0EpzYbJPeh7G42L8GUxHtdaYlIliTvQON29gD3s=
+	t=1707341160; cv=none; b=WJJW/2n6bv8wVS3fsK1aJ9T0ntgMX61owzPTUIOCuewKqbKFWBX0D99g2s0uB+81hsMjg6DlwCRs6cag3XfPVygq1RYksn6wHaOjLFmnbtlImHJWRf8v5e347+W3w29YuUiSqf/HZ4dFFz4Jq8T9+8k8kY7CCBR6azluMfQ0ewY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341159; c=relaxed/simple;
-	bh=e+Z2YkeWHVp4lNUuM47W5BZGrVfrvL38YMqC+CmljIM=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=sUHR9DSy2Z77X+8Lb9baipiplf3U/sTHBGk6h+ySO9XLOS38xUOa4qDEoX099C1T8lL9oIDxox9JFCvPe1uOtfA4hEM6EhoVd6ZeVRIrO+S+qsIy27oXYtjzNwx44wPr6Qo1fmDUFWCq72d9ZxS8RdVIdvx7RiaJ6igAj6clhb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl3hCxpQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707341160; c=relaxed/simple;
+	bh=3Zria3SDjxCD65ZC/gxaL0fTaARSqCzzrAlR5RzhxVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lZoSC0ebHk+lrfNE/v2+xw3rfvEFLAoxiZ6Ptu6d1Phlwp80QTOHSTFhrlNC3grd25aFpZZB/aN1bd3r5jFznlywp3wgoBzjJr5lXYBBwdMz5m5yx5QNUkS8AHz59BELIGuhlTzanuebbwBqTHdDBV6ND0kUQEkt+z0RImfMJdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPVxFCGu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl3hCxpQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24EA9C433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPVxFCGu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C37C433F1;
 	Wed,  7 Feb 2024 21:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707341159;
-	bh=e+Z2YkeWHVp4lNUuM47W5BZGrVfrvL38YMqC+CmljIM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=hl3hCxpQs3nZiA1Cfh0NDG/eOrfjD5H7qfTLdu8uBoKH62DkZVPbLOFWSJkCqWVDC
-	 0NBRSeCa80sfou54B9gt34GlGZX/eL5vgUpGfOL4kIqwo/kz+nqpvLKkrk61p0Awzd
-	 4yFlThgspST435hR4UowPVFyg16910/+x+tInsLegxwhlzY/GvCa3e48BEe8OkgxSK
-	 lrzM1GB8mb6f6hnK2seoSg+TGObb3ntQEVkwod+rPx7S2ljkSNwfNze4lsXenYPpK6
-	 3ubDyh+FJhVhZnP672fLPJ2hINoIN8ZJyRJliOWVVCz0YEJPCdVprpeXlcaGShcVEG
-	 tOlDrkGbaalqQ==
-Date: Wed, 07 Feb 2024 21:25:57 +0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	bh=3Zria3SDjxCD65ZC/gxaL0fTaARSqCzzrAlR5RzhxVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iPVxFCGum/F+LblTBTWL8Sn+tBXlVxiitMU//oo7LnorzSQLhSDJ8t2CZXlVUDgsH
+	 tyXU9IqVtK4yzDw+AVxaUQlSKVL8CfSTb9tyfoVO5pKqWgN1YOYjZv5Dinicamg6ti
+	 j/VQN7TwXmeml95y7IGOxqJIQGZ3Z78BlJpUS3BWgzbZh+qH6U9/AC2jDzKWBPuBT3
+	 3jvpDdmGE00D4vwQ6VSaY0O2iqgYN9IYKekrpo8yJFfGBUcT0WFrl8haEXHk9lovbE
+	 i1PvIQlsgbvD0uplLYybR1nRskLDcP3Fmiv9Y6ERSEIUlby9hzYoPQkpK4JsSDubfR
+	 AMlxd19bbaVww==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Paulo Alcantara <pc@manguebit.com>,
+	Steve French <stfrench@microsoft.com>,
+	Sasha Levin <sashal@kernel.org>,
+	sfrench@samba.org,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 6.1 27/29] smb: client: increase number of PDUs allowed in a compound request
+Date: Wed,  7 Feb 2024 16:24:52 -0500
+Message-ID: <20240207212505.3169-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240207212505.3169-1-sashal@kernel.org>
+References: <20240207212505.3169-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Charles Perry <charles.perry@savoirfairelinux.com>
-Cc: Rob Herring <robh+dt@kernel.org>, avandiver@markem-imaje.com, 
- bcody@markem-imaje.com, mdf@kernel.org, linux-fpga@vger.kernel.org, 
- kishore Manne <nava.kishore.manne@amd.com>, devicetree@vger.kernel.org, 
- Wu Hao <hao.wu@intel.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- linux-kernel@vger.kernel.org, Michal Simek <michal.simek@amd.com>, 
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- Tom Rix <trix@redhat.com>, Xu Yilun <yilun.xu@intel.com>
-In-Reply-To: <20240207180142.79625-5-charles.perry@savoirfairelinux.com>
-References: <20240207180142.79625-1-charles.perry@savoirfairelinux.com>
- <20240207180142.79625-5-charles.perry@savoirfairelinux.com>
-Message-Id: <170734115258.3199432.9793593609172465868.robh@kernel.org>
-Subject: Re: [PATCH v3 4/5] dt-bindings: fpga: xlnx,fpga-selectmap: add DT
- schema
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.77
+Content-Transfer-Encoding: 8bit
 
+From: Paulo Alcantara <pc@manguebit.com>
 
-On Wed, 07 Feb 2024 13:01:27 -0500, Charles Perry wrote:
-> Document the SelectMAP interface of Xilinx 7 series FPGA.
-> 
-> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
-> ---
->  .../bindings/fpga/xlnx,fpga-selectmap.yaml    | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
-> 
+[ Upstream commit 11d4d1dba3315f73d2d1d386f5bf4811a8241d45 ]
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+With the introduction of SMB2_OP_QUERY_WSL_EA, the client may now send
+5 commands in a single compound request in order to query xattrs from
+potential WSL reparse points, which should be fine as we currently
+allow up to 5 PDUs in a single compound request.  However, if
+encryption is enabled (e.g. 'seal' mount option) or enforced by the
+server, current MAX_COMPOUND(5) won't be enough as we require an extra
+PDU for the transform header.
 
-yamllint warnings/errors:
+Fix this by increasing MAX_COMPOUND to 7 and, while we're at it, add
+an WARN_ON_ONCE() and return -EIO instead of -ENOMEM in case we
+attempt to send a compound request that couldn't include the extra
+transform header.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.example.dtb: /example-0/fpga-mgr@8000000: failed to match any schema with compatible: ['xlnx,fpga-selectmap']
+Signed-off-by: Paulo Alcantara <pc@manguebit.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/smb/client/cifsglob.h  | 2 +-
+ fs/smb/client/transport.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240207180142.79625-5-charles.perry@savoirfairelinux.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/fs/smb/client/cifsglob.h b/fs/smb/client/cifsglob.h
+index 7f1aea4c11b9..58bb54994e22 100644
+--- a/fs/smb/client/cifsglob.h
++++ b/fs/smb/client/cifsglob.h
+@@ -86,7 +86,7 @@
+ #define SMB_INTERFACE_POLL_INTERVAL	600
+ 
+ /* maximum number of PDUs in one compound */
+-#define MAX_COMPOUND 5
++#define MAX_COMPOUND 7
+ 
+ /*
+  * Default number of credits to keep available for SMB3.
+diff --git a/fs/smb/client/transport.c b/fs/smb/client/transport.c
+index 8a1dd8407a3a..c7254b321184 100644
+--- a/fs/smb/client/transport.c
++++ b/fs/smb/client/transport.c
+@@ -449,8 +449,8 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	if (!(flags & CIFS_TRANSFORM_REQ))
+ 		return __smb_send_rqst(server, num_rqst, rqst);
+ 
+-	if (num_rqst > MAX_COMPOUND - 1)
+-		return -ENOMEM;
++	if (WARN_ON_ONCE(num_rqst > MAX_COMPOUND - 1))
++		return -EIO;
+ 
+ 	if (!server->ops->init_transform_rq) {
+ 		cifs_server_dbg(VFS, "Encryption requested but transform callback is missing\n");
+-- 
+2.43.0
 
