@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8CE1F61C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 07:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1A1200D8
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 07:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707290904; cv=none; b=RW9BW6cVGHfW6w5uAfiPBezNBcJzwZsFMMn6CsZq9i5zq5kkPM2+F15nb+22iAaInGIfPdK4y0/Si0VA5frETgMzxHriMCt6rIpWp+rxZ4LU4fxnLlwKFY6q3Lbj35AzhAGUF7lks+o0sjV0a2X0TS3GbTzM1fC7jE6CpV2Ee0A=
+	t=1707290907; cv=none; b=EHYZTLJIoD8HTxkQD1GMn0JVfDXC6EpdACujMVBOCnogPGJ226Q18rdiRzGks7JjVhzFDcNHdr2fUupsq9VftZRb1ccPgmLSM9wEeWvUBqdvKaUn6uTiOpUX6+hdSpL6d69/1QaIh1QhW1cDsCZbNago1qbZ+SYbv9Sgm+TjL6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707290904; c=relaxed/simple;
-	bh=eGtrr4VW10JCFCUBkjAf6PTQszmNmJaBy09Ocx3LzZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E43YO/wlDHL7VCLwD1TMefNGHEyXxhDMDhSvEoMGeHTX1NwW/J97UUFQup+0LvzQS9v8YfRJiWrKB61g8aqOvyRuoryPECSlVIbCg7FR1PRAqODo6hEbjZc76irrMHLddioj4txLTrm59b+3uoO4MjJKBdhprYsFwS8jcjV6QGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5BR/Drb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707290907; c=relaxed/simple;
+	bh=HJ8IhDMnRtXRcH7QQWNi/3y6XYnFHwSd1H1sIxy1Luo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uJ4FTg4lFYiDuCvaCAFSW7uNaMBSRUEwT5ZSieFuLz4FBA69l4La8O/gy2nHeWGVNOcKP0O2qiWvTuqzZJTkTYw9XKIMsAp0DnkknJOwfBK9rmxoWIEIhckxeZmtVCUblNNe2PrEQasuqdIiKKyMfIhadQ7lWm38HlDeKS4zcCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3bolgMW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5BR/Drb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DB6C433C7;
-	Wed,  7 Feb 2024 07:28:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3bolgMW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BE8C433F1;
+	Wed,  7 Feb 2024 07:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707290903;
-	bh=eGtrr4VW10JCFCUBkjAf6PTQszmNmJaBy09Ocx3LzZk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k5BR/DrbkoYmLsOW1P3a06ls7ei+TGqP/YQvryerjvBVCOJTy+Yl3eVUh5IV3yd+/
-	 MdLE8TGDOFvDzNyAIFADTTReAU2noF5KT3WUvjBDB6yqomhmW63VFiY4JZ9Vl3Uf/s
-	 BliPXa3reIZOVMKTKSlXeQd2a/2uU7+dwwDVGM6CBZr+swA8JHASdx7h6LRE2U3AP1
-	 bnAY4ECSU04peF60ukbSFOrYdfPOwD7uLeljTonEcS8IO5FAUmd8k1a8cKo/5CIAEI
-	 KzVx/BeXhRidQJ1RdG+fDVx+gVoEBMEnWG6cNzsgsYa/jp4951SMnILOEK+gtfFh8T
-	 y+6M3VVyA2pMw==
+	s=k20201202; t=1707290907;
+	bh=HJ8IhDMnRtXRcH7QQWNi/3y6XYnFHwSd1H1sIxy1Luo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=g3bolgMWjULeKQeo+0Oa9LrdecwhDRU38coASeGAR3jLmh6ZBKfnbaIj1VQebVm0C
+	 W0Dw5FE4WeUfIJM28Lx0LFaw7OhhcEFLWfU3pjTA3XWt9jlQ6HRwoPsVoApPDI4eHt
+	 MtZWzItScs3bZsCm5PfckL3/XkiyapCnCVMWZnIM7hIyLSStwyXdXbVVWd99yfCcOK
+	 mGjicbOdj5bPpDYp5wX0SVPn3MRNC7QaH/PmlBP3naTXwmKDyankEMQ3SI+aYWFYB8
+	 tzj5F81DEJ4XS9fSZIoHZjKXhM50eS+olG9L/oAntJygN3YLG3XA7WuSP7rYErR41e
+	 G3s0BVw8o31sw==
 From: Saeed Mahameed <saeed@kernel.org>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -40,10 +41,12 @@ Cc: Leon Romanovsky <leonro@nvidia.com>,
 	Christoph Hellwig <hch@infradead.org>,
 	andrew.gospodarek@broadcom.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Date: Tue,  6 Feb 2024 23:24:30 -0800
-Message-ID: <20240207072435.14182-1-saeed@kernel.org>
+Subject: [PATCH V4 3/5] misc: mlx5ctl: Add info ioctl
+Date: Tue,  6 Feb 2024 23:24:33 -0800
+Message-ID: <20240207072435.14182-4-saeed@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240207072435.14182-1-saeed@kernel.org>
+References: <20240207072435.14182-1-saeed@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,212 +57,155 @@ Content-Transfer-Encoding: 8bit
 
 From: Saeed Mahameed <saeedm@nvidia.com>
 
-Recap from V3 discussion:
-=========================
-
-LWN has published an article on this series aptly summarizing the debate.
-LINK: https://lwn.net/Articles/955001/
-
-We continue to think that mlx5ctl is reasonable and aligned with the
-greater kernel community values. People have pointed to the HW RAID
-miscdevices as a good analog. The MD developers did not get to block HW
-RAID configuration on the basis that it undermines their work on the
-software RAID stack. Further, while there is a superficial similarity to
-the DRM/accel debate, that was grounded in a real concern that DRM values
-on open source would be bypassed. That argument does not hold up here as
-this does come with open source userspace and the functionality mlx5ctl
-enables on lockdown has always been available to ConnectX users through
-the non-lockdown PCI sysfs. netdev has been doing just fine despite the
-long standing presence of this tooling and we have continued to work with
-Jakub on building common APIs when appropriate. mlx5 already implements
-a wide range of the netdev common interfaces, many of which were pushed
-forward by our staff - the DPLL configuration netlink being a recent
-example.
-
-Version history:
-================
-V3: https://lore.kernel.org/all/20231121070619.9836-1-saeed@kernel.org/#r
-V2: https://lore.kernel.org/all/20231119092450.164996-1-saeed@kernel.org/#r
-V1: https://lore.kernel.org/all/20231018081941.475277-1-saeed@kernel.org/#r
-
-V3->V4:
- - Document locking scheme for device lifecycle
- - Document reserved bits will always be checked for 0 by driver
- - Use GFP_KERNEL instead of ACCOUNT for short lived buffers
- - Create sysfs link to parent device under the misc device's sysfs
- - Remove unnecessary device name from info ioctl output
- - Remove reserved and future flags fields from ioctls
- - Precise size checking for ioctl user input.
-
-V2->V3:
-  - Fix bad Sign-off line.
-  - Fix kernel robot warnings, define a user ptr arg for umem_unreg ioctl
-    instead of plain integer to simplify compat_ioctl usage.
-
-V1->V2:
-  - Provide legal statement and sign-off for dual license use
-  - Fix License clause to use: BSD-3-Clause OR GPL-2.0
-  - Fix kernel robot warnings
-  - Use dev_dbg directly instead of umem_dbg() local wrapper
-  - Implement .compat_ioctl for 32bit compatibility
-  - Fix mlx5ctl_info ABI structure size and alignment
-  - Local pointer to correct type instead of in-place cast
-  - Check unused fields and flags are 0 on ioctl path
-  - Use correct macro to declare scalar arg ioctl command
-    #define MLX5CTL_IOCTL_UMEM_UNREG \
-           _IO(MLX5CTL_IOCTL_MAGIC, 0x3)
-
-mlx5 ConnectX control misc driver:
-==================================
-
-The ConnectX HW family supported by the mlx5 drivers uses an architecture
-where a FW component executes "mailbox RPCs" issued by the driver to make
-changes to the device. This results in a complex debugging environment
-where the FW component has information and low level configuration that
-needs to be accessed to userspace for debugging purposes.
-
-Historically a userspace program was used that accessed the PCI register
-and config space directly through /sys/bus/pci/.../XXX and could operate
-these debugging interfaces in parallel with the running driver.
-This approach is incompatible with secure boot and kernel lockdown so this
-driver provides a secure and restricted interface to that.
-
-Patch breakdown:
-================
-
-1) The first patch in the series introduces the main driver file with the
-implementation of a new mlx5 auxiliary device driver to run on top
-mlx5_core device instances, on probe it creates a new misc device and in
-this patch we implement the open and release fops, On open the driver
-would allocate a special FW UID (user context ID) restricted to debug
-RPCs only, where all user debug rpcs will be executed under this UID,
-and on release the UID will be freed.
-
-2) The second patch adds an info ioctl that will show the allocated UID
-and the available capability masks of the device and the current UID, and
-some other useful device information such as the underlying ConnectX
+Implement INFO ioctl to return the allocated UID and the capability flags
+and some other useful device information.
 
 Example:
-    $ sudo ./mlx5ctlu mlx5_core.ctl.0
-    mlx5dev: 0000:00:04.0
-    UCTX UID: 1
-    UCTX CAP: 0x3
-    DEV UCTX CAP: 0x3
-    USER CAP: 0x1d
+$ sudo ./mlx5ctl mlx5_core.ctl.0
+UCTX UID: 1
+UCTX CAP: 0x3
+DEV UCTX CAP: 0x3
+USER CAP: 0x1d
 
-3) Third patch will add the capability to execute debug RPCs under the
-special UID.
-
-In the mlx5 architecture the FW RPC commands are of the format of
-inbox and outbox buffers. The inbox buffer contains the command
-rpc layout as described in the ConnectX Programmers Reference Manual
-(PRM) document and as defined in linux/include/mlx5/mlx5_ifc.h.
-
-On success the user outbox buffer will be filled with the device's rpc
-response.
-
-For example to query device capabilities:
-a user fills out an inbox buffer with the inbox layout:
-    struct mlx5_ifc_query_hca_cap_in_bits
-and expects an outbox buffer with the layout:
-     struct mlx5_ifc_cmd_hca_cap_bits
-
-4) The fourth patch adds the ability to register user memory into the
-ConntectX device and create a umem object that points to that memory.
-
-Command rpc outbox buffer is limited in size, which can be very
-annoying when trying to pull large traces out of the device.
-Many rpcs offer the ability to scatter output traces, contexts
-and logs directly into user space buffers in a single shot.
-
-The registered memory will be described by a device UMEM object which
-has a unique umem_id, this umem_id can be later used in the rpc inbox
-to tell the device where to populate the response output,
-e.g HW traces and other debug object queries.
-
-Example usecase, a ConnectX device coredump can be as large as 2MB.
-Using inline rpcs will take thousands of rpcs to get the full
-coredump which can consume multiple seconds.
-
-With UMEM, it can be done in a single rpc, using 2MB of umem user buffer.
-
-Other usecases with umem:
-  - dynamic HW and FW trace monitoring
-  - high frequency diagnostic counters sampling
-  - batched objects and resource dumps
-
-See links below for information about user space tools that use this
-interface:
-
-[1] https://github.com/saeedtx/mlx5ctl
-
-[2] https://github.com/Mellanox/mstflint
-see:
-
-   d) mstregdump utility
-      This utility dumps hardware registers from Mellanox hardware
-      for later analysis by Mellanox.
-
-    g) mstconfig
-      This tool sets or queries non-volatile configurable options
-      for Mellanox HCAs.
-
-    h) mstfwmanager
-      Mellanox firmware update and query utility which scans the system
-      for available Mellanox devices (only mst PCI devices) and performs
-      the necessary firmware updates.
-
-    i) mstreg
-      The mlxreg utility allows users to obtain information regarding
-      supported access registers, such as their fields
-
-License: BSD-3-Clause OR GPL-2.0
-================================
-After a review of this thread [3], and a conversation with the LF,
-Mellanox and NVIDIA legal continue to approve the use of a Dual GPL &
-Permissive License for mlx5 related driver contributions. This makes it
-clear to future contributors that this file may be adapted and reused
-under BSD-3-Clause terms on other operating systems. Contributions will
-be handled in the normal way and the dual license will apply
-automatically. If people wish to contribute significantly and opt out of
-a dual license they may separate their GPL only contributions in dedicated
-files.
-
-Jason has a signing authority for NVIDIA and has gone through our internal
-process to get approval.
-
-[3] https://lore.kernel.org/all/20231018081941.475277-3-saeed@kernel.org/#r
-
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com> # for legal
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
-Nacked-by: Jakub Kicinski <kuba@kernel.org>
-
-Saeed Mahameed (5):
-  mlx5: Add aux dev for ctl interface
-  misc: mlx5ctl: Add mlx5ctl misc driver
-  misc: mlx5ctl: Add info ioctl
-  misc: mlx5ctl: Add command rpc ioctl
-  misc: mlx5ctl: Add umem reg/unreg ioctl
-
- .../userspace-api/ioctl/ioctl-number.rst      |   1 +
- MAINTAINERS                                   |   8 +
- drivers/misc/Kconfig                          |   1 +
- drivers/misc/Makefile                         |   1 +
- drivers/misc/mlx5ctl/Kconfig                  |  14 +
- drivers/misc/mlx5ctl/Makefile                 |   5 +
- drivers/misc/mlx5ctl/main.c                   | 597 ++++++++++++++++++
- drivers/misc/mlx5ctl/umem.c                   | 322 ++++++++++
- drivers/misc/mlx5ctl/umem.h                   |  17 +
- drivers/net/ethernet/mellanox/mlx5/core/dev.c |   8 +
- include/uapi/misc/mlx5ctl.h                   |  50 ++
- 11 files changed, 1024 insertions(+)
- create mode 100644 drivers/misc/mlx5ctl/Kconfig
- create mode 100644 drivers/misc/mlx5ctl/Makefile
- create mode 100644 drivers/misc/mlx5ctl/main.c
- create mode 100644 drivers/misc/mlx5ctl/umem.c
- create mode 100644 drivers/misc/mlx5ctl/umem.h
+---
+ .../userspace-api/ioctl/ioctl-number.rst      |  1 +
+ drivers/misc/mlx5ctl/main.c                   | 68 +++++++++++++++++++
+ include/uapi/misc/mlx5ctl.h                   | 20 ++++++
+ 3 files changed, 89 insertions(+)
  create mode 100644 include/uapi/misc/mlx5ctl.h
 
---
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 457e16f06e04..17e6ab6d0d9f 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -89,6 +89,7 @@ Code  Seq#    Include File                                           Comments
+ 0x20  all    drivers/cdrom/cm206.h
+ 0x22  all    scsi/sg.h
+ 0x3E  00-0F  linux/counter.h                                         <mailto:linux-iio@vger.kernel.org>
++0x5c  all    uapi/misc/mlx5ctl.h                                     Nvidia ConnectX control
+ '!'   00-1F  uapi/linux/seccomp.h
+ '#'   00-3F                                                          IEEE 1394 Subsystem
+                                                                      Block for the entire subsystem
+diff --git a/drivers/misc/mlx5ctl/main.c b/drivers/misc/mlx5ctl/main.c
+index 314aeb45bb8e..e4e70359dbe8 100644
+--- a/drivers/misc/mlx5ctl/main.c
++++ b/drivers/misc/mlx5ctl/main.c
+@@ -8,6 +8,7 @@
+ #include <linux/auxiliary_bus.h>
+ #include <linux/mlx5/device.h>
+ #include <linux/mlx5/driver.h>
++#include <uapi/misc/mlx5ctl.h>
+ #include <linux/atomic.h>
+ #include <linux/refcount.h>
+ 
+@@ -214,10 +215,77 @@ static int mlx5ctl_release(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++static int mlx5ctl_info_ioctl(struct file *file,
++			      struct mlx5ctl_info __user *arg,
++			      size_t usize)
++{
++	struct mlx5ctl_fd *mfd = file->private_data;
++	size_t ksize = sizeof(struct mlx5ctl_info);
++	struct mlx5ctl_dev *mcdev = mfd->mcdev;
++	struct mlx5_core_dev *mdev = mcdev->mdev;
++	struct mlx5ctl_info *info;
++	int err = 0;
++
++	if (usize < ksize)
++		return -EINVAL;
++
++	info = kzalloc(ksize, GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->dev_uctx_cap = MLX5_CAP_GEN(mdev, uctx_cap);
++	info->uctx_cap = mfd->uctx_cap;
++	info->uctx_uid = mfd->uctx_uid;
++	info->ucap = mfd->ucap;
++
++	if (copy_to_user(arg, info, ksize))
++		err = -EFAULT;
++
++	kfree(info);
++	return err;
++}
++
++static long mlx5ctl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	struct mlx5ctl_fd *mfd = file->private_data;
++	struct mlx5ctl_dev *mcdev = mfd->mcdev;
++	void __user *argp = (void __user *)arg;
++	size_t size = _IOC_SIZE(cmd);
++	int err = 0;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	mlx5ctl_dbg(mcdev, "ioctl 0x%x type/nr: %d/%d size: %d DIR:%d\n", cmd,
++		    _IOC_TYPE(cmd), _IOC_NR(cmd), _IOC_SIZE(cmd), _IOC_DIR(cmd));
++
++	down_read(&mcdev->rw_lock);
++	if (!mcdev->mdev) {
++		err = -ENODEV;
++		goto unlock;
++	}
++
++	switch (cmd) {
++	case MLX5CTL_IOCTL_INFO:
++		err = mlx5ctl_info_ioctl(file, argp, size);
++		break;
++
++	default:
++		mlx5ctl_dbg(mcdev, "Unknown ioctl %x\n", cmd);
++		err = -ENOTTY;
++		break;
++	}
++unlock:
++	up_read(&mcdev->rw_lock);
++	return err;
++}
++
+ static const struct file_operations mlx5ctl_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = mlx5ctl_open,
+ 	.release = mlx5ctl_release,
++	.unlocked_ioctl = mlx5ctl_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static int mlx5ctl_probe(struct auxiliary_device *adev,
+diff --git a/include/uapi/misc/mlx5ctl.h b/include/uapi/misc/mlx5ctl.h
+new file mode 100644
+index 000000000000..9be944128025
+--- /dev/null
++++ b/include/uapi/misc/mlx5ctl.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 WITH Linux-syscall-note */
++/* Copyright (c) 2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved. */
++
++#ifndef __MLX5CTL_IOCTL_H__
++#define __MLX5CTL_IOCTL_H__
++
++struct mlx5ctl_info {
++	__u16 uctx_uid; /* current process allocated UCTX UID */
++	__u16 reserved1; /* explicit padding must be zero */
++	__u32 uctx_cap; /* current process effective UCTX cap */
++	__u32 dev_uctx_cap; /* device's UCTX capabilities */
++	__u32 ucap; /* process user capability */
++};
++
++#define MLX5CTL_IOCTL_MAGIC 0x5c
++
++#define MLX5CTL_IOCTL_INFO \
++	_IOR(MLX5CTL_IOCTL_MAGIC, 0x0, struct mlx5ctl_info)
++
++#endif /* __MLX5CTL_IOCTL_H__ */
+-- 
 2.43.0
 
