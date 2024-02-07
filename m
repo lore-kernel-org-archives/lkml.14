@@ -1,225 +1,181 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C88E7E784
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B6C7E788;
+	Wed,  7 Feb 2024 14:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707317882; cv=none; b=N4jVy8p8EICuipqJ39L4IYUpm8JB1XZcjVN0h0Sz9O7lhWw+73YMLxnIF3lSgK370130VVSjk+9Z/puOtfRjdtiaZi5Cd7aEtc1dtWNNQrXDgyzXfTpkLaxQD64tBhsU1+qEBzBtAF0xVzx9JukjwGyDBb7Mq1b2kftZhaPrWG4=
+	t=1707317897; cv=none; b=aqDtNwtj7Y++ZwgnOIkG606BQnoAzwo47GkWppObvddsj5amS6StGL4Jp7Edv6U0lvBDJjmeAWS6iuRKdFB12gOA0Unw3IFkQkHLEpcdjihiYN2jZRbPVpckt33wRva4yTKbpnG/3i+lTzTMxITg8RPfPEKLvupr5qpw5WDY1gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707317882; c=relaxed/simple;
-	bh=rM2+A4y8ut0HE5QBG5YZ2JHQfLBnTNBkBkI7m8+cGLM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TedGz2NpOOE5t/cupHgZNLX/Fn3vN4AwjmUGLguPEa1WhLTlJADw4hugh6zCULf8V4KEcHJrN1ZoRiCHZdZxdEgS/2EpQqntn4vOa8w2sKa5Gno/oxMDvno5yFf0f/7BUicX+SsDWjbTyYoEDFrytUv5wmpgDwVxrzSf0evN/rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OuLpKG+I; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707317897; c=relaxed/simple;
+	bh=Zcfu4s2mGNxv9U/rabj5bTaiDiHDbjmmMVOXq9x9lOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VAqlt6Wc52BQA8bxncMjYODy7cRkO4wAMb/IQpdRGqpMziEU3bmiwOAlEVHRJapI+SRGu7KloD9SDvomCYQvaEbt1cYOP4bTt8wLPPwEg+YMQyab50XsEL9pzr3f3WTXHPanUrHtXOVtSnhXCxTEZh1QUFX6MsO8lDpMSNZ7RTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dyq7/izO; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OuLpKG+I"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51032058f17so922379e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:57:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707317878; x=1707922678; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yw+ZFLUeQpB09fZ01d0Kcu51k39UdmSHJS8VA8lDgcw=;
-        b=OuLpKG+If3lXrZ5oiUO3/Kld62NxJy2em/FnlpuUWdf8a3CLNTJacfax9xNP0Yeb7r
-         hQ86Ebx2eQHxnAV6IzcPAz2yfW8OX6gt7iyM37vB+fbQ8NY/bA57kKBmQS03y0ZkNZ9L
-         tddXXB6Jl+5UsWLxhkLUe/JAAOeIHOQxpcm0yPYWCiuK5adWXhBVqXqseP9nSwzmqKlb
-         6gCD2KWZKLxHsBY6ugqdZOzQpR2ZrBh8qww1IZNm64E/h2cU6Aj6pQ+I4ox1+OP9o5g2
-         2n/yAGkXRBeJsydhMsHZ086ThYUq7LPBZlAPrwBuSEvVGk1b0AWBGvNfn2mMhgpsocPv
-         l2gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707317878; x=1707922678;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yw+ZFLUeQpB09fZ01d0Kcu51k39UdmSHJS8VA8lDgcw=;
-        b=lv4XF8b8ggVQhYGoN56f+LJ0xqdS8wuAjwN9v+hgT+QsYjSet2s06OfGO/wp32cX2W
-         LFMvsgP2JQBYGWvVIsM7WhxxeAfkmYAJOOqiDfoEgmH6uetIWTt8GyVqtu4XpNzT3f5G
-         F3HDdwS5GnCI2mv6socT2W4A5uBmFVs/mtWPWEu2NJTfusP3l7Im+fM15zSPc2o5spe1
-         AajVssawzFQjIbNR312CJNjacMO+VdIG1gVaYid8ZIQFuYHC6KjNCNrjL/hVhmhOWHla
-         qFbjbpd48Pr/kNbepisMrNufAGTpwpS7uDbWwHCmEnx5OLCz4hTMOtdTqRADhUPLSHJS
-         zxFw==
-X-Gm-Message-State: AOJu0YxG+c9P8/DazZ3AItQGtRzckS9/rBkAL38UroEv7XMwLdbPygy+
-	RKqmyu4+JTKSjKMRlqi3z/s0895XDVNBHOPuzpzAvlelz6xKo37z5Mha6h72Was=
-X-Google-Smtp-Source: AGHT+IEBuN+LXOLtqc7RSSzBK/j0MJWezurLCsLWC9vYUou93riQDpe07JLvts+6zF3X24MvXm+UXQ==
-X-Received: by 2002:a05:6512:3084:b0:511:4cc9:33a4 with SMTP id z4-20020a056512308400b005114cc933a4mr5694360lfd.52.1707317877932;
-        Wed, 07 Feb 2024 06:57:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVlxRNSM79t9F4iAPhnvtvu9WOEBeOlCLIVOLECYq2ynGeg2l9/5JtgRkCvP/X4GN9DIUlg5exAOYRaOPaRYg+rVanDs8g8r9hqSwbo82gMnio+pkZThcC766hCsn44uJZ33WMcIwdYoGhCWdWc9p3Hveaz73ew0oU8XiXgTTsajH6iV8VFiiv9XLLFpVEUFxitAtWWYiAjBXbtPq+IE+Q+iQNJy3Ww4di1w1PBEtGAP1JlGLJ8OT2GNXTxc3/wx0WmjeylMo6WwE9DqX2KhALIaRxGDQR/MPve0qY0dvHAIy2dfzg4XZjrmTYplTylstb+zyXu7DfjXwa/I+7114TGHs+5i0/LQlPz6jUYVSui7Sy81QhU3NH+2T1iEmFbiFmcwg6Dw2oK2v0jL/3ZPrE4TwexUGHKIH8=
-Received: from ?IPV6:2a01:e0a:982:cbb0:5ae7:7fdb:32ad:f6d7? ([2a01:e0a:982:cbb0:5ae7:7fdb:32ad:f6d7])
-        by smtp.gmail.com with ESMTPSA id fa7-20020a05600c518700b0040ef3ae26cdsm2342311wmb.37.2024.02.07.06.57.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 06:57:57 -0800 (PST)
-Message-ID: <cc48bced-7591-4394-a1ad-4e7cd77a7844@linaro.org>
-Date: Wed, 7 Feb 2024 15:57:56 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dyq7/izO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707317896; x=1738853896;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Zcfu4s2mGNxv9U/rabj5bTaiDiHDbjmmMVOXq9x9lOU=;
+  b=dyq7/izOhWh7Pi3LX0OSID8jCOOS8yyTxHGQgFHEFWpn0RhYV2X64c5t
+   JipboQPfriqS3wFlshiA2BE0AH9JA5zUH7ewnMmS92xaEUHMIfdg2H+Ij
+   zzevNE6t2qg39OBiCAVRTXuq/UsUlGkx7EoDUpxKy8FuQhOk2pFYRcZyt
+   kDPb0SKyINFGSlBxBEClDMq40DoVOUoxpHHDdZF8lYwIi1bAnCeOeJTiY
+   v6E2CNXq6ul0GBtfotisj6Vlrcncde7YQkKRN8EzCsKC+NFD2+/ReAi0m
+   vy/lbAcg9YgkeOzAy0MGk0HnbTbpPeBHSL6CFQDypmndBVtib3SpoemTg
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1138500"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="1138500"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 06:58:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="32426232"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa001.fm.intel.com with ESMTP; 07 Feb 2024 06:58:13 -0800
+Date: Wed, 7 Feb 2024 22:54:36 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pattara Teerapong <pteerapong@google.com>
+Subject: Re: [PATCH 6/8] KVM: x86/mmu: Check for usable TDP MMU root while
+ holding mmu_lock for read
+Message-ID: <ZcOZrNLJqjtjSRdP@yilunxu-OptiPlex-7050>
+References: <20240111020048.844847-1-seanjc@google.com>
+ <20240111020048.844847-7-seanjc@google.com>
+ <ZcIFTkWaTqItQPsj@yilunxu-OptiPlex-7050>
+ <ZcJHYtMZsQHInVEI@yilunxu-OptiPlex-7050>
+ <ZcJ4jBQatw7ti46D@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC 1/2] spmi: Add support for multi-master
-Content-Language: en-US, fr
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Abel Vesa <abel.vesa@linaro.org>, Stephen Boyd <sboyd@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- linux-mediatek@lists.infradead.org
-References: <20240207-spmi-multi-master-support-v1-0-ce57f301c7fd@linaro.org>
- <20240207-spmi-multi-master-support-v1-1-ce57f301c7fd@linaro.org>
- <CAA8EJpqsJmv36=o1aTjVH6eMHXMg8BHNpiDvs+Q8YB23ezVGtQ@mail.gmail.com>
- <ZcMvFtAwQQjAZhk6@linaro.org>
- <CAA8EJprqWLX7_yWZzKp3FAKFGkSkk041f9hj1uXuRBrbH5APyQ@mail.gmail.com>
- <ZcNIddeG6VHxBEOQ@linaro.org>
- <CAA8EJpo-16u34Yc6MLmHSqFrQ0VrZAq6TwGeVc5WFwMmhruqoA@mail.gmail.com>
- <b4018932-2fcb-4a15-9ec4-e29e5761d3e0@collabora.com>
- <CAA8EJpo5bb+AWJra26MoDPKE_vF+eBAJAGoxenkMtGWz2N5Tuw@mail.gmail.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <CAA8EJpo5bb+AWJra26MoDPKE_vF+eBAJAGoxenkMtGWz2N5Tuw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcJ4jBQatw7ti46D@google.com>
 
-On 07/02/2024 15:22, Dmitry Baryshkov wrote:
-> On Wed, 7 Feb 2024 at 14:46, AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
->>
->> Il 07/02/24 12:45, Dmitry Baryshkov ha scritto:
->>> On Wed, 7 Feb 2024 at 11:08, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>>
->>>> On 24-02-07 09:23:09, Dmitry Baryshkov wrote:
->>>>> On Wed, 7 Feb 2024 at 09:19, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>>>>
->>>>>> On 24-02-07 01:55:39, Dmitry Baryshkov wrote:
->>>>>>> On Wed, 7 Feb 2024 at 01:34, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>>>>>>
->>>>>>>> Some newer SPMI controllers support multiple bus masters.
->>>>>>>> Such a master can control multiple slave devices. The generic
->>>>>>>> framework needs to be able to pass on the master id to the
->>>>>>>> controller-specific driver. So do that. The framework will
->>>>>>>> check if the devicetree child nodes are actually bus masters
->>>>>>>> and will register the devices for each master. The legacy
->>>>>>>> approach will still be supported for backwards compatibility.
->>>>>>>
->>>>>>> Please remind me, are those two actual bus musters driving a single
->>>>>>> bus in parallel or two SPMI buses being handled by a single device? In
->>>>>>> the latter case this implementation is incorrect. There should be
->>>>>>> multiple spmi_controller instances, one for each bus. Allocate them in
->>>>>>> a loop and set ctrl->dev.of_node after allocating.
->>>>>>
->>>>>> It's two SPMI buses (two sets of wires) handled by the same controller,
->>>>>> HW-wise.
->>>>>>
->>>>>> If we register two spmi controllers with the kernel framework, it will
->>>>>> be HW inaccurate, because there is just one controller which has
->>>>>> multiple masters.
->>>>>
->>>>> struct spmi_controller is a controller for a single bus. Inside your
->>>>> device you have two SPMI buses, each can be controlled by its own
->>>>> struct spmi_controller. Just like devices that control multiple I2C,
->>>>> SPI or USB busses register a separate instance of the bus controller.
->>>>
->>>> Well, this is what this patchset is trying to do in the generic part.
->>>> The SPMI controller supports multiple buses (HW-wise) and therefore SW
->>>> implementation shouldn't be tied to single bus requirement.
->>>
->>> So, after the off-line discussion:
->>> - add new compatible string for sm8450+
->>> - register two spmi controller instances
->>
->> Well, I don't know about the actual hardware that you're trying to implement
->> but, in my opinion, the "idea" of this series does actually make sense.
->>
->> The SPMI specification says that SPMI supports up to 4 masters, and up to
->> 16 slaves.
+On Tue, Feb 06, 2024 at 10:21:00AM -0800, Sean Christopherson wrote:
+> On Tue, Feb 06, 2024, Xu Yilun wrote:
+> > On Tue, Feb 06, 2024 at 06:09:18PM +0800, Xu Yilun wrote:
+> > > On Wed, Jan 10, 2024 at 06:00:46PM -0800, Sean Christopherson wrote:
+> > > > When allocating a new TDP MMU root, check for a usable root while holding
+> > > > mmu_lock for read and only acquire mmu_lock for write if a new root needs
+> > > > to be created.  There is no need to serialize other MMU operations if a
+> > > > vCPU is simply grabbing a reference to an existing root, holding mmu_lock
+> > > > for write is "necessary" (spoiler alert, it's not strictly necessary) only
+> > > > to ensure KVM doesn't end up with duplicate roots.
+> > > > 
+> > > > Allowing vCPUs to get "new" roots in parallel is beneficial to VM boot and
+> > > > to setups that frequently delete memslots, i.e. which force all vCPUs to
+> > > > reload all roots.
+> > > > 
+> > > > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > > > ---
+> > > >  arch/x86/kvm/mmu/mmu.c     |  8 ++---
+> > > >  arch/x86/kvm/mmu/tdp_mmu.c | 60 +++++++++++++++++++++++++++++++-------
+> > > >  arch/x86/kvm/mmu/tdp_mmu.h |  2 +-
+> > > >  3 files changed, 55 insertions(+), 15 deletions(-)
+> > > > 
+> > > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > > index 3c844e428684..ea18aca23196 100644
+> > > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > > @@ -3693,15 +3693,15 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+> > > >  	unsigned i;
+> > > >  	int r;
+> > > >  
+> > > > +	if (tdp_mmu_enabled)
+> > > > +		return kvm_tdp_mmu_alloc_root(vcpu);
+> > > > +
+> > > >  	write_lock(&vcpu->kvm->mmu_lock);
+> > > >  	r = make_mmu_pages_available(vcpu);
+> > > >  	if (r < 0)
+> > > >  		goto out_unlock;
+> > > >  
+> > > > -	if (tdp_mmu_enabled) {
+> > > > -		root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
+> > > > -		mmu->root.hpa = root;
+> > > > -	} else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
+> > > > +	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
+> > > >  		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
+> > > >  		mmu->root.hpa = root;
+> > > >  	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
+> > > > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> > > > index e0a8343f66dc..9a8250a14fc1 100644
+> > > > --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> > > > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> > > > @@ -223,21 +223,52 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
+> > > >  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
+> > > >  }
+> > > >  
+> > > > -hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
+> > > > +static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
+> > > >  {
+> > > >  	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
+> > > > +	int as_id = kvm_mmu_role_as_id(role);
+> > > >  	struct kvm *kvm = vcpu->kvm;
+> > > >  	struct kvm_mmu_page *root;
+> > > >  
+> > > > -	lockdep_assert_held_write(&kvm->mmu_lock);
+> > > > -
+> > > > -	/* Check for an existing root before allocating a new one. */
+> > > > -	for_each_valid_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
+> > > > -		if (root->role.word == role.word &&
+> > > > -		    kvm_tdp_mmu_get_root(root))
+> > > > -			goto out;
+> > > > +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
+> > > 
+> > > No lock yielding attempt in this loop, why change to _yield_safe version?
 > 
-> So, that is my main question: whether this supports multiple masters
-> on a same bus or multiple buses. From the SoC pins description I
-> assume the latter is the case.
-
-This is clearly 2 separate physically separate busses, not 2 masters on the same bus.
-
-We registers separate controllers for i2c, spi, 1w, ... in this case, why not here ?
-
-Neil
-
+> Because variants that don't allow yielding, i.e. for_each_valid_tdp_mmu_root()
+> as of this patch, require mmu_lock be held for write.  Holding mmu_lock for write
+> is necessary because that simpler version uses list_for_each_entry() and doesn't
+> grab a reference to the root, i.e. entries on the list could be freed, e.g. by
+> kvm_tdp_mmu_zap_invalidated_roots().
 > 
->>
->> Just my two cents.
->>
->> Cheers,
->> Angelo
->>
->>> - drop the master-id from the SPMI interface
->>> - optionally: think about having a new separate driver for v7 SPMI.
->>>
->>>>
->>>>>
->>>>>>
->>>>>> I'm not saying it might not work. But, to me, it looks more like a hack.
->>>>>>
->>>>>> Basically, we would be mapping HW bus masters to kernel controllers.
->>>>>
->>>>> Buses, not just masters.
->>>>>
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->>>>>>>> ---
->>>>>>>>    drivers/spmi/spmi-mtk-pmif.c |  6 ++--
->>>>>>>>    drivers/spmi/spmi-pmic-arb.c | 10 +++---
->>>>>>>>    drivers/spmi/spmi.c          | 76 ++++++++++++++++++++++++++++++--------------
->>>>>>>>    include/linux/spmi.h         | 10 +++---
->>>>>>>>    4 files changed, 67 insertions(+), 35 deletions(-)
->>>>>>>
->>>>>>> --
->>>>>>> With best wishes
->>>>>>> Dmitry
->>>>>
->>>>>
->>>>>
->>>>> --
->>>>> With best wishes
->>>>> Dmitry
->>>
->>>
->>>
->>
->>
+> The _yield_safe() versions don't require the user to want to yield.  The naming
+> is _yield_safe() because the yield-safe iterators can run with mmu_lock held for
+> read *or* right.
 > 
+> > Oh, I assume you just want to early exit the loop with the reference to
+> > root hold.  But I feel it makes harder for us to have a clear
+> > understanding of the usage of _yield_safe and non _yield_safe helpers.
+> > 
+> > Maybe change it back?
 > 
+> No.  There's even a comment above for_each_tdp_mmu_root() (which is
+
+Oh, I should have read comments more carefully.
+
+> for_each_valid_tdp_mmu_root() as of this patch) that explains the difference.
+> The rule is essentially, use the yield-safe variant unless there's a good reason
+> not to.
+> 
+> /*
+>  * Iterate over all TDP MMU roots.  Requires that mmu_lock be held for write,
+>  * the implication being that any flow that holds mmu_lock for read is
+>  * inherently yield-friendly and should use the yield-safe variant above.
+
+I still have doubt until I see the changelog:
+
+The nature of a shared walk means that the caller needs to
+play nice with other tasks modifying the page tables, which is more or
+less the same thing as playing nice with yielding.
+
+Thanks.
+
+>  * Holding mmu_lock for write obviates the need for RCU protection as the list
+>  * is guaranteed to be stable.
+>  */
+
+
 
