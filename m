@@ -1,129 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244A0DF78;
-	Wed,  7 Feb 2024 01:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3DDDDB3
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707270933; cv=none; b=LtyF4f+Q3XDAoCbjHI4FIHLajTgj/TUeGXqYV0VZlrE0PpZPACCWQKppSRtFlPOHhx/daGa7zT6/PcXSZntrXvF1xyHUPm1jcakE/qxpt0o7wkd7MxkToCRkGGZhX4U4Fa/b0oZlM8LwvCBQbz8DUaL6mHu0r3lg8Bg/Gi/3Cp4=
+	t=1707271327; cv=none; b=HJuCjuYuMDABPUc2GVzTpMZ0vqsaI4PDqqW7X+LBIFuIbV8s5iwOWCs3l/iOdOy9Wt2KjGMsKU+05DU9g7YlxpiGSA3EX0wnUDxpsgt9Q+J2Mj8JwdLpJJZHzEezfyyByomypwu+JNXPauZUAVYOGd2UxR58VvgD7Zrgfjy3pGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707270933; c=relaxed/simple;
-	bh=mG7uSB7BF0mlbRNJ9ZZyvOnHgKYsgTxFbHl5KXrLGug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ukku/ahHKgN3zLVsjSLScw64MMmo+NyMhn4vAq8sFcXVn+JIUpAeK9VRrJ7mVpI/RAFd9wcb71aGybFAJwDEMby4VJOwUcPnaaTbpv651ly6k+p49g0R6MQm6fhx/nBZry8NfsRolgHGfDe+w6a4dKXzOV3PX7A/JpiSFAw4YVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3O55aQ4; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3O55aQ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707270930; x=1738806930;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mG7uSB7BF0mlbRNJ9ZZyvOnHgKYsgTxFbHl5KXrLGug=;
-  b=B3O55aQ4kdKFmYjUNuUgkK9+q5KwpfRZz4qPKnMnL+fPPoRHAka2nU2e
-   evi3HKpde10+QT5vxsm0ZJq3xhDYBzA3w9XxMJPCHQz4azb5a7339+cAo
-   6PfReVhKg9AH2a8JUAR2IZNDGjQbxo+aMP3ahHhK7/on5asxoYKagaCW2
-   AtwZ+U0N2S2LI+KFCR+uYAX11CrGO1Jj0lRo2MskAkCIRiu52NSVWh6Ox
-   hXtqYJx0HP2wn61wFxP5v0pe0unKdcbS2J21zFiOQSksq56O1EwboY/is
-   o7mTSM7pxmNVFvoIdxxwDu+sQcVid9iLxtsJoU2QjVJ077AkWlV0wMW4f
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="4671459"
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="4671459"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 17:55:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="5807087"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 06 Feb 2024 17:55:26 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXX9o-0001yQ-1U;
-	Wed, 07 Feb 2024 01:55:24 +0000
-Date: Wed, 7 Feb 2024 09:54:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 2/2 v3] cxl/region: Use cond_guard() in show_targetN()
-Message-ID: <202402070919.0zuYCxMS-lkp@intel.com>
-References: <20240206121301.7225-3-fabio.maria.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1707271327; c=relaxed/simple;
+	bh=dqkBJAgvOf54M17NAgC2bdZdD8Q1alVaZw9A7jwQE4Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bSpliixB2MA72MADrhBhktGSaFWbM8Z9VCeFNmQJ/MhZ0/KXtWUZpW1dYbcwyhkZJRdOtjk09ia06+3aISy4A7F6biam4fMdjza4esa93B23yGMAz6wu24dpD1uegEF+fLYx9wZeO4w806763bgnFhv+oTvkLJfxIBDmxyGfHp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 41721Nq0075264;
+	Wed, 7 Feb 2024 10:01:23 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TV3Hv3prTz2K4cJ2;
+	Wed,  7 Feb 2024 10:01:15 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 7 Feb 2024 10:01:20 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <hongyu.jin@unisoc.com>
+Subject: [PATCH v2 0/4] f2fs: fix panic issue in small capacity device
+Date: Wed, 7 Feb 2024 10:01:00 +0800
+Message-ID: <1707271264-5551-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206121301.7225-3-fabio.maria.de.francesco@linux.intel.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 41721Nq0075264
 
-Hi Fabio,
+A panic issue happened in a reboot test in small capacity device
+as following:
+1.The device size is 64MB, and main area has 24 segments, and
+CONFIG_F2FS_CHECK_FS is not enabled.
+2.There is no any free segments left shown in free_segmap_info,
+then another write request cause get_new_segment get a out-of-bound
+segment with segno 24.
+3.panic happen in update_sit_entry because access invalid bitmap
+pointer.
 
-kernel test robot noticed the following build warnings:
+More detail shown in following patch sets.
+The three patches are splited here because the modifications are
+relatively independent and more readable.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.8-rc3 next-20240206]
-[cannot apply to cxl/next cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+---
+Changes of v2: stop checkpoint when get a out-of-bound segment
+---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cleanup-Add-cond_guard-to-conditional-guards/20240206-203110
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240206121301.7225-3-fabio.maria.de.francesco%40linux.intel.com
-patch subject: [PATCH 2/2 v3] cxl/region: Use cond_guard() in show_targetN()
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp@intel.com/reproduce)
+Zhiguo Niu (4):
+  f2fs: correct counting methods of free_segments in __set_inuse
+  f2fs: fix panic issue in update_sit_entry
+  f2fs: enhance judgment conditions of GET_SEGNO
+  f2fs: stop checkpoint when get a out-of-bounds segment
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402070919.0zuYCxMS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/cxl/core/region.c: In function 'show_targetN':
->> drivers/cxl/core/region.c:670:70: warning: suggest braces around empty body in an 'else' statement [-Wempty-body]
-     670 |         cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
-         |                                                                      ^
-
-
-vim +/else +670 drivers/cxl/core/region.c
-
-   664	
-   665	static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
-   666	{
-   667		struct cxl_region_params *p = &cxlr->params;
-   668		struct cxl_endpoint_decoder *cxled;
-   669	
- > 670		cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
-   671	
-   672		if (pos >= p->interleave_ways) {
-   673			dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
-   674				p->interleave_ways);
-   675			return -ENXIO;
-   676		}
-   677	
-   678		cxled = p->targets[pos];
-   679		if (!cxled)
-   680			return sysfs_emit(buf, "\n");
-   681	
-   682		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
-   683	}
-   684	
+ fs/f2fs/file.c          |  7 ++++++-
+ fs/f2fs/segment.c       | 21 ++++++++++++++++-----
+ fs/f2fs/segment.h       |  7 ++++---
+ include/linux/f2fs_fs.h |  1 +
+ 4 files changed, 27 insertions(+), 9 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+1.9.1
+
