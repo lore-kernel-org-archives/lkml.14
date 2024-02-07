@@ -1,178 +1,134 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A8486AF9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 19:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA4086AC0
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 19:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707335675; cv=none; b=EZnQ486lPvOepWgUeG2NFYdsORUZIccbK9rPk9BTcZNKWEZ3Ra6cg7c/iWLnLOdIZxI7auEoOkctoDlZZWNFywix4czwBtk52p0Y07dwpfp9vooI2QOjhrEYjfPuWQoTMgjKyx0jo9PcahSVrB28IwGOaj6y3fVNNo9kwPGu+4g=
+	t=1707335787; cv=none; b=SUk6bYQQr2WFTVgPUH1TBWaHStZVtc33Isi7OlRDsurehU/EZkOj/uN1BjIThmOgBqu8/3IjdnQM/53Rx0xM+KTrYk7g2SIvD503nwJam77uQX8yYiF5OvZOWPGmTGk3UJczFTBwQmT5TKvQQBgXt/EipTKcvkL+oqOPwvHShsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707335675; c=relaxed/simple;
-	bh=hYThMK1Xf4I8228RVeu4sPoLLzyiRmJ6EGR1xxc8cw8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QnRkObLo0eD6eHL4ahi191iiozHrFatSy9f/bQpfOozAVBiHJ5aBouT2Bt14uqxZhWNN/c+lm//uW6ND1gWh5UGp/hDr+KmozFGrz6+d5idcy292eEqA6T9TbCh1YzowNYWV79OV3kWnVBfCcF6nModKOjAeBHV06Tzf9aPP+GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363ca646a1dso8274095ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 11:54:33 -0800 (PST)
+	s=arc-20240116; t=1707335787; c=relaxed/simple;
+	bh=dzgYn4bp7nr3cKM50l3TAoVq8LCXbeNtvvcBhmI+5F4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nn5btSEkH4hkCNfzilZzrnQgq9yMVypl3F+TptCwJ1RAbgnWgO33494zFO5TXLv/IUAbTPTjlMiJkO4TALKDzzqf55OEAAhgs8UExvkgab42VFrGTKT/mY0i3dWVOkNB83SsjAKkO9FLD1+5zbYV2HH3sUaPfgsykPrOQRjp5E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X/LDMUNl; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X/LDMUNl"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d9daf74f41so17645ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 11:56:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707335785; x=1707940585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GOFmIdHcVZFpvdlv+SwpSo0Y7EY1nbkZlWlLRqBJt6I=;
+        b=X/LDMUNl7q9r6qduvQQvW4Ck0iiopQjs1f8lsQz4dzB3rd0araf0qa5JvuZ/kNfDFU
+         gviYn784uyuu80WBVvON8JAQm09zLX1op41GCtzyCeOus5dS8dURR/lrLE6eolBcmSYB
+         49DNlVVXW/ILEwmXVA6z4KHP2ZaisphbBxUJiMLoDCXa5tCfv/G2v46gu6pf8gHaRfKB
+         GIvmH3CzJroIAFEKJchqEUNYfrcaMfL/Yh7OPgZb4Kkc1RrMo7V4DDVzN/L+A46l5BuJ
+         Ed4n6OljKwUvXGR8pW4XTBYxq6fZjLT9Ys6H0QfSxcE4jyHZZJjQIgRj16MD+WLtPHiy
+         /iEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707335672; x=1707940472;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yXijhnJSqfNwRwrMz0wxJxUultHKEFeKw9S9BLLYx9E=;
-        b=QXzXL54a7TXNe45Faxa7WAEa/+JuFvHBlX1Z1aVsx8NHfPKyHEbFkvNMZAIYkHJOAm
-         WJvYZXSzBzn+N4jRh9eq9PCtItXhyEynH12pLsrqJRM05k0vzC+Uc6tPaiWbcNeBEYoY
-         i4rK4Vw0cPqPpZNuZTCrmQEIPf0vX52nJ5xvwoo4EC0ZZMMfWAnOjicK1X+I2W4p60Gs
-         BgKrk7hDl9w0RiLSvJMLKh6ks0eVC9y6qIlRkpWsKbDqL9rTegKDMydokhwBB/b2EL7X
-         6Xi0rZLE/CddNIqt6nFP+IOTF+Xw0AzwFwH6HCTiBOCIV12d0RJI8d3gGCJBKVpqNIVd
-         52Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBdSRnNso91CODMns3R0YxVENTbLEaVxzLADvwB+8PLAMAImVIGTMS1tVwJZ0SwsRN/rasZitvip/DWesCjkmepVcaUOEvzQB8ZR8Z
-X-Gm-Message-State: AOJu0Yx2Fn631N8YRH6yAmFOsLUOucgDUiWmZaiHHZjr3QK4n4pW9ZIb
-	hhJ8lDd2UdK9CXkOULhWeFzLlNUba4OGtrtQwocXh+mGER6fE+l2lTZjeaDZrE/+VQdl8fV43fR
-	vXzMbRBy2OkVnDOkegr4QdOX76qvLsq+mmYv3wGywJ2gPVoVn/odnV5w=
-X-Google-Smtp-Source: AGHT+IH/XqaXynFOhnl6JjLdwgwpGFSyoyWSeUneNpuf0CWOlEs7ALO3CLjyu77yoB49oO++8shLP8/OkYyfLkMxHAQMBT2LYHVY
+        d=1e100.net; s=20230601; t=1707335785; x=1707940585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GOFmIdHcVZFpvdlv+SwpSo0Y7EY1nbkZlWlLRqBJt6I=;
+        b=dUvEtoY7iHuifNj6rJtPuPqnAf/yeNQgp3+cmPLYcm1iN2GqAO0V0s3Gd7yFIFV5Sh
+         SKRqNPC32AKROGeT3RAJniwN2lCbSP3dt1FRIddR7BHjbG4CosNq3fubVtE7vuGNoB0h
+         fKRL3w/e4GmrjjNOa6ylVTyiclqN3ywHo99ZNioWPvs5f5JJD7xTHl6oOAU6zKVKaeds
+         jOCwCvRqO6JCpOpI8BUh+HR6i6eZW3GBcFhu/Rh8sNTgvq5hxqQcaZiMoou1eQfoLs6v
+         1BytjG2D8Tph1hTujnEHf+g8VWn3JBo5nrGS4sXMJUaagc53ghDOwLSjL2dW0uo/a5AL
+         s83Q==
+X-Gm-Message-State: AOJu0YyyPOpinqGq2OIchFCpbKpkn4RCW8ncn5eXeWpujHkJp/XoycFg
+	CMi4fBGezUfMGUR9ZQEQ8mJeUg7AI0vvjAB/hWa7pLiIU7dfmnjSrHSqNZE64Yod1TSobbwipFo
+	swrVGcpEd7EK2X6O25rAiRvpP/Ez8+OOYc0G2
+X-Google-Smtp-Source: AGHT+IFyDmN8vpC/DtDFuDdylPr5fqRKmrKple2kR7uMrqfpHKpOh5ImkTJJ2shCLtNsUJhOZnmu0pONfefEfmA+h98=
+X-Received: by 2002:a17:903:484:b0:1d8:da36:d0ae with SMTP id
+ jj4-20020a170903048400b001d8da36d0aemr215750plb.3.1707335785036; Wed, 07 Feb
+ 2024 11:56:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1bc4:b0:363:cc27:74c with SMTP id
- x4-20020a056e021bc400b00363cc27074cmr540192ilv.4.1707335672617; Wed, 07 Feb
- 2024 11:54:32 -0800 (PST)
-Date: Wed, 07 Feb 2024 11:54:32 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000047631d0610d010c1@google.com>
-Subject: [syzbot] [input?] [usb?] WARNING in input_register_device (2)
-From: syzbot <syzbot+8e41bb0c055b209ebbf4@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, rafael@kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20240202220459.527138-1-namhyung@kernel.org> <20240202220459.527138-5-namhyung@kernel.org>
+ <CAP-5=fU=P-ib+n+OfqJAbm8gS2RY-W-KcBskoSHkC+aCmXYcXQ@mail.gmail.com>
+ <CAM9d7chvEw6r8_7agxOpWxufTo+dLaNForSFFShCFGd9KDBtoA@mail.gmail.com>
+ <CAP-5=fWx9Uub9uRgQJq_ekQScm4fJXMdr9_cr19vcckCPjPt9w@mail.gmail.com> <CAM9d7ciGna7tm5gxoVAQexj_to9sRSL-emmCTSkMbGZgY8mthw@mail.gmail.com>
+In-Reply-To: <CAM9d7ciGna7tm5gxoVAQexj_to9sRSL-emmCTSkMbGZgY8mthw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 7 Feb 2024 11:56:13 -0800
+Message-ID: <CAP-5=fXWew4c-0zAAny-1R+6mZpfATUc8pEi0G6G79BebiaPuA@mail.gmail.com>
+Subject: Re: [PATCH 04/14] perf map: Add map__objdump_2rip()
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Feb 7, 2024 at 11:04=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Feb 6, 2024 at 3:34=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > On Tue, Feb 6, 2024 at 3:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Fri, Feb 2, 2024 at 5:42=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> > > >
+> > > > On Fri, Feb 2, 2024 at 2:05=E2=80=AFPM Namhyung Kim <namhyung@kerne=
+l.org> wrote:
+> > > > >
+> > > > > Sometimes we want to convert an address in objdump output to
+> > > > > map-relative address to match with a sample data.  Let's add
+> > > > > map__objdump_2rip() for that.
+> > > >
+> > > > Hi Namhyung,
+> > > >
+> > > > I think the naming can be better here. Aren't the objdump addresses
+> > > > DSO relative offsets? Is the relative IP relative to the map or the
+> > > > DSO?
+> > >
+> > > AFAIK the objdump addresses are DSO-relative and rip is to map.
+> > > They are mostly the same but sometimes different due to kASLR
+> > > for the kernel.
+> >
+> > Perhaps we need to use names like map_rip for mapping relative and
+> > dso_rip to clean this up, or to add a different mapping_type to the
+> > enum. For non-kernel maps addresses for map are either the whole
+> > virtual address space (identity) or relative to a dso:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/map.h?h=3Dperf-tools-next#n115
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/map.h?h=3Dperf-tools-next#n20
+> > The dso addresses should work for objdump so perhaps the kernel
+> > addresses need map__pgoff fixing?
+>
+> I'm not sure about the vDSO case.
+>
+> By the way, I need to take a look if we can make this objdump-rip
+> thing simpler as you mentioned.  My feeling is that it can be done
+> but I'd like to do it in a separate work and to move this forward.
 
-syzbot found the following issue on:
+Makes sense. Could we add a comment to the header file definition to
+capture some of this? Perhaps a "to be removed" to avoid later patches
+adding dependencies to the function.
 
-HEAD commit:    6613476e225e Linux 6.8-rc1
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ca9224180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=877e61347079aad5
-dashboard link: https://syzkaller.appspot.com/bug?extid=8e41bb0c055b209ebbf4
-compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: riscv64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b32118180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17dab048180000
+Thanks,
+Ian
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-6613476e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/33ea806d02dd/vmlinux-6613476e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/33195f72f823/Image-6613476e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8e41bb0c055b209ebbf4@syzkaller.appspotmail.com
-
-WARNING: CPU: 0 PID: 8 at lib/kobject_uevent.c:671 add_uevent_var+0x282/0x296 lib/kobject_uevent.c:671
-Modules linked in:
-CPU: 0 PID: 8 Comm: kworker/0:0 Not tainted 6.8.0-rc1-syzkaller #0
-Hardware name: riscv-virtio,qemu (DT)
-Workqueue: usb_hub_wq hub_event
-epc : add_uevent_var+0x282/0x296 lib/kobject_uevent.c:671
- ra : add_uevent_var+0x282/0x296 lib/kobject_uevent.c:671
-epc : ffffffff858325ec ra : ffffffff858325ec sp : ff20000000049b20
- gp : ffffffff8863e320 tp : ff6000000c29ce00 t0 : ccb0ea972aeb292d
- t1 : ffe3ffff000092d8 t2 : ff6000000c29d8f8 s0 : ff20000000049c00
- s1 : ff60000016d76000 a0 : 0000000000000001 a1 : 0000000000000000
- a2 : 0000000000000002 a3 : ffffffff800b66fa a4 : 0000000000000000
- a5 : 0000000000000000 a6 : 0000000000000003 a7 : ff200000000496c7
- s2 : 0000000000000004 s3 : 1fe4000000009368 s4 : 1fec000002daec43
- s5 : ff60000016d76218 s6 : 0000000000000006 s7 : 00000000000007fc
- s8 : ff60000016d76a1c s9 : 1fec000002daed43 s10: ffffffff885377c0
- s11: ffffffff86b9c560 t3 : 0000000000000004 t4 : ffe3ffff000092d8
- t5 : ffe3ffff000092d9 t6 : ff200000000496d8
-status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000003
-[<ffffffff858325ec>] add_uevent_var+0x282/0x296 lib/kobject_uevent.c:671
-[<ffffffff85833cdc>] kobject_uevent_env+0xb0c/0x1378 lib/kobject_uevent.c:602
-[<ffffffff8583456a>] kobject_uevent+0x22/0x2e lib/kobject_uevent.c:642
-[<ffffffff82542b12>] device_add+0x10d2/0x186e drivers/base/core.c:3606
-[<ffffffff837032c4>] input_register_device+0x606/0xe9a drivers/input/input.c:2379
-[<ffffffff83faba00>] hidinput_connect+0x4c72/0x88a4 drivers/hid/hid-input.c:2355
-[<ffffffff83f9d330>] hid_connect+0x11e0/0x15e0 drivers/hid/hid-core.c:2194
-[<ffffffff83f9d7e6>] hid_hw_start drivers/hid/hid-core.c:2309 [inline]
-[<ffffffff83f9d7e6>] hid_hw_start+0xb6/0x13c drivers/hid/hid-core.c:2300
-[<ffffffff840255a0>] ms_probe+0x15e/0x4f0 drivers/hid/hid-microsoft.c:391
-[<ffffffff83f9de94>] __hid_device_probe drivers/hid/hid-core.c:2633 [inline]
-[<ffffffff83f9de94>] hid_device_probe+0x2a4/0x3f2 drivers/hid/hid-core.c:2670
-[<ffffffff8254cd2e>] call_driver_probe drivers/base/dd.c:579 [inline]
-[<ffffffff8254cd2e>] really_probe+0x234/0xbbc drivers/base/dd.c:658
-[<ffffffff8254d88a>] __driver_probe_device+0x1d4/0x458 drivers/base/dd.c:800
-[<ffffffff8254db6e>] driver_probe_device+0x60/0x1ce drivers/base/dd.c:830
-[<ffffffff8254dec0>] __device_attach_driver+0x1e4/0x2fe drivers/base/dd.c:958
-[<ffffffff82547562>] bus_for_each_drv+0x142/0x1da drivers/base/bus.c:457
-[<ffffffff8254eae2>] __device_attach+0x1c4/0x462 drivers/base/dd.c:1030
-[<ffffffff8254f108>] device_initial_probe+0x1c/0x26 drivers/base/dd.c:1079
-[<ffffffff82549fe4>] bus_probe_device+0x15c/0x192 drivers/base/bus.c:532
-[<ffffffff82542b6c>] device_add+0x112c/0x186e drivers/base/core.c:3625
-[<ffffffff83f96c5c>] hid_add_device+0x374/0x9b2 drivers/hid/hid-core.c:2816
-[<ffffffff840dc3f2>] usbhid_probe+0xa50/0xf84 drivers/hid/usbhid/hid-core.c:1429
-[<ffffffff830a18c0>] usb_probe_interface+0x2d4/0x8a2 drivers/usb/core/driver.c:399
-[<ffffffff8254cd2e>] call_driver_probe drivers/base/dd.c:579 [inline]
-[<ffffffff8254cd2e>] really_probe+0x234/0xbbc drivers/base/dd.c:658
-[<ffffffff8254d88a>] __driver_probe_device+0x1d4/0x458 drivers/base/dd.c:800
-[<ffffffff8254db6e>] driver_probe_device+0x60/0x1ce drivers/base/dd.c:830
-[<ffffffff8254dec0>] __device_attach_driver+0x1e4/0x2fe drivers/base/dd.c:958
-[<ffffffff82547562>] bus_for_each_drv+0x142/0x1da drivers/base/bus.c:457
-[<ffffffff8254eae2>] __device_attach+0x1c4/0x462 drivers/base/dd.c:1030
-[<ffffffff8254f108>] device_initial_probe+0x1c/0x26 drivers/base/dd.c:1079
-[<ffffffff82549fe4>] bus_probe_device+0x15c/0x192 drivers/base/bus.c:532
-[<ffffffff82542b6c>] device_add+0x112c/0x186e drivers/base/core.c:3625
-[<ffffffff8309b2b4>] usb_set_configuration+0xfe0/0x1b10 drivers/usb/core/message.c:2207
-[<ffffffff830c3d56>] usb_generic_driver_probe+0xae/0x128 drivers/usb/core/generic.c:254
-[<ffffffff830a0606>] usb_probe_device+0xd6/0x340 drivers/usb/core/driver.c:294
-[<ffffffff8254cd2e>] call_driver_probe drivers/base/dd.c:579 [inline]
-[<ffffffff8254cd2e>] really_probe+0x234/0xbbc drivers/base/dd.c:658
-[<ffffffff8254d88a>] __driver_probe_device+0x1d4/0x458 drivers/base/dd.c:800
-[<ffffffff8254db6e>] driver_probe_device+0x60/0x1ce drivers/base/dd.c:830
-[<ffffffff8254dec0>] __device_attach_driver+0x1e4/0x2fe drivers/base/dd.c:958
-[<ffffffff82547562>] bus_for_each_drv+0x142/0x1da drivers/base/bus.c:457
-[<ffffffff8254eae2>] __device_attach+0x1c4/0x462 drivers/base/dd.c:1030
-[<ffffffff8254f108>] device_initial_probe+0x1c/0x26 drivers/base/dd.c:1079
-[<ffffffff82549fe4>] bus_probe_device+0x15c/0x192 drivers/base/bus.c:532
-[<ffffffff82542b6c>] device_add+0x112c/0x186e drivers/base/core.c:3625
-[<ffffffff830777fe>] usb_new_device+0x960/0x1648 drivers/usb/core/hub.c:2596
-[<ffffffff8307dc48>] hub_port_connect drivers/usb/core/hub.c:5465 [inline]
-[<ffffffff8307dc48>] hub_port_connect_change drivers/usb/core/hub.c:5605 [inline]
-[<ffffffff8307dc48>] port_event drivers/usb/core/hub.c:5765 [inline]
-[<ffffffff8307dc48>] hub_event+0x2954/0x4756 drivers/usb/core/hub.c:5847
-[<ffffffff801231ea>] process_one_work+0x7ce/0x179c kernel/workqueue.c:2633
-[<ffffffff80124c94>] process_scheduled_works kernel/workqueue.c:2706 [inline]
-[<ffffffff80124c94>] worker_thread+0xadc/0x10f8 kernel/workqueue.c:2787
-[<ffffffff80144154>] kthread+0x28c/0x3a6 kernel/kthread.c:388
-[<ffffffff85928722>] ret_from_fork+0xe/0x1c arch/riscv/kernel/entry.S:229
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> Thanks,
+> Namhyung
