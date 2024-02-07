@@ -1,114 +1,149 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ED476036
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 12:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE78F76055
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 13:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707310571; cv=none; b=CC4dOUqtR+JbG9hbidHlXhKkBNyiPcm1/eNA4D9x1D/oSwJZ+5skfEhoc2+NkmSNlbtQHeQ4A1+jZ6EDemDEXMSZc6S6RFvJHrQcpAp3EqOrW7SArQ1pzAZ7wVV2ihlojnPOHRF55OjMYpaKCrsqEj/Go8tjxD1B4r70dwNHJ1M=
+	t=1707311058; cv=none; b=nJEnDNW0qWBGJMR7FW73gcC2beK1YR/z/9G/WDBqzY/ebWG65rhW8JRZyYoqfboYYWU1UhRbjkmLPyVSla4WOR2GAC//Ktzgih+ZGDKEZZn3acTXgDN3kGhgqKJKq/ejHDalzY6sYZoZYzvWUacz0hwECrLt4LsmNDLvlOxF904=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707310571; c=relaxed/simple;
-	bh=4w4s8GAeYati7RUQEBui/SkRd47gbmjGEuufx8ZOtdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qX8+d9U7YCIJc/yIizCHvDaR9ri71ef1k+1jZ5DPjbJy56ueiUm7ScnfKJTqrUfI7n4kbeVItDGRHzKSxFSmOSEULVXF6xo8p3QUfi010eQ6Da7IC+WQ8HyygdraNpjsgAxwNnJBzeHf31RCTYOkec5sxEqlIk13f3E8VfwsPew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XwJ9/kVc; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1707311058; c=relaxed/simple;
+	bh=NX8orA+GVnnPwrF0apwCns+C6OpZLx0AleNzR/n5FUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cO8YtaBeSf0t0X/ygCiW6+cy/89RQqXB5vgQTZ9EPE09xfw+CvNn1rMsUcIr6iNbXntZ7ckuD5C/rZGJX76FbPpy0Ntd6gkHcarnnGp87UYtWimnn+8IojIl8lZWgNuHnS9eSEv4Uxelvcx8YA9BcokAFlwTuhGLlFBrYUr9VqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fb/60FrZ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XwJ9/kVc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fb/60FrZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707310568;
+	s=mimecast20190719; t=1707311055;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IjLljkcOjmkfh1di8sk/TzvNm0GraGUpgA3hDhsNW28=;
-	b=XwJ9/kVcP5ne5Uu/zrUtKroyyeUSkp1SUxaDQNvz7ch6vD1nDxO3xbJ1pucjU5N8HJoick
-	+gVzqtEJPju8imvjAFqV2yYK7VfP8M9pmNdO9JeJuA7TCEgAk7dEDSrTIfpFdyDmO1JJOi
-	TveDp10MEg9yZ1pAOtuPcP3SiHTMhDI=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=L12i3OcGmJi2tYPUezs3YjaVa/gCWzHhD1McLmDOUM8=;
+	b=Fb/60FrZomR7MEKSM5O2426+YaRPc7cS9Vf35F8ehMU5yO+f1J6lKtCRX++C/AoRWYStlU
+	tPRN7k7AEy3KWy5MPoR6JJ3a0l6cy6FoiK7jY48L5f6KklGS010TazbiZmjceA72cbv9TT
+	Cz/PC525TiKQEEbZSbscPmuRz6xSD5M=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-bMxVDLmOMZeuLs5ZMUPJmw-1; Wed, 07 Feb 2024 07:56:06 -0500
-X-MC-Unique: bMxVDLmOMZeuLs5ZMUPJmw-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-6041c45ce1cso9280297b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 04:56:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707310566; x=1707915366;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IjLljkcOjmkfh1di8sk/TzvNm0GraGUpgA3hDhsNW28=;
-        b=mmF0HTnIDdWn/6naXYoNqsDszP0Nhj6ijqo/xUXkp4uuHj7YtJWC/2QQknavaKaDtr
-         uEbfrfbBg+foO8D8wLtVYa00r2vPGC+n73scWK0JVltyp9BSfiwPiNRmnVfRUKwqrjgn
-         lTHBWMYAd2zjpIG06Sdwvv1pw1MfhxIHA0xKHeXL9ai3k0SL8BFp7r7BRtk6z8wez1oJ
-         IfSB4sITCySJcHfcQIADJH6BLKZQGc8FqaXoT/4D+JmgxKL7nfn1BGOXEFS+5admLGN0
-         PM7nRPsdYyK1hGFwGVNuC50vKhc3LLOxKTnb3x4WFU9Fo4wQgoRyvx5DuFu1ma3xZR95
-         FRxg==
-X-Gm-Message-State: AOJu0YwJwttSWohAsp/LzgBbmgvu+u5d4gYU8B/dSDW5rJYZZiG4Dqpm
-	p2MqH1q477UV9MglU0OyQfacI3ZYQIS/7JPt8FS308D/P+S8qqRkQujlry5LbbET3QK3VXgyjY6
-	AS+2g5OYvvuialgB36sjN29Mr37v7s5JBA4ul/E1JLTarKiNwqSt05XYhU4xnEQ==
-X-Received: by 2002:a81:7e07:0:b0:5ef:4a7d:2426 with SMTP id o7-20020a817e07000000b005ef4a7d2426mr4480575ywn.31.1707310566090;
-        Wed, 07 Feb 2024 04:56:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHYTvpG27MlsryLbPhBMlMIDy/jl5qqx0QN1iCiRJomoklTijNwOrhVPd9T0itjoUQMRMCGJg==
-X-Received: by 2002:a81:7e07:0:b0:5ef:4a7d:2426 with SMTP id o7-20020a817e07000000b005ef4a7d2426mr4480558ywn.31.1707310565774;
-        Wed, 07 Feb 2024 04:56:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUbvebY0DHLBbpoXm/fnjGZulxd8pCjjhojAGkGAcd7WpnxeWBRBg67IuDeNig/ivTHU5HwTf5TDBpkbJnn8+VMCIme8IfMhsqPH4BQM262p9qwit0mfUit90B4ocwSCyFYuWmusQmjG+/qy30hyRqQPN800MF4
-Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id a10-20020ac844aa000000b0042c22902ca2sm489302qto.81.2024.02.07.04.56.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 04:56:04 -0800 (PST)
-Message-ID: <6fdbeed0-980e-4371-a448-0c215c4bc48e@redhat.com>
-Date: Wed, 7 Feb 2024 13:56:02 +0100
+ us-mta-440-OV_Rx9OvMKyeOZ5fiIid2g-1; Wed, 07 Feb 2024 08:04:11 -0500
+X-MC-Unique: OV_Rx9OvMKyeOZ5fiIid2g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 450F5862DC8;
+	Wed,  7 Feb 2024 13:04:11 +0000 (UTC)
+Received: from bfoster (unknown [10.22.32.186])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C87151121312;
+	Wed,  7 Feb 2024 13:04:10 +0000 (UTC)
+Date: Wed, 7 Feb 2024 08:05:29 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Dave Chinner <david@fromorbit.com>, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [PATCH v2 3/7] fs: FS_IOC_GETUUID
+Message-ID: <ZcN+8iOBR97t451x@bfoster>
+References: <20240206201858.952303-1-kent.overstreet@linux.dev>
+ <20240206201858.952303-4-kent.overstreet@linux.dev>
+ <ZcKsIbRRfeXfCObl@dread.disaster.area>
+ <cm4wbdmpuq6mlyfqrb3qqwyysa3qao6t5sc2eq3ykmgb4ptpab@qkyberqtvrtt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: selftests: Fix a semaphore imbalance in the dirty
- ring logging test
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shaoqin Huang <shahuang@redhat.com>
-References: <20240202231831.354848-1-seanjc@google.com>
- <170724566758.385340.17150738546447592707.b4-ty@google.com>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <170724566758.385340.17150738546447592707.b4-ty@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cm4wbdmpuq6mlyfqrb3qqwyysa3qao6t5sc2eq3ykmgb4ptpab@qkyberqtvrtt>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Hi Sean,
-
-On 2/6/24 22:36, Sean Christopherson wrote:
-> On Fri, 02 Feb 2024 15:18:31 -0800, Sean Christopherson wrote:
->> When finishing the final iteration of dirty_log_test testcase, set
->> host_quit _before_ the final "continue" so that the vCPU worker doesn't
->> run an extra iteration, and delete the hack-a-fix of an extra "continue"
->> from the dirty ring testcase.  This fixes a bug where the extra post to
->> sem_vcpu_cont may not be consumed, which results in failures in subsequent
->> runs of the testcases.  The bug likely was missed during development as
->> x86 supports only a single "guest mode", i.e. there aren't any subsequent
->> testcases after the dirty ring test, because for_each_guest_mode() only
->> runs a single iteration.
->>
->> [...]
+On Tue, Feb 06, 2024 at 05:37:22PM -0500, Kent Overstreet wrote:
+> On Wed, Feb 07, 2024 at 09:01:05AM +1100, Dave Chinner wrote:
+> > On Tue, Feb 06, 2024 at 03:18:51PM -0500, Kent Overstreet wrote:
+> > > +static int ioctl_getfsuuid(struct file *file, void __user *argp)
+> > > +{
+> > > +	struct super_block *sb = file_inode(file)->i_sb;
+> > > +
+> > > +	if (!sb->s_uuid_len)
+> > > +		return -ENOIOCTLCMD;
+> > > +
+> > > +	struct fsuuid2 u = { .len = sb->s_uuid_len, };
+> > > +	memcpy(&u.uuid[0], &sb->s_uuid, sb->s_uuid_len);
+> > > +
+> > > +	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
+> > > +}
+> > 
+> > Can we please keep the declarations separate from the code? I always
+> > find this sort of implicit scoping of variables both difficult to
+> > read (especially in larger functions) and a landmine waiting to be
+> > tripped over. This could easily just be:
+> > 
+> > static int ioctl_getfsuuid(struct file *file, void __user *argp)
+> > {
+> > 	struct super_block *sb = file_inode(file)->i_sb;
+> > 	struct fsuuid2 u = { .len = sb->s_uuid_len, };
+> > 
+> > 	....
+> > 
+> > and then it's consistent with all the rest of the code...
 > 
-> Applied to kvm-x86 selftests, thanks!
-Do you plan to send this branch to Paolo for v6.8?
-
-Thanks
-
-Eric
+> The way I'm doing it here is actually what I'm transitioning my own code
+> to - the big reason being that always declaring variables at the tops of
+> functions leads to separating declaration and initialization, and worse
+> it leads people to declaring a variable once and reusing it for multiple
+> things (I've seen that be a source of real bugs too many times).
 > 
-> [1/1] KVM: selftests: Fix a semaphore imbalance in the dirty ring logging test
->       https://github.com/kvm-x86/linux/commit/ba58f873cdee
 
+I still think this is of questionable value. I know I've mentioned
+similar concerns to Dave's here on the bcachefs list, but still have not
+really seen any discussion other than a bit of back and forth on the
+handful of generally accepted (in the kernel) uses of this sort of thing
+for limiting scope in loops/branches and such.
+
+I was skimming through some more recent bcachefs patches the other day
+(the journal write pipelining stuff) where I came across one or two
+medium length functions where this had proliferated, and I found it kind
+of annoying TBH. It starts to almost look like there are casts all over
+the place and it's a bit more tedious to filter out logic from the
+additional/gratuitous syntax, IMO.
+
+That's still just my .02, but there was also previous mention of
+starting/having discussion on this sort of style change. Is that still
+the plan? If so, before or after proliferating it throughout the
+bcachefs code? ;) I am curious if there are other folks in kernel land
+who think this makes enough sense that they'd plan to adopt it. Hm?
+
+Brian
+
+> But I won't push that in this patch, we can just keep the style
+> consistent for now.
 > 
-> --
-> https://github.com/kvm-x86/linux/tree/next
+> > > +/* Returns the external filesystem UUID, the same one blkid returns */
+> > > +#define FS_IOC_GETFSUUID		_IOR(0x12, 142, struct fsuuid2)
+> > > +
+> > 
+> > Can you add a comment somewhere in the file saying that new VFS
+> > ioctls should use the "0x12" namespace in the range 142-255, and
+> > mention that BLK ioctls should be kept within the 0x12 {0-141}
+> > range?
+> 
+> Well, if we're going to try to keep the BLK_ and FS_IOC_ ioctls in
+> separate ranges, then FS_IOC_ needs to move to something else becasue
+> otherwise BLK_ won't have a way to expand.
+> 
+> So what else -
+> 
+> ioctl-number.rst has a bunch of other ranges listed for fs.h, but 0x12
+> appears to be the only one without conflicts - all the other ranges seem
+> to have originated with other filesystems.
+> 
+> So perhaps I will take Darrick's nak (0x15) suggestion after all.
 > 
 
