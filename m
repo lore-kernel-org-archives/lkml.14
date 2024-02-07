@@ -1,66 +1,140 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7441250F2
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 10:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334D924B2A;
+	Wed,  7 Feb 2024 10:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707300580; cv=none; b=ItMS617T5T305xdl2a24aMMRh1Ce9yB/4UNMSwf98rcrAnUXzRb26LKO4NrB4/BXiSGyIAGrGakkmCtsxXg5T2vgzWjS2WWAUTv7wlssVgLfDpAYZ8P+LXbVXEBJFfVMhp6dBnKE3ujjOGwtrgUxxoDFzTnYiaoBdSRm9id5Wzs=
+	t=1707300678; cv=none; b=ldXa7Fp0ZdIpjHVqdQi/J4xK6pWdqs7KEMt+R8Q8TAEQvQfYY5aL7TS4dy0/znlTVXPcsqEJtP0ur8uszkV/NfPwR9vBMaQZ4UZtFQQMnDxL7RH5yQXdmt/xo9pQwoVha7DeY6R4mrzs/BnlxPafvUaanx4Sp47YoFuxaqAW7Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707300580; c=relaxed/simple;
-	bh=7cWIqL+AIo9NrMbiRmTYyymRICjR4BA6HqjzIbR46P4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D8JERi3IgQQC9CVWVzDzMUvGTggj7/hd2010ErXyB77Yi4JuVA8+LGbCHCJD05nmC0ysKNA9mxcQ50f1Q/4aOtxXTTOb6P41wl0+neGZbXMzLnB6UozFg2Q14/c9XtmlM8oVYYb1tlvf3Fnu9a1MpyebUPX9mHA8vuWpwrJC7xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qS9+itkL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QmscFldW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707300678; c=relaxed/simple;
+	bh=fy0MuGEeBqq0yRk9q1POmHQUTTNM7NnZ5ogEzRYEj/I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GsWIaYsBulZX1olSOvNYrC4Yoqci3oSRWcJFkFLEMlPaAbQHVMEqaAod0M5BIWHhQ02O4kvJhLfRFjQYHCaqf8DKxJyAcX8XcpT29j8nFqSS1I7gUO/hMCrzj7fU4MNcPdJK+jeGQnUfBibCIsfO92KheOH6vET266IzOZx9q20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=KyL7oM7i; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qS9+itkL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QmscFldW"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707300569;
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="KyL7oM7i"
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id D1D67635B069;
+	Wed,  7 Feb 2024 11:11:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1707300666;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7cWIqL+AIo9NrMbiRmTYyymRICjR4BA6HqjzIbR46P4=;
-	b=qS9+itkLNVJWa5S3VSX7TMK27feLcw1kNYrg9ieql7hTn5ZQGzzDvYV+0csOmzI+YKQaiL
-	goHljjBJUhdjUlxeo+jouMQJe87g8wKR+f8cyR3QuI7vqqCXv2Fd8yG6/3ylMYvipIHlFV
-	Lq0mGY1dCWMCfHore6EI4t7H6g9OnPazJSJDOKfYtZBh/bGZX2NymM7i5/R0ZXn9ZisxZB
-	PCvNMv5O1hPmzHF5h5RGqcaYCG6cQLnejivuCblICzVpEXokoEq4Gu8gv6M5sUmj68xcGU
-	5pfhLiSXpUspbpY8gSm2G8mHBcy6519hc9LCDvmmt8Oh21YQvuBhJKxPmMvABg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707300569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7cWIqL+AIo9NrMbiRmTYyymRICjR4BA6HqjzIbR46P4=;
-	b=QmscFldW/I7x3UnXzbL7KT42pMtGsUFS6iQ4BlHWhqDznumDeUtnwk6u4Q65dk+vj4m5o4
-	4BvV+aZjzjlUXkDw==
-To: tiozhang <tiozhang@didiglobal.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, "Steven Rostedt (Google)"
- <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, zyhtheonly@gmail.com,
- zyhtheonly@yeah.net, tiozhang@didiglobal.com
-Subject: Re: [PATCH] hrtimer: add cmdline parameter retry_threshold to
- config retry times in interrupt handler routine
-In-Reply-To: <20240131104152.GA19461@didi-ThinkCentre-M930t-N000>
-References: <20240131104152.GA19461@didi-ThinkCentre-M930t-N000>
-Date: Wed, 07 Feb 2024 11:09:28 +0100
-Message-ID: <87sf24mvqf.ffs@tglx>
+	bh=qk89De6FrqTdMkAJYqG4hQmTMMefgxmhKdx6js2QarM=;
+	b=KyL7oM7iafK7DSybwDFdAZAMiJ3ehUyp+BRzcCbLYde4BRADgMdlGp3/4m3KvueGghizKu
+	T0CBG9kR9OpEUCFUfp22+dQ1cirlFfG0ekAzHWklbRNhWJLx1n4TrPnGeXmeCokEA72M6M
+	CNT5dMy4P44VGic0SsjSOmoIvXjKcFo=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: rafael.j.wysocki@intel.com, Mario.Limonciello@amd.com,
+ viresh.kumar@linaro.org, Ray.Huang@amd.com, gautham.shenoy@amd.com,
+ Borislav.Petkov@amd.com, Perry Yuan <perry.yuan@amd.com>
+Cc: Alexander.Deucher@amd.com, Xinmei.Huang@amd.com, Xiaojian.Du@amd.com,
+ Li.Meng@amd.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v3 6/7] cpufreq: amd-pstate: remove legacy set_boost callback for
+ passive mode
+Date: Wed, 07 Feb 2024 11:10:52 +0100
+Message-ID: <2887380.mvXUDI8C0e@natalenko.name>
+In-Reply-To:
+ <fb14f6e7748f1b872f68eb2549d4e6033f0facbc.1707297581.git.perry.yuan@amd.com>
+References:
+ <cover.1707297581.git.perry.yuan@amd.com>
+ <fb14f6e7748f1b872f68eb2549d4e6033f0facbc.1707297581.git.perry.yuan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="nextPart12544814.O9o76ZdvQC";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Wed, Jan 31 2024 at 18:41, tiozhang@didiglobal.com wrote:
-> Motivation of doing this is to give user a config option to reduce time
-> cost in hrtimer irq when influenced by some time consuming hrtimer
-> callbacks running in irq context.
-> E.g, if we tune this parameter to 1, we dont retry anymore to prevent
-> occasionally consecutive time consuming callbacks running in a single
-> interrupt.
+--nextPart12544814.O9o76ZdvQC
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Date: Wed, 07 Feb 2024 11:10:52 +0100
+Message-ID: <2887380.mvXUDI8C0e@natalenko.name>
+MIME-Version: 1.0
 
-Which is the exact problem you are trying to solve here?
+Hello.
+
+On st=C5=99eda 7. =C3=BAnora 2024 10:21:57 CET Perry Yuan wrote:
+> With new freqency boost interface supported, legacy boost control
+> doesn't make sense any more which only support passive mode.
+> so it can remove the legacy set_boost interface from amd-pstate driver
+> in case of there is conflict with new boost control logic.
+>=20
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+> ---
+>  drivers/cpufreq/amd-pstate.c | 1 -
+>  include/linux/amd-pstate.h   | 1 -
+>  2 files changed, 2 deletions(-)
+>=20
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index 35791efc6e88..1dd523db3871 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -1675,7 +1675,6 @@ static struct cpufreq_driver amd_pstate_driver =3D {
+>  	.exit		=3D amd_pstate_cpu_exit,
+>  	.suspend	=3D amd_pstate_cpu_suspend,
+>  	.resume		=3D amd_pstate_cpu_resume,
+> -	.set_boost	=3D amd_pstate_set_boost,
+>  	.update_limits	=3D amd_pstate_update_limits,
+>  	.name		=3D "amd-pstate",
+>  	.attr		=3D amd_pstate_attr,
+> diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
+> index 465e9295a60c..ab7ca26974da 100644
+> --- a/include/linux/amd-pstate.h
+> +++ b/include/linux/amd-pstate.h
+> @@ -93,7 +93,6 @@ struct amd_cpudata {
+>  	struct amd_aperf_mperf prev;
+> =20
+>  	u64	freq;
+> -	bool	boost_supported;
+
+As a result of this removal the kernel-doc for this struct should be amende=
+d too because even after this patch is applied the `boost_supported` field =
+remains documented.
+
+>  	bool	hw_prefcore;
+> =20
+>  	/* EPP feature related attributes*/
+>=20
+
+
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart12544814.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmXDVywACgkQil/iNcg8
+M0usJA/8DvFsv4pQV0fQtw4hJh2XYcd5dI7x9P7ACTWNem6eWk5h8r8E50qAAj/i
+mhw1eZ7XKEALojhZPehAs4FBkFSZDKwfj7mO4crwDvBtX4sN+zKQI92YAmxY08fu
+jWzGSL607lbFJosXKQ5AUwj4oFLbntWt3I8sYgY9/7LqiaUbyGf376QIDr2+1aNQ
+i3kcCrALsnN0mFmCXmyc7mJLMDRy41v859TBNVpjprq7GUxdhmp42uLl8n49B3uN
+3P4McJLQ1UGc+mOB64MGMypZcBpPGQdGOF+a+0ijNOuUnLKvGm8vxc4vmZFn/lwF
+HVqhnDdFG5e0i4recu3ExN3n43Ji28pcfFYhfBNlu+ro8b4fypF1ija184fl5w44
+POv5QVTLELrLBGE+lzvigTZip/afLojug6VSGVq+PwSAc6UzB0akJTRXO4p5vNyl
+F1l8wcEhKN0flzJkp0q18hIKDLKr9n+Ja3pr+EDkZPQ3W8Fu3dXBHOg4IDWvyvEC
+C5V5UyU1KDF7S3bEIDj1hgDuHG2rGtCNp5UWhCeIxR5GnI4KXgEU1flOu3Yp3VN8
+f4rTaKJHgwZCC1vmK3QejH762nTxqLuAmQXe728nEjEO9Kbs0pPuY9FUQhLRjf6z
+YRDiGifZxWVomkZbz1ueePf5U3zwH1QtnyZbgVUeTWcyftSGC0w=
+=B1Jv
+-----END PGP SIGNATURE-----
+
+--nextPart12544814.O9o76ZdvQC--
+
+
+
