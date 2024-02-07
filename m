@@ -1,182 +1,95 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5EFF9D6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 03:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A79FC02
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 03:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707275130; cv=none; b=lNHRQL5KjLJmNFPVrVnpBDi5ec4wi0NuX66acn3sL+ZPPZ4kVY7vVOpaAgUB7rJS5YkK5jAae/QMPwEPvkp/FE7+XCIdNdNwXLlarRI1/MvmzrIuhtQ0j5GJk9QMxsQ+fmDN/UqScAyvCXWxaNghqN5XshnanuL1eJRZbTb+rqw=
+	t=1707275600; cv=none; b=OnwyA1DYUhs+EhEjnVYwz0W6e7mDCHZ0ayYREBOQ5+aMElWQlxXOGfd/+oDO5WG/11JAelKQgeNKvCN9fzv5K9KPfAwa+eWbbFrCRLpf7nAdYzmiEHaPDgWRbnzaGkMBJJRZIiujzmL/FDb1twd5jvoz9QcDBhtQXhoIllwu224=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707275130; c=relaxed/simple;
-	bh=qGhkZQIgQVNp0AZCjdVRVJL7p1vNU4Lb94vZHDmjz70=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jfzj+AuYiAdpU/t3xsmOX1zxdtUqFQBOUfhWS4w5gTBAqgalUoERCWkxz9fbDcFwNiVmSXLg+sn9EhNYiOUsATl+Yet1A7P2BfdGUDXncfVyR5R7QjYyV6BV9CLGEWmIUjivyHftXj894VW9A+mvF8hiR9d5wGugddfAJzaepAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dsQE6HfE; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707275600; c=relaxed/simple;
+	bh=qLTvqD/ssU4qZJmW1fUoq81bEGmNuhl5i23qQLLkIpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2VsOQ2DG9m/6c94k4KkifokwVfjI7bjF2oFCXkAyRZ21yIrrHz1Uyz5kN71q+rdlE6Gqwlk5ZeXlLSwZvNoZR/7qfJPJ1dH8TsHjbdBCb++zMVoab93KG/cMvl5BlmfajYchPPJFXYTU+ob4yYQ1tUBqbCWIAs149081mCeoDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IK9gWW37; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsQE6HfE"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56061ad3d3dso326924a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 19:05:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK9gWW37"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e1214ae9d4so50100a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 19:13:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707275127; x=1707879927; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VzJz2VhUqQo6bsWu4ZInY8E3t/UAr4i9VkRJ4+BoPG0=;
-        b=dsQE6HfEx+hmAVH/AvQUiRk4GHnp9l251uNXuFHLTYYvYGqqY8bZMG+PMMuqvcKNj2
-         E43EtdlAj1bx+KOWhcG2kUbNaKr27tTpR5tldXIJmRjY66I0eVFq6B/2+WZLQJrGytM3
-         M+PsX2VsJWMUPCjMUabBZ6lQWw6LwFsshhC+wgRtmtMWahEs76tYQC8cuJeIyaQvOiKJ
-         3247RtRGZZywlMnP2gwvOIPVInuiRmdosNRU2DUp8JlpT+MfY8ZYEvvu1MfpE/jppMa3
-         BlDWac2pEy/fWOTgKe/4KxDPx2fInaLUYyBjFT6OZNEYtfGOs+raURwWQAbJOT0wj6Tz
-         PF3Q==
+        d=gmail.com; s=20230601; t=1707275598; x=1707880398; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aZa2rDtQygSVd/zKMjyhQzpij43YQZ3f+RmrbEh9TGc=;
+        b=IK9gWW37oD7A2YNOT9pCTSacwW+3UQLb6Ocjj1VDYiF+rfaxACsLnb5X4eSjeUn1MR
+         hoqUYrvdpWcP5L0Eo+LVtx+F2iVWgt6fFBvlT6I21W5nFj63ur/5DPut9fgIEXBdg6Ox
+         a++21eTxKUQj9DgtU8aRWpgjhn7qkx4wFaGLc/rLWXU5s2Yw4xEnekMChqmBU9PXTuRo
+         5sjxxZbmtHL5ENfCHDt4S5oUBnGJL7myATs/MBnFNPrlBp2iMyZ0H9toHSHfFUGuDYyr
+         5z1XkyEEpIriVF5D2ugIwwxXscUQ18bEB8QgDWI6CDJ8y4s9Qq6eSb9b8A45jgqsSq94
+         7Cyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707275127; x=1707879927;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VzJz2VhUqQo6bsWu4ZInY8E3t/UAr4i9VkRJ4+BoPG0=;
-        b=pg1WA/O8JRlXfMXIXR3N2tUHWyYS+PisdgvYo8B3pnwu+44FuhlrdMo8w0qhyT7p3a
-         qAvPSd8EjW8UeveCyxUZhOXao9JCE5Ebs/pUjIaRd/Gi7P57O/v0hwkNMl3Lp57QfzOJ
-         taZFuGs699TD9Liz2tVh+5hofaqq4wFjEqgjOyY4mBV2tNnY1rvv8lSVwNirz+xfKK6F
-         DE+vmQAJvxF8DeB1hI+6zFsZfcZ2WN2AyTOCtd3LAvlszI6yRlf+DAxg6ZPxY3uiidlW
-         sQ7rc+T6zmrZcPWI2EWZjmZ/APrK+PF+/UKpKjSrVlbpWIoe/2fDwkpigCjkDTd7hjyV
-         cvNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUB3CX9eyWLUg8y84IGvIVmzndZvf0bJK5EoTccqbl+fexdpv71eTkrE0ttp40TE5zWi9jtoi/VbFiL73mNwYMosxuswmy7Bw62a/C
-X-Gm-Message-State: AOJu0Yxg4DWJfKPahCh3RDxMGKxVbqLtD0MnOTKuySRTCvRCyvRJautx
-	FIEvGe5IuP3ktD0svKbkM3ErLBnOGxapmKsvJmbUEL/YWW5T0Uc2NOXYoW0Ut2RLJoFMd0zEuvP
-	8r1qyjfr+6kYIb+WGX2429IsBxPY=
-X-Google-Smtp-Source: AGHT+IHR8KELzkqPswE+Zbj1LmsGAFkS/tLghwrN4ewDP4p0eb9igGI9OPYGFLo5BbMxda/UYM0MiucKrxLa994RdGc=
-X-Received: by 2002:a50:8d52:0:b0:55f:e2ee:6bba with SMTP id
- t18-20020a508d52000000b0055fe2ee6bbamr10543405edt.5.1707275127159; Tue, 06
- Feb 2024 19:05:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707275598; x=1707880398;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZa2rDtQygSVd/zKMjyhQzpij43YQZ3f+RmrbEh9TGc=;
+        b=aVMCYyA9Jk21F/ADZFQ1TbefeyiL5sA4kq/Sly/71Zw1JrzerTxqVGBDmYJz3ERRsb
+         hThAn3RcEoH/o21dw4b4y9dtrS+uhU8iSd1SjqyzJuaIgWWKsK1ce2K4Ac1I9Qz1nnCx
+         vLAuSZ1Gc3crdrU2IEpFhDMrK5HsaApNtXr/WEbB50qKI4PXwBxrdGBXeco1gmKnpGb7
+         OLs2xkod/2vS0kVxLyYzeW1u7/TyayTQy61B3h4bSp+G1yLVsJWk/WUCleJstiTRFiQk
+         ahnj+l0GAX03eGwK6e0J5nTlTqIlH/KiFtB4E6sat96HZDATyLoI0E6AnlG9Zt6Vq7op
+         J13Q==
+X-Gm-Message-State: AOJu0Ywbi0pkCm1FQPlG8NlOv/btr+4ELVTBqisN2OYIcCcbiEizpapy
+	+Bj4QVgu5YheSs7oQwmGV82hKaZt0q11JPHy97Yw4AqiqJdcE/hYvhLjkyQcr5E=
+X-Google-Smtp-Source: AGHT+IGwIPMor0Ue5yhPu9dVznv0djj3c41mGTsQsVxLOFnBlZD8fpLhpx/T2n3beX4dmuhIhxLNcg==
+X-Received: by 2002:a05:6358:224d:b0:178:9393:176b with SMTP id i13-20020a056358224d00b001789393176bmr1563416rwc.16.1707275598258;
+        Tue, 06 Feb 2024 19:13:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXxp6Q6f9Wjf0/McXuRvi5WJYdC1h/9TqdiaVJ+Z8BCkz9I9iVWCXKSWoer5EFANET4ILIlJ4wIJWStTJjOjZwxn+UgE8DQA2Pl8YY6SSn3bcB6uwB+qzw+7bMPDvvPv2+9bxpLzFLsu9WlHhx1yOT8dKbX9YKwKYB03aexmjLCuJa1bldMi9rt/32uMuSQI3Z2gejisKIxTKtP25vEdo5rp/ZkIFuGaJzQAByVSjybm0MRPoQr6bAPmPd3/SsA
+Received: from localhost ([2620:10d:c090:400::4:3c45])
+        by smtp.gmail.com with ESMTPSA id sw4-20020a17090b2c8400b0029608793122sm333228pjb.20.2024.02.06.19.13.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 19:13:16 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 6 Feb 2024 17:13:14 -1000
+From: Tejun Heo <tj@kernel.org>
+To: yunlong xing <yunlongxing23@gmail.com>
+Cc: Yunlong Xing <yunlong.xing@unisoc.com>, jiangshanlai@gmail.com,
+	linux-kernel@vger.kernel.org, hongyu.jin@unisoc.com,
+	zhiguo.niu@unisoc.com, zhengxu.zhang@unisoc.com
+Subject: Re: [PATCH] workqueue: Fix pool->nr_running type back to atomic
+Message-ID: <ZcL1SofG_uul0732@slm.duckdns.org>
+References: <20240206080024.2373490-1-yunlong.xing@unisoc.com>
+ <ZcJj2dUUyAY_7XFS@slm.duckdns.org>
+ <CA+3AYtQBci3WgTfhSA-8V34qWbnQ23V86rw7rGArGqStdpnVPw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111115745.62813-2-zegao@tencent.com> <d0ab28dd-95e0-446c-9e21-a45680114e5b@arm.com>
-In-Reply-To: <d0ab28dd-95e0-446c-9e21-a45680114e5b@arm.com>
-From: Ze Gao <zegao2021@gmail.com>
-Date: Wed, 7 Feb 2024 11:05:15 +0800
-Message-ID: <CAD8CoPD7CC+i7TTV3Mvm3LJe=P2SMZUyDBnPLuMz7SPv23t6vw@mail.gmail.com>
-Subject: Re: [RFC PATCH] sched/eevdf: Use tunable knob sysctl_sched_base_slice
- as explicit time quanta
-To: Luis Machado <luis.machado@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ben Segall <bsegall@google.com>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Steven Rostedt <rostedt@goodmis.org>, Valentin Schneider <vschneid@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, linux-kernel@vger.kernel.org, 
-	Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+3AYtQBci3WgTfhSA-8V34qWbnQ23V86rw7rGArGqStdpnVPw@mail.gmail.com>
 
-On Tue, Feb 6, 2024 at 9:09=E2=80=AFPM Luis Machado <luis.machado@arm.com> =
-wrote:
->
-> Hi,
->
-> On 1/11/24 11:57, Ze Gao wrote:
-> > AFAIS, We've overlooked what role of the concept of time quanta plays
-> > in EEVDF. According to Theorem 1 in [1], we have
-> >
-> >       -r_max < log_k(t) < max(r_max, q)
-> >
-> > cleary we don't want either r_max (the maximum user request) or q (time
-> > quanta) to be too much big.
-> >
-> > To trade for throughput, in [2] it chooses to do tick preemtion at
-> > per request boundary (i.e., once a cetain request is fulfilled), which
-> > means we literally have no concept of time quanta defined anymore.
-> > Obviously this is no problem if we make
-> >
-> >       q =3D r_i =3D sysctl_sched_base_slice
-> >
-> > just as exactly what we have for now, which actually creates a implict
-> > quanta for us and works well.
-> >
-> > However, with custom slice being possible, the lag bound is subject
-> > only to the distribution of users requested slices given the fact no
-> > time quantum is available now and we would pay the cost of losing
-> > many scheduling opportunities to maintain fairness and responsiveness
-> > due to [2]. What's worse, we may suffer unexpected unfairness and
-> > lantecy.
-> >
-> > For example, take two cpu bound processes with the same weight and bind
-> > them to the same cpu, and let process A request for 100ms whereas B
-> > request for 0.1ms each time (with HZ=3D1000, sysctl_sched_base_slice=3D=
-3ms,
-> > nr_cpu=3D42).  And we can clearly see that playing with custom slice ca=
-n
-> > actually incur unfair cpu bandwidth allocation (10706 whose request
-> > length is 0.1ms gets more cpu time as well as better latency compared t=
-o
-> > 10705. Note you might see the other way around in different machines bu=
-t
-> > the allocation inaccuracy retains, and even top can show you the
-> > noticeble difference in terms of cpu util by per second reporting), whi=
-ch
-> > is obviously not what we want because that would mess up the nice syste=
-m
-> > and fairness would not hold.
-> >
-> >                       stress-ng-cpu:10705     stress-ng-cpu:10706
-> > ---------------------------------------------------------------------
-> > Slices(ms)            100                     0.1
-> > Runtime(ms)           4934.206                5025.048
-> > Switches              58                      67
-> > Average delay(ms)     87.074                  73.863
-> > Maximum delay(ms)     101.998                 101.010
-> >
-> > In contrast, using sysctl_sched_base_slice as the size of a 'quantum'
-> > in this patch gives us a better control of the allocation accuracy and
-> > the avg latency:
-> >
-> >                       stress-ng-cpu:10584     stress-ng-cpu:10583
-> > ---------------------------------------------------------------------
-> > Slices(ms)            100                     0.1
-> > Runtime(ms)           4980.309                4981.356
-> > Switches              1253                    1254
-> > Average delay(ms)     3.990                   3.990
-> > Maximum delay(ms)     5.001                   4.014
-> >
-> > Furthmore, with sysctl_sched_base_slice =3D 10ms, we might benefit from
-> > less switches at the cost of worse delay:
-> >
-> >                       stress-ng-cpu:11208     stress-ng-cpu:11207
-> > ---------------------------------------------------------------------
-> > Slices(ms)            100                     0.1
-> > Runtime(ms)           4983.722                4977.035
-> > Switches              456                     456
-> > Average delay(ms)     10.963                  10.939
-> > Maximum delay(ms)     19.002                  21.001
->
-> Thanks for the write-up, those are interesting results.
->
-> While the fairness is restablished (important, no doubt), I'm wondering i=
-f the much larger number of switches is of any concern.
+Hello,
 
-This patch should introduce no changes against the status quo, of
-course if I understand and implement it correctly,  like I said in the
-changelog when custom slices are not supported right now,
+On Wed, Feb 07, 2024 at 10:06:56AM +0800, yunlong xing wrote:
+> Yes, WARN_ON is triggered. The reason of  set_cpus_allowed_ptr() fail  still
+> needs to be further investigated.
 
-If we do the same experiments without setting custom slices,
-(for 10 secs with HZ=3D1000 and sysctl_sched_base_slice=3D3ms)
-the number of switches is likely to be almost 1253, due to which,
-we can conclude that if no regressions are spot w/o this patch,
-then there should be none w/ patch, if your concern was about
-the throughput it possibly affects.
+I see. Please include context like the above when posting patches.
 
-> I'm planning on giving this patch a try as well.
+> I was originally planning to inquire workqueue whether or not allows the worker
+> that associated with one cpu running on the other cpus？From your reply，the
+> answer of my question is not allow，right？
 
-Cheers!
-        -- Ze
+Yes, you're right. set_cpus_allowed_ptr() shouldn't fail.
 
+Thanks.
 
-> IMPORTANT NOTICE: The contents of this email and any attachments are conf=
-idential and may also be privileged. If you are not the intended recipient,=
- please notify the sender immediately and do not disclose the contents to a=
-ny other person, use it for any purpose, or store or copy the information i=
-n any medium. Thank you.
+-- 
+tejun
