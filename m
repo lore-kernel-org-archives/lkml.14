@@ -1,169 +1,164 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F85825577
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D78D1AACC
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707304526; cv=none; b=svsCVt4DeS8n9g2W1saGfuLkaf1PNS1Hb7HIqSACLkI1HoVel6jGbDr5fZLyopwGZwuJlJamNCAlLEsIc4ujfJga7T00fBLOFgWW6Rge6hR0rwrpsN9c70yPZZAvIzIkJuc41rk2y8zKOD14cwhUu5dUieEQMKjVH4KE4bJ0DY0=
+	t=1707304592; cv=none; b=KGoM4lk2PHqGYluUoYMPgkxEeK2bYq34Zm/auxJLNZGaG34RaRJTM+w1gYG/d4AlQ8iwappdCJF2JdLkO90jibaKKlDpg+jERKcI38EaUzokgdLnAUJHp/8zFDENQpX6W8ZtyA4b/jgMkUSu+IzZ2z2O0Nvo8gUKU1ldsWygMng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707304526; c=relaxed/simple;
-	bh=o/wJjcmifG6yfUSs1dsSi2RQKEeeRraIOWfqCZABqdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sW78Ft/9qdP0RJm/9bm0bbGb9HTu/d2v6ivkrUiwXOv3QgzyirrggI+NqDdhoJlfapFaHYrwuTgHJu7fD45R4LyKTLZ+jVYXbYUXas3RqSyq2uXoPjQA+r8hKQrCmquVm0dexqWdk+OuF65BLeFA5UT+icGZl+HdewXHW5/HS1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wJvdKYd8; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707304592; c=relaxed/simple;
+	bh=LJtFGIADyf/tpqM1VRO1P2IVV+9g5WuvYQlUJGQtzAQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
+	 Content-Type:References; b=YVsj3zKTsv4ZVRcQxhYp2mDhOOv1kpWhax4hRCo6W0Kvya/l0e9E1N84PvvBg9nWsIjp9WFMkgMD0V/4H5YH0WS/s8bDEq9qLcvdEdW92h5/OASWjj2igj/dndSr11GK98RbZhMq8j+DQjm7zQZjRmQ5qEmzM3gXf8NsHR+G14A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mzmvVkaY; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wJvdKYd8"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40f033c2e30so4194525e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:15:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707304521; x=1707909321; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D8XcmWMrPCGgSQiW78AbqKZG3dzV30LWYZrn5ta2nWk=;
-        b=wJvdKYd862kgDIb5wwSwyvlA2dP2aQPB0fx3OOj8Sj0GcI565V8Vm6TMrSfPlpXDX5
-         1Kc9B5yRXt9pwli3fDHE37MGT41R8/uTAoIyYFW+vn7IARCzDBM81XCAPRsNifwgpWvW
-         6VYpScGxgifxftYCUU8Macz/mxCAUBzlOtBi4xpOPTKkIfy7x6sgg881rOqenrquYXOD
-         uc5RfkiBAX45T2OjjlVj7pDjeWOouBoY+JBBkymWHeTOsMd23H8gdYzdjXmvfzlnMklq
-         d+IJPWAZV+cNuEVVunK0YzNkiZBEPnp1RKoP0anxFWxEUArhvq7JOn9zvzdeGVYC/HeE
-         8DZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707304521; x=1707909321;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D8XcmWMrPCGgSQiW78AbqKZG3dzV30LWYZrn5ta2nWk=;
-        b=R0Xcdg14Skj7PhPNVVudu3WQJzyKkPuLVKtbtEfHd2PCKUy5kEzUi9LfdG6PHzUfnY
-         7eWvcKRWfrTGKCaWyjbBqg9WCcT00YRuBVauFzFIGU7rFzpklkJlJBFE+Hniop268v3b
-         OmoAc+PVZI5RSraQ7wA/S4F60iEx6p8T6QR/iK5tMXYFMLXCH0Ci4gK4kbBTfqDpw1Lt
-         UMOtQrS59tfDBtdBjnLlxLa8XpFw/DsxlFGkaPAGqkcQOWU9aV9/xcvorDSRQnAoQzjb
-         BsLLcvZm8UggPCDbp7MLXn00CkdCjN7D/88G6URVa+inp4KAD53a8M3TMNy7cHa1hHn9
-         AOcg==
-X-Gm-Message-State: AOJu0YytjQD2QroaZFvj1HtMaJ3cKvn0P0ksqnhnIA0MJaS8Xw4D1Jpb
-	mGYyht9e4mvJsVuQeQn0nuq2Nvq7jpVmssFcE9L1VGswQpT6tl5MhCYwVHP42c8=
-X-Google-Smtp-Source: AGHT+IHhAlzVOY3B/+bWhEASytG6LTCOy7YUe7jUKPq2qdZL6OMhfZ75BzgFAg2T1kUMNJ1cT9onwA==
-X-Received: by 2002:a05:600c:46cf:b0:40e:a32c:988d with SMTP id q15-20020a05600c46cf00b0040ea32c988dmr4057504wmo.4.1707304521284;
-        Wed, 07 Feb 2024 03:15:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV1bYTpXyorkK/1JuK3jfVAVwjF4wHMZCtBydXAl+0AyUWFNFEHeU82TvRj8suDQdqEl8CC3VxUyRYgEDJEqvx4lxbIs5TKO31WgN1wnGWzGLNuPtv8Oo4DM62kh1pNiLfpBTfQAHnAzCM/d6/XtLPK5uPpJeTnDmeDcWjwT/tjqsqPAJsj/iCvUEvsrP3tGL/PjGt8eMenR0MeAtqArckdmLhUUCnr5Jb8sqJCgNa4+1co3amJwtXCWCfpVxI573zNN8Wg9m3moxZmDkvy1IJxj9oSjsZrI1FD+H2nwrDm60X6AYuh4rrt0QudF+prqaW0KABSzD9LuTffb1jGQc+dbOyu/h6/rwhB8/M9/njiVj7H/RPXlH5zcpEuIIW1gRk1gG4m4CJtOFRsKawKdCIKJ3MiC1pls5jxEVo0gQIlRXulBRYHkR1pYCbUmxojKwBgvfVSsIaqx+O0QoyezCfO1BUX5zq7+gl+q67aexyukL0AqRVvZFOgkO/sJSD2PI8pZ9Uut2mvzd9JSEhXCzT7eL+b56d/z97FjieGCYK+ECzzBfUvtcp7zw5dgT8U03KCJkoz3BGWYmv9M2HkzeQinQ==
-Received: from ta2.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
-        by smtp.gmail.com with ESMTPSA id l14-20020a05600c4f0e00b0040ec8330c8asm4983260wmq.39.2024.02.07.03.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 03:15:20 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: broonie@kernel.org,
-	andi.shyti@kernel.org,
-	semen.protsenko@linaro.org
-Cc: krzysztof.kozlowski@linaro.org,
-	alim.akhtar@samsung.com,
-	linux-spi@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	andre.draszik@linaro.org,
-	peter.griffin@linaro.org,
-	kernel-team@android.com,
-	willmcvicker@google.com,
-	robh+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2 3/4] spi: s3c64xx: add s3c64xx_iowrite{8,16}_32_rep accessors
-Date: Wed,  7 Feb 2024 11:15:15 +0000
-Message-ID: <20240207111516.2563218-4-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-In-Reply-To: <20240207111516.2563218-1-tudor.ambarus@linaro.org>
-References: <20240207111516.2563218-1-tudor.ambarus@linaro.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mzmvVkaY"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240207111628euoutp02f670d881fee32aaed66d12a4bceb664a~xkHpBvhdV0413104131euoutp02e
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:16:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240207111628euoutp02f670d881fee32aaed66d12a4bceb664a~xkHpBvhdV0413104131euoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707304588;
+	bh=Y5FZSjgrrNPEIoeyx60PXrwjiJiBieeyiawTNRw4j0g=;
+	h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
+	b=mzmvVkaY8AuaCxvIYbs71IwEsnZs8XnfUPbS4gv88beWLSkF6wlMp9ODAN1deINDj
+	 oZfo5dxrimOY9YqUxU0MbJNKzaQYqjKy8LwyPeUemSYCOgSZXfLKQcFHNd1F6+xT2A
+	 VsDEVRbXEvojxSLs4JES43niccqWxShZGqwMcs20=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240207111628eucas1p291cb78a004be8b706c065337e82c576f~xkHoxRXIf1544215442eucas1p2u;
+	Wed,  7 Feb 2024 11:16:28 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 8D.76.09552.C8663C56; Wed,  7
+	Feb 2024 11:16:28 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240207111627eucas1p18965924f9815a1d8bf94c3bedcd6a945~xkHoXLbtw0515305153eucas1p1g;
+	Wed,  7 Feb 2024 11:16:27 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240207111627eusmtrp1b7afce73360a0814c5dd87e926b37662~xkHoWivvZ3199031990eusmtrp1j;
+	Wed,  7 Feb 2024 11:16:27 +0000 (GMT)
+X-AuditID: cbfec7f5-853ff70000002550-08-65c3668c9894
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 48.DC.09146.B8663C56; Wed,  7
+	Feb 2024 11:16:27 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240207111626eusmtip1f12e8a2850e8d6b9df2ea7087b60f46e~xkHnlIucd1225112251eusmtip1h;
+	Wed,  7 Feb 2024 11:16:26 +0000 (GMT)
+Message-ID: <4a043533-009f-4db9-b107-c8374be28d2b@samsung.com>
+Date: Wed, 7 Feb 2024 12:16:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v1] PM: sleep: Restore asynchronous device resume
+ optimization
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+	<linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Tejun Heo
+	<tj@kernel.org>, Nathan Chancellor <nathan@kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, Stanislaw Gruszka
+	<stanislaw.gruszka@linux.intel.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	Naohiro.Aota@wdc.com, kernel-team@meta.com
+Content-Language: en-US
+In-Reply-To: <CAJZ5v0hn=KgaWn9pwtLsH2a8n61BNxzb1xrNoxUfEi3o9OAZGw@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPKsWRmVeSWpSXmKPExsWy7djP87o9aYdTDfafY7WYunY3k8W+i2vY
+	LC7vmsNm8bn3CKPFxOObWS3aVz5ls5j7ZSqzxZnTl1gtPu7ZwGjxa/lRRovja8MduD12zrrL
+	7rFpVSebx51re9g85p0M9Dh3scJjy9V2Fo/Pm+Q82g90MwVwRHHZpKTmZJalFunbJXBlnHwy
+	j71ggkDFisk/WBsYF/N2MXJySAiYSEw4O5Gli5GLQ0hgBaPE8RNX2SCcL4wS73d+hXI+AzkH
+	f7DCtLSt+QCVWM4o8W/2PkYI5yOjxIbHl5i6GDk4eAXsJE7c4gBpYBFQkdh1YisjiM0rIChx
+	cuYTFhBbVEBe4v6tGewgNpuAoUTX2y42EFtYIETi9dmjYMtEBLQlliy6ygwyn1ngE5PE7YnN
+	YM3MAuISt57MZwKxOQUCJS7OuMIOEZeXaN46G6xBQmAyp8Sl+TsZIc52kfi89wczhC0s8er4
+	FnYIW0bi9OQeFoiGdkaJBb/vM0E4ExglGp7fguq2lrhz7hcbyGvMApoS63fpQ4QdJVqXbGAF
+	CUsI8EnceCsIcQSfxKRt05khwrwSHW1CENVqErOOr4Nbe/DCJeYJjEqzkMJlFpLXZiF5ZxbC
+	3gWMLKsYxVNLi3PTU4uN81LL9YoTc4tL89L1kvNzNzEC09jpf8e/7mBc8eqj3iFGJg7GQ4wS
+	HMxKIrxmOw6kCvGmJFZWpRblxxeV5qQWH2KU5mBREudVTZFPFRJITyxJzU5NLUgtgskycXBK
+	NTCVRxTO7OJ0DA7ZbCeidrF2xq7v/84umnb8gcGEtrlPi8pMrp6Oje90eFBtb338Tb7Q4Wh7
+	/9fqp2U3Tm/uuHhFaIlB4Nf+HbwWPbFO6tpX0modY9uKZB8xKq6ckCWVF5/w/3O42ovi7bk2
+	4YK6y1/lVR76rpTow6IhMf3DrjbmldqGU8NaT8zmkNaWF9RsPLxtIWOG0ju237NnShR935vV
+	ZhAVFO7TaaDCpc+/NXPint8JP2/aJiSz33544nHC5Vnr15Wn8m2eFuqWcni3dkT2gUDVly8W
+	5fNs2q6xe/H84jJTydx1ZocXhPJ8ThAVOyrD08P6nfV3S/YnjSsrjTp1uH/tmWQdvuOH1bPI
+	CUosxRmJhlrMRcWJAOXs9LzSAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7rdaYdTDU7e0LaYunY3k8W+i2vY
+	LC7vmsNm8bn3CKPFxOObWS3aVz5ls5j7ZSqzxZnTl1gtPu7ZwGjxa/lRRovja8MduD12zrrL
+	7rFpVSebx51re9g85p0M9Dh3scJjy9V2Fo/Pm+Q82g90MwVwROnZFOWXlqQqZOQXl9gqRRta
+	GOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlnHwyj71ggkDFisk/WBsYF/N2MXJy
+	SAiYSLSt+cDWxcjFISSwlFHi2Ow9rBAJGYmT0xqgbGGJP9e6oIreM0qs6F/F3MXIwcErYCdx
+	4hYHSA2LgIrErhNbGUFsXgFBiZMzn7CA2KIC8hL3b81gB7HZBAwlut6CzOHkEBYIkXh99ijY
+	fBEBbYkli64yg8xnFvjCJPFp0kpWiGW/GCVmrPoL1s0sIC5x68l8JhCbUyBQ4uKMK1BxM4mu
+	rV2MELa8RPPW2cwTGIVmITlkFpL2WUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93
+	EyMwbrcd+7l5B+O8Vx/1DjEycTAeYpTgYFYS4TXbcSBViDclsbIqtSg/vqg0J7X4EKMpMDQm
+	MkuJJucDE0deSbyhmYGpoYmZpYGppZmxkjivZ0FHopBAemJJanZqakFqEUwfEwenVAPT5GBW
+	Tn67Gz8nTi+dopYrbv7fU12wOmTzU92cPxcvKjpWNt1it9bdb1Q5bfvlU3GbGW8mvVmjf3tm
+	/6KLK6dPqBA8Yuj+f+LMri1Tylvnyr+adppN4qNJrozqkfIn65++85pad/SnQM3Rc3VHXuf8
+	1b5eOfejTdPNU87OIieKi4u7BKT/Ld3xaPaPX9Onzp6zJ/7u64fZws4LXwUWvjG02O1jLrRT
+	YYqzxvfySsfTWx6fYGC/u2tBhJjy7njprs5CgZ3/tayjpdui1/bVvjqko+L6c/33L9Oa0jsf
+	9y3vLntu8eLmu2KpOIeoIJtMsx1z4gsr5/hIpTR6qs773TnV+mjP8tPe3/qLmacuCm6LV2Ip
+	zkg01GIuKk4EAC1oeRhkAwAA
+X-CMS-MailID: 20240207111627eucas1p18965924f9815a1d8bf94c3bedcd6a945
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20240207103144eucas1p16b601a73ff347d2542f8380b25921491
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240207103144eucas1p16b601a73ff347d2542f8380b25921491
+References: <CGME20240207103144eucas1p16b601a73ff347d2542f8380b25921491@eucas1p1.samsung.com>
+	<10423008.nUPlyArG6x@kreacher>
+	<708a65cc-79ec-44a6-8454-a93d0f3114c3@samsung.com>
+	<CAJZ5v0hn=KgaWn9pwtLsH2a8n61BNxzb1xrNoxUfEi3o9OAZGw@mail.gmail.com>
 
-Allow SoCs that require 32 bits register accesses to write data in
-chunks of 8 or 16 bits. One SoC that requires 32 bit register accesses
-is the google gs101. The operation is rare, thus open code it in the
-driver rather than making it generic (through asm-generic/io.h).
+On 07.02.2024 11:38, Rafael J. Wysocki wrote:
+> On Wed, Feb 7, 2024 at 11:31 AM Marek Szyprowski
+> <m.szyprowski@samsung.com>  wrote:
+>> On 09.01.2024 17:59, Rafael J. Wysocki wrote:
+>>>    From: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
+>>>
+>>> Before commit 7839d0078e0d ("PM: sleep: Fix possible deadlocks in core
+>>> system-wide PM code"), the resume of devices that were allowed to resume
+>>> asynchronously was scheduled before starting the resume of the other
+>>> devices, so the former did not have to wait for the latter unless
+>>> functional dependencies were present.
+>>>
+>>> Commit 7839d0078e0d removed that optimization in order to address a
+>>> correctness issue, but it can be restored with the help of a new device
+>>> power management flag, so do that now.
+>>>
+>>> Signed-off-by: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
+>>> ---
+>> This patch finally landed in linux-next some time ago as 3e999770ac1c
+>> ("PM: sleep: Restore asynchronous device resume optimization"). Recently
+>> I found that it causes a non-trivial interaction with commit
+>> 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement
+>> for unbound workqueues"). Since merge commit 954350a5f8db in linux-next
+>> system suspend/resume fails (board doesn't wake up) on my old Samsung
+>> Exynos4412-based Odroid-U3 board (ARM 32bit based), which was rock
+>> stable for last years.
+>>
+>> My further investigations confirmed that the mentioned commits are
+>> responsible for this issue. Each of them separately (3e999770ac1c and
+>> 5797b1c18919) doesn't trigger any problems. Reverting any of them on top
+>> of linux-next (with some additional commit due to code dependencies)
+>> also fixes/hides the problem.
+>>
+>> Let me know if You need more information or tests on the hardware. I'm
+>> open to help debugging this issue.
+> If you echo 0 to /sys/power/pm_async before suspending the system,
+> does it still fail?
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/spi/spi-s3c64xx.c | 36 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+In such case it works fine.
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index eb79c6e4f509..014fcc933c90 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -142,6 +142,7 @@ struct s3c64xx_spi_dma_data {
-  *	prescaler unit.
-  * @clk_ioclk: True if clock is present on this device
-  * @has_loopback: True if loopback mode can be supported
-+ * @use_32bit_io: True if the SoC allows only 32-bit register accesses.
-  *
-  * The Samsung s3c64xx SPI controller are used on various Samsung SoC's but
-  * differ in some aspects such as the size of the fifo and spi bus clock
-@@ -158,6 +159,7 @@ struct s3c64xx_spi_port_config {
- 	bool	clk_from_cmu;
- 	bool	clk_ioclk;
- 	bool	has_loopback;
-+	bool	use_32bit_io;
- };
- 
- /**
-@@ -414,6 +416,30 @@ static bool s3c64xx_spi_can_dma(struct spi_controller *host,
- 
- }
- 
-+static void s3c64xx_iowrite8_32_rep(volatile void __iomem *addr,
-+				    const void *buffer, unsigned int count)
-+{
-+	if (count) {
-+		const u8 *buf = buffer;
-+
-+		do {
-+			__raw_writel(*buf++, addr);
-+		} while (--count);
-+	}
-+}
-+
-+static void s3c64xx_iowrite16_32_rep(volatile void __iomem *addr,
-+				     const void *buffer, unsigned int count)
-+{
-+	if (count) {
-+		const u16 *buf = buffer;
-+
-+		do {
-+			__raw_writel(*buf++, addr);
-+		} while (--count);
-+	}
-+}
-+
- static void s3c64xx_iowrite_rep(const struct s3c64xx_spi_driver_data *sdd,
- 				struct spi_transfer *xfer)
- {
-@@ -426,10 +452,16 @@ static void s3c64xx_iowrite_rep(const struct s3c64xx_spi_driver_data *sdd,
- 		iowrite32_rep(addr, buf, len / 4);
- 		break;
- 	case 16:
--		iowrite16_rep(addr, buf, len / 2);
-+		if (sdd->port_conf->use_32bit_io)
-+			s3c64xx_iowrite16_32_rep(addr, buf, len / 2);
-+		else
-+			iowrite16_rep(addr, buf, len / 2);
- 		break;
- 	default:
--		iowrite8_rep(addr, buf, len);
-+		if (sdd->port_conf->use_32bit_io)
-+			s3c64xx_iowrite8_32_rep(addr, buf, len);
-+		else
-+			iowrite8_rep(addr, buf, len);
- 		break;
- 	}
- }
+Best regards
 -- 
-2.43.0.687.g38aa6559b0-goog
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
