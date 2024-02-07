@@ -1,155 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC9915DF03;
-	Wed,  7 Feb 2024 21:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDEE15DF1D;
+	Wed,  7 Feb 2024 21:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341158; cv=none; b=Oh+rEdOwJIdzpAlIIWY09d7jwA+6NmCPP21Gz6QmI3S5SesJaoVzPapi6dQCFKD5pIB46Mz8nR//9Pja/aJGXJYVzkIhxBbRizHVJpTMpBXffzvon6BQo3fYY68idXoiYuauvnPvXxJiKv7AT7bdvTiXviFXe6YIOO/ttO3xSYg=
+	t=1707341159; cv=none; b=c4KJODKMHCt7mDBrgiRAULtMsheFtL1pinEJL4n5AEZs8cG/UGOB9278fIhvcJ0ogPDyL02R5upYuOJjUSxAUR2IhdUHtWyi4kvJk7zjsUqAbqs1oKUPXeosFjzOfoa7oXQS0EpzYbJPeh7G42L8GUxHtdaYlIliTvQON29gD3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341158; c=relaxed/simple;
-	bh=h79hO05xp7Yb1JfaQ+0MRJL26ORufyCzdOf24bZvOpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ah6xLy2ayxwfpNGyLe4v8+Z3NwRkNgC1r6tv8KUOu0NeCaHVsMAu+4t24sJOJVUaYHErZeXVV/Zj+pIviBDXMIWwWbOAyu0DEp4Qkhr3QFgPrIahnPcYmnZOa/FDwnbhRaxG7QKMSTLAarqH+Ml+ctZXNzRx35rBBsRVvm5eKB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBwVzhTQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707341159; c=relaxed/simple;
+	bh=e+Z2YkeWHVp4lNUuM47W5BZGrVfrvL38YMqC+CmljIM=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=sUHR9DSy2Z77X+8Lb9baipiplf3U/sTHBGk6h+ySO9XLOS38xUOa4qDEoX099C1T8lL9oIDxox9JFCvPe1uOtfA4hEM6EhoVd6ZeVRIrO+S+qsIy27oXYtjzNwx44wPr6Qo1fmDUFWCq72d9ZxS8RdVIdvx7RiaJ6igAj6clhb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl3hCxpQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBwVzhTQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20EFEC43394;
-	Wed,  7 Feb 2024 21:25:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl3hCxpQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24EA9C433C7;
+	Wed,  7 Feb 2024 21:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707341158;
-	bh=h79hO05xp7Yb1JfaQ+0MRJL26ORufyCzdOf24bZvOpI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nBwVzhTQFeCKgYCLH+yyrT7gVxkSiV9WoFtEzBE0InPNj+ygUmDsOiSFxnRH24frW
-	 mdg+VnVtTOj6n/uxsXk0vwfLTycXEpjz7fPjkOiBQD2Av6U9MrBIzGd2FgjuFwU3V1
-	 4CvQKz+PX/zV+tDm1oSDWwn87HVQzpq11XEf/eeNZ9MBF+RnlwTIgGPnWrxWwQdpoK
-	 5jv9dYBRsMpuzfVkksnw3MQ+hoqihbLXeR6B3REUw3S/LT9jRy/9hmwT9yvkPeeuSO
-	 Ga4VExLFunP2Y6o3e/nPIolzmrh34qkNnIceXK4LS7P14p5g11aYBzPN8Vt8gIkP64
-	 TG88vRFh8wacw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Daniel Wagner <dwagner@suse.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	james.smart@broadcom.com,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 26/29] nvmet-fc: take ref count on tgtport before delete assoc
-Date: Wed,  7 Feb 2024 16:24:51 -0500
-Message-ID: <20240207212505.3169-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207212505.3169-1-sashal@kernel.org>
-References: <20240207212505.3169-1-sashal@kernel.org>
+	s=k20201202; t=1707341159;
+	bh=e+Z2YkeWHVp4lNUuM47W5BZGrVfrvL38YMqC+CmljIM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=hl3hCxpQs3nZiA1Cfh0NDG/eOrfjD5H7qfTLdu8uBoKH62DkZVPbLOFWSJkCqWVDC
+	 0NBRSeCa80sfou54B9gt34GlGZX/eL5vgUpGfOL4kIqwo/kz+nqpvLKkrk61p0Awzd
+	 4yFlThgspST435hR4UowPVFyg16910/+x+tInsLegxwhlzY/GvCa3e48BEe8OkgxSK
+	 lrzM1GB8mb6f6hnK2seoSg+TGObb3ntQEVkwod+rPx7S2ljkSNwfNze4lsXenYPpK6
+	 3ubDyh+FJhVhZnP672fLPJ2hINoIN8ZJyRJliOWVVCz0YEJPCdVprpeXlcaGShcVEG
+	 tOlDrkGbaalqQ==
+Date: Wed, 07 Feb 2024 21:25:57 +0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.77
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Charles Perry <charles.perry@savoirfairelinux.com>
+Cc: Rob Herring <robh+dt@kernel.org>, avandiver@markem-imaje.com, 
+ bcody@markem-imaje.com, mdf@kernel.org, linux-fpga@vger.kernel.org, 
+ kishore Manne <nava.kishore.manne@amd.com>, devicetree@vger.kernel.org, 
+ Wu Hao <hao.wu@intel.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ linux-kernel@vger.kernel.org, Michal Simek <michal.simek@amd.com>, 
+ linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+ Tom Rix <trix@redhat.com>, Xu Yilun <yilun.xu@intel.com>
+In-Reply-To: <20240207180142.79625-5-charles.perry@savoirfairelinux.com>
+References: <20240207180142.79625-1-charles.perry@savoirfairelinux.com>
+ <20240207180142.79625-5-charles.perry@savoirfairelinux.com>
+Message-Id: <170734115258.3199432.9793593609172465868.robh@kernel.org>
+Subject: Re: [PATCH v3 4/5] dt-bindings: fpga: xlnx,fpga-selectmap: add DT
+ schema
 
-From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit fe506a74589326183297d5abdda02d0c76ae5a8b ]
+On Wed, 07 Feb 2024 13:01:27 -0500, Charles Perry wrote:
+> Document the SelectMAP interface of Xilinx 7 series FPGA.
+> 
+> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+> ---
+>  .../bindings/fpga/xlnx,fpga-selectmap.yaml    | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+> 
 
-We have to ensure that the tgtport is not going away
-before be have remove all the associations.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/target/fc.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+yamllint warnings/errors:
 
-diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
-index 36cae038eb04..8a02ed63b156 100644
---- a/drivers/nvme/target/fc.c
-+++ b/drivers/nvme/target/fc.c
-@@ -1092,13 +1092,28 @@ nvmet_fc_alloc_hostport(struct nvmet_fc_tgtport *tgtport, void *hosthandle)
- }
- 
- static void
--nvmet_fc_delete_assoc(struct work_struct *work)
-+nvmet_fc_delete_assoc(struct nvmet_fc_tgt_assoc *assoc)
-+{
-+	nvmet_fc_delete_target_assoc(assoc);
-+	nvmet_fc_tgt_a_put(assoc);
-+}
-+
-+static void
-+nvmet_fc_delete_assoc_work(struct work_struct *work)
- {
- 	struct nvmet_fc_tgt_assoc *assoc =
- 		container_of(work, struct nvmet_fc_tgt_assoc, del_work);
-+	struct nvmet_fc_tgtport *tgtport = assoc->tgtport;
- 
--	nvmet_fc_delete_target_assoc(assoc);
--	nvmet_fc_tgt_a_put(assoc);
-+	nvmet_fc_delete_assoc(assoc);
-+	nvmet_fc_tgtport_put(tgtport);
-+}
-+
-+static void
-+nvmet_fc_schedule_delete_assoc(struct nvmet_fc_tgt_assoc *assoc)
-+{
-+	nvmet_fc_tgtport_get(assoc->tgtport);
-+	queue_work(nvmet_wq, &assoc->del_work);
- }
- 
- static struct nvmet_fc_tgt_assoc *
-@@ -1132,7 +1147,7 @@ nvmet_fc_alloc_target_assoc(struct nvmet_fc_tgtport *tgtport, void *hosthandle)
- 	assoc->a_id = idx;
- 	INIT_LIST_HEAD(&assoc->a_list);
- 	kref_init(&assoc->ref);
--	INIT_WORK(&assoc->del_work, nvmet_fc_delete_assoc);
-+	INIT_WORK(&assoc->del_work, nvmet_fc_delete_assoc_work);
- 	atomic_set(&assoc->terminating, 0);
- 
- 	while (needrandom) {
-@@ -1491,7 +1506,7 @@ __nvmet_fc_free_assocs(struct nvmet_fc_tgtport *tgtport)
- 	list_for_each_entry_rcu(assoc, &tgtport->assoc_list, a_list) {
- 		if (!nvmet_fc_tgt_a_get(assoc))
- 			continue;
--		queue_work(nvmet_wq, &assoc->del_work);
-+		nvmet_fc_schedule_delete_assoc(assoc);
- 		nvmet_fc_tgt_a_put(assoc);
- 	}
- 	rcu_read_unlock();
-@@ -1545,7 +1560,7 @@ nvmet_fc_invalidate_host(struct nvmet_fc_target_port *target_port,
- 			continue;
- 		assoc->hostport->invalid = 1;
- 		noassoc = false;
--		queue_work(nvmet_wq, &assoc->del_work);
-+		nvmet_fc_schedule_delete_assoc(assoc);
- 		nvmet_fc_tgt_a_put(assoc);
- 	}
- 	spin_unlock_irqrestore(&tgtport->lock, flags);
-@@ -1590,7 +1605,7 @@ nvmet_fc_delete_ctrl(struct nvmet_ctrl *ctrl)
- 		nvmet_fc_tgtport_put(tgtport);
- 
- 		if (found_ctrl) {
--			queue_work(nvmet_wq, &assoc->del_work);
-+			nvmet_fc_schedule_delete_assoc(assoc);
- 			nvmet_fc_tgt_a_put(assoc);
- 			return;
- 		}
-@@ -1897,7 +1912,7 @@ nvmet_fc_ls_disconnect(struct nvmet_fc_tgtport *tgtport,
- 		nvmet_fc_xmt_ls_rsp(tgtport, oldls);
- 	}
- 
--	queue_work(nvmet_wq, &assoc->del_work);
-+	nvmet_fc_schedule_delete_assoc(assoc);
- 	nvmet_fc_tgt_a_put(assoc);
- 
- 	return false;
--- 
-2.43.0
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.example.dtb: /example-0/fpga-mgr@8000000: failed to match any schema with compatible: ['xlnx,fpga-selectmap']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240207180142.79625-5-charles.perry@savoirfairelinux.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
