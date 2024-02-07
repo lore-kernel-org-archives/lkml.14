@@ -1,202 +1,75 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C835C175A6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D31C1B7F2
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707304142; cv=none; b=Wmo8KSAsiiloOgolGm3Vckgqipty6okdMlF217iMOY9iF/qT8cEXZKqCYJt3vbG+fSEFCpk/s+LDI5NNJIlBQtyEf9TEncflxLF04nYTdE2Eoe2G0sFTVzHpFwzN2uV1+MrADxOkCiZNB4+a4vhljdeJiYzOdlc4S45GNqVyZPc=
+	t=1707304146; cv=none; b=Ss1vfHXkZxlUQMt5NVdc9CpEYp9gNBv6nBXUjXBqUYR7eRujm8BUgPbDD78IQXSQ2sYFJKsmKkL5D910F2hOTWJmKLWDc/Oi/ssQ3bqz0/r+UQG29uTkNJtY+nT1YMi91I0a7Ck+h8rQyM4oUuu6Hl0gPivZIcBdLVOEQWvSMBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707304142; c=relaxed/simple;
-	bh=ludCN2TVVC0VlF3oN4zQ55FOfOprq98JMt8dluiEa28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i50MzlFYMjwTC6+fXoEbiePIy/icDCyCFrLVdrmDPhQCangJkcmYEwse+mVzckPXvlVL9KlLKXOlUXuM166r87k03TK/qqXtDJUKElQIZ/3UtpWL/jfrfmjV4/9Dd7lHulfWQEOKt0VjOIV2JoKkSkGKrE/6Uq4ncFvfyGvcbb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=IPLZI6uG; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="IPLZI6uG"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso331209a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:09:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tweaklogic.com; s=google; t=1707304140; x=1707908940; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y4Er2JvCrzXK5LJAuZCNC4zYfiOB+GgDvOYEhwDSc+I=;
-        b=IPLZI6uGiXIo17/jo0x508617kB7W6KczHe4RcLzWh/b6sWOzre62cgdOgJ+YqqjZR
-         /nr9XURqVwZLHrXbqx7aguaiQdXhp8JoTNJqHFhf081wC+1ue1qknCALgNt84QZ2PHg1
-         ryApSowKjfdPdY509+f/P7RepgDxdTlUWRN3lmnreL0NFpX4JsiV4dZs+svMtToj4rIa
-         qP+q+frpQkPmMmoIAeKd41GMLgBXA8NNruTA8P+FxQvjYWZmUK9tWW+o0oWis9LAJWKH
-         szTUqmcOEIuKE4H2J17yZtwrGE+z2fDWJPeOzlIspJqFy+i9V0b4pBuBQPgUNXGO7zpG
-         F5mA==
+	s=arc-20240116; t=1707304146; c=relaxed/simple;
+	bh=5PhO/CSyRdS/kcBg1FslvShsADEHbW2yd9KE30COm2w=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WTMzux5vpDL20mkB80jNjbILA5+cOgtrGtAfPGLno6M7r0sbAs39lIEBLo75nyHKv5al+9vlcIcKHgZVa6ZW2avIFUzFWzvo+K+oT2z7JoQBNKaIPJyrsqlr+9qTtrWHjXl2uiO3R8npS0NYiNE2GedfHjJKnFuRzlJGNQwATb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bf4698825eso39499339f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:09:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707304140; x=1707908940;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1707304143; x=1707908943;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4Er2JvCrzXK5LJAuZCNC4zYfiOB+GgDvOYEhwDSc+I=;
-        b=tsraNqIlsjJ8/t61+Tt7o9fnCppY59fW5bioBnihaAXtoBf39fxY9iQ2BXYIl4XBgF
-         1VKPHtVe3jSVbDWPgpLnBHIzz/Iqy4jb1ytb5x/0Jo6NDPQRyaOLQt5tlDaUKQ1Y+Mq7
-         oF9nklixBELWLevaRMpW+Qnd+ncTw1weqpnK1XP+wE2oaFoQUQ3q28oPVAmeYVVVGZs6
-         O58jCSO07zVvf/NDTzDlXW1ZfTxfqKA3V1z9i71lZamCblNLdGYIr4YhFascWRZRPLKx
-         m2JZWMlEwRU7zxe/ySCzajmAfBmd8O1RSiHzYW0aL4yh+iKYjRsJkQKZM2/0hjz5G6+5
-         9Urg==
-X-Gm-Message-State: AOJu0YxFLHrAl80ArVj8l9VeYTAb2euAzI8ShVFlHtmf4RlbhNFd0OZV
-	7+xL8QKWo3k99ZMfMrWNzcAgf5vADAAXz9APzHwS0WZEeWtt1uCedJ+a69JknvEK1FIjlUronq/
-	v
-X-Google-Smtp-Source: AGHT+IHixBjQ+x80cJqn2rYfFLizhrgAUeBl7cIYsU+F3jtydagok6FWiSeTqw+grYXJUYAIgI621A==
-X-Received: by 2002:a05:6a21:394a:b0:19e:5683:e8d0 with SMTP id ac10-20020a056a21394a00b0019e5683e8d0mr5054306pzc.12.1707304140011;
-        Wed, 07 Feb 2024 03:09:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWMBqqrEu/Maor6qKAKLi9J/x5p341mi1EahuFaugvKkoTSe5J4Pb6t6JsihxD9xPQJUCL1T3bIunLFxQC3QJfUkl9xYQsIjLm+HDB7WeNu204v8P56D+jkse98AadzL39P0GVpdnNAuJtzp0Mf9R5PS7t/oTYQCZdUJTSFFgKHceZhzRGTEhu4/rCSIyIj08pmsBrGeKdb/MhauXUhCL0ie9yYOggcjOW7j43eTfK7U4fn7/S4coP1xMCqPoJbYnlAmUpbK+AthNY1GbT+ZS8pARtQOWLBgCmUAr/ICRC1Uh6xWQcccwfxB89K57KhxcdCsefQhce29rOjpY+AMg3cIHW7HeXU1KAg2/e90BonQTTB3npnKxSlryUKNfjzRH+5M8g92QbrmMho0GduzxjqmKPoe2rfpsyVKzgEcgEHLvENk+nvW0aoIAUtQGlBai1w3SNDB6l2Kc6E7cwrgxpk8rwzPQ9uWhEttNmEoLSHk+k=
-Received: from [192.168.20.11] ([180.150.113.62])
-        by smtp.gmail.com with ESMTPSA id a17-20020a056a000c9100b006dd9ff236b6sm1273985pfv.177.2024.02.07.03.07.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 03:08:59 -0800 (PST)
-Message-ID: <43e01493-1f26-414b-b2eb-7fb959b9b542@tweaklogic.com>
-Date: Wed, 7 Feb 2024 21:37:37 +1030
+        bh=ON6px046rR8EBHR3nBWI29k5JFBBUrDnkEhtRqAg3/M=;
+        b=C9XyDoh/pLO2dtEyprmZkB5DjyHVOzTq/8kmppwHkMpVhc/7dYxGZWS2jbJRzDMjfL
+         wg+kZ+g6/uKuNa9i1V5fChAfQhVI5AI3yo+TcXf/kvOY976rJD07lbTV/3rUVw9wmfC3
+         vE8TLcjzcvx40ynvjmEGhwf3ijZ7O7bV1toDJtk+uBmfiCobBKx23yZKbtSWFBAg320x
+         JzgNk00zpwgLTnDHHCgjjvmaQVhdrbqju0iF9nyy71RHFNca9yYEM72FMgswlVx4l4bQ
+         IiUlL+yopCA4zn4dHrmCB3I1OcBH+h5tgMHicKcyb2fCVCJWxR+P0wkZ3dIshwqdZ3H1
+         Q5yw==
+X-Gm-Message-State: AOJu0Yy8KCWvnkYA6m9YU2Tc4jOomIY0P/3weyE/OL9KtJk2EYXf78pO
+	F/WvyvoIzWRy5DdU3ISzjQjziyKAlhvUIybF3dZDbHWgMD7Vz39kJ33gr9cL4BNMdUB7wLB3xNQ
+	OqnM+nCWP9xQp2aaAVAyRTFL1oOJBd0r1oQ+Z/CanLgNCdSZKjDpdB0k=
+X-Google-Smtp-Source: AGHT+IFBWylZ9MvHDjQAjrBJ7NsXQEeWoUUUOY5tLH6qSAC3pqHHpyCcIow7X+8Z+EajQDVj05fZB0vZ65RiQl066en/Vn1eR9pE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/5] iio: light: Add support for APDS9306 Light Sensor
-Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>, Marek Vasut <marex@denx.de>,
- Anshul Dalal <anshulusr@gmail.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Matt Ranostay <matt@ranostay.sg>,
- Stefan Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240206130017.7839-1-subhajit.ghosh@tweaklogic.com>
- <20240206130017.7839-6-subhajit.ghosh@tweaklogic.com>
- <ZcI3Pz6Z5V4qqpHO@smile.fi.intel.com>
-From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
-In-Reply-To: <ZcI3Pz6Z5V4qqpHO@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:160a:b0:7bf:f9d1:ffc6 with SMTP id
+ x10-20020a056602160a00b007bff9d1ffc6mr200027iow.4.1707304143713; Wed, 07 Feb
+ 2024 03:09:03 -0800 (PST)
+Date: Wed, 07 Feb 2024 03:09:03 -0800
+In-Reply-To: <000000000000a5f23f05ee4865cf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000027e150610c8b964@google.com>
+Subject: Re: [syzbot] [reiserfs?] KASAN: use-after-free Read in set_de_name_and_namelen
+From: syzbot <syzbot+3969ffae9388a369bab8@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Andy,
->> + */
-> 
-> ...
-> 
->> +static_assert(ARRAY_SIZE(apds9306_repeat_rate_freq) ==
->> +		APDS9306_NUM_REPEAT_RATES);
-> 
-> Just make that define to be inside [] in the respective array and drop this
-> static assert. The assertion might make sense to have different arrays to be
-> synchronized and when their maximums are different due to semantics (not your
-> case AFAICS).
-> 
-> ...
-> 
->> +static_assert(ARRAY_SIZE(apds9306_repeat_rate_period) ==
->> +		APDS9306_NUM_REPEAT_RATES);
-> 
-> Ditto.
-> 
-> ...
-I apologize for this. You pointed me out in an earlier review, I misunderstood
-it and used the macro in two static asserts! It will be fixed.
-> 
->> +	struct mutex mutex;
-> 
-> checkpatch probably wants this to have a comment.
-I used the mainline checkpatch, it did not through any explicit warnings or errors
-regarding this.
-As per previous review pointed below, I removed the the comment from here to
-kernel doc:
-https://lore.kernel.org/all/20240121152332.6b15666a@jic23-huawei/
+syzbot suspects this issue was fixed by commit:
 
-Do you still want me to add a comment before struct mutex?
-> 
-> ...
-> 
->> +	struct regmap_field *regfield_sw_reset;
->> +	struct regmap_field *regfield_en;
->> +	struct regmap_field *regfield_intg_time;
->> +	struct regmap_field *regfield_repeat_rate;
->> +	struct regmap_field *regfield_gain;
->> +	struct regmap_field *regfield_int_src;
->> +	struct regmap_field *regfield_int_thresh_var_en;
->> +	struct regmap_field *regfield_int_en;
->> +	struct regmap_field *regfield_int_persist_val;
->> +	struct regmap_field *regfield_int_thresh_var_val;
-> 
-> May we reduce the names by
-> 
-> 	struct {
-> 		...
-> 		struct regmap_field *int_persist_val;
-> 		struct regmap_field *int_thresh_var_val;
-> 	} regfield;
-> 
-> In the code
-> 
-> 	struct regfield *rf = &priv->regfield;
-> 
-> 	rf->int...
-> 
-> ...
-> 
->> +static struct attribute *apds9306_event_attributes[] = {
->> +	&iio_const_attr_thresh_either_period_available.dev_attr.attr,
->> +	&iio_const_attr_thresh_adaptive_either_values_available.dev_attr.attr,
->> +	NULL
->> +};
->> +
->> +static const struct attribute_group apds9306_event_attr_group = {
->> +	.attrs = apds9306_event_attributes,
->> +};
-> 
-> ...
-> 
->> +static int apds9306_runtime_power_on(struct device *dev)
->> +{
->> +	int ret;
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0)
->> +		dev_err_ratelimited(dev, "runtime resume failed: %d\n", ret);
->> +
->> +	return ret;
->> +}
->> +
->> +static int apds9306_runtime_power_off(struct device *dev)
->> +{
->> +	pm_runtime_mark_last_busy(dev);
->> +	pm_runtime_put_autosuspend(dev);
->> +
->> +	return 0;
->> +}
-> 
-> Seems to me like useless wrappers. Why do you need that message?
-No specific need for that message, however the wrapper was suggested in a previous review:
-https://lore.kernel.org/all/ZTuuUl0PBklbVjb9@smile.fi.intel.com/
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-Do you still want me to use the pm functions directly from the calling functions?
+    fs: Block writes to mounted block devices
 
-> Btw, it's used only twice, open coding saves the LoCs!
-Yes, it makes sense.
-> Try making the next submission so the driver LoCs is < 1400.
-The current driver file is 1335 lines, next one, I will definitely try to keep in under 1400 lines.
-> 
-> ...
-Acknowledging all other review comments. Thank you for reviewing.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fffd6c180000
+start commit:   c3eb11fbb826 Merge tag 'pci-v6.1-fixes-3' of git://git.ker..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8d01b6e3197974dd
+dashboard link: https://syzkaller.appspot.com/bug?extid=3969ffae9388a369bab8
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1615d7e5880000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f20981880000
 
-Regards,
-Subhajit Ghosh
+If the result looks correct, please mark the issue as fixed by replying with:
 
+#syz fix: fs: Block writes to mounted block devices
 
-
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
