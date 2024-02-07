@@ -1,189 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314A0200D8;
-	Wed,  7 Feb 2024 22:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5EA1DDEA;
+	Wed,  7 Feb 2024 22:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707346404; cv=none; b=PeObR9UAGj2nJGwHdbLV4GFEKXf7TuWuQPrGkEV3Nos7B/GLC/zyIKuVAfePeftZayATHJq9dbF86Fjj5vr8U1rF2CXy7QY1YG8J9nKCr9UcN/y9wa71UthrF3K76h+bq/n4IiIqIcIHl3zRPJq+B5WZ1S5xRWE8Vn/szC6I12o=
+	t=1707346536; cv=none; b=CpwSUmgt6H/TgWiQYXOZ8KJ+6NIj5QKptq8x00md8Ciz+A+CrelICJqGElkN94z5d2lmx4723uCMwbiQgeRQQuwx6cJa9oPx7aXE7NuIwntR8nPxMJgbUegZhQDfV7B3CeFhj4EYyy2cPHZ8lSxcFEQpKOPvjM20Jg59CDeMwlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707346404; c=relaxed/simple;
-	bh=nmb2k3C9v+KzAmt2g3cPPXFlei6g+FVLekXJpHiBpLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NS/JFQWxsk2zCAxt6XubWZepqLaZht/c6YuBXEJp6nbzfedrPLvhovpemA6pmB2WtgX1QJPok2g6TYkmjck/bVJdPiKM+CtXb5Vonqorb40Q0xjfCRb0uE/kAbOR5FSV4afj8n76bRmEjrPdptCdiIvpkj8j2EWlNe3JOREaZvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bx4B6DK9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707346536; c=relaxed/simple;
+	bh=idvn3pjyxa/N57a+UnjQodXQS7KsV3M5a3R6gPthrr0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Pdal4tYfrovNsONO8v96n3MNO2ScWAfJtg52wPmHs7K4CelrQ6dQ11ZhJjMeNMJalqLqASocGjSEHQjQFkfXv7tzdoD+t9oB+7JssSXbp8HX7b3qMtCfGTMBL2JKVO+OtNkLCeNlTLgcKNAkQIc0aXOLeCNWRK2Xp4i8rbf1RLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ythum+wg; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bx4B6DK9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707346402; x=1738882402;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nmb2k3C9v+KzAmt2g3cPPXFlei6g+FVLekXJpHiBpLI=;
-  b=bx4B6DK9cAZW4NeoF+ZNq8KkKYJ3r2FMD0aBkRwCc2B1aWPSVjA+ZvKd
-   s3QrytosAXeEXwP2ZGQv343c2wAx+rgMqjo9C26yIUtfba+FtLwi0YIOv
-   aOg6mpKde7VbQph7Xsq/1YZURkXMOVd5muoCEn2LaPbinsFIamFGadqkg
-   lS42kimccj4seghVoD9kT7k/3aAsliinV2m1TjKOkbxe0Y5F9B7l4gr/+
-   3GMO3QFSwEjozigOcpw6k+lMLefVF4apNqF938XPDtWYC8x8VJcBUQiZR
-   3Kizc/Yr9VaEmPxobF9/Ly7rSmHInMW0dQno7FTUclPc+Xb3NhZNHiWXq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12467562"
-X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="12467562"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 14:53:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="1494186"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 07 Feb 2024 14:53:17 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXqn3-000376-2u;
-	Wed, 07 Feb 2024 22:53:13 +0000
-Date: Thu, 8 Feb 2024 06:52:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Prashant Malani <pmalani@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Emilie Roberts <hadrosaur@google.com>,
-	"Nyman, Mathias" <mathias.nyman@intel.com>,
-	"Regupathy, Rajaram" <rajaram.regupathy@intel.com>,
-	"Radjacoumar, Shyam Sundar" <ssradjacoumar@google.com>,
-	Samuel Jacob <samjaco@google.com>, linux-usb@vger.kernel.org,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Uday Bhat <uday.m.bhat@intel.com>
-Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_typec: Make sure the USB
- role switch has PLD
-Message-ID: <202402080600.zOq5UvYq-lkp@intel.com>
-References: <20240207145851.1603237-3-heikki.krogerus@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ythum+wg"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 417MtRPo099405;
+	Wed, 7 Feb 2024 16:55:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707346527;
+	bh=LilwvBYyIfugN4/wYl1HmDbFlnjpxAnRYwYlrg1Efzo=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ythum+wgtcpA4ha1iw4MxJjTkD0fbPq83H0fLPqTOOi6cXsIVnvvI6jzU05QzTd/s
+	 /rMJQwe7iiYKh/hxmKdcQl3J2maTCoV1/Y+VU5gtj7yHJM7fWclVwZwUXmJCtGXeUq
+	 78zE3Sph3Nrm0ctDf6CuOKD48uNp3kws3mSHWKKk=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 417MtR2I082343
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 Feb 2024 16:55:27 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ Feb 2024 16:55:27 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 Feb 2024 16:55:27 -0600
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 417MtQma014027;
+	Wed, 7 Feb 2024 16:55:27 -0600
+From: Judith Mendez <jm@ti.com>
+To: Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 7/9] arm64: dts: ti: k3-am6*: Fix ti,clkbuf-sel property in MMC nodes
+Date: Wed, 7 Feb 2024 16:55:24 -0600
+Message-ID: <20240207225526.3953230-8-jm@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240207225526.3953230-1-jm@ti.com>
+References: <20240207225526.3953230-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240207145851.1603237-3-heikki.krogerus@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Heikki,
+Move ti,clkbuf-sel property above the OTAP/ITAP delay values.
+While there is no error with where it is currently at, it is
+easier to read the MMC node if ti,clkbuf-sel is located above
+the OTAP/ITAP delay values consistently across MMC nodes.
 
-kernel test robot noticed the following build errors:
+Add missing ti,clkbuf-sel for MMC0 in k3-am64-main.
 
-[auto build test ERROR on usb/usb-testing]
-[also build test ERROR on usb/usb-next usb/usb-linus chrome-platform/for-next chrome-platform/for-firmware-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.8-rc3 next-20240207]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi  | 4 ++--
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 2 +-
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi  | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Heikki-Krogerus/usb-roles-Link-the-switch-to-its-connector/20240207-230017
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-patch link:    https://lore.kernel.org/r/20240207145851.1603237-3-heikki.krogerus%40linux.intel.com
-patch subject: [PATCH 2/2] platform/chrome: cros_ec_typec: Make sure the USB role switch has PLD
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240208/202402080600.zOq5UvYq-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240208/202402080600.zOq5UvYq-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402080600.zOq5UvYq-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/platform/chrome/cros_ec_typec.c:75:20: error: incomplete definition of type 'struct acpi_device'
-                   if (adev && !adev->pld_crc)
-                                ~~~~^
-   include/linux/acpi.h:795:8: note: forward declaration of 'struct acpi_device'
-   struct acpi_device;
-          ^
-   drivers/platform/chrome/cros_ec_typec.c:76:8: error: incomplete definition of type 'struct acpi_device'
-                           adev->pld_crc = to_acpi_device_node(fwnode)->pld_crc;
-                           ~~~~^
-   include/linux/acpi.h:795:8: note: forward declaration of 'struct acpi_device'
-   struct acpi_device;
-          ^
-   drivers/platform/chrome/cros_ec_typec.c:76:47: error: incomplete definition of type 'struct acpi_device'
-                           adev->pld_crc = to_acpi_device_node(fwnode)->pld_crc;
-                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-   include/linux/acpi.h:795:8: note: forward declaration of 'struct acpi_device'
-   struct acpi_device;
-          ^
-   3 errors generated.
-
-
-vim +75 drivers/platform/chrome/cros_ec_typec.c
-
-    23	
-    24	#define DP_PORT_VDO	(DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D)) | \
-    25					DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
-    26	
-    27	static int cros_typec_parse_port_props(struct typec_capability *cap,
-    28					       struct fwnode_handle *fwnode,
-    29					       struct device *dev)
-    30	{
-    31		struct fwnode_handle *sw_fwnode;
-    32		const char *buf;
-    33		int ret;
-    34	
-    35		memset(cap, 0, sizeof(*cap));
-    36		ret = fwnode_property_read_string(fwnode, "power-role", &buf);
-    37		if (ret) {
-    38			dev_err(dev, "power-role not found: %d\n", ret);
-    39			return ret;
-    40		}
-    41	
-    42		ret = typec_find_port_power_role(buf);
-    43		if (ret < 0)
-    44			return ret;
-    45		cap->type = ret;
-    46	
-    47		ret = fwnode_property_read_string(fwnode, "data-role", &buf);
-    48		if (ret) {
-    49			dev_err(dev, "data-role not found: %d\n", ret);
-    50			return ret;
-    51		}
-    52	
-    53		ret = typec_find_port_data_role(buf);
-    54		if (ret < 0)
-    55			return ret;
-    56		cap->data = ret;
-    57	
-    58		/* Try-power-role is optional. */
-    59		ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
-    60		if (ret) {
-    61			dev_warn(dev, "try-power-role not found: %d\n", ret);
-    62			cap->prefer_role = TYPEC_NO_PREFERRED_ROLE;
-    63		} else {
-    64			ret = typec_find_power_role(buf);
-    65			if (ret < 0)
-    66				return ret;
-    67			cap->prefer_role = ret;
-    68		}
-    69	
-    70		/* Assing the USB role switch the correct pld_crc if it's missing. */
-    71		sw_fwnode = fwnode_find_reference(fwnode, "usb-role-switch", 0);
-    72		if (!IS_ERR_OR_NULL(sw_fwnode)) {
-    73			struct acpi_device *adev = to_acpi_device_node(sw_fwnode);
-    74	
-  > 75			if (adev && !adev->pld_crc)
-    76				adev->pld_crc = to_acpi_device_node(fwnode)->pld_crc;
-    77			fwnode_handle_put(sw_fwnode);
-    78		}
-    79	
-    80		cap->fwnode = fwnode;
-    81	
-    82		return 0;
-    83	}
-    84	
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index 79ed5cbbbda1..410b390ce5d5 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -579,6 +579,7 @@ sdhci1: mmc@fa00000 {
+ 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+ 		clock-names = "clk_ahb", "clk_xin";
++		ti,clkbuf-sel = <0x7>;
+ 		ti,otap-del-sel-legacy = <0x8>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0x0>;
+@@ -590,7 +591,6 @@ sdhci1: mmc@fa00000 {
+ 		ti,itap-del-sel-sd-hs = <0x1>;
+ 		ti,itap-del-sel-sdr12 = <0xa>;
+ 		ti,itap-del-sel-sdr25 = <0x1>;
+-		ti,clkbuf-sel = <0x7>;
+ 		bus-width = <4>;
+ 		status = "disabled";
+ 	};
+@@ -602,6 +602,7 @@ sdhci2: mmc@fa20000 {
+ 		power-domains = <&k3_pds 184 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 184 5>, <&k3_clks 184 6>;
+ 		clock-names = "clk_ahb", "clk_xin";
++		ti,clkbuf-sel = <0x7>;
+ 		ti,otap-del-sel-legacy = <0x8>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0x0>;
+@@ -613,7 +614,6 @@ sdhci2: mmc@fa20000 {
+ 		ti,itap-del-sel-sd-hs = <0xa>;
+ 		ti,itap-del-sel-sdr12 = <0xa>;
+ 		ti,itap-del-sel-sdr25 = <0x1>;
+-		ti,clkbuf-sel = <0x7>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+index f283777d54b4..ddb76cd66f88 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+@@ -561,6 +561,7 @@ sdhci1: mmc@fa00000 {
+ 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+ 		clock-names = "clk_ahb", "clk_xin";
++		ti,clkbuf-sel = <0x7>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+@@ -572,7 +573,6 @@ sdhci1: mmc@fa00000 {
+ 		ti,itap-del-sel-sd-hs = <0x0>;
+ 		ti,itap-del-sel-sdr12 = <0x0>;
+ 		ti,itap-del-sel-sdr25 = <0x0>;
+-		ti,clkbuf-sel = <0x7>;
+ 		bus-width = <4>;
+ 		no-1-8-v;
+ 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index a29847735c6e..bea05be7cb48 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -628,6 +628,7 @@ sdhci0: mmc@fa10000 {
+ 		clock-names = "clk_ahb", "clk_xin";
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
++		ti,clkbuf-sel = <0x7>;
+ 		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+@@ -646,6 +647,7 @@ sdhci1: mmc@fa00000 {
+ 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 58 3>, <&k3_clks 58 4>;
+ 		clock-names = "clk_ahb", "clk_xin";
++		ti,clkbuf-sel = <0x7>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+@@ -657,7 +659,6 @@ sdhci1: mmc@fa00000 {
+ 		ti,itap-del-sel-sd-hs = <0x0>;
+ 		ti,itap-del-sel-sdr12 = <0x0>;
+ 		ti,itap-del-sel-sdr25 = <0x0>;
+-		ti,clkbuf-sel = <0x7>;
+ 		status = "disabled";
+ 	};
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
