@@ -1,116 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D227FBBE;
-	Wed,  7 Feb 2024 14:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FEF76C6F;
+	Wed,  7 Feb 2024 15:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707317963; cv=none; b=MXtKbVpXTvfdRK5JG6D0P1A/y/+4Ksy+gNsuW6eaOr0J2I0IRShr+ZlIoUX8hiunS4CNEcLq4/zoPd0YnAh7GxpO5L8IEaD3iFp6vgR98qwC3YXitumOGQWvArJIL2wC/Dl0TBPJryBWq3ZC9eRbdt49Vo+Du5bFxrzaZfzk7J4=
+	t=1707318057; cv=none; b=BjREINhizClBC27ZNpb6bpoXgkoDrJMZzk0hhrdnCyUrRQYoX9qymFXTJQA+aoEhbOS48dbx8lUx/U3FZP/QEBcn7Siojsd3vD1R+pdy0TsC5TjzfvFqd4dNd8P9nDkS0xVhXGm9O0oSR9e5ZlKBfD9G0sW1Xin+d8wB+NZEiAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707317963; c=relaxed/simple;
-	bh=wJ5erar78HhMhQzSx2+rDQ9WduuYUwpvlY26tbDxq6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tkJYzoKbk8duz38gZ8dpfnmV9JeFhsAVQt59IV9+wOR7W8Q860MJmp0BBMZYMbUn/J/LMkCeCeZ0HQ/mhF7v6g3GS2CEqzJdLxYDiPdQhvPD6tupUnDLbTA0pL/F71ALoFdQzHcPVAjXUo/iuDs9mNPDge4clGUU4OWGsxNAss0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bz//pEE0; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707318057; c=relaxed/simple;
+	bh=XXFDvBkeGOfbwZKGPocdQlFeqLv49I9NlaKKBdpBvqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i8eWGQlrShymc0N5OjWdRX5tge0rgivLxdYGrLcoY9XZEdD0jrPZgRceqCwp3obFyMqx/qKpV6uan+ufwgJcOus86VbtXQeuj/zhNyI9W02tc1dWSULtpVyV7sn7IyPdxfwgXxcUF7HV9bXvrIpIsaw/UOS6AfVXt9uurd1q+pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ox5b70PW; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bz//pEE0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707317962; x=1738853962;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wJ5erar78HhMhQzSx2+rDQ9WduuYUwpvlY26tbDxq6g=;
-  b=Bz//pEE0nLE17QsgMYDeMR9rasJSCe4mNDgi8NttTfImga5p1tK6LmoH
-   mbNjTsIJJmIZLStnlmLM3CYPBBkxZKafw7lzx84scLB1MO2REp29/hTaH
-   kslrY5FE3da6JixXpP/fryzXqdkutboSTID7rJtIHU/JBQMgsesFkdr/L
-   SvOqvlwjSkUBoaQ5M7ET+Marb2uNTLvZzl3lUFTZeO9flZH0BVKa1u4pz
-   fFIug7yW+Y+Vv6gz3uJ0ykkeMzwrER+zhVc8YVPQafPOtGbC1UeBuML8m
-   7qRhew1puG0ButRuV09TsJ6qloFnOfdAYkVu1lfKOWj8NsPgkkNoXeF6f
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1155047"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="1155047"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 06:59:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="933799566"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="933799566"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Feb 2024 06:59:00 -0800
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Prashant Malani <pmalani@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Emilie Roberts <hadrosaur@google.com>,
-	"Nyman, Mathias" <mathias.nyman@intel.com>,
-	"Regupathy, Rajaram" <rajaram.regupathy@intel.com>,
-	"Radjacoumar, Shyam Sundar" <ssradjacoumar@google.com>,
-	Samuel Jacob <samjaco@google.com>,
-	linux-usb@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Uday Bhat <uday.m.bhat@intel.com>
-Subject: [PATCH 2/2] platform/chrome: cros_ec_typec: Make sure the USB role switch has PLD
-Date: Wed,  7 Feb 2024 16:58:51 +0200
-Message-ID: <20240207145851.1603237-3-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207145851.1603237-1-heikki.krogerus@linux.intel.com>
-References: <20240207145851.1603237-1-heikki.krogerus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ox5b70PW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707318053;
+	bh=XXFDvBkeGOfbwZKGPocdQlFeqLv49I9NlaKKBdpBvqY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ox5b70PWQW1WjQ+6JuWbrICh02r2vS3PgbKIo6AknU+m1Z5Wpqdwr5BRPssr5ff+Q
+	 aDnC/vkmoztrwKefMm9rM240l9btCIzLDT5Bo2xunfeNemN/2WrImCHHnMlXe3li2L
+	 UvtK69YeUVcP0Pw77JSKFOEanmDPPjne/xoTVhw7k2e+koUe9qTVdB+RLFnfhYvsXH
+	 Qq7TqQ0vx32nN/y0Qhj+Z7gHd/2RC5VC6TtyZZ4o6ceIZonPBvmw71I1HV0wLiPpVB
+	 w7Ys3QiryqlGKrsoThwDskrrakbB4xpznlGcBs6bODS8FzpceySMfyaalFXGKRPTQF
+	 umMZ/cafheGYw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E0A1A3782072;
+	Wed,  7 Feb 2024 15:00:52 +0000 (UTC)
+Message-ID: <2b91bd5e-9e66-402e-87fe-c2894e5a1d5a@collabora.com>
+Date: Wed, 7 Feb 2024 16:00:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] mt76: Remove redundant assignment to variable tidno
+Content-Language: en-US
+To: Colin Ian King <colin.i.king@gmail.com>, Felix Fietkau <nbd@nbd.name>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+ Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Kalle Valo <kvalo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240207131113.2450297-1-colin.i.king@gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240207131113.2450297-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The USB role switch does not always have the _PLD (Physical
-Location of Device) in ACPI tables. If it's missing,
-assigning the PLD hash of the port to the switch. That
-should guarantee that the USB Type-C port mapping code is
-always able to find the connection between the two (the port
-and the switch).
+Il 07/02/24 14:11, Colin Ian King ha scritto:
+> The variable tidno is being assigned a value that is not being read
+> and is being re-assigned a new value a few statements later.
+> The assignment is redundant and can be removed.
+> 
+> Cleans up clang scan warning:
+> drivers/net/wireless/mediatek/mt76/agg-rx.c:125:5: warning: Value stored
+> to 'tidno' during its initialization is never read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Tested-by: Uday Bhat <uday.m.bhat@intel.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/platform/chrome/cros_ec_typec.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 2b2f14a1b711..5c14e8db08b5 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -28,6 +28,7 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
- 				       struct fwnode_handle *fwnode,
- 				       struct device *dev)
- {
-+	struct fwnode_handle *sw_fwnode;
- 	const char *buf;
- 	int ret;
- 
-@@ -66,6 +67,16 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
- 		cap->prefer_role = ret;
- 	}
- 
-+	/* Assing the USB role switch the correct pld_crc if it's missing. */
-+	sw_fwnode = fwnode_find_reference(fwnode, "usb-role-switch", 0);
-+	if (!IS_ERR_OR_NULL(sw_fwnode)) {
-+		struct acpi_device *adev = to_acpi_device_node(sw_fwnode);
-+
-+		if (adev && !adev->pld_crc)
-+			adev->pld_crc = to_acpi_device_node(fwnode)->pld_crc;
-+		fwnode_handle_put(sw_fwnode);
-+	}
-+
- 	cap->fwnode = fwnode;
- 
- 	return 0;
--- 
-2.43.0
+> ---
+>   drivers/net/wireless/mediatek/mt76/agg-rx.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+> index 10cbd9e560e7..07c386c7b4d0 100644
+> --- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
+> +++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+> @@ -122,7 +122,7 @@ mt76_rx_aggr_check_ctl(struct sk_buff *skb, struct sk_buff_head *frames)
+>   	struct ieee80211_bar *bar = mt76_skb_get_hdr(skb);
+>   	struct mt76_wcid *wcid = status->wcid;
+>   	struct mt76_rx_tid *tid;
+> -	u8 tidno = status->qos_ctl & IEEE80211_QOS_CTL_TID_MASK;
+> +	u8 tidno;
+>   	u16 seqno;
+>   
+>   	if (!ieee80211_is_ctl(bar->frame_control))
+
 
