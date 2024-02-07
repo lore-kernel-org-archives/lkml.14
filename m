@@ -1,188 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8E0FBF7
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCE9EEAC
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707272611; cv=none; b=ha9kVJel20ybcjsVvhA4Pmx0p8f/GEbZgKBMdx3sv7OXkFzq7qbrvt56M3vGqJrL1WkQWprO7amHe09Bvfbs7GxNK5af5o36yPjbkkSQ2UkpMSgLoSs2ctEyAQzGE/ASblBQ4BfzOsqGZKkMAP8oIIanqOQNqqEWSyotWHdu9Ec=
+	t=1707272739; cv=none; b=N92mqhEKOFOegKHSCtkKZIbYZd3vFosJlLBPV4ls2Ky2dA7AjcXjJnkNeXtNvx6gtUsB1pOQ3J6MogeiJ3teY83nRnP3u46UkFTvmIg3/hhca/1K8Qy+bZbAyOAjgNNFcMrrLaQKB5pQ37+hQkLxhuQgWtFge9UZXe64FrlFHCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707272611; c=relaxed/simple;
-	bh=4N/5tP5iMHWmFVdx1HRYIF5wy7QwMIH1xbJY0jDg6SY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=t1+aKBqWlC8P026nnTROTGur8z09Rc6NUZgC4fRNIK2wscY6lrs58cNA6I/MHt32XaM3VcVw6MgbBDDf7+iQJp6kd07+QqI9UGOB1o3rR5X9Cl5KM39F0WuGkEFfEKwu3eIRv/OA+BB0d+la2vLJfF7A6eMKGFvXPTK45EEz2iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3urytyN; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707272739; c=relaxed/simple;
+	bh=OuRoN1AaajxzC9NcM1BSle+BErg7eCWnR8Pv33SqleQ=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=cfpnOinnZXAE1YOYNJl5SyFk4Qh2nwJI74N8y158dImxSDXyFGyyARc67cqQ+yN4xP9QwJuSOuwSGZrPmbeHtSu4Mqt40fouSLdS5zl2HNf0Gz/X6jRuIJ7YJsXoNpmGM6pV8/m+nNPRT7kHa9uBwWVDVw1m0MQ1tj/QxqrKRsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PvQ5YOH0; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3urytyN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707272609; x=1738808609;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=4N/5tP5iMHWmFVdx1HRYIF5wy7QwMIH1xbJY0jDg6SY=;
-  b=n3urytyNasUK34OoiMnU4phaxGdhXeafV4HkxRtvVEGX5EdTMkFeg/v7
-   osaatDIplz9Y+GdPWvp4z+AZlYN/glPDXOC2YEHXT+bj6fMiETvHHLMZr
-   Fdk5dFYmanzhXNCYL6q+DbvHEtf0+zFLqg7jC47CM8fvqYR3WMBa2563s
-   Huif5A9EghdghP5HAQzk8S5ckv+4+bZHUHbNdTkWVc2jcNmgs0J/R7r0u
-   L1NtcNfiT1sgaUoesj6tMNGftFtqHhrpvY3ICv4tvEJqGeRht6fWqUxo2
-   T4YYt5DWaexDEtUSgVIbH+SFO7LegoDDXhAFkbL8vX21PgB6xmDLJaE4k
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="780232"
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="780232"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 18:23:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="1421154"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 18:23:25 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Peng Zhang <zhangpeng362@huawei.com>
-Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
-  <akpm@linux-foundation.org>,  <willy@infradead.org>,
-  <fengwei.yin@intel.com>,  <aneesh.kumar@linux.ibm.com>,
-  <shy828301@gmail.com>,  <hughd@google.com>,  <david@redhat.com>,
-  <wangkefeng.wang@huawei.com>
-Subject: Re: [PATCH v2] filemap: avoid unnecessary major faults in
- filemap_fault()
-In-Reply-To: <20240206092627.1421712-1-zhangpeng362@huawei.com> (Peng Zhang's
-	message of "Tue, 6 Feb 2024 17:26:27 +0800")
-References: <20240206092627.1421712-1-zhangpeng362@huawei.com>
-Date: Wed, 07 Feb 2024 10:21:29 +0800
-Message-ID: <87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PvQ5YOH0"
+Content-Type: text/plain; charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707272735;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KxDGt9b3bgYXiw9ZtkUhOb/RH81efkpcL0KqwcN75VA=;
+	b=PvQ5YOH00zOroTBNYKsZS52hOf+6xeqTmhSZoJIDwWQuhwYD2kGq/THf2t9yMELPeqFqwa
+	hSMc7XmhwbuGoUTbDCkjBE0rEfqcv24cUEsg0/x2Upsy9PoBTc4Wd7KAV8gn8VO3hkvqfH
+	o+26BJbbfBmzRv2GjgeVeFuLfvrHUoc=
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Mime-Version: 1.0
+Subject: Re: [PATCH v3] mm: hugetlb: improve the handling of hugetlb allocation failure for freed or in-use hugetlb
+Date: Wed, 7 Feb 2024 10:24:52 +0800
+Message-Id: <CB00D336-84AE-412C-ACA4-254EDD3C2279@linux.dev>
+References: <62890fd60b1ecd5bf1cdc476c973f60fe37aa0cb.1707181934.git.baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, osalvador@suse.de, david@redhat.com,
+ mhocko@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <62890fd60b1ecd5bf1cdc476c973f60fe37aa0cb.1707181934.git.baolin.wang@linux.alibaba.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+X-Migadu-Flow: FLOW_OUT
 
-Peng Zhang <zhangpeng362@huawei.com> writes:
 
-> From: ZhangPeng <zhangpeng362@huawei.com>
->
-> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
-> in application, which leading to an unexpected performance issue[1].
->
-> This caused by temporarily cleared PTE during a read+clear/modify/write
-> update of the PTE, eg, do_numa_page()/change_pte_range().
->
-> For the data segment of the user-mode program, the global variable area
-> is a private mapping. After the pagecache is loaded, the private anonymous
-> page is generated after the COW is triggered. Mlockall can lock COW pages
-> (anonymous pages), but the original file pages cannot be locked and may
-> be reclaimed. If the global variable (private anon page) is accessed when
-> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
->
-> At this time, the original private file page may have been reclaimed.
-> If the page cache is not available at this time, a major fault will be
-> triggered and the file will be read, causing additional overhead.
->
-> Fix this by rechecking the PTE without acquiring PTL in filemap_fault()
-> before triggering a major fault.
->
-> Testing file anonymous page read and write page fault performance in ext4
-> and ramdisk using will-it-scale[2] on a x86 physical machine. The data
-> is the average change compared with the mainline after the patch is
-> applied. The test results are within the range of fluctuation, and there
-> is no obvious difference. The test results are as follows:
 
-You still claim that there's no difference in the test results.  If so,
-why do you implement the patch?  IMHO, you need to prove your patch can
-improve the performance in some cases.
+> On Feb 6, 2024, at 11:08, Baolin Wang <baolin.wang@linux.alibaba.com> wrot=
+e:
+>=20
+> =EF=BB=BFalloc_and_dissolve_hugetlb_folio() preallocates a new hugetlb pag=
+e before
+> it takes hugetlb_lock. In 3 out of 4 cases the page is not really used and=
 
-> 	                 processes processes_idle threads threads_idle
-> ext4    private file write: -1.14%  -0.08%         -1.87%   0.13%
-> ext4    shared  file write:  0.14%  -0.53%          2.88%  -0.77%
-> ext4    private file  read:  0.03%  -0.65%         -0.51%  -0.08%
-> tmpfs   private file write: -0.34%  -0.11%          0.20%   0.15%
-> tmpfs   shared  file write:  0.96%   0.10%          2.78%  -0.34%
-> ramdisk private file write: -1.21%  -0.21%         -1.12%   0.11%
-> ramdisk private file  read:  0.00%  -0.68%         -0.33%  -0.02%
->
-> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
-> [2] https://github.com/antonblanchard/will-it-scale/
->
-> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
-> Suggested-by: Yin Fengwei <fengwei.yin@intel.com>
-> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> therefore the newly allocated page is just freed right away. This is
+> wasteful and it might cause pre-mature failures in those cases.
+>=20
+> Address that by moving the allocation down to the only case (hugetlb
+> page is really in the free pages pool). We need to drop hugetlb_lock
+> to do so and therefore need to recheck the page state after regaining
+> it.
+>=20
+> The patch is more of a cleanup than an actual fix to an existing
+> problem. There are no known reports about pre-mature failures.
+>=20
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+Reviewed-by: Muchun Song <muchun.song@linux.dev>
+
+Thanks
+
 > ---
-> v1->v2:
-> - Add more test results per Huang, Ying
-> - Add more comments before check PTE per Huang, Ying, David Hildenbrand
->   and Yin Fengwei
-> - Change pte_offset_map_nolock to pte_offset_map as the ptl lock won't
->   be used
->
-> RFC->v1:
-> - Add error handling when ptep == NULL per Huang, Ying and Matthew
->   Wilcox
-> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
->   Huang, Ying and Yin Fengwei
-> - Add pmd_none() check before PTE map
-> - Update commit message and add performance test information
->
->  mm/filemap.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 142864338ca4..a2c1a98bc771 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3238,6 +3238,40 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
->  			mapping_locked = true;
->  		}
->  	} else {
-> +		if (!pmd_none(*vmf->pmd)) {
-> +			pte_t *ptep;
+> Changes from v2=EF=BC=9B
+> - Update the commit message suggested by Michal.
+> - Remove unnecessary comments.
+> Changes from v1:
+> - Update the suject line per Muchun.
+> - Move the allocation into the free hugetlb handling branch per Michal.
+> ---
+> mm/hugetlb.c | 32 ++++++++++++++++----------------
+> 1 file changed, 16 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 9d996fe4ecd9..a05507a2143f 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3031,21 +3031,9 @@ static int alloc_and_dissolve_hugetlb_folio(struct h=
+state *h,
+> {
+>    gfp_t gfp_mask =3D htlb_alloc_mask(h) | __GFP_THISNODE;
+>    int nid =3D folio_nid(old_folio);
+> -    struct folio *new_folio;
+> +    struct folio *new_folio =3D NULL;
+>    int ret =3D 0;
+>=20
+> -    /*
+> -     * Before dissolving the folio, we need to allocate a new one for the=
+
+> -     * pool to remain stable.  Here, we allocate the folio and 'prep' it
+> -     * by doing everything but actually updating counters and adding to
+> -     * the pool.  This simplifies and let us do most of the processing
+> -     * under the lock.
+> -     */
+> -    new_folio =3D alloc_buddy_hugetlb_folio(h, gfp_mask, nid, NULL, NULL)=
+;
+> -    if (!new_folio)
+> -        return -ENOMEM;
+> -    __prep_new_hugetlb_folio(h, new_folio);
+> -
+> retry:
+>    spin_lock_irq(&hugetlb_lock);
+>    if (!folio_test_hugetlb(old_folio)) {
+> @@ -3075,6 +3063,16 @@ static int alloc_and_dissolve_hugetlb_folio(struct h=
+state *h,
+>        cond_resched();
+>        goto retry;
+>    } else {
+> +        if (!new_folio) {
+> +            spin_unlock_irq(&hugetlb_lock);
+> +            new_folio =3D alloc_buddy_hugetlb_folio(h, gfp_mask, nid,
+> +                                  NULL, NULL);
+> +            if (!new_folio)
+> +                return -ENOMEM;
+> +            __prep_new_hugetlb_folio(h, new_folio);
+> +            goto retry;
+> +        }
 > +
-> +			ptep = pte_offset_map(vmf->pmd, vmf->address);
-> +			if (unlikely(!ptep))
-> +				return VM_FAULT_NOPAGE;
-> +			/*
-> +			 * Recheck PTE as the PTE can be cleared temporarily
-> +			 * during a read+clear/modify/write update of the PTE,
-> +			 * eg, do_numa_page()/change_pte_range(). This will
-> +			 * trigger a major fault, even if we use mlockall,
-> +			 * which may affect performance.
-> +			 * We don't hold PTL here as acquiring PTL hurts
-> +			 * performance. So the check is still racy, but
-> +			 * the race window seems small enough.
-> +			 *
-> +			 * If we lose the race during the check, the page_fault
-> +			 * will be triggered. Butthe page table entry lock
-> +			 * still make sure the correctness:
-> +			 * - If the page cache is not reclaimed, the page_fault
-> +			 *   will work like the page fault was served already
-> +			 *   and bail out.
-> +			 * - If the page cache is reclaimed, the major fault
-> +			 *   will be triggered, page cache is filled,
-> +			 *   page_fault also work like the page fault was
-> +			 *   served already and bail out.
-> +			 */
-
-IMHO, this is too long.  It can be shorten to like,
-
-If we lose the race, major fault may be triggered unnecessary.  This
-hurts performance but not functionality.
-
-> +			if (unlikely(!pte_none(ptep_get_lockless(ptep))))
-> +				ret = VM_FAULT_NOPAGE;
-> +			pte_unmap(ptep);
-> +			if (unlikely(ret))
-> +				return ret;
-> +		}
-> +
->  		/* No page in the page cache at all */
->  		count_vm_event(PGMAJFAULT);
->  		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
-
---
-Best Regards,
-Huang, Ying
+>        /*
+>         * Ok, old_folio is still a genuine free hugepage. Remove it from
+>         * the freelist and decrease the counters. These will be
+> @@ -3102,9 +3100,11 @@ static int alloc_and_dissolve_hugetlb_folio(struct h=
+state *h,
+>=20
+> free_new:
+>    spin_unlock_irq(&hugetlb_lock);
+> -    /* Folio has a zero ref count, but needs a ref to be freed */
+> -    folio_ref_unfreeze(new_folio, 1);
+> -    update_and_free_hugetlb_folio(h, new_folio, false);
+> +    if (new_folio) {
+> +        /* Folio has a zero ref count, but needs a ref to be freed */
+> +        folio_ref_unfreeze(new_folio, 1);
+> +        update_and_free_hugetlb_folio(h, new_folio, false);
+> +    }
+>=20
+>    return ret;
+> }
+> --=20
+> 2.39.3
+>=20
