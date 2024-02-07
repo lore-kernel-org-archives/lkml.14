@@ -1,93 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248BF15CB8E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D531015CD62;
 	Wed,  7 Feb 2024 21:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341156; cv=none; b=KCYmrsFLIvA3BkikUSwsd0X/gElTmWBixscVg9ADmnN8zd9IbCXs0dtUE8FiHbSn4zXgkOaNpDEiPlcEnbboYyxEl1w77BQwR0U7BbMwpuAXgndVWOwcWUSRMBtshpl4Qcivoo08Ty5qnpWCQifSx9UHvCQypKFSOrpNYUe4hHA=
+	t=1707341156; cv=none; b=rZjGA2VlTzb02a2mkateiNIucjBdpBo0obi1Ebi5XbO5B2SNidpvTUfAhlDEKv10+RpOBte+u3GCyMkf8zs8SNzsfMH9pN2bjOvKZYwEKTrhXaf2p3upWxDgEOBVsfo8IrsTk3s4Js6AnDysOKQqpTRZJtdadnKqAimL+5+9t9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707341156; c=relaxed/simple;
-	bh=o8H4o09pkLeXy0frODGluKudoPi9PzNvii1yKYW0Lj0=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=p+g+EA7jiO2bhIAtplg8e2ft8fwifKa0s6rP9AYMyUqPzNWLhHAIsDO3rlZ8Ib1GUUJ/rMJ8hsiQP3q/WauQijA8h6IP4bfsrCWUo6rf7ySLpj0/fXnSGptrC3O1RI2TOzxEg1rot5IU8oDgiYnMKiO+OlDjCxylX5c8CvszE+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJlCtETy; arc=none smtp.client-ip=10.30.226.201
+	bh=EVJw3/SXfuBf5v9qJgE4yM7WLbNBIMe7pkiV9lhnVaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SINVq84nbudo8sdZLqrUNDQeqbpK9YpgvGLw19chN5Fo5xNIWocmjHmelsqKtUMawJT75KSHUpKghSFrUc81g7pvYU4hqLMfbh4DaUlHybOhWCFvKDhsKeVPwSN/CBD+Kl1PQiLPpiH0H+u6Q4YFSWHYowmRXHoTov2TQelqtdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3leUQdq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJlCtETy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779B8C433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3leUQdq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4DFC43399;
 	Wed,  7 Feb 2024 21:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707341156;
-	bh=o8H4o09pkLeXy0frODGluKudoPi9PzNvii1yKYW0Lj0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=WJlCtETyglI9CUyxAiNpStKaFOkznG4fLAhkcnYvWPyUx+NxNcee6IJe7iomn2NvO
-	 9iOGfbTdAqrj+eGjS0mhBhkmW1h96EqDclNYMHjQT67YbHIaXUOs9HDPEsjpxmxmdx
-	 hDkjNALZIPL7j1Ko4fCH3pGL8Yk/rqRECsQd72uxQBWNpgBTCWE0uwYROCvz6QKzxe
-	 J7JEC4TzxR/12ND3tr4VOo8XJ/XJe1FgZ5rZxiwZhXO0zxgAaIUeFWN6saFIMgV217
-	 dbag2poBlAKhjuMPEzqK9Nivc4AHks2ZlTsll3eyMmrz021A3wFKgJaqgprYBDJz90
-	 l1IqlucNJ1Hyw==
-Date: Wed, 07 Feb 2024 21:25:53 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	bh=EVJw3/SXfuBf5v9qJgE4yM7WLbNBIMe7pkiV9lhnVaQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=K3leUQdqB0Eu0jDo8v6f86rKd8z4N4CDGhwmhkmcSiauifKUZTAP0/jQBm/xEi3w2
+	 lDri0bv/GbmQU7WxI0MIaylOGEGh8xpfSt8rZwSFP9ISZzHSLNuDuQ3Q1DefvD2SbT
+	 Yk8Q6IC3u8NKveFKJSHo+k6eCG6WZLv+ZYKhYEr29SAo41VFxNvBjJCkCEwTfiyLLJ
+	 sLtjbR22lg2XYrNYueKXw/sSezaQCkUz6Ygl1sUXC8F9FhVARQvPrJE64usjj4Cm1j
+	 7Qvm4qAIK5qIY62ASOyjIRbafJkNtKaS6sVH/4fDv3dQEipS54w1X0LIfuIOLNodmY
+	 ma5AJBMU+3uWg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Daniel Wagner <dwagner@suse.de>,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	james.smart@broadcom.com,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.1 25/29] nvmet-fc: avoid deadlock on delete association path
+Date: Wed,  7 Feb 2024 16:24:50 -0500
+Message-ID: <20240207212505.3169-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240207212505.3169-1-sashal@kernel.org>
+References: <20240207212505.3169-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: linux-iio@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Li peiyu <579lpy@gmail.com>, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- linux-kernel@vger.kernel.org, Nuno Sa <nuno.sa@analog.com>
-In-Reply-To: <20240207074758.4138724-3-dima.fedrau@gmail.com>
-References: <20240207074758.4138724-1-dima.fedrau@gmail.com>
- <20240207074758.4138724-3-dima.fedrau@gmail.com>
-Message-Id: <170734115194.3199410.700483085044705042.robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: iio: humidity: hdc3020: add
- interrupt bindings in example
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.77
+Content-Transfer-Encoding: 8bit
 
+From: Daniel Wagner <dwagner@suse.de>
 
-On Wed, 07 Feb 2024 08:47:52 +0100, Dimitri Fedrau wrote:
-> Add interrupt bindings in example.
-> 
-> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> ---
->  Documentation/devicetree/bindings/iio/humidity/ti,hdc3020.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+[ Upstream commit 710c69dbaccdac312e32931abcb8499c1525d397 ]
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+When deleting an association the shutdown path is deadlocking because we
+try to flush the nvmet_wq nested. Avoid this by deadlock by deferring
+the put work into its own work item.
 
-yamllint warnings/errors:
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/target/fc.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/iio/humidity/ti,hdc3020.example.dts:33.34-35 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/iio/humidity/ti,hdc3020.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240207074758.4138724-3-dima.fedrau@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index b4b2631eb530..36cae038eb04 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -111,6 +111,8 @@ struct nvmet_fc_tgtport {
+ 	struct nvmet_fc_port_entry	*pe;
+ 	struct kref			ref;
+ 	u32				max_sg_cnt;
++
++	struct work_struct		put_work;
+ };
+ 
+ struct nvmet_fc_port_entry {
+@@ -248,6 +250,13 @@ static int nvmet_fc_tgt_a_get(struct nvmet_fc_tgt_assoc *assoc);
+ static void nvmet_fc_tgt_q_put(struct nvmet_fc_tgt_queue *queue);
+ static int nvmet_fc_tgt_q_get(struct nvmet_fc_tgt_queue *queue);
+ static void nvmet_fc_tgtport_put(struct nvmet_fc_tgtport *tgtport);
++static void nvmet_fc_put_tgtport_work(struct work_struct *work)
++{
++	struct nvmet_fc_tgtport *tgtport =
++		container_of(work, struct nvmet_fc_tgtport, put_work);
++
++	nvmet_fc_tgtport_put(tgtport);
++}
+ static int nvmet_fc_tgtport_get(struct nvmet_fc_tgtport *tgtport);
+ static void nvmet_fc_handle_fcp_rqst(struct nvmet_fc_tgtport *tgtport,
+ 					struct nvmet_fc_fcp_iod *fod);
+@@ -359,7 +368,7 @@ __nvmet_fc_finish_ls_req(struct nvmet_fc_ls_req_op *lsop)
+ 
+ 	if (!lsop->req_queued) {
+ 		spin_unlock_irqrestore(&tgtport->lock, flags);
+-		goto out_puttgtport;
++		goto out_putwork;
+ 	}
+ 
+ 	list_del(&lsop->lsreq_list);
+@@ -372,8 +381,8 @@ __nvmet_fc_finish_ls_req(struct nvmet_fc_ls_req_op *lsop)
+ 				  (lsreq->rqstlen + lsreq->rsplen),
+ 				  DMA_BIDIRECTIONAL);
+ 
+-out_puttgtport:
+-	nvmet_fc_tgtport_put(tgtport);
++out_putwork:
++	queue_work(nvmet_wq, &tgtport->put_work);
+ }
+ 
+ static int
+@@ -1404,6 +1413,7 @@ nvmet_fc_register_targetport(struct nvmet_fc_port_info *pinfo,
+ 	kref_init(&newrec->ref);
+ 	ida_init(&newrec->assoc_cnt);
+ 	newrec->max_sg_cnt = template->max_sgl_segments;
++	INIT_WORK(&newrec->put_work, nvmet_fc_put_tgtport_work);
+ 
+ 	ret = nvmet_fc_alloc_ls_iodlist(newrec);
+ 	if (ret) {
+-- 
+2.43.0
 
