@@ -1,71 +1,113 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B127528DBC;
-	Wed,  7 Feb 2024 09:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474D022F1E
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 09:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707299521; cv=none; b=cHjzoOguRCz54II57j804Fg2i0q38FBLAmp7TLsRBDXvP62QtRk5xoHjYjsyuXDtpl8yQsLHrxHGsFNC2ybNSDUlxWpLwEmOX+40y2v7N+qNF0QyhC08Gu1hj7gVc8kp3d7g+NBOggEk8T5ovOZmMUKDbTRqzaHo25uAIS0O3kI=
+	t=1707299592; cv=none; b=E3Ecla1XhpokpFIfjgGuJDRLyzxK1eZ/V/64RkO+ppCGE7MQk12fg394ncBjf+9DpwxMVnZRiGIoNjeTqt1HxImSPeS5Z7VsHcLLnZpKLhdq1vjfdeWTmoHQcMGmp7Z48yOucSmE+d34bMEinqPzkreJ4igi+b7NvIzxwBfhbbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707299521; c=relaxed/simple;
-	bh=XqdeSA/6t257zdspDNBGkqLK9I4Kn390CRGdDF1TMJk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A0E3RxBn8THJcMODZ9yJYQjOMU9kPOJrzLWKB/e895MuFXlx9mS8yaR26Ss+8VrVhae3Yi66LDQnHR1qeYPasyhyMo0FIY2bRPyVoLGBdTqpk5N6UtM3ePPPIMm1ecIBcyZXXrvS9srRFMNac+aFDgLJrVZG52cu0ai/DSL7ahY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TVFhg0wJpz29lTN;
-	Wed,  7 Feb 2024 17:49:55 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id ACB021404F7;
-	Wed,  7 Feb 2024 17:51:51 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 7 Feb 2024 17:51:51 +0800
-From: Weili Qian <qianweili@huawei.com>
-To: <herbert@gondor.apana.org.au>
-CC: <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<liulongfang@huawei.com>
-Subject: [PATCH v2 0/3] crypto: hisilicon/qm - add stop function and obtain queue status
-Date: Wed, 7 Feb 2024 17:50:58 +0800
-Message-ID: <20240207095101.37280-1-qianweili@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1707299592; c=relaxed/simple;
+	bh=fBagnQpf9lsurAdCpTPPCwp0zC2lC8ox5gnQI1Q20r0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XaYomt4/N00RNad83njifUxmaW+apbMFiWUG2m8PBRB1BazQVwVcbjMl7ZvCAsdjCfBGuZV5nVSEeiapQWNZ3YSHJmXrrD2Ulkp0rtEe9CV5YmOPjeyTFCwQcrg5R6Lg77fJlgLEs+zWdzcWY/u+UMBFvpmDyl0xwC26VgpdxHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GzQiPDNF; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GzQiPDNF"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-60491b1fdeaso3485227b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 01:53:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707299590; x=1707904390; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=D48j7hXU3glDBmXxDOFw5bCwEMnSogYiPviREFd32FQ=;
+        b=GzQiPDNFGzV+WacOxV2qmKnevKuNYdxne9ZZf2GPguun7J2rV5ep60zPImNMx1tVMd
+         FPt5dKM3bcUx7hOWghjP+f7V7T8AZlu/rmJuH8i+IB/vX/hA2tkaiMT8i2A5v9s8LzAB
+         cF0sDnRNQK4G3d4zw2FicrJcJDC5521gaQ1Xlt0uOtLqgthqLhBljxqQ28ngwY2qo7+1
+         8NSFjvK4f179Lg38idDuML0rIlQVOm+sb+fSIYk78PjtDWkPWV/DJ6IwFdP5eTxkJ4oa
+         LBC7LkP1s62rD7gWyXeqKZc7RlrE+oAmVigSDOVO+El8zL25BoPnIPZvI7wtXL3zVoBW
+         g6SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707299590; x=1707904390;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D48j7hXU3glDBmXxDOFw5bCwEMnSogYiPviREFd32FQ=;
+        b=Cz19P10yxn+WIjSYY2qHQV9Jrmu5+d7XldZNWh5PNFFRLIexgTGyDHpmUSRWpBIdTC
+         TjXj71KHvjjfLHdLYyNB1lBAaG6gG4bbpRGPO4hAtJO+j/lU+h62LePxzb/nKxRlzfJD
+         D2LVBwf3jbDo7k5w6cl8Eg+H5Mt3eF4RpwNs7qL/wjx7QcFS4cbfwT4Uo/GDCIQ5p3VF
+         awv8fFydP4aSK0D2Q7RIGbAq4ADOloLEy2zPmm8B1kKhCkDNXMKqRNLB87hIQEG9Seaa
+         A0zb1g/IXGu7zmoOuqnZuut3QE69SqB5GBasQJfZSlx95q0T8BTm7lSIjN9ixOPxHhcG
+         KLBQ==
+X-Gm-Message-State: AOJu0YzmdsZO9c5fiPGPaiyDGGvpA9B/zX8AurBZwkFLhZlmChjBoRH1
+	O1sFC3P575hhNKGzgetiVoH5OcWBqAcbYnnTnTMVXTIAsEktYFOEJgNOJj3DTYonAyttd1ML1Cv
+	s842bAdHXGUPcEh0MakAYp5sxrZL+64q9NiHnqw==
+X-Google-Smtp-Source: AGHT+IEh15/3UNFNxwbhtyktWrw5Dq3WwqrIRYrh9/Lre+JIygghfrZgJ0hP4Cue7+98aLmgX4RyI000Dpu6bvDHXZM=
+X-Received: by 2002:a81:e60c:0:b0:5fa:5251:2332 with SMTP id
+ u12-20020a81e60c000000b005fa52512332mr4349582ywl.32.1707299590157; Wed, 07
+ Feb 2024 01:53:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+References: <20240202064039.15505-1-quic_ekangupt@quicinc.com>
+ <20240202064039.15505-3-quic_ekangupt@quicinc.com> <2024020248-improving-algorithm-a5f0@gregkh>
+ <a2c5e594-f485-4510-84ba-6cd022c4c774@quicinc.com>
+In-Reply-To: <a2c5e594-f485-4510-84ba-6cd022c4c774@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 7 Feb 2024 11:52:59 +0200
+Message-ID: <CAA8EJppuaPLuH2Xb1Cu6P1HiD3PSjTy4L-Q6C3S82m5RAxfApg@mail.gmail.com>
+Subject: Re: [PATCH v1 02/16] misc: fastrpc: Add support for unsigned PD
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, srinivas.kandagatla@linaro.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Patch #1 supports stopping function by sending mailbox to device,
-device directly flush out function data.
-Patch #2 supports users to obtain the queue stopping result by
-querying the debug file.
-Patch #3 changes function type.
+On Wed, 7 Feb 2024 at 10:57, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
+>
+>
+> On 2/2/2024 8:13 PM, Greg KH wrote:
+> > On Fri, Feb 02, 2024 at 12:10:25PM +0530, Ekansh Gupta wrote:
+> >> Unsigned PD requires more initial memory to spawn.
+> > What exactly is "Unsigned PD"?
+> >
+> > And where are all of the userspace changes for this series so we can
+> > verify they work properly?
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> Hi Greg,
+> Unsigned PDs are sandboxed DSP processes used to offload computation
+> workloads to the DSP. Unsigned PD have less privileges in terms of
+> DSP resource access as compared to Signed PD.
 
-Changed in v2:
- - Remove redundant check in patch#2.
- - The loop exit condition is modified to
-prevent no log output when timeout.
+All such details must be described in commit messages for the patches.
 
-Weili Qian (3):
-  crypto: hisilicon/qm - add stop function by hardware
-  crypto: hisilicon/qm - obtain stop queue status
-  crypto: hisilicon/qm - change function type to void
+>
+> Unsigned PD can be enabled using userspace API:
+> https://git.codelinaro.org/linaro/qcomlt/fastrpc/-/blob/master/src/fastrpc_apps_user.c?ref_type=heads#L1173
+>
+> For multimode invoke request(other feature) also I've shared the
+> userspace changes with Srini which he will be pulling to userspace
+> project.
 
- Documentation/ABI/testing/debugfs-hisi-hpre |  15 ++
- Documentation/ABI/testing/debugfs-hisi-sec  |  15 ++
- Documentation/ABI/testing/debugfs-hisi-zip  |  15 ++
- drivers/crypto/hisilicon/debugfs.c          |   5 +
- drivers/crypto/hisilicon/qm.c               | 184 +++++++++++++-------
- include/linux/hisi_acc_qm.h                 |  10 +-
- 6 files changed, 183 insertions(+), 61 deletions(-)
+And this should be a part of the cover letter.
+
+>
+> Please let me know if you have any other queries.
+>
+> Thanks
+> --ekansh
+>
+>
+
 
 -- 
-2.33.0
-
+With best wishes
+Dmitry
