@@ -1,322 +1,162 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDEC1272CB
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3C3127B6D
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707331732; cv=none; b=i0EwSJRWh4md+EaDLXlr079lWz190CIp55sIaJLlrcJu4ZB1iin4RTjKPn6mR1knvh0ohSusAUebxMdiD1cD4bBnzLlszNrKFuEhnzHvwgTMZLYTJYZRiVceswd8MI5Wxyy1zAspfoZFhBhw9eru5YlUNryPqi9CXfxYxn75LZg=
+	t=1707331822; cv=none; b=NeQiVsrLvG4FCtMUDRsZTSRjaNICsB67N9FzY4DQCidzuxMlgB9i3aYgaMN5cXEIgRYgHxszAKJULnbL6nMTGs5MaXE34ccGOtdomVhZlBSfxWMPq0VzJDfPyClO0wh6YrFyhCZs20QktC8OXOxG7bD1DkjTycaeu1vfGTTUrRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707331732; c=relaxed/simple;
-	bh=wvb1mKGslbahYKMQcj6UXLGPIub78UIv66qubREGkwE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=dVuI9OHzUcleqD+z1fgYTIep59GtxBmDi7xhiiMnyIpbGFoo2r/ZTOqSzKBy5x5gabwbIw0ciQUoKSNHkAcGShe/A5rlXic2jfE3sDMqxXhOafE812rH+PigEb2xpHoOWQBwkTyTBxO1myHo7BDl0luwdI1btfYHNBJA4IlYF9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bFF8LrBY; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707331822; c=relaxed/simple;
+	bh=FHpj/xXyQLYjyor2xeXAMKuWhBGCAUI46q76hCBjf4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ioSsedbv7QkiSNxVlvo8h54UQX3jd5q807IxCc1jK6vtumhxyESfK2zaDB4Hgnqq9h5FjdkD84nwKmrm32ly8j5ktaLn+Fb7HZbwlpQq7b7WiBFGUWb9VYeAr5j/aRWCWA9hZc/gDTTuhed5aVR+V/i3bIze4kHz27ct+PABcuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=w5XqJT7s; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bFF8LrBY"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40fb3b5893eso8057685e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 10:48:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="w5XqJT7s"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d8df2edd29so665474a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 10:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707331728; x=1707936528; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=fastly.com; s=google; t=1707331819; x=1707936619; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YEbS8x6FOBuKd7dbPbw/YK28mMkf7/ZaGGkdJ/zSoBI=;
-        b=bFF8LrBYxHJuaDERczj1V68Zkjs3c+wW6C94wAgima/zYNkRhi0IPGjcKfP4byekbg
-         H4UBrNyoJWdiPE8FboJPgGactjQhDuQ5leAD/KALW3WU4znYaQnex4AkUUnEQVjkkDEq
-         X8Rj31UCR2gC0ArSIPqBhqWSu5p+5Uy2FoWl0dy3enPq0CVSMtPdySjuLYreXb4IuOMG
-         RL1l4fdz1Uutsl5P4lnxmERkiJIMygVtWrozTOahNRjWov5esTAJGBYDim+c9L+QFNGK
-         N5HoGNTrZuD2NHLawAQQuViRwj2P8MmkJ5lVmnW6mgjIVRPt51QzNJIeU/kp3qN51SFz
-         Yleg==
+        bh=qQf4+IgLEkSw22mx7uyDkWbJAHHHB9UuyZ0jbaQX1VQ=;
+        b=w5XqJT7suxBW6Q6QnZ/SQgRGMZ3g1jqfYNtQR9l75F2Ii1ziWHIJTYedhArdnPnNjY
+         eASfq0rVeodWARrPeDxYGtg7lAtJ+KPZa4qLPe5pXGQ61wXM1tsC/y0+eyQHSyEXXkca
+         oR32mLE9wTkv+87POJr4snks3FV/CNEPjHBr0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707331728; x=1707936528;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707331819; x=1707936619;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YEbS8x6FOBuKd7dbPbw/YK28mMkf7/ZaGGkdJ/zSoBI=;
-        b=JA+Dg3GWiLoUdYnL3EoIn5lgIYZ8Q7pr1jZjIKGr9ExjKZg4TP0tW7RAo7gxxsqytX
-         7+AFIquZd84YmXk8uuKwT7c6yN7Rf/mMItsI9Ru/ftMFjxN4QI+WmG1w86rYgWH5T3mZ
-         VCDyUU38U4od+quEs61XD+njhZ/gUvDS9Y4N3A2/AEIH+pYtVoc3ilQVkeuq9E5tEZ9W
-         oXA1Y3de1cQ/qvyXkW9hUzzVxo+sJ1ObsSTWRLIAbHMk1rWFjH9W/vlUa0Wk249j42Fb
-         Kppd4JHvnhm1ZzpME1LWzWeesu0qHfTEP1qVl6w2BxWyvNPHCzer2ehlx+Mmbt0kCpre
-         COpA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8tyl12NWKdP5jJthYg7qAqS6+jCSJ22ZyyMsF/rqh8AQzBtRmkbuWOIv028crVJONj65R00VHssczXUWMGWkVheUNHzWqXo41v8R1
-X-Gm-Message-State: AOJu0YzlL0btuA9aYGrWIo/z8m9bWNQeE4/SSY6IF0siKCZdRLUHKu9F
-	e7YVH/iBnkyCOe49jyFC2Ypbw0DBfZ1WxtsTlrp0lNxvBELsWLfBOmqohmtnDP70VT5a8QFqWzH
-	f+yIHU9+st/PEe8GnS7xg+TFTFJCpzOgCGMUu
-X-Google-Smtp-Source: AGHT+IGz9sOVYCRyXKULBfQNcdwNAFxBi6ehHuFrlTPaZLS1FHBgo2NLZZk6fRMhF6NzcnxzFzZM+y4zxCp+jZchzJ0=
-X-Received: by 2002:a5d:47a2:0:b0:33b:3aa6:a28e with SMTP id
- 2-20020a5d47a2000000b0033b3aa6a28emr4478697wrb.55.1707331728007; Wed, 07 Feb
- 2024 10:48:48 -0800 (PST)
+        bh=qQf4+IgLEkSw22mx7uyDkWbJAHHHB9UuyZ0jbaQX1VQ=;
+        b=bEtiUWnJaR6cbssfj+FbJwu3+xWuS6xaD7KA+8aC8lohrbAk8g8EBTfvzIzfxIAV8h
+         lorc05CvKXZnwyXqdyNKO0OE+RN0zqM2907wX57HslUMzLEz9NikKwQzP4ZkTa414pMr
+         AUe43QjJ3/dQLLYUg01O0GDfrQhzWPfoj63jNiOg24nnbUoEqa3RVklK1PsClXE6SsrO
+         tqx+LNQTR94eSyTLr1GvS9kQz7m5lR74gw6fiSCQnTbKoMkuRl9utk7H39SwRazVgp2u
+         /F2YA+G4QwHUINh42sGJ1TYl1gL0Zn0VuemZqFBws1FBXDXq6lJ0VCuaoj/oZEqAueSr
+         VPDw==
+X-Gm-Message-State: AOJu0YyeHiN0ndi4iinzZAYsqJtUOsBGPG5eKL3BJNT/kUi0KjajWtr+
+	pTbhxI8cke9c91VZt0FZXBZBM4rPDmdWSKmzPX3Kyq/F6pat7DadYv8Y3Al09iQ=
+X-Google-Smtp-Source: AGHT+IGQvVbGz3QeVBRU8HV3lCSe/k/gC1Nc5AYsNKsNaVbI7gyDoJvv5HG9mp3ZWoAk6Hf1n3N7rw==
+X-Received: by 2002:a05:6a20:9591:b0:19e:9a7b:230f with SMTP id iu17-20020a056a20959100b0019e9a7b230fmr6248711pzb.9.1707331819370;
+        Wed, 07 Feb 2024 10:50:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXP5D3VQWJvH341gnT+Kd3ij2X9pcq/8IUse138FBGQNGJccLxkgLD2TM0AwzoBb01V4wXRQ8fbHgtULuINUB8Y/cxELr2RSGSBAfKAZfN99uFvTQqVcbq5W+r3G9y0oxGFzQHz3WmqevKYI0h74KkSnxYmWDJInDxxkZeg01gg3CWEMX7GL5+xicM7k+NiIWMjIDPki4i6jgA2IVfimCAUhjQA9hBk2OnHOdnwsDfATSSaJNQnShizjcz4DihQpkWrNx1mJQ/wJtOUQTuhsO1CYiKH3aWhIFSY4NjQgS3JsZOJRrF7oc77+3HWOj5IwxH8WIndAFjJltCJCvcGVmhUxc0GRHJhsNL69SXnkdTcGBzKaKMJ553KmuMPlExje1oaOGFgeoQFVNWBeGi1+FLloGZOCiVE4kauNft3oQkvt6UtwdLaAZ5+r9O9sXsMenW7fGapT7YsARoOOper3smD/bP9+/jSDJhi6MNM7Eu3/JpdoDEI4PYJoNG/T1PKGqKhZfLjs9gLHFlwp+m2CA308c+PRY27XP84589ZCbCOXkkOxPpkiluPBOgwaQYXuZHzKoUQWlef+RdIdxwsqaMihyTrqo7PhAE2fNUJIsyVKN9F32xz7CuIr8k2X0Qy3khgNWXxSLTRfmgSTge8+X9ciH/6kwccaXB5Q01DSY6TMZwYi7qqeoj9ix0tJkO9mndOpMnhJUK0aihqQtMlJF775VydIHgryimfw3GCDCMyK1Wct1PEURkvYuqkjiLjLeinlWbbAtcyY/TEo/iHKkDWxe9ZGKxbcdxHiZHq4YojB3hIrOfZ0JVD1qrEgsx88SgnFKCYV2vu6zOehvnElqSRwCtWNZahQk8eOeRrF+z67tHlUaqeFmfp8nP5fchWpXMhNVHls813y7ChVBbKYPjLlUdOpmoZTLSpwcL3sd/oi5xiEs+z2sgY724v47/Qp6uHGM
+ X/7KGpggItlob7VfLZi8g=
+Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id cb11-20020a056a02070b00b005d7b18bb7e2sm1766169pgb.45.2024.02.07.10.50.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Feb 2024 10:50:19 -0800 (PST)
+Date: Wed, 7 Feb 2024 10:50:15 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: kuba@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	chuck.lever@oracle.com, jlayton@kernel.org,
+	linux-api@vger.kernel.org, brauner@kernel.org, edumazet@google.com,
+	davem@davemloft.net, alexander.duyck@gmail.com,
+	sridhar.samudrala@intel.com, kuba@kernel.org,
+	willemdebruijn.kernel@gmail.com, weiwan@google.com,
+	David.Laight@ACULAB.COM, arnd@arndb.de, sdf@google.com,
+	amritha.nambiar@intel.com, Jonathan Corbet <corbet@lwn.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Nathan Lynch <nathanl@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Steve French <stfrench@microsoft.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Julien Panis <jpanis@baylibre.com>,
+	Andrew Waterman <waterman@eecs.berkeley.edu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH net-next v6 4/4] eventpoll: Add epoll ioctl for
+ epoll_params
+Message-ID: <20240207185014.GA1221@fastly.com>
+References: <20240205210453.11301-1-jdamato@fastly.com>
+ <20240205210453.11301-5-jdamato@fastly.com>
+ <ec9791cf-d0a2-4d75-a7d6-00bcab92e823@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206010919.1109005-1-lokeshgidra@google.com>
- <20240206010919.1109005-4-lokeshgidra@google.com> <20240206170501.3caqeylaogpaemuc@revolver>
-In-Reply-To: <20240206170501.3caqeylaogpaemuc@revolver>
-From: Lokesh Gidra <lokeshgidra@google.com>
-Date: Wed, 7 Feb 2024 10:48:35 -0800
-Message-ID: <CA+EESO7OExRs8Tz2SRD5EZoVf1DocoTZyG4c0Y89xDzZAVViGw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] userfaultfd: use per-vma locks in userfaultfd operations
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lokesh Gidra <lokeshgidra@google.com>, 
-	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, surenb@google.com, 
-	kernel-team@android.com, aarcange@redhat.com, peterx@redhat.com, 
-	david@redhat.com, axelrasmussen@google.com, bgeffon@google.com, 
-	willy@infradead.org, jannh@google.com, kaleshsingh@google.com, 
-	ngeoffray@google.com, timmurray@google.com, rppt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec9791cf-d0a2-4d75-a7d6-00bcab92e823@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 
-On Tue, Feb 6, 2024 at 9:05=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> * Lokesh Gidra <lokeshgidra@google.com> [240205 20:10]:
-> > All userfaultfd operations, except write-protect, opportunistically use
-> > per-vma locks to lock vmas. On failure, attempt again inside mmap_lock
-> > critical section.
+On Wed, Feb 07, 2024 at 09:37:14AM +0100, Jiri Slaby wrote:
+> On 05. 02. 24, 22:04, Joe Damato wrote:
+> >Add an ioctl for getting and setting epoll_params. User programs can use
+> >this ioctl to get and set the busy poll usec time, packet budget, and
+> >prefer busy poll params for a specific epoll context.
 > >
-> > Write-protect operation requires mmap_lock as it iterates over multiple
-> > vmas.
+> >Parameters are limited:
+> >   - busy_poll_usecs is limited to <= u32_max
+> >   - busy_poll_budget is limited to <= NAPI_POLL_WEIGHT by unprivileged
+> >     users (!capable(CAP_NET_ADMIN))
+> >   - prefer_busy_poll must be 0 or 1
+> >   - __pad must be 0
 > >
-> > Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
-> > ---
-> >  fs/userfaultfd.c              |  13 +-
-> >  include/linux/mm.h            |  16 +++
-> >  include/linux/userfaultfd_k.h |   5 +-
-> >  mm/memory.c                   |  48 +++++++
-> >  mm/userfaultfd.c              | 242 +++++++++++++++++++++-------------
-> >  5 files changed, 222 insertions(+), 102 deletions(-)
-> >
-> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> > index c00a021bcce4..60dcfafdc11a 100644
-> > --- a/fs/userfaultfd.c
-> > +++ b/fs/userfaultfd.c
-> > @@ -2005,17 +2005,8 @@ static int userfaultfd_move(struct userfaultfd_c=
-tx *ctx,
-> >               return -EINVAL;
-> >
-> >       if (mmget_not_zero(mm)) {
-> > -             mmap_read_lock(mm);
-> > -
-> > -             /* Re-check after taking map_changing_lock */
-> > -             down_read(&ctx->map_changing_lock);
-> > -             if (likely(!atomic_read(&ctx->mmap_changing)))
-> > -                     ret =3D move_pages(ctx, mm, uffdio_move.dst, uffd=
-io_move.src,
-> > -                                      uffdio_move.len, uffdio_move.mod=
-e);
-> > -             else
-> > -                     ret =3D -EAGAIN;
-> > -             up_read(&ctx->map_changing_lock);
-> > -             mmap_read_unlock(mm);
-> > +             ret =3D move_pages(ctx, uffdio_move.dst, uffdio_move.src,
-> > +                              uffdio_move.len, uffdio_move.mode);
-> >               mmput(mm);
-> >       } else {
-> >               return -ESRCH;
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 0d1f98ab0c72..e69dfe2edcce 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -753,6 +753,11 @@ static inline void release_fault_lock(struct vm_fa=
-ult *vmf)
-> >               mmap_read_unlock(vmf->vma->vm_mm);
+> >Signed-off-by: Joe Damato <jdamato@fastly.com>
+> ...
+> >--- a/fs/eventpoll.c
+> >+++ b/fs/eventpoll.c
+> ...
+> >@@ -497,6 +498,50 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+> >  	ep->napi_id = napi_id;
 > >  }
-> >
-> > +static inline void unlock_vma(struct mm_struct *mm, struct vm_area_str=
-uct *vma)
-> > +{
-> > +     vma_end_read(vma);
-> > +}
-> > +
-> >  static inline void assert_fault_locked(struct vm_fault *vmf)
-> >  {
-> >       if (vmf->flags & FAULT_FLAG_VMA_LOCK)
-> > @@ -774,6 +779,9 @@ static inline void vma_assert_write_locked(struct v=
-m_area_struct *vma)
-> >               { mmap_assert_write_locked(vma->vm_mm); }
-> >  static inline void vma_mark_detached(struct vm_area_struct *vma,
-> >                                    bool detached) {}
-> > +static inline void vma_acquire_read_lock(struct vm_area_struct *vma) {
-> > +     mmap_assert_locked(vma->vm_mm);
-> > +}
-> >
-> >  static inline struct vm_area_struct *lock_vma_under_rcu(struct mm_stru=
-ct *mm,
-> >               unsigned long address)
-> > @@ -786,6 +794,11 @@ static inline void release_fault_lock(struct vm_fa=
-ult *vmf)
-> >       mmap_read_unlock(vmf->vma->vm_mm);
-> >  }
-> >
-> > +static inline void unlock_vma(struct mm_struct *mm, struct vm_area_str=
-uct *vma)
-> > +{
-> > +     mmap_read_unlock(mm);
-> > +}
-> > +
->
-> Instead of passing two variables and only using one based on
-> configuration of kernel build, why not use vma->vm_mm to
-> mmap_read_unlock() and just pass the vma?
->
-> It is odd to call unlock_vma() which maps to mmap_read_unlock().  Could
-> we have this abstraction depend on CONFIG_PER_VMA_LOCK in uffd so that
-> reading the code remains clear?  You seem to have pretty much two
-> versions of each function already.  If you do that, then we can leave
-> unlock_vma() undefined if !CONFIG_PER_VMA_LOCK.
->
-> >  static inline void assert_fault_locked(struct vm_fault *vmf)
-> >  {
-> >       mmap_assert_locked(vmf->vma->vm_mm);
-> > @@ -794,6 +807,9 @@ static inline void assert_fault_locked(struct vm_fa=
-ult *vmf)
-> >  #endif /* CONFIG_PER_VMA_LOCK */
-> >
-> >  extern const struct vm_operations_struct vma_dummy_vm_ops;
-> > +extern struct vm_area_struct *lock_vma(struct mm_struct *mm,
-> > +                                    unsigned long address,
-> > +                                    bool prepare_anon);
-> >
-> >  /*
-> >   * WARNING: vma_init does not initialize vma->vm_lock.
-> > diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_=
-k.h
-> > index 3210c3552976..05d59f74fc88 100644
-> > --- a/include/linux/userfaultfd_k.h
-> > +++ b/include/linux/userfaultfd_k.h
-> > @@ -138,9 +138,8 @@ extern long uffd_wp_range(struct vm_area_struct *vm=
-a,
-> >  /* move_pages */
-> >  void double_pt_lock(spinlock_t *ptl1, spinlock_t *ptl2);
-> >  void double_pt_unlock(spinlock_t *ptl1, spinlock_t *ptl2);
-> > -ssize_t move_pages(struct userfaultfd_ctx *ctx, struct mm_struct *mm,
-> > -                unsigned long dst_start, unsigned long src_start,
-> > -                unsigned long len, __u64 flags);
-> > +ssize_t move_pages(struct userfaultfd_ctx *ctx, unsigned long dst_star=
-t,
-> > +                unsigned long src_start, unsigned long len, __u64 flag=
-s);
-> >  int move_pages_huge_pmd(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *s=
-rc_pmd, pmd_t dst_pmdval,
-> >                       struct vm_area_struct *dst_vma,
-> >                       struct vm_area_struct *src_vma,
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index b05fd28dbce1..393ab3b0d6f3 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -5760,8 +5760,56 @@ struct vm_area_struct *lock_vma_under_rcu(struct=
- mm_struct *mm,
-> >       count_vm_vma_lock_event(VMA_LOCK_ABORT);
-> >       return NULL;
-> >  }
-> > +
-> > +static void vma_acquire_read_lock(struct vm_area_struct *vma)
-> > +{
-> > +     /*
-> > +      * We cannot use vma_start_read() as it may fail due to false loc=
-ked
-> > +      * (see comment in vma_start_read()). We can avoid that by direct=
-ly
-> > +      * locking vm_lock under mmap_lock, which guarantees that nobody =
-could
-> > +      * have locked the vma for write (vma_start_write()).
-> > +      */
-> > +     mmap_assert_locked(vma->vm_mm);
-> > +     down_read(&vma->vm_lock->lock);
-> > +}
-> >  #endif /* CONFIG_PER_VMA_LOCK */
-> >
-> > +/*
-> > + * lock_vma() - Lookup and lock VMA corresponding to @address.
->
-> Missing arguments in the comment
->
-> > + * @prepare_anon: If true, then prepare the VMA (if anonymous) with an=
-on_vma.
-> > + *
-> > + * Should be called without holding mmap_lock. VMA should be unlocked =
-after use
-> > + * with unlock_vma().
-> > + *
-> > + * Return: A locked VMA containing @address, NULL of no VMA is found, =
-or
-> > + * -ENOMEM if anon_vma couldn't be allocated.
-> > + */
-> > +struct vm_area_struct *lock_vma(struct mm_struct *mm,
-> > +                             unsigned long address,
-> > +                             bool prepare_anon)
-> > +{
-> > +     struct vm_area_struct *vma;
-> > +
-> > +     vma =3D lock_vma_under_rcu(mm, address);
-> > +
->
-> Nit: extra new line
->
-> > +     if (vma)
-> > +             return vma;
-> > +
-> > +     mmap_read_lock(mm);
-> > +     vma =3D vma_lookup(mm, address);
-> > +     if (vma) {
-> > +             if (prepare_anon && vma_is_anonymous(vma) &&
-> > +                 anon_vma_prepare(vma))
-> > +                     vma =3D ERR_PTR(-ENOMEM);
-> > +             else
-> > +                     vma_acquire_read_lock(vma);
-> > +     }
-> > +
-> > +     if (IS_ENABLED(CONFIG_PER_VMA_LOCK) || !vma || PTR_ERR(vma) =3D=
-=3D -ENOMEM)
-> > +             mmap_read_unlock(mm);
-> > +     return vma;
-> > +}
-> > +
->
-> It is also very odd that lock_vma() may, in fact, be locking the mm.  It
-> seems like there is a layer of abstraction missing here, where your code
-> would either lock the vma or lock the mm - like you had before, but
-> without the confusing semantics of unlocking with a flag.  That is, we
-> know what to do to unlock based on CONFIG_PER_VMA_LOCK, but it isn't
-> always used.
->
-> Maybe my comments were not clear on what I was thinking on the locking
-> plan.  I was thinking that, in the CONFIG_PER_VMA_LOCK case, you could
-> have a lock_vma() which does the per-vma locking which you can use in
-> your code.  You could call lock_vma() in some uffd helper function that
-> would do what is required (limit checking, etc) and return a locked vma.
->
-> The counterpart of that would be another helper function that would do
-> what was required under the mmap_read lock (limit check, etc).  The
-> unlocking would be entirely config dependant as you have today.
->
-> Just write the few functions you have twice: once for per-vma lock
-> support, once without it.  Since we now can ensure the per-vma lock is
-> taken in the per-vma lock path (or it failed), then you don't need to
-> mmap_locked boolean you had in the previous version.  You solved the
-> unlock issue already, but it should be abstracted so uffd calls the
-> underlying unlock vs vma_unlock() doing an mmap_read_unlock() - because
-> that's very confusing to see.
->
-> I'd drop the vma from the function names that lock the mm or the vma as
-> well.
->
-> Thanks,
-> Liam
+> >+static long ep_eventpoll_bp_ioctl(struct file *file, unsigned int cmd,
+> >+				  unsigned long arg)
+> >+{
+> >+	struct eventpoll *ep;
+> >+	struct epoll_params epoll_params;
+> >+	void __user *uarg = (void __user *) arg;
+> >+
+> >+	ep = file->private_data;
+> 
+> This might have been on the ep declaration line.
+> 
+> >+	switch (cmd) {
+> >+	case EPIOCSPARAMS:
+> >+		if (copy_from_user(&epoll_params, uarg, sizeof(epoll_params)))
+> >+			return -EFAULT;
+> >+
+> >+		if (memchr_inv(epoll_params.__pad, 0, sizeof(epoll_params.__pad)))
+> >+			return -EINVAL;
+> >+
+> >+		if (epoll_params.busy_poll_usecs > U32_MAX)
+> >+			return -EINVAL;
+> >+
+> >+		if (epoll_params.prefer_busy_poll > 1)
+> >+			return -EINVAL;
+> >+
+> >+		if (epoll_params.busy_poll_budget > NAPI_POLL_WEIGHT &&
+> >+		    !capable(CAP_NET_ADMIN))
+> >+			return -EPERM;
+> >+
+> >+		ep->busy_poll_usecs = epoll_params.busy_poll_usecs;
+> >+		ep->busy_poll_budget = epoll_params.busy_poll_budget;
+> >+		ep->prefer_busy_poll = !!epoll_params.prefer_busy_poll;
+> 
+> This !! is unnecessary. Nonzero values shall be "converted" to true.
+> 
+> But FWIW, the above is nothing which should be blocking, so:
+"> 
+> Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-I got it now. I'll make the changes in the next version.
+netdev maintainers: Jiri marked this with Reviewed-by, but was this review
+what caused "Changes Requested" to be the status set for this patch set in
+patchwork?
 
-Would it be ok to make lock_vma()/unlock_vma() (in case of
-CONFIG_PER_VMA_LOCK) also be defined in mm/userfaultfd.c? The reason I
-say this is because first there are no other users of these functions.
-And also due to what Jann pointed out about anon_vma.
-lock_vma_under_rcu() (rightly) only checks for private+anonymous case
-and not private+file-backed case. So lock_vma() implementation is
-getting very userfaultfd specific IMO.
+If needed, I'll send a v7 with the changes Jiri suggested and add the
+"Reviewed-by" since the changes are cosmetic, but I wanted to make sure
+this was the reason.
+
+Thanks.
