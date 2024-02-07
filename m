@@ -1,99 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2297E78A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 15:07:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE047E77F;
+	Wed,  7 Feb 2024 15:07:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707318462; cv=none; b=VpGPXOEYWQK3Tl7ofk5LFT2IPKVIXLQm4N4FrIUyXCSUy9z33jg+8xd97P6p/Oa2B2iKLkqQ224M+XVvPPo0VfU6eNxdJ405Rca/Nl8OzCHViAyz7aWJ2wPQgOP4jrel0yuU2HL7dOSEIFy/sa+RaXYe7mIIrKDBkptX9EPYvKg=
+	t=1707318473; cv=none; b=uJhQJFDqSEapsAVZU87qFLwdXvDjUe7ruZz64EwMUdd5WF/ZMBNiDbQb9zJLpNKyaMm/bi+KiQyppLsX55EFOorrPSFeP/ZFBjjtFL2m2BWRQkXvYB+qxJTZbJfjyPNVfHzX3HG8d4NEd8w5SaAQIZcj+qSAK0Jh8t+sAjPEPK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707318462; c=relaxed/simple;
-	bh=/FqWXfV/HSCjSSNlo7ORSdgjuhGmOAjdQjE+0p+5C8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dVU2uogDjnzy4VCtoB9cnsxltFJKnyuOzYzW0krkCGMCj8Vei/1Iysya5ZQ3N4Ysh/yYdMiuoN/j6XwyBv9Ym8Vnka1nH5qa5NQxbiuSbUk/4FLczKkw3dAVGHebstJC2Wsh7mSL2CF0XONQqCnv7X9tu3sZymRlZOQTKptX06c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X92uDQko; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707318473; c=relaxed/simple;
+	bh=e8ZPTLBiG4EhvRswyFxjA28H3ywaFhr8kyDAQdHgczI=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=fdMcs7F/ISHl6SFd+XERTaxcnwv2xtkn+6TGgB1UeSAheUnCbUTsvEDuq1hE10ArY1tJe+YRr563YLz/OJ4pMQeT7vyOltz0ThJVYoYCqg17v20mYMQq0gih4S7gCWNZ6PScxmx0pzqewWp8TziAyB4xAjZ7huIWkIpn/hLCDjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X20Otscc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X92uDQko"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1ED7C433C7;
-	Wed,  7 Feb 2024 15:07:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X20Otscc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E2AC433F1;
+	Wed,  7 Feb 2024 15:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707318461;
-	bh=/FqWXfV/HSCjSSNlo7ORSdgjuhGmOAjdQjE+0p+5C8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X92uDQkouiJaOfpxP+Gy2vRB8fjxUG5Vc7vgi4F70HTzcsvqCcvg9GgHPAkqsL0Qo
-	 EHG4ZwgG8xmDwRfSxd1m0U/ToKbe6BHC7FWB7Bi+UiyDXSMhZtnd1ZC8CMHotIHEkQ
-	 GtMo1a5b6a0l9hX7OaacKDVbExHR5zB2wvZXASZGTAyia0qPvogUrrlHR0fvwivy7w
-	 VQP2t+ixwzL/SdpEoU133551s0o9g0JZIIwjSN/fa4SM2r5o6wQyomVohK0RPalkzZ
-	 O1K6gIvdFevIyX7mUo3lTorGWkzJLELRSwE58wyr2NeRm7Bd4irIrR4jnqitwRT3Ft
-	 9+Wfl3iBoe8eA==
-Date: Wed, 7 Feb 2024 15:07:38 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64/sve: Lower the maximum allocation for the SVE
- ptrace regset
-Message-ID: <ZcOcumjBZSYvWya1@finisterre.sirena.org.uk>
-References: <20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org>
- <ZcEW3y0IlEctOYBA@e133380.arm.com>
- <ZcEd2zU/JpeIwn5f@finisterre.sirena.org.uk>
- <ZcN2XMkvqxNnsz5K@e133380.arm.com>
- <ZcOBH7ip/KMhLYGO@finisterre.sirena.org.uk>
- <ZcOK7oIe2f/BFlDj@e133380.arm.com>
+	s=k20201202; t=1707318472;
+	bh=e8ZPTLBiG4EhvRswyFxjA28H3ywaFhr8kyDAQdHgczI=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=X20OtsccAeo3DwMltzHcMivL6XbkHNDm0ibarOqcMOwUYdMbe17Jh/yl8QlKLBl0t
+	 fmXyH09p0z7FNfqDL9iBpPygypzgeSOBML6U9HqjAfTV6rRvKdowrVJ1jWfvVCA71V
+	 qYaRkNy12XFZCS7isZ4acuIAwTYY4NVYTEF2YOwh85jgx8HtDZEZfGayQXRtmpmUB2
+	 OllkPBO9v6AgmbOQqGsQTkihfN4/iNQ5SGQVwlXKQdVhJLtsVtwf/6DrST25SCoQjm
+	 UAsj/xGNWLv6G2KGQErmmZFySmp7QTkAfCZVSCx/wKOplJwfH9hOst2n3B4M1VnDo/
+	 ptBQ+Jy/tZCwQ==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o0RZcVx3sBEJPf63"
-Content-Disposition: inline
-In-Reply-To: <ZcOK7oIe2f/BFlDj@e133380.arm.com>
-X-Cookie: You might have mail.
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wifi: ath11k: Really consistently use
+ ath11k_vif_to_arvif()
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240205-ath11k_vif_to_arvif-v1-1-7c41313c8318@quicinc.com>
+References: <20240205-ath11k_vif_to_arvif-v1-1-7c41313c8318@quicinc.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, <ath11k@lists.infradead.org>,
+ <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170731846999.2220494.5799872642523142596.kvalo@kernel.org>
+Date: Wed,  7 Feb 2024 15:07:51 +0000 (UTC)
 
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
---o0RZcVx3sBEJPf63
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Commit 9476cda44c13 ("wifi: ath11k: Consistently use ath11k_vif_to_arvif()")
+> previously replaced all open coding of the ath11k_vif_to_arvif()
+> functionality. Subsequently two more instances of open coding were
+> introduced, one in commit 92425f788fee ("wifi: ath11k: fill parameters for
+> vdev set tpc power WMI command") and one in commit 6f4e235be655 ("wifi:
+> ath11k: add parse of transmit power envelope element"), so fix those as
+> well.
+> 
+> No functional changes, compile tested only.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-On Wed, Feb 07, 2024 at 01:51:42PM +0000, Dave Martin wrote:
-> On Wed, Feb 07, 2024 at 01:09:51PM +0000, Mark Brown wrote:
+Patch applied to ath-next branch of ath.git, thanks.
 
-> > I think if we fix the ptrace regset issue we're doing a good enough job
-> > of just using fully dynamic sizing with no limits other than what's been
-> > enumerated there.  We could possibly deal with the enumberation code by
-> > changing it to use ZCR/SMCR_ELx_LEN_ based defines so that it's
-> > obviously coming from what we can possibly write to the register but
-> > it's a bit less clear how to do that neatly.
+d7a5c7cde2cb wifi: ath11k: Really consistently use ath11k_vif_to_arvif()
 
-> OK, but we still seem to have two competing approaches: clamp SVE_VQ_MAX
-> for kernel internal purposes, or restore the dynamic sizing of
-> NT_ARM_SVE based on the new regset core behaviour.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240205-ath11k_vif_to_arvif-v1-1-7c41313c8318@quicinc.com/
 
-> Are you saying we should or both, or otherwise which one?
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-I'd like to remove uses of SVE_VQ_MAX, to the extent possible by making
-things dynamic but if not by not using it I would like to not use
-SVE_VQ_MAX partly due to the considerations you mentioned about people
-picking up from looking at the kernel source that it's a good idea.
-
---o0RZcVx3sBEJPf63
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXDnLcACgkQJNaLcl1U
-h9Cqogf/YVubSZSSKxxzH4c7ujFCQ4mUJbGhxjFtTC7VRCd/CQwVl8M/IQ1ravBm
-7JX5M0ct6KXGIeQcCl87sT/5QiN00NTospgxZEVvxIdrbLOngYeTrrfjhPoWrvXW
-6xHHxFLu0PZHybk7NBOXKqeNxC/ps9mAt9kqdEm1Ba2FTSS+UzXXpQFEDdaVQWHX
-bZwK5RtA8pmvJPkoMkRBYEoJmQWc1s4bprGFmlB2MHY2iM686C+xwssJYT3HULm3
-VMhVAl1Df/y3B3WSV0x7oi5ODrquofGg0BEbrWfAeEjcrdVvf1rRljygLL0GQtUO
-aYSCVUi+9Fqgntsyy0joF4LwPA94dQ==
-=yz8L
------END PGP SIGNATURE-----
-
---o0RZcVx3sBEJPf63--
