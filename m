@@ -1,152 +1,86 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373F67F7D9;
-	Wed,  7 Feb 2024 16:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7CD8120B
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 16:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707322895; cv=none; b=sKgc6EazGWGAFwpi4L9GThYrE9oZCVhqlevKr/oX6kAalArWwAVqj1oCliJtEatQaMHlbwUMpLk4iOTltlxRBx762Jx8jBvLVQiB+GHpmfD/wtFXUk+54uBl5B9CAlf0MOYkj7q2Uj5X8z8qsTBLj0RHaVMrsd1RRAfI4DhHP0o=
+	t=1707322901; cv=none; b=LI31ar55AykRjw57K7EgD47u0Iw8Yv1u/PkmVfi0y7Z/Ck1gUkNkKhGy2CEk2rDjoDRg+kCn7jTTFn7PO4IPzfW6BGelmcIL94P88G/cm3UhNDCz/vYzEx32nipahFj6j08F8wVEIWqP3jVjeXqK/uktoJBkd6gDpTx6pD+AnyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707322895; c=relaxed/simple;
-	bh=B5gBP6x0enaNCeeJRYkY6ghg0l8S5AEmEd5S0eLp0Mg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=Br8idnv4sgQtxkEH6clYdh9mYMm4O4tetsfgroO3Y25LDoeJA+hA5u5ECy4toj5A6PRaaAWtkdzKKI+VbLltMpnfoAGnAG3gBLwvO7t4wByFwSNdaG7vsYbFUtxqJXma7g8WdH4NzR5f3j55IySaZvJ2wiTKYbCe1ZvWOLbVb78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B6KY5AWq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707322901; c=relaxed/simple;
+	bh=Ham27Lju8X30G/Pi7G2NB/yVZZfjl/5xdSUO56dUsNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTr7K/hUJNYQ2szj5wCAuheFzBG0H8vXjyPhDDWAHJ3smn65tHTds+wPBTVS+T2CtnluzaF8lwwM6BGuXYiaPVWTK1j1MRiGTUN11Q9B7FnbBHrLNWwv5NUR/Q0KgNRm+RpGOjV8TjgcaSh/1vLMMmLbj4wd6YUkwvEedsEUF+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U0lXzm6w; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B6KY5AWq"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4173kN0L031923;
-	Wed, 7 Feb 2024 16:21:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=s1fFx4okONwAPqgvrtAAYHmQOYNk9SbYOu2KY6lFHhI=; b=B6
-	KY5AWqg9qpIkyZy0H3BmCMvjKjHItgXcAKuoTQlgt04kNtjyxkwRHCAxurvAMMht
-	qzUmmkI9ge8RayTwUoZlDPO+OUuA3hJPq/GRL0vgYH1LAmBzZTaLZAml0SzWHuXg
-	ko9GtE9juQA7GkA9t3RhHs3I5EksWsN26KUdxyoH40NJXD0Xuvq8KzFPIAXnYv2b
-	l0wginASVyPG7CZmeRsnYJN7E75tk3O+w/s9nRsUJNKD48eK00y4xc4TUBGIMqpK
-	CPnQg6hx6Yb8/FwTMRyJlSbRsoLbL9QZreBBWLiZX08udhFLQXYSi5Vz48vQesCZ
-	hRLVxqlHCBXwI11x5Gqg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w3v9124m8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 Feb 2024 16:21:26 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 417GLPRA007792
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 Feb 2024 16:21:25 GMT
-Received: from [10.50.40.120] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 7 Feb
- 2024 08:21:21 -0800
-Message-ID: <468b5a6d-53b7-4d75-8966-2fd48bb13d54@quicinc.com>
-Date: Wed, 7 Feb 2024 21:51:18 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U0lXzm6w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707322900; x=1738858900;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ham27Lju8X30G/Pi7G2NB/yVZZfjl/5xdSUO56dUsNk=;
+  b=U0lXzm6wYsI3tNX7Q9jxYKMir8ujFDznBHjE0aiLLbWHr5DmAeQeFzBQ
+   DIG/7/Kgg/bJpehZOJ8X0AqIGo8bWRydVndNF9ntFusbttYWNlEdxX9lb
+   gzTM4KWBj1zUXbEPvnp1KRxBTlobxAKIjJ6gx3A1VmrKJkRRpXSZLwNdW
+   nr0V8NSdl8eX9tGr7s8NgBcbVm9mmfLlEPBJv1N49vWWbjBBQYhLBELcC
+   RQdCRr9SjwYbzLlcjiO+idctD1JRi+/UDeOt3G/1gS7Tbk7nU84eKBRia
+   7fsfbl2KcztZRxpaUImaHopeBUaUBTiUtX1TyQxT1xou5vQQbUOrgk0cM
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="4887758"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="4887758"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 08:21:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="38817515"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 08:21:37 -0800
+Date: Wed, 7 Feb 2024 08:22:55 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: alexs@kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, yangyicong@hisilicon.com
+Subject: Re: [PATCH v4 2/4] sched/fair: remove unused parameters
+Message-ID: <20240207162255.GB21939@ranerica-svr.sc.intel.com>
+References: <20240207034704.935774-1-alexs@kernel.org>
+ <20240207034704.935774-2-alexs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] remoteproc: qcom: Add NOTIFY_FATAL event type to SSR
- subdevice
-Content-Language: en-US
-From: Vignesh Viswanathan <quic_viswanat@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>
-CC: <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mathieu.poirier@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>,
-        <quic_kathirav@quicinc.com>, <quic_devipriy@quicinc.com>,
-        <quic_sjaganat@quicinc.com>
-References: <20230503062146.3891-1-quic_viswanat@quicinc.com>
- <egnmb647g7x7e74j4g2jddwho23ulmbap2q4eimcyj7y4qvdlz@zmaydxodu2a6>
- <509406eb-8093-4bcf-820f-8e5210e1539d@quicinc.com>
- <d3c3320b-8cc1-4d13-ae87-f2f8f46826e6@quicinc.com>
-In-Reply-To: <d3c3320b-8cc1-4d13-ae87-f2f8f46826e6@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VX-ZO5uVTwZJVmnJRfL-ARvni91ycUOZ
-X-Proofpoint-GUID: VX-ZO5uVTwZJVmnJRfL-ARvni91ycUOZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-07_07,2024-02-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
- mlxlogscore=868 clxscore=1011 impostorscore=0 mlxscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402070120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207034704.935774-2-alexs@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
+On Wed, Feb 07, 2024 at 11:47:02AM +0800, alexs@kernel.org wrote:
+> From: Alex Shi <alexs@kernel.org>
 
+A few nits:
 
-On 11/25/2023 12:24 AM, Vignesh Viswanathan wrote:
+subject: s/remove/Remove/
+
 > 
-> 
-> On 9/4/2023 10:23 PM, Vignesh Viswanathan wrote:
->>
->>
->> On 7/16/2023 1:50 AM, Bjorn Andersson wrote:
->>> On Wed, May 03, 2023 at 11:51:46AM +0530, Vignesh Viswanathan wrote:
->>>> Currently the SSR subdevice notifies the client driver on crash of the
->>>> rproc from the recovery workqueue using the BEFORE_SHUTDOWN event.
->>>> However the client driver might be interested to know that the device
->>>> has crashed immediately to pause any further transactions with the
->>>> rproc. This calls for an event to be sent to the driver in the IRQ
->>>> context as soon as the rproc crashes.
->>>>
->>>
->>> Please make your argumentation more concrete, I can only guess what
->>> client driver you're referring to.
->>>
->>> You can do this either by spelling out which actual problem you're
->>> solving, or better yet, include some patches in the series that actually
->>> uses this interface.
->>>
->>
->> Hi Bjorn,
->>
->> Apologies for the delay in response.
->>
->> The client driver in my scenario is a Wi-Fi driver which is continuously
->> queuing data to the remoteproc and needs to know if remoteproc crashes
->> as soon as possible to stop queuing further data and also dump some debugstatistics on the driver side that could potentially help in debug
->> of why the remoteproc crashed.
->>
->> Also in the case with upcoming Wi-Fi 7 targets with multi-link operation, the driver might need to know that the remoteproc has crashed
->> instantly to handle some multi-link specific handling.
->>
->> The ath11k/ath12k WLAN drivers today partially have support for handling
->> such FATAL notification but it has not been upstreamed yet.
->>
->> Reference patch: https://git.codelinaro.org/clo/qsdk/oss/system/feeds/wlan-open/-/blob/win.wlan_host_opensource.1.0/mac80211/patches/031-ath11k-print-stats-on-crash.patch -- event SUBSYS_PREPARE_FOR_FATAL_SHUTDOWN.
->>
->> Also, Mukesh mentioned earlier that in some MSM targets with PCIe where latency cannot be tolerated, a similar downstream patch adds support for "early notifier". If this patch is accepted, the early notifier can also be replaced to use the same NOTIFY_FATAL event from SSR Subdevice
->>
->> https://git.codelinaro.org/clo/la/kernel/msm-5.15/-/commit/7583d24de337aa1bf7c375a7da706af9b995b9a1#a840754ebb0e24e88adbf48177e1abd0830b72d2
->> https://git.codelinaro.org/clo/la/kernel/msm-5.15/-/commit/257de41c63a5a51a081cc7887cdaa4a46e4d1744
-> 
-> Hi Bjorn,
-> 
-> Gentle reminder for this patch.
-> 
-> Thanks,
-> Vignesh
+> sds isn't used in function sched_asym(), so remove it to cleanup code.
 
-Hi Bjorn,
+The argument sds is not used in function sched_asym(). Remove it.
 
-Could you please help review this patch and let me know if any comments.
+> 
+> Fixes: c9ca07886aaa ("sched/fair: Do not even the number of busy CPUs via asym_packing")
+> Signed-off-by: Alex Shi <alexs@kernel.org>
+> Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
-Thanks,
-Vignesh
->>
->> Thanks,
->> Vignesh
->>
->>> Regards,
->>> Bjorn
+With that, my tag stands, FWIW.
