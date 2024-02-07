@@ -1,156 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E24E7E77F;
-	Wed,  7 Feb 2024 15:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88D77F7D4;
+	Wed,  7 Feb 2024 15:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707319042; cv=none; b=oXZpn15sRzbED1TXBX89XNTM4G4/vhei6cx5qDHVkvmy/c2pbAW8GmGO8xNjkYbi5UTYCqUj6XFhFXikBvyG/C26tc/lQHsaoapC8IzUi0TULStjU0hlj6Nn9hxd7uaFSyKtGdK/Eh0nxQJrNFLHBvaot29msGPBtHWPqpBlLLs=
+	t=1707319127; cv=none; b=exwMcOeJ2Ae+FO1TQlsDUvdaq6Ru5Agur/e3Zv+/JqCR20Nd7Q50ZNX7GduaSfdwWXFXoDQJvJb9tF4wO3790s5pl+lCXRBF9WyXmXUb/nZiQZJ8/LE4N2FSBFwZhFe4SwhOS6xYRJLmG2C3SgyUhv/tloXBAPCor25eiCfyaA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707319042; c=relaxed/simple;
-	bh=HaVwog0vd20fRKI8tk8LKuyAmGU4sQJZhYsnB/xkj5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f4lTtvQyMWW2mtEOggBYFloPP5IZI1zA4acfsjcd6p/83cjwIFKCoKjnZOKFoU9+3l/oe1yKlHO5Zz/TF4PsB+FmS3QJ1cQbfzhY3hv5AVg0KCe/7QUlOk8AN0lin7SBRpgrx9V6F/Cj4PnvlhrZQ43JYK2KpHWtHzU/7hl0RJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ljNFezj+; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707319127; c=relaxed/simple;
+	bh=tY5ecJDiWRgQfR15XnT6sr26N06KCzgBu+oCAppi+2I=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mto+B/qpJFo9iMtoWNOmCd34mqx/OU4ReylByzU58flZMt07XptMithmB4bXowDlkJU9s1RV8Z825XQYijs32hS2NrKDPhd+sa56zupb4qHF2Gd5v/+hGtm7MlloRlupMdID0wg5YNE5i32GLp+P1mLzxjmmVAEw/Ds1FcT+yAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dqpY/gHB; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ljNFezj+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707319040; x=1738855040;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HaVwog0vd20fRKI8tk8LKuyAmGU4sQJZhYsnB/xkj5U=;
-  b=ljNFezj+yRIK1tU8w7rnmY+UpOSZJPEn+GD4gcS5bzKJeP2v71DwSbfz
-   kkdxYx+W/R4QVenb/OlBOmUj74PXUZDy5xRNLdUfLD7Mll/Oeh6hZviw/
-   d59A9tr331+wHN2ArXcR/AKdXkcgq/R1Vz5gXswEqpxN/fXVGXwHAF8Go
-   A8oC1QBlH28tKTPNs+O+9Fl/NcFB8pB5TtafxLJ2EL65X6g+i/TwC7i0P
-   Zk4ToDtz3QtLkJDYn9qKDopgPLQ4tve+pjShTWYuwiHogD/9ySD3CfpnI
-   M+Prs2oWTFTnvAU0jV6Nbs5X6lJJ2HSj6n3fw3lcFGzIG66iO7z+Rs7NL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="11742453"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="11742453"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 07:17:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="32431766"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa001.fm.intel.com with ESMTP; 07 Feb 2024 07:17:18 -0800
-Date: Wed, 7 Feb 2024 23:13:41 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Pattara Teerapong <pteerapong@google.com>
-Subject: Re: [PATCH 7/8] KVM: x86/mmu: Alloc TDP MMU roots while holding
- mmu_lock for read
-Message-ID: <ZcOeJXHsiE5XUrBv@yilunxu-OptiPlex-7050>
-References: <20240111020048.844847-1-seanjc@google.com>
- <20240111020048.844847-8-seanjc@google.com>
- <ZcJSmNRLbKacPfoq@yilunxu-OptiPlex-7050>
- <ZcJ2JG54O0g07e-P@google.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dqpY/gHB"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 417FIVb8103266;
+	Wed, 7 Feb 2024 09:18:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707319111;
+	bh=f7VohMqMIEhbj4OYHXX4yY0/nqrzl3/aoxQ51t+Xjww=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=dqpY/gHBY4wgIzUPDLsOsmmfTfrM1TQsps/AyuyAVpLcOwz8ETQYbIGM1rioinU1Y
+	 UFq524M38rDhbBCfA1x9MduOXyEXvLkCiBVDrvkTN+km+b+PGk6LCDw8GbrxSrqdCA
+	 erDrdBRPmz0NVOuH/PVuLEDt4rmFW2H91Qu9Lgic=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 417FIVbw011504
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 Feb 2024 09:18:31 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ Feb 2024 09:18:30 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 Feb 2024 09:18:30 -0600
+Received: from localhost ([10.249.131.210])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 417FIToc038018;
+	Wed, 7 Feb 2024 09:18:30 -0600
+Date: Wed, 7 Feb 2024 20:48:29 +0530
+From: Jai Luthra <j-luthra@ti.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+CC: <linux-media@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Mauro
+ Carvalho Chehab <mchehab@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] media: ti: Use devm_platform_ioremap_resource() in
+ ti_csi2rx_probe()
+Message-ID: <aogfgugtynpo7v5a4df5n2r7nx7jujcbrtwmggkesti2quzrwf@xzzivrbtjd4r>
+References: <66d7218d-ed57-4dec-b6ac-630b01056b5e@web.de>
+ <5m4zr6d3geqdyxtr5owlur4ysn6ublauvc5km3boga2vnm2rwj@mflpsf4ql2yj>
+ <c110c46b-e7b3-4175-9b14-d4cfc9982bca@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jpmq56a6mp47qds4"
+Content-Disposition: inline
+In-Reply-To: <c110c46b-e7b3-4175-9b14-d4cfc9982bca@web.de>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+
+--jpmq56a6mp47qds4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZcJ2JG54O0g07e-P@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 06, 2024 at 10:10:44AM -0800, Sean Christopherson wrote:
-> On Tue, Feb 06, 2024, Xu Yilun wrote:
-> > On Wed, Jan 10, 2024 at 06:00:47PM -0800, Sean Christopherson wrote:
-> > > ---
-> > >  arch/x86/kvm/mmu/tdp_mmu.c | 55 +++++++++++++++-----------------------
-> > >  1 file changed, 22 insertions(+), 33 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> > > index 9a8250a14fc1..d078157e62aa 100644
-> > > --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> > > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> > > @@ -223,51 +223,42 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
-> > >  	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
-> > >  }
-> > >  
-> > > -static struct kvm_mmu_page *kvm_tdp_mmu_try_get_root(struct kvm_vcpu *vcpu)
-> > > -{
-> > > -	union kvm_mmu_page_role role = vcpu->arch.mmu->root_role;
-> > > -	int as_id = kvm_mmu_role_as_id(role);
-> > > -	struct kvm *kvm = vcpu->kvm;
-> > > -	struct kvm_mmu_page *root;
-> > > -
-> > > -	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
-> > > -		if (root->role.word == role.word)
-> > > -			return root;
-> > > -	}
-> > > -
-> > > -	return NULL;
-> > > -}
-> > > -
-> > >  int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
-> > >  {
-> > >  	struct kvm_mmu *mmu = vcpu->arch.mmu;
-> > >  	union kvm_mmu_page_role role = mmu->root_role;
-> > > +	int as_id = kvm_mmu_role_as_id(role);
-> > >  	struct kvm *kvm = vcpu->kvm;
-> > >  	struct kvm_mmu_page *root;
-> > >  
-> > >  	/*
-> > > -	 * Check for an existing root while holding mmu_lock for read to avoid
-> > > +	 * Check for an existing root before acquiring the pages lock to avoid
-> > >  	 * unnecessary serialization if multiple vCPUs are loading a new root.
-> > >  	 * E.g. when bringing up secondary vCPUs, KVM will already have created
-> > >  	 * a valid root on behalf of the primary vCPU.
-> > >  	 */
-> > >  	read_lock(&kvm->mmu_lock);
-> > > -	root = kvm_tdp_mmu_try_get_root(vcpu);
-> > > -	read_unlock(&kvm->mmu_lock);
-> > >  
-> > > -	if (root)
-> > > -		goto out;
-> > > +	for_each_valid_tdp_mmu_root_yield_safe(kvm, root, as_id) {
-> > > +		if (root->role.word == role.word)
-> > > +			goto out_read_unlock;
-> > > +	}
-> > >  
-> > > -	write_lock(&kvm->mmu_lock);
-> > 
-> > It seems really complex to me...
-> > 
-> > I failed to understand why the following KVM_BUG_ON() could be avoided
-> > without the mmu_lock for write. I thought a valid root could be added
-> > during zapping.
-> > 
-> >   void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
-> >   {
-> > 	struct kvm_mmu_page *root;
-> > 
-> > 	read_lock(&kvm->mmu_lock);
-> > 
-> > 	for_each_tdp_mmu_root_yield_safe(kvm, root) {
-> > 		if (!root->tdp_mmu_scheduled_root_to_zap)
-> > 			continue;
-> > 
-> > 		root->tdp_mmu_scheduled_root_to_zap = false;
-> > 		KVM_BUG_ON(!root->role.invalid, kvm);
-> 
-> tdp_mmu_scheduled_root_to_zap is set only when mmu_lock is held for write, i.e.
-> it's mutually exclusive with allocating a new root.
-> 
-> And tdp_mmu_scheduled_root_to_zap is cleared if and only if kvm_tdp_mmu_zap_invalidated_roots
-> is already set, and is only processed by kvm_tdp_mmu_zap_invalidated_roots(),
-> which runs under slots_lock (a mutex).
-> 
-> So a new, valid root can be added, but it won't have tdp_mmu_scheduled_root_to_zap
-> set, at least not until the current "fast zap" completes and a new one beings,
-> which as above requires taking mmu_lock for write.
+Hi Markus,
 
-It's clear to me.
+On Feb 06, 2024 at 15:37:30 +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 6 Feb 2024 15:30:13 +0100
+>=20
+> A wrapper function is available since the commit 7945f929f1a77a1c8887a97c=
+a07f87626858ff42
+> ("drivers: provide devm_platform_ioremap_resource()").
+>=20
+> * Thus reuse existing functionality instead of keeping duplicate source c=
+ode.
+>=20
+> * Delete a local variable which became unnecessary with this refactoring.
+>=20
+>=20
+> This issue was transformed by using the Coccinelle software.
+>=20
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Thanks for the detailed explanation.
-> 
+Reviewed-by: Jai Luthra <j-luthra@ti.com>
+
+> ---
+>=20
+> v2:
+> The transformation pattern was adjusted based on advices by known contrib=
+utors.
+>=20
+> Examples:
+> * Doug Anderson
+> * Geert Uytterhoeven
+> * Robin Murphy
+>=20
+>=20
+>  drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/driv=
+ers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+> index 2b078c5d7f5d..54aba055c96b 100644
+> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+> @@ -1089,7 +1089,6 @@ static void ti_csi2rx_cleanup_vb2q(struct ti_csi2rx=
+_dev *csi)
+>  static int ti_csi2rx_probe(struct platform_device *pdev)
+>  {
+>  	struct ti_csi2rx_dev *csi;
+> -	struct resource *res;
+>  	int ret;
+>=20
+>  	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
+> @@ -1100,9 +1099,7 @@ static int ti_csi2rx_probe(struct platform_device *=
+pdev)
+>  	platform_set_drvdata(pdev, csi);
+>=20
+>  	mutex_init(&csi->mutex);
+> -
+> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	csi->shim =3D devm_ioremap_resource(&pdev->dev, res);
+> +	csi->shim =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(csi->shim)) {
+>  		ret =3D PTR_ERR(csi->shim);
+>  		goto err_mutex;
+> --
+> 2.43.0
+>=20
+
+--=20
+Thanks,
+Jai
+
+GPG Fingerprint: 4DE0 D818 E5D5 75E8 D45A AFC5 43DE 91F9 249A 7145
+
+--jpmq56a6mp47qds4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmXDn0EACgkQQ96R+SSa
+cUVTtg//Xv0HbelPVk5uEF7Hf1yTBhHi9TYVaJhddrIslnFvwExJ9PRSaQ4eFFD+
+vMKZZZomPvwPjrnyvEY79l9BFx8tOcXKs7znmH693tmaKG33JCrOG2QjlS8ZbxQX
+3vpn4JfWBTKt1oXo0zp5mBkPiWLbZDgwg4bZiQIQew3O2lY1WCTBjZkX4yx8kC83
+4rqRzprRCBjW49UBWkmba41eZTAalNBC2e5+/bscs3/RpLzmSY0CaK9vbl1Rk3z1
+dPh1T/lzWAOP7pERXAOU8439DEE59BhMeXUTBrA+XtJ1O5uQxkEGsusfK7jKsTyQ
+gDhAIPtBqg1ZAmde1iYga1YYHowTHEzuZW+SGzQ7023huQH5+dHU6uBcbRwCmey4
+ksN95tAJSVkdWUOYB4zA6NwMjgjcHf45xWzWOnkaqFrzLNj+HI0JD8Msqi/0KKfM
+GTEHxHBvpwLcuKNL29/6Y49U76Z3iQTsjU+aWG12/Sw61XpDquumiCwxU570+Tfq
+m+yT/VKUZMPQmuEatmWUPunCLQ9TtmY9JOix6dB+miX2C1sZBT8zFGCn5QjQ3n3E
+87h/TSXhCpqO6S6k3h5yZ3CbejgTwAdErJUVhvUsV6WaKWxM1/c+xrZnP0t3L7du
+r0h/MUoaPie7X7b2ysuZ55GNnwXJP/A+oXcxOUr0aAlk8m6IN48=
+=XaaJ
+-----END PGP SIGNATURE-----
+
+--jpmq56a6mp47qds4--
