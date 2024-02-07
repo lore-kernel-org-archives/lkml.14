@@ -1,195 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F3C86AC3
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0A782883
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707331356; cv=none; b=Qi4ljkF/vrHX4nGpBDUrtvAH5KfZ/+ZvBs+3ObruDqt5/imlLDriE18fjdk5rWWXEvSnYBMpwgOZFOYZiUa60Oe2wcjoh5Wx2ZtwcG9uYFb+viRrNupSGKcK9pDyXbzieD/Z5awcRp3PrlWbwpPKFB6zRsGZYbaS5SNVqBxcdT4=
+	t=1707331398; cv=none; b=VMPx7+kpByiTWBvZcAaxJY0D0uqraMjuE31w9B+a/88E9K/bnChsNYdSZ9zwgcV+9nP5Jz9CnX/7J9xWeEZsSH3ML1qXnHmdKYNuXJGQxvG9o6QwxcamU84KkzFj6LX6zxJdghN2/98/eFNrneWxtJz66zRlzTEbl92bWUA/DuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707331356; c=relaxed/simple;
-	bh=WxvH6FDX/eWNGMCI+SWHVfMnLqP3askGdu0ASe254/Y=;
+	s=arc-20240116; t=1707331398; c=relaxed/simple;
+	bh=ISdH8w89RgoFeG4mw+w0XtCxZMCx6Ijs0xa+U6wuLM4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dti5G61IYM7E/xP0blr6rXq8jHow9ioL3O1qFm/+sKT+dUgZIlL1MSqzUbIBGphb/gbBbAC3k1jn6magHNPt9VouvC+tKqh+ctQdJpzqY4TntEi1AySekKQrDZkxTwq2gbvX3EkWaaBde7iAVMeqkWP5Y3smT61/sXmoGAUTrt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ee+/qVnN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ee+/qVnN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707331353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VwU//eJ9yadzq/fsfDhiEtvVbtfHI98m1htYpt9Ipdk=;
-	b=ee+/qVnNk8KVahdZouW+oiRq+/6BcPlD/19dTMp7FKf/ffDaQlzVIwY7lzY3yRKfdSKLwQ
-	mSlf9lkl5x/41VPySBTQ8mJWuoicJinakPK3hXwGTmmtp9q0wlhFExOy2snv9o5hLpSCkq
-	KwzjtSM8HjhAeHd1WaXxvKefl70x0Iw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-686-m-6gGQ7ROWmYlHUy-tFPLQ-1; Wed, 07 Feb 2024 13:42:28 -0500
-X-MC-Unique: m-6gGQ7ROWmYlHUy-tFPLQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 28C2C84AF81;
-	Wed,  7 Feb 2024 18:42:28 +0000 (UTC)
-Received: from fedora-work.redhat.com (unknown [10.22.32.236])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id AC90B4011FF1;
-	Wed,  7 Feb 2024 18:42:27 +0000 (UTC)
-From: David Jeffery <djeffery@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org,
+	 MIME-Version:Content-Type; b=V7e8j7BlnGPVnGpJb4djVn3clYg0LsrMBCDL//5ZHJ0BWsEtjtFY5M0Wh190A5mrHQ5l6j6ZkJHbgH1psaPlEOSjeJhU1OVJrQHFKu9unXrlDDxtGiwVDsB+OpjCeDfMPkZu4SFTaAmSUd+JHlncVo/KIlEhXQp29rED6eWNjEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXmt4-0007Qk-Sj; Wed, 07 Feb 2024 19:43:10 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXmt4-0054XQ-G3; Wed, 07 Feb 2024 19:43:10 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXmt4-00HRsL-1K;
+	Wed, 07 Feb 2024 19:43:10 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: kernel@pengutronix.de,
+	Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	David Jeffery <djeffery@redhat.com>,
-	Laurence Oberman <loberman@redhat.com>
-Subject: [RFC PATCH 6/6] sd: async cache flush on shutdown
-Date: Wed,  7 Feb 2024 13:41:00 -0500
-Message-ID: <20240207184100.18066-7-djeffery@redhat.com>
-In-Reply-To: <20240207184100.18066-1-djeffery@redhat.com>
-References: <20240207184100.18066-1-djeffery@redhat.com>
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3 10/32] misc: gehc-achc: Follow renaming of SPI "master" to "controller"
+Date: Wed,  7 Feb 2024 19:40:24 +0100
+Message-ID:  <3c93bf41d2399d06b5a379a76c8f6e877f3560b7.1707324794.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1707324793.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1707324793.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1646; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=ISdH8w89RgoFeG4mw+w0XtCxZMCx6Ijs0xa+U6wuLM4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlw86hQkaBkuFTlFDYTUPSXZKwC7XJB4U1RkwxD /64HwYu55eJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcPOoQAKCRCPgPtYfRL+ Tg5RB/4ji79EENz4deLH5Q76yZhhYsQ9eDPTGWfeEzPgkxTu3IOw+T48nZ6I84b0W0ierBRekQ4 fOx1DqZaTZnZEHoD+YQvZqPh+L8pUgQGsSv9h9mrVR4GMoAEo5746xSOb4TGC6eR3w3O06pGdpf Wb5xOQ2eblckz/NQ3P5s1OOH892/0EShPR3hppQhNXTQ9mutnD7ivHuZ4MaoaV41mrRs/yCGRQ3 40a9vjgD76bZMlsCPwLkjdOqwIR1DIC68O1Dj3fWnTa1E0RxX93QshQSBbh8DBgwYah84vb7/OC SdjIS/4RkrrNdIjyVwOiVEoCJLB9bwbK207HpxWijqc9ZuMT
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add async shutdown for the cache flush to the sd device by sending a
-SYNCHRONIZE_CACHE command asynchronously. If there is any sort of error,
-falls back to the synchronous sd_sync_cache() to try again and resolve
-any errors.
+In commit 8caab75fd2c2 ("spi: Generalize SPI "master" to "controller"")
+some functions and struct members were renamed. To not break all drivers
+compatibility macros were provided.
 
-Signed-off-by: David Jeffery <djeffery@redhat.com>
-Tested-by:     Laurence Oberman <loberman@redhat.com>
+To be able to remove these compatibility macros push the renaming into
+this driver.
 
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/scsi/sd.c | 66 ++++++++++++++++++++++++++++++++++++++++++-----
- drivers/scsi/sd.h |  2 ++
- 2 files changed, 62 insertions(+), 6 deletions(-)
+ drivers/misc/gehc-achc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 0833b3e6aa6e..f972310df76a 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3838,23 +3838,64 @@ static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
- 	return 0;
+diff --git a/drivers/misc/gehc-achc.c b/drivers/misc/gehc-achc.c
+index 4c9c5394da6f..b8fca4d393c6 100644
+--- a/drivers/misc/gehc-achc.c
++++ b/drivers/misc/gehc-achc.c
+@@ -65,7 +65,7 @@ static int ezport_start_programming(struct spi_device *spi, struct gpio_desc *re
+ 	struct spi_transfer release_cs = { };
+ 	int ret;
+ 
+-	spi_bus_lock(spi->master);
++	spi_bus_lock(spi->controller);
+ 
+ 	/* assert chip select */
+ 	spi_message_init(&msg);
+@@ -85,16 +85,16 @@ static int ezport_start_programming(struct spi_device *spi, struct gpio_desc *re
+ 	ret = spi_sync_locked(spi, &msg);
+ 
+ fail:
+-	spi_bus_unlock(spi->master);
++	spi_bus_unlock(spi->controller);
+ 	return ret;
  }
  
--/*
-- * Send a SYNCHRONIZE CACHE instruction down to the device through
-- * the normal SCSI command structure.  Wait for the command to
-- * complete.
-- */
--static void sd_shutdown(struct device *dev)
-+static void sd_sync_cache_callback(struct scsi_cmnd *scmd,
-+				   struct scsi_exec_args *args) {
-+	struct scsi_disk *sdkp;
-+
-+	sdkp = container_of(args, struct scsi_disk, shutdown_params);
-+	complete(&sdkp->shutdown_done);
-+}
-+
-+static void sd_async_shutdown_start(struct device *dev)
+ static void ezport_stop_programming(struct spi_device *spi, struct gpio_desc *reset)
  {
- 	struct scsi_disk *sdkp = dev_get_drvdata(dev);
-+	const int timeout = sdkp->device->request_queue->rq_timeout
-+			    * SD_FLUSH_TIMEOUT_MULTIPLIER;
-+	int ret;
- 
- 	if (!sdkp)
- 		return;         /* this can happen */
- 
-+	init_completion(&sdkp->shutdown_done);
-+	sdkp->shutdown_params.callback = sd_sync_cache_callback;
-+
- 	if (pm_runtime_suspended(dev))
- 		return;
- 
- 	if (sdkp->WCE && sdkp->media_present) {
-+		unsigned char cmd[16] = { 0 };
-+
- 		sd_printk(KERN_NOTICE, sdkp, "Synchronizing SCSI cache\n");
-+		if (sdkp->device->use_16_for_sync)
-+			cmd[0] = SYNCHRONIZE_CACHE_16;
-+		else
-+			cmd[0] = SYNCHRONIZE_CACHE;
-+
-+		ret = scsi_execute_cmd_nowait(sdkp->device, cmd, REQ_OP_DRV_IN,
-+					      timeout, sdkp->max_retries,
-+					      &sdkp->shutdown_params);
-+		if (!ret)
-+			return;
-+		sdkp->shutdown_params.result = ret;
-+	}
-+	/* no async I/O to do, go ahead and mark it complete */
-+	complete(&sdkp->shutdown_done);
-+}
-+
-+static void sd_async_shutdown_end(struct device *dev)
-+{
-+	struct scsi_disk *sdkp = dev_get_drvdata(dev);
-+
-+	if (!sdkp)
-+		return;
-+
-+	if (pm_runtime_suspended(dev))
-+		return;
-+
-+	wait_for_completion(&sdkp->shutdown_done);
-+
-+	if (sdkp->WCE && sdkp->media_present && sdkp->shutdown_params.result) {
-+		/* for any error with the async flush, retry as sync */
- 		sd_sync_cache(sdkp);
- 	}
- 
-@@ -3867,6 +3908,17 @@ static void sd_shutdown(struct device *dev)
- 	}
+ 	/* reset without asserted chip select to return into normal mode */
+-	spi_bus_lock(spi->master);
++	spi_bus_lock(spi->controller);
+ 	ezport_reset(reset);
+-	spi_bus_unlock(spi->master);
++	spi_bus_unlock(spi->controller);
  }
  
-+/*
-+ * Send a SYNCHRONIZE CACHE instruction down to the device through
-+ * the normal SCSI command structure.  Wait for the command to
-+ * complete.
-+ */
-+static void sd_shutdown(struct device *dev)
-+{
-+	sd_async_shutdown_start(dev);
-+	sd_async_shutdown_end(dev);
-+}
-+
- static inline bool sd_do_start_stop(struct scsi_device *sdev, bool runtime)
- {
- 	return (sdev->manage_system_start_stop && !runtime) ||
-@@ -4003,6 +4055,8 @@ static struct scsi_driver sd_template = {
- 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 		.remove		= sd_remove,
- 		.shutdown	= sd_shutdown,
-+		.async_shutdown_start = sd_async_shutdown_start,
-+		.async_shutdown_end   = sd_async_shutdown_end,
- 		.pm		= &sd_pm_ops,
- 	},
- 	.rescan			= sd_rescan,
-diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
-index 409dda5350d1..7b5098211cec 100644
---- a/drivers/scsi/sd.h
-+++ b/drivers/scsi/sd.h
-@@ -91,6 +91,8 @@ struct scsi_disk {
- 	struct device	disk_dev;
- 	struct gendisk	*disk;
- 	struct opal_dev *opal_dev;
-+	struct scsi_exec_args shutdown_params;
-+	struct completion shutdown_done;
- #ifdef CONFIG_BLK_DEV_ZONED
- 	/* Updated during revalidation before the gendisk capacity is known. */
- 	struct zoned_disk_info	early_zone_info;
+ static int ezport_get_status_register(struct spi_device *spi)
 -- 
 2.43.0
 
