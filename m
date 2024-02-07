@@ -1,91 +1,96 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53CE10A08;
-	Wed,  7 Feb 2024 01:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C06163C1
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 01:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707268530; cv=none; b=XGmIp8juQNpn4hvoTw9CFrQAziqu4YKQALhFlhT3oSzW0PTOcH8++ZYyLt6UQNVQdf9OrZm5mpJGIsUN91tIvEuyabTtjjerIYbRJoKgRWzPw8pxlnJVdZYFtAJw/xr+TJcHXSeFziR+Ma0OlP7maVO2H1QtAfwZhqlM/dpy8/0=
+	t=1707268693; cv=none; b=D6WUUMx1Es/2vfi+H23IzD/ifkTTmC7pqX2oP4pjEocFotwE9BwKyPkCq8LDpokI3tkkhwVCV6xqLt+ULREj+zQYp3mlVryKbcTOrG0SEJQm/Go3uCC7WFK4Xk06yRjSETI6IuBOZCDA4KLNgKElK/47EB/mGMd24h45PmUvltA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707268530; c=relaxed/simple;
-	bh=PaJV0dwJCY3rLy+k1vVDwWO2OPl7I28jlWl9NOqIFxY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BXzjcDo0Y2+xzQSLaScsGxAi7OhJTZUl7BKtift0GCVzHeGhWEO0nr7pQeqtvXrJpjW6iFbhZm2ZNME7w+8Ttr4p3RI/1J/wTQTAXP7IstUJdG4FJY3H9UOMXI4XtEfdn+6QR7Cw8mwGIaZrE/qaEdc8yzfSSAdHmpdhuWvCkac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VS3yQeN9; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707268693; c=relaxed/simple;
+	bh=wrL2jNNKKhbi8/viDh62hnYuSFxSKbu2NpzPTnqEhKQ=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=rNRxSzKLNCMyRFS2uhq1nC9kpsTXi4KGF1gYwFuYNKBcTEEJdo6GDV4WZj/+UI1uh0F6eE3wa6zPuTM9t3V9IXJeDg+Vyus+GhtJ46GMB5SF8HxJxj0wofjwtSuz91YCDiH+urmPV1spwwns/MZIKS2xZ6aVGsw2B/deo9+JlxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c71qFAMk; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VS3yQeN9"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4171FKi0101975;
-	Tue, 6 Feb 2024 19:15:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707268520;
-	bh=RdS9TC8rCGy1b4uCt4j3JAyxW7QaBSflgKOBRehwNis=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=VS3yQeN9FmTK2lIOgSJIEo7oXesNFy4mXc/ZHPxsvODPQQq7ewKIWEqjfY7cuUoUx
-	 hmjfmGJot7n+R82pfU2w6uG2ILVM79pKe9Xf5Kw6ZOa2O7WewFe+228PlEcFEDasYz
-	 afrqtylSzJ/m5RFhOCfEe13O65gjD8vma7+3GTGI=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4171FKsk114486
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 Feb 2024 19:15:20 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- Feb 2024 19:15:20 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 Feb 2024 19:15:20 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4171FKMs122103;
-	Tue, 6 Feb 2024 19:15:20 -0600
-From: Judith Mendez <jm@ti.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-CC: Adrian Hunter <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/7] mmc: sdhci_am654: Fix itapdly/otapdly array type
-Date: Tue, 6 Feb 2024 19:15:17 -0600
-Message-ID: <20240207011520.3128382-5-jm@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207011520.3128382-1-jm@ti.com>
-References: <20240207011520.3128382-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c71qFAMk"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6047a047f58so2058327b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Feb 2024 17:18:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707268690; x=1707873490; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UexJNRXrO9O5AbEP/1DqD+ioDnk3bGMvlBeoNd1TAjw=;
+        b=c71qFAMkYrKhLxVsq3o0RdXCYUMlDTgYxkiC/2z5wvGPfrHCtHgm+QL3VbXNpJOTEu
+         NlXk2rG4R/oTEXFz0FtaNWaiYXk55+xYn8XU3nCraDARvCeKYUWwAxzNg026qC4tJq45
+         Iy6wASKtjlKtStBf7l8ZlW//JyCXKLvUr6Tn/LuYs59LqOCVC36Avnp9pgXJWxcE/Oz6
+         /33NdXiY8fWLP/2/ClNJ/BHxK5htnRDFjXW/X/5CKg2U8Au4S/dzVGZh4PNM6MngrPQm
+         2uGAH+ElT7XPCn6jhf0KjxPcc1x4k3SBuYiGhfmmtIj6qTd5j2iRvBNA7PmXQOuEURbU
+         NOPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707268690; x=1707873490;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UexJNRXrO9O5AbEP/1DqD+ioDnk3bGMvlBeoNd1TAjw=;
+        b=Rm36KUeJoRZeqH7hBrIzGpdYCkv8yYosKaAowjaGH9Y4J9ntWM+CiUx1bQUC4EPowk
+         OgJhGNSMuYES5VyWIr7LfUJSOmn70ipBhNf7TJNYi5UIhUnLNhDz/MOdYRL1HkdacZl9
+         xSTINVBa/aNwK39inxBwF57rH1bKl8dZP2GQQ8IgJ+LZ+UPUVZ+ZPX7kOsqU1m90b/Ts
+         VXUGxM2mF0pwmQuC16aibQRY50R8lVqxASWtNBH21/LnP/nB4JSsXjnxbJAtTqF3TxN/
+         ViF6p+WBTlPWS/KK2uYeUVfc/roNAnDim1NTmvQ0uA+CxUI7CHyxAktWw09RXTasryOH
+         N8/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVydXOzvTm9nePcW/cU2zuUl6XuXXTdxhoQ9O4msglFfMFNBdQcRj1oyvb95n9jmE4f9lkWXXe2eAwt5y/IZx939dxVVUj6HWSJ5ajp
+X-Gm-Message-State: AOJu0YxxyJ/AqhMFgcduHf9jaAP2mFr3fJM4ujEA4YwgQgAIONd+4FVl
+	0qinPjPwhPSQncmz0hxGYe+ihw67nQzLwfVKK9/F/lI4WjTJ2Co5PuWIR3TJ44Ykt1IhXDxfDmm
+	Mz5wruITNR0BoEA==
+X-Google-Smtp-Source: AGHT+IHfqADdfz6fZ2KpBKfhEALh227q5cvBjI3VmGcT2CqheeQtt9yLZDlPtN8WRPSmjwB7GIBnR84YC++NeT4=
+X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:dc84:66b8:120:935a])
+ (user=saravanak job=sendgmr) by 2002:a81:4cca:0:b0:5ff:dac0:6524 with SMTP id
+ z193-20020a814cca000000b005ffdac06524mr676661ywa.3.1707268690450; Tue, 06 Feb
+ 2024 17:18:10 -0800 (PST)
+Date: Tue,  6 Feb 2024 17:17:59 -0800
+Message-Id: <20240207011803.2637531-1-saravanak@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Subject: [PATCH v2 0/3] Improve remote-endpoint parsing
+From: Saravana Kannan <saravanak@google.com>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>
+Cc: Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-While integer type works, the otap_del_sel and itap_del_sel
-arrays are manipulated as u32, so change array types to u32.
+Some changes to do a more accurate parsing of remote-endpoints. Making
+fw_devlink a tiny bit more efficient and the debug logs a bit cleaner when
+trying to debug fw_devlink.
 
-Fixes: 8ee5fc0e0b3b ("mmc: sdhci_am654: Update OTAPDLY writes")
-Fixes: a0a62497f6aa ("mmc: sdhci_am654: Add support for input tap delay")
-Signed-off-by: Judith Mendez <jm@ti.com>
----
- drivers/mmc/host/sdhci_am654.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Rob,
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index 935f581c05d8..35ba7d921690 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -141,8 +141,8 @@ static const struct timing_data td[] = {
- 
- struct sdhci_am654_data {
- 	struct regmap *base;
--	int otap_del_sel[ARRAY_SIZE(td)];
--	int itap_del_sel[ARRAY_SIZE(td)];
-+	u32 otap_del_sel[ARRAY_SIZE(td)];
-+	u32 itap_del_sel[ARRAY_SIZE(td)];
- 	u32 itap_del_ena[ARRAY_SIZE(td)];
- 	int clkbuf_sel;
- 	int trm_icp;
+Can we get this into 6.8-rcX please?
+
+Thanks,
+Saravana
+
+v1->v2:
+- Switched from fwnode_graph_get_port_parent() to of_graph_get_port_parent()
+- Added Patch 3
+
+Saravana Kannan (3):
+  of: property: Improve finding the consumer of a remote-endpoint
+    property
+  of: property: Improve finding the supplier of a remote-endpoint
+    property
+  of: property: Add in-ports/out-ports support to
+    of_graph_get_port_parent()
+
+ drivers/of/property.c | 63 +++++++++++++++++--------------------------
+ 1 file changed, 24 insertions(+), 39 deletions(-)
+
 -- 
-2.43.0
+2.43.0.594.gd9cf4e227d-goog
 
