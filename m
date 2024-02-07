@@ -1,117 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78181D525;
-	Wed,  7 Feb 2024 11:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB061D524
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707306652; cv=none; b=PuC4UoJrIip7A6X7+dOyGA5tF/hkLqyxYCdKAtZ6ZJXW+6IH8aJ8skxiURgKSGQ5vbeHkXIXgsIjMu+c0XFSyvHSGqeiRAhLOrl+OCUB4v8hLli2lgFrH4HHwx5Q3odC37hbuWf9v4q2KR4NdH8jLfryVzccgeGN8wkpo0tyvcI=
+	t=1707306726; cv=none; b=FMQh/xACFzy05+c64YrGQ1H+oxhielrHENSqqbnn9rcr269g/fKBlTL73Y15QG0dJYujKrLLwIuHP0TcINM9HR0gs/KLL+K2pkGgtU8/Gg1v85nPO/O8RgbSsd5tFIQqJdDCI9ERra9mh/PgWxeaUZJZjG3/AZBWFYRU0tbGz2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707306652; c=relaxed/simple;
-	bh=SfvJn+xoupBR1MbkXFoDnA5hLXb3/g/1CcV8cOlXD/A=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WZW8MG3XeH3TMiXgw10eaJRkwKploy7wNFKikXB/icvEZ5WUdhIOZEYP1M19EYNJCN5RonR9GhPOqOYLP3/rBcemNPEa0piFGok/nFAV1Yh1kYC/XoQ9dvYM/OZXLLfRNhj2mIcjq1k7TRvOfhCwKtFF177P3lC5dR7jkx5aDn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y6Wu6pno; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y6Wu6pno"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707306651; x=1738842651;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=SfvJn+xoupBR1MbkXFoDnA5hLXb3/g/1CcV8cOlXD/A=;
-  b=Y6Wu6pnom9XLv6poGlDiUWQsebH+Dk2elTYCJDQzn3C8DC7ZvXyiHmw5
-   yobsVvVo8LysAr9PllLlEbmlFK0ipHXwjPHdvOimsaWtILkwFEV1osbHM
-   V1YTvfQJLtH4ScELhVy9wRdhogHLfIT6bMONwwjB1QcUPtroN7l5BlcaS
-   oLjcflRgYAqzeoophCcahRcxi/DnkSdOvpZqoI/+ZPVPrpjxewKSIv19K
-   TTv0IqubjZa9V3orFBAtyE7PJcN1H5MNakjo1sZJr4uVGZwhSLv7AXT5M
-   1hV4HZP74SThZU5OWmJSSzYITj3rhvGnarjK8ILnyr30g92TAhrUxWksF
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="4837019"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="4837019"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 03:50:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="909976005"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="909976005"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.51.96])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 03:50:43 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 7 Feb 2024 13:50:37 +0200 (EET)
-To: linux-pci@vger.kernel.org, 
-    "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Jesse Brandeburg <jesse.brandeburg@intel.com>, 
-    intel-wired-lan@lists.osuosl.org, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-    Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    linux-edac@vger.kernel.org, linux-efi@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Netdev <netdev@vger.kernel.org>, Oliver O'Halloran <oohall@gmail.com>, 
-    Paolo Abeni <pabeni@redhat.com>, Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH 0/4] PCI: Consolidate TLP Log reading and printing
-In-Reply-To: <20240206135717.8565-1-ilpo.jarvinen@linux.intel.com>
-Message-ID: <d1168e4a-c766-b3c2-bb74-c8dbae984cff@linux.intel.com>
-References: <20240206135717.8565-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1707306726; c=relaxed/simple;
+	bh=JyyB+xwzTfWceLKzrVoFyYUD8McBiLaCxrGO49shQ1Q=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=F75Tc0MpFHgBWRjzl1FZWEQH+ks/wvpO0gPe/rm6F4koyQJRy5UON2NAhWH3vGTAIzlyzVVtfArqQt19VJac/HTqovj1wXDzx3i3uBnA4GqJGseeGwumXflQqEkyZ6EP1Qf5xlxChr7G6fQ3LX/8IUqoMhHidEW98VrSE7WrDYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363d86bef43so2518315ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:52:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707306724; x=1707911524;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYjWeZ/hZEvaM5rvBaNC11crdBcOmLYiQvMupK8SDMs=;
+        b=duzYzfmXSh1OLKrS8/p2vEzPrKlPqVk6kMj2RMEe4dDGUsxTrtKwyt8zSg0LlcJW9s
+         Aj4lExlnRF+T0UHyqG21st7Eef2yOg9UqAK+HaE43Zd693MFP78is21FlSKVpyBr/0EN
+         7etrAO34K5RDBv6Q/GiZZxzpVQkNOx6X+qpbiijEENZR+Z9l2JNhZscu6vhAo8WSJLGS
+         CjQn2estEhuDLFy3Z2Peit/gOH0h9YdMc1bDhNaHdlhDT7TzNUYaSeJeACjUNvtgyMGj
+         rINe5IeNR1CQs7ItuRq+qrjQIGrC0KCXALno4Vv46yifRbVqdi9Tv+kAWWOT6mAKSyN6
+         qaXw==
+X-Gm-Message-State: AOJu0YwTmEHonmFH5ul9YH8sXmoRchcoNl7tlH5CJcdiWus/uYxCqsd6
+	NYqIxuaeCCSWw7vilEqeV1zaa0lwUIcMu5NC/AwpMsj+mwrQLJzlisIWGvIY5N4pYKY+T9VBCCy
+	Ov899eVPF2mme75tlMnotnN7DJNcZEcng7aeM0oW72JPACFLHqa/LEyQ=
+X-Google-Smtp-Source: AGHT+IFw8HXwSFcBftnlV/RhW8Iy6rHtZpG8DlCt4YFa5TIHMnyAiSIf3K6K01l93PaAzYabLAOxysa9v3BljxgEwihUoXTyJKvT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-2015099635-1707302934=:1119"
-Content-ID: <ca89eb14-5052-c712-0d3b-dae8e97234e8@linux.intel.com>
+X-Received: by 2002:a05:6e02:1a09:b0:363:96ee:cc55 with SMTP id
+ s9-20020a056e021a0900b0036396eecc55mr352541ild.1.1707306723917; Wed, 07 Feb
+ 2024 03:52:03 -0800 (PST)
+Date: Wed, 07 Feb 2024 03:52:03 -0800
+In-Reply-To: <20240207113405.999-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cd471a0610c95277@google.com>
+Subject: Re: [syzbot] [usb?] [fs?] KASAN: slab-use-after-free Read in comedi_release_hardware_device
+From: syzbot <syzbot+cf1afeda4043ffecf03e@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello,
 
---8323328-2015099635-1707302934=:1119
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <5d24dca6-e3dc-f4f5-8d6c-ee0d65616a2f@linux.intel.com>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Adding Cc Quigshun which I ended up forgotting despite thinking it at one=
-=20
-point.
+Reported-and-tested-by: syzbot+cf1afeda4043ffecf03e@syzkaller.appspotmail.com
 
---=20
- i.
+Tested on:
 
-On Tue, 6 Feb 2024, Ilpo J=E4rvinen wrote:
+commit:         ed555127 Merge 6.8-rc3 into usb-next
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ba118fe80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28a3704ea90ef255
+dashboard link: https://syzkaller.appspot.com/bug?extid=cf1afeda4043ffecf03e
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=131153c4180000
 
-> This series consolidates AER & DPC TLP Log handling code. Helpers are
-> added for reading and printing the TLP Log and the format is made to
-> include E-E Prefixes in both cases (previously only one DPC RP PIO
-> displayed the E-E Prefixes).
->=20
-> I'd appreciate if people familiar with ixgbe could check the error
-> handling conversion within the driver is correct.
->=20
-> Ilpo J=E4rvinen (4):
->   PCI/AER: Cleanup register variable
->   PCI: Generalize TLP Header Log reading
->   PCI: Add TLP Prefix reading into pcie_read_tlp_log()
->   PCI: Create helper to print TLP Header and Prefix Log
->=20
->  drivers/firmware/efi/cper.c                   |  4 +-
->  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 39 +++------
->  drivers/pci/ats.c                             |  2 +-
->  drivers/pci/pci.c                             | 79 +++++++++++++++++++
->  drivers/pci/pci.h                             |  2 +-
->  drivers/pci/pcie/aer.c                        | 28 ++-----
->  drivers/pci/pcie/dpc.c                        | 31 ++++----
->  drivers/pci/probe.c                           | 14 ++--
->  include/linux/aer.h                           | 16 ++--
->  include/linux/pci.h                           |  2 +-
->  include/ras/ras_event.h                       | 10 +--
->  include/uapi/linux/pci_regs.h                 |  2 +
->  12 files changed, 145 insertions(+), 84 deletions(-)
->=20
->=20
---8323328-2015099635-1707302934=:1119--
+Note: testing is done by a robot and is best-effort only.
