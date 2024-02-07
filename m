@@ -1,81 +1,78 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59A97D3E6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE4D7E77C;
+	Wed,  7 Feb 2024 14:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707316933; cv=none; b=l4oXOkcHcrg2SiAO7IR5pr176NuSVeVyLbVDbM8vYqvkJa+s3/3+cKG92WZwF/OAbFNVBFinQVyU3oq68ltGziL8MXF9PpWkdM8oYRsDja5/p9xMQFTW+EIFVtz+fcMY7hk5C1hUQI1sfinrBCfbGZYnVqYrxaeC0wRe93TOfk8=
+	t=1707316961; cv=none; b=E0jC0JARdYGpkkLuVOW9g/gLJk4hNehPDUbBv8MBEOaMo6M/tjweYgEITidyUz1q1k4yjbn3QOnA0i8VGGUC/UwBcC2t+dwcHUXUd8NjfvRTaBmgtjh/Q9j89jT6PO6m71270DZj1JxSsj7JgF3TPGgbJU3fjO15uZeXwEvv8+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707316933; c=relaxed/simple;
-	bh=3Cv8/QhBIpD74slYSSoo4vxVIJLl/J4xx5zC5DQgKTk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZRxI6CHhPo1XkbhpBc+F/HYrQhb/JkdabPStCeSNJtAC9AUok1/4GzB6WrgqpOA7wZVIkh5YOOvx3jdDME8nwX5pXVZ5PpzirYQxAhTQ3GM6P4D+6Un9D/BpNOh1Cmt9N1eUbWyw8o5Q8ccy0ZnsPYcHHnsz7xNUDygH5kuO1Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f0ZEToLx; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1707316961; c=relaxed/simple;
+	bh=lgwC+nQacpQt17RsMVSyGHUSSBjw2SwJRYu3FKz012I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rm89eAQS4ndnf72Swe8/McxlPJju2WgtCsR/2Na9IWw2gajlYG99KhDNHjWTLifTVuZVYjOnQOt9GxWiqhCg32FeTwhGfZJQwYplsc4nqgPYHMaOKKpXWdMdbf+aHd+h4Iiz4G1wPXmzvbZ21Un4fz+G+7VT45+YTHuBEkUaz5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ByAuNcuj; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f0ZEToLx"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5cfc2041cdfso494694a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707316931; x=1707921731; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P+knB1ngdSyKARG/doZP96ZXvsPHGkqMevFJ+aYaZPk=;
-        b=f0ZEToLxMs5TDBDkMEF2LePt9f4ymD9ISzVGM1Ft+/s6mrYclpP04f6PklXj3OTx3H
-         wcR+ulr1eIOKWmu3p7Tz5NKfbQqfO1OkP0FjXxVvHLXdkyL3zSquUkDAevegBQYzZwmM
-         Iov5KqUInUM7fdr8mHwf2BIAqTCYKAISl+gMTwtyPePd8urAmsgvR532GN4YwS6Ao92a
-         MAtUqdoj3LfnnaOQq+1vojACoTQJnhZJcGY9HndsFEBK0l8zd+JxX6qZS6t4DJPjFB7k
-         neDSnwGGUyb7YRutDLt+2HBJfkqcZZaHX/kmfREMAnTDfIcGD94l+50XXaADW5vKeMmp
-         lF5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707316931; x=1707921731;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P+knB1ngdSyKARG/doZP96ZXvsPHGkqMevFJ+aYaZPk=;
-        b=SyzqWMjXEaXVMWJTNRLYw8IdBr25WQC5wUZmnacgGCtR608FlZw+/9WIQ2N88uA0OJ
-         ytEIatlKNuilMcg5WJZr+/qLUxR3dfmCHbWDOGg2Hs4tHuFwRMVO8cdC7k8+V1FTSa1c
-         HwQZbkAOg6swOrrrbyBZTRVwkSYNrUawoOM6atI4ZIHC///sg+HxC3bHsRI/zgPBXtKk
-         cHtFJVAoacK+KlyR7anyh/7QA/EZ1w6KhemL2yO8KvkuoAQi22p8FUCcZfhuCUuDiyJY
-         rJn0PDPapdarE3PBeP54He5IYpnuSipNFkFx1OKw3Jdi8MnI4DqSZjdMEXUqTnn6ZLxh
-         PQfg==
-X-Gm-Message-State: AOJu0YzRjvQIw1nLjfRPw5xM/jXMeoX/trj6h4vlW5CEO1VU7G7i3nAM
-	Ji5cI0E+aRs8MS5ZYHv+Kynrjf+r+0vzXximQnfqSy5oAsky6naykhSwnPGl9ylMwo8t72PukaW
-	9Sw==
-X-Google-Smtp-Source: AGHT+IH2CYj13LOcOTolr6P9fTU40Ga1BYphTzszQJKE8pMlAoy03SGK9b1MwI11mOBq96zOCeNblDSCKiQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a02:190:b0:5ca:439c:86ac with SMTP id
- bj16-20020a056a02019000b005ca439c86acmr8804pgb.8.1707316931114; Wed, 07 Feb
- 2024 06:42:11 -0800 (PST)
-Date: Wed, 7 Feb 2024 06:42:09 -0800
-In-Reply-To: <20240131233056.10845-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ByAuNcuj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707316958;
+	bh=lgwC+nQacpQt17RsMVSyGHUSSBjw2SwJRYu3FKz012I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ByAuNcuj3mlohoOnzvl7BmdLkgeOwehNmhTKZVdeqQBeznicf4Zw/sVSNXOThDjBM
+	 zcN654bub8cEGpt1kCxTHDioCOR5AnYbxSEwVPv0akvQXtpAs7DcI4CCgFDt6aRQNF
+	 l7UUtrqbUtH+470b0VC/OBbmtVrQbIJswD6ouu7A4Qo/RxWwEc+UkdHFoHAshLZ2yo
+	 BR25qkuB1WJSz4lsFxjwUZ9YJL0/hCvJMlK2jiOLaqnt+K2TW9+A7OQbMqj60XNs/Y
+	 l3NiXMG3YrupnomL5/2KEjMYhX3oNrp3BDiVaRptVsVTBvwYpgVbT2VUCOIORKO2v+
+	 P5d7mSnz85pTA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 368913782059;
+	Wed,  7 Feb 2024 14:42:36 +0000 (UTC)
+Message-ID: <420ee120-2962-4848-b76f-b32ed70e70b0@collabora.com>
+Date: Wed, 7 Feb 2024 15:42:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240131233056.10845-1-pbonzini@redhat.com>
-Message-ID: <ZcOWwYRUxZmpH304@google.com>
-Subject: Re: [PATCH 0/8] KVM: cleanup linux/kvm.h
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] media: dt-bindings: i2c: add GalaxyCore GC08A3
+ image sensor
+Content-Language: en-US
+To: Zhi Mao <zhi.mao@mediatek.com>, mchehab@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, sakari.ailus@linux.intel.com
+Cc: laurent.pinchart@ideasonboard.com, shengnan.wang@mediatek.com,
+ yaya.chang@mediatek.com, 10572168@qq.com,
+ Project_Global_Chrome_Upstream_Group@mediatek.com, yunkec@chromium.org,
+ conor+dt@kernel.org, matthias.bgg@gmail.com, jacopo.mondi@ideasonboard.com,
+ hverkuil-cisco@xs4all.nl, heiko@sntech.de, jernej.skrabec@gmail.com,
+ macromorgan@hotmail.com, linus.walleij@linaro.org, hdegoede@redhat.com,
+ tomi.valkeinen@ideasonboard.com, gerald.loacker@wolfvision.net,
+ andy.shevchenko@gmail.com, bingbu.cao@intel.com,
+ dan.scally@ideasonboard.com, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240204061538.2105-1-zhi.mao@mediatek.com>
+ <20240204061538.2105-2-zhi.mao@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240204061538.2105-2-zhi.mao@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 31, 2024, Paolo Bonzini wrote:
-> More cleanups of KVM's main header:
+Il 04/02/24 07:15, Zhi Mao ha scritto:
+> Add YAML device tree binding for GC08A3 CMOS image sensor,
+> and the relevant MAINTAINERS entries.
 > 
-> * remove thoroughly obsolete APIs
-> 
-> * move architecture-dependent stuff to uapi/asm/kvm.h
-> 
-> * small cleanups to __KVM_HAVE_* symbols
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
 
-Do you have any thoughts on how/when you're going to apply this?  The kvm.h code
-movement is likely going to generate conflicts for any new uAPI, e.g. I know Paul's
-Xen series at least conflicts.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-A topic branch is probably overkill.  Maybe getting this into kvm/next sooner
-than later so that kvm/next can be used as a base will suffice?
+
