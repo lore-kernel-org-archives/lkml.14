@@ -1,95 +1,144 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7C859178;
-	Wed,  7 Feb 2024 13:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5C776C69
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 13:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707311100; cv=none; b=JerZZzpe+NEUvVxOHG9yHMcLdaIgcfOC4xkq4jwMFoJTvp3ByAq4OTtDd7a5xtyX6JaYPsnLfQLbeXnmJaR1ExWcaLpVkLpxjfY1CKRPNmMG/tq20jKPdnHLrNwWONestIiUAYdI8QtW2EkxYto5GbGXdElL4/bBpSy/0WziX/s=
+	t=1707311279; cv=none; b=fE86h1LFTpo3FGepdXokcBW7NWp27zO7EF7x2OEEMS+x8LKlzE1MqSoXLCyD51MWA17PKss4EYc4Q8JDsNc+/lpgJGnyrxtmyPlnsljbKvAHOsdL3HMz3B1BM99K0JRD748Xu3HRjZd7UM+6tHWImi2KGX3hpZKbFg+o4zGgW64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707311100; c=relaxed/simple;
-	bh=ous0MH1KPZJPfO8wzVGi7xPdc7ON7llYysO4R/VPbGc=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=EaZCHQAE4PRaSQ1cYy4YPRpR/2aS92id1pnMFd8oHcwNGSzpdruEKPAllHOq7gIG6ZwiOB+nC2C5O2mWRbCOOafjcy56qMh+AEKfkOlX8Y2fDfHoBD+QN+U3kCPpJFgE0npEY7jt8PzmHN4ttZrJ6v3VdCoCmugsnajYAc+qQtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Joxw6dC+; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1707311279; c=relaxed/simple;
+	bh=cnUYyVs5/vC7vebIv9+mS88wVxIV0SdJzuzMN/NHZ3Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G4qVXXJTauJTx2t3CITd2H11dQhN+eqJ8rHwnjZmPD5OiXeq9IIs58hfU/wjIvYMxNPvcF0xTMPuaMLr74TKPFIpgLLtw3oLRjMLDdquMEBxLgS8uSUi1ncgj6itvtEHVCYbk+RG1Gd0lxx5KJ1sDgnCTrbDqR7Ihuh+vDeNUEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Cph3DwTB; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Joxw6dC+"
-Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A38DEA27;
-	Wed,  7 Feb 2024 14:03:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1707311007;
-	bh=ous0MH1KPZJPfO8wzVGi7xPdc7ON7llYysO4R/VPbGc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=Joxw6dC+Kf6+vZVGbKclT283ZdQpJOdh2McfsJ7j9hSwJrzWJ0mCFzNp40kguAZSq
-	 d+P3gY5wwbOHjQvgkliFGKw0g8lTBan1YyTzl+xYjrpsXfPv47FHTdEDMXXcu28wao
-	 2h6QqHA042qlUNs3q14ux6pXti9Cj61yCoC2at9I=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Cph3DwTB"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6dbcebaf9a9so346136a34.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 05:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1707311275; x=1707916075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cgZxjoWrT1AZAxZIzQbeXNN5B4NUExBzEhcUQwx7T6M=;
+        b=Cph3DwTBukllsxqRfOjoNMLbVy+BrSiWUJHXNm/MMVC0N1x+1qhe/TAPddTvp6MPVB
+         UcV1MIYys+ueNkCO+9cRvtUqdRFJhKaudl++opXhKButacdjpkilsSQic1Y0TI01XWkx
+         019IK3QxZp8IoCTAmg23XmUnbHpBhhXAUwUNSot0Pt6ZSUze2Z/+AJrtCg6hUgR/ufzs
+         UI0c6THi+8YKg7QD0XWqwwTZ1ojJRcaDGcHZHgnU9D9AYeKfriwjjDiGTdPxWEP/xGqh
+         uKP8pChyuAOVvf3hrLjc32p4VSXMeAJV9SKHvy8S27GknQeEnBmQ+Xhzvq6MIYW45L3j
+         2XTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707311275; x=1707916075;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cgZxjoWrT1AZAxZIzQbeXNN5B4NUExBzEhcUQwx7T6M=;
+        b=O9cHKY60GG+Esdpvpp0x1O0QIETAFlOXH7x23wwxG27Ve/cD4V4uzNM5wziYdfSghf
+         CKTx8Seybt6Y8cpiklv/hIYUUQIVAhzqMUx4FbCavUCraJB4SpYYvh7cGQdV9Ax6kaiG
+         G3O4ynEOI/JL+Jcnl+jeON16dQyKtOgGONgd0D+FbrPbvjXVtw3nE/QWwAOzagG96OsO
+         6pG4pKJp7RJizm0cgLy8guHxEjvXZNQeIzO7q37H2fn0RwlYdjllInt9buRpn9KwENYv
+         YSFfrO/SIcYlUl/H1D4bDKt5i6nYZCYyOF+HMUcDZTz26NQWH049hmyQ2ThdRCDU5VuS
+         HX+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU0R3fEE1sGtIbbU8vU5Obf4Fcw9ZYvGm5276JDEjf77XEyQBHWqmA5b6feNnzwRVD6oOIKOc9T1TonAy8gCtHQskzBRjJyvgaufPT8
+X-Gm-Message-State: AOJu0YzH8E4UtSwEs8jkH3YNrVRzsL0iXXj3qMXqjYLClYcIg9+0BmlR
+	n8zyHwkSjgOHqe80ZnIn1L7Izy3OXO1QGc14DaTTskbSO7CgaE0mECouzh+AI1o=
+X-Google-Smtp-Source: AGHT+IGN3NF79eAyEr+25oA68ij44eKtiXaEuQSz0jscK3NPCNE+n65Z6eFMP6e1JcIgHQCGfmqIqg==
+X-Received: by 2002:a05:6830:3a88:b0:6dd:cd73:3b0e with SMTP id dj8-20020a0568303a8800b006ddcd733b0emr5678654otb.23.1707311275538;
+        Wed, 07 Feb 2024 05:07:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXqCDZDDBRDbsXqT1ey9HzXOkExZvunGlbVwR85X02+RML9qzTmXaasE8bMz95+CJqyJuDdjUU7X9NSSdPFs6u4B/AWUp18Ziek6W7WmFahz/Y9bhmywcXigdcQK83JMVOzlxD38ThZFceT/k9sH93EMJoRlvnvVWB3K1aWSCPFXiKEpycfUvxXwG/G5g1zrMmqlGL8m4vcyxsnr33K8BtM+ftBrAq9mSnC013gk1IuqVTZ7uUhYiJzKAgOQZEs5/cflyl7YXklzWZBHyV7SrJ1oZ2jC5GXiW/2Bf8r3uFhFHx306TyTLk39IaICzhaPsn+9KsbeZeITYVJGNLZ8tQuzS2PsEbC1nrFqoMMq/vnDFChRJrtfcKLgKAa7qod/Xy5uJ8J3+/Ti9VP+lhyS2U6BBOgmp/wDHtwNQMPF4gd36FdVc1ZYU6gdfdp/cdeuFZxrcpJrwpZTQ0JrBnrbqADrEKLaf5wFOklZB5ggDQITRmhYutPfPuWHFp8vYvumvsmI3nODM3r3Q==
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.114])
+        by smtp.gmail.com with ESMTPSA id a17-20020a0ca991000000b0068c9cd2cf88sm565455qvb.60.2024.02.07.05.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 05:07:55 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	biju.das.jz@bp.renesas.com
+Cc: linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v5 0/9] watchdog: rzg2l_wdt: Add support for RZ/G3S
+Date: Wed,  7 Feb 2024 15:07:36 +0200
+Message-Id: <20240207130745.1783198-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZcKk6QJXfGGo2DH9@pengutronix.de>
-References: <ZcFx7P30Su_Mx4AV@pengutronix.de> <20240206032301.6e4tmbvmk7vs72gg@synopsys.com> <ZcKk6QJXfGGo2DH9@pengutronix.de>
-Subject: Re: duplicate requests on host side while streaming via uvcvideo gadget
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org <linux-usb@vger.kernel.org>
-To: Michael Grzeschik <mgr@pengutronix.de>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Date: Wed, 07 Feb 2024 13:04:48 +0000
-Message-ID: <170731108881.252503.6282895768429052406@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
 
-Hi Michael,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Quoting Michael Grzeschik (2024-02-06 21:30:17)
-> On Tue, Feb 06, 2024 at 03:23:17AM +0000, Thinh Nguyen wrote:
-> >On Tue, Feb 06, 2024, Michael Grzeschik wrote:
-> >> Hi Thinh
-> >>
-> >> I found some strange situation while streaming via uvc-gadget to some
-> >> usb host. It happens when some requests are missed due to higher load =
-on
-> >> the gadget machine. In some cases some requests will reach the host
-> >> twice. In my special case, I added the following changes [1] for the
-> >> host and gadget side.
-> >
-> >Does this only happen to some specific hosts?
->=20
-> >Are all the data of the duplicate requests matching or just some bits of
-> >the transfer? Were you able to confirm from some usb analyzer/sniffer
-> >that the data out the wire is actually duplicate?
->=20
-> Turns out, this duplicates are just misinterpretations.
+Hi,
 
-I'm glad there's no deeper issue to worry about here.
+Series adds watchdog support for Renesas RZ/G3S (R9A08G045) SoC.
 
-> The linux uvcvideo driver will parse the uvc header payload twice. (If
-> the FID was incremented inbetween). This led to those double misleading
-> outputs. Although this means that there is a bug in
-> uvc_video_stats_decode for incrementing the error count.
+Patches do the following:
+- patch 1/9 makes the driver depend on ARCH_RZG2L || ARCH_R9A09G011
+- patch 2/9 makes the driver depend on PM
+- patches 3-7/9 adds fixes and cleanups for the watchdog driver
+- patch 8/9 adds suspend to RAM to the watchdog driver (to be used by
+  RZ/G3S)
+- patch 9/9 documents the RZ/G3S support
 
-Do you plan/are you able to submit a patch to fix this?  Hopefully that
-would prevent anyone else following the same rabbit-hole.
+Thank you,
+Claudiu Beznea
 
---
-Kieran
+Changes in v5:
+- updated description of patch 2/9
+- simplify the code in patch 2/9 by using on a new line:
+  depends on PM || COMPILE_TEST
 
+Changes in v4:
+- added patch "watchdog: rzg2l_wdt: Restrict the driver to ARCH_RZG2L and
+  ARCH_R9A09G011"
+- collected tags
 
->=20
-> Anyway, so just ignore this whole thread and be thanked for even having a=
-ny
-> thoghts on this.
->=20
-> Regards,
-> Michael
->=20
-> --=20
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Changes in v3:
+- make driver depend on PM not select it
+- drop patches already accepted (patches 1, 10, 11 from v2)
+- re-arranged the tags in patch 8/8 as they were messed by b4 am/shazam
+
+Changes in v2:
+- added patch "watchdog: rzg2l_wdt: Select PM"
+- propagate the return status of rzg2l_wdt_start() to it's callers
+  in patch "watchdog: rzg2l_wdt: Use pm_runtime_resume_and_get()" 
+- propagate the return status of rzg2l_wdt_stop() to it's callers
+  in patch "watchdog: rzg2l_wdt: Check return status of pm_runtime_put()" 
+- removed pm_ptr() from patch "watchdog: rzg2l_wdt: Add suspend/resume support"
+- s/G2UL/G2L in patch "dt-bindings: watchdog: renesas,wdt: Document RZ/G3S support"
+- collected tags
+
+Claudiu Beznea (9):
+  watchdog: rzg2l_wdt: Restrict the driver to ARCH_RZG2L and
+    ARCH_R9A09G011
+  watchdog: rzg2l_wdt: Make the driver depend on PM
+  watchdog: rzg2l_wdt: Use pm_runtime_resume_and_get()
+  watchdog: rzg2l_wdt: Check return status of pm_runtime_put()
+  watchdog: rzg2l_wdt: Remove reset de-assert on probe/stop
+  watchdog: rzg2l_wdt: Remove comparison with zero
+  watchdog: rzg2l_wdt: Rely on the reset driver for doing proper reset
+  watchdog: rzg2l_wdt: Add suspend/resume support
+  dt-bindings: watchdog: renesas,wdt: Document RZ/G3S support
+
+ .../bindings/watchdog/renesas,wdt.yaml        |   1 +
+ drivers/watchdog/Kconfig                      |   3 +-
+ drivers/watchdog/rzg2l_wdt.c                  | 111 ++++++++++--------
+ 3 files changed, 64 insertions(+), 51 deletions(-)
+
+-- 
+2.39.2
+
