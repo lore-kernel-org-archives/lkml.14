@@ -1,68 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED12D1B7F0;
-	Wed,  7 Feb 2024 18:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB42828DDE
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707329654; cv=none; b=dARabMFGsWk/mcq0nTnASGLyC7VBjQcvtfh2pa6IbVns7WgaZmd4xMHqgwjagX30B07n1R9kFXjVdP7/8hO61TaSAy5qDe3danrDhe8LxtqUEl52SoSeBsPvqsHn7EoS5KS7IorD1hv3HA+hmMJEzjazhE1ZyK16JND+HDm9xIA=
+	t=1707329827; cv=none; b=SEjCRqaTRl4ODTIbRDSEvdLxHS3cC4ZrY6MF5pCZ0SLpfiJ1xCZq0pC1KcLOeDpp8WR2EGn7SmUF4Kma2fX3zf7OB/S5C0XZaYwWY9HjMLVJ3K7/dnPcLeaUbAHGG/LHgboRPaLhzE0NtZZEnPr57nr+ZgTi4VftCuSsT4XcRTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707329654; c=relaxed/simple;
-	bh=eP/zI19SPSRRm5KxM8isKzsQV4/zUTMHBunc8dphjiQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=RM5ndtjjln+t7inZ8g+zX6G3FjPZEv5cgw3tXfZwQdsdez39+z0i134fCFbG2I3CSJWlAUPiBasgmlslf7YbKW+Ra+725IFIhmEQF5SJSVxtcn1yDkskww9rTHjy8x9JFNSqYzzgRSHk3y5Ldi8N/EaH1/jOAdXF+OdRYFtR1eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNIk7sJY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNIk7sJY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE4AC433C7;
-	Wed,  7 Feb 2024 18:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707329653;
-	bh=eP/zI19SPSRRm5KxM8isKzsQV4/zUTMHBunc8dphjiQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=vNIk7sJY8Qm62mFrkb9lpQ2YkFwH1W4nUltIhZOtUc89p+x8O5FSy/PKtcc5BW9m5
-	 PyRVmOcpwKB0kPded1Vy4YMwNAcgkr3mBQ0nnI2446aEW9E/ei3yX1dJs0Pc7/dT0v
-	 vJAqPmHIGtxul7dJmmxFFuEtwCgwINP0YPmNJgFXSjHnrMV8DIK9KmqUC77ukMLM2K
-	 Q9mFSYpTbJLARpyPrQ1svxG1lNFt9a5QWMGTxs4NjTNffdv9L77DBsV7tg9Sxu8o1o
-	 hZu++QLeWmOkMP1Dt0bIefJNlAS4CB2PDwujEIPAGTe1tVqBMBvpTph7Dv/CjC19bH
-	 qK2rWKyjMZlDA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Christian Lamparter <chunkeey@googlemail.com>,
-  linux-wireless@vger.kernel.org,  kernel-janitors@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] carl9170: Remove redundant assignment to pointer
- super
-References: <20240207171524.2458418-1-colin.i.king@gmail.com>
-Date: Wed, 07 Feb 2024 20:12:00 +0200
-In-Reply-To: <20240207171524.2458418-1-colin.i.king@gmail.com> (Colin Ian
-	King's message of "Wed, 7 Feb 2024 17:15:24 +0000")
-Message-ID: <87a5ocgn4f.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1707329827; c=relaxed/simple;
+	bh=2vTyFLmYYfKWy6Gj4hU+1rmm0ovvg7vjHgQ4+Zm13YY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=CdkAE2/9wo6d43cBnYKR7hl2eeVcwHVfbnnuxlOEAMVT1pK0aKxX7D3zxlvmn1i5hIDRUVPkOnuxw5kkG3Y7y8Slz1C8ttyWYvcqOAOQ0jApylB+Tl5EtA91bIplWVlQG7hbQBDrs55eurIwNHNZqD4cq6yQ9F1aRVlr2ounNDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bbb3de4dcbso98312939f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 10:17:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707329825; x=1707934625;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=be3GbaZ/I/Bw54yVwIBFkvdPJfjdH73IwIL5QtbBR9E=;
+        b=V2TaBEl70Z/OFZgAWkJogoZAoYtq6xX1HV6Fbw+FTQaiT4rEjwme3ttQLwHRXR7HRq
+         gXDt6h51VRxWV4DdOf04N19O+7hkyvqv5yulKqr0sAcnPrL69tfHdEhRgR1QGq4r8jl2
+         S+GIOQ76oMcujQrl5EVjvf0TDqhaeivzCvgcSIQu/FdseGtoYk1PM8NjkmzR1rY5eK8K
+         G9o5+HZYu+OdKeAdzvRzeKV75niNNDH8KlOO6wHVybvKCeDpmrcFxt8j2IqVyWm8LRz4
+         jtCPavZXHYfjecn8oXDLhIKqam8Jn0tvCpiP4ztvRL4/JNejsinl8MvfAFTg2tfKOTkK
+         tiBQ==
+X-Gm-Message-State: AOJu0YxPpI3u1YhBO7ez6V1HfKskd2ark1++RAxgMkjWNezSx1zllgzS
+	tmj+TEjN9RjZhyXumh4a5YFYFGn/W5uLZWdhSVXRZeGJ2caR532v/7+TmTde2MIHEnQ5ngsazlx
+	s2R7ROPQGqkkusoU3/dnjDrT28nMZH4K27eeAelYQf7LOuaKAJC7fJyE=
+X-Google-Smtp-Source: AGHT+IHfir+A+/gYcaMQmPZSB8NET3r6FooBj5GlmYy8UvJN9Uul0QpZesXws4oFQggR75nC6+t3Sqg2/GSAJxTFEBpiKWJBaxiH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a02:9999:0:b0:470:b4f0:f762 with SMTP id
+ a25-20020a029999000000b00470b4f0f762mr43403jal.1.1707329825085; Wed, 07 Feb
+ 2024 10:17:05 -0800 (PST)
+Date: Wed, 07 Feb 2024 10:17:05 -0800
+In-Reply-To: <00000000000067322b05fdfa973f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bd244b0610ceb32c@google.com>
+Subject: Re: [syzbot] [dri?] WARNING in vkms_get_vblank_timestamp (2)
+From: syzbot <syzbot+93bd128a383695391534@syzkaller.appspotmail.com>
+To: airlied@gmail.com, airlied@linux.ie, daniel.vetter@ffwll.ch, 
+	daniel.vetter@intel.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, 
+	hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org, 
+	maarten.lankhorst@linux.intel.com, mairacanal@riseup.net, 
+	melissa.srw@gmail.com, mripard@kernel.org, rodrigosiqueiramelo@gmail.com, 
+	syzkaller-bugs@googlegroups.com, tzimmermann@suse.de
+Content-Type: text/plain; charset="UTF-8"
 
-Colin Ian King <colin.i.king@gmail.com> writes:
+syzbot has bisected this issue to:
 
-> The pointer super is being assigned a value that is not being read, it
-> is being re-assigned later. The assignment is redundant and can be
-> removed.
->
-> Cleans up clang scan warning:
-> drivers/net/wireless/ath/carl9170/tx.c:192:34: warning: Value stored to
-> 'super' during its initialization is never read [deadcode.DeadStores]
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+commit ea40d7857d5250e5400f38c69ef9e17321e9c4a2
+Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri Oct 9 23:21:56 2020 +0000
 
-Same here, "wifi:" missing. I can add it, no need to resend because of
-this.
+    drm/vkms: fbdev emulation support
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1282dbffe80000
+start commit:   6764c317b6bb Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1182dbffe80000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1682dbffe80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2c0ac5dfae6ecc58
+dashboard link: https://syzkaller.appspot.com/bug?extid=93bd128a383695391534
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12067e60180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=102774b7e80000
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Reported-by: syzbot+93bd128a383695391534@syzkaller.appspotmail.com
+Fixes: ea40d7857d52 ("drm/vkms: fbdev emulation support")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
