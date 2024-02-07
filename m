@@ -1,167 +1,91 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88D77F7D4;
-	Wed,  7 Feb 2024 15:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396DD7E77F;
+	Wed,  7 Feb 2024 15:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707319127; cv=none; b=exwMcOeJ2Ae+FO1TQlsDUvdaq6Ru5Agur/e3Zv+/JqCR20Nd7Q50ZNX7GduaSfdwWXFXoDQJvJb9tF4wO3790s5pl+lCXRBF9WyXmXUb/nZiQZJ8/LE4N2FSBFwZhFe4SwhOS6xYRJLmG2C3SgyUhv/tloXBAPCor25eiCfyaA8=
+	t=1707319278; cv=none; b=bGLlLos8D9i1BBhrs+ZyELKdmeMvOc2ysbK5WuxNwESS14WQPHcxqcF0c2eJ/YI5DwM0sDy3qjdpsbZuqNuCtavifh34Ugms32TdyG3hkJBbpdkrFClx9fHH179L6rPZzz4TI18RenjIdr/sBRZdzgQEG+RqAchX1o5uP6gPmAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707319127; c=relaxed/simple;
-	bh=tY5ecJDiWRgQfR15XnT6sr26N06KCzgBu+oCAppi+2I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mto+B/qpJFo9iMtoWNOmCd34mqx/OU4ReylByzU58flZMt07XptMithmB4bXowDlkJU9s1RV8Z825XQYijs32hS2NrKDPhd+sa56zupb4qHF2Gd5v/+hGtm7MlloRlupMdID0wg5YNE5i32GLp+P1mLzxjmmVAEw/Ds1FcT+yAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dqpY/gHB; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707319278; c=relaxed/simple;
+	bh=G/nJs42QSxBHIw7VLRbyxA32VFnZ1LCXl9jq296Ee+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=aaI/dDbaH35HCbrpiEaMz63yjUUSahf4avTUqh2P/SA1ycKUSgse7aPlshetHel2ojeihHalrUYieHtORqqDU//hcc0HXgEivcpJFh8BiLNhKpWQhFVPTsSkhJUOMzoSAApf7zZMbZ4zNe/LT4fmL8yiJsVc7tNpobZLcwZ24Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqBteE4V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dqpY/gHB"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 417FIVb8103266;
-	Wed, 7 Feb 2024 09:18:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707319111;
-	bh=f7VohMqMIEhbj4OYHXX4yY0/nqrzl3/aoxQ51t+Xjww=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=dqpY/gHBY4wgIzUPDLsOsmmfTfrM1TQsps/AyuyAVpLcOwz8ETQYbIGM1rioinU1Y
-	 UFq524M38rDhbBCfA1x9MduOXyEXvLkCiBVDrvkTN+km+b+PGk6LCDw8GbrxSrqdCA
-	 erDrdBRPmz0NVOuH/PVuLEDt4rmFW2H91Qu9Lgic=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 417FIVbw011504
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 7 Feb 2024 09:18:31 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
- Feb 2024 09:18:30 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 7 Feb 2024 09:18:30 -0600
-Received: from localhost ([10.249.131.210])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 417FIToc038018;
-	Wed, 7 Feb 2024 09:18:30 -0600
-Date: Wed, 7 Feb 2024 20:48:29 +0530
-From: Jai Luthra <j-luthra@ti.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-CC: <linux-media@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Mauro
- Carvalho Chehab <mchehab@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] media: ti: Use devm_platform_ioremap_resource() in
- ti_csi2rx_probe()
-Message-ID: <aogfgugtynpo7v5a4df5n2r7nx7jujcbrtwmggkesti2quzrwf@xzzivrbtjd4r>
-References: <66d7218d-ed57-4dec-b6ac-630b01056b5e@web.de>
- <5m4zr6d3geqdyxtr5owlur4ysn6ublauvc5km3boga2vnm2rwj@mflpsf4ql2yj>
- <c110c46b-e7b3-4175-9b14-d4cfc9982bca@web.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqBteE4V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D03C433C7;
+	Wed,  7 Feb 2024 15:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707319277;
+	bh=G/nJs42QSxBHIw7VLRbyxA32VFnZ1LCXl9jq296Ee+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=AqBteE4VCBRnqMDjHLeEAuRUl6X5DlM2b4SEZk9IcJs68QVblBkvEamDC1UWi1CzI
+	 /TtyxHBeuFAW6vLpHOE082b4T/AfZ5nTX/FTMmcAs1vrsIat5LCraku5cprtFu6WKf
+	 PUIIS/1Si9Uc2wqccagfZ6kLudgtfkfpzr5TnwQZCYccwVjPZoYKps3Af+X76kf20m
+	 nNyUt+Uxy4lwljpPrhGXvKinxKkTmnMEYdH6utj98d9RrRiPVis3eNxL0tm7TkSYG/
+	 3sFqPDMEdiVvYdp8rog+GKYWfV3jkfNiR+pAswVMuGx82NhWYvqYH5zEiXaCo/yW4j
+	 naOiat9SGYTYg==
+From: Mark Brown <broonie@kernel.org>
+To: linux-spi@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+Cc: Alain Volmat <alain.volmat@foss.st.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240206200648.1782234-1-dlechner@baylibre.com>
+References: <20240206200648.1782234-1-dlechner@baylibre.com>
+Subject: Re: [PATCH] spi: drop gpf arg from __spi_split_transfer_maxsize()
+Message-Id: <170731927648.1061486.14426168465610494014.b4-ty@kernel.org>
+Date: Wed, 07 Feb 2024 15:21:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jpmq56a6mp47qds4"
-Content-Disposition: inline
-In-Reply-To: <c110c46b-e7b3-4175-9b14-d4cfc9982bca@web.de>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-0438c
 
---jpmq56a6mp47qds4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 06 Feb 2024 14:06:46 -0600, David Lechner wrote:
+> The __spi_split_transfer_maxsize() function has a gpf argument to allow
+> callers to specify the type of memory allocation that needs to be used.
+> However, this function only allocates struct spi_transfer and is not
+> intended to be used from atomic contexts so this type should always be
+> GFP_KERNEL, so we can just drop the argument.
+> 
+> Some callers of these functions also passed GFP_DMA, but since only
+> struct spi_transfer is allocated and not any tx/rx buffers, this is
+> not actually necessary and is removed in this commit.
+> 
+> [...]
 
-Hi Markus,
+Applied to
 
-On Feb 06, 2024 at 15:37:30 +0100, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 6 Feb 2024 15:30:13 +0100
->=20
-> A wrapper function is available since the commit 7945f929f1a77a1c8887a97c=
-a07f87626858ff42
-> ("drivers: provide devm_platform_ioremap_resource()").
->=20
-> * Thus reuse existing functionality instead of keeping duplicate source c=
-ode.
->=20
-> * Delete a local variable which became unnecessary with this refactoring.
->=20
->=20
-> This issue was transformed by using the Coccinelle software.
->=20
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Reviewed-by: Jai Luthra <j-luthra@ti.com>
+Thanks!
 
-> ---
->=20
-> v2:
-> The transformation pattern was adjusted based on advices by known contrib=
-utors.
->=20
-> Examples:
-> * Doug Anderson
-> * Geert Uytterhoeven
-> * Robin Murphy
->=20
->=20
->  drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->=20
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/driv=
-ers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index 2b078c5d7f5d..54aba055c96b 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -1089,7 +1089,6 @@ static void ti_csi2rx_cleanup_vb2q(struct ti_csi2rx=
-_dev *csi)
->  static int ti_csi2rx_probe(struct platform_device *pdev)
->  {
->  	struct ti_csi2rx_dev *csi;
-> -	struct resource *res;
->  	int ret;
->=20
->  	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
-> @@ -1100,9 +1099,7 @@ static int ti_csi2rx_probe(struct platform_device *=
-pdev)
->  	platform_set_drvdata(pdev, csi);
->=20
->  	mutex_init(&csi->mutex);
-> -
-> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	csi->shim =3D devm_ioremap_resource(&pdev->dev, res);
-> +	csi->shim =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(csi->shim)) {
->  		ret =3D PTR_ERR(csi->shim);
->  		goto err_mutex;
-> --
-> 2.43.0
->=20
+[1/1] spi: drop gpf arg from __spi_split_transfer_maxsize()
+      commit: c0c0293cf7a0f21ef461956d44e4add718574f3f
 
---=20
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
 Thanks,
-Jai
+Mark
 
-GPG Fingerprint: 4DE0 D818 E5D5 75E8 D45A AFC5 43DE 91F9 249A 7145
-
---jpmq56a6mp47qds4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmXDn0EACgkQQ96R+SSa
-cUVTtg//Xv0HbelPVk5uEF7Hf1yTBhHi9TYVaJhddrIslnFvwExJ9PRSaQ4eFFD+
-vMKZZZomPvwPjrnyvEY79l9BFx8tOcXKs7znmH693tmaKG33JCrOG2QjlS8ZbxQX
-3vpn4JfWBTKt1oXo0zp5mBkPiWLbZDgwg4bZiQIQew3O2lY1WCTBjZkX4yx8kC83
-4rqRzprRCBjW49UBWkmba41eZTAalNBC2e5+/bscs3/RpLzmSY0CaK9vbl1Rk3z1
-dPh1T/lzWAOP7pERXAOU8439DEE59BhMeXUTBrA+XtJ1O5uQxkEGsusfK7jKsTyQ
-gDhAIPtBqg1ZAmde1iYga1YYHowTHEzuZW+SGzQ7023huQH5+dHU6uBcbRwCmey4
-ksN95tAJSVkdWUOYB4zA6NwMjgjcHf45xWzWOnkaqFrzLNj+HI0JD8Msqi/0KKfM
-GTEHxHBvpwLcuKNL29/6Y49U76Z3iQTsjU+aWG12/Sw61XpDquumiCwxU570+Tfq
-m+yT/VKUZMPQmuEatmWUPunCLQ9TtmY9JOix6dB+miX2C1sZBT8zFGCn5QjQ3n3E
-87h/TSXhCpqO6S6k3h5yZ3CbejgTwAdErJUVhvUsV6WaKWxM1/c+xrZnP0t3L7du
-r0h/MUoaPie7X7b2ysuZ55GNnwXJP/A+oXcxOUr0aAlk8m6IN48=
-=XaaJ
------END PGP SIGNATURE-----
-
---jpmq56a6mp47qds4--
