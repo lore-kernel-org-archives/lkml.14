@@ -1,115 +1,66 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E956C241E6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 10:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25FB24B2F;
+	Wed,  7 Feb 2024 10:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707300552; cv=none; b=pHoZfmLDFi3mzuK7zlDa9stO6C22nqVbgEkbhEjsZWuMGi+C4c1G0QbpdhUVwOCVKWvLTUEPiyyqFSOSv1rBJ0eStEwhmKynV5t8zYZahXC8pCcZRw+OkftIfu9hnQOQhURTqv43cJzmkN/cYORNMn/cVG46FFA3OAyeLNwTSlY=
+	t=1707300578; cv=none; b=KSjJrVX/xWsOpdP0hnfvuluVFHOvKIAqHVuLO8mXm/uwAeiDaJczgb3VlwlBJ6t5jko+BKn3AaQ33DMP+Qz1/+29xYYnz9Yk8ffPdavm2Tw82lY6lmrXl//Nnar7XyzYpM9UwLzxas23zV8pgoDAuvfKaWLwbqUzp+FLp+0+zXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707300552; c=relaxed/simple;
-	bh=+QjEoF1iBuFKg8pCeTILdz/4fUNBQKzVFRD/2ohclhg=;
+	s=arc-20240116; t=1707300578; c=relaxed/simple;
+	bh=GX4Tfyd35kpVX8P4fYXsUxs2ee//i7TBi6iywu14vhI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAU9DDB2mLKZE4yUFeDnnI7Qi0sgf6F3lFksi7wANcWaUwWXDY2UIoHCp50d2PK1kt6VQqqx8U/hblKPA4Ps/pnwsIBvnJbxkmF04K4AzmP10oNDLlO70P7Yb54gP8o8B/XbRC1htTzAUqAauYDfdLIeONbQ3xNTDWvcg9Xh23E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rXerH-0000Ey-Ow; Wed, 07 Feb 2024 11:08:47 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rXerG-004zxy-KE; Wed, 07 Feb 2024 11:08:46 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rXerG-00Fcna-1h;
-	Wed, 07 Feb 2024 11:08:46 +0100
-Date: Wed, 7 Feb 2024 11:08:46 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux@roeck-us.net, heikki.krogerus@linux.intel.com,
-	linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 1/4] dt-bindings: usb: typec-tcpci: add tcpci compatible
- binding
-Message-ID: <20240207100846.vw6vose2hwdtgrq7@pengutronix.de>
-References: <20240205164316.805408-1-m.felsch@pengutronix.de>
- <20240205164316.805408-2-m.felsch@pengutronix.de>
- <004dbeb3-f863-416c-a4e4-18739302ae58@linaro.org>
- <20240206145253.u555h3rvtetv3qaf@pengutronix.de>
- <8d4cf7f7-0ee0-49ab-994a-892b200347e8@linaro.org>
- <20240207090544.g7dy7grssah3o6n3@pengutronix.de>
- <c687756a-1dcc-4103-b2ac-7c117ad792e2@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=As6ymhVCb6f8vXqlGTAZ85AzfxmP7oBIUTsgzjOJaPUb9w8v9a1e5CPtbxoM6jxTgafWyGwkjOS+BZdnYzvp3UPtM8bL1CrX5L17cA9A6IYnRZ2oWEYi2RucETPaapDo5K+U/2laLhotY4gXn9uePx0Of2ZtbOUx/IW9igUGtFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bWH0Yv0T; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bWH0Yv0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17C3CC433C7;
+	Wed,  7 Feb 2024 10:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707300577;
+	bh=GX4Tfyd35kpVX8P4fYXsUxs2ee//i7TBi6iywu14vhI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bWH0Yv0Tblenbca/VGH4PxVWoFpeeSgv6rTl+q0Dkd4Jkbt3pkXEgjkjSF6z88i+w
+	 /VjFIwd5KkfyHsOSLOrZpKnx3K3vN8uKVGSWh7Bi9Wb0t1NHAonkhTr6PBLeOxK8Jp
+	 qeGJciwEEecftClv8LNTyjNRxUEbTUx2RmKxisYI=
+Date: Wed, 7 Feb 2024 10:09:34 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.6 000/326] 6.6.16-rc2 review
+Message-ID: <2024020758-judo-stardom-80f5@gregkh>
+References: <CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-ddMYHSw4wK0Q@mail.gmail.com>
+ <e4305f3d-ede8-44fc-8bd4-eae899284f56@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c687756a-1dcc-4103-b2ac-7c117ad792e2@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e4305f3d-ede8-44fc-8bd4-eae899284f56@leemhuis.info>
 
-On 24-02-07, Krzysztof Kozlowski wrote:
-> On 07/02/2024 10:05, Marco Felsch wrote:
-> > On 24-02-06, Krzysztof Kozlowski wrote:
-> >> On 06/02/2024 15:52, Marco Felsch wrote:
-> >>> On 24-02-06, Krzysztof Kozlowski wrote:
-> >>>> On 05/02/2024 17:43, Marco Felsch wrote:
-> >>>>> This binding descripes the generic TCPCI specification [1]. So add the
+On Wed, Feb 07, 2024 at 08:04:49AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 04.02.24 05:43, Стас Ничипорович wrote:
+> > After trying again to create the ipset with timeout option I get a kernel panic
+> > # ipset create throttled-ips hash:ip family inet hashsize 1024 maxelem
+> > 100000 timeout 600 bucketsize 12 initval 0x22b96e3a
+> > ipset v7.20: Set cannot be created: set with the same name already exists
+> 
+> To be sure the issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, the Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced fdb8e12cc2cc
+> #regzbot title netfilter: WARNING when using ipset with timeout option
+> #regzbot fix: netfilter: ipset: Missing gc cancellations fixed
+> #regzbot ignore-activity
 
-...
+Note, this did not get applied to the stable kernels, so it's an issue
+in Linus's tree only, with a proposed fix already posted (and might be
+in linux-next already, haven't checked...)
 
-> > Don't get me wrong, I get your point. In the end I don't care and can
-> > copy'n'paste the whole file and change the compatible to the OnSemi
-> > device or I can add the dedicated OnSemi compatible to this file. But I
-> > don't wanted to add an 2nd specific compatible while the device already
-> > supports the generic one but via i2c_device_id.name. Therefore I aligned
-> > the i2c_device_id with the of_device_id.
-> 
-> You can add generic compatible used as fallback. That's pretty common
-> practice.
+thanks,
 
-Okay. To bring this discussion to an end, I will add the generic
-compatible as fallback :)
-
-Thanks,
-  Marco
-
-> 
-> > 
-> >>>> Are all details expected to follow spec, without need of quirks?
-> >>>
-> >>> Please see above, I hope this helps.
-> >>
-> >> Sorry, doesn't. You still speak about driver and how it can bind to
-> >> something. I did not ask about this at all.
-> >>
-> >> To be clear:
-> >> WE ARE NOT TALKING ABOUT LINUX DRIVER.
-> > 
-> > I KNOW
-> > 
-> >> We talk about hardware and how it is represented in Devicetree,
-> >> including its supplies, pins, GPIOs and any ideas hardware engineers
-> >> like to bring.
-> 
-> Then terms "driver" and "binding" (or matching) do not fit here as
-> arguments whether specific compatible should be there or not. There is
-> guideline for that: writing bindings, which exactly, 100% covers this
-> thing here.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+greg k-h
