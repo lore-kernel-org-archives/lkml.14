@@ -1,62 +1,71 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D272030F;
-	Wed,  7 Feb 2024 06:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F950200A8;
+	Wed,  7 Feb 2024 06:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707288779; cv=none; b=AWpy3x9YV1GRrCcFtREc91Bdiv3lgfWODSBVez94g9NtOxhgaLrrEXZHtJvC4KXdMe+FsHOasexmV08LAGOXy978vEb2Kl+hLTfGk4brjjwmqLjQ5aCzqha2RTg74UqfBwWGVwQIig9HvV39pC1jU0Tjql0sj1hPrgPUIdWwh2Q=
+	t=1707288780; cv=none; b=Muxz+keALvbt7Tpiw8z00amY71Fokp5ZsqZgn3h9CxF3yt1v7xqyjmLD4eQsiQwOL6Zb3J2SDD3OqAautV7WdjKxNKeQ5cW9IIknKonBBQn8CI23NVLk4Jz9m2KW82cFxCl9SPohdsEVaZIxpq//kFGMqbN2zcSvwPXberKM4/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707288779; c=relaxed/simple;
-	bh=u+DuOyUphLhc0JsgmjJAs0IqQG0U9EHmmJDRmq8UbFg=;
+	s=arc-20240116; t=1707288780; c=relaxed/simple;
+	bh=mwFmbRAyhrwkXxTEfV6PBf7zSA7DfnOmyHQJrtO2wm4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qWpUff6LzDjKi2FRBqXc2LgMngBM+hapNeUNEtONvl6MRburt5OgZ5k//zslvqbUDCypaAz/ycg3G1IeWQGpWoynP+z19mmZgzWfKbqD02gWJQ08ttgTNUSzZWuV6cgFyEkWUi5Lp5LKyU4Qy7UANoMJ1Mt5CZV23lTw//Gfp2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=RNbBGBur; arc=none smtp.client-ip=67.231.148.174
+	 MIME-Version:Content-Type; b=s6vzbV8K/nwjrsimOu57Jf3i8X8m587txGxFzooU3HN9wfANNpnyXptfCTmqdjMGRJOUhz8dVSFKyPlz2xVpf1C/+8RnoV6xMiB+Y6jnxXHCrZIkTD8S7FN2Q+MewHNQDBbP2SGUQUQ2bd2IxfSPORMXPy6Uw5uf/w52lDyPivw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=W/CHMp2O; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="RNbBGBur"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4172g3dM021112;
-	Tue, 6 Feb 2024 22:52:48 -0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="W/CHMp2O"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 416M6OE7027190;
+	Tue, 6 Feb 2024 22:52:37 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=NpPF7EhzT+z7VE9Q3ijQcaeaTlLxl6M3MS18F9Qkm98=; b=RNb
-	BGBurvhUNpDIi6QKaSYZ71eYorPT6j3P5xXbL9Gq9L7FpDiJLe6L8H+3fIn0yB7T
-	mxSO6bKII5vLNwyNaDe68htOoCtRCfMqrP6w7U0TSq6TSmuZnfpLWQlWX9XLouOP
-	isSzdInY/xcMzodBabwC5fcTdTDAsuKVdYctwCM2jWhrxXA2X0b4jQ13jfvB7YxH
-	fuNMf4v3aY/uGGNSRXiiTcyw+6pXipUSzFbHpFy3uwIvP2kRzEChTyvR6uzgLCmh
-	uNNfZWXRaIWdUCYZ+aHRiXVE8V2+gsuayNsurwaSPq6LvN4d2KzdVMZ5zTypZMfL
-	dMvkJlyIMyT0WLMWRXQ==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3w3qsx3648-1
+	pfpt0220; bh=T48126SBMC0dNLYzu9kvT/dnRfJR0UmWx52wOCSWgSM=; b=W/C
+	HMp2O6ihl4BMQTogPrRbTzK5lgXIAmVDBN1bjB75XVEtN6S5MawNg9Uzfl8JDqwU
+	CFmMyL1QEkX7cAc2A75F2Ii9GPu6fkQsaBkrIZkyC3mYySwIpryR1rlwgLyES7X6
+	a+EwsoxYR/PaUQtvLdQZj1A2AYqyHkMYJCqZBUBKfimbiv6kol/6wz+ngKfX+0xQ
+	2qighgSe3V9LMF1FW0QcMqd3dcyZKsr7XzMW/puL++3vip2oRwNbfPtpRbwVVxUZ
+	Tj+21qJfzTBy48HL89bgTOK7gB+NAI+7cUvDTqxCdwRldJ6FlFfvPK0/d77/uB/R
+	vcfMj+45mdQPZA2kEbA==
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3w38u85xwv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Tue, 06 Feb 2024 22:52:48 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 6 Feb
- 2024 22:52:46 -0800
+	Tue, 06 Feb 2024 22:52:36 -0800 (PST)
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 6 Feb
+ 2024 22:52:34 -0800
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
  (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Tue, 6 Feb 2024 22:52:46 -0800
+ Transport; Tue, 6 Feb 2024 22:52:33 -0800
 Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id 28B6E3F7084;
-	Tue,  6 Feb 2024 22:52:46 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id 402293F7082;
+	Tue,  6 Feb 2024 22:52:33 -0800 (PST)
 From: Shinas Rasheed <srasheed@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
         <srasheed@marvell.com>, <egallen@redhat.com>, <mschmidt@redhat.com>,
         <pabeni@redhat.com>, <kuba@kernel.org>, <horms@kernel.org>,
         <wizhao@redhat.com>, <kheib@redhat.com>, <konguyen@redhat.com>,
+        "David S.
+ Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jonathan
+ Corbet" <corbet@lwn.net>,
         Veerasenareddy Burru <vburru@marvell.com>,
-        Satananda Burla
-	<sburla@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>
-Subject: [PATCH net-next v6 6/8] octeon_ep_vf: add Tx/Rx processing and interrupt support
-Date: Tue, 6 Feb 2024 22:52:05 -0800
-Message-ID: <20240207065207.3092004-7-srasheed@marvell.com>
+        "Satananda Burla" <sburla@marvell.com>,
+        Shannon Nelson
+	<shannon.nelson@amd.com>,
+        "Tony Nguyen" <anthony.l.nguyen@intel.com>,
+        Brett
+ Creeley <brett.creeley@amd.com>,
+        Joshua Hay <joshua.a.hay@intel.com>,
+        Jacob
+ Keller <jacob.e.keller@intel.com>, Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH net-next v6 1/8] octeon_ep_vf: Add driver framework and device initialization
+Date: Tue, 6 Feb 2024 22:52:00 -0800
+Message-ID: <20240207065207.3092004-2-srasheed@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240207065207.3092004-1-srasheed@marvell.com>
 References: <20240207065207.3092004-1-srasheed@marvell.com>
@@ -68,1010 +77,2611 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: OuwtyhavzKvwLgloJ8ja5Aa6KkEDU9ds
-X-Proofpoint-GUID: OuwtyhavzKvwLgloJ8ja5Aa6KkEDU9ds
+X-Proofpoint-ORIG-GUID: xmW9r5AfH7HsxzUSa-xqs0BGPprhSuB_
+X-Proofpoint-GUID: xmW9r5AfH7HsxzUSa-xqs0BGPprhSuB_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-06_16,2024-01-31_01,2023-05-22_02
 
-Add support to enable MSI-x and register interrupts.
-Add support to process Tx and Rx traffic. Includes processing
-Tx completions and Rx refill.
+Add driver framework and device setup and initialization for Octeon
+PCI Endpoint NIC VF.
+
+Add implementation to load module, initialize, register network device,
+cleanup and unload module.
 
 Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
 ---
 V6:
+  - Removed reuse of netif_tx_stop_all_queues, called implicitly in
+    netif_tx_disable, when stopping netdev
+  - Corrected error jump labels to have proper action-specific names in
+    probe function
+  - Removed singlethreaded workqueue implementation, since only tx
+    timeout task is run. Run the same in the system workqueue
+  - netdev_hold when tx_timeout happens to protect against free_netdev
+    if race occurs between rmmod and a tx timeout. netdev_put the
+    reference when timeout task ends to progress freeing netdev
+
+V5: https://lore.kernel.org/all/20240129050254.3047778-2-srasheed@marvell.com/
   - No changes
 
-V5: https://lore.kernel.org/all/20240129050254.3047778-7-srasheed@marvell.com/
+V4: https://lore.kernel.org/all/20240108124213.2966536-2-srasheed@marvell.com/
   - No changes
 
-V4: https://lore.kernel.org/all/20240108124213.2966536-7-srasheed@marvell.com/
-  - Replaced code in IQ full check function to use helper from
-    net/netdev_queues.h
-  - Refactored code so that NETDEV_TX_BUSY is avoided
+V3: https://lore.kernel.org/all/20240105203823.2953604-2-srasheed@marvell.com/
+  - Removed UINT64_MAX, which is unused
 
-V3: https://lore.kernel.org/all/20240105203823.2953604-7-srasheed@marvell.com/
-  - Set static budget of 64 for tx completion processing in NAPI
-  - Replaces napi_complete and build_skb APIs to napi_complete_done and
-    napi_build_skb APIs respectively
-  - Replaced code with helper from net/netdev_queues.h to wake queues in TX completion
-    processing
-  - Moved null pointer casting corrections to earlier patch
+V2: https://lore.kernel.org/all/20231223134000.2906144-2-srasheed@marvell.com/
+  - Removed linux/version.h header file from inclusion in
+    octep_vf_main.c
 
-V2: https://lore.kernel.org/all/20231223134000.2906144-7-srasheed@marvell.com/
-  - Corrected Makefile entry to include building octep_vf_mbox.c
-  - Removed redundant vzalloc pointer cast and vfree pointer check
+V1: https://lore.kernel.org/all/20231221092844.2885872-2-srasheed@marvell.com/
 
-V1: https://lore.kernel.org/all/20231221092844.2885872-7-srasheed@marvell.com/
+ .../device_drivers/ethernet/index.rst         |   1 +
+ .../ethernet/marvell/octeon_ep_vf.rst         |  24 +
+ drivers/net/ethernet/marvell/Kconfig          |   1 +
+ drivers/net/ethernet/marvell/Makefile         |   1 +
+ .../net/ethernet/marvell/octeon_ep_vf/Kconfig |  19 +
+ .../ethernet/marvell/octeon_ep_vf/Makefile    |   9 +
+ .../marvell/octeon_ep_vf/octep_vf_cn9k.c      | 157 ++++++
+ .../marvell/octeon_ep_vf/octep_vf_cnxk.c      | 158 ++++++
+ .../marvell/octeon_ep_vf/octep_vf_config.h    | 160 ++++++
+ .../marvell/octeon_ep_vf/octep_vf_main.c      | 516 ++++++++++++++++++
+ .../marvell/octeon_ep_vf/octep_vf_main.h      | 332 +++++++++++
+ .../marvell/octeon_ep_vf/octep_vf_mbox.c      |  96 ++++
+ .../marvell/octeon_ep_vf/octep_vf_mbox.h      |  25 +
+ .../marvell/octeon_ep_vf/octep_vf_regs_cn9k.h | 154 ++++++
+ .../marvell/octeon_ep_vf/octep_vf_regs_cnxk.h | 162 ++++++
+ .../marvell/octeon_ep_vf/octep_vf_rx.c        |  42 ++
+ .../marvell/octeon_ep_vf/octep_vf_rx.h        | 224 ++++++++
+ .../marvell/octeon_ep_vf/octep_vf_tx.c        |  43 ++
+ .../marvell/octeon_ep_vf/octep_vf_tx.h        | 276 ++++++++++
+ 19 files changed, 2400 insertions(+)
+ create mode 100644 Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_config.h
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.h
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cn9k.h
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cnxk.h
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.h
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.h
 
- .../marvell/octeon_ep_vf/octep_vf_main.c      | 550 ++++++++++++++++++
- .../marvell/octeon_ep_vf/octep_vf_rx.c        | 247 ++++++++
- .../marvell/octeon_ep_vf/octep_vf_tx.c        |  71 +++
- 3 files changed, 868 insertions(+)
-
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-index ff879b1e846e..3dee85ae6e1c 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-@@ -13,6 +13,7 @@
- #include <linux/etherdevice.h>
- #include <linux/rtnetlink.h>
- #include <linux/vmalloc.h>
-+#include <net/netdev_queues.h>
+diff --git a/Documentation/networking/device_drivers/ethernet/index.rst b/Documentation/networking/device_drivers/ethernet/index.rst
+index 43de285b8a92..6932d8c043c2 100644
+--- a/Documentation/networking/device_drivers/ethernet/index.rst
++++ b/Documentation/networking/device_drivers/ethernet/index.rst
+@@ -42,6 +42,7 @@ Contents:
+    intel/ice
+    marvell/octeontx2
+    marvell/octeon_ep
++   marvell/octeon_ep_vf
+    mellanox/mlx5/index
+    microsoft/netvsc
+    neterion/s2io
+diff --git a/Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst b/Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst
+new file mode 100644
+index 000000000000..603133d0b92f
+--- /dev/null
++++ b/Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst
+@@ -0,0 +1,24 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++=======================================================================
++Linux kernel networking driver for Marvell's Octeon PCI Endpoint NIC VF
++=======================================================================
++
++Network driver for Marvell's Octeon PCI EndPoint NIC VF.
++Copyright (c) 2020 Marvell International Ltd.
++
++Overview
++========
++This driver implements networking functionality of Marvell's Octeon PCI
++EndPoint NIC VF.
++
++Supported Devices
++=================
++Currently, this driver support following devices:
++ * Network controller: Cavium, Inc. Device b203
++ * Network controller: Cavium, Inc. Device b403
++ * Network controller: Cavium, Inc. Device b103
++ * Network controller: Cavium, Inc. Device b903
++ * Network controller: Cavium, Inc. Device ba03
++ * Network controller: Cavium, Inc. Device bc03
++ * Network controller: Cavium, Inc. Device bd03
+diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/ethernet/marvell/Kconfig
+index 884d64114bff..837295fecd17 100644
+--- a/drivers/net/ethernet/marvell/Kconfig
++++ b/drivers/net/ethernet/marvell/Kconfig
+@@ -180,6 +180,7 @@ config SKY2_DEBUG
  
- #include "octep_vf_config.h"
- #include "octep_vf_main.h"
-@@ -36,6 +37,372 @@ MODULE_AUTHOR("Veerasenareddy Burru <vburru@marvell.com>");
- MODULE_DESCRIPTION(OCTEP_VF_DRV_STRING);
- MODULE_LICENSE("GPL");
+ source "drivers/net/ethernet/marvell/octeontx2/Kconfig"
+ source "drivers/net/ethernet/marvell/octeon_ep/Kconfig"
++source "drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig"
+ source "drivers/net/ethernet/marvell/prestera/Kconfig"
  
-+/**
-+ * octep_vf_alloc_ioq_vectors() - Allocate Tx/Rx Queue interrupt info.
+ endif # NET_VENDOR_MARVELL
+diff --git a/drivers/net/ethernet/marvell/Makefile b/drivers/net/ethernet/marvell/Makefile
+index ceba4aa4f026..a399defe25fd 100644
+--- a/drivers/net/ethernet/marvell/Makefile
++++ b/drivers/net/ethernet/marvell/Makefile
+@@ -12,5 +12,6 @@ obj-$(CONFIG_PXA168_ETH) += pxa168_eth.o
+ obj-$(CONFIG_SKGE) += skge.o
+ obj-$(CONFIG_SKY2) += sky2.o
+ obj-y		+= octeon_ep/
++obj-y		+= octeon_ep_vf/
+ obj-y		+= octeontx2/
+ obj-y		+= prestera/
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig b/drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig
+new file mode 100644
+index 000000000000..dbd1267bda0c
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig
+@@ -0,0 +1,19 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Marvell's Octeon PCI Endpoint NIC VF Driver Configuration
++#
++
++config OCTEON_EP_VF
++	tristate "Marvell Octeon PCI Endpoint NIC VF Driver"
++	depends on 64BIT
++	depends on PCI
++	help
++	  This driver supports networking functionality of Marvell's
++	  Octeon PCI Endpoint NIC VF.
++
++	  To know the list of devices supported by this driver, refer
++	  documentation in
++	  <file:Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst>.
++
++	  To compile this drivers as a module, choose M here. Name of the
++	  module is octeon_ep_vf.
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile b/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+new file mode 100644
+index 000000000000..694eb9b46e99
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Network driver for Marvell's Octeon PCI Endpoint NIC VF
++#
++
++obj-$(CONFIG_OCTEON_EP_VF) += octeon_ep_vf.o
++
++octeon_ep_vf-y := octep_vf_main.o octep_vf_cn9k.o octep_vf_cnxk.o \
++		  octep_vf_tx.o octep_vf_rx.o octep_vf_mbox.o
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c
+new file mode 100644
+index 000000000000..c24ef2265205
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c
+@@ -0,0 +1,157 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
 + *
-+ * @oct: Octeon device private data structure.
++ * Copyright (C) 2020 Marvell.
 + *
-+ * Allocate resources to hold per Tx/Rx queue interrupt info.
-+ * This is the information passed to interrupt handler, from which napi poll
-+ * is scheduled and includes quick access to private data of Tx/Rx queue
-+ * corresponding to the interrupt being handled.
-+ *
-+ * Return: 0, on successful allocation of resources for all queue interrupts.
-+ *         -1, if failed to allocate any resource.
 + */
-+static int octep_vf_alloc_ioq_vectors(struct octep_vf_device *oct)
++
++#include <linux/pci.h>
++#include <linux/netdevice.h>
++#include <linux/etherdevice.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++#include "octep_vf_regs_cn9k.h"
++
++/* Reset all hardware Tx/Rx queues */
++static void octep_vf_reset_io_queues_cn93(struct octep_vf_device *oct)
 +{
-+	struct octep_vf_ioq_vector *ioq_vector;
-+	int i;
++}
 +
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		oct->ioq_vector[i] = vzalloc(sizeof(*oct->ioq_vector[i]));
-+		if (!oct->ioq_vector[i])
-+			goto free_ioq_vector;
++/* Initialize configuration limits and initial active config */
++static void octep_vf_init_config_cn93_vf(struct octep_vf_device *oct)
++{
++	struct octep_vf_config *conf = oct->conf;
++	u64 reg_val;
 +
-+		ioq_vector = oct->ioq_vector[i];
-+		ioq_vector->iq = oct->iq[i];
-+		ioq_vector->oq = oct->oq[i];
-+		ioq_vector->octep_vf_dev = oct;
-+	}
++	reg_val = octep_vf_read_csr64(oct, CN93_VF_SDP_R_IN_CONTROL(0));
++	conf->ring_cfg.max_io_rings = (reg_val >> CN93_VF_R_IN_CTL_RPVF_POS) &
++				      CN93_VF_R_IN_CTL_RPVF_MASK;
++	conf->ring_cfg.active_io_rings = conf->ring_cfg.max_io_rings;
 +
-+	dev_info(&oct->pdev->dev, "Allocated %d IOQ vectors\n", oct->num_oqs);
++	conf->iq.num_descs = OCTEP_VF_IQ_MAX_DESCRIPTORS;
++	conf->iq.instr_type = OCTEP_VF_64BYTE_INSTR;
++	conf->iq.db_min = OCTEP_VF_DB_MIN;
++	conf->iq.intr_threshold = OCTEP_VF_IQ_INTR_THRESHOLD;
++
++	conf->oq.num_descs = OCTEP_VF_OQ_MAX_DESCRIPTORS;
++	conf->oq.buf_size = OCTEP_VF_OQ_BUF_SIZE;
++	conf->oq.refill_threshold = OCTEP_VF_OQ_REFILL_THRESHOLD;
++	conf->oq.oq_intr_pkt = OCTEP_VF_OQ_INTR_PKT_THRESHOLD;
++	conf->oq.oq_intr_time = OCTEP_VF_OQ_INTR_TIME_THRESHOLD;
++
++	conf->msix_cfg.ioq_msix = conf->ring_cfg.active_io_rings;
++}
++
++/* Setup registers for a hardware Tx Queue  */
++static void octep_vf_setup_iq_regs_cn93(struct octep_vf_device *oct, int iq_no)
++{
++}
++
++/* Setup registers for a hardware Rx Queue  */
++static void octep_vf_setup_oq_regs_cn93(struct octep_vf_device *oct, int oq_no)
++{
++}
++
++/* Setup registers for a VF mailbox */
++static void octep_vf_setup_mbox_regs_cn93(struct octep_vf_device *oct, int q_no)
++{
++}
++
++/* Tx/Rx queue interrupt handler */
++static irqreturn_t octep_vf_ioq_intr_handler_cn93(void *data)
++{
++	return IRQ_HANDLED;
++}
++
++/* Re-initialize Octeon hardware registers */
++static void octep_vf_reinit_regs_cn93(struct octep_vf_device *oct)
++{
++}
++
++/* Enable all interrupts */
++static void octep_vf_enable_interrupts_cn93(struct octep_vf_device *oct)
++{
++}
++
++/* Disable all interrupts */
++static void octep_vf_disable_interrupts_cn93(struct octep_vf_device *oct)
++{
++}
++
++/* Get new Octeon Read Index: index of descriptor that Octeon reads next. */
++static u32 octep_vf_update_iq_read_index_cn93(struct octep_vf_iq *iq)
++{
 +	return 0;
++}
 +
-+free_ioq_vector:
-+	while (i) {
-+		i--;
-+		vfree(oct->ioq_vector[i]);
-+		oct->ioq_vector[i] = NULL;
-+	}
-+	return -1;
++/* Enable a hardware Tx Queue */
++static void octep_vf_enable_iq_cn93(struct octep_vf_device *oct, int iq_no)
++{
++}
++
++/* Enable a hardware Rx Queue */
++static void octep_vf_enable_oq_cn93(struct octep_vf_device *oct, int oq_no)
++{
++}
++
++/* Enable all hardware Tx/Rx Queues assigned to VF */
++static void octep_vf_enable_io_queues_cn93(struct octep_vf_device *oct)
++{
++}
++
++/* Disable a hardware Tx Queue assigned to VF */
++static void octep_vf_disable_iq_cn93(struct octep_vf_device *oct, int iq_no)
++{
++}
++
++/* Disable a hardware Rx Queue assigned to VF */
++static void octep_vf_disable_oq_cn93(struct octep_vf_device *oct, int oq_no)
++{
++}
++
++/* Disable all hardware Tx/Rx Queues assigned to VF */
++static void octep_vf_disable_io_queues_cn93(struct octep_vf_device *oct)
++{
++}
++
++/* Dump hardware registers (including Tx/Rx queues) for debugging. */
++static void octep_vf_dump_registers_cn93(struct octep_vf_device *oct)
++{
 +}
 +
 +/**
-+ * octep_vf_free_ioq_vectors() - Free Tx/Rx Queue interrupt vector info.
++ * octep_vf_device_setup_cn93() - Setup Octeon device.
 + *
 + * @oct: Octeon device private data structure.
++ *
++ * - initialize hardware operations.
++ * - get target side pcie port number for the device.
++ * - set initial configuration and max limits.
 + */
-+static void octep_vf_free_ioq_vectors(struct octep_vf_device *oct)
++void octep_vf_device_setup_cn93(struct octep_vf_device *oct)
 +{
-+	int i;
++	oct->hw_ops.setup_iq_regs = octep_vf_setup_iq_regs_cn93;
++	oct->hw_ops.setup_oq_regs = octep_vf_setup_oq_regs_cn93;
++	oct->hw_ops.setup_mbox_regs = octep_vf_setup_mbox_regs_cn93;
 +
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		if (oct->ioq_vector[i]) {
-+			vfree(oct->ioq_vector[i]);
-+			oct->ioq_vector[i] = NULL;
-+		}
-+	}
-+	netdev_info(oct->netdev, "Freed IOQ Vectors\n");
++	oct->hw_ops.ioq_intr_handler = octep_vf_ioq_intr_handler_cn93;
++	oct->hw_ops.reinit_regs = octep_vf_reinit_regs_cn93;
++
++	oct->hw_ops.enable_interrupts = octep_vf_enable_interrupts_cn93;
++	oct->hw_ops.disable_interrupts = octep_vf_disable_interrupts_cn93;
++
++	oct->hw_ops.update_iq_read_idx = octep_vf_update_iq_read_index_cn93;
++
++	oct->hw_ops.enable_iq = octep_vf_enable_iq_cn93;
++	oct->hw_ops.enable_oq = octep_vf_enable_oq_cn93;
++	oct->hw_ops.enable_io_queues = octep_vf_enable_io_queues_cn93;
++
++	oct->hw_ops.disable_iq = octep_vf_disable_iq_cn93;
++	oct->hw_ops.disable_oq = octep_vf_disable_oq_cn93;
++	oct->hw_ops.disable_io_queues = octep_vf_disable_io_queues_cn93;
++	oct->hw_ops.reset_io_queues = octep_vf_reset_io_queues_cn93;
++
++	oct->hw_ops.dump_registers = octep_vf_dump_registers_cn93;
++	octep_vf_init_config_cn93_vf(oct);
++}
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c
+new file mode 100644
+index 000000000000..af07a4a6edc5
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#include <linux/pci.h>
++#include <linux/netdevice.h>
++#include <linux/etherdevice.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++#include "octep_vf_regs_cnxk.h"
++
++/* Reset all hardware Tx/Rx queues */
++static void octep_vf_reset_io_queues_cnxk(struct octep_vf_device *oct)
++{
 +}
 +
-+/**
-+ * octep_vf_enable_msix_range() - enable MSI-x interrupts.
-+ *
-+ * @oct: Octeon device private data structure.
-+ *
-+ * Allocate and enable all MSI-x interrupts (queue and non-queue interrupts)
-+ * for the Octeon device.
-+ *
-+ * Return: 0, on successfully enabling all MSI-x interrupts.
-+ *         -1, if failed to enable any MSI-x interrupt.
-+ */
-+static int octep_vf_enable_msix_range(struct octep_vf_device *oct)
++/* Initialize configuration limits and initial active config */
++static void octep_vf_init_config_cnxk_vf(struct octep_vf_device *oct)
 +{
-+	int num_msix, msix_allocated;
-+	int i;
++	struct octep_vf_config *conf = oct->conf;
++	u64 reg_val;
 +
-+	/* Generic interrupts apart from input/output queues */
-+	//num_msix = oct->num_oqs + CFG_GET_NON_IOQ_MSIX(oct->conf);
-+	num_msix = oct->num_oqs;
-+	oct->msix_entries = kcalloc(num_msix, sizeof(struct msix_entry), GFP_KERNEL);
-+	if (!oct->msix_entries)
-+		goto msix_alloc_err;
++	reg_val = octep_vf_read_csr64(oct, CNXK_VF_SDP_R_IN_CONTROL(0));
++	conf->ring_cfg.max_io_rings = (reg_val >> CNXK_VF_R_IN_CTL_RPVF_POS) &
++				      CNXK_VF_R_IN_CTL_RPVF_MASK;
++	conf->ring_cfg.active_io_rings = conf->ring_cfg.max_io_rings;
 +
-+	for (i = 0; i < num_msix; i++)
-+		oct->msix_entries[i].entry = i;
++	conf->iq.num_descs = OCTEP_VF_IQ_MAX_DESCRIPTORS;
++	conf->iq.instr_type = OCTEP_VF_64BYTE_INSTR;
++	conf->iq.db_min = OCTEP_VF_DB_MIN;
++	conf->iq.intr_threshold = OCTEP_VF_IQ_INTR_THRESHOLD;
 +
-+	msix_allocated = pci_enable_msix_range(oct->pdev, oct->msix_entries,
-+					       num_msix, num_msix);
-+	if (msix_allocated != num_msix) {
-+		dev_err(&oct->pdev->dev,
-+			"Failed to enable %d msix irqs; got only %d\n",
-+			num_msix, msix_allocated);
-+		goto enable_msix_err;
-+	}
-+	oct->num_irqs = msix_allocated;
-+	dev_info(&oct->pdev->dev, "MSI-X enabled successfully\n");
++	conf->oq.num_descs = OCTEP_VF_OQ_MAX_DESCRIPTORS;
++	conf->oq.buf_size = OCTEP_VF_OQ_BUF_SIZE;
++	conf->oq.refill_threshold = OCTEP_VF_OQ_REFILL_THRESHOLD;
++	conf->oq.oq_intr_pkt = OCTEP_VF_OQ_INTR_PKT_THRESHOLD;
++	conf->oq.oq_intr_time = OCTEP_VF_OQ_INTR_TIME_THRESHOLD;
++	conf->oq.wmark = OCTEP_VF_OQ_WMARK_MIN;
 +
++	conf->msix_cfg.ioq_msix = conf->ring_cfg.active_io_rings;
++}
++
++/* Setup registers for a hardware Tx Queue  */
++static void octep_vf_setup_iq_regs_cnxk(struct octep_vf_device *oct, int iq_no)
++{
++}
++
++/* Setup registers for a hardware Rx Queue  */
++static void octep_vf_setup_oq_regs_cnxk(struct octep_vf_device *oct, int oq_no)
++{
++}
++
++/* Setup registers for a VF mailbox */
++static void octep_vf_setup_mbox_regs_cnxk(struct octep_vf_device *oct, int q_no)
++{
++}
++
++/* Tx/Rx queue interrupt handler */
++static irqreturn_t octep_vf_ioq_intr_handler_cnxk(void *data)
++{
++	return IRQ_HANDLED;
++}
++
++/* Re-initialize Octeon hardware registers */
++static void octep_vf_reinit_regs_cnxk(struct octep_vf_device *oct)
++{
++}
++
++/* Enable all interrupts */
++static void octep_vf_enable_interrupts_cnxk(struct octep_vf_device *oct)
++{
++}
++
++/* Disable all interrupts */
++static void octep_vf_disable_interrupts_cnxk(struct octep_vf_device *oct)
++{
++}
++
++/* Get new Octeon Read Index: index of descriptor that Octeon reads next. */
++static u32 octep_vf_update_iq_read_index_cnxk(struct octep_vf_iq *iq)
++{
 +	return 0;
++}
 +
-+enable_msix_err:
-+	if (msix_allocated > 0)
-+		pci_disable_msix(oct->pdev);
-+	kfree(oct->msix_entries);
-+	oct->msix_entries = NULL;
-+msix_alloc_err:
-+	return -1;
++/* Enable a hardware Tx Queue */
++static void octep_vf_enable_iq_cnxk(struct octep_vf_device *oct, int iq_no)
++{
++}
++
++/* Enable a hardware Rx Queue */
++static void octep_vf_enable_oq_cnxk(struct octep_vf_device *oct, int oq_no)
++{
++}
++
++/* Enable all hardware Tx/Rx Queues assigned to VF */
++static void octep_vf_enable_io_queues_cnxk(struct octep_vf_device *oct)
++{
++}
++
++/* Disable a hardware Tx Queue assigned to VF */
++static void octep_vf_disable_iq_cnxk(struct octep_vf_device *oct, int iq_no)
++{
++}
++
++/* Disable a hardware Rx Queue assigned to VF */
++static void octep_vf_disable_oq_cnxk(struct octep_vf_device *oct, int oq_no)
++{
++}
++
++/* Disable all hardware Tx/Rx Queues assigned to VF */
++static void octep_vf_disable_io_queues_cnxk(struct octep_vf_device *oct)
++{
++}
++
++/* Dump hardware registers (including Tx/Rx queues) for debugging. */
++static void octep_vf_dump_registers_cnxk(struct octep_vf_device *oct)
++{
 +}
 +
 +/**
-+ * octep_vf_disable_msix() - disable MSI-x interrupts.
++ * octep_vf_device_setup_cnxk() - Setup Octeon device.
 + *
 + * @oct: Octeon device private data structure.
 + *
-+ * Disable MSI-x on the Octeon device.
++ * - initialize hardware operations.
++ * - get target side pcie port number for the device.
++ * - set initial configuration and max limits.
 + */
-+static void octep_vf_disable_msix(struct octep_vf_device *oct)
++void octep_vf_device_setup_cnxk(struct octep_vf_device *oct)
 +{
-+	pci_disable_msix(oct->pdev);
-+	kfree(oct->msix_entries);
-+	oct->msix_entries = NULL;
-+	dev_info(&oct->pdev->dev, "Disabled MSI-X\n");
++	oct->hw_ops.setup_iq_regs = octep_vf_setup_iq_regs_cnxk;
++	oct->hw_ops.setup_oq_regs = octep_vf_setup_oq_regs_cnxk;
++	oct->hw_ops.setup_mbox_regs = octep_vf_setup_mbox_regs_cnxk;
++
++	oct->hw_ops.ioq_intr_handler = octep_vf_ioq_intr_handler_cnxk;
++	oct->hw_ops.reinit_regs = octep_vf_reinit_regs_cnxk;
++
++	oct->hw_ops.enable_interrupts = octep_vf_enable_interrupts_cnxk;
++	oct->hw_ops.disable_interrupts = octep_vf_disable_interrupts_cnxk;
++
++	oct->hw_ops.update_iq_read_idx = octep_vf_update_iq_read_index_cnxk;
++
++	oct->hw_ops.enable_iq = octep_vf_enable_iq_cnxk;
++	oct->hw_ops.enable_oq = octep_vf_enable_oq_cnxk;
++	oct->hw_ops.enable_io_queues = octep_vf_enable_io_queues_cnxk;
++
++	oct->hw_ops.disable_iq = octep_vf_disable_iq_cnxk;
++	oct->hw_ops.disable_oq = octep_vf_disable_oq_cnxk;
++	oct->hw_ops.disable_io_queues = octep_vf_disable_io_queues_cnxk;
++	oct->hw_ops.reset_io_queues = octep_vf_reset_io_queues_cnxk;
++
++	oct->hw_ops.dump_registers = octep_vf_dump_registers_cnxk;
++	octep_vf_init_config_cnxk_vf(oct);
 +}
-+
-+/**
-+ * octep_vf_ioq_intr_handler() - handler for all Tx/Rx queue interrupts.
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_config.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_config.h
+new file mode 100644
+index 000000000000..e03a647b0110
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_config.h
+@@ -0,0 +1,160 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
 + *
-+ * @irq: Interrupt number.
-+ * @data: interrupt data contains pointers to Tx/Rx queue private data
-+ *         and correspong NAPI context.
++ * Copyright (C) 2020 Marvell.
 + *
-+ * this is common handler for all non-queue (generic) interrupts.
 + */
-+static irqreturn_t octep_vf_ioq_intr_handler(int irq, void *data)
-+{
-+	struct octep_vf_ioq_vector *ioq_vector = data;
-+	struct octep_vf_device *oct = ioq_vector->octep_vf_dev;
 +
-+	return oct->hw_ops.ioq_intr_handler(ioq_vector);
-+}
++#ifndef _OCTEP_VF_CONFIG_H_
++#define _OCTEP_VF_CONFIG_H_
 +
-+/**
-+ * octep_vf_request_irqs() - Register interrupt handlers.
-+ *
-+ * @oct: Octeon device private data structure.
-+ *
-+ * Register handlers for all queue and non-queue interrupts.
-+ *
-+ * Return: 0, on successful registration of all interrupt handlers.
-+ *         -1, on any error.
++/* Tx instruction types by length */
++#define OCTEP_VF_32BYTE_INSTR  32
++#define OCTEP_VF_64BYTE_INSTR  64
++
++/* Tx Queue: maximum descriptors per ring */
++#define OCTEP_VF_IQ_MAX_DESCRIPTORS    1024
++/* Minimum input (Tx) requests to be enqueued to ring doorbell */
++#define OCTEP_VF_DB_MIN                8
++/* Packet threshold for Tx queue interrupt */
++#define OCTEP_VF_IQ_INTR_THRESHOLD     0x0
++
++/* Minimum watermark for backpressure */
++#define OCTEP_VF_OQ_WMARK_MIN 256
++
++/* Rx Queue: maximum descriptors per ring */
++#define OCTEP_VF_OQ_MAX_DESCRIPTORS   1024
++
++/* Rx buffer size: Use page size buffers.
++ * Build skb from allocated page buffer once the packet is received.
++ * When a gathered packet is received, make head page as skb head and
++ * page buffers in consecutive Rx descriptors as fragments.
 + */
-+static int octep_vf_request_irqs(struct octep_vf_device *oct)
-+{
-+	struct net_device *netdev = oct->netdev;
-+	struct octep_vf_ioq_vector *ioq_vector;
-+	struct msix_entry *msix_entry;
-+	int ret, i;
++#define OCTEP_VF_OQ_BUF_SIZE          (SKB_WITH_OVERHEAD(PAGE_SIZE))
++#define OCTEP_VF_OQ_PKTS_PER_INTR     128
++#define OCTEP_VF_OQ_REFILL_THRESHOLD  (OCTEP_VF_OQ_MAX_DESCRIPTORS / 4)
 +
-+	/* Request IRQs for Tx/Rx queues */
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		ioq_vector = oct->ioq_vector[i];
-+		msix_entry = &oct->msix_entries[i];
++#define OCTEP_VF_OQ_INTR_PKT_THRESHOLD   1
++#define OCTEP_VF_OQ_INTR_TIME_THRESHOLD  10
 +
-+		snprintf(ioq_vector->name, sizeof(ioq_vector->name),
-+			 "%s-q%d", netdev->name, i);
-+		ret = request_irq(msix_entry->vector,
-+				  octep_vf_ioq_intr_handler, 0,
-+				  ioq_vector->name, ioq_vector);
-+		if (ret) {
-+			netdev_err(netdev,
-+				   "request_irq failed for Q-%d; err=%d",
-+				   i, ret);
-+			goto ioq_irq_err;
-+		}
++#define OCTEP_VF_MSIX_NAME_SIZE      (IFNAMSIZ + 32)
 +
-+		cpumask_set_cpu(i % num_online_cpus(),
-+				&ioq_vector->affinity_mask);
-+		irq_set_affinity_hint(msix_entry->vector,
-+				      &ioq_vector->affinity_mask);
-+	}
-+
-+	return 0;
-+ioq_irq_err:
-+	while (i) {
-+		--i;
-+		free_irq(oct->msix_entries[i].vector, oct);
-+	}
-+	return -1;
-+}
-+
-+/**
-+ * octep_vf_free_irqs() - free all registered interrupts.
-+ *
-+ * @oct: Octeon device private data structure.
-+ *
-+ * Free all queue and non-queue interrupts of the Octeon device.
++/* Tx Queue wake threshold
++ * wakeup a stopped Tx queue if minimum 2 descriptors are available.
++ * Even a skb with fragments consume only one Tx queue descriptor entry.
 + */
-+static void octep_vf_free_irqs(struct octep_vf_device *oct)
-+{
-+	int i;
++#define OCTEP_VF_WAKE_QUEUE_THRESHOLD 2
 +
-+	for (i = 0; i < oct->num_irqs; i++) {
-+		irq_set_affinity_hint(oct->msix_entries[i].vector, NULL);
-+		free_irq(oct->msix_entries[i].vector, oct->ioq_vector[i]);
-+	}
-+	netdev_info(oct->netdev, "IRQs freed\n");
-+}
++/* Minimum MTU supported by Octeon network interface */
++#define OCTEP_VF_MIN_MTU        ETH_MIN_MTU
++/* Maximum MTU supported by Octeon interface*/
++#define OCTEP_VF_MAX_MTU        (10000 - (ETH_HLEN + ETH_FCS_LEN))
++/* Default MTU */
++#define OCTEP_VF_DEFAULT_MTU    1500
 +
-+/**
-+ * octep_vf_setup_irqs() - setup interrupts for the Octeon device.
-+ *
-+ * @oct: Octeon device private data structure.
-+ *
-+ * Allocate data structures to hold per interrupt information, allocate/enable
-+ * MSI-x interrupt and register interrupt handlers.
-+ *
-+ * Return: 0, on successful allocation and registration of all interrupts.
-+ *         -1, on any error.
-+ */
-+static int octep_vf_setup_irqs(struct octep_vf_device *oct)
-+{
-+	if (octep_vf_alloc_ioq_vectors(oct))
-+		goto ioq_vector_err;
++/* Macros to get octeon config params */
++#define CFG_GET_IQ_CFG(cfg)             ((cfg)->iq)
++#define CFG_GET_IQ_NUM_DESC(cfg)        ((cfg)->iq.num_descs)
++#define CFG_GET_IQ_INSTR_TYPE(cfg)      ((cfg)->iq.instr_type)
++#define CFG_GET_IQ_INSTR_SIZE(cfg)      (64)
++#define CFG_GET_IQ_DB_MIN(cfg)          ((cfg)->iq.db_min)
++#define CFG_GET_IQ_INTR_THRESHOLD(cfg)  ((cfg)->iq.intr_threshold)
 +
-+	if (octep_vf_enable_msix_range(oct))
-+		goto enable_msix_err;
++#define CFG_GET_OQ_NUM_DESC(cfg)          ((cfg)->oq.num_descs)
++#define CFG_GET_OQ_BUF_SIZE(cfg)          ((cfg)->oq.buf_size)
++#define CFG_GET_OQ_REFILL_THRESHOLD(cfg)  ((cfg)->oq.refill_threshold)
++#define CFG_GET_OQ_INTR_PKT(cfg)          ((cfg)->oq.oq_intr_pkt)
++#define CFG_GET_OQ_INTR_TIME(cfg)         ((cfg)->oq.oq_intr_time)
++#define CFG_GET_OQ_WMARK(cfg)             ((cfg)->oq.wmark)
 +
-+	if (octep_vf_request_irqs(oct))
-+		goto request_irq_err;
++#define CFG_GET_PORTS_ACTIVE_IO_RINGS(cfg) ((cfg)->ring_cfg.active_io_rings)
++#define CFG_GET_PORTS_MAX_IO_RINGS(cfg) ((cfg)->ring_cfg.max_io_rings)
 +
-+	return 0;
++#define CFG_GET_CORE_TICS_PER_US(cfg)     ((cfg)->core_cfg.core_tics_per_us)
++#define CFG_GET_COPROC_TICS_PER_US(cfg)   ((cfg)->core_cfg.coproc_tics_per_us)
 +
-+request_irq_err:
-+	octep_vf_disable_msix(oct);
-+enable_msix_err:
-+	octep_vf_free_ioq_vectors(oct);
-+ioq_vector_err:
-+	return -1;
-+}
++#define CFG_GET_IOQ_MSIX(cfg)            ((cfg)->msix_cfg.ioq_msix)
 +
-+/**
-+ * octep_vf_clean_irqs() - free all interrupts and its resources.
-+ *
-+ * @oct: Octeon device private data structure.
-+ */
-+static void octep_vf_clean_irqs(struct octep_vf_device *oct)
-+{
-+	octep_vf_free_irqs(oct);
-+	octep_vf_disable_msix(oct);
-+	octep_vf_free_ioq_vectors(oct);
-+}
++/* Hardware Tx Queue configuration. */
++struct octep_vf_iq_config {
++	/* Size of the Input queue (number of commands) */
++	u16 num_descs;
 +
-+/**
-+ * octep_vf_enable_ioq_irq() - Enable MSI-x interrupt of a Tx/Rx queue.
-+ *
-+ * @iq: Octeon Tx queue data structure.
-+ * @oq: Octeon Rx queue data structure.
-+ */
-+static void octep_vf_enable_ioq_irq(struct octep_vf_iq *iq, struct octep_vf_oq *oq)
-+{
-+	u32 pkts_pend = oq->pkts_pending;
++	/* Command size - 32 or 64 bytes */
++	u16 instr_type;
 +
-+	netdev_dbg(iq->netdev, "enabling intr for Q-%u\n", iq->q_no);
-+	if (iq->pkts_processed) {
-+		writel(iq->pkts_processed, iq->inst_cnt_reg);
-+		iq->pkt_in_done -= iq->pkts_processed;
-+		iq->pkts_processed = 0;
-+	}
-+	if (oq->last_pkt_count - pkts_pend) {
-+		writel(oq->last_pkt_count - pkts_pend, oq->pkts_sent_reg);
-+		oq->last_pkt_count = pkts_pend;
-+	}
-+
-+	/* Flush the previous wrties before writing to RESEND bit */
-+	smp_wmb();
-+	writeq(1UL << OCTEP_VF_OQ_INTR_RESEND_BIT, oq->pkts_sent_reg);
-+	writeq(1UL << OCTEP_VF_IQ_INTR_RESEND_BIT, iq->inst_cnt_reg);
-+}
-+
-+/**
-+ * octep_vf_napi_poll() - NAPI poll function for Tx/Rx.
-+ *
-+ * @napi: pointer to napi context.
-+ * @budget: max number of packets to be processed in single invocation.
-+ */
-+static int octep_vf_napi_poll(struct napi_struct *napi, int budget)
-+{
-+	struct octep_vf_ioq_vector *ioq_vector =
-+		container_of(napi, struct octep_vf_ioq_vector, napi);
-+	u32 tx_pending, rx_done;
-+
-+	tx_pending = octep_vf_iq_process_completions(ioq_vector->iq, 64);
-+	rx_done = octep_vf_oq_process_rx(ioq_vector->oq, budget);
-+
-+	/* need more polling if tx completion processing is still pending or
-+	 * processed at least 'budget' number of rx packets.
++	/* Minimum number of commands pending to be posted to Octeon before driver
++	 * hits the Input queue doorbell.
 +	 */
-+	if (tx_pending || rx_done >= budget)
-+		return budget;
++	u16 db_min;
 +
-+	if (likely(napi_complete_done(napi, rx_done)))
-+		octep_vf_enable_ioq_irq(ioq_vector->iq, ioq_vector->oq);
++	/* Trigger the IQ interrupt when processed cmd count reaches
++	 * this level.
++	 */
++	u32 intr_threshold;
++};
 +
-+	return rx_done;
++/* Hardware Rx Queue configuration. */
++struct octep_vf_oq_config {
++	/* Size of Output queue (number of descriptors) */
++	u16 num_descs;
++
++	/* Size of buffer in this Output queue. */
++	u16 buf_size;
++
++	/* The number of buffers that were consumed during packet processing
++	 * by the driver on this Output queue before the driver attempts to
++	 * replenish the descriptor ring with new buffers.
++	 */
++	u16 refill_threshold;
++
++	/* Interrupt Coalescing (Packet Count). Octeon will interrupt the host
++	 * only if it sent as many packets as specified by this field.
++	 * The driver usually does not use packet count interrupt coalescing.
++	 */
++	u32 oq_intr_pkt;
++
++	/* Interrupt Coalescing (Time Interval). Octeon will interrupt the host
++	 * if at least one packet was sent in the time interval specified by
++	 * this field. The driver uses time interval interrupt coalescing by
++	 * default. The time is specified in microseconds.
++	 */
++	u32 oq_intr_time;
++
++	/* Water mark for backpressure.
++	 * Output queue sends backpressure signal to source when
++	 * free buffer count falls below wmark.
++	 */
++	u32 wmark;
++};
++
++/* Tx/Rx configuration */
++struct octep_vf_ring_config {
++	/* Max number of IOQs */
++	u16 max_io_rings;
++
++	/* Number of active IOQs */
++	u16 active_io_rings;
++};
++
++/* Octeon MSI-x config. */
++struct octep_vf_msix_config {
++	/* Number of IOQ interrupts */
++	u16 ioq_msix;
++};
++
++/* Data Structure to hold configuration limits and active config */
++struct octep_vf_config {
++	/* Input Queue attributes. */
++	struct octep_vf_iq_config iq;
++
++	/* Output Queue attributes. */
++	struct octep_vf_oq_config oq;
++
++	/* MSI-X interrupt config */
++	struct octep_vf_msix_config msix_cfg;
++
++	/* NIC VF ring Configuration */
++	struct octep_vf_ring_config ring_cfg;
++};
++#endif /* _OCTEP_VF_CONFIG_H_ */
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+new file mode 100644
+index 000000000000..2ade88698f65
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+@@ -0,0 +1,516 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#include <linux/types.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/aer.h>
++#include <linux/netdevice.h>
++#include <linux/etherdevice.h>
++#include <linux/rtnetlink.h>
++#include <linux/vmalloc.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++
++struct workqueue_struct *octep_vf_wq;
++
++/* Supported Devices */
++static const struct pci_device_id octep_vf_pci_id_tbl[] = {
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CN93_VF)},
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CNF95N_VF)},
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CN98_VF)},
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CN10KA_VF)},
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CNF10KA_VF)},
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CNF10KB_VF)},
++	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CN10KB_VF)},
++	{0, },
++};
++MODULE_DEVICE_TABLE(pci, octep_vf_pci_id_tbl);
++
++MODULE_AUTHOR("Veerasenareddy Burru <vburru@marvell.com>");
++MODULE_DESCRIPTION(OCTEP_VF_DRV_STRING);
++MODULE_LICENSE("GPL");
++
++static void octep_vf_link_up(struct net_device *netdev)
++{
++	netif_carrier_on(netdev);
++	netif_tx_start_all_queues(netdev);
++}
++
++static void octep_vf_set_rx_state(struct octep_vf_device *oct, bool up)
++{
++	int err;
++
++	err = octep_vf_mbox_set_rx_state(oct, up);
++	if (err)
++		netdev_err(oct->netdev, "Set Rx state to %d failed with err:%d\n", up, err);
++}
++
++static int octep_vf_get_link_status(struct octep_vf_device *oct)
++{
++	int err;
++
++	err = octep_vf_mbox_get_link_status(oct, &oct->link_info.oper_up);
++	if (err)
++		netdev_err(oct->netdev, "Get link status failed with err:%d\n", err);
++	return oct->link_info.oper_up;
++}
++
++static void octep_vf_set_link_status(struct octep_vf_device *oct, bool up)
++{
++	int err;
++
++	err = octep_vf_mbox_set_link_status(oct, up);
++	if (err) {
++		netdev_err(oct->netdev, "Set link status to %d failed with err:%d\n", up, err);
++		return;
++	}
++	oct->link_info.oper_up = up;
 +}
 +
 +/**
-+ * octep_vf_napi_add() - Add NAPI poll for all Tx/Rx queues.
++ * octep_vf_open() - start the octeon network device.
 + *
-+ * @oct: Octeon device private data structure.
++ * @netdev: pointer to kernel network device.
++ *
++ * setup Tx/Rx queues, interrupts and enable hardware operation of Tx/Rx queues
++ * and interrupts..
++ *
++ * Return: 0, on successfully setting up device and bring it up.
++ *         -1, on any error.
 + */
-+static void octep_vf_napi_add(struct octep_vf_device *oct)
++static int octep_vf_open(struct net_device *netdev)
 +{
-+	int i;
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	int err, ret;
 +
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		netdev_dbg(oct->netdev, "Adding NAPI on Q-%d\n", i);
-+		netif_napi_add(oct->netdev, &oct->ioq_vector[i]->napi, octep_vf_napi_poll);
-+		oct->oq[i]->napi = &oct->ioq_vector[i]->napi;
++	netdev_info(netdev, "Starting netdev ...\n");
++	netif_carrier_off(netdev);
++
++	oct->hw_ops.reset_io_queues(oct);
++
++	if (octep_vf_setup_iqs(oct))
++		goto setup_iq_err;
++	if (octep_vf_setup_oqs(oct))
++		goto setup_oq_err;
++
++	err = netif_set_real_num_tx_queues(netdev, oct->num_oqs);
++	if (err)
++		goto set_queues_err;
++	err = netif_set_real_num_rx_queues(netdev, oct->num_iqs);
++	if (err)
++		goto set_queues_err;
++
++	oct->link_info.admin_up = 1;
++	octep_vf_set_rx_state(oct, true);
++
++	ret = octep_vf_get_link_status(oct);
++	if (!ret)
++		octep_vf_set_link_status(oct, true);
++
++	/* Enable the input and output queues for this Octeon device */
++	oct->hw_ops.enable_io_queues(oct);
++
++	/* Enable Octeon device interrupts */
++	oct->hw_ops.enable_interrupts(oct);
++
++	octep_vf_oq_dbell_init(oct);
++
++	ret = octep_vf_get_link_status(oct);
++	if (ret)
++		octep_vf_link_up(netdev);
++
++	return 0;
++
++set_queues_err:
++	octep_vf_free_oqs(oct);
++setup_oq_err:
++	octep_vf_free_iqs(oct);
++setup_iq_err:
++	return -1;
++}
++
++/**
++ * octep_vf_stop() - stop the octeon network device.
++ *
++ * @netdev: pointer to kernel network device.
++ *
++ * stop the device Tx/Rx operations, bring down the link and
++ * free up all resources allocated for Tx/Rx queues and interrupts.
++ */
++static int octep_vf_stop(struct net_device *netdev)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++
++	netdev_info(netdev, "Stopping the device ...\n");
++
++	/* Stop Tx from stack */
++	netif_carrier_off(netdev);
++	netif_tx_disable(netdev);
++
++	octep_vf_set_link_status(oct, false);
++	octep_vf_set_rx_state(oct, false);
++
++	oct->link_info.admin_up = 0;
++	oct->link_info.oper_up = 0;
++
++	oct->hw_ops.disable_interrupts(oct);
++
++	octep_vf_clean_iqs(oct);
++
++	oct->hw_ops.disable_io_queues(oct);
++	oct->hw_ops.reset_io_queues(oct);
++	octep_vf_free_oqs(oct);
++	octep_vf_free_iqs(oct);
++	netdev_info(netdev, "Device stopped !!\n");
++	return 0;
++}
++
++/**
++ * octep_vf_start_xmit() - Enqueue packet to Octoen hardware Tx Queue.
++ *
++ * @skb: packet skbuff pointer.
++ * @netdev: kernel network device.
++ *
++ * Return: NETDEV_TX_BUSY, if Tx Queue is full.
++ *         NETDEV_TX_OK, if successfully enqueued to hardware Tx queue.
++ */
++static netdev_tx_t octep_vf_start_xmit(struct sk_buff *skb,
++				       struct net_device *netdev)
++{
++	return NETDEV_TX_OK;
++}
++
++/**
++ * octep_vf_tx_timeout_task - work queue task to Handle Tx queue timeout.
++ *
++ * @work: pointer to Tx queue timeout work_struct
++ *
++ * Stop and start the device so that it frees up all queue resources
++ * and restarts the queues, that potentially clears a Tx queue timeout
++ * condition.
++ **/
++static void octep_vf_tx_timeout_task(struct work_struct *work)
++{
++	struct octep_vf_device *oct = container_of(work, struct octep_vf_device,
++						tx_timeout_task);
++	struct net_device *netdev = oct->netdev;
++
++	rtnl_lock();
++	if (netif_running(netdev)) {
++		octep_vf_stop(netdev);
++		octep_vf_open(netdev);
++	}
++	rtnl_unlock();
++	netdev_put(netdev, NULL);
++}
++
++/**
++ * octep_vf_tx_timeout() - Handle Tx Queue timeout.
++ *
++ * @netdev: pointer to kernel network device.
++ * @txqueue: Timed out Tx queue number.
++ *
++ * Schedule a work to handle Tx queue timeout.
++ */
++static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++
++	netdev_hold(netdev, NULL, GFP_ATOMIC);
++	schedule_work(&oct->tx_timeout_task);
++}
++
++static const struct net_device_ops octep_vf_netdev_ops = {
++	.ndo_open                = octep_vf_open,
++	.ndo_stop                = octep_vf_stop,
++	.ndo_start_xmit          = octep_vf_start_xmit,
++	.ndo_tx_timeout          = octep_vf_tx_timeout,
++};
++
++static const char *octep_vf_devid_to_str(struct octep_vf_device *oct)
++{
++	switch (oct->chip_id) {
++	case OCTEP_PCI_DEVICE_ID_CN93_VF:
++		return "CN93XX";
++	case OCTEP_PCI_DEVICE_ID_CNF95N_VF:
++		return "CNF95N";
++	case OCTEP_PCI_DEVICE_ID_CN10KA_VF:
++		return "CN10KA";
++	case OCTEP_PCI_DEVICE_ID_CNF10KA_VF:
++		return "CNF10KA";
++	case OCTEP_PCI_DEVICE_ID_CNF10KB_VF:
++		return "CNF10KB";
++	case OCTEP_PCI_DEVICE_ID_CN10KB_VF:
++		return "CN10KB";
++	default:
++		return "Unsupported";
 +	}
 +}
 +
 +/**
-+ * octep_vf_napi_delete() - delete NAPI poll callback for all Tx/Rx queues.
++ * octep_vf_device_setup() - Setup Octeon Device.
 + *
 + * @oct: Octeon device private data structure.
++ *
++ * Setup Octeon device hardware operations, configuration, etc ...
 + */
-+static void octep_vf_napi_delete(struct octep_vf_device *oct)
++int octep_vf_device_setup(struct octep_vf_device *oct)
 +{
-+	int i;
++	struct pci_dev *pdev = oct->pdev;
 +
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		netdev_dbg(oct->netdev, "Deleting NAPI on Q-%d\n", i);
-+		netif_napi_del(&oct->ioq_vector[i]->napi);
-+		oct->oq[i]->napi = NULL;
++	/* allocate memory for oct->conf */
++	oct->conf = kzalloc(sizeof(*oct->conf), GFP_KERNEL);
++	if (!oct->conf)
++		return -ENOMEM;
++
++	/* Map BAR region 0 */
++	oct->mmio.hw_addr = ioremap(pci_resource_start(oct->pdev, 0),
++				    pci_resource_len(oct->pdev, 0));
++	if (!oct->mmio.hw_addr) {
++		dev_err(&pdev->dev,
++			"Failed to remap BAR0; start=0x%llx len=0x%llx\n",
++			pci_resource_start(oct->pdev, 0),
++			pci_resource_len(oct->pdev, 0));
++		goto ioremap_err;
 +	}
++	oct->mmio.mapped = 1;
++
++	oct->chip_id = pdev->device;
++	oct->rev_id = pdev->revision;
++	dev_info(&pdev->dev, "chip_id = 0x%x\n", pdev->device);
++
++	switch (oct->chip_id) {
++	case OCTEP_PCI_DEVICE_ID_CN93_VF:
++	case OCTEP_PCI_DEVICE_ID_CNF95N_VF:
++	case OCTEP_PCI_DEVICE_ID_CN98_VF:
++		dev_info(&pdev->dev, "Setting up OCTEON %s VF PASS%d.%d\n",
++			 octep_vf_devid_to_str(oct), OCTEP_VF_MAJOR_REV(oct),
++			 OCTEP_VF_MINOR_REV(oct));
++		octep_vf_device_setup_cn93(oct);
++		break;
++	case OCTEP_PCI_DEVICE_ID_CNF10KA_VF:
++	case OCTEP_PCI_DEVICE_ID_CN10KA_VF:
++	case OCTEP_PCI_DEVICE_ID_CNF10KB_VF:
++	case OCTEP_PCI_DEVICE_ID_CN10KB_VF:
++		dev_info(&pdev->dev, "Setting up OCTEON %s VF PASS%d.%d\n",
++			 octep_vf_devid_to_str(oct), OCTEP_VF_MAJOR_REV(oct),
++			 OCTEP_VF_MINOR_REV(oct));
++		octep_vf_device_setup_cnxk(oct);
++		break;
++	default:
++		dev_err(&pdev->dev, "Unsupported device\n");
++		goto unsupported_dev;
++	}
++
++	return 0;
++
++unsupported_dev:
++	iounmap(oct->mmio.hw_addr);
++ioremap_err:
++	kfree(oct->conf);
++	return -EOPNOTSUPP;
 +}
 +
 +/**
-+ * octep_vf_napi_enable() - enable NAPI for all Tx/Rx queues.
++ * octep_vf_device_cleanup() - Cleanup Octeon Device.
 + *
 + * @oct: Octeon device private data structure.
++ *
++ * Cleanup Octeon device allocated resources.
 + */
-+static void octep_vf_napi_enable(struct octep_vf_device *oct)
++static void octep_vf_device_cleanup(struct octep_vf_device *oct)
 +{
-+	int i;
++	dev_info(&oct->pdev->dev, "Cleaning up Octeon Device ...\n");
 +
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		netdev_dbg(oct->netdev, "Enabling NAPI on Q-%d\n", i);
-+		napi_enable(&oct->ioq_vector[i]->napi);
-+	}
++	if (oct->mmio.mapped)
++		iounmap(oct->mmio.hw_addr);
++
++	kfree(oct->conf);
++	oct->conf = NULL;
++}
++
++static int octep_vf_get_mac_addr(struct octep_vf_device *oct, u8 *addr)
++{
++	return octep_vf_mbox_get_mac_addr(oct, addr);
 +}
 +
 +/**
-+ * octep_vf_napi_disable() - disable NAPI for all Tx/Rx queues.
++ * octep_vf_probe() - Octeon PCI device probe handler.
 + *
-+ * @oct: Octeon device private data structure.
++ * @pdev: PCI device structure.
++ * @ent: entry in Octeon PCI device ID table.
++ *
++ * Initializes and enables the Octeon PCI device for network operations.
++ * Initializes Octeon private data structure and registers a network device.
 + */
-+static void octep_vf_napi_disable(struct octep_vf_device *oct)
++static int octep_vf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 +{
-+	int i;
++	struct octep_vf_device *octep_vf_dev;
++	struct net_device *netdev;
++	int err;
 +
-+	for (i = 0; i < oct->num_oqs; i++) {
-+		netdev_dbg(oct->netdev, "Disabling NAPI on Q-%d\n", i);
-+		napi_disable(&oct->ioq_vector[i]->napi);
++	err = pci_enable_device(pdev);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to enable PCI device\n");
++		return  err;
 +	}
++
++	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	if (err) {
++		dev_err(&pdev->dev, "Failed to set DMA mask !!\n");
++		goto disable_pci_device;
++	}
++
++	err = pci_request_mem_regions(pdev, OCTEP_VF_DRV_NAME);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to map PCI memory regions\n");
++		goto disable_pci_device;
++	}
++
++	pci_set_master(pdev);
++
++	netdev = alloc_etherdev_mq(sizeof(struct octep_vf_device),
++				   OCTEP_VF_MAX_QUEUES);
++	if (!netdev) {
++		dev_err(&pdev->dev, "Failed to allocate netdev\n");
++		err = -ENOMEM;
++		goto mem_regions_release;
++	}
++	SET_NETDEV_DEV(netdev, &pdev->dev);
++
++	octep_vf_dev = netdev_priv(netdev);
++	octep_vf_dev->netdev = netdev;
++	octep_vf_dev->pdev = pdev;
++	octep_vf_dev->dev = &pdev->dev;
++	pci_set_drvdata(pdev, octep_vf_dev);
++
++	err = octep_vf_device_setup(octep_vf_dev);
++	if (err) {
++		dev_err(&pdev->dev, "Device setup failed\n");
++		goto netdevice_free;
++	}
++	INIT_WORK(&octep_vf_dev->tx_timeout_task, octep_vf_tx_timeout_task);
++
++	netdev->netdev_ops = &octep_vf_netdev_ops;
++	netif_carrier_off(netdev);
++
++	if (octep_vf_setup_mbox(octep_vf_dev)) {
++		dev_err(&pdev->dev, "VF Mailbox setup failed\n");
++		err = -ENOMEM;
++		goto device_cleanup;
++	}
++
++	if (octep_vf_mbox_version_check(octep_vf_dev)) {
++		dev_err(&pdev->dev, "PF VF Mailbox version mismatch\n");
++		err = -EINVAL;
++		goto delete_mbox;
++	}
++
++	netdev->hw_features = NETIF_F_SG;
++	netdev->min_mtu = OCTEP_VF_MIN_MTU;
++	netdev->max_mtu = OCTEP_VF_MAX_MTU;
++	netdev->mtu = OCTEP_VF_DEFAULT_MTU;
++
++	netdev->features |= netdev->hw_features;
++	octep_vf_get_mac_addr(octep_vf_dev, octep_vf_dev->mac_addr);
++	eth_hw_addr_set(netdev, octep_vf_dev->mac_addr);
++	err = register_netdev(netdev);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to register netdev\n");
++		goto delete_mbox;
++	}
++	dev_info(&pdev->dev, "Device probe successful\n");
++	return 0;
++
++delete_mbox:
++	octep_vf_delete_mbox(octep_vf_dev);
++device_cleanup:
++	octep_vf_device_cleanup(octep_vf_dev);
++netdevice_free:
++	free_netdev(netdev);
++mem_regions_release:
++	pci_release_mem_regions(pdev);
++disable_pci_device:
++	pci_disable_device(pdev);
++	dev_err(&pdev->dev, "Device probe failed\n");
++	return err;
 +}
 +
- static void octep_vf_link_up(struct net_device *netdev)
- {
- 	netif_carrier_on(netdev);
-@@ -98,6 +465,8 @@ static int octep_vf_open(struct net_device *netdev)
- 		goto setup_iq_err;
- 	if (octep_vf_setup_oqs(oct))
- 		goto setup_oq_err;
-+	if (octep_vf_setup_irqs(oct))
-+		goto setup_irq_err;
- 
- 	err = netif_set_real_num_tx_queues(netdev, oct->num_oqs);
- 	if (err)
-@@ -106,6 +475,9 @@ static int octep_vf_open(struct net_device *netdev)
- 	if (err)
- 		goto set_queues_err;
- 
-+	octep_vf_napi_add(oct);
-+	octep_vf_napi_enable(oct);
-+
- 	oct->link_info.admin_up = 1;
- 	octep_vf_set_rx_state(oct, true);
- 
-@@ -128,6 +500,10 @@ static int octep_vf_open(struct net_device *netdev)
- 	return 0;
- 
- set_queues_err:
-+	octep_vf_napi_disable(oct);
-+	octep_vf_napi_delete(oct);
-+	octep_vf_clean_irqs(oct);
-+setup_irq_err:
- 	octep_vf_free_oqs(oct);
- setup_oq_err:
- 	octep_vf_free_iqs(oct);
-@@ -160,7 +536,10 @@ static int octep_vf_stop(struct net_device *netdev)
- 	oct->link_info.oper_up = 0;
- 
- 	oct->hw_ops.disable_interrupts(oct);
-+	octep_vf_napi_disable(oct);
-+	octep_vf_napi_delete(oct);
- 
-+	octep_vf_clean_irqs(oct);
- 	octep_vf_clean_iqs(oct);
- 
- 	oct->hw_ops.disable_io_queues(oct);
-@@ -171,6 +550,39 @@ static int octep_vf_stop(struct net_device *netdev)
- 	return 0;
- }
- 
 +/**
-+ * octep_vf_iq_full_check() - check if a Tx queue is full.
++ * octep_vf_remove() - Remove Octeon PCI device from driver control.
 + *
-+ * @iq: Octeon Tx queue data structure.
++ * @pdev: PCI device structure of the Octeon device.
 + *
-+ * Return: 0, if the Tx queue is not full.
-+ *         1, if the Tx queue is full.
++ * Cleanup all resources allocated for the Octeon device.
++ * Unregister from network device and disable the PCI device.
 + */
-+static int octep_vf_iq_full_check(struct octep_vf_iq *iq)
++static void octep_vf_remove(struct pci_dev *pdev)
++{
++	struct octep_vf_device *oct = pci_get_drvdata(pdev);
++	struct net_device *netdev;
++
++	if (!oct)
++		return;
++
++	octep_vf_mbox_dev_remove(oct);
++	cancel_work_sync(&oct->tx_timeout_task);
++	netdev = oct->netdev;
++	if (netdev->reg_state == NETREG_REGISTERED)
++		unregister_netdev(netdev);
++	octep_vf_delete_mbox(oct);
++	octep_vf_device_cleanup(oct);
++	pci_release_mem_regions(pdev);
++	free_netdev(netdev);
++	pci_disable_device(pdev);
++}
++
++static struct pci_driver octep_vf_driver = {
++	.name = OCTEP_VF_DRV_NAME,
++	.id_table = octep_vf_pci_id_tbl,
++	.probe = octep_vf_probe,
++	.remove = octep_vf_remove,
++};
++
++/**
++ * octep_vf_init_module() - Module initialization.
++ *
++ * create common resource for the driver and register PCI driver.
++ */
++static int __init octep_vf_init_module(void)
 +{
 +	int ret;
 +
-+	ret = netif_subqueue_maybe_stop(iq->netdev, iq->q_no, IQ_INSTR_SPACE(iq),
-+					OCTEP_VF_WAKE_QUEUE_THRESHOLD,
-+					OCTEP_VF_WAKE_QUEUE_THRESHOLD);
-+	switch (ret) {
-+	case 0: /* Stopped the queue, since IQ is full */
-+		return 1;
-+	case -1: /*
-+		  * Pending updates in write index from
-+		  * iq_process_completion in other cpus
-+		  * caused queues to get re-enabled after
-+		  * being stopped
-+		  */
-+		iq->stats.restart_cnt++;
-+		fallthrough;
-+	case 1: /* Queue left enabled, since IQ is not yet full*/
-+		return 0;
++	pr_info("%s: Loading %s ...\n", OCTEP_VF_DRV_NAME, OCTEP_VF_DRV_STRING);
++
++	ret = pci_register_driver(&octep_vf_driver);
++	if (ret < 0) {
++		pr_err("%s: Failed to register PCI driver; err=%d\n",
++		       OCTEP_VF_DRV_NAME, ret);
++		return ret;
 +	}
 +
-+	return 1;
++	return ret;
 +}
 +
- /**
-  * octep_vf_start_xmit() - Enqueue packet to Octoen hardware Tx Queue.
-  *
-@@ -183,6 +595,144 @@ static int octep_vf_stop(struct net_device *netdev)
- static netdev_tx_t octep_vf_start_xmit(struct sk_buff *skb,
- 				       struct net_device *netdev)
- {
-+	struct octep_vf_device *oct = netdev_priv(netdev);
-+	netdev_features_t feat  = netdev->features;
-+	struct octep_vf_tx_sglist_desc *sglist;
-+	struct octep_vf_tx_buffer *tx_buffer;
-+	struct octep_vf_tx_desc_hw *hw_desc;
-+	struct skb_shared_info *shinfo;
-+	struct octep_vf_instr_hdr *ih;
++/**
++ * octep_vf_exit_module() - Module exit routine.
++ *
++ * unregister the driver with PCI subsystem and cleanup common resources.
++ */
++static void __exit octep_vf_exit_module(void)
++{
++	pr_info("%s: Unloading ...\n", OCTEP_VF_DRV_NAME);
++
++	pci_unregister_driver(&octep_vf_driver);
++
++	pr_info("%s: Unloading complete\n", OCTEP_VF_DRV_NAME);
++}
++
++module_init(octep_vf_init_module);
++module_exit(octep_vf_exit_module);
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+new file mode 100644
+index 000000000000..e22e393c6ee2
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+@@ -0,0 +1,332 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#ifndef _OCTEP_VF_MAIN_H_
++#define _OCTEP_VF_MAIN_H_
++
++#include "octep_vf_tx.h"
++#include "octep_vf_rx.h"
++#include "octep_vf_mbox.h"
++
++#define OCTEP_VF_DRV_NAME	"octeon_ep_vf"
++#define OCTEP_VF_DRV_STRING	"Marvell Octeon EndPoint NIC VF Driver"
++
++#define  OCTEP_PCI_DEVICE_ID_CN93_VF   0xB203    //93xx VF
++#define  OCTEP_PCI_DEVICE_ID_CNF95N_VF 0xB403    //95N VF
++#define  OCTEP_PCI_DEVICE_ID_CN98_VF	0xB103
++#define  OCTEP_PCI_DEVICE_ID_CN10KA_VF  0xB903
++#define  OCTEP_PCI_DEVICE_ID_CNF10KA_VF 0xBA03
++#define  OCTEP_PCI_DEVICE_ID_CNF10KB_VF 0xBC03
++#define  OCTEP_PCI_DEVICE_ID_CN10KB_VF  0xBD03
++
++#define  OCTEP_VF_MAX_QUEUES   63
++#define  OCTEP_VF_MAX_IQ       OCTEP_VF_MAX_QUEUES
++#define  OCTEP_VF_MAX_OQ       OCTEP_VF_MAX_QUEUES
++
++#define OCTEP_VF_MAX_MSIX_VECTORS OCTEP_VF_MAX_OQ
++
++#define  OCTEP_VF_IQ_INTR_RESEND_BIT  59
++#define  OCTEP_VF_OQ_INTR_RESEND_BIT  59
++
++#define  IQ_INSTR_PENDING(iq)  ({ typeof(iq) iq__ = (iq); \
++				  ((iq__)->host_write_index - (iq__)->flush_index) & \
++				  (iq__)->ring_size_mask; \
++				})
++#define  IQ_INSTR_SPACE(iq)    ({ typeof(iq) iq_ = (iq); \
++				  (iq_)->max_count - IQ_INSTR_PENDING(iq_); \
++				})
++
++/* PCI address space mapping information.
++ * Each of the 3 address spaces given by BAR0, BAR2 and BAR4 of
++ * Octeon gets mapped to different physical address spaces in
++ * the kernel.
++ */
++struct octep_vf_mmio {
++	/* The physical address to which the PCI address space is mapped. */
++	u8 __iomem *hw_addr;
++
++	/* Flag indicating the mapping was successful. */
++	int mapped;
++};
++
++struct octep_vf_hw_ops {
++	void (*setup_iq_regs)(struct octep_vf_device *oct, int q);
++	void (*setup_oq_regs)(struct octep_vf_device *oct, int q);
++	void (*setup_mbox_regs)(struct octep_vf_device *oct, int mbox);
++
++	irqreturn_t (*non_ioq_intr_handler)(void *ioq_vector);
++	irqreturn_t (*ioq_intr_handler)(void *ioq_vector);
++	void (*reinit_regs)(struct octep_vf_device *oct);
++	u32  (*update_iq_read_idx)(struct octep_vf_iq *iq);
++
++	void (*enable_interrupts)(struct octep_vf_device *oct);
++	void (*disable_interrupts)(struct octep_vf_device *oct);
++
++	void (*enable_io_queues)(struct octep_vf_device *oct);
++	void (*disable_io_queues)(struct octep_vf_device *oct);
++	void (*enable_iq)(struct octep_vf_device *oct, int q);
++	void (*disable_iq)(struct octep_vf_device *oct, int q);
++	void (*enable_oq)(struct octep_vf_device *oct, int q);
++	void (*disable_oq)(struct octep_vf_device *oct, int q);
++	void (*reset_io_queues)(struct octep_vf_device *oct);
++	void (*dump_registers)(struct octep_vf_device *oct);
++};
++
++/* Octeon mailbox data */
++struct octep_vf_mbox_data {
++	/* Holds the offset of received data via mailbox. */
++	u32 data_index;
++
++	/* Holds the received data via mailbox. */
++	u8 recv_data[OCTEP_PFVF_MBOX_MAX_DATA_BUF_SIZE];
++};
++
++/* wrappers around work structs */
++struct octep_vf_mbox_wk {
++	struct work_struct work;
++	void *ctxptr;
++};
++
++/* Octeon device mailbox */
++struct octep_vf_mbox {
++	/* A mutex to protect access to this q_mbox. */
++	struct mutex lock;
++
++	u32 state;
++
++	/* SLI_MAC_PF_MBOX_INT for PF, SLI_PKT_MBOX_INT for VF. */
++	u8 __iomem *mbox_int_reg;
++
++	/* SLI_PKT_PF_VF_MBOX_SIG(0) for PF,
++	 * SLI_PKT_PF_VF_MBOX_SIG(1) for VF.
++	 */
++	u8 __iomem *mbox_write_reg;
++
++	/* SLI_PKT_PF_VF_MBOX_SIG(1) for PF,
++	 * SLI_PKT_PF_VF_MBOX_SIG(0) for VF.
++	 */
++	u8 __iomem *mbox_read_reg;
++
++	/* Octeon mailbox data */
++	struct octep_vf_mbox_data mbox_data;
++
++	/* Octeon mailbox work handler to process Mbox messages */
++	struct octep_vf_mbox_wk wk;
++};
++
++/* Tx/Rx queue vector per interrupt. */
++struct octep_vf_ioq_vector {
++	char name[OCTEP_VF_MSIX_NAME_SIZE];
++	struct napi_struct napi;
++	struct octep_vf_device *octep_vf_dev;
 +	struct octep_vf_iq *iq;
-+	skb_frag_t *frag;
-+	u16 nr_frags, si;
-+	int xmit_more;
-+	u16 q_no, wi;
++	struct octep_vf_oq *oq;
++	cpumask_t affinity_mask;
++};
 +
-+	if (skb_put_padto(skb, ETH_ZLEN))
-+		return NETDEV_TX_OK;
++/* Octeon hardware/firmware offload capability flags. */
++#define OCTEP_VF_CAP_TX_CHECKSUM BIT(0)
++#define OCTEP_VF_CAP_RX_CHECKSUM BIT(1)
++#define OCTEP_VF_CAP_TSO         BIT(2)
 +
-+	q_no = skb_get_queue_mapping(skb);
-+	if (q_no >= oct->num_iqs) {
-+		netdev_err(netdev, "Invalid Tx skb->queue_mapping=%d\n", q_no);
-+		q_no = q_no % oct->num_iqs;
++/* Link modes */
++enum octep_vf_link_mode_bit_indices {
++	OCTEP_VF_LINK_MODE_10GBASE_T    = 0,
++	OCTEP_VF_LINK_MODE_10GBASE_R,
++	OCTEP_VF_LINK_MODE_10GBASE_CR,
++	OCTEP_VF_LINK_MODE_10GBASE_KR,
++	OCTEP_VF_LINK_MODE_10GBASE_LR,
++	OCTEP_VF_LINK_MODE_10GBASE_SR,
++	OCTEP_VF_LINK_MODE_25GBASE_CR,
++	OCTEP_VF_LINK_MODE_25GBASE_KR,
++	OCTEP_VF_LINK_MODE_25GBASE_SR,
++	OCTEP_VF_LINK_MODE_40GBASE_CR4,
++	OCTEP_VF_LINK_MODE_40GBASE_KR4,
++	OCTEP_VF_LINK_MODE_40GBASE_LR4,
++	OCTEP_VF_LINK_MODE_40GBASE_SR4,
++	OCTEP_VF_LINK_MODE_50GBASE_CR2,
++	OCTEP_VF_LINK_MODE_50GBASE_KR2,
++	OCTEP_VF_LINK_MODE_50GBASE_SR2,
++	OCTEP_VF_LINK_MODE_50GBASE_CR,
++	OCTEP_VF_LINK_MODE_50GBASE_KR,
++	OCTEP_VF_LINK_MODE_50GBASE_LR,
++	OCTEP_VF_LINK_MODE_50GBASE_SR,
++	OCTEP_VF_LINK_MODE_100GBASE_CR4,
++	OCTEP_VF_LINK_MODE_100GBASE_KR4,
++	OCTEP_VF_LINK_MODE_100GBASE_LR4,
++	OCTEP_VF_LINK_MODE_100GBASE_SR4,
++	OCTEP_VF_LINK_MODE_NBITS
++};
++
++/* Hardware interface link state information. */
++struct octep_vf_iface_link_info {
++	/* Bitmap of Supported link speeds/modes. */
++	u64 supported_modes;
++
++	/* Bitmap of Advertised link speeds/modes. */
++	u64 advertised_modes;
++
++	/* Negotiated link speed in Mbps. */
++	u32 speed;
++
++	/* MTU */
++	u16 mtu;
++
++	/* Autonegotiation state. */
++#define OCTEP_VF_LINK_MODE_AUTONEG_SUPPORTED   BIT(0)
++#define OCTEP_VF_LINK_MODE_AUTONEG_ADVERTISED  BIT(1)
++	u8 autoneg;
++
++	/* Pause frames setting. */
++#define OCTEP_VF_LINK_MODE_PAUSE_SUPPORTED   BIT(0)
++#define OCTEP_VF_LINK_MODE_PAUSE_ADVERTISED  BIT(1)
++	u8 pause;
++
++	/* Admin state of the link (ifconfig <iface> up/down */
++	u8  admin_up;
++
++	/* Operational state of the link: physical link is up down */
++	u8  oper_up;
++};
++
++/* Hardware interface stats information. */
++struct octep_vf_iface_rxtx_stats {
++	/* Hardware Interface Rx statistics */
++	struct octep_vf_iface_rx_stats iface_rx_stats;
++
++	/* Hardware Interface Tx statistics */
++	struct octep_vf_iface_tx_stats iface_tx_stats;
++};
++
++struct octep_vf_fw_info {
++	/* pkind value to be used in every Tx hardware descriptor */
++	u8 pkind;
++	/* front size data */
++	u8 fsz;
++	/* supported rx offloads OCTEP_VF_RX_OFFLOAD_* */
++	u16 rx_ol_flags;
++	/* supported tx offloads OCTEP_VF_TX_OFFLOAD_* */
++	u16 tx_ol_flags;
++};
++
++/* The Octeon device specific private data structure.
++ * Each Octeon device has this structure to represent all its components.
++ */
++struct octep_vf_device {
++	struct octep_vf_config *conf;
++
++	/* Octeon Chip type. */
++	u16 chip_id;
++	u16 rev_id;
++
++	/* Device capabilities enabled */
++	u64 caps_enabled;
++	/* Device capabilities supported */
++	u64 caps_supported;
++
++	/* Pointer to basic Linux device */
++	struct device *dev;
++	/* Linux PCI device pointer */
++	struct pci_dev *pdev;
++	/* Netdev corresponding to the Octeon device */
++	struct net_device *netdev;
++
++	/* memory mapped io range */
++	struct octep_vf_mmio mmio;
++
++	/* MAC address */
++	u8 mac_addr[ETH_ALEN];
++
++	/* Tx queues (IQ: Instruction Queue) */
++	u16 num_iqs;
++	/* Pointers to Octeon Tx queues */
++	struct octep_vf_iq *iq[OCTEP_VF_MAX_IQ];
++
++	/* Rx queues (OQ: Output Queue) */
++	u16 num_oqs;
++	/* Pointers to Octeon Rx queues */
++	struct octep_vf_oq *oq[OCTEP_VF_MAX_OQ];
++
++	/* Hardware port number of the PCIe interface */
++	u16 pcie_port;
++
++	/* Hardware operations */
++	struct octep_vf_hw_ops hw_ops;
++
++	/* IRQ info */
++	u16 num_irqs;
++	u16 num_non_ioq_irqs;
++	char *non_ioq_irq_names;
++	struct msix_entry *msix_entries;
++	/* IOq information of it's corresponding MSI-X interrupt. */
++	struct octep_vf_ioq_vector *ioq_vector[OCTEP_VF_MAX_QUEUES];
++
++	/* Hardware Interface Tx statistics */
++	struct octep_vf_iface_tx_stats iface_tx_stats;
++	/* Hardware Interface Rx statistics */
++	struct octep_vf_iface_rx_stats iface_rx_stats;
++
++	/* Hardware Interface Link info like supported modes, aneg support */
++	struct octep_vf_iface_link_info link_info;
++
++	/* Mailbox to talk to VFs */
++	struct octep_vf_mbox *mbox;
++
++	/* Work entry to handle Tx timeout */
++	struct work_struct tx_timeout_task;
++
++	/* offset for iface stats */
++	u32 ctrl_mbox_ifstats_offset;
++
++	/* Negotiated Mbox version */
++	u32 mbox_neg_ver;
++
++	/* firmware info */
++	struct octep_vf_fw_info fw_info;
++};
++
++static inline u16 OCTEP_VF_MAJOR_REV(struct octep_vf_device *oct)
++{
++	u16 rev = (oct->rev_id & 0xC) >> 2;
++
++	return (rev == 0) ? 1 : rev;
++}
++
++static inline u16 OCTEP_VF_MINOR_REV(struct octep_vf_device *oct)
++{
++	return (oct->rev_id & 0x3);
++}
++
++/* Octeon CSR read/write access APIs */
++#define octep_vf_write_csr(octep_vf_dev, reg_off, value) \
++	writel(value, (octep_vf_dev)->mmio.hw_addr + (reg_off))
++
++#define octep_vf_write_csr64(octep_vf_dev, reg_off, val64) \
++	writeq(val64, (octep_vf_dev)->mmio.hw_addr + (reg_off))
++
++#define octep_vf_read_csr(octep_vf_dev, reg_off)         \
++	readl((octep_vf_dev)->mmio.hw_addr + (reg_off))
++
++#define octep_vf_read_csr64(octep_vf_dev, reg_off)         \
++	readq((octep_vf_dev)->mmio.hw_addr + (reg_off))
++
++extern struct workqueue_struct *octep_vf_wq;
++
++int octep_vf_device_setup(struct octep_vf_device *oct);
++int octep_vf_setup_iqs(struct octep_vf_device *oct);
++void octep_vf_free_iqs(struct octep_vf_device *oct);
++void octep_vf_clean_iqs(struct octep_vf_device *oct);
++int octep_vf_setup_oqs(struct octep_vf_device *oct);
++void octep_vf_free_oqs(struct octep_vf_device *oct);
++void octep_vf_oq_dbell_init(struct octep_vf_device *oct);
++void octep_vf_device_setup_cn93(struct octep_vf_device *oct);
++void octep_vf_device_setup_cnxk(struct octep_vf_device *oct);
++int octep_vf_iq_process_completions(struct octep_vf_iq *iq, u16 budget);
++int octep_vf_oq_process_rx(struct octep_vf_oq *oq, int budget);
++int octep_vf_get_if_stats(struct octep_vf_device *oct);
++void octep_vf_mbox_work(struct work_struct *work);
++#endif /* _OCTEP_VF_MAIN_H_ */
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
+new file mode 100644
+index 000000000000..1c1fe293fc50
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++#include <linux/types.h>
++#include <linux/pci.h>
++#include <linux/netdevice.h>
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++
++int octep_vf_setup_mbox(struct octep_vf_device *oct)
++{
++	int ring = 0;
++
++	oct->mbox = vzalloc(sizeof(*oct->mbox));
++	if (!oct->mbox)
++		return -1;
++
++	mutex_init(&oct->mbox->lock);
++
++	oct->hw_ops.setup_mbox_regs(oct, ring);
++	INIT_WORK(&oct->mbox->wk.work, octep_vf_mbox_work);
++	oct->mbox->wk.ctxptr = oct;
++	dev_info(&oct->pdev->dev, "setup vf mbox successfully\n");
++	return 0;
++}
++
++void octep_vf_delete_mbox(struct octep_vf_device *oct)
++{
++	if (oct->mbox) {
++		if (work_pending(&oct->mbox->wk.work))
++			cancel_work_sync(&oct->mbox->wk.work);
++
++		mutex_destroy(&oct->mbox->lock);
++		vfree(oct->mbox);
++		oct->mbox = NULL;
++		dev_info(&oct->pdev->dev, "Deleted vf mbox successfully\n");
 +	}
++}
 +
-+	iq = oct->iq[q_no];
++int octep_vf_mbox_version_check(struct octep_vf_device *oct)
++{
++	return 0;
++}
 +
-+	shinfo = skb_shinfo(skb);
-+	nr_frags = shinfo->nr_frags;
++void octep_vf_mbox_work(struct work_struct *work)
++{
++}
 +
-+	wi = iq->host_write_index;
-+	hw_desc = &iq->desc_ring[wi];
-+	hw_desc->ih64 = 0;
++int octep_vf_mbox_set_mtu(struct octep_vf_device *oct, int mtu)
++{
++	return 0;
++}
 +
-+	tx_buffer = iq->buff_info + wi;
-+	tx_buffer->skb = skb;
++int octep_vf_mbox_set_mac_addr(struct octep_vf_device *oct, char *mac_addr)
++{
++	return 0;
++}
 +
-+	ih = &hw_desc->ih;
-+	ih->tlen = skb->len;
-+	ih->pkind = oct->fw_info.pkind;
-+	ih->fsz = oct->fw_info.fsz;
-+	ih->tlen = skb->len + ih->fsz;
++int octep_vf_mbox_get_mac_addr(struct octep_vf_device *oct, char *mac_addr)
++{
++	return 0;
++}
 +
-+	if (!nr_frags) {
-+		tx_buffer->gather = 0;
-+		tx_buffer->dma = dma_map_single(iq->dev, skb->data,
-+						skb->len, DMA_TO_DEVICE);
-+		if (dma_mapping_error(iq->dev, tx_buffer->dma))
-+			goto dma_map_err;
-+		hw_desc->dptr = tx_buffer->dma;
-+	} else {
-+		/* Scatter/Gather */
-+		dma_addr_t dma;
-+		u16 len;
++int octep_vf_mbox_set_rx_state(struct octep_vf_device *oct, bool state)
++{
++	return 0;
++}
 +
-+		sglist = tx_buffer->sglist;
++int octep_vf_mbox_set_link_status(struct octep_vf_device *oct, bool status)
++{
++	return 0;
++}
 +
-+		ih->gsz = nr_frags + 1;
-+		ih->gather = 1;
-+		tx_buffer->gather = 1;
++int octep_vf_mbox_get_link_status(struct octep_vf_device *oct, u8 *oper_up)
++{
++	return 0;
++}
 +
-+		len = skb_headlen(skb);
-+		dma = dma_map_single(iq->dev, skb->data, len, DMA_TO_DEVICE);
-+		if (dma_mapping_error(iq->dev, dma))
-+			goto dma_map_err;
++int octep_vf_mbox_dev_remove(struct octep_vf_device *oct)
++{
++	return 0;
++}
 +
-+		memset(sglist, 0, OCTEP_VF_SGLIST_SIZE_PER_PKT);
-+		sglist[0].len[3] = len;
-+		sglist[0].dma_ptr[0] = dma;
++int octep_vf_mbox_get_fw_info(struct octep_vf_device *oct)
++{
++	return 0;
++}
 +
-+		si = 1; /* entry 0 is main skb, mapped above */
-+		frag = &shinfo->frags[0];
-+		while (nr_frags--) {
-+			len = skb_frag_size(frag);
-+			dma = skb_frag_dma_map(iq->dev, frag, 0,
-+					       len, DMA_TO_DEVICE);
-+			if (dma_mapping_error(iq->dev, dma))
-+				goto dma_map_sg_err;
++int octep_vf_mbox_set_offloads(struct octep_vf_device *oct, u16 tx_offloads,
++			       u16 rx_offloads)
++{
++	return 0;
++}
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.h
+new file mode 100644
+index 000000000000..14f4fb19445b
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++#ifndef _OCTEP_VF_MBOX_H_
++#define _OCTEP_VF_MBOX_H_
 +
-+			sglist[si >> 2].len[3 - (si & 3)] = len;
-+			sglist[si >> 2].dma_ptr[si & 3] = dma;
++#define OCTEP_PFVF_MBOX_MAX_DATA_BUF_SIZE 256
 +
-+			frag++;
-+			si++;
-+		}
-+		hw_desc->dptr = tx_buffer->sglist_dma;
-+	}
-+	if (oct->fw_info.tx_ol_flags) {
-+		if ((feat & (NETIF_F_TSO)) && (skb_is_gso(skb))) {
-+			hw_desc->txm.ol_flags = OCTEP_VF_TX_OFFLOAD_CKSUM;
-+			hw_desc->txm.ol_flags |= OCTEP_VF_TX_OFFLOAD_TSO;
-+			hw_desc->txm.gso_size =  skb_shinfo(skb)->gso_size;
-+			hw_desc->txm.gso_segs =  skb_shinfo(skb)->gso_segs;
-+		} else if (feat & (NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM)) {
-+			hw_desc->txm.ol_flags = OCTEP_VF_TX_OFFLOAD_CKSUM;
-+		}
-+		/* due to ESR txm will be swapped by hw */
-+		hw_desc->txm64[0] = (__force u64)cpu_to_be64(hw_desc->txm64[0]);
-+	}
++int octep_vf_setup_mbox(struct octep_vf_device *oct);
++void octep_vf_delete_mbox(struct octep_vf_device *oct);
++int octep_vf_mbox_set_mtu(struct octep_vf_device *oct, int mtu);
++int octep_vf_mbox_set_mac_addr(struct octep_vf_device *oct, char *mac_addr);
++int octep_vf_mbox_get_mac_addr(struct octep_vf_device *oct, char *mac_addr);
++int octep_vf_mbox_version_check(struct octep_vf_device *oct);
++int octep_vf_mbox_set_rx_state(struct octep_vf_device *oct, bool state);
++int octep_vf_mbox_set_link_status(struct octep_vf_device *oct, bool status);
++int octep_vf_mbox_get_link_status(struct octep_vf_device *oct, u8 *oper_up);
++int octep_vf_mbox_dev_remove(struct octep_vf_device *oct);
++int octep_vf_mbox_get_fw_info(struct octep_vf_device *oct);
++int octep_vf_mbox_set_offloads(struct octep_vf_device *oct, u16 tx_offloads, u16 rx_offloads);
 +
-+	xmit_more = netdev_xmit_more();
++#endif
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cn9k.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cn9k.h
+new file mode 100644
+index 000000000000..25e2a876ebba
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cn9k.h
+@@ -0,0 +1,154 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++#ifndef _OCTEP_VF_REGS_CN9K_H_
++#define _OCTEP_VF_REGS_CN9K_H_
 +
-+	netdev_tx_sent_queue(iq->netdev_q, skb->len);
++/*############################ RST #########################*/
++#define     CN93_VF_CONFIG_XPANSION_BAR         0x38
++#define     CN93_VF_CONFIG_PCIE_CAP             0x70
++#define     CN93_VF_CONFIG_PCIE_DEVCAP          0x74
++#define     CN93_VF_CONFIG_PCIE_DEVCTL          0x78
++#define     CN93_VF_CONFIG_PCIE_LINKCAP         0x7C
++#define     CN93_VF_CONFIG_PCIE_LINKCTL         0x80
++#define     CN93_VF_CONFIG_PCIE_SLOTCAP         0x84
++#define     CN93_VF_CONFIG_PCIE_SLOTCTL         0x88
 +
-+	skb_tx_timestamp(skb);
-+	iq->fill_cnt++;
-+	wi++;
-+	iq->host_write_index = wi & iq->ring_size_mask;
++#define     CN93_VF_RING_OFFSET                    BIT_ULL(17)
 +
-+	/* octep_iq_full_check stops the queue and returns
-+	 * true if so, in case the queue has become full
-+	 * by inserting current packet. If so, we can
-+	 * go ahead and ring doorbell.
-+	 */
-+	if (!octep_vf_iq_full_check(iq) && xmit_more &&
-+	    iq->fill_cnt < iq->fill_threshold)
-+		return NETDEV_TX_OK;
++/*###################### RING IN REGISTERS #########################*/
++#define    CN93_VF_SDP_R_IN_CONTROL_START          0x10000
++#define    CN93_VF_SDP_R_IN_ENABLE_START           0x10010
++#define    CN93_VF_SDP_R_IN_INSTR_BADDR_START      0x10020
++#define    CN93_VF_SDP_R_IN_INSTR_RSIZE_START      0x10030
++#define    CN93_VF_SDP_R_IN_INSTR_DBELL_START      0x10040
++#define    CN93_VF_SDP_R_IN_CNTS_START             0x10050
++#define    CN93_VF_SDP_R_IN_INT_LEVELS_START       0x10060
++#define    CN93_VF_SDP_R_IN_PKT_CNT_START          0x10080
++#define    CN93_VF_SDP_R_IN_BYTE_CNT_START         0x10090
 +
-+	goto ring_dbell;
++#define    CN93_VF_SDP_R_IN_CONTROL(ring)          \
++	(CN93_VF_SDP_R_IN_CONTROL_START + ((ring) * CN93_VF_RING_OFFSET))
 +
-+dma_map_sg_err:
-+	if (si > 0) {
-+		dma_unmap_single(iq->dev, sglist[0].dma_ptr[0],
-+				 sglist[0].len[0], DMA_TO_DEVICE);
-+		sglist[0].len[0] = 0;
-+	}
-+	while (si > 1) {
-+		dma_unmap_page(iq->dev, sglist[si >> 2].dma_ptr[si & 3],
-+			       sglist[si >> 2].len[si & 3], DMA_TO_DEVICE);
-+		sglist[si >> 2].len[si & 3] = 0;
-+		si--;
-+	}
-+	tx_buffer->gather = 0;
-+dma_map_err:
-+	dev_kfree_skb_any(skb);
-+ring_dbell:
-+	/* Flush the hw descriptors before writing to doorbell */
-+	smp_wmb();
-+	writel(iq->fill_cnt, iq->doorbell_reg);
-+	iq->stats.instr_posted += iq->fill_cnt;
-+	iq->fill_cnt = 0;
- 	return NETDEV_TX_OK;
- }
- 
++#define    CN93_VF_SDP_R_IN_ENABLE(ring)          \
++	(CN93_VF_SDP_R_IN_ENABLE_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_INSTR_BADDR(ring)          \
++	(CN93_VF_SDP_R_IN_INSTR_BADDR_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_INSTR_RSIZE(ring)          \
++	(CN93_VF_SDP_R_IN_INSTR_RSIZE_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_INSTR_DBELL(ring)          \
++	(CN93_VF_SDP_R_IN_INSTR_DBELL_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_CNTS(ring)          \
++	(CN93_VF_SDP_R_IN_CNTS_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_INT_LEVELS(ring)          \
++	(CN93_VF_SDP_R_IN_INT_LEVELS_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_PKT_CNT(ring)          \
++	(CN93_VF_SDP_R_IN_PKT_CNT_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_IN_BYTE_CNT(ring)          \
++	(CN93_VF_SDP_R_IN_BYTE_CNT_START + ((ring) * CN93_VF_RING_OFFSET))
++
++/*------------------ R_IN Masks ----------------*/
++
++/** Rings per Virtual Function **/
++#define    CN93_VF_R_IN_CTL_RPVF_MASK    (0xF)
++#define	   CN93_VF_R_IN_CTL_RPVF_POS     (48)
++
++/* Number of instructions to be read in one MAC read request.
++ * setting to Max value(4)
++ **/
++#define    CN93_VF_R_IN_CTL_IDLE                  BIT_ULL(28)
++#define    CN93_VF_R_IN_CTL_RDSIZE                (0x3ULL << 25)
++#define    CN93_VF_R_IN_CTL_IS_64B                BIT_ULL(24)
++#define    CN93_VF_R_IN_CTL_D_NSR                 BIT_ULL(8)
++#define    CN93_VF_R_IN_CTL_D_ESR                 BIT_ULL(6)
++#define    CN93_VF_R_IN_CTL_D_ROR                 BIT_ULL(5)
++#define    CN93_VF_R_IN_CTL_NSR                   BIT_ULL(3)
++#define    CN93_VF_R_IN_CTL_ESR                   BIT_ULL(1)
++#define    CN93_VF_R_IN_CTL_ROR                   BIT_ULL(0)
++
++#define    CN93_VF_R_IN_CTL_MASK     (CN93_VF_R_IN_CTL_RDSIZE | CN93_VF_R_IN_CTL_IS_64B)
++
++/*###################### RING OUT REGISTERS #########################*/
++#define    CN93_VF_SDP_R_OUT_CNTS_START            0x10100
++#define    CN93_VF_SDP_R_OUT_INT_LEVELS_START      0x10110
++#define    CN93_VF_SDP_R_OUT_SLIST_BADDR_START     0x10120
++#define    CN93_VF_SDP_R_OUT_SLIST_RSIZE_START     0x10130
++#define    CN93_VF_SDP_R_OUT_SLIST_DBELL_START     0x10140
++#define    CN93_VF_SDP_R_OUT_CONTROL_START         0x10150
++#define    CN93_VF_SDP_R_OUT_ENABLE_START          0x10160
++#define    CN93_VF_SDP_R_OUT_PKT_CNT_START         0x10180
++#define    CN93_VF_SDP_R_OUT_BYTE_CNT_START        0x10190
++
++#define    CN93_VF_SDP_R_OUT_CONTROL(ring)          \
++	(CN93_VF_SDP_R_OUT_CONTROL_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_ENABLE(ring)          \
++	(CN93_VF_SDP_R_OUT_ENABLE_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_SLIST_BADDR(ring)          \
++	(CN93_VF_SDP_R_OUT_SLIST_BADDR_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_SLIST_RSIZE(ring)          \
++	(CN93_VF_SDP_R_OUT_SLIST_RSIZE_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_SLIST_DBELL(ring)          \
++	(CN93_VF_SDP_R_OUT_SLIST_DBELL_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_CNTS(ring)          \
++	(CN93_VF_SDP_R_OUT_CNTS_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_INT_LEVELS(ring)          \
++	(CN93_VF_SDP_R_OUT_INT_LEVELS_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_PKT_CNT(ring)          \
++	(CN93_VF_SDP_R_OUT_PKT_CNT_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_OUT_BYTE_CNT(ring)          \
++	(CN93_VF_SDP_R_OUT_BYTE_CNT_START + ((ring) * CN93_VF_RING_OFFSET))
++
++/*------------------ R_OUT Masks ----------------*/
++#define    CN93_VF_R_OUT_INT_LEVELS_BMODE            BIT_ULL(63)
++#define    CN93_VF_R_OUT_INT_LEVELS_TIMET            (32)
++
++#define    CN93_VF_R_OUT_CTL_IDLE                    BIT_ULL(40)
++#define    CN93_VF_R_OUT_CTL_ES_I                    BIT_ULL(34)
++#define    CN93_VF_R_OUT_CTL_NSR_I                   BIT_ULL(33)
++#define    CN93_VF_R_OUT_CTL_ROR_I                   BIT_ULL(32)
++#define    CN93_VF_R_OUT_CTL_ES_D                    BIT_ULL(30)
++#define    CN93_VF_R_OUT_CTL_NSR_D                   BIT_ULL(29)
++#define    CN93_VF_R_OUT_CTL_ROR_D                   BIT_ULL(28)
++#define    CN93_VF_R_OUT_CTL_ES_P                    BIT_ULL(26)
++#define    CN93_VF_R_OUT_CTL_NSR_P                   BIT_ULL(25)
++#define    CN93_VF_R_OUT_CTL_ROR_P                   BIT_ULL(24)
++#define    CN93_VF_R_OUT_CTL_IMODE                   BIT_ULL(23)
++
++/* ##################### Mail Box Registers ########################## */
++/* SDP PF to VF Mailbox Data Register */
++#define    CN93_VF_SDP_R_MBOX_PF_VF_DATA_START    0x10210
++/* SDP Packet PF to VF Mailbox Interrupt Register */
++#define    CN93_VF_SDP_R_MBOX_PF_VF_INT_START     0x10220
++/* SDP VF to PF Mailbox Data Register */
++#define    CN93_VF_SDP_R_MBOX_VF_PF_DATA_START    0x10230
++
++#define    CN93_VF_SDP_R_MBOX_PF_VF_INT_ENAB         BIT_ULL(1)
++#define    CN93_VF_SDP_R_MBOX_PF_VF_INT_STATUS       BIT_ULL(0)
++
++#define    CN93_VF_SDP_R_MBOX_PF_VF_DATA(ring)          \
++	(CN93_VF_SDP_R_MBOX_PF_VF_DATA_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_MBOX_PF_VF_INT(ring)          \
++	(CN93_VF_SDP_R_MBOX_PF_VF_INT_START + ((ring) * CN93_VF_RING_OFFSET))
++
++#define    CN93_VF_SDP_R_MBOX_VF_PF_DATA(ring)          \
++	(CN93_VF_SDP_R_MBOX_VF_PF_DATA_START + ((ring) * CN93_VF_RING_OFFSET))
++#endif /* _OCTEP_VF_REGS_CN9K_H_ */
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cnxk.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cnxk.h
+new file mode 100644
+index 000000000000..2e156745ef64
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cnxk.h
+@@ -0,0 +1,162 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++#ifndef _OCTEP_VF_REGS_CNXK_H_
++#define _OCTEP_VF_REGS_CNXK_H_
++
++/*############################ RST #########################*/
++#define     CNXK_VF_CONFIG_XPANSION_BAR         0x38
++#define     CNXK_VF_CONFIG_PCIE_CAP             0x70
++#define     CNXK_VF_CONFIG_PCIE_DEVCAP          0x74
++#define     CNXK_VF_CONFIG_PCIE_DEVCTL          0x78
++#define     CNXK_VF_CONFIG_PCIE_LINKCAP         0x7C
++#define     CNXK_VF_CONFIG_PCIE_LINKCTL         0x80
++#define     CNXK_VF_CONFIG_PCIE_SLOTCAP         0x84
++#define     CNXK_VF_CONFIG_PCIE_SLOTCTL         0x88
++
++#define     CNXK_VF_RING_OFFSET                    (0x1ULL << 17)
++
++/*###################### RING IN REGISTERS #########################*/
++#define    CNXK_VF_SDP_R_IN_CONTROL_START          0x10000
++#define    CNXK_VF_SDP_R_IN_ENABLE_START           0x10010
++#define    CNXK_VF_SDP_R_IN_INSTR_BADDR_START      0x10020
++#define    CNXK_VF_SDP_R_IN_INSTR_RSIZE_START      0x10030
++#define    CNXK_VF_SDP_R_IN_INSTR_DBELL_START      0x10040
++#define    CNXK_VF_SDP_R_IN_CNTS_START             0x10050
++#define    CNXK_VF_SDP_R_IN_INT_LEVELS_START       0x10060
++#define    CNXK_VF_SDP_R_IN_PKT_CNT_START          0x10080
++#define    CNXK_VF_SDP_R_IN_BYTE_CNT_START         0x10090
++#define    CNXK_VF_SDP_R_ERR_TYPE_START            0x10400
++
++#define CNXK_VF_SDP_R_ERR_TYPE(ring)                 \
++	(CNXK_VF_SDP_R_ERR_TYPE_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_CONTROL(ring)          \
++	(CNXK_VF_SDP_R_IN_CONTROL_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_ENABLE(ring)          \
++	(CNXK_VF_SDP_R_IN_ENABLE_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_INSTR_BADDR(ring)          \
++	(CNXK_VF_SDP_R_IN_INSTR_BADDR_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_INSTR_RSIZE(ring)          \
++	(CNXK_VF_SDP_R_IN_INSTR_RSIZE_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_INSTR_DBELL(ring)          \
++	(CNXK_VF_SDP_R_IN_INSTR_DBELL_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_CNTS(ring)          \
++	(CNXK_VF_SDP_R_IN_CNTS_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_INT_LEVELS(ring)          \
++	(CNXK_VF_SDP_R_IN_INT_LEVELS_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_PKT_CNT(ring)          \
++	(CNXK_VF_SDP_R_IN_PKT_CNT_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_IN_BYTE_CNT(ring)          \
++	(CNXK_VF_SDP_R_IN_BYTE_CNT_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++/*------------------ R_IN Masks ----------------*/
++
++/** Rings per Virtual Function **/
++#define    CNXK_VF_R_IN_CTL_RPVF_MASK    (0xF)
++#define	   CNXK_VF_R_IN_CTL_RPVF_POS     (48)
++
++/* Number of instructions to be read in one MAC read request.
++ * setting to Max value(4)
++ **/
++#define    CNXK_VF_R_IN_CTL_IDLE                  (0x1ULL << 28)
++#define    CNXK_VF_R_IN_CTL_RDSIZE                (0x3ULL << 25)
++#define    CNXK_VF_R_IN_CTL_IS_64B                (0x1ULL << 24)
++#define    CNXK_VF_R_IN_CTL_D_NSR                 (0x1ULL << 8)
++#define    CNXK_VF_R_IN_CTL_D_ESR                 (0x1ULL << 6)
++#define    CNXK_VF_R_IN_CTL_D_ROR                 (0x1ULL << 5)
++#define    CNXK_VF_R_IN_CTL_NSR                   (0x1ULL << 3)
++#define    CNXK_VF_R_IN_CTL_ESR                   (0x1ULL << 1)
++#define    CNXK_VF_R_IN_CTL_ROR                   (0x1ULL << 0)
++
++#define    CNXK_VF_R_IN_CTL_MASK     (CNXK_VF_R_IN_CTL_RDSIZE | CNXK_VF_R_IN_CTL_IS_64B)
++
++/*###################### RING OUT REGISTERS #########################*/
++#define    CNXK_VF_SDP_R_OUT_CNTS_START            0x10100
++#define    CNXK_VF_SDP_R_OUT_INT_LEVELS_START      0x10110
++#define    CNXK_VF_SDP_R_OUT_SLIST_BADDR_START     0x10120
++#define    CNXK_VF_SDP_R_OUT_SLIST_RSIZE_START     0x10130
++#define    CNXK_VF_SDP_R_OUT_SLIST_DBELL_START     0x10140
++#define    CNXK_VF_SDP_R_OUT_CONTROL_START         0x10150
++#define    CNXK_VF_SDP_R_OUT_WMARK_START           0x10160
++#define    CNXK_VF_SDP_R_OUT_ENABLE_START          0x10170
++#define    CNXK_VF_SDP_R_OUT_PKT_CNT_START         0x10180
++#define    CNXK_VF_SDP_R_OUT_BYTE_CNT_START        0x10190
++
++#define    CNXK_VF_SDP_R_OUT_CONTROL(ring)          \
++	(CNXK_VF_SDP_R_OUT_CONTROL_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_ENABLE(ring)          \
++	(CNXK_VF_SDP_R_OUT_ENABLE_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_SLIST_BADDR(ring)          \
++	(CNXK_VF_SDP_R_OUT_SLIST_BADDR_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_SLIST_RSIZE(ring)          \
++	(CNXK_VF_SDP_R_OUT_SLIST_RSIZE_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_SLIST_DBELL(ring)          \
++	(CNXK_VF_SDP_R_OUT_SLIST_DBELL_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_WMARK(ring)          \
++	(CNXK_VF_SDP_R_OUT_WMARK_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_CNTS(ring)          \
++	(CNXK_VF_SDP_R_OUT_CNTS_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_INT_LEVELS(ring)          \
++	(CNXK_VF_SDP_R_OUT_INT_LEVELS_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_PKT_CNT(ring)          \
++	(CNXK_VF_SDP_R_OUT_PKT_CNT_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_OUT_BYTE_CNT(ring)          \
++	(CNXK_VF_SDP_R_OUT_BYTE_CNT_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++/*------------------ R_OUT Masks ----------------*/
++#define    CNXK_VF_R_OUT_INT_LEVELS_BMODE            BIT_ULL(63)
++#define    CNXK_VF_R_OUT_INT_LEVELS_TIMET            (32)
++
++#define    CNXK_VF_R_OUT_CTL_IDLE                    BIT_ULL(40)
++#define    CNXK_VF_R_OUT_CTL_ES_I                    BIT_ULL(34)
++#define    CNXK_VF_R_OUT_CTL_NSR_I                   BIT_ULL(33)
++#define    CNXK_VF_R_OUT_CTL_ROR_I                   BIT_ULL(32)
++#define    CNXK_VF_R_OUT_CTL_ES_D                    BIT_ULL(30)
++#define    CNXK_VF_R_OUT_CTL_NSR_D                   BIT_ULL(29)
++#define    CNXK_VF_R_OUT_CTL_ROR_D                   BIT_ULL(28)
++#define    CNXK_VF_R_OUT_CTL_ES_P                    BIT_ULL(26)
++#define    CNXK_VF_R_OUT_CTL_NSR_P                   BIT_ULL(25)
++#define    CNXK_VF_R_OUT_CTL_ROR_P                   BIT_ULL(24)
++#define    CNXK_VF_R_OUT_CTL_IMODE                   BIT_ULL(23)
++
++/* ##################### Mail Box Registers ########################## */
++/* SDP PF to VF Mailbox Data Register */
++#define    CNXK_VF_SDP_R_MBOX_PF_VF_DATA_START    0x10210
++/* SDP Packet PF to VF Mailbox Interrupt Register */
++#define    CNXK_VF_SDP_R_MBOX_PF_VF_INT_START     0x10220
++/* SDP VF to PF Mailbox Data Register */
++#define    CNXK_VF_SDP_R_MBOX_VF_PF_DATA_START    0x10230
++
++#define    CNXK_VF_SDP_R_MBOX_PF_VF_INT_ENAB         BIT_ULL(1)
++#define    CNXK_VF_SDP_R_MBOX_PF_VF_INT_STATUS       BIT_ULL(0)
++
++#define    CNXK_VF_SDP_R_MBOX_PF_VF_DATA(ring)          \
++	(CNXK_VF_SDP_R_MBOX_PF_VF_DATA_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_MBOX_PF_VF_INT(ring)          \
++	(CNXK_VF_SDP_R_MBOX_PF_VF_INT_START + ((ring) * CNXK_VF_RING_OFFSET))
++
++#define    CNXK_VF_SDP_R_MBOX_VF_PF_DATA(ring)          \
++	(CNXK_VF_SDP_R_MBOX_VF_PF_DATA_START + ((ring) * CNXK_VF_RING_OFFSET))
++#endif /* _OCTEP_VF_REGS_CNXK_H_ */
 diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-index 330d6e72bc0b..82821bc28634 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
+new file mode 100644
+index 000000000000..4f1a8157ce39
+--- /dev/null
 +++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-@@ -68,6 +68,50 @@ static int octep_vf_oq_fill_ring_buffers(struct octep_vf_oq *oq)
- 	return -ENOMEM;
- }
- 
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#include <linux/pci.h>
++#include <linux/etherdevice.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++
 +/**
-+ * octep_vf_oq_refill() - refill buffers for used Rx ring descriptors.
++ * octep_vf_setup_oqs() - setup resources for all Rx queues.
 + *
 + * @oct: Octeon device private data structure.
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Return: number of descriptors successfully refilled with receive buffers.
 + */
-+static int octep_vf_oq_refill(struct octep_vf_device *oct, struct octep_vf_oq *oq)
++int octep_vf_setup_oqs(struct octep_vf_device *oct)
 +{
-+	struct octep_vf_oq_desc_hw *desc_ring = oq->desc_ring;
++	return -1;
++}
++
++/**
++ * octep_vf_oq_dbell_init() - Initialize Rx queue doorbell.
++ *
++ * @oct: Octeon device private data structure.
++ *
++ * Write number of descriptors to Rx queue doorbell register.
++ */
++void octep_vf_oq_dbell_init(struct octep_vf_device *oct)
++{
++}
++
++/**
++ * octep_vf_free_oqs() - Free resources of all Rx queues.
++ *
++ * @oct: Octeon device private data structure.
++ */
++void octep_vf_free_oqs(struct octep_vf_device *oct)
++{
++}
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.h
+new file mode 100644
+index 000000000000..fe46838b5200
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.h
+@@ -0,0 +1,224 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#ifndef _OCTEP_VF_RX_H_
++#define _OCTEP_VF_RX_H_
++
++/* struct octep_vf_oq_desc_hw - Octeon Hardware OQ descriptor format.
++ *
++ * The descriptor ring is made of descriptors which have 2 64-bit values:
++ *
++ *   @buffer_ptr: DMA address of the skb->data
++ *   @info_ptr:  DMA address of host memory, used to update pkt count by hw.
++ *               This is currently unused to save pci writes.
++ */
++struct octep_vf_oq_desc_hw {
++	dma_addr_t buffer_ptr;
++	u64 info_ptr;
++};
++
++static_assert(sizeof(struct octep_vf_oq_desc_hw) == 16);
++
++#define OCTEP_VF_OQ_DESC_SIZE    (sizeof(struct octep_vf_oq_desc_hw))
++
++/* Rx offload flags */
++#define OCTEP_VF_RX_OFFLOAD_VLAN_STRIP		BIT(0)
++#define OCTEP_VF_RX_OFFLOAD_IPV4_CKSUM		BIT(1)
++#define OCTEP_VF_RX_OFFLOAD_UDP_CKSUM		BIT(2)
++#define OCTEP_VF_RX_OFFLOAD_TCP_CKSUM		BIT(3)
++
++#define OCTEP_VF_RX_OFFLOAD_CKSUM		(OCTEP_VF_RX_OFFLOAD_IPV4_CKSUM | \
++						 OCTEP_VF_RX_OFFLOAD_UDP_CKSUM | \
++						 OCTEP_VF_RX_OFFLOAD_TCP_CKSUM)
++
++#define OCTEP_VF_RX_IP_CSUM(flags)		((flags) & \
++						 (OCTEP_VF_RX_OFFLOAD_IPV4_CKSUM | \
++						  OCTEP_VF_RX_OFFLOAD_TCP_CKSUM | \
++						  OCTEP_VF_RX_OFFLOAD_UDP_CKSUM))
++
++/* bit 0 is vlan strip */
++#define OCTEP_VF_RX_CSUM_IP_VERIFIED		BIT(1)
++#define OCTEP_VF_RX_CSUM_L4_VERIFIED		BIT(2)
++
++#define OCTEP_VF_RX_CSUM_VERIFIED(flags)	((flags) & \
++						 (OCTEP_VF_RX_CSUM_L4_VERIFIED | \
++						  OCTEP_VF_RX_CSUM_IP_VERIFIED))
++
++/* Extended Response Header in packet data received from Hardware.
++ * Includes metadata like checksum status.
++ * this is valid only if hardware/firmware published support for this.
++ * This is at offset 0 of packet data (skb->data).
++ */
++struct octep_vf_oq_resp_hw_ext {
++	/* Reserved. */
++	u64 rsvd:48;
++
++	/* rx offload flags */
++	u16 rx_ol_flags;
++};
++
++static_assert(sizeof(struct octep_vf_oq_resp_hw_ext) == 8);
++
++#define  OCTEP_VF_OQ_RESP_HW_EXT_SIZE   (sizeof(struct octep_vf_oq_resp_hw_ext))
++
++/* Length of Rx packet DMA'ed by Octeon to Host.
++ * this is in bigendian; so need to be converted to cpu endian.
++ * Octeon writes this at the beginning of Rx buffer (skb->data).
++ */
++struct octep_vf_oq_resp_hw {
++	/* The Length of the packet. */
++	__be64 length;
++};
++
++static_assert(sizeof(struct octep_vf_oq_resp_hw) == 8);
++
++#define OCTEP_VF_OQ_RESP_HW_SIZE   (sizeof(struct octep_vf_oq_resp_hw))
++
++/* Pointer to data buffer.
++ * Driver keeps a pointer to the data buffer that it made available to
++ * the Octeon device. Since the descriptor ring keeps physical (bus)
++ * addresses, this field is required for the driver to keep track of
++ * the virtual address pointers. The fields are operated by
++ * OS-dependent routines.
++ */
++struct octep_vf_rx_buffer {
 +	struct page *page;
-+	u32 refill_idx, i;
 +
-+	refill_idx = oq->host_refill_idx;
-+	for (i = 0; i < oq->refill_count; i++) {
-+		page = dev_alloc_page();
-+		if (unlikely(!page)) {
-+			dev_err(oq->dev, "refill: rx buffer alloc failed\n");
-+			oq->stats.alloc_failures++;
-+			break;
-+		}
++	/* length from rx hardware descriptor after converting to cpu endian */
++	u64 len;
++};
 +
-+		desc_ring[refill_idx].buffer_ptr = dma_map_page(oq->dev, page, 0,
-+								PAGE_SIZE, DMA_FROM_DEVICE);
-+		if (dma_mapping_error(oq->dev, desc_ring[refill_idx].buffer_ptr)) {
-+			dev_err(oq->dev,
-+				"OQ-%d buffer refill: DMA mapping error!\n",
-+				oq->q_no);
-+			put_page(page);
-+			oq->stats.alloc_failures++;
-+			break;
-+		}
-+		oq->buff_info[refill_idx].page = page;
-+		refill_idx++;
-+		if (refill_idx == oq->max_count)
-+			refill_idx = 0;
-+	}
-+	oq->host_refill_idx = refill_idx;
-+	oq->refill_count -= i;
++#define OCTEP_VF_OQ_RECVBUF_SIZE    (sizeof(struct octep_vf_rx_buffer))
 +
-+	return i;
-+}
++/* Output Queue statistics. Each output queue has four stats fields. */
++struct octep_vf_oq_stats {
++	/* Number of packets received from the Device. */
++	u64 packets;
 +
- /**
-  * octep_vf_setup_oq() - Setup a Rx queue.
-  *
-@@ -261,3 +305,206 @@ void octep_vf_free_oqs(struct octep_vf_device *oct)
- 			"Successfully freed OQ(RxQ)-%d.\n", i);
- 	}
- }
++	/* Number of bytes received from the Device. */
++	u64 bytes;
 +
-+/**
-+ * octep_vf_oq_check_hw_for_pkts() - Check for new Rx packets.
-+ *
-+ * @oct: Octeon device private data structure.
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Return: packets received after previous check.
++	/* Number of times failed to allocate buffers. */
++	u64 alloc_failures;
++};
++
++#define OCTEP_VF_OQ_STATS_SIZE   (sizeof(struct octep_vf_oq_stats))
++
++/* Hardware interface Rx statistics */
++struct octep_vf_iface_rx_stats {
++	/* Received packets */
++	u64 pkts;
++
++	/* Octets of received packets */
++	u64 octets;
++
++	/* Received PAUSE and Control packets */
++	u64 pause_pkts;
++
++	/* Received PAUSE and Control octets */
++	u64 pause_octets;
++
++	/* Filtered DMAC0 packets */
++	u64 dmac0_pkts;
++
++	/* Filtered DMAC0 octets */
++	u64 dmac0_octets;
++
++	/* Packets dropped due to RX FIFO full */
++	u64 dropped_pkts_fifo_full;
++
++	/* Octets dropped due to RX FIFO full */
++	u64 dropped_octets_fifo_full;
++
++	/* Error packets */
++	u64 err_pkts;
++
++	/* Filtered DMAC1 packets */
++	u64 dmac1_pkts;
++
++	/* Filtered DMAC1 octets */
++	u64 dmac1_octets;
++
++	/* NCSI-bound packets dropped */
++	u64 ncsi_dropped_pkts;
++
++	/* NCSI-bound octets dropped */
++	u64 ncsi_dropped_octets;
++
++	/* Multicast packets received. */
++	u64 mcast_pkts;
++
++	/* Broadcast packets received. */
++	u64 bcast_pkts;
++
++};
++
++/* The Descriptor Ring Output Queue structure.
++ * This structure has all the information required to implement a
++ * Octeon OQ.
 + */
-+static int octep_vf_oq_check_hw_for_pkts(struct octep_vf_device *oct,
-+					 struct octep_vf_oq *oq)
-+{
-+	u32 pkt_count, new_pkts;
++struct octep_vf_oq {
++	u32 q_no;
 +
-+	pkt_count = readl(oq->pkts_sent_reg);
-+	new_pkts = pkt_count - oq->last_pkt_count;
++	struct octep_vf_device *octep_vf_dev;
++	struct net_device *netdev;
++	struct device *dev;
 +
-+	/* Clear the hardware packets counter register if the rx queue is
-+	 * being processed continuously with-in a single interrupt and
-+	 * reached half its max value.
-+	 * this counter is not cleared every time read, to save write cycles.
++	struct napi_struct *napi;
++
++	/* The receive buffer list. This list has the virtual addresses
++	 * of the buffers.
 +	 */
-+	if (unlikely(pkt_count > 0xF0000000U)) {
-+		writel(pkt_count, oq->pkts_sent_reg);
-+		pkt_count = readl(oq->pkts_sent_reg);
-+		new_pkts += pkt_count;
-+	}
-+	oq->last_pkt_count = pkt_count;
-+	oq->pkts_pending += new_pkts;
-+	return new_pkts;
-+}
++	struct octep_vf_rx_buffer *buff_info;
++
++	/* Pointer to the mapped packet credit register.
++	 * Host writes number of info/buffer ptrs available to this register
++	 */
++	u8 __iomem *pkts_credit_reg;
++
++	/* Pointer to the mapped packet sent register.
++	 * Octeon writes the number of packets DMA'ed to host memory
++	 * in this register.
++	 */
++	u8 __iomem *pkts_sent_reg;
++
++	/* Statistics for this OQ. */
++	struct octep_vf_oq_stats stats;
++
++	/* Packets pending to be processed */
++	u32 pkts_pending;
++	u32 last_pkt_count;
++
++	/* Index in the ring where the driver should read the next packet */
++	u32 host_read_idx;
++
++	/* Number of  descriptors in this ring. */
++	u32 max_count;
++	u32 ring_size_mask;
++
++	/* The number of descriptors pending refill. */
++	u32 refill_count;
++
++	/* Index in the ring where the driver will refill the
++	 * descriptor's buffer
++	 */
++	u32 host_refill_idx;
++	u32 refill_threshold;
++
++	/* The size of each buffer pointed by the buffer pointer. */
++	u32 buffer_size;
++	u32 max_single_buffer_size;
++
++	/* The 8B aligned descriptor ring starts at this address. */
++	struct octep_vf_oq_desc_hw *desc_ring;
++
++	/* DMA mapped address of the OQ descriptor ring. */
++	dma_addr_t desc_ring_dma;
++};
++
++#define OCTEP_VF_OQ_SIZE   (sizeof(struct octep_vf_oq))
++#endif	/* _OCTEP_VF_RX_H_ */
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
+new file mode 100644
+index 000000000000..232ba479ecf6
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#include <linux/pci.h>
++#include <linux/etherdevice.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
 +
 +/**
-+ * __octep_vf_oq_process_rx() - Process hardware Rx queue and push to stack.
++ * octep_vf_clean_iqs()  - Clean Tx queues to shutdown the device.
 + *
 + * @oct: Octeon device private data structure.
-+ * @oq: Octeon Rx queue data structure.
-+ * @pkts_to_process: number of packets to be processed.
 + *
-+ * Process the new packets in Rx queue.
-+ * Packets larger than single Rx buffer arrive in consecutive descriptors.
-+ * But, count returned by the API only accounts full packets, not fragments.
-+ *
-+ * Return: number of packets processed and pushed to stack.
++ * Free the buffers in Tx queue descriptors pending completion and
++ * reset queue indices
 + */
-+static int __octep_vf_oq_process_rx(struct octep_vf_device *oct,
-+				    struct octep_vf_oq *oq, u16 pkts_to_process)
++void octep_vf_clean_iqs(struct octep_vf_device *oct)
 +{
-+	struct octep_vf_oq_resp_hw_ext *resp_hw_ext = NULL;
-+	netdev_features_t feat = oq->netdev->features;
-+	struct octep_vf_rx_buffer *buff_info;
-+	struct octep_vf_oq_resp_hw *resp_hw;
-+	u32 pkt, rx_bytes, desc_used;
-+	u16 data_offset, rx_ol_flags;
-+	struct sk_buff *skb;
-+	u32 read_idx;
-+
-+	read_idx = oq->host_read_idx;
-+	rx_bytes = 0;
-+	desc_used = 0;
-+	for (pkt = 0; pkt < pkts_to_process; pkt++) {
-+		buff_info = (struct octep_vf_rx_buffer *)&oq->buff_info[read_idx];
-+		dma_unmap_page(oq->dev, oq->desc_ring[read_idx].buffer_ptr,
-+			       PAGE_SIZE, DMA_FROM_DEVICE);
-+		resp_hw = page_address(buff_info->page);
-+		buff_info->page = NULL;
-+
-+		/* Swap the length field that is in Big-Endian to CPU */
-+		buff_info->len = be64_to_cpu(resp_hw->length);
-+		if (oct->fw_info.rx_ol_flags) {
-+			/* Extended response header is immediately after
-+			 * response header (resp_hw)
-+			 */
-+			resp_hw_ext = (struct octep_vf_oq_resp_hw_ext *)
-+				      (resp_hw + 1);
-+			buff_info->len -= OCTEP_VF_OQ_RESP_HW_EXT_SIZE;
-+			/* Packet Data is immediately after
-+			 * extended response header.
-+			 */
-+			data_offset = OCTEP_VF_OQ_RESP_HW_SIZE +
-+				      OCTEP_VF_OQ_RESP_HW_EXT_SIZE;
-+			rx_ol_flags = resp_hw_ext->rx_ol_flags;
-+		} else {
-+			/* Data is immediately after
-+			 * Hardware Rx response header.
-+			 */
-+			data_offset = OCTEP_VF_OQ_RESP_HW_SIZE;
-+			rx_ol_flags = 0;
-+		}
-+		rx_bytes += buff_info->len;
-+
-+		if (buff_info->len <= oq->max_single_buffer_size) {
-+			skb = napi_build_skb((void *)resp_hw, PAGE_SIZE);
-+			skb_reserve(skb, data_offset);
-+			skb_put(skb, buff_info->len);
-+			read_idx++;
-+			desc_used++;
-+			if (read_idx == oq->max_count)
-+				read_idx = 0;
-+		} else {
-+			struct skb_shared_info *shinfo;
-+			u16 data_len;
-+
-+			skb = napi_build_skb((void *)resp_hw, PAGE_SIZE);
-+			skb_reserve(skb, data_offset);
-+			/* Head fragment includes response header(s);
-+			 * subsequent fragments contains only data.
-+			 */
-+			skb_put(skb, oq->max_single_buffer_size);
-+			read_idx++;
-+			desc_used++;
-+			if (read_idx == oq->max_count)
-+				read_idx = 0;
-+
-+			shinfo = skb_shinfo(skb);
-+			data_len = buff_info->len - oq->max_single_buffer_size;
-+			while (data_len) {
-+				dma_unmap_page(oq->dev, oq->desc_ring[read_idx].buffer_ptr,
-+					       PAGE_SIZE, DMA_FROM_DEVICE);
-+				buff_info = (struct octep_vf_rx_buffer *)
-+					    &oq->buff_info[read_idx];
-+				if (data_len < oq->buffer_size) {
-+					buff_info->len = data_len;
-+					data_len = 0;
-+				} else {
-+					buff_info->len = oq->buffer_size;
-+					data_len -= oq->buffer_size;
-+				}
-+
-+				skb_add_rx_frag(skb, shinfo->nr_frags,
-+						buff_info->page, 0,
-+						buff_info->len,
-+						buff_info->len);
-+				buff_info->page = NULL;
-+				read_idx++;
-+				desc_used++;
-+				if (read_idx == oq->max_count)
-+					read_idx = 0;
-+			}
-+		}
-+
-+		skb->dev = oq->netdev;
-+		skb->protocol = eth_type_trans(skb, skb->dev);
-+		if (feat & NETIF_F_RXCSUM &&
-+		    OCTEP_VF_RX_CSUM_VERIFIED(rx_ol_flags))
-+			skb->ip_summed = CHECKSUM_UNNECESSARY;
-+		else
-+			skb->ip_summed = CHECKSUM_NONE;
-+		napi_gro_receive(oq->napi, skb);
-+	}
-+
-+	oq->host_read_idx = read_idx;
-+	oq->refill_count += desc_used;
-+	oq->stats.packets += pkt;
-+	oq->stats.bytes += rx_bytes;
-+
-+	return pkt;
 +}
 +
 +/**
-+ * octep_vf_oq_process_rx() - Process Rx queue.
++ * octep_vf_setup_iqs() - setup resources for all Tx queues.
 + *
-+ * @oq: Octeon Rx queue data structure.
-+ * @budget: max number of packets can be processed in one invocation.
-+ *
-+ * Check for newly received packets and process them.
-+ * Keeps checking for new packets until budget is used or no new packets seen.
-+ *
-+ * Return: number of packets processed.
++ * @oct: Octeon device private data structure.
 + */
-+int octep_vf_oq_process_rx(struct octep_vf_oq *oq, int budget)
++int octep_vf_setup_iqs(struct octep_vf_device *oct)
 +{
-+	u32 pkts_available, pkts_processed, total_pkts_processed;
-+	struct octep_vf_device *oct = oq->octep_vf_dev;
-+
-+	pkts_available = 0;
-+	pkts_processed = 0;
-+	total_pkts_processed = 0;
-+	while (total_pkts_processed < budget) {
-+		 /* update pending count only when current one exhausted */
-+		if (oq->pkts_pending == 0)
-+			octep_vf_oq_check_hw_for_pkts(oct, oq);
-+		pkts_available = min(budget - total_pkts_processed,
-+				     oq->pkts_pending);
-+		if (!pkts_available)
-+			break;
-+
-+		pkts_processed = __octep_vf_oq_process_rx(oct, oq,
-+							  pkts_available);
-+		oq->pkts_pending -= pkts_processed;
-+		total_pkts_processed += pkts_processed;
-+	}
-+
-+	if (oq->refill_count >= oq->refill_threshold) {
-+		u32 desc_refilled = octep_vf_oq_refill(oct, oq);
-+
-+		/* flush pending writes before updating credits */
-+		smp_wmb();
-+		writel(desc_refilled, oq->pkts_credit_reg);
-+	}
-+
-+	return total_pkts_processed;
++	return -1;
 +}
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-index 1a3e1a651dc4..47a5c054fdb6 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-@@ -8,6 +8,7 @@
- #include <linux/pci.h>
- #include <linux/etherdevice.h>
- #include <linux/vmalloc.h>
-+#include <net/netdev_queues.h>
- 
- #include "octep_vf_config.h"
- #include "octep_vf_main.h"
-@@ -23,6 +24,76 @@ static void octep_vf_iq_reset_indices(struct octep_vf_iq *iq)
- 	iq->pkt_in_done = 0;
- }
- 
++
 +/**
-+ * octep_vf_iq_process_completions() - Process Tx queue completions.
++ * octep_vf_free_iqs() - Free resources of all Tx queues.
 + *
-+ * @iq: Octeon Tx queue data structure.
-+ * @budget: max number of completions to be processed in one invocation.
++ * @oct: Octeon device private data structure.
 + */
-+int octep_vf_iq_process_completions(struct octep_vf_iq *iq, u16 budget)
++void octep_vf_free_iqs(struct octep_vf_device *oct)
 +{
-+	u32 compl_pkts, compl_bytes, compl_sg;
-+	struct octep_vf_device *oct = iq->octep_vf_dev;
-+	struct octep_vf_tx_buffer *tx_buffer;
-+	struct skb_shared_info *shinfo;
-+	u32 fi = iq->flush_index;
-+	struct sk_buff *skb;
-+	u8 frags, i;
-+
-+	compl_pkts = 0;
-+	compl_sg = 0;
-+	compl_bytes = 0;
-+	iq->octep_vf_read_index = oct->hw_ops.update_iq_read_idx(iq);
-+
-+	while (likely(budget && (fi != iq->octep_vf_read_index))) {
-+		tx_buffer = iq->buff_info + fi;
-+		skb = tx_buffer->skb;
-+
-+		fi++;
-+		if (unlikely(fi == iq->max_count))
-+			fi = 0;
-+		compl_bytes += skb->len;
-+		compl_pkts++;
-+		budget--;
-+
-+		if (!tx_buffer->gather) {
-+			dma_unmap_single(iq->dev, tx_buffer->dma,
-+					 tx_buffer->skb->len, DMA_TO_DEVICE);
-+			dev_kfree_skb_any(skb);
-+			continue;
-+		}
-+
-+		/* Scatter/Gather */
-+		shinfo = skb_shinfo(skb);
-+		frags = shinfo->nr_frags;
-+		compl_sg++;
-+
-+		dma_unmap_single(iq->dev, tx_buffer->sglist[0].dma_ptr[0],
-+				 tx_buffer->sglist[0].len[3], DMA_TO_DEVICE);
-+
-+		i = 1; /* entry 0 is main skb, unmapped above */
-+		while (frags--) {
-+			dma_unmap_page(iq->dev, tx_buffer->sglist[i >> 2].dma_ptr[i & 3],
-+				       tx_buffer->sglist[i >> 2].len[3 - (i & 3)], DMA_TO_DEVICE);
-+			i++;
-+		}
-+
-+		dev_kfree_skb_any(skb);
-+	}
-+
-+	iq->pkts_processed += compl_pkts;
-+	iq->stats.instr_completed += compl_pkts;
-+	iq->stats.bytes_sent += compl_bytes;
-+	iq->stats.sgentry_sent += compl_sg;
-+	iq->flush_index = fi;
-+
-+	netif_subqueue_completed_wake(iq->netdev, iq->q_no, compl_pkts,
-+				      compl_bytes, IQ_INSTR_SPACE(iq),
-+				      OCTEP_VF_WAKE_QUEUE_THRESHOLD);
-+
-+	return !budget;
 +}
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.h
+new file mode 100644
+index 000000000000..f338b975103c
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.h
+@@ -0,0 +1,276 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
 +
- /**
-  * octep_vf_iq_free_pending() - Free Tx buffers for pending completions.
-  *
++#ifndef _OCTEP_VF_TX_H_
++#define _OCTEP_VF_TX_H_
++
++#define IQ_SEND_OK          0
++#define IQ_SEND_STOP        1
++#define IQ_SEND_FAILED     -1
++
++#define TX_BUFTYPE_NONE          0
++#define TX_BUFTYPE_NET           1
++#define TX_BUFTYPE_NET_SG        2
++#define NUM_TX_BUFTYPES          3
++
++/* Hardware format for Scatter/Gather list
++ *
++ * 63      48|47     32|31     16|15       0
++ * -----------------------------------------
++ * |  Len 0  |  Len 1  |  Len 2  |  Len 3  |
++ * -----------------------------------------
++ * |                Ptr 0                  |
++ * -----------------------------------------
++ * |                Ptr 1                  |
++ * -----------------------------------------
++ * |                Ptr 2                  |
++ * -----------------------------------------
++ * |                Ptr 3                  |
++ * -----------------------------------------
++ */
++struct octep_vf_tx_sglist_desc {
++	u16 len[4];
++	dma_addr_t dma_ptr[4];
++};
++
++static_assert(sizeof(struct octep_vf_tx_sglist_desc) == 40);
++
++/* Each Scatter/Gather entry sent to hardwar hold four pointers.
++ * So, number of entries required is (MAX_SKB_FRAGS + 1)/4, where '+1'
++ * is for main skb which also goes as a gather buffer to Octeon hardware.
++ * To allocate sufficient SGLIST entries for a packet with max fragments,
++ * align by adding 3 before calcuating max SGLIST entries per packet.
++ */
++#define OCTEP_VF_SGLIST_ENTRIES_PER_PKT ((MAX_SKB_FRAGS + 1 + 3) / 4)
++#define OCTEP_VF_SGLIST_SIZE_PER_PKT \
++	(OCTEP_VF_SGLIST_ENTRIES_PER_PKT * sizeof(struct octep_vf_tx_sglist_desc))
++
++struct octep_vf_tx_buffer {
++	struct sk_buff *skb;
++	dma_addr_t dma;
++	struct octep_vf_tx_sglist_desc *sglist;
++	dma_addr_t sglist_dma;
++	u8 gather;
++};
++
++#define OCTEP_VF_IQ_TXBUFF_INFO_SIZE (sizeof(struct octep_vf_tx_buffer))
++
++/* VF Hardware interface Tx statistics */
++struct octep_vf_iface_tx_stats {
++	/* Total frames sent on the interface */
++	u64 pkts;
++
++	/* Total octets sent on the interface */
++	u64 octs;
++
++	/* Packets sent to a broadcast DMAC */
++	u64 bcst;
++
++	/* Packets sent to the multicast DMAC */
++	u64 mcst;
++
++	/* Packets dropped */
++	u64 dropped;
++
++	/* Reserved */
++	u64 reserved[13];
++};
++
++/* VF Input Queue statistics */
++struct octep_vf_iq_stats {
++	/* Instructions posted to this queue. */
++	u64 instr_posted;
++
++	/* Instructions copied by hardware for processing. */
++	u64 instr_completed;
++
++	/* Instructions that could not be processed. */
++	u64 instr_dropped;
++
++	/* Bytes sent through this queue. */
++	u64 bytes_sent;
++
++	/* Gather entries sent through this queue. */
++	u64 sgentry_sent;
++
++	/* Number of transmit failures due to TX_BUSY */
++	u64 tx_busy;
++
++	/* Number of times the queue is restarted */
++	u64 restart_cnt;
++};
++
++/* The instruction (input) queue.
++ * The input queue is used to post raw (instruction) mode data or packet
++ * data to Octeon device from the host. Each input queue (up to 4) for
++ * a Octeon device has one such structure to represent it.
++ */
++struct octep_vf_iq {
++	u32 q_no;
++
++	struct octep_vf_device *octep_vf_dev;
++	struct net_device *netdev;
++	struct device *dev;
++	struct netdev_queue *netdev_q;
++
++	/* Index in input ring where driver should write the next packet */
++	u16 host_write_index;
++
++	/* Index in input ring where Octeon is expected to read next packet */
++	u16 octep_vf_read_index;
++
++	/* This index aids in finding the window in the queue where Octeon
++	 * has read the commands.
++	 */
++	u16 flush_index;
++
++	/* Statistics for this input queue. */
++	struct octep_vf_iq_stats stats;
++
++	/* Pointer to the Virtual Base addr of the input ring. */
++	struct octep_vf_tx_desc_hw *desc_ring;
++
++	/* DMA mapped base address of the input descriptor ring. */
++	dma_addr_t desc_ring_dma;
++
++	/* Info of Tx buffers pending completion. */
++	struct octep_vf_tx_buffer *buff_info;
++
++	/* Base pointer to Scatter/Gather lists for all ring descriptors. */
++	struct octep_vf_tx_sglist_desc *sglist;
++
++	/* DMA mapped addr of Scatter Gather Lists */
++	dma_addr_t sglist_dma;
++
++	/* Octeon doorbell register for the ring. */
++	u8 __iomem *doorbell_reg;
++
++	/* Octeon instruction count register for this ring. */
++	u8 __iomem *inst_cnt_reg;
++
++	/* interrupt level register for this ring */
++	u8 __iomem *intr_lvl_reg;
++
++	/* Maximum no. of instructions in this queue. */
++	u32 max_count;
++	u32 ring_size_mask;
++
++	u32 pkt_in_done;
++	u32 pkts_processed;
++
++	u32 status;
++
++	/* Number of instructions pending to be posted to Octeon. */
++	u32 fill_cnt;
++
++	/* The max. number of instructions that can be held pending by the
++	 * driver before ringing doorbell.
++	 */
++	u32 fill_threshold;
++};
++
++/* Hardware Tx Instruction Header */
++struct octep_vf_instr_hdr {
++	/* Data Len */
++	u64 tlen:16;
++
++	/* Reserved */
++	u64 rsvd:20;
++
++	/* PKIND for SDP */
++	u64 pkind:6;
++
++	/* Front Data size */
++	u64 fsz:6;
++
++	/* No. of entries in gather list */
++	u64 gsz:14;
++
++	/* Gather indicator 1=gather*/
++	u64 gather:1;
++
++	/* Reserved3 */
++	u64 reserved3:1;
++};
++
++static_assert(sizeof(struct octep_vf_instr_hdr) == 8);
++
++/* Tx offload flags */
++#define OCTEP_VF_TX_OFFLOAD_VLAN_INSERT	BIT(0)
++#define OCTEP_VF_TX_OFFLOAD_IPV4_CKSUM	BIT(1)
++#define OCTEP_VF_TX_OFFLOAD_UDP_CKSUM	BIT(2)
++#define OCTEP_VF_TX_OFFLOAD_TCP_CKSUM	BIT(3)
++#define OCTEP_VF_TX_OFFLOAD_SCTP_CKSUM	BIT(4)
++#define OCTEP_VF_TX_OFFLOAD_TCP_TSO	BIT(5)
++#define OCTEP_VF_TX_OFFLOAD_UDP_TSO	BIT(6)
++
++#define OCTEP_VF_TX_OFFLOAD_CKSUM	(OCTEP_VF_TX_OFFLOAD_IPV4_CKSUM | \
++					 OCTEP_VF_TX_OFFLOAD_UDP_CKSUM | \
++					 OCTEP_VF_TX_OFFLOAD_TCP_CKSUM)
++
++#define OCTEP_VF_TX_OFFLOAD_TSO		(OCTEP_VF_TX_OFFLOAD_TCP_TSO | \
++					 OCTEP_VF_TX_OFFLOAD_UDP_TSO)
++
++#define OCTEP_VF_TX_IP_CSUM(flags)	((flags) & \
++					 (OCTEP_VF_TX_OFFLOAD_IPV4_CKSUM | \
++					  OCTEP_VF_TX_OFFLOAD_TCP_CKSUM | \
++					  OCTEP_VF_TX_OFFLOAD_UDP_CKSUM))
++
++#define OCTEP_VF_TX_TSO(flags)		((flags) & \
++					 (OCTEP_VF_TX_OFFLOAD_TCP_TSO | \
++					  OCTEP_VF_TX_OFFLOAD_UDP_TSO))
++
++struct tx_mdata {
++	/* offload flags */
++	u16 ol_flags;
++
++	/* gso size */
++	u16 gso_size;
++
++	/* gso flags */
++	u16 gso_segs;
++
++	/* reserved */
++	u16 rsvd1;
++
++	/* reserved */
++	u64 rsvd2;
++};
++
++static_assert(sizeof(struct tx_mdata) == 16);
++
++/* 64-byte Tx instruction format.
++ * Format of instruction for a 64-byte mode input queue.
++ *
++ * only first 16-bytes (dptr and ih) are mandatory; rest are optional
++ * and filled by the driver based on firmware/hardware capabilities.
++ * These optional headers together called Front Data and its size is
++ * described by ih->fsz.
++ */
++struct octep_vf_tx_desc_hw {
++	/* Pointer where the input data is available. */
++	u64 dptr;
++
++	/* Instruction Header. */
++	union {
++		struct octep_vf_instr_hdr ih;
++		u64 ih64;
++	};
++
++	union  {
++		u64 txm64[2];
++		struct tx_mdata txm;
++	};
++
++	/* Additional headers available in a 64-byte instruction. */
++	u64 exhdr[4];
++};
++
++static_assert(sizeof(struct octep_vf_tx_desc_hw) == 64);
++
++#define OCTEP_VF_IQ_DESC_SIZE (sizeof(struct octep_vf_tx_desc_hw))
++#endif /* _OCTEP_VF_TX_H_ */
 -- 
 2.25.1
 
