@@ -1,138 +1,162 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB1C2231F;
-	Wed,  7 Feb 2024 08:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C803420B10
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 08:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707295387; cv=none; b=BEd8Irouyaz2lAUu5AbEN04AQ7RLEitUr4wLQDhINxamimmrdJxayCFwqSJMZE1o7+4t9w8GTPUduvkuuSHThtDnQC5j/lEbPy9DgnZYh80NbS8uPn1n72zWF9x/BE7IbXm7+t0+BChF4tWNUb3maApbouZyAJqleKtGh8O2rmE=
+	t=1707295404; cv=none; b=KC4g8OwSo9c59ixNZOv4Wr9RkaYmDcK8mhp015djduQcPqU/ucOUiJEuP3uo7FucOUJydXxSfng+pWEKZQRmOjS/yjbVQvfx+okBQY2Bw+yZdiYhCP032fv8udFNDIsblby8o9tNFrlPLdQRCjEQDC7paAEdsAMblHKy8/oCqBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707295387; c=relaxed/simple;
-	bh=iDiKQY8q5ltjX8ENZ+sgq/WXnlBPN6BX7cO0TQvWkuE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N92pZtlz53Dj1X4LuKpy57B2k8GoUvgdpZ5BwyG8bXD1FkCyebRdbZpadtxmOrPjJST8YhQnz2vdxzw7N+4Ytp0IHlKQN9XV5u3/OpbC0rotpLPoOWm4kFQPIbOGW+0HgSdXpZizoLYM+Ozs0JQsp+VJL9roxZ7hnlg3vdQMxMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YQ4bdOVX; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YQ4bdOVX"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4178gtpJ061988;
-	Wed, 7 Feb 2024 02:42:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707295375;
-	bh=G7dgSHhP0N06vgiT4jQE6KpIIh0597u9fGyYroAeJUk=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=YQ4bdOVXlt+WzrsxXtuMSk+oBRH0991qSeTvqE1UUODSw+Kjowj+C3aE1d4pMyoiL
-	 AcR4V7cUvqidoWIzoLJVGvXDjMU8SXnw2LnEN5GxgG7l/gT1TSiUWb8S5zByWAfJDN
-	 ydjCuHSF//TJDgEg4Zx2Hh1eHMEqnA7mdLpcSeDU=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4178gtZg063646
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 7 Feb 2024 02:42:55 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
- Feb 2024 02:42:55 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 7 Feb 2024 02:42:54 -0600
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4178gsMH075858;
-	Wed, 7 Feb 2024 02:42:54 -0600
-Date: Wed, 7 Feb 2024 14:12:53 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-CC: Mark Brown <broonie@kernel.org>, Apurva Nandan <a-nandan@ti.com>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Gregory CLEMENT
-	<gregory.clement@bootlin.com>,
-        Vladimir Kondratiev
-	<vladimir.kondratiev@mobileye.com>,
-        Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>,
-        Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Subject: Re: [PATCH v2 2/4] spi: cadence-qspi: fix pointer reference in
- runtime PM hooks
-Message-ID: <20240207084253.fxrnoskda5x6usqo@dhruva>
-References: <20240205-cdns-qspi-pm-fix-v2-0-2e7bbad49a46@bootlin.com>
- <20240205-cdns-qspi-pm-fix-v2-2-2e7bbad49a46@bootlin.com>
+	s=arc-20240116; t=1707295404; c=relaxed/simple;
+	bh=m7YzNhGTx8EdreLaLQv6WahRGcqBsoyLRaNgx5AIeZ8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Obmv3DIfRXx8DBI0O4t/edeoD7AIsOrTebb/+Ht4KO7zwAwfX9eRGVSzAAP9j9E4vrBk6J0TsbPv+b5V0ToPfwkqAYyYxuYC+ZLgQCxtZ4ZyT46whOiPosZuA1eviDaUN9hJGR6ng9fQvgYBhR5YHZ3lWnteguhiKlQgPtb3lC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36381f0e0a6so2583595ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 00:43:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707295402; x=1707900202;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5cHzaOQQcEQytKXWs8H9MBprsiLU/8XFqHbQYiJ3eXY=;
+        b=ZrBgiWixKlmMLdR/h5g4S2NDzbbRlxdXG0Aqj3Ge2/RJjdNUlwdxWMWz61zangnyIL
+         MqdFrxbmGhFslgc6pe/igYYUXqxZ78roDPw60QEM16STbE4kXGvXqwB6M28c8HXP6arU
+         Ojs5JYE3sE9/VluIMy/2g0LnL81KkbhE/MkZytaLBdzXy9TxmXombPB1YWIFe56EVKmb
+         wmTTtFcg0h8tki1Bm/Bch43+17If3jnDTaQkp2XK2uGs46X/FVgyoTJO305aLlvQpOl9
+         uiltRYNfsLwZQI4Q08cemGDaedoZHw57FZqjnOMGxmBgPed+D0KaN6gpGxpcu1xTbvbS
+         lADA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMKWniiLrMueTqenEdu1WRYoTqM2NxpqhW8iIMX5yRDV/MjEhpxs6Wvn5ekL2BZMPifgPTBlpygnaBv+VL3TZMFGrg1Z+NjVYcZTh6
+X-Gm-Message-State: AOJu0Yzuj2TTMFqU/FR1mYoOo3NLLBortk9qcuMHoPOSnG8BO0+71Hf0
+	xp1nYN87CzvSbWejP2xMXEzfmawJLZt2pTd1k5CBxyxBRUzm6SK3WPbZa5N9zKG1q8/s+7cJx3e
+	hssNBb2Wf6wCtyt3nWDEJ/dikur4tEzo6ExpaD71NzKK2vL0RSpzN2sM=
+X-Google-Smtp-Source: AGHT+IEj7C7Vt1p1cSPScjHI5tRVGFIaP0qrsOagSmyFMRsP4RHKwDPuTJ1XpcZRXkl1bJqWyi7Z42gV4tVHlu9ywtqq85SNrmxR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240205-cdns-qspi-pm-fix-v2-2-2e7bbad49a46@bootlin.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Received: by 2002:a05:6e02:1c2f:b0:363:b5e3:1082 with SMTP id
+ m15-20020a056e021c2f00b00363b5e31082mr284357ilh.4.1707295402015; Wed, 07 Feb
+ 2024 00:43:22 -0800 (PST)
+Date: Wed, 07 Feb 2024 00:43:22 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f6c32a0610c6af48@google.com>
+Subject: [syzbot] [btrfs?] kernel BUG in mapping_try_invalidate
+From: syzbot <syzbot+e017b58b47bacf31a06b@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Feb 05, 2024 at 15:57:30 +0100, Théo Lebrun wrote:
-> dev_get_drvdata() gets used to acquire the pointer to cqspi and the SPI
-> controller. Neither embed the other; this lead to memory corruption.
-> 
-> On a given platform (Mobileye EyeQ5) the memory corruption is hidden
-> inside cqspi->f_pdata. Also, this uninitialised memory is used as a
-> mutex (ctlr->bus_lock_mutex) by spi_controller_suspend().
-> 
-> Fixes: 2087e85bb66e ("spi: cadence-quadspi: fix suspend-resume implementations")
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> ---
->  drivers/spi/spi-cadence-quadspi.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-> index 720b28d2980c..1a27987638f0 100644
-> --- a/drivers/spi/spi-cadence-quadspi.c
-> +++ b/drivers/spi/spi-cadence-quadspi.c
-> @@ -1930,10 +1930,9 @@ static void cqspi_remove(struct platform_device *pdev)
->  static int cqspi_runtime_suspend(struct device *dev)
->  {
->  	struct cqspi_st *cqspi = dev_get_drvdata(dev);
-> -	struct spi_controller *host = dev_get_drvdata(dev);
+Hello,
 
-Or you could do:
-+	struct spi_controller *host = cqspi->host;
+syzbot found the following issue on:
 
->  	int ret;
->  
-> -	ret = spi_controller_suspend(host);
-> +	ret = spi_controller_suspend(cqspi->host);
+HEAD commit:    99bd3cb0d12e Merge tag 'bcachefs-2024-02-05' of https://ev..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16629540180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89a5d896b14c4565
+dashboard link: https://syzkaller.appspot.com/bug?extid=e017b58b47bacf31a06b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-And avoid changing these?
+Unfortunately, I don't have any reproducer for this issue yet.
 
->  	cqspi_controller_enable(cqspi, 0);
->  
->  	clk_disable_unprepare(cqspi->clk);
-> @@ -1944,7 +1943,6 @@ static int cqspi_runtime_suspend(struct device *dev)
->  static int cqspi_runtime_resume(struct device *dev)
->  {
->  	struct cqspi_st *cqspi = dev_get_drvdata(dev);
-> -	struct spi_controller *host = dev_get_drvdata(dev);
->  
->  	clk_prepare_enable(cqspi->clk);
->  	cqspi_wait_idle(cqspi);
-> @@ -1953,7 +1951,7 @@ static int cqspi_runtime_resume(struct device *dev)
->  	cqspi->current_cs = -1;
->  	cqspi->sclk = 0;
->  
-> -	return spi_controller_resume(host);
-> +	return spi_controller_resume(cqspi->host);
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/73aa72bd3577/disk-99bd3cb0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6c6bf1614995/vmlinux-99bd3cb0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7df252d11788/bzImage-99bd3cb0.xz
 
-ditto.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e017b58b47bacf31a06b@syzkaller.appspotmail.com
 
-Thanks,
-Dhruva Gole <d-gole@ti.com>
+ process_one_work kernel/workqueue.c:2633 [inline]
+ process_scheduled_works+0x913/0x1420 kernel/workqueue.c:2706
+ worker_thread+0xa5f/0x1000 kernel/workqueue.c:2787
+ kthread+0x2ef/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+------------[ cut here ]------------
+kernel BUG at mm/filemap.c:2072!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 16388 Comm: syz-executor.2 Not tainted 6.8.0-rc3-syzkaller-00005-g99bd3cb0d12e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:find_lock_entries+0xfdf/0x1110 mm/filemap.c:2071
+Code: e8 96 4d cb ff eb 2a e8 8f 4d cb ff eb 3a e8 88 4d cb ff eb 4a e8 81 4d cb ff 4c 89 f7 48 c7 c6 a0 41 b3 8b e8 32 0f 10 00 90 <0f> 0b e8 6a 4d cb ff 4c 89 f7 48 c7 c6 a0 4b b3 8b e8 1b 0f 10 00
+RSP: 0018:ffffc90013457520 EFLAGS: 00010246
+RAX: f6dc7e6d18066c00 RBX: 0000000000000000 RCX: ffffc90013457303
+RDX: 0000000000000002 RSI: ffffffff8baac6e0 RDI: ffffffff8bfd93e0
+RBP: ffffc90013457670 R08: ffffffff8f842b6f R09: 1ffffffff1f0856d
+R10: dffffc0000000000 R11: fffffbfff1f0856e R12: ffffc900134575c0
+R13: ffffffffffffffff R14: ffffea0000b3c100 R15: ffffea0000b3c134
+FS:  00007f60b3b6e6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000056197e1c4648 CR3: 000000007d35c000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mapping_try_invalidate+0x162/0x640 mm/truncate.c:499
+ open_ctree+0xa9c/0x2a00 fs/btrfs/disk-io.c:3220
+ btrfs_fill_super fs/btrfs/super.c:940 [inline]
+ btrfs_get_tree_super fs/btrfs/super.c:1860 [inline]
+ btrfs_get_tree+0xe7a/0x1920 fs/btrfs/super.c:2086
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1784
+ fc_mount+0x1b/0xb0 fs/namespace.c:1125
+ btrfs_get_tree_subvol fs/btrfs/super.c:2049 [inline]
+ btrfs_get_tree+0x652/0x1920 fs/btrfs/super.c:2087
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1784
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f60b2e7f4aa
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f60b3b6def8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f60b3b6df80 RCX: 00007f60b2e7f4aa
+RDX: 00000000200051c0 RSI: 0000000020005200 RDI: 00007f60b3b6df40
+RBP: 00000000200051c0 R08: 00007f60b3b6df80 R09: 0000000001000008
+R10: 0000000001000008 R11: 0000000000000202 R12: 0000000020005200
+R13: 00007f60b3b6df40 R14: 00000000000051ab R15: 0000000020000280
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:find_lock_entries+0xfdf/0x1110 mm/filemap.c:2071
+Code: e8 96 4d cb ff eb 2a e8 8f 4d cb ff eb 3a e8 88 4d cb ff eb 4a e8 81 4d cb ff 4c 89 f7 48 c7 c6 a0 41 b3 8b e8 32 0f 10 00 90 <0f> 0b e8 6a 4d cb ff 4c 89 f7 48 c7 c6 a0 4b b3 8b e8 1b 0f 10 00
+RSP: 0018:ffffc90013457520 EFLAGS: 00010246
+RAX: f6dc7e6d18066c00 RBX: 0000000000000000 RCX: ffffc90013457303
+RDX: 0000000000000002 RSI: ffffffff8baac6e0 RDI: ffffffff8bfd93e0
+RBP: ffffc90013457670 R08: ffffffff8f842b6f R09: 1ffffffff1f0856d
+R10: dffffc0000000000 R11: fffffbfff1f0856e R12: ffffc900134575c0
+R13: ffffffffffffffff R14: ffffea0000b3c100 R15: ffffea0000b3c134
+FS:  00007f60b3b6e6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555555ac9938 CR3: 000000007d35c000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
->  }
->  
->  static DEFINE_RUNTIME_DEV_PM_OPS(cqspi_dev_pm_ops, cqspi_runtime_suspend,
-> 
-> -- 
-> 2.43.0
-> 
-> 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
