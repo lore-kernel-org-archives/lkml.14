@@ -1,95 +1,109 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B658595E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 19:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B7485946
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 19:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707334052; cv=none; b=Zp/ESkOYgUPXRpuQyMZNyOHy3ewjralyF5SYJXkKhm5XVl03nk5CXi+J9h/5RkUfBxqGGPQP4R3j63vwQfzp8u0D4+7a+snMy4yd9S9BmpmEha7VVhsrJFkeYvQBT40N8AGavu0btPIuySIj9k+ZEnjtenO8fWQCTwwnFTUFSfw=
+	t=1707334516; cv=none; b=AYcM7hZ4Wa1siDtEtJOp5j/Slkj0RCuKE7a2qRCsiqKF5xK1gThVhmX/XXJ2jX9JTSD4P5h+BJhXYIOxZ2oN7IS1J+NXHD/RjcyCVV422fTKfG7lTtYJXOxpoirvyU4EaZbTh3NExvD/g2SOnAisQ4QdikmZiZV0+eVL79T0/Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707334052; c=relaxed/simple;
-	bh=5RaTiIWx9wDoTYXHqrYH6XJ/pBQOCNuol350peNdprY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=U1L2QnGM7y8eo02S87eZr8c9rAZWJL2GOso6J0oJVDbmBRDAgMkmmkXVgcAPlH35q2S2RL9JwojzEnw2472P8W1e4O2WKTk9ldhK3emDjrv9k34UV3CuGz2fiUmYKgfP2nLFCAAHbLipNNKZpX3vBdFEUQL0hjIxCx8O2OEKknQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TViiTtzA; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1707334516; c=relaxed/simple;
+	bh=vwN+D5W7fSFBHcmU7F4lz9AR0Hav7hHZZc7DLd/55bg=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=ky6sCqsbNgn8Q5TXge/ZmNAkm5qs/Aa9SB/BcG214KZe6lXt0w0WXc4sR3FtA4djGi9Wp5QECMzoPM4+FYw4Hs+q1/oHvGzYJYsqWaQvOUfYBt+yjdL1RKdNSO2+ZBElk56fKp0+/jUHP5K7DSE9NDX7NrZI207+fw2qfkJW8J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=d3lBnFXA; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TViiTtzA"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-42a8be32041so8701061cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 11:27:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="d3lBnFXA"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e06d2180b0so562278b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 11:35:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1707334049; x=1707938849; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cA5YwgvtHoLDpmj5Skshopyo0pdeDCfKH8nml3v6ZvA=;
-        b=TViiTtzAyVaIrBaq1lcHsQ9AJv+rg/QUQ2fWILE5q56VkvV031ahfyj5KnoaVPxJG+
-         M9uGLQupOz0998OezZIktk5NhRzyAnpu9ZcNTAYMYfAC8gKVJwip/oVdla2emp/ZhMUh
-         nAtBLA2LcdQhWqxmYup0qP9CTO6RXPUW1ddqp5ajgGpb63swHKoHrjJvDMtBgf6EMCya
-         u7aablLGhtysxqqoZjk9gViO6SYPnWcjOAdPwOIZNrztfy7lyUtfjmmvm3pN5mipDCVT
-         RszNM3mo1ctob7nLsAtBKFRzHF5OZEY0TwjtvKPumh+yXebsFW3N9u0M2lxkh+WM/LPe
-         85Lw==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1707334513; x=1707939313; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5DNJ0YWZMQGJUiB/7nqMNUBTgtfVhRG2xEzHjBsppl0=;
+        b=d3lBnFXADp8WiM8tKDSQeCd8vb1Oz0nWYZCRMAuv2Qi8E/Nd2BnY7ojmTxsSaUCTop
+         Dg81afMOlsPLdY69WRo5lE5NekW1cG2eSoBLIkBqH1OEnFwMDIVFG3e1KfxS/ONc0bap
+         B3M3wwHVH2mEygswdYbhXRQMfXAy9kZkIfovwYkz5nVeBnidHqf+ssB6eKiiHE9hUHF8
+         5iRdWNsdKRn6sQLmI4Uecx6dQ3Wv468So1CQc1FLxE6litUIuMF9l/xe3oYaFbRpz4Qk
+         KGePbPsoSX4bfoOA3Ak+8ZIUIJdAvQu+ZyBL/XLvEpSlI/6ysm/9C63NuAfD5oxuPBCT
+         OehA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707334049; x=1707938849;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cA5YwgvtHoLDpmj5Skshopyo0pdeDCfKH8nml3v6ZvA=;
-        b=mcfQJqHTgOB90qXe2IVCIeRg2sZ0+q04ziTwmpOh3FtoLa3hkjvqyHoy+rm5QQ4zLY
-         JnNhrKi29seLxY+N4ulKp0lramiOp3vfx2QfsI1IDCZpXDXDTG7btSjyFOjUUVpN2S3l
-         YaKzn/ppbdT0RDgrIyCmoCRE+lXrspCqWRWTkVB/2hIys4taunXXcYpY9n7RSq3WTt5k
-         R65F6uOT/WLYvhUI7m9TZwW2MFAO2CIvgG6IeF0QmTmqHl9tJmwFWwgiX41tLQoSZx+Q
-         sofUJTu/4Cs1mw0Yxifx6mdRyFOfeHrZScvEur0c1o7I4ebCcIsOX46whr2FssJ1HaCb
-         JuPQ==
-X-Gm-Message-State: AOJu0YwBXOUvLxwen93uuoSm56G0WV40Od/Gz4ZgMy2G9g4zsbHcf9Dn
-	xNZ1Te699Js1VjqwlTu4cecwYX5pXT8rd+YpKCIwNktgllOVG3g4YgWIcYo2mNI=
-X-Google-Smtp-Source: AGHT+IHsK4ELyrPXdU4ZLmwitvFRj7LYEHNgAJuvSyMPNB8sou2DqRMM7N8MJoYaGqi2rQYT+Fxtqg==
-X-Received: by 2002:a05:6214:27cb:b0:68c:67aa:c056 with SMTP id ge11-20020a05621427cb00b0068c67aac056mr6941805qvb.39.1707334049232;
-        Wed, 07 Feb 2024 11:27:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXj1ff2e/sYSGxK1YlhNSpJ8/w8GhjTI5LhuvxizKy6x8W/6hos9diJ1ETtTEcLg/TVYmqAIwhTEKHzeaxM9l9DDMoT6Rl/ykv8I5MEn2RQ4RzDTpjnVLYW3ZXn/TNw0ueiAHScDsmwL3AwcGQDqrxvYNXsvFkP1puPtlXLOAxSFw+g/0BCBhy9I8Gajfei3p+mqqln7VJ2vILpUpfwVUdbkVf1werhIL4Xk9hkFoyQSXVpRi34UW/O8UHpavC+10PZ4+KSLIrP8EsbFRi/xpmZIjPE/QII7mdA+9jGp3ZJw+/NwygGxNW2xdpBgA2x1B/FviTu6abT91l6SLSW4ExTkADsYTqPkirRqI14FN4vBik5b9VpObUbi0iUqNRUfVaRBoEsg3TQ3KU+IyoV/60EkdsKc6zC+dDKPwAsDoMmpJz3Nv45Y33ntLQctzsHs9XF3FZuVV8dMiaEtw==
-Received: from [100.64.0.1] ([170.85.8.192])
-        by smtp.gmail.com with ESMTPSA id nd10-20020a056214420a00b006819aeb62d6sm868412qvb.136.2024.02.07.11.27.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 11:27:28 -0800 (PST)
-Message-ID: <b4e20286-eb80-4dce-8d37-0d079ba5296a@sifive.com>
-Date: Wed, 7 Feb 2024 13:27:27 -0600
+        d=1e100.net; s=20230601; t=1707334513; x=1707939313;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5DNJ0YWZMQGJUiB/7nqMNUBTgtfVhRG2xEzHjBsppl0=;
+        b=Zlb1Ce9MmWrF/tkkzYTzRCotGfO0CZcjSZiab6U0gWd9pbEfpaiE4SfknnYjtAb3zr
+         kmePsrJOSV4hoIY9t5/u0oRTfVcdMmBqh/M24BLcpi+LhjyrVFxF6iR0Ih99rghBIS/l
+         rbkaAPJ4EZauKbKklB8xuvqpGJBYSmCe1XyrKsg0PaMNn/uFcqY6zUTiGH+l3vihJGoO
+         VaEbQSTYjhBiFG0CTx9HB+3qcOfRaGhG25z0o5N3IOSQlkv1WHw+Sy8twUhqVFcv8uMt
+         bVP2PM0odnaiaw2djAA+IsM2ztj9TxwdtfVnF4KwJb6gaL1fuopwbBDYfkKw+WUxLW2y
+         L9vg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFMKCYN8mdlBICFWsobYVgrydWfmfDppSiaE4KbjW3YggQzBGB9T13JFP6UAdgjQjy4DfF0R290VO/vJq0z5IO9LwkkLKTwRBLGguG
+X-Gm-Message-State: AOJu0YwiO2nSTzkSftN0WtbKs+RcmFzuVHgBu3EeQAS2WnVO2sbJgTAS
+	gDf6UNRw3JEWYdHksW5AqUueuw4ppvuTxKywx1lueDxGxbSLojwTRNv7k1DeVZw=
+X-Google-Smtp-Source: AGHT+IHecxI00C0AysG9jk2vFisMXFVveXNnX/H4oDlFL2OOUFQ/AEV1QOpSJXJ9aHab8uyRYIlfKQ==
+X-Received: by 2002:a05:6a20:a092:b0:19e:987c:78a7 with SMTP id r18-20020a056a20a09200b0019e987c78a7mr4101823pzj.32.1707334513324;
+        Wed, 07 Feb 2024 11:35:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW7PM5eZAdnwqPrU9TC7lCb+5kyWOLdybcxqg3gwdxj5FVcxgrXFDgek0GyZpZ25vYnaquKPDeXQYeJBu03dxalZ1OiLKQbCmuOYYkKi4snVeuasLujaeCS7Vdcz9MwBWHwGg/DodlOcuuV0ckC/ciHANKGB2iQrxKivw32mbrxR+7hXyb9UvMJWdF5se7BjgDEgBM2AUxmSWE/Fn2OO3Zr5GH3aigEDwVXPiaRPTJizzIP
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id j17-20020a056a00175100b006d9b35b2602sm2024683pfc.3.2024.02.07.11.35.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 11:35:12 -0800 (PST)
+Date: Wed, 07 Feb 2024 11:35:12 -0800 (PST)
+X-Google-Original-Date: Wed, 07 Feb 2024 11:35:11 PST (-0800)
+Subject:     Re: [PATCH -fixes] riscv: Fix arch_tlbbatch_flush() by clearing the batch cpumask
+In-Reply-To: <a21e4253-9ef6-4c44-917c-02742440d192@sifive.com>
+CC: alexghiti@rivosinc.com, Paul Walmsley <paul.walmsley@sifive.com>,
+  aou@eecs.berkeley.edu, jszhang@kernel.org, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: samuel.holland@sifive.com
+Message-ID: <mhng-e8dda78d-2d87-403f-a969-2b5ec99da094@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -fixes] riscv: Flush the tlb when a page directory is
- freed
-Content-Language: en-US
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-References: <20240128120405.25876-1-alexghiti@rivosinc.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-Cc: Will Deacon <will@kernel.org>,
- "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Andrew Jones <ajones@ventanamicro.com>, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240128120405.25876-1-alexghiti@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024-01-28 6:04 AM, Alexandre Ghiti wrote:
-> The riscv privileged specification mandates to flush the TLB whenever a
-> page directory is modified, so add that to tlb_flush().
-> 
-> Fixes: c5e9b2c2ae82 ("riscv: Improve tlb_flush()")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/tlb.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, 07 Feb 2024 11:23:55 PST (-0800), samuel.holland@sifive.com wrote:
+> Hi Alex,
+>
+> On 2024-01-30 5:55 AM, Alexandre Ghiti wrote:
+>> We must clear the cpumask once we have flushed the batch, otherwise cpus
+>> get accumulated and we end sending IPIs to more cpus than needed.
+>>
+>> Fixes: 54d7431af73e ("riscv: Add support for BATCHED_UNMAP_TLB_FLUSH")
+>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>> ---
+>>  arch/riscv/mm/tlbflush.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+>> index 99c3e037f127..c8efc3f87a0f 100644
+>> --- a/arch/riscv/mm/tlbflush.c
+>> +++ b/arch/riscv/mm/tlbflush.c
+>> @@ -240,4 +240,5 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>>  {
+>>  	__flush_tlb_range(NULL, &batch->cpumask,
+>>  			  0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+>> +	cpumask_clear(&batch->cpumask);
+>>  }
+>
+> This patch doesn't apply to fixes -- it looks like it was based on "riscv: Call
+> secondary mmu notifier when flushing the tlb"[1], which has not been merged and
+> would go in for-next anyway. Otherwise:
+>
+> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+>
+> [1]: https://lore.kernel.org/all/20240124080325.2324462-1-alexghiti@rivosinc.com/
 
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
-Tested-by: Samuel Holland <samuel.holland@sifive.com>
-
+Ya and for some reason it trips up "patch -p1", which applies it to some 
+other function.  I just merged it manually a few minutes ago and it's in 
+the tester...
