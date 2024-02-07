@@ -1,230 +1,200 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A747B2376C;
-	Wed,  7 Feb 2024 09:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B29224DD;
+	Wed,  7 Feb 2024 09:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707298967; cv=none; b=S53PCiW22+mY4isrzG/fwTYi2z9RT/oyMIcoNLGP79LfVzC659G8kKrFkyJfUqUNLwHJpdC6xj22VjKiyo6sB9KFpVt9BJoqU4lRtr+rO+XUJBTJ190SZfBAS8ELCIVvgqAs6W+lROufLh0V0awDz+sa8Srbwb3+6hpooLlqL/w=
+	t=1707298991; cv=none; b=IrAwuatzjTFp3my7usGlP7TtQee7NzbT02MTvikXeDyWLX7DRQIiCkOh7FsqK7ZcQdLxvb+aSWx7MyfaQhh2we1zw5iARMskew1O4zgaTR1bZA/OJWs7SVpziT2kLq4laJSDKm0CLIFSUfYIOYqeB+NAHim/uvYS54qldKf9Os0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707298967; c=relaxed/simple;
-	bh=eaPjoMfznAH4IZPj/39ikg5X854USdvackzLWMpCGwI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DIg6Kfz+kcv0geC004dwYEMnCBZLINNAQ9/lFwoJZo3wqHNCv+gs2/tFiNF/IfebLj3oPTj8oghsUa6PD60kLJQlSNc/XDj6J0vo4LGpiB1M9uoFLSKtRVMxY2kmEf6ubeGRC4Zpj/SAlDKs0VnBx5DHZ/FBW5KhMhcd4jOG0EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pmFBVayh; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1707298991; c=relaxed/simple;
+	bh=rBz0ZwAZn/fuX05TD2o/9u17HdFvyA2lKgn60HGjLzQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bzod1wW+vhxcy+JU4YSEO8t6JI/KXEV2eUubGeDJpBujYRNJkb6bxIgdex2KHxf05sUE43ExMDyDcQlQH9hNJWq6Wkm9qeSR9EH4RsaBqJdZQddj7BHzKE8CY0BjO6tx4x9AoCFqch8xZ8g3gIAWBcZwARTWFy1XIMOruJO2a90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rr0WjIqw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pmFBVayh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707298964; x=1738834964;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=eaPjoMfznAH4IZPj/39ikg5X854USdvackzLWMpCGwI=;
-  b=pmFBVayhw9A7DBhzegwByBBKtQt/h1IUSR+a4UHUePar1OFPhxMoQIaX
-   ToBG/z6knZSgnrzP9Ja611bWSQkzwSTpiyymbMm7gxPXun2qAV4SA2EbV
-   R0mfJux/hU6xFTKq/JdYrORXkuUBM8UM+RxKwqZOkKYx7qSe1HaIKgp46
-   walrdMykclpBxduihHr4wBU9r6hQr2r0UvgDR1m+AYhqhwUz3L4v922Dg
-   YU2QCKwiXbCYw1ROUhgWMCk4za4eWx9clOhrlA3gKoQc493jPljpvaOTO
-   p0RRoAym0xoJvNeHJU1ioJ9/fY2Tk0wheO1h+anfdIa+TDinPRC4dxGjY
-   w==;
-X-CSE-ConnectionGUID: fRBUDne2SeOxScIZjr2Gpg==
-X-CSE-MsgGUID: gMnZzN7ETgKrlsrBwpz63Q==
-X-IronPort-AV: E=Sophos;i="6.05,250,1701154800"; 
-   d="scan'208";a="15884586"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Feb 2024 02:42:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 7 Feb 2024 02:41:55 -0700
-Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 7 Feb 2024 02:41:49 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <claudiu.beznea@tuxon.dev>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <dharma.b@microchip.com>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <hari.prasathge@microchip.com>
-Subject: [PATCH] ASoC: dt-bindings: atmel,asoc-wm8904: Convert to json-schema
-Date: Wed, 7 Feb 2024 15:11:44 +0530
-Message-ID: <20240207094144.195397-1-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rr0WjIqw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC510C43390;
+	Wed,  7 Feb 2024 09:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707298991;
+	bh=rBz0ZwAZn/fuX05TD2o/9u17HdFvyA2lKgn60HGjLzQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Rr0WjIqwWKkXMAj8MPLtyRgEsuKFpcOPImpwtlmcKRaT6LgHvR7IejqHLPxMxw2LA
+	 H7jP6h+RrMUibtGEzaHz0TfebbH2rZVovUGkbAxo6xEpZP6CWf7CU9lNN2wuyRzlIr
+	 LTKTwVK6TOSH/cuX470mt1ToYC9jK/BY1eLwFpxHGJws1w6qi4QjSEITbG6yMo+O8H
+	 2+YjBXGu8rJZA72FXkCOBwEyaqH8c2bZrekk5nOW30L0AR82JI65WHhSCuId/fNuQ0
+	 EXELA3/a90JO87R6/6Aalw5H9JldYFH1JH4/9Pk5DaGorhoV+duKfFGcet7dAT39ef
+	 W+tga8Ll1WeUQ==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
+ <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org,
+ Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>,
+ Anup Patel <anup@brainfault.org>, linux-kernel@vger.kernel.org, Atish
+ Patra <atishp@atishpatra.org>, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, Andrew Jones
+ <ajones@ventanamicro.com>
+Subject: Re: [PATCH v12 18/25] irqchip: Add RISC-V incoming MSI controller
+ early driver
+In-Reply-To: <20240127161753.114685-19-apatel@ventanamicro.com>
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <20240127161753.114685-19-apatel@ventanamicro.com>
+Date: Wed, 07 Feb 2024 10:43:08 +0100
+Message-ID: <87il30y5hv.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Convert atmel,asoc-wm8904 devicetree binding to json-schema.
+Anup Patel <apatel@ventanamicro.com> writes:
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- .../bindings/sound/atmel,asoc-wm8904.yaml     | 84 +++++++++++++++++++
- .../bindings/sound/atmel-wm8904.txt           | 55 ------------
- 2 files changed, 84 insertions(+), 55 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/atmel,asoc-wm8904.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+> The RISC-V advanced interrupt architecture (AIA) specification
+> defines a new MSI controller called incoming message signalled
+> interrupt controller (IMSIC) which manages MSI on per-HART (or
+> per-CPU) basis. It also supports IPIs as software injected MSIs.
+> (For more details refer https://github.com/riscv/riscv-aia)
+>
+> Let us add an early irqchip driver for RISC-V IMSIC which sets
+> up the IMSIC state and provide IPIs.
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  drivers/irqchip/Kconfig                 |   7 +
+>  drivers/irqchip/Makefile                |   1 +
+>  drivers/irqchip/irq-riscv-imsic-early.c | 241 +++++++
+>  drivers/irqchip/irq-riscv-imsic-state.c | 887 ++++++++++++++++++++++++
+>  drivers/irqchip/irq-riscv-imsic-state.h | 105 +++
+>  include/linux/irqchip/riscv-imsic.h     |  87 +++
+>  6 files changed, 1328 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-riscv-imsic-early.c
+>  create mode 100644 drivers/irqchip/irq-riscv-imsic-state.c
+>  create mode 100644 drivers/irqchip/irq-riscv-imsic-state.h
+>  create mode 100644 include/linux/irqchip/riscv-imsic.h
+>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index f7149d0f3d45..85f86e31c996 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -546,6 +546,13 @@ config SIFIVE_PLIC
+>  	select IRQ_DOMAIN_HIERARCHY
+>  	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+>=20=20
+> +config RISCV_IMSIC
+> +	bool
+> +	depends on RISCV
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	select GENERIC_IRQ_MATRIX_ALLOCATOR
+> +	select GENERIC_MSI_IRQ
+> +
+>  config EXYNOS_IRQ_COMBINER
+>  	bool "Samsung Exynos IRQ combiner support" if COMPILE_TEST
+>  	depends on (ARCH_EXYNOS && ARM) || COMPILE_TEST
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index ffd945fe71aa..d714724387ce 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -95,6 +95,7 @@ obj-$(CONFIG_QCOM_MPM)			+=3D irq-qcom-mpm.o
+>  obj-$(CONFIG_CSKY_MPINTC)		+=3D irq-csky-mpintc.o
+>  obj-$(CONFIG_CSKY_APB_INTC)		+=3D irq-csky-apb-intc.o
+>  obj-$(CONFIG_RISCV_INTC)		+=3D irq-riscv-intc.o
+> +obj-$(CONFIG_RISCV_IMSIC)		+=3D irq-riscv-imsic-state.o irq-riscv-imsic-=
+early.o
+>  obj-$(CONFIG_SIFIVE_PLIC)		+=3D irq-sifive-plic.o
+>  obj-$(CONFIG_IMX_IRQSTEER)		+=3D irq-imx-irqsteer.o
+>  obj-$(CONFIG_IMX_INTMUX)		+=3D irq-imx-intmux.o
+> diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/ir=
+q-riscv-imsic-early.c
+> new file mode 100644
+> index 000000000000..3557e32a713c
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-riscv-imsic-early.c
+> @@ -0,0 +1,241 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2021 Western Digital Corporation or its affiliates.
+> + * Copyright (C) 2022 Ventana Micro Systems Inc.
+> + */
+> +
+> +#define pr_fmt(fmt) "riscv-imsic: " fmt
+> +#include <linux/cpu.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/module.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/smp.h>
+> +
+> +#include "irq-riscv-imsic-state.h"
+> +
+> +static int imsic_parent_irq;
+> +
+> +#ifdef CONFIG_SMP
+> +static irqreturn_t imsic_local_sync_handler(int irq, void *data)
+> +{
+> +	imsic_local_sync();
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void imsic_ipi_send(unsigned int cpu)
+> +{
+> +	struct imsic_local_config *local =3D
+> +				per_cpu_ptr(imsic->global.local, cpu);
+> +
+> +	writel_relaxed(IMSIC_IPI_ID, local->msi_va);
+> +}
+> +
+> +static void imsic_ipi_starting_cpu(void)
+> +{
+> +	/* Enable IPIs for current CPU. */
+> +	__imsic_id_set_enable(IMSIC_IPI_ID);
+> +
+> +	/* Enable virtual IPI used for IMSIC ID synchronization */
+> +	enable_percpu_irq(imsic->ipi_virq, 0);
+> +}
+> +
+> +static void imsic_ipi_dying_cpu(void)
+> +{
+> +	/*
+> +	 * Disable virtual IPI used for IMSIC ID synchronization so
+> +	 * that we don't receive ID synchronization requests.
+> +	 */
+> +	disable_percpu_irq(imsic->ipi_virq);
+> +}
+> +
+> +static int __init imsic_ipi_domain_init(void)
+> +{
+> +	int virq;
+> +
+> +	/* Create IMSIC IPI multiplexing */
+> +	virq =3D ipi_mux_create(IMSIC_NR_IPI, imsic_ipi_send);
+> +	if (virq <=3D 0)
+> +		return (virq < 0) ? virq : -ENOMEM;
+> +	imsic->ipi_virq =3D virq;
+> +
+> +	/* First vIRQ is used for IMSIC ID synchronization */
+> +	virq =3D request_percpu_irq(imsic->ipi_virq, imsic_local_sync_handler,
+> +				  "riscv-imsic-lsync", imsic->global.local);
 
-diff --git a/Documentation/devicetree/bindings/sound/atmel,asoc-wm8904.yaml b/Documentation/devicetree/bindings/sound/atmel,asoc-wm8904.yaml
-new file mode 100644
-index 000000000000..89a67f8e33b6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/atmel,asoc-wm8904.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/atmel,asoc-wm8904.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel wm8904 audio codec complex
-+
-+maintainers:
-+  - Dharma Balasubiramani <dharma.b@microchip.com>
-+
-+description:
-+  The ASoC audio complex configuration for Atmel with WM8904 audio codec.
-+
-+properties:
-+  compatible:
-+    const: atmel,asoc-wm8904
-+
-+  atmel,model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: The user-visible name of this sound complex.
-+
-+  atmel,ssc-controller:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of the SSC controller.
-+
-+  atmel,audio-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of the WM8731 audio codec.
-+
-+  atmel,audio-routing:
-+    description:
-+      A list of the connections between audio components. Each entry is a pair
-+      of strings, the first being the connection's sink, the second being the
-+      connection's source.
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    items:
-+      enum:
-+        # Board Connectors
-+        - Headphone Jack
-+        - Line In Jack
-+        - Mic
-+        # WM8904 CODEC Pins
-+        - IN1L
-+        - IN1R
-+        - IN2L
-+        - IN2R
-+        - IN3L
-+        - IN3R
-+        - HPOUTL
-+        - HPOUTR
-+        - LINEOUTL
-+        - LINEOUTR
-+        - MICBIAS
-+
-+required:
-+  - compatible
-+  - atmel,model
-+  - atmel,audio-routing
-+  - atmel,ssc-controller
-+  - atmel,audio-codec
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "atmel,asoc-wm8904";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_pck0_as_mck>;
-+
-+        atmel,model = "wm8904 @ AT91SAM9N12EK";
-+
-+        atmel,audio-routing =
-+                "Headphone Jack", "HPOUTL",
-+                "Headphone Jack", "HPOUTR",
-+                "IN2L", "Line In Jack",
-+                "IN2R", "Line In Jack",
-+                "Mic", "MICBIAS",
-+                "IN1L", "Mic";
-+
-+        atmel,ssc-controller = <&ssc0>;
-+        atmel,audio-codec = <&wm8904>;
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
-deleted file mode 100644
-index 8bbe50c884b6..000000000000
---- a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
-+++ /dev/null
-@@ -1,55 +0,0 @@
--Atmel ASoC driver with wm8904 audio codec complex
--
--Required properties:
--  - compatible: "atmel,asoc-wm8904"
--  - atmel,model: The user-visible name of this sound complex.
--  - atmel,audio-routing: A list of the connections between audio components.
--    Each entry is a pair of strings, the first being the connection's sink,
--    the second being the connection's source. Valid names for sources and
--    sinks are the WM8904's pins, and the jacks on the board:
--
--    WM8904 pins:
--
--    * IN1L
--    * IN1R
--    * IN2L
--    * IN2R
--    * IN3L
--    * IN3R
--    * HPOUTL
--    * HPOUTR
--    * LINEOUTL
--    * LINEOUTR
--    * MICBIAS
--
--    Board connectors:
--
--    * Headphone Jack
--    * Line In Jack
--    * Mic
--
--  - atmel,ssc-controller: The phandle of the SSC controller
--  - atmel,audio-codec: The phandle of the WM8904 audio codec
--
--Optional properties:
--  - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
--
--Example:
--sound {
--	compatible = "atmel,asoc-wm8904";
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_pck0_as_mck>;
--
--	atmel,model = "wm8904 @ AT91SAM9N12EK";
--
--	atmel,audio-routing =
--		"Headphone Jack", "HPOUTL",
--		"Headphone Jack", "HPOUTR",
--		"IN2L", "Line In Jack",
--		"IN2R", "Line In Jack",
--		"Mic", "MICBIAS",
--		"IN1L", "Mic";
--
--	atmel,ssc-controller = <&ssc0>;
--	atmel,audio-codec = <&wm8904>;
--};
--- 
-2.25.1
+There's a lot of boilerplate for the local-sync IPI. Any reason not to
+use what the kernel provides out-of-the-box:
 
+  int smp_call_function_single(int cpuid, smp_call_func_t func, void *info,
+			     int wait);
+
+e.g.
+
+  smp_call_function_single(target_cpu, imsic_local_sync_with_new_signature,=
+ NULL, 0);
+
+
+Bj=C3=B6rn
