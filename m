@@ -1,67 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3221624B2F;
-	Wed,  7 Feb 2024 09:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5394122F17;
+	Wed,  7 Feb 2024 09:50:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707299383; cv=none; b=KZ5ocmu+BqCe3I4EyOLKDgCKPvsdRAPejqUtCWLRkoR9bij84YmPXDUNaZdpkdUrPF1ENcT6Iq3lPPX6Bf169w8IIoEdADzXCJ0moR9C5seIbohssheOplIuIKxXunOj2ORD0+2FRk1p28PxQalUyPtBzqX9E7qQoSNx5OP0mHo=
+	t=1707299413; cv=none; b=UhSd+zhf6hSccZboKzyZHu9xZ6Ib3yLqYWj/fc3rBPvKfHseE0eayGMt2AzK+5HQRX8XEnU+NhvK5Itwlgm4mnxsckwx+e3xDuHSNCaCFTOulfNdfjeHyZA2p9+vCnx/Alr0CtziwxExGdkEjYST5SuW69swRBq18PnmvkaV8ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707299383; c=relaxed/simple;
-	bh=iaPJLCw/Xy+KGXqtOa/G1rsYICV+i+x8OmFlAgHnp7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NaTra8wYXIPw387ys7PU0sDj8Etbu9cnuGffySuzvU8amtQQUd01XiDfjUblrAY9NWWTDbOIs4kth97LBOlJY91J+VESL77PdkjbvUgvQQbpbOgSpwsbGZZItaxdkSPFduRaBIvZcB9sj08YXPKOXUwe0damvAFZrmjA8OpcaCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+Vul9bq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707299413; c=relaxed/simple;
+	bh=Z7RlkR6pBXTxcfR2yNl0x4kWdlPW84U0WWRNxTe6kcQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=acun2f4YGz2nhRbVJbTo4g8VYcZkeS9UF5R0JemNOJUQ30YSaUhe/ZQOMDcLxoesP6Bodc+g2Kq0PEa8H5IwynGJTYrsKieOvNH0NOhOWCzI7zJi0RBBtnM8w5LFcPaCrcMLs09/LS2IxJORUjGFIrT3R0eHuzpxiAk3bk7WNRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cw+RmZKY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+Vul9bq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE59C433C7;
-	Wed,  7 Feb 2024 09:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cw+RmZKY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0FCC433C7;
+	Wed,  7 Feb 2024 09:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707299383;
-	bh=iaPJLCw/Xy+KGXqtOa/G1rsYICV+i+x8OmFlAgHnp7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+Vul9bqfemWsLYL963wUa4MjMJGapEgDfRHrT1NByLcjIGeELuDwCbLITaom9AeY
-	 Rep4tYFuHlv8iNYCJzFdvw1OC3COym1wVptqJrVnDEtoa5Gm0pzpF4baL+3J9sHmTf
-	 08WM61TGPbzR4Qa2Qo61alnOcUu8mYArqElhk5XbaaZ0pVaxl63jL0sPoFZAKvp1IQ
-	 E9KMiYavIim0MtCaPZ+KTNbMxVgMHDGJliuL4zcZrdDdeE2wMJTTq1Y05UJuSLfusQ
-	 JR15HUZ6Ym3oJMQQc8JqsjdXntvOuefg78Uarl5/EsFdDPWmEu5zs4xKFadGdLFCgX
-	 KurQ3rTSg6C1w==
-Date: Wed, 7 Feb 2024 09:48:08 +0000
-From: Simon Horman <horms@kernel.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/mlx5: remove redundant assignment to variable
- object_range
-Message-ID: <20240207094808.GO1104779@kernel.org>
-References: <20240206165815.2420951-1-colin.i.king@gmail.com>
+	s=k20201202; t=1707299412;
+	bh=Z7RlkR6pBXTxcfR2yNl0x4kWdlPW84U0WWRNxTe6kcQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Cw+RmZKYsDqxZqNaHIC2ZXIc+kIEFcWadvDoFHd+50/OKP0cOSu/DJLC2gUqzG2hY
+	 JY8awGsz2UzFQDE87QukobjDEyia+PAuvTIqnPZGgnzdupFyVLBOVt8sssbb9gV42p
+	 h9r4z4nx7HJWLK74m0LFIqlE5CBaBucZ6SGEXRZoB+fOMmBVxt7QVSI/9Bu9FKZRYh
+	 Jj39gqjdmcXLPILG43hIz/NXeAj/6SiaJ0SqCrfUW1GkK/KQzaEaMExPGO0vvSHAFQ
+	 t74o/4WYmAG7i3CAlUoR7lbeZIl2wN7o8EYKvsUIdoYwCrCmA2bnCRKj+1It5iylD/
+	 5/EsKYZOrLlsw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rXeZG-0014r2-87;
+	Wed, 07 Feb 2024 09:50:10 +0000
+Date: Wed, 07 Feb 2024 09:50:09 +0000
+Message-ID: <86r0ho61ta.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Fuad Tabba <tabba@google.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kristina Martsenko <kristina.martsenko@arm.com>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
+	linux-kernel@vger.kernel.org (open list),
+	kvmarm@lists.linux.dev (open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64))
+Subject: Re: [RFC PATCH] KVM: arm64: Override Microsoft Azure Cobalt 100 MIDR value with ARM Neoverse N2
+In-Reply-To: <20240206195819.1146693-1-eahariha@linux.microsoft.com>
+References: <20240206195819.1146693-1-eahariha@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206165815.2420951-1-colin.i.king@gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: eahariha@linux.microsoft.com, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, andre.przywara@arm.com, robh@kernel.org, tabba@google.com, joey.gouly@arm.com, kristina.martsenko@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Feb 06, 2024 at 04:58:15PM +0000, Colin Ian King wrote:
-> The variable object_range to log_header_modify_argument_granularity
-> is being assigned a value that is never read, the following statement
-> assigns object_range to the max of log_header_modify_argument_granularity
-> and DR_ICM_MODIFY_HDR_GRANULARITY_4K, so clearly the initial
-> assignment is redundant. Remove it.
+On Tue, 06 Feb 2024 19:58:16 +0000,
+Easwar Hariharan <eahariha@linux.microsoft.com> wrote:
 > 
-> Cleans up clang-scan build warning:
-> drivers/net/ethernet/mellanox/mlx5/core/steering/dr_arg.c:42:2: warning:
-> Value stored to 'object_range' is never read [deadcode.DeadStores]
+> Several workload optimizations and errata depend on validating that the
+> optimization or errata are applicable to the particular CPU by checking
+> the MIDR_EL1 system register value. With the Microsoft implementer ID
+> for Azure Cobalt 100, the value doesn't match and ~20-25% performance
+> regression is seen in these workloads. Override the Azure Cobalt 100
+> value and replace it with the default ARM Neoverse N2 value that Azure
+> Cobalt 100 is based on.
+
+Since you don't disclose *why* this particular value should have any
+impact on the behaviour of the kernel, the answer should be "Thanks,
+but no, thanks".
+
+Whatever the reason is for doing so, you should make it plain what you
+are working around. Blindly overriding ID registers is not an option,
+and you should simply add your MIDR value to whatever errata list that
+actually matches your implementation.
+
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> ---
+>  arch/arm64/include/asm/cputype.h   | 3 ++-
+>  arch/arm64/include/asm/el2_setup.h | 5 +++++
+>  arch/arm64/kvm/sys_regs.c          | 9 ++++++++-
+>  3 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+> index 7c7493cb571f..0450c6c32377 100644
+> --- a/arch/arm64/include/asm/cputype.h
+> +++ b/arch/arm64/include/asm/cputype.h
+> @@ -262,7 +262,8 @@ is_midr_in_range_list(u32 midr, struct midr_range const *ranges)
+>   */
+>  static inline u32 __attribute_const__ read_cpuid_id(void)
+>  {
+> -	return read_cpuid(MIDR_EL1);
+> +	return (read_cpuid(MIDR_EL1) == 0x6D0FD490 ? 0x410FD490 :
+> +			read_cpuid(MIDR_EL1));
+>  }
+>  
+>  static inline u64 __attribute_const__ read_cpuid_mpidr(void)
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index b7afaa026842..502a14e54a31 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -138,6 +138,11 @@
+>  .macro __init_el2_nvhe_idregs
+>  	mrs	x0, midr_el1
+>  	mrs	x1, mpidr_el1
+> +	ldr	x2, =0x6D0FD490
+> +	cmp	x0, x2
+> +	bne	.Loverride_cobalt100_\@
+> +	ldr	x0, =0x410FD490
+> +.Loverride_cobalt100_\@:
+>  	msr	vpidr_el2, x0
+>  	msr	vmpidr_el2, x1
+>  .endm
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 30253bd19917..8ea9c7fdabdb 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -3574,7 +3574,14 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
+>  		return ((struct sys_reg_desc *)r)->val;			\
+>  	}
+>  
+> -FUNCTION_INVARIANT(midr_el1)
+> +static u64 get_midr_el1(struct kvm_vcpu *v, const struct sys_reg_desc *r)
+> +{
+> +	((struct sys_reg_desc *)r)->val = read_sysreg(midr_el1);
+> +	if (((struct sys_reg_desc *)r)->val == 0x6D0FD490)
+> +		((struct sys_reg_desc *)r)->val == 0x410FD490;
 
-Thanks Colin,
+As pointed out to me by Joey, this line is really interesting, and
+shows that you didn't really test this patch.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
