@@ -1,103 +1,145 @@
-Received: from mx.kolabnow.com (mx.kolabnow.com [212.103.80.153])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE46823AD;
-	Wed,  7 Feb 2024 17:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.103.80.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BE5823AD;
+	Wed,  7 Feb 2024 17:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707325973; cv=none; b=PKPqh9I+SsRulYXgE+Jpq4LT1g+XNkAyeH2vYCZz1ILFe3IHj8js9qZQNvyZDIfAG615LNLNpHbpcFyCvm/YdbXHkYKYBdPsYqoSDR8y/G4iut6e1UVKNu7mtYnKXR6HpNU/blXwCpPd5c9FuaLeXlRPAPXhOsvnrOWdq+jFc7k=
+	t=1707325995; cv=none; b=B34K8IBwkEspxyxKjbY2XkKX4fqxV63/fjAv3mrdFOeabPiwOcHD6v/8OruELqMyDFqadlAWJxcOysh3A6X57VCFAwxd41urVrJBQGTJllnZFZkYEPD0mt3q0u9ycjpL2C98Y9CaCIwfnST995oaaM39mXcy8fYIEf2t2VLDdGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707325973; c=relaxed/simple;
-	bh=4thBBmqk5hlMpmpcQwxAA3u0nkyAH6ntKflK/ok1k2w=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=q4wfvhc6mb5JgRt89Cr1V3+1AtBjCvvhsSnRNs3yVonZPTUeAPy0ko9RqK+V/tyF69LGiYBM0rlKOBvrUOmDmMWTTVolv8zNHbzW6TcEtmzclzTl+pyfHs5Gj5TfpiaBKOkTcF3792FgcpQxHfcLUBDvzv40J4ll74U9+iCEF64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vaga.pv.it; spf=pass smtp.mailfrom=vaga.pv.it; dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b=R5Fi9UGL; arc=none smtp.client-ip=212.103.80.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vaga.pv.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vaga.pv.it
+	s=arc-20240116; t=1707325995; c=relaxed/simple;
+	bh=BVNIe1kDhE4wJLuDeON0evrTQTP1yhyS10nZ1KpN5+U=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=qknAIRA6gqtNwormYM6SBP0EROE4qd3CsoEnN7ht10LI/Xb2DmAu/p1OVevEloFCCXyg+r5FFb5CJP7N85T34YfUmpKURUKoO2MCogQtylH5PcyeD36xjIKfFvnzVUlDD7cXKT3uxUqA98MzNauYc7yMXGtk/9ULSY9g2CLGCSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eYg8PzWZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2mdwdsVy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="R5Fi9UGL"
-Received: from localhost (unknown [127.0.0.1])
-	by mx.kolabnow.com (Postfix) with ESMTP id 9AEBA2095C06;
-	Wed,  7 Feb 2024 18:06:15 +0100 (CET)
-Authentication-Results: ext-mx-out011.mykolab.com (amavis);
- dkim=pass (4096-bit key) reason="pass (just generated, assumed good)"
- header.d=kolabnow.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-	content-transfer-encoding:content-type:content-type:message-id
-	:references:in-reply-to:subject:subject:from:from:date:date
-	:mime-version:received:received:received; s=dkim20160331; t=
-	1707325573; x=1709139974; bh=aHIWuq7r2wmuzrEqiql4mNGKz5wCpRsiiSb
-	LoRj77zU=; b=R5Fi9UGL7pdTdbdeeNB5OrOOKQeYcBm9/Rzpc/6Eh6lkBI8oMia
-	Iw3+ERv1gMdlWmT6gal0kYPE/6D0biQ0b4GIjPgE/JR6PejdxaVIAM3A2rMl4AtU
-	3XSNxQqB2oW7W2VwX4lvn83SzpbJhxfpFilCoxJyzKCP6NAi9aTHDVMh+LWR5Hfm
-	yxwDVW9vlOZfqn8StEbMJaFdze7wRAbLb9E+zBJh8oy3HzV6hcR0QyFdk0i1cx+O
-	sLEa9A/PRmAGVAWkmN/kw3SXGjkA+YNURDcxQYoVdZrT2Sbn61H1wR7nnlFwSt9C
-	JkNHWbIjEcs9PD42lCieDCC/ktL6ICQM/bmjc7CNQ5kyUY92ddqxxGkROf1LQ81V
-	OqcX5uKL8KfolAyHCKkjVebeBsvddCR3z5dccMeZFhACV/bKl3hBNGy8FETNfH3/
-	WcxTJ4imITNRM2npmrVrcSulCbAfFqOLUFsZp/0sEgPSzEoYEyHzTdfMCANAnc2W
-	11QPr0+VTKDp8/DOSN2tygE/W6CYo9ksnQWMujn+LVsIiqNtzKBSwCN3zJY/8Q+A
-	3zLqEmD5FIijSRUUaOnYGLFoYIw+GTlQj85e5GMn7rfroNVNPTUdx08MJ1p6PSNI
-	tB82lO7sNh8SDt5ns4fwTSWKzaCkyWAWFOW/rS44Exg/a0rlus8Tha44=
-X-Virus-Scanned: amavis at mykolab.com
-X-Spam-Flag: NO
-X-Spam-Score: -1
-X-Spam-Level:
-Received: from mx.kolabnow.com ([127.0.0.1])
- by localhost (ext-mx-out011.mykolab.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id D36b_ffzchBX; Wed,  7 Feb 2024 18:06:13 +0100 (CET)
-Received: from int-mx011.mykolab.com (unknown [10.9.13.11])
-	by mx.kolabnow.com (Postfix) with ESMTPS id 51C8F20C81E3;
-	Wed,  7 Feb 2024 18:06:12 +0100 (CET)
-Received: from int-subm015.mykolab.com (unknown [10.9.37.15])
-	by int-mx011.mykolab.com (Postfix) with ESMTPS id 0129C30B0233;
-	Wed,  7 Feb 2024 18:06:11 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eYg8PzWZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2mdwdsVy"
+Date: Wed, 07 Feb 2024 17:13:08 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707325989;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CFsgkB1zC7/VSK3pWwrvuz6GTg2EbUcNZu4MIdsRY+w=;
+	b=eYg8PzWZqrrn4BTqvsaFzE8XsmIYBDARuAt6mbu5OX46Mdcx6kpmZs+e0NkOYuoZ7pfkty
+	iTaoorv6xO4sHHAs6ITGnr0wsdRwVdQYG7C9XbOKMtSXNufbTBDYmeGSDxKnYOAOs47BKp
+	Cjo/eUZvz1Lv6XNIFBMyTtYS9T6whhmBBqmhYzqFHTehHsq3i3LHYJZ27+fozUfpnCnfmb
+	1ee1QzQAF1FfczNyBYFD9LD5MxR0XgkG/35ST3suJ2l6RPwPEyA7/VZ2rwDuBDgRYLh5n8
+	DAnELXfp4FKKJxHnFjJyGMlkCF2aoxUJU2BSQeFqA3AfLEcWOL2uf/uwd4upvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707325989;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CFsgkB1zC7/VSK3pWwrvuz6GTg2EbUcNZu4MIdsRY+w=;
+	b=2mdwdsVyhaKMS9pQX9iYb03tGvt5qYpQ6EQOhNKISWkV2uKSXgsO3YmMACyA2V0oUFmUYT
+	j8TOgb0+o1mhZbBw==
+From: "tip-bot2 for Ashish Kalra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/sev] iommu/amd: Fix failure return from snp_lookup_rmpentry()
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+ Ashish Kalra <ashish.kalra@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Joerg Roedel <jroedel@suse.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240126041126.1927228-20-michael.roth@amd.com>
+References: <20240126041126.1927228-20-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 07 Feb 2024 18:06:11 +0100
-From: Federico Vaga <federico.vaga@vaga.pv.it>
-To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc:it_IT: fix a typo in the config name in RCU torture
-In-Reply-To: <20240207150322.20238-1-lukas.bulwahn@gmail.com>
-References: <20240207150322.20238-1-lukas.bulwahn@gmail.com>
-Message-ID: <c7917018190d71e6ebecd91ce81f5f2c@vaga.pv.it>
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <170732598872.398.2550238673926493243.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Thank you for the fix
+The following commit has been merged into the x86/sev branch of tip:
 
-On 2024-02-07 16:03, Lukas Bulwahn wrote:
-> This issue was detected with the scripts/checkkconfigsymbols.py tool.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
->  Documentation/translations/it_IT/RCU/torture.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/translations/it_IT/RCU/torture.rst
-> b/Documentation/translations/it_IT/RCU/torture.rst
-> index 79d9e6932acc..189f7c6caebc 100644
-> --- a/Documentation/translations/it_IT/RCU/torture.rst
-> +++ b/Documentation/translations/it_IT/RCU/torture.rst
-> @@ -129,7 +129,7 @@ Uso su specifici kernel
-> 
->  A volte può essere utile eseguire RCU torture su un kernel già 
-> compilato, ad
->  esempio quando lo si sta per mettere in proeduzione. In questo caso, 
-> il kernel
-> -dev'essere compilato con CONFIG_RCU_TORTUE_TEST=m, cosicché le
-> verifiche possano
-> +dev'essere compilato con CONFIG_RCU_TORTURE_TEST=m, cosicché le
-> verifiche possano
->  essere avviate usano modprobe e terminate con rmmod.
-> 
->  Per esempio, potreste usare questo script::
+Commit-ID:     45ba5b3c0a02949a4da74ead6e11c43e9b88bdca
+Gitweb:        https://git.kernel.org/tip/45ba5b3c0a02949a4da74ead6e11c43e9b88bdca
+Author:        Ashish Kalra <ashish.kalra@amd.com>
+AuthorDate:    Mon, 05 Feb 2024 21:06:54 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 07 Feb 2024 17:27:03 +01:00
 
--- 
-Federico Vaga
+iommu/amd: Fix failure return from snp_lookup_rmpentry()
+
+Commit
+
+  f366a8dac1b8: ("iommu/amd: Clean up RMP entries for IOMMU pages during SNP shutdown")
+
+leads to the following Smatch static checker warning:
+
+  drivers/iommu/amd/init.c:3820 iommu_page_make_shared() error: uninitialized symbol 'assigned'.
+
+Fix it.
+
+  [ bp: Address the other error cases too. ]
+
+Fixes: f366a8dac1b8 ("iommu/amd: Clean up RMP entries for IOMMU pages during SNP shutdown")
+Closes: https://lore.kernel.org/linux-iommu/1be69f6a-e7e1-45f9-9a74-b2550344f3fd@moroto.mountain
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: Joerg Roedel <jroedel@suse.com>
+Link: https://lore.kernel.org/lkml/20240126041126.1927228-20-michael.roth@amd.com
+---
+ drivers/iommu/amd/init.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index 88bb08a..480e768 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -3813,23 +3813,28 @@ static int iommu_page_make_shared(void *page)
+ 		bool assigned;
+ 
+ 		ret = snp_lookup_rmpentry(pfn, &assigned, &level);
+-		if (ret)
+-			pr_warn("IOMMU PFN %lx RMP lookup failed, ret %d\n",
+-				pfn, ret);
++		if (ret) {
++			pr_warn("IOMMU PFN %lx RMP lookup failed, ret %d\n", pfn, ret);
++			return ret;
++		}
+ 
+-		if (!assigned)
+-			pr_warn("IOMMU PFN %lx not assigned in RMP table\n",
+-				pfn);
++		if (!assigned) {
++			pr_warn("IOMMU PFN %lx not assigned in RMP table\n", pfn);
++			return -EINVAL;
++		}
+ 
+ 		if (level > PG_LEVEL_4K) {
+ 			ret = psmash(pfn);
+-			if (ret) {
+-				pr_warn("IOMMU PFN %lx had a huge RMP entry, but attempted psmash failed, ret: %d, level: %d\n",
+-					pfn, ret, level);
+-			}
++			if (!ret)
++				goto done;
++
++			pr_warn("PSMASH failed for IOMMU PFN %lx huge RMP entry, ret: %d, level: %d\n",
++				pfn, ret, level);
++			return ret;
+ 		}
+ 	}
+ 
++done:
+ 	return rmp_make_shared(pfn, PG_LEVEL_4K);
+ }
+ 
