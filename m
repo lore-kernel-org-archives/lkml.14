@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9979A12C533
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74F712FB09
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:43:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707331412; cv=none; b=hd94cV26mgky/o8H+Zmrt5BSSrdxtdI20ZUQJxEpDJCsElQ5fAzlbsUUt5hcCvJcJbJ930er2GURBfZOf9Nqr6boFNQ/IajXqxp2zvOF1VCdQAMWFeB7S4evkbZZtrrUb6RwL5w5QApd9isbttelPwweibQ9Fv7aL8VNeUeCmTU=
+	t=1707331414; cv=none; b=CHLXdz347RLmCntva72l7m+u4aluP6Uj9LbvY5YpSgpwg+mveaCSXn7AotP1g6Nl0i5iij/RGJTy4nyuVes/8NlWz+zI9Bn/QZ6vsOzVYoRy1axhToeqYV8van8paMsVSQ2fCxOWyVHVuwDnycHKBOqAwaHTpXBDCQHzSSWUt9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707331412; c=relaxed/simple;
-	bh=3uWg1dj8JY2x4YbDK4pPCpaqGziQ38xKtIysd488qoY=;
+	s=arc-20240116; t=1707331414; c=relaxed/simple;
+	bh=VHrosqJBw/jD2fXLXTk6B7k9ErsOSKDugMqkiDkHpEU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bf2JtJyqg4In7xL4fWz6SEJs7PFdfOafBVRRiYNz5ZlHHCe2HWrhx9ZZDKpafl0S/1CnBJ754/s7Up1ehx2pA+CC8Q2IwMgc4EojiWVZk2y60/Go1Fh0Wg9AbuckvWFOO3asZ29nOjFeWK5Fu6welGRiliFShJxlOKS9a7wwpvw=
+	 MIME-Version:Content-Type; b=iGMOvo86a2xEAyqxXWoFwbhv/uzO7hejd/Qz3eo7u+dZkOovpf9VULNlQ9jBlWhq4s9wdpEKQ/kWiuTwy6Weet+ytkWx7NCfVjbHZrsNHM7e+TS0CVOqZI3KE9mSV/D+M7pt9kjXcqfQFEkgaRo7GgzK1KUR+U5xsgim7WLa51Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,29 +18,29 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rXmt5-0007Sd-Gt; Wed, 07 Feb 2024 19:43:11 +0100
+	id 1rXmtE-00086R-84; Wed, 07 Feb 2024 19:43:20 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rXmt4-0054XU-TT; Wed, 07 Feb 2024 19:43:10 +0100
+	id 1rXmtD-0054Yf-Av; Wed, 07 Feb 2024 19:43:19 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rXmt4-00HRsU-2e;
-	Wed, 07 Feb 2024 19:43:10 +0100
+	id 1rXmtD-00HRtl-0o;
+	Wed, 07 Feb 2024 19:43:19 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Mark Brown <broonie@kernel.org>
 Cc: kernel@pengutronix.de,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	linux-mmc@vger.kernel.org,
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+	libertas-dev@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 11/32] mmc: mmc_spi: Follow renaming of SPI "master" to "controller"
-Date: Wed,  7 Feb 2024 19:40:25 +0100
-Message-ID:  <a9c95759cf77a19c160d1d497c76ac5770c67684.1707324794.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v3 29/32] wifi: libertas: Follow renaming of SPI "master" to "controller"
+Date: Wed,  7 Feb 2024 19:40:43 +0100
+Message-ID:  <971429eacddbad4c2f49b783ddd68746c1929ab3.1707324794.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1707324793.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1707324793.git.u.kleine-koenig@pengutronix.de>
@@ -51,7 +51,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1681; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=3uWg1dj8JY2x4YbDK4pPCpaqGziQ38xKtIysd488qoY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlw86iRgaXsnAONPwKcmuWcccjOTtI4N+LZaa3r vFnNuQq3YeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcPOogAKCRCPgPtYfRL+ TuGiB/4q83A3nbw2iRt8SUETQFwrm/YEhFpxFYwZ1pvftS7tqTK4D+okPck/OcXlQTFGX06Zcpl AYSRQUlRCEfjgyOn1yC3CYsT3dLPS879Y63xknQy3AiEOuTH7V20cldVljtwQV5YftBbugq28xn y/HUZhpyefhnnvbpca7Ghu+CtTg+8BeGDUelSW7vylKSdShiFD7F6Le6OIEwjrAny2SIN6194qo g1mSV9BD7CepqbONlfsGdqc9QDqDm7S5TsHNTyxSIMS4OiQPWfxNrRaVt3P4lYKAaLs0wrJHhMa nkUh9TPQj6RN6+KHZ75lTA3ym06Wxqrwls28Uryyx8FrseF5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1219; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=VHrosqJBw/jD2fXLXTk6B7k9ErsOSKDugMqkiDkHpEU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlw87kvHJm3k99v3JLvxkbz6eOQnEymFaod/Qtw nSZ+2lPOu+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcPO5AAKCRCPgPtYfRL+ TkJkB/9MqJcVzo/oH3CtG2kkoGwi4IpSxpVsGFpp+yF3RdDaCtDk2KBdfK+lY8wVJLX/BuAh6Wz 7O7Fa3ZDbhzeyfXQQZUnkIwkUUI52U0ARmrXI2Dnl9JulBCfTlHHQkTXIJ2n/t+oPDY2l4Jwas3 KahFY0rdhvXSpVFe04dC7GMisI8nrlysgeAJ/IVZ4QOib6usVwtOFnbej+ebk1KFo56S/n4bpCm Rk1mJO+McINm/vyOOfSp3XZtBC/xBE9NvCd9BzUVdZTzk5huwSHBKvYcpaQOVl0qA6+ksnYNrXf jITbEf7XGJBSOcVzIlKKS16S229rmir2iZDuUZYLIZZBq4RS
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -66,44 +66,26 @@ compatibility macros were provided.
 To be able to remove these compatibility macros push the renaming into
 this driver.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Kalle Valo <kvalo@kernel.org>
 Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/mmc/host/mmc_spi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/marvell/libertas/if_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-index b8dda8160c4e..bf35761f783a 100644
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -935,7 +935,7 @@ static void mmc_spi_request(struct mmc_host *mmc, struct mmc_request *mrq)
- #endif
- 
- 	/* request exclusive bus access */
--	spi_bus_lock(host->spi->master);
-+	spi_bus_lock(host->spi->controller);
- 
- crc_recover:
- 	/* issue command; then optionally data and stop */
-@@ -967,7 +967,7 @@ static void mmc_spi_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 	}
- 
- 	/* release the bus */
--	spi_bus_unlock(host->spi->master);
-+	spi_bus_unlock(host->spi->controller);
- 
- 	mmc_request_done(host->mmc, mrq);
- }
-@@ -1157,7 +1157,7 @@ static int mmc_spi_probe(struct spi_device *spi)
- 	/* We rely on full duplex transfers, mostly to reduce
- 	 * per-transfer overheads (by making fewer transfers).
- 	 */
--	if (spi->master->flags & SPI_CONTROLLER_HALF_DUPLEX)
-+	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX)
- 		return -EINVAL;
- 
- 	/* MMC and SD specs only seem to care that sampling is on the
+diff --git a/drivers/net/wireless/marvell/libertas/if_spi.c b/drivers/net/wireless/marvell/libertas/if_spi.c
+index 8690b0114e23..b722a6587fd3 100644
+--- a/drivers/net/wireless/marvell/libertas/if_spi.c
++++ b/drivers/net/wireless/marvell/libertas/if_spi.c
+@@ -1052,7 +1052,7 @@ static int if_spi_init_card(struct if_spi_card *card)
+ 				"attached to SPI bus_num %d, chip_select %d. "
+ 				"spi->max_speed_hz=%d\n",
+ 				card->card_id, card->card_rev,
+-				card->spi->master->bus_num,
++				card->spi->controller->bus_num,
+ 				spi_get_chipselect(card->spi, 0),
+ 				card->spi->max_speed_hz);
+ 		err = if_spi_prog_helper_firmware(card, helper);
 -- 
 2.43.0
 
