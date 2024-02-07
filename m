@@ -1,102 +1,105 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C823C8289E;
-	Wed,  7 Feb 2024 19:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663EE82D73;
+	Wed,  7 Feb 2024 19:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707332908; cv=none; b=en0sy9cWSAo8WUQ4LhI0gvjd8qmRtlRTdSb+8P5ww7gAcgt1dZK4oZ9iH+jO+/5W+Ri+TjJJpnh0XRzTymrJowuiUU3tmekHBiqgf146qWtsD8R3+Ammfd051qjsT7weXcETPIU2lrKKsv5UgFCs++kYxYijchthTv8h/63VmVY=
+	t=1707333052; cv=none; b=R6rsRnmeCD0TDQlZoEB5WhoQiyYDaKEKi79IsxXz5qj0r6UGVXlI6+FSheh7zetyyQz7ZTo0MlBinVOYwHNMDw9xwWO7EQ6oI7qjs3t4q9zCgvDa286x6+Z1uo8JPQyz4bNfXHoiu6UP6xP8EbXOGxZQTXiXFP9/9+b7mrY2Jag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707332908; c=relaxed/simple;
-	bh=gppkMTLUZP2M0ir4y57co003yRnpqCBQwMrit6QAMRY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oXDKTMpsa5nlQXTBWUu66zTguCcdtUKZIWl/6nYq0KAIXO7vsF8y4bwQ8bs8CoeDhOqU0262IAXKvnj5vmRI5bv2BKGbTaXgsEDaZQj6K7VP4i+aVFj8Ts3RT+B9zBj+vbyGWXpUaoh5G+OtEfYtvgC2n7szQed4IpmhcHMYqrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e06c06c0f6so111581b3a.0;
-        Wed, 07 Feb 2024 11:08:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707332906; x=1707937706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b5NAyJJk2M6nTouAkFWsG1u5nlnAwfDcNyiH/8GXd1c=;
-        b=C/4YYI5y9POb1PY8NMjbEC3mSjf2OBAwSBTqXjBZAnEYUiwPn1wPPFVWMi7FR9Lqjg
-         /MorQX9dPOW96VdhGztqQytC2RIL0eQOwtiMqm7ZrYriFW/ww3qaZ+XSur6TMC5xCfcC
-         PaWMVlvr6OLT0Dm2dhy6pLIIXrUot+3rv4T8JdK+0eW9t21sQeX0iEFalPf9b4nGiRat
-         Z1wWA7jDS2NO2tFhIIUrMytNUg8VtaETPB7T7p/UKqFY2DrlOBmjkjHcz3KaurYljpxT
-         uYA3BSRZhspXpTpNgwO8KNp7JeYZxitl2/U7tE4xjVBX0YbIaG04WbuMPy3EsSUefccY
-         OkBg==
-X-Gm-Message-State: AOJu0Yyp2kgXdPl6+Qgru1Jw8Dv8XlLP4tmVvE/FsEILSxWllwMqU5ll
-	LlhobANgiLzHTjHCEzGXjqR4Gh+Ga80rLd4Z+dfOCPw4wOPEFStHmm1kJBXtpoAKhVc+vT4Q9Ww
-	bZW19QDQH7e2yoGxJFD12HYDbjZ0=
-X-Google-Smtp-Source: AGHT+IFbDa1MkIhin+YrCea3UDRAWki+bDn7OQtqgtmEhvXnmb3mzN9FOwFGws3FiO87xF1vQI6cvCXFaGKdkJVwvJA=
-X-Received: by 2002:a05:6a20:438f:b0:19c:9e7d:3f4e with SMTP id
- i15-20020a056a20438f00b0019c9e7d3f4emr891189pzl.1.1707332906015; Wed, 07 Feb
- 2024 11:08:26 -0800 (PST)
+	s=arc-20240116; t=1707333052; c=relaxed/simple;
+	bh=OCnvHMbEgGstPQ+6RSJ1FJWLuiwrN1X56YrscIQU1ps=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=I61fqL9beUI2jb1iYEN4fBfq3v7fnCuvY243JejRFfl/1lObttI/67Un0Nl7OvDsOuVLkiPTe/uAL5xM+mihMKA62H99tD0QRAIeexWvvKq+iNAPZGriED+vKqkgORvFmX45IIfZx7QFTyHAulbhr2arc3wl7sYBhzBeWCVTFC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3ymfeSd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3ymfeSd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD0FC433F1;
+	Wed,  7 Feb 2024 19:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707333051;
+	bh=OCnvHMbEgGstPQ+6RSJ1FJWLuiwrN1X56YrscIQU1ps=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=k3ymfeSdbhT2bqIwZJS9xY+5EqNd0Bcsp4td7PM/2zlnSyoEqO6cpotVx0zrxuUNC
+	 0BaCBHHx/vV9Z/gbSlX5ZtlEZ01yzL0GgyHimwHldvTzywMRpsS1g+rCVyEeGVPjGi
+	 V6XxpTqHO+dZk803Wb91hawO+t7PUEyoly+kALzl79DrE+Az5fB9+/pYT3rLkUfjYV
+	 H8i0oRKW4YDLZhRDdhr/xv/PiY29kdcqa3+4fA5VlBNtMwc5awStF+Wtn9kpQBMeju
+	 nDiCUc+f2pf8zB/+Ce1IaU/9XnzAWhmpKFiO+MuCIuxYTvCgSWVe2yFKtoaSF/uN9E
+	 Re7Junm/vc3WA==
+Date: Wed, 7 Feb 2024 13:10:50 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Niklas Cassel <niklas.cassel@wdc.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] PCI: dwc: Fix a 64bit bug in
+ dw_pcie_ep_raise_msix_irq()
+Message-ID: <20240207191050.GA912556@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202220459.527138-1-namhyung@kernel.org> <20240202220459.527138-15-namhyung@kernel.org>
- <CAP-5=fUWaKW7d6_YkET0o26=fjBwX6PPJ1gXQ9wndQM_Oi2O3A@mail.gmail.com>
- <CAM9d7cgF_PYm2fG1Vgu25u1hVZUK0wmFBqY7DHW2eVpRV=iERA@mail.gmail.com> <CAP-5=fV7fWHM53roUJOU+0vAYQJAbhdE1EkgzHLv7jPgeLc2HQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fV7fWHM53roUJOU+0vAYQJAbhdE1EkgzHLv7jPgeLc2HQ@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 7 Feb 2024 11:08:15 -0800
-Message-ID: <CAM9d7cgV-c2bLE9KGSA2qTHNbzGriQo9NqYD5k177+46e51pJA@mail.gmail.com>
-Subject: Re: [PATCH 14/14] perf annotate-data: Add stack canary type
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <af59c7ad-ab93-40f7-ad4a-7ac0b14d37f5@moroto.mountain>
 
-On Tue, Feb 6, 2024 at 3:40=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Tue, Feb 6, 2024 at 3:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> >
-> > On Fri, Feb 2, 2024 at 7:21=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > On Fri, Feb 2, 2024 at 2:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > > >
-> > > > When the stack protector is enabled, compiler would generate code t=
-o
-> > > > check stack overflow with a special value called 'stack carary' at
-> > > > runtime.  On x86_64, GCC hard-codes the stack canary as %gs:40.
-> > > >
-> > > > While there's a definition of fixed_percpu_data in asm/processor.h,
-> > > > it seems that the header is not included everywhere and many places
-> > > > it cannot find the type info.  As it's in the well-known location (=
-at
-> > > > %gs:40), let's add a pseudo stack canary type to handle it speciall=
-y.
-> > >
-> > > I wonder if cases like this can be handled by debug info rather than
-> > > special cases in the tool. Special cases are fine too, but are
-> > > potentially less portable.
-> >
-> > Agreed, but I couldn't find anything special in DWARF.
->
-> The fs and gs selectors are commonly used for thread local storage, so
-> could something like DW_OP_form_tls_address be used?
-> https://dwarfstd.org/issues/110803.1.html
+On Fri, Jan 26, 2024 at 11:40:37AM +0300, Dan Carpenter wrote:
+> The "msg_addr" variable is u64.  However, the "aligned_offset" is an
+> unsigned int.  This means that when the code does:
+> 
+>         msg_addr &= ~aligned_offset;
+> 
+> it will unintentionally zero out the high 32 bits.  Use ALIGN_DOWN()
+> to do the alignment instead.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 2217fffcd63f ("PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq() alignment support")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I'm not sure if it's the same thing.  Maybe it's for variables with
-__thread annotation.  I don't know if compilers generate a
-(pseudo) variable for stack canary.
+I applied both of these to for-linus for v6.8, thanks!
 
-Thanks,
-Namhyung
+> ---
+> v5: Add the #include.
+> v4: Add stable and r-b from Niklas
+> v3: Use ALIGN_DOWN()
+> v2: fix typo in commit message
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 5befed2dc02b..d6b66597101e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -6,6 +6,7 @@
+>   * Author: Kishon Vijay Abraham I <kishon@ti.com>
+>   */
+>  
+> +#include <linux/align.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -551,7 +552,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  
+>  	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> -	msg_addr &= ~aligned_offset;
+> +	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>  				  epc->mem->window.page_size);
+>  	if (ret)
+> -- 
+> 2.43.0
+> 
