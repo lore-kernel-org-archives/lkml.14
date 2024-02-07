@@ -1,141 +1,188 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3FD8286B;
-	Wed,  7 Feb 2024 19:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A8685943
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 19:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707335825; cv=none; b=lzXMeAzC47K+wam8K0Q4ut9vQU2clF/PIXAUbUSc48645xiOHWGClEdkVKK9y90kK65ZOIKL31gqaIri9IfJQW1kYjYKSExT3JILWNF39IKYh/vfZIctmbZOCp/oI7hHdPVyqO2tWBO91yaIlwA3AzcMIdAZ75rjyKW3J6EMJf4=
+	t=1707335982; cv=none; b=iuw9JfAVV2c6dojhrKJe7fL2+ejP1ByzZMBc6rtwOf3y++s/AFnmoqG9WwWOcSi4jtUuUGDajFpnTwrXOfPOFrBkYAayUoVAmjXOXdAqv84miGPqHw/J6H/bf2MEEiRRUW6d4TVnf18usHB5U0nhPSPArFHeMIBWY8esC8+d6us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707335825; c=relaxed/simple;
-	bh=/FcFb9qUU0AFc7ntQBhM1DYybql7YvNG3j0P9y2MGhs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ir6yUS/3lEI88VrjrANMZkys2PfwWYPFSD1rUfXEKRDz+QiF0f5g7d6y6YkaXA3p23bGG6HekPh2hu041l7EgHRNLfKAzGdqWRujfg+SPFDLxtcLgZsbf/3EaFhjdHkuP+aCn94v3O9qVfcNXDGT/A8ENAWF4+qpaahvA5IPo14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evHphc0j; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707335982; c=relaxed/simple;
+	bh=UkQx4KYTSb6zos+CY9uB4ZKRtoH3ayU53Ahbx0ztcHQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sHx6gKPCLhM8uL6F0i0BCifNLJHk2A6BUM74j/rUXh0tvCwkx2mpXRO7DLR3SU2bOdWM0P56HLSZKxmn4Dw1isjhypgQH/gNf8zZU0tGLcytm5GhkyjHuu4q1HGDfltgIngygMMa8ZuNKRmaWMoDWJyzkhgfl+FpD0uYI1mb/Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tJByh9QL; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evHphc0j"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a39e31e1aa9so9845666b.0;
-        Wed, 07 Feb 2024 11:57:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tJByh9QL"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6047a616bfeso10447957b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 11:59:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707335822; x=1707940622; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3uPhDmGaNbr+vXWHveZBJmP7AayoiCUUwJqSBYw/j+Y=;
-        b=evHphc0jwG3eqkM+ybCJI9bM7H5e4u2OTLHTy1CPnlGWEYL2f4i30k45QYEFx6wf2R
-         AvKRSJW8lJaVNS8lYty4k8TIYTnNe2k1w3Pc35tZbHGhJ6bLYoxWvVmQmmvMldiKm2A3
-         kadgp0sEN4ePDla9EifOaDlatMMfGuxbZR6kofHQ1OnhsiJ2YRkMMSzXyoKKHxczOY2R
-         B5b9G0yaRGjQrKkgxTWHACXwnawWYnDOLtTqJzky0takj07uP35QAapoii25F0Xrby1q
-         Xjs7e9gap33g6ueiIOdF60GMDmPUWZ1aMNEU1ACe3f//V1i9mF/J5NTcEAHNo37M52E4
-         cHug==
+        d=linaro.org; s=google; t=1707335979; x=1707940779; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GwkfJHLn8/HfkCk/r+wwlW1fJAVG5oLG8A4VHYAkrHI=;
+        b=tJByh9QLL6QLI93LI3k+Cxp8i2axsgx29j5qZRlpKPs3LnWp20rZGaPFcYOGwDP7GD
+         7cqZ+Q9hUfGGSS3aI6MEq4zptxfymqLGCe8qg3BeSSBTKpTy1yxphkpmraN0Sq62WQru
+         Pg6+nsILS03vvprIuJQ/q/d2TygebWj5jP6OhlU++oOcqDd8okezL4xpoquahSPDul1u
+         pP1Avv4YLkYnHRLhf9jWRm9awutzptLqM/7Sz2RjIRS7EfNjaKRZCwfIOVYdiLZfvpeM
+         /X0nJWNYzuAvdJ1+beUCjF55mPOR7lxlZXoL7HxUoh5broHQ1J6Gmg97nLYuXxtW5JOo
+         btjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707335822; x=1707940622;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3uPhDmGaNbr+vXWHveZBJmP7AayoiCUUwJqSBYw/j+Y=;
-        b=Ue9MQtpBMrL5T97FaWoPDsBlJfo+HgufIzlrLWkgAcFwe/vVFiZR0RGxcfYWlzV1iS
-         le1Av0uWM0pllVL+Kh2d4lNp28gWuh8Ky5ErWqOcvkBgy0GHYgEVvGq6i3oBXJ132Y14
-         eHKzQQRkS4sj7NL7cnlShNcbn74wb58xaFIJ5viZpK5C8z4XxeSTEx7kFMC2zzXaNaPR
-         hybNoEDtmOGdoZiAORqVDSxIQXpBcXyqjbhRrKArPtH4b27o7BbZqbY7HW+m/tBni+gf
-         UY45XnABojFBAU0VqgON8tdTvcgYw6gohyIJVcdFEojrQe3+TJhk8fzKlOJZBbiNqlWZ
-         F5tw==
-X-Gm-Message-State: AOJu0YzfQU0Q8PWezm6ddWsueLJdcKVYth0YW8BZdJTbBuAKrMSPT+Ny
-	Dhfjb6g1WzWDTgbNonLu6SGIdZuG/lVgw9ZQrPGBw5wxVao1YHvh
-X-Google-Smtp-Source: AGHT+IEk+obbIzohAZ2Cb9TslRpGBO1bLg1Qbs9SXH09Foh5WinxJwTiiAubuQhQN0RLHTQqfL/OgQ==
-X-Received: by 2002:a17:906:ca2:b0:a37:3525:d227 with SMTP id k2-20020a1709060ca200b00a373525d227mr5543066ejh.27.1707335822056;
-        Wed, 07 Feb 2024 11:57:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWak2uUE8YgnUnWJshSf3V14sOhgfgMZCSz114ya52S0qjEjhlTLLU+sN2hiZ5vNDLKS1E1TgjyS282mvbYjIM4iKbYwyXHJnYfXah1ZCTOZIOvbIfSjCjIDhx+3zKfuWh6L1HWFWnKwxFb0ndgO7KlDt5dHK4ftcqa1MWLAvAjbmRs7A==
-Received: from localhost.localdomain (i577B69E7.versanet.de. [87.123.105.231])
-        by smtp.gmail.com with ESMTPSA id rf19-20020a1709076a1300b00a353ca3d907sm1086438ejc.217.2024.02.07.11.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 11:57:01 -0800 (PST)
-From: Jesus Gonzalez <jesusmgh@gmail.com>
-To: andriy.shevchenko@linux.intel.com,
-	jic23@kernel.org,
-	lars@metafoo.de
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jesus Gonzalez <jesusmgh@gmail.com>
-Subject: [PATCH v4 1/1] Add 10EC5280 to bmi160_i2c ACPI IDs to allow binding on some devices
-Date: Wed,  7 Feb 2024 20:55:50 +0100
-Message-ID: <20240207195549.37994-2-jesusmgh@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZcOLql2RGmPP10EY@smile.fi.intel.com>
-References: <ZcOLql2RGmPP10EY@smile.fi.intel.com>
+        d=1e100.net; s=20230601; t=1707335979; x=1707940779;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GwkfJHLn8/HfkCk/r+wwlW1fJAVG5oLG8A4VHYAkrHI=;
+        b=lEwwojfnsMxCKfInAqW0+FDcnHJQ6BS4btQHiK4/6QMSC7prYibojF3Fm/BS9JIq3H
+         Mu1ha3qwNxKskrkisDjNjW0RU0E4kI/zwVijlm0VNBmoY1Jp1+wCfkKAnRHAIvBtp76/
+         n0htRzW/U5zd/cyDKqMptYiTnc3MA5Z+YM9X4PQal06q/2Nm0wo9B2lxITdHn1HVo7F4
+         RdBYwzqP3VZeZwKfWRT18CmxYQR1yjgUm+MxjuI2e1Gr064UQk4xvYUr7lCmro4dg5WJ
+         TtrnPvQE96qklKCaYon2ZkaMnaBsH8ET7grjO09izO8jFiVQ3Fdw3SR+W568F4xGBV4j
+         CGWA==
+X-Gm-Message-State: AOJu0Yyz9djafMp/QEd+mQom0ho/cCIMIll+iPSHpgUtFNebBEsvbvNl
+	pIjogSm1cMkneaOnxc7c7Os3GUFnF0qwSkhIKfUyhUWSHWxoGF376vBtbaud6JCEiZMDcX+5rFn
+	SHZ/8cYyXwlpNRfHPnkrDJdMmOkTlnsprOPICtA==
+X-Google-Smtp-Source: AGHT+IEuEU6FhY/I616wY+eWpvyqJscoEtGa/IwbEkSleqQN6CLz65NvHcecJWfYtSCQAm6B9A1dkykyMc95djTRxCc=
+X-Received: by 2002:a5b:c0d:0:b0:dc2:4f96:fc38 with SMTP id
+ f13-20020a5b0c0d000000b00dc24f96fc38mr5720301ybq.50.1707335979137; Wed, 07
+ Feb 2024 11:59:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240106-fd-migrate-mdp5-v3-0-3d2750378063@linaro.org>
+ <20240106-fd-migrate-mdp5-v3-1-3d2750378063@linaro.org> <89d02d5c-4af1-9f40-483f-1efb39b2a33d@quicinc.com>
+In-Reply-To: <89d02d5c-4af1-9f40-483f-1efb39b2a33d@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 7 Feb 2024 21:59:28 +0200
+Message-ID: <CAA8EJpro3jVPDAGWdpFiukCHTVif--Y-ZhEw=ir7U3ABsa_qbA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] drm/msm/mdss: generate MDSS data for MDP5 platforms
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-"10EC5280" is used by several manufacturers like Lenovo, GPD, or AYA (and
-probably others) in their ACPI table as the ID for the bmi160 IMU. This
-means the bmi160_i2c driver won't bind to it, and the IMU is unavailable
-to the user. Manufacturers have been approached on several occasions to
-try getting a BIOS with a fixed ID, mostly without actual positive
-results, and since affected devices are already a few years old, this is
-not expected to change. This patch enables using the bmi160_i2c driver for
-the bmi160 IMU on these devices.
+On Wed, 7 Feb 2024 at 20:25, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>
+>
+>
+> On 1/5/2024 3:34 PM, Dmitry Baryshkov wrote:
+> > Older (mdp5) platforms do not use per-SoC compatible strings. Instead
+> > they use a single compat entry 'qcom,mdss'. To facilitate migrating
+> > these platforms to the DPU driver provide a way to generate the MDSS /
+> > UBWC data at runtime, when the DPU driver asks for it.
+> >
+> > It is not possible to generate this data structure at the probe time,
+> > since some platforms might not have MDP_CLK enabled, which makes reading
+> > HW_REV register return 0.
+> >
+>
+> I would have expected a crash if clock was not enabled and we tried to
+> access the hw_rev register.
 
-Here is the relevant extract from the DSDT of a GPD Win Max 2 (AMD 6800U
-model) with the latest firmware 1.05 installed. GPD sees this as WONTFIX
-with the argument of the device working with the Windows drivers.
+No, for all the platforms I tested it returns 0 instead.
+However this doesn't make any difference, we don't read the register
+in MDP5 case until all clocks are enabled.
 
-	Device (BMA2)
-	{
-	    Name (_ADR, Zero)  // _ADR: Address
-	    Name (_HID, "10EC5280")  // _HID: Hardware ID
-	    Name (_CID, "10EC5280")  // _CID: Compatible ID
-	    Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
-	    Name (_UID, One)  // _UID: Unique ID
-	    Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-	    {
-		Name (RBUF, ResourceTemplate ()
-		{
-		    I2cSerialBusV2 (0x0069, ControllerInitiated, 0x00061A80,
-		        AddressingMode7Bit, "\\_SB.I2CC",
-		        0x00, ResourceConsumer, , Exclusive,
-		        )
-		})
-		Return (RBUF) /* \_SB_.I2CC.BMA2._CRS.RBUF */
-	    }
-	    
-	    ...
-	    
-	}
+>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >   drivers/gpu/drm/msm/msm_mdss.c | 51 ++++++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 51 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
+> > index 455b2e3a0cdd..566a5dd5b8e8 100644
+> > --- a/drivers/gpu/drm/msm/msm_mdss.c
+> > +++ b/drivers/gpu/drm/msm/msm_mdss.c
+> > @@ -3,6 +3,7 @@
+> >    * Copyright (c) 2018, The Linux Foundation
+> >    */
+> >
+> > +#include <linux/bitfield.h>
+> >   #include <linux/clk.h>
+> >   #include <linux/delay.h>
+> >   #include <linux/interconnect.h>
+> > @@ -213,6 +214,49 @@ static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss)
+> >       }
+> >   }
+> >
+> > +#define MDSS_HW_MAJ_MIN              GENMASK(31, 16)
+> > +
+> > +#define MDSS_HW_MSM8996              0x1007
+> > +#define MDSS_HW_MSM8937              0x100e
+> > +#define MDSS_HW_MSM8956              0x1010
+>
+> This should be 0x100B in the docs I see.
 
-Signed-off-by: Jesus Gonzalez <jesusmgh@gmail.com>
----
-v4: Moved comment back to relevant position inside function
+Yes, I mixed MSM8956 and MSM8953 here. The code support the latter one.
 
- drivers/iio/imu/bmi160/bmi160_i2c.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+>
+> > +#define MDSS_HW_MSM8998              0x3000
+> > +#define MDSS_HW_SDM660               0x3002
+> > +#define MDSS_HW_SDM630               0x3003
+> > +
+> > +/*
+> > + * MDP5 platforms use generic qcom,mdp5 compat string, so we have to generate this data
+> > + */
+> > +static const struct msm_mdss_data *msm_mdss_generate_mdp5_mdss_data(struct msm_mdss *mdss)
+> > +{
+> > +     struct msm_mdss_data *data;
+> > +     u32 hw_rev;
+> > +
+> > +     data = devm_kzalloc(mdss->dev, sizeof(*data), GFP_KERNEL);
+> > +     if (!data)
+> > +             return NULL;
+> > +
+> > +     hw_rev = readl_relaxed(mdss->mmio + HW_REV);
+> > +     hw_rev = FIELD_GET(MDSS_HW_MAJ_MIN, hw_rev);
+> > +
+> > +     if (hw_rev == MDSS_HW_MSM8996 ||
+> > +         hw_rev == MDSS_HW_MSM8937 ||
+> > +         hw_rev == MDSS_HW_MSM8956 ||
+> > +         hw_rev == MDSS_HW_MSM8998 ||
+> > +         hw_rev == MDSS_HW_SDM660 ||
+> > +         hw_rev == MDSS_HW_SDM630) {
+> > +             data->ubwc_dec_version = UBWC_1_0;
+> > +             data->ubwc_enc_version = UBWC_1_0;
+> > +     }
+> > +
+> > +     if (hw_rev == MDSS_HW_MSM8996 ||
+> > +         hw_rev == MDSS_HW_MSM8998)
+> > +             data->highest_bank_bit = 2;
+> > +     else
+> > +             data->highest_bank_bit = 1;
+> > +
+> > +     return data;
+> > +}
+> > +
+> >   const struct msm_mdss_data *msm_mdss_get_mdss_data(struct device *dev)
+> >   {
+> >       struct msm_mdss *mdss;
+> > @@ -222,6 +266,13 @@ const struct msm_mdss_data *msm_mdss_get_mdss_data(struct device *dev)
+> >
+> >       mdss = dev_get_drvdata(dev);
+> >
+> > +     /*
+> > +      * We could not do it at the probe time, since hw revision register was
+> > +      * not readable. Fill data structure now for the MDP5 platforms.
+> > +      */
+> > +     if (!mdss->mdss_data && mdss->is_mdp5)
+> > +             mdss->mdss_data = msm_mdss_generate_mdp5_mdss_data(mdss);
+> > +
+> >       return mdss->mdss_data;
+> >   }
+> >
+> >
 
-diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
-index 81652c08e644..a081305254db 100644
---- a/drivers/iio/imu/bmi160/bmi160_i2c.c
-+++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
-@@ -43,6 +43,15 @@ static const struct i2c_device_id bmi160_i2c_id[] = {
- MODULE_DEVICE_TABLE(i2c, bmi160_i2c_id);
- 
- static const struct acpi_device_id bmi160_acpi_match[] = {
-+	/*
-+	 * FIRMWARE BUG WORKAROUND
-+	 * Some manufacturers like GPD, Lenovo or Aya used the incorrect
-+	 * ID "10EC5280" for bmi160 in their DSDT. A fixed firmware is not
-+	 * available as of Feb 2024 after trying to work with OEMs, and
-+	 * this is not expected to change anymore since at least some of
-+	 * the affected devices are from 2021/2022.
-+	 */
-+	{"10EC5280", 0},
- 	{"BMI0160", 0},
- 	{ },
- };
+
+
 -- 
-2.43.0
-
+With best wishes
+Dmitry
