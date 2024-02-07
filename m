@@ -1,141 +1,153 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852897F7F6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 15:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A9259B78;
+	Wed,  7 Feb 2024 15:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707319281; cv=none; b=fMLSSMNTVJzCmsh1CNkbYlEN0oThlwVWbIphLc2d96TahA3TEVFltAYTdQnPLi85XNvFCVe+Qs2ae1XnigffBcI0uyAu95HvSXQtLqotfd8xRdc/6fwol7kcWfe2Obo1ZvX0+Z7CPEPT4Pb1V+6hxmCRZbr1my4vEbTWuL+cfhw=
+	t=1707319342; cv=none; b=lrUCSqxna0Z4NqFNPcdKk0tgrU1NOCzEPdIawlabTnsv7SNePgVryT1nrogmRoSZQBTQwnqjVQcXLBjIvHBCPLlt9z2+6xaPwfT/SF9ulYszNC+Te2Vs8RqnkOaroidR3e+Whava+rtrhw5dXc0uKHHtNm0BBDNOvrJCLkEBILM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707319281; c=relaxed/simple;
-	bh=JPR+3qEr1xbqWmLp/7UMRRu35URQqE3BUcnR+vKiBTw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OzNVQd96AC7twDiObYsKa+9TMMbZxloX7kBUJXKMRBFNfYfhb8TqXx2KXcmcILo/01WY28KvbL6kWx0Sbnqr4BDY5/dHSIm42EV6YUIRMoZ2AMlN2CBVCPiYIlW30Ez3bsjWTAdGE6pEJgWX5GzU4kbE1W2TNWMX/JtCV2G+OPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dOKdYlKU; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1707319342; c=relaxed/simple;
+	bh=0ZqVkE4MQT6le5S4lU2VaSaHvTULorc8uo0swoUmiUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lKlO6E2l0hjG/0kWTceUX5e47Elxn1oGO8drrwsfDECzAvd6LBh6MaOIX6sJN0IOcXe+4h75d8CMJC4ltFiu3nnYvutNeug9+Iir6zxpaiz7i/TDDxH66pKoPHRWTVz9FkdX6hUkwhA5qY4k9uu4Q8wRx6D+lzblVKVXxbBUD5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jF3oZI/C; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dOKdYlKU"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc236729a2bso731551276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 07:21:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1707319278; x=1707924078; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fd9LzoF3Qcikc6QqNUOfmmz6AfgfuMOnEaN/8Dvg2lo=;
-        b=dOKdYlKUIDp9KW4au6XXYa8NsQV5/DwXjUGQTupdIiPQzRPjnGpLVyM8jmrhs7Sp35
-         yklzwkkVTLCWYoyE0CqZ7f2d0t9w1m8n6p59+lU1l56hG1CDl2+685KzVT7FKH8xhFn6
-         AlXnK616om/p7BJDJNIHc0xNsSzoBS5nYnWc/cZGYrukMRoUbi6a4hhHL5lK0ESL+uiH
-         pRu/MIWUd5KAR/sUPv9cUn3Fw7i7OG3NgJNOsN/0DTQ0cxPpaUW5cpp1c08JC5/6f83p
-         4qxK1CjnfSdRQgGt2lRcyXUK13WzU8/L1CbeTXu5Lb+KQspJr+0lbTq1yBdohpB1i6Gl
-         4mIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707319278; x=1707924078;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fd9LzoF3Qcikc6QqNUOfmmz6AfgfuMOnEaN/8Dvg2lo=;
-        b=wFI/l8gnmIQZ9vnJFKp/cBzqOu6p10BnVGQJGUsxPQMGmGVD/eMaSVjQt22aQi0reX
-         cLwkecJ6OnNtrerXlTfVWEJhOvdevWzr2rqg4fcnfeHHv/ZQ5jgY0plUVZWyyNMzzgrP
-         S3EqZfoRNp4i2GEQFh7hTJtmh4dcy7/c22Z5qSc0s1ewAqg96zfmQccAVdDH304lL7ap
-         kjJyTelCHO/fpCnQ5Bxho280/l/kiqQmOMlvyXEc/0qVwenhI9Il00LEuudSwFaPQT7l
-         FOVgPEuwbrXr69dXh+ERgnQqWFQUHuAuUW3IpY1cHXrE77sC+O+y0rkBPDHdRin9jKD5
-         6LEA==
-X-Gm-Message-State: AOJu0Yxgb8aHBbslANSR7udzl0180RlEmFSxkbjuYcgFkyle1xJMjblS
-	j5APgJ8RMU/YdA2K1VmCd8CGP0OdsYAmB+kotWbiHsNc4tbZyTnK42kjvVMWVFbEAbHJUn75Voc
-	wQ5+CD2e/L/v3ds4/LOdU0ApEZ8+pEaNIOsyl
-X-Google-Smtp-Source: AGHT+IEkvoMMB8s8FTe5701UT+q7iWJTZFp1gA0vH5f2XPg6Xh+N3IH9AX1nXc4sEpNTVPWBiTfsTDHbhRKvBSRjGkk=
-X-Received: by 2002:a25:c513:0:b0:dc2:4450:92f2 with SMTP id
- v19-20020a25c513000000b00dc2445092f2mr5130232ybe.22.1707319277895; Wed, 07
- Feb 2024 07:21:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jF3oZI/C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707319340; x=1738855340;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0ZqVkE4MQT6le5S4lU2VaSaHvTULorc8uo0swoUmiUI=;
+  b=jF3oZI/C6hb98mtYHLQaugOK0GTYEdMV4GOoBB9VDN5uccgjt13LzvEU
+   0S7YVOHaxqmo+FW5kBHHVg9qcZCK9iqsKXFUNzJCEKATt0f9M8YhRBMY6
+   DLqkyOH2iz0RBimCBo+QH0aexZ68u7o5b5jqovksBXX0j1R95xLQ4TACQ
+   a27uTuCKc3qRaUgyM14ZH1eM2BvBUGj8T0SP6k7pBUcjfamlijkptwk1b
+   6g5g94pDo/qyo6fRkUU9qarplLhIbsPcuJXolfXMRIzAGOxrvDmpgcrDC
+   oRpB88eJ7tYerjjRLlP95sgZhjIaaqG1Wtvw7vViYFV27mM1FRXvAA4Cz
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="3998390"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="3998390"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 07:22:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="1657320"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.22.1])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 07:22:16 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+ oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ingo Molnar <mingo@kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 2/2 v3] cxl/region: Use cond_guard() in show_targetN()
+Date: Wed, 07 Feb 2024 16:22:13 +0100
+Message-ID: <4546212.LvFx2qVVIh@fdefranc-mobl3>
+Organization: intel
+In-Reply-To: <202402070919.0zuYCxMS-lkp@intel.com>
+References:
+ <20240206121301.7225-3-fabio.maria.de.francesco@linux.intel.com>
+ <202402070919.0zuYCxMS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8fafb8e1-b6be-4d08-945f-b464e3a396c8@I-love.SAKURA.ne.jp>
- <999a4733-c554-43ca-a6e9-998c939fbeb8@I-love.SAKURA.ne.jp> <202402070622.D2DCD9C4@keescook>
-In-Reply-To: <202402070622.D2DCD9C4@keescook>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 7 Feb 2024 10:21:07 -0500
-Message-ID: <CAHC9VhTJ85d6jBFBMYUoA4CrYgb6i9yHDC_tFce9ACKi7UTa6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] LSM: add security_execve_abort() hook
-To: Kees Cook <keescook@chromium.org>
-Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	linux-security-module <linux-security-module@vger.kernel.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Feb 7, 2024 at 9:24=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> On Sat, Feb 03, 2024 at 07:52:54PM +0900, Tetsuo Handa wrote:
-> > A regression caused by commit 978ffcbf00d8 ("execve: open the executabl=
-e
-> > file before doing anything else") has been fixed by commit 4759ff71f23e
-> > ("exec: Check __FMODE_EXEC instead of in_execve for LSMs") and commit
-> > 3eab830189d9 ("uselib: remove use of __FMODE_EXEC"). While fixing this
-> > regression, Linus commented that we want to remove current->in_execve f=
-lag.
-> >
-> > The current->in_execve flag was introduced by commit f9ce1f1cda8b ("Add
-> > in_execve flag into task_struct.") when TOMOYO LSM was merged, and the
-> > reason was explained in commit f7433243770c ("LSM adapter functions.").
-> >
-> > In short, TOMOYO's design is not compatible with COW credential model
-> > introduced in Linux 2.6.29, and the current->in_execve flag was added f=
-or
-> > emulating security_bprm_free() hook which has been removed by introduct=
-ion
-> > of COW credential model.
-> >
-> > security_task_alloc()/security_task_free() hooks have been removed by
-> > commit f1752eec6145 ("CRED: Detach the credentials from task_struct"),
-> > and these hooks have been revived by commit 1a2a4d06e1e9 ("security:
-> > create task_free security callback") and commit e4e55b47ed9a ("LSM: Rev=
-ive
-> > security_task_alloc() hook and per "struct task_struct" security blob."=
-).
-> >
-> > But security_bprm_free() hook did not revive until now. Now that Linus
-> > wants TOMOYO to stop carrying state across two independent execve() cal=
-ls,
-> > and TOMOYO can stop carrying state if a hook for restoring previous sta=
-te
-> > upon failed execve() call were provided, this patch revives the hook.
-> >
-> > Since security_bprm_committing_creds() and security_bprm_committed_cred=
-s()
-> > hooks are called when an execve() request succeeded, we don't need to c=
-all
-> > security_bprm_free() hook when an execve() request succeeded. Therefore=
-,
-> > this patch adds security_execve_abort() hook which is called only when =
-an
-> > execve() request failed after successful prepare_bprm_creds() call.
-> >
-> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
->
-> This looks good to me.
->
-> Given this touches execve and is related to the recent execve changes,
-> shall I carry this in the execve tree for testing and send a PR to Linus
-> for it before v6.8 releases?
->
-> There's already an Ack from Serge, so this seems a reasonable way to go
-> unless Paul would like it done some other way?
+On Wednesday, 7 February 2024 02:54:34 CET kernel test robot wrote:
+> Hi Fabio,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.8-rc3 next-20240206]
+> [cannot apply to cxl/next cxl/pending]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:   
+> https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cleanup
+> -Add-cond_guard-to-conditional-guards/20240206-203110 base:   linus/master
+> patch link:   
+> https://lore.kernel.org/r/20240206121301.7225-3-fabio.maria.de.francesco%40
+> linux.intel.com patch subject: [PATCH 2/2 v3] cxl/region: Use cond_guard()
+> in show_targetN() config: s390-allyesconfig
+> (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp
+> @intel.com/config) compiler: s390-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build):
+> (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp
+> @intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version
+> of the same patch/commit), kindly add following tags
+> 
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes:
+> | https://lore.kernel.org/oe-kbuild-all/202402070919.0zuYCxMS-lkp@intel.com
+> | /
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/cxl/core/region.c: In function 'show_targetN':
+> >> drivers/cxl/core/region.c:670:70: warning: suggest braces around empty
+> >> body in an 'else' statement [-Wempty-body]
+>      670 |         cond_guard(rwsem_read_intr, return -EINTR,
+> &cxl_region_rwsem);
+>          |                                                                      
+^
 
-Please hold off on this Kees (see my email from yesterday), I'd prefer
-to take this via the LSM tree and with the immediate regression
-resolved I'd prefer this go in during the upcoming merge window and
-not during the -rcX cycle.  Or am I misunderstanding things about the
-state of Linus' tree currently?
+I think that this warning deserves attention and braces should be added around 
+the 'else' empty body. I'm going to send v4:
 
---
-paul-moore.com
+#define cond_guard(_name, _ret, args...) \
+        CLASS(_name, scope)(args); \
+        if (!__guard_ptr(_name)(&scope)) _ret; \
+        else { }
+
+Any comments?
+
+Fabio
+
+> 
+> vim +/else +670 drivers/cxl/core/region.c
+> 
+>    664
+>    665	static size_t show_targetN(struct cxl_region *cxlr, char *buf, int
+> pos) 666	{
+>    667		struct cxl_region_params *p = &cxlr->params;
+>    668		struct cxl_endpoint_decoder *cxled;
+>    669
+> 
+>  > 670		cond_guard(rwsem_read_intr, return -EINTR, 
+&cxl_region_rwsem);
+> 
+>    671
+>    672		if (pos >= p->interleave_ways) {
+>    673			dev_dbg(&cxlr->dev, "position %d out of range 
+%d\n", pos,
+>    674				p->interleave_ways);
+>    675			return -ENXIO;
+>    676		}
+>    677
+>    678		cxled = p->targets[pos];
+>    679		if (!cxled)
+>    680			return sysfs_emit(buf, "\n");
+>    681
+>    682		return sysfs_emit(buf, "%s\n", dev_name(&cxled-
+>cxld.dev));
+>    683	}
+>    684
+
+
+
+
