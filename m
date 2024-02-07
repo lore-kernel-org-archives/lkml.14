@@ -1,182 +1,83 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F5D25602
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 10:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41C525620;
+	Wed,  7 Feb 2024 10:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707300395; cv=none; b=YK5U2I5NciLs8OX/DW0H88QL/bDnpL4cKRBW4qNGUVOiMnidisXBOWmUlfp8M1MvzWg8Y8uyaW/cyMgB2g15FZ2bdQAwIpVzJeqq/AD3yQEK4DISx+/buBU8uUPkLW9o4UBS60K1kOEw2jYBxS3ipErkN+68Y1L/8g806c/T1ck=
+	t=1707300396; cv=none; b=corI9uv2xendBwcitNl/PoCqSqFJHcNkBVzjibJeBwohoaDEUQ3uJuFInSr/xUYd1s4QM2t4LdU7GTQYkAtTjpJ/gzV57zrAQr2SHemGSN5OXUahCaQJ8nlpUL9HGZxMgitPK3yBgBPzJjSNgjklgCNCzy4vEQHdnQf+0Gn7fF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707300395; c=relaxed/simple;
-	bh=e+QYfe3EBAnFeI6C06KSlz6hgCpRzI0/cX5GEtPsNfg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fgf40/LemyrFGbzrv7xXxRSUoFDw//E7UIUu9HdiAnZnEUyoKwLJBrtb0FQnjPN9w2rE5nUQ5FzRY9M6VO3RjE/HlpyPEsEuFnUtbpR/QNi4GUHPf0DuV2vaZAwvN67PR7OnhzSSXzZN1nVWJmV/MtKdWOVGJvZIa0TWF0i0unQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pranavpp.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IeMtiH1Z; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pranavpp.bounces.google.com
+	s=arc-20240116; t=1707300396; c=relaxed/simple;
+	bh=8SIztSSdRHmnv6/+sGa3e7hEC65ih9fcCTIUIr5N3ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KwxUvfdynWpnjGn9GamV/MxWV0acbuU0SLrv0mdnXnqkDzCuldiEmQhbr6KbRG850YIscOeMYUJmdhklzX1y7WtmJqiHQW9UUQKvX/CFF+LmIzFlpDtc0u8Cv1uugG7RcSoCqsN/Vz7bvoA8uqrtCSiFw5bPLA+dlCQsbtRfK1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4+L7DNx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IeMtiH1Z"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-296e09c305eso488152a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 02:06:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707300393; x=1707905193; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JHyxNaPCKju0suiGcb7YkRX+LpmSfcg8/gQ3kq3ldf8=;
-        b=IeMtiH1ZN91C6+yvDyPuFLmRl+pabFaac/Lhm0oSRLDv3V3AbDbTIYzIDZAcgRIXo/
-         rJVDYtBKLShXpVPFWMI51ur24FWRSvXZ2DMDJhgr3KxvJVJAloASj6NW8wl9hrYS+rUK
-         ZzUglr3SExuyb+/5Fc9hAvfY+08Gxf4i3JpwAuGLUoBRz5F0caabMxP6AVkxM88MNSz/
-         SmbZAvjklHC/juUS/iCXrlxmc2X48GXupNMYVB5mxPPZUbIZR4LQDw/9k5q4hoGZe9SC
-         WpBYWMBMRq/EZTBwCQgw1MlEGfIBSF2WnZjTZHj0xc2uI0OOEI12CpO0T5NFVLzhOkYQ
-         qLHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707300393; x=1707905193;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JHyxNaPCKju0suiGcb7YkRX+LpmSfcg8/gQ3kq3ldf8=;
-        b=jeilbY+gisMopPPsShT59sNWbHjBs+4mvi3WPExDrNhnP//nBzgOhAcbEUD6zgY8g/
-         ui0fQue0qwu4SfPO25H3g93/+7yssWuwdkssBl/4HHkLVX0a5/KEmevJArNiC37UnIH5
-         SIFdShHn9AbuGhtaYxPr0ZEIKhcYSllQlq9u3nyyYqx5FmW/FTDpw1/t99Y4rpj5sZg+
-         owHkM+zAO6ii9yR1Pz2EATkmUfcBltTvpM+vPlk5v0CCBpbITSL2XZLvzGtg0MOmyOSm
-         jxCN7YYP8YUwKBdymk4DRB+BZIXMfzMcY1VXZbB+UMQjejghWNDhgsPgaYrGoS0vKvCI
-         0QfA==
-X-Gm-Message-State: AOJu0YypjgjNLZkzXK2K6UUoM5Rl8kOlv3MdpbGKAp3JQXZy2pQ00zY/
-	k/2ZWHGizKSLEe1ocd5x6uNEaRzMsEv4rMjLRlt6Kto1pfV+pmaVBP2ClwkVIpa4zyAomp+zhqU
-	JK+gL99yxvw==
-X-Google-Smtp-Source: AGHT+IFTya2ZyeZ/C36rVXr9zqm2bHORKHvP6G9MfSZoDZoGhxV1NyJpb+dnBDqe/z8HmrRbZ8laRTzSvJ3YXw==
-X-Received: from pranav-first.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:390b])
- (user=pranavpp job=sendgmr) by 2002:a17:90a:cc3:b0:296:dd68:e4d4 with SMTP id
- 3-20020a17090a0cc300b00296dd68e4d4mr36447pjt.3.1707300393162; Wed, 07 Feb
- 2024 02:06:33 -0800 (PST)
-Date: Wed,  7 Feb 2024 10:06:18 +0000
-In-Reply-To: <20240207100619.3947442-1-pranavpp@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4+L7DNx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F61C433C7;
+	Wed,  7 Feb 2024 10:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707300396;
+	bh=8SIztSSdRHmnv6/+sGa3e7hEC65ih9fcCTIUIr5N3ic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M4+L7DNxS+nHECEWBlPGeUjLKef0rkZ84tpxsN4MDZTx5siH0x7IfNdN2KWCLA0aF
+	 enMLJUn3mMAjKREoqZ50HO2RFWxoa0ZCsojrmXXmLnUdWimd7BOpKqMudltLzpvq7V
+	 nHo4mSRhIh+XY/X1+1La1Lbh/NXGGefRtpR0utlGHrglVSYY4OUswKtNZrpve7666C
+	 cFl3aEF+QdvNE0JWkLelRyrKZs8BHLl9MV/ry4hiqq6c5SOlNENK4alIV9pTZYUS3B
+	 3wRaT8dJVxwyeFLq23XlwzhNGIm3+VLHikl8cFTpNdfMbAsH69qgTChqbmqKVhgaBS
+	 N3TKC4z0Tjaig==
+Date: Wed, 7 Feb 2024 10:06:33 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Gergo Koteles <soyer@irl.hu>
+Cc: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: tas2781: remove unused acpi_subysystem_id
+Message-ID: <ZcNWKUByQZM6nayY@finisterre.sirena.org.uk>
+References: <df5c94396256e9573b772962182def52d20c50d4.1707250969.git.soyer@irl.hu>
+ <631722b9ec0a4a2667d68f4747f01f3f7eb8ceb8.1707255177.git.soyer@irl.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240207100619.3947442-1-pranavpp@google.com>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240207100619.3947442-2-pranavpp@google.com>
-Subject: [PATCH 1/2] alarmtimer: Create alarmtimer sysfs to make duration of
- kernel suspend check configurable
-From: Pranav Prasad <pranavpp@google.com>
-To: tglx@linutronix.de, jstultz@google.com, sboyd@kernel.org
-Cc: linux-kernel@vger.kernel.org, Pranav Prasad <pranavpp@google.com>, 
-	Kelly Rossmoyer <krossmo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r2001rdQd9M4MkVU"
+Content-Disposition: inline
+In-Reply-To: <631722b9ec0a4a2667d68f4747f01f3f7eb8ceb8.1707255177.git.soyer@irl.hu>
+X-Cookie: You might have mail.
 
-Currently, the alarmtimer_suspend does not allow the kernel
-to suspend if the next alarm is within 2 seconds.
-Create alarmtimer sysfs to make the value of 2 seconds configurable.
-This allows flexibility to provide a different value based on the
-type of device running the Linux kernel. As a data point, about 40% of
-kernel suspend failures in a subset of Android devices were due to
-this check. A differently configured value can avoid these suspend
-failures which performs a lot of additional work affecting the
-power consumption of these Android devices.
 
-Signed-off-by: Pranav Prasad <pranavpp@google.com>
-Signed-off-by: Kelly Rossmoyer <krossmo@google.com>
----
- kernel/time/alarmtimer.c | 61 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 58 insertions(+), 3 deletions(-)
+--r2001rdQd9M4MkVU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 4657cb8e8b1f..e5d2e560b4c1 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -33,6 +33,8 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/alarmtimer.h>
- 
-+static const char alarmtimer_group_name[] = "alarmtimer";
-+
- /**
-  * struct alarm_base - Alarm timer bases
-  * @lock:		Lock for syncrhonized access to the base
-@@ -63,6 +65,56 @@ static struct rtc_timer		rtctimer;
- static struct rtc_device	*rtcdev;
- static DEFINE_SPINLOCK(rtcdev_lock);
- 
-+/* Duration to check for soonest alarm during kernel suspend */
-+static u64 suspend_check_duration_ns = 2 * NSEC_PER_SEC;
-+
-+static ssize_t suspend_check_duration_show(struct kobject *kobj,
-+			struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%llu\n", suspend_check_duration_ns);
-+}
-+
-+static ssize_t suspend_check_duration_store(struct kobject *kobj,
-+			struct kobj_attribute *attr, const char *buf, size_t n)
-+{
-+	u64 val;
-+
-+	if (kstrtou64(buf, 10, &val))
-+		return -EINVAL;
-+
-+	suspend_check_duration_ns = val;
-+
-+	return n;
-+}
-+
-+static struct kobj_attribute suspend_check_duration =
-+			__ATTR_RW(suspend_check_duration);
-+
-+static struct attribute *alarmtimer_attrs[] = {
-+	&suspend_check_duration.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group alarmtimer_attr_group = {
-+	.name	= alarmtimer_group_name,
-+	.attrs	= alarmtimer_attrs,
-+};
-+
-+/**
-+ * alarmtimer_sysfs_add - Adds sysfs attributes for alarmtimer
-+ *
-+ * Returns 0 if successful, non-zero value for error.
-+ */
-+static int alarmtimer_sysfs_add(void)
-+{
-+	int ret = sysfs_create_group(kernel_kobj, &alarmtimer_attr_group);
-+
-+	if (ret)
-+		pr_warn("[%s] failed to create a sysfs group\n", __func__);
-+
-+	return ret;
-+}
-+
- /**
-  * alarmtimer_get_rtcdev - Return selected rtcdevice
-  *
-@@ -98,8 +150,11 @@ static int alarmtimer_rtc_add_device(struct device *dev)
- 
- 	pdev = platform_device_register_data(dev, "alarmtimer",
- 					     PLATFORM_DEVID_AUTO, NULL, 0);
--	if (!IS_ERR(pdev))
-+	if (!IS_ERR(pdev)) {
- 		device_init_wakeup(&pdev->dev, true);
-+		if (alarmtimer_sysfs_add())
-+			pr_warn("[%s] Failed to add alarmtimer sysfs attributes\n", __func__);
-+	}
- 
- 	spin_lock_irqsave(&rtcdev_lock, flags);
- 	if (!IS_ERR(pdev) && !rtcdev) {
-@@ -279,8 +334,8 @@ static int alarmtimer_suspend(struct device *dev)
- 	if (min == 0)
- 		return 0;
- 
--	if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
--		pm_wakeup_event(dev, 2 * MSEC_PER_SEC);
-+	if (ktime_to_ns(min) < suspend_check_duration_ns) {
-+		pm_wakeup_event(dev, suspend_check_duration_ns/NSEC_PER_MSEC);
- 		return -EBUSY;
- 	}
- 
--- 
-2.43.0.594.gd9cf4e227d-goog
+On Tue, Feb 06, 2024 at 10:34:15PM +0100, Gergo Koteles wrote:
+> The acpi_subysystem_id is only written and freed, not read, so
+> unnecessary.
+>=20
+> Fixes: ef3bcde75d06 ("ASoC: tas2781: Add tas2781 driver")
+> CC: stable@vger.kernel.org
 
+This is clearly a cleanup, not a bugfix.
+
+--r2001rdQd9M4MkVU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXDVigACgkQJNaLcl1U
+h9BTKgf/Y91pr9e8zpI9HU+whTgfiYK/+lW5+OM8y2XgQUls1VnMG5fVUBPwlAa9
+UyVXNUZGpGb7tpN4zdhNZmyl7m8IuN0JLPAaquDFPJycaRcck83Me89KhkKiZpFz
+mvAQTULEv4BcF4R4fPgqhPRNTy7CxNAynHbSsuISfaFBjcjn0m7CkCUF626shYmp
+wV39QOKWsLqJCJH0jGVEaxTgsn2rKvotCL2Bl7Eklb9qdRxDBwm/5g9q/ThGyP8s
+P6bw2nYu1cLdIfWJvVbKahQBxdiYeKyzUK91jEew1Vy9bcCyPZ2VWe5pdXzTz4J/
+7TJoritrxIq6p9JKAgjDwZzTLNqi0g==
+=cqxc
+-----END PGP SIGNATURE-----
+
+--r2001rdQd9M4MkVU--
