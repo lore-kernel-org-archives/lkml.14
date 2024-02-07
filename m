@@ -1,103 +1,99 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421A877658;
-	Wed,  7 Feb 2024 14:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242D57A73C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707315195; cv=none; b=MbHQA+doKLZD6h33JOlREJ0I3doWSLJ1dE/nkVze7BBueDtvSWpk8crAf0MrcC7051Y0aSnd+jwY30Rg9evGqiIp3LyiOmEPKgNN64L7ra09/sku/3n7FYLoY81kmeV3XbDn4BwFBQgBGqU+EqgIPnLHD1D9vPxnFFIVTDfuiS4=
+	t=1707315227; cv=none; b=ZSI0+jutlImPmFuQjAK/hDO5LJwA3/07WwknaRopZxwzcBe6gBvePnRj0PTeN8+3d4Hl+lglotxbAZdsPdfGJfDx38kvG9nS+BZghdOLjgXES2+9r/zZHe5qQDn2eWrkD3DylajU4yGBZOitTR1iaXaFP9jV1xIMc7Gp7DXL7jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707315195; c=relaxed/simple;
-	bh=gwH2gW0FnuxRVKwAAt2yOec201/07KaXUQlk8qLfDZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EqC9Q10IwgEYWvrMRS+W9jMJqy7kpPCzkl4bkSmhr1nCzumDID3bCEKWc3M9NpHU4nRwIA0XTY5jgJMTvnjimbHay+WNJKeKVUsTuFLGCrT8Ce4sP2iLLG+WVBxLTo3b/EqnZb3HMkkek/qN0YSOX2peno5Nx+o1vhVyiyCtDpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a0A3NoJh; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707315227; c=relaxed/simple;
+	bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U5EG5TvReagfpKbZ2nIT8RBz7Gyq4SkC8HY89cTipjGcTFL0I4Clg9Hwf2YfZVlh56M0/jhEopxOViMZYAt6dVGY82zCifPWZ1RTQrzgxNe7C/s9NaYPIKRR3v6hMDZ7ypwZ0UdNmsMapmYz+a+4I8hUtELu12Wn15w7EplCi9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=AEM1TaGG; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a0A3NoJh"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 417DPYtk019413;
-	Wed, 7 Feb 2024 14:13:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=gwH2gW0FnuxRVKwAAt2yOec201/07KaXUQlk8qLfDZU=;
- b=a0A3NoJh1Spx+I0IuZTi7I411DRRGjhhQOoSoeugeBKDsijx9EVulSk1OFogWAoetGPy
- R8z44MwNDpSc3ePyFrgDHnrZ2Q/tFhDllVbmuVNEGIcsHS3d/Wbsmfwiv+HQXK1uBDOB
- RbDa+PPvQdc7NyVnLCTyr7OI+i5ZNRtUvIAC8JIUbNepGHHNj4Ak+4xOvYET3qiaHtNu
- Muto3nCHriEe+lPXnvOfMSfml5jRh9ImAqut/fRtW4xP6M1uALpfk8dozAhzAhwJ2TdT
- 26igZiHU4+hbNoUMHZSgInqRWxA27nerpiauSTkIT6/es6c5RXhpzRVT5IJAFuaE2qhl Nw== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w4a402jae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 Feb 2024 14:13:04 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 417COK4X016148;
-	Wed, 7 Feb 2024 14:13:02 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w22h25n5q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 Feb 2024 14:13:02 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 417ECxtx18744014
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 Feb 2024 14:12:59 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3080020043;
-	Wed,  7 Feb 2024 14:12:59 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EFEA620040;
-	Wed,  7 Feb 2024 14:12:58 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  7 Feb 2024 14:12:58 +0000 (GMT)
-Date: Wed, 7 Feb 2024 15:12:57 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 5/5] sched/vtime: do not include <asm/vtime.h> header
-Message-ID: <ZcOP6bm0ekxDUVk6@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.1706470223.git.agordeev@linux.ibm.com>
- <2402f44309e1c9705501bdc9b798e8fe6d73f905.1706470223.git.agordeev@linux.ibm.com>
- <ZcLBAKMJ5Vbbm2Ln@localhost.localdomain>
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="AEM1TaGG"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d0ce2222a6so2785341fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:13:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1707315223; x=1707920023; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
+        b=AEM1TaGGJL4wfEqm+2q9peXuocQIkjrQDjqZWUgmrqbKh2c6echwGBVUOkHYGtL1Jp
+         02AhZevn+De6PN7zGsB819FgrNnk/pvSqHSCA7PPW//BH4iRu3GtCxMeDnF34BH9WieF
+         R1hLL0ZneyOMPuS0eERh9ZDVSUIzkN/ZJ2rKg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707315223; x=1707920023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
+        b=gf8kxdF8CuD6tHrKD71MfCLr0j0fYKzNGz++3vTS1ZZIba6QUlyE7gQW5qgYcKB+Nn
+         Vg79n15WbNhZ4+bPQMHZ+eTz73r3QzXx47L0DcSTrHWzP7Jq/cJs7ZXXUcepgs48aYo5
+         maRxafNczOZ0hc8O95edo/zXHHdmck3LhHVuv1cs21TIntfJVRnv6J9iawO8SgrUdOYk
+         dhTew0uaGZBWITnly11XH0a9czgyYdAS9zlo9i9IaIbGCqS3qMDbxiOnQ94eXa5hpRQ0
+         fM4AtSYgWREXJ1QBtlbccAUjhhJKSELESXC0Foj2m0wiaqQYRtsBOHf5jLTM0iB00pX8
+         tH+w==
+X-Gm-Message-State: AOJu0Yyn+FNcVunprkICqU+MeleObu0GHT2ZdRZ2SZiebBP5rJXDrFoG
+	SuALdoJ3uKxXW0zls7iwp9YGqh5PMgeRMs0286qAlIEZ/bVU9OPo5W4493cOV++oDt2guXRwWom
+	f9QPnr/JBtXjLqlUXSMZHijEPQtGlQ3iGUwcJ9A==
+X-Google-Smtp-Source: AGHT+IED9YAP6IjuLO7QGzwihwwoadtsQqIErozgRiEhzKfXYz5J89hbN3mS6Tn00zxP0ae3LMxLBAw1f4m1Z4XB0YY=
+X-Received: by 2002:a2e:2206:0:b0:2d0:5f90:2b29 with SMTP id
+ i6-20020a2e2206000000b002d05f902b29mr4579555lji.12.1707315222978; Wed, 07 Feb
+ 2024 06:13:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcLBAKMJ5Vbbm2Ln@localhost.localdomain>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ZUgQbDIIA_epP8KRIveyfx_KgUblcvVb
-X-Proofpoint-GUID: ZUgQbDIIA_epP8KRIveyfx_KgUblcvVb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-07_04,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- clxscore=1015 malwarescore=0 mlxscore=0 phishscore=0 mlxlogscore=361
- bulkscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402070105
+References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
+ <50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org> <20240207061429.3e29afc8@rorschach.local.home>
+In-Reply-To: <20240207061429.3e29afc8@rorschach.local.home>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Wed, 7 Feb 2024 09:13:30 -0500
+Message-ID: <CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
+Subject: Re: [PATCH v4] tracing: Support to dump instance traces by ftrace_dump_on_oops
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Huang Yiwei <quic_hyiwei@quicinc.com>, mhiramat@kernel.org, mark.rutland@arm.com, 
+	mcgrof@kernel.org, keescook@chromium.org, j.granados@samsung.com, 
+	mathieu.desnoyers@efficios.com, corbet@lwn.net, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, quic_bjorande@quicinc.com, quic_tsoni@quicinc.com, 
+	quic_satyap@quicinc.com, quic_aiquny@quicinc.com, kernel@quicinc.com, 
+	Ross Zwisler <zwisler@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 07, 2024 at 12:30:08AM +0100, Frederic Weisbecker wrote:
-> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+On Wed, Feb 7, 2024 at 6:14=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Wed, 7 Feb 2024 05:24:58 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> > Btw, hopefully the "trace off on warning" and related boot parameters a=
+lso apply
+> > to instances, I haven't personally checked but I often couple those wit=
+h the
+> > dump-on-oops ones.
+>
+> Currently they do not. It would require an updated interface to do so,
+> as sometimes instances can be used to continue tracing after a warning,
+> so I don't want to make it for all instances.
 
-Thank you for the review, Frederic!
+Thanks for clarifying.
 
-The Heiko comment is valid and I would add this chunk in v2:
+> Perhaps we need an option for these too, and have all options be
+> updated via the command line. That way we don't need to make special
+> boot line parameters for this. If we move these to options (keeping the
+> proc interface for backward compatibility) it would make most features
+> available to all with one change.
 
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@ -6,5 +6,4 @@ generic-y += agp.h
- generic-y += kvm_types.h
- generic-y += mcs_spinlock.h
- generic-y += qrwlock.h
--generic-y += vtime.h
- generic-y += early_ioremap.h
+Agreed, that would be nice!!
 
-Would you keep your Reviewed-by?
+ - Joel
