@@ -1,181 +1,141 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D3617C65;
-	Wed,  7 Feb 2024 11:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D5F1AACD
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 11:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707305112; cv=none; b=HekQpp732kIrN/8fDlJvw1pOJwkFPFDRgxA2NuxKDRsH1ssJ97kU8Edw0WtHp8Guo9HjbBI5HgjW+uB8Yz9kTBzoh5a5Zbs8ir81QSShDyG1vXXq6nZoklNekwiDhb7wLpnwmRpyCdC3HOCRh3tDyhx25Y3CqbR+23JhnZG/ZvE=
+	t=1707305144; cv=none; b=OUQXWCn2ZMzMZIyWmpRfckaDCxxBiBRYWevqERCpUAGY2HVJ/o2yJIrN4sRSQH9KhGUm2CknKps191XnNQ/ybRR1l/S9TPC5/dnCT0UCdWGYQ/jyV+T1WJqRLn0Dah6fTc0teiGRJnHuC2f61TQfywFKvlhXZ5GeQAmIrZwJ8yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707305112; c=relaxed/simple;
-	bh=FPBuznEEEVUrobBekXZ2+ABmMXNzXIUpNcpdsZQpR6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WFfVem8olhUpW/WUMMycwvPYfG+Bepu3snuw/IUxfWE1gIblv4W00hkzb46xYt8IJIWIWrHi7Y2cDDPURIk1xLWcr39hT1gT4rT3u5Jx34XPJoVqZquIVLwk2iHDQclpqmyY84bx3h2SxDpbK7zhy9LbXOauoY64Uunclcqt4Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dA/fmEQG; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707305144; c=relaxed/simple;
+	bh=//WupjhxZ/daA1c3+E7b3f7GJj8YlnHRfnguy6tToSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fPdsvj0/QJYGkCXz1jJVfpGH4yMfJ34VVwOdZEn34BGwCf+NKYs6UthRjrZpd2pkM7rEAMfpYlzgq0RODFcWpoi245rjHjkUGjXomTukCI0YR3mXG0XhIzA/hTUAiEtDoYD2bkcBnG5xhVEo7zG4Ih2/WFxcuh1sADn4QBuBsac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=eLNvsA3A; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dA/fmEQG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707305109;
-	bh=FPBuznEEEVUrobBekXZ2+ABmMXNzXIUpNcpdsZQpR6Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dA/fmEQGXyarKiz0ia1We2nHVpCQTCp/Dniaomtt30Q8TWe3Nbd8+VTAY9eNwEfss
-	 2+icFQErNiLhkvyC95NxPLgnuTlyzxpJIPtS7YzokEIdZ+cGo7JdBrlhV+VvgDCBN6
-	 KGnuRLOHxlBIO14HeH0HuUHqsBo4bUaPaZhOMdCYD/IdZgppVUU1AVg+u6hHVglZoY
-	 SUHwMOI2aipM3yMvRpcHI/3y6i/AtbSK4kuR8uaW2qZmSTiqlWvhRNTZ67x0X3yrkL
-	 Z+ysc5eZsDwq7OKRFII3b/nmnIGVe+MZuU8PnSwbzEPVVQQx9FNkdGorl9gGZ73OoV
-	 CRohK2M64ozbg==
-Received: from [100.93.89.217] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4890B378203B;
-	Wed,  7 Feb 2024 11:25:09 +0000 (UTC)
-Message-ID: <9fda7e17-42e8-4b2e-8daf-f0e556934356@collabora.com>
-Date: Wed, 7 Feb 2024 12:25:08 +0100
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="eLNvsA3A"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-296a79e6295so366313a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 03:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1707305142; x=1707909942; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eW2spjim+pJByd3Mxg/0ijFrCYtfv6oEIqERAXXxYdQ=;
+        b=eLNvsA3Avb+46PvHWLNMLCkNShKwWj6n4PuYqqN0uiNDupKx/m3Fp2SfKpaTE7uvdq
+         tUpx0gvPyDIUzvDD7Z054+UX//5tldp+XhnX75CZi+hQQFgNPpblbqN4+0BhCicFQYSq
+         S1xFcQ30PLysq4L3gymxAObEsNbx9YEezYt+i7iG83ezCYRmykI6wJPQLDla2akLKY5w
+         jzTsnNS8+J13m4aOqkVbM/OykzIi5GGBQJkJ1EuOz3qrcSH9ydFXCMN4RNwnxazdhT9L
+         t9OjXsw5wIqB4lQiL+6YuK/SfK6HP9odCrztcyYj6gnKND8kvjAZJby2LtscHBiAvEdh
+         y93w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707305142; x=1707909942;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eW2spjim+pJByd3Mxg/0ijFrCYtfv6oEIqERAXXxYdQ=;
+        b=LpXyMNnms1kfMgs+DV8gDjB7Kre9hC91NG0oL0lnZ1GZbVHcqq3fbgUUGeWljDn1Re
+         5l/GokIq/RpJ+aN5ZdD1aSrNJfANA6Wx5msfK/yV81C+0edgL6GgnnXfFNdm4UI9dDGH
+         /TUFqXPKH2BGZV1HpYMREfdnPOYU81Mw20i2wLigPcfJN+w61C66N3opCTDHoJaL6YCV
+         Wf8+wihf787KnWSu5bTxefZWRILl0OttGIZ4nXSFjC0QlrtNewsU2A7xuoOTKtSuLpaq
+         gKU6aTa9wNrgOGmshbCXV5g89iFRTDDBsSTn73fnqfPZrdAE99vuIPgPKzVLtoag/h1P
+         WO/g==
+X-Forwarded-Encrypted: i=1; AJvYcCW7WFsfcbyUIACnu9UfFfd7EbcOpGIWmD09Ln7VGdnklacqKl7AE7zT/B8iJVX/vabb6R24++HJyvIB1U0LF/B16MFlMB4wfDT2X4dI
+X-Gm-Message-State: AOJu0YwVBlDZcE9NVLxGdMwWRHgEA/t7CzKtCRoF2hY9DzEgxkrh9fk5
+	XIlfikq++wfrA8gkXT7uLJ106xGR39Ndref+M3c27Xtx5cSmsNbewLFwRtt1LVc=
+X-Google-Smtp-Source: AGHT+IGfhBWi96Xsjmb84UU38Fpf2+ni1FJ2iaJ3cnv/Yalixy3TYd0oC6MObc6Eo/qdms50zPpG0Q==
+X-Received: by 2002:a17:90a:bc81:b0:296:2f9b:8c2f with SMTP id x1-20020a17090abc8100b002962f9b8c2fmr2189952pjr.40.1707305142616;
+        Wed, 07 Feb 2024 03:25:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVIisq+tGMyhVpZ9LDjBzRIZZcB5Q9SCQYewSSZMV2gFGKenIM3PXJNuD9TbM6qt8JIu0BzkyrMAbXxtG9VprJB7PrQWlfWSFyz69e7STaloVeJtsqc0z9I3XCzSPAU0lrye50BLmTpbrLyCun6MI8Y3giaL3P8zy9SXVT2/RUSyS7f6acELfmwf21i+MrVarMRIZg29iQv9f6YULANXvE1P5v4QWWEnmsyVrVdLGrTQzc1FkUvTmwTSf2t6Vy2Fqk5NM5ZyAaQU1pT+KEgBfj2EMoxFL8xE7oGMlbg0Z6ajFEP+G4krgTjglyuYMFN1DqTZNwKFFN418hK2MmlYP1ROGhAmb0uPu1f+X5+tX8X36klLgrVeWc=
+Received: from starnight.endlessm-sf.com ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id st7-20020a17090b1fc700b00296c018f070sm1348428pjb.52.2024.02.07.03.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 03:25:42 -0800 (PST)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+	Johan Hovold <johan@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	David Box <david.e.box@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v3 3/3] PCI/ASPM: Fix L1SS parameters & only enable supported features when enable link state
+Date: Wed,  7 Feb 2024 19:18:55 +0800
+Message-ID: <20240207111854.576402-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 0/9] Add DELETE_BUF ioctl
-Content-Language: en-US
-To: Hans Verkuil <hverkuil@xs4all.nl>, mchehab@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- kernel@collabora.com
-References: <20240206080219.11951-1-benjamin.gaignard@collabora.com>
- <dcafb602-228f-439f-99d2-010d26a23ad1@xs4all.nl>
- <63a46881-7fe8-4858-b0f7-cde33ffc7ea6@xs4all.nl>
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <63a46881-7fe8-4858-b0f7-cde33ffc7ea6@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+The original __pci_enable_link_state() configs the links directly without:
+* Check the L1 substates features which are supported, or not
+* Calculate & program related parameters for L1.2, such as T_POWER_ON,
+  Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD
 
-Le 07/02/2024 à 11:28, Hans Verkuil a écrit :
-> On 06/02/2024 09:58, Hans Verkuil wrote:
->> On 06/02/2024 09:02, Benjamin Gaignard wrote:
->>> Unlike when resolution change on keyframes, dynamic resolution change
->>> on inter frames doesn't allow to do a stream off/on sequence because
->>> it is need to keep all previous references alive to decode inter frames.
->>> This constraint have two main problems:
->>> - more memory consumption.
->>> - more buffers in use.
->>> To solve these issue this series introduce DELETE_BUFS ioctl and remove
->>> the 32 buffers limit per queue.
->> This v19 looks good. There are three outstanding issues that I need to take a
->> look at:
->>
->> 1) Can we still signal support for DELETE_BUFS in the V4L2_BUF_CAP_ caps?
->>     It would be nice to have, but I'm not sure if and how that can be done.
->>
->> 2) I want to take another look at providing a next version of the VIDIOC_CREATE_BUFS
->>     ioctl and how that would possibly influence the design of DELETE_BUFS.
->>     Just to make sure we're not blocking anything or making life harder.
-> So I just tried creating a new version of the VIDIOC_CREATE_BUFS ioctl
-> that is greatly simplified. This just updates the header, no real code yet:
->
-> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> ---
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 03443833aaaa..a7398e4c85e7 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -2624,6 +2624,39 @@ struct v4l2_create_buffers {
->   	__u32			reserved[5];
->   };
->
-> +/**
-> + * struct v4l2_create_buffers_v2 - VIDIOC_CREATE_BUFFERS argument
-> + * @type:	enum v4l2_buf_type
-> + * @memory:	enum v4l2_memory; buffer memory type
-> + * @count:	entry: number of requested buffers,
-> + *		return: number of created buffers
-> + * @num_planes:	requested number of planes for each buffer
-> + * @sizes:	requested plane sizes for each buffer
-> + * @start_index:on return, index of the first created buffer
-> + * @total_count:on return, the total number of allocated buffers
-> + * @capabilities: capabilities of this buffer type.
-> + * @flags:	additional buffer management attributes (ignored unless the
-> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
-> + *		and configured for MMAP streaming I/O).
-> + * @max_num_buffers: if V4L2_BUF_CAP_SUPPORTS_MAX_NUM_BUFFERS capability flag is set
-> + *		this field indicate the maximum possible number of buffers
-> + *		for this queue.
-> + * @reserved:	future extensions
-> + */
-> +struct v4l2_create_buffers_v2 {
-> +	__u32			type;
-> +	__u32			memory;
-> +	__u32			count;
-> +	__u32			num_planes;
-> +	__u32			size[VIDEO_MAX_PLANES];
-> +	__u32			start_index;
-> +	__u32			total_count;
-> +	__u32			capabilities;
-> +	__u32			flags;
-> +	__u32			max_num_buffers;
-> +	__u32			reserved[7];
-> +};
-> +
->   /**
->    * struct v4l2_delete_buffers - VIDIOC_DELETE_BUFS argument
->    * @index:	the first buffer to be deleted
-> @@ -2738,6 +2771,7 @@ struct v4l2_delete_buffers {
->
->   #define VIDIOC_QUERY_EXT_CTRL	_IOWR('V', 103, struct v4l2_query_ext_ctrl)
->   #define VIDIOC_DELETE_BUFS	_IOWR('V', 104, struct v4l2_delete_buffers)
-> +#define VIDIOC_CREATE_BUFFERS	_IOWR('V', 105, struct v4l2_create_buffers_v2)
->
->
->   /* Reminder: when adding new ioctls please add support for them to
->
->
-> Sadly, struct v4l2_create_buffers was already used for the existing
-> VIDIOC_CREATE_BUFS (I wish it was called v4l2_create_bufs...), so I did
-> have to add a _v2 suffix. Compared to the old struct it just moves the
-> type, num_planes and sizes from v4l2_format into the new struct and drops
-> the format field. Note that those fields are the only v4l2_format fields
-> that VIDIOC_CREATE_BUFS used, so getting rid of the format makes live
-> much easier. I also renamed 'index' to 'start_index' and added a new 'total_count'
-> field to report the total number of buffers.
->
-> The reason for adding 'total_count' is that VIDIOC_CREATE_BUFS with
-> count == 0 would report the total number of buffers in the 'index' field,
-> which was rather odd. Adding a specific field for this purpose is nicer.
->
-> One thing that might impact your series is the name of the ioctls.
->
-> We have:
->
-> VIDIOC_CREATE_BUFS/v4l2_create_buffers
-> VIDIOC_DELETE_BUFS/v4l2_delete_buffers
-> VIDIOC_CREATE_BUFFERS/v4l2_create_buffers_v2 (TBD)
->
-> I'm wondering if VIDIOC_DELETE_BUFS should be renamed to
-> VIDIOC_DELETE_BUFFERS, that would make it more consistent with
-> the proposed VIDIOC_CREATE_BUFFERS.
->
-> Alternatively, instead of calling it VIDIOC_CREATE_BUFFERS we
-> might call it VIDIOC_CREATE_BUFS_V2.
->
-> Or perhaps some other naming convention?
+This leads some supported L1 PM substates of the link between VMD remapped
+PCIe Root Port and NVMe get wrong configs when a caller tries to enabled
+them.
 
-Maybe VIDIOC_NEW_BUFS/v4l2_new_buffers ?
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
 
-I will wait until naming convention is fixed before send v20.
+Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=10us
 
-Regards,
-Benjamin
+This patch initializes the link's L1 PM substates to get the supported
+features and programs relating paramters, if some of them are going to be
+enabled in __pci_enable_link_state(). Then, enables the L1 PM substates if
+the caller intends to enable them and they are supported.
 
->
-> Ideas are welcome.
->
-> Regards,
->
-> 	Hans
->
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+---
+v2:
+- Prepare the PCIe LTR parameters before enable L1 Substates
+
+v3:
+- Only enable supported features for the L1 Substates part
+
+ drivers/pci/pcie/aspm.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index a39d2ee744cb..c866971cae70 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1389,14 +1389,16 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+ 		link->aspm_default |= ASPM_STATE_L0S;
+ 	if (state & PCIE_LINK_STATE_L1)
+ 		link->aspm_default |= ASPM_STATE_L1;
+-	/* L1 PM substates require L1 */
+-	if (state & PCIE_LINK_STATE_L1_1)
++	if (state & ASPM_STATE_L1_2_MASK)
++		aspm_l1ss_init(link);
++	/* L1 PM substates require L1 and should be in supported list */
++	if (state & link->aspm_support & PCIE_LINK_STATE_L1_1)
+ 		link->aspm_default |= ASPM_STATE_L1_1 | ASPM_STATE_L1;
+-	if (state & PCIE_LINK_STATE_L1_2)
++	if (state & link->aspm_support & PCIE_LINK_STATE_L1_2)
+ 		link->aspm_default |= ASPM_STATE_L1_2 | ASPM_STATE_L1;
+-	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
++	if (state & link->aspm_support & PCIE_LINK_STATE_L1_1_PCIPM)
+ 		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
+-	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
++	if (state & link->aspm_support & PCIE_LINK_STATE_L1_2_PCIPM)
+ 		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+-- 
+2.43.0
+
