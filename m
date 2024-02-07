@@ -1,48 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B177763B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988E87604B
 	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 13:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707311554; cv=none; b=AANuwOrLh89Pzq8rz9qazW4PCngzvb+E4qsYPgNFW+dqxQOvqX39KWh0AuehopyNN7jBgYKv7s17VeGrVGj//WC9RbRyTq9/34NA8+cfupFDmpVeDLJ/cWCuteeDvIGVQBkELEXcTM+8NL54CzCOJKefuE9v2nODEo1s/ZCUWHE=
+	t=1707311554; cv=none; b=clXYPFRrPMJNHjbuZ4J4T6Fm9x6tPBYQ47BQi7+Y6V1aKZO1ts44rXxm4HxZtmlMApLtC5+XmIUQFD39yc482dFetujxr8vysEHYmSbuVKOix/bed5h0Ug0p1cf91r6BRaRVHidEtXonfyqRWMWbOp65K6r87eED+IXTF8OlFc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707311554; c=relaxed/simple;
-	bh=mcgudmNsgGYlUWEso2KgZlxVIAjOAUJd8mkOJpdSHgs=;
+	bh=eHfaLB0w9StkMcmAmJyt0WL3X4LB5H4bpV1qlxJJDNg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=txJVH+hR2DBWCtjgaErA8fa3II5rHfTTp21SQv80ieUZyK2S3E2HzNJyEkNlfJTR+EngcVLBu88zx+//JeHZqZIgsgAWF8fFNwPSy+/q/SddD1NlYBqdg79wr7lk1dyPSyfc/loMG7aiaEtIq3jDWjChHhBcND75qIft4QFUU8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KFfXjnG1; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=a+EnA0Jx0qo36MyG2udW67XlG1WFtJT4Qm7zgi+MUsf4uHnkfgnPoXqeBomvojlLRj3l703xSoXUJKeeoOo+yP7OtxqISFXlBq3gVeKuM7fhShYoe1ulazRUgp9HQpO88KaUYpq9wsNZedqauFxr4y8k9aH5rJCQv6ck6VHkUFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b1nxFYqG; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KFfXjnG1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1nxFYqG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707311547;
+	s=mimecast20190719; t=1707311548;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4eRyFxceGltGzr8JPr9dUfh3b9LMZCIpGvQjr0KChxI=;
-	b=KFfXjnG1fltBG1fYqcfOpLiYer8A7Tl9/cNOIPZZbuZrmmeIScHC+LmuR8+jWClXiiQeZI
-	DeSG+NlnsMq3awhHFeDa4xMyV5oZPzsHCMpTwdAqwFFpvWWgdipJvD4LNtazguXMJkwqO/
-	elIbNqeBlJk6d8oDbdL5J7CWCzYJw8U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-147-JL0pHH3iOpCClapp8WzwRA-1; Wed, 07 Feb 2024 08:12:24 -0500
-X-MC-Unique: JL0pHH3iOpCClapp8WzwRA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	bh=TxHbYgF40mvXhoLp/NUG6zCoxS7zVB+OFLNTVEsXK0E=;
+	b=b1nxFYqGi+zLp6nFpFt9mx0Rh2Z2AK0ZpsAhcfgpVRilZnRFRGjU9B2+qCU4wTyr9GoTGr
+	jBfnx00XuUWXYpfJ0pwrII7hVhAtFVkOf0OKQnVh9wYqpUCLT2NF3VNX+Sl9utBtQRgJ2+
+	sk8nmO4sUhbaIJBiWbc6YO/cFCGGKm8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-zztZeUjeOFqBlf5fejcSCw-1; Wed,
+ 07 Feb 2024 08:12:24 -0500
+X-MC-Unique: zztZeUjeOFqBlf5fejcSCw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 69CE285A58E;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 68AD13816B45;
 	Wed,  7 Feb 2024 13:12:24 +0000 (UTC)
 Received: from tpad.localdomain (unknown [10.96.133.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E40AC08EF7;
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1DB131C066AA;
 	Wed,  7 Feb 2024 13:12:24 +0000 (UTC)
 Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 3E826401E12E5; Wed,  7 Feb 2024 10:10:41 -0300 (-03)
-Date: Wed, 7 Feb 2024 10:10:41 -0300
+	id C40704023C99F; Wed,  7 Feb 2024 09:51:24 -0300 (-03)
+Date: Wed, 7 Feb 2024 09:51:24 -0300
 From: Marcelo Tosatti <mtosatti@redhat.com>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-kernel@vger.kernel.org,
@@ -52,106 +51,125 @@ Cc: linux-kernel@vger.kernel.org,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Leonardo Bras <leobras@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [patch 12/12] x86/cacheinfo.c: check for block interference CPUs
-Message-ID: <ZcOBUWlZMpIErtKu@tpad>
+Subject: Re: [patch 04/12] clockevent unbind: use smp_call_func_single_fail
+Message-ID: <ZcN8zA4WaLx7c3qy@tpad>
 References: <20240206184911.248214633@redhat.com>
- <20240206185710.142514323@redhat.com>
- <87eddomoov.ffs@tglx>
+ <20240206185709.928420669@redhat.com>
+ <87jzngmqsw.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87eddomoov.ffs@tglx>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <87jzngmqsw.ffs@tglx>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Wed, Feb 07, 2024 at 01:41:36PM +0100, Thomas Gleixner wrote:
+On Wed, Feb 07, 2024 at 12:55:59PM +0100, Thomas Gleixner wrote:
 > On Tue, Feb 06 2024 at 15:49, Marcelo Tosatti wrote:
-> > @@ -396,6 +397,7 @@ static void amd_l3_disable_index(struct
-> >  	 *  disable index in all 4 subcaches
-> >  	 */
-> >  	for (i = 0; i < 4; i++) {
-> > +		int ret;
-> >  		u32 reg = idx | (i << 20);
-> >  
-> >  		if (!nb->l3_cache.subcaches[i])
-> > @@ -409,6 +411,7 @@ static void amd_l3_disable_index(struct
-> >  		 * is not sufficient.
-> >  		 */
-> >  		ret = wbinvd_on_cpu(cpu);
-> > +		WARN_ON(ret == -EPERM);
+> > Convert clockevents_unbind from smp_call_function_single
+> > to smp_call_func_single_fail, which will fail in case
+> > the target CPU is tagged as block interference CPU.
 > 
-> What? You create inconsistent state here.
+> Seriously? This is a root only operation. So if root wants to interfere
+> then so be it.
 
-That should not happen, since we checked for 
+Hi Thomas!
 
-+   idx = block_interf_srcu_read_lock();
+OK, so the problem is the following: due to software complexity, one is
+often not aware of all operations that might take place.
+
+For example:
+
+https://lore.kernel.org/lkml/Y6mXDUZkII5OnuE8@tpad/T/
+
+[PATCH] hwmon: coretemp: avoid RDMSR interruptions to isolated CPUs
+
+The coretemp driver uses rdmsr_on_cpu calls to read
+MSR_IA32_PACKAGE_THERM_STATUS/MSR_IA32_THERM_STATUS registers,
+which contain information about current core temperature.
+
+For certain low latency applications, the RDMSR interruption exceeds    
+the applications requirements.
+
+So disable reading of crit_alarm and temp files via /sys, in case
+CPU isolation is enabled.
+
+Temperature information from the housekeeping cores should be
+sufficient to infer die temperature.
+
+Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+
+diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
+index 9bee4d33fbdf..30a35f4130d5 100644
+--- a/drivers/hwmon/coretemp.c
++++ b/drivers/hwmon/coretemp.c
+@@ -27,6 +27,7 @@
+ #include <asm/msr.h>
+ #include <asm/processor.h>
+ #include <asm/cpu_device_id.h>
++#include <linux/sched/isolation.h>
+ 
+ #define DRVNAME	"coretemp"
+ 
+@@ -121,6 +122,10 @@ static ssize_t show_crit_alarm(struct device *dev,
+ 	struct platform_data *pdata = dev_get_drvdata(dev);
+ 	struct temp_data *tdata = pdata->core_data[attr->index];
+ 
 +
-+   if (block_interf_cpu(cpu))
-+           ret = -EPERM;
-
-Earlier.
-
-Thus the WARN_ON (hum, can change to BUG_ON...).
-
-> > -	amd_l3_disable_index(nb, cpu, slot, index);
-> > +	ret = 0;
-> > +	idx = block_interf_srcu_read_lock();
-> > +
-> > +	if (block_interf_cpu(cpu))
-> > +		ret = -EPERM;
-> > +	else
-> > +		amd_l3_disable_index(nb, cpu, slot, index);
-> > +
-> > +	block_interf_srcu_read_unlock(idx);
-> 
-> Again. This is a root only operation.
-> 
-> This whole patch series is just voodoo programming with zero
-> justification for the mess it creates.
-> 
-> Thanks,
-> 
->         tglx
-
-Its not really voodoo programming: its simply returning errors to
-userspace if a CPU is set in a particular cpumask.
-
-Do you have a better idea? (i am in the process of converting more
-users).
-Can improve on the patchset quality.
-
-Ok, the justification is as follows. Today, there is a reactive approach
-to interruptions to isolated CPUs:
-
-1) Run Linux+latency sensitive application on isolated CPU.
-
-2) Wait for IPI or other interruption to happen on that isolated CPU,
-which breaks the application.
-
-3) Remove that interruption to the isolated CPU.
-
-This is (for a class of IPIs), an active approach, where those IPIs are 
-not permitted to interrupt the latency sensitive applications.
-
-https://iot-analytics.com/soft-plc-industrial-innovators-dilemma/
-
-"Hard PLCs (a market in which incumbent vendors dominate) have
-historically addressed most of the needs of the existing / high end
-market, such as high reliability, fast cycle times and, perhaps most
-importantly, the ability of existing workforce to support and maintain
-the systems. Soft PLCs, on the other hand, initially addressed the needs
-of new / lower end customers by providing more flexible,
-non-deterministic control solutions often at a fraction of the cost of
-similar hard PLCs. Since entering the market in the 90’s, soft PLCs have
-rapidly become more performant thanks to advances in virtualization
-technologies, real-time Linux operating systems and more powerful edge
-computing hardware, thus moving up the y-axis (product performance) in
-the chart above."
++	if (!housekeeping_cpu(tdata->cpu, HK_TYPE_MISC))
++		return -EINVAL;
++
+ 	mutex_lock(&tdata->update_lock);
+ 	rdmsr_on_cpu(tdata->cpu, tdata->status_reg, &eax, &edx);
+ 	mutex_unlock(&tdata->update_lock);
+@@ -158,6 +163,8 @@ static ssize_t show_temp(struct device *dev,
+ 
+ 	/* Check whether the time interval has elapsed */
+ 	if (!tdata->valid || time_after(jiffies, tdata->last_updated + HZ)) {
++		if (!housekeeping_cpu(tdata->cpu, HK_TYPE_MISC))
++			return -EINVAL;
+ 		rdmsr_on_cpu(tdata->cpu, tdata->status_reg, &eax, &edx);
+ 		/*
+ 		 * Ignore the valid bit. In all observed cases the register
 
 
+In this case, a userspace application (collecting telemetry data), was
+responsible for reading the sysfs files.
+
+Now think of all possible paths, from userspace, that lead to kernel
+code that ends up in smp_call_function_* variants (or other functions
+that cause IPIs to isolated CPUs).
+
+The alternative, from blocking this in the kernel, would be to validate all 
+userspace software involved in your application, to ensure it won't end
+up in the kernel sending IPIs. Which is impractical, isnt it ?
+(or rather, with such option in the kernel, it would be possible to run 
+applications which have not been validated, since the kernel would fail
+the operation that results in IPI to isolated CPU).
+
+So the idea would be an additional "isolation mode", which when enabled, 
+would disallow the IPIs. Its still possible for root user to disable
+this mode, and retry the operation.
+
+So lets say i want to read MSRs on a given CPU, as root.
+
+You'd have to: 
+
+1) readmsr on given CPU (returns -EPERM or whatever), since the
+"block interference" mode is enabled for that CPU.
+
+2) Disable that CPU in the block interference cpumask.
+
+3) readmsr on the given CPU (success).
+
+4) Re-enable CPU in block interference cpumask, if desired.
+
+
+(BTW, better ideas than the cpumask are welcome, but it seems the
+realibility aspect of something similar to this is necessary).
+
+Thanks!
 
