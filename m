@@ -1,113 +1,100 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704548563F;
-	Wed,  7 Feb 2024 20:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4629776039
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 20:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707339030; cv=none; b=mqYuvdKxEtHipNy0yyvLFheAt6FeHb295KwLsAlP+NJllc0gFUpiwFHFyxLLublpA0NKYPukIGi8k9xrTUyupYm/koFMCD/NgxJDro2dDqDSUIdNuR5rEb2OngbGQQ4ZQkC0bxP5Ud09SL1V41X7Y5by5lOmyPi6n3r3D7/yTnY=
+	t=1707339288; cv=none; b=LpVEfSBGAvam/dych3h0nHrj5jW3uWV3MFaH0MEYXflt6FTS5+AKqR4IKJhlLsLj1fsm0CO6zvED4FLIUM8f8CTVdEYOy3DAjjtmJgl0hvKyPsMrLtLhVuNm0ACchD1SKqBhlLfgXBCQCsmGmDUlYBVTUzKCHWllbYlRAP1oPoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707339030; c=relaxed/simple;
-	bh=TWvMx84K4Fa8daMtVvMNIksPwUbQuSlfg6JIQVy8JiM=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=j+gbEXWOVYC3vuCz3xgje1aQY0epSm7m0bV/k6dO1rRDXmcKmADrrwD9GekgEJktCw/Eq+TvgCcqJ6QgwFW/6jRJ1ech0dsGCvBuWIg37wVhNL58lOsnQtj9BSEhTWKrLf0FPwLemfJYaL3cgAav5SKoZf6jAmKUJg4II1AoiNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (178.176.76.58) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 7 Feb
- 2024 23:50:16 +0300
-Subject: Re: [PATCH net-next 4/5] net: ravb: Do not apply RX checksum settings
- to hardware if the interface is down
-To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>
-References: <20240207120733.1746920-1-claudiu.beznea.uj@bp.renesas.com>
- <20240207120733.1746920-5-claudiu.beznea.uj@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <82a95cae-29bc-06c1-0fab-5fa6302b4654@omp.ru>
-Date: Wed, 7 Feb 2024 23:50:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1707339288; c=relaxed/simple;
+	bh=0ODhUkbCs76NCTBzAROMQnicuP+Us/3Ez5rJrhqcSRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RPEvXG00tmykQ5isZr89c2OGshxQzjQUE1qqJGt0Hw9dcwBGWvjugclB9QbfGX1Pdyp7c8A1g615XOTg1av9H6k47ug2EUAN50zXXTgsuADeatPYJYrT9WoacPlobo4BEJRzPUrCCRu1ODIKflXppn01YntGW9Rf7S9IKWcaJj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=OBGXfrz7; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="OBGXfrz7"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d751bc0c15so11108235ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 12:54:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707339286; x=1707944086; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IPDZFDAr8m25erMC4/CtO31Vk29YNq1SvAgfgiB0850=;
+        b=OBGXfrz7jluC1QYtEFUDIOMh4bl72xiyuZxlNUsR40fSeCTRsK3vVXv7KySmS8AM8l
+         OfiErWa6yvSIGVsGjBOQ+Ww+ZDYWZggFRYMHvkiNgp/daf3OfmIITF9mQ2t02XsEZvoO
+         ExeDo6qlc4ibbPVXjpWMJnIJDhHQwSXQZOntvCPZ4tMP+wMMsPe9o2Hs44lptGfxqnXL
+         OuYdAHTvvtopiMmYeojmPD3xRB00JO/Ab9dKvNaPHqCuMHJSXhincRqCIoXCkOg7S1GC
+         HG9+ATap0BZ5x+EW5BsHkpYQaxLVqigvx6DKQ3Q+/CRb0AeSJuXHboxtZ6LY8Yp2cYM8
+         N9DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707339286; x=1707944086;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IPDZFDAr8m25erMC4/CtO31Vk29YNq1SvAgfgiB0850=;
+        b=T/mKu2JGYOmPtXgNoqIvQAbZE29S2Vwupr/ha3lbcuEMwlvg5gFpMGnr0/XgtkRCoi
+         ydhoirnzNb8qqpKJHHTxk8hrRy73gO4V9MpAKFN2gREXCJWbMmmShx87QryOZ+HlUQpp
+         8y/VIAm8HRqBUiUFsv6vYYTBP2XQLjVATuY9IY/y5pa9b2g6gaasICSK9tDD+jLF/clb
+         CJgXg2IwXcBTXMDLXDpriOJUCBgEDjoB3AjOn/uSGVObytQhXdKztH5n13dA1+G1NfTW
+         MxYB3doyEbQj25ImXB+1YLKdnLMJPvu0npnLVhWlcchmKs7vdQyzzB9F2sHME67CTQiK
+         ZZDA==
+X-Gm-Message-State: AOJu0YxTj6YbAZ8FysGrMR6e07DCygaJdJvOxb+hBMzryDlSDj35vpoy
+	bnohXVPrT4RrqKl8NiP4Q/02Ror3xfL2vNpAvp1aw+pXSYWBDvfHust9t+nmwik=
+X-Google-Smtp-Source: AGHT+IF0hSUbjTyX8vY/HtWs256VfTt8IqeYpEfabo6eDnTdMzdlYcYDvRiNMpi6/fhdOt9rauBXOg==
+X-Received: by 2002:a17:903:124a:b0:1d5:c08e:52eb with SMTP id u10-20020a170903124a00b001d5c08e52ebmr6449495plh.65.1707339286546;
+        Wed, 07 Feb 2024 12:54:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXQOAy9vIa9qhh3Ig25rCrS55e2XpLLhzxcjIEV5WlSysLiAEEB/jCZiCEpXYVRszsWfZT/JAlPlwf4Rk2lJk3LKz1qnCvf75iaSmbRlN2KX99xK77EkK3AKdmZLJ53Kjlfc6aS5w+VMb+9IDCJ8VwtLkDYy6flKO5oZKrgGBzW5nwPSDNLZppTIkfGbLhstBflJ5QwihOfEkqs0epEkVJdx/XKPRuKMbaZ9Ot765hx/VqZ2a7uC6SMe+0=
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id l12-20020a170902d04c00b001d9c1d8a401sm1884646pll.191.2024.02.07.12.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 12:54:46 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rXowN-003QdQ-0t;
+	Thu, 08 Feb 2024 07:54:43 +1100
+Date: Thu, 8 Feb 2024 07:54:43 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: syzbot <syzbot+0260338e3eff65854d1f@syzkaller.appspotmail.com>
+Cc: chandan.babu@oracle.com, djwong@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [xfs?] INFO: task hung in xfs_inodegc_flush
+Message-ID: <ZcPuE4FL9bUu8h0Q@dread.disaster.area>
+References: <00000000000088268a0610c6b3ae@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240207120733.1746920-5-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 02/07/2024 20:37:16
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 183286 [Feb 07 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.76.58 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.76.58 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.76.58
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 02/07/2024 20:42:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 2/7/2024 5:40:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000088268a0610c6b3ae@google.com>
 
-On 2/7/24 3:07 PM, Claudiu wrote:
-
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Wed, Feb 07, 2024 at 12:44:21AM -0800, syzbot wrote:
+> Hello,
 > 
-> Do not apply the RX checksum settings to hardware if the interface is down.
-> In case runtime PM is enabled, and while the interface is down, the IP will
-> be in reset mode (as for some platforms disabling the clocks will switch
-> the IP to reset mode, which will lead to losing registers content) and
-
-   The register contents? I thought I'd pointed out all of these...
-
-> applying settings in reset mode is not an option. Instead, cache the RX
-> checksum settings and apply them in ravb_open() through ravb_emac_init().
-> This has been solved by introducing pm_runtime_active() check. The device
-> runtime PM usage counter has been incremented to avoid disabling the device
-> clocks while the check is in progress (if any).
+> syzbot found the following issue on:
 > 
-> Commit prepares for the addition of runtime PM.
+> HEAD commit:    076d56d74f17 Add linux-next specific files for 20240202
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=173b568fe80000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=428086ff1c010d9f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0260338e3eff65854d1f
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148b3c9fe80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13811004180000
+.....
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+#syz fix: workqueue: Fix pwq->nr_in_flight corruption in try_to_grab_pending()
 
-   I'm afraid such check now needs to be added to ravb_set_features_gbeth()
-that's populated by Biju Das' checksum patches (which I've already ACKed)...
 
-[...]
-
-MBR, Sergey
+-- 
+Dave Chinner
+david@fromorbit.com
