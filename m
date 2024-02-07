@@ -1,37 +1,37 @@
 Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C1EDDC1
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAA712E74
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 02:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707271329; cv=none; b=iVgqa88zV/4DKH3WEbkaMPgM0yrGunTNVTVSJsy2Bb7jGj9miUhxRFzp5WUjrdpjmdrBfzbOU6w4QJSl5eYH5u42JIa8sKT6ZQX7NHk0FN1CTdabtvTQ9PCKalEs1bl8/5cWU3FyGPtRpacB/BGrW525ZaeBxZN+A8F97UgOX7I=
+	t=1707271334; cv=none; b=VylOc8HJkJQlGhAerQD5vf/g4Ydn9dBc6NmZ2ZVsY0BfLLfBTA1gIvBpPM2DEYsYslHeoyXwZdibk07/FVkZPUGsw4HHM9PiJ04oXlV/pQrAYP/aIZEqkvhKbZMIH4+eaiLJ7spqkvSREm1kAmokgCj1QErXOz16nsqaHafoc3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707271329; c=relaxed/simple;
-	bh=CaZxgYYb4ZfJrYl/9daHpHqKX/nQ0rHVtu0HGQLYOY4=;
+	s=arc-20240116; t=1707271334; c=relaxed/simple;
+	bh=8iTvrOWdUHwLUYIO0I51Nm4DAdcTJoccfesvR6ZoX/g=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iclEMdZQ5w8k30iEvOOeUfqeh4S+EJm8m1xSTpLU4t0UKIvdzvIbz2JY8FVoWDRVFbIXmkdVQ2CHvd5NLRnZezb8vA4SC9SCQ1WeigYLXfmLCbp4wLAzPwr61Kd/5eNiYSuqCwNqZaEo6YxARHFcIlzzygPQyhU7ho9n0ap12so=
+	 MIME-Version:Content-Type; b=BQjH7iDihEs9UnCMVlnktENpG1d2VVl3JB50mlnBlerVA3gjMiAJHUTIz9LvLrFQTqSmEn3lspKte/b2vZ2kpcKtgU+fAG2/M4qafPdFjLCJpqCDkRP+wFcWYHOoYQdwYelmmoFaWJWAoiD9v1psmEcpfFQsn3/OWZq2ccUWKPY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
 Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 41721TTX075531;
-	Wed, 7 Feb 2024 10:01:29 +0800 (+08)
+	by SHSQR01.spreadtrum.com with ESMTP id 41721YXP075835;
+	Wed, 7 Feb 2024 10:01:34 +0800 (+08)
 	(envelope-from Zhiguo.Niu@unisoc.com)
 Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TV3J13RTXz2K4cHw;
-	Wed,  7 Feb 2024 10:01:21 +0800 (CST)
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TV3J65frxz2K4cHw;
+	Wed,  7 Feb 2024 10:01:26 +0800 (CST)
 Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
  BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 7 Feb 2024 10:01:26 +0800
+ 15.0.1497.23; Wed, 7 Feb 2024 10:01:31 +0800
 From: Zhiguo Niu <zhiguo.niu@unisoc.com>
 To: <jaegeuk@kernel.org>, <chao@kernel.org>
 CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
         <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
         <hongyu.jin@unisoc.com>
-Subject: [PATCH v2 1/4] f2fs: correct counting methods of free_segments in __set_inuse
-Date: Wed, 7 Feb 2024 10:01:01 +0800
-Message-ID: <1707271264-5551-2-git-send-email-zhiguo.niu@unisoc.com>
+Subject: [PATCH v2 3/4] f2fs: enhance judgment conditions of GET_SEGNO
+Date: Wed, 7 Feb 2024 10:01:03 +0800
+Message-ID: <1707271264-5551-4-git-send-email-zhiguo.niu@unisoc.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1707271264-5551-1-git-send-email-zhiguo.niu@unisoc.com>
 References: <1707271264-5551-1-git-send-email-zhiguo.niu@unisoc.com>
@@ -44,60 +44,84 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 41721TTX075531
+X-MAIL:SHSQR01.spreadtrum.com 41721YXP075835
 
-There is a corner scenario on a small-capacity partition with 64MB size:
-1. The main area has a total of 24 segments, and there are no free
-segments left shown from the free_segmap bitmap and free_secmap in
-free_segmap_info.
----------------------------------------------------------------------
-bitmap value: ffffffffffffffff
----------------------------------------------------------------------
-2. When doing gc, an out-of-bounds segment with segno=24 is allocated.
-Because CONFIG_F2FS_CHECK_FS is not enabled, f2fs_bug_on in get_new_segment
-just print warning log but the subsequent process continues to run.
----------------------------------------------------------------------
-got_it:
-    /* set it as dirty segment in free segmap */
-    f2fs_bug_on(sbi, test_bit(segno, free_i->free_segmap));
-    __set_inuse(sbi, segno);
-----------------------------------------------------------------------
-3. __set_inuse directly sets free_i->free_segments--,
-As a result, free_i->free_segments=-1, as shown in the following
-coredump information:
-----------------------------------------------------------------------
-  crash_arm64> struct free_segmap_info 0xffffff8084d9a000 -x
-  struct free_segmap_info {
-  start_segno = 0x7,
-  free_segments = 0xffffffff,
-  free_sections = 0x0,
-----------------------------------------------------------------------
-This is unreasonable and will cause free_segments and free_sections
-counts mismatch if there are segments released as free.
+NULL_SEGNO should also be returned when the blk_addr value is
+out-of-bound main area even __is_valid_data_blkaddr return true.
 
-So same counting methods like free_sections should be used to
-free_segments.
+For example, a 64MB partition with total 24 main segments has no
+any free segments left, then a new wrtie request use get_new_segment
+may get a out-of-bound segno 24 if CONFIG_F2FS_CHECK_FS is not enabled.
+GET_SEGNO should also return NULL_SEGNO in this case rather than treating
+is as valid segment.
+
+Besides, if the caller of GET_SEGNO does not ensure blk_addr pass to
+GET_SEGNO is valid, it should do sanity check about return value of
+GET_SEGNO, avoid causing some unexpected problems later.
 
 Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
 ---
- fs/f2fs/segment.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/file.c    | 7 ++++++-
+ fs/f2fs/segment.c | 4 +++-
+ fs/f2fs/segment.h | 3 ++-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 23cd6a1..2cd3cd9 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2985,9 +2985,14 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (range.dev_num != 0)
++	if (range.dev_num != 0) {
+ 		dev_start_segno = GET_SEGNO(sbi, FDEV(range.dev_num).start_blk);
++		if (dev_start_segno == NULL_SEGNO)
++			return -EINVAL;
++	}
+ 	dev_end_segno = GET_SEGNO(sbi, FDEV(range.dev_num).end_blk);
++	if (dev_end_segno == NULL_SEGNO)
++		return -EINVAL;
+ 
+ 	start_segno = sm->last_victim[FLUSH_DEVICE];
+ 	if (start_segno < dev_start_segno || start_segno >= dev_end_segno)
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index f373ff7..6772ad4 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2496,7 +2496,7 @@ void f2fs_invalidate_blocks(struct f2fs_sb_info *sbi, block_t addr)
+ 	struct sit_info *sit_i = SIT_I(sbi);
+ 
+ 	f2fs_bug_on(sbi, addr == NULL_ADDR);
+-	if (addr == NEW_ADDR || addr == COMPRESS_ADDR)
++	if (segno == NULL_SEGNO)
+ 		return;
+ 
+ 	f2fs_invalidate_internal_cache(sbi, addr);
+@@ -3708,6 +3708,8 @@ void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+ 	unsigned char old_alloc_type;
+ 
+ 	segno = GET_SEGNO(sbi, new_blkaddr);
++	if (segno == NULL_SEGNO)
++		return;
+ 	se = get_seg_entry(sbi, segno);
+ 	type = se->type;
+ 
 diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 8129be7..f2847f1 100644
+index f2847f1..b0ea315 100644
 --- a/fs/f2fs/segment.h
 +++ b/fs/f2fs/segment.h
-@@ -463,8 +463,8 @@ static inline void __set_inuse(struct f2fs_sb_info *sbi,
- 	struct free_segmap_info *free_i = FREE_I(sbi);
- 	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
+@@ -96,7 +96,8 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+ 	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & ((sbi)->blocks_per_seg - 1))
  
--	set_bit(segno, free_i->free_segmap);
--	free_i->free_segments--;
-+	if (!test_and_set_bit(segno, free_i->free_segmap))
-+		free_i->free_segments--;
- 	if (!test_and_set_bit(secno, free_i->free_secmap))
- 		free_i->free_sections--;
- }
+ #define GET_SEGNO(sbi, blk_addr)					\
+-	((!__is_valid_data_blkaddr(blk_addr)) ?			\
++	((!__is_valid_data_blkaddr(blk_addr) ||			\
++	!f2fs_is_valid_blkaddr(sbi, blk_addr, DATA_GENERIC)) ?	\
+ 	NULL_SEGNO : GET_L2R_SEGNO(FREE_I(sbi),			\
+ 		GET_SEGNO_FROM_SEG0(sbi, blk_addr)))
+ #define BLKS_PER_SEC(sbi)					\
 -- 
 1.9.1
 
