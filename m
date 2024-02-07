@@ -1,107 +1,94 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9657CFC05;
-	Wed,  7 Feb 2024 03:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C554B12E74
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 03:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707277443; cv=none; b=f0wJooFac3AApD1TVReJRPbTYBZYc5MLKFADRZTn/NnV8qBPiQr0iwpdpCGb2L4iwEpn+ZVMhJ/S69iAKH5aff4mgJyhmFEkVb2+azJ9Gw2stcBcb1cSm53mzOmYEf0yVog2cmDGtL7BiMm10r9DIMqWwDSvKK76fI40E3fDCpY=
+	t=1707277450; cv=none; b=DHc1T0fK7sLWmJsFcYHpOBV2MIyGK9WlNymvOEUFcI5LZiq38CU/6zyAcU3V/6UmuY7x2YeaXFDsD3jGKDx3vFvu9JANSdVquKbLmVAdnw2atjmy8uA+dtgogN7NsI1LYH1OFJpvfl1bvGz/imyyDPyBlngxh+w4ddhDR+G/FLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707277443; c=relaxed/simple;
-	bh=NKdGqa02hSaQu5JelJ/ksYe+zhE7UAptAzAuxtKjJc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ph455ZGB0m/IZ1AQde7G1/9dEN7vsEiN9jVUQKWkrnWz8kEfh9Uxq0OJllmwIAODSWMHvxWM/6Bjvd2t6oubpsifSZsDcsjqYQQBT54CCHAmSexMe/Pa7y2SpRKoSbBlSZYzb9Qshexa5YsVCTE2ijhCgNcaItW60Pn++ImlfZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-296db7e258dso170255a91.0;
-        Tue, 06 Feb 2024 19:44:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707277441; x=1707882241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GXYHBO/Sk9zqXtLS3+vl4Dw89XDk75azVHAu3XUaUas=;
-        b=PWb84E250xFohyIyh8cCXXtOtutZSakG/RsJO54gojzqopKPXVlhwYYU2mwsjnu0G0
-         cwEaoaJ1q8lE5S6ChckmM/+GzivLVvoH+lH2zK2oP5oxJHz9iqYJbNVZmgruyh9CuNtu
-         uhgddOrbW+gTeuL7olJkTmao3LUIwGCT97qh/RFMkCHbHl76oyu7gkFpKPwgXnMgwq1d
-         ZiCjHAbhTu+3pVHxJR4QnGcsufVNh5h6+XcmaVrJxzeh9xMQew5MpW4VTr2DvYXEwPeH
-         O2e7OyxxPj2OnA9xlk/kvStNs8t2WOr29GtGO7+3t7kigoabMAWkCWMjeKYD98gngQNd
-         YYfw==
-X-Gm-Message-State: AOJu0Yynh7zeCdrTfM0hU69N9p5Ny7GQXfi554K+SJUpcEniy6rn/gC8
-	i2VDtpfBkiTianGAjHxuFJtrQmow1L5HzIan7pAaSJ2U5bLmTVvXSitJwmArCsVUcAdfu/VrB48
-	+Ss7QeVumc9QXQ+cU1TuCaAi4uLw=
-X-Google-Smtp-Source: AGHT+IGEPIphPBJ3SG91ugAQu3jAc6gnya8eOCAXJm5wVKBb/y2U6JdG+iSfAZ+R+/o55W4i4WV555ctwvTj67vnkOs=
-X-Received: by 2002:a17:90a:470e:b0:296:a76a:9711 with SMTP id
- h14-20020a17090a470e00b00296a76a9711mr2325191pjg.12.1707277440608; Tue, 06
- Feb 2024 19:44:00 -0800 (PST)
+	s=arc-20240116; t=1707277450; c=relaxed/simple;
+	bh=7vUiNV5G3nvvwfoetaYLt/ii5ihVPI2ja1/aLjEI590=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qscFHHmNAiJYDHZJuwlcOZ9/OqzWfoampphDLhvL73eVTOt/ipFlF/urBdT8DbWPmjqZfe97RNDVXBn+ZwDC4NPvAzpzhCDlrw2NFIrhyrnwW2KEXJaRWcLvuNJ8cQ3l0AoB6W9uBRjOkG/yyjmfPjaTJQjqHXyl593/r+dhDts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lczDQgnf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lczDQgnf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B701C433C7;
+	Wed,  7 Feb 2024 03:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707277450;
+	bh=7vUiNV5G3nvvwfoetaYLt/ii5ihVPI2ja1/aLjEI590=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lczDQgnfgJOCY4MK/ePzFHE6JOGKVK8GTmB6IaxhfwXYjnpCndTNp392dkhjX8MaK
+	 TddRliBpzoeVAdGAUV4lEhA0WsAgm6z1stDQWyrY3JgjK9aEmpomLCi9zOToOsBuGo
+	 ygqCFnhLcXEG4V8YR7+ScGCyPzCtfz7Sprl9026ckxNUagfUv0aW5hj5HvJrDzvjEM
+	 9bQMEJN7Zl5thJCqnPvCtyxGS43vu30Ue4JKOtyJgnkWtOlSfQ5swhfesApv80T/VO
+	 5V3T7k58nNF7Eqc5II3Ka/UIq2lEND0ZdEaIrlgAXr6689pIN7UX4chlgGeswf3tfT
+	 Nkj+2BSao0WoA==
+From: alexs@kernel.org
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	ricardo.neri-calderon@linux.intel.com,
+	yangyicong@hisilicon.com
+Cc: Alex Shi <alexs@kernel.org>
+Subject: [PATCH v4 1/4] sched/topology: Remove duplicate descriptions from TOPOLOGY_SD_FLAGS
+Date: Wed,  7 Feb 2024 11:47:01 +0800
+Message-ID: <20240207034704.935774-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112231340.779469-1-namhyung@kernel.org>
-In-Reply-To: <20240112231340.779469-1-namhyung@kernel.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 6 Feb 2024 19:43:49 -0800
-Message-ID: <CAM9d7chHZumJ5+KHex0hkp0JsL1phMPsA_qtaVnBZXyJus5NZg@mail.gmail.com>
-Subject: Re: [PATCH] perf record: Display data size on pipe mode
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Ping!
+From: Alex Shi <alexs@kernel.org>
 
-On Fri, Jan 12, 2024 at 3:13=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Currently pipe mode doesn't set the file size and it results in a
-> misleading message of 0 data size at the end.  Although it might miss
-> some accounting for pipe header or more, just displaying the data size
-> would reduce the possible confusion.
->
-> Before:
->   $ perf record -o- perf test -w noploop | perf report -i- -q --percent-l=
-imit=3D1
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.000 MB - ]    <=3D=3D=3D=3D=3D=3D  =
-(here)
->       99.58%  perf     perf                  [.] noploop
->
-> After:
->   $ perf record -o- perf test -w noploop | perf report -i- -q --percent-l=
-imit=3D1
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.229 MB - ]
->       99.46%  perf     perf                  [.] noploop
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-record.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 91e6828c38cc..21ebcb04f1d8 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1773,8 +1773,11 @@ record__finish_output(struct record *rec)
->         struct perf_data *data =3D &rec->data;
->         int fd =3D perf_data__fd(data);
->
-> -       if (data->is_pipe)
-> +       if (data->is_pipe) {
-> +               /* Just to display approx. size */
-> +               data->file.size =3D rec->bytes_written;
->                 return;
-> +       }
->
->         rec->session->header.data_size +=3D rec->bytes_written;
->         data->file.size =3D lseek(perf_data__fd(data), 0, SEEK_CUR);
-> --
-> 2.43.0.275.g3460e3d667-goog
->
->
+These flags are already documented in include/linux/sched/sd_flags.h.
+Also add missing SD_CLUSTER and keep the comment on SD_ASYM_PACKING
+as it is a special case.
+
+Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Alex Shi <alexs@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+To: Juri Lelli <juri.lelli@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+---
+ kernel/sched/topology.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 10d1391e7416..0b33f7b05d21 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1551,11 +1551,12 @@ static struct cpumask		***sched_domains_numa_masks;
+  *
+  * These flags are purely descriptive of the topology and do not prescribe
+  * behaviour. Behaviour is artificial and mapped in the below sd_init()
+- * function:
++ * function. For details, see include/linux/sched/sd_flags.h.
+  *
+- *   SD_SHARE_CPUCAPACITY   - describes SMT topologies
+- *   SD_SHARE_PKG_RESOURCES - describes shared caches
+- *   SD_NUMA                - describes NUMA topologies
++ *   SD_SHARE_CPUCAPACITY
++ *   SD_SHARE_PKG_RESOURCES
++ *   SD_CLUSTER
++ *   SD_NUMA
+  *
+  * Odd one out, which beside describing the topology has a quirk also
+  * prescribes the desired behaviour that goes along with it:
+-- 
+2.43.0
+
