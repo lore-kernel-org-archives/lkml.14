@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F7B85C64
-	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:43:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57942128814
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 18:43:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707331409; cv=none; b=ciAMmIlQNX/ra8kCoWKi26VPIcTvd4gwlQ5qBTVEPHFFtleRS1+HfcFUcPWh1jEfmsBbAc4eVLj25qBqwYHIGpNvLEguQOZjKeQolblDH/CU5nmiT/VdG558+1oqaWDS6MHZBWcHYrwRfJoyUCFQybod9hUG7V+HlcuJqmWA9G8=
+	t=1707331407; cv=none; b=MlSDkJMEHg74+XhRgrR5hptpNotgzQU5tQMSJ6FXDCVBZY+BhRnM+O8T/OIU5V0VrPHa1tugjFIWKfURCzZaVxkQAZLcjAhXYZiX35XsZZ7Gh+VJ7cE6+DeA1Jz26Re4bY1hwr4Sznp5/07lQdPEayuaHOFsWXEVO/Bryoin2JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707331409; c=relaxed/simple;
-	bh=mdwBi3Gt1cG0DX3WTfBzo1jaCcILClmPsuQWChC91NE=;
+	s=arc-20240116; t=1707331407; c=relaxed/simple;
+	bh=KaJJ8quxzgWB8y4pMleISYyM1DKK7MkNdnVgj/kZgVA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fmcg8+oiv2Qii7pQ13JPzFFKRq8tIEFlqk3RZO+j9KaeZ5dg1HqamNm6qexblfvZlNU3wKW855LnLVXnjA3LmBptps9a1O8TnXLOauMBaQsEiE/cpb+i6U31t6GV6HuI5XkGUzoARfTGhMkUYN5o4Dic8YYZVua2UcQW7xScbxI=
+	 MIME-Version:Content-Type; b=r5uAancIVGZLx9kD0J3YvDd9NfEm6915gzVihxiAiu8EjFiSiMu8OmWC//5Il3f/g6rYLi2t4hSWc/LdNHxtgt6kJvfB6iAA37crC4bPhNpkj6lt5eeLFFqgijvxuJ0m+3ZdIKGjiF10f0aoZveTkvVAooE3hsSnS8fXd9Fc5Kc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,33 +18,26 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rXmt6-0007Wx-GE; Wed, 07 Feb 2024 19:43:12 +0100
+	id 1rXmt4-0007Q6-Fs; Wed, 07 Feb 2024 19:43:10 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rXmt5-0054Xb-Cj; Wed, 07 Feb 2024 19:43:11 +0100
+	id 1rXmt4-0054XF-1x; Wed, 07 Feb 2024 19:43:10 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rXmt5-00HRsc-0y;
-	Wed, 07 Feb 2024 19:43:11 +0100
+	id 1rXmt3-00HRsH-39;
+	Wed, 07 Feb 2024 19:43:09 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Mark Brown <broonie@kernel.org>
 Cc: kernel@pengutronix.de,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Ronald Wahl <ronald.wahl@raritan.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 13/32] net: ks8851: Follow renaming of SPI "master" to "controller"
-Date: Wed,  7 Feb 2024 19:40:27 +0100
-Message-ID:  <4f26761c0c86072a084b2a20439da1d0a681b07b.1707324794.git.u.kleine-koenig@pengutronix.de>
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 09/32] media: v4l2-subdev: Follow renaming of SPI "master" to "controller"
+Date: Wed,  7 Feb 2024 19:40:23 +0100
+Message-ID:  <b6e3a53ce75dfb8a21a5958a381070944dfa0875.1707324794.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1707324793.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1707324793.git.u.kleine-koenig@pengutronix.de>
@@ -55,7 +48,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1533; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=mdwBi3Gt1cG0DX3WTfBzo1jaCcILClmPsuQWChC91NE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlw86k9EqMmy0LbIMCuyFFQLhB3tqOih4LKdVNG KI/UOAY1haJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcPOpAAKCRCPgPtYfRL+ TmPxCACuusIwJoxvplewh7tp3xA8zp7Nt5arOfpSCDlr/xJ1JEFphV0FPRqpAvK5njlV8tTO7KG tB++GQjC/ToR8xZnCJj0+RTaGeLmXSaXjPwntEbITXOxfos/M68s6pEBVqcYwuBmfS4fSuICzTI iT6j4fT+Trobv2m/4azGbhXodf1oHuafhIasTvNM1tfonTjmW4o1xlF4Se1frJ240DBo5CQw2jf Eujd0cnILh6sVaOMV+4dMXeHD+FsJS0eDLYQF9ulAg5F1Tg/kr7JlgxJWGoGWpevE3Z+EevjJUz jIlZ5H6BNDeCYipiLNRcehw+tWIvmUadOkbqG2bI2AmkaCZQ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2547; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=KaJJ8quxzgWB8y4pMleISYyM1DKK7MkNdnVgj/kZgVA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlw86g3V4NkM5t2iVxQniw0e6ww0L3UTrUHmKhS K0i3JBODmeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcPOoAAKCRCPgPtYfRL+ TmxbCACLR1jKX4MTNh5obO5h8YAhLVtwd1uz529v9zFqG4CpBWY3FG8foiklJOZbMNrBvF/CH6I +i4pKx16oVdeywvHnv8/Bnzww8mM1NlfwKf2LB4pVDmnD+6k4dE8eEeyHUQG226ZaeQNil4oW4G MmsR40iwY+soe7R2jsuOZ7drdmwGQDM/tI4y/szddPv4BjtL0iN7PI/nvguOiPVgqwJs0GUOflJ cKnL5E4zrb5JI8otzRQsJydgbtcZmOlTpMALeuQKLBgB3FJK9So/HtSfopdS7tP1+eieUeq/Qi+ cwo31VIPZJr2/DqJK1L08aOtXXmrBAnVofKaZ5E/oZADrQwJ
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -68,37 +61,66 @@ some functions and struct members were renamed. To not break all drivers
 compatibility macros were provided.
 
 To be able to remove these compatibility macros push the renaming into
-this driver.
+v4l2_spi_new_subdev().
 
-Reviewed-by: Simon Horman <horms@kernel.org>
 Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/net/ethernet/micrel/ks8851_spi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/v4l2-core/v4l2-spi.c | 4 ++--
+ include/media/v4l2-common.h        | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_spi.c b/drivers/net/ethernet/micrel/ks8851_spi.c
-index 54f2eac11a63..2f803377c9f9 100644
---- a/drivers/net/ethernet/micrel/ks8851_spi.c
-+++ b/drivers/net/ethernet/micrel/ks8851_spi.c
-@@ -156,7 +156,7 @@ static void ks8851_rdreg(struct ks8851_net *ks, unsigned int op,
+diff --git a/drivers/media/v4l2-core/v4l2-spi.c b/drivers/media/v4l2-core/v4l2-spi.c
+index eadecdff7349..a7092c3930d6 100644
+--- a/drivers/media/v4l2-core/v4l2-spi.c
++++ b/drivers/media/v4l2-core/v4l2-spi.c
+@@ -34,7 +34,7 @@ void v4l2_spi_subdev_init(struct v4l2_subdev *sd, struct spi_device *spi,
+ EXPORT_SYMBOL_GPL(v4l2_spi_subdev_init);
  
- 	txb[0] = cpu_to_le16(op | KS_SPIOP_RD);
+ struct v4l2_subdev *v4l2_spi_new_subdev(struct v4l2_device *v4l2_dev,
+-					struct spi_master *master,
++					struct spi_controller *ctlr,
+ 					struct spi_board_info *info)
+ {
+ 	struct v4l2_subdev *sd = NULL;
+@@ -45,7 +45,7 @@ struct v4l2_subdev *v4l2_spi_new_subdev(struct v4l2_device *v4l2_dev,
+ 	if (info->modalias[0])
+ 		request_module(info->modalias);
  
--	if (kss->spidev->master->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+	if (kss->spidev->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
- 		msg = &kss->spi_msg2;
- 		xfer = kss->spi_xfer2;
+-	spi = spi_new_device(master, info);
++	spi = spi_new_device(ctlr, info);
  
-@@ -180,7 +180,7 @@ static void ks8851_rdreg(struct ks8851_net *ks, unsigned int op,
- 	ret = spi_sync(kss->spidev, msg);
- 	if (ret < 0)
- 		netdev_err(ks->netdev, "read: spi_sync() failed\n");
--	else if (kss->spidev->master->flags & SPI_CONTROLLER_HALF_DUPLEX)
-+	else if (kss->spidev->controller->flags & SPI_CONTROLLER_HALF_DUPLEX)
- 		memcpy(rxb, trx, rxl);
- 	else
- 		memcpy(rxb, trx + 2, rxl);
+ 	if (!spi || !spi->dev.driver)
+ 		goto error;
+diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+index acf5be24a5ca..739b0f0fc1a0 100644
+--- a/include/media/v4l2-common.h
++++ b/include/media/v4l2-common.h
+@@ -278,13 +278,13 @@ static inline void v4l2_i2c_subdev_unregister(struct v4l2_subdev *sd)
+  *
+  *
+  * @v4l2_dev: pointer to &struct v4l2_device.
+- * @master: pointer to struct spi_master.
++ * @ctlr: pointer to struct spi_controller.
+  * @info: pointer to struct spi_board_info.
+  *
+  * returns a &struct v4l2_subdev pointer.
+  */
+ struct v4l2_subdev *v4l2_spi_new_subdev(struct v4l2_device *v4l2_dev,
+-		struct spi_master *master, struct spi_board_info *info);
++		struct spi_controller *ctlr, struct spi_board_info *info);
+ 
+ /**
+  * v4l2_spi_subdev_init - Initialize a v4l2_subdev with data from an
+@@ -308,7 +308,7 @@ void v4l2_spi_subdev_unregister(struct v4l2_subdev *sd);
+ 
+ static inline struct v4l2_subdev *
+ v4l2_spi_new_subdev(struct v4l2_device *v4l2_dev,
+-		    struct spi_master *master, struct spi_board_info *info)
++		    struct spi_controller *ctlr, struct spi_board_info *info)
+ {
+ 	return NULL;
+ }
 -- 
 2.43.0
 
