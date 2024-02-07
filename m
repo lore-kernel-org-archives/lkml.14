@@ -1,165 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC0120DCF;
-	Wed,  7 Feb 2024 09:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B06920DC1
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 09:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707297652; cv=none; b=IP51l2Xn+Z1rrLzyXxCbbPfm3be64aw4ae0r4aS2QCoF6NkTyApQb9xOECOZgB+nYQOZXVG5nHvACLDOPnoHjCJZ8OYRWVxguRBNqE/hiNCeNVguuvOexZQ9RIwQN4VMmEKlNW9Dm0xNrKVMhxd7XPARiC+uwCfKjSsnAesffxc=
+	t=1707297753; cv=none; b=Iyqa0aaMXexOGuzvW0S9gXccTgWEKCH3RUnQoXWrIOPYwcLXar33qS+L5zIfYXeWh+M4vf7s4SidseBBPilJqUGr+piFmcHLCa5PIhIWmZ4JSgZz2BgCq26Ab0VjJWaQo9Ho8SYcpsVrpn6Is19FA36lqKz3bZuoZHtd1qyVL+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707297652; c=relaxed/simple;
-	bh=6YvQzVV4nusevcHCqpVYqUFJYCCJgg8JwrDhNoV+FTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QnOctq25G/YtUctrk3a/5arMP+Sm3svPdwvby4ACslznA5bxH8xup1dpZWjxGVqHGtTAMEhbz0pFzQ4ySHHwqo6hE0giPJ4RJq93iGi+vHCZ1saq8aOfPuATPlMLgowFwDT/OgeOd1BqK6D0BRe1XO3p6YZp55Xu/DTelXDVS8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kK8i5+wP; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707297753; c=relaxed/simple;
+	bh=PYnCfQ2DugAyGQ5Ih8ootlOhTX0uijvK7/6Xdhv/W/o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dpg/XJpzDLKQKYEtR8E75nTqic2GEQhguMCKyRxBpi7HXUV7kbSXzE0IxpONmcki1AVQWwlqJDF2GhthKwwQMNigEzmoBnV9uz1Gel4Wb/ScA0blfoIubAPIxBI5iZ3KRkp7/annVpCxI6+MHgP/pACEtJoYXE+0/ilc4yk3ZeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iqb8A6OP; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kK8i5+wP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707297651; x=1738833651;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6YvQzVV4nusevcHCqpVYqUFJYCCJgg8JwrDhNoV+FTM=;
-  b=kK8i5+wPmRsUKNu3gKq/P+rKxfHYbk709xj9yW8agh1lFzqLGeOC49Jk
-   SzLJiu0eC1bamZRpBqNjtQb3o7LID1pCtoGz04qwP2+W+NY9AdwfE7F1S
-   6G3trwOaOkUakGt8kuczB9NqRqRuRnjrTBaapJ5+rlasoosuj48CzWiFl
-   LjojzbiVwDLiba9eYc3ovJijqhGJgFJM4Bpv3EL6Vng9SNIsntFj10sQb
-   H2Kz8xZqGmBgu8+YfMX4JIFFuDyH0XiwxJHnny9KIDQ38uA0k1VeKMQK0
-   ti+O6XZbtQ+HyXZa53qyqMKjGGP/UKTOCtg7PMDkrrTmR9Q2kjC71VoHL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="1086070"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="1086070"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 01:20:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="6050463"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 07 Feb 2024 01:20:47 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXe6m-0002Rg-2D;
-	Wed, 07 Feb 2024 09:20:44 +0000
-Date: Wed, 7 Feb 2024 17:19:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Miquel Raynal <miquel.raynal@bootlin.com>, yen-mei.goh@keysight.com,
-	koon-kee.lie@keysight.com,
-	Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: Re: [PATCH 2/2] spi: omap2-mcspi: Add support for MULTI-mode
-Message-ID: <202402071719.e1p4tUge-lkp@intel.com>
-References: <20240126-spi-omap2-mcspi-multi-mode-v1-2-d143d33f0fe0@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iqb8A6OP"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2904c81f26eso69592a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 01:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707297751; x=1707902551; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oat139wFLSjfVKIsAZBBlXueAqHNZFThp0IjSSQQnHk=;
+        b=Iqb8A6OPrfvtTkwTMTjprNLSxPZM2vTsfdqvYFkvhiWjZQ9LoM7VJZOqldBXMsyZTO
+         xu3QzhOUnHAmgFLhZnP3WxvbmZsxEa58Ss5PtX+CvP7E6or8mBwvf9pJPXGNA4D8f1Kv
+         O/HDuaEvW+y1ZWJBTIIXSi3DsnxkjXl+O79C9MpaX8SfHbz9SppGndblUJRUaDLvBUin
+         JCr0L8OVrc9d+95eByRdaaR/9K2sLTJoL50VqQfWnp2as94/Spxxod6xjVQEZ3Bv/7Xw
+         gm7jYFV6FQxMaiDfMDzlum7njwei+N06BRt0E7Ow9/gUZpncFJfPOPGj3KN5zK3eqXkr
+         A9tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707297751; x=1707902551;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oat139wFLSjfVKIsAZBBlXueAqHNZFThp0IjSSQQnHk=;
+        b=Id6qMAtU+44XwarymutVthT/PCSxu0P67hFgDBeRAMMW70oU2ogchyxrmeZ0cO7Cze
+         WGFNqaa8Ay/u/chxm+T9uD/1NGOJM+W4V4MBK98OyicWw6jnM6BHpO5XJSz9Mh0PYtLm
+         U+BqtIvjPwcSdtN5pywMAAllxU0+yCPcc6ja9h6eksRxySk8OqY6c+b5Rfq7d5oZ2U0x
+         FJCKwRO3xewdMyDbYCVv08WensAxKHd9khcr1IFf6wNpx/K/9epfxduP7e0q1mMegwZz
+         /rSDyKgtg7rvXtXPzqbJR/ygWHFJlISh+H+sQSQz2ddZdYgl3dib96w3yyJnJkk5gTMA
+         M7bA==
+X-Gm-Message-State: AOJu0Yx1XvcXwNHgFz/AG0tY4W61E2S6YCAz9oiVrNxaaEy9i+4sNZRq
+	Q0ZxDTUDZISWBzNNvJlwqNJ64uZ6Z1D9umolYaIPu/RD6+cS5zsvZiVMSUURMpcueMVjLG8L+96
+	7V+biQcSxB9/ce3LCbCOJ+Lwdtik=
+X-Google-Smtp-Source: AGHT+IFr9zk9YPtcwwWeLlC+0qNDxpzGCms5VGzeQLl7LWlNxnnXxGzrAQ1FGf43ob5qq9Fq30A0i7bCdw+JtIWPFmA=
+X-Received: by 2002:a17:90b:3a82:b0:296:e236:f69e with SMTP id
+ om2-20020a17090b3a8200b00296e236f69emr946735pjb.4.1707297751332; Wed, 07 Feb
+ 2024 01:22:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126-spi-omap2-mcspi-multi-mode-v1-2-d143d33f0fe0@bootlin.com>
+References: <20240207002305.618499-1-aford173@gmail.com>
+In-Reply-To: <20240207002305.618499-1-aford173@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 7 Feb 2024 06:22:19 -0300
+Message-ID: <CAOMZO5A1yiXiLOtR=H_4vJYAMGwjpqrErCzvSkmLoB_f6_rN_w@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: imx8mp-hdmi-pvi: Fix build warnings
+To: Adam Ford <aford173@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, nathan@kernel.org, 
+	kernel test robot <lkp@intel.com>, Liu Ying <victor.liu@nxp.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Louis,
+Hi Adam,
 
-kernel test robot noticed the following build errors:
+On Tue, Feb 6, 2024 at 9:23=E2=80=AFPM Adam Ford <aford173@gmail.com> wrote=
+:
+>
+> Two separate build warnings were reported.  One from an
+> uninitialized variable, and the other from returning 0
+> instead of NULL from a pointer.
+>
+> Fixes: 059c53e877ca ("drm/bridge: imx: add driver for HDMI TX Parallel Vi=
+deo Interface")
+> Reported-by: nathan@kernel.org
 
-[auto build test ERROR on 41bccc98fb7931d63d03f326a746ac4d429c1dd3]
+The Reported-by line format can be improved:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Louis-Chauvet/Revert-spi-spi-omap2-mcspi-c-Toggle-CS-after-each-word/20240206-180243
-base:   41bccc98fb7931d63d03f326a746ac4d429c1dd3
-patch link:    https://lore.kernel.org/r/20240126-spi-omap2-mcspi-multi-mode-v1-2-d143d33f0fe0%40bootlin.com
-patch subject: [PATCH 2/2] spi: omap2-mcspi: Add support for MULTI-mode
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240207/202402071719.e1p4tUge-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240207/202402071719.e1p4tUge-lkp@intel.com/reproduce)
+Reported-by: Nathan Chancellor <nathan@kernel.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402071719.e1p4tUge-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   drivers/spi/spi-omap2-mcspi.c: In function 'omap2_mcspi_prepare_message':
->> drivers/spi/spi-omap2-mcspi.c:1415:30: error: 'master' undeclared (first use in this function)
-    1415 |         omap2_mcspi_set_mode(master);
-         |                              ^~~~~~
-   drivers/spi/spi-omap2-mcspi.c:1415:30: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/spi/spi-omap2-mcspi.c:1388:13: warning: unused variable 'speed_hz' [-Wunused-variable]
-    1388 |         u32 speed_hz;
-         |             ^~~~~~~~
-
-
-vim +/master +1415 drivers/spi/spi-omap2-mcspi.c
-
-  1379	
-  1380	static int omap2_mcspi_prepare_message(struct spi_controller *ctlr,
-  1381					       struct spi_message *msg)
-  1382	{
-  1383		struct omap2_mcspi	*mcspi = spi_controller_get_devdata(ctlr);
-  1384		struct omap2_mcspi_regs	*ctx = &mcspi->ctx;
-  1385		struct omap2_mcspi_cs	*cs;
-  1386		struct spi_transfer	*tr;
-  1387		u8 bits_per_word;
-> 1388		u32 speed_hz;
-  1389	
-  1390		/*
-  1391		 * The conditions are strict, it is mandatory to check each transfer of the list to see if
-  1392		 * multi-mode is applicable.
-  1393		 */
-  1394		mcspi->use_multi_mode = true;
-  1395		list_for_each_entry(tr, &msg->transfers, transfer_list) {
-  1396			if (!tr->bits_per_word)
-  1397				bits_per_word = msg->spi->bits_per_word;
-  1398			else
-  1399				bits_per_word = tr->bits_per_word;
-  1400	
-  1401			/* Check if the transfer content is only one word */
-  1402			if ((bits_per_word < 8 && tr->len > 1) ||
-  1403			    (bits_per_word >= 8 && tr->len > bits_per_word / 8))
-  1404				mcspi->use_multi_mode = false;
-  1405	
-  1406			/* Check if transfer asks to change the CS status after the transfer */
-  1407			if (!tr->cs_change)
-  1408				mcspi->use_multi_mode = false;
-  1409	
-  1410			/* If at least one message is not compatible, switch back to single mode */
-  1411			if (!mcspi->use_multi_mode)
-  1412				break;
-  1413		}
-  1414	
-> 1415		omap2_mcspi_set_mode(master);
-  1416	
-  1417		/* In single mode only a single channel can have the FORCE bit enabled
-  1418		 * in its chconf0 register.
-  1419		 * Scan all channels and disable them except the current one.
-  1420		 * A FORCE can remain from a last transfer having cs_change enabled
-  1421		 *
-  1422		 * In multi mode all FORCE bits must be disabled.
-  1423		 */
-  1424		list_for_each_entry(cs, &ctx->cs, node) {
-  1425			if (msg->spi->controller_state == cs && !mcspi->use_multi_mode) {
-  1426				continue;
-  1427			}
-  1428	
-  1429			if ((cs->chconf0 & OMAP2_MCSPI_CHCONF_FORCE)) {
-  1430				cs->chconf0 &= ~OMAP2_MCSPI_CHCONF_FORCE;
-  1431				writel_relaxed(cs->chconf0,
-  1432						cs->base + OMAP2_MCSPI_CHCONF0);
-  1433				readl_relaxed(cs->base + OMAP2_MCSPI_CHCONF0);
-  1434			}
-  1435		}
-  1436	
-  1437		return 0;
-  1438	}
-  1439	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
