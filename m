@@ -1,88 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C6A147099;
-	Wed,  7 Feb 2024 21:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A252C136668
+	for <linux-kernel@vger.kernel.org>; Wed,  7 Feb 2024 21:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341273; cv=none; b=lJRXxf8wgR5RxpQ9Pli9AkifT73c/PN9k3f+ACCGRWwHAflZrUiduq7672gM14Mhi1YjIu/Jc2mUx/uPqM87GukyzmS1D6Ci2aYOE8+PoHRa/hwY4fV9X1OQddvY25UfF9R+9FDIkC/0wQhGCE4nXEg2r5YhG8424+R53XEJi7c=
+	t=1707341284; cv=none; b=pPEnNbzBA7eythAtSQ2qYkh1z+WJpotjnP9Sn/ae+tnGxolc/dajgRYNLXFkeI9AY4fbcUDdKXoBbAV2wD6s28dP0l0t+9lAxvCc/+9x6hUeOfOeF8Kru73zXPi8W5WI6P5bG0ztNk+6d2uwZkQQUh804WV5SNpaPVWW5zmKFzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341273; c=relaxed/simple;
-	bh=lEwR17HNRcweBk2ZPPmZFQ+iSQa+4ZtlUzi0I4wAoH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bLFdca009w41h3ckZ2PWDZ3ruGSdZw728bGuxgUcreQObPsUd3bKxXU2OmE3/VZJ3Zwd8K2SKjaJ7AiAN+FojM2G9MDi52MpJCkOOar1E+iQdHIYwgVwRbDUnqUiGTejz6vwfWjlIor2d4R0+LQcMr8cAq7yyfE2Y8T6vX2y0mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bp4nCrTp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707341284; c=relaxed/simple;
+	bh=q31bgicYaWHpH21aqzUEXUC1pWsCHfkb+EzH4p0wWdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s79AM1dZfiCvKBgfcs/jv/0thgh28uLCZh8+9AecK3vH028UE1/ZdszCOV5GbZfSRjlpcKJmRq0mY+RQEVe9uFHGDufsf6oDRBIrus0ggJQHLrl2pDD7zYPfcwHlB+MFlPcVo+zjUnq6t89tqzwIotsE7+eYgRcNSXrgAfZ5smQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=SNqUyqqT; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bp4nCrTp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1E7C433C7;
-	Wed,  7 Feb 2024 21:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707341273;
-	bh=lEwR17HNRcweBk2ZPPmZFQ+iSQa+4ZtlUzi0I4wAoH4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bp4nCrTplqpLBP8D5fyDVHBMQ4tfEa+q6q6UrFXyu29zXcAyblAuXMjh7verlYl52
-	 659tv4dVAaruvKPkms/s+/chgTA0qJdtTQqm/fROHQleclCFlFABDX/atmDcKlVuYQ
-	 n0xp+dKqfBEQ3N5kTUY8OAnWva5pP5qyGuibhS/+gZ83uqK1XMbiyKdpk1EHqO96MW
-	 DtQ4SQZ7v0zjsvKLIwyuF8x68EZ+41ZWRCQu4Bh7sAL03JX81VS/KlQP42Qvd/1UU9
-	 QCpSCtZPbI6Wo7mtowMpLm3408xAkEbxgZIjpKZOHOGgCZSJTcVJPz3PdCNitqh9Bm
-	 phKambH4KTi4w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com
-Subject: [PATCH AUTOSEL 4.19 3/3] regulator: pwm-regulator: Add validity checks in continuous .get_voltage
-Date: Wed,  7 Feb 2024 16:27:47 -0500
-Message-ID: <20240207212747.4783-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207212747.4783-1-sashal@kernel.org>
-References: <20240207212747.4783-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="SNqUyqqT"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-db3a09e96daso1173232276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 13:28:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1707341280; x=1707946080; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WNi99T1nROigThww20pAjGWc1T88MfKDCoW7KDY0Ayk=;
+        b=SNqUyqqTOxpdTA/yLmR6oAeDQoJwJY4Bzw1hxgCmCDqrMrzWw8qgJolJwdtMTUq1Vu
+         pn9K6qYwVFGpYZMW+dlUuJBAdXDh4uSHnti3lR8DlG9u4xtWiXJPCE1ave2a+gA1H2ry
+         slMNqDfAUAKLcC/j6y6qIsClxNEXpL6cb7KnKnsE4+wU+spGUbrCd0e2/z6qJ5IzrBV7
+         OljDsr5j2H9H0vW8FnYU0HI/0i4DBccF7zf69Ww1TkzlQb8iiJK08w0ShlvxHwXLR9Yd
+         khUZSnMRQP6XYep4EeR4bmbIa3S/qAGU5LEHZn10vUxbLohw9meqkU3ViYCEBl8YaV5F
+         MSJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707341280; x=1707946080;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WNi99T1nROigThww20pAjGWc1T88MfKDCoW7KDY0Ayk=;
+        b=exF6QyFPwpp1+yMHK+WGP7Qh/Wbn02dxa7mFAod6HJNsiutuYrwCTmBJOete+3ENsM
+         4LuGt20XbM+3DfzzUljZVkcffC9TKCgQXHlp2I/txc913YMK2PgeeKmAKuxRB0EYN000
+         KB+O2phl/CNSQYoNzrp+oUr/0Z0siBqvMcvU4lg7kD/Tqvwlvx6D8xIIql+Bjd5xm9Wc
+         ERVc1Pa2C5lq3dXpr+Pb1exstuEDL8Qb8AbJy4wniyYZeVU3RGXfOLsPeDWdvoKfNnWY
+         OiZcM/z7pejoNbrsFoVTmbg4aEAM9FqFX3IoGw2hUrVnvXAA6P3LsQWH/8zKXWDEThov
+         mA0A==
+X-Gm-Message-State: AOJu0Yy3bkyNm39mXJMiGNPgrtlFkwp57O4HiTllj1AEg+/XvmvJobvw
+	zDDrOgs1qBn6PsxjDfHjFyTF14dxhPPPXUtNsH9zF6iDV0kZgzqgXWd9rOSe6b4ib4q3NvJiPY1
+	ejrQdINxvSE56pKnM6ghcsmARnbShk0nb3Ood
+X-Google-Smtp-Source: AGHT+IFHQUUb9rxkBdli0M+OpewK7V4N8lqOlkAbunqI5nxoYR2FGdUbo01LW7S6k0x2Sf6cX8+w3VR5e+NNNnIOPHo=
+X-Received: by 2002:a25:6843:0:b0:dc2:4397:6add with SMTP id
+ d64-20020a256843000000b00dc243976addmr5669174ybc.32.1707341280567; Wed, 07
+ Feb 2024 13:28:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.306
-Content-Transfer-Encoding: 8bit
+References: <20240207101929.484681-1-leitao@debian.org> <20240207101929.484681-8-leitao@debian.org>
+In-Reply-To: <20240207101929.484681-8-leitao@debian.org>
+From: Jamal Hadi Salim <jhs@mojatatu.com>
+Date: Wed, 7 Feb 2024 16:27:49 -0500
+Message-ID: <CAM0EoMkRZJicRtYKJcOso0dZNGVM48HHqKag3AoF52zB_PRupA@mail.gmail.com>
+Subject: Re: [PATCH net v2 7/9] net: fill in MODULE_DESCRIPTION()s for net/sched
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
+	edumazet@google.com, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	horms@kernel.org, andrew@lunn.ch
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Wed, Feb 7, 2024 at 5:19=E2=80=AFAM Breno Leitao <leitao@debian.org> wro=
+te:
+>
+> W=3D1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> Add descriptions to the network schedulers.
+>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  net/sched/em_canid.c | 1 +
+>  net/sched/em_cmp.c   | 1 +
+>  net/sched/em_meta.c  | 1 +
+>  net/sched/em_nbyte.c | 1 +
+>  net/sched/em_text.c  | 1 +
+>  net/sched/em_u32.c   | 1 +
+>  6 files changed, 6 insertions(+)
+>
+> diff --git a/net/sched/em_canid.c b/net/sched/em_canid.c
+> index 5ea84decec19..c1852d79c00a 100644
+> --- a/net/sched/em_canid.c
+> +++ b/net/sched/em_canid.c
+> @@ -222,6 +222,7 @@ static void __exit exit_em_canid(void)
+>         tcf_em_unregister(&em_canid_ops);
+>  }
+>
+> +MODULE_DESCRIPTION("CAN Identifier comparison network helpers");
 
-[ Upstream commit c92688cac239794e4a1d976afa5203a4d3a2ac0e ]
+ematch classifier to match CAN IDs embedded in skb CAN frames
 
-Continuous regulators can be configured to operate only in a certain
-duty cycle range (for example from 0..91%). Add a check to error out if
-the duty cycle translates to an unsupported (or out of range) voltage.
+>  MODULE_LICENSE("GPL");
+>
+>  module_init(init_em_canid);
+> diff --git a/net/sched/em_cmp.c b/net/sched/em_cmp.c
+> index f17b049ea530..285b36c32c16 100644
+> --- a/net/sched/em_cmp.c
+> +++ b/net/sched/em_cmp.c
+> @@ -87,6 +87,7 @@ static void __exit exit_em_cmp(void)
+>         tcf_em_unregister(&em_cmp_ops);
+>  }
+>
+> +MODULE_DESCRIPTION("Simple packet data comparison network helpers");
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Link: https://msgid.link/r/20240113224628.377993-2-martin.blumenstingl@googlemail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/regulator/pwm-regulator.c | 3 +++
- 1 file changed, 3 insertions(+)
+ematch classifier for basic data types(8/16/32 bit) against skb data
 
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index 34f3b9778ffa..215581dfd333 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -164,6 +164,9 @@ static int pwm_regulator_get_voltage(struct regulator_dev *rdev)
- 	pwm_get_state(drvdata->pwm, &pstate);
- 
- 	voltage = pwm_get_relative_duty_cycle(&pstate, duty_unit);
-+	if (voltage < min(max_uV_duty, min_uV_duty) ||
-+	    voltage > max(max_uV_duty, min_uV_duty))
-+		return -ENOTRECOVERABLE;
- 
- 	/*
- 	 * The dutycycle for min_uV might be greater than the one for max_uV.
--- 
-2.43.0
+>  MODULE_LICENSE("GPL");
+>
+>  module_init(init_em_cmp);
+> diff --git a/net/sched/em_meta.c b/net/sched/em_meta.c
+> index 09d8afd04a2a..cab43356824a 100644
+> --- a/net/sched/em_meta.c
+> +++ b/net/sched/em_meta.c
+> @@ -1006,6 +1006,7 @@ static void __exit exit_em_meta(void)
+>         tcf_em_unregister(&em_meta_ops);
+>  }
+>
+> +MODULE_DESCRIPTION("Metadata comparison network helpers");
 
+ematch classifier for various internal kernel metadata, skb metadata
+and sk metadata
+
+>  MODULE_LICENSE("GPL");
+>
+>  module_init(init_em_meta);
+> diff --git a/net/sched/em_nbyte.c b/net/sched/em_nbyte.c
+> index a83b237cbeb0..34c6e8c8b695 100644
+> --- a/net/sched/em_nbyte.c
+> +++ b/net/sched/em_nbyte.c
+> @@ -68,6 +68,7 @@ static void __exit exit_em_nbyte(void)
+>         tcf_em_unregister(&em_nbyte_ops);
+>  }
+>
+> +MODULE_DESCRIPTION("Multi byte comparison network helpers");
+
+ematch classifier for arbitrary skb multi-bytes
+
+>  MODULE_LICENSE("GPL");
+>
+>  module_init(init_em_nbyte);
+> diff --git a/net/sched/em_text.c b/net/sched/em_text.c
+> index f176afb70559..7a89db8e5409 100644
+> --- a/net/sched/em_text.c
+> +++ b/net/sched/em_text.c
+> @@ -147,6 +147,7 @@ static void __exit exit_em_text(void)
+>         tcf_em_unregister(&em_text_ops);
+>  }
+>
+> +MODULE_DESCRIPTION("Textsearch comparison network helpers");
+
+ematch classifier for embedded text in skbs
+
+>  MODULE_LICENSE("GPL");
+>
+>  module_init(init_em_text);
+> diff --git a/net/sched/em_u32.c b/net/sched/em_u32.c
+> index 71b070da0437..ea32e4e12a99 100644
+> --- a/net/sched/em_u32.c
+> +++ b/net/sched/em_u32.c
+> @@ -52,6 +52,7 @@ static void __exit exit_em_u32(void)
+>         tcf_em_unregister(&em_u32_ops);
+>  }
+>
+> +MODULE_DESCRIPTION("U32 Key comparison network helpers");
+
+ematch skb classifier using 32 bit chunks of data
+
+>  MODULE_LICENSE("GPL");
+>
+>  module_init(init_em_u32);
+> --
+> 2.39.3
+>
