@@ -1,129 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AF41DFCE;
-	Thu,  8 Feb 2024 11:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A386EB70;
+	Thu,  8 Feb 2024 11:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707392655; cv=none; b=LWOuUkfSJFkAGB0vI8kQos0v47tqXaw72mbOm4FjzFa4J1/c6RSwBmdd7shBVx+w+8FknijKIYoRiujkfLHmKYOtOG0Kocbb3Gg8eeR4jUxmSJh8Mq2rfTU+LaCOBSXq91GOF+Ctbf7ZAoRN+i9m8mITSHWplmNahngfHZGpOZM=
+	t=1707392698; cv=none; b=F9v2WfOkPCrlNTrxzgXrqpnNOqIRIj3HyWEHEf/mseb/FmLfMUW58svpcAVJIO6WEU3zLWqdTrPq8lgoEfemnQMhA5cZuBCJZ7B3BjLUygcefG7ElDp+Oa4p+/aTvFNBk4fJznXDnEaeRQ9SceaZu+Pgk0wL1zG3nbV5O0+07KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707392655; c=relaxed/simple;
-	bh=yTjseaYVw0yF5zP6CGXqUmZUSPFs3w8SZduU+tXhSIk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=glz3/WeAaL2fyN0Av1DQEoT+AXYZhKKeG3sI3uPK7tyuk0gAfTY8mu8/Zjrx9F6LYzDlgtrtsSO+Loh1y27+Xet/ceLRKGBpWGG9guVx8+uMuiVBuPAZyU+jMtjJGgPD8FWvVN/U9Zhxwf4MhNLQh9/vfRqARYkR8NmPmH42cvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTMkDEc+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707392698; c=relaxed/simple;
+	bh=4RLrpLO9Lr9DKthkMv9dYVS7bKcH7m8SKjLUBGgExck=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ASgQq/bIsgpv7sDXYsZBvh4yYwX9ZMpQFEm2XcoJh0Ez8jjAEWBIwCYOJrHlKqXauQNiagNSKLCgkUBiWRfUYgGwThRGKcswV80/f6I1LpyyAE2ylMU2zNF7NQeMte5VUYsEPPNQUOmKxGwhuz23g76aezGv2Kge+D1FsQZbH1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=RmnrDl+N; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTMkDEc+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC644C433C7;
-	Thu,  8 Feb 2024 11:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707392655;
-	bh=yTjseaYVw0yF5zP6CGXqUmZUSPFs3w8SZduU+tXhSIk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jTMkDEc+AVCeQA5FQ+dvJWvaP7Ooj+9838vMpKbAYHqtrgXszANRMAkhPuTWyGAVT
-	 2e9yPGMJHM9foZw40JzjPDDKd7pB0haqtDgMbDihQNWr939v1yabMEaXSaiEaA2ziF
-	 kjkBztORC/swU8+kRjv+AMIsF94HLF4KvU9F29Jp0/OyiBELf5C+zOoGM5Nv/uIlaw
-	 EhHHmPYTeHn5jKUnd9Kk5Qk54tjPwKMbFjH5LIcoDUgI0dD8w+wGyGgRQQuqI/CemB
-	 4m9neYEUnaRWDQ3gLAdT19t80Jh+K6P+2mYcJ2yhhJ0KCgcHapjUJP15KH/pRio3/6
-	 mRd6E6TQwSJbg==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: daniel@ffwll.ch
-Cc: linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Ubisectech Sirius <bugreport@ubisectech.com>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH] fbcon: always restore the old font data in fbcon_do_set_font()
-Date: Thu,  8 Feb 2024 12:44:11 +0100
-Message-ID: <20240208114411.14604-1-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RmnrDl+N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707392695; x=1738928695;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=4RLrpLO9Lr9DKthkMv9dYVS7bKcH7m8SKjLUBGgExck=;
+  b=RmnrDl+N3xQJo69LYDdDZp96I3eMI5CMPAYOtEdqt1lvjX8G1xX42JWo
+   YR1QbtVoEcZSLBCTf9ogl7yfDGSetakXSdmcYmdY27XFoMBamYVP0fBRP
+   HcLc295vQv3k8isqxvN92DQYa1uTh7Ez+aEBpX4DJXcXbrxmVRm0gR9Bf
+   g8XKeSK9CJI62k4rfA1tB4aCpcDnaPsM1nKmmYaxx1ZRrWHy01f2nJxSx
+   kRn6dmKAUALxa+ugEvMjxGRfGuXcBkF+5LrPVOqX31uW517ZiZUAB4OgU
+   za7xO7LgqEJDEVtxShZxqE7uDq6rPw8r200UcLMI4Bz4mspx/7ZWi44zD
+   g==;
+X-CSE-ConnectionGUID: 1FvkdppZRHmt/Dzk9vusdQ==
+X-CSE-MsgGUID: OJNdQtm/SPKx55/Ftri+9A==
+X-IronPort-AV: E=Sophos;i="6.05,253,1701154800"; 
+   d="scan'208";a="15964774"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Feb 2024 04:44:54 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 04:44:34 -0700
+Received: from [10.40.56.22] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 8 Feb 2024 04:44:29 -0700
+From: Nayab Sayed <nayabbasha.sayed@microchip.com>
+Date: Thu, 8 Feb 2024 17:12:12 +0530
+Subject: [PATCH] dt-bindings: mtd: update references from partition.txt to
+ mtd.yaml
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-ID: <20240208-partition-txt-v1-1-4398af3b7bb2@microchip.com>
+X-B4-Tracking: v=1; b=H4sIABO+xGUC/x2MQQqAIBAAvxJ7TjATsb4SHUy32ouJSgji35OOA
+ zNTIWEkTLAOFSK+lOjxHaZxAHsbfyEj1xkEF5ILrlkwMVPuFsslM6cQudWHVMsMvQkRTyr/b9t
+ b+wD7YKiJXwAAAA==
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Thierry Reding
+	<thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Han Xu
+	<han.xu@nxp.com>
+CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>, Nayab Sayed
+	<nayabbasha.sayed@microchip.com>
+X-Mailer: b4 0.12.4
 
-Commit a5a923038d70 (fbdev: fbcon: Properly revert changes when
-vc_resize() failed) started restoring old font data upon failure (of
-vc_resize()). But it performs so only for user fonts. It means that the
-"system"/internal fonts are not restored at all. So in result, the very
-first call to fbcon_do_set_font() performs no restore at all upon
-failing vc_resize().
+Commit f902baa917b6 ("dt-bindings: mtd: Remove useless file about
+partitions") removed the file partition.txt. Hence, in this commit, the
+lines mentioning this file are updated to reference mtd.yaml, which now
+includes partition{,s}.yaml.
 
-This can be reproduced by Syzkaller to crash the system on the next
-invocation of font_get(). It's rather hard to hit the allocation failure
-in vc_resize() on the first font_set(), but not impossible. Esp. if
-fault injection is used to aid the execution/failure. It was
-demonstrated by Sirius:
-  BUG: unable to handle page fault for address: fffffffffffffff8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD cb7b067 P4D cb7b067 PUD cb7d067 PMD 0
-  Oops: 0000 [#1] PREEMPT SMP KASAN
-  CPU: 1 PID: 8007 Comm: poc Not tainted 6.7.0-g9d1694dc91ce #20
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-  RIP: 0010:fbcon_get_font+0x229/0x800 drivers/video/fbdev/core/fbcon.c:2286
-  Call Trace:
-   <TASK>
-   con_font_get drivers/tty/vt/vt.c:4558 [inline]
-   con_font_op+0x1fc/0xf20 drivers/tty/vt/vt.c:4673
-   vt_k_ioctl drivers/tty/vt/vt_ioctl.c:474 [inline]
-   vt_ioctl+0x632/0x2ec0 drivers/tty/vt/vt_ioctl.c:752
-   tty_ioctl+0x6f8/0x1570 drivers/tty/tty_io.c:2803
-   vfs_ioctl fs/ioctl.c:51 [inline]
-  ...
-
-So restore the font data in any case, not only for user fonts. Note the
-later 'if' is now protected by 'old_userfont' and not 'old_data' as the
-latter is always set now. (And it is supposed to be non-NULL. Otherwise
-we would see the bug above again.)
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Fixes: a5a923038d70 ("fbdev: fbcon: Properly revert changes when vc_resize() failed")
-Cc: Ubisectech Sirius <bugreport@ubisectech.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Nayab Sayed <nayabbasha.sayed@microchip.com>
 ---
- drivers/video/fbdev/core/fbcon.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/mtd/davinci-nand.txt        | 2 +-
+ Documentation/devicetree/bindings/mtd/flctl-nand.txt          | 2 +-
+ Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt        | 2 +-
+ Documentation/devicetree/bindings/mtd/gpio-control-nand.txt   | 2 +-
+ Documentation/devicetree/bindings/mtd/gpmi-nand.yaml          | 2 +-
+ Documentation/devicetree/bindings/mtd/hisi504-nand.txt        | 2 +-
+ Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt | 2 +-
+ Documentation/devicetree/bindings/mtd/orion-nand.txt          | 2 +-
+ Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt     | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index 17a9fc80b4e4..98d0e2dbcd2f 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -2395,11 +2395,9 @@ static int fbcon_do_set_font(struct vc_data *vc, int w, int h, int charcount,
- 	struct fbcon_ops *ops = info->fbcon_par;
- 	struct fbcon_display *p = &fb_display[vc->vc_num];
- 	int resize, ret, old_userfont, old_width, old_height, old_charcount;
--	char *old_data = NULL;
-+	u8 *old_data = vc->vc_font.data;
+diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+index edebeae1f5b3..eb8e2ff4dbd2 100644
+--- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+@@ -68,7 +68,7 @@ Deprecated properties:
+ 				false.
  
- 	resize = (w != vc->vc_font.width) || (h != vc->vc_font.height);
--	if (p->userfont)
--		old_data = vc->vc_font.data;
- 	vc->vc_font.data = (void *)(p->fontdata = data);
- 	old_userfont = p->userfont;
- 	if ((p->userfont = userfont))
-@@ -2433,13 +2431,13 @@ static int fbcon_do_set_font(struct vc_data *vc, int w, int h, int charcount,
- 		update_screen(vc);
- 	}
+ Nand device bindings may contain additional sub-nodes describing partitions of
+-the address space. See partition.txt for more detail. The NAND Flash timing
++the address space. See mtd.yaml for more detail. The NAND Flash timing
+ values must be programmed in the chip select’s node of AEMIF
+ memory-controller (see Documentation/devicetree/bindings/memory-controllers/
+ davinci-aemif.txt).
+diff --git a/Documentation/devicetree/bindings/mtd/flctl-nand.txt b/Documentation/devicetree/bindings/mtd/flctl-nand.txt
+index 427f46dc60ad..51518399d737 100644
+--- a/Documentation/devicetree/bindings/mtd/flctl-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/flctl-nand.txt
+@@ -15,7 +15,7 @@ The DMA fields are not used yet in the driver but are listed here for
+ completing the bindings.
  
--	if (old_data && (--REFCOUNT(old_data) == 0))
-+	if (old_userfont && (--REFCOUNT(old_data) == 0))
- 		kfree(old_data - FONT_EXTRA_WORDS * sizeof(int));
- 	return 0;
+ The device tree may optionally contain sub-nodes describing partitions of the
+-address space. See partition.txt for more detail.
++address space. See mtd.yaml for more detail.
  
- err_out:
- 	p->fontdata = old_data;
--	vc->vc_font.data = (void *)old_data;
-+	vc->vc_font.data = old_data;
+ Example:
  
- 	if (userfont) {
- 		p->userfont = old_userfont;
+diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+index 25f07c1f9e44..530c017e014e 100644
+--- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+@@ -22,7 +22,7 @@ Deprecated properties:
+ 	(R/B# pins not connected).
+ 
+ Each flash chip described may optionally contain additional sub-nodes
+-describing partitions of the address space. See partition.txt for more
++describing partitions of the address space. See mtd.yaml for more
+ detail.
+ 
+ Examples:
+diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+index 486a17d533d7..0edf55d47ea8 100644
+--- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+@@ -26,7 +26,7 @@ Optional properties:
+   read to ensure that the GPIO accesses have completed.
+ 
+ The device tree may optionally contain sub-nodes describing partitions of the
+-address space. See partition.txt for more detail.
++address space. See mtd.yaml for more detail.
+ 
+ Examples:
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+index ba086c34626d..021c0da0b072 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
++++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+@@ -12,7 +12,7 @@ maintainers:
+ description: |
+   The GPMI nand controller provides an interface to control the NAND
+   flash chips. The device tree may optionally contain sub-nodes
+-  describing partitions of the address space. See partition.txt for
++  describing partitions of the address space. See mtd.yaml for
+   more detail.
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+index 8963983ae7cb..362203e7d50e 100644
+--- a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+@@ -22,7 +22,7 @@ The following ECC strength and step size are currently supported:
+  - nand-ecc-strength = <16>, nand-ecc-step-size = <1024>
+ 
+ Flash chip may optionally contain additional sub-nodes describing partitions of
+-the address space. See partition.txt for more detail.
++the address space. See mtd.yaml for more detail.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+index e737e5beb7bf..4a00ec2b2540 100644
+--- a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+@@ -39,7 +39,7 @@ Optional children node properties:
+ - wp-gpios: GPIO specifier for the write protect pin.
+ 
+ Optional child node of NAND chip nodes:
+-Partitions: see partition.txt
++Partitions: see mtd.yaml
+ 
+   Example:
+ 	nand-controller@70008000 {
+diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+index 2d6ab660e603..b9997b1f13ac 100644
+--- a/Documentation/devicetree/bindings/mtd/orion-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+@@ -13,7 +13,7 @@ Optional properties:
+                registers in usecs
+ 
+ The device tree may optionally contain sub-nodes describing partitions of the
+-address space. See partition.txt for more detail.
++address space. See mtd.yaml for more detail.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt b/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+index 09815c40fc8a..635455350660 100644
+--- a/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
++++ b/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+@@ -19,7 +19,7 @@ Optional child properties:
+ 
+ Each child device node may optionally contain a 'partitions' sub-node,
+ which further contains sub-nodes describing the flash partition mapping.
+-See partition.txt for more detail.
++See mtd.yaml for more detail.
+ 
+ Example:
+ 
+
+---
+base-commit: 547ab8fc4cb04a1a6b34377dd8fad34cd2c8a8e3
+change-id: 20240208-partition-txt-d6ee0c8b4693
+
+Best regards,
 -- 
-2.43.0
+Nayab Sayed <nayabbasha.sayed@microchip.com>
 
