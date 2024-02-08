@@ -1,87 +1,96 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19D4768E9
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B76476414;
+	Thu,  8 Feb 2024 13:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707400009; cv=none; b=iGI3+ImQ/9zKI6wi+Fxa1K6xzE7a9PzawsY5I9OUBJbDwC6+XduDX7a76UagBj/FvegMte+uTMcK5d7PMaEdQ3++ykqGYSHqjWplrHBwPJn5wa4nPIN4Ykppzli11jPimbddMMMB2OZSMDtWTCPOW0lpB47DZs9AorGNfRU9les=
+	t=1707400218; cv=none; b=hdSeAn9vIp3FUpMDASEU5Z4q+1+g5EZWaK+kGupiN7LP/p+dN0LhcMdCYnvRoTM60mTng3+uPvkPElnDdMA8RD6kcHefjZJmdlzLsohJ2bh7gshqNAFmBtXiA+NtOHymq9p9g0qQUsOqCeBlrq1wlpriAR8CVnSdMA56ZZHCfHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707400009; c=relaxed/simple;
-	bh=qCVhFVtPC5tbl66HtqtFrAlZz3ol3WalO+JusmTAcyY=;
+	s=arc-20240116; t=1707400218; c=relaxed/simple;
+	bh=k1NNnC+yIkCrCM9yvFPbzgg4mQWnvkfU5Su8+mooQjM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kBLLFu7x0LIGpOiIBhKR66FCd7nXayV7skar44PZMJfzl7Ecg3ZmsxXz4eEh0gV7nf6xjN1DBuTxy4QyRx2927kDfm62LeGWzjNXMCUFDnW9H+PmiDS/0NdFtUZkx/ComCit3OtgQe48qjCA3Lxt2IFpRWq+kHdi6cF6xFISPrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZN0qOwJm; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZN0qOwJm"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6d8f19ab3so1951099276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:46:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707400007; x=1708004807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qCVhFVtPC5tbl66HtqtFrAlZz3ol3WalO+JusmTAcyY=;
-        b=ZN0qOwJmOLvWTEJ/UWk8Jn9oOh8uONsiiaSfqQQvpehSoaXG3VWqobRNyImqCcuAZo
-         VnNAvPMXcyYxHBeMvNo5B/WQ+qmT62AT7IN2YNZf3VOCPTH+Zmo0IKtWH0JHLnjR1GA3
-         IrvMhSP1p+Z0p/wp832+0vQ6FOtcpAcb6kNqFYaC0uPL9rUMcTQEVKOCXf9QKptL062C
-         5S/csN4yNSqolv/+6CopVcqedm4Mb6VVYiOxowy/73aOhe2JocDXgpDN1FABdTriACSJ
-         T6RrobyUTQqpvRP7NPSW150Lqe10XA98QXquShpST8q4vKU6mHzPEAQYubAZVG5/j1PA
-         RrVw==
+	 To:Cc:Content-Type; b=GnSFBKe7p2hNccAgmE/oQaxDmnr+hfef8/OMt93xgXX2W/Yc/9XlBnJU5wQg0KIdFlfe4OJF1Y1BWuBzj7NmT6uoeeUKTjpGWWXFc40JSa7ZMt7D9tu29vTRwWr1HUiTxazr2xs/LIZOK8aKLX+OORb5evBLS84WlWjCR3ojysU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-59ceb5a0593so88779eaf.0;
+        Thu, 08 Feb 2024 05:50:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707400007; x=1708004807;
+        d=1e100.net; s=20230601; t=1707400215; x=1708005015;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qCVhFVtPC5tbl66HtqtFrAlZz3ol3WalO+JusmTAcyY=;
-        b=BbtPaPmhlK2DLcHTzpnEnKiOpVID8CxloYaS4jhtcAeClqQnYeIJST3HomJdxLx7yx
-         PwpG+Uie7kCuotyts7e+Se7yQeddcQP65bwkdznE/JqRoSmFqAOu6RojXV/upBu7MObw
-         /RcXEEtQ//l2gYXXsJCp9VOY+xn11MofDidg/wJuz6elm9jR21J5zcd+g8nU7l/Rc+Lv
-         mJF2lIklKgQ/11c0lafHXeZ5gq/8Ne+wlVIBuexe60fx/ZB2BQC5j7kDtrUUeBtZQ3VV
-         TlW8Sym9Du5X1MD+Oc6ryAaVq5ED+C4ibVwFEBkQedPEr7qD4gTq/y7Kfb1SEdVpnMh3
-         TBUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2rrAySHVhxoAfSqbh/IU7/v8+/FF+JfX1GEcSLixT5Gw+TZSdrSndoXrfhHneOIBxTiNvFngUTcfYRZaECcPqIywmP/KOYx4fOuW0
-X-Gm-Message-State: AOJu0YwWj3dSSZ7/fbWl6cvyqp1yUptz0cQpu+y3/qdMjgb10UR2z0aS
-	mlKjVT4AOXUH7UMZb8aTtXFbYagNRZmW0tXGq79FpszyAzjrHnLZ5DAgyi5ZIvo7jzzWkMKu19Z
-	J7kXF3M/tZ9lG+wcgQLrUWoFoReF2fByIhe5VUg==
-X-Google-Smtp-Source: AGHT+IGudlPEl6/lvKujeI4dp5nYTC7DGljHLLRLLV91qux7C5p+u/hDiKcrt2xWwb8aTa7LUTk2zQ6teOWNlj5s5Yw=
-X-Received: by 2002:a25:2985:0:b0:dbd:7491:368f with SMTP id
- p127-20020a252985000000b00dbd7491368fmr8246474ybp.7.1707400006818; Thu, 08
- Feb 2024 05:46:46 -0800 (PST)
+        bh=k1NNnC+yIkCrCM9yvFPbzgg4mQWnvkfU5Su8+mooQjM=;
+        b=Fkjbx+Oug0yMcSFRCWVJWmt47tqoG7PpIBNN3jR2mGkAvMTajPKII8JuGqrPIc7s1O
+         rY3wRFv9c6smr7mYFFRPgZ5AZK85vojztvQ6LQTN/oAB/6nB6ZKXWPVw0AFSX6P+n/Bz
+         j2TRMmG3SaH8boMCxv2JZKNvPiVYJUfDRymvMyLvqjt2CP3crXQq+bimcjyYqFFOSbfz
+         Kca5B1typT9tvq09mzt/t5ck6mFBG0LUcD4wU4Lr/ZbV3mhwv91R++xhXk9Cr2mSrU6Y
+         +oumcZM/HaRRJWGJcOvNtPlWCtEqWg13kt+6LjZlHaR2cCdeiKAlo7niZkcVu+wRLduN
+         So4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVeBL99d/XNtQa5+ZejZgXIjMWeAyvb9AL1obmKdKenc6wgGUrmTw2X/8gRfuFcal8GHRysVK8RMjxcGyqgu9QFDs1k1rkTDAbuk5Mh6L3jGHFF01AMFvdZjPSURASuUbjiv2PcCnX3iWRNCRjEJAEZRxE0CpuNFaYEKrQS3iYjlEpsJ2fdgw==
+X-Gm-Message-State: AOJu0YzcrtMro2v+A+XQRD0Rl3Tt+HyMy0Z5tx9ZPP/lLSjBN9BsKbjq
+	amV74XDobwUHFgRZrsypRHpjPXGdDat7zNiaquMh13KZ8SCGs3x/958NV9nY7BpsdXTJZ+YfR/o
+	p0kwqKAIoxZio1meVV9cGU0QqjMGHDt+R
+X-Google-Smtp-Source: AGHT+IFrHZbdxODDdLyWqBUxhFjB1P+AqoJNJ1xPFPQDZ/b7oFC9u7YlZf0fX+tEbY98hT/0tcyd3wUvvg2ffkSaTw0=
+X-Received: by 2002:a05:6820:405:b0:59a:bfb:f556 with SMTP id
+ o5-20020a056820040500b0059a0bfbf556mr8799733oou.0.1707400215608; Thu, 08 Feb
+ 2024 05:50:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201141406.32484-2-arturas.moskvinas@gmail.com>
-In-Reply-To: <20240201141406.32484-2-arturas.moskvinas@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 8 Feb 2024 14:46:35 +0100
-Message-ID: <CACRpkdaftsHBW5uJe4WkQRW1+YrdROuVewxDTfzVKoz9q9ZyqQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mcp23s08: Check only GPIOs which have
- interrupts enabled
-To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Cc: biju.das.jz@bp.renesas.com, akaessens@gmail.com, 
-	thomas.preston@codethink.co.uk, andriy.shevchenko@linux.intel.com, 
-	preid@electromag.com.au, u.kleine-koenig@pengutronix.de, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1892445.tdWV9SEqCh@kreacher> <875xyzh4ah.fsf@kernel.org>
+ <9e740b50d7798b5d01c0a3c9e328ccf90978d30c.camel@sipsolutions.net> <MW5PR11MB58101FBF45EFEC362A8A1E18A3442@MW5PR11MB5810.namprd11.prod.outlook.com>
+In-Reply-To: <MW5PR11MB58101FBF45EFEC362A8A1E18A3442@MW5PR11MB5810.namprd11.prod.outlook.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 8 Feb 2024 14:50:04 +0100
+Message-ID: <CAJZ5v0ixRs0cM0ZMnSY5K7PMcHwiZy5OL3mAMFQ=yTZuHpVr1w@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] iwlwifi: mvm: Thermal management fixes
+To: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Kalle Valo <kvalo@kernel.org>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 1, 2024 at 3:15=E2=80=AFPM Arturas Moskvinas
-<arturas.moskvinas@gmail.com> wrote:
-
-> GPINTEN register contains information about GPIOs with enabled
-> interrupts no need to check other GPIOs for changes.
+On Thu, Feb 8, 2024 at 2:26=E2=80=AFPM Korenblit, Miriam Rachel
+<miriam.rachel.korenblit@intel.com> wrote:
 >
-> Signed-off-by: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+>
+>
+> > On Thu, 2024-02-08 at 08:13 +0200, Kalle Valo wrote:
+> > > >
+> > > > If possible, I'd like to route the $subject series through the
+> > > > thermal tree, it is requisite for the above one.
+> > >
+> > > iwlwifi is getting a lot of patches lately, though I don't know if an=
+y
+> > > of them touch the thermal stuff. But if this patchset goes to the
+> > > thermal I am a bit worried about conflicts.
+> >
+> > Should be OK, I checked now and apart from the trivial change in mvm.h =
+this is
+> > contained in tt.c, which isn't touched (even in our internal feeder tre=
+e) after
+> > commit 0106cce5ad0c ("wifi: iwlwifi: mvm: drop NULL pointer check in
+> > iwl_mvm_tzone_set_trip_temp()").
+> >
+> > But I'll let Miri send an Acked-by to go through your tree, since she's=
+ the
+> > maintainer :-)
+> >
+> > Johannes
+>
+> Hi,
+>
+> This seems fine to go through your tree, as Johannes said, we don't expec=
+t any conflicts.
 
-LGTM, patch applied!
-As Andy points out, the commit now links to the discussion thread so
-people can find the details if need be.
+Thank you!
 
-Yours,
-Linus Walleij
+I'll go ahead and queue it up, then.
