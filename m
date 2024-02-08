@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C05A7640C;
-	Thu,  8 Feb 2024 13:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D816976418;
+	Thu,  8 Feb 2024 13:10:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707397809; cv=none; b=oXk7waXzbpLq0jerTRVPL5InUIg/UHWT8Td8PH1mcmSEzpu3SQL6QPSQmsaBhXh55v16VWZHSKVnP0pyRnSmnkdXLbndhw3oqzif1chF1roAaOpZxMaBGmz8PkFiUTauGHHQjP6bbCuvUui0P1r8SVMP8yRSQzrLcqzabltziG8=
+	t=1707397808; cv=none; b=FJt5xfpAAHluYY28hGUtX7uy1GMO+f/tmydwLpRS3kg17bQq1HoSF7RRG75pA6f0xNEKawTwVbCOCyrfWV5DtE2L8x8mvcBpkm94duASkRKNZCCSlFp0auB5E9V67ps4CoiycjD0WfiNRCRb3MHM317hVSoPBiVxiwOWgmvRu/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707397809; c=relaxed/simple;
-	bh=BEsMkSVnEmDlKXPlzUL92ArKVPZ1Y3ABe4ZVH4VG1E4=;
+	s=arc-20240116; t=1707397808; c=relaxed/simple;
+	bh=bXUyCUJ4bnhVS2NQrqa7dWbdEotahWU/x7Y81IWD7x0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GM0FlDaaMF/K8PN1mi3wNEGygc/NNTBWQdR0H6TgocsOT+FJzFlavNEQW8nsy64DMlx074F4cdChqRQCrO3Qq1ix/BhOfJT8SHmj+Trtnm2BSp3XBNuBGz3Fq3LPkhV24liQkhXOlNCxJMKloTNXvYWEFbxGLzs8EEpsDinvrlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=G/HhNjAv; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=JNKYjI0eqV0vosUMmz8Gw3pcjwMNCUbcPbgnJW+lx01sRHIAynr6o1sffuszdDjg8v36gmIjF57uk+pK+0HFeCGUyCYfxDHUdMElic/5YiledGfJLILl/pAT2xdT82ASbi5n8ceoa3xqVGJa8Ke01TziTV2SU/GmprlOflDu4nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Lg/mEYEd; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="G/HhNjAv"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D89E1BF218;
-	Thu,  8 Feb 2024 13:10:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Lg/mEYEd"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FB901BF213;
+	Thu,  8 Feb 2024 13:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707397803;
+	t=1707397798;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NayoPCHkW2x9pTZBP5jIOhCX82yZhHDXH77d7wK2PzA=;
-	b=G/HhNjAvBOquD0ta6W2FHGB4gY2KTfjO1jUc2ELHBF9WSn4V1WsRF70fVgYT1mE4zOoIak
-	tsED3L35TAbAUkc5wNcOFeDtVhEullc1OiSo1b7ToDB52FLz7Q01JMgfwO35edsbeRQHRY
-	m9km0KeJLDI6eykFEa+y3YbMBEDmF7xSEmHtflUwdY6n1Q+CCI5ElElFFhKTAyabHTqing
-	haW+kK5SrORbZ0pOsEkugiSl2ULy1KesyN4HzjiMusKZIcPT9H2zEmoHjLRvDFxZAyRquN
-	QWblVvO110HrmU1XQA1L7WrpVS2fs6kEDTEAHhAoXtXQAq4J8YSH4L1TXbUTLQ==
+	bh=PM3cJPuJ5aDZ69vB9xbXIbs+Uu0OPcNn3hgQYvop0ks=;
+	b=Lg/mEYEduzOknJD7ECNsPPNSxyUb8pN7UixsyaqaSCIdZrs5FmYkG5Pk3UwJKM6QUtVQZE
+	PhkOKW/tJt5rwB1snUobYEAusnGxLjbNbv5Kmq8xp+p85GQxDw4FauGHDFCJJqmoSJlhmW
+	S8Z0HRPocC0RxZqf3I4AZyp/L5K3/a10e7b585DPQg69E6WFGWFGxiGUfdx9SrDjj5dBhe
+	P7FZUIRdl7+rN+qdzHFGcqA17YnxnruckQbWenEXlYchX8k/c4plj0OP1+x87ShWzJdBZJ
+	vnU3ISQVeBdC5+WTvefsDqORJ/3r6G3PPSFJSjpBDBPN2XvAPritdLF0fgHfIA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Thu, 08 Feb 2024 14:08:46 +0100
-Subject: [PATCH net-next v3 09/17] MAINTAINERS: Add myself to pse
- networking maintainer
+Date: Thu, 08 Feb 2024 14:08:42 +0100
+Subject: [PATCH net-next v3 05/17] net: pse-pd: Introduce PSE types
+ enumeration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240208-feature_poe-v3-9-531d2674469e@bootlin.com>
+Message-Id: <20240208-feature_poe-v3-5-531d2674469e@bootlin.com>
 References: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
 In-Reply-To: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,31 +64,144 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-As I add support for PoE in PSE networking subsystem it seems legitimate
-to be added to the maintainers.
+Introduce an enumeration to define PSE types (C33 or PoDL),
+utilizing a bitfield for potential future support of both types.
+Include 'pse_get_types' helper for external access to PSE type info.
 
 Sponsored-by: Dent Project <dentproject@linuxfoundation.org>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v3:
-- New patch
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v2:
+- Rename PSE_POE to PSE_C33 to have naming consistency.
+- Use "static inline" instead of simple static in the header
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2dcf48948d2b..7a69f9d3de2d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17670,6 +17670,7 @@ F:	net/psample
+Changes in v3:
+- Move the pse_type enum in uapi.
+- Replace pse_get_types helper by pse_has_podl and pse_has_c33.
+---
+ drivers/net/pse-pd/pse_core.c      | 12 ++++++++++++
+ drivers/net/pse-pd/pse_regulator.c |  1 +
+ include/linux/pse-pd/pse.h         | 16 ++++++++++++++++
+ include/uapi/linux/pse.h           | 23 +++++++++++++++++++++++
+ 4 files changed, 52 insertions(+)
+
+diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+index 146b81f08a89..090e04c32f9e 100644
+--- a/drivers/net/pse-pd/pse_core.c
++++ b/drivers/net/pse-pd/pse_core.c
+@@ -312,3 +312,15 @@ int pse_ethtool_set_config(struct pse_control *psec,
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(pse_ethtool_set_config);
++
++bool pse_has_podl(struct pse_control *psec)
++{
++	return psec->pcdev->types & PSE_PODL;
++}
++EXPORT_SYMBOL_GPL(pse_has_podl);
++
++bool pse_has_c33(struct pse_control *psec)
++{
++	return psec->pcdev->types & PSE_C33;
++}
++EXPORT_SYMBOL_GPL(pse_has_c33);
+diff --git a/drivers/net/pse-pd/pse_regulator.c b/drivers/net/pse-pd/pse_regulator.c
+index 1dedf4de296e..e34ab8526067 100644
+--- a/drivers/net/pse-pd/pse_regulator.c
++++ b/drivers/net/pse-pd/pse_regulator.c
+@@ -116,6 +116,7 @@ pse_reg_probe(struct platform_device *pdev)
+ 	priv->pcdev.owner = THIS_MODULE;
+ 	priv->pcdev.ops = &pse_reg_ops;
+ 	priv->pcdev.dev = dev;
++	priv->pcdev.types = PSE_PODL;
+ 	ret = devm_pse_controller_register(dev, &priv->pcdev);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register PSE controller (%pe)\n",
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index be4e5754eb24..f006cbdf8b3b 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -8,6 +8,7 @@
+ #include <linux/ethtool.h>
+ #include <linux/list.h>
+ #include <uapi/linux/ethtool.h>
++#include <uapi/linux/pse.h>
  
- PSE NETWORK DRIVER
- M:	Oleksij Rempel <o.rempel@pengutronix.de>
-+M:	Kory Maincent <kory.maincent@bootlin.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/net/pse-pd/
+ struct phy_device;
+ struct pse_controller_dev;
+@@ -77,6 +78,7 @@ struct pse_control;
+  *            device tree to id as given to the PSE control ops
+  * @nr_lines: number of PSE controls in this controller device
+  * @lock: Mutex for serialization access to the PSE controller
++ * @types: types of the PSE controller
+  */
+ struct pse_controller_dev {
+ 	const struct pse_controller_ops *ops;
+@@ -89,6 +91,7 @@ struct pse_controller_dev {
+ 			const struct of_phandle_args *pse_spec);
+ 	unsigned int nr_lines;
+ 	struct mutex lock;
++	u32 types;
+ };
+ 
+ #if IS_ENABLED(CONFIG_PSE_CONTROLLER)
+@@ -108,6 +111,9 @@ int pse_ethtool_set_config(struct pse_control *psec,
+ 			   struct netlink_ext_ack *extack,
+ 			   const struct pse_control_config *config);
+ 
++bool pse_has_podl(struct pse_control *psec);
++bool pse_has_c33(struct pse_control *psec);
++
+ #else
+ 
+ static inline struct pse_control *of_pse_control_get(struct device_node *node)
+@@ -133,6 +139,16 @@ static inline int pse_ethtool_set_config(struct pse_control *psec,
+ 	return -ENOTSUPP;
+ }
+ 
++static inline bool pse_has_podl(struct pse_control *psec)
++{
++	return false;
++}
++
++static inline bool pse_has_c33(struct pse_control *psec)
++{
++	return false;
++}
++
+ #endif
+ 
+ #endif
+diff --git a/include/uapi/linux/pse.h b/include/uapi/linux/pse.h
+new file mode 100644
+index 000000000000..ebd9b4be9d9d
+--- /dev/null
++++ b/include/uapi/linux/pse.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Userspace API for Power Sourcing Equipment
++ *
++ * Copyright (c) 2023 Bootlin, Kory Maincent <kory.maincent@bootlin.com>
++ */
++#ifndef _PSE_CONTROLLER_H
++#define _PSE_CONTROLLER_H
++
++/**
++ * enum - Types of PSE controller.
++ *
++ * @PSE_UNKNOWN: Type of PSE controller is unknown
++ * @PSE_PODL: PSE controller which support PoDL
++ * @PSE_C33: PSE controller which support Clause 33 (PoE)
++ */
++enum {
++	PSE_UNKNOWN =	1 << 0,
++	PSE_PODL =	1 << 1,
++	PSE_C33 =	1 << 2,
++};
++
++#endif /* _PSE_CONTROLLER_H */
 
 -- 
 2.25.1
