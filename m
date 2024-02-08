@@ -1,101 +1,88 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EF377F0A
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DBD1E485;
+	Thu,  8 Feb 2024 13:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707400607; cv=none; b=PHM/OPsVwpd0L0fDPAG8dj6onzCIPo4UGHMQfDLFTdNoGT+5UGYwAXYZDB789Y1Ehy5eb/ud0AsbPrOXrruqWMhKxY5T/rPZdaRSNaPxMFL8TLhJQPZnKHmDlniTgtHf3ZtaO/vEZIx6e91L/cibh6p+M91Pbg3oLqscFN+JoCE=
+	t=1707400608; cv=none; b=Us9ZvfUXtTMzjJHL4K0MM/ZLJbPa0ZhHKkfFGo0QwiBUWO+Wgv/Czo5F37RZIFU/hAPYiSMi9rJ6nlKrq9NwrmXejAjnnu+iTFsmaDHSBQjQgOe/nFffY96MxrlPK4DIa3p/18LhDnRhhFz3/d0unm+7JMzezxlbhOm7+xv+moU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707400607; c=relaxed/simple;
-	bh=bn0NcY9oMrS6LrrubXH3e2mE3DZDDG0Tf9WK+wT2N9w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WjbyQn3ot4oO8Qbzww6JhOLobkyTZe1YNPFCv3HwtGR3IoBQmJ3f8IY6513hznN8PgFprYnL8OWkdzKy+n04TeB029yCTt8j75XMEcLuTQxL2iuPL0GG0boQRWiwKJxu7VaIDt5i4RPAhw/4WMOt/y3amI260Q37HE48mJhjrMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=IQi58yFd; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1707400608; c=relaxed/simple;
+	bh=FuVF+eJ+3ABnfmzK4oUj76/6C587TcB1yKwdLXQapuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i6HDQRRyRdmX+msf0TVLrKgQxO+3MRWfElsqN3jiducaj7Eu85n8Rk1DBfCh9dqKzrujRjIUbvKvez8hhrWw4G+MR6eF4wQsgvkUPZZvoOenZPvd/S+T7tyYk3MqFyLUBN0jlh1P22KKOYn74F8qhLhcOHTkQW4SbQtSL/CaDt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lRfpav/j; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="IQi58yFd"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fe3141e1cso17460505e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:56:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707400603; x=1708005403; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZLFsA5I/Fz9jsdK8SZL9TOtMhZ/+MDG8kle9oaKK1Pc=;
-        b=IQi58yFdCFOK8kgyDfwJPUM9rnQ5tqdvPjBets/SsDwj0JDoK0QPCCIbdPL1khSBn+
-         Yd2I9ksFOg4PY4VZcE4jafs/0TL9+FjHAQ9AKCsgjyb37qcgmdS4lI/5DgAdkkKJof+e
-         3lLAJXXe+HE9WeqLDBrvNjtMqwGZJTjgnJHRNJndSRgqOIZVQrz9VWwI03fhHbRy0Hsn
-         owe3dUW4ZC8iCvIFITqALGs0ypFEuotwNcVlt7Gn8pdHB1arpuDMUoiyFEtiZTXCPgcb
-         DY5yI87yYE1S06f4Rr47KgYtaiqfuR1bzHg4zNoj3efkJHduJ7e/qYS8LoMHwgyC9TSt
-         oKrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707400603; x=1708005403;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZLFsA5I/Fz9jsdK8SZL9TOtMhZ/+MDG8kle9oaKK1Pc=;
-        b=EZfsaCgKSHuP9UppSmDgvRJKPsezQ/hCMStMxC7TYJwtU/bOCAKn7Lrg2VVgGzD2aq
-         bQ/knE+vIj1pxuGhBAw+pY3TsN1X9mZpTmpkUo1wsOaUbpbsuoC5RNY3bcKMbCA8fiQb
-         SBpuNVR/y8uwyRvdJApXqNqiWWsrfNht7Ni9WWJThuuCNPrtaRbtFCBh2tObQAjIqsU/
-         hmNqHYWbDoLHw80S97hzxNX7wtgnHKPKCR6TUAPqsQhpQbDB3xtPtwBQ3KYaaoGQYE9+
-         v7sHw9CyFkYRT2KceVdQEGC+B7I+L+BjnFCo257P/x9zNylqouXTzlfshCM56Vibc8Ij
-         0j7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVmTSynk5E7F0SOpRtUlB+5pc2I5PAwT1Vb0VXX8x7fyIuglGXtYlRbe3F3ognZoYcZ3LZUp9a6kbEkZMZ/NpU2zc0aetWV7ZnKZm1u
-X-Gm-Message-State: AOJu0YzTbH4iCX3fGArE3By3ud4o1n00FEXkzcHObDDhk9VSrXHelcZ6
-	0XX0+O+IuVYK1bZE0XNuFnGrTr2SSmxB2412z9FLLeLx2LH9Yh1LmsQWHryNzpc=
-X-Google-Smtp-Source: AGHT+IGX+jm/Syg7kOmYPVpoRSrD0yrtbSudVly2inmrQ/SpVebFdoebTuF9yCM+8FnbI0uh/3IzUQ==
-X-Received: by 2002:a05:600c:5119:b0:40e:f1f4:89cc with SMTP id o25-20020a05600c511900b0040ef1f489ccmr6320525wms.25.1707400603111;
-        Thu, 08 Feb 2024 05:56:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWK/QZqlCIo5oXoEjyUlWREZD2xYNlnmB9lXMcxmUhWPv+Y2DcLakLRBejaLURwaKjtK3jTVCGfDy9zJXSiPIZ1sTjZj7cvF4CLB90ls9Df9Jneu+4Ugs/iLnxEdtFEzCesHPL8+ZbN9UvtfxTgxktd43j7TYwY+7CnRey9YeVlImH9vk7LlaQZ3AjEV97HXsycBSIsDhOdJO/RPICZK8eQV1o/2PgikZ63ufNuwrkZTHt4YbIyIyFFL7ifIUKyGKLnGQQfPcObDqAfCw3qiuUmRKp47pv2i9G6PPIo4aCHtsKnIU8S+a805myVHjxUfcepuYD5C5rgGRKZfCYb/JXr3Z7oyQnS0Mbtdma+gC8j3H67lLhvseFJBpI5WbBl8eOjaLZwLwh/EwpKn+T8mTPKhSeRXVJqPhbKYQ==
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.45])
-        by smtp.gmail.com with ESMTPSA id iv6-20020a05600c548600b0040ef3ae26cdsm1703058wmb.37.2024.02.08.05.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 05:56:42 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	linus.walleij@linaro.org
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 0/2] pinctrl: renesas: rzg2l: Add suspend to RAM support
-Date: Thu,  8 Feb 2024 15:56:27 +0200
-Message-Id: <20240208135629.2840932-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lRfpav/j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Dej5H/0l4N8S9JwfsbANmrzhys6YFfTllssE9ozh6P8=; b=lRfpav/jSMFg7FFOHIB3QgRiKg
+	atqKDwftQSwxyTcLW5pAccjMVhyraxElasRoopDU0yh6CnPTJq14ROx4k/LBhCQbsTn4FkqoEfGQf
+	00huKYVp70PB4+jj8/qs2qNQoOu/TCmiqdDz2ZOpycZydLwL653u+ZTjx4YNCrJ6fHbc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rY4tF-007JSy-Kl; Thu, 08 Feb 2024 14:56:33 +0100
+Date: Thu, 8 Feb 2024 14:56:33 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"afd@ti.com" <afd@ti.com>,
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] net: phy: dp83826: support TX data voltage tuning
+Message-ID: <145e1c28-af2b-4aca-9fd3-f9d7a272516c@lunn.ch>
+References: <20240207175845.764775-1-catalin.popescu@leica-geosystems.com>
+ <20240207175845.764775-2-catalin.popescu@leica-geosystems.com>
+ <4dc382bd-3477-45cb-8044-fc5c2c7251f4@lunn.ch>
+ <f37e9df4-e1bd-4d40-bd99-3998cfd803f4@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f37e9df4-e1bd-4d40-bd99-3998cfd803f4@leica-geosystems.com>
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > I could be reading this wrong, but it looks like
+> > DP83826_CFG_DAC_MINUS_DEFAULT actually means leave the value
+> > unchanged? Is there anything guaranteeing it does in fact have the
+> > default value in the hardware?
+> >
+> >          Andrew
+> 
+> Yes, the datasheet clearly states the default/reset values of both 
+> registers VOD_CFG1 & VOD_CFG2 which are :
+> - cfg_dac_minus : 30h
+> - cfg_dac_plus : 10h
 
-Hi,
+And the device is actually and always reset by Linux when the driver
+loads? Anything the bootloader has done, or a previous kernel, will be
+cleared?
 
-Series adds suspend to RAM support for rzg2l pinctrl driver.
+Please add this explanation to the commit message.
 
-It is expected that patches will go through Geert's tree.
+I'm being pedantic because we have had problems like this in the past.
+If a register was not actually set back to the default value, the
+bootloader set it to some other value, the board can work fine. Then a
+board can came along which the bootloader set the wrong value, and the
+default is actually needed. Fixing the driver to actually enforce the
+default breaks boards...
 
-Thank you,
-Claudiu Beznea
-
-Claudiu Beznea (2):
-  pinctrl: renesas: rzg2l: Add suspend/resume support
-  arm64: dts: renesas: r9a08g045: add PSCI support
-
- arch/arm64/boot/dts/renesas/r9a08g045.dtsi |   5 +
- drivers/pinctrl/renesas/pinctrl-rzg2l.c    | 397 ++++++++++++++++++++-
- 2 files changed, 398 insertions(+), 4 deletions(-)
-
--- 
-2.39.2
-
+	 Andrew
