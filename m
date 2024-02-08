@@ -1,78 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ADE1D540;
-	Thu,  8 Feb 2024 02:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A801D525;
+	Thu,  8 Feb 2024 02:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707360029; cv=none; b=VjPvM8aF6UU7NvhGri9cQdV211lVRXXG57tRhtMzh64jvsA3YCpuOFkvB1zC33VCXMyvmvB702P4WS4mwVSN7o+AYQqH/QFH98h7/sZuHIZVSa40Uo+PCUTFhsn1OjcyxTp6t2tele65OEfLSI7QVjs0UetdMFbUUc5igrb086Q=
+	t=1707360122; cv=none; b=M6DyiLkOuvoQl2WW2APJb4ZbuG4mOZ5BEWP2c6OVe0xReV6Z09d0PhIo4adGoUoutPEuLVVLxAU3aComrGFaxiNC0AyNKYrBd9Rl+d4RPWUI0qnOstMZBlbrtgGlJz07aZ3pPHEDI58aULIM9ixUGcmTomkA5C/wYB8OZoGqV0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707360029; c=relaxed/simple;
-	bh=oqIUq0+9PWDUdp7JNIr+uhslNtaLYeLhrukFS7asBjo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=c+z333uonqlt33z3s1gIIfnCshaZRCyIY1ScMkShuPfaTdWpfN3q6vJroVJlJSGwKmbsiceltBCzzAmaEwium6ldowNlE1FnGQxwm8p0o0KDoDtKgOjZsmSwsIgMCkmQyO9wJIVS0yiIAI3/Yh1n90nSTqJKHLvHgoThuSn1QUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+5c7Cr4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707360122; c=relaxed/simple;
+	bh=HnZVKRgWjaJGnqnfgwePaLGo0wMeQdaMpS2Wqgm09sM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JFMY2wAvktR1PRcofeiYoAPpXxb9JkYGCgbSSzNuwIQR+BU2dEbcvGQBjZwl9ajoizkBiCZaMWoHAIx1dyjvTZDwJXeY8rN/HIQjaFtlHVx/nnGde3dVeUeM6d3yWOPhLV/jzHoiDwczpccxuPoeeC83u+mNYDUm0zroSoBeSto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iz9FvQbI; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+5c7Cr4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9CD78C43394;
-	Thu,  8 Feb 2024 02:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707360028;
-	bh=oqIUq0+9PWDUdp7JNIr+uhslNtaLYeLhrukFS7asBjo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G+5c7Cr49LkcyojTmvwep/kbT/HMRYFQ20v3HW11MicTuxv7guWrHYkH7rSaPKicd
-	 s+3C7reg3t+VPKRtDSaSIr/LBFJfwR6fwYJrCfG7IWuD5jz+tdsTsF/vfUJnKlm5jt
-	 MgPL7KoQ5meWUF9BwUqAUdASHi86bQTraaoHyXcgvy3Ogh8wSJelL47XP4OoEC6Gzi
-	 AvrlaxExU/vr4HsIohWyHVLa00ngPLR8huLMRjnLJSyBgjUtfGadJJsAbV3f7YJDjX
-	 0E7kmJv+kl0YU62RqjkFeYaOHUZraiSEFI3bQpIAjyNjyLSB2FxJZvY3HXmMPChgO3
-	 AEeUCT/kKbugg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7F2F7E2F2F1;
-	Thu,  8 Feb 2024 02:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iz9FvQbI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707360121; x=1738896121;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HnZVKRgWjaJGnqnfgwePaLGo0wMeQdaMpS2Wqgm09sM=;
+  b=iz9FvQbIvO1v+Z4jvNbhj7/jLg6SA9AOUloAhsv1P7MuoDc7a5Ud8lv1
+   z9FpwKjxyxqb+b15QNnZiTgtYANFfDlfeQgjGmCVJIAvUKbwKOXZhJ9dk
+   XZNRHtFrwPhKyAV1iil2/m4BcRU0x7Wqx/lLUjCt9JAquOK547LLtXQI5
+   AcNdjcAdHjEO7Bb/sPDtNeYZJM6jv9mvXQGLFpW4/irs4M6meTLggRRh1
+   YNACwsVbvXUAiwo8voHJD4Y2ep5uAPdHbB6fFT0M47MwuMWYPCVKh5Lwz
+   qxS3YLVy4+5p+ynXBQgyFAy079Qjz+VKr0YMjANYA8NSSy9VwMGk9wxDT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12487390"
+X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
+   d="scan'208";a="12487390"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:42:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
+   d="scan'208";a="6178279"
+Received: from srussjr-mobl1.amr.corp.intel.com (HELO [10.209.91.249]) ([10.209.91.249])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:42:00 -0800
+Message-ID: <6360f90f-1aca-4355-aa19-661c2925dd24@linux.intel.com>
+Date: Wed, 7 Feb 2024 18:41:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net/smc: change the term virtual ISM to Emulated-ISM
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170736002851.13402.12604224600010407697.git-patchwork-notify@kernel.org>
-Date: Thu, 08 Feb 2024 02:40:28 +0000
-References: <20240205033317.127269-1-guwen@linux.alibaba.com>
-In-Reply-To: <20240205033317.127269-1-guwen@linux.alibaba.com>
-To: Wen Gu <guwen@linux.alibaba.com>
-Cc: wenjia@linux.ibm.com, jaka@linux.ibm.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: wmi: Make input buffer madatory when
+ evaulating methods
+Content-Language: en-US
+To: Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240207202012.3506-1-W_Armin@gmx.de>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240207202012.3506-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+On 2/7/24 12:20 PM, Armin Wolf wrote:
+> The ACPI-WMI specification declares that a WMxx control method takes
+> 3 arguments: instance, method id and argument buffer. This is also
+> the case even when the underlying WMI method does not have any
+> input arguments.
 
-On Mon,  5 Feb 2024 11:33:17 +0800 you wrote:
-> According to latest release of SMCv2.1[1], the term 'virtual ISM' has
-> been changed to 'Emulated-ISM' to avoid the ambiguity of the word
-> 'virtual' in different contexts. So the names or comments in the code
-> need be modified accordingly.
-> 
-> [1] https://www.ibm.com/support/pages/node/7112343
-> 
-> [...]
+It would be better if you include specification version and section
+title for reference.
 
-Here is the summary with links:
-  - [net-next] net/smc: change the term virtual ISM to Emulated-ISM
-    https://git.kernel.org/netdev/net-next/c/b27696cd8fcc
+>
+> So if a WMI driver evaluates a WMI method without passing an input
+> buffer, ACPICA will log a warning complaining that the third argument
+> is missing.
 
-You are awesome, thank you!
+I assume it is a compile warning. Can you copy the warning message?
+
+>
+> Prevent this by checking that a input buffer was passed, and return
+> an error if this was not the case.
+>
+> Tested on a Asus PRIME B650-Plus.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+
+
+With above fixed,
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+>  drivers/platform/x86/wmi.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 63906fdd0abf..f9e23d491dd9 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -296,7 +296,7 @@ EXPORT_SYMBOL_GPL(wmidev_instance_count);
+>   * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+>   * @instance: Instance index
+>   * @method_id: Method ID to call
+> - * @in: Buffer containing input for the method call
+> + * @in: Mandatory buffer containing input for the method call
+>   * @out: Empty buffer to return the method results
+>   *
+>   * Call an ACPI-WMI method, the caller must free @out.
+> @@ -326,7 +326,7 @@ EXPORT_SYMBOL_GPL(wmi_evaluate_method);
+>   * @wdev: A wmi bus device from a driver
+>   * @instance: Instance index
+>   * @method_id: Method ID to call
+> - * @in: Buffer containing input for the method call
+> + * @in: Mandatory buffer containing input for the method call
+>   * @out: Empty buffer to return the method results
+>   *
+>   * Call an ACPI-WMI method, the caller must free @out.
+> @@ -347,26 +347,25 @@ acpi_status wmidev_evaluate_method(struct wmi_device *wdev, u8 instance, u32 met
+>  	block = &wblock->gblock;
+>  	handle = wblock->acpi_device->handle;
+>
+> +	if (!in)
+> +		return AE_BAD_DATA;
+> +
+>  	if (!(block->flags & ACPI_WMI_METHOD))
+>  		return AE_BAD_DATA;
+>
+>  	if (block->instance_count <= instance)
+>  		return AE_BAD_PARAMETER;
+>
+> -	input.count = 2;
+> +	input.count = 3;
+>  	input.pointer = params;
+> +
+>  	params[0].type = ACPI_TYPE_INTEGER;
+>  	params[0].integer.value = instance;
+>  	params[1].type = ACPI_TYPE_INTEGER;
+>  	params[1].integer.value = method_id;
+> -
+> -	if (in) {
+> -		input.count = 3;
+> -
+> -		params[2].type = get_param_acpi_type(wblock);
+> -		params[2].buffer.length = in->length;
+> -		params[2].buffer.pointer = in->pointer;
+> -	}
+> +	params[2].type = get_param_acpi_type(wblock);
+> +	params[2].buffer.length = in->length;
+> +	params[2].buffer.pointer = in->pointer;
+>
+>  	get_acpi_method_name(wblock, 'M', method);
+>
+> --
+> 2.39.2
+>
+>
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
