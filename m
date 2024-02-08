@@ -1,153 +1,93 @@
-Received: from davidv.dev (mail.davidv.dev [78.46.233.60])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D3D82D74
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 16:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.233.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E02385276;
+	Thu,  8 Feb 2024 16:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707410583; cv=none; b=OwfRtgkgOjaquaLagUJkRUr/OxgSVCyWg3hONglxlk+hoCKTdIzXhReEL3vLF0cqLfKcqNyuap1aqDWD+HzTmWFejfd+DGD5h6N0bvUcjX/d2mi0hZ+yIaEscYyUL+piCKfg7vWVDfOUL+u74FJETEtytJqT4v7SjPQcTwjuUck=
+	t=1707410584; cv=none; b=m/YdOYvKLRC0XzGNoh/2oVolCady9olaX2JcDMshYlhmstLV3TeDlHXqmWq6XzpDky2Rs5XbjVXvYACr1Fh/aUrYQBvR8T991dd+esBdfD4Gc+h0nCRQNOabeZG3oN9vhkCKcmdjhHEJPPrqD2EzdS1SV9v8SXoieX3pTuddUFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707410583; c=relaxed/simple;
-	bh=e9gx7ysf5nDVQcKyRIhMrUuZqIvSokXKGgA3mBX6IGE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/PT+K2MMUiJcri2/a14pW556Iyoa+OLjMxqyBNhFc47U6K6Tpsh1OIQlSGhzWHb9VUZkb/g8wF5d46dyVW1aPcOQPlcWh6efyy++QqCmCMw6+ouVTm6DMPYt2mL3U+1nA/egm/qBtru5BSKxJHgVNU+xZWjdbqnJv1YuggKuiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev; spf=pass smtp.mailfrom=davidv.dev; arc=none smtp.client-ip=78.46.233.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidv.dev
-Received: from [192.168.2.131]
-	by mail.davidv.dev (chasquid) with ESMTPSA
-	tls TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-	(over submission+TLS, TLS-1.2, envelope from "david@davidv.dev")
-	; Thu, 08 Feb 2024 17:42:59 +0100
-Message-ID: <ff6cef18-c1fb-4a1e-91a5-fb713086474e@davidv.dev>
-Date: Thu, 8 Feb 2024 17:42:58 +0100
+	s=arc-20240116; t=1707410584; c=relaxed/simple;
+	bh=0TJr9SPkwnlTG9uKVj59UILIzyUJlgu+VRGvyidgXCc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Wq8qvcV8UnHK1TIAELk0u63Rt8zx7+agq5cOVJ12gn30l43TzSQhPNbkLwpyx2b/O17hdIfcJpBzv2MahWb5skMXDkdGaVAob1nMThdcfrc767ERU3w/KHFRlbyXeTW2MS27Dg9mXrG7e1JdYUV0PFT9kfOxPuNBJKupbse3GXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3916c1f9b0so170888466b.1;
+        Thu, 08 Feb 2024 08:43:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707410581; x=1708015381;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j6NrglvQNA8UcjFWlDsn4D/ol88i9iFcMKr2mLjvwfI=;
+        b=bWPMmAv5PPpeZ6rf6Mcp/rDTI2AtRyoiqfI0nedN1n+8SlC0fZkhrvXqxA0yGxH2Fb
+         VlMHoZ2YrlxvdUCn9uNbReXueajwM7rDe2GKuMAUhs/FqpDSY4AiFlDmIwy9kLcFbNmB
+         VDAFNPO/dd3oRXUyX4pOVaXVc6j+A0QMC8K2umU14YlvrwR+vWI8EYoJgsbh4/1+pLUn
+         GqXXnYXL3RdWtRrm4Fe1NzV8Ysa1Z7SkmlmTgWvJmugU6cHq6iS3Us0Ttf9AvkjbXsGy
+         YaZWU3HE0LOa5qJYGGLh9Tgj9GZMxyNmrv5LsyZ0zmnOMt1nawqywPXsdmbdPWknHbmh
+         4IOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWS+GvJycw6FeHL3/I8c8fDMuvXYavmq/XTRPX/SfC3pxsw8+AsRgwrXGKb7/9HMa04EUT+5jyEyhPFaBwuiyKA5xa8SRSZi/5euljDaxNt4NUdTINYwe72QaudbxDLq72EuCKlHGzhwYQOJv31m/r8NNHqhg1UM22teWxiM741vBpOWSaLOawrPw==
+X-Gm-Message-State: AOJu0YzcSJVapR1fgF0hkMalfEBeehItCPnxJDqh5nq29ldlRlK97/yD
+	+RQZpvGNaG3TWhQusTCaCFRhrMN3R2KM7EHppwYIdEeP7YJXgsR6
+X-Google-Smtp-Source: AGHT+IEVdByW8vdmM232leKEL2grx8yFSsfrFp4uRJEt8bXULYqon2r5VuiscI/p1X3+2J9ZpGGShA==
+X-Received: by 2002:a17:906:7cc:b0:a38:e745:fb88 with SMTP id m12-20020a17090607cc00b00a38e745fb88mr2410396ejc.57.1707410580613;
+        Thu, 08 Feb 2024 08:43:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV2V2LpfZ0wvPrNAyW+/jX8LM07o02stddr3VyFKzA/uf4lP94qe7uR3OZVYf+Cb3dmSMS+bRTuQ1Z0UsZ8ASHSOkZYDA7mhPlQaLK+dYmFgbH0kRcWajiF4jvarfERj2tzJAbvOxCBwtIp+7/xYxkmbT8WARVLjt6NHZXtu1TrTn8pIMw8sn867qFb5Qelcbg04Yk7NaIuKhpG5IH+z2VpdwsMh1Ofpink/9xYnewUiOGFuIqZYm1+9xNgxzxEP9jZjCmfcOzA81zU85I7udqsxpRKOQZUbF9U6pT7shyAgI8DwuvEmGoiCRCJFBDeLYLb9iQv/C8VLVj07ke3Q5T8FpMVTrs4nehtzhwGJ/zcvrRu4fNL/1VwIwMLoOgIBrcNNaIGSHAgRteVd1XS/uLhs//qZJL/DeCrE/c=
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id g15-20020a170906198f00b00a3809ce7e00sm215713ejd.196.2024.02.08.08.42.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 08:43:00 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	Alexander Aring <alex.aring@gmail.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org,
+	andrew@lunn.ch,
+	f.fainelli@gmail.com,
+	jhs@mojatatu.com,
+	Alexander Aring <aahringo@redhat.com>,
+	linux-bluetooth@vger.kernel.org (open list:6LOWPAN GENERIC (BTLE/IEEE 802.15.4)),
+	linux-wpan@vger.kernel.org (open list:6LOWPAN GENERIC (BTLE/IEEE 802.15.4))
+Subject: [PATCH net v3 4/9] net: fill in MODULE_DESCRIPTION()s for 6LoWPAN
+Date: Thu,  8 Feb 2024 08:42:39 -0800
+Message-Id: <20240208164244.3818498-5-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240208164244.3818498-1-leitao@debian.org>
+References: <20240208164244.3818498-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] net: make driver settling time configurable
-Content-Language: en-US
-To: Denis Kirjanov <dkirjanov@suse.de>
-Cc: Jonathan Corbet <corbet@lwn.net>, "David S. Miller"
- <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Xiongwei Song <xiongwei.song@windriver.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>
-References: <20240208093722.246930-1-david@davidv.dev>
- <20240208095358.251381-1-david@davidv.dev>
- <0e129417-53c8-4931-af76-a37762472fb0@suse.de>
-From: David <david@davidv.dev>
-In-Reply-To: <0e129417-53c8-4931-af76-a37762472fb0@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/8/24 11:26, Denis Kirjanov wrote:
->
-> On 2/8/24 12:52, David Ventura wrote:
->> During IP auto configuration, some drivers apparently need to wait a
->> certain length of time to settle; as this is not true for all drivers,
->> make this length of time configurable.
->>
->> Signed-off-by: David Ventura <david@davidv.dev>
->> ---
->>   .../admin-guide/kernel-parameters.txt         |  4 ++++
->>   Documentation/admin-guide/nfs/nfsroot.rst     |  3 +++
->>   net/ipv4/ipconfig.c                           | 23 ++++++++++++++++---
->>   3 files changed, 27 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index b47940577c10..b07a035642fa 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -2291,6 +2291,10 @@
->>   
->>   	ip=		[IP_PNP]
->>   			See Documentation/admin-guide/nfs/nfsroot.rst.
->> +	ip.dev_wait_ms=
->> +			[IP_PNP]
->> +			See Documentation/admin-guide/nfs/nfsroot.rst.
->> +
->>   
->>   	ipcmni_extend	[KNL,EARLY] Extend the maximum number of unique System V
->>   			IPC identifiers from 32,768 to 16,777,216.
->> diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
->> index 135218f33394..f26f7a342af6 100644
->> --- a/Documentation/admin-guide/nfs/nfsroot.rst
->> +++ b/Documentation/admin-guide/nfs/nfsroot.rst
->> @@ -223,6 +223,9 @@ ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>:<dns
->>     /proc/net/ipconfig/ntp_servers to an NTP client before mounting the real
->>     root filesystem if it is on NFS).
->>   
->> +ip.dev_wait_ms=<value>
->> +  Set the number of milliseconds to delay after opening the network device
->> +  which will be autoconfigured. Defaults to 10 milliseconds.
->>   
->>   nfsrootdebug
->>     This parameter enables debugging messages to appear in the kernel
->> diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
->> index c56b6fe6f0d7..cbf35163b973 100644
->> --- a/net/ipv4/ipconfig.c
->> +++ b/net/ipv4/ipconfig.c
->> @@ -82,8 +82,6 @@
->>   #define IPCONFIG_DYNAMIC
->>   #endif
->>   
->> -/* Define the friendly delay before and after opening net devices */
->> -#define CONF_POST_OPEN		10	/* After opening: 10 msecs */
->>   
->>   /* Define the timeout for waiting for a DHCP/BOOTP/RARP reply */
->>   #define CONF_OPEN_RETRIES 	2	/* (Re)open devices twice */
->> @@ -101,6 +99,7 @@
->>   
->>   /* Wait for carrier timeout default in seconds */
->>   static unsigned int carrier_timeout = 120;
->> +static unsigned int dev_wait_ms = 10;
->>   
->>   /*
->>    * Public IP configuration
->> @@ -1516,7 +1515,8 @@ static int __init ip_auto_config(void)
->>   		return err;
->>   
->>   	/* Give drivers a chance to settle */
->> -	msleep(CONF_POST_OPEN);
->> +	if(dev_wait_ms > 0)
->> +		msleep(dev_wait_ms);
-> What's the point to wait more than CONF_POST_OPEN with the change?
+W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+Add descriptions to IPv6 over Low power Wireless Personal Area Network.
 
-I didn't have anything specificin mind - shall I change this
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Acked-by: Alexander Aring <aahringo@redhat.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+ net/6lowpan/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-to only enable/disable the 10ms wait instead of allowing a configurable 
-value?
+diff --git a/net/6lowpan/core.c b/net/6lowpan/core.c
+index 7b3341cef926..850d4a185f55 100644
+--- a/net/6lowpan/core.c
++++ b/net/6lowpan/core.c
+@@ -179,4 +179,5 @@ static void __exit lowpan_module_exit(void)
+ module_init(lowpan_module_init);
+ module_exit(lowpan_module_exit);
+ 
++MODULE_DESCRIPTION("IPv6 over Low-Power Wireless Personal Area Network core module");
+ MODULE_LICENSE("GPL");
+-- 
+2.39.3
 
->>   
->>   	/*
->>   	 * If the config information is insufficient (e.g., our IP address or
->> @@ -1849,3 +1849,20 @@ static int __init set_carrier_timeout(char *str)
->>   	return 1;
->>   }
->>   __setup("carrier_timeout=", set_carrier_timeout);
->> +
->> +
->> +static int __init set_dev_wait_ms(char *str)
->> +{
->> +	ssize_t ret;
->> +
->> +	if (!str)
->> +		return 0;
->> +
->> +	ret = kstrtouint(str, 0, &dev_wait_ms);
->> +	if (ret)
->> +		return 0;
->> +
->> +	return 1;
->> +}
->> +
->> +__setup("ip.dev_wait_ms=", set_dev_wait_ms);
