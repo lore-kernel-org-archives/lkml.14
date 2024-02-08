@@ -1,140 +1,146 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0580971B5F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 12:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D2071B5F;
+	Thu,  8 Feb 2024 12:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707394841; cv=none; b=A8z1GM3cjhEFljhM7ryrN2a+6+JIx58wOIEEqE7hysvanONCImZn+5AI2QSxGQwWdYotFqZuQ6FzIY2fWkJr4XnA6CM3wUv25rve3VwqOOtS8H5JjyhhzKtSsePkgFw1OA8Zu/R0qUyPR7oWDmzjAhpQGQg/N2uECVQgui0/C60=
+	t=1707394857; cv=none; b=LkmMfOFD8J9kKaunQTcAuuRwHWhRitRHjxzAr5UJInlR9HJNx1/F4M2HWETDZCkyc/m3CFvUmcYxh7R6YKNVM6ljibFivUde5ZoZ9IOts4sOZywo/IDitRABBkTNAnPHHuOwwWbcxqYMlJNUW2SjJXP1D192RnpgxN8K/nB78Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707394841; c=relaxed/simple;
-	bh=3JyyPHDywY0DWXt/HZUqe0GH7KV9wdeM+NZ7Y9F6MdU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c4M39vpQQ3OEP/VnGsafYdaQFJ9BLpoUXQzm8r+vUvvgSCnhpkMJ/ez1LBQLw/8I2oo8/t48bWCE68Lsv2k6nCwh+IOJ3QTT9Nh/qUUaUfo41eoXOpPEn5ztsG7lKdL5qWFiTgt4tX4E7ouiNIDgeAAAQa2zo5BWNqYsBr9NHqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lK6jO+qp; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707394857; c=relaxed/simple;
+	bh=lgNfawRxjPeDnbNa3ygdNz7JsFcsmkcaB+u6Dl+NOSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NCQNUlJonk+ZB8vtmWNHSG/OctZXC5KjpuTaPXvkKNA1XiNVjMNxNi+cHxwHQqwq1+R6pyldFVpZ7jNMQFcwFcXy2M8EkC9/IiuaM4SZhc9Xp+tUnq9PLjBNt0NbN1QHXa1222ErTKypbop7x7Hx1F7sq+fpangh6HeZDBfQvXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5M0RFSU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lK6jO+qp"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7d5c514944fso417562241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 04:20:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707394839; x=1707999639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bf7m/USDjz7kE2FE9CQHR/aM8ZK7eKAJ6zNf2AmjvPo=;
-        b=lK6jO+qpiz7Dz9zsibMBe0G6Xhgti5BjVZZEhrSbWOPjFXVq1LNCV2ezC4LE7TA7Zh
-         qHoGNfvRUT/MH9/1yxRmjdjfz+GQAwSeyGdJU4PMLnZqGrDcFfTrs/Tdf0948IKDt3xt
-         CX8TzjI8NrWh5WmugssPxPBW9iq27e1Jy73KV+smHBEKYrsueaMtKc6dOjc5jnnMKfgU
-         QQH5zYJJ5o5N1G+c4Q+cWKhq3xuwwjXshKu9LvfSP3Gky5nCyed8BGQCmJQ+t2QwMSTR
-         yskXrOLu5ZBPwsv1xes2TL2ghZ0v43veKoT5J5LZTuqRaOX/IQhDVN7kj9TZghm67w3D
-         v7xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707394839; x=1707999639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bf7m/USDjz7kE2FE9CQHR/aM8ZK7eKAJ6zNf2AmjvPo=;
-        b=FxLn1IBDSTNId6mRkQdK+EvafPPjqKJZ/RdQPI+YPTLp35EoOsBLjLfupEBkDKR07i
-         VhAVKH2/RtCMdEkgmAI+0AFmIWeML6mWEFdmOU+phjWvEp8GLrhmjE0E15UpziwdFIxq
-         gn87H9ezEVJvTkqJuR0wHfveXhpJWi6blohFJ0sLSg+WdePcAOEFY0L5IjEjijMRi8ix
-         7F2uxaPk5SffVTyrCv2fvB7e4nf2zOjouWz8RD+QatV4wT5pwSl96K1i5TPZQ+BJC8ZY
-         FG7YPR2xQEWsRl5LewTP0BdnxYfKlalX0WSBuTyN4Nm3YeHzWV+vZzA8MsaIzB1vAbWp
-         lcIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAs2vIvu5cCG0QwLCpFsZm8bbo7UK/MjOtZN5CiSozqZX2tCCwpb0rJiw8CTOY4y84eVjVjBangYE8twcj7neUkAsbfwYQy0dwbIFK
-X-Gm-Message-State: AOJu0YzTLMYDXwwHOUjwlXACcLhPesgzk2iBw0k6/M1tyGPtu1eUhZZg
-	P3ZN3OqpWMCsCBWHMlm1SIX1HWUIoR4UC/uhiO4gjZ/y+k+vDGKMRqy+eWId13aA2C+PQsBgnSD
-	LLObq+D6W/lRqL9mJbZF+RcG26sIyJJcCoEcf
-X-Google-Smtp-Source: AGHT+IGlL86D1Ci5269kTzm8XhRyortv2UdzEszE/4vmPzP7uLriXUhvD14B2r1rBQ/5VXy4f5o9FdDQRR6VTHNU/Uo=
-X-Received: by 2002:a05:6122:1c86:b0:4c0:3929:2748 with SMTP id
- eu6-20020a0561221c8600b004c039292748mr1987582vkb.7.1707394838719; Thu, 08 Feb
- 2024 04:20:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5M0RFSU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745ECC43390;
+	Thu,  8 Feb 2024 12:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707394856;
+	bh=lgNfawRxjPeDnbNa3ygdNz7JsFcsmkcaB+u6Dl+NOSk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L5M0RFSU2Yb7jH0fuf+OPPgiuxxpsfegXJkM9reYUVVkccOujc+2JFTTvq1Gqo8y4
+	 i2wvMTByERe2+nYPMLG7TPGEqLG3k9gR5DhCs9nm3nRabKGiUXc5Ada4b4wvfsRGR+
+	 mLVnIOaSdE+h5laHqzITyO3Hvb06NHaWIu0lF+7LaqO6jcMROuEU5gbildI2umj+tg
+	 LfqhZUsgk2bGlBI6k6kpwBK8IRy+TAMMJrAu1sifu72jHFhGPZljB4YV5AAwpHszkk
+	 A6mCAXFA3oX7bMjBKGuFdVylDi2KGG0dsaw5M12LWPwk/mz7lDMTgrDchWTB6D2WPL
+	 h4mwK1oW6pMJg==
+Message-ID: <330f901c-2d69-4666-90ed-9c558a4b3dfe@kernel.org>
+Date: Thu, 8 Feb 2024 14:20:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124-alice-mm-v1-1-d1abcec83c44@google.com> <20240124231235.6183-1-kernel@valentinobst.de>
-In-Reply-To: <20240124231235.6183-1-kernel@valentinobst.de>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 8 Feb 2024 13:20:28 +0100
-Message-ID: <CAH5fLghRiVGWr--9hqwr4Cg4anaKWVqZA0D65DgJzLPPOAvNgg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] rust: add userspace pointers
-To: Valentin Obst <kernel@valentinobst.de>
-Cc: a.hindborg@samsung.com, akpm@linux-foundation.org, alex.gaynor@gmail.com, 
-	arnd@arndb.de, arve@android.com, benno.lossin@proton.me, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, brauner@kernel.org, 
-	cmllamas@google.com, gary@garyguo.net, gregkh@linuxfoundation.org, 
-	joel@joelfernandes.org, keescook@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, maco@android.com, ojeda@kernel.org, 
-	rust-for-linux@vger.kernel.org, surenb@google.com, tkjos@android.com, 
-	viro@zeniv.linux.org.uk, wedsonaf@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] usb: dwc3-am62: add workaround for Errata i2409
+Content-Language: en-US
+To: Andrew Davis <afd@ti.com>, Thinh.Nguyen@synopsys.com
+Cc: gregkh@linuxfoundation.org, r-gunasekaran@ti.com, b-liu@ti.com,
+ nm@ti.com, srk@ti.com, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+References: <20240205141221.56076-1-rogerq@kernel.org>
+ <20240205141221.56076-6-rogerq@kernel.org>
+ <05a3ef7e-b4d6-4f87-b34d-cec5f4ecfb9f@ti.com>
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <05a3ef7e-b4d6-4f87-b34d-cec5f4ecfb9f@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 12:13=E2=80=AFAM Valentin Obst <kernel@valentinobst=
-.de> wrote:
->
-> > +//! User pointers.
-> > +//!
-> > +//! C header: [`include/linux/uaccess.h`](../../../../include/linux/ua=
-ccess.h)
-> > +
->
-> nit: could this be using srctree-relative links?
->
-> > +/// The maximum length of a operation using `copy_[from|to]_user`.
->
-> nit: 'a' -> 'an'
->
-> > +///
-> > +/// If a usize is not greater than this constant, then casting it to `=
-c_ulong`
-> > +/// is guaranteed to be lossless.
->
-> nit: could this be `usize` or [`usize`]. Maybe would also be clearer to
-> say "... a value of type [`usize`] is smaller than ..."
->
-> > +///
-> > +/// These APIs are designed to make it difficult to accidentally write=
- TOCTOU
-> > +/// bugs. Every time you read from a memory location, the pointer is a=
-dvanced by
->
-> Maybe makes sense to also introduce the abbreviation TOCTOU in the type
-> documentation when it is first used.
->
-> > +    /// Reads the entirety of the user slice.
-> > +    ///
-> > +    /// Returns `EFAULT` if the address does not currently point to
-> > +    /// mapped, readable memory.
-> > +    pub fn read_all(self) -> Result<Vec<u8>> {
-> > +        self.reader().read_all()
-> > +    }
->
-> If I understand it correctly, the function will return `EFAULT` if _any_
-> address in the interval `[self.0, self.0 + self.1)` does not point to
-> mapped, readable memory. Maybe the docs could be more explicit.
->
-> > +        // Since this is not a pointer to a valid object in our progra=
-m,
-> > +        // we cannot use `add`, which has C-style rules for defined
-> > +        // behavior.
-> > +        self.0 =3D self.0.wrapping_add(len);
->
-> If I understand it correctly, you are using 'valid object' to refer to
-> an 'allocated object' [1] as this is what the `add` method's docs
-> refer to [2]. In that case it might be better to use the latter term as
-> it has a defined meaning. Also see [3] and [4] which are about making it
-> more precise.
->
-> [1]: https://doc.rust-lang.org/core/ptr/index.html#allocated-object
-> [2]: https://doc.rust-lang.org/core/primitive.pointer.html#method.add
-> [3]: https://github.com/rust-lang/rust/pull/116675
-> [4]: https://github.com/rust-lang/unsafe-code-guidelines/issues/465
 
-Thanks. I'll include all of your suggestions in my next version.
 
-Alice
+On 05/02/2024 20:07, Andrew Davis wrote:
+> On 2/5/24 8:12 AM, Roger Quadros wrote:
+>> All AM62 devices have Errata i2409 [1] due to which
+>> USB2 PHY may lock up due to short suspend.
+>>
+>> Workaround involves setting bit 5 and 4 PLL_REG12
+>> in PHY2 register space after USB controller is brought
+>> out of LPSC reset but before controller initialization.
+>>
+>> Handle this workaround.
+>>
+>> [1] - https://www.ti.com/lit/er/sprz487d/sprz487d.pdf
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+>> Cc: Conor Dooley <conor+dt@kernel.org>
+>> Signed-off-by: Roger Quadros <rogerq@kernel.org>
+>> ---
+>>
+>> Notes:
+>>      Changelog:
+>>           v2:
+>>      - don't add phy read/write helpers or add phy to private data
+>>           v1: https://lore.kernel.org/all/20240201121220.5523-5-rogerq@kernel.org/
+>>
+>>   drivers/usb/dwc3/dwc3-am62.c | 21 ++++++++++++++++++++-
+>>   1 file changed, 20 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/dwc3/dwc3-am62.c b/drivers/usb/dwc3/dwc3-am62.c
+>> index af1ce934e7fb..5ae5c3087b0f 100644
+>> --- a/drivers/usb/dwc3/dwc3-am62.c
+>> +++ b/drivers/usb/dwc3/dwc3-am62.c
+>> @@ -101,6 +101,11 @@
+>>   #define PHY_CORE_VOLTAGE_MASK    BIT(31)
+>>   #define PHY_PLL_REFCLK_MASK    GENMASK(3, 0)
+>>   +/* USB PHY2 register offsets */
+>> +#define    USB_PHY_PLL_REG12        0x130
+>> +#define    USB_PHY_PLL_LDO_REF_EN        BIT(5)
+>> +#define    USB_PHY_PLL_LDO_REF_EN_EN    BIT(4)
+>> +
+>>   #define DWC3_AM62_AUTOSUSPEND_DELAY    100
+>>     struct dwc3_am62 {
+>> @@ -184,8 +189,9 @@ static int dwc3_ti_probe(struct platform_device *pdev)
+>>       struct device *dev = &pdev->dev;
+>>       struct device_node *node = pdev->dev.of_node;
+>>       struct dwc3_am62 *am62;
+>> -    int i, ret;
+>>       unsigned long rate;
+>> +    void __iomem *phy;
+>> +    int i, ret;
+>>       u32 reg;
+>>         am62 = devm_kzalloc(dev, sizeof(*am62), GFP_KERNEL);
+>> @@ -201,6 +207,12 @@ static int dwc3_ti_probe(struct platform_device *pdev)
+>>           return PTR_ERR(am62->usbss);
+>>       }
+>>   +    phy = devm_platform_ioremap_resource(pdev, 1);
+>> +    if (IS_ERR(phy)) {
+>> +        dev_err(dev, "can't map PHY IOMEM resource. Won't apply i2409 fix.\n");
+>> +        phy = NULL;
+>> +    }
+> 
+> Why not move this down to where you use it below, then just have
+> it be an if/else with the work around in the if (!IS_ERR(phy))
+> and the warning in the else.
+
+Seems reasonable. Will fix.
+
+> 
+> Andrew
+> 
+>> +
+>>       am62->usb2_refclk = devm_clk_get(dev, "ref");
+>>       if (IS_ERR(am62->usb2_refclk)) {
+>>           dev_err(dev, "can't get usb2_refclk\n");
+>> @@ -227,6 +239,13 @@ static int dwc3_ti_probe(struct platform_device *pdev)
+>>       if (ret)
+>>           return ret;
+>>   +    /* Workaround Errata i2409 */
+>> +    if (phy) {
+>> +        reg = readl(phy + USB_PHY_PLL_REG12);
+>> +        reg |= USB_PHY_PLL_LDO_REF_EN | USB_PHY_PLL_LDO_REF_EN_EN;
+>> +        writel(reg, phy + USB_PHY_PLL_REG12);
+>> +    }
+>> +
+>>       /* VBUS divider select */
+>>       am62->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
+>>       reg = dwc3_ti_readl(am62, USBSS_PHY_CONFIG);
+
+-- 
+cheers,
+-roger
