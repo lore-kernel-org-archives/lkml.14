@@ -1,453 +1,315 @@
-Received: from esa2.ltts.com (unknown [14.140.155.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553A37EEFA;
-	Thu,  8 Feb 2024 10:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8B763E1
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707389662; cv=none; b=sQYJUbRED5q+JBe9dMu30O8L/weQOF6fNHUQRRnnkjcT3mbxgj9qM49+uExwvB7XwiFvU5cfjJJukzw4MTUyaIqB1Xzpd3TjW8lqwQvBEwl+pV1SAto/DGFojFfG1hVN2bH7mdTACkh3x3+ag1nx6ydSUW6bCWq2Bt1ej47pPNM=
+	t=1707389678; cv=none; b=H53QkLZ7yXPZ5vDvLRxY6jhmMLUxXbt5O5ZUzLJG9Q5LnvynUhfxPExRHy01+2HrlbkSkBXPuyHD8CoO+P4sJSdFAYf1Qpd/KIo4Ppo/2UjLYIt9bOkKs/H5Om+Wfkb5JMKjGir2kG4enfL9jY0NT8ABrgV0z71eKIkPAkPGn2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707389662; c=relaxed/simple;
-	bh=rFrBvRxg3IAIv84bm1JhciARDNjXksoQOePpjbMgLmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HAdw/E6LS0/bwYpPSum914m5u+1Vy48NKO1WeXkgex84U8n42wiHT/C3SISaYCWZgO9zNeuTamgF3nL8e0bPGh8CQqIN/GQVfBUeIJmttt8A42WCf1vF0BJhThU+qu1urZRNv+puV20FU4mOxb7KztRZWoeM+jgUj/T92Yzn+os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: ROoCt+yNZFjvRicajE84P7SWVmMC3AF3wJA7w2ka0vGzvHsC9ELd5bxRN/Xp+erk+xBf4ND1at
- i29fj1pF2kmw==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 08 Feb 2024 16:24:10 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com,
-	lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jpanis@baylibre.com,
-	devicetree@vger.kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org
-Subject: [RESEND PATCH v1 12/13] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-Date: Thu,  8 Feb 2024 16:23:42 +0530
-Message-Id: <20240208105343.1212902-13-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240208105343.1212902-1-bhargav.r@ltts.com>
-References: <20240208105343.1212902-1-bhargav.r@ltts.com>
+	s=arc-20240116; t=1707389678; c=relaxed/simple;
+	bh=t4jjhQCQU5K2RcQenB+fy1X5o6Y7FBupo8tnX6DuXkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=khF14qX3fXaQz5cnLczrZnqDReENFgU04pMOWyyXs44XYkRKX7xfV146FaS1UzqLfSuBdZQhSl/RKnC0j3G9Lts+/oPD8sl94Qt5xNmaHMo/kDwDCawwXU4MidSW8Cde1jPDE2V7WWAnXvcHHktgmD2aXCqqpkbNE55ca33N+tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jh7w1I82; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jh7w1I82"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33adec41b55so903028f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 02:54:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707389674; x=1707994474; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S/kb+gyU3Rtfx6Hm+9IXxrBKwcOt1NhZJ++2tQxBh8Y=;
+        b=Jh7w1I82iPCbA9wvE0wqHlimKp5H6YkSqa/l7xHuvSDUxsqsFR7AsGBeAyqW3qPo2B
+         XzIk118w0bK25v1u/uuaKfZExtsKH2Y3r0Pjvmss4b41loMxqX04Tsffszy+ATXaaDYF
+         W3oYdDmLnLb9inMSlBlnQBr210U+l88EJpUNpLOfVEjQMdIbWIBonweAHsEYqbGvyhQm
+         8ARNT4CRVDxG7UQNM0WMsPSevcWR6ZtRl9b3Bve0dWYrdMXZA4elIcvxmW3vFi2270C2
+         DksNz5lz9t6OuzAqBHRTmObdRNR4WrDgaRFy1iMoQFYYVA2Fdz5WFwCaSxQJ1YMWM7bY
+         xkPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707389674; x=1707994474;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S/kb+gyU3Rtfx6Hm+9IXxrBKwcOt1NhZJ++2tQxBh8Y=;
+        b=mIsiEZlzpjdUZMpVD3Xa7xndoMMdD7zIBQerRf/mgYqVbWcUqiqbozgvfJLkUiV1Fu
+         gdmzrYwlWcRuP7ZamfEuIag62jnRHFvD867COEq0WDLpKjBrswEN8U/FlQ1CA6qJNsOY
+         cgxPLfR8ZRqVwnCPe5ReX3Gfrk0AuP1cqZEmbK6ueZfHL4PaV3I2xOM479wPTmkMjbYI
+         CjIZBU9qfV3Uwvp0g8Qmo4AFns/YRW6xCayuUZejTeuTeqU1yYbs54Mv3FXRv3DpHNUQ
+         j/yYasX1FptruuPK4kfTr78XuqSPgNiBKzmoKPo8NcWLc4WHPF7Hfl3aR7Ws2UG0AyRv
+         utDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtvXLkZG39PZmPqsoFOm163cLAXPr0K9Ib1hmc84LN+Fd8VRpJZYOHfsdd+B4cfEI8FfMs1PUS5VWSR4K41quu97za3CSXLLcvhpaT
+X-Gm-Message-State: AOJu0Ywu1ODL7SFxARYZMH+yca28wGDXmaZbreWGLM5eCAGbLn0ODUqm
+	4oC4jacNer1vJUZ3mRHfsRkIr7RvfUTk/N60imVPT2EHDa+ZiE3TI7WwudGoHQ==
+X-Google-Smtp-Source: AGHT+IF+IJpnfbvbF0ih1s0lb4YYEYsUqwWNm9pfTy93m/cXmHg332cMznQi4soNtyqci/EWTd0Tpg==
+X-Received: by 2002:a05:6000:110b:b0:33b:4f08:ac9e with SMTP id z11-20020a056000110b00b0033b4f08ac9emr3510758wrw.34.1707389673485;
+        Thu, 08 Feb 2024 02:54:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWuwHeFPV3uIlxqCtv9KzsVgdLmeMJHm3Ze9vu5+QmqRFygR7ZCD03KV7KqDAq8m7x7sxwo3BHEvysqkMFRYouCWqwZkw3b0Gg2bv8zdGiVG6SQXi7lKback5OGEPJOG/+rPklOk7EHN4f25fAqLffIKhYm3R247FJxDfJSiE/VuLtuPwF4rjVkdvfLihUDod9wJ7Gfi1njCJx5dPfLtfSFdRB6BDCuYKF4HvSotYt87aOXLhwZ/3j3q91rpXl4/zkBrmYnzcNng2ro85Rl0CSK+PhD5y7B4z+Ev1LXD0pSIeOZLWTGuf4NBWfK0DiW2Luj0wWp4JXjraAhinaAJV8ffhCY93fgViwxZVM/rkhj6CX7XpLUxT4yuYbIEKdRZClvgHRk5t6lJbvxgWkwSxUmlPXnNPfij1JkWpjIGyoCECASIpQ8OhVs5FsQBQsvAi83NCZ0nGqbvqZPkYd7EhLRHkfG4NlnDPUOabhzZ1zLaOYMnzBxUV0jr2kMt0TckKH7eWf5da9Vp/eFNHY5Wpo=
+Received: from elver.google.com ([2a00:79e0:9c:201:d242:69f5:cb36:120])
+        by smtp.gmail.com with ESMTPSA id c13-20020a056000184d00b0033b07f428b6sm3382401wri.0.2024.02.08.02.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 02:54:32 -0800 (PST)
+Date: Thu, 8 Feb 2024 11:54:27 +0100
+From: Marco Elver <elver@google.com>
+To: Yonghong Song <yonghong.song@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Yafang Shao <laoar.shao@gmail.com>, Tejun Heo <tj@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2] bpf: Allow compiler to inline most of
+ bpf_local_storage_lookup()
+Message-ID: <ZcSy49GKt3EWIdbK@elver.google.com>
+References: <20240207122626.3508658-1-elver@google.com>
+ <289242c3-052b-436d-8c7c-b0fa5ae45bce@linux.dev>
+ <CANpmjNMGW3zTGOn_69=+KjE4Txik8aQBbdefeo0GuVOkqjgV6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMGW3zTGOn_69=+KjE4Txik8aQBbdefeo0GuVOkqjgV6Q@mail.gmail.com>
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+On Thu, Feb 08, 2024 at 08:37AM +0100, Marco Elver wrote:
+> On Thu, 8 Feb 2024 at 00:58, Yonghong Song <yonghong.song@linux.dev> wrote:
+> > On 2/7/24 4:26 AM, Marco Elver wrote:
+> > > In various performance profiles of kernels with BPF programs attached,
+> > > bpf_local_storage_lookup() appears as a significant portion of CPU
+> > > cycles spent. To enable the compiler generate more optimal code, turn
+> > > bpf_local_storage_lookup() into a static inline function, where only the
+> > > cache insertion code path is outlined
+> > >
+> > > Notably, outlining cache insertion helps avoid bloating callers by
+> > > duplicating setting up calls to raw_spin_{lock,unlock}_irqsave() (on
+> > > architectures which do not inline spin_lock/unlock, such as x86), which
+> > > would cause the compiler produce worse code by deciding to outline
+> > > otherwise inlinable functions. The call overhead is neutral, because we
+> > > make 2 calls either way: either calling raw_spin_lock_irqsave() and
+> > > raw_spin_unlock_irqsave(); or call __bpf_local_storage_insert_cache(),
+> > > which calls raw_spin_lock_irqsave(), followed by a tail-call to
+> > > raw_spin_unlock_irqsave() where the compiler can perform TCO and (in
+> > > optimized uninstrumented builds) turns it into a plain jump. The call to
+> > > __bpf_local_storage_insert_cache() can be elided entirely if
+> > > cacheit_lockit is a false constant expression.
+> > >
+> > > Based on results from './benchs/run_bench_local_storage.sh' (21 trials,
+> > > reboot between each trial; x86 defconfig + BPF, clang 16) this produces
+> > > improvements in throughput and latency in the majority of cases, with an
+> > > average (geomean) improvement of 8%:
+> [...]
+> > >   include/linux/bpf_local_storage.h             | 30 ++++++++++-
+> > >   kernel/bpf/bpf_local_storage.c                | 52 +++++--------------
+> > >   .../bpf/prog_tests/task_local_storage.c       |  6 ---
+> > >   .../selftests/bpf/progs/cgrp_ls_recursion.c   | 26 ----------
+> > >   .../selftests/bpf/progs/task_ls_recursion.c   | 17 ------
+> > >   5 files changed, 41 insertions(+), 90 deletions(-)
+> > >
+> > > diff --git a/include/linux/bpf_local_storage.h b/include/linux/bpf_local_storage.h
+> > > index 173ec7f43ed1..dcddb0aef7d8 100644
+> > > --- a/include/linux/bpf_local_storage.h
+> > > +++ b/include/linux/bpf_local_storage.h
+> > > @@ -129,10 +129,36 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
+> > >                           struct bpf_local_storage_cache *cache,
+> > >                           bool bpf_ma);
+> > >
+> > > -struct bpf_local_storage_data *
+> > > +void __bpf_local_storage_insert_cache(struct bpf_local_storage *local_storage,
+> > > +                                   struct bpf_local_storage_map *smap,
+> > > +                                   struct bpf_local_storage_elem *selem);
+> > > +/* If cacheit_lockit is false, this lookup function is lockless */
+> > > +static inline struct bpf_local_storage_data *
+> > >   bpf_local_storage_lookup(struct bpf_local_storage *local_storage,
+> > >                        struct bpf_local_storage_map *smap,
+> > > -                      bool cacheit_lockit);
+> > > +                      bool cacheit_lockit)
+> > > +{
+> > > +     struct bpf_local_storage_data *sdata;
+> > > +     struct bpf_local_storage_elem *selem;
+> > > +
+> > > +     /* Fast path (cache hit) */
+> > > +     sdata = rcu_dereference_check(local_storage->cache[smap->cache_idx],
+> > > +                                   bpf_rcu_lock_held());
+> > > +     if (sdata && rcu_access_pointer(sdata->smap) == smap)
+> > > +             return sdata;
+> >
+> > I think we should focus on fast path (your v1 patch)
+> > and I suppose most production environments
+> > want to hit fast path in most times. In your production environment did
+> > you see more than 16 local storage maps per entity (task/sk/inode)?
+> 
+> I think having more than 16 local storage maps isn't entirely unlikely
+> as eBPF usage grows. But at the moment, it should be rare.
+> 
+> > In the fast path, the memory accesses are
+> >    two from local_storage->cache[smap->cache_idx] and
+> >    one from sdata->smap
+> >
+> >
+> > > +
+> > > +     /* Slow path (cache miss) */
+> > > +     hlist_for_each_entry_rcu(selem, &local_storage->list, snode,
+> > > +                               rcu_read_lock_trace_held())
+> > > +             if (rcu_access_pointer(SDATA(selem)->smap) == smap)
+> > > +                     break;
+> >
+> > But if we reach slow path here which means we have more than 16 local
+> > storage maps, then traversing the list and getting SDATA(selem)->smap
+> > will be very expensive, in addition to memory accesses in fast path.
+> >
+> > I suppose here we mostly care about socket local storage since it is
+> > totally possible for a production workload to have millions of sockets.
+> > To improve performance, fast path should hit in most cases.
+> > If there are too many sk local storage maps, some kind of sharing
+> > can be done so multiple applications might be using a single sk
+> > local storage.
+> >
+> > Your above inlining/outlining analysis also show how tricky it is
+> > for compilation optimization. Without profiling, it is totally
+> > possible that compiler might do optimization differently in
+> > the future.
+> 
+> Sure, but it's usually the case that we have to help the compiler a
+> little to produce more optimal code - if the compiler becomes stupid
+> in future, we need either fix the compiler or help it some more.
+> 
+> > So here is my suggestion, let us do inlining
+> > for fast path and focus on performance of fast path.
+> 
+> The slow-path (iterate list w/o cache insertion) is still relatively
+> small (it's a pointer-chasing loop and a compare), and I decided that
+> it can be justified inlining it. Martin asked in v1 why there were
+> slowdowns above 16 local maps, and I analyzed, and concluded that
+> inlining most is needed to fix and does not hurt performance: in fact,
+> the current version is better than v1 in all cases (even for 16 maps
+> or below).
+> 
+> Let me know which version you prefer, and I'll change it. However,
+> based on the results, I would prefer the current version.
 
-Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they
-have significant functional overlap.
-TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
-dedicated device functions.
+FTR, these were the results going from v1 (before) -> v2 (after):
 
-Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
----
- drivers/pinctrl/pinctrl-tps6594.c | 287 +++++++++++++++++++++++++-----
- 1 file changed, 246 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
-index 66985e54b..5da21aa14 100644
---- a/drivers/pinctrl/pinctrl-tps6594.c
-+++ b/drivers/pinctrl/pinctrl-tps6594.c
-@@ -14,8 +14,6 @@
- 
- #include <linux/mfd/tps6594.h>
- 
--#define TPS6594_PINCTRL_PINS_NB 11
--
- #define TPS6594_PINCTRL_GPIO_FUNCTION 0
- #define TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
- #define TPS6594_PINCTRL_TRIG_WDOG_FUNCTION 1
-@@ -40,17 +38,40 @@
- #define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8 3
- #define TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9 3
- 
-+/* TPS65224 pin muxval */
-+#define TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION 1
-+#define TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
-+#define TPS65224_PINCTRL_VMON1_FUNCTION 1
-+#define TPS65224_PINCTRL_VMON2_FUNCTION 1
-+#define TPS65224_PINCTRL_WKUP_FUNCTION 1
-+#define TPS65224_PINCTRL_NSLEEP2_FUNCTION 2
-+#define TPS65224_PINCTRL_NSLEEP1_FUNCTION 2
-+#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION 2
-+#define TPS65224_PINCTRL_NERR_MCU_FUNCTION 2
-+#define TPS65224_PINCTRL_NINT_FUNCTION 3
-+#define TPS65224_PINCTRL_TRIG_WDOG_FUNCTION 3
-+#define TPS65224_PINCTRL_PB_FUNCTION 3
-+#define TPS65224_PINCTRL_ADC_IN_FUNCTION 3
-+
-+/* TPS65224 Special muxval for recalcitrant pins */
-+#define TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5 1
-+#define TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5 4
-+#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5 3
-+
- #define TPS6594_OFFSET_GPIO_SEL 5
- 
--#define FUNCTION(fname, v)									\
-+#define TPS65224_NGPIO_PER_REG 6
-+#define TPS6594_NGPIO_PER_REG  8
-+
-+#define FUNCTION(dev_name, fname, v)							\
- {											\
- 	.pinfunction = PINCTRL_PINFUNCTION(#fname,					\
--					tps6594_##fname##_func_group_names,		\
--					ARRAY_SIZE(tps6594_##fname##_func_group_names)),\
-+					dev_name##_##fname##_func_group_names,		\
-+					ARRAY_SIZE(dev_name##_##fname##_func_group_names)),\
- 	.muxval = v,									\
- }
- 
--static const struct pinctrl_pin_desc tps6594_pins[TPS6594_PINCTRL_PINS_NB] = {
-+static const struct pinctrl_pin_desc tps6594_pins[] = {
- 	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
- 	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
- 	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
-@@ -143,30 +164,127 @@ static const char *const tps6594_syncclkin_func_group_names[] = {
- 	"GPIO9",
- };
- 
-+static const struct pinctrl_pin_desc tps65224_pins[] = {
-+	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
-+	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
-+	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
-+};
-+
-+static const char *const tps65224_gpio_func_group_names[] = {
-+	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_sda_i2c2_sdo_spi_func_group_names[] = {
-+	"GPIO0",
-+};
-+
-+static const char *const tps65224_nsleep2_func_group_names[] = {
-+	"GPIO0", "GPIO5",
-+};
-+
-+static const char *const tps65224_nint_func_group_names[] = {
-+	"GPIO0",
-+};
-+
-+static const char *const tps65224_scl_i2c2_cs_spi_func_group_names[] = {
-+	"GPIO1",
-+};
-+
-+static const char *const tps65224_nsleep1_func_group_names[] = {
-+	"GPIO1", "GPIO2", "GPIO3",
-+};
-+
-+static const char *const tps65224_trig_wdog_func_group_names[] = {
-+	"GPIO1",
-+};
-+
-+static const char *const tps65224_vmon1_func_group_names[] = {
-+	"GPIO2",
-+};
-+
-+static const char *const tps65224_pb_func_group_names[] = {
-+	"GPIO2",
-+};
-+
-+static const char *const tps65224_vmon2_func_group_names[] = {
-+	"GPIO3",
-+};
-+
-+static const char *const tps65224_adc_in_func_group_names[] = {
-+	"GPIO3", "GPIO4",
-+};
-+
-+static const char *const tps65224_wkup_func_group_names[] = {
-+	"GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_syncclkin_func_group_names[] = {
-+	"GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_nerr_mcu_func_group_names[] = {
-+	"GPIO5",
-+};
-+
- struct tps6594_pinctrl_function {
- 	struct pinfunction pinfunction;
- 	u8 muxval;
- };
- 
-+struct muxval_remap {
-+	unsigned int group;
-+	u8 muxval;
-+	u8 remap;
-+};
-+
-+struct muxval_remap tps65224_muxval_remap[] = {
-+	{5, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5},
-+	{5, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5},
-+	{5, TPS65224_PINCTRL_NSLEEP2_FUNCTION, TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5},
-+};
-+
-+struct muxval_remap tps6594_muxval_remap[] = {
-+	{8, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8},
-+	{8, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8},
-+	{9, TPS6594_PINCTRL_CLK32KOUT_FUNCTION, TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9},
-+};
-+
- static const struct tps6594_pinctrl_function pinctrl_functions[] = {
--	FUNCTION(gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
--	FUNCTION(nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
--	FUNCTION(nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
--	FUNCTION(wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
--	FUNCTION(wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
--	FUNCTION(scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
--	FUNCTION(nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
--	FUNCTION(trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
--	FUNCTION(sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
--	FUNCTION(clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
--	FUNCTION(nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
--	FUNCTION(sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
--	FUNCTION(sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
--	FUNCTION(nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
--	FUNCTION(syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
--	FUNCTION(disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
--	FUNCTION(pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
--	FUNCTION(syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
-+	FUNCTION(tps6594, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
-+	FUNCTION(tps6594, nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
-+	FUNCTION(tps6594, nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
-+	FUNCTION(tps6594, wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
-+	FUNCTION(tps6594, wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
-+	FUNCTION(tps6594, scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
-+	FUNCTION(tps6594, nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
-+	FUNCTION(tps6594, trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
-+	FUNCTION(tps6594, sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
-+	FUNCTION(tps6594, clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
-+	FUNCTION(tps6594, nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
-+	FUNCTION(tps6594, sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
-+	FUNCTION(tps6594, sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
-+	FUNCTION(tps6594, nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
-+	FUNCTION(tps6594, syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
-+	FUNCTION(tps6594, disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
-+	FUNCTION(tps6594, pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
-+	FUNCTION(tps6594, syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
-+};
-+
-+static const struct tps6594_pinctrl_function tps65224_pinctrl_functions[] = {
-+	FUNCTION(tps65224, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
-+	FUNCTION(tps65224, sda_i2c2_sdo_spi, TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
-+	FUNCTION(tps65224, nsleep2, TPS65224_PINCTRL_NSLEEP2_FUNCTION),
-+	FUNCTION(tps65224, nint, TPS65224_PINCTRL_NINT_FUNCTION),
-+	FUNCTION(tps65224, scl_i2c2_cs_spi, TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
-+	FUNCTION(tps65224, nsleep1, TPS65224_PINCTRL_NSLEEP1_FUNCTION),
-+	FUNCTION(tps65224, trig_wdog, TPS65224_PINCTRL_TRIG_WDOG_FUNCTION),
-+	FUNCTION(tps65224, vmon1, TPS65224_PINCTRL_VMON1_FUNCTION),
-+	FUNCTION(tps65224, pb, TPS65224_PINCTRL_PB_FUNCTION),
-+	FUNCTION(tps65224, vmon2, TPS65224_PINCTRL_VMON2_FUNCTION),
-+	FUNCTION(tps65224, adc_in, TPS65224_PINCTRL_ADC_IN_FUNCTION),
-+	FUNCTION(tps65224, wkup, TPS65224_PINCTRL_WKUP_FUNCTION),
-+	FUNCTION(tps65224, syncclkin, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION),
-+	FUNCTION(tps65224, nerr_mcu, TPS65224_PINCTRL_NERR_MCU_FUNCTION),
- };
- 
- struct tps6594_pinctrl {
-@@ -201,7 +319,21 @@ static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
- 
- static int tps6594_pmx_func_cnt(struct pinctrl_dev *pctldev)
- {
--	return ARRAY_SIZE(pinctrl_functions);
-+	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	int func_cnt = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		func_cnt = ARRAY_SIZE(tps65224_pinctrl_functions);
-+		break;
-+	case TPS6594:
-+		func_cnt = ARRAY_SIZE(pinctrl_functions);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return func_cnt;
- }
- 
- static const char *tps6594_pmx_func_name(struct pinctrl_dev *pctldev,
-@@ -229,10 +361,26 @@ static int tps6594_pmx_set(struct tps6594_pinctrl *pinctrl, unsigned int pin,
- 			   u8 muxval)
- {
- 	u8 mux_sel_val = muxval << TPS6594_OFFSET_GPIO_SEL;
-+	u8 mux_sel_mask = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		mux_sel_mask = TPS65224_MASK_GPIO_SEL;
-+		/* GPIO6 has a different mask in TPS65224*/
-+		if (pin == 5)
-+			mux_sel_mask = TPS65224_MASK_GPIO_SEL_GPIO6;
-+		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
-+		break;
-+	case TPS6594:
-+		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return regmap_update_bits(pinctrl->tps->regmap,
- 				  TPS6594_REG_GPIOX_CONF(pin),
--				  TPS6594_MASK_GPIO_SEL, mux_sel_val);
-+				  mux_sel_mask, mux_sel_val);
- }
- 
- static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
-@@ -240,16 +388,28 @@ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
- {
- 	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
- 	u8 muxval = pinctrl->funcs[function].muxval;
-+	unsigned int remap_cnt = 0;
-+	struct muxval_remap *remap;
- 
- 	/* Some pins don't have the same muxval for the same function... */
--	if (group == 8) {
--		if (muxval == TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION)
--			muxval = TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8;
--		else if (muxval == TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION)
--			muxval = TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8;
--	} else if (group == 9) {
--		if (muxval == TPS6594_PINCTRL_CLK32KOUT_FUNCTION)
--			muxval = TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		remap = tps65224_muxval_remap;
-+		remap_cnt = ARRAY_SIZE(tps65224_muxval_remap);
-+		break;
-+	case TPS6594:
-+		remap = tps6594_muxval_remap;
-+		remap_cnt = ARRAY_SIZE(tps6594_muxval_remap);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	for (unsigned int i = 0; i < remap_cnt; i++) {
-+		if (group == remap[i].group && muxval == remap[i].muxval) {
-+			muxval = remap[i].remap;
-+			break;
-+		}
- 	}
- 
- 	return tps6594_pmx_set(pinctrl, group, muxval);
-@@ -276,7 +436,21 @@ static const struct pinmux_ops tps6594_pmx_ops = {
- 
- static int tps6594_groups_cnt(struct pinctrl_dev *pctldev)
- {
--	return ARRAY_SIZE(tps6594_pins);
-+	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	int num_pins = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		num_pins = ARRAY_SIZE(tps65224_pins);
-+		break;
-+	case TPS6594:
-+		num_pins = ARRAY_SIZE(tps6594_pins);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return num_pins;
- }
- 
- static int tps6594_group_pins(struct pinctrl_dev *pctldev,
-@@ -320,8 +494,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	pctrl_desc->name = dev_name(dev);
- 	pctrl_desc->owner = THIS_MODULE;
--	pctrl_desc->pins = tps6594_pins;
--	pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
-+	switch (tps->chip_id) {
-+	case TPS65224:
-+		pctrl_desc->pins = tps65224_pins;
-+		pctrl_desc->npins = ARRAY_SIZE(tps65224_pins);
-+		break;
-+	case TPS6594:
-+		pctrl_desc->pins = tps6594_pins;
-+		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
-+		break;
-+	default:
-+		break;
-+	}
- 	pctrl_desc->pctlops = &tps6594_pctrl_ops;
- 	pctrl_desc->pmxops = &tps6594_pmx_ops;
- 
-@@ -329,8 +513,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 	if (!pinctrl)
- 		return -ENOMEM;
- 	pinctrl->tps = dev_get_drvdata(dev->parent);
--	pinctrl->funcs = pinctrl_functions;
--	pinctrl->pins = tps6594_pins;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		pinctrl->funcs = tps65224_pinctrl_functions;
-+		pinctrl->pins = tps65224_pins;
-+		break;
-+	case TPS6594:
-+		pinctrl->funcs = pinctrl_functions;
-+		pinctrl->pins = tps6594_pins;
-+		break;
-+	default:
-+		break;
-+	}
- 	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
- 	if (IS_ERR(pinctrl->pctl_dev))
- 		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
-@@ -338,8 +532,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 
- 	config.parent = tps->dev;
- 	config.regmap = tps->regmap;
--	config.ngpio = TPS6594_PINCTRL_PINS_NB;
--	config.ngpio_per_reg = 8;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		config.ngpio = ARRAY_SIZE(tps65224_gpio_func_group_names);
-+		config.ngpio_per_reg = TPS65224_NGPIO_PER_REG;
-+		break;
-+	case TPS6594:
-+		config.ngpio = ARRAY_SIZE(tps6594_gpio_func_group_names);
-+		config.ngpio_per_reg = TPS6594_NGPIO_PER_REG;
-+		break;
-+	default:
-+		break;
-+	}
- 	config.reg_dat_base = TPS6594_REG_GPIO_IN_1;
- 	config.reg_set_base = TPS6594_REG_GPIO_OUT_1;
- 	config.reg_dir_out_base = TPS6594_REG_GPIOX_CONF(0);
-@@ -369,5 +573,6 @@ static struct platform_driver tps6594_pinctrl_driver = {
- module_platform_driver(tps6594_pinctrl_driver);
- 
- MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
-+MODULE_AUTHOR("Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>");
- MODULE_DESCRIPTION("TPS6594 pinctrl and GPIO driver");
- MODULE_LICENSE("GPL");
--- 
-2.25.1
-
++---- Local Storage ----------------------
+|
+| + num_maps: 1
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 38.593 M ops/s       | 39.068 M ops/s (+1.2%)
+|   +- hits latency                       | 25.913 ns/op         | 25.598 ns/op   (-1.2%)
+|   +- important_hits throughput          | 38.593 M ops/s       | 39.068 M ops/s (+1.2%)
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 44.406 M ops/s       | 44.926 M ops/s (+1.2%)
+|   +- hits latency                       | 22.521 ns/op         | 22.259 ns/op   (-1.2%)
+|   +- important_hits throughput          | 44.406 M ops/s       | 44.926 M ops/s (+1.2%)
+|
+| + num_maps: 10
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 37.583 M ops/s       | 38.099 M ops/s (+1.4%)
+|   +- hits latency                       | 26.609 ns/op         | 26.248 ns/op   (-1.4%)
+|   +- important_hits throughput          | 3.758 M ops/s        | 3.810 M ops/s  (+1.4%)
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 40.698 M ops/s       | 41.145 M ops/s (+1.1%)
+|   +- hits latency                       | 24.573 ns/op         | 24.307 ns/op   (-1.1%)
+|   +- important_hits throughput          | 14.535 M ops/s       | 14.695 M ops/s (+1.1%)
+|
+| + num_maps: 16
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 38.061 M ops/s       | 38.341 M ops/s (  ~  )
+|   +- hits latency                       | 26.275 ns/op         | 26.083 ns/op   (  ~  )
+|   +- important_hits throughput          | 2.379 M ops/s        | 2.396 M ops/s  (  ~  )
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 40.890 M ops/s       | 41.338 M ops/s (+1.1%)
+|   +- hits latency                       | 24.458 ns/op         | 24.193 ns/op   (-1.1%)
+|   +- important_hits throughput          | 13.010 M ops/s       | 13.153 M ops/s (+1.1%)
+|
+| + num_maps: 17
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 31.799 M ops/s       | 32.756 M ops/s (+3.0%)
+|   +- hits latency                       | 31.448 ns/op         | 30.530 ns/op   (-2.9%)
+|   +- important_hits throughput          | 1.873 M ops/s        | 1.929 M ops/s  (+3.0%)
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 35.284 M ops/s       | 36.110 M ops/s (+2.3%)
+|   +- hits latency                       | 28.343 ns/op         | 27.697 ns/op   (-2.3%)
+|   +- important_hits throughput          | 10.742 M ops/s       | 10.993 M ops/s (+2.3%)
+|
+| + num_maps: 24
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 17.947 M ops/s       | 19.937 M ops/s (+11.1%)
+|   +- hits latency                       | 55.725 ns/op         | 50.166 ns/op   (-10.0%)
+|   +- important_hits throughput          | 0.748 M ops/s        | 0.831 M ops/s  (+11.1%)
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 21.379 M ops/s       | 23.332 M ops/s (+9.1%)
+|   +- hits latency                       | 46.775 ns/op         | 42.865 ns/op   (-8.4%)
+|   +- important_hits throughput          | 6.014 M ops/s        | 6.564 M ops/s  (+9.1%)
+|
+| + num_maps: 32
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 13.279 M ops/s       | 14.626 M ops/s (+10.1%)
+|   +- hits latency                       | 75.317 ns/op         | 68.381 ns/op   (-9.2%)
+|   +- important_hits throughput          | 0.416 M ops/s        | 0.458 M ops/s  (+10.2%)
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 16.444 M ops/s       | 17.906 M ops/s (+8.9%)
+|   +- hits latency                       | 60.816 ns/op         | 55.865 ns/op   (-8.1%)
+|   +- important_hits throughput          | 4.590 M ops/s        | 4.998 M ops/s  (+8.9%)
+|
+| + num_maps: 100
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 4.912 M ops/s        | 5.528 M ops/s  (+12.5%)
+|   +- hits latency                       | 207.291 ns/op        | 183.059 ns/op  (-11.7%)
+|   +- important_hits throughput          | 0.049 M ops/s        | 0.055 M ops/s  (+12.7%)
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 6.039 M ops/s        | 6.498 M ops/s  (+7.6%)
+|   +- hits latency                       | 167.325 ns/op        | 152.877 ns/op  (-8.6%)
+|   +- important_hits throughput          | 1.577 M ops/s        | 1.697 M ops/s  (+7.6%)
+|
+| + num_maps: 1000
+| :                                         <before>             | <after>
+| +-+ local_storage cache sequential get  +----------------------+----------------------
+|   +- hits throughput                    | 0.342 M ops/s        | 0.354 M ops/s  (+3.6%)
+|   +- hits latency                       | 2930.550 ns/op       | 2827.139 ns/op (-3.5%)
+|   +- important_hits throughput          | 0.000 M ops/s        | 0.000 M ops/s  (  ~  )
+| :
+| :                                         <before>             | <after>
+| +-+ local_storage cache interleaved get +----------------------+----------------------
+|   +- hits throughput                    | 0.413 M ops/s        | 0.403 M ops/s  (-2.5%)
+|   +- hits latency                       | 2427.830 ns/op       | 2487.555 ns/op (+2.5%)
+|   +- important_hits throughput          | 0.104 M ops/s        | 0.101 M ops/s  (-2.6%)
+|
+| Geomean:
+| hits throughput: 102.93%
+| hits latency: 97.11%
+| important_hits throughput: 102.77%
