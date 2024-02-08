@@ -1,73 +1,43 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6016DD1C
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D536BFC2;
+	Thu,  8 Feb 2024 10:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707387458; cv=none; b=TnAli3k0mio7H/YiolHZyx7i49Hk0tkzvD1SOB3kJFOWdYdCXxeJj4KL+h2tSN9aFYvt3CkPR7Uwq0nsv3/boq0tfk6lnFhkIQr6lnWX+rmK/sXvMKmTAB3aTSoBBsn9DIhfDmygZ2SUe3BV4pJ8G/CoqFOmR2QWw+/Bb2UH2HY=
+	t=1707387518; cv=none; b=RExouByf9IVe7f3andPuMgQJBbTVFKQtoAUGMxW0MaAXq3MCeqGwEfMdnk1/I6CKFVKOsOoKvO9F+oKfzcYSwm+FIraBCqJUAIE3o+MWKM0vjM74uWhHiHbBRdUQFFlEK45rARwk4QpFGIdik46TiUtMxOUKJxnNkyhlQEGk/T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707387458; c=relaxed/simple;
-	bh=TqMu84p62go2ECAjuTKX5lC7+9a4OPfiRFRt5ZFApA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=D3F18oehmpUqtJjIpqqgIk2Ynn/t+h/m6oXSpdJndr4CP+JkKG54DoMrO+w7CEHzNs0QipmUQIq7YGAEJj1Z4fe/ycBwXsGhdQxooBPrkD/fzCNcjlTAZKsv03E8+4nCG3+fSvjYg6GXSWkArLRVPJUaBf423p/5/Zsb+tu3BGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GDcB4PpD; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707387518; c=relaxed/simple;
+	bh=uhvalGSkL3ej/pnChIRBm8dpvY069eIscLpqr/mfNjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hJMnAbWFv+6h8QP/6uXjVKD4K4WvEouVBqTmdUjgPdSTttE4mPYJDGNo73vdhC2PYD5KE8cqbnCO9+004Yp27r2kDFIHBvK5Wj1hhXnr5gmREiQiQZUmJCAwHvysPvWlG+fm6o2uinOush8HbEidWq3uAE1KLBFh1FWJ3p/oD2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=C76K69iN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GDcB4PpD"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5601eb97b29so1401018a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 02:17:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707387454; x=1707992254; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mExta14h3FfRuo79nR/+ky5h2A6/maxcVWEMwCpWnDU=;
-        b=GDcB4PpDjORSHT4pBwsomRTCG42odWQd08Y/VyEK0SryNql9mvXetDAqztU95XtA6Z
-         w5FrTrzj/KL1uNPOm5yX6tSZx2K2ePAQEPDEZWYRuzwbo0LVkpw/esW1wIEaVXRWZ5ny
-         r90EAEEaSyWP7yd3Imspbgand6IMjxjqhUcozV5SQ92F8NXRlbmRh1uV2FDG5Wo1YOoH
-         p3vYB4IUzxVnq4/U0Cw3jEGdFbpsVsPWd9S9O3hww5TWnhNyJTcz5DPDVmnS4KguaZJ/
-         EdUJpgcxJpUFpYafLPLYxRa+65T7e+QujNaoHV8MclshhnPBQ3NQAbzJjXPEMN4ffWV4
-         DjDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707387454; x=1707992254;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mExta14h3FfRuo79nR/+ky5h2A6/maxcVWEMwCpWnDU=;
-        b=I59ArLqjLPVYaoMrzpXQhDVMMSK4Iwz0CUmwwZgagOSr7tc0op7FYZVJhsECrH6pk6
-         P1vaGkjLgf3oKORFx38++EHurzPw3sbnhVHGcJbC9V6Xtph+QJyCQ671HOxpiqhfJ7Rp
-         tYUT1ufQA4/C6A70CmEZ5XBxxbjWzmwOMGAB9SI3iAVhf5fFipb9VIlRtG1WzmsZAy1j
-         W+Df1U5TRNJaLcYauoI9Xfp3IIml0ff0DeacxyXKSY6jMe0rZmn2NbLWI2lbxeXddP/i
-         nPu8O9kyRQIbKoV9YxnDJD1RchTe0DjvD2TGNwXHQfM+yipm7KRZtrU5cGniB9bO+WkG
-         SFiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWo08eGxc6NgZhUUcF+ch3Aoiu3Zi+XGo0pP1DwfXc4YR/BUieIL9TbCoUDqlt6nXrOb/mjK7UGEVUJ8bCUMXM0WyP8EFyL5+h/loWu
-X-Gm-Message-State: AOJu0YzQe+CD9J8/axVvQGqIGY0j0OJDdIVjNBV7Dr9FhZ22oL6SEMiF
-	dmlouZ1ipZtP9GjKjsaNbj3elLeYb6SYPIMreZLU5Q56wnAaMFqpscR5XAODpWM=
-X-Google-Smtp-Source: AGHT+IFQx6srRh7zgGl8duv2aSjEJvDZQ++1WrbUI0C9W3RKZcrZvqb9vQvs8q9ELhOdvjzgZEUn0A==
-X-Received: by 2002:a50:aa96:0:b0:55f:ccb4:ec84 with SMTP id q22-20020a50aa96000000b0055fccb4ec84mr2314443edc.1.1707387454717;
-        Thu, 08 Feb 2024 02:17:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU41TDGHT0O3Zd4pv2l8cH4j6BtQDwfNy5O8SMYC/4cRdl+FDAuYn1N4inXencM9KSIJQRYVCXNvB1oqaHfNcwSE1OoL5Eh3mOfdxHndzcI8lPsXHUg6W5V5t3zFqlJ70J0VKSUHIeeq07rkaxcCtQkfTNRwFkEpJABpKbySvWpyZkDop94PVG6/C2Ok4CpbGoe/v9zQ/Azi5iIJwIMm3Yo0p/CEfAGbt61tucEf4sTwptF0TTNYnwxpq4PWB+eZQkYjyCrKCevHe1xdYM5fEL092N88BiajKxQWJ4AN+wtbu1Bt1ZXuny80ao4XLnCDM+aVKaM4loTW2DdzPTUoJgJMcvihk0a2bDIWzTwvQy2CWUHHHtP+Oi/TofHRN6Hg/5CKWVBCVAZhi+R57MWWav3qbuTncqAVNJUWubjybh0cZYAh7CQr/jN0BHQDSSHxgfWsAIaPruuR1BRdQ==
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id en14-20020a056402528e00b0055fe55441cbsm663142edb.40.2024.02.08.02.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 02:17:34 -0800 (PST)
-Date: Thu, 8 Feb 2024 13:17:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Matt Chen <matt.chen@intel.com>
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Alon Giladi <alon.giladi@intel.com>,
-	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
-	Daniel Gabay <daniel.gabay@intel.com>,
-	Luca Coelho <luciano.coelho@intel.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH 2/2] wifi: iwlwifi: uninitialized variable in
- iwl_acpi_get_ppag_table()
-Message-ID: <09900c01-6540-4a32-9451-563da0029cb6@moroto.mountain>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="C76K69iN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88635C433F1;
+	Thu,  8 Feb 2024 10:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707387518;
+	bh=uhvalGSkL3ej/pnChIRBm8dpvY069eIscLpqr/mfNjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C76K69iNT1RPa3juo5uWTFrboEuHrqgEw71QgP8AG9z6A+XLj9N8CsuxN+ouMcMFl
+	 emRZGF8bxvsvczRwYW7qd8intl0G2z9uYZgSi5Qgv85epKaWTQ6IBI3ERkVWXbXvrb
+	 1drZVUAoJjI1k466fauUMSU0TM8IQaH8vtVHFVXc=
+Date: Thu, 8 Feb 2024 10:18:35 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sreenath Vijayan <sreenath.vijayan@sony.com>, john.ogness@linutronix.de,
+	corbet@lwn.net, jirislaby@kernel.org, rdunlap@infradead.org,
+	rostedt@goodmis.org, senozhatsky@chromium.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, taichi.shimoyashiki@sony.com,
+	daniel.palmer@sony.com, anandakumar.balasubramaniam@sony.com
+Subject: Re: [PATCH v4 2/2] tty/sysrq: Dump printk ring buffer messages via
+ sysrq
+Message-ID: <2024020845-antiquely-faculty-407d@gregkh>
+References: <cover.1706772349.git.sreenath.vijayan@sony.com>
+ <ca8dd18e434f309612c907d90e9f77c09e045b37.1706772349.git.sreenath.vijayan@sony.com>
+ <ZcOdLrOPiPJmCec5@alley>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,34 +46,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9620bb77-2d7c-4d76-b255-ad824ebf8e35@moroto.mountain>
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <ZcOdLrOPiPJmCec5@alley>
 
-This is an error path and Smatch complains that "tbl_rev" is uninitialized
-on this path.  All the other functions follow this same patter where they
-set the error code and goto out_free so that's probably what was intended
-here as well.
+On Wed, Feb 07, 2024 at 04:09:34PM +0100, Petr Mladek wrote:
+> On Thu 2024-02-01 13:12:41, Sreenath Vijayan wrote:
+> > When terminal is unresponsive, one cannot use dmesg to view printk
+> > ring buffer messages. Also, syslog services may be disabled,
+> > to check the messages after a reboot, especially on embedded systems.
+> > In this scenario, dump the printk ring buffer messages via sysrq
+> > by pressing sysrq+D.
+> 
+> I would use sysrq-R and say that it replays the kernel log on
+> consoles.
+> 
+> The word "dump" is ambiguous. People might thing that it calls
+> dmesg dumpers.
+> 
+> Also the messages would be shown on the terminal only when
+> console_loglevel is set to show all messages. This is done
+> in __handle_sysrq(). But it is not done in the workqueue
+> context.
+> 
+> Finally, the commit message should explain why workqueues are used
+> and what are the limitations. Something like:
+> 
+> <add>
+> The log is replayed using workqueues. The reason is that it has to
+> be done a safe way (in compare with panic context).
+> 
+> This also means that the sysrq won't have the desired effect
+> when the system is in so bad state that workqueues do not
+> make any progress.
+> </add>
+> 
+> Another reason might be that we do not want to do it in
+> an interrupt context. But this reason is questionable.
+> Many other sysrq commands do a complicate work and
+> print many messages as well.
+> 
+> Another reason is that the function need to use console_lock()
+> which can't be called in IRQ context. Maybe, we should use
+> console_trylock() instead.
+> 
+> The function would replay the messages only when console_trylock()
+> succeeds. Users could repeat the sysrq when it fails.
+> 
+> Idea:
+> 
+> Using console_trylock() actually might be more reliable than
+> workqueues. console_trylock() might fail repeatably when:
+> 
+>     + the console_lock() owner is stuck. But workqueues would fail
+>       in this case as well.
+> 
+>     + there is a flood of messages. In this case, replaying
+>       the log would not help much.
+> 
+> Another advantage is that the consoles would be flushed
+> in sysrq context with the manipulated console_loglevel.
 
-Fixes: e8e10a37c51c ("iwlwifi: acpi: move ppag code from mvm to fw/acpi")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/net/wireless/intel/iwlwifi/fw/acpi.c | 3 +++
- 1 file changed, 3 insertions(+)
+I just remembered all the rt-changes coming down the pipe for
+consoles/printk, is this going to mess with that?
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-index 506279b95442..6806ac1636ca 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-@@ -848,6 +848,9 @@ int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fwrt)
- 		goto read_table;
- 	}
- 
-+	ret = PTR_ERR(wifi_pkg);
-+	goto out_free;
-+
- read_table:
- 	fwrt->ppag_ver = tbl_rev;
- 	flags = &wifi_pkg->package.elements[1];
--- 
-2.43.0
+And in thinking about it, the workqueue is a worry, sysrq is only
+usually hit if you have a lockup, and this isn't going to work well
+here, if at all, in that situation.
 
+So when this option fails when people need it the most, perhaps it's not
+worth adding?  When else would people want to use it?
+
+thanks,
+
+greg k-h
