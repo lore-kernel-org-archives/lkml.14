@@ -1,30 +1,30 @@
-Received: from esa1.ltts.com (unknown [118.185.121.105])
+Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A296BB4F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54836A8C5
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384053; cv=none; b=TIGElBu0zhgTn0r2w0+VLWgkh0WFxGc+TLwxVNh3vPsK9j3Tg0B+IRNX+mZPPi2Xd9Xup0MeaHmKzETrNjSGaA2W1iaSTdWXZaJVXgwNKk3Zr3j+pLzyBCfT630jgCN1CZTr9q1gU/Qzi16IfEOceFWaUsV96agzOoDnjcAGukg=
+	t=1707384056; cv=none; b=r87O54IJYuLzC9Aios9FZf5WuNO2ep+eKU1/tKovuGOhu0qBtNqJQUIBFUgKo5sQZ0hB45Epwo8cYm16kBW/cJzP7ciDlak5uZOHDtcTZGZxUytvogPWG2YlJ5GjeHUzxRnR70eOpkuD2pwpaYtKRrEMEjbJEoj4d/ayTqYeFBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384053; c=relaxed/simple;
-	bh=MSMA/Ar5xNq7gjfGIgm/+GRGGaFMAfD3V43FNkMJOFE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qByMmy/1BSJnqeWu55/xLJWC+0k39wcKR7lDNIA+QU/6NuwaN7wBQ2VsMW+tRs43T4oehntXz/P5FntE16APZ29yOUhYdJOGbViS3J0B6qUqDmoBjP65X2npuOkqub9tucQFxfsuBHVYeNagtbK8iYmHF8V1d0Ov+Bzzmo4xffA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
+	s=arc-20240116; t=1707384056; c=relaxed/simple;
+	bh=NGlHW/aBv9IHGU3rIPQqJQrm5GA1wX8GLiD/3YcDe2w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q8PrUcNRDpZr9IXGq1dzsyCW2DxcKRMHceQls6i8/OfHUy/FrLGpBU44Z4OLVgr6HDTVDZse/1ryXldVpXniCkR6onJ08YyvlvAvwZxHYOzPLJNLVVEm9zOtFCrK/pDLFUcU5hoMW1NyJPfhnpcv4CkDjY06n8WivwbY3pl6tgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: efdHsa9RxU+vY/RUxS1obiEp5dzk0Ok5czPpEkroSH+9kLEgWkDox0AssIWwqKYcnsI+2PkOli
- E+J5cEa3pHzg==
+IronPort-SDR: kzBwBmKbnKnMQJw5TtnNKHnu9j9fDgoAAxUSYxY0CR+LQO5yAy3Uo/3GKU3yCGhw3WBpD6eDDi
+ eDTQjHF5oSgw==
 Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa1.ltts.com with ESMTP; 08 Feb 2024 14:50:48 +0530
+  by esa2.ltts.com with ESMTP; 08 Feb 2024 14:49:39 +0530
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com,
 	lee@kernel.org,
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v1 04/13] mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
-Date: Thu,  8 Feb 2024 14:50:32 +0530
-Message-Id: <20240208092034.1207057-1-bhargav.r@ltts.com>
+Subject: [PATCH v1 00/13]  Add support for TI TPS65224 PMIC
+Date: Thu,  8 Feb 2024 14:49:20 +0530
+Message-Id: <20240208091922.1206916-1-bhargav.r@ltts.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,73 +34,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for TPS65224 PMIC in TPS6594's I2C driver which has
-significant functional overlap.
+This series modifies the existing TPS6594 drivers to add support for the
+TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
+similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
+PFSM, Regulators and GPIO features overlap between the two devices.
 
-Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
----
- drivers/mfd/tps6594-i2c.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+TPS65224 is a Power Management IC (PMIC) which provides regulators and
+other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
+Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
+communicate through the I2C or SPI interfaces. The PMIC TPS65224
+additionally has a 12-bit ADC.
+Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
 
-diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
-index c125b474b..4ab91c34d 100644
---- a/drivers/mfd/tps6594-i2c.c
-+++ b/drivers/mfd/tps6594-i2c.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * I2C access driver for TI TPS6594/TPS6593/LP8764 PMICs
-+ * I2C access driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
-  *
-  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
-  */
-@@ -183,7 +183,7 @@ static int tps6594_i2c_write(void *context, const void *data, size_t count)
- 	return ret;
- }
- 
--static const struct regmap_config tps6594_i2c_regmap_config = {
-+static struct regmap_config tps6594_i2c_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
-@@ -196,6 +196,7 @@ static const struct of_device_id tps6594_i2c_of_match_table[] = {
- 	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
- 	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
- 	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
-+	{ .compatible = "ti,tps65224-q1", .data = (void *)TPS65224, },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, tps6594_i2c_of_match_table);
-@@ -216,15 +217,18 @@ static int tps6594_i2c_probe(struct i2c_client *client)
- 	tps->reg = client->addr;
- 	tps->irq = client->irq;
- 
--	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
--	if (IS_ERR(tps->regmap))
--		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
--
- 	match = of_match_device(tps6594_i2c_of_match_table, dev);
- 	if (!match)
- 		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
- 	tps->chip_id = (unsigned long)match->data;
- 
-+	if (tps->chip_id == TPS65224)
-+		tps6594_i2c_regmap_config.volatile_table = &tps65224_volatile_table;
-+
-+	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
-+	if (IS_ERR(tps->regmap))
-+		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
-+
- 	crc8_populate_msb(tps6594_i2c_crc_table, TPS6594_CRC8_POLYNOMIAL);
- 
- 	return tps6594_device_init(tps, enable_crc);
-@@ -240,5 +244,5 @@ static struct i2c_driver tps6594_i2c_driver = {
- module_i2c_driver(tps6594_i2c_driver);
- 
- MODULE_AUTHOR("Julien Panis <jpanis@baylibre.com>");
--MODULE_DESCRIPTION("TPS6594 I2C Interface Driver");
-+MODULE_DESCRIPTION("I2C Interface Driver for TPS65224, TPS6594/3, and LP8764");
- MODULE_LICENSE("GPL");
+Driver re-use is applied following the advice of the following series:
+https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
+
+The features implemented in this series are:
+- TPS65224 Register definitions
+- Core (MFD I2C and SPI entry points)
+- PFSM	
+- ESM
+- Regulators
+- Pinctrl
+
+TPS65224 Register definitions:
+This patch adds macros for register field definitions of TPS65224
+to the existing TPS6594 driver.  
+
+Core description:
+I2C and SPI interface protocols are implemented, with and without
+the bit-integrity error detection feature (CRC mode).
+
+PFSM description:
+Strictly speaking, PFSM is not hardware. It is a piece of code.
+PMIC integrates a state machine which manages operational modes.
+Depending on the current operational mode, some voltage domains
+remain energized while others can be off.
+PFSM driver can be used to trigger transitions between configured
+states.
+
+ESM description:
+This device monitors the SoC error output signal at its nERR_MCU
+input pin. On error detection, ESM driver toggles the PMIC nRSTOUT pin
+to reset the SoC.
+
+Regulators description:
+4 BUCKs and 3 LDOs.
+BUCK12 can be used in dual-phase mode.
+
+Pinctrl description:
+TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
+functions such as I2C or SPI interface or watchdog disable functions.
+The driver provides both pinmuxing for the functions and GPIO capability.
+
+This series was tested on linux-next tag: next-20240118
+
+Test logs can be found here:
+https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
+
+Bhargav Raviprakash (10):
+  mfd: tps6594: use volatile_table instead of volatile_reg
+  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+  mfd: tps6594-core: Add TI TPS65224 PMIC core
+  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+  misc: tps6594-esm: reversion check limited to TPS6594 family
+  misc: tps6594-esm: use regmap_field
+  misc: tps6594-esm: Add TI TPS65224 PMIC ESM
+  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
+    dts
+
+Nirmala Devi Mal Nadar (3):
+  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
+  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
+ drivers/mfd/tps6594-core.c                    | 258 ++++++++++++-
+ drivers/mfd/tps6594-i2c.c                     |  20 +-
+ drivers/mfd/tps6594-spi.c                     |  18 +-
+ drivers/misc/tps6594-esm.c                    |  89 +++--
+ drivers/misc/tps6594-pfsm.c                   |  55 ++-
+ drivers/pinctrl/pinctrl-tps6594.c             | 287 ++++++++++++--
+ drivers/regulator/Kconfig                     |   4 +-
+ drivers/regulator/tps6594-regulator.c         | 244 ++++++++++--
+ include/linux/mfd/tps6594.h                   | 358 +++++++++++++++++-
+ 11 files changed, 1272 insertions(+), 157 deletions(-)
+
+
+base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
 -- 
 2.25.1
 
