@@ -1,36 +1,36 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24CD4F603;
-	Thu,  8 Feb 2024 22:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9288E50245;
+	Thu,  8 Feb 2024 22:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707432925; cv=none; b=AXduFu6SiV8doreO4QklUmm21KRKvsBK6kNmtCjVgZ6z2LfzNTjZmhq8QC0ZX3eaVPEUIkdDbKHFQMBdY6Vo2Nz9hahsrmkiWac305Io6wgOndQo9d2oFG0eUNa8AMv/UQM+IuYCYk7zyIKOEKyZz/8kBjpjri2rFbaM8uymOPY=
+	t=1707433017; cv=none; b=AeCsWTjAoWwGkTOhR9sx3bzoRJiIVC5laYnwugarfcG94sDWy1w69xthHrBciIxMOiPWmdjy2HRhVETFXmJqwoU9y1bXnHG6uIAjF4pFJRwdSWm+cVnW9MgslUsARgwAmidGK9Y7X88c7XEVL71p91EQy3xRmiroVbSgXPOSBcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707432925; c=relaxed/simple;
-	bh=e+MFB3XZAq9GFafBngfM90xut0vO6IkDIPYDubemxVg=;
+	s=arc-20240116; t=1707433017; c=relaxed/simple;
+	bh=0eQjwa9zvkiFOJuBX71aJOe+rSs/uQTgAJ1f49hA0Tw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aVGuTjBiQiHn1/86HWCACWcb/+gsxqv+9u/dicmBeAKLFnWxcBkQcS0qgxoOAwh2hpWRyaYy7Zf06UlRO3AWBlP/Opgjqag96TsC9EMVM2f2D81sQq0DWFE+En814pWgZDzRi2ff9noJypGPoWkqd0Lr4S36oZmLxEp5lUZVsCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=zCiRV+cy; arc=none smtp.client-ip=212.227.126.187
+	 MIME-Version; b=tN5esZGsN4SvPS9sQemF72uho1Zq6Z8SA3gpAwlX0soHFIVgQGKd1LxE60tk9dn0XooS7hIDmpRzNk6a0Fe6klJ3bfifjIzABQPfsyWy1KIn5H2Ur+64n6ok/mjhuzrUnq8cNSalc7ofze0JAzJvfEYWEp9SvJ/jdoPW6XEUyig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=EM8RDRPn; arc=none smtp.client-ip=212.227.126.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="zCiRV+cy"
+	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="EM8RDRPn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
-	s=s1-ionos; t=1707432886; x=1708037686; i=kernel@valentinobst.de;
-	bh=e+MFB3XZAq9GFafBngfM90xut0vO6IkDIPYDubemxVg=;
+	s=s1-ionos; t=1707432984; x=1708037784; i=kernel@valentinobst.de;
+	bh=0eQjwa9zvkiFOJuBX71aJOe+rSs/uQTgAJ1f49hA0Tw=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=zCiRV+cy6zuur2CXcS8b6/spqGAfMlbIdvYb/z/6NCVsCXAUUSqvKMJPn356W5qu
-	 IGaaJbdoittkjnqXIQJ5BYeqaoq7c4jCVBSSXEC4i+hkI/IdVZXa9+k/ernd6V+N1
-	 v2+tsPIoQd5iY3B9lF7kt0j+3KIM0qSEPsdxfz8ZGnx5uwl3WYH44DAkI/AW4FQxr
-	 ZIlVhwsUTSpjuFubtUCqyoOL0n/+Q/7SMNsLVCCStLuOz0eXbyrZ6oktEpyYmvdTf
-	 0j1oUCD8ES5/E1YW3wnyVP6DaZaqR1RkWUSb4imprQ57pBjjmB0TM93FFC9oABRkc
-	 +fNURJPSQWPWd4JooA==
+	b=EM8RDRPn5nVlG3Q8CoNoc1RyRXXvlGTG1lXCJt00vFE8Ys9us6JjXMfn/Fnk7dwi
+	 HZavgxOPqJgRGBEQ9BAGymlAOcrYXBvzpYwtsNrZSc3kE67D1pd1k91JUm/djg3Vk
+	 SEXjhfEvMq9W19KqSCcnBnLX4XaPWZrPuQCKa4b4xivtFh0UNjRw40Gji2oJ+/ZAo
+	 8ZBYuFZHhYT4f2COq/nofIxj1WAd6nudGCuxD1ucuRmubaJc4MgEvoVH36CT1jjvR
+	 YOH2Z8KIt2LdtnYwV3TcBUp8xQXiHorZXNIlQYolbpWPromXOkPWh47KgDvZDNkIo
+	 VM/nffRvHMZDW5XKVA==
 X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
 Received: from localhost.localdomain ([217.149.163.107]) by
- mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1N4A1h-1qq2id2Ohd-0105qW; Thu, 08 Feb 2024 23:54:46 +0100
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MoNMu-1rEYtL3dwe-00opeV; Thu, 08 Feb 2024 23:56:24 +0100
 From: Valentin Obst <kernel@valentinobst.de>
 To: aliceryhl@google.com
 Cc: a.hindborg@samsung.com,
@@ -57,44 +57,42 @@ Cc: a.hindborg@samsung.com,
 	viro@zeniv.linux.org.uk,
 	wedsonaf@gmail.com,
 	Valentin Obst <kernel@valentinobst.de>
-Subject: Re: [PATCH v2 1/4] rust: uaccess: add userspace pointers
-Date: Thu,  8 Feb 2024 23:54:07 +0100
-Message-ID: <20240208225407.11951-1-kernel@valentinobst.de>
+Subject: Re: [PATCH v2 2/4] uaccess: always export _copy_[from|to]_user with CONFIG_RUST
+Date: Thu,  8 Feb 2024 23:56:08 +0100
+Message-ID: <20240208225608.11987-1-kernel@valentinobst.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240208-alice-mm-v2-1-d821250204a6@google.com>
-References: <20240208-alice-mm-v2-1-d821250204a6@google.com>
+In-Reply-To: <20240208-alice-mm-v2-2-d821250204a6@google.com>
+References: <20240208-alice-mm-v2-2-d821250204a6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:c3KgsHDte+YYH7c1f2niFI8o4D1CssfnYZbqlLxRwIzgZlV1m65
- 1v+5LpTs0C45KrSXwq/XbwLAJyIk3blTzGXfeL3Mnh07bZ2CvceAW9v+EE07z83Lrkp/AKr
- ABHwcTm8b2pMVasBQXP6G2032obiZSmZBzVqnyNj6tOdnFZF5Uo231GEQ7Wg9brVtFrdEsZ
- pdb1HmRnnrTtxtfXypukw==
+X-Provags-ID: V03:K1:vmiLC5pSr7/XxKjgOv06P8f8tm/G40jiKHheWjGEZiMLHB7Tg9W
+ qYo+U9dL+JxVgMCz6r0OUYBMUuMgZlJ4yQUMjF9zV5xWROz8N5Qt4BRzxra23T+qNsR1xK4
+ kjV0B2Ts0SRPag0xNpElaQ4Yn3SOyN8KPxaham1j/8ZUU/FdDuNRnXQHskl+ixfT/sceG/d
+ bU1pv0GDitWHLKgDQE5Sw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KYCs2emiKW8=;K18jqxUd3/8AJwUpPierWZAqHDc
- dEw+/3PzbaX7olGqnUAxVQIfFtYjFRNUhFOTpO/0AxMFQ530MoNbMFZF1d6QLW2KyjUF69Gv2
- NEu8LRblExRRKFGfUsWvxRiTB391W54u38qktQdpgfUobuKc7Abjc4IFc3AYB3XnYym/r6pKv
- Rzz66fZ4GpcZak2akShmYvB73hp4OazEJ31FwuEhG2nIs8E4HNYdFjAWUiPhkHwqcppwRZuiD
- WzuB3U3Eq4Udx4kpPY7vFKDnk3+sxoCyqqLFN1uymBe3NP7SmsZoXsDsZgsGLw7FqNRUfhJMi
- vD6ncfSRAW9KYgA6GWlxeeTlOamwAtFPecjFLvXRdkS4pV/UtHU9RJov45VjVd+9zZmn4wvcv
- sWO8eQOSZhbTXJXgwQXQQPqqDjgxVdOMZ79aVcQ9Ygp5QO20rm3DA8kXSjPai00ByE+SZj8z3
- 7yylVcHnwfFF4tbtHTeBcIbMu7tiVAYxWSBPfiO+GW14ToOURtIf4rGYcu7ej1dCXM0x8aZxV
- l18+fflSjQeCEj94Po9ceNIKKCH4PrP2DvS+EANQmPL3bGuDJldsP45z6w1k2HloXVZVH27bj
- ALU02viAHi3M4Lqmrw/5fsU1RyHP4lsQSN0mhpX6Itgh6zfBwt/cc9qFCs2W1ir+mQuLnLU76
- PPQbQ1iVm5ylROWyrEk4/2mP0EUcKRLjoW91zDrkIjf7nv1e0nYbsQKSE6ThNJfj+yJGnbxPu
- 6GE1jj9j1acKmRW+qLkkaLifdUrCcpXbnExS97bXFzJT/Ax02hkE9s=
+UI-OutboundReport: notjunk:1;M01:P0:RvfhGNpkbug=;48u+x7VSak14HUhjLwhxBvAcG7I
+ z7y7+0hdqTlwriOQGCtCPi5n2BWW/wbOlWy3c/PsuIeGmg+WsA/BIMJGsJNGrQEG3itItQ9H5
+ nJcwwPVV5SCZkcczKWHOKMzTBBkfSHtrpIw9VQvcZT+FYGtN57zSBdDXF70Ip80fGmwdKUec6
+ Y0aYSh45ytE+m88dCz8fZq9frNzgueBpS6tLSBgqutiem7qvcNAXJDrsjMGMFm7aLlb+eDwZI
+ h1Kfl4uRjh10rzxXH1bvMxXJa5pyS2prQeT8ninZKMlVjdTBNZaWE8ZTO2A5GZjvpXPCortae
+ rixYIVO74ZboC4OhH+B2QWHydPAIf2bAI3HNBV9WavKqwivu0TTv5lrXLf97obDIt43ThAJNF
+ qYqgbHk6/bJRUR3CATIgNq2g7RKxPEEpLwDhgPOLVao51krqm1ak6ztlEzqgobtODRGNISnJ8
+ FIWL6/CXkYYOKKsOQwZwQ5587pvjpDG+9Wm2+wr5pwWvvJTCsb5MOOlImch82S+mBrMLAB9fv
+ 53UPo1EexuLs8OxZVJzJ+x5wd/1K9zpx692zUL4Wvn2FH5t9bKMf/wj6pj2vcTrLZYDFlmxwj
+ AZiIfi7KEzgQ2CJoMt8hueBND86OrRhwA5UtnCScGMNyxZFKC+0UrvvUmMqmV42V45hK4oozf
+ BzmDe1LlyLlj9/52AbGRXF84Nu/GM7a4VRbD7m/ZcuH4+YvQxxHhRJ7ejvE4dO6SX742faVSg
+ sOS7iaVKWcVi0+onc1Pn5ARWjTo+c/kOotfnSecY/YLnhkVHqCv4cg=
 
-> +    /// Reads the entirety of the user slice, appending it to the end of the
-> +    /// provided buffer.
-> +    ///
-> +    /// Fails with `EFAULT` if the read encounters a page fault.
-> +    pub fn read_all(self, buf: &mut Vec<u8>) -> Result<()> {
-> +        self.reader().read_all(buf)
-> +    }
+> -#else
+>  extern __must_check unsigned long
+>  _copy_from_user(void *, const void __user *, unsigned long);
+> -#endif
 
-I think there is also no need to give an explicit `()` for the
-generic type parameter here as it is the default (applies to some
-other methods in this patch as well).
+This function is now unconditionally declared, but only defined if
+`!defined(INLINE_COPY_FROM_USER) || defined(CONFIG_RUST)`, i.e., in the
+common case where it is inlined and Rust is disabled this can lead to
+link-time problems if someone decides to use it.
