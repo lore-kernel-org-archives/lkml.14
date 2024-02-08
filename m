@@ -1,61 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B20D6EB54;
-	Thu,  8 Feb 2024 11:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918C66E2DC;
+	Thu,  8 Feb 2024 11:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707392144; cv=none; b=WJzW6u5qoxtUu/5616U4TvIKtJ3xERk2/w8zAf2JUeC/avG7QP2OFG2tupV0BjnFgCiG6+6zB98+P9BQf15AvaekT88524/EzqDoGCUWxNkr7a42QWwggglud7p4jb18/6J0Jo19a8Od9oNaE8iVTb1H5AAvbmz1nvB9Lsg6lIM=
+	t=1707392278; cv=none; b=mzK62N0bOHWzT70+ozuYdfdL7Xz4eAGm2wKQI/tGUZRAa6XR9iZU8UWwoovBxWCaihKn7yAFbXhDnbNfVSww+2ErMaEdq3LgT8GR65mq3docbIcYnduHteA9SxuXzIRfpvNwXD5tU8jGFjRE/hkFRB7TylyXlsnR6wymQsm+RWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707392144; c=relaxed/simple;
-	bh=dbEqbs2DlZ57eJRLbS3RnNuusT5JJtnYhLOjxPF5GXM=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=u5vQiWH1p7DZfCYBqhUTgd1aJnFH9qM7j+KZXzQXxLeTrDb6SRCYduCxDSsIEoSMeehuTXycsUlwMhvId5CnK8fbogxN2iGq68W082rZvPNMU/h1VJgqUOtOPEa0uI7dcKK1lTMP468nPyNTRPZxU7jywwxXOFgE+hTuBmsZ8m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGTfgz7I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707392278; c=relaxed/simple;
+	bh=r71RoIKN+p7IBDsZxy3keLwQy6qjvh5Oo6IsPvi4Tis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5/elzhyzcYkdhPWxgdr+iJSRpOIZpvT5+NcKHECoinsR7n1d2GPEF3b5WOK0gTd1+cATfN28qL7EmZ56truW5GAu2QszTiBHYLu1zrNTPS0v3uzhAj07BkpL+l9ppKGw90/mF7fIzQAg/ujT5WrROu6vX8P5SxXaBBQOIQLcak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHjFfK91; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGTfgz7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A36C433F1;
-	Thu,  8 Feb 2024 11:35:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHjFfK91"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A63DC433C7;
+	Thu,  8 Feb 2024 11:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707392143;
-	bh=dbEqbs2DlZ57eJRLbS3RnNuusT5JJtnYhLOjxPF5GXM=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=CGTfgz7ILbunX8vMly1n7DggEg2KZdersB/jeWhDOVGS0RF4s82z8FXRj6uoWPjd/
-	 5SIT9NGjP3KLwJ+dNzdI/Ru5XX+atVja2zo4Ae+138guuExpZXdtUMce7/hh9Toj2n
-	 cu2wdFZ1Xcj5u7TpbscBXc7VPoNs2x+Anz16Eo9NwdYdUJELrXSKD5fML9h21LmfBq
-	 AbAVHNjeJVz++Tz4ujFaLJYxwgFqjipJoPR5AgtvV7fr3yTyP41Dh8Vd+JiL25GtVx
-	 HITW0EBenLbLky53aB/pDbIkG2EpnT7EI3Z1BNz8ORRtFg1fK+ZyeJFjr7bSIKsxIr
-	 0ctmFc4EO7DFg==
-From: Lee Jones <lee@kernel.org>
-To: pavel@ucw.cz, lee@kernel.org, linux-leds@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Amitesh Singh <singh.amitesh@gmail.com>
-In-Reply-To: <20240203162524.343936-1-singh.amitesh@gmail.com>
-References: <20240203162524.343936-1-singh.amitesh@gmail.com>
-Subject: Re: (subset) [PATCH v3] leds: pca963x: Add power management
- support
-Message-Id: <170739214246.950581.13917324551294999476.b4-ty@kernel.org>
-Date: Thu, 08 Feb 2024 11:35:42 +0000
+	s=k20201202; t=1707392278;
+	bh=r71RoIKN+p7IBDsZxy3keLwQy6qjvh5Oo6IsPvi4Tis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oHjFfK91dIuW9AMFWub1Z+oEXlaXk57o4+Ixv+EAwjqiBeWl2rwu8ARxmArj0N6se
+	 4nnZObUba5Nx2jPwxEjAwURTJL9Dr3Md/XIpb+MPZ4H5ZznpUJWR4sw/7153MAxwEX
+	 qUXcO/2Vb2Edka+umtf+LQggsUB+ozia6PPiRsg/EifbG0s9R+AjsfW7dA9GugsABK
+	 rbyU0iEie4+5KekGPjdbMW0wxnfGZCTK2TV8p2xtpC7CBBzE4+I7hghJBbQGbL5PYj
+	 ykwfNmqWNdZWX0UuDnAlLEg81aUFt00AfVlTSeOzEQiSxF3Sv2TYKygio+1hGuU2+U
+	 cL0IWzUE64oAg==
+Date: Thu, 8 Feb 2024 11:37:54 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	srinivas.kandagatla@linaro.org, bgoswami@quicinc.com,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.7 07/44] ASoC: codecs: wcd934x: drop unneeded
+ regulator include
+Message-ID: <ZcS9EmcM1rtsNYy0@finisterre.sirena.org.uk>
+References: <20240207212142.1399-1-sashal@kernel.org>
+ <20240207212142.1399-7-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Y3Ic8DwDm+OAu+TF"
+Content-Disposition: inline
+In-Reply-To: <20240207212142.1399-7-sashal@kernel.org>
+X-Cookie: You might have mail.
 
-On Sat, 03 Feb 2024 21:55:24 +0530, Amitesh Singh wrote:
-> This implements power management for pca9633 which enables
-> device sleep and resume on system-wide sleep/hibernation
-> 
-> 
 
-Applied, thanks!
+--Y3Ic8DwDm+OAu+TF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1/1] leds: pca963x: Add power management support
-      commit: e684dcca3659a3f88945a2a5c6fe5a156d4b0178
+On Wed, Feb 07, 2024 at 04:20:34PM -0500, Sasha Levin wrote:
+> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
+> [ Upstream commit 35314e39dabcfb256832654ad0e856a9fba744bd ]
+>=20
+> Driver does not use any regulator code, so drop redundant include of
+> regulator/consumer.h header.
 
---
-Lee Jones [李琼斯]
+This doesn't seem like an obvious stable candidate...
 
+--Y3Ic8DwDm+OAu+TF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXEvREACgkQJNaLcl1U
+h9BN2Af/USv2MQK7rWzBfIWGhMZ4Xk4a2piJqomP7DM4NMIIDgUMNwjDHJjGLnt6
+n4IThpQeGFxDWva3CapyOTthWZcu6KvzR6AzoiT0+aEEvmJ7USKck6KGqgkDZdBG
+vgY79RdHhNsVSvHMqHhl+66BkUzhA1Pz/Trn3HrxNYZbiVAIuqZWY73sgbSVXYp/
+g/yzWtGih1JY+CdXGOsdPObR5pI9S40ptWERUhppeB672t+yY/TM86HXpXRqpVKA
+YJ7lXThB3kZaCc2t1LhGEmBtgxdBzAfopPldgpfJrb/eAVauMV7N/M94FalJvwgQ
+zPb0RfE3fKuJW/VnM1ljgNxFwL04zw==
+=wjDO
+-----END PGP SIGNATURE-----
+
+--Y3Ic8DwDm+OAu+TF--
