@@ -1,58 +1,58 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07098762CA
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15B3763E8
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707386385; cv=none; b=IKSFXucYFiZ5djZZk5oXP5DvUDMGNaD5kvyvnaeCiqHzhA1GbeDIQU4gtF8hQsBFUgStg8IXKbdkATn74W64Hucd6ojSVcOgGHNjsDoiUYfO8GCaLsxFG1XilEAkqczjJz4wxUxchfVZykkvCoehBMS/64PWmLHHz3aU8aQsiWA=
+	t=1707386388; cv=none; b=YsjFfyHi5Unz/r8urCfvXYAguf/uJoDkT7/KT6tG4usiAKaVAc7DBaDooGiX/ebBt6IVg+ngrsMgFosK2+C+eeEGgiOuLj1gUlOv+p9RhCo1sGQ3jE2ja9rtJUv2rcNG2jGzd5VYW1ZMPWuBNM+Mj7B5HFe+WD1rIV3wovPalu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707386385; c=relaxed/simple;
-	bh=4pcqVR2UKNjNb7TNBpVrhzZAcEAKto4VhymTx/E7Yb0=;
+	s=arc-20240116; t=1707386388; c=relaxed/simple;
+	bh=zyYRmke/1SCtbqMjlRvTGUpu/1RsBvW/3TjBpD2c1Lo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fDyPgF1Fq19JZ9j1HCoZpaQCGREMsv3hLe8LURPdEvkR8oJ5msljtxIGCxnQa7oZC5P/EBoDApEQXDLWdGX2jUDf6yjdChDGi4t577eveZDfr9VL18urZum8qq8AB/8UJRqTHYHNqwKO91aaFIPSUbnxaiq0OwOGleSMag1V6l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dHfD2vBf; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=G4yA+IN2ODVDZBLaK3mLnsc+D93xYr1yBLHOlDtJGwDM8v23XzKRC92tGjHPg/UCSGsvIZBCE3xzroDmtDoKWqJVI/mGc4f1gLyqtCTkR4oDw1lNxdAqkSQfuQKeBgEIMj+csXHZVHfaTLSTIQzRL99/sxGn/w/PUDYQf9AkeoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LcvLjqIA; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dHfD2vBf"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40f033c2e30so13898025e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 01:59:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LcvLjqIA"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4101eb5a115so11526565e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 01:59:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707386382; x=1707991182; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707386384; x=1707991184; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hXQKcxTvr8ZEuMd3OtlDIObv0psz6oUY1P/Gu9NpG0o=;
-        b=dHfD2vBfPwL8OXB08vMdVm9oMlWtHJafy8ZR0UMcyy9FJMavnjAtEsJAVpsX6/n6eN
-         IwWbKqxsFsvDQUc0Ny8/bdY/7Qym+onbgyZ+LgEv2E8NBujyBowBawtiQR3KxTxDiH7u
-         BnNoq+XV4xY61jVW0KDrQ3xHwi3XaeKInooaLzUiKY02QB6p7twIkFOnKmO/+IJlMn5D
-         uD7LElW1anyBnV+yXQYV7Sz11OCAPPGjeeSWJijJjs8pBzDatD2mfbRHrbM1exZ70lCU
-         e3xbvXJ/aMtFpZu/dO6zlaE6XkmoZB38VpGew8q0No3qYuqvSaWLBVQl94NSMuGZWFJ7
-         /kOQ==
+        bh=RYIRlc5OkrwZx92ZtvrH7YghLqa9zERXf/+sLJWSs1w=;
+        b=LcvLjqIARyhPHJeE+GFYZBV5UxQZzWZ0ij/9yf8Ngehd0w3F2g5D04+RrkJVTCqvBB
+         RMB48xYbJWcgD4UK+JuFGYGWE4TjBiLX00L53ltF0fztELSUgrC4YN2cek7/GR1yxOjG
+         f+kwbqUQA06VBoRHS3e5F1toEE2PwHyz9WoZWbNIVspTg+tT++K8y7Q0JDqsv3VecyMD
+         a1UT4ARal0RrWdwmo/IAIA6peSyJtThQOxZ7xwlaMjVwev2Ry6J409fj3gRCWDz75lxn
+         QhUBxzhlosS4Kg+K5nilCmrzcZtqIAErZmkOg2PqICPkmd36n3XAq3bcTtWfEBZg5Q9X
+         gGnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707386382; x=1707991182;
+        d=1e100.net; s=20230601; t=1707386384; x=1707991184;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hXQKcxTvr8ZEuMd3OtlDIObv0psz6oUY1P/Gu9NpG0o=;
-        b=WF2W5550qOS8DPezeScAlxEy2UWwZ6i9xTob9c12gIOHpTQoRfYm/QyVsKhNaoMySL
-         ymLJlBwVG2hA6250NURN0WETVzIVXDwGNdDTKstKHvn2iMEKvHgBHSTfcuZsBa1duNiW
-         ejzzhuhlR6HzBr19IT9wM19kwmK5ZmhoMLnxz/+aZ4Z5v2ARitVvVyLv51PtZhAPn5Al
-         xoSh6fZ4NRenCPd2VW/0dOgCL+R1xIsU77M7dArWR7+Nn5hvGJC71b5EC0OpwHWsULeN
-         2NR+Jh+htogFDZl/tRlxBktI5f2EIx3vOrwdmQML5JwMPdrY34ca8ZOyh1gAFPV4IKGu
-         tyjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXK4Gsjg4k38yTT8y1+P2Z23noXvtzcGjiAeh29ZDaa6VrTNP87FPiPrBe9ygenoxJIh685wkp35GtkgiDr5vN5/96cTKZC//HeMZv3
-X-Gm-Message-State: AOJu0Yzch3jv1d7KZuGb67/kzpLhdEGSd4T8SDcocAElpv/KNXpKsCdt
-	SgatFdDY9hQU2AR9irMBBXblT08mSOZE/QIDwmdAdzo9XetFUy/cDScSgUkIvDg=
-X-Google-Smtp-Source: AGHT+IGWTHEe/i1Wmkb7L2L6RlK0ZbynRzx7eNQzssOSfrF6qS+pTlPhms6IddPzGCRIN3coN8yWNw==
-X-Received: by 2002:adf:e501:0:b0:33a:e828:c3e6 with SMTP id j1-20020adfe501000000b0033ae828c3e6mr5766414wrm.30.1707386382236;
-        Thu, 08 Feb 2024 01:59:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUtUJ52Q8n40X2maKICeeuBN9bIYW5VfpWSOtWES22IXTX0RRT3Cr6oCiJM5XIWez0KAI/+Q2HqOntqRIGh/HIfWtLCOkIPmaE6f9MwbuifW+ceYfeF1IGKnI15eYwMt3n5CjN4zManxJXh8htl98wZrOfd+o+HVe2yrqx3z3aCZj977gEPuSeeo8IVOsa+OC7SkIdX+1MGfubv4JHFlug5E/6jxs3kJPdFjrk1NieAtttCChV2mYEwGzAPIUIOAPRz6ZEUcQIv/QuY8v/ty+G7irUWbqU8eotAqtM3GbVAPUs4tdWlopEeFA+Xua7m7BtZmwWeGxvmDkJ9la73vsArcTz5jZqlNw==
+        bh=RYIRlc5OkrwZx92ZtvrH7YghLqa9zERXf/+sLJWSs1w=;
+        b=fJmv12wMqT6FgTIZxunVAyB8dqTVgELPSu8VIaeHP8qUxKW4OoMc9BNld7hIjbpNN+
+         qBtvSl3pMurwJGs4K+2noCMOCmWFoERFA85msjrAhye2gHm1IF+CjXC6rcHe3Qd80oFT
+         g0B5/cfu6FbXj2Qgb6Geza6FWO2G6UUl6a/i8QyI0u7599gZO0ml+36jV8tJehcHHn4Q
+         XbiFhovSdpZ7+g0VCH7mrNtJCNQ2UsV9FXf7nBKsvsDpjyfBucnCKTlYjTG7rIZ/p4dR
+         ezdMHbdtjr4/wAwBCU84ETrqXZ9pQiMufpnOFB3Giov56YkNYG7IjxjqgMuKcVhHW5u7
+         pFcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4UvRHhakNXYo7dm2N7O3V+4wA4yqBpfhH25PkDFfh5mDAXB65gow+uAFfjTCBKpSjJM178X30ALPRB+e1AguPlN43lor7H6uTjKT
+X-Gm-Message-State: AOJu0Ywg6XW/Hdk+HhomF9dfMDUfUIZH6pXOxGTpIQF972192FP+Hd2f
+	2+eAVPJDdOpISKDWXh4zkSfUxKwFsU30H3vuKBVE5Rjr8tzvsmZPWT8PHL2a9bI=
+X-Google-Smtp-Source: AGHT+IGmjI3oUCT6UGyEZLyHOIfrA6gY0gJbhE50NLpRBeSQx92Z/ddnY3cwTtLCzY6EZet+u3ke7g==
+X-Received: by 2002:a5d:5905:0:b0:33b:28df:c370 with SMTP id v5-20020a5d5905000000b0033b28dfc370mr5240161wrd.14.1707386384098;
+        Thu, 08 Feb 2024 01:59:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCViQt0ORtUTwvgRsnwaxwfM9LU+1xPs52gzk/iVEXu3OHYomnxR4eYemcPqJP25T2cd28tqXed7sdF+8igZtyf/dHBDKXDm3jSYxaCQkQKqu1BfSc6k3hJvq+mDOwqfaX9jLa5S2pINY9+/dFo05YgavaF5YixHlIxhga+1Enjzw0YppwtRHXEX8B4Psmem6OjvYrTOaE2U2FiKmCWwXHwsh/oFxkTMsfS3YAJMCWvOBYjX8XDdc/taQNCOvcExbe5qj2Y1Jjrw0Nt1X4Xv7qvtvLNLshQkRchFXcYTpj+tDvQqiIZQ/jXnyKFbP9Dk1vkKtUzzOnGj+Hb81o1Cg+j9U+N/0pnI+A==
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:44bd:e160:131:19a4])
-        by smtp.gmail.com with ESMTPSA id x17-20020a5d60d1000000b0033af5086c2dsm3265963wrt.58.2024.02.08.01.59.41
+        by smtp.gmail.com with ESMTPSA id x17-20020a5d60d1000000b0033af5086c2dsm3265963wrt.58.2024.02.08.01.59.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 01:59:41 -0800 (PST)
+        Thu, 08 Feb 2024 01:59:43 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Kent Gibson <warthog618@gmail.com>,
@@ -64,9 +64,9 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v3 16/24] gpio: sysfs: don't access gdev->chip if it's not needed
-Date: Thu,  8 Feb 2024 10:59:12 +0100
-Message-Id: <20240208095920.8035-17-brgl@bgdev.pl>
+Subject: [PATCH v3 18/24] gpio: reduce the functionality of validate_desc()
+Date: Thu,  8 Feb 2024 10:59:14 +0100
+Message-Id: <20240208095920.8035-19-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240208095920.8035-1-brgl@bgdev.pl>
 References: <20240208095920.8035-1-brgl@bgdev.pl>
@@ -80,46 +80,58 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Don't dereference gdev->chip if the same information can be obtained
-from struct gpio_device.
+Checking desc->gdev->chip for NULL without holding it in place with some
+serializing mechanism is pointless. Remove this check. Also don't check
+desc->gdev for NULL as it can never happen. We'll be protecting
+gdev->chip with SRCU soon but we will provide a dedicated, automatic
+class for that.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpiolib-sysfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index b46d50ac2452..2e3edf41e853 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -403,7 +403,7 @@ static ssize_t base_show(struct device *dev,
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 6598960b29de..9be7ec470cc0 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2257,19 +2257,12 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
  {
- 	const struct gpio_device *gdev = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%d\n", gdev->chip->base);
-+	return sysfs_emit(buf, "%d\n", gdev->base);
+ 	if (!desc)
+ 		return 0;
++
+ 	if (IS_ERR(desc)) {
+ 		pr_warn("%s: invalid GPIO (errorpointer)\n", func);
+ 		return PTR_ERR(desc);
+ 	}
+-	if (!desc->gdev) {
+-		pr_warn("%s: invalid GPIO (no device)\n", func);
+-		return -EINVAL;
+-	}
+-	if (!desc->gdev->chip) {
+-		dev_warn(&desc->gdev->dev,
+-			 "%s: backing chip is gone\n", func);
+-		return 0;
+-	}
++
+ 	return 1;
  }
- static DEVICE_ATTR_RO(base);
  
-@@ -412,7 +412,7 @@ static ssize_t label_show(struct device *dev,
+@@ -2345,12 +2338,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 
+ void gpiod_free(struct gpio_desc *desc)
  {
- 	const struct gpio_device *gdev = dev_get_drvdata(dev);
+-	/*
+-	 * We must not use VALIDATE_DESC_VOID() as the underlying gdev->chip
+-	 * may already be NULL but we still want to put the references.
+-	 */
+-	if (!desc)
+-		return;
++	VALIDATE_DESC_VOID(desc);
  
--	return sysfs_emit(buf, "%s\n", gdev->chip->label ?: "");
-+	return sysfs_emit(buf, "%s\n", gdev->label);
- }
- static DEVICE_ATTR_RO(label);
- 
-@@ -421,7 +421,7 @@ static ssize_t ngpio_show(struct device *dev,
- {
- 	const struct gpio_device *gdev = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%u\n", gdev->chip->ngpio);
-+	return sysfs_emit(buf, "%u\n", gdev->ngpio);
- }
- static DEVICE_ATTR_RO(ngpio);
- 
+ 	if (!gpiod_free_commit(desc))
+ 		WARN_ON(1);
 -- 
 2.40.1
 
