@@ -1,305 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF5926EB6D;
-	Thu,  8 Feb 2024 10:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A666A347
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707389848; cv=none; b=luhTubdb7m+zHgWEVA9meQNT6dtGdlQ9El+q+QVBu1d/1aj8tsWOitygnbrICVNn5KeC0dEz4tvaqHMv41X3uLrWokpXZlwFUEjQv/8Lwkcs9jkxHytDjruehlx35g8g8V3aXFm9Amox5xrFDlln3LuRv4S0tMSMxNVAcnHhOSA=
+	t=1707389906; cv=none; b=YkOqEvQmT/GTFItiAjFHJ55iRzhPmnTokD4bwFwee5gAtiycGyZPURPxGjFcVJSklkZeOtOpBuvwSyx9rLzyE+S0sMMxyBUieL/qqt9QXn0RdXvkiT7to2DAfPRXlfAUJq9ofyMCVFF/5PbtgfyO1gToHRwYSVqEQMphwVItC4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707389848; c=relaxed/simple;
-	bh=F0AD35zRkzPDFFqGLNrXClBOwbPZXXqj2AyKsqqb3P8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jz09XQ1ARDdkKlRzJoOdCcg9DVALgA1kBpZIzU00ZUhy3LGGhoX6p3Yuivl4W232CeSE0teKfeWkIxYYNcHvwhN3EF3p8HDop6C34RswFIPicSPiRFPL/u8WNxXCwl6AJhzO51ow+3PIt8wmjHOn0Ra7xjSd7+7wDRjUX8laE/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99EB01FB;
-	Thu,  8 Feb 2024 02:58:07 -0800 (PST)
-Received: from [10.57.10.153] (unknown [10.57.10.153])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D64DA3F762;
-	Thu,  8 Feb 2024 02:57:22 -0800 (PST)
-Message-ID: <761a3982-c7a1-40f1-92d8-5c08dad8383a@arm.com>
-Date: Thu, 8 Feb 2024 10:57:21 +0000
+	s=arc-20240116; t=1707389906; c=relaxed/simple;
+	bh=5Bxp/bh1w8OdWrrBUfJVFbG+B0G2CQq0vUog0du35XM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iN2b9uIhlSNgEJ7y6tSOA1GZE7C3FD/4k2lKTJ/hFj5WNyn4M4iks+neApRSq5sBTqlP666gFB2BR7WQlxEuxPu5qBLKZPNK5eTxXtSC0/zApyXSGyiQeMfILmi/yGWRvpIOFgyVrQSgSRmrCHr0EeX6BajFwGQO6aBvsD8EV5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=nP+B2W6Y; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="nP+B2W6Y"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41047386d18so1473365e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 02:58:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1707389903; x=1707994703; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oUJzDYVUY8Pgj6sj7mj4gZ0EMrX1aLG3gSh2cSQURAw=;
+        b=nP+B2W6Y9CSNBEr+BnP0npn/yvJndSajM5K2lbjf1d2BLrnxR8V1TKgjjjGLiFf4Jy
+         QnwYjko8Fta8vQoeJeMN21I+TRDc61mkCmRll1dlpeEQiBgQ0RXz4pyYIfCrlwa+qtoV
+         7IzJCvY8T2gE0Hp9XFnS7nxgqKPbbgJCL3AzXxwC2ke23Nl3661icDZXUbccLawn+aIM
+         ILDWgR0jVSvZcMQy0mpAdrSZwNkESXM8WMva2cntPcLKt7YnylIob8c6iRevI9HYf13Y
+         VY6arnNFD75QmaiYEDyJZw/E9va/E09GpPhxmO1lpNc92nIPeyiCHBKKo9x+FVYMMIjT
+         n+lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707389903; x=1707994703;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oUJzDYVUY8Pgj6sj7mj4gZ0EMrX1aLG3gSh2cSQURAw=;
+        b=H/T82obPUM07DDwqMh3FclxQWz2/PWUaP4LjW4iXomtQ6zdsznfyB1cDPtu1fRmEol
+         0EzQD7JEPyoo76J8Pxt4p5A0F0GdBzVM8fxvEcnXcsU3FQacLRNE21O2d/ltxX4Wxia1
+         JN+Ovo+guecy/Vj0QLBuZm7WRwokPWqvUsDUU5VQp6WelfFabMdvInL67L7tbW9iawRP
+         x3WtK03mhJXyHTzjvkh69TesqkPgGE1/IjOD4auuE6JDPjEQ8D9AhEHJkPPjlTTzTpoX
+         0XbxpFsvdEnl/uVAFcPPZuFK6IoFpA/8yztvr0VYTokX5MYcaDuM7efaiyNCQDCdG4m/
+         NzsA==
+X-Gm-Message-State: AOJu0Yw3IlyDX0cZa3ir18mt9Q1nb+3BNuu7TBTvT/y3fnaDuX+Bgo0g
+	a6zbmF9JQjSx34AbvVQmRvlsvIBxqHkdayO38u7H30schh55F4sQwxRbWgPUKQ8=
+X-Google-Smtp-Source: AGHT+IEww1iqqyP4DIBybyp3NsKiGjG6e8Byuw7mujtspkeaGE/O0wJ1dQLvW7bcKiMSOLBXFM1I6Q==
+X-Received: by 2002:a05:600c:68c8:b0:40f:ddb8:c854 with SMTP id jd8-20020a05600c68c800b0040fddb8c854mr6126526wmb.28.1707389903111;
+        Thu, 08 Feb 2024 02:58:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXi8c7Mg34IHZ8ix/mGLlRSEX7OtotNMwOELXd/6BdKlAO5TWQqgIV1zUKyS+f3lMIXYY7WvpSvc7JKxro/Hs3T+1eF5a6cV4lmL1uSRVNS7Q2Ho3jglqzq6BgOE8NCsbVKrUHuDhMzoAgHejx7l1NEtnVR8BNn7r2omljjCfT+RF0RIfkXZoxxmJxU1Q1Z5yh8A/8U3mj/j+ar62KzJ1MDCRIg2it+mYKyI3IPU6BCuUM0IcIEg42lMDhKE6PRJzKwJyda6BE4x8z3IQBvo//iyhQyzSoFAz+mbLlfbvu1dJztJ0zLLLF3PpxWCXwfL6bds49V7OQQOCmkapKVnh+MQhH1ovd9epedBzSvNQGrWXL/8kgX4uTd253WZp34Hh8mNbeEBtAOP76d15I0XzZrRLcH221pNfhk2UqTaxB8mmnklkM4Vp297FsbWFqZ6cDIrXJRHBqG2s22g1jaPTm1vCOjj2Zu5a74F6mwDrOGKEnpShyMURrsgvTQYn1kPgABvryRauqOzg==
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.45])
+        by smtp.gmail.com with ESMTPSA id a6-20020adffac6000000b0033b4a52bfbfsm3344153wrs.57.2024.02.08.02.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 02:58:22 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	biju.das.jz@bp.renesas.com
+Cc: linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v6 1/9] watchdog: rzg2l_wdt: Restrict the driver to ARCH_RZG2L and ARCH_R9A09G011
+Date: Thu,  8 Feb 2024 12:58:09 +0200
+Message-Id: <20240208105817.2619703-2-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240208105817.2619703-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240208105817.2619703-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC gmem v1 3/8] KVM: x86: Add gmem hook for initializing
- memory
-Content-Language: en-GB
-To: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org
-Cc: linux-coco@lists.linux.dev, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, pbonzini@redhat.com, seanjc@google.com,
- isaku.yamahata@intel.com, ackerleytng@google.com, vbabka@suse.cz,
- ashish.kalra@amd.com, nikunj.dadhania@amd.com, jroedel@suse.de,
- pankaj.gupta@amd.com
-References: <20231016115028.996656-1-michael.roth@amd.com>
- <20231016115028.996656-4-michael.roth@amd.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20231016115028.996656-4-michael.roth@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-On 16/10/2023 12:50, Michael Roth wrote:
-> guest_memfd pages are generally expected to be in some arch-defined
-> initial state prior to using them for guest memory. For SEV-SNP this
-> initial state is 'private', or 'guest-owned', and requires additional
-> operations to move these pages into a 'private' state by updating the
-> corresponding entries the RMP table.
-> 
-> Allow for an arch-defined hook to handle updates of this sort, and go
-> ahead and implement one for x86 so KVM implementations like AMD SVM can
-> register a kvm_x86_ops callback to handle these updates for SEV-SNP
-> guests.
-> 
-> The preparation callback is always called when allocating/grabbing
-> folios via gmem, and it is up to the architecture to keep track of
-> whether or not the pages are already in the expected state (e.g. the RMP
-> table in the case of SEV-SNP).
-> 
-> In some cases, it is necessary to defer the preparation of the pages to
-> handle things like in-place encryption of initial guest memory payloads
-> before marking these pages as 'private'/'guest-owned', so also add a
-> helper that performs the same function as kvm_gmem_get_pfn(), but allows
-> for the preparation callback to be bypassed to allow for pages to be
-> accessed beforehand.
+The rzg2l_wdt driver is used only by ARCH_RZG2L and ARCH_R9A09G011
+micro-architectures of Renesas. Thus, limit it's usage only to these.
 
-This will be useful for Arm CCA, where the pages need to be moved into
-"Realm state". Some minor comments below.
+Suggested-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
 
-> 
-> Link: https://lore.kernel.org/lkml/ZLqVdvsF11Ddo7Dq@google.com/
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> ---
->   arch/x86/include/asm/kvm-x86-ops.h |  1 +
->   arch/x86/include/asm/kvm_host.h    |  2 ++
->   arch/x86/kvm/x86.c                 |  6 ++++
->   include/linux/kvm_host.h           | 14 ++++++++
->   virt/kvm/Kconfig                   |  4 +++
->   virt/kvm/guest_memfd.c             | 56 +++++++++++++++++++++++++++---
->   6 files changed, 78 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-> index e3054e3e46d5..0c113f42d5c7 100644
-> --- a/arch/x86/include/asm/kvm-x86-ops.h
-> +++ b/arch/x86/include/asm/kvm-x86-ops.h
-> @@ -134,6 +134,7 @@ KVM_X86_OP(msr_filter_changed)
->   KVM_X86_OP(complete_emulated_msr)
->   KVM_X86_OP(vcpu_deliver_sipi_vector)
->   KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
-> +KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
->   
->   #undef KVM_X86_OP
->   #undef KVM_X86_OP_OPTIONAL
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 95018cc653f5..66fc89d1858f 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1752,6 +1752,8 @@ struct kvm_x86_ops {
->   	 * Returns vCPU specific APICv inhibit reasons
->   	 */
->   	unsigned long (*vcpu_get_apicv_inhibit_reasons)(struct kvm_vcpu *vcpu);
-> +
-> +	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
->   };
->   
->   struct kvm_x86_nested_ops {
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 767236b4d771..33a4cc33d86d 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -13301,6 +13301,12 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
->   }
->   EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
->   
-> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-> +int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order)
-> +{
-> +	return static_call(kvm_x86_gmem_prepare)(kvm, pfn, gfn, max_order);
-> +}
-> +#endif
->   
->   int kvm_spec_ctrl_test_value(u64 value)
->   {
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 8c5c017ab4e9..c7f82c2f1bcf 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2403,9 +2403,19 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->   #endif /* CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES */
->   
->   #ifdef CONFIG_KVM_PRIVATE_MEM
-> +int __kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> +		       gfn_t gfn, kvm_pfn_t *pfn, int *max_order, bool prep);
->   int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->   			      gfn_t gfn, kvm_pfn_t *pfn, int *max_order);
->   #else
-> +static inline int __kvm_gmem_get_pfn(struct kvm *kvm,
-> +				     struct kvm_memory_slot *slot, gfn_t gfn,
-> +				     kvm_pfn_t *pfn, int *max_order)
+Changes in v6:
+- none
 
-Missing "bool prep" here ?
+Changes in v5:
+- none
 
-minor nit: Do we need to export both __kvm_gmem_get_pfn and 
-kvm_gmem_get_pfn ? I don't see anyone else using the former.
+Changes in v4:
+- none; this patch is introduced in v4
 
-We could have :
+ drivers/watchdog/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-#ifdef CONFIG_KVM_PRIVATE_MEM
-int __kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-		       gfn_t gfn, kvm_pfn_t *pfn, int *max_order, bool prep);
-#else
-static inline int __kvm_gmem_get_pfn(struct kvm *kvm,
-				    struct kvm_memory_slot *slot, gfn_t gfn,
-				    kvm_pfn_t *pfn, int *max_order,
-				    bool prep)
-{
-	KVM_BUG_ON(1, kvm);
-	return -EIO;
-}
-#endif
-
-static inline int kvm_gmem_get_pfn(struct kvm *kvm,
-				 struct kvm_memory_slot *slot, gfn_t gfn,
-				kvm_pfn_t *pfn, int *max_order)
-{
-	return __kvm_gmem_get_pfn(kvm, slot, gfn, pfn, max_order, true);
-}
-
-
-Suzuki
-
-> +	KVM_BUG_ON(1, kvm);
-> +	return -EIO;
-> +}
-> +
->   static inline int kvm_gmem_get_pfn(struct kvm *kvm,
->   				   struct kvm_memory_slot *slot, gfn_t gfn,
->   				   kvm_pfn_t *pfn, int *max_order)
-> @@ -2415,4 +2425,8 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
->   }
->   #endif /* CONFIG_KVM_PRIVATE_MEM */
->   
-> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-> +int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order);
-> +#endif
-> +
->   #endif
-> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-> index 2c964586aa14..992cf6ed86ef 100644
-> --- a/virt/kvm/Kconfig
-> +++ b/virt/kvm/Kconfig
-> @@ -109,3 +109,7 @@ config KVM_GENERIC_PRIVATE_MEM
->          select KVM_GENERIC_MEMORY_ATTRIBUTES
->          select KVM_PRIVATE_MEM
->          bool
-> +
-> +config HAVE_KVM_GMEM_PREPARE
-> +       bool
-> +       depends on KVM_PRIVATE_MEM
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index f6f1b17a319c..72ff8b7b31d5 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -44,7 +44,40 @@ static struct folio *kvm_gmem_get_huge_folio(struct inode *inode, pgoff_t index)
->   #endif
->   }
->   
-> -static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
-> +static int kvm_gmem_prepare_folio(struct inode *inode, pgoff_t index, struct folio *folio)
-> +{
-> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-> +	struct list_head *gmem_list = &inode->i_mapping->private_list;
-> +	struct kvm_gmem *gmem;
-> +
-> +	list_for_each_entry(gmem, gmem_list, entry) {
-> +		struct kvm_memory_slot *slot;
-> +		struct kvm *kvm = gmem->kvm;
-> +		struct page *page;
-> +		kvm_pfn_t pfn;
-> +		gfn_t gfn;
-> +		int rc;
-> +
-> +		slot = xa_load(&gmem->bindings, index);
-> +		if (!slot)
-> +			continue;
-> +
-> +		page = folio_file_page(folio, index);
-> +		pfn = page_to_pfn(page);
-> +		gfn = slot->base_gfn + index - slot->gmem.pgoff;
-> +		rc = kvm_arch_gmem_prepare(kvm, gfn, pfn, compound_order(compound_head(page)));
-> +		if (rc) {
-> +			pr_warn_ratelimited("gmem: Failed to prepare folio for index %lx, error %d.\n",
-> +					    index, rc);
-> +			return rc;
-> +		}
-> +	}
-> +
-> +#endif
-> +	return 0;
-> +}
-> +
-> +static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index, bool prep)
->   {
->   	struct folio *folio;
->   
-> @@ -74,6 +107,12 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->   		folio_mark_uptodate(folio);
->   	}
->   
-> +	if (prep && kvm_gmem_prepare_folio(inode, index, folio)) {
-> +		folio_unlock(folio);
-> +		folio_put(folio);
-> +		return NULL;
-> +	}
-> +
->   	/*
->   	 * Ignore accessed, referenced, and dirty flags.  The memory is
->   	 * unevictable and there is no storage to write back to.
-> @@ -178,7 +217,7 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
->   			break;
->   		}
->   
-> -		folio = kvm_gmem_get_folio(inode, index);
-> +		folio = kvm_gmem_get_folio(inode, index, true);
->   		if (!folio) {
->   			r = -ENOMEM;
->   			break;
-> @@ -537,8 +576,8 @@ void kvm_gmem_unbind(struct kvm_memory_slot *slot)
->   	fput(file);
->   }
->   
-> -int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> -		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order)
-> +int __kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> +		       gfn_t gfn, kvm_pfn_t *pfn, int *max_order, bool prep)
->   {
->   	pgoff_t index, huge_index;
->   	struct kvm_gmem *gmem;
-> @@ -559,7 +598,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->   		goto out_fput;
->   	}
->   
-> -	folio = kvm_gmem_get_folio(file_inode(file), index);
-> +	folio = kvm_gmem_get_folio(file_inode(file), index, prep);
->   	if (!folio) {
->   		r = -ENOMEM;
->   		goto out_fput;
-> @@ -600,4 +639,11 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->   
->   	return r;
->   }
-> +EXPORT_SYMBOL_GPL(__kvm_gmem_get_pfn);
-> +
-> +int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> +		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order)
-> +{
-> +	return __kvm_gmem_get_pfn(kvm, slot, gfn, pfn, max_order, true);
-> +} >   EXPORT_SYMBOL_GPL(kvm_gmem_get_pfn);
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 7d22051b15a2..f6cb63a0d889 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -910,7 +910,7 @@ config RENESAS_RZN1WDT
+ 
+ config RENESAS_RZG2LWDT
+ 	tristate "Renesas RZ/G2L WDT Watchdog"
+-	depends on ARCH_RENESAS || COMPILE_TEST
++	depends on ARCH_RZG2L || ARCH_R9A09G011 || COMPILE_TEST
+ 	select WATCHDOG_CORE
+ 	help
+ 	  This driver adds watchdog support for the integrated watchdogs in the
+-- 
+2.39.2
 
