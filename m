@@ -1,64 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9CB25601;
-	Thu,  8 Feb 2024 18:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E4D25635;
+	Thu,  8 Feb 2024 18:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707418171; cv=none; b=Tr4XC4ayyRsooRnXg0RQf0uRA4OO/RjE9o/jtFDsy+BsKLZFW9gc2GWb7PmWj/iJsJRPpqPHkGbwB4h5dOoTjE8rHzW/wfBSJgyaS2iouCeDeceQrgpjPIzqBFmmFQ7OkmsNRDwH/pmw15nS/CKD1tWEcLFGGy2RC0EmRVLTt68=
+	t=1707418171; cv=none; b=bP7glmw9s6qj0lA95xiTCSi0KTHwFEHMT+Hl3jtL8Y2FEoeydf1b8jI3nQ4SvX9DIbR4h/QmsKdp5Tf4PBACaDYG9vbRaow4QnYvQkW9QCzmP1SEwwbcN3IpvfkeVNrni0jyuswV4UVQP02ST7O+FmkpVm+4bSJh3HDhdCG70pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707418171; c=relaxed/simple;
-	bh=FC1cjzT0133HljBbHlbObVyjHCu4QTG/1Zt/QXNpVSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Oii71mtQF7otWjCl095G9BOgsNd+1q0LVWTrEpweatq+gS1ZZV3rKAU2afAGzSDgPWiqU53sKWHIIs3hHYeunbFxJU6pwRaAv8khDIwX/i7kBY9sPXRvTt7AzOWPk2jkCK1uejl5NUk8L704iA8mY4ie8urJORYlLrJQA6wSMSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqlpNeW+; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=7Ochv10fF/HDECdDCBhY5k3B/jWscDOgrt50maoZBSM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eX1VY1wR9VB0ZS0FnXbXC1/Y/ozYM4p0IMiaqBjYNLDdu699luxXRZmxQ3xNhSMsniLmZ3TeBsnlgaMcpOOOSrTM+dBgGOPfDmai4oU/KBYHEhvzF9xgSweryPzvp/7toqdEd/fyL9wvnzmw0KEoFDRARq6WVdgDlqjtItD6o1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=tbRZUBYK; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqlpNeW+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707418169; x=1738954169;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FC1cjzT0133HljBbHlbObVyjHCu4QTG/1Zt/QXNpVSA=;
-  b=FqlpNeW+lbDvHeHIE022F/CyRT2UJymtasBjmTiV9RexkxAsXSUrATip
-   ClDAAIX3IApnW+lSoszuXKLNaxBRinehiVkr3yEXw+Hjvf9Z4YU8EQnxB
-   dD5NnQXzzyd/dbfRTTLg4SKOBKoH1E5NKoOICpxWGkCYVkPcFAdRc67yo
-   wHT5ZUcKYMxgXJVKN8N+0j0IdBrUfW5HKFeBba3P+X1coxKFLLarq2hQh
-   8xAl+ZIXtZ5a8viPOt/ASiu2myqIVuZxoiTXIfzlL40XcHtuhg6ukfAuX
-   T/CqAzSA/Xm9hU/9lqLY3WfNjQmkIbCrHuL/cJ5pu0mIdx2YPU64GGcrl
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186112"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1186112"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:49:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215530"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934215530"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:25 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5E3254C4; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 05/15] auxdisplay: linedisp: Add missing header(s)
-Date: Thu,  8 Feb 2024 20:48:03 +0200
-Message-ID: <20240208184919.2224986-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
-References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="tbRZUBYK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1707418162;
+	bh=7Ochv10fF/HDECdDCBhY5k3B/jWscDOgrt50maoZBSM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tbRZUBYKZeGuGZqoaY1DeK0hJwQjx5z1KlX4+5BjG6KbY0Wk63ANlCvJNLNHlZa3q
+	 AUni6+/Zg3BIFSkr3VSAod2+wG4om/7ONygxmnx3R8qV4KfQsZwdwxR/mM07U628WQ
+	 k19fXtoHrvLwxdcINcsb5baXKobPg9DensK1+8QFljOtCtki8OcEMSaA14ImZIluOL
+	 HBFIytcfOMxaLatB6NbpkXRQ8dIHcmIw4+3c36ghJ2FkKfkT1jBw0k4BKfFjUoRMQW
+	 0Hw8foVVlIlyyL8xJUMQOn7XN5Ij/6RqjdW4lVw7Nz7wr+wztv85CRKkRVtJejDGJn
+	 uUVzPSeTZ8zkg==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TW5cf2nN2zY9Y;
+	Thu,  8 Feb 2024 13:49:22 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dave Chinner <david@fromorbit.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v4 00/12] Introduce cpu_dcache_is_aliasing() to fix DAX regression
+Date: Thu,  8 Feb 2024 13:49:01 -0500
+Message-Id: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,45 +60,141 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Do not imply that some of the generic headers may be always included.
-Instead, include explicitly what we are direct user of.
+This commit introduced in v4.0 prevents building FS_DAX on 32-bit ARM,
+even on ARMv7 which does not have virtually aliased data caches:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/auxdisplay/line-display.c | 3 +++
- drivers/auxdisplay/line-display.h | 3 +++
- 2 files changed, 6 insertions(+)
+commit d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
 
-diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
-index 4b92ae7781f1..6b3d25e20eeb 100644
---- a/drivers/auxdisplay/line-display.c
-+++ b/drivers/auxdisplay/line-display.c
-@@ -10,8 +10,11 @@
- 
- #include <generated/utsrelease.h>
- 
-+#include <linux/container_of.h>
- #include <linux/device.h>
-+#include <linux/export.h>
- #include <linux/idr.h>
-+#include <linux/jiffies.h>
- #include <linux/kstrtox.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-diff --git a/drivers/auxdisplay/line-display.h b/drivers/auxdisplay/line-display.h
-index 1fbe57fdc4cb..d72c1899dc50 100644
---- a/drivers/auxdisplay/line-display.h
-+++ b/drivers/auxdisplay/line-display.h
-@@ -11,6 +11,9 @@
- #ifndef _LINEDISP_H
- #define _LINEDISP_H
- 
-+#include <linux/device.h>
-+#include <linux/timer_types.h>
-+
- /**
-  * struct linedisp - character line display private data structure
-  * @dev: the line display device
+It used to work fine before: I have customers using DAX over pmem on
+ARMv7, but this regression will likely prevent them from upgrading their
+kernel.
+
+The root of the issue here is the fact that DAX was never designed to
+handle virtually aliasing data caches (VIVT and VIPT with aliasing data
+cache). It touches the pages through their linear mapping, which is not
+consistent with the userspace mappings with virtually aliasing data
+caches.
+
+This patch series introduces cpu_dcache_is_aliasing() with the new
+Kconfig option ARCH_HAS_CPU_CACHE_ALIASING and implements it for all
+architectures. The implementation of cpu_dcache_is_aliasing() is either
+evaluated to a constant at compile-time or a runtime check, which is
+what is needed on ARM.
+
+With this we can basically narrow down the list of architectures which
+are unsupported by DAX to those which are really affected.
+
+Testing done so far:
+
+- Compile allyesconfig on x86-64,
+- Compile allyesconfig on x86-64, with FS_DAX=n.
+- Compile allyesconfig on x86-64, with DAX=n.
+- Boot test after modifying alloc_dax() to force returning -EOPNOTSUPP
+  even on x86-64, thus simulating the behavior expected on an
+  architecture with data cache aliasing.
+
+There are many more axes to test however. I would welcome Tested-by for:
+
+- affected architectures,
+- affected drivers,
+- affected filesytems.
+
+Thanks,
+
+Mathieu
+
+Changes since v3:
+- Fix a leak on dax_add_host() failure in nvdimm/pmem.
+- Split the series into a bissectable sequence of changes.
+- Ensure that device-dax use-cases still works on data cache
+  aliasing architectures.
+
+Changes since v2:
+- Move DAX supported runtime check to alloc_dax(),
+- Modify DM to handle alloc_dax() error as non-fatal,
+- Remove all filesystem modifications, since the check is now done by
+  alloc_dax(),
+- rename "dcache" and "cache" to "cpu dcache" and "cpu cache" to
+  eliminate confusion with VFS terminology.
+
+Changes since v1:
+- The order of the series was completely changed based on the
+  feedback received on v1,
+- cache_is_aliasing() is renamed to dcache_is_aliasing(),
+- ARCH_HAS_CACHE_ALIASING_DYNAMIC is gone,
+- dcache_is_aliasing() vs ARCH_HAS_CACHE_ALIASING relationship is
+  simplified,
+- the dax_is_supported() check was moved to its rightful place in all
+  filesystems.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-xfs@vger.kernel.org
+Cc: dm-devel@lists.linux.dev
+Cc: nvdimm@lists.linux.dev
+Cc: linux-s390@vger.kernel.org
+
+Mathieu Desnoyers (12):
+  nvdimm/pmem: Fix leak on dax_add_host() failure
+  nvdimm/pmem: Treat alloc_dax() -EOPNOTSUPP failure as non-fatal
+  dm: Treat alloc_dax() -EOPNOTSUPP failure as non-fatal
+  dcssblk: Handle alloc_dax() -EOPNOTSUPP failure
+  virtio: Treat alloc_dax() -EOPNOTSUPP failure as non-fatal
+  dax: Check for data cache aliasing at runtime
+  Introduce cpu_dcache_is_aliasing() across all architectures
+  dax: Fix incorrect list of data cache aliasing architectures
+  nvdimm/pmem: Cleanup alloc_dax() error handling
+  dm: Cleanup alloc_dax() error handling
+  dcssblk: Cleanup alloc_dax() error handling
+  virtio: Cleanup alloc_dax() error handling
+
+ arch/arc/Kconfig                    |  1 +
+ arch/arc/include/asm/cachetype.h    |  9 +++++++++
+ arch/arm/Kconfig                    |  1 +
+ arch/arm/include/asm/cachetype.h    |  2 ++
+ arch/csky/Kconfig                   |  1 +
+ arch/csky/include/asm/cachetype.h   |  9 +++++++++
+ arch/m68k/Kconfig                   |  1 +
+ arch/m68k/include/asm/cachetype.h   |  9 +++++++++
+ arch/mips/Kconfig                   |  1 +
+ arch/mips/include/asm/cachetype.h   |  9 +++++++++
+ arch/nios2/Kconfig                  |  1 +
+ arch/nios2/include/asm/cachetype.h  | 10 ++++++++++
+ arch/parisc/Kconfig                 |  1 +
+ arch/parisc/include/asm/cachetype.h |  9 +++++++++
+ arch/sh/Kconfig                     |  1 +
+ arch/sh/include/asm/cachetype.h     |  9 +++++++++
+ arch/sparc/Kconfig                  |  1 +
+ arch/sparc/include/asm/cachetype.h  | 14 ++++++++++++++
+ arch/xtensa/Kconfig                 |  1 +
+ arch/xtensa/include/asm/cachetype.h | 10 ++++++++++
+ drivers/dax/super.c                 | 14 ++++++++++++++
+ drivers/md/dm.c                     | 17 +++++++++--------
+ drivers/nvdimm/pmem.c               | 23 ++++++++++++-----------
+ drivers/s390/block/dcssblk.c        | 11 ++++++-----
+ fs/Kconfig                          |  1 -
+ fs/fuse/virtio_fs.c                 | 15 +++++++++++----
+ include/linux/cacheinfo.h           |  6 ++++++
+ include/linux/dax.h                 |  6 +-----
+ mm/Kconfig                          |  6 ++++++
+ 29 files changed, 165 insertions(+), 34 deletions(-)
+ create mode 100644 arch/arc/include/asm/cachetype.h
+ create mode 100644 arch/csky/include/asm/cachetype.h
+ create mode 100644 arch/m68k/include/asm/cachetype.h
+ create mode 100644 arch/mips/include/asm/cachetype.h
+ create mode 100644 arch/nios2/include/asm/cachetype.h
+ create mode 100644 arch/parisc/include/asm/cachetype.h
+ create mode 100644 arch/sh/include/asm/cachetype.h
+ create mode 100644 arch/sparc/include/asm/cachetype.h
+ create mode 100644 arch/xtensa/include/asm/cachetype.h
+
 -- 
-2.43.0.rc1.1.gbec44491f096
-
+2.39.2
