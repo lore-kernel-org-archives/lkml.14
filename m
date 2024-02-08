@@ -1,119 +1,155 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EEA1D532
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 02:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6791D526
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 02:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707360148; cv=none; b=ZM/91Phsv8d8ZsZ5rXLeZTbfYGrUTZxRoRETx5F1Ri4llXP5utW0yiFH+A0Qxn2DfwFsCg+94sXvFdP7AZ53A8lFT4yLnP0NbM0CMKT3EzHChXB5AfRjSUoHYAdR5VnzXDVW+yU4/JmR38FLbYnHr7DWLGfkiPx83xzDhciXpp8=
+	t=1707360287; cv=none; b=Pqz1DzWYoLbNDxRk4y7C8bMZM21LQBA8+NhExaCYmacBKQdrTgCthRrxSEWsdgPZY1kBKthpwOxqyGEdHOa37z7VcUfHmDpDQuHmSzeYBKUqk5x7i3cG5RGoy/H64LxlaqJMq4l0N1XlmNOa97gPc8sQ98jsspEzmrtxDjNXsxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707360148; c=relaxed/simple;
-	bh=+Hzd1w7HojwnCU/DVxbJMRTDalNKgxkpki45I1mN0VQ=;
+	s=arc-20240116; t=1707360287; c=relaxed/simple;
+	bh=gWRJfyvnfr8IuOi42mEJJAKeyuzjF1PjOjUnUZDHGGY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XKsaWlLHIstJJEuQ4TQ7698ZqklOK58p0vZiifLyvsB0oEkW+5zgQvmfwW7kBc0ly9i2ZoULRzq7Y5GnA6NxfSIsAwyQCvSac1DGG5uS/zMj9BvisjGpj/uaFiiUN5vj2m3eoWyA4fpfMOQ7ikY9pRnCpliOqRR8qxJalB6iBOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=drC4G/dn; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=KL90NYILWYUGKjd6qqfcsR6fIsqJSzQxOdV9yQ7r37K2glLdu2l8of67efbD+MnMbfeBwo2UIpZJnhUBJjrQLlbYdE5GKqhSLbeAuqMXB5tL5lLbJHLPhpEhxXNsGeFhDCqH5Dk7HCh0M24SFrhcz+UJ1G9HwUw44Oh/MSyDcy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCV4bx4w; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="drC4G/dn"
-Message-ID: <defcaf0b-21a9-454f-b44a-c91820f541c8@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707360143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sxbB6xl70fcGsF0IjYGB+vnomK4N76RXXTy+fmO65MY=;
-	b=drC4G/dntuy7hyCZhZ/TYhQlm483ShTPi8iqV0f3Hhe2yE6Idq0qPeIJ61wnyG1xlGW7T3
-	SaHbz8HMLWS/eJcIxevdBDs+KSoDAEfBZpICD9Egc9mUTgLfY/q4hSfnIqSyQa9Fme5Fp6
-	Mfdiw2hOgnNbiiVNyvQdoID3TlotNmo=
-Date: Thu, 8 Feb 2024 10:41:49 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCV4bx4w"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bda4bd14e2so1179011b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Feb 2024 18:44:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707360285; x=1707965085; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8xuQjRjBuhA5J7Jebq3jrSWdK7UbrSGGBIMtsR4rn7M=;
+        b=TCV4bx4wJfzFCsevWvU1eXsi3hxm74TEmJEA7vwR0Y2Vy8Z6RfHxCiPv0bdDWCHrFK
+         ZiwuTLdUYDtcFKGknBqd86AZjXtGwRhAeXy8IgqQ0+ro5yfW4SeHAMI6EXw9ExmWNdeg
+         yGWohpxZSjqxwUbTELC81yJB7tuaT6L/19yxUOmf28g2yGoKsV4olszKaWFulRGlr/QT
+         9paWLurrDwYqIY9ymY1ABxEHEF6SPMcjiEm5AOeLqFVAhtkKsb5VTgLxZ6yavOv9fTrN
+         5mp3rrR9xRrbwKfkx/UpkIFlpkFCthNxGSmCpo/fH91I//6IvigRc8pba2lEEsZZTLRS
+         JQZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707360285; x=1707965085;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8xuQjRjBuhA5J7Jebq3jrSWdK7UbrSGGBIMtsR4rn7M=;
+        b=hYy1ORgieqi/DU0sGMkpjoO0xxfS8vsFIYXWzx2nEihVLsYzqPqG7+6JRKqPVPNI96
+         P7jicrOCwz69fUv3Hmcz9P+ghWsCJmczFp6ZpV1wSirEyl6q30armFLr4xgWd7aWkUPa
+         knXkxn8UuT5Y0JZWVi7veu8UPMAKJd59ApvCALyGm7dI97SrLSeEo/tAptb8B/ySnElK
+         qq79LlltE+dI9jxFAYKHGNtuKcTnCqOnGiHEOezD53ySX9HnKdTPTfdBX7AZlqUu3F6N
+         l2dEh5O23YU/IIeXcT3xvp39Vq7Ibc5eO/+sYBqrD132f5WCNpWnFECEUX2XgGMzsYQK
+         0GXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPyaM5lhJj6Jvp8BBT6l47TmpUXvlpUfL7Eblyrl+KeOH05kE2vlw9XQ0fiUU75T+IS5esebOLvEY6juCcG6PcRbNm+M/JU7pXKtQw
+X-Gm-Message-State: AOJu0YwQwIfM091LPMDLW6uFuhevS9NWZNry1SagC0RO5IIOSqnSN4rn
+	SH2OGs+jTzHJoUpy5GXGNkifU1WdeKdJB9jGUxXxmgl/bb4oDV11fd5rAoio
+X-Google-Smtp-Source: AGHT+IFqiMcvU19026JiqLA/TeFHyiebdsIX48amjqdAovfc+Ex760vrirXXv7FQctq/FhJnNidRVg==
+X-Received: by 2002:a05:6808:10d3:b0:3bd:9e75:15cf with SMTP id s19-20020a05680810d300b003bd9e7515cfmr8454667ois.53.1707360284920;
+        Wed, 07 Feb 2024 18:44:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWBUkFRCSLmqWplXGbu37CR8AiaoRem3/1JQMX8l6LB+Rxs4AiGbb6L3rwIkNHygNtF+Ke25U3Kze7n1X0FMtne5VQPom1UmW5rfrAHO+0UFnAgjuV3IcGcfVIUpUCXmWGJSN9qoki5h3jo9vtEqekIIvlIW/Jbik6hsCwAoYqCG7Xp35iVnMYUtx8=
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m24-20020a638c18000000b005dc36417f35sm2171794pgd.34.2024.02.07.18.44.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Feb 2024 18:44:44 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <622b1790-8abb-463c-b6f6-9fb8b4a739cc@roeck-us.net>
+Date: Wed, 7 Feb 2024 18:44:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4] mm/zswap: invalidate old entry when store fail or
- !zswap_enabled
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/2] lib: checksum: Fix issues with checksum tests
 Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: hannes@cmpxchg.org, yosryahmed@google.com, nphamcs@gmail.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Chengming Zhou <zhouchengming@bytedance.com>, stable@vger.kernel.org,
- Chris Li <chrisl@kernel.org>
-References: <20240207115406.3865746-1-chengming.zhou@linux.dev>
- <20240207154308.bc275f3e72ec1c1fd06cf5a2@linux-foundation.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240207154308.bc275f3e72ec1c1fd06cf5a2@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
+To: Charlie Jenkins <charlie@rivosinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Laight <David.Laight@aculab.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, linux-kernel@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
+References: <20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com>
+ <20240207174522.2d19729ec2e014d521335a04@linux-foundation.org>
+ <ZcQ38U20MLSdIxHP@ghost>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <ZcQ38U20MLSdIxHP@ghost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 2024/2/8 07:43, Andrew Morton wrote:
-> On Wed,  7 Feb 2024 11:54:06 +0000 chengming.zhou@linux.dev wrote:
+On 2/7/24 18:09, Charlie Jenkins wrote:
+> On Wed, Feb 07, 2024 at 05:45:22PM -0800, Andrew Morton wrote:
+>> On Wed, 07 Feb 2024 16:22:49 -0800 Charlie Jenkins <charlie@rivosinc.com> wrote:
+>>
+>>> The ip_fast_csum and csum_ipv6_magic tests did not have the data
+>>> types properly casted, and improperly misaligned data.
+>>
+>> Neither this nor the two patch's changelogs describe *why* these changes
+>> are needed.  They merely assert that we need to do this.
+>>
+>> IOW, when fixing a bug please always describe the user-visible effects
+>> of that bug.
+>>
 > 
->> From: Chengming Zhou <zhouchengming@bytedance.com>
->>
->> We may encounter duplicate entry in the zswap_store():
->>
->> 1. swap slot that freed to per-cpu swap cache, doesn't invalidate
->>    the zswap entry, then got reused. This has been fixed.
->>
->> 2. !exclusive load mode, swapin folio will leave its zswap entry
->>    on the tree, then swapout again. This has been removed.
->>
->> 3. one folio can be dirtied again after zswap_store(), so need to
->>    zswap_store() again. This should be handled correctly.
->>
->> So we must invalidate the old duplicate entry before insert the
->> new one, which actually doesn't have to be done at the beginning
->> of zswap_store(). And this is a normal situation, we shouldn't
->> WARN_ON(1) in this case, so delete it. (The WARN_ON(1) seems want
->> to detect swap entry UAF problem? But not very necessary here.)
->>
->> The good point is that we don't need to lock tree twice in the
->> store success path.
->>
->> Note we still need to invalidate the old duplicate entry in the
->> store failure path, otherwise the new data in swapfile could be
->> overwrite by the old data in zswap pool when lru writeback.
->>
->> We have to do this even when !zswap_enabled since zswap can be
->> disabled anytime. If the folio store success before, then got
->> dirtied again but zswap disabled, we won't invalidate the old
->> duplicate entry in the zswap_store(). So later lru writeback
->> may overwrite the new data in swapfile.
->>
->> Fixes: 42c06a0e8ebe ("mm: kill frontswap")
->> Cc: <stable@vger.kernel.org>
+> I can add a description that says that the tests are being fixed because
+> they caused failures on systems without misaligned access support. As
+> for the casting patch it's a bit less pertinent but I can add that it
+> allows the code to pass sparse checks.
 > 
-> We have a patch ordering issue.
+> - Charlie
 > 
-> As a cc:stable hotfix, this should be merged into 6.8-rcX and later
-> backported into -stable trees.  So it will go
-> mm-hotfixes-unstable->mm-hotfixes-stable->mainline.  So someone has to
-> make this patch merge and work against latest mm-hotfixes-unstable.
+I don't know exactly what Andrew is asking for, but maybe including the
+error log from the failed selftests and/or the sparse errors would be
+sufficient ?
 
-Ah, right. I just sent a fix based on mm-hotfixes-unstable [1], which
-is split from this patch to only include bugfix, so easy to backport.
+Not sure though if any of those count as "user visible".
 
-This patch actually include two parts: bugfix and a little optimization
-for the zswap_store() normal case.
+Guenter
 
-Should I split this patch into two small patches and resend based on
-mm-unstable?
 
-[1] https://lore.kernel.org/all/20240208023254.3873823-1-chengming.zhou@linux.dev/
 
-> 
-> The patch you sent appears to be based on linux-next, so it has
-> dependencies upon mm-unstable patches which won't be merged into
-> mainline until the next merge window.
-> 
-> So can you please redo and retest this against mm.git's
-> mm-hotfixes-unstable branch?  Then I'll try to figure out how to merge
-> the gigentic pile of mm-unstable zswap changes on top of that.
-> 
-> Thanks.
