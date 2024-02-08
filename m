@@ -1,47 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD07F2556D;
-	Thu,  8 Feb 2024 18:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE14A25770;
+	Thu,  8 Feb 2024 18:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707418169; cv=none; b=QID3bS/xMfCKdIA+nzGefU7ztGzolgYpTx4eqTlltASIp/aVEVF63Kh4mNSVk+hmZHa3gxODpEtBcG2Rjwje1vNnHwcOQ8ayP8/5t+ne5Di//swgnJ5iuw1XovF/0Ln4u6BLbagPkCL6+3z95EpIHy0gsYNhVPUbtiamdpdcktg=
+	t=1707418170; cv=none; b=U2fh1nDrn1Wa8MciCXIfT4EmVZKa4XxL+Xbu8Kj9MaOUnvQC8tyad9+bV1dF4NU9C9KzUOxQYf9/JhqVL7pXNQeGQW54jG3GP85EnLE5f4qhbYcVPbcfWeH4DL/6Jn7Ng1HzvJoaTlE2d1xeIIgPhzKL9kV0/jVS5IqUTTd72GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707418169; c=relaxed/simple;
-	bh=xSKeAKNBA96roisQYOcxV4QilUZU+Ks7Czd6oPoWOHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HcLMgYOJEkumR2LJj0R1iH1xrnNa2lAvOZ9ILp2CmefqAv5e5MZxV/yK5itE7YijORoMSemzfNIuik+hpWBCZnwH0hPyfrZ7bI+xtSWqmsZIHE6m3PgTC+nyz3dJpbnh/EGG8hBBD0wnX2v1aLGKsfFRv78VzyBDTECNjQIBkE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R3btefzz; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1707418170; c=relaxed/simple;
+	bh=nKnI1gzZu/2gi1frEJ0pSztmvg8qGxw/QhIDsCZBNC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J+XthcE3bfvx8jryQz1dzToyJA8Tgj1sP5pL4RkViZW31DniW0WjA+7S2zLTM+yYtQHIuJCcU02u99/3tSzBHhY4kswkqq0RgGCGeNn6NhrdoBbEvwDdEbEcjk1UVyn3vJCJrsINSbJe84E9RBhIViI/DS3RlD1BNZlgUPvuHDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YR2iQgLC; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R3btefzz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YR2iQgLC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707418168; x=1738954168;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xSKeAKNBA96roisQYOcxV4QilUZU+Ks7Czd6oPoWOHU=;
-  b=R3btefzzCOmPypUcdfnxzpNw3uuaOhiP2dje0z/Jh8UGVUesKjrIq0GW
-   68F3L2zIGyH3Y2i4w/0cxNEDNQuHDen/FO5djOOwTXKAZjHlAjHsd69Ws
-   yJjqoED7VQa723nZpQ03dOm0FVx/i+HW3aoXGLZ8dPvOA++GslzqMzfrB
-   uE8ahgWVQXKW6fFBPd7mARsKL6BDPf5hFyaDwry25WLRRD8JSQJ6r8Pu0
-   PtSGtKdHB21CfQnF06xejPbHI2pZ6PePUks/BA9WKnZIIWvazCsPvq/Zy
-   olwQUI23SA6I0ayQqT50iVTMs5gwPeWHljfXdttQd6S453uRtKtmxdll4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186088"
+  t=1707418169; x=1738954169;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nKnI1gzZu/2gi1frEJ0pSztmvg8qGxw/QhIDsCZBNC8=;
+  b=YR2iQgLCJ17vXbJ5tUT8DwzbJc7qnA+8oqgrLyU0QLDVccwB7NunlQcv
+   eZ0Zv/8JtfFKkNqpJyXR0drkZzFI20tRPmhb/sXkLxLKPih7FhAPzwS3W
+   q7S1/S/JQd/cJa7S2FmF+6FTL4i6JToyfc4vI1y7WpDEHeJm0Yt5k2n2r
+   gtHdPmxEssYZtpjMzmd2WPHOOua/eOrysLaCNvzxmy+fOubf1pfup0MwW
+   bg79JPxJaRQN10SY1+ZQxkLCJp8NCIIJpRFXcuMGQlHDChXVQ3QITB2vo
+   7Zrm5GwvHwHSUjA3wq9H9s/B2GpaIEuuNs9zT96TI8w2YrN+jQURjMnWi
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186095"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1186088"
+   d="scan'208";a="1186095"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:49:25 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215514"
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215515"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934215514"
+   d="scan'208";a="934215515"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:22 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 557F532F; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
+	id 2DF9786; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	devicetree@vger.kernel.org,
@@ -53,12 +52,10 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 04/15] auxdisplay: linedisp: Unshadow error codes in ->store()
-Date: Thu,  8 Feb 2024 20:48:02 +0200
-Message-ID: <20240208184919.2224986-5-andriy.shevchenko@linux.intel.com>
+Subject: [resend, PATCH v1 00/15] auxdisplay: linedisp: Clean up and add new driver
+Date: Thu,  8 Feb 2024 20:47:58 +0200
+Message-ID: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
-References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,43 +64,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-kstrtox() may return different error codes.
+Add a new initial driver for Maxim MAX6958/6959 chips.
+While developing that driver I realised that there is a lot
+of duplication between ht16k33 and a new one. Hence set of
+cleanups and refactorings.
 
-Unshadow them in the ->store() callback to give better error report.
+Note, the new driver has minimum support of the hardware and
+I have plans to cover more features in the future.
 
-While at it, add missing kstrtox.h inclusion.
+Andy Shevchenko (15):
+  auxdisplay: img-ascii-lcd: Make container_of() no-op for struct
+    linedisp
+  auxdisplay: linedisp: Free allocated resources in ->release()
+  auxdisplay: linedisp: Use unique number for id
+  auxdisplay: linedisp: Unshadow error codes in ->store()
+  auxdisplay: linedisp: Add missing header(s)
+  auxdisplay: linedisp: Move exported symbols to a namespace
+  auxdisplay: linedisp: Group line display drivers together
+  auxdisplay: linedisp: Provide struct linedisp_ops for future extension
+  auxdisplay: linedisp: Add support for overriding character mapping
+  auxdisplay: linedisp: Provide a small buffer in the struct linedisp
+  auxdisplay: ht16k33: Move ht16k33_linedisp_ops down
+  auxdisplay: ht16k33: Switch to use line display character mapping
+  auxdisplay: ht16k33: Use buffer from struct linedisp
+  dt-bindings: auxdisplay: Add Maxim MAX6958/6959
+  auxdisplay: Add driver for MAX695x 7-segment LED controllers
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/auxdisplay/line-display.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../bindings/auxdisplay/maxim,max6959.yaml    |  35 +++
+ drivers/auxdisplay/Kconfig                    |  40 ++--
+ drivers/auxdisplay/Makefile                   |  13 +-
+ drivers/auxdisplay/ht16k33.c                  | 145 +++++--------
+ drivers/auxdisplay/img-ascii-lcd.c            |  24 ++-
+ drivers/auxdisplay/line-display.c             | 162 ++++++++++++--
+ drivers/auxdisplay/line-display.h             |  57 ++++-
+ drivers/auxdisplay/max6959.c                  | 200 ++++++++++++++++++
+ 8 files changed, 530 insertions(+), 146 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
+ create mode 100644 drivers/auxdisplay/max6959.c
 
-diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
-index c4dbb13293d1..4b92ae7781f1 100644
---- a/drivers/auxdisplay/line-display.c
-+++ b/drivers/auxdisplay/line-display.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/device.h>
- #include <linux/idr.h>
-+#include <linux/kstrtox.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -166,9 +167,11 @@ static ssize_t scroll_step_ms_store(struct device *dev,
- {
- 	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
- 	unsigned int ms;
-+	int ret;
- 
--	if (kstrtouint(buf, 10, &ms) != 0)
--		return -EINVAL;
-+	ret = kstrtouint(buf, 10, &ms);
-+	if (ret)
-+		return ret;
- 
- 	linedisp->scroll_rate = msecs_to_jiffies(ms);
- 	if (linedisp->message && linedisp->message_len > linedisp->num_chars) {
 -- 
 2.43.0.rc1.1.gbec44491f096
 
