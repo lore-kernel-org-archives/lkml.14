@@ -1,67 +1,66 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DA476021
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 12:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E9C7604D
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 12:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707394859; cv=none; b=qqYHTgytXb1OK02pywX7gDraiYkpKJLITyHIpGZmY6/AkvU2czH7HL1qLcSpJIfBdMlLEe4R36ddyi2Cl6HInjf3W3F/wr7t+jZ9Ul0ydFNP1hqgUSRUeZF1ZvJHMGsLD65BlWtfFLkv43NOkBWkaw+F+qrRN2EPDNH3CAoVUvY=
+	t=1707394890; cv=none; b=gH1pNJjJ+5/P34iR6rwF3Enc7/n3Lg+nUvFhKEiE8XWUE1Wn1Qmr1R5izBSdDRVXpWEgZY9mbKLBVaJUPAe34sCCJ/HNAwezOhkBa9djT+AbYvjyW8riUuF3TbwlVMDJLROxIlNucwtFNw/EkV11HIwZgKUMH5xvB5uzmyIMQ9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707394859; c=relaxed/simple;
-	bh=iBRxCFNg530HZ3mowLtmdXeppw43BoOmKkPx98+KxGQ=;
+	s=arc-20240116; t=1707394890; c=relaxed/simple;
+	bh=c7XAvXW3JqDQu3a1gMUnXDEqNL5QzKj2+D77O+/2mAI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KvFd9jSAcrCqe53L9vkpGdR3xA0ROES9Oab+eu33hmOUxzRcZpl86s6ymhcycaCeq86gVzfyxqq40PJbX+5tEg0wXVIGpc3E+fan2mWkiIS6p0Rp+124WWti0dPpQhOw2T6E6J77a63BxitEKPcWn4E+klGfbBbkGu6kwM4Dh/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K8GvBnLw; arc=none smtp.client-ip=209.85.128.180
+	 To:Cc:Content-Type; b=ZptWK3si7HnrWYpe8m1ZEYhs8APz2vZcnZsOLMsmo8wrg3EcDkwURZ1em82jzEpV21QsocWZz7VR2wDAwlQnhGih68HgDtMQPJYwLvXodqnTI/dwMAOMR0KJjCvPQWVfSwXOGwZQSxXDanBliuv7R0DkACRTK38h2psjIMtAzj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nmr8nhgL; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K8GvBnLw"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-604b0ae6babso1581767b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 04:20:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nmr8nhgL"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-604ab54bb83so3845027b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 04:21:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707394856; x=1707999656; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707394887; x=1707999687; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iBRxCFNg530HZ3mowLtmdXeppw43BoOmKkPx98+KxGQ=;
-        b=K8GvBnLwHDN4ObdcyJyFaoH9q+VbIqnV8NsNRrlyp58VcSfxZMGELlSZF45/KXtbx9
-         qCJK5qlXOeFGVP2fL0KJeboSCqV0mit4eQ5ofcOWREo+cdmzcubPlKbGxpCortBifVch
-         il2W/xp68lTaFbrOvKMoEF++Xsqir1pHh+wnty2utmZrqHH/sgn7nwaFh43+tHWoc/6k
-         o9Ll1eU8Jo4FHthMwC6UHUOwKlZSSRhGcNN+cM7svR9WXa4yUzAfCusHM3hunkOkms/p
-         c/B5TpVaqHTwUd3xxNeeHPxa/BJ/PK/TnVz2Yht5T+/0WJSTTvKE9QSFLhSw20zGHFij
-         8wAA==
+        bh=c7XAvXW3JqDQu3a1gMUnXDEqNL5QzKj2+D77O+/2mAI=;
+        b=nmr8nhgLZPJ++N2Jp7Q0EweSK3WAkfvn7DK8N5vw5hOeM/cAIIuS8/C5xfpTrOZkPX
+         5pxp3Swlj4UBdLR9M8AEkePwJhNQcKsx7sv0sG+OBEGep5QNu5BJGOhs8QXCXwtS/6qX
+         pSYfN3nD14pZZZX8x8IR6WkfKl0FG6THUQmaYeqB1InNUqIO2KnXMimEt+DU+r98iF8i
+         k+kRCewlC87n6N/5iTkAfnwlXxfDhe8rhipFvm+joU9cYWhMR9J88KhJKCv2RfTVAlTy
+         1NbvsW7p5Wvq//ASOwdC1haSjfkM3HOj7S3XB4N1haDkq4vL4n/7E/1hviTs2HKQ+AI0
+         uO/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707394856; x=1707999656;
+        d=1e100.net; s=20230601; t=1707394887; x=1707999687;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iBRxCFNg530HZ3mowLtmdXeppw43BoOmKkPx98+KxGQ=;
-        b=dpIwoq9oP1/Dw160rrmhE8JELPx92HKIiNYkYxUXIN+jupzly7zJo/G77/wDhgxRmA
-         83TGRRvlIvd2smwkHb6BSQAJR+3TOnGGADLi7aEYt0/mxUAK8U9CeCwONPDBxX7cHf14
-         d9UAOTQjaMSD1g3ipHqqJzVw9PXYel8Jq64Xr+uwKdYmfkcHcl1kKKOokqSstit4eQXF
-         Hzan2llsG7pAFTFRlm5OmtDAE2wvFtMEdmswpukMBovTU81tIsAvghZ4v0LtX9TuhSFX
-         NrAt/NhL0o51dbeSmR2XLAUeHWSWFACiTbZ6Qhh4BWughNOqVGwKOluQYOk0YuqIqIzN
-         lsTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMUun2oVgcEEg3p+LpABMypZ6Tdyrp7VnsdaLhmQr9i6wFs9u8o0z+FgRgzyHnwLFMKzBrAr2xvsa0sr9GNEKDuyMersFBQ/lf1l6e
-X-Gm-Message-State: AOJu0YyzfFQ7VIEkqGscCLM9CRyQ7DUdFwqsmdGz/m4QIUOM64QrhmRM
-	/tvg3RDwhMebBncxGfzHms/S6HPrw1OfrCyOd6gsBNpujfNLDs9IPWgq2iHKIvf6maqxxgyfnmq
-	/46p3o9RauMqPClhJMjAlwNyl7BJgcQm5cB+9Lw==
-X-Google-Smtp-Source: AGHT+IHKhaZnnM7h0sNB0ERbnAD1jv4LPYRxgzkjQ5lvuf4L29l+0F15fpZHLoEl+PkN17TnOypsBH/bxF0yT9EzVQ4=
-X-Received: by 2002:a81:b3c1:0:b0:604:7a6a:9d58 with SMTP id
- r184-20020a81b3c1000000b006047a6a9d58mr8271515ywh.25.1707394856481; Thu, 08
- Feb 2024 04:20:56 -0800 (PST)
+        bh=c7XAvXW3JqDQu3a1gMUnXDEqNL5QzKj2+D77O+/2mAI=;
+        b=vt/nJDJjrZuMqjOJQ6MSVsm5ya7Xk5uOU+ofEfU+sbWLsvlA1sBJB2ZdaL1JFbdlcp
+         xUPp4hy3Qz1WJ7PDfCfceYHpIBgXLFIXN1KY80hK1j5wf6mf5Atw/a+wag5kGFNheRUy
+         OcL6dk6XzPqqLlCChFED7Tr2TTDMJXjn6NkiNEpmB7abWDNQHwe7aW5BDhqenhIsxIZH
+         l6fG396KgF3Lnb6RxVyOly9m4dlDgSARg+xrASZfpBwsodASzvkjdKNxYzyfICoFu7JW
+         z1C7MAR3sfDj7o3wJJmN/y+sFvCDmgon0XhPXzpmHflnlnKBEc31UQnP+8+MtcG89k3X
+         jp2Q==
+X-Gm-Message-State: AOJu0Yw8V85VlKPz7YRQoG/aXMs31XfgKDDjFRcJ27MQd5IMwwlIW5Ot
+	b+HNeqrk1HabEl3rcdRm9tDuBx+/ov3macvu4HuAe0cUmo8ZtyyqpVhMTqA1qvF1UApPdqwS9+i
+	O2xlRpu6PBYhYexeR/Nx/Q8DFc/Mz+VUDhAJGeQ==
+X-Google-Smtp-Source: AGHT+IH+rdYwt1V9v42o57rZ+obkKonh/gd6tgsKYiHOCD7690dxOjHGrL+EaoIIsJbBelNWioDPFHCf8ZENSVttMvw=
+X-Received: by 2002:a81:e443:0:b0:5ff:9676:3658 with SMTP id
+ t3-20020a81e443000000b005ff96763658mr7587421ywl.48.1707394887647; Thu, 08 Feb
+ 2024 04:21:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208095920.8035-1-brgl@bgdev.pl> <20240208095920.8035-17-brgl@bgdev.pl>
-In-Reply-To: <20240208095920.8035-17-brgl@bgdev.pl>
+References: <20240208095920.8035-1-brgl@bgdev.pl> <20240208095920.8035-18-brgl@bgdev.pl>
+In-Reply-To: <20240208095920.8035-18-brgl@bgdev.pl>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 8 Feb 2024 13:20:45 +0100
-Message-ID: <CACRpkdYV8Q9LRdZ4A4hGUmWsyEFkOeMkCOv1_nyPZS4ccpeY6A@mail.gmail.com>
-Subject: Re: [PATCH v3 16/24] gpio: sysfs: don't access gdev->chip if it's not needed
+Date: Thu, 8 Feb 2024 13:21:16 +0100
+Message-ID: <CACRpkdZOzekCQ44Mx8ruQsx70Z6ZZtAOxxr6hy0PSQGqB2T=0w@mail.gmail.com>
+Subject: Re: [PATCH v3 17/24] gpio: don't dereference gdev->chip in gpiochip_setup_dev()
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
 	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
@@ -76,10 +75,10 @@ On Thu, Feb 8, 2024 at 10:59=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Don't dereference gdev->chip if the same information can be obtained
-> from struct gpio_device.
+> We don't need to dereference gdev->chip in gpiochip_setup_dev() as at
+> the time it's called, the label in the associated struct gpio_device is
+> already set.
 >
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
