@@ -1,119 +1,202 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10D86BB2F;
-	Thu,  8 Feb 2024 09:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8FE6A03A;
+	Thu,  8 Feb 2024 09:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707385045; cv=none; b=e6XCrUQWXCuiiT9cGf3kPdBj54jGhUkcAsIl2VB6n0gRJHpFHliDKGXrU83IlWZr2n/TVqb0zDS4mHiTwbgngL1GecWOVbGj8O28v2uhc9mqV0HpkKwY4awCM5fkkdD/qJDB/7cUUEdmzkxipJOPxXuND3MrWqZv90uKzQRqtAM=
+	t=1707385087; cv=none; b=AVbnSpjY8xHl+c9kCv0VmMkJwPN4kLEHCqxO2tMX1LlgwVG9WupxmFBrABEKf7ykJzLHknyKXe3S+xEtDkvAJ21oLj4054/MSN0Ilr1kb4Pb9X1jBo1bVXPWicsMtKSoXhWrBSa3QTNQUEoM84ZLw6GMOJ1d6Dtkdc+FqkHOnt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707385045; c=relaxed/simple;
-	bh=3Q2iyKC4hyp8AoOZUqz27l11mkhP1r9E0t2phlEb+Ck=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c1YQYn20twW76s7bKXM6rVrVzESYT0O6WTh8uR6zA7KKlndB9dvtKMXRfuWGR94Q3Txl782ZkogDSUZajP6HnCpwXZoIHxvsUlPCbmyAekrAHPxFeB85xCJ9keGdhL69/nKCqgBZXOL5+bPWRg8GoTLV7PEOTR4DJCiPR1UJonU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=NVlOusRq; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1707385087; c=relaxed/simple;
+	bh=KenGFnO8V0sQCx2w3bRvDG2ZWIiPIufLamD4iu2CQCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ii3bpD2PktdNJs1DFAZrA/ENCHtbEbjZwa68MnaVAGiQkT8w8Fr1KMKe0NnRi2kkFQulJ8Ny/gwvES8eH3IaSYG0otT21YJL0d1S6//lZZ463KjyMRBe5cYPURXsDhJi3rbtzk0c3NVOfKiBNoeG5jEt/eZyrmg0BR++1yIthQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=qhH84FVz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pvB/VrnQ; arc=none smtp.client-ip=66.111.4.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="NVlOusRq"
-Received: from fpc.intra.ispras.ru (unknown [10.10.165.11])
-	by mail.ispras.ru (Postfix) with ESMTPSA id D37D740755CC;
-	Thu,  8 Feb 2024 09:37:11 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru D37D740755CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1707385031;
-	bh=2icsXM4sghF71ROYFCFa6roBWVoViRGL+G2hZIeLN2Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NVlOusRqo/vP1OrfsuqYNRGwY5C9++itFnlj14yUQ6+AwsQ4QEdlh5gLhmU3FDSW5
-	 oMk7LvL1rPu3oPs9JkKZWAG3B1byV1SmiPnUNO91WvAl6BqSc0+vR/epcA74l4wAKF
-	 Cr+X0r7Gz8m/sOmOzhC/bpSLWGFLTmUsumy1sl0g=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: James Smart <james.smart@broadcom.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Ram Vegesna <ram.vegesna@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	Daniel Wagner <dwagner@suse.de>,
-	Hannes Reinecke <hare@suse.de>,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] scsi: elx: efct: adjust error handling inside efct_hw_setup_io
-Date: Thu,  8 Feb 2024 12:36:57 +0300
-Message-Id: <20240208093657.19617-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="qhH84FVz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pvB/VrnQ"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 2A7C45C014B;
+	Thu,  8 Feb 2024 04:38:05 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 08 Feb 2024 04:38:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1707385085;
+	 x=1707471485; bh=CtbWDd3+TzkoLPwwunkgdRlj99pZzuVSHHCYDHMn/68=; b=
+	qhH84FVzUTJh9XebWTQFbO6NX77+WhPzit5IDV2+MRnsh81Q29yoE/Kl5AOjDkJe
+	a3/PWVlkQYP8Vaxl5PEd+II19BneLoABpRELqEKGs5+F4iAESqAdrbehBsCIRCIu
+	SESRvGww0SkTD8q19qS+nq7fpS/OMoLe4NCmtHN7Umvszz8Pcu/+zpR/rWhCXkuZ
+	lpK9ChYv6PRlKsajiTvN5BPDYtqqQa/IKmMP6fEzj16gDBgsIfgcmLRBkiyYFfUY
+	8a2R1HzIF+LgxKSfBLpNLvzr+eiTmNIE7uZjB9gzjsI3/ecHNeafnzkGZJRn/DPR
+	pN3JtJQ03Dgc8zTs+1q1vA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707385085; x=
+	1707471485; bh=CtbWDd3+TzkoLPwwunkgdRlj99pZzuVSHHCYDHMn/68=; b=p
+	vB/VrnQkypUQ39IhkDvl7Y2tRQjEJTG74bNIapjp5SMTajzYA7hed0Yi/k7q4MDD
+	uA8XzzlH+AKju8RzSnivTtDH4y/XM8i5CTj89Tj71Bhcl+BaVELs01qGKJiwC0AW
+	jQNLIVw4f2+4s61DQvaXLGgSW8KB5gInE8sHr3DHeAiMprACSQ8yNLZR56clgSxh
+	dcbVIPkpcPu/80JdW1pN3MN/g4KIGXM4HMeoSlRGp65Bj3uBzhcCd+p70lwIN2TY
+	JdxodqGsKx/7Y/hD/KJC2wHxcQF9tY62RAW5CFmw7C4C3FH6QNmBNkd/TATy3XNc
+	tg7ZEZb/9EUxIwlMGNAVA==
+X-ME-Sender: <xms:_KDEZZJ9ewiyLPl3BX0hk-M6P7u0TGRKIAcv6VHlU3aK_rd6UOUiXw>
+    <xme:_KDEZVK_8zUiLFWDTwGDjR2A1ko7fIK5tfEKA8PAChjxhb5viU2R7HgFCPshGFnM9
+    gg4vsy9E5_qO8K1X8E>
+X-ME-Received: <xmr:_KDEZRt6pGl8ZxIl7DCY_NA395dnNllyqcScM4Mudti213CApfaQoLiCmqWdWKezOqLLa9GGM-Q_tWnIntDF0GC8jw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtdeggddtgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpeelueffheehgeeluedvlefghfeukeejteeuveeuhffftdfguefh
+    gefgueekffeftdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:_KDEZaargwB1zfQlnERK6yHbjjOYhDYaG3TLFuOt_2UQqcwTWFNg4A>
+    <xmx:_KDEZQb-kvGrjSTXUXwdUPJc4S-LV-5GPnNmFPEkt-GW2sdXU-h0JA>
+    <xmx:_KDEZeAoPs5ASihJxCZb1Rb7DFfsjN_drgHi1WK9B_CJ9nhduf78_w>
+    <xmx:_aDEZcQ-Mun3Z4TW8nrGLPs1bCHRdHwrhobB7ETFZ40Ho8YuzIWeCA>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 8 Feb 2024 04:38:03 -0500 (EST)
+Message-ID: <ce16e86b-59d0-4aac-8e62-b0c89a852e26@flygoat.com>
+Date: Thu, 8 Feb 2024 09:38:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/14] MIPS: Share generic kernel code with other
+ architecture
+Content-Language: en-US
+To: Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20240205153503.574468-1-gregory.clement@bootlin.com>
+ <20240205153503.574468-13-gregory.clement@bootlin.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Autocrypt: addr=jiaxun.yang@flygoat.com;
+ keydata= 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
+ HVO98ZmbMeg=
+In-Reply-To: <20240205153503.574468-13-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-IO and WQE buffers are allocated once per HW and can be reused later. If
-WQE buffers allocation fails then the whole allocation is marked as failed
-but already created IO array internal objects are not freed. hw->io is
-freed but not nullified in that specific case - it may become a problem
-later as efct_hw_setup_io() is supposed to be reusable for the same HW.
 
-While at it, use kcalloc instead of kmalloc_array/memset-zero combination
-and get rid of some needless NULL assignments: nullifying hw->io[i]
-elements just before freeing hw->io is not really useful.
 
-Found by Linux Verification Center (linuxtesting.org).
+在 2024/2/5 15:34, Gregory CLEMENT 写道:
+> Some architectures might seek to utilize a significant portion of the
+> generic kernel code while maintaining independence from the generic
+> kernel due to specific peculiarities.
+>
+> This patch allows for the reuse of core code, preventing unnecessary
+> duplication.
+>
+> Suggested-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Fixes: 4df84e846624 ("scsi: elx: efct: Driver initialization routines")
-Cc: stable@vger.kernel.org
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- drivers/scsi/elx/efct/efct_hw.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+Thanks!
+- Jiaxun
+> ---
+>   arch/mips/Kbuild           | 1 +
+>   arch/mips/Kconfig          | 3 +++
+>   arch/mips/generic/Makefile | 6 +++---
+>   3 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/mips/Kbuild b/arch/mips/Kbuild
+> index af2967bffb73d..d683993ed331c 100644
+> --- a/arch/mips/Kbuild
+> +++ b/arch/mips/Kbuild
+> @@ -17,6 +17,7 @@ obj- := $(platform-y)
+>   # mips object files
+>   # The object files are linked as core-y files would be linked
+>   
+> +obj-y += generic/
+>   obj-y += kernel/
+>   obj-y += mm/
+>   obj-y += net/
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 797ae590ebdba..5549d26448941 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -109,6 +109,9 @@ config MIPS_FIXUP_BIGPHYS_ADDR
+>   config MIPS_GENERIC
+>   	bool
+>   
+> +config MACH_GENERIC_CORE
+> +	bool
+> +
+>   config MACH_INGENIC
+>   	bool
+>   	select SYS_SUPPORTS_32BIT_KERNEL
+> diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
+> index e37a59bae0a62..56011d738441f 100644
+> --- a/arch/mips/generic/Makefile
+> +++ b/arch/mips/generic/Makefile
+> @@ -4,9 +4,9 @@
+>   # Author: Paul Burton <paul.burton@mips.com>
+>   #
+>   
+> -obj-y += init.o
+> -obj-y += irq.o
+> -obj-y += proc.o
+> +obj-$(CONFIG_MACH_GENERIC_CORE) += init.o
+> +obj-$(CONFIG_MACH_GENERIC_CORE) += irq.o
+> +obj-$(CONFIG_MACH_GENERIC_CORE) += proc.o
+>   
+>   obj-$(CONFIG_YAMON_DT_SHIM)		+= yamon-dt.o
+>   obj-$(CONFIG_LEGACY_BOARD_SEAD3)	+= board-sead3.o
 
-diff --git a/drivers/scsi/elx/efct/efct_hw.c b/drivers/scsi/elx/efct/efct_hw.c
-index 5a5525054d71..e5486e6949f9 100644
---- a/drivers/scsi/elx/efct/efct_hw.c
-+++ b/drivers/scsi/elx/efct/efct_hw.c
-@@ -487,12 +487,10 @@ efct_hw_setup_io(struct efct_hw *hw)
- 	struct efct *efct = hw->os;
- 
- 	if (!hw->io) {
--		hw->io = kmalloc_array(hw->config.n_io, sizeof(io), GFP_KERNEL);
-+		hw->io = kcalloc(hw->config.n_io, sizeof(io), GFP_KERNEL);
- 		if (!hw->io)
- 			return -ENOMEM;
- 
--		memset(hw->io, 0, hw->config.n_io * sizeof(io));
--
- 		for (i = 0; i < hw->config.n_io; i++) {
- 			hw->io[i] = kzalloc(sizeof(*io), GFP_KERNEL);
- 			if (!hw->io[i])
-@@ -502,10 +500,8 @@ efct_hw_setup_io(struct efct_hw *hw)
- 		/* Create WQE buffs for IO */
- 		hw->wqe_buffs = kzalloc((hw->config.n_io * hw->sli.wqe_size),
- 					GFP_KERNEL);
--		if (!hw->wqe_buffs) {
--			kfree(hw->io);
--			return -ENOMEM;
--		}
-+		if (!hw->wqe_buffs)
-+			goto error;
- 
- 	} else {
- 		/* re-use existing IOs, including SGLs */
-@@ -586,10 +582,8 @@ efct_hw_setup_io(struct efct_hw *hw)
- 
- 	return 0;
- error:
--	for (i = 0; i < hw->config.n_io && hw->io[i]; i++) {
-+	for (i = 0; i < hw->config.n_io && hw->io[i]; i++)
- 		kfree(hw->io[i]);
--		hw->io[i] = NULL;
--	}
- 
- 	kfree(hw->io);
- 	hw->io = NULL;
 -- 
-2.39.2
+---
+Jiaxun Yang
 
