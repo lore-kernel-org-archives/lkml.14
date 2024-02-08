@@ -1,95 +1,85 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FFF50256;
-	Thu,  8 Feb 2024 22:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363C950253;
+	Thu,  8 Feb 2024 22:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707432623; cv=none; b=PEMBB5qAVUQINRX9DWGmy/iUMmDPPES/5h77UzTuz9ay2J9xpAHyow1qhB+NvOmMZotOlYvJMp3LKwqFvw8U14q/R/WQeOA3R6sI1USe0EvRxCnV/dU639C6DD8t85TVrEl1a89sV7+BMNRgkMC80rFFQbeIUKEl6rrX6FKAQ/Y=
+	t=1707432731; cv=none; b=pSFz2Dm7Tcg4jkCW0qWLu19KiQS8/fANJTk/lJ4dpcSb7bn1VaOLdaZcdY5UnakNd2bvVUN5Lu5j7B9F07qj4MmkWd2xPj1e3EBgJBY8vQPjN9zJXX1uEf/tXe+sHiAlyXerlaHfd1o8ltzVDGaPrCewu67U244ETH1PHCByKiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707432623; c=relaxed/simple;
-	bh=QQbWm1vnzLUS1txRr9hch/TyTh+VOwAmW8Axv2tX8O8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YcMCp/jlSLdQ8TR/nGHiMu5yezQPDnymWVi2nb4SMCv6/jkvLMLVsKzL9CiGs4ynev/gUVBsc0Maj3rey6Y8+1BSv+uaQrvPhX1I7QzOoJIVGCLJa1ueOFl794jTrPiGT0XPxipPtqr6oJ/2oQoWXXUY1zo0/0YWoELfUbO6lrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgBNulay; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707432731; c=relaxed/simple;
+	bh=FXldPRMidLA55x+Hx/mIMRwupZQ/ec2lSqkWMdAcMXg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Alr6Xu+1PsN2rScdGykD8Oju5kOo7MT8CErCJZuzC08tIpInt87uK8r+jNkuT5cr6k+iShNFRAszSgoVCryWULq9ndpET+IrE5WsBE9++uajsCGv4NQmeFEI/qvBPawCfMsRVyfky/wPTXHGw6u2PCwl1IHz3J30Z52tGHQHhzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=FErf5knS; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgBNulay"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bfeb155d31so144132b6e.1;
-        Thu, 08 Feb 2024 14:50:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707432620; x=1708037420; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MGoqD8TT68ixzRNm3vNixXDLMpdkKEucKJo6ktMulao=;
-        b=BgBNulay1MXMfxpqEYVvKTuArU58i7RXPInBmj5ZkrsFnzBdvx4eSJCACHSsm3m01M
-         lLfOPwtqP5yp1MXmLcQ3V2uBsgaxm9qR5MMiI+38ZENrg7yXs2HnQS17fbAom7a8DMeV
-         hUW5CvsHUZSO3iNVzzs0uGyMEZFHRmuT2LLbJhG/+o7gTI2omc/Eps9Sx+X8tBb3VAkm
-         t8Do2h/ziUOoAv9/GvbywmCPJ/V+H4Zl1mW5qyWGWSEjuqkGdkCShELnYeT4hIMxsY5D
-         ivPO23GJUou+w9EOXGME75XT7MF/JcNlYLKAUvt3A/m2sYEHeyXYFzuHdF9BWNbBK66k
-         05oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707432620; x=1708037420;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MGoqD8TT68ixzRNm3vNixXDLMpdkKEucKJo6ktMulao=;
-        b=QAPdCyQc0Tf5eQvdLa2UaFcXY85rpBAykkZYzA9hy0haWjfkqfGgwdU/NkaYBR4p/b
-         Acr0C+dlFgTeHLEeqTOeiViH1Rj7VDn9jwL10eRYCue+aS5TiWRBuIY93cmrDyZ2o9KU
-         EyVXvISBsdWI1TXVLApdXvGGNiSoKfHrAvkOQyzcv9dat/uXCywaUPlvb7T2qrm3+W+w
-         6uWShJuUj2pGb+fUs1V7/gTh7kyiKb2VV51aOriY3FLpTdmXI3E28fHrGhkotlarNACk
-         oaaF7DZjBGO2YRR49ufKi7X0Ql13vZB7JYKr94Fol8PtOponSlmDqfgee/TkRD2bfqtp
-         fy4A==
-X-Gm-Message-State: AOJu0Yz381/sl2dEE5wgDPX0LWnS552G8JZGj1LTCCci6T7IruX6RfJP
-	DJMNIskxZ9+Ii9AGpo+5mhesBNCXcHK28cR9xi59pQk6GIGFIZWY
-X-Google-Smtp-Source: AGHT+IERRUQ4GDpJ49o40yXi6V2s2n9mKovBi13RS4qwlL6Kk00nSycdLPKOBYqEZOIxw7iA9TiRMQ==
-X-Received: by 2002:a05:6808:99a:b0:3bd:ca59:8f4 with SMTP id a26-20020a056808099a00b003bdca5908f4mr916041oic.33.1707432620697;
-        Thu, 08 Feb 2024 14:50:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWrdk7DGYjpSsbeF/CgHLCOVICu4qBMhDjjrKtVyldYxtifcOf07d0ouGzEjpLXZ5mVm6b8OoijaNmq/HpEx5rG3bzdDTCuOU8vUh9qWs0XkgRw+waz+bGhJAwsKpp42NKCfI+ngQlscsrpBrLHSzJ2vLhwLQnKlFbuY+/ZMknZ1lz/pcv8+FvxrVDqvgTY97EKCDc+EyQQXyAnK61fIEoDb7kuoH4RPwrodzx9kG/7Ao3tIR+cpEdPPXpB+qt+3xP8p96jB5BQiWEa0tztZE9swmqRsG67+MRscBVLrxCkXFspkOjdB1Dx/N1V3DbBEtpXMd7xIrELRbycb7r0ickyjQ4J0ZkZTwzDNKeP/VADxmtA9cbi7I8k
-Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
-        by smtp.gmail.com with ESMTPSA id e2-20020ac84b42000000b0042c3bb838cdsm173488qts.90.2024.02.08.14.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 14:50:20 -0800 (PST)
-Date: Thu, 8 Feb 2024 12:50:18 -0500
-From: Oliver Crumrine <ozlinuxc@gmail.com>
-To: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
-	andrii@kernel.org, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: remove check before __cgroup_bpf_run_filter_skb
-Message-ID: <ngc7klapduckb67tsymb3blu2wlmdsjo4pa4gbaivgxezbwzxp@v7akqu7gbwl4>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="FErf5knS"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8B37545917
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1707432729; bh=3TgYkOcRC2sSgpj6cJafcSQeo2zp3995bRHryh4idG8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=FErf5knSwzEnT4RPdR6837+qZGmBdLkKqgWLqoQGTzLUOMKQHFlQB3jfvtEfBI9Yh
+	 oxwSDDqUPq850t93+eCkhKymFHjQchhZAsNDmLUw4383x5ProoDVQ3phOaGc4lIHCR
+	 dudUtgm7kOpyBYdHsqK109HN5k3Jm5j4mCjQT9XwXy9oSTuphvIa0yRK+7XtNX/nOQ
+	 a0o3TiX/rCNNjBBBoUYIhKsJEzGlRX64RcVis7T5BvttIzCAmqTq8jASNqVuIokd58
+	 DSV2TbRoRWZY1STOF0JRGzc5hbECIr23sA6zgsYW6fMHe74d5ZmuMaxDfN5AfSPxN2
+	 YnqPp/CArr34w==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::646])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 8B37545917;
+	Thu,  8 Feb 2024 22:52:09 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Thorsten Blum
+ <thorsten.blum@toblux.com>, Vegard Nossum <vegard.nossum@oracle.com>,
+ Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH] docs: Makefile: Fix make cleandocs by deleting
+ generated .rst files
+In-Reply-To: <20240208145001.61769-1-thorsten.blum@toblux.com>
+References: <20240208145001.61769-1-thorsten.blum@toblux.com>
+Date: Thu, 08 Feb 2024 15:52:08 -0700
+Message-ID: <87a5oafu1z.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-Checking if __sk is a full socket in macro 
-BPF_CGROUP_RUN_PROG_INET_EGRESS is redundant, as the same check is 
-done in function __cgroup_bpf_run_filter_skb, called as part of the 
-macro.
+Thorsten Blum <thorsten.blum@toblux.com> writes:
 
-Signed-off-by: Oliver Crumrine <ozlinuxc@gmail.com>
----
- include/linux/bpf-cgroup.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The script tools/net/ynl/ynl-gen-rst.py (YNL_TOOL) generates several .rst
+> files (YNL_INDEX, YNL_RST_FILES) in Documentation/networking/netlink_spec
+> (YNL_RST_DIR) which are not deleted by make cleandocs.
+>
+> Fix make cleandocs by deleting the generated .rst files.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  Documentation/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index 3885bbe260eb..4479910166fc 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -176,6 +176,7 @@ refcheckdocs:
+>  	$(Q)cd $(srctree);scripts/documentation-file-ref-check
+>  
+>  cleandocs:
+> +	$(Q)rm -f $(YNL_INDEX) $(YNL_RST_FILES)
+>  	$(Q)rm -rf $(BUILDDIR)
+>  	$(Q)$(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media clean
 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index a789266feac3..95b4a4715d60 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -208,7 +208,7 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
- 	int __ret = 0;							       \
- 	if (cgroup_bpf_enabled(CGROUP_INET_EGRESS) && sk) {		       \
- 		typeof(sk) __sk = sk_to_full_sk(sk);			       \
--		if (sk_fullsock(__sk) && __sk == skb_to_full_sk(skb) &&	       \
-+		if (__sk == skb_to_full_sk(skb) &&			       \
- 		    cgroup_bpf_sock_enabled(__sk, CGROUP_INET_EGRESS))	       \
- 			__ret = __cgroup_bpf_run_filter_skb(__sk, skb,	       \
- 						      CGROUP_INET_EGRESS); \
--- 
-2.43.0
+So this seems worth doing ... except that there has been talk about not
+depositing those files into the source tree in the first place.  Adding
+Vegard and Breno to see if they have any thoughts on the matter...
 
+Thanks,
+
+jon
