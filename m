@@ -1,79 +1,81 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106C76EB67;
-	Thu,  8 Feb 2024 09:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22396BB49;
+	Thu,  8 Feb 2024 09:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384195; cv=none; b=a6JeTinXzQBbVSp6E+JTXjWKE51GRmTPND0sT389plPCHOL4xEZev87VdG3/Hx9YnsNjSF8IOFNy26LCUa2BII5S6DaJ27xKt2UiTkU1WNrAqG4k2qnlLVHl5VJoFlsbG/+VVoQHJjNL9h/sqhiuuTbPJPiwJIyHD7wbDTRh/vk=
+	t=1707384219; cv=none; b=C9pIjx18rlLYRy64HYFnyACvYBkaR4tXpSih578Wkv7Pn+v3bFqO/hDMFQ2X/+9BLt3cD+Qc2EqEWrb3u3B5ytsKXjGU6cEcZQS3NXHs5PTOJeD53M9RcOaUU/SGlUNtIV64xJMZjCUv9a5RLSPAfp9zftc2VhyIoLUxCCgnCyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384195; c=relaxed/simple;
-	bh=m8ByMPmtH9hhv//zYNDkx9dkDkOeAX7tnkbM/aPtZJ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DdMFXhQAGrcIbq0VdfrXLdMfKqAoOTyfwfhsAMirudQEsgCMaPrvvPt0LpkdssFO72bYrRi0wJOLjXKtQYjZ/qPHi3HfFUc22NLf1y6uA9ehDJp01NTXp4jNYmFonqghoMecT+R31LzWr4Jq6yq3VJAAAzEQCIrEKMuLLtrTTqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TVs375Vtyz4f3m7Y;
-	Thu,  8 Feb 2024 17:22:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 86BCD1A04BE;
-	Thu,  8 Feb 2024 17:23:06 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP2 (Coremail) with SMTP id Syh0CgAnSQx4ncRl3tGXDQ--.8574S2;
-	Thu, 08 Feb 2024 17:23:06 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] Fixes and cleanups to fs-writeback
-Date: Fri,  9 Feb 2024 01:20:17 +0800
-Message-Id: <20240208172024.23625-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1707384219; c=relaxed/simple;
+	bh=fnl17jHgJNcwIszysCdLjpjMhTABBL9VRXQDBQS7qQw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qmkcdOH3eczUdKwHolsI+S1UPfyIa0Or5euzhfstNdcRp7GPP9kpBsn3kz4hwWoWHaRp3gpIEhyHZszABWg/pNL5q0hQB0lsiaUw9uvMPf5vEv868etigXOGO2cTFabsDAE8qxPXSRWb6gGVfGyUVZds+bDSDPMNPgT3tMwQF8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Mx730JTW; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Mx730JTW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1707384209;
+	bh=fnl17jHgJNcwIszysCdLjpjMhTABBL9VRXQDBQS7qQw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Mx730JTWcpjC6EEOjrl3nCvfMyqQk6d7jJHkViExyWYqy/IxM3zOswBLGObS35ltR
+	 H2LWXuXC9x1TSoNZ9asVn0OJIeERVNJ+5lJwzFabAEOPtVdZf60AlpPuWPlsmhOXlP
+	 4IoBKeeS578w+Y0w8LLeSLeRRfpYX+VzIFMnyfUk=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 4587166A3F;
+	Thu,  8 Feb 2024 04:23:27 -0500 (EST)
+Message-ID: <7636b9072f2b72f6079a65d456c561716c5d90a3.camel@xry111.site>
+Subject: Re: [PATCH v2 0/3] Handle delay slot for extable lookup
+From: Xi Ruoyao <xry111@xry111.site>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Oleg Nesterov <oleg@redhat.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Andrew Morton
+ <akpm@linux-foundation.org>, Ben Hutchings <ben@decadent.org.uk>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, Linus Torvalds
+	 <torvalds@linux-foundation.org>
+Date: Thu, 08 Feb 2024 17:23:24 +0800
+In-Reply-To: <63a1738c-5755-4c2e-a4d4-f5047cdb3660@flygoat.com>
+References: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
+	 <63a1738c-5755-4c2e-a4d4-f5047cdb3660@flygoat.com>
+Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
+ keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgAnSQx4ncRl3tGXDQ--.8574S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gry5AFyrXFyftr13GFy7Awb_yoW3AFb_XF
-	y8JFyDJrnrXF17GayI9FnrJFyqkw4UCF1UJF15CFs8Jr1akwnxZrs5Cr4DXr1UXFyUuF4D
-	GwnrWw48JwsFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
-	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7
-	JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oV
-	Cq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG
-	8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2js
-	IE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY
-	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUsBMNUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-This series contains some random fixes and cleanups to fs-writeback.
-More details can be found in respective patches. Thanks!
+On Thu, 2024-02-08 at 09:20 +0000, Jiaxun Yang wrote:
+>=20
+>=20
+> =E5=9C=A8 2024/2/2 12:30, Jiaxun Yang =E5=86=99=E9=81=93:
+> > Hi all,
+> >=20
+> > This series fixed extable handling for architecture delay slot (MIPS).
+> >=20
+> > Please see previous discussions at [1].
+> >=20
+> > There are some other places in kernel not handling delay slots properly=
+,
+> > such as uprobe and kgdb, I'll sort them later.
+>=20
+> A gentle ping :-)
+>=20
+> This series fixes a regression, perhaps it should go through fixes tree.
 
-Kemeng Shi (7):
-  fs/writeback: avoid to writeback non-expired inode in kupdate
-    writeback
-  fs/writeback: bail out if there is no more inodes for IO and queued
-    once
-  fs/writeback: remove unused parameter wb of finish_writeback_work
-  fs/writeback: remove unneeded check in writeback_single_inode
-  fs/writeback: only calculate dirtied_before when b_io is empty
-  fs/writeback: correct comment of __wakeup_flusher_threads_bdi
-  fs/writeback: remove unnecessary return in writeback_inodes_sb
+If you have Fixes: {sha} and Cc: stable@vger.kernel.org Greg will pick
+it up once it's in Linus tree.
 
- fs/fs-writeback.c | 66 +++++++++++++++++++++++++++++++----------------
- 1 file changed, 44 insertions(+), 22 deletions(-)
-
--- 
-2.30.0
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
