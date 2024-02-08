@@ -1,122 +1,115 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183BB7D410
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF797D410
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707398154; cv=none; b=G3WAeHLIGb3NwmfoAtTyX05pVa4iPCqmI/iSik7HAf/9jE5TmSTay1nz5bm0GOyu+fqVvwyqGGAMd3F+MBDlcC1jkuKn2PmjyeJcml9Rdu8XI3b5ou4g1sp8HiLAyN4cI4crmkZK+05pcHRZJnms1sM3caj/V4KjQw5zSZd2GJk=
+	t=1707398161; cv=none; b=t+i1xOrNim6Z1TyHCTzMr3sJ85V7Nh765M0ErOkphFwvDmKUdP9wJXqgstDAtm66CC6LsSsfSe0QBSX/E/Lg2OMS/8IRrmoiADOB91ze7F6P9UKAoFhl3C5NjKZXriDHVLNrxy6woXJ9h2RqyGGk9E+gvjrkhRIFX4JPLZRIIiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707398154; c=relaxed/simple;
-	bh=SEyLV8EA3UDikWXZ2JGORmUmCOCr2Fe68O2kEh9Su9w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hZxRXAeCyfSmglcG6uBdr6ryBiOi06d8EVR9r6WH0z/V5SVaChbRWtrY11ZjjlMxiKQHlrJ7fOpxXbx/xq6lmHUiCsdp9Eluwim1YcsjlaWuss3nc8P2r++XV8Ezb2U3yd9u8HDyV2xlszA0lhzG9C1S6Jog62F0hcld+2cr9Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=letYUnSD; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1707398161; c=relaxed/simple;
+	bh=JYAXOHhijzGveTgLECFMxWt2hP1TLJVns/dJDsdVzn4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rb4AC5w2qJhYNCZ1HmRLfEzF4d7jGZlR67uaI9592iH85qPNamToO5s12VRhnozPhpZis9ZYT6hwbDHv98igIEtzl1z41ocbCCS5+N8+2czCqNHu1BAVmJeFYeA403EwzP5pbNpTIAfKa9YNFLlKFDgvM/rwjoVE9maILyAEr7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZqE0hvwG; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="letYUnSD"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-511717cfa62so401712e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:15:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqE0hvwG"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso1302627a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:15:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707398150; x=1708002950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1707398159; x=1708002959; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tN5AQ/TNx9xhXcl1uoql+eElOXefKNcD2qx18n9oR4A=;
-        b=letYUnSDAswX+eIl9SWuqGBNebhGdqr8qZrLQcjn0N53+mIgGZt0/YJ97n6iKHtz7b
-         WAjdJJOdp7tJ/20miuKxZV3R+RiSkQe057C9KksptxtS4P4iVyP9L/dxO/tqUHZozlu5
-         aslVwWP2EYoo2rLnUicxJqloTrjxQzNbIeDImkb66AufAKjYREZgSWQzc2Hp3UaUAHMk
-         O9Za8hGyFBaNEzmrPrS0rQ5ZM/FHg0rhiGF4GSILUTdqcOgi94Hexl2yYWXwr2orCjIN
-         vVpwkX3WSyHZMoaAis04f9aDSYeFlVnKHUlaujmk/a5R77DyqSEAOeXSKVs9KkWuZzX6
-         ARjg==
+        bh=D8Dp3BKeiZZKDAqJdXYO0Ke5gALNhbM/RCCF/9rM4yU=;
+        b=ZqE0hvwGedeTUAog3feEeY1ZxJ4BlHJrsA4Qto3fDpjVSdq46VHr58S9EifnAaLLEG
+         QfyZKhPhlC86wBzDeqNwF1ht5+tDRpoLZ4BXVoYqVCfZncyXya0Ei4ctInW/bed1s5k5
+         CTcXzTfzs0b4RxAvyes8Akoo6abPdHlcqANVQv6PQdDH7qBo0Y3Y27Sv9RRl7FJlvpeN
+         t+oOk5IgTEaKjusZdb5t18wLiNcAacOtw3ubxKgZY5q20/s4IG2UpXokvmTdaHitjzsq
+         SrWFJkH6jcm+2o/jNtthwoN86u4bOekL7+IdS2oGtu9FRYGB/p3aommI2YmsZsHOPZPH
+         CtQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707398150; x=1708002950;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707398159; x=1708002959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tN5AQ/TNx9xhXcl1uoql+eElOXefKNcD2qx18n9oR4A=;
-        b=b068W7eKxlyhof0Zdytxqs73+KgSddWXQBE5u2JpxsVviadOVnauoBlE2ExmIlsChA
-         feboVXhKfm5htSKfydUyK7C6J+PI4W6O9u97wL+CSLk7grbjf44Uj96GAqm3kjIxi0nM
-         +J5iF0pyLOdvWu6ePbrbUAoKCfJ2IAL9GsQmBSFAo+kRvJDgUWhPW7q9elmuB8gtrEnp
-         4ct/NWgtpWsZBCLmpo0WD4ndNP3wBSsJw1mBGIOFwcXR1gSO8X+dWa6a3RK+Pd4bGor/
-         g3RpbrSE3Jyhv6SEobJodKVVlcVKYiIbndUlpXe1/oYW8HgVCF/YiT+vlF8XO7zmE2gg
-         mbuw==
-X-Gm-Message-State: AOJu0YxZYT65yowLzX5SS87MV4IQaNMBBWRls9AMxylNz+92NYTbhIvD
-	ZBgYingSwvT6JJiKuEZfNcmx61FppL736+dkGswY6wE+Nm6vsiGpqaBatwr0ggM=
-X-Google-Smtp-Source: AGHT+IGAqOf4DQcqfONgGpO02Y92fts42fxxYssdJfsFXf7d88iLObcv18TXvK28nb5eSZyikxSilg==
-X-Received: by 2002:a05:651c:220d:b0:2d0:ccc4:4f8e with SMTP id y13-20020a05651c220d00b002d0ccc44f8emr3465928ljq.44.1707398149935;
-        Thu, 08 Feb 2024 05:15:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVLw0HIQIivXh67dDbUpoRHuOQ86nOXfOYUIkSo73l5AQU7Cw1UcYIanz/UxfwMufn4QhhtDx8YoyVOVIgMF6wLc3pYqAdkZy5ijpyQQyhPf50BiLqUAv1MlwCAIc9BQeNXFBydILe+kEbx/Uo7/TwTE1YhcqlI/blk1KHjV/HYVq+lQwPw4pZx3vwybO5JKEZliytsIg==
-Received: from debian.fritz.box (aftr-82-135-80-180.dynamic.mnet-online.de. [82.135.80.180])
-        by smtp.gmail.com with ESMTPSA id k10-20020a056402340a00b00560651808a6sm776678edc.67.2024.02.08.05.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 05:15:49 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: vegard.nossum@oracle.com
-Cc: corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mchehab@kernel.org,
-	thorsten.blum@toblux.com
-Subject: [PATCH v2] docs: scripts: sphinx-pre-install: Fix building docs with pyyaml package
-Date: Thu,  8 Feb 2024 14:13:06 +0100
-Message-Id: <20240208131305.52577-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <c6555e01-1945-410e-9950-53c40052626a@oracle.com>
-References: <c6555e01-1945-410e-9950-53c40052626a@oracle.com>
+        bh=D8Dp3BKeiZZKDAqJdXYO0Ke5gALNhbM/RCCF/9rM4yU=;
+        b=DM5A1xWvCCMQedQsBJ+Yqvr2FmnKz7khtUewDj04ivd7UURWLzCVnOb2/3EyFDFlYt
+         za3wRUCNUDqxZOwRQ+lbDJnDvgvnaRVTbzB9k4eUbsVKQE44w3JS82lAbVG/dlrOhi7x
+         pSs/m2ivh/IR59gHg+vo3OB3o2pO4h8/phm2kTXAkMc5MGa0+QjdwD0ctO/pJ7uts3/M
+         fkNukVVV/jH7cf058vjh8MHAxOdFUO95GYwMyO0d+aEFzmyhuRY7MhxnbMzftP40R75y
+         Of3tww7RecKCvya6Xrv80fMvPsWn2SEIl2Z5bfUw9URidLGucSAyD3GVFKhPWBaqsVp6
+         ZBGg==
+X-Gm-Message-State: AOJu0YzsUC3BPlAmFrstnPrUoJQMQzA839cAG+ojKFkVFKr5nIeeymP7
+	RThThz45ordIl3mcvg567RviEy10VJEA2KnsmE2dv0MzE6kalaBrfbAUDMc9DV+jpiCGC5zI5U4
+	vH9B0+AZv7OyScgaPkPCUwu4FdpY=
+X-Google-Smtp-Source: AGHT+IE/CAKMPbroR8bnQix8tNmZwX1tZA2jxbhk7gQBcadNJRAkSVcjp7iPkE/azE/A4cvEvq7A64+NprUUb0rHG5w=
+X-Received: by 2002:a17:90a:e2c2:b0:296:f9e9:5d45 with SMTP id
+ fr2-20020a17090ae2c200b00296f9e95d45mr1709115pjb.32.1707398158977; Thu, 08
+ Feb 2024 05:15:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231212033259.189718-1-aford173@gmail.com> <20231212033259.189718-2-aford173@gmail.com>
+ <CAHCN7xKKMzOtVaEXzgTgsO4yZF0JZ6=o+TFJOeTCza0fMGss2w@mail.gmail.com> <e2688a01-47d2-4f89-ab92-252f378d37ba@kontron.de>
+In-Reply-To: <e2688a01-47d2-4f89-ab92-252f378d37ba@kontron.de>
+From: Adam Ford <aford173@gmail.com>
+Date: Thu, 8 Feb 2024 07:15:47 -0600
+Message-ID: <CAHCN7xL-a9EK0Zk4K8k4Eiktsop9+KN34rY=yOvjN_==WTqULw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/bridge: samsung-dsim: Fix porch calcalcuation rounding
+To: Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc: dri-devel@lists.freedesktop.org, aford@beaconembedded.com, 
+	Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Michael Tretter <m.tretter@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Python module pyyaml is required to build the docs, but it is only
-listed in Documentation/sphinx/requirements.txt and is therefore missing
-when Sphinx is installed as a package and not via pip/pypi.
+On Mon, Jan 29, 2024 at 2:17=E2=80=AFAM Frieder Schrempf
+<frieder.schrempf@kontron.de> wrote:
+>
+> On 25.01.24 19:44, Adam Ford wrote:
+> > On Mon, Dec 11, 2023 at 9:33=E2=80=AFPM Adam Ford <aford173@gmail.com> =
+wrote:
+> >>
+> >> When using video sync pulses, the HFP, HBP, and HSA are divided betwee=
+n
+> >> the available lanes if there is more than one lane.  For certain
+> >> timings and lane configurations, the HFP may not be evenly divisible.
+> >> If the HFP is rounded down, it ends up being too small which can cause
+> >> some monitors to not sync properly. In these instances, adjust htotal
+> >> and hsync to round the HFP up, and recalculate the htotal.
+> >>
+> >> Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de> # Kontron BL=
+ i.MX8MM with HDMI monitor
+> >> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> > Gentle nudge on this one.  Basically this fixes an issue with the 8MP,
+> > but it's still unknown why it doesn't work on 8MM or 8MN, but Frieder
+> > confirmed there are no regressions on 8MM or 8MN.
+>
 
-Add pyyaml as an optional package for Debian- and Red Hat-based distros to
-fix building the docs if you prefer to install Sphinx as a package.
+Inki,
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- s/pyyaml/yaml/ as suggested by Vegard Nossum <vegard.nossum@oracle.com>
-- Make the check require the Python module; was optional
----
- scripts/sphinx-pre-install | 3 +++
- 1 file changed, 3 insertions(+)
+Is there something you need which is holding this back?  It's been
+nearly two months since I posted the initial patch.
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 25aefbb35377..7e49a020c25e 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -361,6 +361,7 @@ sub give_debian_hints()
- {
- 	my %map = (
- 		"python-sphinx"		=> "python3-sphinx",
-+		"yaml"			=> "python3-yaml",
- 		"ensurepip"		=> "python3-venv",
- 		"virtualenv"		=> "virtualenv",
- 		"dot"			=> "graphviz",
-@@ -395,6 +396,7 @@ sub give_redhat_hints()
- {
- 	my %map = (
- 		"python-sphinx"		=> "python3-sphinx",
-+		"yaml"			=> "python3-pyyaml",
- 		"virtualenv"		=> "python3-virtualenv",
- 		"dot"			=> "graphviz",
- 		"convert"		=> "ImageMagick",
-@@ -951,6 +953,7 @@ sub check_needs()
- 
- 	# Check for needed programs/tools
- 	check_perl_module("Pod::Usage", 0);
-+	check_python_module("yaml", 0);
- 	check_program("make", 0);
- 	check_program("gcc", 0);
- 	check_program("dot", 1);
--- 
-2.39.2
+Thank you,
 
+adam
+
+> I only tested two specific display setups on i.MX8MM. So of course I
+> can't confirm the absence of regressions in general.
+>
+> Anyway, I think this should be applied.
