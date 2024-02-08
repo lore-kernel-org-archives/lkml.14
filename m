@@ -1,46 +1,46 @@
 Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6380F82D8B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0255B83CAB;
 	Thu,  8 Feb 2024 17:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707411878; cv=none; b=rbHjILEcD54oDKjRw+FM1MbGt9N83IqJDfHL9S1Zo0iNYUku4TW1efgue7pMU31/h3M39O03szeYXPFUEqBX3M3Fd0Fkn7BlUS27tRzYOtJtRPJCN7Rtkl4TOTPqEWT6fV1JsK38gqK3BYwm1v99ki3MlJu9hB5cnjLTJrh5u10=
+	t=1707411879; cv=none; b=rPbvaP5rSZJKtpitMXTnI/6a15hRGQau1HTMlR5WSLtyazB3r7QQMFL9KEssiItN2oaYp1FjiUOUHfuBudPOtoOXY4Aur70Q4CEEliHL85Dzw+nAyWGOfwctkWO7rjn2WaagXWigG8m5C5znYeVNJYoiz8JUW5+NAleUezzRKlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707411878; c=relaxed/simple;
-	bh=sRckxtSDsCpf73zR+jB6R7mpE9gOvaxLiRmboePNvtg=;
+	s=arc-20240116; t=1707411879; c=relaxed/simple;
+	bh=b1HCM6PNhU5iOFP0yy2ZAE2FiVY5BYt6sfsBzt/lauQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hkQ/moTFUxsYivOspne4uu+vns/PEGCulwLAsgqDhpOabrVDMUmbTvPNaHWwIiSF4mQuuadZTBSkBGWcK9/D8EPxKUQoy0udc1a7mkRZf8Fi0+mkl2h7/NJnxBh21qLti85CnUyul7yhoxfzw/igF99TNDzHP/DbDRVeffNnMQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jffJY8Iu; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=mPtVJ/pNcNYi/FsMJC7pC/3MP5qpMLBlcHhKoarm//1vEWaLbmGX0LFpiTPDl3jTnjEz8CUc+NLivMmOhtjCzJiu2kGOaOE0nzU9dOgSaFzWo0JAs0fMMTEP6I0t5ms6ZZGzqMZambqSs3hj2pNxYwxar2AnZPNuww3l5UcCDKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GnjG2xxF; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jffJY8Iu"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 418H4JkL018161;
-	Thu, 8 Feb 2024 11:04:19 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GnjG2xxF"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 418H4L9j018171;
+	Thu, 8 Feb 2024 11:04:21 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707411859;
-	bh=YZPa9ZZEbQI9MSRPlkSzDWGxamhkq1zsmhD46HzU6Hs=;
+	s=ti-com-17Q1; t=1707411862;
+	bh=+yoH0oyAcvSMYuuy/HNbc6iZw+avNZNinJT/iIL/4IE=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=jffJY8Iu8YZwiGU0xFKp8gz4B2jzlRGKHRetBItcdMu6BLFk+u1rc2EfBwBFzv4cp
-	 uGQAA93F3k4vwaTXcLeCuz2RxKZN7qb1P2rnyRxDhv+2F+DxWcLqyCNMtQFl3ljjA3
-	 cD+o2s82cdsMcNFGLf3GNKqAfvZOiIMDgeY6wrOQ=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 418H4Jkb054113
+	b=GnjG2xxFCRI69mZjfPb965Hp01Yv9lbtJkux9PahLlWr/uB3SrQwMJ5HrlSDhCM55
+	 RgWd1EYx7QfFWJOrVRo/Qpqatmh6NcGSfK0OD6dQSpJtkMkf+hBsVFYGJmoOEMKkRm
+	 8y2muXbA4QV06wUhxTE2nXqqlZ3QgwptYXVGndXY=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 418H4LTC035404
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 Feb 2024 11:04:19 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 8 Feb 2024 11:04:21 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- Feb 2024 11:04:19 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 11:04:21 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 Feb 2024 11:04:19 -0600
+ Frontend Transport; Thu, 8 Feb 2024 11:04:21 -0600
 Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 418H4B6D091006;
-	Thu, 8 Feb 2024 11:04:18 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 418H4B6G091006;
+	Thu, 8 Feb 2024 11:04:20 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Manivannan Sadhasivam
@@ -62,9 +62,9 @@ CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH v3 11/19] power: reset: mt6323-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-Date: Thu, 8 Feb 2024 11:04:02 -0600
-Message-ID: <20240208170410.67975-12-afd@ti.com>
+Subject: [PATCH v3 14/19] power: reset: regulator-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
+Date: Thu, 8 Feb 2024 11:04:05 -0600
+Message-ID: <20240208170410.67975-15-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240208170410.67975-1-afd@ti.com>
 References: <20240208170410.67975-1-afd@ti.com>
@@ -83,87 +83,84 @@ exit paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/power/reset/mt6323-poweroff.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/power/reset/regulator-poweroff.c | 36 +++++++++---------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-index 57a63c0ab7fb7..c663347547f97 100644
---- a/drivers/power/reset/mt6323-poweroff.c
-+++ b/drivers/power/reset/mt6323-poweroff.c
-@@ -14,6 +14,7 @@
+diff --git a/drivers/power/reset/regulator-poweroff.c b/drivers/power/reset/regulator-poweroff.c
+index 15160809c423a..fed4978e38580 100644
+--- a/drivers/power/reset/regulator-poweroff.c
++++ b/drivers/power/reset/regulator-poweroff.c
+@@ -13,18 +13,15 @@
+ #include <linux/of.h>
  #include <linux/platform_device.h>
- #include <linux/mfd/mt6397/core.h>
- #include <linux/mfd/mt6397/rtc.h>
+ #include <linux/pm.h>
 +#include <linux/reboot.h>
+ #include <linux/regulator/consumer.h>
  
- struct mt6323_pwrc {
- 	struct device *dev;
-@@ -21,11 +22,9 @@ struct mt6323_pwrc {
- 	u32 base;
- };
+ #define TIMEOUT_MS 3000
  
--static struct mt6323_pwrc *mt_pwrc;
+-/*
+- * Hold configuration here, cannot be more than one instance of the driver
+- * since pm_power_off itself is global.
+- */
+-static struct regulator *cpu_regulator;
 -
--static void mt6323_do_pwroff(void)
-+static int mt6323_do_pwroff(struct sys_off_data *data)
+-static void regulator_poweroff_do_poweroff(void)
++static int regulator_poweroff_do_poweroff(struct sys_off_data *data)
  {
--	struct mt6323_pwrc *pwrc = mt_pwrc;
-+	struct mt6323_pwrc *pwrc = data->cb_data;
- 	unsigned int val;
- 	int ret;
++	struct regulator *cpu_regulator = data->cb_data;
++
+ 	if (cpu_regulator && regulator_is_enabled(cpu_regulator))
+ 		regulator_force_disable(cpu_regulator);
  
-@@ -44,6 +43,8 @@ static void mt6323_do_pwroff(void)
- 	mdelay(1000);
+@@ -32,30 +29,24 @@ static void regulator_poweroff_do_poweroff(void)
+ 	mdelay(TIMEOUT_MS);
  
- 	WARN_ONCE(1, "Unable to power off system\n");
+ 	WARN_ON(1);
 +
 +	return NOTIFY_DONE;
  }
  
- static int mt6323_pwrc_probe(struct platform_device *pdev)
-@@ -51,6 +52,7 @@ static int mt6323_pwrc_probe(struct platform_device *pdev)
- 	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
- 	struct mt6323_pwrc *pwrc;
- 	struct resource *res;
-+	int ret;
+ static int regulator_poweroff_probe(struct platform_device *pdev)
+ {
+-	/* If a pm_power_off function has already been added, leave it alone */
+-	if (pm_power_off != NULL) {
+-		dev_err(&pdev->dev,
+-			"%s: pm_power_off function already registered\n",
+-			__func__);
+-		return -EBUSY;
+-	}
++	struct regulator *cpu_regulator;
  
- 	pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
- 	if (!pwrc)
-@@ -63,19 +65,18 @@ static int mt6323_pwrc_probe(struct platform_device *pdev)
- 	pwrc->base = res->start;
- 	pwrc->regmap = mt6397_chip->regmap;
- 	pwrc->dev = &pdev->dev;
--	mt_pwrc = pwrc;
+ 	cpu_regulator = devm_regulator_get(&pdev->dev, "cpu");
+ 	if (IS_ERR(cpu_regulator))
+ 		return PTR_ERR(cpu_regulator);
  
--	pm_power_off = &mt6323_do_pwroff;
-+	ret = devm_register_sys_off_handler(pwrc->dev,
-+					    SYS_OFF_MODE_POWER_OFF,
-+					    SYS_OFF_PRIO_DEFAULT,
-+					    mt6323_do_pwroff,
-+					    pwrc);
-+	if (ret)
-+		return dev_err_probe(pwrc->dev, ret, "failed to register power-off handler\n");
- 
- 	return 0;
- }
- 
--static void mt6323_pwrc_remove(struct platform_device *pdev)
--{
--	if (pm_power_off == &mt6323_do_pwroff)
--		pm_power_off = NULL;
+-	pm_power_off = &regulator_poweroff_do_poweroff;
+-	return 0;
 -}
 -
- static const struct of_device_id mt6323_pwrc_dt_match[] = {
- 	{ .compatible = "mediatek,mt6323-pwrc" },
- 	{},
-@@ -84,7 +85,6 @@ MODULE_DEVICE_TABLE(of, mt6323_pwrc_dt_match);
+-static void regulator_poweroff_remove(struct platform_device *pdev)
+-{
+-	if (pm_power_off == &regulator_poweroff_do_poweroff)
+-		pm_power_off = NULL;
++	/* Set this handler to low priority to not override an existing handler */
++	return devm_register_sys_off_handler(&pdev->dev,
++					     SYS_OFF_MODE_POWER_OFF,
++					     SYS_OFF_PRIO_LOW,
++					     regulator_poweroff_do_poweroff,
++					     cpu_regulator);
+ }
  
- static struct platform_driver mt6323_pwrc_driver = {
- 	.probe          = mt6323_pwrc_probe,
--	.remove_new     = mt6323_pwrc_remove,
- 	.driver         = {
- 		.name   = "mt6323-pwrc",
- 		.of_match_table = mt6323_pwrc_dt_match,
+ static const struct of_device_id of_regulator_poweroff_match[] = {
+@@ -66,7 +57,6 @@ MODULE_DEVICE_TABLE(of, of_regulator_poweroff_match);
+ 
+ static struct platform_driver regulator_poweroff_driver = {
+ 	.probe = regulator_poweroff_probe,
+-	.remove_new = regulator_poweroff_remove,
+ 	.driver = {
+ 		.name = "poweroff-regulator",
+ 		.of_match_table = of_regulator_poweroff_match,
 -- 
 2.39.2
 
