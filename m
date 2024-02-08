@@ -1,176 +1,390 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6885465D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 23:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BB253800;
+	Thu,  8 Feb 2024 23:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707434088; cv=none; b=XroHNfDhwV1+2tTFyQCcFHge2MkJgY9I3l0gu9l9Lqd/C4YPtbY63eeYUzaWZdxjhgIYRwsV3RUbW4PAfJBPfwPa8FxEpU0lo+nEhYEzB5ofoGm9wRqut3snMPRDXMd3DPEQedx5sZC/DCVqWVuiIFVmjnsi54XohkYW8UrTun8=
+	t=1707434087; cv=none; b=g0wsrg82W3PaGaYcVSweMWNfQwI22oe/hO6ulRojfNlbGNLwLSFPyT6xay1DNrCddscEFdDAJk0D3nYwYgxwVcHLYT3NTf1xBF+4YdEkM4dyUZWXeLpCjWiw81DqV9zT+w+gqSFaZFp8MLHkDUZvXOkWgC2tSj4l2dESBVuksA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707434088; c=relaxed/simple;
-	bh=9j5r/pr1EIliO35fXmzoIikYmXFewW/u7vlCgIYiELg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qSuRa+zCXFz1tFepATYRqiqQUZ1jNfPqUMxaGaxmSl6RRS7fASIg0u1zz3Z13s8d4owps3a8gF/3KFFCxHJMrhuHRGkhLSzF3e27vxptFKhpDFZiwTCa1nJksjsORWO8QGT8Hb71CorCJkEEYkD3I2ZmS/lkrgVCl5ZQHOxLbX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cnGFaOVR; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707434087; c=relaxed/simple;
+	bh=RTqL/6yg3gqL8ZK4i40n0gkIb7t9uu+dvMG3qkam1Gw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MCgeMJX4U9KDQi89N6rRxLmJUjOHUYZS8k5AQWVRdmdbecbiEohQjgM/rHSzpqsYgZ0NJQ5/Go6ePKBK9ApG2lM5wM4wGnBHm6Oo/XhShRhdBgzR4YKk6YawspWl2fVGyxOxjpEsWdOyh516fIzOPi2TlXxVdV/p1gEPt+hvEws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H4ADjBhB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cnGFaOVR"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56001b47285so581312a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 15:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707434082; x=1708038882; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZNufXJXCKu6+G1nHJMEy9AFU0fyk63nw9WZ1UB/GpnQ=;
-        b=cnGFaOVRSWOtJfe434/CQ2t6Nr2eirVoCSSIggffwo6eLIGkZX7m7/KhjO9t0+/SqO
-         hs2l1YfoAmeijkAeeA9TGwiQgVYWFv4mPoKGOr8x67JzZH48FzxBLOwvAmi28p1DRjST
-         lQGru7OUtrWIV+F8E5tjDH8gZE9rCjL8w8SricabFq7l2/ugVVSJUULsjly2xcnMlvjR
-         xclLKxbniCFBP/iDfSgfVuXfMqabjpcynvWOXg2eAk5Ncnp/qCVe2KRI/HzJZ3EB6J/0
-         zGkRwDiO29h+YtXNAyJgi49xvflFC2GY7xeB0q9deg5EbnnpI6FXEA4e/lGs+60a3OYw
-         VqtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707434082; x=1708038882;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZNufXJXCKu6+G1nHJMEy9AFU0fyk63nw9WZ1UB/GpnQ=;
-        b=qqj319uDOFnXP4aI3jFqAAuThBcGFqxG4vd36G5p6dDzFopDS6zrgxQg8tF+QVqT48
-         kQWI5ng+cQs12LDpec5qPwmZgxniBgl+4oU2/usVdn2dojMqvHivpgLLFP0khLjVfdG8
-         YnwRIKOqT6Pu9Blrg5gmft+Yp/BXy72mB0PWSxtVLMo0HlIyht69IkCM636Y9goJw8+4
-         71F5Pvdrlj6lYkWl5diS7EqnRGVZNI+UxYuWTcxz02wKhOlZJzVwraX9RFTTYey/v+wE
-         mdB7pjAfmX3pyQJmAgUvgG2BXTdHYYVt7KCS59OZtY4+JQ60lM098TqSBhFrs2E9hCJ8
-         fDFg==
-X-Gm-Message-State: AOJu0Yy+T/t3qq153nNbXVNfvNY2exttZ65nAmGvsbtKzQ5qmWBhdFzc
-	wYSiQ+VFYxo7vgtmpiGNeAAdjPJFGBTOOoAlHdr05AYQ/HVEIluCd//kib1yNYg=
-X-Google-Smtp-Source: AGHT+IHZzrDF1dJO86+ZGoeaHkZw5DV0jHxccZc5eSvLiRCNDIi3uZOYz1gZpe26W/rxoaQcSgZDWg==
-X-Received: by 2002:a17:906:f1d7:b0:a3b:cc20:31c with SMTP id gx23-20020a170906f1d700b00a3bcc20031cmr479225ejb.41.1707434082406;
-        Thu, 08 Feb 2024 15:14:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWWmSWUK4/G7m3o2+LOVGKHhZ3XPSDr841nYQGWd66xixk2rLM9ESv4ajmt1Vqc3S/aAuj93G/FgdTSZh5iQLBEfI5nUqml6+qS0cMtNqZG0VPjm/BQRIMSwuqcq9abhkEXwsi2ijX2L2Vq1a5/e9Qz0iC5oVtJ3y1jEaqHs26iGr1k8r5xCR+f3hPODIe017eLInuE2IWQyaznZoHAgjhJTFsaC6fbEZ03LUB7pW4mKvz7XFm7sZvEW/CMlRCnivlIpzI4V+aPX6Qw77JMAX/2oW9qFa2sAf7On/3PF0aB7QhYkC4Yz59VNeRLn3VPzUZbuWyvyAvqOz1z+eguJcgVOqfLWZm96yxSPF15wdFP+LYSHU6D6fKtFf19eQZ7jZv3nU5jxIaxTZW+OXYSEoRQKLFHjcDetXY/rnnMNdOTv/0QMb5n4xkYE+JM
-Received: from [192.168.192.207] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
-        by smtp.gmail.com with ESMTPSA id rf22-20020a1709076a1600b00a3bb26bd7afsm161577ejc.38.2024.02.08.15.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 15:14:42 -0800 (PST)
-Message-ID: <7b294518-9d4b-4648-a2b7-3843aca033a1@linaro.org>
-Date: Fri, 9 Feb 2024 00:14:38 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H4ADjBhB"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 418Mn5gl029828;
+	Thu, 8 Feb 2024 23:14:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=HV9Pb6l7ZvIx0wp5NxUZ
+	hQQ9a+JOucxlg/XCtN+7Lmo=; b=H4ADjBhBIznlI1JCP8jI7Axsw64VnIRdooVi
+	MTnyYpvcSCTxTZ9lgDxGqUX46HcF5iaRg1TXJLN618oP6ce8tUow7zj6zOeQsANO
+	oi/vS2u0I/RzwTx2t8fB1gDsvuKSNh+C53vUikY/GRA/W4UdyXpjkXmAUuGYNHqT
+	jN8doXYj7BoDU943i88LxjqM/JPB+XXd4espflhqbWoGhFgZX+S6VtP8dla1kZK7
+	yAK0vapABAI1J4LaldcKrQlZc19Au3zjv/JRg4jjGfzORE/IXgZbAPubB7PaUbov
+	7OI0nQANiHlQCK/DeKF9AW8tQonejBaUuhngFd3IXdqcgnYXgg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4sudj9yf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Feb 2024 23:14:23 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 418NEM9b009219
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 Feb 2024 23:14:22 GMT
+Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 8 Feb 2024 15:14:22 -0800
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v14 24/53] ASoC: qcom: qdsp6: Add USB backend ASoC driver for Q6
+Date: Thu, 8 Feb 2024 15:13:37 -0800
+Message-ID: <20240208231406.27397-25-quic_wcheng@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240208231406.27397-1-quic_wcheng@quicinc.com>
+References: <20240208231406.27397-1-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/7] dt-bindings: mailbox: qcom: Add CPUCP mailbox
- controller bindings
-To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
- cristian.marussi@arm.com, andersson@kernel.org, jassisinghbrar@gmail.com,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, quic_rgottimu@quicinc.com,
- quic_kshivnan@quicinc.com, conor+dt@kernel.org
-References: <20240117173458.2312669-1-quic_sibis@quicinc.com>
- <20240117173458.2312669-2-quic_sibis@quicinc.com>
- <7bf729a4-f3ac-4751-9275-a2aa4d62c036@linaro.org>
- <1f0c2767-c489-58a6-e5ba-9f1974072bb7@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <1f0c2767-c489-58a6-e5ba-9f1974072bb7@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: RURA2Xibtex_GgC-F-AjK-Xl4Aax_GUG
+X-Proofpoint-ORIG-GUID: RURA2Xibtex_GgC-F-AjK-Xl4Aax_GUG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-08_11,2024-02-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 adultscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401310000 definitions=main-2402080131
 
-On 8.02.2024 11:22, Sibi Sankar wrote:
-> 
-> 
-> On 1/18/24 01:23, Konrad Dybcio wrote:
->>
->>
->> On 1/17/24 18:34, Sibi Sankar wrote:
->>> Add devicetree binding for CPUSS Control Processor (CPUCP) mailbox
->>> controller.
->>>
->>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
->>> ---
->>
-> 
-> Hey Konrad,
-> 
-> Thanks for taking time to review the series.
-> 
->> [...]
->>
->>> +  - |
->>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +    mailbox@17430000 {
->>> +        compatible = "qcom,x1e80100-cpucp-mbox", "qcom,cpucp-mbox";
->>> +        reg = <0x17430000 0x10000>, <0x18830000 0x300>;
->>
->> These reg spaces are quite far apart.. On 7280-8550, a similar
->> mailbox exists, although it's dubbed RIMPS-mbox instead. In
->> that case, I separated the mbox into tx (via
->> qcom-apcs-ipc-mailbox.c) and rx (with a simple driver). Still
->> haven't pushed or posted that anywhere, I'd need to access
->> another machine..
->>
->> On (some of) these SoCs, one of the channels (rx[1], iirc?) clearly
->> bleeds into the CPUFREQ_HW/OSM register region, which gives an
->> impression of misrepresenting the hardware. X1E doesn't have a
->> node for cpufreq_hw defined, so I can't tell whether it's also the
->> case here.
-> 
-> I am aware of ^^ discussion and the X1E doesn't have this problem.
-> Both the regions described are only used for mailbox communication.
-> X1E uses the scmi perf protocol for cpu dvfs.
+Create a USB BE component that will register a new USB port to the ASoC USB
+framework.  This will handle determination on if the requested audio
+profile is supported by the USB device currently selected.
 
-Yes, that's clear.
+Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+---
+ include/sound/q6usboffload.h  |  20 ++++
+ sound/soc/qcom/Kconfig        |   4 +
+ sound/soc/qcom/qdsp6/Makefile |   1 +
+ sound/soc/qcom/qdsp6/q6usb.c  | 218 ++++++++++++++++++++++++++++++++++
+ sound/soc/soc-usb.c           |   1 -
+ 5 files changed, 243 insertions(+), 1 deletion(-)
+ create mode 100644 include/sound/q6usboffload.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6usb.c
 
-I am however asking for something different: I presume the CPUSS
-IP hasn't changed too much on this SoC, other than having new cores and
-OSM now being controlled through a different firmware interface, and I'd
-like to keep the hardware description in our DT as close to the metal as
-possible.
-
-In other words, if the good ol' OSM hardware is indeed there under however
-many layers of firmware, and if RX does indeed bleed into its register
-space, I'd prefer there be at least a syscon node describing the actual
-block, and not a magic hwio entry that's many zeroes away.
-
-Konrad
-
+diff --git a/include/sound/q6usboffload.h b/include/sound/q6usboffload.h
+new file mode 100644
+index 000000000000..fdc1f5c53a3b
+--- /dev/null
++++ b/include/sound/q6usboffload.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * linux/sound/q6usboffload.h -- QDSP6 USB offload
++ *
++ * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++/**
++ * struct q6usb_offload
++ * @dev - dev handle to usb be
++ * @sid - streamID for iommu
++ * @intr_num - usb interrupter number
++ * @domain - allocated iommu domain
++ **/
++struct q6usb_offload {
++	struct device *dev;
++	long long sid;
++	u16 intr_num;
++	struct iommu_domain *domain;
++};
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 762491d6f2f2..b4eed01a2b2b 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -114,6 +114,9 @@ config SND_SOC_QDSP6_APM
+ config SND_SOC_QDSP6_PRM_LPASS_CLOCKS
+ 	tristate
+ 
++config SND_SOC_QDSP6_USB
++	tristate
++
+ config SND_SOC_QDSP6_PRM
+ 	tristate
+ 	select SND_SOC_QDSP6_PRM_LPASS_CLOCKS
+@@ -134,6 +137,7 @@ config SND_SOC_QDSP6
+ 	select SND_SOC_TOPOLOGY
+ 	select SND_SOC_QDSP6_APM
+ 	select SND_SOC_QDSP6_PRM
++	select SND_SOC_QDSP6_USB
+ 	help
+ 	 To add support for MSM QDSP6 Soc Audio.
+ 	 This will enable sound soc platform specific
+diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
+index 3963bf234664..c9457ee898d0 100644
+--- a/sound/soc/qcom/qdsp6/Makefile
++++ b/sound/soc/qcom/qdsp6/Makefile
+@@ -17,3 +17,4 @@ obj-$(CONFIG_SND_SOC_QDSP6_APM_DAI) += q6apm-dai.o
+ obj-$(CONFIG_SND_SOC_QDSP6_APM_LPASS_DAI) += q6apm-lpass-dais.o
+ obj-$(CONFIG_SND_SOC_QDSP6_PRM) += q6prm.o
+ obj-$(CONFIG_SND_SOC_QDSP6_PRM_LPASS_CLOCKS) += q6prm-clocks.o
++obj-$(CONFIG_SND_SOC_QDSP6_USB) += q6usb.o
+diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
+new file mode 100644
+index 000000000000..00cba1021dc6
+--- /dev/null
++++ b/sound/soc/qcom/qdsp6/q6usb.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/device.h>
++#include <linux/dma-mapping.h>
++#include <linux/dma-map-ops.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/iommu.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#include <sound/asound.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/q6usboffload.h>
++#include <sound/soc.h>
++#include <sound/soc-usb.h>
++
++#include <dt-bindings/sound/qcom,q6afe.h>
++
++#include "q6afe.h"
++#include "q6dsp-lpass-ports.h"
++
++#define Q6_USB_SID_MASK	0xF
++
++struct q6usb_port_data {
++	struct q6afe_usb_cfg usb_cfg;
++	struct snd_soc_usb *usb;
++	struct q6usb_offload priv;
++	int active_usb_chip_idx;
++};
++
++static const struct snd_soc_dapm_widget q6usb_dai_widgets[] = {
++	SND_SOC_DAPM_HP("USB_RX_BE", NULL),
++};
++
++static const struct snd_soc_dapm_route q6usb_dapm_routes[] = {
++	{"USB Playback", NULL, "USB_RX_BE"},
++};
++
++static int q6usb_hw_params(struct snd_pcm_substream *substream,
++			   struct snd_pcm_hw_params *params,
++			   struct snd_soc_dai *dai)
++{
++	return 0;
++}
++
++static const struct snd_soc_dai_ops q6usb_ops = {
++	.hw_params = q6usb_hw_params,
++};
++
++static struct snd_soc_dai_driver q6usb_be_dais[] = {
++	{
++		.playback = {
++			.stream_name = "USB BE RX",
++			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 |
++				SNDRV_PCM_RATE_16000 | SNDRV_PCM_RATE_22050 |
++				SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |
++				SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_96000 |
++				SNDRV_PCM_RATE_192000,
++			.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S16_BE |
++				SNDRV_PCM_FMTBIT_U16_LE | SNDRV_PCM_FMTBIT_U16_BE |
++				SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S24_BE |
++				SNDRV_PCM_FMTBIT_U24_LE | SNDRV_PCM_FMTBIT_U24_BE,
++			.channels_min = 1,
++			.channels_max = 2,
++			.rate_max =     192000,
++			.rate_min =	8000,
++		},
++		.id = USB_RX,
++		.name = "USB_RX_BE",
++		.ops = &q6usb_ops,
++	},
++};
++
++static int q6usb_audio_ports_of_xlate_dai_name(struct snd_soc_component *component,
++					const struct of_phandle_args *args,
++					const char **dai_name)
++{
++	int id = args->args[0];
++	int ret = -EINVAL;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(q6usb_be_dais); i++) {
++		if (q6usb_be_dais[i].id == id) {
++			*dai_name = q6usb_be_dais[i].name;
++			ret = 0;
++			break;
++		}
++	}
++
++	return ret;
++}
++
++static int q6usb_alsa_connection_cb(struct snd_soc_usb *usb,
++			struct snd_soc_usb_device *sdev, bool connected)
++{
++	struct q6usb_port_data *data;
++
++	if (!usb->component)
++		return -ENODEV;
++
++	data = dev_get_drvdata(usb->component->dev);
++
++	if (connected) {
++		/* We only track the latest USB headset plugged in */
++		data->active_usb_chip_idx = sdev->card_idx;
++	}
++
++	return 0;
++}
++
++static int q6usb_component_probe(struct snd_soc_component *component)
++{
++	struct q6usb_port_data *data = dev_get_drvdata(component->dev);
++	struct snd_soc_usb *usb;
++	int ret;
++
++	usb = snd_soc_usb_allocate_port(component, 1, &data->priv);
++	if (IS_ERR(usb))
++		return -ENOMEM;
++
++	usb->connection_status_cb = q6usb_alsa_connection_cb;
++
++	ret = snd_soc_usb_add_port(usb);
++	if (ret < 0) {
++		dev_err(component->dev, "failed to add usb port\n");
++		goto free_usb;
++	}
++
++	data->usb = usb;
++
++	return 0;
++
++free_usb:
++	snd_soc_usb_free_port(usb);
++
++	return ret;
++}
++
++static void q6usb_component_remove(struct snd_soc_component *component)
++{
++	struct q6usb_port_data *data = dev_get_drvdata(component->dev);
++
++	snd_soc_usb_remove_port(data->usb);
++	snd_soc_usb_free_port(data->usb);
++}
++
++static const struct snd_soc_component_driver q6usb_dai_component = {
++	.probe = q6usb_component_probe,
++	.remove = q6usb_component_remove,
++	.name = "q6usb-dai-component",
++	.dapm_widgets = q6usb_dai_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(q6usb_dai_widgets),
++	.dapm_routes = q6usb_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(q6usb_dapm_routes),
++	.of_xlate_dai_name = q6usb_audio_ports_of_xlate_dai_name,
++};
++
++static int q6usb_dai_dev_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct q6usb_port_data *data;
++	struct device *dev = &pdev->dev;
++	struct of_phandle_args args;
++	int ret;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	ret = of_property_read_u16(node, "qcom,usb-audio-intr-idx",
++				&data->priv.intr_num);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to read intr idx.\n");
++		return ret;
++	}
++
++	ret = of_parse_phandle_with_fixed_args(node, "iommus", 1, 0, &args);
++	if (ret < 0)
++		data->priv.sid = -1;
++	else
++		data->priv.sid = args.args[0] & Q6_USB_SID_MASK;
++
++	data->priv.domain = iommu_get_domain_for_dev(&pdev->dev);
++
++	data->priv.dev = dev;
++	dev_set_drvdata(dev, data);
++
++	return devm_snd_soc_register_component(dev, &q6usb_dai_component,
++					q6usb_be_dais, ARRAY_SIZE(q6usb_be_dais));
++}
++
++static const struct of_device_id q6usb_dai_device_id[] = {
++	{ .compatible = "qcom,q6usb" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, q6usb_dai_device_id);
++
++static struct platform_driver q6usb_dai_platform_driver = {
++	.driver = {
++		.name = "q6usb-dai",
++		.of_match_table = of_match_ptr(q6usb_dai_device_id),
++	},
++	.probe = q6usb_dai_dev_probe,
++	/*
++	 * Remove not required as resources are cleaned up as part of
++	 * component removal.  Others are device managed resources.
++	 */
++};
++module_platform_driver(q6usb_dai_platform_driver);
++
++MODULE_DESCRIPTION("Q6 USB backend dai driver");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/soc-usb.c b/sound/soc/soc-usb.c
+index ca92418501a3..a1e0363bd760 100644
+--- a/sound/soc/soc-usb.c
++++ b/sound/soc/soc-usb.c
+@@ -101,7 +101,6 @@ struct snd_soc_usb *snd_soc_usb_allocate_port(struct snd_soc_component *componen
+ 
+ 	usb->component = component;
+ 	usb->priv_data = data;
+-	usb->num_supported_streams = num_streams;
+ 
+ 	return usb;
+ }
