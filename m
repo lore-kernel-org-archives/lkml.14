@@ -1,240 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2124B8564E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 17:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D011182D8C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 17:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414362; cv=none; b=myy6rhVAUTA672fsI3Yj2sPuvXwykx4YPXkmDkwK3oyj7ygSz/fLsXgmUIIO18p73itQR3beCcAsELJ7kLvLS9NeAsN2ukEL6rkQ6p4d0mPw32xlVSgcHSvgctKC2c5MV4ww5u+H0aaXAOn/ympXkOhOfBMTxB6tcr3FnHdT8lo=
+	t=1707414365; cv=none; b=oRR4Q7oBz5yJyjP4A51j5Lhjuib70OybIDNJ4jD835TWSAQtRro+k8s9pAY1E8UWYV+cU0t6qI3AXVuNaUwfZQTgT+LN3n/ySB7kW/HCGtShmBPrtUeLsxa+j130zZvQcRTux3ZCubXW/Eb//5FjP3FDJBb3mpJRZk4x4dfrpN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707414362; c=relaxed/simple;
-	bh=DGawrRqtYeqOrBvzvwOYYvqISr/5uez89z5EVMVIj0U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=sFDcnohUIkBSWy9VE/cg/n4V9fjpeexb/DyFxzV3ZhRBa/K2coDORf9FFFW86m6oCOfjLziYM/5JuJbksii8/BdYSFd4beAim8/3ice6rjDuKU4yiqZMtHC6ScKbi8Qapp9zas00d2QRYQWr8Fwk2ykRFxnjYIpiZfmUAONRWlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ae+cnaLW; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707414365; c=relaxed/simple;
+	bh=f+PuXbNhXMTQKCE8D1ReIzehabsulG0iotcVaoV0u04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rq5lX66kqhR4I6hfC+5oqAWeZJ63CeEZ0VQzFlgYXLrBNEzpJKQ9Riw5qxbNtKaGJzUSxbm5aDsZooWSYdHFRQNaY/7f4tZLbfXStGzweGGmBviB53oS7F3MwEQsoG8zqX/piYCKiH8LK+DayK1jEzdOFHiFJ8Ccq477AIyWU+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hoaTxKRj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ae+cnaLW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707414360; x=1738950360;
-  h=date:from:to:cc:subject:message-id;
-  bh=DGawrRqtYeqOrBvzvwOYYvqISr/5uez89z5EVMVIj0U=;
-  b=ae+cnaLW9cOws7KStpadYpejpschNuSeJe7ngT6nK+zfUgPwcu1o0Ovb
-   6GETlbHa8W7OhHfRVHk+HqpFwaAfl/TxnRX2SFnj+bmq1xYlRWYIWZwxy
-   SfisWMsJ+uKY3xYObA8V6Nmj0ZXptz1GbeQRVHfAbGJJ9PW9VnDpkLRj8
-   j2FlRyav5s4RyZUgjFiuveXhN+W+Uazo8gXN9ETFTr+I1H7KxynW8QA1V
-   EKoT/84jQh1e4nMCc997gP5207apsuuJPt/3OBOs13jU7Y3xecJWZrDUh
-   8gwHT5Y4U4n5Bh6pB7DdfODj/WGjRHckYWfPjsiZGAm65WZjipovugGO2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="5132002"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="5132002"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:45:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="2088413"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 08 Feb 2024 09:45:53 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rY8T8-000402-15;
-	Thu, 08 Feb 2024 17:45:50 +0000
-Date: Fri, 09 Feb 2024 01:45:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/sev] BUILD SUCCESS
- 45ba5b3c0a02949a4da74ead6e11c43e9b88bdca
-Message-ID: <202402090114.l2XJv9Lk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hoaTxKRj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707414362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y8X4EhnjHNg6ZybPIUTxfj0f8bu4Fo5AJsqmmWpX13E=;
+	b=hoaTxKRj0hwUzwSf7HfCFwO/LvcA8IkkdawWFpjk9mdfE7o2M0caeMxvcmyhLOyecE0kq9
+	5f/oSVpVAZ673+g+SMW+MVBB7S6ufqAIIEvobmjSwKRuRxfVHbUWXZYyM4EqUEOE56GeAT
+	Xv+cfOLjBM08ttCZ0uwrbiAs/gWDhI8=
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com
+ [209.85.217.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-385-FLVz5ynHOc-PCYrYvAPkRQ-1; Thu, 08 Feb 2024 12:45:58 -0500
+X-MC-Unique: FLVz5ynHOc-PCYrYvAPkRQ-1
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-46d2776dbc1so18629137.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 09:45:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707414357; x=1708019157;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y8X4EhnjHNg6ZybPIUTxfj0f8bu4Fo5AJsqmmWpX13E=;
+        b=nr5iNe9s22nOh3KGJ/qgYTnbTasw3PmfW0ZSY5DH7Z0dXbiMJ5+b47cWNmZ9/l+YYB
+         ydWY3GYqKuVZvjtXdkBNnGiHelOCRLx38QWtKExm3cJgxCs0XCsdlBnOresKRU3uJBVG
+         cUz0vH3UzSYCSyKvXRwDIpVxLLxjwcZ8lAHaPIsP6PccHeoutVdvN8cFy0Qcn5GdwkOz
+         uBy2zSVRleD0rMoLaFFz7RrK6RSvJCoZVaX8NJ8V6K2ZJANvvLCg4mChMTlvvQC++j8L
+         sVmP0hvBour1z3CevrTTE05Y5n9znLuMkN062Vvqi42SQZOcv2aNMxuK0j6d4l3GkQdE
+         mwtA==
+X-Gm-Message-State: AOJu0YzzphjL9jkx8/wWEYjN6oZAIGnczp74mJW+6HfmHZqq//ecYm7J
+	ke98g+YazRhpWCrs66zA5taf87XCJw7DTJKHToc8D2JrrT4SfaBG3io/blTa6OrdunNnI2agPBj
+	75LkFHnMs9ojQWllqYwOfZOt8IGruawjLeNa3WWNNtSvEY6Ko/jotv6Z8+cAoueyTrRYhSdHUqp
+	SI3LrGtsobavrib+rQBqUYMvpeoOBVTIOEJ4US
+X-Received: by 2002:a05:6102:754:b0:46d:2083:14d1 with SMTP id v20-20020a056102075400b0046d208314d1mr23911vsg.10.1707414357389;
+        Thu, 08 Feb 2024 09:45:57 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFjZYAC+poB2A8bKFCXFb8kn7FgCzxPV6IsYhUCAgELoYofUjEzpN8/jetwu7l5YiegAIAgtJ1gKO1+GPVsjw=
+X-Received: by 2002:a05:6102:754:b0:46d:2083:14d1 with SMTP id
+ v20-20020a056102075400b0046d208314d1mr23887vsg.10.1707414357128; Thu, 08 Feb
+ 2024 09:45:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240123001555.4168188-1-michal.wilczynski@intel.com>
+ <20240125005710.GA8443@yjiang5-mobl.amr.corp.intel.com> <CABgObfYaUHXyRmsmg8UjRomnpQ0Jnaog9-L2gMjsjkqChjDYUQ@mail.gmail.com>
+ <42d31df4-2dbf-44db-a511-a2d65324fded@intel.com>
+In-Reply-To: <42d31df4-2dbf-44db-a511-a2d65324fded@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Thu, 8 Feb 2024 18:45:44 +0100
+Message-ID: <CABgObfYa5eKj_8qyRfimqG7DXpbxe-eSM6pCwR6Hq97eZEtX6A@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: x86: nSVM/nVMX: Fix handling triple fault on RSM instruction
+To: "Wilczynski, Michal" <michal.wilczynski@intel.com>
+Cc: Yunhong Jiang <yunhong.jiang@linux.intel.com>, seanjc@google.com, mlevitsk@redhat.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, dedekind1@gmail.com, 
+	yuan.yao@intel.com, Zheyu Ma <zheyuma97@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/sev
-branch HEAD: 45ba5b3c0a02949a4da74ead6e11c43e9b88bdca  iommu/amd: Fix failure return from snp_lookup_rmpentry()
+On Thu, Feb 8, 2024 at 2:18=E2=80=AFPM Wilczynski, Michal
+<michal.wilczynski@intel.com> wrote:
+> Hi, I've tested the patch and it seems to work, both on Intel and AMD.
+> There was a problem with applying this chunk though:
+>
+> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kv=
+m-x86-ops.h
+> index ac8b7614e79d..3d18fa7db353 100644
+> --- a/arch/x86/include/asm/kvm-x86-ops.h
+> +++ b/arch/x86/include/asm/kvm-x86-ops.h
+> @@ -119,7 +119,8 @@ KVM_X86_OP(setup_mce)
+>  #ifdef CONFIG_KVM_SMM
+>  KVM_X86_OP(smi_allowed)
+>  KVM_X86_OP()                 // <- This shouldn't be there I guess ?
+> -KVM_X86_OP(leave_smm)
+> +KVM_X86_OP(leave_smm_prepare)
+> +KVM_X86_OP(leave_smm_commit)
+>  KVM_X86_OP(enable_smi_window)
+>  #endif
+>  KVM_X86_OP_OPTIONAL(dev_get_attr)
+>
+> Anyway I was a bit averse to this approach as I noticed in the git log
+> that callbacks like e.g post_leave_smm() used to exist, but they were lat=
+er
+> removed, so I though the maintainers don't like introducing extra
+> callbacks.
 
-elapsed time: 1452m
+If they are needed, it's fine. In my opinion a new callback is easier
+to handle and understand than new state.
 
-configs tested: 167
-configs skipped: 3
+> > 2) otherwise, if the problem is that we have not gone through the
+> > vmenter yet, then KVM needs to do that and _then_ inject the triple
+> > fault. The fix is to merge the .triple_fault and .check_nested_events
+> > callbacks, with something like the second attached patch - which
+> > probably has so many problems that I haven't even tried to compile it.
+>
+> Well, in this case if we know that RSM will fail it doesn't seem to me
+> like it make sense to run vmenter just do kill the VM anyway, this would
+> be more confusing.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Note that the triple fault must not kill the VM, it's just causing a
+nested vmexit from L2 to L1. KVM's algorithm to inject a
+vmexit-causing event is always to first ensure that the VMCS02 (VMCB02
+for AMD) is consistent, and only then trigger the vmexit. So if patch
+2 or something like it works, that would be even better.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240208   gcc  
-arc                   randconfig-002-20240208   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   gcc  
-arm                                 defconfig   clang
-arm                             mxs_defconfig   clang
-arm                   randconfig-001-20240208   gcc  
-arm                   randconfig-002-20240208   gcc  
-arm                   randconfig-003-20240208   gcc  
-arm                   randconfig-004-20240208   clang
-arm                        realview_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240208   clang
-arm64                 randconfig-002-20240208   clang
-arm64                 randconfig-003-20240208   clang
-arm64                 randconfig-004-20240208   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240208   gcc  
-csky                  randconfig-002-20240208   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240208   clang
-hexagon               randconfig-002-20240208   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240208   gcc  
-i386         buildonly-randconfig-002-20240208   clang
-i386         buildonly-randconfig-003-20240208   gcc  
-i386         buildonly-randconfig-004-20240208   gcc  
-i386         buildonly-randconfig-005-20240208   gcc  
-i386         buildonly-randconfig-006-20240208   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240208   gcc  
-i386                  randconfig-002-20240208   gcc  
-i386                  randconfig-003-20240208   gcc  
-i386                  randconfig-004-20240208   clang
-i386                  randconfig-005-20240208   gcc  
-i386                  randconfig-006-20240208   gcc  
-i386                  randconfig-011-20240208   clang
-i386                  randconfig-012-20240208   clang
-i386                  randconfig-013-20240208   clang
-i386                  randconfig-014-20240208   clang
-i386                  randconfig-015-20240208   clang
-i386                  randconfig-016-20240208   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240208   gcc  
-loongarch             randconfig-002-20240208   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                            mac_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm63xx_defconfig   clang
-mips                      bmips_stb_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240208   gcc  
-nios2                 randconfig-002-20240208   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240208   gcc  
-parisc                randconfig-002-20240208   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                          g5_defconfig   gcc  
-powerpc                      makalu_defconfig   clang
-powerpc                    mvme5100_defconfig   gcc  
-powerpc               randconfig-001-20240208   clang
-powerpc               randconfig-002-20240208   gcc  
-powerpc               randconfig-003-20240208   gcc  
-powerpc64             randconfig-001-20240208   gcc  
-powerpc64             randconfig-002-20240208   gcc  
-powerpc64             randconfig-003-20240208   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240208   gcc  
-riscv                 randconfig-002-20240208   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240208   clang
-s390                  randconfig-002-20240208   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240208   gcc  
-sh                    randconfig-002-20240208   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240208   gcc  
-sparc64               randconfig-002-20240208   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240208   clang
-x86_64       buildonly-randconfig-002-20240208   clang
-x86_64       buildonly-randconfig-003-20240208   gcc  
-x86_64       buildonly-randconfig-004-20240208   clang
-x86_64       buildonly-randconfig-005-20240208   clang
-x86_64       buildonly-randconfig-006-20240208   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240208   gcc  
-x86_64                randconfig-002-20240208   gcc  
-x86_64                randconfig-003-20240208   gcc  
-x86_64                randconfig-004-20240208   clang
-x86_64                randconfig-005-20240208   gcc  
-x86_64                randconfig-006-20240208   gcc  
-x86_64                randconfig-011-20240208   gcc  
-x86_64                randconfig-012-20240208   gcc  
-x86_64                randconfig-013-20240208   clang
-x86_64                randconfig-014-20240208   clang
-x86_64                randconfig-015-20240208   clang
-x86_64                randconfig-016-20240208   clang
-x86_64                randconfig-071-20240208   clang
-x86_64                randconfig-072-20240208   clang
-x86_64                randconfig-073-20240208   gcc  
-x86_64                randconfig-074-20240208   clang
-x86_64                randconfig-075-20240208   gcc  
-x86_64                randconfig-076-20240208   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
+> I've made the fix this way based on our discussion with Sean in v1, and
+> tried to mark the RSM instruction with a flag, as a one that needs
+> actual HW VMenter to complete succesfully, and based on that information
+> manipulate nested_run_pending.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I understand, apologies for not noticing v1. Let's wait for Sean's opinion.
+
+Paolo
+
