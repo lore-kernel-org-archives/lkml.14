@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1547467E78;
-	Thu,  8 Feb 2024 11:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F656A029;
+	Thu,  8 Feb 2024 11:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707390084; cv=none; b=QWywTksNfk3flqJTeMLJ//x0aPJEEjyUNY+6nEvUwCC1p6Z1v7w0JMiZ4ftYuAtnYoNkpeKuLMi3BiBurJFGQYypNrn4vr6yFOEtzJ5cym+hr/5AXazOPjcsDxvMSjMSAoAfrCLR1KXEWNtDAwEBsVq4iQ8qGnqPscyakzxzEy0=
+	t=1707390171; cv=none; b=Tbgxh+iaQqGO7lHN8tPb19NvmIkYRLCyWYNatT6rFjwC0h4oZjPIxnXTUpSOpphS7ZviwJsho3yED7wSLgPQglUqfPbPPGO/hjrWKQF5xrlVasumxXtrSKoBD+Z+WHLP3Uupf2xImNrL9gyIhorJkkvf1piVzYCqRF6NQbghVN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707390084; c=relaxed/simple;
-	bh=RQiY2x/kbfGJWd67E0x5M+DvHL5FS0x/+1pqAG6y19Q=;
+	s=arc-20240116; t=1707390171; c=relaxed/simple;
+	bh=id8hjXjDkMAIkpA8l2vrFNoREynbbgbC3OPsjb01W9k=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qmhKhe+l+ZQFBHk5GeiaCwQBR1/ic6wbJymNmixX59mQydgIiXe9PzokqEn+rbo+k5RVsulCloJCz2Q5jYtaFjaccdLFUg2fVvPqhOHOloMhbe4YwyDAr2oenDhtQ7gLj22T+fcfvpVDXbYpivp6ZQNHxnb1GtozHCFYeiAZsmQ=
+	 MIME-Version:Content-Type; b=ayFDDb6tLqJLO9potdPMH0Du/bjR8wtCsO8lkFbQ5WtihNM4ogkciSr1Wh0RBLDRmSTe1pk72+vgQ2u12lUmi6OUbSn2AtRigKUooYcAv0b27TCc35Q7hGKixUbjyPD3X0fCGc8mMsyM4R3s2wcD/r56MiT0bz0vN1MA3zPoy2E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 894111FB;
-	Thu,  8 Feb 2024 03:02:03 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A3AF1FB;
+	Thu,  8 Feb 2024 03:03:30 -0800 (PST)
 Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE5323F762;
-	Thu,  8 Feb 2024 03:01:19 -0800 (PST)
-Date: Thu, 8 Feb 2024 11:01:11 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9FBD3F762;
+	Thu,  8 Feb 2024 03:02:46 -0800 (PST)
+Date: Thu, 8 Feb 2024 11:02:44 +0000
 From: Andre Przywara <andre.przywara@arm.com>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
@@ -27,11 +27,12 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
  Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: dts: allwinner: use capital "OR" for
- multiple licenses in SPDX
-Message-ID: <20240208110111.3ed4e5f4@donnerap.manchester.arm.com>
-In-Reply-To: <20240208105301.129005-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h616: minor whitespace
+ cleanup
+Message-ID: <20240208110244.2a39382a@donnerap.manchester.arm.com>
+In-Reply-To: <20240208105301.129005-2-krzysztof.kozlowski@linaro.org>
 References: <20240208105301.129005-1-krzysztof.kozlowski@linaro.org>
+	<20240208105301.129005-2-krzysztof.kozlowski@linaro.org>
 Organization: ARM
 X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
@@ -43,14 +44,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  8 Feb 2024 11:53:00 +0100
+On Thu,  8 Feb 2024 11:53:01 +0100
 Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
 Hi,
 
-> Documentation/process/license-rules.rst and checkpatch expect the SPDX
-> identifier syntax for multiple licenses to use capital "OR".  Correct it
-> to keep consistent format and avoid copy-paste issues.
+> The DTS code coding style expects exactly one space before '{'
+> character.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
@@ -60,39 +60,20 @@ Thanks,
 Andre
 
 > ---
->  .../boot/dts/allwinner/sun50i-h616-bigtreetech-cb1-manta.dts    | 2 +-
->  arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi  | 2 +-
->  arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-pi.dts    | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1-manta.dts b/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1-manta.dts
-> index dbce61b355d6..4bfb52609c94 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1-manta.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1-manta.dts
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
->   * Copyright (C) 2023 Martin Botka <martin.botka@somainline.org>.
->   */
 > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi
-> index 1fed2b46cfe8..b2988f500231 100644
+> index b2988f500231..af421ba24ce0 100644
 > --- a/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi
 > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
->   * Copyright (C) 2023 Martin Botka <martin.botka@somainline.org>.
->   */
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-pi.dts b/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-pi.dts
-> index 832f08b2b260..ff84a3794470 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-pi.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-bigtreetech-pi.dts
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
->   * Copyright (C) 2023 Martin Botka <martin@biqu3d.com>.
->   */
+> @@ -93,7 +93,7 @@ axp313a: pmic@36 {
+>  		interrupt-controller;
+>  		#interrupt-cells = <1>;
+>  
+> -		regulators{
+> +		regulators {
+>  			reg_dcdc1: dcdc1 {
+>  				regulator-name = "vdd-gpu-sys";
+>  				regulator-min-microvolt = <810000>;
 
