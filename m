@@ -1,23 +1,23 @@
 Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F5076033;
-	Thu,  8 Feb 2024 10:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBAA6F06D;
+	Thu,  8 Feb 2024 10:54:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707389649; cv=none; b=ca1cgbXgouBIggnzDP9cKXMmB6VpRB4sLLBh5eX2NiuHWB0MaqGJWaLeYrQ3GrGG3MLNtvHHOWFObQzdX3xjoMoswf+SG5nw+e+/pUOavpPikSOeRecNXCRqaOaXe1Jw1uquXxe/0Fc17MKduuYiZxyMkuFLB2M+pYMObgfg8eY=
+	t=1707389653; cv=none; b=OckWDPJ2bqEJRBMKgQEdbkDZyGyYGiuw0WuaeQnOWmD5xWuGFM7uaMfLdVczTX+dxQBws0TELn0edo5NA6F1mcSlSEhEcr+Hm4rgwyMLXGfT4fTeUhgTipidSQmeKpCByrYje8TAcgwWvH2wyXN3QWlZmvbRD1SKQP8yQkeBOxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707389649; c=relaxed/simple;
-	bh=QqiVaGyVZLVdQRUJj79HXou64FEpupT0GmSSU1mSm4Y=;
+	s=arc-20240116; t=1707389653; c=relaxed/simple;
+	bh=MSMA/Ar5xNq7gjfGIgm/+GRGGaFMAfD3V43FNkMJOFE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jsu8aSQKMKxk0okNn0MrsrdTlpeWqxFsqiMd36ZUDpbI/Eh3LZY4RqYdp1avsUVjG3OS899y2AYRuE7O83IdtMJk/IefHVEQTQOUYgYKfl9bqdZ5l4PnTHwq6BVfJfJrXlPWz60IeTM5h84/k+KNVq/i8rEtAW6LgPxvHcIUAHo=
+	 MIME-Version; b=p14xLI841EI/zutjuonbrYkdfCol2BrldVMne9VYFoM22EEB47UQw7ZAu4T4Km17lFoGFURuZqTP/xT4mlliFAJHo/QJMak8j0BGyZ4OZ2XbXuksqspx8dxZmjjENevT9DRpUbW8I2gUgk2ZrnQUGSlG0ZG9qzkUgt1KKbpQdnA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: 06ngFOAbgVFtplzFI7WFSctiSEl4sbmfl+MipgAKBbGEj/H6qG55l+8m/xK5G+1fti/m8x7VyU
- 5feN4+q+m9FA==
+IronPort-SDR: 6gPotqXFqWt9d19/0uXaWV/Duwu/TkKI3Yhen0MuE0sDgWQxeqHgUqzhOXzaX+m8ro09/QNSEO
+ gAtYLcrf6Fnw==
 Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 08 Feb 2024 16:24:01 +0530
+  by esa2.ltts.com with ESMTP; 08 Feb 2024 16:24:03 +0530
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com,
@@ -38,9 +38,9 @@ Cc: m.nirmaladevi@ltts.com,
 	vigneshr@ti.com,
 	kristo@kernel.org,
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [RESEND PATCH v1 02/13] mfd: tps6594: use volatile_table instead of volatile_reg
-Date: Thu,  8 Feb 2024 16:23:32 +0530
-Message-Id: <20240208105343.1212902-3-bhargav.r@ltts.com>
+Subject: [RESEND PATCH v1 04/13] mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+Date: Thu,  8 Feb 2024 16:23:34 +0530
+Message-Id: <20240208105343.1212902-5-bhargav.r@ltts.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240208105343.1212902-1-bhargav.r@ltts.com>
 References: <20240208105343.1212902-1-bhargav.r@ltts.com>
@@ -52,85 +52,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In regmap_config use volatile_table instead of volatile_reg.
-This change makes it easier to add support for TPS65224 PMIC.
+Add support for TPS65224 PMIC in TPS6594's I2C driver which has
+significant functional overlap.
 
 Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 ---
- drivers/mfd/tps6594-core.c  | 16 ++++++++++------
- drivers/mfd/tps6594-i2c.c   |  2 +-
- drivers/mfd/tps6594-spi.c   |  2 +-
- include/linux/mfd/tps6594.h |  4 +++-
- 4 files changed, 15 insertions(+), 9 deletions(-)
+ drivers/mfd/tps6594-i2c.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
-index 783ee5990..089ab8cc8 100644
---- a/drivers/mfd/tps6594-core.c
-+++ b/drivers/mfd/tps6594-core.c
-@@ -319,12 +319,16 @@ static struct regmap_irq_chip tps6594_irq_chip = {
- 	.handle_post_irq = tps6594_handle_post_irq,
- };
- 
--bool tps6594_is_volatile_reg(struct device *dev, unsigned int reg)
--{
--	return (reg >= TPS6594_REG_INT_TOP && reg <= TPS6594_REG_STAT_READBACK_ERR) ||
--	       reg == TPS6594_REG_RTC_STATUS;
--}
--EXPORT_SYMBOL_GPL(tps6594_is_volatile_reg);
-+static const struct regmap_range tps6594_volatile_ranges[] = {
-+	regmap_reg_range(TPS6594_REG_INT_TOP, TPS6594_REG_STAT_READBACK_ERR),
-+	regmap_reg_range(TPS6594_REG_RTC_STATUS, TPS6594_REG_RTC_STATUS),
-+};
-+
-+const struct regmap_access_table tps6594_volatile_table = {
-+	.yes_ranges = tps6594_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(tps6594_volatile_ranges),
-+};
-+EXPORT_SYMBOL_GPL(tps6594_volatile_table);
- 
- static int tps6594_check_crc_mode(struct tps6594 *tps, bool primary_pmic)
- {
 diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
-index 899c88c0f..c125b474b 100644
+index c125b474b..4ab91c34d 100644
 --- a/drivers/mfd/tps6594-i2c.c
 +++ b/drivers/mfd/tps6594-i2c.c
-@@ -187,7 +187,7 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
--	.volatile_reg = tps6594_is_volatile_reg,
-+	.volatile_table = &tps6594_volatile_table,
- 	.read = tps6594_i2c_read,
- 	.write = tps6594_i2c_write,
- };
-diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
-index 24b72847e..5afb1736f 100644
---- a/drivers/mfd/tps6594-spi.c
-+++ b/drivers/mfd/tps6594-spi.c
-@@ -70,7 +70,7 @@ static const struct regmap_config tps6594_spi_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
--	.volatile_reg = tps6594_is_volatile_reg,
-+	.volatile_table = &tps6594_volatile_table,
- 	.reg_read = tps6594_spi_reg_read,
- 	.reg_write = tps6594_spi_reg_write,
- 	.use_single_read = true,
-diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
-index 1d8969594..6c5a2889f 100644
---- a/include/linux/mfd/tps6594.h
-+++ b/include/linux/mfd/tps6594.h
-@@ -1344,7 +1344,9 @@ struct tps6594 {
- 	struct regmap_irq_chip_data *irq_data;
- };
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * I2C access driver for TI TPS6594/TPS6593/LP8764 PMICs
++ * I2C access driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
+  *
+  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
+  */
+@@ -183,7 +183,7 @@ static int tps6594_i2c_write(void *context, const void *data, size_t count)
+ 	return ret;
+ }
  
--bool tps6594_is_volatile_reg(struct device *dev, unsigned int reg);
-+extern const struct regmap_access_table tps6594_volatile_table;
-+extern const struct regmap_access_table tps65224_volatile_table;
+-static const struct regmap_config tps6594_i2c_regmap_config = {
++static struct regmap_config tps6594_i2c_regmap_config = {
+ 	.reg_bits = 16,
+ 	.val_bits = 8,
+ 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
+@@ -196,6 +196,7 @@ static const struct of_device_id tps6594_i2c_of_match_table[] = {
+ 	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
+ 	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+ 	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
++	{ .compatible = "ti,tps65224-q1", .data = (void *)TPS65224, },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, tps6594_i2c_of_match_table);
+@@ -216,15 +217,18 @@ static int tps6594_i2c_probe(struct i2c_client *client)
+ 	tps->reg = client->addr;
+ 	tps->irq = client->irq;
+ 
+-	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
+-	if (IS_ERR(tps->regmap))
+-		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
+-
+ 	match = of_match_device(tps6594_i2c_of_match_table, dev);
+ 	if (!match)
+ 		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
+ 	tps->chip_id = (unsigned long)match->data;
+ 
++	if (tps->chip_id == TPS65224)
++		tps6594_i2c_regmap_config.volatile_table = &tps65224_volatile_table;
 +
- int tps6594_device_init(struct tps6594 *tps, bool enable_crc);
++	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
++	if (IS_ERR(tps->regmap))
++		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
++
+ 	crc8_populate_msb(tps6594_i2c_crc_table, TPS6594_CRC8_POLYNOMIAL);
  
- #endif /*  __LINUX_MFD_TPS6594_H */
+ 	return tps6594_device_init(tps, enable_crc);
+@@ -240,5 +244,5 @@ static struct i2c_driver tps6594_i2c_driver = {
+ module_i2c_driver(tps6594_i2c_driver);
+ 
+ MODULE_AUTHOR("Julien Panis <jpanis@baylibre.com>");
+-MODULE_DESCRIPTION("TPS6594 I2C Interface Driver");
++MODULE_DESCRIPTION("I2C Interface Driver for TPS65224, TPS6594/3, and LP8764");
+ MODULE_LICENSE("GPL");
 -- 
 2.25.1
 
