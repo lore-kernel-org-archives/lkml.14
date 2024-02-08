@@ -1,182 +1,74 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C537602B
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 12:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998E76EB44;
+	Thu,  8 Feb 2024 12:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707396084; cv=none; b=LsZkDlcBB+FL52g26JTRkDPtXC4Gr/Mnj5IAVjEqSjaFT6C9OFsPUlxTmCUSsNiK3rk+NSz4pbWSYW4UDAh3y7bu0tdoltSrWh7+VpOui0MeJH0n6FzqY2Z661qL2+cdpJ13w88TXS3mvyqjA8DX4dADoQCfUWsuvoo/0lRQnK0=
+	t=1707396208; cv=none; b=RBzo25ryOwsp38moGZ/pXJETkl1qrq4UFBskoq1d2v+giKJWi2R3NjIwXcmJ56ZZ5gTvv4makFYt0JXVDUcbDRZpWRD1P4P/eRaomHcrlg6jdCreB3Wzx0Y1IlVZDIXpYLsgfcG0VA5k0lUo0BwrSWTPy4dBgDvZKlaFtCmY4fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707396084; c=relaxed/simple;
-	bh=qDk7UEWrlqaGwCuD8ABX2X5AjVW+Rcn6ztsH2olqobc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=izN+uJ0n6mBT6lYyVXlcM2P8XqJGm+MLQoWK4c+ug1mqgVJ3ukUAwQI1yVEc9Bi30xMQTjngeJMN/zemDcXMJW2/3ITGkwKCfB1xWOMBHV91YqhiBEPsXnciXq3OhYuSw4oPAmBAdd/fCNEIOqgdN8ax3l6u4FLSUy3cmldxO+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uassgZjt; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uassgZjt"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d8b276979aso1253793a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 04:41:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707396082; x=1708000882; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Py4LQQCjOD+63xICQgoe8LGjtYSfgfgYUdsYohF9IsI=;
-        b=uassgZjtbWN7S7eEJl7Oc7Wk+gn19vhaaInRkry38+Qqvp2nZSgOWtERJtdusd7mfC
-         5KV829x0o3/qdAGOlVolWRwoZNJksuOygT5XAiU67evpnqAO5nkiC6w3JqEb9IWlqmns
-         jmYFsMEfqiDgM484LEaokB+Bo49/nO1sgx3e33HNmR0RTizGxtIDQR7SfuPBHVQ8XPMv
-         RZfYO7QJE3DeR/+la0EhNb+yzXz9RaJKUBKQ+HGvtrdfOIm5vWQ5+Juohjr1vHUUQ5f2
-         s+53DCPEJDmrZJinscCJHq+d/jighw4oE6xka2tTmtODdEbE4YwmSEiP+sz6a3AoCH9P
-         CLlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707396082; x=1708000882;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Py4LQQCjOD+63xICQgoe8LGjtYSfgfgYUdsYohF9IsI=;
-        b=dEjgBfcxOonXaS34uX4kwZb1FfAoQP3bDQkxv5bPqJUj1SpwvhPh5A2t2M7Ngthrxw
-         Cuq+saAlToAOnLJ1ZZxUq9yn/N/6/ZlmmGvpMyXdCtC2JJ5mi/hpgpNO2x6wcuVP+rJn
-         6bdeRnEfcxMLfhc+BYa2PpTsh8V4hGU77ffzXEg+kHG3xWkuDGLD1qZrVwW7yKWdEEu1
-         ECDNpCDyxRdMLGgyNcbZ37qVL5ZuBklara3h97Fk9zHQhujNmeAe5i7/Z/0n4qv65mYr
-         Z7v8NTo8sWJwkB0rLzeAoOKixcZzEg+uMApMHIUh51431OU1QCKoxnAF7JjYvT+B5nUC
-         c4wA==
-X-Gm-Message-State: AOJu0YzQXJDHGMsa9Us/GBhYU6yedi9MQLFT235VaxHnwQVjJNEix4jG
-	/XJohnJq+2pQRxEk4YWTkzl0Of3GN1SPWJTEHokodW7H8gNC9wt5bsVSeeV8jVsc0OZZQvlvVUB
-	HVLhllsouyj4m5J3BLVN/wZgyEamvPM9QeLVbyw==
-X-Google-Smtp-Source: AGHT+IFTVbn9MROnjZ4NEuMlDyJg8O7OWSiIXi5sJ9EP3ohJj7o0qEJihfhAu8IXeI2TFNlGpHudI04RAgjFiq2t5+0=
-X-Received: by 2002:a17:90a:fb87:b0:290:7739:b886 with SMTP id
- cp7-20020a17090afb8700b002907739b886mr5369282pjb.29.1707396081873; Thu, 08
- Feb 2024 04:41:21 -0800 (PST)
+	s=arc-20240116; t=1707396208; c=relaxed/simple;
+	bh=UsM4BcpfcImsSZDujcIlDhvQpBCwADaptLL3/9Qq0Bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPikdd9KGS31zXkL67gMpPTel2xAVMv6TXBJVIyKlgWl1LQDhjM3yqWQvP5JdoHSkZmtGz3PRTu/xCvrlDho7+kP6aNahgtadfts8CmSpmNOPa2NpWaUOTHf5eNdJOpUKLwFaFAWDzDIkdOG3o6Yrvsi6RrtPc32gIImvVtkl+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1rY3Mr-00032B-00; Thu, 08 Feb 2024 13:19:01 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 72F0AC0267; Thu,  8 Feb 2024 13:18:27 +0100 (CET)
+Date: Thu, 8 Feb 2024 13:18:27 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 00/14] Add support for the Mobileye EyeQ5 SoC
+Message-ID: <ZcTGk/iJO2wZlRxT@alpha.franken.de>
+References: <20240205153503.574468-1-gregory.clement@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208105243.128875-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240208105243.128875-1-krzysztof.kozlowski@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Thu, 8 Feb 2024 06:41:10 -0600
-Message-ID: <CAPLW+4n5LqENFgUZYDb2rF+Db59Ry4tdAfKLiL-W-ZG6mP=kjw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: exynos: gs101: minor whitespace cleanup
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240205153503.574468-1-gregory.clement@bootlin.com>
 
-On Thu, Feb 8, 2024 at 4:55=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> The DTS code coding style expects exactly one space before '{' and
-> around '=3D' characters.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+On Mon, Feb 05, 2024 at 04:34:46PM +0100, Gregory CLEMENT wrote:
+> Hello,
+> 
+> The EyeQ5 SoC from Mobileye is based on the MIPS I6500 architecture
+> and features multiple controllers such as the classic UART, I2C, SPI,
+> as well as CAN-FD, PCIe, Octal/Quad SPI Flash interface, Gigabit
+> Ethernet, MIPI CSI-2, and eMMC 5.1. It also includes a Hardware
+> Security Module, Functional Safety Hardware, and MJPEG encoder.
+> 
+> One peculiarity of this SoC is that the physical address of the DDDR
+> exceeds 32 bits. Given that the architecture is 64 bits, this is not
+> an issue, but it requires some changes in how the mips64 is currently
+> managed during boot.
+> 
+> In this seventh version, I removed the OLB related part as it is not
+> used yet. I have left it to Théo to handle in his series. Another
+> notable change is the Kconfig modification to remove the selection of
+> unused configurations.
+> [..]
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+thank you for your work on this patch set. I've commented on the
+two patches, where is see need for changes. Other than that it's
+looking good.
 
->  .../boot/dts/exynos/google/gs101-pinctrl.dtsi    |  2 +-
->  arch/arm64/boot/dts/exynos/google/gs101.dtsi     | 16 ++++++++--------
->  2 files changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi b/arch/=
-arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi
-> index e6a9776d4d62..a675f822acec 100644
-> --- a/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi
-> @@ -251,7 +251,7 @@ gph1: gph1-gpio-bank {
->                 #interrupt-cells =3D <2>;
->         };
->
-> -       pcie0_clkreq: pcie0-clkreq-pins{
-> +       pcie0_clkreq: pcie0-clkreq-pins {
->                 samsung,pins =3D "gph0-1";
->                 samsung,pin-function =3D <GS101_PIN_FUNC_2>;
->                 samsung,pin-pud =3D <GS101_PIN_PULL_UP>;
-> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/bo=
-ot/dts/exynos/google/gs101.dtsi
-> index c7a9e81d23b9..80cc933cca3d 100644
-> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> @@ -73,7 +73,7 @@ cpu0: cpu@0 {
->                         compatible =3D "arm,cortex-a55";
->                         reg =3D <0x0000>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&ANANKE_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <250>;
->                         dynamic-power-coefficient =3D <70>;
->                 };
-> @@ -83,7 +83,7 @@ cpu1: cpu@100 {
->                         compatible =3D "arm,cortex-a55";
->                         reg =3D <0x0100>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&ANANKE_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <250>;
->                         dynamic-power-coefficient =3D <70>;
->                 };
-> @@ -93,7 +93,7 @@ cpu2: cpu@200 {
->                         compatible =3D "arm,cortex-a55";
->                         reg =3D <0x0200>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&ANANKE_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <250>;
->                         dynamic-power-coefficient =3D <70>;
->                 };
-> @@ -103,7 +103,7 @@ cpu3: cpu@300 {
->                         compatible =3D "arm,cortex-a55";
->                         reg =3D <0x0300>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&ANANKE_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <250>;
->                         dynamic-power-coefficient =3D <70>;
->                 };
-> @@ -113,7 +113,7 @@ cpu4: cpu@400 {
->                         compatible =3D "arm,cortex-a76";
->                         reg =3D <0x0400>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&ENYO_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&ENYO_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <620>;
->                         dynamic-power-coefficient =3D <284>;
->                 };
-> @@ -123,7 +123,7 @@ cpu5: cpu@500 {
->                         compatible =3D "arm,cortex-a76";
->                         reg =3D <0x0500>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&ENYO_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&ENYO_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <620>;
->                         dynamic-power-coefficient =3D <284>;
->                 };
-> @@ -133,7 +133,7 @@ cpu6: cpu@600 {
->                         compatible =3D "arm,cortex-x1";
->                         reg =3D <0x0600>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&HERA_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&HERA_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <1024>;
->                         dynamic-power-coefficient =3D <650>;
->                 };
-> @@ -143,7 +143,7 @@ cpu7: cpu@700 {
->                         compatible =3D "arm,cortex-x1";
->                         reg =3D <0x0700>;
->                         enable-method =3D "psci";
-> -                       cpu-idle-states =3D  <&HERA_CPU_SLEEP>;
-> +                       cpu-idle-states =3D <&HERA_CPU_SLEEP>;
->                         capacity-dmips-mhz =3D <1024>;
->                         dynamic-power-coefficient =3D <650>;
->                 };
-> --
-> 2.34.1
->
->
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
