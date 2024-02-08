@@ -1,333 +1,269 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2077.outbound.protection.outlook.com [40.107.244.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C9F79DBB;
-	Thu,  8 Feb 2024 13:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707397888; cv=fail; b=E0YMq1HmTb8hpbobzAmXvA0fozmBgbmIU4yywsU7Vas+iFLwCAqWGDe+tXmI4oXFuFQ8dCAT4WM4kqiOe4AFtQ1fAEtlvPXkoRTLv/xHGRN4t5YCR7gNuq3UcEDq66gjYmC5906nQxuKdTwKhfIMoSztK7egZp/7H0nqTi0PHOg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707397888; c=relaxed/simple;
-	bh=bQFn4AMFxgeQLT/QI7IVCbRkvjomFJE9zODdyOAtVMg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VSTpKB1OmhI0kuEXDRZVE0hq3Y9aKK/Fg1oD1Lsh25PL2SrNrzQYya2NtHonNmaNZJGQHVPOD+PMIzVmzbf8lXn7ZxAQfINLim+HlwxHilq0cVHTWGB8lZ+UXT0aqMPTyPSXjJQ3++5aCzrURz7teNPiPF2cOpFH5gcrW36kJGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qHjsmuxY; arc=fail smtp.client-ip=40.107.244.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF3B79DA8
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707398058; cv=none; b=meHuY3MPChpIweHKDcardGfilWl5xbdW12j6Ow9KJhZRmEBLG2hSXt96gZZWUf/Y004O19vHz+ryHW3U0DKB1BkgkQ7psuQScwLTD36mun2KIUeggMIX2V+VFBTlRY3rOVHDLboGkkKhRidBlGx4Tvj1JbcT1qv5ceRxurRu5RA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707398058; c=relaxed/simple;
+	bh=aD+Cw2+HmYwuNjGEKwdtPj0qQ/W5mX3RahbDYj/KXk8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QPB+uLuhXk7mDZi+uiJCxxaFNl9eBTYyid1pr1IDkQZ/gzcmw65MjsiRiNjl1PyiOXryD8osx2yX7NWvQvXKqhCvJm89vRF9q9TYHvUZvKbcQVcYYg27i1BVDy/xkFul4Lrbd+7E17SguxMNJIyrr8ybrrA8irtwDrtHTfKTwqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x0a5CORa; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qHjsmuxY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kgE/pIr3Ua1fTvmpf2nQJtMWGLExlnQmU9XIqgsDM3D66ksiQtPPRipBvtG/E9Z55EY1O3YJxNyNTYoGC0Q8xBbfUguY1NIlDVDwES0Y7fTbHcyGL77nUv07MYq21sXehKOXqG+igEshjOHklXpY4ugxTjqfEx1PveUNtR1FGobcwMLS8XuSImDbJ3niHXyUceDvoxc0n8ugNURegxEZa7IEgCXXms+7adKoYxZWxE31w+JFm370ELQzbEgfToHbRuf6d3mOg3DBc1Jblv2OS4VDIl6GEerGMPgDnYbVN+2BZmM58YGfIYo0vXoP0HbZTrfx+qv1T8uvCe4mnlaxSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p4cZe1neRZxfs2zXEPKcKT+oGkYRs+UIVw4Hmf4KZt4=;
- b=if7VWZiG5U6Aib9/XyMpJZr98Q63cP+QXtzuQ1CN4rn4Q8PpOPuJAi5PlQPPHYJRUzCYr4HGdLwq+rOv4Bfj+eouCZIpVegE5P0pIASs1p3cn6rmSQ9BTA8t47rRZ7pYfuQBAn1Fe7cAk4LAkgF8PAkB1N/8y5O9YZRDpDYtrItttxSDg5wxAyc1l5Qeno7Wwoy2RUxBAi9WFTdbh0Sr6JXP4Lywg/S/kd0ljRPWKkHZOKPfvuzxXcfC2OSf4zwkh1v9nMXX/8yk/rVdNhtIIl1+OLImK0zXcZYT4ZzGlQKC22bxdOmZ0t1Ww+Hms3FgiFqe2RMowagmaOClG/NCaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p4cZe1neRZxfs2zXEPKcKT+oGkYRs+UIVw4Hmf4KZt4=;
- b=qHjsmuxYr5XVbwVIpw5rgwSBvngHT4MeWVRm68cXsZJN3b6aK696dclxpoy3/2q6OgFbWjhTo9odPCyMJAe8NjENEj0q9mFxrcyjMNVHC+l9FloP+w5oVTW6no5tCs6P9L47GQIjln9E+33PEjq/eDMupKKqOcotc48QH83HtQQdGum1xwnRFkyPby3OTFFFlgpjtOb4LpvKiycrVaVX/0S+UYubuthbQodKkyC7jdoSUFjTHG7/gUIoxLHum6+yQ7cLuLhWZ2IW+p/KdBDdIVPtn0M3GrjWK2ZDXDanZN6q7uU5+3/cvdX6ufzKgJHrO4/vN+9FOAIzo8b0JQmd2w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
- SN7PR12MB8792.namprd12.prod.outlook.com (2603:10b6:806:341::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.14; Thu, 8 Feb
- 2024 13:11:23 +0000
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::acb6:8bd8:e40b:2bfe]) by CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::acb6:8bd8:e40b:2bfe%3]) with mapi id 15.20.7270.016; Thu, 8 Feb 2024
- 13:11:23 +0000
-Message-ID: <d46a4d9c-7253-4318-90b7-08646493e7db@nvidia.com>
-Date: Thu, 8 Feb 2024 13:11:16 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v4] net: stmmac: xgmac: fix handling of DPP safety
- error for DMA channels
-Content-Language: en-US
-To: Simon Horman <horms@kernel.org>
-Cc: Furong Xu <0x1207@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Joao Pinto
- <jpinto@synopsys.com>, Serge Semin <fancer.lancer@gmail.com>,
- netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- xfr@outlook.com, rock.xu@nio.com,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20240203051439.1127090-1-0x1207@gmail.com>
- <c25eb595-8d91-40ea-9f52-efa15ebafdbc@nvidia.com>
- <20240208092627.GP1297511@kernel.org> <20240208095348.GA1435458@kernel.org>
-From: Jon Hunter <jonathanh@nvidia.com>
-In-Reply-To: <20240208095348.GA1435458@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO2P265CA0257.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8a::29) To CO6PR12MB5444.namprd12.prod.outlook.com
- (2603:10b6:5:35e::8)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x0a5CORa"
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-46d29ed4574so484241137.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707398056; x=1708002856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u4Y28H6BgiSHtemuYz9Q6cvGUwcKGIFMyv2Vo+B56G0=;
+        b=x0a5CORaI3H8OMWo68NAhEJH+qX+9xRR2827jV/hH6NY4u8Y9OuNVFC3DNJdKcCy4L
+         jYJrnNdIisFdePfqJLWNCCRvbOYgukCi8hO/5nwK1I43jbauu7G7Az5c19A3e4Tz8OdK
+         chKMPAUQufXATu6NiVms3yvyuA13KwbWfjNhEmJ2nsJBO6npUCwn/mbCteQHWs2R8Mwv
+         1rYN+UqOgz2k0XMyQzjyZPnD5Cp2Fw0xH1mLsAiTQzM+dMR0f+hYc8XkDqO6S1nI+69B
+         Byu49EMmXiDG16aYrutvLghoyjw2pjMTSk6gTSlRx3Tk8rdrj/IEpnfcRPccsmjHv9in
+         7PNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707398056; x=1708002856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u4Y28H6BgiSHtemuYz9Q6cvGUwcKGIFMyv2Vo+B56G0=;
+        b=J4bGaexsX/E5tOXW8K53xkGgwRKKF7aNJt1sCbIEch5Q/9IJ0pvZ1cRXdA1Lwa3okG
+         /9XnRJb0mci5z8pXKL8CX/N6g+rCNEpI4vKKp22C1NW7watneJM53lCXhyng68IEJhjY
+         I4JU0M2eMajbz4YYevn+PdhbusIn5q9+XIBXrYIUdiIy+Gp2XnCso54NowAQVR9nabgX
+         tRiteHc7wtDUw0yvmiWwSkaOo8qgMBlrdXXRKn/Vqb6zKVpeOdqXLcHhqzWmeip4iYG/
+         LpjSUUbDQg+jrdahOzeUDVKqsbpvDXzWy3bD7isw21LrwoPAfT9XQn8pPFOVP3EVhcZF
+         omVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuQvna17CKn9Or6E18O7zych/yTo7v/7gKmGbqhfxAAGrftzeG5PV9auW5Sr0MMxCboJL0fuFl/NwxoY9nq7nWfZHlgWDa95xTUuK9
+X-Gm-Message-State: AOJu0Yxm/xbdGjZfjIuhkC6IhoFvrFd04n0bsSJqfaUblE5oG8pINvc4
+	9A5nS0rh7j1MAH0Y0Rh5ZV1ENatmh8nJ0yrowVameAeoYXW8sLlc/BjTJQZRedcC52dXwbWS4hN
+	i5cDVyv17pcnMI9GJKmCMsTj2U/v4MXkpEYGg
+X-Google-Smtp-Source: AGHT+IFAH2AcakGpseEeHbdkDCpG2lxDefL5T1Ou+BT2/kUYqqhr3VPMB7tRMumatFtOHoQQ4hDQ0sn5XhVLJ3wPWPQ=
+X-Received: by 2002:a05:6102:2a7a:b0:46d:49a5:e9fd with SMTP id
+ hp26-20020a0561022a7a00b0046d49a5e9fdmr5975810vsb.24.1707398055828; Thu, 08
+ Feb 2024 05:14:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|SN7PR12MB8792:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4c0bdc5b-67f4-4b1b-8cc7-08dc28a772c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	J7A4Gov4qrSP53GBVf/J55Gzu1yAPS6IPXbR1eXZSN/73ZO4H8FlFd/8YJlEuCRNnJ0jrWbNwADxq2CSNSfHlJRhr4iMovru34uA6Mm9wlQIhjR4TcYg6H/FnTgAtX/+nOIYyUoGRLAeA5VDSJsITJwck8XZIjx5N6T9pp1rZWyuvN9aP+rFW8LGGhH0jUxFWiljxPioYRU9vYwHPYzI1gk3al/SPxWG2notYZL9K+WTadmn3xCfOZxO86JaBAfYaQiifTYO8Ko3E3j9Y6/YpikQmAqV2GI3oUZi+zXKbvsEJLQjs/NJnMtSVzf4LSbxuQetYRymaBGdmXpzrVt0Do8OLdqEVyUZFvjg9qJHhmx/0ikMkic3sCOFDdJbnL8y6gRCEhNLIXY/Kfwz48/07EkAIapDXhf3wEjF2b2ofv8GoBVEPgm7Z/phB4JlEXCMo6xDSepHwA0rrDy4er+YrqG1xyk7THg8TJTCVg8mdnHpZ2q1JdgP4Qhkm8Zw7Q4EG7/DOFqYqt4d4rJ6mBL/6ohMZEuIppWF7ZaRAHLnlJITJKy2Ao+k6zdVRECfAqlst58DxLrHEVWjArRRJYHZi2+jVYPGoZaqFL/jvlXtFwRAu6l0SjEo9eRXxVqt0Aws8K9x01o9XQ4R47NTAPLR3A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(396003)(39860400002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(478600001)(966005)(2616005)(66946007)(53546011)(6506007)(6486002)(6916009)(55236004)(26005)(6666004)(6512007)(38100700002)(7416002)(41300700001)(2906002)(54906003)(5660300002)(8676002)(316002)(66556008)(4326008)(8936002)(66476007)(36756003)(83380400001)(86362001)(31686004)(31696002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VFArS1BsSzF2SHZMYXcwMGNpSkZWSTJaUzZQVVQ4WkFLSTNkazhqUVl2eThq?=
- =?utf-8?B?YVhZUWpjazJBZzNKMW5IMnBRYWRkcEExVkhtc1dtbjhodUhQeWRxU1ZsNWR1?=
- =?utf-8?B?dkRuNzFRQmd0NkVGZC9xS3RIL0NiRW9obENrWklac2h1R1Fsbmc4Y3VzakRu?=
- =?utf-8?B?ZUdyYWZtQW5OT2VHMmIzcU9mai9EZFFUN2VaclpTQVdvUFNFbndiSFlIZUdC?=
- =?utf-8?B?WFZzSEFEKzV0dWtuUkpKUjhxT3hLbkRMY3UwOVliemhSR056UnRJSGpTYW81?=
- =?utf-8?B?UzFvUUhkT3RmYkFIMHo3bGFMTHNlUCtHSDFSRUtvRGNDTnRGQkJzcFVJd3da?=
- =?utf-8?B?bGZzSmFjUzRHNFVGVnJzZ1o1ZUhjVENuU3Y5OEVwK1lvVHU2MDhpa29GTW14?=
- =?utf-8?B?TWhpV2hGbFJ5ZTFJV3hHS25wWkNqdm9qNmZXdnJvMFJBWlU1OVpvVW0relRj?=
- =?utf-8?B?S1Fxa0k2TG0xNlFYWTNaMUMxcldrZk0wdS9teTNQcTVlWEVlTEd3Njh2WlR5?=
- =?utf-8?B?UCtoSGJ1eS9MUWtGQVV3ZEtMTmdnQjAwU2diOG9LNEJhVTM3bmVhaTdjL0hp?=
- =?utf-8?B?R0lUNWU2VnVoRVgrcEFKNmo2NW53ZW9JTFhmcXZSeTJiVW5xOTlWa1Q2WERh?=
- =?utf-8?B?Z284VTF2eWU5cXR1SUh2MXY1T2tyeS9TSTF2Qk41SVZ4WHVhYWo3N1NhZU0x?=
- =?utf-8?B?b2YzdkxJb24vMVpZU2xMS2FGMWY4aWpjby8yZTlOTnN2YVNwc1NNT2ZxZ05I?=
- =?utf-8?B?dFB3NWpyMWFzbC83NEhwclR2UlpGcFFzbCtxR1VXT2dnd2NwK1FFbWxjSzMv?=
- =?utf-8?B?N1F4ZkhzbkJLSUkyS1g5RFRNZWVNUzlsdTNMVTNsdjNKK3N4MHdkNUlUQU9J?=
- =?utf-8?B?aEExUEhpNG9ONHpleC94N1FJaGIzN2lXNXdBRzdHTUdVeXVUamIvcEp6Q1dX?=
- =?utf-8?B?R1Q3Qm1UTzJOOXBMeWd3M2VydkNabGZacCtXR01ETXVsdnhnYi9zMGxuSDQ1?=
- =?utf-8?B?Qzhtb214MUlXMEM1ZGhCU2h1MktSR0ZlT3Jyb2wzUjlodVJoMXRmNFN2VVVJ?=
- =?utf-8?B?bXRxemEzejlBTWRVY2JqcjdXMG5NQzlLMFlZMUJYMGNwSEh1VDJrUklUMnQ4?=
- =?utf-8?B?L0N6ZmtXTDQvMzJBWFVjKy83NWhrRkF1OFEzN25TUUM0ZG1FdGcxN0RjYWc2?=
- =?utf-8?B?Q3hWTUNJSzc1eUdTQ1FadVlSR1RWdlBpQ1hUMlBwM0owM3BhajlwVFcxbnJD?=
- =?utf-8?B?NVk5aCtHQVBnZy90a2N5K0lpNEFWOFRFa2FEN0VXdCtFM25SOGdhSkxwNERV?=
- =?utf-8?B?V05yNGRZQXBkbWpOeFBMbFFhblByTG9hSVE1dFEzaCs0YStJNzlWcEdJckJr?=
- =?utf-8?B?WUtvNmJIS1oxazNsTlN6V2R3R1kzd3JkU05GOVgybE92SUhxRGFCN2lQcHhP?=
- =?utf-8?B?S0ZpcDkyVmpnN3AvVU9BMkNLclJRR3hZTk50RnFoSkw2QjAwSGFCYis3YndJ?=
- =?utf-8?B?bXZsV2RhNDA3dENZOHNwWWhGQ3ZoWVhxR0N0elk5NEJWNTNQa3d0aGtDNTVN?=
- =?utf-8?B?UlVxVDZBQWgvWityaFRSak9yYkIxVmVkeFRyc0UyQmg5bDg5MU8xaGRINzh3?=
- =?utf-8?B?RDZFZFJJRUR6SEZaZXVjY1owM2tiNXVJR1Z2eVJGbTM4Qm0rb2FjS1Z3eEJh?=
- =?utf-8?B?TGhqYTBOMTYzQklVdjJHSUhGaVFMbTdQNk5CWUpZd295a3F0U3I3MXJuUWNY?=
- =?utf-8?B?RWhUb1hRNkgvUUh5TGx6ZTQrd01sbWhWQ1g3VFFDb04zQmNROHZJczZwbXd4?=
- =?utf-8?B?dkdlRzJTZnoyUzFXVDAxQWd4TU9RVjRWWDduVVRzY3dUSndacmFNZE9rZEdC?=
- =?utf-8?B?TlFSclFmY2NLUy9ZNXFlL1p2bHZqMDljR2FJeU80Mmd1WXl1RHZuTmJrRzBY?=
- =?utf-8?B?d2Z6SFlHMEhHNU9PdUlJckNiU0hodm5WT0NDaDBjbHdmeTU4dWVEV1V0V1lK?=
- =?utf-8?B?NTR0cEwxT3dYZDFGM2tsaVJGeGFXamdscnBIbmRTYVBDYVBCVlNEUit6NXBS?=
- =?utf-8?B?cFZOY1kwKzgrd04zMGszd1p5UDJZYVFVVzZ4a3NycEpWMERiNVl4TFBrNmFi?=
- =?utf-8?Q?J7gQxOs88maN7tnSa0zTH8Xi4?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c0bdc5b-67f4-4b1b-8cc7-08dc28a772c2
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 13:11:23.2559
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YQiFkUk2WI7d3nijz2eIWDPKrUR+eLhmwFTujcSP1nXQOSsDRIeFRsfXtxYoim9N2go5rxP8+7KTqvacXnYt0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8792
+References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
+ <20240124-alice-mm-v1-2-d1abcec83c44@google.com> <CALNs47ubBgWr25AEKtgYPyzPB1tfcyCAz8-TbYmmqMpY98Fu_A@mail.gmail.com>
+In-Reply-To: <CALNs47ubBgWr25AEKtgYPyzPB1tfcyCAz8-TbYmmqMpY98Fu_A@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 8 Feb 2024 14:14:04 +0100
+Message-ID: <CAH5fLggebX-dgYXtf9mbScv02c3gpq1qCJSesZ8qpXsceBXDOg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] rust: add typed accessors for userspace pointers
+To: Trevor Gross <tmgross@umich.edu>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Kees Cook <keescook@chromium.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 1, 2024 at 6:04=E2=80=AFAM Trevor Gross <tmgross@umich.edu> wro=
+te:
+>
+> On Wed, Jan 24, 2024 at 6:21=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+> > +    /// Reads a value of the specified type.
+> > +    ///
+> > +    /// Fails with `EFAULT` if the read encounters a page fault.
+> > +    pub fn read<T: ReadableFromBytes>(&mut self) -> Result<T> {
+>
+> I think that `T: Copy` is required here, or for Copy to be a
+> supertrait of ReadableBytes, since the data in the buffer is being
+> duplicated from a reference.
+>
+> Send is probably also a reasonable bound to have .
 
-On 08/02/2024 09:53, Simon Horman wrote:
-> On Thu, Feb 08, 2024 at 09:26:27AM +0000, Simon Horman wrote:
->> On Wed, Feb 07, 2024 at 11:56:26AM +0000, Jon Hunter wrote:
->>>
->>> On 03/02/2024 05:14, Furong Xu wrote:
->>>> Commit 56e58d6c8a56 ("net: stmmac: Implement Safety Features in
->>>> XGMAC core") checks and reports safety errors, but leaves the
->>>> Data Path Parity Errors for each channel in DMA unhandled at all, lead to
->>>> a storm of interrupt.
->>>> Fix it by checking and clearing the DMA_DPP_Interrupt_Status register.
->>>>
->>>> Fixes: 56e58d6c8a56 ("net: stmmac: Implement Safety Features in XGMAC core")
->>>> Signed-off-by: Furong Xu <0x1207@gmail.com>
->>>> Reviewed-by: Simon Horman <horms@kernel.org>
->>>> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
->>>> ---
->>>> Changes in v4:
->>>>    - fix a typo name of DDPP bit, thanks Serge Semin
->>>>
->>>> Changes in v3:
->>>>    - code style fix, thanks Paolo Abeni
->>>>
->>>> Changes in v2:
->>>>     - explicit enable Data Path Parity Protection
->>>>     - add new counters to stmmac_safety_stats
->>>>     - add detailed log
->>>> ---
->>>>    drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
->>>>    .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  3 +
->>>>    .../ethernet/stmicro/stmmac/dwxgmac2_core.c   | 57 ++++++++++++++++++-
->>>>    3 files changed, 60 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
->>>> index 721c1f8e892f..b4f60ab078d6 100644
->>>> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
->>>> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
->>>> @@ -216,6 +216,7 @@ struct stmmac_safety_stats {
->>>>    	unsigned long mac_errors[32];
->>>>    	unsigned long mtl_errors[32];
->>>>    	unsigned long dma_errors[32];
->>>> +	unsigned long dma_dpp_errors[32];
->>>>    };
->>>>    /* Number of fields in Safety Stats */
->>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
->>>> index 207ff1799f2c..5c67a3f89f08 100644
->>>> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
->>>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
->>>> @@ -303,6 +303,8 @@
->>>>    #define XGMAC_RXCEIE			BIT(4)
->>>>    #define XGMAC_TXCEIE			BIT(0)
->>>>    #define XGMAC_MTL_ECC_INT_STATUS	0x000010cc
->>>> +#define XGMAC_MTL_DPP_CONTROL		0x000010e0
->>>> +#define XGMAC_DPP_DISABLE		BIT(0)
->>>>    #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
->>>>    #define XGMAC_TQS			GENMASK(25, 16)
->>>>    #define XGMAC_TQS_SHIFT			16
->>>> @@ -385,6 +387,7 @@
->>>>    #define XGMAC_DCEIE			BIT(1)
->>>>    #define XGMAC_TCEIE			BIT(0)
->>>>    #define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
->>>> +#define XGMAC_DMA_DPP_INT_STATUS	0x00003074
->>>>    #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
->>>>    #define XGMAC_SPH			BIT(24)
->>>>    #define XGMAC_PBLx8			BIT(16)
->>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
->>>> index eb48211d9b0e..04d7c4dc2e35 100644
->>>> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
->>>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
->>>> @@ -830,6 +830,43 @@ static const struct dwxgmac3_error_desc dwxgmac3_dma_errors[32]= {
->>>>    	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
->>>>    };
->>>> +static const char * const dpp_rx_err = "Read Rx Descriptor Parity checker Error";
->>>> +static const char * const dpp_tx_err = "Read Tx Descriptor Parity checker Error";
->>>> +static const struct dwxgmac3_error_desc dwxgmac3_dma_dpp_errors[32] = {
->>>> +	{ true, "TDPES0", dpp_tx_err },
->>>> +	{ true, "TDPES1", dpp_tx_err },
->>>> +	{ true, "TDPES2", dpp_tx_err },
->>>> +	{ true, "TDPES3", dpp_tx_err },
->>>> +	{ true, "TDPES4", dpp_tx_err },
->>>> +	{ true, "TDPES5", dpp_tx_err },
->>>> +	{ true, "TDPES6", dpp_tx_err },
->>>> +	{ true, "TDPES7", dpp_tx_err },
->>>> +	{ true, "TDPES8", dpp_tx_err },
->>>> +	{ true, "TDPES9", dpp_tx_err },
->>>> +	{ true, "TDPES10", dpp_tx_err },
->>>> +	{ true, "TDPES11", dpp_tx_err },
->>>> +	{ true, "TDPES12", dpp_tx_err },
->>>> +	{ true, "TDPES13", dpp_tx_err },
->>>> +	{ true, "TDPES14", dpp_tx_err },
->>>> +	{ true, "TDPES15", dpp_tx_err },
->>>> +	{ true, "RDPES0", dpp_rx_err },
->>>> +	{ true, "RDPES1", dpp_rx_err },
->>>> +	{ true, "RDPES2", dpp_rx_err },
->>>> +	{ true, "RDPES3", dpp_rx_err },
->>>> +	{ true, "RDPES4", dpp_rx_err },
->>>> +	{ true, "RDPES5", dpp_rx_err },
->>>> +	{ true, "RDPES6", dpp_rx_err },
->>>> +	{ true, "RDPES7", dpp_rx_err },
->>>> +	{ true, "RDPES8", dpp_rx_err },
->>>> +	{ true, "RDPES9", dpp_rx_err },
->>>> +	{ true, "RDPES10", dpp_rx_err },
->>>> +	{ true, "RDPES11", dpp_rx_err },
->>>> +	{ true, "RDPES12", dpp_rx_err },
->>>> +	{ true, "RDPES13", dpp_rx_err },
->>>> +	{ true, "RDPES14", dpp_rx_err },
->>>> +	{ true, "RDPES15", dpp_rx_err },
->>>> +};
->>>> +
->>>>    static void dwxgmac3_handle_dma_err(struct net_device *ndev,
->>>>    				    void __iomem *ioaddr, bool correctable,
->>>>    				    struct stmmac_safety_stats *stats)
->>>> @@ -841,6 +878,13 @@ static void dwxgmac3_handle_dma_err(struct net_device *ndev,
->>>>    	dwxgmac3_log_error(ndev, value, correctable, "DMA",
->>>>    			   dwxgmac3_dma_errors, STAT_OFF(dma_errors), stats);
->>>> +
->>>> +	value = readl(ioaddr + XGMAC_DMA_DPP_INT_STATUS);
->>>> +	writel(value, ioaddr + XGMAC_DMA_DPP_INT_STATUS);
->>>> +
->>>> +	dwxgmac3_log_error(ndev, value, false, "DMA_DPP",
->>>> +			   dwxgmac3_dma_dpp_errors,
->>>> +			   STAT_OFF(dma_dpp_errors), stats);
->>>>    }
->>>>    static int
->>>> @@ -881,6 +925,12 @@ dwxgmac3_safety_feat_config(void __iomem *ioaddr, unsigned int asp,
->>>>    	value |= XGMAC_TMOUTEN; /* FSM Timeout Feature */
->>>>    	writel(value, ioaddr + XGMAC_MAC_FSM_CONTROL);
->>>> +	/* 5. Enable Data Path Parity Protection */
->>>> +	value = readl(ioaddr + XGMAC_MTL_DPP_CONTROL);
->>>> +	/* already enabled by default, explicit enable it again */
->>>> +	value &= ~XGMAC_DPP_DISABLE;
->>>> +	writel(value, ioaddr + XGMAC_MTL_DPP_CONTROL);
->>>> +
->>>>    	return 0;
->>>>    }
->>>> @@ -914,7 +964,11 @@ static int dwxgmac3_safety_feat_irq_status(struct net_device *ndev,
->>>>    		ret |= !corr;
->>>>    	}
->>>> -	err = dma & (XGMAC_DEUIS | XGMAC_DECIS);
->>>> +	/* DMA_DPP_Interrupt_Status is indicated by MCSIS bit in
->>>> +	 * DMA_Safety_Interrupt_Status, so we handle DMA Data Path
->>>> +	 * Parity Errors here
->>>> +	 */
->>>> +	err = dma & (XGMAC_DEUIS | XGMAC_DECIS | XGMAC_MCSIS);
->>>>    	corr = dma & XGMAC_DECIS;
->>>>    	if (err) {
->>>>    		dwxgmac3_handle_dma_err(ndev, ioaddr, corr, stats);
->>>> @@ -930,6 +984,7 @@ static const struct dwxgmac3_error {
->>>>    	{ dwxgmac3_mac_errors },
->>>>    	{ dwxgmac3_mtl_errors },
->>>>    	{ dwxgmac3_dma_errors },
->>>> +	{ dwxgmac3_dma_dpp_errors },
->>>>    };
->>>>    static int dwxgmac3_safety_feat_dump(struct stmmac_safety_stats *stats,
->>>
->>>
->>> This change is breaking the build on some of our builders that are still using GCC 6.x ...
->>>
->>> drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c:836:20: error: initialiser element is not constant
->>>    { true, "TDPES0", dpp_tx_err },
->>>                      ^~~~~~~~~~
->>> drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c:836:20: note: (near initialisation for ‘dwxgmac3_dma_dpp_errors[0].detailed_desc’)
->>> drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c:837:20: error: initialiser element is not constant
->>>    { true, "TDPES1", dpp_tx_err },
->>>                      ^~~~~~~~~~
->>> drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c:837:20: note: (near initialisation for ‘dwxgmac3_dma_dpp_errors[1].detailed_desc’)
->>> ...
->>>
->>> I know that this is quite old but the minimum supported by the kernel is v5.1 ...
->>>
->>> https://www.kernel.org/doc/html/next/process/changes.html
->>
->> Thanks Jon,
->>
->> I separately received a notification about this occurring with gcc 7.
->>
->> https://lore.kernel.org/oe-kbuild-all/202402081135.lAxxBXHk-lkp@intel.com/
->>
->> It is unclear to me why this occurs, as dpp_tx_err and dpp_tx_err are const.
->> But I do seem to be able to address this problem by using #defines for
->> these values instead.
->>
->> I plan to post a patch shortly.
-> 
-> Patch posted:
-> - [PATCH net] net: stmmac: xgmac: use #define for string constants
->    https://lore.kernel.org/netdev/20240208-xgmac-const-v1-1-e69a1eeabfc8@kernel.org/
-> 
+We're not moving a value of type `T`. We're creating a new value of
+type `T` from a byte array. The trait says that we can do that, so I
+think that is enough here.
 
+Besides, we'll often want to use this for wrappers around bindgen
+types. If we add a Copy bound, then we need to get bindgen to generate
+a #[derive(Copy)] for them, which I don't think it does right now.
 
-Thanks for fixing! Works for me.
+> > +        // SAFETY: The local variable `out` is valid for writing `size=
+_of::<T>()` bytes.
+> > +        let res =3D unsafe {
+> > +            bindings::copy_from_user_unsafe_skip_check_object_size(
+> > +                out.as_mut_ptr().cast::<c_void>(),
+> > +                self.0,
+> > +                size_of::<T>() as c_ulong,
+>
+> As with the other patch, I think it would be more clear to use
+> `c_ulong::try_from(...)` rather than comparing against
+> `MAX_USER_OP_LEN ` and later casting. Possibly just in a helper
+> function.
 
-Jon
+Done.
 
--- 
-nvpublic
+> > +        // Since this is not a pointer to a valid object in our progra=
+m,
+> > +        // we cannot use `add`, which has C-style rules for defined
+> > +        // behavior.
+> > +        self.0 =3D self.0.wrapping_add(size_of::<T>());
+>
+> There are now methods `wrapping_byte_add` (since 1.75). Doesn't make
+> much of a difference since the pointer is c_void anyway, but it does
+> make the unit more clear.
+
+Sure, I can use those methods.
+
+> > +    /// Writes the provided Rust value to this userspace pointer.
+> > +    ///
+> > +    /// Fails with `EFAULT` if the write encounters a page fault.
+> > +    pub fn write<T: WritableToBytes>(&mut self, value: &T) -> Result {
+>
+> Send + Copy are also needed here, or supertraits of WritableToBytes.
+
+I also disagree here. We're not moving a value of type T. We're
+creating a byte array from a value of type T, and the trait says that
+we can do that.
+
+> > +/// Specifies that a type is safely readable from bytes.
+> > +///
+> > +/// Not all types are valid for all values. For example, a `bool` must=
+ be either
+> > +/// zero or one, so reading arbitrary bytes into something that contai=
+ns a
+> > +/// `bool` is not okay.
+> > +///
+> > +/// It's okay for the type to have padding, as initializing those byte=
+s has no
+> > +/// effect.
+> > +///
+> > +/// # Safety
+> > +///
+> > +/// All bit-patterns must be valid for this type.
+> > +pub unsafe trait ReadableFromBytes {}
+> > +
+> > +// SAFETY: All bit patterns are acceptable values of the types below.
+> > +unsafe impl ReadableFromBytes for u8 {}
+> > +unsafe impl ReadableFromBytes for u16 {}
+> > +unsafe impl ReadableFromBytes for u32 {}
+> > +unsafe impl ReadableFromBytes for u64 {}
+> > +unsafe impl ReadableFromBytes for usize {}
+> > +unsafe impl ReadableFromBytes for i8 {}
+> > +unsafe impl ReadableFromBytes for i16 {}
+> > +unsafe impl ReadableFromBytes for i32 {}
+> > +unsafe impl ReadableFromBytes for i64 {}
+> > +unsafe impl ReadableFromBytes for isize {}
+> > +// SAFETY: If all bit patterns are acceptable for individual values in=
+ an array,
+> > +// then all bit patterns are also acceptable for arrays of that type.
+> > +unsafe impl<T: ReadableFromBytes> ReadableFromBytes for [T] {}
+> > +unsafe impl<T: ReadableFromBytes, const N: usize> ReadableFromBytes fo=
+r [T; N] {}
+> > +
+> > +/// Specifies that a type is safely writable to bytes.
+> > +///
+> > +/// If a struct implements this trait, then it is okay to copy it byte=
+-for-byte
+> > +/// to userspace. This means that it should not have any padding, as p=
+adding
+> > +/// bytes are uninitialized. Reading uninitialized memory is not just =
+undefined
+> > +/// behavior, it may even lead to leaking sensitive information on the=
+ stack to
+> > +/// userspace.
+> > +///
+> > +/// The struct should also not hold kernel pointers, as kernel pointer=
+ addresses
+> > +/// are also considered sensitive. However, leaking kernel pointers is=
+ not
+> > +/// considered undefined behavior by Rust, so this is a correctness re=
+quirement,
+> > +/// but not a safety requirement.
+> > +///
+> > +/// # Safety
+> > +///
+> > +/// Values of this type may not contain any uninitialized bytes.
+> > +pub unsafe trait WritableToBytes {}
+> > +
+> > +// SAFETY: Instances of the following types have no uninitialized port=
+ions.
+> > +unsafe impl WritableToBytes for u8 {}
+> > +unsafe impl WritableToBytes for u16 {}
+> > +unsafe impl WritableToBytes for u32 {}
+> > +unsafe impl WritableToBytes for u64 {}
+> > +unsafe impl WritableToBytes for usize {}
+> > +unsafe impl WritableToBytes for i8 {}
+> > +unsafe impl WritableToBytes for i16 {}
+> > +unsafe impl WritableToBytes for i32 {}
+> > +unsafe impl WritableToBytes for i64 {}
+> > +unsafe impl WritableToBytes for isize {}
+> > +unsafe impl WritableToBytes for bool {}
+> > +unsafe impl WritableToBytes for char {}
+> > +unsafe impl WritableToBytes for str {}
+> > +// SAFETY: If individual values in an array have no uninitialized port=
+ions, then
+> > +// the the array itself does not have any uninitialized portions eithe=
+r.
+> > +unsafe impl<T: WritableToBytes> WritableToBytes for [T] {}
+> > +unsafe impl<T: WritableToBytes, const N: usize> WritableToBytes for [T=
+; N] {}
+>
+> These traits are probably usable in a lot of other places (e.g.
+> packets, GPU), so could you put them in a separate module?
+
+I can move them to the types module.
+
+> The patterns here are pretty similar to what the bytemuck crate does
+> [1]. Since that crate is well established and open licensed, I think
+> it makes sense to keep their naming or possibly even vendor a portion
+> in.
+
+Vendoring bytemuck is out of scope for this patchset.
+
+If we *are* going to vendor one of them, I would suggest zerocopy over byte=
+muck.
+
+> In particular, this would likely include the traits:
+>
+> - AnyBitPattern, which is roughly ReadableFromBytes here
+> - NoUninit, which is roughly WritableToBytes here
+> - Optionally Pod (plain old data), a supertrait of both AnyBitPattern
+> and NoUninit just used to simplify trait implementation (impl Pod and
+> you get the other two).
+
+I can rename the two traits, but I'm not going to introduce Pod. It's
+over engineered for my purposes. Also, I prefer the trait names from
+zerocopy. They emphasize that it's really about conversions to/from
+byte arrays, and not about moving values around.
+
+Note that WritableToBytes has an extra comment about pointer addresses
+that bytemuck/zerocopy doesn't have.
+
+> And the functions:
+>
+> - from_bytes to turn &[u8] into &T for use in `read`. Needs `T: Copy`
+> to return an owned value, as noted above.
+> - bytes_of to turn &T into &[u8], for use in `write`
+>
+> The derive macros would also be nice to have down the line, though
+> bytemuck's unfortunately relies on syn.
+>
+> - Trevor
+>
+> [1]: https://docs.rs/bytemuck/latest/bytemuck/
