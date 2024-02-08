@@ -1,90 +1,153 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from davidv.dev (mail.davidv.dev [78.46.233.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD102823DE;
-	Thu,  8 Feb 2024 16:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D3D82D74
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 16:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.233.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707410582; cv=none; b=CNgRxSgG9kNnMTTO8Qsd2sbjB4mvoueyNmY2vfZsfmuCVbvtrrudP17c9QaLiHYE3ytUtbfAvu7CRxgcqp9DJXrImB+qEGEo7k6jjlf9Tx7bpm15sX6hKS8RRXzHM5nhZIHk8xcvCeR6Zh4/c3iAhfyywTz41TFavbA/kfHDWUA=
+	t=1707410583; cv=none; b=OwfRtgkgOjaquaLagUJkRUr/OxgSVCyWg3hONglxlk+hoCKTdIzXhReEL3vLF0cqLfKcqNyuap1aqDWD+HzTmWFejfd+DGD5h6N0bvUcjX/d2mi0hZ+yIaEscYyUL+piCKfg7vWVDfOUL+u74FJETEtytJqT4v7SjPQcTwjuUck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707410582; c=relaxed/simple;
-	bh=qGprDF5yFbJMMfvwg7rlQsZq1GoMUYoBgio5pa7q6nY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KWUA9zIIiob1xKtGUOgGLX5MWogUx+Znnk72IkyWheNgEoMt7vCEamnXEVwJapbH1H6OVhx/w2/4n98wwcx3DLc+YcG7HlukOzpV6nl+NMe5xxEwua7aJ0ypXXP7J455EfZwB6memV6Gcve3vL7anVSUwOHsqcCr1xGn4pWr7jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a29c4bbb2f4so277239666b.1;
-        Thu, 08 Feb 2024 08:43:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707410579; x=1708015379;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UkvYXjV87q8WCwTxmNUx3QJd5xc/NdLDoxk8vLpDGEA=;
-        b=Vf/kDJohlg29qvceV7jqLKfW2+aTMtDzywL0QQk3ynp8lFAhzGUJUobDwN8KGhWHu4
-         CVt3EVG8J1vtb5DLR3K+OcVPUp6WVlJOKDJ+O4f2nZueof0H0s+rppb/qmkrDdyIsUpI
-         98jQF/LUnX261xfBYRtOOS+oZcPN5+GxY3CrLFJJqMRJ6T4BmDo1T++iIrifmZqXi2LU
-         w96TnjNXvQtOGr7sxrsRxQ74oHO7oSL4ZAAk0j6FYI35L2//jO5bW5RBqBClFAS9OPUu
-         Wu/Xg+NB0M5xATWBK06Z994nvgePTfL3tSy8YszEBZ+tzNEHDgPOcMKO9k4IjMJHO8xV
-         ovXA==
-X-Gm-Message-State: AOJu0YwKj/QfM96PRCCY8wy3TL+BHeDPzNDFF3NUodaGf5oxoimqi+PL
-	Yv+6VDDlcyVagnh0hbFOGTX6BNGYi6evspMEeSJJLVkGuAHaa4Su
-X-Google-Smtp-Source: AGHT+IH7ul2dwGNdIAq2sUTLqGxn7/5daggKuKE43x4OoCRAWkWcVU9P7X773u77bNYzZvgdaLmiCw==
-X-Received: by 2002:a17:907:60ce:b0:a30:db53:5bb5 with SMTP id hv14-20020a17090760ce00b00a30db535bb5mr7824145ejc.58.1707410578667;
-        Thu, 08 Feb 2024 08:42:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQrK1ranyGnGRRYBkuusGjrMs1eFVK06hmGga+H28lThOLY1h43LOZcusK6oOQj8opMl5tr06R4oVZZai9/Njfz4ly3DZ6KRpeGo0mvPsB17wxAfgG78gNPS9vfgc2T4rzWnJTcbmdZkpXDewmMijLRqzIy10Eads3sJp7Ksw0ROLTupzuM9sFs5q7++igGDBgnw/uFFdGhfGcMz0DtovykDdEZUc1QFdu0u5SOpo5sNLClHYeJDrIAV7QVb7ZgLbmbKkq5YUVlxAs84LBPu2cRGDRA2dEmP3oj9V41KsBqix6d3MQvYoR+QXdEGegboUL0TOtoAsPJb8pZq3KBW+Nl6i+KHB3awHT/9JaRyQ=
-Received: from localhost (fwdproxy-lla-000.fbsv.net. [2a03:2880:30ff::face:b00c])
-        by smtp.gmail.com with ESMTPSA id u18-20020a170906069200b00a3522154450sm227959ejb.12.2024.02.08.08.42.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 08:42:58 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org,
-	andrew@lunn.ch,
-	f.fainelli@gmail.com,
-	jhs@mojatatu.com
-Subject: [PATCH net v3 3/9] net: fill in MODULE_DESCRIPTION()s for af_key
-Date: Thu,  8 Feb 2024 08:42:38 -0800
-Message-Id: <20240208164244.3818498-4-leitao@debian.org>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240208164244.3818498-1-leitao@debian.org>
-References: <20240208164244.3818498-1-leitao@debian.org>
+	s=arc-20240116; t=1707410583; c=relaxed/simple;
+	bh=e9gx7ysf5nDVQcKyRIhMrUuZqIvSokXKGgA3mBX6IGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u/PT+K2MMUiJcri2/a14pW556Iyoa+OLjMxqyBNhFc47U6K6Tpsh1OIQlSGhzWHb9VUZkb/g8wF5d46dyVW1aPcOQPlcWh6efyy++QqCmCMw6+ouVTm6DMPYt2mL3U+1nA/egm/qBtru5BSKxJHgVNU+xZWjdbqnJv1YuggKuiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev; spf=pass smtp.mailfrom=davidv.dev; arc=none smtp.client-ip=78.46.233.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidv.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidv.dev
+Received: from [192.168.2.131]
+	by mail.davidv.dev (chasquid) with ESMTPSA
+	tls TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+	(over submission+TLS, TLS-1.2, envelope from "david@davidv.dev")
+	; Thu, 08 Feb 2024 17:42:59 +0100
+Message-ID: <ff6cef18-c1fb-4a1e-91a5-fb713086474e@davidv.dev>
+Date: Thu, 8 Feb 2024 17:42:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] net: make driver settling time configurable
+Content-Language: en-US
+To: Denis Kirjanov <dkirjanov@suse.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, "David S. Miller"
+ <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap
+ <rdunlap@infradead.org>, Xiongwei Song <xiongwei.song@windriver.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>
+References: <20240208093722.246930-1-david@davidv.dev>
+ <20240208095358.251381-1-david@davidv.dev>
+ <0e129417-53c8-4931-af76-a37762472fb0@suse.de>
+From: David <david@davidv.dev>
+In-Reply-To: <0e129417-53c8-4931-af76-a37762472fb0@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-Add descriptions to the PF_KEY socket helpers.
+On 2/8/24 11:26, Denis Kirjanov wrote:
+>
+> On 2/8/24 12:52, David Ventura wrote:
+>> During IP auto configuration, some drivers apparently need to wait a
+>> certain length of time to settle; as this is not true for all drivers,
+>> make this length of time configurable.
+>>
+>> Signed-off-by: David Ventura <david@davidv.dev>
+>> ---
+>>   .../admin-guide/kernel-parameters.txt         |  4 ++++
+>>   Documentation/admin-guide/nfs/nfsroot.rst     |  3 +++
+>>   net/ipv4/ipconfig.c                           | 23 ++++++++++++++++---
+>>   3 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index b47940577c10..b07a035642fa 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -2291,6 +2291,10 @@
+>>   
+>>   	ip=		[IP_PNP]
+>>   			See Documentation/admin-guide/nfs/nfsroot.rst.
+>> +	ip.dev_wait_ms=
+>> +			[IP_PNP]
+>> +			See Documentation/admin-guide/nfs/nfsroot.rst.
+>> +
+>>   
+>>   	ipcmni_extend	[KNL,EARLY] Extend the maximum number of unique System V
+>>   			IPC identifiers from 32,768 to 16,777,216.
+>> diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
+>> index 135218f33394..f26f7a342af6 100644
+>> --- a/Documentation/admin-guide/nfs/nfsroot.rst
+>> +++ b/Documentation/admin-guide/nfs/nfsroot.rst
+>> @@ -223,6 +223,9 @@ ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>:<dns
+>>     /proc/net/ipconfig/ntp_servers to an NTP client before mounting the real
+>>     root filesystem if it is on NFS).
+>>   
+>> +ip.dev_wait_ms=<value>
+>> +  Set the number of milliseconds to delay after opening the network device
+>> +  which will be autoconfigured. Defaults to 10 milliseconds.
+>>   
+>>   nfsrootdebug
+>>     This parameter enables debugging messages to appear in the kernel
+>> diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+>> index c56b6fe6f0d7..cbf35163b973 100644
+>> --- a/net/ipv4/ipconfig.c
+>> +++ b/net/ipv4/ipconfig.c
+>> @@ -82,8 +82,6 @@
+>>   #define IPCONFIG_DYNAMIC
+>>   #endif
+>>   
+>> -/* Define the friendly delay before and after opening net devices */
+>> -#define CONF_POST_OPEN		10	/* After opening: 10 msecs */
+>>   
+>>   /* Define the timeout for waiting for a DHCP/BOOTP/RARP reply */
+>>   #define CONF_OPEN_RETRIES 	2	/* (Re)open devices twice */
+>> @@ -101,6 +99,7 @@
+>>   
+>>   /* Wait for carrier timeout default in seconds */
+>>   static unsigned int carrier_timeout = 120;
+>> +static unsigned int dev_wait_ms = 10;
+>>   
+>>   /*
+>>    * Public IP configuration
+>> @@ -1516,7 +1515,8 @@ static int __init ip_auto_config(void)
+>>   		return err;
+>>   
+>>   	/* Give drivers a chance to settle */
+>> -	msleep(CONF_POST_OPEN);
+>> +	if(dev_wait_ms > 0)
+>> +		msleep(dev_wait_ms);
+> What's the point to wait more than CONF_POST_OPEN with the change?
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- net/key/af_key.c | 1 +
- 1 file changed, 1 insertion(+)
+I didn't have anything specificin mind - shall I change this
 
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index d68d01804dc7..f79fb99271ed 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -3924,5 +3924,6 @@ static int __init ipsec_pfkey_init(void)
- 
- module_init(ipsec_pfkey_init);
- module_exit(ipsec_pfkey_exit);
-+MODULE_DESCRIPTION("PF_KEY socket helpers");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS_NETPROTO(PF_KEY);
--- 
-2.39.3
+to only enable/disable the 10ms wait instead of allowing a configurable 
+value?
 
+>>   
+>>   	/*
+>>   	 * If the config information is insufficient (e.g., our IP address or
+>> @@ -1849,3 +1849,20 @@ static int __init set_carrier_timeout(char *str)
+>>   	return 1;
+>>   }
+>>   __setup("carrier_timeout=", set_carrier_timeout);
+>> +
+>> +
+>> +static int __init set_dev_wait_ms(char *str)
+>> +{
+>> +	ssize_t ret;
+>> +
+>> +	if (!str)
+>> +		return 0;
+>> +
+>> +	ret = kstrtouint(str, 0, &dev_wait_ms);
+>> +	if (ret)
+>> +		return 0;
+>> +
+>> +	return 1;
+>> +}
+>> +
+>> +__setup("ip.dev_wait_ms=", set_dev_wait_ms);
