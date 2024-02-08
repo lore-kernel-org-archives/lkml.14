@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09D51D54D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E007C1D557;
+	Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707355829; cv=none; b=gtFw4in/0l7Ogcuh1vyiyZfl4tYhWZSZmHcWMynsFeIjXCm3j5fec16Gt4c37LPEkn/TZKskSPNVAmZD0imBpTNsnF5W8tQTQOHX1obTseyZu18nak30WH7qTteD2qorNT+wsqWuF8LSnCmg3OVGsW1B2xQwfqNYLWxUlaPc5zM=
+	t=1707355830; cv=none; b=HSeeDCta+g6bH9H9hQkcXi0bJs7VJrj9891jserugExPm9yDa/pB34rfLsdBiCO/R3Xsug5hUUPyjCYWu/eI+PrfsITAB2Q0li9VprzAsk50Q+L6TSvFlzmvEopeo7ap0ap/kg1ASUtB9EPz/0TRrVVMyBYO8Tm8qGGUm9t836Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707355829; c=relaxed/simple;
-	bh=eKM7cbq2LsQtT2XrjxLN0imXBewanhEf/4QaFmByZU8=;
+	s=arc-20240116; t=1707355830; c=relaxed/simple;
+	bh=RMupFb4nJ/fs56B3Mp8NAVjkwclZL/zYoqXWz4mV58M=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YdrI/8hbhzj0gfCZ1JHT+4UOSh1RdqA+hCAh/2d+Q8t1IPmpUMbuo+suawMMzGQMymLFbxu3bFbcVpwYfpSl26MVuUJousBkTc+oD79M1/F0ltpSa68bx4C9F9fdGKFa//J7p3r15B5BRmbxxPs6r+0S5DWXuQAjADUNDYmmXms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvznHYv1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=BQwVD9KTuTqKTGJauq1LHOG1AqP4paL28jvKmFNeUVgbTIdtRACHNJ3cjWLaelYWY7W7Kw6vTRrPTODmyOeXbOrISPVNORQfwN0MLdLXwNuu0V6okFVN9zuOqPpSU6Y9zOSJPWaupqlG8S7L1o/jVum5V4O5N+YI5SzY0yJK6ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUggYVTw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvznHYv1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B46EC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUggYVTw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6DB25C433B1;
 	Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707355829;
-	bh=eKM7cbq2LsQtT2XrjxLN0imXBewanhEf/4QaFmByZU8=;
+	bh=RMupFb4nJ/fs56B3Mp8NAVjkwclZL/zYoqXWz4mV58M=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hvznHYv1RguuNuXyuqydB4E7vEKoEBRsC/cwIRjaRO4bRGijC+LiiVl17Pewsgw9G
-	 5AcgCGzZSS1jOkjOQp6tZSyhqRp27C3K2euzh/qxNRfQgcd8dKeX65qRki9eTL+7CA
-	 Djastyta5r6eHNnR2BtUS3HdBVB2AciD06RDrBUOhnEyDAnFrAS+NP+M32GsFZ+W3L
-	 gr/wld8sPg1uupwo3sINuXxtx5TBMliMVzfAN5HQrNYpd3claiyqxQ0QIOPttYvUHP
-	 aLcdMTU8oJerv5/GwFDnGvKZogT0JXmbkhXuGPGqIMg11skuo1at5XGLoWaWjBRt6w
-	 kFfBgpMmitDOg==
+	b=NUggYVTwasaK3+SnCqY9s1DQ8Rkt7whE+tlGoGXPUQQHxV3a/U/FiudlgRtJqnnyL
+	 YoK0u724ZuXIkgMN43WHBgAwe8VJWRVCNGKJtogCxNKdiPByDc5gPHchg3xuPtNNKA
+	 pds3VnpHYtH5Is78jCHKQJujPhHp0Rpm7sxocM5zPY5OWGtP9m5O8jv5M2BLykINi/
+	 9+laroHlcorrGptWxrx5+8JomDo2K9VELemYkrrT+jqwsTxUQu+JvkV9EsIlT+Q+TL
+	 N5nOmV8eSLnWHM8LeWY6cawc/BekQMMpt9wBGk4facBRozJMKBvc5XrbdTWXJSWo5N
+	 tJ4Oy9c9bNaNQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1D7ACD8C96E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 53514E2F2F1;
 	Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,35 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: declare overflow_stack as exported from traps.c
+Subject: Re: [PATCH -fixes] riscv: Flush the tlb when a page directory is freed
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170735582911.12826.14792273436491773148.git-patchwork-notify@kernel.org>
+ <170735582932.12826.4648361824228463635.git-patchwork-notify@kernel.org>
 Date: Thu, 08 Feb 2024 01:30:29 +0000
-References: <20231123134214.81481-1-ben.dooks@codethink.co.uk>
-In-Reply-To: <20231123134214.81481-1-ben.dooks@codethink.co.uk>
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+References: <20240128120405.25876-1-alexghiti@rivosinc.com>
+In-Reply-To: <20240128120405.25876-1-alexghiti@rivosinc.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, will@kernel.org,
+ aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org, npiggin@gmail.com,
+ peterz@infradead.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, samuel.holland@sifive.com, ajones@ventanamicro.com,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 23 Nov 2023 13:42:14 +0000 you wrote:
-> The percpu area overflow_stacks is exported from arch/riscv/kernel/traps.c
-> for use in the entry code, but is not declared anywhere. Add the relevant
-> declaration to arch/riscv/include/asm/stacktrace.h to silence the following
-> sparse warning:
+On Sun, 28 Jan 2024 13:04:05 +0100 you wrote:
+> The riscv privileged specification mandates to flush the TLB whenever a
+> page directory is modified, so add that to tlb_flush().
 > 
-> arch/riscv/kernel/traps.c:395:1: warning: symbol '__pcpu_scope_overflow_stack' was not declared. Should it be static?
-> 
-> [...]
+> Fixes: c5e9b2c2ae82 ("riscv: Improve tlb_flush()")
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/tlb.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Here is the summary with links:
-  - riscv: declare overflow_stack as exported from traps.c
-    https://git.kernel.org/riscv/c/2cf963787529
+  - [-fixes] riscv: Flush the tlb when a page directory is freed
+    https://git.kernel.org/riscv/c/97cf301fa42e
 
 You are awesome, thank you!
 -- 
