@@ -1,172 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01olkn2065.outbound.protection.outlook.com [40.92.66.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDEB1D54D;
-	Thu,  8 Feb 2024 08:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB22D1D54D;
+	Thu,  8 Feb 2024 08:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.66.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707381050; cv=fail; b=r/6tsNiRFZLfjtJNzsfv9YkKUWvn2CxrKgGSOUNxY1gAHJtv0G3anDTAjNtWGfaWllDBLncCgwDreXzJKRe+zrZVFZhcfhCeIepz5yNI1smiLpsDYYdKq+Y4YxWORZIz8gXbLn3ITkAE6qwaQUpJEJn894AWfRdhhdVMTniXae4=
+	t=1707381059; cv=fail; b=VPTV7DXNJg609IMh7xMlOl86da7KCCw4MERSp4XEz3AoWejnPss57/C2Mv+FI+lkuE96YyEe0/3rvpV2m2k2lq9TrO9p6aLqN/pfeHudzczqosHK+xJU4vUX2NzdW8lT7LBL8FiGUCIz6NM4S0qc1Zpg7FqO+tLkfKHcbkPpzmo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707381050; c=relaxed/simple;
-	bh=J73122+HFnNFNC51GLrx14jTPC+CRAtzjqyHQkKb3M4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cgsM9z22cp6s/b/xWX4yznPVzlOmK3ZUy3ZR7+vQErDNIdQliEA//QvdGGk7Xzp7kC3VzLAZ9k+uwhbGCloQv6n3SHzok1DFO2JcPsqa2bTyTUrCUY0L5qxteP6zkr9F7i0ZFQMhufPVaWQm9kaVh90GQ24skq24fFZRSNeuZIA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jKQrABEO; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jKQrABEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707381049; x=1738917049;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=J73122+HFnNFNC51GLrx14jTPC+CRAtzjqyHQkKb3M4=;
-  b=jKQrABEOHBO4G1gP/qBS5NvpJNVIySqRgWNj0iPllttKHvAJRtNoYpRR
-   ZZugF1ROXTr5QwFz/CJOzu7M6JsYLBasgrc8cohUaTYvj785zMEe4kIxj
-   f6vfLe0Bghdqb49d29dd8e8rp2vGSkQwWJ/rMRyoJnZ0GmX7CmmFoqUGB
-   0B93ADaafSUbdWb9p0ehNnCVe/uKZurG9cv0hg2TUIiJcgwlb4GhQ4xek
-   VIMknzmOGTjN+6geyfZzAMHE17kjo62h0jlIdihNWYyDvd/vF/m3eLQ+j
-   r7LOqXDFO8jLALqhAm4nVJUbXrchQ39xQ6okdxxXQBmohLqrtBvIbZnZN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1324399"
-X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1324399"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 00:30:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1583378"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Feb 2024 00:30:37 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 8 Feb 2024 00:30:36 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 8 Feb 2024 00:30:35 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 8 Feb 2024 00:30:35 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 8 Feb 2024 00:30:34 -0800
+	s=arc-20240116; t=1707381059; c=relaxed/simple;
+	bh=7IpiKfYKVacJ1t4P6O5c1ugnropKbaWyydy42TgHZkA=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=diLGKdy5KRaKsF6ERzYtNjuk03ZVMDX51e1e2pTzwVsxS9ad0kAKMmGlWiEZZu2HKvz1/tQbNm2wfPLg2S40LaSRpGTACNOX9tpgVQGEiaZURw1j8JnrI8TcJpPyP1Pvw0bIw145RgbCdeb10RR6TynxTi1pBJFc6KghvHRxXW8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; arc=fail smtp.client-ip=40.92.66.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fflJ6eGv5e5iyZJSZwOMKbmD5fPUVI1AU1YEu7pIQWXipVDH6HdO3nq0gKK0csYh21sk1ACI/0E7Q2Js9hW7YtN0rpaRpqumtAY5grQRXYhJz8fnbQiOMZslwm0/x/CbBZ822P1xSbCWyjU41gP9hcZibCW70ujB1NuXNri0aA7I+FkBF0M4/1W1mfZk4HJeraKyJDJZAnfTeDUWZYnxWIu0dRSoHNkqFyX+e+F6Dd2zX4SpPpNtiryUD06W0peS7wYXO8K8GHSNmyTqX3dquetlTZsfqMEfd5dmhcS7nYRQ7+4G3Eo71LggrXCxsHyhmT2YpinHkxTJ6nUrM0PYjQ==
+ b=KlJyaBGsMHI5cRJcQbDvjyux5EdM3X08g/Kvr9lOb4TTmCNIM9Nyj6p9Eo4DPG6jFGZ0GyhGLuGx3DfbIFBkdJii222/Odgp570lQqfkyv7SH0ieQsOg1B4CmyjECueJqrqu0OLVZhEDZ6pRVvbkyt4/tuIDgbvKEWFg6GJzGhD1H2a17HPaI4BwZZdA3e2HmoUaNLdNN13o22W4VpYWBF32MK9dFXU4o3tqv1WH4PUnRGMa1bxzHJkKJw/qD+cusQ0zxbqKP+fwjZVOPJ/tsEcG+IapWK/Fa79tLDxfe/2TB3w7gW3zNaUhl8a7tj3Ypc20jOj0v3aVsG0ofmpbCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J73122+HFnNFNC51GLrx14jTPC+CRAtzjqyHQkKb3M4=;
- b=kFrBeJZw7zb63Kyx+PdhTQI+DnRxs3fTrSHeT64d0ewZ/DfI2Ij3PLhLDRpB+yn3YciSIqDgUwqnXPloftmPJHCah9xDGIPlHfJQzgl5P904se08VTOnS3spWx9PICFIn8UePKQkNF1euJXczZo8qSjJdpAN+y+HNk+/+kn97Ur/TmtuNRvMbOjwDaZZuL8T5inY4CaB2iWjvtCB1fp+bJR+9wKSUTsQCQObioIu+g0hIRlcIZW6IUaCdy3OZWPPWsqyGPvYRhYqbN6P9Uy4yFDIPV0ikEOrft/XhMpbkBlkCuzeoJVHmun4zloXSjg0Lfx3hqabrt7Hro4jvxUMOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by CY8PR11MB7393.namprd11.prod.outlook.com (2603:10b6:930:84::18) with
+ bh=KRStz896llpSM7qMGVKNvhUPpVQs/Yo1dv3hQf54n/M=;
+ b=jxyHgQYXo1L1GrAQrHT1ioXBc1HGa+cRi/z+Z4lLHY/W8Ris4MepnrEx2vLwqqj73X83UoZ5jIRrFGPffd6fA8TuJqUmwru6s7VT/DvkpcJf9H+waI4qDd50/VDFLOYX6YPtG7dNEk5PRQ2PVdlY4DDBFryxlT73OHxu+OvM8P4oZZxKQ+jY6vCrHo/M2ZiKmlJlndOhkACGzXnh5lAEJFkdM80lkukazdv1Mk/ZPWXONiiyeCn2r3acztX5hzqdwi7G5s60JnNF9jvST1U8CvIFSyjIrw0o3Nwe/QMbRSSyrCyVk2+V81e36NU+ixf/+ms86EHjO6cb8pFN9D+Jpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AS1PR03MB8189.eurprd03.prod.outlook.com (2603:10a6:20b:47d::10)
+ by DB4PR03MB9484.eurprd03.prod.outlook.com (2603:10a6:10:3f4::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.38; Thu, 8 Feb
- 2024 08:30:32 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb%3]) with mapi id 15.20.7249.038; Thu, 8 Feb 2024
- 08:30:32 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: "Liu, Yi L" <yi.l.liu@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"jgg@nvidia.com" <jgg@nvidia.com>, "baolu.lu@linux.intel.com"
-	<baolu.lu@linux.intel.com>
-CC: "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "eric.auger@redhat.com"
-	<eric.auger@redhat.com>, "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "chao.p.peng@linux.intel.com"
-	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
-	<yi.y.sun@linux.intel.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
- Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
-	<joao.m.martins@oracle.com>
-Subject: RE: [PATCH rc 2/8] iommu/vt-d: Add __iommu_flush_iotlb_psi()
-Thread-Topic: [PATCH rc 2/8] iommu/vt-d: Add __iommu_flush_iotlb_psi()
-Thread-Index: AQHaWmgSC9AgQSzqckCf5bbjXGK1WrEAHTtw
-Date: Thu, 8 Feb 2024 08:30:32 +0000
-Message-ID: <BN9PR11MB5276D80BCF8CF97DEB3602378C442@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240208082307.15759-1-yi.l.liu@intel.com>
- <20240208082307.15759-3-yi.l.liu@intel.com>
-In-Reply-To: <20240208082307.15759-3-yi.l.liu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CY8PR11MB7393:EE_
-x-ms-office365-filtering-correlation-id: 52458726-ade8-4395-4379-08dc28803746
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: a1ylftFvmvXCdRS4Q1kMzlFviV8Y2OUnLSv9LfqL8qHwZPjr0lcPcl2xQd6jHURpUUBwYc3HzOKexE6assj1/cndEmT6OnwfSBPokOa3rcqM19zlJt+UOq/947Z3PkGRA8Lt6j1cFwf7bHj1OGmubIOamYSVnJ3qQM2P/ffGkqI1c1mKdoi/b4MSN5eUyjuuxdoZ33tD7i4wL9VJntKFvildaghy6n1w0nA0EzKFFhw3B7EzxnTVHYjD/A2jwfP6cTcCqkENudMXKFXAFz5FMEA08o0n54lPBITH/hExLyH//IoDLn6fD6kyujIgoReuhPfa0ffFB8Je/srlutnmX7PImFSDP8M/g0SUxuPnGAeQ7r8R8mhBoJTn86Hgp60FpMPlCAvCoOGzPQyA8pNp9apCjPXBkhCQ59D/afSFrItpv8jn5EsqDRMKEBmffK9RVbC4zb2VsrqblqVRK6BfATG9OUQv/vHQAvbmrV1MQnE/kSoPBrJDT4kzvAry5fYhzkN0JqB9W8+AemJeW+CbRGq1uBIhFLw6yOAEUDytJbkVkJdyGh4GdmDXzlm0S5WTNIPnquD+4qimNoXyLkQv0L+GzOJ6srUdkRRgNehbsYM+rW7wm83FIgeV8Q091KvR
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(396003)(346002)(376002)(39860400002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(86362001)(55016003)(41300700001)(33656002)(82960400001)(122000001)(7416002)(2906002)(4744005)(38100700002)(38070700009)(9686003)(26005)(5660300002)(66476007)(7696005)(6506007)(478600001)(71200400001)(76116006)(110136005)(54906003)(66556008)(66446008)(316002)(66946007)(64756008)(4326008)(8676002)(8936002)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?9sHRCbiUwtnIvh4iNOue9Am4cLz6tPC6gsKzpoJ38NhK9f9uo+mCOTtDYTYf?=
- =?us-ascii?Q?DAq+PamhyZELd+ZniQGnBhsaE0fAFHZZqNujgma8X2i2MUZfewHVjhDx6zFe?=
- =?us-ascii?Q?7CBjmlP6LD8PArgEiEPJDirfyxpylF3ljXzT8EqSjhs9eItRObeTkvkRhjeJ?=
- =?us-ascii?Q?hb9B+i9DEqlkUdi8C5v/e+Ya5dx8Ywrmi99LdEIJL7oemp/mT3FaX+yN1N3M?=
- =?us-ascii?Q?GW4yRqBHVBfax5K80/c2rgF27ONTchITkMUIpK8f1WYNGnLc+I71mUFGBJNB?=
- =?us-ascii?Q?jSaOPD6MWWPIyO1y4ZJAcgH7bPrzxz+vq35LZ+a9i1dj0OkAcmActWfsn/gI?=
- =?us-ascii?Q?mINw2bkqC+J5SKhX5uMU5pmHFrGb6+6KKaXM/BEDrnQ9kZtIH0HZnt0nozCu?=
- =?us-ascii?Q?qavBgZwVKlTV2JAZVJ/iIHpiPBu/dfryK9rYalNfUYgUBkc5QcbnDHdfvheQ?=
- =?us-ascii?Q?7dVI7RkvcgMaMlFJz43yGBc8lI2vRjOdGUpTX0OM9O9g8UDHjp2ddFNZnaoE?=
- =?us-ascii?Q?D8MGqP9SsDRczzZo1rpOhcHcmWdFA9fu3sudOsq+w1pj8K31lCXP7kqw+KKs?=
- =?us-ascii?Q?cVj5FuF3CcuWeoSA1V05FyFu0gVmUUYMclgBl62WRDo/NjkpfDVRNFj50yAm?=
- =?us-ascii?Q?ZhwPp/eLFMi8I0Kj+9MvP3NKb6b1echLbSu+gmagU0J32Qg7JmrCZwzhERua?=
- =?us-ascii?Q?sRx6DXjx1ub0BZmf/eQIwqyqA+1RBlVqR4ugV3mxYzG+dHpif9X1gWEsAWrK?=
- =?us-ascii?Q?woVqBLxXY5DB8eP+Duwa+1+M8u8xKOCssZlnHG5R3RNhWzxxKBG+zQudvRHL?=
- =?us-ascii?Q?sPmPYYLaYf9FJ1bzrn+2/sM1p/tAg8hsKlASbyl3InuzawgRXtLViRSwHiYw?=
- =?us-ascii?Q?AazDYBnECuoTCIqy7Vp+ga0MthG5DC4cWAIrCkQzbYi1xSVWy9FceRw+stfG?=
- =?us-ascii?Q?ybdQ95HrAsZWcMFTMMfJMzH/8fDrOnVUppCcy3jIKGM0zMB5KggZR6vWCeev?=
- =?us-ascii?Q?lp5oHyt6fl/SOPg9BpfOgI6lwIe6luorn4rerUIkR+7G64PQ+SZCxUiAch3q?=
- =?us-ascii?Q?NER9Xyv2YiUJo+g8D+ZCv1fWiXSV31S23U0xfWoME3V+eYTKa21xx9jXpIo9?=
- =?us-ascii?Q?sUb+uVNSTAsruhZ8yuoJLMRAUSc8iH5h0tsS8jOmvIN6sXC6ewignclfLabH?=
- =?us-ascii?Q?0v7fA6349tY7/9ihLXPYN8awokRQeXjw58Ow2Ky+KfRuWAFeoHAWitjyhpfl?=
- =?us-ascii?Q?APBZ99B19QzYPdefT3j9wY1qHfqCACaz8fueCatdyJ+8cNpTQzlVgYqtxBv5?=
- =?us-ascii?Q?kGtvGiRsX79mTnQZ7KicntLIjc8ap2i2qoMlK831rZ+XFHF/lsWlXx/SQRgK?=
- =?us-ascii?Q?C6M9AU+Aq83x7fu42Bz3CK7Sz/9L1FurnaKl8fIjzD0J94IihoRsklnDcJZe?=
- =?us-ascii?Q?77rVPsWBf5NelAZZNWLdqdxpIL+jDReivLmak/m6+UzYfKmKnN0dE4Vjeyen?=
- =?us-ascii?Q?3LM1QSvqjEKARO4uq0kMdFN1fh46kwg9CsXIkMSnSFbY/MQI/xHVoO1anCFz?=
- =?us-ascii?Q?uTFDGBBhnNpDlTelqwNPg0TBxnOC6SUbcVymCvo8?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Thu, 8 Feb
+ 2024 08:30:54 +0000
+Received: from AS1PR03MB8189.eurprd03.prod.outlook.com
+ ([fe80::ffb3:3ff8:6ea9:52b5]) by AS1PR03MB8189.eurprd03.prod.outlook.com
+ ([fe80::ffb3:3ff8:6ea9:52b5%5]) with mapi id 15.20.7249.032; Thu, 8 Feb 2024
+ 08:30:54 +0000
+Message-ID:
+ <AS1PR03MB818926990092981B0E09E60B82442@AS1PR03MB8189.eurprd03.prod.outlook.com>
+Date: Thu, 8 Feb 2024 09:30:48 +0100
+User-Agent: Mozilla Thunderbird
+From: Sergio Palumbo <palumbo.ser@outlook.it>
+Subject: Re: [PATCH net-next] net: sfp: add quirk for OEM DFP-34X-2C2 GPON ONU
+ SFP
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <AS1PR03MB8189AD85CEB6E139F27307D3827F2@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <ZbZn8oCiyc1aNPuW@shell.armlinux.org.uk>
+ <AS1PR03MB8189B99C360FB403B8A0DD6882422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <Zb0t+zKHx+0wTXH5@shell.armlinux.org.uk>
+ <AS1PR03MB8189D48114A559B080AF5BEA82422@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <Zb1+p6FiJwUF53xc@shell.armlinux.org.uk>
+ <f8cf41f2-4a90-4ef5-b214-906319bd82d4@outlook.it>
+ <AS1PR03MB818911164FB76698446CFEDC82472@AS1PR03MB8189.eurprd03.prod.outlook.com>
+ <ZcI+7grKa33oLtwc@shell.armlinux.org.uk>
+Content-Language: it
+In-Reply-To: <ZcI+7grKa33oLtwc@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN: [QwV3UvbXfYaYAIrFQf/fChZd8cpMpZQW9Sd48hqf06gsuQV3zjqF5kfMk3VF38D3]
+X-ClientProxiedBy: MI1P293CA0019.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:3::16) To AS1PR03MB8189.eurprd03.prod.outlook.com
+ (2603:10a6:20b:47d::10)
+X-Microsoft-Original-Message-ID:
+ <8b1a4992-4db6-45a7-9f72-f47b2069a592@outlook.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS1PR03MB8189:EE_|DB4PR03MB9484:EE_
+X-MS-Office365-Filtering-Correlation-Id: 998a1c6b-c4ce-48f2-d8c4-08dc2880437b
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	BXKPnuJxaClcn9e+NwTbX/mTxRWlqDqd7/q4Hd8Hm/cAzoLN2Uih+PnNU0EPt5ZsBwCZ5EBMt3fbbdSvzrEr+JdOq2J+wQ2UxIK/mYeYApjTrmS6bx44fD3LCk5WKv78niM4Xa8ePvTOAxv+ahuR+uitVv2izVket/vkkY+8CyfKIwSRQRYuehX6j3sE0XBBwDodQv62EMvdazSNd3LQ58JqKbhjw9II6kDKZJJdI5ETDYv4PQycSps+TOP0yWquFnULsPxALz0jwDYrUDLsmoQLG0bmbmu3/ThNnhFHf8tBE/wk5lxuFqtZ97o4GC6mEicD228Btzg1olqxO8Z+7g7miM5tNjCcO8cPFnycHzPIAv9hyjJ+LA2CzM58VSvIFO3TmaP5AMlqtScBn9LoU1RT/Sq1foWVsgPvQkofXdTzVeF0uJHHHTwPGHUGA3yxochQUeY9x8LYu8CWPODQ14MzmZd3kL6YGX+2P5yv04dYSpeGQUnRHKkC9a14c2+DGeuMP6B2d4h8wKVrZfpupQJEYZ+ShSzUvKlEt+16Rf65sNsrr9v+MdQnfwkNHgtm
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cHU2dFZVcG8vbzVOd3kyVDZDOEVBV0RPTzlYL2JoaEdGbWVLb2JzTVhKaGRF?=
+ =?utf-8?B?SWx4QVBJb2ovTHFVVVRPVENHRnNYaWprRy83bW9TaFZuZ1pvVzQrdnVVcTQv?=
+ =?utf-8?B?VkdMdHBPTVhpSnF0WUFIejdiWUZjOVk1WXpmWU5NTENIR1RLVmZPbGp1RUYr?=
+ =?utf-8?B?Mk5PSllWajQ2OU43VjNLUFoxNFVLbnFWRDFVSFZVNEZFQ1VJNldUVUxFRWRT?=
+ =?utf-8?B?K2tMM2tMdHlTRnJiYVF3Y3VSTUx5VmVES1VmeFJxYXh1NkdrdkxiNmttSjA4?=
+ =?utf-8?B?VGhiQW9ab2pDQ2JyaldWV1FCUjN0RDJGK2x6OHdXcUUzcHp6U2pncytNRTlI?=
+ =?utf-8?B?c0FvU3lUTCtRVHR6QTlGTUgxSE5CMlZPaHVvWUdQeVFvU2VNYWhkVWNsbFd5?=
+ =?utf-8?B?L0d4dVlKdXhySDI0Y2V3Q2pBTU5uTkViU0hIa2xkYnMrNEp1K3pBUnVvQ3RT?=
+ =?utf-8?B?MWZWZFVKNnNTK2N3SzJPcEd4WDcwa1BwUlNYd3BtRXZsZGhhZ2UwOG5xZCtI?=
+ =?utf-8?B?L1dQSHVTT2NEUTd2dlg3NDZ3MjFTRlNiRUp5Y082Qzl0V2UwV0tLZmJhK1N0?=
+ =?utf-8?B?MFZUVnBzNVFQMDF5dTdsdk9KZ3Ftak9TbkhlRi9JSjZlaFJXay9hOE92cGpJ?=
+ =?utf-8?B?bGZVNUMyVENtVFJiOFJ0c2taRzJCY2M3WmNKNUt5UVBMQldoUHh0b29BME1a?=
+ =?utf-8?B?eWVrb1NmdzhJVEdhTlpoYk4yUmRpTzJMMndJZzJmNE96MHJXUE9lV0tGa2Rn?=
+ =?utf-8?B?RTF6SE0zWDR1QldaNjd0YU1jejFMeG5HRlBmTFFYS29XbTdCRkhMeHl3d0Jm?=
+ =?utf-8?B?M2hhbHp4NTJ4cDVvdW5BazFES3lSQXJUd1RlSzhuellhakpIMENWQU1SUmZm?=
+ =?utf-8?B?aVZqbm9UTUhVbE5SaWZmNlNZV00reDBQTzZsY2RJNmVVWlpweVRJb2xGK0tC?=
+ =?utf-8?B?UGZLZzlTS2ZOZ0I3WEZmK1U4bkllQ0hxb3BzZVU5Zm9LQVNhbU9UM3JWWFZF?=
+ =?utf-8?B?VXRJbXRuaDNmMGRzcmZUbTUzTHRJOGUrekRReFByMmZWeDNhTVdsc1ZYWlZj?=
+ =?utf-8?B?cUJ3c3EwaVBjSEpuYTJWN1lhdnlmSTdzNE56a0EvYWlyOStBZlBsenZ5K1Ar?=
+ =?utf-8?B?WjJlc0RYUVM2TlJOZDVLZzY2Y0Z3b2RUL0hrZFVOU3ludjFqT1lNb1BLb0VL?=
+ =?utf-8?B?MFJLdGZTa0FSeEczanZiSndieE11d0ViUER1cjdFb3gxYS80UEMxVnViUzFX?=
+ =?utf-8?B?ZHlmd1E5VjM1YzRzWVVGMlRzYmF2OGFDTHVpeS9SWE5oeVdyME9oMWlvWWdN?=
+ =?utf-8?B?cjB6Tkwyamk4bHpjK1E4L2ZiOGx2c1VBbW1yMG9tRDVhSFdlRkZRUkJNblZl?=
+ =?utf-8?B?azhvUTlyVjRaM0VjckJDTVI3MTNLZXhGQkJBQW9iZU1UdklTRzI0TGJGWEZO?=
+ =?utf-8?B?elFCQW9zOGZYUVlPQkFjY0h1dnhwV2lyeURkMWdpSUtoaEJxOEhUQU5sbWdI?=
+ =?utf-8?B?MmYweXBORVZrcXhHK2Nmci9UbUlneGxYb3llajNoeVpkYUFTcDdDZFFDVkY3?=
+ =?utf-8?B?RDlDMVRQbi9GNU9MZ29sMjg1bmRLTlIrREFuU0RRcS8xM1VsdEVYazMvb1hZ?=
+ =?utf-8?B?ancreE1rcW5aYThVZGswZHVlRmpocUt4bVY0eVliUHVJeDhCRmFPYWRiSCtQ?=
+ =?utf-8?B?MFV6QXFYS09keXhsRU12S3NaNTRhNy9lMjR0ckp4QUlZa0UzQkZNWE80WHNR?=
+ =?utf-8?Q?quLNVAgSZJSuzrDTbc=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-76d7b.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 998a1c6b-c4ce-48f2-d8c4-08dc2880437b
+X-MS-Exchange-CrossTenant-AuthSource: AS1PR03MB8189.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52458726-ade8-4395-4379-08dc28803746
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2024 08:30:32.7644
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 08:30:54.6780
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zddd3RyPzicIv+diLnrNOperTP2kenwSmZaYymdv7o1aP6ZL/WQ5sIQRJbijQ6Mh0+6ZtR9Ws3QQ0XdatWS03w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7393
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR03MB9484
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Thursday, February 8, 2024 4:23 PM
->=20
-> Add __iommu_flush_iotlb_psi() to do the psi iotlb flush with a DID input
-> rather than calculating it within the helper.
->=20
-> This is useful when flushing cache for parent domain which reuses DIDs of
-> its nested domains.
->=20
-> Signed-off-by: Yi Liu <yi.l.liu@intel.com>
+Hello Russell,
+I did the requested test
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+- host that supports 1000base-X and 2500base-X with your quirk (Banana PI R3)
+- SFP inserted with LAN_SDS_MODE=1 (DFP-34X-2C2
+
+and here below system messages concerning sfp:
+
+Sun Feb  4 00:35:06 2024 kern.info kernel: [   14.686771] sfp sfp-1: 
+Host maximum power 3.0W
+Sun Feb  4 00:35:06 2024 kern.info kernel: [   14.692137] sfp sfp-2: 
+Host maximum power 3.0W
+Sun Feb  4 00:35:06 2024 kern.info kernel: [   15.029727] sfp sfp-1: 
+module OEM              DFP-34X-2C2      rev      sn XPONxxxxxxxx     dc 
+230912
+Sun Feb  4 00:35:06 2024 kern.info kernel: [   15.068806] sfp sfp-2: 
+module                                   rev 1.0  sn 2307210038       dc 
+230721
+Sun Feb  4 00:35:08 2024 kern.info kernel: [   22.767328] mt7530-mdio 
+mdio-bus:1f sfp2: configuring for inband/2500base-x link mode
+Sun Feb  4 00:35:08 2024 kern.info kernel: [   22.777097] br-lan: port 
+5(sfp2) entered blocking state
+Sun Feb  4 00:35:08 2024 kern.info kernel: [   22.782390] br-lan: port 
+5(sfp2) entered disabled state
+Sun Feb  4 00:35:12 2024 kern.info kernel: [   26.970294] mt7530-mdio 
+mdio-bus:1f sfp2: Link is Up - 2.5Gbps/Full - flow control off
+Sun Feb  4 00:35:12 2024 kern.info kernel: [   26.978403] br-lan: port 
+5(sfp2) entered blocking state
+Sun Feb  4 00:35:12 2024 kern.info kernel: [   26.983623] br-lan: port 
+5(sfp2) entered forwarding state
+Sun Feb  4 00:35:12 2024 daemon.notice netifd: Network device 'sfp2' 
+link is up
+Sun Feb  4 00:35:08 2024 kern.info kernel: [   22.834307] mtk_soc_eth 
+15100000.ethernet eth1: configuring for inband/2500base-x link mode
+Sun Feb  4 00:35:08 2024 kern.info kernel: [   22.846214] device eth1 
+entered promiscuous mode
+Sun Feb  4 00:35:58 2024 kern.info kernel: [   72.800035] mtk_soc_eth 
+15100000.ethernet eth1: Link is Up - 2.5Gbps/Full - flow control off
+
+sfp-1 is linked to eth1
+eth1 is running at 2500base-x
+
+Same result with ethtool:
+
+Settings for eth1:
+         Supported ports: [ FIBRE ]
+         Supported link modes:   2500baseX/Full
+                                 1000baseX/Full
+         Supported pause frame use: Symmetric Receive-only
+         Supports auto-negotiation: Yes
+         Supported FEC modes: Not reported
+         Advertised link modes:  2500baseX/Full
+         Advertised pause frame use: Symmetric Receive-only
+         Advertised auto-negotiation: Yes
+         Advertised FEC modes: Not reported
+         Speed: 2500Mb/s
+         Duplex: Full
+         Auto-negotiation: on
+         Port: FIBRE
+         PHYAD: 0
+         Transceiver: internal
+         Current message level: 0x000000ff (255)
+                                drv probe link timer ifdown ifup rx_err 
+tx_err
+         Link detected: yes
+
+Please let me have your comments.
+
+Sergio Palumbo
+
+
+Il 06/02/2024 15:15, Russell King (Oracle) ha scritto:
+> Hi Sergio,
+>
+> I did ask for the kernel messages from a specific scenario:
+>
+> - host that supports 1000base-X and 2500base-X with your quirk
+> - SFP inserted with LAN_SDS_MODE=1
+>
+> What I expet to see in the kernel messages is that the system will
+> use 2500base-X, and a failure.
+>
+> You claim that the kernel will link at 1000base-X. There is no
+> mechanism in the kernel for this to happen, and I believe that
+> if you look at the kernel messages, this will prove my point.
+>
+
