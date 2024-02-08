@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A2684FAD;
-	Thu,  8 Feb 2024 17:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022438121B;
+	Thu,  8 Feb 2024 17:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707412656; cv=none; b=BYjJ5vZSIxIvFFc3cU9CVlNac9PsKRWmxlxtz7eRqLzkRRs9nCmRthCCjh1qt9dq7xDTVPmfaJ8EFIxj/IlPlBWNldhtoD3FllVCDW0OMbY/9Yy8YqEEefjkFdWyiJvyKl6U293g5LIxekqkcP3WxSiFSaNYjwdkfBOckAfmzgI=
+	t=1707412657; cv=none; b=Rv9KnAlqkyHuRSAhr9ewA0D6x4NSOUXhU86+KB9bW825HsqMqiJgk7IcSUP+Ys9kbvRFXCu+29bekThv2YH7/RbFIMrms/SkkEfGRBFda/2MnS28sbNBfbDtkEYFMXdzlLnGwOWJ223yWrNwapCkJoc16OlQqKT9IHbQJ+n3U0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707412656; c=relaxed/simple;
-	bh=HmO8BJAxHzacI5yK10Y9+ofU0L21g/VbhUyc1S5/3jg=;
+	s=arc-20240116; t=1707412657; c=relaxed/simple;
+	bh=Fg8HFd6qXwgrRuKizTmdQy4zN2vPEsdI81OkVtdnatg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gQzI0p83QScPd7J5kLD4xkhEu63XhVUXgVHo4sJUS0pvCB/CwljWyCKHSHoS2jSb+aF0e3La8s3ZfFgYPypV3Ixze56RQBhp0/ZuIVSV9kCwn4Q0oPMYjCLM84qZqqZtLZsRQL9bgpk8XEjDH0LoLTmh3HSuKHF36mR63XKr81Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fp0c+kZE; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=qZ5TFir34wpbmLgSaM2ymKOzrUcJJBMJtpjVpabUzMqQNKqNwAX4+H9QA1sMPksjDJEhgjUELJB9u6CYwxoKVOAejP5PD2qKwBjbTpvyuFANe+3/joESmRwMTdDhLFxpmT8Wiluc8KzR9C/y2VBkNAUqqPyJ5eHdWZR8VcQqYmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=inMS7K2y; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fp0c+kZE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="inMS7K2y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1707412655; x=1738948655;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HmO8BJAxHzacI5yK10Y9+ofU0L21g/VbhUyc1S5/3jg=;
-  b=fp0c+kZEowmfNUNS9/4Jd/LUh9xAaXlw14STOlzb+SRcCIOOvuGQKgVN
-   Tl1IAVql6UUkNjrnpTpSqfpuGsXAyahmB4fv3ON7FPXAmY4FfDMqpA+o1
-   NrQ/doaAcVS6Rga7GO31fwqC9dSBdn5gDY2hIiqEWWc2QYIFozv7kyrbx
-   qNT6vkLPRaGVkjpCknFgD6TVi0/AYfFUAnuqY69fdHakF6bscpjWhc6iQ
-   3g409BqEu3b4UoZ2a5GvaXprWIVtzzl3QDDhboWZDvAd5CsK7sda90P/y
-   VCMmpDgGpohWDOLfq3KyzwTu7oKV3T5toJTg/aeXA8zLYpQcsWQmAvfPb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1565672"
+  bh=Fg8HFd6qXwgrRuKizTmdQy4zN2vPEsdI81OkVtdnatg=;
+  b=inMS7K2y4NKgs4TmUojWeFTQYcLpmiR0bk/Ch8CkMFrp8ThyJLBhG8NE
+   drYRM3C2w/TpbG/USSMEVBJ2f3zNQH1PRIIHqB2qwdl/nd2GDvChKrOyv
+   ygNJw22cFBClhc7WSuvo5xh8R6u5Zfjl+kF+r7cZKyVihTH1L8nusioYf
+   7lXA6jv12BHgu56hpw866Qz9lpxZcasDW81QeGm+YLuLIjHQ8jTbfR/s1
+   z77qdPPkdELhPYUxxHuaomDsoF5VOwHbC4RCaG+8zvBhxCbUPG1FIIYOP
+   +ahV7KS06Ul2kEsN6s1KNzJRamJ6/OFWe36dpyegOdBpHyvYR/iuK+teM
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1565667"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1565672"
+   d="scan'208";a="1565667"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:17:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934195372"
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934195371"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934195372"
+   d="scan'208";a="934195371"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 09:17:30 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 09:17:29 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 1BCD013C5; Thu,  8 Feb 2024 18:59:41 +0200 (EET)
+	id 5B2E6147B; Thu,  8 Feb 2024 18:59:41 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	devicetree@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 02/15] auxdisplay: linedisp: Free allocated resources in ->release()
-Date: Thu,  8 Feb 2024 18:58:45 +0200
-Message-ID: <20240208165937.2221193-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 07/15] auxdisplay: linedisp: Group line display drivers together
+Date: Thu,  8 Feb 2024 18:58:50 +0200
+Message-ID: <20240208165937.2221193-8-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240208165937.2221193-1-andriy.shevchenko@linux.intel.com>
 References: <20240208165937.2221193-1-andriy.shevchenko@linux.intel.com>
@@ -67,44 +67,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While there is no issue currently with the resources allocation,
-the code may still be made more robust by deallocating message
-in the ->release() callback.
+For better usability group the line display drivers together in Kconfig
+and Makefile.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/line-display.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/auxdisplay/Kconfig  | 32 ++++++++++++++++----------------
+ drivers/auxdisplay/Makefile | 12 ++++++------
+ 2 files changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
-index 03e7f104aa1a..310e9bfb41ae 100644
---- a/drivers/auxdisplay/line-display.c
-+++ b/drivers/auxdisplay/line-display.c
-@@ -188,8 +188,16 @@ static struct attribute *linedisp_attrs[] = {
- };
- ATTRIBUTE_GROUPS(linedisp);
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index d944d5298eca..a34a9a52158f 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -25,12 +25,6 @@ config CHARLCD
+ 	  This is some character LCD core interface that multiple drivers can
+ 	  use.
  
-+static void linedisp_release(struct device *dev)
-+{
-+	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
-+
-+	kfree(linedisp->message);
-+}
-+
- static const struct device_type linedisp_type = {
- 	.groups	= linedisp_groups,
-+	.release = linedisp_release,
- };
+-config LINEDISP
+-	tristate "Character line display core support" if COMPILE_TEST
+-	help
+-	  This is the core support for single-line character displays, to be
+-	  selected by drivers that use it.
+-
+ config HD44780_COMMON
+ 	tristate "Common functions for HD44780 (and compatibles) LCD displays" if COMPILE_TEST
+ 	select CHARLCD
+@@ -52,6 +46,16 @@ config HD44780
+ 	  kernel and started at boot.
+ 	  If you don't understand what all this is about, say N.
  
- /**
-@@ -253,7 +261,6 @@ void linedisp_unregister(struct linedisp *linedisp)
- {
- 	device_del(&linedisp->dev);
- 	del_timer_sync(&linedisp->timer);
--	kfree(linedisp->message);
- 	put_device(&linedisp->dev);
- }
- EXPORT_SYMBOL_GPL(linedisp_unregister);
++config LCD2S
++	tristate "lcd2s 20x4 character display over I2C console"
++	depends on I2C
++	select CHARLCD
++	help
++	  This is a driver that lets you use the lcd2s 20x4 character display
++	  from Modtronix engineering as a console output device. The display
++	  is a simple single color character display. You have to connect it
++	  to an I2C bus.
++
+ config KS0108
+ 	tristate "KS0108 LCD Controller"
+ 	depends on PARPORT_PC
+@@ -153,6 +157,12 @@ config CFAG12864B_RATE
+ 	  If you compile this as a module, you can still override this
+ 	  value using the module parameters.
+ 
++config LINEDISP
++	tristate "Character line display core support" if COMPILE_TEST
++	help
++	  This is the core support for single-line character displays, to be
++	  selected by drivers that use it.
++
+ config IMG_ASCII_LCD
+ 	tristate "Imagination Technologies ASCII LCD Display"
+ 	depends on HAS_IOMEM
+@@ -177,16 +187,6 @@ config HT16K33
+ 	  Say yes here to add support for Holtek HT16K33, RAM mapping 16*8
+ 	  LED controller driver with keyscan.
+ 
+-config LCD2S
+-	tristate "lcd2s 20x4 character display over I2C console"
+-	depends on I2C
+-	select CHARLCD
+-	help
+-	  This is a driver that lets you use the lcd2s 20x4 character display
+-	  from Modtronix engineering as a console output device. The display
+-	  is a simple single color character display. You have to connect it
+-	  to an I2C bus.
+-
+ config ARM_CHARLCD
+ 	bool "ARM Ltd. Character LCD Driver"
+ 	depends on PLAT_VERSATILE
+diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
+index 6968ed4d3f0a..43bad850481c 100644
+--- a/drivers/auxdisplay/Makefile
++++ b/drivers/auxdisplay/Makefile
+@@ -5,12 +5,12 @@
+ 
+ obj-$(CONFIG_CHARLCD)		+= charlcd.o
+ obj-$(CONFIG_HD44780_COMMON)	+= hd44780_common.o
+-obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
++obj-$(CONFIG_HD44780)		+= hd44780.o
++obj-$(CONFIG_LCD2S)		+= lcd2s.o
+ obj-$(CONFIG_KS0108)		+= ks0108.o
+ obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
+-obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
+-obj-$(CONFIG_HD44780)		+= hd44780.o
+-obj-$(CONFIG_HT16K33)		+= ht16k33.o
+-obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
+-obj-$(CONFIG_LCD2S)		+= lcd2s.o
+ obj-$(CONFIG_LINEDISP)		+= line-display.o
++obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
++obj-$(CONFIG_HT16K33)		+= ht16k33.o
++obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
++obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
 -- 
 2.43.0.rc1.1.gbec44491f096
 
