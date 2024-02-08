@@ -1,64 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB1B36AE1;
-	Thu,  8 Feb 2024 18:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2ED33CE2;
+	Thu,  8 Feb 2024 18:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707418177; cv=none; b=Yt4z4mqEwKZOENMev72htaE3ycuKJaGyZqz+t6rqM1hufnEE1dCDPW8vHhAEjXirdN8TQ0eJINkLoJQoPBCmJ86ieIYEe0V3q4n0GAFnINUICT0u55021fpLlXnTTKTo89q8Xwbg7chikdZhC+rfdWAeKfhK5NS/yq6ViJK0QTE=
+	t=1707418177; cv=none; b=lZs1+GU+9RR3Zp4ow/aGk89VleBJMwWwNMPw9DnEaJZSJAnFy9TLXkrdDkcX3we5Pk5vZPfrvwxR+tHGv8dea4yGlt+Oma/iNqG3A2PSn8b+eU/OocZvcql+BFUtuHmAvxgJZtB06iEIEKbwGQJAxdWoTO9eB/GgDIUFLxdJi+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707418177; c=relaxed/simple;
-	bh=xwQv8uq+9wANm7Kp3tnfC+qRvpRyTa5vpEt37Og3eA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NmtedN/pFCbYVpQKWQkl/hlMakijeAK80rLrX9goH1Deu7FXp6DdqpGY5fb2c1KeL+f4iaRU5N72dD54qHflPWd8K3yUPxQnQt3yGps4D4SRbdzwxQTJIBOyP9br82FN3xxKP+x9hg+ghXY0OsByMsS7xuF8krg77D3WSwntwpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPpVkpOw; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=6kaHeiBxh7tXa+wyC1kCcD7MhkDErN5w3UH4NjBdGts=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AqZYheoC5AmwnWlRO6bn35p1sdLWmCsiBSFneJRbZpEyN27OEBvIOgirL2UwemqsYITZ220JoCEotMpYUu+FLSX0aT9XcxuXGCdmPH4em9QOYSSzX42t8wV+NChMh7VmiZ1E6D4dIBWQ1SmreKXaCSzeMYwe3LJ5HQScXqGP4/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=G1otBWj1; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPpVkpOw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707418175; x=1738954175;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xwQv8uq+9wANm7Kp3tnfC+qRvpRyTa5vpEt37Og3eA0=;
-  b=KPpVkpOwmpcbJaEuStBBJXt9pcDyw0Yp21ENfTOk3WWVq0SuxU1K9G0+
-   694OQtFllPE+ThKBqsS+dqOuZGZTi+Nt1s+hOVi/yCA5ZXjj0s4Xd+dJo
-   /8gpsSpXXGmOY0ONR+q1WypL+1mJO9J70UrMvsWMzjj1bhND6+uk3WfHU
-   ur2qQwGbR3JxHg567nzcRNqdwb3jjgNg1tIjDHNW+FBorwuLoSWtnkW8I
-   oqwVFS/PbVyZoSs1O/uY0CaggrCsegxSf2OchqwGKBwVFHcHFfxdx5eH2
-   455QXbR7NIGFQE3Q09iWlV1GzxyrvuA/y/wcZL09mEHoXwDvVRb6xIJpT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186141"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1186141"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:49:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215540"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934215540"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BBA6112FC; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 14/15] dt-bindings: auxdisplay: Add Maxim MAX6958/6959
-Date: Thu,  8 Feb 2024 20:48:12 +0200
-Message-ID: <20240208184919.2224986-15-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
-References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="G1otBWj1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1707418164;
+	bh=6kaHeiBxh7tXa+wyC1kCcD7MhkDErN5w3UH4NjBdGts=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=G1otBWj15OtcJQ7enAUe6jy4+Hmw1j+1RwF/HjVZzbrmTo0Xq8YXGs0hrk2qusl1d
+	 eijVgRfCPmEmMkGdLStUirsrDOsQmxW/Vfu7q9zBCAFzVJhw85FoIlYd4T1LBmOIGy
+	 AJ7zW/g2Rt4d1ND4RQ50x/gK+b6zeCeinDap1WQDbFiItLb5CYncWggvKtcuuQp4fM
+	 LLzxPROqJhaQezmxcMN5SI6J2fdnGw88vf+f/UxShR7g5ODOvE8FjXmQHReKIcaIMH
+	 8L15rahH+uIOjMvUoX/ApTNmMuln8Ju+P7uQzH2v/mh1UushfEwCFZqtPgbFAqH9ST
+	 vz4YFgZmmOK/A==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TW5ch438gzY5N;
+	Thu,  8 Feb 2024 13:49:24 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dave Chinner <david@fromorbit.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	linux-s390@vger.kernel.org,
+	Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>
+Subject: [PATCH v4 05/12] virtio: Treat alloc_dax() -EOPNOTSUPP failure as non-fatal
+Date: Thu,  8 Feb 2024 13:49:06 -0500
+Message-Id: <20240208184913.484340-6-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
+References: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,55 +66,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add initial device tree documentation for Maxim MAX6958/6959.
+In preparation for checking whether the architecture has data cache
+aliasing within alloc_dax(), modify the error handling of virtio
+virtio_fs_setup_dax() to treat alloc_dax() -EOPNOTSUPP failure as
+non-fatal.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+For the transition, consider that alloc_dax() returning NULL is the
+same as returning -EOPNOTSUPP.
+
+Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-xfs@vger.kernel.org
+Cc: dm-devel@lists.linux.dev
+Cc: nvdimm@lists.linux.dev
 ---
- .../bindings/auxdisplay/maxim,max6959.yaml    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
+ fs/fuse/virtio_fs.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml b/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
-new file mode 100644
-index 000000000000..49ce26176797
---- /dev/null
-+++ b/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/auxdisplay/maxim,max6959.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index 5f1be1da92ce..621b1bca2d55 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -16,6 +16,7 @@
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
+ #include <linux/highmem.h>
++#include <linux/cleanup.h>
+ #include <linux/uio.h>
+ #include "fuse_i.h"
+ 
+@@ -795,8 +796,11 @@ static void virtio_fs_cleanup_dax(void *data)
+ 	put_dax(dax_dev);
+ }
+ 
++DEFINE_FREE(cleanup_dax, struct dax_dev *, if (!IS_ERR_OR_NULL(_T)) virtio_fs_cleanup_dax(_T))
 +
-+title: MAX6958/6959 7-segment LED display controller with keyscan
+ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+ {
++	struct dax_device *dax_dev __free(cleanup_dax) = NULL;
+ 	struct virtio_shm_region cache_reg;
+ 	struct dev_pagemap *pgmap;
+ 	bool have_cache;
+@@ -804,6 +808,12 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+ 	if (!IS_ENABLED(CONFIG_FUSE_DAX))
+ 		return 0;
+ 
++	dax_dev = alloc_dax(fs, &virtio_fs_dax_ops);
++	if (IS_ERR_OR_NULL(dax_dev)) {
++		int rc = IS_ERR(dax_dev) ? PTR_ERR(dax_dev) : -EOPNOTSUPP;
++		return rc == -EOPNOTSUPP ? 0 : rc;
++	}
 +
-+maintainers:
-+  - Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    const: maxim,max6959
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            max6959: max6959@38 {
-+                    compatible = "maxim,max6959";
-+                    reg = <0x38>;
-+            };
-+      };
+ 	/* Get cache region */
+ 	have_cache = virtio_get_shm_region(vdev, &cache_reg,
+ 					   (u8)VIRTIO_FS_SHMCAP_ID_CACHE);
+@@ -849,10 +859,7 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+ 	dev_dbg(&vdev->dev, "%s: window kaddr 0x%px phys_addr 0x%llx len 0x%llx\n",
+ 		__func__, fs->window_kaddr, cache_reg.addr, cache_reg.len);
+ 
+-	fs->dax_dev = alloc_dax(fs, &virtio_fs_dax_ops);
+-	if (IS_ERR(fs->dax_dev))
+-		return PTR_ERR(fs->dax_dev);
+-
++	fs->dax_dev = no_free_ptr(dax_dev);
+ 	return devm_add_action_or_reset(&vdev->dev, virtio_fs_cleanup_dax,
+ 					fs->dax_dev);
+ }
 -- 
-2.43.0.rc1.1.gbec44491f096
+2.39.2
 
