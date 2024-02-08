@@ -1,91 +1,226 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9661DFCE;
-	Thu,  8 Feb 2024 10:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798F61DFC4
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707388568; cv=none; b=KPUI0eeiqlew9JJMrnGUJU66NeWzhuLaqHpBsDnnS1no7Jb4X5ErrPkhPfQNcH97dyvcroempNULNrqFcAx2kShkdinss8jgn4mUQ7zJIi0RxtNutqq3CB7F1Zqb+FDGP+JUn2E03fLyGXOfKap7JS+brDl2KSbMVCkRFBrbvaE=
+	t=1707388598; cv=none; b=jT5HCH6SHE23qXCuxDpkOxz0GADy1jo41mYEorQHxHqdlCP2vESZVF07cdcVvoHXXedeB0De//EzcPbMocwcUDbx8LwP46VutPy+0tksJYgXcY+Y/52H4t2HGCJ8YzmoPGwVnnWhqQGyms92SMDfFIbtqX+jgGPhN8Z4JDMRVso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707388568; c=relaxed/simple;
-	bh=0zNRXF4ORDisC/Kb4dNM9tOYTW/WUJ5hS2ia3vIjIlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UmQIZRcBa9QUxQec2qJxY+JtCpah2sAQ5i5wo4agYhzYu2O9FVNo/L9mc/E7zhXNmi52+7eGvEL9Up+xoLRYM+DfokWti9xAlZZ5iyg+uBoo+Zbi7ZeVzLn5VTzIUPOqw4OllOxoch1ado9NWwIl26QIuSCtZstvX1vYAcj9nZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=idwWE5Wt; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="idwWE5Wt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707388564;
-	bh=0zNRXF4ORDisC/Kb4dNM9tOYTW/WUJ5hS2ia3vIjIlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=idwWE5WtYmYgXTKLjEZvSDEqRvpwz7lGhOsDQ0QGI5H/q3KXfTTjW7fDvfAqUgLYP
-	 Rv5GqSJ1kjBSyDcU9ae9hrB9ur2m+jwtW/O8lywICCXxpWBsoa9iH3LYphNzHFh2jz
-	 +bVNSJHzM8GBALLauuNwAKBgoPOyvMNcHP6167FcevXaDdCn3G89eodkwg6ocdM/y8
-	 gwVSK3W38QnLwt+tQr0cRJYxtJ5GqO2p8mc+JmtvFg/kbeJJC4R+u3XY41fZSlbheD
-	 qPsrgG4CB11CC/izWa80apElV6jPO8JDK6e+kWWNaGSU4fBV8GRngSbRwohBYRNtja
-	 2PF3Zs4PCUxXg==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sebastianfricke)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D5210378134F;
-	Thu,  8 Feb 2024 10:36:03 +0000 (UTC)
-Date: Thu, 8 Feb 2024 11:36:02 +0100
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: "jackson.lee" <jackson.lee@chipsnmedia.com>
-Cc: mchehab@kernel.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nas.chung@chipsnmedia.com,
-	lafley.kim@chipsnmedia.com, b-brnich@ti.com
-Subject: Re: [RESEND PATCH v0 0/5] wave5 codec driver
-Message-ID: <20240208103602.bnkhvoy5jnzns44i@basti-XPS-13-9310>
-References: <20240131013046.15687-1-jackson.lee@chipsnmedia.com>
+	s=arc-20240116; t=1707388598; c=relaxed/simple;
+	bh=HEbzkWf7E48tqxLX+5DXDAgO+/sJmFhalyk/7wcrN/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zbbdl8Gci5iBdtTnbF5UQKde0ieIz/syM7m6OPpGmOM5JLGnjf1WewtqBx9IjHSo4khP4Zzjlwb3qqaMon5gfxYtAPiXik8jLNL66Dipy02tL9UwY3GFDqW1Ot8q2sVhycHslYdgz4UVHjc3N+HsnKT1QWOOv+IOZc9I5b9SbaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 418AVCnJ023148;
+	Thu, 8 Feb 2024 04:31:12 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 418AVBGq023147;
+	Thu, 8 Feb 2024 04:31:11 -0600
+Date: Thu, 8 Feb 2024 04:31:11 -0600
+From: "Dr. Greg" <dg@enjellic.com>
+To: "Daniel P. Berrang??" <berrange@redhat.com>
+Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Nakajima, Jun" <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
+Message-ID: <20240208103111.GA22549@wind.enjellic.com>
+Reply-To: "Dr. Greg" <dg@enjellic.com>
+References: <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com> <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com> <20240206011247.GA29224@wind.enjellic.com> <ZcHoKUElwXGPzrWb@redhat.com> <20240206120445.GA1247@wind.enjellic.com> <ZcItU5FKlIVEEVte@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240131013046.15687-1-jackson.lee@chipsnmedia.com>
+In-Reply-To: <ZcItU5FKlIVEEVte@redhat.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 08 Feb 2024 04:31:12 -0600 (CST)
 
-Hey Jackson,
+On Tue, Feb 06, 2024 at 01:00:03PM +0000, Daniel P. Berrang?? wrote:
 
-On 31.01.2024 10:30, jackson.lee wrote:
->The wave5 codec driver is a stateful encoder/decoder.
+Good morning.
 
-You don't have to re introduce the driver here.
+> On Tue, Feb 06, 2024 at 06:04:45AM -0600, Dr. Greg wrote:
+> > On Tue, Feb 06, 2024 at 08:04:57AM +0000, Daniel P. Berrang?? wrote:
+> > 
+> > Good morning to everyone.
+> > 
+> > > On Mon, Feb 05, 2024 at 07:12:47PM -0600, Dr. Greg wrote:
+> > > > 
+> > > > Actually, I now believe there is clear evidence that the problem is
+> > > > indeed Intel specific.  In light of our testing, it will be
+> > > > interesting to see what your 'AR' returns with respect to an official
+> > > > response from Intel engineering on this issue.
+> > > > 
+> > > > One of the very bright young engineers collaborating on Quixote, who
+> > > > has been following this conversation, took it upon himself to do some
+> > > > very methodical engineering analysis on this issue.  I'm the messenger
+> > > > but this is very much his work product.
+> > > > 
+> > > > Executive summary is as follows:
+> > > > 
+> > > > - No RDRAND depletion failures were observable with either the Intel
+> > > >   or AMD hardware that was load tested.
+> > > > 
+> > > > - RDSEED depletion is an Intel specific issue, AMD's RDSEED
+> > > >   implementation could not be provoked into failure.
+> > 
+> > > My colleague ran a multithread parallel stress test program on his
+> > > 16core/2HT AMD Ryzen (Zen4 uarch) and saw a 80% failure rate in
+> > > RDSEED.
+> > 
+> > Interesting datapoint, thanks for forwarding it along, so the issue
+> > shows up on at least some AMD platforms as well.
+> > 
+> > On the 18 core/socket Intel Skylake platform, the parallelized
+> > depletion test forces RDSEED success rates down to around 2%.  It
+> > would appear that your tests suggest that the AMD platform fairs
+> > better than the Intel platform.
 
->The following patches is for supporting yuv422 inpuy format, supporting
->runtime suspend/resume feature and extra things.
+> Yes, given the speed of the AMD RDRAND/RDSEED ops, compared to my
+> Intel test platforms, their DRBG looks better able to keep up with
+> the demand for bits.
 
-Could you provide some test scores in your next patch version?
-Interesting would be your score on V4L2-compliance and also the fluster
-score for the decoder.
+We now believe the observed resiliency of AMD's RNG infrastructure
+comes down to the fact that the completion times of their RNG
+instructions are significantly slower than Intel's.
 
-Greetings,
-Sebastian
->
->jackson.lee (5):
->  wave5 : Support yuv422 input format for encoder.
->  wave5: Support to prepend sps/pps to IDR frame.
->  wave5 : Support runtime suspend/resume.
->  wave5: Use the bitstream buffer size from host.
->  wave5 : Fixed the wrong buffer size formula.
->
-> .../platform/chips-media/wave5/wave5-hw.c     |  11 +-
-> .../chips-media/wave5/wave5-vpu-dec.c         |  86 ++++------
-> .../chips-media/wave5/wave5-vpu-enc.c         | 159 +++++++++++++++---
-> .../platform/chips-media/wave5/wave5-vpu.c    |  68 ++++++++
-> .../platform/chips-media/wave5/wave5-vpuapi.c |   7 +
-> .../platform/chips-media/wave5/wave5-vpuapi.h |   1 +
-> .../media/platform/chips-media/wave5/wave5.h  |   3 +
-> 7 files changed, 255 insertions(+), 80 deletions(-)
->
->-- 
->2.43.0
->
->
+SkyLake and KabyLake instruction completion times are documented at
+463 clock cycles, regardless of operand size.
+
+AMD Ryzen documents variable completion times based on operand size.
+16 and 32 bit transfers complete in 1200 clock cycles with 64 bit
+requests completing in 2500 clock cycles.
+
+Given that Jason's test program was issueing 64-bit RNG requests, the
+AMD platforms are going to be approximately 5.4 times slower than
+Intel platforms, provided the results are corrected for CPU clock
+rates.
+
+AMD's entropy source is execution jitter time over a bank of inverter
+based ring oscillors, presumably sampled by a constant clock rate
+sampler.  Slower instruction retirement times consumes less of the
+constant rate entropy production.
+
+Intel uses thermal/quantum noise across a diode junction retrieved by
+a self-clocked sampler.  Faster instruction retirement translates into
+increased bandwidth demands on the sampler.
+
+> > Of course, the other variable may be how the parallelized stress test
+> > is conducted.  If you would like to share your implementation source
+> > we could give it a twirl on the systems we have access to.
+> 
+> It is just Jason's earlier test program, but moved into one thread
+> for each core....
+> 
+> $ cat cpurngstress.c
+> #include <stdio.h>
+> #include <immintrin.h>
+> #include <pthread.h>
+> #include <unistd.h>
+> 
+> /*
+>  * Gives about 25 seconds walllock time on my Alderlake CPU
+>  *
+>  * Probably want to reduce this x10, or possibly even x100
+>  * on AMD due to much slower ops.
+>  */
+> #define MAX_ITER 10000000
+> 
+> #define MAX_CPUS 4096
+> 
+> void *doit(void *f) {
+>     unsigned long long rand;
+>     unsigned int i, success_rand = 0, success_seed = 0;
+> 
+>     for (i = 0; i < MAX_ITER; ++i) {
+>         success_seed += !!_rdseed64_step(&rand);
+>     }
+>     for (i = 0; i < MAX_ITER; ++i) {
+>         success_rand += !!_rdrand64_step(&rand);
+>     }
+> 
+>     fprintf(stderr,
+> 	    "RDRAND: %.2f%%, RDSEED: %.2f%%\n",
+> 	    success_rand * 100.0 / MAX_ITER,
+> 	    success_seed * 100.0 / MAX_ITER);
+> 
+>     return NULL;
+> }
+> 
+> 
+> int main(int argc, char *argv[])
+> {
+>     pthread_t th[MAX_CPUS];
+>     int nproc = sysconf(_SC_NPROCESSORS_ONLN);
+>     if (nproc > MAX_CPUS) {
+>       nproc = MAX_CPUS;
+>     }
+>     fprintf(stderr, "Stressing RDRAND/RDSEED across %d CPUs\n", nproc);
+> 
+>     for (int i = 0 ; i < nproc;i ++) {
+>       pthread_create(&th[i], NULL, doit,NULL);
+>     }
+> 
+>     for (int i = 0 ; i < nproc;i ++) {
+>       pthread_join(th[i], NULL);
+>     }
+> 
+>     return 0;
+> }
+> 
+> $ gcc -march=native -o cpurngstress cpurngstress.c
+
+Thanks for forwarding your test code along, we've added it to our
+tests for comparison.
+
+> > If there is the possibility of over-harvesting randomness, why not
+> > design the implementations to be clamped at some per core value such
+> > as a megabit/second.  In the case of the documented RDSEED generation
+> > rates, that would allow the servicing of 3222 cores, if my math at
+> > 0530 in the morning is correct.
+> > 
+> > Would a core need more than 128 kilobytes of randomness, ie. one
+> > second of output, to effectively seed a random number generator?
+> > 
+> > A cynical conclusion would suggest engineering acquiesing to marketing
+> > demands... :-)
+
+> My assumption is that it was simply easier to not implement a rate
+> limiting feature at the CPU level and punt the starvation problem to
+> software :-)
+
+Could be, it does seem unlikely that random number generation speed
+would be seen as fertile ground for marketing types.
+
+Punting to software is certainly rationale, perhaps problematic in a
+CoCo environment depending on the definition of 'astronomical'.  See
+my response to Borislav who was kind enough to respond to all of this.
+
+> With regards,
+> Daniel
+
+Have a good day.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
