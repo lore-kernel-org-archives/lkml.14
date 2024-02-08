@@ -1,180 +1,198 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5897B3DB
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 16:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB54F7E79A;
+	Thu,  8 Feb 2024 16:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707408600; cv=none; b=m/rMBBAxEncvzXgbJxHhYM8DKWcOW4hJxKSKVshcvfEM7QRw6Z5GoNE9QgWrp4g7S5yDU3nKb/ENZ8jNyg+/7F444r2WK8NF+s9q9mxpb8ceq+6E4M+/jVBN5oh8GZewDRNLp6bXtrT77SCoc8yJWlp9+rkgaQAJgewqpmPipBg=
+	t=1707408604; cv=none; b=DrSu3Tj68WH/Mb3uHeg6sGLjz9CzhbojpZbXE7BuVyFovZJWpAVbP965P+G1AYTq6zDC1kDHYX9GNpeEljGvQz/p81YRgT/4DkXf+YPCCDGPQ3eBc0wf47zHDErd4FRB83q/pRwCvAlOyIH4do5cEVPUIstN/cdqXAEz/81ez7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707408600; c=relaxed/simple;
-	bh=8b6yhfgHTrK7SL+o2yqwRJqBoR4vo8TvUDQmtT6mkeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S5QO0bxQ0K/m1fU8r3RuvZtT6+DLHHJeB6VkcbzZfuKx6BL8Wzo/Zdd5NQzaLYbnPSsR0MUQP9J/XPdjHGegtY007xGIiz09JzaByNiBxUhHoVQPvggn62pjrKuvl7dwINitUBpW4iJUPyRpFYsao2mdQqJ7LZJu/4I4AQKqRuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UAsEs6Rv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UAsEs6Rv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707408597;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zDmR4tHnXMzdgyQmi3H+OCa7thhQCaZGsxtXTelmwuA=;
-	b=UAsEs6RvmOhc5c8mX8Fzi9OFB2xqpI3X8bYQAWT94LIW3xb0APi/cDqoSPZUtbYG117L1a
-	rRUT+OQmEBOP49whnV5z6iOio7YK5/EEpXfmh2p4FBHutWKt7bcOBi8vF8NfHSug0GKcrW
-	1zlKvfpgdxZK/nZ04BOLORe1CanLRb0=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-VtkL5YNUNA-n8Y1SzAEjrA-1; Thu, 08 Feb 2024 11:09:56 -0500
-X-MC-Unique: VtkL5YNUNA-n8Y1SzAEjrA-1
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363c5eca20eso13094295ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 08:09:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707408595; x=1708013395;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zDmR4tHnXMzdgyQmi3H+OCa7thhQCaZGsxtXTelmwuA=;
-        b=TnKchytArHA8Tw3uugYKEXpHwclI27S+xvv5nUMB2JBU6i0oPb+Jn48QZokGAw9sgb
-         n9iWGd2MpBfzM+HGpMD5Fq/6myUElp7k62C209muDxDzIzTJHID1IMaCpmGdLkmGnTzq
-         Ru6nP691fk9pxVdXp8clTyO9SjqPs27xFgfzcxGYoBbDBv5X5X4csL2EdSyN7otoy1rA
-         7EoPHYhpXGTzCEzmkyk+5P+VUJN764pwLcVpXmA4KJXG3r9QmTciHHFDNTVnem9VHE7a
-         vmsE6RpcfwV39aIgD20jf1g1jxsJPzMft9egesamuBqwFsSANcocCeV5/XxV7QR53Iq/
-         STNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfonpe+LpDItTgbyELeMG9NYhd1U2hjM12aQ+jkXb/HAVjmR4MFcVzkV2Y65ueghCF3SV4Qvsowg7ZMbQyX7NlewH0n1o5NqZ7QbAH
-X-Gm-Message-State: AOJu0YyvGgnun/uF6y7P7n3m2qHjIIItVysWOMK/oqc5iqIT96TJ2VFh
-	ubJo/vEujpi3SJfrdkMxeT8lTWuZJ+Qg9Inyo9Al2rbbAKAG8CaGspyZNg+WT8VBC6JlG3GE792
-	mdnjVO74kIHrrLqz8mtd6vyPNkTxmvnlWo7ufzLfDarn8PG411SgCzOUqrR1ebg==
-X-Received: by 2002:a92:603:0:b0:363:c919:2713 with SMTP id x3-20020a920603000000b00363c9192713mr8586148ilg.22.1707408595232;
-        Thu, 08 Feb 2024 08:09:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEpIxBR8eMWhkHq5KoRpU8/4mjUiBShDenZIpFCN7Unh14JXNhOvvFTsgG1RPRhQA12D8cNCg==
-X-Received: by 2002:a92:603:0:b0:363:c919:2713 with SMTP id x3-20020a920603000000b00363c9192713mr8586101ilg.22.1707408594914;
-        Thu, 08 Feb 2024 08:09:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZJoqj5Isq+p556FX3b/py3/DV7OopvrH+GGYskZGGSMob/9P2Mu2LHPFEL52ws78iXNOl6RUPlrkzhAAn/aFSZL6OmE8L3pLVvSD+oAR/KOaLiHISuyPHnOItQU/cbdoR+jk/hK8apYxgEjxusDUcYpVkKwd57wUuN9S9io4ySpzkWjZjpjxhRIrEtgZrU33QoX6EV/wzXc9am3aim8QeWmGMu/jtgd38jobbIrWOyARM0N7vgNi4skcAy/grRUGUh1hjewjYobq1FCDI1vxJNto8CyP/xmrw5i1Mc2HZ53PsGZLWM0an+QFpksmOzI8hd/Ud7dOG0r0kRdVW+HYDsHvYN6sqn+9NUQBvqacYSbDjHu1O22h5+GENH7XAR6BSvxNU7LPR5ibcT9RDmeC96QmZK4Acr9WrFp+ygfZh9+L5PolCRXdW4USfDz7oOCpgArcwinknJsqtkEf4z9U+Cvz3f2BCi7UDG4jARAkmq3zZ0QJNCg1BUHChIdrcSdZznQqf23m87Yn7q0GtllT9HJWd0AGWiGHSZgGdpMtr/0fSy5XkRApAZYFF09+bzbGR2BciXlZkiGR0kG15v0raYfioSxCsGbsYjaEa/klalbbLGyfgE2HKdA0XVMe29PXhk1M6TLPRqRS/pkOILG5L08g6VeuNWVibeEhsiWmr9bhPaLnF90fABk0E4rmW1IOgJvbktWLXxXFMcm0JS1LFi8LU8lOnlK6Vl4+8kGnoWdJ4aPFPUl9AQejjIyhX+dio2kt0K98ww3hn7GosuVLjN07ZEU75fUglFRMo8xkOQxvbitARxcQU3wa++3M4EF2T2k5o5TSDtxk9x3s=
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id s5-20020a92cc05000000b00363c8e5a1a1sm1077348ilp.44.2024.02.08.08.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 08:09:50 -0800 (PST)
-Date: Thu, 8 Feb 2024 09:09:47 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Ankit Agrawal <ankita@nvidia.com>, Zhi Wang <zhi.wang.linux@gmail.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
- "mst@redhat.com" <mst@redhat.com>, "shameerali.kolothum.thodi@huawei.com"
- <shameerali.kolothum.thodi@huawei.com>, "clg@redhat.com" <clg@redhat.com>,
- "oleksandr@natalenko.name" <oleksandr@natalenko.name>, "K V P,
- Satyanarayana" <satyanarayana.k.v.p@intel.com>, "eric.auger@redhat.com"
- <eric.auger@redhat.com>, "brett.creeley@amd.com" <brett.creeley@amd.com>,
- "horms@kernel.org" <horms@kernel.org>, Rahul Rameshbabu
- <rrameshbabu@nvidia.com>, Aniket Agashe <aniketa@nvidia.com>, Neo Jia
- <cjia@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, "Tarun Gupta
- (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, "Currid,
- Andy" <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, "John
- Hubbard" <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>, "Anuj
- Aggarwal (SW-GPU)" <anuaggarwal@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v17 3/3] vfio/nvgrace-gpu: Add vfio pci variant module
- for grace hopper
-Message-ID: <20240208090947.1254e72c.alex.williamson@redhat.com>
-In-Reply-To: <BN9PR11MB527640ADE99D92210977E7CA8C442@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240205230123.18981-1-ankita@nvidia.com>
-	<20240205230123.18981-4-ankita@nvidia.com>
-	<20240208003210.000078ba.zhi.wang.linux@gmail.com>
-	<20240207162740.1d713cf0.alex.williamson@redhat.com>
-	<SA1PR12MB7199A9470EC2562C5BCC2FAFB0442@SA1PR12MB7199.namprd12.prod.outlook.com>
-	<BN9PR11MB527640ADE99D92210977E7CA8C442@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1707408604; c=relaxed/simple;
+	bh=S1sd8HbbpUd9FjSYOKtZgb/F3IO/C1wLRtiXfPZIx/s=;
+	h=From:To:Cc:In-Reply-To:References:Date:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=X96Yusq6uCW4gxzaxaq/sGtcq1qvldJZ8+Xkn5uGYOqoE4oMcKcLJKKTLNgLTF7v2lpEaqtQ7JkhuvO8QD86nvISP7I6QDWn4Vk+G+rBqKUwriEI0o0eLHMfBf72jkkc3MydOflsFvKsamrx3wKja9d09pEi0x9dIpseaM6TOxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:56100)
+	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rY6Q0-003VkL-8b; Thu, 08 Feb 2024 08:34:28 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:56436 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rY6Pz-001plP-2z; Thu, 08 Feb 2024 08:34:27 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,  Andy Lutomirski
+ <luto@amacapital.net>,  Tycho Andersen <tycho@tycho.pizza>,
+  linux-api@vger.kernel.org,  linux-kernel@vger.kernel.org
+In-Reply-To: <20240207114549.GA12697@redhat.com> (Oleg Nesterov's message of
+	"Wed, 7 Feb 2024 12:45:49 +0100")
+References: <20240207114549.GA12697@redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+Date: Thu, 08 Feb 2024 09:33:46 -0600
+Message-ID: <8734u32co5.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-XM-SPF: eid=1rY6Pz-001plP-2z;;;mid=<8734u32co5.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/ZEJ+XOenGhdjrpc2ZjArZXtizBmgdUL0=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa07 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+	*  0.0 T_TooManySym_02 5+ unique symbols in subject
+X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Oleg Nesterov <oleg@redhat.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 582 ms - load_scoreonly_sql: 0.03 (0.0%),
+	signal_user_changed: 10 (1.6%), b_tie_ro: 8 (1.4%), parse: 0.88 (0.2%),
+	 extract_message_metadata: 3.8 (0.7%), get_uri_detail_list: 2.0 (0.3%),
+	 tests_pri_-2000: 3.1 (0.5%), tests_pri_-1000: 2.2 (0.4%),
+	tests_pri_-950: 1.17 (0.2%), tests_pri_-900: 0.90 (0.2%),
+	tests_pri_-90: 231 (39.7%), check_bayes: 229 (39.4%), b_tokenize: 9
+	(1.6%), b_tok_get_all: 8 (1.4%), b_comp_prob: 2.5 (0.4%),
+	b_tok_touch_all: 206 (35.4%), b_finish: 0.87 (0.1%), tests_pri_0: 313
+	(53.8%), check_dkim_signature: 0.56 (0.1%), check_dkim_adsp: 2.9
+	(0.5%), poll_dns_idle: 1.15 (0.2%), tests_pri_10: 1.99 (0.3%),
+	tests_pri_500: 7 (1.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] pidfd: change pidfd_send_signal() to respect PIDFD_THREAD
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 
-On Thu, 8 Feb 2024 07:21:40 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+Oleg Nesterov <oleg@redhat.com> writes:
 
-> > From: Ankit Agrawal <ankita@nvidia.com>
-> > Sent: Thursday, February 8, 2024 3:13 PM =20
-> > >> > +=C2=A0=C2=A0=C2=A0 * Determine how many bytes to be actually read=
- from the
-> > >> > device memory.
-> > >> > +=C2=A0=C2=A0=C2=A0 * Read request beyond the actual device memory=
- size is
-> > >> > filled with ~0,
-> > >> > +=C2=A0=C2=A0=C2=A0 * while those beyond the actual reported size =
-is skipped.
-> > >> > +=C2=A0=C2=A0=C2=A0 */
-> > >> > +=C2=A0=C2=A0 if (offset >=3D memregion->memlength)
-> > >> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mem_=
-count =3D 0; =20
-> > >>
-> > >> If mem_count =3D=3D 0, going through nvgrace_gpu_map_and_read() is n=
-ot
-> > >> necessary. =20
-> > >
-> > > Harmless, other than the possibly unnecessary call through to
-> > > nvgrace_gpu_map_device_mem().=C2=A0 Maybe both =20
-> > nvgrace_gpu_map_and_read() =20
-> > > and nvgrace_gpu_map_and_write() could conditionally return 0 as their
-> > > first operation when !mem_count.=C2=A0 Thanks,
-> > >
-> > >Alex =20
-> >=20
-> > IMO, this seems like adding too much code to reduce the call length for=
- a
-> > very specific case. If there aren't any strong opinion on this, I'm pla=
-nning to
-> > leave this code as it is. =20
->=20
-> a slight difference. if mem_count=3D=3D0 the result should always succeed
-> no matter nvgrace_gpu_map_device_mem() succeeds or not. Of course
-> if it fails it's already a big problem probably nobody cares about the su=
-btle
-> difference when reading non-exist range.
->=20
-> but regarding to readability it's still clearer:
->=20
-> if (mem_count)
-> 	nvgrace_gpu_map_and_read();
->=20
+> Turn kill_pid_info() into kill_pid_info_type(), this allows to pass any
+> pid_type to group_send_sig_info(), despite its name it should work fine
+> even if type = PIDTYPE_PID.
+>
+> Change pidfd_send_signal() to use PIDTYPE_PID or PIDTYPE_TGID depending
+> on PIDFD_THREAD.
+>
+> While at it kill another TODO comment in pidfd_show_fdinfo(). As Christian
+> expains fdinfo reports f_flags, userspace can already detect PIDFD_THREAD.
+>
 
-The below has better flow imo vs conditionalizing the call to
-map_and_read/write and subsequent error handling, but I don't think
-either adds too much code.  Thanks,
+I have a question here.
 
-Alex
+Why is this based on group_send_sig_info instead of send_sig_info?
 
---- a/drivers/vfio/pci/nvgrace-gpu/main.c
-+++ b/drivers/vfio/pci/nvgrace-gpu/main.c
-@@ -429,6 +429,9 @@ nvgrace_gpu_map_and_read(struct nvgrace_gpu_vfio_pci_co=
-re_device *nvdev,
-        u64 offset =3D *ppos & VFIO_PCI_OFFSET_MASK;
-        int ret;
-=20
-+       if (!mem_count)
-+               return 0;
-+
-        /*
-         * Handle read on the BAR regions. Map to the target device memory
-         * physical address and copy to the request read buffer.
-@@ -547,6 +550,9 @@ nvgrace_gpu_map_and_write(struct nvgrace_gpu_vfio_pci_c=
-ore_device *nvdev,
-        loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
-        int ret;
-=20
-+       if (!mem_count)
-+               return 0;
-+
-        ret =3D nvgrace_gpu_map_device_mem(index, nvdev);
-        if (ret)
-                return ret;
+AKA why does this look like sys_kill instead of sys_tgkill?
 
+In particular I am asking are the intended semantics that the signal is
+sent to a single thread in a thread group and placed in the per thread
+queue, or is the signal sent to the entire thread group and placed
+in the thread group signal queue?
+
+Does the type parameter handle that decision for us now?  If so
+perhaps we should cleanup the helpers so that this easier to
+see when reading the code.
+
+Because honestly right now using group_send_sig_info when
+the intended target of the signal is not the entire thread
+group is very confusing when reading your change.
+
+Eric
+
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  kernel/fork.c   |  2 --
+>  kernel/signal.c | 18 ++++++++++++------
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+>
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index cd61ca87d0e6..47b565598063 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -2051,8 +2051,6 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+>  
+>  	seq_put_decimal_ll(m, "Pid:\t", nr);
+>  
+> -	/* TODO: report PIDFD_THREAD */
+> -
+>  #ifdef CONFIG_PID_NS
+>  	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
+>  	if (nr > 0) {
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index c3fac06937e2..e3edcd784e45 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -47,6 +47,7 @@
+>  #include <linux/cgroup.h>
+>  #include <linux/audit.h>
+>  #include <linux/sysctl.h>
+> +#include <uapi/linux/pidfd.h>
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/signal.h>
+> @@ -1478,7 +1479,8 @@ int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp)
+>  	return ret;
+>  }
+>  
+> -int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
+> +static int kill_pid_info_type(int sig, struct kernel_siginfo *info,
+> +				struct pid *pid, enum pid_type type)
+>  {
+>  	int error = -ESRCH;
+>  	struct task_struct *p;
+> @@ -1487,11 +1489,10 @@ int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
+>  		rcu_read_lock();
+>  		p = pid_task(pid, PIDTYPE_PID);
+>  		if (p)
+> -			error = group_send_sig_info(sig, info, p, PIDTYPE_TGID);
+> +			error = group_send_sig_info(sig, info, p, type);
+>  		rcu_read_unlock();
+>  		if (likely(!p || error != -ESRCH))
+>  			return error;
+> -
+>  		/*
+>  		 * The task was unhashed in between, try again.  If it
+>  		 * is dead, pid_task() will return NULL, if we race with
+> @@ -1500,6 +1501,11 @@ int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
+>  	}
+>  }
+>  
+> +int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
+> +{
+> +	return kill_pid_info_type(sig, info, pid, PIDTYPE_TGID);
+> +}
+> +
+>  static int kill_proc_info(int sig, struct kernel_siginfo *info, pid_t pid)
+>  {
+>  	int error;
+> @@ -3890,6 +3896,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+>  	struct fd f;
+>  	struct pid *pid;
+>  	kernel_siginfo_t kinfo;
+> +	enum pid_type type;
+>  
+>  	/* Enforce flags be set to 0 until we add an extension. */
+>  	if (flags)
+> @@ -3928,9 +3935,8 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+>  		prepare_kill_siginfo(sig, &kinfo);
+>  	}
+>  
+> -	/* TODO: respect PIDFD_THREAD */
+> -	ret = kill_pid_info(sig, &kinfo, pid);
+> -
+> +	type = (f.file->f_flags & PIDFD_THREAD) ? PIDTYPE_PID : PIDTYPE_TGID;
+> +	ret = kill_pid_info_type(sig, &kinfo, pid, type);
+>  err:
+>  	fdput(f);
+>  	return ret;
