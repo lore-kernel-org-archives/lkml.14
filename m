@@ -1,102 +1,135 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CB738DE7
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 20:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038093612A;
+	Thu,  8 Feb 2024 20:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707423317; cv=none; b=pA6aC3YbA9Qsu2wNbzXcpn0AXb4/DuW5k9qPuCkKfhkrmHift0Gqd4dWdcZQ2Y9RAMvsMeaWAoH2VLavU1qytMbPYzo+7RKSqjqWnBd6ZzcZKumQha2zUtHm1bpKBrjRS1GJ55nH5JeKD3MHD00AjuqiRulNpXsbETBBMatKQG8=
+	t=1707423365; cv=none; b=taS7OPqaAt8NlfK2ioB3/VefAHfIOH13kQjpPrFSFGMzeW/OOGlC05WcsO9gBMlg+IKR9dym6i60YWCkiPi+s5TIx7sQEhRymxqDCSIYCM7a+/fWkv3FYDbM/WljZO+kY96q+U2dR/kRzLB9ySElvMkJIwPQrmS5IcBmGS+yWlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707423317; c=relaxed/simple;
-	bh=w95z9LtvdNkUpKjwrkQVtuE+C6gu5L1A3XgFY1DPBwQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=e795cyP7l+p/rmCP1k2CmETmzuISFN0jj41R0Pa/bPLuK6dub4A9H6PinDmnqOSNYOsb+fYKMiJGfls6HAVDyrLFsoaASJbVJxQ8xAxVRNuEQEOC68SpxfVrBSf+8aziTDo4y5J9EbTka8DCoAhESkn9UiJXubk/1ZvnztbF0C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=MRbtKWwk; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1707423365; c=relaxed/simple;
+	bh=+RTs0tvxM24Ryz5bljNL759ffo+2YNoUxuxyTBXYaGI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q5b6bVyftnQSVgtWKUun35m6OHHGxwFlPyQUmRE26CGTtXosQGFu8Ym4vt8HgOl7BZN8qFRIfSe+yuOywRHGteDhdXW1wELyH86HXBciXjzkmqNaAl03nP+sgk/549jfszn27bvhOl+3wtirH+VASqNoh4/iUCC5mhsx3BXuq5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k6MnG6ik; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="MRbtKWwk"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a36126ee41eso26870366b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 12:15:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707423314; x=1708028114; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ov/TBvm47kxw1jS/iQPYWi8WL4vb2WCyBo35udeJE6w=;
-        b=MRbtKWwkRWsMKPi3841ZliDeW18Tem4/NCIEFIUnoXsexbmGroufL+Bbq5ZKzdtdt9
-         jVQQEVnbW/lWnjTdFqlg/DA52iyZOKx/HT6FPuE094AWXeingIFoaApfl2FRqkfnwaLi
-         E8fORyPcyNVBt9ebxYBxgwaF16+02xzgiVHosB0KtoMa17C5ofKk5a1VBWf4QH4tlt+X
-         vdlwidwMpEseZgCBhFUtpmp+7X7N9HVuAn4xnbU4NtulWKiSs5EWLrVWd3GjZuBbrpbu
-         hV+0UfqWygftBC2MGkK+LYhGOJEXDI4/LnqU+gFuUgEmsFEWQYJ5cftvWcE962nqLlN1
-         gCxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707423314; x=1708028114;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ov/TBvm47kxw1jS/iQPYWi8WL4vb2WCyBo35udeJE6w=;
-        b=WIASetJGyCkZ3Kxj7EqalMS7oCugGctcDZzEVRvMDp9dR5muvwknNnKxRexXHdIwyT
-         o1w2PYNvFBTPTlKsAwmgDmPKm6llWa+ZauCY1vSjgVr9n6pyi+h3nxJReg5PEgE/PYiZ
-         1fiLBFlkH0hZ54N4S9ehzOQhotWIG+/MvIotOcCHJK9zNF+SUVCLPZ4+C1ahWz5RuINw
-         fLwXLSRmHafQ2EU4/8Vv4WAnDWfeSTsbJQDjAgB850UpulwiaORl35kso8e6GYKcgctj
-         2VubB+FyCVL5+7in7+O1SZnraFnZVjCyvK2slONG3yLvGLNlxF9XcbSfdaShe/vfFX6h
-         YTMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQoqRLHgNU9rwuWVMmZbAp05lHxRizBQ4TIYtdl24JbLltCfY2KUX/Fkyz9weApFG/57QfJ/932YPozhRllgxxWFscMwH9/vLK04YM
-X-Gm-Message-State: AOJu0YwRuep3Z7qh18EN4mM8ASpcpTkKXreP8P8unoPkZjo6w9G6Vuy8
-	uK806AXTnt+wsMjnL6RJPrxYP71SnUIDi/ROCWt18jRbELeOvO/LRM+OUr8nMpAOy+zLlfX869s
-	azAE=
-X-Google-Smtp-Source: AGHT+IEAdr88Gx/+vICgsj6ceeYZa3r+T0nuN2k07Ys1Uwbj6Q/O10AooapmOoQ1CFOIybiV97uVbA==
-X-Received: by 2002:a17:906:b51:b0:a37:ee9c:273e with SMTP id v17-20020a1709060b5100b00a37ee9c273emr253338ejg.53.1707423313736;
-        Thu, 08 Feb 2024 12:15:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUg4HE8l91/ZXCuypMsN86/4IlT7/vecXHWD7KIlb0DK0wt/C1cneb9b0Ejy3CraINpVMRizIFiwLLrplw/qtzbFrAUn9qppoSxLonsM/bYFj0hfqc3Mck0COTvrevbA1kofGCa1NgLXaIGe6tPNrJEEMoK3kzJJwqB66o=
-Received: from smtpclient.apple ([2001:a61:1048:a501:d86e:8719:82c4:70b9])
-        by smtp.gmail.com with ESMTPSA id q9-20020a17090622c900b00a3848ed2ef6sm22679eja.201.2024.02.08.12.15.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Feb 2024 12:15:13 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k6MnG6ik"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 418Ja6BX021701;
+	Thu, 8 Feb 2024 20:15:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=fCcHbyEAzqbnRluYnPu4Vp7xopD1bdKUBz6WsH9/P5c=;
+ b=k6MnG6iktxBaNI3kignFILhQZmVoR3hxjLuK5tOyTKH+L/UMAWsgdFFYxfnTneehIPz+
+ eBvM1yE0MqH9xHZz89dMKNbAc3l+WucutMe0nleOlE9qeNPph07VFAVNIq9fP+XK1CXt
+ ZhVYmlbHpJBZb4evLsGW5dfLV2nQ0WBBQ7xpjpg8fPrNhujnEaHVmEOsr4yT/vNws/MA
+ jwuwy0lJnwJ9KS7vM0gV02DhhMQRNQIGUa0nYDCjHv4BRR/hiw/gpqgxc3Y/ttHaD6To
+ WE+MuZD45JUXK/AMITa2P2e5Su4Uhfi3RMRgcbvBVMThNMn+JNlZdW8vX7TyK/YUkmwS 6w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w53ejknrr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Feb 2024 20:15:54 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 418K9OuH027077;
+	Thu, 8 Feb 2024 20:15:53 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w53ejknrb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Feb 2024 20:15:53 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 418IiVpe008487;
+	Thu, 8 Feb 2024 20:15:52 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w221kejv2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Feb 2024 20:15:52 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 418KFnMs58327306
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 Feb 2024 20:15:49 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BC1F92006B;
+	Thu,  8 Feb 2024 20:15:49 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A7F932005A;
+	Thu,  8 Feb 2024 20:15:49 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  8 Feb 2024 20:15:49 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 7EF41E1515; Thu,  8 Feb 2024 21:15:49 +0100 (CET)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 4/5] s390/irq,nmi: include <asm/vtime.h> header directly
+Date: Thu,  8 Feb 2024 21:15:48 +0100
+Message-Id: <03bf9f84e54e337fc8ccc75f89aef48a407aad31.1707422448.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1707422448.git.agordeev@linux.ibm.com>
+References: <cover.1707422448.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: [PATCH v2] docs: scripts: sphinx-pre-install: Fix building docs
- with pyyaml package
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <4c297f67-72e1-44d7-acb0-462ac261640d@oracle.com>
-Date: Thu, 8 Feb 2024 21:15:01 +0100
-Cc: corbet@lwn.net,
- linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- mchehab@kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <ED5D37EF-B353-4EA3-8AC9-7368BDD2CFD9@toblux.com>
-References: <c6555e01-1945-410e-9950-53c40052626a@oracle.com>
- <20240208131305.52577-1-thorsten.blum@toblux.com>
- <4c297f67-72e1-44d7-acb0-462ac261640d@oracle.com>
-To: Vegard Nossum <vegard.nossum@oracle.com>
-X-Mailer: Apple Mail (2.3774.400.31)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: f6hshjXUo1Xm-7YvHGAfsn2HiYbnU3J4
+X-Proofpoint-GUID: lnAKe9dV9bzR3Ss9en7HFNSKr9KwJYoH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-08_08,2024-02-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=561 spamscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2402080108
 
+update_timer_sys() and update_timer_mcck() are inlines used for
+CPU time accounting from the interrupt and machine-check handlers.
+These routines are specific to s390 architecture, but included
+via <linux/vtime.h> header implicitly. Avoid the extra loop and
+include <asm/vtime.h> header directly.
 
-> On Feb 8, 2024, at 17:37, Vegard Nossum <vegard.nossum@oracle.com> wrote:
-> 
-> On 08/02/2024 14:13, Thorsten Blum wrote:
->> The Python module pyyaml is required to build the docs, but it is only
->> listed in Documentation/sphinx/requirements.txt and is therefore missing
->> when Sphinx is installed as a package and not via pip/pypi.
->> Add pyyaml as an optional package for Debian- and Red Hat-based distros to
-> s/optional/required/ ? Given...
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ arch/s390/kernel/irq.c | 1 +
+ arch/s390/kernel/nmi.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-The commit message should be correct. The system package is optional, but the
-Python module itself is required.
+diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
+index 6f71b0ce1068..259496fe0ef9 100644
+--- a/arch/s390/kernel/irq.c
++++ b/arch/s390/kernel/irq.c
+@@ -29,6 +29,7 @@
+ #include <asm/hw_irq.h>
+ #include <asm/stacktrace.h>
+ #include <asm/softirq_stack.h>
++#include <asm/vtime.h>
+ #include "entry.h"
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct irq_stat, irq_stat);
+diff --git a/arch/s390/kernel/nmi.c b/arch/s390/kernel/nmi.c
+index 9ad44c26d1a2..4422a27faace 100644
+--- a/arch/s390/kernel/nmi.c
++++ b/arch/s390/kernel/nmi.c
+@@ -32,6 +32,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/pai.h>
+ #include <asm/vx-insn.h>
++#include <asm/vtime.h>
+ #include <asm/fpu/api.h>
+ 
+ struct mcck_struct {
+-- 
+2.40.1
 
-> Can/should we add it to give_opensuse_hints() as well, given that it
-> also apparently allows you to install Sphinx via the distro package
-> manager? (Not sure about mageia/arch/gentoo.)
-
-Yes, I'll submit a v3 shortly.
-
-Thanks,
-Thorsten
