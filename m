@@ -1,55 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0300411CAF
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 20:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04B048CD1;
+	Thu,  8 Feb 2024 20:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707425651; cv=none; b=tm33SmvoCPcBIyWIo+UkXhz091qviAxZtSXVqDr00/12JEdUYHeo4b35N9z/fv+LU8UxP9ipAd2dcBA/dWLEifGsrmF6NStkMl0TKYrKiwf9BYq90KPXJlczab6D9Ep5GlmaqGpkGYoc5T4t3jTso4PpSSbPMjuRAZAgrkXbtRo=
+	t=1707425787; cv=none; b=tdlfi/mG8gdJmXG8qiX4A32DT6YvqDyGI6yCpChjWuOfMh4qLL31kYSwAtE3Qsm66pzNzESR8+2CgJldtnNEs4h6ZuW/stdUrsIrYsmr284HtdxlW9G/x4pV+eqRphurKvkbX2c1uQs460P4udnywxdYzHgc5Xp6PE1AW3sgAV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707425651; c=relaxed/simple;
-	bh=lVKgetkWYnLj+KtF4Z88XXytHWtTBc7STnJTaCzNPuI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bOjv/zLbVa0DKwksPrWdhKh5sqydK2Vjc4QEkSr+rE13nUMKtdANGcnKLETUc1lmnnAWRUQZjRUOp5VF+YIbCeS90aQF8hJwTxtVLstC/GAKybDKj9k/IrP7A+jv9KejYPTnkggVdBWvinQ23bZhnv3aBAxapve52rTJ0duktoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=sIFC25qJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707425787; c=relaxed/simple;
+	bh=T8EwgSBfhLdOsFciFuw6X5d9/0+41gQ0AA16Ecb/rcU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HChk7CWgexCAMfVxKLcNaNCdLGG3xcYgE93T9sSc3VHHsdhz+Q6VVCDsv888kZT3cu+1XyDbiRH4aTRfApGb/6vVB0LKnM35uuMWzN+kq3kFGcPkpfY1UbK55vKZ/1685ktTyncmchJ3wTmWmIWpfZS7GHjdn5y9QJArIYj9ioA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+3Bx4Xa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="sIFC25qJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45BFC433F1;
-	Thu,  8 Feb 2024 20:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1707425650;
-	bh=lVKgetkWYnLj+KtF4Z88XXytHWtTBc7STnJTaCzNPuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sIFC25qJpPpWXruDfNT5iyKz8ukpn+X3bfKb1vV/q8CRb5AIudAlJiqVCD/rNtO4X
-	 a2IBgZz203bWRu2JPtvlDAgpsltCGUqIrnYXL2fyfMQYw1rvIH5QNDpOBgZf/SwIOn
-	 hSk7TlEeiCY5pclrg8GCV7YTV/s2uYqGmtcJPZZE=
-Date: Thu, 8 Feb 2024 12:54:09 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Byungchul Park <byungchul@sk.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, ying.huang@intel.com, namit@vmware.com,
- vernhao@tencent.com, mgorman@techsingularity.net, hughd@google.com,
- willy@infradead.org, david@redhat.com, peterz@infradead.org,
- luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, rjgolo@gmail.com
-Subject: Re: [RESEND PATCH v7 7/8] mm: Defer TLB flush by keeping both src
- and dst folios at migration
-Message-Id: <20240208125409.28d5aa60d88657405f5c8e1b@linux-foundation.org>
-In-Reply-To: <20240208062608.44351-8-byungchul@sk.com>
-References: <20240208062608.44351-1-byungchul@sk.com>
-	<20240208062608.44351-8-byungchul@sk.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+3Bx4Xa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0D7C433C7;
+	Thu,  8 Feb 2024 20:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707425786;
+	bh=T8EwgSBfhLdOsFciFuw6X5d9/0+41gQ0AA16Ecb/rcU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=e+3Bx4Xa4325tK8mGNO/Jhz450pjYzUveah8U9GEFNEVNETIXzBDCIL0hMqyJRNMp
+	 hkMIKP8aTyBdPP6zXFrfShdRBFeVDyoNM/E4fdxxSVpKon/5Gs1K0NWcyqqOMwsjOf
+	 l+imnJ7ff+linFqmKB9Hy1V1B1y/kJ2hfwBvv1X9N+Caq/VIxA1e5uRHfCHs+pDDsN
+	 Bd+BT4sgZbHkbxypldvwp2Kd4SXmciQ3dT67PqSC31WwgOQhWaFNB0J1A8CPwVSQLg
+	 LTZ4RNobnmr70yKt/r30QM4wBiIpWDQ1z7KQ88kBKzPFEs1pHUtHN0J+j87J0EDBDM
+	 g4eha5M4qEqWg==
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+In-Reply-To: <20240208123742.1278104-1-rf@opensource.cirrus.com>
+References: <20240208123742.1278104-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH v2] ASoC: cs35l56: Fix deadlock in ASP1 mixer register
+ initialization
+Message-Id: <170742578487.2206785.11509531249240507855.b4-ty@kernel.org>
+Date: Thu, 08 Feb 2024 20:56:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-0438c
 
-On Thu,  8 Feb 2024 15:26:07 +0900 Byungchul Park <byungchul@sk.com> wrote:
+On Thu, 08 Feb 2024 12:37:42 +0000, Richard Fitzgerald wrote:
+> Rewrite the handling of ASP1 TX mixer mux initialization to prevent a
+> deadlock during component_remove().
+> 
+> The firmware can overwrite the ASP1 TX mixer registers with
+> system-specific settings. This is mainly for hardware that uses the
+> ASP as a chip-to-chip link controlled by the firmware. Because of this
+> the driver cannot know the starting state of the ASP1 mixer muxes until
+> the firmware has been downloaded and rebooted.
+> 
+> [...]
 
-> Implementation of MIGRC mechanism that stands for 'Migration Read Copy'.
+Applied to
 
-Oh there is it.  Please put this in the [0/N] cover letter?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: cs35l56: Fix deadlock in ASP1 mixer register initialization
+      commit: c14f09f010cc569ae7e2f6ef02374f6bfef9917e
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
