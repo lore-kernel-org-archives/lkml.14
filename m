@@ -1,89 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5465E6A347;
-	Thu,  8 Feb 2024 14:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266506EB4B
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 14:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707402874; cv=none; b=MX9uakV+Hn7ZId5g13SKJgqOqbBElGvHUmh4guJuPLhI0Vvjb/y7Ttc2LRzEgRx8fGQo2TCuMtKaaW9d3VAEEhYWqcx5Yd9dHAfJO0G7eOYCXL92VK61iEisZEKTflnzf//yvwFROrrYUfE6J9Zflc+1MVbtNiMLzAhUyPKq6eg=
+	t=1707402932; cv=none; b=ka8jrvYiHsAJHFCdZwxg0KX3hPRIXtdpVZ6co2z2ormVagpICkaFjgSalMDo8BXP/ohrzg5QOE0U4DY3y3RqyvUlI7qqD0EhqX6yob7D3Nm5i52wsEquUu5KeJP86P1IYsYRpjt3DAZZgWHEj2qlObl2Ifyf0kSGYYXKB/Iuna4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707402874; c=relaxed/simple;
-	bh=cjeBQF+H60qIRCN8KiTSL9BpFV9avuvy09H2SemvsUI=;
+	s=arc-20240116; t=1707402932; c=relaxed/simple;
+	bh=9YqzliOGzkkMDhfypshk6U0P1+CqguZTr81ooRTLRZU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VmVVMHW0ZjfNfHjuWJW4wt1I/sSYKboocwwbxMIM6ZGP8uq0B97EkzscEGW+kE8BMLGaaebp/xeN1BFq83OynBsvw6/p1ojgSinWWlF0ZRfWhvC3s9/fDu+q6XGXi+9ogn2akTFtzxnxBstR0rGH1Kq8LNhviPffSbLrLUxIO9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyVEfMyG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuYqhar1vsL7zvoQkeFPpEXLHsxIs1+3zuZxYIcoYrqO8WaO0xFfY/RETr3SH1BYLwOyrv/45qjHS0iUED/JBZgr6TZ1IcBs+42EGD23D0/cApYZPKTJBv+3eNFhZSobSRBMfvVOSIdXtaF0GadALnfQjM/5L/W1l+BajUtxfe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L6szAznS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyVEfMyG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7192BC433F1;
-	Thu,  8 Feb 2024 14:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707402873;
-	bh=cjeBQF+H60qIRCN8KiTSL9BpFV9avuvy09H2SemvsUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IyVEfMyGfOFoou2K8QzU1KqpicVeCZb0GO870IEZ2BfvNSHL+O763XVE+6Co4+NZi
-	 733hgpRETljSCdt8xfp0EeZ0Ti2awUJ+oSIfAe2XVz0WeEFkijI5S0dlBUU6k5E7fk
-	 MI2E9xYe/qQLfJFnJi8575kBzTPmSu9RxFYfBri6fxgQfpBn0sgSsrHqyWoIKr/Ham
-	 oybP3+loI6ITuzFtC7IZhx2u12zG4jg2IIaZivD3c+UzSxoBMRr7lknnlahSSIMFK0
-	 9Tut197zeX0mk5ycsGQHn1FJjfkpu+FEiu2j+9zF/Yhw4aHwJw9V+vkN1SfQbDCl+0
-	 hDm7nsxrys/3Q==
-Date: Thu, 8 Feb 2024 14:34:30 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] `lis3lv02d_i2c_suspend()` causes `unbalanced
- disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
-Message-ID: <ZcTmdg2qTq0bP0ul@finisterre.sirena.org.uk>
-References: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L6szAznS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707402928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rIFybJDnOhyzqhit+HnnDJoYVstx80eqvFnajir605c=;
+	b=L6szAznS7mh/uZM80v2NhZN3JjI+hq37P+TGlGrtjDQrZI6/p5TrLnEbclXNw3aKdM4wfp
+	LaHHQL4pgdp4DZ/fNVQs0zmo4C9/FR7GI8YXs8UzSzKF7VwtvjdwEFiQqyQpvpbKR631tI
+	OEOa9CwPIIbZ3ifHFfXfSWul3UCxepc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-mHzfyN9iPPuu-h2TqO4tDA-1; Thu, 08 Feb 2024 09:35:26 -0500
+X-MC-Unique: mHzfyN9iPPuu-h2TqO4tDA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8DFF84AE41;
+	Thu,  8 Feb 2024 14:35:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.158])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 0B0BE492BC6;
+	Thu,  8 Feb 2024 14:35:23 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  8 Feb 2024 15:34:10 +0100 (CET)
+Date: Thu, 8 Feb 2024 15:34:07 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pidfd: change pidfd_send_signal() to respect PIDFD_THREAD
+Message-ID: <20240208143407.GF19801@redhat.com>
+References: <20240207114549.GA12697@redhat.com>
+ <20240208-fragt-prospekt-7866333b15f0@brauner>
+ <20240208135344.GD19801@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WpfLvOBs6QH8Jk+0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
-X-Cookie: You might have mail.
+In-Reply-To: <20240208135344.GD19801@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
+On 02/08, Oleg Nesterov wrote:
+>
+> On 02/08, Christian Brauner wrote:
+> >
+> > On Wed, Feb 07, 2024 at 12:45:49PM +0100, Oleg Nesterov wrote:
+> > > +	type = (f.file->f_flags & PIDFD_THREAD) ? PIDTYPE_PID : PIDTYPE_TGID;
+> > > +	ret = kill_pid_info_type(sig, &kinfo, pid, type);
+> >
+> > If the user doesn't provide siginfo then the kernel fills in the info in
+> > prepare_kill_siginfo() a few lines above. That sets info->si_code to
+> > SI_USER even for the PIDFD_THREAD case. Whenever the info is filled in
+> > by the kernel it's not exactly userspace impersonating anything plus we
+> > know that what we're sending to is a pidfd by the type of the pidfd. So
+> > it feels like we should fill in SI_TKILL here as well?
+>
+> Hmm. Agreed, will do, thanks.
 
---WpfLvOBs6QH8Jk+0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cough... lets forget this patch for the moment.
 
-On Fri, Feb 02, 2024 at 12:38:04PM +0100, Paul Menzel wrote:
+Is prepare_kill_siginfo() correct when we send a signal to the child
+pid namespace? si_pid = task_tgid_vnr(current) doesn't look right in
+this case but perhaps I am totally confused.
 
-> Testing commit 2f189493ae32 (i2c: i801: Add lis3lv02d for Dell XPS 15 759=
-0)
-> [1], it=E2=80=99s very likely this commit, it turns out, that Linux logs =
-the warning
-> below during ACPI S3 suspend:
+And why do we need it at all? Can't sys_kill() and pidfd_send_signal()
+just use SEND_SIG_NOINFO?
 
-The driver is just buggy here AFAICT, it's powering off the device in
-both runtime suspend and runtime resume so if the device is runtime
-suspended when system suspend happens then it'll power off the device
-again.  The runtime suspend and system suspend need to talk to each
-other here.
+OK, I am sure I missed something. Will read this code tomorrow.
 
---WpfLvOBs6QH8Jk+0
-Content-Type: application/pgp-signature; name="signature.asc"
+Oleg.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXE5nYACgkQJNaLcl1U
-h9D2FQf/aIy1W/ZQfqQl38qjH+AxWm2uBJTRKtUWbZlYKX75+sYgnz+SSeSNs5Uf
-tQ1fFae7U27jP4eqD10dVVx9iInwPHg7MZMSr5eEoZHKxpTDBZzDFNbYFXeuwZNi
-cR7lGKdqV2zBhKeGip+h+JzwPZk5kSzM96lUFe1QJZwCKvr9ocj6fqIedTrtbkCC
-Mn37SnlSTz9H3/0+uk3xMyop1EePKJSmpgGORA6t6TfPzPhqhjBkyFDc5XpqmDtK
-v3p6QH0xRTLQbvzo2fAEXgYGPdOifKXk6jqDWZ/l3aOSzMu6+Zmcf3hVt/zIcsWT
-ft9AUmNoVO3FiPNqqcaqCpMC4oZWnQ==
-=MLow
------END PGP SIGNATURE-----
-
---WpfLvOBs6QH8Jk+0--
