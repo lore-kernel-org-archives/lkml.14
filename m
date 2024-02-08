@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F7D7C092;
-	Thu,  8 Feb 2024 13:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D185C44;
+	Thu,  8 Feb 2024 13:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707397813; cv=none; b=iKk8UHA6ot5METwopgpFul9NU0+jI0RIlP8odPUT71Fix5pdLH729P46VsagG30BZl3lVVjyGCBw1M9MBCYxvNmsDSH26oT0pwQ43fbvSqJs5iDM72bG2picNmPN2hawx/DxciffMMMMw74o0wEZHqZ6iTKue7MEMD7BUhXAxSw=
+	t=1707397817; cv=none; b=JUqyflrruXsXKqVDpQz3t/y/mVw0Jo22Zr6g5H34l/iAPiFr5XL0N95MVsrCBivxfbGoGw4YUCR/ZlNufmcRGRVPWT/OuvzlZakN67QgtvLHfj9QQQOaMD0J+vTn4ddOlZkmBd0Am/TtrCjh293MWwiOShhJ199AIW7F9CNilFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707397813; c=relaxed/simple;
-	bh=NJTA1qf01BPd6uvODADJyIacXFrgybEoXT0rf9o6r9k=;
+	s=arc-20240116; t=1707397817; c=relaxed/simple;
+	bh=yBgsOvw/NoISfdN2yod3aEr3vSox7tBEiwL1cyoesks=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uBSyebvLo/t8tHYOm/2ZzJJQqHwxsylK0hjdugYBqWgwz53GFyncR8JWkh9J29w+AYvYEqO7H8hlRaAeuxtmdfghCd6XQkH8mY+7A1LMcXFPRzlB/RzqoMAIa+YWowo5c84A7J2XY64GD10UqNuCo2eoCGNZp1eplR6cIcE7pys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HvNO9zlA; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=J0XJdPoJI0Qryqs22Fmp0jjxs4rpL6BicEiWgNzOP88x0G3QKpnuyp2yy0O3ue4yKnAvhuP0jokorZZhnWi8pWHb1e1xLRAtA3doc4omTbH7YlkuIBuFokg12tdEHUc0n0Fzo6MJieS5ezI0LKSnTgPE5GHmBI2E0yYL71Yf4GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A3fxYBtm; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HvNO9zlA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A267B1BF21C;
-	Thu,  8 Feb 2024 13:10:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A3fxYBtm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4911E1BF211;
+	Thu,  8 Feb 2024 13:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707397807;
+	t=1707397812;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=495lyhTZMAnpn8hAgwRanj2CFvC65XB8krYQ7Jr6wCo=;
-	b=HvNO9zlAjFopoPpRm0Xrrzc51OGjadd5iuUZbLFk3UBNYCFyhxLNg1PoT7TVfQr7YQgfqo
-	GgCeFPb76Cm188Anjwt3vWISVJ+zLYPFBojeFnj1llBI/RHXFQ5fhwKMhDH14FH70DC1Dy
-	hUNxfouTYjZsAj1LjYcN1Dl++fJpstDHq9/VhxWU6B3m8X2wQiJJpXkshjZ8wHU29A8BBh
-	XFPX0tsK9Cq/9GKYGxn03uN5vxMQDUbxbQpfMZ3cS7ILD1pmNDegUTyPzCTD2MHxqo486V
-	yE8bfqnPdDyLLfG41iH96lQJ2bzk7D3EVrRp3FF/Lmv1kj2ZzKKH/GXZrTL11A==
+	bh=uWFpO66+raCSIK7l5pAG9KnHSXs0wHMTXMKiSs8/ubk=;
+	b=A3fxYBtm3caY+Ocp/x96g7iaeAeKQJvLphOXm501KrrUJh8O43D7CZ63VtNTiZavhRJDQR
+	WF+aupPbJNK9TI2b3llPya5Oedp20Zbt1XKBp/GD2EOO0gAt0oiOVjN1YSaN13zPPzKXlm
+	Nu13dv8WDuOezJzgSsJPnY2mZP1qAyuTXGZuiQbS+FYdxBWfxYMqEXA6Dgnor/f+laXFjv
+	86/RZVgXa0ryjByYwlIxMZE+a6yU2zduplOyfqKIPYJWt74Db11IhQ/5FoyS+ojKPJqCIK
+	lBc3LvsEtraSkRU8CCHOkbKMM92Q5x2y/AQSg8D8MR8r8l7ExzakdbkbcM9AIA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Thu, 08 Feb 2024 14:08:50 +0100
-Subject: [PATCH net-next v3 13/17] net: pse-pd: Use regulator framework
- within PSE framework
+Date: Thu, 08 Feb 2024 14:08:54 +0100
+Subject: [PATCH net-next v3 17/17] net: pse-pd: Add TI TPS23881 PSE
+ controller driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240208-feature_poe-v3-13-531d2674469e@bootlin.com>
+Message-Id: <20240208-feature_poe-v3-17-531d2674469e@bootlin.com>
 References: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
 In-Reply-To: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,630 +64,872 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Integrate the regulator framework to the PSE framework for enhanced
-access to features such as voltage, power measurement, and limits, which
-are akin to regulators. Additionally, PSE features like port priorities
-could potentially enhance the regulator framework. Note that this
-integration introduces some implementation complexity, including wrapper
-callbacks and nested locks, but the potential benefits make it worthwhile.
-
-Regulator are using enable counter with specific behavior.
-Two calls to regulator_disable will trigger kernel warnings.
-If the counter exceeds one, regulator_disable call won't disable the
-PSE PI. These behavior isn't suitable for PSE control.
-Added a boolean 'enabled' state to prevent multiple calls to
-regulator_enable/disable. PSE mutex safeguards this boolean.
-However, ethtool command or regulator sysfs framework can set/get this
-boolean, leading to nested locking. The PSE nested lock function is a copy
-of regulator_lock_nested function, ensuring no issues with its usage.
-
-regulator_get uses the consumer device pointer therefore of_pse_control_get
-is modified accordingly to pass the PSE consumer device alongside its
-device node.
+Add a new driver for the TI TPS23881 I2C Power Sourcing Equipment
+controller.
 
 Sponsored-by: Dent Project <dentproject@linuxfoundation.org>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
 
-Changes in v3:
-- New patch
 ---
- drivers/net/mdio/fwnode_mdio.c     |  29 ++--
- drivers/net/pse-pd/pse_core.c      | 264 ++++++++++++++++++++++++++++++++++---
- drivers/net/pse-pd/pse_regulator.c |  48 ++++---
- include/linux/pse-pd/pse.h         |  20 ++-
- 4 files changed, 302 insertions(+), 59 deletions(-)
+Change in v3:
+- New patch.
+---
+ drivers/net/pse-pd/Kconfig    |   9 +
+ drivers/net/pse-pd/Makefile   |   1 +
+ drivers/net/pse-pd/tps23881.c | 818 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 828 insertions(+)
 
-diff --git a/drivers/net/mdio/fwnode_mdio.c b/drivers/net/mdio/fwnode_mdio.c
-index fd02f5cbc853..aa20b2ac7f2d 100644
---- a/drivers/net/mdio/fwnode_mdio.c
-+++ b/drivers/net/mdio/fwnode_mdio.c
-@@ -17,19 +17,17 @@ MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("FWNODE MDIO bus (Ethernet PHY) accessors");
+diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
+index e3a6ba669f20..80cf373a5a0e 100644
+--- a/drivers/net/pse-pd/Kconfig
++++ b/drivers/net/pse-pd/Kconfig
+@@ -31,4 +31,13 @@ config PSE_PD692X0
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called pd692x0.
  
- static struct pse_control *
--fwnode_find_pse_control(struct fwnode_handle *fwnode)
-+dev_find_pse_control(struct device *dev)
- {
- 	struct pse_control *psec;
--	struct device_node *np;
- 
- 	if (!IS_ENABLED(CONFIG_PSE_CONTROLLER))
- 		return NULL;
- 
--	np = to_of_node(fwnode);
--	if (!np)
-+	if (!dev->of_node)
- 		return NULL;
- 
--	psec = of_pse_control_get(np);
-+	psec = of_pse_control_get(dev, dev->of_node);
- 	if (PTR_ERR(psec) == -ENOENT)
- 		return NULL;
- 
-@@ -120,15 +118,9 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
- 	u32 phy_id;
- 	int rc;
- 
--	psec = fwnode_find_pse_control(child);
--	if (IS_ERR(psec))
--		return PTR_ERR(psec);
--
- 	mii_ts = fwnode_find_mii_timestamper(child);
--	if (IS_ERR(mii_ts)) {
--		rc = PTR_ERR(mii_ts);
--		goto clean_pse;
--	}
-+	if (IS_ERR(mii_ts))
-+		return PTR_ERR(mii_ts);
- 
- 	is_c45 = fwnode_device_is_compatible(child, "ethernet-phy-ieee802.3-c45");
- 	if (is_c45 || fwnode_get_phy_id(child, &phy_id))
-@@ -161,6 +153,12 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
- 			goto clean_phy;
- 	}
- 
-+	psec = dev_find_pse_control(&phy->mdio.dev);
-+	if (IS_ERR(psec)) {
-+		rc = PTR_ERR(psec);
-+		goto unregister_phy;
-+	}
++config PSE_TPS23881
++	tristate "TPS23881 PSE controller"
++	depends on I2C
++	help
++	  This module provides support for TPS23881 regulator based Ethernet
++	  Power Sourcing Equipment.
 +
- 	phy->psec = psec;
++	  To compile this driver as a module, choose M here: the
++	  module will be called tps23881.
+ endif
+diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
+index 9c12c4a65730..9d2898b36737 100644
+--- a/drivers/net/pse-pd/Makefile
++++ b/drivers/net/pse-pd/Makefile
+@@ -5,3 +5,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
  
- 	/* phy->mii_ts may already be defined by the PHY driver. A
-@@ -172,12 +170,13 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
- 
- 	return 0;
- 
-+unregister_phy:
-+	if (is_acpi_node(child) || is_of_node(child))
-+		phy_device_remove(phy);
- clean_phy:
- 	phy_device_free(phy);
- clean_mii_ts:
- 	unregister_mii_timestamper(mii_ts);
--clean_pse:
--	pse_control_put(psec);
- 
- 	return rc;
- }
-diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
-index 59427c79858c..222f4f67f0e1 100644
---- a/drivers/net/pse-pd/pse_core.c
-+++ b/drivers/net/pse-pd/pse_core.c
-@@ -8,25 +8,93 @@
- #include <linux/device.h>
- #include <linux/of.h>
- #include <linux/pse-pd/pse.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
- 
- static DEFINE_MUTEX(pse_list_mutex);
-+static DEFINE_MUTEX(pse_nesting_mutex);
- static LIST_HEAD(pse_controller_list);
- 
- /**
-  * struct pse_control - a PSE control
-  * @pcdev: a pointer to the PSE controller device
-  *         this PSE control belongs to
-+ * @ps: PSE PI supply of the PSE control
-  * @list: list entry for the pcdev's PSE controller list
-  * @id: ID of the PSE line in the PSE controller device
-  * @refcnt: Number of gets of this pse_control
-  */
- struct pse_control {
- 	struct pse_controller_dev *pcdev;
-+	struct regulator *ps;
- 	struct list_head list;
- 	unsigned int id;
- 	struct kref refcnt;
- };
- 
-+/**
-+ * pse_lock - lock a single PSE
-+ * @pcdev:		PSE source
+ obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
+ obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
++obj-$(CONFIG_PSE_TPS23881) += tps23881.o
+diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
+new file mode 100644
+index 000000000000..432b1686fd9b
+--- /dev/null
++++ b/drivers/net/pse-pd/tps23881.c
+@@ -0,0 +1,818 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Driver for the TI TPS23881 PoE PSE Controller driver (I2C bus)
 + *
-+ * This function can be called many times by one task on
-+ * a single pse and its mutex will be locked only once.
-+ * If a task, which is calling this function is other
-+ * than the one, which initially locked the mutex, it will
-+ * wait on mutex.
++ * Copyright (c) 2023 Bootlin, Kory Maincent <kory.maincent@bootlin.com>
 + */
-+static int pse_lock(struct pse_controller_dev *pcdev)
++
++#include <linux/delay.h>
++#include <linux/firmware.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pse-pd/pse.h>
++
++#define TPS23881_MAX_CHANS 8
++
++#define TPS23881_REG_PW_STATUS	0x10
++#define TPS23881_REG_OP_MODE	0x12
++#define TPS23881_REG_DIS_EN	0x13
++#define TPS23881_REG_DET_CLA_EN	0x14
++#define TPS23881_REG_GEN_MASK	0x17
++#define TPS23881_REG_NBITACC	BIT(5)
++#define TPS23881_REG_PW_EN	0x19
++#define TPS23881_REG_PORT_MAP	0x26
++#define TPS23881_REG_PORT_POWER	0x29
++#define TPS23881_REG_POEPLUS	0x40
++#define TPS23881_REG_TPON	BIT(0)
++#define TPS23881_REG_FWREV	0x41
++#define TPS23881_REG_DEVID	0x43
++#define TPS23881_REG_SRAM_CTRL	0x60
++#define TPS23881_REG_SRAM_DATA	0x61
++
++struct tps23881_port_desc {
++	u8 chan[2];
++	bool is_4p;
++};
++
++struct tps23881_priv {
++	struct i2c_client *client;
++	struct pse_controller_dev pcdev;
++	struct device_node *np;
++	struct tps23881_port_desc port[TPS23881_MAX_CHANS];
++};
++
++static struct tps23881_priv *to_tps23881_priv(struct pse_controller_dev *pcdev)
 +{
-+	bool lock = false;
-+	int ret = 0;
++	return container_of(pcdev, struct tps23881_priv, pcdev);
++}
 +
-+	mutex_lock(&pse_nesting_mutex);
++static int tps23881_pi_enable(struct pse_controller_dev *pcdev, int id)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	u8 chan;
++	u16 val;
++	int ret;
 +
-+	if (!mutex_trylock(&pcdev->lock)) {
-+		if (pcdev->lock_owner == current)
-+			pcdev->ref_cnt++;
++	if (id >= TPS23881_MAX_CHANS)
++		return -ERANGE;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4)
++		val = (u16)(ret | BIT(chan));
++	else
++		val = (u16)(ret | BIT(chan + 4));
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4)
++			val |= BIT(chan);
 +		else
-+			lock = true;
-+
-+		if (lock) {
-+			mutex_unlock(&pse_nesting_mutex);
-+			mutex_lock(&pcdev->lock);
-+			mutex_lock(&pse_nesting_mutex);
-+		}
-+	} else {
-+		lock = true;
++			val |= BIT(chan + 4);
 +	}
 +
-+	if (lock) {
-+		pcdev->ref_cnt++;
-+		pcdev->lock_owner = current;
-+	}
-+
-+	mutex_unlock(&pse_nesting_mutex);
-+
-+	return ret;
-+}
-+
-+/**
-+ * pse_unlock - unlock a single PSE
-+ * @pcdev:		PSE source
-+ *
-+ * This function unlocks the mutex when the
-+ * reference counter reaches 0.
-+ */
-+static void pse_unlock(struct pse_controller_dev *pcdev)
-+{
-+	mutex_lock(&pse_nesting_mutex);
-+
-+	if (--pcdev->ref_cnt == 0) {
-+		pcdev->lock_owner = NULL;
-+		mutex_unlock(&pcdev->lock);
-+	}
-+
-+	WARN_ON_ONCE(pcdev->ref_cnt < 0);
-+
-+	mutex_unlock(&pse_nesting_mutex);
-+}
-+
- static int of_load_pse_pi_pairsets(struct device_node *node,
- 				   struct pse_pi *pi,
- 				   int npairsets)
-@@ -160,13 +228,123 @@ static int of_load_pse_pis(struct pse_controller_dev *pcdev)
- 	return ret;
- }
- 
-+static int pse_pi_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct pse_controller_dev *pcdev = rdev_get_drvdata(rdev);
-+	const struct pse_controller_ops *ops;
-+	int id, ret;
-+
-+	ops = pcdev->ops;
-+	if (!ops->pi_is_enabled)
-+		return -EOPNOTSUPP;
-+
-+	id = rdev_get_id(rdev);
-+	pse_lock(pcdev);
-+	ret = ops->pi_is_enabled(pcdev, id);
-+	if (ret >= 0)
-+		pcdev->pi[id].enabled = ret;
-+	pse_unlock(pcdev);
-+
-+	return ret;
-+}
-+
-+static int pse_pi_enable(struct regulator_dev *rdev)
-+{
-+	struct pse_controller_dev *pcdev = rdev_get_drvdata(rdev);
-+	const struct pse_controller_ops *ops;
-+	int id, ret;
-+
-+	ops = pcdev->ops;
-+	if (!ops->pi_enable)
-+		return -EOPNOTSUPP;
-+
-+	id = rdev_get_id(rdev);
-+	pse_lock(pcdev);
-+	ret = ops->pi_enable(pcdev, id);
-+	if (!ret)
-+		pcdev->pi[id].enabled = 1;
-+	pse_unlock(pcdev);
-+
-+	return ret;
-+}
-+
-+static int pse_pi_disable(struct regulator_dev *rdev)
-+{
-+	struct pse_controller_dev *pcdev = rdev_get_drvdata(rdev);
-+	const struct pse_controller_ops *ops;
-+	int id, ret;
-+
-+	ops = pcdev->ops;
-+	if (!ops->pi_disable)
-+		return -EOPNOTSUPP;
-+
-+	id = rdev_get_id(rdev);
-+	pse_lock(pcdev);
-+	ret = ops->pi_disable(pcdev, id);
-+	if (!ret)
-+		pcdev->pi[id].enabled = 0;
-+	pse_unlock(pcdev);
-+
-+	return ret;
-+}
-+
-+static const struct regulator_ops pse_pi_ops = {
-+	.is_enabled = pse_pi_is_enabled,
-+	.enable = pse_pi_enable,
-+	.disable = pse_pi_disable,
-+};
-+
-+static const struct regulator_init_data pse_pi_initdata = {
-+	.constraints = {
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+};
-+
-+static int
-+devm_pse_pi_regulator_register(struct pse_controller_dev *pcdev,
-+			       char *name, int id)
-+{
-+	struct regulator_config rconfig = {0};
-+	struct regulator_desc *rdesc;
-+	struct regulator_dev *rdev;
-+
-+	rdesc = devm_kzalloc(pcdev->dev, sizeof(*rdesc), GFP_KERNEL);
-+	if (!rdesc)
-+		return -ENOMEM;
-+
-+	/* Regulator descriptor id have to be the same as its associated
-+	 * PSE PI id for the well functioning of the PSE controls.
-+	 */
-+	rdesc->id = id;
-+	rdesc->name = name;
-+	rdesc->type = REGULATOR_VOLTAGE;
-+	rdesc->ops = &pse_pi_ops;
-+	rdesc->owner = pcdev->owner;
-+
-+	rconfig.dev = pcdev->dev;
-+	rconfig.driver_data = pcdev;
-+	rconfig.init_data = &pse_pi_initdata;
-+
-+	rdev = devm_regulator_register(pcdev->dev, rdesc, &rconfig);
-+	if (IS_ERR(rdev)) {
-+		dev_err_probe(pcdev->dev, PTR_ERR(rdev),
-+			      "Failed to register regulator\n");
-+		return PTR_ERR(rdev);
-+	}
-+
-+	pcdev->pi[id].rdev = rdev;
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
++	if (ret < 0)
++		return ret;
 +
 +	return 0;
 +}
 +
- /**
-  * pse_controller_register - register a PSE controller device
-  * @pcdev: a pointer to the initialized PSE controller device
-  */
- int pse_controller_register(struct pse_controller_dev *pcdev)
- {
--	int ret;
-+	size_t reg_name_len;
-+	int ret, i;
- 
- 	mutex_init(&pcdev->lock);
- 	INIT_LIST_HEAD(&pcdev->pse_control_head);
-@@ -184,6 +362,31 @@ int pse_controller_register(struct pse_controller_dev *pcdev)
- 			return ret;
- 	}
- 
-+	/* Each regulator name len is pcdev dev name + 7 char +
-+	 * int max digit number (10) + 1
-+	 */
-+	reg_name_len = strlen(dev_name(pcdev->dev)) + 18;
++static int tps23881_pi_disable(struct pse_controller_dev *pcdev, int id)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	u8 chan;
++	u16 val;
++	int ret;
 +
-+	/* Register PI regulators */
-+	for (i = 0; i < pcdev->nr_lines; i++) {
-+		char *reg_name;
++	if (id >= TPS23881_MAX_CHANS)
++		return -ERANGE;
 +
-+		/* Do not register regulator for PIs not described */
-+		if (!pcdev->of_legacy && !pcdev->pi[i].np)
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4)
++		val = (u16)(ret | BIT(chan + 4));
++	else
++		val = (u16)(ret | BIT(chan + 8));
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4)
++			val |= BIT(chan + 4);
++		else
++			val |= BIT(chan + 8);
++	}
++
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int tps23881_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	bool enabled;
++	u8 chan;
++	int ret;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4)
++		enabled = ret & BIT(chan);
++	else
++		enabled = ret & BIT(chan + 4);
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4)
++			enabled &= !!(ret & BIT(chan));
++		else
++			enabled &= !!(ret & BIT(chan + 4));
++	}
++
++	/* Return enabled status only if both channel are on this state */
++	return enabled;
++}
++
++static int tps23881_ethtool_get_status(struct pse_controller_dev *pcdev,
++				       unsigned long id,
++				       struct netlink_ext_ack *extack,
++				       struct pse_control_status *status)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	bool enabled, delivering;
++	u8 chan;
++	int ret;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4) {
++		enabled = ret & BIT(chan);
++		delivering = ret & BIT(chan + 4);
++	} else {
++		enabled = ret & BIT(chan + 4);
++		delivering = ret & BIT(chan + 8);
++	}
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4) {
++			enabled &= !!(ret & BIT(chan));
++			delivering &= !!(ret & BIT(chan + 4));
++		} else {
++			enabled &= !!(ret & BIT(chan + 4));
++			delivering &= !!(ret & BIT(chan + 8));
++		}
++	}
++
++	/* Return delivering status only if both channel are on this state */
++	if (delivering)
++		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING;
++	else
++		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED;
++
++	/* Return enabled status only if both channel are on this state */
++	if (enabled)
++		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED;
++	else
++		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED;
++
++	return 0;
++}
++
++/* Parse managers subnode into a array of device node */
++static int
++tps23881_get_of_channels(struct tps23881_priv *priv,
++			 struct device_node *chan_node[TPS23881_MAX_CHANS])
++{
++	struct device_node *channels_node, *node;
++	int i, ret;
++
++	if (!priv->np)
++		return -EINVAL;
++
++	channels_node = of_find_node_by_name(priv->np, "channels");
++	if (!channels_node)
++		return -EINVAL;
++
++	for_each_child_of_node(channels_node, node) {
++		u32 chan_id;
++
++		if (!of_node_name_eq(node, "channel"))
 +			continue;
 +
-+		reg_name = devm_kzalloc(pcdev->dev, reg_name_len, GFP_KERNEL);
-+		if (!reg_name)
-+			return -ENOMEM;
++		ret = of_property_read_u32(node, "reg", &chan_id);
++		if (ret) {
++			ret = -EINVAL;
++			goto out;
++		}
 +
-+		snprintf(reg_name, reg_name_len, "pse-%s_pi%d",
-+			 dev_name(pcdev->dev), i);
++		if (chan_id >= TPS23881_MAX_CHANS || chan_node[chan_id]) {
++			dev_err(&priv->client->dev,
++				"wrong number of port (%d)\n", chan_id);
++			ret = -EINVAL;
++			goto out;
++		}
 +
-+		ret = devm_pse_pi_regulator_register(pcdev, reg_name, i);
++		of_node_get(node);
++		chan_node[chan_id] = node;
++	}
++
++	of_node_put(channels_node);
++	return 0;
++
++out:
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		of_node_put(chan_node[i]);
++		chan_node[i] = NULL;
++	}
++
++	of_node_put(node);
++	of_node_put(channels_node);
++	return ret;
++}
++
++struct tps23881_port_matrix {
++	u8 pi_id;
++	u8 lgcl_chan[2];
++	u8 hw_chan[2];
++	bool is_4p;
++	bool exist;
++};
++
++static int
++tps23881_match_channel(const struct pse_pi_pairset *pairset,
++		       struct device_node *chan_node[TPS23881_MAX_CHANS])
++{
++	int i;
++
++	/* Look on every channels */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (pairset->np == chan_node[i])
++			return i;
++	}
++
++	return -ENODEV;
++}
++
++static bool
++tps23881_is_chan_free(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
++		      int chan)
++{
++	int i;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (port_matrix[i].exist &&
++		    (port_matrix[i].hw_chan[0] == chan ||
++		    port_matrix[i].hw_chan[1] == chan))
++			return false;
++	}
++
++	return true;
++}
++
++/* Fill port matrix with the matching channels */
++static int
++tps23881_match_port_matrix(struct pse_pi *pi, int pi_id,
++			   struct device_node *chan_node[TPS23881_MAX_CHANS],
++			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++{
++	int ret;
++
++	if (!pi->pairset[0].np)
++		return 0;
++
++	ret = tps23881_match_channel(&pi->pairset[0], chan_node);
++	if (ret < 0)
++		return ret;
++
++	if (!tps23881_is_chan_free(port_matrix, ret)) {
++		pr_err("tps23881: channel %d already used\n", ret);
++		return -ENODEV;
++	}
++
++	port_matrix[pi_id].hw_chan[0] = ret;
++	port_matrix[pi_id].exist = true;
++
++	if (!pi->pairset[1].np)
++		return 0;
++
++	ret = tps23881_match_channel(&pi->pairset[1], chan_node);
++	if (ret < 0)
++		return ret;
++
++	if (!tps23881_is_chan_free(port_matrix, ret)) {
++		pr_err("tps23881: channel %d already used\n", ret);
++		return -ENODEV;
++	}
++
++	if (port_matrix[pi_id].hw_chan[0] / 4 != ret / 4) {
++		pr_err("tps23881: 4-pair PSE can only be set within the same 4 ports group");
++		return -ENODEV;
++	}
++
++	port_matrix[pi_id].hw_chan[1] = ret;
++	port_matrix[pi_id].is_4p = true;
++
++	return 0;
++}
++
++static int
++tps23881_get_unused_chan(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
++			 int port_cnt)
++{
++	bool used;
++	int i, j;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		used = false;
++
++		for (j = 0; j < port_cnt; j++) {
++			if (port_matrix[j].hw_chan[0] == i) {
++				used = true;
++				break;
++			}
++
++			if (port_matrix[j].is_4p &&
++			    port_matrix[j].hw_chan[1] == i) {
++				used = true;
++				break;
++			}
++		}
++
++		if (!used)
++			return i;
++	}
++
++	return -1;
++}
++
++/* Sort the port matrix to following particular hardware ports matrix
++ * specification of the tps23881. The device has two 4-ports groups and
++ * each 4-pair powered device has to be configured to use two consecutive
++ * logical channel in each 4 ports group (1 and 2 or 3 and 4). Also the
++ * hardware matrix has to be fully configured even with unused chan to be
++ * valid.
++ */
++static int
++tps23881_sort_port_matrix(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++{
++	struct tps23881_port_matrix tmp_port_matrix[TPS23881_MAX_CHANS] = {0};
++	int i, ret, port_cnt = 0, cnt_4ch_grp1 = 0, cnt_4ch_grp2 = 4;
++
++	/* Configure 4p port matrix */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		int *cnt;
++
++		if (!port_matrix[i].exist || !port_matrix[i].is_4p)
++			continue;
++
++		if (port_matrix[i].hw_chan[0] < 4)
++			cnt = &cnt_4ch_grp1;
++		else
++			cnt = &cnt_4ch_grp2;
++
++		tmp_port_matrix[port_cnt].exist = true;
++		tmp_port_matrix[port_cnt].is_4p = true;
++		tmp_port_matrix[port_cnt].pi_id = i;
++		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
++		tmp_port_matrix[port_cnt].hw_chan[1] = port_matrix[i].hw_chan[1];
++
++		/* 4-pair ports have to be configured with consecutive
++		 * logical channels 0 and 1, 2 and 3.
++		 */
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
++		tmp_port_matrix[port_cnt].lgcl_chan[1] = (*cnt)++;
++
++		port_cnt++;
++	}
++
++	/* Configure 2p port matrix */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		int *cnt;
++
++		if (!port_matrix[i].exist || port_matrix[i].is_4p)
++			continue;
++
++		if (port_matrix[i].hw_chan[0] < 4)
++			cnt = &cnt_4ch_grp1;
++		else
++			cnt = &cnt_4ch_grp2;
++
++		tmp_port_matrix[port_cnt].exist = true;
++		tmp_port_matrix[port_cnt].pi_id = i;
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
++		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
++
++		port_cnt++;
++	}
++
++	/* Complete the rest of the first 4 port group matrix even if
++	 * channels are unused
++	 */
++	while (cnt_4ch_grp1 < 4) {
++		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
++		if (ret < 0) {
++			pr_err("tps23881: port matrix issue, no chan available\n");
++			return -ENODEV;
++		}
++
++		if (port_cnt >= TPS23881_MAX_CHANS) {
++			pr_err("tps23881: wrong number of channels\n");
++			return -ENODEV;
++		}
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp1;
++		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
++		cnt_4ch_grp1++;
++		port_cnt++;
++	}
++
++	/* Complete the rest of the second 4 port group matrix even if
++	 * channels are unused
++	 */
++	while (cnt_4ch_grp2 < 8) {
++		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
++		if (ret < 0) {
++			pr_err("tps23881: port matrix issue, no chan available\n");
++			return -ENODEV;
++		}
++
++		if (port_cnt >= TPS23881_MAX_CHANS) {
++			pr_err("tps23881: wrong number of channels\n");
++			return -ENODEV;
++		}
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp2;
++		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
++		cnt_4ch_grp2++;
++		port_cnt++;
++	}
++
++	memcpy(port_matrix, tmp_port_matrix, sizeof(tmp_port_matrix));
++
++	return port_cnt;
++}
++
++/* Write port matrix to the hardware port matrix and the software port
++ * matrix.
++ */
++static int
++tps23881_write_port_matrix(struct tps23881_priv *priv,
++			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
++			   int port_cnt)
++{
++	struct i2c_client *client = priv->client;
++	u8 pi_id, lgcl_chan, hw_chan;
++	u16 val = 0;
++	int i, ret;
++
++	for (i = 0; i < port_cnt; i++) {
++		pi_id = port_matrix[i].pi_id;
++		lgcl_chan = port_matrix[i].lgcl_chan[0];
++		hw_chan = port_matrix[i].hw_chan[0] % 4;
++
++		/* Set software port matrix for existing ports */
++		if (port_matrix[i].exist)
++			priv->port[pi_id].chan[0] = lgcl_chan;
++
++		/* Set hardware port matrix for all ports */
++		val |= hw_chan << (lgcl_chan * 2);
++
++		if (!port_matrix[i].is_4p)
++			continue;
++
++		lgcl_chan = port_matrix[i].lgcl_chan[1];
++		hw_chan = port_matrix[i].hw_chan[1] % 4;
++
++		/* Set software port matrix for existing ports */
++		if (port_matrix[i].exist) {
++			priv->port[pi_id].is_4p = true;
++			priv->port[pi_id].chan[1] = lgcl_chan;
++		}
++
++		/* Set hardware port matrix for all ports */
++		val |= hw_chan << (lgcl_chan * 2);
++	}
++
++	/* Write hardware ports matrix */
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_MAP, val);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int
++tps23881_set_ports_conf(struct tps23881_priv *priv,
++			struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++{
++	struct i2c_client *client = priv->client;
++	int i, ret;
++	u16 val;
++
++	/* Set operating mode */
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_OP_MODE, 0xaaaa);
++	if (ret < 0)
++		return ret;
++
++	/* Disable DC disconnect */
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DIS_EN, 0x0);
++	if (ret < 0)
++		return ret;
++
++	/* Set port power allocation */
++	val = 0;
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!port_matrix[i].exist)
++			continue;
++
++		if (port_matrix[i].is_4p)
++			val |= 0xf << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
++		else
++			val |= 0x3 << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
++	}
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_POWER, val);
++	if (ret < 0)
++		return ret;
++
++	/* Enable detection and classification */
++	val = 0;
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!port_matrix[i].exist)
++			continue;
++
++		val |= BIT(port_matrix[i].lgcl_chan[0]) |
++		       BIT(port_matrix[i].lgcl_chan[0] + 4);
++		if (port_matrix[i].is_4p)
++			val |= BIT(port_matrix[i].lgcl_chan[1]) |
++			       BIT(port_matrix[i].lgcl_chan[1] + 4);
++	}
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DET_CLA_EN, 0xffff);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int
++tps23881_set_ports_matrix(struct tps23881_priv *priv,
++			  struct device_node *chan_node[TPS23881_MAX_CHANS])
++{
++	struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS] = {0};
++	int i, ret;
++
++	/* Update with values for every PSE PIs */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		ret = tps23881_match_port_matrix(&priv->pcdev.pi[i], i,
++						 chan_node, port_matrix);
 +		if (ret)
 +			return ret;
 +	}
 +
- 	mutex_lock(&pse_list_mutex);
- 	list_add(&pcdev->list, &pse_controller_list);
- 	mutex_unlock(&pse_list_mutex);
-@@ -281,6 +484,9 @@ void pse_control_put(struct pse_control *psec)
- 	if (IS_ERR_OR_NULL(psec))
- 		return;
- 
-+	if (psec->pcdev->pi[psec->id].enabled)
-+		regulator_disable(psec->ps);
++	ret = tps23881_sort_port_matrix(port_matrix);
++	if (ret < 0)
++		return ret;
 +
- 	mutex_lock(&pse_list_mutex);
- 	__pse_control_put_internal(psec);
- 	mutex_unlock(&pse_list_mutex);
-@@ -288,9 +494,11 @@ void pse_control_put(struct pse_control *psec)
- EXPORT_SYMBOL_GPL(pse_control_put);
- 
- static struct pse_control *
--pse_control_get_internal(struct pse_controller_dev *pcdev, unsigned int index)
-+pse_control_get_internal(struct device *dev, struct pse_controller_dev *pcdev,
-+			 unsigned int index)
- {
- 	struct pse_control *psec;
-+	int ret;
- 
- 	lockdep_assert_held(&pse_list_mutex);
- 
-@@ -310,6 +518,20 @@ pse_control_get_internal(struct pse_controller_dev *pcdev, unsigned int index)
- 		return ERR_PTR(-ENODEV);
- 	}
- 
-+	psec->ps = devm_regulator_get_exclusive(dev,
-+						rdev_get_name(pcdev->pi[index].rdev));
-+	if (IS_ERR(psec->ps)) {
-+		kfree(psec);
-+		return ERR_CAST(psec->ps);
-+	}
-+
-+	ret = regulator_is_enabled(psec->ps);
-+	if (ret < 0) {
-+		kfree(psec);
-+		return ERR_PTR(ret);
-+	}
-+	pcdev->pi[index].enabled = ret;
-+
- 	psec->pcdev = pcdev;
- 	list_add(&psec->list, &pcdev->pse_control_head);
- 	psec->id = index;
-@@ -344,7 +566,8 @@ static int psec_id_legacy_xlate(struct pse_controller_dev *pcdev,
- 	return pse_spec->args[0];
- }
- 
--struct pse_control *of_pse_control_get(struct device_node *node)
-+struct pse_control *of_pse_control_get(struct device *dev,
-+				       struct device_node *node)
- {
- 	struct pse_controller_dev *r, *pcdev;
- 	struct of_phandle_args args;
-@@ -394,7 +617,7 @@ struct pse_control *of_pse_control_get(struct device_node *node)
- 	}
- 
- 	/* pse_list_mutex also protects the pcdev's pse_control list */
--	psec = pse_control_get_internal(pcdev, psec_id);
-+	psec = pse_control_get_internal(dev, pcdev, psec_id);
- 
- out:
- 	mutex_unlock(&pse_list_mutex);
-@@ -425,9 +648,9 @@ int pse_ethtool_get_status(struct pse_control *psec,
- 		return -EOPNOTSUPP;
- 	}
- 
--	mutex_lock(&psec->pcdev->lock);
-+	pse_lock(psec->pcdev);
- 	err = ops->ethtool_get_status(psec->pcdev, psec->id, extack, status);
--	mutex_unlock(&psec->pcdev->lock);
-+	pse_unlock(psec->pcdev);
- 
- 	return err;
- }
-@@ -443,20 +666,25 @@ int pse_ethtool_set_config(struct pse_control *psec,
- 			   struct netlink_ext_ack *extack,
- 			   const struct pse_control_config *config)
- {
--	const struct pse_controller_ops *ops;
--	int err;
-+	int err = 0;
- 
--	ops = psec->pcdev->ops;
--
--	if (!ops->ethtool_set_config) {
--		NL_SET_ERR_MSG(extack,
--			       "PSE driver does not configuration");
--		return -EOPNOTSUPP;
-+	/* Look at enabled status to not call regulator_enable or
-+	 * regulator_disable twice creating a regulator counter mismatch
-+	 */
-+	pse_lock(psec->pcdev);
-+	switch (config->c33_admin_control) {
-+	case ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED:
-+		if (!psec->pcdev->pi[psec->id].enabled)
-+			err = regulator_enable(psec->ps);
-+		break;
-+	case ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED:
-+		if (psec->pcdev->pi[psec->id].enabled)
-+			err = regulator_disable(psec->ps);
-+		break;
-+	default:
-+		err = -EOPNOTSUPP;
- 	}
--
--	mutex_lock(&psec->pcdev->lock);
--	err = ops->ethtool_set_config(psec->pcdev, psec->id, extack, config);
--	mutex_unlock(&psec->pcdev->lock);
-+	pse_unlock(psec->pcdev);
- 
- 	return err;
- }
-diff --git a/drivers/net/pse-pd/pse_regulator.c b/drivers/net/pse-pd/pse_regulator.c
-index e34ab8526067..a6f61489fd12 100644
---- a/drivers/net/pse-pd/pse_regulator.c
-+++ b/drivers/net/pse-pd/pse_regulator.c
-@@ -24,37 +24,41 @@ static struct pse_reg_priv *to_pse_reg(struct pse_controller_dev *pcdev)
- }
- 
- static int
--pse_reg_ethtool_set_config(struct pse_controller_dev *pcdev, unsigned long id,
--			   struct netlink_ext_ack *extack,
--			   const struct pse_control_config *config)
-+pse_reg_pi_enable(struct pse_controller_dev *pcdev, int id)
- {
- 	struct pse_reg_priv *priv = to_pse_reg(pcdev);
- 	int ret;
- 
--	if (priv->admin_state == config->podl_admin_control)
--		return 0;
--
--	switch (config->podl_admin_control) {
--	case ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED:
--		ret = regulator_enable(priv->ps);
--		break;
--	case ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED:
--		ret = regulator_disable(priv->ps);
--		break;
--	default:
--		dev_err(pcdev->dev, "Unknown admin state %i\n",
--			config->podl_admin_control);
--		ret = -ENOTSUPP;
--	}
--
-+	ret = regulator_enable(priv->ps);
- 	if (ret)
- 		return ret;
- 
--	priv->admin_state = config->podl_admin_control;
-+	priv->admin_state = ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED;
-+	return 0;
-+}
-+
-+static int
-+pse_reg_pi_disable(struct pse_controller_dev *pcdev, int id)
-+{
-+	struct pse_reg_priv *priv = to_pse_reg(pcdev);
-+	int ret;
- 
-+	ret = regulator_disable(priv->ps);
++	ret = tps23881_write_port_matrix(priv, port_matrix, ret);
 +	if (ret)
 +		return ret;
 +
-+	priv->admin_state = ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED;
- 	return 0;
- }
- 
-+static int
-+pse_reg_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
-+{
-+	struct pse_reg_priv *priv = to_pse_reg(pcdev);
++	ret = tps23881_set_ports_conf(priv, port_matrix);
++	if (ret)
++		return ret;
 +
-+	return regulator_is_enabled(priv->ps);
++	return 0;
 +}
 +
- static int
- pse_reg_ethtool_get_status(struct pse_controller_dev *pcdev, unsigned long id,
- 			   struct netlink_ext_ack *extack,
-@@ -80,7 +84,9 @@ pse_reg_ethtool_get_status(struct pse_controller_dev *pcdev, unsigned long id,
- 
- static const struct pse_controller_ops pse_reg_ops = {
- 	.ethtool_get_status = pse_reg_ethtool_get_status,
--	.ethtool_set_config = pse_reg_ethtool_set_config,
-+	.pi_enable = pse_reg_pi_enable,
-+	.pi_is_enabled = pse_reg_pi_is_enabled,
-+	.pi_disable = pse_reg_pi_disable,
- };
- 
- static int
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index cf0eebb3b0a9..c64c709dbbc1 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -56,10 +56,10 @@ struct pse_controller_ops {
- 	int (*ethtool_get_status)(struct pse_controller_dev *pcdev,
- 		unsigned long id, struct netlink_ext_ack *extack,
- 		struct pse_control_status *status);
--	int (*ethtool_set_config)(struct pse_controller_dev *pcdev,
--		unsigned long id, struct netlink_ext_ack *extack,
--		const struct pse_control_config *config);
- 	int (*setup_pi_matrix)(struct pse_controller_dev *pcdev);
-+	int (*pi_is_enabled)(struct pse_controller_dev *pcdev, int id);
-+	int (*pi_enable)(struct pse_controller_dev *pcdev, int id);
-+	int (*pi_disable)(struct pse_controller_dev *pcdev, int id);
- };
- 
- struct module;
-@@ -91,10 +91,14 @@ struct pse_pi_pairset {
-  *
-  * @pairset: table of the PSE PI pinout alternative for the two pairset
-  * @np: device node pointer of the PSE PI node
-+ * @rdev: regulator represented by the PSE PI
-+ * @enabled: PI enabled state
-  */
- struct pse_pi {
- 	struct pse_pi_pairset pairset[2];
- 	struct device_node *np;
-+	struct regulator_dev *rdev;
-+	bool enabled;
- };
- 
- /**
-@@ -108,6 +112,8 @@ struct pse_pi {
-  * @of_pse_n_cells: number of cells in PSE line specifiers
-  * @nr_lines: number of PSE controls in this controller device
-  * @lock: Mutex for serialization access to the PSE controller
-+ * @lock_owner: current owner of the mutex
-+ * @ref_cnt: mutex's reference count
-  * @types: types of the PSE controller
-  * @pi: table of PSE PIs described in this controller device
-  * @of_legacy: flag set if the pse_pis devicetree node is not used
-@@ -121,6 +127,8 @@ struct pse_controller_dev {
- 	int of_pse_n_cells;
- 	unsigned int nr_lines;
- 	struct mutex lock;
-+	struct task_struct *lock_owner;
-+	int ref_cnt;
- 	u32 types;
- 	struct pse_pi *pi;
- 	bool of_legacy;
-@@ -133,7 +141,8 @@ struct device;
- int devm_pse_controller_register(struct device *dev,
- 				 struct pse_controller_dev *pcdev);
- 
--struct pse_control *of_pse_control_get(struct device_node *node);
-+struct pse_control *of_pse_control_get(struct device *dev,
-+				       struct device_node *node);
- void pse_control_put(struct pse_control *psec);
- 
- int pse_ethtool_get_status(struct pse_control *psec,
-@@ -148,7 +157,8 @@ bool pse_has_c33(struct pse_control *psec);
- 
- #else
- 
--static inline struct pse_control *of_pse_control_get(struct device_node *node)
-+static inline struct pse_control *of_pse_control_get(struct device *dev,
-+						     struct device_node *node)
- {
- 	return ERR_PTR(-ENOENT);
- }
++static int tps23881_setup_pi_matrix(struct pse_controller_dev *pcdev)
++{
++	struct device_node *chan_node[TPS23881_MAX_CHANS] = {NULL};
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	int ret, i;
++
++	ret = tps23881_get_of_channels(priv, chan_node);
++	if (ret < 0) {
++		dev_warn(&priv->client->dev,
++			 "Unable to parse port-matrix, default matrix will be used\n");
++		return 0;
++	}
++
++	ret = tps23881_set_ports_matrix(priv, chan_node);
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++)
++		of_node_put(chan_node[i]);
++
++	return ret;
++}
++
++static const struct pse_controller_ops tps23881_ops = {
++	.setup_pi_matrix = tps23881_setup_pi_matrix,
++	.pi_enable = tps23881_pi_enable,
++	.pi_disable = tps23881_pi_disable,
++	.pi_is_enabled = tps23881_pi_is_enabled,
++	.ethtool_get_status = tps23881_ethtool_get_status,
++};
++
++static const char fw_parity_name[] = "ti/tps23881/tps23881-parity-14.bin";
++static const char fw_sram_name[] = "ti/tps23881/tps23881-sram-14.bin";
++
++struct tps23881_fw_conf {
++	u8 reg;
++	u8 val;
++};
++
++static const struct tps23881_fw_conf tps23881_parity_flash_conf[] = {
++	{.reg = 0x60, .val = 0x01},
++	{.reg = 0x62, .val = 0x00},
++	{.reg = 0x63, .val = 0x80},
++	{.reg = 0x60, .val = 0xC4},
++	{.reg = 0x1D, .val = 0xBC},
++	{.reg = 0xD7, .val = 0x02},
++	{.reg = 0x91, .val = 0x00},
++	{.reg = 0x90, .val = 0x00},
++	{.reg = 0xD7, .val = 0x00},
++	{.reg = 0x1D, .val = 0x00},
++	{ /* sentinel */ }
++};
++
++static const struct tps23881_fw_conf tps23881_sram_flash_conf[] = {
++	{.reg = 0x60, .val = 0xC5},
++	{.reg = 0x62, .val = 0x00},
++	{.reg = 0x63, .val = 0x80},
++	{.reg = 0x60, .val = 0xC0},
++	{.reg = 0x1D, .val = 0xBC},
++	{.reg = 0xD7, .val = 0x02},
++	{.reg = 0x91, .val = 0x00},
++	{.reg = 0x90, .val = 0x00},
++	{.reg = 0xD7, .val = 0x00},
++	{.reg = 0x1D, .val = 0x00},
++	{ /* sentinel */ }
++};
++
++static int tps23881_flash_fw_part(struct i2c_client *client,
++				  const char *fw_name,
++				  const struct tps23881_fw_conf *fw_conf)
++{
++	const struct firmware *fw = NULL;
++	int i, ret;
++
++	ret = request_firmware(&fw, fw_name, &client->dev);
++	if (ret)
++		return ret;
++
++	dev_info(&client->dev, "Flashing %s\n", fw_name);
++
++	/* Prepare device for RAM download */
++	while (fw_conf->reg) {
++		ret = i2c_smbus_write_byte_data(client, fw_conf->reg,
++						fw_conf->val);
++		if (ret < 0)
++			return ret;
++
++		fw_conf++;
++	}
++
++	/* Flash the firmware file */
++	for (i = 0; i < fw->size; i++) {
++		ret = i2c_smbus_write_byte_data(client,
++						TPS23881_REG_SRAM_DATA,
++						fw->data[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	release_firmware(fw);
++
++	return 0;
++}
++
++static int tps23881_flash_fw(struct i2c_client *client)
++{
++	int ret;
++
++	ret = tps23881_flash_fw_part(client, fw_parity_name,
++				     tps23881_parity_flash_conf);
++	if (ret)
++		return ret;
++
++	ret = tps23881_flash_fw_part(client, fw_sram_name,
++				     tps23881_sram_flash_conf);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_SRAM_CTRL, 0x18);
++	if (ret < 0)
++		return ret;
++
++	mdelay(12);
++
++	return 0;
++}
++
++static int tps23881_i2c_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct tps23881_priv *priv;
++	int ret;
++	u8 val;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
++		dev_err(dev, "i2c check functionality failed\n");
++		return -ENXIO;
++	}
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_DEVID);
++	if (ret < 0)
++		return ret;
++
++	if (ret != 0x22) {
++		dev_err(dev, "Wrong device ID\n");
++		return -ENXIO;
++	}
++
++	ret = tps23881_flash_fw(client);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_FWREV);
++	if (ret < 0)
++		return ret;
++
++	dev_info(&client->dev, "Firmware revision 0x%x\n", ret);
++
++	/* Set configuration B, 16 bit access on a single device address */
++	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_GEN_MASK);
++	if (ret < 0)
++		return ret;
++
++	val = ret | TPS23881_REG_NBITACC;
++	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_GEN_MASK, val);
++	if (ret < 0)
++		return ret;
++
++	priv->client = client;
++	i2c_set_clientdata(client, priv);
++	priv->np = dev->of_node;
++
++	priv->pcdev.owner = THIS_MODULE;
++	priv->pcdev.ops = &tps23881_ops;
++	priv->pcdev.dev = dev;
++	priv->pcdev.types = PSE_C33;
++	priv->pcdev.nr_lines = TPS23881_MAX_CHANS;
++	ret = devm_pse_controller_register(dev, &priv->pcdev);
++	if (ret) {
++		return dev_err_probe(dev, ret,
++				     "failed to register PSE controller\n");
++	}
++
++	return ret;
++}
++
++static const struct i2c_device_id tps23881_id[] = {
++	{ "tps23881", 0 },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, tps23881_id);
++
++static const struct of_device_id tps23881_of_match[] = {
++	{ .compatible = "ti,tps23881", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, tps23881_of_match);
++
++static struct i2c_driver tps23881_driver = {
++	.probe		= tps23881_i2c_probe,
++	.id_table	= tps23881_id,
++	.driver		= {
++		.name		= "tps23881",
++		.of_match_table = tps23881_of_match,
++	},
++};
++module_i2c_driver(tps23881_driver);
++
++MODULE_AUTHOR("Kory Maincent <kory.maincent@bootlin.com>");
++MODULE_DESCRIPTION("TI TPS23881 PoE PSE Controller driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.25.1
