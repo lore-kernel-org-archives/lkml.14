@@ -1,165 +1,267 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D3E6A350;
-	Thu,  8 Feb 2024 08:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707381064; cv=fail; b=OfzmBCZUL1Mt214zuTfwtm6mHIqUi9qoCDqGNmwm7ukWqLqoHZi7qf5FzYbcMPsiFGjssSN/Ml0ya94d/LvERyTFe8sHz7dNrBDdGuz6xUp4+XREpguOrlVCNWqocUZamIOh1ONpzEN8pHlBPfWHLhnHjHTpqeQO+mz3sBl7j2o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707381064; c=relaxed/simple;
-	bh=zS/0q78ibp7k2aPZKI8Wz8vX51KHjb4LmNTZFGJ0r+E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rI21nITG1Wf4wbUfVqjje6Hubkax262h7b2xNIFjzyW2PbYf6tIPEIyeIz24hKoavvynNrXetq5C3Lm1wHpFriuR6mj06e682QaJp9dfwXz0x0Y+FE6smyF22/JpS6+cTcApqgz7nvHU2IkLb2n2jOYtHWN1sk2AkZEykbSOpoU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cLyh53zB; arc=fail smtp.client-ip=40.107.220.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9100C1E4A8;
+	Thu,  8 Feb 2024 08:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707381243; cv=none; b=fpDF0WFdriZuL0HRNSHY6ftoq5o7ACPi+L6PoIieB9Wue79fQQ6UTWsD0lK5IfpH8bZHtztRTiLqv5K1rYzarioiu3MRLYWpdi/MnZ2nQKkFYWj0Rqm9B8HQaB/K3mogmitUSIu8yVoocR0OF6VZDlw101JnlZt3NMxI66ndqJc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707381243; c=relaxed/simple;
+	bh=yQIpBBEIxx4/IIjfHNRw5tmPHKF8fKnfitNKVQcauKM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JDbqNcXkKCeYR3DvnxoxX02+7ZU4xKBiqxmKwmInSd38DUzEsVjSrNos98oaeiUGsDvfmGVSoUgnfjIvSP5+E5plPMmTcIboAnX0t/gOVGITw6EbWfZTYuJNYrt+TONfq5YqxOTXRxNRDx0eZeMsWM6O4ylFQgf5SFVzeBVkpQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XwxPSA/r; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=i6LLynjM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XwxPSA/r; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=i6LLynjM; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cLyh53zB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TAY1D0PbWOn8RTsXhDnb/HwY//VliG1zuibnM55IECgpptiO6uZq9cruTX//UKrn395gtZ1d5tAkjgpZ1BOtz/wfjvl0jOHz9GjfSE+1tkKgKP6FyvidOtsY46RK1SAyLgZ2xaebUMkLMVGEo/bsCS7pEfX2i+bY35Gni8fonxFXOYsijgfpKHV3CmfCD+sMLh53zYWJ0jWmgGla2CPV9wmuz2Tm8/7rFp66xCYxUhhqBNE0KeQSaXTButWY1PCGhaqSoKfasNIvjyB1T0re/NcCIx+SvAfsmWNpIVvLvzc5UJmPeFYt/qAAGjcYtu9Dp4zmGXVuJBV6QcGjIsg/Xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JDApHOrdskyAPIovvPjibk9EHl72RmLXXhtWnnMho+Q=;
- b=QcGKsn7lFyvvFDGWoCCUFRiYk4kpbIQtVC0NgG0sKBVUSaNH986OkiPSNJpIFKDkSLAIgfqrYEwhdJH6tQKk0+cnA35oJ4UJ4Non9OXOegPoZmi7RfllVGVMps2Op011QEIvdXY4lp8om7UvSL7R8IExa0nCi5RVwQvaILX6o1K9BXHoSAyptcVcfNnVzt/VzkuzyT83wFteUO7cOk3RE1EyKdVUNw1zFVti8zFW9bqYY0lRQppDQHQ1vJT65/7QP10En/Mlpt6xMMErrFbaFQdAMoll70R5Q2kT7Ss8bYd09TYaa0hNd/PQMN1gyAi7LXpdgBHNG/oez62A87hkMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JDApHOrdskyAPIovvPjibk9EHl72RmLXXhtWnnMho+Q=;
- b=cLyh53zBKfrUF78LRlAgYrsHcyXvx3UZ8Il47UARMiddexxdCljtjqbEHQ5WaLcEXpMva310AXjSE7oV/oVHFGrzf1CzfeuV2coA/QIFdKdH5TQwPo8QfHH5pq6AQPmlex9M5ZD/3OLnuRHhJuh24YusThhzh6rt9RPybgnVTUc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
- by PH7PR12MB7210.namprd12.prod.outlook.com (2603:10b6:510:205::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.14; Thu, 8 Feb
- 2024 08:31:00 +0000
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::f16c:d6e8:91e8:f856]) by IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::f16c:d6e8:91e8:f856%7]) with mapi id 15.20.7270.012; Thu, 8 Feb 2024
- 08:31:00 +0000
-Message-ID: <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
-Date: Thu, 8 Feb 2024 14:00:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: linux-next20240208: tg3 driver nw interfaces not getting configured
-Content-Language: en-US
-To: Stephen Rothwell <sfr@canb.auug.org.au>, hkallweit1@gmail.com,
- andrew@lunn.ch, Jakub Kicinski <kuba@kernel.org>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240208155740.24c6ada7@canb.auug.org.au>
-From: "Aithal, Srikanth" <sraithal@amd.com>
-In-Reply-To: <20240208155740.24c6ada7@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0158.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::28) To IA1PR12MB6460.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::13)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XwxPSA/r";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="i6LLynjM";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XwxPSA/r";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="i6LLynjM"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8AE3B1FCA1;
+	Thu,  8 Feb 2024 08:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707381239; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fs8rzxLNmwlqkJjO3hZMPEHaTXcNfexMZfLhq/hjgdw=;
+	b=XwxPSA/rqRdkAUNLQ/eUO8vFDXbq1aFN8h/uaNasK1TfkwxIBlQhi2TAE8i8L3H+1t88Vk
+	76PfcZZ7PnA/fQeEftPJ6rFfxrb7AQF3D+799ZSE/r4WSzPLean+TQ6JiGGePIZRDKE+07
+	rhC6rZi823vuLFBW0VXgVbERTTJw5wY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707381239;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fs8rzxLNmwlqkJjO3hZMPEHaTXcNfexMZfLhq/hjgdw=;
+	b=i6LLynjMBh/8H/AooDcHNVFovAsslhIUYIayIg3A/Vx8vg0BQmtFCwuR2NPT6hyBMTTSgw
+	ImtDrMVHWMH6RNBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707381239; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fs8rzxLNmwlqkJjO3hZMPEHaTXcNfexMZfLhq/hjgdw=;
+	b=XwxPSA/rqRdkAUNLQ/eUO8vFDXbq1aFN8h/uaNasK1TfkwxIBlQhi2TAE8i8L3H+1t88Vk
+	76PfcZZ7PnA/fQeEftPJ6rFfxrb7AQF3D+799ZSE/r4WSzPLean+TQ6JiGGePIZRDKE+07
+	rhC6rZi823vuLFBW0VXgVbERTTJw5wY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707381239;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fs8rzxLNmwlqkJjO3hZMPEHaTXcNfexMZfLhq/hjgdw=;
+	b=i6LLynjMBh/8H/AooDcHNVFovAsslhIUYIayIg3A/Vx8vg0BQmtFCwuR2NPT6hyBMTTSgw
+	ImtDrMVHWMH6RNBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EDBCD1326D;
+	Thu,  8 Feb 2024 08:33:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /uiqOPaRxGWSIAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 08 Feb 2024 08:33:58 +0000
+Date: Thu, 08 Feb 2024 09:33:58 +0100
+Message-ID: <87zfwb4ao9.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: <srinivas.kandagatla@linaro.org>,
+	<mathias.nyman@intel.com>,
+	<perex@perex.cz>,
+	<conor+dt@kernel.org>,
+	<corbet@lwn.net>,
+	<lgirdwood@gmail.com>,
+	<andersson@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>,
+	<gregkh@linuxfoundation.org>,
+	<Thinh.Nguyen@synopsys.com>,
+	<broonie@kernel.org>,
+	<bgoswami@quicinc.com>,
+	<tiwai@suse.com>,
+	<robh+dt@kernel.org>,
+	<konrad.dybcio@linaro.org>,
+	<linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>,
+	<linux-arm-msm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>
+Subject: Re: [PATCH v13 35/53] ALSA: usb-audio: Prevent starting of audio stream if in use
+In-Reply-To: <0cb39613-ec01-50aa-807f-b537f201dac0@quicinc.com>
+References: <20240203023645.31105-1-quic_wcheng@quicinc.com>
+	<20240203023645.31105-36-quic_wcheng@quicinc.com>
+	<87y1bxvj0o.wl-tiwai@suse.de>
+	<ef83036f-6605-1db3-d962-ac28a10711ac@quicinc.com>
+	<877cjg7o0k.wl-tiwai@suse.de>
+	<810161b3-4d98-755f-163f-fdfc9fe37063@quicinc.com>
+	<0cb39613-ec01-50aa-807f-b537f201dac0@quicinc.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|PH7PR12MB7210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 679115ae-64c3-4a94-3ad9-08dc28804775
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kytwXs3gEdRssRQ6XWTdwHYyQ1mDsolq3sUTy18NkvwjbisWaZ9jI3fJ3kz+uJlpru5Nv+a4SKXalrrXv5EO8u+Upd9zSmPF3GWLj6bAYeD7AJKN1/fng0AWJdJx8WzAyZo7cgTeIdJExQnKAyTz8nXl2H4DII0jmNX0D+OhUJZtgMbr3ZST4+XHBbGDRUrkTQKgCFGi5jR1lxD+CgoKDaCA8yf65so+/yyC2gTm8Jir7a026HU+pdW8J/LMNSEau74D+E+Cod6ane+Ka8tah/tiKlhUZU50kXnydH4TDGMQBPpiDv86iGtiTDcI67K3foYoXP5CjIss1Qcid1M2x5kn+Q20Hp8pDQZvqh4Sjown0kbob3M3lwCJTXwN69Cb7ADxU0ozjVrO6J3vf5xonrvHDHqrbPbbQkdN9OfAxZ7eUeWZPA4JYb09YMnZ9541r3MRFeCX/2qD2gwLjtMDKEQKZiN6mHl5JsPxtp0pVMZVrY1Gl4kmwIcL2Jw3TP3gR3bLnZVeYFMj+jSnXNSWIb1cV5E+QeB47MNDSbUy3AA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(136003)(39860400002)(346002)(396003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(6486002)(41300700001)(4326008)(478600001)(6506007)(2616005)(26005)(66946007)(966005)(54906003)(6666004)(38100700002)(31696002)(6512007)(8676002)(110136005)(316002)(2906002)(66556008)(31686004)(5660300002)(66476007)(36756003)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TEZadDgvMGNHQzNXOEdtTGxqU1liN1Y0NjM4cFBycHlpb2lENCsyNFFWRGtt?=
- =?utf-8?B?Vm9BSFlUNXZQYS83cSthY1d3b1gwd0tkaDBRb29XVFA2YkMrbktQMms0SG9a?=
- =?utf-8?B?eW5sVlNEWW1JSlI0dm9JSXErS25SRlVIdDA4ZEVNbXE1TDQyVUh0T3BLenJs?=
- =?utf-8?B?ZUMzY1hGeThNc1l1aGJOY1dPOFphL1BNUHlraHliSTcwZjVlQ0NiVWdlbGVt?=
- =?utf-8?B?UFpIclJRS3NTc1huMTZDek9xV0tJYldJYmFuVmU5NURxRUs4bE5sSjI4aWhY?=
- =?utf-8?B?eUlpTjM5KzZzNWVOUDJLeE5mbW8xdUsyaUJEb2tSUldUbjkzSnhWMzlncWI1?=
- =?utf-8?B?RG5ENy85YVB6R3ZxYTRyb2FSUncwbnNoWHd3eXMwdmVwSjNOaTdsZVhNUlNR?=
- =?utf-8?B?MUQ1WFlNZXRQY0tLRkgveEVVRjgwNnVOWm5ZMHB1eWZUaVVHMzFwSm95am00?=
- =?utf-8?B?eHp2dTBES3doTlNNeVptSGgyTElsRHVvVGZBMi9TVG5Qa3V2NDREMktxRGtv?=
- =?utf-8?B?aHFhSVcvZ3puSUVtS2hmUExPZGp2R3cxUTBQUjJ4V2N5aXZma3phYXpaejdV?=
- =?utf-8?B?YUNROU5PbEtUT245eGRRL1drbkVMcmhNMkZIVWxQdm9kYzBPMis2WjFXWTNY?=
- =?utf-8?B?M1lyK2FKeThvNksrQksvY0hpK0RCY2U1WmdPbGxFTzJhZ1hnUElWSmhpczJX?=
- =?utf-8?B?Z3poQ2I3NWxBc29iMTlQa0VwN1N0dTZlK2FxM3dMV3FGVzlheFROb2E5UHU2?=
- =?utf-8?B?MndaZ2lXRkxyNUJjKytFSCtpWVBacEpQRGxVYXQzSG81VTgyUHFsWG5Wdjhv?=
- =?utf-8?B?c24wNFdOTDhETWNaMldBbVQ5bmkvUWVlbjZ0TUVUSG9aelhnN0hMbFBxSEJk?=
- =?utf-8?B?NkdDaGFuTCtiZDV0dkpNaVNlQ1gvSDFGMTBZclEzREJSSXg2YXQ5L2loVGxn?=
- =?utf-8?B?VXJUWi9Bbm80MVorcXowWFQ5QzltZm1RMDNzQ2IwTU45eENuY2h1SXp4YmZn?=
- =?utf-8?B?NTBvbDJIZTdhTkdneXBLcVpzV2ZobmlaeTREcU0vc29NRHZxK1R4eFhNYTVz?=
- =?utf-8?B?RVNmYmlHWWtQSHVFMmtyRExKSjNoWW1lWnFPTG1qS2xINjhieDZ2MnJnejc1?=
- =?utf-8?B?LzJOb1FnQXArTXZxbDY2a1pWTUF6UmVncHFhSkdiY2gxd2lOMUVaTGVuN1hK?=
- =?utf-8?B?Q3ZEUXR1dzBacCtIRzZPa0x6d1dEKzllVENtcmNrOFRJUXQ4R29BYWFORFJ5?=
- =?utf-8?B?MDlpNTlEM1NKR0RWcU92QklUTitsMGNWRkNvUUtFeEJLanlxMGV3Sms1WThy?=
- =?utf-8?B?bEJDMVVRRGdxZnRIeFZtTFBlb0hKV2d3eXNOdDJ2MGJxVFlRN1k0RCt5R2xW?=
- =?utf-8?B?RTJ0eGt4Y0xOcjZ2cUhtTVBvclo3RHE2eTVleUFFTE04VzRmZDJ2bVJtOUhp?=
- =?utf-8?B?T1h1L1JmdG0zNy9oZXlLL2FzcXV1RzF6dW5yNXExQ05uYkg4Z1VCNFBHN0Ix?=
- =?utf-8?B?eXpiTlQ5dU5oWVVnL0pGM0lhUGNuZU1RNG1qR0lCb0ZXNU5KUEZSb2dCOVYz?=
- =?utf-8?B?bUovd1M1ZEF2ZWhIYXB0TExJZzZSMUdnWjVHKzI2RGJsQlBSSE9heXp4OFhn?=
- =?utf-8?B?OWN4Y2IzdTQydVlSOFROUlJyZXVwSUptbWJPMVZvRmxIMEpZQWpSbUU5eVpr?=
- =?utf-8?B?OTcyMWxPNjRkSFF5MXQ2cVd3VFlWRW43c2t5T1A4RmVxVDB4YlNlbWZZSmxU?=
- =?utf-8?B?cHFQOW9wZWNnTzUyRFhhZXBKSkJudUFaTWw1Zkl3eE9uV2pkTThWYUNIMllV?=
- =?utf-8?B?UFZLdGMxS0JXN3BmUm9vMjd3ZjFCSm82eFlxdXk0Nk1pL3NPZGUzVmFXdkNw?=
- =?utf-8?B?Zk1wU3A1aW85ekJ2MGNHSE9aWkE1NWxONzRBR2p0TW1wRGQ0NG9CdHJwN09C?=
- =?utf-8?B?UVpRRFplS2plOGtwaFpzQm9SdkxSUXBzc0RKcHQvTmswTTVldlRzY2FwUExW?=
- =?utf-8?B?RFZvY2NZN2VtKzl0MEVJMnJMdXkvbFQvckNGajB0ZXFEbWx5RVJNd1EzQW04?=
- =?utf-8?B?U0NnNW81bjJiU2Q2ZC9iejlyNURnZVdaZmVWK3c3cUVnL3B2bnRxTWNkaTZW?=
- =?utf-8?Q?cueYvLd3dA9QXxvEKYiula3yL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 679115ae-64c3-4a94-3ad9-08dc28804775
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 08:31:00.2327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9Xs1c9mx/V2C5THhY9PJ8rwP4cJQQE8J2B3eX8ruHZk/t7gc8pYoYt2PAA5C/RIjS3BWN9DLqma5RYziqTCZFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7210
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: *
+X-Spam-Score: 1.40
+X-Spamd-Result: default: False [1.40 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[dt];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 NEURAL_SPAM_SHORT(3.00)[1.000];
+	 R_RATELIMIT(0.00)[to_ip_from(RLjs3ec4aura4kmsd6wxjjm4hg)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[23];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[quicinc.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linaro.org,intel.com,perex.cz,kernel.org,lwn.net,gmail.com,linuxfoundation.org,synopsys.com,quicinc.com,suse.com,vger.kernel.org,alsa-project.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-Hi,
+On Thu, 08 Feb 2024 02:12:00 +0100,
+Wesley Cheng wrote:
+> 
+> Hi Takashi,
+> 
+> On 2/7/2024 4:02 PM, Wesley Cheng wrote:
+> > Hi Takashi,
+> > 
+> > On 2/6/2024 11:05 PM, Takashi Iwai wrote:
+> >> On Wed, 07 Feb 2024 01:08:00 +0100,
+> >> Wesley Cheng wrote:
+> >>> 
+> >>> Hi Takashi,
+> >>> 
+> >>> On 2/6/2024 5:07 AM, Takashi Iwai wrote:
+> >>>> On Sat, 03 Feb 2024 03:36:27 +0100,
+> >>>> Wesley Cheng wrote:
+> >>>>> 
+> >>>>> With USB audio offloading, an audio session is started from the ASoC
+> >>>>> platform sound card and PCM devices.  Likewise, the USB SND path
+> >>>>> is still
+> >>>>> readily available for use, in case the non-offload path is
+> >>>>> desired.  In
+> >>>>> order to prevent the two entities from attempting to use the USB bus,
+> >>>>> introduce a flag that determines when either paths are in use.
+> >>>>> 
+> >>>>> If a PCM device is already in use, the check will return an error to
+> >>>>> userspace notifying that the stream is currently busy.  This
+> >>>>> ensures that
+> >>>>> only one path is using the USB substream.
+> >>>>> 
+> >>>>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> >>>> 
+> >>>> Hm, I'm not sure whether it's safe to hold chip->mutex there for the
+> >>>> long code path.  It even kicks off the auto-resume, which may call
+> >>>> various functions at resuming, and some of them may re-hold
+> >>>> chip->mutex.
+> >>>> 
+> >>> 
+> >>> That's a good point.
+> >>> 
+> >>>> If it's only about the open flag, protect only the flag access with
+> >>>> the mutex, not covering the all open function.  At least the re-entry
+> >>>> can be avoided by that.
+> >>>> 
+> >>> 
+> >>> Sure, let me re-order the check/assignment and the mutex locking.
+> >>> Since this is now checked here in USB PCM and the QC offload driver,
+> >>> we want to make sure that if there was some application attempting to
+> >>> open both at the same time, we prevent any possible races.
+> >>> 
+> >>> I think the best way to address this would be something like:
+> >>> 
+> >>> static int snd_usb_pcm_open(struct snd_pcm_substream *substream)
+> >>> {
+> >>> ...
+> >>>     mutex_lock(&chip->mutex);
+> >>>     if (subs->opened) {
+> >>>         mutex_unlock(&chip->mutex);
+> >>>         return -EBUSY;
+> >>>     }
+> >>>     subs->opened = 1;
+> >>>     mutex_unlock(&chip->mutex);
+> >>> 
+> >>> //Execute bulk of PCM open routine
+> >>> ...
+> >>>     return 0;
+> >>> 
+> >>> // If any errors are seen, unwind
+> >>> err_resume:
+> >>>     snd_usb_autosuspend(subs->stream->chip);
+> >>> err_open:
+> >>>     mutex_lock(&chip->mutex);
+> >>>     subs->opened = 0;
+> >>>     mutex_unlock(&chip->mutex);
+> >>> 
+> >>>     return ret;
+> >>> }
+> >>> 
+> >>> Set the opened flag first, so that if QC offload checks it, it can
+> >>> exit early and vice versa.  Otherwise, if we set the opened flag at
+> >>> the same position as the previous patch, we may be calling the other
+> >>> routines in parallel to the QC offload enable stream routine.  The
+> >>> only thing with this patch is that we'd need some error handling
+> >>> unwinding.
+> >> 
+> >> The above is what I had in mind.
+> >> 
+> >> But, thinking on this again, you might be able to get the same result
+> >> by using the ALSA PCM core substream open_mutex and hw_opened flag.
+> >> This is already held and set at snd_pcm_core() (the hw_opened flag is
+> >> set after open callback, though).  The offload driver can use those
+> >> instead of the own lock and flag, too, although it's not really
+> >> well-mannered behavior (hence you need proper comments).
+> >> 
+> > 
+> > I think I had looked into this as well previously, and it was
+> > difficult to achieve, because from the USB offloading perspective,
+> > we don't ever call: snd_usb_pcm_open()
+> > 
+> > This is actually where we populate the pcm_substream parameter
+> > within struct snd_usb_substream based on when userspace opens the
+> > USB SND PCM device (which is not the case for offloading).  So the
+> > offload driver doesn't have a way to fetch the struct snd_pcm that
+> > is allocated to the PCM device created by the USB SND card.
+> > 
+> 
+> Sorry, took a look at it again, and found a way.  Although not pretty,
+> we can access it using:
+> subs->stream->pcm->streams[direction].substream->hw_opened
 
-On 6.8.0-rc3-next-20240208, the network interfaces are not getting 
-configured.
-
-I have 'NetXtreme BCM5720 Gigabit Ethernet PCIe'
-        configuration: autonegotiation=on broadcast=yes driver=tg3
-
-If I revert below commit I am able to get back the interfaces mentioned.
-
-commit 9bc791341bc9a5c22b94889aa37993bb69faa317
-Author: Heiner Kallweit <hkallweit1@gmail.com>
-Date:   Sat Feb 3 22:12:50 2024 +0100
-
-     tg3: convert EEE handling to use linkmode bitmaps
-
-     Convert EEE handling to use linkmode bitmaps. This prepares for
-     removing the legacy bitmaps from struct ethtool_keee.
-     No functional change intended.
-
-     Note: The change to mii_eee_cap1_mod_linkmode_t(tp->eee.advertised, 
-val)
-     in tg3_phy_autoneg_cfg() isn't completely obvious, but it doesn't 
-change
-     the current functionality.
-
-     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-     Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-     Link: 
-https://lore.kernel.org/r/0652b910-6bcc-421f-8769-38f7dae5037e@gmail.com
-     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Yes, it's not easy to follow it.  So if we want to this path, worth
+for a detailed comment.  That said, I don't mind to introduce the new
+local mutex and flag as you did if the above became too messy in the
+end.
 
 
-The same works fine on 6.8.0-rc3-next-20240207.
+thanks,
 
-Thanks,
-Srikanth Aithal
-sraithal@amd.com
+Takashi
