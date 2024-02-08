@@ -1,199 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C39D1CF91;
-	Thu,  8 Feb 2024 18:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F3C1C6A8
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 18:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707417155; cv=none; b=sJnFi9o/Nhd5hF6Cs5ZdD3gB9QsfwTxy2IkSrz+UAOO7uI+8WNdi7+aobivbsNbyQ7SW0v+X/zvRPG5yYuvbou+vjq31xfYVyj85JkFyBMnAajvL5ztZkVm1OqjXFEoP2TKqiw9s3rWsdf2NTQ92X01sfaAFCAZsAeiRX6gtVHg=
+	t=1707417169; cv=none; b=X21hEhZHshIRobepP8AHwgTsydBsOOcYxfjTuCQER5qm2/6oSfTGtQEU4qJlKJRnzF9P8ZgIwTatR1LOBa0iA7hlftDdbXpZzZxdSNG4GbxEtuzA+A+o+bvDEIYMIyTeQU++VYEd3dYgq6b8YePKwTneyPXf2IQVajRxcO153Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707417155; c=relaxed/simple;
-	bh=8InsWry7BortGoJkrl/sU2aGiKY8qEehwzBkYvlwt+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JJ2d6NlQZS0hNWj51o1K7soxxaqvftAabRJBZ66+xOSsPUtGqKWJZX82bXnc5S3KH676UBPDdZZxJ3qWnLkjSthoFiEGDX9ldT8SvuYKI/pNw/1V1H7dZvNs6EIPAsUmj47jHJ6dRFpJzmyYyqar0AwSmt2ISV8ZuZ978eEvMtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBGom4Ld; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707417169; c=relaxed/simple;
+	bh=tPG2L0PFFFvPH17p6jT3vsgyDqO0Ow7iaEmNEza7wAk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RhKif5cl2DnyuFUybhkzRRVrm+UC3US04Bb5SEDX4oGoOEVAitW20BkollWPkHxFxmilGrINPtAwWbh0CWV6CwrA2AjSXlLvysPq7ESrMXMfJGqXu7YGw+fgQHj+Vg5iAsPw8KYG45zWzw4VXGt57NFT1b8GElqq2GDp8FgcSbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=V7f0Fo8O; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBGom4Ld"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707417154; x=1738953154;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8InsWry7BortGoJkrl/sU2aGiKY8qEehwzBkYvlwt+s=;
-  b=ZBGom4LdhxqIbGb0HnVq8tlWRlUfzMCoENLFy7IvXWNrQWkM5+roTa2i
-   wZYRjIPM6NEhj7PdsuhgBtFL4+lxAGfjSxyxUQx7WK5g272q6NJnIjgFq
-   C4yTeywywj5VuMm7NSrzZPXEkOXe0WP1cEQmp6r57/FWkRTyjKALfhVmu
-   LU0BPG60VzWsUFhT4OPc7/9xDMsJ39x08hjRDhSPBDfbAZXESOyLZn9yF
-   12/8vST83XtKt5VLdniEjh+eoSy6sI8j/yhkYAnCHhcx8im7BEEvEteb9
-   NMtNZx+FfXh+/H7FPfATEss1hgcrDKJBJpVs822o4KsXRJUXG2Jaizyus
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="4268805"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="4268805"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:32:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="824917166"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="824917166"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 08 Feb 2024 10:32:27 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C95C31458; Thu,  8 Feb 2024 20:26:09 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Daniel Thompson <daniel.thompson@linaro.org>,
-	Flavio Suligoi <f.suligoi@asem.it>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH v3 1/3] backlight: mp3309c: Make use of device properties
-Date: Thu,  8 Feb 2024 20:24:46 +0200
-Message-ID: <20240208182608.2224191-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240208182608.2224191-1-andriy.shevchenko@linux.intel.com>
-References: <20240208182608.2224191-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="V7f0Fo8O"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-363ce7a4823so87175ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 10:32:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1707417167; x=1708021967; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nr00YgHg0eap+hVTbhFLAb3+BozI0aJmEwESPqYLYlk=;
+        b=V7f0Fo8OOABrGFSz1LmIa4jFGuYKc0Kl7JpYBNI4TTsR3u+A1NuGXYOIdTIc9w1kRW
+         pHoUTVCxJnWOmvtG7eWj/fFliCBHfCDSf38Q5X1l0VIjIkFCg2Y8Ii2cH+loo4VQkhZ+
+         ABl6xYZDqD/7YLUB/17Xnv2PhPWrlXcrk5h90j+P3QCHeQv3QXZbvpgCOJeIP0aJux6T
+         SvgyPv++nev0ATApZT+QhC07yxUN6aDLB3t5eYICftcZIZNI+MjEAv3n/SnJNEnK2Mo6
+         jsdp+zOA3LHTHhNDaLyz/JEtyPUgRsemAsuy9ma/UyMAWfPGbevivA2KTV1HFpfXn+XV
+         I1Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707417167; x=1708021967;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nr00YgHg0eap+hVTbhFLAb3+BozI0aJmEwESPqYLYlk=;
+        b=UyZWSBqLfcVxj2Seg70kEIsCduRU0abrInlMO5wGPOQst1obknpjZ6NCENYePdAYEx
+         SH1TqEALD62bGHEgEBe7nscNALSXxHzvtLxAd5Y7LINvtPFFYvUOaCNNyM/lFDVpp9lA
+         kn2I4N+xlPP8xmVoR6crTBgp5j0Gapu5ypRLwXN9cGbHGlvOeFw1q2ECZjg/a6qGETaN
+         Vru1zqE8ZkCMxyA0i7FF3vlxO88qOgOowwKpwtfB0K0ljmuN14IiqhTeWYPQANn4vt2C
+         Ur1rPkCY9aEdJnjoMFaKNm06TySfeQ4qbgnoGyxah6zug4RbfWt0KgJTKwUoGfVmx6PN
+         7q5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW05lhAXcf+v37MUusBpXRa3shMmldAaTLIwykapk9bnnXyvHyr66dEMea/9HPV6uExkanII2cxV4GbpqxGdIWTvDP4eIMRUTQzgu9x
+X-Gm-Message-State: AOJu0YxukUnvRB+4+fePz2K8/4il2DMZhzXUDm4uKimSUrbjKxYnFQZx
+	RjrhnB9tEUv8iEMDkztaQ+vorez0KredXSdBmD7mtPgEKobUAIyixfRgaV78iac=
+X-Google-Smtp-Source: AGHT+IFAvqlSrBCQWpuejC3u4ynmLUFR513jOu3UsTa/NZ/FzFI6YPc3xiUkiJmHYAWGWy+VajjAaQ==
+X-Received: by 2002:a5e:9409:0:b0:7c4:965:f8c0 with SMTP id q9-20020a5e9409000000b007c40965f8c0mr424407ioj.2.1707417166776;
+        Thu, 08 Feb 2024 10:32:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX5+2PSYipu58OQZUMJJN8fnU2HCB8D8EcGHMM3AVBOVRYlAJguXndVTBIvBchiOORXCFtdNsK4Blm9wUOZJKiheWWbUgJxs47TgaZB
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id t13-20020a6bdb0d000000b007c3fbe781f2sm50823ioc.5.2024.02.08.10.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 10:32:46 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240131094323.146659-1-chentao@kylinos.cn>
+References: <20240131094323.146659-1-chentao@kylinos.cn>
+Subject: Re: [PATCH] block: Simplify the allocation of slab caches
+Message-Id: <170741716606.1391883.6304906990225431733.b4-ty@kernel.dk>
+Date: Thu, 08 Feb 2024 11:32:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-Convert the module to be property provider agnostic and allow
-it to be used on non-OF platforms.
 
-Add mod_devicetable.h include.
+On Wed, 31 Jan 2024 17:43:23 +0800, Kunwu Chan wrote:
+> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+> to simplify the creation of SLAB caches.
+> 
+> 
 
-Tested-by: Flavio Suligoi <f.suligoi@asem.it>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/video/backlight/mp3309c.c | 44 +++++++++++++------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/video/backlight/mp3309c.c b/drivers/video/backlight/mp3309c.c
-index b0d9aef6942b..397f35dafc5e 100644
---- a/drivers/video/backlight/mp3309c.c
-+++ b/drivers/video/backlight/mp3309c.c
-@@ -15,6 +15,8 @@
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/property.h>
- #include <linux/pwm.h>
- #include <linux/regmap.h>
- 
-@@ -199,18 +201,15 @@ static const struct backlight_ops mp3309c_bl_ops = {
- 	.update_status = mp3309c_bl_update_status,
- };
- 
--static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
--				 struct mp3309c_platform_data *pdata)
-+static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
-+				struct mp3309c_platform_data *pdata)
- {
--	struct device_node *node = chip->dev->of_node;
--	struct property *prop_pwms;
--	struct property *prop_levels = NULL;
--	int length = 0;
- 	int ret, i;
- 	unsigned int num_levels, tmp_value;
-+	struct device *dev = chip->dev;
- 
--	if (!node) {
--		dev_err(chip->dev, "failed to get DT node\n");
-+	if (!dev_fwnode(dev)) {
-+		dev_err(dev, "failed to get firmware node\n");
- 		return -ENODEV;
- 	}
- 
-@@ -224,8 +223,7 @@ static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
- 	 * found in the backlight node, the mode switches to PWM mode.
- 	 */
- 	pdata->dimming_mode = DIMMING_ANALOG_I2C;
--	prop_pwms = of_find_property(node, "pwms", &length);
--	if (prop_pwms) {
-+	if (device_property_present(dev, "pwms")) {
- 		chip->pwmd = devm_pwm_get(chip->dev, NULL);
- 		if (IS_ERR(chip->pwmd))
- 			return dev_err_probe(chip->dev, PTR_ERR(chip->pwmd),
-@@ -257,11 +255,9 @@ static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
- 		/*
- 		 * PWM control mode: check for brightness level in DT
- 		 */
--		prop_levels = of_find_property(node, "brightness-levels",
--					       &length);
--		if (prop_levels) {
-+		if (device_property_present(dev, "brightness-levels")) {
- 			/* Read brightness levels from DT */
--			num_levels = length / sizeof(u32);
-+			num_levels = device_property_count_u32(dev, "brightness-levels");
- 			if (num_levels < 2)
- 				return -EINVAL;
- 		} else {
-@@ -275,10 +271,9 @@ static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
- 				     sizeof(*pdata->levels), GFP_KERNEL);
- 	if (!pdata->levels)
- 		return -ENOMEM;
--	if (prop_levels) {
--		ret = of_property_read_u32_array(node, "brightness-levels",
--						 pdata->levels,
--						 num_levels);
-+	if (device_property_present(dev, "brightness-levels")) {
-+		ret = device_property_read_u32_array(dev, "brightness-levels",
-+						     pdata->levels, num_levels);
- 		if (ret < 0)
- 			return ret;
- 	} else {
-@@ -288,8 +283,7 @@ static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
- 
- 	pdata->max_brightness = num_levels - 1;
- 
--	ret = of_property_read_u32(node, "default-brightness",
--				   &pdata->default_brightness);
-+	ret = device_property_read_u32(dev, "default-brightness", &pdata->default_brightness);
- 	if (ret)
- 		pdata->default_brightness = pdata->max_brightness;
- 	if (pdata->default_brightness > pdata->max_brightness) {
-@@ -310,8 +304,8 @@ static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
- 	 * If missing, the default value for OVP is 35.5V
- 	 */
- 	pdata->over_voltage_protection = REG_I2C_1_OVP1;
--	if (!of_property_read_u32(node, "mps,overvoltage-protection-microvolt",
--				  &tmp_value)) {
-+	ret = device_property_read_u32(dev, "mps,overvoltage-protection-microvolt", &tmp_value);
-+	if (!ret) {
- 		switch (tmp_value) {
- 		case 13500000:
- 			pdata->over_voltage_protection = 0x00;
-@@ -328,9 +322,7 @@ static int pm3309c_parse_dt_node(struct mp3309c_chip *chip,
- 	}
- 
- 	/* Synchronous (default) and non-synchronous mode */
--	pdata->sync_mode = true;
--	if (of_property_read_bool(node, "mps,no-sync-mode"))
--		pdata->sync_mode = false;
-+	pdata->sync_mode = !device_property_read_bool(dev, "mps,no-sync-mode");
- 
- 	return 0;
- }
-@@ -366,7 +358,7 @@ static int mp3309c_probe(struct i2c_client *client)
- 		if (!pdata)
- 			return -ENOMEM;
- 
--		ret = pm3309c_parse_dt_node(chip, pdata);
-+		ret = mp3309c_parse_fwnode(chip, pdata);
- 		if (ret)
- 			return ret;
- 	}
+[1/1] block: Simplify the allocation of slab caches
+      commit: 48ff13a618b54aabc447659a9016068cf0cae322
+
+Best regards,
 -- 
-2.43.0.rc1.1.gbec44491f096
+Jens Axboe
+
+
 
