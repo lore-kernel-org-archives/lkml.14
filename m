@@ -1,117 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7157D41F;
-	Thu,  8 Feb 2024 13:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7F576414
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707400389; cv=none; b=P6K098ZoVSr0XQLjik6csn1magBG0Fls3LEwl2rsXOMvoCb+L94ZbQz42OAF+BHt02IN4mDRj5/yj6EtOhmsIQRfBwqsRVh7aIq4prn+Nvn70KemY07duq7GhvHg5K9ef9SVXsJX2PPu7UCAmAqUun1zGDSbKYrjSiSsHGxBUtE=
+	t=1707400460; cv=none; b=uaKHOEL+fA5pgqpsLLVFUHFV0CQE9PFNqY9AGZz8psqUc6IfqXMIR+myJoXaPd1Pm9YsqGh1YYPZ6Yxx/taXM7wbf17bsZteDUAX85opLdonrSFQZytRiTL7nEvJ9ZNLvhTJOXuMI19q4Fh5PcXeQRbxU1Rb5aY+wbZPbss7uMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707400389; c=relaxed/simple;
-	bh=hmXHpXwIBBF6KpV1XzdkD8LH/WZiO4oxEaDM9Yg5alg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IkpBbHASU/cgz0IZps6G6jsK5OdDKFOkbdRPlDRH5mF5SzEasv4L899D7x9IM3VsSyuKGnVeWfiFFu70Zs1AkDrGcYtLozRmZLIVs6dADO6+wVgO2PPOMudfqZuzDlCltQt5jgcAgLwq6mJWdo8hS69p5jUNkLTFvLjnbRKAf8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PHhLjtj2; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707400460; c=relaxed/simple;
+	bh=sAPBOJTqt0Eux7mZyQPffvBf26VAhOH69akvvfeddOw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UfN8iVLmK8SSB/8xfsnST3CeTX9u+BlsLEyL0YnmxSMEJ/W5xfuEZYxBiSh+7IhYkpDcc0FeLotjSfuMR6QHuAhcfOmkAq/UAu+fxBbWJZGxRjaGAvmsbS4no19JBF9cCXuAV8LN0wq4JU2/v6d4tOaar9SmLX+oRE/DB1ZwKXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UGggg9Fo; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PHhLjtj2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707400388; x=1738936388;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hmXHpXwIBBF6KpV1XzdkD8LH/WZiO4oxEaDM9Yg5alg=;
-  b=PHhLjtj2nMishLFevut7xp1SYLxKjY51YgPJ+MXqDUQpi6BNa/GTM/V0
-   w0xpq5OUBl3RqEb0zGw0CGujsTxtTUeEYYYuzlus47Jw2egjdBoCfp8/3
-   94bQLNR6eChaB9t3QwCaRRMtmSNp2h28nqpmTP1eAJufZZikgh0u5+cBq
-   HOD+IUzpi3gFLzMg9H2GbK/SFjBWGiAfn5JsC4je7yd6HZmMXpq706lGr
-   NTRsEmY5HDu2hnFhGR6mS+dnRL+RZSoY7pTWCg7xTFYy6HMHv3l7TSsBG
-   UHx+ko82WBmiyLOQYRpNM1ePFRxe9ymUwn8+U/cosopYaaHTREeBRo84r
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="26662698"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="26662698"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:53:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1694872"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.52.95])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:53:04 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 Feb 2024 15:52:59 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: Netdev <netdev@vger.kernel.org>, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 5/8] platform/x86/intel/sdsi: Add in-band BIOS lock
- support
-In-Reply-To: <20240201010747.471141-6-david.e.box@linux.intel.com>
-Message-ID: <4135a390-22c9-f483-2aca-b89439dc682c@linux.intel.com>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com> <20240201010747.471141-6-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGggg9Fo"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-60492003050so17800937b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:54:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707400458; x=1708005258; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sAPBOJTqt0Eux7mZyQPffvBf26VAhOH69akvvfeddOw=;
+        b=UGggg9FoknxkVTBo3XyTIcoMSgPxsGAIkGqo7suhPJZI8qWpn/cpgKkoobrS23XoDi
+         sDvwR3/ywrrQmp+KT7GlNBOOEbKOyoPaQm1/nCMXi8ojVtQEfMqKDwH6VfVrQSUH3ZBK
+         TZReHWyQ7dEroLQwQ1P0rfkz/dmlkpqkOVDtLdcHNllSRvq9t5RzB//MP/pADzCw+ZxF
+         hZxc1s9a3Q2RQcRrPrXzgWnpDUSP4M2M4RLQQGWKOFq//2BJflrENrhEHWToGstD0Nh4
+         EOxe3XUUHn2S0gJ/5S0SPmmxXiHvO1//Fa6L0XfJxssZodEN396zJQxXylp8oaOXvqBr
+         K1Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707400458; x=1708005258;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sAPBOJTqt0Eux7mZyQPffvBf26VAhOH69akvvfeddOw=;
+        b=qRaS3KZKY10mdSSRpYRpUVutqJJP9UVMnF58/dbhOSU7KNE9N7nRt29RII2Th+jvXm
+         lCxGFqhtfDE/dPwzksf/EVo/E4+Qz95DbiHUYa+bQzBn6XiPRtkon9TGgKlagFgdo3mD
+         6Wg8U2ouv0ORW9ntGLDTS4aXO0CUjk3/Ialo/kNNQCEaG2/9EhXhy0U91f8r8rwF2Qsj
+         ASEDt6Tsu9dV1MRGY3jcIUVUlpoabiBHzw5p29ZuQ3MZSnHFADBIvLecYKmznym3G+7l
+         Yndetc5OWaAqIN6AMw6pG3GgCB6/AaEC8pDi1xFc55/ciOjYKCEoIyUAHPnCf73ABD+0
+         CDBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhaQnpD1QbnhOAOO4X6Acn2QosdBUpeFPlISj06v8zjRXF1Zn42liMR+Urq2J0vV/o/zKfCM4AehioDAG6PMMj6yonj5VXmMVRKrMr
+X-Gm-Message-State: AOJu0YzDnON3RtgsqAGvsoU5IZEK1YMb3FRdW8fsp4t16F0Bm7GZ9AHL
+	JpmIZq2iPj0hmbv0Usfujl030imNP7SQp06mMqQiLdjdPIr0ZgFhaFqVB6bSbH6svbGxh6sAI+K
+	B+MCM7kVuE97ALshkjqkzCDCEUu/LZ2GFQ765f7QMhrEEUGC9rOHGwQ==
+X-Google-Smtp-Source: AGHT+IGDiOneyfJfxmHJsx95/Io/iJWK5Htw1Hg2MZmkBm+216Ld2xxxMuBHMFUPV7I9NJDT+pGjYE+Cddkb3IyflOI=
+X-Received: by 2002:a05:690c:f8a:b0:603:ebf7:947b with SMTP id
+ df10-20020a05690c0f8a00b00603ebf7947bmr9533612ywb.48.1707400458134; Thu, 08
+ Feb 2024 05:54:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240207104604.174843-1-antonio.borneo@foss.st.com>
+In-Reply-To: <20240207104604.174843-1-antonio.borneo@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 8 Feb 2024 14:54:07 +0100
+Message-ID: <CACRpkdZ=Lf+Db7-QwM-X1RqqRJUNH20Yc6tJYjz9DK4RDxP6-w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: stm32: fix PM support for stm32mp257
+To: Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-gpio@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 31 Jan 2024, David E. Box wrote:
+On Wed, Feb 7, 2024 at 11:46=E2=80=AFAM Antonio Borneo
+<antonio.borneo@foss.st.com> wrote:
 
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per SDSi in-band interface specification, sec titled "BIOS lock for
-> in-band provisioning", when IB_LOCK bit is set in control qword, the
-> SDSI agent is only allowed to perform the read flow, but not allowed to
-> provision license blob or license key. So add check for it in
-> sdsi_provision().
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/sdsi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> index 14821fee249c..287780fe65bb 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -61,6 +61,7 @@
->  #define CTRL_OWNER			GENMASK(5, 4)
->  #define CTRL_COMPLETE			BIT(6)
->  #define CTRL_READY			BIT(7)
-> +#define CTRL_INBAND_LOCK		BIT(32)
->  #define CTRL_STATUS			GENMASK(15, 8)
->  #define CTRL_PACKET_SIZE		GENMASK(31, 16)
->  #define CTRL_MSG_SIZE			GENMASK(63, 48)
-> @@ -331,12 +332,21 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
->  	return sdsi_mbox_cmd_read(priv, info, data_size);
->  }
->  
-> +static bool sdsi_ib_locked(struct sdsi_priv *priv)
-> +{
-> +	return !!FIELD_GET(CTRL_INBAND_LOCK, readq(priv->control_addr));
-> +}
-> +
->  static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
->  			      enum sdsi_command command)
->  {
->  	struct sdsi_mbox_info info = {};
->  	int ret;
->  
-> +	/* Make sure In-band lock is not set */
-> +	if (sdsi_ib_locked(priv))
-> +		return -EPERM;
-> +
->  	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
->  		return -EOVERFLOW;
+> The driver for stm32mp257 is missing the suspend callback in
+> struct dev_pm_ops.
+>
+> Add the callback, using the common stm32_pinctrl_suspend()
+> function.
+>
+> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> Fixes: 619f8ca4a73d ("pinctrl: stm32: add stm32mp257 pinctrl support")
 
-Any reason why this order was chosen? I'd prefer these checks be other way 
-around (a stupid caller providing too long count gets notified of its 
-stupidity regardless of the locked state).
+Patch applied!
 
--- 
- i.
-
+Yours,
+Linus Walleij
