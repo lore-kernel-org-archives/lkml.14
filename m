@@ -1,41 +1,42 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40475B1E2
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 07:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A2A67E8D
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 07:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707378318; cv=none; b=Cvsnqm1Px47wrNLHQ6orHsEpCLWN4DUICTRibYfutilGTh/9biAI+5b15Ru6zMueXNEeRCUWIbpRd5yubke0vno33jw0Dpj0TkhX53bV7cIxmDKaKjA9AiDfSEg0DXgk4IK+bqgnMZ8I2NjOW7kcuw13OY1dAihSOEEOhp2c7S0=
+	t=1707378320; cv=none; b=tj95Pv1txOxzgktu4oDCemBbVPyvgqmCWUU/N9sEP+RGVCea8x0FZ0DYF+tZ1t9YROu9Ig2D2+e+pFWJjD52TM+DWNrW5ZTkfHL7GVvmJjPHGy2DsdNIZxxL6ewIqUKJP1iigsNdyZNS7+UduKzojvD2FhI1wO4yJCq3nObYagw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707378318; c=relaxed/simple;
-	bh=roVpI7QEG+N3Gp757y+PaAvh5MTMMTwStLishWClXg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SRnfShcumIP+/cL/VBPtDmDEpax0UBMLaZx23m05rot+j98RRI5VjkYKTcD2BUIQX8apV5W8NY+4UGWgT69SIznjp9smKbx+uwvVbZ2aDgQc+OYvQUX+v2Ecr1M8l8HCus7sNmvbyg4HawIuPJeYYXekgRDiXoGCMRmQtGTvCxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fsLMUKHo; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1707378320; c=relaxed/simple;
+	bh=9VUCCkK7ZSfSAVEAuYXB94bymXAqg5yRUhO4NtdM7cM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nim1Laqywd15Lyiqv70loghN6WVP7K5DafZDRU7Cu9UCXIvAFm9BuGDKuRTdhC33hDbKK3mN0ttVLiEgd23idFx1J/wqVag5turKBDaQctnnZLVbI/rBY2Id50l50//aLnr66fqbzB06AbWX0TWopGzyaV8AMBNu44bbbdsfdk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JIjCUp/O; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fsLMUKHo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JIjCUp/O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707378317; x=1738914317;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=roVpI7QEG+N3Gp757y+PaAvh5MTMMTwStLishWClXg8=;
-  b=fsLMUKHobw0l02PjV4u+HlFomM4aJnF9Qb98q1OBYNCBMuK5fgqiLBm+
-   IAWZ+P/aUDcqcrK3VvGavabIouIF3l0cA8g21VbR85rCsJp7XFhC0lqWj
-   on/cId/lffGdS2kI8/SfgHucb8zibQqsrK/8JEZNbs/tkVFcXelgz71eB
-   /6Gyn2VqMTOAlNuHHQHWmBCUAHF7tQB73AncUERqLY0rIpt22ghkwXHUJ
-   IUDuVzfUg/LmdKEg6kNbd+o5AskjRqfoxk3+QmWydy6+m488rCanfGdG0
-   LYsxHai+7Y1wC8nuJlo+onvOQYtQBKhWHiwmwA1jPfY9zzKJ3WqIIx/R3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12242632"
+  t=1707378319; x=1738914319;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9VUCCkK7ZSfSAVEAuYXB94bymXAqg5yRUhO4NtdM7cM=;
+  b=JIjCUp/OvxCdTIdwz/KENcHvCFqOljwYMZskmN0YGoxrUfk+xQhFtMB3
+   4T/MZdYyMGae0T0uNJkuPTR59s1sEYu2NpCPpZ1vC/GJY+NxNzZnC9+sE
+   I7QWPwH6Ojt2A0AjhM0ZWaHw8GJ5j5Cn1UFN9Wl9Xa8sPcirxz6HzGECz
+   qjgUYyTntUizXJ9KsTB+xvzZ1iZ4ceo+TUADqCd7mSVHVu9J+VY544zIW
+   cHzk12shR9JqOJ/pdk5sGuqX+0isKGMlEAVvSxhLcALGr9vdHLwlgxqMB
+   qBm9gozkRr5sIDNt8bFRtr4IPtw9c9/KzWg0e5ZRc7vx4/pWvEph1dI09
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12242638"
 X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="12242632"
+   d="scan'208";a="12242638"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
   by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 23:45:16 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="6195645"
+   d="scan'208";a="6195652"
 Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
   by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 23:45:16 -0800
 From: Lucas De Marchi <lucas.demarchi@intel.com>
@@ -46,46 +47,70 @@ Cc: linux-kernel@vger.kernel.org,
 	Jani Nikula <jani.nikula@linux.intel.com>,
 	intel-xe@lists.freedesktop.org,
 	intel-gfx@lists.freedesktop.org,
-	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH v3 0/3] Fixed-type GENMASK/BIT
-Date: Wed,  7 Feb 2024 23:45:18 -0800
-Message-ID: <20240208074521.577076-1-lucas.demarchi@intel.com>
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH v3 2/3] bits: Introduce fixed-type BIT
+Date: Wed,  7 Feb 2024 23:45:20 -0800
+Message-ID: <20240208074521.577076-3-lucas.demarchi@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240208074521.577076-1-lucas.demarchi@intel.com>
+References: <20240208074521.577076-1-lucas.demarchi@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-ove the implementation of REG_GENMASK/REG_BIT to a more appropriate
-place to be shared by i915, xe and possibly other parts of the kernel.
+Implement fixed-type BIT() to help drivers add stricter checks, like was
+done for GENMASK.
 
-For now this re-defines the old macros. In future we may start using the
-new macros directly, but that's a more intrusive search-and-replace.
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+---
+ include/linux/bits.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Changes from v2:
-
-	- Document both in commit message and code about the strict type
-	  checking and give examples how it´d break with invalid params.
-
-v1: https://lore.kernel.org/intel-xe/20230509051403.2748545-1-lucas.demarchi@intel.com/
-v2: https://lore.kernel.org/intel-xe/20240124050205.3646390-1-lucas.demarchi@intel.com
-
-Lucas De Marchi (2):
-  bits: Introduce fixed-type BIT
-  drm/i915: Convert REG_GENMASK* to fixed-width GENMASK_*
-
-Yury Norov (1):
-  bits: introduce fixed-type genmasks
-
- drivers/gpu/drm/i915/i915_reg_defs.h | 108 +++------------------------
- include/linux/bitops.h               |   1 -
- include/linux/bits.h                 |  51 ++++++++++---
- 3 files changed, 51 insertions(+), 109 deletions(-)
-
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index bd56f32de44e..811846ce110e 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -24,12 +24,16 @@
+ #define GENMASK_INPUT_CHECK(h, l) \
+ 	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+ 		__is_constexpr((l) > (h)), (l) > (h), 0)))
++#define BIT_INPUT_CHECK(type, b) \
++	((BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
++		__is_constexpr(b), (b) >= BITS_PER_TYPE(type), 0))))
+ #else
+ /*
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+  * disable the input check if that is the case.
+  */
+ #define GENMASK_INPUT_CHECK(h, l) 0
++#define BIT_INPUT_CHECK(type, b) 0
+ #endif
+ 
+ /*
+@@ -54,4 +58,17 @@
+ #define GENMASK_U32(h, l)	__GENMASK(u32, h, l)
+ #define GENMASK_U64(h, l)	__GENMASK(u64, h, l)
+ 
++/*
++ * Fixed-type variants of BIT(), with additional checks like __GENMASK().  The
++ * following examples generate compiler warnings due to shift-count-overflow:
++ *
++ * - BIT_U8(8)
++ * - BIT_U32(-1)
++ * - BIT_U32(40)
++ */
++#define BIT_U8(b)		((u8)(BIT_INPUT_CHECK(u8, b) + BIT(b)))
++#define BIT_U16(b)		((u16)(BIT_INPUT_CHECK(u16, b) + BIT(b)))
++#define BIT_U32(b)		((u32)(BIT_INPUT_CHECK(u32, b) + BIT(b)))
++#define BIT_U64(b)		((u64)(BIT_INPUT_CHECK(u64, b) + BIT(b)))
++
+ #endif	/* __LINUX_BITS_H */
 -- 
 2.43.0
 
