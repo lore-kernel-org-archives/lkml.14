@@ -1,148 +1,95 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9BC82D95;
-	Thu,  8 Feb 2024 17:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEE886AFF;
+	Thu,  8 Feb 2024 17:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707411880; cv=none; b=Q8a+i+EyVufzcuCTmcTago2WwOlzeqe9vIZF0U3MU+/1rv9B+CIxf0F2Jdc3TJ+ij32qAG8ybdoO4Tcbm4kH/sRYcDvoB4mTcAbUuBVK4M4SnepIxW0SgIoolNAUN9iHPhtsmKfD3elyu7vTu2SpPSoca8mkIv/5XCWF3rxRDq0=
+	t=1707411881; cv=none; b=u9QwLhzrTbdxGnlWw8NQLs6rbokcKNgj7WWcZi89qOQnYHNcqG35KvwoHju/u8Ch2TsssaMxogS2nV6Qy+KOxgoge0vzcgS8vgBFOiWhqJXoaxHJh9GYxuu+11EU4N+5o39A24Wi1eT7MSTZh1s8gLI/pvpDnXMQXw7LUhJRPqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707411880; c=relaxed/simple;
-	bh=ItHAlQval55LDZXrx1TuWpoKDl5Vs+vyve96P+RrGac=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R/crveQ+ic1I1ro9mS5FVMXn+fHtfOwcA2FgtqN9Xz8GtXJSG3jFnQCjmjkS4WUM8kvh818lIAYqVyjeRcV0CloHtswfZ6DX/s6kbfaPCD9JUfPupiSDqIk73AiAdQRFWvOyXgY+xf6NfE4fYDaqci66nctWuyeyJt1xBOlFip8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Q6LWPO67; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707411881; c=relaxed/simple;
+	bh=PTrnrsT2Geunz+SnN8BD71O48bXNxNI49r+JQOFpfQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UgQTZxazvcBL+ZfKvW4Q1nyppZOArfIb74Kcb2grcszjakLShGDublWeEuUl1bKkRkErlMvJ5c5/GHx13YFgCtlheBRA+ZeILf5S0Tb6ryQc+R5q0Cys2qpTtbzp6yzIM4hkWx2iVXRkGVtsRcc3apsPnd2Fdqk49li3cGzoKXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SgEMSM1L; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q6LWPO67"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 418H4CdW095444;
-	Thu, 8 Feb 2024 11:04:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707411852;
-	bh=72kVJOjDQJkrwjM0ZlAP/foyy3XhLgjfJ5M64CNka8E=;
-	h=From:To:CC:Subject:Date;
-	b=Q6LWPO6726DQWKoNr0ajun4Dqu1U2P5187Ko4KwBZrW/TR03Q1g85ZVEtaipsMH6Y
-	 k2i6J4XUeUHnhYXSOVJoWZ0rCGHRWCKWitoi7m5FZQSUFxWRJZIl5MiFsFYvSGXdnH
-	 +o+zKJ60NIm5t/ATewmTycO/GFi3qrsJ9OD4sml8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 418H4ClS042364
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 Feb 2024 11:04:12 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- Feb 2024 11:04:12 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 Feb 2024 11:04:12 -0600
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 418H4B62091006;
-	Thu, 8 Feb 2024 11:04:11 -0600
-From: Andrew Davis <afd@ti.com>
-To: Sebastian Reichel <sre@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Cristian Ciocaltea
-	<cristian.ciocaltea@gmail.com>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, Scott Branden
-	<sbranden@broadcom.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH v3 00/19] Remove pm_power_off use in drivers/power/reset
-Date: Thu, 8 Feb 2024 11:03:51 -0600
-Message-ID: <20240208170410.67975-1-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SgEMSM1L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707411881; x=1738947881;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=PTrnrsT2Geunz+SnN8BD71O48bXNxNI49r+JQOFpfQI=;
+  b=SgEMSM1LEmWMWwg5ST4wosPaJ1uN59v/82j1aII1eKFlfTiRHIWaUj7e
+   R5eD5+TJeUcw7qg1rLghe/Ec+8u7TNW58f6D4ljdCkVT1tQyGZmX1CTvM
+   Y6cGKeYqcCvJASoDvAzU4EO/r1QUthykU3fELm9gCPF4p1lYqP6ISqIQa
+   d9aaOhJFgO2LO32BspAIvsNYOgm2qTN27etCOK0UTKBuoXztOEFtI+ivW
+   9nPuwq82gI+RMqfk9kfpzh1eFgu70vkfIHN7Z8QWF3CFvIB8v1XnEpbyq
+   pJXUnazy20IWUSsZxfvIbrRABuF9GpQ8sQZ907nSNqupdMF6Pjhomh/mq
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="11836371"
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="11836371"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:04:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="910425503"
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="910425503"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:04:36 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rY7pC-00000002vkG-0CEj;
+	Thu, 08 Feb 2024 19:04:34 +0200
+Date: Thu, 8 Feb 2024 19:04:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] pwm: dwc: drop redundant error check
+Message-ID: <ZcUJoSMhgC7lhY-H@smile.fi.intel.com>
+References: <20240208070529.28562-1-raag.jadav@intel.com>
+ <20240208070529.28562-2-raag.jadav@intel.com>
+ <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello all,
+On Thu, Feb 08, 2024 at 08:46:44AM +0100, Uwe Kleine-König wrote:
+> On Thu, Feb 08, 2024 at 12:35:25PM +0530, Raag Jadav wrote:
+> > pcim_iomap_table() fails only if pcim_iomap_regions() fails. No need to
+> > check for failure if the latter is already successful.
+> 
+> Is this really true? pcim_iomap_table() calls devres_alloc_node() which
+> might fail if the allocation fails. (Yes, I know
+> https://lwn.net/Articles/627419/, but the rule is still to check for
+> errors, right?)
 
-Use of pm_power_off is considered legacy and should be replaced with
-register_sys_off*(). Same for register_restart_handler(). Do this
-for the drivers/power/reset subsystem for all trivial cases.
+We do not add a dead code to the kernel, right?
 
-Thanks,
-Andrew
+> What am I missing?
 
-Changes for v3:
- - Use dev_err_probe() in patch [11/19]
- - Add review tags in patches [18/19] and [19/19]
+Mysterious ways of the twisted PCI devres code.
+Read the above commit message again :-)
 
-Changes for v2:
- - Fix sparse warning in 7/19 and 10/19
- - Add new patch fixing an already existing sparse warning (3/19)
- - Rebase on v6.8-rc3
-
-Andrew Davis (19):
-  power: reset: atc260x-poweroff: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: atc260x-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: xgene-reboot: Use devm_platform_ioremap_resource()
-    helper
-  power: reset: xgene-reboot: Use devm_register_sys_off_handler(RESTART)
-  power: reset: tps65086-restart: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: tps65086-restart: Remove unneeded device data struct
-  power: reset: brcm-kona-reset: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: axxia-reset: Use devm_register_sys_off_handler(RESTART)
-  power: reset: rmobile-reset: Use devm_platform_ioremap_resource()
-    helper
-  power: reset: rmobile-reset: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: mt6323-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: msm-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: msm-poweroff: Use devm_register_sys_off_handler(RESTART)
-  power: reset: regulator-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: as3722-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: gemini-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: restart-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: syscon-poweroff: Move device data into a struct
-  power: reset: syscon-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-
- drivers/power/reset/as3722-poweroff.c    | 30 ++++-------
- drivers/power/reset/atc260x-poweroff.c   | 55 ++++++++------------
- drivers/power/reset/axxia-reset.c        | 16 +++---
- drivers/power/reset/brcm-kona-reset.c    | 11 ++--
- drivers/power/reset/gemini-poweroff.c    | 16 +++---
- drivers/power/reset/msm-poweroff.c       | 25 ++++-----
- drivers/power/reset/mt6323-poweroff.c    | 26 +++++-----
- drivers/power/reset/regulator-poweroff.c | 36 +++++--------
- drivers/power/reset/restart-poweroff.c   | 25 +++------
- drivers/power/reset/rmobile-reset.c      | 35 ++++---------
- drivers/power/reset/syscon-poweroff.c    | 66 ++++++++++++------------
- drivers/power/reset/tps65086-restart.c   | 58 ++++-----------------
- drivers/power/reset/xgene-reboot.c       | 21 +++-----
- 13 files changed, 152 insertions(+), 268 deletions(-)
+For your convenience I can elaborate. pcim_iomap_table() calls _first_
+devres_find() which _will_ succeed if the pcim_iomap_regions() previously
+succeeded. Does it help to understand how it designed?
 
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
