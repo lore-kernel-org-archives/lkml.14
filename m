@@ -1,59 +1,60 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E055836AFE;
-	Thu,  8 Feb 2024 00:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA77374F7;
+	Thu,  8 Feb 2024 00:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707352545; cv=none; b=pHqlkoLAEBnUUvD57TnHHElUbU2IWxGg3ZT+yACZV2LMzuaFD1dhxwDUmAW7yBjtW9GQJi30OQ2n8aCO2y3NMWC7Cp/3mvZfjVa21VJ/rVNi0wi4eSavMR8igh4RDhm5iJ8Ica1HJZDoHzirz0X/wUjRrVIPPzJrTofL0EnUZdw=
+	t=1707352552; cv=none; b=Dx0zYSNMzXlq8iUgbkIl2O/zmFQqGHM8RjahhIDlw2yNzShGabwQzHGvVK+prn9tdAJdfg/pZHVYoTNFYVmIPDETj7lj5PZxeK0GY/A51uSFKLe3keQ56E76EccHcnCDPqPB7Qog7F8UmXp92FcMFXFVH8IoTXQNYNss4eyTjdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707352545; c=relaxed/simple;
-	bh=BNzZJSEaEd3KjDVzE+rJRUMciaZc7/0BY20IR0u7Iv8=;
+	s=arc-20240116; t=1707352552; c=relaxed/simple;
+	bh=VLJK/j/b7PDEMQo/a7C/uKMRAmAN2B9zbm2BC5mSflk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dwd/2+KRIdIrebkO8WeLmXt6LZcazB5fmLlBoqQ5jBzFewrAuH1t0XSSdv/M3UX2xsX8g7UEcgxogbq6S+JjxoYIsM8pI8hv8Qoo67p5DtFaftnYxLt9H23rkxRDWpuiUhuOETqFiODPQ/bL+Wsi5zFY9EGkRIpZiGfHBIcZqSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lWl/XBja; arc=none smtp.client-ip=209.85.214.175
+	 In-Reply-To:Content-Type; b=UyYDiOD4Z36Q+v6YG1Mgw5jB6PYzcdHPgmCSHSGFBerxeZ062w6CLL0h6pMsL6xv29/u79oSiqh3E6JgWa9X55+Hp33sv+RWtrNp0Ppu5UcuRkP1YT973O8TjZdeJ9xdx/TY0j+Or4VAunotuFAvP74Z+/1ETTeWjHOxFTvfLQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFjsKtul; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWl/XBja"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d8aadc624dso10208655ad.0;
-        Wed, 07 Feb 2024 16:35:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFjsKtul"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e05d41828aso866772b3a.0;
+        Wed, 07 Feb 2024 16:35:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707352543; x=1707957343; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707352550; x=1707957350; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zyFbV7aGaS4o3jrTpqDZSDrB6jGE56Fol8SftcAYoI4=;
-        b=lWl/XBja7x0VE0xRGtaL9Z8KTpFbCXb75sEPyLtKGUuqZ7RjUrbh1ST8tcTjbu7mFi
-         ZpYxYTdZiMlKSg6BqDhhO5cizZhW1Vzn3Qa6c69lYt+OL0WV3xrHCRpwtPTNYhrCXQRa
-         DIzbIAA3LvswaG10YrmPiQDvbP2r/iLy1Pl089gC62XEb0KDeoQXwAcZVUD3UJPp5+HA
-         6fHQCJsySdnW26UlOOp4ioUVE6MtDcItguHCPYmLXx1v0DTGd1VqULB/11PnebQPaUd9
-         XEtHd23rnDhRTNAQarqrOnXgK/N/Bmms/uFgmGUoYCL5OBDJXHI/8NtS8DFws70TpVyh
-         A/oA==
+        bh=IvWBFnMPj0SmcOq/M6KphuwJmg9YhoVXQdx6E2pEKTE=;
+        b=gFjsKtulXRyFAdzAicaOJoZS/y5Hnys7L7Is7cvSzmQx8dMx71/k2JwHyN8MlPFMnw
+         vYzYEbywoVChz80rPt+AWw+cL4NIkL0Afsz0+OVDXtUNsEx7r8ie5YNTH0Kuup7UKSjl
+         EzVCzdAgOZsDUzNrypTp1MGrFeUB8sBfO5XL0kxa9Z0pcG+n3gtjP4VnfgRwb/vxGjYk
+         Rvz5UF5o3ITGCxoCaQwlW02yOnELAhzeyPfZGhhmcw/kXUNoW2DV5Bc3ckAS1v5p3B01
+         Fyn3xb7D/U8xVRRwBRclW/vO3ZEyusLPVj3OCApaVPDdkoY1bE+rK2P1bJxIqbwT1zk8
+         Ep4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707352543; x=1707957343;
+        d=1e100.net; s=20230601; t=1707352550; x=1707957350;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zyFbV7aGaS4o3jrTpqDZSDrB6jGE56Fol8SftcAYoI4=;
-        b=tO/iG7wA7LWCybNDb1runrqAfWDNV8fb5DZNQHmzCWyTNTbTgWN0a/MzNfVjIdfZU/
-         XRCK9mK9kgXx5UZYx6d0P+4T91h0oDgXgxgPgFlFeStLFqF31ZqbZYhYCFNSWlTRJ5HM
-         n5knYx0oGUA/aNfdQUcewlc6cP7nmNNlmgkBw4dM8I1Rv+r+UnccEuPGA6gB7pSNTE+J
-         x+TE7o167YYMZPmdXPznMqrBMZhDNCk6/LUvs6hwj+4x2jk4jn8VUS8kTRbYfbFrv3Q/
-         +1q8GHjyVTqo0try6fG5n+QcZAyumII9KPTcs+rT+F+KdiVlTN4QMzWta5aw0ZJdwUuO
-         b8tQ==
-X-Gm-Message-State: AOJu0YyTRVHE5kk3q2M2t4jED4Fcmkwtp0/E3hDa5GUbSGKjjskQF3rL
-	OAisPwvEmq5OULPxOvpvA1w1Zub9SA20kul9ngYLSfcVB/UuuIO5
-X-Google-Smtp-Source: AGHT+IGojBAFnUw96tmstVKh9Nndf8pOlB1o3sv1FfjQIHdX1f+3Hr43CeGp8D92oZNz9guz9pIZSg==
-X-Received: by 2002:a17:902:da88:b0:1d9:9f86:3c84 with SMTP id j8-20020a170902da8800b001d99f863c84mr7966434plx.23.1707352543140;
-        Wed, 07 Feb 2024 16:35:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVBV3YbKbFkuYLtDzYnMwgGf3oDs7K3zY825kKWCL2V0exGJxISDr1sL8bj9Q7wRSNc5tVzGsTXfg2bfnEL4v3Q4A9v3Fww33j9LAIc16pBFbXd+ElxdMF9uGR7eVRtw8S++X67mrcYaxLKT9I/2tcAbf9qM4Az2ECCbzxF9KGv0J1m9WhNH/nXNy8boczbVd6us2hM1h7V+qvz3qUS48QG9/K8ZEs7KAXl/sA3omKQ2V46aZBoxik5IrQYf1wWbwd3fhKyXuE9qbP5JoXFz7VSb2JSawiO+VXPJOTMP6Bd0DIxp0OmawDKozJkT/Xnugjnlmv7vgVLyxMKkvkPa23zd0inK6RS2Omr3zba5bv+cJdJu5hOV1bmKCDtrf5bOA6NcSKApUn9YQUSXS4NzVLaWLBw1yB93hHk2Y+ybJEnF1TCiVUC/57kDwKe2ywMAQz+bEFy0icDGWNejl2J5NIFu7kU/7pYpY0iozomDnLR/aYEppwVgF2FWOX72VtQG7QPtD1rL/00pG11QcDXtfwKpaXyPjg2U+L8hvIgump+SdeE4njhyS/fl8E0PbSEDxf//HrKJtO4vfU6v8rKzxyjIWGhY5a8h/K9h6rKnNwq3+5HUf5jc4Hhzyo08iWlrtmQ3wVM3wf1pjXivhCgmgNGw/Skuo/WSF7GOEV9DIplUoTTcCexWTYCChJyMMr4stufjcOBZ944JH8JFYsAtxRnAeDmRJxgD5JwCH0PtkmJ+c3jRPiL30CjCElxY+JS+rs7trd+Njb/gFj86S/oamI48Rk/b9QNnlzpnxcP7ghI63NpYgtXOwgo9jc=
+        bh=IvWBFnMPj0SmcOq/M6KphuwJmg9YhoVXQdx6E2pEKTE=;
+        b=fwOvs/of1nG3mA7lUJLrc9OV9kBX0q/ab2omrM8iQ7XDxfqAZmwH1v3fPbquD0iD7G
+         Xy+fnHHX5z2mTccQe3Z9wNgkDuyUolhabd5nXt2c27EoECPuvTTNfoM5nJp11BRbtt1d
+         ynp8u+aINgv/6Rrv/mprJAOzFAiLK7oTeFzSVPEXS3nyGz5epujVPNGke4vZDU/7Lvv8
+         cuKeMFYJ8F5dpYpfG2pW10Ep1ZVGzpSTNr8LGJAp971yugEklpHMw5EFgnu/sYbC4JkF
+         5E3NCwnIzTAe9jK5nBd2orloQ3tVKJH3KESdsuDHWt3gLbP4E1i05gBsaubogm/MiDdO
+         9Nuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEL5utfQi2tWNYQqfcX0te8evh2p9pPrRQEz80NUWvbGdegqmjje6QLF35lUU2TWt9JZgpH/aXKbcgP3mdD6P2zQBUIEXwoKLAN+AqJ28IVnvSonSNF1F8MfEFDjfghxEwGi+7M6dUwWgKSIaydQbK1+cmZSAvgeeS8RRZm2tFF1o+fzuhxh/wtP0m
+X-Gm-Message-State: AOJu0Ywtfq6+vsIepv8K77BmiuxFT2RCUs44bFgeuXynd1Tua0qzw13j
+	7naH3/ojJeMXzvh6jZ5wrkC2YhkhHRqlwmo0YoObCntfUWgBXK8/
+X-Google-Smtp-Source: AGHT+IEtE8fR3NCIXcXfU+CpHQ5AgaOpyNqDtDXDxlUTHG+k3a+yvymwRqsgTFDNSRjzsJZDve0TKg==
+X-Received: by 2002:a05:6a20:9012:b0:19c:881d:78e6 with SMTP id d18-20020a056a20901200b0019c881d78e6mr5161880pzc.42.1707352549990;
+        Wed, 07 Feb 2024 16:35:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVUxS3L4wjEJ0C0nLCSUxFsGiTg+HHq+TPwhvRvVhJw7bSIdg9Pra0rQ9oCA5HCaRf1s8LahQZZZ1C+R4UhPhUT1mUQpvMQszeRf0wSm2Z2QFBCBwNztz9oRNFRz2B677wPhGSIGWlyTCT7wScqjMwg8P5aJEvx6ZZP18DO9GxQ9ITgEEW1SeCJ8Cay5fVt/TKanCFO11J3keU3ER6wUjTilEN8x+iCgs863gA+VpqRUtB90xf4RZ5K4UKcfkFvSTdT0zez7pkS+iy+BY6AlYBGTLXpZ1o1NAaqHKJdqRSbc5+49ClZ64wfrZJQjhqRqUd3E61LbG1SmQiZnrgEjC3y/oUUYOhx3rMvz9x4vS+spWfYSTE4ZPd+HDMidmkR/J/Gtjo4KUCetJpSSwtF7TFUd7+0cbNiUqg4sit92vNsDaTd4krNYA1OGwFVl0gGYiNKWVPZRz5af/OI2LI4Df5Y75Nn4ogtG6iasMWiCKN0jiwcNFO0tyzKN9SoBeCzT/p5YhrGhTCKxsU9JBd/eYUX/PwKwMCKuviE0wAzWpFQwS/ksblSayD1SvXuNXmBcwv9Y5QXjZDAcyGeDwCqKwHxVaVRMYxTgh7sIjvNtGIgmqrZKG0cftmwE8bGrWeDvAThsTOinWozzfqdggomWrq4u8JumfgO3ITmAQAThpZgXdOFUypBVPtz0djtjY7VkH4LJLhXJlpFbIXxOjhd4QsBetQK+oW8M0QnUE9EbNvpLv+1Cd8Cylx4Q1Npx6LCP9ofSyjtF8M3Ljz6BXwHv49ZutyYvfAMiFlKUizdg5/w54yzAfNq+yCkt3o=
 Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
-        by smtp.gmail.com with ESMTPSA id i12-20020a17090320cc00b001d8a93fa5b1sm2080420plb.131.2024.02.07.16.35.37
+        by smtp.gmail.com with ESMTPSA id i12-20020a17090320cc00b001d8a93fa5b1sm2080420plb.131.2024.02.07.16.35.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 16:35:42 -0800 (PST)
-Message-ID: <12b5bbc8-3661-4d67-a402-cecae692e75a@gmail.com>
-Date: Wed, 7 Feb 2024 16:05:19 -0300
+        Wed, 07 Feb 2024 16:35:49 -0800 (PST)
+Message-ID: <6ce4ff41-6e77-47a2-87c4-575c70b98f69@gmail.com>
+Date: Wed, 7 Feb 2024 21:26:01 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,7 +62,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/9] rust: file: add `Kuid` wrapper
+Subject: Re: [PATCH v4 8/9] rust: file: add `DeferredFdCloser`
 Content-Language: en-US
 To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
  Alex Gaynor <alex.gaynor@gmail.com>,
@@ -83,41 +84,41 @@ To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
 Cc: Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
  rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
 References: <20240202-alice-file-v4-0-fc9c2080663b@google.com>
- <20240202-alice-file-v4-7-fc9c2080663b@google.com>
+ <20240202-alice-file-v4-8-fc9c2080663b@google.com>
 From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-In-Reply-To: <20240202-alice-file-v4-7-fc9c2080663b@google.com>
+In-Reply-To: <20240202-alice-file-v4-8-fc9c2080663b@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/24 07:55, Alice Ryhl wrote:
-> Adds a wrapper around `kuid_t` called `Kuid`. This allows us to define
-> various operations on kuids such as equality and current_euid. It also
-> lets us provide conversions from kuid into userspace values.
+> To close an fd from kernel space, we could call `ksys_close`. However,
+> if we do this to an fd that is held using `fdget`, then we may trigger a
+> use-after-free. Introduce a helper that can be used to close an fd even
+> if the fd is currently held with `fdget`. This is done by grabbing an
+> extra refcount to the file and dropping it in a task work once we return
+> to userspace.
 > 
-> Rust Binder needs these operations because it needs to compare kuids for
-> equality, and it needs to tell userspace about the pid and uid of
-> incoming transactions.
+> This is necessary for Rust Binder because otherwise the user might try
+> to have Binder close its fd for /dev/binder, which would cause problems
+> as this happens inside an ioctl on /dev/binder, and ioctls hold the fd
+> using `fdget`.
 > 
-> To read kuids from a `struct task_struct`, you must currently use
-> various #defines that perform the appropriate field access under an RCU
-> read lock. Currently, we do not have a Rust wrapper for rcu_read_lock,
-> which means that for this patch, there are two ways forward:
+> Additional motivation can be found in commit 80cd795630d6 ("binder: fix
+> use-after-free due to ksys_close() during fdget()") and in the comments
+> on `binder_do_fd_close`.
 > 
->   1. Inline the methods into Rust code, and use __rcu_read_lock directly
->      rather than the rcu_read_lock wrapper. This gives up lockdep for
->      these usages of RCU.
+> If there is some way to detect whether an fd is currently held with
+> `fdget`, then this could be optimized to skip the allocation and task
+> work when this is not the case. Another possible optimization would be
+> to combine several fds into a single task work, since this is used with
+> fd arrays that might hold several fds.
 > 
->   2. Wrap the various #defines in helpers and call the helpers from Rust.
+> That said, it might not be necessary to optimize it, because Rust Binder
+> has two ways to send fds: BINDER_TYPE_FD and BINDER_TYPE_FDA. With
+> BINDER_TYPE_FD, it is userspace's responsibility to close the fd, so
+> this mechanism is used only by BINDER_TYPE_FDA, but fd arrays are used
+> rarely these days.
 > 
-> This patch uses the second option. One possible disadvantage of the
-> second option is the possible introduction of speculation gadgets, but
-> as discussed in [1], the risk appears to be acceptable.
-> 
-> Of course, once a wrapper for rcu_read_lock is available, it is
-> preferable to use that over either of the two above approaches.
-> 
-> Link: https://lore.kernel.org/all/202312080947.674CD2DC7@keescook/ [1]
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > ---
 > [...]
