@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A613241E1;
-	Thu,  8 Feb 2024 18:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB1B36AE1;
+	Thu,  8 Feb 2024 18:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707418174; cv=none; b=pvaV5NRaIwGfvkn9Je3oAnk+RMy5GgnpQ3C6c4GIu2wlS/2eI6gpy0d7J8GDmACE9GfVa/oNjO/fSY0mgEtn5IO36MCgTnjFB9tDvedEKEAREQEhXQLNvjZLHh1EaiJSgY261X23HHaCzRyvIxENO0oCFnKP0OPrDzoez6id5Ds=
+	t=1707418177; cv=none; b=Yt4z4mqEwKZOENMev72htaE3ycuKJaGyZqz+t6rqM1hufnEE1dCDPW8vHhAEjXirdN8TQ0eJINkLoJQoPBCmJ86ieIYEe0V3q4n0GAFnINUICT0u55021fpLlXnTTKTo89q8Xwbg7chikdZhC+rfdWAeKfhK5NS/yq6ViJK0QTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707418174; c=relaxed/simple;
-	bh=CF1pX065yGAbwnIQLmXi74KKJnRft9elRt9o2Olm5iY=;
+	s=arc-20240116; t=1707418177; c=relaxed/simple;
+	bh=xwQv8uq+9wANm7Kp3tnfC+qRvpRyTa5vpEt37Og3eA0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ml0gfN7JqZ0tTo0sQcYtqa+wyL8vwzQiGDH+tS4ar86+RPtUEg3itOldKKpric/3jMsRMeLupyeG7Ua+FGOz1CM7gOTGXeRPGIER5buewhAwWpHzBZO2pVEU7YF3/NdRyrnzVaVyZ7fen8CijyGoUkQEZkm7NIav2AYYCc0HpAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kXJR22dM; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=NmtedN/pFCbYVpQKWQkl/hlMakijeAK80rLrX9goH1Deu7FXp6DdqpGY5fb2c1KeL+f4iaRU5N72dD54qHflPWd8K3yUPxQnQt3yGps4D4SRbdzwxQTJIBOyP9br82FN3xxKP+x9hg+ghXY0OsByMsS7xuF8krg77D3WSwntwpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPpVkpOw; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kXJR22dM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPpVkpOw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707418172; x=1738954172;
+  t=1707418175; x=1738954175;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=CF1pX065yGAbwnIQLmXi74KKJnRft9elRt9o2Olm5iY=;
-  b=kXJR22dM4kGGLMdYM5E7umSwxoRLAkXpSgk/LrRN1q/1zuYEcdJiYqNt
-   LEhdev3OSBLWXo6+GbTVrGJJvkkFNbqIEOwoduNOSaMDxjenSkQzl1Q0d
-   MSIqlReqJ3sz170aNiGeFNM1sp5slTTylg/wGtXX4J30uXD+KBXXIMyVw
-   ntu9L2UaSaAsi/mrgn8osCOrYaaNHXwj/Txqh6Vj1zg/dx8DwsaFQlUsB
-   GmSiquQ1zAY0e74qG42QRV3I/RTHRjhxFDSZDiTWgC+djXzlWgQspgnyv
-   noI8p3m9rKT7caSCkdcZk2PpvZy21IRhxq2TcHkiwMDfUwN2aEpAjByoq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186131"
+  bh=xwQv8uq+9wANm7Kp3tnfC+qRvpRyTa5vpEt37Og3eA0=;
+  b=KPpVkpOwmpcbJaEuStBBJXt9pcDyw0Yp21ENfTOk3WWVq0SuxU1K9G0+
+   694OQtFllPE+ThKBqsS+dqOuZGZTi+Nt1s+hOVi/yCA5ZXjj0s4Xd+dJo
+   /8gpsSpXXGmOY0ONR+q1WypL+1mJO9J70UrMvsWMzjj1bhND6+uk3WfHU
+   ur2qQwGbR3JxHg567nzcRNqdwb3jjgNg1tIjDHNW+FBorwuLoSWtnkW8I
+   oqwVFS/PbVyZoSs1O/uY0CaggrCsegxSf2OchqwGKBwVFHcHFfxdx5eH2
+   455QXbR7NIGFQE3Q09iWlV1GzxyrvuA/y/wcZL09mEHoXwDvVRb6xIJpT
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186141"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1186131"
+   d="scan'208";a="1186141"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:49:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215532"
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215540"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934215532"
+   d="scan'208";a="934215540"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:25 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:26 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 661E5B2C; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
+	id BBA6112FC; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	devicetree@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 06/15] auxdisplay: linedisp: Move exported symbols to a namespace
-Date: Thu,  8 Feb 2024 20:48:04 +0200
-Message-ID: <20240208184919.2224986-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 14/15] dt-bindings: auxdisplay: Add Maxim MAX6958/6959
+Date: Thu,  8 Feb 2024 20:48:12 +0200
+Message-ID: <20240208184919.2224986-15-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
 References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
@@ -67,59 +67,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Avoid unnecessary pollution of the global symbol namespace by
-moving library functions in to a specific namespace and import
-that into the drivers that make use of the functions.
-
-For more info: https://lwn.net/Articles/760045/
+Add initial device tree documentation for Maxim MAX6958/6959.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/ht16k33.c       | 1 +
- drivers/auxdisplay/img-ascii-lcd.c | 1 +
- drivers/auxdisplay/line-display.c  | 4 ++--
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ .../bindings/auxdisplay/maxim,max6959.yaml    | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
 
-diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
-index a90430b7d07b..c6a42c5c128f 100644
---- a/drivers/auxdisplay/ht16k33.c
-+++ b/drivers/auxdisplay/ht16k33.c
-@@ -831,4 +831,5 @@ module_i2c_driver(ht16k33_driver);
- 
- MODULE_DESCRIPTION("Holtek HT16K33 driver");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(LINEDISP);
- MODULE_AUTHOR("Robin van der Gracht <robin@protonic.nl>");
-diff --git a/drivers/auxdisplay/img-ascii-lcd.c b/drivers/auxdisplay/img-ascii-lcd.c
-index 09014ada38bd..c571e54d9eb5 100644
---- a/drivers/auxdisplay/img-ascii-lcd.c
-+++ b/drivers/auxdisplay/img-ascii-lcd.c
-@@ -298,3 +298,4 @@ module_platform_driver(img_ascii_lcd_driver);
- MODULE_DESCRIPTION("Imagination Technologies ASCII LCD Display");
- MODULE_AUTHOR("Paul Burton <paul.burton@mips.com>");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(LINEDISP);
-diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
-index 6b3d25e20eeb..851b2c0f9443 100644
---- a/drivers/auxdisplay/line-display.c
-+++ b/drivers/auxdisplay/line-display.c
-@@ -263,7 +263,7 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
- 	put_device(&linedisp->dev);
- 	return err;
- }
--EXPORT_SYMBOL_GPL(linedisp_register);
-+EXPORT_SYMBOL_NS_GPL(linedisp_register, LINEDISP);
- 
- /**
-  * linedisp_unregister - unregister a character line display
-@@ -276,6 +276,6 @@ void linedisp_unregister(struct linedisp *linedisp)
- 	del_timer_sync(&linedisp->timer);
- 	put_device(&linedisp->dev);
- }
--EXPORT_SYMBOL_GPL(linedisp_unregister);
-+EXPORT_SYMBOL_NS_GPL(linedisp_unregister, LINEDISP);
- 
- MODULE_LICENSE("GPL");
+diff --git a/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml b/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
+new file mode 100644
+index 000000000000..49ce26176797
+--- /dev/null
++++ b/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/auxdisplay/maxim,max6959.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MAX6958/6959 7-segment LED display controller with keyscan
++
++maintainers:
++  - Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++
++properties:
++  compatible:
++    const: maxim,max6959
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            max6959: max6959@38 {
++                    compatible = "maxim,max6959";
++                    reg = <0x38>;
++            };
++      };
 -- 
 2.43.0.rc1.1.gbec44491f096
 
