@@ -1,64 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFAB28DD6;
-	Thu,  8 Feb 2024 18:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5233CC2;
+	Thu,  8 Feb 2024 18:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707418173; cv=none; b=cQqEUaGapcICa89GV1cg8CDwL/m9oW4YrKcvkzUF/fFLw5JtjzrE19jdRwPxKUonQ6kSAp03vW0z42GaIImJqAYky23toXHQVUMqwpiOxRXAqmvBpOxq85rB2gBkLYWfyVrd8Lz4dT86jJEZseCagJGmfwPmnLgM3kmsc3JOuTM=
+	t=1707418175; cv=none; b=i5fQ0M/z51UKwK0R80E1dUd0KloTJeL8o891GCnqY4JqbOSk5qP/eGXfE7hEacYqeEsILI30OLhLjsW+r/C8j1LX9cSgcXvJQ+NQRUPyc/UCnMg6LHxH9gFx1QcMRLVRcT/tbqGDmOhHyU/CD7qUk69REV13CVhef941gm2wVCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707418173; c=relaxed/simple;
-	bh=fRF6aaXYm3WO7lZKrdtFCzyzTyXPONtxX7sbViupAFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gd3vdTWd9MiVKxWC2h2iQMTOoK7aoxvN87yDp5w/B2Kdk6DFCUl7CwTnh4cmAViiFgWzDw8JaPFS6VhjlE1qXZHDD3BLTSYepDXcjFBGcEb8Lc8X64CYKmGurKsM5uCSQwtrtQqeNIRk6UTxcfvjunUPyLpW3fyyTQ8bc/cmn30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CcExyo2Z; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707418175; c=relaxed/simple;
+	bh=hDhYMA3F+4l5mMIlcEOrH62nfylV2E9jEwkIfVNtigI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mlnFdM3kWDyYCq51oPNW1tXsOdPALeWSd7zOLIc0NKu57eoWVTiSgLmv0SEfiUQMRjZyp4s+kkHErrJP9+UE6i48/Isi8MEUll6/0uM0b46XiK2SVrXm40agYTRtf3Pc/VTbyRwkWgJeb4Mhs16e8yn45bhyiBhNXFKlrbZRTck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rs1nJ6zN; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CcExyo2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707418171; x=1738954171;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fRF6aaXYm3WO7lZKrdtFCzyzTyXPONtxX7sbViupAFA=;
-  b=CcExyo2Zl2E3fY/QTEIm1qF3w0bkIdBGCSx7vDv779w3UmhXqq4dWkKp
-   kMHsdnWmpR6SOAABYlkqqmh6LC/0khTJUVwyX86Z4M/jOBO/j/7ghNcIU
-   MIAgso2Yp/GMLejrPnqw/3j9k8ZpamuPalQgkhkyD/ZeCEvbioX16Yrgd
-   5t+1zse7TlfRz7UJ8R+PD0DBNvM++H0rbHRPuIweauax+jMM6c3EMBrY7
-   jq0Q6WivrTXx/zA/EH7+mR/5UDdsi9OHKz+GBLPiGzsl4LmiMakyM5xk1
-   8X12a5OuWOtOhabmIvRZAUwURBwXncnz/v5tWveFWNC5UxBp/ubh9vr71
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186120"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1186120"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:49:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215533"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934215533"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:25 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7B81FBA3; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 08/15] auxdisplay: linedisp: Provide struct linedisp_ops for future extension
-Date: Thu,  8 Feb 2024 20:48:06 +0200
-Message-ID: <20240208184919.2224986-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
-References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rs1nJ6zN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1707418165;
+	bh=hDhYMA3F+4l5mMIlcEOrH62nfylV2E9jEwkIfVNtigI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rs1nJ6zN3i3/ZnxcqWVfIObvfKgetmRzKD9Xtjm7nBjU1gQXyq40Hbl0vGdpuDu3o
+	 1ChqvqCpB68GsWf1rfPiXH2WI1izSe5AxZNgR4KA6MzUetBSQbo/tVCeXzBSfElY9X
+	 xc3j36GRCDUwpBwdU5OlD7I27mG/61ybZ+kJ7jSB1oIBSVNjk4niWIo1iYGy65l9dC
+	 Lvj2QNC53f0foG786M7CcQfXzWJiDcvHhZXtuINhQEsbaXYHm9nS5GhJjOkOW+XhzB
+	 TjMlasE8RpSnU8253RGAaFCEwDFmIZdtCUrzC2IzCiPp0guGxx7e15ixCGWwaFEOO9
+	 2aK4Mi+ky1GfA==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TW5cj03Z3zY5P;
+	Thu,  8 Feb 2024 13:49:24 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dave Chinner <david@fromorbit.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v4 06/12] dax: Check for data cache aliasing at runtime
+Date: Thu,  8 Feb 2024 13:49:07 -0500
+Message-Id: <20240208184913.484340-7-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
+References: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,198 +63,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the line display library doesn't scale in case we want to
-provide more operations. Prepare the library to take a newly created
-struct linedisp_ops that scales.
+Replace the following fs/Kconfig:FS_DAX dependency:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  depends on !(ARM || MIPS || SPARC)
+
+By a runtime check within alloc_dax(). This runtime check returns
+ERR_PTR(-EOPNOTSUPP) if the @ops parameter is non-NULL (which means
+the kernel is using an aliased mapping) on an architecture which
+has data cache aliasing.
+
+Change the return value from NULL to PTR_ERR(-EOPNOTSUPP) for
+CONFIG_DAX=n for consistency.
+
+This is done in preparation for using cpu_dcache_is_aliasing() in a
+following change which will properly support architectures which detect
+data cache aliasing at runtime.
+
+Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-xfs@vger.kernel.org
+Cc: dm-devel@lists.linux.dev
+Cc: nvdimm@lists.linux.dev
 ---
- drivers/auxdisplay/ht16k33.c       |  7 +++++--
- drivers/auxdisplay/img-ascii-lcd.c | 19 ++++++++++++-------
- drivers/auxdisplay/line-display.c  | 11 +++++------
- drivers/auxdisplay/line-display.h  | 17 +++++++++++++----
- 4 files changed, 35 insertions(+), 19 deletions(-)
+ drivers/dax/super.c | 15 +++++++++++++++
+ fs/Kconfig          |  1 -
+ include/linux/dax.h |  6 +-----
+ 3 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
-index c6a42c5c128f..0cdf3fbdf81e 100644
---- a/drivers/auxdisplay/ht16k33.c
-+++ b/drivers/auxdisplay/ht16k33.c
-@@ -448,6 +448,10 @@ static void ht16k33_linedisp_update(struct linedisp *linedisp)
- 	schedule_delayed_work(&priv->work, 0);
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 0da9232ea175..ce5bffa86bba 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -319,6 +319,11 @@ EXPORT_SYMBOL_GPL(dax_alive);
+  * that any fault handlers or operations that might have seen
+  * dax_alive(), have completed.  Any operations that start after
+  * synchronize_srcu() has run will abort upon seeing !dax_alive().
++ *
++ * Note, because alloc_dax() returns an ERR_PTR() on error, callers
++ * typically store its result into a local variable in order to check
++ * the result. Therefore, care must be taken to populate the struct
++ * device dax_dev field make sure the dax_dev is not leaked.
+  */
+ void kill_dax(struct dax_device *dax_dev)
+ {
+@@ -445,6 +450,16 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
+ 	dev_t devt;
+ 	int minor;
+ 
++	/*
++	 * Unavailable on architectures with virtually aliased data caches,
++	 * except for device-dax (NULL operations pointer), which does
++	 * not use aliased mappings from the kernel.
++	 */
++	if (ops && (IS_ENABLED(CONFIG_ARM) ||
++	    IS_ENABLED(CONFIG_MIPS) ||
++	    IS_ENABLED(CONFIG_SPARC)))
++		return ERR_PTR(-EOPNOTSUPP);
++
+ 	if (WARN_ON_ONCE(ops && !ops->zero_page_range))
+ 		return ERR_PTR(-EINVAL);
+ 
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 42837617a55b..e5efdb3b276b 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -56,7 +56,6 @@ endif # BLOCK
+ config FS_DAX
+ 	bool "File system based Direct Access (DAX) support"
+ 	depends on MMU
+-	depends on !(ARM || MIPS || SPARC)
+ 	depends on ZONE_DEVICE || FS_DAX_LIMITED
+ 	select FS_IOMAP
+ 	select DAX
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index b463502b16e1..df2d52b8a245 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -86,11 +86,7 @@ static inline void *dax_holder(struct dax_device *dax_dev)
+ static inline struct dax_device *alloc_dax(void *private,
+ 		const struct dax_operations *ops)
+ {
+-	/*
+-	 * Callers should check IS_ENABLED(CONFIG_DAX) to know if this
+-	 * NULL is an error or expected.
+-	 */
+-	return NULL;
++	return ERR_PTR(-EOPNOTSUPP);
  }
- 
-+static const struct linedisp_ops ht16k33_linedisp_ops = {
-+	.update = ht16k33_linedisp_update,
-+};
-+
- static void ht16k33_seg7_update(struct work_struct *work)
+ static inline void put_dax(struct dax_device *dax_dev)
  {
- 	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
-@@ -696,8 +700,7 @@ static int ht16k33_seg_probe(struct device *dev, struct ht16k33_priv *priv,
- 	if (err)
- 		return err;
- 
--	err = linedisp_register(&seg->linedisp, dev, 4, seg->curr,
--				ht16k33_linedisp_update);
-+	err = linedisp_register(&seg->linedisp, dev, 4, seg->curr, &ht16k33_linedisp_ops);
- 	if (err)
- 		goto err_remove_map_file;
- 
-diff --git a/drivers/auxdisplay/img-ascii-lcd.c b/drivers/auxdisplay/img-ascii-lcd.c
-index c571e54d9eb5..c0ec7d9a1c62 100644
---- a/drivers/auxdisplay/img-ascii-lcd.c
-+++ b/drivers/auxdisplay/img-ascii-lcd.c
-@@ -22,12 +22,12 @@ struct img_ascii_lcd_ctx;
-  * struct img_ascii_lcd_config - Configuration information about an LCD model
-  * @num_chars: the number of characters the LCD can display
-  * @external_regmap: true if registers are in a system controller, else false
-- * @update: function called to update the LCD
-+ * @ops: character line display operations
-  */
- struct img_ascii_lcd_config {
- 	unsigned int num_chars;
- 	bool external_regmap;
--	void (*update)(struct linedisp *linedisp);
-+	const struct linedisp_ops ops;
- };
- 
- /**
-@@ -75,7 +75,9 @@ static void boston_update(struct linedisp *linedisp)
- 
- static struct img_ascii_lcd_config boston_config = {
- 	.num_chars = 8,
--	.update = boston_update,
-+	.ops = {
-+		.update = boston_update,
-+	},
- };
- 
- /*
-@@ -103,7 +105,9 @@ static void malta_update(struct linedisp *linedisp)
- static struct img_ascii_lcd_config malta_config = {
- 	.num_chars = 8,
- 	.external_regmap = true,
--	.update = malta_update,
-+	.ops = {
-+		.update = malta_update,
-+	},
- };
- 
- /*
-@@ -203,7 +207,9 @@ static void sead3_update(struct linedisp *linedisp)
- static struct img_ascii_lcd_config sead3_config = {
- 	.num_chars = 16,
- 	.external_regmap = true,
--	.update = sead3_update,
-+	.ops = {
-+		.update = sead3_update,
-+	},
- };
- 
- static const struct of_device_id img_ascii_lcd_matches[] = {
-@@ -247,8 +253,7 @@ static int img_ascii_lcd_probe(struct platform_device *pdev)
- 			return PTR_ERR(ctx->base);
- 	}
- 
--	err = linedisp_register(&ctx->linedisp, dev, cfg->num_chars, ctx->curr,
--				cfg->update);
-+	err = linedisp_register(&ctx->linedisp, dev, cfg->num_chars, ctx->curr, &cfg->ops);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
-index 851b2c0f9443..62e8a911bb12 100644
---- a/drivers/auxdisplay/line-display.c
-+++ b/drivers/auxdisplay/line-display.c
-@@ -50,7 +50,7 @@ static void linedisp_scroll(struct timer_list *t)
- 	}
- 
- 	/* update the display */
--	linedisp->update(linedisp);
-+	linedisp->ops->update(linedisp);
- 
- 	/* move on to the next character */
- 	linedisp->scroll_pos++;
-@@ -94,7 +94,7 @@ static int linedisp_display(struct linedisp *linedisp, const char *msg,
- 		linedisp->message = NULL;
- 		linedisp->message_len = 0;
- 		memset(linedisp->buf, ' ', linedisp->num_chars);
--		linedisp->update(linedisp);
-+		linedisp->ops->update(linedisp);
- 		return 0;
- 	}
- 
-@@ -216,20 +216,19 @@ static const struct device_type linedisp_type = {
-  * @parent: parent device
-  * @num_chars: the number of characters that can be displayed
-  * @buf: pointer to a buffer that can hold @num_chars characters
-- * @update: Function called to update the display.  This must not sleep!
-+ * @ops: character line display operations
-  *
-  * Return: zero on success, else a negative error code.
-  */
- int linedisp_register(struct linedisp *linedisp, struct device *parent,
--		      unsigned int num_chars, char *buf,
--		      void (*update)(struct linedisp *linedisp))
-+		      unsigned int num_chars, char *buf, const struct linedisp_ops *ops)
- {
- 	int err;
- 
- 	memset(linedisp, 0, sizeof(*linedisp));
- 	linedisp->dev.parent = parent;
- 	linedisp->dev.type = &linedisp_type;
--	linedisp->update = update;
-+	linedisp->ops = ops;
- 	linedisp->buf = buf;
- 	linedisp->num_chars = num_chars;
- 	linedisp->scroll_rate = DEFAULT_SCROLL_RATE;
-diff --git a/drivers/auxdisplay/line-display.h b/drivers/auxdisplay/line-display.h
-index d72c1899dc50..a4f0d1bf5848 100644
---- a/drivers/auxdisplay/line-display.h
-+++ b/drivers/auxdisplay/line-display.h
-@@ -14,12 +14,22 @@
- #include <linux/device.h>
- #include <linux/timer_types.h>
- 
-+struct linedisp;
-+
-+/**
-+ * struct linedisp_ops - character line display operations
-+ * @update: Function called to update the display. This must not sleep!
-+ */
-+struct linedisp_ops {
-+	void (*update)(struct linedisp *linedisp);
-+};
-+
- /**
-  * struct linedisp - character line display private data structure
-  * @dev: the line display device
-  * @id: instance id of this display
-  * @timer: timer used to implement scrolling
-- * @update: function called to update the display
-+ * @ops: character line display operations
-  * @buf: pointer to the buffer for the string currently displayed
-  * @message: the full message to display or scroll on the display
-  * @num_chars: the number of characters that can be displayed
-@@ -31,7 +41,7 @@ struct linedisp {
- 	struct device dev;
- 	unsigned int id;
- 	struct timer_list timer;
--	void (*update)(struct linedisp *linedisp);
-+	const struct linedisp_ops *ops;
- 	char *buf;
- 	char *message;
- 	unsigned int num_chars;
-@@ -41,8 +51,7 @@ struct linedisp {
- };
- 
- int linedisp_register(struct linedisp *linedisp, struct device *parent,
--		      unsigned int num_chars, char *buf,
--		      void (*update)(struct linedisp *linedisp));
-+		      unsigned int num_chars, char *buf, const struct linedisp_ops *ops);
- void linedisp_unregister(struct linedisp *linedisp);
- 
- #endif /* LINEDISP_H */
 -- 
-2.43.0.rc1.1.gbec44491f096
+2.39.2
 
