@@ -1,376 +1,175 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFAF6D1C6;
-	Thu,  8 Feb 2024 10:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E916BB46
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707387060; cv=none; b=mxLqWbV8HlxmRMA/NRB8VYId4KI5FglsL0Yyno3GX9aRqzgmmwIdcBrd1Wdo/5aiQ2zv5IWJuzlRN6P8LROWErEl0QDs7PXrN042gpsquTkq9DXfHm4dks5YONWxboyH8hmeBdaPsELlHgbHwlSRgi1tjHYbkvwnj4ck2XTXgoc=
+	t=1707387157; cv=none; b=Gjagi1NSe6MJBitI7Wb3lsCJ0Zn861Im1TcOP66jUv11KV220W7Peq1EWvNMhsl80vmuU3JT/rWWRWqiz08U2JwNAUJFzIUjacpwuQLtdz4quVfemSnWu1cMTeEqzIf2BBNyD1o7hh25sohStK8upi0h3J4r9SYLLbDDVI4dmko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707387060; c=relaxed/simple;
-	bh=+ADWVUpmxulSouAw2nrdNM35CGaO+iwj2qTIUmABrfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G7U6UKrOQq/NF2xY6fiwBfFuqW0s7Tzb+kAFBsTDl/VMT2Hrvfi3sHL8av4yDcpsXyIqC32dy15XzuZJnhztIqNbHz8nZum+8SVCt24W40XJq/evdMwrD1HjMieFlh40eH2mugOBc5jVZlZtqzbbv8S2QhAfYTmWgs2+QNwknTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DswS86sZ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707387157; c=relaxed/simple;
+	bh=PEWJ09jifRFAAlLjcVc4iKAqSR7wR85dz0SRx0aVLSg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=p5u2soQ6wvBbBS+aJykq1v1B1xro4QBx6fWFGuw9iLAVOmu1avZBhSSXrrK83JKMKYLQlnf2KaZDRP+tIua6hMDwvlOfVXikVYI0iibgu7GAs7YaKDOoPs2HvBQk636ZZmC1ZgKbdK+fAbvygzxIL6pVRfMlymKunup6fZd9ooo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LFF9ApvQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DswS86sZ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a3850ce741bso176849366b.3;
-        Thu, 08 Feb 2024 02:10:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707387056; x=1707991856; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t4qJqrQngjhyBVl1eFAnQz4sU3UDyhGqaXA9QuJuUdQ=;
-        b=DswS86sZn991L0nBuZepU05fP9sIHZjscUsoZt/amWe6oqkVcF5dr6N7KITmjRjf2a
-         woju8i/Q7WQnqAyxrOPzuyugcpDgphN8GhagCmBu3Rrw+FmQkL3+vmjfDnBT7hwQt4Lb
-         eFG9OrPNBxcrnqkgDKJWfE6M0haJlAOF8KzhtEUF3VEez8APdzUcIIwzbOlrUDyN97nx
-         G427XKEmZBepS1vn93EZ7MQQLsyHYjtw3tRB2xa2hx3RrKViBlhEKLFMOmFwFDKSSDDz
-         I5E25aSdW0UMUtWHC0H+NF/V+puQuUQ1L/LBmMXHLPlx/LfUwce3OsDcOq+6SSspZSb+
-         by4w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LFF9ApvQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707387154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2xFFELdl4FuzvLcR7hSHd94J0Sm6euURDyqSxsU4JA4=;
+	b=LFF9ApvQQkTlbF93by2fv58SWrDQkL06P7dUldx3PE3jUHzpWBW+PoZBpvywIQu4/gRSro
+	AlHo2Y+BWwiRv/4a7ky2SkV9+eZVcrmFx9Y9QJ8tgWQv52m6814kU4ANvvjh4xddCEX8G9
+	xNDWk90Bq1lhoOD3GL/i+/Osir4lzLI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-212-MuWSM4gxPmO6Ra_orWG27A-1; Thu, 08 Feb 2024 05:12:33 -0500
+X-MC-Unique: MuWSM4gxPmO6Ra_orWG27A-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40fc2c5818aso1042455e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 02:12:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707387056; x=1707991856;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t4qJqrQngjhyBVl1eFAnQz4sU3UDyhGqaXA9QuJuUdQ=;
-        b=n85wq+W6bdZX/barkGPLq0nmS8I6Wq9zMUgciQMLZny03F4y15qDYFbVK5c24ZUohv
-         Q9gdysuKIsmIiWISwlGOhuUo+kY1yIVMaYJvqkSggvvb9pbSiCtM1iunnMdOXT5B1z/b
-         WMk0KfU+Ihlu+1ihB1vu3/7fKdwCEKXDDyK6XJVrauSvmcsOJTSe5LHKIhYEnq3ldvba
-         e3uHOtTvyGLpKEyn0Rx877oea9r4RwTKR+S/nLlXWAiemEeRIyW2YcQLRVusC9/77h6l
-         nFREaM0xZ24VZGm8Hul1AI7g8Us4paa1K6zdgpJerRcIJk+rJqWUYcrTIQxIr8dQAtuu
-         0A+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPzKtFbdKLe4TCCyiU7Z7U+eJMj+Ut/tUNwxa/pIBh0MXFcPu5nHEEXdBsEuWeSeH1YXW8DPztHzHYOjBbpzpCBLVDSgXUHkh5PmGdpfNsnTYBWcmSfHq/A+dh7zLBtjqmLYshILizdQ==
-X-Gm-Message-State: AOJu0YyKQ70+d7SICRbpNKo4cwaSrY+i/2tae1PLIGIAHZfam9bd6Kf6
-	m7JxBZCs8zPB90iGRdYYn5QkjMrGuIK1HMoErTZuzaoofuO2cVxH
-X-Google-Smtp-Source: AGHT+IGRFIbU8FLRHZzqbsvV6g2EUVIm/++y/CMkRT3VZoUYN1lZI9EkNRHwDe4VGj0yVb98ZnoQJg==
-X-Received: by 2002:a17:907:77d7:b0:a38:2ca6:5b5d with SMTP id kz23-20020a17090777d700b00a382ca65b5dmr5006644ejc.16.1707387056021;
-        Thu, 08 Feb 2024 02:10:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXTmduvrzmnQ9Xj4ON9h1J3ZP5e1TxTkX3bx4vbi7MvzfB1DuOz1xJHHtEBktnaVafh+Z+gFlDgRDrB8tGlUqO7WM6LHnLFB8Uue+9LV42z/sbsSTSoGZRtxZszYGFwZM9gL1oYePpQSw0ERF6wxg26VxHCLw9z8vSnKNXGKY38k2lAo2MnPhOmbkBCFFYGonDVqI6ol9kmDt3z504p1H7AlVoJDnwP+xU7KCYJmeVoWoTDGlDOUN3qPpbFnOaOvmhWrfkG/Oqf1johsxT59+6CTS5Bh6NivFH5R9fxYCZAE57Xr+9f7Pj9QkaEkw3XgbCSExBvVJz1h3XCXGYKoSbbkBlU9xjrQ2zG/ap9J27wVPeUTjIUSHb7fkuOYBCP0LmsaZfJl+DhP+J1QlmtoCQ1AEML6un2ep3Ngwgokmc/R6PP36MWuHt/ZmpTaY6MbLs/hXDnTtuwIhFMhWipPqSHqW8a9Gzp5LguGCpROgx38MBYkU5JslvhBWfgiHuEOgxym/lSCMtbf5xdCGp2i13GBFzr4CSHplPmc69mg+xLkOAGOCmWn5CK+MOGZvVPSlDLSA5gugGBMmqXUZDoBA==
-Received: from andrea ([31.189.46.254])
-        by smtp.gmail.com with ESMTPSA id ss11-20020a170907c00b00b00a3868b8e78dsm1745276ejc.52.2024.02.08.02.10.54
+        d=1e100.net; s=20230601; t=1707387150; x=1707991950;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2xFFELdl4FuzvLcR7hSHd94J0Sm6euURDyqSxsU4JA4=;
+        b=rBEtmTRAfX6xvYQMisptFwgW4FHBZjdmMq+TN4KEDoXcCZYx3TCp1AG5v43SXdoVs+
+         zNX9J4fM5cduV4CQEWjSZwsSiqwhEM0NQnri4p+loLyJR5dBZrRppxkonmhznAg5g+tO
+         fIA09Q1pFbrF0SDrROICkwbo+Au5+lkKF6knAXkoPwz//7lqXMO+Y7JMsjqs6V6PDcsx
+         GixOrdCcHuOF9Ka1hAtA69rTYhuQhkqTj4ticze3XwG9ydvxtkvSSWXMXJtQYTyoF+Do
+         4ZP+eF4yEA+jE8vD0zdKM3Cr5TaW8SEdWMtaggAX3ZFx8+1W4BMkQk/VaVQdj62x2mWV
+         n6mg==
+X-Gm-Message-State: AOJu0Yxb5me9RPseIW7bT/RBSn6SRWzakxeDvvBdPrdb863L6zPGi96H
+	XMQzJyS5VjBeM4EAJ8bbhVTdGbTc5eMWxnB4c+nIQjNXf7BRqYb/dmHN9aMnEMLFfWVC5290yaQ
+	nHccUWOhmmb8fUaZxCovgqeX6e+x0G1INdTiGzSkf7KouHZcGAwOrWs78OxV3Rw==
+X-Received: by 2002:a05:600c:1d07:b0:40f:c996:307f with SMTP id l7-20020a05600c1d0700b0040fc996307fmr6728394wms.3.1707387150295;
+        Thu, 08 Feb 2024 02:12:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH78/GRltwIxEgIU+8Y7+NU4Q4kqElIeGIOwpokqq1fSu2KdOgrVrhKBlh9KprEw1Zrt0zakA==
+X-Received: by 2002:a05:600c:1d07:b0:40f:c996:307f with SMTP id l7-20020a05600c1d0700b0040fc996307fmr6728375wms.3.1707387149932;
+        Thu, 08 Feb 2024 02:12:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXnsIxnq53mDLozbjJ3fZAb8+suXi7BF8TSIURB8mIK8DOG9FXPIZfU3FXRaSoS8XmbleXl0vluyFQEmyQhvG5V9yejM7Ii8Z9CPrIsiW2dPuWnNFixWc8KrgrkIEuHcy9dSTGcxJKth2bGEXzsJd/2A4MHwDQAVwyNpdp81G/Tj/vOaTCXgtDltgPrUeNt8p5cmEE3cePb6c+Tf3EXc8KmrW4WKq5G8BfjS1ZFLpk/5iAIvedV/Z8/ocL6gahj10uapy+c9Xg/Rqv0RxX1UyDyxDBISQtJ
+Received: from gerbillo.redhat.com (146-241-238-112.dyn.eolo.it. [146.241.238.112])
+        by smtp.gmail.com with ESMTPSA id u12-20020a05600c138c00b004100c0882fdsm1170260wmf.31.2024.02.08.02.12.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 02:10:55 -0800 (PST)
-Date: Thu, 8 Feb 2024 11:10:50 +0100
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Saravana Kannan <saravanak@google.com>,
-	Marc Zyngier <maz@kernel.org>, Anup Patel <anup@brainfault.org>,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Andrew Jones <ajones@ventanamicro.com>
-Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
-Message-ID: <ZcSoqkexSipQsrLZ@andrea>
-References: <20240127161753.114685-1-apatel@ventanamicro.com>
+        Thu, 08 Feb 2024 02:12:29 -0800 (PST)
+Message-ID: <63d59bff272f572c94f97000475c4ac3e157c013.camel@redhat.com>
+Subject: Re: [PATCH v2] net: phy: dp83822: Fix RGMII TX delay configuration
+From: Paolo Abeni <pabeni@redhat.com>
+To: Tim Pambor <tp@osasysteme.de>, Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>,  "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Dan Murphy
+ <dmurphy@ti.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 08 Feb 2024 11:12:28 +0100
+In-Reply-To: <20240204101128.49336-1-tp@osasysteme.de>
+References: <20240204101128.49336-1-tp@osasysteme.de>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240127161753.114685-1-apatel@ventanamicro.com>
 
-Hi Anup,
+On Sun, 2024-02-04 at 11:11 +0100, Tim Pambor wrote:
+> The logic for enabling the TX clock shift is inverse of enabling the RX
+> clock shift. The TX clock shift is disabled when DP83822_TX_CLK_SHIFT is
+> set. Correct the current behavior and always write the delay configuratio=
+n
+> to ensure consistent delay settings regardless of bootloader configuratio=
+n.
+>=20
+> Reference: https://www.ti.com/lit/ds/symlink/dp83822i.pdf p. 69
+>=20
+> Fixes: 8095295292b5 ("net: phy: DP83822: Add setting the fixed internal d=
+elay")
+> Signed-off-by: Tim Pambor <tp@osasysteme.de>
+> ---
+> Changes in v2:
+>   - Further cleanup of RGMII configuration
 
-I understand that some refactoring is in progress, but I don't see the
-report below; adding it here hoping that it can be useful towards v13.
-(Unfortunately, I didn't have enough time to debug this yet...)
+This overall makes the change more invasive, I'm unsure is in the
+direction pointed by Russell
 
+>   - Check for errors setting DP83822_RGMII_MODE_EN
+> ---
+>  drivers/net/phy/dp83822.c | 41 +++++++++++++--------------------------
+>  1 file changed, 14 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+> index b7cb71817780..1b2c34a97396 100644
+> --- a/drivers/net/phy/dp83822.c
+> +++ b/drivers/net/phy/dp83822.c
+> @@ -380,42 +380,29 @@ static int dp83822_config_init(struct phy_device *p=
+hydev)
+>  {
+>  	struct dp83822_private *dp83822 =3D phydev->priv;
+>  	struct device *dev =3D &phydev->mdio.dev;
+> -	int rgmii_delay;
+> -	s32 rx_int_delay;
+> -	s32 tx_int_delay;
+> +	int rcsr_mask =3D DP83822_RGMII_MODE_EN;
+> +	int rcsr =3D 0;
+>  	int err =3D 0;
+>  	int bmcr;
+> =20
+>  	if (phy_interface_is_rgmii(phydev)) {
+> -		rx_int_delay =3D phy_get_internal_delay(phydev, dev, NULL, 0,
+> -						      true);
+> +		rcsr |=3D DP83822_RGMII_MODE_EN;
+> =20
+> -		if (rx_int_delay <=3D 0)
+> -			rgmii_delay =3D 0;
+> -		else
+> -			rgmii_delay =3D DP83822_RX_CLK_SHIFT;
+> +		/* Set DP83822_RX_CLK_SHIFT to enable rx clk internal delay */
+> +		if (phy_get_internal_delay(phydev, dev, NULL, 0, true) > 0)
+> +			rcsr |=3D DP83822_RX_CLK_SHIFT;
+> =20
+> -		tx_int_delay =3D phy_get_internal_delay(phydev, dev, NULL, 0,
+> -						      false);
+> -		if (tx_int_delay <=3D 0)
+> -			rgmii_delay &=3D ~DP83822_TX_CLK_SHIFT;
+> -		else
+> -			rgmii_delay |=3D DP83822_TX_CLK_SHIFT;
+> +		/* Set DP83822_TX_CLK_SHIFT to disable tx clk internal delay */
+> +		if (phy_get_internal_delay(phydev, dev, NULL, 0, false) <=3D 0)
+> +			rcsr |=3D DP83822_TX_CLK_SHIFT;
+> =20
+> -		if (rgmii_delay) {
+> -			err =3D phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+> -					       MII_DP83822_RCSR, rgmii_delay);
+> -			if (err)
+> -				return err;
+> -		}
+> -
+> -		phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+> -					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
+> -	} else {
+> -		phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
+> -					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
+> +		rcsr_mask |=3D DP83822_RX_CLK_SHIFT | DP83822_TX_CLK_SHIFT;
 
->   irqchip/sifive-plic: Convert PLIC driver into a platform driver
+It looks like there is a change of behavior here. The current code
+clear the DP83822_RGMII_MODE_EN, while this patch will clear
+DP83822_RX_CLK_SHIFT | DP83822_TX_CLK_SHIFT, leaving
+DP83822_RGMII_MODE_EN unmodified.
 
-I'm seeing the following LOCKDEP warning with this series, bisected to
-the commit above.  This is a defconfig + PROVE_LOCKING=y build, booted
-using -machine virt,aia=none.
+It does not look correct to me.
 
-[    0.953473] ========================================================
-[    0.953704] WARNING: possible irq lock inversion dependency detected
-[    0.953955] 6.8.0-rc1-00039-gd9b9d6eb987f #1122 Not tainted
-[    0.954224] --------------------------------------------------------
-[    0.954444] swapper/0/0 just changed the state of lock:
-[    0.954664] ffffaf808109d0c8 (&irq_desc_lock_class){-...}-{2:2}, at: handle_fasteoi_irq+0x24/0x1da
-[    0.955699] but this lock took another, HARDIRQ-unsafe lock in the past:
-[    0.955942]  (&handler->enable_lock){+.+.}-{2:2}
-[    0.955974] 
-               
-               and interrupts could create inverse lock ordering between them.
+Cheers,
 
-[    0.956507] 
-               other info that might help us debug this:
-[    0.956775]  Possible interrupt unsafe locking scenario:
+Paolo
 
-[    0.956998]        CPU0                    CPU1
-[    0.957247]        ----                    ----
-[    0.957439]   lock(&handler->enable_lock);
-[    0.957607]                                local_irq_disable();
-[    0.957793]                                lock(&irq_desc_lock_class);
-[    0.958021]                                lock(&handler->enable_lock);
-[    0.958246]   <Interrupt>
-[    0.958342]     lock(&irq_desc_lock_class);
-[    0.958501] 
-                *** DEADLOCK ***
-
-[    0.958715] no locks held by swapper/0/0.
-[    0.958870] 
-               the shortest dependencies between 2nd lock and 1st lock:
-[    0.959152]  -> (&handler->enable_lock){+.+.}-{2:2} {
-[    0.959372]     HARDIRQ-ON-W at:
-[    0.959522]                       __lock_acquire+0x884/0x1f5c
-[    0.959745]                       lock_acquire+0xf0/0x292
-[    0.959913]                       _raw_spin_lock+0x2c/0x40
-[    0.960090]                       plic_probe+0x322/0x65c
-[    0.960257]                       platform_probe+0x4e/0x92
-[    0.960432]                       really_probe+0x82/0x210
-[    0.960598]                       __driver_probe_device+0x5c/0xd0
-[    0.960784]                       driver_probe_device+0x2c/0xb0
-[    0.960964]                       __driver_attach+0x72/0x10a
-[    0.961151]                       bus_for_each_dev+0x60/0xac
-[    0.961330]                       driver_attach+0x1a/0x22
-[    0.961496]                       bus_add_driver+0xd4/0x19e
-[    0.961666]                       driver_register+0x3e/0xd8
-[    0.961835]                       __platform_driver_register+0x1c/0x24
-[    0.962030]                       plic_driver_init+0x1a/0x22
-[    0.962201]                       do_one_initcall+0x80/0x268
-[    0.962371]                       kernel_init_freeable+0x296/0x300
-[    0.962554]                       kernel_init+0x1e/0x10a
-[    0.962713]                       ret_from_fork+0xe/0x1c
-[    0.962884]     SOFTIRQ-ON-W at:
-[    0.962994]                       __lock_acquire+0x89e/0x1f5c
-[    0.963169]                       lock_acquire+0xf0/0x292
-[    0.963336]                       _raw_spin_lock+0x2c/0x40
-[    0.963497]                       plic_probe+0x322/0x65c
-[    0.963664]                       platform_probe+0x4e/0x92
-[    0.963849]                       really_probe+0x82/0x210
-[    0.964054]                       __driver_probe_device+0x5c/0xd0
-[    0.964255]                       driver_probe_device+0x2c/0xb0
-[    0.964428]                       __driver_attach+0x72/0x10a
-[    0.964603]                       bus_for_each_dev+0x60/0xac
-[    0.964777]                       driver_attach+0x1a/0x22
-[    0.964943]                       bus_add_driver+0xd4/0x19e
-[    0.965343]                       driver_register+0x3e/0xd8
-[    0.965527]                       __platform_driver_register+0x1c/0x24
-[    0.965732]                       plic_driver_init+0x1a/0x22
-[    0.965908]                       do_one_initcall+0x80/0x268
-[    0.966078]                       kernel_init_freeable+0x296/0x300
-[    0.966268]                       kernel_init+0x1e/0x10a
-[    0.966436]                       ret_from_fork+0xe/0x1c
-[    0.966599]     INITIAL USE at:
-[    0.966716]                      __lock_acquire+0x3fc/0x1f5c
-[    0.966891]                      lock_acquire+0xf0/0x292
-[    0.967048]                      _raw_spin_lock+0x2c/0x40
-[    0.967206]                      plic_probe+0x322/0x65c
-[    0.967360]                      platform_probe+0x4e/0x92
-[    0.967522]                      really_probe+0x82/0x210
-[    0.967678]                      __driver_probe_device+0x5c/0xd0
-[    0.967853]                      driver_probe_device+0x2c/0xb0
-[    0.968025]                      __driver_attach+0x72/0x10a
-[    0.968185]                      bus_for_each_dev+0x60/0xac
-[    0.968348]                      driver_attach+0x1a/0x22
-[    0.968513]                      bus_add_driver+0xd4/0x19e
-[    0.968678]                      driver_register+0x3e/0xd8
-[    0.968839]                      __platform_driver_register+0x1c/0x24
-[    0.969035]                      plic_driver_init+0x1a/0x22
-[    0.969239]                      do_one_initcall+0x80/0x268
-[    0.969431]                      kernel_init_freeable+0x296/0x300
-[    0.969610]                      kernel_init+0x1e/0x10a
-[    0.969766]                      ret_from_fork+0xe/0x1c
-[    0.969936]   }
-[    0.970010]   ... key      at: [<ffffffff824f4138>] __key.2+0x0/0x10
-[    0.970224]   ... acquired at:
-[    0.970353]    lock_acquire+0xf0/0x292
-[    0.970482]    _raw_spin_lock+0x2c/0x40
-[    0.970609]    plic_irq_enable+0x7e/0x140
-[    0.970739]    irq_enable+0x2c/0x60
-[    0.970882]    __irq_startup+0x58/0x60
-[    0.971008]    irq_startup+0x5e/0x13c
-[    0.971126]    __setup_irq+0x4de/0x5da
-[    0.971248]    request_threaded_irq+0xcc/0x12e
-[    0.971394]    vm_find_vqs+0x62/0x50a
-[    0.971518]    probe_common+0xfe/0x1d2
-[    0.971635]    virtrng_probe+0xc/0x14
-[    0.971751]    virtio_dev_probe+0x154/0x1fc
-[    0.971878]    really_probe+0x82/0x210
-[    0.972008]    __driver_probe_device+0x5c/0xd0
-[    0.972147]    driver_probe_device+0x2c/0xb0
-[    0.972280]    __driver_attach+0x72/0x10a
-[    0.972407]    bus_for_each_dev+0x60/0xac
-[    0.972540]    driver_attach+0x1a/0x22
-[    0.972656]    bus_add_driver+0xd4/0x19e
-[    0.972777]    driver_register+0x3e/0xd8
-[    0.972896]    register_virtio_driver+0x1c/0x2a
-[    0.973049]    virtio_rng_driver_init+0x18/0x20
-[    0.973236]    do_one_initcall+0x80/0x268
-[    0.973399]    kernel_init_freeable+0x296/0x300
-[    0.973540]    kernel_init+0x1e/0x10a
-[    0.973658]    ret_from_fork+0xe/0x1c
-
-[    0.973858] -> (&irq_desc_lock_class){-...}-{2:2} {
-[    0.974036]    IN-HARDIRQ-W at:
-[    0.974142]                     __lock_acquire+0xa82/0x1f5c
-[    0.974309]                     lock_acquire+0xf0/0x292
-[    0.974467]                     _raw_spin_lock+0x2c/0x40
-[    0.974625]                     handle_fasteoi_irq+0x24/0x1da
-[    0.974794]                     generic_handle_domain_irq+0x1c/0x2a
-[    0.974982]                     plic_handle_irq+0x7e/0xf0
-[    0.975143]                     generic_handle_domain_irq+0x1c/0x2a
-[    0.975329]                     riscv_intc_irq+0x2e/0x46
-[    0.975488]                     handle_riscv_irq+0x4a/0x74
-[    0.975652]                     call_on_irq_stack+0x32/0x40
-[    0.975817]    INITIAL USE at:
-[    0.975923]                    __lock_acquire+0x3fc/0x1f5c
-[    0.976087]                    lock_acquire+0xf0/0x292
-[    0.976244]                    _raw_spin_lock_irqsave+0x3a/0x64
-[    0.976423]                    __irq_get_desc_lock+0x5a/0x84
-[    0.976594]                    irq_modify_status+0x2a/0x106
-[    0.976764]                    irq_set_percpu_devid+0x62/0x78
-[    0.976939]                    riscv_intc_domain_map+0x1e/0x54
-[    0.977133]                    irq_domain_associate_locked+0x42/0xe4
-[    0.977363]                    irq_create_mapping_affinity+0x98/0xd4
-[    0.977570]                    sbi_ipi_init+0x70/0x142
-[    0.977744]                    init_IRQ+0xfe/0x11a
-[    0.977906]                    start_kernel+0x4ae/0x790
-[    0.978082]  }
-[    0.978151]  ... key      at: [<ffffffff824bbee0>] irq_desc_lock_class+0x0/0x10
-[    0.978389]  ... acquired at:
-[    0.978494]    mark_lock+0x3fe/0x8c2
-[    0.978624]    __lock_acquire+0xa82/0x1f5c
-[    0.978766]    lock_acquire+0xf0/0x292
-[    0.978897]    _raw_spin_lock+0x2c/0x40
-[    0.979029]    handle_fasteoi_irq+0x24/0x1da
-[    0.979171]    generic_handle_domain_irq+0x1c/0x2a
-[    0.979326]    plic_handle_irq+0x7e/0xf0
-[    0.979460]    generic_handle_domain_irq+0x1c/0x2a
-[    0.979618]    riscv_intc_irq+0x2e/0x46
-[    0.979751]    handle_riscv_irq+0x4a/0x74
-[    0.979888]    call_on_irq_stack+0x32/0x40
-
-[    0.980110] 
-               stack backtrace:
-[    0.980358] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0-rc1-00039-gd9b9d6eb987f #1122
-[    0.980662] Hardware name: riscv-virtio,qemu (DT)
-[    0.980913] Call Trace:
-[    0.981042] [<ffffffff80007198>] dump_backtrace+0x1c/0x24
-[    0.981246] [<ffffffff80ae020a>] show_stack+0x2c/0x38
-[    0.981456] [<ffffffff80aedac4>] dump_stack_lvl+0x5a/0x7c
-[    0.981648] [<ffffffff80aedafa>] dump_stack+0x14/0x1c
-[    0.981813] [<ffffffff80ae17a4>] print_irq_inversion_bug.part.0+0x162/0x176
-[    0.982031] [<ffffffff8007c6e6>] mark_lock+0x3fe/0x8c2
-[    0.982198] [<ffffffff8007d888>] __lock_acquire+0xa82/0x1f5c
-[    0.982377] [<ffffffff8007f59e>] lock_acquire+0xf0/0x292
-[    0.982549] [<ffffffff80af9962>] _raw_spin_lock+0x2c/0x40
-[    0.982721] [<ffffffff8008f3fe>] handle_fasteoi_irq+0x24/0x1da
-[    0.982904] [<ffffffff8008a4a4>] generic_handle_domain_irq+0x1c/0x2a
-[    0.983112] [<ffffffff80581dc0>] plic_handle_irq+0x7e/0xf0
-[    0.983293] [<ffffffff8008a4a4>] generic_handle_domain_irq+0x1c/0x2a
-[    0.983495] [<ffffffff8057fb1a>] riscv_intc_irq+0x2e/0x46
-[    0.983671] [<ffffffff80aedb4c>] handle_riscv_irq+0x4a/0x74
-[    0.983856] [<ffffffff80afa756>] call_on_irq_stack+0x32/0x40
-
-
-When I switch to -machine virt,aia=aplic-imsic (same config as above), I
-get:
-
-[    0.971406] ============================================
-[    0.971439] WARNING: possible recursive locking detected
-[    0.971497] 6.8.0-rc1-00039-gd9b9d6eb987f #1122 Not tainted
-[    0.971583] --------------------------------------------
-[    0.971612] swapper/0/1 is trying to acquire lock:
-[    0.971662] ffffaf83fefa8e78 (&lpriv->ids_lock){-...}-{2:2}, at: imsic_vector_move+0x92/0x146
-[    0.971927] 
-               but task is already holding lock:
-[    0.971975] ffffaf83fef6ee78 (&lpriv->ids_lock){-...}-{2:2}, at: imsic_vector_move+0x86/0x146
-[    0.972045] 
-               other info that might help us debug this:
-[    0.972085]  Possible unsafe locking scenario:
-
-[    0.972114]        CPU0
-[    0.972133]        ----
-[    0.972153]   lock(&lpriv->ids_lock);
-[    0.972191]   lock(&lpriv->ids_lock);
-[    0.972228] 
-                *** DEADLOCK ***
-
-[    0.972258]  May be due to missing lock nesting notation
-
-[    0.972306] 6 locks held by swapper/0/1:
-[    0.972338]  #0: ffffaf8081f65970 (&dev->mutex){....}-{3:3}, at: __driver_attach+0x6a/0x10a
-[    0.972413]  #1: ffffaf808217c240 (&desc->request_mutex){+.+.}-{3:3}, at: __setup_irq+0xa2/0x5da
-[    0.972492]  #2: ffffaf808217c0c8 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xbe/0x5da
-[    0.972555]  #3: ffffffff81892ac0 (mask_lock){....}-{2:2}, at: irq_setup_affinity+0x38/0xc6
-[    0.972617]  #4: ffffffff81892a80 (tmp_mask_lock){....}-{2:2}, at: irq_do_set_affinity+0x3a/0x164
-[    0.972681]  #5: ffffaf83fef6ee78 (&lpriv->ids_lock){-...}-{2:2}, at: imsic_vector_move+0x86/0x146
-[    0.972753] 
-               stack backtrace:
-[    0.972852] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc1-00039-gd9b9d6eb987f #1122
-[    0.972900] Hardware name: riscv-virtio,qemu (DT)
-[    0.972987] Call Trace:
-[    0.973019] [<ffffffff80007198>] dump_backtrace+0x1c/0x24
-[    0.973054] [<ffffffff80ae020a>] show_stack+0x2c/0x38
-[    0.973083] [<ffffffff80aedac4>] dump_stack_lvl+0x5a/0x7c
-[    0.973112] [<ffffffff80aedafa>] dump_stack+0x14/0x1c
-[    0.973139] [<ffffffff8007ad5e>] print_deadlock_bug+0x282/0x328
-[    0.973168] [<ffffffff8007e15c>] __lock_acquire+0x1356/0x1f5c
-[    0.973198] [<ffffffff8007f59e>] lock_acquire+0xf0/0x292
-[    0.973225] [<ffffffff80af9adc>] _raw_spin_lock_irqsave+0x3a/0x64
-[    0.973255] [<ffffffff80581210>] imsic_vector_move+0x92/0x146
-[    0.973285] [<ffffffff80581a04>] imsic_irq_set_affinity+0x8e/0xc6
-[    0.973315] [<ffffffff8008c86a>] irq_do_set_affinity+0x142/0x164
-[    0.973345] [<ffffffff8008cc22>] irq_setup_affinity+0x68/0xc6
-[    0.973374] [<ffffffff8008fa82>] irq_startup+0x72/0x13c
-[    0.973401] [<ffffffff8008d40c>] __setup_irq+0x4de/0x5da
-[    0.973430] [<ffffffff8008d5d4>] request_threaded_irq+0xcc/0x12e
-[    0.973460] [<ffffffff806346d8>] vp_find_vqs_msix+0x114/0x376
-[    0.973491] [<ffffffff80634970>] vp_find_vqs+0x36/0x136
-[    0.973518] [<ffffffff80633280>] vp_modern_find_vqs+0x16/0x4e
-[    0.973547] [<ffffffff80ab31f8>] p9_virtio_probe+0x8e/0x31c
-[    0.973576] [<ffffffff8062d982>] virtio_dev_probe+0x154/0x1fc
-[    0.973605] [<ffffffff80693738>] really_probe+0x82/0x210
-[    0.973632] [<ffffffff80693922>] __driver_probe_device+0x5c/0xd0
-[    0.973661] [<ffffffff806939c2>] driver_probe_device+0x2c/0xb0
-[    0.973690] [<ffffffff80693b46>] __driver_attach+0x72/0x10a
-[    0.973718] [<ffffffff8069191a>] bus_for_each_dev+0x60/0xac
-[    0.973746] [<ffffffff80693164>] driver_attach+0x1a/0x22
-[    0.973773] [<ffffffff80692ade>] bus_add_driver+0xd4/0x19e
-[    0.973801] [<ffffffff8069487e>] driver_register+0x3e/0xd8
-[    0.973829] [<ffffffff8062d1ce>] register_virtio_driver+0x1c/0x2a
-[    0.973858] [<ffffffff80c3da52>] p9_virtio_init+0x36/0x56
-[    0.973887] [<ffffffff800028fe>] do_one_initcall+0x80/0x268
-[    0.973915] [<ffffffff80c01144>] kernel_init_freeable+0x296/0x300
-[    0.973944] [<ffffffff80af05dc>] kernel_init+0x1e/0x10a
-[    0.973972] [<ffffffff80afa716>] ret_from_fork+0xe/0x1c
-
-
-FWIW, the full Qemu command I used was as follows:
-
-	sudo /home/andrea/Downloads/qemu/build/qemu-system-riscv64 \
-		-append "root=/dev/root rw rootfstype=9p rootflags=version=9p2000.L,trans=virtio,cache=mmap,access=any raid=noautodetect security=none loglevel=7" \
-		-cpu rv64,sv57=off,svadu=off,svnapot=off \
-		-device virtio-net-device,netdev=net0 \
-		-device virtio-rng-device,rng=rng0 \
-		-device virtio-9p-pci,fsdev=root,mount_tag=/dev/root \
-		-fsdev local,id=root,path=/home/andrea/Downloads/jammy/,security_model=none \
-		-kernel /home/andrea/linux/arch/riscv/boot/Image \
-		-m 16G \
-		-machine virt,aia=<either "none" or "aplic-imsic"> \
-		-monitor telnet:127.0.0.1:55555,server,nowait \
-		-netdev user,id=net0,host=10.0.2.10,hostfwd=tcp::10022-:22 \
-		-nographic \
-		-object rng-random,filename=/dev/urandom,id=rng0 \
-		-serial mon:stdio \
-		-smp 5
-
-
-  Andrea
