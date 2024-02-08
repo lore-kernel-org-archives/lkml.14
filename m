@@ -1,60 +1,60 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1018333CE7;
-	Thu,  8 Feb 2024 19:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABA733CCF
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707419503; cv=none; b=Rz6bxB5YwLXxK9vKJVOrWbmLU+L90scrMM9giXvKzfgtClo12EiVYPgndWVyBjmIMXwzpjrFHUaVdzZnzpUT7ElrI1jwPITd9ItU5wD/+OJkxYaLQczYFxQPkivoSvTcfMhvEHGxuORDxjAI6WfMTf7mZt01eK35E1bhX+zdutY=
+	t=1707419513; cv=none; b=fsQdUuIzQWRFqcOaZaRQT2kPiCB5xK0MFfiYqNQ2e/DicvJ/m+eRnZjzNyHQNXe1iGJ9oxD+oJTqxMy6uAcVEqQUwTOCCAcpBJeAHmnh6u8L73/f6odlMNaLitQQ4SrBANA4QAmOygmit3ZsIC4FH1OyMFShs/7MG81WAabCq4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707419503; c=relaxed/simple;
-	bh=aQEy3mSWaDeeTSuY1HAPfZhDAO2ymzOLonZei+6zUg4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fPE0tADQohLkwSOrMhdXhD03z2G1RC4GABDY36HqKUa0zk/6CsKaAQWE9g/TG4ImzA7oqEXvFce5RqMZPmBwcRMA/wdNHVcKWN31tmXypLoY5YnkOqRr6m6pxq5FcWks0HT90qmXGRz6YD8yg7c3qFMgPLeLzrpwqGF++P4Ubg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=Zd/wgLaS; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1707419513; c=relaxed/simple;
+	bh=blCSza5TQ+iFiMNQqLUeTbweD6hh0a+7uJXycqjiFEA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TbKZW5N1EDkBDHLrolhWNSAb19uzC9Vm/L0xsBzjlqW8gYyyAnS6BDanVdxTmndDGM7TSVI3CwpPBZQxneIKQsgeXjGE+IBbRdR+2uk9WaltSHvzpKcKA4oZ70ft4XN5/AO0LHahNjLUYe1DhYpxe72cIwajbwjNG4S80/Y8168=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=YN+LF18Z; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="Zd/wgLaS"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d70b0e521eso1097335ad.1;
-        Thu, 08 Feb 2024 11:11:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="YN+LF18Z"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-295c8b795e2so150848a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 11:11:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707419500; x=1708024300;
+        d=1e100.net; s=20230601; t=1707419511; x=1708024311;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y1PL72wG+pTNKJ8ODm/IPBfg6h6zM4BQGA0MFJHp+QU=;
-        b=WDcw4qF0UgRI2dq8mnVe2007TllokYV1PfV6fjO2rw8rD2HFPNBazRbBVzkfYA5xIL
-         juRbbhdDUImECf0CNY64mLdOCUHJduN8MmWnaLXZlHz4QvWPU+vDdJESlRCOpKciywBR
-         L2E/fxb2LXhm7HZasGLHcus19up69nqS5PWzKMISvTzCEEAGXAxLzQZhZTfQhHQymTWm
-         gErbFyXBVJVOHkbaIlZbPEG3OPeOJBpDedz7MPlUJvImNd0oAED0aML41WgyucgjQ/mF
-         Y/PGNdgHXYTuFpg2q4FPt6qFUItDk96DV+HPWAb6guuw6xies7xfNzzssNG1fJs6ng7A
-         m3AQ==
-X-Gm-Message-State: AOJu0YypHcAnhMQx8SEs5rlKG1nwtK7J9xqKWGql5XkZcg1J4T/mtyET
-	dZMQD83NPFnjdcJW4t36MTPvLAEZpAxGUfgZytAvpGjxUV2TYkKz
-X-Google-Smtp-Source: AGHT+IESTJhHOIx4yxxdx6CBz3zZTjh5s95ewXfAPWbhN3a81Xm8y14s7O/v73CpE2tI4iBR2+1P/A==
-X-Received: by 2002:a17:902:d2c6:b0:1d9:3b54:d857 with SMTP id n6-20020a170902d2c600b001d93b54d857mr108412plc.23.1707419500141;
-        Thu, 08 Feb 2024 11:11:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWR20PWoX58eCA+IjlkLkegHMpsTBiRz0wymeIrC1g/6A0F9m8J+FIDXObHsKZsW2t3VA15MXktj3YBLWCLfpHsBrFTQyNrjmrtEKHZLHRlWWQmVuAr0uAXaZMT3SWCbAxdwzIBAkK8KDf/QI5Gep/groKElY6P72V6rbfb6ZmgydH+2yK4xok=
+        bh=vITTCQqApfqjUncYWpsTg5mOxYlUOY7+4BnAfOQ/uHo=;
+        b=pLAMkyQHJgCiz1WZTMAc2fo2Vab/VwE/96UihdLyqTfzpmyeDeK19CrzL5DmeH98pg
+         nMEy7V0I+dxJtMtXoDJ2oArl0UWwTAyX5UZ/t+HsUnOS6OQlM9GwBAFXKDiCZaiVi76j
+         ARsJTNzoGhmH1rcaAXjxGF8XmGufmpUk//lZjSMTLzJBuiVooehgBJt/3n0GGRBvNjzT
+         BjPBlUUd2UuLvLHYZC28Uh7ONeY+KjAspJXOUOyNS+K7F9d1ru5CEzjcMieaWwzpYozl
+         LYreiYLMM3qruYWDKcXmynRELddtAg6J3eXSZf1W5RZJGCVek1w+3Pg5R9fuvvr/Y6Gx
+         D6bQ==
+X-Gm-Message-State: AOJu0YxesA2AVFb7s4xClsDdlmvzu/cI5ccsXlLluzkNxgSwlq1dqjIg
+	OVxp9Z36WMPc/LlfbSSfYOx3riz4AGZ0QubjQFl51iMDmG+AVUXo
+X-Google-Smtp-Source: AGHT+IFhXj2F4FBpzHtVsotxqIVbnXL/PpzrBW1Ump4XU6GNW2ecnGoDhT/7Hx0qMHs2Z4XzFmfKtg==
+X-Received: by 2002:a17:90b:1bd2:b0:296:ee58:646a with SMTP id oa18-20020a17090b1bd200b00296ee58646amr200982pjb.25.1707419511349;
+        Thu, 08 Feb 2024 11:11:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUY4S0sLUZjN2ovwW7PLWe3UO8nP0LEwoLuUEXHTO20z0JBxoat9cWr349Vtg4Rh1niL0Z2sVyPCr2JagSfW47ae4aQ46wcHBdbKzPEmNsTv2fIDeMWe6/IuIPpCRo6WQ==
 Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id e16-20020a170902cf5000b001d77a0e1374sm97940plg.151.2024.02.08.11.11.34
+        by smtp.gmail.com with ESMTPSA id gd13-20020a17090b0fcd00b00296dd7eff41sm132586pjb.9.2024.02.08.11.11.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 11:11:35 -0800 (PST)
+        Thu, 08 Feb 2024 11:11:50 -0800 (PST)
 From: "Ricardo B. Marliere" <ricardo@marliere.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707419490;
+	s=2024; t=1707419508;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=Y1PL72wG+pTNKJ8ODm/IPBfg6h6zM4BQGA0MFJHp+QU=;
-	b=Zd/wgLaShCIdHMzteS1tRduU/IrZqYTzM9XWZrgA4ijliNvFPOJpRzBIS15DzwJAtW95Ky
-	g8Mw03c0Hp4gqTUkJwyt34BSzz+zAty8XenUzyMbfgx+4C6oyopnFmUXpSCuDC9vjW71k2
-	BJaOCSz9rBcEc/GvewW6bItuJeMW417IS4r+jQwTcj5Q87aD81Lhd8jIFrF6tALJUPxJD+
-	/3JGZPGfc9cb9SihcEyK20HNubPrnCIYuDNuZ1nSP6DqYZEnxVOYZpfx8mEYN+wnnNohnp
-	A1RslDwEDTxzB9hI1zKiRHSJtbPjO/0HSpQPCJiCebYjj09zGyzN/XtmZ3sVtQ==
+	bh=vITTCQqApfqjUncYWpsTg5mOxYlUOY7+4BnAfOQ/uHo=;
+	b=YN+LF18ZU5JEJ2YJPkrdhV5nLL8tK5b7OA+HDEgyfcrvbQ3f+utGpnfHQ4kosRFFgkq2HC
+	STcK+M88+9g9DUTPr5AcuvIF/ZCZG7S76IJNN+M87ww+GwS/LKdDPjVNUsckMblrTITfQI
+	Ffymj35G9pEz1aVSH1S9aeyR33MDJ94oC1ANZliF8AeVWUkzjrFAwNmewcddBFYr3+PnDJ
+	/+QjeglPe8SGAO+5qQOfS3aQtA45O4w32UhnAdO3jrJ3cgBox7aeKC1ojkQjK+JNODsguB
+	YRBdaybSjZBrugWSi2u0vMGz5jCBRFVe97UOHmpIu6hOpqrBBhjG+A5EN0/nvg==
 Authentication-Results: ORIGINATING;
 	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Thu, 08 Feb 2024 16:12:02 -0300
-Subject: [PATCH] bus: mhi: ep: make mhi_ep_bus_type const
+Date: Thu, 08 Feb 2024 16:12:21 -0300
+Subject: [PATCH] rapidio: make rio_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,74 +63,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240208-bus_cleanup-mhi-v1-1-ee80f4e71845@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAIEnxWUC/x3MQQqAIBBA0avIrBNMC6yrRETaWANloRhBePek5
- Vv8/0LEQBihZy8EvCnS6QvqioHdZr8ip6UYpJCNkEJzk+Jkd5x9uvixEbfOqUWrrjVaQ6mugI6
- e/ziMOX9R+0XNYQAAAA==
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
+Message-Id: <20240208-bus_cleanup-rapidio-v1-1-c69040ab0151@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAJQnxWUC/x3MQQqAIBBA0avIrBPMCqqrRITmVAOh4mAE0d2Tl
+ m/x/wOMiZBhFA8kvIgp+IK6ErAexu8oyRWDVrpVWvXSZl7WE43PUSYTyVGQQ2ObXjlr0XRQyph
+ wo/u/TvP7fjaax7ZlAAAA
+To: Matt Porter <mporter@kernel.crashing.org>, 
+ Alexandre Bounine <alex.bou9@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1552; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=aQEy3mSWaDeeTSuY1HAPfZhDAO2ymzOLonZei+6zUg4=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlxSeEIdGbnUmuLq4798rs1q+lJxH4G/NRRqSYl
- AS5e/NJF0eJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcUnhAAKCRDJC4p8Y4ZY
- pjnQEACev8uaDbyRtMeSDrbIbSZgXFVgR0+fNGk1dDYWu4HrLblTHwG1I9a+bqqLOaTi35jntZO
- tyyfq1EG1vHHeBi8TtbHbNNi1N8SeHq7Xox/U2UJlUzAWJLerqh3oaI4f+ygV2bGxiBEhbSRR/0
- YMOyIEmCgIoTKpHS9/WiJhgwiywB9wXrvv3w7ZjG0fAL3yLc300ZRfXFDGdjJqoR/NV/aE3uTya
- gm/jEMR/6JzX/W8pVSIQ7f8bLaBamMN6tlSxw7qqYidoaPhnZW1IJ602Rc9i3l21sLf6VwweTEc
- sRkNNvQ9RewZeeKVtDZwEzP5WsScdKt3Q0aBZ1uXbrJWOquq0xXV70sreEQW9SJO6Qr8ufu56Rl
- g/q2Ojcd58B9JiAKB0jow1EHAHnSLzlp0kjxKyANnPvnWnkSVO4ZCA1P6GBOlSeIEYGT8p5WBLE
- joiCWqF1eYgCnXp/Dzt1J+7XuYGM2WcbVFZKXYQxn6f0ewzmfjbvVAP1DhKAj/04E07EbRcIluc
- Uk0xrQpQ489eWGcLSah7rK1YUr/oK/e1fOXRFMekF0ojqy+I9Mj+nMtqS9foySWFEirktLP6m1p
- oxMA5QfHYzWK3FFiBT8nz5TxYthluIx/C4sE4d9DxJTHmFbmBny5RY7lERlQHNoPx9XuVz0d6qR
- ViTUoyBuinOnEqQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1589; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=blCSza5TQ+iFiMNQqLUeTbweD6hh0a+7uJXycqjiFEA=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlxSeVXQp/RxgRS56sAed4O3A59pqAUVLSBeCiR
+ AdLM/KgJh6JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcUnlQAKCRDJC4p8Y4ZY
+ pnpZD/wO02U2hQnGoQr8Oez5m4Fq0b4U1RWQxorc4KUQuNxbX5P903j6zGCQ/ti4czpG7Qkn6bQ
+ O2tV6LhU3AP3uL5rFniJZQ1HvvDoPHfBJjjkCGnX3c9y9o+/+rngl/qn3DmL5ytT9pru7dw0iGw
+ afWmzgbIwlopOpt+rV4rjbCV7w2nT9OfrT+UZJiXt5TKoFaUj6kGA7lkMuafVaSqYWuigUicCKo
+ v+VjZiwnvM/JbXmkjRJN36LfnNAiRu0HEUcx4qDVaIy/RNti/tnFVAV6O/gRWvSH9fh3eibzqEE
+ 4MJGysNmhc7rJUPBEFUfJ1+CcnZ5uLcG3vQNwLZqiQqO+ChXwlya4dtZX21PgGxBIptE5dkz0N6
+ KrMMnQfoFXIEdaGsBYWxveQMaOBUdEXgS+CCr0H3P/jF+3y34ly/6fKkr1mAaEs6HsjbUgRF79V
+ 3JvZJTTYuWEe1dEdcH6QktZqlqzMWvitC7+seUjViLq3Ug6TdNbs/c6p91ePoEUuyqLO+07g9NP
+ shGD9b6Aoah1fKCX3r0MNoBdysR/jTHTEB06fT2JF8EWkk06PiAmiGSFyCQNavusghnW/vptOPt
+ 32g0U4TC08qGpvGUmQsK1p5Rn13rYbg31jt1wL1avW2AFgEu9BD0I+WCMvZzosBxJERzEXFVGrn
+ VZqrjnTd2c+HFSw==
 X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
  fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
 Now that the driver core can properly handle constant struct bus_type,
-move the mhi_ep_bus_type variable to be a constant structure as well,
+move the rio_bus_type variable to be a constant structure as well,
 placing it into read-only memory which can not be modified at runtime.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
- drivers/bus/mhi/ep/internal.h | 2 +-
- drivers/bus/mhi/ep/main.c     | 2 +-
+ drivers/rapidio/rio-driver.c | 2 +-
+ include/linux/rio.h          | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/mhi/ep/internal.h b/drivers/bus/mhi/ep/internal.h
-index 577965f95fda..512da7482acc 100644
---- a/drivers/bus/mhi/ep/internal.h
-+++ b/drivers/bus/mhi/ep/internal.h
-@@ -11,7 +11,7 @@
- 
- #include "../common.h"
- 
--extern struct bus_type mhi_ep_bus_type;
-+extern const struct bus_type mhi_ep_bus_type;
- 
- #define MHI_REG_OFFSET				0x100
- #define BHI_REG_OFFSET				0x200
-diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-index 8d7a4102bdb7..a583038131d3 100644
---- a/drivers/bus/mhi/ep/main.c
-+++ b/drivers/bus/mhi/ep/main.c
-@@ -1716,7 +1716,7 @@ static int mhi_ep_match(struct device *dev, struct device_driver *drv)
- 	return 0;
+diff --git a/drivers/rapidio/rio-driver.c b/drivers/rapidio/rio-driver.c
+index 1b3b4c2e015d..2baef45ee5ff 100644
+--- a/drivers/rapidio/rio-driver.c
++++ b/drivers/rapidio/rio-driver.c
+@@ -227,7 +227,7 @@ struct class rio_mport_class = {
  };
+ EXPORT_SYMBOL_GPL(rio_mport_class);
  
--struct bus_type mhi_ep_bus_type = {
-+const struct bus_type mhi_ep_bus_type = {
- 	.name = "mhi_ep",
- 	.dev_name = "mhi_ep",
- 	.match = mhi_ep_match,
+-struct bus_type rio_bus_type = {
++const struct bus_type rio_bus_type = {
+ 	.name = "rapidio",
+ 	.match = rio_match_bus,
+ 	.dev_groups = rio_dev_groups,
+diff --git a/include/linux/rio.h b/include/linux/rio.h
+index 2cd637268b4f..e9ca2fb7133f 100644
+--- a/include/linux/rio.h
++++ b/include/linux/rio.h
+@@ -78,7 +78,7 @@
+ #define RIO_CTAG_RESRVD	0xfffe0000 /* Reserved */
+ #define RIO_CTAG_UDEVID	0x0001ffff /* Unique device identifier */
+ 
+-extern struct bus_type rio_bus_type;
++extern const struct bus_type rio_bus_type;
+ extern struct class rio_mport_class;
+ 
+ struct rio_mport;
 
 ---
-base-commit: ceeb64f41fe6a1eb9fc56d583983a81f8f3dd058
-change-id: 20240208-bus_cleanup-mhi-cff3d8395b88
+base-commit: 547ab8fc4cb04a1a6b34377dd8fad34cd2c8a8e3
+change-id: 20240208-bus_cleanup-rapidio-93b380dbbea5
 
 Best regards,
 -- 
