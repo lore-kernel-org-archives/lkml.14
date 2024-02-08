@@ -1,207 +1,121 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6110D7E57F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 16:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EFF7E769
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 16:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707410315; cv=none; b=NsW22Ie8SSG4BTExe7D3AimrX4zqSbVPf33u0R5/ENl0w0ZE3yv2rUlqSZiVA572/rJdZnntDKUXdJSwq67vEPtFproCdx5jJRfiL07TQSIb1tyF9xDh+1HEOnXp0d9SOp8U1rmMXaxYiPl2fDtdPxVFaJ7Siv9EOGnN188oNzE=
+	t=1707410424; cv=none; b=obbri0tBT2CoKe2Omr079CDyGKS8LI9G4UjEi8bI49+IhpXc1RSJsRMOaXF3Th34JSucoYMBXuFVLBs3HcnRl9soBh36U3T42iAxf81X12d3HrdobiSn4VYX4l8Rwh2sh19DpLrL5qfTyivrDwLIHI/D5q8LXdt7WdK8rbGoZR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707410315; c=relaxed/simple;
-	bh=9QGLWUnXjOEE0l9GehnJutnkj1I2sx1Pl8YobqZyvs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=b37uIYwcUQttzuCXHGNvGNLfKmNPG6X9+38LjYL8IAy0GUxkWU0DetQMbgRzBja5JvJhwsNSvF1qJT4OrpGS4NzwkipncqbzbO6MN/kPddSta18G7SO6+Ol7qrj9NHiUQ4p5yGQM0pj5vEfcufDEe67xt0PquDgf8fyKYLBWsX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Zm041nd/; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1707410424; c=relaxed/simple;
+	bh=OXpJXM5ENIxkUBCwl/xB7oMNxeBAlvJGW9C9NzXiVCA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=trz/3F09VXuF9WPZM7fmtf8lqm1JQl5xfa1ps5LNMFLTyUxQkf4OgH3SIu1f09Du3oBbAgmJmriOcPvnQlMhbpkFbnx7ScjvjbiUL4ZY4/rhJBHI4NXwGRbqVC1FBByfGiF1F7GjBopogEnO+Y/q/HG/lp0HnoBcESJRD31YerQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MVnXw8UC; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Zm041nd/"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4101eb5a115so435695e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 08:38:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MVnXw8UC"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4103be6e938so533465e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 08:40:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707410311; x=1708015111; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=d4jeruN/E/glf3Gv5XyYQqRCOQY8bjJkIw1GYmYaFgo=;
-        b=Zm041nd/eXG42xD4I/4j8Ss6FQ4+DxhitSUvJLSg+bVxqWVhvfxYi/6iHjIyMZorRn
-         D5PXmU7x7126T36sdR/DdL1K+/cVgYQrlroWGyePWOwn9Q353hlp6w97jsJDohCG2Boy
-         GiHERUmFz6qEfXp5riKWdOB4vdnRRhfWyiihZM1BTtPXWhHkysgUNfu9tEwAklJlutV7
-         RsMqXDwH8XAbntEMQMyLUbih1emjlXGXcj71qtZkluyIjUmWyYAW5TXPw31Rl8sCR5Ip
-         DJ4F37P96ePlaPixeVAeVsf54YTaaCkzsHYrFYNGaK/jXmchwohg2DfLFvKsIyYhXNCX
-         7vzw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707410421; x=1708015221; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MxuJQNz83Rv9rSn0MovZy25uHrT4R1JS0Xrvo9xnhdQ=;
+        b=MVnXw8UC814h62a+82y8G+LfNJ2jmkko+uK84bt57uT+kMZ4yUO3xSF2wzJYoHPj+3
+         v5by3nHhSS+xaleFjI2K5E0vt06K7phVFBtJtK94cghFiUF7igCAmTYrd94yyPc+XYEr
+         CBCE5LcbA3/72YYyMfAQ2Owj+dKvznjiyL9kipf/4jhUmJ3j8TrIxPbSKZWXnoRsqpGy
+         AWGIMVfBtfdQP/EScehaHHtuQDetZ/fLnbUKcMJKqLFhzNP1DeE91iBaR9Zayq/zBVau
+         ldmNAq/CkoXaWHpXSAOkzsDETK7itKLh1zEgr0U50RMLnOd2erYlC7/j8lP8MB4mjgv5
+         yiHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707410311; x=1708015111;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d4jeruN/E/glf3Gv5XyYQqRCOQY8bjJkIw1GYmYaFgo=;
-        b=PXCX2uIv8Id9gGB5y9OZvsXHZvAKziqC2YivBV+TMbofklVh6MwjU1N7QTGxykWXRL
-         IZb8uC7uJ2p+tg2kxpwiwNaChnd/WGpUKZq1mqTyfnCcyvCN5z/A0oGvWxTOcDPUMx3S
-         nfS5mI0HXJyUCSJNudsmpAnbzr6uOkI0aHk/rvk0JmH23ymTB8ASYW+r89uJG80agUPk
-         cM7GHuiHskrpcb+TGB2Hm84nQnZuSRsElcTZ8/4ehxkBEUu0e1Hciz/ulYPn8lcjxZvX
-         gg/cwUVt5IS3mHP4Yj+K4j2buLSpLD2Hq9Eb17EjEaZGjZcT3y3TQ7mmQs7BM35fbRaF
-         ouPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOWel43nTXXfBQecrdvWKTxOaKcm9J06B5oHjdhxqCWuhK8mr5KzbrTaCyED3xmhPDnFzI+7ImPb0QHfSarEC7sGqCR90H9F0GAqNX
-X-Gm-Message-State: AOJu0YySFdBG4xCauGs0BtwAT7KfH3I0egt6p9q+8GEjk6R7K68IHB+M
-	+0avB85++Yq6IzIuxWuAov7kchl9t34kroKSn9dx4SB+QOX0b1nXZp9nw26fZQc=
-X-Google-Smtp-Source: AGHT+IGeczzJ6ulNuOfDeAkZzD4h/YxsrbGq/4YU7wzrrzqbNExodvuxGuysdztEqknj6gCR0G9FoQ==
-X-Received: by 2002:a05:600c:a384:b0:40f:e207:2e4f with SMTP id hn4-20020a05600ca38400b0040fe2072e4fmr5456881wmb.40.1707410311378;
-        Thu, 08 Feb 2024 08:38:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWPBRrzRZpG0QEm9u8butDqffuNPwzOAmIqysEx6IuG03LHiQbIbH/2HA3gxGXcduMd3NAB5mmYX8nfw324QhgXL+1BbocnqzTv8AwSH9m7Rvdmrts0acZtOW48ZJVqMj1hZ0Pkh1yWIe3HIruqy/jclQt6HcBUh1vBPEPgM4fufkV5qx+mWOqsV8vhWvg1aYi9ZTBBa3tIhk7RSr1QJke/j1XXaDUGM5eGj+YkVFAr8jyuB+Xwos0+fqIYnqRa15Tmfir5gLKg/MaJ5ZANQgZd4Ib7uvTR34TMVNXcqm7zilA8siPkeztgQRu20elP+k0SEBjN54PYNLr1iyg5F+wdThnUvPTHqd1vFihBDQ6MWwuZaXNAvQqCu5RyQSEFOxC/pf3zlX7tNoGG1jXUt+ksYyL19VXp0XtH6Ee7d3LAMw==
-Received: from [192.168.50.4] ([82.78.167.45])
-        by smtp.gmail.com with ESMTPSA id o30-20020a05600c511e00b0040ec8330c8asm2121522wms.39.2024.02.08.08.38.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 08:38:30 -0800 (PST)
-Message-ID: <42b48f52-0d14-4f24-9eeb-38e68558eb8f@tuxon.dev>
-Date: Thu, 8 Feb 2024 18:38:29 +0200
+        d=1e100.net; s=20230601; t=1707410421; x=1708015221;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MxuJQNz83Rv9rSn0MovZy25uHrT4R1JS0Xrvo9xnhdQ=;
+        b=CZ1G4eHHVPs7KG5THMbhXUPaVHRcL/ks/ILi6XcWTztogWyNKukzt1pRklzdSccLho
+         R4RtG6a/xYzF+CwH/1TqlRjZ4wePej0UUq3ILLlW7fEz/Ay+yisTMaKDVsqrVYmJIETO
+         w7gEwghmP1uhWU8tYwZLHulTlpdXCfj7C0Je2eCVsD1gvbSj0ftKMIyOaPlI0FBsYO3c
+         mZfBkjqfopRssgK9RixEu3ovtx7hg0/aT/HwedcSI6uPe4IDhqH15hUduwEvUZG03lPi
+         6grOlJRLo3lxmTq5Unh6myDP6pO9QxozRRbeiOsjIKKZ4tUIMjzY8gXNp/rXUJwYwds0
+         YSEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWglrLyHyFSVHpwJt8CIJ3ioBXzmnny2o+vQMhfoCUzEUPluuQgmoUS7BFy4cDMDN5bQfdEVfDGek9Um0mrvSqcGRB6fKR2I48hJbLY
+X-Gm-Message-State: AOJu0YyGtNdv19A5KTdbCehMn1TWYd3QcpBJ/zvCQcX/CWJ1Q55t5kFZ
+	zaOMz8Pj5QsgWu0QsRSD11xcA98JWPb5G4ieWmZtLDUg7r+/R6MjmnzQnhF2IFY=
+X-Google-Smtp-Source: AGHT+IG67zzLkDBYUQH/Oh+GXm+5eQ5upBG622C9PYnPayDKwkt63GFHsbuL4gmr6qW8MpMN8bhZdw==
+X-Received: by 2002:a5d:4089:0:b0:33a:e9b5:b14d with SMTP id o9-20020a5d4089000000b0033ae9b5b14dmr241wrp.65.1707410420747;
+        Thu, 08 Feb 2024 08:40:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWB2I3ETg91DGm+JML3ch4l6SiV4VksNtKz2Lhmqdg92oqKC2pFDz3odWZV6cD9nOYEAbmKUITi4dhUBv/RSid1+VbrkPCg05YBK0rw1kQSQ6T8pqSz2T8DytkGU/i8Brb72f721tWyZfZi2fwOKl62KvqVYTAhlfowCrBEk9gaAV0lfx35lKBv9YVamjPxdb4dmvaaPCA=
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:44bd:e160:131:19a4])
+        by smtp.gmail.com with ESMTPSA id s16-20020adfea90000000b0033b198efbedsm3915335wrm.15.2024.02.08.08.40.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 08:40:20 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Miaoqian Lin <linmq006@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] Bluetooth: hci_qca: don't use IS_ERR_OR_NULL() with gpiod_get_optional()
+Date: Thu,  8 Feb 2024 17:40:17 +0100
+Message-Id: <20240208164017.26699-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mmc: renesas_sdhi: Fix change point of data handling
-Content-Language: en-US
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, ulf.hansson@linaro.org,
- yoshihiro.shimoda.uh@renesas.com, masaharu.hayakawa.ry@renesas.com,
- takeshi.saito.xv@renesas.com, linux-mmc@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240205112702.213050-1-claudiu.beznea.uj@bp.renesas.com>
- <ZcDdn2AVz8FIXzak@shikoro> <237bd5c8-184d-4e46-ba66-253e3ef0c895@tuxon.dev>
- <ZcD17mTRnfIaueAW@shikoro> <63e1eabd-a484-48ee-b8db-1e460bce70ab@tuxon.dev>
- <ZcQmoEkv_1PVURrT@shikoro>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <ZcQmoEkv_1PVURrT@shikoro>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi, Wolfram,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 08.02.2024 02:56, Wolfram Sang wrote:
-> Hi Claudiu,
-> 
-> I got more information about SMPCMP now. I had a misunderstanding there.
-> According to your patch description, you might have the same
-> misunderstanding? Let me quote again:
-> 
-> ===
-> RZ hardware manual are similar on this chapter), at the time of tuning,
-> data is captured by the previous and next TAPs and the result is stored in
-> the SMPCMP register (previous TAP in bits 22..16, next TAP in bits 7..0).
-> ===
-> 
-> It is not the previous and next TAP but the previous and next clock
-> cycle using the *same* TAP. And the bits in the register describe if
-> there was a mismatch in the data bits across these clock cycles.
+The optional variants for the gpiod_get() family of functions return NULL
+if the GPIO in question is not associated with this device. They return
+ERR_PTR() on any other error. NULL descriptors are graciously handled by
+GPIOLIB and can be safely passed to any of the GPIO consumer interfaces
+as they will return 0 and act as if the function succeeded. If one is
+using the optional variant, then there's no point in checking for NULL.
 
-That's something new for me, it's not described in HW manual (or at least I
-haven't found it).
+Fixes: 6845667146a2 ("Bluetooth: hci_qca: Fix NULL vs IS_ERR_OR_NULL check in qca_serdev_probe")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/bluetooth/hci_qca.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> So, we really want SMPCMP to be 0 because the data should be stable
-> across all three clock cycles of the same TAP.
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index edd2a81b4d5e..8a60ad7acd70 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2326,7 +2326,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR_OR_NULL(qcadev->bt_en) &&
++		if (IS_ERR(qcadev->bt_en) &&
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855)) {
+ 			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
+@@ -2335,7 +2335,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 
+ 		qcadev->sw_ctrl = devm_gpiod_get_optional(&serdev->dev, "swctrl",
+ 					       GPIOD_IN);
+-		if (IS_ERR_OR_NULL(qcadev->sw_ctrl) &&
++		if (IS_ERR(qcadev->sw_ctrl) &&
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855 ||
+ 		     data->soc_type == QCA_WCN7850))
+@@ -2357,7 +2357,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	default:
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR_OR_NULL(qcadev->bt_en)) {
++		if (IS_ERR(qcadev->bt_en)) {
+ 			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+ 			power_ctrl_enabled = false;
+ 		}
+-- 
+2.40.1
 
-So, it means issues should be somewhere else on my setup.
-
-> 
->> As of my understanding the TAP where cmpngu = 0x0e and cmpngd=0x0e is not
->> considered change point of the input data. For that to happen it would mean
->> that cmpngu != cmpngd.
-> 
-> I am not sure you can assume that cmpngu != cmpngd is always true for a
-> change point. I'd think it is likely often the case. But always? I am
-> not convinced. 
-
-That's was my understanding from HW manual and since it fixed my issue I
-considered it valid at the point I wrote this statement. Maybe we need to
-understand this?
-
-> But I am convinced that if SMPCMP is 0, this is a good
-> TAP because it was stable over these clock cycles.
-> 
->> From this snapshot, datasheet and our discussions:
->>
->> i=0, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> i=1, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> i=2, cmpngu=0000000e, cmpngd=0000000e, smpcmp=000e000e
->> i=3, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> *i=4, cmpngu=00000000, cmpngd=00000002, smpcmp=00000002*
->> *i=5, cmpngu=00000000, cmpngd=000000ff, smpcmp=000001ff*
->> *i=6, cmpngu=000000ff, cmpngd=00000000, smpcmp=01ff0000*
->> i=7, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> i=8, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> i=9, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> i=10, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> i=11, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->> *i=12, cmpngu=00000000, cmpngd=00000002, smpcmp=00000002*
->> *i=13, cmpngu=00000000, cmpngd=000000ff, smpcmp=000001ff*
->> *i=14, cmpngu=000000ff, cmpngd=00000000, smpcmp=01ff0000*
->> i=15, cmpngu=00000000, cmpngd=00000000, smpcmp=00000000
->>
->> I understand that TAP4,5,6 are change point of the input data and
->> TAP8,0,1,2,3 are candidates for being selected, TAP 1,2 being the best
->> (please correct me if I'm wrong).
-> 
-> I agree that TAP4-6 are the change point. TAP2 could be a candidate. I
-> dunno why SMPCMP is non-zero at i == 2, maybe some glitch due to noise
-> on the board?
-
-Hm... it worth considering it...
-
-> 
-> I do really wonder why probing failed, though? TAP1 sounds like a good
-> choice as well. I mean we consider SMPCMP only if all TAPs are good. So,
-> if probing fails, that means that SMPCMP was non-zero all the time?
-
-Yes, that was my finding as well on my setup which leads to this patch.
-
-If we're taking as example the snapshot I dropped here in a previous email,
-and do not consider this patch, code at [1] should clear bit for TAP2 in
-smpcmp mask because in the 1st round SMPCMP was not zero (but 0x000e000e)
-and in the 2nd round it was zero.
-
-[1]
-https://elixir.bootlin.com/linux/latest/source/drivers/mmc/host/renesas_sdhi_core.c#L629
-
-> 
-> That being said, our code to select the best TAP from SMPCMP is really
-> not considering the change point :( It just picks the first one where
-> SMPCMP is 0.
-
-Hm... I thought code at [2] selects the TAP in the middle (in the snapshot
-I pointed, TAP1).
-
-[1]
-https://elixir.bootlin.com/linux/latest/source/drivers/mmc/host/renesas_sdhi_core.c#L656
-
-
-> We are not checking where the change point is and try to be
-> as far away as possible.
-> 
->> root@smarc-rzg3s:~# md5sum out test
->> b053723af63801e665959d48cb7bd8e6  out
->> b053723af63801e665959d48cb7bd8e6  test
->>
->> Do yo consider this enough?
-> 
-> Yes, if done 100 times ;)
-
-This may take a while...
-
-> 
-> I hope this mail was helpful?
-
-The tuning procedure it's better understand now. But I'm not sure in which
-direction should I dig further... :)
-
-Thank you for details and patience,
-Claudiu Beznea
-
-> 
-> Thanks and happy hacking,
-> 
->    Wolfram
-> 
