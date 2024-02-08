@@ -1,216 +1,137 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A386EB70;
-	Thu,  8 Feb 2024 11:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4C66F50E;
+	Thu,  8 Feb 2024 11:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707392698; cv=none; b=F9v2WfOkPCrlNTrxzgXrqpnNOqIRIj3HyWEHEf/mseb/FmLfMUW58svpcAVJIO6WEU3zLWqdTrPq8lgoEfemnQMhA5cZuBCJZ7B3BjLUygcefG7ElDp+Oa4p+/aTvFNBk4fJznXDnEaeRQ9SceaZu+Pgk0wL1zG3nbV5O0+07KI=
+	t=1707392700; cv=none; b=Nwt3gcGudwn2hqc0/sPfJjBxqLD6sGRzAQdRPKQAZQtKZhgbVjuSZNjxPWFOl9zZNg6HoOCLelQWCg3V/5rOyLr/LDqPHpK+Urtaw9+4c0NlblI3Ny+2w4tMVS8W8tqVWnW0FL0uv8RBav6gcu1tySxex3iP7CIwaEHthRSM8E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707392698; c=relaxed/simple;
-	bh=4RLrpLO9Lr9DKthkMv9dYVS7bKcH7m8SKjLUBGgExck=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ASgQq/bIsgpv7sDXYsZBvh4yYwX9ZMpQFEm2XcoJh0Ez8jjAEWBIwCYOJrHlKqXauQNiagNSKLCgkUBiWRfUYgGwThRGKcswV80/f6I1LpyyAE2ylMU2zNF7NQeMte5VUYsEPPNQUOmKxGwhuz23g76aezGv2Kge+D1FsQZbH1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=RmnrDl+N; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1707392700; c=relaxed/simple;
+	bh=SV4BLe+gEou1zDSRbzWIuNvr7/UpoWLL4qZYlpo5iRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dmxd3D0ItQm0mzkj0TIjAzPQ5HsX+2VctwhC0kNv7xaPAR57Xrp1DTpy2N4pwb3jMl6g04AjzqumTGcC1T+OLBh3/RWJOGJl6M7n5GKDvGshmLsCtpFXc/LcQTnk3Fl3+VVAY0bEWMb5dt10zJfC4+BXQz+JrFx8Mt0JsAiER1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bkwbBj4Q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RmnrDl+N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707392695; x=1738928695;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=4RLrpLO9Lr9DKthkMv9dYVS7bKcH7m8SKjLUBGgExck=;
-  b=RmnrDl+N3xQJo69LYDdDZp96I3eMI5CMPAYOtEdqt1lvjX8G1xX42JWo
-   YR1QbtVoEcZSLBCTf9ogl7yfDGSetakXSdmcYmdY27XFoMBamYVP0fBRP
-   HcLc295vQv3k8isqxvN92DQYa1uTh7Ez+aEBpX4DJXcXbrxmVRm0gR9Bf
-   g8XKeSK9CJI62k4rfA1tB4aCpcDnaPsM1nKmmYaxx1ZRrWHy01f2nJxSx
-   kRn6dmKAUALxa+ugEvMjxGRfGuXcBkF+5LrPVOqX31uW517ZiZUAB4OgU
-   za7xO7LgqEJDEVtxShZxqE7uDq6rPw8r200UcLMI4Bz4mspx/7ZWi44zD
-   g==;
-X-CSE-ConnectionGUID: 1FvkdppZRHmt/Dzk9vusdQ==
-X-CSE-MsgGUID: OJNdQtm/SPKx55/Ftri+9A==
-X-IronPort-AV: E=Sophos;i="6.05,253,1701154800"; 
-   d="scan'208";a="15964774"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Feb 2024 04:44:54 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 8 Feb 2024 04:44:34 -0700
-Received: from [10.40.56.22] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 8 Feb 2024 04:44:29 -0700
-From: Nayab Sayed <nayabbasha.sayed@microchip.com>
-Date: Thu, 8 Feb 2024 17:12:12 +0530
-Subject: [PATCH] dt-bindings: mtd: update references from partition.txt to
- mtd.yaml
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bkwbBj4Q"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4186bJEC018973;
+	Thu, 8 Feb 2024 11:44:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=DqCkSUfxyWtun34Wph0v0lBrYC8lAMgQvT0HMRCFIMU=; b=bk
+	wbBj4QLjtwiLnv50vp0407POqdN0xtpLzipYfMzUTlrYpyoLAa+LFGTy7C1JF2Xb
+	f3dVshMVm0Z1JPzAvOYxND3iEZp0K1Pn84qGNJsuOhaebeVyGbDuUnidZEMyqHPq
+	TFFzi5BUQFnqvxx99QeM1F67cJlW3bjgyrnS8GC00WpgVeoZRnAUEnxuswfJBHgT
+	82n5yFmP2/dOvwO8kMm8huITYJ1h0qbGGIgSJC/Xm+U6lX4Z2vEThpYHTwer/fZo
+	5ZcQNSnIt2waBojoCEmwsiAsGtxAPSQLszQxpZPLgdgcY+S4DhuBZsbmeVzkoyqG
+	UXeGyJbDFXs7mT1FS0aQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4sudgspn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Feb 2024 11:44:55 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 418BisCu026426
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 Feb 2024 11:44:54 GMT
+Received: from [10.216.8.145] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 8 Feb
+ 2024 03:44:51 -0800
+Message-ID: <c4a6500d-7fdd-4e62-bc96-bd2e164f3bc4@quicinc.com>
+Date: Thu, 8 Feb 2024 17:14:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] soc: qcom: mdt_loader: Add Upperbounds check for
+ program header access
+To: Mukesh Ojha <quic_mojha@quicinc.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240202063919.23780-1-quic_audityab@quicinc.com>
+ <9773d189-c896-d5c5-804c-e086c24987b4@quicinc.com>
+Content-Language: en-US
+From: Auditya Bhattaram <quic_audityab@quicinc.com>
+In-Reply-To: <9773d189-c896-d5c5-804c-e086c24987b4@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-ID: <20240208-partition-txt-v1-1-4398af3b7bb2@microchip.com>
-X-B4-Tracking: v=1; b=H4sIABO+xGUC/x2MQQqAIBAAvxJ7TjATsb4SHUy32ouJSgji35OOA
- zNTIWEkTLAOFSK+lOjxHaZxAHsbfyEj1xkEF5ILrlkwMVPuFsslM6cQudWHVMsMvQkRTyr/b9t
- b+wD7YKiJXwAAAA==
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
-	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Thierry Reding
-	<thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Han Xu
-	<han.xu@nxp.com>
-CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>, Nayab Sayed
-	<nayabbasha.sayed@microchip.com>
-X-Mailer: b4 0.12.4
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Uo58qFgVe6qJT-gMf2LHq1myonw-kYvH
+X-Proofpoint-ORIG-GUID: Uo58qFgVe6qJT-gMf2LHq1myonw-kYvH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-08_03,2024-02-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 adultscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401310000 definitions=main-2402080061
 
-Commit f902baa917b6 ("dt-bindings: mtd: Remove useless file about
-partitions") removed the file partition.txt. Hence, in this commit, the
-lines mentioning this file are updated to reference mtd.yaml, which now
-includes partition{,s}.yaml.
 
-Signed-off-by: Nayab Sayed <nayabbasha.sayed@microchip.com>
----
- Documentation/devicetree/bindings/mtd/davinci-nand.txt        | 2 +-
- Documentation/devicetree/bindings/mtd/flctl-nand.txt          | 2 +-
- Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt        | 2 +-
- Documentation/devicetree/bindings/mtd/gpio-control-nand.txt   | 2 +-
- Documentation/devicetree/bindings/mtd/gpmi-nand.yaml          | 2 +-
- Documentation/devicetree/bindings/mtd/hisi504-nand.txt        | 2 +-
- Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt | 2 +-
- Documentation/devicetree/bindings/mtd/orion-nand.txt          | 2 +-
- Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt     | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-index edebeae1f5b3..eb8e2ff4dbd2 100644
---- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-@@ -68,7 +68,7 @@ Deprecated properties:
- 				false.
- 
- Nand device bindings may contain additional sub-nodes describing partitions of
--the address space. See partition.txt for more detail. The NAND Flash timing
-+the address space. See mtd.yaml for more detail. The NAND Flash timing
- values must be programmed in the chip select’s node of AEMIF
- memory-controller (see Documentation/devicetree/bindings/memory-controllers/
- davinci-aemif.txt).
-diff --git a/Documentation/devicetree/bindings/mtd/flctl-nand.txt b/Documentation/devicetree/bindings/mtd/flctl-nand.txt
-index 427f46dc60ad..51518399d737 100644
---- a/Documentation/devicetree/bindings/mtd/flctl-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/flctl-nand.txt
-@@ -15,7 +15,7 @@ The DMA fields are not used yet in the driver but are listed here for
- completing the bindings.
- 
- The device tree may optionally contain sub-nodes describing partitions of the
--address space. See partition.txt for more detail.
-+address space. See mtd.yaml for more detail.
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-index 25f07c1f9e44..530c017e014e 100644
---- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-@@ -22,7 +22,7 @@ Deprecated properties:
- 	(R/B# pins not connected).
- 
- Each flash chip described may optionally contain additional sub-nodes
--describing partitions of the address space. See partition.txt for more
-+describing partitions of the address space. See mtd.yaml for more
- detail.
- 
- Examples:
-diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-index 486a17d533d7..0edf55d47ea8 100644
---- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-@@ -26,7 +26,7 @@ Optional properties:
-   read to ensure that the GPIO accesses have completed.
- 
- The device tree may optionally contain sub-nodes describing partitions of the
--address space. See partition.txt for more detail.
-+address space. See mtd.yaml for more detail.
- 
- Examples:
- 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-index ba086c34626d..021c0da0b072 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-@@ -12,7 +12,7 @@ maintainers:
- description: |
-   The GPMI nand controller provides an interface to control the NAND
-   flash chips. The device tree may optionally contain sub-nodes
--  describing partitions of the address space. See partition.txt for
-+  describing partitions of the address space. See mtd.yaml for
-   more detail.
- 
- properties:
-diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-index 8963983ae7cb..362203e7d50e 100644
---- a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-@@ -22,7 +22,7 @@ The following ECC strength and step size are currently supported:
-  - nand-ecc-strength = <16>, nand-ecc-step-size = <1024>
- 
- Flash chip may optionally contain additional sub-nodes describing partitions of
--the address space. See partition.txt for more detail.
-+the address space. See mtd.yaml for more detail.
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
-index e737e5beb7bf..4a00ec2b2540 100644
---- a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
-@@ -39,7 +39,7 @@ Optional children node properties:
- - wp-gpios: GPIO specifier for the write protect pin.
- 
- Optional child node of NAND chip nodes:
--Partitions: see partition.txt
-+Partitions: see mtd.yaml
- 
-   Example:
- 	nand-controller@70008000 {
-diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-index 2d6ab660e603..b9997b1f13ac 100644
---- a/Documentation/devicetree/bindings/mtd/orion-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-@@ -13,7 +13,7 @@ Optional properties:
-                registers in usecs
- 
- The device tree may optionally contain sub-nodes describing partitions of the
--address space. See partition.txt for more detail.
-+address space. See mtd.yaml for more detail.
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt b/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
-index 09815c40fc8a..635455350660 100644
---- a/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
-+++ b/Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
-@@ -19,7 +19,7 @@ Optional child properties:
- 
- Each child device node may optionally contain a 'partitions' sub-node,
- which further contains sub-nodes describing the flash partition mapping.
--See partition.txt for more detail.
-+See mtd.yaml for more detail.
- 
- Example:
- 
+On 2/2/2024 1:34 PM, Mukesh Ojha wrote:
+> 
+> This should be v2., first time patches is always counted as v1
+> 
+> On 2/2/2024 12:09 PM, Auditya Bhattaram wrote:
+>> hash_index is evaluated by looping phdrs till QCOM_MDT_TYPE_HASH
+>> is found. Add an upperbound check to phdrs to access within elf size.
+>>
+>> Signed-off-by: Auditya Bhattaram <quic_audityab@quicinc.com> > ---
+>> Added error prints for Invalid access.
+>> Link for previous discussion 
+>> https://lore.kernel.org/linux-arm-msm/5d7a3b97-d840-4863-91a0-32c1d8e7532f@linaro.org/T/#t
+> 
+> Would be better if you take reference from other patches,
+> 
+> Like above can be done as,
+> 
+> Changes in v2:
+>    -  ...
+>    -  ,,,
+>> ---
+>>   drivers/soc/qcom/mdt_loader.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/soc/qcom/mdt_loader.c 
+>> b/drivers/soc/qcom/mdt_loader.c
+>> index 6f177e46fa0f..61e2377cc5c3 100644
+>> --- a/drivers/soc/qcom/mdt_loader.c
+>> +++ b/drivers/soc/qcom/mdt_loader.c
+>> @@ -145,6 +145,11 @@ void *qcom_mdt_read_metadata(const struct 
+>> firmware *fw, size_t *data_len,
+>>       if (phdrs[0].p_type == PT_LOAD)
+>>           return ERR_PTR(-EINVAL);
+>>
+>> +    if (((size_t)(phdrs + ehdr->e_phnum)) > ((size_t)ehdr + fw->size)) {
+>> +        dev_err(dev, "Invalid phdrs access: %s\n", fw_name);
+>> +        return ERR_PTR(-EINVAL);
+>> +    }
+>> +
+> 
+> Should this not be marked for stable kernel ? as without this it could 
+> be accessing beyond fw_size for uncertain scenario.
+> 
+> -Mukesh
 
----
-base-commit: 547ab8fc4cb04a1a6b34377dd8fad34cd2c8a8e3
-change-id: 20240208-partition-txt-d6ee0c8b4693
+Yes This should be marked for stable.
 
-Best regards,
--- 
-Nayab Sayed <nayabbasha.sayed@microchip.com>
-
+> 
+>>       for (i = 1; i < ehdr->e_phnum; i++) {
+>>           if ((phdrs[i].p_flags & QCOM_MDT_TYPE_MASK) == 
+>> QCOM_MDT_TYPE_HASH) {
+>>               hash_segment = i;
+>> -- 
+>> 2.17.1
+>>
+>>
