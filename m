@@ -1,236 +1,150 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C37650A64;
-	Thu,  8 Feb 2024 23:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789675675D;
+	Thu,  8 Feb 2024 23:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707435208; cv=none; b=u4XHtbkryxUu/2f+fRBDgby7YFe9cz4EPQxeUd25VLsI2dy6iu/Mxiqp7Jg13G+TfNXR2q/31K4sddYMC3HcUJ+ake3cDdM9QD4BNseRl7LI0yi3VVpHpsC1aGn5OMhAIbI6WvNlsswQzcVEqtCNrJ03EPOpe8kdSVz9TE7jsj8=
+	t=1707435333; cv=none; b=qNw6SVwcNF9wKbLD/XCFN3WzgibdHFRLLsV5BfPa1xTlgmKr4wrcIqK+o4dB1c/Qh/uzTJi0HCa64adFDCCihvvBjtQzmQslfgdWgIqq1OfZnllP3f9Yh4Jra8pLZmIDn8xdHkoNalXkeAPGj+eJSlzx7NMJGR6SaFIBYVbNv0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707435208; c=relaxed/simple;
-	bh=TEEFEepXyCqc9g1ZZZ8XtBGqtWSrNLURh9dQCcX4rtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aUAr+X9qWAXLo429yrIR1I3tWyE3k3wBAi7nmbXVDOa4V5q3SNFy4lkrYi/dF5skb2XLvObth3tnKIdSXpZI08Nbhn7OISNPkOz7qlIiLSazRCpZOx16kibJhaxOTWGCqfnWUOPvpbolXmZvDDOMbDc4Lag1JZkqCJV3fieAKAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NpkV10KA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707435333; c=relaxed/simple;
+	bh=J0Twd02hQUbsBBInLg7jm3H07srkKxEwwTBstUiRQMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GpshfDseCyMTzZxkGRKNkmTzb1/4X2fdz3fhqWRb3DdPcfpoYdHuzFfbxKUUpcwhynamlmsqvbtNjuX2sPICYlovDcnm+FsTm073eHlbM0TYTmtrNf4Y+CPHwflhFH5e1uQgyPy14EV7wXUXuCqRmyBPmfs1COi85FdZMG7Puek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E5NgCWMa; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NpkV10KA"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 418N0KNJ004992;
-	Thu, 8 Feb 2024 23:33:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Oy7H7tCINrPN6qPXnahQy8morONvqh8KS+VwLuVeV84=; b=Np
-	kV10KAlmmljAfdNpISR2CmPE/sLh2AsZxblIrCFU16RfXzw/vYIEhsEcyHr4LQjJ
-	ta9mAuTg1/yx508yNHRLtDCiTvnchFrgaI/MUgeF/FkQBOjq/gSg0rWLsQyvxWOv
-	7zpnbrKHFK2vrqNNPPMUePu0Wf/MeTMqOx96VTI694gYIvOajZQZYPsjJN6PhJCY
-	rL9FhXVtrzwsvoTxEwb/A52CORBdnn08/hAp4z88omGKtsH2ewznUUTwC2d3gaWj
-	5PjptBJJ6EpWV2q8o8YhNFbnbqPOHK1rz48RUatQzCBlNy3YzvH7CE+FOyp7fVnt
-	fFpF36B7LJCiuERnI7ZQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4hhkbbs1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 23:33:08 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 418NX7xS012074
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 Feb 2024 23:33:07 GMT
-Received: from [10.71.114.174] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 8 Feb
- 2024 15:33:06 -0800
-Message-ID: <852cc2e0-4e61-3b8a-428f-7623ceade463@quicinc.com>
-Date: Thu, 8 Feb 2024 15:33:06 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E5NgCWMa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707435331; x=1738971331;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=J0Twd02hQUbsBBInLg7jm3H07srkKxEwwTBstUiRQMQ=;
+  b=E5NgCWMa52VkuLIhxaibgfcsBlk+q+nD7p8UGJC47TX92gjL1oIYPOG1
+   wAWirt2UQIvd+sl+/+KgEyWLNhUg+UUwCEWVg3tS2mIZmj0qdv2A4P8oZ
+   Z214KPLRD7n3IR9v22FueQP+d78+5oyWzEplREKKLgu07YkKiMAqQnjTc
+   GElg6HxhlncFJxXaxEEowwhnrQljp0CB3O1u8u1aaWlCPeI1vYllht6T3
+   sirYZqO25MCAXcdqwmR54orTvSawcvZbbL0MZudNqslekFTXyb9cAGzUr
+   BpPgPD9iwp/PjY20mx3KdIwB3+dMZaPnUUX8tkIf7mfzQ8Zi04/30k3HW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1482247"
+X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
+   d="scan'208";a="1482247"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 15:35:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="824989337"
+X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
+   d="scan'208";a="824989337"
+Received: from leonzhen-mobl1.amr.corp.intel.com (HELO [10.212.78.190]) ([10.212.78.190])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 15:35:27 -0800
+Message-ID: <160173b0-098e-493f-93b1-8b831838e0a0@linux.intel.com>
+Date: Thu, 8 Feb 2024 08:38:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v14 00/53] Introduce QC USB SND audio offloading support
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] ASoc: PCM6240: Create PCM6240 Family driver code
 Content-Language: en-US
-To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-        <lgirdwood@gmail.com>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
-        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
-        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>
-References: <20240208231406.27397-1-quic_wcheng@quicinc.com>
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <20240208231406.27397-1-quic_wcheng@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Shenghao Ding <shenghao-ding@ti.com>, broonie@kernel.org,
+ conor+dt@kernel.org, krzysztof.kozlowski@linaro.org,
+ devicetree@vger.kernel.org, robh+dt@kernel.org,
+ andriy.shevchenko@linux.intel.com, linux-sound@vger.kernel.org,
+ liam.r.girdwood@intel.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Cc: kevin-lu@ti.com, baojun.xu@ti.com, v-po@ti.com, navada@ti.com,
+ perex@perex.cz, j-mcpherson@ti.com, 13916275206@139.com,
+ mohit.chawla@ti.com, soyer@irl.hu, jkhuang3@ti.com, tiwai@suse.de,
+ pdjuandi@ti.com, manisha.agrawal@ti.com, s-hari@ti.com, aviel@ti.com,
+ hnagalla@ti.com, praneeth@ti.com
+References: <20240208095255.1508-1-shenghao-ding@ti.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20240208095255.1508-1-shenghao-ding@ti.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: GfinuZM_oyq9rMZiW24z_n-NJyrjMlOs
-X-Proofpoint-GUID: GfinuZM_oyq9rMZiW24z_n-NJyrjMlOs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_11,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 spamscore=0 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402080134
 
-Hi Mark/Takashi,
 
-On 2/8/2024 3:13 PM, Wesley Cheng wrote:
-<snip>
 
-Would it be possible to see if we could start pulling some of these non 
-offloading dependent changes into your repos?  It would really be 
-helpful since the # of patches is getting a little cumbersome to 
-maintain.  If we need to make any follow ups, I can address them as a 
-separate patch and add it to the series w/ the other changes that are 
-still pending.
 
-> Mathias Nyman (13):
->    xhci: fix possible null pointer dereference at secondary interrupter
->      removal
->    xhci: fix off by one check when adding a secondary interrupter.
->    xhci: Add interrupt pending autoclear flag to each interrupter
->    xhci: Add helper to set an interrupters interrupt moderation interval
->    xhci: make isoc_bei_interval variable interrupter specific.
->    xhci: remove unnecessary event_ring_deq parameter from
->      xhci_handle_event()
->    xhci: update event ring dequeue pointer position to controller
->      correctly
->    xhci: move event processing for one interrupter to a separate function
->    xhci: add helper that checks for unhandled events on a event ring
->    xhci: Don't check if the event ring is valid before every event TRB
->    xhci: Decouple handling an event from checking for unhandled events
->    xhci: add helper to stop endpoint and wait for completion
->    xhci: sideband: add initial api to register a sideband entity
-> 
+> +static const char *const pcmdev_ctrl_name[] = {
+> +	"%s-i2c-%d-dev%d-ch%d-ana-gain",
+> +	"%s-i2c-%d-dev%d-ch%d-digi-gain",
+> +	"%s-i2c-%d-dev%d-ch%d-fine-gain",
+> +};
 
-Will work with Mathias on the XHCI stuff when he gets some time to 
-review the set of changes added for the XHCI interrupters.  Some of the 
-series in USB SND are dependent on that, such as the qc_audio_offload 
-driver, since it makes calls into the XHCI sideband that was added, so 
-won't be able to pull that in yet. (This is the only driver that will 
-interact w/ XHCI sideband, all ASoC and general USB SND changes are 
-independent)
+Controls are exposed to user-space, and it helps if it's easy to
+identify which device is which.
 
-Thanks
-Wesley Cheng
+But below you are using the I2C address, is this 'stable' enough so that
+userspace can still identify the controls and set them accordingly with
+amixer or UCM?
 
-> Wesley Cheng (40):
->    usb: host: xhci: Export enable and disable interrupter APIs
->    usb: host: xhci: Repurpose event handler for skipping interrupter
->      events
->    xhci: export XHCI IMOD setting helper for interrupters
->    usb: host: xhci-sideband: Expose a sideband interrupter enable API
->    usb: host: xhci-mem: Cleanup pending secondary event ring events
->    usb: host: xhci-mem: Allow for interrupter clients to choose specific
->      index
->    ASoC: Add SOC USB APIs for adding an USB backend
->    ASoC: dt-bindings: qcom,q6dsp-lpass-ports: Add USB_RX port
->    ASoC: qcom: qdsp6: Introduce USB AFE port to q6dsp
->    ASoC: qdsp6: q6afe: Increase APR timeout >    ASoC: qcom: qdsp6: Add USB backend ASoC driver for Q6>    ALSA: 
-usb-audio: Introduce USB SND platform op callbacks
->    ALSA: usb-audio: Export USB SND APIs for modules
->    ALSA: usb-audio: Save UAC sample size information
->    usb: dwc3: Specify maximum number of XHCI interrupters
->    usb: host: xhci-plat: Set XHCI max interrupters if property is present
->    ALSA: usb-audio: qcom: Add USB QMI definitions
->    ALSA: usb-audio: qcom: Introduce QC USB SND offloading support
->    ALSA: usb-audio: Check for support for requested audio format
->    ASoC: usb: Add PCM format check API for USB backend
->    ASoC: qcom: qdsp6: Ensure PCM format is supported by USB audio device
->    ALSA: usb-audio: Prevent starting of audio stream if in use
->    ALSA: usb-audio: Do not allow USB offload path if PCM device is in use
->    ASoC: dt-bindings: Add Q6USB backend
->    ASoC: dt-bindings: Update example for enabling USB offload on SM8250
->    ALSA: usb-audio: qcom: Populate PCM and USB chip information
->    ASoC: qcom: qdsp6: Add support to track available USB PCM devices
->    ASoC: Introduce SND kcontrols to select sound card and PCM device
->    ASoC: qcom: qdsp6: Add SOC USB offload select get/put callbacks
->    ASoC: Add SND kcontrol for fetching USB offload status
->    ASoC: qcom: qdsp6: Add PCM ops to track current state
->    ASoC: usb: Create SOC USB SND jack kcontrol
->    ASoC: qcom: qdsp6: Add headphone jack for offload connection status
->    ASoC: usb: Fetch ASoC sound card information
->    ALSA: usb-audio: mixer: Add USB offloading mixer control
->    ALSA: usb-audio: qcom: Use card and PCM index from QMI request
->    ALSA: usb-audio: Allow for rediscovery of connected USB SND devices
->    ASoC: usb: Rediscover USB SND devices on USB port add
->    ASoC: qcom: Populate SoC components string
->    ASoC: doc: Add documentation for SOC USB
-> 
->   .../devicetree/bindings/sound/qcom,q6usb.yaml |   55 +
->   .../bindings/sound/qcom,sm8250.yaml           |   15 +
->   Documentation/sound/soc/index.rst             |    1 +
->   Documentation/sound/soc/usb.rst               |  611 ++++++
->   drivers/usb/dwc3/core.c                       |   12 +
->   drivers/usb/dwc3/core.h                       |    2 +
->   drivers/usb/dwc3/host.c                       |    5 +-
->   drivers/usb/host/Kconfig                      |    9 +
->   drivers/usb/host/Makefile                     |    2 +
->   drivers/usb/host/xhci-mem.c                   |   53 +-
->   drivers/usb/host/xhci-plat.c                  |    2 +
->   drivers/usb/host/xhci-ring.c                  |  240 ++-
->   drivers/usb/host/xhci-sideband.c              |  439 ++++
->   drivers/usb/host/xhci.c                       |   97 +-
->   drivers/usb/host/xhci.h                       |   21 +-
->   .../sound/qcom,q6dsp-lpass-ports.h            |    1 +
->   include/linux/usb/xhci-sideband.h             |   70 +
->   include/sound/q6usboffload.h                  |   20 +
->   include/sound/soc-usb.h                       |   90 +
->   sound/soc/Makefile                            |    2 +-
->   sound/soc/qcom/Kconfig                        |    4 +
->   sound/soc/qcom/common.c                       |   41 +
->   sound/soc/qcom/common.h                       |    4 +-
->   sound/soc/qcom/qdsp6/Makefile                 |    1 +
->   sound/soc/qcom/qdsp6/q6afe-dai.c              |   60 +
->   sound/soc/qcom/qdsp6/q6afe.c                  |  193 +-
->   sound/soc/qcom/qdsp6/q6afe.h                  |   36 +-
->   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.c      |   23 +
->   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.h      |    1 +
->   sound/soc/qcom/qdsp6/q6routing.c              |    9 +
->   sound/soc/qcom/qdsp6/q6usb.c                  |  401 ++++
->   sound/soc/qcom/sm8250.c                       |   14 +-
->   sound/soc/soc-usb.c                           |  538 +++++
->   sound/usb/Kconfig                             |   19 +
->   sound/usb/Makefile                            |    3 +-
->   sound/usb/card.c                              |  109 +
->   sound/usb/card.h                              |   24 +
->   sound/usb/endpoint.c                          |    1 +
->   sound/usb/format.c                            |    1 +
->   sound/usb/helper.c                            |    1 +
->   sound/usb/mixer.c                             |    5 +
->   sound/usb/mixer_usb_offload.c                 |   72 +
->   sound/usb/mixer_usb_offload.h                 |   17 +
->   sound/usb/pcm.c                               |  104 +-
->   sound/usb/pcm.h                               |   11 +
->   sound/usb/qcom/Makefile                       |    2 +
->   sound/usb/qcom/qc_audio_offload.c             | 1910 +++++++++++++++++
->   sound/usb/qcom/usb_audio_qmi_v01.c            |  892 ++++++++
->   sound/usb/qcom/usb_audio_qmi_v01.h            |  162 ++
->   49 files changed, 6228 insertions(+), 177 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6usb.yaml
->   create mode 100644 Documentation/sound/soc/usb.rst
->   create mode 100644 drivers/usb/host/xhci-sideband.c
->   create mode 100644 include/linux/usb/xhci-sideband.h
->   create mode 100644 include/sound/q6usboffload.h
->   create mode 100644 include/sound/soc-usb.h
->   create mode 100644 sound/soc/qcom/qdsp6/q6usb.c
->   create mode 100644 sound/soc/soc-usb.c
->   create mode 100644 sound/usb/mixer_usb_offload.c
->   create mode 100644 sound/usb/mixer_usb_offload.h
->   create mode 100644 sound/usb/qcom/Makefile
->   create mode 100644 sound/usb/qcom/qc_audio_offload.c
->   create mode 100644 sound/usb/qcom/usb_audio_qmi_v01.c
->   create mode 100644 sound/usb/qcom/usb_audio_qmi_v01.h
-> 
+
+> +	err = pcmdev_dev_update_bits(pcm_dev, dev_no, reg, val_mask, val);
+> +	if (err)
+> +		dev_err(pcm_dev->dev, "%s:update_bits, ERROR, E=%d\n",
+> +			__func__, err);
+
+generic comment for this patch: you may want to follow the same
+convention for error log, sometimes it's %s, or %s: or no %s
+
+
+> +static int pcmdevice_codec_probe(struct snd_soc_component *codec)
+> +{
+> +	struct pcmdevice_priv *pcm_dev = snd_soc_component_get_drvdata(codec);
+> +	struct i2c_adapter *adap = pcm_dev->client->adapter;
+> +	int ret, i, j;
+> +
+> +	mutex_lock(&pcm_dev->codec_lock);
+> +	pcm_dev->component = codec;
+> +	pcm_dev->fw_state = PCMDEVICE_FW_LOAD_OK;
+> +
+> +	for (i = 0; i < pcm_dev->ndev; i++) {
+> +		for (j = 0; j < 2; j++) {
+> +			ret = pcmdev_gain_ctrl_add(pcm_dev, i, j);
+> +			if (ret < 0)
+> +				goto out;
+> +		}
+> +	}
+> +
+> +	/* device-name[defined in pcmdevice_i2c_id]-i2c-bus_id[0,1,...,N]-
+> +	 * sum[1,2,...,4]dev-reg.bin stores the firmware including register
+> +	 * setting and params for different filters inside chips, it must be
+> +	 * copied into firmware folder. The same types of pcmdevices sitting
+> +	 * on the same i2c bus will be aggregated as one single codec,
+> +	 * all of them share the same bin file.
+> +	 */
+> +	scnprintf(pcm_dev->regbin_name, PCMDEVICE_REGBIN_FILENAME_LEN,
+> +		"%s-i2c-%d-%udev-reg.bin", pcm_dev->dev_name, adap->nr,
+> +		pcm_dev->ndev);
+> +
+> +	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_UEVENT,
+> +		pcm_dev->regbin_name, pcm_dev->dev, GFP_KERNEL, pcm_dev,
+> +		pcmdev_regbin_ready);
+
+I already had a question early on whether these addresses are 'stable',
+but here the device address is used to fetch firmware, and there is no
+prefix or directory to identify platform-specific settings.
+
+I don't know how this might work for a distribution. There needs to be a
+way to detect what system this is at run-time, and make sure we don't
+use settings for platform XYZ on platform ABC.
+
+
+> +static int pcmdevice_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+> +	int clk_id, unsigned int freq, int dir)
+> +{
+> +	struct pcmdevice_priv *pcm_dev = snd_soc_dai_get_drvdata(codec_dai);
+> +
+> +	pcm_dev->sysclk = freq;
+
+check clock values?
+
+> +
+> +	return 0;
+> +}
+
