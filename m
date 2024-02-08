@@ -1,98 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B33167C45;
-	Thu,  8 Feb 2024 09:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257B6BB3B;
+	Thu,  8 Feb 2024 09:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707383659; cv=none; b=sby0NwCc10VEnK+Wth1OQFYhddNoDn6aHmemME8bbNf/emmMoroEPQeWLxJVWqPnr51YQ4Etw/6DsnnXiDAvWmZk1Yl9jDE4ROAi6ux7I11dT7soOkgIUGO/PSACQs0bwGxNowji4lGmj5J0BehNdY67HS+AjneLyFHbmpuHdN8=
+	t=1707383711; cv=none; b=q1/NBsutSXJBm8bNF5xCTuTPkFhSXbmyPhSsMI6O+Mh8ivu5j0nkbKqJu7Soh7mNBLk9WyNMn5HhVfRzQ6xSJ9efdCX6JdQuB+hGxq6h+70KLyqyRlIqgkb7KG7OieVaJZAXtygZNSw/OyJYA/vbovtBNEbVwbHYXmlkFwukAZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707383659; c=relaxed/simple;
-	bh=GfZd+JEhD2jTwwbKWrI6hzvpQqkOQgWgJY3OFvAaJwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sddp1tF3HQRUeLfxLstquX8dzDDFhF50bV0RkTP94tn/ZxE+bGXSDFAKWBurwZ9ZI5bHYVkq/JvbnipohPMnLXBldUA+MhLLEXy9xIoti3a2HSNs9ThudAtV9WUfQh2ZjolksBlp2XZ4WiquB///pcoqV27KD1bCe94PPI9lT1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ES0pCdTA; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707383711; c=relaxed/simple;
+	bh=waw1SbJdDbiBjHm/aT/t/Wf0N1njTMQj7zIlzg9utqI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rkLWl3kLhnkxllFbZw7zG/GB8ftr2NDqlmim/zmWvfIuTau4/L+ZfJ8J7k000MrFMIrRALcj6+aWOYtf1oXm/Zr5X08X01xaZ8aMIc4BooBwBhTVBvHM0nLNL4Xn4s5tm57SsIj2GSRHaS4RCrJfXlNBBNTeQNZGOQNrDNMU5WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msIZuXzG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ES0pCdTA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707383659; x=1738919659;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GfZd+JEhD2jTwwbKWrI6hzvpQqkOQgWgJY3OFvAaJwg=;
-  b=ES0pCdTAwMA3TE7xcJ9m0lc6TGGqv6cKgIWxoKqEFroWjciGKuRihgq/
-   o/63n46ei9UkSt1K3GMdOb9g20SaOdesuh2dcKDVpWbpR7KJELv8RtTXh
-   DAbNlsVPoAVb0CwpKUS9m0rp5mK+CXU+Sm44agdwSfzTmhHoDgD4Fcnj5
-   glnoOlqx4aZljeJK1MyBuxq8UaYxabANI1PYBvXB7rQTixpNpGpgVoPRm
-   uNj2c/hPNnEizDeQCW5M6ignQDFbsUNbpvmyvWh7MbiKZhFTAamO8AVoi
-   LtC2/GQXjz6AE/oM7RqRpzTXcyItdurXzSTZPijDSJuimxZSO14deFNpV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1475035"
-X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1475035"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 01:14:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="32672164"
-Received: from 984fee00a4c6.jf.intel.com ([10.165.58.231])
-  by fmviesa001.fm.intel.com with ESMTP; 08 Feb 2024 01:14:16 -0800
-From: Yi Liu <yi.l.liu@intel.com>
-To: joro@8bytes.org,
-	jgg@nvidia.com,
-	kevin.tian@intel.com,
-	baolu.lu@linux.intel.com
-Cc: alex.williamson@redhat.com,
-	robin.murphy@arm.com,
-	eric.auger@redhat.com,
-	nicolinc@nvidia.com,
-	kvm@vger.kernel.org,
-	chao.p.peng@linux.intel.com,
-	yi.l.liu@intel.com,
-	yi.y.sun@linux.intel.com,
-	iommu@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msIZuXzG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B53C433F1;
+	Thu,  8 Feb 2024 09:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707383710;
+	bh=waw1SbJdDbiBjHm/aT/t/Wf0N1njTMQj7zIlzg9utqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=msIZuXzGftHuaITYOsOoFfZ37ykrtsaxq/mTvuOtKsD9UHgETeS1paD+D2C65o5KN
+	 nLEV9lzy9EWLLek2zKYpNXn8LMNliTbJC0BkP+opHd/Qf+s96D/ZrQqMCslj4yJZcI
+	 +tgLB1jV6ika/Q7zcba0s0RANjQCtixj10+dAQ7QUrH+zv818fTj8aBj3meWZUYPxu
+	 gJ8XrSg+Fdm7l0r5vsUsvFjB1vct7jRXjavYv5C4qqH6fc3jCGiAO4jT8qzI1zffwn
+	 nZF+P+Y2838ZBtQbpW6HCqCoOOQFrtI31F7K+2L4NwoWy2NmBaeHsYEcSIJlGs+ajl
+	 Fsxmuh7YC6L/A==
+From: Christian Brauner <brauner@kernel.org>
+To: Taylor Jackson <taylor.a.jackson@me.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	zhenzhong.duan@intel.com,
-	joao.m.martins@oracle.com
-Subject: [PATCH] iommu/vt-d: Set SSADE when attaching to a parent with dirty tracking
-Date: Thu,  8 Feb 2024 01:14:14 -0800
-Message-Id: <20240208091414.28133-1-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Seth Forshee <sforshee@kernel.org>
+Subject: Re: [PATCH v2] fs/mnt_idmapping.c: Return -EINVAL when no map is written
+Date: Thu,  8 Feb 2024 10:13:06 +0100
+Message-ID: <20240208-homogen-faszination-3740f9dc34b3@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240208-mnt-idmap-inval-v2-1-58ef26d194e0@me.com>
+References: <20240208-mnt-idmap-inval-v2-1-58ef26d194e0@me.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1593; i=brauner@kernel.org; h=from:subject:message-id; bh=waw1SbJdDbiBjHm/aT/t/Wf0N1njTMQj7zIlzg9utqI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQemT39Lt/xWY88dpuYLxQxdnq+o0tiWr7riT9+Eq8sk jcJ5m007ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIgQ+MDD0fi26u11t2Uu3J 0hcSjW/WmorXb1Q9Vbno/b7DpVP9drQx/LPVfrCBOXkFOzMzT3nAy/5yLZX2ZT4bZTVO3V21dao QLw8A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-Should set the SSADE (Second Stage Access/Dirty bit Enable) bit of the
-pasid entry when attaching a device to a nested domain if its parent
-has already enabled dirty tracking.
+On Thu, 08 Feb 2024 03:02:54 +0000, Taylor Jackson wrote:
+> Currently, it is possible to create an idmapped mount using a user
+> namespace without any mappings. However, this yields an idmapped
+> mount that doesn't actually map the ids. With the following change,
+> it will no longer be possible to create an idmapped mount when using
+> a user namespace with no mappings, and will instead return EINVAL,
+> an “invalid argument” error code.
+> 
+> [...]
 
-Fixes: 111bf85c68f6 ("iommu/vt-d: Add helper to setup pasid nested translation")
-Signed-off-by: Yi Liu <yi.l.liu@intel.com>
+Thanks for the fix!
+In case you're interested, it would be worth expanding
+tool/testing/selftests/mount_setattr to verify that it's now impossible to use
+an empty idmapping.
+
+But note, that currently tool/testing/selftests/mount_setattr/ is broken
+because the tests assume that tmpfs cannot be idmapped which hasn't been true
+for a long time.
+
 ---
-base commit: 547ab8fc4cb04a1a6b34377dd8fad34cd2c8a8e3
----
- drivers/iommu/intel/pasid.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 3239cefa4c33..9be24bb762cf 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -658,6 +658,8 @@ int intel_pasid_setup_nested(struct intel_iommu *iommu, struct device *dev,
- 	pasid_set_domain_id(pte, did);
- 	pasid_set_address_width(pte, s2_domain->agaw);
- 	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
-+	if (s2_domain->dirty_tracking)
-+		pasid_set_ssade(pte);
- 	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_NESTED);
- 	pasid_set_present(pte);
- 	spin_unlock(&iommu->lock);
--- 
-2.34.1
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] fs/mnt_idmapping.c: Return -EINVAL when no map is written
+      https://git.kernel.org/vfs/vfs/c/b4291c7fd9e5
