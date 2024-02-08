@@ -1,186 +1,249 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926D86D1AC;
-	Thu,  8 Feb 2024 08:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707382426; cv=fail; b=X8lAFk3G6VfewlKXAF4PyCAvFXTBCEpvJSrOvQ9+e+zN9Dr1ArK7u3lVR+kU4P0g2PNW99IiHDE8NzFeb1ra5xQ7U/5CE3IcAQJmy6py/8UCXYNTLFz5M9j2vZCHZCoy0WxOu6V+luO/i2hN9T2Ljcn0DvKh5Lxn3yK54W5LbjM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707382426; c=relaxed/simple;
-	bh=YI99Z4IZ7kMXs+7dCxlYGMvamMyLQmLCOWsj9B1n/C8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VQJx1Q3EW0nOwznpxTM3tVGoN9nwt7KjvEx+GQFv/IFaGX+JYrXMazhnNjDahOgn33clic0eq2WoSMkRkQ05YI1Kz+ihVXXHGg45SjLXLJYtxnqueBxMtAa/XdGniifJ9OHxVxzYQd1M9uD0I7aDHUZUJYcnNXUPeArpSaYAGuo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HBrQEYkt; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77F56D1DA;
+	Thu,  8 Feb 2024 08:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707382427; cv=none; b=hYskdplYnV6cS04n2m78L7GcbN0tZ6l7QRITXWtqsygr0B9HNZntBZQw8mTGK6dNE0eLyWSE8rmQEjFzg5rVD8vHE0ui4Vg7vnrvWVT23QH8W0e65n7LMTtXx7rjp+NzmMVoh4JWA3Wx4HaOKaw2jT327SIAJN/Vqp7GHl6f8Ng=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707382427; c=relaxed/simple;
+	bh=liuCnYvj43a4tXuQpW3mnRUkdN4KcCl1EfuqJpVLEwo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LntnfmXP+av6Nxq/0jA5FlJpr8t7CA9+YGjCEalo9auAvMLRx3nAbsAtm55I9rwtqMQUXc4lXzq5CgRXL5xxlAeqlytWssUJcOA5jmPvGzfN3fnfWDHgU4uKJsl6MNY4BQx7MP/l5UitcYXIxuBMD2VBSYVNCqjJbAAefg/KYLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WMLR9sKF; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBrQEYkt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WMLR9sKF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707382422; x=1738918422;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YI99Z4IZ7kMXs+7dCxlYGMvamMyLQmLCOWsj9B1n/C8=;
-  b=HBrQEYkthjM6pYIziuSoXyW4UjeNjj7in+j/LAKmEBtNPM9XwAZFwdkF
-   ZCpzUG+DtVMfrpxNOnXmjzxm+nHA+o6S6cX70AkdaNGyXWcSyWFNHAdPM
-   qWjKuS5JFbMWpOA/eYQzKcIGYm827H0gV+s2/wLdIZ3NN7EQU27v4CPJw
-   GBOXrRLbxjJ52fG8wRMcfW5+jy8Y+aOr3IT9zyrGHFYiGGz+GrVqqRsWn
-   PX2bwaoG+QTtA3oobsz16lvwg7sbV2iT8AsJno71YIBEmg+BwwoQmcCnV
-   LYiiz2k7AeGhzxgmJaqFrpDanfLStSra0GMuMih/FTi2aAHmm/UZ/qn1Q
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1329189"
+  t=1707382425; x=1738918425;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=liuCnYvj43a4tXuQpW3mnRUkdN4KcCl1EfuqJpVLEwo=;
+  b=WMLR9sKF0sFT/KEY/V6MJnG+SS1Tks+O41UrBvzZBRd/pqk8Nm92C613
+   Owiwl2wcMPkyYNk7YVqMGswETfW6qYzCa+mZ0rDkW8TPPgG9gD0rXCw5y
+   gL1ACtmQPl4kKZFYMmf6RPSEjny6+TMA6TAoQy1SnC8o/I8QUPbbqC3yD
+   /WLrZOFlg1Wp7vV+aq/qWPCYTlPgKKDw+R9UU9sxhZ5Yv7UxmBFUqG/jG
+   m2W13HiZuvZfsq/7aDD7nwWEWlr1ZSKZ3BFUsYopypwJoXGfLFWC4zhWp
+   +6a+Ws12uyHETlRA5D+Pm8t5zWvfDvqmWL2Fcl9pXUeWz2k+Q6WPYWm37
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1329202"
 X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1329189"
+   d="scan'208";a="1329202"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 00:53:40 -0800
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 00:53:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1589471"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Feb 2024 00:53:40 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 8 Feb 2024 00:53:39 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 8 Feb 2024 00:53:38 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 8 Feb 2024 00:53:38 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 8 Feb 2024 00:53:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e4S0oUcOMC6jDILIcqjwV9OM2Jg4/LfcY2KXiJEHaX+pYjRrpMtUx/Uj3LkFOtF7OdxBLPWGLJJBvaKBrUgAwU0XkRfUlDnjkstWZqDDFDXLcnkZBN4ZLLp+wPpUQ4bnGkGV88Bpj0XWcs1IcbYMcHYi/1wixZ4V71kJ/PA+jx6kGWa+Mkq+Vd+R4CdLDowmRWHkLdd6wahL2iqahuIdyDCN1o3BzwMS6fOvIDRTfy3kspl3rv/T/Lrg+speFpBLNgCqLt2axXOtyHSTWB/75CzXW87waPOULnBE//7a3bR4qlHqD4G5MsIulIF9CdtXXNLjGF5IHd3I+I35Y2BMSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QvfzeYVXwz3yFatbKpn54a7V9GhbP44u8G+Mo3i6F5Y=;
- b=J3JkA+09xU0bk3vRTsV8+cj+2pgWgv5u3NkYujixGkYLvYAvdsK/fMC+5Xu0/vLGSfHS9To93xc11uHTHFwJ8qqqFJQLzijQ0VYmwb7jLMw/sATzzk5xYbODjDpjp0bd57cyFZRFR8EzThHuF56lKVrgdPfeiM6Gu331meBs8BbVH2tTpeSy+wcbh5wLSPsEC9bjRLGXTLSjXOF+ZDIh+9EYDVpM++VWUmcxb/DG6oCgdHBCTqTXbolS2DXWuoDhare58bIh/nE+ctrx0qwzAcj6MFv7t5Z3Z7sNKfoFoHjxn+4X713PBiAThggc8meq0D1uh3hsc0EDf/rh/sHP+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by BN9PR11MB5513.namprd11.prod.outlook.com (2603:10b6:408:102::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.24; Thu, 8 Feb
- 2024 08:53:31 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb%3]) with mapi id 15.20.7249.038; Thu, 8 Feb 2024
- 08:53:31 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: "Liu, Yi L" <yi.l.liu@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"jgg@nvidia.com" <jgg@nvidia.com>, "baolu.lu@linux.intel.com"
-	<baolu.lu@linux.intel.com>
-CC: "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "eric.auger@redhat.com"
-	<eric.auger@redhat.com>, "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "chao.p.peng@linux.intel.com"
-	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
-	<yi.y.sun@linux.intel.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
- Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
-	<joao.m.martins@oracle.com>
-Subject: RE: [PATCH rc 8/8] iommu/vt-d: Add missing dirty tracking set for
- parent domain
-Thread-Topic: [PATCH rc 8/8] iommu/vt-d: Add missing dirty tracking set for
- parent domain
-Thread-Index: AQHaWmgW6gj3lexfjk67ec6V2xTDRLEAIuLw
-Date: Thu, 8 Feb 2024 08:53:31 +0000
-Message-ID: <BN9PR11MB52761895C4DB8861C32A4B698C442@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240208082307.15759-1-yi.l.liu@intel.com>
- <20240208082307.15759-9-yi.l.liu@intel.com>
-In-Reply-To: <20240208082307.15759-9-yi.l.liu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|BN9PR11MB5513:EE_
-x-ms-office365-filtering-correlation-id: c8d14cc9-e772-4033-f95f-08dc28836d18
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wfrT1UYKqLLydY8/gcGaON1a1jg7cTFtTokWF9YCoj3tv+CFRdl/japCW+gLA7muFCZkmxFVG9r5rKX58dQJ9YPe0AzrSzHfE/xlzA2DgdrUpvKDxQWxjmr6SDAVH+hVN4T+jdLVwDBdt/AXtq1uolpXfVyCb+l8Ic1Cmd0gMhjpsHGd5AaZTtIE/NgdOsT0rX94gbFZKRfmclKsLY/reFipxl6Y4M+JzChQ163v7uiLmt98p2r3EZjqflfP+irhG+wooHeUVm77rY7mm9kkTyxF4ItYfFCziCIgDsJx6SuzOGbOFjBzPsUc5iYPprlsI0ivYhAxrAXbZy4w4WcPsOXUwX1IguHIQp+6G/ZpTQ8GxNK/7o2YXDXW1IOvdAHuzAf91YcpRYMtSiV7E3z/YpnK/dAkwh57XJaufTtAL4hlBTPr8lSXEyosNwoW/BrYPt+OynmE4YD35F5qrcorMLv+OmESwH0lpNxXpb3uTD0MXo0qVlpIRzsvnEv972Yrp9Llt2gAc1BdPiZIgrGyC8hRq3p0TnZWIbwBDmWqXaQJ/poEHp75lfhqudQ2GH9hUrANh+VejwEcb0RuXu+N80VMpiF5mUjzZzAQDDiTc3fRMOfEbi6y/EnE0gAwWJ+9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(39860400002)(396003)(136003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(71200400001)(7696005)(55016003)(2906002)(7416002)(110136005)(54906003)(52536014)(5660300002)(4744005)(316002)(41300700001)(66446008)(64756008)(66476007)(66556008)(66946007)(6506007)(9686003)(478600001)(76116006)(8936002)(8676002)(4326008)(38070700009)(86362001)(38100700002)(82960400001)(26005)(122000001)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?t90KOK2St9FMEhvwAl69D0Zumn+xj4qkiYbmpwB00AnY0ZA9cpOOk9rXR+Jq?=
- =?us-ascii?Q?xn/8ci0x9iQaySV97nHU9Gy40jBhD9/PiQwepR5mGwdaPMHAbwfgfsEuGZ4+?=
- =?us-ascii?Q?vI0zMTp7Ok4WMMoKqZW78PykYUFv6Tz8pECqFzhLqfcBgDbIfc4mRWMJRMf+?=
- =?us-ascii?Q?jE89Q9snafZjwvrU6p5jf7z1uZDKfsQWc2xQIKYT82xMHEnbNvfQBsNT7o3M?=
- =?us-ascii?Q?uiMYa4Pu5nOKQU8CnRPPsACYo9b/H/A6XsQuLtekLyA8FnllJ1K2LCqOdftC?=
- =?us-ascii?Q?Ush5TeemRP5LOIKCb/hZDomxhuvLRAnGeF1XculqbSZFNRVBdMNPBfQoMf2d?=
- =?us-ascii?Q?XOiKIzHJtkxsTpfA9OMA0B92h8pqdDKnbqb8eZgHn/vMJpq6/ZiiVIxoS5m+?=
- =?us-ascii?Q?eEQlk3qyCs8lR9RGwz8sxDrfuOlEz3sfxC24xHfS4QMthha2AlmzNRaWTFZJ?=
- =?us-ascii?Q?FRGKJu5GoUm6vEFSLjOZ0uqWgA+oiqRKKQ+FOpvfZxR1zsn4Wd+/AZ7NB3/a?=
- =?us-ascii?Q?cvsLR6gWPxjA/jTL1gmc+pjGBkaW9jQPkZ34kPF101x3iow+aSszw/9PgZ3o?=
- =?us-ascii?Q?HX4cvJFcDb9ZtFR615AK66XRT+FFq2PncOAyewhmlZPXbugYgwwo7BQgC0FV?=
- =?us-ascii?Q?EbrxUkF7onL3jII++VidGtZBUsX0yR11V93/W53Y7ikHHF+f7Eki3tydXbBf?=
- =?us-ascii?Q?Y6MrpFG6fTC4m9F55MAakYko54GJa1UlDwZlgyjEEkx9oT7V4pRBIG0lCUtx?=
- =?us-ascii?Q?LhCu8dWCvtZWVg/lRdm0HeXaN2gCV8xjbxH0yWp5WxPxI+NmazfPub/Ycwzg?=
- =?us-ascii?Q?JBp94pqYNmZZjdQqYM/ms1rNxkAU+vEZE7ahU2By9FrVASqa3ovLUghK5mqt?=
- =?us-ascii?Q?F+64lCfnY1xcOaHh9yup4/Thr9p2WELXIq1wQ/RDEE0touTf8GOBPCVeKmzN?=
- =?us-ascii?Q?XeqT9R9M0H65NWc963AgXjD+nz0qWCC3rVcVINDtgi9JK35KPg6NTzmAqMag?=
- =?us-ascii?Q?AgOrp/jz3RjPwd2Ylo9sMuYf4I9LSNpSiHHP7UCWSQ4fusqQUBwroEPOf5Ae?=
- =?us-ascii?Q?VAxaPSPKrvVoWK4Ue3pPIs/ad8GD/4tar6hHPTUGEPAu+PLkQHKbPiu4u3c9?=
- =?us-ascii?Q?SfKQ4SsRuR8SkFx5AYRgb31EeocQ/gJ6gMZinBEgi1BTIzTddOX0l1QagE5a?=
- =?us-ascii?Q?jhVndI6wWx8DxrqzFqXsd3uklqFWbnCLt07q+2/GMD3txgmmVEaIIpVMbM4x?=
- =?us-ascii?Q?jel7tyaCmvpsE+no75RKUyZLrn8o9FYrQfLgTfvHaYw4t84Ftzf1+tZkpyPx?=
- =?us-ascii?Q?siuaA+Hw2OyL1vYZvBMxjclEtrf+P44ebnmrYXclH3sSQ6IJkto5TEtixJJq?=
- =?us-ascii?Q?0/WUa4k2hWpgrgDm4lJa+09K3M1x7F8TGulnbLXXZUURm5xyZOwJL5/Oeuck?=
- =?us-ascii?Q?1ST3ZLFIA4fziLCcjqkadFpLmnSYHkK4mhmeRe3ivfTR/Mqn6QXo9EOQhFNS?=
- =?us-ascii?Q?yXCYc1sBg2Jv0hAiws8+V0kmoLZAIrBgWukLPyDTz22SnvgvjyUx1Jj5vSEX?=
- =?us-ascii?Q?NVzx92VoGef2lVoTmpKH7bIzjd1ugb4oyE+CgIYI?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+   d="scan'208";a="1589486"
+Received: from lnielsex-mobl.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.219.88])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 00:53:40 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V3 1/2] perf tools: Make it possible to see perf's kernel and module memory mappings
+Date: Thu,  8 Feb 2024 10:53:25 +0200
+Message-Id: <20240208085326.13432-2-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240208085326.13432-1-adrian.hunter@intel.com>
+References: <20240208085326.13432-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8d14cc9-e772-4033-f95f-08dc28836d18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2024 08:53:31.5329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BhTTWyc5t1M8i8Wd2lD83qpLrBzhPVwEVSNON390TpZtX0zfmPKj8jFZQjA/agEmHCapjbgsY40a27tZRaXzlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5513
-X-OriginatorOrg: intel.com
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Thursday, February 8, 2024 4:23 PM
->=20
-> @@ -4760,6 +4790,12 @@ static int intel_iommu_set_dirty_tracking(struct
-> iommu_domain *domain,
->  	if (ret)
->  		goto err_unwind;
->=20
-> +	if (dmar_domain->nested_parent) {
-> +		ret =3D parent_domain_set_dirty_tracking(dmar_domain,
-> enable);
-> +		if (ret)
-> +			goto err_unwind;
-> +	}
-> +
+Dump kmaps if using 'perf --debug kmaps' or verbose > 2 (e.g. -vvv) for
+tools 'perf script' and 'perf report' if there is no browser.
 
-there also lack of setting dirty tracking when a device is attached to the
-nested domain while the parent already has dirty-tracking enabled.
+Example:
 
-but looks even w/o nesting this is missed in the attach path.
+  $ perf --debug kmaps script 2>&1 >/dev/null | grep kvm.intel
+  build id event received for /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko: 0691d75e10e72ebbbd45a44c59f6d00a5604badf [20]
+  Map: 0-3a3 4f5d8 [kvm_intel].modinfo
+  Map: 0-5240 5f280 [kvm_intel]__versions
+  Map: 0-30 64 [kvm_intel].note.Linux
+  Map: 0-14 644c0 [kvm_intel].orc_header
+  Map: 0-5297 43680 [kvm_intel].rodata
+  Map: 0-5bee 3b837 [kvm_intel].text.unlikely
+  Map: 0-7e0 41430 [kvm_intel].noinstr.text
+  Map: 0-2080 713c0 [kvm_intel].bss
+  Map: 0-26 705c8 [kvm_intel].data..read_mostly
+  Map: 0-5888 6a4c0 [kvm_intel].data
+  Map: 0-22 70220 [kvm_intel].data.once
+  Map: 0-40 705f0 [kvm_intel].data..percpu
+  Map: 0-1685 41d20 [kvm_intel].init.text
+  Map: 0-4b8 6fd60 [kvm_intel].init.data
+  Map: 0-380 70248 [kvm_intel]__dyndbg
+  Map: 0-8 70218 [kvm_intel].exit.data
+  Map: 0-438 4f980 [kvm_intel]__param
+  Map: 0-5f5 4ca0f [kvm_intel].rodata.str1.1
+  Map: 0-3657 493b8 [kvm_intel].rodata.str1.8
+  Map: 0-e0 70640 [kvm_intel].data..ro_after_init
+  Map: 0-500 70ec0 [kvm_intel].gnu.linkonce.this_module
+  Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
 
-could be fixed separately. so for this one:
+The example above shows how the module section mappings are all wrong
+except for the main .text mapping at 0xffffffffc13a7000.
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+
+
+Changes in V3:
+    - re-base
+
+Changes in V2:
+    - add dump to perf report (if no browser) as well as perf script
+    - add 'perf --debug kmaps' option also to dump kmaps
+
+
+ tools/perf/Documentation/perf.txt |  2 ++
+ tools/perf/builtin-report.c       |  2 ++
+ tools/perf/builtin-script.c       |  3 +++
+ tools/perf/util/debug.c           |  3 +++
+ tools/perf/util/debug.h           |  1 +
+ tools/perf/util/python.c          |  1 +
+ tools/perf/util/session.c         | 11 +++++++++++
+ tools/perf/util/session.h         |  2 ++
+ 8 files changed, 25 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+index a7cf7bc2f968..09f516f3fdfb 100644
+--- a/tools/perf/Documentation/perf.txt
++++ b/tools/perf/Documentation/perf.txt
+@@ -63,6 +63,8 @@ OPTIONS
+                              in browser mode
+           perf-event-open  - Print perf_event_open() arguments and
+                              return value
++          kmaps            - Print kernel and module maps (perf script
++                             and perf report without browser)
+ 
+ --debug-file::
+ 	Write debug output to a specified file.
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index ccb91fe6b876..8e16fa261e6f 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1766,6 +1766,8 @@ int cmd_report(int argc, const char **argv)
+ 	} else
+ 		ret = 0;
+ 
++	if (!use_browser && (verbose > 2 || debug_kmaps))
++		perf_session__dump_kmaps(session);
+ error:
+ 	if (report.ptime_range) {
+ 		itrace_synth_opts__clear_time_range(&itrace_synth_opts);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index af63b7c37c8a..24baa8284add 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -4378,6 +4378,9 @@ int cmd_script(int argc, const char **argv)
+ 
+ 	flush_scripting();
+ 
++	if (verbose > 2 || debug_kmaps)
++		perf_session__dump_kmaps(session);
++
+ out_delete:
+ 	if (script.ptime_range) {
+ 		itrace_synth_opts__clear_time_range(&itrace_synth_opts);
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index e282b4ceb4d2..c39ee0fcb8cf 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -33,6 +33,7 @@
+ #endif
+ 
+ int verbose;
++int debug_kmaps;
+ int debug_peo_args;
+ bool dump_trace = false, quiet = false;
+ int debug_ordered_events;
+@@ -229,6 +230,7 @@ static struct sublevel_option debug_opts[] = {
+ 	{ .name = "stderr",		.value_ptr = &redirect_to_stderr},
+ 	{ .name = "data-convert",	.value_ptr = &debug_data_convert },
+ 	{ .name = "perf-event-open",	.value_ptr = &debug_peo_args },
++	{ .name = "kmaps",		.value_ptr = &debug_kmaps },
+ 	{ .name = NULL, }
+ };
+ 
+@@ -267,6 +269,7 @@ int perf_quiet_option(void)
+ 	/* For debug variables that are used as bool types, set to 0. */
+ 	redirect_to_stderr = 0;
+ 	debug_peo_args = 0;
++	debug_kmaps = 0;
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index de8870980d44..35a7a5ae762e 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -9,6 +9,7 @@
+ #include <linux/compiler.h>
+ 
+ extern int verbose;
++extern int debug_kmaps;
+ extern int debug_peo_args;
+ extern bool quiet, dump_trace;
+ extern int debug_ordered_events;
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 8761f51b5c7c..075c0f79b1b9 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -181,6 +181,7 @@ int perf_bpf_filter__destroy(struct evsel *evsel __maybe_unused)
+  * implementing 'verbose' and 'eprintf'.
+  */
+ int verbose;
++int debug_kmaps;
+ int debug_peo_args;
+ 
+ int eprintf(int level, int var, const char *fmt, ...);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 199d3e8df315..06d0bd7fb459 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2720,6 +2720,17 @@ size_t perf_session__fprintf(struct perf_session *session, FILE *fp)
+ 	return machine__fprintf(&session->machines.host, fp);
+ }
+ 
++void perf_session__dump_kmaps(struct perf_session *session)
++{
++	int save_verbose = verbose;
++
++	fflush(stdout);
++	fprintf(stderr, "Kernel and module maps:\n");
++	verbose = 0; /* Suppress verbose to print a summary only */
++	maps__fprintf(machine__kernel_maps(&session->machines.host), stderr);
++	verbose = save_verbose;
++}
++
+ struct evsel *perf_session__find_first_evtype(struct perf_session *session,
+ 					      unsigned int type)
+ {
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index ee3715e8563b..5064c6ec11e7 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -133,6 +133,8 @@ size_t perf_session__fprintf_dsos_buildid(struct perf_session *session, FILE *fp
+ size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
+ 				       bool skip_empty);
+ 
++void perf_session__dump_kmaps(struct perf_session *session);
++
+ struct evsel *perf_session__find_first_evtype(struct perf_session *session,
+ 					    unsigned int type);
+ 
+-- 
+2.34.1
+
