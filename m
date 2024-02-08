@@ -1,129 +1,110 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B454F6BFC5
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1C46BB2F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707385974; cv=none; b=RD6KKOydq0VU+cqjm0moHwwKP6NCT4bOqYE+fOrBFlA6DqBWBLYzzW7KUJWLaTr0bMJZpbR9a9cXXC/8Y6LIk4x0U8LeiHVTN9aQsNLtMH2xS86Vjj/pWovhybgUCEB0zt6G2QzcxrjsxlRknNqu2ZQ6mZkhrB1LJ382VZjhTa8=
+	t=1707385996; cv=none; b=arf0S3+gLtZjMXxGmu64qtq589yUMt5I9bvQnFaQPF+5w8Vrq+GCK2GZN+D8uTf9HFXBLvSG1WY3Z1VD6nrjzxfJnixHPZxOliDnH9m654myEqKUXqf1xkvx98YLPq9XJ9wvPmpkIQ5RR4e+oP/YF/VzwszX5lFHkCyKGMNh4OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707385974; c=relaxed/simple;
-	bh=HHlgklhEHH9O7ta3u1cLYxPyu4OGTsMH97Y+4IfEOao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZnTl94ndbmDtvMunhQpUeQdcadADLkJlUxQXfdggln7JBud4G3okSh3m4A9ehfIE9bkB0dnXMUb+3LwlRtUxMMM8n8CYVwgZf3IyF9/ElGK/zPhNz2Yzze59LT+2A7z2ZpMYYWMGpQYWCfjVge9wt+s2hU0Qtnsn4Q5nl/fsGM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=tudDLVEs; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+	s=arc-20240116; t=1707385996; c=relaxed/simple;
+	bh=18SG6NUCNLXQLNqsHtsTIjssjOlE4YxcB1dl/F3+n7I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D2Pu6V+zXinkwcGwHdnqituzpezleYi2HKB24/xfTbzCBHPyqj0F62ZHRc+QlzURi7wmqxHHtYtlsJNnFjQeRA8JYKl8ri6pYYmD+1/+6xXpS6YQCfTOIdaiOTUcYbIpDZ8jeQwReX6TliAeXWOcK48aUW+mgu5y6lV3CQBqrl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=dZiajh4e; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="tudDLVEs"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc34d761e2aso352991276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 01:52:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="dZiajh4e"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d0d100336cso7459361fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 01:53:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1707385971; x=1707990771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FVZrDw08jx/+WS3cBHZbP06Mv/MXnXO3+N5Y9WPwJKc=;
-        b=tudDLVEsisWPpzROJ05zczqStpTC8X0SOAFddSbSaxuZFzK1SN/PbP/b0CuNcjcure
-         z/SOjMtL7nbtokwWJvW3aEWZm5fynOYSJ59tSRxrLZo569vUaljHRd7XCi+Kn/OK6KEQ
-         nUmxS6bdU1/lYN/Bl4uHc50YKB35J5aOERL+Y4zfVXdI0npdohoCRQXXcI2AY9tk5EUG
-         feuH5oNF/rVaPZ3w3TAkbEpC7CjkcuNvfvWES33iVXe+cKKmu04wVQ6HPulxAoYi+LEg
-         uHDEandfUYdKuu87QdwCPM/rEBYNNMNWncjl9r5SZg83warV24aZ7mYoEknN43qnvSHh
-         Kcrw==
+        d=fairphone.com; s=fair; t=1707385992; x=1707990792; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MMggITsyUYXMSRsj+SW8m9RDh5vOxy0FBhM5/mNSO2c=;
+        b=dZiajh4eiJ0thdU632hgS3e1Q+TVpkryOPbvlK1Mzx/RQItTRNWuHzXtH37fgMaBdq
+         zxhtu6AsHsxz1ZQLWLx9kRSAGKbw2WBpdE55Vy+ICnNxYtnrEWw5ChnZC4lrLZwb1IGN
+         X/n7sNQKJtoHsgbydiOqAOFpdXlz+M8DXBeikg8JSGPjL3BqEZJPdoLGHE+k1DMnxFHJ
+         XCkFz3JM0LmMHGQJtBDq2xvFpUwMzdhsmlkcAvr6K7zxe+nJXwuszbCzFD4OlVnyoTW5
+         raDxG6oNWjdN49yNnbUUzd8xGk1SYD4xvkDDiOB/9Sh/ysHPo4bpeekf/cUARY7rbbMW
+         xHqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707385971; x=1707990771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FVZrDw08jx/+WS3cBHZbP06Mv/MXnXO3+N5Y9WPwJKc=;
-        b=VSSTGMyg24Mp0FQ8cHZ1qjumargJtUry5WxEI/TLFv05cEYzAlTYUA2cCjU58NIK51
-         Jl0XWftGoUHwDuoLii0xX7CWyE+5DZJZnttERrs58W0EjwJTr7TFgPAYNN/MkZJOGXpt
-         h4I9tI0IvVTE2oMy8l+KWqvVz7To7lL1EUpPk8sDgSpM3uGp1z1l4qsJNK8w7hs9INlh
-         O70e5dPf/HFV/+pmiBE6Lhvv2kITIdqwOn00bXh9cOjcWTSwtD5buMuJMWnShlDXmHww
-         etEHHcw3abTiKTvu+tgLdm8Mr3Lltx+6AdkRKApfSIN7oe2dDLCP7iygrd+tLEfMEO6d
-         ryXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXPdIqE9FTPY0tPqvjpjBgXgWq71uQJYogXgseFRgJuTTFw9HxC6hAaHqbeOgvxL+/k6n1my6zXDz+S08R+Bh6QVap99c7EIamV3L7
-X-Gm-Message-State: AOJu0YxmKu/PoOMBdL8uuLxXtWZMc+HU77OEP6sF8PoilwXlSg5iLjvj
-	PiabVDBQx1Oh66+vVjDRYoji5/m/wSMxfBCvKtN0Eld/fGAr28J2HsDOm/d8Axyw5wDbsmbBdr3
-	frD/DDn8rBgqKJsw1DwSnB0Rr9jHo1m0zOkJMjg==
-X-Google-Smtp-Source: AGHT+IHznbxnmQ2a9sE2uljICDUHwGrSmpOZeuPsWRerpchjYqZKcjzMU9+eJU7z/zz7WRh/gKnst+hmhjZTufwjTUc=
-X-Received: by 2002:a25:8002:0:b0:dbc:b927:c5f9 with SMTP id
- m2-20020a258002000000b00dbcb927c5f9mr7187786ybk.6.1707385971607; Thu, 08 Feb
- 2024 01:52:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707385992; x=1707990792;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MMggITsyUYXMSRsj+SW8m9RDh5vOxy0FBhM5/mNSO2c=;
+        b=ncQwgUvQZ2dEwfqb66b4JWJbk2LI7gK4lT1pUY3jGer0SyP8DxHp36vco7sm57NIAC
+         F3me7v3WNCm7FqHiUgYUTbZNnoM3PH4kOOtcZuWLzeuNm37SlFkhHBFmsfD+dIH9WGua
+         NW/eKucCtd96q1y+opphFd5z4i9bumQKu1TzLGa2ifXCIYZSZXJosj0eAo2u6TE2nyor
+         ny5JY0QCIykGJvYdkz/+FVXQiOOjSoLfB+GZ4XKEmEPaiDyqRniCzoj0r1BHy07+9ax2
+         Kix1ZVPxSzv42hvodKs/BewuOiaP9kJmt7JY3M+EZcbMNMNlptEv9D0mAFbjQLpYYO2H
+         XdlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkidZr3F4BWblkSDr5inQpVAUVIir9gzafju6SYvYUWu8TBT7j4LTlS2Y2O1piO71PRRUKg5qgh3gR4Xh28KYpHvDQ7+UeFRzDMzXi
+X-Gm-Message-State: AOJu0YzVkdP1Iiq2oep3jnEoj+X7mWDVwcujpWAxSWjjuVNhzOkA2tND
+	pmC/kSes933i4dhXbS/uOOFkYTSwPj4xuVcWtfQu55gS44kCDFP8FjEdLwzrfsk=
+X-Google-Smtp-Source: AGHT+IHTG9d+/k61DJi/OYmrjvhF8N+qrNdTM1lT+zbdR8F2YzeqnMoHHX0Vopf1tTkA2OP4lzO/nQ==
+X-Received: by 2002:a2e:be0f:0:b0:2d0:ca58:c434 with SMTP id z15-20020a2ebe0f000000b002d0ca58c434mr3365433ljq.21.1707385991846;
+        Thu, 08 Feb 2024 01:53:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVq4867nsyS3k44XuZpjhQuprdpRzUlIs5dAgaRGDus76kjjj+vmZhE1+mUV8ttj4EivYRE9/IHF5TW/u0vU8blw58Iv4bwiQ9DNkkZ7BG+al1DgK7cZ6esd66HSuXwDNg5MtTJigxvgBqP8BwRbo/f/p7FpSskyVueyck7uBZrD4Ivhaiquty0L9CRwoqqUhBF81oEG8EPpSSyYqKGEaf7TsEa2mS38UuL4TX1HM+HOPWUwG2CHXbFcIAzT0d5XkqIU/82QEH/8BMTjo8pYKF59r01FlUGL66vC18MnR/PAFv6SOOAA8M27EN85L5i1lH7nVTwSo/74mZ1uG01DWJ9iiLCGzf4P2t8Fdgl/Yj+L21TIJuIt93zBmnF8E4UZe9R5NW3+fz4sa2kDP71I1uXFuQjhk28frJgqDGC22K4otGaeGqtoU8lp9ebCG2V4UXcMehqvM6KGCq5YU0+NB9Z1ibwO9m76PfGAO6uTJlgQj9dIUPgT2804uSFjrPMInB14nZ0fPeEDhuLZ7g4CTnf9nMFDwR6DcPYR7BMr7PlwYfNm6MHYeT5dT1h8kAGgE3rfccbquMVi/18FSj//v/SWcjTNsq/Sw+0D892+gX/LmOmuW2pRGuD5oQxsLcw5u2FyxwxgzN3+L5zP3EJOAQ=
+Received: from otso.luca.vpn.lucaweiss.eu (ip-185-104-137-32.ptr.icomera.net. [185.104.137.32])
+        by smtp.gmail.com with ESMTPSA id d20-20020a170903209400b001d8f111804asm2956685plc.113.2024.02.08.01.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 01:53:11 -0800 (PST)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH v2 0/2] Fairphone 5 PMIC-GLINK support (USB-C, charger,
+ fuel gauge)
+Date: Thu, 08 Feb 2024 10:52:31 +0100
+Message-Id: <20240208-fp5-pmic-glink-v2-0-4837d4abd5a4@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207084452.9597-1-drake@endlessos.org> <20240207200538.GA912749@bhelgaas>
- <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
-In-Reply-To: <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
-From: Daniel Drake <drake@endlessos.org>
-Date: Thu, 8 Feb 2024 10:52:15 +0100
-Message-ID: <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, 
-	david.e.box@linux.intel.com, mario.limonciello@amd.com, rafael@kernel.org, 
-	lenb@kernel.org, linux-acpi@vger.kernel.org, linux@endlessos.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGCkxGUC/3XMQQrCMBCF4auUWTuSSbWKK+8hXcR00g7aJCRSl
+ JK7G7t3+T943wqZk3CGS7NC4kWyBF9D7xqwk/Ejowy1QSvdktYKXTxinMXi+BT/wLui4eAM2RM
+ bqKeY2Ml7A2997UnyK6TP5i/0W/9SC6FCbcidubVdR/bqjKQ4Bc97G2boSylf5oBZKrAAAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ cros-qcom-dts-watchers@chromium.org, Rob Herring <robh@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.12.4
 
-On Thu, Feb 8, 2024 at 9:37=E2=80=AFAM Daniel Drake <drake@endlessos.org> w=
-rote:
-> > What would be the downside of skipping the DMI table and calling
-> > pci_d3cold_disable() always?  If this truly is a Root Port defect, it
-> > should affect all platforms with this device, and what's the benefit
-> > of relying on BIOS to use StorageD3Enable to avoid the defect?
->
-> I had more assumed that it was a platform-specific DSDT bug, in that
-> PEG0.PXP._OFF is doing something that PEG0.PXP._ON is unable to
-> recover from, and that other platforms might handle the suspend/resume
-> of this root port more correctly. Not sure if it is reasonable to
-> assume that all other platforms on the same chipset have the same bug
-> (if that's what this is).
+This series adds all the necessary bits to enable USB-C role switching,
+charger and fuel gauge (all via pmic-glink) on Fairphone 5.
 
-Just realised my main workstation (Dell XPS) has the same chipset.
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Changes in v2:
+- Rebase on -next, drop applied patch
+- Pick up tags
+- Link to v1: https://lore.kernel.org/r/20231220-fp5-pmic-glink-v1-0-2a1f8e3c661c@fairphone.com
 
-The Dell ACPI table has the exact same suspect-buggy function, which
-the affected Asus system calls from PEG0.PXP._OFF:
+---
+Luca Weiss (2):
+      dt-bindings: soc: qcom: qcom,pmic-glink: document QCM6490 compatible
+      usb: typec: ucsi: Add qcm6490-pmic-glink as needing PDOS quirk
 
-        Method (DL23, 0, Serialized)
-        {
-            L23E =3D One
-            Sleep (0x10)
-            Local0 =3D Zero
-            While (L23E)
-            {
-                If ((Local0 > 0x04))
-                {
-                    Break
-                }
+ Documentation/devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml | 1 +
+ drivers/usb/typec/ucsi/ucsi_glink.c                             | 1 +
+ 2 files changed, 2 insertions(+)
+---
+base-commit: d36e89e4c25c15302eb1820d45680f765847dad9
+change-id: 20231220-fp5-pmic-glink-b01d4fa1c7ea
 
-                Sleep (0x10)
-                Local0++
-            }
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
 
-            SCB0 =3D One
-        }
-
-(the "L23E =3D One" line is the one that writes a value to config offset
-0xe2, if you comment out this line then everything works)
-
-However, on the Dell XPS system, nothing calls DL23() i.e. it is dead code.
-
-Comparing side by side:
-Asus root port (PC00.PEG0) has the PXP power resource which gets
-powered down during D3cold transition as it becomes unused. Dell root
-port has no power resources (no _PR0).
-Asus NVM device sitting under that root port (PC00.PEG0.PEGP) has
-no-op _PS3 method, but Dell does not have _PS3. This means that Dell
-doesn't attempt D3cold on NVMe nor the parent root port during suspend
-(both go to D3hot only).
-
-Let me know if you have any ideas for other useful comparative experiments.
-
-Daniel
