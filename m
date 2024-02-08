@@ -1,184 +1,121 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3895B50A64;
-	Thu,  8 Feb 2024 21:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46C24F88C;
+	Thu,  8 Feb 2024 22:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707429584; cv=none; b=lGiKjeBwlP0XPgFzIxl0hp0kJvdKTIR1ZBBCzflD/HINWscAtaTWNvuCGzZ6ZL1iik4asWQ5rBKCC7vs51HYtrlJPzDBinwHFOrUHo6aQTSzRimmCAcwm8XyBWpn7gX1H4mFEblEUopHJ1wvzltqB9KAwW2AYQF+pzVKX6oFlb0=
+	t=1707429629; cv=none; b=usY3ZjjJJF+U/UqXsL9ezCcgR7i5T2bF3VLWRe7mRj201kSABElhFOpiqymgErla+LdeKnUErbW43MO5tn62J7ifOS8tviX5ET0gmFcfC1F+ZcYOcEU5LL56RnU8DIUcRgZt90v/fMlisfjjEDWpZMioaBVh3AyhMFsnMiT9n34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707429584; c=relaxed/simple;
-	bh=8f35FdJ/pQY+mhck7+IAQi4vxCn4gr2UiZgQP2iv6T4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lUYl8jZSU9F+N82K079jIPyWCpixHWWot101amMyqTn26Ht0Osj9hxAzXBR6X+VGNLrvnNhudGLJztKuMOp7rvT3NqkqIe+q/Px/I7gShfhwVev0FSoewy4GmcVKns9PbB6sT97gJ+8E8F+QVg2EnsD+6gZHxu1tXWpW4uxrF0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SVmfoHOW; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707429629; c=relaxed/simple;
+	bh=sfqU/s/3SiEvSEePFviZWJkwmQb3jHOvGvS8pWeeXZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=A3A5BErObC8r9ZetdIXrVz26z/wDsfWeMl7U9X4cuZvB5DuDuZllu9ELW1hv/ur6YfXosKj1KcqsB0yz9Rjxyl9TO7AgptTCIZP1U/w1/LSeUYmJOe+mYIkAMgtyaT+PqP7fa/aWr3QNt636jk3LZuofLaIgn4JT3SoEw3NbfMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAC18m2n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVmfoHOW"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a388c5542e9so254686266b.1;
-        Thu, 08 Feb 2024 13:59:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707429581; x=1708034381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zpgVj5cIJYfsEe4k8tOMDseJ01hUY/30ToLsNTzKrj0=;
-        b=SVmfoHOWuY2SnmMM7Tk4IwF729lltn8G8DbU7ssHqWOAAeC2c9QEMbGD+JGrrz2mFa
-         yVRHDGnRUoqAWzDScTen6UObg9TSzQ4ItFJMJiGtFMhjkAq2dz42vovKhKOhQQbIRwkR
-         GCnzfq3h187EhDdiMISdLzAcne9gfAcylNIOldq/n2w1roqO2HawjUVFYYSbI5DVMSqS
-         sPB2gjnD1NqOiHF3BqGN6BWsWuMuXwAB6+JkRqAGAI1o3uxrso6iK7TBzTHaacAeWIt5
-         eC5bPzb3zQC0FOJ3rEqsyE3zN+cT7u7SkUz7hxgqwdM97mskILOw+I63chrkLyAZx4TB
-         3anQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707429581; x=1708034381;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zpgVj5cIJYfsEe4k8tOMDseJ01hUY/30ToLsNTzKrj0=;
-        b=IafNcKVA5ayGifwl1icbdpbEBJ7SXLsZ1NHLFrIpa/v1lIX+Ix53ghcYBmAnNi/s/j
-         Zfjw+P0XpLoNFFBxw/LbReQKhoj6OC9EiFXJ1JPEWRLlUrkdezX35geIGIfFvtdBbSFY
-         tWE0x5HD6Cx4vu45e7SCVSsUGHc5tKMuKsIxHiqf7YkkQhIa6paTkaZzb/8Je5THuC85
-         NCB7uuAQs5zvDgQI8bIKuJcC1b693aK7bUxEuPYL+qFJIvGEibUdVRDZebIvuIiXqQxp
-         tCwXF3+IyvRTzQfoMmUUTvv6ooE6RLc7/SR4be5mvogvEgk9pnfNQcfubfRZVgE6yQvL
-         U3Kg==
-X-Gm-Message-State: AOJu0YxdqBnpp98FmiRpxHh3oVJFl0x/n01etm0m1WtZauJkG6bEEQGX
-	JwfRr3CKUs0pXVHtzC1INQGHkzEpa4kePZZyumU53jg5Bwkth5bhqFWLY4k7
-X-Google-Smtp-Source: AGHT+IFNxvM9cY+GaiQyQtPUyUX5PIfavKE10/ptk4BXmXj9FVhWmxsdHmeT4N0bGqDsEKu83NTBLw==
-X-Received: by 2002:a17:906:f753:b0:a36:5c45:1e09 with SMTP id jp19-20020a170906f75300b00a365c451e09mr628743ejb.31.1707429581490;
-        Thu, 08 Feb 2024 13:59:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXltFUHHXN3QJVpFmKZaCHkdH8PMvNfBhL99ytOY454pqiQKr2FFutKWFoWShjCCMTwLN2sgcRcefp+CfhhFBcdRzvld0rnW/jtVj30JvFzNrZ3Q6qrvYpCsRAd/VBSDViKWcNHWQQz1xJtKoCPjrLo1aPy1TwbAVwebS/VqbfRtXPeu8QgMP3xIB3/V/dIzyQhb03FnQuAzbLpOplvi8/ltLffe89S1oaeq3zP6Wz9ekzVfJwPKM2Pr9S98EH/55v5/L9tk4KlbT6RkBpRMgkY2LLeHf6B/9CnOUzA1IRb3RMX0KwILY1g6Z9qYqSEJSj1Wm7jnNhTXJfCZKE6rNNl8qYGpGSdG8/wWehReYwAzFl2jvDwx3msi9Uvp/fC2WBTMwc0X8r0Zc5c0K1gN/uGzHHloLc+WFb63Ht1JFtsFL4Z8UXj7PSB48Kk13tBQ2rkrcakd5XMDmESB6J85Uc8ypzzM1DVJspwHDloamzfdBbU8q1WRr31fxRikE3HCrJycO0=
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id rf19-20020a1709076a1300b00a3743142429sm108255ejc.39.2024.02.08.13.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 13:59:41 -0800 (PST)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Russell King <linux@armlinux.org.uk>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 3/3] dt-bindings: arm: mediatek: convert SSUSBSYS to the json-schema clock
-Date: Thu,  8 Feb 2024 22:59:26 +0100
-Message-Id: <20240208215926.10085-4-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240208215926.10085-1-zajec5@gmail.com>
-References: <20240208215926.10085-1-zajec5@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAC18m2n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45EA6C433C7;
+	Thu,  8 Feb 2024 22:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707429629;
+	bh=sfqU/s/3SiEvSEePFviZWJkwmQb3jHOvGvS8pWeeXZU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HAC18m2ncaPmq5J7DCM9ZqsPgRFcSlY9RiD20SThR76iZUy348j/TuwqqdfxdQ9u1
+	 WmjqgY7vOj2hJ1j7KW6M1bnJddK7MWjWSy8KNt7lnqICugcvxM6Rjo+tKjR/t9ncKy
+	 l1l8hL91Rqx7ufOWymvpq6esMakpcr/F9Jh86t98kC1KA2Kpj2jQUx1/+gsPD5Ku2+
+	 c274pG+q4NzJsUw3WczdAt9TbFozmyCXAOTiI2KcAuUvnzxmsDAxjWvK+NPLfS3Wii
+	 9qjKFQRVYY6geRg+oy3FWZj53OX6raJRGiEHcBzi2uIhfdT8J0U+6/bPEtyP5Sti4G
+	 9J/1G2LlMmD+A==
+Date: Thu, 8 Feb 2024 16:00:27 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH kernel 2/4] pci/doe: Support discovery version
+Message-ID: <20240208220027.GA975008@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240201060228.3070928-3-aik@amd.com>
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Thu, Feb 01, 2024 at 05:02:26PM +1100, Alexey Kardashevskiy wrote:
+> PCIe spec v6.1 defines a "DOE Discovery Version" field in the DOE Discovery
+> Request Data Object Contents (3rd DW) as:
 
-This helps validating DTS files. Introduced changes:
-1. Documented "reg" property
-2. Dropped "syscon" as it was incorrectly used
-3. Adjusted nodename, "compatible" and "reg" in example
+Please include spec section number, e.g., "PCIe r6.1, sec xx.xx".
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- .../arm/mediatek/mediatek,ssusbsys.txt        | 25 -----------
- .../clock/mediatek,mt7622-ssusbsys.yaml       | 45 +++++++++++++++++++
- 2 files changed, 45 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
- create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt7622-ssusbsys.yaml
+(Also note PCI-SIG uses "revision" as the major, "version" as the
+minor, so this would be "PCIe r6.1", not "PCIe v6.1".)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-deleted file mode 100644
-index 7cb02c930613..000000000000
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--MediaTek SSUSBSYS controller
--============================
--
--The MediaTek SSUSBSYS controller provides various clocks to the system.
--
--Required Properties:
--
--- compatible: Should be:
--	- "mediatek,mt7622-ssusbsys", "syscon"
--	- "mediatek,mt7629-ssusbsys", "syscon"
--- #clock-cells: Must be 1
--- #reset-cells: Must be 1
--
--The SSUSBSYS controller uses the common clk binding from
--Documentation/devicetree/bindings/clock/clock-bindings.txt
--The available clocks are defined in dt-bindings/clock/mt*-clk.h.
--
--Example:
--
--ssusbsys: ssusbsys@1a000000 {
--	compatible = "mediatek,mt7622-ssusbsys", "syscon";
--	reg = <0 0x1a000000 0 0x1000>;
--	#clock-cells = <1>;
--	#reset-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7622-ssusbsys.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt7622-ssusbsys.yaml
-new file mode 100644
-index 000000000000..5e48c2d3ff11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/mediatek,mt7622-ssusbsys.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/mediatek,mt7622-ssusbsys.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek SSUSBSYS controller
-+
-+description:
-+  The MediaTek SSUSBSYS controller provides various clocks to the system.
-+
-+maintainers:
-+  - Matthias Brugger <matthias.bgg@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt7622-ssusbsys
-+      - mediatek,mt7629-ssusbsys
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 1
-+    description: The available clocks are defined in dt-bindings/clock/mt*-clk.h
-+
-+  "#reset-cells":
-+    const: 1
-+
-+required:
-+  - reg
-+  - "#clock-cells"
-+  - "#reset-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clock-controller@1a000000 {
-+        compatible = "mediatek,mt7622-ssusbsys";
-+        reg = <0x1a000000 0x1000>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+    };
--- 
-2.35.3
-
+> 15:8 DOE Discovery Version – must be 02h if the Capability Version in
+> the Data Object Exchange Extended Capability is 02h or greater.
+> 
+> Add support for the version on devices with the DOE v2 capability.
+> 
+> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+> ---
+>  include/uapi/linux/pci_regs.h |  1 +
+>  drivers/pci/doe.c             | 11 ++++++++---
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index a39193213ff2..b9c681f14181 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1144,6 +1144,7 @@
+>  #define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
+>  
+>  #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
+> +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER	0x0000ff00
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 61f0531d2b1d..f57def002175 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -381,11 +381,13 @@ static void pci_doe_task_complete(struct pci_doe_task *task)
+>  	complete(task->private);
+>  }
+>  
+> -static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
+> +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
+>  			     u8 *protocol)
+>  {
+> +	u32 disver = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
+> +				(capver >= 2) ? 2 : 0);
+>  	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+> -				    *index);
+> +				    *index) | disver;
+>  	__le32 request_pl_le = cpu_to_le32(request_pl);
+>  	__le32 response_pl_le;
+>  	u32 response_pl;
+> @@ -419,13 +421,16 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
+>  {
+>  	u8 index = 0;
+>  	u8 xa_idx = 0;
+> +	u32 hdr = 0;
+> +
+> +	pci_read_config_dword(doe_mb->pdev, doe_mb->cap_offset, &hdr);
+>  
+>  	do {
+>  		int rc;
+>  		u16 vid;
+>  		u8 prot;
+>  
+> -		rc = pci_doe_discovery(doe_mb, &index, &vid, &prot);
+> +		rc = pci_doe_discovery(doe_mb, PCI_EXT_CAP_VER(hdr), &index, &vid, &prot);
+>  		if (rc)
+>  			return rc;
+>  
+> -- 
+> 2.41.0
+> 
