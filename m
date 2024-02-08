@@ -1,149 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A336F079;
-	Thu,  8 Feb 2024 11:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169CF6F079;
+	Thu,  8 Feb 2024 11:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707392471; cv=none; b=S8K9ubfolr0iuIWEMoPkbY/4GKhUWf4m4Oc34JMCJ5rbQ8w5T3MHamdIueW8yXUBcDQ0E4PvEz+7PqyAzGwmyv1s42/PfvJD6A7Ux2wKi//xxpvAg6hIBooXruUcJ9Qt1r46+q7PH/uqeFViTtxCbLxrY2hgPfH7lKb7J2Dyewk=
+	t=1707392522; cv=none; b=W2Too8xkFOZB2Vzhfp9ct3Dhxb2Br2jmzAlbcD/+TSorJyyopyANuA59jOKvd9EoLS5PzuvVi/g3pVHLPAXjThfpD13OsdZIkv0HWEhnMtUxzTWalxyzjKM/6zdfWtqm8nOPIjzI6SYJ+dmrKogDQmY5mOGmf8/jXr8B2mzb9oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707392471; c=relaxed/simple;
-	bh=p6MmZDZ286zVVAy/pVq6azWTqolhe5LOY18uDbtN6ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2YyoCNQo5BU+uh5BCBjMtx07nK/A5HfP/1UHtWgEDYUc6x8N6uHl5O6/K9cYtRBXzI/jGrimilzQMssZLJxYMAXg/Vat59dnKywIIt0eboBUMlWC01k0UbJMlqK5K6O/oDbHxBbYojVvW6OwB6O7+UIe0yXwv90niGIYnco9oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOy9x9Rv; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707392522; c=relaxed/simple;
+	bh=Qo52dT+MaX4Zu1tDJ9IE+j+kFhpRPJkdsCNMZCVnhdo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=btrqQO9w12QCPh1ylCMigrIMLACsg8oC2bEjczrQ5p993PGJW1IAt4MYnV6csn3JVtqNERPetFP9qf5MjWUnAdQtxQixlJ5XUAGWXUDUhwL11xyajnACRtjUhsND05jim5OTHqb+2kAxcJQo9SMUi6tRjDa8gp0R21rulZSeiJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kh5Pr4uZ; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOy9x9Rv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707392469; x=1738928469;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=p6MmZDZ286zVVAy/pVq6azWTqolhe5LOY18uDbtN6ck=;
-  b=aOy9x9RvczTnyD9bmX5OeCR94+C8Tnnvv2xNBYJFNc/rvJON4/MrJjmf
-   Oe5SrjsCQ4NRA0JQEQcjtoK55sVouD2eSGGsbJxxhTriyP2f1d+mVaME2
-   aMaVkyRCdBk4PaOw2ub9E9OdWoFX5iH1oTDSftyILXBr/Wj6dwTLznEbS
-   7DHTA2JDNsMnbROxNinXpFD3ZY6FUphKJ3ComaKUbUwIO0m3IUvSaPoi9
-   A4v4KJUSe/D7U7tG9MYs/52iUDPDP7D5/dDtx6Pqt3udDZJSJiJSoCcmV
-   BPWp4Smyvq76t17FRuUbYpU8qJinAXgLtsvggvm+1gdx3tuKPGTWpiPYt
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1091981"
-X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1091981"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:41:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
-   d="scan'208";a="1914877"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.219.88])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:41:02 -0800
-Message-ID: <86490ec4-423e-4a7d-881b-56c47b3320ce@intel.com>
-Date: Thu, 8 Feb 2024 13:40:57 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kh5Pr4uZ"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 418BfEYW056871;
+	Thu, 8 Feb 2024 05:41:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707392474;
+	bh=7opL0zSVFjKbMr+AvWF+mEU7KwHnfICtgBJY8r+XMu0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=kh5Pr4uZ9bNB422m4GmJLusPFaielrlnUg57OTc4QxJZN9/tooLUCK+hlZm6CdCM/
+	 q129OUYktvXmqKwxU3nvwj5ol7RtODEpMkDHPHPbKNdf57XgjuySSdswcuNbr5X7CC
+	 /gfZa8LqxtouARCEgLxLxsQGUt5PowLqgSPwEL7I=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 418BfEah093691
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 Feb 2024 05:41:14 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ Feb 2024 05:41:14 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 Feb 2024 05:41:14 -0600
+Received: from LT5CG31242FY.dhcp.ti.com ([10.250.162.93])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 418BepBw007761;
+	Thu, 8 Feb 2024 05:41:08 -0600
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <perex@perex.cz>, <tiwai@suse.com>, <13916275206@139.com>,
+        <mohit.chawla@ti.com>, <soyer@irl.hu>, <jkhuang3@ti.com>,
+        <tiwai@suse.de>, <pdjuandi@ti.com>, <manisha.agrawal@ti.com>,
+        <s-hari@ti.com>, <aviel@ti.com>, <hnagalla@ti.com>, <praneeth@ti.com>,
+        Shenghao Ding <shenghao-ding@ti.com>
+Subject: [RESEND PATCH v4 3/4] ASoc: PCM6240: Add compile item for PCM6240 Family driver
+Date: Thu, 8 Feb 2024 19:40:47 +0800
+Message-ID: <20240208114049.1429-3-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
+In-Reply-To: <20240208114049.1429-1-shenghao-ding@ti.com>
+References: <20240208114049.1429-1-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 00/11] perf/core: Add ability for an event to "pause"
- or "resume" AUX area tracing
-To: James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, Yicong Yang
- <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240111081914.3123-1-adrian.hunter@intel.com>
- <31bae596-ecb1-4b9c-9f1c-aaec4bcefd38@intel.com>
- <CAP-5=fUo96EABpH6=7i2cXFmZhAB2MM=UsnG-+vL4HJtLGS=bA@mail.gmail.com>
- <a4c616ff-12bf-592b-b74d-407013a68cb7@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <a4c616ff-12bf-592b-b74d-407013a68cb7@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 1/02/24 18:29, James Clark wrote:
-> 
-> 
-> On 31/01/2024 16:53, Ian Rogers wrote:
->> On Mon, Jan 29, 2024 at 4:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> On 11/01/24 10:19, Adrian Hunter wrote:
->>>> Hi
->>>>
->>>> Hardware traces, such as instruction traces, can produce a vast amount of
->>>> trace data, so being able to reduce tracing to more specific circumstances
->>>> can be useful.
->>>>
->>>> The ability to pause or resume tracing when another event happens, can do
->>>> that.
->>>>
->>>> These patches add such a facilty and show how it would work for Intel
->>>> Processor Trace.
->>>>
->>>> Maintainers of other AUX area tracing implementations are requested to
->>>> consider if this is something they might employ and then whether or not
->>>> the ABI would work for them.
->>>>
->>>> Changes to perf tools are now (since V4) fleshed out.
->>>>
->>>>
->>>> Changes in V4:
->>>>
->>>>     perf/core: Add aux_pause, aux_resume, aux_start_paused
->>>>       Rename aux_output_cfg -> aux_action
->>>>       Reorder aux_action bits from:
->>>>               aux_pause, aux_resume, aux_start_paused
->>>>       to:
->>>>               aux_start_paused, aux_pause, aux_resume
->>>>       Fix aux_action bits __u64 -> __u32
->>>>
->>>>     coresight: Have a stab at support for pause / resume
->>>>       Dropped
->>>>
->>>>     perf tools
->>>>       All new patches
->>>>
->>>> Changes in RFC V3:
->>>>
->>>>     coresight: Have a stab at support for pause / resume
->>>>       'mode' -> 'flags' so it at least compiles
->>>>
->>>> Changes in RFC V2:
->>>>
->>>>       Use ->stop() / ->start() instead of ->pause_resume()
->>>>       Move aux_start_paused bit into aux_output_cfg
->>>>       Tighten up when Intel PT pause / resume is allowed
->>>>       Add an example of how it might work for CoreSight
->>>
->>> Any more comments?
->>
->> I think the tools side looks good. The parsing changes match the
->> existing style. I wonder if it wouldn't be better to handle the valid
->> strings (pause, resume, etc.) in the lexer rather than a separate
->> parse function, but the pattern used matches the existing one. You can
->> have my Acked-by on the tools changes, although the subtleties of ARM
->> PMUs makes me somewhat nervous in this regard.
->>
->> Thanks,
->> Ian
-> 
-> Acked-by: James Clark <james.clark@arm.com>
-> 
-> I will get round to adding the Coresight support at some point. I
-> checked the new parsing in this version and it seems to work ok.
+PCM6240 driver implements a flexible and configurable setting for register
+and filter coefficients, to one, two or even multiple PCM6240 Family Audio
+chips.
 
-Thanks James and Ian!
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+
+---
+Change in v4:
+ - All these chips have only a portion of the codec's functionality, such
+   as ADC or DAC, and so on, but their audio performance is far superior
+   to the codec's, and cost is lower than codec, and much easier to
+   program than codec.
+---
+ sound/soc/codecs/Kconfig  | 10 ++++++++++
+ sound/soc/codecs/Makefile |  2 ++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 59f9742e9ff4..bab0ed032b5d 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -178,6 +178,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_PCM5102A
+ 	imply SND_SOC_PCM512x_I2C
+ 	imply SND_SOC_PCM512x_SPI
++	imply SND_SOC_PCM6240
+ 	imply SND_SOC_PEB2466
+ 	imply SND_SOC_RK3328
+ 	imply SND_SOC_RK817
+@@ -1389,6 +1390,15 @@ config SND_SOC_PCM512x_SPI
+ 	select SND_SOC_PCM512x
+ 	select REGMAP_SPI
+ 
++config SND_SOC_PCM6240
++	tristate "Texas Instruments PCM6240 Family Audio chips based on I2C"
++	depends on I2C
++	help
++	  Enable support for Texas Instruments PCM6240 Family Audio chips.
++	  Note the PCM6240 driver implements a flexible and configurable
++	  setting for register and filter coefficients, to one, two or
++	  even multiple PCM6240 Family Audio chips.
++
+ config SND_SOC_PEB2466
+ 	tristate "Infineon PEB2466 quad PCM codec"
+ 	depends on SPI
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index f53baa2b9565..c2ae573b62dd 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -201,6 +201,7 @@ snd-soc-pcm5102a-objs := pcm5102a.o
+ snd-soc-pcm512x-objs := pcm512x.o
+ snd-soc-pcm512x-i2c-objs := pcm512x-i2c.o
+ snd-soc-pcm512x-spi-objs := pcm512x-spi.o
++snd-soc-pcm6240-objs := pcm6240.o
+ snd-soc-peb2466-objs := peb2466.o
+ snd-soc-rk3328-objs := rk3328_codec.o
+ snd-soc-rk817-objs := rk817_codec.o
+@@ -586,6 +587,7 @@ obj-$(CONFIG_SND_SOC_PCM5102A)	+= snd-soc-pcm5102a.o
+ obj-$(CONFIG_SND_SOC_PCM512x)	+= snd-soc-pcm512x.o
+ obj-$(CONFIG_SND_SOC_PCM512x_I2C)	+= snd-soc-pcm512x-i2c.o
+ obj-$(CONFIG_SND_SOC_PCM512x_SPI)	+= snd-soc-pcm512x-spi.o
++obj-$(CONFIG_SND_SOC_PCM6240)	+= snd-soc-pcm6240.o
+ obj-$(CONFIG_SND_SOC_PEB2466)	+= snd-soc-peb2466.o
+ obj-$(CONFIG_SND_SOC_RK3328)	+= snd-soc-rk3328.o
+ obj-$(CONFIG_SND_SOC_RK817)	+= snd-soc-rk817.o
+-- 
+2.34.1
+
