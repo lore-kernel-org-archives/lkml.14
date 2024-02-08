@@ -1,213 +1,204 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E5850257
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 23:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D1250A70;
+	Thu,  8 Feb 2024 23:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707434056; cv=none; b=Np/5aDLp2mUxURkhwrz/um8qhUdyZFahM726PgJi/4UahWBaTLPyISQZJcRV4dET6z6zR/djoqJGdHrKYkpiEihqkDDLwl6dKon6TNu8R/OKgdeJ4/ZgdUzjFcg8TI11ktEpcSmzc4YDxfOQEp3RVGy3R90wLYWl/Y1ByskMGjc=
+	t=1707434079; cv=none; b=eMzWc20vP72bogeh7vkTQspRHtDFW3aFjFUe/Z2mw7+kx91PUp7ARo7VGt45OqF7tDuEIYidLO6qqFW3bl24dGP1pvZ77dyyGlhvVaV37xro5wxSSQ+zw1E+EIObIi1Gp9QT16z6utXVVeOvhNa5Rd3CivrgUsqomiX3i9Wv6+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707434056; c=relaxed/simple;
-	bh=me8ZF9MFV3b25A/LpyNIDRWvjZIMoVYXkuh8e+uhqu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WjIr1t62yC/i9hf938eHwqY1B+YiMqb3sqA1g3BskHrBT1hY7cdJUnWlEqo5vHMlRyf/54kWfX2ZzUdWYEtRJYLH57RieeQ+ZZ2eWdMuleEy+ovn8Tqp1S6k0TK4lhVYe1LhSeI9IWFXpCR2qT2wsqBEtqI9avvkxSfzCrJmgxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4g+lO9XL; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707434079; c=relaxed/simple;
+	bh=NFb5KrutHq3DEtEEDYwpfG5twPMjHvzujusJINVO7hw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VZj/40COk3HGsY7SPh5NK4yNjYd2CDZbNn9oQuhuxbQVN1ti48Ppnuo5TXvlIW+yaktYwQJv+u30j75YjfNp48DTu+EIpdQHm8lPyIrRTHfuGZ7QiU7Z5byanggdIryblK7ygY/jN7zNLrL5U6Wl7j/BMkRPECGNuhNRuYDg3hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nmyhFz94; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4g+lO9XL"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c00cfd7156so12461239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 15:14:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707434052; x=1708038852; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pe6jnI7sJWQLdADxcvkIM7ZK9uT6CeFtU8HHzuib1uI=;
-        b=4g+lO9XLlJoQtPaBqQ3SEo6Fh7AeaNA3RLLXDuFd3F0ZXKNgu2G0OUJCfjDQ84fqAw
-         dLCvsF/7C02IGnmvzxM/BFsfUUQURtQm3sBHq95RWUWIeQzzxsIJ08XlMi/tfbwkN5N/
-         JXtVO/e1i2Ug4n+67Q6rOIY4yz/gFWEnPQ2hO9d2h2Hs8NzwgZEx12pDNtCljlptAF3J
-         XgyJBoDVDu01aDFb0nhxLMfl2G/rVCn9PsM96xAPdzWWFlNvCsNAaSCwTgZV81UCRrrk
-         nfeRdPEq+wjXesFs+n4qYeY684okTiRul678sUd4XISCAQ1L6w3NZ2rvq2f8EtVVDL8n
-         DvIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707434052; x=1708038852;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pe6jnI7sJWQLdADxcvkIM7ZK9uT6CeFtU8HHzuib1uI=;
-        b=sx0/0Uz/Fq3CpRoigATwEEnsTtrSDDBz2z3bP1z1E22O9Cjj2XZ0qlbeHb5NFh4l75
-         JXRaAptQ4euvdJangbXBkbXxdylL7m4Ev+ldLAcN+IyUVLAqpwDoNtNSnIGKCieLN2L1
-         B/DgLFVi9LXl3YQRyfMgK58L8rIpWB2gxjcVlD9UCrw+hFWSOii0UFLJJ+y9hV+IHQrE
-         m48yD52PhsXsKzZE3gAiyb4TeVn+n3S70JM4sNp/pLHUoJx1dcRuHlP0/dxyD1SxkrpN
-         34as1lap0Riuxh83mp7BNli2Z+wdgESrgKj/hNF1YCmdfznWQZMy9FcWiBVbvkzkVK9O
-         aWjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKczt2uEOhL5YV39xzcTIkYeX4+tXTxUTB0pfwN/JmR4W0weq71Wr65+qYW0D8FVqR2gCzws5zR74t8CiM17HVo0taZvH+zN8tFsHO
-X-Gm-Message-State: AOJu0YxoFFzND58N7kq6/1VXkGkPyAqmm9tX9psuYyapRnMijb2w6Ya9
-	dlT6A4/dYZ7CiIlGdxioh1BWXUERczNds4R2E/UgOY6Whimdv4NzKtRkxdEe+g==
-X-Google-Smtp-Source: AGHT+IHCKa/qnllJa3a8anZ50HmqNn75qJTTGYvPU2+WwjU6U+rngyIqVcN2/lsJ591YBvYTq0dxLw==
-X-Received: by 2002:a6b:6b15:0:b0:7c4:6c8:fe2a with SMTP id g21-20020a6b6b15000000b007c406c8fe2amr64594ioc.11.1707434052059;
-        Thu, 08 Feb 2024 15:14:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV/sQAnakA0PHqUvHJVwEnGRDfLGGR1Y3EMsnDtlTssTQZLJmdAZJb4weX5gsjP0GHz87cjZ+J4aTm3lhvE8vGjJ7gUV+F94Ka/SSo/b0jZGktJv8SsWuN+Yrn45Ipj+rKMx3j6PTbvF7sIXTY9e4mk+6newdRmq9RdiFbg4fYoOZuLNbxx4HXoEGYuFDdtn2v4l5+YOsvluP3SnMTPSMvLEJwmE6Mrlt7FC4AUaj0/1y4WFnSQi890D49iGXs7laiKi57+1CfTmrGa5diaVMarJ9O9titiQNcX/FXJQYyh6OVxOY1bQ3N5yXIxcec1OGFFBIH7m541j3LvNbQIEAyVT65ZyucUjxkLBvXNwqxZmVLQYDKJGzdW3u+sFiPdyA==
-Received: from google.com (20.10.132.34.bc.googleusercontent.com. [34.132.10.20])
-        by smtp.gmail.com with ESMTPSA id t30-20020a05663836de00b004714adc2d2fsm106510jau.46.2024.02.08.15.14.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 15:14:11 -0800 (PST)
-Date: Thu, 8 Feb 2024 23:14:07 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, maskray@google.com,
-	ndesaulniers@google.com, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	patches@lists.linux.dev
-Subject: Re: [PATCH 00/11] s390: Support linking with ld.lld
-Message-ID: <20240208231407.vkisblrowjvivsxb@google.com>
-References: <20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nmyhFz94"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 418MWXUY003836;
+	Thu, 8 Feb 2024 23:14:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=S9VTWxSz7x4qq1AeYZyZ
+	G+OFcZ7lvmr3A4Wyz4IN404=; b=nmyhFz94i58NcMtBUXFTjFvgn+JoddbHFpsq
+	1HZftJnOtPoWWU7bO5CnwCN8LXMX9FxFr3dzeHIp8KxM3AwnF4AarfXKFDs4aIj0
+	aF2A/2fMkgy/btH6W45Lk0pewA1cxI2qghchH8N90oekuxcjmDNP08NIXD4gMUJs
+	jhkCCT2o3MXkkxCDUWJK4GnCNwT9HmBBSTv/CD5c2sljVtnrFExxfY5SkWx1143D
+	OVP3VakBVlgWgT/r4dpWng1lw5Zl8KcbQgYBFZNKdepNSS3CIYlFKeXvZSkKGxyO
+	v5r06cBM0/CqJpwX1lyNLjC0JZdMPkhnsjUug6kHG3W3LaBapg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4m3ak1pe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Feb 2024 23:14:23 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 418NEMsw005590
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 Feb 2024 23:14:23 GMT
+Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 8 Feb 2024 15:14:22 -0800
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v14 25/53] ALSA: usb-audio: Introduce USB SND platform op callbacks
+Date: Thu, 8 Feb 2024 15:13:38 -0800
+Message-ID: <20240208231406.27397-26-quic_wcheng@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240208231406.27397-1-quic_wcheng@quicinc.com>
+References: <20240208231406.27397-1-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org>
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: MV9UD4QMEr-0_X4WY57egN_5DuUEBoQP
+X-Proofpoint-GUID: MV9UD4QMEr-0_X4WY57egN_5DuUEBoQP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-08_11,2024-02-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=934 adultscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402080131
 
-Hi,
+Allow for different platforms to be notified on USB SND connect/disconnect
+seqeunces.  This allows for platform USB SND modules to properly initialize
+and populate internal structures with references to the USB SND chip
+device.
 
-On Wed, Feb 07, 2024 at 05:14:52PM -0700, Nathan Chancellor wrote:
-> Hi all,
->
-> This series allows the s390 kernel to be linked with ld.lld (support for
-> s390 is under review at [1]). This implicitly depends on [2], which was
-> created and sent before it was realized that this series was necessary.
->
-> The first chunk of this series enables support for
-> CONFIG_LD_ORPHAN_WARN, as it was discovered during testing that the
-> kernel fails to build with ld.lld due to differences in orphan section
-> handling, which would have been caught with the linker's orphan section
-> warnings ahead of the actual build error. There are no warnings when
-> building ARCH=s390 defconfig and allmodconfig with GCC 6 through 13 or
-> tip of tree Clang using ld.bfd or ld.lld
->
-> The final patch resolves a series of errors due to ld.lld having a
-> different default for checking for DT_TEXTREL ('-z text') vs ld.bfd,
-> which defaults to '-z notext' (but this is configurable at build time).
->
-> There is one outstanding issue due to something that ld.lld does not
-> support that the kernel relies on:
->
->   ld.lld: error: drivers/nvme/host/fc.o:(__bug_table): writable SHF_MERGE section is not supported
->
-> This was changed in the kernel in commit e21f8baf8d9a ("s390/bug: add
-> entry size to the __bug_table section"). Is this change truly necessary?
-> I selectively applied a revert on top of current mainline and I did not
-> observe any issues with either Clang or GCC.
->
-> diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-> index aebe1e22c7be..c500d45fb465 100644
-> --- a/arch/s390/include/asm/bug.h
-> +++ b/arch/s390/include/asm/bug.h
-> @@ -14,7 +14,7 @@
->  		".section .rodata.str,\"aMS\",@progbits,1\n"	\
->  		"1:	.asciz	\""__FILE__"\"\n"		\
->  		".previous\n"					\
-> -		".section __bug_table,\"awM\",@progbits,%2\n"	\
-> +		".section __bug_table,\"aw\"\n"			\
->  		"2:	.long	0b-.\n"				\
->  		"	.long	1b-.\n"				\
->  		"	.short	%0,%1\n"			\
-> @@ -30,7 +30,7 @@
->  #define __EMIT_BUG(x) do {					\
->  	asm_inline volatile(					\
->  		"0:	mc	0,0\n"				\
-> -		".section __bug_table,\"awM\",@progbits,%1\n"	\
-> +		".section __bug_table,\"aw\"\n"			\
->  		"1:	.long	0b-.\n"				\
->  		"	.short	%0\n"				\
->  		"	.org	1b+%1\n"			\
->
-> If it is necessary, is there any way to work around this error? For
-> testing purposes, disabling CONFIG_BUG is easy enough but that is not
-> usable in the real world.
->
-> To test this series with ld.lld, you'll need to build ld.lld from the
-> pull request, which is easy to do following LLVM's instructions [3].
-> Here is a TL;DR version I tested that just builds LLD with minimal noise
-> during the build.
->
-> $ git clone https://github.com/llvm/llvm-project
-> $ cd llvm-project
-> $ git fetch https://github.com/llvm/llvm-project pull/75643/head
-> $ git switch -d FETCH_HEAD
-> $ cmake \
->     -B build \
->     -G Ninja \
->     -S llvm \
->     --log-level=NOTICE \
->     -Wno-dev \
->     -DCMAKE_BUILD_TYPE=Release \
->     -DLLVM_ENABLE_PROJECTS=lld \
->     -DLLVM_ENABLE_WARNINGS=OFF \
->     -DLLVM_TARGETS_TO_BUILD=SystemZ
-> $ ninja -C build lld
-> $ export PATH=$PWD/build/bin:$PATH
->
-> Then build the kernel with 'LD=ld.lld' in addition to whatever command
-> line you use (I tested both Clang and GCC). I can boot an ld.lld linked
-> kernel built with both compilers in QEMU with this series.
+Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+---
+ sound/usb/card.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++
+ sound/usb/card.h |  9 ++++++++
+ 2 files changed, 62 insertions(+)
 
-Yeah, this all works for me and I am able to boot. I did need to use the
-diff present in 0/11 to remove the warnings regarding SHF_MERGE
-sections. It should probably be a patch in this series instead of a
-inlined diff?
-
->
-> [    1.386970] Linux version 6.8.0-rc3-00043-g05761ede85d6-dirty (nathan@dev-fedora.aadp) (s390-linux-gcc (GCC) 13.2.0, ClangBuiltLinux LLD 19.0.0) #1 SMP Wed Feb  7 16:51:12 MST 2024
->
-> [    0.871923] Linux version 6.8.0-rc3-00043-g05761ede85d6-dirty (nathan@dev-fedora.aadp) (ClangBuiltLinux clang version 19.0.0git (https://github.com/llvm/llvm-project 417075e56aeba5a5b20301c7bfeba9c2a800982b), ClangBuiltLinux LLD 19.0.0) #1 SMP Wed Feb  7 17:01:22 MST 2024
->
-> [1]: https://github.com/llvm/llvm-project/pull/75643
-> [2]: https://lore.kernel.org/r/20240130-s390-vdso-drop-fpic-from-ldflags-v1-1-094ad104fc55@kernel.org/
-^^^^^^^^^
-I needed this too, as I was getting a warnings about -fPIC being an
-unknown option.
-
-
-All in all, works great for me building on clang and booting with qemu.
-
-Tested-by: Justin Stitt <justinstitt@google.com>
-
-> [3]: https://llvm.org/docs/CMake.html
->
-> ---
-> Nathan Chancellor (11):
->       s390: boot: Add support for CONFIG_LD_ORPHAN_WARN
->       s390: vmlinux.lds.S: Handle '.data.rel' sections explicitly
->       s390: vmlinux.lds.S: Explicitly handle '.got' and '.plt' sections
->       s390: vmlinux.lds.S: Discard unnecessary sections
->       s390/boot: vmlinux.lds.S: Handle '.init.text'
->       s390/boot: vmlinux.lds.S: Handle '.rela' sections
->       s390/boot: vmlinux.lds.S: Handle DWARF debug sections
->       s390/boot: vmlinux.lds.S: Handle ELF required sections
->       s390/boot: vmlinux.lds.S: Handle commonly discarded sections
->       s390: Select CONFIG_ARCH_WANT_LD_ORPHAN_WARN
->       s390: Link vmlinux with '-z notext'
->
->  arch/s390/Kconfig              |  1 +
->  arch/s390/Makefile             |  2 +-
->  arch/s390/boot/Makefile        |  5 +++--
->  arch/s390/boot/vmlinux.lds.S   | 28 ++++++++++++++++++++++++++++
->  arch/s390/kernel/vmlinux.lds.S | 28 +++++++++++++++++++++++++++-
->  5 files changed, 60 insertions(+), 4 deletions(-)
-> ---
-> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-> change-id: 20240207-s390-lld-and-orphan-warn-d0ff4ff657b0
->
-> Best regards,
-> --
-> Nathan Chancellor <nathan@kernel.org>
->
-
-Thanks
-Justin
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index 1b2edc0fd2e9..ca4f3bc1b42d 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -118,6 +118,42 @@ MODULE_PARM_DESC(skip_validation, "Skip unit descriptor validation (default: no)
+ static DEFINE_MUTEX(register_mutex);
+ static struct snd_usb_audio *usb_chip[SNDRV_CARDS];
+ static struct usb_driver usb_audio_driver;
++static struct snd_usb_platform_ops *platform_ops;
++
++/*
++ * Register platform specific operations that will be notified on events
++ * which occur in USB SND.  The platform driver can utilize this path to
++ * enable features, such as USB audio offloading, which allows for audio data
++ * to be queued by an audio DSP.
++ *
++ * Only one set of platform operations can be registered to USB SND.  The
++ * platform register operation is protected by the register_mutex.
++ */
++int snd_usb_register_platform_ops(struct snd_usb_platform_ops *ops)
++{
++	guard(mutex)(&register_mutex);
++	if (platform_ops)
++		return -EEXIST;
++
++	platform_ops = ops;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(snd_usb_register_platform_ops);
++
++/*
++ * Unregisters the current set of platform operations.  This allows for
++ * a new set to be registered if required.
++ *
++ * The platform unregister operation is protected by the register_mutex.
++ */
++int snd_usb_unregister_platform_ops(void)
++{
++	guard(mutex)(&register_mutex);
++	platform_ops = NULL;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(snd_usb_unregister_platform_ops);
+ 
+ /*
+  * disconnect streams
+@@ -910,7 +946,11 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 	chip->num_interfaces++;
+ 	usb_set_intfdata(intf, chip);
+ 	atomic_dec(&chip->active);
++
++	if (platform_ops && platform_ops->connect_cb)
++		platform_ops->connect_cb(chip);
+ 	mutex_unlock(&register_mutex);
++
+ 	return 0;
+ 
+  __error:
+@@ -947,6 +987,9 @@ static void usb_audio_disconnect(struct usb_interface *intf)
+ 	card = chip->card;
+ 
+ 	mutex_lock(&register_mutex);
++	if (platform_ops && platform_ops->disconnect_cb)
++		platform_ops->disconnect_cb(chip);
++
+ 	if (atomic_inc_return(&chip->shutdown) == 1) {
+ 		struct snd_usb_stream *as;
+ 		struct snd_usb_endpoint *ep;
+@@ -1090,6 +1133,11 @@ static int usb_audio_suspend(struct usb_interface *intf, pm_message_t message)
+ 		chip->system_suspend = chip->num_suspended_intf;
+ 	}
+ 
++	mutex_lock(&register_mutex);
++	if (platform_ops && platform_ops->suspend_cb)
++		platform_ops->suspend_cb(intf, message);
++	mutex_unlock(&register_mutex);
++
+ 	return 0;
+ }
+ 
+@@ -1130,6 +1178,11 @@ static int usb_audio_resume(struct usb_interface *intf)
+ 
+ 	snd_usb_midi_v2_resume_all(chip);
+ 
++	mutex_lock(&register_mutex);
++	if (platform_ops && platform_ops->resume_cb)
++		platform_ops->resume_cb(intf);
++	mutex_unlock(&register_mutex);
++
+  out:
+ 	if (chip->num_suspended_intf == chip->system_suspend) {
+ 		snd_power_change_state(chip->card, SNDRV_CTL_POWER_D0);
+diff --git a/sound/usb/card.h b/sound/usb/card.h
+index 6ec95b2edf86..2884912adc96 100644
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -207,4 +207,13 @@ struct snd_usb_stream {
+ 	struct list_head list;
+ };
+ 
++struct snd_usb_platform_ops {
++	void (*connect_cb)(struct snd_usb_audio *chip);
++	void (*disconnect_cb)(struct snd_usb_audio *chip);
++	void (*suspend_cb)(struct usb_interface *intf, pm_message_t message);
++	void (*resume_cb)(struct usb_interface *intf);
++};
++
++int snd_usb_register_platform_ops(struct snd_usb_platform_ops *ops);
++int snd_usb_unregister_platform_ops(void);
+ #endif /* __USBAUDIO_CARD_H */
