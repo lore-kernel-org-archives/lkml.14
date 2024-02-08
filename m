@@ -1,107 +1,101 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AAE171A4;
-	Thu,  8 Feb 2024 08:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1086A02E;
+	Thu,  8 Feb 2024 08:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707379913; cv=none; b=Ub7UMVRI0nzC3yuIhUQdZ+b1ncdTeIyyetDLyUz1j1IE3jQTzwmS3rtEs7TuEulW6PDTJn9D6pUWJV9uQWHcXk16nvsilbVPuhfF6wOErQF3xzgaybt/Ll7wpkoIw4u5dO/mvLcpy97X9CnSCWbDSADVsRFsoA8MR4eZ289MrC0=
+	t=1707379919; cv=none; b=hb7GCfAbJH/kModMW+55F1xOIQiRJ25BR0U8P5EcKuc/s3vpNInMF9wJIU04HiN/ohizTJGpoabdvJgAhawUZUZ8cJ/0CfgUTflcfFxIoAw7FDoE+jB1t6nkmw+QUT+k9dTSdTeL5p/eIjlh2aFbmYUIuDrN9SvixJngPmaPejY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707379913; c=relaxed/simple;
-	bh=961XXUYAg7flUndFM6MqR2FMjasU0hzE16yiPbWwwHg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y4M7Pos+TVwiLXXZao3SVeDYnfDd6y/8p8FL79TinzGsO8kxFLqqvPqcd6QjFz1nT2mY9SU6u30qzYwv7Wz0e2b1bk25znLxvRNpTBa0VgF5zegl9ELHiPjQD5zsRSAPA4IgPKNpqW/6jgi7JulOAhsljjAey1tubyJ8NxzkN88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JSsAsX1H; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1707379919; c=relaxed/simple;
+	bh=r2gDOJZsfcEKcNeXFgVU4/d8DvY6q/9pRPxUslnQm+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rOxbfn0wAClHj6QfGKzrK4mIfX7V8y9F9FDPLde6IgPSsOx0pjjVoTaKjKiqHrz4+Rn+Q+80IjxFEwqCDZzY/L1dInna8eSWrTsgUwv3EmQvarAj1l6A2GesffnJdgNFomFUnMpEIcZRycdmw6xwydepe0p8BQZjnKMzqKVnmgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AbswsTdN; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JSsAsX1H"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55f279dca99so2251564a12.3;
-        Thu, 08 Feb 2024 00:11:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbswsTdN"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d94323d547so14096635ad.3;
+        Thu, 08 Feb 2024 00:11:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707379910; x=1707984710; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OREw2fCwmTOMl21TQGPuH4XMzXOOzUHUl3pryOOA5T4=;
-        b=JSsAsX1HNFPqZJy7qCEdWjJn/hm/RrYNVdL21zRA30vxAvgRur6h2c1KhUBrh7oxIE
-         dbGkWZPEiiRK6UzcXzoQnbR/HnmqBhGvEmpa/qtTxQVOrRRzngGC9NIYhEviBtKRMvlx
-         3zpLcPzBVc2yRE7X9JdhTVP/wCTv0nNtOE28mzlBn7ygU6ksGWrrpHUbP18d2+HoYKSo
-         bCio8pAGpD+5+JjkYrT2v+vmvnBPlx4dfP0aoBYskIXPPC5/8A0KIGNdvdGRzdQftTHt
-         Zpx5bywdczJjFnraRmSN4vFjit1MMW1IwfZqCRm0i6ZLfJujZEE6G1S+qtz6+AFPElLj
-         IjWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707379910; x=1707984710;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=gmail.com; s=20230601; t=1707379916; x=1707984716; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=OREw2fCwmTOMl21TQGPuH4XMzXOOzUHUl3pryOOA5T4=;
-        b=a8EPxRxG3tzGoflhj9RBF5oncq3TwN1C5s+f5NDdOf83ZbUe9mR245KaJdyl3gpcvY
-         /MrXv/IU2Pw2lgED6sGMdsHxzpVSKhfTJs4WY40mWZfMl4Uz8HUoN/rUQVupZHfKq3eu
-         SWFsnbnorZZoK7fHR0E0F6tH3CLjBzV5cl2++yPHn5OKUYME/vqCX4cefS554X0frDPH
-         pkKiCFBe/xeFW4wevxA+rGrJ8/A2wA5hvWLAGJM8FpFen6pJwpvXWFCCnh71bM/N8SXz
-         QnHegnYRg2NcfIzzw35UrBwLNc9RtiNnsvKPBHqtaXqQ3hCvI/Rui2hlRcPL3pxoboHR
-         tP9g==
-X-Gm-Message-State: AOJu0YzPqonrPkZNaHohOK1U31P/ed8vBYX2xSYR4yHYrVgMpOV8T5dG
-	iZlXBQzl4vDmzzPH6/mI72NfIFpQm6w7AZDSUkji1LVlmI2mN5tt
-X-Google-Smtp-Source: AGHT+IGnXR5BJFklRFdJYPpIREQovNNS62qBg8rA72sgc8HGGBvkOtq6WFlZNCBMtlX6XXaP39UT7Q==
-X-Received: by 2002:a05:6402:645:b0:560:5fc:4c9e with SMTP id u5-20020a056402064500b0056005fc4c9emr4541341edx.41.1707379909884;
-        Thu, 08 Feb 2024 00:11:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWTEkTSSsSduVuXM9x4994Z3n8VN4h9dZF9DLuYiQcX1oMmyytSD8KVrFPlFdtnaQAJ5AIqWKsBlIf7/G3dUkJR4+GnJ4Kolw3oQ7HQQoUxYiTFZF7ajVeNBH0OPt9Ee2fkkS3+FV2Lm39io50LOFlqy9uDZUEstFJ5O9BecTCZlw1vugoys5O8JvmQ7iKBNVW6zYX3Mw5dscopbHr2ei8oNntGQlKUBED9trveEMKw2ViYNXtEm+Ng0OUM2nrgyok/h1A=
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id w8-20020a056402128800b00560fe987dd1sm504206edv.28.2024.02.08.00.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 00:11:49 -0800 (PST)
-Message-ID: <fd81a6127a9b7abb6eae0785281836a238af8b57.camel@gmail.com>
-Subject: Re: [PATCH 1/2] iio: adc: ad4130: zero-initialize clock init data
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>, Lars-Peter Clausen
-	 <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron
-	 <jic23@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 08 Feb 2024 09:15:08 +0100
-In-Reply-To: <20240207132007.253768-1-demonsingur@gmail.com>
-References: <20240207132007.253768-1-demonsingur@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+        bh=+EzGcEGSGki041mX/q4WVvvLib1LrKkmNOXMbNSMe9k=;
+        b=AbswsTdNrXW4JOEzBSKCm3xLFTEk1LoZKKxB7RDsrmvXD9Hsr42BwqAg5rS7d8Ab7u
+         2TVbCwmRTkq5hX5TgAxAIpg5tRonx3bTCOgzsIanaypTU7h5jJzr6rRGfi8UibsZ0VFV
+         eGvceRd8j09rQ1DROAKg8wW3+1RD7kIGG9zqiOdXZ9Cy8+WPMDo2If7ecZGa3cY0qiGV
+         bblBNjwshQbDfNAaGKvZxY3rexEgQo3teaS6QlBHj2EhYR4P6qHp7/RKdWo/pVKnXEXk
+         ddhpdczEW/rCli/lzBNU3BQJWd/bQXBA9xlLZfW7Lavlu+mGzOFOY6kDVWvJ7Vee6usq
+         uRgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707379916; x=1707984716;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+EzGcEGSGki041mX/q4WVvvLib1LrKkmNOXMbNSMe9k=;
+        b=qMqckgOMI9N0vSdo+alGV5nkaSXhWv85dXOkjGn3tlNDrLMswtEbTcpwNchQPZjB7j
+         bGvrGMbzKLTeg7W/0/1xTHnKzbN8IB7rlLWg61ZWLrSlWSInJsgQXcrEJZodbl1HKqiF
+         B2UseILIoUlXUswLxN2GSZAUlpTJs6dNuZFASi0jfdQvofkZVlexYugDsdqvZOlWrZOg
+         Co3zoeFiKYRyR9/VtsXP78oBT8Wv9Mp2qCFFSmYXKCYF92K3KM5d54/zRPGGRMWEZIlO
+         +6H+7sO5N2wJSXwUn0OESM4YL0DYDc4eV8fOAyKV6ztLXZfptiYHv9sc3YwvJbL6NKK8
+         ZH8Q==
+X-Gm-Message-State: AOJu0YxnkJezFiNjzGZ1T+6394hJlJnuaehTU7+Hg7D9uTZNLaIU91ES
+	fmJxKUcG3IxLSa0GrKqV89H42c5+yuZg8q+h2zFFLZwRFugfXwwr
+X-Google-Smtp-Source: AGHT+IG5rt3u2UGwyrRiwP0jDNepsx1EaHecgtVzojFLKjbioIlru7dTmEcioRvKo7tRDyS8TaYb7A==
+X-Received: by 2002:a17:902:ead1:b0:1d9:6381:a4b3 with SMTP id p17-20020a170902ead100b001d96381a4b3mr6541505pld.36.1707379916398;
+        Thu, 08 Feb 2024 00:11:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVM0Eei7B+s2xu7LIQ5YQ3htmsre/Zi1BiMcqbTuBhg1gCskj5rTO6VTnGufF83HLSNCtEAExblGgFcT8yp/ZF3LR5ZEDEeAYrVsobqzAxjQGDoYqbhVmCV4nyw38q4NiyLY56twVdxK0e2AFytP+cpdv3aFE6RFHGg23dfp3TvQKGM5XgDRhwP
+Received: from [192.168.50.127] (42-98-185-035.static.netvigator.com. [42.98.185.35])
+        by smtp.gmail.com with ESMTPSA id h4-20020a170902748400b001d8e5a3be8asm2764386pll.259.2024.02.08.00.11.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Feb 2024 00:11:55 -0800 (PST)
+Message-ID: <bab0d763-2907-4412-8075-a7ebb25081c0@gmail.com>
+Date: Thu, 8 Feb 2024 16:11:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "f2fs: stop allocating pinned sections if EAGAIN
+ happens"
+To: Chao Yu <chao@kernel.org>, Wu Bo <bo.wu@vivo.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240205031415.557879-1-bo.wu@vivo.com>
+ <793fd834-fe28-4647-b2cf-0012acb95b43@kernel.org>
+Content-Language: en-US
+From: Wu Bo <wubo.oduw@gmail.com>
+In-Reply-To: <793fd834-fe28-4647-b2cf-0012acb95b43@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-02-07 at 15:20 +0200, Cosmin Tanislav wrote:
-> The clk_init_data struct does not have all its members
-> initialized, causing issues when trying to expose the internal
-> clock on the CLK pin.
->=20
-> Fix this by zero-initializing the clk_init_data struct.
->=20
-> Fixes: 62094060cf3a ("iio: adc: ad4130: add AD4130 driver")
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
+On 2024/2/5 11:54, Chao Yu wrote:
+> How about calling f2fs_balance_fs() to double check and make sure 
+> there is
+> enough free space for following allocation.
+>
+>         if (has_not_enough_free_secs(sbi, 0,
+>             GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
+>             f2fs_down_write(&sbi->gc_lock);
+>             stat_inc_gc_call_count(sbi, FOREGROUND);
+>             err = f2fs_gc(sbi, &gc_control);
+>             if (err == -EAGAIN)
+>                 f2fs_balance_fs(sbi, true);
+>             if (err && err != -ENODATA)
+>                 goto out_err;
+>         }
+>
+> Thanks,
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+f2fs_balance_fs() here will not change procedure branch and may just 
+trigger another GC.
 
-> =C2=A0drivers/iio/adc/ad4130.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/adc/ad4130.c b/drivers/iio/adc/ad4130.c
-> index 53e19a863198..c7df499f9775 100644
-> --- a/drivers/iio/adc/ad4130.c
-> +++ b/drivers/iio/adc/ad4130.c
-> @@ -1794,7 +1794,7 @@ static int ad4130_setup_int_clk(struct ad4130_state=
- *st)
-> =C2=A0{
-> =C2=A0	struct device *dev =3D &st->spi->dev;
-> =C2=A0	struct device_node *of_node =3D dev_of_node(dev);
-> -	struct clk_init_data init;
-> +	struct clk_init_data init =3D {};
-> =C2=A0	const char *clk_name;
-> =C2=A0	int ret;
-> =C2=A0
+I'm afraid this is a bit redundant.
 
+>
