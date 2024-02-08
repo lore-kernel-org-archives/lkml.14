@@ -1,122 +1,89 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518BE7602B;
-	Thu,  8 Feb 2024 11:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AA17641F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 11:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707390378; cv=none; b=ZBHxDVdJ9hcY6g08dEhKmUYP1Hr7Vxk4ydA3/3Ydi6Esg57SrV345tEtV6WI6YQ6sDVAl4BRL/ig3xs8CiRjGyutc3ybc4QS6szPtHRuQ3Mhxmjpor6bxDNIPGgClgF3tKbEAVE8QPPOuyeoSkPvn8Q513e6b3i5kje1aVpjoAg=
+	t=1707390391; cv=none; b=hQqeVVNlgxd7Kns2rAGQpPcR9tHRCuxlTunvlG3Lgs8NB4cdYF3IusTDS9nFHDzTKwJk7I2THYpUQ8p2UjTxZNybgxjsITFcfLwY/jytOxZF85hTTkqEcdeae3/+EQj6BE+uE0tLM21UMIbsFE+TWTikad/4puD7mOLAZF9RaEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707390378; c=relaxed/simple;
-	bh=8NRSiZVkkl3lh/MRCcP5v3kJHexKIIms0YJTvzaQl4Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q9n2WdMt14vRHeU5b+UTj5tcIJhHe5A7HC/fHYvZOlWMWx73+JOvnOnplfxwoj1XSTfsuGjcCXoRbyCZ7GhD8mYMTiJO3WAbLJ1fAaCy4virnLOoPqrpompbSBFJMav2gS2bvZnkHKKMMXzofiQBYl6r56okjO+5pr4p6dtNXmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=x3JSS1o/; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707390391; c=relaxed/simple;
+	bh=nXEJucPloRyNfQg1hxo160IEH9PiiHbyQJDfLM4pJ+4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q4YMWMrHf+ae9h5ABVI4gABbbjK8fkmuZDWpaNg7v8xksc0S2kmwErNgc0ezqWa+9/UWX881wbsOHjTjjBmOkS/yT9P1gNAbitmRExTvMU/F8sKkgT9maPkl2ZPO/Box96RE36t1CpKB61pTy08id0SmNZ1IQK6i3OBurTKG3Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ud9mfGlv; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x3JSS1o/"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 418B662x083887;
-	Thu, 8 Feb 2024 05:06:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707390366;
-	bh=QXuk50433xsIuuLNqWvfYOf5mc2kL1jE9kluYU6GUH8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=x3JSS1o/SlCvYBpQOF/0C2qy2pD+OAtowUTsXITL1QV8ekR8ORWLlLyCTtkSX6uY+
-	 gFueDc64b/zF+xWLdhjPN/frMo2Ie8qd5d615qItIdOTnMbW6uw0UWskwiPDg5t9dV
-	 GmKx5wBAn/B49hgVHhZGwMYnzZlT63m87+4G/MLA=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 418B65s5022931
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 Feb 2024 05:06:05 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- Feb 2024 05:06:05 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 Feb 2024 05:06:05 -0600
-Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 418B64PA038099;
-	Thu, 8 Feb 2024 05:06:05 -0600
-From: Bhavya Kapoor <b-kapoor@ti.com>
-To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <b-kapoor@ti.com>
-Subject: [PATCH 1/3] arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for wakeup and mcu uart
-Date: Thu, 8 Feb 2024 16:36:00 +0530
-Message-ID: <20240208110602.931573-2-b-kapoor@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240208110602.931573-1-b-kapoor@ti.com>
-References: <20240208110602.931573-1-b-kapoor@ti.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ud9mfGlv"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-604a1581cffso9485437b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 03:06:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707390388; x=1707995188; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zv2QzNoNrHR0W9Z/ijLeBt72BsIROQonHbxqN4l0J00=;
+        b=ud9mfGlvEMFoCtW9mj0hleJ//Mg44k8dI6ENHYyaa1gbxWXi/6K9AtzVApt/URJ4nF
+         unt9/3hF2cyIo4zlZ431L/xAYGdRQ20VU6lwwvrZclpvyQFFYoUq1l3ip1daxdtV+bzl
+         JI/TfmPMrpFOYqvOIkle8t4O4fb/Na/l8GB9hWzU1WMsrpjGdtE7oGqIAEpGMRyWOGjh
+         UNeh+lohUqwqKt99J5jkbkofaksjbmpMrloTACQLQe0qw372QmzdZobIUiLuUDiyf5L8
+         1eyyJnVwxq4savaaIxoCbYEHKzkqApXgExF/Dfm6Ldt+I5dOvnJjYvqNcGIp0YPFlwE6
+         BA0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707390388; x=1707995188;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zv2QzNoNrHR0W9Z/ijLeBt72BsIROQonHbxqN4l0J00=;
+        b=Cwmb88rxLstp6vUs3CrbfKZWdfrTkqT5vjTibwxiYeO5etPz9t39GgPC8sYx45qXtc
+         mAij06Svyxq1xK2Uer2UOpJXeueogHkguoLwksHLR2Mmg+b7Dpv7N9wQp5Bak/kZzgkg
+         ib1vWpsqGkSiEqHBHkXPHkqx8xVQdGSZZiRYAzFRdNhkkAt373xLDBVdTUsiqYzj3Wc3
+         /SrEHJyHYhclUCUERpQiwlrguK1JOWtIIVh0+BuphgVHUAIDe0odwPbxIu+g3rw6/4f3
+         7hlXLBDrAg15s3g9TpwPsM6N+vERyu327y96HU6Z75ot58WiiLT11Cipy59Gi8joVKyJ
+         6mWw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5zej5poP9Rj64WjvDApUK5hxVnu2Ve6JwPkZ321TH44iGsiKbFnu4YmK0hQDod9MAV+1P5ZtazfnezUz8pklAi7j7OkH/xJq9yidK
+X-Gm-Message-State: AOJu0YyxJir4Lyw2bGw7b9NFmUxo9q4hkPZPQmZCoZ3Rx7YES5CeGbHa
+	p+7aALUX1C34prWjaJgR90uZXku7ZpnFOvLo71NLDiFG+y/AeBwHPDh2m/xtfLKWNn7y9K7LBr6
+	UA26EY+cDqCTOMVdC0v4zPekIKSBAAB/3KxVu+Q==
+X-Google-Smtp-Source: AGHT+IHpsrmLs8p7zk/kqkNB77JilHmJAQmArskIr5lryhEV7krDIR9S8OA/Q8HDEtMaT6Hvsgwrjhorn6jBJPtU/cE=
+X-Received: by 2002:a81:d202:0:b0:604:20ab:fc32 with SMTP id
+ x2-20020a81d202000000b0060420abfc32mr8311495ywi.17.1707390388572; Thu, 08 Feb
+ 2024 03:06:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240208105208.128706-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240208105208.128706-1-krzysztof.kozlowski@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 8 Feb 2024 13:06:17 +0200
+Message-ID: <CAA8EJppiNEJVUO-pTsCBXXjNHVrCqqV7J5wC+CihBtH0FdncsA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: minor whitespace cleanup
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-WKUP_PADCONFIG registers for wakeup and mcu uart lies
-under wkup_pmx2 for J7200. Thus, modify pinmux for both
-of them.
+On Thu, 8 Feb 2024 at 12:54, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> The DTS code coding style expects exactly one space before '{' and
+> around '=' characters.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm4450.dtsi   | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8650.dtsi   | 4 ++--
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 4 ++--
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+>
 
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
----
- .../boot/dts/ti/k3-j7200-common-proc-board.dts | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index 1d8bddcae90e..6593c5da82c0 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -119,24 +119,25 @@ transceiver3: can-phy3 {
- };
- 
- &wkup_pmx0 {
-+};
-+
-+&wkup_pmx2 {
- 	mcu_uart0_pins_default: mcu-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721E_WKUP_IOPAD(0xf4, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
--			J721E_WKUP_IOPAD(0xf0, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
--			J721E_WKUP_IOPAD(0xf8, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
--			J721E_WKUP_IOPAD(0xfc, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
-+			J721E_WKUP_IOPAD(0x90, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
-+			J721E_WKUP_IOPAD(0x94, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
-+			J721E_WKUP_IOPAD(0x8c, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
-+			J721E_WKUP_IOPAD(0x88, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
- 		>;
- 	};
- 
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721E_WKUP_IOPAD(0xb0, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
--			J721E_WKUP_IOPAD(0xb4, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
-+			J721E_WKUP_IOPAD(0x48, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
-+			J721E_WKUP_IOPAD(0x4c, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
- 		>;
- 	};
--};
- 
--&wkup_pmx2 {
- 	mcu_cpsw_pins_default: mcu-cpsw-default-pins {
- 		pinctrl-single,pins = <
- 			J721E_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
-@@ -272,7 +273,6 @@ &mcu_uart0 {
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcu_uart0_pins_default>;
--	clock-frequency = <96000000>;
- };
- 
- &main_uart0 {
 -- 
-2.34.1
-
+With best wishes
+Dmitry
