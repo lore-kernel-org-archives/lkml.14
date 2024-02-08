@@ -1,46 +1,46 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A339E6A8D1;
-	Thu,  8 Feb 2024 08:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89036E2A4;
+	Thu,  8 Feb 2024 08:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707381827; cv=none; b=BPbwHwOfvuRt7WmKXYwqIKAhhuuoZWe4mAMU29OluBOH8mfO6R+L2CdKfvWVoMGEvWB9hxtVe4KPubmdXAY4EQDw0ZtsRXulDzE28sSqZrN8tSjjGFKMsJNgLDU6H7Ojc7f/pRO6KhBbDxfFpqdKd7LDofrGsHP+JhBA4fjdrWQ=
+	t=1707381828; cv=none; b=fsQ17ekV7fIC7oc5cP2XInPuNzfPNjCQMSrf3t3dmOS98c9GilqvmB8BOoKR07m8BtoGeP8/OJCZedsJ9nonmoR+koogX3PaMMpFCw22G8002G7o1E8AEFLf8r/OumYYPT4aFFDYU5mT3ItocnUysdnFdkh4VsnPil1mkWU5HBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707381827; c=relaxed/simple;
-	bh=5DjEAmd0Al47ApFhK2c2zFanGazF3l9P7Idhf+mYE7M=;
+	s=arc-20240116; t=1707381828; c=relaxed/simple;
+	bh=4/7LooQWnhdKVtfbE7HqNZ6kk0Pd7g2CQiJtb6HGBoY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FRq1Gs+v77oajThG7sRPNOOwP+XGATF/PM9bhbZb+shdbR72XJh8kt+gjYU+yFz1yvzC1XDax3kx4Pd41KY2iQqbPMZaaAY4tDhTPK6FxfLfwVQADZ9UijwDhz2juFIwVJBp31bIj7achPMQP6aCs8YKv2oE5joqwP7ZyFEZVi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=w+NvL1VK; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=ZtGUV72/j8keNbvOBE/X58Ybguh6NvljsDgcm48jnI4rEpsrDc9mbY2aXT2TVaRLk/HtOX6J2GlJDYNmbz5F0VCmfqRzheTft/4VOLahBqVawTe8mE7Yx7xuTI5HHnQemzokf6qJCmxsnBwyde6Jsm3Cf5jmrxWcvO6eP4FEcBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Vz7PWxx5; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w+NvL1VK"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4188hT3f050180;
-	Thu, 8 Feb 2024 02:43:29 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vz7PWxx5"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4188hCcC050138;
+	Thu, 8 Feb 2024 02:43:12 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707381809;
-	bh=qHTNoZUs8Kn273JdWk21dan7QPeeQK54NJqoAwn7jco=;
+	s=ti-com-17Q1; t=1707381792;
+	bh=4A4Z/qpcZA8AC33ULipWc2n/UZEdk4NC/YctUo/j1+g=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=w+NvL1VK/zXy4SIUiwy6nZWH6V1QOCv2k+MW6keIaBu3qGqSQ3GMdRoC+UV7N8a2x
-	 HAi2EHravAibiJj4idXrqYW1Gj1mLxn+nA3+eFK+K4rsuesytw4WIFwAfaFK/nAVFf
-	 TmL2vB+0ThCz79syarUIjbp35g65+vtNQM+m6CN0=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4188hT0P043709
+	b=Vz7PWxx5vUoA9RiXWXMxTxYpqtbIhciTtJxK3Vad21cpOsOriearAlhANuQ5vFvZn
+	 5Cls+0lkNq++L7TmANlLycHsDZLBmto8k1n+w6NgWi8GErbAc4/m8pxnUcqaLPOUIB
+	 OrWxMMEZpSWARiZTIj9IyIzZLAOQVI5DVqLNKZGc=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4188hCPR025665
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 Feb 2024 02:43:29 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 8 Feb 2024 02:43:12 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- Feb 2024 02:43:29 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 02:43:12 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 Feb 2024 02:43:29 -0600
+ Frontend Transport; Thu, 8 Feb 2024 02:43:12 -0600
 Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4188gshR097884;
-	Thu, 8 Feb 2024 02:43:25 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4188gshN097884;
+	Thu, 8 Feb 2024 02:43:08 -0600
 From: Vaishnav Achath <vaishnav.a@ti.com>
 To: <vigneshr@ti.com>, <nm@ti.com>, <conor+dt@kernel.org>, <kristo@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <robh+dt@kernel.org>
@@ -48,9 +48,9 @@ CC: <j-luthra@ti.com>, <devicetree@vger.kernel.org>, <j-choudhary@ti.com>,
         <kernel@pengutronix.de>, <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <vaishnav.a@ti.com>,
         <afd@ti.com>
-Subject: [PATCH v2 7/9] arm64: dts: ti: k3-j721s2-main: Add CSI2RX capture nodes
-Date: Thu, 8 Feb 2024 14:12:52 +0530
-Message-ID: <20240208084254.295289-8-vaishnav.a@ti.com>
+Subject: [PATCH v2 3/9] arm64: dts: ti: k3-am68-sk-base-board: Enable camera peripherals
+Date: Thu, 8 Feb 2024 14:12:48 +0530
+Message-ID: <20240208084254.295289-4-vaishnav.a@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240208084254.295289-1-vaishnav.a@ti.com>
 References: <20240208084254.295289-1-vaishnav.a@ti.com>
@@ -64,163 +64,94 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-J721S2 has two CSI2RX capture subsystem featuring Cadence CSI2RX,
-DPHY and TI's pixel grabbing wrapper. Add nodes for the same and
-keep them disabled by default. J721S2 uses a dedicated BCDMA instance
-for CSI-RX traffic, so enable that as well.
+CSI cameras are controlled using I2C. On AM68 Starter Kit, this is routed
+to I2C-1, so enable the instance and the TCA9543 I2C switch on the bus.
 
-J721S2 TRM (Section 12.7 Camera Subsystem):
-	https://www.ti.com/lit/zip/spruj28
+AM68 SK schematics: https://www.ti.com/lit/zip/sprr463
 
 Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 ---
 
-V1->V2: Update commit message with TRM.
+V1->V2: Update commit message with schematics.
 
- arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 123 ++++++++++++++++++++-
- 1 file changed, 122 insertions(+), 1 deletion(-)
+ .../boot/dts/ti/k3-am68-sk-base-board.dts     | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-index dcaa4da0d678..a401e84a2eb2 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-@@ -1122,7 +1122,6 @@ main_bcdma_csi: dma-controller@311a0000 {
- 			ti,sci-dev-id = <225>;
- 			ti,sci-rm-range-rchan = <0x21>;
- 			ti,sci-rm-range-tchan = <0x22>;
--			status = "disabled";
- 		};
- 
- 		cpts@310d0000 {
-@@ -1233,6 +1232,128 @@ usb0: usb@6000000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+index f48155dd16a3..d743f023cdd9 100644
+--- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+@@ -169,6 +169,13 @@ tfp410_out: endpoint {
+ 			};
  		};
  	};
++
++	csi_mux: mux-controller {
++		compatible = "gpio-mux";
++		#mux-state-cells = <1>;
++		mux-gpios = <&exp3 1 GPIO_ACTIVE_HIGH>;
++		idle-state = <0>;
++	};
+ };
  
-+	ti_csi2rx0: ticsi2rx@4500000 {
-+		compatible = "ti,j721e-csi2rx-shim";
-+		dmas = <&main_bcdma_csi 0 0x4940 0>;
-+		dma-names = "rx0";
-+		reg = <0x00 0x04500000 0x00 0x1000>;
-+		power-domains = <&k3_pds 38 TI_SCI_PD_EXCLUSIVE>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
+ &main_pmx0 {
+@@ -186,6 +193,13 @@ J721S2_IOPAD(0x0e4, PIN_INPUT, 0) /* (AE24) I2C0_SDA */
+ 		>;
+ 	};
+ 
++	main_i2c1_pins_default: main-i2c1-default-pins {
++		pinctrl-single,pins = <
++			J721S2_IOPAD(0x0ac, PIN_INPUT, 13) /* (AC25) MCASP0_AXR15.I2C1_SCL */
++			J721S2_IOPAD(0x0b0, PIN_INPUT, 13) /* (AD26) MCASP1_AXR3.I2C1_SDA */
++		>;
++	};
 +
-+		cdns_csi2rx0: csi-bridge@4504000 {
-+			compatible = "ti,j721e-csi2rx", "cdns,csi2rx";
-+			reg = <0x00 0x04504000 0x00 0x1000>;
-+			clocks = <&k3_clks 38 3>, <&k3_clks 38 1>, <&k3_clks 38 3>,
-+				<&k3_clks 38 3>, <&k3_clks 38 4>, <&k3_clks 38 4>;
-+			clock-names = "sys_clk", "p_clk", "pixel_if0_clk",
-+				"pixel_if1_clk", "pixel_if2_clk", "pixel_if3_clk";
-+			phys = <&dphy0>;
-+			phy-names = "dphy";
+ 	main_mmc1_pins_default: main-mmc1-default-pins {
+ 		pinctrl-single,pins = <
+ 			J721S2_IOPAD(0x104, PIN_INPUT, 0) /* (P23) MMC1_CLK */
+@@ -431,6 +445,42 @@ exp1: gpio@21 {
+ 	};
+ };
+ 
++&main_i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_i2c1_pins_default>;
++	status = "okay";
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
++	exp3: gpio@20 {
++		compatible = "ti,tca6408";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "CSI_VIO_SEL", "CSI_SEL_FPC_EXPn",
++				  "IO_EXP_CSI2_EXP_RSTz","CSI0_B_GPIO1",
++				  "CSI1_B_GPIO1";
++	};
 +
-+				csi0_port0: port@0 {
-+					reg = <0>;
-+					status = "disabled";
-+				};
++	i2c-mux@70 {
++		compatible = "nxp,pca9543";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
 +
-+				csi0_port1: port@1 {
-+					reg = <1>;
-+					status = "disabled";
-+				};
-+
-+				csi0_port2: port@2 {
-+					reg = <2>;
-+					status = "disabled";
-+				};
-+
-+				csi0_port3: port@3 {
-+					reg = <3>;
-+					status = "disabled";
-+				};
-+
-+				csi0_port4: port@4 {
-+					reg = <4>;
-+					status = "disabled";
-+				};
-+			};
++		cam0_i2c: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
 +		};
-+	};
 +
-+	ti_csi2rx1: ticsi2rx@4510000 {
-+		compatible = "ti,j721e-csi2rx-shim";
-+		dmas = <&main_bcdma_csi 0 0x4960 0>;
-+		dma-names = "rx0";
-+		reg = <0x00 0x04510000 0x00 0x1000>;
-+		power-domains = <&k3_pds 39 TI_SCI_PD_EXCLUSIVE>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+
-+		cdns_csi2rx1: csi-bridge@4514000 {
-+			compatible = "ti,j721e-csi2rx", "cdns,csi2rx";
-+			reg = <0x00 0x04514000 0x00 0x1000>;
-+			clocks = <&k3_clks 39 3>, <&k3_clks 39 1>, <&k3_clks 39 3>,
-+				<&k3_clks 39 3>, <&k3_clks 39 4>, <&k3_clks 39 4>;
-+			clock-names = "sys_clk", "p_clk", "pixel_if0_clk",
-+				"pixel_if1_clk", "pixel_if2_clk", "pixel_if3_clk";
-+			phys = <&dphy1>;
-+			phy-names = "dphy";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				csi1_port0: port@0 {
-+					reg = <0>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port1: port@1 {
-+					reg = <1>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port2: port@2 {
-+					reg = <2>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port3: port@3 {
-+					reg = <3>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port4: port@4 {
-+					reg = <4>;
-+					status = "disabled";
-+				};
-+			};
++		cam1_i2c: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
 +		};
-+	};
 +
-+	dphy0: phy@4580000 {
-+		compatible = "cdns,dphy-rx";
-+		reg = <0x00 0x04580000 0x00 0x1100>;
-+		#phy-cells = <0>;
-+		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
 +	};
++};
 +
-+	dphy1: phy@4590000 {
-+		compatible = "cdns,dphy-rx";
-+		reg = <0x00 0x04590000 0x00 0x1100>;
-+		#phy-cells = <0>;
-+		power-domains = <&k3_pds 153 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+	};
-+
- 	serdes_wiz0: wiz@5060000 {
- 		compatible = "ti,j721s2-wiz-10g";
- 		#address-cells = <1>;
+ &main_i2c4 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
 -- 
 2.34.1
 
