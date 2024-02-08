@@ -1,107 +1,136 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7007C6F07B;
-	Thu,  8 Feb 2024 11:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5F16EB54
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 11:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707392950; cv=none; b=tcG6Mfd19o+adxGVzfy01zRXAs5O6wXRBxM3P/cbwx1noJTxx5MkIeP0KFl6v8ZWnNBqazi9SPUX/vVyhFbiXr1XaA1zRleOuEUb6Wcmvqtt6Z+PqfMxiRyUk3jUogX/4rr9KYc9SvpK2uvG+2pCk9U/Y3SNlJlAUuv51yAb1r0=
+	t=1707392985; cv=none; b=lMYpSmv3HVItDj8ZKLsyn90bNYJb+WsOro5T7A+RXCcOEkdSvEfT/UC123gkPf7cxgscO8VGgSs3I91BvcQ9QSueC3ZuQZn6FVhanXaQAdQ4ksycTib4CiT2KueJVvyWsB9iz+v9uKq7GITVa3CF2OEB6UES2sSv/x74XEltp0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707392950; c=relaxed/simple;
-	bh=VuFwjgSAbf+dr0FZrqLBZ8yK5NB/XhAxZze2d60h6ws=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=HVaYj14HdG2hvnh0KDzvPMgOOtDIMPZb4vpuy3I9+nJRjunKktY3AlCAYPXN3jJcgTyAhnkfHAkJfoUshFGjIHD/dg5+a+BVMgVZutgSVlNPF62xloTQglVf4FU0v0Q3jAXbFdN/OGAKd050+Bsa+ArQw0IGzbqYZCyXGg7QZns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HMIe6CKV; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HMIe6CKV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1707392641; bh=Gkj5XFeU5b5pKCS25vXKF7CydQoxzA6b2Os6pGuw5Fg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HMIe6CKVRTJFkAoJR4uS2SoRNp+RkimsKjFcTZjXA5YWcDtmPJOL+ryGCM60DM6eZ
-	 d+eR5hadbScbVTxNtVQNHYHxsWsKOLzMwmeDpKhEFVCQ27a29z+2+Qz9IBL4yC2mTf
-	 fEcO3/PHclIPb7TIotJKC2aYEopgaRZNrotSAuWc=
-Received: from pek-lxu-l1.wrs.com ([117.61.184.234])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 97824E67; Thu, 08 Feb 2024 19:37:56 +0800
-X-QQ-mid: xmsmtpt1707392276twmcn2erk
-Message-ID: <tencent_6C6ACF8878B26D482FE56F649498E90EEF0A@qq.com>
-X-QQ-XMAILINFO: MtZ4zLDUQmWf9rinpoXhvRYK7PO+Za+NxaIR9gDee9WMiJAZEi0XVP7WEfXTLA
-	 Uw5RLxWmvr6RKJf1GgzJs5fXQ3jd5bu1DXhz1t5zFhaWnet+M3E5SY5GLGPrxH6o4SwBj4Ab+3TG
-	 6lwFcnxMldQqH7hzXw4MN3cezqfS1/EBNvjVJtch9frYYV4GA57uhOwo/jSiwo/M9PHbIffHicpz
-	 buzwCJXliSscL8s6bZGXwzXfDYmtH3z/ijHAnz2c8XD4j4D0k1ahZXYNjPq1c5N0VRbrZV/6vwqL
-	 OHBzDVCrSJQGke/+FJS+NvZCKoOQfKy98p5G720ByOmVvQxpb4tdmnCMZKhV2EeW/TBerFutdwAK
-	 dwddubXl1P22ggsFR3VZoAP5kd4/D6cXp5yIuuSaXdsu50LAEUDOCwqVp1wsz0eUG2yvnF/k6R0Y
-	 Ay5OVk0ehvAdP/osx9aqpPOjAfv04zHtODj7FLQi+d2CcHz7sk+KqsVXw7eUQXXymb6gEu9JQ6tX
-	 qtvgwOBm8MmiYbzNXRAFq9Bgir4DAcufGkwTYIjKZVfOVGnz3AU8ehwnsBbbu6IqxNbnxmr18XHT
-	 JGFy2JPHTipZORCrIv0hg8aNeFg7tAGUfz3JznaKCIHhRp/P80yau9KAjzhM5p2ZJ6tK8AL5WE9G
-	 qMi3X/4QmI8et6UhK5cniqwgV8Vu8ylGDTmvzO2AsHpkkMq/bz2lA4D1GXQ069SNa2K09dLWx7yD
-	 DGJYIbNFLfXApIiXKtWJsD5/XDAS2MW6YHQffLixjofiCbPOvd2WWxMnOxKVUYG5P8cmJQQ+M7KP
-	 pcYMGNsGoTNNdo/IXBvoQKMdjtYgBREJQ63qdz5gRAwJWpWAuf8FaZiaNqFJKgHNf8mdqnMN+OCH
-	 Y+xGTczJWUeN3APNH7LDPJ9+wQJiVnuZqN7H4lDH9CLD3YzjTy7Na+SPPEmlBnAslk0Z6+VaSFBW
-	 m+1wOHv9wUf/Mr1B4H1ZDkWkNHrIkR23DjRqe8uVEP6r2kHKOOog==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: gregkh@linuxfoundation.org
-Cc: eadavis@qq.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	rafael@kernel.org,
-	syzbot+8e41bb0c055b209ebbf4@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH riscv64] kobject: fix WARNING in input_register_device
-Date: Thu,  8 Feb 2024 19:37:56 +0800
-X-OQ-MSGID: <20240208113755.3815370-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024020812-snowbound-version-6bfa@gregkh>
-References: <2024020812-snowbound-version-6bfa@gregkh>
+	s=arc-20240116; t=1707392985; c=relaxed/simple;
+	bh=W8hh8SVXTKvD7eEwi7WV4j5y4uSnRC+F/4neJBDMh5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jf3Dons3usBZ1kKwoUrnE78bxUfZzzgDkOrdiPLBARFTrJQ6yULqSOQ+qUKHBw2+xh6VZlnCLiX114aLGisnFRoL4HxUsH1NyI7050xgPhNIGwREqA2pFC8qHuP8SsUSjF1oWu7PzFIkrX1dzopjrLbdxSBD/TYZPplEpPY3pOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 418BijxE023873;
+	Thu, 8 Feb 2024 05:44:45 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 418BiiQW023872;
+	Thu, 8 Feb 2024 05:44:44 -0600
+Date: Thu, 8 Feb 2024 05:44:44 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Daniel P. Berrang??" <berrange@redhat.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Nakajima, Jun" <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
+Message-ID: <20240208114444.GA23164@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com> <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com> <20240206011247.GA29224@wind.enjellic.com> <ZcHoKUElwXGPzrWb@redhat.com> <20240206120445.GA1247@wind.enjellic.com> <20240206153529.GHZcJRwTdDkWXuopOQ@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206153529.GHZcJRwTdDkWXuopOQ@fat_crate.local>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 08 Feb 2024 05:44:45 -0600 (CST)
 
-On Thu, 8 Feb 2024 10:56:00, Greg KH wrote:
-> > The input_add_uevent_modalias_var()->input_print_modalias() will add 1684 bytes
-> > of data to env, which will result in insufficient memory allocated to the buf
-> > members of env.
-> 
-> What is "env"?  And can you wrap your lines at 72 columns please?
-env is an instance of struct kobj_uevent_env.
-> 
-> > Reported-and-tested-by: syzbot+8e41bb0c055b209ebbf4@syzkaller.appspotmail.com
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> >  include/linux/kobject.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-> > index c30affcc43b4..74b37b6459cd 100644
-> > --- a/include/linux/kobject.h
-> > +++ b/include/linux/kobject.h
-> > @@ -30,7 +30,7 @@
-> >
-> >  #define UEVENT_HELPER_PATH_LEN		256
-> >  #define UEVENT_NUM_ENVP			64	/* number of env pointers */
-> > -#define UEVENT_BUFFER_SIZE		2048	/* buffer for the variables */
-> > +#define UEVENT_BUFFER_SIZE		2560	/* buffer for the variables */
-> 
-> That's an odd number, why that?  Why not just a page?  What happens if
-> some other path wants more?
-An increase of 512 bytes is sufficient for the current issue. Do not consider
-the problem of hypothetical existence.
-> 
-> And what's causing the input stack to have so many variables all of a
-> sudden, what changed to cause this?  Is this a bugfix for a specific
-> commit that needs to be backported to older kernels?  Why did this
-> buffer size all of a sudden be too small?
-The result of my analysis is that several members of struct input_dev are too
-large, such as its member keybit.
+On Tue, Feb 06, 2024 at 04:35:29PM +0100, Borislav Petkov wrote:
 
-thanks,
-edward.
+Good morning, or perhaps afternoon, thanks for taking the time to
+reply.
 
+> On Tue, Feb 06, 2024 at 06:04:45AM -0600, Dr. Greg wrote:
+> > The silence appears to be deafening out of the respective engineering
+> > camps... :-)
+
+> I usually wait for those threads to "relax" themselves first. :)
+
+Indeed, my standard practice is to wait 24 hours before replying to
+any public e-mail, hence the delay in my response.
+
+> So, what do you wanna know?
+
+I guess a useful starting point would be if AMD would like to offer
+any type of quantification for 'astronomically small' when it comes to
+the probability of failure over 10 RDRAND attempts... :-)
+
+Secondly, given our test findings and those of RedHat, would it be
+safe to assume that EPYC has engineering that prevents RDSEED failures
+that Ryzen does not?
+
+Given HPA's response in this thread, I do appreciate that all of this
+may be shrouded in trade secrets and other issues.  With an
+acknowledgement to that fact, let me see if I can extend the
+discussion in a generic manner that may prove useful to the community
+without being 'abusive'.
+
+Both AMD and Intel designs start with a hardware based entropy source.
+Intel samples thermal/quantum junction noise, AMD samples execution
+jitter over a bank of inverter based oscillators.  An assumption of
+constant clocked sampling implies a maximum randomness bandwidth
+limit.
+
+None of this implies that randomness is a finite resource, it will
+always become available, with the caveat that a core may have to stand
+in line, cup in hand, waiting for a dollop.
+
+So this leaves the fundamental question of what does an RDRAND or
+RDSEED failure return actually imply?
+
+Silicon is a expensive resource, which would imply a queue depth
+limitation for access to the socket common RNG infastructure.  If the
+queue is full when an instruction issues, it would be a logical
+response to signal an instruction failure quickly and let software try
+again.
+
+An alternate theory would be a requirement for constant instruction
+time completion.  In that case a 'buffer' of cycles would be included
+in the RNG instruction cycle allocation count.  If the instruction
+would need to 'sleep', waiting for randomness, beyond this cycle
+buffer, a failure would be returned.
+
+Absent broken hardware, astronomical then becomes the probability of a
+core being unlucky enough to run into these or alternate
+implementation scenarios 10 times in a row.  Particularly given the
+recommendation to sleep between attempts, which implies getting
+scheduled onto different cores for the attempts.
+
+Any enlightenment along these lines would seem to be useful in
+facilitating an understanding of the issues at hand.
+
+Given the time and engineering invested in the engineering behind both
+TDX and SEV-SNP, it would seem unlikely that really smart engineers at
+both Intel and AMD didn't anticipate this issue and its proper
+resolution for CoCo environments.
+
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+All the best from the Upper Midwest.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
