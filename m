@@ -1,95 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEE886AFF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022AC1272AD;
 	Thu,  8 Feb 2024 17:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707411881; cv=none; b=u9QwLhzrTbdxGnlWw8NQLs6rbokcKNgj7WWcZi89qOQnYHNcqG35KvwoHju/u8Ch2TsssaMxogS2nV6Qy+KOxgoge0vzcgS8vgBFOiWhqJXoaxHJh9GYxuu+11EU4N+5o39A24Wi1eT7MSTZh1s8gLI/pvpDnXMQXw7LUhJRPqI=
+	t=1707411882; cv=none; b=Dz4QzEKS6P7TDk35Mri/WjN6BWVxSR1ZHc9rfqwEGZW1TrL4Y8E/fPh4EjshnOcBFpKWZQBH1uY6UkxWBOX/fuSQjbGuBZXennW1ge+mW40ES0Ic3lComnw8dtCZc8WqvkAJhbUH0OadmB1br1lrHRoB6j7VaEm3wUvP5iOiS7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707411881; c=relaxed/simple;
-	bh=PTrnrsT2Geunz+SnN8BD71O48bXNxNI49r+JQOFpfQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UgQTZxazvcBL+ZfKvW4Q1nyppZOArfIb74Kcb2grcszjakLShGDublWeEuUl1bKkRkErlMvJ5c5/GHx13YFgCtlheBRA+ZeILf5S0Tb6ryQc+R5q0Cys2qpTtbzp6yzIM4hkWx2iVXRkGVtsRcc3apsPnd2Fdqk49li3cGzoKXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SgEMSM1L; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707411882; c=relaxed/simple;
+	bh=BvK8IwqnEFboy699PAEmSTVNPQ3C5pW/mK6yHdKKsaA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H6j9ISQyL6IxWuxMywPxpw7y+FXtAHIfloenJWmFgXWVEX1OUF3MbOFXumP6mRaT02SBrNBPBYaqU5mVBpXYrOq9e553eYlgxMOihItgKqhBDEHvw5JVLAxr2ae52f5PEtlMpaZJRA6HY+XgpKQ+Vwmay6sVo1C9dTXOLR5DDAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qFBzFgPW; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SgEMSM1L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707411881; x=1738947881;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=PTrnrsT2Geunz+SnN8BD71O48bXNxNI49r+JQOFpfQI=;
-  b=SgEMSM1LEmWMWwg5ST4wosPaJ1uN59v/82j1aII1eKFlfTiRHIWaUj7e
-   R5eD5+TJeUcw7qg1rLghe/Ec+8u7TNW58f6D4ljdCkVT1tQyGZmX1CTvM
-   Y6cGKeYqcCvJASoDvAzU4EO/r1QUthykU3fELm9gCPF4p1lYqP6ISqIQa
-   d9aaOhJFgO2LO32BspAIvsNYOgm2qTN27etCOK0UTKBuoXztOEFtI+ivW
-   9nPuwq82gI+RMqfk9kfpzh1eFgu70vkfIHN7Z8QWF3CFvIB8v1XnEpbyq
-   pJXUnazy20IWUSsZxfvIbrRABuF9GpQ8sQZ907nSNqupdMF6Pjhomh/mq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="11836371"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="11836371"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:04:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="910425503"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="910425503"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:04:36 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rY7pC-00000002vkG-0CEj;
-	Thu, 08 Feb 2024 19:04:34 +0200
-Date: Thu, 8 Feb 2024 19:04:33 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] pwm: dwc: drop redundant error check
-Message-ID: <ZcUJoSMhgC7lhY-H@smile.fi.intel.com>
-References: <20240208070529.28562-1-raag.jadav@intel.com>
- <20240208070529.28562-2-raag.jadav@intel.com>
- <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qFBzFgPW"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 418H4KtK018166;
+	Thu, 8 Feb 2024 11:04:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707411860;
+	bh=+iboSw0kHr/XQ2F6mUqPjCZdFfbDSD+ql6zjttiLFSU=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=qFBzFgPWIfVCJ8td3HE0ND29xlvtSztIedeQtMbPqqnEICeRYcXaTDB5n343gjgoR
+	 FO11sZucI54YGwpQaPVN1q3UyqL/4Hti5PLDWgLPt8Z9rrrYixAWQkj+RGqHzAXICK
+	 rkas9W7QeLxV+qMyMpb3zGYTJ81oco9iTMgQZQjE=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 418H4Keg042444
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 Feb 2024 11:04:20 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ Feb 2024 11:04:20 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 Feb 2024 11:04:20 -0600
+Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 418H4B6E091006;
+	Thu, 8 Feb 2024 11:04:19 -0600
+From: Andrew Davis <afd@ti.com>
+To: Sebastian Reichel <sre@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Cristian Ciocaltea
+	<cristian.ciocaltea@gmail.com>,
+        Florian Fainelli
+	<florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, Scott Branden
+	<sbranden@broadcom.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad
+ Dybcio <konrad.dybcio@linaro.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
+Subject: [PATCH v3 12/19] power: reset: msm-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
+Date: Thu, 8 Feb 2024 11:04:03 -0600
+Message-ID: <20240208170410.67975-13-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240208170410.67975-1-afd@ti.com>
+References: <20240208170410.67975-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Feb 08, 2024 at 08:46:44AM +0100, Uwe Kleine-König wrote:
-> On Thu, Feb 08, 2024 at 12:35:25PM +0530, Raag Jadav wrote:
-> > pcim_iomap_table() fails only if pcim_iomap_regions() fails. No need to
-> > check for failure if the latter is already successful.
-> 
-> Is this really true? pcim_iomap_table() calls devres_alloc_node() which
-> might fail if the allocation fails. (Yes, I know
-> https://lwn.net/Articles/627419/, but the rule is still to check for
-> errors, right?)
+Use this helper to register sys_off handler. Drivers should move away from
+setting pm_power_off directly as it only allows for one handler. The new
+way allows for trying multiple if the first one doesn't work.
 
-We do not add a dead code to the kernel, right?
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/power/reset/msm-poweroff.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-> What am I missing?
-
-Mysterious ways of the twisted PCI devres code.
-Read the above commit message again :-)
-
-For your convenience I can elaborate. pcim_iomap_table() calls _first_
-devres_find() which _will_ succeed if the pcim_iomap_regions() previously
-succeeded. Does it help to understand how it designed?
-
+diff --git a/drivers/power/reset/msm-poweroff.c b/drivers/power/reset/msm-poweroff.c
+index d96d248a6e25b..bcf04491e7022 100644
+--- a/drivers/power/reset/msm-poweroff.c
++++ b/drivers/power/reset/msm-poweroff.c
+@@ -28,9 +28,11 @@ static struct notifier_block restart_nb = {
+ 	.priority = 128,
+ };
+ 
+-static void do_msm_poweroff(void)
++static int do_msm_poweroff(struct sys_off_data *data)
+ {
+ 	deassert_pshold(&restart_nb, 0, NULL);
++
++	return NOTIFY_DONE;
+ }
+ 
+ static int msm_restart_probe(struct platform_device *pdev)
+@@ -41,7 +43,9 @@ static int msm_restart_probe(struct platform_device *pdev)
+ 
+ 	register_restart_handler(&restart_nb);
+ 
+-	pm_power_off = do_msm_poweroff;
++	devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_POWER_OFF,
++				      SYS_OFF_PRIO_DEFAULT, do_msm_poweroff,
++				      msm_ps_hold);
+ 
+ 	return 0;
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
