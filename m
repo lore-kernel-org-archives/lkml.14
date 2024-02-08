@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09981CF9A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C095C1CF91
 	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707355829; cv=none; b=CAcvTL53Wlqf7YH+ycCpvATbcqPeoimBPs+VVAPNpLKcEVhbWGVK/epmDqrwhclRiyxiCs7XIF+4oYMr6+K/LnPSCbA5i3l3jLZk3KUMaqFKrblRHE0gOIX/Bf4RbsxoGi7ZeYVVWpexNTsUzjYS89iZ2J/3+IbRpSq6OHIvSoE=
+	t=1707355829; cv=none; b=RQj2INxHw9+BY1aqhP0BNyx47XCzY9GX/gHANV67f/qCbRJ51puLt1JxKgFcV+AVqtypX6PD5kZD6HBo2Eo9cOfOSLq6eAxV8itSOcBq1CRJiBYu0jrSDmCOrU+bur61RSaqRnZ+JnmcejxVFE44knwBT64TGUj1LW+KUUccfPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707355829; c=relaxed/simple;
-	bh=jYYwLLD0cwfcrSOXqzB93y66pQoLtdRRtkWOuQY4Tcs=;
+	bh=LM9rriYZStkud30VJaubR5guh0n/IwnZmlpk5h5RwCY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cocEqm/AfkEeoPiVa72QYY+H+pqt43HhZ45yfD/hKrKU5n2oI6y7kcNv1FCZVo6a7c/lPGT3C2HyyExUrvgqnLAaKPAdcAKjDHzlY3E6pu2vo7Chvtt1ZKopOg4bCZjF9MRfhkBHpAiJ1tdfxUGhIBJOGWXFdHR82JjBe2NkLlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry4PZHKt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dVFV1UzCOQRsejtgReQqaTZI1C3P1XQIuuwBNqNi08IgEH8wLVTsOl/OWnpXyhRKVLtfEIYLaXxMjdezg8fdSZJm/EMoU5D8XW6g9IJz1/vmaF+GEcs1rGrx6A37oDAvcMnQ3bRmrGETdZqUEzcMevoZEs3zCbOWC2SYAWTArsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgDQTMtP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry4PZHKt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CBE5C43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgDQTMtP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 63569C433B2;
 	Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707355829;
-	bh=jYYwLLD0cwfcrSOXqzB93y66pQoLtdRRtkWOuQY4Tcs=;
+	bh=LM9rriYZStkud30VJaubR5guh0n/IwnZmlpk5h5RwCY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ry4PZHKt2T4QCiOzmtdUe9xa5hmTVZOPPqR7Entrs1kU5kxZEvLVtszf3Xx6fWRki
-	 tWOfoshV8pMS3HS9cDp9uiLNiU19prV4RCn8HmYOvVRC9KKX2zYIhLgMfUT6pZUpNr
-	 uQJzkgt4vhIb1TYQg30lDwcznon7vq7hU1FEseNx9JsqQZcqf+yXXRFPjTjjG7VCPk
-	 xIZKeEbyVco4h441qqP7BfCB55CTNzetH3lResw3DS5H8tSsuVHRVtnTjUnvU8e4rP
-	 jvHA3//nLw9IP7kICjl4Hyz5/KnKZ9Zz771ydifwh0TcVYW7Ypa0b8SkDFYeUqodSq
-	 LH9m//dRHfgJw==
+	b=bgDQTMtPRgF2FFfkL82Uhv8R185R3Ak4jsEKvagyrfNdEIcmeFNq1ufMbkCCrRXpv
+	 is/VDTHrzXW7aEpIq7NcXlE5f7d3KeepQXY8zH95fT29sbtev3Sr7GBK8lGtzR2yoX
+	 W2NwnieCz/m+2EOrsyF0tmQdgkUwjrFrXCfLuja6w0urv6VmEP/VkCnFTLRqE8z2Iy
+	 A+36FAa0hIUxUhKBS+UofXPcDoRKQYJtkU8cSSg8BOJvuPWLYpAmgcinLaErPOwEDt
+	 y/lU9wIRsAsbW+lfa+SNwtJukqHG6ee/xbpRimFd9+O8kKW4ZnsRAb59fGG33ju44u
+	 hgL2oM5qzvrDw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 266D0D8C97D;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 46AD2D8C97E;
 	Thu,  8 Feb 2024 01:30:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH -fixes] riscv: Fix arch_hugetlb_migration_supported() for
- NAPOT
+Subject: Re: [PATCH -fixes 0/2] svnapot fixes
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170735582915.12826.16835732930725743994.git-patchwork-notify@kernel.org>
+ <170735582928.12826.2812001497496359961.git-patchwork-notify@kernel.org>
 Date: Thu, 08 Feb 2024 01:30:29 +0000
-References: <20240130120114.106003-1-alexghiti@rivosinc.com>
-In-Reply-To: <20240130120114.106003-1-alexghiti@rivosinc.com>
+References: <20240117195741.1926459-1-alexghiti@rivosinc.com>
+In-Reply-To: <20240117195741.1926459-1-alexghiti@rivosinc.com>
 To: Alexandre Ghiti <alexghiti@rivosinc.com>
 Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, ajones@ventanamicro.com,
- panqinglin2020@iscas.ac.cn, linux-kernel@vger.kernel.org
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, panqinglin2020@iscas.ac.cn,
+ ajones@ventanamicro.com, linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
+This series was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Tue, 30 Jan 2024 13:01:14 +0100 you wrote:
-> arch_hugetlb_migration_supported() must be reimplemented to add support
-> for NAPOT hugepages, which is done here.
+On Wed, 17 Jan 2024 20:57:39 +0100 you wrote:
+> While merging riscv napot and arm64 contpte support, I noticed we did
+> not abide by the specification which states that we should clear a
+> napot mapping before setting a new one, called "break before make" in
+> arm64 (patch 1). And also that we did not add the new hugetlb page size
+> added by napot in hugetlb_mask_last_page() (patch 2).
 > 
-> Fixes: 82a1a1f3bfb6 ("riscv: mm: support Svnapot in hugetlb page")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/hugetlb.h |  3 +++
->  arch/riscv/mm/hugetlbpage.c      | 16 +++++++++++++---
->  2 files changed, 16 insertions(+), 3 deletions(-)
+> Alexandre Ghiti (2):
+>   riscv: Fix set_huge_pte_at() for NAPOT mapping
+>   riscv: Fix hugetlb_mask_last_page() when NAPOT is enabled
+> 
+> [...]
 
 Here is the summary with links:
-  - [-fixes] riscv: Fix arch_hugetlb_migration_supported() for NAPOT
-    https://git.kernel.org/riscv/c/ce68c035457b
+  - [1/2] riscv: Fix set_huge_pte_at() for NAPOT mapping
+    https://git.kernel.org/riscv/c/1458eb2c9d88
+  - [2/2] riscv: Fix hugetlb_mask_last_page() when NAPOT is enabled
+    https://git.kernel.org/riscv/c/a179a4bfb694
 
 You are awesome, thank you!
 -- 
