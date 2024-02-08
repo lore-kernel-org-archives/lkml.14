@@ -1,218 +1,220 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86652562E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCA436121;
+	Thu,  8 Feb 2024 19:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707419571; cv=none; b=mO0M4tiO4m4Hp9wPFdzpbF1sQ3IcSfekJcR3A5Ob/NtwNwWT7BYxBrldRU9JtIa6E00eklKsTpKDM5+EFtn6JFrm21aoEt9imP2XNDb/Sl52Y5tkbqD1l2B8yty69kTunuXgGRAHi0hix3/RlFJRC+YtGWC3QqQueEznsOR3WSY=
+	t=1707419573; cv=none; b=ib/lOUYYUEKCIvTEgDPWFutZmp3Vt40A9sToHGOo3b/bSMoJrlYlW7u20aUFJ2LeyfBJkJhsrh8n1T6D9Xpg9M3LEK4WPygg38Qic6zGRmUcZvTIuzf/qmmgOrC4BDiwayUXecjnIlXXFKcqxZN1bVYU36g4Wk6AoOYeotDSu+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707419571; c=relaxed/simple;
-	bh=506h+I6jENuIwHl/+l3GqWz/VJuMQboUBhmMK6kLGrk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oyViu9OPoViZ5GqpPQ11qZB2/s7JalZhVvEE3AEPi1FhXZmtit8u8hoQ8Ey6F0mBNw7dP9GL/Fr1yYk1Re1HFV25bmhOArIbj75+2S/15ZEIHtOJSdUVgSze8U5dxxNvSY63L7S0MZjyh+/6NFbPYpsHCEzteV0ZHvCujd4ZPgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A90XOS4+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707419573; c=relaxed/simple;
+	bh=qxWxhPD5BRxGx/8XjhWHfoKRfl1hlFiGpqLEiC51qZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCngwToU292RZEhw8KAdzyd+YxE++hMYWhMnXWpuYPH5JDHmvSdpettBE5BXSW/bdBDfdFxMHJ9pNnc29AgVsYA/yged/DiZKKIL20b/7zL/r0qngwED0x5OE0+BkhVXggyrC3xsZRO2LJ+h81+xA+q2Cnx43RNo+7yMLP22AJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lo7R4CcH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A90XOS4+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707419568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cSqFDht9oqySGNbtHUWvob5GvrVsWMq1FrhWjgIOu+Y=;
-	b=A90XOS4+ohy8ukS65g6+RjJNcvxJed/DXeJfc6TKJcKg0fvHX0/KnluGj/UPurhyBBY14J
-	KedE0d/tvz87sLoKrU5LB7ypxW/OKPI76uWuoryYNmyYS0CfjEM1H4hzpE4AsASJu5fenc
-	kYzNlp1s8/b3ZomiLmGmiW08yNDjde0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-Jnbb78LxNU-dulUcC3EUvQ-1; Thu,
- 08 Feb 2024 14:12:47 -0500
-X-MC-Unique: Jnbb78LxNU-dulUcC3EUvQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0BB4229AA3AF;
-	Thu,  8 Feb 2024 19:12:47 +0000 (UTC)
-Received: from llong.com (unknown [10.22.8.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 77BA14011FF1;
-	Thu,  8 Feb 2024 19:12:46 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Cestmir Kalina <ckalina@redhat.com>,
-	Alex Gladkov <agladkov@redhat.com>,
-	Phil Auld <pauld@redhat.com>,
-	Costa Shulyupin <cshulyup@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH wq/for-6.9 v6 2/4] workqueue: Enable unbound cpumask update on ordered workqueues
-Date: Thu,  8 Feb 2024 14:12:20 -0500
-Message-Id: <20240208191220.1094426-1-longman@redhat.com>
-In-Reply-To: <20240208161014.1084943-1-longman@redhat.com>
-References: <20240208161014.1084943-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lo7R4CcH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506BBC433F1;
+	Thu,  8 Feb 2024 19:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707419572;
+	bh=qxWxhPD5BRxGx/8XjhWHfoKRfl1hlFiGpqLEiC51qZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lo7R4CcHxQOs7jopOpFDfOJl/mXi7YjRJaUBLFVVrbjbqkJnBLIo0D892ioPXPsT1
+	 D8TyFzhjX0ub3cvDhGf4OAMpQI/WRa8+WZ80lRvQ5NllZQ3UPOy4LEZIDYK0OLYfzh
+	 HmaK6zQ6ql5IMXE9r6+sskT9iSNTD+QCYSl7UP6hQBS6ZnfaPWQzXvRZXLfeTTmLJd
+	 NWGm6e4k7WenEMiWxXVO6SXrKoCoofDnKLrwvFimENLNyuoEd/tGFBy54YVd4Jt5Dl
+	 FrQErSW/Zb4K3hi68BZEfnMLg6dYbZozsatEGYyxl0sIfYg86ty1PKOZBWkujePgWw
+	 PfFdLemuhaoOg==
+Date: Thu, 8 Feb 2024 19:12:47 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
+ file
+Message-ID: <20240208-jarring-frolic-8d4c9b409127@spud>
+References: <20240207062403.304367-1-Frank.Li@nxp.com>
+ <20240207-yoga-mobility-90a728f6342c@spud>
+ <ZcPCn8q7viB/qcOH@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SRpmeCfQQ7dek33O"
+Content-Disposition: inline
+In-Reply-To: <ZcPCn8q7viB/qcOH@lizhi-Precision-Tower-5810>
 
-Ordered workqueues does not currently follow changes made to the
-global unbound cpumask because per-pool workqueue changes may break
-the ordering guarantee. IOW, a work function in an ordered workqueue
-may run on an isolated CPU.
 
-This patch enables ordered workqueues to follow changes made to the
-global unbound cpumask by temporaily plug or suspend the newly allocated
-pool_workqueue from executing newly queued work items until the old
-pwq has been properly drained. For ordered workqueues, there should
-only be one pwq that is unplugged, the rests should be plugged.
+--SRpmeCfQQ7dek33O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This enables ordered workqueues to follow the unbound cpumask changes
-like other unbound workqueues at the expense of some delay in execution
-of work functions during the transition period.
+On Wed, Feb 07, 2024 at 12:49:19PM -0500, Frank Li wrote:
+> On Wed, Feb 07, 2024 at 05:17:55PM +0000, Conor Dooley wrote:
+> > Hey Frank,
+> >=20
+> > On Wed, Feb 07, 2024 at 01:24:02AM -0500, Frank Li wrote:
+> > > Convert layerscape pcie bind document to yaml file.
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  |  84 +++++++++
+> > >  .../bindings/pci/fsl,layerscape-pcie.yaml     | 163 ++++++++++++++++=
+++
+> > >  .../bindings/pci/layerscape-pci.txt           |  79 ---------
+> > >  3 files changed, 247 insertions(+), 79 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layersc=
+ape-pcie-ep.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layersc=
+ape-pcie.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-=
+pci.txt
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pci=
+e-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.ya=
+ml
+> > > new file mode 100644
+> > > index 0000000000000..3b592c820eb4c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.ya=
+ml
+> > > @@ -0,0 +1,84 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Freescale Layerscape PCIe controller
+> > > +
+> > > +maintainers:
+> > > +  - Frank Li <Frank.Li@nxp.com>
+> > > +
+> > > +description: |+
+> >=20
+> > Are you sure that you need this chomping operator?
+> >=20
+> > > +  This PCIe endpoint controller is based on the Synopsys DesignWare =
+PCIe IP
+> >=20
+> > > +  and thus inherits all the common properties defined in snps,dw-pci=
+e-ep.yaml.
+> >=20
+> > You shouldn't need this statement given you have the ref: below.
+> >=20
+> > > +
+> > > +  This controller derives its clocks from the Reset Configuration Wo=
+rd (RCW)
+> > > +  which is used to describe the PLL settings at the time of chip-res=
+et.
+> > > +
+> > > +  Also as per the available Reference Manuals, there is no specific =
+'version'
+> > > +  register available in the Freescale PCIe controller register set,
+> > > +  which can allow determining the underlying DesignWare PCIe control=
+ler version
+> > > +  information.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - fsl,ls2088a-pcie-ep
+> > > +      - fsl,ls1088a-pcie-ep
+> > > +      - fsl,ls1046a-pcie-ep
+> > > +      - fsl,ls1028a-pcie-ep
+> > > +      - fsl,lx2160ar2-pcie-ep
+> >=20
+> > Where did the fallback compatible go?
+>=20
+> So far, no fallback compatible needed now. each devices already have its
+> compatible string.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/workqueue.c | 69 +++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 59 insertions(+), 10 deletions(-)
+It used to exist though, have you checked that u-boot or *bsd etc do not
+use the fallback compatible? You also need to mention your justification
+for removing it in the commit message.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index fa7bd3b34f52..da124859a691 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -255,6 +255,7 @@ struct pool_workqueue {
- 	int			refcnt;		/* L: reference count */
- 	int			nr_in_flight[WORK_NR_COLORS];
- 						/* L: nr of in_flight works */
-+	bool			plugged;	/* L: execution suspended */
- 
- 	/*
- 	 * nr_active management and WORK_STRUCT_INACTIVE:
-@@ -1708,6 +1709,9 @@ static bool pwq_tryinc_nr_active(struct pool_workqueue *pwq, bool fill)
- 		goto out;
- 	}
- 
-+	if (unlikely(pwq->plugged))
-+		return false;
-+
- 	/*
- 	 * Unbound workqueue uses per-node shared nr_active $nna. If @pwq is
- 	 * already waiting on $nna, pwq_dec_nr_active() will maintain the
-@@ -1782,6 +1786,43 @@ static bool pwq_activate_first_inactive(struct pool_workqueue *pwq, bool fill)
- 	}
- }
- 
-+/**
-+ * unplug_oldest_pwq - restart an oldest plugged pool_workqueue
-+ * @wq: workqueue_struct to be restarted
-+ *
-+ * pwq's are linked into wq->pwqs with the oldest first. For ordered
-+ * workqueues, only the oldest pwq is unplugged, the others are plugged to
-+ * suspend execution until the oldest one is drained. When this happens, the
-+ * next oldest one (first plugged pwq in iteration) will be unplugged to
-+ * restart work item execution to ensure proper work item ordering.
-+ *
-+ *    dfl_pwq --------------+     [P] - plugged
-+ *                          |
-+ *                          v
-+ *    pwqs -> A -> B [P] -> C [P] (newest)
-+ *            |    |        |
-+ *            1    3        5
-+ *            |    |        |
-+ *            2    4        6
-+ */
-+static void unplug_oldest_pwq(struct workqueue_struct *wq)
-+{
-+	struct pool_workqueue *pwq;
-+
-+	lockdep_assert_held(&wq->mutex);
-+
-+	/* Caller should make sure that pwqs isn't empty before calling */
-+	pwq = list_first_entry_or_null(&wq->pwqs, struct pool_workqueue,
-+				       pwqs_node);
-+	raw_spin_lock_irq(&pwq->pool->lock);
-+	if (pwq->plugged) {
-+		pwq->plugged = false;
-+		if (pwq_activate_first_inactive(pwq, true))
-+			kick_pool(pwq->pool);
-+	}
-+	raw_spin_unlock_irq(&pwq->pool->lock);
-+}
-+
- /**
-  * node_activate_pending_pwq - Activate a pending pwq on a wq_node_nr_active
-  * @nna: wq_node_nr_active to activate a pending pwq for
-@@ -4740,6 +4781,13 @@ static void pwq_release_workfn(struct kthread_work *work)
- 		mutex_lock(&wq->mutex);
- 		list_del_rcu(&pwq->pwqs_node);
- 		is_last = list_empty(&wq->pwqs);
-+
-+		/*
-+		 * For ordered workqueue with a plugged dfl_pwq, restart it now.
-+		 */
-+		if (!is_last && (wq->flags & __WQ_ORDERED))
-+			unplug_oldest_pwq(wq);
-+
- 		mutex_unlock(&wq->mutex);
- 	}
- 
-@@ -4966,6 +5014,15 @@ apply_wqattrs_prepare(struct workqueue_struct *wq,
- 	cpumask_copy(new_attrs->__pod_cpumask, new_attrs->cpumask);
- 	ctx->attrs = new_attrs;
- 
-+	/*
-+	 * For initialized ordered workqueues, there should only be one pwq
-+	 * (dfl_pwq). Set the plugged flag of ctx->dfl_pwq to suspend execution
-+	 * of newly queued work items until execution of older work items in
-+	 * the old pwq's have completed.
-+	 */
-+	if ((wq->flags & __WQ_ORDERED) && !list_empty(&wq->pwqs))
-+		ctx->dfl_pwq->plugged = true;
-+
- 	ctx->wq = wq;
- 	return ctx;
- 
-@@ -5006,10 +5063,6 @@ static int apply_workqueue_attrs_locked(struct workqueue_struct *wq,
- 	if (WARN_ON(!(wq->flags & WQ_UNBOUND)))
- 		return -EINVAL;
- 
--	/* creating multiple pwqs breaks ordering guarantee */
--	if (!list_empty(&wq->pwqs) && WARN_ON(wq->flags & __WQ_ORDERED))
--		return -EINVAL;
--
- 	ctx = apply_wqattrs_prepare(wq, attrs, wq_unbound_cpumask);
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
-@@ -6489,9 +6542,6 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
- 	list_for_each_entry(wq, &workqueues, list) {
- 		if (!(wq->flags & WQ_UNBOUND) || (wq->flags & __WQ_DESTROYING))
- 			continue;
--		/* creating multiple pwqs breaks ordering guarantee */
--		if (wq->flags & __WQ_ORDERED)
--			continue;
- 
- 		ctx = apply_wqattrs_prepare(wq, wq->unbound_attrs, unbound_cpumask);
- 		if (IS_ERR(ctx)) {
-@@ -7006,9 +7056,8 @@ int workqueue_sysfs_register(struct workqueue_struct *wq)
- 	int ret;
- 
- 	/*
--	 * Adjusting max_active or creating new pwqs by applying
--	 * attributes breaks ordering guarantee.  Disallow exposing ordered
--	 * workqueues.
-+	 * Adjusting max_active breaks ordering guarantee.  Disallow exposing
-+	 * ordered workqueues.
- 	 */
- 	if (WARN_ON(wq->flags & __WQ_ORDERED))
- 		return -EINVAL;
--- 
-2.39.3
+> > > +
+> > > +  reg:
+> > > +    maxItems: 2
+> > > +
+> > > +  reg-names:
+> > > +    items:
+> > > +      - const: regs
+> > > +      - const: addr_space
+> >=20
+> > The example uses "regs" and "config". Where did addr_space come from?
+>=20
+> Example just show pcie-host part. Not show pcie-ep part.
+> pcie-ep part need 'addr_space'.
 
+Okay. Again, please mention where this is coming from.
+
+>=20
+> >=20
+> > > +  fsl,pcie-scfg:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: A phandle to the SCFG device node. The second entry=
+ is the
+> > > +      physical PCIe controller index starting from '0'. This is used=
+ to get
+> > > +      SCFG PEXN registers.
+> > > +
+> > > +  dma-coherent:
+> >=20
+> > dma-coherent: true
+> >=20
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: Indicates that the hardware IP block can ensure the=
+ coherency
+> > > +      of the data transferred from/to the IP block. This can avoid t=
+he software
+> > > +      cache flush/invalid actions, and improve the performance signi=
+ficantly.
+> > > +
+> > > +  big-endian:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: If the PEX_LUT and PF register block is in big-endi=
+an, specify
+> > > +      this property.
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - reg-names
+> >=20
+> > This was not previously required, why is it required now?
+>=20
+> Actually its needed.
+
+Well, if it wasn't, I'd hope that you wouldn't be making it required.
+But I asked /why/ and you've not given a reason. Please mention the why
+in your commit message for v2.
+
+Cheers,
+Conor.
+
+
+--SRpmeCfQQ7dek33O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcUnrwAKCRB4tDGHoIJi
+0mtuAP9E4kgj16HNkIGd1VacL4AXJRLPuj/WspJh0e0xb9YX7wD+I6Mvg4AGjDL0
+57vFoWWJHnkFY8XXol6QAMWynXGjggg=
+=XvWb
+-----END PGP SIGNATURE-----
+
+--SRpmeCfQQ7dek33O--
