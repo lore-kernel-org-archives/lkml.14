@@ -1,148 +1,164 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE9883CD1
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 17:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF4376416;
+	Thu,  8 Feb 2024 17:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414160; cv=none; b=MFqc7ythdUqjE5GAA1YDjPNCUgQX+d1Zn6Mli+N+G/oURbu53WRQKV2zqbp3pg//hXw4JtZ6CchqkDq+d1XlGL/Vpu+VLpO7eaJ9sWPLPHpA3XcdZtD/gdFdjxWne1p8a0oL4GypLHytzip6VuOuVjdljmQZo6vBNfGGNt3Dw/U=
+	t=1707414197; cv=none; b=ZvJ7N26yVKl92N0Y/JVLo2vRjgiVtQj8gy41lPhp938R7bWgot+cFySO2qSXV2mT9wiqbY80vimuio6+NGSN77nGHS2D+FeHBfqvPe8A5lpy76k+kddLwE9ERn/raoJi2UI3oUqI3+w0DHBmmPspFOnfCBLtvuzSc+PX3XEnNyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707414160; c=relaxed/simple;
-	bh=jTyqq1McBzhXuBGoQDTNsRl0bVoBKu3QPqRS+ZSe964=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G8ofc3azzWKwSKgpg8hnUwfSb5z+JWQKB+qL0WejbePoYqjqAqgK698XYsmcsIIig45A5gd83EJL+SP2is7O+KkYNKQY2RMrvInnQlhzrlTpOhHuTL49C7zj1kg3UZKqVy/mVmC3jJMantXd2PKYSKTd8IQTlQu7iTgla/G71jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ODmKEHzt; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707414197; c=relaxed/simple;
+	bh=7i9glvuI7jCT+A+DlSpqDglxXqMLP6DyYKrhkKNr1W8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H0TGcVl4XHjD7jcUcQW6BejUkKm0gSiqt47qjjEYkwRv286bD+VXp8XueTc85NxyXd5umYGWc2k1Xx0iQ+QXEX01gxyzvRVWoamkRxsFhmLX59VKKxT6kZUd4ND3E/iKVmHWmijV6LniiCduzEOfx/pdwCkYO3i7vG7fT7NqqHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZeAtces+; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ODmKEHzt"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6818f3cf00aso565296d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 09:42:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707414158; x=1708018958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qE9yJofYcIrp+q8fl2NtOvzDEIFhiUUc4detkUYKRUo=;
-        b=ODmKEHzt3IVRk9s32gldWB8tCYoD1x7ROFpCAFaY0kCxCj1+OaGZJ9/nEATY0jCirB
-         D0xzDilAaLkVd+aY1yUqSbsIMOTfmtRYo9o12oKtYFfp4ch5bs+UJrD0D3uQTUjSd6k3
-         hVot2f+yitilQxsdjf0ybbKptSug95aUbdozzHRuRMCGPqVVi8Qk3GyNT7Yvij2DPh7P
-         RHNcAo8ZWrAcfEdSjPXeQ1sA4Rqcyf+5MhtI/18MxrI5UVfHWj+a2x0Lft6j86eHxb7F
-         SKsFNKeWCovD7j6ah6RCEAL3eThKvP01fR1834yKVPUpGS5ByW2nny0Sin5/qXtvGpMo
-         cVPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707414158; x=1708018958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qE9yJofYcIrp+q8fl2NtOvzDEIFhiUUc4detkUYKRUo=;
-        b=CKdc48KbE7J+jubkyCW7DqA2N3Q6AHUIwqlkI9yI3RiGXI+eCRI0Cv4fsLIbohRvXi
-         53JFng8s2qrGIufuOKVWvIsILRi9Rr8xhyaPa6h/WtixC05YYIjtd9jUi79J+NZ9oYA6
-         UMOGWT3nASTryTYUuzbY5JX9Fsyvif9sJ1k8Ap096wDNZNnfPqB6D9VZPaIyT3zfIfkh
-         08EELAxKQHPoR8A425a7XHYqXTQdfES+CNHLfgTC5kHrhPGycuBf+KsoStbj1+EU2syR
-         Fnu53ty9ZRLyHFgruStFVgVAb0aoUm96Z/LLE+3+8bfloUsTCtSH/ofiHgpBGlZMd7Dc
-         l27g==
-X-Forwarded-Encrypted: i=1; AJvYcCV8nD8Fqpq+h3HfTJpfZSdj/JRw35siRpVpTYkbj9Q+v0oANpzaNmwdSBAGJ5/niRyPGsHvolHCv31DpIr0noezWjvCmGZ8ZPDKVu4c
-X-Gm-Message-State: AOJu0Yz9P4yzF11nng5tGngAbZFl0We4bo3wdJuj5ZqFWbouaLfV5sPs
-	VWTHlN6qldOGvtmRnsR/1GpcQHBlYryvUXBV7ieY/OdDo5Wbg4XfSodRGE/fgA0HeZCz7FQZwsa
-	igKyOzTudWYnOxr5umatVRrxZypadvQtyiPjZ
-X-Google-Smtp-Source: AGHT+IHisO4YeJ4HMjJTJ7Pa6g2UoWbHmyDF6/F8nMdBmOGtjRmAF7AXJRfz3Lb4ftoWcIr8EGxQVdi4TlQ13SQyHQk=
-X-Received: by 2002:a05:6214:258b:b0:681:78cf:3920 with SMTP id
- fq11-20020a056214258b00b0068178cf3920mr12087645qvb.25.1707414157664; Thu, 08
- Feb 2024 09:42:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZeAtces+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707414196; x=1738950196;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7i9glvuI7jCT+A+DlSpqDglxXqMLP6DyYKrhkKNr1W8=;
+  b=ZeAtces+NWbwOCaUQtyQulerdw4qUfxAR4GIh5S48pFc5jJMhohaLl+0
+   hdlRt9i2aq/rN4MWZAnw/NnnNjVf1pFGG2Oqvdq/9PxBsR8ghHcKFNkWL
+   eLIUZ6qNx0I1lIwFnDDCEJ1og84mZ7YOaxClDSgImTgfwH/py8YWBkp/J
+   e10TkXjQbkxvPK2YnnuP2pob9+0hVwpWYgsKVXPemC/a+iP0ZU7a9Rxth
+   YWgQLwh/DrjM3K4qu39u061TaG/QE1tq6OacKJzhkdd6XwKHVqAyrKu+R
+   terxhkZrs8UsDrDkecJ2CZU+2fn7RP/xyPCaIg8BqR1Zm2e3K6PxTa3Je
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1431207"
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="1431207"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:43:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="910440101"
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="910440101"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:43:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rY8QW-00000002wKd-2cCV;
+	Thu, 08 Feb 2024 19:43:08 +0200
+Date: Thu, 8 Feb 2024 19:43:08 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 00/24] gpio: rework locking and object life-time
+ control
+Message-ID: <ZcUSrCK_w06ZeV-W@smile.fi.intel.com>
+References: <20240208095920.8035-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
- <ZcNdzZVPD76uSbps@eldamar.lan> <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
- <1d4c7d06-0c02-4adb-a2a3-ec85fd802ddb@vrvis.at>
-In-Reply-To: <1d4c7d06-0c02-4adb-a2a3-ec85fd802ddb@vrvis.at>
-From: Jordan Rife <jrife@google.com>
-Date: Thu, 8 Feb 2024 09:42:24 -0800
-Message-ID: <CADKFtnQUQt=M32tYhcutP0q6exOgk9R6xgxddDdewbms+7xwTQ@mail.gmail.com>
-Subject: Re: [regression 6.1.76] dlm: cannot start dlm midcomms -97 after
- backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
-To: Valentin Kleibel <valentin@vrvis.at>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, David Teigland <teigland@redhat.com>, 
-	Alexander Aring <aahringo@redhat.com>, 1063338@bugs.debian.org, gfs2@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240208095920.8035-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 8, 2024 at 3:37=E2=80=AFAM Valentin Kleibel <valentin@vrvis.at>=
- wrote:
->
-> Hi Jordan, hi all
->
-> > Just a quick look comparing dlm_tcp_listen_bind between the latest 6.1
-> > and 6.6 stable branches,
-> > it looks like there is a mismatch here with the dlm_local_addr[0] param=
-eter.
-> >
-> > 6.1
-> > ----
-> >
-> > static int dlm_tcp_listen_bind(struct socket *sock)
-> > {
-> > int addr_len;
-> >
-> > /* Bind to our port */
-> > make_sockaddr(dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
-> >     addr_len);
-> > }
-> >
-> > 6.6
-> > ----
-> > static int dlm_tcp_listen_bind(struct socket *sock)
-> > {
-> > int addr_len;
-> >
-> > /* Bind to our port */
-> > make_sockaddr(&dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
-> >     addr_len);
-> > }
-> >
-> > 6.6 contains commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on hea=
-p) which
-> > changed
-> >
-> > static struct sockaddr_storage *dlm_local_addr[DLM_MAX_ADDR_COUNT];
-> >
-> > to
-> >
-> > static struct sockaddr_storage dlm_local_addr[DLM_MAX_ADDR_COUNT];
-> >
-> > It looks like kernel_bind() in 6.1 needs to be modified to match.
->
-> We tried to apply commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on
-> heap) to the debian kernel 6.1.76 and came up with the attached patch.
-> Besides the different offsets there is a slight change dlm_tcp_bind()
-> where in 6.1.76 kernel_bind() is used instead of sock->ops->bind() in
-> the original commit.
->
-> This patch solves the issue we experienced.
->
-> Thanks for your help,
-> Valentin
+On Thu, Feb 08, 2024 at 10:58:56AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> This is a big rework of locking in GPIOLIB. The current serialization is
+> pretty much useless. There is one big spinlock (gpio_lock) that "protects"
+> both the GPIO device list, GPIO descriptor access and who knows what else.
+> 
+> I'm putting "protects" in quotes as in several places the lock is
+> taken, released whenever a sleeping function is called and re-taken
+> without regards for the "protected" state that may have changed.
+> 
+> First a little background on what we're dealing with in GPIOLIB. We have
+> consumer API functions that can be called from any context explicitly
+> (get/set value, set direction) as well as many others which will get
+> called in atomic context implicitly (e.g. set config called in certain
+> situations from gpiod_direction_output()).
+> 
+> On the other side: we have GPIO provider drivers whose callbacks may or
+> may not sleep depending on the underlying protocol.
+> 
+> This makes any attempts at serialization quite complex. We typically
+> cannot use sleeping locks - we may be called from atomic - but we also
+> often cannot use spinlocks - provider callbacks may sleep. Moreover: we
+> have close ties with the interrupt and pinctrl subsystems, often either
+> calling into them or getting called from them. They use their own locking
+> schemes which are at odds with ours (pinctrl uses mutexes, the interrupt
+> subsystem can call GPIO helpers with spinlock taken).
+> 
+> There is also another significant issue: the GPIO device object contains
+> a pointer to gpio_chip which is the implementation of the GPIO provider.
+> This object can be removed at any point - as GPIOLIB officially supports
+> hotplugging with all the dynamic expanders that we provide drivers for -
+> and leave the GPIO API callbacks with a suddenly NULL pointer. This is
+> a problem that allowed user-space processes to easily crash the kernel
+> until we patched it with a read-write semaphore in the user-space facing
+> code (but the problem still exists for in-kernel users). This was
+> recognized before as evidenced by the implementation of validate_desc()
+> but without proper serialization, simple checking for a NULL pointer is
+> pointless and we do need a generic solution for that issue as well.
+> 
+> If we want to get it right - the more lockless we go, the better. This is
+> why SRCU seems to be the right candidate for the mechanism to use. In fact
+> it's the only mechanism we can use our read-only critical sections to be
+> called from atomic and protecc contexts as well as call driver callbacks
+> that may sleep (for the latter case).
+> 
+> We're going to use it in three places: to protect the global list of GPIO
+> devices, to ensure consistency when dereferencing the chip pointer in GPIO
+> device struct and finally to ensure that users can access GPIO descriptors
+> and always see a consistent state.
+> 
+> We do NOT serialize all API callbacks. This means that provider callbacks
+> may be called simultaneously and GPIO drivers need to provide their own
+> locking if needed. This is on purpose. First: we only support exclusive
+> GPIO usage* so there's no risk of two drivers getting in each other's way
+> over the same GPIO. Second: with this series, we ensure enough consistency
+> to limit the chance of drivers or user-space users crashing the kernel.
+> With additional improvements in handling the flags field in GPIO
+> descriptors there's very little to gain, while bitbanging drivers may care
+> about the increased performance of going lockless.
+> 
+> This series brings in one somewhat significant functional change for
+> in-kernel users, namely: GPIO API calls, for which the underlying GPIO
+> chip is gone, will no longer return 0 and emit a log message but instead
+> will return -ENODEV.
+> 
+> I know this is a lot of code to go through but the more eyes we get on it
+> the better.
+> 
+> Thanks,
+> Bartosz
+> 
+> * - This is not technically true. We do provide the
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE flag. However this is just another piece of
+> technical debt. This is a hack provided for a single use-case in the
+> regulator framework which got out of control and is now used in many
+> places that should have never touched it. It's utterly broken and doesn't
+> even provide any contract as to what a "shared GPIO" is. I would argue
+> that it's the next thing we should address by providing "reference counted
+> GPIO enable", not just a flag allowing to request the same GPIO twice
+> and then allow two drivers to fight over who toggles it as is the case
+> now. For now, let's just treat users of GPIOD_FLAGS_BIT_NONEXCLUSIVE like
+> they're consciously and deliberately choosing to risk undefined behavior.
 
-Good to hear that works for you! We should fix this in the 6.1 stable
-kernel as well.
+LGTM, but I haven't done thorough review, hence, FWIW,
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-IMO it may be less risky and simpler to fix the backport of my patch
-e9cdebbe23f1 ("dlm: use kernel_connect() and
-kernel_bind()") and just switch (struct sockaddr *)&dlm_local_addr[0]
-to (struct sockaddr *)dlm_local_addr[0]
-in the call to kernel_bind() rather than backporting c51c9cd8 (fs:
-dlm: don't put dlm_local_addrs on
-heap) to 6.1.
 
-I will have some time soon to fix the 6.1 backport, but it may make
-sense just to revert in the meantime.
+-- 
+With Best Regards,
+Andy Shevchenko
 
--Jordan
+
