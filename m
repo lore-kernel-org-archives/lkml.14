@@ -1,35 +1,36 @@
 Received: from esa1.ltts.com (unknown [118.185.121.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F0E71B3B
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:21:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC276D1BB;
+	Thu,  8 Feb 2024 09:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384084; cv=none; b=LuyEbULJeM5s3fzOX8dKUGNEzoW2G/XGJ9lja5NmLhCIa6q27fb3PJTgnzo5Oe2lTmPUwC2QcSAtEyidEgBaZYB4S7Ij1RPgqf7K648BITgkV9fajI4r+wOaarFW+obF/tv2mw1y8SBWqpBE+rHrxZB7oWwca45w+c9qom0K7Ls=
+	t=1707384099; cv=none; b=q6qrO7NtWs7a5IK1+whbuE9qCdBQxBzOrHxb4mDVupEZAUy7d93l8N2mItDw39sig7CgSYUhVoUCqGAI4IjMH7Jv49L/ZnKjSN3kjGFZWs4FnEIiUO+EFschOeRM0/rK/iSFG7Uq/uANaMeTj3JZY9qDhobP2Ll28I/VP7pJSSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384084; c=relaxed/simple;
-	bh=ANFQs58thb6Sfo8Tnd1vzz2cEfX0deEseKjVLICGrQU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=myxtKiaHUTAF5Osm4p81EF458KwRBCJFK9dfwoJpG0xa8TH5584jFLjSGHcM/cyITyrhMil0BvNqZ56Ike8wyTiAqv/BTNoXIsBnW1CxiAVVRZkKUrV5CfPCVKkafxW7YPHR2qnDGOiAfBsKE5/neDpAoQz/hyVXi30+CxQQ/8I=
+	s=arc-20240116; t=1707384099; c=relaxed/simple;
+	bh=1Zn0pbl+Us/lPLFf385YwPJy/pjFtQA4GG45Zc7JrJM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q4PeRKhnTZcCqqY/pS7zk9v7pypLMEPSYt2eVq8+bqgyqYb7pbl+0EPFaY6VDXuc1Couqp1vyrYbyqy0wPQf1kUcX6lQKW47fTmmPi5lfOliyDqdQl5tlqQ4rvZcj9sSbBZnUYp1AF+trShX80H58E8Q0lXk4WP2Rqg7TmTIumI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: 4/N13WmplNXRIeMIGn/FrRpk2Cyz+WSpmbB8whz8wzehNUbXss/FbNbvDU0VTJjgrE49cV8rnq
- W6bek2HdD9xA==
+IronPort-SDR: JOK1B6F2fRJ5W+a31S13F+GYXT68mhdior8jwWtyNAAWFmCKbP6B34/kYUhJnpSkB8ywCmIVyk
+ Rdcn4OiAwBKA==
 Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa1.ltts.com with ESMTP; 08 Feb 2024 14:51:14 +0530
+  by esa1.ltts.com with ESMTP; 08 Feb 2024 14:50:26 +0530
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v1 10/13] misc: tps6594-esm: Add TI TPS65224 PMIC ESM
-Date: Thu,  8 Feb 2024 14:50:59 +0530
-Message-Id: <20240208092059.1207134-4-bhargav.r@ltts.com>
+Subject: [PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+Date: Thu,  8 Feb 2024 14:50:11 +0530
+Message-Id: <20240208092011.1206988-1-bhargav.r@ltts.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240208092059.1207134-1-bhargav.r@ltts.com>
-References: <20240208092059.1207134-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,59 +39,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for TPS65224 Error Signal Monitor in the TPS6594 ESM driver
-as they share significant functionality.
+TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+regulators, it includes additional features like GPIOs, watchdog, ESMs
+(Error Signal Monitor), and PFSM (Pre-configurable Finite State Machine)
+managing the state of the device.
+TPS6594 and TPS65224 have significant functional overlap.
 
 Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 ---
- drivers/misc/tps6594-esm.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/mfd/ti,tps6594.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/tps6594-esm.c b/drivers/misc/tps6594-esm.c
-index d0f86b0e9..445d82bd3 100644
---- a/drivers/misc/tps6594-esm.c
-+++ b/drivers/misc/tps6594-esm.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * ESM (Error Signal Monitor) driver for TI TPS6594/TPS6593/LP8764 PMICs
-+ * ESM (Error Signal Monitor) driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
-  *
-  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
-  */
-@@ -20,6 +20,8 @@
- #define ESM_MODE_CFG_CLR  0x0
- #define ESM_START_CLR     0x0
+diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+index 9d43376be..6341b6070 100644
+--- a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
++++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+@@ -21,6 +21,7 @@ properties:
+       - ti,lp8764-q1
+       - ti,tps6593-q1
+       - ti,tps6594-q1
++      - ti,tps65224-q1
  
-+static struct reg_field tps65224_esm_mode_cfg = REG_FIELD(TPS6594_REG_ESM_MCU_MODE_CFG,  5, 6);
-+static struct reg_field tps65224_esm_start    = REG_FIELD(TPS6594_REG_ESM_MCU_START_REG, 0, 0);
- static struct reg_field tps6594_esm_mode_cfg  = REG_FIELD(TPS6594_REG_ESM_SOC_MODE_CFG,  5, 6);
- static struct reg_field tps6594_esm_start     = REG_FIELD(TPS6594_REG_ESM_SOC_START_REG, 0, 0);
- 
-@@ -87,8 +89,14 @@ static int tps6594_esm_probe(struct platform_device *pdev)
- 	if (!esm)
- 		return -ENOMEM;
- 
--	esm->esm_mode_cfg = devm_regmap_field_alloc(dev, tps->regmap, tps6594_esm_mode_cfg);
--	esm->esm_start = devm_regmap_field_alloc(dev, tps->regmap, tps6594_esm_start);
-+	if (tps->chip_id == TPS65224) {
-+		esm->esm_mode_cfg = devm_regmap_field_alloc(dev, tps->regmap,
-+							    tps65224_esm_mode_cfg);
-+		esm->esm_start = devm_regmap_field_alloc(dev, tps->regmap, tps65224_esm_start);
-+	} else {
-+		esm->esm_mode_cfg = devm_regmap_field_alloc(dev, tps->regmap, tps6594_esm_mode_cfg);
-+		esm->esm_start = devm_regmap_field_alloc(dev, tps->regmap, tps6594_esm_start);
-+	}
- 
- 	if (IS_ERR(esm->esm_mode_cfg)) {
- 		dev_err(dev, "esm_mode_cfg reg field init failed\n");
-@@ -176,5 +184,6 @@ module_platform_driver(tps6594_esm_driver);
- 
- MODULE_ALIAS("platform:tps6594-esm");
- MODULE_AUTHOR("Julien Panis <jpanis@baylibre.com>");
-+MODULE_AUTHOR("Bhargav Raviprakash <bhargav.r@ltts.com>");
- MODULE_DESCRIPTION("TPS6594 Error Signal Monitor Driver");
- MODULE_LICENSE("GPL");
+   reg:
+     description: I2C slave address or SPI chip select number.
 -- 
 2.25.1
 
