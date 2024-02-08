@@ -1,292 +1,105 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF9D6F517;
-	Thu,  8 Feb 2024 09:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BC36BFDC
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707386066; cv=none; b=MmOfEZ8oqc9xQpGkIkOhPS4C2AuHC3oBWhG1a2QMqI7PyqQ+Qw3AkZJfb9YdGGqcehFuw0N8QrlDcR0liW0gTdUQHOAIdD0GCo8Wnl2rM5/LEMSl7VAgCmpmYgaP1144c64XrhMbS6pN3Ch2sPc4jhRwcH9cBjX3Eq3FLxYdj14=
+	t=1707386112; cv=none; b=UJubNJN9np72ya+4mZkbhUPyecGDbaUkH9j7GxOt6F8LzMZrmCDucgRGRIZMjfy8kQLgqMLLd2ZWpx5mXjX05B4ylCoW6UfGB+fZVrMIlNgmIVXQrCtP1vNP4cnoC6YcQYGX2Fvfq8d/hkpYXme92ouqesEB7+2WrZ1f5bOfWcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707386066; c=relaxed/simple;
-	bh=A7EVTIDLHtGX9lO4EdDXrAGB8NfIUDtJqg9uBTSY2ak=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TJxHhdn7zQmzeN1Ugc+Tve9FQ/dIq95tdRsYQjvIp5MN9GRh7gj8Ox+FTA6Ep4BZzLHIN4YsfBj+FPFVC+oenysWEIxq6Kd7Xpbt/ibQyEllCxKqK8g6PnNNIsOWj7O0gS21AbrG7DUtm3WNL52YGaXE/WPhyMlZba0Kaik+5wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Tr2zJw3L; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tr2zJw3L"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4189rbWg065688;
-	Thu, 8 Feb 2024 03:53:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707386017;
-	bh=i66KRsT5MXiCMeRUrNYxeiPCd7Z1pAneWKX/rWP8R50=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Tr2zJw3LX6tOr9navFzLmdJ0kPwwGIgKXCiG0/Vrw8h3RaavRuiVnLVnwgGlCh3pz
-	 JnPLFZ3eRSWLLkF9JIUHv9uWlFBSHfmYC+6QPZYZC5T/PuddN3T78I17ioYw/SQxPL
-	 MvG3jhY2dsb93vNNHeqDV5IPbceaHHvdxEx6wpRk=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4189rblx121246
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 Feb 2024 03:53:37 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- Feb 2024 03:53:37 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 Feb 2024 03:53:37 -0600
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.162.93])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4189qwg6001185;
-	Thu, 8 Feb 2024 03:53:29 -0600
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski@linaro.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <linux-sound@vger.kernel.org>, <liam.r.girdwood@intel.com>,
-        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>
-CC: <kevin-lu@ti.com>, <baojun.xu@ti.com>, <v-po@ti.com>, <navada@ti.com>,
-        <perex@perex.cz>, <j-mcpherson@ti.com>,
-        <pierre-louis.bossart@linux.intel.com>, <13916275206@139.com>,
-        <mohit.chawla@ti.com>, <soyer@irl.hu>, <jkhuang3@ti.com>,
-        <tiwai@suse.de>, <pdjuandi@ti.com>, <manisha.agrawal@ti.com>,
-        <s-hari@ti.com>, <aviel@ti.com>, <hnagalla@ti.com>, <praneeth@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v4 4/4] ASoc: dt-bindings: PCM6240: Add initial DT binding
-Date: Thu, 8 Feb 2024 17:52:54 +0800
-Message-ID: <20240208095255.1508-4-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20240208095255.1508-1-shenghao-ding@ti.com>
-References: <20240208095255.1508-1-shenghao-ding@ti.com>
+	s=arc-20240116; t=1707386112; c=relaxed/simple;
+	bh=A5u3bJpWdZ5zza7OgZpzC7vZ3+2py5aXPKSGlD4Yvac=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=t6CYoFjcy1ykV9nAH5o23PmLxCh5Vd8Tsh7epAkqtrvf9j/jXQWvg+mJtlTy3CHSIUIcf6pG8eX2vAsnhBPlMukCSTnxEBEqSV4/L2oSrzbvri5F1DtwS+Z9UFlNJkw2idOHX/C5NcHyCiaZAtLpkyjTCRqZfPX28m/ynTmzzVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-152-XpH53RNmNBOBYoAZQ70Org-1; Thu, 08 Feb 2024 09:54:59 +0000
+X-MC-Unique: XpH53RNmNBOBYoAZQ70Org-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 8 Feb
+ 2024 09:54:39 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 8 Feb 2024 09:54:39 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Charlie Jenkins' <charlie@rivosinc.com>, Guenter Roeck
+	<linux@roeck-us.net>
+CC: Palmer Dabbelt <palmer@dabbelt.com>, Andrew Morton
+	<akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v5 2/2] lib: checksum: Use aligned accesses for
+ ip_fast_csum and csum_ipv6_magic tests
+Thread-Topic: [PATCH v5 2/2] lib: checksum: Use aligned accesses for
+ ip_fast_csum and csum_ipv6_magic tests
+Thread-Index: AQHaWiTi9Vrw8P9Q6kGXDnUtGZ/kaLEAM1Og
+Date: Thu, 8 Feb 2024 09:54:39 +0000
+Message-ID: <0b78e69bf4ef4e52a61ffe21d2c08c96@AcuMS.aculab.com>
+References: <20240130-fix_sparse_errors_checksum_tests-v5-0-4d8a0a337e5e@rivosinc.com>
+ <20240130-fix_sparse_errors_checksum_tests-v5-2-4d8a0a337e5e@rivosinc.com>
+ <ec44bf32-8b66-40c4-bc62-4deed3702f99@roeck-us.net> <ZcQeyigDWwvnc4Nu@ghost>
+In-Reply-To: <ZcQeyigDWwvnc4Nu@ghost>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-PCM6240 family chips are popular among audio customers, in spite of only a
-portion of the functionality of codec, such as ADC or DAC, and so on, for
-different Specifications, range from Personal Electric to Automotive
-Electric, even some professional fields.yet their audio performance is far
-superior to the codec's, and cost is lower than codec, and much easier to
-program than codec.
+From: Charlie Jenkins
+> Sent: 08 February 2024 00:23
+>=20
+> On Sun, Feb 04, 2024 at 09:41:56AM -0800, Guenter Roeck wrote:
+> > Hi,
+> >
+> > On Tue, Jan 30, 2024 at 11:10:04AM -0800, Charlie Jenkins wrote:
+> > > The test cases for ip_fast_csum and csum_ipv6_magic were using arbitr=
+ary
+> > > alignment of data to iterate through random inputs. ip_fast_csum shou=
+ld
+> > > have the data aligned along (14 + NET_IP_ALIGN) bytes and
+> > > csum_ipv6_magic should have data aligned along 32-bit boundaries.
+> > >
+> > >
+...
+> >
+> > So this works on little endian systems. Unfortunately, I still get
+> >
+...
+> >
+> > when running the test on big endian systems such as hppa/parisc or spar=
+c.
+>=20
+> Hmm okay it was easy to get this to work on big endian for
+> test_ip_fast_csum but test_csum_ipv6_magic was trickier. I will send out
+> a new version with the changes.
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+Instead of trying to save the expected results why not just
+calculate them with a 'really dumb' implementation.
+(eg: Add 16bit items and then fold.)
 
----
-Change in v4:
- - Rewrite the subject to match something similar to other commits.
- - And none of them are compatible with something.
- - minItems, then maxItems.
- - Drop reset-gpios description
- - Remove the repeated reg descriptions and reg constraints.
- - Drop redundant spaces.
- - Add missing line breaks between blocks and additionalProperties.
- - Correct compatibility issue on adc6120 and pcm6240.
- - All these chips have only a portion of the functionality of codec,
-   such as ADC or DAC, and so on, but their audio performance is far
-   superior to the codec's, and cost is lower than codec, and much easier
-   to program than codec. Simply one or two register settings can enable
-   them to work. Init for these chips are hardware reset or software reset.
-   As to some audio filter params for internal filters, it is up to the
-   special user cases, which can be saved into the bin file. The default
-   value also can work well.
- - Add blank line before reg.
- - remove unneeded items and if branches.
- - Add missing compatible devices, such as adc6120, etc.
- - Add necessary people into the list for DTS review
- - correct misaligned.
- - Remove dix4192
- - simplify the compatibility
----
- .../devicetree/bindings/sound/ti,pcm6240.yaml | 172 ++++++++++++++++++
- 1 file changed, 172 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,pcm6240.yaml
+For the generic tests, IIRC:
+Your test vectors looked random.
+They should probably contain some very specific tests cases.
+eg:
+- Zero length and all zeros - checksum should be zero (not 0xffff).
+- Buffers where the final 'fold' needs the carry added in.
 
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm6240.yaml b/Documentation/devicetree/bindings/sound/ti,pcm6240.yaml
-new file mode 100644
-index 000000000000..05fcb5459920
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm6240.yaml
-@@ -0,0 +1,172 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2022 - 2024 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/ti,pcm6240.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments PCM6240 Family Audio ADC/DAC
-+
-+maintainers:
-+  - Shenghao Ding <shenghao-ding@ti.com>
-+
-+description: |
-+  The PCM6240 Family is a big family of Audio ADC/DAC for
-+  different Specifications, range from Personal Electric
-+  to Automotive Electric, even some professional fields.
-+
-+  Specifications about the audio chip can be found at:
-+    https://www.ti.com/lit/gpn/tlv320adc3120
-+    https://www.ti.com/lit/gpn/tlv320adc5120
-+    https://www.ti.com/lit/gpn/tlv320adc6120
-+    https://www.ti.com/lit/gpn/pcm1690
-+    https://www.ti.com/lit/gpn/pcm3120-q1
-+    https://www.ti.com/lit/gpn/pcm3140-q1
-+    https://www.ti.com/lit/gpn/pcm5120-q1
-+    https://www.ti.com/lit/gpn/pcm6120-q1
-+    https://www.ti.com/lit/gpn/pcm6260-q1
-+    https://www.ti.com/lit/gpn/pcm9211
-+    https://www.ti.com/lit/gpn/pcmd3140
-+    https://www.ti.com/lit/gpn/pcmd3180
-+    https://www.ti.com/lit/gpn/taa5212
-+    https://www.ti.com/lit/gpn/tad5212
-+
-+properties:
-+  compatible:
-+    description: |
-+      ti,adc3120: Stereo-channel, 768-kHz, Burr-Brown™ audio analog-to-
-+      digital converter (ADC) with 106-dB SNR.
-+
-+      ti,adc5120: 2-Channel, 768-kHz, Burr-Brown™ Audio ADC with 120-dB SNR.
-+
-+      ti,adc6120: Stereo-channel, 768-kHz, Burr-Brown™ audio analog-to-
-+      digital converter (ADC) with 123-dB SNR.
-+
-+      ti,pcm1690: Automotive Catalog 113dB SNR 8-Channel Audio DAC with
-+      Differential Outputs.
-+
-+      ti,pcm3120: Automotive, stereo, 106-dB SNR, 768-kHz, low-power
-+      software-controlled audio ADC.
-+
-+      ti,pcm3140: Automotive, Quad-Channel, 768-kHz, Burr-Brown™ Audio ADC
-+      with 106-dB SNR.
-+
-+      ti,pcm5120: Automotive, stereo, 120-dB SNR, 768-kHz, low-power
-+      software-controlled audio ADC.
-+
-+      ti,pcm5140: Automotive, Quad-Channel, 768-kHz, Burr-Brown™ Audio ADC
-+      with 120-dB SNR.
-+
-+      ti,pcm6120: Automotive, stereo, 123-dB SNR, 768-kHz, low-power
-+      software-controlled audio ADC.
-+
-+      ti,pcm6140: Automotive, Quad-Channel, 768-kHz, Burr-Brown™ Audio ADC
-+      with 123-dB SNR.
-+
-+      ti,pcm6240: Automotive 4-ch audio ADC with integrated programmable mic
-+      bias, boost and input diagnostics.
-+
-+      ti,pcm6260: Automotive 6-ch audio ADC with integrated programmable mic
-+      bias, boost and input diagnostics.
-+
-+      ti,pcm9211: 216-kHz Digital Audio Interface Transceiver (DIX)
-+      With Stereo ADC and Routing.
-+
-+      ti,pcmd3140: Four-channel PDM-input to TDM or I2S output converter.
-+
-+      ti,pcmd3180: Eight-channel pulse-density-modulation input to TDM or
-+      I2S output converter.
-+
-+      ti,taa5212: Low-power high-performance stereo audio ADC with 118-dB
-+      dynamic range.
-+
-+      ti,tad5212: Low-power stereo audio DAC with 120-dB dynamic range.
-+    oneOf:
-+      - items:
-+          - enum:
-+              - ti,adc3120
-+              - ti,adc5120
-+              - ti,pcm3120
-+              - ti,pcm5120
-+              - ti,pcm6120
-+          - const: ti,adc6120
-+      - items:
-+          - enum:
-+              - ti,pcmd512x
-+              - ti,pcm9211
-+              - ti,taa5212
-+              - ti,tad5212
-+          - const: ti,adc6120
-+      - items:
-+          - enum:
-+              - ti,pcm6260
-+              - ti,pcm6140
-+              - ti,pcm3140
-+              - ti,pcm5140
-+          - const: ti,pcm6240
-+      - items:
-+          - enum:
-+              - ti,pcmd3140
-+              - ti,pcmd3180
-+              - ti,pcm1690
-+              - ti,taa5412
-+              - ti,tad5412
-+          - const: ti,pcm6240
-+      - enum:
-+          - ti,adc6120
-+          - ti,pcm6240
-+
-+  reg:
-+    description:
-+      I2C address, in multiple pcmdevices case, all the i2c address
-+      aggregate as one Audio Device to support multiple audio slots.
-+    minItems: 1
-+    maxItems: 4
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description:
-+      Invalid only for ti,pcm1690 because of no INT pin.
-+
-+  '#sound-dai-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - ti,pcm1690
-+    then:
-+      properties:
-+        interrupts: false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+   #include <dt-bindings/gpio/gpio.h>
-+   i2c {
-+     /* example for two devices with interrupt support */
-+     #address-cells = <1>;
-+     #size-cells = <0>;
-+     pcm6240: audio-codec@48 {
-+       compatible = "ti,pcm6240";
-+       reg = <0x48>, /* primary-device */
-+             <0x4b>; /* secondary-device */
-+       #sound-dai-cells = <0>;
-+       reset-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-+       interrupt-parent = <&gpio1>;
-+       interrupts = <15>;
-+     };
-+   };
-+...
--- 
-2.34.1
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
