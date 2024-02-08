@@ -1,177 +1,177 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8679C3770B
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B12B3218B
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707421292; cv=none; b=FkNxof6qeHyTBoxYVE1oaMFG6I6LDkEm1IEf9czqXp/1yxF5xb964h14Ra4RRtGqhMgiKua+bNU9Ox2NEfMKcl0jEIXlyhkdmSpHAOsOdlGlIt3NyamLKoyTJ/X9rnSN1wM/92PtFoqBZ7b9vwMZpZqSnJqy3mVrNpkibUFJBVM=
+	t=1707421350; cv=none; b=T7bmXrz39A143H4HHWViDkmqS6zfJWpHg0Bl/RPft7O+S7h/vpEBXixSpXh5aKXQnV1ZyvR+GYdLLQRrGVUlRwP+5oCPbjQ0BojR/ouaAI8vBdt8uXevrypXEtn2Ji68uBowx/nbYAmSrxtZinhht2iHU/OfywTYw45548Xdsdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707421292; c=relaxed/simple;
-	bh=opZ3ssT8sjym6Pvoim1o6dI7WUwmY+CBpKJVfryTELE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0GKUc/IL1JfQPEubOe5QFtfam+MpyH5FUIrR4vk0uQZY7tCOd6yqgeqTEx6I6Hhf72bMASURD0xgL6uBxfML+LHKwrYpXhduSL0euB+n63RWvk/SC28/Di5nsqQ/UIeLHTv3GgT3djW8SdWYIVf1SJPRK5rSOohfvqDXEGi9AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=JLoTR5YT; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1707421350; c=relaxed/simple;
+	bh=Rtu/dgNHowIMhZUa88CnntQ6SugfUthYsgnqdjsX7Go=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YIkJSHfjQc1SrFRtIukefPneCuDQKgMBRG8U4CQXC78ZmCrd5CI3xhEQivME29tpCpXlwaSNex3lRpa2EyEF0Fp0BArRWWQmsjOR/bO+cskPU+oQfaGi/2QWANwcNOq8vOG5M2Ep0XAHh7/R1HHL2yl72g8tqijZaUzODbW98j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwyL+pHr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="JLoTR5YT"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-59883168a83so89828eaf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 11:41:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1707421289; x=1708026089; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VaVWU02hJD7IfCilvqmn8I4qxNAVVyYhKwZVKkHOTd4=;
-        b=JLoTR5YTh66JZYBLJRosVqhIBPA41MTq+T9kYAyGMocXt8Krjip8GgJ4q8b1r9mkcX
-         4yTShQLKDWvzJLkM6ZPZdT/mRgSIoUiwdDIixLYYDLALnMuvOQ0alX8Da9YLJsBU0n5f
-         WpqwHfMFWzkBRtpTCUBsnRicnlSLVekTDVBkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707421289; x=1708026089;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VaVWU02hJD7IfCilvqmn8I4qxNAVVyYhKwZVKkHOTd4=;
-        b=OBIh52GaJwg9FaeRiNh/S3T0yfNaT9i6KexLjGZZ9dvXklXbJ0ny4LceeJHG+xtiWj
-         3kbWKjzKiPyBG7sR6753mVi28mgKbEE5oJ9PhOv+E+owpxpJe2g96o9VZXpaHuDvfM7h
-         mdm4aaqyTeD2bsDTjZUV/ks50TXX2ShbVklV8jLP6YQoWnYZIrMACgWOQDOGxWFvDgie
-         R9vg5yyMSqxcD/MJh2Kh9x9XL7SRStFzrtUxlp401a1YmGyeKGQqK9hSLD5l4OdxQd/5
-         rIFoH5exntUGICuMelcSU487kD8Ystuj2K/ikYn/3EeQ6Ta1iepOop+3wj4/LSwJvv3F
-         9O0A==
-X-Gm-Message-State: AOJu0YzOP4L3B6KZIjX/dzdyO2qh+l0ITxYdfUQ/DUxg71H+vrK7TDur
-	dx7z7Ac1X0Pfrq0UYzK9PTQgNKm2a2zSM5/0CH1XiL2+eDkRkk8Mnx48ehx7OPw=
-X-Google-Smtp-Source: AGHT+IGtjDBJf7DunhoNr4ewGT3uM0NMHpsvm5Nd0mQlyZuTS2s0ICF9POG9y0QUL0L620cQQbqZlQ==
-X-Received: by 2002:a05:6358:4194:b0:178:fadb:d191 with SMTP id w20-20020a056358419400b00178fadbd191mr139079rwc.28.1707421289497;
-        Thu, 08 Feb 2024 11:41:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU7jlSjlU8QAkXZ3ZmUImhqDJh0gptuVJMqCJquIAAK2n5hMcEdSofy3O3po1rLvE3PYivDqk3eksnlopvgVK1JJLalTXAJtKZnVUUvpVAskXYfXiSg36XoMCrthTvdSOgpejv1NMZ0uhloFYiKk0csXPyIlLNMjWyO7gB5O8ydkjD87ngGHshbXwpuyW8cUXus/zo5eWlE76FItF4mg2/hiYWvJ9RDNjr/7gEjEs3WC/h0ZMEqLstvnoT1NVt2RQQ3hTEOiGLuoxOm4TYqbTTc5hFUZcixj7viwuk+XUGLRD4ZKmM5/4TSlCo2WIDRGqFgsH3x0W7RNTWXRF5vRxRrl3MNbib2pobE1bOaju61/11qd/kyuOo2FjM+k+z0BcR9RRjqWkyGUhKOP37/Uz8M1ueBo7jb59XyQ49jLCI3X3jDlAY=
-Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id x129-20020a636387000000b005c6617b52e6sm217384pgb.5.2024.02.08.11.41.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Feb 2024 11:41:29 -0800 (PST)
-Date: Thu, 8 Feb 2024 11:41:26 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Tariq Toukan <ttoukan.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, tariqt@nvidia.com,
-	rrameshbabu@nvidia.com, Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	"open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH net-next v3] net/mlx5e: link NAPI instances to queues and
- IRQs
-Message-ID: <20240208194125.GA3166@fastly.com>
-References: <20240208030702.27296-1-jdamato@fastly.com>
- <8c083e6d-5fcd-4557-88dd-0f95acdbc747@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwyL+pHr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF5EC43394
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707421349;
+	bh=Rtu/dgNHowIMhZUa88CnntQ6SugfUthYsgnqdjsX7Go=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nwyL+pHrtUggAFG7+gq7rpvp4fptaBg+1myWc3chKSCN2XvuCRzfkgy2Rilz3gP0T
+	 IwCUG3APe8Gnp3Uzg1F1hfJKyN0dBFYEdb0nsfkHawXiKV44TY98l6Umq+r9OlEOK+
+	 T4Yb7DlyaHmiqU3khye1tas4BiFKtbmvgm8pusH55z/xukK70zcFUbT1WMQ/BO2lLy
+	 N4w3XWZIfHv3tmeYiR3wevs7VRZmd5VJtUIa4N1HJ5TOBktvgHDPe40V/GjQpCThPH
+	 AWitEdB9uk5PtdOiTdtU/9RQPflOgF2UWmk/eK3kDpzFG7RZSCRHj/ORY65dhqPTPJ
+	 WN6GI5SDvEUzA==
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7ba9f1cfe94so45042739f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 11:42:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXZW14I/Wrc5hW0ULue83jUqXgthPMvTOGCCm6kTIL8aLP8GAj6wDPTDflf7k/7vhsGfle1QC904XlomK5/Be25KS6OkIFjn3O7VppB
+X-Gm-Message-State: AOJu0YxpfCj09q5GXdGcuYRRu8CRA1KHx/bIwkDaIHvF66p/2yKXGwaY
+	nX+q5k7yMFmdcCJuvN1PIYH9PsFwNsD7TVG4VzitIirAE4YROQrw393LJ5hwUYDwHi1vCB+qagi
+	OrfsDHaTM9kWVjVafXBJqCbZn+ctzB9RQrmHD
+X-Google-Smtp-Source: AGHT+IGcfRhtd9MGWZfmF3BJHfebS6aqh8aEn9feq7jKiTcP0qZsciSIAAE7Fq6y/oaDjz3cb6cf2XLBXQ6TGFiCDb8=
+X-Received: by 2002:a92:d481:0:b0:363:8882:d86 with SMTP id
+ p1-20020a92d481000000b0036388820d86mr501941ilg.1.1707421348650; Thu, 08 Feb
+ 2024 11:42:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c083e6d-5fcd-4557-88dd-0f95acdbc747@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20240206182559.32264-1-ryncsn@gmail.com> <CAF8kJuMe7MYsAhwX804jZfO4w6kt74YMZXuz+FqUbZEt70p7Rg@mail.gmail.com>
+ <CAGsJ_4zF+U5JG8XYANe2x0VbjovokFCirf=YLHOfO3E-U8b4sg@mail.gmail.com>
+ <CAF8kJuOBtT+n5CM2s1Mobk5fzpgetCSMTZ-nb8+0KUj1W5f+Mw@mail.gmail.com>
+ <CAMgjq7CV-Cxar8cRj1SxB4ZtO8QPTUuA5mj9_vQro7sm+eFH=w@mail.gmail.com>
+ <CAF8kJuOQqqqM6MvOvo4PyOhT9eyNFreQjWC+TybGYDgXRfpweA@mail.gmail.com>
+ <CAMgjq7CBV4dVo7ETr0K1VbLE=M7T0Go5=7pHBUY6=o0cuXaZXg@mail.gmail.com>
+ <ZcPMi6DX5PN4WwHr@google.com> <CAMgjq7AJo1SKzRc-w5UuK3Ojk5PaXxRV2_G2Ww9BGgiNRp_5Eg@mail.gmail.com>
+ <87eddnxy47.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAMgjq7Cg+8zy25Cif2DJ0Qey3bC=Ni0q7xHNO9ka+ezoK1rgxA@mail.gmail.com>
+In-Reply-To: <CAMgjq7Cg+8zy25Cif2DJ0Qey3bC=Ni0q7xHNO9ka+ezoK1rgxA@mail.gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 8 Feb 2024 11:42:16 -0800
+X-Gmail-Original-Message-ID: <CAF8kJuNXr7CT7-homTfOX=XYfie2woPbcS9sKkt4R3HSiHUmng@mail.gmail.com>
+Message-ID: <CAF8kJuNXr7CT7-homTfOX=XYfie2woPbcS9sKkt4R3HSiHUmng@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/swap: fix race when skipping swapcache
+To: Kairui Song <ryncsn@gmail.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Minchan Kim <minchan@kernel.org>, 
+	Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Yu Zhao <yuzhao@google.com>, 
+	Barry Song <v-songbaohua@oppo.com>, SeongJae Park <sj@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, David Hildenbrand <david@redhat.com>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 08, 2024 at 09:13:25PM +0200, Tariq Toukan wrote:
-> 
-> 
-> On 08/02/2024 5:07, Joe Damato wrote:
-> >Make mlx5 compatible with the newly added netlink queue GET APIs.
+On Thu, Feb 8, 2024 at 11:01=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> On Thu, Feb 8, 2024 at 2:36=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
+ wrote:
 > >
-> >Signed-off-by: Joe Damato <jdamato@fastly.com>
-> >---
-> >v2 -> v3:
-> >   - Fix commit message subject
-> >   - call netif_queue_set_napi in mlx5e_ptp_activate_channel and
-> >     mlx5e_ptp_deactivate_channel to enable/disable NETDEV_QUEUE_TYPE_RX for
-> >     the PTP channel.
-> >   - Modify mlx5e_activate_txqsq and mlx5e_deactivate_txqsq to set
-> >     NETDEV_QUEUE_TYPE_TX which should take care of all TX queues including
-> >     QoS/HTB and PTP.
-> >   - Rearrange mlx5e_activate_channel and mlx5e_deactivate_channel for
-> >     better ordering when setting and unsetting NETDEV_QUEUE_TYPE_RX NAPI
-> >     structs
+> > Kairui Song <ryncsn@gmail.com> writes:
 > >
-> >v1 -> v2:
-> >   - Move netlink NULL code to mlx5e_deactivate_channel
-> >   - Move netif_napi_set_irq to mlx5e_open_channel and avoid storing the
-> >     irq, after netif_napi_add which itself sets the IRQ to -1
+> > > On Thu, Feb 8, 2024 at 2:31=E2=80=AFAM Minchan Kim <minchan@kernel.or=
+g> wrote:
+> > >>
+> > >> On Wed, Feb 07, 2024 at 12:06:15PM +0800, Kairui Song wrote:
 > >
-> >  drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c  | 3 +++
-> >  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 +++++++
-> >  2 files changed, 10 insertions(+)
+> > [snip]
 > >
-> >diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c
-> >index 078f56a3cbb2..fbbc287d924d 100644
-> >--- a/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c
-> >+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c
-> >@@ -927,6 +927,8 @@ void mlx5e_ptp_activate_channel(struct mlx5e_ptp *c)
-> >  	int tc;
-> >  	napi_enable(&c->napi);
-> >+	netif_queue_set_napi(c->netdev, c->rq.ix, NETDEV_QUEUE_TYPE_RX,
-> >+			     &c->napi);
-> >  	if (test_bit(MLX5E_PTP_STATE_TX, c->state)) {
-> >  		for (tc = 0; tc < c->num_tc; tc++)
-> >@@ -951,6 +953,7 @@ void mlx5e_ptp_deactivate_channel(struct mlx5e_ptp *c)
-> >  			mlx5e_deactivate_txqsq(&c->ptpsq[tc].txqsq);
-> >  	}
-> >+	netif_queue_set_napi(c->netdev, c->rq.ix, NETDEV_QUEUE_TYPE_RX, NULL);
-> >  	napi_disable(&c->napi);
-> >  }
-> >diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> >index c8e8f512803e..2f1792854dd5 100644
-> >--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> >+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> >@@ -1806,6 +1806,7 @@ void mlx5e_activate_txqsq(struct mlx5e_txqsq *sq)
-> >  	set_bit(MLX5E_SQ_STATE_ENABLED, &sq->state);
-> >  	netdev_tx_reset_queue(sq->txq);
-> >  	netif_tx_start_queue(sq->txq);
-> >+	netif_queue_set_napi(sq->channel->netdev, sq->txq_ix, NETDEV_QUEUE_TYPE_TX, &sq->channel->napi);
-> 
-> Might be called with channel==NULL.
-> For example for PTP.
-> 
-> Prefer sq->netdev and sq->cq.napi.
+> > >> >
+> > >> > So I think the thing is, it's getting complex because this patch
+> > >> > wanted to make it simple and just reuse the swap cache flags.
+> > >>
+> > >> I agree that a simple fix would be the important at this point.
+> > >>
+> > >> Considering your description, here's my understanding of the other i=
+dea:
+> > >> Other method, such as increasing the swap count, haven't proven effe=
+ctive
+> > >> in your tests. The approach risk forcing racers to rely on the swap =
+cache
+> > >> again and the potential performance loss in race scenario.
+> > >>
+> > >> While I understand that simplicity is important, and performance los=
+s
+> > >> in this case may be infrequent, I believe swap_count approach could =
+be a
+> > >> suitable solution. What do you think?
+> > >
+> > > Hi Minchan
+> > >
+> > > Yes, my main concern was about simplicity and performance.
+> > >
+> > > Increasing swap_count here will also race with another process from
+> > > releasing swap_count to 0 (swapcache was able to sync callers in othe=
+r
+> > > call paths but we skipped swapcache here).
+> >
+> > What is the consequence of the race condition?
+>
+> Hi Ying,
+>
+> It will increase the swap count of an already freed entry, this race
+> with multiple swap free/alloc logic that checks if count =3D=3D
+> SWAP_HAS_CACHE or sets count to zero, or repeated free of an entry,
+> all result in random corruption of the swap map. This happens a lot
+> during stress testing.
 
-OK, I'll make that change for the v4 which I'll send sometime tomorrow.
+In theory, the original code before your patch can get into a
+situation similar to what you try to avoid.
+CPU1 enters the do_swap_page() with entry swap count =3D=3D 1 and
+continues handling the swap fault without swap cache.  Then some
+operation bumps up the swap entry count and CPU2 enters the
+do_swap_page() racing with CPU1 with swap count =3D=3D 2. CPU2 will need
+to go through the swap cache case.  We still need to handle this
+situation correctly.
+So the complexity is already there.
 
-Thanks.
+If we can make sure the above case works correctly, then one way to
+avoid the problem is just send the CPU2 to use the swap cache (without
+the swap cache by-passing).
 
-> >  }
-> >  void mlx5e_tx_disable_queue(struct netdev_queue *txq)
-> >@@ -1819,6 +1820,7 @@ void mlx5e_deactivate_txqsq(struct mlx5e_txqsq *sq)
-> >  {
-> >  	struct mlx5_wq_cyc *wq = &sq->wq;
-> >+	netif_queue_set_napi(sq->channel->netdev, sq->txq_ix, NETDEV_QUEUE_TYPE_TX, NULL);
-> 
-> Same here.
-> 
-> >  	clear_bit(MLX5E_SQ_STATE_ENABLED, &sq->state);
-> >  	synchronize_net(); /* Sync with NAPI to prevent netif_tx_wake_queue. */
-> >@@ -2560,6 +2562,7 @@ static int mlx5e_open_channel(struct mlx5e_priv *priv, int ix,
-> >  	c->lag_port = mlx5e_enumerate_lag_port(priv->mdev, ix);
-> >  	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll);
-> >+	netif_napi_set_irq(&c->napi, irq);
-> >  	err = mlx5e_open_queues(c, params, cparam);
-> >  	if (unlikely(err))
-> >@@ -2602,12 +2605,16 @@ static void mlx5e_activate_channel(struct mlx5e_channel *c)
-> >  		mlx5e_activate_xsk(c);
-> >  	else
-> >  		mlx5e_activate_rq(&c->rq);
-> >+
-> >+	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, &c->napi);
-> >  }
-> >  static void mlx5e_deactivate_channel(struct mlx5e_channel *c)
-> >  {
-> >  	int tc;
-> >+	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, NULL);
-> >+
-> >  	if (test_bit(MLX5E_CHANNEL_STATE_XSK, c->state))
-> >  		mlx5e_deactivate_xsk(c);
-> >  	else
+
+
+>
+> >
+> > > So the right step is: 1. Lock the cluster/swap lock; 2. Check if stil=
+l
+> > > have swap_count =3D=3D 1, bail out if not; 3. Set it to 2;
+> > > __swap_duplicate can be modified to support this, it's similar to
+> > > existing logics for SWAP_HAS_CACHE.
+> > >
+> > > And swap freeing path will do more things, swapcache clean up needs t=
+o
+> > > be handled even in the bypassing path since the racer may add it to
+> > > swapcache.
+> > >
+> > > Reusing SWAP_HAS_CACHE seems to make it much simpler and avoided many
+> > > overhead, so I used that way in this patch, the only issue is
+> > > potentially repeated page faults now.
+> > >
+> > > I'm currently trying to add a SWAP_MAP_LOCK (or SWAP_MAP_SYNC, I'm ba=
+d
+> > > at naming it) special value, so any racer can just spin on it to avoi=
+d
+> > > all the problems, how do you think about this?
+> >
+> > Let's try some simpler method firstly.
+>
+> Another simpler idea is, add a schedule() or
+> schedule_timeout_uninterruptible(1) in the swapcache_prepare failure
+> path before goto out (just like __read_swap_cache_async). I think this
+> should ensure in almost all cases, PTE is ready after it returns, also
+> yields more CPU.
+
+I mentioned in my earlier email and Ying points out that as well.
+Looping waiting inside do_swap_page() is bad because it is holding
+other locks. Sorry I started this idea but it seems no good. If we can
+have CPU2 make forward progress without retrying the page fault would
+be the best, if possible.
+
+Chris
