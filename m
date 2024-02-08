@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C41967E63
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 06:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2881692E4
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 06:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707373589; cv=none; b=nb/ntcPThuvVqQW/mzTvIwqzETrKUmupoZKpKVLS9D0/JiQU5hRbAiKaEVm7iseuj57n7Y1dXJ+WZkqvEUX8SzffZDOJRM8D63Vi1/4ILLHVgMapH6U56znU8/1/d6BgKQqhsFTBM7nflQIe77ndcETdsjTAIml3SX2Cg7RMVKE=
+	t=1707373590; cv=none; b=bKmFdp6dlDigX+VKC9T48VN2IWYsO7ZTDxnq3mT367VaTYbhz38ySRDy/uElRSyfjIgB1MRnR3fzf6UkgpMvRd1yP5+BcXLwSh6C+N4V9dbv93z9ZcdxUIOFDbb++NiM2nLz2Jy0wTREoMo+cN3N5+Z2bTUyeIt8Uf6kWokjl7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707373589; c=relaxed/simple;
-	bh=WHuF8WryLfu8JX/60dlBPk8CVS136b4yvUfGBE1UZcQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=OK3zgtJ3BccpqgH2HrGdDLM/PrumDhJ81/JmoGOz8Dyo7fz8kcyhxMXYB4ZD1C7VSmsk7bHADqhCCcrDPRDDCl3ne8gYxOjgR6+HO6fSsnmD880FA083zNki9ECPc9yZn9B0ZISCG4PBcfuC//HoWIPEbfIYS6UCvg7titiJzXM=
+	s=arc-20240116; t=1707373590; c=relaxed/simple;
+	bh=bOo6ompPxEjsShhZOqBiAWkLgDaqfCbo8j/HY5Q8F4Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Ld0Tmayc3z6lA5Jh0DtrGnrOaxazbJxgumznbA1oLniAWF66pGmNltl0u54DHpZZCtldwIS6MuOXbm94APqGxbf+BhWlDWpMrY3YYY7DKKW5ueYomP8f8rkD/mRy6IVsSJazSokkr2kVZtR4g1NRgsagWPaNIvWTMd0RHDFmKYs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-7d-65c4740bc993
+X-AuditID: a67dfc5b-d85ff70000001748-86-65c4740be438
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -31,36 +31,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [RESEND PATCH v7 3/8] mm/rmap: Recognize read-only TLB entries during batched TLB flush
-Date: Thu,  8 Feb 2024 15:26:03 +0900
-Message-Id: <20240208062608.44351-4-byungchul@sk.com>
+Subject: [RESEND PATCH v7 5/8] mm: Separate move/undo doing on folio list from migrate_pages_batch()
+Date: Thu,  8 Feb 2024 15:26:05 +0900
+Message-Id: <20240208062608.44351-6-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240208062608.44351-1-byungchul@sk.com>
 References: <20240208062608.44351-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsXC9ZZnoS53yZFUg6bNAhZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHF910NGi+O9B5gs
-	5t/7zGaxedNUZovjU6YyWvz+AdRxctZkFgdBj++tfSweO2fdZfdYsKnUY/MKLY/Fe14yeWxa
-	1cnmsenTJHaPd+fOsXucmPGbxWPeyUCP9/uusnls/WXn0Tj1GpvH501yHu/mv2UL4I/isklJ
-	zcksSy3St0vgyvg6z6nguHTFh087GBsYH4h1MXJySAiYSHx+9JcFxu75PZURxGYTUJe4ceMn
-	M4gtImAmcbD1D3sXIxcHs8BHJonV3zvAGoQFEiT6zyxkBbFZBFQlmv90gDXzCphKzN2xkhFi
-	qLzE6g0HwAZxAg3aue0UWL0QUM2L2ZPZQIZKCPxnk5jbv50dokFS4uCKGywTGHkXMDKsYhTK
-	zCvLTczMMdHLqMzLrNBLzs/dxAiMh2W1f6J3MH66EHyIUYCDUYmH90T54VQh1sSy4srcQ4wS
-	HMxKIrxmOw6kCvGmJFZWpRblxxeV5qQWH2KU5mBREuc1+laeIiSQnliSmp2aWpBaBJNl4uCU
-	amAMk/hgllfEfM3ljXTHGzsDk7yyw2KLzQRM34RWCbRbBc87bbdnhrGmfvHHgO27fqWeiuOe
-	vYSf6+YE6fXXJFdPcYz5c+Wp3KOPwva7HnTzL3rZWBClty15kXkzm5POtis3d7+2Wzf95Qa+
-	Z1s88v1aZ4jsm9rL/1kzwbb3Cks+s+aFTTH8/P1KLMUZiYZazEXFiQB5E/uagwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsXC5WfdrMtdciTVYPkEZos569ewWXze8I/N
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsXC9ZZnoS53yZFUg99LJSzmrF/DZvF5wz82
+	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeL6roeMFsd7DzBZ
+	zL/3mc1i86apzBbHp0xltPj9A6jj5KzJLA6CHt9b+1g8ds66y+6xYFOpx+YVWh6L97xk8ti0
+	qpPNY9OnSewe786dY/c4MeM3i8e8k4Ee7/ddZfPY+svOo3HqNTaPz5vkPN7Nf8sWwB/FZZOS
+	mpNZllqkb5fAlXHj/V32gn6dikVzHrI3MK5U7mLk4JAQMJFY9Y2ri5ETzDw7/x0riM0moC5x
+	48ZPZhBbRMBM4mDrH/YuRi4OZoGPTBKrv3ewgCSEBVIkvp5uZgOxWQRUJbb+u80IYvMKmEq8
+	f7KSHWKovMTqDQfABnECDdq57RTYAiGgmhezJ7NB1LSzSyy9YwZhS0ocXHGDZQIj7wJGhlWM
+	Qpl5ZbmJmTkmehmVeZkVesn5uZsYgdGwrPZP9A7GTxeCDzEKcDAq8fCeKD+cKsSaWFZcmXuI
+	UYKDWUmE12zHgVQh3pTEyqrUovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwc
+	nFINjOvUp+aIq0mc+5SbIprtwXXA6fDf64oWs197LtvJUbt9h+bLjW189yYEMXmZMnQYybUK
+	V5SKdUn87TK/M2HjWu/lJ/dvWKs0328yY/xElVuT/v5+/vJClG7KwuJtrzdZL7KtKjdoNnsl
+	ZshQY/TGffm8clZTkQiHEr+rZRZ3OSM6lx+SkPNVVWIpzkg01GIuKk4EAIuevTiCAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsXC5WfdrMtdciTV4MAKbos569ewWXze8I/N
 	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfVdDxkt
 	jvceYLKYf+8zm8XmTVOZLY5Pmcpo8fsHUMfJWZNZHIQ8vrf2sXjsnHWX3WPBplKPzSu0PBbv
 	ecnksWlVJ5vHpk+T2D3enTvH7nFixm8Wj3knAz3e77vK5rH4xQcmj62/7Dwap15j8/i8Sc7j
-	3fy3bAECUVw2Kak5mWWpRfp2CVwZX+c5FRyXrvjwaQdjA+MDsS5GTg4JAROJnt9TGUFsNgF1
-	iRs3fjKD2CICZhIHW/+wdzFycTALfGSSWP29gwUkISyQINF/ZiEriM0ioCrR/KcDrJlXwFRi
-	7o6VjBBD5SVWbzgANogTaNDObafA6oWAal7Mnsw2gZFrASPDKkaRzLyy3MTMHFO94uyMyrzM
-	Cr3k/NxNjMDgXlb7Z+IOxi+X3Q8xCnAwKvHwnig/nCrEmlhWXJl7iFGCg1lJhNdsx4FUId6U
-	xMqq1KL8+KLSnNTiQ4zSHCxK4rxe4akJQgLpiSWp2ampBalFMFkmDk6pBsbT6Qs2PjP8zBge
-	GnD61x6zpztS2dVYI/78MDKWPyPr0e73o/j8M9srfp8+2R5ee/PFGmZbs31Wwgsdznr/WiIf
-	spbRtHRVS+M7d89Mn+bwqU9M7ex3fI70eij2oMR7bbU3R5PUlJvi3Bcy9nL9jG3xyUpr0FGe
-	PZ/PNfi0/oxJHG86vXQbTZRYijMSDbWYi4oTAeOGLtNqAgAA
+	3fy3bAECUVw2Kak5mWWpRfp2CVwZN97fZS/o16lYNOchewPjSuUuRk4OCQETibPz37GC2GwC
+	6hI3bvxkBrFFBMwkDrb+Ye9i5OJgFvjIJLH6ewcLSEJYIEXi6+lmNhCbRUBVYuu/24wgNq+A
+	qcT7JyvZIYbKS6zecABsECfQoJ3bToEtEAKqeTF7MtsERq4FjAyrGEUy88pyEzNzTPWKszMq
+	8zIr9JLzczcxAsN7We2fiTsYv1x2P8QowMGoxMN7ovxwqhBrYllxZe4hRgkOZiURXrMdB1KF
+	eFMSK6tSi/Lji0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGPVl5+yQcXTs
+	e6p7f5FPv0Xi/QeMy/bW2y032XDl8e5t2UKOfnN3+XmyCCltOL2rp4o5Q/bb/NLNGic+el44
+	zs23pmP7nMJPMfXn2WrMr75WnqzV/5WDZRrTz3vbDS8cPpZwfuMj7tpo0eosDtsUH639kdwm
+	n0puic3iyj/ldXTihb9TlvfyuSqxFGckGmoxFxUnAgBFmRGYawIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,114 +69,182 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Functionally, no change. This is a preparation for migrc mechanism that
-requires to recognize read-only TLB entries and makes use of them to
-batch more aggressively. Plus, the newly introduced API, fold_ubc() will
-be used by migrc mechanism when manipulating tlb batch data.
+requires to use separate folio lists for its own handling at migration.
+
+Refactored migrate_pages_batch() and separated move and undo parts
+operating on folio list, from migrate_pages_batch().
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/sched.h |  1 +
- mm/internal.h         |  4 ++++
- mm/rmap.c             | 31 ++++++++++++++++++++++++++++++-
- 3 files changed, 35 insertions(+), 1 deletion(-)
+ mm/migrate.c | 134 +++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 83 insertions(+), 51 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 292c31697248..0317e7a65151 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1328,6 +1328,7 @@ struct task_struct {
- #endif
- 
- 	struct tlbflush_unmap_batch	tlb_ubc;
-+	struct tlbflush_unmap_batch	tlb_ubc_ro;
- 
- 	/* Cache last used pipe for splice(): */
- 	struct pipe_inode_info		*splice_pipe;
-diff --git a/mm/internal.h b/mm/internal.h
-index b61034bd50f5..b880f1e78700 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -923,6 +923,7 @@ extern struct workqueue_struct *mm_percpu_wq;
- void try_to_unmap_flush(void);
- void try_to_unmap_flush_dirty(void);
- void flush_tlb_batched_pending(struct mm_struct *mm);
-+void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src);
- #else
- static inline void try_to_unmap_flush(void)
- {
-@@ -933,6 +934,9 @@ static inline void try_to_unmap_flush_dirty(void)
- static inline void flush_tlb_batched_pending(struct mm_struct *mm)
- {
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 397f2a6e34cb..bbe1ecef4956 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1611,6 +1611,81 @@ static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
+ 	return nr_failed;
  }
-+static inline void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src)
+ 
++static void migrate_folios_move(struct list_head *src_folios,
++		struct list_head *dst_folios,
++		free_folio_t put_new_folio, unsigned long private,
++		enum migrate_mode mode, int reason,
++		struct list_head *ret_folios,
++		struct migrate_pages_stats *stats,
++		int *retry, int *thp_retry, int *nr_failed,
++		int *nr_retry_pages)
 +{
++	struct folio *folio, *folio2, *dst, *dst2;
++	bool is_thp;
++	int nr_pages;
++	int rc;
++
++	dst = list_first_entry(dst_folios, struct folio, lru);
++	dst2 = list_next_entry(dst, lru);
++	list_for_each_entry_safe(folio, folio2, src_folios, lru) {
++		is_thp = folio_test_large(folio) && folio_test_pmd_mappable(folio);
++		nr_pages = folio_nr_pages(folio);
++
++		cond_resched();
++
++		rc = migrate_folio_move(put_new_folio, private,
++				folio, dst, mode,
++				reason, ret_folios);
++		/*
++		 * The rules are:
++		 *	Success: folio will be freed
++		 *	-EAGAIN: stay on the unmap_folios list
++		 *	Other errno: put on ret_folios list
++		 */
++		switch(rc) {
++		case -EAGAIN:
++			*retry += 1;
++			*thp_retry += is_thp;
++			*nr_retry_pages += nr_pages;
++			break;
++		case MIGRATEPAGE_SUCCESS:
++			stats->nr_succeeded += nr_pages;
++			stats->nr_thp_succeeded += is_thp;
++			break;
++		default:
++			*nr_failed += 1;
++			stats->nr_thp_failed += is_thp;
++			stats->nr_failed_pages += nr_pages;
++			break;
++		}
++		dst = dst2;
++		dst2 = list_next_entry(dst, lru);
++	}
 +}
- #endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
- 
- extern const struct trace_print_flags pageflag_names[];
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 7a27a2b41802..da36f23ff7b0 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -605,6 +605,28 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
- }
- 
- #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
 +
-+void fold_ubc(struct tlbflush_unmap_batch *dst,
-+	      struct tlbflush_unmap_batch *src)
++static void migrate_folios_undo(struct list_head *src_folios,
++		struct list_head *dst_folios,
++		free_folio_t put_new_folio, unsigned long private,
++		struct list_head *ret_folios)
 +{
-+	if (!src->flush_required)
-+		return;
++	struct folio *folio, *folio2, *dst, *dst2;
 +
-+	/*
-+	 * Fold src to dst.
-+	 */
-+	arch_tlbbatch_fold(&dst->arch, &src->arch);
-+	dst->writable = dst->writable || src->writable;
-+	dst->flush_required = true;
++	dst = list_first_entry(dst_folios, struct folio, lru);
++	dst2 = list_next_entry(dst, lru);
++	list_for_each_entry_safe(folio, folio2, src_folios, lru) {
++		int old_page_state = 0;
++		struct anon_vma *anon_vma = NULL;
 +
-+	/*
-+	 * Reset src.
-+	 */
-+	arch_tlbbatch_clear(&src->arch);
-+	src->flush_required = false;
-+	src->writable = false;
++		__migrate_folio_extract(dst, &old_page_state, &anon_vma);
++		migrate_folio_undo_src(folio, old_page_state & PAGE_WAS_MAPPED,
++				anon_vma, true, ret_folios);
++		list_del(&dst->lru);
++		migrate_folio_undo_dst(dst, true, put_new_folio, private);
++		dst = dst2;
++		dst2 = list_next_entry(dst, lru);
++	}
 +}
 +
  /*
-  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
-  * important if a PTE was dirty when it was unmapped that it's flushed
-@@ -614,7 +636,9 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
- void try_to_unmap_flush(void)
- {
- 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
-+	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
+  * migrate_pages_batch() first unmaps folios in the from list as many as
+  * possible, then move the unmapped folios.
+@@ -1633,7 +1708,7 @@ static int migrate_pages_batch(struct list_head *from,
+ 	int pass = 0;
+ 	bool is_thp = false;
+ 	bool is_large = false;
+-	struct folio *folio, *folio2, *dst = NULL, *dst2;
++	struct folio *folio, *folio2, *dst = NULL;
+ 	int rc, rc_saved = 0, nr_pages;
+ 	LIST_HEAD(unmap_folios);
+ 	LIST_HEAD(dst_folios);
+@@ -1769,42 +1844,11 @@ static int migrate_pages_batch(struct list_head *from,
+ 		thp_retry = 0;
+ 		nr_retry_pages = 0;
  
-+	fold_ubc(tlb_ubc, tlb_ubc_ro);
- 	if (!tlb_ubc->flush_required)
- 		return;
+-		dst = list_first_entry(&dst_folios, struct folio, lru);
+-		dst2 = list_next_entry(dst, lru);
+-		list_for_each_entry_safe(folio, folio2, &unmap_folios, lru) {
+-			is_thp = folio_test_large(folio) && folio_test_pmd_mappable(folio);
+-			nr_pages = folio_nr_pages(folio);
+-
+-			cond_resched();
+-
+-			rc = migrate_folio_move(put_new_folio, private,
+-						folio, dst, mode,
+-						reason, ret_folios);
+-			/*
+-			 * The rules are:
+-			 *	Success: folio will be freed
+-			 *	-EAGAIN: stay on the unmap_folios list
+-			 *	Other errno: put on ret_folios list
+-			 */
+-			switch(rc) {
+-			case -EAGAIN:
+-				retry++;
+-				thp_retry += is_thp;
+-				nr_retry_pages += nr_pages;
+-				break;
+-			case MIGRATEPAGE_SUCCESS:
+-				stats->nr_succeeded += nr_pages;
+-				stats->nr_thp_succeeded += is_thp;
+-				break;
+-			default:
+-				nr_failed++;
+-				stats->nr_thp_failed += is_thp;
+-				stats->nr_failed_pages += nr_pages;
+-				break;
+-			}
+-			dst = dst2;
+-			dst2 = list_next_entry(dst, lru);
+-		}
++		/* Move the unmapped folios */
++		migrate_folios_move(&unmap_folios, &dst_folios,
++				put_new_folio, private, mode, reason,
++				ret_folios, stats, &retry, &thp_retry,
++				&nr_failed, &nr_retry_pages);
+ 	}
+ 	nr_failed += retry;
+ 	stats->nr_thp_failed += thp_retry;
+@@ -1813,20 +1857,8 @@ static int migrate_pages_batch(struct list_head *from,
+ 	rc = rc_saved ? : nr_failed;
+ out:
+ 	/* Cleanup remaining folios */
+-	dst = list_first_entry(&dst_folios, struct folio, lru);
+-	dst2 = list_next_entry(dst, lru);
+-	list_for_each_entry_safe(folio, folio2, &unmap_folios, lru) {
+-		int old_page_state = 0;
+-		struct anon_vma *anon_vma = NULL;
+-
+-		__migrate_folio_extract(dst, &old_page_state, &anon_vma);
+-		migrate_folio_undo_src(folio, old_page_state & PAGE_WAS_MAPPED,
+-				       anon_vma, true, ret_folios);
+-		list_del(&dst->lru);
+-		migrate_folio_undo_dst(dst, true, put_new_folio, private);
+-		dst = dst2;
+-		dst2 = list_next_entry(dst, lru);
+-	}
++	migrate_folios_undo(&unmap_folios, &dst_folios,
++			put_new_folio, private, ret_folios);
  
-@@ -645,13 +669,18 @@ void try_to_unmap_flush_dirty(void)
- static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
- 				      unsigned long uaddr)
- {
--	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
-+	struct tlbflush_unmap_batch *tlb_ubc;
- 	int batch;
- 	bool writable = pte_dirty(pteval);
- 
- 	if (!pte_accessible(mm, pteval))
- 		return;
- 
-+	if (pte_write(pteval) || writable)
-+		tlb_ubc = &current->tlb_ubc;
-+	else
-+		tlb_ubc = &current->tlb_ubc_ro;
-+
- 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, uaddr);
- 	tlb_ubc->flush_required = true;
- 
+ 	return rc;
+ }
 -- 
 2.17.1
 
