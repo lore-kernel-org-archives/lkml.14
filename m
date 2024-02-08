@@ -1,281 +1,226 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07AD280C05;
-	Thu,  8 Feb 2024 11:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707393437; cv=none; b=kQw+dbNy81eAz+//O9CWXiwMTu9zb6X8nr5euZgOPCBDI4nLNZUtGWO7IeLey/zQFVWi07HEZs9yv7Xvgu5ib9Z/EhQLDSkDFwyuhbtv3KIHtSFxga+bMv/uUtHArS/SYe1zp8zMUNWO0coctLpMss2Yo4qzKZTDMMdyZFBLkUs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707393437; c=relaxed/simple;
-	bh=mOT08XEByO+LeskfYMHlZjEPu2b3L6qYci807q41tVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C9sEMfRqKqAQJgjEbFTc2YnfWq1ZRsl4Vqz3XddNyIE1JUX5UUpOjLjKxxlrxOg6tUS6C+DkN1RDpzYarSNKopC5lgtca+xAnNzRENH8KlUKmr6iLDBUGF5Ml9GtfvM+QmjBeRVrlWJ17jBhHfoIOch1WUnuf/7J5HT7d8C5iOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C8BBDA7;
-	Thu,  8 Feb 2024 03:57:56 -0800 (PST)
-Received: from e129166.arm.com (unknown [10.57.8.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AD0A93F5A1;
-	Thu,  8 Feb 2024 03:57:11 -0800 (PST)
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	rafael@kernel.org
-Cc: lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com,
-	rui.zhang@intel.com,
-	amit.kucheria@verdurent.com,
-	amit.kachhap@gmail.com,
-	daniel.lezcano@linaro.org,
-	viresh.kumar@linaro.org,
-	len.brown@intel.com,
-	pavel@ucw.cz,
-	mhiramat@kernel.org,
-	qyousef@layalina.io,
-	wvw@google.com,
-	xuewen.yan94@gmail.com
-Subject: [PATCH v8 23/23] Documentation: EM: Update with runtime modification design
-Date: Thu,  8 Feb 2024 11:55:57 +0000
-Message-Id: <20240208115557.1273962-24-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240208115557.1273962-1-lukasz.luba@arm.com>
-References: <20240208115557.1273962-1-lukasz.luba@arm.com>
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97FE823B3;
+	Thu,  8 Feb 2024 11:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707393441; cv=fail; b=dxs/scqLnPsZAQrDO1nuNo1LZ7unXydSoL7tLUTRU7/TPqQvbpgYUgpfqxjPnKl1JdclyjowOKtD0J4PJiRQB79tUI9yN/32r8mV8DVSc1OTLxMTkHvf6wedwXGngE5Mdf36wi0kJlu+a0eevH43W3cJqIrdO3plCJRjaPs1qmU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707393441; c=relaxed/simple;
+	bh=r5A9ohtK0hw8op7987kt9qoEXZDXNbXQVPJ4n+JWWG4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dgSfbteQWHwUXu54KE3jdwdGH4tePr3/+PTuh6LrFXGVzRj3Zg3Gpo8yVij5ALdZLgWEBt4LvsIL7OXnBYsOO1Hlgba9T+FInix/sAINerYjSgAw9csjKmVsGAB2cOSnAI/42d8el7MdCz+xuNnyIqH6WLY0W3vRwP05QkpM1V8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YMFuy0A/; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YMFuy0A/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707393440; x=1738929440;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=r5A9ohtK0hw8op7987kt9qoEXZDXNbXQVPJ4n+JWWG4=;
+  b=YMFuy0A/Mk6sjM0J5YXSKMY/zllcUvZKAMso0f0xR5B69e/14KyzDT5u
+   +3wRwUpRg2Ew1EIX9E32mm1rFtkyjPBqKRMjD/fJ68W/T6yp5TaJ94Irc
+   w6yOIXDRNw3BN+qu8apSqMojmeUCILmwC8I0M4/+RHhMLcgl4TfxR9xgg
+   oQs01aiZxqHLMaUasHDvZKBDilHFJ+LkZ4HzX8BYWDg8y0QeJkFYYa1JP
+   bBsfRsJx5XSU4BP8cJZqEXGNjCYSX3EiIrJffmoR5U/wk1VziuKSqH04V
+   ozx4HuJTNM0P3P5Nkks72YXgPJs1+spFp3ct9TeJusRJLoaeYapSAb+wf
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1089144"
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1089144"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:57:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="6265244"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Feb 2024 03:57:18 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 03:57:18 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 03:57:17 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 8 Feb 2024 03:57:17 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 8 Feb 2024 03:57:17 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CyoelcJJfumiKqsk4xb8Y+sCy8hnALDD2szUnAGLqMyKjd+c8nFvEjybljpDmI9HjMNoUNMFQbE7RAp/a9uhkH2pUWyqJ/bHcmDh13I+5q6/Qt3BAexTDVZ9GgRMY45QbpFLNgB+jVe4KsF/YyCrezGCXtf6L4n9gfh1UME2JatmJo8W4nSTZJzV/vS2V4EFtcMmWn++KywlStmIHgSqjjLs63o0fBD4FvjlidYQU6f44A+dUBofY7tdVnlPKDNXx/Gm3KcXmIMmFPCkIEsGTZp1O5a8pAhPBuNuHjIYVR3wZNVi9BGv6zjpHmf5FJyLeWiYsvRdTMHJsSpV5Yk1/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9P7O7vmUjhSWTcostT104o4dy7dJTQPKUsMsCVL8Yec=;
+ b=YDT9x0jDq1gQoD7yG+1LL1LVSqpNi/9/QNyv4MhrthA2grqzDoCF9Pa3UZENxAEF8B/LKc+caqYQOBt379FxuUlY9DquAkQvn9MTSkjJkbW2c/w6Y5djk3hbbvcgWxL1w0TzfxAftAr4oqiDRjk80fGAkbqWchS1szdL80s20upzYfhrUvA4xV9DA9cp2h0vmXznOJNinGr50Y4b4NJKsoCwUAK6LmsBadHxgikPpaZ68nL1ZtwhJoEwVxSD+sPYP8/Uw5NICFpzKtaMaubPoK5x9rAe0aeMnVPrEWemqaGZN8cWmsc0nbfxihDxglmA+W6x4wcOjy0tCnqJB1iLQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB5865.namprd11.prod.outlook.com (2603:10b6:a03:428::13)
+ by SJ2PR11MB8565.namprd11.prod.outlook.com (2603:10b6:a03:56b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Thu, 8 Feb
+ 2024 11:57:15 +0000
+Received: from SJ0PR11MB5865.namprd11.prod.outlook.com
+ ([fe80::1859:eed7:cd98:cc08]) by SJ0PR11MB5865.namprd11.prod.outlook.com
+ ([fe80::1859:eed7:cd98:cc08%7]) with mapi id 15.20.7249.035; Thu, 8 Feb 2024
+ 11:57:15 +0000
+From: "Romanowski, Rafal" <rafal.romanowski@intel.com>
+To: Simon Horman <horms@kernel.org>, ivecera <ivecera@redhat.com>
+CC: Mateusz Palczewski <mateusz.palczewski@intel.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "Williams, Mitch A"
+	<mitch.a.williams@intel.com>, "Brandeburg, Jesse"
+	<jesse.brandeburg@intel.com>, open list <linux-kernel@vger.kernel.org>, "Eric
+ Dumazet" <edumazet@google.com>, "Nguyen, Anthony L"
+	<anthony.l.nguyen@intel.com>, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+	Sylwester Dziedziuch <sylwesterx.dziedziuch@intel.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "David S. Miller"
+	<davem@davemloft.net>, "moderated list:INTEL ETHERNET DRIVERS"
+	<intel-wired-lan@lists.osuosl.org>
+Subject: RE: [Intel-wired-lan] [PATCH net] i40e: Do not allow untrusted VF to
+ remove administratively set MAC
+Thread-Topic: [Intel-wired-lan] [PATCH net] i40e: Do not allow untrusted VF to
+ remove administratively set MAC
+Thread-Index: AQHaVEf5VS5h9VRQmkOA7cxvQbQI87D3AioAgAlhHVA=
+Date: Thu, 8 Feb 2024 11:57:15 +0000
+Message-ID: <SJ0PR11MB58652DF7738CBACACC7B8D9F8F442@SJ0PR11MB5865.namprd11.prod.outlook.com>
+References: <20240131131714.23497-1-ivecera@redhat.com>
+ <20240202124304.GQ530335@kernel.org>
+In-Reply-To: <20240202124304.GQ530335@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB5865:EE_|SJ2PR11MB8565:EE_
+x-ms-office365-filtering-correlation-id: ed1b79b7-60bf-40cf-15d7-08dc289d1817
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GQehOXI8ceO/yQyFYr8NhcLnSkh3J8NGkuIZrAniixMadtRJ1UzgDEBGnrM/o5h25n7HjXpIVNPx8YBXAVCaupL68M6DszIUpIxEjMNvk34DYMd1kzc43pqjmXRC0sXXRS0g1E2CmJereqzmFhVHn8vsDREHjtVXMbROhrhOSh6P2qDgRIICw+vteJ5sUHZnjkPWuFcMX9KFup3yhaTUX9VMCAS9DBRZRh9mVy21mvIqHAOlAs7uzis9xiN6Lm/3mCSxGNn/Jx2iRdhJpD0b3vRJl3aJeRPVqT0cuH9+m7bYe4C5oax2CXlcUXrFNj43HNWW5s9ISnPODQpJXQWC3LHlI1a+dBkot3alY4HOYBM3YU4k+jSR8x8AwkJdUgKb8oPKRxCAySscJ4nTtFv9KWnKLK6JKKwhuZvCTZB29tw0/6aZG9Ws2OZ3PEgvYv1Wi6X0c1UZZbi7Jg6/X6MbNYAe+uZfSED1OXH9oN9SDI52A3avFheL7XcjNZBSDNTEcsDg8/dhBEBxI7OE50jWT97jbtdoKNSF9DqdLxqnrKUwJfd3QDi76gkELuWcpV/gctXCV9uTI4KPGDoNPXgQE2sib8J/jDfsAzNBjhRphjfTvGUY/dLGDmTfmCnKc9C/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5865.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(396003)(366004)(39860400002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(2906002)(5660300002)(52536014)(55016003)(26005)(38100700002)(41300700001)(82960400001)(83380400001)(122000001)(86362001)(7696005)(33656002)(9686003)(66446008)(66556008)(478600001)(66476007)(6506007)(71200400001)(110136005)(8936002)(76116006)(66946007)(54906003)(64756008)(4326008)(38070700009)(316002)(53546011)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0kmgaF/FtEcyOqtemW8o+BAmwMsIVYLvhQB/2YaVTvCg69t+B8yETEDiRt5h?=
+ =?us-ascii?Q?nJ2njb+FvG9Sf9WdI9KIYTyzp1Iem3akxVU8DOwWbI/7BV+KkK9Sa1aalz8u?=
+ =?us-ascii?Q?5eGHNzs/WB6n6JSJSTo3IWb37zQnNAbi03yfrx7LDNLS/Dh+tchtpabPyr6l?=
+ =?us-ascii?Q?4a9d5n8jcTzuCiJqh0D87WLUtGZWedRfj+Rg4DG79VJfH8+WlzbghxclW1JQ?=
+ =?us-ascii?Q?wq1zocnsrrgGhy1GoKO3d0Uxf6JlKG4SPDjnyGJ2TDeFnZ+ZQF6ATT4UPqUX?=
+ =?us-ascii?Q?feqCD81f8Ikwvkk6kxAQVwHTJBO7TvyFiTX1EVjeLtp8NZ6A6G7wxUulqQ2W?=
+ =?us-ascii?Q?C462nmnoBjLcZruSVHu/tydawT4PpdqS7J0V8fkE7pitd+fhgX3N1DMfBkQj?=
+ =?us-ascii?Q?+2mI3Ppn4bxV+2FByGQIDYgnmiUtI7xw3Qf80jIml+PucE7P6nmVpFBZpYFW?=
+ =?us-ascii?Q?trKJKMxCQs9PZeWlK1SjlAroQ5NIAdC00TP7QBStkiuwtCReU/rUbUUZlTOY?=
+ =?us-ascii?Q?Wr3N/3hZ8wZLmdDl3OzAHtxrgyMWXd+nBJloJXVm+IRHS9pc2dUd1Wo5Y2i1?=
+ =?us-ascii?Q?f5zGE/8UIo8+h72hJrwgmO7jQ0Tx+m7fLCbkllMtMaRf8AoYdtQ89Gso6gBO?=
+ =?us-ascii?Q?2WUwPSihz8203dPcw6evtYh+pLWx5oRJqVi5Jxwd/tjSiUtW0/ilJYy1ESf7?=
+ =?us-ascii?Q?rWQEhGtmcA45rlJZ3yc/tAE3h1iT4BEuMg88pfwZaoasbYFBm/3fL+0V4bVz?=
+ =?us-ascii?Q?sxLabI7eOrFZzrc1P7vIq7LZmbiLP8tNbvJZ0tJ6Af8/zKSvJaqQ5fxzmhZs?=
+ =?us-ascii?Q?vKJ+Aalws1qpb64SyFdfTDDZGEsDCs3Qu2nrbjUxckj57IpN1xXGho+4vpva?=
+ =?us-ascii?Q?xIrapOluy5Xczq3YJlz1QYYPU/T9WxFP2F+T1U2RkQDqNM5//ZxXh2YkkLHG?=
+ =?us-ascii?Q?1ux1gtrlFXCtt2ZB9uYteAhMAKkTucjbUtf7++blZ/ZX6MDkmWR0FgB8Iqw+?=
+ =?us-ascii?Q?hFXMMSiErYrdiZJxR0Jj7o32TittX2tgKSrMj6ywcreUam4/EoE5RxZ1tcfm?=
+ =?us-ascii?Q?ru1C3AyyymM6pMOu4vX/bc3+TNRK/APLEvZFe3aumwPLPgoniaA6f1cxeIir?=
+ =?us-ascii?Q?GBwG58n63Neih4i4d95nOE953mxDQO2IeaYjP5OvW7gAv+kz+au1BBfcPMZG?=
+ =?us-ascii?Q?fXQeGVbRcl5EMEVAQV7ogF2shEL6z6nE/gx6ojA9l8jSdaLwZE6E7pldVkmD?=
+ =?us-ascii?Q?mQHZFjVRYyghN9buiFNglC6/m5iI4+bwAm36rMIauXMuCZeZpibZhaMaCPDN?=
+ =?us-ascii?Q?wrBFFfvxMEtkG3KCl+DzFYGM0+CfPgeurFT9k6W/fxhiFVZ2zA860xiqLbV9?=
+ =?us-ascii?Q?C62h9H4pFiB/EhWCIhbjts+EMTwfmUA6V3dENEKzcDy5qzR1mY/MvKy0st6f?=
+ =?us-ascii?Q?XJZN5LkzBPvyXn5i1XcjLGn65bljWsl0Ct+q7jFip8MK8JGDh6WEAaouUigM?=
+ =?us-ascii?Q?e8TZkztBW7vk9s6yeX0+qJx27Q3/me9Gkr/Q/73xjUziotUZNdK6zY2Lgdea?=
+ =?us-ascii?Q?0fXhJ68T4N/gisVBY69T9m2B0DKT3o95yCZlMoHC?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5865.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed1b79b7-60bf-40cf-15d7-08dc289d1817
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2024 11:57:15.8868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /G767KZHday7/dfXATCQ7IkeB+3hleX7Oh4FF17ekIsOPrScwKNuFjz1KEK+Ss8Q+drG8OTMoU7POGwl8t7zytl5lEhC+MtLeMlVIPOuudU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8565
+X-OriginatorOrg: intel.com
 
-Add a new description which covers the information about runtime EM.
-It contains the design decisions, describes models and how they
-reflect the reality. Remove description of the default EM. Add example
-driver code which modifies EM. Add API documentation for the new feature
-which allows to modify the EM in runtime.
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Simon Horman
+> Sent: Friday, February 2, 2024 1:43 PM
+> To: ivecera <ivecera@redhat.com>
+> Cc: Mateusz Palczewski <mateusz.palczewski@intel.com>;
+> netdev@vger.kernel.org; Williams, Mitch A <mitch.a.williams@intel.com>;
+> Brandeburg, Jesse <jesse.brandeburg@intel.com>; open list <linux-
+> kernel@vger.kernel.org>; Eric Dumazet <edumazet@google.com>; Nguyen,
+> Anthony L <anthony.l.nguyen@intel.com>; Jeff Kirsher
+> <jeffrey.t.kirsher@intel.com>; Sylwester Dziedziuch
+> <sylwesterx.dziedziuch@intel.com>; Jakub Kicinski <kuba@kernel.org>; Paol=
+o
+> Abeni <pabeni@redhat.com>; David S. Miller <davem@davemloft.net>;
+> moderated list:INTEL ETHERNET DRIVERS <intel-wired-lan@lists.osuosl.org>
+> Subject: Re: [Intel-wired-lan] [PATCH net] i40e: Do not allow untrusted V=
+F to
+> remove administratively set MAC
+>=20
+> On Wed, Jan 31, 2024 at 02:17:14PM +0100, Ivan Vecera wrote:
+> > Currently when PF administratively sets VF's MAC address and the VF is
+> > put down (VF tries to delete all MACs) then the MAC is removed from
+> > MAC filters and primary VF MAC is zeroed.
+> >
+> > Do not allow untrusted VF to remove primary MAC when it was set
+> > administratively by PF.
+> >
+> > Reproducer:
+> > 1) Create VF
+> > 2) Set VF interface up
+> > 3) Administratively set the VF's MAC
+> > 4) Put VF interface down
+> >
+> > [root@host ~]# echo 1 > /sys/class/net/enp2s0f0/device/sriov_numvfs
+> > [root@host ~]# ip link set enp2s0f0v0 up [root@host ~]# ip link set
+> > enp2s0f0 vf 0 mac fe:6c:b5:da:c7:7d [root@host ~]# ip link show
+> > enp2s0f0
+> > 23: enp2s0f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc
+> mq state UP mode DEFAULT group default qlen 1000
+> >     link/ether 3c:ec:ef:b7:dd:04 brd ff:ff:ff:ff:ff:ff
+> >     vf 0     link/ether fe:6c:b5:da:c7:7d brd ff:ff:ff:ff:ff:ff, spoof =
+checking on,
+> link-state auto, trust off
+> > [root@host ~]# ip link set enp2s0f0v0 down [root@host ~]# ip link show
+> > enp2s0f0
+> > 23: enp2s0f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc
+> mq state UP mode DEFAULT group default qlen 1000
+> >     link/ether 3c:ec:ef:b7:dd:04 brd ff:ff:ff:ff:ff:ff
+> >     vf 0     link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff, spoof =
+checking on,
+> link-state auto, trust off
+> >
+> > Fixes: 700bbf6c1f9e ("i40e: allow VF to remove any MAC filter")
+> > Fixes: ceb29474bbbc ("i40e: Add support for VF to specify its primary
+> > MAC address")
+> > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>=20
+> Thanks Ivan,
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- Documentation/power/energy-model.rst | 183 ++++++++++++++++++++++++++-
- 1 file changed, 179 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
-index 13225965c9a4..ada4938c37e5 100644
---- a/Documentation/power/energy-model.rst
-+++ b/Documentation/power/energy-model.rst
-@@ -71,6 +71,31 @@ whose performance is scaled together. Performance domains generally have a
- required to have the same micro-architecture. CPUs in different performance
- domains can have different micro-architectures.
- 
-+To better reflect power variation due to static power (leakage) the EM
-+supports runtime modifications of the power values. The mechanism relies on
-+RCU to free the modifiable EM perf_state table memory. Its user, the task
-+scheduler, also uses RCU to access this memory. The EM framework provides
-+API for allocating/freeing the new memory for the modifiable EM table.
-+The old memory is freed automatically using RCU callback mechanism when there
-+are no owners anymore for the given EM runtime table instance. This is tracked
-+using kref mechanism. The device driver which provided the new EM at runtime,
-+should call EM API to free it safely when it's no longer needed. The EM
-+framework will handle the clean-up when it's possible.
-+
-+The kernel code which want to modify the EM values is protected from concurrent
-+access using a mutex. Therefore, the device driver code must run in sleeping
-+context when it tries to modify the EM.
-+
-+With the runtime modifiable EM we switch from a 'single and during the entire
-+runtime static EM' (system property) design to a 'single EM which can be
-+changed during runtime according e.g. to the workload' (system and workload
-+property) design.
-+
-+It is possible also to modify the CPU performance values for each EM's
-+performance state. Thus, the full power and performance profile (which
-+is an exponential curve) can be changed according e.g. to the workload
-+or system property.
-+
- 
- 2. Core APIs
- ------------
-@@ -175,10 +200,82 @@ CPUfreq governor is in use in case of CPU device. Currently this calculation is
- not provided for other type of devices.
- 
- More details about the above APIs can be found in ``<linux/energy_model.h>``
--or in Section 2.4
-+or in Section 2.5
-+
-+
-+2.4 Runtime modifications
-+^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Drivers willing to update the EM at runtime should use the following dedicated
-+function to allocate a new instance of the modified EM. The API is listed
-+below::
-+
-+  struct em_perf_table __rcu *em_table_alloc(struct em_perf_domain *pd);
-+
-+This allows to allocate a structure which contains the new EM table with
-+also RCU and kref needed by the EM framework. The 'struct em_perf_table'
-+contains array 'struct em_perf_state state[]' which is a list of performance
-+states in ascending order. That list must be populated by the device driver
-+which wants to update the EM. The list of frequencies can be taken from
-+existing EM (created during boot). The content in the 'struct em_perf_state'
-+must be populated by the driver as well.
-+
-+This is the API which does the EM update, using RCU pointers swap::
-+
-+  int em_dev_update_perf_domain(struct device *dev,
-+			struct em_perf_table __rcu *new_table);
-+
-+Drivers must provide a pointer to the allocated and initialized new EM
-+'struct em_perf_table'. That new EM will be safely used inside the EM framework
-+and will be visible to other sub-systems in the kernel (thermal, powercap).
-+The main design goal for this API is to be fast and avoid extra calculations
-+or memory allocations at runtime. When pre-computed EMs are available in the
-+device driver, than it should be possible to simply re-use them with low
-+performance overhead.
-+
-+In order to free the EM, provided earlier by the driver (e.g. when the module
-+is unloaded), there is a need to call the API::
-+
-+  void em_table_free(struct em_perf_table __rcu *table);
-+
-+It will allow the EM framework to safely remove the memory, when there is
-+no other sub-system using it, e.g. EAS.
-+
-+To use the power values in other sub-systems (like thermal, powercap) there is
-+a need to call API which protects the reader and provide consistency of the EM
-+table data::
-+
-+  struct em_perf_state *em_perf_state_from_pd(struct em_perf_domain *pd);
-+
-+It returns the 'struct em_perf_state' pointer which is an array of performance
-+states in ascending order.
-+This function must be called in the RCU read lock section (after the
-+rcu_read_lock()). When the EM table is not needed anymore there is a need to
-+call rcu_real_unlock(). In this way the EM safely uses the RCU read section
-+and protects the users. It also allows the EM framework to manage the memory
-+and free it. More details how to use it can be found in Section 3.2 in the
-+example driver.
-+
-+There is dedicated API for device drivers to calculate em_perf_state::cost
-+values::
-+
-+  int em_dev_compute_costs(struct device *dev, struct em_perf_state *table,
-+                           int nr_states);
-+
-+These 'cost' values from EM are used in EAS. The new EM table should be passed
-+together with the number of entries and device pointer. When the computation
-+of the cost values is done properly the return value from the function is 0.
-+The function takes care for right setting of inefficiency for each performance
-+state as well. It updates em_perf_state::flags accordingly.
-+Then such prepared new EM can be passed to the em_dev_update_perf_domain()
-+function, which will allow to use it.
-+
-+More details about the above APIs can be found in ``<linux/energy_model.h>``
-+or in Section 3.2 with an example code showing simple implementation of the
-+updating mechanism in a device driver.
- 
- 
--2.4 Description details of this API
-+2.5 Description details of this API
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- .. kernel-doc:: include/linux/energy_model.h
-    :internal:
-@@ -187,8 +284,11 @@ or in Section 2.4
-    :export:
- 
- 
--3. Example driver
-------------------
-+3. Examples
-+-----------
-+
-+3.1 Example driver with EM registration
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The CPUFreq framework supports dedicated callback for registering
- the EM for a given CPU(s) 'policy' object: cpufreq_driver::register_em().
-@@ -242,3 +342,78 @@ EM framework::
-   39	static struct cpufreq_driver foo_cpufreq_driver = {
-   40		.register_em = foo_cpufreq_register_em,
-   41	};
-+
-+
-+3.2 Example driver with EM modification
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+This section provides a simple example of a thermal driver modifying the EM.
-+The driver implements a foo_thermal_em_update() function. The driver is woken
-+up periodically to check the temperature and modify the EM data::
-+
-+  -> drivers/soc/example/example_em_mod.c
-+
-+  01	static void foo_get_new_em(struct foo_context *ctx)
-+  02	{
-+  03		struct em_perf_table __rcu *em_table;
-+  04		struct em_perf_state *table, *new_table;
-+  05		struct device *dev = ctx->dev;
-+  06		struct em_perf_domain *pd;
-+  07		unsigned long freq;
-+  08		int i, ret;
-+  09
-+  10		pd = em_pd_get(dev);
-+  11		if (!pd)
-+  12			return;
-+  13
-+  14		em_table = em_table_alloc(pd);
-+  15		if (!em_table)
-+  16			return;
-+  17
-+  18		new_table = em_table->state;
-+  19
-+  20		rcu_read_lock();
-+  21		table = em_perf_state_from_pd(pd);
-+  22		for (i = 0; i < pd->nr_perf_states; i++) {
-+  23			freq = table[i].frequency;
-+  24			foo_get_power_perf_values(dev, freq, &new_table[i]);
-+  25		}
-+  26		rcu_read_unlock();
-+  27
-+  28		/* Calculate 'cost' values for EAS */
-+  29		ret = em_dev_compute_costs(dev, table, pd->nr_perf_states);
-+  30		if (ret) {
-+  31			dev_warn(dev, "EM: compute costs failed %d\n", ret);
-+  32			em_free_table(em_table);
-+  33			return;
-+  34		}
-+  35
-+  36		ret = em_dev_update_perf_domain(dev, em_table);
-+  37		if (ret) {
-+  38			dev_warn(dev, "EM: update failed %d\n", ret);
-+  39			em_free_table(em_table);
-+  40			return;
-+  41		}
-+  42
-+  43		/*
-+  44		 * Since it's one-time-update drop the usage counter.
-+  45		 * The EM framework will later free the table when needed.
-+  46		 */
-+  47		em_table_free(em_table);
-+  48	}
-+  49
-+  50	/*
-+  51	 * Function called periodically to check the temperature and
-+  52	 * update the EM if needed
-+  53	 */
-+  54	static void foo_thermal_em_update(struct foo_context *ctx)
-+  55	{
-+  56		struct device *dev = ctx->dev;
-+  57		int cpu;
-+  58
-+  59		ctx->temperature = foo_get_temp(dev, ctx);
-+  60		if (ctx->temperature < FOO_EM_UPDATE_TEMP_THRESHOLD)
-+  61			return;
-+  62
-+  63		foo_get_new_em(ctx);
-+  64	}
--- 
-2.25.1
+Tested-by: Rafal Romanowski <rafal.romanowski@intel.com>
+
 
