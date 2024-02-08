@@ -1,147 +1,213 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3FB50244;
-	Thu,  8 Feb 2024 23:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E5850257
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 23:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707433926; cv=none; b=euynMnm6Cil6fvM5wPd/9Re5rbuty3r4m6T8cNNTmwIh8EBPd91WkHZ6dP6sM4qecUoAigrdF1Hth+1kh6pdsz6/jPRD8fgyjZ7JQp/7BiFuu2dUc/6mYI6qjRVpPEtDi1QIOXPkvnMBE6tdq60LfVFKG9c3nEWU7EVmgWmnr18=
+	t=1707434056; cv=none; b=Np/5aDLp2mUxURkhwrz/um8qhUdyZFahM726PgJi/4UahWBaTLPyISQZJcRV4dET6z6zR/djoqJGdHrKYkpiEihqkDDLwl6dKon6TNu8R/OKgdeJ4/ZgdUzjFcg8TI11ktEpcSmzc4YDxfOQEp3RVGy3R90wLYWl/Y1ByskMGjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707433926; c=relaxed/simple;
-	bh=DVFoMTR1w9+PzhHgP5navN+7GT8dw0J1k5hs5Fwa09s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TPnte1uNixeIU35sPHejmvoybZRhcyTbiiI3UnL8oqaBYrm7qlgaifJTTVcGyojVl6bKJGqVSmYoIMrMb/9b04vz7O6yJj+SRMQmy/rOKn0NlUE67136Aw26uHZWnPkR8BH6YvpcEwl05i6s/edGtQKDbdIgZvJX1Skdo6Bv7Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lGM7vBWV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1707434056; c=relaxed/simple;
+	bh=me8ZF9MFV3b25A/LpyNIDRWvjZIMoVYXkuh8e+uhqu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjIr1t62yC/i9hf938eHwqY1B+YiMqb3sqA1g3BskHrBT1hY7cdJUnWlEqo5vHMlRyf/54kWfX2ZzUdWYEtRJYLH57RieeQ+ZZ2eWdMuleEy+ovn8Tqp1S6k0TK4lhVYe1LhSeI9IWFXpCR2qT2wsqBEtqI9avvkxSfzCrJmgxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4g+lO9XL; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lGM7vBWV"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 418KN0nj017495;
-	Thu, 8 Feb 2024 23:11:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=qcppdkim1; bh=MYr7RqbkI24DdXTRPAmW
-	g5WD1wbGsIeujnA+npP7CZk=; b=lGM7vBWVWAiE73Ea96rN8OBaBjzmIKqbUzre
-	JSDJck0HOKz4OmLFSpoZz2DyyC2ii7a3OovKb0x06/YOP6D9UOjw9IMWRs/48ToL
-	KGkVBO3+fOIBkiWyjW6D7Ca6Nv1OIz9djfHtbWAwkxZSGGGOkI/fCrdGwvq3b3GT
-	1+NcKvXPNhUenRM0IYXoNr+mdZpl62ABlvNwJXhBjzm+Y2kP20NOvzeG+JlqsRGN
-	u8klHYYZCU4ofVcxNChuSg1kdlMczjsTjZ+kFz8QsIraYTHHDDIfxuCvbRCUSGWH
-	1eDbDT2KHFH6X31ZhjGYiHlcsZiZtx5JSDiY+CplpQ/0Lm2qwQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4uphsypf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 23:11:46 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA03.qualcomm.com [127.0.0.1])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 418NBjM4006159;
-	Thu, 8 Feb 2024 23:11:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA03.qualcomm.com (PPS) with ESMTPS id 3w502k31bq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 23:11:45 +0000
-Received: from NALASPPMTA03.qualcomm.com (NALASPPMTA03.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 418NBjjU006154;
-	Thu, 8 Feb 2024 23:11:45 GMT
-Received: from hu-devc-lv-u20-a-new.qualcomm.com (hu-abchauha-lv.qualcomm.com [10.81.25.35])
-	by NALASPPMTA03.qualcomm.com (PPS) with ESMTPS id 418NBjK2006153
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 23:11:45 +0000
-Received: by hu-devc-lv-u20-a-new.qualcomm.com (Postfix, from userid 214165)
-	id 6BA832270D; Thu,  8 Feb 2024 15:11:45 -0800 (PST)
-From: Abhishek Chauhan <quic_abchauha@quicinc.com>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Halaney <ahalaney@redhat.com>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: kernel@quicinc.com
-Subject: [PATCH net-next v4] net: stmmac: dwmac-qcom-ethqos: Enable TBS on all queues but 0
-Date: Thu,  8 Feb 2024 15:11:45 -0800
-Message-Id: <20240208231145.2732931-1-quic_abchauha@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4g+lO9XL"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c00cfd7156so12461239f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 15:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707434052; x=1708038852; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pe6jnI7sJWQLdADxcvkIM7ZK9uT6CeFtU8HHzuib1uI=;
+        b=4g+lO9XLlJoQtPaBqQ3SEo6Fh7AeaNA3RLLXDuFd3F0ZXKNgu2G0OUJCfjDQ84fqAw
+         dLCvsF/7C02IGnmvzxM/BFsfUUQURtQm3sBHq95RWUWIeQzzxsIJ08XlMi/tfbwkN5N/
+         JXtVO/e1i2Ug4n+67Q6rOIY4yz/gFWEnPQ2hO9d2h2Hs8NzwgZEx12pDNtCljlptAF3J
+         XgyJBoDVDu01aDFb0nhxLMfl2G/rVCn9PsM96xAPdzWWFlNvCsNAaSCwTgZV81UCRrrk
+         nfeRdPEq+wjXesFs+n4qYeY684okTiRul678sUd4XISCAQ1L6w3NZ2rvq2f8EtVVDL8n
+         DvIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707434052; x=1708038852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pe6jnI7sJWQLdADxcvkIM7ZK9uT6CeFtU8HHzuib1uI=;
+        b=sx0/0Uz/Fq3CpRoigATwEEnsTtrSDDBz2z3bP1z1E22O9Cjj2XZ0qlbeHb5NFh4l75
+         JXRaAptQ4euvdJangbXBkbXxdylL7m4Ev+ldLAcN+IyUVLAqpwDoNtNSnIGKCieLN2L1
+         B/DgLFVi9LXl3YQRyfMgK58L8rIpWB2gxjcVlD9UCrw+hFWSOii0UFLJJ+y9hV+IHQrE
+         m48yD52PhsXsKzZE3gAiyb4TeVn+n3S70JM4sNp/pLHUoJx1dcRuHlP0/dxyD1SxkrpN
+         34as1lap0Riuxh83mp7BNli2Z+wdgESrgKj/hNF1YCmdfznWQZMy9FcWiBVbvkzkVK9O
+         aWjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKczt2uEOhL5YV39xzcTIkYeX4+tXTxUTB0pfwN/JmR4W0weq71Wr65+qYW0D8FVqR2gCzws5zR74t8CiM17HVo0taZvH+zN8tFsHO
+X-Gm-Message-State: AOJu0YxoFFzND58N7kq6/1VXkGkPyAqmm9tX9psuYyapRnMijb2w6Ya9
+	dlT6A4/dYZ7CiIlGdxioh1BWXUERczNds4R2E/UgOY6Whimdv4NzKtRkxdEe+g==
+X-Google-Smtp-Source: AGHT+IHCKa/qnllJa3a8anZ50HmqNn75qJTTGYvPU2+WwjU6U+rngyIqVcN2/lsJ591YBvYTq0dxLw==
+X-Received: by 2002:a6b:6b15:0:b0:7c4:6c8:fe2a with SMTP id g21-20020a6b6b15000000b007c406c8fe2amr64594ioc.11.1707434052059;
+        Thu, 08 Feb 2024 15:14:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV/sQAnakA0PHqUvHJVwEnGRDfLGGR1Y3EMsnDtlTssTQZLJmdAZJb4weX5gsjP0GHz87cjZ+J4aTm3lhvE8vGjJ7gUV+F94Ka/SSo/b0jZGktJv8SsWuN+Yrn45Ipj+rKMx3j6PTbvF7sIXTY9e4mk+6newdRmq9RdiFbg4fYoOZuLNbxx4HXoEGYuFDdtn2v4l5+YOsvluP3SnMTPSMvLEJwmE6Mrlt7FC4AUaj0/1y4WFnSQi890D49iGXs7laiKi57+1CfTmrGa5diaVMarJ9O9titiQNcX/FXJQYyh6OVxOY1bQ3N5yXIxcec1OGFFBIH7m541j3LvNbQIEAyVT65ZyucUjxkLBvXNwqxZmVLQYDKJGzdW3u+sFiPdyA==
+Received: from google.com (20.10.132.34.bc.googleusercontent.com. [34.132.10.20])
+        by smtp.gmail.com with ESMTPSA id t30-20020a05663836de00b004714adc2d2fsm106510jau.46.2024.02.08.15.14.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 15:14:11 -0800 (PST)
+Date: Thu, 8 Feb 2024 23:14:07 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, maskray@google.com,
+	ndesaulniers@google.com, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 00/11] s390: Support linking with ld.lld
+Message-ID: <20240208231407.vkisblrowjvivsxb@google.com>
+References: <20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: osft6LiMV2DWc-ZUSgATWs8TH2yP2Kf7
-X-Proofpoint-GUID: osft6LiMV2DWc-ZUSgATWs8TH2yP2Kf7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_11,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 spamscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxlogscore=873
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402080131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org>
 
-TSO and TBS cannot co-exist. TBS requires special descriptor to be
-allocated at bootup. Initialising Tx queues at probe to support
-TSO and TBS can help in allocating those resources at bootup.
+Hi,
 
-TX queues with TBS can support etf qdisc hw offload.
+On Wed, Feb 07, 2024 at 05:14:52PM -0700, Nathan Chancellor wrote:
+> Hi all,
+>
+> This series allows the s390 kernel to be linked with ld.lld (support for
+> s390 is under review at [1]). This implicitly depends on [2], which was
+> created and sent before it was realized that this series was necessary.
+>
+> The first chunk of this series enables support for
+> CONFIG_LD_ORPHAN_WARN, as it was discovered during testing that the
+> kernel fails to build with ld.lld due to differences in orphan section
+> handling, which would have been caught with the linker's orphan section
+> warnings ahead of the actual build error. There are no warnings when
+> building ARCH=s390 defconfig and allmodconfig with GCC 6 through 13 or
+> tip of tree Clang using ld.bfd or ld.lld
+>
+> The final patch resolves a series of errors due to ld.lld having a
+> different default for checking for DT_TEXTREL ('-z text') vs ld.bfd,
+> which defaults to '-z notext' (but this is configurable at build time).
+>
+> There is one outstanding issue due to something that ld.lld does not
+> support that the kernel relies on:
+>
+>   ld.lld: error: drivers/nvme/host/fc.o:(__bug_table): writable SHF_MERGE section is not supported
+>
+> This was changed in the kernel in commit e21f8baf8d9a ("s390/bug: add
+> entry size to the __bug_table section"). Is this change truly necessary?
+> I selectively applied a revert on top of current mainline and I did not
+> observe any issues with either Clang or GCC.
+>
+> diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+> index aebe1e22c7be..c500d45fb465 100644
+> --- a/arch/s390/include/asm/bug.h
+> +++ b/arch/s390/include/asm/bug.h
+> @@ -14,7 +14,7 @@
+>  		".section .rodata.str,\"aMS\",@progbits,1\n"	\
+>  		"1:	.asciz	\""__FILE__"\"\n"		\
+>  		".previous\n"					\
+> -		".section __bug_table,\"awM\",@progbits,%2\n"	\
+> +		".section __bug_table,\"aw\"\n"			\
+>  		"2:	.long	0b-.\n"				\
+>  		"	.long	1b-.\n"				\
+>  		"	.short	%0,%1\n"			\
+> @@ -30,7 +30,7 @@
+>  #define __EMIT_BUG(x) do {					\
+>  	asm_inline volatile(					\
+>  		"0:	mc	0,0\n"				\
+> -		".section __bug_table,\"awM\",@progbits,%1\n"	\
+> +		".section __bug_table,\"aw\"\n"			\
+>  		"1:	.long	0b-.\n"				\
+>  		"	.short	%0\n"				\
+>  		"	.org	1b+%1\n"			\
+>
+> If it is necessary, is there any way to work around this error? For
+> testing purposes, disabling CONFIG_BUG is easy enough but that is not
+> usable in the real world.
+>
+> To test this series with ld.lld, you'll need to build ld.lld from the
+> pull request, which is easy to do following LLVM's instructions [3].
+> Here is a TL;DR version I tested that just builds LLD with minimal noise
+> during the build.
+>
+> $ git clone https://github.com/llvm/llvm-project
+> $ cd llvm-project
+> $ git fetch https://github.com/llvm/llvm-project pull/75643/head
+> $ git switch -d FETCH_HEAD
+> $ cmake \
+>     -B build \
+>     -G Ninja \
+>     -S llvm \
+>     --log-level=NOTICE \
+>     -Wno-dev \
+>     -DCMAKE_BUILD_TYPE=Release \
+>     -DLLVM_ENABLE_PROJECTS=lld \
+>     -DLLVM_ENABLE_WARNINGS=OFF \
+>     -DLLVM_TARGETS_TO_BUILD=SystemZ
+> $ ninja -C build lld
+> $ export PATH=$PWD/build/bin:$PATH
+>
+> Then build the kernel with 'LD=ld.lld' in addition to whatever command
+> line you use (I tested both Clang and GCC). I can boot an ld.lld linked
+> kernel built with both compilers in QEMU with this series.
 
-This is similar to the patch raised by NXP
-commit 3b12ec8f618e ("net: stmmac: dwmac-imx: set TSO/TBS TX queues default settings")
+Yeah, this all works for me and I am able to boot. I did need to use the
+diff present in 0/11 to remove the warnings regarding SHF_MERGE
+sections. It should probably be a patch in this series instead of a
+inlined diff?
 
-Tested-by: Andrew Halaney <ahalaney@redhat.com> # sa8775p-ride
-Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
----
-Changes since v3:
-- The change is Tested-by Andrew Halaney <ahalaney@redhat.com>
-  on Qualcomm Ride platform
-- Change log is removed from the commit text
+>
+> [    1.386970] Linux version 6.8.0-rc3-00043-g05761ede85d6-dirty (nathan@dev-fedora.aadp) (s390-linux-gcc (GCC) 13.2.0, ClangBuiltLinux LLD 19.0.0) #1 SMP Wed Feb  7 16:51:12 MST 2024
+>
+> [    0.871923] Linux version 6.8.0-rc3-00043-g05761ede85d6-dirty (nathan@dev-fedora.aadp) (ClangBuiltLinux clang version 19.0.0git (https://github.com/llvm/llvm-project 417075e56aeba5a5b20301c7bfeba9c2a800982b), ClangBuiltLinux LLD 19.0.0) #1 SMP Wed Feb  7 17:01:22 MST 2024
+>
+> [1]: https://github.com/llvm/llvm-project/pull/75643
+> [2]: https://lore.kernel.org/r/20240130-s390-vdso-drop-fpic-from-ldflags-v1-1-094ad104fc55@kernel.org/
+^^^^^^^^^
+I needed this too, as I was getting a warnings about -fPIC being an
+unknown option.
 
-Changes since v2:
-- Fixed the styling of comment in the dwmac-qcom-ethqos.c
-- Followed the upstream format to give other glue
-  driver references to solve the same problem
-- Appended  the subject with net-next
-- Discussion of why this patch is required is discussed in
-https://lore.kernel.org/netdev/c2497eef-1041-4cd0-8220-42622c8902f4@quicinc.com/
 
-Changes since v1:
-- Subject is changed as per upstream guidelines
-- Added a reference of a similar change done by NXP in
-  body of the commit message
+All in all, works great for me building on clang and booting with qemu.
 
- drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Tested-by: Justin Stitt <justinstitt@google.com>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-index 31631e3f89d0..2691a250a5a7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -728,7 +728,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
- 	struct stmmac_resources stmmac_res;
- 	struct device *dev = &pdev->dev;
- 	struct qcom_ethqos *ethqos;
--	int ret;
-+	int ret, i;
- 
- 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
- 	if (ret)
-@@ -822,6 +822,10 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
- 		plat_dat->serdes_powerdown  = qcom_ethqos_serdes_powerdown;
- 	}
- 
-+	/* Enable TSO on queue0 and enable TBS on rest of the queues */
-+	for (i = 1; i < plat_dat->tx_queues_to_use; i++)
-+		plat_dat->tx_queues_cfg[i].tbs_en = 1;
-+
- 	return devm_stmmac_pltfr_probe(pdev, plat_dat, &stmmac_res);
- }
- 
--- 
-2.25.1
+> [3]: https://llvm.org/docs/CMake.html
+>
+> ---
+> Nathan Chancellor (11):
+>       s390: boot: Add support for CONFIG_LD_ORPHAN_WARN
+>       s390: vmlinux.lds.S: Handle '.data.rel' sections explicitly
+>       s390: vmlinux.lds.S: Explicitly handle '.got' and '.plt' sections
+>       s390: vmlinux.lds.S: Discard unnecessary sections
+>       s390/boot: vmlinux.lds.S: Handle '.init.text'
+>       s390/boot: vmlinux.lds.S: Handle '.rela' sections
+>       s390/boot: vmlinux.lds.S: Handle DWARF debug sections
+>       s390/boot: vmlinux.lds.S: Handle ELF required sections
+>       s390/boot: vmlinux.lds.S: Handle commonly discarded sections
+>       s390: Select CONFIG_ARCH_WANT_LD_ORPHAN_WARN
+>       s390: Link vmlinux with '-z notext'
+>
+>  arch/s390/Kconfig              |  1 +
+>  arch/s390/Makefile             |  2 +-
+>  arch/s390/boot/Makefile        |  5 +++--
+>  arch/s390/boot/vmlinux.lds.S   | 28 ++++++++++++++++++++++++++++
+>  arch/s390/kernel/vmlinux.lds.S | 28 +++++++++++++++++++++++++++-
+>  5 files changed, 60 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> change-id: 20240207-s390-lld-and-orphan-warn-d0ff4ff657b0
+>
+> Best regards,
+> --
+> Nathan Chancellor <nathan@kernel.org>
+>
 
+Thanks
+Justin
