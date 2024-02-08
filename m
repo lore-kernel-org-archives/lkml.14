@@ -1,98 +1,106 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406DB67C51;
-	Thu,  8 Feb 2024 05:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7A467C60;
+	Thu,  8 Feb 2024 05:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707370202; cv=none; b=qm1mbqY1XogGJWEZcbDcOp5y9GHo520Tu0f+jynCmmv+EdubMMYUZ/16pnqiOY+lTBf3VDSJcMRODmC70olcDL1DUfEXO1c4Hh7P82P4+rLabQg9fPqtrC+Q9NxkeaZhRDSRM9iDm8fk0PPe9/gWHsXAxR4zsSczJY7QsMkG3Xo=
+	t=1707371493; cv=none; b=Xn44Ksitim9urRkkOo3EqlmRT4j6erYxA9ZTpADVeQ6GDlyvg37c3peTenaukRIGopjp86ZAZl2dJ2gPyRVxgyHUyhwc+9ER2IonT/kEME6U5AwxOgia/cH86JHvdFK11z9HxYoyTL7u+Sbo5rUK2yFgas9d5LJy71yfdIUiW+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707370202; c=relaxed/simple;
-	bh=LSGhLsIEUn/a5N+Xif81iePzt9BrdznZDIftCEWCoSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nn41fUP0iMJ6IHu2fE0J46QrOdv2c1agIv+FBHKIjvuwC5gCDEQq/0EdTY+oo3sshlCYuIzfAAOrWBaU/cnE7RwNaIoPahmycRRFRkWSF/BGZEENUsQug/a3EPDBdaNi7ypYN18Mv23orkhhKYbNhQ+zzc15+6lJTNlErXxzUSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so934579a12.3;
-        Wed, 07 Feb 2024 21:30:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707370200; x=1707975000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Np0WXML6XnfyYnvQ5Kz5GSWkppmE8CLxkStPxfJskEI=;
-        b=pSwOBaqeyJ35qoibW13y68VwiHeqzYTbKyGdvI/iH8G6sDq3VboRdLCOw/5vsLWXm4
-         ynSTPvv2Oh7Iq9vxZQFxaXxK7b5onLM+r/SfCzTgSSErr9YUmIR0AlI6kMskLNdgnV+h
-         JebF0Faw5SskWeFnkZ57T8NnDGJ1IV7hmIuifaYweX93Nir3cIAMoeJqV/lTYRnqkZQy
-         Wi2h+QZF6BrxZsFFEYp9sN/9q+MDSjRlrUbu1oi8N6AF7IaYia2Fu3C+buG4TVmfjRsU
-         1bNs1eGKBPm3v73YL1rRdc9tfw6UMcuPUN1TeTbDKdoXG68bVA4mZLTKQ54UImWg0Afr
-         +fDg==
-X-Gm-Message-State: AOJu0YxIs1RHyssvhqwC4qFTOBKo4Jw3k5j0i7I/ffSxSB6Jc4RmpZkE
-	u47aLJwRMhP7Sjq+lohqxiAdcyl8+y4tAAprrPrz/HWfq2OReLD3JhV/u7KnAYIpy5FGlUaIN5T
-	KLx/Dz3/kHS3WtlUp9OLciIp8KHs=
-X-Google-Smtp-Source: AGHT+IGvTl+ZP11IcRdz3/2WBLOG5nM8RrJ8DnAcBUA8U2fJjpj4v5W9LdevI4C7gBzBP9/uV4GBDbFfVkU60MfOKPo=
-X-Received: by 2002:a05:6300:8082:b0:19c:6b59:b9fc with SMTP id
- ap2-20020a056300808200b0019c6b59b9fcmr7270336pzc.24.1707370200365; Wed, 07
- Feb 2024 21:30:00 -0800 (PST)
+	s=arc-20240116; t=1707371493; c=relaxed/simple;
+	bh=SU+tK2MlpgkdVnVhaHn0UQcoIzpj8l2UDGxN8QSA/B4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kWVEg5+fJLkZ+3PIC65hdIelWqzT5ESquQx5mUD4TFB+DEQoHfnY7XvaNCuy3V11+KYlgRkJf7qN0z7ekiAdoXD3l9Wmd70OEazED0Z9Eku5rOXt1G19CcfJcCVVWbX3oC319BNR1A87WDEEskwTtrggFM9JxoJ0fPs8rhtoQX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dqnH2OzT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqnH2OzT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 32F86C43390;
+	Thu,  8 Feb 2024 05:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707371493;
+	bh=SU+tK2MlpgkdVnVhaHn0UQcoIzpj8l2UDGxN8QSA/B4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=dqnH2OzT+hCRvXizdoX9qn8XTeMqqfS/LSEAyWVjjPQiy1hfWJxEuesWaJzgj+V/j
+	 dJFcDEpzmeJZqCCZJI6PVyHKJYZsIwr4OAgBaAymUmYRC0YNP2ocvSK4yc+devTXVv
+	 43v8JbV+4LQaFq7ol6xRhhWfSuDxqbVDcKYnni2tPk6BHAmTnACeZ5Th8uuan/lMWc
+	 N60h2okhFXG8TZ/L+2qNy4pq18U9BaWn/4QfGHQ5WtgIuzKRRIp/y1V5BRwyxZDtUe
+	 cubk3E8B5u6ji5abcOloBS87ptjqC22AEou8acce/GRaCNTDXSas5EmBghfWGznT22
+	 JDIzWFzCzx0JA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F48FC4829E;
+	Thu,  8 Feb 2024 05:51:33 +0000 (UTC)
+From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
+ <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Thu, 08 Feb 2024 08:51:30 +0300
+Subject: [PATCH netnext 2/8] net: dsa: mt7530: set interrupt register only
+ for MT7530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206130458.8867-1-adrian.hunter@intel.com> <CAM9d7cjiCT7C=WHd9EmPRRRQY=1aq8-NAGgRcZPWz-s=7Js3mw@mail.gmail.com>
-In-Reply-To: <CAM9d7cjiCT7C=WHd9EmPRRRQY=1aq8-NAGgRcZPWz-s=7Js3mw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 7 Feb 2024 21:29:49 -0800
-Message-ID: <CAM9d7ciZuHzsi+nt190GwyfGYh5txLqDq6-2hOXLzJ+sibjaMQ@mail.gmail.com>
-Subject: Re: [PATCH V2 0/2] perf symbols: Slightly improve module file
- executable section mappings
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Like Xu <like.xu.linux@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id:
+ <20240208-for-netnext-mt7530-improvements-3-v1-2-d7c1cfd502ca@arinc9.com>
+References:
+ <20240208-for-netnext-mt7530-improvements-3-v1-0-d7c1cfd502ca@arinc9.com>
+In-Reply-To:
+ <20240208-for-netnext-mt7530-improvements-3-v1-0-d7c1cfd502ca@arinc9.com>
+To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707371489; l=921;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=JV5lkSoAmKAO6vEQKKvFpHOlOFc0GQ6XMI05UOpapU0=;
+ b=gVJzgC1rkRFswBLSwsGE9zAoA7gaHsrqPDBpHSaPRlfz3WAEM9kFoZLOs1dYjje6uA30WLr92
+ ckaRwet1UcuAyBDO9o/b453+4N++G5PYpr0BUe+/xfNbcWUH5145IRI
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received:
+ by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
+X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Reply-To: <arinc.unal@arinc9.com>
 
-On Wed, Feb 7, 2024 at 9:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hi Adrian,
->
-> On Tue, Feb 6, 2024 at 5:05=E2=80=AFAM Adrian Hunter <adrian.hunter@intel=
-.com> wrote:
-> >
-> > Hi
-> >
-> > Currently perf does not record module section addresses except for
-> > the .text section. In general that means perf cannot get module section
-> > mappings correct (except for .text) when loading symbols from a kernel
-> > module file. (Note using --kcore does not have this issue)
-> >
-> > Here are a couple of patches to help shed light upon and slightly impro=
-ve
-> > the situation.
-> >
-> >
-> > Changes in V2:
-> >
-> >   perf tools: Make it possible to see perf's kernel and module memory m=
-appings
-> >     - add dump to perf report (if no browser) as well as perf script
-> >     - add 'perf --debug kmaps' option also to dump kmaps
-> >
-> >
-> > Adrian Hunter (2):
-> >       perf tools: Make it possible to see perf's kernel and module memo=
-ry mappings
-> >       perf symbols: Slightly improve module file executable section map=
-pings
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Hmm.. this is not applied cleanly.  Can you please rebase
-onto the current perf-tools-next?
+Setting this register related to interrupts is only needed for the MT7530
+switch. Make an exclusive check to ensure this.
 
-Thanks,
-Namhyung
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Acked-by: Daniel Golle <daniel@makrotopia.org>
+Tested-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/net/dsa/mt7530.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 94d4b2c87799..5cfd303b773f 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2055,7 +2055,7 @@ mt7530_setup_irq(struct mt7530_priv *priv)
+ 	}
+ 
+ 	/* This register must be set for MT7530 to properly fire interrupts */
+-	if (priv->id != ID_MT7531)
++	if (priv->id == ID_MT7530 || priv->id == ID_MT7621)
+ 		mt7530_set(priv, MT7530_TOP_SIG_CTRL, TOP_SIG_CTRL_NORMAL);
+ 
+ 	ret = request_threaded_irq(priv->irq, NULL, mt7530_irq_thread_fn,
+
+-- 
+2.40.1
+
