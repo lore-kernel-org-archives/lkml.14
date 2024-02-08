@@ -1,155 +1,132 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0516D823A0;
-	Thu,  8 Feb 2024 17:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414091; cv=fail; b=J2lsGj4n3QTdgTyPT8PT37bR+ztyr8L0PgaU5tDL/3RPSWbvhVetdWD8yU2/wXztwhkF6FDGVEtKaBydQbDedytFUbaHd83FZxhJZdFNeUOHcjstG8J8VNjW2rsQRj7kU7Kjev2MLnXaTDSidPAAv/ZN14J0jDNKbmJ/0XSizeU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707414091; c=relaxed/simple;
-	bh=s4bZjb2OIAPQ6Ozag9DrsuskdL+n+8gvdtUl9l1Ergo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kvEsnuwJO8ilvhGTfbgb6X8VE77KCoF5BqBbexZyKFCkpfTdRxPDWqwWvSVnD96kSAuuLA6t+X2vG+w8lz8SFvlXnOay0oKr4Oy3P82A0nnEyEXtc6fO9s0xThtnYuuEbqVstXLFxCE/tRHE/wa5mx+w26+VUQcdl4pTQ08amcE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=d/onGp+Y; arc=fail smtp.client-ip=40.107.237.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB34823C2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 17:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707414151; cv=none; b=ObNX3zU3duxsdCGyFNq0pRlXOphH3CZHmocgbBN6FcJsFUNxeVyMPgr6GXLwVMryXJjwjcRUMMpSLmEZ9uJ6XdhhG+wqYKQuTgb5DJhQzoIg1pxBAXm1lUjvBkOt6t/fGfYIHW2RQzRZr40amAhNTHARxLq0iy013tdI4SxHJjY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707414151; c=relaxed/simple;
+	bh=r3ot4oF1LX3nA6eTOhVf+jyF+CVFFa7172oMKsIh+b4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ih1Uxj2C7358to0hVFD2BJEAcn9rV0bV4wRpJy1pxMlRPuMvzB4eJQFyvSiHsoJe3smLLhA/mDPmjQ93NKYToMUUAPU/8d7f85YhcghbaeHRkh37CRZVEV+ftRuBGzFsU9yJZe81r69Zq8sYPuyGFp9hIbS9Fun7KiD10XWQ76U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTYvaocI; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="d/onGp+Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LyQEi9hvBEEH+oxu2jkA7f+RqHAXMUCci5En18ToTYoCsOQddE7rBCgP8EuteG4cMY38+CIlqPSHWX+iDpYdp3CSPWwey7LiWqI23v80kKQWzYyIdvbD5e93UMHO6A84aNSuem4rHR4ZyWUZTDO/EbgO7rTEP2rzdirIBCy1UoEHeche0aio1lhPYQAuWT1x+a4dp0kA0fo6kiGOAep/U0FQvU6ZhjWjeI8mAbWsVAm/AepeZ6IIf63aPLb5FJzKV0mE1zYMQiWjBH35EBHDRy/b3xjCGl1wK3Q9hYKv05hXkuN0xRcy8nnDV4ZM+NbfacBQ2n/CCc3G9ks2/o3Mwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3SIEmTs0ThzfgJxTkybnElNg03GmYbf+WErFGnp/jEA=;
- b=YB+CK9GvEphi1ViX1b7dEAtcmfkZ/SIE7v+vDiZHM9ve0LcNjpwQUnKpmlHneIAOL5NOvD2nPLYG9cfp2iqfHRhrd3XE7Jm+xiMyy0lakXKWk6tgvhpCh4X/CozPqYqABSbPP3rwelwBB7r3k3XmIJnlj2c1BHrupctXoIwLPXy9G+SB0TMkXHQRdz2sp/oS0epmkmz3FhA+Rzu2njdGcBPd4svLtZQVb0lS6pbyupkpyj3LkR+ITuLYgeA9ioOetLFeCFma8dKWPiKgDz/WSnDFgB4Zu+j4nqreYLcrSC+LdsDhexqE4GXbcuDNnobv6tFEsoK5qkG++2SNonEFLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3SIEmTs0ThzfgJxTkybnElNg03GmYbf+WErFGnp/jEA=;
- b=d/onGp+Y/yDtU5s7cag1l2n4Y3Pe+DCy6etJVFz9zLwwQVLLuzkXrxpTG46wDQxAqnh1JO9f9ifFL8YD9r5k9AQmqFYTRWzZJMNnCsLhoQXpxFdm3Ya0PTmZqe97VhEqppIgu0+TpsS7QuZqx7b3pM9eR6Ob9FcWY8c2D0SxFKY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
- by BL1PR12MB5804.namprd12.prod.outlook.com (2603:10b6:208:394::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.11; Thu, 8 Feb
- 2024 17:41:26 +0000
-Received: from CH3PR12MB8403.namprd12.prod.outlook.com
- ([fe80::ea0e:199a:3686:40d4]) by CH3PR12MB8403.namprd12.prod.outlook.com
- ([fe80::ea0e:199a:3686:40d4%4]) with mapi id 15.20.7270.016; Thu, 8 Feb 2024
- 17:41:26 +0000
-Message-ID: <3281ec05-60cb-4fa2-8562-afa93e770159@amd.com>
-Date: Thu, 8 Feb 2024 11:41:24 -0600
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 1/2] x86/MCE: Extend size of the MCE Records pool
-To: "Luck, Tony" <tony.luck@intel.com>, "x86@kernel.org" <x86@kernel.org>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: "bp@alien8.de" <bp@alien8.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
- Avadhut Naik <avadhut.naik@amd.com>
-References: <20240207225632.159276-1-avadhut.naik@amd.com>
- <20240207225632.159276-2-avadhut.naik@amd.com>
- <SJ1PR11MB6083E1876B8CFBA76F1B3806FC442@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: "Naik, Avadhut" <avadnaik@amd.com>
-In-Reply-To: <SJ1PR11MB6083E1876B8CFBA76F1B3806FC442@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0133.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::18) To CH3PR12MB8403.namprd12.prod.outlook.com
- (2603:10b6:610:133::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTYvaocI"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d944e8f367so339385ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 09:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707414149; x=1708018949; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kbA8ylbFRlKyg5U453MmfWxg4qPQ1odWQVw3a/yjMMA=;
+        b=hTYvaocIehF1NJeE88McVIzur5iFgb2oJkcoUJv7bWzCGSgK77SJWluiqUgwBgXTqb
+         Y8unvikmGPK8RjBTj9/gBWptfUMApx030JNmaC63qU/VksrsLrY1+I0pwXdtYnOQOPSu
+         NlC9P/F4Oy80Z1MwjTBjt8Iu/GEht6mPm7RBEj966of7Wi/QU1Cq1Ovw+Ym4z3p44D5x
+         eQp+B/9cZy1ZtBOTWHuu97/h86LOYNC2zzNoHeoUdKcOV5O/TMhlgBXekDbPnD3AZEdS
+         quGV+j4foPNS/gLh0KD/Tl9SoOEcTMBjvdsgmLCYnRcGJKMeWs9re906NOrCxQcZJYHP
+         /TMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707414149; x=1708018949;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kbA8ylbFRlKyg5U453MmfWxg4qPQ1odWQVw3a/yjMMA=;
+        b=adhJ4u+rrRDcF/irbY/DvVg/VuzZGyQRWDZ0sIlnF1Cc2uACPiASromse1n5ZqPS2O
+         MALHp2KH4tvmTchbGL/xal/4vj1koyhd1vuHSdteLTSDmcaHXGnHFNGG5YZkqMVfeIec
+         9ujnIpiipUb0/JlGtm5agU0Tqj3YLEe22xuQH+s+Ctk6LTiUE/x5gcBpteNpLIUNFsXT
+         +tI5vq8KFburqOjHRFVnwXGQtMHBmLfLTQCNOQTCuuSooxM4v7oDhyz2IY/xK/sLzvFM
+         ivBcvlYECb8MYdDV8NAigWN5DiK48BF9J3mJ22/RyyvfSAbmv5Sybsyj3S5bL4SNXBnP
+         /+0g==
+X-Gm-Message-State: AOJu0YwudnhDee/fEntCOQAv5SOzMgAh/TVc+3AzMVkVPyXZl2P3ap8s
+	3ERvjpTuFRxMjQVH6EEp9X2n6Fm7dq9UsOcs+UqgthslURi+msng
+X-Google-Smtp-Source: AGHT+IFk6ER52uITpm87v07bgASXvVurZymY4H4FuFh2fytCLhYBydXqnDqjV2kf0JSjDzbU5vhyNQ==
+X-Received: by 2002:a17:902:e548:b0:1d8:fafa:f923 with SMTP id n8-20020a170902e54800b001d8fafaf923mr10701826plf.10.1707414149142;
+        Thu, 08 Feb 2024 09:42:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUuLQdpMvgMSpEolg7dRZzQIMALmahYAibXzcxpqNiziqewujlGdkHkym2hAvMMGY12mwW2XKyEI6yKivy7gXcvR4pMRzr8XGLB2mXBa1nYCHldWUX7LdBN/+/wZP7kBHiAXG8A7+Elrkn7ezrDZK0gzging/43et5msVEXE9xfCdR45gSRc9pL3RONG7dF6qQlnEuQsruPByqcT1a4DiPBD+nw9J4fPAP7uVeEP3I5AyULM+s/Q3lfDctjgV9RuBF/ycxQIw==
+Received: from localhost ([2620:10d:c090:400::4:3c45])
+        by smtp.gmail.com with ESMTPSA id mn7-20020a1709030a4700b001d8aa88f59esm15975plb.110.2024.02.08.09.42.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 09:42:28 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 8 Feb 2024 07:42:27 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Cestmir Kalina <ckalina@redhat.com>,
+	Alex Gladkov <agladkov@redhat.com>, Phil Auld <pauld@redhat.com>,
+	Costa Shulyupin <cshulyup@redhat.com>
+Subject: Re: [PATCH wq/for-6.9 v5 2/4] workqueue: Enable unbound cpumask
+ update on ordered workqueues
+Message-ID: <ZcUSg1t-hXbZXsKj@slm.duckdns.org>
+References: <20240208161014.1084943-1-longman@redhat.com>
+ <20240208161014.1084943-3-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|BL1PR12MB5804:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86f35735-82d8-4837-0b0a-08dc28cd2c8c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Nu9PadpfGhIWit9JnoTv9mGbcjfnfADjfUS/DLcR62ueUIqM8LzUvy7JkPfdGOT6QS9Y/d9OxnTA4K3pIwCQbIdBTwRtMeNStn4xXgoDA1tOePC4l4f8TrJ1Uukm6sv2eP/xl9GaN7GyAopGgX/ea6kHGHdWp2v+FCjQS3cYcAvPJcqkIwzHu7NvHUsS4lSMk+Qb8zcWqiMvC++0+wNQNS8IqVBXwrQFxdvc+VonnkYv3vFXaRU1jrfXPs4VwDC5mUnYuAv9Lfhxh6N/rFwu17cgAfbjH/vVEV0zPMhg4i6JQCU3TUdCc7COEDOJiDYQ2bL3oGTOeXb2+h37sng30TRv7kygcLpbYfUtIhbOKyQ1/dKYqkEUgk6g+mvahrMQaFVzZCIkIYWseB+ANJg8jDFRKZGgM9BmPW6/6fTkNT4nVzc/tfWHkyz371IRpOBer0If7M/DVgVa6sOupp41NF6FX6a7YtHrcocFNldg06Rz43rEJu9TAvQ1F3HmNAuf0pWNgENNEWnvLDbaZQ1rKEPp+mmHef12cNitQ4lid6VbyaDFPiuNO9BEfmpJJHMp
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(366004)(136003)(39860400002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(83380400001)(26005)(6512007)(2616005)(66556008)(4326008)(8676002)(54906003)(316002)(66476007)(38100700002)(110136005)(4744005)(6506007)(8936002)(53546011)(66946007)(6486002)(478600001)(5660300002)(41300700001)(2906002)(36756003)(31696002)(31686004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ty8wL0FZSGplSGt2TWczMG5KYnJ3Z0EvQ0pZQVhiSFFJQ3JwUGpweUJoVGpZ?=
- =?utf-8?B?WHdKb1V0SU16cmZCeFo5MkZnOTV2dERQb3A5bldqQnhYRGJ6QkhYVEV3dDJ2?=
- =?utf-8?B?S2JEYStSYzM0TFFtK1QwdnJaVVBjVzJBdGhLK1BOR3pqWGxCZlpSWTE4QjlZ?=
- =?utf-8?B?OXVjMG1QN1JxNDg2dmVad3NWZWVYRmZUbTNTS2hyelMzelUrQTVadzA4Zml0?=
- =?utf-8?B?dWVHa2NmSVl3V0RZRXJ1cnkzNExjZXpyRld0WDRLZERFM3dMcG8zUDhjUm1U?=
- =?utf-8?B?eEQ1RUtKVlFtd0dNZEpzZE9NVEZydDN6ZGlsTFdFVjREYitKQy9yZENTS1lW?=
- =?utf-8?B?NGc0MEtmdVF5OVlzRy80MmFJU0ZYemZ5MkJIT1dHSVpHcmJiNU9nNzMvQWJo?=
- =?utf-8?B?c0ZvR0t0MlVuWTJxak4xdDVERnNmYWZVOElrNlFkaW45WmNiY3U4M29TNHNU?=
- =?utf-8?B?V2lSbDUzNmgxOENHd21Gb3hMVThtQ1Q5cnN3bnBLUkVEUDhEUG5hSXd1L1Ex?=
- =?utf-8?B?UVNteHc2OTNFRUdVNTREckRUSHhvNFRPb2dXbG5kSy9PTldHSlhQSndFeXkw?=
- =?utf-8?B?UFlGd2kwSmVZeklBZVNVdDR0K1JTWUt6Qzd6K2s3dnhuelp5ZW9aVi9aSVRU?=
- =?utf-8?B?UjVXL2hmeHVJMXZwQUVEa1F3RlFSdktiYnVzeHBYeCtmVyt6NmJNSWJaajRV?=
- =?utf-8?B?bXFXak1aeE1ZaStzb0VGUWNZSjRrRkVsVDd6SVJHZW9EWlRVMk4ydmN5N1hr?=
- =?utf-8?B?K2dZQWNzL1QrYnNUMDNiWGJmMUtSeWdhQUQwZWkxYUs5SjZDTkhlSStGY2lk?=
- =?utf-8?B?QkhzS09CbUM4SmhIQ3Eya2laWGNibDBYb3VHSFRjbGVmQzNnbk5YcWp3aHdr?=
- =?utf-8?B?c3htQW4zM29XNlF3czdBTjVoYy9uR2Nad1B1cmpIVmduRmFDZEsrY2NORjIw?=
- =?utf-8?B?Wm00dTNCc2lrdTU1MHM1Z2JmNGx2RGJEa2FZcEJGY0ZTR1ZTeFMycE5Pa2FG?=
- =?utf-8?B?ZGs4U0dZS3RKMmFHNE9SVEdsSXJOb2lJMXQxWGFWMlZScmUyOHI0MXFzeTBn?=
- =?utf-8?B?UHJWQ3FZSmxhODhLenBjWk4rR3ZpOTQwYktFTVgrbkRnOFNwZTZDc1RVU3Jo?=
- =?utf-8?B?RXM4ZHdUT2FmUHQwcUVqbVdXN2I3ZFdManpNQ21Nc20xRmRCSW5HVTRlVSty?=
- =?utf-8?B?b09TUHhUazZwWnBZSmVMS2txRjFxRlVSNEdWZUFNQ2V5UlNIc245dEg5WlQ1?=
- =?utf-8?B?WUM3L0tEaXM1ZkRHY3BDaTFzaGNFN1pvUi9CNG5tR3FEWUFUVFRzN2RVWjVG?=
- =?utf-8?B?YzArcXJZbkVWUTVabmcwQ0pUNnMzNU5QY1JvOE9EY1l4cWJ5aXpjYTlVSmZK?=
- =?utf-8?B?S3Fkb3NDcE54L205S2ZNdmNZS3Q4UldicG9wSXYrQWdKTkhpVjA0di94ZGNW?=
- =?utf-8?B?eXpkNXNhbkNIS3psbFB2akxqdXZ5c29RdFgzZ2xCc0l5STNCc1VmSlBjN2g1?=
- =?utf-8?B?ajVGeEJWYWxjTWZxMlJhcFlFYXNCZGNzOTE1KzRmcllCUm5pRjBZekYyUmxj?=
- =?utf-8?B?cXY2TkN3N1lOVTRVd29PTHMzb1c2VGdGYzdFaVdSUzFRY3RzTFV3UU9NNVBo?=
- =?utf-8?B?NHZhR3JQK285V3kyMmtDZzZTMjQrTkN2VHhYK1hBb0NnKzhCTDlnWldNZ0U0?=
- =?utf-8?B?UGM5N0dTbDRPNFFMOGNJVjVYS3QxMFBpZGYrdHVESGNvdEJENzljdFlBZTcv?=
- =?utf-8?B?UHJjeit5M2NGb1ZVSS9kZXdLL09nTlVwSFV3NjdHRmZEeFlpSzYvcjVtTGsr?=
- =?utf-8?B?YjBJVzlESndmUlVuNnBQYUxGQTZWb0pSOEh0Zm9iVUE2UWtuVWVVaVVBd3E4?=
- =?utf-8?B?a1dJSEZzdG0zVU1PSWM4WHJ1dTNIc1ZxM1pKaUZ0OWt4QittR1ljT0ozWmNB?=
- =?utf-8?B?VFhyK2JFbnd1YWN3NExIOWtQd2tyVHRrME96U0hOYjVxRk9rckdhcGh2VXQv?=
- =?utf-8?B?dC9IUlYveW1Nd1lIdkhmNWhNNnBtQ1o5Z09rRElwK0NWRXNGOHkwKzZaNDZo?=
- =?utf-8?B?QTViLzNwcFNNNjRRc2Rmcm51ZGtRcHlRaDZrTzBvdDFGcG1XWUp6dHZPdTNn?=
- =?utf-8?Q?4sg/W5JqPyPB/GR55YavL8LzC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86f35735-82d8-4837-0b0a-08dc28cd2c8c
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 17:41:26.2891
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +exFG5QNjrF8+ZDVmNSkI7ciafZQqk2CItn64EzSCusSSl7Dn67b8jJ5lusl9KKG8fMpfkMDQ92hXefmDFZc4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5804
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240208161014.1084943-3-longman@redhat.com>
 
-Hi
+Hello,
 
-On 2/7/2024 18:02, Luck, Tony wrote:
->> +#define CPU_GEN_MEMSZ	256
+Generally looks good to me. Minor nits below:
+
+On Thu, Feb 08, 2024 at 11:10:12AM -0500, Waiman Long wrote:
+> +static void unplug_oldest_pwq(struct workqueue_struct *wq)
+> +{
+> +	struct pool_workqueue *pwq;
+> +	unsigned long flags;
+> +
+> +	lockdep_assert_held(&wq->mutex);
+> +
+> +	pwq = list_first_entry_or_null(&wq->pwqs, struct pool_workqueue,
+> +				       pwqs_node);
+> +	if (WARN_ON_ONCE(!pwq))
+> +		return;
+> +	raw_spin_lock_irqsave(&pwq->pool->lock, flags);
+
+Can we do raw_spin_lock_irq() instead?
+
+> @@ -4740,6 +4784,13 @@ static void pwq_release_workfn(struct kthread_work *work)
+>  		mutex_lock(&wq->mutex);
+>  		list_del_rcu(&pwq->pwqs_node);
+>  		is_last = list_empty(&wq->pwqs);
+> +
+> +		/*
+> +		 * For ordered workqueue with a plugged dfl_pwq, restart it now.
+> +		 */
+> +		if (!is_last && (wq->flags & __WQ_ORDERED))
+> +			unplug_oldest_pwq(wq);
+
+I'm not so sure about is_last test here. unplug_oldest_pwq() is testing for
+NULL anyway, so maybe just drop this test here and drop WARN_ON_ONCE()
+there?
+
+> @@ -4966,6 +5017,15 @@ apply_wqattrs_prepare(struct workqueue_struct *wq,
+>  	cpumask_copy(new_attrs->__pod_cpumask, new_attrs->cpumask);
+>  	ctx->attrs = new_attrs;
 >  
-> What is this define?
-> 
-> Why isn't this "sizeof(struct mce)"?
-> 
-> Or 2* that if you are trying to reserve enough space for two records per CPU.
-> 
-That's the memory in bytes reserved for each logical CPU in the
-extended MCE Records pool. By current size of struct mce that
-equates to around 2 records.
+> +	/*
+> +	 * For initialized ordered workqueues, there is only one pwq (dfl_pwq).
+> +	 * Set the plugged flag of ctx->dfl_pwq to suspend execution of newly
+> +	 * queued work items until execution of older work items in the old
+> +	 * pwq's have completed.
+> +	 */
+> +	if (!list_empty(&wq->pwqs) && (wq->flags & __WQ_ORDERED))
+> +		ctx->dfl_pwq->plugged = true;
 
-Will change it to (2 * sizeof(struct mce)) though. Feels more
-accurate. Thanks for the suggestion!
+Can we test __WQ_ORDERED first?
 
-Do you have any additional concerns/comments on this patchset?
-
-> -Tony
+Thanks.
 
 -- 
-Thanks,
-Avadhut Naik
+tejun
