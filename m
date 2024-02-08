@@ -1,141 +1,175 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from esa1.ltts.com (unknown [118.185.121.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734FC6F53E;
-	Thu,  8 Feb 2024 09:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8595871B2E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384072; cv=none; b=VM4qDwqRhCrEstw42OHE7fH/YcrJgp8937gHhSrp2+Am6lC8ThrJjeKHwTN97NrW1z17D953UrR2ZbJ9BC1m7+q3lNa1asExGzZLsshzwu6cSYpJsQFtxgJ4W0SKZxarTMaoyjHoWxjdK7TKiRv0NVn8WFPFUegyxdMQcJ211g4=
+	t=1707384078; cv=none; b=gkEuFHH71/EtWdIQxz1Khyewzypvl1ooQaVlXTHDU8/OCTuJ/GGPrTVmCIpOlLa03fS38e4RkQQLBrc4Lqv5aIh6oUm0P5We4/MWG8XiGaTDaLTGTCFZfop4Es35bkCSMxhtKlYJgDRdA7UJ+DQOaip3tXYXC5iZnK4jPWKcymU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384072; c=relaxed/simple;
-	bh=7Osbsv9Uu5LnSEkPrNLL6eFwAd2oq5PdQu+OGCPcDYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VxydNMVldUl5H57RHvQuJBTDDViP9TMslvqe9jpckIWDtSwj79yqMkAMFh97WRNA/jfRpHY8WGvWD2E4I6VgWly0g07vzPgVw1lTJi+1JUj83SnGAOHgQ5CtK5qIz8E3TqnM+96YLBuCpGJkO4WkLMh/XRlfwh/WwOSe+s/WWA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=19wkwW+6; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="19wkwW+6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=vb5dORbqze0SdpTtcMmBFKm/vy+xDGZxBk1OHiDwRbc=; b=19wkwW+6sREDBf78amIq92Zl1u
-	e0eDGWzYrrGtPBT4FJQqeLmWlR6shetElr7ZzQCoLltdJmNRw0G4p65NnJYLS2gWYBIG3kvGV6Zb2
-	CFEwQkt7+rau4DEIzj3JN+cbQOW5aH8P3W3GtuwGs6bHnQB31qUBihTOi6hWKSukGnetdMu40rso5
-	BCwYq62lFyF5fRzDyTdtThxAyJqGAZ+uC+eAisSBHqM5Hv8wSPjV0s8VV1W9GYxawEocCSD9GXL7k
-	LRqcTe00XNGg5NXGm9EvurzWQCwplVd2IY/XPRawXuE4h+SXY2uu9DVLxciVr7wpLRW6YklafcQwd
-	HHZQ/DXg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38480)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rY0ad-00048s-1h;
-	Thu, 08 Feb 2024 09:21:03 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rY0aX-0005QB-5C; Thu, 08 Feb 2024 09:20:57 +0000
-Date: Thu, 8 Feb 2024 09:20:57 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Zev Weiss <zev@bewilderbeest.net>
-Cc: linux-parisc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Helge Deller <deller@gmx.de>, Florent Revest <revest@chromium.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	Stefan Roesch <shr@devkernel.io>, Oleg Nesterov <oleg@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>, openbmc@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Sam James <sam@gentoo.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 0/2] ARM: prctl: Reject PR_SET_MDWE where not supported
-Message-ID: <ZcSc+ftxHY8RyinQ@shell.armlinux.org.uk>
-References: <20240208012620.32604-4-zev@bewilderbeest.net>
+	s=arc-20240116; t=1707384078; c=relaxed/simple;
+	bh=IxGn927BGFRmm/ygF3LwDNCQJWTN1CLV232sRxge5WA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IbPs0tJ9ORk4kzUxdX7i+y1KD2rxTbti5m3Hun6/IZH7qnzEV68fTfMjFWOq8dA58gzp4rojT2aHXgrZwJXdsSOGno+1HJbmAcUlJlzcmXSchsI5YlVqlujU+I38DddykXe8t37CXzvoH+782q6tDPkyCAHTlk/Bo+htSXu+oJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: ZptpJZB3dT5gG2aZDWswoarET+vMrDeAQBMKGpArwB3J4skc/xQJUYA3yqnS03EvLXq34mEZIZ
+ agylEM+s9DYw==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa1.ltts.com with ESMTP; 08 Feb 2024 14:51:13 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v1 07/13] misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+Date: Thu,  8 Feb 2024 14:50:56 +0530
+Message-Id: <20240208092059.1207134-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208012620.32604-4-zev@bewilderbeest.net>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Add support for TPS65224 PFSM in the TPS6594 PFSM driver
+as they share significant functionality.
 
-Where is patch 1 of this series? It doesn't seem to have been Cc'd to
-linux-arm-kernel. Therefore, this can't be reviewed.
+Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+---
+ drivers/misc/tps6594-pfsm.c | 55 +++++++++++++++++++++++++++----------
+ 1 file changed, 40 insertions(+), 15 deletions(-)
 
-Thanks.
-
-On Wed, Feb 07, 2024 at 05:26:18PM -0800, Zev Weiss wrote:
-> Hello,
-> 
-> I noticed after a recent kernel update that my ARM926 system started
-> segfaulting on any execve() after calling prctl(PR_SET_MDWE).  After
-> some investigation it appears that ARMv5 is incapable of providing the
-> appropriate protections for MDWE, since any readable memory is also
-> implicitly executable.
-> 
-> (Note that I'm not an expert in either ARM arch details or the mm
-> subsystem, so please bear with me if I've botched something in the
-> above analysis.)
-> 
-> The prctl_set_mdwe() function already had some special-case logic
-> added disabling it on PARISC (commit 793838138c15, "prctl: Disable
-> prctl(PR_SET_MDWE) on parisc"); this patch series (1) generalizes that
-> check to use an arch_*() function, and (2) adds a corresponding
-> override for ARM to disable MDWE on pre-ARMv6 CPUs.
-> 
-> With the series applied, prctl(PR_SET_MDWE) is rejected on ARMv5 and
-> subsequent execve() calls (as well as mmap(PROT_READ|PROT_WRITE)) can
-> succeed instead of unconditionally failing; on ARMv6 the prctl works
-> as it did previously.
-> 
-> Since this was effectively a userspace-breaking change in v6.3 (with
-> newer MDWE-aware userspace on older pre-MDWE kernels the prctl would
-> simply fail safely) I've CCed -stable for v6.3+, though since the
-> patches depend on the PARISC one above it will only apply cleanly on
-> the linux-6.6.y and linux-6.7.y branches, since at least at time of
-> writing the 6.3 through 6.5 branches don't have that patch backported
-> (due to further missing dependencies [0]).
-> 
-> 
-> Thanks,
-> Zev
-> 
-> [0] https://lore.kernel.org/all/2023112456-linked-nape-bf19@gregkh/
-> 
-> Zev Weiss (2):
->   prctl: Generalize PR_SET_MDWE support check to be per-arch
->   ARM: prctl: Reject PR_SET_MDWE on pre-ARMv6
-> 
->  arch/arm/include/asm/mman.h    | 14 ++++++++++++++
->  arch/parisc/include/asm/mman.h | 14 ++++++++++++++
->  include/linux/mman.h           |  8 ++++++++
->  kernel/sys.c                   |  7 +++++--
->  4 files changed, 41 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm/include/asm/mman.h
->  create mode 100644 arch/parisc/include/asm/mman.h
-> 
-> -- 
-> 2.43.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
+index 88dcac814..4fa071093 100644
+--- a/drivers/misc/tps6594-pfsm.c
++++ b/drivers/misc/tps6594-pfsm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * PFSM (Pre-configurable Finite State Machine) driver for TI TPS6594/TPS6593/LP8764 PMICs
++ * PFSM (Pre-configurable Finite State Machine) driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
+  *
+  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
+  */
+@@ -34,15 +34,17 @@
+ 
+ #define TPS6594_FILE_TO_PFSM(f) container_of((f)->private_data, struct tps6594_pfsm, miscdev)
+ 
+-/**
++/*
+  * struct tps6594_pfsm - device private data structure
+  *
+  * @miscdev: misc device infos
+  * @regmap:  regmap for accessing the device registers
++ * @chip_id: chip identifier of the device
+  */
+ struct tps6594_pfsm {
+ 	struct miscdevice miscdev;
+ 	struct regmap *regmap;
++	unsigned long chip_id;
+ };
+ 
+ static ssize_t tps6594_pfsm_read(struct file *f, char __user *buf,
+@@ -133,21 +135,29 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 	struct tps6594_pfsm *pfsm = TPS6594_FILE_TO_PFSM(f);
+ 	struct pmic_state_opt state_opt;
+ 	void __user *argp = (void __user *)arg;
++	unsigned int regmap_reg, mask;
+ 	int ret = -ENOIOCTLCMD;
+ 
+ 	switch (cmd) {
+ 	case PMIC_GOTO_STANDBY:
+-		/* Disable LP mode */
+-		ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-					TPS6594_BIT_LP_STANDBY_SEL);
+-		if (ret)
+-			return ret;
++		/* Disable LP mode on TPS6594 Family PMIC */
++		if (pfsm->chip_id != TPS65224) {
++			ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
++						TPS6594_BIT_LP_STANDBY_SEL);
++
++			if (ret)
++				return ret;
++		}
+ 
+ 		/* Force trigger */
+ 		ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
+ 					TPS6594_BIT_TRIGGER_I2C(0), TPS6594_BIT_TRIGGER_I2C(0));
+ 		break;
+ 	case PMIC_GOTO_LP_STANDBY:
++		/* TPS65224 does not support LP STANDBY */
++		if (pfsm->chip_id == TPS65224)
++			return ret;
++
+ 		/* Enable LP mode */
+ 		ret = regmap_set_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+ 				      TPS6594_BIT_LP_STANDBY_SEL);
+@@ -169,6 +179,10 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 				      TPS6594_BIT_NSLEEP1B | TPS6594_BIT_NSLEEP2B);
+ 		break;
+ 	case PMIC_SET_MCU_ONLY_STATE:
++		/* TPS65224 does not support MCU_ONLY_STATE */
++		if (pfsm->chip_id == TPS65224)
++			return ret;
++
+ 		if (copy_from_user(&state_opt, argp, sizeof(state_opt)))
+ 			return -EFAULT;
+ 
+@@ -192,14 +206,20 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 			return -EFAULT;
+ 
+ 		/* Configure wake-up destination */
++		if (pfsm->chip_id == TPS65224) {
++			regmap_reg = TPS65224_REG_STARTUP_CTRL;
++			mask = TPS65224_MASK_STARTUP_DEST;
++		} else {
++			regmap_reg = TPS6594_REG_RTC_CTRL_2;
++			mask = TPS6594_MASK_STARTUP_DEST;
++		}
++
+ 		if (state_opt.mcu_only_startup_dest)
+-			ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-						TPS6594_MASK_STARTUP_DEST,
+-						TPS6594_STARTUP_DEST_MCU_ONLY);
++			ret = regmap_write_bits(pfsm->regmap, regmap_reg,
++						mask, TPS6594_STARTUP_DEST_MCU_ONLY);
+ 		else
+-			ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-						TPS6594_MASK_STARTUP_DEST,
+-						TPS6594_STARTUP_DEST_ACTIVE);
++			ret = regmap_write_bits(pfsm->regmap, regmap_reg,
++						mask, TPS6594_STARTUP_DEST_ACTIVE);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -210,8 +230,12 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 			return ret;
+ 
+ 		/* Modify NSLEEP1-2 bits */
+-		ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_FSM_NSLEEP_TRIGGERS,
+-					TPS6594_BIT_NSLEEP2B);
++		if (pfsm->chip_id == TPS65224)
++			ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_FSM_NSLEEP_TRIGGERS,
++						TPS6594_BIT_NSLEEP1B);
++		else
++			ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_FSM_NSLEEP_TRIGGERS,
++						TPS6594_BIT_NSLEEP2B);
+ 		break;
+ 	}
+ 
+@@ -262,6 +286,7 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
+ 					    tps->chip_id, tps->reg);
+ 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+ 	pfsm->miscdev.parent = dev->parent;
++	pfsm->chip_id = tps->chip_id;
+ 
+ 	for (i = 0 ; i < pdev->num_resources ; i++) {
+ 		irq = platform_get_irq_byname(pdev, pdev->resource[i].name);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.25.1
+
