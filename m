@@ -1,93 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFA17B3C2;
-	Thu,  8 Feb 2024 17:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592CA7CF23;
+	Thu,  8 Feb 2024 17:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707412540; cv=none; b=WssO38IZlcoLhmN8UGWEXYM/plDFJusCzGFhQZuopDl251ctdDZH1R6qeNamTUwuWS1MS5mW/uqtBIrDT3KtMsf1DGryuV6/OCNqRtnHm7VElIWxS0+gzHDSIWmdRdzSqZWEl3sCH+ofDaXgRaat4GLZjvpsr2YACkccqiAE4J8=
+	t=1707412651; cv=none; b=Uck6OGV5CNh8fmFabWUedKj39jK87io/K9aFD4zh22nN0PtR97baN8YLx7vsZr3MkCNY6BAjrGZuxM5DsuGHDq8Edg96Yjvwq2TE4aw6JYBTrYBbsUt0QwDgObL67+zsfY+YcGSB72dCOXsjm67t8awZ37yRN+mXv5It2+hDRCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707412540; c=relaxed/simple;
-	bh=p76xqtocPXxIASp/RvwQN97YAIQh0QlwZC10TmxGnq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7E4fT68Ay9gcHD4F4tm9o16fdPG5xcNwKapfrQZJnFN2L9mSiOjElSJekdXX7Io9xDsR+fhrDT1xtHYlPE2uZXENADmtFHNUpTwWqvruFn5xR/z1MBR7ofwJofBnw+5EAq9laxc7GW9aFnKo4+kOkQ9L/4ql6IPRO+HUCsxVM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jz2kKRJp; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1707412651; c=relaxed/simple;
+	bh=LvC0jNLSvlISq+pfX0tunOut+CloWPeckMMVxbBHVes=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jSN56725zDkvyIh7k8y1NGW3pJgTc4u63tG69v4WxZabRtJTM0rUY7KtktuZa6LFxslzqHBLjJC6D81mZPjaeYITJm7oZorr36MPmb3uLl+TPasvL6hnUbmfusLKYX2tXIrdRNiVxLHh4ooPopIPTGYDEqjhLw43dGUP1yuhqhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXVWHN2j; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jz2kKRJp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXVWHN2j"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707412540; x=1738948540;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p76xqtocPXxIASp/RvwQN97YAIQh0QlwZC10TmxGnq0=;
-  b=jz2kKRJpJZRqmgKHolbk+geF9tcOM5CkaAyv1Is2zCoeOKzu3X/6JX2f
-   dB7+I/zHv/4fC74iGlbGY+GyQXa7yEPCVsCdoEQY+/DeH6qb49na2oJ4F
-   hTzGd4LDZogVBWiVMzyXhX8cWOdStJVl2ZdtFvvEAM+3y+j9usu41f3Q/
-   MYy9sTo5aEG9CFV9WV1B30ON+424STbuixiLraMCfnGnRHUwcXELQXyU8
-   aZpkkaNBisOt7SjZAdfmSzlHTnILm0Pbr4eAUikeR0Oz4jTsLWle7Z5e5
-   BU6xUMC3bOHJSHS0mIU50CyjxrOiCmFhysvgA0Zkji/B/Ts35BI0wo0TX
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="11841737"
+  t=1707412649; x=1738948649;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LvC0jNLSvlISq+pfX0tunOut+CloWPeckMMVxbBHVes=;
+  b=RXVWHN2j7xYe3EkiNvYU5TviV2CFsuljkp7R1di2FqeoAZPfvFKrXReQ
+   RG5bns25xeEZlneTRRE7HI1UflSRAhxdT3Gr9xqFwtoilTHNIsp8lebrb
+   KSnYMPiNKEpk18tEApze86BvwOD+WUQe4nMDpw/crthPefh9eB3SWJp95
+   W9vUR36NkO0368B9LkgyFI+48NSFVlsYow+usFIhfuZOYvhbVQst5/Qgf
+   NFO9A3QtKl8TGOvIQxURYXULgXYU+gRlWqGgTLyQojzAjFjXev25v5jlh
+   RIlK6f3I5qxKVrAdp32LU5F2sszzgFaZcnPt1Gf6DEMIGRJqiQRDES+td
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1565633"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="11841737"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:15:38 -0800
+   d="scan'208";a="1565633"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:17:28 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="910429976"
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934195354"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="910429976"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:15:34 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rY7zn-00000002vyu-3v1g;
-	Thu, 08 Feb 2024 19:15:31 +0200
-Date: Thu, 8 Feb 2024 19:15:31 +0200
+   d="scan'208";a="934195354"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 09:17:26 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 210101374; Thu,  8 Feb 2024 18:59:41 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Flavio Suligoi <f.suligoi@asem.it>, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v2 0/3] backlight: mp3309c: Allow to use on non-OF
- platforms
-Message-ID: <ZcUMMyV_vBTNw8Rz@smile.fi.intel.com>
-References: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
- <20240208113425.GK689448@google.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Paul Burton <paulburton@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v1 03/15] auxdisplay: linedisp: Use unique number for id
+Date: Thu,  8 Feb 2024 18:58:46 +0200
+Message-ID: <20240208165937.2221193-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240208165937.2221193-1-andriy.shevchenko@linux.intel.com>
+References: <20240208165937.2221193-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208113425.GK689448@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 08, 2024 at 11:34:25AM +0000, Lee Jones wrote:
-> On Thu, 01 Feb 2024, Andy Shevchenko wrote:
+The absence of decrementation of linedisp_id is incorrect in two ways,
+i.e. it may cause:
+- an ID exhaustion
+- (and if the above is addressed) a duplicate id number may be allocated
+  next time a device is added
 
-...
+Replace above mentioned approach by using IDA framework.
 
-> >   backlight: mp3309c: Utilise temporary variable for struct device
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/auxdisplay/line-display.c | 13 ++++++++++---
+ drivers/auxdisplay/line-display.h |  2 ++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-(1)
-
-> Set no longer applies.  Please rebase, thanks.
-
-I got a contradictory messages:
-1) email that says that all had been applied;
-2) this email (that tells the complete opposite);
-3) the repository where the first two were applied.
-
-While you can amend your scripts, I think I need to rebase only the last patch
-(1) that may not be found in your tree currently.
-
+diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
+index 310e9bfb41ae..c4dbb13293d1 100644
+--- a/drivers/auxdisplay/line-display.c
++++ b/drivers/auxdisplay/line-display.c
+@@ -11,6 +11,7 @@
+ #include <generated/utsrelease.h>
+ 
+ #include <linux/device.h>
++#include <linux/idr.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+@@ -188,11 +189,14 @@ static struct attribute *linedisp_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(linedisp);
+ 
++static DEFINE_IDA(linedisp_id);
++
+ static void linedisp_release(struct device *dev)
+ {
+ 	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
+ 
+ 	kfree(linedisp->message);
++	ida_free(&linedisp_id, linedisp->id);
+ }
+ 
+ static const struct device_type linedisp_type = {
+@@ -214,7 +218,6 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
+ 		      unsigned int num_chars, char *buf,
+ 		      void (*update)(struct linedisp *linedisp))
+ {
+-	static atomic_t linedisp_id = ATOMIC_INIT(-1);
+ 	int err;
+ 
+ 	memset(linedisp, 0, sizeof(*linedisp));
+@@ -225,9 +228,13 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
+ 	linedisp->num_chars = num_chars;
+ 	linedisp->scroll_rate = DEFAULT_SCROLL_RATE;
+ 
++	err = ida_alloc(&linedisp_id, GFP_KERNEL);
++	if (err < 0)
++		return err;
++	linedisp->id = err;
++
+ 	device_initialize(&linedisp->dev);
+-	dev_set_name(&linedisp->dev, "linedisp.%lu",
+-		     (unsigned long)atomic_inc_return(&linedisp_id));
++	dev_set_name(&linedisp->dev, "linedisp.%u", linedisp->id);
+ 
+ 	/* initialise a timer for scrolling the message */
+ 	timer_setup(&linedisp->timer, linedisp_scroll, 0);
+diff --git a/drivers/auxdisplay/line-display.h b/drivers/auxdisplay/line-display.h
+index 0f5891d34c48..1fbe57fdc4cb 100644
+--- a/drivers/auxdisplay/line-display.h
++++ b/drivers/auxdisplay/line-display.h
+@@ -14,6 +14,7 @@
+ /**
+  * struct linedisp - character line display private data structure
+  * @dev: the line display device
++ * @id: instance id of this display
+  * @timer: timer used to implement scrolling
+  * @update: function called to update the display
+  * @buf: pointer to the buffer for the string currently displayed
+@@ -25,6 +26,7 @@
+  */
+ struct linedisp {
+ 	struct device dev;
++	unsigned int id;
+ 	struct timer_list timer;
+ 	void (*update)(struct linedisp *linedisp);
+ 	char *buf;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0.rc1.1.gbec44491f096
 
