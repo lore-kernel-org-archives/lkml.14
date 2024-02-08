@@ -1,232 +1,79 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDFF7EF06
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 12:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363242EB1A;
+	Thu,  8 Feb 2024 12:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707396265; cv=none; b=nKCnIQO9B8Pb7fMWvzzmDNBAoSRtH1DOPOFXZoPjRttxSmGBwZWSU7xx+ZegTP5etIoygJE5CvQL7CctAR5tn+8H1khYvEJGnh4kqop1PT2sMrSFpNvdb7HLzcq3hBnmjaCFvuo8Ve/pED6jMr06pliuFB+zI7Jy3xkNopdT340=
+	t=1707396592; cv=none; b=VK+Jl4dZL3Wb2OVurMHDOP+5ROoJApImEaE6MuGG4pRPQ/IvsXc+MRS1EQqeuVQv7roMQmG5eaMtL9ozg9etxAyh5+hg95/e99DCIWcCR4LNoxsi/IyNlJRAVkBpkacX1HGMgT1rYK0e6FeLh+/owbMMY41loTO3+z78o2gVVjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707396265; c=relaxed/simple;
-	bh=gRX2x88FqVLUStqN8zuHyneH2upnBTYGjfOVYMyFZ0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ikqFNv2jh4168jh+xY0cZ3jPffQO59etB4//BGJPVujJgfTHPOBgVqQr+cpsfVlGwkxyB9YGOQs07lbLOSL/eDp39AwQcSemMMBrmVSJw8jxGqdP8dIXTxGAW0vOFoHcTNsm8whhGS4++Wya6aIsqikQSIa2jWsFELTTQ9TOdWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=KKJuxj0d; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="KKJuxj0d"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41008ab427fso16158805e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 04:44:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707396261; x=1708001061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6yTEa4/lsVRh49barZX5/hHwmF5ODn+0XbIAzs9ib3A=;
-        b=KKJuxj0d3E7VI/zgAkCYq9iS28icvQc3wktVef55AGsDGZgWHKVJe+dQX4GUCCoDGM
-         zONbRMFr4bDbPYkT7u2D+nh2HerfwtkxgrJIirDXYFrAGCa8YX8w73vTeGZZhlmYbwcQ
-         /By6OAPXb3e5wnhInvQc3UEz6coIW8UAo6y/ep0lAf8e8X69GUDiKUEpUe0shoXKD8Rq
-         6OwZkiopObf0sFrH/LbF51tgjI9l8I/JD2TH5aRx2EG5sELqZ2P/76aaX4euJecJ2949
-         QI1i16pl3rEbmCGSI0WYdVlmlULbo3r+auNKFvwtu7gWbUYNIUL26CVnrkIct8HG8fJS
-         yVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707396261; x=1708001061;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6yTEa4/lsVRh49barZX5/hHwmF5ODn+0XbIAzs9ib3A=;
-        b=blg1BJnvuxRtvs8idE2Cl5pbbR4WsR2Jhs6wiT/PqNdmT7HwnbK3wdx0dxrWxJVJ2o
-         l/qWtep037jhkSBVYtRLaoPhXYPlE0Qj7IVkF7k+FzZH9Pd7LRcXkDmN0RW+sngUTKk3
-         6iY5CqHC96PV3l+1SvSxw41mE8K4I/ekBjZVxVMeXmNyf5SM7dEFC1IdNkhotALWkSVK
-         HxHVey6wkczZ+CHjTS1lXMHiNkeMWuWj15/IbgPUbSKVpSqJ01OzFXesjA3lFtlAqHNm
-         1/9d/EkIYtwemniaKbJpwZcOkH31VUB4Tk7yHMqPah0aI7lUkxQUFDebq7YayFo8FiLH
-         0eMA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0C9+OdcQ95gvLnzNkOZ/6Vf4gmMWyt2Zns5ruK0VyFhC5yvA6QwQVO/deUovIn9yGpNCI3zh0SSIXMR8HlEgVfWmMj+aYML5ty88x
-X-Gm-Message-State: AOJu0YzgSM2vkBzL95hy0+PPvjDKA8bblHqDZud+7b4ccpgxE+vceA3C
-	zBiqtJLE2AHp0sXYDnN61sr7JYoQaEYFz57joT803GjiGRS+VZSgsSyfL7wclXk=
-X-Google-Smtp-Source: AGHT+IGANbj1iqOytgIwqTg4Mq/0gpcdPMAp60+0punCG5pjW18WFbjKTwZGb5kh4i/RgdGw5GaHyw==
-X-Received: by 2002:a05:600c:1c9e:b0:40f:c1b7:2556 with SMTP id k30-20020a05600c1c9e00b0040fc1b72556mr7366673wms.11.1707396261396;
-        Thu, 08 Feb 2024 04:44:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW9Sr/LYarYn0Ydw9Z5UndLl0lPc2rf5eImobbDtGEveI/5qBkV4OQYupRBQfDCMJRJ35YozSSMZas9QWzlnjzZVptnk7zkEZazrYTVw86UYlPS3AI0amTEsE6I1FZTTCY+hKtcasM7WBV0CBCiw8LWCK5V8+EBrXoy+b097mnpz/r7tCy6nox9rqP8L6C/nTjqQwSbamMiJThJ8fRRSO1vtaaCazKwu8e2vMsvJBixIu9GxEvggwQmByZNF0Ftcn2PZ+sei2Tg2ED43jC+Pkt/GSwfzj4BqqDpmdcS/ligPgbTVv4N94S7AmYojqC3XPwLYcTPlsGwptui7xpDuKnOfdMoU91UuSuawHavUuKJrBzwPp3Gk8VKSIXbo2O13LQPhV7Rrq5vTtcWY2ksYI7gP3GUlsypZNX08ORpOoYrg0q6+EI8xVUSuGbFdrQeqxp/s1UyKIEqYLsn9o0yOymBeDmq7b0rAXaZJ+wGnPwDdhKPP0W9GZMM1Ow3IYm8P5oq0ulAfZVqpmXZbInU1pEw6JiKqDGpNY1BXjMkk/DzWiFO5eVGwKSTxx5g6mbiqdQ=
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.45])
-        by smtp.gmail.com with ESMTPSA id o13-20020a05600c4fcd00b0041047382b76sm790244wmq.37.2024.02.08.04.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 04:44:20 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	magnus.damm@gmail.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 17/17] arm64: dts: renesas: r9a09g011: Update #power-domain-cells = <1>
-Date: Thu,  8 Feb 2024 14:43:00 +0200
-Message-Id: <20240208124300.2740313-18-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240208124300.2740313-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240208124300.2740313-1-claudiu.beznea.uj@bp.renesas.com>
+	s=arc-20240116; t=1707396592; c=relaxed/simple;
+	bh=UYSlbZmLjurXnUNDON8vfhJ+CuykhF4aVAA+Uan4bzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eBI1eSoXgVupoaaOFMA+MOQREfe0UcOtDGqnbU/CJJ3jCCHI02uBgDldFcxh7BDshypd+DWhqlqsevuO78j/Ewz78InuDW3/F5xhMiswFA3NyZrxab5DhzmCB1n59q1Grd1I7ZZZytTNQLtNbtG3AKrZRQmN1F6Jsothyjra9RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1rY3Mr-000329-00; Thu, 08 Feb 2024 13:19:01 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id A3824C0267; Thu,  8 Feb 2024 13:14:17 +0100 (CET)
+Date: Thu, 8 Feb 2024 13:14:17 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 01/14] MIPS: spaces: Define a couple of handy macros
+Message-ID: <ZcTFmUtV/mzeIBTx@alpha.franken.de>
+References: <20240205153503.574468-1-gregory.clement@bootlin.com>
+ <20240205153503.574468-2-gregory.clement@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205153503.574468-2-gregory.clement@bootlin.com>
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Mon, Feb 05, 2024 at 04:34:47PM +0100, Gregory CLEMENT wrote:
+> Define KSEGX_SIZE to represent the size of each KSEG segment.
+> 
+> Introduce CKSEG0ADDR_OR_64BIT and CKSEG1ADDR_OR_64BIT to get an XPHYS
+> address in 64bits and CKSEG[01]ADDR() in 32 bits mode.
+> 
+> Co-developed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  arch/mips/include/asm/addrspace.h           | 5 +++++
+>  arch/mips/include/asm/mach-generic/spaces.h | 4 ++++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/mips/include/asm/addrspace.h b/arch/mips/include/asm/addrspace.h
+> index 59a48c60a065c..03a5e2c8b5dc9 100644
+> --- a/arch/mips/include/asm/addrspace.h
+> +++ b/arch/mips/include/asm/addrspace.h
+> @@ -47,6 +47,11 @@
+>   */
+>  #define KSEGX(a)		((_ACAST32_(a)) & _ACAST32_(0xe0000000))
+>  
+> +/*
+> + * Gives the size of each kernel segment
+> + */
+> +#define KSEGX_SIZE		0x20000000
 
-Update CPG #power-domain-cells = <1> and move all the IPs to be part of the
-always on power domain as the driver has been modified to support multiple
-power domains.
+well this is the KSEG size for 32bit and defined in a common section,
+so better use CSEGX_SIZE
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a09g011.dtsi | 28 +++++++++++-----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Thomas.
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g011.dtsi b/arch/arm64/boot/dts/renesas/r9a09g011.dtsi
-index 50ed66d42a24..74af0f730b89 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g011.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a09g011.dtsi
-@@ -81,7 +81,7 @@ sdhi0: mmc@85000000 {
- 				 <&cpg CPG_MOD R9A09G011_SDI0_ACLK>;
- 			clock-names = "core", "clkh", "cd", "aclk";
- 			resets = <&cpg R9A09G011_SDI0_IXRST>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
- 
-@@ -97,7 +97,7 @@ sdhi1: mmc@85010000  {
- 				 <&cpg CPG_MOD R9A09G011_SDI1_ACLK>;
- 			clock-names = "core", "clkh", "cd", "aclk";
- 			resets = <&cpg R9A09G011_SDI1_IXRST>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
- 
-@@ -113,7 +113,7 @@ emmc: mmc@85020000  {
- 				 <&cpg CPG_MOD R9A09G011_EMM_ACLK>;
- 			clock-names = "core", "clkh", "cd", "aclk";
- 			resets = <&cpg R9A09G011_EMM_IXRST>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
- 
-@@ -129,7 +129,7 @@ usb3drd: usb3drd@85070400 {
- 				 <&cpg CPG_MOD R9A09G011_USB_PCLK>;
- 			clock-names = "axi", "reg";
- 			resets = <&cpg R9A09G011_USB_DRD_RESET>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			ranges;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
-@@ -144,7 +144,7 @@ usb3host: usb@85060000 {
- 					 <&cpg CPG_MOD R9A09G011_USB_PCLK>;
- 				clock-names = "axi", "reg";
- 				resets = <&cpg R9A09G011_USB_ARESETN_H>;
--				power-domains = <&cpg>;
-+				power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 				status = "disabled";
- 			};
- 
-@@ -157,7 +157,7 @@ usb3peri: usb3peri@85070000 {
- 					 <&cpg CPG_MOD R9A09G011_USB_PCLK>;
- 				clock-names = "axi", "reg";
- 				resets = <&cpg R9A09G011_USB_ARESETN_P>;
--				power-domains = <&cpg>;
-+				power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 				status = "disabled";
- 			};
- 		};
-@@ -207,7 +207,7 @@ avb: ethernet@a3300000 {
- 				 <&cpg CPG_MOD R9A09G011_ETH0_GPTP_EXT>;
- 			clock-names = "axi", "chi", "gptp";
- 			resets = <&cpg R9A09G011_ETH0_RST_HW_N>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -220,7 +220,7 @@ cpg: clock-controller@a3500000 {
- 			clock-names = "extal";
- 			#clock-cells = <2>;
- 			#reset-cells = <1>;
--			#power-domain-cells = <0>;
-+			#power-domain-cells = <1>;
- 		};
- 
- 		pwc: pwc@a3700000 {
-@@ -244,7 +244,7 @@ csi0: spi@a4020000 {
- 				 <&cpg CPG_MOD R9A09G011_CPERI_GRPG_PCLK>;
- 			clock-names = "csiclk", "pclk";
- 			resets = <&cpg R9A09G011_CSI_GPG_PRESETN>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -258,7 +258,7 @@ csi4: spi@a4020200 {
- 				 <&cpg CPG_MOD R9A09G011_CPERI_GRPH_PCLK>;
- 			clock-names = "csiclk", "pclk";
- 			resets = <&cpg R9A09G011_CSI_GPH_PRESETN>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -274,7 +274,7 @@ i2c0: i2c@a4030000 {
- 			interrupt-names = "tia", "tis";
- 			clocks = <&cpg CPG_MOD R9A09G011_IIC_PCLK0>;
- 			resets = <&cpg R9A09G011_IIC_GPA_PRESETN>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
- 
-@@ -288,7 +288,7 @@ i2c2: i2c@a4030100 {
- 			interrupt-names = "tia", "tis";
- 			clocks = <&cpg CPG_MOD R9A09G011_IIC_PCLK1>;
- 			resets = <&cpg R9A09G011_IIC_GPB_PRESETN>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
- 
-@@ -311,7 +311,7 @@ wdt0: watchdog@a4050000 {
- 			clock-names = "pclk", "oscclk";
- 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			resets = <&cpg R9A09G011_WDT0_PRESETN>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
- 
-@@ -361,7 +361,7 @@ pinctrl: pinctrl@b6250000 {
- 				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD R9A09G011_PFC_PCLK>;
--			power-domains = <&cpg>;
-+			power-domains = <&cpg R9A09G011_PD_ALWAYS_ON>;
- 			resets = <&cpg R9A09G011_PFC_PRESETN>;
- 		};
- 	};
 -- 
-2.39.2
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
