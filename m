@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F220B364A5;
-	Thu,  8 Feb 2024 18:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865173C481;
+	Thu,  8 Feb 2024 18:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707418179; cv=none; b=VQACZ2k3/xuXYl4SclvmKNJ0EKL98Hhq23ZOcNyowt81lQgnxsg1q34scxjv+n/eiuRXnRcxHWSIOnRST4oRKf6o9Kl5qkA+5WVGcuUKk2bi0zi5vNe9VHCschTDBqC3Q2bVFpaB2gm7AeFZZuoii67QLXrq2asfuLCEwetQXsQ=
+	t=1707418181; cv=none; b=ZTqDOJm6xaurCGKtVNkH5aKTN/Zvyibr+N2PhK30RwFgfP8gZ/hEFgWfdKXKBjubztfwEj/VzxWr4ng/Zm7FPZ0Z9x0aXaijxxkotyoJljjZfbTTmawaaf1hUKwTkVTZFZG8NNEn8LVIbSxagp8pc6KY1j3BdMaDZXY4fsByn9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707418179; c=relaxed/simple;
-	bh=xY52GBdbWlUZAfmSG2absg3scItgooHoNN72W48Llrw=;
+	s=arc-20240116; t=1707418181; c=relaxed/simple;
+	bh=T8KmXvh0YgA9eNWvtIJ49Y3WYjlHB5MaL3TkD79lAqw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g7JXTSTs7mKWx/G2XiEvpFz5K+t1e2/dOwASCoXONnyXypwQUJw7D2v3azUpIFCHZRaukCKhDY04bMMDBZjPNJ84zPdxIqiygpOM0gQI4Pdja0qpRFkRHK+gZOJN7y41DV5+A19qCJbm7vAHVRVGEu0GH4k5PoKrDbCCbEO1rUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=juptwNZH; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=pxCJSZXfgH6/q3R1qlDumce8iT+5E4CX59LB6Pm4m3Sos55kqErTX6eOSP+MzsHG47ibeYChUysWIYUYy6zG6sSq8IKcCM9HI0lafDullG2tNEakZKulDBTWawhMKI3RZAeynxdX3idFBGZ3dTXWkNjkUDXoe1+9MzDr8GyUVaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ma/RGIMH; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="juptwNZH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ma/RGIMH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707418174; x=1738954174;
+  t=1707418179; x=1738954179;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xY52GBdbWlUZAfmSG2absg3scItgooHoNN72W48Llrw=;
-  b=juptwNZH2fQxy9z/+VkHzyhPXxQ0fqx9xxjARYgTLx82ymngkVIB+7n7
-   IDznOe1l9HMoqb89DTAXL0yyntY0S0mzLRkaXvmxgc67srbTL7WPx5URh
-   EF1x1bc+lkgbUEI5y7h7j3tMj/NyjLZEFA+TL5QqsfeY//MQk+f68bKRW
-   nO3yl8+nXROR1WeQKKS+eYHPib+XsyM9LoBrAqmaaDgxwf9wA+GY9R6Wd
-   uZdVaaYUCCv4O4eiu6w3bO2FT9Wl8TsqntWNrPLn1wlzrFP79pCTV0gmN
-   13dosrdYdozj+yOpOnNcBJEn/e1ePzUcV29BQB8qc5PJ6uMcb8sUDL2Vj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186145"
+  bh=T8KmXvh0YgA9eNWvtIJ49Y3WYjlHB5MaL3TkD79lAqw=;
+  b=Ma/RGIMHvJv6U1/NI4+GYuSP+A2np48lLQjbU8D8IOY1Cssf3IN9T2II
+   XBi3SV2XP9RHD7IUZ25LYGfqnqxmr0cf0KaSkWWfWNV4kwvTZVbvlcg2d
+   9HbGvh/UHc+FSjtcg6NTIY1UGBR+wHaOqQKnLBj+jyNt+hVzSComAZE9o
+   pPyOGc5sirnsA9RYU9p5Vo8g6lES73GN22gn6Io8f1m4snt38f1qXFkpY
+   9ReV/pEamDS9e/AXqHBKLu969F5KZHOfMB94GDBKlsif1RxDSLHH1ka8D
+   mlXlbABwsmYOYhy3pBnUGL6oaAdwSaBWR46YgcVB1AHo+fAhf90ZlofeT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1186162"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1186145"
+   d="scan'208";a="1186162"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 10:49:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215539"
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934215538"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="934215539"
+   d="scan'208";a="934215538"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 08 Feb 2024 10:49:26 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A22571027; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
+	id 8DDA4F3C; Thu,  8 Feb 2024 20:49:21 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	devicetree@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v1 12/15] auxdisplay: ht16k33: Switch to use line display character mapping
-Date: Thu,  8 Feb 2024 20:48:10 +0200
-Message-ID: <20240208184919.2224986-13-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 10/15] auxdisplay: linedisp: Provide a small buffer in the struct linedisp
+Date: Thu,  8 Feb 2024 20:48:08 +0200
+Message-ID: <20240208184919.2224986-11-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
 References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
@@ -67,191 +67,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since line display library supports necessary bits to map the characters
-(if required), switch this driver to use that.
+There is a driver that uses small buffer for the string, when we
+add a new one, we may avoid duplication and use one provided by
+the line display library. Allow user to skip buffer pointer when
+registering a device.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/ht16k33.c | 109 +++++++++++------------------------
- 1 file changed, 34 insertions(+), 75 deletions(-)
+ drivers/auxdisplay/line-display.c | 4 ++--
+ drivers/auxdisplay/line-display.h | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
-index 75c4a8d31642..b104f08252dd 100644
---- a/drivers/auxdisplay/ht16k33.c
-+++ b/drivers/auxdisplay/ht16k33.c
-@@ -87,11 +87,6 @@ struct ht16k33_fbdev {
+diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
+index da47fc59f6cb..a3c706e1739d 100644
+--- a/drivers/auxdisplay/line-display.c
++++ b/drivers/auxdisplay/line-display.c
+@@ -330,8 +330,8 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
+ 	linedisp->dev.parent = parent;
+ 	linedisp->dev.type = &linedisp_type;
+ 	linedisp->ops = ops;
+-	linedisp->buf = buf;
+-	linedisp->num_chars = num_chars;
++	linedisp->buf = buf ? buf : linedisp->curr;
++	linedisp->num_chars = buf ? num_chars : min(num_chars, LINEDISP_DEFAULT_BUF_SZ);
+ 	linedisp->scroll_rate = DEFAULT_SCROLL_RATE;
  
- struct ht16k33_seg {
- 	struct linedisp linedisp;
--	union {
--		struct seg7_conversion_map seg7;
--		struct seg14_conversion_map seg14;
--	} map;
--	unsigned int map_size;
- 	char curr[4];
+ 	err = ida_alloc(&linedisp_id, GFP_KERNEL);
+diff --git a/drivers/auxdisplay/line-display.h b/drivers/auxdisplay/line-display.h
+index 65d782111f53..4c354b8f376e 100644
+--- a/drivers/auxdisplay/line-display.h
++++ b/drivers/auxdisplay/line-display.h
+@@ -54,12 +54,15 @@ struct linedisp_ops {
+ 	void (*update)(struct linedisp *linedisp);
  };
  
-@@ -135,33 +130,6 @@ static const struct fb_var_screeninfo ht16k33_fb_var = {
- 	.vmode = FB_VMODE_NONINTERLACED,
- };
- 
--static const SEG7_DEFAULT_MAP(initial_map_seg7);
--static const SEG14_DEFAULT_MAP(initial_map_seg14);
--
--static ssize_t map_seg_show(struct device *dev, struct device_attribute *attr,
--			    char *buf)
--{
--	struct ht16k33_priv *priv = dev_get_drvdata(dev);
--
--	memcpy(buf, &priv->seg.map, priv->seg.map_size);
--	return priv->seg.map_size;
--}
--
--static ssize_t map_seg_store(struct device *dev, struct device_attribute *attr,
--			     const char *buf, size_t cnt)
--{
--	struct ht16k33_priv *priv = dev_get_drvdata(dev);
--
--	if (cnt != priv->seg.map_size)
--		return -EINVAL;
--
--	memcpy(&priv->seg.map, buf, cnt);
--	return cnt;
--}
--
--static DEVICE_ATTR(map_seg7, 0644, map_seg_show, map_seg_store);
--static DEVICE_ATTR(map_seg14, 0644, map_seg_show, map_seg_store);
--
- static int ht16k33_display_on(struct ht16k33_priv *priv)
- {
- 	uint8_t data = REG_DISPLAY_SETUP | REG_DISPLAY_SETUP_ON | priv->blink;
-@@ -445,18 +413,20 @@ static void ht16k33_seg7_update(struct work_struct *work)
- 	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
- 						 work.work);
- 	struct ht16k33_seg *seg = &priv->seg;
-+	struct linedisp *linedisp = &seg->linedisp;
-+	struct linedisp_map *map = linedisp->map;
- 	char *s = seg->curr;
- 	uint8_t buf[9];
- 
--	buf[0] = map_to_seg7(&seg->map.seg7, *s++);
-+	buf[0] = map_to_seg7(&map->map.seg7, *s++);
- 	buf[1] = 0;
--	buf[2] = map_to_seg7(&seg->map.seg7, *s++);
-+	buf[2] = map_to_seg7(&map->map.seg7, *s++);
- 	buf[3] = 0;
- 	buf[4] = 0;
- 	buf[5] = 0;
--	buf[6] = map_to_seg7(&seg->map.seg7, *s++);
-+	buf[6] = map_to_seg7(&map->map.seg7, *s++);
- 	buf[7] = 0;
--	buf[8] = map_to_seg7(&seg->map.seg7, *s++);
-+	buf[8] = map_to_seg7(&map->map.seg7, *s++);
- 
- 	i2c_smbus_write_i2c_block_data(priv->client, 0, ARRAY_SIZE(buf), buf);
- }
-@@ -466,17 +436,39 @@ static void ht16k33_seg14_update(struct work_struct *work)
- 	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
- 						 work.work);
- 	struct ht16k33_seg *seg = &priv->seg;
-+	struct linedisp *linedisp = &seg->linedisp;
-+	struct linedisp_map *map = linedisp->map;
- 	char *s = seg->curr;
- 	uint8_t buf[8];
- 
--	put_unaligned_le16(map_to_seg14(&seg->map.seg14, *s++), buf);
--	put_unaligned_le16(map_to_seg14(&seg->map.seg14, *s++), buf + 2);
--	put_unaligned_le16(map_to_seg14(&seg->map.seg14, *s++), buf + 4);
--	put_unaligned_le16(map_to_seg14(&seg->map.seg14, *s++), buf + 6);
-+	put_unaligned_le16(map_to_seg14(&map->map.seg14, *s++), buf + 0);
-+	put_unaligned_le16(map_to_seg14(&map->map.seg14, *s++), buf + 2);
-+	put_unaligned_le16(map_to_seg14(&map->map.seg14, *s++), buf + 4);
-+	put_unaligned_le16(map_to_seg14(&map->map.seg14, *s++), buf + 6);
- 
- 	i2c_smbus_write_i2c_block_data(priv->client, 0, ARRAY_SIZE(buf), buf);
- }
- 
-+static int ht16k33_linedisp_get_map_type(struct linedisp *linedisp)
-+{
-+	struct ht16k33_priv *priv = container_of(linedisp, struct ht16k33_priv,
-+						 seg.linedisp);
++#define LINEDISP_DEFAULT_BUF_SZ		8u
 +
-+	switch (priv->type) {
-+	case DISP_MATRIX:
-+		/* not handled here */
-+		return -EINVAL;
-+
-+	case DISP_QUAD_7SEG:
-+		INIT_DELAYED_WORK(&priv->work, ht16k33_seg7_update);
-+		return LINEDISP_MAP_SEG7;
-+
-+	case DISP_QUAD_14SEG:
-+		INIT_DELAYED_WORK(&priv->work, ht16k33_seg14_update);
-+		return LINEDISP_MAP_SEG14;
-+	}
-+}
-+
- static void ht16k33_linedisp_update(struct linedisp *linedisp)
- {
- 	struct ht16k33_priv *priv = container_of(linedisp, struct ht16k33_priv,
-@@ -486,6 +478,7 @@ static void ht16k33_linedisp_update(struct linedisp *linedisp)
- }
- 
- static const struct linedisp_ops ht16k33_linedisp_ops = {
-+	.get_map_type = ht16k33_linedisp_get_map_type,
- 	.update = ht16k33_linedisp_update,
- };
- 
-@@ -677,39 +670,7 @@ static int ht16k33_seg_probe(struct device *dev, struct ht16k33_priv *priv,
- 	if (err)
- 		return err;
- 
--	switch (priv->type) {
--	case DISP_MATRIX:
--		/* not handled here */
--		err = -EINVAL;
--		break;
--
--	case DISP_QUAD_7SEG:
--		INIT_DELAYED_WORK(&priv->work, ht16k33_seg7_update);
--		seg->map.seg7 = initial_map_seg7;
--		seg->map_size = sizeof(seg->map.seg7);
--		err = device_create_file(dev, &dev_attr_map_seg7);
--		break;
--
--	case DISP_QUAD_14SEG:
--		INIT_DELAYED_WORK(&priv->work, ht16k33_seg14_update);
--		seg->map.seg14 = initial_map_seg14;
--		seg->map_size = sizeof(seg->map.seg14);
--		err = device_create_file(dev, &dev_attr_map_seg14);
--		break;
--	}
--	if (err)
--		return err;
--
--	err = linedisp_register(&seg->linedisp, dev, 4, seg->curr, &ht16k33_linedisp_ops);
--	if (err)
--		goto err_remove_map_file;
--
--	return 0;
--
--err_remove_map_file:
--	device_remove_file(dev, &dev_attr_map_seg7);
--	device_remove_file(dev, &dev_attr_map_seg14);
--	return err;
-+	return linedisp_register(&seg->linedisp, dev, 4, seg->curr, &ht16k33_linedisp_ops);
- }
- 
- static int ht16k33_probe(struct i2c_client *client)
-@@ -794,8 +755,6 @@ static void ht16k33_remove(struct i2c_client *client)
- 	case DISP_QUAD_7SEG:
- 	case DISP_QUAD_14SEG:
- 		linedisp_unregister(&priv->seg.linedisp);
--		device_remove_file(&client->dev, &dev_attr_map_seg7);
--		device_remove_file(&client->dev, &dev_attr_map_seg14);
- 		break;
- 	}
- }
+ /**
+  * struct linedisp - character line display private data structure
+  * @dev: the line display device
+  * @id: instance id of this display
+  * @timer: timer used to implement scrolling
+  * @ops: character line display operations
++ * @curr: fallback buffer for the string
+  * @buf: pointer to the buffer for the string currently displayed
+  * @message: the full message to display or scroll on the display
+  * @num_chars: the number of characters that can be displayed
+@@ -73,6 +76,7 @@ struct linedisp {
+ 	struct timer_list timer;
+ 	const struct linedisp_ops *ops;
+ 	struct linedisp_map *map;
++	char curr[LINEDISP_DEFAULT_BUF_SZ];
+ 	char *buf;
+ 	char *message;
+ 	unsigned int num_chars;
 -- 
 2.43.0.rc1.1.gbec44491f096
 
