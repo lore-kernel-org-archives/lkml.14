@@ -1,148 +1,93 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7807178667;
-	Thu,  8 Feb 2024 16:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81AA7CF25
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 16:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707408784; cv=none; b=WtUJZ6/fIrK7izJK1F1xcBB8+S28VW8hMNvEMLBZ/jTF5lHcq9qeolBph6i3iotOXC/fsiC/IMTwlQbTfI4r1iLdV8eIPSy3zI+p2GE+W89QHWHU0+ukSouEZQCywcI3aSSKg3PINGuct+3Su/i5t2or5xqfQDsb5Qd/TFE6RJ0=
+	t=1707408826; cv=none; b=GCVx+3BiWUO5jlG8qPfuI2a5u4kHtLggFnYw/aM39jLnKFxt7+GON87j068h2gu3wYJJe92USbWa0AHPDrfk6N4T0Gp2+6srGwDdV6Tt2L9dMmlMugzlfTr/iF8LB3gjIU/BF5SoPUpR9f83ElkZoQaRNi77/cYrq789ol6iKqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707408784; c=relaxed/simple;
-	bh=httI3jPwLFmSHmstxtkwKfoc0Oiu9/X7f4uOJchIqxE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WgwgLuSTcRcWkJMOYcZQQKweIbkZJJ/INL7t9K+fs3R4eSEn4iIy9KZ4eeSsrqNuC3eQqLF8N2q0cL0l8Gq55uzQ4rFv6jW03rGR5T8Vm7Obrp7i3gA5hXyiq7qcR94uxn2xLD2BZVaM4dxae0ghBVKjQcb7/jEg55TA/W63TJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=D1r0nZIV; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1707408826; c=relaxed/simple;
+	bh=fGN+8yem8iK2xAq/g74215xfHKUUWP3ssmQdsWN6nkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCN8M+uHOV5UdHmfncDq+daWGP7TMiljmltvncveYQnqK+Ik9mOhjPStX+kIOO65uWBlVGAUvNVyJCVG+PD91MhOBVUsHFS2uxxbqN/vv62bMDu/uhWAjllsDks57GBsn2wPY5KyP/fbL4tYVoMjkHsxnv3wZTJWu+34m0Q6V9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KhoLfLgy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="D1r0nZIV"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707408772; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=FfIGolZtnx4ArqMHswsjhwdEWJ6tIV6Ggvo4TitHT3c=;
-	b=D1r0nZIV6TRMZMfyMGGLW5BIeTpDbwl9Zm+ViGltfZXxWQ/bmlS0/amWjX6b8FLTr0cnU3ZvgQCZcdTPedOuXEujyKzki4P5PsI7/sI2x1uohAVK4H/hBNd/iEQEFf3NlKSuI6UNVeLpyC3/XzhzLtw37N1sDOmHg4rHVjldEYs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W0JlSZN_1707408769;
-Received: from 192.168.1.100(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W0JlSZN_1707408769)
-          by smtp.aliyun-inc.com;
-          Fri, 09 Feb 2024 00:12:51 +0800
-Message-ID: <357fa933-a19f-40eb-a108-9fcf71471648@linux.alibaba.com>
-Date: Fri, 9 Feb 2024 00:12:49 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhoLfLgy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707408823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fGN+8yem8iK2xAq/g74215xfHKUUWP3ssmQdsWN6nkk=;
+	b=KhoLfLgybZo6mZVGUELNTX5kjiGnDbP/D5QKt8RPHF0+kNBH8XgwrJbbsCEwCsjMOtTrPN
+	yQgEUDTccy/HZFuo69CfyMEPFNR0Vz9vUgK73L9LGCnSTpY8AXQ4r4lBMa9uwZcqnMctx3
+	NqfqIo4Uq8yUShm57NW0rt0TwXLTrgI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-lBOwh8qBM6KbU3EH3hgsWQ-1; Thu,
+ 08 Feb 2024 11:13:02 -0500
+X-MC-Unique: lBOwh8qBM6KbU3EH3hgsWQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 155803C28653;
+	Thu,  8 Feb 2024 16:12:37 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.158])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 71A841C14B0E;
+	Thu,  8 Feb 2024 16:12:35 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  8 Feb 2024 17:11:21 +0100 (CET)
+Date: Thu, 8 Feb 2024 17:11:19 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pidfd: change pidfd_send_signal() to respect PIDFD_THREAD
+Message-ID: <20240208161118.GI19801@redhat.com>
+References: <20240207114549.GA12697@redhat.com>
+ <20240208-fragt-prospekt-7866333b15f0@brauner>
+ <20240208135344.GD19801@redhat.com>
+ <20240208143407.GF19801@redhat.com>
+ <20240208-klopapier-aushebeln-446ac80a6e9b@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Wen Gu <guwen@linux.alibaba.com>
-Subject: Re: [PATCH net-next 00/15] net/smc: implement loopback-ism used by
- SMC-D
-To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
- alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240111120036.109903-1-guwen@linux.alibaba.com>
- <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
-In-Reply-To: <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240208-klopapier-aushebeln-446ac80a6e9b@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
+On 02/08, Christian Brauner wrote:
+>
+> > Is prepare_kill_siginfo() correct when we send a signal to the child
+> > pid namespace? si_pid = task_tgid_vnr(current) doesn't look right in
+> > this case but perhaps I am totally confused.
+> >
+> > And why do we need it at all? Can't sys_kill() and pidfd_send_signal()
+> > just use SEND_SIG_NOINFO?
+>
+> Yeah, good point. I don't remember as it's been quite a while ago. My
+> guess is that it just tried to mirror kill() itself without being aware
+> of SEND_SIG_NOINFO. If you don't find anything wrong with this then
+> switch it to SEND_SIG_NOINFO in a preparatory patch we can backport,
+> please.
 
+Yes, but I still feel I must have missed something. Will read this code
+tomorrow.
 
-On 2024/2/6 20:18, Alexandra Winter wrote:
-> 
-> 
-> On 11.01.24 13:00, Wen Gu wrote:
->> This patch set acts as the second part of the new version of [1] (The first
->> part can be referred from [2]), the updated things of this version are listed
->> at the end.
->>
->> # Background
->>
->> SMC-D is now used in IBM z with ISM function to optimize network interconnect
->> for intra-CPC communications. Inspired by this, we try to make SMC-D available
->> on the non-s390 architecture through a software-implemented virtual ISM device,
->> that is the loopback-ism device here, to accelerate inter-process or
->> inter-containers communication within the same OS instance.
-> 
-> 
-> Hello Wen Gu,
-> 
-> thank you very much for this patchset. I have been looking at it a bit.
-> I installed in on a testserver, but did not yet excercise the loopback-ism device.
-> I want to continue investigations, but daily work interferes, so I thought I
-> send you some comments now. So this is not at all a code review, but some
-> thoughts and observations about the general concept.
-> 
+And another note for the record before I forget this. We can probably
+improve and rename access_pidfd_pidns(). Currently it is only used by
+pidfd_send_signal() but pidns_install() looks like another user.
 
-Hi Sandy and Wenjia,
+Oleg.
 
-Thank you very much for your feedback!
-I am working on the detailed replies. As we are on holiday for Chinese New Year,
-the progress may be slower. But please feel free to leave any other comments and
-feedback, thank you!
-
-Best regards!
-Wen Gu
-
-> 
-> In [1] there was a discussion about an abstraction layer between smc-d and the
-> ism devices.
-> I am not sure what you are proposing now, is it an smc-d feature or independent of smc?
-> In 3/15 you say it is part of the SMC module, but then it has its own device entry.
-> Didn't you want to use it for other things as well? Or is it an SMC-D only feature?
-> Is it a device (Config help: "kind of virtual device")? Or an SMC-D feature?
-> 
-> Will we have a class of ism devices (s390 ism, ism-loopback, virtio-ism)
-> That share common properties (internal API?)
-> and smc-d will work with any of those?
-> But they all can exist without smc ?! BTW: This is what we want for s390-ism.
-> The client-registration interface [2] is currently the way to achieve this.
-> But maybe we need a more general concept?
-> 
-> Maybe first a preparation patchset that introduces a class/ism
-> Together with an improved API?
-> In case you want to use ISM devices for other purposes as well..
-> But then the whole picture of ism-loopback in one patchset (RFC?)
-> has its benefits as well.
-> 
-> 
-> Other points that I noticed:
-> 
-> Naming: smc loopback, ism-loopback, loopback-ism ?
-> 
-> config: why not tristate? Why under net/smc?
-> 
-> /sys/devices/virtual/smc  does not initially show up in my installation!!!
-> root@t35lp50:/sys/devices/virtual/> ls
-> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  tty/  vc/  vtconsole/  workqueue/
-> root@t35lp50:/sys/devices/virtual/> ls smc/loopback-ism
-> active  dmb_copy  dmbs_cnt  dmb_type  subsystem@  uevent  xfer_bytes
-> root@t35lp50:/sys/devices/virtual/> ls
-> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  smc/  tty/  vc/  vtconsole/  workqueue/
-> Is that normal behaviour?
-> 
-> You introduced a class/smc
-> Maybe class/ism would be better?
-> The other smc interfaces do not show up in class/smc!! Not so good
-> 
-> Why doesn't it show in smc_rnics?
-> (Maybe some deficiency of smc_rnics?)
-> 
-> But then it shows in other smc-tools:
-> root@t35lp50:/sys/> smcd device
-> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
-> 0000 0     loopback-ism  ffff   No        0
-> 0029 ISM   0000:00:00.0  07c1   No        0  NET1
-> Nice!
-> 
-> Kind regards
-> Sandy
-> 
-> 
-> [1] https://lore.kernel.org/lkml/e3819550-7b10-4f9c-7347-dcf1f97b8e6b@linux.alibaba.com/
-> [2] 89e7d2ba61b7 ("net/ism: Add new API for client registration")
