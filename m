@@ -1,110 +1,113 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097DF6D1CB
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7AB6EB40
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 10:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707389488; cv=none; b=GVpHeuMRUjbS2jw42XToDPFucYvnOJXwQMrQupxqCymoSHMrftJwCfws6TkyaTZteQBrotXTJHeds9mYWIF6oIpLG2DOoQHbaVSShBy4o/OcSIKOMXyMD/r5rmfXLROCVlrKV2ab0RCnkKHDqNiDqEtiQSOc9jaq5l8Dxlkleb4=
+	t=1707389497; cv=none; b=oWQS6GBvRPFz3nQig+igARvFDVtgGf4OVGPR3C8x55VE1i1xAvmpKH2Z6JKkWW+QHSRpXnW1xlsOg32uS3bPdGInFFSuCNOfwxN7Z5EI5QarxL02e4pbFo+S6b1tCJoqRfSysLU/Bn7j11kmT+hQovhxxW9KLkaWKDsIYsbzBIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707389488; c=relaxed/simple;
-	bh=bc0FK8CLAJw7fRwrx3DNZEXzs5rQi3YK7pzMVlHS+P0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EwwlBQ8EzEfLPMt9ILUcDd1xHOwQD5Zl08LTjrwqFDLdDqGWe3vG+2lIRrLylcTFmyp7p7J+estMDDs5/aAVpjO9VsPP3UYq6jbgYc3zKCxyVcsEVyj1BGe3HtTf0pr4pftJ4vGpjpYQ2ZKRQUiO5hX/OM9d+UvR7e7bESdmO3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=gWyHURHL; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
+	s=arc-20240116; t=1707389497; c=relaxed/simple;
+	bh=9ZGZAniVojBPAzZnK7VRxQ6KyiPK4LjtRgqlXHoCmlk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BiYoP2eo8821Bqey6Yy3LS33AvL6tsOzan6bsAltv9AqOY3K4HIKYroPmQkBvVODZI4RfLDK3rmf6+xf59YEhb+YJLCBfIdW7bLz17VzX6riQLxjgGyY4tHhGoDEaahfHkLQWQXzLbI2KFQtXoyhwbENiKfrVgYWBK4mGB9AFY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m6N97i8q; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="gWyHURHL"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso1394541a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 02:51:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m6N97i8q"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33b535c5d0fso722648f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 02:51:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tweaklogic.com; s=google; t=1707389486; x=1707994286; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U81mhrQtXLSRhyU8Eow+19b7E6wnZMxfsagdIxnP7q8=;
-        b=gWyHURHLRi8RwXbjaQhpuaWsSkfwBnVALTZxxyF/OQG8PMsRlgtpWMYCyZy6I5/GiX
-         aLPTuiL1pzu5NUjvnSJGGb2KKnJ6eghqfrheuNOXZlxIfCfoPIUZdNuSc27QZs1JCJZr
-         8NI7qPi5h4bc5pWNVv/tkg3WE2jszTc5UkngB5VeR5qwqYr5iWUaI5h38bNrs0rKLwyk
-         jGTO4wPsG7+0LvMdMOO5TfntkcoN8MvtdaGDETpd8u3wXxC4mdjYPmuWROQuODOVqLUx
-         eIa9buW43/HzyqlDlaVQJFuVJoylNCcVdRjQwZRmR0Xeksd9m6KmRKf3BuN6Y7EYsZ8L
-         js/Q==
+        d=linaro.org; s=google; t=1707389493; x=1707994293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QRtcBLpg2UJfwrDcTIbV2QdDaYWh1k1w6J6l7NGdAhQ=;
+        b=m6N97i8qyDpPjlH11HegArK+bnHhGDB/ASRyaxDCAbf/AgdJ9zgoJc4nOIbKs2JKn4
+         ZHwyOkw0YquGrrq9vEvtz6I+qkt91lY0pWZFnxuVROaFsc8gQV0NPfz0Zaxd35Ghlb/N
+         1vDr8QnHKCjoe07gZYY2+rPrX7Ug+b3Sm7WEjKKi2cvgkX8yQCvgynB67seBQqNf49Kk
+         kTx6UsCg1X7QWx11dk98HpN+iaG1/Vd1QEMU4BcKCgrWsRMIvF5XuNfpVCO06CZf3qbP
+         nj7YDXYo7Ew57qxYujAICos4AanpC6H/2aA8snLOVj45XBC1uVmy3KwU0NywYQ1ELqk9
+         vtuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707389486; x=1707994286;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U81mhrQtXLSRhyU8Eow+19b7E6wnZMxfsagdIxnP7q8=;
-        b=SG24SFljG0pe/9S/I+CoGvzWNPj56BP1Q3Yi9x4dm7rNDCftqN3r1hPLxu4IViZZ6m
-         QSiSg39Hrj9qMwJkxzB+za8I+9BwKlZOH2CWqASi0yW6p+98gYm+lEuOKGmVPUpoFzc3
-         bUZwnsq1qzmkc4EefJjjOcSGv+0Njta+MScYfVCL18YD2oQTOqpQagIXUPEIuUgdDSS8
-         eLeG5pXnRer9K9s43dIG1JW4hQp7gu8Wpa6YRNP2C6V5H1OPKwoDGl/dPMsYCo7TtwzK
-         /bOGGus3cB1KKIQIdheKH0ffGlvjGMbkPWrKOlSgiSvOdlfYZlFPDuY4tec2gdcuv6ra
-         dPtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWisr2vOZCkSdGzS+JCw0svW/BkOKQdactpFaz3PgGTXC3yFQCTnuXqMTWE3oVCRy+8nDTdO3WxMjPSrQZDeAU8hFlQMHLAVMre/h09
-X-Gm-Message-State: AOJu0YxK+9iAK4C14iygP0YM2tb53yus2szAQzJqMrhrR/uaS2WDSkTt
-	Tsv/VXEhnDj6hXDymXFQ1CviFY2gLVujSmmsICRovUlr90zEgx5ZHZbUzYi8zz8=
-X-Google-Smtp-Source: AGHT+IEkG8Cewlu3zaq01ZBUh30BUa4UE+D0bA+40onlZOyJWUK+AQj8qO02AeoTl1g6mcod6qtB6Q==
-X-Received: by 2002:a05:6a20:760a:b0:19e:9967:4e0b with SMTP id m10-20020a056a20760a00b0019e99674e0bmr5896921pze.14.1707389486153;
-        Thu, 08 Feb 2024 02:51:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUqFcz3QpdPEjofG5XyYyb7LWORJeKeHYvfeN5ybE5e+ptGzdLAik/1N20M5LmNlFP5LB89gyYLbgS3c8v2aaPvEBscpyZXHhw8jIT1YLSc/kb7f13Qupw4OumrF/LsQSb/IwNEVn6+KDyXlmgpIIEEDmZi3/uXO2p+92MgNz/f6mkl+lCd8PwrrkiZ6sdBV5mzotQZS6bqz6hH5E674l1QiUf3D3JuRQL+v5PcdNioxyLpCPVTGcmtsbtRgbF/qQmQ8y1xwC9GA6amK74w9MxsilweCTNA4FHkCWFDAXY2FDgdMXVanjL3CJXnYrra066H70fP07rqhSHNhBAT9hYCgFPk+UJo1PhLDlih9Bwq1jy+NEHN8r8ITjM5zKrpwRI9nORCh0eSnLg7sv3X5NhEMQis2U67URDh/D4WEuIXGMT34GFJMJl0VE2ylTHbqRmBrfWTIxP9yPTUBLJTKOpx3ClGvyhSiwxKBDb3Ozxcp90=
-Received: from [192.168.20.11] ([180.150.113.62])
-        by smtp.gmail.com with ESMTPSA id o1-20020a17090ab88100b00296b2f99946sm1165917pjr.30.2024.02.08.02.51.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 02:51:24 -0800 (PST)
-Message-ID: <f7c18fca-2a85-46b2-a671-2409e662520f@tweaklogic.com>
-Date: Thu, 8 Feb 2024 21:21:17 +1030
+        d=1e100.net; s=20230601; t=1707389493; x=1707994293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QRtcBLpg2UJfwrDcTIbV2QdDaYWh1k1w6J6l7NGdAhQ=;
+        b=svyGOdddK11FubpfvJs+s6rTLG8ETvOaYVVKY4YT8szs0JVx8r0GFaKiO8yrnqJioa
+         tIjAGIGErsq452WAgWmVLSsDgWSaxibr1rYt1dEHB3mgEXw7Iz1VgqDX+JABsbMhCski
+         cs/+cRQrQfJ7NcUsOfBS37Ef6TEjNWPtu0Vh01wnD6FAqw9CERfAFvc88gPdNO9QEIHI
+         c2rqVvxSjWJKiwiW5LZfWsGVJfbeoYM7BCYO5g/ePNPIj7uLKHw3mqCvweT2YSvJdn7n
+         L8KhA4a/TVjnZND2IRBMSfy5XjqSLJotwR724bqFkBWTwxWfCEHJzjHWRDyHjW3y16/m
+         91+Q==
+X-Gm-Message-State: AOJu0YzfrNWBwvvGfeqbOuVeBaT24Wux6XuyS6JzoibvgvGDV4eF2r0L
+	0U/gVLw3DO9jgRKg5UJox34Hs8C2nt+ynVct2dirUynCl/CbTtVUzkKRbtDxBe8=
+X-Google-Smtp-Source: AGHT+IEtk56T9/G7HFmIhKoOQe4FP+rsV9tK+gzIAjo/IBHXLpz2jJSe8DMq+PkYA15lBnbprZ9bDg==
+X-Received: by 2002:adf:ce92:0:b0:33b:136b:557a with SMTP id r18-20020adfce92000000b0033b136b557amr5602663wrn.70.1707389493618;
+        Thu, 08 Feb 2024 02:51:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWBOKH+RkujrQ0JyPkA08iduNE7ajI11rqzMjvPGYZTYJnh6LqlrbAvDIDMtq2qKT5YWuD912t05UCIqoDs2E5U4G1+VHA9kCq1m90hpODt/9T64d3t7W6iWmxCcoK4UwqeWuuFgyDmqxZQ/lmGAbrI7G6sHnToD+woifi3wYSXgpvbirjOzFPB213qWVBifJaOy0XuT8VpZ0B149UpZ98T3Dbdbbk+sHKwR6bCus2sF4VChK4GeOwdT23f99diptXQM6VFpL8YF421xy33OVQzfSUjNhuqBlg=
+Received: from krzk-bin.. ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id n10-20020a5d484a000000b0033b43d7394bsm3340824wrs.55.2024.02.08.02.51.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 02:51:33 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] arm64: dts: rk3588: minor whitespace cleanup
+Date: Thu,  8 Feb 2024 11:51:29 +0100
+Message-Id: <20240208105129.128561-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/5] dt-bindings: iio: light: Avago APDS9306
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Marek Vasut <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Matt Ranostay <matt@ranostay.sg>,
- Stefan Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240206130017.7839-1-subhajit.ghosh@tweaklogic.com>
- <20240206130017.7839-5-subhajit.ghosh@tweaklogic.com>
- <80e58f2f-b98b-46de-bcd4-fccbab11422a@linaro.org>
-From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
-In-Reply-To: <80e58f2f-b98b-46de-bcd4-fccbab11422a@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
+The DTS code coding style expects exactly one space before '{'
+character.
 
-On 8/2/24 18:48, Krzysztof Kozlowski wrote:
-> On 06/02/2024 14:00, Subhajit Ghosh wrote:
->> Driver support for Avago (Broadcom) APDS9306 Ambient Light Sensor.
->> Extend avago,apds9300.yaml schema file to support apds9306 device.
->>
->> this patch depends on patch:
->> "dt-bindings: iio: light: adps9300: Update interrupt definitions"
-> 
-> Drop the paragraph, not helping. There is no dependency here.
-In the submitting patches guide, I read that if one patch depends
-on another, it should be mentioned.
-If I try to apply this patch with "git am", it fails without
-first applying the patch dependency mentioned above. Is that fine?
-Again, sorry about the silly questions, just don't want to assume stuff!
-> 
-> Best regards,
-> Krzysztof
-> 
-Thank you for reviewing.
-Regards,
-Subhajit Ghosh
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
+index 3d0ea9e34049..ad8e36a339dc 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
+@@ -212,19 +212,19 @@ &cpu_l3 {
+ 	cpu-supply = <&vdd_cpu_lit_s0>;
+ };
+ 
+-&cpu_b0{
++&cpu_b0 {
+ 	cpu-supply = <&vdd_cpu_big0_s0>;
+ };
+ 
+-&cpu_b1{
++&cpu_b1 {
+ 	cpu-supply = <&vdd_cpu_big0_s0>;
+ };
+ 
+-&cpu_b2{
++&cpu_b2 {
+ 	cpu-supply = <&vdd_cpu_big1_s0>;
+ };
+ 
+-&cpu_b3{
++&cpu_b3 {
+ 	cpu-supply = <&vdd_cpu_big1_s0>;
+ };
+ 
+-- 
+2.34.1
+
