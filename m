@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3384779921;
-	Thu,  8 Feb 2024 13:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160F07AE56;
+	Thu,  8 Feb 2024 13:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707397810; cv=none; b=FFH5UyY9YZ89hNOCP4uhcc05x4m+azY95prYnNs7RTu0sn+DA//qU/0L1f+NfSYix3aUlcn2c69Hzainrw7a7vVVtYnezBO6z7/clwrNTU7gMg9wsEpjZLDbID72+SLU9ZcrhRm8UCmtd/BsT9M1gqd+IsK8Ljm4dQFqNqcelgM=
+	t=1707397810; cv=none; b=rLARdAnIEDPUFzdUCGIvSKF7cYQs9jK8AmeixHum4MEkyze86tH6+atVovqlc+ViwRBWrrt4R66u4fcOdfuWi9Db58UnRXvGV++6S1kBbeduOSVVvMJSsczCt4AVxp3Ho39TksXqyAXGYFO97y9aIK4y+8YfkhtuviI4BEdApdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707397810; c=relaxed/simple;
-	bh=t+8GVeREjAhAch7uWEnhrNh1JKLhOtncglwxCrxWkNY=;
+	bh=jrF+PnzsQEzVVDDK9SQnoBvJsZ9Ly+O147FRAq6rKGY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f/UsC9RL0rBpYj2pO/KIInFV1Auc9m6egnkWD5qISjSdEgDDRX7deEDc9Ti9vw8oYrW32dFmBa0V7REziPfFWgYf+NmKHZyKYMsV9E5zOUXEnOkJn/xSYoF/gPPghTbaYGMihCCi4pHbjhlzFkOvst1OdR/VeVZTqrkugrYQa00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CxE8zJnX; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=khJRts7/JXHeJxkOij+UXm/I/oQBDEkZojE7T+xwV51IY5VVKJ7Ko2Iox6F10QL+p1aVJcNrcGWFl5aw7lMhUeUow9iOJGMBzifFpA2pL98Lygefwi49nVC/CZ9+aPV1fymMdvqGMu7VLz0QRgkAUjI7uN7HoLfDHj/TBgxoY8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=X8x45mic; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CxE8zJnX"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 39C001BF219;
-	Thu,  8 Feb 2024 13:10:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="X8x45mic"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 76EEF1BF216;
+	Thu,  8 Feb 2024 13:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707397804;
+	t=1707397806;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3H2Ec9U+2SamwK2cExtznkCvvslX9Qvet9UIGOsPGrc=;
-	b=CxE8zJnXOr0S7LyJ37lz6Eo4bJvHNZkznk5mQ5SoUVL/gAZxBJ2rzkpB8AOH+heUJebJZ/
-	ruD4tNRobSu+7GxHZSGS/i9QKwJeTV4aO3pWHVfhhPFHCJ6OWLFon4CA9qb8lbkLhHy2EB
-	JR8ULd34DeqTJevf7iETRLdjHjhqnvEUPuX7QqJETA82QH6HRtOqvq/0yv6YWPp51wfNK3
-	1joSsyZ+VNpzad2kkUMORMN6mxqhYggRyMkVBhGlYFXoCvqT19pOOqYhddAIX2HvTpEV5q
-	5BIQ8kpQp5fbUZ3cFXcLtXdtibCAYUcjfco+a9eNNDqA7TO6Q6qqGfezPH1wnQ==
+	bh=xYcoa/aoqIKwA6jwslFsD4vFR+6svXmOQrkrfKofybQ=;
+	b=X8x45micSQaT3Hx5mX8sZ9VAIacllnE9BK2LlsadWY974fwau/CphIdAq2idk00ar3OxoO
+	ZHHcwndr1UFBoYXfV7NtJAMVm2PQoUVSdrrkqsoiJhrRTpjT98VKoiqUIjV6LSX4KI50Fp
+	VCML79F5cPmDvJgNRHg+2xfH0zMevo7DQPVmEYdKDJYyY+z8SEpjYqHNh9agFEG5ewIOjE
+	w7LCI//rGGcUghn+E6ynu785CrhBaorlBW3ydHZxY+Xg27UeM85DhD29t8QQTucoqZkQrA
+	E1bb33PhbtCYJwi//vSdJwOXDpcvFWQ6az1f1F83AB7/5t1eO12TKCTMxlrbmg==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Thu, 08 Feb 2024 14:08:47 +0100
-Subject: [PATCH net-next v3 10/17] dt-bindings: net: pse-pd: Add another
- way of describing several PSE PIs
+Date: Thu, 08 Feb 2024 14:08:49 +0100
+Subject: [PATCH net-next v3 12/17] net: pse-pd: Add support for
+ setup_pi_matrix callback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240208-feature_poe-v3-10-531d2674469e@bootlin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240208-feature_poe-v3-12-531d2674469e@bootlin.com>
 References: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
 In-Reply-To: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,11 +64,9 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Before hand we set "#pse-cell" to 1 to define a PSE controller with
-several PIs (Power Interface). The drawback of this was that we could not
-have any information on the PI except its number.
-Add support for pse_pis and pse_pi node to be able to have more information
-on the PI like the number of pairset used and the pairset pinout.
+Implement setup_pi_matrix callback to configure the PSE PI matrix. This
+functionality is invoked before registering the PSE and following the core
+parsing of the pse_pis devicetree subnode.
 
 Sponsored-by: Dent Project <dentproject@linuxfoundation.org>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
@@ -77,130 +75,47 @@ Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 Changes in v3:
 - New patch
 ---
- .../bindings/net/pse-pd/pse-controller.yaml        | 101 ++++++++++++++++++++-
- 1 file changed, 98 insertions(+), 3 deletions(-)
+ drivers/net/pse-pd/pse_core.c | 6 ++++++
+ include/linux/pse-pd/pse.h    | 2 ++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
-index 2d382faca0e6..dd5fb53e527a 100644
---- a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
-@@ -13,6 +13,7 @@ description: Binding for the Power Sourcing Equipment (PSE) as defined in the
+diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+index e03d36793d18..59427c79858c 100644
+--- a/drivers/net/pse-pd/pse_core.c
++++ b/drivers/net/pse-pd/pse_core.c
+@@ -178,6 +178,12 @@ int pse_controller_register(struct pse_controller_dev *pcdev)
+ 	if (ret)
+ 		return ret;
  
- maintainers:
-   - Oleksij Rempel <o.rempel@pengutronix.de>
-+  - Kory Maincent <kory.maincent@bootlin.com>
++	if (pcdev->ops->setup_pi_matrix) {
++		ret = pcdev->ops->setup_pi_matrix(pcdev);
++		if (ret)
++			return ret;
++	}
++
+ 	mutex_lock(&pse_list_mutex);
+ 	list_add(&pcdev->list, &pse_controller_list);
+ 	mutex_unlock(&pse_list_mutex);
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index 6c48668cebe3..cf0eebb3b0a9 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -50,6 +50,7 @@ struct pse_control_status {
+  *
+  * @ethtool_get_status: get PSE control status for ethtool interface
+  * @ethtool_set_config: set PSE control configuration over ethtool interface
++ * @setup_pi_matrix: setup PI matrix of the PSE controller
+  */
+ struct pse_controller_ops {
+ 	int (*ethtool_get_status)(struct pse_controller_dev *pcdev,
+@@ -58,6 +59,7 @@ struct pse_controller_ops {
+ 	int (*ethtool_set_config)(struct pse_controller_dev *pcdev,
+ 		unsigned long id, struct netlink_ext_ack *extack,
+ 		const struct pse_control_config *config);
++	int (*setup_pi_matrix)(struct pse_controller_dev *pcdev);
+ };
  
- properties:
-   $nodename:
-@@ -22,11 +23,105 @@ properties:
-     description:
-       Used to uniquely identify a PSE instance within an IC. Will be
-       0 on PSE nodes with only a single output and at least 1 on nodes
--      controlling several outputs.
-+      controlling several outputs which are not described in the pse_pis
-+      subnode. This property is deprecated, please use pse_pis instead.
-     enum: [0, 1]
- 
--required:
--  - "#pse-cells"
-+  pse_pis:
-+    $ref: "#/$defs/pse_pis"
-+
-+$defs:
-+  pse_pis:
-+    type: object
-+    description:
-+      Kind of a matrix to identify the concordance between a PSE Power
-+      Interface and one or two (PoE4) physical ports.
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^pse_pi@[0-9]+$":
-+        $ref: "#/$defs/pse_pi"
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  pse_pi:
-+    description:
-+      PSE PI device for power delivery via pairsets, compliant with IEEE
-+      802.3-2022, Section 145.2.4. Each pairset comprises a positive and a
-+      negative VPSE pair, adhering to the pinout configurations detailed in
-+      the standard.
-+    type: object
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+      "#pse-cells":
-+        const: 0
-+
-+      pairset-names:
-+        description:
-+          Names of the pairsets as per IEEE 802.3-2022, Section 145.2.4. Valid
-+          values are "alternative-a" and "alternative-b". Each name should
-+          correspond to a phandle in the 'pairset' property pointing to the
-+          power supply for that pairset.
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        minItems: 1
-+        maxItems: 2
-+        items:
-+          - enum:
-+            - "alternative-a"
-+            - "alternative-b"
-+
-+      pairsets:
-+        description:
-+          List of phandles, each pointing to the power supply for the
-+          corresponding pairset named in 'pairset-names'. This property aligns
-+          with IEEE 802.3-2022, Section 33.2.3 and 145.2.4.
-+          PSE Pinout Alternatives (as per IEEE 802.3-2022 Table 145–3)
-+          | Conductor | Alternative A (MDI-X) | Alternative A (MDI) | Alternative B(X) | Alternative B(S) |
-+          |-----------|-----------------------|---------------------|------------------|------------------|
-+          | 1         | Negative VPSE         | Positive VPSE       | —                | —                |
-+          | 2         | Negative VPSE         | Positive VPSE       | —                | —                |
-+          | 3         | Positive VPSE         | Negative VPSE       | —                | —                |
-+          | 4         | —                     | —                   | Negative VPSE    | Positive VPSE    |
-+          | 5         | —                     | —                   | Negative VPSE    | Positive VPSE    |
-+          | 6         | Positive VPSE         | Negative VPSE       | —                | —                |
-+          | 7         | —                     | —                   | Positive VPSE    | Negative VPSE    |
-+          | 8         | —                     | —                   | Positive VPSE    | Negative VPSE    |
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        minItems: 1
-+        maxItems: 2
-+
-+    required:
-+      - reg
-+      - "#pse-cells"
-+      - pairset-names
-+      - pairsets
-+
-+allOf:
-+  - if:
-+      required:
-+        - "#pse-cells"
-+    then:
-+      not:
-+        required:
-+          - pse-pis
-+
-+  - if:
-+      required:
-+        - pse-pis
-+    then:
-+      not:
-+        required:
-+          - "#pse-cells"
- 
- additionalProperties: true
- 
+ struct module;
 
 -- 
 2.25.1
