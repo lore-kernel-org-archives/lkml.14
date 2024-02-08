@@ -1,96 +1,139 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE67786124;
-	Thu,  8 Feb 2024 17:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3440B85C7F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 17:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414371; cv=none; b=KlGWABkOq4lE2oSX+PLeXgfj5MosQdErITssC9/zLZAxbDMQvaJMZv+ebVIUo0UXI7wUdU3nw2OWkGF2uh4nJSKIlJNy1gehk2PfvFHCUmj/dexjhAXd0lmHSMklE9yQxth72w6uyYoYexqGgZm/fbI88eRznXrMrBrzXLMZ/QI=
+	t=1707414371; cv=none; b=WKUxVYAraMVU4NZHjDAXdQqFXJcvCBHZhTOjSWByQTvhtGmOvr5oYRfhvbP4nDOjq6rS5L0hy+HUavNKXMctz3iahJ9ZAz8ShlZSbpX+J7AyPtQcJ3DbYIcMz5p8KEFxwV66GsK/KO7xJgy+iNRr7Kl3DBCWLKUKIrv2tQz5r1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707414371; c=relaxed/simple;
-	bh=KaV20q0GQfGnGgavViyz5KXHwueNCiLVGhY7BqMMw18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=eeWf1FbkJj6mmlRROpKughQtIEHxJShf6MPQUP/9oYPCzeuBKbJ2SFHNIo3dz1qxoeecJmFd7ZXm2kfFSpqU13ANIDQ9V7N8y0UomuEDDIw/qBw7R9WpeeK1+//3Ul0ZptG4oqHPZ3lTm/iVXN71z30YuZ5uWc0/ParHN9bHuXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+	bh=TovmD2j51jtTM66hpCFmsorXcQli9Xe6IuYTQkybXjc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PVg2fciNgdgs+v1u5PADaeCW+1eLkWJX4kG7LndOBZLP4g3hInrnvfljTnymoLWDaUH/8s0FqRbPn8SoVDiGx4sh7ZiYnunXqKuo/BYQ0Ee+N2Knex4L6oLVJEPkZAGbr5f0dqoTRWwcA1P9CtmX5EjPm3Q4WPKFC2UiBwgM8kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e071953676so58776b3a.2;
-        Thu, 08 Feb 2024 09:46:09 -0800 (PST)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a389a3b9601so6183266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 09:46:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707414369; x=1708019169;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tKfd7lmWIbfcamrHQWTBL8dnYP6EtyRFZjlbeDKgg2E=;
-        b=D/u2En/7VGG18JgEx6/K1bTJpOLXZQTuoi3Db3q2WN8p4DSPSTFeVLVWLF0NP9cfC6
-         HftiVg8VHXtjQFeko78gLWRBRvxOre20efyjifuWM7eqDxNw3LI+fD3Os6ahXnvt2QR0
-         xqBVlsOBEbacblQj2pFd2BzjZR2cTkDIgVpEY3dY4RRXZriloWnLMsT+dUyOVfPbxZOx
-         rvERYE+q/pJHbtNqUPSiKz1cXW5ox4dEheS27scmn2zOAqXM5u3H7/M49E8AfAjq1h/R
-         4bIsUnz8vv5GxuHouLMDlEEF3wK4NC3oRtTeDHwjK4mC9QqZauGQlNoPqIwEAWON3bAl
-         2msA==
-X-Gm-Message-State: AOJu0Yz3B6aX4iqXnCoqn6QJ+eCz7DQcMb/tD8ILQ8H4+bGkgtceYz6j
-	dhAlogssvjliN7Wi66hyHFiiC7uHusU0jLj5HrnbKcCg2p9WaL5oj7oFtBM7
-X-Google-Smtp-Source: AGHT+IFVXx5yprIFcXZZD+ButXoyZPkAGls4X6oQz0IhSiK88IfZJ0OdctI53Zra3OMb1YxpO2j1Ag==
-X-Received: by 2002:aa7:8745:0:b0:6e0:7308:7325 with SMTP id g5-20020aa78745000000b006e073087325mr3041016pfo.1.1707414368915;
-        Thu, 08 Feb 2024 09:46:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWiuVCKqUeskch1J4BBFbTjt+/A6f91D69wHp0wQEmpUQK1Jglrx6TUKHvJlM3AL20Bs6pd6Cbc32x1vVoMC7cWPDro0Fe+1Ege1XPRm0uY2WsFa9eYGAs2AvNGRqjdCoRbPgmco9StnyXAfV9fEg+4upNpFtubxuSwSt2aS45pDxbHRvnPH/vEVugf6QrP2mTkLpFdv8IdIfQJdXhPvnXAQFLpyhFhwZzureT0XU6wTIIZUeBLSjrMxMYAJx0nE7ZWyNBfDVZtrgC0A2aBoge4CumVLRmuHyy3HF5UpiLPtTd3FTdZsFMt/QOH/LC+aeaUlTW9rta4skTOoWq9ENLyfuGNkhR2KGEI5QrSHI21VkgZBFJBRbbT
-Received: from ?IPV6:2620:0:1000:8411:6ab9:a725:60e:97d2? ([2620:0:1000:8411:6ab9:a725:60e:97d2])
-        by smtp.gmail.com with ESMTPSA id lp20-20020a056a003d5400b006e04c3b3b58sm4191879pfb.179.2024.02.08.09.46.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 09:46:08 -0800 (PST)
-Message-ID: <5f934ebf-4e2a-44f9-993f-8b2c8d358370@acm.org>
-Date: Thu, 8 Feb 2024 09:46:06 -0800
+        d=1e100.net; s=20230601; t=1707414367; x=1708019167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8mdU4S5Z5jADGob+hYKZdQF6w6k19+tD96wjo2aggCI=;
+        b=K93zVtk5TqIwATKVIZx2obDuK4bk/Dbq1WH0TGil0G4BVpsYE7a6EUMaCUHdCQ2BOY
+         tBlfHysKW4ZMphPry7Iulv57J0PbF6C58G/Tfjnmzrq6Skejp1X5QD/6WMTLMhMHyB8Q
+         cBTf6fIewkt8dDHEHXFhS18Ss2TyQZ0zg288KCt1y65w32vvGamcvIdDG6cm/S9kaOL5
+         DHTlTtXVdDIB3nbNhFFMobTGTfdgo89FLRDn15Ycb2Ry5KQvEANUTfxny/9yFPco9eeP
+         UoE0DqD+Nwy8iUFCidPDRq56nSTkM8Oe/byg1Hu3RkFjpHt8dG28gQhnNtAXFuVTisfz
+         Fo6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXirlOU99A8mkFvhp8AmI0aKWQzE1L0jkam6c3KNgOFFnVo7gyli9pdccM8QaDe5nOPOMj0VZd7Ggogi5p5ZVXxFH091PNUr2G7Q/QE
+X-Gm-Message-State: AOJu0YzIaZQVkgm8EBaAY6pBYtd2WrIAIHmWoah0/ncvM3p0FsjXu51s
+	9pOmYKoYi60kAektelw37maaJ28m3OsO6CFPs/+XklYVfVQe1ObX
+X-Google-Smtp-Source: AGHT+IE/NGUmUZa1HOZoJhtbMvfFj82zgAdXKstcjYYV4edhyWYdVIS+isjB8QkNSHWH4ayteQ4bNg==
+X-Received: by 2002:a17:906:513:b0:a35:85b7:560a with SMTP id j19-20020a170906051300b00a3585b7560amr21260eja.46.1707414367231;
+        Thu, 08 Feb 2024 09:46:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWmKYaA/lT6du156ic13GRUErnXvg5MDe93/akcNihhYG03c7fEkUS2f0KLeffbHrs8qj1W2rNwSfEEjq68sjdpFxjrEkuOFEfXvznYm8GA2n26J6cE46c4Qnc+3GeH8OepnJ2Awe0eq8ZROFKUQuoMOtNzdDdZJSpDOhaBnBEMst6WzYCIX2sUTflrJSweHviUpY8aw65t6gAxqn69VBpzxw==
+Received: from localhost (fwdproxy-lla-117.fbsv.net. [2a03:2880:30ff:75::face:b00c])
+        by smtp.gmail.com with ESMTPSA id jx21-20020a170906ca5500b00a371a1b40c1sm281935ejb.23.2024.02.08.09.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 09:46:06 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: mingo@redhat.com
+Cc: jpoimboe@kernel.org,
+	x86@kernel.org,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	linux-kernel@vger.kernel.org,
+	pawan.kumar.gupta@linux.intel.com
+Subject: [PATCH v2 0/3] x86/bugs: Separate config for mitigations (part 2)
+Date: Thu,  8 Feb 2024 09:45:52 -0800
+Message-Id: <20240208174555.44200-1-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] block: introducing a bias over deadline's fifo_time
-Content-Language: en-US
-To: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Jens Axboe
- <axboe@kernel.dk>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Yu Zhao <yuzhao@google.com>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zhaoyang Huang <huangzhaoyang@gmail.com>, steve.kang@unisoc.com
-References: <20240208093136.178797-1-zhaoyang.huang@unisoc.com>
- <20240208093136.178797-3-zhaoyang.huang@unisoc.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240208093136.178797-3-zhaoyang.huang@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/8/24 01:31, zhaoyang.huang wrote:
-> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-> index f958e79277b8..43c08c3d6f18 100644
-> --- a/block/mq-deadline.c
-> +++ b/block/mq-deadline.c
-> @@ -15,6 +15,7 @@
->   #include <linux/compiler.h>
->   #include <linux/rbtree.h>
->   #include <linux/sbitmap.h>
-> +#include "../kernel/sched/sched.h"
+The current CONFIG_SPECULATION_MITIGATIONS namespace is only
+halfway populated, where some mitigations have entries in Kconfig, and
+they could be modified, while others mitigations do not have Kconfig
+entries, and can not be controlled at build time.
 
-Is kernel/sched/sched.h perhaps a private scheduler kernel header file? Shouldn't
-block layer code only include public scheduler header files?
+Fine-grained control over these Kconfig entries can help in a number of ways:
 
-> @@ -840,7 +842,9 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
->   		/*
->   		 * set expire time and add to fifo list
->   		 */
-> -		rq->fifo_time = jiffies + dd->fifo_expire[data_dir];
-> +		fifo_expire = task_is_realtime(current) ? dd->fifo_expire[data_dir] :
-> +			CFS_PROPORTION(current, dd->fifo_expire[data_dir]);
-> +		rq->fifo_time = jiffies + fifo_expire;
->   		insert_before = &per_prio->fifo_list[data_dir];
->   #ifdef CONFIG_BLK_DEV_ZONED
->   		/*
+1) Users can choose and pick only mitigations that are important for
+ their workloads.
 
-Making the mq-deadline request expiry time dependent on the task priority seems wrong
-to me.
+2) Users and developers can choose to disable mitigations that mangle
+ the assembly code generation, making it hard to read.
 
-Thanks,
+3) Separate Kconfigs for just source code readability,
+ so that we see *which* butt-ugly piece of crap code is for what
+ reason...
 
-Bart.
+In most cases, if a mitigation is disabled at compilation time, it
+can still be enabled at runtime using kernel command line arguments.
+
+This is the second part of the initial patchset[1] that got half landed.
+The first patch did some code re-organization. This second part
+contains the exact missing patches from the initial patchset, and
+basically adds build-time configuration for the other mitigations that
+are currently only disabled at boot time.
+
+Here is a detailed view of each patch:
+
+Patch 1: Create a Kconfig to disable GDS mitigation.
+Patch 2: Make spectre v2 userspace mitigation dependent on kernel
+         mitigations.
+Patch 3: Add a Kconfig entry for each mitigation that doesn't have such
+
+With this patch applied, setting CONFIG_SPECULATION_MITIGATIONS=n, a
+simple script[2] shows that all the mitigations are disabled:
+
+  spectre_v2_user_stibp   	 SPECTRE_V2_USER_NONE
+  spectre_v2_user_ibpb    	 SPECTRE_V2_USER_NONE
+  spectre_v2_cmd          	 SPECTRE_V2_CMD_NONE
+  ssb_mode                	 SPEC_STORE_BYPASS_NONE
+  l1tf_mitigation         	 L1TF_MITIGATION_OFF
+  srso_mitigation         	 SRSO_MITIGATION_NONE
+  srso_cmd                	 SRSO_CMD_SAFE_RET
+  mds_mitigation          	 MDS_MITIGATION_OFF
+  taa_mitigation          	 TAA_MITIGATION_OFF
+  mmio_mitigation         	 MMIO_MITIGATION_OFF
+  srbds_mitigation        	 SRBDS_MITIGATION_OFF
+  gds_mitigation          	 GDS_MITIGATION_OFF
+  spectre_v1_mitigation   	 SPECTRE_V1_MITIGATION_NONE
+  spectre_v2_enabled      	 SPECTRE_V2_NONE
+  retbleed_mitigation     	 RETBLEED_MITIGATION_NONE
+
+[1] https://lore.kernel.org/all/ZZ7c9EbJ71zU5TOF@gmail.com/#t
+[2] https://github.com/leitao/debug/blob/main/spec/dump_speculation.py
+
+Changelog:
+
+v1:
+  * https://lore.kernel.org/all/20240118173213.2008115-1-leitao@debian.org/
+
+v2:
+  * Patch 2: Changed `mode` type from int to `enum spectre_v2_user_cmd`
+    as suggested by Pawan Gupta
+  * Patch 3: Change MITIGATION_RETBLEED dependency to match the code.
+
+PS: This patchset is against tip/x86/bugs branch.
+
+Breno Leitao (3):
+  x86/bugs: Create a way to disable GDS mitigation
+  x86/bugs: spectre_v2_user default mode depends on main default
+  x86/bugs: Add a separate config for missing mitigation
+
+ arch/x86/Kconfig           | 117 +++++++++++++++++++++++++++++++++++--
+ arch/x86/kernel/cpu/bugs.c |  56 +++++++++++-------
+ 2 files changed, 147 insertions(+), 26 deletions(-)
+
+-- 
+2.39.3
+
