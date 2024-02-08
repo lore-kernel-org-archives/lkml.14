@@ -1,173 +1,130 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73047C08A;
-	Thu,  8 Feb 2024 15:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F84076908
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 15:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707405501; cv=none; b=pmgaj3/bUUfrD7PofyGifqk67dhF+h3f/JnWt3SAg0gDAvL32oTuv7PpbEUMBCDQmUOA78jXPItQ6GsSPaaUL2En3P6jb8gRNZOrJMY2TTJlzm8VhqfFGoHrsM5HCEG5reM4Y0g7ECyHzcNME49GsGEauKwOUjIiAcPVqUwedSs=
+	t=1707405549; cv=none; b=rAQLOByC8kAJUeMdk9LsBvjr3KNhz5PuQgJZkctkhhKdqx213Er/GzNL2wvIL8NQKfrNg/F51DCD2bP8DNDnn0kBa2TTqRPN8+hTK1nymox606ceZLPkZuA98KwQpI7lYBnyHkFN/PrCTUvEpnDpc7Uk+8v75ZNlvxkdpwKgAn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707405501; c=relaxed/simple;
-	bh=7FHpLsml/xrkJsAoY6Cfp+BIiPZFRxSXlyhhfCApqt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lvLyGBtAzU2bYez+mLq19kqqec59yln3jg2ofF7By0p5topI5CxAg1c5AkCoF2bFvPCc+swTWfq5YnBcecheHGBmLBqDGBIgtnPqWsaw8lDYFii33TuqRutcjXvnmvJwbflftPArcQeGEaxrZrIneFxWOkNr/3M9GdVoS9pls4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e8s3+zAE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707405549; c=relaxed/simple;
+	bh=YaE4rnCUJWx/7Md3/nE4Z3LEbCzPWxX77+ZbszOJLpY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oY/OTt8R8/sPFHJttgmQKb37Vy08SAY7XatUhv522XyTrFhJD2CMHvXJQ3YnLAgUVjtPibGMd4pXsDg1gDiNgsRsG3otVQWhxfe9Zh4vTB8wtX726QhuByfEs1JF1vog4Jxvzg7AE7+PJgjgHRXpsuuqgxpaBTyAxW4+tAlGUkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DPx/exek; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e8s3+zAE"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 418FG4uo008555;
-	Thu, 8 Feb 2024 15:18:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=xJSY7K7wKqMS50bCqgU7kI6Mf7K1mbRsWl+vQYNi4Q4=; b=e8
-	s3+zAEszMyNcJM0J8FuoEQxEraXVRkIq9qWkwo6rICcywwZwtdRAxD2mzJ5l76Lq
-	A40uobPwuShNpl7zTJMN3+uThyO8jZ+LRQuWrljlt1FEOpt/fHTDPuk3aCqlpe5J
-	hePkWhM0PbQBW3v62PuKzMGBbE5+OTtKPh23x2i4KMpIzC3tR7n5qH91AUmZHvsa
-	pNVCToOk7X9qahlGNEXzdAAl4VCpMx/ZIgqBlIfxdE9Cy/VNyxbfZIQ15/XnlwKF
-	YmNlO/dusj8HUxU2KYuwLLVjDnEkVC2067fwZybX80jmdvgOpfRnxBanWpEQrYir
-	AvkfR36F/ilNALmvCfHQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4frwtg5m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 15:18:10 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 418FIAcD019950
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 Feb 2024 15:18:10 GMT
-Received: from [10.216.3.128] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 8 Feb
- 2024 07:18:07 -0800
-Message-ID: <1cb6a33f-57e8-f3d0-9098-755af70cda41@quicinc.com>
-Date: Thu, 8 Feb 2024 20:47:42 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DPx/exek"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707405546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jC5ELXrvlO45sPj4MDJFCPeH9dCnSddJr5cpxY/vovY=;
+	b=DPx/exek860nq2wv3anHhln5r+KmXbt9bVK38bWdv8rfwFK9oMy3TEhnFzvKvFtf2S2wOP
+	qpfdUczUTm/n1qmFMtqHhhFHK4isB/mcvktj6qbk2zv16q3j9GkruBuXlru0GDDbuzGkSp
+	jCLfNdHAY4zvdI7mQsn92DYqjdCKTlc=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-484-BnINLi-cORyHEv3Sqsfo8w-1; Thu, 08 Feb 2024 10:19:04 -0500
+X-MC-Unique: BnINLi-cORyHEv3Sqsfo8w-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-68058b0112cso28661016d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 07:19:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707405544; x=1708010344;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jC5ELXrvlO45sPj4MDJFCPeH9dCnSddJr5cpxY/vovY=;
+        b=jELUE6mqpYYvoMHMN+ZwFsqjRMVxlKQJXcy4lYYncvlSD5ID4lH5SavFsKdOzlkAEj
+         bH1TYJ9LBq3jeEowH6IPM4SMOs1kH5wk4aROq62NkzsOdYdMODls4Nq4N/2WrVvpgm2y
+         rAoSzn0MceMBiUize3fX2CJ92MrIURgzFmbLIfqLrsC10B9sXyfNi0w5pJUxHJj+ynuV
+         ehH1EAu4tcZ+giUS5AglrHm9UVbN3ExFkW/hNP0PwFVbp+KPFzLp9gdGdVRw5fjr20wv
+         Ko+7M9ORrTA9HJiG74PzSElCuNVbe6oLWsaUhztl1E1H1h1SpnCDaDb2q8ewgQkJaE2w
+         t09Q==
+X-Gm-Message-State: AOJu0YzE4/4QY6Z15JCY1WNmA3mB7HcnQ2bEUEyq1GI8oKj6HRnWFs4s
+	3UpixRxh4sdtb4q0XGWY3Ytc0yBELTzM6Wj5ZNiAV3ZJhIkq00Vf1V5XXHe8CDOqGsvPPglyEff
+	Ur0t0N2s7zVOdIWQ1gsCrDYlQQLArgmHABtF1HdBFckbsHKPDlwjdI2nleibPEQ==
+X-Received: by 2002:a0c:f28b:0:b0:68c:cf75:f3ed with SMTP id k11-20020a0cf28b000000b0068ccf75f3edmr312814qvl.36.1707405544123;
+        Thu, 08 Feb 2024 07:19:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEPHo2q5+5ap667UZTnNXH7EL+viO7Q3SQ3dk2Fw+Na2aQNXd0SHm24FatVHL7uUZWEREJmdA==
+X-Received: by 2002:a0c:f28b:0:b0:68c:cf75:f3ed with SMTP id k11-20020a0cf28b000000b0068ccf75f3edmr312779qvl.36.1707405543881;
+        Thu, 08 Feb 2024 07:19:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX1vzpgWCr3GkZVrTqbWZpqwXV98dgoymDuP6/yj1JYcHSyTcMzDSbdcuymXQAp6RZ5AJ2iJJ37yXibzzcDg1UtvuVKRxS1ah1KaZY9cYQeCu9b+bB3c901lH68PkXBlTseR4itW/SavmR+Xtk6MinI2l1fgjAfswOHPLc8xTzvm8wsVYhR7AHm0s2DdThVX7r+y0AmvPY8YDLgS3sW5uJwaEBKFgnvHDTspFcY1q9Nyg0Gx1rda2sxlOusBSHmX3ARCerFCmPonpwX9l4Owi6MovZAirRUiRzV1Nx/UU25xIvLPMIWikYy+KJbL/MOPXQjinqSzXUs2s+sPHy9TnUm5unxugSKgDC9CmPxpQn22eDy4a2bebK8b2R3QuyRDoO5Kxbky6mXcNalp67WmRezJRhlf0OsHume+V9nu3mqJnawnx+5S1MnYL8JhJ71O8I9D4XEg1LcmR8Bv6clULulmG8HjTXN4U+/C+kZfS2s3BoZ6baMyXf7rjzw1hL4cgdFGLK1EVVEH63ADuDxCytjOH5ZnjzKxPBDX3Mm9o32SI8NDioqaZknh48tFkE+ixi56fdOhOPnavUvAGbbjUJUERdxC46W5jCeS3Rzd4AhsG5DlqGdsPPZdexMxR9ExQOqP/S5VtLH+GckqG0uDkfRldcOJ9Lupb02IRpCSDijfahGljo1YHDwqHbHhK+Tn2I5TSJfSeAcqsM43eY0tMH9oU3Ef56wi/g6pVsmrYBliOp7ePwN/A==
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id p16-20020ad451d0000000b006862b537412sm73991qvq.123.2024.02.08.07.18.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 07:19:03 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: alexs@kernel.org, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>, "Naveen N . Rao"
+ <naveen.n.rao@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>, Frederic Weisbecker
+ <frederic@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Barry Song
+ <song.bao.hua@hisilicon.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Alex Shi <alexs@kernel.org>, Ricardo Neri
+ <ricardo.neri-calderon@linux.intel.com>, Yicong Yang
+ <yangyicong@hisilicon.com>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>
+Subject: Re: [PATCH v4 5/5] sched: rename SD_SHARE_PKG_RESOURCES to
+ SD_SHARE_LLC
+In-Reply-To: <20240207035840.936676-1-alexs@kernel.org>
+References: <20240207034704.935774-4-alexs@kernel.org>
+ <20240207035840.936676-1-alexs@kernel.org>
+Date: Thu, 08 Feb 2024 16:18:58 +0100
+Message-ID: <xhsmhv86zf0gt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH 1/1] iommu: Avoid races around default domain allocations
-To: Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>
-CC: Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        "Charan
- Teja Kalla" <quic_charante@quicinc.com>,
-        <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-References: <e605b38a2d40b1e7589e10110c6d3ece35f6af4e.1705571894.git.quic_nprakash@quicinc.com>
- <139a9abe-75d8-3bda-3ec9-a14a493eb2a9@quicinc.com>
- <20240201162317.GI50608@ziepe.ca>
- <9ba9c4fa-3fa9-c6c4-ce77-0c6cd5e23680@quicinc.com>
- <20240207145656.GJ31743@ziepe.ca>
- <37ab8689-5e0d-4166-bad6-84d3c51446ca@arm.com>
- <20240208011305.GM31743@ziepe.ca>
- <a93e93dd-5cb8-48ee-bf8d-b3bbb19507d6@arm.com>
-Content-Language: en-US
-From: Nikhil V <quic_nprakash@quicinc.com>
-In-Reply-To: <a93e93dd-5cb8-48ee-bf8d-b3bbb19507d6@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: V_wrRmnuYUYs1H_6fl4F0M1x38iqtUAN
-X-Proofpoint-GUID: V_wrRmnuYUYs1H_6fl4F0M1x38iqtUAN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_05,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 mlxlogscore=868 adultscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402080081
+Content-Type: text/plain
 
+On 07/02/24 11:58, alexs@kernel.org wrote:
+> From: Alex Shi <alexs@kernel.org>
+>
+> SD_CLUSTER shares the CPU resources like llc tags or l2 cache, that's
+> easy confuse with SD_SHARE_PKG_RESOURCES. So let's specifical point
+> what the latter shares: LLC. That would reduce some confusing.
+>
+> Suggested-by: Valentin Schneider <vschneid@redhat.com>
+> Signed-off-by: Alex Shi <alexs@kernel.org>
 
+AFAICT it's just missing the below replacement (I've stretched the comments
+to go up to 80 chars while at it), otherwise LGTM.
 
-On 2/8/2024 7:07 AM, Robin Murphy wrote:
-> On 2024-02-08 1:13 am, Jason Gunthorpe wrote:
->> On Thu, Feb 08, 2024 at 12:04:44AM +0000, Robin Murphy wrote:
->>>> Frankly, I'd suggest just proposing the necessary (and tested)
->>>> upstream patches to 6.1, however large they are, and see what Greg and
->>>> Sasha say. This is the usual working model they have, as I understand
->>>> it.
->>>
->>> To be blunt, hell no. Stable is far enough from its namesake already; 
->>> the
->>> ongoing bordering-on-ridiculous brokenness of your mainline changes 
->>> where
->>
->> What on earth are you even talking about? POWER?
-> 
-> I mean you're literally getting bug reports for your fix for your fix 
-> for your grand idea, so what should we figure, that reality not aligning 
-> with your expectations is all reality's fault?
-> 
->>> That said, I also don't think there would be any harm in applying 
->>> this to
->>> mainline as a belt-and-braces thing either,
->>
->> Really?
-> 
-> "at 12:04:44AM +0000, Robin Murphy wrote:"
-> 
-> It's late, I should have gone to bed hours ago, so I apologise for any 
-> lack of clarity; that was very much meant to be an implication of 
-> agreement with the overall approach, not the exact patch as is, which if 
-> you read the rest of my response you will see I still had questions 
-> about and did not formally ack or review.
-> 
->> Now that you've made me look, this patch breaks the
->> iommu_group_store_type() flow both on latest and on v6.1 from what I
->> can see.
->>
->> On v6.1:
->>
->> iommu_change_dev_def_domain():
->>          prev_dom = group->default_domain;
->>          if (!prev_dom) {
->>                  ret = -EINVAL;
->>                  goto out;
->>          }
->> [..]
->>          /* Sets group->default_domain to the newly allocated domain */
->>          ret = iommu_group_alloc_default_domain(dev->bus, group, type);
->>          if (ret)
->>                  goto out;
->>
->> But this patch changes iommu_group_alloc_default_domain() to succeed
->> always without doing anythiing.
->>
->> So this patch needs some fixing.
-> 
-> Hurrah! Please apply that kind of rigour to your own patches also.
-> 
-> Thanks,
-> Robin.
-> 
-> [ you get two responses this week since I admit I ran out of patience 
-> and motivation to finish last week's on time ]
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
 
+---
 
-Hi Robin,
-
-Bunch of issues were reported on 6.1 because that is where we do master 
-testing. The change proposed was fixing the reported issues.
-
-On your query regarding 5.15, from code perspective, looks like this fix 
-is applicable on 5.15 as well. However, as mentioned, we have done 
-master testings on 6.1 codebase and hence could see the issues there only.
-
-Also, as Jason pointed out, this fix would not allow changing the 
-default domain for an iommu group. We didn't have any usecase for 
-changing default domain, hence couldn't see any issues with the fix 
-proposed. So, we would have to rework the patch for it to be upstream 
-ready. Any suggestions for this would be really helpful and
-appreciated. Thanks!!!
-
-Thanks
-Nikhil V
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index e877730219d38..99ea5986038ce 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -657,13 +657,13 @@ static void destroy_sched_domains(struct sched_domain *sd)
+ }
+ 
+ /*
+- * Keep a special pointer to the highest sched_domain that has
+- * SD_SHARE_PKG_RESOURCE set (Last Level Cache Domain) for this
+- * allows us to avoid some pointer chasing select_idle_sibling().
++ * Keep a special pointer to the highest sched_domain that has SD_SHARE_LLC set
++ * (Last Level Cache Domain) for this allows us to avoid some pointer chasing
++ * select_idle_sibling().
+  *
+- * Also keep a unique ID per domain (we use the first CPU number in
+- * the cpumask of the domain), this allows us to quickly tell if
+- * two CPUs are in the same cache domain, see cpus_share_cache().
++ * Also keep a unique ID per domain (we use the first CPU number in the cpumask
++ * of the domain), this allows us to quickly tell if two CPUs are in the same
++ * cache domain, see cpus_share_cache().
+  */
+ DEFINE_PER_CPU(struct sched_domain __rcu *, sd_llc);
+ DEFINE_PER_CPU(int, sd_llc_size);
 
