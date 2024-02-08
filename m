@@ -1,66 +1,64 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2634F219;
-	Thu,  8 Feb 2024 21:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217094F5EC;
+	Thu,  8 Feb 2024 21:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707429264; cv=none; b=gh5zPf8u5p+O6n+QJheohe/U6sYyyC1r1sS3WrWSQDyGPIkUWyK0fBaVGuOU0/Du8aoDVNgzlQTaDbeuLgoJQJKUNmStUEQyOoAT8urLp5+4vEhatUFJfC8fomXXp3viNYOj07gYzzbwdviASdQghcL/vP6zxzDRIBcSkddd4K8=
+	t=1707429320; cv=none; b=UwVw7IDCqfwKj01+pms34coBKV9GrkQSVfDlUbFeT+3Hhne6bwY46SU6xzr3tP+UHBhP0SkW6v8hwMD8O2rC9IBtc2yoV9qjd2SGjFno9I7GlLKrFYfxZwIW0UB0UGWVXmUxb8ABGij4ybqz45ZofV+6NR3mteI5lsIbJ8Ao8mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707429264; c=relaxed/simple;
-	bh=78OlWKA8etugimLgU7LOFg8JohEzP01qVuc5Gal/3PE=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ld8FZuNuRks/AAYjtYx+9epzCn6YjQpV1rE/Cu7ZFxrthKy0X1TV/YeZhuiAdO7HoqXUgwsgc3N4cTqC2/24puJbl9An4NGhFZV2TMWuYiCX7CHZaitV6pqFMVMLicQmX+zHVmSFLAhauRpQsgY192LbeP1YXJqJUiLjODuNntA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=ZfWN5SAa; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1707429320; c=relaxed/simple;
+	bh=qpe/bk740xF6+TArsiyZ/Gghuo9KZRMRpbOgjwEkEhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=chdeUDKndjvDbH+iAxT29EUt/BX2YW75JWoYCW7xNqH1wo3eQXeT/fHaBWZT8F1CmMgJRqtJw+c3h71taweupnb6EvFfDklOL1t7dYD22nZzOk3C4DdFX8ksfYVlyWuq6z+ecqzQKwlzKuSf2385Z94G9qGY7ajMqgNpfJfXxMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjeZhXif; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="ZfWN5SAa"
-Received: from [192.168.68.112] (ppp118-210-182-175.adl-adc-lon-bras34.tpg.internode.on.net [118.210.182.175])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id DA2DA200DB;
-	Fri,  9 Feb 2024 05:48:55 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1707428937;
-	bh=78OlWKA8etugimLgU7LOFg8JohEzP01qVuc5Gal/3PE=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=ZfWN5SAaLQLAwMnWoCYSgD6iqURUOgdTNIkdCkqNrx5U5B80lHFXAJIzRb+qn1jc7
-	 K3rm2BEm1lTXvVe5zgsXUp3APyUZzLVm4dNJThFG2vOuksDysx5EhSIWcfZ0Ex3nTn
-	 m+nm06OKO4Oa7LEInZDnLb0LT/DsdjWDQ+BzMUOsGLS7fKDk4Ps+37g2aQpNBQgD7d
-	 RSiGYlsmA257KG7mh9H5TacHKhg3moWEwC/MT7Xwg7ynnMiQOrPxICLzFgXFZCC70s
-	 v7kRnz+bQ1yx0A45B0n72yT2dPXPCsK5IsHdmDDciTD1+aSZDxUYLgEXUpkytrgTGK
-	 btQfOFzoRcgLw==
-Message-ID: <d5d488f2777b34d744d07fbd94f525ae381dca44.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 1/1] ARM:dts:aspeed: Initial device tree for AMD Onyx
- Platform
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Supreeth Venkatesh <supvenka@amd.com>, Supreeth Venkatesh
-	 <supreeth.venkatesh@amd.com>, joel@jms.id.au, andrew@aj.id.au, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, robh+dt@kernel.org
-Date: Fri, 09 Feb 2024 08:18:54 +1030
-In-Reply-To: <d4fe8b55-a1ea-4ce7-89ac-ce17e8ff4e45@amd.com>
-References: <20240110033543.799919-1-supreeth.venkatesh@amd.com>
-	 <d4fe8b55-a1ea-4ce7-89ac-ce17e8ff4e45@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjeZhXif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46884C433C7;
+	Thu,  8 Feb 2024 21:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707429319;
+	bh=qpe/bk740xF6+TArsiyZ/Gghuo9KZRMRpbOgjwEkEhk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sjeZhXifEJf/k4TsbGWdWut7BtgKYaxXZTB2KxSyor/EiRbh4Wi8Etc4GihBCJALM
+	 qGKELDZB4EgLn2olUjTypzSXJABv6zajA+bLz9kfJVUCgxn4aC7Tc3osufJIolTQum
+	 1MEvWxoK3fRQQX+gjLiJmxFy2WER2Ck+aItjkbNrXTUklHsSU+/jWuuaYr67AROwOk
+	 6I2TRda4viTydGv80rvQy3xocF2HepUYHPHQkh6LNXJ0al/yEBFlukwfzTkVqaWqDM
+	 6XZGJqllN5SsGCW9yPpRCp5HH4YqX2F8X4tAgvYwxJlkvAtKGDS9+XjrPOm24B93Fx
+	 493bpwVyMdI9A==
+Date: Thu, 8 Feb 2024 15:55:17 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH kernel 0/4] pci/doe/ide: Capabilities, protocols
+Message-ID: <20240208215517.GA974726@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201060228.3070928-1-aik@amd.com>
 
-On Thu, 2024-02-08 at 08:57 -0600, Supreeth Venkatesh wrote:
-> This patch is pending for a month now.
->=20
-> Can DT maintainers please help review this and provide feedback?
+On Thu, Feb 01, 2024 at 05:02:24PM +1100, Alexey Kardashevskiy wrote:
+> Here are 4 small independent patches defining new PCIe caps and bits and
+> protocols, I am using them with my test device so they are real :)
+> 
+> 
+> Please comment. Thanks.
+> 
+> 
+> 
+> Alexey Kardashevskiy (4):
+>   pci/doe: Define protocol types and make those public
+>   pci/doe: Support discovery version
+>   pci: Define TEE-IO bit in PCIe device capabilities
+>   pci: Define Integrity and Data Encryption (IDE) extended capability
 
-Joel's on leave and I'm having to manage some personal concerns as well
-as other professional priorities.
-
-I'm trying to find time to address the BMC patch backlog but it really
-is a best-effort thing at the moment.
-
-Andrew
+For changes in drivers/pci and related files, follow the subject line
+convention (learn from "git log --oneline drivers/pci/").
