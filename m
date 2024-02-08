@@ -1,78 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81D36BFC2;
-	Thu,  8 Feb 2024 12:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022E171B30;
+	Thu,  8 Feb 2024 12:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707394292; cv=none; b=bsFLrpSBr4vefHzr671qyQRGapRZ3m+80RpnnIjRQg/nAkLPN7eHHAbBIduhTNeGwnC5nMtSz45N6L7S8/gBqs0Om4IJgQtzgSHdrCVQL8FaRMboz2NhV/2evWnqwd1+LhzjIcxp7I1k0xdypAG4SGeYl8eAmCCvc+SysnxrExk=
+	t=1707394436; cv=none; b=tZtZYyjy9u1r5jdkM8+Sv8d0yFawwAkMUiMSZB4OeM37w2dtwyJ2st7e1DUN2yNQDgf45d1l8BsKLD/Kr9aWMKnTGEA/wE/1GX7SIhgFZzpsDyVLPBLfFogwyne+WSXznSc7gh1NpKJtWlLUg/5LhHnaKksBbv3s6peHRd4n/D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707394292; c=relaxed/simple;
-	bh=Y5mb87bfIecKDPigGFFDcBn7FIohiyxS2vG0T0P/zF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibGpJ7ruDywLsw8yBtJRP5ft6A3iT8WKGmbE4Ngue/2seQ0l+djIKUkA5f1CluTjPa2iXPoB03zEaa80fzd+SO1Y8dW6Us6q9s5u8PudUSqkdOe6+I4+FlZu3k4QW6sfUczWhEpeG5pGp1MXTSFrYwL51dNpnX+HtMT98JsZK/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uz3QtunK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707394436; c=relaxed/simple;
+	bh=MvlH4ndOdSzFUwm8GqHry7TYNDj279G1o15aCH4zOkA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Djr/dd1jwSwWVrAdb//mnYsTeP97yZ1dztaUsLb8xpRIwHEhkvDEmPoZxcGny9mT59Rve5JG241sRBlmh+fiftEXxF8EG8bUToGnEyGViybzilL0tVAEEBlhX+QJy+/adV7/ES+26HtpmKjrbH6ri5JZnh/fb7mxqwRq8IAw4Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvxcGrGP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uz3QtunK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EAF6C433F1;
-	Thu,  8 Feb 2024 12:11:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvxcGrGP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCBCC433C7;
+	Thu,  8 Feb 2024 12:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707394292;
-	bh=Y5mb87bfIecKDPigGFFDcBn7FIohiyxS2vG0T0P/zF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uz3QtunKhCW+rx23zeGl0a4Y4+yjbToRCKcnRHh2AozrVZQrrWiBeSm7Z4WquCNCq
-	 qrsXs2xfQK4+Gn/QtbtJXDPToZC2wW/xbA8G8kg7S6DMOAqFH1iFdjC6jptoCq8wur
-	 PVK4Q9XEwL2o1B7CKe2AUsgJBZYdzYBc+g/HmfV0rCx5cc8Mi+pL4/wqTNr+NK1JYw
-	 jVd5rsJNyZ7gC8Rh4499PzBTdkJ4Lfbt8Qx1mn9WMYYdzUgcrYq/hviJOBslUKoHpn
-	 dfFpeSqXB4rGxHHXJrOMfM+7rBY7F5onzltGhLph5tzJlzUa0UPwZiL8Y/kdPQDnEK
-	 S+TKnYexIh4Pw==
-Date: Thu, 8 Feb 2024 12:11:28 +0000
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Sam Creasey <sammy@sammy.net>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/sun3_82586: Avoid reading past buffer in debug output
-Message-ID: <20240208121128.GI1435458@kernel.org>
-References: <20240206161651.work.876-kees@kernel.org>
+	s=k20201202; t=1707394435;
+	bh=MvlH4ndOdSzFUwm8GqHry7TYNDj279G1o15aCH4zOkA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=kvxcGrGPAHDxiZe0WrrziSYopGe/0VsWAgEupIYMX7sLnATKYvGNzjPxxJVJz8rE7
+	 pjT2bHgHcIe9y7iHY3SerQzs2qBTx4iw/C81t0nuAEWIcZUC+XnE0BI2F391CO//mf
+	 g0e9iKQJkMImxQ94APAbY0Ml4kSbTgQIDeU4kRi8chMtVkpaKUNZ0qMQb1xbXWihhe
+	 RkDHhYNDGd1EuAp2hbDjXifLkvw69KhCAyGbFTdx1BRu9WnNesr2s6ssgx+lh8p12z
+	 UXiMsbxViyQbcRkBBES+AXuOyCwS1Hc0KOrH1OVEy/C4K7SDSp4nFwbDy9rJ86oloj
+	 vkgccAmOSvixw==
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, Johan Hovold <johan@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@somainline.org>, 
+ Martin Botka <martin.botka@somainline.org>, 
+ Jami Kettunen <jami.kettunen@somainline.org>, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
+ Bjorn Andersson <andersson@kernel.org>
+In-Reply-To: <20240204-pm660l-lpg-v5-1-2f54d1a0894b@somainline.org>
+References: <20240204-pm660l-lpg-v5-1-2f54d1a0894b@somainline.org>
+Subject: Re: (subset) [PATCH v5] leds: qcom-lpg: Add PM660L configuration
+ and compatible
+Message-Id: <170739443256.968294.11874564929033098601.b4-ty@kernel.org>
+Date: Thu, 08 Feb 2024 12:13:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206161651.work.876-kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.3
 
-On Tue, Feb 06, 2024 at 08:16:54AM -0800, Kees Cook wrote:
-> Since NUM_XMIT_BUFFS is always 1, building m68k with sun3_defconfig and
-> -Warraybounds, this build warning is visible[1]:
+On Sun, 04 Feb 2024 18:24:20 +0100, Marijn Suijten wrote:
+> Inherit PM660L PMIC LPG/triled block configuration from downstream
+> drivers and DT sources, consisting of a triled block with automatic
+> trickle charge control and source selection, three colored led channels
+> belonging to the synchronized triled block and one loose PWM channel.
 > 
-> drivers/net/ethernet/i825xx/sun3_82586.c: In function 'sun3_82586_timeout':
-> drivers/net/ethernet/i825xx/sun3_82586.c:990:122: warning: array subscript 1 is above array bounds of 'volatile struct transmit_cmd_struct *[1]' [-Warray-bounds=]
->   990 |                 printk("%s: command-stats: %04x %04x\n",dev->name,swab16(p->xmit_cmds[0]->cmd_status),swab16(p->xmit_cmds[1]->cmd_status));
->       |                                                                                                               ~~~~~~~~~~~~^~~
-> ...
-> drivers/net/ethernet/i825xx/sun3_82586.c:156:46: note: while referencing 'xmit_cmds'
->   156 |         volatile struct transmit_cmd_struct *xmit_cmds[NUM_XMIT_BUFFS];
 > 
-> Avoid accessing index 1 since it doesn't exist.
-> 
-> Link: https://github.com/KSPP/linux/issues/325 [1]
-> Cc: Sam Creasey <sammy@sammy.net>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-Tested-by: Simon Horman <horms@kernel.org> # build-tested
+Applied, thanks!
 
-...
+[1/1] leds: qcom-lpg: Add PM660L configuration and compatible
+      commit: 0e848bb4630e12099636fde050cadad33221045f
+
+--
+Lee Jones [李琼斯]
+
