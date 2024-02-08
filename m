@@ -1,122 +1,110 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7EF6BFA6;
-	Thu,  8 Feb 2024 09:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1076B6EB6D;
+	Thu,  8 Feb 2024 09:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384189; cv=none; b=bbiGTD10VviojDU49InhDPyWy6CDmwNh3wi4arYsmzDUX0TiTbAExzkpvF0bnOHylv1N/fFvrgtxVMK+qQihYnf9wmBGmCeM7Nm1WbwYIxpqyzZYyPqdFPPl1k11IwLJeOMEABIL6V9vIPx66LiB3/0a1ieO3ugcgLu42pJ87so=
+	t=1707384193; cv=none; b=A+GcOuQUivRro7pAOnVFRkAQuFi5pVZULECLNzAL3K9ukA3yn+63POmQnmjAVlT86ReqXrFEbPYYcMD4BLmwwh82CUKsOg1o8DE95g5m7KDpyV9baJXehv9gyjVNDHUYyOar4xI0eeqZ4JNOpfuDt2mMzglyGn7/QTuSqMtZnp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384189; c=relaxed/simple;
-	bh=gdfBej27euGxJcT9NXwgasXWvHeRtnjKy2yiVwekJ4A=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=qdi8V1UDty9CKmsFB49Rafcp6a+wBNOUvie+3WvMQuYCVCgwJJncJvINI0LOAguwPDy9r0mddbFDZNTvqTT0LedVgNM/c4K25LsVoLT9W75jnUMwZUcQGOJwQ0FPeK3c6Hfo5oDrBNKIhIzcAvxlKBQ5XDIz48AL0ogCSXVzmXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a69GVgQO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a69GVgQO"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4185PxZ6031708;
-	Thu, 8 Feb 2024 09:22:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:from:subject:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=yIsFGzjC2AWz7C0/no0S1EAVpf2e+m6kDY2d+317iyg=; b=a6
-	9GVgQOrPS9NO26yK+GxGX1Hswx1AN7AN+g3u/2eHnUc2ui2Ylo4RSMOLe5zLBWoT
-	hMElQRCELAiAnRQCZWV5HWtbs8DfH/tknHubjr/MfftH7iDaMUAZ6tySizyo9R7+
-	jFhS/gqrOofS3tFhK4d5seIezBWXBe6t3QJRlvDhngrJe7hEDCU+VuUG6gvuUuKB
-	z9sF+Q/h5J1bdKGgldQukX2XjbqFiB/V26TKTdZ6s3/+/a9/ATi92SRHM4ZlnKJK
-	AwZe+fgndca5yvUo07C8aJHy+0Tp1phS0+hDq/uJSY4/76BOil0CLGCXYp00lEtd
-	ILWwj2Pzp81T+ar0kCXw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w44fwk7hg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 09:22:44 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4189Mh2r025552
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 Feb 2024 09:22:43 GMT
-Received: from [10.239.132.50] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 8 Feb
- 2024 01:22:36 -0800
-Message-ID: <ec99fdee-8d3f-476f-842f-f57b2b817dae@quicinc.com>
-Date: Thu, 8 Feb 2024 17:22:34 +0800
+	s=arc-20240116; t=1707384193; c=relaxed/simple;
+	bh=aCreZ5MUO5xBIYGsOG1qJHRg7BTL70NtVzxDdZwBTxc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oCGKZan12fwqyrv1cLAkfi7xnYvh9WlBStvT4ywUwb3S1WsC0ysS14IEu73ASHqgXcE5zZ2AScZkcnzZP83MasP0eGtYaJkpjAd/nC7S6XvUJJ0Je8sM1oQC03+mItaWCw2wKGx8jPIFG6+4aIzwALxJohnRaUbzWXMAoYKVEdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TVs382cnhz4f3mHl;
+	Thu,  8 Feb 2024 17:23:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 20A531A0232;
+	Thu,  8 Feb 2024 17:23:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP2 (Coremail) with SMTP id Syh0CgAnSQx4ncRl3tGXDQ--.8574S4;
+	Thu, 08 Feb 2024 17:23:06 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/7] fs/writeback: bail out if there is no more inodes for IO and queued once
+Date: Fri,  9 Feb 2024 01:20:19 +0800
+Message-Id: <20240208172024.23625-3-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240208172024.23625-1-shikemeng@huaweicloud.com>
+References: <20240208172024.23625-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Huang Yiwei <quic_hyiwei@quicinc.com>
-Subject: Re: [PATCH v4] tracing: Support to dump instance traces by
- ftrace_dump_on_oops
-To: Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>
-CC: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
-        <keescook@chromium.org>, <j.granados@samsung.com>,
-        <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
-        <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>,
-        <kernel@quicinc.com>, Ross Zwisler <zwisler@google.com>
-References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
- <50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org>
- <20240207061429.3e29afc8@rorschach.local.home>
- <CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Q_Xwq2R-qjMYvW3jW5NKo5PQzDK1nXS8
-X-Proofpoint-ORIG-GUID: Q_Xwq2R-qjMYvW3jW5NKo5PQzDK1nXS8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_01,2024-02-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1015 mlxscore=0
- adultscore=0 suspectscore=0 priorityscore=1501 spamscore=0 mlxlogscore=964
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402080049
+X-CM-TRANSID:Syh0CgAnSQx4ncRl3tGXDQ--.8574S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1rArWxJry5ArWrZFykGrg_yoW8Gr47pF
+	W5tryUtrWYv3yxurykCa42vw1Ygw4DtFW7XFyfua17trn3ZFWFgFy0gw10yr4xJ39xuFWS
+	vrZYv3y8Jr1xt3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
+	z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTQ6JUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
+For case there is no more inodes for IO in io list from last wb_writeback,
+We may bail out early even there is inode in dirty list should be written
+back. Only bail out when we queued once to avoid missing dirtied inode.
 
+This is from code reading...
 
-On 2/7/2024 10:13 PM, Joel Fernandes wrote:
-> On Wed, Feb 7, 2024 at 6:14 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->> On Wed, 7 Feb 2024 05:24:58 -0500
->> Joel Fernandes <joel@joelfernandes.org> wrote:
->>
->>> Btw, hopefully the "trace off on warning" and related boot parameters also apply
->>> to instances, I haven't personally checked but I often couple those with the
->>> dump-on-oops ones.
->>
->> Currently they do not. It would require an updated interface to do so,
->> as sometimes instances can be used to continue tracing after a warning,
->> so I don't want to make it for all instances.
-> 
-> Thanks for clarifying.
-> 
->> Perhaps we need an option for these too, and have all options be
->> updated via the command line. That way we don't need to make special
->> boot line parameters for this. If we move these to options (keeping the
->> proc interface for backward compatibility) it would make most features
->> available to all with one change.
-It's a good idea that "traceoff_on_warning" also has instance support, 
-but we will use another patchset to do this, right?
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ fs/fs-writeback.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-And for this patchset, shall I fix the typo and resend again? Thanks.
-> 
-> Agreed, that would be nice!!
-> 
->   - Joel
-Regards,
-Huang Yiwei
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index a9a918972719..edb0cff51673 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -2086,6 +2086,7 @@ static long wb_writeback(struct bdi_writeback *wb,
+ 	struct inode *inode;
+ 	long progress;
+ 	struct blk_plug plug;
++	bool queued = false;
+ 
+ 	if (work->for_kupdate)
+ 		filter_expired_io(wb);
+@@ -2131,8 +2132,10 @@ static long wb_writeback(struct bdi_writeback *wb,
+ 			dirtied_before = jiffies;
+ 
+ 		trace_writeback_start(wb, work);
+-		if (list_empty(&wb->b_io))
++		if (list_empty(&wb->b_io)) {
+ 			queue_io(wb, work, dirtied_before);
++			queued = true;
++		}
+ 		if (work->sb)
+ 			progress = writeback_sb_inodes(work->sb, wb, work);
+ 		else
+@@ -2155,7 +2158,7 @@ static long wb_writeback(struct bdi_writeback *wb,
+ 		/*
+ 		 * No more inodes for IO, bail
+ 		 */
+-		if (list_empty(&wb->b_more_io)) {
++		if (list_empty(&wb->b_more_io) && queued) {
+ 			spin_unlock(&wb->list_lock);
+ 			break;
+ 		}
+-- 
+2.30.0
+
