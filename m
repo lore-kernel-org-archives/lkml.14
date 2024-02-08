@@ -1,154 +1,123 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F96D37167
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F0936AF5
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 19:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707419779; cv=none; b=Eu4U0+XdJAJuF+DS2gyRfQ5a3nK/OahKKgmBEL4LM7QpfG8qJQ4QkrgqZqmU2jkzemuTvtxqohfkNZRicfXs2tFYcxehCYEBqwsAsObmt+97KzZH4BK52bHmh8+Tr66SjFAHbYVaWCLpOsmFndapDZkZM/OAMYbHXw6RhGbwI5c=
+	t=1707419848; cv=none; b=BJBMt+8mACkGNdLnw7xLTG2du7pcio/hFrfqSCRwxJr2vjhx+O6eRJ3en/ueeauAALCAYgGHZSehvKgq8qSuQZMq+ocmKYU7sE23WNvAcBobgck53M699qMNUGc4npNNPB+Xn1brHFr1hUFoxKVi8PCe+/j+XqJZpbG2askAxEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707419779; c=relaxed/simple;
-	bh=b6c2t9B/pfloTiLl3QpaQz8LmLqZFIjOHYHcQTLOATY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ODmthx2uahpy8beSCzveYpOBlpTWTi00whZMHOrFqFuqpUjhye5LNfG8rRkZulh+yOOCYt4kGr7L74v2NdM81vOmM+SIvxDpFjXD01cC6sYznWdrsZI7PSHuIz/QI6V5MYAbgW3GXoXawWaJi01ZC421TUFAG8Go7yR0sUB/1Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mVhRmfC8; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1707419848; c=relaxed/simple;
+	bh=9UoBOpbhu6eV2y4H7sdW5gvSf3svH9MoKhKbdBUQGAM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XXbu02Dj0AbC80iB7nkqJIAn3jAARDe08he6NDtGAjuuojwOqrAY9Ea5m3TD9hYVuHbqtTA24rtncCSpR/o9nGmjVr755HtW+RDHRhBLm58ITQT3zyuza3pjLUh/dgqSDCsVjZIYOR7W6Ea9DdQqAKbyuAiiSMpBHOM6PzujBJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MeJMWp5q; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mVhRmfC8"
-Received: from [100.64.216.206] (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 03A0D207E718;
-	Thu,  8 Feb 2024 11:16:10 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 03A0D207E718
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1707419771;
-	bh=u7Sr1GivyYQRssWu9Sxm5FwiQjNYTxwfTxEdxVnZrog=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mVhRmfC8kQaVixsTdXy+xkNZpGrlA/MqXeC1o5PHI3bMWayHqbVhTVa+eNbHRSGKG
-	 LnHztq2MuuhiV41949Vmm2cz5jd2l7OiC2Zygyt545g873v1mN3H59AWkn3C47z4lY
-	 jeic5HaEFHEdLqFsoDO/GZe3uOKEnkkok1uiYnkY=
-Message-ID: <ed6c25dc-d5c7-4f15-8fdc-f2adf209e638@linux.microsoft.com>
-Date: Thu, 8 Feb 2024 11:16:10 -0800
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MeJMWp5q"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db3a09e96daso153538276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 11:17:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707419845; x=1708024645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TtXydcUrYcRHvyIMxGgFSNKHU7B+Ylsdr0/kUFS+KNE=;
+        b=MeJMWp5q2U4P6ozyPu694UmQEyyNMlk/8uhRQsdliSAraxCtSu6ODQjNCuPUKhzDyZ
+         FiAJymeQ5XLDlwZr9qH3a0imGINyLIw6xz0eL0OBkchb/yUlxhMQMECTR/9LNnjWd0pE
+         GcyGBs3psnV1k6ms9c+hpCKL5pSTgmCA7ARgtVO+B8HSZOy2pCEoWwOIzou67jraOutl
+         1hanLY8qsWRItCfkoL0QaHyFd8+ccsmtQBtKOqWbWDl14dzNcFMG5luMBp7QyGj3g+fP
+         9IyCdU26AmQObywGSPcqAQiASYGLeJFzO5EuJ6AXn4e9r1Rarp8S7X18K88cYa7rjXMC
+         CpPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707419845; x=1708024645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TtXydcUrYcRHvyIMxGgFSNKHU7B+Ylsdr0/kUFS+KNE=;
+        b=ttiaTXx1QicTl++BQWxzFiP3K4D7xnAYsDXMNeHDIzmFaQ+jYuQERCPpjk5rH7O6rU
+         UDWSlQXXV+4AEK+z0kV1EVm3EHOYeYOq4us1qCDL2rBrr+hvjGqKLYAYUAyKL1ZMdf57
+         WcRQWME6pO9GU7Iv0j21Bm7l6NvMJvm2og5NYHJzOVZzbyR3elDQ0A+rlzYe/b+kO+Pa
+         v/F+KjwqqOvs6Z9mGlvw6+7uWP8i6cMOy1w/CyuhHC5RbBsASWL1jNexnCPhprlHv1lT
+         2cvHSs56+pwiLwxA2CRASGOcqnr4HI/6ZXSv50F0Zm69WkoT0QMIL/70XsdM47q7uLiM
+         7sZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlBO0WX0vEfM2hxRJClvwCD7vn6RAuilW6bL/glGmJ7wPp6xCOzlTc2elKp/htHhCPZ19Sqj6WrVScm/YqQlNEZogHg+CpnOue1Qk/
+X-Gm-Message-State: AOJu0Yz/WEl911488mwe3EIw3+r1crxb0IqpJdqK2I09uH/IcxLdc8/2
+	yo0RJlyadNkD+yFN6OSuHbSE1ChV2IjWpR554jUTqERiRifKR0frf+Z0gRRQWbeS/PmIVo9/zTK
+	nG52/cEmxEEpmIghUnS2Yxux0v8bh/Qg5D27tKQ==
+X-Google-Smtp-Source: AGHT+IG84ooN06FJ9VL6zD13n18pXA6f/HZwrVXzaApnmbUPjN9NZLwKVvv8AHc3zTz9ucWQ2V1kc1FFV35kgMLdHEo=
+X-Received: by 2002:a05:6902:2402:b0:dc7:43d3:f8ad with SMTP id
+ dr2-20020a056902240200b00dc743d3f8admr506111ybb.17.1707419845567; Thu, 08 Feb
+ 2024 11:17:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] KVM: arm64: Override Microsoft Azure Cobalt 100 MIDR
- value with ARM Neoverse N2
-Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
- Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh@kernel.org>,
- Fuad Tabba <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Kristina Martsenko <kristina.martsenko@arm.com>,
- "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)"
- <kvmarm@lists.linux.dev>
-References: <20240206195819.1146693-1-eahariha@linux.microsoft.com>
- <ZcNSI089xqia6lho@FVFF77S0Q05N.cambridge.arm.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <ZcNSI089xqia6lho@FVFF77S0Q05N.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240208095920.8035-1-brgl@bgdev.pl> <20240208095920.8035-20-brgl@bgdev.pl>
+ <ZcURtLZoEftBDpsy@smile.fi.intel.com>
+In-Reply-To: <ZcURtLZoEftBDpsy@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 8 Feb 2024 20:17:14 +0100
+Message-ID: <CAMRc=MdaxrjKVoBe92ci+4U-VbxyuxMVu30-m2E3My0k7KN65A@mail.gmail.com>
+Subject: Re: [PATCH v3 19/24] gpio: remove unnecessary checks from gpiod_to_chip()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/7/2024 1:49 AM, Mark Rutland wrote:
-> On Tue, Feb 06, 2024 at 07:58:16PM +0000, Easwar Hariharan wrote:
->> Several workload optimizations and errata depend on validating that the
->> optimization or errata are applicable to the particular CPU by checking
->> the MIDR_EL1 system register value. With the Microsoft implementer ID
->> for Azure Cobalt 100, the value doesn't match and ~20-25% performance
->> regression is seen in these workloads. Override the Azure Cobalt 100
->> value and replace it with the default ARM Neoverse N2 value that Azure
->> Cobalt 100 is based on.
-> 
-> NAK to rewriting the MIDR in the kernel; we do not lie to userspace about the
-> MIDR, and this is not a can of worms we're going to open.
-> 
-> If you desire some microarchitectural performance optimizations in particular
-> projects, please submit patches to those projects to understand your MIDR
-> value.
-
-Understood.
-
-> 
-> Further, if Azure Cobalt 100 is based on ARM Neoverse N2, you presumably suffer
-> from the same errata; can you comment on that at all? e.g. are there any
-> changes in this part that *might* lead to differences in errata and/or
-> workarounds? How do the MIDR_EL1.{Variant,Revision} values compare to that of
-> Neoverse N2?
+On Thu, Feb 8, 2024 at 6:39=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Feb 08, 2024 at 10:59:15AM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > We don't need to check the gdev pointer in struct gpio_desc - it's
+> > always assigned and never cleared. It's also pointless to check
+> > gdev->chip before we actually serialize access to it.
+>
+> ...
+>
+> >  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+> >  {
+> > -     if (!desc || !desc->gdev)
+> > +     if (!desc)
+>
+> Wondering if it makes sense to align with the below and use IS_ERR_OR_NUL=
+L() check.
 >
 
-Yes, Azure Cobalt 100 suffers from the same errata as Neoverse N2. We had changes
-in the implementation, but according to our hardware folks, the Neoverse N2 errata
-we are affected by so far aren't affected by the changes made for Azure Cobalt 100.
+Nah, it's not supposed to be used with optional GPIOs anyway as it's
+not a consumer facing API.
 
-> Mark.
-> 
->> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
->> ---
->>  arch/arm64/include/asm/cputype.h   | 3 ++-
->>  arch/arm64/include/asm/el2_setup.h | 5 +++++
->>  arch/arm64/kvm/sys_regs.c          | 9 ++++++++-
->>  3 files changed, 15 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
->> index 7c7493cb571f..0450c6c32377 100644
->> --- a/arch/arm64/include/asm/cputype.h
->> +++ b/arch/arm64/include/asm/cputype.h
->> @@ -262,7 +262,8 @@ is_midr_in_range_list(u32 midr, struct midr_range const *ranges)
->>   */
->>  static inline u32 __attribute_const__ read_cpuid_id(void)
->>  {
->> -	return read_cpuid(MIDR_EL1);
->> +	return (read_cpuid(MIDR_EL1) == 0x6D0FD490 ? 0x410FD490 :
->> +			read_cpuid(MIDR_EL1));
->>  }
->>  
->>  static inline u64 __attribute_const__ read_cpuid_mpidr(void)
->> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
->> index b7afaa026842..502a14e54a31 100644
->> --- a/arch/arm64/include/asm/el2_setup.h
->> +++ b/arch/arm64/include/asm/el2_setup.h
->> @@ -138,6 +138,11 @@
->>  .macro __init_el2_nvhe_idregs
->>  	mrs	x0, midr_el1
->>  	mrs	x1, mpidr_el1
->> +	ldr	x2, =0x6D0FD490
->> +	cmp	x0, x2
->> +	bne	.Loverride_cobalt100_\@
->> +	ldr	x0, =0x410FD490
->> +.Loverride_cobalt100_\@:
->>  	msr	vpidr_el2, x0
->>  	msr	vmpidr_el2, x1
->>  .endm
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 30253bd19917..8ea9c7fdabdb 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -3574,7 +3574,14 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
->>  		return ((struct sys_reg_desc *)r)->val;			\
->>  	}
->>  
->> -FUNCTION_INVARIANT(midr_el1)
->> +static u64 get_midr_el1(struct kvm_vcpu *v, const struct sys_reg_desc *r)
->> +{
->> +	((struct sys_reg_desc *)r)->val = read_sysreg(midr_el1);
->> +	if (((struct sys_reg_desc *)r)->val == 0x6D0FD490)
->> +		((struct sys_reg_desc *)r)->val == 0x410FD490;
->> +	return ((struct sys_reg_desc *)r)->val;
->> +}
->> +
->>  FUNCTION_INVARIANT(revidr_el1)
->>  FUNCTION_INVARIANT(aidr_el1)
->>  
->> -- 
->> 2.34.1
->>
->>
+> >               return NULL;
+> >       return desc->gdev->chip;
+>
+> ...
+>
+> > -     if (!desc || IS_ERR(desc) || !desc->gdev || !desc->gdev->chip)
+> > +     if (!desc || IS_ERR(desc))
+>
+> IS_ERR_OR_NULL()
+>
 
+Ah, good point. It's a small nit though so I'll fix it when applying
+barring some major objections for the rest.
+
+Bart
+
+> >               return -EINVAL;
+> >
+> >       gc =3D desc->gdev->chip;
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
