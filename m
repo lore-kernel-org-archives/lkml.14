@@ -1,90 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401D97CF25
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 15:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953A776C75
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 15:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707405841; cv=none; b=pJnJ8vVk7BxaHSSU9i8rIIsrD4Pp5wV5fXJbNP8cQyhQymcOnmHg7m8fa+TwCspk62zUi4PLkiWr0OyiTtnj4V6//a83Fln/9541hXiExzGtSuzuVUpS/7J119wLIX4tUtpm2Nwagp8VWuLFIr5IeNN9KzuYP+PKD4XMQBiqxaI=
+	t=1707405896; cv=none; b=YTluRDXN/u4A2Bv6MkJPKSmQNjNxP4Bm8pEm1zymC3MxFcCFVMGC0/dVUwY9Yp0z6c5+o8wXeKl/2tYHiJoEkAjoUziqKHIkhYNkoO+/xolyfDDpdmGoL/I0oDG5PvGWSXJfUV8jK0vmdpen17pkqx0nMy5NkYCAlq2yTbXqEp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707405841; c=relaxed/simple;
-	bh=TXFqJl+VejqNcQc19S9a0yo1TsUlfDoX2zcdznVhVOM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NtI4GMEXygbWsaCZApwV1vj4TyjKqKf/ZgXe3IwJfj6fWNTFt8sghC5tQTrF9DhuHCbDSupVRWnDKZDysgi85c/fXmBrVPJ/in0zQmgGw2DPJL/zw5GQDdYtYr1OvVbcaj+6WsfVpBxWi6zB5ghH62NmzwWNmSkcw0U2yVXTRRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ltOYCkeW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UX1fbATa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707405896; c=relaxed/simple;
+	bh=kAOIuWlwovzhjk3AgDdaNyJxXE1rLS9fIf9ZEx9VMjY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kJ+ELZR9VchwmFipm8p6uVQXOtg+YGbe5tGKWZWC3bQ4Z4NO/nKkIZB3olwJqmoeTxqKCm3y1imGKhNncgDfycwFd27+ZT5K0izIjTUcaokti0tjfihIR+dS6D70RfMwnHDgDOT2XW7hx7uo5wRnbC/Z+wfwsoaZ9s+ruQGc8sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=meGLZBXG; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ltOYCkeW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UX1fbATa"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707405838;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1FduTETIMSh9ur/MljH5h2gohj0pSlcSQSBY5yBtqTM=;
-	b=ltOYCkeWx00OsUOMcZ7fKtADFlEpW7RCaaeg3pIN5BdzYvBMn5VfQftyf9c4wKCUznZ9uI
-	rWgKMPHVJ+nZNL/LsxtZFkWJZkV2UncJYJbyC4YrGYcP2hyNqTRBN+qWh5swblac+rucIt
-	GG6Lh25RPuMERxOL+dyYukQvV1L9jY0RDkVNYdkpP3dVpIeKoSUetPisJXuLdgXzyw6mGy
-	xn1UQMPWv2HBUaIHTWOWl0a31Li5lRW4kCt1phq3dmsNa1/Z+DAYdmEUiaFBJyluz1lIjI
-	Ttzy6Kw1jl1Tj77iYYuU14NVCFLDFuTYKYBi5OW725ncyLMAMNozJqKzym81TA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707405838;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1FduTETIMSh9ur/MljH5h2gohj0pSlcSQSBY5yBtqTM=;
-	b=UX1fbATalMtYxRzrC/EaMHJvq0xjPwMgZGMOVsaJfoIZQaUpCBk0eFixUL0EOLkqbUh07E
-	Zn3szRFUHu/swrDA==
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Daniel Bristot de Oliveira
- <bristot@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, Frederic Weisbecker
- <frederic@kernel.org>, Leonardo Bras <leobras@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>
-Subject: Re: [patch 05/12] timekeeping_notify: use stop_machine_fail when
- appropriate
-In-Reply-To: <ZcN+XM4223HS42LM@tpad>
-References: <20240206184911.248214633@redhat.com>
- <20240206185709.955049547@redhat.com> <87h6ikmqqo.ffs@tglx>
- <ZcN+XM4223HS42LM@tpad>
-Date: Thu, 08 Feb 2024 16:23:58 +0100
-Message-ID: <87zfwbkmi9.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="meGLZBXG"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3122b70439so262426966b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 07:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707405893; x=1708010693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlC2lhzngOyeafJ48Z4cKb3VJi3sH6uOejDd3gD5xnI=;
+        b=meGLZBXG/DbQqOnS2e89RiIuf/EE8lDBwa2ZdGBoOQOqBQrD5LI2kB747PCY/RaWKI
+         /rAJqd7hSTdabi+2LovHVyPfF3GDYc5hGgMhdfscFdq3Miz7j/VbQHxYeEeyNWKxf2Em
+         3WrqWdMrZvPqCDl9XcCO/kawwP108Ft53AYSfGfD18jVSY28sAGrtdPsjVGgZErxcUmc
+         czuauihsw4PRm3Fc7zuLRokJXpFeDbvsp1FJT9THMDKIDz6mkdLAAktHL6xnsJqItNcF
+         XI10jhVQdKSq4xrHGg7lN7aP1/1FsmhXNxqBbcC/4rnRdkj7U9PIx7eeT0l1WvOdLTnV
+         yZ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707405893; x=1708010693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZlC2lhzngOyeafJ48Z4cKb3VJi3sH6uOejDd3gD5xnI=;
+        b=lwOxDqNji7Cjbb2GnNdeLZdWn1Vrd69z1MLS3XQdc/R4jl984CL+k6uf5/NF4oryl1
+         k6lTl1FuY+gihtn9LFlU69W7SA/swajT+JEA9JlplYwhkToMASJq/V1wEygab1IqYp7M
+         GcrW45tI8XP5oFg6fy+7ng3qTU3NIJXUSflz+S6C5ZYWzbG3XVyrBaLXyg56YA8UrRQW
+         Ta/pphuabQ6TKlwXmxkTkfbP+7oVvyE26wDVWICLMF4Ycemv4E3R839Sr3u3eIHiz73u
+         G5sbPJktliHBM3rWQntXAobVbiPxVmPYvofUCGDWA3i1dpUgvBjnNbBPyeGycKPZaYZj
+         FNcg==
+X-Gm-Message-State: AOJu0Yx3L2F0JbAiGFqc50GhPWS6yXtWH2BnqxQ0zKJUmFQbW2azH/J8
+	2DeIn9xUa2ejRiP3Qs5GqBHTLqBW4wgooRDMjuNlVRIt4PXjSBm+6WP1VpTLzFsnVCL1DF7OmPr
+	kLz3WuQ==
+X-Google-Smtp-Source: AGHT+IG9IjcQZfVwTrZS0u/E1ebQvET8jEiFldZ8xlY1mor7GtxKiiyGjhmZKyn7ZlW9NL8ZuY4JSQ==
+X-Received: by 2002:a17:907:7856:b0:a38:3ec3:9379 with SMTP id lb22-20020a170907785600b00a383ec39379mr5294511ejc.44.1707405892723;
+        Thu, 08 Feb 2024 07:24:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXQ8IEO6JZFgmRiIonq1XkvroWEyaaxaFIO/nHSPzEN/V53OUkgjD9/IgkmuZOSa1S3NZCky5sIX2VEll/4k4vWQHeZuAM6/JweicEBanitnNSbsqO+ChWSVFcM9uo0LgSjdRjXss50TKrG4/9QVlidITHf3mapmm2yQvbDZ2HW2LLSf5dC3rdPSh/aS5uYPd81vTCPnPDkGNDi1QjwcjU8
+Received: from debian.fritz.box (aftr-82-135-80-180.dynamic.mnet-online.de. [82.135.80.180])
+        by smtp.gmail.com with ESMTPSA id a24-20020a1709066d5800b00a3bb2156f7asm147155ejt.185.2024.02.08.07.24.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 07:24:52 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] docs: dev-tools: checkpatch.rst: Fix grammar
+Date: Thu,  8 Feb 2024 16:20:40 +0100
+Message-Id: <20240208152039.65293-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 07 2024 at 09:58, Marcelo Tosatti wrote:
-> On Wed, Feb 07, 2024 at 12:57:19PM +0100, Thomas Gleixner wrote:
->> On Tue, Feb 06 2024 at 15:49, Marcelo Tosatti wrote:
->> > Change timekeeping_notify to use stop_machine_fail when appropriate,
->> > which will fail in case the target CPU is tagged as block interference
->> > CPU.
->> 
->> You completely fail to explain 'appropriate'. There is zero reason for
->> this churn, really.
->
-> The churn is so that we can return an error to
-> current_clocksource_store (sysfs handler for writes to
-> /sys/devices/system/clocksource/clocksource0/current_clocksource).
+- s/exists/exist/
+- s/maybe/may be/
 
-What for? Why?
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ Documentation/dev-tools/checkpatch.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Writing to that file requires root. Root can rightfully screw up a
-system and adding a debugfs based "prevention" mechanism is not making
-this any better because root can just clear the CPU mask there and move
-on.
+diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev-tools/checkpatch.rst
+index c3389c6f3838..127968995847 100644
+--- a/Documentation/dev-tools/checkpatch.rst
++++ b/Documentation/dev-tools/checkpatch.rst
+@@ -168,7 +168,7 @@ Available options:
+ 
+  - --fix
+ 
+-   This is an EXPERIMENTAL feature.  If correctable errors exists, a file
++   This is an EXPERIMENTAL feature.  If correctable errors exist, a file
+    <inputfile>.EXPERIMENTAL-checkpatch-fixes is created which has the
+    automatically fixable errors corrected.
+ 
+@@ -181,7 +181,7 @@ Available options:
+ 
+  - --ignore-perl-version
+ 
+-   Override checking of perl version.  Runtime errors maybe encountered after
++   Override checking of perl version.  Runtime errors may be encountered after
+    enabling this flag if the perl version does not meet the minimum specified.
+ 
+  - --codespell
+-- 
+2.39.2
 
-So what is the actual real world problem solved by these patches?
-
-All I've seen so far is handwaving about interference prevention and TBH
-I can't squint hard enough to believe that.
-
-Thanks,
-
-        tglx
