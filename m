@@ -1,110 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED68D149DF8;
-	Thu,  8 Feb 2024 21:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F32F383BA;
+	Thu,  8 Feb 2024 21:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707426163; cv=none; b=PyHDmeuqRxIYx2YR8jIpGnZtsqA0Ax7zNdml1LM2n/xs3PCNWUpmftw1S1JruptprmwxQEmxPB2cA0sLrdsXyysL6UprhV0DLsSFB3sT98ujJzCfkJmrZ/PBAjIZqrcg+F6GiCYBJGnUIiSGIt7ucOjGmkEtcyuixr83FA30G4M=
+	t=1707426317; cv=none; b=STAtfnTe3CLe/ztVPN/Cw2mdMjrk24xrYR9SJifW4oEqtD9GKodlWGRG0olsIu1jfUz6cckKf/N0+6tsnuGF14ml93O4R8XgD8yi3RC8WVySviK6SYOneu6e7Aw2Jb2cVXYsWUQbIVmJ3VLD6UOZ5VaVVhQqEfa1UIfzijETLto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707426163; c=relaxed/simple;
-	bh=9o+cviq5kEoHDzHUTgK5/QBBVE/KPaRbFcYqh1I4jLM=;
+	s=arc-20240116; t=1707426317; c=relaxed/simple;
+	bh=eHD06yrD/OfXGPb/oIPIzX6rOkMWUaTi7Z630Arq8cw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S3K5D8xAlNgRm/dLjrsaBYyC3Sr5QSD6kzJ6oYYPqL9w8GcNXch4tVrwhtX6MQf6MYDi4MV7j5Xiqn33kfp4R4aNIvCFyJDjJ85nuLe9jhyAt4QYvIZFdHpC/4MRIzqqtFXtQrol5M8MWgEyP32ujNOK8/mhBsnjBAtlZUJl9Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWLEbdJl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnE/ZbMqX0Be70tP1h3TBnWWxhJADXFz2pj6WZkj1I2PqrmwJUdFpCQa+DIZBohQ/rSyWnNy0BPcgg81IhAJ/nYyxh1a/Nipuf8yQf9zsaWXmDg8li9TzBmW4E5ZeJJMt+s6QOdoORl0lZd+j5lPW/qc7gjOs9dx2OO7zCV+cYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxepUUUp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWLEbdJl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40310C433C7;
-	Thu,  8 Feb 2024 21:02:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxepUUUp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F747C433C7;
+	Thu,  8 Feb 2024 21:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707426162;
-	bh=9o+cviq5kEoHDzHUTgK5/QBBVE/KPaRbFcYqh1I4jLM=;
+	s=k20201202; t=1707426316;
+	bh=eHD06yrD/OfXGPb/oIPIzX6rOkMWUaTi7Z630Arq8cw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gWLEbdJlYl/ZYqS0IDroMY0q3MKyhayNdE3lxjCV8DseZVr0HAsMYVgBIPZthF6Ni
-	 cG/kZeF5dWlyRKgqKZx6Je1i1hcYG9HM3k+P+qqNipRim4O9xo9wNbEVLr9k22Kr/m
-	 N+lrEYH6s1yHBLpEryXvwY6+6yFYdjP6dlBS0btEgPDSjAyi8GdGwqc2X1Er4S4sp0
-	 Qb6IGt2czmBZPofBcQ/nigwIEGHl6QEvZGdkuHfj1QWjM00H/4Bqk/NnlVBx5Nx2TD
-	 1JQJgvR1Od4cUoha3xUzYs2A/s90HvVLmmfSxenzeB/4maAo2LjoDWKALPUocwje4o
-	 m5H6LmzdLQaAQ==
-Date: Thu, 8 Feb 2024 21:02:37 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
- file
-Message-ID: <20240208-moisten-jaws-35a4935dca44@spud>
-References: <20240207231550.2663689-1-Frank.Li@nxp.com>
- <20240208-subfloor-polka-96bbbbc27fb0@spud>
- <ZcUyqaxf52GivQnd@lizhi-Precision-Tower-5810>
+	b=sxepUUUpUNfUb0t9M24TX8LFcJrOec3SVk8AbnpQRHohNwweLaXLWWYq14YE80bef
+	 hQ2Bh9E9nc2uLjvANKUTPK1x2aSuYChVSRpqNciLfNQXnd4ozEl6jFUOEQ96P7/d1K
+	 XiuGT75AF10tuxpDVPW57VEVSqXsKx7baN50iKvmtVH9FuTtI3wQafkZBhuri18c9i
+	 58BP5obnhuaxRNkLvYPLHplHAi4cLsEe0uvNGehspWDKsEEWQ3/saz5gDCBmlgoX8z
+	 rQKu3EIHWZRDGfbCw7Rb9RybENCEDd+oHUkBLbp5R2oE6XRcxDV+UCeeN8k9211OMS
+	 uQXvF2m40ZiGA==
+Date: Thu, 8 Feb 2024 22:05:13 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Robert Richter <rric@kernel.org>
+Cc: Piyush Malgujar <pmalgujar@marvell.com>, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cchavva@marvell.com, sgarapati@marvell.com, 
+	jannadurai@marvell.com, Jan Glauber <jan.glauber@gmail.com>
+Subject: Re: [PATCH v2 0/4] i2c: thunderx: Marvell thunderx i2c changes
+Message-ID: <o6ngyvj2vb5ku74r4dfipibprm4opyqpufkhpxzs3urakosj33@u7ei4447zd44>
+References: <20230728120004.19680-1-pmalgujar@marvell.com>
+ <20231024201440.ey7pjah7fq33mbwm@zenone.zhora.eu>
+ <20231026125429.GA22428@Dell2s-9>
+ <nu6py2gosmy33ge4mozuisyfyfdw6i7j4i77o6v2xudyshosso@3x3frfn5gomd>
+ <ZZfjlgN9iOjz2oMx@rric.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WmaGg2xNACeUW1/d"
-Content-Disposition: inline
-In-Reply-To: <ZcUyqaxf52GivQnd@lizhi-Precision-Tower-5810>
-
-
---WmaGg2xNACeUW1/d
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZZfjlgN9iOjz2oMx@rric.localdomain>
 
-On Thu, Feb 08, 2024 at 02:59:37PM -0500, Frank Li wrote:
-> On Thu, Feb 08, 2024 at 07:26:15PM +0000, Conor Dooley wrote:
-> > On Wed, Feb 07, 2024 at 06:15:49PM -0500, Frank Li wrote:
-> > > Convert layerscape pcie bind document to yaml file.
-> > >=20
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> >=20
-> > Please don't send new versions before giving people a chance to finish
-> > the discussion on the existing ones. This is not the first time in the
-> > last few days I am asking you this. Nobody pays me to review DT
-> > bindings, so you'll have to accept that I will take some time to reply.
->=20
-> Usb-glitch patch
-> v1, I sent at Jan 19.=20
-> v2, I sent at Jan 21.
-> v4, at Jan 24.=20
+Hi Robert,
 
-Actually, I think I need to apologise. My first reply to you on v1 came
-after you send the v4, so you didn't send new versions in that case
-during a conversation - but sending 4 versions in 5 days is just going
-to lead to people reviewing the old versions of a series. Please just
-take a little more time between versions :)
+On Fri, Jan 05, 2024 at 12:10:14PM +0100, Robert Richter wrote:
+> On 04.01.24 23:06:35, Andi Shyti wrote:
+> > On Thu, Oct 26, 2023 at 05:54:29AM -0700, Piyush Malgujar wrote:
+> > > On Tue, Oct 24, 2023 at 10:14:40PM +0200, Andi Shyti wrote:
+> > > > On Fri, Jul 28, 2023 at 05:00:00AM -0700, Piyush Malgujar wrote:
+> 
+> > > > >  drivers/i2c/busses/i2c-octeon-core.c     | 96 ++++++++++++++++++------
+> > > > >  drivers/i2c/busses/i2c-octeon-core.h     | 27 +++++++
+> > > > >  drivers/i2c/busses/i2c-thunderx-pcidrv.c | 23 ++++--
+> > > > >  3 files changed, 115 insertions(+), 31 deletions(-)
+> > > > 
+> > > > I was going through the patches that failed to receive an answer,
+> > > > is this series still valid? Do you still need a round of review
+> > > > here?
+> > > > 
+> > > > Andi
+> > > 
+> > > Hi Andi,
+> > > 
+> > > Yes, these patches are still valid. These have been acked by you
+> > > and were waiting to get reply from Robert.
+> > > Please review the patches.
+> > 
+> > sorry for the very late response... I guess we won't receive any
+> > answer from Robert... do you mind respinning the series as this
+> > doesn't apply anymore?
+> 
+> I would prefer if someone from Marvell could take over maintainership
+> for those ThunderX drivers.
 
-> Generally, I send patch quick because I accepted their suggestion. It will
-> be clear base on the new version. There are not big dissension need be
-> discussed.=20
->=20
-> About this one, I think first one have bigger problem because just convert
-> txt to yaml file. Base on this version will be easy to discuss futher.
+As long as it will be
 
-> The samething for me, nobody pays me to work this patch, which is my extra
-> work.
+CAVIUM I2C DRIVER
+M:      Robert Richter <rric@kernel.org>
+S:      Odd Fixes
+W:      http://www.marvell.com
+F:      drivers/i2c/busses/i2c-octeon*
+F:      drivers/i2c/busses/i2c-thunderx*
 
-Thanks for spending your free time working on binding conversions :)
+people will refer to you about this driver. If you really don't
+want to be referred to these patches you can consider removing
+the entry or I can do it for you.
 
---WmaGg2xNACeUW1/d
-Content-Type: application/pgp-signature; name="signature.asc"
+Meantime, I can accept candidates from Marvell/Cavium.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcVBbQAKCRB4tDGHoIJi
-0un1AP9TsH6E9Z5p9TZzobwdGratw7ep4NgGW8SdqVgfGcKhzwD/VoMWX8J7YO+m
-oh7+i17+eYHwZ6LfCUlirk576gpNTQ4=
-=5N4M
------END PGP SIGNATURE-----
-
---WmaGg2xNACeUW1/d--
+Andi
