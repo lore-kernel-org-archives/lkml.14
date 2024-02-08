@@ -1,91 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23E881AC7;
-	Thu,  8 Feb 2024 17:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BFA125DA;
+	Thu,  8 Feb 2024 17:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707413992; cv=none; b=SK65jOI3EB5hil01pJrTb4K5yzORwP3hzjURRYoCDTVeWedoqotlQzS0dfsH1I3gqCgBZAdZZ8eTcz7R6q7g6s/dP0WMAkGGdBpdSPXvlrRIb7tbUHSIqmAv0vnyrL2NWL37ciCd3nIn+DK9ZHzniyUDsEUujalC8S7GuFAxd0g=
+	t=1707414063; cv=none; b=WyeNzmGQ9nq+qU4ndAW/ltsH1+fnGKdwmuGJpZAXGT+euHRS0h6cpn5cNyPwpZhOxUZZIUwd+futzoU2X1gILCGs28yswVUS2coCQL1QfY6uy48jJQzKn4D88KUyCSHiZEVJjEdMHxGzgINtrADoQixDxTfM+Cd6ESFDTDdlGoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707413992; c=relaxed/simple;
-	bh=BLDjJ38BnZgGooci7rpMBki3qE7Nq/vz2SqBaf8tDzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vGNXBmoX63GOGUUxIpKm81nuQCIXHYt8vfXESz+11kEVvf2cROEoz9Ig9rVwfrUP3TeCKHBc/24C8NjADRD+dE1STpBs7/+faYv+8HZoCddH7Oggm+D0O5yS1Z2Y+k1Q7gW87ImG0PzqwyD7Nz5R/KOaygNOV62L55+0apRT48c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evu3PttG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evu3PttG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FDD5C433F1;
-	Thu,  8 Feb 2024 17:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707413991;
-	bh=BLDjJ38BnZgGooci7rpMBki3qE7Nq/vz2SqBaf8tDzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=evu3PttGEh9Y3+sMHYBw5zY2o+8AYCpHi7kcwWD+iUEmOU66tGNvGHhzONA/z/VQD
-	 xPwCZ1Bdu73J52OuSD2bS14V7TXl59l8ftSU3hBxAgg+ehoURWf9eqxMmHQfKDFPem
-	 DArgkB3rP0JsXuLh+amoeGLfuFpyft16yQ8ovJSEynbd2Eci4YUFs88M47V0J80+4H
-	 7Ih0n2ADy6Zt6BGdAHdmEGjxPBnUOWgbMK/EvVuh7XxB3uBUrxmX9hnYoyX8oOdwPE
-	 4UuUdBEQ7fEwTFxwRkEVfi8GqqKqgrvK5X4aMtNdf+GsWY3kGxQhfkm/F5XfEmI5Yc
-	 2y40d2hUtXACA==
-Date: Thu, 8 Feb 2024 17:39:46 +0000
-From: Lee Jones <lee@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Flavio Suligoi <f.suligoi@asem.it>, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v2 0/3] backlight: mp3309c: Allow to use on non-OF
- platforms
-Message-ID: <20240208173946.GX689448@google.com>
-References: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
- <20240208113425.GK689448@google.com>
- <ZcUMMyV_vBTNw8Rz@smile.fi.intel.com>
+	s=arc-20240116; t=1707414063; c=relaxed/simple;
+	bh=JDlxEd4DUAltJgPtyMqh2rUgGaRPVzcz0OjIShKXtIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qr7s4Viewurt7bQgXiLhTKfSFhy9c8F5yoUjEikwct8IaH3OM/qfDnHYhq4BUhpR/Lcpdw/OW2L8DesuOHXgc2rJDRti8NNXqRFG2n7EWok+ZBScgsOE3H2l6IEdTHe0g4DD+wJ/0AV7/RT5xNtDsSF1r/MafXRG4e3N/Ai/aMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d73066880eso153715ad.3;
+        Thu, 08 Feb 2024 09:41:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707414061; x=1708018861;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JDlxEd4DUAltJgPtyMqh2rUgGaRPVzcz0OjIShKXtIA=;
+        b=Jq2rvyGUVo3NBnO27UpwBVPLO4sjCa/URCATcRE0zyvCopx6kIOdRpIxPzlUm67vqp
+         +N8sMd8nRVrTiuoToBb8TvQvkommp7bSTovBRIjZhdwWljgxCAAvAi+usS2MxrF+dC1z
+         yNY4dDCVrTEJtPdur8eeW5LLNl785V2PF4PvC8fF0HGePokMwn30CJiDpIxwDHkELqx4
+         EbzxGuKI/diNn3nom6GRNGeFyszxIGULBm8n6EXiOYnShYqGz7d8QEqKtMgRqJQWR2xN
+         egc6jZULCyHqOU3mppGKD/diUAdb1D85IAlKuOBJpCz9OILSpUcD9vzACdhSictIoNVV
+         ibrQ==
+X-Gm-Message-State: AOJu0YyZZYGzd2UIh4EJZS8mS5qyFh3JOoVKGfDFV3P03CLAwZxZley7
+	z80g02efr4G8j82mRe4RmvpCn6pij0atrpjnk57kNlmpTSRrxEBB
+X-Google-Smtp-Source: AGHT+IFqbBBf6L/TNgl9ud++eiJTxjSFTetMmFD3k56FU/BMtYyyW70vU5kc2Vv9Z8vtEXTsgQRdTw==
+X-Received: by 2002:a17:903:1c3:b0:1d9:6895:81c3 with SMTP id e3-20020a17090301c300b001d9689581c3mr10652820plh.22.1707414060984;
+        Thu, 08 Feb 2024 09:41:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWwjeR7M737s3YhNB8/OXBJ/YXwSu9RCoYeW2dKcndfY2WOZwrqMkODdN7ilPpGQw5lK3nvu+szGFUZIxSQ2ybJTxDZ8uZz3qzlgWHOIBhl8g5GS/coMsWQb13qveBsmfhspOO3IUE7hQwvdwRRrU/JhEUVKbedMJu8qZHEdtrYv8iJ2YFZFHTSBgiFSjNLVmSv4xYyweIy7p+5DybJBdtO/fqCwR4mH4fde0BktHj5NUiBf6GdRz6H/NbgSoX6Qu/x4rYUu86wC6Vw4an0aGhF2DqQBff9j202E9WX/Wz4HgbaDq8ZIIE6W5uRqRCgoMR/QI71vSkiVJ3aC17+ozL0b3cThc36+NIZfO6euMCxM+uHC9SCc1ovwKGvanjnO82FWHJW2xk3gEW0Dan66v9wTQt9t8QYJJOmjWS7uT7cXlVj5VuDU6Qcw7FZIemJQ8fiLoke7LGh24wWCOos2aZ51NKjhNipZ/+l6I9uQbTfLC29kIrV/XrwkfvgQxELkVQTY+LcXI9q0r+gSkJoXgfMwwX5q491x1zxEOBDQyEZ4ToWgMPzZl4bmoGj8MzcRemj8wzOheYD9EBjfUrDS08WDO+qudgq9BL/+CPurFWY1qMMpVFI1Brr7qRMTdno
+Received: from ?IPV6:2620:0:1000:8411:6ab9:a725:60e:97d2? ([2620:0:1000:8411:6ab9:a725:60e:97d2])
+        by smtp.gmail.com with ESMTPSA id g5-20020a170902740500b001d7439bf914sm5255pll.235.2024.02.08.09.40.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Feb 2024 09:41:00 -0800 (PST)
+Message-ID: <c9129b08-50fb-4371-aa05-6f6c7cd7acfa@acm.org>
+Date: Thu, 8 Feb 2024 09:40:55 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZcUMMyV_vBTNw8Rz@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/10] scsi: Replace {v}snprintf() variants with safer
+ alternatives
+Content-Language: en-US
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Adam Radford <aradford@gmail.com>,
+ Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+ Andre Hedrick <andre@suse.com>, de Melo <acme@conectiva.com.br>,
+ drew@colorado.edu, Finn Thain <fthain@linux-m68k.org>,
+ Hannes Reinecke <hare@suse.com>, "James E.J. Bottomley"
+ <jejb@linux.ibm.com>, Joel Jacobson <linux@3ware.com>,
+ John Garry <john.g.garry@oracle.com>, linux-scsi@vger.kernel.org,
+ Luben Tuikov <luben_tuikov@adaptec.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Michael Schmitz <schmitzmic@gmail.com>,
+ "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>,
+ Richard Hirst <rhirst@linuxcare.com>, support@areca.com.tw,
+ Tnx to <Thomas_Roesch@m2.maus.de>
+References: <20240208084512.3803250-1-lee@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240208084512.3803250-1-lee@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 08 Feb 2024, Andy Shevchenko wrote:
+On 2/8/24 00:44, Lee Jones wrote:
+> Cc: Andre Hedrick <andre@suse.com>
 
-> On Thu, Feb 08, 2024 at 11:34:25AM +0000, Lee Jones wrote:
-> > On Thu, 01 Feb 2024, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > >   backlight: mp3309c: Utilise temporary variable for struct device
-> 
-> (1)
-> 
-> > Set no longer applies.  Please rebase, thanks.
-> 
-> I got a contradictory messages:
-> 1) email that says that all had been applied;
-> 2) this email (that tells the complete opposite);
-> 3) the repository where the first two were applied.
-> 
-> While you can amend your scripts, I think I need to rebase only the last patch
+Please take a look at https://lwn.net/Articles/508222/.
 
-This is what I assume happened:
+Thanks,
 
-1. Attempted to apply the set (as a set)
-2. 2 commits applied cleanly
-3. The final commit conflicted
-4. I sent you a message to say that the set failed to apply
-5. *** I forgot to remove the 2 successful patches ***
-6. I applied another patch
-7. b4 noticed the 2 patches that were applied and thanked you for them
-8. *** I didn't notice that those tys were sent ***
+Bart.
 
-No need to update the scripts. :)
-
-> (1) that may not be found in your tree currently.
-
-I'm going to remove the other ones now.  Please submit the set.
-
--- 
-Lee Jones [李琼斯]
