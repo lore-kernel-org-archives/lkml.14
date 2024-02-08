@@ -1,182 +1,156 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF2876402
-	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 13:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5DE763EC;
+	Thu,  8 Feb 2024 13:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707398598; cv=none; b=o7N6kBM+Hj3dPJvv8bGGe2tCfGXTqTgbjU/rj3W2Ws8FLWNtT+tUOQTfgMvty8uKz7zDoi1rN8FJkyUKKWuT1YmgcYgUYTy7Fj5IAed/CMQnC/DXE9IsMLZROUOtOuqdkGw0f8rQIY+elx9bMiutsufJ4/jh/u/+3/vAQFTEU4U=
+	t=1707398613; cv=none; b=POK7zLP10BsEvmWstPMJbeaV7cDckPuDlVWVMKE/Cwgc+CXgyXQ9VCUca2HIjxnF0HdvYniUMl7bMlCc6Acxn2NMSCpNgRE+EKaY5R7FenqxlCUFdTNNqpRcOdRLo21SEFAKoqmp2calZyr9gPjqm45F86io1DsRnIlBqw4Vr/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707398598; c=relaxed/simple;
-	bh=OuNCUz52dZoeKZCssECX7LECAYjAN81wWrFdpWXkTcg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L3bttQX1ksas5/1XljSkyrINWF+/AGfpubu03dFwL11teilqND1zC7R8682cuH6AncmL7hKGqWOGL30Kd3ffgzCK6UQjoeC2hK3dIr6oAwq0w5m1fJ4gBJuPj3UfV/1838XGGKMOI5hkt/Kp3lW46qlsnEAVAJpo7WilEGh4Rm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=MpcQQGFt; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1707398613; c=relaxed/simple;
+	bh=6GyLDB0Ktv9rLaR9FABPsKSQQBcO299HdLT77EeYMjI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=KRR/rfCDtb+nhf55pdPSVqfx2rM2hFwUUzNOFcG3TU1W7pijOMyTByYeHzGHtUQbLKV/iJDECJ2ZWp6vCeLHzZdcIN4RCOAA6FfH8odB9tOsQxIsv8BboR4jQ1PnUOvPPdP+tYMqIZ+SFEyZvX1dj+JdnfocQceMrmk/JpqjpN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NpZX0UV4; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="MpcQQGFt"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3916c1f9b0so136021766b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 05:23:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707398593; x=1708003393; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g2zpgdujj1gYFQCxpzgk3AGLL3hOuoYEj3pj3VOmX9g=;
-        b=MpcQQGFt5nZ56LXM/FpKp1OO1eC6PdSXWMUwlPP+k1acYTaB7N94uaMhp0kb65uQnp
-         HJA6r4Mfp9nWqivNhipv6BkUq1OFyuFjX+UIjLFG0CipXIocf3wt87ox8UhJid+LbX37
-         ecL3uVhw9xTo9fvoEU4YgGBgafzxe1o5x+y8ZHHvl+HEoqSezBesUqB8taU4ig88EcZz
-         AZdvkFoYKF5efgild4maX8RqWjE7+iMIY9IUvoBrq3aibh+7lbiYTTabE+2v1QO2a7P1
-         qvm19N8KH9df7ozxN9YzyGR/Ui+gaGQ1NpWfh3KQ/76cfLRxxdtPdwpaYe5vua/Qpqsx
-         ssnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707398593; x=1708003393;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2zpgdujj1gYFQCxpzgk3AGLL3hOuoYEj3pj3VOmX9g=;
-        b=oET7jgzFH8TfhmCHTXtaTr/xa5/5Rm2sPEl8FKxqL1mUxT+Px7FDFBev5UnMBjzRX8
-         RYb9zl6j56A7uHaO/doa1lTnw3VH97JIiAtWj9iO0VRLfNjty+GiqU1N3GYX4fyAUcrg
-         H86KPazge6VdmoxKJ8YqNAv02sJJaCSm0OeCel64QKWUagdKaqyGtpjlRY66JIQ/LzZs
-         WmLi4D+XxjxCr0RWNkZwukmkl8crYx/3M61I/y1GCyfgHpkzWO3CFAiQWVq6Gi+GS1wk
-         C4EiQ8a3ekGofBDHyp3RtitV6r1TX7p4Ya2aslgOI7yTJFeAzpzUJfGJeTWCVjDU21+G
-         DoEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUm9cDTvn+2thCpdHi9s1pfXdtAZBHw6gyIP87dp6xd3uRQAnefnmQQyIT1lWlvArgtAfrVa1a8bpOlWG1VVssxosKXDLFeqF36KhRW
-X-Gm-Message-State: AOJu0YyJfGv36xISQw42VLeej83UIcUdS9GdD59NB+JLqytJ7xGqRml/
-	A5767XMlBtE8nCqVhiCVzIOws1pkUmw+B4xd0BMBPX93FTMo/1Ga1zzgOg4qbYgsobdmL+KHeDE
-	N7tFuHxEflvHaNv5koL99UVyu6A9FIP9DfwQQ5w==
-X-Google-Smtp-Source: AGHT+IEc4w81N06k/dJCCWI/8ie/Uaz6Jb1ky5A9KAQW2kGf8+rE4iLeOHNbonyyyUv3nuMoSXMDNxqjJlJT0K+Lu+s=
-X-Received: by 2002:a17:906:dce:b0:a3b:a4e6:f83e with SMTP id
- p14-20020a1709060dce00b00a3ba4e6f83emr1277933eji.20.1707398593065; Thu, 08
- Feb 2024 05:23:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NpZX0UV4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707398612; x=1738934612;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6GyLDB0Ktv9rLaR9FABPsKSQQBcO299HdLT77EeYMjI=;
+  b=NpZX0UV4dVJV3uHkK5ZMr3qZinr2SdsXNQNYVziMQvVxu0DKJDyK4Lz8
+   F6plFLamQQ9OKHtRHU7L2WvGoDNWlD/zktF6NBTvd/fDL6jnana6DJHuu
+   dukEfNHsxBQXcsHHvWZFivfIvyK2N2o6TrqpiD0P6/8isuFdjXWXSMBos
+   UjIHV4tiLJDoTCk3dkh9fd5qt/eh4TQ3ztDg1PCWOCg5I4d3Q9wkhnOwM
+   aLDO5VDRakZoIO5qqegiV7fGNXryY7CgP1iVsk+2SokhwEuW5xnWNqYwO
+   ADvGT56MIrHXXejmQ5brGoLuT1S6xCpmXiyeQjQXfXMeUd3yiDVnGqitE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1083702"
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1083702"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:23:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="6279804"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.52.95])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:23:28 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 1/1] PCI: Do not wait for disconnected devices when resuming
+Date: Thu,  8 Feb 2024 15:23:21 +0200
+Message-Id: <20240208132322.4811-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206204607.527195-1-alexghiti@rivosinc.com> <ZcS+GAaM25LXsBOl@andrea>
-In-Reply-To: <ZcS+GAaM25LXsBOl@andrea>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Thu, 8 Feb 2024 14:23:02 +0100
-Message-ID: <CAHVXubj7ChgpvN4F_QO0oASaT5WC2VS0Q-bEqhnmF8z8QV=yDQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Fix text patching when icache flushes use IPIs
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Andrea,
+On runtime resume, pci_dev_wait() is called:
+  pci_pm_runtime_resume()
+    pci_pm_bridge_power_up_actions()
+      pci_bridge_wait_for_secondary_bus()
+        pci_dev_wait()
 
-On Thu, Feb 8, 2024 at 12:42=E2=80=AFPM Andrea Parri <parri.andrea@gmail.co=
-m> wrote:
->
-> > +static int __ftrace_modify_code(void *data)
-> > +{
-> > +     struct ftrace_modify_param *param =3D data;
-> > +
-> > +     if (atomic_inc_return(&param->cpu_count) =3D=3D num_online_cpus()=
-) {
-> > +             ftrace_modify_all_code(param->command);
-> > +             atomic_inc(&param->cpu_count);
->
-> I stared at ftrace_modify_all_code() for a bit but honestly I don't see
-> what prevents the ->cpu_count increment from being reordered before the
-> insn write(s) (architecturally) now that you have removed the IPI dance:
-> perhaps add an smp_wmb() right before the atomic_inc() (or promote this
-> latter to a (void)atomic_inc_return_release()) and/or an inline comment
-> saying why such reordering is not possible?
+While a device is runtime suspended along with its PCI hierarchy, the
+device could get disconnected. In such case, the link will not come up
+no matter how long pci_dev_wait() waits for it.
 
-I did not even think of that, and it actually makes sense so I'll go
-with what you propose: I'll replace atomic_inc() with
-atomic_inc_return_release(). And I'll add the following comment if
-that's ok with you:
+Besides the above mentioned case, there could be other ways to get the
+device disconnected while pci_dev_wait() is waiting for the link to
+come up.
 
-"Make sure the patching store is effective *before* we increment the
-counter which releases all waiting cpus"
+Make pci_dev_wait() to exit if the device is already disconnected to
+avoid unnecessary delay.
 
->
->
-> > +     } else {
-> > +             while (atomic_read(&param->cpu_count) <=3D num_online_cpu=
-s())
-> > +                     cpu_relax();
-> > +             smp_mb();
->
-> I see that you've lifted/copied the memory barrier from patch_text_cb():
-> what's its point?  AFAIU, the barrier has no ordering effect on program
-> order later insn fetches; perhaps the code was based on some legacy/old
-> version of Zifencei?  IAC, comments, comments, ... or maybe just remove
-> that memory barrier?
+The use cases of pci_dev_wait() boil down to two:
+  1. Waiting for the device after reset
+  2. pci_bridge_wait_for_secondary_bus()
 
-Honestly, I looked at it one minute, did not understand its purpose
-and said to myself "ok that can't hurt anyway, I may be missing
-something".
+The callers in both cases seem to benefit from propagating the
+disconnection as error even if device disconnection would be more
+analoguous to the case where there is no device in the first place
+which return 0 from pci_dev_wait(). In the case 2, it results in
+unnecessary marking of the devices disconnected again but that is
+just harmless extra work.
 
-FWIW,  I see that arm64 uses isb() here. If you don't see its purpose,
-I'll remove it (here and where I copied it).
+Also make sure compiler does not become too clever with
+dev->error_state and use READ_ONCE() to force a fetch for the
+up-to-date value.
 
->
->
-> > +     }
-> > +
-> > +     local_flush_icache_all();
-> > +
-> > +     return 0;
-> > +}
->
-> [...]
->
->
-> > @@ -232,8 +230,7 @@ static int patch_text_cb(void *data)
-> >       if (atomic_inc_return(&patch->cpu_count) =3D=3D num_online_cpus()=
-) {
-> >               for (i =3D 0; ret =3D=3D 0 && i < patch->ninsns; i++) {
-> >                       len =3D GET_INSN_LENGTH(patch->insns[i]);
-> > -                     ret =3D patch_text_nosync(patch->addr + i * len,
-> > -                                             &patch->insns[i], len);
-> > +                     ret =3D patch_insn_write(patch->addr + i * len, &=
-patch->insns[i], len);
-> >               }
-> >               atomic_inc(&patch->cpu_count);
-> >       } else {
-> > @@ -242,6 +239,8 @@ static int patch_text_cb(void *data)
-> >               smp_mb();
-> >       }
-> >
-> > +     local_flush_icache_all();
-> > +
-> >       return ret;
-> >  }
-> >  NOKPROBE_SYMBOL(patch_text_cb);
->
-> My above remarks/questions also apply to this function.
->
->
-> On a last topic, although somehow orthogonal to the scope of this patch,
-> I'm not sure the patch_{map,unmap}() dance in our patch_insn_write() is
-> correct: I can see why we may want (need to do) the local TLB flush be-
-> fore returning from patch_{map,unmap}(), but does a local flush suffice?
-> For comparison, arm64 seems to go through a complete dsb-tlbi-dsb(-isb)
-> sequence in their unmapping stage (and apparently relying on "no caching
-> of invalid ptes" in their mapping stage).  Of course, "broadcasting" our
-> (riscv's) TLB invalidations will necessary introduce some complexity...
->
-> Thoughts?
+Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-To avoid remote TLBI, could we simply disable the preemption before
-the first patch_map()? arm64 disables the irqs, but that seems
-overkill to me, but maybe I'm missing something again?
+v2:
 
-Thanks for your comments Andrea,
+Sent independent of the other patch.
 
-Alex
+Return -ENOTTY instead of 0 because it aligns better with the
+expecations of the reset use case and only causes unnecessary
+disconnect marking in the pci_bridge_wait_for_secondary_bus()
+case for devices that are already marked disconnected.
 
->
->   Andrea
+ drivers/pci/pci.c | 5 +++++
+ drivers/pci/pci.h | 9 ++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ca4159472a72..14c57296a0aa 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1250,6 +1250,11 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+ 	for (;;) {
+ 		u32 id;
+ 
++		if (pci_dev_is_disconnected(dev)) {
++			pci_dbg(dev, "disconnected; not waiting\n");
++			return -ENOTTY;
++		}
++
+ 		pci_read_config_dword(dev, PCI_COMMAND, &id);
+ 		if (!PCI_POSSIBLE_ERROR(id))
+ 			break;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2336a8d1edab..58a32d2d2e96 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -4,6 +4,8 @@
+ 
+ #include <linux/pci.h>
+ 
++#include <asm/rwonce.h>
++
+ /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+ #define MAX_NR_DEVFNS 256
+ 
+@@ -370,7 +372,12 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 
+ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+ {
+-	return dev->error_state == pci_channel_io_perm_failure;
++	/*
++	 * error_state is set in pci_dev_set_io_state() using xchg/cmpxchg()
++	 * and read w/o common lock. READ_ONCE() ensures compiler cannot cache
++	 * the value (e.g. inside the loop in pci_dev_wait()).
++	 */
++	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
+ }
+ 
+ /* pci_dev priv_flags */
+-- 
+2.39.2
+
