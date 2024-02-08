@@ -1,88 +1,167 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEDC6A8BB;
-	Thu,  8 Feb 2024 10:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787766D1BD;
+	Thu,  8 Feb 2024 10:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707386465; cv=none; b=uK5AQbxPuavSsD/OhNhpMjMoaddAIPCAgyg80bAqhguB81zVpXl+1SLKiKi1VjYAktHKYh3r6DxXTW5llgqcFCeOKjudKZ4EP8UcyL4aDBfEUfsR/Q3NizWAaWBjNWpaVAr06C2pD8kPkScsyrH9NKjEM91MK79aLvDp8ymkmtk=
+	t=1707386520; cv=none; b=rmOY4CUTBPrf0guTAwT9gsUVu3ahRHHDRTCDm0PO7F5eu/o2fWXCGPjo6RspAifWWvV0+xDSuJWExHrdmxuh2t4N+8iaDdfttE3MXkr34UHbDNEGFHyEWJDgSceqU/UtGSEmvfz2fYoba/ua1ojXgaGpXvLNudmUDn951A1vDDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707386465; c=relaxed/simple;
-	bh=QdAtsmJAqD21B3GWv8/xJXnL6FFTkI21JTQdzVgWRPA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=W7aSDGSkBYCAaYjzQ6igrTaGbkzaBUOTj09C9Z+8sk3ggj+zaJk1z2tsRJMF+M9OyTDO4KFH7fkOVMazkVA4WAmn6xzDWT1n2uq+daHba3RWgdHyUIakAQGbT8+Rb9/j0W8GIpHkH4PpHEhJkI33BQ2KUnotp3yLsudDmFKTiyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fGePYv3t; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1707386520; c=relaxed/simple;
+	bh=ZjTYuZI27yktivY2o1E00i2URHt1xHbHgN6Q3LlWvUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TL/25RjoxGqw+ITI2aZkPKLUCUUj8RceMUZPEAZgo71z7P/q0yGVACsnVrSUP8rHFr3W9uBKqa3qpCLvor2quPTv2QH+raT3pCEeVXMpS24nrBd8tz3dzdsJOlJ1t6/RgH88fe08p/fAsf4RT+4PmkNOkCGVHuaCS0785fX0eac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bLzj8ooH; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fGePYv3t"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bLzj8ooH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707386511;
+	bh=ZjTYuZI27yktivY2o1E00i2URHt1xHbHgN6Q3LlWvUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bLzj8ooHWv6M8Wo0jLN4HnS6vZrxTMuvLVSOVdDYjWuM/wDAXm6ZxcIOgdeKCBU9x
+	 V8l6sJ37DgW/wfiecteAzhN5YxFX+vLozXOJHzrnzU0UpIjOG1e4TqABaeKFuQ4rL/
+	 mqsUkesAckB5rqalYvcYW8UbiOMEXZWPcvGPLRjbHDsltlUJjOHBFzTCEDKsD30P4r
+	 cXKXCDFen+ZEC4+fAQA4yKA+W8WuVhMU4NXls4O5Lyr7+LjKpNOoDQlVsdhdi2BX5g
+	 hvG3iDAEVqohLtG/+0ioroGo1Az8wddNkqxIhgSGXu4qtyCRo3NQHu+HqiqidU3LD6
+	 q8VMBfDldMvrQ==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4TVstx73VXz9svQ;
-	Thu,  8 Feb 2024 11:00:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1707386458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Barut0WbxR8ZK4VaiV9eTXhumtMeDqIqqbIXK0ewMac=;
-	b=fGePYv3ttH/RDbDWXPu1vUWKmRBKZee+sonviJghwd/dIEfo1MRnefu3DlYcG5VpO7Mx6Q
-	FUIE+Il+xQVUMGYNSpDRiwaJP+V15RcuUEFe6Bm06Qn9FHrBR1d90PNEcLIo0og/9AVWzt
-	iSdVV3I7L2e6fTT2VUjfYZBQkfE6+yslsspmJUbHVoSbWWUhcdSKdJ2FXsL6/H0ijkqSXb
-	gGii79eWD/rrj1LWGrIPXbT3PJBS3SHxVwjWoVUmTW9B2+uyr/9iMErMF40PdOX6DV8N2C
-	TMP+ZY+54z4sU101e4JOV2fTcNPLhx1yAhIJFlDJCSbI5xPLHpSJcaWJmj67RQ==
-Message-ID: <8eefeeb7-f8e8-49f4-b83c-e67a9e728f41@mailbox.org>
-Date: Thu, 8 Feb 2024 11:00:50 +0100
+	(Authenticated sender: sebastianfricke)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9EDA237811CF;
+	Thu,  8 Feb 2024 10:01:50 +0000 (UTC)
+Date: Thu, 8 Feb 2024 11:01:49 +0100
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: "jackson.lee" <jackson.lee@chipsnmedia.com>, mchehab@kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nas.chung@chipsnmedia.com, lafley.kim@chipsnmedia.com,
+	b-brnich@ti.com
+Subject: Re: [RESEND PATCH v0 2/5] wave5: Support to prepend sps/pps to IDR
+ frame.
+Message-ID: <20240208100149.pet6em5tnunv2ome@basti-XPS-13-9310>
+References: <20240131013046.15687-1-jackson.lee@chipsnmedia.com>
+ <20240131013046.15687-3-jackson.lee@chipsnmedia.com>
+ <cdcf594ecaefaac748655bdcb7dcc1c4f9ad1a68.camel@ndufresne.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Language: en-US
-To: Perry Yuan <Perry.Yuan@amd.com>, Huang Rui <ray.huang@amd.com>,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- "Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- Oleksandr Natalenko <oleksandr@natalenko.name>
-From: Tor Vic <torvic9@mailbox.org>
-Subject: [PATCH v2] cpufreq: amd-pstate: Fix min_perf assignment in
- amd_pstate_adjust_perf()
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: e587f8e7f120ffd8bfa
-X-MBO-RS-META: nq6zerw71rdaaxdbo5g7f95humxm8hnk
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cdcf594ecaefaac748655bdcb7dcc1c4f9ad1a68.camel@ndufresne.ca>
 
-In the function amd_pstate_adjust_perf(), the 'min_perf' variable is set
-to 'highest_perf' instead of 'lowest_perf'.
+Hey Jackson,
 
-Cc: stable@vger.kernel.org # 6.1+
-Fixes: 1d215f0319c2 ("cpufreq: amd-pstate: Add fast switch function for 
-AMD P-State")
-Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Reviewed-by: Perry Yuan <Perry.Yuan@amd.com>
-Signed-off-by: Tor Vic <torvic9@mailbox.org>
----
-v1->v2: Add Perry's 'Reviewed-by' and 'Cc: stable' tag
----
-  drivers/cpufreq/amd-pstate.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+as with the previous review, the title needs to be adjusted 'wave5:' is
+not enough.
+Also 'Support to prepend sps/pps to IDR' sounds a bit weird and doesn't
+quite match what you describe below.
+How about:
+'Support SPS/PPS generation for each IDR'
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 08e112444c27..aa5e57e27d2b 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -577,7 +577,7 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
-      if (target_perf < capacity)
-          des_perf = DIV_ROUND_UP(cap_perf * target_perf, capacity);
+On 07.02.2024 13:00, Nicolas Dufresne wrote:
+>Hi Jackson,
+>
+>Le mercredi 31 janvier 2024 à 10:30 +0900, jackson.lee a écrit :
+>> Indicates whether to generate SPS and PPS at every IDR. Setting it to 0 disables generating SPS and PPS at every IDR.
+>> Setting it to one enables generating SPS and PPS at every IDR.
 
--    min_perf = READ_ONCE(cpudata->highest_perf);
-+    min_perf = READ_ONCE(cpudata->lowest_perf);
-      if (_min_perf < capacity)
-          min_perf = DIV_ROUND_UP(cap_perf * _min_perf, capacity);
+My suggestion:
 
--- 
-2.43.0
+Provide a control to toggle (0 = off / 1 = on), whether the SPS and PPS
+are generated for every IDR.
+
+Greetings,
+Sebastian
+
+>>
+>> Signed-off-by: Jackson Lee <jackson.lee@chipsnmedia.com>
+>> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+>> ---
+>>  drivers/media/platform/chips-media/wave5/wave5-hw.c      | 6 ++++--
+>>  drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c | 7 +++++++
+>>  drivers/media/platform/chips-media/wave5/wave5-vpuapi.h  | 1 +
+>>  3 files changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-hw.c b/drivers/media/platform/chips-media/wave5/wave5-hw.c
+>> index f1e022fb148e..8ad7f3a28ae1 100644
+>> --- a/drivers/media/platform/chips-media/wave5/wave5-hw.c
+>> +++ b/drivers/media/platform/chips-media/wave5/wave5-hw.c
+>> @@ -1602,11 +1602,13 @@ int wave5_vpu_enc_init_seq(struct vpu_instance *inst)
+>>  	if (inst->std == W_AVC_ENC)
+>>  		vpu_write_reg(inst->dev, W5_CMD_ENC_SEQ_INTRA_PARAM, p_param->intra_qp |
+>>  				((p_param->intra_period & 0x7ff) << 6) |
+>> -				((p_param->avc_idr_period & 0x7ff) << 17));
+>> +				((p_param->avc_idr_period & 0x7ff) << 17) |
+>> +				(p_param->forced_idr_header_enable << 28));
+>
+>I can spot evident hard-coding of mask and bit shifts in here. In order to
+>continuously improve this driver code, I would like to see this (and the
+>following) magic number being defined with well named macros as a preparation
+>patch to this feature change.
+>
+>regards,
+>Nicolas
+>
+>>  	else if (inst->std == W_HEVC_ENC)
+>>  		vpu_write_reg(inst->dev, W5_CMD_ENC_SEQ_INTRA_PARAM,
+>>  			      p_param->decoding_refresh_type | (p_param->intra_qp << 3) |
+>> -				(p_param->intra_period << 16));
+>> +			      (p_param->forced_idr_header_enable << 9) |
+>> +			      (p_param->intra_period << 16));
+>>
+>>  	reg_val = (p_param->rdo_skip << 2) |
+>>  		(p_param->lambda_scaling_enable << 3) |
+>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
+>> index 0cb5bfb67258..761775216cd4 100644
+>> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
+>> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
+>> @@ -1125,6 +1125,9 @@ static int wave5_vpu_enc_s_ctrl(struct v4l2_ctrl *ctrl)
+>>  	case V4L2_CID_MPEG_VIDEO_H264_ENTROPY_MODE:
+>>  		inst->enc_param.entropy_coding_mode = ctrl->val;
+>>  		break;
+>> +	case V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR:
+>> +		inst->enc_param.forced_idr_header_enable = ctrl->val;
+>> +		break;
+>>  	case V4L2_CID_MIN_BUFFERS_FOR_OUTPUT:
+>>  		break;
+>>  	default:
+>> @@ -1292,6 +1295,7 @@ static void wave5_set_enc_openparam(struct enc_open_param *open_param,
+>>  		else
+>>  			open_param->wave_param.intra_refresh_arg = num_ctu_row;
+>>  	}
+>> +	open_param->wave_param.forced_idr_header_enable = input.forced_idr_header_enable;
+>>  }
+>>
+>>  static int initialize_sequence(struct vpu_instance *inst)
+>> @@ -1775,6 +1779,9 @@ static int wave5_vpu_open_enc(struct file *filp)
+>>  			  0, 1, 1, 0);
+>>  	v4l2_ctrl_new_std(v4l2_ctrl_hdl, &wave5_vpu_enc_ctrl_ops,
+>>  			  V4L2_CID_MIN_BUFFERS_FOR_OUTPUT, 1, 32, 1, 1);
+>> +	v4l2_ctrl_new_std(v4l2_ctrl_hdl, &wave5_vpu_enc_ctrl_ops,
+>> +			  V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR,
+>> +			  0, 1, 1, 0);
+>>
+>>  	if (v4l2_ctrl_hdl->error) {
+>>  		ret = -ENODEV;
+>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+>> index 352f6e904e50..3ad6118550ac 100644
+>> --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+>> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+>> @@ -566,6 +566,7 @@ struct enc_wave_param {
+>>  	u32 lambda_scaling_enable: 1; /* enable lambda scaling using custom GOP */
+>>  	u32 transform8x8_enable: 1; /* enable 8x8 intra prediction and 8x8 transform */
+>>  	u32 mb_level_rc_enable: 1; /* enable MB-level rate control */
+>> +	u32 forced_idr_header_enable: 1; /* enable header encoding before IDR frame */
+>>  };
+>>
+>>  struct enc_open_param {
+>
+>
