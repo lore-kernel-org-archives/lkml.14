@@ -1,85 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918C66E2DC;
-	Thu,  8 Feb 2024 11:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A336F079;
+	Thu,  8 Feb 2024 11:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707392278; cv=none; b=mzK62N0bOHWzT70+ozuYdfdL7Xz4eAGm2wKQI/tGUZRAa6XR9iZU8UWwoovBxWCaihKn7yAFbXhDnbNfVSww+2ErMaEdq3LgT8GR65mq3docbIcYnduHteA9SxuXzIRfpvNwXD5tU8jGFjRE/hkFRB7TylyXlsnR6wymQsm+RWA=
+	t=1707392471; cv=none; b=S8K9ubfolr0iuIWEMoPkbY/4GKhUWf4m4Oc34JMCJ5rbQ8w5T3MHamdIueW8yXUBcDQ0E4PvEz+7PqyAzGwmyv1s42/PfvJD6A7Ux2wKi//xxpvAg6hIBooXruUcJ9Qt1r46+q7PH/uqeFViTtxCbLxrY2hgPfH7lKb7J2Dyewk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707392278; c=relaxed/simple;
-	bh=r71RoIKN+p7IBDsZxy3keLwQy6qjvh5Oo6IsPvi4Tis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n5/elzhyzcYkdhPWxgdr+iJSRpOIZpvT5+NcKHECoinsR7n1d2GPEF3b5WOK0gTd1+cATfN28qL7EmZ56truW5GAu2QszTiBHYLu1zrNTPS0v3uzhAj07BkpL+l9ppKGw90/mF7fIzQAg/ujT5WrROu6vX8P5SxXaBBQOIQLcak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHjFfK91; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707392471; c=relaxed/simple;
+	bh=p6MmZDZ286zVVAy/pVq6azWTqolhe5LOY18uDbtN6ck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a2YyoCNQo5BU+uh5BCBjMtx07nK/A5HfP/1UHtWgEDYUc6x8N6uHl5O6/K9cYtRBXzI/jGrimilzQMssZLJxYMAXg/Vat59dnKywIIt0eboBUMlWC01k0UbJMlqK5K6O/oDbHxBbYojVvW6OwB6O7+UIe0yXwv90niGIYnco9oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOy9x9Rv; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHjFfK91"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A63DC433C7;
-	Thu,  8 Feb 2024 11:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707392278;
-	bh=r71RoIKN+p7IBDsZxy3keLwQy6qjvh5Oo6IsPvi4Tis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oHjFfK91dIuW9AMFWub1Z+oEXlaXk57o4+Ixv+EAwjqiBeWl2rwu8ARxmArj0N6se
-	 4nnZObUba5Nx2jPwxEjAwURTJL9Dr3Md/XIpb+MPZ4H5ZznpUJWR4sw/7153MAxwEX
-	 qUXcO/2Vb2Edka+umtf+LQggsUB+ozia6PPiRsg/EifbG0s9R+AjsfW7dA9GugsABK
-	 rbyU0iEie4+5KekGPjdbMW0wxnfGZCTK2TV8p2xtpC7CBBzE4+I7hghJBbQGbL5PYj
-	 ykwfNmqWNdZWX0UuDnAlLEg81aUFt00AfVlTSeOzEQiSxF3Sv2TYKygio+1hGuU2+U
-	 cL0IWzUE64oAg==
-Date: Thu, 8 Feb 2024 11:37:54 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	srinivas.kandagatla@linaro.org, bgoswami@quicinc.com,
-	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.7 07/44] ASoC: codecs: wcd934x: drop unneeded
- regulator include
-Message-ID: <ZcS9EmcM1rtsNYy0@finisterre.sirena.org.uk>
-References: <20240207212142.1399-1-sashal@kernel.org>
- <20240207212142.1399-7-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOy9x9Rv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707392469; x=1738928469;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=p6MmZDZ286zVVAy/pVq6azWTqolhe5LOY18uDbtN6ck=;
+  b=aOy9x9RvczTnyD9bmX5OeCR94+C8Tnnvv2xNBYJFNc/rvJON4/MrJjmf
+   Oe5SrjsCQ4NRA0JQEQcjtoK55sVouD2eSGGsbJxxhTriyP2f1d+mVaME2
+   aMaVkyRCdBk4PaOw2ub9E9OdWoFX5iH1oTDSftyILXBr/Wj6dwTLznEbS
+   7DHTA2JDNsMnbROxNinXpFD3ZY6FUphKJ3ComaKUbUwIO0m3IUvSaPoi9
+   A4v4KJUSe/D7U7tG9MYs/52iUDPDP7D5/dDtx6Pqt3udDZJSJiJSoCcmV
+   BPWp4Smyvq76t17FRuUbYpU8qJinAXgLtsvggvm+1gdx3tuKPGTWpiPYt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1091981"
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1091981"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:41:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1914877"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.219.88])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:41:02 -0800
+Message-ID: <86490ec4-423e-4a7d-881b-56c47b3320ce@intel.com>
+Date: Thu, 8 Feb 2024 13:40:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Y3Ic8DwDm+OAu+TF"
-Content-Disposition: inline
-In-Reply-To: <20240207212142.1399-7-sashal@kernel.org>
-X-Cookie: You might have mail.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 00/11] perf/core: Add ability for an event to "pause"
+ or "resume" AUX area tracing
+To: James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240111081914.3123-1-adrian.hunter@intel.com>
+ <31bae596-ecb1-4b9c-9f1c-aaec4bcefd38@intel.com>
+ <CAP-5=fUo96EABpH6=7i2cXFmZhAB2MM=UsnG-+vL4HJtLGS=bA@mail.gmail.com>
+ <a4c616ff-12bf-592b-b74d-407013a68cb7@arm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <a4c616ff-12bf-592b-b74d-407013a68cb7@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 1/02/24 18:29, James Clark wrote:
+> 
+> 
+> On 31/01/2024 16:53, Ian Rogers wrote:
+>> On Mon, Jan 29, 2024 at 4:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>
+>>> On 11/01/24 10:19, Adrian Hunter wrote:
+>>>> Hi
+>>>>
+>>>> Hardware traces, such as instruction traces, can produce a vast amount of
+>>>> trace data, so being able to reduce tracing to more specific circumstances
+>>>> can be useful.
+>>>>
+>>>> The ability to pause or resume tracing when another event happens, can do
+>>>> that.
+>>>>
+>>>> These patches add such a facilty and show how it would work for Intel
+>>>> Processor Trace.
+>>>>
+>>>> Maintainers of other AUX area tracing implementations are requested to
+>>>> consider if this is something they might employ and then whether or not
+>>>> the ABI would work for them.
+>>>>
+>>>> Changes to perf tools are now (since V4) fleshed out.
+>>>>
+>>>>
+>>>> Changes in V4:
+>>>>
+>>>>     perf/core: Add aux_pause, aux_resume, aux_start_paused
+>>>>       Rename aux_output_cfg -> aux_action
+>>>>       Reorder aux_action bits from:
+>>>>               aux_pause, aux_resume, aux_start_paused
+>>>>       to:
+>>>>               aux_start_paused, aux_pause, aux_resume
+>>>>       Fix aux_action bits __u64 -> __u32
+>>>>
+>>>>     coresight: Have a stab at support for pause / resume
+>>>>       Dropped
+>>>>
+>>>>     perf tools
+>>>>       All new patches
+>>>>
+>>>> Changes in RFC V3:
+>>>>
+>>>>     coresight: Have a stab at support for pause / resume
+>>>>       'mode' -> 'flags' so it at least compiles
+>>>>
+>>>> Changes in RFC V2:
+>>>>
+>>>>       Use ->stop() / ->start() instead of ->pause_resume()
+>>>>       Move aux_start_paused bit into aux_output_cfg
+>>>>       Tighten up when Intel PT pause / resume is allowed
+>>>>       Add an example of how it might work for CoreSight
+>>>
+>>> Any more comments?
+>>
+>> I think the tools side looks good. The parsing changes match the
+>> existing style. I wonder if it wouldn't be better to handle the valid
+>> strings (pause, resume, etc.) in the lexer rather than a separate
+>> parse function, but the pattern used matches the existing one. You can
+>> have my Acked-by on the tools changes, although the subtleties of ARM
+>> PMUs makes me somewhat nervous in this regard.
+>>
+>> Thanks,
+>> Ian
+> 
+> Acked-by: James Clark <james.clark@arm.com>
+> 
+> I will get round to adding the Coresight support at some point. I
+> checked the new parsing in this version and it seems to work ok.
 
---Y3Ic8DwDm+OAu+TF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 07, 2024 at 04:20:34PM -0500, Sasha Levin wrote:
-> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
-> [ Upstream commit 35314e39dabcfb256832654ad0e856a9fba744bd ]
->=20
-> Driver does not use any regulator code, so drop redundant include of
-> regulator/consumer.h header.
-
-This doesn't seem like an obvious stable candidate...
-
---Y3Ic8DwDm+OAu+TF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXEvREACgkQJNaLcl1U
-h9BN2Af/USv2MQK7rWzBfIWGhMZ4Xk4a2piJqomP7DM4NMIIDgUMNwjDHJjGLnt6
-n4IThpQeGFxDWva3CapyOTthWZcu6KvzR6AzoiT0+aEEvmJ7USKck6KGqgkDZdBG
-vgY79RdHhNsVSvHMqHhl+66BkUzhA1Pz/Trn3HrxNYZbiVAIuqZWY73sgbSVXYp/
-g/yzWtGih1JY+CdXGOsdPObR5pI9S40ptWERUhppeB672t+yY/TM86HXpXRqpVKA
-YJ7lXThB3kZaCc2t1LhGEmBtgxdBzAfopPldgpfJrb/eAVauMV7N/M94FalJvwgQ
-zPb0RfE3fKuJW/VnM1ljgNxFwL04zw==
-=wjDO
------END PGP SIGNATURE-----
-
---Y3Ic8DwDm+OAu+TF--
+Thanks James and Ian!
