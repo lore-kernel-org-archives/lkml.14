@@ -1,205 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C011D69300;
-	Thu,  8 Feb 2024 14:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA47067A01
+	for <linux-kernel@vger.kernel.org>; Thu,  8 Feb 2024 14:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707403573; cv=none; b=L/xALv6rolQ69/W74oWyJAIYU/7SDcOdMFUAROaLhgwZ3SKpF4X4S16pmmokteSSZQMXw56BGthWB7psWid+sI949ReMXzGhb7rYDvYs+hRnbscGl5QiXOFnlEC7xM6Rh4lreonLj5aFJxIQO5ywPaZ2c18zJ/9wu9jiTvBTImU=
+	t=1707403835; cv=none; b=bTYJIh9E4NIx3TcuOhtYwk+uZknHZZ7FPR0J0q0WvrRvZGWXVkhIvhsI2mRJY3C53lxLeStCJbTuJF+SEKmZjS9Yqu+03j+1feBkrEvM/nhrpIOEO8Oludj78tsdctjw6uQPrtNP/EDhbhLAx/3II45dtU2qUuB5usrLVavgPPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707403573; c=relaxed/simple;
-	bh=Ycp/275UvtnRb1jLK/6lublEGbsUfigtHuXe5sUsrlI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A+E5FrtAJi0oe7Be2vdejpyAPThaUF8v8mC+8WsmYXeBuxB/G6VYtkd5qqxM6xSwdgfWbhYlfKHTwYfWxnYDu1E9WmXyrlzdzyyITpeSELdmtFwx2d4EsD9/Qsa6X1TAO2pUEae3lc+wgVAkhS0PTpC7I9xISLwDqwJb+NPAZdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E1lymJLx; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707403835; c=relaxed/simple;
+	bh=x/YVZfjdNfpe+Sx6imXL9gORrTESWB+MUbneEnPObG4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IbEzlLEfy7YK7ZQ6EDSfJi6rfJufccLcngUX8tp1x5sqsFPd407L7uXRHPkX+pEgo+HaTWlgLaRKqaq5vekeEEXTGWcH0tfyNBvAlazWP++xeWMm/T1OuQvpAemejRqYTCCrLhVuu7ByYBym/vwPZuZIUSE/v1MDUXozfA3MIXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZYWDF5v3; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E1lymJLx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707403571; x=1738939571;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ycp/275UvtnRb1jLK/6lublEGbsUfigtHuXe5sUsrlI=;
-  b=E1lymJLxAtmSs/6pRzof05u+1YvHlW4FqiNduLF7XIk8prQx059lDx6u
-   fbt4o09nD7jGwBDvB+kMsvnJDoA149BwltG08NVjO9b5s3eDUI9mt7Dnd
-   hPtEhjeDyM5CTc1UgImHEKeOzOJ6YTHK3DmXfKQblLaaQAygCzF1ipOHI
-   22cX6U+wvdXb+d3W1CEzmpVfX/3M9M0NQQq2J6+w1xejU0/7k+WMPhsBq
-   AlkbpB3X3eaZJvc6+dHdKG411eCeH2bPtDL3gu9vfwXmJVbKOqkG3qxrX
-   AoUbVnsd8xIW3pP+sBKhLto0s7XBSM7fbRsNhuZpQQcIV4D8iv9k3rOf9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1384812"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1384812"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 06:46:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1658892"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.52.95])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 06:46:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 Feb 2024 16:46:04 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: Netdev <netdev@vger.kernel.org>, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 7/8] tools: Fix errors in meter_certificate display
-In-Reply-To: <20240201010747.471141-8-david.e.box@linux.intel.com>
-Message-ID: <654cf0d5-e6c4-ac98-154a-29c0536ae2a4@linux.intel.com>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com> <20240201010747.471141-8-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZYWDF5v3"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5101cd91017so2224087e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 06:50:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707403832; x=1708008632; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=isFytFDXARzCh2Jm6b6WyMr5DRIgqurmR16IdjoLmWw=;
+        b=ZYWDF5v3IdJ4ij+F4pMxK0TSEOjpIiARZHLwGjv0UOkGRm2sVFoLtN7OckQhP89Apm
+         djuYs8i91Rdx1ZWyfhYYh/jiMiKeam9z7XFW4qS6Z9kqoGa2dw+7yfoI3MudEkhU37iR
+         623Jyvb/ftq5TA1vFiIWrccOAycNwhQVH/5dPxNuhINaC5J7YlyoWHriApCicXc+na4I
+         GH0WF5UTujG++lDWG6yiyFproZnRIlloT7Lbn2E6QU3qrrRY+qK/d/BJgRw9QhdfMOem
+         w386qHcW3mT6LHblB2baJE3tm3orYeNL//TH004tbaa9+xsfQ9IvaUwQo7q5Sb6ASexH
+         E33w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707403832; x=1708008632;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=isFytFDXARzCh2Jm6b6WyMr5DRIgqurmR16IdjoLmWw=;
+        b=A1r7JfjgGGJQ9dg7KjQ2zj+GzTxTMuv7vS7ZrmRW/ZdRV7dX0NfdKoXBHO7eyKAgqj
+         GXeaZBn4W9BnewiOyxWZEwzK6DO5BjidBk/kTpfSNqtTGYgYDJ7D39TI/1GUlDdLP3jO
+         YrBVS/YBQvlFDif/TF757xJn9BKiSKyV1glhUaW2bV5kdgM/CuJ7ymb/24NC4NmjQRFT
+         ejb6WYLEjuWPg9X634b5eVkLVMRtgbCeMbfGM8IUkqYOHGTkBJQi7vlDFtf8ymi7elEC
+         1qTHwtlt/A3O/A4FMqIsuw7NQwfHnn+w1s6Xf09tWgU4R2bWxmFMJNn/gvEmC2OCs9BH
+         UcBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnYyi/ouSA7+p6Kn1sPdObSw3oTps6DOTB3TwmzOdBekKJlE9jOcWkqj43jStBwQyOp6Da+NQ9ebDi0TNY/G1c2GbPA3QBOUDqgaCj
+X-Gm-Message-State: AOJu0YwvRivxOX3TI/8IV7eq2ZlW7cPn4cdenzIbjbBq86zXuEHQAQ9J
+	LeCNOkXrbxKwTES0icgaEgWjrYaUt1TXthi60wiQdBaQeHAxXhQBzGd4TIFBQu4=
+X-Google-Smtp-Source: AGHT+IE5P6J4KgAgsuL0CsQE8iHKVUyxpqlXKbhBUrR1OdOwxJGpw7JPp6luC1UX32OF+2q+jVtXsA==
+X-Received: by 2002:ac2:5e9d:0:b0:511:60eb:cb1e with SMTP id b29-20020ac25e9d000000b0051160ebcb1emr5468828lfq.67.1707403831789;
+        Thu, 08 Feb 2024 06:50:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU889DrDkoP2EL0AQ5Awe3MnvmaThnO6wNUDDSKLLdLcLXSO01+Opd6tk6yqykwTUZs9JGEyU9uLk6UkHKOH3b6QJMwN+eQWdxsfBkRUnh1E7ecjhQ6zhekL6kCkzBwfbDz+aOhfJ2wUw5BYx5M1SZzZWorGD6WDIf+g8KNLbxTGwiu8zO73rN4Y9/KEZlmoOKxEDXttleer9tkLti7m/sGiFhoaqEor+PbZHE7HuW3X/IPGh8obaRVHPDc3ihESzcXKOzc5xyPPMW/M6qQ4BsrzRQrxaXuKUoRGg13o4RdX+kTIb7U2DkxEyV8QD4aj27rFA1dE+1uSGppFVUy
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id l4-20020ac25544000000b005114808a6a3sm18706lfk.168.2024.02.08.06.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 06:50:31 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 08 Feb 2024 16:50:27 +0200
+Subject: [PATCH v2] drm/msm/dpu: make "vblank timeout" more useful
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240208-fd-dpu-debug-timeout-v2-1-9f907f1bdd87@linaro.org>
+X-B4-Tracking: v=1; b=H4sIADLqxGUC/4WNQQ6CMBBFr0Jm7Zi2NgVccQ/DAugAkyglLW00h
+ LtbuYDL95L//g6BPFOAe7GDp8SB3ZJBXQoY5m6ZCNlmBiWUFlIYHC3aNaKlPk648Ytc3JBqWY6
+ iHyphbpCnq6eR32f20WaeOWzOf86XJH/2TzBJlGhsXRpVVdpo2Tx56by7Oj9BexzHFzdfS0C5A
+ AAA
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1528;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=x/YVZfjdNfpe+Sx6imXL9gORrTESWB+MUbneEnPObG4=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBlxOo3cq2IouUVB8De6f00vICVYzCDbalGwerEn
+ 5b+e6Wey8WJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZcTqNwAKCRCLPIo+Aiko
+ 1SpYB/9ulG3MmOsHSUbXR9H9Tq2M8lBcWigpdCj0CDDaOuXMQFDJk/Jjvu2xo9k6lT86PcKhf5x
+ QEE4Z8EAZai7fDQ0ugBk83nfi5loCR30Val4odndfGz3nF6dQFK1RoYcIIhMXHHR7yo6g/8NA1q
+ +R8lwDkp5TAT7KWWPk3siq/WbCgeOuYbUn+YdLgf6O5zFbBzvVFwYU+AdpZtu3YfqOl5da0g1wu
+ VTO8PJx280w5XFuTwyuZ74g3JKENeY7y7h3p7bIlldy69AhFLbJZnn61Ll/TMf1ar2ZqWVcDRqU
+ /CO85qi5PON2G/OoE5B5VxPqFK3vu5VgH20Ybw3esisaS8dy
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Wed, 31 Jan 2024, David E. Box wrote:
+We have several reports of vblank timeout messages. However after some
+debugging it was found that there might be different causes to that.
+To allow us to identify the DPU block that gets stuck, include the
+actual CTL_FLUSH value into the timeout message and trigger the devcore
+snapshot capture.
 
-> The maximum number of bundles in the meter certificate was hardcoded to
-> 8 which caused extra bundles not to display. Instead, since the bundles
-> appear at the end of the file, set it to the remaining size from where
-> the bundles start.
-> 
-> Add missing 'version' field to struct meter_certificate.
-> 
-> Fix errors in the calculation of the start position of the counters and
-> in the display loop.
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v2:
+- Added a call to msm_disp_snapshot_state() to trigger devcore dump
+  (Abhinav)
+- Link to v1: https://lore.kernel.org/r/20240106-fd-dpu-debug-timeout-v1-1-6d9762884641@linaro.org
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Why are all these bundled into a single commit? They sound like 
-independent changes.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index d0f56c5c4cce..a8d6165b3c0a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -489,7 +489,8 @@ static int dpu_encoder_phys_vid_wait_for_commit_done(
+ 		(hw_ctl->ops.get_flush_register(hw_ctl) == 0),
+ 		msecs_to_jiffies(50));
+ 	if (ret <= 0) {
+-		DPU_ERROR("vblank timeout\n");
++		DPU_ERROR("vblank timeout: %x\n", hw_ctl->ops.get_flush_register(hw_ctl));
++		msm_disp_snapshot_state(phys_enc->parent->dev);
+ 		return -ETIMEDOUT;
+ 	}
+ 
 
+---
+base-commit: 39676dfe52331dba909c617f213fdb21015c8d10
+change-id: 20240106-fd-dpu-debug-timeout-e917f0bc8063
+
+Best regards,
 -- 
- i.
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> Fixes: aad129780bae ("platform/x86/intel/sdsi: Add support for reading the current meter state")
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  tools/arch/x86/intel_sdsi/intel_sdsi.c | 51 +++++++++++++++-----------
->  1 file changed, 30 insertions(+), 21 deletions(-)
-> 
-> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> index 2cd92761f171..a8fb6d17405f 100644
-> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> @@ -43,7 +43,6 @@
->  #define METER_CERT_MAX_SIZE	4096
->  #define STATE_MAX_NUM_LICENSES	16
->  #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
-> -#define METER_MAX_NUM_BUNDLES	8
->  
->  #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
->  #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-> @@ -154,11 +153,12 @@ struct bundle_encoding {
->  };
->  
->  struct meter_certificate {
-> -	uint32_t block_signature;
-> +	uint32_t signature;
-> +	uint32_t version;
-> +	uint64_t ppin;
->  	uint32_t counter_unit;
-> -	uint64_t ppin;
->  	uint32_t bundle_length;
-> -	uint32_t reserved;
-> +	uint64_t reserved;
->  	uint32_t mmrc_encoding;
->  	uint32_t mmrc_counter;
->  };
-> @@ -167,6 +167,9 @@ struct bundle_encoding_counter {
->  	uint32_t encoding;
->  	uint32_t counter;
->  };
-> +#define METER_MAX_NUM_BUNDLES							\
-> +		(METER_CERT_MAX_SIZE - sizeof(struct meter_certificate) /	\
-> +		 sizeof(struct bundle_encoding_counter))
->  
->  struct sdsi_dev {
->  	struct sdsi_regs regs;
-> @@ -334,6 +337,7 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
->  	uint32_t count = 0;
->  	FILE *cert_ptr;
->  	int ret, size;
-> +	char name[4];
->  
->  	ret = sdsi_update_registers(s);
->  	if (ret)
-> @@ -375,32 +379,39 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
->  	printf("\n");
->  	printf("Meter certificate for device %s\n", s->dev_name);
->  	printf("\n");
-> -	printf("Block Signature:       0x%x\n", mc->block_signature);
-> -	printf("Count Unit:            %dms\n", mc->counter_unit);
-> -	printf("PPIN:                  0x%lx\n", mc->ppin);
-> -	printf("Feature Bundle Length: %d\n", mc->bundle_length);
-> -	printf("MMRC encoding:         %d\n", mc->mmrc_encoding);
-> -	printf("MMRC counter:          %d\n", mc->mmrc_counter);
-> +
-> +	get_feature(mc->signature, name);
-> +	printf("Signature:                    %.4s\n", name);
-> +
-> +	printf("Version:                      %d\n", mc->version);
-> +	printf("Count Unit:                   %dms\n", mc->counter_unit);
-> +	printf("PPIN:                         0x%lx\n", mc->ppin);
-> +	printf("Feature Bundle Length:        %d\n", mc->bundle_length);
-> +
-> +	get_feature(mc->mmrc_encoding, name);
-> +	printf("MMRC encoding:                %.4s\n", name);
-> +
-> +	printf("MMRC counter:                 %d\n", mc->mmrc_counter);
->  	if (mc->bundle_length % 8) {
->  		fprintf(stderr, "Invalid bundle length\n");
->  		return -1;
->  	}
->  
->  	if (mc->bundle_length > METER_MAX_NUM_BUNDLES * 8)  {
-> -		fprintf(stderr, "More than %d bundles: %d\n",
-> +		fprintf(stderr, "More than %ld bundles: actual %d\n",
->  			METER_MAX_NUM_BUNDLES, mc->bundle_length / 8);
->  		return -1;
->  	}
->  
-> -	bec = (void *)(mc) + sizeof(mc);
-> +	bec = (void *)(mc) + sizeof(*mc);
->  
-> -	printf("Number of Feature Counters:          %d\n", mc->bundle_length / 8);
-> -	while (count++ < mc->bundle_length / 8) {
-> -		char feature[5];
-> +	printf("Number of Feature Counters:   %d\n", mc->bundle_length / 8);
-> +	while (count < mc->bundle_length / 8) {
-> +		char feature[4];
->  
-> -		feature[4] = '\0';
->  		get_feature(bec[count].encoding, feature);
-> -		printf("    %s:          %d\n", feature, bec[count].counter);
-> +		printf("    %.4s:          %d\n", feature, bec[count].counter);
-> +		++count;
->  	}
->  
->  	return 0;
-> @@ -480,7 +491,7 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
->  			sizeof(*lki) +			// size of the license key info
->  			offset;				// offset to this blob content
->  		struct bundle_encoding *bundle = (void *)(lbc) + sizeof(*lbc);
-> -		char feature[5];
-> +		char feature[4];
->  		uint32_t i;
->  
->  		printf("     Blob %d:\n", count - 1);
-> @@ -493,11 +504,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
->  		printf("        Blob revision ID:           %u\n", lbc->rev_id);
->  		printf("        Number of Features:         %u\n", lbc->num_bundles);
->  
-> -		feature[4] = '\0';
-> -
->  		for (i = 0; i < min(lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE); i++) {
->  			get_feature(bundle[i].encoding, feature);
-> -			printf("                 Feature %d:         %s\n", i, feature);
-> +			printf("                 Feature %d:         %.4s\n", i, feature);
->  		}
->  
->  		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
-> 
