@@ -1,321 +1,117 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCAB69E16
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECC469E16
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707501352; cv=none; b=uHBQ34pu9Ca8fRPqYqI/Jr41ORMWxUx3sdIJf4M2rrLBlKcxTlUgtkNl64UDbg/DBZ+RemlZyE+/i7sPGcbpsVh4G+v3Y2bFIsxAPeSMKeSOcBpeqGhF/HUP8x4prK6vQWx8o5Uny/NJKHyGWR7zmLGo+aLmwZXmRg9a8Wdpzpc=
+	t=1707501373; cv=none; b=bi1iLNZj43QGLBcia+27Qbyk2uss436B65Mhf3rp0WXjR9zu01U4im2hnMOvD6kDsiRc2UoHgKWGckzMV+ZANThpD1VXVWxyi41oUw+qpESIxW8w5hogsm1c0CgmpLBtc6f0aXh44hN8pky4UMMAlalO2QCsMh2cK7cWFTueYZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707501352; c=relaxed/simple;
-	bh=RBWJR1Eh8vuN0h9bGi/ckIjItfaKvIijP5GV8KpjA6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LlyZ5YEtCJiXKZ0BPDby16n8iXC2FJKuDvaB6PfRkgBa9oYOF8SYs5eTL0hHV6Fx7DAg+xMsvmakTd/SPM8/ar85byURSZQijMPkhOOSWQyqD3rFYc8ZejtmRe5d81BWssSy+L/r9Lzq6eKDqAD/myxjdjEVlt7rFW65G+vVc/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Zo15Dvmb; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707501373; c=relaxed/simple;
+	bh=Vf9sTnp18c97Qa74hLutsqcRaj6j2Rea5/NTIJB8XkI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j/3Rhy51UWpBifddyW+z6eH4x2Xr5t20010BEhABcXYt0fF11evDkttKj/XYsxLvC7EhG+hvjwqUpeZNNNBh+LlnR/V4e6gF+OssRGrYoekXXDlIy7yLR8FMkDzn5P5Gj2Plvdg85NvHhZJJTQphb7r8rAOeWdVwPlT3MSFUicc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UZPGqns1; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Zo15Dvmb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707500883;
-	bh=RBWJR1Eh8vuN0h9bGi/ckIjItfaKvIijP5GV8KpjA6g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Zo15DvmbhKiWZ3g8bViki4F8JhXeNxInsld4DiG5mZ0IqCItf+wHi/EIXVzsUat8N
-	 UwinPaIi/47rIjEz206GtBO2+FIV0+yztwGFp+NI251s+yIXXOTJH8WcaxRLRD2NLb
-	 5GqXvOHgN5yE9JzyU5Qhs7qrsEMK1Pzwf9KShPl/yKlA3RV1UHN7UGh2vbKwDkCUWJ
-	 3PHBtbTpY4hTt5BMUOLV3zome9GKFPsMeJvg1HmAHlug32EsGCbPpQf42OLJ6vudSC
-	 FUz54tiv6WZwAph5yi7v7Qzsw/akbPxnSDpr1WwL9lvuenH6d0lY+1Uex/l9Z2iO1t
-	 1UazI/8BYvrOA==
-Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 50EEA37813B6;
-	Fri,  9 Feb 2024 17:47:59 +0000 (UTC)
-Message-ID: <ae4e612a-47d2-4190-8547-2c8dc13b2cd6@collabora.com>
-Date: Fri, 9 Feb 2024 14:47:56 -0300
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UZPGqns1"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d0ce2222a6so14433251fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 09:56:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1707501369; x=1708106169; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NoqTVJex4Iddq9y5fjMVxpMdqogqTy+7RDtEYo1Z2eY=;
+        b=UZPGqns1ddpe6PE8qep76DghxIZ54oub7dZQCE2ld456iSv0wQTTK1WqrvH5gsnz+J
+         ThgCjE92VR5XRff4s3ohXEaHmItKSRgRGGyAeeSCYqYIS14AwfBa3T91/+CcBxuXv5dy
+         5S2mi5tEO5XyFp0l1j1XI0c6dwu7iWzBkraLk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707501369; x=1708106169;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NoqTVJex4Iddq9y5fjMVxpMdqogqTy+7RDtEYo1Z2eY=;
+        b=wEt2ptOb0Ykqr+T/m2XWEYMnl7jf/6VE5TPkNgfO0v5npR2AKhYAwAw0Ez/oY6IVk7
+         AcqsCa7blBbIzkbhou6/PIu2nbOU+BR16D0iVEpaPZ56kwCX8OXydykQXK33/PMaljaZ
+         Gp0jD7r+/wHBlKmuuYe54knQjCW9FPMwCol0kWAo72hXVOWHtzERlNJypPC81E1wVRVc
+         l6dE0JWmU5EkwSazTfRVuVIGpgUOQk1cSLAzF8XG5cwLeiGbsrqpsAyBXJwOn3sAMCds
+         hFVCVurREFr2+wGPhQyQejlCRBhQiMioZcTon3WeDZhXG/W3ITL8PwjunO+VI3uf7TyJ
+         KjiQ==
+X-Gm-Message-State: AOJu0YyNdijdB9pvzZRgRkNywePlKOhHaJFW8NJuGy0OwVSuV7A23FEk
+	z+dtw4bVoISYDeF0htDorJnvkr8+cxsNuRfyC7rawDwrNz1rWDkFGarv7H8wZ55TDb5aCrnILAM
+	k
+X-Google-Smtp-Source: AGHT+IGdMBEwUJCdjS4Xl1O6cdui69S8UsaZwBEZN53SoiLoyGm1WaJYgV4sq540uGBgetfzuE1Qsw==
+X-Received: by 2002:a05:651c:10af:b0:2d0:aafc:9138 with SMTP id k15-20020a05651c10af00b002d0aafc9138mr1523179ljn.42.1707501369325;
+        Fri, 09 Feb 2024 09:56:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXtP79a02kjIguSNd3fi4FCMz9/YySbeOquqUQdwop8koNICAl0RasWL/hPqhL9NMoN2xRCCwHojfgW1ZV3LyADFesP4Cc0A/n+pW0V
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id o16-20020a2e90d0000000b002d0aa95176dsm331021ljg.29.2024.02.09.09.56.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Feb 2024 09:56:08 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d0a4e8444dso13775931fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 09:56:08 -0800 (PST)
+X-Received: by 2002:a2e:b057:0:b0:2d0:c9b5:7257 with SMTP id
+ d23-20020a2eb057000000b002d0c9b57257mr2002248ljl.8.1707501367696; Fri, 09 Feb
+ 2024 09:56:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] drm/ci: add tests on vkms
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- dri-devel@lists.freedesktop.org
-Cc: hamohammed.sa@gmail.com, daniels@collabora.com,
- rodrigosiqueiramelo@gmail.com, david.heidelberg@collabora.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- linux-kernel@vger.kernel.org, melissa.srw@gmail.com, mairacanal@riseup.net,
- daniel@ffwll.ch
-References: <20240201065346.801038-1-vignesh.raman@collabora.com>
-Content-Language: en-US
-From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240201065346.801038-1-vignesh.raman@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240208220604.140859-1-seanjc@google.com> <CAKwvOdk_obRUkD6WQHhS9uoFVe3HrgqH5h+FpqsNNgmj4cmvCQ@mail.gmail.com>
+ <DM6PR02MB40587AD6ABBF1814E9CCFA7CB84B2@DM6PR02MB4058.namprd02.prod.outlook.com>
+In-Reply-To: <DM6PR02MB40587AD6ABBF1814E9CCFA7CB84B2@DM6PR02MB4058.namprd02.prod.outlook.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 9 Feb 2024 09:55:50 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi3p5C1n03UYoQhgVDJbh_0ogCpwbgVGnOdGn6RJ6hnKA@mail.gmail.com>
+Message-ID: <CAHk-=wi3p5C1n03UYoQhgVDJbh_0ogCpwbgVGnOdGn6RJ6hnKA@mail.gmail.com>
+Subject: Re: [PATCH] Kconfig: Explicitly disable asm goto w/ outputs on gcc-11
+ (and earlier)
+To: "Andrew Pinski (QUIC)" <quic_apinski@quicinc.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, Sean Christopherson <seanjc@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 9 Feb 2024 at 09:14, Andrew Pinski (QUIC)
+<quic_apinski@quicinc.com> wrote:
+>
+> So the exact versions of GCC where this is/was fixed are:
+> 12.4.0 (not released yet)
+> 13.2.0
+> 14.1.0 (not released yet)
 
+Looking at the patch that the bugzilla says is the fix, it *looks*
+like it's just the "mark volatile" that is missing.
 
-On 01/02/2024 03:53, Vignesh Raman wrote:
-> Add job that runs igt on top of vkms.
-> 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-> Acked-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-> Tested-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> 
-> v2:
-> - do not mv modules to /lib/modules in the job definition, leave it to
->    crosvm-runner.sh
-> 
-> v3:
-> - Enable CONFIG_DRM_VKMS in x86_64.config and update xfails
-> 
-> v3:
-> - Build vkms as module and test with latest IGT.
->    This patch depends on https://lore.kernel.org/dri-devel/20240130150340.687871-1-vignesh.raman@collabora.com/
-> 
+But Sean says that  even if we mark "asm goto" as volatile manually,
+it still fails.
 
-Do you have a link of a pipeline with this job passing?
+So there seems to be something else going on in addition to just the volatile.
 
-Thanks
-Helen
+Side note: the reason we have that "asm_volatile_goto()" define in the
+kernel is that we *used* to have a _different_ workaround for a gcc
+bug in this area:
 
-> ---
->   MAINTAINERS                                   |  1 +
->   drivers/gpu/drm/ci/build.sh                   |  1 -
->   drivers/gpu/drm/ci/gitlab-ci.yml              |  2 +-
->   drivers/gpu/drm/ci/igt_runner.sh              |  6 ++--
->   drivers/gpu/drm/ci/image-tags.yml             |  2 +-
->   drivers/gpu/drm/ci/test.yml                   | 24 +++++++++++++-
->   drivers/gpu/drm/ci/x86_64.config              |  1 +
->   .../drm/ci/xfails/virtio_gpu-none-fails.txt   |  1 -
->   drivers/gpu/drm/ci/xfails/vkms-none-fails.txt | 32 +++++++++++++++++++
->   .../gpu/drm/ci/xfails/vkms-none-flakes.txt    | 19 +++++++++++
->   drivers/gpu/drm/ci/xfails/vkms-none-skips.txt | 16 ++++++++++
->   11 files changed, 97 insertions(+), 8 deletions(-)
->   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bcdc17d1aa26..09310a6f4b5f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6923,6 +6923,7 @@ L:	dri-devel@lists.freedesktop.org
->   S:	Maintained
->   T:	git git://anongit.freedesktop.org/drm/drm-misc
->   F:	Documentation/gpu/vkms.rst
-> +F:	drivers/gpu/drm/ci/xfails/vkms*
->   F:	drivers/gpu/drm/vkms/
->   
->   DRM DRIVER FOR VIRTUALBOX VIRTUAL GPU
-> diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
-> index 331a61e0d25a..2e089e03f061 100644
-> --- a/drivers/gpu/drm/ci/build.sh
-> +++ b/drivers/gpu/drm/ci/build.sh
-> @@ -152,7 +152,6 @@ fi
->   
->   mkdir -p artifacts/install/lib
->   mv install/* artifacts/install/.
-> -rm -rf artifacts/install/modules
->   ln -s common artifacts/install/ci-common
->   cp .config artifacts/${CI_JOB_NAME}_config
->   
-> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-> index e2b021616a8e..c69fb6af4cf8 100644
-> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
-> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-> @@ -107,7 +107,7 @@ stages:
->     - meson
->     - msm
->     - rockchip
-> -  - virtio-gpu
-> +  - software-driver
->   
->   # YAML anchors for rule conditions
->   # --------------------------------
-> diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
-> index 2fd09b9b7cf6..3c7f000805e5 100755
-> --- a/drivers/gpu/drm/ci/igt_runner.sh
-> +++ b/drivers/gpu/drm/ci/igt_runner.sh
-> @@ -20,10 +20,10 @@ cat /sys/kernel/debug/dri/*/state
->   set -e
->   
->   case "$DRIVER_NAME" in
-> -    amdgpu)
-> +    amdgpu|vkms)
->           # Cannot use HWCI_KERNEL_MODULES as at that point we don't have the module in /lib
-> -        mv /install/modules/lib/modules/* /lib/modules/.
-> -        modprobe amdgpu
-> +        mv /install/modules/lib/modules/* /lib/modules/. || true
-> +        modprobe --first-time $DRIVER_NAME
->           ;;
->   esac
->   
-> diff --git a/drivers/gpu/drm/ci/image-tags.yml b/drivers/gpu/drm/ci/image-tags.yml
-> index cf07c3e09b8c..bf861ab8b9c2 100644
-> --- a/drivers/gpu/drm/ci/image-tags.yml
-> +++ b/drivers/gpu/drm/ci/image-tags.yml
-> @@ -4,7 +4,7 @@ variables:
->      DEBIAN_BASE_TAG: "${CONTAINER_TAG}"
->   
->      DEBIAN_X86_64_BUILD_IMAGE_PATH: "debian/x86_64_build"
-> -   DEBIAN_BUILD_TAG: "2023-10-08-config"
-> +   DEBIAN_BUILD_TAG: "2024-01-29-vkms"
->   
->      KERNEL_ROOTFS_TAG: "2023-10-06-amd"
->      PKG_REPO_REV: "67f2c46b"
-> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-> index 8ab8a8f56d6a..58c3cf4b18e0 100644
-> --- a/drivers/gpu/drm/ci/test.yml
-> +++ b/drivers/gpu/drm/ci/test.yml
-> @@ -399,7 +399,7 @@ meson:g12b-display:
->       DRIVER_NAME: meson
->   
->   virtio_gpu:none:
-> -  stage: virtio-gpu
-> +  stage: software-driver
->     variables:
->       CROSVM_GALLIUM_DRIVER: llvmpipe
->       DRIVER_NAME: virtio_gpu
-> @@ -419,3 +419,25 @@ virtio_gpu:none:
->       - debian/x86_64_test-gl
->       - testing:x86_64
->       - igt:x86_64
-> +
-> +vkms:none:
-> +  stage: software-driver
-> +  variables:
-> +    DRIVER_NAME: vkms
-> +    GPU_VERSION: vkms-none
-> +  extends:
-> +    - .test-gl
-> +    - .test-rules
-> +  tags:
-> +    - kvm
-> +  script:
-> +    - ln -sf $CI_PROJECT_DIR/install /install
-> +    - mv install/bzImage /lava-files/bzImage
-> +    - mkdir -p /lib/modules
-> +    - mkdir -p $CI_PROJECT_DIR/results
-> +    - ln -sf $CI_PROJECT_DIR/results /results
-> +    - ./install/crosvm-runner.sh ./install/igt_runner.sh
-> +  needs:
-> +    - debian/x86_64_test-gl
-> +    - testing:x86_64
-> +    - igt:x86_64
-> diff --git a/drivers/gpu/drm/ci/x86_64.config b/drivers/gpu/drm/ci/x86_64.config
-> index 1cbd49a5b23a..8eaba388b141 100644
-> --- a/drivers/gpu/drm/ci/x86_64.config
-> +++ b/drivers/gpu/drm/ci/x86_64.config
-> @@ -24,6 +24,7 @@ CONFIG_DRM=y
->   CONFIG_DRM_PANEL_SIMPLE=y
->   CONFIG_PWM_CROS_EC=y
->   CONFIG_BACKLIGHT_PWM=y
-> +CONFIG_DRM_VKMS=m
->   
->   # Strip out some stuff we don't need for graphics testing, to reduce
->   # the build.
-> diff --git a/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt b/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt
-> index 007f21e56d89..f82d437909b5 100644
-> --- a/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt
-> @@ -41,7 +41,6 @@ kms_flip@flip-vs-absolute-wf_vblank,Fail
->   kms_flip@flip-vs-absolute-wf_vblank-interruptible,Fail
->   kms_flip@flip-vs-blocking-wf-vblank,Fail
->   kms_flip@flip-vs-expired-vblank,Fail
-> -kms_flip@flip-vs-expired-vblank-interruptible,Fail
->   kms_flip@flip-vs-modeset-vs-hang,Fail
->   kms_flip@flip-vs-panning-vs-hang,Fail
->   kms_flip@flip-vs-wf_vblank-interruptible,Fail
-> diff --git a/drivers/gpu/drm/ci/xfails/vkms-none-fails.txt b/drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
-> new file mode 100644
-> index 000000000000..a8b9d79d9a16
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
-> @@ -0,0 +1,32 @@
-> +kms_cursor_crc@cursor-rapid-movement-128x128,Fail
-> +kms_cursor_crc@cursor-rapid-movement-128x42,Fail
-> +kms_cursor_crc@cursor-rapid-movement-256x256,Fail
-> +kms_cursor_crc@cursor-rapid-movement-256x85,Fail
-> +kms_cursor_crc@cursor-rapid-movement-32x10,Fail
-> +kms_cursor_crc@cursor-rapid-movement-32x32,Fail
-> +kms_cursor_crc@cursor-rapid-movement-512x170,Fail
-> +kms_cursor_crc@cursor-rapid-movement-512x512,Fail
-> +kms_cursor_crc@cursor-rapid-movement-64x21,Fail
-> +kms_cursor_crc@cursor-rapid-movement-64x64,Fail
-> +kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
-> +kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
-> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
-> +kms_cursor_legacy@cursor-vs-flip-legacy,Fail
-> +kms_cursor_legacy@cursor-vs-flip-toggle,Fail
-> +kms_cursor_legacy@cursor-vs-flip-varying-size,Fail
-> +kms_cursor_legacy@flip-vs-cursor-atomic,Fail
-> +kms_cursor_legacy@flip-vs-cursor-crc-atomic,Fail
-> +kms_cursor_legacy@flip-vs-cursor-crc-legacy,Fail
-> +kms_cursor_legacy@flip-vs-cursor-legacy,Fail
-> +kms_flip@flip-vs-modeset-vs-hang,Fail
-> +kms_flip@flip-vs-panning-vs-hang,Fail
-> +kms_pipe_crc_basic@nonblocking-crc,Fail
-> +kms_pipe_crc_basic@nonblocking-crc-frame-sequence,Fail
-> +kms_pipe_crc_basic@suspend-read-crc,Fail
-> +kms_plane@plane-panning-bottom-right-suspend,Fail
-> +kms_universal_plane@universal-plane-pipe-A-sanity,Fail
-> +kms_vblank@pipe-A-ts-continuation-dpms-suspend,Fail
-> +kms_writeback@writeback-check-output,Fail
-> +kms_writeback@writeback-fb-id,Fail
-> +kms_writeback@writeback-invalid-parameters,Fail
-> +kms_writeback@writeback-pixel-formats,Fail
-> diff --git a/drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt b/drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
-> new file mode 100644
-> index 000000000000..18afbfcc1c52
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
-> @@ -0,0 +1,19 @@
-> +# Board Name: vkms
-> +# Bug Report: https://lore.kernel.org/dri-devel/005da8f1-8050-bffd-653c-2a87ae6376f7@collabora.com/T/#u
-> +# IGT Version: 1.28-gb0cc8160e
-> +# Linux Version: 6.7.0-rc3
-> +# Failure Rate: 50
-> +
-> +# Reported by deqp-runner
-> +kms_cursor_legacy@cursorA-vs-flipA-legacy
-> +kms_cursor_legacy@cursorA-vs-flipA-varying-size
-> +kms_flip@flip-vs-expired-vblank-interruptible
-> +kms_flip@flip-vs-expired-vblank
-> +kms_flip@plain-flip-fb-recreate
-> +kms_flip@plain-flip-fb-recreate-interruptible
-> +kms_flip@plain-flip-ts-check-interruptible
-> +
-> +# The below test shows inconsistency across multiple runs,
-> +# giving results of Pass and Fail alternately.
-> +kms_cursor_legacy@cursorA-vs-flipA-toggle
-> +kms_pipe_crc_basic@nonblocking-crc
-> diff --git a/drivers/gpu/drm/ci/xfails/vkms-none-skips.txt b/drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
-> new file mode 100644
-> index 000000000000..524e7972c75a
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
-> @@ -0,0 +1,16 @@
-> +# Hits:
-> +# rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> +# rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P749/1:b..l
-> +kms_prop_blob@invalid-get-prop
-> +
-> +# keeps printing vkms_vblank_simulate: vblank timer overrun and never ends
-> +kms_invalid_mode@int-max-clock
-> +
-> +# Suspend seems to be broken
-> +.*suspend.*
-> +
-> +# Hangs machine and timeout occurs
-> +kms_flip@flip-vs-absolute-wf_vblank-interruptible
-> +kms_invalid_mode@zero-hdisplay
-> +kms_invalid_mode@bad-vtotal
-> +kms_cursor_crc.*
+ /*
+  * GCC 'asm goto' miscompiles certain code sequences:
+  *
+  *   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58670
+  *
+  * Work it around via a compiler barrier quirk suggested by Jakub Jelinek.
+  *
+  * (asm goto is automatically volatile - the naming reflects this.)
+  */
+ #define asm_volatile_goto(x...) do { asm goto(x); asm (""); } while (0)
+
+and looking at that (old) bugzilla there seems to be a lot of "seems
+to be fixed", but it's not entirely clear.
+
+We've removed that workaround in commit 43c249ea0b1e ("compiler-gcc.h:
+remove ancient workaround for gcc PR 58670"), I'm wondering if maybe
+that removal was a bit optimistic.
+
+                Linus
