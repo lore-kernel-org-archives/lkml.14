@@ -1,292 +1,161 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2137.outbound.protection.outlook.com [40.107.247.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0BB69DFF
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 14:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707488953; cv=none; b=Ssd2KTZoa3UHA/jg8ORIXL7z1Z5G3eMxY9MYWCkMygromumSliZqw/nihQB7q2Rl1RfERuaf+GAz1okE/cQ6vkY/JsogDGAh32bBoFYG3q4/d8VfsFITjZ/p3DeGZEFmzFOTesnu6sELFectAY/e9dRBtYIb2N92RmN2L41+Z6s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707488953; c=relaxed/simple;
-	bh=8CpVZl2bJx8NP6Riuz2Y+yedCiDF5mfz2vl6gbJDV5I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=EBe7BGpfHX13qAhW2CiWd4vqco8dKA2m0c0kYoEVFyB+2n7rWBNWGq2VWpxvgSUfUMGpzExMbk2wZRjs7R+buovM6Mg9O1XaxzzQNgdAAHEwSk9JyJbvtqPqp9K7BBSuAxQY+XeBK+OP/IY8F+BW1G6H/0VN7CsY60w4jPkdqp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tjFYJKAe; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0500969D34;
+	Fri,  9 Feb 2024 14:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.137
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707489033; cv=fail; b=fiE8Y0O/ZptZ/4ZvGFR0bjR6ZBoGbWU+gvkHZiQRXYaFZMT0BuwhzzGlPCRqDISLRxVDz4vavwzLmM+mg1PwOQMVgcU4QIcqBunGt/TLL0Y8kPpzDaOW1mXF7KmuXunlWFPcfrBswKIqfGqaNck1kc3aZq5Fneg8X8a2DTaBvcw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707489033; c=relaxed/simple;
+	bh=U2phM+abfp8+ubwzCaZiw6vNdkIDVJLH5OsBGMcwwrI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=aWmQLoz+9Yu58NyBQmOWxDi4F4aioTzRkwiI0Na+kHpeOL1nNguk5jODLw8HnLQfUrEqICp9bAIhKdv8qxqbRRwKr3+e+wPqAhcocI9ju6tq3qd5ROYYydXdebhe14Vp6LSh8HnYavlDD0s44S8wkow9gjsH+Q5PK+7zZB+KtTM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vaisala.com; spf=pass smtp.mailfrom=vaisala.com; dkim=pass (2048-bit key) header.d=vaisala.com header.i=@vaisala.com header.b=U/xEDka5; arc=fail smtp.client-ip=40.107.247.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vaisala.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vaisala.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tjFYJKAe"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240209142908euoutp017d8614aa37188ed7b24f3fafa37562f2~yOCbnh6ME2778527785euoutp01j
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 14:29:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240209142908euoutp017d8614aa37188ed7b24f3fafa37562f2~yOCbnh6ME2778527785euoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707488948;
-	bh=a88W1Bbg0jxB2ngLMkFDtFwflxkCFGav4/gOzgelMLM=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=tjFYJKAebkiJIwpM50vhlXOLbPn0zREBKWRH/LD5cD5jan0ZiYFAg0HXrgf2WLmT+
-	 4J0RCX0UfX9sCyYkie2JirnYLxF74XihbO/qQ6de9Qxb5XZ4yxE+zw+c0hn6j4HAxs
-	 ASETTTjD5AfGyHF8E0CxWzVIEW020EKZorD5gM1E=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240209142908eucas1p16a6b31632e8d9865f952e959c973c8e5~yOCbPMlkz0281802818eucas1p1s;
-	Fri,  9 Feb 2024 14:29:08 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id B6.0E.09539.3B636C56; Fri,  9
-	Feb 2024 14:29:07 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240209142907eucas1p2c61ae37b2a1ca2caeccc48b2169226f2~yOCatdJaJ2253522535eucas1p2p;
-	Fri,  9 Feb 2024 14:29:07 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240209142907eusmtrp11d733555d1468f5959c30cb5a5a11e05~yOCasoSCp0528405284eusmtrp1H;
-	Fri,  9 Feb 2024 14:29:07 +0000 (GMT)
-X-AuditID: cbfec7f2-52bff70000002543-1c-65c636b3da7b
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id F5.B3.10702.3B636C56; Fri,  9
-	Feb 2024 14:29:07 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240209142907eusmtip1170d8fecd9e85f89a441b27f26df0489~yOCaisoha0140701407eusmtip1F;
-	Fri,  9 Feb 2024 14:29:07 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) with Microsoft SMTP
-	Server (TLS) id 15.0.1497.2; Fri, 9 Feb 2024 14:29:06 +0000
-Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
-	([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Fri, 9 Feb
-	2024 14:29:06 +0000
-From: Daniel Gomez <da.gomez@samsung.com>
-To: "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-	"brauner@kernel.org" <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>,
-	"hughd@google.com" <hughd@google.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>
-CC: "dagmcr@gmail.com" <dagmcr@gmail.com>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"willy@infradead.org" <willy@infradead.org>, "hch@infradead.org"
-	<hch@infradead.org>, "mcgrof@kernel.org" <mcgrof@kernel.org>, Pankaj Raghav
-	<p.raghav@samsung.com>, "gost.dev@samsung.com" <gost.dev@samsung.com>,
-	Daniel Gomez <da.gomez@samsung.com>
-Subject: [RFC PATCH 8/9] shmem: clear uptodate blocks after PUNCH_HOLE
-Thread-Topic: [RFC PATCH 8/9] shmem: clear uptodate blocks after PUNCH_HOLE
-Thread-Index: AQHaW2RVqhumUoqlFUi8PRO0fiHHFQ==
-Date: Fri, 9 Feb 2024 14:29:04 +0000
-Message-ID: <20240209142901.126894-9-da.gomez@samsung.com>
-In-Reply-To: <20240209142901.126894-1-da.gomez@samsung.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="U/xEDka5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F0PoBC5gFVScg5jwVmirrKGHf50owOk167ewxiMWjDQYVA6mY9AGG0no7sDcs79/iuNPq6mZLOY3QGrjxdEKbredoxa2mY+0xwQarrvc0xIP3VZ4PgFpN7PELu2YpZHxwUwChk7E8KlwlahrxnQZluvHjiVWzv//IeDlBx7NYHTHvQQeyzBkCYqnJKc5uNjj7T/bA36s+36MoVv9uK2VsPDeSsynQbo6EqizYR8cburE+ABhBaXXxgcEccGafYtdAmLHi2LbfHSJfRkQggzzNKgOKxJA4GzekWJEiSzbNXWaQVG/cPSyeKP//QJ8rEVlyx2acPtsYf7zAynVVVcE0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kfJVkj8byHgGgoRSZY/a/EQ+ehk+0NqskUsJfzop2vg=;
+ b=CM6g71ndSLYqO1QEMF2XCsm5zyi+Hz6nm7GLMT+5oG9R6sBfOEfDsXyuKFhb7fZT938Okyr6ubcG7RB68FXtUDrLa4MLHJxJTUZTtuKZ79wlIiSPorEsIEaz1cW/yDhMyh7ct1QyQiLRKHEHRDhseUb506XOxf8m87s0AXb67T48t7BY+9gpYTTYOPRZSEs0t0p5c3N2qopY3Bv3f2x9x2pJqHUgK5f+tLH5iDsORk5QO4uUwmEyw46diRq5hCB/pjaeIlGWMg38Cm3BqKgDIjBNSC4m7W2XLXXdDmfsVlmuJlU9cXm5h6bGXW67nTjDKctk2z1MVP9FB7CHaERkZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
+ dkim=pass header.d=vaisala.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kfJVkj8byHgGgoRSZY/a/EQ+ehk+0NqskUsJfzop2vg=;
+ b=U/xEDka5As+T9VhtlQXyL+C+4aQ6oefvuQQpwxIKJbBMLLqS7If5oiS1IV9QGhW1it/GQg4xYiNSIgzz1JNfBXaYVqZmT8XXzNiLh05smp6eQXYR6egbzhptdLG9m6xHS3atG+QZf39PWCcBQnWy4kr/XIxJDInUBcFBGSumMYwuAW1jg0UWyGoZyPwjzkCJeGY23eLQuuSt9bM4D9DJLY0a3HtiRSgNdB6x8akzmRqFCfTqC/xGyARFxDbcIkcExHXGAjpLHBgJbG4sPt9zZgrmj7O5qSX0k8QrMKd0VJa2QI6Tdo8rk6GrR4o/leZN1YKi+djjrTQBspI0DtqlWg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vaisala.com;
+Received: from AS4PR06MB8447.eurprd06.prod.outlook.com (2603:10a6:20b:4e2::11)
+ by DB9PR06MB7386.eurprd06.prod.outlook.com (2603:10a6:10:252::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.24; Fri, 9 Feb
+ 2024 14:30:25 +0000
+Received: from AS4PR06MB8447.eurprd06.prod.outlook.com
+ ([fe80::b5ae:8355:acaf:29e0]) by AS4PR06MB8447.eurprd06.prod.outlook.com
+ ([fe80::b5ae:8355:acaf:29e0%4]) with mapi id 15.20.7270.025; Fri, 9 Feb 2024
+ 14:30:24 +0000
+From: niko.mauno@vaisala.com
+To: gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	vesa.jaaskelainen@vaisala.com,
+	geert@linux-m68k.org,
+	Niko Mauno <niko.mauno@vaisala.com>
+Subject: [PATCH] usb: core: Kconfig: Improve USB authorization mode help
+Date: Fri,  9 Feb 2024 16:29:51 +0200
+Message-Id: <20240209142951.27195-1-niko.mauno@vaisala.com>
+X-Mailer: git-send-email 2.39.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR06CA0117.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::22) To AS4PR06MB8447.eurprd06.prod.outlook.com
+ (2603:10a6:20b:4e2::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsWy7djPc7qbzY6lGnhYzFm/hs3i9eFPjBZn
-	+36zWZyesIjJ4umnPhaL2dObmSz27D3JYnF51xw2i3tr/rNa3JjwlNHi/N/jrBa/f8xhc+Dx
-	2DnrLrvHgk2lHptXaHlsWtXJ5rHp0yR2jxMzfrN4nFlwhN3j8yY5j01P3jIFcEZx2aSk5mSW
-	pRbp2yVwZZz/spat4Kh6RcOu1cwNjB/kuxg5OSQETCS+Ld3NAmILCaxglLjXkdrFyAVkf2GU
-	uHp7LROE85lRYs/XJrYuRg6wjt+3MiAaljNKfPuTDlezousYI4RzmlFi2eaNjHBjd01VB7HZ
-	BDQl9p3cxA5SJCLwnFGidfdHMIdZ4CazxLWr59lAqoQF3CQ+vt4AdpSIgLfEgcN/oWw9ibtb
-	3jKB2CwCKhJrdpxgBDmJV8BK4vkkP5Awp4C1xLxH68HGMArISjxa+YsdxGYWEJe49WQ+E8TP
-	ghKLZu9hhrDFJP7tesgGYetInL3+hBHCNpDYunQfC4StKNFx7CYbxBw9iRtTp0DZ2hLLFr4G
-	m8MLNPPkzCcsIL9ICDRxSTyf1c0O0ewisbN3ItQyYYlXx7dAxWUkTk/uYZnAqD0LyX2zkOyY
-	hWTHLCQ7FjCyrGIUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMbaf/Hf+0g3Huq496hxiZ
-	OBgPMUpwMCuJ8IYsOZIqxJuSWFmVWpQfX1Sak1p8iFGag0VJnFc1RT5VSCA9sSQ1OzW1ILUI
-	JsvEwSnVwFTMosD6fcXKB0qMJq97jYyXtCwWZ0iznmP0Qu/bH+3IPXGqqx2kdzQUzNB98UZE
-	6R7vhUX/5nE0O7rvN/ovr9msH7NsRkrzDVmDth9d7/9e4VeR7pDvlfd++TRIddPBGfN9sjK5
-	XgpY/yt4/KFJcbfJA9VO9y3X/V8vt522Wjj2OZ9qY5bLtHbGE2uVwvznH3wYwfnLOY+3ZFfN
-	hpV7GfcEfqn/2hHNr9w/T+f4ok/3da1PTbwS3fI76fKV5PBtxw071ay/P4p+7eYh837ere8P
-	Fqn/Vrr6uXGFhGbb44vXC+edWNrw+umB5R088RW3j3x2b2qZ/mKOyjzdZeYn2Dy33ObO2ntS
-	Qv7jrsOP2DmUWIozEg21mIuKEwFdoFWY3AMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGKsWRmVeSWpSXmKPExsVy+t/xu7qbzY6lGtyfJ2UxZ/0aNovXhz8x
-	Wpzt+81mcXrCIiaLp5/6WCxmT29mstiz9ySLxeVdc9gs7q35z2pxY8JTRovzf4+zWvz+MYfN
-	gcdj56y77B4LNpV6bF6h5bFpVSebx6ZPk9g9Tsz4zeJxZsERdo/Pm+Q8Nj15yxTAGaVnU5Rf
-	WpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXcf7LWraCo+oV
-	DbtWMzcwfpDvYuTgkBAwkfh9K6OLkYtDSGApo8TJ+X/Yuhg5geIyEhu/XGWFsIUl/lzrAosL
-	CXxklHj6owTCPs0o8WRuEETzCkaJYx+6wYrYBDQl9p3cxA6SEBF4yigx/fchFpAEs8BNZokv
-	b8RAbGEBN4mPrzeAxUUEvCUOHP4LZetJ3N3ylgnEZhFQkViz4wQjyKW8AlYSzyf5QSy2kpi2
-	/TTYLk4Ba4l5j9aD2YwCshKPVv5ih1glLnHryXwmiAcEJJbsOc8MYYtKvHz8D+oxHYmz158w
-	QtgGEluX7mOBsBUlOo7dZIOYoydxY+oUKFtbYtnC12BzeAUEJU7OfMIygVF6FpJ1s5C0zELS
-	MgtJywJGllWMIqmlxbnpucVGesWJucWleel6yfm5mxiBCWrbsZ9bdjCufPVR7xAjEwfjIUYJ
-	DmYlEd6QJUdShXhTEiurUovy44tKc1KLDzGaAoNoIrOUaHI+MEXmlcQbmhmYGpqYWRqYWpoZ
-	K4nzehZ0JAoJpCeWpGanphakFsH0MXFwSjUwaQVlVb6a+1XoycnNbsv8ipIy9Kwc/F2+Xuuv
-	2PbTb46RUtKNvelfIuf9P2mbYep98O66x1wVb+42sGg0380ueqExp/L/dR42+xNaz48p7inV
-	rjU0MLt1Y/lXo54k01bdrNOTPVn5d7vULH2iueFYvY3kpllct1bnGc5Yy3/Pr/J+a0q0UmZN
-	mVlup7lcl+bDGX6Mu51lGPmWzwyNjSirMAwJCbnx0bQkqnfFhojaG1m6713P9mlG+zd4/NXg
-	/6N2041D88lc9zundxQ+D/WztCxycZp0foKrkvoNTocNx7fWHliclC0pk2rrKpyeISS57mXR
-	iX0xRy7dUrsq0Cq02mSuejtbv6tLf++laUosxRmJhlrMRcWJABo8BnvZAwAA
-X-CMS-MailID: 20240209142907eucas1p2c61ae37b2a1ca2caeccc48b2169226f2
-X-Msg-Generator: CA
-X-RootMTR: 20240209142907eucas1p2c61ae37b2a1ca2caeccc48b2169226f2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240209142907eucas1p2c61ae37b2a1ca2caeccc48b2169226f2
-References: <20240209142901.126894-1-da.gomez@samsung.com>
-	<CGME20240209142907eucas1p2c61ae37b2a1ca2caeccc48b2169226f2@eucas1p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR06MB8447:EE_|DB9PR06MB7386:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e2ba728-1159-4062-b979-08dc297ba700
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7sIc96Fwm0sDiieXbZdCAg2jmaTTG/CCk+qdu5ebnt4HyJunTQ3s6hoSqbl7R6KiBeRWsyr6Tz6gzLm2QbozkfcksT1vrF49taoD7PvnlXMjqmiS7NAkF3Dh/lNK7YgT4ZCiE2BtbXcPq7fuMMbLPbdnqhvtmEx19wIasbfcMsKF4ZnftHunq/blG06eu98Rbhpf6C5I0bocpNTOKh2C0+50hcqlSIwsx1CeACwrq7G04e+zlAuH49UVQHICWutB6hOg7HVmdq8fibcsCypsIoRxLuKPFOYEYb5ACO7GZqqZzepp2cuwMiTfO8j8ioRx4MrytB83PGoN20JbIPcXjpQ/tcOFqnPnn0E22c2ZFHJLLgj5xFq1Mm/Rc1OTZTy9F7ASWFV4NXpipZPl5yZoWDu9kG2VoLDAZE8MTTS7IEsst15MPjrzA2Y91dzGxR7j8Dou9drun66ZDMPHlXHZnVpkTzisQjbyLFRnBBOPa/NJwdYy6TlAP6dCrTkoJKj3Es3gTgpSeSSWgvo5lUhK5To9PQafL4MrjpEt9nc1hhP0KvsakZo4XNpffnCLkEm/NeX+11ONhXJazMpbBFipG01HcsQGe/28TX5JxUj25Q5nq+bA9ZqseSHkUCRNIC2W
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR06MB8447.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(136003)(366004)(39850400004)(230922051799003)(230273577357003)(64100799003)(1800799012)(186009)(451199024)(6666004)(52116002)(2906002)(5660300002)(316002)(41300700001)(38350700005)(8676002)(66476007)(66946007)(478600001)(6506007)(6512007)(6486002)(9686003)(66556008)(4326008)(8936002)(6916009)(107886003)(2616005)(83380400001)(38100700002)(36756003)(86362001)(1076003)(26005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gyTmNr9hZs/OSSr1RXsFaVmiyAWeWPlmOkMihQfaHzzkmqTZ6e++HfyPKzCd?=
+ =?us-ascii?Q?a+ajbNTNTr7WxP4ycvZGHJlNvYQ157JY0EuKCVgxpClJlWAIJnlwrN+t+CFS?=
+ =?us-ascii?Q?a6/ftDOrekV7Zi5JLXkNXIGib2RmoWKrVuotGvVzoaK2bGZzLCi8hIHWyVvO?=
+ =?us-ascii?Q?bn40neYgRPLpx4o/r/X6vzxBvtOGu5QC8yW/UN5t6Cb70lmNVsNT5SxI8ogF?=
+ =?us-ascii?Q?QMSskyqrmLjHd+yJpteK5fzMwnx8HiVdAhqfMEV0MP8/skA43t5ns7Q7unbX?=
+ =?us-ascii?Q?JAkeXtHu9sGwJErATaA7yg1Rkljv1A74ltfzVdw2XP4LJiS4QbCO5Iaa2pn7?=
+ =?us-ascii?Q?XXtIlFF8A1bFo02Sxm0B/IP0Br3dm6duqd4vVvDZ3xiVb99aGWytibhuPZJV?=
+ =?us-ascii?Q?JKFHQynDIzSMHrDFMpeqLHyRcPMfJVPIrY7+Xv5YDJPFi08ZPZUJZcZ2Aszl?=
+ =?us-ascii?Q?XJIHumYTCl+cbNXRtJUwBl0Z5qvwnOLGY3lsR9fvSMPVLww6svSsnIl3aBYK?=
+ =?us-ascii?Q?RTe1SWuXPyznhjYIvZFC8o0DZh7DA7N3vn/bJalHKJVw2JcXjaAaIc8gOLSR?=
+ =?us-ascii?Q?ixsjAKRyOpx2E580/Q/bb5mZ0bKWzs80YHtaQlip3XPqyvdG5Go6x5ZQZMvI?=
+ =?us-ascii?Q?3OStHjKnV9Wwa58Jwi9WgFZGZUbtEOEEZpEWjtVcFlYVK2FB+AwdaoVJrn3J?=
+ =?us-ascii?Q?YLC0sXYLbd+n+++qfrPf+n8Ww2M9BTtZAQpkySW8xY8bOZ74LF0GMSCvQ+RV?=
+ =?us-ascii?Q?wLxJd2xnCjhaR29osxAEzeyzOzvmJIzVcm3FP7ZK0GFVyQu4KF/PhtV34Dw6?=
+ =?us-ascii?Q?7TXQ+7l8Y51TgkeRksk5jsr5vP+CgabMcOgcbW6XVA8fg+Tufs6P2BDSMF1m?=
+ =?us-ascii?Q?YsC7/bazV2GQzXpXYUJvJ2ZzHT0VtPp18KXVAZHfW78I5OiYR5q4NGc9SdJO?=
+ =?us-ascii?Q?uMJkiDiyYzNIhJSgJl4HzP1k/fbRgDQAzApTnLKQj/z8E3VB3Ux/+AnkE75w?=
+ =?us-ascii?Q?3buE+Vq2Ym3zZyuYpebxlUCSfRO0fRKzntqePpkI4Ky0VoTC2ZDocTQUHB7Y?=
+ =?us-ascii?Q?gxq4vlYoJDVOHJ24S2/gxq2bW6vEv9QSRvPGA4yd7Wxa5hB+NPwmwiRNv5iK?=
+ =?us-ascii?Q?y52pOtXEcVSrS+hK+NHEu3aCzdYEcmVzCRhtexRcBoID8A4UKlPRsVJOJAcW?=
+ =?us-ascii?Q?eFwcWUuSZO5lFO8XKfsqCkzR741egY0BrCeWhqHHMPRNEyVYWSx0kDaeLrbf?=
+ =?us-ascii?Q?Me5NCnfd5GKgfgJP8xuLScWfv97OHhk7zn6+RDHlD6ApP2KC9F0WexKhd8hx?=
+ =?us-ascii?Q?Ng/3e1ljebo9kir8+DMjs8KHVFHoCN5H/PSwE3aNWLCfFP5Wg7nBKzkGcqNM?=
+ =?us-ascii?Q?sC6yjQi+kF4srhfqHI5MQF90rZM7Usa6f5+y3hyYD+dWms6otVHO1k7bTrq/?=
+ =?us-ascii?Q?vfAo0IoOuxXzbE04n2waBvXhPCTX2OIx7UAPj+s2q23w/a9y+NvvBYziyA/u?=
+ =?us-ascii?Q?CuhVL0NwgnssvRalCs2WcIfIJk8+7ZV/JYMiN98I0s7bWjip19qj5h1NSBqU?=
+ =?us-ascii?Q?KJawtA6apgpxhHY2fVpWgv+UTe733uTNAH3mW6BlkDRbAXvYOShr9Wf6bRaG?=
+ =?us-ascii?Q?QQ=3D=3D?=
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2ba728-1159-4062-b979-08dc297ba700
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR06MB8447.eurprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 14:30:24.0631
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V40cMP6LwAmjmKLj9AY6axx1E4lGnTekyFRh0/PTFzsd/ir+BDVctNt518AMeg2im4QDOcp8DNN3zYpyE6cgjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR06MB7386
 
-In the fallocate path with PUNCH_HOLE mode flag enabled, clear the
-uptodate flag for those blocks covered by the punch. Skip all partial
-blocks as they may still contain data.
+From: Niko Mauno <niko.mauno@vaisala.com>
 
-Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+Update the default USB device authorization mode help text so that the
+meaning of the option and it's available values are described more
+accurately.
+
+Signed-off-by: Niko Mauno <niko.mauno@vaisala.com>
 ---
- mm/shmem.c | 78 +++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 72 insertions(+), 6 deletions(-)
+ drivers/usb/core/Kconfig | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 2d2eeb40f19b..2157a87b2e4b 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -209,6 +209,28 @@ static void sfs_set_range_uptodate(struct folio *folio=
-,
- 	spin_unlock_irqrestore(&sfs->state_lock, flags);
- }
-=20
-+static void sfs_clear_range_uptodate(struct folio *folio,
-+				     struct shmem_folio_state *sfs, size_t off,
-+				     size_t len)
-+{
-+	struct inode *inode =3D folio->mapping->host;
-+	unsigned int first_blk, last_blk;
-+	unsigned long flags;
+diff --git a/drivers/usb/core/Kconfig b/drivers/usb/core/Kconfig
+index f337aaea7604..4665df550d36 100644
+--- a/drivers/usb/core/Kconfig
++++ b/drivers/usb/core/Kconfig
+@@ -126,10 +126,21 @@ config USB_DEFAULT_AUTHORIZATION_MODE
+ 	  Select the default USB device authorization mode. Can be overridden
+ 	  with usbcore.authorized_default command line or module parameter.
+ 
+-	  The available values have the following meanings:
+-		0 is unauthorized for all devices
+-		1 is authorized for all devices (default)
+-		2 is authorized for internal devices
++	  This option allows you to choose whether USB devices that are
++	  connected to the system can be used by default, or if they are
++	  locked down.
 +
-+	first_blk =3D DIV_ROUND_UP_ULL(off, 1 << inode->i_blkbits);
-+	last_blk =3D DIV_ROUND_DOWN_ULL(off + len, 1 << inode->i_blkbits) - 1;
-+	if (last_blk =3D=3D UINT_MAX)
-+		return;
++	  With value 0 all connected USB devices with the exception of root
++	  hub require user space authorization before they can be used.
 +
-+	if (first_blk > last_blk)
-+		return;
++	  With value 1 (default) no user space authorization is required to
++	  use connected USB devices.
 +
-+	spin_lock_irqsave(&sfs->state_lock, flags);
-+	bitmap_clear(sfs->state, first_blk, last_blk - first_blk + 1);
-+	folio_clear_uptodate(folio);
-+	spin_unlock_irqrestore(&sfs->state_lock, flags);
-+}
-+
- static struct shmem_folio_state *sfs_alloc(struct inode *inode,
- 					   struct folio *folio)
- {
-@@ -276,6 +298,19 @@ static void shmem_set_range_uptodate(struct folio *fol=
-io, size_t off,
- 	else
- 		folio_mark_uptodate(folio);
- }
-+
-+static void shmem_clear_range_uptodate(struct folio *folio, size_t off,
-+				     size_t len)
-+{
-+	struct shmem_folio_state *sfs =3D folio->private;
-+
-+	if (sfs)
-+		sfs_clear_range_uptodate(folio, sfs, off, len);
-+	else
-+		folio_clear_uptodate(folio);
-+
-+}
-+
- #ifdef CONFIG_TMPFS
- static unsigned long shmem_default_max_blocks(void)
- {
-@@ -1103,12 +1138,33 @@ static struct folio *shmem_get_partial_folio(struct=
- inode *inode, pgoff_t index)
- 	return folio;
- }
-=20
-+static void shmem_clear(struct folio *folio, loff_t start, loff_t end, int=
- mode)
-+{
-+	loff_t pos =3D folio_pos(folio);
-+	unsigned int offset, length;
-+
-+	if (!(mode & FALLOC_FL_PUNCH_HOLE) || !(folio_test_large(folio)))
-+		return;
-+
-+	if (pos < start)
-+		offset =3D start - pos;
-+	else
-+		offset =3D 0;
-+	length =3D folio_size(folio);
-+	if (pos + length <=3D (u64)end)
-+		length =3D length - offset;
-+	else
-+		length =3D end + 1 - pos - offset;
-+
-+	shmem_clear_range_uptodate(folio, offset, length);
-+}
-+
- /*
-  * Remove range of pages and swap entries from page cache, and free them.
-  * If !unfalloc, truncate or punch hole; if unfalloc, undo failed fallocat=
-e.
-  */
- static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t le=
-nd,
--								 bool unfalloc)
-+			     bool unfalloc, int mode)
- {
- 	struct address_space *mapping =3D inode->i_mapping;
- 	struct shmem_inode_info *info =3D SHMEM_I(inode);
-@@ -1166,6 +1222,7 @@ static void shmem_undo_range(struct inode *inode, lof=
-f_t lstart, loff_t lend,
- 	if (folio) {
- 		same_folio =3D lend < folio_pos(folio) + folio_size(folio);
- 		folio_mark_dirty(folio);
-+		shmem_clear(folio, lstart, lend, mode);
- 		if (!truncate_inode_partial_folio(folio, lstart, lend)) {
- 			start =3D folio_next_index(folio);
- 			if (same_folio)
-@@ -1255,9 +1312,17 @@ static void shmem_undo_range(struct inode *inode, lo=
-ff_t lstart, loff_t lend,
- 	shmem_recalc_inode(inode, 0, -nr_swaps_freed);
- }
-=20
-+static void shmem_truncate_range_mode(struct inode *inode, loff_t lstart,
-+				      loff_t lend, int mode)
-+{
-+	shmem_undo_range(inode, lstart, lend, false, mode);
-+	inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
-+	inode_inc_iversion(inode);
-+}
-+
- void shmem_truncate_range(struct inode *inode, loff_t lstart, loff_t lend)
- {
--	shmem_undo_range(inode, lstart, lend, false);
-+	shmem_undo_range(inode, lstart, lend, false, 0);
- 	inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
- 	inode_inc_iversion(inode);
- }
-@@ -3315,7 +3380,7 @@ static long shmem_fallocate(struct file *file, int mo=
-de, loff_t offset,
- 		if ((u64)unmap_end > (u64)unmap_start)
- 			unmap_mapping_range(mapping, unmap_start,
- 					    1 + unmap_end - unmap_start, 0);
--		shmem_truncate_range(inode, offset, offset + len - 1);
-+		shmem_truncate_range_mode(inode, offset, offset + len - 1, mode);
- 		/* No need to unmap again: hole-punching leaves COWed pages */
-=20
- 		spin_lock(&inode->i_lock);
-@@ -3381,9 +3446,10 @@ static long shmem_fallocate(struct file *file, int m=
-ode, loff_t offset,
- 			info->fallocend =3D undo_fallocend;
- 			/* Remove the !uptodate folios we added */
- 			if (index > start) {
--				shmem_undo_range(inode,
--				    (loff_t)start << PAGE_SHIFT,
--				    ((loff_t)index << PAGE_SHIFT) - 1, true);
-+				shmem_undo_range(
-+					inode, (loff_t)start << PAGE_SHIFT,
-+					((loff_t)index << PAGE_SHIFT) - 1, true,
-+					0);
- 			}
- 			goto undone;
- 		}
---=20
-2.43.0
++	  With value 2 all connected USB devices with exception of internal
++	  USB devices require user space authorization before they can be
++	  used. Note that in this mode the differentiation between internal
++	  and external USB devices relies on ACPI, and on systems without
++	  ACPI selecting value 2 is analogous to selecting value 0.
+ 
+ 	  If the default value is too permissive but you are unsure which mode
+ 	  to use, say 2.
+-- 
+2.39.2
+
