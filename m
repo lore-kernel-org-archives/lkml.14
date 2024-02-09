@@ -1,39 +1,34 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8BE84A46;
-	Fri,  9 Feb 2024 14:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7C674E36;
+	Fri,  9 Feb 2024 14:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707489131; cv=none; b=sitbYbjxqRgNupI+9huY3zZvA9gC+hnfIEYuKk2HrpHcicS1sNvvlJ0fBsFXOipWUcML+VgjsQROyni4ntfFYM8LNIyoHVeZi3OqTlGUmIHfbSj1q+12kFODVIJHIaVVcpD611obtN+ztu/A4sq6VgWLpTfgcUM3lZ2x6bkwX60=
+	t=1707489147; cv=none; b=oVe24WCB1EF3koGYqrSYwaYmVvnpuENXiPfq7QL1KEJqM5CYrGZ0SEf4kNuEG5jBYMIh6hRGKtsBnvyc85tv9Fo7HrGHpNV+8XfcdeNWEBquDmOm5Jn+bWrrxUtB/6SuU8MDK2cU1jLXjYl01u8m2lL25O16iN/ij+cL1c9axQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707489131; c=relaxed/simple;
-	bh=AOujWblAL/Eb3SoFX/DXZmLu4by42Gj1/JOw1DWfuS8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZOMhxNH1QFXC7WuAnmjHAbA0Ex/hwYk/BRwKPvEByLy6uV3hI5p6gqe8uNKKE3nSpbxpYeGtAxPLG1c9j+EMo7vies8thNfbd5eOYDuBHcyCZPsc3KE8pXiYdrfLa54L53O/JOb7VhLdZth2zkmhlqhfNJGyEn9htIqkGqwIEVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BVyi5cQM; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1707489147; c=relaxed/simple;
+	bh=z/myf+v/1y1qIOHpJpehIboeoya05bejTBt1ojDoHsQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=l1TmiI0V45ttiVAObsjUD0D2eQyFoDs3khJq7KZdziobvqNaGdUsKasA7mHaJeMffd8gSFyv3PCqgDPK8+4IK2oDd8TKAndQh4FiGgnweLmULsbqy8jjSQf0/XNHo9CEMwDIIaQkghOBgHrU+7A2/nA/ZPaNcXibFSjwG4jmCsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2rxUTox; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BVyi5cQM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D6A31240002;
-	Fri,  9 Feb 2024 14:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707489127;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ntwnUlVjSIXSSPhME4Hzl2L0UVU1UFUtEinrPzePqbc=;
-	b=BVyi5cQM8O0TM2kfxyarxGfF0hrHr6KZltGw3eEBwcrKXU9/WqYJ09Tl+CqUu58GFJbtD2
-	GGsU6trI6kfl2hGk9RcwvgBrchBrog737NFOyYMnx0Ah5WKX5iz+TBi79yA00VqhCY57OV
-	OQn/86ESSyoTB2YUJHPL8jHSUALpghn29a6irbPpaKlkY8V6yKfrsV/H2RrQ4D6jOOmZeB
-	9pygDXUEiGtaXxzbzVNV30aLbUSBYJM1oKSMM+Q61e4OuLcIKzEyOBDnMKYSXD1EM/Gyb/
-	rMSdyZefllO9bm3UuKF6NfSnN1WLTfggrmnnZ0kXS1XLGY0ZeFQ8onSwDerTrA==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 09 Feb 2024 15:31:49 +0100
-Subject: [PATCH v5 13/13] MIPS: mobileye: eyeq5: add pinctrl node & pinmux
- function nodes
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2rxUTox"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105BDC433F1;
+	Fri,  9 Feb 2024 14:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707489146;
+	bh=z/myf+v/1y1qIOHpJpehIboeoya05bejTBt1ojDoHsQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=H2rxUToxeSBGn+kEPoVOE5feiJRSrE4z9O8q5FRA0ANxmuzpghdukTdfFW7XI5SK8
+	 jNzeSBg5TmQt7t6RwgCJfLfBoUMMblT1mhYFd5QWKY8Ep3ncmezD8bdLroMJearjx9
+	 ZVuPdeSv8v2R0Avumy9+WKQGJ2EweG78Kk5/7HdLQyQsosMErykRaHhN8CEVGcNNXS
+	 77AHQulyRHlJ3BKoDHJEzOI4Uz4nU/AQn2pjWxXNekbr7wg1VLOgMw7foI6U4+hUv/
+	 EsRNn46L1yzDpi4pUu0fljn+fDZ8Gzjk8QpPkF11fRrLvXkAagO0oPUMdLfxHxWffk
+	 Nsi4NaVxf9yRw==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/2] selftests/mm: Output cleanups for the compaction test
+Date: Fri, 09 Feb 2024 14:30:02 +0000
+Message-Id: <20240209-kselftest-mm-cleanup-v1-0-a3c0386496b5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,221 +36,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240209-mbly-clk-v5-13-f094ee5e918a@bootlin.com>
-References: <20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com>
-In-Reply-To: <20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: b4 0.12.4
-X-GND-Sasl: theo.lebrun@bootlin.com
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOo2xmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDIwML3ezi1Jy0ktTiEt3cXN3knNTEvNICXWOD1JQUo1RTM/PkJCWg1oK
+ i1LTMCrCx0bG1tQBA4O+fZgAAAA==
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, 
+ Ryan Roberts <Ryan.Roberts@arm.com>, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-0438c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=628; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=z/myf+v/1y1qIOHpJpehIboeoya05bejTBt1ojDoHsQ=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlxjd1Y/cl/Jjs1IsHJQZKUCPu62BRt5V6rqVoq
+ YhGItbRB3qJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcY3dQAKCRAk1otyXVSH
+ 0PlOB/wK/gIKAIzkBaIYeu4hGCconShTBMFnfJFUMsqm42YyhqMiv3DalLV4xx5uVqOSZeFHwVy
+ S7hY6c/oZm3Iwrm6KUTsl++Moeo/PXaXKvXt+M0B/td7IFPWkkiGGVpqxRuSNY3zGRH8IEEe2H3
+ MyKTUtODpKSXqg2d1BPOFPJ0aSuyPNntp0xfZLhErKHCxwI0FA62peidhxsKbW1t1Z//kI91N4v
+ bNP82/5h+aV+Aau3kGh9jvsMXALRAq7eqW7j0RbVXuKH1LLshyfy0ikTGZ5cCxHb7MT6zYnkQKM
+ Z+/el8bBOewMP69eAH/rXwtX9bWlUiNBqHRo671c+U7fweFO
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Pins on this platform have two functions: GPIO or something-else. We
-create function nodes for each something-else based on functions.
+A couple of small updates for the check_compaction selftest which make
+it play more nicely with test automation systems.
 
-UART nodes are present in the platform devicetree. Add pinctrl to them
-now that the pin controller is supported.
-
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi | 125 ++++++++++++++++++++++++++++
- arch/mips/boot/dts/mobileye/eyeq5.dtsi      |  13 +++
- 2 files changed, 138 insertions(+)
+Mark Brown (2):
+      selftests/mm: Log skipped compaction test as a skip
+      selftests/mm: Log a consistent test name for check_compaction
 
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
-new file mode 100644
-index 000000000000..42acda13e57a
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+
-+/*
-+ * Default pin configuration for Mobileye EyeQ5 boards. We mostly create one
-+ * pin configuration node per function.
-+ */
-+
-+&pinctrl {
-+	timer0_pins: timer0-pins {
-+		function = "timer0";
-+		pins = "PA0", "PA1";
-+	};
-+	timer1_pins: timer1-pins {
-+		function = "timer1";
-+		pins = "PA2", "PA3";
-+	};
-+	timer2_pins: timer2-pins {
-+		function = "timer2";
-+		pins = "PA4", "PA5";
-+	};
-+	pps0_pins: pps0-pin {
-+		function = "timer2";
-+		pins = "PA4";
-+	};
-+	pps1_pins: pps1-pin {
-+		function = "timer2";
-+		pins = "PA5";
-+	};
-+	timer5_ext_pins: timer5-ext-pins {
-+		function = "timer5";
-+		pins = "PA6", "PA7", "PA8", "PA9";
-+	};
-+	timer5_ext_input_pins: timer5-ext-input-pins {
-+		function = "timer5";
-+		pins = "PA6", "PA7";
-+	};
-+	timer5_ext_incap_a_pins: timer5-ext-incap-a-pin {
-+		function = "timer5";
-+		pins = "PA6";
-+	};
-+	timer5_ext_incap_b_pins: timer5-ext-incap-b-pin {
-+		function = "timer5";
-+		pins = "PA7";
-+	};
-+	can0_pins: can0-pins {
-+		function = "can0";
-+		pins = "PA14", "PA15";
-+	};
-+	can1_pins: can1-pins {
-+		function = "can1";
-+		pins = "PA16", "PA17";
-+	};
-+	uart0_pins: uart0-pins {
-+		function = "uart0";
-+		pins = "PA10", "PA11";
-+	};
-+	uart1_pins: uart1-pins {
-+		function = "uart1";
-+		pins = "PA12", "PA13";
-+	};
-+	spi0_pins: spi0-pins {
-+		function = "spi0";
-+		pins = "PA18", "PA19", "PA20", "PA21", "PA22";
-+	};
-+	spi1_pins: spi1-pins {
-+		function = "spi1";
-+		pins = "PA23", "PA24", "PA25", "PA26", "PA27";
-+	};
-+	spi1_slave_pins: spi1-slave-pins {
-+		function = "spi1";
-+		pins = "PA24", "PA25", "PA26";
-+	};
-+	refclk0_pins: refclk0-pin {
-+		function = "refclk0";
-+		pins = "PA28";
-+	};
-+	timer3_pins: timer3-pins {
-+		function = "timer3";
-+		pins = "PB0", "PB1";
-+	};
-+	timer4_pins: timer4-pins {
-+		function = "timer4";
-+		pins = "PB2", "PB3";
-+	};
-+	timer6_ext_pins: timer6-ext-pins {
-+		function = "timer6";
-+		pins = "PB4", "PB5", "PB6", "PB7";
-+	};
-+	timer6_ext_input_pins: timer6-ext-input-pins {
-+		function = "timer6";
-+		pins = "PB4", "PB5";
-+	};
-+	timer6_ext_incap_a_pins: timer6-ext-incap-a-pin {
-+		function = "timer6";
-+		pins = "PB4";
-+	};
-+	timer6_ext_incap_b_pins: timer6-ext-incap-b-pin {
-+		function = "timer6";
-+		pins = "PB5";
-+	};
-+	can2_pins: can2-pins {
-+		function = "can2";
-+		pins = "PB10", "PB11";
-+	};
-+	uart2_pins: uart2-pins {
-+		function = "uart2";
-+		pins = "PB8", "PB9";
-+	};
-+	spi2_pins: spi2-pins {
-+		function = "spi2";
-+		pins = "PB12", "PB13", "PB14", "PB15", "PB16";
-+	};
-+	spi3_pins: spi3-pins {
-+		function = "spi3";
-+		pins = "PB17", "PB18", "PB19", "PB20", "PB21";
-+	};
-+	spi3_slave_pins: spi3-slave-pins {
-+		function = "spi3";
-+		pins = "PB18", "PB19", "PB20";
-+	};
-+	mclk0_pins: mclk0-pin {
-+		function = "mclk0";
-+		pins = "PB22";
-+	};
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 76935f237ab5..8d4f65ec912d 100644
---- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-+++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -79,6 +79,8 @@ uart0: serial@800000 {
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
- 			resets = <&reset 0 10>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins>;
- 		};
- 
- 		uart1: serial@900000 {
-@@ -90,6 +92,8 @@ uart1: serial@900000 {
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
- 			resets = <&reset 0 11>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pins>;
- 		};
- 
- 		uart2: serial@a00000 {
-@@ -101,6 +105,8 @@ uart2: serial@a00000 {
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
- 			resets = <&reset 0 12>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins>;
- 		};
- 
- 		olb: system-controller@e00000 {
-@@ -125,6 +131,11 @@ clocks: clock-controller@e0002c {
- 				clocks = <&xtal>;
- 				clock-names = "ref";
- 			};
-+
-+			pinctrl: pinctrl@e000b0 {
-+				compatible = "mobileye,eyeq5-pinctrl";
-+				reg = <0x0b0 0x30>;
-+			};
- 		};
- 
- 		gic: interrupt-controller@140000 {
-@@ -149,3 +160,5 @@ timer {
- 		};
- 	};
- };
-+
-+#include "eyeq5-pins.dtsi"
+ tools/testing/selftests/mm/compaction_test.c | 37 +++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
+---
+base-commit: b1d3a0e70c3881d2f8cf6692ccf7c2a4fb2d030d
+change-id: 20240208-kselftest-mm-cleanup-30edd2e567cb
 
+Best regards,
 -- 
-2.43.0
+Mark Brown <broonie@kernel.org>
 
