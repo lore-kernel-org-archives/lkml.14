@@ -1,180 +1,220 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B2925748;
-	Fri,  9 Feb 2024 22:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B91B38399;
+	Fri,  9 Feb 2024 22:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707517087; cv=none; b=b2T7MJVy39j0gIPfsOHKSFxzRTuvEKXxIifFwlFdCUdXM3A40/+Oe4Em+Q2GsGd+++x0CeQ158/Jt0FA3Bn47R4pypHC1WHZhJCqFu15dJHZ6e51xF7I1WOHXad8uIY09JM7WRJj5ppe9lfvT+zMhqeOf1lMuAgjUZ5hrts5e+Q=
+	t=1707517147; cv=none; b=QJNLa5BxZ7UYXHrkqhN4AXDbyRG+qayVBdBGtVRvn36JYkhvJ2/+PXXejWB9G1IWdQIRDBeWR/uA99ffQKMbWKHsW0U4HhCn8EtEPslNA7FxaU9Jol4Ahv7FNPZmZflTuqLdPcGkMk+iDsiqObjSG7GO4VUq8OVxSCSZX244+qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707517087; c=relaxed/simple;
-	bh=7tbkgyy9saKSRyBIxabQor3qpnFHI3DnO5mdDOv/3Ew=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YPBxPlniuuStgTxt2xjX6O55sOcdIYpuy3VkqLoaQilwk2MUw5sVTJBz4FoaedAtVK/ehPKzowgc0mSzqtMS1iDm5TGc5xn81t64B8IAYVvBPV9X/Ql3/raRm10Uzy8wu0CLxd9NVNPpoFWORsFxWlxCKB8Ck5r2NQ91VaStguk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e861914.versanet.de ([94.134.25.20] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rYZBm-00089k-3z; Fri, 09 Feb 2024 23:17:42 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- linux-rockchip@lists.infradead.org, linux-phy@lists.infradead.org,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Frank Wang <frank.wang@rock-chips.com>,
- Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com
-Subject:
- Re: [PATCH v1 03/10] dt-bindings: phy: add rockchip usbdp combo phy document
-Date: Fri, 09 Feb 2024 23:17:40 +0100
-Message-ID: <3267388.oiGErgHkdL@diego>
-In-Reply-To: <20240209181831.104687-4-sebastian.reichel@collabora.com>
-References:
- <20240209181831.104687-1-sebastian.reichel@collabora.com>
- <20240209181831.104687-4-sebastian.reichel@collabora.com>
+	s=arc-20240116; t=1707517147; c=relaxed/simple;
+	bh=7xft6VdjJIn9OrQvD8ZcJDWYsG2EyFJWTBnzONoipxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCO0D1dx9NLQTmg0uj+pogz5w6KrhiJNwZdzbMMnyZ1enhegPFa2h7o1+Nn36eGJElSCbcu+LfDFoWtRmOg108H6Yb6snfk70O/21XSxnbNLzkk2YG0pDBd8XFhXOotZygX0rGg+EfaWovoTZe8pailav8rUguiyai9ZKQkrMXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id B1B1E72C8F5;
+	Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
+Received: from pony.office.basealt.ru (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id 9F4FE36D0246;
+	Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
+Received: by pony.office.basealt.ru (Postfix, from userid 500)
+	id 75D12360AE77; Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
+Date: Sat, 10 Feb 2024 01:13:06 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>, 
+	Ronnie Sahlberg <lsahlber@redhat.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cifs: Convert struct fealist away from 1-element array
+Message-ID: <qjyfz2xftsbch6aozgplxyjfyqnuhn7j44udrucls4pqa5ey35@adxvvrdtagqf>
+References: <20230215000832.never.591-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230215000832.never.591-kees@kernel.org>
 
-Hi,
+Kees,
 
-Am Freitag, 9. Februar 2024, 19:17:19 CET schrieb Sebastian Reichel:
-> Add device tree binding document for Rockchip USBDP Combo PHY
-> with Samsung IP block.
+On Tue, Feb 14, 2023 at 04:08:39PM -0800, Kees Cook wrote:
+> The kernel is globally removing the ambiguous 0-length and 1-element
+> arrays in favor of flexible arrays, so that we can gain both compile-time
+> and run-time array bounds checking[1].
 > 
-> Co-developed-by: Frank Wang <frank.wang@rock-chips.com>
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-looks ok to me overall, but I stumbled over some spelling below.
-
+> While struct fealist is defined as a "fake" flexible array (via a
+> 1-element array), it is only used for examination of the first array
+> element. Walking the list is performed separately, so there is no reason
+> to treat the "list" member of struct fealist as anything other than a
+> single entry. Adjust the struct and code to match.
+> 
+> Additionally, struct fea uses the "name" member either as a dynamic
+> string, or is manually calculated from the start of the struct. Redefine
+> the member as a flexible array.
+> 
+> No machine code output differences are produced after these changes.
+> 
+> [1] For lots of details, see both:
+>     https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+>     https://people.kernel.org/kees/bounded-flexible-arrays-in-c
+> 
+> Cc: Steve French <sfrench@samba.org>
+> Cc: Paulo Alcantara <pc@cjr.nz>
+> Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+> Cc: Shyam Prasad N <sprasad@microsoft.com>
+> Cc: Tom Talpey <tom@talpey.com>
+> Cc: linux-cifs@vger.kernel.org
+> Cc: samba-technical@lists.samba.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  .../bindings/phy/phy-rockchip-usbdp.yaml      | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml
+>  fs/cifs/cifspdu.h |  4 ++--
+>  fs/cifs/cifssmb.c | 16 ++++++++--------
+>  2 files changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml
-> new file mode 100644
-> index 000000000000..3375a3099038
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml
-> @@ -0,0 +1,166 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/phy-rockchip-usbdp.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip USBDP Combo PHY with Samsung IP block
-> +
-> +maintainers:
-> +  - Frank Wang <frank.wang@rock-chips.com>
-> +  - Zhang Yubing <yubing.zhang@rock-chips.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,rk3588-usbdp-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    items:
-> +      - const: refclk
-> +      - const: immortal
-> +      - const: pclk
-> +      - const: utmi
-> +
-> +  resets:
-> +    maxItems: 5
-> +
-> +  reset-names:
-> +    items:
-> +      - const: init
-> +      - const: cmn
-> +      - const: lane
-> +      - const: pcs_apb
-> +      - const: pma_apb
-> +
-> +  rockchip,dp-lane-mux:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 2
-> +    maxItems: 4
-> +    description:
-> +      An array of physical Tyep-C lanes indexes. Position of an entry determines
+> diff --git a/fs/cifs/cifspdu.h b/fs/cifs/cifspdu.h
+> index 623caece2b10..add73be4902c 100644
+> --- a/fs/cifs/cifspdu.h
+> +++ b/fs/cifs/cifspdu.h
+> @@ -2583,7 +2583,7 @@ struct fea {
+>  	unsigned char EA_flags;
+>  	__u8 name_len;
+>  	__le16 value_len;
+> -	char name[1];
+> +	char name[];
+>  	/* optionally followed by value */
+>  } __attribute__((packed));
+>  /* flags for _FEA.fEA */
+> @@ -2591,7 +2591,7 @@ struct fea {
+>  
+>  struct fealist {
+>  	__le32 list_len;
+> -	struct fea list[1];
+> +	struct fea list;
+>  } __attribute__((packed));
+>  
+>  /* used to hold an arbitrary blob of data */
+> diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
+> index 60dd4e37030a..7c587157d030 100644
+> --- a/fs/cifs/cifssmb.c
+> +++ b/fs/cifs/cifssmb.c
+> @@ -5787,7 +5787,7 @@ CIFSSMBQAllEAs(const unsigned int xid, struct cifs_tcon *tcon,
+>  
+>  	/* account for ea list len */
+>  	list_len -= 4;
+> -	temp_fea = ea_response_data->list;
+> +	temp_fea = &ea_response_data->list;
+>  	temp_ptr = (char *)temp_fea;
+>  	while (list_len > 0) {
+>  		unsigned int name_len;
+> @@ -5902,7 +5902,7 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+>  	else
+>  		name_len = strnlen(ea_name, 255);
+>  
+> -	count = sizeof(*parm_data) + ea_value_len + name_len;
+> +	count = sizeof(*parm_data) + 1 + ea_value_len + name_len;
+>  	pSMB->MaxParameterCount = cpu_to_le16(2);
+>  	/* BB find max SMB PDU from sess */
+>  	pSMB->MaxDataCount = cpu_to_le16(1000);
+> @@ -5926,14 +5926,14 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+>  	byte_count = 3 /* pad */  + params + count;
+>  	pSMB->DataCount = cpu_to_le16(count);
+>  	parm_data->list_len = cpu_to_le32(count);
+> -	parm_data->list[0].EA_flags = 0;
+> +	parm_data->list.EA_flags = 0;
+>  	/* we checked above that name len is less than 255 */
+> -	parm_data->list[0].name_len = (__u8)name_len;
+> +	parm_data->list.name_len = (__u8)name_len;
+>  	/* EA names are always ASCII */
+>  	if (ea_name)
+> -		strncpy(parm_data->list[0].name, ea_name, name_len);
+> -	parm_data->list[0].name[name_len] = 0;
+> -	parm_data->list[0].value_len = cpu_to_le16(ea_value_len);
+> +		strncpy(parm_data->list.name, ea_name, name_len);
 
-nit: Type-C lane indexes
+Could non-applying this patch cause false-positive fortify_panic?
+We got a bug report from user of 6.1.73:
 
-> +      the dp lane index, while the value of an entry indicater physical Type-C lane.
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: detected buffer overflow in strncpy
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: ------------[ cut here ]------------
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: kernel BUG at lib/string_helpers.c:1027!
+   ...
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: Call Trace:
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  <TASK>
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __die_body.cold+0x1a/0x1f
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? die+0x2b/0x50
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? do_trap+0xcf/0x120
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? do_error_trap+0x83/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? exc_invalid_op+0x4e/0x70
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? asm_exc_invalid_op+0x16/0x20
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  CIFSSMBSetEA.cold+0xc/0x18 [cifs]
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  cifs_xattr_set+0x596/0x690 [cifs]
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? evm_protected_xattr_common+0x41/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __vfs_removexattr+0x52/0x70
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __vfs_removexattr_locked+0xbc/0x150
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  vfs_removexattr+0x56/0x100
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  removexattr+0x58/0x90
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? ct_kernel_exit.constprop.0+0x6b/0x80
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_enter+0x5a/0xd0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? syscall_exit_to_user_mode+0x31/0x50
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? int80_emulation+0xb9/0x110
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? ct_kernel_exit.constprop.0+0x6b/0x80
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_enter+0x5a/0xd0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __fget_light.part.0+0x83/0xd0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __ia32_sys_fremovexattr+0x80/0xa0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  int80_emulation+0xa9/0x110
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? vtime_user_exit+0x1c/0x70
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_exit+0x6c/0xc0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? int80_emulation+0x1b/0x110
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  asm_int80_emulation+0x16/0x20
 
-nit: indicates instead of indicater?
+I don't find this patch appled to stable/linux-6.1.y.
 
-> +      The support dp lanes number are 2 or 4. e.g. for 2 lanes dp lanes map, we could
+Thanks,
 
-nit: The supported dp lane numbers ... ?
+ps. (Unfortunately `CIFSSMBSetEA+0xc` address is not resolvable to the
+actual line inside of CIFSSMBSetEA pointing just to the head of it.
 
+   (gdb) l *CIFSSMBSetEA+0xc
+   0x6de3c is in CIFSSMBSetEA (fs/smb/client/cifssmb.c:5776).
+   5771    int
+   5772    CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+   5773                 const char *fileName, const char *ea_name, const void *ea_value,
+   5774                 const __u16 ea_value_len, const struct nls_table *nls_codepage,
+   5775                 struct cifs_sb_info *cifs_sb)
+   5776    {
+   5777            struct smb_com_transaction2_spi_req *pSMB = NULL;
+   5778            struct smb_com_transaction2_spi_rsp *pSMBr = NULL;
+   5779            struct fealist *parm_data;
+   5780            int name_len;
 
-> +      have "rockchip,dp-lane-mux = <2, 3>;", assuming dp lane0 on Type-C phy lane2,
-> +      dp lane1 on Type-C phy lane3. For 4 lanes dp lanes map, we could have
-> +      "rockchip,dp-lane-mux = <0, 1, 2, 3>;", assuming dp lane0 on Type-C phy lane0,
-> +      dp lane1 on Type-C phy lane1, dp lane2 on Type-C phy lane2, dp lane3 on Type-C
-> +      phy lane3. If dp lane map by DisplayPort Alt mode, this property is not need.
-> +
-> +  rockchip,u2phy-grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the syscon managing the 'usb2 phy general register files'.
-> +
-> +  rockchip,usb-grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the syscon managing the 'usb general register files'.
-> +
-> +  rockchip,usbdpphy-grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the syscon managing the 'usbdp phy general register files'.
-> +
-> +  rockchip,vo-grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the syscon managing the 'video output general register files'.
-> +      When select the dp lane mapping will request its phandle.
-> +
-> +  sbu1-dc-gpios:
-> +    description:
-> +      GPIO connected to the SBU1 line of the USB-C connector via a big resistor
-> +      (~100K) to apply a DC offset for signalling the connector orientation.
-> +
-> +  sbu2-dc-gpios:
-> +    description:
-> +      GPIO connected to the SBU2 line of the USB-C connector via a big resistor
-> +      (~100K) to apply a DC offset for signalling the connector orientation.
-> +
-> +  orientation-switch:
-> +    description: Flag the port as possible handler of orientation switching
-> +    type: boolean
-> +
-> +  mode-switch:
-> +    description: Flag the port as possible handle of altmode switching
+But there is only one strncpy there.
 
-nit: also a handler ... aka add an r ?
-
-
-Heiko
-
-
+> +	parm_data->list.name[name_len] = '\0';
+> +	parm_data->list.value_len = cpu_to_le16(ea_value_len);
+>  	/* caller ensures that ea_value_len is less than 64K but
+>  	we need to ensure that it fits within the smb */
+>  
+> @@ -5941,7 +5941,7 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+>  	     negotiated SMB buffer size BB */
+>  	/* if (ea_value_len > buffer_size - 512 (enough for header)) */
+>  	if (ea_value_len)
+> -		memcpy(parm_data->list[0].name+name_len+1,
+> +		memcpy(parm_data->list.name + name_len + 1,
+>  		       ea_value, ea_value_len);
+>  
+>  	pSMB->TotalDataCount = pSMB->DataCount;
+> -- 
+> 2.34.1
+> 
