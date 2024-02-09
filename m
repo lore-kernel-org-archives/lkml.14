@@ -1,35 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034574C92;
-	Fri,  9 Feb 2024 03:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361934A28;
+	Fri,  9 Feb 2024 03:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707448269; cv=none; b=RVVD4MTLxU0nGVmz43qa3q/4dJIVOLxZfBe+YVjnflVb9mjOGzVfxe7M6u5mfyFfxzdYify02GfwJLMiUF/+yHgriDRx9GTnE9IbpLQSatyJ0X9j2mEHKjvO2wGgxi7TCfSitdMA7VZ967RgnEEN+r+nMrOPlUTp3cR/nixHS0s=
+	t=1707448490; cv=none; b=QERdp1YwJrF+07zJgsx4ayyw2xUSW7pz3WgRFs3MEezSLXvbsrvaU6Tp+1gfzXA/dQkXxcm+hJ3JkvAVkaJyzfgaE2KnYdraW/pwt4aAgdYnS+OpI5IshVCt89N5cc5NlWxN8o/lbpJ4GECI4WZf7JAMuLRWMrmxI94yOAOKKV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707448269; c=relaxed/simple;
-	bh=FUmi3UXZdl0m8BCeA4JszAk2qUkSpIO4EAqIdRWeN+c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=fpwSyOFMFiFF7HNIYIJEMuLYloPz/4zmEk+k6pKQ8eY+omAW6IVJs1Wc2eFOBZ4uHwwqg3WGvnKt8yBlMblkdhOCLsulGH1sYHf8T0a44G/DChK6GZwp9DI5/MupUM8X1nq4rap1cPaWLtnGJsjxWYlqQCJqi07IOj7NV/gHDZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQh1FNhJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707448490; c=relaxed/simple;
+	bh=/qrAJe4JPth0HrN2viuXOrLNb41b0iCYzbzAL5ueynA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KLrWrG2NiVKxl7MXQG4/zApIqoRr3LZ5YMVQApgKgKCaem/JGvXpuQUY3sKdRbmLHmMUXP9xpPmQZ/GPQ6PPdwpsKlY3BUvGW406E9/iK1buGFK+x/KzURrukQ48H92jj4+gu+2OM4u3NyYz+pea5d9KBI9T2my/OAkwa0IBMg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LAPZcWYe; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQh1FNhJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 83134C4166B;
-	Fri,  9 Feb 2024 03:11:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707448268;
-	bh=FUmi3UXZdl0m8BCeA4JszAk2qUkSpIO4EAqIdRWeN+c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lQh1FNhJnbthcpvsB5Ez3ycypln3bV/qMo98iJOhLXiQxFM9SOXVMBA9D950FI1ES
-	 SyRgUAgqErUXcMAABfFzimthwYWTcqwqI7qVPMCIfO6G3Umz6Ey8T7JickLLUh0prS
-	 nqo2TbYhEDxXuWgvgrwW86tTv5ejXix9d7Y/zDV9KQGeTaqZU5v5gDE8lXSmU4yOJt
-	 wbS7PbIq0/euR7meqcaK0jZ21z7rF3z69NYd3u9shyhjl3sUpRJ9wZ5VKa6bijIiVR
-	 W/YDhJqb7AipUbsuNniZ03MI+wE1H0chWLhlD5o897uFdRImWaj5Oly26rN6qIaC/a
-	 5MPyORgfedzgg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 708B8D8C96E;
-	Fri,  9 Feb 2024 03:11:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LAPZcWYe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707448488; x=1738984488;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/qrAJe4JPth0HrN2viuXOrLNb41b0iCYzbzAL5ueynA=;
+  b=LAPZcWYezbSaKBFwIwgT2s8SdYQv6F2jQMjx0OnxcQgdMqgbyJKV0sS+
+   UuYb9JQprWFJult9yaP6Cg2jZs8xQcc0G+t+tLWcama+yfgdtGRySnnlf
+   5H5Zp68X65DXm7Sid7PKXI+SKwM49/5M6HHbxh/MSFkEKBKOCfXIidiFR
+   BJ1M5IEqnyadBryt9UUxzAUqtcgBJPGmhVPH+rHWhAhIEKhFKjSGh5bI6
+   or2zA0g0zgyZtkJ4/MvdVHXXZCQLp1VYqa4ztXYUhsbvp3vd6Yz6NyfnX
+   VEKD5g2RGH907ihwbtyiOePwAFAE6JoFAvSFo6mM+gfcz7lFq2Q+JZGP7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1257869"
+X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
+   d="scan'208";a="1257869"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 19:14:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
+   d="scan'208";a="32631398"
+Received: from b49691a74b80.jf.intel.com ([10.165.54.183])
+  by orviesa002.jf.intel.com with ESMTP; 08 Feb 2024 19:14:47 -0800
+From: weilin.wang@intel.com
+To: weilin.wang@intel.com,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [RFC PATCH v4 00/15]  Perf stat metric grouping with hardware information
+Date: Thu,  8 Feb 2024 19:14:26 -0800
+Message-ID: <20240209031441.943012-1-weilin.wang@intel.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +66,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] netxen_nic: remove redundant assignment to variable
- capability
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170744826845.23533.8151257630099768804.git-patchwork-notify@kernel.org>
-Date: Fri, 09 Feb 2024 03:11:08 +0000
-References: <20240206115049.1879389-1-colin.i.king@gmail.com>
-In-Reply-To: <20240206115049.1879389-1-colin.i.king@gmail.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: manishc@marvell.com, rahulv@marvell.com, GR-Linux-NIC-Dev@marvell.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
 
-Hello:
+From: Weilin Wang <weilin.wang@intel.com>
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Changes in v4:
+- Update bitmap operation functions [Kan, Ian]
+- Move data struct definitions to metricgroup.c for smaller scope [Ian]
+- Update variable names and comments for better readbility [Ian]
+- Exclude JSON files from this patch. A seperate patch set with complete set of
+JSON files will be submitted soon.
 
-On Tue,  6 Feb 2024 11:50:49 +0000 you wrote:
-> The variable capability is being assigned a value that is never
-> read and is being re-assigned later. The assignment is redundant and
-> can be removed. Also remove empty line before assignment to capability.
-> 
-> Cleans up clang scan build warning:
-> drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c:1189:2: warning:
-> Value stored to 'capability' is never read [deadcode.DeadStores]
-> 
-> [...]
+v3: https://lore.kernel.org/all/20231212230224.1473300-1-weilin.wang@intel.com/
 
-Here is the summary with links:
-  - [next] netxen_nic: remove redundant assignment to variable capability
-    https://git.kernel.org/netdev/net-next/c/a6c15d7ff29c
+Weilin Wang (15):
+  perf stat: Add new field in stat_config to enable hardware aware
+    grouping.
+  perf stat: Add basic functions for the hardware aware grouping
+  perf pmu-events: Add functions in jevent.py to parse counter and event
+    info for hardware aware grouping
+  find_bit: add _find_last_and_bit() to support finding the most
+    significant set bit
+  perf stat: Add functions to set counter bitmaps for hardware-grouping
+    method
+  perf stat: Add functions to get counter info
+  perf stat: Add functions to create new group and assign events into
+    groups
+  perf stat: Add build string function and topdown events handling in
+    hardware-grouping
+  perf stat: Add function to handle special events in hardware-grouping
+  perf stat: Add function to combine metrics for hardware-grouping
+  perf stat: Handle taken alone in hardware-grouping
+  perf stat: Handle NMI in hardware-grouping
+  perf stat: Code refactoring in hardware-grouping
+  perf stat: Add tool events support in hardware-grouping
+  perf stat: Add hardware-grouping cmd option to perf stat
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+ tools/include/linux/find.h         |   18 +
+ tools/lib/find_bit.c               |   33 +
+ tools/perf/builtin-stat.c          |    7 +
+ tools/perf/pmu-events/jevents.py   |  192 +++-
+ tools/perf/pmu-events/pmu-events.h |   35 +-
+ tools/perf/util/metricgroup.c      | 1338 +++++++++++++++++++++++++---
+ tools/perf/util/metricgroup.h      |    1 +
+ tools/perf/util/stat.h             |    1 +
+ 8 files changed, 1464 insertions(+), 161 deletions(-)
 
+--
+2.42.0
 
