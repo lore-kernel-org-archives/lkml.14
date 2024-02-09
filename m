@@ -1,105 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422E225614
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 10:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8173C2555F;
+	Fri,  9 Feb 2024 10:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707476118; cv=none; b=YLaJIfR4qOglI09kltc+teM7V3oI8A5vBpAGbjEDp5CZqfMrNpPh5Gtol1fltAQEhXxZHClpVwWy5AB5btPQHzNabYzF0vShEDVSUqhjOmzK38hwOWXf5nOoJFTdhtNK/cokx2wCKv0XbXzbTRsv+7eoXfxMbGGkWkyyRc2vdU0=
+	t=1707476120; cv=none; b=U716MuVqk0gzaiXd5ZyV4QVi/g1WktJ45x4cBSMCgOTcEUe3Gr651Fp8MW0OAme9STCOiwxAYsVTceeLkC4QbN1ZlpbXNXqWdyN0hS3l3KSDPp13//4GtiS3vCOjVSUTwZiwAXtscqkFUMXBbZmlL/4jbU5guxkYbqUGNTRKjG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707476118; c=relaxed/simple;
-	bh=PuoJ7FAF6sK9oT75e0IAxDQhewqKsNVGGVSNtkERdh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdiAPrEeY20EQpKZC8lZJrp7An35co2oty9Og+9vz0l/JLmJNDkt0pnCoFiCxHfXWn2f/Xgc6pSMwWTXjOeq+j8k0OMP+0Qlf1VVuoEKsRJgABTpeu1lhDx/VSKoE/+PCWctnpy9hHYFJBRJVjNsV2kshD0NkLgEMssWsBlKtFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cuQLrUlr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707476120; c=relaxed/simple;
+	bh=2WOJQ2RgbU0u8rkQ+XtqSxX9y1ZGslQjMejF/3cwOaE=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jbZULDCNaD5hSYpA5w2Oh6e1l4KbhunXgQ5lGbFtYT9g5uZT9XgY2+m9yc1z+z+Tcvm/8s77Mszu/c6U0wCVe19NhQpOr//Ifud8Uv38jWrPDd3QpOFYj1YKhm5HYya6+MYQqn34AuMeF2lbMMlDlH8Q2U7Tf/su4fF+BRm0kf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JazfIBl5; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cuQLrUlr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707476114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZMAPlkEOykUikv1rtlx9+4EfL9AWEUsHnCPiEO7N96Q=;
-	b=cuQLrUlrb9kuQbIjc8NwoKXl1lg+7ad9hlxfwwd6lAmwVO5OsThrBaG2RHyqMTkfmiYI6a
-	PFuh+6j+HJRcRNaUeinOEbpGdBsB1L0Zfi0sRHLK0xCzJzslAYgExz6zywXnT7HBNzlL2w
-	uyqRvVjP8Fx5uVQQNMXJaX/PoZRfwBM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-HLskda55OjePR3B4iQ8_IA-1; Fri, 09 Feb 2024 05:55:11 -0500
-X-MC-Unique: HLskda55OjePR3B4iQ8_IA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B43DC85A58B;
-	Fri,  9 Feb 2024 10:55:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.84])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 4629C8BCC;
-	Fri,  9 Feb 2024 10:55:09 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri,  9 Feb 2024 11:53:54 +0100 (CET)
-Date: Fri, 9 Feb 2024 11:53:52 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pidfd: change pidfd_send_signal() to respect PIDFD_THREAD
-Message-ID: <20240209105351.GB3282@redhat.com>
-References: <20240207114549.GA12697@redhat.com>
- <8734u32co5.fsf@email.froward.int.ebiederm.org>
- <20240208155731.GH19801@redhat.com>
- <20240209-postfach-notorisch-f8443677b490@brauner>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JazfIBl5"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3122b70439so93653466b.3;
+        Fri, 09 Feb 2024 02:55:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707476116; x=1708080916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VPDCxvBNMC7jVwM9lF/rwisiu2UQZms91Q9LKR4ZUe8=;
+        b=JazfIBl5EyDW3RXD32Gpt0e6l2j3zan+NXP3o8m7yhdvAoMHdM1AOVQS7cIabd9m/n
+         BcIxj1cxfn8UwEpfL/Rip1z9g+28lvpt7Ek56rn4FU+qvahny1xsaQWEbxPc6uXLlIju
+         hWIVvfZztBqIKUZwZfLJSEQ6omdR4NizG/vv7HIzWhLrSF8b5CTYE8BM4p4KAT5dFLmz
+         gFJCTc+8q824hfKZgIimeig5xLlySZbkcUpA42d8aJthqDjK0W5KjW1PP8VaWyCq99d0
+         gw6UIhUAbMez+++NtRDTVs0Ebemg88nuQiaqPGP/uItAZpsp9LK+9VOSmPtSfXz4Apg2
+         i+Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707476116; x=1708080916;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VPDCxvBNMC7jVwM9lF/rwisiu2UQZms91Q9LKR4ZUe8=;
+        b=SByE3Foaexmd2Fj9qSQ3+OCWRf4xQScyArflWzCEHvf3YhJ8P6/Zg9wDYLzzYWB4GI
+         5lf4jJutesV6IMHr/XKptksAe8o3ozD7y8cbfg+glDoeUF8+GbVXzBvsvPsvnyPUUSoy
+         OXhYvDZQDBd/pYYLY+sKVd71KP3frMOJWImrUNCPK6XoBoYqa4P16YftK5UwYw3h3Sdq
+         eJpctNeJAXr8KZ0+C/OFo8JZqtFT/xV8rFYylzkMl8BOPKf39+13gdJmbKRVb2NOSENS
+         5ktBCSUaw0+2pc447JaBne/JQziUQ4fI/cDOj4dcddLdkXX72ZzmyUaFdsHaQ/sDyqrj
+         muLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOV+/5OgGkkg+IOlhZUGhqSbnqb+O/JonUK01nwSVkrScQxxl5HCJrGxCuuten1xwsfTRE/7cfvyzWJOlp32leAT7ISPAZDXTxObybouoKZRs0Yhr8JMTQSA4ULKO86b8tcDgdwcRsmB2T1elcE99aMTmI68jFtR22STagzFEqR+HijjQO/O7QjPJI4JsOBed+Kj29LAPU0e8iquJgNYirYtjnUDTTAtJBMANS1cBQYym2nmaGrcGGYQ6AVTB3S8vEoSkA//Lv+jX8xl/CRDROSQ6P7Z2buyusriyEcMTU
+X-Gm-Message-State: AOJu0YxmAqvnPKO3N3nV+/7s0Wir1VfcEqOyIme6oFOY8bODgJJELVSP
+	TZBymIuzHMTD90bOf5bFyBsKHKYi/z6dxUTEwq4y0kuXKFVJfxLg
+X-Google-Smtp-Source: AGHT+IH8fQC4BYcatf4eNnFGSb58UqS4zJtebYfp5Tkvc0uum0cdKtMKpIELju2LqVMZ4Dh9GK/KUg==
+X-Received: by 2002:a17:906:f9d1:b0:a35:103e:3614 with SMTP id lj17-20020a170906f9d100b00a35103e3614mr863231ejb.52.1707476115517;
+        Fri, 09 Feb 2024 02:55:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW0W2ig//yQ03IYUX8CzVxAEgCm8ndS3T1j4w20EZR4F7pSO46B0Ssj3CYd8S2QKwCcARm6ki3u9e+DBebFxzoEmI0oAbFUYYnNmQnIfRpW9iMLjJG04+63v/Bw70+28ySDWZpJTWzL6cI2ZNkUJZJBwsdxGXcv13Cex5FSXWQ/rA9VbY9FqqY9gqP3vr4cmM/C3FOjfKS8JqLEr7MLEXtAgcq9EhKu+atw3ez0PoqAKQG/JmJIV2N3c6/pHD4PEA5X2XFnqx8RZrsvXH+e/FBSspe0y9uDFUUpbR+LzWYkl9acy+GflcK9HZwzgdhL5XJATWhk/+YNWJSYJgI+XFcILFpe3zGY7mon1YpeqDQFNax5MEtzOpB5DFscrKJeiFJa/7oEMJeHdR8nIb74rJbhsoPHQM5vd0oKFnfn7QtJHpVf89dKVi8weQbjAgJ8g2mC1rBg2UiWropsPA72suo7mEQ2M8/tfdoGloKbAuI+XKt7MyeE0A4AUXuhmNfplAnS7k3f5b8skGR7wFI1yF/DOwTR9dk2x5l3vM5QHJJa/wXVNHmAM7ZtMSHzOAcf7sB/1Dk6rr6D6sBvSBih/Yi7A3mTIUvJfrTMeAH3bu+fBav/NdxOlr0OWM9Aut74GPCsiTwnDNmslfl6+GV9NyNqTeUeLd6jND27dWT/VhjfxwKpej42Iobb9GYk/l2DwagtHAj1C6DTy4Tyejx0ACCc3UnkebndWh0nS1SilTf6sRtD17hmcAGj6yEScljW6quvxOQyxq1rGybRxq+XfDHNKiGkrJcTfhs7AOxIFi8aJl3Fnj8/k/Q+dBj1ROIQhnjUeOw/Ex01Ynamfb6VACenMHuYjs2DjUiRQe5nrAPgYOyUOHlpV/SI9NViaJOezY/A87rwGJG3CngeT5OAMkMDIqpvq62KcNN+aLUv/t7qFkaBjYyzTSgLR+iN0DO+phbXFZ
+ pZJknOwjoo5SfgsL5gCYFRu5BCGxsd7nqNZTS9Hzq/tcc4IS/I7MGp6eiH+iCXIfdGAUgh4wOUbiOFGVsT9Z4idnsbB4hg5CGFiXSz6dgATKIgfsFvnmH4aQsC8iOJY2gmUAl3aIcQoEvOGdClgxelpZRKICgoSZzGK6kDqTQ6vgChMcBthxj+Rdb0aQRz1GtwtU+RcgF48fqY/UxEv4oUdUktTlEpJvnVT+0OlR5hZMlrAkTb4orEqBQKit/397dC5qzNVOLhyViUGFZVmUj8RcXSSScjXz/1Qn6eg+H7iKlae2EqEcdkYUiIBH/c/9zREOdzHiAGPOLatjckrAsePGDqYRUI/w0KCpzynCVjY1wV3GpyCS/noMczEQKDj7rAfUyB7PzDOalH/Cd8ScBs3aHXlv9Eo6z+MLOLKzJwD/e02tmzYjM86xU4WeM23qznU1N3jw777w==
+Received: from jernej-laptop.localnet (APN-123-244-98-gprs.simobil.net. [46.123.244.98])
+        by smtp.gmail.com with ESMTPSA id cu7-20020a170906ba8700b00a37b795348fsm629101ejd.127.2024.02.09.02.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 02:55:14 -0800 (PST)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: akpm@linux-foundation.org, alim.akhtar@samsung.com, alyssa@rosenzweig.io,
+ asahi@lists.linux.dev, baolu.lu@linux.intel.com, bhelgaas@google.com,
+ cgroups@vger.kernel.org, corbet@lwn.net, david@redhat.com,
+ dwmw2@infradead.org, hannes@cmpxchg.org, heiko@sntech.de,
+ iommu@lists.linux.dev, jonathanh@nvidia.com, joro@8bytes.org,
+ krzysztof.kozlowski@linaro.org, linux-doc@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-rockchip@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-tegra@vger.kernel.org, lizefan.x@bytedance.com, marcan@marcan.st,
+ mhiramat@kernel.org, m.szyprowski@samsung.com, pasha.tatashin@soleen.com,
+ paulmck@kernel.org, rdunlap@infradead.org, robin.murphy@arm.com,
+ samuel@sholland.org, suravee.suthikulpanit@amd.com, sven@svenpeter.dev,
+ thierry.reding@gmail.com, tj@kernel.org, tomas.mudrunka@gmail.com,
+ vdumpa@nvidia.com, wens@csie.org, will@kernel.org, yu-cheng.yu@intel.com,
+ rientjes@google.com, bagasdotme@gmail.com, mkoutny@suse.com,
+ Pasha Tatashin <pasha.tatashin@soleen.com>
+Subject:
+ Re: [PATCH v4 07/10] iommu/sun50i: use page allocation function provided by
+ iommu-pages.h
+Date: Fri, 09 Feb 2024 11:55:09 +0100
+Message-ID: <2718393.mvXUDI8C0e@jernej-laptop>
+In-Reply-To: <20240207174102.1486130-8-pasha.tatashin@soleen.com>
+References:
+ <20240207174102.1486130-1-pasha.tatashin@soleen.com>
+ <20240207174102.1486130-8-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209-postfach-notorisch-f8443677b490@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 02/09, Christian Brauner wrote:
->
-> On Thu, Feb 08, 2024 at 04:57:31PM +0100, Oleg Nesterov wrote:
-> > On 02/08, Eric W. Biederman wrote:
-> > >
-> > > Because honestly right now using group_send_sig_info when
-> > > the intended target of the signal is not the entire thread
-> > > group is very confusing when reading your change.
-> >
-> > Agreed, so perhaps it makes sense to rename it later. See
->
-> Agreed. The function seems misnamed and incorrectly documented. It just
-> seems that it's never been used with PIDTYPE_PID but it's perfectly
-> capable of doing that. So maybe just put a patch on top renaming it to
-> send_sig_info_type() and remove the old comment. But I can live without
-> renaming it for now as well.
+Dne sreda, 07. februar 2024 ob 18:40:59 CET je Pasha Tatashin napisal(a):
+> Convert iommu/sun50i-iommu.c to use the new page allocation functions
+> provided in iommu-pages.h.
+> 
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Acked-by: David Rientjes <rientjes@google.com>
+> Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-OK, I'll update the comment, please see below.
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-It should probably say more about the case when type > PIDTYPE_TGID,
-but this is "offtopic" for this patch.
+Best regards,
+Jernej
 
-Oleg.
-
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1437,7 +1437,8 @@ void lockdep_assert_task_sighand_held(struct task_struct *task)
- #endif
- 
- /*
-- * send signal info to all the members of a group
-+ * send signal info to all the members of a thread group or to the
-+ * individual thread if type == PIDTYPE_PID.
-  */
- int group_send_sig_info(int sig, struct kernel_siginfo *info,
- 			struct task_struct *p, enum pid_type type)
 
