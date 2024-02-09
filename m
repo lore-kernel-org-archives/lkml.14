@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E49D80BF8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF15E80C16
 	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707503873; cv=none; b=KW/j5rhGarv3oQ7Z8ffdCkbXal+ENc37eVO1RAsMU6HuJlVAieipNYZ6pv1SjR02lUm3dkC27EKiJBbzkaxSSXzNqdbE9JO8xCgKPSjdmDqHCZczGZskst0ClJEzKrUFOhVDx6zo3oJqWGNoOA8+6Dv9IHVl8HCpIo45u6ndTOA=
+	t=1707503873; cv=none; b=In5ELqw7fVqazgpigZ0aJebM2oFBAI416How0sLm56hfM/Bzp5t5PJWIbZOQYtL5RXWGtSkj0/U0NdlZNB4XcsQepXeP6VCmgHMDf4LgJOTWAFM3Dysh/Vkmmdq73LI37UQzb3OWzjZY2sizgaj1GguxBa/pwyaGu0VjMilaIS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707503873; c=relaxed/simple;
-	bh=nxL7p5ga/pbwBNJ0AcArtO5cQqiGKNRbW0hrGmJ/ETA=;
+	bh=Gv/Kr8TOzPt0rp3aa81lJO/6g/pp+CHZVu5w3lMoNB8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sTetZnR5IUqkpa3n5n+zvuIhfxVnLAk5RQGhKEewehS2WQxSpXtFu1nyUYIpwXf1FhPQ5lD9qIoJ7Sp+ip5Bf70ddsIGa6qXJ6Cjz66d6H9s8GeSpii2ivVNL0AS5AIzASdD0HdZaOI37T8voeOUhgWGq8KDS7iUAJtO/EeyN8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IfLY0GrF; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=lOKLVCkZNb/Mkpz4PNaIcM98cdnFU7HVBwNERsrN/9ZI/bEpddwvfm+ndZZoq6duMFKSFa0glA8GfGt1rYVS0IqFZWiG3Jq/0JDx8bg+UvGrjWmIG8V3mAb1a3tmhFfs9DF1UDrCVhE2Tu/+2RuQFWmRF31fmh5D0Ka6T7BfBeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZGeOLb/K; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IfLY0GrF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZGeOLb/K"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1707503869;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uTQ6AKR5avCm33VMOIR+Irc60rlBw+yA9bG+WGeGyGk=;
-	b=IfLY0GrFBxvcktjJA91UUwY54JBOafZB5X2TUtjuYK0YSFjX3gM7ROrKw1evSistrIcPfb
-	1gYBemVhciTcfApegriHGXSo18BZYzATUbNhdevJ1g/WwheRW0HiBdMz754Y/76PqJosFS
-	psCTDMyCh1hdZsZ3u8PGedY+dP2JjH4=
+	bh=KMuM2iDsKyRXLwOQwCqQqqcOLqtJ/Pinx6UZ/VSyKIk=;
+	b=ZGeOLb/Kp+BtG0RLNLDxCXXSGaOqNtmxOtuv1I9r2uVZe6PnP1Wzgii3AMNB37J5AKo0Ve
+	2M1meFxLSeBwqKve7ZBypRvJ3VslpeY7KQq+tnEEHvC4+sPV1yZP84G1oiQuQw1w9bV2sD
+	9IkLrU+P0q0uNsUsameEY4B+1k8POes=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-_wNBaf-GMFunlgOexE6Pww-1; Fri, 09 Feb 2024 13:37:44 -0500
-X-MC-Unique: _wNBaf-GMFunlgOexE6Pww-1
+ us-mta-223-Z88hIqB6NMWbVDBrYewrdA-1; Fri, 09 Feb 2024 13:37:46 -0500
+X-MC-Unique: Z88hIqB6NMWbVDBrYewrdA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5BD75862DC2;
-	Fri,  9 Feb 2024 18:37:44 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD37810665A0;
+	Fri,  9 Feb 2024 18:37:45 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2DC76492BC6;
-	Fri,  9 Feb 2024 18:37:44 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id AF969492BC6;
+	Fri,  9 Feb 2024 18:37:45 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	aik@amd.com,
 	isaku.yamahata@intel.com
-Subject: [PATCH 02/10] KVM: introduce new vendor op for KVM_GET_DEVICE_ATTR
-Date: Fri,  9 Feb 2024 13:37:34 -0500
-Message-Id: <20240209183743.22030-3-pbonzini@redhat.com>
+Subject: [PATCH 09/10] KVM: SEV: introduce KVM_SEV_INIT2 operation
+Date: Fri,  9 Feb 2024 13:37:41 -0500
+Message-Id: <20240209183743.22030-10-pbonzini@redhat.com>
 In-Reply-To: <20240209183743.22030-1-pbonzini@redhat.com>
 References: <20240209183743.22030-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,119 +62,202 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Allow vendor modules to provide their own attributes on /dev/kvm.
-To avoid proliferation of vendor ops, implement KVM_HAS_DEVICE_ATTR
-and KVM_GET_DEVICE_ATTR in terms of the same function.  You're not
-supposed to use KVM_GET_DEVICE_ATTR to do complicated computations,
-especially on /dev/kvm.
+The idea that no parameter would ever be necessary when enabling SEV or
+SEV-ES for a VM was decidedly optimistic.  In fact, in some sense it's
+already a parameter whether SEV or SEV-ES is desired.  Another possible
+source of variability is the desired set of VMSA features, as that affects
+the measurement of the VM's initial state and cannot be changed
+arbitrarily by the hypervisor.
+
+Create a new sub-operation for KVM_MEM_ENCRYPT_OP that can take a struct,
+and put the new op to work by including the VMSA features as a field of the
+struct.  The existing KVM_SEV_INIT and KVM_SEV_ES_INIT use the full set of
+supported VMSA features for backwards compatibility.
+
+The struct also includes the usual bells and whistles for future
+extensibility: a flags field that must be zero for now, and some padding
+at the end.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h |  1 +
- arch/x86/include/asm/kvm_host.h    |  1 +
- arch/x86/kvm/x86.c                 | 52 +++++++++++++++++++-----------
- 3 files changed, 36 insertions(+), 18 deletions(-)
+ .../virt/kvm/x86/amd-memory-encryption.rst    | 41 ++++++++++++++--
+ arch/x86/include/uapi/asm/kvm.h               | 10 ++++
+ arch/x86/kvm/svm/sev.c                        | 48 +++++++++++++++++--
+ 3 files changed, 92 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 378ed944b849..ac8b7614e79d 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -122,6 +122,7 @@ KVM_X86_OP(enter_smm)
- KVM_X86_OP(leave_smm)
- KVM_X86_OP(enable_smi_window)
- #endif
-+KVM_X86_OP_OPTIONAL(dev_get_attr)
- KVM_X86_OP_OPTIONAL(mem_enc_ioctl)
- KVM_X86_OP_OPTIONAL(mem_enc_register_region)
- KVM_X86_OP_OPTIONAL(mem_enc_unregister_region)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d271ba20a0b2..0bcd9ae16097 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1769,6 +1769,7 @@ struct kvm_x86_ops {
- 	void (*enable_smi_window)(struct kvm_vcpu *vcpu);
- #endif
+diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+index 5ed11bc16b96..a4291e7bd8ed 100644
+--- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+@@ -75,15 +75,50 @@ are defined in ``<linux/psp-dev.h>``.
+ KVM implements the following commands to support common lifecycle events of SEV
+ guests, such as launching, running, snapshotting, migrating and decommissioning.
  
-+	int (*dev_get_attr)(u64 attr, u64 *val);
- 	int (*mem_enc_ioctl)(struct kvm *kvm, void __user *argp);
- 	int (*mem_enc_register_region)(struct kvm *kvm, struct kvm_enc_region *argp);
- 	int (*mem_enc_unregister_region)(struct kvm *kvm, struct kvm_enc_region *argp);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index bf10a9073a09..8746530930d5 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4804,37 +4804,53 @@ static inline void __user *kvm_get_attr_addr(struct kvm_device_attr *attr)
- 	return uaddr;
+-1. KVM_SEV_INIT
+----------------
++1. KVM_SEV_INIT2
++----------------
+ 
+-The KVM_SEV_INIT command is used by the hypervisor to initialize the SEV platform
++The KVM_SEV_INIT2 command is used by the hypervisor to initialize the SEV platform
+ context. In a typical workflow, this command should be the first command issued.
+ 
++For this command to be accepted, either KVM_X86_SEV_VM or KVM_X86_SEV_ES_VM
++must have been passed to the KVM_CREATE_VM ioctl.  A virtual machine created
++with those machine types in turn cannot be run until KVM_SEV_INIT2 is invoked.
++
++Parameters: struct kvm_sev_init (in)
+ 
+ Returns: 0 on success, -negative on error
+ 
++::
++
++        struct struct kvm_sev_init {
++                __u32 flags;          /* must be 0 */
++                __u64 vmsa_features;  /* initial value of features field in VMSA */
++                __u32 pad[8];
++        };
++
++It is an error if the hypervisor does not support any of the bits that
++are set in ``flags`` or ``vmsa_features``.
++
++This command replaces the deprecated KVM_SEV_INIT and KVM_SEV_ES_INIT commands.
++The commands did not have any parameters (the ```data``` field was unused) and
++only work for the KVM_X86_DEFAULT_VM machine type (0).
++
++They behave as if:
++
++* the VM type is KVM_X86_SEV_VM for KVM_SEV_INIT, or KVM_X86_SEV_ES_VM for
++  KVM_SEV_ES_INIT
++
++* the ``flags`` field of ``struct kvm_sev_init`` is set to zero
++
++* the ``vmsa_features`` field of ``struct kvm_sev_init`` is set to all features
++  supported by the hypervisor (as returned by ``KVM_GET_DEVICE_ATTR`` when
++  passed group 0 and attribute id ``KVM_X86_SEV_VMSA_FEATURES``).
++
++If the ``KVM_X86_SEV_VMSA_FEATURES`` attribute does not exist, the hypervisor only
++supports KVM_SEV_INIT and KVM_SEV_ES_INIT.  In that case the set of VMSA features is
++undefined.
++
+ 2. KVM_SEV_LAUNCH_START
+ -----------------------
+ 
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 7c46e96cfe62..6baf18335c7b 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -683,6 +683,9 @@ enum sev_cmd_id {
+ 	/* Guest Migration Extension */
+ 	KVM_SEV_SEND_CANCEL,
+ 
++	/* Second time is the charm; improved versions of the above ioctls.  */
++	KVM_SEV_INIT2,
++
+ 	KVM_SEV_NR_MAX,
+ };
+ 
+@@ -694,6 +697,13 @@ struct kvm_sev_cmd {
+ 	__u32 sev_fd;
+ };
+ 
++struct kvm_sev_init {
++	__u32 vm_type;
++	__u32 flags;
++	__u64 vmsa_features;
++	__u32 pad[8];
++};
++
+ struct kvm_sev_launch_start {
+ 	__u32 handle;
+ 	__u32 policy;
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index acf5c45ef14e..78c52764453f 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -252,7 +252,9 @@ static void sev_unbind_asid(struct kvm *kvm, unsigned int handle)
+ 	sev_decommission(handle);
  }
  
--static int kvm_x86_dev_get_attr(struct kvm_device_attr *attr)
-+static int __kvm_x86_dev_get_attr(struct kvm_device_attr *attr, u64 *val)
+-static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
++static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
++			    struct kvm_sev_init *data,
++			    unsigned long vm_type)
  {
--	u64 __user *uaddr = kvm_get_attr_addr(attr);
-+	int r;
+ 	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+ 	int asid, ret;
+@@ -260,7 +262,10 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	if (kvm->created_vcpus)
+ 		return -EINVAL;
  
- 	if (attr->group)
- 		return -ENXIO;
- 
-+	switch (attr->attr) {
-+	case KVM_X86_XCOMP_GUEST_SUPP:
-+		r = 0;
-+		*val = kvm_caps.supported_xcr0;
-+		break;
-+	default:
-+		r = -ENXIO;
-+		if (kvm_x86_ops.dev_get_attr)
-+			r = kvm_x86_ops.dev_get_attr(attr->attr, val);
-+		break;
-+	}
+-	if (kvm->arch.vm_type != KVM_X86_DEFAULT_VM)
++	if (data->flags)
++		return -EINVAL;
 +
-+	return r;
++	if (data->vmsa_features & ~sev_supported_vmsa_features)
+ 		return -EINVAL;
+ 
+ 	ret = -EBUSY;
+@@ -268,8 +273,8 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 		return ret;
+ 
+ 	sev->active = true;
+-	sev->es_active = argp->id == KVM_SEV_ES_INIT;
+-	sev->vmsa_features = sev_supported_vmsa_features;
++	sev->es_active = (vm_type & __KVM_X86_PROTECTED_STATE_TYPE) != 0;
++	sev->vmsa_features = data->vmsa_features;
+ 
+ 	asid = sev_asid_new(sev);
+ 	if (asid < 0)
+@@ -298,6 +303,38 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	return ret;
+ }
+ 
++static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
++{
++	struct kvm_sev_init data = {
++		.vmsa_features = sev_supported_vmsa_features,
++	};
++	unsigned long vm_type;
++
++	if (kvm->arch.vm_type != KVM_X86_DEFAULT_VM)
++		return -EINVAL;
++
++	vm_type = (argp->id == KVM_SEV_INIT ? KVM_X86_SEV_VM : KVM_X86_SEV_ES_VM);
++	return __sev_guest_init(kvm, argp, &data, vm_type);
 +}
 +
-+static int kvm_x86_dev_get_attr(struct kvm_device_attr *attr)
++static int sev_guest_init2(struct kvm *kvm, struct kvm_sev_cmd *argp)
 +{
-+	u64 __user *uaddr;
-+	int r;
-+	u64 val;
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++	struct kvm_sev_init data;
 +
-+	r = __kvm_x86_dev_get_attr(attr, &val);
-+	if (r < 0)
-+		return r;
++	if (!sev->need_init)
++		return -EINVAL;
 +
-+	uaddr = kvm_get_attr_addr(attr);
- 	if (IS_ERR(uaddr))
- 		return PTR_ERR(uaddr);
- 
--	switch (attr->attr) {
--	case KVM_X86_XCOMP_GUEST_SUPP:
--		if (put_user(kvm_caps.supported_xcr0, uaddr))
--			return -EFAULT;
--		return 0;
--	default:
--		return -ENXIO;
--	}
-+	if (put_user(val, uaddr))
++	if (kvm->arch.vm_type != KVM_X86_SEV_VM &&
++	    kvm->arch.vm_type != KVM_X86_SEV_ES_VM)
++		return -EINVAL;
++
++	if (copy_from_user(&data, (void __user *)(uintptr_t)argp->data, sizeof(data)))
 +		return -EFAULT;
 +
-+	return 0;
- }
- 
- static int kvm_x86_dev_has_attr(struct kvm_device_attr *attr)
++	return __sev_guest_init(kvm, argp, &data, kvm->arch.vm_type);
++}
++
+ static int sev_bind_asid(struct kvm *kvm, unsigned int handle, int *error)
  {
--	if (attr->group)
--		return -ENXIO;
-+	u64 val;
- 
--	switch (attr->attr) {
--	case KVM_X86_XCOMP_GUEST_SUPP:
--		return 0;
--	default:
--		return -ENXIO;
--	}
-+	return __kvm_x86_dev_get_attr(attr, &val);
- }
- 
- long kvm_arch_dev_ioctl(struct file *filp,
+ 	struct sev_data_activate activate;
+@@ -1915,6 +1952,9 @@ int sev_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
+ 	case KVM_SEV_INIT:
+ 		r = sev_guest_init(kvm, &sev_cmd);
+ 		break;
++	case KVM_SEV_INIT2:
++		r = sev_guest_init2(kvm, &sev_cmd);
++		break;
+ 	case KVM_SEV_LAUNCH_START:
+ 		r = sev_launch_start(kvm, &sev_cmd);
+ 		break;
 -- 
 2.39.0
 
