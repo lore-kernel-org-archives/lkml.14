@@ -1,39 +1,39 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89DA6D1D4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AB66D1D7;
 	Fri,  9 Feb 2024 14:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707489117; cv=none; b=nv7M2r9iTeI+DHcfmGG/CfuSyZ2nOxw21rtKoKCRaPPZGAGsR6Y0lV9MhNZ/vGUow/vpwswHvrIoI11+KRk6F0oxKKVbSWk0PlQSyBysIiEd8TgfP560kRlt3U9LZ9o8P1XD9vpkQjEsxpS5D4aM9u3gy1uINC+Vbjn/fTFPzgc=
+	t=1707489117; cv=none; b=EwqZmgwbemCiUPgUlcjS7gkr2dl0DlZNkck+iQzOt69rQDB005y97O2a0cLolLggF5hR6LEmfHV71oIg0PUaUDrVEp41rDS0fk7FOUoZRI2KF3umor7faTVphraFsSAa45L9Uhz90UcQWT2cpDSyUHEm/hC4y5LE0ooYexhCflo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707489117; c=relaxed/simple;
-	bh=pzJfrinjIDxBTHW1NQtKke7bnQ5u/8w10fV7kImjVII=;
+	bh=p96N34DQIp9iFKK4bMHk+DDoqnyUXSCL+rvjuPLimgY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vhx2BqAJqmosRkxFyD+/K8+Mn40Ga4FzRqAQtuXDZAIa5RulwOrjGtb+Gchhrq0qdwg1s3Rx2h38HoTeOdyUPHnrXWzgC/xeGyXjxVk+zl97PDppT8j5WXjuyn2oQV2dj4/7os70mc5KOoaVpo0LDRqU+/UsVzO7vhAuMV/H+bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bAPxabmH; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=WAsgQQ50w/Av6h1j/vD+/14f21MwXiLo2QdUf3xBLhiuV4MeXUQzDJClGwQuW5uzsgB2l9p03sMnopfPJxye1d9cgHtAswrk+LHuQANWD3N5DmwXgXtE0JeVxjcH7N/o1bhPpIcniZuS0sft5UL2U7KcBw58RPdW3AopEXizG5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YxELNk8G; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bAPxabmH"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2A171240010;
-	Fri,  9 Feb 2024 14:31:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YxELNk8G"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9AB7B240006;
+	Fri,  9 Feb 2024 14:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707489113;
+	t=1707489107;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CQI1tDyU/5DevDA510arVwNDwXyynUTeTAbpUDAxeCQ=;
-	b=bAPxabmHLvUbZ5TfuOyX+Bqd4ho7o2eP2gqdOF6Umr6GhennS38lLy7jJO7p7qZ7A34fhk
-	Be3ps2J5vI51z8vToIwn3CNAWHgKZ9VN5x1LN6ijZt6QhGfHxciiCzhe4r1v0xXB2PC7aO
-	ZWAB2QaKCvnv2eIlIH7Ax1ASFPPOADixmfziuH1HAD6R6J2wSS7/h+EobVBrLM8PmGeps1
-	8HrZSQns/1iktPgB7yaFO8t7PVgOdr1Ero2eDty+CK4TJ/3JiP53OiEzrpLuyOXpv0NrbL
-	MiyQMEFp2zmy3BMo35ehW0aQ8w+Cx8KekJm48SZMgfy1d12T2rKpPO8KYuqPyw==
+	bh=Hzzlts4PGXFUuRWYcplGsnHuTe6WB3sA9fR+Y6Zs2Sk=;
+	b=YxELNk8GIRtAzHcsAXkojPcvcYNCw3TsTr97GRQ4jPy5T49FaGz0RFadFPVEMYfvv0nwsp
+	DtwZpIWXZhB8AVFFE4z23oyFa8PlOqJ05K23hHtJM/CThXJTkcodsBQc6Dh8jJFLYw5Suh
+	/BrmCZH8SNMjB4IzO1nMSbHeLK3XPawGtKjMa6fpw7Si/D4ppxSggLQJ7qOt+/pIhRkGJo
+	ykTtqPbZwJY8xzc0iBqJ/W9NeLl41PwGq7iKommWRAIxbFXCtGOuW3ok24V5FKgHqULAkh
+	Cob0ZYesclqy2htysMV8tF0iRQdmWO8sTiNFvTktaDfHH8JC8Dlv3ScEDBCsaQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 09 Feb 2024 15:31:41 +0100
-Subject: [PATCH v5 05/13] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add
- bindings
+Date: Fri, 09 Feb 2024 15:31:38 +0100
+Subject: [PATCH v5 02/13] clk: fixed-factor: add fwname-based constructor
+ functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240209-mbly-clk-v5-5-f094ee5e918a@bootlin.com>
+Message-Id: <20240209-mbly-clk-v5-2-f094ee5e918a@bootlin.com>
 References: <20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com>
 In-Reply-To: <20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -59,280 +59,222 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Rob Herring <robh@kernel.org>
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
 X-Mailer: b4 0.12.4
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
+Add four functions to register clk_hw based on the fw_name field in
+clk_parent_data, ie the value in the DT property `clock-names`.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+There are variants for devm or not and passing an accuracy or not
+passing one:
+
+ - clk_hw_register_fixed_factor_fwname
+ - clk_hw_register_fixed_factor_with_accuracy_fwname
+ - devm_clk_hw_register_fixed_factor_fwname
+ - devm_clk_hw_register_fixed_factor_with_accuracy_fwname
+
+The `struct clk_parent_data` init is extracted from
+__clk_hw_register_fixed_factor to each calling function. It is required
+to allow each function to pass whatever field they want, not only index.
+
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 +++++++++++++++++++++
- MAINTAINERS                                        |   1 +
- 2 files changed, 243 insertions(+)
+ drivers/clk/clk-fixed-factor.c | 85 +++++++++++++++++++++++++++++++++++-------
+ include/linux/clk-provider.h   | 14 +++++++
+ 2 files changed, 85 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
-new file mode 100644
-index 000000000000..5f00604bf48c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
-@@ -0,0 +1,242 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/mobileye,eyeq5-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+index bc2644a9bd7d..fe0500a1af3e 100644
+--- a/drivers/clk/clk-fixed-factor.c
++++ b/drivers/clk/clk-fixed-factor.c
+@@ -91,13 +91,12 @@ static void devm_clk_hw_register_fixed_factor_release(struct device *dev, void *
+ static struct clk_hw *
+ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
+ 		const char *name, const char *parent_name,
+-		const struct clk_hw *parent_hw, int index,
++		const struct clk_hw *parent_hw, const struct clk_parent_data *pdata,
+ 		unsigned long flags, unsigned int mult, unsigned int div,
+ 		unsigned long acc, unsigned int fixflags, bool devm)
+ {
+ 	struct clk_fixed_factor *fix;
+ 	struct clk_init_data init = { };
+-	struct clk_parent_data pdata = { .index = index };
+ 	struct clk_hw *hw;
+ 	int ret;
+ 
+@@ -128,7 +127,7 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
+ 	else if (parent_hw)
+ 		init.parent_hws = &parent_hw;
+ 	else
+-		init.parent_data = &pdata;
++		init.parent_data = pdata;
+ 	init.num_parents = 1;
+ 
+ 	hw = &fix->hw;
+@@ -165,7 +164,9 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
+ 		const char *name, unsigned int index, unsigned long flags,
+ 		unsigned int mult, unsigned int div)
+ {
+-	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, index,
++	const struct clk_parent_data pdata = { .index = index };
 +
-+title: Mobileye EyeQ5 pin controller
++	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, &pdata,
+ 					      flags, mult, div, 0, 0, true);
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_index);
+@@ -187,8 +188,10 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_parent_hw(struct device *dev,
+ 		const char *name, const struct clk_hw *parent_hw,
+ 		unsigned long flags, unsigned int mult, unsigned int div)
+ {
++	const struct clk_parent_data pdata = { .index = -1 };
 +
-+description: >
-+  The EyeQ5 pin controller handles the two pin banks of the system. It belongs
-+  to a system-controller block called OLB.
+ 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
+-					      -1, flags, mult, div, 0, 0, true);
++					      &pdata, flags, mult, div, 0, 0, true);
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_parent_hw);
+ 
+@@ -196,9 +199,10 @@ struct clk_hw *clk_hw_register_fixed_factor_parent_hw(struct device *dev,
+ 		const char *name, const struct clk_hw *parent_hw,
+ 		unsigned long flags, unsigned int mult, unsigned int div)
+ {
+-	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL,
+-					      parent_hw, -1, flags, mult, div,
+-					      0, 0, false);
++	const struct clk_parent_data pdata = { .index = -1 };
 +
-+  Pin control is about bias (pull-down, pull-up), drive strength and muxing. Pin
-+  muxing supports two functions for each pin: first is GPIO, second is
-+  pin-dependent.
++	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
++					      &pdata, flags, mult, div, 0, 0, false);
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_parent_hw);
+ 
+@@ -206,11 +210,37 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+ 		const char *name, const char *parent_name, unsigned long flags,
+ 		unsigned int mult, unsigned int div)
+ {
+-	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
+-					      flags, mult, div, 0, 0, false);
++	const struct clk_parent_data pdata = { .index = -1 };
 +
-+  Pins and groups are bijective.
++	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL,
++					      &pdata, flags, mult, div, 0, 0, false);
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
+ 
++struct clk_hw *clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
 +
-+maintainers:
-+  - Grégory Clement <gregory.clement@bootlin.com>
-+  - Théo Lebrun <theo.lebrun@bootlin.com>
-+  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, 0, 0, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_fwname);
 +
-+$ref: pinctrl.yaml#
++struct clk_hw *clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
 +
-+properties:
-+  compatible:
-+    enum:
-+      - mobileye,eyeq5-pinctrl
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, acc,
++			CLK_FIXED_FACTOR_FIXED_ACCURACY, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_with_accuracy_fwname);
 +
-+  reg:
-+    maxItems: 1
+ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
+ 		unsigned int mult, unsigned int div)
+@@ -253,16 +283,43 @@ struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
+ 		const char *name, const char *parent_name, unsigned long flags,
+ 		unsigned int mult, unsigned int div)
+ {
+-	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
+-			flags, mult, div, 0, 0, true);
++	const struct clk_parent_data pdata = { .index = -1 };
 +
-+patternProperties:
-+  "-pins?$":
-+    type: object
-+    description: Pin muxing configuration.
-+    $ref: pinmux-node.yaml#
-+    additionalProperties: false
-+    properties:
-+      pins: true
-+      function:
-+        enum: [gpio,
-+               # Bank A
-+               timer0, timer1, timer2, timer5, uart0, uart1, can0, can1, spi0,
-+               spi1, refclk0,
-+               # Bank B
-+               timer3, timer4, timer6, uart2, can2, spi2, spi3, mclk0]
-+      bias-disable: true
-+      bias-pull-down: true
-+      bias-pull-up: true
-+      drive-strength: true
-+    required:
-+      - pins
-+      - function
-+    allOf:
-+      - if:
-+          properties:
-+            function:
-+              const: gpio
-+        then:
-+          properties:
-+            pins:
-+              items: # PA0 - PA28, PB0 - PB22
-+                pattern: '^(P(A|B)1?[0-9]|PA2[0-8]|PB2[0-2])$'
-+      - if:
-+          properties:
-+            function:
-+              const: timer0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA0, PA1]
-+      - if:
-+          properties:
-+            function:
-+              const: timer1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA2, PA3]
-+      - if:
-+          properties:
-+            function:
-+              const: timer2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA4, PA5]
-+      - if:
-+          properties:
-+            function:
-+              const: timer5
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA6, PA7, PA8, PA9]
-+      - if:
-+          properties:
-+            function:
-+              const: uart0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA10, PA11]
-+      - if:
-+          properties:
-+            function:
-+              const: uart1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA12, PA13]
-+      - if:
-+          properties:
-+            function:
-+              const: can0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA14, PA15]
-+      - if:
-+          properties:
-+            function:
-+              const: can1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA16, PA17]
-+      - if:
-+          properties:
-+            function:
-+              const: spi0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA18, PA19, PA20, PA21, PA22]
-+      - if:
-+          properties:
-+            function:
-+              const: spi1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA23, PA24, PA25, PA26, PA27]
-+      - if:
-+          properties:
-+            function:
-+              const: refclk0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA28]
-+      - if:
-+          properties:
-+            function:
-+              const: timer3
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB0, PB1]
-+      - if:
-+          properties:
-+            function:
-+              const: timer4
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB2, PB3]
-+      - if:
-+          properties:
-+            function:
-+              const: timer6
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB4, PB5, PB6, PB7]
-+      - if:
-+          properties:
-+            function:
-+              const: uart2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB8, PB9]
-+      - if:
-+          properties:
-+            function:
-+              const: can2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB10, PB11]
-+      - if:
-+          properties:
-+            function:
-+              const: spi2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB12, PB13, PB14, PB15, PB16]
-+      - if:
-+          properties:
-+            function:
-+              const: spi3
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB17, PB18, PB19, PB20, PB21]
-+      - if:
-+          properties:
-+            function:
-+              const: mclk0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB22]
++	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL,
++			&pdata, flags, mult, div, 0, 0, true);
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor);
+ 
++struct clk_hw *devm_clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
 +
-+required:
-+  - compatible
-+  - reg
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, 0, 0, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_fwname);
 +
-+additionalProperties: false
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d5348fbbace6..a09899acfa6a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14791,6 +14791,7 @@ L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
- F:	Documentation/devicetree/bindings/mips/mobileye.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
- F:	Documentation/devicetree/bindings/reset/mobileye,eyeq5-reset.yaml
- F:	arch/mips/boot/dts/mobileye/
- F:	arch/mips/configs/eyeq5_defconfig
++struct clk_hw *devm_clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
++
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, acc,
++			CLK_FIXED_FACTOR_FIXED_ACCURACY, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_with_accuracy_fwname);
++
+ #ifdef CONFIG_OF
+ static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
+ {
+ 	struct clk_hw *hw;
+ 	const char *clk_name = node->name;
++	const struct clk_parent_data pdata = { .index = 0 };
+ 	u32 div, mult;
+ 	int ret;
+ 
+@@ -280,8 +337,8 @@ static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
+ 
+ 	of_property_read_string(node, "clock-output-names", &clk_name);
+ 
+-	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL, 0,
+-					    0, mult, div, 0, 0, false);
++	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL,
++					    &pdata, 0, mult, div, 0, 0, false);
+ 	if (IS_ERR(hw)) {
+ 		/*
+ 		 * Clear OF_POPULATED flag so that clock registration can be
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 7ddc952c8c67..4a537260f655 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -1116,10 +1116,24 @@ void clk_unregister_fixed_factor(struct clk *clk);
+ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+ 		const char *name, const char *parent_name, unsigned long flags,
+ 		unsigned int mult, unsigned int div);
++struct clk_hw *clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div);
++struct clk_hw *clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc);
+ void clk_hw_unregister_fixed_factor(struct clk_hw *hw);
+ struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
+ 		const char *name, const char *parent_name, unsigned long flags,
+ 		unsigned int mult, unsigned int div);
++struct clk_hw *devm_clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div);
++struct clk_hw *devm_clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc);
+ struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
+ 		const char *name, unsigned int index, unsigned long flags,
+ 		unsigned int mult, unsigned int div);
 
 -- 
 2.43.0
