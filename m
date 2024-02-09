@@ -1,220 +1,110 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B91B38399;
-	Fri,  9 Feb 2024 22:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB0F28DDE;
+	Fri,  9 Feb 2024 22:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707517147; cv=none; b=QJNLa5BxZ7UYXHrkqhN4AXDbyRG+qayVBdBGtVRvn36JYkhvJ2/+PXXejWB9G1IWdQIRDBeWR/uA99ffQKMbWKHsW0U4HhCn8EtEPslNA7FxaU9Jol4Ahv7FNPZmZflTuqLdPcGkMk+iDsiqObjSG7GO4VUq8OVxSCSZX244+qo=
+	t=1707517229; cv=none; b=E/abT1B7iD7CLoI7KLvUEyHMUrJg18u+m5XcaR1hJgymwD85s7cZD7IOJrldJE1ejSqeAVgBS3x07v8G+rF2jNDaW8ZCvQqqYnIPuZV4SvqAoqh6gw1uEf1S4XPu0q9Xs7k9U5MUnly6ddea0K7U+GF0l9qQqYSyzb7qHzTQxac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707517147; c=relaxed/simple;
-	bh=7xft6VdjJIn9OrQvD8ZcJDWYsG2EyFJWTBnzONoipxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCO0D1dx9NLQTmg0uj+pogz5w6KrhiJNwZdzbMMnyZ1enhegPFa2h7o1+Nn36eGJElSCbcu+LfDFoWtRmOg108H6Yb6snfk70O/21XSxnbNLzkk2YG0pDBd8XFhXOotZygX0rGg+EfaWovoTZe8pailav8rUguiyai9ZKQkrMXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id B1B1E72C8F5;
-	Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
-Received: from pony.office.basealt.ru (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 9F4FE36D0246;
-	Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
-Received: by pony.office.basealt.ru (Postfix, from userid 500)
-	id 75D12360AE77; Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
-Date: Sat, 10 Feb 2024 01:13:06 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>, 
-	Ronnie Sahlberg <lsahlber@redhat.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] cifs: Convert struct fealist away from 1-element array
-Message-ID: <qjyfz2xftsbch6aozgplxyjfyqnuhn7j44udrucls4pqa5ey35@adxvvrdtagqf>
-References: <20230215000832.never.591-kees@kernel.org>
+	s=arc-20240116; t=1707517229; c=relaxed/simple;
+	bh=zmD09Cf5Gxel7PFPTF/XTQTKu02LpKzT3/K6xp9h1qA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nhRyfzlNB/kKz0/lKYl8M+TnlZMGDf/l0GWSi5x2wLKz/L4UhJTVkZ8c2OwiJVwe/9d5A8cuNbYoHl4JT0GekUF74LKB7+gyYHzfUEDcIIRwsje63GMovLmB319idgE42BirpZN2Ug1kaYPq4BdRBU8ZpDiICzjLFMZVjHD2VZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLNTGQUC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLNTGQUC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BF14DC43390;
+	Fri,  9 Feb 2024 22:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707517228;
+	bh=zmD09Cf5Gxel7PFPTF/XTQTKu02LpKzT3/K6xp9h1qA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WLNTGQUC8epHIrd8rB1EWFjpleFM5hcoEKMOGR9092xvOF2/MnWqrjZQx6a6qkXb4
+	 nrRKa6VpSWPFyR4JvzFfeZECzi7Smp/1aqcZ34xGIaqdAm4UtDERqAsurCe2J83XlD
+	 012GEDwrPvh34jf9slAIyrf/6Aj9wM1m+5X5JgFV7ufeLUeVCs089wXtZsraJzDMET
+	 Qw3Mo2wRzDwXwsfoj6gw28sHXc0qW4A+Co8p3IrufoVOfeoTpToi6spj5YYi7rv2bF
+	 9Kb2/LKZW9lfj0Y06AJYDZ9kxqNHHSY8x3UX76Or6OO4tHmWfXdFyiIzUis+UOVk+n
+	 /u3Ha0oOsePxA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A5A53C395F1;
+	Fri,  9 Feb 2024 22:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230215000832.never.591-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v3 0/9] net: Fix MODULE_DESCRIPTION() for net (p5)
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170751722867.20266.7249381801250857706.git-patchwork-notify@kernel.org>
+Date: Fri, 09 Feb 2024 22:20:28 +0000
+References: <20240208164244.3818498-1-leitao@debian.org>
+In-Reply-To: <20240208164244.3818498-1-leitao@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
+ edumazet@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ horms@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jhs@mojatatu.com
 
-Kees,
+Hello:
 
-On Tue, Feb 14, 2023 at 04:08:39PM -0800, Kees Cook wrote:
-> The kernel is globally removing the ambiguous 0-length and 1-element
-> arrays in favor of flexible arrays, so that we can gain both compile-time
-> and run-time array bounds checking[1].
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu,  8 Feb 2024 08:42:35 -0800 you wrote:
+> There are hundreds of network modules that misses MODULE_DESCRIPTION(),
+> causing a warning when compiling with W=1. Example:
 > 
-> While struct fealist is defined as a "fake" flexible array (via a
-> 1-element array), it is only used for examination of the first array
-> element. Walking the list is performed separately, so there is no reason
-> to treat the "list" member of struct fealist as anything other than a
-> single entry. Adjust the struct and code to match.
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/sched/em_cmp.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/sched/em_nbyte.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/sched/em_u32.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/sched/em_meta.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/sched/em_text.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/sched/em_canid.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_tunnel.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ipip.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_gre.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/udp_tunnel.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_vti.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ah4.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/esp4.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/xfrm4_tunnel.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/tunnel4.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/xfrm/xfrm_algo.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/xfrm/xfrm_user.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/ah6.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/esp6.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/xfrm6_tunnel.o
+> 	WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/tunnel6.o
 > 
-> Additionally, struct fea uses the "name" member either as a dynamic
-> string, or is manually calculated from the start of the struct. Redefine
-> the member as a flexible array.
-> 
-> No machine code output differences are produced after these changes.
-> 
-> [1] For lots of details, see both:
->     https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
->     https://people.kernel.org/kees/bounded-flexible-arrays-in-c
-> 
-> Cc: Steve French <sfrench@samba.org>
-> Cc: Paulo Alcantara <pc@cjr.nz>
-> Cc: Ronnie Sahlberg <lsahlber@redhat.com>
-> Cc: Shyam Prasad N <sprasad@microsoft.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: linux-cifs@vger.kernel.org
-> Cc: samba-technical@lists.samba.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  fs/cifs/cifspdu.h |  4 ++--
->  fs/cifs/cifssmb.c | 16 ++++++++--------
->  2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/cifs/cifspdu.h b/fs/cifs/cifspdu.h
-> index 623caece2b10..add73be4902c 100644
-> --- a/fs/cifs/cifspdu.h
-> +++ b/fs/cifs/cifspdu.h
-> @@ -2583,7 +2583,7 @@ struct fea {
->  	unsigned char EA_flags;
->  	__u8 name_len;
->  	__le16 value_len;
-> -	char name[1];
-> +	char name[];
->  	/* optionally followed by value */
->  } __attribute__((packed));
->  /* flags for _FEA.fEA */
-> @@ -2591,7 +2591,7 @@ struct fea {
->  
->  struct fealist {
->  	__le32 list_len;
-> -	struct fea list[1];
-> +	struct fea list;
->  } __attribute__((packed));
->  
->  /* used to hold an arbitrary blob of data */
-> diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-> index 60dd4e37030a..7c587157d030 100644
-> --- a/fs/cifs/cifssmb.c
-> +++ b/fs/cifs/cifssmb.c
-> @@ -5787,7 +5787,7 @@ CIFSSMBQAllEAs(const unsigned int xid, struct cifs_tcon *tcon,
->  
->  	/* account for ea list len */
->  	list_len -= 4;
-> -	temp_fea = ea_response_data->list;
-> +	temp_fea = &ea_response_data->list;
->  	temp_ptr = (char *)temp_fea;
->  	while (list_len > 0) {
->  		unsigned int name_len;
-> @@ -5902,7 +5902,7 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
->  	else
->  		name_len = strnlen(ea_name, 255);
->  
-> -	count = sizeof(*parm_data) + ea_value_len + name_len;
-> +	count = sizeof(*parm_data) + 1 + ea_value_len + name_len;
->  	pSMB->MaxParameterCount = cpu_to_le16(2);
->  	/* BB find max SMB PDU from sess */
->  	pSMB->MaxDataCount = cpu_to_le16(1000);
-> @@ -5926,14 +5926,14 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
->  	byte_count = 3 /* pad */  + params + count;
->  	pSMB->DataCount = cpu_to_le16(count);
->  	parm_data->list_len = cpu_to_le32(count);
-> -	parm_data->list[0].EA_flags = 0;
-> +	parm_data->list.EA_flags = 0;
->  	/* we checked above that name len is less than 255 */
-> -	parm_data->list[0].name_len = (__u8)name_len;
-> +	parm_data->list.name_len = (__u8)name_len;
->  	/* EA names are always ASCII */
->  	if (ea_name)
-> -		strncpy(parm_data->list[0].name, ea_name, name_len);
-> -	parm_data->list[0].name[name_len] = 0;
-> -	parm_data->list[0].value_len = cpu_to_le16(ea_value_len);
-> +		strncpy(parm_data->list.name, ea_name, name_len);
+> [...]
 
-Could non-applying this patch cause false-positive fortify_panic?
-We got a bug report from user of 6.1.73:
+Here is the summary with links:
+  - [net,v3,1/9] net: fill in MODULE_DESCRIPTION()s for xfrm
+    https://git.kernel.org/netdev/net/c/2599bb5e0c74
+  - [net,v3,2/9] net: fill in MODULE_DESCRIPTION()s for mpoa
+    https://git.kernel.org/netdev/net/c/f73f55b0fcff
+  - [net,v3,3/9] net: fill in MODULE_DESCRIPTION()s for af_key
+    https://git.kernel.org/netdev/net/c/6e2cf0eb6926
+  - [net,v3,4/9] net: fill in MODULE_DESCRIPTION()s for 6LoWPAN
+    https://git.kernel.org/netdev/net/c/2898f3075e6a
+  - [net,v3,5/9] net: fill in MODULE_DESCRIPTION()s for ipv6 modules
+    https://git.kernel.org/netdev/net/c/92ab08eb63bb
+  - [net,v3,6/9] net: fill in MODULE_DESCRIPTION()s for ipv4 modules
+    https://git.kernel.org/netdev/net/c/b058a5d25d92
+  - [net,v3,7/9] net: fill in MODULE_DESCRIPTION()s for net/sched
+    https://git.kernel.org/netdev/net/c/a46c31bf2744
+  - [net,v3,8/9] net: fill in MODULE_DESCRIPTION()s for ipvtap
+    https://git.kernel.org/netdev/net/c/830bd88cc151
+  - [net,v3,9/9] net: fill in MODULE_DESCRIPTION()s for dsa_loop_bdinfo
+    https://git.kernel.org/netdev/net/c/6034e059f5d3
 
-   Jan 24 15:15:20 kalt2test.dpt.local kernel: detected buffer overflow in strncpy
-   Jan 24 15:15:20 kalt2test.dpt.local kernel: ------------[ cut here ]------------
-   Jan 24 15:15:20 kalt2test.dpt.local kernel: kernel BUG at lib/string_helpers.c:1027!
-   ...
-   Jan 24 15:15:20 kalt2test.dpt.local kernel: Call Trace:
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  <TASK>
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __die_body.cold+0x1a/0x1f
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? die+0x2b/0x50
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? do_trap+0xcf/0x120
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? do_error_trap+0x83/0xb0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? exc_invalid_op+0x4e/0x70
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? asm_exc_invalid_op+0x16/0x20
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  CIFSSMBSetEA.cold+0xc/0x18 [cifs]
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  cifs_xattr_set+0x596/0x690 [cifs]
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? evm_protected_xattr_common+0x41/0xb0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __vfs_removexattr+0x52/0x70
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __vfs_removexattr_locked+0xbc/0x150
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  vfs_removexattr+0x56/0x100
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  removexattr+0x58/0x90
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? ct_kernel_exit.constprop.0+0x6b/0x80
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_enter+0x5a/0xd0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? syscall_exit_to_user_mode+0x31/0x50
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? int80_emulation+0xb9/0x110
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? ct_kernel_exit.constprop.0+0x6b/0x80
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_enter+0x5a/0xd0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __fget_light.part.0+0x83/0xd0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __ia32_sys_fremovexattr+0x80/0xa0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  int80_emulation+0xa9/0x110
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? vtime_user_exit+0x1c/0x70
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_exit+0x6c/0xc0
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? int80_emulation+0x1b/0x110
-   Jan 24 15:15:20 kalt2test.dpt.local kernel:  asm_int80_emulation+0x16/0x20
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-I don't find this patch appled to stable/linux-6.1.y.
 
-Thanks,
-
-ps. (Unfortunately `CIFSSMBSetEA+0xc` address is not resolvable to the
-actual line inside of CIFSSMBSetEA pointing just to the head of it.
-
-   (gdb) l *CIFSSMBSetEA+0xc
-   0x6de3c is in CIFSSMBSetEA (fs/smb/client/cifssmb.c:5776).
-   5771    int
-   5772    CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
-   5773                 const char *fileName, const char *ea_name, const void *ea_value,
-   5774                 const __u16 ea_value_len, const struct nls_table *nls_codepage,
-   5775                 struct cifs_sb_info *cifs_sb)
-   5776    {
-   5777            struct smb_com_transaction2_spi_req *pSMB = NULL;
-   5778            struct smb_com_transaction2_spi_rsp *pSMBr = NULL;
-   5779            struct fealist *parm_data;
-   5780            int name_len;
-
-But there is only one strncpy there.
-
-> +	parm_data->list.name[name_len] = '\0';
-> +	parm_data->list.value_len = cpu_to_le16(ea_value_len);
->  	/* caller ensures that ea_value_len is less than 64K but
->  	we need to ensure that it fits within the smb */
->  
-> @@ -5941,7 +5941,7 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
->  	     negotiated SMB buffer size BB */
->  	/* if (ea_value_len > buffer_size - 512 (enough for header)) */
->  	if (ea_value_len)
-> -		memcpy(parm_data->list[0].name+name_len+1,
-> +		memcpy(parm_data->list.name + name_len + 1,
->  		       ea_value, ea_value_len);
->  
->  	pSMB->TotalDataCount = pSMB->DataCount;
-> -- 
-> 2.34.1
-> 
