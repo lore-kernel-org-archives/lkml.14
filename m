@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C4F84A32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC0674E3A
 	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 19:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707507121; cv=none; b=FKjjrJO0y1ecFKuPf1KQ/CqdOLX6QRF5UPsf7Zwy3lv8C5mF+xw0zixL6hCAgO481pj0hPhu4sYYJ/RhJaQOmMzqYABtYDURcqn7yyoh6MK06mE94xk8akU1u60+YzzgKBQWqM6l/f1LlB4WOhmo41mtaOd+Yzt+QRB9eWLGZhk=
+	t=1707507121; cv=none; b=cJH0EeEr4VoO0ZO7QXjrKrc//fIVoomaecx2nXnC60b6hX7Ih9tTuVPlWkrOaRJA+PZycgFYfUXQ1elki8M+HSwsoMvE0HgSGpD7t73gJtCrXlU/94lrPuaNuN3ujXNNEtguAei9R7nL8MGLa6FK6k8c0Co0WEf4GOCw7PvfhsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707507121; c=relaxed/simple;
-	bh=F+sIiex4L43Qikbn9GbDgBIpdkqiOM3V5P2O0mK4WyQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=N6TqkA6TybQi0NctKIk1TDZeEOxrwN9YLT44FMrrqRmGZ2QF9a0nZjyiDMuCnZe6fCW0BULhx4Z0kN8LLA3PPqOlVGiLxP3dp1gTZctirOhYJcpEt1DXSfWCG3TZIAa/09mQ+TevM5tOsUN/DZaIUtJrenlPmwMb83SXClfAv6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmnWk3Mt; arc=none smtp.client-ip=10.30.226.201
+	bh=SvRvbWUq67hWpGe06ImQpxOubWkq5TahLnFAgxsZSqA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nYzYv6F1X7iYrq6P6Z/RKcsRikjELLxOZUiE0UiANVkUZfFyLkarmIndmRDYk6bVpohSMpHXP0lbDgc1KO2evzB9uKrVnpsSsiQ90L7vfYlV8kPhQY5USlM8m4VsgIw1BgzolKyHsyhSxQfIr7vHuX0DAdwW4iiN1hroxumcMuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxU5n017; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmnWk3Mt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 188D3C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxU5n017"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3A9A3C43394;
 	Fri,  9 Feb 2024 19:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707507121;
-	bh=F+sIiex4L43Qikbn9GbDgBIpdkqiOM3V5P2O0mK4WyQ=;
+	bh=SvRvbWUq67hWpGe06ImQpxOubWkq5TahLnFAgxsZSqA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jmnWk3MtMYUaUbLdqCNwwYuuauCYq/HcUz97yJLf8lNg8A5g1w5oRaJZs7FKnHMf6
-	 X2p4xwQK0V8rKVYnNQI9SiAgvX99VBjezPlo7nZUzYjV3RUCAaAMY+cnofJ8Q946Y6
-	 pi1Wxuxb+T8FHzhn775nShvrmwlyEoK6a3s72/JGHjCEtKtob6NKgbDNWI9akMzASx
-	 4CjQdqvFI3TXhfr+evWkjGUgm9yN6vZEvNsgaOr7MR7lJ6eimbpaAXOO6C7cmrrPih
-	 etTxj+h0lkmiRKDLY+TbayXkQWYUmH4cG1I7AJrgs7hYRXFKwWsA8ax3e8iyUXA04V
-	 BmIXIQu96NNVw==
+	b=rxU5n0171QGiEgo9t4DOwm7DQR/mP7csdB681esZoAz8by/yyd1PZHXvW55FDxOC9
+	 pe8j54vTl5rBxK6TSfDEMO7OikYIHaVDp8DgmlcBUgUFJKnbhPlUoC9LJiSl6JS3hN
+	 SG2AlvzrIeLu7Qj3qksq0VdBAx2YTZNhWnkbTL/oEJ1MDBR2aHV0tcrNj8BY8HUOad
+	 IixmKbTvOXiLLNc2hqzY4ND5L0I685DPd/qtdfjWiXGgMWQDXNRrhJVfJs78ENMRrg
+	 53cHL2H27jw+LvE4uDdhT6+G893yuN05h9Li0XDnX5J2LYVi9ET/aeAj7u9cE6q6hS
+	 ONkZ2kpEGBT+g==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 05BB7E2F2FC;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 28464C41677;
 	Fri,  9 Feb 2024 19:32:01 +0000 (UTC)
-Subject: Re: [GIT PULL] probes: fixes for v6.8-rc3
+Subject: Re: [GIT PULL] tracing: Fixes for v6.8-rc3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240209200916.e1607c9688a39971feb43867@kernel.org>
-References: <20240209200916.e1607c9688a39971feb43867@kernel.org>
+In-Reply-To: <20240209084845.3744389f@rorschach.local.home>
+References: <20240209084845.3744389f@rorschach.local.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240209200916.e1607c9688a39971feb43867@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git probes-fixes-v6.8-rc3
-X-PR-Tracked-Commit-Id: 9efd24ec5599ed485b7c4d9aeb731141f6285167
+X-PR-Tracked-Message-Id: <20240209084845.3744389f@rorschach.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-v6.8-rc3
+X-PR-Tracked-Commit-Id: 44dc5c41b5b1267d4dd037d26afc0c4d3a568acb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6dc512a0a22e817100a0522d8f0985c8ffc86456
-Message-Id: <170750712101.26526.8809545842289447237.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: ca8a66738a444e05fb256ca0081224d066318401
+Message-Id: <170750712115.26526.3065654968842818136.pr-tracker-bot@kernel.org>
 Date: Fri, 09 Feb 2024 19:32:01 +0000
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Li zeming <zeming@nfschina.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 9 Feb 2024 20:09:16 +0900:
+The pull request you sent on Fri, 9 Feb 2024 08:48:45 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git probes-fixes-v6.8-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-v6.8-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6dc512a0a22e817100a0522d8f0985c8ffc86456
+https://git.kernel.org/torvalds/c/ca8a66738a444e05fb256ca0081224d066318401
 
 Thank you!
 
