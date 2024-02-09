@@ -1,88 +1,72 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B618AE4;
-	Fri,  9 Feb 2024 22:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACBA14F6C
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 22:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707516732; cv=none; b=suu6MgnvYD9Z3Q0stSP7oFwkNAiVNrwTZC8zcP3mIzjOOijk6y+PIU7o2RtwIGucnBLTuyOo8H5BP1mNjzT6j8f97HKq13sW1UHKbAz1DtQw39yWvKEkoEYEQh3jlOWGmCj8zwxXWbnaP8oA7TAaXIQJ4jbD7pwjjngSfLoP6C8=
+	t=1707516806; cv=none; b=RjBhd+X5/RdYO5qRN3jtsMTZ0NS1I0atMzURgXn2R3Csi3Fg8nTgcArXASW4HSCUGoZwSsvT4yWrpblgvI/t4xo9FNuQReh/zPZxsxh2XXk7calXBZz8tPoSbdm4p+ZaULOZ+4oP+T+yX6ruyHPFVDWzOIQuneZFdn4ny4TCHoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707516732; c=relaxed/simple;
-	bh=6oi2fMAr5Pa/CcrOzzWHwIc25Cj/SWFT1BQ4zQmQJ6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8WG24D9QPL+1wMiZdXjX8rKSByKCRLiEudkjDTQGWz5hIfvRGRG0CyBkbwykE5R9TtELhvgmD0WNlk3sRMZMvZaUOKcmR1/ldD+x0aP/SSxaedkCpnZy1hZJzjxnualb4fotK1rms/OUu0CzpvVOVar6svEJ/E4q6OZkr/tF1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Iy5YZcwt; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1707516806; c=relaxed/simple;
+	bh=xDYbd+DGzLF4NRgDCcI5oy/Gg3q6BXcvRGOTITka09Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=s/NvDt/YnETVp98LfHCIyyrbZrlycrMkzwzrWB39eQMsCcDSv7A8i/4xyBCfWI6T5UBzASUBf3u3YB60tHIM7npo9A3Wl+C6IVKc3/CRvTCRj00tc0Fsz45qJhUtb1sx7vAiBVt0YJlY8mRP519vOsl+jlC1QaUGw3inWBiigyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jZZYKmSZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Iy5YZcwt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Li/m2CO1iH9ZTlT4q9LrLguLOr9rrO94b5DkDf2WAJI=; b=Iy5YZcwtloEbmqNWDFuCkS/ag3
-	xF98DSUvYa6MMxUjuw+qRsat09Hkk+BqMQ7UnKaGDEeqzbrhUui6P9SkgZL2CrojlhmTaRrpzC9GV
-	8LqEpO/pTvbnlW/Yby63W7squg0yKMNgfMi8lpinDgd0algbRTmMvP0/g8CDYj2TwTGQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rYZ69-007Q99-PG; Fri, 09 Feb 2024 23:11:53 +0100
-Date: Fri, 9 Feb 2024 23:11:53 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: David Ventura <david@davidv.dev>, Jonathan Corbet <corbet@lwn.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] net: make driver settling time configurable
-Message-ID: <7485f0b2-93fe-4c82-95e8-5b0e10f9fa7a@lunn.ch>
-References: <20240208093722.246930-1-david@davidv.dev>
- <20240208095358.251381-1-david@davidv.dev>
- <20240209135944.265953be@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jZZYKmSZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3EFC433C7;
+	Fri,  9 Feb 2024 22:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1707516805;
+	bh=xDYbd+DGzLF4NRgDCcI5oy/Gg3q6BXcvRGOTITka09Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jZZYKmSZwEVkeSNrzlDR/rmu9PIg6eib8zzw63E+9YVy0+ptXVUMMNZgN29G3b3tJ
+	 dtdMHi8RdCi30sdnA3CJ4rie0jgstN9FqPdcn1oHtARMbtbOMa34GCjjLB6WVKn1mE
+	 SXc0T/75Fv/GWI74oE7HEcx5Ll1zfrfnw2+lwMbo=
+Date: Fri, 9 Feb 2024 14:13:24 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-kernel@vger.kernel.org, fuyuanli <fuyuanli@didiglobal.com>
+Subject: Re: [PATCH] kernel/hung_task.c: export
+ sysctl_hung_task_timeout_secs
+Message-Id: <20240209141324.28cae36fe14c909058c1fed7@linux-foundation.org>
+In-Reply-To: <20240209070935.1529844-1-kent.overstreet@linux.dev>
+References: <20240209070935.1529844-1-kent.overstreet@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209135944.265953be@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 09, 2024 at 01:59:44PM -0800, Jakub Kicinski wrote:
-> On Thu,  8 Feb 2024 10:52:29 +0100 David Ventura wrote:
-> > During IP auto configuration, some drivers apparently need to wait a
-> > certain length of time to settle; as this is not true for all drivers,
-> > make this length of time configurable.
-> 
-> Please CC folks who gave you feedback, Andrew's is missing.
-> 
-> Andrew, what do you think about just removing the wait?
-> Or decreasing it to 1ms?
-> It feels a little wasteful to be adding uAPI for something
-> which as you said is likely papering over ancient bugs. We'll 
-> fix the bugs which are still around and the uAPI will stay 
-> forever :(
+On Fri,  9 Feb 2024 02:09:35 -0500 Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-My guess is, the broken drivers are doing setup stuff after they call
-netdev_register().
+> needed for thread_with_file; also rare but not unheard of to need this
+> in module code, when blocking on user input.
 
-Reducing it to 1ms will probably continue to hide such bugs. So we
-could just go with that, and probably not see any regressions. Or we
-can decide we really do want to know about broken drivers, and just
-remove the delay.
+I see no bcachefs code in linux-next which uses this.  All I have to go
+with is the above explanation-free assertion.  IOW this patch is
+unreviewable.
 
-Either way, we don't need a new uAPI.
+> one workaround used by some code is wait_event_interruptible()
 
-David, is 1ms too long for you? If we do take the delay out, you are
-going to receive some of the flack from regression reports.
+examples?
 
-      Andrew
+> - but that can be buggy if the outer context isn't expecting unwinding.
+
+More explanation of this?
+
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -43,6 +43,7 @@ static int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+>   * Zero means infinite timeout - no checking done:
+>   */
+>  unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT;
+> +EXPORT_SYMBOL_GPL(sysctl_hung_task_timeout_secs);
+
+It seems strange that a module wouild want this.  Makes one wonder what
+the heck is going on in there.
 
