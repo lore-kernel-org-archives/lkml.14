@@ -1,226 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB76157326;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAB75025A;
 	Fri,  9 Feb 2024 14:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707487353; cv=none; b=HZnw6IXNq6HWXINtrd9OQYTIcJ40VA9XStC/6/2f4C9ozw1VhFEpdXO8dWJ++AW2V3rtycbZc8AnyOM6+CZA6CcP3PwzViAQIXZiCRRmU1TIhks7S19kOMa+ImD3inCnI8AL7khFLGYjaNyCRBEj4nO6Pd5LrXIJGk3FdwfpTKE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707487353; cv=fail; b=H4qMKYQEXz/gTxwsuw0FyP5X6/KXAbzC86HShG5Mszwlwj7wa3BI1yvq+4G/uI1kUD/BeTExFXZUOzvO+n+1Ht06O3U/+tF9t39Gc56kkZOHyfpMclHgZ1sGxZVpfMXDuhtbDo1nrrllBw23q009tdnMy0oU06U2zWCvd3SXSkc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707487353; c=relaxed/simple;
-	bh=K6rMMQZvXeXM/c2DLOoBYHOlEwO+LI0vLpSgjCF0MuA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cGLC3ReKZyoCafNFDO/mdBcuetAgQI3p96kX522K5nHZ6R1FlOqtCL8/34T+R6x7CTgRMI/OFCuZuKY04Krw5PQM4V/iMSMWeCDF7DyHboC1abDc0c23CZkW245Bn6F7aIFeBuam/Xp9RhcVe+YyfF9GGSj7WNDYirpvh9ywOcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lbgpae4/; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=5YqK8X+Nssx3UghroxhO0qywGFZVoj1dCa6QT5ZwvLg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=a3NLOFHGDMcYBoTD4MDAq1bNWuGh/Z6BfrPYG5shCartis5SbtWjKElhMfkoT2YxPuC2Of9lLVQ0czCEbG260L2hUudMUXOgYLx9WAKcsgy3fF9cFqwa5mmtQX5r8kP+Fu5tx0f9HQ+3I6fmim0e2tJQUNGvg1f0Ap3ar3o0nF4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GGtZklbH; arc=fail smtp.client-ip=40.107.92.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lbgpae4/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707487352; x=1739023352;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K6rMMQZvXeXM/c2DLOoBYHOlEwO+LI0vLpSgjCF0MuA=;
-  b=lbgpae4/7ZA3SRc0b7PMn5ohVWISk5IOQiN1ftIPZ5PoEOpLIfmZFUSH
-   1jvWDPG9Cj2EUQwiJGxWfwR+1SSWmIrgVQ0RNU1+/SLmci1OPxyd1/hUc
-   bQuKJIgMW+y+1iR6bclVu5wOib0FZ/DBLk3oJ/AKbWMUZszEJ/36nKJxL
-   +7Ou45VCOKsicrnT8jV0gP6xriYd98bP42CzUEC95o/NrRUTkA1KFcF5f
-   FlkmnzbMbHtL/OWsR0pkJ5NbV2CD+vNVbwp2lsB6iYWIO2+1UEd24Jtut
-   HjJ86QM/CWLxHuguQ+SVP3GfcaAzfbf+AchMe+3LdyCtIvx6KwhxYI6X9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1328896"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1328896"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 06:02:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="6596724"
-Received: from ldziemin-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.2.218])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 06:02:29 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: reinette.chatre@intel.com,
-	shuah@kernel.org,
-	fenghua.yu@intel.com
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v5 5/5] selftests/resctrl: Add non-contiguous CBMs CAT test
-Date: Fri,  9 Feb 2024 15:02:18 +0100
-Message-ID: <2c1011e7630605365b67caa6ddfe4e8ee2ba5bff.1707487039.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1707487039.git.maciej.wieczor-retman@intel.com>
-References: <cover.1707487039.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GGtZklbH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jbcDoUEz85IEiWYSwE6ny1DpOSGHxtpVJBPFawwwD21/EmLvtXqQBIwXHKeqk1FfnxAE34F5hpiRauqVwnml9STPFusk4t/o0Vfo//oGlOuRsmK8D+JUVPaiHAskLb57Xb9ggfLyabzCtuRMAIWu0Nqtl77HRvfnXwFqIHHuFXa73tfCzkG9G2PNEmCyxzk7O+de0xx/dhczZrPJya+v/O9wO9w5yDALdn1WzA1Ec7tpLJPinykWFRyZZ1moO5ITl6hqHRGndm8DN356jqvmgePCC1irerEQXzuqyXBKunmbbgb1TQwuvl81uKc8lWhKAQQQJzgA4KqMyPYT35ptzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mMPm/yRzS4LkriLfnWCP9NS7k227165nkluHgTDLY64=;
+ b=FP1WIZ7QZR0Fy9zyGgjqmAMUMXsjQheWKi7+9Myt6D6C5tMmIut9JF9DzNLwR27PQx/K9tqbbEQIS3usOxZ0T+J4BSJCOAg2tAyBBZmR7yaEz6jjsTuLe5LE0pfcuKKYnDBENIQUYYxQZLFhOjK+A4ARomaTWId/iGjTqh1cdds24m/eyZT1Dzl5gjbhD+ZDvbSydqgQSP+HXRo054XWMvVMB2kUkQFBw8AjZLEYE7VABiyFxHQOEqDs2B7MLw2IZ43lFCwwoixLB4gDzz7MAb9Gs8islwbvweceM9bnNmPDNDXPzY5f+9iTa+1Rh3vwLwURTeEb/+X7ffTog9j+2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mMPm/yRzS4LkriLfnWCP9NS7k227165nkluHgTDLY64=;
+ b=GGtZklbHDXSlCc14xgT7qzdoWZqEsdlZuz8A4OE3L0ybqhjxiwj0ZG+XeJN7z53cyfDV5TFO1BmQFv2dIIRMLv3Bd/IJwwjb/lqCWYhe4FdhBd2KgzcY2dSMoKHep9f7Ajj1A1JnvnGUFXqFWrPDc2AOZV8VKboKsrlwBrNbR3jBbd9SGEpFBF1VbNp17knjbaI8PW2sq+UiB4fzjU4O8mi8hzlbED4XfHaKtvwQ0tXqZoawZKR+CgV2597fZC9cY4tsUfqcSwhmnKiHEVQbOs0tAvrwaDax3h8Mjk6x4a2DaOGKAzok6+cLMNbVpvo+JlRGZJGwnkVRwbg7mQfwMQ==
+Received: from MW4PR12MB7213.namprd12.prod.outlook.com (2603:10b6:303:22a::18)
+ by DM6PR12MB4578.namprd12.prod.outlook.com (2603:10b6:5:2a9::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.12; Fri, 9 Feb
+ 2024 14:02:26 +0000
+Received: from MW4PR12MB7213.namprd12.prod.outlook.com
+ ([fe80::b68c:1caf:4ca5:b0a7]) by MW4PR12MB7213.namprd12.prod.outlook.com
+ ([fe80::b68c:1caf:4ca5:b0a7%6]) with mapi id 15.20.7270.012; Fri, 9 Feb 2024
+ 14:02:26 +0000
+From: Ankit Agrawal <ankita@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>, Alex Williamson
+	<alex.williamson@redhat.com>
+CC: "maz@kernel.org" <maz@kernel.org>, "oliver.upton@linux.dev"
+	<oliver.upton@linux.dev>, "james.morse@arm.com" <james.morse@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
+	<yuzenghui@huawei.com>, "reinette.chatre@intel.com"
+	<reinette.chatre@intel.com>, "surenb@google.com" <surenb@google.com>,
+	"stefanha@redhat.com" <stefanha@redhat.com>, "brauner@kernel.org"
+	<brauner@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ardb@kernel.org"
+	<ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"andreyknvl@gmail.com" <andreyknvl@gmail.com>, "wangjinchao@xfusion.com"
+	<wangjinchao@xfusion.com>, "gshan@redhat.com" <gshan@redhat.com>,
+	"ricarkol@google.com" <ricarkol@google.com>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"rananta@google.com" <rananta@google.com>, "ryan.roberts@arm.com"
+	<ryan.roberts@arm.com>, Aniket Agashe <aniketa@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, "Tarun Gupta
+ (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Andy
+ Currid <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, John
+ Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, Matt Ochs
+	<mochs@nvidia.com>, Zhi Wang <zhiw@nvidia.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 4/4] vfio: convey kvm that the vfio-pci device is wc
+ safe
+Thread-Topic: [PATCH v6 4/4] vfio: convey kvm that the vfio-pci device is wc
+ safe
+Thread-Index: AQHaWgb18It89LNRq0isaS+c2RvzNbEAtO4AgAAGx4CAAVCChQ==
+Date: Fri, 9 Feb 2024 14:02:26 +0000
+Message-ID:
+ <MW4PR12MB7213C81E5CD611CF3AFCB0A9B04B2@MW4PR12MB7213.namprd12.prod.outlook.com>
+References: <20240207204652.22954-1-ankita@nvidia.com>
+ <20240207204652.22954-5-ankita@nvidia.com>
+ <20240208103022.452a1ba3.alex.williamson@redhat.com>
+ <20240208175437.GN10476@nvidia.com>
+In-Reply-To: <20240208175437.GN10476@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR12MB7213:EE_|DM6PR12MB4578:EE_
+x-ms-office365-filtering-correlation-id: 7e15f7c7-7b5e-48cd-2b5e-08dc2977befb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ V/LesF/vko/Gd0I0U6G3uKJZaY7QTmhxWckDsxj77rsW/ePmxJpWRow3g1+UL/Vi6m5mYY6Q+4vES8JMjU9rMRdeJZSPv/Wvjrzkbz8S7CoGyIKej1NzwjUmq7cVtYQllCkvEQyHmcTxwkFj24TAgTrvxvQ+o0oyWQeqL9o27AKpUYXjJq0bHmzZntyKXxOzXtaMFrdMWaIJzI2DakgH36UWhej4XwZghrph4NmuvcFB8k2L8EAIRN1OaItz7TpuL2rNSb38/inmulgDWkX91C8QPAOTT/rzb5V6HNO3wr8qhgCbsceY39xO6gjDqZZBnRz5ZTRBCAhkpcYjYuFXLXd20wRrOe8bK0hP+UT02xvfMK2w2xViVVGjqlZvCbQ6cxC5pRrICfTeClovPqiB/jleKGgocCnbhVqM8JudIwXd3VOQzVN6VzcAVuECSqxAeotmlTkhr5dhI377Emr9JBLIm6ijVefZ9L2VzvJoFQVtOH7bU1toHFRoo1BBiGKPKip0mfGi8NlbwlgKf0vkKzzbzB0SefN1oe1um0lpBUXiKuq1eEF6GEciZDuRCGs7r/C5bm9OocJeKf4WMxL4d6nn9iOly+NTA4HJ4heBFeXSWspcNuj8BE8iHAU0x9qA
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7213.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(366004)(376002)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(86362001)(41300700001)(38100700002)(122000001)(55016003)(5660300002)(64756008)(66446008)(66476007)(2906002)(7416002)(71200400001)(478600001)(7696005)(9686003)(6506007)(54906003)(26005)(4744005)(38070700009)(76116006)(52536014)(4326008)(8676002)(66556008)(66946007)(110136005)(8936002)(316002)(33656002)(91956017);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?Z6XFeR8ZoIrJ0HBz0PiOzIvGulNuX6GMAru4AHjrG2hmIpvRIoE9fSAxmU?=
+ =?iso-8859-1?Q?wjqPszVlYZOqqDKDe+hvuf+ICu02p3IfvRo79yeVbaNrZh3cehSHGKAJO6?=
+ =?iso-8859-1?Q?4QGqx71SkhISysuZx02wjGIQy9F8+JAcyLxRbmTBzxTxHBZrgf+JcjuypN?=
+ =?iso-8859-1?Q?iISoFW3TdEQMfFF6YFH7sdClHQeHpqOWXYLec/YMfBzL5M43uQYpVsDuBs?=
+ =?iso-8859-1?Q?TCrMbangX4/3dAFERHeJUyNqEchHV07fe0XXYH+pRKAQagBHJJbik9Ge9f?=
+ =?iso-8859-1?Q?u5rkEaFcWwLr21hrUkaHmuQB+IooweYwPhAWw33dJa+Yde9xsjBMuntJS6?=
+ =?iso-8859-1?Q?ZAJDy7Cm+6HN2rMHDcSok9SfxWv74k6P0mNeNp70evFxGr4+LR+epHx6DR?=
+ =?iso-8859-1?Q?3THlsJsFR0QXIB/XmMiU+BGUKwmiac5BJDJC7sPYjAxSTEmZIQftwp+Vet?=
+ =?iso-8859-1?Q?1wf4neJIhMITuzpE4bIDiAH5vMX8v7JFZuWBEXYCmNSz9DB2sZ3/rv5DZK?=
+ =?iso-8859-1?Q?ziZK8JA22hyxtRfmcMsV7EGSgO0JpJ/X0uXSVG5nt+VVRbEKNVvX+n52iC?=
+ =?iso-8859-1?Q?XMkvqCi1WGO//XcJJ44ePk38fHONDWMRxbqQSrWSy+HWWFoZk5wzs+E72z?=
+ =?iso-8859-1?Q?Q0Vk7SimZttJgT/LZ+KYGFHyM61CY3rIB+RpDi8vTF33HhjgzUcmx96voV?=
+ =?iso-8859-1?Q?cQjrxiCf9uYUok4jHH09BogVCIbGXN5c336Exy9WKXcDq+rVlFBo3szid3?=
+ =?iso-8859-1?Q?LsO6qTBMfiB24mIA7pZ/nojYJqXZ12HTHX45vG6fFhy9RR6zbmsWVfqKbM?=
+ =?iso-8859-1?Q?vfhwRVLkT+L5pR79cLcdpFOXOSAe9pEFQ481+jhEoa920YfnvU806otZmY?=
+ =?iso-8859-1?Q?w3kJ6XA0DROsWcghjzVfAxP1n5BBTnvRsdBBqLKBnFwM/nUqySk//vfoej?=
+ =?iso-8859-1?Q?y62ueb7ataurtQub1PBUYC2L3CzKCpocxmGpHstUQx5apqRJ2oaDdPW80X?=
+ =?iso-8859-1?Q?KutZEEQW0c9BBXhnMijza2uOIrmadEFu+R+6oXbHZ6MIL/UxQUA5TtCh2C?=
+ =?iso-8859-1?Q?MPb+ALwb0CBSnxs3uIex8eyOLiNrhmRJK/4xEFL4YUiHUrYbdmaSHdYCc5?=
+ =?iso-8859-1?Q?k0PPNaTklYmcNrfekuOR7JLCt5vZYFLmBvRN+zG2u5fdiY+5rowUBJLX5N?=
+ =?iso-8859-1?Q?ueaidSRiitvQTczVxP0b+pCrL2T9Mzfg61hEdcKbk4wd646QtANzB1qRYj?=
+ =?iso-8859-1?Q?b50DC3q6qgPPEr3kTHwh0fVcmyScxh2gVWh2T/9pNOLWkl4lkwdle5B7yF?=
+ =?iso-8859-1?Q?3XSA5nOmQDU8R0hNKNjk/nr2N/rI+BVSPvp8G8p8/jJeJZjKvCJsliRr+s?=
+ =?iso-8859-1?Q?z9SGJxhBzgHjfdEX7752Ss1Mm5aybDYIE8iJsI22vBvgAAKx4IAycAUmOq?=
+ =?iso-8859-1?Q?8TK44BuRc6aJL4spWrG8kDSzZLFn+dTYruaOkrwb6erbwBKNKiIl9YLrMN?=
+ =?iso-8859-1?Q?WBsY5GeKK70A5wEm8XXK3tswFGGRjueQrOTUlne2ahljp4Z+mdQ+q/PcT6?=
+ =?iso-8859-1?Q?d4sGZNgf1zBKEIGGbZX35pzdUlNa39EgZ++2DY8GqzTtTLkRjOOAapcsmw?=
+ =?iso-8859-1?Q?Frb9hENMpG7o8=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7213.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e15f7c7-7b5e-48cd-2b5e-08dc2977befb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2024 14:02:26.1571
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tfo7sRb7XEpyHe3J2SJaGSoit7N8MmmIsOXTEQBBfJibEtxGUybdO+Mki0mEJPxorQIBPQoAxVYN0C/f8er5Gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4578
 
-Add tests for both L2 and L3 CAT to verify the return values
-generated by writing non-contiguous CBMs don't contradict the
-reported non-contiguous support information.
-
-Use a logical XOR to confirm return value of write_schemata() and
-non-contiguous CBMs support information match.
-
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
-Changelog v5:
-- Add Reinette's reviewed-by tag.
-- Make 0xf UL in case the CBMs get bigger in the future. (Ilpo)
-
-Changelog v4:
-- Return failure instead of error on check of cpuid against sparse_masks
-  and on contiguous write_schemata fail. (Reinette)
-
-Changelog v3:
-- Roll back __cpuid_count part. (Reinette)
-- Update function name to read sparse_masks file.
-- Roll back get_cache_level() changes.
-- Add ksft_print_msg() to contiguous schemata write error handling
-  (Reinette).
-
-Changelog v2:
-- Redo the patch message. (Ilpo)
-- Tidy up __cpuid_count calls. (Ilpo)
-- Remove redundant AND in noncont_mask calculations (Ilpo)
-- Fix bit_center offset.
-- Add newline before function return. (Ilpo)
-- Group non-contiguous tests with CAT tests. (Ilpo)
-- Use a helper for reading sparse_masks file. (Ilpo)
-- Make get_cache_level() available in other source files. (Ilpo)
-
- tools/testing/selftests/resctrl/cat_test.c    | 81 +++++++++++++++++++
- tools/testing/selftests/resctrl/resctrl.h     |  2 +
- .../testing/selftests/resctrl/resctrl_tests.c |  2 +
- 3 files changed, 85 insertions(+)
-
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 39fc9303b8e8..d4b7bf8a6780 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -294,6 +294,71 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 	return ret;
- }
- 
-+static int noncont_cat_run_test(const struct resctrl_test *test,
-+				const struct user_params *uparams)
-+{
-+	unsigned long full_cache_mask, cont_mask, noncont_mask;
-+	unsigned int eax, ebx, ecx, edx, ret, sparse_masks;
-+	char schemata[64];
-+	int bit_center;
-+
-+	/* Check to compare sparse_masks content to CPUID output. */
-+	ret = resource_info_unsigned_get(test->resource, "sparse_masks", &sparse_masks);
-+	if (ret)
-+		return ret;
-+
-+	if (!strcmp(test->resource, "L3"))
-+		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
-+	else if (!strcmp(test->resource, "L2"))
-+		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
-+	else
-+		return -EINVAL;
-+
-+	if (sparse_masks != ((ecx >> 3) & 1)) {
-+		ksft_print_msg("CPUID output doesn't match 'sparse_masks' file content!\n");
-+		return 1;
-+	}
-+
-+	/* Write checks initialization. */
-+	ret = get_full_cbm(test->resource, &full_cache_mask);
-+	if (ret < 0)
-+		return ret;
-+	bit_center = count_bits(full_cache_mask) / 2;
-+	cont_mask = full_cache_mask >> bit_center;
-+
-+	/* Contiguous mask write check. */
-+	snprintf(schemata, sizeof(schemata), "%lx", cont_mask);
-+	ret = write_schemata("", schemata, uparams->cpu, test->resource);
-+	if (ret) {
-+		ksft_print_msg("Write of contiguous CBM failed\n");
-+		return 1;
-+	}
-+
-+	/*
-+	 * Non-contiguous mask write check. CBM has a 0xf hole approximately in the middle.
-+	 * Output is compared with support information to catch any edge case errors.
-+	 */
-+	noncont_mask = ~(0xfUL << (bit_center - 2)) & full_cache_mask;
-+	snprintf(schemata, sizeof(schemata), "%lx", noncont_mask);
-+	ret = write_schemata("", schemata, uparams->cpu, test->resource);
-+	if (ret && sparse_masks)
-+		ksft_print_msg("Non-contiguous CBMs supported but write of non-contiguous CBM failed\n");
-+	else if (ret && !sparse_masks)
-+		ksft_print_msg("Non-contiguous CBMs not supported and write of non-contiguous CBM failed as expected\n");
-+	else if (!ret && !sparse_masks)
-+		ksft_print_msg("Non-contiguous CBMs not supported but write of non-contiguous CBM succeeded\n");
-+
-+	return !ret == !sparse_masks;
-+}
-+
-+static bool noncont_cat_feature_check(const struct resctrl_test *test)
-+{
-+	if (!resctrl_resource_exists(test->resource))
-+		return false;
-+
-+	return resource_info_file_exists(test->resource, "sparse_masks");
-+}
-+
- struct resctrl_test l3_cat_test = {
- 	.name = "L3_CAT",
- 	.group = "CAT",
-@@ -301,3 +366,19 @@ struct resctrl_test l3_cat_test = {
- 	.feature_check = test_resource_feature_check,
- 	.run_test = cat_run_test,
- };
-+
-+struct resctrl_test l3_noncont_cat_test = {
-+	.name = "L3_NONCONT_CAT",
-+	.group = "CAT",
-+	.resource = "L3",
-+	.feature_check = noncont_cat_feature_check,
-+	.run_test = noncont_cat_run_test,
-+};
-+
-+struct resctrl_test l2_noncont_cat_test = {
-+	.name = "L2_NONCONT_CAT",
-+	.group = "CAT",
-+	.resource = "L2",
-+	.feature_check = noncont_cat_feature_check,
-+	.run_test = noncont_cat_run_test,
-+};
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index f434a6543b4f..2051bd135e0d 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -209,5 +209,7 @@ extern struct resctrl_test mbm_test;
- extern struct resctrl_test mba_test;
- extern struct resctrl_test cmt_test;
- extern struct resctrl_test l3_cat_test;
-+extern struct resctrl_test l3_noncont_cat_test;
-+extern struct resctrl_test l2_noncont_cat_test;
- 
- #endif /* RESCTRL_H */
-diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
-index 3044179ee6e9..f3dc1b9696e7 100644
---- a/tools/testing/selftests/resctrl/resctrl_tests.c
-+++ b/tools/testing/selftests/resctrl/resctrl_tests.c
-@@ -19,6 +19,8 @@ static struct resctrl_test *resctrl_tests[] = {
- 	&mba_test,
- 	&cmt_test,
- 	&l3_cat_test,
-+	&l3_noncont_cat_test,
-+	&l2_noncont_cat_test,
- };
- 
- static int detect_vendor(void)
--- 
-2.43.0
-
+> The comment above this is justifying the flags as equivalent to those=0A=
+> set by the remap_pfn_range() path.  That's no longer the case and the=0A=
+> additional flag needs to be described there.=0A=
+=0A=
+Ack.=0A=
+=0A=
+>> the comment where the bit is defined and we could use a name like=0A=
+>> VM_ALLOW_ANY_UNCACHED or VM_IO_ANY.=A0 Thanks,=0A=
+>=0A=
+> I'd pick VM_ALLOW_ANY_UNCACHED of those two=0A=
+=0A=
+If there is consensus on this name, I'll make the change=0A=
+s/VM_VFIO_ALLOW_WC/VM_ALLOW_ANY_UNCACHED.=
