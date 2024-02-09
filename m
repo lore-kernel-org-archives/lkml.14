@@ -1,161 +1,181 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2137.outbound.protection.outlook.com [40.107.247.137])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0500969D34;
-	Fri,  9 Feb 2024 14:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.137
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707489033; cv=fail; b=fiE8Y0O/ZptZ/4ZvGFR0bjR6ZBoGbWU+gvkHZiQRXYaFZMT0BuwhzzGlPCRqDISLRxVDz4vavwzLmM+mg1PwOQMVgcU4QIcqBunGt/TLL0Y8kPpzDaOW1mXF7KmuXunlWFPcfrBswKIqfGqaNck1kc3aZq5Fneg8X8a2DTaBvcw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707489033; c=relaxed/simple;
-	bh=U2phM+abfp8+ubwzCaZiw6vNdkIDVJLH5OsBGMcwwrI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=aWmQLoz+9Yu58NyBQmOWxDi4F4aioTzRkwiI0Na+kHpeOL1nNguk5jODLw8HnLQfUrEqICp9bAIhKdv8qxqbRRwKr3+e+wPqAhcocI9ju6tq3qd5ROYYydXdebhe14Vp6LSh8HnYavlDD0s44S8wkow9gjsH+Q5PK+7zZB+KtTM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vaisala.com; spf=pass smtp.mailfrom=vaisala.com; dkim=pass (2048-bit key) header.d=vaisala.com header.i=@vaisala.com header.b=U/xEDka5; arc=fail smtp.client-ip=40.107.247.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vaisala.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vaisala.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8643F9C0;
+	Fri,  9 Feb 2024 14:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707489114; cv=none; b=ahbAgNZgPr+egkqcf02zYe3womeJJiL+fEU+xK35kbc0VAkswDKi78LB6SPTiWhBQ3DMOm1CytHoTAlWxtc2Ci9UtasBifZtw6YIaaW91emRldYR1AMdj6OYrgZeHbJUXbRdwvaJItmTWQ1uqXTGvHRvtjBJjb41ZJEx1enpDi8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707489114; c=relaxed/simple;
+	bh=QyuJSJlqyr4I15nAAAdkFa3ViskJgQew0x/JXRRa0AE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NO6l/YpIPOpSYGq9KYpD3i2uCGrRYi/JR2twhPEsuTqSN94nSSAZ1GI/cl/vR71RxRQFDSDLerMikAJBVBTlN2Zf+tjbzJhZCA9FXnNHjfzi9JdnJsDqGfvtPMnAu9aBXxeKghK4YOAL3lFBDCa91eq5V4DDdHwC/nasFoQrhQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QgvOrLd4; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="U/xEDka5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F0PoBC5gFVScg5jwVmirrKGHf50owOk167ewxiMWjDQYVA6mY9AGG0no7sDcs79/iuNPq6mZLOY3QGrjxdEKbredoxa2mY+0xwQarrvc0xIP3VZ4PgFpN7PELu2YpZHxwUwChk7E8KlwlahrxnQZluvHjiVWzv//IeDlBx7NYHTHvQQeyzBkCYqnJKc5uNjj7T/bA36s+36MoVv9uK2VsPDeSsynQbo6EqizYR8cburE+ABhBaXXxgcEccGafYtdAmLHi2LbfHSJfRkQggzzNKgOKxJA4GzekWJEiSzbNXWaQVG/cPSyeKP//QJ8rEVlyx2acPtsYf7zAynVVVcE0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kfJVkj8byHgGgoRSZY/a/EQ+ehk+0NqskUsJfzop2vg=;
- b=CM6g71ndSLYqO1QEMF2XCsm5zyi+Hz6nm7GLMT+5oG9R6sBfOEfDsXyuKFhb7fZT938Okyr6ubcG7RB68FXtUDrLa4MLHJxJTUZTtuKZ79wlIiSPorEsIEaz1cW/yDhMyh7ct1QyQiLRKHEHRDhseUb506XOxf8m87s0AXb67T48t7BY+9gpYTTYOPRZSEs0t0p5c3N2qopY3Bv3f2x9x2pJqHUgK5f+tLH5iDsORk5QO4uUwmEyw46diRq5hCB/pjaeIlGWMg38Cm3BqKgDIjBNSC4m7W2XLXXdDmfsVlmuJlU9cXm5h6bGXW67nTjDKctk2z1MVP9FB7CHaERkZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
- dkim=pass header.d=vaisala.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kfJVkj8byHgGgoRSZY/a/EQ+ehk+0NqskUsJfzop2vg=;
- b=U/xEDka5As+T9VhtlQXyL+C+4aQ6oefvuQQpwxIKJbBMLLqS7If5oiS1IV9QGhW1it/GQg4xYiNSIgzz1JNfBXaYVqZmT8XXzNiLh05smp6eQXYR6egbzhptdLG9m6xHS3atG+QZf39PWCcBQnWy4kr/XIxJDInUBcFBGSumMYwuAW1jg0UWyGoZyPwjzkCJeGY23eLQuuSt9bM4D9DJLY0a3HtiRSgNdB6x8akzmRqFCfTqC/xGyARFxDbcIkcExHXGAjpLHBgJbG4sPt9zZgrmj7O5qSX0k8QrMKd0VJa2QI6Tdo8rk6GrR4o/leZN1YKi+djjrTQBspI0DtqlWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vaisala.com;
-Received: from AS4PR06MB8447.eurprd06.prod.outlook.com (2603:10a6:20b:4e2::11)
- by DB9PR06MB7386.eurprd06.prod.outlook.com (2603:10a6:10:252::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.24; Fri, 9 Feb
- 2024 14:30:25 +0000
-Received: from AS4PR06MB8447.eurprd06.prod.outlook.com
- ([fe80::b5ae:8355:acaf:29e0]) by AS4PR06MB8447.eurprd06.prod.outlook.com
- ([fe80::b5ae:8355:acaf:29e0%4]) with mapi id 15.20.7270.025; Fri, 9 Feb 2024
- 14:30:24 +0000
-From: niko.mauno@vaisala.com
-To: gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	vesa.jaaskelainen@vaisala.com,
-	geert@linux-m68k.org,
-	Niko Mauno <niko.mauno@vaisala.com>
-Subject: [PATCH] usb: core: Kconfig: Improve USB authorization mode help
-Date: Fri,  9 Feb 2024 16:29:51 +0200
-Message-Id: <20240209142951.27195-1-niko.mauno@vaisala.com>
-X-Mailer: git-send-email 2.39.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR06CA0117.eurprd06.prod.outlook.com
- (2603:10a6:208:ab::22) To AS4PR06MB8447.eurprd06.prod.outlook.com
- (2603:10a6:20b:4e2::11)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QgvOrLd4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8F59C240002;
+	Fri,  9 Feb 2024 14:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707489109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Aq9MbOqr21Sl0cLKaoBi7IfLbqhaI1zVPu3ITBlSL8o=;
+	b=QgvOrLd4CH0xvBJjh2lbqtPgPCmRxHnDiPDPO54ZMRSb62wQ3AT6wnzDmq+w2Xf1Hcof7n
+	cJBeXqM48r4vthLWHP8MbKcQFeeUXqprkIdIKsQv2YwtUzrWYFvbdiE7rkEvJgFEQ+Y6eg
+	vLx2t/h5u8lwh6HkRY56X5Pi+6iS3lfhed97byLmBwV4nM1HpyLOQKGEScbnkz4FUex8Gz
+	UAr7t02ETmVg9fIyLck3fz+GPlqBbnw7TK3q6KWjUXdxdaEeGxIwtR3Aff57RmzDTuYmxC
+	pht/sVt95GcBJLa6vA4Gn3ye8cthaeKBfmTVKixNwLIYyok4XuahnECr9cNHkA==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Fri, 09 Feb 2024 15:31:39 +0100
+Subject: [PATCH v5 03/13] dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR06MB8447:EE_|DB9PR06MB7386:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e2ba728-1159-4062-b979-08dc297ba700
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	7sIc96Fwm0sDiieXbZdCAg2jmaTTG/CCk+qdu5ebnt4HyJunTQ3s6hoSqbl7R6KiBeRWsyr6Tz6gzLm2QbozkfcksT1vrF49taoD7PvnlXMjqmiS7NAkF3Dh/lNK7YgT4ZCiE2BtbXcPq7fuMMbLPbdnqhvtmEx19wIasbfcMsKF4ZnftHunq/blG06eu98Rbhpf6C5I0bocpNTOKh2C0+50hcqlSIwsx1CeACwrq7G04e+zlAuH49UVQHICWutB6hOg7HVmdq8fibcsCypsIoRxLuKPFOYEYb5ACO7GZqqZzepp2cuwMiTfO8j8ioRx4MrytB83PGoN20JbIPcXjpQ/tcOFqnPnn0E22c2ZFHJLLgj5xFq1Mm/Rc1OTZTy9F7ASWFV4NXpipZPl5yZoWDu9kG2VoLDAZE8MTTS7IEsst15MPjrzA2Y91dzGxR7j8Dou9drun66ZDMPHlXHZnVpkTzisQjbyLFRnBBOPa/NJwdYy6TlAP6dCrTkoJKj3Es3gTgpSeSSWgvo5lUhK5To9PQafL4MrjpEt9nc1hhP0KvsakZo4XNpffnCLkEm/NeX+11ONhXJazMpbBFipG01HcsQGe/28TX5JxUj25Q5nq+bA9ZqseSHkUCRNIC2W
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR06MB8447.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(136003)(366004)(39850400004)(230922051799003)(230273577357003)(64100799003)(1800799012)(186009)(451199024)(6666004)(52116002)(2906002)(5660300002)(316002)(41300700001)(38350700005)(8676002)(66476007)(66946007)(478600001)(6506007)(6512007)(6486002)(9686003)(66556008)(4326008)(8936002)(6916009)(107886003)(2616005)(83380400001)(38100700002)(36756003)(86362001)(1076003)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gyTmNr9hZs/OSSr1RXsFaVmiyAWeWPlmOkMihQfaHzzkmqTZ6e++HfyPKzCd?=
- =?us-ascii?Q?a+ajbNTNTr7WxP4ycvZGHJlNvYQ157JY0EuKCVgxpClJlWAIJnlwrN+t+CFS?=
- =?us-ascii?Q?a6/ftDOrekV7Zi5JLXkNXIGib2RmoWKrVuotGvVzoaK2bGZzLCi8hIHWyVvO?=
- =?us-ascii?Q?bn40neYgRPLpx4o/r/X6vzxBvtOGu5QC8yW/UN5t6Cb70lmNVsNT5SxI8ogF?=
- =?us-ascii?Q?QMSskyqrmLjHd+yJpteK5fzMwnx8HiVdAhqfMEV0MP8/skA43t5ns7Q7unbX?=
- =?us-ascii?Q?JAkeXtHu9sGwJErATaA7yg1Rkljv1A74ltfzVdw2XP4LJiS4QbCO5Iaa2pn7?=
- =?us-ascii?Q?XXtIlFF8A1bFo02Sxm0B/IP0Br3dm6duqd4vVvDZ3xiVb99aGWytibhuPZJV?=
- =?us-ascii?Q?JKFHQynDIzSMHrDFMpeqLHyRcPMfJVPIrY7+Xv5YDJPFi08ZPZUJZcZ2Aszl?=
- =?us-ascii?Q?XJIHumYTCl+cbNXRtJUwBl0Z5qvwnOLGY3lsR9fvSMPVLww6svSsnIl3aBYK?=
- =?us-ascii?Q?RTe1SWuXPyznhjYIvZFC8o0DZh7DA7N3vn/bJalHKJVw2JcXjaAaIc8gOLSR?=
- =?us-ascii?Q?ixsjAKRyOpx2E580/Q/bb5mZ0bKWzs80YHtaQlip3XPqyvdG5Go6x5ZQZMvI?=
- =?us-ascii?Q?3OStHjKnV9Wwa58Jwi9WgFZGZUbtEOEEZpEWjtVcFlYVK2FB+AwdaoVJrn3J?=
- =?us-ascii?Q?YLC0sXYLbd+n+++qfrPf+n8Ww2M9BTtZAQpkySW8xY8bOZ74LF0GMSCvQ+RV?=
- =?us-ascii?Q?wLxJd2xnCjhaR29osxAEzeyzOzvmJIzVcm3FP7ZK0GFVyQu4KF/PhtV34Dw6?=
- =?us-ascii?Q?7TXQ+7l8Y51TgkeRksk5jsr5vP+CgabMcOgcbW6XVA8fg+Tufs6P2BDSMF1m?=
- =?us-ascii?Q?YsC7/bazV2GQzXpXYUJvJ2ZzHT0VtPp18KXVAZHfW78I5OiYR5q4NGc9SdJO?=
- =?us-ascii?Q?uMJkiDiyYzNIhJSgJl4HzP1k/fbRgDQAzApTnLKQj/z8E3VB3Ux/+AnkE75w?=
- =?us-ascii?Q?3buE+Vq2Ym3zZyuYpebxlUCSfRO0fRKzntqePpkI4Ky0VoTC2ZDocTQUHB7Y?=
- =?us-ascii?Q?gxq4vlYoJDVOHJ24S2/gxq2bW6vEv9QSRvPGA4yd7Wxa5hB+NPwmwiRNv5iK?=
- =?us-ascii?Q?y52pOtXEcVSrS+hK+NHEu3aCzdYEcmVzCRhtexRcBoID8A4UKlPRsVJOJAcW?=
- =?us-ascii?Q?eFwcWUuSZO5lFO8XKfsqCkzR741egY0BrCeWhqHHMPRNEyVYWSx0kDaeLrbf?=
- =?us-ascii?Q?Me5NCnfd5GKgfgJP8xuLScWfv97OHhk7zn6+RDHlD6ApP2KC9F0WexKhd8hx?=
- =?us-ascii?Q?Ng/3e1ljebo9kir8+DMjs8KHVFHoCN5H/PSwE3aNWLCfFP5Wg7nBKzkGcqNM?=
- =?us-ascii?Q?sC6yjQi+kF4srhfqHI5MQF90rZM7Usa6f5+y3hyYD+dWms6otVHO1k7bTrq/?=
- =?us-ascii?Q?vfAo0IoOuxXzbE04n2waBvXhPCTX2OIx7UAPj+s2q23w/a9y+NvvBYziyA/u?=
- =?us-ascii?Q?CuhVL0NwgnssvRalCs2WcIfIJk8+7ZV/JYMiN98I0s7bWjip19qj5h1NSBqU?=
- =?us-ascii?Q?KJawtA6apgpxhHY2fVpWgv+UTe733uTNAH3mW6BlkDRbAXvYOShr9Wf6bRaG?=
- =?us-ascii?Q?QQ=3D=3D?=
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2ba728-1159-4062-b979-08dc297ba700
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR06MB8447.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 14:30:24.0631
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V40cMP6LwAmjmKLj9AY6axx1E4lGnTekyFRh0/PTFzsd/ir+BDVctNt518AMeg2im4QDOcp8DNN3zYpyE6cgjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR06MB7386
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240209-mbly-clk-v5-3-f094ee5e918a@bootlin.com>
+References: <20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com>
+In-Reply-To: <20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-From: Niko Mauno <niko.mauno@vaisala.com>
+Add DT schema bindings for the EyeQ5 clock controller driver.
 
-Update the default USB device authorization mode help text so that the
-meaning of the option and it's available values are described more
-accurately.
-
-Signed-off-by: Niko Mauno <niko.mauno@vaisala.com>
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/usb/core/Kconfig | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         | 52 ++++++++++++++++++++++
+ MAINTAINERS                                        |  2 +
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     | 22 +++++++++
+ 3 files changed, 76 insertions(+)
 
-diff --git a/drivers/usb/core/Kconfig b/drivers/usb/core/Kconfig
-index f337aaea7604..4665df550d36 100644
---- a/drivers/usb/core/Kconfig
-+++ b/drivers/usb/core/Kconfig
-@@ -126,10 +126,21 @@ config USB_DEFAULT_AUTHORIZATION_MODE
- 	  Select the default USB device authorization mode. Can be overridden
- 	  with usbcore.authorized_default command line or module parameter.
+diff --git a/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+new file mode 100644
+index 000000000000..44eff4618ca7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mobileye EyeQ5 clock controller
++
++description:
++  The EyeQ5 clock controller handles 10 read-only PLLs derived from the main
++  crystal clock. It also exposes one divider clock, a child of one of the PLLs.
++  Its registers live in a shared region called OLB.
++
++maintainers:
++  - Grégory Clement <gregory.clement@bootlin.com>
++  - Théo Lebrun <theo.lebrun@bootlin.com>
++  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++
++properties:
++  compatible:
++    const: mobileye,eyeq5-clk
++
++  reg:
++    minItems: 2
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: plls
++      - const: ospi
++
++  "#clock-cells":
++    const: 1
++
++  clocks:
++    maxItems: 1
++    description:
++      Input parent clock to all PLLs. Expected to be the main crystal.
++
++  clock-names:
++    items:
++      - const: ref
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - "#clock-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 35c752dc536b..2143f64e9e15 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14789,10 +14789,12 @@ M:	Gregory CLEMENT <gregory.clement@bootlin.com>
+ M:	Théo Lebrun <theo.lebrun@bootlin.com>
+ L:	linux-mips@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+ F:	Documentation/devicetree/bindings/mips/mobileye.yaml
+ F:	arch/mips/boot/dts/mobileye/
+ F:	arch/mips/configs/eyeq5_defconfig
+ F:	arch/mips/mobileye/board-epm5.its.S
++F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
+ F:	include/dt-bindings/soc/mobileye,eyeq5.h
  
--	  The available values have the following meanings:
--		0 is unauthorized for all devices
--		1 is authorized for all devices (default)
--		2 is authorized for internal devices
-+	  This option allows you to choose whether USB devices that are
-+	  connected to the system can be used by default, or if they are
-+	  locked down.
+ MODULE SUPPORT
+diff --git a/include/dt-bindings/clock/mobileye,eyeq5-clk.h b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
+new file mode 100644
+index 000000000000..26d8930335e4
+--- /dev/null
++++ b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
++ */
 +
-+	  With value 0 all connected USB devices with the exception of root
-+	  hub require user space authorization before they can be used.
++#ifndef _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ5_CLK_H
++#define _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ5_CLK_H
 +
-+	  With value 1 (default) no user space authorization is required to
-+	  use connected USB devices.
++#define EQ5C_PLL_CPU	0
++#define EQ5C_PLL_VMP	1
++#define EQ5C_PLL_PMA	2
++#define EQ5C_PLL_VDI	3
++#define EQ5C_PLL_DDR0	4
++#define EQ5C_PLL_PCI	5
++#define EQ5C_PLL_PER	6
++#define EQ5C_PLL_PMAC	7
++#define EQ5C_PLL_MPC	8
++#define EQ5C_PLL_DDR1	9
 +
-+	  With value 2 all connected USB devices with exception of internal
-+	  USB devices require user space authorization before they can be
-+	  used. Note that in this mode the differentiation between internal
-+	  and external USB devices relies on ACPI, and on systems without
-+	  ACPI selecting value 2 is analogous to selecting value 0.
- 
- 	  If the default value is too permissive but you are unsure which mode
- 	  to use, say 2.
++#define EQ5C_DIV_OSPI	10
++
++#endif
+
 -- 
-2.39.2
+2.43.0
 
