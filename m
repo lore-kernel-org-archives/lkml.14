@@ -1,247 +1,130 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340771292F8
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B471F12A146
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707496883; cv=none; b=VySK345CeTByri63OV8txg+Hd9gytvRe/oH2ZG80PrHl8S1rJzCbs/IZcsKeISv+5v+kvZYpLIRsMJ1rLtZduirL7mV73wk+s+5mW9p6M/f1EkRPU+13m55E4BWLCsd2uacFW17yVJ1xI249b/vp64DPBt9hJyTVicCK3gWrqAU=
+	t=1707496885; cv=none; b=L4bYT2vIM0qfpl6SVfaMIPCmXXfP8cJKjwLjGjgPlMpCRgFkwWh06b/h5lWLf18CUs3Jk/ZfikUQJ9ql/MZOzhaa4FPjFkzAFhZfVhemXTYxk7XW5UihixQ5aSLx7Vi4YBf+Kxpqng+GVm/tTkV+X0gRSrW6jzuauUTAcTwUt+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707496883; c=relaxed/simple;
-	bh=5WoLQ+20FuNzDTgx6dlWdeAOXVkYHDqU6RsL5tdTmfc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VgZG3miU7BwfFu6RHx6Q9TUWxTBR1+zMxc40hvoNbVQL2UHYpPQpaLcITibKriLl/IKkQ+rW6VnGHsY8xsCIr6oaXQ0HpJvr/FVX2nd/KzB7mXQ52Y7w1pHmaCAimZk3hnjFEN2mAl0p/UhaZ2s29bydWDaXSLO7P3HzxGxkjLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=ZM4Dshbn; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1707496885; c=relaxed/simple;
+	bh=cWBreh1uuEEiqOpLgDlhEs12/LVS9j+zXzKJbO/pwK4=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=PFpCveHzsIHcp0fRq6r/KGYeGwly7027jkQ066ho4btklmLVtkpqrg5k3Cz6JGdQSKXlxINidlTYyLOW7wm9Vt/d8m/QjNHwjgtzwRZSx5qnF198LRbmROrBhBIy+n2YXJKptApm49VAVAZI5Wgv3l9+bO3zXQoe7MwP/NVsXAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=BL6pVXWe; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="ZM4Dshbn"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a383016f428so127946866b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:41:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="BL6pVXWe"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e08dd0fa0bso522674b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:41:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707496876; x=1708101676; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fKk+aGvc2YUoK3OFau8iqg4ZDHFtN8sLbkkpKq6ClNw=;
-        b=ZM4Dshbnwb6ldz/uZQgEDTAtjh8P9lOFBXnxms73HCwhThxbaMJkwwYpcbmZM78FmS
-         mUTXzAwZ4OWeCMkjz/WduyvQNFZkFqGQy5Y3EaNkKZVayPrmXHzNTRnRHY9v6R0MD8Yp
-         7FiAUcY6z2eUb7MbY4Ry54qH2+9/eAcIF0ColR9QVLftcF1s1JeD1rLnLoWsYUcgYm4V
-         YiC9VWNyVI8AQUgxRm8mjhMwq/8EDRZ1gwfJp1yu8oYv+uXwe7R9H0zegekREMbgEQ1w
-         DPq4hzFfDBzN19lMq+0GGGl2IlbhbHQ0CttpdXJtUD/eFfb6HS9QlgPYe1omazyq46Zl
-         1DlQ==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1707496880; x=1708101680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2zcUgQutS3DlGmwc5sEu07E2yjamp4+tUNWDaLkXDGg=;
+        b=BL6pVXWeOhXRvpwBrQKaiO1OO8eDuYdJdqJRcabv3PUfPOpZZ5g6EEnokfmExc/d+U
+         vXyAFSkKG3/NO2zmk4kyMah3m2zHB57kYeSyiDOEcHrz6DUJZ3QOOrLpD2tCQiYostDT
+         IlPJ+tbgPSg89asUdInOXIs8+bR/lnRl8a2icOn0awiI7eG6RCnCt8qkGyIJtBSP2Rnv
+         UhU2vqA0+7kgZ7CI4Gx42sJVlcr5eDYbJfThMzxqB4xFSZOENO/m/2QniyuKV/F3S3IB
+         mhFqksFSitXAY/bxDnZTeM2Odoe2oZeip0cGuEgJP+XzJIdGSXvIVFfiJTGSn0gQ72/n
+         o+MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707496876; x=1708101676;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fKk+aGvc2YUoK3OFau8iqg4ZDHFtN8sLbkkpKq6ClNw=;
-        b=D9xjamW5SmtwoEycTcM6tpVhyn6R+lhOCfO9gneR5ol1xIRlHVzalWkB/T1Crw15fj
-         0uahcAzspEGswplQh8HvHyNIsyqA1BRLXx9+6mRAz7fuvivdLqaqxQSmTnTB63yctGrK
-         ++e0sWrYfvo+FpjoCLO2SOsmugMpiEzeIQdJOQC5ansA8v804cFLhxokkrTiMKbxNtCW
-         YjIsV89GlxRF/m5Sl0Rbn98JbGUJrVe+GcTPqcmwnqHZQ2LsCeld+2ZXWEsZ07qJ9Nj/
-         1LhxtpvnCjS8C01zDMgitHf7ZTrtzb3WK06gkyg2FO3hg/qunovos5C6I0gOvO2p+Oli
-         c1Ew==
-X-Gm-Message-State: AOJu0YzF+WsB4Q1pkLW6FXuxhVi9it1anvSR7gFMM4zCW2FUE3vyccbw
-	pl5sf0CXaCBF0E3kNSp0BEQjmeQSs2DPjeplu9LgoSy1tAEdqq5RuFy0qwXxCpk8F6YLhHR2j9a
-	F
-X-Google-Smtp-Source: AGHT+IELBxOziINdJQqpIWiZqVviVxJEL1dud7H96GV0aEdsRv3IEezlG8LZ5nTr+YOOuMIplwfSwQ==
-X-Received: by 2002:a17:906:ff4f:b0:a38:252b:ba1b with SMTP id zo15-20020a170906ff4f00b00a38252bba1bmr1590640ejb.51.1707496875807;
-        Fri, 09 Feb 2024 08:41:15 -0800 (PST)
-Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id tl27-20020a170907c31b00b00a3bfe97fe27sm477724ejc.218.2024.02.09.08.41.14
+        d=1e100.net; s=20230601; t=1707496880; x=1708101680;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2zcUgQutS3DlGmwc5sEu07E2yjamp4+tUNWDaLkXDGg=;
+        b=kZZEZJkqZu9KiZLPJIrgD8/Wx4jG1/YJm541//eCRlgnVinF02WRsXE1q3/R3XYFnX
+         iQd2q3oW05ToTNa9KQJiqHfWiad9AOrPpd9m6squOJbZ0qgsiSHYvTjBoVZkH7BT0UoM
+         qJxumZP1iT7tM5nYyIn9mtT1LbLJjBpXvlOAY94VkEg3oIRfBX67IxXkfzW0bXLAxq/t
+         ghlzm2SpwuC9Fni7qqeSYtDJNShWRuBMUNhu5XzvaF3Cqv75FsJETZ94pcHr2SgOJN6e
+         kiEi26TEI7maDdq10aCk4Sp/ObUOgxhb2+rsvEApUVlyPugbVhFV5wGWR2p98CwMThdg
+         UirQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgjeHS8SXvgrx1i/ENUoj53D+LPniG/OTIlSe/c4a6ORRLWYkmH8vgYRuKUg4RbQgtzmAVlYrU5lIPuQKHniKPm7qPcT3pk7lte5wZ
+X-Gm-Message-State: AOJu0YwDuT1iyWMNNYoUf1CPdqFtu7p6nPAp634lKAoPIaYOGvQU3WG8
+	paI5A0yWm7GEPSjQDBmYUY5nFSqzMsKJhcFzbXT4ya1vbCSL1ifeVJB+ciuCkfM=
+X-Google-Smtp-Source: AGHT+IH138In2qxnUDyUf5L0gXNV1VbXHmjJHEtnKql2S7mQ4A7aMyRWwAcBnM47BI7S/82MALke/A==
+X-Received: by 2002:a05:6a00:2d90:b0:6e0:4030:ef77 with SMTP id fb16-20020a056a002d9000b006e04030ef77mr2136298pfb.16.1707496879549;
+        Fri, 09 Feb 2024 08:41:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW6wu/Bha+p2xiJadb32Pu5nECmFu1bSMq78Yus+Wy9UGejr+P/rAkvSaYFYJpd4eKOMUDwtlXR5p89UC6jkt7GzbRaB16LaAfJvdZA5qsJOFcMQrqMzs/8q3+2FOkBiC2owQCZL1+Z5jjNK6+JZfuehN3+7w9pRTq1NIPmfjiU0jmf6RUsN1XH/GUA125keZ5AVyaEH/JZTQJEzNlNvzc/DzGDYa/D3+APhpCn3IhlaWxIwdc=
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id y2-20020aa78542000000b006e096ff7c91sm728258pfn.100.2024.02.09.08.41.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 08:41:14 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 32/35] linux/kernel.h: move VERIFY_OCTAL_PERMISSIONS() to octal_permissions.h
-Date: Fri,  9 Feb 2024 17:40:24 +0100
-Message-Id: <20240209164027.2582906-33-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240209164027.2582906-1-max.kellermann@ionos.com>
-References: <20240209164027.2582906-1-max.kellermann@ionos.com>
+        Fri, 09 Feb 2024 08:41:18 -0800 (PST)
+Date: Fri, 09 Feb 2024 08:41:18 -0800 (PST)
+X-Google-Original-Date: Fri, 09 Feb 2024 08:41:15 PST (-0800)
+Subject:     Re: [PATCH] riscv: Fix wrong size passed to local_flush_tlb_range_asid()
+In-Reply-To: <ZbsT16CvwSDXtlAL@snowbird>
+CC: alexghiti@rivosinc.com, Paul Walmsley <paul.walmsley@sifive.com>,
+  aou@eecs.berkeley.edu, geert@linux-m68k.org, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: dennis@kernel.org
+Message-ID: <mhng-df0a3f10-0713-440c-81c4-a47f22fb367a@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Reducing dependencies on the header linux/kernel.h.
+On Wed, 31 Jan 2024 19:45:27 PST (-0800), dennis@kernel.org wrote:
+> Hi Palmer,
+>
+> On Wed, Jan 31, 2024 at 12:34:40PM -0800, Palmer Dabbelt wrote:
+>> On Mon, 29 Jan 2024 01:01:00 PST (-0800), dennis@kernel.org wrote:
+>> > Hi Alexandre,
+>> >
+>> > On Tue, Jan 23, 2024 at 02:27:30PM +0100, Alexandre Ghiti wrote:
+>> > > local_flush_tlb_range_asid() takes the size as argument, not the end of
+>> > > the range to flush, so fix this by computing the size from the end and
+>> > > the start of the range.
+>> > >
+>> > > Fixes: 7a92fc8b4d20 ("mm: Introduce flush_cache_vmap_early()")
+>> > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>> > > ---
+>> > >  arch/riscv/mm/tlbflush.c | 2 +-
+>> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> > >
+>> > > diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+>> > > index 8d12b26f5ac3..9619965f6501 100644
+>> > > --- a/arch/riscv/mm/tlbflush.c
+>> > > +++ b/arch/riscv/mm/tlbflush.c
+>> > > @@ -68,7 +68,7 @@ static inline void local_flush_tlb_range_asid(unsigned long start,
+>> > >
+>> > >  void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
+>> > >  {
+>> > > -	local_flush_tlb_range_asid(start, end, PAGE_SIZE, FLUSH_TLB_NO_ASID);
+>> > > +	local_flush_tlb_range_asid(start, end - start, PAGE_SIZE, FLUSH_TLB_NO_ASID);
+>> > >  }
+>> > >
+>> > >  static void __ipi_flush_tlb_all(void *info)
+>> > > --
+>> > > 2.39.2
+>> > >
+>> >
+>> > Sorry for the delay, I just pulled this into percpu#for-6.8-fixes. I'll
+>> > send it to Linus this week.
+>>
+>> Do you mind if we do a shared tag or something?  It's going to conflict with
+>> https://lore.kernel.org/all/20240117140333.2479667-1-vincent.chen@sifive.com/
+>> .  No big deal as it's a pretty trivial conflict, but they'll both need
+>> stable backports.
+>
+> This alone won't need a stable backport, I merged the bug as part of
+> enabling the percpu page allocator in the recent 6.8 merge window.
+>
+> That being said, this is the only patch I'm carrying for v6.8. I'm happy
+> to drop it and have you pick it up instead. Saves me a tag and a PR.
+> Lmk if that works for you.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- arch/arc/kernel/perf_event.c             |  1 +
- drivers/edac/thunderx_edac.c             |  1 +
- drivers/hwmon/occ/common.c               |  1 +
- drivers/media/platform/amphion/vpu_dbg.c |  1 +
- drivers/soc/aspeed/aspeed-uart-routing.c |  1 +
- fs/xfs/xfs_error.c                       |  1 +
- include/linux/kernel.h                   | 13 -------------
- include/linux/moduleparam.h              |  2 +-
- include/linux/octal_permissions.h        | 20 ++++++++++++++++++++
- include/linux/sysfs.h                    |  2 +-
- 10 files changed, 28 insertions(+), 15 deletions(-)
- create mode 100644 include/linux/octal_permissions.h
-
-diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
-index 9d43a9988812..dbc24c9351d1 100644
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -9,6 +9,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
- #include <linux/module.h>
-+#include <linux/octal_permissions.h>
- #include <linux/of.h>
- #include <linux/perf_event.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
-index e99ce19e6574..c610d99dceda 100644
---- a/drivers/edac/thunderx_edac.c
-+++ b/drivers/edac/thunderx_edac.c
-@@ -21,6 +21,7 @@
- #include <linux/atomic.h>
- #include <linux/bitfield.h>
- #include <linux/circ_buf.h>
-+#include <linux/octal_permissions.h>
- 
- #include <asm/page.h>
- 
-diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-index f7b89b880339..1a4f1a90c2c5 100644
---- a/drivers/hwmon/occ/common.c
-+++ b/drivers/hwmon/occ/common.c
-@@ -11,6 +11,7 @@
- #include <linux/math64.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/octal_permissions.h>
- #include <linux/property.h>
- #include <linux/sprintf.h>
- #include <linux/sysfs.h>
-diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
-index bed0ed4fb8a0..ef5658b492cf 100644
---- a/drivers/media/platform/amphion/vpu_dbg.c
-+++ b/drivers/media/platform/amphion/vpu_dbg.c
-@@ -9,6 +9,7 @@
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/octal_permissions.h>
- #include <linux/sprintf.h>
- #include <linux/types.h>
- #include <linux/pm_runtime.h>
-diff --git a/drivers/soc/aspeed/aspeed-uart-routing.c b/drivers/soc/aspeed/aspeed-uart-routing.c
-index a2195f062e01..6b091df7775a 100644
---- a/drivers/soc/aspeed/aspeed-uart-routing.c
-+++ b/drivers/soc/aspeed/aspeed-uart-routing.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/device.h>
- #include <linux/module.h>
-+#include <linux/octal_permissions.h>
- #include <linux/of.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 8d558f0f1b3b..a225860d272a 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -14,6 +14,7 @@
- #include "xfs_error.h"
- #include "xfs_sysfs.h"
- #include "xfs_inode.h"
-+#include <linux/octal_permissions.h>
- #include <linux/kstrtox.h>
- #include <linux/sprintf.h>
- #include <linux/sysfs.h>
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 5d088ce30045..ac332f4deed9 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -29,7 +29,6 @@
- #include <linux/typecheck.h>
- #include <linux/panic.h>
- #include <linux/printk.h>
--#include <linux/build_bug.h>
- #include <linux/sprintf.h>
- #include <linux/static_call_types.h>
- #include <linux/instruction_pointer.h>
-@@ -308,16 +307,4 @@ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
- # define REBUILD_DUE_TO_FTRACE_MCOUNT_RECORD
- #endif
- 
--/* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
--#define VERIFY_OCTAL_PERMISSIONS(perms)						\
--	(BUILD_BUG_ON_ZERO((perms) < 0) +					\
--	 BUILD_BUG_ON_ZERO((perms) > 0777) +					\
--	 /* USER_READABLE >= GROUP_READABLE >= OTHER_READABLE */		\
--	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 4) < (((perms) >> 3) & 4)) +	\
--	 BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +		\
--	 /* USER_WRITABLE >= GROUP_WRITABLE */					\
--	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 2) < (((perms) >> 3) & 2)) +	\
--	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
--	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
--	 (perms))
- #endif
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index a285e74ec028..860b0ea1f3b3 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -4,7 +4,7 @@
- /* (C) Copyright 2001, 2002 Rusty Russell IBM Corporation */
- #include <linux/init.h>
- #include <linux/stringify.h>
--#include <linux/kernel.h> // for VERIFY_OCTAL_PERMISSIONS()
-+#include <linux/octal_permissions.h>
- 
- /* You can override this manually, but generally this should match the
-    module name. */
-diff --git a/include/linux/octal_permissions.h b/include/linux/octal_permissions.h
-new file mode 100644
-index 000000000000..57d4d6a5b66d
---- /dev/null
-+++ b/include/linux/octal_permissions.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_OCTAL_PERMISSIONS_H
-+#define _LINUX_OCTAL_PERMISSIONS_H
-+
-+#include <linux/build_bug.h>
-+
-+/* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
-+#define VERIFY_OCTAL_PERMISSIONS(perms)						\
-+	(BUILD_BUG_ON_ZERO((perms) < 0) +					\
-+	 BUILD_BUG_ON_ZERO((perms) > 0777) +					\
-+	 /* USER_READABLE >= GROUP_READABLE >= OTHER_READABLE */		\
-+	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 4) < (((perms) >> 3) & 4)) +	\
-+	 BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +		\
-+	 /* USER_WRITABLE >= GROUP_WRITABLE */					\
-+	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 2) < (((perms) >> 3) & 2)) +	\
-+	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
-+	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
-+	 (perms))
-+
-+#endif
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 0500b023b5cc..a4b752b24329 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -15,10 +15,10 @@
- 
- #include <linux/sysfs_types.h>
- #include <linux/kernfs.h>
--#include <linux/kernel.h> // for VERIFY_OCTAL_PERMISSIONS()
- #include <linux/compiler.h>
- #include <linux/list.h>
- #include <linux/lockdep_types.h>
-+#include <linux/octal_permissions.h>
- 
- struct kobject;
- struct module;
--- 
-2.39.2
-
+Sorry I missed this, but that seems like the easiest way to go here -- 
+the other patch fixes the same bug (and another one), so I think we're 
+safe with just that (which I'm sending to Linus as part of my rc4 fixes 
+now-ish, as I'd need to anyway).  It's d9807d60c145 ("riscv: mm: execute 
+local TLB flush after populating vmemmap"), in case anyone's looking 
+later...
