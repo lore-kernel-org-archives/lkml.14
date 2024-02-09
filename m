@@ -1,164 +1,109 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2926A57339
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3707F57339;
+	Fri,  9 Feb 2024 18:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707504960; cv=none; b=cICgf4IC8lzxVbrVYd1ws5lAs7oim+rFWnpbvLF4XQBjxF1WpZBnMjK95uCk8xIFW1TY7ETEhdfgSqB8lS2UuSkJrqk4JrF3Ve6RoNLqpgsBZOkX1d62/4AaqNJ4xauujVsjCZoSCT09GbKAnWMv6KsvnZoQzQ13G5m9d70qaRA=
+	t=1707504976; cv=none; b=GqlqHyjkt12yZtaKi1zL0HZPr18JsI8pOxAYjVtRHb0nvZTzKdgG5wrsUyU157mbFdbggWfmiAb4Mi7S6mqbUH83GV4rGNh9HVKoEgea5bnExAM3/Am/jIRoNDbj5auBZRbGl63nA0LTSEnG8mVC/1b6e6I+de8KO1FtYKnhzeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707504960; c=relaxed/simple;
-	bh=vr5rJvFiGAhBJJXv+RHazOWDEKyoNkrSI04U1hYyfH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r/iALE/LWKKLDUBEEwVVNx474soFPoLHavL5swyAqFP3SO6jkP0MzM7O8FEzsvg/qRl4npk3kcu/U4ReYbHLxwtKF0GcuH7zyHd+Z+r/AU+SW5n2qBIoXHJ7CSNHwnBgHY3+r/ph0n/7h6STlkmfKpuigVJXQvISMXMvgTcT3OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aUO0zJqb; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707504976; c=relaxed/simple;
+	bh=C9S2oNwOOfhw1Ocskog3nsge/HD81Vm1NImbMpSpgYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FQZvggnW/tNJ0o5wTvHps0TZ7SkTjL1iANhg65Np1Xayao1YSmr2kvAaQu36/o97KaFPypm4IAzTloXPxW+TC7tp209eL0fyHQQQwJ2ml4RPMJzoKbxuw/Lia3H+St8YIeWufNYncyc+EWUjgFjadWApg023FPbYODIRJY2fTDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kwtDETOR; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUO0zJqb"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4103be6e938so11174255e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 10:55:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwtDETOR"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d944e8f367so10694845ad.0;
+        Fri, 09 Feb 2024 10:56:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707504957; x=1708109757; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XIO9eqEBuzeJvHgboL0yq147O60ChCDjxtRjTyvfnAk=;
-        b=aUO0zJqbaS/flcjJdvFSrL4koTHYIOTHTGdr6dvzPlEK67YE8FVFe43Xpv1vGfOMX3
-         YjuLo41K6EBieE9gAStci5kb/DfhqGeTCEuU2Gxe1eeOaaMB+qyIpRODBR5RO4/8L6qW
-         1Q7NeUZgAZmAjWmUyzzR8d0DEPQuJx0Wz/LtFfHR9aFJV2v4hRLTiP7cpbxz0Ci0tCzw
-         9LEtpRAOcRQI9MTwLZWwuScjJIhpY4y5XJxutYRtz+2KYdJyX6w2QLiw0bcSDa7kCxti
-         2GfNqoCYtIX5U3MxvXd2mCh9IQE+AIYHO4/DECeyCEPW0YPomLGiXP4pcO1GSM+5LjDf
-         pD0g==
+        d=gmail.com; s=20230601; t=1707504974; x=1708109774; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=56hgMqr3mswCnWTmMb87WQwpoLmhLltp/8RI39azy0Q=;
+        b=kwtDETORaeIZyJ5GswVr2CPfFgdFKIhkh/HlZhwqphJGaZhMSEXEDVgRm/rItcetBq
+         4jOvmh+oCVkVboXWIwdCro15yk1YUTDZN/+SIxz3ruaSCDbN3t2pUp/BaYC9cjlu6siD
+         85SwZH+4jlTCDluHpPyqg7p/Jrf6AXyyyDF71nktLhyiMxofNPg7n99l1+4tMz8tEQzE
+         11kMbCf49BKcFAiL+yjT42iyfBcvoJTY1DtEEAiZarEWA85RV9gnuqxVrgntVv1evoxL
+         ESQpFHAgzQNmq5NSBUs7m1EWAa5SNjODQZAn63BcpbcwBRHG4wL1vkTZ1cR9RDQxLaPM
+         dh6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707504957; x=1708109757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XIO9eqEBuzeJvHgboL0yq147O60ChCDjxtRjTyvfnAk=;
-        b=NT/ufSLoGxrEwXL5qEPgoPgA2r4Kh/mFZgzjy6e9V5rtUL6XIKwqJdlkI6c786no3D
-         /FIXuNR5qkoDWAzXC3wkxdoDZ526qFyzeMbmIEyJoouY+UlIP88gJRM8ySYQkP2DbRP4
-         Dd4FHD4aXgD0ScNfM0nUkLRQ92GU9I/RaiZvXiZtHkXFHkmDC2vFSTYm8o+H8EKVZewz
-         U5VuaG6hjhB5mcQYFsLhevBUtsWkdMYmA4ZmA8U5BJduM+B5X3seFUyHaPUNjuul54Xj
-         X/hrr2QJhEmNWDkB5tDt1niuFjHZgmNNr0hkYGRAwex1r6BzhxTY1zfCVzPX+nwMGD/n
-         MCMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUH3CdD8/FpaoszMjyYiQ5RnSnhhWSFMvLNtPyxdUs3UCT44epqJpazOmBVIgi8WoJHJ93Q1+RSdWtNVxP5zCSEe6Bpr7BlFn5VJjX+
-X-Gm-Message-State: AOJu0YzB7H/Am8I/b2f1iqjz9V8E/nthYWC+ErNFOr5WODy97n+it+2u
-	MxuvRl/Ldcni7y3ObVMtmFt+fhWV9i+v/pQlNr9U0cjyD1Ju3sUtKgkTF+MuY9UlypRcaJwdMj/
-	g8oRiO+0o8BKP/YzrhLlmP7TlgDtyfCK88OVO
-X-Google-Smtp-Source: AGHT+IFhtTJvlp6btzPTOCweFKlqDV+HT5LMMNeDCjfk83IbytbntRjDykhFwI+vkGM7a47x/psO7pGbV+9DOlJM2G4=
-X-Received: by 2002:adf:f6c7:0:b0:33b:183f:b194 with SMTP id
- y7-20020adff6c7000000b0033b183fb194mr1576381wrp.38.1707504957230; Fri, 09 Feb
- 2024 10:55:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707504974; x=1708109774;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=56hgMqr3mswCnWTmMb87WQwpoLmhLltp/8RI39azy0Q=;
+        b=qtIL1cVPRhopNidwNHS2Q2vxbOxln7qP4kIX+vsPNyUXtCx1wkFNhyLbfG+FsaeTG5
+         DjE8Lj6nUbXjnbQn9sxEMAKHf/tspMZUnMT7zx7kmnqQlU6jOQc1oh0Cmx9ql8a8fr+r
+         2F1kkAnnJOuSlzKfVLdUZFU6Pdi6B8gCyIJtatbtHKZWUXf8i7evkNKQRcKGl7Cs39BH
+         4EgO/YQbXM8rX0PkTNm3Tuoruibn+PkCdCDClqZagIFgaB0e0BUre3t/gu+/65Pq0gSi
+         1LW2hygi1PjQgV9x8PM/LixDPBAEWwrhbrMMo1vuE38I226drTtkQMvHPRi3/E1klBuP
+         CPgQ==
+X-Gm-Message-State: AOJu0YyStg0jbn8cjl8uunSxYyIolhvQHFpgDWE/4VSRUU77dYfnIhvE
+	f6RxVG4O3hFigJCD+IAGJvK/SA1Dvsq2CVmFeTAHCWVXFxj4nPEZ
+X-Google-Smtp-Source: AGHT+IEfTKQr1tJLEw0FhCX2wQeGeOD8/LznWPv9wkv7W5WtuaR7MMqHEGB5GTH/HFZP71SmkqHDFQ==
+X-Received: by 2002:a17:902:9f87:b0:1d9:657c:2769 with SMTP id g7-20020a1709029f8700b001d9657c2769mr119939plq.19.1707504974268;
+        Fri, 09 Feb 2024 10:56:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWYlk1nnzdg273wMBD0TlhR6Ex1Db4qqsAlWzgp9N2xrKjlR4Z3Ll4QNQmgN1UgNggrDZ2kvKKro10zHppccIWiEj8o/FJjRXuwADw5+rKMOsUplakT4BPh613rrk2Rw31w9nr8i+Z4fbrev7ADEXGvqqrqq00BGkKS95jNo4R4VOa/Xt+wW5YKr4jTIvET9SN/kqULLfb9YmFgr5LzxQoGscyAGHdLfVxpikYJP7P3LUeVpKvuVreBQONCZcj2XCGLlAjPwyLJ0s3rG1yg5hqJ227QE0/293fthgV0KxI969k8fDWhMWebhI9LX7MH+sT/eTXnCoKXiv2qCk6AJmrnyPblLouVywWif/iu7EDuh5SGOLv3r2eWC7oUSh59iMMV5w81eWwa/IFBZS+H84FCL//AQoG8tzkM5GRxlLt2Tl0KpwrNrut/7rvABggTmdJi2eZBnZo0cZEX8Hr3
+Received: from google.com ([2620:15c:9d:2:9ec:8b78:c8c:fc9])
+        by smtp.gmail.com with ESMTPSA id jh21-20020a170903329500b001d9609f2e30sm1843385plb.1.2024.02.09.10.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 10:56:13 -0800 (PST)
+Date: Fri, 9 Feb 2024 10:56:10 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Brenton Simpson <appsforartists@google.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Cameron Gutman <aicommander@gmail.com>,
+	Erica Taylor <rickytaylor26@gmail.com>,
+	Ismael Ferreras Morezuelas <swyterzone@gmail.com>,
+	Jonathan Frederick <doublej472@gmail.com>,
+	Matthias Benkmann <matthias.benkmann@gmail.com>,
+	Matthias Berndt <matthias_berndt@gmx.de>, nate@yocom.org,
+	Sam Lantinga <slouken@libsdl.org>, Vicki Pfau <vi@endrift.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	trivial@kernel.org
+Subject: Re: [PATCH] Input: xpad - sort xpad_device by vendor and product ID
+Message-ID: <ZcZ1Sn_iPwlgfI3s@google.com>
+References: <Zbl49VAMZx2qrz-p@google.com>
+ <20240130231903.293265-1-appsforartists@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208220604.140859-1-seanjc@google.com> <CAKwvOdk_obRUkD6WQHhS9uoFVe3HrgqH5h+FpqsNNgmj4cmvCQ@mail.gmail.com>
- <DM6PR02MB40587AD6ABBF1814E9CCFA7CB84B2@DM6PR02MB4058.namprd02.prod.outlook.com>
- <CAHk-=wi3p5C1n03UYoQhgVDJbh_0ogCpwbgVGnOdGn6RJ6hnKA@mail.gmail.com> <ZcZyWrawr1NUCiQZ@google.com>
-In-Reply-To: <ZcZyWrawr1NUCiQZ@google.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Fri, 9 Feb 2024 10:55:42 -0800
-Message-ID: <CAKwvOdmKaYYxf7vjvPf2vbn-Ly+4=JZ_zf+OcjYOkWCkgyU_kA@mail.gmail.com>
-Subject: Re: [PATCH] Kconfig: Explicitly disable asm goto w/ outputs on gcc-11
- (and earlier)
-To: Sean Christopherson <seanjc@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	"Andrew Pinski (QUIC)" <quic_apinski@quicinc.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130231903.293265-1-appsforartists@google.com>
 
-On Fri, Feb 9, 2024 at 10:43=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Fri, Feb 09, 2024, Linus Torvalds wrote:
-> > On Fri, 9 Feb 2024 at 09:14, Andrew Pinski (QUIC)
-> > <quic_apinski@quicinc.com> wrote:
-> > >
-> > > So the exact versions of GCC where this is/was fixed are:
-> > > 12.4.0 (not released yet)
-> > > 13.2.0
-> > > 14.1.0 (not released yet)
-> >
-> > Looking at the patch that the bugzilla says is the fix, it *looks*
-> > like it's just the "mark volatile" that is missing.
-> >
-> > But Sean says that  even if we mark "asm goto" as volatile manually,
-> > it still fails.
-> >
-> > So there seems to be something else going on in addition to just the vo=
-latile.
->
-> Aha!  Yeah, there's a second bug that set things up so that the "not impl=
-icitly
-> volatile" bug could rear its head.  (And now I feel less bad for not susp=
-ecting
-> the compiler sooner, because it didn't occur to me that gcc could possibl=
-y think
-> the asm blob had no used outputs).
->
-> With "volatile" forced, gcc generates code for the asm blob, but doesn't =
-actually
-> consume the output of the VMREAD.  As a result, the optimization pass see=
-s the
-> unused output and throws it away because the blob isn't treated as volati=
-le.
->
->    vmread %rax,%rax       <=3D output register is unused
->    jbe    0xffffffff8109994a <sync_vmcs02_to_vmcs12+1898>
->    xor    %r12d,%r12d     <=3D one of the "return 0" statements
->    mov    %r12,0xf0(%rbx) <=3D store the output
->
-> > Side note: the reason we have that "asm_volatile_goto()" define in the
-> > kernel is that we *used* to have a _different_ workaround for a gcc
-> > bug in this area:
-> >
-> >  /*
-> >   * GCC 'asm goto' miscompiles certain code sequences:
-> >   *
-> >   *   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D58670
-> >   *
-> >   * Work it around via a compiler barrier quirk suggested by Jakub Jeli=
-nek.
-> >   *
-> >   * (asm goto is automatically volatile - the naming reflects this.)
-> >   */
-> >  #define asm_volatile_goto(x...) do { asm goto(x); asm (""); } while (0=
-)
-> >
-> > and looking at that (old) bugzilla there seems to be a lot of "seems
-> > to be fixed", but it's not entirely clear.
-> >
-> > We've removed that workaround in commit 43c249ea0b1e ("compiler-gcc.h:
+Hi Brenton,
 
-Interesting, I thought I had proposed removing that earlier and Linus
-had yelled about doing so.
-https://lore.kernel.org/lkml/20180907222109.163802-1-ndesaulniers@google.co=
-m/
-seems like in ~2018 I was trying to, but can't seem to find the thread
-where Linus pushed back.
+On Tue, Jan 30, 2024 at 11:19:03PM +0000, Brenton Simpson wrote:
+> Signed-off-by: Brenton Simpson <appsforartists@google.com>
 
-> > remove ancient workaround for gcc PR 58670"), I'm wondering if maybe
-> > that removal was a bit optimistic.
->
-> FWIW, reverting that does restore correct behavior on gcc-11.
+Empty patch descriptions are frowned upon. You should be able to add at
+least a single sentence why the change is being made.
 
-And also pessimizes all asm gotos (for gcc) including ones that don't
-contain output as described in 43c249ea0b1e.  The version checks would
-at least not pessimize those.
+...
 
->
-> Note, this is 100% reproducible across multiple systems, though AFAICT it=
-'s
-> somewhat dependent on the .config.  Holler if anyone wants the .config.
+>  
+>  static const struct usb_device_id xpad_table[] = {
+> +	/* Please keep this list sorted by vendor ID.  Because the lines use different
+> +	 * macros, you may need to sort it by hand.
+> +	 */
 
+Kernel style of multi-line comments is:
 
+	/*
+	 * line 1
+	 * line 2.
+	 */
 
---=20
-Thanks,
-~Nick Desaulniers
+I adjusted and applied, thank you.
+
+Thanks.
+
+-- 
+Dmitry
