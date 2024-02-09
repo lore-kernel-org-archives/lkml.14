@@ -1,98 +1,112 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F2538392
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 23:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF15F37149
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 23:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707520394; cv=none; b=S73JT8u5yumIi4FQyShb3Ucvm5wiiNccd6Ki73rWHFEieod3xHTO3YmyWbPtH4WMdgHt2iXJW7TXTyqSg0Q48Dc9qbKaIFJPbQwJzhC8u4gDyvG92BT60BpmQkDipk2GEaUViSIIAE7NX+rZ1mdo8RhihY2taqMLKurN64ziLWg=
+	t=1707520491; cv=none; b=iWsqh4Mh6FNy/5bwkgd0WxVSSQgJxQ2cIK3D1FdJLpTs0CfJdF+y6E/Yi7W3ZWABL98W0mEuJU+e+YbugCVIVVpNofNkpjVtLVBk0kTZuSXef2110qyWal2lPv6kms7owGdMAXxCcfutah1auduSfLdKVvEajwxgrRlI+/5cPX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707520394; c=relaxed/simple;
-	bh=uuEtxV5ALQgg4gSV6SbtQnnx2jogxdpn3fOeoMd9OM4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=d3qvoybpJL9CYnxvO4O5JjBWmcaXqxVNLUlBQq5UwkG2obodVcb08fFMM8KX4oE5WLYmmf4lH7lEfFqkU+kBOO4oDp0lPqBEV8UiGEyWrtxk/EB05+MVw7bGIPMaZTL8V2MG1pljhpWUdHXEp0ukQZQh+SYwaozEY2FBFEEs6Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DTu7QvoC; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1707520491; c=relaxed/simple;
+	bh=jdcg4DWF8JQDI25uT7aDRCN2nQorXmzFpgA+OiAtN/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IO46pdQac86pq5PDo9EuPj1YhSaDSdgWysU7UASMaj0r1ZkEPwkIJEvmcAmAbwxYFBetqw4wF8vpYsy8ckG54+r9kGeng4+eehIYm04l1WF33d8dblR6d4aSjIb21Q36SXqPN9C66L5gFizZd4UnqNawwDiZwFBixOHUmDgo1tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E2SynAlz; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DTu7QvoC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=f7VpLXkaZnyYw4ZAn+6l9WcMSrOCeJHNjRP6J5T3G+s=; b=DTu7QvoC0kGiSXt2VutNJetr1P
-	/kFSFhX4twKqRTu9TlBBNfBdG5E6lUanYO2bjS+K6hci0feUcPrh5F/9DWKM7NSN6P/7kJ7/z82w1
-	z8tWUApRyGP2neRpNd95Cw2/9gmqP6ceqe6CZwDqW+gFOgfdoaJzDF83ERowTy9SoYWqvTodoMzv4
-	cID1af4QqcV0DNdF6r5eufZ9QxfvrD9RpUdJFRTy2RdbAiisEzRy++0arRRnXHrJf7W9b402ov0KW
-	cEx8c0+2rBpdPuDoildGhmG2H/rYwQnAFZ2tn9z3dQKFKfGxTJOMb5b2D6dAV2eopQqtbuTsFTlci
-	b+B2HEFQ==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rYa3U-00000000qm4-1Wt2;
-	Fri, 09 Feb 2024 23:13:12 +0000
-Message-ID: <ed358bfb-9603-4c73-bc20-0980a9678f73@infradead.org>
-Date: Fri, 9 Feb 2024 15:13:10 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E2SynAlz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707520489; x=1739056489;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jdcg4DWF8JQDI25uT7aDRCN2nQorXmzFpgA+OiAtN/c=;
+  b=E2SynAlzwSbKbl5zLo2wy0XsszUhgt0CFvlHJOPGvopWjmgQwBu0CaXM
+   pJTx3Ns/sJY1h9zp3jJX3FUDUMGAobNTGMt6sKTPOUAaCVxfBGOV55DCi
+   J8YABBCdnSvvQAYXqjLdV5BZ9R0E3fJxzPESomVAhpNfj6viPU5CxOAkZ
+   FH4veFAUDUNHN5lfVzNSKxpzUPrsODHNHIXTeE6mDnCqMBJyLxAjEsFBS
+   D17iHxLm7UkcKrTOxAfBOXxI0iBXNlFlAdPybfmNpjfsPsRl/PsKIrbYr
+   fm34CS4D9CDaY35o5cZW1XSr0wat6jKhRL4YYDn96AkMPgD/lU6lWpQR9
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="4495780"
+X-IronPort-AV: E=Sophos;i="6.05,258,1701158400"; 
+   d="scan'208";a="4495780"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 15:14:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,258,1701158400"; 
+   d="scan'208";a="2355567"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 09 Feb 2024 15:14:45 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rYa4w-0005C2-35;
+	Fri, 09 Feb 2024 23:14:42 +0000
+Date: Sat, 10 Feb 2024 07:14:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v7 3/4] mm,page_owner: Display all stacks and their count
+Message-ID: <202402100636.5lFPAlbB-lkp@intel.com>
+References: <20240208234539.19113-4-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kernel: add boot param to disable stack dump on panic
-Content-Language: en-US
-To: Nir Lichtman <nir@lichtman.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
- linux-kernel@vger.kernel.org
-References: <20240206213902.GA1490631@lichtman.org>
- <ZcLmjrBxE2BA_hLG@archie.me> <20240208081425.GA1511946@lichtman.org>
- <81f2df0b-0780-458c-b432-5d61b78e8157@gmail.com>
- <20240209095049.GA1528371@lichtman.org>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240209095049.GA1528371@lichtman.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240208234539.19113-4-osalvador@suse.de>
 
+Hi Oscar,
 
+kernel test robot noticed the following build warnings:
 
-On 2/9/24 01:50, Nir Lichtman wrote:
-> On Fri, Feb 09, 2024 at 04:22:12PM +0700, Bagas Sanjaya wrote:
->> On 2/8/24 15:14, Nir Lichtman wrote:
->>> In a lot of cases when there is a kernel panic it obscures on the display the previous problem that caused it and the main
->>> reason is that the call stack prints a lot of lines on the display - and there is no way to scroll back up.
->>> What led me to make this patch is that I was working on running the kernel on my old computer and when I passed root=/dev/sda
->>> to the kernel there was a panic and it could not start init, but since the call stack took almost all the space on the screen,
->>> I couldn't see the available partitions the kernel does detects.
->>>
->>> After this patch, I could just pass in the new boot parameter I added here and then it would not print the call stack,
->>> and I saw the line in which the kernel prints the available partitions.
->>>
->>
->> Please don't top-post; reply inline with appropriate context instead.
->>
->> Thanks for the explanation. Now please send v2 with appropriate maintainers
->> and lists Cc'ed (use scripts/get_maintainer.pl to find ones). Also read
->> Documentation/process/submitting-patches.rst before sending.
->>
->> Ciao!
->>
->> -- 
->> An old man doll... just what I always wanted! - Clara
->>
-> 
-> Yah I read the docs about submitting patches and ran the get_maintainer script but it didn't find anything for the
-> changes I made (except documentation maintainers), I guess maybe the panic.c file has no main mantainer?
+[auto build test WARNING on akpm-mm/mm-nonmm-unstable]
+[also build test WARNING on linus/master v6.8-rc3]
+[cannot apply to akpm-mm/mm-everything next-20240209]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-True, it doesn't have a primary maintainer. You can use
-$ git log kernel/panic.c
-to see who has been merging patches for it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Oscar-Salvador/lib-stackdepot-Move-stack_record-struct-definition-into-the-header/20240209-074611
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
+patch link:    https://lore.kernel.org/r/20240208234539.19113-4-osalvador%40suse.de
+patch subject: [PATCH v7 3/4] mm,page_owner: Display all stacks and their count
+config: x86_64-randconfig-121-20240209 (https://download.01.org/0day-ci/archive/20240210/202402100636.5lFPAlbB-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240210/202402100636.5lFPAlbB-lkp@intel.com/reproduce)
 
-Examples:
-Andrew Morton
-Petr Mladek (printk or log buffer related)
-Ingo Molnar (preemption related)
-etc.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402100636.5lFPAlbB-lkp@intel.com/
 
-If in doubt, Andrew Morton is usually a good guess.
+sparse warnings: (new ones prefixed by >>)
+>> mm/page_owner.c:828:30: sparse: sparse: symbol 'page_owner_stack_operations' was not declared. Should it be static?
+   mm/page_owner.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/xarray.h, ...):
+   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
+
+vim +/page_owner_stack_operations +828 mm/page_owner.c
+
+   827	
+ > 828	const struct file_operations page_owner_stack_operations = {
+   829		.open		= page_owner_stack_open,
+   830		.read		= seq_read,
+   831		.llseek		= seq_lseek,
+   832		.release	= seq_release,
+   833	};
+   834	
 
 -- 
-#Randy
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
