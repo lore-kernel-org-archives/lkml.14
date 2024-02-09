@@ -1,383 +1,122 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B285B80C02
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13037B3CF
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707496513; cv=none; b=P9oz+BuxkEQzMwsKpcGPAJ6PMFdSocIbbjJzC7bjZPEguWEwDTQGbQCI/4/goZe30qfCjr4E9RZKe5IiOw8PaaNhu/zuixzsoQ0uKm69wOSVEmsMoCdwGuNu97fMuVjY6eiJ4dBpPqPrRobMWq9RMKhyPinDVhCYiWZpv0F+qaA=
+	t=1707496613; cv=none; b=YeH7InBgn0jQpA6N5QszI/reSbZBesF8WLGTTM/asDtOyU8+mptv1nB59B1+WcxcJthOk4vVWSqGxLtKv6HlcYrvPV/UxKoT7gS5ZfnnZdQqMbKZuggNe8uiiYhDTGm0aLVd5qP+OdvyOQU5g5rshY64mRm1omNAK26v6RA43ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707496513; c=relaxed/simple;
-	bh=yF4snXCigsdD2V4iu9JXl93VeJuVdieGXDlgLcIwa4g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iNrjaosERN4z1EefiZ+7bwmjIG//4EOZbDqwUibjxGeHX5UCIqUOnpZJnEg+Qhi2+PlgLpj8iGkefp936hvBjo2uqcfyv7hmPJUSZbfyuXMOdS7fDth1jkGvg1fZQnbyZlFhdALKNpIKmNiyNhZGikBpIamgSahQB0TJPC0NfUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pTKvZpHs; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1707496613; c=relaxed/simple;
+	bh=d7okUqp/3uZnwXF7MeKDkSh0JzNedP4z+LN7JvpdaHA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OXTljWkpiJIkzNHk6LEQWGH3Y9pp/E/kx3Q+h4L+GVkWnrZuK3uTY7YMjD5XvLgEbCbM1IqoatMjn0rL9a4eYt9H6koApp0xkT9kk1imqRcuiAPuCxTysyDSUWFWYvCKW2+Sm1yn5aExsUIQY1pd6zShIWuEzrn+f4hEKunGBwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Zmyp79Sr; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTKvZpHs"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5ee22efe5eeso22946207b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:35:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707496510; x=1708101310; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMbQC9Qrfc/CHbT/uyUQA9ufo0litTV7XPwdOdKcRAI=;
-        b=pTKvZpHsEcx0X1kiTj54vR/o94Zgp1Q3WwdrXEqK6CYRAJnMpchoHmvAnoFfpgdio/
-         tTDIQtHG+X87bYpgh7wsJ/Zvdkzsd4KtO+WmxZSUO+HN5vyyvUL0bmVkCbhRGUvhVvIR
-         fhRc95FpS2tNjm1fKhHvg11XAQUR/ONPJJuDUc7WEBayCAyfWyJX57B8Eng8PTX9HFK3
-         Ffgs9YFJ9788SrmEX08YdnN0ibsofACvNzSUxYI66AWwAJjXRkfvd2Fmyi9aRVg1NUUj
-         3f9OXPcpPbehl/PmLPBkobHqT5fksOHGa0pq2V9sk9J2VNJwk1uVIlSuejW+WZ6LtPFm
-         h7EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707496510; x=1708101310;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMbQC9Qrfc/CHbT/uyUQA9ufo0litTV7XPwdOdKcRAI=;
-        b=sCmHNvAT497PSWwPVYjyHB7bhRFsiMz+olqXss0lrwx0PR1F8UsgSxTW1nTwOTTVPG
-         ZVXejk2WSWpLCutsj0ueP20J0qkQMcRoU1b2rynmMkj+t5NpsDwWuxlF4g8KIHLKzgL8
-         Y0OETQrX/o1Te/1WTFqYrC4aM4aDbcB5C+Ig8jJW/VQxo412JldM3dkWyAm+8p3K2OUF
-         dRlLJHcrUARjpKP5ERbe0A9U0g/q5v9DXTzBsOtHsV77jypqUgUYsqwb9WJFY4ZrJEgE
-         67Ya8AP7upbWCNO2e2f8Aytq1Uu3ppUNcck1FypKc5mBfsJHAYqvQIwPromsEQRgNDLo
-         6jZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX4p7xUCQkGXiryQJ4E8tZzNNpUzpfGk+wUOZYUzUdafHplxxTLbd1vC1C8ZRlOl1H72qlewhHeJMXcLvT5WHMlCCWZiRSun6a1cOqW
-X-Gm-Message-State: AOJu0Ywd5iWh3ZoCPzyQi/SU+b4CT1Yp7fJjeHjx4BWQJE1hJ5bvp7Z2
-	OwMZo6uhrXU1llDRWUbRoe83u/g5YnyqxmQRRMdWO/ekUWkAfPCSH2Q5Ne8tDF7g59o7QHhb57f
-	00XL/jcSv/lZYkCs1kA==
-X-Google-Smtp-Source: AGHT+IF96eh3thbWmXPsFEotE/nIuZhaMMePQq+bRya4JHK69BpL1vobDQ9qaVEC2kAu862eeFtyD7uV3tGcqPa5
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a25:c586:0:b0:dc6:a6e3:ca93 with SMTP
- id v128-20020a25c586000000b00dc6a6e3ca93mr46762ybe.10.1707496510734; Fri, 09
- Feb 2024 08:35:10 -0800 (PST)
-Date: Fri,  9 Feb 2024 16:34:48 +0000
-In-Reply-To: <20240209163448.944970-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Zmyp79Sr"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net C639C41A2A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1707496611; bh=NRT0BzbVaBiW/CbrG+I1Jwm5NSvx3kcZk+mnaMCJbrY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Zmyp79SrYdrLr0mM1ufjNYkLxvlR9/31+UkcdlW2eVhwXvE4ByFO64Z2M64uauywM
+	 ZR93kdhg0fYtarXwaD7JiSC3It+dnFohyWeIzWsaiv66zKIy8yufgLHvseLL2C13Nf
+	 Qxp+EGiCdxHTt6GkYgJWRNoEplOezdab2ozv4ZFThMqymVUt966sw0fLkidRhW2b+n
+	 H/Oe03GypYDPcAYVMHvC8YcpHgmVAlS5PVsXRVP/vGTgNSKlpTguPRGJ6HxlfRe87P
+	 p9S+WPDIgTpcuePy8GINUb+kXWR/uXrGaZ92zCx9LsSwHFjuqnonVdVAHup3SacFFG
+	 BlzcyR701hAog==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::646])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id C639C41A2A;
+	Fri,  9 Feb 2024 16:36:50 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Tejun Heo <tj@kernel.org>, Waiman Long <longman@redhat.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: Fix kernel-doc comment of unplug_oldest_pwq()
+In-Reply-To: <ZcZSlBRELjUIVJ_B@slm.duckdns.org>
+References: <20240209145850.1157304-1-longman@redhat.com>
+ <ZcZSlBRELjUIVJ_B@slm.duckdns.org>
+Date: Fri, 09 Feb 2024 09:36:50 -0700
+Message-ID: <87zfw9d271.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240209163448.944970-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240209163448.944970-7-vdonnefort@google.com>
-Subject: [PATCH v16 6/6] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+Tejun Heo <tj@kernel.org> writes:
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> (cc'ing Jonathan and quoting whole body)
+>
+> I'm not necessarily against the patch but at least from in-code
+> documentation POV the diagram being in the function comment seems better.
+> Jonathan, do you happen to know a better way to address this?
 
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..56c44b29d998
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,273 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	void				*data;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	unsigned long meta_len, data_len;
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	map = mmap(NULL, data_len, PROT_READ, MAP_SHARED, desc->cpu_fd, meta_len);
-+	if (map == MAP_FAILED) {
-+		munmap(desc->meta, desc->meta->meta_page_size);
-+		return -EINVAL;
-+	}
-+
-+	desc->data = map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->data, desc->meta->subbuf_size * desc->meta->nr_subbufs);
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.43.0.687.g38aa6559b0-goog
+So I went to reproduce this problem, but it seems that it's hidden away
+in some branch and not in linux-next.  So I'll have to guess without
+testing my solution, but...
 
+> On Fri, Feb 09, 2024 at 09:58:50AM -0500, Waiman Long wrote:
+>> It turns out that it is not a good idea to put an ASCII diagram in the
+>> kernel-doc comment of unplug_oldest_pwq() as the tool puts out warnings
+>> about its format and will likely render it illegible anyway. Break the
+>> ASCII diagram out into its own comment block inside the function to
+>> avoid this problem.
+>> 
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  kernel/workqueue.c | 32 ++++++++++++++++++--------------
+>>  1 file changed, 18 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+>> index cd2c6edc5c66..f622f535bc00 100644
+>> --- a/kernel/workqueue.c
+>> +++ b/kernel/workqueue.c
+>> @@ -1790,25 +1790,29 @@ static bool pwq_activate_first_inactive(struct pool_workqueue *pwq, bool fill)
+>>   * unplug_oldest_pwq - restart an oldest plugged pool_workqueue
+>>   * @wq: workqueue_struct to be restarted
+>>   *
+>> - * pwq's are linked into wq->pwqs with the oldest first. For ordered
+>> - * workqueues, only the oldest pwq is unplugged, the others are plugged to
+>> - * suspend execution until the oldest one is drained. When this happens, the
+>> - * next oldest one (first plugged pwq in iteration) will be unplugged to
+>> - * restart work item execution to ensure proper work item ordering.
+>> - *
+>> - *    dfl_pwq --------------+     [P] - plugged
+>> - *                          |
+>> - *                          v
+>> - *    pwqs -> A -> B [P] -> C [P] (newest)
+>> - *            |    |        |
+>> - *            1    3        5
+>> - *            |    |        |
+>> - *            2    4        6
+>> + * This function should only be called for ordered workqueues where only the
+
+The problem here is that you have a literal block without marking it as
+such.  If you were to format it as:
+
+> * next oldest one (first plugged pwq in iteration) will be unplugged to
+> * restart work item execution to ensure proper work item ordering::
+> *
+> *    dfl_pwq --------------+     [P] - plugged
+> *                          |
+> *                          v
+> *    pwqs -> A -> B [P] -> C [P] (newest)
+> *            |    |        |
+> *            1    3        5
+> *            |    |        |
+> *            2    4        6
+> *
+> * This function should only be called for ordered workqueues where only the
+
+...it should work.  The changes are the "::" after "ordering" and the
+blank line at the end of the block.
+
+Thanks,
+
+jon
