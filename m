@@ -1,65 +1,331 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E821E6D1CB;
-	Fri,  9 Feb 2024 15:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1B269E07
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707491474; cv=none; b=iRL7xWLffef9BAzzlPWQJF+i3F8kPD2p6obUT55UOSEAEkP05cM+EuTZzjTa61s2mCprMFI/PJ583q8dCBd3HkcENt333LXL8EddJbcX/2UYCr5hUiG0YLlAv0F5aThpm68WIH2ViewWFZVoZz7EWcdndREOTaY6X2HknXdVR/E=
+	t=1707491567; cv=none; b=Svv1v9Y7fs7HCkKf76NOwXOrIfsIT+3AHPBrkeQi36r/QAI3kCrSVXTkdINwl94KySEVNCPia+w5Czo8EMdJkCWk2Uoe14lRCBYdp6Myk6cDXtGSyOH7lz9brXSliRTC3M5Fmemm9ypprn2NYjfGO4XxaH0nHIAZYhUYKQWyyh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707491474; c=relaxed/simple;
-	bh=VwCqQlgMD5ijvTe1CDRtTpyuJtBMBP3AZJbX9C0U4eQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JVToFPgd3os8xSN2CS9NPPH/iCnqIujeZ9cV64F/vX/xQ+mNFDxpYwvwzzG9ucQ5+7NIbK7bD4DQjYX/z2FNd+BDQie6qlt1LEzw4AZN20jNZE5Ucq/39CBRTNliy1eXWBw9FOHAJFJwb5yxhQWYo1oN9xixpIQQXxeIntjrJzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXnBv+Pa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707491567; c=relaxed/simple;
+	bh=RH+NuY+D6aHD+wcrZU8Dadzd1nSEDNtwzxcILsjJCaQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VZt5ftPLkvArQllk+yyE/q23Vs7t1r2fGDyKJc5wf/M43ySF35vtLElrGYrn3emM26A2x7++/FA90mm0Z/3Q4ke+yCLW7rSwzQ3Cz4YSJYnr0CfU1zRXXMk+lfON6gJo1SXATPn2L69Arcv8bREQBXfvq/ksjYkXuVtBWWo111o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O8cDoeeF; arc=none smtp.client-ip=209.85.160.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXnBv+Pa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09CE5C43390;
-	Fri,  9 Feb 2024 15:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707491473;
-	bh=VwCqQlgMD5ijvTe1CDRtTpyuJtBMBP3AZJbX9C0U4eQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qXnBv+PaprGtyM8d1vEJZaPYs8z9ZiMmYRLvBJdHcpmfzTRm/hr6im4QePAIUKTEy
-	 Ddhf8E9NuKTx0XAcqCj2daArr6uwjZ2vgA1MRLQ9yjdJbvvq0me0993N9AHRn7+h9p
-	 /VbpybhSp8acS4pkGLAoYvsKB65Rc4x7JmCqLjUCtg6BmuYD3i+PtBO54qoCnJntm+
-	 +yDl0XaZYeiRc+yyEAsEueh9L4EGrdEQ0I7jcBvOBfY9xerDLGRTQNo6v2lC3BJGD5
-	 UCG4OrrnTTqOcxYPoNL7eTN12PoYV9m/DKJaIEGx7KM3rTXW9XBL/1Q9hnAyOmRqXo
-	 0ckgim5vRfscA==
-Date: Fri, 9 Feb 2024 16:11:09 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andy Lutomirski <luto@amacapital.net>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
- PIDFD_THREAD
-Message-ID: <20240209-bockig-essverhalten-9d80946c0bf4@brauner>
-References: <20240209130620.GA8039@redhat.com>
- <20240209130650.GA8048@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O8cDoeeF"
+Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-42c2f0266c9so39827481cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 07:12:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707491565; x=1708096365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=be0Sgf7TyAr8aMe2h7QxmV6L47RdFNqX/VIAvjQGSD4=;
+        b=O8cDoeeFViWjOpJrM1+IpNNI9DNHCfLMrXhm65VkusIG0Ih+Cwm2pE2+oCVClfhSdZ
+         NHU3tFKdM4EjRar1ZaRN7im0COktjylQ+VdAtaEVYHITdt3egSbpfpf9WU1ArdvwRGnA
+         U7jOWX60JY1sYUu4e/BUslDbJW9JVEd342zNlghquBoMsfhBPsy7UgfRU5kAf0KRB0lv
+         9jzDF2FLxR5v95QICiwIw/QCjN+3sRNddALeq7cq1teO6zgujO2ZJBTiyA+2MxbeH3th
+         np49MKI/BjFAztOZizgR5YUhBmaqrtw0Ezjuq7/1qcLnHZn1iUhvOie12getFOKZkODg
+         9kaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707491565; x=1708096365;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=be0Sgf7TyAr8aMe2h7QxmV6L47RdFNqX/VIAvjQGSD4=;
+        b=fEwIP6JVcKxk+8o65ft9IlhFbbwLmY58ZRHWNxHZiDq8m8BxemC4KfleTtzTwlFblw
+         W8ZF8EHQ2orj0iSlG1x0HATsJTeUPVoLksAyEyhavWoS2njYd+eJql4EvhLiv4UQ+NYy
+         rzAdQC1GKv/njrICAZkuHCeHsgTp26GtSbkSHqjpYrTcuL/JEIwRCsTVopEQq56Mw7Ij
+         e4ieRYTqW3VVjTtqE8UnpUM1v4t+D9hsd2R1tN8QN8SlJRlbNvtquOp2+fpl3Bs8sysv
+         xVfY+2dPdlsGJNp/3RgscGICi0hISwVyQOaCrL8zhqRhIbNz3NGUNg/Z56yM4/Iw70Ld
+         v/uQ==
+X-Gm-Message-State: AOJu0Yx+JH/+n+g5+V5PG5EdS9Tv/ia9tJVCpNB6+3m6Eltu32mhPDVK
+	FHdLf+UnAOSsZKzHgA4cy60SI1/9Fpb7wgMZqpw7spgmzRQX+RAaP64lnm1mXZPQ2MU2wZbobSE
+	yYQ==
+X-Google-Smtp-Source: AGHT+IEp0zYmZOYMN1hp14T5hBMvMTHWqCOz/d1f2OAn/8Se/MwK1MovKkUjd+34jVqVXgYnUJUU1MpMmm0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:ea07:0:b0:5ff:6e82:ea31 with SMTP id
+ t7-20020a0dea07000000b005ff6e82ea31mr206587ywe.3.1707491099217; Fri, 09 Feb
+ 2024 07:04:59 -0800 (PST)
+Date: Fri, 9 Feb 2024 07:04:57 -0800
+In-Reply-To: <CABgObfYa5eKj_8qyRfimqG7DXpbxe-eSM6pCwR6Hq97eZEtX6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240209130650.GA8048@redhat.com>
+Mime-Version: 1.0
+References: <20240123001555.4168188-1-michal.wilczynski@intel.com>
+ <20240125005710.GA8443@yjiang5-mobl.amr.corp.intel.com> <CABgObfYaUHXyRmsmg8UjRomnpQ0Jnaog9-L2gMjsjkqChjDYUQ@mail.gmail.com>
+ <42d31df4-2dbf-44db-a511-a2d65324fded@intel.com> <CABgObfYa5eKj_8qyRfimqG7DXpbxe-eSM6pCwR6Hq97eZEtX6A@mail.gmail.com>
+Message-ID: <ZcY_GbqcFXH2pR5E@google.com>
+Subject: Re: [PATCH v2] KVM: x86: nSVM/nVMX: Fix handling triple fault on RSM instruction
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Michal Wilczynski <michal.wilczynski@intel.com>, 
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>, mlevitsk@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dedekind1@gmail.com, yuan.yao@intel.com, Zheyu Ma <zheyuma97@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 09, 2024 at 02:06:50PM +0100, Oleg Nesterov wrote:
-> Turn kill_pid_info() into kill_pid_info_type(), this allows to pass any
-> pid_type to group_send_sig_info(), despite its name it should work fine
-> even if type = PIDTYPE_PID.
-> 
-> Change pidfd_send_signal() to use PIDTYPE_PID or PIDTYPE_TGID depending
-> on PIDFD_THREAD.
-> 
-> While at it kill another TODO comment in pidfd_show_fdinfo(). As Christian
-> expains fdinfo reports f_flags, userspace can already detect PIDFD_THREAD.
-> 
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
+On Thu, Feb 08, 2024, Paolo Bonzini wrote:
+> On Thu, Feb 8, 2024 at 2:18=E2=80=AFPM Wilczynski, Michal
+> <michal.wilczynski@intel.com> wrote:
+> > Hi, I've tested the patch and it seems to work, both on Intel and AMD.
+> > There was a problem with applying this chunk though:
+> >
+> > diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/=
+kvm-x86-ops.h
+> > index ac8b7614e79d..3d18fa7db353 100644
+> > --- a/arch/x86/include/asm/kvm-x86-ops.h
+> > +++ b/arch/x86/include/asm/kvm-x86-ops.h
+> > @@ -119,7 +119,8 @@ KVM_X86_OP(setup_mce)
+> >  #ifdef CONFIG_KVM_SMM
+> >  KVM_X86_OP(smi_allowed)
+> >  KVM_X86_OP()                 // <- This shouldn't be there I guess ?
+> > -KVM_X86_OP(leave_smm)
+> > +KVM_X86_OP(leave_smm_prepare)
+> > +KVM_X86_OP(leave_smm_commit)
+> >  KVM_X86_OP(enable_smi_window)
+> >  #endif
+> >  KVM_X86_OP_OPTIONAL(dev_get_attr)
+> >
+> > Anyway I was a bit averse to this approach as I noticed in the git log
+> > that callbacks like e.g post_leave_smm() used to exist, but they were l=
+ater
+> > removed, so I though the maintainers don't like introducing extra
+> > callbacks.
+>=20
+> If they are needed, it's fine. In my opinion a new callback is easier
+> to handle and understand than new state.
 
-Looks good to me,
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+Yeah, we ripped out post_leave_smm() because its sole usage at the time was=
+ buggy,
+and having a callback without a purpose would just be dead code.
+
+> > > 2) otherwise, if the problem is that we have not gone through the
+> > > vmenter yet, then KVM needs to do that and _then_ inject the triple
+> > > fault. The fix is to merge the .triple_fault and .check_nested_events
+> > > callbacks, with something like the second attached patch - which
+> > > probably has so many problems that I haven't even tried to compile it=
+.
+> >
+> > Well, in this case if we know that RSM will fail it doesn't seem to me
+> > like it make sense to run vmenter just do kill the VM anyway, this woul=
+d
+> > be more confusing.
+>=20
+> Note that the triple fault must not kill the VM, it's just causing a
+> nested vmexit from L2 to L1. KVM's algorithm to inject a
+> vmexit-causing event is always to first ensure that the VMCS02 (VMCB02
+> for AMD) is consistent, and only then trigger the vmexit. So if patch
+> 2 or something like it works, that would be even better.
+>=20
+> > I've made the fix this way based on our discussion with Sean in v1, and
+> > tried to mark the RSM instruction with a flag, as a one that needs
+> > actual HW VMenter to complete succesfully, and based on that informatio=
+n
+> > manipulate nested_run_pending.
+
+Heh, you misunderstood my suggestion.
+
+ : But due to nested_run_pending being (unnecessarily) buried in vendor str=
+ucts, it
+ : might actually be easier to do a cleaner fix.  E.g. add yet another flag=
+ to track
+ : that a hardware VM-Enter needs to be completed in order to complete inst=
+ruction
+ : emulation.
+
+I didn't mean add a flag to the emulator to muck with nested_run_pending, I=
+ meant
+add a flag to kvm_vcpu_arch to be a superset of nested_run_pending.  E.g. a=
+s a
+first step, something like the below.  And then as follow up, see if it's d=
+oable
+to propagate nested_run_pending =3D> insn_emulation_needs_vmenter so that t=
+he
+nested_run_pending checks in {svm,vmx}_{interrupt,nmi,smi}_allowed() can be
+dropped.
+
+---
+ arch/x86/include/asm/kvm_host.h |  8 ++++++
+ arch/x86/kvm/smm.c              | 10 ++++++--
+ arch/x86/kvm/x86.c              | 44 +++++++++++++++++++++++++--------
+ 3 files changed, 50 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
+t.h
+index d271ba20a0b2..bb4250551619 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -769,6 +769,14 @@ struct kvm_vcpu_arch {
+ 	u64 ia32_misc_enable_msr;
+ 	u64 smbase;
+ 	u64 smi_count;
++
++	/*
++	 * Tracks if a successful VM-Enter is needed to complete emulation of
++	 * an instruction, e.g. to ensure emulation of RSM or nested VM-Enter,
++	 * which can directly inject events, completes before KVM attempts to
++	 * inject new events.
++	 */
++	bool insn_emulation_needs_vmenter;
+ 	bool at_instruction_boundary;
+ 	bool tpr_access_reporting;
+ 	bool xfd_no_write_intercept;
+diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
+index dc3d95fdca7d..c6e597b8c794 100644
+--- a/arch/x86/kvm/smm.c
++++ b/arch/x86/kvm/smm.c
+@@ -640,8 +640,14 @@ int emulator_leave_smm(struct x86_emulate_ctxt *ctxt)
+=20
+ #ifdef CONFIG_X86_64
+ 	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
+-		return rsm_load_state_64(ctxt, &smram.smram64);
++		ret =3D rsm_load_state_64(ctxt, &smram.smram64);
+ 	else
+ #endif
+-		return rsm_load_state_32(ctxt, &smram.smram32);
++		ret =3D rsm_load_state_32(ctxt, &smram.smram32);
++
++	if (ret !=3D X86EMUL_CONTINUE)
++		return ret;
++
++	vcpu->arch.insn_emulation_needs_vmenter =3D true;
++	return X86EMUL_CONTINUE;
+ }
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index bf10a9073a09..21a7183bbf69 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10195,6 +10195,30 @@ int kvm_check_nested_events(struct kvm_vcpu *vcpu)
+ 	return kvm_x86_ops.nested_ops->check_events(vcpu);
+ }
+=20
++static int kvm_interrupt_allowed(struct kvm_vcpu *vcpu, bool for_injection=
+)
++{
++	if (vcpu->arch.insn_emulation_needs_vmenter)
++		return -EBUSY;
++
++	return static_call(kvm_x86_interrupt_allowed)(vcpu, for_injection);
++}
++
++static int kvm_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
++{
++	if (vcpu->arch.insn_emulation_needs_vmenter)
++		return -EBUSY;
++
++	return static_call(kvm_x86_smi_allowed)(vcpu, for_injection)
++}
++
++static int kvm_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
++{
++	if (vcpu->arch.insn_emulation_needs_vmenter)
++		return -EBUSY;
++
++	return x86_nmi_static_call(kvm_x86_nmi_allowed)(vcpu, for_injection);
++}
++
+ static void kvm_inject_exception(struct kvm_vcpu *vcpu)
+ {
+ 	/*
+@@ -10384,7 +10408,7 @@ static int kvm_check_and_inject_events(struct kvm_v=
+cpu *vcpu,
+ 	 */
+ #ifdef CONFIG_KVM_SMM
+ 	if (vcpu->arch.smi_pending) {
+-		r =3D can_inject ? static_call(kvm_x86_smi_allowed)(vcpu, true) : -EBUSY=
+;
++		r =3D can_inject ? kvm_smi_allowed(vcpu, true) : -EBUSY;
+ 		if (r < 0)
+ 			goto out;
+ 		if (r) {
+@@ -10398,7 +10422,7 @@ static int kvm_check_and_inject_events(struct kvm_v=
+cpu *vcpu,
+ #endif
+=20
+ 	if (vcpu->arch.nmi_pending) {
+-		r =3D can_inject ? static_call(kvm_x86_nmi_allowed)(vcpu, true) : -EBUSY=
+;
++		r =3D can_inject ? kvm_nmi_allowed(vcpu, true) : -EBUSY;
+ 		if (r < 0)
+ 			goto out;
+ 		if (r) {
+@@ -10406,14 +10430,14 @@ static int kvm_check_and_inject_events(struct kvm=
+_vcpu *vcpu,
+ 			vcpu->arch.nmi_injected =3D true;
+ 			static_call(kvm_x86_inject_nmi)(vcpu);
+ 			can_inject =3D false;
+-			WARN_ON(static_call(kvm_x86_nmi_allowed)(vcpu, true) < 0);
++			WARN_ON_ONCE(kvm_nmi_allowed() < 0);
+ 		}
+ 		if (vcpu->arch.nmi_pending)
+ 			static_call(kvm_x86_enable_nmi_window)(vcpu);
+ 	}
+=20
+ 	if (kvm_cpu_has_injectable_intr(vcpu)) {
+-		r =3D can_inject ? static_call(kvm_x86_interrupt_allowed)(vcpu, true) : =
+-EBUSY;
++		r =3D can_inject ? kvm_interrupt_allowed(vcpu, true) : -EBUSY;
+ 		if (r < 0)
+ 			goto out;
+ 		if (r) {
+@@ -10422,7 +10446,7 @@ static int kvm_check_and_inject_events(struct kvm_v=
+cpu *vcpu,
+ 			if (!WARN_ON_ONCE(irq =3D=3D -1)) {
+ 				kvm_queue_interrupt(vcpu, irq, false);
+ 				static_call(kvm_x86_inject_irq)(vcpu, false);
+-				WARN_ON(static_call(kvm_x86_interrupt_allowed)(vcpu, true) < 0);
++				WARN_ON(kvm_interrupt_allowed(vcpu, true) < 0);
+ 			}
+ 		}
+ 		if (kvm_cpu_has_injectable_intr(vcpu))
+@@ -10969,6 +10993,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		WARN_ON_ONCE((kvm_vcpu_apicv_activated(vcpu) !=3D kvm_vcpu_apicv_active(=
+vcpu)) &&
+ 			     (kvm_get_apic_mode(vcpu) !=3D LAPIC_MODE_DISABLED));
+=20
++		vcpu->arch.insn_emulation_needs_vmenter =3D false;
++
+ 		exit_fastpath =3D static_call(kvm_x86_vcpu_run)(vcpu);
+ 		if (likely(exit_fastpath !=3D EXIT_FASTPATH_REENTER_GUEST))
+ 			break;
+@@ -13051,14 +13077,12 @@ static inline bool kvm_vcpu_has_events(struct kvm=
+_vcpu *vcpu)
+ 		return true;
+=20
+ 	if (kvm_test_request(KVM_REQ_NMI, vcpu) ||
+-	    (vcpu->arch.nmi_pending &&
+-	     static_call(kvm_x86_nmi_allowed)(vcpu, false)))
++	    (vcpu->arch.nmi_pending && kvm_nmi_allowed(vcpu, false)))
+ 		return true;
+=20
+ #ifdef CONFIG_KVM_SMM
+ 	if (kvm_test_request(KVM_REQ_SMI, vcpu) ||
+-	    (vcpu->arch.smi_pending &&
+-	     static_call(kvm_x86_smi_allowed)(vcpu, false)))
++	    (vcpu->arch.smi_pending && kvm_smi_allowed(vcpu, false)))
+ 		return true;
+ #endif
+=20
+@@ -13136,7 +13160,7 @@ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu=
+)
+=20
+ int kvm_arch_interrupt_allowed(struct kvm_vcpu *vcpu)
+ {
+-	return static_call(kvm_x86_interrupt_allowed)(vcpu, false);
++	return kvm_interrupt_allowed(vcpu, false);
+ }
+=20
+ unsigned long kvm_get_linear_rip(struct kvm_vcpu *vcpu)
+
+base-commit: f8fe663bc413d2a14ab9a452638a99b975011a9d
+--=20
+
