@@ -1,124 +1,134 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50659A5F
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 01:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746CD15D4;
+	Fri,  9 Feb 2024 01:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707443721; cv=none; b=MT8NMxBhQDDITZ4/oMYGQYUtScX3nY/eBs9lyxi2VJaDq0U348QOEvhRukyeBIpqTpVBaNq6q3OK3EW7hmJt3X8R1OT+BJKfz5ZXwC/GjGgrM9sLqqFcwcON7lokmJvHaegWIMRQSfqhtIqKFvyPu5f+yfYJkZME7TY39PzXszg=
+	t=1707443924; cv=none; b=NWpJaLzMi/P0pDc5V4UOB0lJmCnIOyPiYd42eWuTXQIVWCkv7fV4PxaIzY5OCdfwE/ZJmWCLw8OTtZHdv5xkqa5f7tjmyQrGkyh51bJq2yUvR14Kl23m8zPnOUv2qPABByukgZQxK025er0snoqFVhUFisvFYiiih94DfKlMy8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707443721; c=relaxed/simple;
-	bh=km8RfSoIhq4OlQItyglFP30YRBjC2JQ86CUek4SLJFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tlgHCEvWGTIfiBWoaqrzcdG3Cl+uO6bMtUDm0htIK+k7L6/NlnGj0es7sP+ouK0RMarTCp5leUHirKcqX7KkpBh+dhD7WGqxElvVV4zZb36dRqQ9FwnV8uFw3ZrEyBQXyzs1q3+b0PR5vysUZaMKoOZ+dcejscxRddh+vEz2xYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PewTwzEb; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1707443924; c=relaxed/simple;
+	bh=fhyg5jBDizytO6x3hZXyQa4pHMLhM/GRB9tg0/a7aZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MCP+9xTxjmMNvxRvENPrzVz4kTNdaU7tBNiXoSJEHfQRsvoSXPvd6dbveSXQGkkJ7vVNpp2Co7OpbNIbcX17NPQgXEbkow7NalB5Nr7CP2cKMHLrUIk1Jjz/QhzGDkm173DeNtiDmIkH6A1rIq4rj8nxgrnvfZ69UF45F6zShjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwNkCvof; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PewTwzEb"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d91397bd22so4084885ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Feb 2024 17:55:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707443719; x=1708048519; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FPcxmfF1K+emjGX7/juChDlmt4cDFHRmhTmTnNlE/Ts=;
-        b=PewTwzEbHpz1Myll3pCkxUeLClRcyX0uqOX91Bmk8gPFOSn3PDOzb64LZrg2ruLpYC
-         MbPWWJNF0GS2r/r4BJXOsBJLOi7e+SC6j8L4JHOsSTyWV69oQUE4mR/OHm0DLaRhrubG
-         BY+QJorXARzhLIbdGVeHl2ogW0DLJaFZQVmK+J0pJBe+idBNh9QzYYh7AC09aRQkpgxK
-         KrVnM7OtFR/UK8+uT+IHkqRSqn4JV3qPvmiJvQfsOfakQZQ+c9dN1SDdhhMepO/dM8uk
-         DYfBcDlpNr7CPCMp0FluTD0d+gUJa6ErwYu4wHYrol7XikMtYQhMffkAJPNf1VCa2gVT
-         hbOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707443719; x=1708048519;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FPcxmfF1K+emjGX7/juChDlmt4cDFHRmhTmTnNlE/Ts=;
-        b=IJlhB5AuSD+E97bq4D4IFCveDfsvUB1v6CGst3pg36eVpiVOpwxmkvGfe1dQzUtKHl
-         t1jeHGkXeyniZHQPhZzihk9cNVihhe2k5HHQJao+8Kzg7WAnTAinpEtJ2AzkotdVoGs3
-         srFwpGSFwm/AESsVfa+xqLz660pyWYXvvztnhxk33iuHt9yUbnqzBczl2bdwEjnLPgQt
-         P037+77Z1GrDYCDuEvvE8GIYyAq5Q0mLiKuA63Gyiwh+mR0lTWWm3mIeRbmqyL1VSqmF
-         RYeUcgDtkb2fQ1mURCxxyiZWSrlcLenBNeMmaMtbhgvle2d7FNZsEw2rnCiUEwnYLWhE
-         DfSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWc5/+c3sV/g5HxaIkQxiDRkoumGcQsLSmnz7uoQ+lACSbWLzJxeh3ErMECH44nDSl42VXXnP8ISdmsZ6ApfwVvqIzBYheoVBeTELqs
-X-Gm-Message-State: AOJu0YwJnFHdjnKf1n97UZihd1UySZ74SsW2uw3Lmx8pnFea4x8m1Bvr
-	NVy7vmQwLaL29gs085NQ3t6ZEhKOzKIAwwMDu76tcn0prhvV1BZhmvji4HrabyRISk/7iwQvVo8
-	v
-X-Google-Smtp-Source: AGHT+IGGQ//i5yw3BV9iZEZHf7YAhLEeHJnu7fbFVOuv6QJ6Q3i2u60pix7ahaQAHDgvGPyN99ChrQ==
-X-Received: by 2002:a17:903:40c7:b0:1d7:3067:aab5 with SMTP id t7-20020a17090340c700b001d73067aab5mr197967pld.57.1707443719552;
-        Thu, 08 Feb 2024 17:55:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1PvnZbiSzchAIBR5d5DntiI+g6t6bp6Qdq9z31jaP4L/jxarBoPRNW5d+fcFZ0eWMk6rfe7NF1+jTu9kD9QccvyK0vfbpjx5xzZWHll0K3V17nWt87wHGkPe28UmC4RaTINg7WPROmJY3pRQCn69HstkGwG5hwU2pBTgBDhu3I3fMGyRWCfREIfZ0ZVdF
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id kj11-20020a17090306cb00b001d8edfec673sm423161plb.214.2024.02.08.17.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 17:55:19 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rYG6m-003y41-2g;
-	Fri, 09 Feb 2024 12:55:16 +1100
-Date: Fri, 9 Feb 2024 12:55:16 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,
-	lsf-pc <lsf-pc@lists.linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] tracing the source of errors
-Message-ID: <ZcWGBLGYzNWZC+ze@dread.disaster.area>
-References: <CAJfpegtw0-88qLjy0QDLyYFZEM7PJCG3R-mBMa9s8TNSVZmJTA@mail.gmail.com>
- <ZcP4GewZ9jPw5NbA@dread.disaster.area>
- <ZcT5540Bv7U8qoUa@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwNkCvof"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1481DC433C7;
+	Fri,  9 Feb 2024 01:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707443924;
+	bh=fhyg5jBDizytO6x3hZXyQa4pHMLhM/GRB9tg0/a7aZE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mwNkCvofzO6gMxI2qcdtN8md9csh2uCkP/J0eHFdHTB4dLVWyLHZ3aiYlQJM/jduZ
+	 +hryoxuATnyhBUk/vVVCkwJsVtM5o+K9SeXc33ObfsubUvnxZGA2bWHr0aA19uBPfV
+	 dYl5ozEtRoRfx35lUC9EOh99D57uk/k+w660bE0O3dHEJWEzQIIPW7k+dBY8OmSRqT
+	 IxriGWy0bd3IYLrE88cJMjkUjyHYbKtv0kBhyirD62VatmfDIu9cZzSivIO0mAdgwY
+	 7aXkwrwgw9SvkzG5X7IKVcJa1psfjfaF4noxrt1HDpWD+q39x5noI7hsS3invtHjuE
+	 hvgT7gF8VQPPg==
+Message-ID: <e4078b85-5675-4fdb-a01f-7112342ec501@kernel.org>
+Date: Fri, 9 Feb 2024 10:58:40 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcT5540Bv7U8qoUa@casper.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] block: introducing a bias over deadline's fifo_time
+Content-Language: en-US
+To: Zhaoyang Huang <huangzhaoyang@gmail.com>, Jens Axboe <axboe@kernel.dk>
+Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Yu Zhao <yuzhao@google.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ steve.kang@unisoc.com
+References: <20240208093136.178797-1-zhaoyang.huang@unisoc.com>
+ <20240208093136.178797-3-zhaoyang.huang@unisoc.com>
+ <ca00ff75-e98d-4652-9c52-94b2e876901e@kernel.dk>
+ <CAGWkznH6Y8u7PsoHWid0uQ+ceRK_qzSn6=eWn4dvDhK+DzSXzg@mail.gmail.com>
+ <da41bac4-015f-4df0-b8cc-6c8b2f468e12@kernel.dk>
+ <CAGWkznGnyPXM_DyyUxxZFoW=3K0B3Nh8sRZ8Lnsvm7WfES_fmA@mail.gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <CAGWkznGnyPXM_DyyUxxZFoW=3K0B3Nh8sRZ8Lnsvm7WfES_fmA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 08, 2024 at 03:57:27PM +0000, Matthew Wilcox wrote:
-> On Thu, Feb 08, 2024 at 08:37:29AM +1100, Dave Chinner wrote:
-> > ftrace using the function_graph tracer will emit the return values
-> > of the functions if you use it with the 'funcgraph-retval' option.
-> 
-> OK, but that may not be fine grained enough.  Why is mmap() returning
-> -ENOMEM?
-> 
-> unsigned long do_mmap(struct file *file, unsigned long addr,
-> ...
->        /* Careful about overflows.. */
->         len = PAGE_ALIGN(len);
->         if (!len)
->                 return -ENOMEM;
-> ...
->         /* Too many mappings? */
->         if (mm->map_count > sysctl_max_map_count)
->                 return -ENOMEM;
-> 
-> So it can distinguish between mmap() returning ENOMEM because
-> get_unmapped_area() returned ENOMEM and do_mmap() returning ENOMEM of
-> its own accord (right?),
+On 2/9/24 09:28, Zhaoyang Huang wrote:
+> On Fri, Feb 9, 2024 at 8:11 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 2/8/24 5:02 PM, Zhaoyang Huang wrote:
+>>> On Fri, Feb 9, 2024 at 1:49?AM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>
+>>>> On 2/8/24 2:31 AM, zhaoyang.huang wrote:
+>>>>> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+>>>>> index f958e79277b8..43c08c3d6f18 100644
+>>>>> --- a/block/mq-deadline.c
+>>>>> +++ b/block/mq-deadline.c
+>>>>> @@ -15,6 +15,7 @@
+>>>>>  #include <linux/compiler.h>
+>>>>>  #include <linux/rbtree.h>
+>>>>>  #include <linux/sbitmap.h>
+>>>>> +#include "../kernel/sched/sched.h"
+>>>>>
+>>>>>  #include <trace/events/block.h>
+>>>>>
+>>>>> @@ -802,6 +803,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+>>>>>       u8 ioprio_class = IOPRIO_PRIO_CLASS(ioprio);
+>>>>>       struct dd_per_prio *per_prio;
+>>>>>       enum dd_prio prio;
+>>>>> +     int fifo_expire;
+>>>>>
+>>>>>       lockdep_assert_held(&dd->lock);
+>>>>>
+>>>>> @@ -840,7 +842,9 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+>>>>>               /*
+>>>>>                * set expire time and add to fifo list
+>>>>>                */
+>>>>> -             rq->fifo_time = jiffies + dd->fifo_expire[data_dir];
+>>>>> +             fifo_expire = task_is_realtime(current) ? dd->fifo_expire[data_dir] :
+>>>>> +                     CFS_PROPORTION(current, dd->fifo_expire[data_dir]);
+>>>>> +             rq->fifo_time = jiffies + fifo_expire;
+>>>>>               insert_before = &per_prio->fifo_list[data_dir];
+>>>>>  #ifdef CONFIG_BLK_DEV_ZONED
+>>>>>               /*
+>>>>
+>>>> Hard pass on this blatant layering violation. Just like the priority
+>>>> changes, this utterly fails to understand how things are properly
+>>>> designed.
+>>> IMHO, I don't think this is a layering violation. bio_set_ioprio is
+>>> the one which introduces the scheduler thing into the block layer,
+>>> this commit just wants to do a little improvement based on that. This
+>>> commit helps CFS task save some IO time when preempted by RT heavily.
+>>
+>> Listen, both this and the previous content ioprio thing show a glaring
+>> misunderstanding of how to design these kinds of things. You have no
+>> grasp of what the different layers do, or how they interact. I'm not
+>> sure how to put this kindly, but it's really an awful idea to hardcore
+>> some CFS helper into the IO scheduler. The fact that you had to fiddle
+>> around with headers to make it work was the first warning sign, and the
+>> fact that you didn't stop at that point to consider how it could be
+>> properly done makes it even worse.
+>>
+>> You need to stop sending kernel patches until you understand basic
+>> software design. Neither of these patches are going anywhere until this
+>> happens. There's been plenty of feedback to telling you that, but you
+>> seem to just ignore it and plow on ahead. Stop.
+> Ok, thanks for pointing this out, I will follow your advice. But I
+> have to say that '[PATCHv9 1/1] block: introduce content activity
+> based ioprio' really solved layering violation things. I would like to
+> humbly ask for your kindly patient to have a look, as it is really
+> helpful.
 
-The call stack trace should tell you which function the error
-originated from, yes?
+If properly designed, that patch would *not* be a block layer API/function and
+so does not need review by block layer folks/Jens as it would simply set an IO
+prio for a BIO issued by an FS. So that patch needs to be accepted by FS
+people, for the FS you are interested in.
 
-> but it can't tell you which of the above two
-> cases you hit.  Or can it?
 
-Never used it, but it might be able to - the "sym-offset" option
-will display exact offsets of the function in the trace. If you then
-add "funcgraph-tail" it will emit the function being returned from.
-If the return location is generated with an offset indicating the
-actual return, then it might tell you the exact location.
-
-If it doesn't, then this would seem like a reasonable thing to add
-to ftrace - function return tracing with a filter to grab the return
-location when the return value is less than 0 seems exactly the sort
-of thing ftrace was intended to be used for...
-
--Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Damien Le Moal
+Western Digital Research
+
