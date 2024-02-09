@@ -1,264 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082FB3D3AC
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 13:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838CC4CB50;
+	Fri,  9 Feb 2024 13:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707486531; cv=none; b=aqv1PK1Hxw2s811uLCoGxSpL1axF6dAnDG3erRf+nTKxM+Vo0DCw0KW8e1+zbAKdtex/kTM9ySrmKMToFHxGHOfS4eI89Nm4KDD8f57qxtXAn3vWUwKlkH7qsgSdgNbUzocddaIPWmNAqdofmo7aWZEsSzLgYsP/0eJ8xJifgvI=
+	t=1707486716; cv=none; b=a9hkqvkqvvBrTrVUHDOHnY5uEAV6MRixS3OVjSxuwleO3+fpLlK4H96GyEcNfqOM7YOiExXo1gCuS3jZlaadddZ00vS9mPn/ktt5jK/Z17NlNR+674jHSgjGs7owBzhYk6CTEP7wjCWSrkGTjt//9Hu+wBXy2A8awk+b0Vs8ssA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707486531; c=relaxed/simple;
-	bh=OIE5COOO6rqfwxCMmCGXgFOnkdt6DaCZsKrEzxx5dvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RUtBC0XtQnKfBS0Vq5mTnPOJB6OUuGmRqe2Zxfb08eR3nmpTHnIXpeb/yKT7u4CRVj8p2OOLvyE6EU/KB81UUlWMfdhwWSPVv4IrRLAl5V3RW9zu/DR3tfeNSbNyraB0O1zj3vzt7Xycwq4R3U+9rKaBHrRe8f2bYLeswc3/h1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF27C433F1;
-	Fri,  9 Feb 2024 13:48:49 +0000 (UTC)
-Date: Fri, 9 Feb 2024 08:48:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [GIT PULL] tracing: Fixes for v6.8-rc3
-Message-ID: <20240209084845.3744389f@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707486716; c=relaxed/simple;
+	bh=0bD1Yt7GaMWvgagUDRUd142oKOAha2Uum7epnkYDwYM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ESGfy75wSIMA286Yq0/RhFBqyrScWuNFSXpS6raLKCCQU0aBpvCev4GN0ZxBjgj86MyvY5OkdwHc/hMD0vRdU7oNPrFwzFgM0tupmCGsrpcY+5/QDZ0OdOpcE9JraVe+oyEPPonN5GrAJqzI8nCtyijCLaK/bQT56Pij0tnlSaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ETBDqY2w; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ETBDqY2w"
+Received: from relay6-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::226])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 4F523C386D;
+	Fri,  9 Feb 2024 13:51:46 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E403C0006;
+	Fri,  9 Feb 2024 13:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707486697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AUYRGdnXj82lH9bL33wM3PM4HJIHlriE6TD1Z3Nt0sI=;
+	b=ETBDqY2wPkcGTEGRxzebBkunFGckdAZ804L/mgWOjGLEwhXdfrfZsC1Lo4bpwlQEtpenTc
+	SQbuIBUO1JJ1Oktdw+aRH0j8OYDhXSQMhGu/SlXI+oENT0tA7jl0pn739yIqJgr2Svw/mB
+	EKJNmaCqj2wnnxGN69xlpwa4NSAgaW50GacDj0IYhM455+2IdpIEHfq4F1LVRB1MUVwE7W
+	UNryUU/48r46YzAJFc4sY+/bLMmIVpSWVR5J+FSQbZQsmVfr+uCcLM4gtNAhu02O6ep605
+	YJeriIHtnOAYVCVYFMiyI7V63hJiYBB8KC2P2B/rR2dO/YdN2LyN8qyJjMsZfg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Fri, 09 Feb 2024 14:51:23 +0100
+Subject: [PATCH] spi: spi-mem: add statistics support to ->exec_op() calls
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240209-spi-mem-stats-v1-1-dd1a422fc015@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIANotxmUC/x3MMQqAMAxA0auUzAZqEaReRRy0JprBWhoRQXp3i
+ +Mb/n9BKQspDOaFTLeonLGibQyEfY4boazV4KzrrLMeNQkedKBe86XI7Bf2bbDcE9QmZWJ5/t8
+ 4lfIB4wjtUV8AAAA=
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dhruva Gole <d-gole@ti.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Current behavior is that spi-mem operations do not increment statistics,
+neither per-controller nor per-device, if ->exec_op() is used. For
+operations that do NOT use ->exec_op(), stats are increased as the
+usual spi_sync() is called.
 
-Linus,
+The newly implemented spi_mem_add_op_stats() function is strongly
+inspired by spi_statistics_add_transfer_stats(); locking logic and
+l2len computation comes from there.
 
-[
-   Note: The first change is a definite fix. The second one I believe
-   is a fix but you may not. If you feel that the second is not worthy
-   of an RC addition, I created another tag: trace-v6.8-rc3-alt
-   that only has the first fix in it.
+Statistics that are being filled: bytes{,_rx,_tx}, messages, transfers,
+errors, timedout, transfer_bytes_histo_*.
 
-   While looking to improve the saved_cmdlines cache that maps PIDs to
-   COMMs I discovered that a large structure that is allocated is just
-   over a power of 2 leaving 131040 bytes unused that could have been
-   used for the cache itself. I personally think that's a bug, but I can
-   understand if others do not. I'll let you decided if you want to
-   pull it or not. If you do not, I'll just rebase that change on top
-   of my for-next queue.
-]
+Note about messages & transfers counters: in the fallback to spi_sync()
+case, there are from 1 to 4 transfers per message. We only register one
+big transfer in the ->exec_op() case as that is closer to reality.
 
+This patch is NOT touching:
+ - spi_async, spi_sync, spi_sync_immediate: those counters describe
+   precise function calls, incrementing them would be lying. I believe
+   comparing the messages counter to spi_async+spi_sync is a good way
+   to detect ->exec_op() calls, but I might be missing edge cases
+   knowledge.
+ - transfers_split_maxsize: splitting cannot happen if ->exec_op() is
+   provided.
 
-Tracing fixes for v6.8-rc3:
+Testing this patch:
 
-- Fix broken direct trampolines being called when another callback is
-  attached to the same function. ARM 64 does not support FTRACE_WITH_REGS, and
-  when it added direct trampoline calls from ftrace, it removed the
-  "WITH_REGS" flag from the ftrace_ops for direct trampolines. This broke
-  x86 as x86 requires direct trampolines to have WITH_REGS. This wasn't
-  noticed because direct trampolines work as long as the function it is
-  attached to is not shared with other callbacks (like the function tracer).
-  When there's other callbacks, a helper trampoline is called, to call all
-  the non direct callbacks and when it returns, the direct trampoline is
-  called. For x86, the trampoline sets a flag in the regs field to
-  tell the x86 specific code to call the direct trampoline. But this only
-  works if the ftrace_ops had WITH_REGS set. ARM does things differently
-  that does not require this. For now, set WITH_REGS if the arch supports
-  WITH_REGS (which ARM does not), and this makes it work for both ARM64 and
-  x86.
+   $ cd /sys/devices/platform/soc
+   $ find . -type d -path "*spi*" -name statistics
+   ./2100000.spi/spi_master/spi0/statistics
+   ./2100000.spi/spi_master/spi0/spi0.0/statistics
+   $ cd ./2100000.spi/spi_master/spi0/statistics
 
-- Fix wasted memory in the saved_cmdlines logic.
+   $ for f in *; do printf "%s\t" $f; cat $f; done | \
+         grep -v transfer_bytes_histo | column -t
+   bytes                    240745444
+   bytes_rx                 240170907
+   bytes_tx                 126320
+   errors                   0
+   messages                 97354
+   spi_async                0
+   spi_sync                 0
+   spi_sync_immediate       0
+   timedout                 0
+   transfers                97354
+   transfers_split_maxsize  0
 
-  The saved_cmdlines is a cache that maps PIDs to COMMs that tracing can
-  use. Most trace events only save the PID in the event. The saved_cmdlines
-  file lists PIDs to COMMs so that the tracing tools can show an actual name
-  and not just a PID for each event. There's an array of PIDs that map to a
-  small set of saved COMM strings. The array is set to PID_MAX_DEFAULT which
-  is usually set to 32768. When a PID comes in, it will add itself to this
-  array along with the index into the COMM array (note if the system allows
-  more than PID_MAX_DEFAULT, this cache is similar to cache lines as an
-  update of a PID that has the same PID_MAX_DEFAULT bits set will flush out
-  another task with the same matching bits set).
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ drivers/spi/spi-mem.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 1 deletion(-)
 
-  A while ago, the size of this cache was changed to be dynamic and the
-  array was moved into a structure and created with kmalloc(). But this
-  new structure had the size of 131104 bytes, or 0x20020 in hex. As kmalloc
-  allocates in powers of two, it was actually allocating 0x40000 bytes
-  (262144) leaving 131040 bytes of wasted memory. The last element of this
-  structure was a pointer to the COMM string array which defaulted to just
-  saving 128 COMMs.
-
-  By changing the last field of this structure to a variable length string,
-  and just having it round up to fill the allocated memory, the default
-  size of the saved COMM cache is now 8190. This not only uses the wasted
-  space, but actually saves space by removing the extra allocation for the
-  COMM names.
-
-
-Please pull the latest trace-v6.8-rc3 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-v6.8-rc3
-
-Tag SHA1: 28c94dfb4c59f1e16d71d487bb242f6214420b21
-Head SHA1: 44dc5c41b5b1267d4dd037d26afc0c4d3a568acb
-
-
-Masami Hiramatsu (Google) (1):
-      ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
-
-Steven Rostedt (Google) (1):
-      tracing: Fix wasted memory in saved_cmdlines logic
-
-----
- kernel/trace/ftrace.c | 10 +++++++
- kernel/trace/trace.c  | 75 +++++++++++++++++++++++++--------------------------
- 2 files changed, 47 insertions(+), 38 deletions(-)
----------------------------
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index b01ae7d36021..c060d5b47910 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5325,7 +5325,17 @@ static LIST_HEAD(ftrace_direct_funcs);
- 
- static int register_ftrace_function_nolock(struct ftrace_ops *ops);
- 
-+/*
-+ * If there are multiple ftrace_ops, use SAVE_REGS by default, so that direct
-+ * call will be jumped from ftrace_regs_caller. Only if the architecture does
-+ * not support ftrace_regs_caller but direct_call, use SAVE_ARGS so that it
-+ * jumps from ftrace_caller for multiple ftrace_ops.
-+ */
-+#ifndef HAVE_DYNAMIC_FTRACE_WITH_REGS
- #define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_ARGS)
-+#else
-+#define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS)
-+#endif
- 
- static int check_direct_multi(struct ftrace_ops *ops)
- {
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2a7c6fd934e9..9ff8a439d674 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2320,7 +2320,7 @@ struct saved_cmdlines_buffer {
- 	unsigned *map_cmdline_to_pid;
- 	unsigned cmdline_num;
- 	int cmdline_idx;
--	char *saved_cmdlines;
-+	char saved_cmdlines[];
- };
- static struct saved_cmdlines_buffer *savedcmd;
- 
-@@ -2334,47 +2334,58 @@ static inline void set_cmdline(int idx, const char *cmdline)
- 	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 2dc8ceb85374..171fe6b1c247 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -297,6 +297,50 @@ static void spi_mem_access_end(struct spi_mem *mem)
+ 		pm_runtime_put(ctlr->dev.parent);
  }
  
--static int allocate_cmdlines_buffer(unsigned int val,
--				    struct saved_cmdlines_buffer *s)
-+static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
++static void spi_mem_add_op_stats(struct spi_statistics __percpu *pcpu_stats,
++				 const struct spi_mem_op *op, int exec_op_ret)
 +{
-+	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
++	struct spi_statistics *stats;
++	int len, l2len;
 +
-+	kfree(s->map_cmdline_to_pid);
-+	free_pages((unsigned long)s, order);
++	get_cpu();
++	stats = this_cpu_ptr(pcpu_stats);
++	u64_stats_update_begin(&stats->syncp);
++
++	/*
++	 * We do not have the concept of messages or transfers. Let's consider
++	 * that one operation is equivalent to one message and one transfer.
++	 */
++	u64_stats_inc(&stats->messages);
++	u64_stats_inc(&stats->transfers);
++
++	/* Use the sum of all lengths as bytes count and histogram value. */
++	len = (int)op->cmd.nbytes + (int)op->addr.nbytes;
++	len += (int)op->dummy.nbytes + (int)op->data.nbytes;
++	u64_stats_add(&stats->bytes, len);
++	l2len = min(fls(len), SPI_STATISTICS_HISTO_SIZE) - 1;
++	l2len = max(l2len, 0);
++	u64_stats_inc(&stats->transfer_bytes_histo[l2len]);
++
++	/* Only account for data bytes as xferred bytes. */
++	if (op->data.nbytes && op->data.dir == SPI_MEM_DATA_OUT)
++		u64_stats_add(&stats->bytes_tx, op->data.nbytes);
++	if (op->data.nbytes && op->data.dir == SPI_MEM_DATA_IN)
++		u64_stats_add(&stats->bytes_rx, op->data.nbytes);
++
++	/*
++	 * A timeout is not an error, following the same behavior as
++	 * spi_transfer_one_message().
++	 */
++	if (exec_op_ret == -ETIMEDOUT)
++		u64_stats_inc(&stats->timedout);
++	else if (exec_op_ret)
++		u64_stats_inc(&stats->errors);
++
++	u64_stats_update_end(&stats->syncp);
++	put_cpu();
 +}
 +
-+static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- {
-+	struct saved_cmdlines_buffer *s;
-+	struct page *page;
-+	int orig_size, size;
-+	int order;
+ /**
+  * spi_mem_exec_op() - Execute a memory operation
+  * @mem: the SPI memory
+@@ -339,8 +383,12 @@ int spi_mem_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 		 * read path) and expect the core to use the regular SPI
+ 		 * interface in other cases.
+ 		 */
+-		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP)
++		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP) {
++			spi_mem_add_op_stats(ctlr->pcpu_statistics, op, ret);
++			spi_mem_add_op_stats(mem->spi->pcpu_statistics, op, ret);
 +
-+	/* Figure out how much is needed to hold the given number of cmdlines */
-+	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-+	order = get_order(orig_size);
-+	size = 1 << (order + PAGE_SHIFT);
-+	page = alloc_pages(GFP_KERNEL, order);
-+	if (!page)
-+		return NULL;
-+
-+	s = page_address(page);
-+	memset(s, 0, sizeof(*s));
-+
-+	/* Round up to actual allocation */
-+	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-+	s->cmdline_num = val;
-+
- 	s->map_cmdline_to_pid = kmalloc_array(val,
- 					      sizeof(*s->map_cmdline_to_pid),
- 					      GFP_KERNEL);
--	if (!s->map_cmdline_to_pid)
--		return -ENOMEM;
--
--	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
--	if (!s->saved_cmdlines) {
--		kfree(s->map_cmdline_to_pid);
--		return -ENOMEM;
-+	if (!s->map_cmdline_to_pid) {
-+		free_saved_cmdlines_buffer(s);
-+		return NULL;
+ 			return ret;
++		}
  	}
  
- 	s->cmdline_idx = 0;
--	s->cmdline_num = val;
- 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
- 	       sizeof(s->map_pid_to_cmdline));
- 	memset(s->map_cmdline_to_pid, NO_CMDLINE_MAP,
- 	       val * sizeof(*s->map_cmdline_to_pid));
- 
--	return 0;
-+	return s;
- }
- 
- static int trace_create_savedcmd(void)
- {
--	int ret;
--
--	savedcmd = kmalloc(sizeof(*savedcmd), GFP_KERNEL);
--	if (!savedcmd)
--		return -ENOMEM;
--
--	ret = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT, savedcmd);
--	if (ret < 0) {
--		kfree(savedcmd);
--		savedcmd = NULL;
--		return -ENOMEM;
--	}
-+	savedcmd = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT);
- 
--	return 0;
-+	return savedcmd ? 0 : -ENOMEM;
- }
- 
- int is_tracing_stopped(void)
-@@ -6056,26 +6067,14 @@ tracing_saved_cmdlines_size_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
--static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
--{
--	kfree(s->saved_cmdlines);
--	kfree(s->map_cmdline_to_pid);
--	kfree(s);
--}
--
- static int tracing_resize_saved_cmdlines(unsigned int val)
- {
- 	struct saved_cmdlines_buffer *s, *savedcmd_temp;
- 
--	s = kmalloc(sizeof(*s), GFP_KERNEL);
-+	s = allocate_cmdlines_buffer(val);
- 	if (!s)
- 		return -ENOMEM;
- 
--	if (allocate_cmdlines_buffer(val, s) < 0) {
--		kfree(s);
--		return -ENOMEM;
--	}
--
- 	preempt_disable();
- 	arch_spin_lock(&trace_cmdline_lock);
- 	savedcmd_temp = savedcmd;
+ 	tmpbufsize = op->cmd.nbytes + op->addr.nbytes + op->dummy.nbytes;
+
+---
+base-commit: 19b50f80b3a4865bd477aa5c026dd234d39a50d2
+change-id: 20240209-spi-mem-stats-ff9bf91c0f7e
+
+Best regards,
+-- 
+Théo Lebrun <theo.lebrun@bootlin.com>
+
