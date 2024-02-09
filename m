@@ -1,60 +1,47 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1B180BF5;
-	Fri,  9 Feb 2024 18:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B186B7EEE7;
+	Fri,  9 Feb 2024 18:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707502040; cv=none; b=KGF19STA304lv7RL4V2gbG+oj7p5bNrqRydQ8SJddanSAAuzF5Pqc50hqxYMLXDE83YETRH+06N6vxTlj5jbGbjdCqDiTF/fA9rMHcPnxFq3vniyyfaEEbg/KIDSj2cL2XpTP9xWEoVXuzIMgJU5uvMOfiCaxWGSSKHycu/1pOc=
+	t=1707502069; cv=none; b=TvrHhth7LXMArAVBjc2aISGEP9gmdeJrWeYFk91D7hNVc2XHF8o1De93VIYeJvTJqxOufKjTC4IaE1EdzKtDsCuyxrtjula2Nt2Z3gBCptf6V9/ORCkfB7hgMVyYS7bL/2QczMmi/wJQaJ7P31PDCkRBVTkgcLc70SJ87e2r8QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707502040; c=relaxed/simple;
-	bh=/vVHfU4e8VpEUslZI8rvDFAJFug05ANihwQevcdLXQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oeguQDkly1PvJeoJUC74Yv4zTbrl/KZ8TafSNJvISfkVGyMLNh6xztXREt2VoLxdqP+1UUqreKiDhuQOR/XAShgIdk0wfcQsduDYPDDdInk0tmOVj1T+A0xyHXlonJ35KMFNXKkfN8+YZbu7oienHLTx0uo3AoU71RFAKNSU9iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eqf/GXHK; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eqf/GXHK"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 419H42nH011805;
-	Fri, 9 Feb 2024 18:07:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=6HOUs3KwIxMYByg9Nllb37I2V7KbdMSxVpV5fSt60Z8=;
- b=eqf/GXHKvfNdsi/IJ/lqrq2ZJQF2Rvxl2udzjgMibw75EVx00/oKkLiF0TWllOTYnHeT
- rutaM1E3Dm9RB9ywIndwo7Ss8qU0MIxfYFm3EN6Fl7HUplz/ZfRRjol3d+EGOCPyT9oI
- 0hiy2POjXG06wcslOr1O7PE1yf2WFs973hDveK5Rzr8WJdjY/mNCBGPLpO4xTfZvmpoZ
- ROlwgHRS5cqkRQTjNjkdCKzTr1No+sPFuih52RPNFbZkyn/XiFT6AnJgXOWvY8lCLYgt
- Zx1Ov42kVOCkR+XgBWHdBwHHF0tvaxhl75bc/gSeT6Z/InOJaGBjunr/X0ByMUY6O2Hy Zw== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w1d3ur102-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 09 Feb 2024 18:07:08 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 419HgVNm019807;
-	Fri, 9 Feb 2024 18:07:08 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w1bxjtcer-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 09 Feb 2024 18:07:08 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 419I77HK003846;
-	Fri, 9 Feb 2024 18:07:07 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3w1bxjtcdd-1;
-	Fri, 09 Feb 2024 18:07:07 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: darren.kenny@oracle.com,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Subject: [PATCH] net: sched: Remove NET_ACT_IPT from Kconfig
-Date: Fri,  9 Feb 2024 10:06:56 -0800
-Message-ID: <20240209180656.867546-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1707502069; c=relaxed/simple;
+	bh=MX0tzE8nnND6hj2IoJyHqla21d5eDqH6UJy0UtwJC/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TQvsTjPGIOoVM8BsvYZAodunsZGcrT2hqFj/6UxcJDFoFyiPUtKMM0aWX0fDaUVZFP9oTsUDExhrhBS5OLLe2NhAjg/PPOKFNYvxVy1ASetaZ5YAi9k2m1biTm+Zk1WlAjLCgWvfGaAIfMX/qYScmJyYNNZaGKUFaBOT03JzU+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D283A1F821;
+	Fri,  9 Feb 2024 18:07:45 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 098AC139E7;
+	Fri,  9 Feb 2024 18:07:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jiAoM+9pxmVHNgAAD6G6ig
+	(envelope-from <leeman.duncan@gmail.com>); Fri, 09 Feb 2024 18:07:43 +0000
+From: Lee Duncan <leeman.duncan@gmail.com>
+To: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Chengfeng Ye <dg573847474@gmail.com>,
+	hare@suse.de,
+	Satish Kharat <satishkh@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Lee Duncan <lduncan@suse.com>
+Subject: [PATCH v4 0/2] Ensure FCoE target interrupts work correctly
+Date: Fri,  9 Feb 2024 10:07:33 -0800
+Message-Id: <cover.1707500786.git.lduncan@suse.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,50 +49,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-09_15,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 mlxscore=0
- adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402090131
-X-Proofpoint-ORIG-GUID: qN2dE4OUBodg7SCRNEV7sqwNg7ONaBS3
-X-Proofpoint-GUID: qN2dE4OUBodg7SCRNEV7sqwNg7ONaBS3
+X-Spam-Level: **
+X-Spamd-Bar: ++
+Authentication-Results: smtp-out2.suse.de;
+	dkim=none
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [2.39 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_FROM(0.50)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 MX_GOOD(-0.01)[];
+	 NEURAL_HAM_SHORT(-0.20)[-0.989];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_ENVFROM(0.00)[gmail.com];
+	 BAYES_HAM(-3.00)[100.00%];
+	 TAGGED_FROM(0.00)[];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 R_DKIM_NA(2.20)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[gmail.com,suse.de,cisco.com,suse.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Score: 2.39
+X-Rspamd-Queue-Id: D283A1F821
+X-Spam-Flag: NO
 
-After this commit ba24ea129126 ("net/sched: Retire ipt action")
-NET_ACT_IPT is not needed anymore as the action is retired and the code
-is removed.
+From: Lee Duncan <lduncan@suse.com>
 
-Clean the Kconfig part as well.
+Commit 1a1975551943 "scsi: fcoe: Fix potential deadlock on &fip->ctlr_lock"
+changed locking for fnic/FCoE, but it did so by disabling interrupts
+where they weren't disabled before, and this caused FCoE targets
+to go offline. Reverting that patch fixed the issue.
 
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
-This is just based on observation.
+But to handle the problem originally addressed by the commit,
+instead of modifying the locking, move the work to be done
+into a work queue.
 
- net/sched/Kconfig | 10 ----------
- 1 file changed, 10 deletions(-)
+Differences in v4:
+  - Corrected "Fixes" attributes in both patches
+  - Added identifier name in fnic_flush_tx() prototype, for checkpatch
 
-diff --git a/net/sched/Kconfig b/net/sched/Kconfig
-index 470c70deffe2..8180d0c12fce 100644
---- a/net/sched/Kconfig
-+++ b/net/sched/Kconfig
-@@ -737,16 +737,6 @@ config NET_ACT_SAMPLE
- 	  To compile this code as a module, choose M here: the
- 	  module will be called act_sample.
- 
--config NET_ACT_IPT
--	tristate "IPtables targets"
--	depends on NET_CLS_ACT && NETFILTER && NETFILTER_XTABLES
--	help
--	  Say Y here to be able to invoke iptables targets after successful
--	  classification.
--
--	  To compile this code as a module, choose M here: the
--	  module will be called act_ipt.
--
- config NET_ACT_NAT
- 	tristate "Stateless NAT"
- 	depends on NET_CLS_ACT
+Differences in v3:
+  - Added "fixes" clause to the fnic patch, as requested by Hannes
+
+Differences in V2:
+  - Fix kerneldoc comments in fnic_flush_tx()
+
+Lee Duncan (1):
+  Revert "scsi: fcoe: Fix potential deadlock on &fip->ctlr_lock"
+
+Hannes Reinecke (1):
+  fnic: move fnic_fnic_flush_tx() to a work queue
+
+ drivers/scsi/fcoe/fcoe_ctlr.c | 20 ++++++++------------
+ drivers/scsi/fnic/fnic.h      |  3 ++-
+ drivers/scsi/fnic/fnic_fcs.c  |  5 +++--
+ drivers/scsi/fnic/fnic_main.c |  1 +
+ drivers/scsi/fnic/fnic_scsi.c |  4 ++--
+ 5 files changed, 16 insertions(+), 17 deletions(-)
+
 -- 
-2.39.3
+2.35.3
 
