@@ -1,63 +1,63 @@
 Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971E77B3D2
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CE67BAF1
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707496859; cv=none; b=kK1alRrXJ0yVYrqDRRs2wZDE9fVy+gKPUgm/KlqDCKf4/RR+XaxwDwjPsC4ikrXl+ZX9U/6XV5ioXIP+WcYDWPSHtuSi6srcFH5DyizxBs3Ih1djPcusrJu2dst7LCoJ2KyIv9+8JedB69Zv57bysNTJmh5P2wGANKOHkxR07qw=
+	t=1707496868; cv=none; b=rvWMkX0n/5O+mpq4ePPLbCe8avwEo04Npy1PS4GbPy8/sjpzmwt+aXuQTIo6T70Ixfwu9Vk6kzf0TpzXwNDu9WCst0pKatHx83M17LYAHNlcsE6SWZRKMa6E8SjsRcjYfzhr+RP8wgJt17gTyuGlxh3Xjm2elIjyWFy7TxjMb1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707496859; c=relaxed/simple;
-	bh=Z3zMja135IkB6Sq/twqD9jvdg6zxfmw5vu4HRvyqiCI=;
+	s=arc-20240116; t=1707496868; c=relaxed/simple;
+	bh=3EMwRWQVmXFpMULqT0KRcNauX3dUmEoNi+TxEAuDB/E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nC+9hhg5YAzwya5NgC2Bp5kb4SLu3dOYCjEtyjIezOMeqE0PnTz6hQCIfWwOq9XU8zY3q3Ub8pH/23T2WoIpxI9em8043nF6T/2AtJG+Ts6C/vZNWouK/bcbltfLsM+pY8VnUchompsm1+w2PDucANTcKst0SipXtnIR1MnFfeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Nys96pd/; arc=none smtp.client-ip=209.85.218.48
+	 MIME-Version; b=HtjKHBqzju6rnx1MI9mUzZLE5EG6moO+BnU7ciQxz7Xcy+bsiyi7b6/EqHUK7SMik4i09mTBG9w/XCxcxTavhEn6R3Co8V4PuPwtB6l5w3CUFlLnUc0e83tsFW/ytk0hhkLNH1MGr+L42IEpL47LJdNmUdtar5niWDBxOPzeDIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=NyduFacq; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Nys96pd/"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a34c5ca2537so148808566b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:40:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="NyduFacq"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3be744df3fso107077966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:41:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707496853; x=1708101653; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707496863; x=1708101663; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Eq1LER+rX57fPTUZ1MEt58uiuSP6Ee5pNi3jY4qxCyc=;
-        b=Nys96pd/8hvFVSHw/sagv4apPRRsdjA4OvdULwZ7cwRhudbBPadRzP5FQq9Pa9IY+Y
-         fsBN3u+fWVuJvcvb9qF9zJ/66RkLHDNXjRhQhU8jDULfRelumYsk2TW0tW1QYSYb9sRt
-         MgYh0stPu9WJue0kXN4hiP92TgrMA8r9iJx+Y97346peqioVEpE/irkJc1NDBPYisItZ
-         +ixY3hTcwl9Z/uxbmIS6eS3XwilKCV0965NCbFx4PfZEdBnM/FBQwGGtciUleiXKyAhX
-         qbLdQ1yHxet50UwLRp5G1n4u1fQpWb6uQOmLr7xMzCAiBQooztQTt+MdacoX56HIf+w6
-         42Nw==
+        bh=jYWONKEfyypsQx26Swj5H3vXFHTxMGTOOr2K1QsNu0M=;
+        b=NyduFacq0vaZ3tpqLroB1nI2SKZnhb05PwtacMqddIU9Sqk8F3+cieZwbkDnTx88On
+         W66o6RWKhbRAJsAbRbxYzvhm46D6Vga6+Pw9+POXEto5J1hL1ZG0wIrQt9SqFI4KTWbU
+         TlB54qyS8LXpUW7x4Ee3EgqwjPlZI17TSZZz+wrV8ena3rZTMovchB/q4RhU7pw0FYdZ
+         P0d6J5STppY1DW5kc16vlEek5AhIYSOzn0kuq/GGxtjUAaGdU1FteCTaxgRCkWw2fuCZ
+         jmi7q6M+Zy1yE1NpceN/4i0Ms2OvSdQGImeIcSR+7yT/p/8CpfcbIOHoF0H92LbQcncy
+         D7ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707496853; x=1708101653;
+        d=1e100.net; s=20230601; t=1707496863; x=1708101663;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Eq1LER+rX57fPTUZ1MEt58uiuSP6Ee5pNi3jY4qxCyc=;
-        b=iSStnzS6yHB464A5Dup4zFWdq/TguiVXB2MNr2qyIMskHspIOXRMxSV7ZlI34bYkir
-         shCDCMn0NrNY/dqqD7oQDY7QSkCk0ZiXW/I64w3NLHjCghKs2lJHrtOVhiGWzgm5ro5u
-         m74b5wfKP3sbUy5DogPFNIVPZhPy039xkrp/xc9ZcG1/zkIygthTJ5TCNpH1ghQ2zlS9
-         z66JbsPxMfZvrz8WFoXucIeY6fE1usayb+YyKuLoQ5Jk86B+TG26n4b6oO/RnGJcwdMd
-         bz5wal2Wea+6IYtNgMG/LYwsvD2DZ8+z5gcUGva1VHVXsYjqcReCmxPdcIy4r+xNIlxa
-         ljbQ==
-X-Gm-Message-State: AOJu0Yw/lHJjTi9GBDt0w5ixqIG2O5jNNi/YdQpH25B8TRK7485NCeRw
-	fj3+PUuJua4qubYR/sfcSv25OBOtg/fNVFOP2fufR09C+WL/rVLLAPNQ3ag1py5923zD8KSr70p
-	y
-X-Google-Smtp-Source: AGHT+IG1Jg66ZLKb/OdqFcAZ6bB1O9DbieVE8LDQajeeE75ci3bjFUuEpMLJAf/QkxPcNUE8PUVZtg==
-X-Received: by 2002:a17:906:496:b0:a36:c466:52ea with SMTP id f22-20020a170906049600b00a36c46652eamr1454972eja.75.1707496853130;
-        Fri, 09 Feb 2024 08:40:53 -0800 (PST)
+        bh=jYWONKEfyypsQx26Swj5H3vXFHTxMGTOOr2K1QsNu0M=;
+        b=rv5Qx84Odba3RiJy/8J3RNxZVcS5HJdkIOMqc+VpcmvEcf1YMw2HV4aEESQw1PHn4M
+         gEHsLwF8JLn7pDrRvGQQOXu6IPYDIGC26QloY/PHwzhdgoL6OCUTtjkmaatnoyA9amus
+         zPL83zrOKT2IJ4tWpinihkvcFAvTwKCSHkIcSieYwhiqCGsYtpD+8XHOLxhykQEvovDc
+         yITU6npOiPzWAr3V9AwoiQE+Rj8kIeJ0EhIhnJrmz3IFU+L8YVQEbsg3bhQwktRUSP9t
+         gZo1YhPEPZEkaD4E8JXXWG+NvydItFxR5YZHxMvLLoge1eRqkvihiqM9hUmstpFvdWXr
+         FWqA==
+X-Gm-Message-State: AOJu0YzrvoGs792TmTtpq0SYAqpBjxF9y5na58OijtO64SgrbTIFGoPM
+	UWdMGqcbZscs3Zpwm5/dnP3JNZEOUY49GhCFZFXGHFMRy4A99Bv70L0yammDSOXQS4CrxMFbwYw
+	Q
+X-Google-Smtp-Source: AGHT+IGRE7iKEsB0hRMZJew3xU4qi9Bd38rT3eRcBwrHNratzwYbZSYSyhNQ51ZHf5UW8kb7BoVSuw==
+X-Received: by 2002:a17:906:169a:b0:a3c:1638:b069 with SMTP id s26-20020a170906169a00b00a3c1638b069mr137148ejd.75.1707496863287;
+        Fri, 09 Feb 2024 08:41:03 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id tl27-20020a170907c31b00b00a3bfe97fe27sm477724ejc.218.2024.02.09.08.40.51
+        by smtp.gmail.com with ESMTPSA id tl27-20020a170907c31b00b00a3bfe97fe27sm477724ejc.218.2024.02.09.08.41.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 08:40:51 -0800 (PST)
+        Fri, 09 Feb 2024 08:41:01 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 08/35] maple_tree.h: move declarations to maple_tree_types.h
-Date: Fri,  9 Feb 2024 17:40:00 +0100
-Message-Id: <20240209164027.2582906-9-max.kellermann@ionos.com>
+Subject: [PATCH v2 18/35] blkdev.h: move blk_op_is_passthrough() to blk_types.h
+Date: Fri,  9 Feb 2024 17:40:10 +0100
+Message-Id: <20240209164027.2582906-19-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240209164027.2582906-1-max.kellermann@ionos.com>
 References: <20240209164027.2582906-1-max.kellermann@ionos.com>
@@ -69,770 +69,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By providing declarations in a lean header, we can reduce header
-dependencies.
+This is a very low-level function without any additional dependencies,
+and moving it will allow certain sources to omit the "blkdev.h"
+dependency.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/maple_tree.h       | 323 +----------------------------
- include/linux/maple_tree_types.h | 341 +++++++++++++++++++++++++++++++
- include/linux/mm.h               |   1 +
- include/linux/mm_types.h         |   2 +-
- 4 files changed, 345 insertions(+), 322 deletions(-)
- create mode 100644 include/linux/maple_tree_types.h
+ include/linux/blk_types.h | 6 ++++++
+ include/linux/blkdev.h    | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
-index b3d63123b945..7f5dd33f4b94 100644
---- a/include/linux/maple_tree.h
-+++ b/include/linux/maple_tree.h
-@@ -8,147 +8,13 @@
-  *              Matthew Wilcox <willy@infradead.org>
-  */
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 96a37f399928..ad48c3f5ddd6 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -434,6 +434,12 @@ static inline enum req_op bio_op(const struct bio *bio)
+ 	return bio->bi_opf & REQ_OP_MASK;
+ }
  
-+#include <linux/maple_tree_types.h>
-+
- #include <linux/kernel.h>
- #include <linux/rcupdate.h>
- #include <linux/spinlock.h>
- /* #define CONFIG_MAPLE_RCU_DISABLED */
- 
--/*
-- * Allocated nodes are mutable until they have been inserted into the tree,
-- * at which time they cannot change their type until they have been removed
-- * from the tree and an RCU grace period has passed.
-- *
-- * Removed nodes have their ->parent set to point to themselves.  RCU readers
-- * check ->parent before relying on the value that they loaded from the
-- * slots array.  This lets us reuse the slots array for the RCU head.
-- *
-- * Nodes in the tree point to their parent unless bit 0 is set.
-- */
--#if defined(CONFIG_64BIT) || defined(BUILD_VDSO32_64)
--/* 64bit sizes */
--#define MAPLE_NODE_SLOTS	31	/* 256 bytes including ->parent */
--#define MAPLE_RANGE64_SLOTS	16	/* 256 bytes */
--#define MAPLE_ARANGE64_SLOTS	10	/* 240 bytes */
--#define MAPLE_ALLOC_SLOTS	(MAPLE_NODE_SLOTS - 1)
--#else
--/* 32bit sizes */
--#define MAPLE_NODE_SLOTS	63	/* 256 bytes including ->parent */
--#define MAPLE_RANGE64_SLOTS	32	/* 256 bytes */
--#define MAPLE_ARANGE64_SLOTS	21	/* 240 bytes */
--#define MAPLE_ALLOC_SLOTS	(MAPLE_NODE_SLOTS - 2)
--#endif /* defined(CONFIG_64BIT) || defined(BUILD_VDSO32_64) */
--
--#define MAPLE_NODE_MASK		255UL
--
--/*
-- * The node->parent of the root node has bit 0 set and the rest of the pointer
-- * is a pointer to the tree itself.  No more bits are available in this pointer
-- * (on m68k, the data structure may only be 2-byte aligned).
-- *
-- * Internal non-root nodes can only have maple_range_* nodes as parents.  The
-- * parent pointer is 256B aligned like all other tree nodes.  When storing a 32
-- * or 64 bit values, the offset can fit into 4 bits.  The 16 bit values need an
-- * extra bit to store the offset.  This extra bit comes from a reuse of the last
-- * bit in the node type.  This is possible by using bit 1 to indicate if bit 2
-- * is part of the type or the slot.
-- *
-- * Once the type is decided, the decision of an allocation range type or a range
-- * type is done by examining the immutable tree flag for the MAPLE_ALLOC_RANGE
-- * flag.
-- *
-- *  Node types:
-- *   0x??1 = Root
-- *   0x?00 = 16 bit nodes
-- *   0x010 = 32 bit nodes
-- *   0x110 = 64 bit nodes
-- *
-- *  Slot size and location in the parent pointer:
-- *   type  : slot location
-- *   0x??1 : Root
-- *   0x?00 : 16 bit values, type in 0-1, slot in 2-6
-- *   0x010 : 32 bit values, type in 0-2, slot in 3-6
-- *   0x110 : 64 bit values, type in 0-2, slot in 3-6
-- */
--
--/*
-- * This metadata is used to optimize the gap updating code and in reverse
-- * searching for gaps or any other code that needs to find the end of the data.
-- */
--struct maple_metadata {
--	unsigned char end;
--	unsigned char gap;
--};
--
--/*
-- * Leaf nodes do not store pointers to nodes, they store user data.  Users may
-- * store almost any bit pattern.  As noted above, the optimisation of storing an
-- * entry at 0 in the root pointer cannot be done for data which have the bottom
-- * two bits set to '10'.  We also reserve values with the bottom two bits set to
-- * '10' which are below 4096 (ie 2, 6, 10 .. 4094) for internal use.  Some APIs
-- * return errnos as a negative errno shifted right by two bits and the bottom
-- * two bits set to '10', and while choosing to store these values in the array
-- * is not an error, it may lead to confusion if you're testing for an error with
-- * mas_is_err().
-- *
-- * Non-leaf nodes store the type of the node pointed to (enum maple_type in bits
-- * 3-6), bit 2 is reserved.  That leaves bits 0-1 unused for now.
-- *
-- * In regular B-Tree terms, pivots are called keys.  The term pivot is used to
-- * indicate that the tree is specifying ranges,  Pivots may appear in the
-- * subtree with an entry attached to the value whereas keys are unique to a
-- * specific position of a B-tree.  Pivot values are inclusive of the slot with
-- * the same index.
-- */
--
--struct maple_range_64 {
--	struct maple_pnode *parent;
--	unsigned long pivot[MAPLE_RANGE64_SLOTS - 1];
--	union {
--		void __rcu *slot[MAPLE_RANGE64_SLOTS];
--		struct {
--			void __rcu *pad[MAPLE_RANGE64_SLOTS - 1];
--			struct maple_metadata meta;
--		};
--	};
--};
--
--/*
-- * At tree creation time, the user can specify that they're willing to trade off
-- * storing fewer entries in a tree in return for storing more information in
-- * each node.
-- *
-- * The maple tree supports recording the largest range of NULL entries available
-- * in this node, also called gaps.  This optimises the tree for allocating a
-- * range.
-- */
--struct maple_arange_64 {
--	struct maple_pnode *parent;
--	unsigned long pivot[MAPLE_ARANGE64_SLOTS - 1];
--	void __rcu *slot[MAPLE_ARANGE64_SLOTS];
--	unsigned long gap[MAPLE_ARANGE64_SLOTS];
--	struct maple_metadata meta;
--};
--
--struct maple_alloc {
--	unsigned long total;
--	unsigned char node_count;
--	unsigned int request_count;
--	struct maple_alloc *slot[MAPLE_ALLOC_SLOTS];
--};
--
--struct maple_topiary {
--	struct maple_pnode *parent;
--	struct maple_enode *next; /* Overlaps the pivot */
--};
--
--enum maple_type {
--	maple_dense,
--	maple_leaf_64,
--	maple_range_64,
--	maple_arange_64,
--};
--
--
- /**
-  * DOC: Maple tree flags
-  *
-@@ -181,7 +47,6 @@ enum maple_type {
- #define MAPLE_RESERVED_RANGE	4096
- 
- #ifdef CONFIG_LOCKDEP
--typedef struct lockdep_map *lockdep_map_p;
- #define mt_lock_is_held(mt)                                             \
- 	(!(mt)->ma_external_lock || lock_is_held((mt)->ma_external_lock))
- 
-@@ -194,36 +59,12 @@ typedef struct lockdep_map *lockdep_map_p;
- 
- #define mt_on_stack(mt)			(mt).ma_external_lock = NULL
- #else
--typedef struct { /* nothing */ } lockdep_map_p;
- #define mt_lock_is_held(mt)		1
- #define mt_write_lock_is_held(mt)	1
- #define mt_set_external_lock(mt, lock)	do { } while (0)
- #define mt_on_stack(mt)			do { } while (0)
- #endif
- 
--/*
-- * If the tree contains a single entry at index 0, it is usually stored in
-- * tree->ma_root.  To optimise for the page cache, an entry which ends in '00',
-- * '01' or '11' is stored in the root, but an entry which ends in '10' will be
-- * stored in a node.  Bits 3-6 are used to store enum maple_type.
-- *
-- * The flags are used both to store some immutable information about this tree
-- * (set at tree creation time) and dynamic information set under the spinlock.
-- *
-- * Another use of flags are to indicate global states of the tree.  This is the
-- * case with the MAPLE_USE_RCU flag, which indicates the tree is currently in
-- * RCU mode.  This mode was added to allow the tree to reuse nodes instead of
-- * re-allocating and RCU freeing nodes when there is a single user.
-- */
--struct maple_tree {
--	union {
--		spinlock_t	ma_lock;
--		lockdep_map_p	ma_external_lock;
--	};
--	unsigned int	ma_flags;
--	void __rcu      *ma_root;
--};
--
- /**
-  * MTREE_INIT() - Initialize a maple tree
-  * @name: The maple tree name
-@@ -260,56 +101,6 @@ struct maple_tree {
- 		spin_lock_nested((&(mt)->ma_lock), subclass)
- #define mtree_unlock(mt)	spin_unlock((&(mt)->ma_lock))
- 
--/*
-- * The Maple Tree squeezes various bits in at various points which aren't
-- * necessarily obvious.  Usually, this is done by observing that pointers are
-- * N-byte aligned and thus the bottom log_2(N) bits are available for use.  We
-- * don't use the high bits of pointers to store additional information because
-- * we don't know what bits are unused on any given architecture.
-- *
-- * Nodes are 256 bytes in size and are also aligned to 256 bytes, giving us 8
-- * low bits for our own purposes.  Nodes are currently of 4 types:
-- * 1. Single pointer (Range is 0-0)
-- * 2. Non-leaf Allocation Range nodes
-- * 3. Non-leaf Range nodes
-- * 4. Leaf Range nodes All nodes consist of a number of node slots,
-- *    pivots, and a parent pointer.
-- */
--
--struct maple_node {
--	union {
--		struct {
--			struct maple_pnode *parent;
--			void __rcu *slot[MAPLE_NODE_SLOTS];
--		};
--		struct {
--			void *pad;
--			struct rcu_head rcu;
--			struct maple_enode *piv_parent;
--			unsigned char parent_slot;
--			enum maple_type type;
--			unsigned char slot_len;
--			unsigned int ma_flags;
--		};
--		struct maple_range_64 mr64;
--		struct maple_arange_64 ma64;
--		struct maple_alloc alloc;
--	};
--};
--
--/*
-- * More complicated stores can cause two nodes to become one or three and
-- * potentially alter the height of the tree.  Either half of the tree may need
-- * to be rebalanced against the other.  The ma_topiary struct is used to track
-- * which nodes have been 'cut' from the tree so that the change can be done
-- * safely at a later date.  This is done to support RCU.
-- */
--struct ma_topiary {
--	struct maple_enode *head;
--	struct maple_enode *tail;
--	struct maple_tree *mtree;
--};
--
- void *mtree_load(struct maple_tree *mt, unsigned long index);
- 
- int mtree_insert(struct maple_tree *mt, unsigned long index,
-@@ -349,105 +140,6 @@ static inline bool mtree_empty(const struct maple_tree *mt)
- 
- /* Advanced API */
- 
--/*
-- * Maple State Status
-- * ma_active means the maple state is pointing to a node and offset and can
-- * continue operating on the tree.
-- * ma_start means we have not searched the tree.
-- * ma_root means we have searched the tree and the entry we found lives in
-- * the root of the tree (ie it has index 0, length 1 and is the only entry in
-- * the tree).
-- * ma_none means we have searched the tree and there is no node in the
-- * tree for this entry.  For example, we searched for index 1 in an empty
-- * tree.  Or we have a tree which points to a full leaf node and we
-- * searched for an entry which is larger than can be contained in that
-- * leaf node.
-- * ma_pause means the data within the maple state may be stale, restart the
-- * operation
-- * ma_overflow means the search has reached the upper limit of the search
-- * ma_underflow means the search has reached the lower limit of the search
-- * ma_error means there was an error, check the node for the error number.
-- */
--enum maple_status {
--	ma_active,
--	ma_start,
--	ma_root,
--	ma_none,
--	ma_pause,
--	ma_overflow,
--	ma_underflow,
--	ma_error,
--};
--
--/*
-- * The maple state is defined in the struct ma_state and is used to keep track
-- * of information during operations, and even between operations when using the
-- * advanced API.
-- *
-- * If state->node has bit 0 set then it references a tree location which is not
-- * a node (eg the root).  If bit 1 is set, the rest of the bits are a negative
-- * errno.  Bit 2 (the 'unallocated slots' bit) is clear.  Bits 3-6 indicate the
-- * node type.
-- *
-- * state->alloc either has a request number of nodes or an allocated node.  If
-- * stat->alloc has a requested number of nodes, the first bit will be set (0x1)
-- * and the remaining bits are the value.  If state->alloc is a node, then the
-- * node will be of type maple_alloc.  maple_alloc has MAPLE_NODE_SLOTS - 1 for
-- * storing more allocated nodes, a total number of nodes allocated, and the
-- * node_count in this node.  node_count is the number of allocated nodes in this
-- * node.  The scaling beyond MAPLE_NODE_SLOTS - 1 is handled by storing further
-- * nodes into state->alloc->slot[0]'s node.  Nodes are taken from state->alloc
-- * by removing a node from the state->alloc node until state->alloc->node_count
-- * is 1, when state->alloc is returned and the state->alloc->slot[0] is promoted
-- * to state->alloc.  Nodes are pushed onto state->alloc by putting the current
-- * state->alloc into the pushed node's slot[0].
-- *
-- * The state also contains the implied min/max of the state->node, the depth of
-- * this search, and the offset. The implied min/max are either from the parent
-- * node or are 0-oo for the root node.  The depth is incremented or decremented
-- * every time a node is walked down or up.  The offset is the slot/pivot of
-- * interest in the node - either for reading or writing.
-- *
-- * When returning a value the maple state index and last respectively contain
-- * the start and end of the range for the entry.  Ranges are inclusive in the
-- * Maple Tree.
-- *
-- * The status of the state is used to determine how the next action should treat
-- * the state.  For instance, if the status is ma_start then the next action
-- * should start at the root of the tree and walk down.  If the status is
-- * ma_pause then the node may be stale data and should be discarded.  If the
-- * status is ma_overflow, then the last action hit the upper limit.
-- *
-- */
--struct ma_state {
--	struct maple_tree *tree;	/* The tree we're operating in */
--	unsigned long index;		/* The index we're operating on - range start */
--	unsigned long last;		/* The last index we're operating on - range end */
--	struct maple_enode *node;	/* The node containing this entry */
--	unsigned long min;		/* The minimum index of this node - implied pivot min */
--	unsigned long max;		/* The maximum index of this node - implied pivot max */
--	struct maple_alloc *alloc;	/* Allocated nodes for this operation */
--	enum maple_status status;	/* The status of the state (active, start, none, etc) */
--	unsigned char depth;		/* depth of tree descent during write */
--	unsigned char offset;
--	unsigned char mas_flags;
--	unsigned char end;		/* The end of the node */
--};
--
--struct ma_wr_state {
--	struct ma_state *mas;
--	struct maple_node *node;	/* Decoded mas->node */
--	unsigned long r_min;		/* range min */
--	unsigned long r_max;		/* range max */
--	enum maple_type type;		/* mas->node type */
--	unsigned char offset_end;	/* The offset where the write ends */
--	unsigned long *pivots;		/* mas->node->pivots pointer */
--	unsigned long end_piv;		/* The pivot at the offset end */
--	void __rcu **slots;		/* mas->node->slots pointer */
--	void *entry;			/* The entry to write */
--	void *content;			/* The existing entry that is being overwritten */
--};
--
- #define mas_lock(mas)           spin_lock(&((mas)->tree->ma_lock))
- #define mas_lock_nested(mas, subclass) \
- 		spin_lock_nested(&((mas)->tree->ma_lock), subclass)
-@@ -520,17 +212,6 @@ int mas_empty_area(struct ma_state *mas, unsigned long min, unsigned long max,
- int mas_empty_area_rev(struct ma_state *mas, unsigned long min,
- 		       unsigned long max, unsigned long size);
- 
--static inline void mas_init(struct ma_state *mas, struct maple_tree *tree,
--			    unsigned long addr)
--{
--	memset(mas, 0, sizeof(struct ma_state));
--	mas->tree = tree;
--	mas->index = mas->last = addr;
--	mas->max = ULONG_MAX;
--	mas->status = ma_start;
--	mas->node = NULL;
--}
--
- static inline bool mas_is_active(struct ma_state *mas)
- {
- 	return mas->status == ma_active;
-diff --git a/include/linux/maple_tree_types.h b/include/linux/maple_tree_types.h
-new file mode 100644
-index 000000000000..fe13414f239d
---- /dev/null
-+++ b/include/linux/maple_tree_types.h
-@@ -0,0 +1,341 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+#ifndef _LINUX_MAPLE_TREE_TYPES_H
-+#define _LINUX_MAPLE_TREE_TYPES_H
-+/*
-+ * Maple Tree - An RCU-safe adaptive tree for storing ranges
-+ * Copyright (c) 2018-2022 Oracle
-+ * Authors:     Liam R. Howlett <Liam.Howlett@Oracle.com>
-+ *              Matthew Wilcox <willy@infradead.org>
-+ */
-+
-+#include <linux/spinlock_types.h>
-+#include <linux/string.h> // for memset()
-+#include <linux/limits.h> // for ULONG_MAX
-+
-+/*
-+ * Allocated nodes are mutable until they have been inserted into the tree,
-+ * at which time they cannot change their type until they have been removed
-+ * from the tree and an RCU grace period has passed.
-+ *
-+ * Removed nodes have their ->parent set to point to themselves.  RCU readers
-+ * check ->parent before relying on the value that they loaded from the
-+ * slots array.  This lets us reuse the slots array for the RCU head.
-+ *
-+ * Nodes in the tree point to their parent unless bit 0 is set.
-+ */
-+#if defined(CONFIG_64BIT) || defined(BUILD_VDSO32_64)
-+/* 64bit sizes */
-+#define MAPLE_NODE_SLOTS	31	/* 256 bytes including ->parent */
-+#define MAPLE_RANGE64_SLOTS	16	/* 256 bytes */
-+#define MAPLE_ARANGE64_SLOTS	10	/* 240 bytes */
-+#define MAPLE_ALLOC_SLOTS	(MAPLE_NODE_SLOTS - 1)
-+#else
-+/* 32bit sizes */
-+#define MAPLE_NODE_SLOTS	63	/* 256 bytes including ->parent */
-+#define MAPLE_RANGE64_SLOTS	32	/* 256 bytes */
-+#define MAPLE_ARANGE64_SLOTS	21	/* 240 bytes */
-+#define MAPLE_ALLOC_SLOTS	(MAPLE_NODE_SLOTS - 2)
-+#endif /* defined(CONFIG_64BIT) || defined(BUILD_VDSO32_64) */
-+
-+#define MAPLE_NODE_MASK		255UL
-+
-+/*
-+ * The node->parent of the root node has bit 0 set and the rest of the pointer
-+ * is a pointer to the tree itself.  No more bits are available in this pointer
-+ * (on m68k, the data structure may only be 2-byte aligned).
-+ *
-+ * Internal non-root nodes can only have maple_range_* nodes as parents.  The
-+ * parent pointer is 256B aligned like all other tree nodes.  When storing a 32
-+ * or 64 bit values, the offset can fit into 4 bits.  The 16 bit values need an
-+ * extra bit to store the offset.  This extra bit comes from a reuse of the last
-+ * bit in the node type.  This is possible by using bit 1 to indicate if bit 2
-+ * is part of the type or the slot.
-+ *
-+ * Once the type is decided, the decision of an allocation range type or a range
-+ * type is done by examining the immutable tree flag for the MAPLE_ALLOC_RANGE
-+ * flag.
-+ *
-+ *  Node types:
-+ *   0x??1 = Root
-+ *   0x?00 = 16 bit nodes
-+ *   0x010 = 32 bit nodes
-+ *   0x110 = 64 bit nodes
-+ *
-+ *  Slot size and location in the parent pointer:
-+ *   type  : slot location
-+ *   0x??1 : Root
-+ *   0x?00 : 16 bit values, type in 0-1, slot in 2-6
-+ *   0x010 : 32 bit values, type in 0-2, slot in 3-6
-+ *   0x110 : 64 bit values, type in 0-2, slot in 3-6
-+ */
-+
-+/*
-+ * This metadata is used to optimize the gap updating code and in reverse
-+ * searching for gaps or any other code that needs to find the end of the data.
-+ */
-+struct maple_metadata {
-+	unsigned char end;
-+	unsigned char gap;
-+};
-+
-+/*
-+ * Leaf nodes do not store pointers to nodes, they store user data.  Users may
-+ * store almost any bit pattern.  As noted above, the optimisation of storing an
-+ * entry at 0 in the root pointer cannot be done for data which have the bottom
-+ * two bits set to '10'.  We also reserve values with the bottom two bits set to
-+ * '10' which are below 4096 (ie 2, 6, 10 .. 4094) for internal use.  Some APIs
-+ * return errnos as a negative errno shifted right by two bits and the bottom
-+ * two bits set to '10', and while choosing to store these values in the array
-+ * is not an error, it may lead to confusion if you're testing for an error with
-+ * mas_is_err().
-+ *
-+ * Non-leaf nodes store the type of the node pointed to (enum maple_type in bits
-+ * 3-6), bit 2 is reserved.  That leaves bits 0-1 unused for now.
-+ *
-+ * In regular B-Tree terms, pivots are called keys.  The term pivot is used to
-+ * indicate that the tree is specifying ranges,  Pivots may appear in the
-+ * subtree with an entry attached to the value whereas keys are unique to a
-+ * specific position of a B-tree.  Pivot values are inclusive of the slot with
-+ * the same index.
-+ */
-+
-+struct maple_range_64 {
-+	struct maple_pnode *parent;
-+	unsigned long pivot[MAPLE_RANGE64_SLOTS - 1];
-+	union {
-+		void __rcu *slot[MAPLE_RANGE64_SLOTS];
-+		struct {
-+			void __rcu *pad[MAPLE_RANGE64_SLOTS - 1];
-+			struct maple_metadata meta;
-+		};
-+	};
-+};
-+
-+/*
-+ * At tree creation time, the user can specify that they're willing to trade off
-+ * storing fewer entries in a tree in return for storing more information in
-+ * each node.
-+ *
-+ * The maple tree supports recording the largest range of NULL entries available
-+ * in this node, also called gaps.  This optimises the tree for allocating a
-+ * range.
-+ */
-+struct maple_arange_64 {
-+	struct maple_pnode *parent;
-+	unsigned long pivot[MAPLE_ARANGE64_SLOTS - 1];
-+	void __rcu *slot[MAPLE_ARANGE64_SLOTS];
-+	unsigned long gap[MAPLE_ARANGE64_SLOTS];
-+	struct maple_metadata meta;
-+};
-+
-+struct maple_alloc {
-+	unsigned long total;
-+	unsigned char node_count;
-+	unsigned int request_count;
-+	struct maple_alloc *slot[MAPLE_ALLOC_SLOTS];
-+};
-+
-+struct maple_topiary {
-+	struct maple_pnode *parent;
-+	struct maple_enode *next; /* Overlaps the pivot */
-+};
-+
-+enum maple_type {
-+	maple_dense,
-+	maple_leaf_64,
-+	maple_range_64,
-+	maple_arange_64,
-+};
-+
-+#ifdef CONFIG_LOCKDEP
-+typedef struct lockdep_map *lockdep_map_p;
-+#else
-+typedef struct { /* nothing */ } lockdep_map_p;
-+#endif
-+
-+/*
-+ * If the tree contains a single entry at index 0, it is usually stored in
-+ * tree->ma_root.  To optimise for the page cache, an entry which ends in '00',
-+ * '01' or '11' is stored in the root, but an entry which ends in '10' will be
-+ * stored in a node.  Bits 3-6 are used to store enum maple_type.
-+ *
-+ * The flags are used both to store some immutable information about this tree
-+ * (set at tree creation time) and dynamic information set under the spinlock.
-+ *
-+ * Another use of flags are to indicate global states of the tree.  This is the
-+ * case with the MAPLE_USE_RCU flag, which indicates the tree is currently in
-+ * RCU mode.  This mode was added to allow the tree to reuse nodes instead of
-+ * re-allocating and RCU freeing nodes when there is a single user.
-+ */
-+struct maple_tree {
-+	union {
-+		spinlock_t	ma_lock;
-+		lockdep_map_p	ma_external_lock;
-+	};
-+	unsigned int	ma_flags;
-+	void __rcu      *ma_root;
-+};
-+
-+/*
-+ * The Maple Tree squeezes various bits in at various points which aren't
-+ * necessarily obvious.  Usually, this is done by observing that pointers are
-+ * N-byte aligned and thus the bottom log_2(N) bits are available for use.  We
-+ * don't use the high bits of pointers to store additional information because
-+ * we don't know what bits are unused on any given architecture.
-+ *
-+ * Nodes are 256 bytes in size and are also aligned to 256 bytes, giving us 8
-+ * low bits for our own purposes.  Nodes are currently of 4 types:
-+ * 1. Single pointer (Range is 0-0)
-+ * 2. Non-leaf Allocation Range nodes
-+ * 3. Non-leaf Range nodes
-+ * 4. Leaf Range nodes All nodes consist of a number of node slots,
-+ *    pivots, and a parent pointer.
-+ */
-+
-+struct maple_node {
-+	union {
-+		struct {
-+			struct maple_pnode *parent;
-+			void __rcu *slot[MAPLE_NODE_SLOTS];
-+		};
-+		struct {
-+			void *pad;
-+			struct rcu_head rcu;
-+			struct maple_enode *piv_parent;
-+			unsigned char parent_slot;
-+			enum maple_type type;
-+			unsigned char slot_len;
-+			unsigned int ma_flags;
-+		};
-+		struct maple_range_64 mr64;
-+		struct maple_arange_64 ma64;
-+		struct maple_alloc alloc;
-+	};
-+};
-+
-+/*
-+ * More complicated stores can cause two nodes to become one or three and
-+ * potentially alter the height of the tree.  Either half of the tree may need
-+ * to be rebalanced against the other.  The ma_topiary struct is used to track
-+ * which nodes have been 'cut' from the tree so that the change can be done
-+ * safely at a later date.  This is done to support RCU.
-+ */
-+struct ma_topiary {
-+	struct maple_enode *head;
-+	struct maple_enode *tail;
-+	struct maple_tree *mtree;
-+};
-+
-+/* Advanced API */
-+
-+/*
-+ * Maple State Status
-+ * ma_active means the maple state is pointing to a node and offset and can
-+ * continue operating on the tree.
-+ * ma_start means we have not searched the tree.
-+ * ma_root means we have searched the tree and the entry we found lives in
-+ * the root of the tree (ie it has index 0, length 1 and is the only entry in
-+ * the tree).
-+ * ma_none means we have searched the tree and there is no node in the
-+ * tree for this entry.  For example, we searched for index 1 in an empty
-+ * tree.  Or we have a tree which points to a full leaf node and we
-+ * searched for an entry which is larger than can be contained in that
-+ * leaf node.
-+ * ma_pause means the data within the maple state may be stale, restart the
-+ * operation
-+ * ma_overflow means the search has reached the upper limit of the search
-+ * ma_underflow means the search has reached the lower limit of the search
-+ * ma_error means there was an error, check the node for the error number.
-+ */
-+enum maple_status {
-+	ma_active,
-+	ma_start,
-+	ma_root,
-+	ma_none,
-+	ma_pause,
-+	ma_overflow,
-+	ma_underflow,
-+	ma_error,
-+};
-+
-+/*
-+ * The maple state is defined in the struct ma_state and is used to keep track
-+ * of information during operations, and even between operations when using the
-+ * advanced API.
-+ *
-+ * If state->node has bit 0 set then it references a tree location which is not
-+ * a node (eg the root).  If bit 1 is set, the rest of the bits are a negative
-+ * errno.  Bit 2 (the 'unallocated slots' bit) is clear.  Bits 3-6 indicate the
-+ * node type.
-+ *
-+ * state->alloc either has a request number of nodes or an allocated node.  If
-+ * stat->alloc has a requested number of nodes, the first bit will be set (0x1)
-+ * and the remaining bits are the value.  If state->alloc is a node, then the
-+ * node will be of type maple_alloc.  maple_alloc has MAPLE_NODE_SLOTS - 1 for
-+ * storing more allocated nodes, a total number of nodes allocated, and the
-+ * node_count in this node.  node_count is the number of allocated nodes in this
-+ * node.  The scaling beyond MAPLE_NODE_SLOTS - 1 is handled by storing further
-+ * nodes into state->alloc->slot[0]'s node.  Nodes are taken from state->alloc
-+ * by removing a node from the state->alloc node until state->alloc->node_count
-+ * is 1, when state->alloc is returned and the state->alloc->slot[0] is promoted
-+ * to state->alloc.  Nodes are pushed onto state->alloc by putting the current
-+ * state->alloc into the pushed node's slot[0].
-+ *
-+ * The state also contains the implied min/max of the state->node, the depth of
-+ * this search, and the offset. The implied min/max are either from the parent
-+ * node or are 0-oo for the root node.  The depth is incremented or decremented
-+ * every time a node is walked down or up.  The offset is the slot/pivot of
-+ * interest in the node - either for reading or writing.
-+ *
-+ * When returning a value the maple state index and last respectively contain
-+ * the start and end of the range for the entry.  Ranges are inclusive in the
-+ * Maple Tree.
-+ *
-+ * The status of the state is used to determine how the next action should treat
-+ * the state.  For instance, if the status is ma_start then the next action
-+ * should start at the root of the tree and walk down.  If the status is
-+ * ma_pause then the node may be stale data and should be discarded.  If the
-+ * status is ma_overflow, then the last action hit the upper limit.
-+ *
-+ */
-+struct ma_state {
-+	struct maple_tree *tree;	/* The tree we're operating in */
-+	unsigned long index;		/* The index we're operating on - range start */
-+	unsigned long last;		/* The last index we're operating on - range end */
-+	struct maple_enode *node;	/* The node containing this entry */
-+	unsigned long min;		/* The minimum index of this node - implied pivot min */
-+	unsigned long max;		/* The maximum index of this node - implied pivot max */
-+	struct maple_alloc *alloc;	/* Allocated nodes for this operation */
-+	enum maple_status status;	/* The status of the state (active, start, none, etc) */
-+	unsigned char depth;		/* depth of tree descent during write */
-+	unsigned char offset;
-+	unsigned char mas_flags;
-+	unsigned char end;		/* The end of the node */
-+};
-+
-+struct ma_wr_state {
-+	struct ma_state *mas;
-+	struct maple_node *node;	/* Decoded mas->node */
-+	unsigned long r_min;		/* range min */
-+	unsigned long r_max;		/* range max */
-+	enum maple_type type;		/* mas->node type */
-+	unsigned char offset_end;	/* The offset where the write ends */
-+	unsigned long *pivots;		/* mas->node->pivots pointer */
-+	unsigned long end_piv;		/* The pivot at the offset end */
-+	void __rcu **slots;		/* mas->node->slots pointer */
-+	void *entry;			/* The entry to write */
-+	void *content;			/* The existing entry that is being overwritten */
-+};
-+
-+static inline void mas_init(struct ma_state *mas, struct maple_tree *tree,
-+			    unsigned long addr)
++static inline bool blk_op_is_passthrough(blk_opf_t op)
 +{
-+	memset(mas, 0, sizeof(struct ma_state));
-+	mas->tree = tree;
-+	mas->index = mas->last = addr;
-+	mas->max = ULONG_MAX;
-+	mas->status = ma_start;
-+	mas->node = NULL;
++	op &= REQ_OP_MASK;
++	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
 +}
 +
-+#endif /*_LINUX_MAPLE_TREE_TYPES_H */
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 95c29b8f573d..0e6bdce6e4e8 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -13,6 +13,7 @@
- #include <linux/debug_locks.h>
- #include <linux/mm_types.h>
- #include <linux/mmap_lock.h>
-+#include <linux/maple_tree.h>
- #include <linux/range.h>
- #include <linux/pfn.h>
- #include <linux/bit_spinlock.h>
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index e44ef7852019..ff5d33ace0f9 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -11,7 +11,7 @@
- #include <linux/list.h>
- #include <linux/spinlock_types.h>
- #include <linux/rbtree_types.h>
--#include <linux/maple_tree.h>
-+#include <linux/maple_tree_types.h>
- #include <linux/rwsem.h>
- #include <linux/cpumask.h>
- #include <linux/uprobes.h>
+ static inline bool op_is_write(blk_opf_t op)
+ {
+ 	return !!(op & (__force blk_opf_t)1);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index e67298984913..6bfa4b92bb32 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -260,12 +260,6 @@ static inline int blk_validate_block_size(unsigned long bsize)
+ 	return 0;
+ }
+ 
+-static inline bool blk_op_is_passthrough(blk_opf_t op)
+-{
+-	op &= REQ_OP_MASK;
+-	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
+-}
+-
+ /*
+  * BLK_BOUNCE_NONE:	never bounce (default)
+  * BLK_BOUNCE_HIGH:	bounce all highmem pages
 -- 
 2.39.2
 
