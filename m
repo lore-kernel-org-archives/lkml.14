@@ -1,137 +1,127 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580B916439;
-	Fri,  9 Feb 2024 23:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DC124214;
+	Fri,  9 Feb 2024 23:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707521252; cv=none; b=ae2v557ERTiCCRfZyC4RSgDMNtVJbhjaambLUvC4eY51uGHjyghsdSgr6DCqFOJYVmLB0wWHLVIAasBj0pSrgj07bRobJ0JOe1cRNJHN+5hk45OCeYmuK/GATkv78DlyIV0H9U4sup2ErR23ah2zcsPg0gEksN4Uv8eF18B5Zjs=
+	t=1707521767; cv=none; b=nL8TORBxotQiZ/CgG5fATmgBLzOokmGI1xa2GYil2Xq1eIeEHsj8D1IC9CfIuho+173vr1KWmmKVIZgUTMj077MSz/RzeuUU7l4NtS2BT8aYi8s0PNy37lzuGHn0Qu+nf16fO1GVe9Q6g2YOlAF/TzfCmfFpugIgKi6OggZa0qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707521252; c=relaxed/simple;
-	bh=kCLT7qokmuFY/CFxh4tmc+PM1+RtP1qfIzM12mWcNj4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=scd/wsCdlFDKoPjnBrpF9VZekUQgkx+2R7BgT8dbGkRW8KW+3h34SytNBMcidydy+c2ir/F4rJgAbrbSvgnH15BCmzlp8v4ds+oi8L9vpYdd29Nh6V3LIfnMy8fLDKsQSD7tDdMgxFL4Weyry7YnSc+tISpzw8mtvsNrOZdPhCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=MXCyppf6; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+	s=arc-20240116; t=1707521767; c=relaxed/simple;
+	bh=Y/PUlg7pZqISBcOisWGlla14uXigrMdXCUUHoiyywQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WBisvNL7l1vcFfbgSLGpp+R3ba7o2gY4bUQzzkxPM4EeCBhZj70Wwu3xacT46CE5SF2p56voDYKmCYVSfrm/NGrSMwDyZ71v4LvxVnGCl5KiocJCta5E5slyOSjOYyMbzR7xq5PtfcfyYXKG273gpJ51oHGSynZEQRoGYtoyh+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f31EX3KP; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="MXCyppf6"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5957ede4deaso926983eaf.1;
-        Fri, 09 Feb 2024 15:27:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f31EX3KP"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7857947b179so108504185a.3;
+        Fri, 09 Feb 2024 15:36:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707521761; x=1708126561; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=arz5YfjQN+baeIdblLJ/rOWjM410EatO+A9RTDsoWLc=;
+        b=f31EX3KP7fZOs0RdxXKTt7jJd0UcNpzIuHbwbQM+IGQoc2pPPft5DyrVIXcTUl+7EH
+         bHb1IB7mVENagFvNX9INwT1t0GJYrgDOvDDPHSW7hAC0yWvY9k2lKuCFpLLcLGZzp2s0
+         63IgS+TnKaE1g06E39tIHMOTQERDRr1wNND3t6eZ8W+ZsIBMujhDkQpCzPkq1gSgjWlX
+         cLZEqc0iT+Se/H3d2aiEXrGyScQaftz8H7ytcxFkq8KKBD9+csn0Q6puOPZP7YvmprLs
+         YLD50gjptvUizv0Ohe8LYgJ25VqEeJVbA8dfij/Hv10BrCmv0NLgfEAHU4axuw9fUOH3
+         1H0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707521249; x=1708126049;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+BKEK4TZGi95ukxVkTkUsfUXe8VY89KvOv3l4m85x1o=;
-        b=NfdwsqNEUVG/5TsZWN/JXKVpuzRvblvw5bMTI0J+l/jFWCP7FjEyAL+9FVyJZghUDB
-         d5UCitORogl+S9u8G4QfqU3Qk5rCdAS/A7afRagAcWsxX+PvkII2hBNfKKCY+KmjyZgw
-         Ro/qzU5nQ32KLyaks9DtGnjOTMdIJ987SK7i0U/oZy46sWdZhj0/R6O9rOBywYj8bcJN
-         pTGoo9RzYz6nsgsicO4EYNuiu3UTib1ElHsv+sYB7Kd2opBetXt8GKUgi4brsYFt1v0C
-         0l//6vUZdunWYg+U6IIb2OOyoYuW6FRanhayulnltdV9hzpdikGYGNlcAfMcSOKTsY/t
-         HvQQ==
-X-Gm-Message-State: AOJu0YyMUzM4hJWNGyQb5hlz6uJPMJ8aOUjkzurYEw9l4xWT7zu1ACQY
-	LEm2wlNXP9RroYN4+RmV3tckV4fi1ti1eZGi4Xqx8/3dr7hxLyfA
-X-Google-Smtp-Source: AGHT+IE2cNXaFyERMNf4m/KskJ3Htz8k3Lv0pRpSJBvNazvt2b2RcA8dQJEuzm/HLJBouy6EduTJ+g==
-X-Received: by 2002:a05:6358:2607:b0:178:fe3e:1e35 with SMTP id l7-20020a056358260700b00178fe3e1e35mr1356333rwc.13.1707521249339;
-        Fri, 09 Feb 2024 15:27:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWoZ40mXUi8fJ6bV5qepCv4c0hvB7se4/czJO3foYUN5RToOO1Vl2/na2xT3hIuzp9V+XfsHz4QAwesHfi1abx9zDQSujGuHKVOEISVUF8JoHGvA24zSbHVeRJGmo0LjbcFGNiDnFA6iA==
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id n26-20020a638f1a000000b005d7994a08dcsm2349359pgd.36.2024.02.09.15.27.28
+        d=1e100.net; s=20230601; t=1707521761; x=1708126561;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=arz5YfjQN+baeIdblLJ/rOWjM410EatO+A9RTDsoWLc=;
+        b=UJipRJBpJJyCuRrVeqk4fXNcNYJ27/YDY0bhlMwFUwPX/fwk9jglah0vU3SC8lDOGj
+         EKIYg6e2bJYP574jolmKmWRNw+qWk0kVgRlPXrpFCOJXcni0quunmUkfpR9ys/u98mTj
+         Lmk40agq2D4XEQoB7qinCViXLXNlcEJk/UDg9peYZiSSrqlrRxuHADdNevvbt0r/j0TO
+         h+yISb0XQQwt4s7Bh6uF6PU/OXYZ4VLGLRV5lWiQnrYhV1m+jNFhN6ZKFlCbOiuoOLYC
+         wdMYV+iu+58tK+6viIBIVM8VZckUtU8VX4+aWha4eebl6VhJuy2D86fOl9dXoF1mTab+
+         ihkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKePodYQy/8xjCbHNebAu+Z7S3YMnANpUreDDWBm7qplvHals9Va6sQHV1dZuYG1Mex00lJivR7LYAupyM0d5a61iLwJsgQW7qV3E/
+X-Gm-Message-State: AOJu0YyuH0pw2YQFMx02LHbqPjQhhdkihY90mX7xd56wVrpAdB9/6w7d
+	/FKnAgDdlTangpWlBrxl1O3ChnmTkmj3ZYyxiMnn9Degup82RM68
+X-Google-Smtp-Source: AGHT+IFMBXPvvmwxivkWBaipFYGGBUS/B2fifZvtWXzXWPTBEVsnMOxMJ+Ho3MP/iRp1cTX2GLgfog==
+X-Received: by 2002:a05:6214:240d:b0:68c:cd5e:62b6 with SMTP id fv13-20020a056214240d00b0068ccd5e62b6mr848886qvb.62.1707521761454;
+        Fri, 09 Feb 2024 15:36:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrC6YEoYYAlJJSTeQmcS1U41dGJfDlUBhacrm5fwAIFpIgVziVMa7WqGHJTEwjC3qb6uS1z12PPl8DD9hMgNC+JZc5WOsbiXaP62Ar7Sn0/LLrVzHno4H72OmqAkisAuGV9QAqDS8uPFJgBpKWXtjYhEMKDjKse5z8AEan6rHGQaqHb1iSkZY8S/lz/qxGTmCdem1awrBf8UVLRsJTHgl7acjq6ZtnoFNqceCrlE/PeF8IiqUmNlGcoPu558bKazwfup5sWS9dmQONJkWVSQq2ujEmE9zTMHMfunkgAQKyMrLicazNkzI2u8ZkyyByz2grceJBwdNhTOIINr7ozIeIKOFC2SYXJXsXwgQGjlSd/dS1u+YSYVMs
+Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
+        by smtp.gmail.com with ESMTPSA id oi10-20020a05621443ca00b0068ce676eb4dsm75153qvb.69.2024.02.09.15.36.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 15:27:28 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707521246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+BKEK4TZGi95ukxVkTkUsfUXe8VY89KvOv3l4m85x1o=;
-	b=MXCyppf65CxfWZMJtWrLN4huAvuE/ySVy6TYTNv115995hjO/Jx/ujJ+GQivDwxMBzUmem
-	5BJDUchSUG46x6R9m864p2Pj46+fJl0lpZ+iQd5OoD9C273d6XwcW98P752DyH6XrEFVaw
-	KlR/SJxQZAJjWLVswf+iLCsPy7jIpGFwsEdODaof5zqJ5Xo0hJCKrodUBydgwhnYfTMQP/
-	UJQDWYxLVFfp44jUE5PP5E+G75YRkLkLco0Zj4UDupQ3V43qdL76e7fFc+cQLP6daCk0iz
-	j58n8NgjBIl0KmNCHTYP11goGa9lXQmJIyhLI97Z+SHyIOwbwminK4hyR4oLlA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Fri, 09 Feb 2024 20:27:48 -0300
-Subject: [PATCH] media: bt8xx: make bttv_sub_bus_type const
+        Fri, 09 Feb 2024 15:36:01 -0800 (PST)
+Date: Fri, 9 Feb 2024 13:35:59 -0500
+From: Oliver Crumrine <ozlinuxc@gmail.com>
+To: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
+	andrii@kernel.org, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
+	kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 bpf-next] net: remove check in __cgroup_bpf_run_filter_skb
+Message-ID: <5ac3e6uwvhdujq6tywb6b5bh5flqln6d7kedmcbvhyp55jp4yo@65pnej6e2ub6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240209-bus_cleanup-media2-v1-1-8037c73bf688@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAPO0xmUC/x3MQQqAIBBA0avIrBPMIqqrRITpVANl4WAE4d2Tl
- m/x/wuMgZChFy8EvInp9BllIcBuxq8oyWWDVrpWWnVyjjzZHY2PlzzQkdHSVA22ZWNnqxzk8Aq
- 40PNPhzGlDwua8/5kAAAA
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1807; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=kCLT7qokmuFY/CFxh4tmc+PM1+RtP1qfIzM12mWcNj4=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlxrUBcElFvq0oGUo6//Irgo8tU4js8sFamcYLu
- elBwHTEtTWJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZca1AQAKCRDJC4p8Y4ZY
- pq6qD/wIkkdl2Y4lktcyIsZbG3rG4nJH7ALJYB1a4vFJaWCsgN9B6VsWPtgrCPOVjAvZGt3mUx9
- 0xZKioKaNoyUB6WbG0z9vsffno1dpVuZJ6l82n9CRDcO2b2ASNe9bxxRvyjdVFMVZXdB6PUKN1U
- sjF38D4QMJ+2dfEnVfoigplVP25qpf3F0XOTdBA/x3w8f/jusCM2DhlWiozC1YahS6Geg6WihH0
- FOY1hC27XkMzSd2GmeE+72pmxnJYiBxMBLHyrvXZePJNROgz32RAcoS7FwLYM1btQxhRgI3wjjc
- LZz1zIBZ6pVAZ1+LFs9VDO9Oid036aphOBmsCCfSerm0oOYv3YdDbN6JqssRVJ7zF9kFLlX9qfh
- CrwnPyodH2JM7I/+NbfAtyw2lvMWoEgRATReRmtr4LyJAcMHZVJmuaiLTTe1sb5mljHSgzfWp5l
- 2n/ji1L/ZV51Zh+bdPfOSRi09mhZwHDjpaXPQpKnGKcMFxZT8hxNsqvVsZ8HoKYVzlBMwIU/iVN
- G0c5vvizmlPrn582uq8krw/WJ3W5gxhs75EVw5dIP/HYDtpqgoz0wLPILgp8yVJ3wLszKVH8/g5
- 3+FMCci77/9tgGihsDoS7Z5ULFsgNykBEg8gJEEGmLSy7HwcBjjfFm1pVFHumCKnB8hOXe3hL81
- xH+dPmTFp/rsHAQ==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Now that the driver core can properly handle constant struct bus_type,
-move the bttv_sub_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+Originally, this patch removed a redundant check in
+BPF_CGROUP_RUN_PROG_INET_EGRESS, as the check was already being done in
+the function it called, __cgroup_bpf_run_filter_skb. For v2, it was
+reccomended that I remove the check from __cgroup_bpf_run_filter_skb,
+and add the checks to the other macro that calls that function,
+BPF_CGROUP_RUN_PROG_INET_INGRESS.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+To sum it up, checking that the socket exists and that it is a full
+socket is now part of both macros BPF_CGROUP_RUN_PROG_INET_EGRESS and
+BPF_CGROUP_RUN_PROG_INET_INGRESS, and it is no longer part of the
+function they call, __cgroup_bpf_run_filter_skb.
+
+Signed-off-by: Oliver Crumrine <ozlinuxc@gmail.com>
+
+v2->v3: Sent to bpf-next instead of generic patch
+v1->v2: Addressed feedback about where check should be removed.
 ---
- drivers/media/pci/bt8xx/bttv-gpio.c | 2 +-
- drivers/media/pci/bt8xx/bttvp.h     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/bpf-cgroup.h | 7 ++++---
+ kernel/bpf/cgroup.c        | 3 ---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/pci/bt8xx/bttv-gpio.c b/drivers/media/pci/bt8xx/bttv-gpio.c
-index a2b18e2bed1b..6b7fea50328c 100644
---- a/drivers/media/pci/bt8xx/bttv-gpio.c
-+++ b/drivers/media/pci/bt8xx/bttv-gpio.c
-@@ -55,7 +55,7 @@ static void bttv_sub_remove(struct device *dev)
- 		sub->remove(sdev);
- }
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index a789266feac3..b28dc0ff4218 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -195,10 +195,11 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
+ #define BPF_CGROUP_RUN_PROG_INET_INGRESS(sk, skb)			      \
+ ({									      \
+ 	int __ret = 0;							      \
+-	if (cgroup_bpf_enabled(CGROUP_INET_INGRESS) &&			      \
+-	    cgroup_bpf_sock_enabled(sk, CGROUP_INET_INGRESS))		      \
++	if (cgroup_bpf_enabled(CGROUP_INET_INGRESS) &&			      \
++	    cgroup_bpf_sock_enabled(sk, CGROUP_INET_INGRESS) && sk &&	      \
++	    sk_fullsock(sk))						      \
+ 		__ret = __cgroup_bpf_run_filter_skb(sk, skb,		      \
+-						    CGROUP_INET_INGRESS);     \
++						    CGROUP_INET_INGRESS);     \
+ 									      \
+ 	__ret;								      \
+ })
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 491d20038cbe..644bfb39cf9d 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -1364,9 +1364,6 @@ int __cgroup_bpf_run_filter_skb(struct sock *sk,
+ 	struct cgroup *cgrp;
+ 	int ret;
  
--struct bus_type bttv_sub_bus_type = {
-+const struct bus_type bttv_sub_bus_type = {
- 	.name   = "bttv-sub",
- 	.match  = &bttv_sub_bus_match,
- 	.probe  = bttv_sub_probe,
-diff --git a/drivers/media/pci/bt8xx/bttvp.h b/drivers/media/pci/bt8xx/bttvp.h
-index 0368a583cf07..a534e63b9a37 100644
---- a/drivers/media/pci/bt8xx/bttvp.h
-+++ b/drivers/media/pci/bt8xx/bttvp.h
-@@ -234,7 +234,7 @@ int bttv_s_fmt_vbi_cap(struct file *file, void *fh, struct v4l2_format *f);
- /* ---------------------------------------------------------- */
- /* bttv-gpio.c */
+-	if (!sk || !sk_fullsock(sk))
+-		return 0;
+-
+ 	if (sk->sk_family != AF_INET && sk->sk_family != AF_INET6)
+ 		return 0;
  
--extern struct bus_type bttv_sub_bus_type;
-+extern const struct bus_type bttv_sub_bus_type;
- int bttv_sub_add_device(struct bttv_core *core, char *name);
- int bttv_sub_del_devices(struct bttv_core *core);
- 
-
----
-base-commit: feb8831be9d468ee961289c6a275536a1ee0011c
-change-id: 20240209-bus_cleanup-media2-a36e816cbc0d
-
-Best regards,
 -- 
-Ricardo B. Marliere <ricardo@marliere.net>
+2.43.0
 
