@@ -1,44 +1,45 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2854C8B
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 01:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782374C9B
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 01:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707443937; cv=none; b=nRxC1vl7ASihYKLLD3QSifQ7RZQnR9xxlHdDuUGt0UJ1ZcmneDT7j1opp+kj7Eo/ZrSR2wGP5rgR6gLjKPlMnkgNnc77cS+uRVoxyt7H0HqjjsE85R4RDSiY9ms7X+OD/FabOr1N8Sxk8khRw0AQE5sG3A0H/7+z9DY+OCDFgzI=
+	t=1707443937; cv=none; b=F1g4j/bOKEbKoOu/1sA27r95OXNQ4fjGSTWjJ4wgTAlzSc0CIyaC7kR3AsgxSsL7sDdEd4oP9dwKcON8HD25MrzRz9hrc//PGf1bBq3zbl2SKNT9iJS6Fy0+QmedPHPBpKcoem8sh+dGqLZWbqwrUibhAceg7DrHL9PTeOE5PlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707443937; c=relaxed/simple;
-	bh=SPMEhHXZ2gMON2Fdo5+psoDe8TKEgrIzCRXmLgoZkEo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ihuFTJt2EXgIcR+zI8US4hI4SK/rJ1fInKpQg13YfbBQwGqlq5maIh5pduOfRqqAfiqkoIqyELDsiJTXZWJKF+yoBPP/3pL4QKFuNe1AzWguc3YntaWeFzLlk6nMK3Ju9j7845vs1ilpd9DAbrKLBFGfhcBElFR5uPPkdve+YAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=c3DSh6zr; arc=none smtp.client-ip=194.117.254.33
+	bh=tx1y8XIKZpKJJSnn8pZsRsa5tD0WChElb9EzS5FTCLk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=U/tI92uNTv6PLFMwvWOyc03sSf8ucjuSqlWfWd+XNhUzgWRmEO9qe0J4IFyhfEFDV2yyoDvPTCwyCWuC98xSH9qEdRqgAZDlcpDuj7Jbjcw3wTn8zs+t1YbaQXNtltgUUQhgvNKOVhh7oa6Y5yseIN/GCXurpe76VaeB01E0E50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=h4uP91W1; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="c3DSh6zr"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="h4uP91W1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=JkJiI1zdweLmw5
-	Brm11cP7jfynZIq7IJZmwIfkRRQnI=; b=c3DSh6zrTbJpNGfC2mXlrduQsNlpSf
-	C1KH2X+l+7gzNtMC69FHqTeiQkGUoW2BimDdKRoGWn+J/50DvhojlV4OW1yMFWOC
-	O6BpRoGF+YftBK/l2LtBIPnXT1gUz8HJ86GkvTIkwC8by9mJMEXemQaYkoq3CbdS
-	UcQ60GfRSQa4gzucpuljhoNjaw/7F7Wvf0TVDPWdmPWTPoL0Vi7i0UM/E0THMRhp
-	xWKNFy+phsoHzC/LutXtrUtwsn3JkiCB4srGwV6/vGK069TYqHQf9VLILaOzhBJJ
-	vW6BrmdEbO/2FD5ISHMbpyoSq0tmelNsJxjVPTgNqbxADpe3G8SlyDhQ==
-Received: (qmail 2792257 invoked from network); 9 Feb 2024 02:58:43 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 9 Feb 2024 02:58:43 +0100
-X-UD-Smtp-Session: l3s3148p1@sBmIROkQMuMujnsZ
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=GdRahbPRK6CXKlo5juA9L5bxxYgoIlufylxqn5g6A/o=; b=h4uP91
+	W1EEyi79vNV8J69KBbbBbu36JmCGt4KuTHJX+6eKDo1A7CHTbih2zhb6/cMRKWCx
+	XYcvjEr573QjqAkP4CLFedwTolmnPIauC3uKrY5NMbTFF+chw///fgT1nffeJ9Fs
+	zrAV1It6ZH0YtyvwSnJdYH7o9pTDD3rjbCMI5NucMr6bjrYdDOLfn4KKbUu5Gpd8
+	LbPSvhuuuQN8O6mSbowAZmUFaukHETzSrlpGZf2R0WeuqOe+3wEHoBm3phjjgLWL
+	SIsHxnPPan+TEHh9GcZR2cBPiClCk7AO2kENZRkIOMBoZpIRSIor8ILkSlDZVyPV
+	fBvMfKa9O27v7EdA==
+Received: (qmail 2792329 invoked from network); 9 Feb 2024 02:58:45 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 9 Feb 2024 02:58:45 +0100
+X-UD-Smtp-Session: l3s3148p1@5vSoROkQhLMujnsZ
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-renesas-soc@vger.kernel.org
 Cc: Lee Jones <lee@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-sh@vger.kernel.org
-Subject: [PATCH 0/6] mfd: tmio: simplify header and move to platform_data
-Date: Fri,  9 Feb 2024 02:58:15 +0100
-Message-ID: <20240209015817.14627-8-wsa+renesas@sang-engineering.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/6] mfd: tmio: remove obsolete io accessors
+Date: Fri,  9 Feb 2024 02:58:17 +0100
+Message-ID: <20240209015817.14627-10-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240209015817.14627-8-wsa+renesas@sang-engineering.com>
+References: <20240209015817.14627-8-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,49 +48,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The MFD parts of the TMIO have been removed by Arnd, so that only the
-SD/MMC related functionality is left. Remove the outdated remains in the
-public header file and then move it to platform_data as the data is now
-specific for the SD/MMC part.
+Since commit 568494db6809 ("mtd: remove tmio_nand driver") and commit
+aceae7848624 ("fbdev: remove tmiofb driver"), these accessors have no
+users anymore. Remove them.
 
-Based on 6.8-rc3, build bot is happy. Branch is here:
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ include/linux/mfd/tmio.h | 25 -------------------------
+ 1 file changed, 25 deletions(-)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/sdhi/tmio-simplification
-
-I'd suggest this goes via the MFD tree, so the series would need acks
-from the MMC and SH maintainers. Is that okay with everyone?
-
-All the best!
-
-   Wolfram
-
-
-Wolfram Sang (6):
-  mfd: tmio: remove obsolete platform_data
-  mfd: tmio: remove obsolete io accessors
-  mmc: tmio/sdhi: fix includes
-  mfd: tmio: update include files
-  mfd: tmio: sanitize comments
-  mfd: tmio: move header to platform_data
-
- MAINTAINERS                                   |   2 +-
- arch/sh/boards/board-sh7757lcr.c              |   2 +-
- arch/sh/boards/mach-ap325rxa/setup.c          |   2 +-
- arch/sh/boards/mach-ecovec24/setup.c          |   2 +-
- arch/sh/boards/mach-kfr2r09/setup.c           |   2 +-
- arch/sh/boards/mach-migor/setup.c             |   2 +-
- arch/sh/boards/mach-se/7724/setup.c           |   2 +-
- drivers/mmc/host/renesas_sdhi_core.c          |   2 +-
- drivers/mmc/host/renesas_sdhi_internal_dmac.c |   5 +-
- drivers/mmc/host/renesas_sdhi_sys_dmac.c      |   5 +-
- drivers/mmc/host/tmio_mmc_core.c              |   3 +-
- drivers/mmc/host/uniphier-sd.c                |   2 +-
- include/linux/mfd/tmio.h                      | 133 ------------------
- include/linux/platform_data/tmio.h            |  64 +++++++++
- 14 files changed, 81 insertions(+), 147 deletions(-)
- delete mode 100644 include/linux/mfd/tmio.h
- create mode 100644 include/linux/platform_data/tmio.h
-
+diff --git a/include/linux/mfd/tmio.h b/include/linux/mfd/tmio.h
+index bc53323293a3..4223315d2b2a 100644
+--- a/include/linux/mfd/tmio.h
++++ b/include/linux/mfd/tmio.h
+@@ -10,31 +10,6 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ 
+-#define tmio_ioread8(addr) readb(addr)
+-#define tmio_ioread16(addr) readw(addr)
+-#define tmio_ioread16_rep(r, b, l) readsw(r, b, l)
+-#define tmio_ioread32(addr) \
+-	(((u32)readw((addr))) | (((u32)readw((addr) + 2)) << 16))
+-
+-#define tmio_iowrite8(val, addr) writeb((val), (addr))
+-#define tmio_iowrite16(val, addr) writew((val), (addr))
+-#define tmio_iowrite16_rep(r, b, l) writesw(r, b, l)
+-#define tmio_iowrite32(val, addr) \
+-	do { \
+-		writew((val),       (addr)); \
+-		writew((val) >> 16, (addr) + 2); \
+-	} while (0)
+-
+-#define sd_config_write8(base, shift, reg, val) \
+-	tmio_iowrite8((val), (base) + ((reg) << (shift)))
+-#define sd_config_write16(base, shift, reg, val) \
+-	tmio_iowrite16((val), (base) + ((reg) << (shift)))
+-#define sd_config_write32(base, shift, reg, val) \
+-	do { \
+-		tmio_iowrite16((val), (base) + ((reg) << (shift)));   \
+-		tmio_iowrite16((val) >> 16, (base) + ((reg + 2) << (shift))); \
+-	} while (0)
+-
+ /* tmio MMC platform flags */
+ /*
+  * Some controllers can support a 2-byte block size when the bus width
 -- 
 2.43.0
 
