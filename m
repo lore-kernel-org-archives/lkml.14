@@ -1,153 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D9D7E115;
-	Fri,  9 Feb 2024 17:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910727BB15;
+	Fri,  9 Feb 2024 17:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707500528; cv=none; b=fk4Z3OkAdwilOio5CIg2PG5A0yuB4SJWpUS7wd+0GqQk2xiIL4fBiHrlUs2X6qJF7iRTVWO+sTSwR0D33hBxjRCvByHdOWVl+E8QCTgWiqWEIF7k5vCiZtyZbWIwDlRpN0vi99w3AP9mpdxYwE3eg6oUixL9RghBn6p2xkNsRc0=
+	t=1707500528; cv=none; b=Ei0O8MmIQyothlc06ibHEWPwolvSSvhUhbywISxruj22+Drg1MiagB+Amq5CSVKIJBPGqTnS3SuQWVvudOy4xzYl/ZVd8FbYM6g6MzDiNTJig/xSBPpIb/AtWVNleg4NCdo3SUgeRGrRPwNSbzxbn8wFPQvv21Q5vEojUSOihKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707500528; c=relaxed/simple;
-	bh=HF9PftpJsOvVmalzJ2URbYmTYhyNPvu3Hk7v1fBL/aA=;
+	bh=5m/3eJmfothhnhgxKnpNtpJvugtTYUTPVjgm3HJHwlc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuvtAGdCzyIzoJSA0j6LfQgqFF5qFFo+yEfGKA9JEauzyrXs5A9XqT1vgbhUImivM82IBzdZAj3+BkdGxZ3iuL4YVSxh5oYTlhODMMDnJNC0quu01PwTlUAEt8jrGxKGl1QjkNKi1Tns4K0qxTx7Eb4v6CKQ018Mkcfo7A6LSyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmXERWD4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MJsDDEcKvH4f7Ig+TWjowV/jXA7eC7Hki3Rh4+55fnMrK1AcA6BOfg4iyAnBW4pITTQUkRyBqy6G287SJGvB4s/Xml4iNRngAxrLZJaHgMOoal9k96p8W8atDO+z/nwZQeOBrz3dSJSTDidA3cOHlwgvXRtYc0l5uT2gxMDHbwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=A8nl5JmG; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmXERWD4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C992C433F1;
-	Fri,  9 Feb 2024 17:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707500527;
-	bh=HF9PftpJsOvVmalzJ2URbYmTYhyNPvu3Hk7v1fBL/aA=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="A8nl5JmG"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7AE1940E01A9;
+	Fri,  9 Feb 2024 17:42:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id vPlwjzkI-XUz; Fri,  9 Feb 2024 17:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707500522; bh=mGQ5M66FN/MWid9y/3BfbjpRXrDFgbqHu66GLoKJcCw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cmXERWD4o3IX37eOr45+H2TjuzQgGl46WADdo35xY6KpftoYOEkD+OdAuJb3GycgC
-	 1ySOeHpBhi1mGt3MBJos2MddUJgbGky+nd8ei8yhw4HnR351m4B9cQe3bw7018i4wD
-	 Wdt/c5U+wuAhQLpe76toLC7rHaGvnIwQIdNc+Wb+ehQ4T6p8x3XwPg5QbAgF9Xitvg
-	 bwUrvmz+lmChMYRRvr+xLik5/eZG7freTmCi3hIn6CTlVh+Dmu2C4GHNeNKxYZjkLK
-	 SxoJhnvyd/dHX0jp9b799ULXoBx+NRw5KemrRcT4sLL8MwfDjIeFETOSjtZ9HGIZbl
-	 tnFo5gLqFVYjQ==
-Date: Fri, 9 Feb 2024 17:42:00 +0000
-From: Conor Dooley <conor@kernel.org>
-To: William Zhang <william.zhang@broadcom.com>
-Cc: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-	f.fainelli@gmail.com, kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com, anand.gore@broadcom.com, dregan@mail.com,
-	kamal.dasu@broadcom.com, tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com, devicetree@vger.kernel.org,
-	Brian Norris <computersforpeace@gmail.com>,
-	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Kamal Dasu <kdasu.kdev@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 03/12] dt-bindings: mtd: brcmnand: Add ecc strap
- property
-Message-ID: <20240209-jalapeno-estate-a1371c281bc7@spud>
-References: <20240207202257.271784-1-william.zhang@broadcom.com>
- <20240207202257.271784-4-william.zhang@broadcom.com>
+	b=A8nl5JmGx+0NzvVn8k1oO9VMbOBGpj+aJqmmPBQPk7BfdUfsA9Miy9VEK2oPYoB2j
+	 PUe9qNw7ol4OeV6BvW8BQF9kB31kIb7a/KbZutP14jzTKHp7z0j/cgvMWD8+drbycz
+	 x2lm2ElA2I1kNUzhUG53HTnhZF1/E+zGIZLKRZhYMje227mgkik8ZwWGpqStv7Y9RC
+	 NMsBPT+57ol3i/7Io1ZmB4QdhpUpxsi4M+HkbJ8SONmbHWHyu0aTn8j/makSGDN3kg
+	 3h8bbIZAQNeAgYN6O7nDCr8C0GcBFGo+phVjCjFuu3OaCiqc6RK8XSeYQs/YvpBRnw
+	 m72jFT4oy8WcHqv+9pTlCNJNS1p1entpUFbGmJDw1IcNrJuWMT9rFo8q3YZdX6CEBA
+	 eoQhmE5W+y4clMJIvLZNx6VZFyDECO+DLNrLHnGDdvd68x3GJJSaQmPqsrzUBSBlaU
+	 RCGSp4t9R9yded72vFxjeYWyxnv/1cYY+tR1INMy7k5O6ah+MlzVdg8mNrcsN4cw0s
+	 rqsHVU31kpuEdpiSVHtp3uo21J6PKOEpj+mutxpsdQ7jWkxAVhn3Y3FvQEMIR5Xk7u
+	 QjAD4SMngUVfHI/occoKlDYVbnszhDmaxqP2iKi+OjyzzUWTaiyyQCsf2AX3EifzrL
+	 5NNPjy/7UJz6Z9+CEUZQxRTo=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B02F40E0192;
+	Fri,  9 Feb 2024 17:41:50 +0000 (UTC)
+Date: Fri, 9 Feb 2024 18:41:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc: "Yuan, Perry" <Perry.Yuan@amd.com>,
+	"rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+	"Limonciello, Mario" <Mario.Limonciello@amd.com>,
+	"viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+	"Huang, Ray" <Ray.Huang@amd.com>,
+	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
+	"Huang, Shimmer" <Shimmer.Huang@amd.com>,
+	"Du, Xiaojian" <Xiaojian.Du@amd.com>,
+	"Meng, Li (Jassmine)" <Li.Meng@amd.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 0/6] AMD Pstate Fixes And Enhancements
+Message-ID: <20240209174145.GCZcZj2XKVsWSIefuz@fat_crate.local>
+References: <cover.1707363758.git.perry.yuan@amd.com>
+ <20240208102122.GAZcSrIkbPJfIExdF6@fat_crate.local>
+ <BL1PR12MB514409256AE93E5D13556F90F7442@BL1PR12MB5144.namprd12.prod.outlook.com>
+ <20240209155119.GAZcZJ92bTnwwO8l6Z@fat_crate.local>
+ <BL1PR12MB514496D92AE89A52D767192DF74B2@BL1PR12MB5144.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4eFKpvXR/FSb5KR1"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240207202257.271784-4-william.zhang@broadcom.com>
+In-Reply-To: <BL1PR12MB514496D92AE89A52D767192DF74B2@BL1PR12MB5144.namprd12.prod.outlook.com>
 
+On Fri, Feb 09, 2024 at 05:33:35PM +0000, Deucher, Alexander wrote:
+> My reading of the rules is that you should wait before resending or
+> pinging if you have not received feedback. 
 
---4eFKpvXR/FSb5KR1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But the feedback you've received is not the whole feedback. Someone
+might want to review them but not have the time right now. So at the
+time we did agree that a week is kinda ok to let people have a look.
 
-On Wed, Feb 07, 2024 at 12:22:48PM -0800, William Zhang wrote:
-> Add brcm,nand-ecc-use-strap to get ecc and spare area size settings from
-> board boot strap for broadband board designs because they do not specify
-> ecc setting in dts but rather using the strap setting.
->=20
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+And from experience reviewers tend to ignore patchsets which get resent
+rapidly.
 
-If Miquel is happy with this, then I am too.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> If you are actively receiving feedback, to me, it makes sense to
+> rapidly iterate.  If a patch is reviewed and comments are addressed,
+> it can land rather than waiting an extra week or two.
 
-Cheers,
-Conor.
+There's the other problem - if you keep dealing with only a single
+patchset, all the others who are waiting get starved. I, for example,
+try to have at least some fairness when it comes to looking at people's
+submissions and round-robin between them as much as I can.
 
->=20
-> ---
->=20
-> Changes in v5:
-> - Update the description for this ecc strap property
-> - Add check to make sure brcm,nand-ecc-use-strap and
->   nand-ecc-strength/brcm,nand-oob-sector-size can not be used at the
->   same time
->=20
-> Changes in v4:
-> - Move ecc strap property to this separate patch and remove some
-> non-binding related text from the description
->=20
-> Changes in v3: None
-> Changes in v2: None
->=20
->  .../bindings/mtd/brcm,brcmnand.yaml           | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/D=
-ocumentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-> index 6a717bcedfd3..52a4c993b6f1 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-> @@ -146,6 +146,13 @@ patternProperties:
->            layout.
->          $ref: /schemas/types.yaml#/definitions/uint32
-> =20
-> +      brcm,nand-ecc-use-strap:
-> +        description:
-> +          This property requires the host system to get the ECC strength
-> +          and step size from the SoC NAND boot strap setting. This is a
-> +          common hardware design on BCMBCA based boards.
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +
->      unevaluatedProperties: false
-> =20
->  allOf:
-> @@ -195,6 +202,18 @@ allOf:
->        required:
->          - interrupt-names
-> =20
-> +  - if:
-> +      patternProperties:
-> +        "^nand@[a-f0-9]$":
-> +          required:
-> +            - brcm,nand-ecc-use-strap
-> +    then:
-> +      patternProperties:
-> +        "^nand@[a-f0-9]$":
-> +          properties:
-> +            nand-ecc-strength: false
-> +            brcm,nand-oob-sector-size: false
-> +
->  unevaluatedProperties: false
-> =20
->  required:
-> --=20
-> 2.37.3
->=20
+> It also adds extra latency.  With my maintainer hat on, I'd like to
+> have new revisions rapidly.  I guess it comes down to personal
+> preference, but I don't do well with task switching.
 
---4eFKpvXR/FSb5KR1
-Content-Type: application/pgp-signature; name="signature.asc"
+I know *exactly* what you mean. I usually read my replies to the
+previous submissions in order to swap in everything I was pointing at
+the last time...
 
------BEGIN PGP SIGNATURE-----
+Can you review it all? Definitely not. :-\
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcZj6AAKCRB4tDGHoIJi
-0txwAP9L9cpXbp0KAt/EmZ9qFjK+FmzE6kOodOMW0T5ocDkcTgD/U7ygxkY+t+lE
-Ip1OM3oe2ziXosKS9QoxgxRpePiD1gc=
-=n7ED
------END PGP SIGNATURE-----
+> When a patch set is fresh in my mind, I'd rather see it finished off
+> and committed sooner rather than lingering and then a week or two
+> later, I'd need to page the whole discussion back into my head to make
+> sure everything was addressed and all the tags were collected.
 
---4eFKpvXR/FSb5KR1--
+Yeah, I definitely see your point. But there are also those other
+things I mentioned. I think one could find a good balance between the
+two...
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
