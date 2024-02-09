@@ -1,304 +1,292 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2087.outbound.protection.outlook.com [40.107.95.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A942A4E1A2
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 19:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707507387; cv=fail; b=iVvLbxSVLPTKLiRdiTLLtwpcMJJ/AgaLAi/Og5ddpNBJsd0InKyn6/OP3lHNVQiF4ixCEj9tJqpKPrzt/iKc0BJF2WP7m3UHx7jdtc7SzQffm+bYn/Zlg1NL3OkK8K8oUiUIORHYBQ10deyMnBChAjqxv4LSZdVD/nNCpbZ9u+g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707507387; c=relaxed/simple;
-	bh=96cqNtjVw9PKjptxtY/RG7sL5cECeH8n6Kp2I5II0iA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p8vO5KX7Fw0WzEy7garU9gWdrOn0goyxFKzy82l4RJ4FhsiS87Lvi0S0zisKswnWElm87TXxRsRX1khGIFOE4fce8cT24qt5X4GrqmnobWdP8f4eW2QQWyfOOr+U3qvkWWPlHQ5vMyRPk3d40Ju3Gp6g7EdgLwVEF3MixrfwkKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ngUxiKny; arc=fail smtp.client-ip=40.107.95.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E459584A2E;
+	Fri,  9 Feb 2024 19:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707507389; cv=none; b=jCxQQwAbsCxRk0b5GLSFgnYCpwE6/9WCEPpcGykS3dk7UuutTJA6VGocg8XrbolcbjR+SHZJu5RajQ/j4Nc6dSAnfJAKPRGc6Qj1hsmkXNESVZ42T12oZgudoR7NyAYatACz40obvctR5W1VKzcWNO3Aj7ARnQ5IsPHvaCKtx5M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707507389; c=relaxed/simple;
+	bh=1t2jsDcc6BAyqWzck/uook5ni4hSyJpMHc+6o+p6lsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AumGdlikrlmtsttcfH1qHjwjnr77DCY3Mywdm0eTtK4Ssbvim1eY9F/IxNUP2INOAiWSVcs+yjgydN9zmx17ugsFAeaNpaV7/U8MwArZQX3/8QVjacE4VmlRaLjofX5ladwdixf4C0doAvMEFxXI90n7gP+3nIQn5lxaPXzpTGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g0HPwZAT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ngUxiKny"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ADRgQBch1kjnnABqNvwLIYMDRxG1YsoD/GJZ6w3eppLCoZ1O+IidZCZCwu2FClQPSwqzhCseDCJTF8tcLHygjZGVPSVnULGZMzdtO0NaX+kmH3Fg9KM1kjUJladWtYpIsjrtlISmoIhrlmLGLlpAvXb9HWcHEJS1dmTwfsGmgIs37f3I2oMts3l6X4ghofujpbruGPr7BiB/1GBmf/OZf8a8FVVVvNmFXv4XeSR/+Y3EJL/jLqkb9j807DwMEMbkCA5n/qS4urRalfY84+z4uPQi6Eq1j9u8m0UYvVBJZss9HKtrEy4e42yDXCsNg/He6pkNT+yVAHz6vqJB2ZG0NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RaiixobfdE2wG76JFvnY9D4lkwPpOdVbsPfBYxKufn8=;
- b=SokYcpww6itD1nODqcipDDiD3Sv4mJwHK45AgCyU9Fucr+u1wSXUi/YGwrEaaAwigraqQmyuY8h7ZFRg+pRQjD5oiMD6Q4dktVeO85o0cUJ3bDTXRL6+hVkBEaSO+leTRfLxVRi08a119iyil/o+HT4NjevTN0zAA2Gqyp7R4ZGEeq3cZNhp+yDm0sUeQjlWSyzxkzw9VPRPIejFpY1vzZnaWDb04dqP6Sv7oeebyFi+Hbmtytzb6AXuIQmuMUzRVvpu23vtJmkzVpm6d+pYAbB0h1EE1rwQJcZzrclLGAu1uOVmNm9EEbljotp5lCzxS8daTvHC4scVOsT6MB/1Yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RaiixobfdE2wG76JFvnY9D4lkwPpOdVbsPfBYxKufn8=;
- b=ngUxiKnywRtvSKr9dRuBG+qkJ719G4+FpFDWqzAWzN5J3YBw0mH7dZXsWBIEBWerN6xQ07HR9JTT/kqwvxOvMQQik3zDsVfc9EmIRYoZ5mNLSlyZSPmlNBHHIzTV5HS6TmwDIIIvf6YIiEBTsJKcfVwM75q7FFSwBcs7zoKOiKZJm3GiO2GNft745SMa8J5+DmszkD9lbdBj+mQOE70Z0Sd6a268hBYxEnVufHK7CQYB0zieSI1UC0BbC95i6wpDHo0ZzHcP196B0lLbK1jwQA7EN8uh8MyT97T+T5HhBFJuBg0z+SwLra6L6X3dQiPMC4sMSVQJS1W1oTYYZEwWCg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- CY8PR12MB8361.namprd12.prod.outlook.com (2603:10b6:930:7b::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.11; Fri, 9 Feb 2024 19:36:19 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::db3e:28df:adc1:9c15]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::db3e:28df:adc1:9c15%5]) with mapi id 15.20.7292.013; Fri, 9 Feb 2024
- 19:36:19 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- "\"Huang, Ying\"" <ying.huang@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "\"Matthew Wilcox (Oracle)\"" <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "\"Yin, Fengwei\"" <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
- "\"Kirill A . Shutemov\"" <kirill.shutemov@linux.intel.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Kemeng Shi <shikemeng@huaweicloud.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Rohan Puri <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>,
- Adam Manzanares <a.manzanares@samsung.com>,
- "\"Vishal Moola (Oracle)\"" <vishal.moola@gmail.com>
-Subject: Re: [PATCH v3 2/3] mm/compaction: add support for >0 order folio
- memory compaction.
-Date: Fri, 09 Feb 2024 14:36:16 -0500
-X-Mailer: MailMate (1.14r6018)
-Message-ID: <5F394663-0AFE-4C12-827C-3A0723863395@nvidia.com>
-In-Reply-To: <025b7e7c-b17f-47c7-8677-ee36fc6dbc52@suse.cz>
-References: <20240202161554.565023-1-zi.yan@sent.com>
- <20240202161554.565023-3-zi.yan@sent.com>
- <025b7e7c-b17f-47c7-8677-ee36fc6dbc52@suse.cz>
-Content-Type: multipart/signed;
- boundary="=_MailMate_C3686B6A-167D-443B-B02A-6619C30F4C87_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: BL1PR13CA0300.namprd13.prod.outlook.com
- (2603:10b6:208:2bc::35) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g0HPwZAT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC7EAC433C7;
+	Fri,  9 Feb 2024 19:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707507388;
+	bh=1t2jsDcc6BAyqWzck/uook5ni4hSyJpMHc+6o+p6lsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g0HPwZATbrtinGh3yrfFB4Is7bFKLvoP4aHA8oaZNymdvkAPCgXfP4bneZgR9zDR8
+	 xloncJ48J/8hf+6JQkg5FXSqRAnz9rMDjC7LYHHTcArMc2Ns9XORbp9z2NUfhN4R5S
+	 zeuKm+h0UUoN5kED2YdlwclwJNkLLs5JYDzVWT/HAIuPWudhsxi5qX9V0kxlWGjBjD
+	 pC/g9ffHdjEIX1GIne8xoUSdH9tuYVsK90FmuJ7P9heLCZdVu5bybAedhyvAuUTCk4
+	 DOBbmhThoFM6I9eaTqif4o1f1yoFFTOwlR/dKT/8+5KNENA+nhORP5ri0hjT1QU+Ct
+	 HRl6kS+xol0yQ==
+Date: Fri, 9 Feb 2024 20:36:24 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, 
+	Andy Lutomirski <luto@amacapital.net>, Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] signal: add the "int si_code" arg to
+ prepare_kill_siginfo()
+Message-ID: <20240209-traben-geothermie-8c6aa7e1984f@brauner>
+References: <20240209130620.GA8039@redhat.com>
+ <87sf21zjy8.fsf@email.froward.int.ebiederm.org>
+ <20240209163914.GE3282@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|CY8PR12MB8361:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88dde097-a4d0-465d-3587-08dc29a6637c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	1dKQib3OFMGgRo5Gjn4Q6ZtDly6ZT3K+TtrEfp+P/vj142ocJgwMOCPrcE+33ceTgdybQ3a1/T5fnQTenB5U/eN8cONOE+6BwSXBxqd69M/ASVzN9lEJM2CY51ypgmey1PT4Pwq/EOXlIEhRGNkM+izksfueJPsmkZDPpwcsccPP+Uy8qiZgFtuMKPX8B5OSLwz7PCTGIVtC6mnPaGpUpEGgSzbInfSHAUQL0Yefij2lJjiz9x4YcE7JYXTZlq+PNeuFkGScedis09N+said+2F9xEwqPbSYOvebzj6t7gOzqAiDsD+OZ4jhn6vE4xfHpjzqrP8ArYnYJ7Um9049S+4i4ZT7pEnwz8NbcJY5rliAaHespZNrZt2Lt8lXq8etfiAXHI7vcVHgZx5nRNJu1K1sbmT8Iw3b1BfqmcRnz1vYkXHdb4zVHTE8mKi7jp0wSFy2sQfAypL7ZnsBWPKKsVk6GbT2D2Rt4qwT9y+wJQh+uXDqxUIBOMIugNpVqOQxU9I5cqTrDJaVKFVXRaMIZZ14KQ3Z1OxQgpSHOyjBywcJ+tlDNiZhMHfsrissqYM+
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(136003)(366004)(396003)(346002)(230273577357003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(2616005)(6512007)(26005)(83380400001)(54906003)(66946007)(316002)(6916009)(66476007)(66556008)(53546011)(4326008)(8676002)(6666004)(6486002)(6506007)(478600001)(8936002)(33656002)(36756003)(86362001)(38100700002)(2906002)(41300700001)(7416002)(5660300002)(235185007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?B9OOvf1r8Uh8/aiI0MB3QcByftAs4AUKZOtfdJK4DOJhG7FU2VXUcY+08DlI?=
- =?us-ascii?Q?eo+J4zssF6Gz9h/a6LmZxLfeLu3Jufkw7smw0Bd1Er1X/fXBuxkTQqTkIJJg?=
- =?us-ascii?Q?UxPxDRJJwgEroqbeV9sFtDCUKiIsBpDKzTHp0nQYY7jqiyjOjdeDKSB0S3i9?=
- =?us-ascii?Q?dGhAyRDAruJjt3Vt16Bzt3gnzvLwuRGGNSZ0XqyUo4AN12uX4Gxn79UnDX8A?=
- =?us-ascii?Q?ZxEuJHNvGXRDKW5slpm65vaSSsSlZLAIelAPSlUU5UYzInRMOAsnTElhjyn6?=
- =?us-ascii?Q?kt5qaeyoJwSPJLE3YFNfL5CqOvY/HWc8jTEbdRpkngeT638j1o/7iOLboTJa?=
- =?us-ascii?Q?zaZMh43Rwi1k+STnNC4OnoVuv1CdldmY/vHzCi33MWno5F4KTJW0AmyJvgKM?=
- =?us-ascii?Q?T2UNeEMPn0VGY6iNwqUiBmqt6nYVYL1hLwvDRvPYp0BAiMAJ+v8IgnKnXK5h?=
- =?us-ascii?Q?NWIcoLR7aAKA2pkhzjkw+/oMPJegColzFvrfMqbkU3iTmBQskaHhi9mqZ8wQ?=
- =?us-ascii?Q?0UHXsmjkCRblpMuHW08omgFKvvdKoYK4AoblKzxJHyQmbh/a2sNNA7TIeifP?=
- =?us-ascii?Q?lOcG2NIZdxow4UOCaE0zjJBJSb33fwXTLPYFraInmEoP3KEJIPoOdgWi3QZy?=
- =?us-ascii?Q?b0pydceqjwL9fH3xUlwhzayzKtiCQhH+o46EiBjdpg8QJ6E3XycDOdUhVbyi?=
- =?us-ascii?Q?18t2ofuzUhUWYpASPTTIfnoRrwDkyE5XtAt4gj/0nCMzB6ll0XxLkQvGhNfR?=
- =?us-ascii?Q?lZeRW/Gx6GMUnGyILq4zhFl7xx6z+l9BxwWymaVf58bfYcq++KMgFl59sW0n?=
- =?us-ascii?Q?cZa0jGIz+Eir+ofwwV4uGYNZBvD0AbwJYfOdpSJBHAOnMefzFhPcOV4sR0rs?=
- =?us-ascii?Q?iCGOW8K2Zn8xg8q5Qt1XM4iZkmOrXIcek/fkcJuWsBc43J+Wob0S0w9+24US?=
- =?us-ascii?Q?yyLwTnmkY2SUSjdJhSpQjkZ5UCigFJadhVpR4wlgYKgi9/9wqLVsYdQiqtSm?=
- =?us-ascii?Q?NM/uOD2rFtKoiHzTrX0UTJKdfm26uEyqeIUp19oRnNsBZs9PvV5nhMrc8rB+?=
- =?us-ascii?Q?TdgXnimpFjaTwLKYHm7xbiaJnEJnip2q0TWVt+JyIxQtQytgkNhsUqawWXMZ?=
- =?us-ascii?Q?07by0t/v0S5n33Y8YENqPrpxMYd07XSfnzCtjZEWoJJd8X4BAxZzYdcfQaWq?=
- =?us-ascii?Q?vA8Vz8n9Lc8jRHjPho9J+A6Km9YGjRIaUmzleVpqF/j1yAllbS3WRXDXyNMk?=
- =?us-ascii?Q?8x08lJxoIhFN20Z31sbXgYyd9XXdhVzJ81Lu9gaJ5B/QDjP5ve2s6EsnAl2h?=
- =?us-ascii?Q?yIID4AZw+ciaK2DISmeLFG9x1/p53rXzKO05Hr//5X6AYhjOKiAhBnbNXb7y?=
- =?us-ascii?Q?JBRJy9Z1OJqq9gkQp92KoJIUBlPugbl67LUlEkrtOi6J6ex8olMgY02juWtA?=
- =?us-ascii?Q?WSLTZ07ugV00T3ebfrBzMWC6UpVuwH/Ojn1BWHaiPIDOpNxot7n03GUru2us?=
- =?us-ascii?Q?abq/SP79SlRymEgsg8/XAgp1XVzSuWgHPKt4fN3hxxE+VSWr2E1+WTbXWDV8?=
- =?us-ascii?Q?dgePwW4xtnt80ppRdZQhrmJxGefXY0CspBDGMJ1s?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88dde097-a4d0-465d-3587-08dc29a6637c
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 19:36:19.1418
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QtsQa5AFSpdoNVu83vqHnWrFPp6f+Nq4Q+q9ysoAPtJsfs0RXBEGlMwcMgyIhwT7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8361
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240209163914.GE3282@redhat.com>
 
---=_MailMate_C3686B6A-167D-443B-B02A-6619C30F4C87_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On 9 Feb 2024, at 11:37, Vlastimil Babka wrote:
-
-> On 2/2/24 17:15, Zi Yan wrote:
->> From: Zi Yan <ziy@nvidia.com>
->>
->> Before last commit, memory compaction only migrates order-0 folios and=
-
->> skips >0 order folios. Last commit splits all >0 order folios during
->> compaction. This commit migrates >0 order folios during compaction by
->> keeping isolated free pages at their original size without splitting t=
-hem
->> into order-0 pages and using them directly during migration process.
->>
->> What is different from the prior implementation:
->> 1. All isolated free pages are kept in a NR_PAGE_ORDERS array of page
->>    lists, where each page list stores free pages in the same order.
->> 2. All free pages are not post_alloc_hook() processed nor buddy pages,=
-
->>    although their orders are stored in first page's private like buddy=
-
->>    pages.
->> 3. During migration, in new page allocation time (i.e., in
->>    compaction_alloc()), free pages are then processed by post_alloc_ho=
-ok().
->>    When migration fails and a new page is returned (i.e., in
->>    compaction_free()), free pages are restored by reversing the
->>    post_alloc_hook() operations using newly added
->>    free_pages_prepare_fpi_none().
->>
->> Step 3 is done for a latter optimization that splitting and/or merging=
- free
->> pages during compaction becomes easier.
->>
->> Note: without splitting free pages, compaction can end prematurely due=
- to
->> migration will return -ENOMEM even if there is free pages. This happen=
-s
->> when no order-0 free page exist and compaction_alloc() return NULL.
->>
->> Signed-off-by: Zi Yan <ziy@nvidia.com>
->
+On Fri, Feb 09, 2024 at 05:39:14PM +0100, Oleg Nesterov wrote:
+> On 02/09, Eric W. Biederman wrote:
+> >
+> > Could you can pass in the destination type instead of the si_code?
+> > Something like I have shown below?
+> 
 > ...
->
->>  /*
->> @@ -1835,9 +1857,17 @@ static struct folio *compaction_alloc(struct fo=
-lio *src, unsigned long data)
->>  static void compaction_free(struct folio *dst, unsigned long data)
->>  {
->>  	struct compact_control *cc =3D (struct compact_control *)data;
->> +	int order =3D folio_order(dst);
->> +	struct page *page =3D &dst->page;
->> +
->> +	folio_set_count(dst, 0);
->
-> We can't change refcount to 0 like this, after it was already set to 1 =
-and
-> somebody else might have done get_page_unless_zero(). You need to eithe=
-r
-> put_page_testzero() and if it's false, consider the page lost, or leave=
- it
-> refcounted and adjust the code to handle both refcounted and non-refcou=
-nted
-> pages on the lists (the first option is simpler and shouldn't be too ba=
-d).
-Got it. Will fix it with the first option. Thanks.
+> 
+> > 	info->si_code = (type == PIDTYPE_PID) ? SI_TKILL : SI_USER;
+> 
+> Yes, I considered this option too.
+> 
+> OK, will send V3 tomorrow.
 
->
-> Perhaps folio_set_count()/set_page_count() should get some comment warn=
-ing
-> against this kind of mistake.
->
->> +	free_pages_prepare_fpi_none(page, order);
->>
->> -	list_add(&dst->lru, &cc->freepages);
->> -	cc->nr_freepages++;
->> +	INIT_LIST_HEAD(&dst->lru);
->> +
->> +	list_add(&dst->lru, &cc->freepages[order].pages);
->> +	cc->freepages[order].nr_pages++;
->> +	cc->nr_freepages +=3D 1 << order;
->>  }
->>
->
-> ...
->
->>
->>  extern void free_unref_page(struct page *page, unsigned int order);
->> @@ -473,6 +475,11 @@ int split_free_page(struct page *free_page,
->>  /*
->>   * in mm/compaction.c
->>   */
->> +
->> +struct page_list {
->> +	struct list_head	pages;
->> +	unsigned long		nr_pages;
->
-> I've checked and even with patch 3/3 I don't think you actually need th=
-e
-> counter? The only check of the counter I noticed was to check for
-> zero/non-zero, and you could use list_empty() instead.
+Hm, I don't think that's necessary if you're happy to have me just fix
+that up in tree. Here's the two patches updated. It was straightforward
+but I have a baby on my lap so double check, please:
 
-Sure. I will remove nr_pages.
+From 05ffda39f6f5c887cae319274366cbf856c88fe5 Mon Sep 17 00:00:00 2001
+From: Oleg Nesterov <oleg@redhat.com>
+Date: Fri, 9 Feb 2024 14:06:20 +0100
+Subject: [PATCH 1/2] signal: fill in si_code in prepare_kill_siginfo()
 
->
->> +};
->>  /*
->>   * compact_control is used to track pages being migrated and the free=
- pages
->>   * they are being migrated to during memory compaction. The free_pfn =
-starts
->> @@ -481,7 +488,7 @@ int split_free_page(struct page *free_page,
->>   * completes when free_pfn <=3D migrate_pfn
->>   */
->>  struct compact_control {
->> -	struct list_head freepages;	/* List of free pages to migrate to */
->> +	struct page_list freepages[NR_PAGE_ORDERS];	/* List of free pages to=
- migrate to */
->>  	struct list_head migratepages;	/* List of pages being migrated */
->>  	unsigned int nr_freepages;	/* Number of isolated free pages */
->>  	unsigned int nr_migratepages;	/* Number of pages to migrate */
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 5be4cd8f6b5a..c7c135e6d5ee 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -1179,6 +1179,12 @@ static __always_inline bool free_pages_prepare(=
-struct page *page,
->>  	return true;
->>  }
->>
->> +__always_inline bool free_pages_prepare_fpi_none(struct page *page,
->> +			unsigned int order)
->> +{
->> +	return free_pages_prepare(page, order, FPI_NONE);
->> +}
->> +
->>  /*
->>   * Frees a number of pages from the PCP lists
->>   * Assumes all pages on list are in same zone.
+So that do_tkill() can use this helper too. This also simplifies
+the next patch.
 
+TODO: perhaps we can kill prepare_kill_siginfo() and change the
+callers to use SEND_SIG_NOINFO,  but this needs some changes in
+__send_signal_locked() and TP_STORE_SIGINFO().
 
---
-Best Regards,
-Yan, Zi
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20240209130620.GA8039@redhat.com
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ kernel/signal.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
---=_MailMate_C3686B6A-167D-443B-B02A-6619C30F4C87_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+diff --git a/kernel/signal.c b/kernel/signal.c
+index c3fac06937e2..1450689302d9 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3793,12 +3793,13 @@ COMPAT_SYSCALL_DEFINE4(rt_sigtimedwait_time32, compat_sigset_t __user *, uthese,
+ #endif
+ #endif
+ 
+-static inline void prepare_kill_siginfo(int sig, struct kernel_siginfo *info)
++static void prepare_kill_siginfo(int sig, struct kernel_siginfo *info,
++				 enum pid_type type)
+ {
+ 	clear_siginfo(info);
+ 	info->si_signo = sig;
+ 	info->si_errno = 0;
+-	info->si_code = SI_USER;
++	info->si_code = (type == PIDTYPE_PID) ? SI_TKILL : SI_USER;
+ 	info->si_pid = task_tgid_vnr(current);
+ 	info->si_uid = from_kuid_munged(current_user_ns(), current_uid());
+ }
+@@ -3812,7 +3813,7 @@ SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
+ {
+ 	struct kernel_siginfo info;
+ 
+-	prepare_kill_siginfo(sig, &info);
++	prepare_kill_siginfo(sig, &info, PIDTYPE_TGID);
+ 
+ 	return kill_something_info(sig, &info, pid);
+ }
+@@ -3925,7 +3926,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+ 			goto err;
+ 	} else {
+-		prepare_kill_siginfo(sig, &kinfo);
++		prepare_kill_siginfo(sig, &kinfo, PIDTYPE_TGID);
+ 	}
+ 
+ 	/* TODO: respect PIDFD_THREAD */
+@@ -3970,12 +3971,7 @@ static int do_tkill(pid_t tgid, pid_t pid, int sig)
+ {
+ 	struct kernel_siginfo info;
+ 
+-	clear_siginfo(&info);
+-	info.si_signo = sig;
+-	info.si_errno = 0;
+-	info.si_code = SI_TKILL;
+-	info.si_pid = task_tgid_vnr(current);
+-	info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
++	prepare_kill_siginfo(sig, &info, PIDTYPE_PID);
+ 
+ 	return do_send_specific(tgid, pid, sig, &info);
+ }
+-- 
+2.43.0
 
------BEGIN PGP SIGNATURE-----
+From 7726d44467d6d14cfb888ae1a7e48512ac23fedc Mon Sep 17 00:00:00 2001
+From: Oleg Nesterov <oleg@redhat.com>
+Date: Fri, 9 Feb 2024 14:06:50 +0100
+Subject: [PATCH 2/2] pidfd: change pidfd_send_signal() to respect PIDFD_THREAD
 
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmXGfrAPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUzCwP/092D503wXTiG9qwTDAik+OqQu+E84Qcq0vT
-6S5vR5z79wiJbzkWqXN/kz1UCwddS2oeETTKkM52ZhpJ8n3GCzC03shXdgi/E1Ze
-DPWhuSZ1oUi0Ejfg9WTfVzMMQDPZX9YgMwJgh8A739M5h1fm3KRjdJzWvKFQNBrn
-Xfz/QkCmUgIAXk7IdifnSwPn9E6J/BKbtiBEHVgOamHVKUmeyx11YqjIt9e9h0NW
-MNFIOH2ZC3jeGratiCmHVh4pGZ8PTEBJBtnn4XoWdDPvy2JI+GXyOcVqmfLzQWoC
-8RgtzKT3sGf4MCxBIXInn0lX8OyKZUiYJa70h+P42aJWLtTFPiE8tr4QNByVGfLF
-YLw92ZUOt+HPkB5GmcO5dnVRWPJNCNdlIYaKA477rN1k1BkW0T0TiLdlZJxLr+rq
-iUp6lIReO94GfBZ/Zr2KPEbjSPkSoquz2RutMaB6u1JYapz3eU70O1Z4sDzkJtZt
-HIzXVXuTx3Yj/2MhQNhQEfUj0e0otkniaTP/cwv7vMqM7KW5ims33JqjzOL+bJB1
-4uKk2nRcKU76CVGQsLbG0WmnKkD29A0xI+kPs3p7pLNb92bUEDtv/YddutWSaY6T
-/JX8e0wR/E8TkLsoZn0oTOIvLbkRIGU+MkPDr15sP+IB+g0KN0oMWBIrhCzoZWbX
-AHIp22wv
-=Hv2V
------END PGP SIGNATURE-----
+Turn kill_pid_info() into kill_pid_info_type(), this allows to pass any
+pid_type to group_send_sig_info(), despite its name it should work fine
+even if type = PIDTYPE_PID.
 
---=_MailMate_C3686B6A-167D-443B-B02A-6619C30F4C87_=--
+Change pidfd_send_signal() to use PIDTYPE_PID or PIDTYPE_TGID depending
+on PIDFD_THREAD.
+
+While at it kill another TODO comment in pidfd_show_fdinfo(). As Christian
+expains fdinfo reports f_flags, userspace can already detect PIDFD_THREAD.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20240209130650.GA8048@redhat.com
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ kernel/fork.c   |  2 --
+ kernel/signal.c | 39 +++++++++++++++++++++++----------------
+ 2 files changed, 23 insertions(+), 18 deletions(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 4b6d994505ca..3f22ec90c5c6 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2051,8 +2051,6 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ 
+ 	seq_put_decimal_ll(m, "Pid:\t", nr);
+ 
+-	/* TODO: report PIDFD_THREAD */
+-
+ #ifdef CONFIG_PID_NS
+ 	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
+ 	if (nr > 0) {
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 1450689302d9..8b8169623850 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -47,6 +47,7 @@
+ #include <linux/cgroup.h>
+ #include <linux/audit.h>
+ #include <linux/sysctl.h>
++#include <uapi/linux/pidfd.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/signal.h>
+@@ -1436,7 +1437,8 @@ void lockdep_assert_task_sighand_held(struct task_struct *task)
+ #endif
+ 
+ /*
+- * send signal info to all the members of a group
++ * send signal info to all the members of a thread group or to the
++ * individual thread if type == PIDTYPE_PID.
+  */
+ int group_send_sig_info(int sig, struct kernel_siginfo *info,
+ 			struct task_struct *p, enum pid_type type)
+@@ -1478,7 +1480,8 @@ int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp)
+ 	return ret;
+ }
+ 
+-int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
++static int kill_pid_info_type(int sig, struct kernel_siginfo *info,
++				struct pid *pid, enum pid_type type)
+ {
+ 	int error = -ESRCH;
+ 	struct task_struct *p;
+@@ -1487,11 +1490,10 @@ int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
+ 		rcu_read_lock();
+ 		p = pid_task(pid, PIDTYPE_PID);
+ 		if (p)
+-			error = group_send_sig_info(sig, info, p, PIDTYPE_TGID);
++			error = group_send_sig_info(sig, info, p, type);
+ 		rcu_read_unlock();
+ 		if (likely(!p || error != -ESRCH))
+ 			return error;
+-
+ 		/*
+ 		 * The task was unhashed in between, try again.  If it
+ 		 * is dead, pid_task() will return NULL, if we race with
+@@ -1500,6 +1502,11 @@ int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
+ 	}
+ }
+ 
++int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
++{
++	return kill_pid_info_type(sig, info, pid, PIDTYPE_TGID);
++}
++
+ static int kill_proc_info(int sig, struct kernel_siginfo *info, pid_t pid)
+ {
+ 	int error;
+@@ -3873,14 +3880,10 @@ static struct pid *pidfd_to_pid(const struct file *file)
+  * @info:   signal info
+  * @flags:  future flags
+  *
+- * The syscall currently only signals via PIDTYPE_PID which covers
+- * kill(<positive-pid>, <signal>. It does not signal threads or process
+- * groups.
+- * In order to extend the syscall to threads and process groups the @flags
+- * argument should be used. In essence, the @flags argument will determine
+- * what is signaled and not the file descriptor itself. Put in other words,
+- * grouping is a property of the flags argument not a property of the file
+- * descriptor.
++ * Send the signal to the thread group or to the individual thread depending
++ * on PIDFD_THREAD.
++ * In the future extension to @flags may be used to override the default scope
++ * of @pidfd.
+  *
+  * Return: 0 on success, negative errno on failure
+  */
+@@ -3891,6 +3894,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 	struct fd f;
+ 	struct pid *pid;
+ 	kernel_siginfo_t kinfo;
++	enum pid_type type;
+ 
+ 	/* Enforce flags be set to 0 until we add an extension. */
+ 	if (flags)
+@@ -3911,6 +3915,11 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 	if (!access_pidfd_pidns(pid))
+ 		goto err;
+ 
++	if (f.file->f_flags & PIDFD_THREAD)
++		type = PIDTYPE_PID;
++	else
++		type = PIDTYPE_TGID;
++
+ 	if (info) {
+ 		ret = copy_siginfo_from_user_any(&kinfo, info);
+ 		if (unlikely(ret))
+@@ -3926,12 +3935,10 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+ 			goto err;
+ 	} else {
+-		prepare_kill_siginfo(sig, &kinfo, PIDTYPE_TGID);
++		prepare_kill_siginfo(sig, &kinfo, type);
+ 	}
+ 
+-	/* TODO: respect PIDFD_THREAD */
+-	ret = kill_pid_info(sig, &kinfo, pid);
+-
++	ret = kill_pid_info_type(sig, &kinfo, pid, type);
+ err:
+ 	fdput(f);
+ 	return ret;
+-- 
+2.43.0
+
