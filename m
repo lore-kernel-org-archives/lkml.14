@@ -1,213 +1,223 @@
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0877F485;
-	Fri,  9 Feb 2024 16:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D1876415
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707497344; cv=none; b=SFHetB6wsPBv9hgVShCeiX/S9pVwzfQsVkrWDaBPHATb+zjyHjWbCccmvwT3cg3yxM/YMr0GnsJ581WHfJzgqx8fRe9fSIPzN7uC5+ys6QDruuIFaH1vJwphkYe6C9IH89xFWnrtXTeEnqqNiHyYjJGasmwiIQWoRYPW3q4IuR0=
+	t=1707497404; cv=none; b=oGylf/0KzJJdXesgUyOi8xM/iNCBOVBIv0RqlRw0Vqd8kZB20W5ulPHqLjNVEee6ovMbc9f0WX7n+3ckfCR0k83x+wY0O67rghbri/pFQFphLbDjiokx6L7yjPtNUJ43ONbsSth85y/JrjAaBYXo7M67cbgVWC43NFjq0oEgjfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707497344; c=relaxed/simple;
-	bh=yvnRCMqZFZdIsvGy7aZk2DqJQpjiCQS9e9ZHAr+AJjY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N4+sCvAMhqwmQrF2ixtBsyvuu8Qa8M5ayeSgTx8XgkN8+ttRg3hh6/ihPMm+vAkrnbU8F6sdN4O7X1B8iKV9EBDO/+ZjH4bOVwy6huFBHpMNL6H/hKVhFswnId8/k/RhjEyOCiXFPs4r4nlioO4CTQi9up79L6U25tF0hBaYslA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=QpRo1vXn; arc=none smtp.client-ip=195.113.20.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
+	s=arc-20240116; t=1707497404; c=relaxed/simple;
+	bh=lcEncMjWx1cHj3mi+d6/pRmr14bUoDw+wvvYprditqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TbePpbj74JH+aVyARILMQNyQwS7YOmH1jc5++8HhujdW3eSJ6EDBZXgCMSxljmWloNXB/IvtjsRUvsuyCs8mv4W3cLefSjs6kXLx4JIC4oYxE2psW7aRN+Ku1qJVpZV74PnmAhYFt7cMH5ZHROA9QoNstYKFgPIKPsCMyL+rTTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=huopN3AH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="QpRo1vXn"
-Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id 72A07283DF2;
-	Fri,  9 Feb 2024 17:42:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
-	s=gen1; t=1707496961;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="huopN3AH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707497401;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r8Fl1BS1ZRv2Q4mLx2dPAnLNVhhtO3Udm/uijuW0OKE=;
-	b=QpRo1vXnVHDH3RfXPF18y1uQR/jP5/pnQaUpS63lIkaLlkAcKdTzlx48IwIR1EuKCGlmWj
-	elPjqx8lpV3EZcdipC+q62j/xbetZ93j0Jt8Q4OSoT/udabJb1tj+ZmxNlUEtHzgzSQkB8
-	iCzrY/opyKSrWNzZ9txxizS0qbpcRtY=
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: karelb)
-	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 37B794590CD;
-	Fri,  9 Feb 2024 17:42:41 +0100 (CET)
-From: Karel Balej <karelb@gimli.ms.mff.cuni.cz>
-To: Markuss Broks <markuss.broks@gmail.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org
-Subject: [PATCH v5 3/5] input/touchscreen: imagis: Add support for Imagis IST3038B
-Date: Fri,  9 Feb 2024 17:34:20 +0100
-Message-ID: <20240209164217.9008-4-karelb@gimli.ms.mff.cuni.cz>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240209164217.9008-1-karelb@gimli.ms.mff.cuni.cz>
-References: <20240209164217.9008-1-karelb@gimli.ms.mff.cuni.cz>
+	bh=iv56PqPnsvTXTwarveHsnRnFq5SGF+BFGaQ7j/GRxRk=;
+	b=huopN3AH0CGe1fN7lpVFAmoVawQTr7MEbV04Lf27vCCKXwQIQcrBaDFcPSWMO9Rp7FqpLQ
+	mnasFEyw152eadu4cpPt/ZR5w/Rp0+VSAtDsmtU2S7YRursqWuWhIGE8+RCibY4sJhbchX
+	zc3ExaVju5i57fTodTM1/W4elUhLxRg=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-663--pvn5MnoMbm5fuS_HsDE7w-1; Fri, 09 Feb 2024 11:49:59 -0500
+X-MC-Unique: -pvn5MnoMbm5fuS_HsDE7w-1
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5cec090b2bdso1039341a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:49:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707497399; x=1708102199;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iv56PqPnsvTXTwarveHsnRnFq5SGF+BFGaQ7j/GRxRk=;
+        b=fv4CpdRmfvOxRwObVlQUI4FRePSd1vrIu0yCTHF6sA5QEhtYwm2KicocWAbFPF3B37
+         8Ug90FnsWZBSeGcW0wlbg09eNWfyL5+jm9noW/SSjMHY9tYQd3emVZfvgX4OYKr0ea3b
+         WzMU7aaEhLurlejf8uBa5xJC+h865w29hcC48b3K4sdhTibUC+6eeAut/GbuafhVyEMr
+         htdUYhCKUr4y3BtUfcyRYsOhNMUo+a3D5mKHTse+McAC73lgvgLmEhDDTg+aKEMC+9tz
+         UDmfT/4urH2VKn7IviQ+5RisM3gtcq126vYUseVzFLgzEvNfHXm2BJRrfTlLO/Fhz+8/
+         9EvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNEU39WhLZDhtim+kXJeCxrDxwEuP417p+wpqM0SqiU3zRVfGSwse3ta3fEU7H79EmLsGElwp6wLMGnZkp1obj1YIbVCyc54rsJoWb
+X-Gm-Message-State: AOJu0Yz4KkB5Til2/sJIWQb6Vx5SZjW7lWbzwcJw1IR3pM/LoN60NjRa
+	aiDwkoDlhzoxXtnapVHF3qb2A+gtl1jHpmUg750rqAX5OL25EM7+WbBXuEAqROEUPr6CAwH2fzl
+	cWTxkmuq2o4ststNVJs68YDvebpZMwZLIxMWBKH+tODXQEUCsDJPmpE9fcOuXkw4gzpDePUzdjs
+	4yKXbefq7MDudqkM7elk+s+iQDTdYVlSsIecCB
+X-Received: by 2002:a17:90b:4014:b0:295:fe86:ad25 with SMTP id ie20-20020a17090b401400b00295fe86ad25mr2139894pjb.36.1707497398794;
+        Fri, 09 Feb 2024 08:49:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEgOkRWUTSqInTRg13d4URgeXtvTpA7pyw7Ka22GIvJnxFBw36TfEgDb0tEyld0wHgAinA0NFa9/Bkq4ZnaI3o=
+X-Received: by 2002:a17:90b:4014:b0:295:fe86:ad25 with SMTP id
+ ie20-20020a17090b401400b00295fe86ad25mr2139878pjb.36.1707497398427; Fri, 09
+ Feb 2024 08:49:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240209163454.98051-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20240209163454.98051-1-srinivas.kandagatla@linaro.org>
+From: Eric Curtin <ecurtin@redhat.com>
+Date: Fri, 9 Feb 2024 16:49:22 +0000
+Message-ID: <CAOgh=FwFMaYvTwmqeOQrqHq2XANxghZbTuY3+SgFx_ozpysBOg@mail.gmail.com>
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+To: srinivas.kandagatla@linaro.org
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, regressions@lists.linux.dev, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Chen-Yu Tsai <wenst@chromium.org>, asahi@lists.linux.dev, Sven Peter <sven@svenpeter.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Markuss Broks <markuss.broks@gmail.com>
+On Fri, 9 Feb 2024 at 16:43, <srinivas.kandagatla@linaro.org> wrote:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc=
+1 on
+> Apple M1, which (in downstream dts files) has multiple nvmem cells that u=
+se the
+> same byte address. This causes the device probe to fail with
+>
+> [    0.605336] sysfs: cannot create duplicate filename '/devices/platform=
+/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
+> [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                =
+ 6.8.0-rc1-arnd-5+ #133
+> [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
+> [    0.605362] Call trace:
+> [    0.605365]  show_stack+0x18/0x2c
+> [    0.605374]  dump_stack_lvl+0x60/0x80
+> [    0.605383]  dump_stack+0x18/0x24
+> [    0.605388]  sysfs_warn_dup+0x64/0x80
+> [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
+> [    0.605402]  internal_create_group+0x268/0x404
+> [    0.605409]  sysfs_create_groups+0x38/0x94
+> [    0.605415]  devm_device_add_groups+0x50/0x94
+> [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
+> [    0.605682]  nvmem_register+0x38c/0x470
+> [    0.605789]  devm_nvmem_register+0x1c/0x6c
+> [    0.605895]  apple_efuses_probe+0xe4/0x120
+> [    0.606000]  platform_probe+0xa8/0xd0
+>
+> As far as I can tell, this is a problem for any device with multiple cell=
+s on
+> different bits of the same address. Avoid the issue by changing the file =
+name
+> to include the first bit number.
+>
+> Fixes: 0331c611949f ("nvmem: core: Expose cells through sysfs")
+> Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/=
+dts/apple/t600x-dieX.dtsi#L156
+> Cc: regressions@lists.linux.dev
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> Cc: Chen-Yu Tsai <wenst@chromium.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: asahi@lists.linux.dev
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Imagis IST3038B is another variant of Imagis IST3038 IC, which has
-a different register interface from IST3038C (possibly firmware defined).
-This should also work for IST3044B (though untested), however other
-variants using this interface/protocol(IST3026, IST3032, IST3026B,
-IST3032B) have a different format for coordinates, and they'd need
-additional effort to be supported by this driver.
+Seems reasonable to me.
 
-Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
-Signed-off-by: Karel Balej <balejk@matfyz.cz>
----
+Reviewed-by: Eric Curtin <ecurtin@redhat.com>
 
-Notes:
-    v4:
-    * Sort the definitions in alphanumerical order.
+Is mise le meas/Regards,
 
- drivers/input/touchscreen/imagis.c | 58 ++++++++++++++++++++++++------
- 1 file changed, 47 insertions(+), 11 deletions(-)
+Eric Curtin
 
-diff --git a/drivers/input/touchscreen/imagis.c b/drivers/input/touchscreen/imagis.c
-index e67fd3011027..9af8a6332ae6 100644
---- a/drivers/input/touchscreen/imagis.c
-+++ b/drivers/input/touchscreen/imagis.c
-@@ -11,9 +11,13 @@
- #include <linux/property.h>
- #include <linux/regulator/consumer.h>
- 
-+#define IST3038B_REG_STATUS		0x20
-+#define IST3038B_REG_CHIPID		0x30
-+#define IST3038B_WHOAMI			0x30380b
-+
- #define IST3038C_HIB_ACCESS		(0x800B << 16)
- #define IST3038C_DIRECT_ACCESS		BIT(31)
--#define IST3038C_REG_CHIPID		0x40001000
-+#define IST3038C_REG_CHIPID		(0x40001000 | IST3038C_DIRECT_ACCESS)
- #define IST3038C_REG_HIB_BASE		0x30000100
- #define IST3038C_REG_TOUCH_STATUS	(IST3038C_REG_HIB_BASE | IST3038C_HIB_ACCESS)
- #define IST3038C_REG_TOUCH_COORD	(IST3038C_REG_HIB_BASE | IST3038C_HIB_ACCESS | 0x8)
-@@ -31,8 +35,17 @@
- #define IST3038C_FINGER_COUNT_SHIFT	12
- #define IST3038C_FINGER_STATUS_MASK	GENMASK(9, 0)
- 
-+struct imagis_properties {
-+	unsigned int interrupt_msg_cmd;
-+	unsigned int touch_coord_cmd;
-+	unsigned int whoami_cmd;
-+	unsigned int whoami_val;
-+	bool protocol_b;
-+};
-+
- struct imagis_ts {
- 	struct i2c_client *client;
-+	const struct imagis_properties *tdata;
- 	struct input_dev *input_dev;
- 	struct touchscreen_properties prop;
- 	struct regulator_bulk_data supplies[2];
-@@ -84,8 +97,7 @@ static irqreturn_t imagis_interrupt(int irq, void *dev_id)
- 	int i;
- 	int error;
- 
--	error = imagis_i2c_read_reg(ts, IST3038C_REG_INTR_MESSAGE,
--				    &intr_message);
-+	error = imagis_i2c_read_reg(ts, ts->tdata->interrupt_msg_cmd, &intr_message);
- 	if (error) {
- 		dev_err(&ts->client->dev,
- 			"failed to read the interrupt message: %d\n", error);
-@@ -104,9 +116,13 @@ static irqreturn_t imagis_interrupt(int irq, void *dev_id)
- 	finger_pressed = intr_message & IST3038C_FINGER_STATUS_MASK;
- 
- 	for (i = 0; i < finger_count; i++) {
--		error = imagis_i2c_read_reg(ts,
--					    IST3038C_REG_TOUCH_COORD + (i * 4),
--					    &finger_status);
-+		if (ts->tdata->protocol_b)
-+			error = imagis_i2c_read_reg(ts,
-+						    ts->tdata->touch_coord_cmd, &finger_status);
-+		else
-+			error = imagis_i2c_read_reg(ts,
-+						    ts->tdata->touch_coord_cmd + (i * 4),
-+						    &finger_status);
- 		if (error) {
- 			dev_err(&ts->client->dev,
- 				"failed to read coordinates for finger %d: %d\n",
-@@ -261,6 +277,12 @@ static int imagis_probe(struct i2c_client *i2c)
- 
- 	ts->client = i2c;
- 
-+	ts->tdata = device_get_match_data(dev);
-+	if (!ts->tdata) {
-+		dev_err(dev, "missing chip data\n");
-+		return -EINVAL;
-+	}
-+
- 	error = imagis_init_regulators(ts);
- 	if (error) {
- 		dev_err(dev, "regulator init error: %d\n", error);
-@@ -279,15 +301,13 @@ static int imagis_probe(struct i2c_client *i2c)
- 		return error;
- 	}
- 
--	error = imagis_i2c_read_reg(ts,
--			IST3038C_REG_CHIPID | IST3038C_DIRECT_ACCESS,
--			&chip_id);
-+	error = imagis_i2c_read_reg(ts, ts->tdata->whoami_cmd, &chip_id);
- 	if (error) {
- 		dev_err(dev, "chip ID read failure: %d\n", error);
- 		return error;
- 	}
- 
--	if (chip_id != IST3038C_WHOAMI) {
-+	if (chip_id != ts->tdata->whoami_val) {
- 		dev_err(dev, "unknown chip ID: 0x%x\n", chip_id);
- 		return -EINVAL;
- 	}
-@@ -343,9 +363,25 @@ static int imagis_resume(struct device *dev)
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(imagis_pm_ops, imagis_suspend, imagis_resume);
- 
-+static const struct imagis_properties imagis_3038b_data = {
-+	.interrupt_msg_cmd = IST3038B_REG_STATUS,
-+	.touch_coord_cmd = IST3038B_REG_STATUS,
-+	.whoami_cmd = IST3038B_REG_CHIPID,
-+	.whoami_val = IST3038B_WHOAMI,
-+	.protocol_b = true,
-+};
-+
-+static const struct imagis_properties imagis_3038c_data = {
-+	.interrupt_msg_cmd = IST3038C_REG_INTR_MESSAGE,
-+	.touch_coord_cmd = IST3038C_REG_TOUCH_COORD,
-+	.whoami_cmd = IST3038C_REG_CHIPID,
-+	.whoami_val = IST3038C_WHOAMI,
-+};
-+
- #ifdef CONFIG_OF
- static const struct of_device_id imagis_of_match[] = {
--	{ .compatible = "imagis,ist3038c", },
-+	{ .compatible = "imagis,ist3038b", .data = &imagis_3038b_data },
-+	{ .compatible = "imagis,ist3038c", .data = &imagis_3038c_data },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imagis_of_match);
--- 
-2.43.0
+> ---
+> Hi Greg,
+>
+> Here is a fix in nvmem for 6.8, could you queue these for next possible r=
+c.
+>
+> Did not cc Stable as this is only targeted for 6.8 and no backporting is
+> required.
+>
+> Thanks,
+> Srini
+>
+>  Documentation/ABI/testing/sysfs-nvmem-cells | 16 ++++++++--------
+>  drivers/nvmem/core.c                        |  5 +++--
+>  2 files changed, 11 insertions(+), 10 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-nvmem-cells b/Documentation/=
+ABI/testing/sysfs-nvmem-cells
+> index 7af70adf3690..c7c9444f92a8 100644
+> --- a/Documentation/ABI/testing/sysfs-nvmem-cells
+> +++ b/Documentation/ABI/testing/sysfs-nvmem-cells
+> @@ -4,18 +4,18 @@ KernelVersion:        6.5
+>  Contact:       Miquel Raynal <miquel.raynal@bootlin.com>
+>  Description:
+>                 The "cells" folder contains one file per cell exposed by =
+the
+> -               NVMEM device. The name of the file is: <name>@<where>, wi=
+th
+> -               <name> being the cell name and <where> its location in th=
+e NVMEM
+> -               device, in hexadecimal (without the '0x' prefix, to mimic=
+ device
+> -               tree node names). The length of the file is the size of t=
+he cell
+> -               (when known). The content of the file is the binary conte=
+nt of
+> -               the cell (may sometimes be ASCII, likely without trailing
+> -               character).
+> +               NVMEM device. The name of the file is: "<name>@<byte>,<bi=
+t>",
+> +               with <name> being the cell name and <where> its location =
+in
+> +               the NVMEM device, in hexadecimal bytes and bits (without =
+the
+> +               '0x' prefix, to mimic device tree node names). The length=
+ of
+> +               the file is the size of the cell (when known). The conten=
+t of
+> +               the file is the binary content of the cell (may sometimes=
+ be
+> +               ASCII, likely without trailing character).
+>                 Note: This file is only present if CONFIG_NVMEM_SYSFS
+>                 is enabled.
+>
+>                 Example::
+>
+> -                 hexdump -C /sys/bus/nvmem/devices/1-00563/cells/product=
+-name@d
+> +                 hexdump -C /sys/bus/nvmem/devices/1-00563/cells/product=
+-name@d,0
+>                   00000000  54 4e 34 38 4d 2d 50 2d  44 4e         |TN48M=
+-P-DN|
+>                   0000000a
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 980123fb4dde..eb357ac2e54a 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -460,8 +460,9 @@ static int nvmem_populate_sysfs_cells(struct nvmem_de=
+vice *nvmem)
+>         list_for_each_entry(entry, &nvmem->cells, node) {
+>                 sysfs_bin_attr_init(&attrs[i]);
+>                 attrs[i].attr.name =3D devm_kasprintf(&nvmem->dev, GFP_KE=
+RNEL,
+> -                                                   "%s@%x", entry->name,
+> -                                                   entry->offset);
+> +                                                   "%s@%x,%x", entry->na=
+me,
+> +                                                   entry->offset,
+> +                                                   entry->bit_offset);
+>                 attrs[i].attr.mode =3D 0444;
+>                 attrs[i].size =3D entry->bytes;
+>                 attrs[i].read =3D &nvmem_cell_attr_read;
+> --
+> 2.25.1
+>
+>
 
