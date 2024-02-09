@@ -1,123 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9734C2E3F9;
-	Fri,  9 Feb 2024 15:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25952E3F9;
+	Fri,  9 Feb 2024 15:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707491309; cv=none; b=a9WedBYxK14w11VU2pphpKgWu6pGnNvrrqSWNmHXWcYpacpKWG36s8uZ2CT7EpL+13g5ZYNZ/d+3zHCird3ni6qnE53CRhU1Aal4VOEdO9hNkH5koYqif/d3rBYhI16qJa2bkXds+ubmA646CIxAl3w+cB7C9VT4Jx32JJOFY0I=
+	t=1707491323; cv=none; b=UagaFma98S7rcRp/XaFA4ADendkz3Izb9kUZ8/eA673eKzdrlD0Vl2Znm9KJTcH1+boazU2jS60JXjmt6DA8GYgV/R3I0dN5BYpB/HkWLGg7QPDzTvLZIjSl8GWsSDWn717kafTGlr2LugG03P9K+Wlvq12MDgdDb+vtC3TxX8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707491309; c=relaxed/simple;
-	bh=V6+AuvQ1+rkbReYjLH11hrXtd4MOrnvsLrprkOOCzZo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RPi/N8zYZ0S2ocKPHywrzGc32wDwj0Zhd5TTLMLFwhXGmzBfOL3ZeIEfurfQAcrh9yVxhhqaJSibELGxj6LG8eDDtTOixHPUK20ZZfo6nF2Atxjl7fEa88MBZJ5mw4JWGmcErIhy4qUh8zQ6YSbyWEtwulqs/NSBFiRjprI+7so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQz4OuUE; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707491323; c=relaxed/simple;
+	bh=cgrbif3MXR/BTAiL2rEDJWkpNWY9QqVDn209knbW238=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L2xwRZMmmI2ZquetV8cVlv6Gj+DqSP/lYbkuR6xNVlq/dKnm4abTIhizRj2d0rqqdRW+QN5qcz5CUPEH+iSId0fGIIqDEZAsZJi6KV2HnAcZYShbgmrywiusGza7JU5viFZdzK1l/iFxf4k3qRoU6nc2tVuwf6aymPb6ionArKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=01DdIuZF; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQz4OuUE"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="01DdIuZF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707491308; x=1739027308;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=V6+AuvQ1+rkbReYjLH11hrXtd4MOrnvsLrprkOOCzZo=;
-  b=iQz4OuUEZvC/pS3G5NW4GMV4Sa1Bc6BAW4wNH7J+k5Pj1XnTAMZRKX+0
-   ng8artmOKR+51VHvUa9gDhGIn8w+Nafu4r34e/vNo9vaE7OyhIcyumrn0
-   yjVb/4di1Ve+Pucx2sGsyS2/6xLTowJ4hjaX/P/rq+9sqOsfHbKW59aPo
-   s77c8GtYXAXnmafJGCEDVwt+n09MarMjcfFu9sAz+/zpHPvzD4N6EcNIu
-   E/PObrh5/mJx2I78UmfYeTy/RLG8WAAQL2xvNeo6E8crOUNCgmhIWiXM9
-   Pbuu3S09Ua001HDOiTvbc7uIZr3HGstEQ8MDeHJxzWWoMOLMsWnaOVOB2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1595708"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1595708"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:08:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1956572"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.226])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:08:24 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 9 Feb 2024 17:08:20 +0200 (EET)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] platform/mellanox: mlxbf-pmc: Fix signed/unsigned
- mix-up
-In-Reply-To: <366b8fc6f5d77c01f9e0e2ad25627df583729017.1707466888.git.shravankr@nvidia.com>
-Message-ID: <54ff990c-00a8-1854-02c6-e22b088fa3e7@linux.intel.com>
-References: <cover.1707466888.git.shravankr@nvidia.com> <366b8fc6f5d77c01f9e0e2ad25627df583729017.1707466888.git.shravankr@nvidia.com>
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707491322; x=1739027322;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cgrbif3MXR/BTAiL2rEDJWkpNWY9QqVDn209knbW238=;
+  b=01DdIuZFjBfiAsX8hMeNt8XDwPOhtIxwINMUeeduNbHV1zyHSGqcPE4P
+   78LtjkiAkGdQcAyrF3L1hGnyidMvtJdaLxVCeo4Pc40Kx0cR7LFqw/d9a
+   czbPAdPqAviRuqqMC/N7GPEptHSGE3SMEyHBWH/AurGXJBOAgFJFMdlrJ
+   u1tvlvL5hajdNiDsU7GfBQNgUKMKjPhmORQZAtVeJIMxkZXFfpfnZ+aPR
+   GutHS5x5zzJmr68+3efoAcESZFi3MzK047ASM8pHjIhtfHYNlaSpyba89
+   GFYV49m6C97gVuNlw5yGBMNkJndOQOExefYQE/OO2mCeLkxmrpAdujOY0
+   g==;
+X-CSE-ConnectionGUID: KIIHkk3fQjqBsya5fSn4qQ==
+X-CSE-MsgGUID: hxyDI4lESH2W5w9Pl05HTQ==
+X-IronPort-AV: E=Sophos;i="6.05,257,1701154800"; 
+   d="scan'208";a="16014537"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Feb 2024 08:08:40 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 9 Feb 2024 08:08:12 -0700
+Received: from che-lt-i70843lx.amer.actel.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Fri, 9 Feb 2024 08:08:01 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <linux@armlinux.org.uk>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <manikandan.m@microchip.com>,
+	<dharma.b@microchip.com>, <arnd@arndb.de>, <geert+renesas@glider.be>,
+	<Jason@zx2c4.com>, <mpe@ellerman.id.au>, <gerg@linux-m68k.org>,
+	<rdunlap@infradead.org>, <vbabka@suse.cz>, <dri-devel@lists.freedesktop.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <hari.prasathge@microchip.com>,
+	<akpm@linux-foundation.org>, <deller@gmx.de>
+Subject: [PATCH v4 0/4] LVDS Controller Support for SAM9X75 SoC
+Date: Fri, 9 Feb 2024 20:37:53 +0530
+Message-ID: <20240209150757.66914-1-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, 9 Feb 2024, Shravan Kumar Ramani wrote:
+This patch series introduces LVDS controller support for the SAM9X75 SoC. The
+LVDS controller is designed to work with Microchip's sam9x7 series
+System-on-Chip (SoC) devices, providing Low Voltage Differential Signaling
+capabilities.
 
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 110 ++++++++++++++------------
->  1 file changed, 58 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 71d919832e2a..e3f1ae772e43 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -99,8 +99,8 @@
->   */
->  struct mlxbf_pmc_attribute {
->  	struct device_attribute dev_attr;
-> -	int index;
-> -	int nr;
-> +	unsigned int index;
-> +	unsigned int nr;
->  };
->  
->  /**
-> @@ -121,7 +121,7 @@ struct mlxbf_pmc_block_info {
->  	void __iomem *mmio_base;
->  	size_t blk_size;
->  	size_t counters;
-> -	int type;
-> +	unsigned int type;
->  	struct mlxbf_pmc_attribute *attr_counter;
->  	struct mlxbf_pmc_attribute *attr_event;
->  	struct mlxbf_pmc_attribute attr_event_list;
-> @@ -169,7 +169,7 @@ struct mlxbf_pmc_context {
->   * @evt_name: Name of the event
->   */
->  struct mlxbf_pmc_events {
-> -	int evt_num;
-> +	u32 evt_num;
->  	char *evt_name;
->  };
->  
-> @@ -959,7 +959,7 @@ static int mlxbf_pmc_write(void __iomem *addr, int command, u64 value)
->  }
->  
->  /* Check if the register offset is within the mapped region for the block */
-> -static bool mlxbf_pmc_valid_range(int blk_num, u32 offset)
-> +static bool mlxbf_pmc_valid_range(unsigned int blk_num, u32 offset)
->  {
->  	if ((offset >= 0) && !(offset % MLXBF_PMC_REG_SIZE) &&
->  	    (offset + MLXBF_PMC_REG_SIZE <= pmc->block[blk_num].blk_size))
-> @@ -970,7 +970,7 @@ static bool mlxbf_pmc_valid_range(int blk_num, u32 offset)
->  
->  /* Get the event list corresponding to a certain block */
->  static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk,
-> -							   int *size)
-> +							   unsigned int *size)
+Patch series Changelog:
+- Include configs: at91: Enable LVDS serializer
+- include all necessary To/Cc entries.
+The Individual Changelogs are available on the respective patches.
 
-Usually size_t is the type that is preferred for sizes of memory blocks 
-(including this case where it's array size that is just memory block 
-size divided by another).
+Dharma Balasubiramani (4):
+  dt-bindings: display: bridge: add sam9x75-lvds binding
+  drm/bridge: add lvds controller support for sam9x7
+  MAINTAINERS: add SAM9X7 SoC's LVDS controller
+  ARM: configs: at91: Enable LVDS serializer support
 
+ .../bridge/microchip,sam9x75-lvds.yaml        |  55 +++++
+ MAINTAINERS                                   |   8 +
+ arch/arm/configs/at91_dt_defconfig            |   1 +
+ drivers/gpu/drm/bridge/Kconfig                |   7 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/microchip-lvds.c       | 228 ++++++++++++++++++
+ 6 files changed, 300 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
+ create mode 100644 drivers/gpu/drm/bridge/microchip-lvds.c
+
+
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
 -- 
- i.
+2.25.1
 
