@@ -1,73 +1,73 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A9C18B00
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 21:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7401163B9
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 21:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707514278; cv=none; b=SUH2DwM1Ye8UVuqA0M+jNUG5swGvjghTysbLgs/K1ecpwnlbE0RU9kzqpBlRRU7fTmTe4c+jycmI6XbI0DJDIZQtS4yAKVBwlviNXMKHyFiK5SFSJmy/q8/bsb1m3oXV6zWQsqrwYJFCqrUvEavKMgud/UeqdHDFQJl07NhnTCU=
+	t=1707514356; cv=none; b=gkK/W8HyP8um3jKS+/Ngd4ri6kGwjvD+wLGuBg+nJI6q8HLySe4wK74Wkc4DZ12SzcoVh5RBLOzZpvi1B1T7UKdL6xX9u6Rv2c46P4wXneXXLETwdlag8ieoW9RqRkiESk2pkGZ5vp0iC3rWDAOjO+PiHcEU0XQZoEF1Jtcc1JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707514278; c=relaxed/simple;
-	bh=3sZqXdpF/PYBqMBd8d5i9lOA4ttW3p1EgQHFa65NSGY=;
+	s=arc-20240116; t=1707514356; c=relaxed/simple;
+	bh=K3Q6lSKgKZjHTEb9DGMZRqP4y+AE9MrJXAdqEOkH7N0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+gzcLnEW4++CLBhBOqHzJxu94IAg1RhVD6ebu07Ts8PjBuypkHUxvNCANQWjtEh3TQpey390UzfNEz3d24D/2thbyKpzGnbtH2QaiLe4g4Yah7spNLTAcN6KtFJwUw7v/6ESsWqlKKSubu/f2rRPfHghFuhvr8ZG0n3CpzX4Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ak5x7Iht; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=okFJqHzw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ak5x7Iht; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=okFJqHzw; arc=none smtp.client-ip=195.135.223.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=cGbLj/eiCSKe4n6IP/IxcQI6tGzHxWvJuDleMF05KEu9QzSjP4zy+JuY+nn4Fd4tctnf78dijcvcqMeA3xx8X7MqZnpGuzGfK+mpDxP7HnoWJTbU3BdxyIsunjp1kkj/TZFepAVhWZMMbhEVM55o7tN35W8mGhDFIXUgFOrspIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tissuEUV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4nUJ5Nsr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tissuEUV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4nUJ5Nsr; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ak5x7Iht";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="okFJqHzw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ak5x7Iht";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="okFJqHzw"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tissuEUV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4nUJ5Nsr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tissuEUV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4nUJ5Nsr"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 589EF1F831;
-	Fri,  9 Feb 2024 21:31:15 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B44221F831;
+	Fri,  9 Feb 2024 21:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707514275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1707514353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m/UgS6OKcLuwhRl+HIZ9vAVihq/Wj8OIdzwa6FbYGKY=;
-	b=ak5x7Iht9azf/S89fqbDsollTjGsIaTkZ1pwqdWpmpZIVNYFExkw8diPEZiMusn/b5lEhL
-	9V4ln2/0gHfXXCsCYIoz70gp60ttd9NYpXKJn+Qr5WNi27Lr5cSaTvNlAm/UdiEkn8ztit
-	ihFAeMOLhti8CTk634J4IgyB8juCC3I=
+	bh=4ZvmyKdHVxJ/thojldSl4lvPiTjCgxInTW7G7s2pny4=;
+	b=tissuEUVVKmNHAbiDR5CBTOnY3E0hBDLiiZmu8Rqo2W5UdesCWb3PC2NZQoGs6JYrm1xBB
+	/CKqqSKgUGPyz1/TtvzQTLVje0D33EiCO3yrASvAVfJQWqXNCL2/ZnVdP1W5wbgb8/f/Gi
+	2P3RtSlK6DMm9DygNba5bJLfUAerDRU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707514275;
+	s=susede2_ed25519; t=1707514353;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m/UgS6OKcLuwhRl+HIZ9vAVihq/Wj8OIdzwa6FbYGKY=;
-	b=okFJqHzwlBp4YIGXAVy2FHIg/lp2C5mbYhIIm0aVs5V0sRRq3a61DzDjDarhKq6WT8n72E
-	tDL1Nql7m7Sr94DQ==
+	bh=4ZvmyKdHVxJ/thojldSl4lvPiTjCgxInTW7G7s2pny4=;
+	b=4nUJ5NsrpYpJPCqqQLkywTHUlmItn4kNSJg+9ImroxMcrnyv2PCKXQsnus4MGnUNi11jzz
+	oKGhPSFeLT6gBECw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707514275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1707514353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m/UgS6OKcLuwhRl+HIZ9vAVihq/Wj8OIdzwa6FbYGKY=;
-	b=ak5x7Iht9azf/S89fqbDsollTjGsIaTkZ1pwqdWpmpZIVNYFExkw8diPEZiMusn/b5lEhL
-	9V4ln2/0gHfXXCsCYIoz70gp60ttd9NYpXKJn+Qr5WNi27Lr5cSaTvNlAm/UdiEkn8ztit
-	ihFAeMOLhti8CTk634J4IgyB8juCC3I=
+	bh=4ZvmyKdHVxJ/thojldSl4lvPiTjCgxInTW7G7s2pny4=;
+	b=tissuEUVVKmNHAbiDR5CBTOnY3E0hBDLiiZmu8Rqo2W5UdesCWb3PC2NZQoGs6JYrm1xBB
+	/CKqqSKgUGPyz1/TtvzQTLVje0D33EiCO3yrASvAVfJQWqXNCL2/ZnVdP1W5wbgb8/f/Gi
+	2P3RtSlK6DMm9DygNba5bJLfUAerDRU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707514275;
+	s=susede2_ed25519; t=1707514353;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m/UgS6OKcLuwhRl+HIZ9vAVihq/Wj8OIdzwa6FbYGKY=;
-	b=okFJqHzwlBp4YIGXAVy2FHIg/lp2C5mbYhIIm0aVs5V0sRRq3a61DzDjDarhKq6WT8n72E
-	tDL1Nql7m7Sr94DQ==
+	bh=4ZvmyKdHVxJ/thojldSl4lvPiTjCgxInTW7G7s2pny4=;
+	b=4nUJ5NsrpYpJPCqqQLkywTHUlmItn4kNSJg+9ImroxMcrnyv2PCKXQsnus4MGnUNi11jzz
+	oKGhPSFeLT6gBECw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D55C3139E7;
-	Fri,  9 Feb 2024 21:31:14 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3B5DC139E7;
+	Fri,  9 Feb 2024 21:32:33 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4iZlMaKZxmU7aAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 09 Feb 2024 21:31:14 +0000
-Date: Fri, 9 Feb 2024 22:32:21 +0100
+	id RZjHC/GZxmV3aAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 09 Feb 2024 21:32:33 +0000
+Date: Fri, 9 Feb 2024 22:33:32 +0100
 From: Oscar Salvador <osalvador@suse.de>
 To: Marco Elver <elver@google.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
@@ -75,11 +75,12 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
 	Vlastimil Babka <vbabka@suse.cz>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
 	Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH v7 0/4] page_owner: print stacks and their outstanding
- allocations
-Message-ID: <ZcaZ5dwfeWIX_bis@localhost.localdomain>
+Subject: Re: [PATCH v7 1/4] lib/stackdepot: Move stack_record struct
+ definition into the header
+Message-ID: <ZcaaLKeKADD5L2cr@localhost.localdomain>
 References: <20240208234539.19113-1-osalvador@suse.de>
- <CANpmjNOV27EzxfQ1bU_ayKNKt0-FAwjeL9ASK7M2593Z7HvVow@mail.gmail.com>
+ <20240208234539.19113-2-osalvador@suse.de>
+ <CANpmjNOHchgjgJbM8OGQTTxE5wiAjt5rJE8UZYJgcF0y1EtBZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,12 +89,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNOV27EzxfQ1bU_ayKNKt0-FAwjeL9ASK7M2593Z7HvVow@mail.gmail.com>
+In-Reply-To: <CANpmjNOHchgjgJbM8OGQTTxE5wiAjt5rJE8UZYJgcF0y1EtBZw@mail.gmail.com>
 Authentication-Results: smtp-out2.suse.de;
 	none
-X-Spam-Level: 
-X-Spam-Score: -2.50
-X-Spamd-Result: default: False [-2.50 / 50.00];
+X-Spamd-Result: default: False [-0.17 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 FROM_HAS_DN(0.00)[];
@@ -101,35 +100,40 @@ X-Spamd-Result: default: False [-2.50 / 50.00];
 	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
 	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
 	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
 	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,suse.cz,gmail.com,google.com];
 	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.20)[89.20%]
+	 BAYES_HAM(-0.07)[62.37%]
+X-Spam-Level: 
 X-Spam-Flag: NO
+X-Spam-Score: -0.17
 
-On Fri, Feb 09, 2024 at 09:03:21AM +0100, Marco Elver wrote:
-> On Fri, 9 Feb 2024 at 00:45, Oscar Salvador <osalvador@suse.de> wrote:
-> >
-> > Changes v6 -> v7:
-> >      - Rebased on top of Andrey Konovalov's libstackdepot patchset
-> >      - Reformulated the changelogs
+On Fri, Feb 09, 2024 at 08:45:21AM +0100, Marco Elver wrote:
+> > -#define DEPOT_HANDLE_BITS (sizeof(depot_stack_handle_t) * 8)
+> > -
+> > -#define DEPOT_POOL_ORDER 2 /* Pool size order, 4 pages */
+> > -#define DEPOT_POOL_SIZE (1LL << (PAGE_SHIFT + DEPOT_POOL_ORDER))
+> > -#define DEPOT_STACK_ALIGN 4
+> > -#define DEPOT_OFFSET_BITS (DEPOT_POOL_ORDER + PAGE_SHIFT - DEPOT_STACK_ALIGN)
+> > -#define DEPOT_POOL_INDEX_BITS (DEPOT_HANDLE_BITS - DEPOT_OFFSET_BITS - \
+> > -                              STACK_DEPOT_EXTRA_BITS)
+> >  #if IS_ENABLED(CONFIG_KMSAN) && CONFIG_STACKDEPOT_MAX_FRAMES >= 32
+> >  /*
+> >   * KMSAN is frequently used in fuzzing scenarios and thus saves a lot of stack
 > 
-> Overall looks fine, but I think it's not rebased against the latest
-> stackdepot version in -next. That version re-introduces variable-sized
-> records and there's some trickery required so you do not end up with
-> refcount warnings.
+> ^^ This hunk no longer exists, try to rebase against the version in -next.
+> 
+> Other than that, this looks fine.
 
-Thanks a lot Marco for having a look and for the feedback, that's highly
-appreciated.
+Yeah, I noticed it later.
+I already synced the last -next and I have rebased it on top.
 
+Thanks
 
 -- 
 Oscar Salvador
