@@ -1,126 +1,352 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pb-smtp1.pobox.com (pb-smtp1.pobox.com [64.147.108.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83887BAF7
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2630E7AE7C;
+	Fri,  9 Feb 2024 17:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707499329; cv=none; b=Nb4/GEtYiv4VEajhFthmn9dmlfxUZDQjLDWIVWXN/8NaEXdEBfGUVcE6OIbZxwyR2nEf9+ZlmzBLLoSnQru9fZ7ssHMPqAwaX6m1c1iic0CRWPfgFEzTGFQX3QET/l+xjXFQIZ8RkXAiZr10Q3D5onSPyejeiyzuOopYaC8cBFI=
+	t=1707499482; cv=none; b=Kcb3zx2XfMRIQ6mr/e++USrQ1RlbGkntn3Ptmqx3d8OyLAFxKmZI+Szr796o3r7qm1J8mxyGoA8y9e7AlAk3MHt3VqtpGfTP8QeYP8sJdfQ4AvFLa5yQbr1UGi1anctWLUWHP72tPSCkw7lcR0xTMEsvP+mJGVuU4XaJA60FccU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707499329; c=relaxed/simple;
-	bh=+imSJtxf176adv1L38bIPJf24ZMDxnz4d3q1WOYyKQE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WY7GvA0DZXzzdjbLxDxBFbqhT4ZxgKIV9uT4myjrqbxP5z9N3aJVM5VNrG5BevrB0T/l1tcYSwUVGTDLQ6+NSzOaZ8sJZJd+V+W4QnkWeoEsk7Vsq96S48sOTBii/njGvekh9Q7Az3lQw/PViRIi1By3N/YwZnJQJPwHBqXZg3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=OJK5+rus; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1707499482; c=relaxed/simple;
+	bh=DuCZGSgSWVt6wv/8iFDabIywc/tZNNd4F4Fx6RmwFWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uWffHfXDX4H/QUOy5JoTG8IApGo5gjkgpQgCt9z3iL90yKkv3IYYDU6dRMBaCnx1PrJLVnu3wrfpffMATFp6IkRDu8+YcuTaEbpEK8ZPymLwwxGgHTXmmj69BCuu7Cn/K/76UcJ/8n3I6zZ16DJ/7s0BVJw9DEozbzlBhmucdQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com; spf=pass smtp.mailfrom=pobox.com; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=dLUAk/uY; arc=none smtp.client-ip=64.147.108.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pobox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="OJK5+rus"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6e2b05edd46so588243a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 09:22:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1707499326; x=1708104126; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+imSJtxf176adv1L38bIPJf24ZMDxnz4d3q1WOYyKQE=;
-        b=OJK5+rus6F1AyXivlrEo+gEc6DR3qy/ewI+Q/JirZeMNhhsCsbzsgPX0z3fnFxJJGj
-         p6DUFSkcT7jDkIn9AgqVuzK6dMJFnRou4HmFc7038zeuzU2OUiTiYgUWfwMNAnHnAcP4
-         jmiaSzL7+S2Pnh0fIA/RD4435x3fGDwHTwWSRY8xYjOasOajzoFpEeHbWTRUSnU0H46i
-         TBS+KXGz8EzFKu8UZ7yHzjcfOEJ6upmPUltfS9U6cUgKqd5faWLau9oQSHw1dMMlaP3A
-         cufBLUgjATVA/IWXiaa0suzPq7d3vcgPrYBwfZMl12OIcpOSN+P5SKAD8nQ6HNqEIb/X
-         7Ktg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707499326; x=1708104126;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+imSJtxf176adv1L38bIPJf24ZMDxnz4d3q1WOYyKQE=;
-        b=Pu3aHE9wCNA1CiYvP0gZqBfIkIJwd9YzmYPnKQO7gZ+N7b9TSW7hHarTNkeSliw6Gd
-         uI98c5Vjl4pnocOtVWq39Y9ebhA5h5MRMUygFVjalHrysvLFlH95IyfCmItiLNLzRB1r
-         WRDzdqQ+ssyopJe7lbqIPjpJEbzoTym2nGUweC95jgrnv4tlg4xKM/wcjpQ8WnZtCzOs
-         klvhtvi4SDDHN5cH7zp37SYSzI3HP62e3ZsFWQ0fMoypsGALAckosz2x5geebzKzwb7P
-         T090hysU5KbTlXp1EDrm0We7LrocabyxHknNVoRNe7ZgbEfEZCmtbS4ERfJbgKNvgpkq
-         6Ucg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqWooFH+Toj74NXv9G8fiv18L6KfRLKPdhPaJEcTe8AKWW0939l4006gYbcfXO2uFsFuQWGSOfFlb3A2Ps5UxWMFjXwioUYmG+iZpn
-X-Gm-Message-State: AOJu0YxcbAUeguN0LsNPNMIDY/euGQlb+2OwSQcQzDeuxq6pGwICGMa/
-	OnqPwvMcnoX36UPfUDrwARrT7wUQtmEx4M1RFLdbXTO0g4m4QqR8pgCnXEXfkmo=
-X-Google-Smtp-Source: AGHT+IFVo1pyfJE5nNc0iZXG549RZyZgrMmyUpAXcQcZ48gSLZ324pgrOfBLIZmWlQVqzzGfl7rpPg==
-X-Received: by 2002:a9d:4f19:0:b0:6e1:34d7:27b1 with SMTP id d25-20020a9d4f19000000b006e134d727b1mr2335811otl.8.1707499326690;
-        Fri, 09 Feb 2024 09:22:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVl6Fpxn1AxKI+k4lodJiIXYHWQhjKKkC3ASjZ65vLhhYopbZD4x09DaxSONhI9f8fNv19KzFGRx1cEyAi+lcYnbk01QarhXSdQvJjFiZPx26YW9yk+m2bEXnvQO4Vm+xdI6xoOLpYg9y3dZKmS0g+tWyYI98LdWAIGjmXB25m2q4OH2vr2FWWl4kPhsyJkPHGQk5GY2NPD9aO4yHNB9FopjPSt0hHOhVTu6ZbduszvYPa6zwzw2mSoTa6oBmPPOg5Cj58vApHjPEYGb09XDfFSoupbxGYjPFBqsnOnzDpYU7Exzl+ppvMd90+W0t6+wu/+oSf8TbAdWO2ru3lhIwHQ6rOZFdGIwc2/cgx7xOA7GnY/DXTXZEglLjYG/e9zCA6Mx5N79QBEUV9dT1wA6Ijj7TEiqofo45d+BB+opNiu0Awrd3f/nin2pvp1FavRnd7Zxa1pdqG1DdGofLxzlk5Hhg==
-Received: from nicolas-tpx395.localdomain ([2606:6d00:11:3354::7a9])
-        by smtp.gmail.com with ESMTPSA id o19-20020ac85553000000b0042a31bc98b9sm860015qtr.24.2024.02.09.09.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 09:22:04 -0800 (PST)
-Message-ID: <49067f872e56d6f315a8b1b93bea92e54cba4874.camel@ndufresne.ca>
-Subject: Re: [PATCH v2] dt-bindings: media: Add sram-size Property for Wave5
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Nishanth Menon <nm@ti.com>, Krzysztof Kozlowski
-	 <krzysztof.kozlowski@linaro.org>
-Cc: Brandon Brnich <b-brnich@ti.com>, Nas Chung <nas.chung@chipsnmedia.com>,
-  Jackson Lee <jackson.lee@chipsnmedia.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley <conor+dt@kernel.org>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Darren
- Etheridge <detheridge@ti.com>
-Date: Fri, 09 Feb 2024 12:22:02 -0500
-In-Reply-To: <20240202125257.p4astjuxpzr5ltjs@dragster>
-References: <20240201184238.2542695-1-b-brnich@ti.com>
-	 <1209b7cf-5be2-4107-aa6b-d67a32ea3737@linaro.org>
-	 <20240202125257.p4astjuxpzr5ltjs@dragster>
-Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="dLUAk/uY"
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+	by pb-smtp1.pobox.com (Postfix) with ESMTP id C55291DA16E;
+	Fri,  9 Feb 2024 12:24:32 -0500 (EST)
+	(envelope-from junio@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:to:cc
+	:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding; s=sasl; bh=DuCZGSgSWVt6wv/8iFDabIywc
+	/tZNNd4F4Fx6RmwFWg=; b=dLUAk/uYz5Wvi/QjBILNK50FNd4A6q1hPz2Yi2DRf
+	Cr/BmqBaOToRHj6oOrYFS7mL6lI6TYZOaB9g8zF6opbiCKOHn3u8TgeAkG1oGKEu
+	ec9mdYu2cI/mxnR9deZo8dUmVz3Udf91JQ3LRY1VqBGqQsJ6agFmDBAUWRyNgeC4
+	1w=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+	by pb-smtp1.pobox.com (Postfix) with ESMTP id BD6531DA16D;
+	Fri,  9 Feb 2024 12:24:32 -0500 (EST)
+	(envelope-from junio@pobox.com)
+Received: from pobox.com (unknown [34.125.165.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 268C21DA16C;
+	Fri,  9 Feb 2024 12:24:32 -0500 (EST)
+	(envelope-from junio@pobox.com)
+From: Junio C Hamano <gitster@pobox.com>
+To: git@vger.kernel.org
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>,
+    git-packagers@googlegroups.com
+Subject: [ANNOUNCE] Git v2.43.1
+Date: Fri, 09 Feb 2024 09:24:31 -0800
+Message-ID: <xmqqttmhh7ow.fsf@gitster.g>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+X-Pobox-Relay-ID:
+ 166F9968-C770-11EE-9325-78DCEB2EC81B-77302942!pb-smtp1.pobox.com
+Content-Transfer-Encoding: quoted-printable
 
-Le vendredi 02 f=C3=A9vrier 2024 =C3=A0 06:52 -0600, Nishanth Menon a =C3=
-=A9crit=C2=A0:
-> On 11:47-20240202, Krzysztof Kozlowski wrote:
-> > On 01/02/2024 19:42, Brandon Brnich wrote:
-> > > Wave521c has capability to use SRAM carveout to store reference data =
-with
-> > > purpose of reducing memory bandwidth. To properly use this pool, the =
-driver
-> > > expects to have an sram and sram-size node. Without sram-size node, d=
-river
-> > > will default value to zero, making sram node irrelevant.
-> >=20
-> > I am sorry, but what driver expects should not be rationale for new
-> > property. This justification suggests clearly it is not a property for =
-DT.
-> >=20
->=20
-> Yup, the argumentation in the commit message is from the wrong
-> perspective. bindings are OS agnostic hardware description, and what
-> driver does with the description is driver's problem.
->=20
-> I will at least paraphrase my understanding:
-> In this case, however, the hardware block will limp along with
-> the usage of DDR (as is the current description), due to the
-> latencies involved for DDR accesses. However, the hardware block
-> has capability to use a substantially lower latency SRAM to provide
-> proper performance and hence for example, deal with higher resolution
+The latest maintenance release Git v2.43.1 is now available at
+the usual places.  This is only to flush the accumulated fixes
+on the master front down to the maintenance track.
 
-nit: I'd suggest to refer to "higher bandwidth" to generalize the combinati=
-on
-formed by resolution and frame rate. The resolution is always fixed with th=
-is
-IP, regardless if its fast enough of not. It may not match the stream creat=
-or
-intended frame rate though, which such optimization may fix.
+The tarballs are found at:
 
-> data streams. This SRAM is instantiated at SoC level rather than
-> embedded within the hardware block itself.
->=20
->=20
+    https://www.kernel.org/pub/software/scm/git/
+
+The following public repositories all have a copy of the 'v2.43.1'
+tag and the 'maint' branch that the tag points at:
+
+  url =3D https://git.kernel.org/pub/scm/git/git
+  url =3D https://kernel.googlesource.com/pub/scm/git/git
+  url =3D git://repo.or.cz/alt-git.git
+  url =3D https://github.com/gitster/git
+
+----------------------------------------------------------------
+
+Git 2.43.1 Release Notes
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+There is nothing exciting to see here.  Relative to Git 2.43, this
+release contains the fixes that have already been merged to the
+'master' branch of the development towards the next major release.
+
+Fixes since Git 2.43.0
+----------------------
+
+ * The way CI testing used "prove" could lead to running the test
+   suite twice needlessly, which has been corrected.
+
+ * Newer versions of Getopt::Long started giving warnings against our
+   (ab)use of it in "git send-email".  Bump the minimum version
+   requirement for Perl to 5.8.1 (from September 2002) to allow
+   simplifying our implementation.
+
+ * Earlier we stopped relying on commit-graph that (still) records
+   information about commits that are lost from the object store,
+   which has negative performance implications.  The default has been
+   flipped to disable this pessimization.
+
+ * Stale URLs have been updated to their current counterparts (or
+   archive.org) and HTTP links are replaced with working HTTPS links.
+
+ * trace2 streams used to record the URLs that potentially embed
+   authentication material, which has been corrected.
+
+ * The sample pre-commit hook that tries to catch introduction of new
+   paths that use potentially non-portable characters did not notice
+   an existing path getting renamed to such a problematic path, when
+   rename detection was enabled.
+
+ * The command line parser for the "log" family of commands was too
+   loose when parsing certain numbers, e.g., silently ignoring the
+   extra 'q' in "git log -n 1q" without complaining, which has been
+   tightened up.
+
+ * "git $cmd --end-of-options --rev -- --path" for some $cmd failed
+   to interpret "--rev" as a rev, and "--path" as a path.  This was
+   fixed for many programs like "reset" and "checkout".
+
+ * "git bisect reset" has been taught to clean up state files and refs
+   even when BISECT_START file is gone.
+
+ * Some codepaths did not correctly parse configuration variables
+   specified with valueless "true", which has been corrected.
+
+ * Code clean-up for sanity checking of command line options for "git
+   show-ref".
+
+ * The code to parse the From e-mail header has been updated to avoid
+   recursion.
+
+ * "git fetch --atomic" issued an unnecessary empty error message,
+   which has been corrected.
+
+ * Command line completion script (in contrib/) learned to work better
+   with the reftable backend.
+
+ * "git status" is taught to show both the branch being bisected and
+   being rebased when both are in effect at the same time.
+   cf. <xmqqil76kyov.fsf@gitster.g>
+
+ * "git archive --list extra garbage" silently ignored excess command
+   line parameters, which has been corrected.
+
+ * "git sparse-checkout set" added default patterns even when the
+   patterns are being fed from the standard input, which has been
+   corrected.
+
+ * Unlike other environment variables that took the usual
+   true/false/yes/no as well as 0/1, GIT_FLUSH only understood 0/1,
+   which has been corrected.
+
+ * Clearing in-core repository (happens during e.g., "git fetch
+   --recurse-submodules" with commit graph enabled) made in-core
+   commit object in an inconsistent state by discarding the necessary
+   data from commit-graph too early, which has been corrected.
+
+Also contains various documentation updates, code clean-ups and minor fix=
+ups.
+
+----------------------------------------------------------------
+
+Changes since v2.43.0 are as follows:
+
+Chandra Pratap (2):
+      sideband.c: remove redundant 'NEEDSWORK' tag
+      write-or-die: make GIT_FLUSH a Boolean environment variable
+
+Elijah Newren (12):
+      treewide: remove unnecessary includes from header files
+      treewide: remove unnecessary includes in source files
+      archive.h: remove unnecessary include
+      blame.h: remove unnecessary includes
+      fsmonitor--daemon.h: remove unnecessary includes
+      http.h: remove unnecessary include
+      line-log.h: remove unnecessary include
+      pkt-line.h: remove unnecessary include
+      submodule-config.h: remove unnecessary include
+      trace2/tr2_tls.h: remove unnecessary include
+      treewide: add direct includes currently only pulled in transitively
+      treewide: remove unnecessary includes in source files
+
+Eric Sunshine (1):
+      git-add.txt: add missing short option -A to synopsis
+
+Illia Bobyr (1):
+      rebase: clarify --reschedule-failed-exec default
+
+Jeff Hostetler (3):
+      trace2: fix signature of trace2_def_param() macro
+      t0211: test URL redacting in PERF format
+      t0212: test URL redacting in EVENT format
+
+Jeff King (24):
+      parse-options: decouple "--end-of-options" and "--"
+      bisect: always clean on reset
+      config: handle NULL value when parsing non-bools
+      setup: handle NULL value when parsing extensions
+      trace2: handle NULL values in tr2_sysenv config callback
+      help: handle NULL value for alias.* config
+      submodule: handle NULL value when parsing submodule.*.branch
+      trailer: handle NULL value when parsing trailer-specific config
+      fsck: handle NULL value when parsing message config
+      config: reject bogus values for core.checkstat
+      git_xmerge_config(): prefer error() to die()
+      imap-send: don't use git_die_config() inside callback
+      config: use config_error_nonbool() instead of custom messages
+      diff: give more detailed messages for bogus diff.* config
+      config: use git_config_string() for core.checkRoundTripEncoding
+      push: drop confusing configset/callback redundancy
+      gpg-interface: drop pointless config_error_nonbool() checks
+      sequencer: simplify away extra git_config_string() call
+      mailinfo: fix out-of-bounds memory reads in unquote_quoted_pair()
+      t5100: make rfc822 comment test more careful
+      mailinfo: avoid recursion when unquoting From headers
+      t1006: add tests for %(objectsize:disk)
+      commit-graph: retain commit slab when closing NULL commit_graph
+      index-pack: spawn threads atomically
+
+Jiang Xin (5):
+      t5574: test porcelain output of atomic fetch
+      fetch: no redundant error message for atomic fetch
+      test-pkt-line: add option parser for unpack-sideband
+      pkt-line: memorize sideband fragment in reader
+      pkt-line: do not chomp newlines for sideband messages
+
+Johannes Schindelin (3):
+      ci: avoid running the test suite _twice_
+      packfile.c: fix a typo in `each_file_in_pack_dir_fn()`'s declaratio=
+n
+      trace2: redact passwords from https:// URLs by default
+
+Josh Brobst (1):
+      builtin/reflog.c: fix dry-run option short name
+
+Josh Soref (13):
+      doc: update links to current pages
+      doc: switch links to https
+      doc: update links for andre-simon.de
+      doc: refer to internet archive
+      CodingGuidelines: move period inside parentheses
+      CodingGuidelines: write punctuation marks
+      SubmittingPatches: drop ref to "What's in git.git"
+      SubmittingPatches: discourage new trailers
+      SubmittingPatches: update extra tags list
+      SubmittingPatches: provide tag naming advice
+      SubmittingPatches: clarify GitHub visual
+      SubmittingPatches: clarify GitHub artifact format
+      SubmittingPatches: hyphenate non-ASCII
+
+Julian Prein (1):
+      hooks--pre-commit: detect non-ASCII when renaming
+
+Junio C Hamano (13):
+      orphan/unborn: add to the glossary and use them consistently
+      orphan/unborn: fix use of 'orphan' in end-user facing messages
+      revision: parse integer arguments to --max-count, --skip, etc., mor=
+e carefully
+      git.txt: HEAD is not that special
+      git-bisect.txt: BISECT_HEAD is not that special
+      refs.h: HEAD is not that special
+      docs: AUTO_MERGE is not that special
+      docs: MERGE_AUTOSTASH is not that special
+      doc: format.notes specify a ref under refs/notes/ hierarchy
+      remote.h: retire CAS_OPT_NAME
+      archive: "--list" does not take further options
+      sparse-checkout: use default patterns for 'set' only !stdin
+      Git 2.43.1
+
+Linus Arver (3):
+      commit: ignore_non_trailer computes number of bytes to ignore
+      trailer: find the end of the log message
+      trailer: use offsets for trailer_start/trailer_end
+
+Maarten van der Schrieck (1):
+      Documentation: fix statement about rebase.instructionFormat
+
+Marcel Krause (1):
+      doc: make the gitfile syntax easier to discover
+
+Michael Lohmann (2):
+      Documentation/git-merge.txt: fix reference to synopsis
+      Documentation/git-merge.txt: use backticks for command wrapping
+
+Patrick Steinhardt (31):
+      ci: reorder definitions for grouping functions
+      ci: make grouping setup more generic
+      ci: group installation of Docker dependencies
+      ci: split out logic to set up failed test artifacts
+      ci: unify setup of some environment variables
+      ci: squelch warnings when testing with unusable Git repo
+      ci: install test dependencies for linux-musl
+      ci: add support for GitLab CI
+      commit-graph: disable GIT_COMMIT_GRAPH_PARANOIA by default
+      t0410: mark tests to require the reffiles backend
+      t1400: split up generic reflog tests from the reffile-specific ones
+      t1401: stop treating FETCH_HEAD as real reference
+      t1410: use test-tool to create empty reflog
+      t1417: make `reflog --updateref` tests backend agnostic
+      t3310: stop checking for reference existence via `test -f`
+      t4013: simplify magic parsing and drop "failure"
+      t5401: speed up creation of many branches
+      t5551: stop writing packed-refs directly
+      t6301: write invalid object ID via `test-tool ref-store`
+      reftable: wrap EXPECT macros in do/while
+      reftable: handle interrupted reads
+      reftable: handle interrupted writes
+      reftable/stack: verify that `reftable_stack_add()` uses auto-compac=
+tion
+      reftable/stack: perform auto-compaction with transactional interfac=
+e
+      reftable/stack: reuse buffers when reloading stack
+      reftable/stack: fix stale lock when dying
+      reftable/stack: fix use of unseeded randomness
+      reftable/merged: reuse buffer to compute record keys
+      reftable/block: introduce macro to initialize `struct block_iter`
+      reftable/block: reuse buffer to compute record keys
+      tests: adjust whitespace in chainlint expectations
+
+Ren=C3=A9 Scharfe (14):
+      column: release strbuf and string_list after use
+      i18n: factorize even more 'incompatible options' messages
+      push: use die_for_incompatible_opt4() for - -delete/--tags/--all/--=
+mirror
+      repack: use die_for_incompatible_opt3() for -A/-k/--cruft
+      revision: use die_for_incompatible_opt3() for - -graph/--reverse/--=
+walk-reflogs
+      revision, rev-parse: factorize incompatibility messages about - -ex=
+clude-hidden
+      clean: factorize incompatibility message
+      worktree: standardize incompatibility messages
+      worktree: simplify incompatibility message for --orphan and commit-=
+ish
+      show-ref: use die_for_incompatible_opt3()
+      t6300: avoid hard-coding object sizes
+      rebase: use strvec_pushf() for format-patch revisions
+      fast-import: use mem_pool_calloc()
+      t1006: prefer shell loop to awk for packed object sizes
+
+Rub=C3=A9n Justo (1):
+      status: fix branch shown when not only bisecting
+
+Shreyansh Paliwal (1):
+      test-lib-functions.sh: fix test_grep fail message wording
+
+Stan Hu (2):
+      completion: refactor existence checks for pseudorefs
+      completion: support pseudoref existence checks for reftables
+
+Todd Zullinger (2):
+      perl: bump the required Perl version to 5.8.1 from 5.8.0
+      send-email: avoid duplicate specification warnings
 
