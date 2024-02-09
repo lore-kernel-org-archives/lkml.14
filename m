@@ -1,183 +1,201 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F275D745ED;
-	Fri,  9 Feb 2024 15:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89737317B;
+	Fri,  9 Feb 2024 15:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707493914; cv=none; b=KvsVv4gn/3sOVM/OF+I26m4N5E6vbA0gX0kodu6mXqtoup6D0GuiJtSWGwCmVAtAG4VPsFM94jDIpvn2AdyC3SQX9KNpYFUEiRR6K6ktJBie/dRWQBw2zvqCPVAA8I8k7hn01NRnzddvSZXkYEIn44e8McSUSqAJ4tp2fLNLTJQ=
+	t=1707494054; cv=none; b=S48iZISMA8Zpx5L0IeX73x4nShEUjAmR62Pp6IF+3sZ2LtYRt03/uE8CH/mqxEn84yUD4Rm246oF+x2n5l24cK1N4gdwh8EJ+/4ad41ZEmSLKTbM6VUn1PkX8Ytm9pKRB556Yf/mAVbN9HW2Jdf3PaItQFnw1u9gO86wyxWpNsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707493914; c=relaxed/simple;
-	bh=KgpW4VY9CZqDo149P1qi0JCQnE48b3bQgzOYgHCZBME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPCMiX7zUlLzuIX6n/KHwckmv0wtpZU3N0rrWirxT7MHDnVwOMY3CVHLpmp4IZmzqzWbb5offJ47IyphgYlykd+bJsX1VIC1uCcywzzsr4KMQ34XDf3TVdP0XwHFhVXKRR5mXCcwE7XGz4IHzaP76VBiCNK/0BVOVjq2X+6fb1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=il7iGCQt; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1707494054; c=relaxed/simple;
+	bh=NfxzhdKyztjF8ciazrBlmb+rl5JXJQ+cQZovv89eN0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AzoOHIRtrX4Q820EEjNi/zACPwdh8r4Y5kvMXqRKPuKWhO1+uommUd1KjRuZ5zP1z+6oFZducfijb8HNG/yIilzPmit34/+rUnbTiOeaWwWtMEy/emFiAqGf5oGcA/rsJKvyUDrPMcbDRmCfPm/nzBKUSKL2XDaJ94yAK93cac4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=qJq53reP; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="il7iGCQt"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 37D7740E01A9;
-	Fri,  9 Feb 2024 15:51:43 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id nkuBbCb5PlRd; Fri,  9 Feb 2024 15:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707493900; bh=4nFYw4TYmMoF9MsLkbg5jSVxGnaMvAye6HsLrHO4ya8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=il7iGCQttaGs8WKU16jbSFw4EuijBKP7R6qYt6vwe7pSpqPUYwks1l7a2qTqESigV
-	 x1Uner775xxRAOpGnXwP3kNMMnD7y89ase9C1XoLNem4c7w/AdLS/oouPTdZteS3Za
-	 bo1rq89Qy7Zsra7f1+KBzFAZOhNh5sJTl4Xy4r7t2uVS+f3PamatGL7d6bFDXeauqQ
-	 iI0lMblqqZhMo35cjHZNIE0QszNzmk5ejk+TQtUDhzNf/4J/T1xkdJ2ro8LSxgFb3X
-	 dhFNxhRc7/B5SlDwQQxqg4NFEaaPoG+lcwccdlPt69PZRBPl9SoubJsdteJaGizIGG
-	 0PNGs+1oET4UyXGUjg+aOc3bqACWMZfzhAiYymn7xWIsB2wMiTjEjlXP83cFiBljNi
-	 bDigYN4MlML/IYr4DiJzrJCAAXxnKMvq5JCoL1LaUQZSlPvwoo0fRngpZuKZbwdXl6
-	 qD7WWGQg+Bw06WKxv9gnc7Q3fjiTixInSyHRhjZv8kOtC5bXWlpUrhGFLmON19EreF
-	 9DCLt1SlA84zbMD92Sg42GQnvyr6ofZ8FIlb6B3f83lo+J9xLWcG74RgaKHY03a97v
-	 snll6RtaVaxteb7Ib3SVeC2Ab4/bmSz0Nfy23qp3y/vd6bnVuzmKfErBpcam5oxNhO
-	 Feg/ayjyRTMy8zSnVSerzAjk=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DC60F40E01F7;
-	Fri,  9 Feb 2024 15:51:27 +0000 (UTC)
-Date: Fri, 9 Feb 2024 16:51:19 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc: "Yuan, Perry" <Perry.Yuan@amd.com>,
-	"rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-	"Limonciello, Mario" <Mario.Limonciello@amd.com>,
-	"viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-	"Huang, Ray" <Ray.Huang@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	"Huang, Shimmer" <Shimmer.Huang@amd.com>,
-	"Du, Xiaojian" <Xiaojian.Du@amd.com>,
-	"Meng, Li (Jassmine)" <Li.Meng@amd.com>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 0/6] AMD Pstate Fixes And Enhancements
-Message-ID: <20240209155119.GAZcZJ92bTnwwO8l6Z@fat_crate.local>
-References: <cover.1707363758.git.perry.yuan@amd.com>
- <20240208102122.GAZcSrIkbPJfIExdF6@fat_crate.local>
- <BL1PR12MB514409256AE93E5D13556F90F7442@BL1PR12MB5144.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="qJq53reP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1707494018; x=1708098818; i=deller@gmx.de;
+	bh=NfxzhdKyztjF8ciazrBlmb+rl5JXJQ+cQZovv89eN0A=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=qJq53rePK2vW8Lv3zisaV/7HPKeiY/59o73G2CBKrbefuehS4eDm5t059sdTI7kM
+	 bnd3I3zMbKqb3aS1EPyiztXU49TTqtY/BlYZUmmCRegAvmALA1fd+xwLf/TGGE8xH
+	 32jDL3V/WDVyc1rfd1J48HG1cJmY0f6ff2Z0v2uQQCgePs/Wae/i4neq6CgR8a4gy
+	 gB60G5HJSj6IiJETALpbvtD84RNgepS1gtMrejhZCMHgPXFo/Q5yESGLO60k/uBLX
+	 +OKTqkD226MnUhjm1tvI+BbynlEuehsPHTNHvqbyUFsGF6nBahyHaU1NZcuErTYln
+	 nMDBSqqjZsl7M3W4Tw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([94.134.148.154]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3UZ6-1rXuxk1fE2-000ZEv; Fri, 09
+ Feb 2024 16:53:38 +0100
+Message-ID: <8f6efa96-0744-4313-bb15-b38a992e05fc@gmx.de>
+Date: Fri, 9 Feb 2024 16:53:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BL1PR12MB514409256AE93E5D13556F90F7442@BL1PR12MB5144.namprd12.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] fbdev/hyperv_fb: Fix logic error for Gen2 VMs in
+ hvfb_getmem()
+Content-Language: en-US
+To: Michael Kelley <mhklinux@outlook.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+ "javierm@redhat.com" <javierm@redhat.com>, "daniel@ffwll.ch"
+ <daniel@ffwll.ch>, "airlied@gmail.com" <airlied@gmail.com>
+References: <20240201060022.233666-1-mhklinux@outlook.com>
+ <f2fe331b-06cb-4729-888f-1f5eafe18d0f@suse.de>
+ <SN6PR02MB4157811F082C62B6132EC283D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <SN6PR02MB4157811F082C62B6132EC283D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QSiZ+s4XAjHSPPDYeN2Jp309cR9lAC54p6AHsoDUVta6UMqBck8
+ uBQXIKMGM1WXxKm8/pNobcID9yl2jZVPS3ij5o7/r1mcIc6VdLuXSnxeia4eJeIzPu421Gu
+ SIvaTPW/KceoYB4E2jQutzimEzJURU9fhinfIIaJM76ybv7YUFctYDwGE51YlfzRHV3L5hV
+ 8XWwOJ7ssNXgHhyq+0/fw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:x1QbuVO1suU=;Z+0HoRj/htJU/tvJRZwKRTyrd6J
+ odHg16h6Mdr8rT4caDUlCHget/VV65tATPe9XVIzCRM9TynVBgcYGWh7qSpopMhT4PX/kscum
+ YUOLjmpo60RsJT/Ju11pCiB2pOSFpS2Wh6gSAtiz+fY74HaLGQSnsOkNn/QnGd95q03a7fRiq
+ cG0qIEE4Hh50GMk0r0BTmySTPSGHf0muNRzij364tqOwn3nHdWv++dDK+j9CqDMmoRS5bqM+P
+ XXNwtKxzFOdRO+v3u5eNZdsBY7OwNlamZT9qWvowHvG0OvgGypyu8sv0ILc+OUhdItwhXAUFk
+ BEKF+ThuKDpX9M7DRfFUDtX5HILWn3wFjdjbVw3kyabTGUBYoVD1ei7PjOyRqBBddICLZrVhf
+ SfnStDv+aqZCFgHFmJrMT0jbn8y6jozAXKVoNIUIohPtFE+7Yo/+YEkU2eEHiZ6HpETWzthcs
+ brqZFHSMGT0/mlWGXX+Whi4aFuMDTomL4IwqeZJ8MwiU8aVEBIxxv73isxzb/YJAqV0Qx0I7d
+ ag2Yk1dnf0uZUTtLUHjyLN/mqZGTACjCoohVFEu9kD9UfIYa/gsrwPL98n6zZuzw4LcMqWraA
+ GGXHP2fG2GPD82Wed+88n/Bt2GQ2bdTZBCcClX3uVi1Hqh23Q89Zs12rWRx9oBqKlFOrix57j
+ FHnyl1ahM35aCzJoZ9Q/Bi3KT1+WF7DDpiyOwv+oyz9NdqERHeutsOj+ob4/c93XFCmE8fQNX
+ pdAToYLdIQ0SulrNo4gN0M+7of7OV53NvFQRhTHh5NwBEPfDKZDtR8fkMCfV0egOcXOrKzT7l
+ CvWm4EfPiJRjNnce2CQwKMKRi3ITVO82qkchLCVVHdpHU=
 
-On Thu, Feb 08, 2024 at 11:09:47PM +0000, Deucher, Alexander wrote:
-> Why?
+On 2/9/24 16:23, Michael Kelley wrote:
+> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, February 1=
+, 2024 12:17 AM
+>>
+>> Hi
+>>
+>> Am 01.02.24 um 07:00 schrieb mhkelley58@gmail.com:
+>>> From: Michael Kelley <mhklinux@outlook.com>
+>>>
+>>> A recent commit removing the use of screen_info introduced a logic
+>>> error. The error causes hvfb_getmem() to always return -ENOMEM
+>>> for Generation 2 VMs. As a result, the Hyper-V frame buffer
+>>> device fails to initialize. The error was introduced by removing
+>>> an "else if" clause, leaving Gen2 VMs to always take the -ENOMEM
+>>> error path.
+>>>
+>>> Fix the problem by removing the error path "else" clause. Gen 2
+>>> VMs now always proceed through the MMIO memory allocation code,
+>>> but with "base" and "size" defaulting to 0.
+>>
+>> Indeed, that's how it was supposed to work. IDK how I didn't notice thi=
+s
+>> bug. Thanks a lot for the fix.
+>>
+>>>
+>>> Fixes: 0aa0838c84da ("fbdev/hyperv_fb: Remove firmware framebufferswit=
+h aperture helpers")
+>>> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+>>
+>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>
+> Wei Liu and Helge Deller --
+>
+> Should this fix go through the Hyper-V tree or the fbdev tree?   I'm not
+> aware of a reason that it really matters, but it needs to be one or the
+> other, and sooner rather than later, because the Hyper-V driver is broke=
+n
+> starting in 6.8-rc1.
 
-Because we have those rules, you know. You should send about once a week,
-unless you've reworked your set fundamentally.
+I'm fine with either.
+If there is an upcoming hyper-v pull request, I'm fine if this is included
+there. If not, let me know and I can take it via fbdev.
 
-Otherwise maintainers mailboxes would be a serious mess. Not that
-they're already such now...
-
-> In this case, there have been a number of review comments which have
-> been addressed in the new revisions of the patch set.  Why delay the
-> new revisions?
-
-See above.
-
-And see below for the "whopping" differences between the last two.
-
-> You'll ultimately get the same amount of email just with a much longer
-> latency.
-
-No, you'll have a lot less email. You send the set, sit tight and
-collect review feedback, work it in and send again after a week or so.
-
-diff v5..v6 - definitely not resend one day later just to pick up tags.
------------
---- v5_20240207_perry_yuan_amd_pstate_fixes_and_enhancements.mbx	2024-02-09 16:43:29.487104935 +0100
-+++ v6_20240208_perry_yuan_amd_pstate_fixes_and_enhancements.mbx	2024-02-09 16:42:55.671303380 +0100
-@@ -23,6 +23,7 @@ Reported-by: Gino Badouri <badouri.g@gma
- Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218171
- Fixes: fbd74d1689 ("ACPI: CPPC: Fix enabling CPPC on AMD systems with shared memory")
- Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
- ---
-  arch/x86/kernel/acpi/cppc.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
-@@ -293,6 +294,7 @@ Above message is not clear enough to ver
- 
- Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
- Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
- ---
-  drivers/acpi/cppc_acpi.c | 4 +++-
-  1 file changed, 3 insertions(+), 1 deletion(-)
-@@ -342,8 +344,9 @@ $ cat /sys/devices/system/cpu/cpu0/acpi_
- $ cat /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_freq
- 0
- 
--Signed-off-by: Perry Yuan <perry.yuan@amd.com>
- Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-+Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
- ---
-  drivers/cpufreq/amd-pstate.c | 57 ++++++++++++++++++++++++++++++++++--
-  include/linux/amd-pstate.h   |  6 ++++
+Helge
 
 
-diff v4..v5 - *definitely* *not* warranting a new resend on the next
-day!
------------
---- v4_20240206_perry_yuan_amd_pstate_fixes_and_enhancements.mbx	2024-02-09 16:43:53.922961536 +0100
-+++ v5_20240207_perry_yuan_amd_pstate_fixes_and_enhancements.mbx	2024-02-09 16:43:29.487104935 +0100
-@@ -343,13 +343,14 @@ $ cat /sys/devices/system/cpu/cpu0/acpi_
- 0
- 
- Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
- ---
-- drivers/cpufreq/amd-pstate.c | 59 ++++++++++++++++++++++++++++++++++--
-+ drivers/cpufreq/amd-pstate.c | 57 ++++++++++++++++++++++++++++++++++--
-  include/linux/amd-pstate.h   |  6 ++++
-- 2 files changed, 63 insertions(+), 2 deletions(-)
-+ 2 files changed, 61 insertions(+), 2 deletions(-)
- 
- diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
--index 77effc3caf6c..874d8b663790 100644
-+index 77effc3caf6c..ff4727c22dce 100644
- --- a/drivers/cpufreq/amd-pstate.c
- +++ b/drivers/cpufreq/amd-pstate.c
- @@ -67,6 +67,7 @@ static struct cpufreq_driver amd_pstate_epp_driver;
-@@ -372,18 +373,16 @@ index 77effc3caf6c..874d8b663790 100644
- +static int __init dmi_matched_7k62_bios_bug(const struct dmi_system_id *dmi)
- +{
- +	/**
--+	 * match the broken bios for family 17h, model 31h processor
-++	 * match the broken bios for family 17h processor support CPPC V2
- +	 * broken BIOS lack of nominal_freq and lowest_freq capabilities
- +	 * definition in ACPI tables
- +	 */
--+	if (boot_cpu_data.x86 == 0x17 && boot_cpu_data.x86_model == 0x31 &&
--+			boot_cpu_has(X86_FEATURE_ZEN2)) {
-++	if (boot_cpu_has(X86_FEATURE_ZEN2)) {
- +		quirks = dmi->driver_data;
--+		pr_info("hardware type %s found\n", dmi->ident);
-++		pr_info("Overriding nominal and lowest frequencies for %s\n", dmi->ident);
- +		return 1;
- +	}
- +
--+
- +	return 0;
- +}
- +
 
--- 
-Regards/Gruss,
-    Boris.
+>
+> Michael
+>
+>>
+>>> ---
+>>>    drivers/video/fbdev/hyperv_fb.c | 2 --
+>>>    1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/hyperv_fb.c
+>> b/drivers/video/fbdev/hyperv_fb.c
+>>> index c26ee6fd73c9..8fdccf033b2d 100644
+>>> --- a/drivers/video/fbdev/hyperv_fb.c
+>>> +++ b/drivers/video/fbdev/hyperv_fb.c
+>>> @@ -1010,8 +1010,6 @@ static int hvfb_getmem(struct hv_device *hdev,
+>> struct fb_info *info)
+>>>    			goto getmem_done;
+>>>    		}
+>>>    		pr_info("Unable to allocate enough contiguous physical memory on =
+Gen 1 VM. Using MMIO instead.\n");
+>>> -	} else {
+>>> -		goto err1;
+>>>    	}
+>>>
+>>>    	/*
+>>
+>
+>
 
-https://people.kernel.org/tglx/notes-about-netiquette
