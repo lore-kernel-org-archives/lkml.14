@@ -1,108 +1,83 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135B5657B6;
-	Fri,  9 Feb 2024 07:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168FD65BA6
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 07:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707462921; cv=none; b=mutJmeIhn6JiaJUDc1HYH10fuJtsH/8muVpZjPTx4zGFvAE18fCfZeOzfg7vmmRYdKkOACH+AS6Akob4iAUeHCASAPVcouQ27hiRp2V1pqr45nQZak9yOKB8IsPpfW+7rva0Y86LE2rxMz5CgPfrqDhJA8/ot2U9/b33tWOdCH8=
+	t=1707463409; cv=none; b=A1x8WcvQSo/nGvlX7FFSo3710/+OLdyXy5jGSt6skberilH57dO+y0KFxx6dZ3cSkEQaSnWgC2nVyrsdSi6+AZGaL5Ub3VU+SyUqY7p7L3VZtCLWAqGiBPT8Pk5w7WJt3d/DEzn41ECC4qUKbGwBMIy3p+Aft/tEklzaQoMhxLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707462921; c=relaxed/simple;
-	bh=SsACAYr0WLs84wyRPCGBPmrdamG2JsarkOqlVOkUGPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zgp+D/4v6/rGOJP9Rd2N3A7xnOpeGNdKVk2Pp2eoT9iCOr4q0oHnIiMtWXt6FlWW8ncirA2qM2o78zRC8cPiXqrRQTn5/h9ZzHPDfE6cHTMHV650tZdyO5Sk5ssEjPKaf+x4snrVfKqc1a1qLZDhYfoKYj3aHdp797Qul+rPDtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FPJtZ90m; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707463409; c=relaxed/simple;
+	bh=BXHf8bSFqMRDKpHNP0Bi4qB+zeNTBA97tTKWD4lT45U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y5cTqxtT+UkRDyE5iAL4EGDHzK/vn+EVE8f8CVFdlCYHlXv024h7EnmP6ZyYy+DHrviF0DxfBicqsIFJidU+us2H5M38mI8HN0wvG+CTdZk5JEoTjnAQg4TrZF6yqaTZ47jLD6X6J01IOXxMkgym9ICYnmgOa6i07J5oVBAwFqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=LXtykBmX; arc=none smtp.client-ip=185.136.64.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FPJtZ90m"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41972Lf1014051;
-	Fri, 9 Feb 2024 07:15:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=6uEUkSqsBPdEejGxM3M5CA/XkPf07LNpr+fq0kqwRvQ=;
- b=FPJtZ90mLXop9YsX2qdwEvrGfveCuQnhyshF2ZvDnlbl6CD2/1hNdG0mMoM6k1YnXrN0
- dTIQoEnljd1ZB4azzVgBwOXHZ+M5KtZmqwf7og4SiR5/VunuEYsIi2Jcz0YYYrKDf9CL
- NqoPgv/O7NPyJ0iQTgW6/YyeGieg23ewN2BgPeSW0nKc9zWQ7iUwWaLQ2ncWhX/LOrz0
- PL4OL4XOKLFq8s/lb2zP+QLm1e6EeL1NBv4DRFkPllPmoIx2UV0WqTctaoOzcyWszxta
- BvcA8iUTQ6HiKGSNOg5eRrqT6Qc/h12SgUcgKXZumYDCAQS8eC5Dodg32P/a3N5KGUCA hw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w5fabga8v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Feb 2024 07:15:08 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 419746BD020459;
-	Fri, 9 Feb 2024 07:15:08 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w5fabga8c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Feb 2024 07:15:08 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4196LUrO008818;
-	Fri, 9 Feb 2024 07:15:07 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w20701u4g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Feb 2024 07:15:06 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4197F4dh18023094
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 9 Feb 2024 07:15:05 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9F2920043;
-	Fri,  9 Feb 2024 07:15:04 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A4C020040;
-	Fri,  9 Feb 2024 07:15:02 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.43.98.150])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  9 Feb 2024 07:15:01 +0000 (GMT)
-Date: Fri, 9 Feb 2024 12:44:59 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: hch@lst.de, djwong@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-        dchinner@redhat.com, jack@suse.cz, chandan.babu@oracle.com,
-        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tytso@mit.edu, jbongio@google.com
-Subject: Re: [PATCH 0/6] block atomic writes for XFS
-Message-ID: <ZcXQ879zXGFOfDaL@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
-References: <20240124142645.9334-1-john.g.garry@oracle.com>
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="LXtykBmX"
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 20240209072323089fd9fc9dc76c2512
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 09 Feb 2024 08:23:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=jan.kiszka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=d4oZ1vDSY7M3mK9PrAl/qDky65iWWq9JdkDYhp5N1LQ=;
+ b=LXtykBmXXuQVm7H477xpGO3T6+CsIje7Ltj13Zg+YYWkN5QB95PRaWhFOWIhgD7c51yzIf
+ NBvzmUTrbd0rQCRD3YnfZwDYJW1qQXwExnLV2MUFMqdKyuCWhV7ihrkDEJ8O0IvbREzAvu0K
+ CI0hY9geyEZOacmILngbU6Rd8QYZU=;
+From: Jan Kiszka <jan.kiszka@siemens.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Bao Cheng Su <baocheng.su@siemens.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 1/7] dt-bindings: arm: ti: Add binding for Siemens IOT2050 SM variant
+Date: Fri,  9 Feb 2024 08:23:15 +0100
+Message-Id: <595d8d79647a0f5e6e635a22ee0fee011f8a5c5e.1707463401.git.jan.kiszka@siemens.com>
+In-Reply-To: <cover.1707463401.git.jan.kiszka@siemens.com>
+References: <cover.1707463401.git.jan.kiszka@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124142645.9334-1-john.g.garry@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9Z0CLsJy3gXKMWD_95NZWXTjFBXM7XXW
-X-Proofpoint-GUID: f6P1CVQwjDT3E8wBLngat6hatCdQFL3G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-09_04,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015 impostorscore=0
- mlxscore=0 adultscore=0 priorityscore=1501 phishscore=0 bulkscore=0
- mlxlogscore=929 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402090050
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-294854:519-21489:flowmailer
 
-On Wed, Jan 24, 2024 at 02:26:39PM +0000, John Garry wrote:
-> This series expands atomic write support to filesystems, specifically
-> XFS. Since XFS rtvol supports extent alignment already, support will
-> initially be added there. When XFS forcealign feature is merged, then we
-> can similarly support atomic writes for a non-rtvol filesystem.
+From: Su Bao Cheng <baocheng.su@siemens.com>
 
-Hi John,
+This new variant is derived from the Advanced PG2 board, removing the
+Arduino interface, and adding a new ASIC for communicating with the
+PLC 1200 signal modules.
 
-Along with rtvol check, we can also have a simple check to see if the 
-FS blocksize itself is big enough to satisfy the atomic requirements.
-For eg on machines with 64K page, we can have say 16k or 64k block sizes
-which should be able to provide required allocation behavior for atomic
-writes. In such cases we don't need rtvol.
+Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-ojaswin
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index c6506bccfe88..1723e1fa7fee 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -93,6 +93,7 @@ properties:
+               - siemens,iot2050-advanced
+               - siemens,iot2050-advanced-m2
+               - siemens,iot2050-advanced-pg2
++              - siemens,iot2050-advanced-sm
+               - siemens,iot2050-basic
+               - siemens,iot2050-basic-pg2
+               - ti,am654-evm
+-- 
+2.35.3
+
