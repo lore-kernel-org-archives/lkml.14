@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171D584A2E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4023284A43;
 	Fri,  9 Feb 2024 18:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707504383; cv=none; b=Q1CiQmuN47HrGeMv1ThYf4X362jdrdRLE7EQ01KHbPhRW6Pah3Z9eQXArkSdSTTL8MFpTW2Wfup5kAK3E6/za/moAiQQeWjaffwL+/gNZI4V3j4WG/A5DM14F3+uydDDfXNkIhL+PiGvs2ikdR87gabAxx+oMD3N0rZT9iJT/d4=
+	t=1707504383; cv=none; b=roAHvKP6mOQ3FXeRn8o0w1th205uOD0P8j/G9UhhsvxJU5Ban1rDFY1Z8p4wDO4EeFo2x83WDILbYPccu8+80hZSKvoU1i3/CYuVYYCAsM4npyqmP1TUnn6GzzxxiCTj0pEv4DwX9j8Sngsl036gblSrAoEGy/rLmXf5GiPbNJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707504383; c=relaxed/simple;
-	bh=21GVvSyssdPkDuB5I5wVgNGIIIXTJP3ZhVI6r1UTgL4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VzH3OXRPxRtcZfEzO4TLiLqJCMBiyPzCrRs4+G1j3P+Sc4JfrNcMOxpwO8GEOcb5jgCnP8ebVgqkFRDj09+L/FvJz8WOe3I6Ath0apmKcES7rxBzRuPy7JHlePxyFpbuGJNg+QFnTjyl63WKII7UYGtRVy66ef4vQSMZODvnAHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIoLZ3O8; arc=none smtp.client-ip=10.30.226.201
+	bh=CU1FbzJp8Gdt4/dbUgCCbnNWiK69iRgtHHmrGbDjoBw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=o1si/AU6R4hg+ph1dFuQvZU9V7MBHvfqZdLCADsVEQ8GtrHhw61AeclLcO7eYu4GxS5zNmiAvK7//g8N/9HPP7n4JA9219pz73gZ3jDBrUW36rVxt7TQ+/XVN8OGe7nFQZBUgRIpIMJnZkw9JeetKKyFd0bBBP6zc/Vx/sppdSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byUEMia4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIoLZ3O8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E222AC433F1;
-	Fri,  9 Feb 2024 18:46:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byUEMia4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 185B8C433C7;
+	Fri,  9 Feb 2024 18:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707504382;
-	bh=21GVvSyssdPkDuB5I5wVgNGIIIXTJP3ZhVI6r1UTgL4=;
+	s=k20201202; t=1707504383;
+	bh=CU1FbzJp8Gdt4/dbUgCCbnNWiK69iRgtHHmrGbDjoBw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=FIoLZ3O8Fv5IrrZjFJgGz8kn+dliXxwyj4uqwoUyv9/+j2JNoqOlB32ewFUvhk8uC
-	 yKt1lRf6qQSvR9GFcRqEVwb4UNksS5FYBe92ZUWmOC50CETpD3wlrrbKd8VoWpRE7s
-	 G28tK5IzNFNnWCEWRFRVNuUfBv6CHinIhrTFu7xZ838d4T18tm58gBDa5XnmVKuiYl
-	 3ZlRSiHssV8U34Oo7UF8rYHxtgjQgwAuYUJRpI5KgsgFQBHBdghVFAn3+28Tfpe0kJ
-	 NSxOzRfkssqwWRj3/bEIRhilSkDBkcCjlM+ZifRigADdETRywgPMF0nar5DkEr1osN
-	 kVijmSpX4OPIg==
+	b=byUEMia4rF22uPUMtLq0fjADivp8gwYe6HbgxsGjApcky5F5wICXtfSv+PwTNuYVO
+	 F0mF3Sp+qtLHQoCaR1ykXgKlDvEbzcUTkxzQBS2dzfZ6uh6XW0PjNM2jo8ny3uRY/X
+	 F7Tgi7T8taSdgoNxmYZicRGy1YrXEDYJ2h+GjwQN5R1yHyp5OEm08mZoDX/qkubkhX
+	 lL0jWqaHqMUaQKnNb5iJJoZ5DgC/838Mqn/vDUmwzTv2myK/iyGd9Lm2bbSl1m8AjI
+	 GsBiXQvAa1p080POSrRUyHs52V47eAFF3d7GzSiFpsxMRiuZVfgmbDvDfOXNLMdhZq
+	 swAFpUJ6uPMYA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CC564C41677;
-	Fri,  9 Feb 2024 18:46:22 +0000 (UTC)
-Subject: Re: [GIT PULL] MMC fixes for v6.8-rc4
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 01B0CE2F312;
+	Fri,  9 Feb 2024 18:46:23 +0000 (UTC)
+Subject: Re: [GIT PULL] hwmon fixes for v6.8-rc4
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240209124447.768859-1-ulf.hansson@linaro.org>
-References: <20240209124447.768859-1-ulf.hansson@linaro.org>
+In-Reply-To: <20240209150423.1339290-1-linux@roeck-us.net>
+References: <20240209150423.1339290-1-linux@roeck-us.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240209124447.768859-1-ulf.hansson@linaro.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.8-rc2
-X-PR-Tracked-Commit-Id: cc9432c4fb159a3913e0ce3173b8218cd5bad2e0
+X-PR-Tracked-Message-Id: <20240209150423.1339290-1-linux@roeck-us.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.8-rc4
+X-PR-Tracked-Commit-Id: 34cf8c657cf0365791cdc658ddbca9cc907726ce
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eb747bcc3611c7b3df6c8e5826f5003daeea6e9f
-Message-Id: <170750438283.872.9640858363374581197.pr-tracker-bot@kernel.org>
-Date: Fri, 09 Feb 2024 18:46:22 +0000
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+X-PR-Merge-Commit-Id: 5ca243c23ee122ed983a2af3d454a4b58677d2f5
+Message-Id: <170750438300.872.15951413663282480849.pr-tracker-bot@kernel.org>
+Date: Fri, 09 Feb 2024 18:46:23 +0000
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri,  9 Feb 2024 13:44:47 +0100:
+The pull request you sent on Fri,  9 Feb 2024 07:04:23 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.8-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.8-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eb747bcc3611c7b3df6c8e5826f5003daeea6e9f
+https://git.kernel.org/torvalds/c/5ca243c23ee122ed983a2af3d454a4b58677d2f5
 
 Thank you!
 
