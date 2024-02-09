@@ -1,98 +1,65 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC9C28DC9;
-	Fri,  9 Feb 2024 11:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEED2D79D;
+	Fri,  9 Feb 2024 11:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707477510; cv=none; b=rcd0tnzTioyPUQJTj9tkzSUb0xHrmLbDBBmOcNpzc8eg/efGL1TqW5EKCIBimAZPQ1e0hNMLKAiQNooUfZzdzN69Kpp8LSlQuv+DgzpTr1q6DFeTMwTwAOlzzO3SQVkUyNYz5Ps/wf6lSK/zVEAkUG+nNjXQRZ02pGdY5YY1B90=
+	t=1707477515; cv=none; b=i8FgUW7P3t5IamWi38KIL512aB5yVVWourMibDNwOXzWaJvs0DnLrHqKWATg8kll0IR7WD40Q3vQ/l0f4UlvAWjwohxYIlOnTN3h7r8WpbfDuMVQCdri1edu9LcNFzoK6yKtJxvDLmDVMNQMeQ69vzg6Jk4YU/su42MnOskEZNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707477510; c=relaxed/simple;
-	bh=MntDz3frSWPLI1b8XC6BskO076LR1R1lCkWAh6YNv0Q=;
-	h=From:To:CC:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jcL13NV5pd8U96ykXRQsji3ax/5gXs2f6DbLGuL4IACTzLG/EoI1axeUySPEKQdPm5rF6uAkaIDcHD/cQBJRroxMBuvppunHCS9p/lhXfYyGaJi1l5mlU3ZwFUBtMpOPDnTMSUq1hQxRohyAmpl1LWG+jhM9FUd4LyH+emN9RME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=JX8PFc+H; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1707477515; c=relaxed/simple;
+	bh=0yEKW0rm6SR9B4agFV/bN/drIxo98Pq+AKmM5QuTc/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qkdc4UzneYEPPYO8PnM/3bWWHtybarUT9TzIhFFhZlLDgWwiUOzcttLpWXjuiuNLlKDuvg8oGpIaAZQuSpZGADB0FfWjBbZk6iH0lJKYdqPYfQyNyNuBwLDI8kjk3L+/Kko40bacTbI9f4AkER766WMlOBsb94s+Um9IkNr6yaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ol0wnsHx; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JX8PFc+H"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4198UKwV014537;
-	Fri, 9 Feb 2024 05:18:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:references:in-reply-to:subject:date:message-id
-	:mime-version:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=coVRnRrQs3z5qP4mCx2uQbZTGohzfwN2TLzDPTaxh8M=; b=
-	JX8PFc+HFV4adL6eiQsxtlZhMNnqtpYnpgdNhTK4MGVkwoU2UoJTpLR5JkWQrJMa
-	r9TLc8B4eK81Mk+NZ3/CYK4hLf8z0PvcIEQ15tY7W6X8ZUzfsJve9SHDiYmQ8IK6
-	adyoLf9U6LLTaQ9nXbVfJBriSCIdG5jeR4UYquwJIqX/FBrieu/GC2S9Q9sMTxru
-	RCZ1+vckdXA+DgUP2I0aXa0kBXbIfpmSndYDqMCGN+p3ve/EooRHKa9gKFHAxlkP
-	6cFlyj2w16zrE/fO0WWORcM/np8kUTieMlB/DJajqEwmr+mo6Q+YM46p2u72bC4K
-	/vp/d4bYey9Vpfm+VJ91Jw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w1ks2ftsy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Feb 2024 05:18:10 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 9 Feb
- 2024 11:18:08 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Fri, 9 Feb 2024 11:18:08 +0000
-Received: from EDIN6ZZ2FY3 (EDIN6ZZ2FY3.ad.cirrus.com [198.61.64.128])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id CA2E3820243;
-	Fri,  9 Feb 2024 11:18:07 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: 'Lukas Bulwahn' <lukas.bulwahn@gmail.com>,
-        'Jaroslav Kysela'
-	<perex@perex.cz>, 'Takashi Iwai' <tiwai@suse.com>,
-        'Richard Fitzgerald'
-	<rf@opensource.cirrus.com>,
-        <linux-sound@vger.kernel.org>
-CC: <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240209082044.3981-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20240209082044.3981-1-lukas.bulwahn@gmail.com>
-Subject: RE: [PATCH] ALSA: hda/cs35l56: select intended config FW_CS_DSP
-Date: Fri, 9 Feb 2024 11:18:07 +0000
-Message-ID: <001801da5b49$a89be460$f9d3ad20$@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ol0wnsHx"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 7676922AD1;
+	Fri,  9 Feb 2024 12:18:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1707477502;
+	bh=8E0rw2dmwO1kasJctTwr0gBrKYcerfbQMAP6ZEap66g=; h=From:To:Subject;
+	b=ol0wnsHxvu6RjsHBqnd/Mmtbk5feg75qmdwn74N/4UZy49kzqpbh35nXY+4VsPUaW
+	 wvRx36EUXN7DKDw+hR1iRqTIsADaXSuboSpyY4iWyu3GwFg6ySiLP2u6Q/3YDdYUcN
+	 d1QlewDrm4NL9/m5VkmdTaMJZkMx53vptRyjk69d7BCwbvEAjAYvLk91eROFzYdE0j
+	 ccgl5wiVf9hkIYR+3X20TYiR5tieSfCOq5QzMEA01MRms57jLCj2XyR33oXzWvpJuv
+	 7YRf5cyba0nZDpSE/Rx9lynYBugs6PJx2tZRd8N03FBDJdk4gDC/879AA5LJnSMtWl
+	 5PWZjw1nHswQQ==
+Date: Fri, 9 Feb 2024 12:18:17 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: ti: verdin-am62: add support for Verdin
+ USB1 interface
+Message-ID: <20240209111817.GA6769@francesco-nb>
+References: <20240209110500.22193-1-andrejs.cainikovs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQIj8QOMXSB51XGLfZZGXWCY5rrZsLBusJ+A
-X-Proofpoint-GUID: o36hZYTiQqh1B2u0fp3WbmugxjGk6opz
-X-Proofpoint-ORIG-GUID: o36hZYTiQqh1B2u0fp3WbmugxjGk6opz
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240209110500.22193-1-andrejs.cainikovs@gmail.com>
 
-> -----Original Message-----
-> From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+On Fri, Feb 09, 2024 at 12:05:00PM +0100, Andrejs Cainikovs wrote:
+> From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
 > 
-> Commit 73cfbfa9caea ("ALSA: hda/cs35l56: Add driver for Cirrus Logic
-> CS35L56 amplifier") adds configs SND_HDA_SCODEC_CS35L56_{I2C,SPI},
-> which selects the non-existing config CS_DSP. Note the renaming in
-> commit d7cfdf17cb9d ("firmware: cs_dsp: Rename KConfig symbol CS_DSP ->
-> FW_CS_DSP"), though.
+> Add support for Verdin USB1 interface, implements role switch
+> functionality using "gpio-usb-b-connector", VBUS is also now
+> controlled with "regulator-fixed" using a standard GPIO.
 > 
-> Select the intended config FW_CS_DSP.
-> 
-> This broken select command probably was not noticed as the configs also
-> select SND_HDA_CS_DSP_CONTROLS and this then selects FW_CS_DSP. So,
-> the
-> select FW_CS_DSP could actually be dropped, but we will keep this
-> redundancy in place as the author originally also intended to have this
-> redundancy of selects in place.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
 
-Thanks!
-
-Reviewed-by: Simon Trimmer <simont@opensource.cirrus.com>
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
