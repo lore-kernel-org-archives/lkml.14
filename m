@@ -1,306 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BB0823AA
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E5279DC0
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707503874; cv=none; b=JEhyVlnU2/8lSXMcqrNf8yYXhScdvIO7gosErQFRPqScqjRXI8sz5NYwPxfAHE1zQ3WFXA4l/TTPRfzseQLMOnlH7AyhqVPGSFrGdqMXJ3poTdYsxucJdNW7Nj7SfpAIW9J7MO014eVNUKVri2Pg4Mw74zLW4I8ZC3u22nbJE6E=
+	t=1707503913; cv=none; b=iVnq1Oh8AblW85EH+AuTswMPuFl6sm8THgVKTFAfb++Ct8DJe+sLsB9wHY877ybB87CVIuA22kb2DtZz0yuWYSva87LVCHkexVYxJ8aeYFYCB8qKL2/O9TAqku9yz37zGy/ByrnoKrnEVJlxWVy2/uFurV+Y5zUjTYpWnCtdH4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707503874; c=relaxed/simple;
-	bh=PzAxlB8XQojjeTv5NkAo89/w447OO0774KDS41PsIfM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oYKPs0gz75aaGoSsz7pqOj98rpXRTsCudLtck3Vm/26aNeSygmlUtVme4YqVPrKILPQRy982Ls9B1gqx/rwokW6vBonOPg/ZinyHgRfyMOuAWhZCkDKfJVQOEgDEgc8UKQYVZwvpDFJPBHtRZq+gxFu+wiyXkQjIvJIQVDDQwqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eX9kSoB5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707503913; c=relaxed/simple;
+	bh=c+rwiItIstRSnL0bCsBeIfiiFeNHQerOKUZIMk9xT0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mrg56+RlNacntTBVTUdamssxdYLTH5TrlkHExQ++lF8MGgSKtNMkTDdCJZ7dWQqvdDmbT9j6j1hBvGOdnLH8vB3jJ6SLDaf+duspfETuDfWsDVrQ2lzH4YG8jYoZfXGGs9gZXw5AuVo1qgzKwNG4OFAA5PHQ7KpJ6MLcetPxkfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=G5aYQz3d; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eX9kSoB5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707503870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SahA0ruwv7SwB+EbvMU7EpLJXosjckZBZUDsYpgF0Wc=;
-	b=eX9kSoB5eZNoJr1H8mb28dCHH/oJHRdihXaV2hdyr2esUTW7OzRG7HANtLShXRlaVrD5kb
-	KJB8+d85Gb8QnqUddG8H/ffrWTzchCVY9LVmRB9yKAGHaricBpxwhUtQ9BLOZfdjiIwo/m
-	snZbSB79rkOcQ/rrWgdgMXXnOpBTBQI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-572-lKeR37rVMNaD_o3QyGQqNA-1; Fri, 09 Feb 2024 13:37:46 -0500
-X-MC-Unique: lKeR37rVMNaD_o3QyGQqNA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 39EF5185A784;
-	Fri,  9 Feb 2024 18:37:46 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0A4232166B33;
-	Fri,  9 Feb 2024 18:37:46 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	michael.roth@amd.com,
-	aik@amd.com,
-	isaku.yamahata@intel.com
-Subject: [PATCH 10/10] selftests: kvm: add tests for KVM_SEV_INIT2
-Date: Fri,  9 Feb 2024 13:37:42 -0500
-Message-Id: <20240209183743.22030-11-pbonzini@redhat.com>
-In-Reply-To: <20240209183743.22030-1-pbonzini@redhat.com>
-References: <20240209183743.22030-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="G5aYQz3d"
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id YJI8rLnq99gG6YVlZr3fN3; Fri, 09 Feb 2024 18:38:25 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id YVlYrYaSqR0A5YVlYrGS7I; Fri, 09 Feb 2024 18:38:24 +0000
+X-Authority-Analysis: v=2.4 cv=Ita9c6/g c=1 sm=1 tr=0 ts=65c67120
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
+ a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=2-LqU1-JSYPvSRI2HFEA:9 a=QEXdDO2ut3YA:10
+ a=1F1461vogZIA:10 a=5kKzt1m56AEA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=SLz71HocmBbuEhFRYD3r:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ubhs5TTJlmjrNVcQ8/d8FvdbYjky0tqln9Hz+0mS83c=; b=G5aYQz3dT7H6nvvIE7oHOiEsj5
+	/NWS2+D1C2tHb+hSTOo1Up1YHqlQE4Wt/XzChjeBGvGZdZLXlBrgqYmG2uTmAs8EVX67FCbAUJCST
+	FpCEHoHQg1GipLjC3EmProNpo09ShJDCkV8o7ZMbhsSNkE+hJYhIoSHV62yhp+MNWS7n4SchyWzqR
+	uuYSfGJkyFEGuJPErIBj8Ksq/lyUqys/fHWcmX+fsexcgLVJngIml623AeNrBtGSRGDYuzzrdtNwA
+	5EEAFbrXH9RUvgo4R+FjdZM/W3qDKb22chTmFN3vB++ljI5GxxPK6d5nUcMSSoxn7sWfsanU4qTib
+	tTlZhVJQ==;
+Received: from [201.172.172.225] (port=33262 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rYVlX-004CdG-2a;
+	Fri, 09 Feb 2024 12:38:23 -0600
+Message-ID: <3ef9dfc9-3d0f-434d-9836-066265975728@embeddedor.com>
+Date: Fri, 9 Feb 2024 12:38:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] irqchip/bcm-6345-l1: Prefer struct_size over open coded
+ arithmetic
+To: Erick Archer <erick.archer@gmx.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, linux-hardening@vger.kernel.org
+References: <20240209181600.9472-1-erick.archer@gmx.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240209181600.9472-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.172.225
+X-Source-L: No
+X-Exim-ID: 1rYVlX-004CdG-2a
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:33262
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfELFz3wgoWBc/RFP1y6YQ9ogB0cNGIQAXkJSDbTJkvQ9CsMMFKJDCH6ajbe/b1ciFuw7xZAaDm2q/D9RM+Jl+mgySIPTY6hHRz4bUmXDqQdI9IvT4kZ0
+ ytYWmJPRGa8mZPSZe0xZkYLHdi5hTQqak25xTfjlaypu+A/P/Tso4xuRHUqqYj1nL3DFQ3n6USXJPPQZI9lw1kP4f6O7uDezDg5ICHbiif1Whxz6dXzowmfb
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../selftests/kvm/include/kvm_util_base.h     |   6 +-
- .../selftests/kvm/set_memory_region_test.c    |   8 +-
- .../selftests/kvm/x86_64/sev_init2_tests.c    | 147 ++++++++++++++++++
- 4 files changed, 154 insertions(+), 8 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 492e937fab00..a81a89b1dc2a 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -116,6 +116,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/tsc_msrs_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_pmu_caps_test
- TEST_GEN_PROGS_x86_64 += x86_64/xen_shinfo_test
- TEST_GEN_PROGS_x86_64 += x86_64/xen_vmcall_test
-+TEST_GEN_PROGS_x86_64 += x86_64/sev_init2_tests
- TEST_GEN_PROGS_x86_64 += x86_64/sev_migrate_tests
- TEST_GEN_PROGS_x86_64 += x86_64/amx_test
- TEST_GEN_PROGS_x86_64 += x86_64/max_vcpuid_cap_test
-diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-index 9e5afc472c14..44b6ea56a205 100644
---- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-@@ -846,17 +846,15 @@ static inline struct kvm_vm *vm_create_barebones(void)
- 	return ____vm_create(VM_SHAPE_DEFAULT);
- }
- 
--#ifdef __x86_64__
--static inline struct kvm_vm *vm_create_barebones_protected_vm(void)
-+static inline struct kvm_vm *vm_create_barebones_type(unsigned long type)
- {
- 	const struct vm_shape shape = {
- 		.mode = VM_MODE_DEFAULT,
--		.type = KVM_X86_SW_PROTECTED_VM,
-+		.type = type,
- 	};
- 
- 	return ____vm_create(shape);
- }
--#endif
- 
- static inline struct kvm_vm *vm_create(uint32_t nr_runnable_vcpus)
- {
-diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
-index 075b80dbe237..0ac6c21d7251 100644
---- a/tools/testing/selftests/kvm/set_memory_region_test.c
-+++ b/tools/testing/selftests/kvm/set_memory_region_test.c
-@@ -339,7 +339,7 @@ static void test_invalid_memory_region_flags(void)
- 
- #ifdef __x86_64__
- 	if (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM))
--		vm = vm_create_barebones_protected_vm();
-+		vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 	else
- #endif
- 		vm = vm_create_barebones();
-@@ -452,7 +452,7 @@ static void test_add_private_memory_region(void)
- 
- 	pr_info("Testing ADD of KVM_MEM_GUEST_MEMFD memory regions\n");
- 
--	vm = vm_create_barebones_protected_vm();
-+	vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 
- 	test_invalid_guest_memfd(vm, vm->kvm_fd, 0, "KVM fd should fail");
- 	test_invalid_guest_memfd(vm, vm->fd, 0, "VM's fd should fail");
-@@ -461,7 +461,7 @@ static void test_add_private_memory_region(void)
- 	test_invalid_guest_memfd(vm, memfd, 0, "Regular memfd() should fail");
- 	close(memfd);
- 
--	vm2 = vm_create_barebones_protected_vm();
-+	vm2 = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 	memfd = vm_create_guest_memfd(vm2, MEM_REGION_SIZE, 0);
- 	test_invalid_guest_memfd(vm, memfd, 0, "Other VM's guest_memfd() should fail");
- 
-@@ -489,7 +489,7 @@ static void test_add_overlapping_private_memory_regions(void)
- 
- 	pr_info("Testing ADD of overlapping KVM_MEM_GUEST_MEMFD memory regions\n");
- 
--	vm = vm_create_barebones_protected_vm();
-+	vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 
- 	memfd = vm_create_guest_memfd(vm, MEM_REGION_SIZE * 4, 0);
- 
-diff --git a/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c b/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
-new file mode 100644
-index 000000000000..639863978405
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/kvm.h>
-+#include <linux/psp-sev.h>
-+#include <stdio.h>
-+#include <sys/ioctl.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <pthread.h>
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "svm_util.h"
-+#include "kselftest.h"
-+
-+#define SVM_SEV_FEAT_DEBUG_SWAP 32u
-+
-+/*
-+ * Some features may have hidden dependencies, or may only work
-+ * for certain VM types.  Err on the side of safety and don't
-+ * expect that all supported features can be passed one by one
-+ * to KVM_SEV_INIT2.
-+ *
-+ * (Well, right now there's only one...)
-+ */
-+#define KNOWN_FEATURES SVM_SEV_FEAT_DEBUG_SWAP
-+
-+int kvm_fd;
-+u64 supported_features;
-+bool have_sev_es;
-+
-+static int __sev_ioctl(int vm_fd, int cmd_id, void *data)
-+{
-+	struct kvm_sev_cmd cmd = {
-+		.id = cmd_id,
-+		.data = (uint64_t)data,
-+		.sev_fd = open_sev_dev_path_or_exit(),
-+	};
-+	int ret;
-+
-+	ret = ioctl(vm_fd, KVM_MEMORY_ENCRYPT_OP, &cmd);
-+	TEST_ASSERT(ret < 0 || cmd.error == SEV_RET_SUCCESS,
-+		    "%d failed: fw error: %d\n",
-+		    cmd_id, cmd.error);
-+
-+	return ret;
-+}
-+
-+static void test_init2(unsigned long vm_type, struct kvm_sev_init *init)
-+{
-+	struct kvm_vm *vm;
-+	int ret;
-+
-+	vm = vm_create_barebones_type(vm_type);
-+	ret = __sev_ioctl(vm->fd, KVM_SEV_INIT2, init);
-+	TEST_ASSERT(ret == 0,
-+		    "KVM_SEV_INIT2 return code is %d (expected 0), errno: %d",
-+		    ret, errno);
-+	kvm_vm_free(vm);
-+}
-+
-+static void test_init2_invalid(unsigned long vm_type, struct kvm_sev_init *init)
-+{
-+	struct kvm_vm *vm;
-+	int ret;
-+
-+	vm = vm_create_barebones_type(vm_type);
-+	ret = __sev_ioctl(vm->fd, KVM_SEV_INIT2, init);
-+	TEST_ASSERT(ret == -1 && errno == EINVAL,
-+		    "KVM_SEV_INIT2 return code %d, errno: %d (expected EINVAL)",
-+		    ret, errno);
-+	kvm_vm_free(vm);
-+}
-+
-+void test_vm_types(void)
-+{
-+	test_init2(KVM_X86_SEV_VM, &(struct kvm_sev_init){});
-+
-+	if (have_sev_es)
-+		test_init2(KVM_X86_SEV_ES_VM, &(struct kvm_sev_init){});
-+	else
-+		test_init2_invalid(KVM_X86_SEV_ES_VM, &(struct kvm_sev_init){});
-+
-+	test_init2_invalid(0, &(struct kvm_sev_init){});
-+	if (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM))
-+		test_init2_invalid(KVM_X86_SW_PROTECTED_VM, &(struct kvm_sev_init){});
-+}
-+
-+void test_flags(uint32_t vm_type)
-+{
-+	int i;
-+
-+	for (i = 0; i < 32; i++)
-+		test_init2_invalid(vm_type, &(struct kvm_sev_init){
-+			.flags = 1u << i,
-+		});
-+}
-+
-+void test_features(uint32_t vm_type)
-+{
-+	int i;
-+
-+	for (i = 0; i < 64; i++) {
-+		if (!(supported_features & (1u << i)))
-+			test_init2_invalid(vm_type, &(struct kvm_sev_init){
-+				.vm_type = vm_type,
-+				.vmsa_features = 1u << i,
-+			});
-+		else if (KNOWN_FEATURES & (1u << i))
-+			test_init2(vm_type, &(struct kvm_sev_init){
-+				.vmsa_features = 1u << i,
-+			});
-+	}
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int kvm_fd = open_kvm_dev_path_or_exit();
-+	bool have_sev;
-+
-+	TEST_REQUIRE(__kvm_has_device_attr(kvm_fd, 0, KVM_X86_SEV_VMSA_FEATURES) == 0);
-+	kvm_device_attr_get(kvm_fd, 0, KVM_X86_SEV_VMSA_FEATURES, &supported_features );
-+
-+	have_sev = kvm_cpu_has(X86_FEATURE_SEV);
-+	TEST_ASSERT(have_sev == !!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SEV_VM)),
-+		    "sev: KVM_CAP_VM_TYPES (%x) does not match cpuid (checking %x)",
-+		    kvm_check_cap(KVM_CAP_VM_TYPES), 1 << KVM_X86_SEV_VM);
-+
-+	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SEV_VM));
-+	have_sev_es = kvm_cpu_has(X86_FEATURE_SEV_ES);
-+
-+	TEST_ASSERT(have_sev_es == !!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SEV_ES_VM)),
-+		    "sev-es: KVM_CAP_VM_TYPES (%x) does not match cpuid (checking %x)",
-+		    kvm_check_cap(KVM_CAP_VM_TYPES), 1 << KVM_X86_SEV_ES_VM);
-+
-+	test_vm_types();
-+
-+	test_flags(KVM_X86_SEV_VM);
-+	if (have_sev_es)
-+		test_flags(KVM_X86_SEV_ES_VM);
-+
-+	test_features(KVM_X86_SEV_VM);
-+	if (have_sev_es)
-+		test_features(KVM_X86_SEV_ES_VM);
-+
-+	return 0;
-+}
+
+On 2/9/24 12:16, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
+> 
+> As the cpu variable is a pointer to "struct bcm6345_l1_cpu" and this
+> structure ends in a flexible array:
+> 
+> struct bcm6345_l1_cpu {
+> 	[...]
+> 	u32	enable_cache[];
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the argument "size + count * size" in the
+> kzalloc() function.
+> 
+> This way, the code is more readable and more safer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162 [2]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+
+LGTM:
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
 -- 
-2.39.0
+Gustavo
 
-
+> ---
+>   drivers/irqchip/irq-bcm6345-l1.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-bcm6345-l1.c b/drivers/irqchip/irq-bcm6345-l1.c
+> index 9745a119d0e6..eb02d203c963 100644
+> --- a/drivers/irqchip/irq-bcm6345-l1.c
+> +++ b/drivers/irqchip/irq-bcm6345-l1.c
+> @@ -242,7 +242,7 @@ static int __init bcm6345_l1_init_one(struct device_node *dn,
+>   	else if (intc->n_words != n_words)
+>   		return -EINVAL;
+> 
+> -	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
+> +	cpu = intc->cpus[idx] = kzalloc(struct_size(cpu, enable_cache, n_words),
+>   					GFP_KERNEL);
+>   	if (!cpu)
+>   		return -ENOMEM;
+> --
+> 2.25.1
+> 
+> 
