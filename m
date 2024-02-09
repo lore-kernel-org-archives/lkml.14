@@ -1,113 +1,97 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D77A6997E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 10:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D5B6997E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 10:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707474137; cv=none; b=mNRf8eyA9DZoxZPw12UuMtBtHZc/MEBKoagUo1ICHiDuG0+zkw3MSZwzB9YLNIvX263ntNoGGsf4qC2YDSZuCFH0dQYFOMBDFPo0iULGZnYAt7DwpW8aP5tJlZ83Rzq3rBkhZP8WXfD1j75Q1NrzYVJuPIetC0e7TLQYfXNzjkM=
+	t=1707474140; cv=none; b=NvcEcPRJFJEEudK3c40mb1sJl7Sru3djYEzcFe47p80zurFPo9MLxfdCpuHo4sgBFIZCifppBL7ppO0duFu0jqwPrM1x59//NykLVHy4x8TVFIJCg0JeLNt/9rWIvb3DPeBUSUymkrB0MY2Hqq3s0I7s9uDYySBE/XObE0BYgxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707474137; c=relaxed/simple;
-	bh=tpt51FeO44HeEXQqmygp1fYLZoXSRZvsHL381MrJybw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cWPCaQ9J5Nb2YBrZyayuWJSmdj8/YtVfnWV5F6A6m8ug29V2PzxK6eiMeU0Rr/PcbGdDWERHhanWbEafwbjmiqAuDXVy+aSzk91Gv3ruHm8hYgOlwyBEfo7151P4mF6qot8xJsuOHsttlU2tHs9Nd47N22xjhXIStNIz+H3RdKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kLlCa8RU; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kLlCa8RU"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-41024549a9fso4812355e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 02:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707474133; x=1708078933; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SqiLbHub5ruL/UvpG5IMav/eAn4s+2aSSt9gMa9+oOE=;
-        b=kLlCa8RUO+aJbOAGzlI200T2102ksm40Zm/LCL3Wby7z/nlFYP3NWZ/657VnDhipGZ
-         FYbd1gq6jfLt0HHKJ7lbZ5w7bBu9SjZWzHe4s+G725HkOHfSw/31yYguJAQEd725cBw3
-         aa0KRf9tOKsBIIbeqLORDDuduYZVgAAzfXvLQSqeWPXm5tRFhFjCfM2YjZ8XwzIHMvXi
-         /I2U4BZCcfkPAX+/c6H8VAehUQkk+fRYDNE+x/fMLJdO1v4OBv4vpTIaeBDHX/+IN0xy
-         7GPqjB21aWGMr1lqUuJm389D9yAuj70YSucfg8OvhlMcAh5m+0MnattXBWOznX/2n/EH
-         lifw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707474133; x=1708078933;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SqiLbHub5ruL/UvpG5IMav/eAn4s+2aSSt9gMa9+oOE=;
-        b=ciip3GTCfhD28l+3OvRSKGv12ktnlhUbzhFzihstjrHwzTgGG4Q5SPI/wqgIPozlCh
-         EoQvj18m04GpNcgPsq72nYxIKN9VvRewlsoJeu8C3Y9FO33cmVNK3tIP8q7RZxoxuKEC
-         IkqSwX1pEksagF4jEgWEq4O8QSgmTZcsZK+aV6hIDwfFTKw3dewM5eGkATmhxCo5jsn7
-         E4ciP7yukCSCDRCP/Q+Psg0rjZWFGeNMaUYC+T3ssAsTwNtx3/hZ3kZ2ZNnRPIaM4o8p
-         NIVLTj+EHQntcn+jEjPZeVRW2no2N1hpc/6Nw5zeCXEiXjzWYuuL7DR6grxeOrKe3lHe
-         ImlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgXvtRqASxBOttQ8LtJhjL5jdRNBmq9dNkM/kA0HAl2DrpWvVXzT/tP2snAiQllSZOcNus1pmRk7GSoHab/0P1ZVUZ8/dzGxY/ZZEY
-X-Gm-Message-State: AOJu0YxU5fNV0NjoNs3uu1lmYixkfsZ1jX0iPxuIg/Y7HoSJ52J7x07e
-	IikgepZJRSSafALXNMnm88tEoBEqQNLKOVcS32g05dHA/hZ5xsWxGrqHiru3HrE80NZokQNjehZ
-	3nU26pxI+DjB7lKGiHw==
-X-Google-Smtp-Source: AGHT+IHsCSAWDoTALZ69dIqskVJ+bDPuZT95tyOFjyEZj05BeKokuUE1iA67QgC/IWMdyoq7Hn3fUiXGCF0cHWUR
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:54c9:b0:410:6ab1:4964 with
- SMTP id iw9-20020a05600c54c900b004106ab14964mr18382wmb.1.1707474133639; Fri,
- 09 Feb 2024 02:22:13 -0800 (PST)
-Date: Fri,  9 Feb 2024 10:21:57 +0000
-In-Reply-To: <20240209102202.649049-1-vdonnefort@google.com>
+	s=arc-20240116; t=1707474140; c=relaxed/simple;
+	bh=N1e1atRgXwaq/L5TMXa6EH0wBYUWwdIwD8g4qAp4gnY=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=EqNk1wi1VWEiahKf6D+2jlF6ZjAhBLT5L8QS0xoDJy0t8iFsIQxuRxQDZn3FQwWxRVXxaS5Xe5e0C8KNnw9tryrApfugASuaEPAsTMyP0p5QISzT2JyRPzJLQrCcQkRXBJdKJ/CBbep5cWvC+3svH0hRlws1XvDQSSwf/9USO5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13D44C433C7;
+	Fri,  9 Feb 2024 10:22:20 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rYO23-00000006pw1-18by;
+	Fri, 09 Feb 2024 05:22:55 -0500
+Message-ID: <20240209102220.255052617@goodmis.org>
+User-Agent: quilt/0.67
+Date: Fri, 09 Feb 2024 05:22:20 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-linus][PATCH 0/2] tracing: Fixes for v6.8-rc3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240209102202.649049-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240209102202.649049-2-vdonnefort@google.com>
-Subject: [PATCH v15 1/6] ring-buffer: Zero ring-buffer sub-buffers
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-In preparation for the ring-buffer memory mapping where each subbuf will
-be accessible to user-space, zero all the page allocations.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Tracing fixes for v6.8-rc3:
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index fd4bfe3ecf01..ca796675c0a1 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1472,7 +1472,8 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 		list_add(&bpage->list, pages);
- 
--		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu), mflags,
-+		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
-+					mflags | __GFP_ZERO,
- 					cpu_buffer->buffer->subbuf_order);
- 		if (!page)
- 			goto free_pages;
-@@ -1557,7 +1558,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 
- 	cpu_buffer->reader_page = bpage;
- 
--	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL, cpu_buffer->buffer->subbuf_order);
-+	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_ZERO,
-+				cpu_buffer->buffer->subbuf_order);
- 	if (!page)
- 		goto fail_free_reader;
- 	bpage->page = page_address(page);
-@@ -5525,7 +5527,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
- 	if (bpage->data)
- 		goto out;
- 
--	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_NORETRY,
-+	page = alloc_pages_node(cpu_to_node(cpu),
-+				GFP_KERNEL | __GFP_NORETRY | __GFP_ZERO,
- 				cpu_buffer->buffer->subbuf_order);
- 	if (!page) {
- 		kfree(bpage);
--- 
-2.43.0.687.g38aa6559b0-goog
+- Fix broken direct trampolines being called when another callback is
+  attached the same function. ARM 64 does not support FTRACE_WITH_REGS, and
+  when it added direct trampoline calls from ftrace, it removed the
+  "WITH_REGS" flag from the ftrace_ops for direct trampolines. This broke
+  x86 as x86 requires direct trampolines to have WITH_REGS. This wasn't
+  noticed because direct trampolines work as long as the function it is
+  attached to is not shared with other callbacks (like the function tracer).
+  When there's other callbacks, a helper trampoline is called, to call all
+  the non direct callbacks and when it returns, the direct trampoline is
+  called. For x86, the direct trampoline sets a flag in the regs field to
+  tell the x86 specific code to call the direct trampoline. But this only
+  works if the ftrace_ops had WITH_REGS set. ARM does things differently
+  that does not require this. For now, set WITH_REGS if the arch supports
+  WITH_REGS (which ARM does not), and this makes it work for both ARM64 and
+  x86.
 
+- Fix wasted memory in the saved_cmdlines logic.
+
+  The saved_cmdlines is a cache that maps PIDs to COMMs that tracing can
+  use. Most trace events only save the PID in the event. The saved_cmdlines
+  file lists PIDs to COMMs so that the tracing tools can show an actual name
+  and not just a PID for each event. There's an array of PIDs that map to a
+  small set of saved COMM strings. The array is set to PID_MAX_DEFAULT which
+  is usually set to 32768. When a PID comes in, it will add itself to this
+  array along with the index into the COMM array (note if the system allows
+  more than PID_MAX_DEFAULT, this cache is similar to cache lines as an
+  update of a PID that has the same PID_MAX_DEFAULT bits set will flush out
+  another task with the same matching bits set).
+
+  A while ago, the size of this cache was changed to be dynamic and the
+  array was moved into a structure and created with kmalloc(). But this
+  new structure had the size of 131104 bytes, or 0x20020 in hex. As kmalloc
+  allocates in powers of two, it was actually allocating 0x40000 bytes
+  (262144) leaving 131040 bytes of wasted memory. The last element of this
+  structure was a pointer to the COMM string array which defaulted to just
+  saving 128 COMMS.
+
+  By changing the last field of this structure to a variable length string,
+  and just having it round up to fill the allocated memory, the default
+  size of the saved COMM cache is now 8190. This not only uses the wasted
+  space, but actually saves space by removing the extra allocation for the
+  COMM names.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/urgent
+
+Head SHA1: f2d3d1fa979e0a8e418a03e96902a9e6b4a6e9ae
+
+
+Masami Hiramatsu (Google) (1):
+      ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
+
+Steven Rostedt (Google) (1):
+      tracing: Fix wasted memory in saved_cmdlines logic
+
+----
+ kernel/trace/ftrace.c | 10 +++++++
+ kernel/trace/trace.c  | 73 ++++++++++++++++++++++++---------------------------
+ 2 files changed, 44 insertions(+), 39 deletions(-)
