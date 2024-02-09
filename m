@@ -1,127 +1,123 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DC124214;
-	Fri,  9 Feb 2024 23:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ACF38DE2;
+	Fri,  9 Feb 2024 23:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707521767; cv=none; b=nL8TORBxotQiZ/CgG5fATmgBLzOokmGI1xa2GYil2Xq1eIeEHsj8D1IC9CfIuho+173vr1KWmmKVIZgUTMj077MSz/RzeuUU7l4NtS2BT8aYi8s0PNy37lzuGHn0Qu+nf16fO1GVe9Q6g2YOlAF/TzfCmfFpugIgKi6OggZa0qM=
+	t=1707521824; cv=none; b=WFfBX9S3MzyEss4+/oXy68eEHa12w6tysbuhrZ9kq96gMfdv1v6dY/Bfm0I1HE+uM49JbRAzyV5VobLMJj8GJMx1ZsYNkzPZGOpqaIRHsD4PsROE/3tsJwAVoIt4XEj6KPwRtA1NgxWcgNf1Sl1wWGuV1jhQy5imCTVoHeszOdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707521767; c=relaxed/simple;
-	bh=Y/PUlg7pZqISBcOisWGlla14uXigrMdXCUUHoiyywQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WBisvNL7l1vcFfbgSLGpp+R3ba7o2gY4bUQzzkxPM4EeCBhZj70Wwu3xacT46CE5SF2p56voDYKmCYVSfrm/NGrSMwDyZ71v4LvxVnGCl5KiocJCta5E5slyOSjOYyMbzR7xq5PtfcfyYXKG273gpJ51oHGSynZEQRoGYtoyh+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f31EX3KP; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707521824; c=relaxed/simple;
+	bh=vab66JaH+98JX7uwKvF0gxBwsDwHTA+LMjKxktqFBFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tCMh8gIzVWyF0QsqPwornGl6bScGVlXBqAiT3zsHcRHeWymPNi5JhWCnnflz4zprt3VpzkLO3InEuW9Zl+YBwUEfbbtA5EiEeHt25LRr/smEp/0n2J14xm9biolVw023wwPpLB7t+jj/PxPux/OdUoJ/PFRdU97h01xNY4eCGQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLrmi2Ug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f31EX3KP"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7857947b179so108504185a.3;
-        Fri, 09 Feb 2024 15:36:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707521761; x=1708126561; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=arz5YfjQN+baeIdblLJ/rOWjM410EatO+A9RTDsoWLc=;
-        b=f31EX3KP7fZOs0RdxXKTt7jJd0UcNpzIuHbwbQM+IGQoc2pPPft5DyrVIXcTUl+7EH
-         bHb1IB7mVENagFvNX9INwT1t0GJYrgDOvDDPHSW7hAC0yWvY9k2lKuCFpLLcLGZzp2s0
-         63IgS+TnKaE1g06E39tIHMOTQERDRr1wNND3t6eZ8W+ZsIBMujhDkQpCzPkq1gSgjWlX
-         cLZEqc0iT+Se/H3d2aiEXrGyScQaftz8H7ytcxFkq8KKBD9+csn0Q6puOPZP7YvmprLs
-         YLD50gjptvUizv0Ohe8LYgJ25VqEeJVbA8dfij/Hv10BrCmv0NLgfEAHU4axuw9fUOH3
-         1H0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707521761; x=1708126561;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=arz5YfjQN+baeIdblLJ/rOWjM410EatO+A9RTDsoWLc=;
-        b=UJipRJBpJJyCuRrVeqk4fXNcNYJ27/YDY0bhlMwFUwPX/fwk9jglah0vU3SC8lDOGj
-         EKIYg6e2bJYP574jolmKmWRNw+qWk0kVgRlPXrpFCOJXcni0quunmUkfpR9ys/u98mTj
-         Lmk40agq2D4XEQoB7qinCViXLXNlcEJk/UDg9peYZiSSrqlrRxuHADdNevvbt0r/j0TO
-         h+yISb0XQQwt4s7Bh6uF6PU/OXYZ4VLGLRV5lWiQnrYhV1m+jNFhN6ZKFlCbOiuoOLYC
-         wdMYV+iu+58tK+6viIBIVM8VZckUtU8VX4+aWha4eebl6VhJuy2D86fOl9dXoF1mTab+
-         ihkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKePodYQy/8xjCbHNebAu+Z7S3YMnANpUreDDWBm7qplvHals9Va6sQHV1dZuYG1Mex00lJivR7LYAupyM0d5a61iLwJsgQW7qV3E/
-X-Gm-Message-State: AOJu0YyuH0pw2YQFMx02LHbqPjQhhdkihY90mX7xd56wVrpAdB9/6w7d
-	/FKnAgDdlTangpWlBrxl1O3ChnmTkmj3ZYyxiMnn9Degup82RM68
-X-Google-Smtp-Source: AGHT+IFMBXPvvmwxivkWBaipFYGGBUS/B2fifZvtWXzXWPTBEVsnMOxMJ+Ho3MP/iRp1cTX2GLgfog==
-X-Received: by 2002:a05:6214:240d:b0:68c:cd5e:62b6 with SMTP id fv13-20020a056214240d00b0068ccd5e62b6mr848886qvb.62.1707521761454;
-        Fri, 09 Feb 2024 15:36:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWrC6YEoYYAlJJSTeQmcS1U41dGJfDlUBhacrm5fwAIFpIgVziVMa7WqGHJTEwjC3qb6uS1z12PPl8DD9hMgNC+JZc5WOsbiXaP62Ar7Sn0/LLrVzHno4H72OmqAkisAuGV9QAqDS8uPFJgBpKWXtjYhEMKDjKse5z8AEan6rHGQaqHb1iSkZY8S/lz/qxGTmCdem1awrBf8UVLRsJTHgl7acjq6ZtnoFNqceCrlE/PeF8IiqUmNlGcoPu558bKazwfup5sWS9dmQONJkWVSQq2ujEmE9zTMHMfunkgAQKyMrLicazNkzI2u8ZkyyByz2grceJBwdNhTOIINr7ozIeIKOFC2SYXJXsXwgQGjlSd/dS1u+YSYVMs
-Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
-        by smtp.gmail.com with ESMTPSA id oi10-20020a05621443ca00b0068ce676eb4dsm75153qvb.69.2024.02.09.15.36.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 15:36:01 -0800 (PST)
-Date: Fri, 9 Feb 2024 13:35:59 -0500
-From: Oliver Crumrine <ozlinuxc@gmail.com>
-To: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
-	andrii@kernel.org, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 bpf-next] net: remove check in __cgroup_bpf_run_filter_skb
-Message-ID: <5ac3e6uwvhdujq6tywb6b5bh5flqln6d7kedmcbvhyp55jp4yo@65pnej6e2ub6>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLrmi2Ug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BEFC433F1;
+	Fri,  9 Feb 2024 23:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707521823;
+	bh=vab66JaH+98JX7uwKvF0gxBwsDwHTA+LMjKxktqFBFI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oLrmi2UgocGnOO/gap5TAGTQkug/s/k067+bvJPqRjk02YmbV1+nxy3sDJAyB1HvK
+	 14++nREuC0sMSTr+hpQhKlx2HG/LjbOM2lb4MK/wfkzlqlP3P8F3iDxChowgCJCeZy
+	 FKKXv2Sgu/LzYTvr5OiH6nz0xyW8+ybUsRv9HM+mcC6OaC8BHzlADy/kXvXMM2pKxH
+	 nKkxd1vCgAvIa7WkQv/dvw6Sq7Mn/5GWVhmzkze32/ZZJZD3fmBIL+fPh1D/k6NiSt
+	 3hB62JPL7qL2Sd/RFwUJq6s9V4x9xd3YXVquvrU47evSzfphB8Sz5bQY9WTnCxaI/n
+	 bjBR24cpsmSZg==
+Date: Fri, 9 Feb 2024 17:37:00 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: Re: [RFC 9/9] PCI/pwrctl: add a PCI power control driver for
+ power sequenced devices
+Message-ID: <nezjddfz22a74rbhjovq2nyba46752lwf66rw47oebfa3xg6zv@ad6wag5e5zrk>
+References: <20240201155532.49707-1-brgl@bgdev.pl>
+ <20240201155532.49707-10-brgl@bgdev.pl>
+ <jb4hzijjxjv4kiy3cn2fuc5ox4x5uutredbxiwo2fvnkh2xudf@5w65qtp35ase>
+ <CAMRc=MdQ_uRq7a24RYt=KRSff9sw_1soQ+8ONEpNXy0emk5ChQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdQ_uRq7a24RYt=KRSff9sw_1soQ+8ONEpNXy0emk5ChQ@mail.gmail.com>
 
-Originally, this patch removed a redundant check in
-BPF_CGROUP_RUN_PROG_INET_EGRESS, as the check was already being done in
-the function it called, __cgroup_bpf_run_filter_skb. For v2, it was
-reccomended that I remove the check from __cgroup_bpf_run_filter_skb,
-and add the checks to the other macro that calls that function,
-BPF_CGROUP_RUN_PROG_INET_INGRESS.
+On Fri, Feb 02, 2024 at 02:05:59PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Feb 2, 2024 at 5:03 AM Bjorn Andersson <andersson@kernel.org> wrote:
+> >
+> > On Thu, Feb 01, 2024 at 04:55:32PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Add a PCI power control driver that's capable of correctly powering up
+> > > devices using the power sequencing subsystem. For now we support the
+> > > ath11k module on QCA6390.
+> > >
+> >
+> > For a PCI device which doesn't share resources with something on another
+> > bus, the whole power sequencing would be implemented in a driver like
+> > this - without the involvement of the power sequence framework.
+> >
+> 
+> Yes, this is what I did in the previous incarnation of this code[1].
+> 
+> (I know, I should have linked it here. My bad, I will do it next time).
+> 
+> > I think it would be nice to see this series introduce a simple
+> > pci_pwrctl driver, and then (in the same series) introduce the power
+> > sequence framework and your PMU driver.
+> >
+> 
+> I disagree. I was initially annoyed by Dmitry asking me to do a lot
+> more work than anticipated but he's right after all. WLAN and BT
+> consuming what is really the PMU's inputs is simply not the actual
+> representation. That's why we should make it a pwrseq user IMO.
+> 
 
-To sum it up, checking that the socket exists and that it is a full
-socket is now part of both macros BPF_CGROUP_RUN_PROG_INET_EGRESS and
-BPF_CGROUP_RUN_PROG_INET_INGRESS, and it is no longer part of the
-function they call, __cgroup_bpf_run_filter_skb.
+If the PMU registers the "internal" output regulators, then PCI device
+would consume the PCI outputs of the PMU, the BT device would consume
+the BT outputs of the PMU. The PMU requests inputs enabled and drives
+BT_EN and WLAN_EN according to which subset of these output regulators
+are enabled.
 
-Signed-off-by: Oliver Crumrine <ozlinuxc@gmail.com>
+Pretty much exactly as "regulator-fixes" isn't a pwrseq device.
 
-v2->v3: Sent to bpf-next instead of generic patch
-v1->v2: Addressed feedback about where check should be removed.
----
- include/linux/bpf-cgroup.h | 7 ++++---
- kernel/bpf/cgroup.c        | 3 ---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+Regards,
+Bjorn
 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index a789266feac3..b28dc0ff4218 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -195,10 +195,11 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
- #define BPF_CGROUP_RUN_PROG_INET_INGRESS(sk, skb)			      \
- ({									      \
- 	int __ret = 0;							      \
--	if (cgroup_bpf_enabled(CGROUP_INET_INGRESS) &&			      \
--	    cgroup_bpf_sock_enabled(sk, CGROUP_INET_INGRESS))		      \
-+	if (cgroup_bpf_enabled(CGROUP_INET_INGRESS) &&			      \
-+	    cgroup_bpf_sock_enabled(sk, CGROUP_INET_INGRESS) && sk &&	      \
-+	    sk_fullsock(sk))						      \
- 		__ret = __cgroup_bpf_run_filter_skb(sk, skb,		      \
--						    CGROUP_INET_INGRESS);     \
-+						    CGROUP_INET_INGRESS);     \
- 									      \
- 	__ret;								      \
- })
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 491d20038cbe..644bfb39cf9d 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -1364,9 +1364,6 @@ int __cgroup_bpf_run_filter_skb(struct sock *sk,
- 	struct cgroup *cgrp;
- 	int ret;
- 
--	if (!sk || !sk_fullsock(sk))
--		return 0;
--
- 	if (sk->sk_family != AF_INET && sk->sk_family != AF_INET6)
- 		return 0;
- 
--- 
-2.43.0
-
+> > One case where such model would be appropriate is the XHCI controller
+> > (uPD720201) on db845c. Today we describe vddpe-3p3-supply as a supply on
+> > the PCI controller, but it should have been vdd33-supply, vdd10-supply,
+> > avdd33-supply on the PCI device.
+> 
+> Sounds like a good second user then!
+> 
+> >
+> > That would provide an example for how a simple PCI power control driver
+> > can/should look like, and we can discuss the PCI pieces separate from
+> > the introduction of the new power sequence framework (which is unrelated
+> > to PCI).
+> 
+> I agree it's unrelated and it could possibly go upstream separately
+> but the particular use-case on RB5 (and other Qcom platforms) requires
+> both the PCI and generic power sequencing to be addressed.
+> 
+> Bart
+> 
+> [snip]
+> 
+> [1] https://lore.kernel.org/netdev/20240117160748.37682-7-brgl@bgdev.pl/T/#m72f52254a52fcb8a8a44de0702cad1087d4bcfa1
