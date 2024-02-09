@@ -1,165 +1,167 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8C278693
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEE56DD18
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707498222; cv=none; b=LqEyimtwCh30x6pEFZomerHHOyaBGeFBqGmCuIthMsjaNX4vZ7kG2geyLhDbC7hEZdowJIfgHM4j0KUULVdHd5D0zEF/BMD3rNRfr3x+ANl5AWI8RhEpfJHr9v5U8x1wSgj2kdDdv9EU5Ki129b8TfJ3Zw5mxhXa7K2yTGctZvk=
+	t=1707498307; cv=none; b=bircHRMCgxoX2kDrmFgnDtn/IjW79Y5DmRW5A0KX4WJCZ3I4WnfLQC3zacrmoQzSidXEyXKZQ4jAd+bEpsWjwVyXXiW/T6PPHXk5VsZ4GlLkebB1ETVKjFx9pr1044Z3dGTzD5uIeJCfxjoDueeo/szQ7dGcLXl4Zb81BkGYkkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707498222; c=relaxed/simple;
-	bh=o24d4mKDR3vggTFcW/wRBSGrkk5nNfwrmH+3ZFwE9RA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J1Ox3XOEkWKoLSI39NhVfFTWwIpL1FJmJ/ueIWybGpVCvG+n0Xg0JjcETTjxY7Veq+ICu6Rgcdkc5IjHjuYQwCrzRmUqw0cmV5cWDrjDGtCivgk42hQongoWEQ2n56ywY4VvDU1lStYMc6KqLJTzzA5CaZ9/3FevD+6Go/p+Wrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rM43FmHX; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707498307; c=relaxed/simple;
+	bh=xwZzEC5N9Tk3OxSnesPK34/6ccpOLSW0y1TDD6td8Xw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FyU2EcbL2WgkUnk3hkxMYvkQxaOmsze6209Wcys9pDOrWZFmm0HcA+TNgIr1HZQfd4Acn7K5EzgYkhlo0oWaX1LdMH3r+rbfT76q3GV+IGP56gbDhK4oxIdukKGwUR40ZrN/vPQtGwEwDnnL6brp0Mmt4lMhQwtBhymattO3WYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MolCB3u5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rM43FmHX"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3392b045e0aso616795f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 09:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707498217; x=1708103017; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=COfj+FIwYG87zb/D26QSbuaV/9maoynPp4ohvDdXH4E=;
-        b=rM43FmHXb0AKIb1B1rQRyhcpEwG06sOdvoLuaB9Q5XudTWcnpyaau6IzIUqC48NL+m
-         Agow3y0nzo2ojXrSDvp6zLg9U5wPIlwi2WDx/QfP/3vMMtZPX5U+cjaSHcHPi8hycaXJ
-         Rwly3yG1+8I2+Oy4bj/UiWyGb0swERohJYsF7xSDK0YJ+DhtRxujVeXTMgn8SRql2hl0
-         n3pb0nICfbzCq64nurIRx9x9nNPtWAFLKZP1q7g08oRkk67pmHh7JdH0mJkanwbPlNoy
-         TqJNf310kRDZYCoszvwyY2ZRLK8Aw7zZB7SKDzY/DvecP+Knw+PF3Qd/EL1cW4chWll6
-         L2kw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MolCB3u5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707498305;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xwZzEC5N9Tk3OxSnesPK34/6ccpOLSW0y1TDD6td8Xw=;
+	b=MolCB3u5n3esnUxXIp5joKwlBCnoCGPa00qFc+0Hcx7CKRORULMQzH+y4xZWXAx+CJsH0K
+	A52KNONQ+m//szDwxbEa5TzjD1/xdtK6B47JaJGyaQSsSi/dZ+kB5MAXHcahlQPQPooFIj
+	FcAeUCu/XE5WpU5KPga8Yw8OifMNC5I=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-26uNdTjhPyK-d7WEkV5CyQ-1; Fri, 09 Feb 2024 12:05:03 -0500
+X-MC-Unique: 26uNdTjhPyK-d7WEkV5CyQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a383b9555d3so53781066b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 09:05:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707498217; x=1708103017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707498302; x=1708103102;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=COfj+FIwYG87zb/D26QSbuaV/9maoynPp4ohvDdXH4E=;
-        b=GCtTUUXzNrYx7hm9c+DgJnhpVZhs5kbqWkT8g9HZF9WhgGpK+x38EeM+PIJMJUDrQc
-         NGKc86qmnSykT133mjKRushOublLu3Z+q0/s5G53GtxQRkoVmlQ/PVGE4cUwJBlA/L7n
-         Nj126r02PoVeHq7YSAo0fBD1lDJZ1mwPlYGVH9hQxhtHEbLHGIKueGLb2dT4VVyvrXyM
-         xUpTI2mPkAMDw1D/De1ieJNimCRbY4MsCqUBMfvLG4HxXNoVz2kFq+LQopmOMCjgBbbz
-         6Unt4n87pWnRm5AblCEZTEbOn+Jv/6EXfvuqVaIm76Ef8IFW4UjL0irMFda5i4IWPuLC
-         2hxQ==
-X-Gm-Message-State: AOJu0YxoIjq0Nty1oBw1M6KjKWxGFiw/l8hSQ9T5gv75FLwkrxPg0j7l
-	tLndUsiJ5RLtEboCZoggTwNem3soF+cnYcvIKw5TiJ+7NMi485FPMPQAvDH4jPQTw2AZhNUba8c
-	bSbD+1lViGPXlBRTC0EWlCuXkUbz4WYLc7XyUXpY4hsjFOr1t0cK7
-X-Google-Smtp-Source: AGHT+IHdTJxRqPbUQi0EeCgp3eJXw7oQ3Sm2lkH9cjrUvssz+6KzqkU0n9PtY3vFCw3VsOTdpKB8fSp2i3yuXcYptUA=
-X-Received: by 2002:a5d:4e0b:0:b0:33b:68bc:6e73 with SMTP id
- p11-20020a5d4e0b000000b0033b68bc6e73mr515018wrt.42.1707498216983; Fri, 09 Feb
- 2024 09:03:36 -0800 (PST)
+        bh=xwZzEC5N9Tk3OxSnesPK34/6ccpOLSW0y1TDD6td8Xw=;
+        b=ShlSJVM6K8KjZtyCjrqyArpP7Fm2U01Dta/8X7uMOyNnnKnr2qvFByNeEXcEgDmKev
+         b6Sh6vRJtD3cr4Y5PTioFuSC4vMP+Upy/Yszvm3KiuYXL8iBbPQmFuzNsiyTpIi/HxTu
+         LqEJ7Zcn2gBkJbLe/SFxOP8Q2Y1OVfFsHm3MB2SFUmGdYACckDMaBArzAaIX/yX9EZ4B
+         ke13PBRMe7y4bUzNilcX+ib7kLWrChmO5rK3k/l27SEXDwDJfug1L4T87fg9roDxdOJM
+         kJuGyjR8TeCN5UTvKz9Ep86WOddU3k2D6nFIk96+VW3dQoz1LhYPL/VX+Wzq7uRQRE4+
+         x4mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNjZ6zto26EGg1ZZAoVBQOLSZlm+liLiSh1Hu1eqbRWo3gK7GaLy1hscYYUupO/pVcqufv5MTx/wxluE85zYPaZgrq2sv3gKn6LYWd
+X-Gm-Message-State: AOJu0YyU6EvGd5+6PjxkAF8YjyuOGpNPItBhKuxGPh3OGtqFVPfOAklg
+	ZBPN2kX4bsZdkLyuHsAYpMOMZjKB9V+V/FHCkYHFw9ZPrJdM9m07eSE2A8GjobxghJnEqXlDh1G
+	nyC3CC9ACl1hgqsTsHwfgdb6egOTBMLbNGYhGA99MO4wq3qn+vcInlSmq+SskSQ==
+X-Received: by 2002:a17:906:3b44:b0:a38:7d12:60dc with SMTP id h4-20020a1709063b4400b00a387d1260dcmr1702930ejf.57.1707498302249;
+        Fri, 09 Feb 2024 09:05:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHZ6rIYmVrGR5l4WhAPhCgw3RoLKnYaDvF16VXRcjzzYpHk7cis3fYExxbimqXtPAUIZR9Fsg==
+X-Received: by 2002:a17:906:3b44:b0:a38:7d12:60dc with SMTP id h4-20020a1709063b4400b00a387d1260dcmr1702892ejf.57.1707498301861;
+        Fri, 09 Feb 2024 09:05:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUOtGsAvv6QdC70PwwyWekW7wdIJz0/cucB80WRTV4+ZgCv+AHZZmjEVwpXyjm9muc1IGcLJofTiSKgLMhO+71pOKkmCHsmgprSc6gN44WovL+T+IE3bc31WnJs6BAjOkBj4fQEAqfoT5ow/rXzVpCO/hSbbIE9Dt4jY1ZtqDzVyLDh0yytbtbpjtq/2OTIBFeqi5ROaH5lUSSx6/9LLUYqZe+E2PsXzaiMfcWn3yl7hphwOsEc/KeyIU99E32NsaDh9nBHJX1xYe5bl8KpmdXQKFfqP3z4NxkokPbuLxWfXkaKaFg4rWPmr7ishQsxF+qk+gUk9Rc3CidaDhDZ0HTXQk7el6HF07YCDWrNrjl6KLwJ08E84AeGFf4j2+0hb1Ft7f4NMXox3PxUIoCZmWlwurPz52zAfk138lNe/A7QbAo4EA3HBNgKtzd9N3YdxKpRH070aztcW8JVA7X0mxtWrbj18Oqdld4FSaPOYRdezUN/WtCnlNzEECMqavl/BdctSzTUWCNVpo6P24VEL6BwNlixXKvrR5Oy2KQk95EwhI/K4R8//D0GdaRHBjI4pPYQxMhfJ8x4GiQAocuisPJTkppbOi7bBkyy76dlXs96ysVgn+e8LeW2+/4Xjrw=
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id fj7-20020a1709069c8700b00a3875804883sm925259ejc.124.2024.02.09.09.05.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 09:05:01 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 23A0810F505E; Fri,  9 Feb 2024 18:05:01 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jiri Kosina
+ <jikos@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <shuah@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC bpf-next 0/9] allow HID-BPF to do device IOs
+In-Reply-To: <CAO-hwJ+UeaBydN9deA8KBbgBiC_UCt6oXX-wGnNuSr8fhUrkXw@mail.gmail.com>
+References: <20240209-hid-bpf-sleepable-v1-0-4cc895b5adbd@kernel.org>
+ <87bk8pve2z.fsf@toke.dk>
+ <CAO-hwJ+UeaBydN9deA8KBbgBiC_UCt6oXX-wGnNuSr8fhUrkXw@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Fri, 09 Feb 2024 18:05:01 +0100
+Message-ID: <875xyxva9u.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208220604.140859-1-seanjc@google.com>
-In-Reply-To: <20240208220604.140859-1-seanjc@google.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Fri, 9 Feb 2024 09:03:22 -0800
-Message-ID: <CAKwvOdk_obRUkD6WQHhS9uoFVe3HrgqH5h+FpqsNNgmj4cmvCQ@mail.gmail.com>
-Subject: Re: [PATCH] Kconfig: Explicitly disable asm goto w/ outputs on gcc-11
- (and earlier)
-To: Sean Christopherson <seanjc@google.com>, quic_apinski@quicinc.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>, Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-+ Andrew
+Benjamin Tissoires <benjamin.tissoires@redhat.com> writes:
 
-Andrew, here's the full thread, I cut most of it out:
-https://lore.kernel.org/lkml/20240208220604.140859-1-seanjc@google.com/
-.
-
-On Thu, Feb 8, 2024 at 2:06=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
+> On Fri, Feb 9, 2024 at 4:42=E2=80=AFPM Toke H=C3=B8iland-J=C3=B8rgensen <=
+toke@redhat.com> wrote:
+>>
+>> Benjamin Tissoires <bentiss@kernel.org> writes:
+>>
+>> > [Putting this as a RFC because I'm pretty sure I'm not doing the things
+>> > correctly at the BPF level.]
+>> > [Also using bpf-next as the base tree as there will be conflicting
+>> > changes otherwise]
+>> >
+>> > Ideally I'd like to have something similar to bpf_timers, but not
+>> > in soft IRQ context. So I'm emulating this with a sleepable
+>> > bpf_tail_call() (see "HID: bpf: allow to defer work in a delayed
+>> > workqueue").
+>>
+>> Why implement a new mechanism? Sounds like what you need is essentially
+>> the bpf_timer functionality, just running in a different context, right?
 >
-> Explicitly require gcc-12+ to enable asm goto with outputs on gcc to avoi=
-d
-> what is effectively a data corruption bug on gcc-11.  As per
-> https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html, "asm goto" is
-> *supposed* be implicitly volatile, but gcc-11 fails to treat it as such.
-> When compiling with -O2, failure to treat the asm block as volatile can
-> result in the entire block being discarded during optimization.
+> Heh, that's exactly why I put in a RFC :)
 >
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D103979
+> So yes, the bpf_timer approach is cleaner, but I need it in a
+> workqueue, as a hrtimer in a softIRQ would prevent me to kzalloc and
+> wait for the device.
 
-Shoot, I was cc'ed on that bug (I think I noticed it in testing as
-well, and pointed it out to Andrew on IRC who then cc'ed me to it). I
-probably should have asked if that would cause issues at some point
-for the kernel.
+Right, makes sense.
 
-I took a look at the test case added in that bug; it doesn't compile
-until gcc-13 (specifically gcc 13.2, not gcc 13.1).  I'm curious since
-the bug says the fix was backported to gcc-12 and gcc-13. Are there
-specific versions of those that contain the fix? If so, should Sean
-amend his version checks below? For instance, was the fix backported
-to gcc 12.3, so users of gcc 12.2 would still have issues?  I can't
-tell in godbolt since the added test case doesn't compile until gcc
-13.2. https://godbolt.org/z/eqaa7dfo3
-
-My implementation in clang still has some issues, too.  It's hard to
-get new control flow right, and there are minimal users outside the
-kernel to help us validate.
-
-So as much of a fan of feature detection as I am, I admit some of
-these edge cases aren't perfect, and we may need to result to version
-detection when such bugs become observable to users.
-
-I'm happy to ack this patch, but I would like to wait for feedback
-from Andrew as to whether we can be even more precise with avoiding
-more specific versions of gcc 12 and 13 (if necessary).
-
-> Fixes: 587f17018a2c ("Kconfig: add config option for asm goto w/ outputs"=
-)
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: kvm@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
+>> So why not just add a flag to the timer setup that controls the callback
+>> context? I've been toying with something similar for restarting XDP TX
+>> for my queueing patch series (though I'm not sure if this will actually
+>> end up being needed in the end):
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/toke/linux.git/commit/?h=
+=3Dxdp-queueing-08&id=3D54bc201a358d1ac6ebfe900099315bbd0a76e862
+>>
 >
-> Linus, I'm sending to you directly as this seems urgent enough to apply
-> straightaway, and this obviously affects much more than the build system.
->
->  init/Kconfig | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index deda3d14135b..f4e46d64c1e7 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -82,6 +82,11 @@ config CC_CAN_LINK_STATIC
->         default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG=
-_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m32-flag) -static)
->
->  config CC_HAS_ASM_GOTO_OUTPUT
-> +       # gcc-11 has a nasty bug where it doesn't treat asm goto as volat=
-ile,
-> +       # which can result in asm blocks being dropped when compiling wit=
-h -02.
-> +       # Note, explicitly forcing volatile doesn't entirely fix the bug!
-> +       # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D103979
-> +       depends on !CC_IS_GCC || GCC_VERSION >=3D 120000
+> Oh, nice. Good idea. But would it be OK to have a "timer-like" where
+> it actually defers the job in a workqueue instead of using an hrtimer?
 
-LGTM; but we might need to be more specific about avoiding certain min
-versions of gcc 13 and 12.
+That's conceptually still a timer, though, isn't it? I.e., it's a
+mechanism whereby you specify a callback and a delay, and bpf_timer
+ensures that your callback is called after that delay. IMO it's totally
+congruent with that API to be able to specify a different execution
+context as part of the timer setup.
 
->         def_bool $(success,echo 'int foo(int x) { asm goto ("": "=3Dr"(x)=
- ::: bar); return x; bar: return 0; }' | $(CC) -x c - -c -o /dev/null)
->
->  config CC_HAS_ASM_GOTO_TIED_OUTPUT
->
-> base-commit: 047371968ffc470769f541d6933e262dc7085456
-> --
-> 2.43.0.687.g38aa6559b0-goog
->
+As for how to implement it, I suspect the easiest may be something
+similar to what the patch I linked above does: keep the hrtimer, and
+just have a different (kernel) callback function when the timer fires
+which does an immediate schedule_work() (without the _delayed) and then
+runs the BPF callback in that workqueue. I.e., keep the delay handling
+the way the existing bpf_timer implementation does it, and just add an
+indirection to start the workqueue in the kernel dispatch code.
 
+> I thought I would have to rewrite the entire bpf_timer approach
+> without the softIRQ, but if I can just add a new flag, that will make
+> things way simpler for me.
 
---=20
-Thanks,
-~Nick Desaulniers
+IMO that would be fine. You may want to wait for the maintainers to
+chime in before going down this route, though :)
+
+> This however raises another issue if I were to use the bpf_timers: now
+> the HID-BPF kfuncs will not be available as they are only available to
+> tracing prog types. And when I tried to call them from a bpf_timer (in
+> softIRQ) they were not available.
+
+IIUC, the bpf_timer callback is just a function (subprog) from the
+verifier PoV, so it is verified as whatever program type is creating the
+timer. So in other words, as long as you setup the timer from inside a
+tracing prog type, you should have access to all the same kfuncs, I
+think?
+
+-Toke
+
