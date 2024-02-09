@@ -1,70 +1,65 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEED63C
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 00:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6B2185E;
+	Sat, 10 Feb 2024 00:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707525973; cv=none; b=sJWZSdyEXhYRMjdE4FXKwrm4e6weqK9KIpwIhhKhZHUeCRbqCM6qaCFspPId6bQjDnmfNOynbV7N6Iy0O+f/DQLD9SFCETFz5Iwl31iNrMPiDv410mRBGrCB8l+eK1og2pHNAQLI+6yZoYoko/Nv2evkhxZFX2moSwBlhBN2cE0=
+	t=1707526063; cv=none; b=VxgaPaVJpR62rkjZeCKb37MBDPG3AUOvgc+yfsT6jVRQWCj0PkbF145MImJSMdSvwx++gqCIKGMB4zWl3bf2upvDVXLxFAkDHV3ObI5PQK762nbZ3BzegW8YdZq9+i6gNqoHlxgeiCaL32PA7ZRjw6xbd1ADJlAXNtMo52PP94w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707525973; c=relaxed/simple;
-	bh=c1m98uWJHsoVBsgAVtMUrA7Ex+4IBof/+TdUbyPKdEE=;
+	s=arc-20240116; t=1707526063; c=relaxed/simple;
+	bh=3GkM8TGREygwBB1OKJjChwJhWO6bfKjIxm42ycxuJ+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uiFAzWtmBgeTsLgKQvvV9C13dZNtNaF0oMAdoUd/KIS2mSvOnN0ZvWzZNwX3376RcgV/sbWFdhNojssjqFunP/QSQ1M71MbNyGUWnUQ/oPuN8WNqmIyAQlzQXjevYO/5TSKo/qDUvPCrL3HTvwRGvhwWvjJrIS5tAAqrCoSnQds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=0JLZkn5M; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LOK51zeCaYHN/h6AFe1UuCni190AWgizvcL6pFexKTKpCqIDfvcaleoI8mTCQC1o+8yDXNIWSBCkpAfpY3+LP1pFmu9m+TBf81L97DbOtfSLI0P97oKUOh5D6tAR1h98u2CbyOzUFNyaaKhIC8zg1Z0J0QGou1ruJfaMk3Folrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/NAL2NX; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="0JLZkn5M"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1298088a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 16:46:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/NAL2NX"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-783dc658bd9so72364685a.1;
+        Fri, 09 Feb 2024 16:47:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707525970; x=1708130770; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707526061; x=1708130861; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kF95EmwupPw/fzcMgiHi7D1T8Cm5RLvxdbpHGZs30QQ=;
-        b=0JLZkn5M5VzAlLXDHUE1D38vczUgZ+Ya+uBOkWgiT/rzdwXzTJo/jeBtrmu6oDxmXT
-         NUeQJdE5iS0JpL7misaC2qSZj6tfl1yAJ41YlIijn9bvMXNOjq2SChC+G0Mo4iYQs07g
-         mUBdgRLPmKGJP/i1uGH/39lEus59ZPopinP3xLNihTMqiTNvQVqDmf3eBiWp9a1Mxj9Z
-         kgY5EE+uXzgpyb8v+kpe2PscCPB+OsSIZ6/wggoIwezaUc0VqFDfMtyTmADtFXa8qdZ9
-         99T1lJXlAKUOFGj7LEuCG64dEbv+Up0H/alTIormUIwtFBnJWx2qxV2jNEhVR945WP1m
-         upew==
+        bh=3GkM8TGREygwBB1OKJjChwJhWO6bfKjIxm42ycxuJ+Q=;
+        b=L/NAL2NXQH20vzpZkUHK6lVI7hUwSj8UqM2f652dcFNjgy9cHHAyFrF89IewtI5DLE
+         48LzeX3esmvDrTkto9Jy1bO9iAcyTi7lFg4d8r1oZ97VpZyPJG2hCCtuIgrb02JIWuph
+         fgaehnTkm3cRWhREzj+0JdWLHcoXjwfsXkaC3SyFDmWTcCgoaEFpDkoBmD8o3YBxiDlF
+         FO51hVpiXzPx24WubRV5C6tfFgDMzayD7bzpWTj4TV+yzPGbOT8dwO69twecrIIkJTK9
+         LgJzMLN2sbHC646NeI8SmoXuPfejjwzM14rgoid60MW3U47YjOYs3hFLgo7R1Wa+UHzM
+         6Z9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707525970; x=1708130770;
+        d=1e100.net; s=20230601; t=1707526061; x=1708130861;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kF95EmwupPw/fzcMgiHi7D1T8Cm5RLvxdbpHGZs30QQ=;
-        b=Q3kYKG7xk2tS46toUcXYLzJpLEebNnlsMLOnjkvrKiYFvFHEX/Sj3Y6EemYQwLLR2t
-         8JapuVkyUi/U1iQpbs9I1cOdSM5i5osFTccurtaZ1ud8h06+nwV5Cvu4lY85uqWbmlZ2
-         HO+4gqo3v5Mo2gjXAtdUrGBNyBC6E7OVmQ6x8OB6UZSVvBp/bmuqQH/9ueLPjE1EqNPN
-         Nh9VTjxwXWu5FLN7TmTsMlbGGIfx9xoFa3gDkI8em4mq6L2owwCPl1NkBOL5t1G/OkH6
-         mm4qvufOx9vneCPCSgfxncNWkdfUQzrcRJrBAiBu6ZqrLvLYfzjsJUFDRH0e3XzFZEUX
-         Xk8Q==
-X-Gm-Message-State: AOJu0Yxmw+hnZcZ/4pLvz4NRs0LOVN7ZuokBo2yD6ShV6oV5phUeknwr
-	Owepw2VP1wUNdJagIidYb3iacTjWo3aRODS6r3H+EtqLTRQvG8wi9JjTX4s/JG0=
-X-Google-Smtp-Source: AGHT+IGR32e6FiZSJeLMwjErq+5wSggpYLYqWeQRw3rXGEh4OM9E/+gmLbxQGY0ECxZ7RUB2aTOC3Q==
-X-Received: by 2002:a05:6a21:1394:b0:19c:9f1b:1d8d with SMTP id oa20-20020a056a21139400b0019c9f1b1d8dmr761155pzb.12.1707525969682;
-        Fri, 09 Feb 2024 16:46:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW73GxaqqiIc5gHy1xKaJWZSQGU7/DufxWN03Ho4lKGpPSAQELayJGU4CNDSqxZrHxGI7A6pysp34ILZ+5B3jnEMBCRkcf7rTGNqPeOwyh+BqlSHnPJkfD8jNITPa+Yz4A9bLRkaxuXb5r3lxIx2k+m359LDkhmEUWibItUCENM4Nv8qwQ+vqhG2JYiaZs=
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id du17-20020a056a002b5100b006ddcf5d5b0bsm1140526pfb.153.2024.02.09.16.46.08
+        bh=3GkM8TGREygwBB1OKJjChwJhWO6bfKjIxm42ycxuJ+Q=;
+        b=tG4grdWoLFau62jIAjpBfaA3WJis7KE653PbZWAgYOu8LQuQSOOiLypoAN8XqPD29E
+         N6pBWTY+KzwPARix+m4Y+EcxeTlWjBmUpDeD8kXv5KLRA1T8fTTFseMRLhOlhmm3kW+/
+         Ii5IS6ZwnB3q5GTYFj9J3bfmXkU+rciVTH1h5Wvhci4dfvaMUuJrGiYigzIT11XHKp7N
+         HY1xVk7xDTh9/imdrIH7zFtJ09kr23VVW7n1jA1L8ckwtbYZ+IxDzLa7lbhXioUoWgqC
+         KjW1UjXatFFat8NYyLa9oExWh73MfRxCboVB+5G8MG2mTnSS6nXQwjpe+5v7Lwrtdb3b
+         A0nA==
+X-Gm-Message-State: AOJu0YzNoUM7+CXa2Dp4du88lqrV1XhSP5c4DkqTwfOU2vgZA1e7IZDe
+	w7SqDdIcFZB0mD9F/TKpfGsGf6ZH0JNXJDapwL9q5Q2/W3bimU8N
+X-Google-Smtp-Source: AGHT+IEiS2PSanma8pRBIGOiyOV6412n5dDFOflinxf+2y5W7ZlHiwSDwM6Zt5PtTSKWQgA5kQa1cQ==
+X-Received: by 2002:a05:620a:4e:b0:783:f7b0:375d with SMTP id t14-20020a05620a004e00b00783f7b0375dmr957691qkt.70.1707526061337;
+        Fri, 09 Feb 2024 16:47:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU7gPGXLyOKCP8EfUdS24xzv7mM/YMcqNnGU21HT+mfX0SoqikCwgJxtRrHq7Xx5cWwWBf9rXicClDOWNUvLpu8X8Azc07uNkFvUSKJ
+Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
+        by smtp.gmail.com with ESMTPSA id qb1-20020a05620a650100b007858a9032c8sm218107qkn.24.2024.02.09.16.47.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 16:46:08 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rYbVN-004OSC-2b;
-	Sat, 10 Feb 2024 11:46:05 +1100
-Date: Sat, 10 Feb 2024 11:46:05 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] fs/writeback: remove unneeded check in
- writeback_single_inode
-Message-ID: <ZcbHTYLSO7mU0e9G@dread.disaster.area>
-References: <20240208172024.23625-1-shikemeng@huaweicloud.com>
- <20240208172024.23625-5-shikemeng@huaweicloud.com>
+        Fri, 09 Feb 2024 16:47:41 -0800 (PST)
+Date: Fri, 9 Feb 2024 14:47:38 -0500
+From: Oliver Crumrine <ozlinuxc@gmail.com>
+To: Stanislav Fomichev <sdf@google.com>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next] net: remove check in
+ __cgroup_bpf_run_filter_skb
+Message-ID: <e2po4x54ouafemogi3uaft2i25qieamr7oizisz5gutcfyzt4i@zyrbjb4cddfs>
+References: <5ac3e6uwvhdujq6tywb6b5bh5flqln6d7kedmcbvhyp55jp4yo@65pnej6e2ub6>
+ <Zca80Uetl26BsICU@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,43 +68,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240208172024.23625-5-shikemeng@huaweicloud.com>
+In-Reply-To: <Zca80Uetl26BsICU@google.com>
 
-On Fri, Feb 09, 2024 at 01:20:21AM +0800, Kemeng Shi wrote:
-> I_DIRTY_ALL consists of I_DIRTY_TIME and I_DIRTY, so I_DIRTY_TIME must
-> be set when any bit of I_DIRTY_ALL is set but I_DIRTY is not set.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  fs/fs-writeback.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 2619f74ced70..b61bf2075931 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -1788,7 +1788,7 @@ static int writeback_single_inode(struct inode *inode,
->  		else if (!(inode->i_state & I_SYNC_QUEUED)) {
->  			if ((inode->i_state & I_DIRTY))
->  				redirty_tail_locked(inode, wb);
-> -			else if (inode->i_state & I_DIRTY_TIME) {
-> +			else {
->  				inode->dirtied_when = jiffies;
->  				inode_io_list_move_locked(inode,
->  							  wb,
-
-NAK.
-
-The code is correct and the behaviour that is intended it obvious
-from the code as it stands.
-
-It is -incorrect- to move any inode that does not have I_DIRTY_TIME
-to the wb->b_dirty_time list. By removing the I_DIRTY_TIME guard
-from this code, you are leaving a nasty, undocumented logic trap in
-the code that somebody is guaranteed to trip over into in the
-future. That's making the code worse, not better....
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+On Fri, Feb 09, 2024 at 04:01:21PM -0800, Stanislav Fomichev wrote:
+> The bot still can't git-am it. And I can't either. Did you somehow
+> manually mangle that part above? The original line has less trailing spaces
+> than what your diff source has, look at:
+I literally saw the bot issue and the spaces just before you sent this.
+> Can you drop this part? Let the idents stay broken :-)
+Just did. Didn't manually edit the patch so I don't exactly know how
+that happened, but thanks for pointing it out.
