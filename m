@@ -1,111 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1327C2134B;
-	Fri,  9 Feb 2024 22:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFB434CD5;
+	Fri,  9 Feb 2024 22:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707518538; cv=none; b=AcG8GpCPB4riu674z5P7+qPqI/dgll/8Tp2qrU0keWNNWyFgQV8fSM0Fpf81AcTOS6sbsWOw6yFKNO2Z0SLLxmBTnC37gQJtOmLdZAWuuoH6hbK1/+Mvmr29aFV6YR+5bKT6K+b5LKJc2mo6diFR36ciN0/P8ouKFiniNGPSkiU=
+	t=1707518582; cv=none; b=sKjyuyMG71AnilOE99N7ApEuUK8xSSuObTxYmPXhdvQ5v64dVQ20UsvWWq/lOQOPj9xchQ2bqzIwZqU3MdT05i31Y+6XMWj/fnDP5b4e7xbZRyZHfOzkOxv11nbzuDanu7V+tkIyn9ftLcu5BKqM37wH5ZzCaARjw3+G9LnMY4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707518538; c=relaxed/simple;
-	bh=LB2yq/a/dObdaIA/QKejtPmk1xv0qVIDrLv38rM+hwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EtTx73wvau0TW1Tq9Mu1vdO8jOW3Gc6/mrc0TAKMv8WLWZzFDPBlvEKQFMLc55pPGt1t0xC/H+jpV6vGf5dclCRzpaqr3mLh59xpSjBDZAUXx9NIgqvmBVjB+w/snjDt8AJ4pmjsE0UCdqC7hJ/mWs1V92FB+A4Np/57SSPvmOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMDUSxV8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707518582; c=relaxed/simple;
+	bh=0VrvZ7V1JHCIdSHJkSJPYRxvDvx/5ayihD+OUxA6lZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=urF/Ot09p7hrkjOw3WFl1InUjdTubQSHPCRUHYcmyUmQp4HH0qDcSQiEFYos8u7K/HQltHJSirPXuED/sxbCq2GEHTGO3Ljc++ARQwOUGKhIPqBfnuv3Xj2ne6WRgz48L0uOGZz1NKKd895SCI300yWQvHtv4CGfgHpyZC1Vxl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=k5ZHtjuG; arc=none smtp.client-ip=91.227.64.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMDUSxV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09679C433C7;
-	Fri,  9 Feb 2024 22:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707518537;
-	bh=LB2yq/a/dObdaIA/QKejtPmk1xv0qVIDrLv38rM+hwY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FMDUSxV8DcP6+vvHsaIGYsiVQCScFd182quGHHIs1DTBHQv4UIfUKOQ01JVWBaW7o
-	 r+ob50tFH7NFzFSIBqpz3IfoKKkPeHX5iz1SEZxVmNdzW+pF90kwrogGbSUmPdPFUs
-	 eQPdlhg+uecKlw9hBEA7KLFaokJESE17zQ7RvDGDW1Ibk2G0Lv7f0aOGzjMpF3ueom
-	 hIFrA5BjqTnvmUvh197AlJA5YJfGVgOWYik6VtBQLumIafAZFaePTBekqCnYKZeAKU
-	 l8Kx6e7rgdSozVkBS5MTpR4S/k+MZwwiQgN4VUQr14/7vZYDJYWBc491hapXmMtvlz
-	 goJOJ9U/RPddg==
-Message-ID: <2bdc5510-801a-4601-87a3-56eb941d661a@kernel.org>
-Date: Fri, 9 Feb 2024 15:42:16 -0700
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="k5ZHtjuG"
+Received: from remote.user (localhost [127.0.0.1])
+	by rere.qmqm.pl (Postfix) with ESMTPSA id 4TWpZp6CMszBR;
+	Fri,  9 Feb 2024 23:35:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+	t=1707518115; bh=0VrvZ7V1JHCIdSHJkSJPYRxvDvx/5ayihD+OUxA6lZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k5ZHtjuGdfiiMlGsBNgkQ+/cwOlBC1f/ZWvTDtSrGXq/un7xNh+cAWHGNkVYuStKd
+	 TKiU/Mt+RotJYBpK4wllp2Kb2MovQ0drodGCL5N7mSwQY29HR1fMbwg9gR6xX5bIIS
+	 Y9ozhVXrANTyWa5QLXXa+aN9RJRfLJIb0G+9sbPV8gP55LJ3iE3sMB9/bDYbOlTSnN
+	 PC3tTZ9bqRVFlz3wReNzKsJjnkPxEuo8XEcaj66iYYVYYAPcHzcjUSIA9e1pRhC1Sm
+	 CzfnFiJbDSXRnD8V3f7iohL6VFyag5ZHp/HoHfHRdaOVX8ETvduc+Voj3pbdeGQ46H
+	 P95Z5Q0jCvYvA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.103.10 at mail
+Date: Fri, 9 Feb 2024 23:35:13 +0100
+From: =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	"linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: core Drop BLK_BOUNCE_HIGH
+Message-ID: <Zcaooa0bTKo3OdvV@qmqm.qmqm.pl>
+References: <20240125-mmc-no-blk-bounce-high-v1-1-d0f92a30e085@linaro.org>
+ <8ca6a46e-551a-4400-965f-f4ad60bff072@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>, Saeed Mahameed <saeed@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Leon Romanovsky <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jiri Pirko <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>,
- Itay Avraham <itayavr@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Christoph Hellwig <hch@infradead.org>, andrew.gospodarek@broadcom.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20240207072435.14182-1-saeed@kernel.org>
- <20240207070342.21ad3e51@kernel.org> <ZcRgp76yWcDfEbMy@x130>
- <20240208181555.22d35b61@kernel.org>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <20240208181555.22d35b61@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ca6a46e-551a-4400-965f-f4ad60bff072@app.fastmail.com>
 
-On 2/8/24 7:15 PM, Jakub Kicinski wrote:
->>> Ah yes, the high frequency counters. Something that is definitely
->>> impossible to implement in a generic way. You were literally in the
->>> room at netconf when David Ahern described his proposal for this.
-
-The key point of that proposal is host memory mapped to userspace where
-H/W counters land (either via direct DMA by a H/W push or a
-kthread/timer pulling in updates). That is similar to what is proposed here.
-
->>>  
->>
->> I was in the room and I am in support of David's idea, I like it a lot,
->> but I don't believe we have any concrete proposal, and we don't have any
->> use case for it in netdev for now, our use case for this is currently RDMA
->> and HPC specific.
->>
->> Also siimilar to devlink we will be the first to jump in and implement
->> the new API once defined, but this doesn't mean I need to throw away the
+On Thu, Jan 25, 2024 at 10:47:26AM +0100, Arnd Bergmann wrote:
+> On Thu, Jan 25, 2024, at 09:50, Linus Walleij wrote:
+> > The MMC core sets BLK_BOUNCE_HIGH for devices where dma_mask
+> > is unassigned.
+> >
+> > For the majority of MMC hosts this path is never taken: the
+> > OF core will unconditionally assign a 32-bit mask to any
+> > OF device, and most MMC hosts are probed from device tree,
+> > see drivers/of/platform.c:
+> >
+> > of_platform_device_create_pdata()
+> >         dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> >         if (!dev->dev.dma_mask)
+> >                 dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+> >
+> > of_amba_device_create()
+> >         dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> >         dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+> >
+> > MMC devices that are probed from ACPI or PCI will likewise
+> > have a proper dma_mask assigned.
+> >
+> > The only remaining devices that could have a blank dma_mask
+> > are platform devices instantiated from board files.
+> >
+> > These are mostly used on systems without CONFIG_HIGHMEM
+> > enabled which means the block layer will not bounce, and in
+> > the few cases where it is enabled it is not used anyway:
+> > for example some OMAP2 systems such as Nokia n800/n810 will
+> > create a platform_device and not assign a dma_mask, however
+> > they do not have any highmem, so no bouncing will happen
+> > anyway: the block core checks if max_low_pfn >= max_pfn
+> > and this will always be false.
+> >
+> > Should it turn out there is a platform_device with blank
+> > DMA mask actually using CONFIG_HIGHMEM somewhere out there
+> > we should set dma_mask for it, not do this trickery.
+> >
+> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> I'm not asking to throw it away. The question is only whether you get
-> to push it upstream and skirt subsystem rules by posting a "misc" driver
-> without even CCing the maintainers on v1 :|
-
-Can you define what you mean by 'skirt subsystem rules'? That's a new
-one to me.
-
-BTW, there is already a broadcom driver under drivers/misc that seems to
-have a lot of overlap capability wise to this driver. Perhaps a Broadcom
-person could chime in.
-
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 > 
->> whole driver just because one single use case will be implemented in netdev
->> one day, and I am sure the netdev implementation won't satisfy all the
->> use-cases of high frequency counters:
->>
->> Also keep in mind high frequency counters is a very small part of the debug 
->> and access capabilities the mlx5ctl interface offers.
->>
->>> Anyway, I don't want to waste any more time arguing with you.
->>> My opinion is that the kernel community is under no obligation to carry
->>> your proprietary gateway interfaces. I may be wrong, but I'm entitled
->>> to my opinion.
->>
->> Thanks, I appreciate your honesty, but I must disagree with your Nack, we
->> provided enough argument for why we believe this approach is the right
->> way to go, it is clear from the responses on V3 and from the LWN article
->> that we have the community support for this open source project.
+> I think it's worth mentioning the cb710 example here, which
+> uses a platform device as a child of a PCI device and
+> does not assign a DMA mask nor use DMA.
 > 
-> Why don't you repost it to netdev and see how many acks you get?
-> I'm not the only netdev maintainer.
+> This one will see a change in behavior, meaning that the
+> blockdev buffers are no longer bounced. As far as I can
+> tell, this is fine because the driver appears to correctly
+> use the sg_iter infrastructure for mapping data pages,
+> but it would be good to have this confirmed by
+> Micha³ Miros³aw because this code path has probably never
+> been tested without BLK_BOUNCE_HIGH.
 
-I'll go out on that limb and say I would have no problem ACK'ing the
-driver. It's been proven time and time again that these kinds of
-debugging facilities are needed for these kinds of complex,
-multifunction devices.
+Hi, this driver doesn't do DMA at all, so having DMA mask set or not
+it should be good as long as the CPU can read/write the buffers.
+
+Best Regards
+Micha³ Miros³aw
