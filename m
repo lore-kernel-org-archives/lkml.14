@@ -1,88 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C2474E28
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77D96BB5F;
+	Fri,  9 Feb 2024 15:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707493472; cv=none; b=YLbMFjogvoA3Awjk5Qnm0F+MfFJac/XiwxYbncW1b98sPH1BWT9hn67AlhstN5TrXfZOnI7RGIncNqJZC6YlKoqyIQ3L8AV646AdF42nZ+m+XMkMghUbcwGI7LutvUC7uFAft0P8Yx2i5CV+8rBnGXZd7WflUrbCID4LOKxhMEI=
+	t=1707493550; cv=none; b=Ek5MPG3IzfbNM3Nyv32x55Y3OlSB+uRfKIgAOF1nj5Sme20DgY9J5c9J45tYwQAaqqdBUJb8z7C5L/ApQJTU+9Pmq7qBleJb87SmuwuGiDdYYRxzXOpscR2r4462o88NWnvzhmn9rMDTGJ4IoYer9uR+NmqXGHw+Wmy8eW+kDG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707493472; c=relaxed/simple;
-	bh=8laP6uomvxanGYT7yrAFbIjiqPGzbWck4Bytm/WmMvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U9QlBx/Qkm+7AK/hNhP/D7InbenTdNWM1uzU3SA6tc7NBlDWnw1VCY2zYxV/avGDPW41Gvf3uGQbNS/D++PamElYDXTPN8gjjiPj5SF2tmYzq/reTGkxG66cX/aNj4nI6k8B/52FHfbXajrgYFA/r7sP3EbJKH1QCIKMj5B17t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LccG94XZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707493550; c=relaxed/simple;
+	bh=XGHTamODldsKIajh+HkJlfAS60GDYUJtSZqaTXI3otw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=BAiycn+JbnMpvAGe3XLsLERGtqB7EzrYfLLylpni3y0zejf3mnq6yirLiSP2nTg2QB3h3Z2C0mdH8dPMCnRjkhvbPNdoc+cGy+f4RJWspD5GO7mPrX0UwH82D0x5z8RPzdBBnAWOD0jNMfbjU5SUVCQZKAnndhJYCmga2bOnUkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RUr5eR+4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iAiJv2Fm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LccG94XZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707493470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RUr5eR+4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iAiJv2Fm"
+Date: Fri, 09 Feb 2024 15:45:39 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707493540;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8laP6uomvxanGYT7yrAFbIjiqPGzbWck4Bytm/WmMvk=;
-	b=LccG94XZHRxVh66M3VNm/U1L7m+x1iYadhSCZTVod8itImpdh3mg/qF49fVoi/E/GZSAKN
-	dAW0vG5WLLhPEQSrNCo+Pexf0bWUe3mbp4jReJ6hjlfY9VWbuPqkckAB3yXv99DJMRANTk
-	lsXh0oZ+B2kPIKYZaS9RA68KnuVS3s4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-tcF3PfSbMDufhk5k1eOCwA-1; Fri,
- 09 Feb 2024 10:44:25 -0500
-X-MC-Unique: tcF3PfSbMDufhk5k1eOCwA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AEEB338130B4;
-	Fri,  9 Feb 2024 15:44:24 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.84])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 0EC362166B31;
-	Fri,  9 Feb 2024 15:44:22 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri,  9 Feb 2024 16:43:08 +0100 (CET)
-Date: Fri, 9 Feb 2024 16:43:05 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
- PIDFD_THREAD
-Message-ID: <20240209154305.GC3282@redhat.com>
-References: <20240209130620.GA8039@redhat.com>
- <20240209130650.GA8048@redhat.com>
- <20240209-stangen-feuerzeug-17c8662854c9@brauner>
+	bh=x8s4ETIGvFJpPoRfIpoZJ/N42G7JkajvXf5vnPmcKnA=;
+	b=RUr5eR+4jpliQ7SpZjPk8WV+Dk+C9Zd/U/0FebCiXeZzE0afJPCoM3VWNcG924iAyqLhTi
+	tIDXGb3kXzOJkn1qk9srw9aeFjNFqrOojjvRT2csK3mwdJRPok19UaqmwxdtG4TWQ7us5L
+	npKS0eJQRiwN4+8/7kXrai9yGIM0TLBfNdoM6lw003zKKcPXjzkdglDKEn28cqvKxASPDs
+	c+e6sBqHwU6oXVRQ77Gt84yfoWqTk0SVOx2BPZ263lr62zaojfi53n1bd/0jyI5LN8Li+R
+	JsIDg2stPzGjDj4o3dtoUAAm7e8Rvqmfsoesf6gMSTS1I2RibexAgOKmE4Mg+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707493540;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8s4ETIGvFJpPoRfIpoZJ/N42G7JkajvXf5vnPmcKnA=;
+	b=iAiJv2FmgtYnI0ILGld7utjlCgMNmKhRYjU+3SpaEtlEuTh9QAkcaWYJ56LeJNy9pk33LE
+	zBhT+MVjwoSthNAA==
+From: "tip-bot2 for Aleksander Mazur" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/Kconfig: Transmeta Crusoe is CPU family 5, not 6
+Cc: Aleksander Mazur <deweloper@wp.pl>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>,  <stable@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240123134309.1117782-1-deweloper@wp.pl>
+References: <20240123134309.1117782-1-deweloper@wp.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209-stangen-feuerzeug-17c8662854c9@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Message-ID: <170749353913.398.14031938627894513083.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 02/09, Christian Brauner wrote:
->
-> How do you feel about the following (untested...) addition?
+The following commit has been merged into the x86/urgent branch of tip:
 
-LGTM, but let me read this patch once again tomorrow, I have
-a headache today.
+Commit-ID:     f6a1892585cd19e63c4ef2334e26cd536d5b678d
+Gitweb:        https://git.kernel.org/tip/f6a1892585cd19e63c4ef2334e26cd536d5b678d
+Author:        Aleksander Mazur <deweloper@wp.pl>
+AuthorDate:    Tue, 23 Jan 2024 14:43:00 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 09 Feb 2024 16:28:19 +01:00
 
-> I've played with PIDFD_SIGNAL_PROCESS_GROUP as well but that code is
-> fairly new to me so I would need some more time.
+x86/Kconfig: Transmeta Crusoe is CPU family 5, not 6
 
-Heh, I was going to send another email to discuss this ;)
+The kernel built with MCRUSOE is unbootable on Transmeta Crusoe.  It shows
+the following error message:
 
-Should be simple, but may be need some simple preparations.
+  This kernel requires an i686 CPU, but only detected an i586 CPU.
+  Unable to boot - please use a kernel appropriate for your CPU.
 
-Especially if we also want PIDFD_SIGNAL_SESSION_GROUP.
+Remove MCRUSOE from the condition introduced in commit in Fixes, effectively
+changing X86_MINIMUM_CPU_FAMILY back to 5 on that machine, which matches the
+CPU family given by CPUID.
 
-So the question: do you think we also want PIDFD_SIGNAL_SESSION_GROUP?
+  [ bp: Massage commit message. ]
 
-Oleg.
+Fixes: 25d76ac88821 ("x86/Kconfig: Explicitly enumerate i686-class CPUs in Kconfig")
+Signed-off-by: Aleksander Mazur <deweloper@wp.pl>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Acked-by: H. Peter Anvin <hpa@zytor.com>
+Cc: <stable@kernel.org>
+Link: https://lore.kernel.org/r/20240123134309.1117782-1-deweloper@wp.pl
+---
+ arch/x86/Kconfig.cpu | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index b9224cf..2a7279d 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -379,7 +379,7 @@ config X86_CMOV
+ config X86_MINIMUM_CPU_FAMILY
+ 	int
+ 	default "64" if X86_64
+-	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MCRUSOE || MCORE2 || MK7 || MK8)
++	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MCORE2 || MK7 || MK8)
+ 	default "5" if X86_32 && X86_CMPXCHG64
+ 	default "4"
+ 
