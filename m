@@ -1,63 +1,63 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807F4128382
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17981272D3
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707496878; cv=none; b=Fvz+sjklBG0L33qxdPZY/xu0URAyIaqlQhfzh89D9ILqBzexQhebv632p1IJoCS9xuAqbDFOIFaCN3hfqZRDYHj47Btkgliyd6DY1KhO7XYEvKUu+nXMnbYAQlua+1afOBJCg+D0euEGa4t2xIW1tGBRJGDGs8Uvr+Ay2ehnS3o=
+	t=1707496877; cv=none; b=o4YThzVzkT4rMbmtvH9Bk9PWGRGXOwIfx/JYNSaClpai6tdHLMIw01b0bdrLrx8lw4REplFrq+/YVcHkhf5MZahjNg1hxCWKRBzH9XLunFNfWbEexwDhmNbwTQ/38sr8//GV71xa0mwkCYGVkbXfOWx5bofV1dTfzUMl2Cav9Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707496878; c=relaxed/simple;
-	bh=FaWrvDRhCn6qo66e2LFY1/am/fRiqeQ00xmmtBjY9fQ=;
+	s=arc-20240116; t=1707496877; c=relaxed/simple;
+	bh=Jk9++ZI9K5g/l3vneedAtiFBwT5nQ9V1AG9tXtn14Z4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cSOfT089iQkWMAUSmNuun8PmAvD0pWGOmhePWcBDE4tWx4OJVJd/VIek5btSbRRLJ98a8unF78EszKGV524FFDqMB1TdTvluEf7OuGhExLoOeNyerP6tSHQTaQIzRj5m9GROnMAa8N8R+crHvmivUc/qTysXAUsjpYYalQRuBXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=OME2SHjO; arc=none smtp.client-ip=209.85.218.43
+	 MIME-Version; b=fwhwhmEDqQeOOckQD4wfj0bmaDSU4jTCQPkDA7maWv6wgRMvBrvCXn2fAso4yAmUkL406U+HGngZN5iEDONeSFVQBwOMboG1mVSyMTv41xsEbveVllGt2l1pDx3tqD+h6M/sAHQ4NuPoe6fOd1jIwK2N+K3Vhja0ms7aE5obMaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=VjPwIOl/; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="OME2SHjO"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3be9edf370so113641566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:41:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="VjPwIOl/"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a271a28aeb4so143309966b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:41:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707496873; x=1708101673; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707496871; x=1708101671; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dhd0Wyk/ZgeZM/EU3KZ6LbkcM94I0OFOZkDaLa9LsZQ=;
-        b=OME2SHjOEEnOIuVYv0xrxC4V+6LsLoundaWDtxAidJwQ9cLNawmYAAH2Y3uc7ylO4v
-         qDfmdhlp9hy+Ukn9AR7NQzQx6VKdPr3hNvjWSHmB4ZXGPUP3Ur7jnj/KwtabSV6Dv7bG
-         2TsRR4BAqVqtrO+1IPv+4DvX5bJNgJGgorfzxMdVvXZTkcNlbBT7afe2BJzq+VGcfDS1
-         WLajWE9yqTQ08Kv1O6UA3hN0iZ1pvijEp2tBvW1a0AKy4omyg7Qjgo9QWilcdQVQcfA9
-         lS7bkNOOP4iZS1bREsGrhH173/CJGiTuBhonSuISKnOeBl0xWVM0vWLRE8mYHRSnxoE4
-         SufQ==
+        bh=ULoKxp+mUpIb8o5pOMUhCUk1LDRRY2hj78IQ7Yi6k2Q=;
+        b=VjPwIOl/aiFSax4U4gQ7W0mgEt1vcruONCq8YmB2qPIbHBYN6PiK4GAadjfAcZXFI3
+         Ul10lp8XhBN1gsxzfN5uh0B1kqddSB1qc9GZP3fofEJwBcLOf9bzvkHBr91JWz6cpH7s
+         m6Tf3zIf8NqctOwAqnQBAtISxZMZHRoc8ZFY0hgUtdBFmHZFmCLQKJL/yxYROYuBXZsB
+         Vc/nYk5Xgcpq+2sJ7tyqrok+JA3dOB8fnOasMB3zMHBj7kUF37wucQb/mVE1JrAnjGEA
+         E7aPHX78RXMbYS3ew+gpYdLzz5icKH/Mwj5er/CabE0u23bbBml8FYvTZtHkeRr+1l46
+         4aZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707496873; x=1708101673;
+        d=1e100.net; s=20230601; t=1707496871; x=1708101671;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dhd0Wyk/ZgeZM/EU3KZ6LbkcM94I0OFOZkDaLa9LsZQ=;
-        b=oobJ7tcudzroCn5HwDHpWk7iw/hTfOXVA9aLfAYdB1ZylA3Ql8X6Tw1cM9r0cIQ+M9
-         rWKO/a/dmMAyRvpgw3asdmXwaFi/Sn2+2O7on+5IvVOu1VZAv0+Uw2hw+HLZlVlns1qI
-         IzMWG7kKf0mQFHO1+e0VrV6nhSM/DeIpex3aC4JoIsQbKZ+WKYs+Gq9dHutaQJh6mWVN
-         ULG1GVAGfMkfue7cPRgnvjFf+KEVk9qbawPMyTnQ2dVo4eMplVDndodkzYcGrULJraZ0
-         7dCms+87pSziaLTe2VKyoK2SCrpD/94GEimGqFP90yIOnplpC7iu+rHY/RobOxsm+c7e
-         BFSw==
-X-Gm-Message-State: AOJu0Ywjl2BmCmN14A22z2q5ESpKREFsTTriRS8O9leX0uEakqW+QS4K
-	V4CcDDhwlOpUGchCuP3lcxU5Y9Vm6kBBmnEwCNRjpwmNtcCm5AGzapCp1LF0+0c7JYidUg34NSK
-	Q
-X-Google-Smtp-Source: AGHT+IGc6qKoVSrXTWrVz/5SZ7bzl/yh/yYOiQ2+BceVCnIn0iyvL12zumI7r7tlFhwv3iqG2e4Y6w==
-X-Received: by 2002:a17:906:1b12:b0:a3c:b14:32e with SMTP id o18-20020a1709061b1200b00a3c0b14032emr683223ejg.47.1707496873640;
-        Fri, 09 Feb 2024 08:41:13 -0800 (PST)
+        bh=ULoKxp+mUpIb8o5pOMUhCUk1LDRRY2hj78IQ7Yi6k2Q=;
+        b=IGg3bWqI0lh5nMuKJaImrYrfAQOpFF0+Qh+P3OELUpGqzIrpneGLou7MP3PxCL3sXv
+         Ke6nwp4XRACtKlI92O+CV8P26Q/RF2MNWM96m5+mv3gvjBmJ2Y5l/5D/9H+4/Ne7L84w
+         dI2ATQPO128DBuEcj67lewWT89vdk5/R186dFqkiC77v3z7jiOtzavm47yWk+kf7Ye1c
+         w6PjWKd2v8DTO6fO1JxiTkYS2vETfwvzxV8hhIw7BN1J9i1VOetlT/QdaovPAll6aPKz
+         9sVMxoOKgTWWC210Z0hr/OiBMmltveNhnUzFRLsNb61ZpIQeX20yWr0P2EXTflXFrs5q
+         RrIw==
+X-Gm-Message-State: AOJu0YyJaF5hZ8nR1BJMICk3naiaYX7hbTN3+CAonNMbairCfuDzrFK9
+	avV4jcOGM68QiKXFJIA699llBMZUweoc9LD6yXKHL02j0ktqcBr+qZpnSKnURXJp4fBa0Bxapwl
+	G
+X-Google-Smtp-Source: AGHT+IG9InsAOjBc8hdDXAcWx/ZJufQNoeGmT18GHMr6vcgNpR0skuGQ8un6TBXH6c9ao/GbwQWcjQ==
+X-Received: by 2002:a17:906:ecb0:b0:a3b:c221:8598 with SMTP id qh16-20020a170906ecb000b00a3bc2218598mr1674181ejb.9.1707496871602;
+        Fri, 09 Feb 2024 08:41:11 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id tl27-20020a170907c31b00b00a3bfe97fe27sm477724ejc.218.2024.02.09.08.41.12
+        by smtp.gmail.com with ESMTPSA id tl27-20020a170907c31b00b00a3bfe97fe27sm477724ejc.218.2024.02.09.08.41.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 08:41:12 -0800 (PST)
+        Fri, 09 Feb 2024 08:41:10 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 29/35] linux/random.h: reduce dependencies on linux/kernel.h
-Date: Fri,  9 Feb 2024 17:40:21 +0100
-Message-Id: <20240209164027.2582906-30-max.kellermann@ionos.com>
+Subject: [PATCH v2 27/35] quota.h: move declarations to quota_types.h
+Date: Fri,  9 Feb 2024 17:40:19 +0100
+Message-Id: <20240209164027.2582906-28-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240209164027.2582906-1-max.kellermann@ionos.com>
 References: <20240209164027.2582906-1-max.kellermann@ionos.com>
@@ -69,25 +69,257 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+By providing declarations in a lean header, we can reduce header
+dependencies.
+
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/random.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/gfs2/incore.h            |  1 +
+ fs/xfs/xfs_qm.h             |  1 +
+ fs/xfs/xfs_qm_syscalls.c    |  2 ++
+ fs/xfs/xfs_quotaops.c       |  1 +
+ fs/xfs/xfs_super.c          |  1 +
+ fs/xfs/xfs_trans_dquot.c    |  2 ++
+ include/linux/fs.h          |  2 +-
+ include/linux/quota.h       | 33 +-----------------
+ include/linux/quota_types.h | 68 +++++++++++++++++++++++++++++++++++++
+ 9 files changed, 78 insertions(+), 33 deletions(-)
+ create mode 100644 include/linux/quota_types.h
 
-diff --git a/include/linux/random.h b/include/linux/random.h
-index 70e5250f3bc4..3183025ddda9 100644
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -4,7 +4,8 @@
- #define _LINUX_RANDOM_H
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index 95a334d64da2..94f945dc4bdb 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -18,6 +18,7 @@
+ #include <linux/rbtree.h>
+ #include <linux/ktime.h>
+ #include <linux/percpu.h>
++#include <linux/quota.h>
+ #include <linux/lockref.h>
+ #include <linux/rhashtable.h>
+ #include <linux/mutex.h>
+diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
+index d5c9fc4ba591..bb111cbc3567 100644
+--- a/fs/xfs/xfs_qm.h
++++ b/fs/xfs/xfs_qm.h
+@@ -9,6 +9,7 @@
+ #include "xfs_dquot_item.h"
+ #include "xfs_dquot.h"
  
- #include <linux/bug.h>
--#include <linux/kernel.h>
-+#include <linux/limits.h> // for U32_MAX
-+#include <linux/log2.h> // for is_power_of_2()
++struct qc_dqblk;
+ struct xfs_inode;
  
- #include <uapi/linux/random.h>
+ extern struct kmem_cache	*xfs_dqtrx_cache;
+diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+index 392cb39cc10c..1de4443bed40 100644
+--- a/fs/xfs/xfs_qm_syscalls.c
++++ b/fs/xfs/xfs_qm_syscalls.c
+@@ -19,6 +19,8 @@
+ #include "xfs_qm.h"
+ #include "xfs_icache.h"
  
++#include <linux/quota.h>
++
+ int
+ xfs_qm_scall_quotaoff(
+ 	xfs_mount_t		*mp,
+diff --git a/fs/xfs/xfs_quotaops.c b/fs/xfs/xfs_quotaops.c
+index 9c162e69976b..eda56d032734 100644
+--- a/fs/xfs/xfs_quotaops.c
++++ b/fs/xfs/xfs_quotaops.c
+@@ -15,6 +15,7 @@
+ #include "xfs_icache.h"
+ #include "xfs_qm.h"
+ 
++#include <linux/quota.h>
+ 
+ static void
+ xfs_qm_fill_state(
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 5013d71143c2..615ba5b1bd1c 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -49,6 +49,7 @@
+ #include <linux/magic.h>
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
++#include <linux/quota.h>
+ 
+ static const struct super_operations xfs_super_operations;
+ 
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index aa00cf67ad72..94214f0baa2b 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -18,6 +18,8 @@
+ #include "xfs_trace.h"
+ #include "xfs_error.h"
+ 
++#include <linux/quota.h>
++
+ STATIC void	xfs_trans_alloc_dqinfo(xfs_trans_t *);
+ 
+ /*
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 1cfe76f7544e..a7e65358ebc0 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -260,7 +260,7 @@ struct iattr {
+ /*
+  * Includes for diskquotas.
+  */
+-#include <linux/quota.h>
++#include <linux/quota_types.h>
+ 
+ /*
+  * Maximum number of layers of fs stack.  Needs to be limited to
+diff --git a/include/linux/quota.h b/include/linux/quota.h
+index 956281c84850..2a3040e61072 100644
+--- a/include/linux/quota.h
++++ b/include/linux/quota.h
+@@ -32,9 +32,8 @@
+ #ifndef _LINUX_QUOTA_
+ #define _LINUX_QUOTA_
+ 
+-#include <linux/list.h>
++#include <linux/quota_types.h>
+ #include <linux/mutex_types.h>
+-#include <linux/rwsem_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/percpu_counter.h>
+ 
+@@ -45,7 +44,6 @@
+ #include <linux/atomic.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/projid.h>
+-#include <uapi/linux/quota.h>
+ 
+ #undef USRQUOTA
+ #undef GRPQUOTA
+@@ -61,9 +59,6 @@ enum quota_type {
+ #define QTYPE_MASK_GRP (1 << GRPQUOTA)
+ #define QTYPE_MASK_PRJ (1 << PRJQUOTA)
+ 
+-typedef __kernel_uid32_t qid_t; /* Type in which we store ids in memory */
+-typedef long long qsize_t;	/* Type in which we store sizes */
+-
+ struct kqid {			/* Type in which we store the quota identifier */
+ 	union {
+ 		kuid_t uid;
+@@ -213,24 +208,6 @@ struct mem_dqblk {
+ 	time64_t dqb_itime;	/* time limit for excessive inode use */
+ };
+ 
+-/*
+- * Data for one quotafile kept in memory
+- */
+-struct quota_format_type;
+-
+-struct mem_dqinfo {
+-	struct quota_format_type *dqi_format;
+-	int dqi_fmt_id;		/* Id of the dqi_format - used when turning
+-				 * quotas on after remount RW */
+-	struct list_head dqi_dirty_list;	/* List of dirty dquots [dq_list_lock] */
+-	unsigned long dqi_flags;	/* DFQ_ flags [dq_data_lock] */
+-	unsigned int dqi_bgrace;	/* Space grace time [dq_data_lock] */
+-	unsigned int dqi_igrace;	/* Inode grace time [dq_data_lock] */
+-	qsize_t dqi_max_spc_limit;	/* Maximum space limit [static] */
+-	qsize_t dqi_max_ino_limit;	/* Maximum inode limit [static] */
+-	void *dqi_priv;
+-};
+-
+ struct super_block;
+ 
+ /* Mask for flags passed to userspace */
+@@ -517,14 +494,6 @@ static inline void quota_send_warning(struct kqid qid, dev_t dev,
+ }
+ #endif /* CONFIG_QUOTA_NETLINK_INTERFACE */
+ 
+-struct quota_info {
+-	unsigned int flags;			/* Flags for diskquotas on this device */
+-	struct rw_semaphore dqio_sem;		/* Lock quota file while I/O in progress */
+-	struct inode *files[MAXQUOTAS];		/* inodes of quotafiles */
+-	struct mem_dqinfo info[MAXQUOTAS];	/* Information for each quota type */
+-	const struct quota_format_ops *ops[MAXQUOTAS];	/* Operations for each type */
+-};
+-
+ int register_quota_format(struct quota_format_type *fmt);
+ void unregister_quota_format(struct quota_format_type *fmt);
+ 
+diff --git a/include/linux/quota_types.h b/include/linux/quota_types.h
+new file mode 100644
+index 000000000000..7f52ee2604bb
+--- /dev/null
++++ b/include/linux/quota_types.h
+@@ -0,0 +1,68 @@
++/*
++ * Copyright (c) 1982, 1986 Regents of the University of California.
++ * All rights reserved.
++ *
++ * This code is derived from software contributed to Berkeley by
++ * Robert Elz at The University of Melbourne.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. Neither the name of the University nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ */
++#ifndef _LINUX_QUOTA_TYPES_
++#define _LINUX_QUOTA_TYPES_
++
++#include <linux/list.h>
++#include <linux/rwsem_types.h>
++#include <uapi/linux/quota.h>
++
++typedef __kernel_uid32_t qid_t; /* Type in which we store ids in memory */
++typedef long long qsize_t;	/* Type in which we store sizes */
++
++/*
++ * Data for one quotafile kept in memory
++ */
++struct quota_format_type;
++
++struct mem_dqinfo {
++	struct quota_format_type *dqi_format;
++	int dqi_fmt_id;		/* Id of the dqi_format - used when turning
++				 * quotas on after remount RW */
++	struct list_head dqi_dirty_list;	/* List of dirty dquots [dq_list_lock] */
++	unsigned long dqi_flags;	/* DFQ_ flags [dq_data_lock] */
++	unsigned int dqi_bgrace;	/* Space grace time [dq_data_lock] */
++	unsigned int dqi_igrace;	/* Inode grace time [dq_data_lock] */
++	qsize_t dqi_max_spc_limit;	/* Maximum space limit [static] */
++	qsize_t dqi_max_ino_limit;	/* Maximum inode limit [static] */
++	void *dqi_priv;
++};
++
++struct quota_info {
++	unsigned int flags;			/* Flags for diskquotas on this device */
++	struct rw_semaphore dqio_sem;		/* Lock quota file while I/O in progress */
++	struct inode *files[MAXQUOTAS];		/* inodes of quotafiles */
++	struct mem_dqinfo info[MAXQUOTAS];	/* Information for each quota type */
++	const struct quota_format_ops *ops[MAXQUOTAS];	/* Operations for each type */
++};
++
++#endif /* _LINUX_QUOTA_TYPES_ */
 -- 
 2.39.2
 
