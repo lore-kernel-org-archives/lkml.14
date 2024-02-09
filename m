@@ -1,110 +1,108 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A267736B17;
-	Fri,  9 Feb 2024 15:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B782D2E3F9
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707491067; cv=none; b=h7Ki8t956V0hk0WBks3exkahRDEdEW6MsXvUx2oGgC9VfYjCOVN0Ybo0wB0fnd1GgWkZ2fijqGH2vtbw5h+1CwZwduYMtMnqiFyhZf8b4bi5SYBCRSQTB2TTp5gGb1yjN8A8eSA5yukMKemWD4UH4hLiddgcPLBckkChHXDx4EU=
+	t=1707491222; cv=none; b=DHTwKVdB5d05F4lO+YIpggslhtWpZxlLvO3KJzn2EZHgER6gnoMYiHhS09Jzy2nh9Z3/09YuI0redFSuAWLFx0eRN6aXrLgpbHKwWbNd3/54imKGUmgHojNOuO1KKKkh7P/QBLRy845SEeBmIiNRsYYQMcThgt/ja4siqzBdll4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707491067; c=relaxed/simple;
-	bh=ZRSisilKJc76i9g2Gk5VSIp9IkLwfEK0p1NI0di/5FY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ISzQHr5UVdyKYy1Hjc8MCuog+imZPE75tUSE9wQYBfjKj7nDAkFzqfCpNG5GS/weTgk4YxeBdpj+uPa0KVG/FxZTLTBThLhxDkrTFILZy+UlAiamIef7bo95mTzW4Fm3YtsJxJ6YFounScpryS0YxrEw8vBcVqtlZMOKWZAvloA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsUZrFYs; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707491222; c=relaxed/simple;
+	bh=yepMO4u59E++4QW9Rxe1Tub7oqWimXxD0lt0roVEjXE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CTDKAYq9eR4vW6OGemC8KEWDgUcdp2U2dMXQgRVK6nJmgWNoFFOei7dFPnsFWC904aT4F9EQGtL3pjHusNnSklDf9aPcJ78jOVg0sDDC34hkehFePkVnqmFO/IrYXDl3qihlIT8YRPlP2PZPEpxP3ONCqVgi6mlZf71kHA5BV4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ikePjpCI; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsUZrFYs"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-59a58ef4a04so372832eaf.2;
-        Fri, 09 Feb 2024 07:04:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707491064; x=1708095864; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=oEEKiyCy3uksk7VJQy89Cmz4Lyoddeyzzlh6/wRqFSk=;
-        b=QsUZrFYsywdckeQjAV9sLT0y6VY3ahayABd1yCVZKiL71aO3fWwfUy+Q76fDDqDvaN
-         1wq3JqElFIYJzB3fBw1x0H3bQxK09ZKZGlCJjy85YdAN4tOWKjFfRQotHn20aQgk0hHP
-         2J3WP/3+x1W07vOZy2UFWTp9ZLTCeu1JYfWXShrS7lYXcGzewUhp5kJsq2rj0qaeiZX2
-         ObAB07bQEvyWuOI/EB+tyCYkmbFfZgGG+C2OcWkwylcPe7dzIbhyyL9glTPWdeCzbJXq
-         Bb4WWe5DJQq6ayQGASyNqKZLlyb27QzBrHxrzQqI6BFs3g/19vxvgESBj9WI6czsyRZy
-         ikxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707491064; x=1708095864;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oEEKiyCy3uksk7VJQy89Cmz4Lyoddeyzzlh6/wRqFSk=;
-        b=RweZkNR+E2duDspESX+8/hrXygzGerjQiG9TTDuFItWl/V8dZSnXRnVKSTLPHSXdLG
-         8/AM9Wjexs/fKTCaoVOVVK7tff0qQ7KKPFg/kbtcoOdHDszdFtfOjqWFAI36BEgmNAui
-         q3+WATFdDy3A58jOH15N5NjBYcjYyciuG76GimqowJMQ8fTT50wPFLpDwnaIeK6YOOEK
-         fpPQme7jQ/IyTHFM7esQxmJRVc/ankr4a14WYmVsENBJgeOGFQKTO52/BYiKhAcVmZOy
-         njGlbbjg8r9Bhko/Fgz8U+axpkajgEBdyI4SVgBfzOOPsAjcS4++KxjjJ5q4+4oO3A1S
-         GSoA==
-X-Gm-Message-State: AOJu0YwKze/7/NGCgyAtYi6wCtQMWXx1evC+gm5CjwD2YhyVoTeLVb/B
-	51JWSFyqGsWyfD6gB4ysts2RLS0BH+u5TiaR7ksultx/fxNOD/04DcB7s7wL
-X-Google-Smtp-Source: AGHT+IGzCxP5fmYlns2HciQeCc2tm9zi+LPxyPoweh3ez2FzylL6+vFnQDZWwgORltCMjdQzjprv5Q==
-X-Received: by 2002:a05:6359:100b:b0:176:7f72:36af with SMTP id ib11-20020a056359100b00b001767f7236afmr2284406rwb.23.1707491064543;
-        Fri, 09 Feb 2024 07:04:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUee3PEp0CsiUAvk4mmRwQmE92SnZt/BbnBKOmciFzc1NoSg5yMCHKKk4yj1SXTkMRVQD+nGjsvYHgagMn44ua1+67P3V2+jevwTMcw
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l5-20020a632505000000b005b458aa0541sm1839622pgl.15.2024.02.09.07.04.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 07:04:24 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon fixes for v6.8-rc4
-Date: Fri,  9 Feb 2024 07:04:23 -0800
-Message-Id: <20240209150423.1339290-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ikePjpCI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707491221; x=1739027221;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=yepMO4u59E++4QW9Rxe1Tub7oqWimXxD0lt0roVEjXE=;
+  b=ikePjpCILbXKTbIkEwGNuE3zSi6fTG+ioVHPHuFX+Ktqs7LS5X6jQ1Dl
+   iy/G+3RCTQhync2DXKAU87QsEhJXWPJdQ7ZNgGDOwRWg1InTk9F0l8l4h
+   qMiNcC8pvLM/OfJPbq2qg+y3MYJECG4lj7xODYUk5aUxWWECu1W/mifbX
+   p7maRYSvI3+mj9c0D752QhuPmJhC8C6jEf+EpQJjzdHnCGwg7YtVRHOvm
+   qB+X9PwtJDPh6U+EGSJtgJao/rm9lHTfdDU/UKrs3vvqrSerTMrCwMq+j
+   JkaipY6G2+a6hWc7qe/Bame/nnUay5NcX9TNZQRzFZAiRFXMn7f/kvnQY
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1595451"
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="1595451"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:07:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="1956543"
+Received: from dfischbe-mobl.ger.corp.intel.com (HELO localhost) ([10.252.62.64])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:06:56 -0800
+From: Jani Nikula <jani.nikula@intel.com>
+To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Luca Coelho
+ <luciano.coelho@intel.com>, =?utf-8?Q?Micha=C5=82?= Winiarski
+ <michal.winiarski@intel.com>
+Subject: Re: [PATCH] drm/tests: mm: Convert to drm_dbg_printer
+In-Reply-To: <20240209140818.106685-1-michal.winiarski@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240209140818.106685-1-michal.winiarski@intel.com>
+Date: Fri, 09 Feb 2024 17:06:53 +0200
+Message-ID: <87o7cpad82.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Fri, 09 Feb 2024, Micha=C5=82 Winiarski <michal.winiarski@intel.com> wro=
+te:
+> Fix one of the tests in drm_mm that was not converted prior to
+> drm_debug_printer removal, causing tests build failure.
 
-Please pull hwmon fixes for Linux v6.8-rc4 from signed tag:
+My bad, thanks for fixing this.
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.8-rc4
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 
-Thanks,
-Guenter
-------
+For one thing, I must not have git grep'd for new drm_debug_printer()
+additions since I wrote the patch.
 
-The following changes since commit 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478:
+For another, I'm missing some kernel config, because I built the changes
+on x86, arm and arm64 before pushing. In particular the arm and arm64
+configs I just recently added from drm-rerere repo. Those defconfigs
+should probably be updated. They don't have CONFIG_DRM_XE=3Dm either.
 
-  Linux 6.8-rc3 (2024-02-04 12:20:36 +0000)
+BR,
+Jani.
 
-are available in the Git repository at:
+>
+> Fixes: e154c4fc7bf2d ("drm: remove drm_debug_printer in favor of drm_dbg_=
+printer")
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/gpu/drm/tests/drm_mm_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/=
+drm_mm_test.c
+> index 1eb0c304f9607..3488d930e3a38 100644
+> --- a/drivers/gpu/drm/tests/drm_mm_test.c
+> +++ b/drivers/gpu/drm/tests/drm_mm_test.c
+> @@ -188,7 +188,7 @@ static void drm_test_mm_init(struct kunit *test)
+>=20=20
+>  static void drm_test_mm_debug(struct kunit *test)
+>  {
+> -	struct drm_printer p =3D drm_debug_printer(test->name);
+> +	struct drm_printer p =3D drm_dbg_printer(NULL, DRM_UT_CORE, test->name);
+>  	struct drm_mm mm;
+>  	struct drm_mm_node nodes[2];
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v6.8-rc4
-
-for you to fetch changes up to 34cf8c657cf0365791cdc658ddbca9cc907726ce:
-
-  hwmon: (coretemp) Enlarge per package core count limit (2024-02-04 06:43:45 -0800)
-
-----------------------------------------------------------------
-hwmon fixes for v6.8-rc4
-
-- coretemp: Various fixes, and increase number of supported CPU cores
-
-- aspeed-pwm-tacho: Add missing mutex protection
-
-----------------------------------------------------------------
-Loic Prylli (1):
-      hwmon: (aspeed-pwm-tacho) mutex for tach reading
-
-Zhang Rui (3):
-      hwmon: (coretemp) Fix out-of-bounds memory access
-      hwmon: (coretemp) Fix bogus core_id to attr name mapping
-      hwmon: (coretemp) Enlarge per package core count limit
-
- drivers/hwmon/aspeed-pwm-tacho.c |  7 +++++++
- drivers/hwmon/coretemp.c         | 42 +++++++++++++++++++++-------------------
- 2 files changed, 29 insertions(+), 20 deletions(-)
+--=20
+Jani Nikula, Intel
