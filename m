@@ -1,152 +1,68 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787DE69940;
-	Fri,  9 Feb 2024 10:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38036774E;
+	Fri,  9 Feb 2024 10:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707473998; cv=none; b=LgPQJaw/2OWLfZm876aVWvFOAz4eD14iomwcWKWZD6ZjFcoMz3Ixr/vNFjBeF+8+5z1UCqiwu1tuyBGzSSVE/H1ZEBbFzeAPNdaU1lsRn1OfW8wCf33g3gI7oOEVVHHYG0BK2xQdeNkAR6yZgX+pDFA+2ciFdjgsnuoXkivhNpI=
+	t=1707474040; cv=none; b=NTvd0f19Gr5GjX2rcZs/WlmhTDSZ4TzrwkY36UOEFhVNYes6CvYXnkoz1wX6FDjYjNJNbjH2+MXlcFEruDT/8iJus4zKX4e8zpa+6arvFLv0OBb+mIbGeBPfAA8s/j7Ft1w5KOuYY+4LEw2lkaeRFN2qZy5syMFBsyp1sutF87k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707473998; c=relaxed/simple;
-	bh=nkyWjlvdw4kQ+MJbdGV188FAXLYtQuZr+wcrFOckkWs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k6n2Q5rwEMYtdeDsbU5UR7nEOfbLX+DpRS6dsamiK0t7OUoHKAPfHj/XdlMLUhyduLdqcIW/9NcIuDg5/194renIAN+/WtG1Qz4EOvq84rrTEvbOTK4XBq8qkua6PtXGSgfmc85mWUPbA4VQfC+E1QwWEWBCjyOWUo7QkMSRsxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JtsNZCep; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0SHNLWaY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JtsNZCep; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0SHNLWaY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707474040; c=relaxed/simple;
+	bh=4lgbDPmTsi0HF0ppwR3s76JThiYAeUNtCaOzdFBIPxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sa5RUnU9ojHpeMlWTTENrE+HlWTZED5RWYswXiasVXhrMs/pgomnjLeGp6hNPeOuSJ8yQfAroUvFmIUe0YLmbO0LI/JRE7gXIG9V0cq97valet6N1J8PeGmK+PFN8GJbz2sxoeuA1c+Qijt1GNcYNl9EluCW/RuBNbhoSH53OGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oosSjFvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JtsNZCep";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0SHNLWaY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JtsNZCep";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0SHNLWaY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B690F2207D;
-	Fri,  9 Feb 2024 10:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707473988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUpM7naFLqFrE8RdUAo4giKWP0dmePiuMe6T9/qylpg=;
-	b=JtsNZCepnHgIIr/E9E0mkgq7OTnGZixaEDzN0jKv0gW0SAkAdnn7vTxaltHFKOjrENt4Ej
-	kUB0abSP4Gv4SopMsk7hLGTuKVQY7sHnz7oLM4Ou19D6obHduHy7Prp4A+h/tjWgzR9B1d
-	EbpyyfcroSz0skZpTctEHUXXOFH0d9Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707473988;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUpM7naFLqFrE8RdUAo4giKWP0dmePiuMe6T9/qylpg=;
-	b=0SHNLWaYL39u2RHUzMP5I/B5yKmyITJcJZ4h5zpixZonn9x+5uvGzHXuV0dbrjsJna/yni
-	vwoVZiKojNZEeTBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707473988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUpM7naFLqFrE8RdUAo4giKWP0dmePiuMe6T9/qylpg=;
-	b=JtsNZCepnHgIIr/E9E0mkgq7OTnGZixaEDzN0jKv0gW0SAkAdnn7vTxaltHFKOjrENt4Ej
-	kUB0abSP4Gv4SopMsk7hLGTuKVQY7sHnz7oLM4Ou19D6obHduHy7Prp4A+h/tjWgzR9B1d
-	EbpyyfcroSz0skZpTctEHUXXOFH0d9Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707473988;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUpM7naFLqFrE8RdUAo4giKWP0dmePiuMe6T9/qylpg=;
-	b=0SHNLWaYL39u2RHUzMP5I/B5yKmyITJcJZ4h5zpixZonn9x+5uvGzHXuV0dbrjsJna/yni
-	vwoVZiKojNZEeTBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F7571326D;
-	Fri,  9 Feb 2024 10:19:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mGb+DET8xWXjIQAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 09 Feb 2024 10:19:48 +0000
-Message-ID: <a602e869-1fb9-40e4-8aba-728d13c22dcb@suse.de>
-Date: Fri, 9 Feb 2024 11:19:48 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oosSjFvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B06C433F1;
+	Fri,  9 Feb 2024 10:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707474039;
+	bh=4lgbDPmTsi0HF0ppwR3s76JThiYAeUNtCaOzdFBIPxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oosSjFvCtYMVZK5VNjKbI/h8k6RoXOGncXecgbTJW0Zjt9b1c0Rgsa/3QQgFQJH6S
+	 jiLcmsCYk4IualaYNeC+YPhjGxhv2QRyTw4kxADApFu01Wx/jXTkGZ52KC7roiYiIe
+	 KglyBDdE6Ccj8tkP++NxzHJEjhZRXX0Lg7f7bme0=
+Date: Fri, 9 Feb 2024 10:20:36 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Rengarajan.S@microchip.com, linux-serial@vger.kernel.org,
+	Kumaravel.Thiagarajan@microchip.com, linux-kernel@vger.kernel.org,
+	Tharunkumar.Pasumarthi@microchip.com, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH v1 tty] 8250: microchip: pci1xxxx: Add Burst mode
+ transmission support in uart driver for reading from FIFO
+Message-ID: <2024020916-barrette-okay-60f7@gregkh>
+References: <20240125100006.153342-1-rengarajan.s@microchip.com>
+ <b8325c3f-bf5b-4c55-8dce-ef395edce251@kernel.org>
+ <e7f29dd64829b597f3881abcf4da653156c1fe59.camel@microchip.com>
+ <fa17f083805e46079bfb4ed89b83d372cfe7e77c.camel@microchip.com>
+ <0c1e8d38-4b00-4738-bd05-7e36ce736681@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] fnic: move fnic_fnic_flush_tx() to a work queue
-Content-Language: en-US
-To: Lee Duncan <leeman.duncan@gmail.com>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Chengfeng Ye <dg573847474@gmail.com>, Satish Kharat <satishkh@cisco.com>,
- Sesidhar Baddela <sebaddel@cisco.com>, Karan Tilak Kumar
- <kartilak@cisco.com>, Lee Duncan <lduncan@suse.com>
-References: <cover.1707343839.git.lduncan@suse.com>
- <ce5ffa5d0ff82c2b2e283b3b4bff23291d49b05c.1707343839.git.lduncan@suse.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <ce5ffa5d0ff82c2b2e283b3b4bff23291d49b05c.1707343839.git.lduncan@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-2.01)[95.11%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.de:email];
-	 FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[gmail.com,cisco.com,suse.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c1e8d38-4b00-4738-bd05-7e36ce736681@kernel.org>
 
-On 2/7/24 23:20, Lee Duncan wrote:
-> From: Lee Duncan <lduncan@suse.com>
+On Fri, Feb 09, 2024 at 07:38:49AM +0100, Jiri Slaby wrote:
+> On 09. 02. 24, 5:52, Rengarajan.S@microchip.com wrote:
+> > Hi Jiri Slaby,
+> > 
+> > The patch has been accepted and added in the tty-git tree and will be
+> > merged during the next merged window. Should the changes be given as a
+> > seperate incremental patch or should we re-submit this patch again.
 > 
-> Rather than call 'fnic_flush_tx()' from interrupt context we should
-> be moving it onto a work queue to avoid any locking issues.
+> Hi,
 > 
-> Fixes: 1a1975551943f681772720f639ff42fbaa746212
+> as you write, you cannot change the patch as it is already queued. PLease
+> submit changes on top.
 
-Same here, please use the correct fixes tag.
+Or, if the original is so bad, we can revert them now and wait for new
+ones later, just let me know.
 
-> Signed-off-by: Hannes Reinecke <hare@suse.de>
-> Signed-off-by: Lee Duncan <lduncan@suse.com>
-> ---
->   drivers/scsi/fnic/fnic.h      | 3 ++-
->   drivers/scsi/fnic/fnic_fcs.c  | 5 +++--
->   drivers/scsi/fnic/fnic_main.c | 1 +
->   drivers/scsi/fnic/fnic_scsi.c | 4 ++--
->   4 files changed, 8 insertions(+), 5 deletions(-)
-> 
-Cheers,
+thanks,
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Ivo Totev, Andrew McDonald,
-Werner Knoblich
-
+greg k-h
