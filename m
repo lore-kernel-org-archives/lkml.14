@@ -1,169 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A17128372;
-	Fri,  9 Feb 2024 14:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555CC12837A
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 14:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707489154; cv=none; b=dRDooECvdFxQ8OK6i5iNWwyy3Eyau22f6aEJmPEJJu6am51aEVMgbPQBpu6gAP9s90EXO5KXyAzP7/KihPKQAr9iSypA2avXftA3TvdXZP77ZyySvnFUFjC41pGMp/dsifEpoAjnMsCgL1oXa8OxToCcxT6tn0RgNeVRvP90cu0=
+	t=1707489157; cv=none; b=X5cF0QftdAIdPlJA8M4A1EGtbfw3FLDnGyOH5b32vpgqLghVrDPK210wL15Wo3YVXDCQoamxBplHtg+YEty+mx0OdSGFZHKl42Cy3DjD3jF+lYhsVhTQOlGnCgx9Z3xP7qTY3vQR0D2c2SdDr8E/VeKLOVGk7kWlSt3+dNScAek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707489154; c=relaxed/simple;
-	bh=n2TkytHIU4mJGTYx0ffPU1nCUw4lDwT3it9P2hgZMPQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h0oiLhkHQM4OpTWtFywK8FmuR5LnOHNLsdF/YabXnSurqU5TPutCaKJMz3ni6WkxgOEDgqgKiJlsbwRSZ4Cffe3m7GJPBhIKAue+uyOnf7O1rctcA0Je/5soL46Gy6JBXV7g8sU1Vya23p3r03B4AiV3MPku3pIWVvhULRcT7y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Py2oq7OI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707489157; c=relaxed/simple;
+	bh=IWAG3iZ8Dh5jMmT/GjEjH4OublYbEsUlHsgaDAc6kqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aq98yCBNeNgOtmygyzoWxdB9S1f2IK174lLoDQqgZE6kmtRsYV0lVzldYoFwfzdqdHuU5vcRdUDhMx4cdmVJ4Udh8TE8Xv5AU2y3J7R8wOFgdrxfCgzlSIDvwUZtxY6WhtX28+d0ViOqM71XA6Qw3d7seU/6wl3J9DPIPwhLb70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dPwpkAYp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IoBEP9Rv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dPwpkAYp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IoBEP9Rv; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Py2oq7OI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBEFAC433C7;
-	Fri,  9 Feb 2024 14:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707489153;
-	bh=n2TkytHIU4mJGTYx0ffPU1nCUw4lDwT3it9P2hgZMPQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Py2oq7OIoqGE1rDSbcY4ohm7stPtta09azzXhVmXoVzbO/0KaU7eC/gGaa5B2uJya
-	 ghfwSgvu1WyV3AssZpBArKxQ+NDKA/FkPwQvRLA33obpvD//AicUslTMbDNKPdwq/7
-	 3pSxLNPShKyL2QxN8mYrPjn3R1lPMGA5WQtFU3k5y3hsBmtb/zWUPtAlYtmo7OwXaw
-	 JqG6H1X3af1LE34qRQrwvFYTyzxlZPAvFngqjXCuvVBtzSAF8Hm7Fa1f9h78yRmHj+
-	 QXZM6J/xZVntBQ2Sj2l4MtSYTOFd9Elk7ZC5ZpculubiLP4Pl0A5AeXzXhy12MtCNY
-	 ZSO7PdsEOP+oA==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 09 Feb 2024 14:30:04 +0000
-Subject: [PATCH 2/2] selftests/mm: Log a consistent test name for
- check_compaction
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dPwpkAYp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IoBEP9Rv";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dPwpkAYp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IoBEP9Rv"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 56884220BC;
+	Fri,  9 Feb 2024 14:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707489153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NvaR8GHga17EqoSaRiIPdrwK05K74U/GowrqG7dNIBI=;
+	b=dPwpkAYphKOr4kYrjwLDzqi7lhq8dEV2JhcAFDwlgXdwnwvQ48j7cfoplMxNFCWKw2EaGF
+	scDk1jiMNx3qnN9yC7Euf06dZRvd7x5/qEN/dK2icgDH84Hd2LY22O4QsO91peplhYwq7x
+	5yVazHrHUR7L6muAAVT+UTiCVE8voJ8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707489153;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NvaR8GHga17EqoSaRiIPdrwK05K74U/GowrqG7dNIBI=;
+	b=IoBEP9RvwoX4kInT8LpmC5UBEx68qAqNXtmZjNcVuszPUOel6y+/FwtViVNkTN7C20Fm47
+	fMCweZhsaiPw36AQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707489153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NvaR8GHga17EqoSaRiIPdrwK05K74U/GowrqG7dNIBI=;
+	b=dPwpkAYphKOr4kYrjwLDzqi7lhq8dEV2JhcAFDwlgXdwnwvQ48j7cfoplMxNFCWKw2EaGF
+	scDk1jiMNx3qnN9yC7Euf06dZRvd7x5/qEN/dK2icgDH84Hd2LY22O4QsO91peplhYwq7x
+	5yVazHrHUR7L6muAAVT+UTiCVE8voJ8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707489153;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NvaR8GHga17EqoSaRiIPdrwK05K74U/GowrqG7dNIBI=;
+	b=IoBEP9RvwoX4kInT8LpmC5UBEx68qAqNXtmZjNcVuszPUOel6y+/FwtViVNkTN7C20Fm47
+	fMCweZhsaiPw36AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2C97D1326D;
+	Fri,  9 Feb 2024 14:32:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PRmNCoE3xmVncwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 09 Feb 2024 14:32:33 +0000
+Message-ID: <c42a6c9f-7d45-428c-95b9-98367ddba9d3@suse.cz>
+Date: Fri, 9 Feb 2024 15:32:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] mm/compaction: enable compacting >0 order folios.
+Content-Language: en-US
+To: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: "Huang, Ying" <ying.huang@intel.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, "Yin, Fengwei"
+ <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>,
+ Mel Gorman <mgorman@techsingularity.net>, Rohan Puri
+ <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Adam Manzanares <a.manzanares@samsung.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+References: <20240202161554.565023-1-zi.yan@sent.com>
+ <20240202161554.565023-2-zi.yan@sent.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240202161554.565023-2-zi.yan@sent.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240209-kselftest-mm-cleanup-v1-2-a3c0386496b5@kernel.org>
-References: <20240209-kselftest-mm-cleanup-v1-0-a3c0386496b5@kernel.org>
-In-Reply-To: <20240209-kselftest-mm-cleanup-v1-0-a3c0386496b5@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, 
- Ryan Roberts <Ryan.Roberts@arm.com>, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-0438c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4141; i=broonie@kernel.org;
- h=from:subject:message-id; bh=n2TkytHIU4mJGTYx0ffPU1nCUw4lDwT3it9P2hgZMPQ=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlxjd2eHrNdRwA/quROZ5aC1w1CkozU3y7OQRiA
- QsCxUdoBAWJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcY3dgAKCRAk1otyXVSH
- 0DfUB/95u6qaCHLmx6YhkYZFy0UOyUJinhJLQsXirmJrQvvovBbB+oDXMGLdYsHMTg7Li2TMAgS
- s9uH/dAJDcoVtf0eEPwd+ztweDP26Q9sz6YzdJee6nPykOnyult75zLJnVo5KKEf0QWOyCwWMIy
- MZkfeqsEkVfnsKnsrHIhM/y0iLAN/4mBO6IyPqFgDGHsmebtxKqR1AikuvhFWufo5KGG+9IxCh3
- N5qgNq9ClC9mYgUoSc1eWSiK3bXEYPNilDhvNBJL+6y8GxPQEnMrp0hfSkWUx/1Uzx1ClkjOvYU
- kpSQ9jSaMDI5CrpuDlvw5E3MutDaeJHBIC+Avx/EqSx5H9FA
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -2.79
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLqwhhqik4qyk5i1fk54co8f1o)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCPT_COUNT_TWELVE(0.00)[19];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,intel.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[intel.com,arm.com,linux-foundation.org,infradead.org,redhat.com,google.com,linux.intel.com,cmpxchg.org,linux.alibaba.com,huaweicloud.com,techsingularity.net,gmail.com,kernel.org,samsung.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-Every test result report in the compaction test prints a distinct log
-messae, and some of the reports print a name that varies at runtime. This
-causes problems for automation since a lot of automation software uses the
-printed string as the name of the test, if the name varies from run to run
-and from pass to fail then the automation software can't identify that a
-test changed result or that the same tests are being run.
+On 2/2/24 17:15, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> migrate_pages() supports >0 order folio migration and during compaction,
+> even if compaction_alloc() cannot provide >0 order free pages,
+> migrate_pages() can split the source page and try to migrate the base pages
+> from the split. It can be a baseline and start point for adding support for
+> compacting >0 order folios.
+> 
+> Suggested-by: Huang Ying <ying.huang@intel.com>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>  mm/compaction.c | 43 +++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 35 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 4add68d40e8d..e43e898d2c77 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -816,6 +816,21 @@ static bool too_many_isolated(struct compact_control *cc)
+>  	return too_many;
+>  }
+>  
+> +/*
+> + * 1. if the page order is larger than or equal to target_order (i.e.,
+> + * cc->order and when it is not -1 for global compaction), skip it since
+> + * target_order already indicates no free page with larger than target_order
+> + * exists and later migrating it will most likely fail;
+> + *
+> + * 2. compacting > pageblock_order pages does not improve memory fragmentation,
+> + * skip them;
+> + */
+> +static bool skip_isolation_on_order(int order, int target_order)
+> +{
+> +	return (target_order != -1 && order >= target_order) ||
+> +		order >= pageblock_order;
+> +}
+> +
+>  /**
+>   * isolate_migratepages_block() - isolate all migrate-able pages within
+>   *				  a single pageblock
+> @@ -1010,7 +1025,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+>  		/*
+>  		 * Regardless of being on LRU, compound pages such as THP and
+>  		 * hugetlbfs are not to be compacted unless we are attempting
+> -		 * an allocation much larger than the huge page size (eg CMA).
+> +		 * an allocation larger than the compound page size.
+>  		 * We can potentially save a lot of iterations if we skip them
+>  		 * at once. The check is racy, but we can consider only valid
+>  		 * values and the only danger is skipping too much.
+> @@ -1018,11 +1033,18 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+>  		if (PageCompound(page) && !cc->alloc_contig) {
+>  			const unsigned int order = compound_order(page);
+>  
+> -			if (likely(order <= MAX_PAGE_ORDER)) {
+> -				low_pfn += (1UL << order) - 1;
+> -				nr_scanned += (1UL << order) - 1;
+> +			/*
+> +			 * Skip based on page order and compaction target order
+> +			 * and skip hugetlbfs pages.
+> +			 */
+> +			if (skip_isolation_on_order(order, cc->order) ||
+> +			    PageHuge(page)) {
 
-Refactor the logging to use a consistent name when printing the result of
-the test, printing the existing messages as diagnostic information instead
-so they are still available for people trying to interpret the results.
+Hm I'd try to avoid a new PageHuge() test here.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/mm/compaction_test.c | 35 +++++++++++++++-------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+Earlier we have a block that does
+                if (PageHuge(page) && cc->alloc_contig) {
+			...
 
-diff --git a/tools/testing/selftests/mm/compaction_test.c b/tools/testing/selftests/mm/compaction_test.c
-index 30150929c8c5..533999b6c284 100644
---- a/tools/testing/selftests/mm/compaction_test.c
-+++ b/tools/testing/selftests/mm/compaction_test.c
-@@ -95,21 +95,22 @@ int check_compaction(unsigned long mem_free, unsigned int hugepage_size)
- 
- 	fd = open("/proc/sys/vm/nr_hugepages", O_RDWR | O_NONBLOCK);
- 	if (fd < 0) {
--		ksft_test_result_fail("Failed to open /proc/sys/vm/nr_hugepages: %s\n",
--				      strerror(errno));
--		return -1;
-+		ksft_print_msg("Failed to open /proc/sys/vm/nr_hugepages: %s\n",
-+			       strerror(errno));
-+		ret = -1;
-+		goto out;
- 	}
- 
- 	if (read(fd, initial_nr_hugepages, sizeof(initial_nr_hugepages)) <= 0) {
--		ksft_test_result_fail("Failed to read from /proc/sys/vm/nr_hugepages: %s\n",
--				      strerror(errno));
-+		ksft_print_msg("Failed to read from /proc/sys/vm/nr_hugepages: %s\n",
-+			       strerror(errno));
- 		goto close_fd;
- 	}
- 
- 	/* Start with the initial condition of 0 huge pages*/
- 	if (write(fd, "0", sizeof(char)) != sizeof(char)) {
--		ksft_test_result_fail("Failed to write 0 to /proc/sys/vm/nr_hugepages: %s\n",
--				      strerror(errno));
-+		ksft_print_msg("Failed to write 0 to /proc/sys/vm/nr_hugepages: %s\n",
-+			       strerror(errno));
- 		goto close_fd;
- 	}
- 
-@@ -118,16 +119,16 @@ int check_compaction(unsigned long mem_free, unsigned int hugepage_size)
- 	/* Request a large number of huge pages. The Kernel will allocate
- 	   as much as it can */
- 	if (write(fd, "100000", (6*sizeof(char))) != (6*sizeof(char))) {
--		ksft_test_result_fail("Failed to write 100000 to /proc/sys/vm/nr_hugepages: %s\n",
--				      strerror(errno));
-+		ksft_print_msg("Failed to write 100000 to /proc/sys/vm/nr_hugepages: %s\n",
-+			       strerror(errno));
- 		goto close_fd;
- 	}
- 
- 	lseek(fd, 0, SEEK_SET);
- 
- 	if (read(fd, nr_hugepages, sizeof(nr_hugepages)) <= 0) {
--		ksft_test_result_fail("Failed to re-read from /proc/sys/vm/nr_hugepages: %s\n",
--				      strerror(errno));
-+		ksft_print_msg("Failed to re-read from /proc/sys/vm/nr_hugepages: %s\n",
-+			       strerror(errno));
- 		goto close_fd;
- 	}
- 
-@@ -139,24 +140,26 @@ int check_compaction(unsigned long mem_free, unsigned int hugepage_size)
- 
- 	if (write(fd, initial_nr_hugepages, strlen(initial_nr_hugepages))
- 	    != strlen(initial_nr_hugepages)) {
--		ksft_test_result_fail("Failed to write value to /proc/sys/vm/nr_hugepages: %s\n",
--				      strerror(errno));
-+		ksft_print_msg("Failed to write value to /proc/sys/vm/nr_hugepages: %s\n",
-+			       strerror(errno));
- 		goto close_fd;
- 	}
- 
-+	ksft_print_msg("Number of huge pages allocated = %d\n",
-+		       atoi(nr_hugepages));
-+
- 	if (compaction_index > 3) {
- 		ksft_print_msg("ERROR: Less that 1/%d of memory is available\n"
- 			       "as huge pages\n", compaction_index);
--		ksft_test_result_fail("No of huge pages allocated = %d\n", (atoi(nr_hugepages)));
- 		goto close_fd;
- 	}
- 
--	ksft_test_result_pass("Memory compaction succeeded. No of huge pages allocated = %d\n",
--			      (atoi(nr_hugepages)));
- 	ret = 0;
- 
-  close_fd:
- 	close(fd);
-+ out:
-+	ksft_test_result(ret == 0, "check_compaction\n");
- 	return ret;
- }
- 
+think I'd rather rewrite it to handle the PageHuge() case completely and
+just make it skip the 1UL << order pages there for !cc->alloc_config. Even
+if it means duplicating a bit of the low_pfn and nr_scanned bumping code.
 
--- 
-2.39.2
+Which reminds me the PageHuge() check there is probably still broken ATM:
+
+https://lore.kernel.org/all/8fa1c95c-4749-33dd-42ba-243e492ab109@suse.cz/
+
+Even better reason not to add another one.
+If the huge page materialized since the first check, we should bail out when
+testing PageLRU later anyway.
+
+> +				if (order <= MAX_PAGE_ORDER) {
+> +					low_pfn += (1UL << order) - 1;
+> +					nr_scanned += (1UL << order) - 1;
+> +				}
+> +				goto isolate_fail;
+>  			}
+> -			goto isolate_fail;
+>  		}
+>  
+>  		/*
+> @@ -1165,10 +1187,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+>  			}
+>  
+>  			/*
+> -			 * folio become large since the non-locked check,
+> -			 * and it's on LRU.
+> +			 * Check LRU folio order under the lock
+>  			 */
+> -			if (unlikely(folio_test_large(folio) && !cc->alloc_contig)) {
+> +			if (unlikely(skip_isolation_on_order(folio_order(folio),
+> +							     cc->order) &&
+> +				     !cc->alloc_contig)) {
+>  				low_pfn += folio_nr_pages(folio) - 1;
+>  				nr_scanned += folio_nr_pages(folio) - 1;
+>  				folio_set_lru(folio);
+> @@ -1786,6 +1809,10 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+>  	struct compact_control *cc = (struct compact_control *)data;
+>  	struct folio *dst;
+>  
+> +	/* this makes migrate_pages() split the source page and retry */
+> +	if (folio_test_large(src) > 0)
+> +		return NULL;
+> +
+>  	if (list_empty(&cc->freepages)) {
+>  		isolate_freepages(cc);
+>  
 
