@@ -1,63 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9484C84A3E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 19:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330F88289B;
+	Fri,  9 Feb 2024 19:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707507121; cv=none; b=oZXyN9PjEwGaVYJ6xT7BuRfbHE+zsF0uvGLBra92wUs8HrpES/f6IoeSz/l6XPgVURsQAuH521EX2iVz7jGLoR49911BdMOiz3QtPt5QKSk9X6vykNCY12bblHpjN+6EuGZgSS2mvE2W/E8gACs0yauVaMbUsH/9AEhL8z1paiY=
+	t=1707507316; cv=none; b=GRuB2DbAI0zS18t/Xh0aV/bTnOsMBKfvSwWHZenGoptGueZtsxISQ5X2GjQ6bClGLLtpS2cE8Q/LB1Sn3Y0nb+HLMzdoTV5fhpWlIgsUt492qWLtQOKvMwNOXlw5lifHfDOokmuk8jnsVIfpeByfxkTbag7G0SDvFLS+S4/eWD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707507121; c=relaxed/simple;
-	bh=1Yw4jQ4LFJihZthUSxjoizmvJLyoCoNkHVHZ49vzjrk=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ThFgsgbCcyVADl1n9vuMb9qxId4zRBThasp+SvuKBHvdrQDIU8k2KREvFkVG9JgwZrsLoPQECG+HgLFUAt2ySI3mzh9LMy6LJ+6RO9mwxXczcvAfS47MCE44WNd+wzM2AjrozwMxXD21Edr6Baoce+ZzTDD2HXixiHQg2ILxMTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vGihRs5X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707507316; c=relaxed/simple;
+	bh=xhzwrO+6ZlV1l0qgiqyNhA2TgTafW1vbnrmWtuXQhXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRwRcJbUTrL8EaISq+GJsSwRdKgZQMEDoDGg0e5tQSC2YR2IfNHtA/BOtu4ja1GG8DuIr0Rsei8VLn8JlHC9d52aGfaacB7n9cuJq0NoA7cOt38V28LBvLyv+RJHVy/CTci4dOdSuI5a7dwf78ZqxEWDG/PCsZWxW5zNShK+Smk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GHULZBc0; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGihRs5X"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C1D1C43399;
-	Fri,  9 Feb 2024 19:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707507121;
-	bh=1Yw4jQ4LFJihZthUSxjoizmvJLyoCoNkHVHZ49vzjrk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=vGihRs5XW32TDsPeOxG0DlRci46hkzF+jkdcMrjhiaPc4FJ244HEMQRyg6PpQVSRV
-	 3DYuMijF+7URFzQdj6rv+yGxFXXf/2n0246IOaz7j9h6hSkjgs5Upm5Na6PS4TY8YC
-	 mGniwiwAC0cCoY+j5bTntJgVhqzIHer2DfpHhFI+8n+33vQvMFAKqquPWrcMq1c9lA
-	 AAifaUZAtv0wtThYysSN0pMhK2Ff9qJOX/b0X4H0+N9ymDRFdZnrOnlqLWd+hKApaI
-	 ngbg9qLrhC2R2MOmSVSY5DPwPfe2LsyuxYr1KvpWAMtArnMldKlS8w5R9yoh7S4TEB
-	 6Lg/9nbgIe4KA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5582EE2F312;
-	Fri,  9 Feb 2024 19:32:01 +0000 (UTC)
-Subject: Re: [GIT PULL] RISC-V Fixes for 6.8-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-cb58eea8-c84e-4aaf-ab71-f445d3b46de0@palmer-ri-x1c9>
-References: <mhng-cb58eea8-c84e-4aaf-ab71-f445d3b46de0@palmer-ri-x1c9>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <mhng-cb58eea8-c84e-4aaf-ab71-f445d3b46de0@palmer-ri-x1c9>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.8-rc4
-X-PR-Tracked-Commit-Id: 3951f6add519a8e954bf78691a412f65b24f4715
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9ed18b0b7765ec3aa5f10843d1c3daaa1a225337
-Message-Id: <170750712134.26526.9089159200603791474.pr-tracker-bot@kernel.org>
-Date: Fri, 09 Feb 2024 19:32:01 +0000
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GHULZBc0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707507314; x=1739043314;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xhzwrO+6ZlV1l0qgiqyNhA2TgTafW1vbnrmWtuXQhXU=;
+  b=GHULZBc0IwH1WVl31TVc8ImVr78SOmbcNfkdNIMp1FBRPMQFD6GxlWHV
+   FqpSOMKE2uPQJbxbBYtX+jmXOWkKhZk69p8VKUhMahoB/y3PV4zfuV15S
+   OhC9l4MgIikYLWbluOkYH/rG9gfSx6PsNtfTM5ax85RNnvb+QQ/r9/ilA
+   AeXd6aD/OfBNvsZyBqKTOgIT8CvMsUNtonQpGTDokf0JHBDSnZArnBYDz
+   OwOm/i795apr4Jxvq15xq/Z6gu6Kphp1CaAAy6a7YmHQe7NN9eGhwmjSs
+   RiGYxbY0U7s/OHNOEaRUP2wTO3xQD23Fr4OPlFXIHA+y0eitNPtd2CR1G
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1641131"
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="1641131"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 11:35:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="33099836"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.74])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 11:35:13 -0800
+Date: Fri, 9 Feb 2024 11:35:12 -0800
+From: Tony Luck <tony.luck@intel.com>
+To: "Moger, Babu" <babu.moger@amd.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>, x86@kernel.org,
+	Shaopeng Tan <tan.shaopeng@fujitsu.com>,
+	James Morse <james.morse@arm.com>,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Drew Fustini <dfustini@baylibre.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v15-RFC 6/8] x86/resctrl: Introduce snc_nodes_per_l3_cache
+Message-ID: <ZcZ-cDqGLTtHpB1T@agluck-desk3>
+References: <20240126223837.21835-1-tony.luck@intel.com>
+ <20240130222034.37181-1-tony.luck@intel.com>
+ <20240130222034.37181-7-tony.luck@intel.com>
+ <89dc9022-c9a4-42dc-8710-be2d6d9a4e7c@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89dc9022-c9a4-42dc-8710-be2d6d9a4e7c@amd.com>
 
-The pull request you sent on Fri, 09 Feb 2024 08:42:32 -0800 (PST):
+On Fri, Feb 09, 2024 at 09:29:16AM -0600, Moger, Babu wrote:
+> >  
+> > +extern unsigned int snc_nodes_per_l3_cache;
+> 
+> I feel this can be part of rdt_resource instead of global.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.8-rc4
+Mixed emotions about that. It would be another field that appears
+in every instance of rdt_resource, but only used by the RDT_RESOURCE_L3_MON
+copy.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9ed18b0b7765ec3aa5f10843d1c3daaa1a225337
+> 
+> > +
+> >  enum resctrl_res_level {
+> >  	RDT_RESOURCE_L3_MON,
+> >  	RDT_RESOURCE_L3,
+> > diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> > index b741cbf61843..dc886d2c9a33 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/core.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> > @@ -48,6 +48,12 @@ int max_name_width, max_data_width;
+> >   */
+> >  bool rdt_alloc_capable;
+> >  
+> > +/*
+> > + * Number of SNC nodes that share each L3 cache.  Default is 1 for
+> > + * systems that do not support SNC, or have SNC disabled.
+> > + */
+> > +unsigned int snc_nodes_per_l3_cache = 1;
+> > +
+> >  static void
+> >  mba_wrmsr_intel(struct rdt_domain *d, struct msr_param *m,
+> >  		struct rdt_resource *r);
+> > diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > index 080cad0d7288..357919bbadbe 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > @@ -148,8 +148,18 @@ static inline struct rmid_entry *__rmid_entry(u32 rmid)
+> >  
+> >  static int __rmid_read(u32 rmid, enum resctrl_event_id eventid, u64 *val)
+> >  {
+> > +	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+> 
+> RDT_RESOURCE_L3_MON?
 
-Thank you!
+Second good catch.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> 
+> > +	int cpu = smp_processor_id();
+> > +	int rmid_offset = 0;
+> >  	u64 msr_val;
+> >  
+> > +	/*
+> > +	 * When SNC mode is on, need to compute the offset to read the
+> > +	 * physical RMID counter for the node to which this CPU belongs.
+> > +	 */
+> > +	if (snc_nodes_per_l3_cache > 1)
+> > +		rmid_offset = (cpu_to_node(cpu) % snc_nodes_per_l3_cache) * r->num_rmid;
+> 
+> Not sure if you have tested or not. r->num_rmid is initialized for the
+> resource RDT_RESOURCE_L3_MON. For other resource it is always 0.
+
+I hadn't got time on the SNC machine to try this out. Thanks
+for catching this one, I'd have been scratching my head for a
+while to track the symptoms of this problem back to this mistake.
+
+Thanks
+
+-Tony
