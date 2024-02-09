@@ -1,55 +1,55 @@
-Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1503A86AD8;
-	Fri,  9 Feb 2024 18:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6C31272D4;
+	Fri,  9 Feb 2024 18:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707502089; cv=none; b=lECCfHaxap0CGnBtDypt7Zf8201mLSeiPKGXgGpe7qO+IWhRdQ465PpzPxzP7QHkbsiKmKRVuQAEOwpJUE9mEK9mJYuNnVjwhezv7T2R/vh03nmaibjbOzankXjTn4rH90rgE3bkGH1hu0Q7lwLv5/5iPkRhwYeVXkh0Z7Wkfyo=
+	t=1707502091; cv=none; b=X0FqbYwtIZ3GS1d9R8SicZ7WkQZi4Cwojh8y4NRtDA44eTg7llCGUe5VrdOKYG6wntm9hk1pEr/qeKrt5W6J0ZxDa1EKUuB0wKe1os6PZ/okYtmk2iZHaeK5MVKwp5dIHULXpobicUt3SC2B7PWVS0V5fzWKldR9Hsr+wnSDHfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707502089; c=relaxed/simple;
-	bh=rzATakOEyyJuBm/TJ8ceDcgUlVU73mkl+ivq91jSATg=;
+	s=arc-20240116; t=1707502091; c=relaxed/simple;
+	bh=ogCOAZX2NXN9A243dzILDExre06o072M6R8BIadrlQY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EI5LxpTCVfMhjxh4W4Lx2E23LEwQCUuIcvsVXlJDKSiE/pe9IaPmybgsr2hE+Rsjq7yzi5tzsj81EW/bvbixNzm5hfnNzrA/kOcLzHwzSFclLF6v4Jj/y5soEzu985h+pSFcLQ8bJ2HDIlIoOCYCnKOz4G1/mibYbliKgmaX1lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=JXf60UWh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=K7qKG67F; arc=none smtp.client-ip=103.168.172.146
+	 In-Reply-To:To:Cc; b=SV3+ecnWAtGoWmUCsBGNVg6EcnoY9QnFiArinb72yJ4d9zt/xNkmQxXZn+7oPQHDKVPuwQgjjwgpUf2DqIuER1+h+mjlqFfF5+eN/wMYvu2fYBpv+RJ4TPEtkmgcEAL8Y2sDVUXHyzwg3IDqTLMvQQzEnJYEs+zV5S4yNc7nPrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=eT4rm1BT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CS36Ks/5; arc=none smtp.client-ip=66.111.4.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="JXf60UWh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K7qKG67F"
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="eT4rm1BT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CS36Ks/5"
 Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.nyi.internal (Postfix) with ESMTP id F2F7813800B9;
-	Fri,  9 Feb 2024 13:08:05 -0500 (EST)
+	by mailout.nyi.internal (Postfix) with ESMTP id 404125C00DB;
+	Fri,  9 Feb 2024 13:08:08 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Fri, 09 Feb 2024 13:08:05 -0500
+  by compute2.internal (MEProxy); Fri, 09 Feb 2024 13:08:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1707502085;
-	 x=1707588485; bh=jv8EYuj3bWvaUTuv8bEn7Jt6jV5x+VSuR/EwKaxASlY=; b=
-	JXf60UWhy+6hSRqJuipBqixrh+53MvI2fNEAuanaJ+5Woo02bYq70BIAvj4UE3xe
-	Phbn9z3SOV3KnFrDyz/8DOf6FE6llD2MOIav9WUedSRroD4GYABrCm+L6DRnKX22
-	ey2ESnZeubD/nlCwWcs3AdOPkOVabqpHJS+xDfw9SdHRgWnfCCLYPM6Ue6EUZrgx
-	q+Gs67EH5Q95bHWU6d3UqYhbI8sHmCFX7JJ9V6fIg5ScxdPGQ6+xwvavPuEEVabf
-	556MwkTU9+xDlAPjhobfEw3BMrQLOdfwmnoJzQjC1wRdYU8Xlf0AQnkyCXFJspJo
-	RM5EfWocqVEp32tqEDGoGA==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1707502088;
+	 x=1707588488; bh=5OEoS0A3LR4JS3bmwdfD5QA/dA50Ddny3vlr09nGCQg=; b=
+	eT4rm1BTPv3BLErxkfkLnxD4ZrxuBopp4NP+MoLM9vtEdIsSGAERg4EFOJLpgvBT
+	m3epCh5i0tpsWtLgmC1vtrA6oR1lqIbnvP9NPg0NE11xHqQQfYFByH1475g3bx73
+	fwUot1PF1LF2SECHP5N/4FR0d5u3ibRzNXmmvWAUr04BY8107Z7kWgiz5dqHVXg7
+	19YK/w6G8yBpLpOmZKbY7N7u3YJE4Rz91bvVOymKHCA9AoVO9K5Llt4hv8wmewyU
+	pKaL4JRRsOKbxvrJlyyhpfQi2ZaMVNWqRUSxi3fFMURKmTAoW+U4uofzGbhcJcfL
+	pzcCFPkp9jjOcjNpEdjHtA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707502085; x=
-	1707588485; bh=jv8EYuj3bWvaUTuv8bEn7Jt6jV5x+VSuR/EwKaxASlY=; b=K
-	7qKG67FL2ol9yy9JlYbOZfIYYKQMWXhsot9IyjLVJ9itKvHgkQaJhCM/XLqD1VsG
-	mNxT/Ol8/TWvd/LYZHFNsRFRrT8FUce8PtaaXaiy9Vlg+hxsmLuTnEVLcteEWdBZ
-	WeIx8/woXW89fH35ePKmVectkvBPM1lsnkVruBvh2xzfiLe683ovW6j4gv7/2mlY
-	h9JmwNW1GsXt+qaJ6Dlz8Naq+0Q3Pqorwr3ySrZNEEbeNSjmIxDn0M4RSaV2LKZj
-	u2vwSJ9/obs3fzgrdPjFOoNvwVILQzqYOsotWZIJzYW+NV2C6vHJTBNoZjvnN75P
-	80QdHKHmcrVlaKl+fT+Pg==
-X-ME-Sender: <xms:BWrGZQi_JpHU0nDtJkSQMj44S0Twl2csNCl1erF0TRPrwxj7Z4a5Qg>
-    <xme:BWrGZZCidvA789U8ax5nEUyDxBqmlIjhBA_p5h6Dp9xxREm_4M3wwvXuHkyrHtxpn
-    QnKv_V-dP4aS1nV8TY>
-X-ME-Received: <xmr:BWrGZYHvsKw7KDjc9c_e5kh7m3smf32rpL_F0RjKWowv7CRteshqcdNK7b8xnoTH7g>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707502088; x=
+	1707588488; bh=5OEoS0A3LR4JS3bmwdfD5QA/dA50Ddny3vlr09nGCQg=; b=C
+	S36Ks/5qOQSaM12xhStZsdROgYXcha6viUceQQsnyDlyh4i3iUkh9bk8KKOutohr
+	Ja5Ne5WGPS7HhiGYpz0wC8BhSFUXoSD/bPBeDxpKjziAtPbcdHsYu48U7lKNXXQy
+	h82KKtWflXXgp1VT8oJpTHCwCnV/3SD2rmWb7xhVmYVZhyWAQ9iKLvsnnVx2llzi
+	X9s9KPTZqwGJgktAB7T5mFeSQlOwDx9KSH4B+5PkvJbrcMOiYvpSRq431XJ0GOsX
+	6/7uMx7224JAzXPtHXlTPMWu4g4nSdoX6Gzjto5CORo71p1+971mNqaynnb57dhk
+	/9y79ABaoRjI75DFJ2Zhg==
+X-ME-Sender: <xms:CGrGZQmNQJ7CGDFb844HrwL8kC7PZ8uLbTRPPb4xbeeYu9dlalh-Jg>
+    <xme:CGrGZf0-dHpCRo73Qbl172AXsRkbPnYkai1G2LBfyumSyzCC4lnQHw8FOeU0ISvrZ
+    4P3Nif3AMSDKdBLo4k>
+X-ME-Received: <xmr:CGrGZep3sgKw71ZX-xUA-YMNyNGd_qnrb_mWWKRKJuKqu_2ToEFBj58viNuXpfmT8Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtdeigddutdejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,16 +58,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtdeigddutdejucetufdoteggod
     cuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffekgedugefhtdduudeghfeu
     veegffegudekjeelnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilh
     hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:BWrGZRRMU2xjYfMMx95Ueemhr1TXbeJ9hFR4JSW5yXXFDCxkcF0y0Q>
-    <xmx:BWrGZdwghaxZGojrPHdk28BdiYLRVtb3incAPOfkv0rcau7-xAPxXw>
-    <xmx:BWrGZf5B66NvlgsxBDVnRMUwhgUUtTm0fHdZktvLCCGl1o3Oc8DK4w>
-    <xmx:BWrGZQpBuWft3x09MjrxnRyula-8H33tT78kutt_QKI44RJ05pOJDw>
+X-ME-Proxy: <xmx:CGrGZcm2VDqR8OzbXxsFjo5iRFWqCEZYaZinPI7zBOuvrGBnL1w7_g>
+    <xmx:CGrGZe0t2v3iCNz3SgPw7tlhiTknqu5Jn9uUfCXGPSzKFgy6-sosyg>
+    <xmx:CGrGZTsYi3h3Cbha35ONG7hGU4RSBwAX1X6sA02XAfyUj1Oe-qPYKA>
+    <xmx:CGrGZRSDychSllF3Rpj0TrMEFRxUQJ_oaA0W5-t4-xtBaezelseKHg>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 9 Feb 2024 13:08:04 -0500 (EST)
+ 9 Feb 2024 13:08:07 -0500 (EST)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Fri, 09 Feb 2024 18:07:52 +0000
-Subject: [PATCH 6/8] MIPS: tlbex: Use GPR number macros
+Date: Fri, 09 Feb 2024 18:07:54 +0000
+Subject: [PATCH 8/8] MIPS: pm-cps: Use GPR number macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240209-regname-v1-6-2125efa016ef@flygoat.com>
+Message-Id: <20240209-regname-v1-8-2125efa016ef@flygoat.com>
 References: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
 In-Reply-To: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
@@ -84,391 +84,356 @@ Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
  linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14697;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12857;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=rzATakOEyyJuBm/TJ8ceDcgUlVU73mkl+ivq91jSATg=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhtRjmX/PbxWultM1uXJ/7tLgrM+OYYxLL/I/V7kZILjZR
- +i7yRrXjlIWBjEuBlkxRZYQAaW+DY0XF1x/kPUHZg4rE8gQBi5OAZjILWWG/56WU/5YMxSrfZqn
- UHV6/aoUTkcuA1/TqvP2nX931vh4zWL4n6q0c4GJ+zUZ5WzNJ7xbcvlXyW7nnrr+4Inq+aXL2fZ
- c4gAA
+ bh=ogCOAZX2NXN9A243dzILDExre06o072M6R8BIadrlQY=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhtRjmX+//U+Xn3tytfnJN5tneIpz90wX4S2N/+d2QlWNe
+ Z9F1YOEjlIWBjEuBlkxRZYQAaW+DY0XF1x/kPUHZg4rE8gQBi5OAZjIUjdGhgsMJpfNjFyuaJpF
+ f4g8c/K7ShDHo0X7Xp77Yf9x5QRm7kZGhrdXFe5WtPH6X/08rS7nrLT+/7C2rXxHJky3XVTztKD
+ sKhMA
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
 Use GPR number macros in uasm code generation parts to
 reduce code duplication.
 
-No functional change.
+There are functional change due to difference in register
+symbolic names between OABI and NABI, while existing code
+is only using definitions from OABI.
+
+Code pieces are carefully inspected to ensure register
+usages are safe on NABI as well.
+
+We changed register allocation of r_pcohctl from T7 to T8
+as T7 is not available on NABI and we just want a caller
+saved scratch register here.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/mm/tlbex.c | 196 +++++++++++++++++++++++++--------------------------
- 1 file changed, 97 insertions(+), 99 deletions(-)
+ arch/mips/kernel/pm-cps.c | 134 ++++++++++++++++++++++------------------------
+ 1 file changed, 64 insertions(+), 70 deletions(-)
 
-diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
-index c9d00d9cb3c8..69ea54bdc0c3 100644
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -34,6 +34,7 @@
- #include <asm/cpu-type.h>
- #include <asm/mipsregs.h>
- #include <asm/mmu_context.h>
+diff --git a/arch/mips/kernel/pm-cps.c b/arch/mips/kernel/pm-cps.c
+index 9bf60d7d44d3..d09ca77e624d 100644
+--- a/arch/mips/kernel/pm-cps.c
++++ b/arch/mips/kernel/pm-cps.c
+@@ -18,6 +18,7 @@
+ #include <asm/mipsmtregs.h>
+ #include <asm/pm.h>
+ #include <asm/pm-cps.h>
 +#include <asm/regdef.h>
+ #include <asm/smp-cps.h>
  #include <asm/uasm.h>
- #include <asm/setup.h>
- #include <asm/tlbex.h>
-@@ -277,10 +278,6 @@ static inline void dump_handler(const char *symbol, const void *start, const voi
- 	pr_debug("\tEND(%s)\n", symbol);
- }
  
--/* The only general purpose registers allowed in TLB handlers. */
--#define K0		26
--#define K1		27
+@@ -69,13 +70,6 @@ DEFINE_PER_CPU_ALIGNED(struct mips_static_suspend_state, cps_cpu_state);
+ static struct uasm_label labels[32];
+ static struct uasm_reloc relocs[32];
+ 
+-enum mips_reg {
+-	zero, at, v0, v1, a0, a1, a2, a3,
+-	t0, t1, t2, t3, t4, t5, t6, t7,
+-	s0, s1, s2, s3, s4, s5, s6, s7,
+-	t8, t9, k0, k1, gp, sp, fp, ra,
+-};
 -
- #ifdef CONFIG_64BIT
- # define GET_CONTEXT(buf, reg) UASM_i_MFC0(buf, reg, C0_XCONTEXT)
- #else
-@@ -340,30 +337,30 @@ static struct work_registers build_get_work_registers(u32 **p)
- 	if (scratch_reg >= 0) {
- 		/* Save in CPU local C0_KScratch? */
- 		UASM_i_MTC0(p, 1, c0_kscratch(), scratch_reg);
--		r.r1 = K0;
--		r.r2 = K1;
--		r.r3 = 1;
-+		r.r1 = GPR_K0;
-+		r.r2 = GPR_K1;
-+		r.r3 = GPR_AT;
- 		return r;
- 	}
- 
- 	if (num_possible_cpus() > 1) {
- 		/* Get smp_processor_id */
--		UASM_i_CPUID_MFC0(p, K0, SMP_CPUID_REG);
--		UASM_i_SRL_SAFE(p, K0, K0, SMP_CPUID_REGSHIFT);
-+		UASM_i_CPUID_MFC0(p, GPR_K0, SMP_CPUID_REG);
-+		UASM_i_SRL_SAFE(p, GPR_K0, GPR_K0, SMP_CPUID_REGSHIFT);
- 
--		/* handler_reg_save index in K0 */
--		UASM_i_SLL(p, K0, K0, ilog2(sizeof(struct tlb_reg_save)));
-+		/* handler_reg_save index in GPR_K0 */
-+		UASM_i_SLL(p, GPR_K0, GPR_K0, ilog2(sizeof(struct tlb_reg_save)));
- 
--		UASM_i_LA(p, K1, (long)&handler_reg_save);
--		UASM_i_ADDU(p, K0, K0, K1);
-+		UASM_i_LA(p, GPR_K1, (long)&handler_reg_save);
-+		UASM_i_ADDU(p, GPR_K0, GPR_K0, GPR_K1);
- 	} else {
--		UASM_i_LA(p, K0, (long)&handler_reg_save);
-+		UASM_i_LA(p, GPR_K0, (long)&handler_reg_save);
- 	}
--	/* K0 now points to save area, save $1 and $2  */
--	UASM_i_SW(p, 1, offsetof(struct tlb_reg_save, a), K0);
--	UASM_i_SW(p, 2, offsetof(struct tlb_reg_save, b), K0);
-+	/* GPR_K0 now points to save area, save $1 and $2  */
-+	UASM_i_SW(p, 1, offsetof(struct tlb_reg_save, a), GPR_K0);
-+	UASM_i_SW(p, 2, offsetof(struct tlb_reg_save, b), GPR_K0);
- 
--	r.r1 = K1;
-+	r.r1 = GPR_K1;
- 	r.r2 = 1;
- 	r.r3 = 2;
- 	return r;
-@@ -376,9 +373,9 @@ static void build_restore_work_registers(u32 **p)
- 		UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+ bool cps_pm_support_state(enum cps_pm_state state)
+ {
+ 	return test_bit(state, state_support);
+@@ -203,13 +197,13 @@ static void cps_gen_cache_routine(u32 **pp, struct uasm_label **pl,
  		return;
+ 
+ 	/* Load base address */
+-	UASM_i_LA(pp, t0, (long)CKSEG0);
++	UASM_i_LA(pp, GPR_T0, (long)CKSEG0);
+ 
+ 	/* Calculate end address */
+ 	if (cache_size < 0x8000)
+-		uasm_i_addiu(pp, t1, t0, cache_size);
++		uasm_i_addiu(pp, GPR_T1, GPR_T0, cache_size);
+ 	else
+-		UASM_i_LA(pp, t1, (long)(CKSEG0 + cache_size));
++		UASM_i_LA(pp, GPR_T1, (long)(CKSEG0 + cache_size));
+ 
+ 	/* Start of cache op loop */
+ 	uasm_build_label(pl, *pp, lbl);
+@@ -217,19 +211,19 @@ static void cps_gen_cache_routine(u32 **pp, struct uasm_label **pl,
+ 	/* Generate the cache ops */
+ 	for (i = 0; i < unroll_lines; i++) {
+ 		if (cpu_has_mips_r6) {
+-			uasm_i_cache(pp, op, 0, t0);
+-			uasm_i_addiu(pp, t0, t0, cache->linesz);
++			uasm_i_cache(pp, op, 0, GPR_T0);
++			uasm_i_addiu(pp, GPR_T0, GPR_T0, cache->linesz);
+ 		} else {
+-			uasm_i_cache(pp, op, i * cache->linesz, t0);
++			uasm_i_cache(pp, op, i * cache->linesz, GPR_T0);
+ 		}
  	}
--	/* K0 already points to save area, restore $1 and $2  */
--	UASM_i_LW(p, 1, offsetof(struct tlb_reg_save, a), K0);
--	UASM_i_LW(p, 2, offsetof(struct tlb_reg_save, b), K0);
-+	/* GPR_K0 already points to save area, restore $1 and $2  */
-+	UASM_i_LW(p, 1, offsetof(struct tlb_reg_save, a), GPR_K0);
-+	UASM_i_LW(p, 2, offsetof(struct tlb_reg_save, b), GPR_K0);
+ 
+ 	if (!cpu_has_mips_r6)
+ 		/* Update the base address */
+-		uasm_i_addiu(pp, t0, t0, unroll_lines * cache->linesz);
++		uasm_i_addiu(pp, GPR_T0, GPR_T0, unroll_lines * cache->linesz);
+ 
+ 	/* Loop if we haven't reached the end address yet */
+-	uasm_il_bne(pp, pr, t0, t1, lbl);
++	uasm_il_bne(pp, pr, GPR_T0, GPR_T1, lbl);
+ 	uasm_i_nop(pp);
  }
  
- #ifndef CONFIG_MIPS_PGD_C0_CONTEXT
-@@ -397,22 +394,22 @@ static void build_r3000_tlb_refill_handler(void)
- 	memset(tlb_handler, 0, sizeof(tlb_handler));
- 	p = tlb_handler;
+@@ -275,25 +269,25 @@ static int cps_gen_flush_fsb(u32 **pp, struct uasm_label **pl,
+ 	 */
  
--	uasm_i_mfc0(&p, K0, C0_BADVADDR);
--	uasm_i_lui(&p, K1, uasm_rel_hi(pgdc)); /* cp0 delay */
--	uasm_i_lw(&p, K1, uasm_rel_lo(pgdc), K1);
--	uasm_i_srl(&p, K0, K0, 22); /* load delay */
--	uasm_i_sll(&p, K0, K0, 2);
--	uasm_i_addu(&p, K1, K1, K0);
--	uasm_i_mfc0(&p, K0, C0_CONTEXT);
--	uasm_i_lw(&p, K1, 0, K1); /* cp0 delay */
--	uasm_i_andi(&p, K0, K0, 0xffc); /* load delay */
--	uasm_i_addu(&p, K1, K1, K0);
--	uasm_i_lw(&p, K0, 0, K1);
-+	uasm_i_mfc0(&p, GPR_K0, C0_BADVADDR);
-+	uasm_i_lui(&p, GPR_K1, uasm_rel_hi(pgdc)); /* cp0 delay */
-+	uasm_i_lw(&p, GPR_K1, uasm_rel_lo(pgdc), GPR_K1);
-+	uasm_i_srl(&p, GPR_K0, GPR_K0, 22); /* load delay */
-+	uasm_i_sll(&p, GPR_K0, GPR_K0, 2);
-+	uasm_i_addu(&p, GPR_K1, GPR_K1, GPR_K0);
-+	uasm_i_mfc0(&p, GPR_K0, C0_CONTEXT);
-+	uasm_i_lw(&p, GPR_K1, 0, GPR_K1); /* cp0 delay */
-+	uasm_i_andi(&p, GPR_K0, GPR_K0, 0xffc); /* load delay */
-+	uasm_i_addu(&p, GPR_K1, GPR_K1, GPR_K0);
-+	uasm_i_lw(&p, GPR_K0, 0, GPR_K1);
- 	uasm_i_nop(&p); /* load delay */
--	uasm_i_mtc0(&p, K0, C0_ENTRYLO0);
--	uasm_i_mfc0(&p, K1, C0_EPC); /* cp0 delay */
-+	uasm_i_mtc0(&p, GPR_K0, C0_ENTRYLO0);
-+	uasm_i_mfc0(&p, GPR_K1, C0_EPC); /* cp0 delay */
- 	uasm_i_tlbwr(&p); /* cp0 delay */
--	uasm_i_jr(&p, K1);
-+	uasm_i_jr(&p, GPR_K1);
- 	uasm_i_rfe(&p); /* branch delay */
+ 	/* Preserve perf counter setup */
+-	uasm_i_mfc0(pp, t2, 25, (perf_counter * 2) + 0); /* PerfCtlN */
+-	uasm_i_mfc0(pp, t3, 25, (perf_counter * 2) + 1); /* PerfCntN */
++	uasm_i_mfc0(pp, GPR_T2, 25, (perf_counter * 2) + 0); /* PerfCtlN */
++	uasm_i_mfc0(pp, GPR_T3, 25, (perf_counter * 2) + 1); /* PerfCntN */
  
- 	if (p > tlb_handler + 32)
-@@ -1260,11 +1257,11 @@ static void build_r4000_tlb_refill_handler(void)
- 	memset(final_handler, 0, sizeof(final_handler));
+ 	/* Setup perf counter to count FSB full pipeline stalls */
+-	uasm_i_addiu(pp, t0, zero, (perf_event << 5) | 0xf);
+-	uasm_i_mtc0(pp, t0, 25, (perf_counter * 2) + 0); /* PerfCtlN */
++	uasm_i_addiu(pp, GPR_T0, GPR_ZERO, (perf_event << 5) | 0xf);
++	uasm_i_mtc0(pp, GPR_T0, 25, (perf_counter * 2) + 0); /* PerfCtlN */
+ 	uasm_i_ehb(pp);
+-	uasm_i_mtc0(pp, zero, 25, (perf_counter * 2) + 1); /* PerfCntN */
++	uasm_i_mtc0(pp, GPR_ZERO, 25, (perf_counter * 2) + 1); /* PerfCntN */
+ 	uasm_i_ehb(pp);
  
- 	if (IS_ENABLED(CONFIG_64BIT) && (scratch_reg >= 0 || scratchpad_available()) && use_bbit_insns()) {
--		htlb_info = build_fast_tlb_refill_handler(&p, &l, &r, K0, K1,
-+		htlb_info = build_fast_tlb_refill_handler(&p, &l, &r, GPR_K0, GPR_K1,
- 							  scratch_reg);
- 		vmalloc_mode = refill_scratch;
- 	} else {
--		htlb_info.huge_pte = K0;
-+		htlb_info.huge_pte = GPR_K0;
- 		htlb_info.restore_scratch = 0;
- 		htlb_info.need_reload_pte = true;
- 		vmalloc_mode = refill_noscratch;
-@@ -1274,29 +1271,29 @@ static void build_r4000_tlb_refill_handler(void)
- 		if (bcm1250_m3_war()) {
- 			unsigned int segbits = 44;
+ 	/* Base address for loads */
+-	UASM_i_LA(pp, t0, (long)CKSEG0);
++	UASM_i_LA(pp, GPR_T0, (long)CKSEG0);
  
--			uasm_i_dmfc0(&p, K0, C0_BADVADDR);
--			uasm_i_dmfc0(&p, K1, C0_ENTRYHI);
--			uasm_i_xor(&p, K0, K0, K1);
--			uasm_i_dsrl_safe(&p, K1, K0, 62);
--			uasm_i_dsrl_safe(&p, K0, K0, 12 + 1);
--			uasm_i_dsll_safe(&p, K0, K0, 64 + 12 + 1 - segbits);
--			uasm_i_or(&p, K0, K0, K1);
--			uasm_il_bnez(&p, &r, K0, label_leave);
-+			uasm_i_dmfc0(&p, GPR_K0, C0_BADVADDR);
-+			uasm_i_dmfc0(&p, GPR_K1, C0_ENTRYHI);
-+			uasm_i_xor(&p, GPR_K0, GPR_K0, GPR_K1);
-+			uasm_i_dsrl_safe(&p, GPR_K1, GPR_K0, 62);
-+			uasm_i_dsrl_safe(&p, GPR_K0, GPR_K0, 12 + 1);
-+			uasm_i_dsll_safe(&p, GPR_K0, GPR_K0, 64 + 12 + 1 - segbits);
-+			uasm_i_or(&p, GPR_K0, GPR_K0, GPR_K1);
-+			uasm_il_bnez(&p, &r, GPR_K0, label_leave);
- 			/* No need for uasm_i_nop */
- 		}
+ 	/* Start of clear loop */
+ 	uasm_build_label(pl, *pp, lbl);
  
- #ifdef CONFIG_64BIT
--		build_get_pmde64(&p, &l, &r, K0, K1); /* get pmd in K1 */
-+		build_get_pmde64(&p, &l, &r, GPR_K0, GPR_K1); /* get pmd in GPR_K1 */
- #else
--		build_get_pgde32(&p, K0, K1); /* get pgd in K1 */
-+		build_get_pgde32(&p, GPR_K0, GPR_K1); /* get pgd in GPR_K1 */
- #endif
- 
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
--		build_is_huge_pte(&p, &r, K0, K1, label_tlb_huge_update);
-+		build_is_huge_pte(&p, &r, GPR_K0, GPR_K1, label_tlb_huge_update);
- #endif
- 
--		build_get_ptep(&p, K0, K1);
--		build_update_entries(&p, K0, K1);
-+		build_get_ptep(&p, GPR_K0, GPR_K1);
-+		build_update_entries(&p, GPR_K0, GPR_K1);
- 		build_tlb_write_entry(&p, &l, &r, tlb_random);
- 		uasm_l_leave(&l, p);
- 		uasm_i_eret(&p); /* return from trap */
-@@ -1304,14 +1301,14 @@ static void build_r4000_tlb_refill_handler(void)
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
- 	uasm_l_tlb_huge_update(&l, p);
- 	if (htlb_info.need_reload_pte)
--		UASM_i_LW(&p, htlb_info.huge_pte, 0, K1);
--	build_huge_update_entries(&p, htlb_info.huge_pte, K1);
--	build_huge_tlb_write_entry(&p, &l, &r, K0, tlb_random,
-+		UASM_i_LW(&p, htlb_info.huge_pte, 0, GPR_K1);
-+	build_huge_update_entries(&p, htlb_info.huge_pte, GPR_K1);
-+	build_huge_tlb_write_entry(&p, &l, &r, GPR_K0, tlb_random,
- 				   htlb_info.restore_scratch);
- #endif
- 
- #ifdef CONFIG_64BIT
--	build_get_pgd_vmalloc64(&p, &l, &r, K0, K1, vmalloc_mode);
-+	build_get_pgd_vmalloc64(&p, &l, &r, GPR_K0, GPR_K1, vmalloc_mode);
- #endif
+ 	/* Perform some loads to fill the FSB */
+ 	for (i = 0; i < num_loads; i++)
+-		uasm_i_lw(pp, zero, i * line_size * line_stride, t0);
++		uasm_i_lw(pp, GPR_ZERO, i * line_size * line_stride, GPR_T0);
  
  	/*
-@@ -1484,34 +1481,35 @@ static void build_loongson3_tlb_refill_handler(void)
- 	memset(tlb_handler, 0, sizeof(tlb_handler));
+ 	 * Invalidate the new D-cache entries so that the cache will need
+@@ -301,9 +295,9 @@ static int cps_gen_flush_fsb(u32 **pp, struct uasm_label **pl,
+ 	 */
+ 	for (i = 0; i < num_loads; i++) {
+ 		uasm_i_cache(pp, Hit_Invalidate_D,
+-			     i * line_size * line_stride, t0);
++			     i * line_size * line_stride, GPR_T0);
+ 		uasm_i_cache(pp, Hit_Writeback_Inv_SD,
+-			     i * line_size * line_stride, t0);
++			     i * line_size * line_stride, GPR_T0);
+ 	}
  
- 	if (check_for_high_segbits) {
--		uasm_i_dmfc0(&p, K0, C0_BADVADDR);
--		uasm_i_dsrl_safe(&p, K1, K0, PGDIR_SHIFT + PGD_TABLE_ORDER + PAGE_SHIFT - 3);
--		uasm_il_beqz(&p, &r, K1, label_vmalloc);
-+		uasm_i_dmfc0(&p, GPR_K0, C0_BADVADDR);
-+		uasm_i_dsrl_safe(&p, GPR_K1, GPR_K0,
-+				PGDIR_SHIFT + PGD_TABLE_ORDER + PAGE_SHIFT - 3);
-+		uasm_il_beqz(&p, &r, GPR_K1, label_vmalloc);
+ 	/* Barrier ensuring previous cache invalidates are complete */
+@@ -311,16 +305,16 @@ static int cps_gen_flush_fsb(u32 **pp, struct uasm_label **pl,
+ 	uasm_i_ehb(pp);
+ 
+ 	/* Check whether the pipeline stalled due to the FSB being full */
+-	uasm_i_mfc0(pp, t1, 25, (perf_counter * 2) + 1); /* PerfCntN */
++	uasm_i_mfc0(pp, GPR_T1, 25, (perf_counter * 2) + 1); /* PerfCntN */
+ 
+ 	/* Loop if it didn't */
+-	uasm_il_beqz(pp, pr, t1, lbl);
++	uasm_il_beqz(pp, pr, GPR_T1, lbl);
+ 	uasm_i_nop(pp);
+ 
+ 	/* Restore perf counter 1. The count may well now be wrong... */
+-	uasm_i_mtc0(pp, t2, 25, (perf_counter * 2) + 0); /* PerfCtlN */
++	uasm_i_mtc0(pp, GPR_T2, 25, (perf_counter * 2) + 0); /* PerfCtlN */
+ 	uasm_i_ehb(pp);
+-	uasm_i_mtc0(pp, t3, 25, (perf_counter * 2) + 1); /* PerfCntN */
++	uasm_i_mtc0(pp, GPR_T3, 25, (perf_counter * 2) + 1); /* PerfCntN */
+ 	uasm_i_ehb(pp);
+ 
+ 	return 0;
+@@ -330,12 +324,12 @@ static void cps_gen_set_top_bit(u32 **pp, struct uasm_label **pl,
+ 				struct uasm_reloc **pr,
+ 				unsigned r_addr, int lbl)
+ {
+-	uasm_i_lui(pp, t0, uasm_rel_hi(0x80000000));
++	uasm_i_lui(pp, GPR_T0, uasm_rel_hi(0x80000000));
+ 	uasm_build_label(pl, *pp, lbl);
+-	uasm_i_ll(pp, t1, 0, r_addr);
+-	uasm_i_or(pp, t1, t1, t0);
+-	uasm_i_sc(pp, t1, 0, r_addr);
+-	uasm_il_beqz(pp, pr, t1, lbl);
++	uasm_i_ll(pp, GPR_T1, 0, r_addr);
++	uasm_i_or(pp, GPR_T1, GPR_T1, GPR_T0);
++	uasm_i_sc(pp, GPR_T1, 0, r_addr);
++	uasm_il_beqz(pp, pr, GPR_T1, lbl);
+ 	uasm_i_nop(pp);
+ }
+ 
+@@ -344,9 +338,9 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 	struct uasm_label *l = labels;
+ 	struct uasm_reloc *r = relocs;
+ 	u32 *buf, *p;
+-	const unsigned r_online = a0;
+-	const unsigned r_nc_count = a1;
+-	const unsigned r_pcohctl = t7;
++	const unsigned r_online = GPR_A0;
++	const unsigned r_nc_count = GPR_A1;
++	const unsigned r_pcohctl = GPR_T8;
+ 	const unsigned max_instrs = 256;
+ 	unsigned cpc_cmd;
+ 	int err;
+@@ -383,8 +377,8 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 		 * with the return address placed in v0 to avoid clobbering
+ 		 * the ra register before it is saved.
+ 		 */
+-		UASM_i_LA(&p, t0, (long)mips_cps_pm_save);
+-		uasm_i_jalr(&p, v0, t0);
++		UASM_i_LA(&p, GPR_T0, (long)mips_cps_pm_save);
++		uasm_i_jalr(&p, GPR_V0, GPR_T0);
+ 		uasm_i_nop(&p);
+ 	}
+ 
+@@ -399,11 +393,11 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 		/* Increment ready_count */
+ 		uasm_i_sync(&p, __SYNC_mb);
+ 		uasm_build_label(&l, p, lbl_incready);
+-		uasm_i_ll(&p, t1, 0, r_nc_count);
+-		uasm_i_addiu(&p, t2, t1, 1);
+-		uasm_i_sc(&p, t2, 0, r_nc_count);
+-		uasm_il_beqz(&p, &r, t2, lbl_incready);
+-		uasm_i_addiu(&p, t1, t1, 1);
++		uasm_i_ll(&p, GPR_T1, 0, r_nc_count);
++		uasm_i_addiu(&p, GPR_T2, GPR_T1, 1);
++		uasm_i_sc(&p, GPR_T2, 0, r_nc_count);
++		uasm_il_beqz(&p, &r, GPR_T2, lbl_incready);
++		uasm_i_addiu(&p, GPR_T1, GPR_T1, 1);
+ 
+ 		/* Barrier ensuring all CPUs see the updated r_nc_count value */
+ 		uasm_i_sync(&p, __SYNC_mb);
+@@ -412,7 +406,7 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 		 * If this is the last VPE to become ready for non-coherence
+ 		 * then it should branch below.
+ 		 */
+-		uasm_il_beq(&p, &r, t1, r_online, lbl_disable_coherence);
++		uasm_il_beq(&p, &r, GPR_T1, r_online, lbl_disable_coherence);
  		uasm_i_nop(&p);
  
--		uasm_il_bgez(&p, &r, K0, label_large_segbits_fault);
-+		uasm_il_bgez(&p, &r, GPR_K0, label_large_segbits_fault);
- 		uasm_i_nop(&p);
- 		uasm_l_vmalloc(&l, p);
+ 		if (state < CPS_PM_POWER_GATED) {
+@@ -422,13 +416,13 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 			 * has been disabled before proceeding, which it will do
+ 			 * by polling for the top bit of ready_count being set.
+ 			 */
+-			uasm_i_addiu(&p, t1, zero, -1);
++			uasm_i_addiu(&p, GPR_T1, GPR_ZERO, -1);
+ 			uasm_build_label(&l, p, lbl_poll_cont);
+-			uasm_i_lw(&p, t0, 0, r_nc_count);
+-			uasm_il_bltz(&p, &r, t0, lbl_secondary_cont);
++			uasm_i_lw(&p, GPR_T0, 0, r_nc_count);
++			uasm_il_bltz(&p, &r, GPR_T0, lbl_secondary_cont);
+ 			uasm_i_ehb(&p);
+ 			if (cpu_has_mipsmt)
+-				uasm_i_yield(&p, zero, t1);
++				uasm_i_yield(&p, GPR_ZERO, GPR_T1);
+ 			uasm_il_b(&p, &r, lbl_poll_cont);
+ 			uasm_i_nop(&p);
+ 		} else {
+@@ -438,16 +432,16 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 			 */
+ 			if (cpu_has_mipsmt) {
+ 				/* Halt the VPE via C0 tchalt register */
+-				uasm_i_addiu(&p, t0, zero, TCHALT_H);
+-				uasm_i_mtc0(&p, t0, 2, 4);
++				uasm_i_addiu(&p, GPR_T0, GPR_ZERO, TCHALT_H);
++				uasm_i_mtc0(&p, GPR_T0, 2, 4);
+ 			} else if (cpu_has_vp) {
+ 				/* Halt the VP via the CPC VP_STOP register */
+ 				unsigned int vpe_id;
+ 
+ 				vpe_id = cpu_vpe_id(&cpu_data[cpu]);
+-				uasm_i_addiu(&p, t0, zero, 1 << vpe_id);
+-				UASM_i_LA(&p, t1, (long)addr_cpc_cl_vp_stop());
+-				uasm_i_sw(&p, t0, 0, t1);
++				uasm_i_addiu(&p, GPR_T0, GPR_ZERO, 1 << vpe_id);
++				UASM_i_LA(&p, GPR_T1, (long)addr_cpc_cl_vp_stop());
++				uasm_i_sw(&p, GPR_T0, 0, GPR_T1);
+ 			} else {
+ 				BUG();
+ 			}
+@@ -482,9 +476,9 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 		* defined by the interAptiv & proAptiv SUMs as ensuring that the
+ 		*  operation resulting from the preceding store is complete.
+ 		*/
+-		uasm_i_addiu(&p, t0, zero, 1 << cpu_core(&cpu_data[cpu]));
+-		uasm_i_sw(&p, t0, 0, r_pcohctl);
+-		uasm_i_lw(&p, t0, 0, r_pcohctl);
++		uasm_i_addiu(&p, GPR_T0, GPR_ZERO, 1 << cpu_core(&cpu_data[cpu]));
++		uasm_i_sw(&p, GPR_T0, 0, r_pcohctl);
++		uasm_i_lw(&p, GPR_T0, 0, r_pcohctl);
+ 
+ 		/* Barrier to ensure write to coherence control is complete */
+ 		uasm_i_sync(&p, __SYNC_full);
+@@ -492,8 +486,8 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
  	}
  
--	uasm_i_dmfc0(&p, K1, C0_PGD);
-+	uasm_i_dmfc0(&p, GPR_K1, C0_PGD);
+ 	/* Disable coherence */
+-	uasm_i_sw(&p, zero, 0, r_pcohctl);
+-	uasm_i_lw(&p, t0, 0, r_pcohctl);
++	uasm_i_sw(&p, GPR_ZERO, 0, r_pcohctl);
++	uasm_i_lw(&p, GPR_T0, 0, r_pcohctl);
  
--	uasm_i_lddir(&p, K0, K1, 3);  /* global page dir */
-+	uasm_i_lddir(&p, GPR_K0, GPR_K1, 3);  /* global page dir */
- #ifndef __PAGETABLE_PMD_FOLDED
--	uasm_i_lddir(&p, K1, K0, 1);  /* middle page dir */
-+	uasm_i_lddir(&p, GPR_K1, GPR_K0, 1);  /* middle page dir */
- #endif
--	uasm_i_ldpte(&p, K1, 0);      /* even */
--	uasm_i_ldpte(&p, K1, 1);      /* odd */
-+	uasm_i_ldpte(&p, GPR_K1, 0);      /* even */
-+	uasm_i_ldpte(&p, GPR_K1, 1);      /* odd */
- 	uasm_i_tlbwr(&p);
+ 	if (state >= CPS_PM_CLOCK_GATED) {
+ 		err = cps_gen_flush_fsb(&p, &l, &r, &cpu_data[cpu],
+@@ -515,9 +509,9 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 		}
  
- 	/* restore page mask */
- 	if (PM_DEFAULT_MASK >> 16) {
--		uasm_i_lui(&p, K0, PM_DEFAULT_MASK >> 16);
--		uasm_i_ori(&p, K0, K0, PM_DEFAULT_MASK & 0xffff);
--		uasm_i_mtc0(&p, K0, C0_PAGEMASK);
-+		uasm_i_lui(&p, GPR_K0, PM_DEFAULT_MASK >> 16);
-+		uasm_i_ori(&p, GPR_K0, GPR_K0, PM_DEFAULT_MASK & 0xffff);
-+		uasm_i_mtc0(&p, GPR_K0, C0_PAGEMASK);
- 	} else if (PM_DEFAULT_MASK) {
--		uasm_i_ori(&p, K0, 0, PM_DEFAULT_MASK);
--		uasm_i_mtc0(&p, K0, C0_PAGEMASK);
-+		uasm_i_ori(&p, GPR_K0, 0, PM_DEFAULT_MASK);
-+		uasm_i_mtc0(&p, GPR_K0, C0_PAGEMASK);
- 	} else {
- 		uasm_i_mtc0(&p, 0, C0_PAGEMASK);
- 	}
-@@ -1520,8 +1518,8 @@ static void build_loongson3_tlb_refill_handler(void)
+ 		/* Issue the CPC command */
+-		UASM_i_LA(&p, t0, (long)addr_cpc_cl_cmd());
+-		uasm_i_addiu(&p, t1, zero, cpc_cmd);
+-		uasm_i_sw(&p, t1, 0, t0);
++		UASM_i_LA(&p, GPR_T0, (long)addr_cpc_cl_cmd());
++		uasm_i_addiu(&p, GPR_T1, GPR_ZERO, cpc_cmd);
++		uasm_i_sw(&p, GPR_T1, 0, GPR_T0);
  
- 	if (check_for_high_segbits) {
- 		uasm_l_large_segbits_fault(&l, p);
--		UASM_i_LA(&p, K1, (unsigned long)tlb_do_page_fault_0);
--		uasm_i_jr(&p, K1);
-+		UASM_i_LA(&p, GPR_K1, (unsigned long)tlb_do_page_fault_0);
-+		uasm_i_jr(&p, GPR_K1);
- 		uasm_i_nop(&p);
- 	}
+ 		if (state == CPS_PM_POWER_GATED) {
+ 			/* If anything goes wrong just hang */
+@@ -564,12 +558,12 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 	 * will run this. The first will actually re-enable coherence & the
+ 	 * rest will just be performing a rather unusual nop.
+ 	 */
+-	uasm_i_addiu(&p, t0, zero, mips_cm_revision() < CM_REV_CM3
++	uasm_i_addiu(&p, GPR_T0, GPR_ZERO, mips_cm_revision() < CM_REV_CM3
+ 				? CM_GCR_Cx_COHERENCE_COHDOMAINEN
+ 				: CM3_GCR_Cx_COHERENCE_COHEN);
  
-@@ -1887,11 +1885,11 @@ static void build_r3000_tlb_load_handler(void)
- 	memset(labels, 0, sizeof(labels));
- 	memset(relocs, 0, sizeof(relocs));
+-	uasm_i_sw(&p, t0, 0, r_pcohctl);
+-	uasm_i_lw(&p, t0, 0, r_pcohctl);
++	uasm_i_sw(&p, GPR_T0, 0, r_pcohctl);
++	uasm_i_lw(&p, GPR_T0, 0, r_pcohctl);
  
--	build_r3000_tlbchange_handler_head(&p, K0, K1);
--	build_pte_present(&p, &r, K0, K1, -1, label_nopage_tlbl);
-+	build_r3000_tlbchange_handler_head(&p, GPR_K0, GPR_K1);
-+	build_pte_present(&p, &r, GPR_K0, GPR_K1, -1, label_nopage_tlbl);
- 	uasm_i_nop(&p); /* load delay */
--	build_make_valid(&p, &r, K0, K1, -1);
--	build_r3000_tlb_reload_write(&p, &l, &r, K0, K1);
-+	build_make_valid(&p, &r, GPR_K0, GPR_K1, -1);
-+	build_r3000_tlb_reload_write(&p, &l, &r, GPR_K0, GPR_K1);
+ 	/* Barrier to ensure write to coherence control is complete */
+ 	uasm_i_sync(&p, __SYNC_full);
+@@ -579,11 +573,11 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
+ 		/* Decrement ready_count */
+ 		uasm_build_label(&l, p, lbl_decready);
+ 		uasm_i_sync(&p, __SYNC_mb);
+-		uasm_i_ll(&p, t1, 0, r_nc_count);
+-		uasm_i_addiu(&p, t2, t1, -1);
+-		uasm_i_sc(&p, t2, 0, r_nc_count);
+-		uasm_il_beqz(&p, &r, t2, lbl_decready);
+-		uasm_i_andi(&p, v0, t1, (1 << fls(smp_num_siblings)) - 1);
++		uasm_i_ll(&p, GPR_T1, 0, r_nc_count);
++		uasm_i_addiu(&p, GPR_T2, GPR_T1, -1);
++		uasm_i_sc(&p, GPR_T2, 0, r_nc_count);
++		uasm_il_beqz(&p, &r, GPR_T2, lbl_decready);
++		uasm_i_andi(&p, GPR_V0, GPR_T1, (1 << fls(smp_num_siblings)) - 1);
  
- 	uasm_l_nopage_tlbl(&l, p);
- 	uasm_i_j(&p, (unsigned long)tlb_do_page_fault_0 & 0x0fffffff);
-@@ -1917,11 +1915,11 @@ static void build_r3000_tlb_store_handler(void)
- 	memset(labels, 0, sizeof(labels));
- 	memset(relocs, 0, sizeof(relocs));
- 
--	build_r3000_tlbchange_handler_head(&p, K0, K1);
--	build_pte_writable(&p, &r, K0, K1, -1, label_nopage_tlbs);
-+	build_r3000_tlbchange_handler_head(&p, GPR_K0, GPR_K1);
-+	build_pte_writable(&p, &r, GPR_K0, GPR_K1, -1, label_nopage_tlbs);
- 	uasm_i_nop(&p); /* load delay */
--	build_make_write(&p, &r, K0, K1, -1);
--	build_r3000_tlb_reload_write(&p, &l, &r, K0, K1);
-+	build_make_write(&p, &r, GPR_K0, GPR_K1, -1);
-+	build_r3000_tlb_reload_write(&p, &l, &r, GPR_K0, GPR_K1);
- 
- 	uasm_l_nopage_tlbs(&l, p);
- 	uasm_i_j(&p, (unsigned long)tlb_do_page_fault_1 & 0x0fffffff);
-@@ -1947,11 +1945,11 @@ static void build_r3000_tlb_modify_handler(void)
- 	memset(labels, 0, sizeof(labels));
- 	memset(relocs, 0, sizeof(relocs));
- 
--	build_r3000_tlbchange_handler_head(&p, K0, K1);
--	build_pte_modifiable(&p, &r, K0, K1,  -1, label_nopage_tlbm);
-+	build_r3000_tlbchange_handler_head(&p, GPR_K0, GPR_K1);
-+	build_pte_modifiable(&p, &r, GPR_K0, GPR_K1,  -1, label_nopage_tlbm);
- 	uasm_i_nop(&p); /* load delay */
--	build_make_write(&p, &r, K0, K1, -1);
--	build_r3000_pte_reload_tlbwi(&p, K0, K1);
-+	build_make_write(&p, &r, GPR_K0, GPR_K1, -1);
-+	build_r3000_pte_reload_tlbwi(&p, GPR_K0, GPR_K1);
- 
- 	uasm_l_nopage_tlbm(&l, p);
- 	uasm_i_j(&p, (unsigned long)tlb_do_page_fault_1 & 0x0fffffff);
-@@ -2067,14 +2065,14 @@ static void build_r4000_tlb_load_handler(void)
- 	if (bcm1250_m3_war()) {
- 		unsigned int segbits = 44;
- 
--		uasm_i_dmfc0(&p, K0, C0_BADVADDR);
--		uasm_i_dmfc0(&p, K1, C0_ENTRYHI);
--		uasm_i_xor(&p, K0, K0, K1);
--		uasm_i_dsrl_safe(&p, K1, K0, 62);
--		uasm_i_dsrl_safe(&p, K0, K0, 12 + 1);
--		uasm_i_dsll_safe(&p, K0, K0, 64 + 12 + 1 - segbits);
--		uasm_i_or(&p, K0, K0, K1);
--		uasm_il_bnez(&p, &r, K0, label_leave);
-+		uasm_i_dmfc0(&p, GPR_K0, C0_BADVADDR);
-+		uasm_i_dmfc0(&p, GPR_K1, C0_ENTRYHI);
-+		uasm_i_xor(&p, GPR_K0, GPR_K0, GPR_K1);
-+		uasm_i_dsrl_safe(&p, GPR_K1, GPR_K0, 62);
-+		uasm_i_dsrl_safe(&p, GPR_K0, GPR_K0, 12 + 1);
-+		uasm_i_dsll_safe(&p, GPR_K0, GPR_K0, 64 + 12 + 1 - segbits);
-+		uasm_i_or(&p, GPR_K0, GPR_K0, GPR_K1);
-+		uasm_il_bnez(&p, &r, GPR_K0, label_leave);
- 		/* No need for uasm_i_nop */
+ 		/* Barrier ensuring all CPUs see the updated r_nc_count value */
+ 		uasm_i_sync(&p, __SYNC_mb);
+@@ -612,7 +606,7 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
  	}
  
-@@ -2217,9 +2215,9 @@ static void build_r4000_tlb_load_handler(void)
- 	build_restore_work_registers(&p);
- #ifdef CONFIG_CPU_MICROMIPS
- 	if ((unsigned long)tlb_do_page_fault_0 & 1) {
--		uasm_i_lui(&p, K0, uasm_rel_hi((long)tlb_do_page_fault_0));
--		uasm_i_addiu(&p, K0, K0, uasm_rel_lo((long)tlb_do_page_fault_0));
--		uasm_i_jr(&p, K0);
-+		uasm_i_lui(&p, GPR_K0, uasm_rel_hi((long)tlb_do_page_fault_0));
-+		uasm_i_addiu(&p, GPR_K0, GPR_K0, uasm_rel_lo((long)tlb_do_page_fault_0));
-+		uasm_i_jr(&p, GPR_K0);
- 	} else
- #endif
- 	uasm_i_j(&p, (unsigned long)tlb_do_page_fault_0 & 0x0fffffff);
-@@ -2273,9 +2271,9 @@ static void build_r4000_tlb_store_handler(void)
- 	build_restore_work_registers(&p);
- #ifdef CONFIG_CPU_MICROMIPS
- 	if ((unsigned long)tlb_do_page_fault_1 & 1) {
--		uasm_i_lui(&p, K0, uasm_rel_hi((long)tlb_do_page_fault_1));
--		uasm_i_addiu(&p, K0, K0, uasm_rel_lo((long)tlb_do_page_fault_1));
--		uasm_i_jr(&p, K0);
-+		uasm_i_lui(&p, GPR_K0, uasm_rel_hi((long)tlb_do_page_fault_1));
-+		uasm_i_addiu(&p, GPR_K0, GPR_K0, uasm_rel_lo((long)tlb_do_page_fault_1));
-+		uasm_i_jr(&p, GPR_K0);
- 	} else
- #endif
- 	uasm_i_j(&p, (unsigned long)tlb_do_page_fault_1 & 0x0fffffff);
-@@ -2330,9 +2328,9 @@ static void build_r4000_tlb_modify_handler(void)
- 	build_restore_work_registers(&p);
- #ifdef CONFIG_CPU_MICROMIPS
- 	if ((unsigned long)tlb_do_page_fault_1 & 1) {
--		uasm_i_lui(&p, K0, uasm_rel_hi((long)tlb_do_page_fault_1));
--		uasm_i_addiu(&p, K0, K0, uasm_rel_lo((long)tlb_do_page_fault_1));
--		uasm_i_jr(&p, K0);
-+		uasm_i_lui(&p, GPR_K0, uasm_rel_hi((long)tlb_do_page_fault_1));
-+		uasm_i_addiu(&p, GPR_K0, GPR_K0, uasm_rel_lo((long)tlb_do_page_fault_1));
-+		uasm_i_jr(&p, GPR_K0);
- 	} else
- #endif
- 	uasm_i_j(&p, (unsigned long)tlb_do_page_fault_1 & 0x0fffffff);
+ 	/* The core is coherent, time to return to C code */
+-	uasm_i_jr(&p, ra);
++	uasm_i_jr(&p, GPR_RA);
+ 	uasm_i_nop(&p);
+ 
+ gen_done:
 
 -- 
 2.43.0
