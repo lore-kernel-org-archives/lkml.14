@@ -1,56 +1,56 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893BD364AE
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 22:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724F538DFB
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 22:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707517745; cv=none; b=gM5O5duR1WFrgRQWMSwjz06pZ9lWh00fsDCb6OAxe2Xtnrm1sNo6ojnfdGUSBFAP2ro/LDHKg4RPAJx9Xz/zeJ9CYo7JIa9BEJT59XRuqi5GyDMMRg3DtQ6OtQSLetX5e/aPhG4ueQ22rW9kP8gS2QCiMlh3HGMT+7L6n2Zp/oQ=
+	t=1707517749; cv=none; b=Rz+R5B4+UIIHd1+Ezs7A+T0Un0g/Q1d/9CKzoTMIrG/vMawWcrI2jCjQGZZ6osUMeUDDUN8JQCyf6gU0gklTV+ILVM8BGkLAFnkJVRcCuHcT2u7BCQV+jrvLKqeAjSRTfAjNR2hvQf/Vo9wzhwayInuQh0gXDSzN3Rl/WJ7bsRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707517745; c=relaxed/simple;
-	bh=icC+nO7MuwJUmEXdQhRIAlaaDV8vsyLHbL3REFEZnx0=;
+	s=arc-20240116; t=1707517749; c=relaxed/simple;
+	bh=MzdZYOJ8bcmLxbBzxayTEgk/rh3FciY0A5qDjUGjyCw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SjQKTikNJvVGHFSHMJRPTgyIUqGTzg9MfeF8uSUI1tDt6Y3Wd9Ul5qsLdpt83yPOGwgKdbIPzbUrnjwU2uc+YS3x5nFdvHe0wUbMpN3XomtMXqXS4nCYpsV6nH32VnVAXH8QsNwT3RMZ7crrTCUgrSNdU+fuvhcsey/55UYBaRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kmnWOXez; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=ntacnGQiG1ekRnE3tf3O3EuNeIe2Xth6isdswpLtDLHWcAxWvc+sbv0PQlDvC/6Ok0ODH5faNl1GfUVptgiB5/IpjwhRW5hUOXYTJUketMjSgZHSPWV4HAzhC/p4KmsZXqYFgoUby2Xz57srYGvkWujcDTqYZD/oIo1kjfS0++Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4rSD36P0; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kmnWOXez"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5f6c12872fbso28415567b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 14:29:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4rSD36P0"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-604acd1d164so28997387b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 14:29:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707517742; x=1708122542; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707517746; x=1708122546; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=dMv+G+Ap9UXJP5o+o2JuMHRcwTnywW6TJb7XNnA0Nis=;
-        b=kmnWOXezJtbZxhmvygdy07yxQMXsYj2ObCntSqWslnbjXJgWYQHQZ7HtDfWfUObgHd
-         CqVEn1syj+pU8q5FC1FWTKNhAdr9Jhzna0Z/X8yEkJnztG0bTVEqiCeB7ZMdlcJB6Di9
-         Nd/IibV2SI9YftV5n8hIjWsH2+g4bmlVv4PHms2wRehZLOp4R0ddpLhr6/UiIUNVplu5
-         /IYcFU0/+VjzCf3eAseoxxwMX4KXTq6Ku7oPx8OGQcdQ6qRIYCJFrH/1poyFRnMqbfUN
-         X6AyFBLV3h/9H6doiKmugLeWfTP9O5pD4C6JG7E6Yr9HAa2/MMeeUxmw4MCLZJPyEMEF
-         2T7A==
+        bh=a9w16DkYUKNtIq1BB7P1j7ef4bijSTE+8L2OPdx5r88=;
+        b=4rSD36P0XAQFuAK/Nms2+vP/iKlh4jKw3co2K416l19tvRWVQfYeGHrwdHSTAhdK+V
+         vGF9bF9x4tJqT2Fs/aqmNcVD0wXXTcDxm7laxOjZP7vNf3K/+EY/1JkAS/hEG8k2RgLa
+         JHCZ9zLtIv7REH4uXprpSVNI0BoLlo6WxA/tQ7XEqSbQBBC7cyPybdbbWUkck9TiZv44
+         h8Fz5VxXWXB4n9XVi+0mnMNelaXL/z2HNk60TcvyrGScblw4s2uLylza8BBd93AKCTQE
+         4W/livcJRfn51On7TIWf2oyfMuCVPC6MIL7oUlONZAuCYCp+UsGJ3+qwPSTJ7NV+LLVy
+         abhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707517742; x=1708122542;
+        d=1e100.net; s=20230601; t=1707517746; x=1708122546;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dMv+G+Ap9UXJP5o+o2JuMHRcwTnywW6TJb7XNnA0Nis=;
-        b=GxuWoxp+2i7Q1lYeG1zqiLJhl6UZvTYXvDI7W52WuzLSBsxr8r5IbyQ9lGRff8wlRP
-         VM+YjPN+Yny9UhiWWSjiqncIoufQCxm/a5cYSPoIvG5XYfpfKnY1LM7Ne6vJz7GcXh5J
-         DcTp6z6vWPr7XkuZheYOuGapkIV/YeuXrKXHS8FqsB/7lVx+/zw6ZYix2TVElb39otzW
-         cowUZIcVRd4sqY5AMTtxR6G17J5J8OKF5smMT+CyaS4/aPATMsWgbSJDwmNlTNZ+D23F
-         g2qirpTOUXjnbyJ/NAcM6M5jXkqTldxfYupmIOOTJAzy+Cb6CahbAIxqHUP4G+CGIUaL
-         mm+A==
-X-Gm-Message-State: AOJu0YzsqXh2Bwph6UJVVhdMHSD49lIk8u+HewPqpBxAzt+mYPhH1gYI
-	d6gQLpZ/lod1YJm0gZ0x91Pbci2bcke6qTThyPyTm9s9O7iF87a1tJ3BIa6xmJgM/Z5E2MhS4xY
-	ziQ==
-X-Google-Smtp-Source: AGHT+IELxZuxEzpEJztgqXAtd5UEdM2r1PgP18O+CDOtyuNNlRlRBUOdU1r0uAwZLiPtzBNxrXzIa1m5k1w=
+        bh=a9w16DkYUKNtIq1BB7P1j7ef4bijSTE+8L2OPdx5r88=;
+        b=R0oI4DM42f+Tud2U6PN9HDLDDxtDJEdHHaM4jQiARG36DyNesWRS2jBKWYGWMsSaNn
+         tHaSb0L18aO2UZcnMCvM/nMFYmKWrVPW0OQs+Wqw9sRbY1LRNAwjJgQRFvOKOx5YNGNF
+         sZ/V37EtwhUqI+3XuvjunL3uQ7hT8J5N2BbpXnGo0mCrUpCnZXEkGA1XW+mWqtH/ToEX
+         g4m8VDWLoGD84Y6FimR/AL5Hl/ZLM4+2CK9j1iOChYJbhlXF7Trw1vn4nG9TTeR+NzWf
+         KRQlqpRzBCrLCANsHyZP1O0O6elsaimnVj9U01ylZ8Axd2BtUJUixUdvuiiVN6395ZWP
+         +NoQ==
+X-Gm-Message-State: AOJu0YwOq+Hs+XripXVp7mlsG3YO7O+lskk98T+OaekYcH5LoxDca9X0
+	MrBvuK0KwztRotj2XdyhDQD2AYdyz2la6nmIZNycfE5/YWJoP8t2eqJLYdjl1WBKYI/E/TCBiio
+	bzw==
+X-Google-Smtp-Source: AGHT+IGt9DDAWDOXh5rWqR7Wdjp1ZBHAe0u2NWCLrJsGzRUa6H3IIUWBVD5SKU6jmY1bLJzmP6LW2pBAIEA=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:4942:0:b0:604:42b0:ebf with SMTP id
- w63-20020a814942000000b0060442b00ebfmr100005ywa.10.1707517742672; Fri, 09 Feb
- 2024 14:29:02 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a05:690c:ec9:b0:604:648:6dc0 with SMTP id
+ cs9-20020a05690c0ec900b0060406486dc0mr161009ywb.10.1707517746491; Fri, 09 Feb
+ 2024 14:29:06 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  9 Feb 2024 14:28:55 -0800
+Date: Fri,  9 Feb 2024 14:28:57 -0800
 In-Reply-To: <20240209222858.396696-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240209222858.396696-1-seanjc@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240209222858.396696-2-seanjc@google.com>
-Subject: [PATCH v4 1/4] KVM: x86/mmu: Retry fault before acquiring mmu_lock if
- mapping is changing
+Message-ID: <20240209222858.396696-4-seanjc@google.com>
+Subject: [PATCH v4 3/4] KVM: x86/mmu: Move slot checks from
+ __kvm_faultin_pfn() to kvm_faultin_pfn()
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -74,185 +74,110 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Retry page faults without acquiring mmu_lock, and without even faulting
-the page into the primary MMU, if the resolved gfn is covered by an active
-invalidation.  Contending for mmu_lock is especially problematic on
-preemptible kernels as the mmu_notifier invalidation task will yield
-mmu_lock (see rwlock_needbreak()), delay the in-progress invalidation, and
-ultimately increase the latency of resolving the page fault.  And in the
-worst case scenario, yielding will be accompanied by a remote TLB flush,
-e.g. if the invalidation covers a large range of memory and vCPUs are
-accessing addresses that were already zapped.
+Move the checks related to the validity of an access to a memslot from the
+inner __kvm_faultin_pfn() to its sole caller, kvm_faultin_pfn().  This
+allows emulating accesses to the APIC access page, which don't need to
+resolve a pfn, even if there is a relevant in-progress mmu_notifier
+invalidation.  Ditto for accesses to KVM internal memslots from L2, which
+KVM also treats as emulated MMIO.
 
-Faulting the page into the primary MMU is similarly problematic, as doing
-so may acquire locks that need to be taken for the invalidation to
-complete (the primary MMU has finer grained locks than KVM's MMU), and/or
-may cause unnecessary churn (getting/putting pages, marking them accessed,
-etc).
+More importantly, this will allow for future cleanup by having the
+"no memslot" case bail from kvm_faultin_pfn() very early on.
 
-Alternatively, the yielding issue could be mitigated by teaching KVM's MMU
-iterators to perform more work before yielding, but that wouldn't solve
-the lock contention and would negatively affect scenarios where a vCPU is
-trying to fault in an address that is NOT covered by the in-progress
-invalidation.
-
-Add a dedicated lockess version of the range-based retry check to avoid
-false positives on the sanity check on start+end WARN, and so that it's
-super obvious that checking for a racing invalidation without holding
-mmu_lock is unsafe (though obviously useful).
-
-Wrap mmu_invalidate_in_progress in READ_ONCE() to ensure that pre-checking
-invalidation in a loop won't put KVM into an infinite loop, e.g. due to
-caching the in-progress flag and never seeing it go to '0'.
-
-Force a load of mmu_invalidate_seq as well, even though it isn't strictly
-necessary to avoid an infinite loop, as doing so improves the probability
-that KVM will detect an invalidation that already completed before
-acquiring mmu_lock and bailing anyways.
-
-Do the pre-check even for non-preemptible kernels, as waiting to detect
-the invalidation until mmu_lock is held guarantees the vCPU will observe
-the worst case latency in terms of handling the fault, and can generate
-even more mmu_lock contention.  E.g. the vCPU will acquire mmu_lock,
-detect retry, drop mmu_lock, re-enter the guest, retake the fault, and
-eventually re-acquire mmu_lock.  This behavior is also why there are no
-new starvation issues due to losing the fairness guarantees provided by
-rwlocks: if the vCPU needs to retry, it _must_ drop mmu_lock, i.e. waiting
-on mmu_lock doesn't guarantee forward progress in the face of _another_
-mmu_notifier invalidation event.
-
-Note, adding READ_ONCE() isn't entirely free, e.g. on x86, the READ_ONCE()
-may generate a load into a register instead of doing a direct comparison
-(MOV+TEST+Jcc instead of CMP+Jcc), but practically speaking the added cost
-is a few bytes of code and maaaaybe a cycle or three.
-
-Reported-by: Yan Zhao <yan.y.zhao@intel.com>
-Closes: https://lore.kernel.org/all/ZNnPF4W26ZbAyGto@yzhao56-desk.sh.intel.com
-Reported-by: Friedrich Weber <f.weber@proxmox.com>
-Cc: Kai Huang <kai.huang@intel.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Yuan Yao <yuan.yao@linux.intel.com>
-Cc: Xu Yilun <yilun.xu@linux.intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c   | 45 +++++++++++++++++++++++++++++++++++++++-
- include/linux/kvm_host.h | 26 +++++++++++++++++++++++
- 2 files changed, 70 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c | 62 ++++++++++++++++++++++--------------------
+ 1 file changed, 33 insertions(+), 29 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 3c193b096b45..166cef0c3ff4 100644
+index 50bfaa53f3f2..505fc7eef533 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4400,11 +4400,37 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
- 			   unsigned int access)
- {
-+	struct kvm_memory_slot *slot = fault->slot;
- 	int ret;
+@@ -4333,33 +4333,6 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 	struct kvm_memory_slot *slot = fault->slot;
+ 	bool async;
  
+-	/*
+-	 * Retry the page fault if the gfn hit a memslot that is being deleted
+-	 * or moved.  This ensures any existing SPTEs for the old memslot will
+-	 * be zapped before KVM inserts a new MMIO SPTE for the gfn.
+-	 */
+-	if (slot && (slot->flags & KVM_MEMSLOT_INVALID))
+-		return RET_PF_RETRY;
+-
+-	if (!kvm_is_visible_memslot(slot)) {
+-		/* Don't expose private memslots to L2. */
+-		if (is_guest_mode(vcpu)) {
+-			fault->slot = NULL;
+-			fault->pfn = KVM_PFN_NOSLOT;
+-			fault->map_writable = false;
+-			return RET_PF_CONTINUE;
+-		}
+-		/*
+-		 * If the APIC access page exists but is disabled, go directly
+-		 * to emulation without caching the MMIO access or creating a
+-		 * MMIO SPTE.  That way the cache doesn't need to be purged
+-		 * when the AVIC is re-enabled.
+-		 */
+-		if (slot && slot->id == APIC_ACCESS_PAGE_PRIVATE_MEMSLOT &&
+-		    !kvm_apicv_activated(vcpu->kvm))
+-			return RET_PF_EMULATE;
+-	}
+-
+ 	if (fault->is_private)
+ 		return kvm_faultin_pfn_private(vcpu, fault);
+ 
+@@ -4406,6 +4379,37 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
  	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
  	smp_rmb();
  
++	if (!slot)
++		goto faultin_pfn;
++
 +	/*
-+	 * Check for a relevant mmu_notifier invalidation event before getting
-+	 * the pfn from the primary MMU, and before acquiring mmu_lock.
-+	 *
-+	 * For mmu_lock, if there is an in-progress invalidation and the kernel
-+	 * allows preemption, the invalidation task may drop mmu_lock and yield
-+	 * in response to mmu_lock being contended, which is *very* counter-
-+	 * productive as this vCPU can't actually make forward progress until
-+	 * the invalidation completes.
-+	 *
-+	 * Retrying now can also avoid unnessary lock contention in the primary
-+	 * MMU, as the primary MMU doesn't necessarily hold a single lock for
-+	 * the duration of the invalidation, i.e. faulting in a conflicting pfn
-+	 * can cause the invalidation to take longer by holding locks that are
-+	 * needed to complete the invalidation.
-+	 *
-+	 * Do the pre-check even for non-preemtible kernels, i.e. even if KVM
-+	 * will never yield mmu_lock in response to contention, as this vCPU is
-+	 * *guaranteed* to need to retry, i.e. waiting until mmu_lock is held
-+	 * to detect retry guarantees the worst case latency for the vCPU.
++	 * Retry the page fault if the gfn hit a memslot that is being deleted
++	 * or moved.  This ensures any existing SPTEs for the old memslot will
++	 * be zapped before KVM inserts a new MMIO SPTE for the gfn.
 +	 */
-+	if (!slot &&
-+	    mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn))
++	if (slot->flags & KVM_MEMSLOT_INVALID)
 +		return RET_PF_RETRY;
 +
++	if (!kvm_is_visible_memslot(slot)) {
++		/* Don't expose KVM's internal memslots to L2. */
++		if (is_guest_mode(vcpu)) {
++			fault->slot = NULL;
++			fault->pfn = KVM_PFN_NOSLOT;
++			fault->map_writable = false;
++			return RET_PF_CONTINUE;
++		}
++
++		/*
++		 * If the APIC access page exists but is disabled, go directly
++		 * to emulation without caching the MMIO access or creating a
++		 * MMIO SPTE.  That way the cache doesn't need to be purged
++		 * when the AVIC is re-enabled.
++		 */
++		if (slot->id == APIC_ACCESS_PAGE_PRIVATE_MEMSLOT &&
++		    !kvm_apicv_activated(vcpu->kvm))
++			return RET_PF_EMULATE;
++	}
++
+ 	/*
+ 	 * Check for a relevant mmu_notifier invalidation event before getting
+ 	 * the pfn from the primary MMU, and before acquiring mmu_lock.
+@@ -4427,10 +4431,10 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 	 * *guaranteed* to need to retry, i.e. waiting until mmu_lock is held
+ 	 * to detect retry guarantees the worst case latency for the vCPU.
+ 	 */
+-	if (!slot &&
+-	    mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn))
++	if (mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn))
+ 		return RET_PF_RETRY;
+ 
++faultin_pfn:
  	ret = __kvm_faultin_pfn(vcpu, fault);
  	if (ret != RET_PF_CONTINUE)
  		return ret;
-@@ -4412,9 +4438,21 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
- 	if (unlikely(is_error_pfn(fault->pfn)))
- 		return kvm_handle_error_pfn(vcpu, fault);
- 
--	if (unlikely(!fault->slot))
-+	if (unlikely(!slot))
- 		return kvm_handle_noslot_fault(vcpu, fault, access);
- 
-+	/*
-+	 * Check again for a relevant mmu_notifier invalidation event purely to
-+	 * avoid contending mmu_lock.  Most invalidations will be detected by
-+	 * the previous check, but checking is extremely cheap relative to the
-+	 * overall cost of failing to detect the invalidation until after
-+	 * mmu_lock is acquired.
-+	 */
-+	if (mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn)) {
-+		kvm_release_pfn_clean(fault->pfn);
-+		return RET_PF_RETRY;
-+	}
-+
- 	return RET_PF_CONTINUE;
- }
- 
-@@ -4442,6 +4480,11 @@ static bool is_page_fault_stale(struct kvm_vcpu *vcpu,
- 	if (!sp && kvm_test_request(KVM_REQ_MMU_FREE_OBSOLETE_ROOTS, vcpu))
- 		return true;
- 
-+	/*
-+	 * Check for a relevant mmu_notifier invalidation event one last time
-+	 * now that mmu_lock is held, as the "unsafe" checks performed without
-+	 * holding mmu_lock can get false negatives.
-+	 */
- 	return fault->slot &&
- 	       mmu_invalidate_retry_gfn(vcpu->kvm, fault->mmu_seq, fault->gfn);
- }
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7e7fd25b09b3..179df96b20f8 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2031,6 +2031,32 @@ static inline int mmu_invalidate_retry_gfn(struct kvm *kvm,
- 		return 1;
- 	return 0;
- }
-+
-+/*
-+ * This lockless version of the range-based retry check *must* be paired with a
-+ * call to the locked version after acquiring mmu_lock, i.e. this is safe to
-+ * use only as a pre-check to avoid contending mmu_lock.  This version *will*
-+ * get false negatives and false positives.
-+ */
-+static inline bool mmu_invalidate_retry_gfn_unsafe(struct kvm *kvm,
-+						   unsigned long mmu_seq,
-+						   gfn_t gfn)
-+{
-+	/*
-+	 * Use READ_ONCE() to ensure the in-progress flag and sequence counter
-+	 * are always read from memory, e.g. so that checking for retry in a
-+	 * loop won't result in an infinite retry loop.  Don't force loads for
-+	 * start+end, as the key to avoiding infinite retry loops is observing
-+	 * the 1=>0 transition of in-progress, i.e. getting false negatives
-+	 * due to stale start+end values is acceptable.
-+	 */
-+	if (unlikely(READ_ONCE(kvm->mmu_invalidate_in_progress)) &&
-+	    gfn >= kvm->mmu_invalidate_range_start &&
-+	    gfn < kvm->mmu_invalidate_range_end)
-+		return true;
-+
-+	return READ_ONCE(kvm->mmu_invalidate_seq) != mmu_seq;
-+}
- #endif
- 
- #ifdef CONFIG_HAVE_KVM_IRQ_ROUTING
 -- 
 2.43.0.687.g38aa6559b0-goog
 
