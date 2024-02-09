@@ -1,125 +1,321 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ADC73161
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCAB69E16
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707501167; cv=none; b=j3/mShZ7gxNwfFsQTZ2UkVxzlzvQ+zpFvu+DbD+CozsAoZ5hG17UsvoPO9VUfDZCdj+dH3t3anGOgBpM42odEn8aPqgOpwdW6XXvQqeiNTfJm7Rc0F2/cnB2Wh472L0B513p9gvYzYmJJdmIcSkfFhonRqDuekIf9nPEgTsjwR4=
+	t=1707501352; cv=none; b=uHBQ34pu9Ca8fRPqYqI/Jr41ORMWxUx3sdIJf4M2rrLBlKcxTlUgtkNl64UDbg/DBZ+RemlZyE+/i7sPGcbpsVh4G+v3Y2bFIsxAPeSMKeSOcBpeqGhF/HUP8x4prK6vQWx8o5Uny/NJKHyGWR7zmLGo+aLmwZXmRg9a8Wdpzpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707501167; c=relaxed/simple;
-	bh=r9ptD/D9HY0EEOB5q1BgMMq6Q5nu3lZqkdrr6XOXEtM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sDaPip57JkvX2UQNaNogvxV4TNdE46flZIwqKbKIsNDE2a57VG21C3qS/1j5eU8+B0D+FmE6ygn1dP87Mppy7Nr3lD47TV0TkyuMkJHDynVLnHVVFHKBkNy9nk3AS5AxYbcuGDlp61JwxwOq+laIaYq5sJLCrEvO1vVehCYUErI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TblmMRHj; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707501352; c=relaxed/simple;
+	bh=RBWJR1Eh8vuN0h9bGi/ckIjItfaKvIijP5GV8KpjA6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LlyZ5YEtCJiXKZ0BPDby16n8iXC2FJKuDvaB6PfRkgBa9oYOF8SYs5eTL0hHV6Fx7DAg+xMsvmakTd/SPM8/ar85byURSZQijMPkhOOSWQyqD3rFYc8ZejtmRe5d81BWssSy+L/r9Lzq6eKDqAD/myxjdjEVlt7rFW65G+vVc/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Zo15Dvmb; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TblmMRHj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707501166; x=1739037166;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=r9ptD/D9HY0EEOB5q1BgMMq6Q5nu3lZqkdrr6XOXEtM=;
-  b=TblmMRHj8ys4E83aLcKqzdGJKPIgGW452Wvui72ocdhxpAVV9hp/jMzu
-   IAWS3w7O+Ie1BGwvRdswKfn8ufSVEvGBp1Ab4yXbxJsCptlSSil15uBxd
-   Yz5WhaBOt/c8e8yXwx959Qkv7NCE71RK/PsWOm2jBnC0WcAbv5C+qYWUQ
-   fhpxmh1SaRmJLIJzm85Ntxl5ZScDdMiDdUYPsQ/KGLuMfESHywKAa3uy2
-   N79H//b8EdPieO1EA5VZLJkuI1UTRDGOGfUdbV8SluHlnDp9kzl09HIPL
-   +PsSWGjLHkTM4jje7fypnS15QIhNUCgPDGeX3KL19Oab+TGeKSbGOi083
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="4450972"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="4450972"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:52:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="6746729"
-Received: from mfahimal-mobl2.amr.corp.intel.com (HELO [10.212.132.151]) ([10.212.132.151])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:52:44 -0800
-Message-ID: <4f1d0c0369e3b08cb0c8d2271396277df6e1d37e.camel@linux.intel.com>
-Subject: Re: [PATCH v2] mm: swap: async free swap slot cache entries
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Chris Li <chrisl@kernel.org>
-Cc: "Huang, Ying" <ying.huang@intel.com>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org,  Wei =?UTF-8?Q?Xu=EF=BF=BC?= <weixugc@google.com>, Yu
- =?UTF-8?Q?Zhao=EF=BF=BC?= <yuzhao@google.com>, Greg Thelen
- <gthelen@google.com>, Chun-Tse Shao <ctshao@google.com>, Suren
- =?UTF-8?Q?Baghdasaryan=EF=BF=BC?= <surenb@google.com>, Yosry
- =?UTF-8?Q?Ahmed=EF=BF=BC?= <yosryahmed@google.com>,  Brain Geffon
- <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>, Michal Hocko
- <mhocko@suse.com>, Mel Gorman <mgorman@techsingularity.net>, Nhat Pham
- <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Kairui Song
- <kasong@tencent.com>, Zhongkun He <hezhongkun.hzk@bytedance.com>, Kemeng
- Shi <shikemeng@huaweicloud.com>,  Barry Song <v-songbaohua@oppo.com>
-Date: Fri, 09 Feb 2024 09:52:44 -0800
-In-Reply-To: <CAF8kJuNC1D0sy90GoSt6yiA7T0Htsu_-gXsbTkmK5GAdO4udgA@mail.gmail.com>
-References: <20240131-async-free-v2-1-525f03e07184@kernel.org>
-	 <87sf2ceoks.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	 <7f19b4d69ff20efe8260a174c7866b4819532b1f.camel@linux.intel.com>
-	 <CAF8kJuNvB8gXv3kj2nkN5j2ny0ZjJoVEdkeDDWSuWxySkKE=1g@mail.gmail.com>
-	 <1fa1da19b0b929efec46bd02a6fc358fef1b9c42.camel@linux.intel.com>
-	 <CAF8kJuMz+HCHkPUQhum32EPB7E1uVvN-E-TffOS7SSHxJNwNmQ@mail.gmail.com>
-	 <a869aff64f69bd1e1318653559f4c32e9f0a4c08.camel@linux.intel.com>
-	 <CAF8kJuNC1D0sy90GoSt6yiA7T0Htsu_-gXsbTkmK5GAdO4udgA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Zo15Dvmb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707500883;
+	bh=RBWJR1Eh8vuN0h9bGi/ckIjItfaKvIijP5GV8KpjA6g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zo15DvmbhKiWZ3g8bViki4F8JhXeNxInsld4DiG5mZ0IqCItf+wHi/EIXVzsUat8N
+	 UwinPaIi/47rIjEz206GtBO2+FIV0+yztwGFp+NI251s+yIXXOTJH8WcaxRLRD2NLb
+	 5GqXvOHgN5yE9JzyU5Qhs7qrsEMK1Pzwf9KShPl/yKlA3RV1UHN7UGh2vbKwDkCUWJ
+	 3PHBtbTpY4hTt5BMUOLV3zome9GKFPsMeJvg1HmAHlug32EsGCbPpQf42OLJ6vudSC
+	 FUz54tiv6WZwAph5yi7v7Qzsw/akbPxnSDpr1WwL9lvuenH6d0lY+1Uex/l9Z2iO1t
+	 1UazI/8BYvrOA==
+Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: koike)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 50EEA37813B6;
+	Fri,  9 Feb 2024 17:47:59 +0000 (UTC)
+Message-ID: <ae4e612a-47d2-4190-8547-2c8dc13b2cd6@collabora.com>
+Date: Fri, 9 Feb 2024 14:47:56 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] drm/ci: add tests on vkms
+To: Vignesh Raman <vignesh.raman@collabora.com>,
+ dri-devel@lists.freedesktop.org
+Cc: hamohammed.sa@gmail.com, daniels@collabora.com,
+ rodrigosiqueiramelo@gmail.com, david.heidelberg@collabora.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ linux-kernel@vger.kernel.org, melissa.srw@gmail.com, mairacanal@riseup.net,
+ daniel@ffwll.ch
+References: <20240201065346.801038-1-vignesh.raman@collabora.com>
+Content-Language: en-US
+From: Helen Koike <helen.koike@collabora.com>
+In-Reply-To: <20240201065346.801038-1-vignesh.raman@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-02-06 at 17:51 -0800, Chris Li wrote:
-> On Tue, Feb 6, 2024 at 5:08=E2=80=AFPM Tim Chen <tim.c.chen@linux.intel.c=
-om> wrote:
-> >=20
-> > On Mon, 2024-02-05 at 11:10 -0800, Chris Li wrote:
-> > >=20
-> > >=20
-> > > In our system, a really heavy swap load is rare and it means somethin=
-g
-> > > is already wrong. At that point the app's SLO is likely at risk,
-> > > regardless of long tail swap latency. It is already too late to
-> > > address it at the swap fault end. We need to address the source of th=
-e
-> > > problem which is swapping out too much.
-> > >=20
-> > >=20
-> >=20
-> > Could some usage scenarios put more pressure on swap than your
-> > usage scenario?  Say system with limited RAM and rely on zswap?
-> >=20
-> Of course. In that case what I proposed  to do will already doing what
-> I think is the best of this situation. After grabbing the cache lock
-> and finding out async fre hasn't started the freeing yet. Just free
-> all 64 entries in the swap slot cache. It is similar to the old code
-> behavior.
-> Yes, it will have the long tail latency due to batch freeing 64 entries.
-> My point is not that I don't care about heavy swap behavior.
-> My point is that the app will suffer from the swap strom anyway, it is
-> unavoidable. That will be the dominant factor shadowing the batch free
-> optimization effect.
 
-The original optimization introducing swap_slots target such heavy
-swap use cases when we have fast swap backend to allow higher sustainable
-swap throughput.  We should not ignore it.  And I am afraid your current
-patch as is will hurt that performance.  If you change the direct free
-path to free all entries, that could maintain the throughput and I'll
-be okay with that.
 
->=20
-> Or do I miss your point as you want to purpose the swap cache double
-> buffer  so it can perform better under swap storm situations?
->=20
+On 01/02/2024 03:53, Vignesh Raman wrote:
+> Add job that runs igt on top of vkms.
+> 
+> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+> Acked-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> Tested-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> Acked-by: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> 
+> v2:
+> - do not mv modules to /lib/modules in the job definition, leave it to
+>    crosvm-runner.sh
+> 
+> v3:
+> - Enable CONFIG_DRM_VKMS in x86_64.config and update xfails
+> 
+> v3:
+> - Build vkms as module and test with latest IGT.
+>    This patch depends on https://lore.kernel.org/dri-devel/20240130150340.687871-1-vignesh.raman@collabora.com/
+> 
 
-I am not actually proposing doubling the buffer as that proposal have
-its own downside.=20
+Do you have a link of a pipeline with this job passing?
 
-Tim
+Thanks
+Helen
 
+> ---
+>   MAINTAINERS                                   |  1 +
+>   drivers/gpu/drm/ci/build.sh                   |  1 -
+>   drivers/gpu/drm/ci/gitlab-ci.yml              |  2 +-
+>   drivers/gpu/drm/ci/igt_runner.sh              |  6 ++--
+>   drivers/gpu/drm/ci/image-tags.yml             |  2 +-
+>   drivers/gpu/drm/ci/test.yml                   | 24 +++++++++++++-
+>   drivers/gpu/drm/ci/x86_64.config              |  1 +
+>   .../drm/ci/xfails/virtio_gpu-none-fails.txt   |  1 -
+>   drivers/gpu/drm/ci/xfails/vkms-none-fails.txt | 32 +++++++++++++++++++
+>   .../gpu/drm/ci/xfails/vkms-none-flakes.txt    | 19 +++++++++++
+>   drivers/gpu/drm/ci/xfails/vkms-none-skips.txt | 16 ++++++++++
+>   11 files changed, 97 insertions(+), 8 deletions(-)
+>   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
+>   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
+>   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bcdc17d1aa26..09310a6f4b5f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6923,6 +6923,7 @@ L:	dri-devel@lists.freedesktop.org
+>   S:	Maintained
+>   T:	git git://anongit.freedesktop.org/drm/drm-misc
+>   F:	Documentation/gpu/vkms.rst
+> +F:	drivers/gpu/drm/ci/xfails/vkms*
+>   F:	drivers/gpu/drm/vkms/
+>   
+>   DRM DRIVER FOR VIRTUALBOX VIRTUAL GPU
+> diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
+> index 331a61e0d25a..2e089e03f061 100644
+> --- a/drivers/gpu/drm/ci/build.sh
+> +++ b/drivers/gpu/drm/ci/build.sh
+> @@ -152,7 +152,6 @@ fi
+>   
+>   mkdir -p artifacts/install/lib
+>   mv install/* artifacts/install/.
+> -rm -rf artifacts/install/modules
+>   ln -s common artifacts/install/ci-common
+>   cp .config artifacts/${CI_JOB_NAME}_config
+>   
+> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
+> index e2b021616a8e..c69fb6af4cf8 100644
+> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
+> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+> @@ -107,7 +107,7 @@ stages:
+>     - meson
+>     - msm
+>     - rockchip
+> -  - virtio-gpu
+> +  - software-driver
+>   
+>   # YAML anchors for rule conditions
+>   # --------------------------------
+> diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
+> index 2fd09b9b7cf6..3c7f000805e5 100755
+> --- a/drivers/gpu/drm/ci/igt_runner.sh
+> +++ b/drivers/gpu/drm/ci/igt_runner.sh
+> @@ -20,10 +20,10 @@ cat /sys/kernel/debug/dri/*/state
+>   set -e
+>   
+>   case "$DRIVER_NAME" in
+> -    amdgpu)
+> +    amdgpu|vkms)
+>           # Cannot use HWCI_KERNEL_MODULES as at that point we don't have the module in /lib
+> -        mv /install/modules/lib/modules/* /lib/modules/.
+> -        modprobe amdgpu
+> +        mv /install/modules/lib/modules/* /lib/modules/. || true
+> +        modprobe --first-time $DRIVER_NAME
+>           ;;
+>   esac
+>   
+> diff --git a/drivers/gpu/drm/ci/image-tags.yml b/drivers/gpu/drm/ci/image-tags.yml
+> index cf07c3e09b8c..bf861ab8b9c2 100644
+> --- a/drivers/gpu/drm/ci/image-tags.yml
+> +++ b/drivers/gpu/drm/ci/image-tags.yml
+> @@ -4,7 +4,7 @@ variables:
+>      DEBIAN_BASE_TAG: "${CONTAINER_TAG}"
+>   
+>      DEBIAN_X86_64_BUILD_IMAGE_PATH: "debian/x86_64_build"
+> -   DEBIAN_BUILD_TAG: "2023-10-08-config"
+> +   DEBIAN_BUILD_TAG: "2024-01-29-vkms"
+>   
+>      KERNEL_ROOTFS_TAG: "2023-10-06-amd"
+>      PKG_REPO_REV: "67f2c46b"
+> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+> index 8ab8a8f56d6a..58c3cf4b18e0 100644
+> --- a/drivers/gpu/drm/ci/test.yml
+> +++ b/drivers/gpu/drm/ci/test.yml
+> @@ -399,7 +399,7 @@ meson:g12b-display:
+>       DRIVER_NAME: meson
+>   
+>   virtio_gpu:none:
+> -  stage: virtio-gpu
+> +  stage: software-driver
+>     variables:
+>       CROSVM_GALLIUM_DRIVER: llvmpipe
+>       DRIVER_NAME: virtio_gpu
+> @@ -419,3 +419,25 @@ virtio_gpu:none:
+>       - debian/x86_64_test-gl
+>       - testing:x86_64
+>       - igt:x86_64
+> +
+> +vkms:none:
+> +  stage: software-driver
+> +  variables:
+> +    DRIVER_NAME: vkms
+> +    GPU_VERSION: vkms-none
+> +  extends:
+> +    - .test-gl
+> +    - .test-rules
+> +  tags:
+> +    - kvm
+> +  script:
+> +    - ln -sf $CI_PROJECT_DIR/install /install
+> +    - mv install/bzImage /lava-files/bzImage
+> +    - mkdir -p /lib/modules
+> +    - mkdir -p $CI_PROJECT_DIR/results
+> +    - ln -sf $CI_PROJECT_DIR/results /results
+> +    - ./install/crosvm-runner.sh ./install/igt_runner.sh
+> +  needs:
+> +    - debian/x86_64_test-gl
+> +    - testing:x86_64
+> +    - igt:x86_64
+> diff --git a/drivers/gpu/drm/ci/x86_64.config b/drivers/gpu/drm/ci/x86_64.config
+> index 1cbd49a5b23a..8eaba388b141 100644
+> --- a/drivers/gpu/drm/ci/x86_64.config
+> +++ b/drivers/gpu/drm/ci/x86_64.config
+> @@ -24,6 +24,7 @@ CONFIG_DRM=y
+>   CONFIG_DRM_PANEL_SIMPLE=y
+>   CONFIG_PWM_CROS_EC=y
+>   CONFIG_BACKLIGHT_PWM=y
+> +CONFIG_DRM_VKMS=m
+>   
+>   # Strip out some stuff we don't need for graphics testing, to reduce
+>   # the build.
+> diff --git a/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt b/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt
+> index 007f21e56d89..f82d437909b5 100644
+> --- a/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt
+> +++ b/drivers/gpu/drm/ci/xfails/virtio_gpu-none-fails.txt
+> @@ -41,7 +41,6 @@ kms_flip@flip-vs-absolute-wf_vblank,Fail
+>   kms_flip@flip-vs-absolute-wf_vblank-interruptible,Fail
+>   kms_flip@flip-vs-blocking-wf-vblank,Fail
+>   kms_flip@flip-vs-expired-vblank,Fail
+> -kms_flip@flip-vs-expired-vblank-interruptible,Fail
+>   kms_flip@flip-vs-modeset-vs-hang,Fail
+>   kms_flip@flip-vs-panning-vs-hang,Fail
+>   kms_flip@flip-vs-wf_vblank-interruptible,Fail
+> diff --git a/drivers/gpu/drm/ci/xfails/vkms-none-fails.txt b/drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
+> new file mode 100644
+> index 000000000000..a8b9d79d9a16
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
+> @@ -0,0 +1,32 @@
+> +kms_cursor_crc@cursor-rapid-movement-128x128,Fail
+> +kms_cursor_crc@cursor-rapid-movement-128x42,Fail
+> +kms_cursor_crc@cursor-rapid-movement-256x256,Fail
+> +kms_cursor_crc@cursor-rapid-movement-256x85,Fail
+> +kms_cursor_crc@cursor-rapid-movement-32x10,Fail
+> +kms_cursor_crc@cursor-rapid-movement-32x32,Fail
+> +kms_cursor_crc@cursor-rapid-movement-512x170,Fail
+> +kms_cursor_crc@cursor-rapid-movement-512x512,Fail
+> +kms_cursor_crc@cursor-rapid-movement-64x21,Fail
+> +kms_cursor_crc@cursor-rapid-movement-64x64,Fail
+> +kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
+> +kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
+> +kms_cursor_legacy@cursor-vs-flip-atomic,Fail
+> +kms_cursor_legacy@cursor-vs-flip-legacy,Fail
+> +kms_cursor_legacy@cursor-vs-flip-toggle,Fail
+> +kms_cursor_legacy@cursor-vs-flip-varying-size,Fail
+> +kms_cursor_legacy@flip-vs-cursor-atomic,Fail
+> +kms_cursor_legacy@flip-vs-cursor-crc-atomic,Fail
+> +kms_cursor_legacy@flip-vs-cursor-crc-legacy,Fail
+> +kms_cursor_legacy@flip-vs-cursor-legacy,Fail
+> +kms_flip@flip-vs-modeset-vs-hang,Fail
+> +kms_flip@flip-vs-panning-vs-hang,Fail
+> +kms_pipe_crc_basic@nonblocking-crc,Fail
+> +kms_pipe_crc_basic@nonblocking-crc-frame-sequence,Fail
+> +kms_pipe_crc_basic@suspend-read-crc,Fail
+> +kms_plane@plane-panning-bottom-right-suspend,Fail
+> +kms_universal_plane@universal-plane-pipe-A-sanity,Fail
+> +kms_vblank@pipe-A-ts-continuation-dpms-suspend,Fail
+> +kms_writeback@writeback-check-output,Fail
+> +kms_writeback@writeback-fb-id,Fail
+> +kms_writeback@writeback-invalid-parameters,Fail
+> +kms_writeback@writeback-pixel-formats,Fail
+> diff --git a/drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt b/drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
+> new file mode 100644
+> index 000000000000..18afbfcc1c52
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
+> @@ -0,0 +1,19 @@
+> +# Board Name: vkms
+> +# Bug Report: https://lore.kernel.org/dri-devel/005da8f1-8050-bffd-653c-2a87ae6376f7@collabora.com/T/#u
+> +# IGT Version: 1.28-gb0cc8160e
+> +# Linux Version: 6.7.0-rc3
+> +# Failure Rate: 50
+> +
+> +# Reported by deqp-runner
+> +kms_cursor_legacy@cursorA-vs-flipA-legacy
+> +kms_cursor_legacy@cursorA-vs-flipA-varying-size
+> +kms_flip@flip-vs-expired-vblank-interruptible
+> +kms_flip@flip-vs-expired-vblank
+> +kms_flip@plain-flip-fb-recreate
+> +kms_flip@plain-flip-fb-recreate-interruptible
+> +kms_flip@plain-flip-ts-check-interruptible
+> +
+> +# The below test shows inconsistency across multiple runs,
+> +# giving results of Pass and Fail alternately.
+> +kms_cursor_legacy@cursorA-vs-flipA-toggle
+> +kms_pipe_crc_basic@nonblocking-crc
+> diff --git a/drivers/gpu/drm/ci/xfails/vkms-none-skips.txt b/drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
+> new file mode 100644
+> index 000000000000..524e7972c75a
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
+> @@ -0,0 +1,16 @@
+> +# Hits:
+> +# rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> +# rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P749/1:b..l
+> +kms_prop_blob@invalid-get-prop
+> +
+> +# keeps printing vkms_vblank_simulate: vblank timer overrun and never ends
+> +kms_invalid_mode@int-max-clock
+> +
+> +# Suspend seems to be broken
+> +.*suspend.*
+> +
+> +# Hangs machine and timeout occurs
+> +kms_flip@flip-vs-absolute-wf_vblank-interruptible
+> +kms_invalid_mode@zero-hdisplay
+> +kms_invalid_mode@bad-vtotal
+> +kms_cursor_crc.*
