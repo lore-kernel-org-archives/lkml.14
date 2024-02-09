@@ -1,135 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62475667;
-	Fri,  9 Feb 2024 22:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C5F25625
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 22:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707518281; cv=none; b=sNFuAAiXlFnS256e4oRyA5y3BcdIKOHhl5LpexW+Vv+3HCFJGAiJbb5LPifWeaAWjihbAwonN/i8/IsV568AsTwy2hjJwXbnGgO7m0FYMkL6IhiVdX1kZKW2ktOiGHtv8466JZbk/nVMxATm/A0k3QAytbPZiOEKEV+NyCHSuHc=
+	t=1707518308; cv=none; b=PLFJ2nBd8VMsXw96J7RtIzfU/sJNJOYtn6AkftDYZARw+aDC5uOFy2SPXq9mxiCE9i0f355MTk/SPPLGvcI8qfCv83DUuadAe087JTYxF40/hwQzB+XVhd0Zg2LOLrItFuaE93WGg+PzTxT/TE//54FyXnHRicVFu4WWqYiYMus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707518281; c=relaxed/simple;
-	bh=Bd4OMZm1UeSfsk8w3Q5GxbdSxQxTV/q6uVgcc/Esg/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fTGAIdf9aO6EkY4mVhRrnfySJN3sbEqtrkD+1qNrpisfU7lZ7YRXqdIwNPetesJh6j6jdgeG8738XxZp4wIgOEaUYwUhr/zVVjXON8v6t737swutnIQXXR1XU4lsB3doYT1/pSLHFAQnu2ab8oicbzaQ/5rsHKIFcxzHNMms34Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JemgcEXY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707518308; c=relaxed/simple;
+	bh=CneQkxAM2XFwm/rlwWTx78xUpKNPxGdJmojiYb4Db4o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IhjiVMC0qhUxH0yjbFap9tH1Vnwdf5hGzDSw0aa1WrjFlJoGf6yaW8CDuYrN1M6wyx+/whzJZR+UVpxluA08a657LxRqKf9ZQs9UZ/z7G17lF4psi7jCKRvn2Ui8TX/dxRFtCtktiSdbuQd5aJoQa8E+YvcpAr3tUBKIWwZb9WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GByAOdzw; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JemgcEXY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E377C433B2;
-	Fri,  9 Feb 2024 22:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707518281;
-	bh=Bd4OMZm1UeSfsk8w3Q5GxbdSxQxTV/q6uVgcc/Esg/I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JemgcEXYbwF1/q9byP9kjMg+bXZ+bod4eWqcnl9yN9jfqw/k9J93it4EiJFelDXFy
-	 w97GhMZEd4748AE3DIh19q5Db7Gcb6DJwdd/mPvEAbRC8vIpyqWjRZn/Xzu1scX6IW
-	 gVF0/eMUHJVpZVd/i6CfxpoOIExwpljmPKDGby0CBba/EVOBZBHs0ZTpoV88gyAXxT
-	 Y5+N7UHfjjRH4WpN8LJ7rpohBfXPMX2of+AaQcnrg9FCG1kuyxqkfS8b3b1Lr6pAkd
-	 zv1p5PNntsV3wreBgORlz6UKovI3H6wLDNI+GSWlKSSB5T3ElfEbIxt17gxuPIZ8Sv
-	 sjh1sxBi/gVpg==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5112bd13a4fso2693530e87.0;
-        Fri, 09 Feb 2024 14:38:01 -0800 (PST)
-X-Gm-Message-State: AOJu0YxvKIqndOLBLk9oT+0v7gut3LU596UZHOS2NEIX+5DqP9itFn78
-	OLO5psbVm2K636ZaekcQroFXuhVaRahSbOyF4jV9ghBRKcUF+HvkRycFwWhpE3Fw8syZkiGaeEa
-	1G+OFXo0MDEALxuIfJOSfjrdcBOk=
-X-Google-Smtp-Source: AGHT+IFpBf3XAC3iKUmfLUywJXROd17ydosHtuM8Th3bDywl8iK5xlHPus50UyvME8O6+Kp9KLw7Sweru+s9C6d+9J4=
-X-Received: by 2002:a05:6512:2088:b0:511:7259:3729 with SMTP id
- t8-20020a056512208800b0051172593729mr802144lfr.0.1707518279186; Fri, 09 Feb
- 2024 14:37:59 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GByAOdzw"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d94b222a3aso12542355ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 14:38:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707518306; x=1708123106; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BA088edQE9MyZoucoNS82KLHl0uttqfXtdVNBUsV2lw=;
+        b=GByAOdzwmthaDqZUTnExg+oy8CofOA2jJJjgTazwDHYgPiFwALA1OZGs0/Ftr2VfdV
+         88FgIKXL+JsDo2X1eIjhOJ1uyq00IosBYNnK1WKvCGuNj1eWl/X0TxsHOjeGSiFSVNQ0
+         hAnuIOhhzFVAVHLDy5ySXZRgS7Poo/KZTaYsY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707518306; x=1708123106;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BA088edQE9MyZoucoNS82KLHl0uttqfXtdVNBUsV2lw=;
+        b=EbQXGZ2mLeZfGkg0qXiRNJQCNymW0yPimBC7NLh2tBSgSmLzI3vHIb5JFg9+d/erpO
+         hPOODMHj0NgMPPjpQpQOyg3hT7xJZavKDuH36Fn5PhyPuEqjjUHmWc16bGwK3gNp5X9S
+         98J5nddI7H9JhhevAevhNjZ/y0YN2KmN3blY1EDTrnxH/W/XWgydrFZyO6dvgqsncDxW
+         XwyXf1lwlp+s67djh2R4j4Q//318aqndLleFoeZ/3koWYkgZd+ITRqna/XWDAolsPpUQ
+         +SpF1YPWY2Z6EMl6YiSQors5sb0ewZSUr1cG0Gr/pYlzXodheyLwZqZE8hVbSRU887Xg
+         vgCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpUXhSjkzVLRMnmmZw5G6XsNxPpCRZm3fjOBDV2eDglfXR5dDPza/3HkYBcvbp8JD2tIU6LS1G2+UDOTpT5vwn8ygy9VrCnEj8j8hR
+X-Gm-Message-State: AOJu0YwAHCZ8CGdedWfYufP5Q4LdISf2tzJlnjNcw2XA5uUJkOhmns5T
+	/MI69K2h7yk+GpieHU1CvwT2G39Y4gmjd+wJlgzPcTtwZiq1J69IlSooecxd1g==
+X-Google-Smtp-Source: AGHT+IEA3550bJ+etF7eGHcMPiX34Guc3JFJMpIfWrFe4F00ei6dA1OBzcWR24+np1q6tAbPxeq/uA==
+X-Received: by 2002:a17:902:e9c4:b0:1d9:c367:205d with SMTP id 4-20020a170902e9c400b001d9c367205dmr673735plk.53.1707518305843;
+        Fri, 09 Feb 2024 14:38:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUNwf5J35fIQTKYNTgsrUnV7uFWXD9RJWfJMZKiwwVifVxjnQQpf2B+juXGvKo8dQhfYRmHkq7P0oVE9Zg03BproOfY9UzECgRnn7cO4uHIpf9ZvjJFQ0nFbs9P38ArSbagR9XTYHkipPRprWto9ValfkEMoc58O49ZJJwJRwGgRtg6PIPviL7TCYs9+yIfabxavBugXRoVTKVzVxKubOtDXose1e7A4YjueEERXqS7XYFdrcYbSCGv35aMHDEVwzxS4tsnmyB1gND6dd9/CMBDIm2PNXDqQKFysgAY+QmbLxLmTiqtZ0eJAwooohkpTE+XEnjJL3TPOjzBd2T4x9RUFbVVhJFo9h0Pt8WUpi44S5FEemoHhwgT+STjIT6EpdasfwjzLtYT02VLRhTWOEn+YKn1K8n32eN/Jt1S+iuHky3uaXlcvyiIqmm/n1aPCrLrqZjLTTqhuSAeORFng5k=
+Received: from localhost (209.148.168.34.bc.googleusercontent.com. [34.168.148.209])
+        by smtp.gmail.com with UTF8SMTPSA id jc9-20020a17090325c900b001d9f4c562b2sm1990156plb.23.2024.02.09.14.38.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Feb 2024 14:38:25 -0800 (PST)
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	linux-usb@vger.kernel.org
+Cc: pmalani@chromium.org,
+	jthies@google.com,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	"Christian A. Ehrhardt" <lk@c--e.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rajaram Regupathy <rajaram.regupathy@intel.com>,
+	Saranya Gopal <saranya.gopal@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] usb: typec: ucsi: Adding support for UCSI 3.0
+Date: Fri,  9 Feb 2024 14:37:29 -0800
+Message-ID: <20240209223824.622869-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201092559.910982-1-yukuai1@huaweicloud.com>
- <Zb2wxIpf7uYV6Vya@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
- <528ce926-6f17-c1ea-8e77-c7d5d7f56022@huaweicloud.com> <ZcE4mGXCDwjqBXgf@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
- <1fdbfcf8-1ee9-4079-e84e-6e2c1121491b@huaweicloud.com> <ZcGuRIrZJaEtXjPh@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
- <CAPhsuW6arbEmRUK3xG1XVjra3BtSx9_wFe+QKDBbTgb3DgYXig@mail.gmail.com> <ZcVhA_IqXH2Pg79t@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
-In-Reply-To: <ZcVhA_IqXH2Pg79t@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
-From: Song Liu <song@kernel.org>
-Date: Fri, 9 Feb 2024 14:37:47 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6VqSRUsB2oQ+Hmf-0+2gfKHgN1skvvUwDmqDOxJvEKtA@mail.gmail.com>
-Message-ID: <CAPhsuW6VqSRUsB2oQ+Hmf-0+2gfKHgN1skvvUwDmqDOxJvEKtA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/14] dm-raid/md/raid: fix v6.7 regressions
-To: Benjamin Marzinski <bmarzins@redhat.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, mpatocka@redhat.com, heinzm@redhat.com, 
-	xni@redhat.com, blazej.kucman@linux.intel.com, agk@redhat.com, 
-	snitzer@kernel.org, dm-devel@lists.linux.dev, jbrassow@f14.redhat.com, 
-	neilb@suse.de, shli@fb.com, akpm@osdl.org, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 8, 2024 at 3:17=E2=80=AFPM Benjamin Marzinski <bmarzins@redhat.=
-com> wrote:
->
-[...]
-> >
-> > I am not able to get reliable results from shell/lvconvert-repair-raid.=
-sh
-> > either. For 6.6.0 kernel, the test fails. On 6.8-rc1 kernel, the test f=
-ails
-> > sometimes.
-> >
-> > Could you please share more information about your test setup?
-> > Specifically:
-> > 1. Which tree/branch/tag are you testing?
-> > 2. What's the .config used in the tests?
-> > 3. How do you run the test suite? One test at a time, or all of them
-> > together?
-> > 4. How do you handle "test passes sometimes" cases?
->
-> So, I have been able to recreate the case where lvconvert-repair-raid.sh
-> keeps failing. It happens when I tried running the reproducer on a virtua=
-l
-> machine made using a cloud image, instead of one that I manually
-> installed. I'm not sure why there is a difference. But I can show you
-> how I can reliably recreate the errors I'm seeing.
->
->
-> Create a new Fedora 39 virtual machine with the following commands (I'm
-> not sure if it is possible to reproduce this on a machine using less
-> memory and cpus, but I can try that if you need me to. You probably also
-> want to pick a faster Fedora Mirror for the image location):
-> # virt-install --name repair-test --memory 8192 --vcpus 8 --disk size=3D4=
-0 --graphics none --extra-args "console=3DttyS0" --osinfo detect=3Don,name=
-=3Dfedora-unknown --location https://download.fedoraproject.org/pub/fedora/=
-linux/releases/39/Server/x86_64/os/
->
 
-virt-install doesn't work well in the my daily dev server. I will try on a
-different machine.
+Hi Heikki,
 
-> Install to the whole virtual drive, using the default LVM partitioning.
-> Then ssh into the VM and run the following commands to setup the
-> lvm2-testsuite and 6.6.0 kernel:
->
-[...]
+This series starts the work adding UCSI 3.0 support to the UCSI driver.
 
->
-> Rerun the lvm2-testsuite with the same commands as before:
->
-> # mount -o remount,dev /tmp
+There's a couple of pieces to start here:
+* Add version checks and limit read size on 1.2.
+* Update Connector Status and Connector Capability structures.
+* Expose Partner PD revision from Capability data.
 
-This mount trick helped me run tests without a full image (use
-CONFIG_9P_FS to reuse host file systems instead). Thanks!
+These were tested against on a 6.6 kernel running a usermode PPM against
+a Realtek Evaluation board.
 
-> # cd ~/lvm2
-> # make check T=3Dlvconvert-repair-raid.sh
->
-> This fails about 20% of the time, usually at either line 146 or 164. You
-> can check by running the following command when the test fails.
-
-However, I am seeing lvconvert-repair-raid.sh passes all the time
-with both 6.6 kernel and 6.8+v5 patchset. My host system is
-CentOS 8.
-
-I guess we will have to run more tests.
-
-DM folks, please also review the set. We won't be able to ship the
-dm changes without your thorough reviews.
+One additional note: there are a lot more unaligned fields in UCSI now
+and the struct definitions are getting a bit out of hand. We can discuss
+alternate mechanisms for defining these structs in the patch that
+changes these structures.
 
 Thanks,
-Song
+Abhishek
+
+Changes in v5:
+  - Change min_t to clamp
+
+Changes in v4:
+  - Added missing Tested-By tags from v1 and reviewed-by tags.
+  - Fix BCD translation of PD Major Rev
+  - Replace IS_MIN_VERSION macro and just compare version directly.
+
+Changes in v3:
+  - Change include to asm/unaligned.h and reorder include.
+
+Changes in v2:
+  - Changed log message to DEBUG
+  - Formatting changes and update macro to use brackets.
+  - Fix incorrect guard condition when checking connector capability.
+
+Abhishek Pandit-Subedi (3):
+  usb: typec: ucsi: Limit read size on v1.2
+  usb: typec: ucsi: Update connector cap and status
+  usb: typec: ucsi: Get PD revision for partner
+
+ drivers/usb/typec/ucsi/ucsi.c | 49 +++++++++++++++++++++++--
+ drivers/usb/typec/ucsi/ucsi.h | 67 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 110 insertions(+), 6 deletions(-)
+
+-- 
+2.43.0.687.g38aa6559b0-goog
+
