@@ -1,111 +1,119 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F36857339
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E87680C11
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707504993; cv=none; b=Dif0hZSpOsqF9Y+Kh0UXU6fJ3EbfsSl+hHLVwGN7V/8ke3+amW/87+uhyVWKtW8/GNB6k3A48nJ3oAfurEQs4/M2TWp9WueV7qOWAHtgJP5SHesse841UfAC8trSltaIth2CdaLP9cn3zTKXCXKX7RMQuSlnyuw74S/C6kQ7iiI=
+	t=1707505006; cv=none; b=DylolGyjDNp2o1W7AzRpjuhubXirx5l2jjdplmEtZupcArxEkO/CtUxPJESsKNMkvCZ6u4MaMhJcSm72AP5mL1jzUdO3V9FHggsIRdOPyS7ye6rq2LApYmG3k3hxJ8opUaxFA/W/uJ67CCSPpUwDSMyIp4lUWQ8XyTQ23qkRVTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707504993; c=relaxed/simple;
-	bh=jyq3Ou2zoIChrt4YF00OKCr8nhre49VBm+9l9qv0SqI=;
+	s=arc-20240116; t=1707505006; c=relaxed/simple;
+	bh=j3yz3zK2OhpwzomMfjssQZsBsMxfSLTMxtx3fOWZv+4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lELzyKzyTMbP1wj6wx8rHM9dn3JBdb0qTQLxPEhVvCnUaZrYVJGRBFzhDUkFkE3JKKaD45YHylnptO3ZGnLqmQSN+3m9ekviA0h7pyT3DU2Tp9z0PEpD8NEcmA3wyS9pwJiH5PKnsS+QJu0KN9KHH9KiWdgur+1C5sZlls+MCxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XB/Pu4Vn; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=VhWzeUpxTktnzbug/o9k2+wscOUTLbyABOToWre0Uiu5mReohVB3h+f0EXi17Juyw897w1NmDRGCFYGH/YNufyG4wUrbeGCDDeYzQm4M5WYHhpfUOCLQtIVd95mIz3/aOWFUEBIxNX9QoMGFhEPLx614HZ3HOvOvuFxQ0K/cO8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=DHa4PDF6; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XB/Pu4Vn"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-557dcb0f870so1855065a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 10:56:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="DHa4PDF6"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6e080c1f0so1262889276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 10:56:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1707504988; x=1708109788; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tAuVk7SJcg0Z9C1D9VIVQQXO8KJNkpgkmG6crijy/Y8=;
-        b=XB/Pu4Vngv+/JFGRfr8J+55vfjciRym7m5SmLAoM/3U68VIRoI/r4OyWAz1IA0MesN
-         xE6dedJdFW2rTj6JnZc7lAy/gcl5q5EjSqzDL/9wG+YTGifRzJob3rGGMGloiHNYaL5+
-         rRPts5BG0b8L5XS461g5my7n45/wnnqaMYl6M=
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1707505003; x=1708109803; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6lMp/9wvqY5Jh56RWGR1pr64HWTvr8MzmyKHWGuDKs=;
+        b=DHa4PDF65Vo5XE6JvE5agslxkn2I4ZYDRfrZQ6vkA3q3XPyg2TEf7XGeKV5f8/oJVG
+         eeR/WxCTCJWi5vtf/IHh9Od8jSw+OLtG1uQZ3Pa2I2aEhy70R5yUyGhGs4gYIOS9pYJY
+         ZFy6YuDsP45NUyUI0bzu+QxQUYgal1PsBmEbP89N0hzbhBzj4PD5k5PjFy7K3jjpP5WS
+         fVoEy6nSFf0YGhG7pFxOQtF5XEB7YGRhoxvCYawIKtqXerq4FyfHkhp7UlVQvATHO8Tf
+         1PgjCXwizsbwkhXFk3CSSAJdzVZrsjKigW3toDdyW/gbKVec7c8vZ6oJYfED1CtkciK7
+         VglA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707504988; x=1708109788;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tAuVk7SJcg0Z9C1D9VIVQQXO8KJNkpgkmG6crijy/Y8=;
-        b=WkIqjg9OjXQVhRTltSXlmGm15dKvUh06erl2tLKGIl6OVk7a0pr2AQ5+NdnINLBsyY
-         NYiA5nq6n/rdhT+Yl9WFOAIgXA3Ul+26A91Z1kynViUbgMRY2yaMhx0bEAArYnuZR3gR
-         OvAwtrYx+DcqrzNCrSM2guRVd0SEQTMGcQn83/jJ23eTwUJc1iugBK6lNxKyzRhYBZdp
-         nJ7uObrCUwfQAKTZN1LGi7zE6RJeE+TQa/Ow1ksQZyNqtW/rUYHAykB3NLQN6Q2luMoS
-         OJB9JM5MHnuWPbr6P5OARKauiTes5ifIfLsyxEXuivEnIDVa65La/5YcbqjGJ3bbpmi4
-         2eKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkxL6la2MEySTDmbl9h6NpsDJfTZ0wsUD0eeAv3qIW2h2c+o+z2IZYOPVaa2s6dcfkq0Hr7Gkg8h/NfIC1YNm3kp9xh5qocqHnsXIT
-X-Gm-Message-State: AOJu0Yww18zBZECs/FlEBlu4LX6ldxNiQGhNye3gLV4mUX3Xhx9DnlBq
-	9eoW9lpMNVjtQRkYMGNIW0XbUgfATGWyjPeYQ6wiy9/CWGI/iLZb5aFh8XNLCMfX2neOlGp3TZp
-	tYEU=
-X-Google-Smtp-Source: AGHT+IFR6oABj3yt8fZrmywM+tJQMkCKbd2FEPmALZ/3IiltFvQ4Ki2CSLHe1vt7TJzfnituPnZXQA==
-X-Received: by 2002:a17:906:c298:b0:a36:5e34:3a34 with SMTP id r24-20020a170906c29800b00a365e343a34mr2186776ejz.69.1707504988603;
-        Fri, 09 Feb 2024 10:56:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUzSPuxsPeXebINNqmnowZb7ZDSEHc21I5uKkbTR4B/IWqa/3O8IWqxObtDIahSyFM/tr2YssGKFa8mKHf8bBF246kCggH1zvBTen5f
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id wp2-20020a170907060200b00a3702ab71f6sm1019761ejb.206.2024.02.09.10.56.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 10:56:28 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55c2cf644f3so1799632a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 10:56:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU58JshA4ZiywW/L9GjyvWUpDFB6OgD/a4JRWM4jx3hP/I8sr/FOFnoOB/BrsgNvhOo7g69ITCCFuztLF9RPK0JzEbWE0W1jUKguSJb
-X-Received: by 2002:aa7:c6d8:0:b0:560:bbcf:1f45 with SMTP id
- b24-20020aa7c6d8000000b00560bbcf1f45mr2004566eds.5.1707504987581; Fri, 09 Feb
- 2024 10:56:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707505003; x=1708109803;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W6lMp/9wvqY5Jh56RWGR1pr64HWTvr8MzmyKHWGuDKs=;
+        b=BEAUDaGjr/gT/PKCOLK5bIoyDmUSnKgmpv/L20X+F3A5VKUWd1VqnT6cUBuAZsj6w2
+         GtUMlBJ41T0ukzPXo6tag9bCZ8nUUEo0OMG9GOqyzLmOXZXPmI85D6IstppVdOLOuMSC
+         ez1X9DCdTV+MelTvZV6JF4iw/Q+TIv6ueE1RSsnrAB7SRpurX8mBTHb3dcWe6ipWrBBv
+         2LkNuclq+voUCpzX1cmo4eKRLE1yFkub0W0XeN345BSSCft7oOoD1+eHXrY6mTwLY7rZ
+         U/rFx+Tb8zuLRNBWIf3Dmpnjrz97twzDK4a/XjI+YDeDvT0y4rdhIKvAwA88vROOQSZw
+         +urg==
+X-Forwarded-Encrypted: i=1; AJvYcCVd3TMT0Knl9FMWCo926Rb8qm24wx/1Muag5PQCP4t5bMo9+weRoCRmb4YghFjGfpXWpqnh8a9MONYFgkQ+PcRzpHXLGmbuUPVf6B+y
+X-Gm-Message-State: AOJu0YwhZHjULTO1P9yiCdx5DuFIDHZsXLNr9y51d2mnOv5QX9EmVSoD
+	Tyd9hOk8A6SLFLJgVbgVIIGf3aqyVoeTxwm4/ulgVnTAQwB03ZNqcK8ksXvhFSbutLL9qkIW+A/
+	O97KS1ZcCecrceAbZn47Kzz+n4IpaodcYF3q8
+X-Google-Smtp-Source: AGHT+IHLJnyQuVDnMonUbnoDDlrrRX/0n7bWglNXMNTa2hezgF/AXMI8jJXOGZfM9ZVwxItaihcgM/jdXOam5HerZ3M=
+X-Received: by 2002:a25:ad61:0:b0:dc6:b7c4:3bb0 with SMTP id
+ l33-20020a25ad61000000b00dc6b7c43bb0mr36691ybe.27.1707505003275; Fri, 09 Feb
+ 2024 10:56:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208220604.140859-1-seanjc@google.com> <CAKwvOdk_obRUkD6WQHhS9uoFVe3HrgqH5h+FpqsNNgmj4cmvCQ@mail.gmail.com>
- <DM6PR02MB40587AD6ABBF1814E9CCFA7CB84B2@DM6PR02MB4058.namprd02.prod.outlook.com>
- <CAHk-=wi3p5C1n03UYoQhgVDJbh_0ogCpwbgVGnOdGn6RJ6hnKA@mail.gmail.com> <ZcZyWrawr1NUCiQZ@google.com>
-In-Reply-To: <ZcZyWrawr1NUCiQZ@google.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 9 Feb 2024 10:56:10 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whGn5j-1whM66VWJ=tVmpMFO8Q91uuFAJUXa5hG-PWdxA@mail.gmail.com>
-Message-ID: <CAHk-=whGn5j-1whM66VWJ=tVmpMFO8Q91uuFAJUXa5hG-PWdxA@mail.gmail.com>
-Subject: Re: [PATCH] Kconfig: Explicitly disable asm goto w/ outputs on gcc-11
- (and earlier)
-To: Sean Christopherson <seanjc@google.com>
-Cc: "Andrew Pinski (QUIC)" <quic_apinski@quicinc.com>, Nick Desaulniers <ndesaulniers@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20240209180656.867546-1-harshit.m.mogalapalli@oracle.com>
+In-Reply-To: <20240209180656.867546-1-harshit.m.mogalapalli@oracle.com>
+From: Jamal Hadi Salim <jhs@mojatatu.com>
+Date: Fri, 9 Feb 2024 13:56:34 -0500
+Message-ID: <CAM0EoMmc0fVegqtYKDZvBbfFjUSh-fEBPi+Nzjoz++CLAO5qPw@mail.gmail.com>
+Subject: Re: [PATCH] net: sched: Remove NET_ACT_IPT from Kconfig
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, darren.kenny@oracle.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 9 Feb 2024 at 10:43, Sean Christopherson <seanjc@google.com> wrote:
+On Fri, Feb 9, 2024 at 1:07=E2=80=AFPM Harshit Mogalapalli
+<harshit.m.mogalapalli@oracle.com> wrote:
 >
-> > We've removed that workaround in commit 43c249ea0b1e ("compiler-gcc.h:
-> > remove ancient workaround for gcc PR 58670"), I'm wondering if maybe
-> > that removal was a bit optimistic.
+> After this commit ba24ea129126 ("net/sched: Retire ipt action")
+> NET_ACT_IPT is not needed anymore as the action is retired and the code
+> is removed.
 >
-> FWIW, reverting that does restore correct behavior on gcc-11.
+> Clean the Kconfig part as well.
+>
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 
-Hmm. I suspect we'll just have to revert that commit then - although
-probably in some form where it only affects the "this has outputs"
-case.
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
 
-Which is much less common than the non-output "asm goto" case.
+cheers,
+jamal
 
-It does cause gcc to generate fairly horrific code (as noted in the
-commit), but it's almost certainly still better code than what the
-non-asm-goto case results in.
-
-We have very few uses of CC_HAS_ASM_GOTO_OUTPUT (and the related
-CC_HAS_ASM_GOTO_TIED_OUTPUT), but unsafe_get_user() in particular
-generates horrid code without it.
-
-But it would be really good to understand *what* that secondary bug
-is, and the fix for it. Just to make sure that gcc is really fixed,
-and there isn't some pending bug that we just keep hiding with that
-extra empty volatile asm.
-
-Andrew?
-
-                   Linus
+> ---
+> This is just based on observation.
+>
+>  net/sched/Kconfig | 10 ----------
+>  1 file changed, 10 deletions(-)
+>
+> diff --git a/net/sched/Kconfig b/net/sched/Kconfig
+> index 470c70deffe2..8180d0c12fce 100644
+> --- a/net/sched/Kconfig
+> +++ b/net/sched/Kconfig
+> @@ -737,16 +737,6 @@ config NET_ACT_SAMPLE
+>           To compile this code as a module, choose M here: the
+>           module will be called act_sample.
+>
+> -config NET_ACT_IPT
+> -       tristate "IPtables targets"
+> -       depends on NET_CLS_ACT && NETFILTER && NETFILTER_XTABLES
+> -       help
+> -         Say Y here to be able to invoke iptables targets after successf=
+ul
+> -         classification.
+> -
+> -         To compile this code as a module, choose M here: the
+> -         module will be called act_ipt.
+> -
+>  config NET_ACT_NAT
+>         tristate "Stateless NAT"
+>         depends on NET_CLS_ACT
+> --
+> 2.39.3
+>
