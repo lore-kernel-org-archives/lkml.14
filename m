@@ -1,124 +1,118 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD957BAE4
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A8D7BB08
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707498713; cv=none; b=SNFYzfc1JETHbHmSqyQY30A0D9vQlumK3Fr7DhUqSxaBbgE6qR8npjJq7h+gI1wXplcLJ3lbqciBkIu2wiKjJiAb/cbi0iZMotHyCL0JBGrGLIWmyKVsWMEb2ksROjAW0scvmKBBkHfuC8W5WAXW948UEooI6jrxs++i1LAvGGw=
+	t=1707498721; cv=none; b=Uklr1QH/V17mtWahjiUWi7CT0mK8leF7NcUPp9cslKp9bkZZwiR9oF2wiQcRMlkyrDyToF77deQjRTen6Grf/4YrKLhpKoQ4S0f2UyPDebaoncw0yhEupn0eBPufP+3+M8+lPbtCgTYdDzsLkXaUC9804NTE3ZEE4ul2bbq+y4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707498713; c=relaxed/simple;
-	bh=pU444VR2MwBF7EKORvFSL5kRdlp16m+GcFlxgCwXC3o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q2x9Plm3ys9ySEVoGcj0rs1kRoKfqhLEjAQ/+YWJgNQRqU961Kn5WXdK2jwiFoA+HOLyu6b6QUBF+fLbEdkIMwLGn2bcVEUJhxMEJp1AJg2WJdN6IpS4lor6zXKTN3d6PAEYdglxS+A2y1mTuOGQ4TfrQB/gReYQxsJ0KNH3fWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b=z0og/ach; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smile.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
+	s=arc-20240116; t=1707498721; c=relaxed/simple;
+	bh=QKvQt9YWW6uZWhy9ZXSZmB6o80HZsnRJY2SXeTLZtCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fp18Ij8Rk0z7/RdcDOTZms65h4VeMA9Ei1TgalRt2L0TH1opbsLTDWBpw9MMgQXc+9JSyb+EsYxLJOaexjGY+uDFRcZJ7pMC0sYa3c/jyWWbBRY8+9Xa+L8jRdHwhKdi0hzCZnLWCIqFu9WpduY27SO/anwsDPCZO803X+v+iQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9WFIsh9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b="z0og/ach"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4101565d20bso10775805e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 09:11:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile-fr.20230601.gappssmtp.com; s=20230601; t=1707498710; x=1708103510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+dMezPy7Z8IlkSblQ1TNf+lGFLcC7KJPcuNV88kKu60=;
-        b=z0og/achpH6L6DdWgxLTQV9yUh7BAb8TrkgNloNtOogjBReubWe5lGvQnj/3aUxNSk
-         iQdj0oWvKIYasUXBKezOUn2eE1FgF/0UsRbL5sQk4fxPjOXmnGblnWiiC6suDRcj0pq2
-         itMlvjXDfQr15abeWT1anza/QtRxQsjYCcEt9UYNma9BOIVIP+aTygvEev6lxvTkFXOo
-         EhqTZOwWVmDoMF5yJW1AAnUcXBIFZYVnHdq7uMiAAGCXhYMqpGO79lclcIGNuSNLZjmi
-         x5LC4KM7CoYB0joVKmA4YpOoOnc4oHFxdm/quu8BK/qepfs4rD75J95ayWkGK8sUf4fF
-         ZGEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707498710; x=1708103510;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+dMezPy7Z8IlkSblQ1TNf+lGFLcC7KJPcuNV88kKu60=;
-        b=mjZ2N4S/GJa1/gfJ48VQA+UzE3UM07oyGB5AJAP8K44G1eiM8cw1VtCfiLqWa5xFOR
-         d7Es6dkffRt8Hn7GwsjAktjVBmo3KaFLyCIYanFYr2Rj3eM9buOr6JsHzFZkgLzKnNCu
-         2USs6Xdo7RfnyJ68Bs33sFZiwZpc/x5l4LOxmfFrmOTrF0jRbwTbhQrS538thu6Fne9o
-         P/b36QbAjREOdcMoB4H48Qe8ad+xUL3xRajhKjMxfHjE5p4TGQeP1Ib4IozWRwzlXjD3
-         VSCd9iPFkA5uWqN7rRpBMcc4EbtGx85PgA71RRI0U+CTeJtf8bcFCpq8AfvWaDWxZ6rk
-         mYWQ==
-X-Gm-Message-State: AOJu0YzgL+7mtXmET9Chl1ZDSuflmU0wpE/arFKJ504DtQskcRmTK07a
-	48p4Byav/VZXbhiWn9mSJx+YDFY3WeGtWgj9P5+o/77GLtFU/ugwg0LiaY56gEas625OyeqQW4q
-	P
-X-Google-Smtp-Source: AGHT+IEynWPshXsRwRlkf4uRadX5FfqUMljHK7RezRibLJLz3N8KjLbFaJz1AGuMHemYdr4hQyVyAw==
-X-Received: by 2002:a05:600c:4511:b0:40f:d280:612f with SMTP id t17-20020a05600c451100b0040fd280612fmr1641979wmo.30.1707498710188;
-        Fri, 09 Feb 2024 09:11:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX3JjG5yMWZfol2W5d7LuIwSoIC008nDdNGToBntF1qg8FMA/ghJ1fUdfVD8KRYhUo5xZ7NMMGYI4hRsO+beylB2CHemQVYHglpb19g2bLNmUdInSZyKKV1OSluU7KqVcduv4zP9fjALlLCXRsxam9Gd81CP9Yd5Ht4rIduDmvzXWyhvSh6QJ8TevAU0Lsqq88X/ZFoWQtaS2/Ry96/PMznCmHcowoGLNxNoZWtovrP1WulYcjKi8nUDeHHMUdDR7vs7leA8fNZWEqrQcAVaLcsIxVgahkks2tvVqsTvVjpMH9phZobCRURxSliYfrnAYEdMX2wRyZ9voMpq5L+
-Received: from P-NTS-Evian.home (2a01cb05945b7e009bdc688723a24f31.ipv6.abo.wanadoo.fr. [2a01:cb05:945b:7e00:9bdc:6887:23a2:4f31])
-        by smtp.gmail.com with ESMTPSA id a20-20020a05600c225400b004104ecb39d1sm1154711wmm.32.2024.02.09.09.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 09:11:49 -0800 (PST)
-From: Romain Naour <romain.naour@smile.fr>
-To: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	conor+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org,
-	kristo@kernel.org,
-	vigneshr@ti.com,
-	nm@ti.com
-Cc: Romain Naour <romain.naour@smile.fr>,
-	Neha Malcom Francis <n-francis@ti.com>
-Subject: [PATCH v2 2/2] arm64: dts: ti: k3-j721e-sk: fix PMIC interrupt number
-Date: Fri,  9 Feb 2024 18:11:46 +0100
-Message-ID: <20240209171146.307465-2-romain.naour@smile.fr>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240209171146.307465-1-romain.naour@smile.fr>
-References: <20240209171146.307465-1-romain.naour@smile.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9WFIsh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADEDC43390;
+	Fri,  9 Feb 2024 17:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707498720;
+	bh=QKvQt9YWW6uZWhy9ZXSZmB6o80HZsnRJY2SXeTLZtCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z9WFIsh9rUY2t9gwyaB2PnmT4eEZUbPWSWlqv+m0mpoX5qQbhPziVmunrZhBrmYWV
+	 3p/VTpPxPNb7TwVtB2zxxYzqwaAqKvyQXktd69erDVMFx3ibrFECD6SF8MoC50g1rW
+	 8KwTmhKq2pGPXLB2GPxYO5Lv+PNHAoasMlcC9ZmwS+ybAyqrbLXSbpuPqmTuSptK8C
+	 g8M+xp6n766X2gi9bH2jjP0EQk5rl+3lB+RUgq4vld1BtOqlASXeY72UCT1Vu46yAX
+	 n+6plub8uQQrTlO9V0CAwr2Q9n2kaYh1YACbICmVxg8d3wrXgIw3cgqnreeftH8z4z
+	 2NnS6km13lPOQ==
+Date: Fri, 9 Feb 2024 17:11:55 +0000
+From: Will Deacon <will@kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Martin <Dave.Martin@arm.com>, Oleg Nesterov <oleg@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/sve: Lower the maximum allocation for the SVE
+ ptrace regset
+Message-ID: <20240209171155.GB25069@willie-the-truck>
+References: <20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org>
+ <CAD=FV=XupbtO3_+P9=XO26vH_5nALSSLZZHZywPSR_hQsWxM0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=XupbtO3_+P9=XO26vH_5nALSSLZZHZywPSR_hQsWxM0Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The tps659413 and tps659411 nodes set WKUP_GPIO0_7 (G28) pin as input
-to be used as PMIC interrupt but uses 9 (WKUP_GPIO0_9) as
-"interrupts" property.
+Hi Doug,
 
-Replace 9 by 7 for both tps659413 and tps659411 after checking in the
-board schematic [1].
+On Mon, Feb 05, 2024 at 09:02:08AM -0800, Doug Anderson wrote:
+> Hi,
+> 
+> On Sat, Feb 3, 2024 at 4:18 AM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > Doug Anderson observed that ChromeOS crashes are being reported which
+> > include failing allocations of order 7 during core dumps due to ptrace
+> > allocating storage for regsets:
+> >
+> >   chrome: page allocation failure: order:7,
+> >           mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
+> >           nodemask=(null),cpuset=urgent,mems_allowed=0
+> >    ...
+> >   regset_get_alloc+0x1c/0x28
+> >   elf_core_dump+0x3d8/0xd8c
+> >   do_coredump+0xeb8/0x1378
+> >
+> > with further investigation showing that this is:
+> >
+> >    [   66.957385] DOUG: Allocating 279584 bytes
+> >
+> > which is the maximum size of the SVE regset. As Doug observes it is not
+> > entirely surprising that such a large allocation of contiguous memory might
+> > fail on a long running system.
+> >
+> > The SVE regset is currently sized to hold SVE registers with a VQ of
+> > SVE_VQ_MAX which is 512, substantially more than the architectural maximum
+> > of 16 which we might see even in a system emulating the limits of the
+> > architecture. Since we don't expose the size we tell the regset core
+> > externally let's define ARCH_SVE_VQ_MAX with the actual architectural
+> > maximum and use that for the regset, we'll still overallocate most of the
+> > time but much less so which will be helpful even if the core is fixed to
+> > not require contiguous allocations.
+> >
+> > We could also teach the ptrace core about runtime discoverable regset sizes
+> > but that would be a more invasive change and this is being observed in
+> > practical systems.
+> >
+> > Reported-by: Doug Anderson <dianders@chromium.org>
+> > Signed-off-by: Mark Brown <broonie@kernel.org>
+> 
+> Confirmed that when I send a "quit" signal to Chrome now that the
+> allocation I see for "core_note_type" NT_ARM_SVE goes down from
+> 279,584 bytes (n=17474) to just 8,768 bytes (n=548). I'm not
+> intimately familiar with this code so I'll skip the Reviewed-by unless
+> someone thinks it would be valuable for me to analyze more. I think
+> there are already plenty of people who know this well, so for now,
+> just:
+> 
+> Tested-by: Douglas Anderson <dianders@chromium.org>
 
-[1] https://www.ti.com/tool/SK-TDA4VM
+I can pick this up as a short-term hack if it solves the problem for you,
+but I also saw that you posted:
 
-Fixes: b808cef0be46 ("arm64: dts: ti: k3-j721e-sk: Add TPS6594 family PMICs")
-Cc: Neha Malcom Francis <n-francis@ti.com>
-Signed-off-by: Romain Naour <romain.naour@smile.fr>
----
-v2: update tps659411 interrupts parameter too.
----
- arch/arm64/boot/dts/ti/k3-j721e-sk.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+https://lore.kernel.org/r/20240205092626.v2.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-index 188dfe291a32..658764f7d544 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-@@ -574,7 +574,7 @@ tps659413: pmic@48 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pmic_irq_pins_default>;
- 		interrupt-parent = <&wkup_gpio0>;
--		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		ti,primary-pmic;
-@@ -651,7 +651,7 @@ tps659411: pmic@4c {
- 		reg = <0x4c>;
- 		system-power-controller;
- 		interrupt-parent = <&wkup_gpio0>;
--		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		buck1234-supply = <&vsys_3v3>;
--- 
-2.43.0
+to fallback onto vmalloc() for large allocations.
 
+What's your preference for a fix?
+
+Cheers,
+
+Will
