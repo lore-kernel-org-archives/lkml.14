@@ -1,181 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B17169971
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C9B74E12
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707493317; cv=none; b=OnXQMRSWo+jHEp4GC1TW4ZSWLrotN0YdtmDkEAYaEU9CQ9eMHixLiQo86bgfG7XGDhCjWmr7rz+Ffu99Fnqn54nrRkztj4xlzut+NGDfD1VEEe4iO9ejiQQm13S4vpEu/wOL5cQM73uDwRA+gl7ZyfR44XphYAnMf4WiJamtvRc=
+	t=1707493371; cv=none; b=UuIVpgU51eEJnRW9+eUyv3rK1hajL5nAJwYc7mNBsYMsFfwGV2Msc2iy67vdwpo3DNHU0Dsx0yrwYG3VZMosns7UQ6r578X2RCbeweXzoMigp+mfmcITAfcjda1HVS8IXJeVurAP3f80tBTbdUCI12KUDxtowEYzss6NS1sPvs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707493317; c=relaxed/simple;
-	bh=BYQAgrM0iCoWkiPwDJhO3sbjPQzqGgLvX5Ho5qTAbYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rrrx1R8cMlVkY4ub7h1xoKRtOKcie+aQiRLEVT4ngprYJbqMFUbIRbED0gM2vR3KqotIzNb+wmAvVUuWd2OlFfinreYcBfStaQROzXAev6iXuPhoMf5TQAPuBdcimBIj/IWRG3H8iW5pKYwWNab+R6A2PCkx0nclVUlp7Au9ArM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsIgGSvh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707493371; c=relaxed/simple;
+	bh=aoRyqAiMEdX1LMy4NGsmx8nuHCXJJko1zkj0XYhs6Is=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ox6maHMxANOn97Mxa0KGNYhVHazhOZib7mfJFRaZbRhznzrxtkkBJnw9YcCFV46ERVmk2ZcTnY5iP3kpPe1aQ3RYlOKXpx2FHkN/sQ9CqDnEmnsk2ldNfWP8Q26nkwppuLeRHGXR594BoFa39kx/ui4kAkhDgiBHHETsBQabsCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E2oXLVzx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsIgGSvh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B72EAC433C7;
-	Fri,  9 Feb 2024 15:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707493317;
-	bh=BYQAgrM0iCoWkiPwDJhO3sbjPQzqGgLvX5Ho5qTAbYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VsIgGSvhtfchQukDvq4H3WhSTrq7UyqASJZ9pVsLHoPtd2T+vyRlwbP33lWXVmt5+
-	 iOkAny1mSRsmzVzfPfCnILsSG0E5SZiXgEz8SJx5RkRCy/Q88kLhOezAl4YpsKSRhn
-	 x8pls9kKl3kDWafXSrSJhIP+alK94F+qoAVx/u7jaVriV1B5VlFrMRrL7orK7aVQMr
-	 3rotfhTB0Ztty+mi1VNypLZYFkMoF8/bPi7Q5gthONJtCJJth/N+fcq3d7yMgZx7Ys
-	 TJ77P1XNTj/0lelVDgaXfWbBdfiVnsvFPtVOlADeglEZpdXYTuu0u8KcUB4yu6boUj
-	 492zsufl2215A==
-Date: Fri, 9 Feb 2024 16:41:54 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "Klymenko, Anatoliy" <Anatoliy.Klymenko@amd.com>, 
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, "tzimmermann@suse.de" <tzimmermann@suse.de>, 
-	"airlied@gmail.com" <airlied@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, 
-	"Simek, Michal" <michal.simek@amd.com>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Re: RE: Re: [PATCH 0/4] Fixing live video input in ZynqMP DPSUB
-Message-ID: <casqzvlydzfckbn2glxn2n2ywtiqzuam2hyn3qpbroaykp5drv@ygeuniecym4w>
-References: <20240112234222.913138-1-anatoliy.klymenko@amd.com>
- <6jhwss2wego6yoo5mwmphwawhsj5bbj62gwrzcpapoixwkrkli@g4fbxdooopby>
- <20240117142343.GD17920@pendragon.ideasonboard.com>
- <u5mngxudtdgy3vqkfbpgqng6tdahijnet2jtj345hrowbt47ce@t3e7hul45mr3>
- <MW4PR12MB7165D35189BEECA8769552AFE6792@MW4PR12MB7165.namprd12.prod.outlook.com>
- <2ytxhpti53e743b5pca3oa5jmscffi4vpsyeh727bcoh4v6cuw@zkz5pqkcv7v2>
- <20240204095618.GJ3094@pendragon.ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E2oXLVzx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707493368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aoRyqAiMEdX1LMy4NGsmx8nuHCXJJko1zkj0XYhs6Is=;
+	b=E2oXLVzxiU0GJs3+yrjSZTdGvVDqv8mEjDQf0SXZGgYCQwHdIdVG6udygrystJxGOgTdm8
+	Ua7PfFSO4khDImEGnMDiQ+xPOyBGPnxqHoWmX/4TRbyUl132Ro5OLB2jCgofxmXDT6ESCt
+	qC4yjSF8CCUUXKzmNPeOBGieHspqnfE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-60-TJdBRjjLN_qukUVS10RHCw-1; Fri, 09 Feb 2024 10:42:46 -0500
+X-MC-Unique: TJdBRjjLN_qukUVS10RHCw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a26f2da3c7bso62104166b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 07:42:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707493365; x=1708098165;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aoRyqAiMEdX1LMy4NGsmx8nuHCXJJko1zkj0XYhs6Is=;
+        b=BKerh+EAUMTJI0FOSxyBb07h+pszt+cdAwINBHpX+vcJ3M91QSCKh4to25mFa0DxUE
+         0phucdrEzr9OD9q1DRsbgVLzFp9g/dYOej1BIAT7dLdg/6bgMFDngO8+b09ljIiXBLzi
+         2NvEkk75UXfi+rKtsTYuRogYuN+nslx8NO0mPg1SJmCsZO1IJjDZui9OxcZKZU1XGy16
+         OG/zVgNWr/ydh6HSsz/ZSNuU4uAcXPkya+VUcyR6Y54EW8ULMqfHdyW9hZwRtc0Qu+XE
+         tTLcD8OSeQndZ8s7NP+OTcVBZNSvADcLbF+lKO+4TzdixenlzBN9z1ujxCo45Ed/jQcw
+         9dnA==
+X-Gm-Message-State: AOJu0YyBIO9nIA/n0zmzCmQCniySRoRnB28hU3sjXAmACGTVO6ktF+mS
+	bnHysxlHNbFM3y6s945OKtHI3IuDY9T0DeCLl2K9R8c6/ft+0D/ATKswuebA+nb5hRjLlB2U5kl
+	MFn5At+cGG36JPOiFvUqWhC0VfYrwyJ12pwpP5lNg4f9lazqbI+hGLDNMaMsc/YUXo7vC3A==
+X-Received: by 2002:a17:906:4954:b0:a39:1702:ea2a with SMTP id f20-20020a170906495400b00a391702ea2amr1650105ejt.46.1707493365228;
+        Fri, 09 Feb 2024 07:42:45 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEUC3LMg6bNhb5Jtq/RWphSd2cR+K8TsfkQXiLcxaI8Rw5dcHhUKQcqOc/in0/EOpwOMYYXdA==
+X-Received: by 2002:a17:906:4954:b0:a39:1702:ea2a with SMTP id f20-20020a170906495400b00a391702ea2amr1650081ejt.46.1707493364829;
+        Fri, 09 Feb 2024 07:42:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXvmDDoMIBdI3NR6zTFpUsocl+Btpm2VcsF4PUKjCLcGNtqWEuwdDwxOrWZZdJ7KwWTBbzst/OV5pixVmNbxccl3kmeq0MYeHJQAe1RPNP08aPvJCsbw9URN83eiYF9YWmqT0knzDu9ASzZCa4k/Ui08b19VxZdOwj8r6/J1bAaDCG8Rh4ZhqLXJH5U7CV6FoZzHsAPaYtPgvYCQBcROrdSfzftRwmuxpPBVe3HuMdjhccVR7T/aYnLn7YQWk/RbP4q/X70Xcm9YKFzF1xi5kdhLjNGPWiFwW4hocPbofGN3FF2RIYEMXWINe501hDqVfYcc9kEYmEbiC/1F3YNCEhw3s003DseqDpa2pDjUONxgcr+yAPmyZr5P5qtN5gzeByuZ8MDSEsJfEuLJrtXn2qQnTtrIKbumPl0RZ1BYfhCvjhHgv6L1zPjJ0fDVn6hQRTJQ4X5g8jSxYK8VqrKitC9z9Vz61p8W3lRxJEUxPGIVqWVQJqVEU8w9FWOaeRWyqE2UJMkwrup1qu9JNwQrsED1V8ARsrYuIZzgcqrAZgQ7VAPznSNa2q19AcOLYR6BmGUSb0QivlzsVuAVTARlsyYArD2y5cafzgWsVlVMVshbSSB9x3n4H5sn+eM97JFXfN8yxUSJB7L
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id u1-20020a1709060ec100b00a37116e2885sm867386eji.84.2024.02.09.07.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 07:42:44 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 321FC10F5038; Fri,  9 Feb 2024 16:42:44 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jiri Kosina
+ <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [PATCH RFC bpf-next 0/9] allow HID-BPF to do device IOs
+In-Reply-To: <20240209-hid-bpf-sleepable-v1-0-4cc895b5adbd@kernel.org>
+References: <20240209-hid-bpf-sleepable-v1-0-4cc895b5adbd@kernel.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Fri, 09 Feb 2024 16:42:44 +0100
+Message-ID: <87bk8pve2z.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aaihxypctcsxwq6q"
-Content-Disposition: inline
-In-Reply-To: <20240204095618.GJ3094@pendragon.ideasonboard.com>
+Content-Type: text/plain
 
+Benjamin Tissoires <bentiss@kernel.org> writes:
 
---aaihxypctcsxwq6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> [Putting this as a RFC because I'm pretty sure I'm not doing the things
+> correctly at the BPF level.]
+> [Also using bpf-next as the base tree as there will be conflicting
+> changes otherwise]
+>
+> Ideally I'd like to have something similar to bpf_timers, but not
+> in soft IRQ context. So I'm emulating this with a sleepable
+> bpf_tail_call() (see "HID: bpf: allow to defer work in a delayed
+> workqueue").
 
-On Sun, Feb 04, 2024 at 11:56:18AM +0200, Laurent Pinchart wrote:
-> On Thu, Feb 01, 2024 at 06:01:01PM +0100, Maxime Ripard wrote:
-> > On Fri, Jan 26, 2024 at 11:18:30PM +0000, Klymenko, Anatoliy wrote:
-> > > On Friday, January 26, 2024 4:26 AM, Maxime Ripard wrote:
-> > > > On Wed, Jan 17, 2024 at 04:23:43PM +0200, Laurent Pinchart wrote:
-> > > > > On Mon, Jan 15, 2024 at 09:28:39AM +0100, Maxime Ripard wrote:
-> > > > > > On Fri, Jan 12, 2024 at 03:42:18PM -0800, Anatoliy Klymenko wro=
-te:
-> > > > > > > Patches 1/4,2/4,3/4 are minor fixes.
-> > > > > > >
-> > > > > > > DPSUB requires input live video format to be configured.
-> > > > > > > Patch 4/4: The DP Subsystem requires the input live video for=
-mat to be
-> > > > > > > configured. In this patch we are assuming that the CRTC's bus=
- format is fixed
-> > > > > > > and comes from the device tree. This is a proposed solution, =
-as there are no api
-> > > > > > > to query CRTC output bus format.
-> > > > > > >
-> > > > > > > Is this a good approach to go with?
-> > > > > >
-> > > > > > I guess you would need to expand a bit on what "live video inpu=
-t" is? Is
-> > > > > > it some kind of mechanism to bypass memory and take your pixels=
- straight
-> > > > > > from a FIFO from another device, or something else?
-> > > > >
-> > > > > Yes and no.
-> > > > >
-> > > > > The DPSUB integrates DMA engines, a blending engine (two planes),=
- and a
-> > > > > DP encoder. The dpsub driver supports all of this, and creates a =
-DRM
-> > > > > device. The DP encoder hardware always takes its input data from =
-the
-> > > > > output of the blending engine.
-> > > > >
-> > > > > The blending engine can optionally take input data from a bus con=
-nected
-> > > > > to the FPGA fabric, instead of taking it from the DPSUB internal =
-DMA
-> > > > > engines. When operating in that mode, the dpsub driver exposes th=
-e DP
-> > > > > encoder as a bridge, and internally programs the blending engine =
-to
-> > > > > disable blending. Typically, the FPGA fabric will then contain a =
-CRTC of
-> > > > > some sort, with a driver that will acquire the DP encoder bridge =
-as
-> > > > > usually done.
-> > > > >
-> > > > > In this mode of operation, it is typical for the IP cores in FPGA=
- fabric
-> > > > > to be synthesized with a fixed format (as that saves resources), =
-while
-> > > > > the DPSUB supports multiple input formats.
-> > > >=20
-> > > > Where is that CRTC driver? It's not clear to me why the format would
-> > > > need to be in the device tree at all. Format negociation between the
-> > > > CRTC and whatever comes next is already done in a number of drivers=
- so
-> > > > it would be useful to have that kind of API outside of the bridge
-> > > > support.
-> > >
-> > > One example of such CRTC driver:
-> > > https://github.com/Xilinx/linux-xlnx/blob/master/drivers/gpu/drm/xlnx=
-/xlnx_mixer.c It's not
-> > > upstreamed yet. Bus format negotiations here are handled by utilizing=
- Xilinx-specific bridge
-> > > framework. Ideally, it would be nice to rework this to comply with th=
-e upstream DRM bridge
-> > > framework.
-> > >
-> > > > > Bridge drivers in the upstream kernel work the other way around, =
-with
-> > > > > the bridge hardware supporting a limited set of formats, and the =
-CRTC
-> > > > > then being programmed with whatever the bridges chain needs. Here=
-, the
-> > > > > negotiation needs to go the other way around, as the CRTC is the
-> > > > > limiting factor, not the bridge.
-> > > >=20
-> > > > Sounds like there's something to rework in the API then?
-> > > >=20
-> > > Adding an optional CRTC callback imposing CRTC specific bus format re=
-strictions, which may be
-> > > called from here https://github.com/torvalds/linux/blob/master/driver=
-s/gpu/drm/drm_bridge.c#L935
-> > > would solve the problem.
-> >=20
-> > CRTCs and bridges are orthogonal. If anything, I'd expect that callback
-> > to be set at the CRTC, encoder and connector levels and filled by the
-> > drm_bridge code if relevant.
->=20
-> I'm thinking about a new CRTC operation that would be called by the
-> bridge chain format negotiation helper
-> drm_atomic_bridge_chain_select_bus_fmts() (or one of the functions it
-> calls), to filter the list of formats supported by the chain based on
-> what the CRTC supports, or possibly to pick a format in that list. This
-> needs to be prototyped
+Why implement a new mechanism? Sounds like what you need is essentially
+the bpf_timer functionality, just running in a different context, right?
+So why not just add a flag to the timer setup that controls the callback
+context? I've been toying with something similar for restarting XDP TX
+for my queueing patch series (though I'm not sure if this will actually
+end up being needed in the end):
 
-As long as we come up with something that works for regular encoders,
-I'm fine with that.
+https://git.kernel.org/pub/scm/linux/kernel/git/toke/linux.git/commit/?h=xdp-queueing-08&id=54bc201a358d1ac6ebfe900099315bbd0a76e862
 
-Maxime
+-Toke
 
---aaihxypctcsxwq6q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZcZHwgAKCRDj7w1vZxhR
-xR4xAQCnQ6B6KaRCdTBxvteV+SMevGOo6sSoUF43CpxDsbz/sgEA63pm3o5vZJBw
-Gkm3OaFel/wkTknuEVjJc+X59sDpagA=
-=H5zw
------END PGP SIGNATURE-----
-
---aaihxypctcsxwq6q--
