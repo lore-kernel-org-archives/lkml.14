@@ -1,149 +1,237 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4B37BAF7;
-	Fri,  9 Feb 2024 17:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707499225; cv=none; b=fnNaw94/FGEuVmqspdl08W2GG0u0w0VL7ODzZZJmpUFEyO7RjX6E7JiURL7PH8hA/WjUMyHnMI9Bqb++8jkuT3OwRMP1OoPVShqXsZn0WRhkR+ELpC9D790Dbyop+aZiadnB13RIty0WJU7iDBQrC8bz8CY3RACZp48jeFaIhyI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707499225; c=relaxed/simple;
-	bh=UsNSt6e4uXXzAf272aBm0wKAn8cU99EE380sIjFDd/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bi52yXljtJVMKCnLlZvQa+Q36KbOf0aWKsJlU5bENciZWr+A8ZSJswi4WvVpsgixICaFa/bQEvm+Tij7visCoSVYfMRiF8yBWCJ89YYHj8PkNqeS6KudU47167RqCwGVnfZhT64nHXtPhRfRYm4pX5tMPfi5fg3CgZ0i0BryJ6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=EM0VMRLq; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B93F80C0C;
+	Fri,  9 Feb 2024 17:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707499235; cv=fail; b=J/U8kDjWaowOo/1WKtBhD+g3hZ65Se4iD3H5dkSmyNa51rPrOsXY1nBTq1CMKvK0uBbsfoX8AIhRL5ujWmH4P1aToUv0VOvXOeWMJReoaZ+iuPEbksqucwheBDdkevY+5BCfk4slQuUxq0T3TZZwn9xbY05pRqYp8X8PkUceFys=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707499235; c=relaxed/simple;
+	bh=zIU4MIW6MQfuak/w2DymJZDrEo1ibRXW6U65hfYQcWA=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YG5pg+Zxc5aKwAEY3inbEpMgerW08CvZBGX9Wufyk5rcLz6x/QOyY5cExBo0hNYD3Q1GNCalLq4Uhm5EfAfQ2ltQhn8aaKoM0r+tN9iCf46YaFa6hr4dnTuCdflttySUD1nlW53NX0X5ju/6WbeOq7WB0xzwGqNOaORsoSQEdZk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dbEHsfP8; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="EM0VMRLq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
-	s=s1-ionos; t=1707499187; x=1708103987; i=kernel@valentinobst.de;
-	bh=UsNSt6e4uXXzAf272aBm0wKAn8cU99EE380sIjFDd/E=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=EM0VMRLqOGOXoL8Qzx04icyqNXHE9PYGwMjCbP/uiZ3pBDdVhnJMlDzFcIwfHvNM
-	 XF3/h8l+dCkJKN+7nAV3NDSKQau+r1Ww/TiGKXhpSQYcJu3arSmHKrVIok0g0ZTUI
-	 nlw1l+DNLdPEHVK0yRvbB2DZUdVyqqSNa9UHdzopbL51vzm9zK0Zn+m31X+rRUQUT
-	 MG+XGT51Uscx5qsQi3XDBfuocO9fuW4c6T55ONQGPxFp0GUUGcx2PE7SZ+730cIPQ
-	 Yp/ZOxCRml249a4t8h7SqtHI2nMosIohMYim+/AIfDnTzRyQI29MnLe/PljpZHhFt
-	 qbYB7X82AGqLUXErYA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost.localdomain ([217.149.163.107]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1M4bd0-1rWpqW4Azu-001kh0; Fri, 09 Feb 2024 18:19:47 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-To: aliceryhl@google.com
-Cc: a.hindborg@samsung.com,
-	akpm@linux-foundation.org,
-	alex.gaynor@gmail.com,
-	arnd@arndb.de,
-	arve@android.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	brauner@kernel.org,
-	cmllamas@google.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	joel@joelfernandes.org,
-	keescook@chromium.org,
-	kernel@valentinobst.de,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	maco@android.com,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	surenb@google.com,
-	tkjos@android.com,
-	viro@zeniv.linux.org.uk,
-	wedsonaf@gmail.com
-Subject: Re: [PATCH v2 3/4] rust: uaccess: add typed accessors for userspace pointers
-Date: Fri,  9 Feb 2024 18:18:41 +0100
-Message-ID: <20240209171841.3494-1-kernel@valentinobst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CAH5fLgg3C79DHz0FJ1LOhvetv4THHNAnu6XPx0vycFCb_txkfg@mail.gmail.com>
-References: <CAH5fLgg3C79DHz0FJ1LOhvetv4THHNAnu6XPx0vycFCb_txkfg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbEHsfP8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707499231; x=1739035231;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=zIU4MIW6MQfuak/w2DymJZDrEo1ibRXW6U65hfYQcWA=;
+  b=dbEHsfP8ODLUBVD6XJ0PuDGlZWMUhyGybtUDdqGeR7bE/kcwT/SttV0b
+   kWppHg5/87Bt348uPtddiyq/+P8TFcvAfTtFAG6f/L5ix2+yArYcM/Ojo
+   UoWJ5zZs/InLoEzB3KmR/ScGhihDHisjxCMj8IuABmDQeqE8541R99h1y
+   YV/iZJIX+VGmdhqcfwHa3iy1XrrbRtdW9rGYJc80kh2hP7EqzHdf0E9gD
+   RcwVh0c+ziuxPra1HCwbL+qgdiNZUvFccRaokJWTQTQ851kdHspwIhHZr
+   p+0sSRF1r87V/wFUpy8zySv08skY1AO4s5rPwh46llQ45eKNXf2yBaaHZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="4445898"
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="4445898"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:20:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="25217665"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Feb 2024 09:20:30 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 9 Feb 2024 09:20:29 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 9 Feb 2024 09:20:29 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 9 Feb 2024 09:20:29 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=niwI80k72lrObb/Y9i/2siQhHDVPBldzTsl1chuCL9wFO50gbBL2RrsKfOyJOOFVrN1o8ZYokRINEqo5v4ih45/8JOZeq0Inq2qkvod7Zbg8sbRhCVtKKsV4bqPIF7OAuGwASodO9BJQUhGFVg1y9f9ZDiavr7+she3MtNF2L/knChmwvVqaC1OsGGDb/6ZIOBePMzelXjscK0yIVhj1ztA1kAJOERF3aBYaMs58d2BCaxe094Mq+QUZGA7ccZu8r7HMhoRZwIpxrZreVUkjWXKqkE8QkdC+OwEApW2jkwetswF2AHIereXFCIUG4X6dtozRj3R6as3naFebQptCrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uhhRBGLJoEIoSP6SkUEXtc8qW5IBvhEOM/3XNC6VgwM=;
+ b=SnJkhtHmCZm61pjaiHxRD+WBye8sktU2K3ywZWDqy9qkl5+GqvnDbHackwHWP59cBSAYYOQiqreyJzM2BwVjuDSwaiZaAWKINkITl1IlQayhTkDUHo8wt0DRA6tOUel30g9VN9mc8TVTVKqV6av73u5Z6t/JCKBt6z4VtT6qIB9X0ZD7/j8VPT/5QM8VtTwFYPj3eV9ItDglMoYOlz2nsFr+/BqsPwJ5P+e5OEQWEMojoOfaO7FZeQxHHpzzbngk8AoZ9VWdfEl49qnapqcqxM2tU2RsO6WjJJdAG7ya2sPcQTI6otbXfuWB+JrLsA/zFWMk/7epQEVVMzD6OHS8ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH7PR11MB8454.namprd11.prod.outlook.com (2603:10b6:510:30c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.27; Fri, 9 Feb
+ 2024 17:20:27 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::c903:6ee5:ed69:f4fa]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::c903:6ee5:ed69:f4fa%7]) with mapi id 15.20.7249.035; Fri, 9 Feb 2024
+ 17:20:27 +0000
+Message-ID: <f65f7c8a-e2d8-444b-abbc-d28eba0f86f5@intel.com>
+Date: Fri, 9 Feb 2024 09:20:27 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] selftests/resctrl: Split
+ validate_resctrl_feature_request()
+Content-Language: en-US
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	<shuah@kernel.org>, <fenghua.yu@intel.com>
+CC: <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>
+References: <cover.1707487039.git.maciej.wieczor-retman@intel.com>
+ <f914c55b9b9f635cff082b0b4a8b636598580821.1707487039.git.maciej.wieczor-retman@intel.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <f914c55b9b9f635cff082b0b4a8b636598580821.1707487039.git.maciej.wieczor-retman@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0088.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::33) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:E/ajS4dEMh4eVMlP+RWn/KBa4oRK8yFyBO8ueV4i6LAUXCIv+RD
- sZSTvB44KcgMEZqb3bC6CqC5QvYjmCj237ZUb3jDdizWJC6lfT4V3xiGmy7gWzXb4mOThjK
- 0bACvJzhuqbFJJTJMT16Z9DkUXQi8pQSESrQdKwr8S4J9YWFYLxcurMlooUyZ8C7OWhnuLP
- F5TxqYREPezYur29PXJng==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QCECXHsTf48=;+jFxZJXMjw0eAGA9wRyu5fsewLe
- EApEVcP3wDMOmD5bC6vVvcWnQ4G8rQKoHSInVKTsQRa6EPbeRqqAGRKyi74GC1MV50+2dNby6
- uDUQdKK0IkZB7owd5vQybtWZ80NLx1rFRH0x+JPCClic+2XRwPmealUGOTbt88jXQHHcaa7m1
- 2VAjO7bh0Ipz1luX3eVRr1joEIEsC/B0wqZjteIuO4/EUDmYmXVi4eLTPhZS7/wmSqNhI2fiQ
- PJieTILebbic/r7w1XwFXJh+mbChBQH0oAZ7lVHTsL5GLECyiqJAc0gOGYDJunN3di91zPQfE
- CIEpDkyipJcUMoHNeoxQWww4aQnBeWtZuIl0T19pIv43/oKah3p40772Eru+V98PuTxzptGuB
- PZBWsUo+HC6qkZlEJ62+Lz/REG4DDYOt1UDIQN1o3fhLjp0Aqg2JdkAbhJQIsIdWDIBjICURC
- CTtRcB4PVi+6OTJn53AdIdcfl99iNlemyPLG15tZAWchAcU9hIISP0BuFHHRmdSHzCUEThVYp
- hVRkSNuOFolNQI5jhfrAPFUMp0hRdAhDpNMD9YPrnV1iODkHsZFr3cQXhSXLEyumcePPM3xrI
- C6f74DJCiCM0bYFuB3i2n2D3wkTAYAq55BThRGsunDPx3qpWGot2FG4fF6DrrlkUmFAAlp0sg
- Hu2SyvenPVIUwLBpae6KUyWpVMUyxxALaHcUgmJ8dJVfVD71JpHZJSpbWEkTg8P85Pfb/bTl6
- Pw321gRmZ/mrbq8gtPh4H+P8ZHG3EW2FTvnUCALbo+zj6NV4RAQQ3I=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB8454:EE_
+X-MS-Office365-Filtering-Correlation-Id: cfb8987d-a230-4a50-1fb6-08dc299368e0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dB/TQ9Z6iMtbRC7OEw402LVioCo0xwIkN0K8jwXSExNgC0GA1L/MNf5n9OnaTKDJH0dhFzns/4i+BAylKTaije/MRAzatQDLbPoM0CXzMRfDcY7OnoiZMVSC9VAuIb236c8s4jjALBJUG88HHjP0W9O+jaoozb2Mvu7R2qhRqm1jmaknuf2+3ltsPT4qmlNBuYNi/DY0U6krmD24HMuMWofNTCWgUDt3y2ipOZ6s2VZlR137N62pMNA0ldLQjnZNt03XBDl6AEgML2TNIx5Rg0D7NkQ0o9Z2EfND31DogF7UNmxyTIIqxMIZa0w5KaS9ggiFIjza0kjFwCtyONFMCH3JUbUm9xDBa0rQcmRh3wj3XTyCSO9zVI7ARoJpeTiCmmVgY977GiRvON3A6C/NZReLlTClEGiNfN/DSrsqwtqGR8l0kSL0cdUOqJNH7hG1goqVPTLlrpb82HasJHtyB9fHUDeWfeP3Ywd6jpOz6XGyCMNxdTdn7pjeXZX/gm/OmQpRf0u9369t8tXXW94E0rsqXpXw9oesbltoL19hoILT8oXqo41LOeiqSQA4VsHt
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(366004)(136003)(396003)(376002)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(86362001)(82960400001)(31696002)(38100700002)(31686004)(41300700001)(15650500001)(2906002)(6512007)(316002)(6486002)(478600001)(83380400001)(26005)(6506007)(53546011)(2616005)(36756003)(4326008)(8676002)(8936002)(6636002)(5660300002)(66556008)(66946007)(66476007)(44832011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QmFmVzdtVXBzQjFrSXBFc0tkL0ZhRTFQWlZWV0JHZWVsdVowaWROakFqUk5N?=
+ =?utf-8?B?eExVTTh5TFRadUxMbjRHeU5PTGtNc2ZEQUwyS0hVb1VNM2UrcDUrV0h4YlNa?=
+ =?utf-8?B?VVpQRlY2MVpwZGVRNzRaVS9uSFJkbm9wZXNic1hTemFqNDNWM2xXcmxpYVBJ?=
+ =?utf-8?B?a0F1QittV3dhVWpjQ0tWZU1zakk4NHlMOHF5MGdDN2pRUkg3cXdKK1FWRktL?=
+ =?utf-8?B?NGs5R1NQNjE4bmY2TlJNQTRLLzBjTm0zSlE4T1ZKdzVNWnpiRGlXVUdtQUdt?=
+ =?utf-8?B?ZFdyVi9XQkpiMXRHSm5wYXhSZC8yLzlmUXJ0elY3Q1ZheDNCUjBCeStlQTJD?=
+ =?utf-8?B?NnV3cExVY2Urd2JnVGZGSWFWaExja2lFUnNPV20yQkMxcDAra0NVaGNjV215?=
+ =?utf-8?B?QzhiTzBmSTVHMFgxR0E1MVNmTTNNbFNXRVhvQjk4akpRdnFvbmdnVzg0ZmE1?=
+ =?utf-8?B?U1VSTmN2ZEF0c2wwaklnVXJDSUJFWUhlbEdVQ0t3YXNaZ3h2ZnZGQ290Q1VO?=
+ =?utf-8?B?V2FlTHJkc09pMXdtU2h6V0hSQnJqbCtrVDVsaEJGZXBPNGVxRE04dXNpd2w5?=
+ =?utf-8?B?anY2OSszQVpQdWFFYzdkQko3ODBFSjZvS2YzSHlRVUt3ZGtQUklFZEVycjNh?=
+ =?utf-8?B?bGRRaTFNWC9zNnF0WUlLSVZDYlQ4TXU3RElnQzNhVysrUzhGWXFzdUpGRlM2?=
+ =?utf-8?B?dTNXSGc5MUhhODcvb0hDZW9aV3ZVZGlzVVh5VUZYYUo4QVRNcUlBVDFySnlz?=
+ =?utf-8?B?QlRaU0xGRWZSQjNPTVlWWjJncUdKYmVXcW9qbXo4dTVYd1VjSHlFRDIxbEFQ?=
+ =?utf-8?B?c2RsZWVhYU1NYm1KOWk4OWhkNTkvT0xYTFJlQmJjaFVOUm9QSVNYYUkyeUhx?=
+ =?utf-8?B?aXlQMFBOVTQyVW01OUNldkNmZS84UFJnMU1pUC9GQ0tYTys5TTZKRGtBV2Zs?=
+ =?utf-8?B?SWMwUTZqaEliYWxoUkxCVFRkb1NRSkFQa2QxNVlyZExsR1EyTEtzSlk1VW9F?=
+ =?utf-8?B?blgwRzVaVysxVTZhdFJJb05Ja0diZXhYbFJ2Ry9zMlYwZHlrRGRNQjFBQk9I?=
+ =?utf-8?B?UHE1R2hEdythbFNTTVMwWm9pa2VhVmRDaHlkOENVQzJZUHBXV09hOGJBTWNL?=
+ =?utf-8?B?Q3hqTy9EUVR3MjJGcGxqdjNBRnpZWjd5Z0xLS29GOFFOeFJCSjlnZVFUWHQw?=
+ =?utf-8?B?SlhRWmZOZkJJSXZtOTFOd0dBUHpublRwQmNpU1VJcm84anJhdGZNWjZKR2kz?=
+ =?utf-8?B?Q0luQm5oOXc1YmpYUys2MUN4VCs3VktoZ3BGKytlWlBzeVJvUy9lT1YzQVBF?=
+ =?utf-8?B?YVRYTkhRV2MwMzZkbENLdVYxc255YjZzM3FId1p1M0Yrd0MzbkkrVW5na0xT?=
+ =?utf-8?B?emZaS0s4NTRmM1JCSWhWdDBiSFlMM0UwRUZtbzNkdEpKckRJUkIrRC9ickpk?=
+ =?utf-8?B?YlhJM3RaUDBCdTVaZU9MN2p1d0dIeWtLRmZhMjBxL2xjdzZVelFZTTJNQWtm?=
+ =?utf-8?B?NGxXUC9JUk9YZzJzVjBBOHp0R21VKzYzcFJ3YnVpQ0lDYm1vSGI3c0tnZTZm?=
+ =?utf-8?B?STVMQytoS0tNaFM3WDBDblR4ZE9sR3FXempGT3RtcVA1cnE1QjNtS25QQUlO?=
+ =?utf-8?B?Y3EzMm9iMEFNVTR6NFdjbXlLekNBT3ZwL1FzUTZ0NktJZ01BTjlOaGFneXIv?=
+ =?utf-8?B?dGhoR05wVXhGSHhiMTR1L1lYbHo1d1JKZDFpbEZGNGdPRmZTSHpWSUJDNlQ3?=
+ =?utf-8?B?YS9OQWtqYXlYTXlHdFdITGpGaXlYR3FvOGpPM2JZREpMcDJYQUpYaXI3ZUdx?=
+ =?utf-8?B?cGxVZkpibVlpcDd0L1VUWFUxMURaSGxRci9weCt3NkRuSlpvRzEvMEpIclhL?=
+ =?utf-8?B?U3ZQeG1uMmRxRE9KZGp4L09mMTM2Slk0dGxIUTdUNVVPWmh1UUJnam5uWVYy?=
+ =?utf-8?B?UnpFZEREZEFZZ2MyVEdqUmZnWkpaN20xSm1KUzdxWWhjdEYxblpVL0hJTmZi?=
+ =?utf-8?B?U2dFZFlISGFHZlZVeGpWMWRBWkNlMHpVc29GdDBSajB3eFlHdWg4b3MwOWk5?=
+ =?utf-8?B?SjB3QlhxdC85US9CRDFxalJLendGWThrSDlGeTRLT05iMStlZzI3YXZGeXVl?=
+ =?utf-8?B?MGV1L0liZWpqQUNGOWE5LzBMdlh4RDFPTDVTaHhoTGluR1VIaUluMXlyNW9T?=
+ =?utf-8?B?NlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfb8987d-a230-4a50-1fb6-08dc299368e0
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 17:20:27.7272
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pm1JmSAAdq7CYVbpXHllZoNth1cDcSUG7p6LzuWKT9Qyl3veCWlhUiM09uI1anSZ4CTzjVeCAL2THGBX+qTG9mORUUFxnE72JS632EqGcDY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8454
+X-OriginatorOrg: intel.com
 
-> > > +/// If a struct implements this trait, then it is okay to copy it byte-for-byte
-> > > +/// to userspace. This means that it should not have any padding, as padding
-> > > +/// bytes are uninitialized. Reading uninitialized memory is not just undefined
-> > > +/// behavior, it may even lead to leaking sensitive information on the stack to
-> > > +/// userspace.
-> >
-> > This feels a bit too restrictive to me. Isn't it okay to copy types with
-> > padding if it is ensured that the padding is always initialized?
-> >
-> > I recall that in C one occasionally does a `memset` for structs that are
-> > copied to user space. I imagine that one could have a Rust
-> > abstraction/macro that makes it easy to define custom types that can
-> > always guarantee that all padding bytes are initialized. Such types
-> > would then qualify for being copied to user space if all field do so as
-> > well.
-> >
-> > This could be a significant quality-of-life improvement for drivers
-> > as it can be tedious to define struct without padding.
->
-> I don't think we should go that route. For example:
->
-> let struct_1 = ..;
-> memset(&mut struct_1, 0);
-> let struct_2 = struct_1;
->
-> Even though struct_1 has its padding zeroed here, that is not the case
-> for struct_2. When Rust performs a typed copy/move, the padding is not
-> copied.
->
-> Anyway, there is a work-around. Define your struct with MaybeUninit:
->
-> // INVARIANT: All bytes always initialized.
-> struct MyWrapper(MaybeUninit<bindings::c_struct>);
->
-> impl Default for MyWrapper {
->     fn default() -> Self {
->         MyWrapper(MaybeUninit::zeroed())
->     }
-> }
->
-> Unlike the bare struct, things wrapped in MaybeUninit always have
-> their padding preserved. Then, you can implement the trait for this
-> wrapper, since its padding is always initialized even if that is not
-> true for the wrapped struct.
+Hi Maciej,
 
-Yea, I see the issue posed by moving values around. What I had in mind
-was some library code that makes achieving the above behavior more
-ergonomic and semantically clearer (in the sense that without the
-surrounding comments it might not be immediately clear to someone
-reading the code why you are doing things that way). My reply was
-mainly about gauging interest into such a feature.
+On 2/9/2024 6:01 AM, Maciej Wieczor-Retman wrote:
 
-However, this really is independent from this patch and could always be
-added later. I agree with mentioning padding in the comment and see
-nothing blocking here.
+...
 
-	- Best Valentin
+> diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+> index 5116ea082d03..f434a6543b4f 100644
+> --- a/tools/testing/selftests/resctrl/resctrl.h
+> +++ b/tools/testing/selftests/resctrl/resctrl.h
+> @@ -136,7 +136,9 @@ int get_domain_id(const char *resource, int cpu_no, int *domain_id);
+>  int mount_resctrlfs(void);
+>  int umount_resctrlfs(void);
+>  int validate_bw_report_request(char *bw_report);
+> -bool validate_resctrl_feature_request(const char *resource, const char *feature);
+> +bool resctrl_resource_exists(const char *resource);
+> +bool resctrl_mon_feature_exists(const char *resource, const char *feature);
+> +bool resource_info_file_exists(const char *resource, const char *file);
 
->
-> Alice
+Portion of next patch sneaked in here.
+
+>  bool test_resource_feature_check(const struct resctrl_test *test);
+>  char *fgrep(FILE *inf, const char *str);
+>  int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
+> diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+> index 8a183c73bc23..af4f800ab23d 100644
+> --- a/tools/testing/selftests/resctrl/resctrlfs.c
+> +++ b/tools/testing/selftests/resctrl/resctrlfs.c
+> @@ -708,20 +708,16 @@ char *fgrep(FILE *inf, const char *str)
+>  }
+>  
+>  /*
+> - * validate_resctrl_feature_request - Check if requested feature is valid.
+> - * @resource:	Required resource (e.g., MB, L3, L2, L3_MON, etc.)
+> - * @feature:	Required monitor feature (in mon_features file). Can only be
+> - *		set for L3_MON. Must be NULL for all other resources.
+> + * resctrl_resource_exists - Check if a resource is supported.
+> + * @resource:	Resctrl resource (e.g., MB, L3, L2, L3_MON, etc.)
+>   *
+> - * Return: True if the resource/feature is supported, else false. False is
+> + * Return: True if the resource is supported, else false. False is
+>   *         also returned if resctrl FS is not mounted.
+>   */
+> -bool validate_resctrl_feature_request(const char *resource, const char *feature)
+> +bool resctrl_resource_exists(const char *resource)
+>  {
+>  	char res_path[PATH_MAX];
+>  	struct stat statbuf;
+> -	char *res;
+> -	FILE *inf;
+>  	int ret;
+>  
+>  	if (!resource)
+> @@ -736,8 +732,25 @@ bool validate_resctrl_feature_request(const char *resource, const char *feature)
+>  	if (stat(res_path, &statbuf))
+>  		return false;
+>  
+> +	return true;
+> +}
+> +
+> +/*
+> + * resctrl_mon_feature_exists - Check if requested monitoring feature is valid.
+> + * @resource:	Resource that uses the mon_features file. Currently only L3_MON
+> + *		is valid.
+> + * @feature:	Required monitor feature (in mon_features file).
+> + *
+> + * Return: True if the feature is supported, else false.
+> + */
+> +bool resctrl_mon_feature_exists(const char *resource, const char *feature)
+> +{
+> +	char res_path[PATH_MAX];
+> +	char *res;
+> +	FILE *inf;
+> +
+>  	if (!feature)
+
+Now that resource is a new parameter should it be checked also? It is not obvious
+why only one parameter is checked.
+
+Reinette
