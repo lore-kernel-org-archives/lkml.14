@@ -1,131 +1,159 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A0836AE3
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 23:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA8219E4
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 23:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707520061; cv=none; b=TM/x9YDb2wCAZIhAlpDldmzNMWNZCMcdK6Xa2cKSWGlaIir+apMUJAjy47l3T7Fysd9j8C3p4qFP7lb9R2TDzueWByP48hW0XUn+qjy5CfeyB9hb1bbWHIG6Ijkr7QzAj7kxLcVjeBj49kY/H7PH6L83kHj/peWDLT3TnlsEGRc=
+	t=1707520390; cv=none; b=l3XgZ2QvaKI6d58QvoMAGik9D6WXIfJP0inwnoyBOlH85oE3lP7V4TkTJNZatmuPQnEwrRaFgI3IlI0zfE+fEJ6WSmVgc0oZ4GP9fewfWl6qjMWzUycz0BrxMB2gbGpdpu8JLWr257sTtcFeLEVkNE+xV8rFM4dW6AcANj2y3+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707520061; c=relaxed/simple;
-	bh=8HElzopGcSrPzjmzDlv/HH9iotHcogieQOgXsP+RqXg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G2Kl4ws0LX/obKqIfUgdAwy/o+N8eZ0I4TnVgi3y4PlpTwnh2cpbBW1d5tqJFmaRLpTOgx7Yee72FWr9Gk+s/MGPm2TG8QsLHrdd+W4ay7+Gx2VJWqYKt/1D9MLXNp7Potb1ZV7rO87u5Z7fc2M+LRYTLoGRqkMpI2076KwgV6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WJfR1ahq; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707520390; c=relaxed/simple;
+	bh=cto60T5aKoSgdnFHbOH1BU81mCjxPNLXa/UWaNi1BKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebo7JHQwmUrsHA8JvJ5e4Qm3iSXXL7ogXRUCdM4/GKfW3LckRf14yCxw2tCiUqPLLVwG/a3McgbheYhDug2kzF1sBPwk7EgWj5j9k03ZWTW+miWr6fGnJmbjVegzr/SkBrR+7NfjG/ya6FdzBwWwM331VTgtaLh7j+115QJfOqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pd0xpMVC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VvSX5hPA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UtV1+l5i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YfD8xwCX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WJfR1ahq"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d8aadc624dso12541135ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 15:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707520059; x=1708124859; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z0AAKh3Wo2mucOY5wb8UuYlu0VE8Lc/bx4O9HZBol2Y=;
-        b=WJfR1ahqD8O7oAh+zpfWEx8wGoaOu9O6fC/fpWhSzc4pnxsbWZm2LBenJBevTdADgs
-         xqFfSgqK4GITzO3c17nAnExv8T6WhcHtPbSvM5WJvkb9Zcw8eE9P5ybT5ID6H91R6Ejz
-         EWbYTJiXiTKCLeAA4r+B4lnyQuYsIgpN8o4+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707520059; x=1708124859;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z0AAKh3Wo2mucOY5wb8UuYlu0VE8Lc/bx4O9HZBol2Y=;
-        b=oSQwSh9/J9eReBOMCDiOukiLWecvKU9YypNHUAQYJ5xIPymfcT5xo5CdsZ7vODuhtY
-         7kD74OxqldZESKLV6XoMBR/sKR52IExRrCcOLF/fBnGNR9PVdG+I0Y0BEA9B80SAdWHQ
-         DdE61At/KT2f+jhoLnXj1hRKDrDSuMEr+XhgtJN7Ix5VPAFO8nzyfQiC/YoVOYvoEZvm
-         3M14Abe0AODXiOb1PZZWWVdXXC0BXNQYqJ+ymc9jlve+8dt7gnbfcBkUnqw9KjpQv+Dj
-         OMkpOXGDJqAqPDrNeGKjiC5bZbWWx2xn4G8DJioYAC0lX0IOJayUp8UYtmm4Nd2rJrzm
-         7Bow==
-X-Gm-Message-State: AOJu0Yx5OfF9HCH9Y0G4wREDph10UOL0uLqABM0k+ZTkx0e7L6j9aq2o
-	zSj2BbP+ao4OKTTuRA4uWtNuUO3Z2BA4y6R1nDmtfEyeU6Sn46IvbFON+RtsxeWRXEnZ43sc4YI
-	=
-X-Google-Smtp-Source: AGHT+IFL9RHVk3uCQFF0DprNvA484nSxWe0VP1yRH/6W7hVcnH4/YHX0eTHjgAM2QC2IjPg9h3i/dA==
-X-Received: by 2002:a17:903:3287:b0:1d8:ef8d:a7ec with SMTP id jh7-20020a170903328700b001d8ef8da7ecmr791832plb.2.1707520059124;
-        Fri, 09 Feb 2024 15:07:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVDE5Zm1a3P2M31ED2lYDsdVKWUiifBjfeD9GUtliSejJJrynoU9gkJUtoO6XXHnS1vOPr3E8JFge1ePG6ubgi4reDU62++bgfk8yAPJ5T/zMpnyWMmMD/NQdfb9XF6iA3IS9xdiVJ/EQObB3hAWcZ3wQqGeh47uF7AXwWWMUMUU2zpOeT2tSu2yvD50s3puYpYrIg+oVKUWO5IlGivHe/z3+FnkoQVIkzglH5cV0DRHdzWwWGKGVrcMBjwOcX8buRSldvAWrYvORxpkWt+NZP8eF5uXIDgmuVmTtiCPStVX89vIUqfAax0gMHLF5ZYqTzLtFqqZItDNIJ8KqYgxIZLk4yhng==
-Received: from localhost (209.148.168.34.bc.googleusercontent.com. [34.168.148.209])
-        by smtp.gmail.com with UTF8SMTPSA id v7-20020a170902b7c700b001d989dd19b0sm1988210plz.140.2024.02.09.15.07.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 15:07:38 -0800 (PST)
-From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To: linux-kernel@vger.kernel.org
-Cc: David.Laight@ACULAB.COM,
-	pmalani@chromium.org,
-	andriy.shevchenko@linux.intel.com,
-	keescook@chromium.org,
-	torvalds@linux-foundation.org,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH] minmax: Add notes to min_t and max_t
-Date: Fri,  9 Feb 2024 15:07:02 -0800
-Message-ID: <20240209150657.1.I45addf7579e1233fa97c05ba72120cd1c57b4310@changeid>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pd0xpMVC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VvSX5hPA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UtV1+l5i";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YfD8xwCX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C59FE1F836;
+	Fri,  9 Feb 2024 23:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707520387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S9lpcBV9vzvFNtzllF8vaGWpSfSHINn8hx6gz8lR9do=;
+	b=Pd0xpMVCWk8lLJEwQIwXH9UVn5/spsULRig1/vCnyKM+gdyWu8qf7TV1TMWVRPYEt2YpNj
+	5o2hsBoU3qlcqwiA+ydpRRoFdcvn8fzlbm+XClOGjDHoNPen9ZydU66ZHa8ZmnjxfncEW0
+	FDNFgaIjXU4txDcbpQUnHP+ICFObajk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707520387;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S9lpcBV9vzvFNtzllF8vaGWpSfSHINn8hx6gz8lR9do=;
+	b=VvSX5hPABaCgbXERSDBgxqWrEGkLFEvlaLRpTTGYlQnBYHwa/j/YvFEZPXTLiGxD/Ith4T
+	32PXNvM0j+3KbfCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707520386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S9lpcBV9vzvFNtzllF8vaGWpSfSHINn8hx6gz8lR9do=;
+	b=UtV1+l5iQa1XiClMk8rQKdiMwA+cUmzLzaThRsKzj+Rvw9veDnV4BUEr0seDDT48d1k1QM
+	Sj5yD6FyEYlvIJPLgUs/4hqjnKlE7RxcqOgR8HL2VyKtNv+R/rnHOZOddcEixosunJMKwj
+	vtSfBGFFD/LlXuvuHO7/F50NJnIZ/xw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707520386;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S9lpcBV9vzvFNtzllF8vaGWpSfSHINn8hx6gz8lR9do=;
+	b=YfD8xwCXfxRTiyKLP33cUiRHKI4NdUAugrEAqxccd/IWuhcAn74QwKOPuS8MuBIFjuPrR0
+	jm6W1nFU5QpkCoCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4758613353;
+	Fri,  9 Feb 2024 23:13:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JZl0DoKxxmVKfwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 09 Feb 2024 23:13:06 +0000
+Date: Sat, 10 Feb 2024 00:14:13 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH v7 3/4] mm,page_owner: Display all stacks and their count
+Message-ID: <ZcaxxQE1PkepEWwf@localhost.localdomain>
+References: <20240208234539.19113-1-osalvador@suse.de>
+ <20240208234539.19113-4-osalvador@suse.de>
+ <CANpmjNNcPr=pPco_HN9nXBabubtfo02SAH=taZGNCvYDq42YUQ@mail.gmail.com>
+ <ZcaesCP4mY-94ciJ@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcaesCP4mY-94ciJ@localhost.localdomain>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UtV1+l5i;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=YfD8xwCX
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.22 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.04)[-0.181];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,suse.cz,gmail.com,google.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.87)[94.27%]
+X-Spam-Score: -3.22
+X-Rspamd-Queue-Id: C59FE1F836
+X-Spam-Flag: NO
 
-Both min_t and max_t are problematic as they can hide issues when
-comparing differently sized types (and especially differently signed
-types). Update the comments to nudge users to other options until
-there is a better fix for these macros.
+On Fri, Feb 09, 2024 at 10:52:48PM +0100, Oscar Salvador wrote:
+> Thinking about it some more, I think I made a mistake:
+> 
+> I am walking all buckets, and within those buckets there are not only
+> page_owner stack_records, which means that I could return a stack_record
+> from e.g: KASAN (which I think can evict stack_records) and then
+> everything goes off the rails.
+> Which means I cannot walk the buckets like that.
+> 
+> Actually, I think that having something like the following
+> 
+>  struct list_stack_records {
+>       struct stack_record *stack;
+>       struct list_stack_records *next;
+>  }
 
-Link: https://lore.kernel.org/all/01e3e09005e9434b8f558a893a47c053@AcuMS.aculab.com/
-Link: https://lore.kernel.org/all/CAHk-=whwEAc22wm8h9FESPB5X+P4bLDgv0erBQMa1buTNQW7tA@mail.gmail.com/
+Or, I could use the extra_bits field from handle_parts to flag that
+when a depot_stack_handle_t is used by page_owner.
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-Andy Shevchenko made me aware of this particular footgun in
-https://lore.kernel.org/linux-usb/ZcZ_he1jYx8w57mK@smile.fi.intel.com/.
-
-While David + others work on the full fix, I'm hoping to apply a
-bandaid in the form of comments so the problem doesn't get worse by devs
-(**cough** me **cough**) inadvertently doing the wrong thing.
-
-
- include/linux/minmax.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/include/linux/minmax.h b/include/linux/minmax.h
-index 2ec559284a9f..96646f840a1f 100644
---- a/include/linux/minmax.h
-+++ b/include/linux/minmax.h
-@@ -154,6 +154,18 @@
+Then __stack_depot_get_next_stack_record() would check whether
+a stack_record->handle.extra_bits has the page_owner bit, and only
+return those stacks that have such bit.
+This would solve the problem of returning a potentially evictable stack
+, only by returning page_owner's stack_records, and I would not have
+to maintain my own list.
  
- /**
-  * min_t - return minimum of two values, using the specified type
-+ *
-+ * Note: Downcasting types in this macro can cause incorrect results. Prefer to
-+ * use min() which does typechecking.
-+ *
-+ * Prefer to use clamp if you are trying to compare to size_t.
-+ *
-+ * Don't:
-+ *   min_t(size_t, buf_size, sizeof(foobar))
-+ *
-+ * Do:
-+ *  clamp(buf_size, 0, sizeof(foobar))
-+ *
-  * @type: data type to use
-  * @x: first value
-  * @y: second value
-@@ -162,6 +174,10 @@
- 
- /**
-  * max_t - return maximum of two values, using the specified type
-+ *
-+ * Note: Downcasting types in this macro can cause incorrect results. Prefer to
-+ * use max() which does typechecking.
-+ *
-  * @type: data type to use
-  * @x: first value
-  * @y: second value
+I yet have to see how that would look like, but sounds promising.
+Do you think that is feasible Marco?
+
+Thanks
+
 -- 
-2.43.0.687.g38aa6559b0-goog
-
+Oscar Salvador
+SUSE Labs
