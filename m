@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46887E774
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B1C54F85
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707503872; cv=none; b=rkNvEcj+L9IOVxLJX7pmEQozw56Sn9VpDEXWAVWKdnDh9V+83uGSzVbSPjVSDKmhJ3Flkjq71O6ZAEpvfJsPiD+U5B2lhVmXT2zVTfc5F3k/U9+QNBL+55mXd9O6llWrAS8SE6QZKELaTaiIxFGK7bayLg2jLszDDPAWda4dICA=
+	t=1707503870; cv=none; b=GBTgvddao0NZ051nJPIamtyy1wfQDEA73yxGfvF10NJOwIrQLu2sXsswayzmWo32y6iticz6U2aIuX1tKzt1ln5NMh53t2j0cBG+SxQ2wq864UliLA3YlRURqTwnSbu6AU5XBJWm7Ie6yxJXR4dHBpyH3oawfgE4mORW04ZDeRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707503872; c=relaxed/simple;
-	bh=tafaotKNTsqIVnZYPat0blc78aZKGHZ+FqJMJixoAWg=;
+	s=arc-20240116; t=1707503870; c=relaxed/simple;
+	bh=BvMhzkPpXyN/8Xg8FgcD8uHqCkKA5AQucMS5tazD45A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BHP4ygfCZLyv0SOhis3HpZ1J5bAI1k0jTQx6XsDyRY3yHWPom3S68l8ShHt9XDV6rJEo0gwJvCJ/h9ZO0dkh9BXovbkW8wGcfSADgiiz3LRdyz8LvaFN29xWyD1NjdfISfPbZf2v1DnLm78Ajiet25m8xsKTUnDbB/eCnmOny7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bPZXsGBI; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=XvZ22I0+Jsy2VGBkDtA5UMHqDpO/3aVJ9e0qn79Lk5sUrF+cpi3oaGcj9uEDTRF2mTnybLvD71U4PrqLig/RVaYayCN8euUTabbOmL01BHQCTKmY10/wa1C0g0qxfCVG2TPg+ZWsaV/IlOYqtmlf27t1S5q0Uqlh+nYXIWCfZYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FQSb8+NF; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPZXsGBI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FQSb8+NF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707503868;
+	s=mimecast20190719; t=1707503867;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SAt/ASJDi0a9pG5VDkbDUypZizJmqJCKlEMTUVFDghU=;
-	b=bPZXsGBIHGjKZvmcvALir7hqBFaEo44PpcsRpFlEkhh9Bt/ocUXmE1WaLiqu+iiJPbugW4
-	eZUzAYRBkfy9tdxBMP3PCHj+GFLubyMXvCiKOZpCVB3/ylFoVcM1EP1qDPSUMe1qHdl+Gh
-	EJGq35OjJ1HGpRrgyAN9YBtqsQDIKHk=
+	bh=L3czntmlcoRsVRz6SFtGmKcsuMBNfmrtK0/P8XAq0oA=;
+	b=FQSb8+NFQtDAx+7L2Yzvx9CiOCmtWAfr8wGeYG/HbH10pN3XaZy2gAXYB+Ym+6s7vys6jr
+	n4Ut4jSizGysCcc7FhTX2KJ9+jcIXUS462zdsqbMPWLJSkRaRzRN+/EVpGsxYSLauopB5C
+	62lJCa3lWalLSwqSY6Wr690u1t0lzbA=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-29-9JF7XzGGOWaNQGZN9A13Pg-1; Fri, 09 Feb 2024 13:37:45 -0500
-X-MC-Unique: 9JF7XzGGOWaNQGZN9A13Pg-1
+ us-mta-556-3kp2yV7lMcSzFNhPv71xaw-1; Fri, 09 Feb 2024 13:37:45 -0500
+X-MC-Unique: 3kp2yV7lMcSzFNhPv71xaw-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9149F185A784;
-	Fri,  9 Feb 2024 18:37:44 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3CDC985A58B;
+	Fri,  9 Feb 2024 18:37:45 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 634D1492BC6;
-	Fri,  9 Feb 2024 18:37:44 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0FC46492BC6;
+	Fri,  9 Feb 2024 18:37:45 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	aik@amd.com,
 	isaku.yamahata@intel.com
-Subject: [PATCH 03/10] Documentation: kvm/sev: separate description of firmware
-Date: Fri,  9 Feb 2024 13:37:35 -0500
-Message-Id: <20240209183743.22030-4-pbonzini@redhat.com>
+Subject: [PATCH 06/10] KVM: x86: define standard behavior for bits 0/1 of VM type
+Date: Fri,  9 Feb 2024 13:37:38 -0500
+Message-Id: <20240209183743.22030-7-pbonzini@redhat.com>
 In-Reply-To: <20240209183743.22030-1-pbonzini@redhat.com>
 References: <20240209183743.22030-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,70 +62,293 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-The description of firmware is included part under the "SEV Key Management"
-header, part under the KVM_SEV_INIT ioctl.  Put these two bits together and
-and rename "SEV Key Management" to what it actually is, namely a description
-of the KVM_MEMORY_ENCRYPT_OP API.
+Some VM types have characteristics in common; in fact, the only use
+of VM types right now is kvm_arch_has_private_mem and it assumes that
+_all_ VM types have private memory.
+
+So, let the low bits specify the characteristics of the VM type.  As
+of we have two special things: whether memory is private, and whether
+guest state is protected.  The latter is similar to
+kvm->arch.guest_state_protected, but the latter is only set on a fully
+initialized VM.  If both are set, ioctls to set registers will cause
+an error---SEV-ES did not do so, which is a problematic API.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- .../virt/kvm/x86/amd-memory-encryption.rst    | 29 +++++++++++--------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+	The plan is to reserve VM type 19 for TDX (16 for Intel,
+	+1 for private memory, +2 for encrypted state).
 
-diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-index 995780088eb2..37c5c37f4f6e 100644
---- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-@@ -46,14 +46,8 @@ SEV hardware uses ASIDs to associate a memory encryption key with a VM.
- Hence, the ASID for the SEV-enabled guests must be from 1 to a maximum value
- defined in the CPUID 0x8000001f[ecx] field.
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/include/uapi/asm/kvm.h |  6 ++-
+ arch/x86/kvm/x86.c              | 93 +++++++++++++++++++++++++++------
+ 3 files changed, 83 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0bcd9ae16097..b7d33205d49d 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -2136,7 +2136,7 @@ void kvm_configure_mmu(bool enable_tdp, int tdp_forced_root_level,
+ 		       int tdp_max_root_level, int tdp_huge_page_level);
  
--SEV Key Management
--==================
--
--The SEV guest key management is handled by a separate processor called the AMD
--Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a secure
--key management interface to perform common hypervisor activities such as
--encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
--information, see the SEV Key Management spec [api-spec]_
-+``KVM_MEMORY_ENCRYPT_OP`` API
-+=============================
+ #ifdef CONFIG_KVM_PRIVATE_MEM
+-#define kvm_arch_has_private_mem(kvm) ((kvm)->arch.vm_type != KVM_X86_DEFAULT_VM)
++#define kvm_arch_has_private_mem(kvm) ((kvm)->arch.vm_type & __KVM_X86_PRIVATE_MEM_TYPE)
+ #else
+ #define kvm_arch_has_private_mem(kvm) false
+ #endif
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index cccaa5ff6d01..6c74db23257e 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -848,7 +848,11 @@ struct kvm_hyperv_eventfd {
+ /* x86-specific KVM_EXIT_HYPERCALL flags. */
+ #define KVM_EXIT_HYPERCALL_LONG_MODE	_BITULL(0)
  
- The main ioctl to access SEV is KVM_MEMORY_ENCRYPT_OP.  If the argument
- to KVM_MEMORY_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
-@@ -87,10 +81,6 @@ guests, such as launching, running, snapshotting, migrating and decommissioning.
- The KVM_SEV_INIT command is used by the hypervisor to initialize the SEV platform
- context. In a typical workflow, this command should be the first command issued.
- 
--The firmware can be initialized either by using its own non-volatile storage or
--the OS can manage the NV storage for the firmware using the module parameter
--``init_ex_path``. If the file specified by ``init_ex_path`` does not exist or
--is invalid, the OS will create or override the file with output from PSP.
- 
- Returns: 0 on success, -negative on error
- 
-@@ -434,6 +424,21 @@ issued by the hypervisor to make the guest ready for execution.
- 
- Returns: 0 on success, -negative on error
- 
-+Firmware Management
-+===================
++/* Low bits of VM types provide confidential computing capabilities.  */
++#define __KVM_X86_PRIVATE_MEM_TYPE	1
++#define __KVM_X86_PROTECTED_STATE_TYPE	2
 +
-+The SEV guest key management is handled by a separate processor called the AMD
-+Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a secure
-+key management interface to perform common hypervisor activities such as
-+encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
-+information, see the SEV Key Management spec [api-spec]_
-+
-+The AMD-SP firmware can be initialized either by using its own non-volatile
-+storage or the OS can manage the NV storage for the firmware using
-+parameter ``init_ex_path`` of the ``ccp`` module. If the file specified
-+by ``init_ex_path`` does not exist or is invalid, the OS will create or
-+override the file with PSP non-volatile storage.
-+
- References
- ==========
+ #define KVM_X86_DEFAULT_VM	0
+-#define KVM_X86_SW_PROTECTED_VM	1
++#define KVM_X86_SW_PROTECTED_VM	(KVM_X86_DEFAULT_VM | __KVM_X86_PRIVATE_MEM_TYPE)
  
+ #endif /* _ASM_X86_KVM_H */
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 8746530930d5..e634e5b67516 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5526,21 +5526,30 @@ static int kvm_vcpu_ioctl_x86_set_vcpu_events(struct kvm_vcpu *vcpu,
+ 	return 0;
+ }
+ 
+-static void kvm_vcpu_ioctl_x86_get_debugregs(struct kvm_vcpu *vcpu,
+-					     struct kvm_debugregs *dbgregs)
++static int kvm_vcpu_ioctl_x86_get_debugregs(struct kvm_vcpu *vcpu,
++					    struct kvm_debugregs *dbgregs)
+ {
+ 	unsigned long val;
+ 
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	memset(dbgregs, 0, sizeof(*dbgregs));
+ 	memcpy(dbgregs->db, vcpu->arch.db, sizeof(vcpu->arch.db));
+ 	kvm_get_dr(vcpu, 6, &val);
+ 	dbgregs->dr6 = val;
+ 	dbgregs->dr7 = vcpu->arch.dr7;
++	return 0;
+ }
+ 
+ static int kvm_vcpu_ioctl_x86_set_debugregs(struct kvm_vcpu *vcpu,
+ 					    struct kvm_debugregs *dbgregs)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	if (dbgregs->flags)
+ 		return -EINVAL;
+ 
+@@ -5559,9 +5568,13 @@ static int kvm_vcpu_ioctl_x86_set_debugregs(struct kvm_vcpu *vcpu,
+ }
+ 
+ 
+-static void kvm_vcpu_ioctl_x86_get_xsave2(struct kvm_vcpu *vcpu,
+-					  u8 *state, unsigned int size)
++static int kvm_vcpu_ioctl_x86_get_xsave2(struct kvm_vcpu *vcpu,
++					 u8 *state, unsigned int size)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    fpstate_is_confidential(&vcpu->arch.guest_fpu))
++		return -EINVAL;
++
+ 	/*
+ 	 * Only copy state for features that are enabled for the guest.  The
+ 	 * state itself isn't problematic, but setting bits in the header for
+@@ -5578,22 +5591,27 @@ static void kvm_vcpu_ioctl_x86_get_xsave2(struct kvm_vcpu *vcpu,
+ 			     XFEATURE_MASK_FPSSE;
+ 
+ 	if (fpstate_is_confidential(&vcpu->arch.guest_fpu))
+-		return;
++		return 0;
+ 
+ 	fpu_copy_guest_fpstate_to_uabi(&vcpu->arch.guest_fpu, state, size,
+ 				       supported_xcr0, vcpu->arch.pkru);
++	return 0;
+ }
+ 
+-static void kvm_vcpu_ioctl_x86_get_xsave(struct kvm_vcpu *vcpu,
+-					 struct kvm_xsave *guest_xsave)
++static int kvm_vcpu_ioctl_x86_get_xsave(struct kvm_vcpu *vcpu,
++					struct kvm_xsave *guest_xsave)
+ {
+-	kvm_vcpu_ioctl_x86_get_xsave2(vcpu, (void *)guest_xsave->region,
+-				      sizeof(guest_xsave->region));
++	return kvm_vcpu_ioctl_x86_get_xsave2(vcpu, (void *)guest_xsave->region,
++					     sizeof(guest_xsave->region));
+ }
+ 
+ static int kvm_vcpu_ioctl_x86_set_xsave(struct kvm_vcpu *vcpu,
+ 					struct kvm_xsave *guest_xsave)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    fpstate_is_confidential(&vcpu->arch.guest_fpu))
++		return -EINVAL;
++
+ 	if (fpstate_is_confidential(&vcpu->arch.guest_fpu))
+ 		return 0;
+ 
+@@ -5603,18 +5621,23 @@ static int kvm_vcpu_ioctl_x86_set_xsave(struct kvm_vcpu *vcpu,
+ 					      &vcpu->arch.pkru);
+ }
+ 
+-static void kvm_vcpu_ioctl_x86_get_xcrs(struct kvm_vcpu *vcpu,
+-					struct kvm_xcrs *guest_xcrs)
++static int kvm_vcpu_ioctl_x86_get_xcrs(struct kvm_vcpu *vcpu,
++				       struct kvm_xcrs *guest_xcrs)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	if (!boot_cpu_has(X86_FEATURE_XSAVE)) {
+ 		guest_xcrs->nr_xcrs = 0;
+-		return;
++		return 0;
+ 	}
+ 
+ 	guest_xcrs->nr_xcrs = 1;
+ 	guest_xcrs->flags = 0;
+ 	guest_xcrs->xcrs[0].xcr = XCR_XFEATURE_ENABLED_MASK;
+ 	guest_xcrs->xcrs[0].value = vcpu->arch.xcr0;
++	return 0;
+ }
+ 
+ static int kvm_vcpu_ioctl_x86_set_xcrs(struct kvm_vcpu *vcpu,
+@@ -5622,6 +5645,10 @@ static int kvm_vcpu_ioctl_x86_set_xcrs(struct kvm_vcpu *vcpu,
+ {
+ 	int i, r = 0;
+ 
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	if (!boot_cpu_has(X86_FEATURE_XSAVE))
+ 		return -EINVAL;
+ 
+@@ -6010,7 +6037,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 	case KVM_GET_DEBUGREGS: {
+ 		struct kvm_debugregs dbgregs;
+ 
+-		kvm_vcpu_ioctl_x86_get_debugregs(vcpu, &dbgregs);
++		r = kvm_vcpu_ioctl_x86_get_debugregs(vcpu, &dbgregs);
++		if (r < 0)
++			break;
+ 
+ 		r = -EFAULT;
+ 		if (copy_to_user(argp, &dbgregs,
+@@ -6040,7 +6069,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		if (!u.xsave)
+ 			break;
+ 
+-		kvm_vcpu_ioctl_x86_get_xsave(vcpu, u.xsave);
++		r = kvm_vcpu_ioctl_x86_get_xsave(vcpu, u.xsave);
++		if (r < 0)
++			break;
+ 
+ 		r = -EFAULT;
+ 		if (copy_to_user(argp, u.xsave, sizeof(struct kvm_xsave)))
+@@ -6069,7 +6100,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		if (!u.xsave)
+ 			break;
+ 
+-		kvm_vcpu_ioctl_x86_get_xsave2(vcpu, u.buffer, size);
++		r = kvm_vcpu_ioctl_x86_get_xsave2(vcpu, u.buffer, size);
++		if (r < 0)
++			break;
+ 
+ 		r = -EFAULT;
+ 		if (copy_to_user(argp, u.xsave, size))
+@@ -6085,7 +6118,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		if (!u.xcrs)
+ 			break;
+ 
+-		kvm_vcpu_ioctl_x86_get_xcrs(vcpu, u.xcrs);
++		r = kvm_vcpu_ioctl_x86_get_xcrs(vcpu, u.xcrs);
++		if (r < 0)
++			break;
+ 
+ 		r = -EFAULT;
+ 		if (copy_to_user(argp, u.xcrs,
+@@ -6229,6 +6264,11 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 	}
+ #endif
+ 	case KVM_GET_SREGS2: {
++		r = -EINVAL;
++		if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++		    vcpu->arch.guest_state_protected)
++			goto out;
++
+ 		u.sregs2 = kzalloc(sizeof(struct kvm_sregs2), GFP_KERNEL);
+ 		r = -ENOMEM;
+ 		if (!u.sregs2)
+@@ -6241,6 +6281,11 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		break;
+ 	}
+ 	case KVM_SET_SREGS2: {
++		r = -EINVAL;
++		if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++		    vcpu->arch.guest_state_protected)
++			goto out;
++
+ 		u.sregs2 = memdup_user(argp, sizeof(struct kvm_sregs2));
+ 		if (IS_ERR(u.sregs2)) {
+ 			r = PTR_ERR(u.sregs2);
+@@ -11466,6 +11511,10 @@ static void __get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ 
+ int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	vcpu_load(vcpu);
+ 	__get_regs(vcpu, regs);
+ 	vcpu_put(vcpu);
+@@ -11507,6 +11556,10 @@ static void __set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ 
+ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	vcpu_load(vcpu);
+ 	__set_regs(vcpu, regs);
+ 	vcpu_put(vcpu);
+@@ -11579,6 +11632,10 @@ static void __get_sregs2(struct kvm_vcpu *vcpu, struct kvm_sregs2 *sregs2)
+ int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
+ 				  struct kvm_sregs *sregs)
+ {
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	vcpu_load(vcpu);
+ 	__get_sregs(vcpu, sregs);
+ 	vcpu_put(vcpu);
+@@ -11846,6 +11903,10 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
+ {
+ 	int ret;
+ 
++	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
++	    vcpu->arch.guest_state_protected)
++		return -EINVAL;
++
+ 	vcpu_load(vcpu);
+ 	ret = __set_sregs(vcpu, sregs);
+ 	vcpu_put(vcpu);
 -- 
 2.39.0
 
