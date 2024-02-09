@@ -1,104 +1,92 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C42F175B0
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 21:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20094DF55
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 21:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707512754; cv=none; b=l0fYufo8UpMzA3XN3XF7c7xAXe4nZjcVroguyEHFrTxuLKwufXH7khLepRK8ir4GUrM9TmECS4eR5JAM0byPqjEtlpsEUZiqvy4TUDS+v4JG97lLAVK6C81eBebgfvYqox+PWttlYBmxp1HkkZf2EuMRAgRgfIHpOyiN9vDzpLM=
+	t=1707512844; cv=none; b=eQvURNTKUc+mDxjJbM0vlyjm7IJS2eDI80jGyPUKY4Pf3saVFrkQPeXuy8yKDyK9/bqu4xf1YBvl7WcYN2iHnQZulGtfMcJDhoCL8XbjlnoStDP0K0h5smUXeQ7oNP58BT0JV/9t5CrkSkRbDFlDzAFPwHe6xjnGxXL1HCFHd2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707512754; c=relaxed/simple;
-	bh=fWX8AY1UCsAO7A9Rl5Srx2ebyrVS3CEaNUQK2IZKBWw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZRy5tQG4qjEILBdN+Ej5BVt0+uG9I1vk9fsBqVgQ1nCke96oLV7+3mAQ7cCt7h3gIVJ3Y0JBk5n8iZBqmJVSb7/cUxjw+pkkzoFmUGowyuTU/VFiP2s/Bumd5hDlslHay8rzYAHiO4525BwQiaxk0jmFixkG4atnEHh+livpOuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xkE/m40j; arc=none smtp.client-ip=209.85.219.52
+	s=arc-20240116; t=1707512844; c=relaxed/simple;
+	bh=EsssZPfuAofzCYmifTEhn5L6k/IYT1EjOB6B81GWfQg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LlbVZbGEpzpQHUSBVrk2pb7ZR5uKBjhMti9VUEgMEdZ8KYqRAQqShGztU4OGo2XdktJTcqfPgv68OMBBBRiAIzbUaWsjzu1z2Es4+nDQuGulEis16S6nzT+Ws1Y+UZ3mFJfJYpVlTjZvFjpWmgX4ZhuPGVIt+2/O/Tm4CFz0UBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GiHQOwb8; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xkE/m40j"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-686a92a8661so6053266d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 13:05:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GiHQOwb8"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b5d1899eso3277778276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 13:07:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707512751; x=1708117551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fWX8AY1UCsAO7A9Rl5Srx2ebyrVS3CEaNUQK2IZKBWw=;
-        b=xkE/m40j0myteCeuAXkuUT8lnEN4ct8CDu7mmbTDAT1CMQe3r8is3167wYTJir800a
-         R9UEZtfTDZiHt0/ODAi5VOq3Yc8qvvj2hrWM0CbENgWjHiJrWUxT/eHp8lYE6/XfqpHJ
-         WkuxnKVBcpgvMMpQNICP4WP0PqNZuiVNU6AyEgzk2uYlwxb/Jit5huKkYxsjbtYFKgNO
-         R8UB/BB8BfvKb21FK253U3NJiSyfJjddJySGbHFoU1KDKAznofeogDLpWLzQ5yOVedoG
-         m8+cx6f20TCO8lyhoop27z4JFeHtNMSPCj/LJDufWD9yTCSI+kiunMtlPP8onE6zn53b
-         k6eQ==
+        d=google.com; s=20230601; t=1707512842; x=1708117642; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QJVA7E4OPiD00glr6A2eE7hMnsJp0FoP1xE3INulbjM=;
+        b=GiHQOwb8WUG6fBVWqqW7XtV8lwwikpuA16Jxl3d7GkbymzzcSG3J/57H77NC6LRg5j
+         2MFc9d8a8BbJvXryVliz54FXtqBWFov0iws0K3O37FzybhWocI9D6usdBFLQpoqbkhIk
+         u1S4d7Q+k8huoAWe/ZTpVElj1bUXQh0DLrQWhpPg955Iwue6vwiF6mf6kh2d/tDRmgje
+         1RQgtICQMo9k5XEzYBjrESRQWOjXjMQ722yWs6bQB9rT4uQRO1iqUXnBoAhTHBBei1t+
+         D723gS4+zXizbPqFRq3/wdKrX+Zzz6BksPNQP0pvkp7j/Nvu8pnGhyOIg/C4ylEpj11O
+         4jUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707512751; x=1708117551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fWX8AY1UCsAO7A9Rl5Srx2ebyrVS3CEaNUQK2IZKBWw=;
-        b=gQZizHXjxveTbu4EBeRWcyvU5Y4KTK5+2TM4STCf6PZXjly0ZRfPVKrZGk4IpV64T/
-         KJB9l7kVjcHPPhucrMCY/8U5lr5LszzG6pwzhd4zCUeQW7bID1dcrESw6ddDotwf3AaB
-         Sg967bmioYUz1UfAHvdHDdDn8SL+UV5Oj5J0EG8KxrQ8moFJC/HBZryHLUh4sSvm6k4v
-         eDp47NduZdMZwN8pujg0Lp7PGcKs/jLqrH12Fe0XaTU+IGV+rroKqXDl4mgW6BpcAqup
-         8JdGoexrrwykZl+LzxLHJXVSb/5QDvsRCEFdtDkt6ZMdfno26tYtyjEVphL8/XfJvDaU
-         nvxA==
-X-Gm-Message-State: AOJu0YxvrqZYasutsJGdohMK0ZRVWUE4x7nWvUkhbawzsjMTBUL1Gw6V
-	cmReahrtzVT0WFqr9m505Uq7stFsMFGSfKtTqW/apFvPx5b1IVFd9f5fi/SGkR2/gEn3rv6Cf0Z
-	u2gT8xtgGCj2GP6DsBRmUezYGtHK9m+Zj6Jsq
-X-Google-Smtp-Source: AGHT+IGs5gOcnQQd2dq5dd2RpG8BY/CC0Qys6/UWioQgwTa/o34PsoRm6jC/jXHj8ljZ3lVgAqg4J2Flc7+R3ljGXEQ=
-X-Received: by 2002:a0c:e351:0:b0:68c:bf1d:70ca with SMTP id
- a17-20020a0ce351000000b0068cbf1d70camr354954qvm.43.1707512751398; Fri, 09 Feb
- 2024 13:05:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707512842; x=1708117642;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QJVA7E4OPiD00glr6A2eE7hMnsJp0FoP1xE3INulbjM=;
+        b=r35P1IYckBDDORVyOmcbf8HZrvdoaWFAWGLRNpkb6WA7pNZMF1jsY7Um2j8jv3IXKD
+         ii8RDmb2LqGADsqBxzOuNkNcTY5GBR5W/kcHUnTtbWSCifpVtxxkQwb5G5uDLfJaQGpz
+         ajOjL9Ud6IY0p+PdHZNyPT69j2S6rLe0Z/6/Roadvc4s1Pyki8d7RD2DBEYleond8W0v
+         k1AkgFj8sbzS6RaJ4m7EzCvo2imrXMYMLMkHtMYpt7+xlINHCPGCwTg8bUhGmLtIB8sG
+         BlCVdt3OFEAPv38C5UPAxGilPQxlXuEWGkw4OxfYW02K6lvZu53ht1tZTtEl+9q3RWLa
+         UHmw==
+X-Gm-Message-State: AOJu0Yy0Xt28GH2i6ngBns8s9aYEfI8QaQlSz4e+PjeW1hQa0EopE+Us
+	TSdWwql9m+kshIy8bw/Yb0+jIrfuRP/fFNcSL2l7Ml2DXZlvBK1XSLXuE7mCrbzM6TVtHhJ8qe3
+	63w==
+X-Google-Smtp-Source: AGHT+IGUHHBgahILEYWs+MFS2D8cEf65K6zPE01Gf0qcohepgEWrWwH95oTQfWnppRqpfBG3AOVVBhi0ZVA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1002:b0:dc6:e884:2342 with SMTP id
+ w2-20020a056902100200b00dc6e8842342mr79952ybt.5.1707512842181; Fri, 09 Feb
+ 2024 13:07:22 -0800 (PST)
+Date: Fri, 9 Feb 2024 13:07:20 -0800
+In-Reply-To: <000000000000f6d051060c6785bc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240201044623.374389-1-aahila@google.com> <ZbuEsltcMLNn4SyF@smile.fi.intel.com>
-In-Reply-To: <ZbuEsltcMLNn4SyF@smile.fi.intel.com>
-From: Aahil Awatramani <aahila@google.com>
-Date: Fri, 9 Feb 2024 13:05:39 -0800
-Message-ID: <CAGfWUPxLVzziWmwcfqDCfWuVM_Gjya4AzTmoqs1xTcGMXsRorA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: designware: allow fine tuning
- tuning waveform from device tree
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Dillow <dillow@google.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <000000000000f6d051060c6785bc@google.com>
+Message-ID: <ZcaUCPka_WL4ruTq@google.com>
+Subject: Re: [syzbot] [kvm?] WARNING in kvm_mmu_notifier_change_pte
+From: Sean Christopherson <seanjc@google.com>
+To: syzbot <syzbot+81227d2bd69e9dedb802@syzkaller.appspotmail.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="us-ascii"
 
-Thank you Andy and Krzysztof,
+On Wed, Dec 13, 2023, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f2e8a57ee903 Merge tag 'scsi-fixes' of git://git.kernel.or..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14fdc732e80000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e56083f7dbe162c2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=81227d2bd69e9dedb802
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=129d09cae80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b8afeee80000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/7b75e59fc59d/disk-f2e8a57e.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/f853580d61be/vmlinux-f2e8a57e.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/8c893ce02e2c/bzImage-f2e8a57e.xz
+> 
+> Bisection is inconclusive: the first bad commit could be any of:
+> 
+> d61ea1cb0095 userfaultfd: UFFD_FEATURE_WP_ASYNC
+> 52526ca7fdb9 fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs
 
-I think you are right and I can use the other DT counter, I am
-currently trying to test if they work for me.
-
-Best,
-Aahil
-
-On Thu, Feb 1, 2024 at 3:49=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Feb 01, 2024 at 04:46:22AM +0000, Aahil Awatramani wrote:
-> > The Synopsys i2c driver allows a user to override the parameters
-> > controlling the waveform using ACPI; this is useful for fine tuning whe=
-n
-> > needed to make spec compliance. Extend this support to the device tree =
-to
-> > allow non-ACPI platforms the same capabilities.
->
-> DT has different counters from which one should derive these ones.
-> Can you explain why existing bindings may _not_ be utilised?
->
-> Without this very justification, NAK.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+#syz fix: fs/proc/task_mmu: move mmu notification mechanism inside mm lock
