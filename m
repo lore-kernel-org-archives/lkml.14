@@ -1,25 +1,61 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C485221
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183316996B
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 16:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707496325; cv=none; b=sxd37Ck8tLJc4w1nollUnnLMVJPZgqUGfRK3trjvSEX8xr0phOA4wuiwBUZ8+kF8TQV5yMdx8NyA7SWVcbPybqkHLUGiza3gSy22w7l/7TCBXBCerZ81gaqtKKmJteQ6dIL9j+lbc/TOi+6Yg+39cHNss+wDRN7B6qe0Oq2jhFA=
+	t=1707496464; cv=none; b=QUlh46bxAvXWE20IlyGQfX/PlO5NyNSJHxdtYZmWGI2oG8vTL+yDy7JZgYuATETjfBgYhiuHjCC35LGXY0MMCf9LdTkBBjw/NZNajcX9dZ9RBGxJ4OGLzI0MqSv7gP6eduF3eQqIwIusqDzWZKEDPmUxDUVWk6YKKO3CUURST5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707496325; c=relaxed/simple;
-	bh=GS1JvHViUXwToGjn+4dF2502dOYIGWp1Karb3Lg3yYo=;
+	s=arc-20240116; t=1707496464; c=relaxed/simple;
+	bh=8WaqMyptWvhbjfJo2zTu2UQfOXF5jGn+OXnDraQT8yo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HKNp9sOtequGx99L3IwzxwjQHNBE+znbahwrC/U6mEMIkrfBVMGK5b6ZBxTl8wX1g5DAz7SH10ahdYhYDHpI0yJ6U1C6+hpv8UODtXAMcopQpnP3Mb/sHFpDJnQ7JXMqW3uEf84fbc2auMr1Cbrk21fceSMHCYNdV0+wLz80mVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DD24DA7;
-	Fri,  9 Feb 2024 08:32:44 -0800 (PST)
-Received: from [10.57.47.119] (unknown [10.57.47.119])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FC313F5A1;
-	Fri,  9 Feb 2024 08:32:01 -0800 (PST)
-Message-ID: <a455e5db-676a-4cf8-8669-8a10e900361c@arm.com>
-Date: Fri, 9 Feb 2024 16:32:00 +0000
+	 In-Reply-To:Content-Type; b=c0AjCnN5904KJ+U+6kl/RXujtjk6u+77j+m258SBYp0d6NlSr5YgtkHM+f5b+v1LRu6+V7cxZ08z7+O3Ru0YoZaWvBj5ciOqI3MLGi+Thof/WaCjw/vhHFR292r8qIBrc6krMy6sT3jbvl4DsQD0+3Qsfxq9SE6fLlC5XkboAsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UQI9qPXS; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UQI9qPXS"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3864258438so204757266b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 08:34:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707496461; x=1708101261; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+HokFitcKdksackVoFNwEM96sXd0wCX1oPDfj5HZB3E=;
+        b=UQI9qPXS622NnDfw30BrydMNej78Ce+pV90FLzQSWf2pqRh2SRgk4madqC2wQVeM3I
+         lAgse2obvs7C4UR6sf3mlF7d/OMw27AKIcWK5oHqOIZFQa8pw8QxqucYcvAW77kB4k/E
+         99108S5VY8Fgc1TLZQ+mulckfb/UWaOilCB+gvKEPM2Q1nv+j+GgfSrx0vtsNmAp91v2
+         jhxwyE0qe0rOMKk/p9EdTISrUGSUVeGsGvs2xn7Qn01tmGvgRtmIJG40Ag6VtNnGSG1p
+         jbnTIrVEQKh4VSoBXAdeCXFI0kNzqtJaORw2BWbgg+rqKZhcyGEtvSo8Y9t8hJTX1exn
+         ZIRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707496461; x=1708101261;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+HokFitcKdksackVoFNwEM96sXd0wCX1oPDfj5HZB3E=;
+        b=otED+BmlZG1JZnPT03tG+IpqZCytrbuz9AnItJ1M9cs5bnpiGsaGFn5pCMF2ssU14S
+         nrMnh6YH0OcImO1hItypLboZe1YYTPh2sDHKb91hA//bfNalFav4aJ7iZvPZ40Df8A5u
+         7+yPEF6xdhGsVMCrZXPvmlS6FKUIVfwJfeXFDyQMVtEIvlWmOUPl0EAu9n7Fed/YF8FA
+         V7ovX02CMxHKlL01Gwt67dV+vk3r+cnaqjJN9e5EzuBPS2ThjQL20RoFX8WMX/xyCE9y
+         OgxNgaXfHjUyiGiXgXBdRn6pnbH69RE4n9Hpr+Ela5zFe7RAEuTvvu6dXRfJeCt9Qwfb
+         YOsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8GtvFWRyKzlRzkbqr+O1KeMDxAIxmg1gG0ugP+qpggDfyj4WhAv+sWDwSTd16CBzUb4sB395QhNWka6GegFQEc1TC6uzIBlpKota0
+X-Gm-Message-State: AOJu0Yxrp4aqQHGnwUkU+OFZj/IAn6j91qlniwqNGGL0Roes2EeO9ooT
+	RIdftQK4co7tkW4xWO1wDEaH5q1RNpVV7/FseV9vRsqwObhCEKdsMhAQBMJeOzk=
+X-Google-Smtp-Source: AGHT+IHJwu+01Hw+7iMFv71NjXpUXxYcSHPzcMndoYMDLGkOHd75UzrkVD3lpMOBLad/tfU3sQVn1A==
+X-Received: by 2002:a17:907:9410:b0:a3b:ea21:e2 with SMTP id dk16-20020a170907941000b00a3bea2100e2mr1945769ejc.1.1707496461397;
+        Fri, 09 Feb 2024 08:34:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUmGwgIEyk12k7bm4d1JjYbd2FdGbsWyZjlyC11/t+fhDSSa7S6jI8wak5cI3jj56oeJGHgas8aCryRxkd9tTYFgcaFfdL3q9pFPS74sJEuUEVtNm+oJIh4uDLgu13vS4zIgm/ViQ9L3Gc7sSQN9Jn0hMF/zSy9J/SIy+gDFhY3IuEU99yKunKkW2kT+Ku3nNGjrZWkAXfrykjn9dfE9ZC+Z2EkkPirhbtOLNi6WIEJUaQviZYHu6xAxxEnDzJ+dBmLgfPEcTOJhAKQ+of7n82IXLFqHQ2mQwcJV6q3YAdr+lXyhrGvd1DJUZ1mVfkGkzxA94c6pqphetGGZwiO
+Received: from [192.168.192.207] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
+        by smtp.gmail.com with ESMTPSA id b19-20020a170906195300b00a3bb8758a4csm896742eje.131.2024.02.09.08.34.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Feb 2024 08:34:21 -0800 (PST)
+Message-ID: <9deaa4c5-02e7-42d7-896a-4bb2af2b01ba@linaro.org>
+Date: Fri, 9 Feb 2024 17:34:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,52 +63,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm_smmuv3: Omit the two judgements which done in
- framework
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>, "JiaLong.Yang" <jialong.yang@shingroup.cn>
-Cc: Mark Rutland <mark.rutland@arm.com>, shenghui.qu@shingroup.cn,
- ke.zhao@shingroup.cn, zhijie.ren@shingroup.cn,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20231221093802.20612-1-jialong.yang@shingroup.cn>
- <20240209160905.GA24565@willie-the-truck>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20240209160905.GA24565@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] arm64: dts: qcom: qcs6490-rb3gen2: Declare GCC clocks
+ protected
+To: Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240209-qcm6490-gcc-protected-clocks-v1-1-bd3487b2e7b1@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240209-qcm6490-gcc-protected-clocks-v1-1-bd3487b2e7b1@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2024-02-09 4:09 pm, Will Deacon wrote:
-> On Thu, Dec 21, 2023 at 05:38:01PM +0800, JiaLong.Yang wrote:
->> 'event->attr.type != event->pmu->type' has been done in
->> core.c::perf_init_event() ,core.c::perf_event_modify_attr(), etc.
->>
->> This PMU is an uncore one. The core framework has disallowed
->> uncore-task events. So the judgement to event->cpu < 0 is no mean.
+On 9.02.2024 17:21, Bjorn Andersson wrote:
+> The SC7180 GCC binding describes clocks which, due to the difference in
+> security model, are not accessible on the RB3gen2 - in the same way seen
+> on QCM6490.
 > 
-> It would be great to refer to the changes which added those checks to
-> the perf core code. From reading the code myself, I can't convince myself
-> that perf_try_init_event() won't call into the driver.
+> Mark these clocks as protected, to allow the board to boot.
 > 
->>
->> The two judgements have been done in kernel/events/core.c
->>
->> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
->> ---
->>   drivers/perf/arm_smmuv3_pmu.c | 8 --------
->>   1 file changed, 8 deletions(-)
-> 
-> It looks like _many_ perf drivers have these checks, so if they really
-> aren't needed, we can clean this up bveyond SMMU. However, as I said
-> above, I'm not quite convinced we can drop them.
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> ---
 
-Right, I think the logic prevents events with a specific PMU type being 
-offered to other PMUs, but as far as I'm aware doesn't apply the other 
-way round to stop generic events (PERF_TYPE_HARDWARE etc.) being offered 
-to all PMUs, so it's those that system PMUs need to reject.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-It's been on my wishlist for a long time to have a capability flag to 
-say "I don't handle generic events, please only ever give me events of 
-my exact type" so we *can* truly factor this into the core.
+Konrad
 
-Thanks,
-Robin.
+
