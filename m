@@ -1,170 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94E16BFD6;
-	Fri,  9 Feb 2024 15:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C198D7603E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707494221; cv=none; b=DjdWUUDUzl8ss03MgKRpLJZk/KMCDuq9IbcqfqyujMc8uIHuf3n685KrvyDheU/W755HepGIns3YPNggGRu4M9aub4la68Gyz99VwBFsZxXV9/4MO999jp3AwjIyYDLmfezpbNwkaKukYB+VeXsT/kFKwtWXw+diiEDeXeSLMEM=
+	t=1707494290; cv=none; b=nWoGUz2cbnb0jiQjqNbqjmm/JMLeo1U8ZZSZDi52Ne9C9oG9SShlZgWKFDYwEnRhTicPFzV/h9ILZm9e44BM3n8Z2kCMSFGzcnjKyZmRfj7EqlVeroD4m5NfIOp08EaLCev6+hMnxzeLV7Ntlf5a+Iht05N3umnODHE2xo4wdDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707494221; c=relaxed/simple;
-	bh=1Py4UFKVG/mP2yurJX7hEGwtHJpXMmiQ6Q1WRDmX8xc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lSTPzruh8WXMlEvY7xQHK99a3QN+oY+ziIgN6pKY4SPgmHaCh6h17Qy1jciEKNiJxEYq6RKkIiNsyuzX9kpLutfD3uyXtFMW1z+ZfKpWy/XPvCrCbKZp6TLgYSIccw806q22BAdVJ+GrGwUU//yNMUIQgetfpIja/osGy7fT4zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1EpISaC; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707494290; c=relaxed/simple;
+	bh=9liaOJHkXmgoMLq2BOqbcJsWNZ7++m9AMPpRUz4DQBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0Xfogzhyi+PNf4PiYBFjRjvkUYdQV8mBeaudpmE+GevFAnXP5MpDmbrWk4oNGCNHbZg8noPjPRef1+GBJrDBVeGP8HgppPhZNSSixKHhJXuXhhAkRtrxSuEoW7+Bz+bse1lyGDyYLer5MCS6gJ1t1IFvEqcWWo1tz8zYj4ln9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eJo24ZyD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1EpISaC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707494220; x=1739030220;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1Py4UFKVG/mP2yurJX7hEGwtHJpXMmiQ6Q1WRDmX8xc=;
-  b=Y1EpISaCrQrk6iXtsa8lnM6Hd0aUxwyGY43YlK2gCVB2fpd8gAtUH3qk
-   44Un1m4TRKGVYIWGELuJj+rJYzY0oCU3Sfihl4qglVOTVh2irolrDmfI2
-   5lkYXDrTYBYdpJb+xCfQaFJW9ndU57gpFZIgZukHoBtCNN2We22hkmYG2
-   llaIQ4Vn7sfjOeInHnW1rz2yW9fZaGeTXoebPaFRI3JVZYbpfdFsTq2t3
-   qDfw20V5CdEJddC+Heaqo0KgXyQob819r70bL51owP/1o7NPqvTFZSKUo
-   j9px1I2KBPovPmAZokVVJRVM1f8MMKpatJ9xr2F5hZ7/p7GCdRKKKQYpT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="12823531"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="12823531"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:56:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1956636"
-Received: from csromei-mobl1.amr.corp.intel.com (HELO [10.212.93.94]) ([10.212.93.94])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:56:56 -0800
-Message-ID: <d65cf9f4-1617-2962-2786-bcaf7907dd67@linux.intel.com>
-Date: Fri, 9 Feb 2024 09:44:25 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eJo24ZyD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707494287;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9liaOJHkXmgoMLq2BOqbcJsWNZ7++m9AMPpRUz4DQBU=;
+	b=eJo24ZyDMmPlsogtRIFAltPi97s9Ge5MoEKqiRqRoBTZf6pGygjRmGA8XziYjUEVXdL8S7
+	mhN9XNMaQDIMGI3JdF/+J5LuqRfg4jTYTgqB6Nr+8ftyZsvFEQ3wr9H0q08xKX0Hi+Qs2+
+	UZ0cuGgk//O784Hx86Eh4N7SNdzZIc4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-350-xcCQgqAgMLaBubu3R9dYCQ-1; Fri, 09 Feb 2024 10:58:04 -0500
+X-MC-Unique: xcCQgqAgMLaBubu3R9dYCQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0544B185A780;
+	Fri,  9 Feb 2024 15:58:04 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.84])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 58FA840C9444;
+	Fri,  9 Feb 2024 15:58:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  9 Feb 2024 16:56:47 +0100 (CET)
+Date: Fri, 9 Feb 2024 16:56:45 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
+ PIDFD_THREAD
+Message-ID: <20240209155644.GD3282@redhat.com>
+References: <20240209130620.GA8039@redhat.com>
+ <20240209130650.GA8048@redhat.com>
+ <20240209-stangen-feuerzeug-17c8662854c9@brauner>
+ <20240209154305.GC3282@redhat.com>
+ <20240209-radeln-untrennbar-9d4ae05aa4cc@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH v4 1/4] ASoc: PCM6240: Create PCM6240 Family driver code
-To: "Ding, Shenghao" <shenghao-ding@ti.com>,
- "broonie@kernel.org" <broonie@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
- "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "Lu, Kevin" <kevin-lu@ti.com>, "Xu, Baojun" <baojun.xu@ti.com>,
- "P O, Vijeth" <v-po@ti.com>, "Navada Kanyana, Mukund" <navada@ti.com>,
- "perex@perex.cz" <perex@perex.cz>, "McPherson, Jeff" <j-mcpherson@ti.com>,
- "13916275206@139.com" <13916275206@139.com>,
- "Chawla, Mohit" <mohit.chawla@ti.com>, "soyer@irl.hu" <soyer@irl.hu>,
- "Huang, Jonathan" <jkhuang3@ti.com>, "tiwai@suse.de" <tiwai@suse.de>,
- "Djuandi, Peter" <pdjuandi@ti.com>, "Agrawal, Manisha"
- <manisha.agrawal@ti.com>, "Hari, Raj" <s-hari@ti.com>,
- "Yashar, Avi" <aviel@ti.com>, "Nagalla, Hari" <hnagalla@ti.com>,
- "Bajjuri, Praneeth" <praneeth@ti.com>
-References: <20240208095255.1508-1-shenghao-ding@ti.com>
- <160173b0-098e-493f-93b1-8b831838e0a0@linux.intel.com>
- <0ac563b32399400897b8f3adce6195c3@ti.com>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <0ac563b32399400897b8f3adce6195c3@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240209-radeln-untrennbar-9d4ae05aa4cc@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
+On 02/09, Christian Brauner wrote:
+>
+> On Fri, Feb 09, 2024 at 04:43:05PM +0100, Oleg Nesterov wrote:
+> >
+> > So the question: do you think we also want PIDFD_SIGNAL_SESSION_GROUP?
+>
+> Thought about this as well and my feeling is to wait until someone asks
+> for it. Right now, we have a reason to add PIDFD_SIGNAL_PROCESS_GROUP
+> because of Andy's use-case. If someone has a use-case for session groups
+> then yes. Otherwise I'd just not bother?
 
->>> +static const char *const pcmdev_ctrl_name[] = {
->>> +	"%s-i2c-%d-dev%d-ch%d-ana-gain",
->>> +	"%s-i2c-%d-dev%d-ch%d-digi-gain",
->>> +	"%s-i2c-%d-dev%d-ch%d-fine-gain",
->>> +};
->>
->> Controls are exposed to user-space, and it helps if it's easy to identify which
->> device is which.
->>
->> But below you are using the I2C address, is this 'stable' enough so that
->> userspace can still identify the controls and set them accordingly with amixer
->> or UCM?
->>
-> So far, I have no good way to handle the devices with multiple pcmdevices sitting in different i2c buses.
-> As you know, the gain value highly depends on both the mic-phone position and the mic-phone's own
->   characters. All these controls have to be open to the product developer or manufacturer. They might
-> rename them per their products if they want.
-> As to the stable, my customers and I had developed many productors on arm-based paltforms. At least,
-> the i2c number is same as the one defined in dts.
+OK, agreed.
 
-IIRC there is a codec prefix that can be used to uniquify controls, 
-that's what we used when we have identical amplifier devices in the same 
-system. Using this prefix would avoid this sort of hard-coding of the 
-control names proper, in other words let the ASoC framework add a prefix 
-if needed.
+and I forgot to mention, if you want to add PIDFD_SIGNAL_PRGP you can
+look at __kill_pgrp_info().
 
->>> +static int pcmdevice_codec_probe(struct snd_soc_component *codec) {
->>> +	struct pcmdevice_priv *pcm_dev =
->> snd_soc_component_get_drvdata(codec);
->>> +	struct i2c_adapter *adap = pcm_dev->client->adapter;
->>> +	int ret, i, j;
->>> +
->>> +	mutex_lock(&pcm_dev->codec_lock);
->>> +	pcm_dev->component = codec;
->>> +	pcm_dev->fw_state = PCMDEVICE_FW_LOAD_OK;
->>> +
->>> +	for (i = 0; i < pcm_dev->ndev; i++) {
->>> +		for (j = 0; j < 2; j++) {
->>> +			ret = pcmdev_gain_ctrl_add(pcm_dev, i, j);
->>> +			if (ret < 0)
->>> +				goto out;
->>> +		}
->>> +	}
->>> +
->>> +	/* device-name[defined in pcmdevice_i2c_id]-i2c-bus_id[0,1,...,N]-
->>> +	 * sum[1,2,...,4]dev-reg.bin stores the firmware including register
->>> +	 * setting and params for different filters inside chips, it must be
->>> +	 * copied into firmware folder. The same types of pcmdevices sitting
->>> +	 * on the same i2c bus will be aggregated as one single codec,
->>> +	 * all of them share the same bin file.
->>> +	 */
->>> +	scnprintf(pcm_dev->regbin_name,
->> PCMDEVICE_REGBIN_FILENAME_LEN,
->>> +		"%s-i2c-%d-%udev-reg.bin", pcm_dev->dev_name, adap->nr,
->>> +		pcm_dev->ndev);
->>> +
->>> +	ret = request_firmware_nowait(THIS_MODULE,
->> FW_ACTION_UEVENT,
->>> +		pcm_dev->regbin_name, pcm_dev->dev, GFP_KERNEL,
->> pcm_dev,
->>> +		pcmdev_regbin_ready);
->>
->> I already had a question early on whether these addresses are 'stable', but
->> here the device address is used to fetch firmware, and there is no prefix or
->> directory to identify platform-specific settings.
->>
->> I don't know how this might work for a distribution. There needs to be a way
->> to detect what system this is at run-time, and make sure we don't use
->> settings for platform XYZ on platform ABC.
->>
-> In PC, hwid, subsysid and vendorid can help to identify the platform.
->   But it seemed difficult to get platform id on non-PC system. More often,
-> different productors from different customers might use the same platform.
-> In my view, the products developer or manufacturer might rename the firmware
->   per their products if they want, not limited to the platform.
-
-It's not "might rename", it's "are required to rename".
-
-Your solution works if everything is build and configured for ONE board. 
-That's pretty limiting, even for your own CI and tests.
-
-Could we not add a prefix for the firmware path that either either set 
-with a subsys_id or vendor_id, and if it doesn't exist with a kernel 
-parameter or a quirk?
-
-Renaming firmware files is a never-ending source of problems IMHO.
+Oleg.
 
