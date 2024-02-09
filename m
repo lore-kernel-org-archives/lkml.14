@@ -1,280 +1,227 @@
-Received: from mail-lf1-f74.google.com (mail-lf1-f74.google.com [209.85.167.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FF23C087
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 11:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B6628DC1;
+	Fri,  9 Feb 2024 11:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707477559; cv=none; b=bWGmgmwbY45ftO/OWTuhWcBix0SUiWPhAfRu9zqIeaN+uPjSRfX7fU0+7v2ph25iiynqTABxJ4uqhgkKXapmz70cuL+vxaRebrD8TUt0l9rmt536RlIUKJL4VsK7uPAvTALPByRJHPIpKRqD7DMYZwdvxZ0IuS/yZqvfi2Fuhro=
+	t=1707477659; cv=none; b=uOM745a24MjUgqBNMyaiuRcn3O5j/YvPs44c+wr20iexDTc8Iu8Qi2tIxpyBRFmH4LBuM9mrahxeZW6cA+9hU9TnMhA6CxTLxsdIKN1odMSIRRhL5/kiDvcHVyvdeMtL0cCtZaZisX7QzdstkGDmntFkF0YoNlfqx0lpSJtjMow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707477559; c=relaxed/simple;
-	bh=1xxnjqk+SAwAyAAQTy8XinjcAaTXBrnKqLlMXwl2Prs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Mr+3trN6Pm1qofxFs+m2D+6E9DlalB3NXO5zQ/QKLh5BoS/OWB+arTQJKZXBEsV2FByED31ra5zKvIUF81E7FUNuL1We/2h2baXxDQ8WZqIjUKljW6zGG0gywORwzKAfuzG8tPwPWI05TaegmKGxjnsJlZMl5Omeqhd8z3zD/3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vP8IHFo3; arc=none smtp.client-ip=209.85.167.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1707477659; c=relaxed/simple;
+	bh=EQDhFl9ifLuO0cWW60pqujcWcLUCCDzUvFz8nDzjWEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qoJz6xEXOSImLM/r4QPRz7GreB8Q+f0TLmEsad1EKdTRvdEGVm00d4WJZRd2M/97YiR59gYSdVwEZBk82HgESrRN7OkMwcqMolqHHFiEhRpQXbXz6uJn1v2HCDSSizx7QbAGuMetVp8x/7pOk4rdDsCpgkPJb6KDYWYtTnGZ1tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WPOo5mjY; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vP8IHFo3"
-Received: by mail-lf1-f74.google.com with SMTP id 2adb3069b0e04-50e55470b49so936213e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 03:19:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707477555; x=1708082355; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/eEjy8EjBs/e5Jj34VUfUT2QjrL+J3wcm7XuKGrkuc=;
-        b=vP8IHFo3fQea4cDR67Le8r9eqGLeLALz9ujrZDTivKBkx/22xGFdCPYBSZfv1NZA9b
-         zUSeyTavWND1VX1W2mh1xCxVBWibp5No908fbEzQ4Lekg4lvcjl9jhwIIbEMHV1ey6CN
-         LnnUxqLb1Aj2puBe0OYWxyUMpEIFtP7KK1Z6CP5cdz+pV6d9CRG2LKf/0s5hJRCdErnp
-         8lTtBOAcvaxvtY1KaWEgHQq0Sjc6bK8+fl2lNR+mL6XcHoaN8E7r+wJPKcicfVAjgLim
-         d8H7K0StyLoUfBkqRDB1+heL6CYuXlq++c8KtkTzNxAC/N4sspELuN4TpiYdsZIXd6E2
-         fZpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707477555; x=1708082355;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/eEjy8EjBs/e5Jj34VUfUT2QjrL+J3wcm7XuKGrkuc=;
-        b=YPZOiOBavfSigcd3ikoh77K8EXFZbZMW2FyyqbqlYaRwOagZCIa9zqlgZx3uTuUlT+
-         KaB27vqwTKE69cDGDC1wOfIVEzYDsZz/cmsV7p+aoUyu99SDDvyjXMD7xwJuKNuoZ1Dw
-         2GiR0Rfa0uuseWYM//aOkXOWKdRaeQehym98R3e1hgMl6rBtBHFc9yL1dUdYA169J9w5
-         kXAJcgzvCKDindyyLfS5t0RsEaKyVOK+vfuFeHz4O15wOjiNZ07MQidxfqKrnX9wy0GW
-         Oz2eUr75VBVE0efszGjYCNzrjEsKLr5VCg9hjd2tbbgTCkqg1EEIekSFyoyoDUAsdqFW
-         HJWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWla/IHxa+z178My99s+hdfdIVC6J3CmD2YZFQoS8TBLBWj4KxInFyoPMz+qAJ8WKn89FiNI+YBMX3qCZPxxv1epmSFe1SXMJLjvoAT
-X-Gm-Message-State: AOJu0YxFnbrgHqTKcHYYMKFMBiwMagN6SYcQMJouI+t9/5P1XCWJ8la4
-	rodslD476x1smPLUPxQZFH8avP3mYEzvp5uWag6gYJLqqv4Zl5b0Ank8CQsFtYwsqADlLaDYKxw
-	j+bcgHQFuny/TGg==
-X-Google-Smtp-Source: AGHT+IGHe/7C6DC2nnibhEVSAtdSRtwXd3JHmLm1o6reeDCXpvPBw0DwRiDCoAKjn8WNP71vdK39mxG+PyciC1A=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:ac2:58e9:0:b0:511:6aed:81b0 with SMTP id
- v9-20020ac258e9000000b005116aed81b0mr1053lfo.1.1707477554973; Fri, 09 Feb
- 2024 03:19:14 -0800 (PST)
-Date: Fri, 09 Feb 2024 11:18:22 +0000
-In-Reply-To: <20240209-alice-file-v5-0-a37886783025@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WPOo5mjY"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 419B7smf017740;
+	Fri, 9 Feb 2024 11:20:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=AFRBt1FCWwZFCacHJwy/3XlOLZrPPJkYg4TH+/NMzCY=;
+ b=WPOo5mjYBYH2IErMw43bckQqh1/4kYc59Mlb1elBZP72pBgJxps+ciUAG95KQzIPdcV8
+ Y3sXAcMbSEuAlbdkku+NXUmybtws7qQ8VFXngPu+HKrUFg+6pJ42vQN2IDvnmeYPYWfW
+ nxN1pg0g4nlr7yKgldgcC9NL05Jpl1HXjZhxifysJ84z2+/p3qI2saNvZ3POkTa4Kgub
+ lZJE5TjAINvFm/HtsjAP+tI1ZJ/FOg2Kjv+QsZmc7ixiZvUwXH/JnIcmjNac30ktCsP5
+ UThMof80NLOpl5D3fiGJ03iLhEFbe1G9Ybwp83dBhrG0aLFvHpXIZY9uOtgA+XGoVqr3 eg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w5gkbc4pe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Feb 2024 11:20:52 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 419BJ0Zi005843;
+	Fri, 9 Feb 2024 11:20:52 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w5gkbc4p3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Feb 2024 11:20:52 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4199OWPH008770;
+	Fri, 9 Feb 2024 11:20:51 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w20702x02-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Feb 2024 11:20:51 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 419BKmWQ65864186
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 Feb 2024 11:20:48 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5E23A20043;
+	Fri,  9 Feb 2024 11:20:48 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E0D3020040;
+	Fri,  9 Feb 2024 11:20:47 +0000 (GMT)
+Received: from osiris (unknown [9.179.1.234])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  9 Feb 2024 11:20:47 +0000 (GMT)
+Date: Fri, 9 Feb 2024 12:20:46 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, maskray@google.com, ndesaulniers@google.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, patches@lists.linux.dev
+Subject: Re: [PATCH 00/11] s390: Support linking with ld.lld
+Message-ID: <20240209112046.13241-C-hca@linux.ibm.com>
+References: <20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SGrVWr2aETRlna7KZhmAL39hFcON2Vc3
+X-Proofpoint-ORIG-GUID: Fb5LnhK3ZSaXbrsL69WJpWi9iLmMuwBX
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240209-alice-file-v5-0-a37886783025@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7156; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=1xxnjqk+SAwAyAAQTy8XinjcAaTXBrnKqLlMXwl2Prs=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBlxgoVLbAi+A07gA4PEN5j4TTZreWWkynfVzDED
- d+aosnS5liJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZcYKFQAKCRAEWL7uWMY5
- Rlt1EACSq7MgWC8Sbje5LSLlyb7hz89g6mUiwRJSmz5SRDBQYWSN8Tcr9Mf3f16t2orPZ9zXYk/
- ORVplPxsXG5fsDrzGXyze3TFzvYpgEbVnGIA8LSv1YU6vYZ5PVp7JsNLi4tgzgeMi2oP4yUcikn
- 3xl7gbwD0P55oMysz0e01XanDYmbQYqcsDEskMdNkOeecytfOm9pvtfy9fU6yHfvcC/ncrJuzxM
- H58q3ymrF5dgJ1s8kPdk4gmsgIiPiLDBa322oab9d0vaxOu1MMxH/aA0pcGv4z9FgBhGYyTqUnT
- UayLsGa0B9ewQxGECeBmNnJ0CrRfkrG8DLSJbwlSLOd6yaepCz1frLpWtgcDngnzjQUe8KAv0lZ
- m7lOnjHtUM5EQTjDUT0IhDytoQMQvYpIfmryunDDs0Vdem2WC3WQ/cEYP6tv3VcvNGLzHlClLsf
- 1mR4QYwWuVDVqr2V4bPZV13oaq5gn4rToNontwgVv0tCUfOUdTnQpcTXVvBX0+/MMoRu8r7Z6s1
- SwKALcMr3yk+jbTY5mynOhRqPpiT/RapVX7vZfF2xoUYwnxY8RGTAwdbAyio5sTpcGPRq2fvqLP
- DvDwq9+JR3C0P4+2JoDI9PPDE2BZy2jXcCMV6+u7rnPIVwZx/TZEbHAHVUGssn/7L0CRWCuvI5P pO9K71qEwt8invQ==
-X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240209-alice-file-v5-9-a37886783025@google.com>
-Subject: [PATCH v5 9/9] rust: file: add abstraction for `poll_table`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?utf-8?q?Arve_Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, 
-	Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-09_08,2024-02-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ adultscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402090082
 
-The existing `CondVar` abstraction is a wrapper around
-`wait_queue_head`, but it does not support all use-cases of the C
-`wait_queue_head` type. To be specific, a `CondVar` cannot be registered
-with a `struct poll_table`. This limitation has the advantage that you
-do not need to call `synchronize_rcu` when destroying a `CondVar`.
+Hi Nathan,
 
-However, we need the ability to register a `poll_table` with a
-`wait_queue_head` in Rust Binder. To enable this, introduce a type
-called `PollCondVar`, which is like `CondVar` except that you can
-register a `poll_table`. We also introduce `PollTable`, which is a safe
-wrapper around `poll_table` that is intended to be used with
-`PollCondVar`.
+> This series allows the s390 kernel to be linked with ld.lld (support for
+> s390 is under review at [1]). This implicitly depends on [2], which was
+> created and sent before it was realized that this series was necessary.
+...
+> There is one outstanding issue due to something that ld.lld does not
+> support that the kernel relies on:
+> 
+>   ld.lld: error: drivers/nvme/host/fc.o:(__bug_table): writable SHF_MERGE section is not supported
+> 
+> This was changed in the kernel in commit e21f8baf8d9a ("s390/bug: add
+> entry size to the __bug_table section"). Is this change truly necessary?
+> I selectively applied a revert on top of current mainline and I did not
+> observe any issues with either Clang or GCC.
 
-The destructor of `PollCondVar` unconditionally calls `synchronize_rcu`
-to ensure that the removal of epoll waiters has fully completed before
-the `wait_queue_head` is destroyed.
+No it is not necessary. As the original patch stated this was a pre-req
+patch for objtool, for which we still don't have support. This (or
+something different) might be needed. But for now this can easily be
+reverted.
 
-That said, `synchronize_rcu` is rather expensive and is not needed in
-all cases: If we have never registered a `poll_table` with the
-`wait_queue_head`, then we don't need to call `synchronize_rcu`. (And
-this is a common case in Binder - not all processes use Binder with
-epoll.) The current implementation does not account for this, but if we
-find that it is necessary to improve this, a future patch could store a
-boolean next to the `wait_queue_head` to keep track of whether a
-`poll_table` has ever been registered.
+> Then build the kernel with 'LD=ld.lld' in addition to whatever command
+> line you use (I tested both Clang and GCC). I can boot an ld.lld linked
+> kernel built with both compilers in QEMU with this series.
+> 
+> [    1.386970] Linux version 6.8.0-rc3-00043-g05761ede85d6-dirty (nathan@dev-fedora.aadp) (s390-linux-gcc (GCC) 13.2.0, ClangBuiltLinux LLD 19.0.0) #1 SMP Wed Feb  7 16:51:12 MST 2024
+> 
+> [    0.871923] Linux version 6.8.0-rc3-00043-g05761ede85d6-dirty (nathan@dev-fedora.aadp) (ClangBuiltLinux clang version 19.0.0git (https://github.com/llvm/llvm-project 417075e56aeba5a5b20301c7bfeba9c2a800982b), ClangBuiltLinux LLD 19.0.0) #1 SMP Wed Feb  7 17:01:22 MST 2024
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Tested, and works for me. Thanks a lot for your work. This is highly
+appreciated!
+
+I applied this series internally to get some CI runs over the weekend, and
+push it to our external repository beginning of next week. As suggested by
+you I reverted the commit you mentioned above, and also removed ENTRY from
+our vdso linker scripts, similar to what you did already for powerpc (see
+patches below).
+
+Please feel free to send patches for both of the issues, and I'll replace
+my patches with your patches.
+
+From 30a0a88d0e6c4802b748a942bb3f6f1b223f53ba Mon Sep 17 00:00:00 2001
+From: Heiko Carstens <hca@linux.ibm.com>
+Date: Fri, 9 Feb 2024 11:48:25 +0100
+Subject: [PATCH 1/2] s390/bug: remove entry size from __bug_table section
+
+Commit e21f8baf8d9a ("s390/bug: add entry size to the __bug_table section")
+changed the __EMIT_BUG() inline assembly to emit mergeable __bug_table
+entries. This is at least currently not needed, but causes problems with
+the upcoming s390 ld.lld support:
+
+  ld.lld: error: drivers/nvme/host/fc.o:(__bug_table): writable SHF_MERGE section is not supported
+
+Therefore revert the change for now.
+
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://lore.kernel.org/all/20240207-s390-lld-and-orphan-warn-v1-0-8a665b3346ab@kernel.org/
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 ---
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/sync.rs             |   1 +
- rust/kernel/sync/poll.rs        | 117 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 119 insertions(+)
+ arch/s390/include/asm/bug.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index f4d9d04333c0..c651d38e5dd6 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -17,6 +17,7 @@
- #include <linux/mdio.h>
- #include <linux/phy.h>
- #include <linux/pid_namespace.h>
-+#include <linux/poll.h>
- #include <linux/security.h>
- #include <linux/slab.h>
- #include <linux/refcount.h>
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index c1fb10fc64f4..84b69e337a55 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -11,6 +11,7 @@
- mod condvar;
- pub mod lock;
- mod locked_by;
-+pub mod poll;
- 
- pub use arc::{Arc, ArcBorrow, UniqueArc};
- pub use condvar::{CondVar, CondVarTimeoutResult};
-diff --git a/rust/kernel/sync/poll.rs b/rust/kernel/sync/poll.rs
-new file mode 100644
-index 000000000000..a0e4f3de109a
---- /dev/null
-+++ b/rust/kernel/sync/poll.rs
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Utilities for working with `struct poll_table`.
-+
-+use crate::{
-+    bindings,
-+    file::File,
-+    prelude::*,
-+    sync::{CondVar, LockClassKey},
-+    types::Opaque,
-+};
-+use core::ops::Deref;
-+
-+/// Creates a [`PollCondVar`] initialiser with the given name and a newly-created lock class.
-+#[macro_export]
-+macro_rules! new_poll_condvar {
-+    ($($name:literal)?) => {
-+        $crate::sync::poll::PollCondVar::new($crate::optional_name!($($name)?), $crate::static_lock_class!())
-+    };
-+}
-+
-+/// Wraps the kernel's `struct poll_table`.
-+///
-+/// # Invariants
-+///
-+/// This struct contains a valid `struct poll_table`.
-+///
-+/// For a `struct poll_table` to be valid, its `_qproc` function must follow the safety
-+/// requirements of `_qproc` functions:
-+///
-+/// * The `_qproc` function is given permission to enqueue a waiter to the provided `poll_table`
-+///   during the call. Once the waiter is removed and an rcu grace period has passed, it must no
-+///   longer access the `wait_queue_head`.
-+#[repr(transparent)]
-+pub struct PollTable(Opaque<bindings::poll_table>);
-+
-+impl PollTable {
-+    /// Creates a reference to a [`PollTable`] from a valid pointer.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The caller must ensure that for the duration of 'a, the pointer will point at a valid poll
-+    /// table (as defined in the type invariants).
-+    ///
-+    /// The caller must also ensure that the `poll_table` is only accessed via the returned
-+    /// reference for the duration of 'a.
-+    pub unsafe fn from_ptr<'a>(ptr: *mut bindings::poll_table) -> &'a mut PollTable {
-+        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
-+        // `PollTable` type being transparent makes the cast ok.
-+        unsafe { &mut *ptr.cast() }
-+    }
-+
-+    fn get_qproc(&self) -> bindings::poll_queue_proc {
-+        let ptr = self.0.get();
-+        // SAFETY: The `ptr` is valid because it originates from a reference, and the `_qproc`
-+        // field is not modified concurrently with this call since we have an immutable reference.
-+        unsafe { (*ptr)._qproc }
-+    }
-+
-+    /// Register this [`PollTable`] with the provided [`PollCondVar`], so that it can be notified
-+    /// using the condition variable.
-+    pub fn register_wait(&mut self, file: &File, cv: &PollCondVar) {
-+        if let Some(qproc) = self.get_qproc() {
-+            // SAFETY: The pointers to `file` and `self` need to be valid for the duration of this
-+            // call to `qproc`, which they are because they are references.
-+            //
-+            // The `cv.wait_queue_head` pointer must be valid until an rcu grace period after the
-+            // waiter is removed. The `PollCondVar` is pinned, so before `cv.wait_queue_head` can
-+            // be destroyed, the destructor must run. That destructor first removes all waiters,
-+            // and then waits for an rcu grace period. Therefore, `cv.wait_queue_head` is valid for
-+            // long enough.
-+            unsafe { qproc(file.as_ptr() as _, cv.wait_queue_head.get(), self.0.get()) };
-+        }
-+    }
-+}
-+
-+/// A wrapper around [`CondVar`] that makes it usable with [`PollTable`].
-+///
-+/// [`CondVar`]: crate::sync::CondVar
-+#[pin_data(PinnedDrop)]
-+pub struct PollCondVar {
-+    #[pin]
-+    inner: CondVar,
-+}
-+
-+impl PollCondVar {
-+    /// Constructs a new condvar initialiser.
-+    pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
-+        pin_init!(Self {
-+            inner <- CondVar::new(name, key),
-+        })
-+    }
-+}
-+
-+// Make the `CondVar` methods callable on `PollCondVar`.
-+impl Deref for PollCondVar {
-+    type Target = CondVar;
-+
-+    fn deref(&self) -> &CondVar {
-+        &self.inner
-+    }
-+}
-+
-+#[pinned_drop]
-+impl PinnedDrop for PollCondVar {
-+    fn drop(self: Pin<&mut Self>) {
-+        // Clear anything registered using `register_wait`.
-+        //
-+        // SAFETY: The pointer points at a valid `wait_queue_head`.
-+        unsafe { bindings::__wake_up_pollfree(self.inner.wait_queue_head.get()) };
-+
-+        // Wait for epoll items to be properly removed.
-+        //
-+        // SAFETY: Just an FFI call.
-+        unsafe { bindings::synchronize_rcu() };
-+    }
-+}
-
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index aebe1e22c7be..c500d45fb465 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -14,7 +14,7 @@
+ 		".section .rodata.str,\"aMS\",@progbits,1\n"	\
+ 		"1:	.asciz	\""__FILE__"\"\n"		\
+ 		".previous\n"					\
+-		".section __bug_table,\"awM\",@progbits,%2\n"	\
++		".section __bug_table,\"aw\"\n"			\
+ 		"2:	.long	0b-.\n"				\
+ 		"	.long	1b-.\n"				\
+ 		"	.short	%0,%1\n"			\
+@@ -30,7 +30,7 @@
+ #define __EMIT_BUG(x) do {					\
+ 	asm_inline volatile(					\
+ 		"0:	mc	0,0\n"				\
+-		".section __bug_table,\"awM\",@progbits,%1\n"	\
++		".section __bug_table,\"aw\"\n"			\
+ 		"1:	.long	0b-.\n"				\
+ 		"	.short	%0\n"				\
+ 		"	.org	1b+%1\n"			\
 -- 
-2.43.0.687.g38aa6559b0-goog
+2.40.1
+
+From bdca9b8dcf3f0884341f491d54502d4cbe660446 Mon Sep 17 00:00:00 2001
+From: Heiko Carstens <hca@linux.ibm.com>
+Date: Fri, 9 Feb 2024 11:54:01 +0100
+Subject: [PATCH 2/2] s390/vdso: remove unused ENTRY in linker scripts
+
+When linking vdso64.so.dbg with ld.lld, there is a warning about not
+finding _start for the starting address:
+
+  ld.lld: warning: cannot find entry symbol _start; not setting start address
+
+Fix this be removing the unused ENTRY in both vdso linker scripts. See
+commit e247172854a5 ("powerpc/vdso: Remove unused ENTRY in linker
+scripts"), which solved the same problem for powerpc, for further details.
+
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+---
+ arch/s390/kernel/vdso32/vdso32.lds.S | 1 -
+ arch/s390/kernel/vdso64/vdso64.lds.S | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/arch/s390/kernel/vdso32/vdso32.lds.S b/arch/s390/kernel/vdso32/vdso32.lds.S
+index edf5ff1debe1..65b9513a5a0e 100644
+--- a/arch/s390/kernel/vdso32/vdso32.lds.S
++++ b/arch/s390/kernel/vdso32/vdso32.lds.S
+@@ -9,7 +9,6 @@
+ 
+ OUTPUT_FORMAT("elf32-s390", "elf32-s390", "elf32-s390")
+ OUTPUT_ARCH(s390:31-bit)
+-ENTRY(_start)
+ 
+ SECTIONS
+ {
+diff --git a/arch/s390/kernel/vdso64/vdso64.lds.S b/arch/s390/kernel/vdso64/vdso64.lds.S
+index 4461ea151e49..37e2a505e81d 100644
+--- a/arch/s390/kernel/vdso64/vdso64.lds.S
++++ b/arch/s390/kernel/vdso64/vdso64.lds.S
+@@ -9,7 +9,6 @@
+ 
+ OUTPUT_FORMAT("elf64-s390", "elf64-s390", "elf64-s390")
+ OUTPUT_ARCH(s390:64-bit)
+-ENTRY(_start)
+ 
+ SECTIONS
+ {
+-- 
+2.40.1
 
