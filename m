@@ -1,118 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EF954F86;
-	Fri,  9 Feb 2024 20:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E26C126F09
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 20:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707510177; cv=none; b=uPNr2QT5DPY9VkDnN05Fh5nnER0fmhx6rjXkJlJJxITslw9SabCwpnv3ISoyFn7Lu90sFv04KCLUQuBviL1VX4v/QYoFAVrHidm4R1I9rJZnsqezdKF1MdiPR/olSe5t/WC2QN8Xolc6PfrrFYnSTbpyr8GXLnVJotA7T3u/bwk=
+	t=1707510201; cv=none; b=M80G9pXi4BHaeb72QO+LbWZDBZVDBaGcLSbTVGVKxF7LFHnIpCrsmBKX7tfjJ9ybpOS1QQI0DnnT/VpGtmvZQcdS07uLMhyeCNcTH6fGrM10dBcp48Qif8UNhGIE0jz8pjMCjcgqmV4tU+mQKCCgVLJ66qWFkVpj3414VSkOT3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707510177; c=relaxed/simple;
-	bh=Vww2Jj+v4Z8QiE6rCC7eLelQulPvEW9AU9xCOOc5Lhs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ed0kCbAEaC4u4EveY17jW4UP8t/1CYvK1IwqbCwIihpfKvI4U5/YTLofNR1xgtTm6I9C8M8QbimGJkk8YpcMjq+0Jq4CkY2Zc09DJcbXoHG8lYSFNM5/whnzTE3qcfu3WEXBguR/vuji7OtaPnZsJt2jQqEaZESaXZTgLrzh2po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VILm83tG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707510201; c=relaxed/simple;
+	bh=Qa7WBTIDQpNbeS/hiyhWQzSVHICDNi2Lqssf/YFEgRQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PIYu2RyrZhfDKgc4p8vD6JSzJM4mmzl67N6X4pkUFZ6W9ioW32XKb7SuaP+u/XV5oqUMZuWR1VPDCeSdILatPsSNLn73xWRqTLGYZDMZaATEcbAYmSe2m9pH59RavvKtzQCHrY9DymCrz2qzd5r6DefLjxUmlOv51bYEznpEp/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=k/nFKFRo; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VILm83tG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C39C433F1;
-	Fri,  9 Feb 2024 20:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707510176;
-	bh=Vww2Jj+v4Z8QiE6rCC7eLelQulPvEW9AU9xCOOc5Lhs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=VILm83tG07I926TyXMoIq7o0EQH9hCwIgF/fp3XDX/JF2nr46v6yuLxuldO2ZvcOf
-	 J6asXPk7Hjegdp1jJKAfaQEIKcLZslgCR/ryNI6E7g0jEVFlKAJD2rWG3IgemaA/8F
-	 mx7RMzb0uFJ2MAtL2G/3/E5SfWXBJdYMwmm8v0Iu1wPIvbeN715hiH2iYUgrkISg7k
-	 5AGJaT8k/lEanSJTYbIDHggvVcGWVlXEz/7st9y41Yt3P39MtWP1cXUZ71Y2PuyP+I
-	 sYfSY9Y0NEPSCIB0UkkqCV+WLfSCugyPjwoF89e8dy+My11N9jc31x6Dx+K5ZCxB+b
-	 zUcMIgipFn2uw==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 09 Feb 2024 20:21:52 +0000
-Subject: [PATCH] selftests/mm: Don't needlessly use sudo to obtain root in
- run_vmtests.sh
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="k/nFKFRo"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-599fc25071bso879389eaf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 12:23:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1707510198; x=1708114998; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rDZ3Jmq4/nSFOD85T2yiUnizUyC/JrtpL4z0B/Jmq+Q=;
+        b=k/nFKFRoIeO5UyIXezOjU30+kbylY8X0rdH7lU4D4U22GLlP9xx/qMLNRMw9s1q/FM
+         Y++AG17tiVa3nnrR2QkltW4NqiQThgQstzq7+7bDLlDz3+9Om3ShVOlg0nC1QZVZrmnj
+         eMnmfmlf3uypwlMNZr0CbUzRHtjH1HSkfX4Qs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707510198; x=1708114998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rDZ3Jmq4/nSFOD85T2yiUnizUyC/JrtpL4z0B/Jmq+Q=;
+        b=EmT71DAZPRot8CNyv2o8u10t7fuimhBSspTbyqblQNGfAR0U89QDCs1OPKjOCd5Q3v
+         uFB9JAZalcNxWpENs2SgY/Pe5nqKS8gqu7rllAh2V+lPiYlsxx0AdEyF5EEcfCIk9geP
+         v3KBr0sWlsXNt1p18lXAxHKA/2OAhJjkc2mZWxCwXjWtd87XuBgBoDGBhX8ZUFFHv/nd
+         26CC1x0j63jcpXebSjNZWsUFRjhSugLUtgIsNOQ3jcJQKBwRFxq9a8L7C2rAbEaFfaHz
+         OY/RYGXNUj6MxcofXH22NzclwIpNxVEiL1za7fRSvOGrxuuUhA4Fy+RVxNHKGCvmpoir
+         r0QA==
+X-Gm-Message-State: AOJu0YwAC9S082ZzOojAKh9BRX+kUYaWUKl3nv/37tuPoxBUn36rRjZS
+	2I7bg//OoOrHAsl7GonpboDcjyJy4K2I34gj4EbyiXsjEn440T7lPW4CrHx5kbB4dK8X8PFXKIM
+	Bov0d6xBKlX/dIXTsp25h8Evh5OnHf1aFu6ElUm+Jg3U0Ik3OGbHamA3UEndc0zUF7511tsmwud
+	2z5AyowLfWOgmxMJyjgIubNHWXyQ+igtpStR9AcoWJDeo=
+X-Google-Smtp-Source: AGHT+IG/BuQR5ro/SbMkt/wRVmSLRrb8pcixKb+A/Usu4R6NRLr71H1G3HJsj0W0HfRlB7IyDnKkBA==
+X-Received: by 2002:a05:6358:1212:b0:178:8ec9:a2f with SMTP id h18-20020a056358121200b001788ec90a2fmr602645rwi.5.1707510198038;
+        Fri, 09 Feb 2024 12:23:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV9gYyDVJ/FTepbkZQWu3Aexv8qHVS0hrlr6yspf74pQaoAyp4jb/aaAEShwx8G0I0JF64bQF9DRoyw+vjK2VOuOd/N+ZjwRQnKTZ/0/RENVtV5Q9qXujjeJo+UJWx3Ku7z+XPP57RCd2F/wJDbaOZmySQTKUyv62JIUVVoj+Xo1xyLufeMnuDWwPxHpTkgJHDd8CTYykBE/gZ0LTgqmJ+kY1/t2ATggIS/IE9CnVm7C8wNXntCa6X94WvNdAakwC0eU8cZncggC3/Xqzdcso5l40SRE9WGdecCHd/8S+jbsfyfkokOvelVGw8otO96Ktlui4zilWlJjvOSNbGLTsrCQnY+nw+Mlh+jj8e95ovv6zuenZ7CrKyJjq5j8zy/4CCbU370DH0/vTnAWfqFZX7d2bwg9uulY0r3efo7usGizAXonVLf
+Received: from localhost.localdomain ([2620:11a:c018:0:ea8:be91:8d1:f59b])
+        by smtp.gmail.com with ESMTPSA id e25-20020a62aa19000000b006ddc71607a7sm933742pff.191.2024.02.09.12.23.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 12:23:17 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: tariqt@nvidia.com,
+	rrameshbabu@nvidia.com,
+	Joe Damato <jdamato@fastly.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Gal Pressman <gal@nvidia.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	linux-rdma@vger.kernel.org (open list:MELLANOX MLX5 core VPI driver)
+Subject: [PATCH net-next v4] net/mlx5e: link NAPI instances to queues and IRQs
+Date: Fri,  9 Feb 2024 20:23:08 +0000
+Message-Id: <20240209202312.30181-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240209-kselftest-mm-check-deps-v1-1-19b09b151522@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAF+JxmUC/x3MSwqAMAxF0a1IxgZqUVC3Ig6kfdXgl0ZEEPduc
- XgG9z6kiAKlNnso4hKVfUso8ozcNGwjWHwyWWNLY03Ds2IJJ/TkdWU3wc3scSibYqhthSrAl5T
- qIyLI/Z+7/n0/aEhrBmkAAAA=
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: Ryan Roberts <Ryan.Roberts@arm.com>, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-0438c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1989; i=broonie@kernel.org;
- h=from:subject:message-id; bh=Vww2Jj+v4Z8QiE6rCC7eLelQulPvEW9AU9xCOOc5Lhs=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlxomdxcmkOMP7U5xLlUuVTjCBZ0WrLPGtq+XfL
- 3p9ITNu54yJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcaJnQAKCRAk1otyXVSH
- 0KH6B/9ApTHhrLOmnmotvLBAK11wu+cHt8ITHTFopBl8aopyk+Y7JyvT+YhnNUxRO8FrGN1labO
- 8apCpf/+yNMZD9meVzb92MkvfZjyXC3UqaEMva5dlT8adWtGeGBNHQoMen/OJiPm5Xz7taVADj4
- itQgs/XjjLYGzZmj6hyA2ch15zqZgAs+uJZpX8nKXXuUkIjEkJFk0c6u5/0FGaHr7QBTFSJUsaG
- mPOH/CqmlDEUQQrtYxc+sKfUxMz+Czj7XmSZ3Fspo8k7CeQv6J8DpHklaV5Cv3SAK8taXiSx/eN
- xsEwQvOvjckH5GCqTeVhp6LVYowJlSr/2TnH+q3oWhqlcsoJ
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Transfer-Encoding: 8bit
 
-When opening yama/ptrace_scope we unconditionally use sudo to ensure we
-are running as root, resulting in failures if running in a minimal root
-filesystem where sudo is not installed. Since automated test systems will
-typically just run all of kselftest as root (and many kselftests rely on
-this for full functionality) add a check to see if we're already root and
-only invoke sudo if not.
+Make mlx5 compatible with the newly added netlink queue GET APIs.
 
-Since I am unclear what the intended effect of the command being run is I
-have not added any error handling for the case where we fail to obtain
-root.
-
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Joe Damato <jdamato@fastly.com>
 ---
- tools/testing/selftests/mm/run_vmtests.sh | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+v3 -> v4:
+  - Use sq->netdev and sq->cq.napi to get the netdev and NAPI structures in
+    mlx5e_activate_txqsq and mlx5e_deactivate_txqsq as requested by Tariq
+    Toukan [1]
+  - Only set or unset NETDEV_QUEUE_TYPE_RX when the MLX5E_PTP_STATE_RX bit
+    is on in mlx5e_ptp_activate_channel and mlx5e_ptp_deactivate_channel as
+    requested by Rahul Rameshbabu [2]
 
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index fe140a9f4f9d..c8ca830dba93 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -248,6 +248,17 @@ run_test() {
+v2 -> v3:
+  - Fix commit message subject
+  - call netif_queue_set_napi in mlx5e_ptp_activate_channel and
+    mlx5e_ptp_deactivate_channel to enable/disable NETDEV_QUEUE_TYPE_RX for
+    the PTP channel.
+  - Modify mlx5e_activate_txqsq and mlx5e_deactivate_txqsq to set
+    NETDEV_QUEUE_TYPE_TX which should take care of all TX queues including
+    QoS/HTB and PTP.
+  - Rearrange mlx5e_activate_channel and mlx5e_deactivate_channel for
+    better ordering when setting and unsetting NETDEV_QUEUE_TYPE_RX NAPI
+    structs
+
+v1 -> v2:
+  - Move netlink NULL code to mlx5e_deactivate_channel
+  - Move netif_napi_set_irq to mlx5e_open_channel and avoid storing the
+    irq, after netif_napi_add which itself sets the IRQ to -1
+
+[1]: https://lore.kernel.org/all/8c083e6d-5fcd-4557-88dd-0f95acdbc747@gmail.com/
+[2]: https://lore.kernel.org/all/871q9mz1a0.fsf@nvidia.com/
+
+ drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c  | 5 ++++-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 +++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c
+index 078f56a3cbb2..fd4ef6431142 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.c
+@@ -935,6 +935,7 @@ void mlx5e_ptp_activate_channel(struct mlx5e_ptp *c)
+ 	if (test_bit(MLX5E_PTP_STATE_RX, c->state)) {
+ 		mlx5e_ptp_rx_set_fs(c->priv);
+ 		mlx5e_activate_rq(&c->rq);
++		netif_queue_set_napi(c->netdev, c->rq.ix, NETDEV_QUEUE_TYPE_RX, &c->napi);
+ 	}
+ 	mlx5e_trigger_napi_sched(&c->napi);
+ }
+@@ -943,8 +944,10 @@ void mlx5e_ptp_deactivate_channel(struct mlx5e_ptp *c)
+ {
+ 	int tc;
  
- echo "TAP version 13" | tap_output
+-	if (test_bit(MLX5E_PTP_STATE_RX, c->state))
++	if (test_bit(MLX5E_PTP_STATE_RX, c->state)) {
++		netif_queue_set_napi(c->netdev, c->rq.ix, NETDEV_QUEUE_TYPE_RX, NULL);
+ 		mlx5e_deactivate_rq(&c->rq);
++	}
  
-+HAVE_ROOT=0
-+if [ "$(id -u)" = "0" ]; then
-+	AS_ROOT=
-+	HAVE_ROOT=1
-+elif [ "$(command -v sudo)" != "" ]; then
-+	AS_ROOT=sudo
-+	HAVE_ROOT=1
-+else
-+	echo # WARNING: Unable to run as root
-+fi
+ 	if (test_bit(MLX5E_PTP_STATE_TX, c->state)) {
+ 		for (tc = 0; tc < c->num_tc; tc++)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index c8e8f512803e..be809556b2e1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -1806,6 +1806,7 @@ void mlx5e_activate_txqsq(struct mlx5e_txqsq *sq)
+ 	set_bit(MLX5E_SQ_STATE_ENABLED, &sq->state);
+ 	netdev_tx_reset_queue(sq->txq);
+ 	netif_tx_start_queue(sq->txq);
++	netif_queue_set_napi(sq->netdev, sq->txq_ix, NETDEV_QUEUE_TYPE_TX, sq->cq.napi);
+ }
+ 
+ void mlx5e_tx_disable_queue(struct netdev_queue *txq)
+@@ -1819,6 +1820,7 @@ void mlx5e_deactivate_txqsq(struct mlx5e_txqsq *sq)
+ {
+ 	struct mlx5_wq_cyc *wq = &sq->wq;
+ 
++	netif_queue_set_napi(sq->netdev, sq->txq_ix, NETDEV_QUEUE_TYPE_TX, NULL);
+ 	clear_bit(MLX5E_SQ_STATE_ENABLED, &sq->state);
+ 	synchronize_net(); /* Sync with NAPI to prevent netif_tx_wake_queue. */
+ 
+@@ -2560,6 +2562,7 @@ static int mlx5e_open_channel(struct mlx5e_priv *priv, int ix,
+ 	c->lag_port = mlx5e_enumerate_lag_port(priv->mdev, ix);
+ 
+ 	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll);
++	netif_napi_set_irq(&c->napi, irq);
+ 
+ 	err = mlx5e_open_queues(c, params, cparam);
+ 	if (unlikely(err))
+@@ -2602,12 +2605,16 @@ static void mlx5e_activate_channel(struct mlx5e_channel *c)
+ 		mlx5e_activate_xsk(c);
+ 	else
+ 		mlx5e_activate_rq(&c->rq);
 +
- CATEGORY="hugetlb" run_test ./hugepage-mmap
++	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, &c->napi);
+ }
  
- shmmax=$(cat /proc/sys/kernel/shmmax)
-@@ -363,7 +374,8 @@ CATEGORY="hmm" run_test bash ./test_hmm.sh smoke
- # MADV_POPULATE_READ and MADV_POPULATE_WRITE tests
- CATEGORY="madv_populate" run_test ./madv_populate
+ static void mlx5e_deactivate_channel(struct mlx5e_channel *c)
+ {
+ 	int tc;
  
--(echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
-+# FIXME: What if we can't get root?
-+(echo 0 | ${AS_ROOT} tee /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
- CATEGORY="memfd_secret" run_test ./memfd_secret
- 
- # KSM KSM_MERGE_TIME_HUGE_PAGES test with size of 100
-
----
-base-commit: 445a555e0623387fa9b94e68e61681717e70200a
-change-id: 20240209-kselftest-mm-check-deps-01a825e5fed4
-
-Best regards,
++	netif_queue_set_napi(c->netdev, c->ix, NETDEV_QUEUE_TYPE_RX, NULL);
++
+ 	if (test_bit(MLX5E_CHANNEL_STATE_XSK, c->state))
+ 		mlx5e_deactivate_xsk(c);
+ 	else
 -- 
-Mark Brown <broonie@kernel.org>
+2.25.1
 
