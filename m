@@ -1,174 +1,458 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B63B4EB4E;
-	Fri,  9 Feb 2024 14:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707487860; cv=fail; b=jVh4G6DKzafX8h/KLebDYEmk0ryP2BIgyjiiVxrZQ92VsqoJzymrtFAAA96ChyXY9Oidb67+CoOhknPW5XK/yJNfah9wzZku0eksbwUyikg+4ZFkik7ubV7wvfNivIrmTC6qtSvthYVHHARUkpfRahmAX3m1A7QTHoT/JSK5kOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707487860; c=relaxed/simple;
-	bh=HFiGNCrukHEefF3Ttt1jj47DRyu+Saxns9CRiZStZaY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lmDWJvMC5/Cd5IdCNQepeCFiGo9Da7ubki43jtlPZIcYKoJ5L1cBVXywg1Ip9L9IqEZnmSiFmI89UnwmVtKVJU7Flj4nGcu1g29SFy4iPS5INm48svNCv6318i9MFKeMlLvmRTQk7FAz71LS7uU59eiqEF8tqQ0UpeRoTRGXhsk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=l0kPD6nO; arc=fail smtp.client-ip=40.107.237.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="l0kPD6nO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UCzWPcWf2puIEwo2oyVwSIp731GgkLxGEygw7/ijXKqGU0wfebSlFzoVCox1ZbMq5uCh+etLTsppwXLpM9G+mK/eK0SgUgmjd0cBxZcwGhs5Nfxs8/DvHEi8MO95hziDufDOq6UUV8lVPegVJ159q5aSkNtBy7kUhtt2vjoNWyAVN6/jFwyOEufl6nrSOSIOjvtRNwkC9ayqHIPR10rNHoMnAICV46w+HyDF9e6NmiS2PpV1sjdqwxm2ZnlagT7i3AfU3kJOGOWWAYW/7yJ4xko7CStqAQjGbvUo5mkLtCDFrOyFDzZKCMK0BPATVfNbNgEI9dTaoFjsQRKCZ40CaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hk6Pv3TH4qdCFNjhngzzXUpZ/akQNX8iGzCzLMWZI+0=;
- b=cl50UetaK4DHRZ83AOqHOchkE4IEqQ4NnVmq86IlYmzI2W96x7c6PnwAJzoWQP2CcRmz06272oE6jXTuayr4mli11xb4FJ7au3wd3/rpZlqIaQbSp5np+HoMQz7yEYclzbJaD4VxlGOljN090wnh/0EWNzJmYYZkywIqqwLgLHkxnjgHP5ihAqRtwBj4XyCyIhA2wve/yTqolqOLDgsnjPy7V89tJqPpj0B9jzvi23+/QYRiU8Rx8WT/mgTVsUig25+rFAsd4h4yZ4zAm0llAfA7cvnfkss5VG0XsF/ffLiK3ZYuGzc+alk4OPhZMawIZDBp7rqxLfrYR/woZxwdwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hk6Pv3TH4qdCFNjhngzzXUpZ/akQNX8iGzCzLMWZI+0=;
- b=l0kPD6nO8YMtUBXrx5Saf31cRFqh9WGX7FFZP/cCPjZHoqumsZjhz0Yyeuw2uHgyoDo8AIt+jyxtd8FbWqLO6cJGyCcXBPgMNoU8PlF/dbDllyuTm3zEcTVJqwGrA3J4abfGqhuHcPM5mAbynDOG1fC1tv1d8EE20F0lLH+j6q9o7lSsA+VdrTZkB3yYDLe1ALgh25qdtOjHmoqVhHvrhxJ9+QtqDI0v4wqCcgVqwd5Ac38cCTU5aZsNhq/jFaG78hV0fSBJig8BcWrOGw7TvbgaIy4BYyqytLo8r2sStss2rbSXliMkaHW8IbzZlSKNh68tJCPsepXPqsa/lSCJqg==
-Received: from MW4PR12MB7213.namprd12.prod.outlook.com (2603:10b6:303:22a::18)
- by SA1PR12MB7296.namprd12.prod.outlook.com (2603:10b6:806:2ba::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Fri, 9 Feb
- 2024 14:10:53 +0000
-Received: from MW4PR12MB7213.namprd12.prod.outlook.com
- ([fe80::b68c:1caf:4ca5:b0a7]) by MW4PR12MB7213.namprd12.prod.outlook.com
- ([fe80::b68c:1caf:4ca5:b0a7%6]) with mapi id 15.20.7270.012; Fri, 9 Feb 2024
- 14:10:52 +0000
-From: Ankit Agrawal <ankita@nvidia.com>
-To: Oliver Upton <oliver.upton@linux.dev>, Catalin Marinas
-	<catalin.marinas@arm.com>
-CC: Jason Gunthorpe <jgg@nvidia.com>, "maz@kernel.org" <maz@kernel.org>,
-	"james.morse@arm.com" <james.morse@arm.com>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"reinette.chatre@intel.com" <reinette.chatre@intel.com>, "surenb@google.com"
-	<surenb@google.com>, "stefanha@redhat.com" <stefanha@redhat.com>,
-	"brauner@kernel.org" <brauner@kernel.org>, "will@kernel.org"
-	<will@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>, "yi.l.liu@intel.com"
-	<yi.l.liu@intel.com>, "ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"andreyknvl@gmail.com" <andreyknvl@gmail.com>, "wangjinchao@xfusion.com"
-	<wangjinchao@xfusion.com>, "gshan@redhat.com" <gshan@redhat.com>,
-	"ricarkol@google.com" <ricarkol@google.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"rananta@google.com" <rananta@google.com>, "ryan.roberts@arm.com"
-	<ryan.roberts@arm.com>, Aniket Agashe <aniketa@nvidia.com>, Neo Jia
-	<cjia@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, "Tarun Gupta
- (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Andy
- Currid <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, John
- Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, Matt Ochs
-	<mochs@nvidia.com>, Zhi Wang <zhiw@nvidia.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6 1/4] kvm: arm64: introduce new flag for non-cacheable
- IO memory
-Thread-Topic: [PATCH v6 1/4] kvm: arm64: introduce new flag for non-cacheable
- IO memory
-Thread-Index: AQHaWgbdhvpY3ycYrU2mOegquaqhOrEAaauAgAAGtICAAZ6ADw==
-Date: Fri, 9 Feb 2024 14:10:51 +0000
-Message-ID:
- <MW4PR12MB72138D289232B5D62078158DB04B2@MW4PR12MB7213.namprd12.prod.outlook.com>
-References: <20240207204652.22954-1-ankita@nvidia.com>
- <20240207204652.22954-2-ankita@nvidia.com> <ZcTQi0wWZgvl05LB@arm.com>
- <ZcTWK6TksvugSlI-@linux.dev>
-In-Reply-To: <ZcTWK6TksvugSlI-@linux.dev>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW4PR12MB7213:EE_|SA1PR12MB7296:EE_
-x-ms-office365-filtering-correlation-id: e1dfb7cf-efb9-41cb-b4c1-08dc2978ec7d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 875ELY2dE+5FoWoWDn590ilExe10CRYKnWHMVlnBweHkVhYmxaGrVWEJah4ZdfYAQRmnH7X9gQ2tMRld8y7XAoZn7yj4+7ZkWMEVDRh1zD+VhRIarXdQrfJKo/CEs466t3Kiv+NP4uRgnsFyKjj9B76X4zx3jsoDztaU6d0LCvkhvWxod8aD29FSJQ5OQU3Z9uOpSEBmr6tM4O8bKrXzlauhx5FJw+duXLnGFObbOXkUeh1/+OlG+kwPrNloqxhdBSoyNK9vndVeHFeCIcp5Qu6w3KDhihR8NKfd1pRxxqDo9l+gTCnqZU28mfvWjnwkfQmQ8YKo0RGeoobaQrQ4570Mzfhz7+Zea4188MGj6EImBVIeA+MMUtAi00iSI4R6xLy/3NKF2L2N7nZi+qTtrg+Mp/871cfYDrtsh7WCvmrPHTxiEJxrt/WyLfiHhdk55qvXUMBl0F0Y7hFJstQsvMMRoDEoR3/hyOyNCGCITHB/hnH8mRIoEJWeD5DRYrUNyG7DSVLn0X0rd1F4Sg+2kZPpP/XJuSgvkc/5OF9cAZVj5MnHRQuvLnPKxzVWFYn1om3UIxCnBmYKKAbWH9S7YuXG284Ks5vNkDPc0CTnOaThIh5F54BXsWyURL0T/Bp1
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7213.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(366004)(396003)(346002)(376002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(33656002)(26005)(55016003)(7416002)(41300700001)(4744005)(8936002)(76116006)(54906003)(86362001)(66476007)(38070700009)(122000001)(91956017)(66446008)(66946007)(7696005)(64756008)(6506007)(71200400001)(110136005)(9686003)(66556008)(38100700002)(478600001)(4326008)(316002)(2906002)(5660300002)(52536014)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?ViI9fhUn9zwDsswn/KMlCC3XkpiXYm5AecFu/qSvBDWswoLY2y4kxPQvH+?=
- =?iso-8859-1?Q?loLTVQN2a/mj1EBZ2jwIdny8ecTOZDgStRlQtc2yeIPDXoPjGnAbkZtJKY?=
- =?iso-8859-1?Q?jwAeYtOHGCWevGd8uLrVgAh+N2KsXO4o13u8EsngWUneLcHsLKc04oriVq?=
- =?iso-8859-1?Q?R/wJVaV+aNsrx8hs4L2HY6TwBiAog98OJs1K4Iwn3/PGHGlgLr6GF2FprK?=
- =?iso-8859-1?Q?z5UddO2YiybKJbQqUizZT111mud/u59MvIiq+NhqrlYoCYIZDmXM2mm28l?=
- =?iso-8859-1?Q?50m96pFvGirnznmZewrgZTmo7e3FMSuyYX3xtI+/zjZTJ4//xNFWP1D6xf?=
- =?iso-8859-1?Q?q3w2bqBZ6LH2h8CR3vbicjeLwL0W8qGhQfC7LuOiKyGq79En3aBU6GFk4j?=
- =?iso-8859-1?Q?QMggZ9HC+icENloJmSDROD/r2/GCv7GqMzP5MRCP9XWKkQdOPHM65hWBJB?=
- =?iso-8859-1?Q?r/w/+0ESTOUU3Z2Z6mkyw8SNQjZcyXfeuL86sKYaUtF5bOcSzHsrduJ0AT?=
- =?iso-8859-1?Q?sWF+yjBniPHv9rVk9nSG8TW8oud3reoHP8/dbO37QFKdhiy/zkMAAYXDLb?=
- =?iso-8859-1?Q?A+ZrMr63m5SvpOVO2fefo6usuSSg8OCA0IqLC0NM3BarROdPJYuGdY65tG?=
- =?iso-8859-1?Q?eKAS17utP5eSvkNp51pTUMfrwSZFp8CHpG2507G3x2Ds5gRvFu9pmcnYyL?=
- =?iso-8859-1?Q?zQxDnkjrtEL0ANUlhGoXCSj4CEObWXjhjMItiTQ0L6RlwgsgjuJP1crP11?=
- =?iso-8859-1?Q?kYURC8C4NURFDG+qJWlWn3NR5G4se+ohglKWJjzhaZyUksRzFpGghih2oj?=
- =?iso-8859-1?Q?oCLhj1B50ADa554UeWZlWBr7/zRSadPuS8+jy7qKjvhzKZow58e9WIgTVW?=
- =?iso-8859-1?Q?/7VpbRkyaux+9keiY1uO7LpkqCs1XaECCGk452AalTqTq2ghV4EhH+QBjt?=
- =?iso-8859-1?Q?CS/OLRD8YO+DYUTDTDT3ZrB3nZWYfDT3cs0iy35hLTRLUA50tnvCFvZkYu?=
- =?iso-8859-1?Q?+AHYBh9v/1AOZssIh4VU3wkNBfQDcaCnuBH4nQASl/+3vjji2IMfJ/zsDV?=
- =?iso-8859-1?Q?chETSsOF5U39syS8N5W2jbhLmJHp10ewpGJMTc4EzptK1ll5l/zP5OhzQ3?=
- =?iso-8859-1?Q?7LWqaMYkiwZkQIuBpsfRkcG8nDSF+UyKFh3FiroJc6Ep4PU9pggI3yywYt?=
- =?iso-8859-1?Q?4nz10hg9KrZcIkvmAhuLWWSXB+l5FSZWoN+730W9c+O4Jwxd2VSokRji3R?=
- =?iso-8859-1?Q?V6CiSwYjHPGBIB6HcR3hHMDyU01AiWF0LKastHI1HK3VizbI0OPWAdGC/p?=
- =?iso-8859-1?Q?UMu42RbmQ0/UhBFLRSr9IUp6R7AS2HqycEg+W7BlrV9vHMQL4vQKTBaTTu?=
- =?iso-8859-1?Q?idTu1yZRsVMRIxOKjbCKgYY9DzLcNy+tCac4v/G23yxqSOppBLj+r/EHTH?=
- =?iso-8859-1?Q?/NAO/5zqyJ+7l94ae2McKR40TkfuZnavbSOXn+B4d5NB6puHpVT1WIPsrt?=
- =?iso-8859-1?Q?JdwIiMLL12bN2HOVmosX0/zRndRAJe6on3xdUCOXsTi8AsTiBFU9aC7YH+?=
- =?iso-8859-1?Q?PucXSRW4SL3iMZOsaIGOJf/JIc0CHa00IY0nL7uzoMPxh6xyRT0tSkgPOF?=
- =?iso-8859-1?Q?ZBtIJWY+wJgeM=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F0D69D00;
+	Fri,  9 Feb 2024 14:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707487864; cv=none; b=D19XI/MYd4tDUBpdWgJUgcvI5uzrYC6D0rDtIfdym1g5tE+ztiWCbkKMmXKw754NH9W/MsBHRtsbFi/v1AkaA859efUM0xzo4Ujb2dZDQqRpw8Gh7VA7t4e55ZIvcEK7E/OsuF/GQQoAA0gbF/XJoNMLwJqZ6l4OBxZcfg3DFKI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707487864; c=relaxed/simple;
+	bh=KOLFzJzmRMSCR4xZEtIXEdjmTTqNH0W9nLaTMonLbDg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QT+vwIJrVbwhRqQkfQWcIw9Xwonh5Oetxi6UqBewBv7vkm3HvVr+NbrDgZligQ69qekiXMpXglvbsnlNx7YpYMgJIm3Vq39vwnSbe2x6tTmTm8v13paPj7jMLXObdiH3wytp7PfzfuaW3nqub6DnOdiT+pf4Zyv1fLQH9V3iws8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TWb3S4bBNz9y4TD;
+	Fri,  9 Feb 2024 21:55:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id D539014059D;
+	Fri,  9 Feb 2024 22:10:52 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwAHshoZMsZlvXMuAg--.65105S7;
+	Fri, 09 Feb 2024 15:10:52 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: corbet@lwn.net,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	shuah@kernel.org,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	mic@digikod.net
+Cc: linux-security-module@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org,
+	zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	linux-integrity@vger.kernel.org,
+	wufan@linux.microsoft.com,
+	pbrobinson@gmail.com,
+	zbyszek@in.waw.pl,
+	hch@lst.de,
+	mjg59@srcf.ucam.org,
+	pmatilai@redhat.com,
+	jannh@google.com,
+	dhowells@redhat.com,
+	jikos@kernel.org,
+	mkoutny@suse.com,
+	ppavlu@suse.com,
+	petr.vorel@gmail.com,
+	petrtesarik@huaweicloud.com,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v3 05/13] digest_cache: Populate the digest cache from a digest list
+Date: Fri,  9 Feb 2024 15:09:09 +0100
+Message-Id: <20240209140917.846878-6-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240209140917.846878-1-roberto.sassu@huaweicloud.com>
+References: <20240209140917.846878-1-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7213.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1dfb7cf-efb9-41cb-b4c1-08dc2978ec7d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2024 14:10:52.0056
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xKdTsrtdzv+IUvkY0/0yzn7bY86714an0DwwSj10EPpV/p1u76/DehjzY8VaWeXLvzoszzb+UC1wiEYLG4jL9w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7296
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwAHshoZMsZlvXMuAg--.65105S7
+X-Coremail-Antispam: 1UD129KBjvJXoWfGr45Zr4DWryxJr15tw15CFg_yoWktrykpa
+	sxCF15trWrJF1fCw4xAF12kryfKrWvqF42qws5ur1ayr47Xr1Yy3WIk3Wjvry5Gr4UWa17
+	Ar4UKFyUKr4DXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_
+	GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2I
+	x0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8
+	JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2
+	ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
+	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdYxBI
+	daVFxhVjvjDU0xZFpf9x0pRQJ5wUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAIBF1jj5Y4egAEsv
 
->> +	default:=0A=
->> +		WARN_ON_ONCE(1);=0A=
->=0A=
-> Return -EINVAL?=0A=
-=0A=
-Sure.=0A=
-=0A=
->> > +=A0=A0 case KVM_PGTABLE_PROT_NORMAL_NC:=0A=
->> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D KVM_S2_MEMATTR(pgt, NORMAL_NC=
-);=0A=
->> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break;=0A=
->>=0A=
->> Does it make sense to allow executable here as well? I don't think it's=
-=0A=
->> harmful but not sure there's a use-case for it either.=0A=
->=0A=
-> Ah, we should just return EINVAL for that too.=0A=
->=0A=
-> I get that the memory attribute itself is not problematic, but since=0A=
-> we're only using this thing for MMIO it'd be a rather massive=0A=
-> bug in KVM... We reject attempts to do this earlier in user_mem_abort().=
-=0A=
-=0A=
-Ack, will change to test executable and return -EINVAL in that case.=
+From: Roberto Sassu <roberto.sassu@huawei.com>
+
+Introduce digest_cache_populate() to populate the digest cache from a
+digest list.
+
+It opens the file and then schedules a work to read the content (with new
+file type READING_DIGEST_LIST). Scheduling a work solves the problem of
+kernel_read_file() returning -EINTR.
+
+Once the work is done, this function calls digest_cache_strip_modsig() to
+strip a module-style appended signature, if present, and finally calls
+digest_cache_parse_digest_list() to parse the data.
+
+The latter function, which at the moment does nothing, will be completed
+with calls to parsing functions selected from the digest list file name.
+It expects digest lists file names to be in the format:
+
+[<seq num>-]<digest list format>-<digest list name>
+
+<seq-num>- is an optional prefix to impose in which order digest lists in
+a directory should be parsed.
+
+Failing to populate a digest cache causes it to be marked as invalid and to
+not be returned by digest_cache_create(). Dig_owner however is kept, to
+avoid an excessive number of retries, which would probably not succeed
+either.
+
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ include/linux/kernel_read_file.h |   1 +
+ security/digest_cache/Makefile   |   2 +-
+ security/digest_cache/internal.h |  26 ++++++
+ security/digest_cache/main.c     |  18 ++++
+ security/digest_cache/modsig.c   |  66 ++++++++++++++
+ security/digest_cache/populate.c | 149 +++++++++++++++++++++++++++++++
+ 6 files changed, 261 insertions(+), 1 deletion(-)
+ create mode 100644 security/digest_cache/modsig.c
+ create mode 100644 security/digest_cache/populate.c
+
+diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+index 90451e2e12bd..85f602e49e2f 100644
+--- a/include/linux/kernel_read_file.h
++++ b/include/linux/kernel_read_file.h
+@@ -14,6 +14,7 @@
+ 	id(KEXEC_INITRAMFS, kexec-initramfs)	\
+ 	id(POLICY, security-policy)		\
+ 	id(X509_CERTIFICATE, x509-certificate)	\
++	id(DIGEST_LIST, digest-list)	\
+ 	id(MAX_ID, )
+ 
+ #define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
+diff --git a/security/digest_cache/Makefile b/security/digest_cache/Makefile
+index 7e00c53d8f55..c1452437d02f 100644
+--- a/security/digest_cache/Makefile
++++ b/security/digest_cache/Makefile
+@@ -4,4 +4,4 @@
+ 
+ obj-$(CONFIG_SECURITY_DIGEST_CACHE) += digest_cache.o
+ 
+-digest_cache-y := main.o secfs.o htable.o
++digest_cache-y := main.o secfs.o htable.o populate.o modsig.o
+diff --git a/security/digest_cache/internal.h b/security/digest_cache/internal.h
+index ee6487acce1d..0d9c01dd9bc8 100644
+--- a/security/digest_cache/internal.h
++++ b/security/digest_cache/internal.h
+@@ -15,6 +15,24 @@
+ 
+ /* Digest cache bits in flags. */
+ #define INIT_IN_PROGRESS	0	/* Digest cache being initialized. */
++#define INVALID			1	/* Digest cache marked as invalid. */
++
++/**
++ * struct read_work - Structure to schedule reading a digest list
++ * @work: Work structure
++ * @file: File descriptor of the digest list to read
++ * @data: Digest list data (updated)
++ * @ret: Return value from kernel_read_file() (updated)
++ *
++ * This structure contains the necessary information to schedule reading a
++ * digest list.
++ */
++struct read_work {
++	struct work_struct work;
++	struct file *file;
++	void *data;
++	int ret;
++};
+ 
+ /**
+  * struct digest_cache_entry - Entry of a digest cache hash table
+@@ -127,4 +145,12 @@ int digest_cache_htable_lookup(struct dentry *dentry,
+ 			       enum hash_algo algo);
+ void digest_cache_htable_free(struct digest_cache *digest_cache);
+ 
++/* populate.c */
++int digest_cache_populate(struct digest_cache *digest_cache,
++			  struct path *digest_list_path, char *path_str,
++			  char *filename);
++
++/* modsig.c */
++size_t digest_cache_strip_modsig(__u8 *data, size_t data_len);
++
+ #endif /* _DIGEST_CACHE_INTERNAL_H */
+diff --git a/security/digest_cache/main.c b/security/digest_cache/main.c
+index fa435b6566fa..8e9ab99081c3 100644
+--- a/security/digest_cache/main.c
++++ b/security/digest_cache/main.c
+@@ -166,6 +166,17 @@ struct digest_cache *digest_cache_create(struct dentry *dentry,
+ 	set_bit(INIT_IN_PROGRESS, &dig_sec->dig_owner->flags);
+ 	mutex_unlock(&dig_sec->dig_owner_mutex);
+ 
++	if (S_ISREG(inode->i_mode)) {
++		ret = digest_cache_populate(digest_cache, digest_list_path,
++					    path_str, filename);
++		if (ret < 0) {
++			pr_debug("Failed to populate digest cache %s ret: %d (keep digest cache)\n",
++				 digest_cache->path_str, ret);
++			/* Prevent usage of partially-populated digest cache. */
++			set_bit(INVALID, &digest_cache->flags);
++		}
++	}
++
+ 	/* Creation complete, notify the other lock contenders. */
+ 	clear_and_wake_up_bit(INIT_IN_PROGRESS, &dig_sec->dig_owner->flags);
+ exists:
+@@ -173,6 +184,13 @@ struct digest_cache *digest_cache_create(struct dentry *dentry,
+ 		/* Wait until creation complete. */
+ 		wait_on_bit(&dig_sec->dig_owner->flags, INIT_IN_PROGRESS,
+ 			    TASK_UNINTERRUPTIBLE);
++
++	if (test_bit(INVALID, &digest_cache->flags)) {
++		pr_debug("Digest cache %s is invalid, don't return it\n",
++			 digest_cache->path_str);
++		digest_cache_put(digest_cache);
++		digest_cache = NULL;
++	}
+ out:
+ 	if (digest_list_path == &file_path)
+ 		path_put(&file_path);
+diff --git a/security/digest_cache/modsig.c b/security/digest_cache/modsig.c
+new file mode 100644
+index 000000000000..3bdda00d8bb2
+--- /dev/null
++++ b/security/digest_cache/modsig.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
++ * Copyright (C) 2019  IBM Corporation
++ * Copyright (C) 2023-2024 Huawei Technologies Duesseldorf GmbH
++ *
++ * Author: Roberto Sassu <roberto.sassu@huawei.com>
++ *
++ * Strip module-style appended signatures.
++ */
++
++#define pr_fmt(fmt) "DIGEST CACHE: "fmt
++#include <linux/module.h>
++#include <linux/module_signature.h>
++
++#include "internal.h"
++
++/**
++ * digest_cache_strip_modsig - Strip module-style appended sig from digest list
++ * @data: Data to parse
++ * @data_len: Length of @data
++ *
++ * This function strips the module-style appended signature from a digest list,
++ * if present.
++ *
++ * Return: Size of stripped data on success, original size otherwise.
++ */
++size_t digest_cache_strip_modsig(__u8 *data, size_t data_len)
++{
++	const size_t marker_len = strlen(MODULE_SIG_STRING);
++	const struct module_signature *sig;
++	size_t parsed_data_len = data_len;
++	size_t sig_len;
++	const void *p;
++
++	/* From ima_modsig.c */
++	if (data_len <= marker_len + sizeof(*sig))
++		return data_len;
++
++	p = data + parsed_data_len - marker_len;
++	if (memcmp(p, MODULE_SIG_STRING, marker_len))
++		return data_len;
++
++	parsed_data_len -= marker_len;
++	sig = (const struct module_signature *)(p - sizeof(*sig));
++
++	/* From module_signature.c */
++	if (be32_to_cpu(sig->sig_len) >= parsed_data_len - sizeof(*sig))
++		return data_len;
++
++	/* Unlike for module signatures, accept all signature types. */
++	if (sig->algo != 0 ||
++	    sig->hash != 0 ||
++	    sig->signer_len != 0 ||
++	    sig->key_id_len != 0 ||
++	    sig->__pad[0] != 0 ||
++	    sig->__pad[1] != 0 ||
++	    sig->__pad[2] != 0) {
++		pr_debug("Signature info has unexpected non-zero params\n");
++		return data_len;
++	}
++
++	sig_len = be32_to_cpu(sig->sig_len);
++	parsed_data_len -= sig_len + sizeof(*sig);
++	return parsed_data_len;
++}
+diff --git a/security/digest_cache/populate.c b/security/digest_cache/populate.c
+new file mode 100644
+index 000000000000..415e638f587b
+--- /dev/null
++++ b/security/digest_cache/populate.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023-2024 Huawei Technologies Duesseldorf GmbH
++ *
++ * Author: Roberto Sassu <roberto.sassu@huawei.com>
++ *
++ * Implement the code to populate a digest cache.
++ */
++
++#define pr_fmt(fmt) "DIGEST CACHE: "fmt
++#include <linux/init_task.h>
++#include <linux/kernel_read_file.h>
++
++#include "internal.h"
++
++/**
++ * digest_cache_parse_digest_list - Parse a digest list
++ * @digest_cache: Digest cache
++ * @path_str: Path string of the digest list
++ * @filename: Digest list file name (can be an empty string)
++ * @data: Data to parse
++ * @data_len: Length of @data
++ *
++ * This function selects a parser for a digest list depending on its file name,
++ * and calls the appropriate parsing function. It expects the file name to be
++ * in the format: [<seq num>-]<format>-<digest list name>. <seq num> is
++ * optional.
++ *
++ * Return: Zero on success, a POSIX error code otherwise.
++ */
++static int digest_cache_parse_digest_list(struct digest_cache *digest_cache,
++					  char *path_str, char *filename,
++					  void *data, size_t data_len)
++{
++	char *format, *next_sep;
++	int ret = -EINVAL;
++
++	if (!filename[0]) {
++		filename = strrchr(path_str, '/');
++		if (!filename)
++			return ret;
++
++		filename++;
++	}
++
++	format = filename;
++
++	/*
++	 * Since we expect that all files start with a digest list format, this
++	 * check is reliable to detect <seq num>.
++	 */
++	if (filename[0] >= '0' && filename[0] <= '9') {
++		format = strchr(filename, '-');
++		if (!format)
++			return ret;
++
++		format++;
++	}
++
++	next_sep = strchr(format, '-');
++	if (!next_sep)
++		return ret;
++
++	pr_debug("Parsing %s%s%s, format: %.*s, size: %ld\n", path_str,
++		 filename[0] ? "/" : "", filename, (int)(next_sep - format),
++		 format, data_len);
++
++	return ret;
++}
++
++/**
++ * digest_cache_read_digest_list - Read a digest list
++ * @work: Work structure
++ *
++ * This function is invoked by schedule_work() to read a digest list.
++ *
++ * It does not return a value, but stores the result in the passed structure.
++ */
++static void digest_cache_read_digest_list(struct work_struct *work)
++{
++	struct read_work *w = container_of(work, struct read_work, work);
++
++	w->ret = kernel_read_file(w->file, 0, &w->data, INT_MAX, NULL,
++				  READING_DIGEST_LIST);
++}
++
++/**
++ * digest_cache_populate - Populate a digest cache from a digest list
++ * @digest_cache: Digest cache
++ * @digest_list_path: Path structure of the digest list
++ * @path_str: Path string of the digest list
++ * @filename: Digest list file name (can be an empty string)
++ *
++ * This function opens the digest list for reading it. Then, it schedules a
++ * work to read the digest list and, once the work is done, it calls
++ * digest_cache_strip_modsig() to strip a module-style appended signature and
++ * digest_cache_parse_digest_list() for extracting and adding digests to the
++ * digest cache.
++ *
++ * Return: Zero on success, a POSIX error code otherwise.
++ */
++int digest_cache_populate(struct digest_cache *digest_cache,
++			  struct path *digest_list_path, char *path_str,
++			  char *filename)
++{
++	struct file *file;
++	void *data;
++	size_t data_len;
++	struct read_work w;
++	int ret;
++
++	file = dentry_open(digest_list_path, O_RDONLY, &init_cred);
++	if (IS_ERR(file)) {
++		pr_debug("Unable to open digest list %s%s%s, ret: %ld\n",
++			 path_str, filename[0] ? "/" : "", filename,
++			 PTR_ERR(file));
++		return PTR_ERR(file);
++	}
++
++	w.data = NULL;
++	w.file = file;
++	INIT_WORK_ONSTACK(&w.work, digest_cache_read_digest_list);
++
++	schedule_work(&w.work);
++	flush_work(&w.work);
++	destroy_work_on_stack(&w.work);
++	fput(file);
++
++	ret = w.ret;
++	data = w.data;
++
++	if (ret < 0) {
++		pr_debug("Unable to read digest list %s%s%s, ret: %d\n",
++			 path_str, filename[0] ? "/" : "", filename, ret);
++		return ret;
++	}
++
++	data_len = digest_cache_strip_modsig(data, ret);
++
++	/* Digest list parsers initialize the hash table and add the digests. */
++	ret = digest_cache_parse_digest_list(digest_cache, path_str, filename,
++					     data, data_len);
++	if (ret < 0)
++		pr_debug("Error parsing digest list %s%s%s, ret: %d\n",
++			 path_str, filename[0] ? "/" : "", filename, ret);
++
++	vfree(data);
++	return ret;
++}
+-- 
+2.34.1
+
