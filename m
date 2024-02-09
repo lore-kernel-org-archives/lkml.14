@@ -1,183 +1,265 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD48765BC6
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 14:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707487716; cv=fail; b=KWA8F4ewYovaVfC+RC/Qw6v7mGv8k1Pz8MtPiYG2eYbsBqtRHxqmbl51pZLjl+o9eDDFKjRFB1gQgeKxTmAIOxqfhIdb4NJ+i0rlBJcvcKmmARAOk6BKRlVsI2U2Gm5xwOw66ZHHYyf95oM9KGeDqVeT0mbaco+dt7ZoDTMlSDk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707487716; c=relaxed/simple;
-	bh=zXekn73AeqhUKvpHC4Vl6vRPBq0O3p/BafQFOQQO63Y=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=lgRR5T+87wwzEaaezQpPK/Zz3Hy1DzAfmbG2RfPtT4zX+ck5H4K+Klj48txMbuGajz98vPIzL5QDPtotqe8FB8hRwT1fpoL/Y3ZdyhEnAV62ozv5hTkL+Ybc7SD/Oi5BWv/rlL8cF8dgrksfGkR+9Guy1PEXD/7cJWKDn49C6Nw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RX4upDDb; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RX4upDDb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707487715; x=1739023715;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=zXekn73AeqhUKvpHC4Vl6vRPBq0O3p/BafQFOQQO63Y=;
-  b=RX4upDDbj/XDdmOstIpRt1BhCRrkQVmucpbcQ9dC/j1gySd2gQDk2wSj
-   V7Q2sgz8x0tOu/vVqPqvdKVwvqp5I+ORYIiuyVCKGJXrh59Tiqw2rfN6C
-   PxeTGQetWWHK/Bi6GaVOCqgZE54wmDbogFsC8mQoXiLQ5R3PHZX89kYPK
-   R7HP8E/xDVfYb6k+ILMbAb4xM9UfFisIO8mTtgfxPHA2vGgVCN3lwkCFH
-   wzjWlqq7XxoA1sKtAvAa03Jcc7QVrkzwRW6D+XZvdiQYBCsn4+e8+8jHT
-   eauhHH7NzGay4W9Y7Hb2ekrdv4BArjbGbf7WXsyMA8ZWlt03ggwhkU72B
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="12081230"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="12081230"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 06:08:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="934432885"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="934432885"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Feb 2024 06:08:33 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 9 Feb 2024 06:08:33 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 9 Feb 2024 06:08:32 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 9 Feb 2024 06:08:32 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 9 Feb 2024 06:08:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FNBAfoem0YqlTdfSLmkLOPkIh2MFM5H8IlfBrDzWMVW6DK7IlL/W5PBpoOEwqXzUit3sH0LBT/RRLxhK31Ehu6HcU42hnFLRzyX+rM973Tr86stV0IbcsbICLP7iqjvQloEQGe6I3p//DKjX6CIfq84EH5qZ4J3Re6HHB/8eOQmE0Opo6BxRZ2VkczvBiQ+vcT4Q9DmVnvwwur5q2102kJij9XKgPHhvvAZKom5tBFeoMSEkpnf90qS/2rgUeU6hWpHX6bVNeJSbDgnnbdTJmAT3lC5KCSCczCAwZs0RooV0aNkyaaHxh5MA4ItOaBoyfOmoSznudd4gA+f3/tW2Sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PVh54wBMadB8xQHnD4RxZN2DI5bFjDm8tzv9WMEWmOU=;
- b=DokJv6VyPelyXXdpOkuwMsk8z0i8Y+3+gVaKUZoEdbB+vkKaV1LV5Umq6UgOUXwqHJ1CeDnMLiW1hBVQfdEVHEYl85UL5Av+G35FqBu6uT+CWDSOSEHlUOs2sLpcy0w2N9iuy5FQ+EXgdg+iYVd1ZNOCRSLNCwTfAHoJ9n3Dp8r+/hIis2HDuA36esZ8a31ubvJmUs1+k1RGCFvGQV6+RKvgMQ3tU4NeyoanVstUBCmzoBM/WvM7mUrrw1a2HQ/+bE+IMcoc3uEbbSS9Zxn4RyPKbK3rPNzz9uQDZvnVd3u9wYe6aOSVFD7sEyorCHMC8LT7BITGzUJ4YVN93mUjSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- DM3PR11MB8669.namprd11.prod.outlook.com (2603:10b6:0:14::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.38; Fri, 9 Feb 2024 14:08:30 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::a818:a5e:b1b1:511]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::a818:a5e:b1b1:511%4]) with mapi id 15.20.7270.024; Fri, 9 Feb 2024
- 14:08:29 +0000
-From: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
-To: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Jani Nikula
-	<jani.nikula@intel.com>, Luca Coelho <luciano.coelho@intel.com>,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
-Subject: [PATCH] drm/tests: mm: Convert to drm_dbg_printer
-Date: Fri, 9 Feb 2024 15:08:18 +0100
-Message-ID: <20240209140818.106685-1-michal.winiarski@intel.com>
-X-Mailer: git-send-email 2.43.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR2P281CA0146.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:98::7) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5C950247;
+	Fri,  9 Feb 2024 14:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707487802; cv=none; b=FgjVuS4M/MMWVG0hfxuXZfPSO5kNOnHnNirpOvJ4vkFqohYiF5t5sAehxf0NKunxVgG/DgC7+ErBRHr53d9fQa2fRwRnrsECUUJ2BBZv5+MIc8dMHjMDfZ6EqJbjr928cmi/OnopIz9bVWNYp6aZDH9AQ7RAzcTVakyOSkzmvyw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707487802; c=relaxed/simple;
+	bh=wHqtCB1+eY06rNvuDYjVH1ShRhuhIJK5Cw5NsSHbMnY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WY0qZvH9kAnusEPD28XC6N08Nyr9QKPpPYxILlWcIjlky6V+9xqS2NaoFdGEx/BIt9BUX5IVyW+Ai63X8g6Isi7sUIBYRaJslez2jp9Shzj84L+pxZQ6FmbdBCFVNPyPU8fKIczfLR3+H+I20riLlEuazTdUerd78sLSU2P2Bhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TWZxs32hlz9xFmM;
+	Fri,  9 Feb 2024 21:50:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id E9AAA14068B;
+	Fri,  9 Feb 2024 22:09:45 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwAHshoZMsZlvXMuAg--.65105S2;
+	Fri, 09 Feb 2024 15:09:45 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: corbet@lwn.net,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	shuah@kernel.org,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	mic@digikod.net
+Cc: linux-security-module@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org,
+	zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	linux-integrity@vger.kernel.org,
+	wufan@linux.microsoft.com,
+	pbrobinson@gmail.com,
+	zbyszek@in.waw.pl,
+	hch@lst.de,
+	mjg59@srcf.ucam.org,
+	pmatilai@redhat.com,
+	jannh@google.com,
+	dhowells@redhat.com,
+	jikos@kernel.org,
+	mkoutny@suse.com,
+	ppavlu@suse.com,
+	petr.vorel@gmail.com,
+	petrtesarik@huaweicloud.com,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v3 00/13] security: digest_cache LSM
+Date: Fri,  9 Feb 2024 15:09:04 +0100
+Message-Id: <20240209140917.846878-1-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|DM3PR11MB8669:EE_
-X-MS-Office365-Filtering-Correlation-Id: c26bd27b-9afe-470c-3114-08dc297897b5
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8Snb9XqjRQDgo67Jfk3lYU3+ZQkyzhU0WCVCBqzJBq6snm27IcW4rRaeJcgXTLOIdP5mJVVkrQIaoQ3htvwQDbe/SVgGknTDwh4BIWVc/MnkEfrtpLEmtMghDVOYtsIpshf5aAYYTY7D5xxX5pMDFhH4PRIddr6ChvIk6gTFWqaHVj/X72OUzhuXF00ThxQmI7TN1UT4qddIcmqChYzf2hPrnWbPz07h3XnPNBddj0vA1JhyeCOaZwmzaHanJyMO072Iv8l55AEKm23H0MgFkP49GUbzrHlAQG+IZaoNx7CrINwNq+R9pViESb23UX6Y7+KIDIEfD1bFAJGiu9hQklsgcIWbbFosFOtyuNP1JOVutqKVNm78VtSJCOyD8iLcnhT2ldWNvOIg9T+gZWdpxmnKkzGf4jFvdr5zncraEvKgVyMKpz23rG9Jqx/ozgU/GS+iig61R+73Ipy9O6NapD08O+OQmOZpmDAxgr+g8Epv/8LBiPbc1H5GGKRrJlowoE5ZGMni/kjvI1sKnxaiTx6gVi77tMtweZpCDqzfDzM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(396003)(346002)(39850400004)(136003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(41300700001)(6512007)(66476007)(36756003)(6486002)(54906003)(6506007)(478600001)(6666004)(316002)(4326008)(8676002)(38100700002)(66946007)(8936002)(66556008)(82960400001)(1076003)(26005)(86362001)(83380400001)(2616005)(4744005)(5660300002)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Umx2STludGRkVFVMQy85TS9hNU9Rd0VXMkZKSXlUeUlXV041ajJEVnZoTklD?=
- =?utf-8?B?UzkwVDZzeTNEbkExVmxNL2dSMHg1K2xScVFIdk1pUnJkZ1dJTW0yTWY5dGhn?=
- =?utf-8?B?eFlmUURNd0tiRFZpWFNHbVNoME8ySzl3Vk5jclBQRDlnbWRDNWNzSjRkT2RQ?=
- =?utf-8?B?YkI5VnJtaHZyRkVPekJISjYzTXNHU1cvNWNHcStEMzZsZEpnZXlIalFHMGgv?=
- =?utf-8?B?amNISi83Y0NrT3ZzME0vaGNlODNKZUI0cGVBMlBscmdNTGE5bUVaWkJwcUp1?=
- =?utf-8?B?bkVXMGhYWjVKdGt1QVcxNlRtTE9VL2svSzdTTkRVK3pGSjRla3ZRMng5UVNG?=
- =?utf-8?B?a2xValNhVHdGc1h5aG9Ia20wdzhkbk9VbmtmNDg2L25xdWk2dmFKa3RpdGIw?=
- =?utf-8?B?SXFJMlQraUVhZ3p3YmRaNWMweDdSbW85d3hPOHBHUFppamtDWFJDTTNiV3pR?=
- =?utf-8?B?dlcrR09PTE9WUWQrZXJIOGdsL21GSStMYjNmcEZTcEZMUEZOOWdWelVpdnd6?=
- =?utf-8?B?SGl6VWZiQWMrVVc2YWpRZUJzcTdWOVNuR0ZFRjZEancvVFFTUWltVk5abVBX?=
- =?utf-8?B?N1NOVmt6VUh5UVRYV1ZjcG16ZWVheGtjaDZWcDE5WWdYT2RzN2VXZVZhV0gx?=
- =?utf-8?B?VStYWnV1anlmMGhvMkQvdjZyTElHQVpaYjc1NGJhaEMxcWF2dXhOYjVxY3Z4?=
- =?utf-8?B?T2NQSFBnTzQxSWNaWWxLVzJHVlhKTGl0cnVCSElzMno2eUgvY1gxWG9tb0Vs?=
- =?utf-8?B?SVl0MWRuWDkxSEJOa0lOYkRTbFZCaG8vZVgxNHgxdEFnQnNkRWYvMWpTbFJJ?=
- =?utf-8?B?MWhVSVVTVHplTUxnZG03SUFhNmxJK3pnVFNtSkE0WFZXR1ZnSkc4eXV0RXFO?=
- =?utf-8?B?ajBtOHRUYmZwTUI0Y0Q4bWJ3cVpmbHBSN1E5T2wrZWp6R0t6dXpiWlYvSWl0?=
- =?utf-8?B?UVBXM3d5TWliejE1M0EwTlhSMlVSQi9EYTloTVBDOE5ZYStabXN2YUlPUEFl?=
- =?utf-8?B?Y1ZlVlJSNGtIYkdSTHVucW56dUpsTGE3NDB0SE5Ddmh3R3NuTUYyZCtxQkRv?=
- =?utf-8?B?NVA3VTQwSzdWY245dUF5V3dxZjU5N3ZOdFFsejRwVmRQSGRyNVVWcVFBeVA2?=
- =?utf-8?B?cXZsbzJhbitkVG5QMXBzamc2a3dKRHF5bTAyUkVXd3JIRHRCd3l2a2t1U1RG?=
- =?utf-8?B?dnJ1VkVUb3BWSlk4U0tMdmttTnRCYjhTMlVQVWgvcm8xemxwZUw4SkMvZXl2?=
- =?utf-8?B?S21abDVpYldqRUl3TXozMzZqZlBLelpWVFZaTnBmaHRzTDZqeDkwejU2aGR2?=
- =?utf-8?B?dG5BM1dBZmNoTERFenQyMlRMT2EvWTdBN3FJSGZGNkI5dExSOXpOdjJLQWo2?=
- =?utf-8?B?QXdnUGJiS01PbFFqemtCNWorcGtpT1B4cWJacFhOaWdsRWdBZTZBVU1rU0Vp?=
- =?utf-8?B?SEx4V3A1MGR4a2R0WUpIU1JleE54WWJ3SU1ZSXpFanVMbVUyV0VFUGN2SVh5?=
- =?utf-8?B?QVM1enpHYys2VEhiNjFtdkFvYzVtQVViczcxY0doSUwvY0pzOVNTdENsb2xY?=
- =?utf-8?B?bmw0RUp1L0dkWFJUVjZHYUxUTGRFQ05LRFRXVzBNSlZpZGJWVFhhTlVXazUy?=
- =?utf-8?B?Q1lOaU5VWDBkTUlia2poRUkyNWRrZkdUWGV1amFVeFNsRGIrVDZWR29od21k?=
- =?utf-8?B?U1JTd3N3YkZPUmg5L3lZMjBleDBJdElDV3JEakdsanowemVjeHdhSDMvNFVL?=
- =?utf-8?B?QzJSVG8vWFFpQ2t3QUlCdGlrbWh5dkQ1V0gvQVZ3WE9oR0RhVDBSQmJ4RWhS?=
- =?utf-8?B?OER1WEcwUHZ6RWtWWTJvemNzck1yL3pUZjVpLzhiK0E3T2lBU0RCd3dzUng1?=
- =?utf-8?B?ZDBUc1lNR2MwL1BJa0ZNdzlRQTl5ZUowRzgvdUtLR3VtYm1JVGt5MUZZYjAw?=
- =?utf-8?B?TWs3VFY5OW85a3BPaEJHVXdaZG1EWk9PMC83UkdUbDc1VnM1V09FQkYvWkly?=
- =?utf-8?B?eUdGdkFwSDdXVktZaGZVMk9zZURjMWxtN3hnRmRIdjJLbzRDRGlud2V6b3RN?=
- =?utf-8?B?WTlnV2VFRUlURldpcld3VWk3SktQNytPbTNsUWM3L1BxVHNEVEtJYzNEYURL?=
- =?utf-8?B?SWJCNm1Bb0g0VGM3dHhYei9rSjFqbVcxL081ZE9iSUVDV2ZHOThFeGNKenFC?=
- =?utf-8?B?Mnc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c26bd27b-9afe-470c-3114-08dc297897b5
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 14:08:29.9275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QgkX1B2hbBCCsUCWJhLM6WyLOJ8ynCDB0t29P0/Ka1kTH+AdwkonleCC5iNuc5AxLUjD1/1/UTg4WXHHan4fIXT02kuZcBrEcySCeMoPYuU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8669
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwAHshoZMsZlvXMuAg--.65105S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3GFykCrWxGr1ruF4UuF4rXwb_yoWfAFyxp3
+	97C3W5Kws5ZFy7Aw4fA3W29F1rt395KF47Gw4fXr13ZrW5XryFy3WIkw17Zry3XrW8Xa1S
+	yw47Kr15Ww1DJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9a14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
+	WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr
+	UvcSsGvfC2KfnxnUUI43ZEXa7sRiuWl3UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAIBF1jj5Y4VwACsE
 
-Fix one of the tests in drm_mm that was not converted prior to
-drm_debug_printer removal, causing tests build failure.
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-Fixes: e154c4fc7bf2d ("drm: remove drm_debug_printer in favor of drm_dbg_printer")
-Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
----
- drivers/gpu/drm/tests/drm_mm_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Introduce the digest_cache LSM, whose purpose is to deliver reference
+digest values to integrity providers, such as IMA and IPE, abstracting to
+them how those digests where extracted from the respective data source.
 
-diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/drm_mm_test.c
-index 1eb0c304f9607..3488d930e3a38 100644
---- a/drivers/gpu/drm/tests/drm_mm_test.c
-+++ b/drivers/gpu/drm/tests/drm_mm_test.c
-@@ -188,7 +188,7 @@ static void drm_test_mm_init(struct kunit *test)
- 
- static void drm_test_mm_debug(struct kunit *test)
- {
--	struct drm_printer p = drm_debug_printer(test->name);
-+	struct drm_printer p = drm_dbg_printer(NULL, DRM_UT_CORE, test->name);
- 	struct drm_mm mm;
- 	struct drm_mm_node nodes[2];
- 
+The major benefit is the ability to use the vaste amount of digests already
+provided (and likely signed) by software vendors, without needing them to
+adapt their format to the one understood by the integrity provider.
+
+IMA and IPE can immediately interface with the digest_cache LSM and query
+the digest of an accessed file. If the digest is found, it means that the
+file is coming from the software vendor and not modified. If not, the file
+might have been corrupted. Each integrity provider decides how to handle
+this situation.
+
+The second major benefit is performance improvement. Since the digest_cache
+LSM has the ability to extract many digests from a single data source, it
+means that it has less signatures to verify compared to the approach of
+verifying individual file signatures (IMA appraisal). Preliminary tests
+have shown a speedup of IMA appraisal of about 65% for sequential read, and
+45% for parallel read.
+
+This patch set has as prerequisites the file_release LSM hook (to be
+introduced with the move of IMA/EVM to the LSM infrastructure), and
+support for PGP keys, which is still unclear how it should be done.
+
+The IMA integration patch set will be introduced separately. Also a PoC
+based on the current version of IPE can be provided.
+
+v2:
+- Include the TLV parser in this patch set (from user asymmetric keys and
+  signatures)
+- Move from IMA and make an independent LSM
+- Remove IMA-specific stuff from this patch set
+- Add per algorithm hash table
+- Expect all digest lists to be in the same directory and allow changing
+  the default directory
+- Support digest lookup on directories, when there is no
+  security.digest_list xattr
+- Add seq num to digest list file name, to impose ordering on directory
+  iteration
+- Add a new data type DIGEST_LIST_ENTRY_DATA for the nested data in the
+  tlv digest list format
+- Add the concept of verification data attached to digest caches
+- Add the reset mechanism to track changes on digest lists and directory
+  containing the digest lists
+- Add kernel selftests
+
+v1:
+- Add documentation in Documentation/security/integrity-digest-cache.rst
+- Pass the mask of IMA actions to digest_cache_alloc()
+- Add a reference count to the digest cache
+- Remove the path parameter from digest_cache_get(), and rely on the
+  reference count to avoid the digest cache disappearing while being used
+- Rename the dentry_to_check parameter of digest_cache_get() to dentry
+- Rename digest_cache_get() to digest_cache_new() and add
+  digest_cache_get() to set the digest cache in the iint of the inode for
+  which the digest cache was requested
+- Add dig_owner and dig_user to the iint, to distinguish from which inode
+  the digest cache was created from, and which is using it; consequently it
+  makes the digest cache usable to measure/appraise other digest caches
+  (support not yet enabled)
+- Add dig_owner_mutex and dig_user_mutex to serialize accesses to dig_owner
+  and dig_user until they are initialized
+- Enforce strong synchronization and make the contenders wait until
+  dig_owner and dig_user are assigned to the iint the first time
+- Move checking IMA actions on the digest list earlier, and fail if no
+  action were performed (digest cache not usable)
+- Remove digest_cache_put(), not needed anymore with the introduction of
+  the reference count
+- Fail immediately in digest_cache_lookup() if the digest algorithm is
+  not set in the digest cache
+- Use 64 bit mask for IMA actions on the digest list instead of 8 bit
+- Return NULL in the inline version of digest_cache_get()
+- Use list_add_tail() instead of list_add() in the iterator
+- Copy the digest list path to a separate buffer in digest_cache_iter_dir()
+- Use digest list parsers verified with Frama-C
+- Explicitly disable (for now) the possibility in the IMA policy to use the
+  digest cache to measure/appraise other digest lists
+- Replace exit(<value>) with return <value> in manage_digest_lists.c
+
+Roberto Sassu (13):
+  lib: Add TLV parser
+  security: Introduce the digest_cache LSM
+  digest_cache: Add securityfs interface
+  digest_cache: Add hash tables and operations
+  digest_cache: Populate the digest cache from a digest list
+  digest_cache: Parse tlv digest lists
+  digest_cache: Parse rpm digest lists
+  digest_cache: Add management of verification data
+  digest_cache: Add support for directories
+  digest cache: Prefetch digest lists if requested
+  digest_cache: Reset digest cache on file/directory change
+  selftests/digest_cache: Add selftests for digest_cache LSM
+  docs: Add documentation of the digest_cache LSM
+
+ Documentation/security/digest_cache.rst       | 900 ++++++++++++++++++
+ Documentation/security/index.rst              |   1 +
+ MAINTAINERS                                   |  16 +
+ include/linux/digest_cache.h                  |  89 ++
+ include/linux/kernel_read_file.h              |   1 +
+ include/linux/tlv_parser.h                    |  28 +
+ include/uapi/linux/lsm.h                      |   1 +
+ include/uapi/linux/tlv_digest_list.h          |  72 ++
+ include/uapi/linux/tlv_parser.h               |  59 ++
+ include/uapi/linux/xattr.h                    |   6 +
+ lib/Kconfig                                   |   3 +
+ lib/Makefile                                  |   3 +
+ lib/tlv_parser.c                              | 214 +++++
+ lib/tlv_parser.h                              |  17 +
+ security/Kconfig                              |  11 +-
+ security/Makefile                             |   1 +
+ security/digest_cache/Kconfig                 |  34 +
+ security/digest_cache/Makefile                |  11 +
+ security/digest_cache/dir.c                   | 245 +++++
+ security/digest_cache/htable.c                | 268 ++++++
+ security/digest_cache/internal.h              | 259 +++++
+ security/digest_cache/main.c                  | 545 +++++++++++
+ security/digest_cache/modsig.c                |  66 ++
+ security/digest_cache/parsers/parsers.h       |  15 +
+ security/digest_cache/parsers/rpm.c           | 223 +++++
+ security/digest_cache/parsers/tlv.c           | 299 ++++++
+ security/digest_cache/populate.c              | 163 ++++
+ security/digest_cache/reset.c                 | 168 ++++
+ security/digest_cache/secfs.c                 |  87 ++
+ security/digest_cache/verif.c                 | 119 +++
+ security/security.c                           |   3 +-
+ tools/testing/selftests/Makefile              |   1 +
+ .../testing/selftests/digest_cache/.gitignore |   3 +
+ tools/testing/selftests/digest_cache/Makefile |  23 +
+ .../testing/selftests/digest_cache/all_test.c | 706 ++++++++++++++
+ tools/testing/selftests/digest_cache/common.c |  79 ++
+ tools/testing/selftests/digest_cache/common.h | 131 +++
+ .../selftests/digest_cache/common_user.c      |  47 +
+ .../selftests/digest_cache/common_user.h      |  17 +
+ tools/testing/selftests/digest_cache/config   |   1 +
+ .../selftests/digest_cache/generators.c       | 248 +++++
+ .../selftests/digest_cache/generators.h       |  19 +
+ .../selftests/digest_cache/testmod/Makefile   |  16 +
+ .../selftests/digest_cache/testmod/kern.c     | 499 ++++++++++
+ .../selftests/lsm/lsm_list_modules_test.c     |   3 +
+ 45 files changed, 5714 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/security/digest_cache.rst
+ create mode 100644 include/linux/digest_cache.h
+ create mode 100644 include/linux/tlv_parser.h
+ create mode 100644 include/uapi/linux/tlv_digest_list.h
+ create mode 100644 include/uapi/linux/tlv_parser.h
+ create mode 100644 lib/tlv_parser.c
+ create mode 100644 lib/tlv_parser.h
+ create mode 100644 security/digest_cache/Kconfig
+ create mode 100644 security/digest_cache/Makefile
+ create mode 100644 security/digest_cache/dir.c
+ create mode 100644 security/digest_cache/htable.c
+ create mode 100644 security/digest_cache/internal.h
+ create mode 100644 security/digest_cache/main.c
+ create mode 100644 security/digest_cache/modsig.c
+ create mode 100644 security/digest_cache/parsers/parsers.h
+ create mode 100644 security/digest_cache/parsers/rpm.c
+ create mode 100644 security/digest_cache/parsers/tlv.c
+ create mode 100644 security/digest_cache/populate.c
+ create mode 100644 security/digest_cache/reset.c
+ create mode 100644 security/digest_cache/secfs.c
+ create mode 100644 security/digest_cache/verif.c
+ create mode 100644 tools/testing/selftests/digest_cache/.gitignore
+ create mode 100644 tools/testing/selftests/digest_cache/Makefile
+ create mode 100644 tools/testing/selftests/digest_cache/all_test.c
+ create mode 100644 tools/testing/selftests/digest_cache/common.c
+ create mode 100644 tools/testing/selftests/digest_cache/common.h
+ create mode 100644 tools/testing/selftests/digest_cache/common_user.c
+ create mode 100644 tools/testing/selftests/digest_cache/common_user.h
+ create mode 100644 tools/testing/selftests/digest_cache/config
+ create mode 100644 tools/testing/selftests/digest_cache/generators.c
+ create mode 100644 tools/testing/selftests/digest_cache/generators.h
+ create mode 100644 tools/testing/selftests/digest_cache/testmod/Makefile
+ create mode 100644 tools/testing/selftests/digest_cache/testmod/kern.c
+
 -- 
-2.43.0
+2.34.1
 
