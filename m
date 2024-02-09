@@ -1,75 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54F857871
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 18:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5F25733C;
+	Fri,  9 Feb 2024 18:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707503494; cv=none; b=GsnIQ1goV5cU+pD1Je76f69IQvad6EJdcIGFB23GpfICqgiBqsoyvai0keldHO2H4s5gAo4BrfYrZ27RR2UBzfjOTt1QV+kwoitlwKBDrokoeusZlQeNgKffGKJst9bK4MULQn3j3f+xcAWz/KssyiN4CoFo9VQQNJpcz2l0xhQ=
+	t=1707503494; cv=none; b=c90q7RZOpy+IzcNVtNbyDThSqBOPhSHEu3WigeEcmYYQwofE9btGC5D7WvWp3RLQZ+13NCouByUxH7Qs5Xcmdv05W9NDDHtr9/DQfq7iAIldq7M2Md7CqaE8KsNNObbQQLxoKvYuKp8s8APPhoUht9BEEJUlQejeA7KsR2KIuCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707503494; c=relaxed/simple;
-	bh=hYphy7hwcZXPWGcrOAf7VnQgVSV5jKML/9gkAcnh6H0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z2bQqeokU7XbBjjaWYQJ6qdsTYq2clPwLzC1t2l2TyZrj0LpzDwUrXBvByIDFEWimVe807xBJc20CETpRbmmCiGGPnaeffqdnbw0orllqD+qLpHfj3kWspoZ9+RvDvdKwH/BtNWxN3WTIAKSvD5sILX099lHDbXsncBkzr9zRm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqoNcjaX; arc=none smtp.client-ip=10.30.226.201
+	bh=M3/AQ82yfrpbo27RiP67TArS5rEkXNxRZ/v2g1yjKCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzHLKV+8aXaZOtQEsoW+GCCyX1IwGEUUFcJx3V03wAeSaJ3NYBlMElHoWPw4o5U4mJj1f8HRFIZ8S6rB7hY5/PyBtqQowHyMC63CXPUZFcEDidiBgCtzCPff2MJlHDydvOh3VCKSNHYfb34FD453GRHIgAqu+605VqW8O4jF4LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X7ucxAzT; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqoNcjaX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94804C433A6;
-	Fri,  9 Feb 2024 18:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707503494;
-	bh=hYphy7hwcZXPWGcrOAf7VnQgVSV5jKML/9gkAcnh6H0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fqoNcjaXs0igQ6rGKAI1xnKBXjmnGf/qFymk6DuXLzrtxnvmZgMIM6EWIzAShTXbM
-	 7xF5z0pJhPsgs4V1pixtBms3qjE06XgwLHTjQuB/Xa1js2Z/DwuZwZF9xFYasMN8sX
-	 luXe7lQz8jl+2MIPw8CGG2dPqoLFX8KeB51+esrObX3U41gSuNd2blDJ7Mb5qT2LXD
-	 kRgYB5Z1puJFIchRN8r7eziDW+Dz+o12MdcUVDDA9nsVMd70gWxE+7BUWU/RHkolvJ
-	 zHmNsYtM9HDUYv1oo4U+o90kxRvPQdIY7Vu1Tgnpddh88V38d0vEAoyzaIzRGzAS1l
-	 RHElABiWUK+/g==
-From: Will Deacon <will@kernel.org>
-To: oliver.upton@linux.dev,
-	catalin.marinas@arm.com,
-	suzuki.poulose@arm.com,
-	mark.rutland@arm.com,
-	broonie@kernel.org,
-	maz@kernel.org,
-	Seongsu Park <sgsu.park@samsung.com>,
-	ryan.roberts@arm.com
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: fix typo in comments
-Date: Fri,  9 Feb 2024 18:31:12 +0000
-Message-Id: <170749765403.2629762.3573310365008007219.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240202013306.883777-1-sgsu.park@samsung.com>
-References: <CGME20240202013414epcas1p28ce117bb1e5e7f03b68365ec0d3a9c89@epcas1p2.samsung.com> <20240202013306.883777-1-sgsu.park@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X7ucxAzT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707503494; x=1739039494;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M3/AQ82yfrpbo27RiP67TArS5rEkXNxRZ/v2g1yjKCs=;
+  b=X7ucxAzTmbSSJd1RZIZ3o+oihE1/CdLk2fhKB3k1CEYm2mJgN7qHxQDM
+   oaRGCjd2/wD2qXaX77XJNnEFOgbO6s8ndtlFdEgbJeYJHGTlkomc2BJ3Z
+   5aJCj2ceu2FSnfpm4SquEaqr0oQySDpUGn43GVnD/Xh4JEHSOBD4nF6RE
+   4yTVnoAsURmdFGVNwPAaIkcB5HXOgoOPV0c6gmofI2Dlc2/OZ9kOe3eAM
+   GSghh4tQ/KzR8iWZSZZdv5sG3OlEgTJjMSxPOoee+jUcu1MG/ju1TO2OC
+   8YwQAEF/MFsT7t8qtt5CyAB+JAucfDmUJHrnCV+r3HwnwXshUxNp3wReA
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="12211010"
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="12211010"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 10:31:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="2297834"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.74])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 10:31:32 -0800
+Date: Fri, 9 Feb 2024 10:31:30 -0800
+From: Tony Luck <tony.luck@intel.com>
+To: "Moger, Babu" <babu.moger@amd.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>, x86@kernel.org,
+	Shaopeng Tan <tan.shaopeng@fujitsu.com>,
+	James Morse <james.morse@arm.com>,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Drew Fustini <dfustini@baylibre.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v15-RFC 0/8] Add support for Sub-NUMA cluster (SNC)
+ systems
+Message-ID: <ZcZvguSNel-z3Xe5@agluck-desk3>
+References: <20240126223837.21835-1-tony.luck@intel.com>
+ <20240130222034.37181-1-tony.luck@intel.com>
+ <91bd281e-e21f-4b60-9e73-2f14fcbec316@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91bd281e-e21f-4b60-9e73-2f14fcbec316@amd.com>
 
-On Fri, 2 Feb 2024 10:33:06 +0900, Seongsu Park wrote:
-> fix typo in comments
+On Fri, Feb 09, 2024 at 09:27:56AM -0600, Moger, Babu wrote:
+> Hi Tony,
 > 
-> thath -> that
+> On 1/30/24 16:20, Tony Luck wrote:
+> > This is the re-worked version of this series that I promised to post
+> > yesterday. Check that e-mail for the arguments for this alternate
+> > approach.
 > 
+> To be honest, I like this series more than the previous series. I always
+> thought RDT_RESOURCE_L3_MON should have been a separate resource by itself.
 > 
+> You need to separate the domain lists for RDT_RESOURCE_L3 and
+> RDT_RESOURCE_L3_MON if you are going this route. I didn't see that in this
+> series. Also I have few other comments as well.
 
-Applied to arm64 (for-next/fixes), thanks!
+They are separated. Each "struct rdt_resource" has its own domain list.
 
-[1/1] arm64: fix typo in comments
-      https://git.kernel.org/arm64/c/c0b26c06ed00
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Or do you mean break up the struct rdt_domain into the control and
+monitor versions as was done in the previous series?
+> 
+> Thanks
+> Babu
+> 
