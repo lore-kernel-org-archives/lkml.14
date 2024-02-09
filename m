@@ -1,62 +1,62 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5C5788F;
-	Fri,  9 Feb 2024 05:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6660858212;
+	Fri,  9 Feb 2024 05:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707455077; cv=none; b=MwZ04jVwNQv134cDmVR7TA0Fxcvh4GkUX2iC3frWHh3hqtobTMHDWjZP1JltK0Ahr/MTtz3fV+gicGN5nLRTn/JkWbcjDthSt3WyFBjUnm9/azTbve9YJTKiprVRViccj6x09/rtvNUIw6UK0lVb+a+aX6M3MWs6q0ezU9N/9QU=
+	t=1707455086; cv=none; b=kVkqOw9+lrmcY5JxFE8e7ryJK9qjbyaDMxl7EYJ0iKx3qzJr7UxGfNmPqA01o6aPVqk8OJVSiDel2hGo/sk/0Vf5K6OimFmU8tgFVk0qwtkQY1FBLhekW0d+uXJ1t0MiskQdOUzyH8y7kpBgiHrCiFCVMo5nSHPDW0XmTwXnpgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707455077; c=relaxed/simple;
-	bh=A/i5C+haAyk33PdSAUkRgcW9VpEkLWcEh+Fkl5NMbtk=;
+	s=arc-20240116; t=1707455086; c=relaxed/simple;
+	bh=uRB/16DuLtBh34jZnH2UtKHsz61uXCD8IYiY4hjgO44=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qWF7RaWSD43D4aLivKNibUURCIDK4bEyIYLzaX1aUOSLN+hVIXz8Rol4oySfoIgaf/QZYt1cREm1KBUe/j91KDHtUKw5Hcn/dBePKQRZTHGitlqf/t5fS5VhzaCmHtTS5VZtBGL+BTENFFJzlaiQVfhNmoaKlOlWYZixzBYe920=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cAvoLxEL; arc=none smtp.client-ip=209.85.167.172
+	 In-Reply-To:To:Cc; b=lie21E32nhQP7qe+9JNl0lpmkAMeNEIjfe78mBXTrV+K1qOPfNXuvukU+DByq4ESb0DmvqNW8OEs703LtAo4JIfJyNhKADp5PLKdQ2bl30h+ojaZVsJEc4OEhgUy59CAchb4WJX6x3WRNThxtiShoL0BaLT2pp2k1j+oVVF8rsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ht2oTvQU; arc=none smtp.client-ip=209.85.167.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAvoLxEL"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3bff5e9ccdeso153046b6e.3;
-        Thu, 08 Feb 2024 21:04:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ht2oTvQU"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3bfdd9fa13eso264217b6e.1;
+        Thu, 08 Feb 2024 21:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707455074; x=1708059874; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707455083; x=1708059883; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DjZFEhta82MOtciRGbl6T2FR/OOl48rGzrVvDiOd70Q=;
-        b=cAvoLxELzt2Rr1Hs9EXguYd9lpOYqZYZxyzjE21vOWyPDOs/YqIaFq11WpWwLAsjFI
-         KyObQBaAmGjOKLW2SN6Dfxjw+WaMJMrgBsrCtVvi2j4Of8oF5jMRhXsKBl2P0yX+7Xd3
-         IT0UIpNjZSxxF6W53bE86cSa08de2FYuQ/Aq3HBdazcvK5BT7m2E4B4CRJEtN3MYmZMF
-         SG2KfLCX1n18aviZSTXOpA4k2uy3YUo/MlyvjxBnFtUvaB2sA/monWaFg2/LwvjU5JrY
-         TWFS+lmAFXdUUnJgy2f1SrSeVHFncXUjTPH6o3Y5CmugKulyIieV+1e/dwOlMlgLkE4Z
-         rmyA==
+        bh=U20uA94KDzmtdzL0Pvmh3qCzwQnio/F6nNOPO+lS/4s=;
+        b=ht2oTvQUFoSEJQyQR6N9ZhQZmfPJzZLo+KFmmqAb3Phen6fVScGC9KdbAxkQGZljyY
+         yFr7F4P+u2mqm5PRfi4UxjTfMkbGQW72bj+Bt02omcBYnziwME9y23cBN/k5PNtHMhPY
+         xCY+qbWzqYhoeDcLzpL9E9pRkrkgWUv6tf5mxBUGEhACOr1Gv6UQlgImFLW/+OXmxcLg
+         w0khRd1fb5sNxTVIlIdY5GGu7kGIpWUbA3LYHKCLabOe3eiFb7+ikn5wFQQpG/EJlwBN
+         SQSxQUCplLPW/tSuayg7L+Q99eHxT1bVuGUaeeiK+m6aUvhIRsIyrqCYsdTOcmOEDwy/
+         0qPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707455074; x=1708059874;
+        d=1e100.net; s=20230601; t=1707455083; x=1708059883;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DjZFEhta82MOtciRGbl6T2FR/OOl48rGzrVvDiOd70Q=;
-        b=qTLx8EkO/SjgDxo5kI75MuGAeXVZNW/+Fc9MCWCW6y2rVErezqfhQ9xl+dX1S32Meu
-         aOmlSDrqXwUxJ/jFvBkBa1qC+2LWEntWa0QUJXuNqHIu3u4mnDJ6++msumxjly642Aob
-         PgBuKjrVejuMePs9bl4MygkCHzkwgirPN9Uc6oEPlf/UeCfeXSxaZVOr1/DWQN95B4OS
-         fRXLKAJTYSMo6l+QwNysGGTJKbvubv4tRsd7FUfVApId4tKo5YtVwGOyjnMFFd5qRair
-         JI7ew6eIBrYliYJnD6fFXT5P9AUxieITyVEhfeoJOTIcuIRBBpmwz6fO5LWXaycoDPUc
-         Zf5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUBcPWYBw8r5pCKEBN/Vf+F1jMjYnIXyU+uRSOhE4rsUQl1O6z/lct1MMgudSyALqE4lpSlpfnrZNgnbyncxyNk+Js7VwqMvHvdXZme
-X-Gm-Message-State: AOJu0YwVZfyTYEYvjdsd1mp3nm4X0TNWp0PrS0kU12D/etYgO0Eokm/K
-	yyTJ6Pfn1bn43hLeRhpzyKX9k0fwqShIHXEvsbgzFUGUB72m/tyUYOScUyWwZ98=
-X-Google-Smtp-Source: AGHT+IE4szqU4Ay1G6/JELxarp78mjVBi7FgzF4R7bKtGoDeFcwkmwDv8btXpIMCHmtZtTn1CYtILw==
-X-Received: by 2002:a05:6808:1a22:b0:3bd:cd55:d320 with SMTP id bk34-20020a0568081a2200b003bdcd55d320mr645768oib.47.1707455074417;
-        Thu, 08 Feb 2024 21:04:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUSERD4SauKvBcEzPT69VFBN5d60cxzNYSDss+5B26n28GIXMZm6cEmZ4S8smV1qyLMGLOcp8PQE2+Hs4NtUe3ZgYvXRsxaEJd+HoGwXa9mhiUKVRf9gWZupzEj0f9XxwdGiJA0UQTq7zoq+sZtm8Oz5XK2fgViD1M7RvMR+uiXM1679AsuT2w9HMzYg1v1anJ5uhGeshqa2/fSg4xBlFpKav6XQD4IStSuolOe6ZaTkZFpm22SgVB5AqUL/BS29AxTTH4v5hHNAIDHWUiNPldMV+JRrpgL/J+GrroXZ3xqebine+GcVgB6Ow/O7s/XUBR/VIzy73ZEFjL1nMGDH6nxPHOBxHMErcwq9EO1yt8JAIRv6SaSxUKSi2prFSMsFE8uIuKsqIyA6bNRF+RTbpmyulA5
+        bh=U20uA94KDzmtdzL0Pvmh3qCzwQnio/F6nNOPO+lS/4s=;
+        b=pQl8dM7IQ0FUqhG1TixxmHIXwWvU8YZm0UT9fb87NkMudbA0rPu+vu49vh1c0oeQWA
+         unTiHhDQIKvvtM17ZkjoW3DVwEt5KjzwTZcVVXxYQfzIdgnobrUpF3W1hh5SlDHC1wla
+         2mPH6QhHF8DW+56Re07h7+oQIyuZIugHNf/ObbAUxOOaMwJ7/CQ3Ixt5ugHXOzf9YK86
+         BFAuR3yq8fbFEQVdpyTPLVsoR+ZdbUUxaB/hdwS2RI1SC+YAak54iEa0sCfjryknAp57
+         FqX5ahCfFD20ZagJYAe11n/vCwGlVz7TTWrc1+J/HuYdH9f5AprcbsU/mCvDpSO5RUZ1
+         MN4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUiVw6T7ejxr2o8L/KWLNPzdjZub6xaD9tC6pbPZ6jjr42dg1m2qSLTKpctX+QKvWXUYTnhtGXuZGCCse0ISqQipk7hxjk1YqNBrDku
+X-Gm-Message-State: AOJu0Yz8rCaXLZYjbaHi4yE8YCjSDeonC1y3f+bvDofpyfgBnfxlr8Rj
+	sMeOz8WBJIAdgQ35h9lVRhASwh26WAjm7EFdh+fuFqGV5grv0q0i
+X-Google-Smtp-Source: AGHT+IHi/1n8sp2AdN3bcPgu3svCEfeSM19ragIjZgN5cLehhFDmA87zAgZNotRSCNmGpiW4AI1IwQ==
+X-Received: by 2002:a05:6808:1a22:b0:3bd:cd55:d320 with SMTP id bk34-20020a0568081a2200b003bdcd55d320mr646205oib.47.1707455083351;
+        Thu, 08 Feb 2024 21:04:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9V0ObKvp4vvxaA/6YbtSgME2bhbZbr4d8uU9XeesGpPY6yGlMx8TG1pM9djELdNxN1b7a0FnbdqrRcXEu7ru57p+PEwonUb1ZcOOORZebwMI4R0UX9JxG1HgQdfwJQduaYfzSvZMPjSCqTh+9yOPCdom2f/vv4P3cSCucR4Jou6ePXDY/H5TGB1P2MdW64hLEUoRbgpPHY/ktfXO2VImXYUMvrOpjTRs5u2BKXYl2RYlvojHcv0KCIXXy7vboV97wT0iKmDWHtuX/unvQDm2APeDpaQC1U31tUA8AkHFKuoOLM96yWx6tP97X4xuyO6xWV9J7ykBPLTf1AAOYqcsT4q7Pc+y147uoSeorL5L5FY20NuX9h1XyGDns2dRZBe/6eXjaaTVrJHBC/eAGWWzfSkfO
 Received: from tresc054937.tre-sc.gov.br ([2804:3b0:4104:200:2be:43ff:febc:c2fb])
-        by smtp.gmail.com with ESMTPSA id d1-20020a634f01000000b005cda7a1d72dsm793616pgb.74.2024.02.08.21.04.30
+        by smtp.gmail.com with ESMTPSA id d1-20020a634f01000000b005cda7a1d72dsm793616pgb.74.2024.02.08.21.04.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 21:04:33 -0800 (PST)
+        Thu, 08 Feb 2024 21:04:42 -0800 (PST)
 From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Date: Fri, 09 Feb 2024 02:03:40 -0300
-Subject: [PATCH net-next v6 04/11] net: dsa: realtek: keep variant
- reference in realtek_priv
+Date: Fri, 09 Feb 2024 02:03:42 -0300
+Subject: [PATCH net-next v6 06/11] net: dsa: realtek: merge rtl83xx and
+ interface modules into realtek_dsa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240209-realtek_reverse-v6-4-0662f8cbc7b5@gmail.com>
+Message-Id: <20240209-realtek_reverse-v6-6-0662f8cbc7b5@gmail.com>
 References: <20240209-realtek_reverse-v6-0-0662f8cbc7b5@gmail.com>
 In-Reply-To: <20240209-realtek_reverse-v6-0-0662f8cbc7b5@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -79,107 +79,113 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Luiz Angelo Daros de Luca <luizluca@gmail.com>, 
  Florian Fainelli <florian.fainelli@broadcom.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3206; i=luizluca@gmail.com;
- h=from:subject:message-id; bh=A/i5C+haAyk33PdSAUkRgcW9VpEkLWcEh+Fkl5NMbtk=;
- b=owEBbQGS/pANAwAIAbsR27rRBztWAcsmYgBlxbJLqGye92Vdwna3jCsp6pzE9QD0R25YKHWKm
- FV3NCQyDMyJATMEAAEIAB0WIQQRByhHhc1bOhL6L/i7Edu60Qc7VgUCZcWySwAKCRC7Edu60Qc7
- VviEB/4vm6/Fdpi+O5IFH7QDkqjArSMhL3hYUJ3v4EB+Z1qDy2FVeg2mP3yAQM20DB1jY1KwvDm
- +CLhA7evVjOM5CUEz8sPidpv+9Z84jPLWqbf/4JDKX8s1TPwJxzPUw+hDqoBiCzqQ/dnaHch3ZX
- EBh1VQ0WN7nMOp7uOcwXQc3LPrZIAWsYC9wWtBVngZ5QsGElefNwe+5ekZXUaJjTR4nQ4MVltNq
- ZbZQQxQW8rX9X7lapQMwISdtMEGgV+1T+4SCJItACp2YobLWq3IaR00IYpIesYbx5PqRDEmhk9F
- ogwKif6Q5Qck3vYAmuSoPzRYURZU6xkqXzmaXdg6CdDiI6lj
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3898; i=luizluca@gmail.com;
+ h=from:subject:message-id; bh=uRB/16DuLtBh34jZnH2UtKHsz61uXCD8IYiY4hjgO44=;
+ b=owEBbQGS/pANAwAIAbsR27rRBztWAcsmYgBlxbJL8xND5+rbHpTQwP/NWYbwjiZZTGb8top8/
+ FVieABAxHWJATMEAAEIAB0WIQQRByhHhc1bOhL6L/i7Edu60Qc7VgUCZcWySwAKCRC7Edu60Qc7
+ VpK/B/9W93jJ0I+CQVtAzBPMkz0wo77tEQxrUjXWRVVxJnuoOJOGI6Ne5AlXJedPwsLdIU120/O
+ uba6Ou2btVRsItynY7pTrlRAO8v822/8rlgk7YQPcMQCV4cdZzkopT/n9eBWKqSZPyRulC/s5Sa
+ sLDgOTFAEOA3LFMz1PE9/AC6ZUpwkj8MYfEtm5fpVhzPs+i28arkLa/OwDZm9zN2cfKP3QkEgcs
+ FkhPa/tQJ9PjM3o0GodqLo4tnAExEZYzY5A+afUDofAEsVZuitttSh/GlVRV/rKhZ0tRtHm5D3W
+ QMWKGevQfK9wt7LrvEZPlP5P66kPV/8qZKaJQtkQioiag0TL
 X-Developer-Key: i=luizluca@gmail.com; a=openpgp;
  fpr=1107284785CD5B3A12FA2FF8BB11DBBAD1073B56
 
-Instead of copying values from the variant, we can keep a reference in
-realtek_priv.
-
-This is a preliminary change for sharing code betwen interfaces. It will
-allow to move most of the probe into a common module while still allow
-code specific to each interface to read variant fields.
+Since rtl83xx and realtek-{smi,mdio} are always loaded together,
+we can optimize resource usage by consolidating them into a single
+module.
 
 Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
 Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/net/dsa/realtek/realtek-mdio.c |  4 +---
- drivers/net/dsa/realtek/realtek-smi.c  | 10 ++++------
- drivers/net/dsa/realtek/realtek.h      |  5 ++---
- 3 files changed, 7 insertions(+), 12 deletions(-)
+ drivers/net/dsa/realtek/Kconfig        |  4 ++--
+ drivers/net/dsa/realtek/Makefile       | 11 +++++++++--
+ drivers/net/dsa/realtek/realtek-mdio.c |  5 -----
+ drivers/net/dsa/realtek/realtek-smi.c  |  5 -----
+ drivers/net/dsa/realtek/rtl83xx.c      |  1 +
+ 5 files changed, 12 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/net/dsa/realtek/Kconfig b/drivers/net/dsa/realtek/Kconfig
+index 9d182fde11b4..6989972eebc3 100644
+--- a/drivers/net/dsa/realtek/Kconfig
++++ b/drivers/net/dsa/realtek/Kconfig
+@@ -16,14 +16,14 @@ menuconfig NET_DSA_REALTEK
+ if NET_DSA_REALTEK
+ 
+ config NET_DSA_REALTEK_MDIO
+-	tristate "Realtek MDIO interface support"
++	bool "Realtek MDIO interface support"
+ 	depends on OF
+ 	help
+ 	  Select to enable support for registering switches configured
+ 	  through MDIO.
+ 
+ config NET_DSA_REALTEK_SMI
+-	tristate "Realtek SMI interface support"
++	bool "Realtek SMI interface support"
+ 	depends on OF
+ 	help
+ 	  Select to enable support for registering switches connected
+diff --git a/drivers/net/dsa/realtek/Makefile b/drivers/net/dsa/realtek/Makefile
+index d579127f05f7..35491dc20d6d 100644
+--- a/drivers/net/dsa/realtek/Makefile
++++ b/drivers/net/dsa/realtek/Makefile
+@@ -1,8 +1,15 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_NET_DSA_REALTEK)		+= realtek_dsa.o
+ realtek_dsa-objs			:= rtl83xx.o
+-obj-$(CONFIG_NET_DSA_REALTEK_MDIO) 	+= realtek-mdio.o
+-obj-$(CONFIG_NET_DSA_REALTEK_SMI) 	+= realtek-smi.o
++
++ifdef CONFIG_NET_DSA_REALTEK_MDIO
++realtek_dsa-objs += realtek-mdio.o
++endif
++
++ifdef CONFIG_NET_DSA_REALTEK_SMI
++realtek_dsa-objs += realtek-smi.o
++endif
++
+ obj-$(CONFIG_NET_DSA_REALTEK_RTL8366RB) += rtl8366.o
+ rtl8366-objs 				:= rtl8366-core.o rtl8366rb.o
+ obj-$(CONFIG_NET_DSA_REALTEK_RTL8365MB) += rtl8365mb.o
 diff --git a/drivers/net/dsa/realtek/realtek-mdio.c b/drivers/net/dsa/realtek/realtek-mdio.c
-index 7c5372561587..7be00aa2a9e7 100644
+index 90a017cbe168..04c65452da0d 100644
 --- a/drivers/net/dsa/realtek/realtek-mdio.c
 +++ b/drivers/net/dsa/realtek/realtek-mdio.c
-@@ -196,9 +196,7 @@ int realtek_mdio_probe(struct mdio_device *mdiodev)
- 	priv->dev = &mdiodev->dev;
- 	priv->chip_data = (void *)priv + sizeof(*priv);
- 
--	priv->clk_delay = var->clk_delay;
--	priv->cmd_read = var->cmd_read;
--	priv->cmd_write = var->cmd_write;
-+	priv->variant = var;
- 	priv->ops = var->ops;
- 
- 	priv->write_reg_noack = realtek_mdio_write;
+@@ -186,8 +186,3 @@ void realtek_mdio_shutdown(struct mdio_device *mdiodev)
+ 	rtl83xx_shutdown(priv);
+ }
+ EXPORT_SYMBOL_NS_GPL(realtek_mdio_shutdown, REALTEK_DSA);
+-
+-MODULE_AUTHOR("Luiz Angelo Daros de Luca <luizluca@gmail.com>");
+-MODULE_DESCRIPTION("Driver for Realtek ethernet switch connected via MDIO interface");
+-MODULE_LICENSE("GPL");
+-MODULE_IMPORT_NS(REALTEK_DSA);
 diff --git a/drivers/net/dsa/realtek/realtek-smi.c b/drivers/net/dsa/realtek/realtek-smi.c
-index 2a6a884bb45e..ad3b57311015 100644
+index d676cc44d517..10de30d3e044 100644
 --- a/drivers/net/dsa/realtek/realtek-smi.c
 +++ b/drivers/net/dsa/realtek/realtek-smi.c
-@@ -46,7 +46,7 @@
- 
- static inline void realtek_smi_clk_delay(struct realtek_priv *priv)
- {
--	ndelay(priv->clk_delay);
-+	ndelay(priv->variant->clk_delay);
+@@ -470,8 +470,3 @@ void realtek_smi_shutdown(struct platform_device *pdev)
+ 	rtl83xx_shutdown(priv);
  }
+ EXPORT_SYMBOL_NS_GPL(realtek_smi_shutdown, REALTEK_DSA);
+-
+-MODULE_AUTHOR("Linus Walleij <linus.walleij@linaro.org>");
+-MODULE_DESCRIPTION("Driver for Realtek ethernet switch connected via SMI interface");
+-MODULE_LICENSE("GPL");
+-MODULE_IMPORT_NS(REALTEK_DSA);
+diff --git a/drivers/net/dsa/realtek/rtl83xx.c b/drivers/net/dsa/realtek/rtl83xx.c
+index 0f628065f456..e42139f6e685 100644
+--- a/drivers/net/dsa/realtek/rtl83xx.c
++++ b/drivers/net/dsa/realtek/rtl83xx.c
+@@ -231,5 +231,6 @@ void rtl83xx_remove(struct realtek_priv *priv)
+ EXPORT_SYMBOL_NS_GPL(rtl83xx_remove, REALTEK_DSA);
  
- static void realtek_smi_start(struct realtek_priv *priv)
-@@ -209,7 +209,7 @@ static int realtek_smi_read_reg(struct realtek_priv *priv, u32 addr, u32 *data)
- 	realtek_smi_start(priv);
- 
- 	/* Send READ command */
--	ret = realtek_smi_write_byte(priv, priv->cmd_read);
-+	ret = realtek_smi_write_byte(priv, priv->variant->cmd_read);
- 	if (ret)
- 		goto out;
- 
-@@ -250,7 +250,7 @@ static int realtek_smi_write_reg(struct realtek_priv *priv,
- 	realtek_smi_start(priv);
- 
- 	/* Send WRITE command */
--	ret = realtek_smi_write_byte(priv, priv->cmd_write);
-+	ret = realtek_smi_write_byte(priv, priv->variant->cmd_write);
- 	if (ret)
- 		goto out;
- 
-@@ -459,9 +459,7 @@ int realtek_smi_probe(struct platform_device *pdev)
- 
- 	/* Link forward and backward */
- 	priv->dev = dev;
--	priv->clk_delay = var->clk_delay;
--	priv->cmd_read = var->cmd_read;
--	priv->cmd_write = var->cmd_write;
-+	priv->variant = var;
- 	priv->ops = var->ops;
- 
- 	priv->setup_interface = realtek_smi_setup_mdio;
-diff --git a/drivers/net/dsa/realtek/realtek.h b/drivers/net/dsa/realtek/realtek.h
-index e9ee778665b2..c7d5ef99e9db 100644
---- a/drivers/net/dsa/realtek/realtek.h
-+++ b/drivers/net/dsa/realtek/realtek.h
-@@ -58,9 +58,8 @@ struct realtek_priv {
- 	struct mii_bus		*bus;
- 	int			mdio_addr;
- 
--	unsigned int		clk_delay;
--	u8			cmd_read;
--	u8			cmd_write;
-+	const struct realtek_variant *variant;
-+
- 	spinlock_t		lock; /* Locks around command writes */
- 	struct dsa_switch	*ds;
- 	struct irq_domain	*irqdomain;
+ MODULE_AUTHOR("Luiz Angelo Daros de Luca <luizluca@gmail.com>");
++MODULE_AUTHOR("Linus Walleij <linus.walleij@linaro.org>");
+ MODULE_DESCRIPTION("Realtek DSA switches common module");
+ MODULE_LICENSE("GPL");
 
 -- 
 2.43.0
