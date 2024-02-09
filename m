@@ -1,123 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ACF38DE2;
-	Fri,  9 Feb 2024 23:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F45437712
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 23:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707521824; cv=none; b=WFfBX9S3MzyEss4+/oXy68eEHa12w6tysbuhrZ9kq96gMfdv1v6dY/Bfm0I1HE+uM49JbRAzyV5VobLMJj8GJMx1ZsYNkzPZGOpqaIRHsD4PsROE/3tsJwAVoIt4XEj6KPwRtA1NgxWcgNf1Sl1wWGuV1jhQy5imCTVoHeszOdE=
+	t=1707522133; cv=none; b=dCiZ3YSbAMFErKydjn7h3VyxYw1upZdBgRSPuzJG7HpBd4CmbMwtzGJlQ8Lana9JCG9Bx7qfuQwnWETjHTFHlw2rbrbx/QAPofmtKLXW17Qgiala+FCmSSzr8UemOB+nUtJRx0lQKjW6JOgi5+4LHT1o+QpnI0rDhZCv3Fl2XTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707521824; c=relaxed/simple;
-	bh=vab66JaH+98JX7uwKvF0gxBwsDwHTA+LMjKxktqFBFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tCMh8gIzVWyF0QsqPwornGl6bScGVlXBqAiT3zsHcRHeWymPNi5JhWCnnflz4zprt3VpzkLO3InEuW9Zl+YBwUEfbbtA5EiEeHt25LRr/smEp/0n2J14xm9biolVw023wwPpLB7t+jj/PxPux/OdUoJ/PFRdU97h01xNY4eCGQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLrmi2Ug; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707522133; c=relaxed/simple;
+	bh=36Bp5V3HrWBZbS46TYrpP52qQdL28XvTzmsXoRqxpGI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j3v2SFRcJhxQKydbGp5KJwjSR4IT95pG15EAb04RT4gQIUEsaxM1pjXCwytaXTSD4t0gsXCaFT6Fp+fvBL3e/tw4I23K2Oi8jOSh50cE3tor/lteh2R0o+BPXmjvvlZ7B/8hv5WeoCkaWSAwruCWlUYO/X8u7tOYsn5/Sm3ir/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PcA3RQ2P; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLrmi2Ug"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BEFC433F1;
-	Fri,  9 Feb 2024 23:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707521823;
-	bh=vab66JaH+98JX7uwKvF0gxBwsDwHTA+LMjKxktqFBFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oLrmi2UgocGnOO/gap5TAGTQkug/s/k067+bvJPqRjk02YmbV1+nxy3sDJAyB1HvK
-	 14++nREuC0sMSTr+hpQhKlx2HG/LjbOM2lb4MK/wfkzlqlP3P8F3iDxChowgCJCeZy
-	 FKKXv2Sgu/LzYTvr5OiH6nz0xyW8+ybUsRv9HM+mcC6OaC8BHzlADy/kXvXMM2pKxH
-	 nKkxd1vCgAvIa7WkQv/dvw6Sq7Mn/5GWVhmzkze32/ZZJZD3fmBIL+fPh1D/k6NiSt
-	 3hB62JPL7qL2Sd/RFwUJq6s9V4x9xd3YXVquvrU47evSzfphB8Sz5bQY9WTnCxaI/n
-	 bjBR24cpsmSZg==
-Date: Fri, 9 Feb 2024 17:37:00 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: Re: [RFC 9/9] PCI/pwrctl: add a PCI power control driver for
- power sequenced devices
-Message-ID: <nezjddfz22a74rbhjovq2nyba46752lwf66rw47oebfa3xg6zv@ad6wag5e5zrk>
-References: <20240201155532.49707-1-brgl@bgdev.pl>
- <20240201155532.49707-10-brgl@bgdev.pl>
- <jb4hzijjxjv4kiy3cn2fuc5ox4x5uutredbxiwo2fvnkh2xudf@5w65qtp35ase>
- <CAMRc=MdQ_uRq7a24RYt=KRSff9sw_1soQ+8ONEpNXy0emk5ChQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PcA3RQ2P"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so2237433276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 15:42:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707522130; x=1708126930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=36Bp5V3HrWBZbS46TYrpP52qQdL28XvTzmsXoRqxpGI=;
+        b=PcA3RQ2PJQ/gQKp5Cbpb6Iyf1ol8kyLN0c/63Z6kA6JiW4NDdE0EtJaJkT2NyxXXMy
+         Kyg5hdLAEPPNzB04lqr5hn0ILOjhm6/z7b3nh72UL9jePV13NKv6XRsNQ32UYHQX/sKc
+         Mmap00ZUMCx8I848Z2GGHIuBpal/DUZjBCBz7OSHOZYEiRPXkng1ZmBtr+C9h83QY3v7
+         2+limIbSa2U1/MlnGpPTyEYskY5d8oRshKsEVbSxvABbSzJ0y9Ld05H+5JDEiw+W/9Dz
+         rLw3MXxoCUbIEtd6uqs73wvDSKnO5Sxs61WxY6Pm1sh8lqIOlcEeMfGTxx+w1e9YqGvi
+         mC+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707522130; x=1708126930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=36Bp5V3HrWBZbS46TYrpP52qQdL28XvTzmsXoRqxpGI=;
+        b=fd3mw3Swo+T3U4sFuTbG/mqlGBetz+t3COxqU2fwLWypZa9mh0YF1futTpqO1LDpRO
+         toluqyEnbGgPNy4WIRC8XRzxdQB/djiRUwgriVxEP6dRDeswZgFVD63Fp8GrF9fRBLVM
+         XJUwFX8wwj/C/UeT8EUkyqgc1g8MrPK3adJ4+ckGATmWV3BZ+cFftqXlqCukEOtTDYyu
+         t/zWgC2HLAXT0bPxthOv1DkO1k7OOAuJEG+ywE1ncglRRZHpfPt/HZwsKIhri8qzBHEe
+         G059rWfmvLIJI6iUVbRn5D3VvIIRFx+opQwupgwOhpzotKYQN6KVoQk2LrciOzkpUjIq
+         OVNg==
+X-Gm-Message-State: AOJu0YzB3FBpQqKTtrdlS+g4oeCH+4nawvKRA/hlqa97JxEYyXfn2wjl
+	hej5bv7ZdNwbXp6N2n9tZl8P0FpNFrYH3QvrHlIS1z5njqPM2PiJBL+35QIQGivpcUcZsBHthrO
+	oKsaAggl0DZi4iON1ZCbImA5t6SoCSl5+CJIxQQ==
+X-Google-Smtp-Source: AGHT+IH7eTrIingP+ahCyJb1b55HFte2tzebTYQbAUv8STciXDuToLLW+b9233LY5KATmB4DKaN2RVXULUm1vcU1YrI=
+X-Received: by 2002:a25:7187:0:b0:dc2:2d55:4179 with SMTP id
+ m129-20020a257187000000b00dc22d554179mr2436830ybc.17.1707522129933; Fri, 09
+ Feb 2024 15:42:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdQ_uRq7a24RYt=KRSff9sw_1soQ+8ONEpNXy0emk5ChQ@mail.gmail.com>
+References: <20240125-mmc-no-blk-bounce-high-v1-1-d0f92a30e085@linaro.org>
+ <8ca6a46e-551a-4400-965f-f4ad60bff072@app.fastmail.com> <Zcaooa0bTKo3OdvV@qmqm.qmqm.pl>
+In-Reply-To: <Zcaooa0bTKo3OdvV@qmqm.qmqm.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 10 Feb 2024 00:41:58 +0100
+Message-ID: <CACRpkdb=aDd+CuJhckE9xZjA4MXRS_BD=qd3sc3Qjnm7CNbATA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: core Drop BLK_BOUNCE_HIGH
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	"linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 02, 2024 at 02:05:59PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Feb 2, 2024 at 5:03 AM Bjorn Andersson <andersson@kernel.org> wrote:
-> >
-> > On Thu, Feb 01, 2024 at 04:55:32PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Add a PCI power control driver that's capable of correctly powering up
-> > > devices using the power sequencing subsystem. For now we support the
-> > > ath11k module on QCA6390.
-> > >
-> >
-> > For a PCI device which doesn't share resources with something on another
-> > bus, the whole power sequencing would be implemented in a driver like
-> > this - without the involvement of the power sequence framework.
-> >
-> 
-> Yes, this is what I did in the previous incarnation of this code[1].
-> 
-> (I know, I should have linked it here. My bad, I will do it next time).
-> 
-> > I think it would be nice to see this series introduce a simple
-> > pci_pwrctl driver, and then (in the same series) introduce the power
-> > sequence framework and your PMU driver.
-> >
-> 
-> I disagree. I was initially annoyed by Dmitry asking me to do a lot
-> more work than anticipated but he's right after all. WLAN and BT
-> consuming what is really the PMU's inputs is simply not the actual
-> representation. That's why we should make it a pwrseq user IMO.
-> 
+On Fri, Feb 9, 2024 at 11:35=E2=80=AFPM Micha=C5=82 Miros=C5=82aw <mirq-lin=
+ux@rere.qmqm.pl> wrote:
 
-If the PMU registers the "internal" output regulators, then PCI device
-would consume the PCI outputs of the PMU, the BT device would consume
-the BT outputs of the PMU. The PMU requests inputs enabled and drives
-BT_EN and WLAN_EN according to which subset of these output regulators
-are enabled.
-
-Pretty much exactly as "regulator-fixes" isn't a pwrseq device.
-
-Regards,
-Bjorn
-
-> > One case where such model would be appropriate is the XHCI controller
-> > (uPD720201) on db845c. Today we describe vddpe-3p3-supply as a supply on
-> > the PCI controller, but it should have been vdd33-supply, vdd10-supply,
-> > avdd33-supply on the PCI device.
-> 
-> Sounds like a good second user then!
-> 
+> > I think it's worth mentioning the cb710 example here, which
+> > uses a platform device as a child of a PCI device and
+> > does not assign a DMA mask nor use DMA.
 > >
-> > That would provide an example for how a simple PCI power control driver
-> > can/should look like, and we can discuss the PCI pieces separate from
-> > the introduction of the new power sequence framework (which is unrelated
-> > to PCI).
-> 
-> I agree it's unrelated and it could possibly go upstream separately
-> but the particular use-case on RB5 (and other Qcom platforms) requires
-> both the PCI and generic power sequencing to be addressed.
-> 
-> Bart
-> 
-> [snip]
-> 
-> [1] https://lore.kernel.org/netdev/20240117160748.37682-7-brgl@bgdev.pl/T/#m72f52254a52fcb8a8a44de0702cad1087d4bcfa1
+> > This one will see a change in behavior, meaning that the
+> > blockdev buffers are no longer bounced. As far as I can
+> > tell, this is fine because the driver appears to correctly
+> > use the sg_iter infrastructure for mapping data pages,
+> > but it would be good to have this confirmed by
+> > Micha=C5=82 Miros=C5=82aw because this code path has probably never
+> > been tested without BLK_BOUNCE_HIGH.
+>
+> Hi, this driver doesn't do DMA at all, so having DMA mask set or not
+> it should be good as long as the CPU can read/write the buffers.
+
+The only difference is where the CPU have to read/write the
+buffers really, before the change those were all guaranteed to
+be in lowmem (bounced there by the block core), now they can
+also be in highmem, but sg_miter will deal with it for sure.
+
+Yours,
+Linus Wallej
