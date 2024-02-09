@@ -1,197 +1,162 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF5B63B9
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 21:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A9F17570
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 21:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707514366; cv=none; b=MPF0pI89ONlPmF/o86W1SIAcglTaeh56snIvAW043JU7xLF4+Pxin+H45RlPnp/XJCOIWkMglZ0VDHDKMzCy8w7MEeDeP05Q7gky9JalewgPG31kYO22RR255PoKPpX788QIU9qvoVVHz/DOfNco6K1+aKprA6Xp9mea+VVz0u0=
+	t=1707514425; cv=none; b=caDmXuC+4/EzRfqzfS3NMUSGPrPCL7ZHUC5hyWqR6XQ3z4Roaslen3JBTeSHs3piUW+rIHduzXBQ6I+hGykF3klW0GXyjVAvNl7J6yy8dzA8fG+hAsSCOGkJkmJUBaf9McjhWE0bWZ+ztdKGXJtbt6gV81o5dpy5xTGmYl5UCCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707514366; c=relaxed/simple;
-	bh=a/rfzEuG68F4hVzPWsbBZz985hkKHCcZB5qg38jjQIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mu3sIM5bTtEqs917T9PhL+ggKRPTYQ2TRpAyk3l9ns8AFlTFvq5tpBygztVSbrLIARW/B82/r9u+p1cOoMzCPO/FfPmtCljHm6F3Ky9OlMSHqXlDozMA0AUZr6hZZZ4UwDMkrHQPs66+JXeAgmdw62MeccITtPLYKjG90bgCN9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GCxS7Vgq; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707514425; c=relaxed/simple;
+	bh=NlXZqaKkhXz9tvOQze70I37khCbmxb0wOBoeUVbkFGg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jzR1ifCoNfag4iZ6rdic/4tP7kaP4yUQbZixz6Gff+2pPRTIwXTBpXkDtxYDTw4fs4cxQtmCwcTAjBDnN9IPK8DiXB0FjbhB6AqGjvO9qR4BASq9uoyAyoY0j1VzRsCo86obuQ+hefPwZ+UYUzGwcWZcLWIuPugtP455YHE0do0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmngzNo5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GCxS7Vgq"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-557dcb0f870so2029467a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 13:32:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707514362; x=1708119162; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Os4qev7suud/YhIU9+WIu+rwnop6A4JmpVMTfm/Akss=;
-        b=GCxS7VgqxxYdlSCa6qmGW6D8y9penNarHsv7rrIt5/UrIS0IHr6KHIdprT78AejYcz
-         cawifFHBgjviirlYnv7whjEB2QWeXy2fcDWk1LC+abD96AJSMfBjKpWIh4YFbRo+9nW5
-         zIPwUFgunDyidEJqZ2fJofoXCLI61Mql9xMlgNjBt8BSyUfPfu/ag8hkEu+b64LStSX4
-         1wnHnaf9OxGvilUjzkgibc53xxZvcjuFsHQZCekULjqrYQ9gv6XELhcHYnaqeUBICF8R
-         cFKVamC3+O7M56L91GLociyPEtjceti19TtDAe0GsYYz+XQiK8fCt36x90BippX3wYqd
-         C3GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707514362; x=1708119162;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Os4qev7suud/YhIU9+WIu+rwnop6A4JmpVMTfm/Akss=;
-        b=YCzDqL2s0UpTTB6ABX6sIdehDy6Qkj2tXiDp+Cs9ZOFajFIw5avwbJ4phIALqy55b5
-         3BIX4gb/zATKOfffO1FTH+4/bKjcJebIvN/L6mJIpOoHtdzL9Vn00Nw/adQgz7itjeZj
-         SaJOs9WFlsbpfi2QIkEHXaOWeqjcFbe2D0gllScjq3fAf0SJ+XkksxZEOewVBL1+b+ju
-         bstHkLAoh/gz8sSHyyR9XLbqJ2wqrXsCnbRihiq3J+DeBwbzbFOJ+uznhSgifNGg6Sne
-         x1bOpgebN0kxLpI7LADIq/Qn1jUNvR7nIfz4bgli/JfzdNsOCQUs6UYkLpuQQ8vdRnNX
-         9W2g==
-X-Gm-Message-State: AOJu0YxDXYHumjcCtYCfLoS6ZxJSJJKyalnr3JhDZy1l6EawzBCUFWed
-	WZ5NM5CcG91MkcT3BlwZG5AT8hFI+VyHZUaEEP/UXSai+Svbl/zmaWJaaHCiPkw=
-X-Google-Smtp-Source: AGHT+IFIoYfxKHL9swRQV0MYgEkbxpFOUINdT2LjlcbSKaf7uj2hPzPUdJudSt8B/nJl4Redq7P9MQ==
-X-Received: by 2002:a05:6402:1295:b0:560:c9b5:c440 with SMTP id w21-20020a056402129500b00560c9b5c440mr99184edv.11.1707514362412;
-        Fri, 09 Feb 2024 13:32:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWhM7Wv3B0b9S5Gg/kpkf8Zyy6sMDXu1ZgzNUyTGzK49js1OjK6ncpS4CI4LVbb573p1dvototMWqikdLS+JAaLWAwLtKAddE5qoVXzPaTV6g3SQSBZHG7akvcu7Txw3akiQZn9DRdyg2vq6lJUoeykfivHoYJ65I0Tw/PH7cSOMiJVode4vbNzjhmT79A73gmcx1OgeUZmcSY2uiSbS6R9wUtrdtH4pTTNUMg/Zxiby1ou5Ae43fvq9PqjadAx8BMc9ElOrd4vaqsBtqeod/EPbwDFKAz6gsyoCL0g3YNZOYLa7cPGzxBfymdKTVSJhsYkgZ0I7HwnUJoC+mvjSrhbblPJ5kgt7D3dyJvWDp6PecFX0gSOwJePVom3f6JWNGf1/Z2DPfa3XfUUV2ZDXGKDIjdA3qIUSzzv1kiNdOuV/EuKEMp5Iu2gtUGVi/1FIzxJjSwSWV0unin+mz0VCrir7OznnZbVbtO0g3MOi6w60QC+zBlh5ilnOD83A6F55zhW85i700tT6DhfrWH4C/ADDEBwz3n5DHyi49hNZsOvmv9w7/LLje6t6njem+UHqU+O/u0IK+EkJvYqfQ9brvFNVFUcw2Y6QCcYIVL3OllINFskkS0SnOoDss4Y8yxDZWZtMFCW4xtW9SbbVctxcKpci0SB0dyOfhYIi+BMATmuxUsnQDHSuILaux9ZMB5ky+1EOjKHW6pxAVtcBwthn6da
-Received: from [192.168.192.207] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
-        by smtp.gmail.com with ESMTPSA id dm24-20020a05640222d800b005607fdd90b8sm114567edb.23.2024.02.09.13.32.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 13:32:42 -0800 (PST)
-Message-ID: <5e71d9d2-0115-4359-9502-b1cb462c10fd@linaro.org>
-Date: Fri, 9 Feb 2024 22:32:38 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmngzNo5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6305EC433F1;
+	Fri,  9 Feb 2024 21:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707514425;
+	bh=NlXZqaKkhXz9tvOQze70I37khCbmxb0wOBoeUVbkFGg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=TmngzNo5wZ0QZDN0n0nxZJxYGyzo/jKf5h8tldRMwbGfxdmkSC9X+xQUKX6pZ/Hrb
+	 /ftlLUDFasxuXWh2bGRnoylXNChFGQW4uAobEry6p89vZhzVTlXEpEIqQriKsf/lAn
+	 Uphv+vDe3v9mmuzZ4pqqrjjnqqwm6nyKze1dKAkJR3ZnjY7jNp6rZCBqotXWus52Fo
+	 h2+Q9YJIw/I8eflcAHUxxiKZbvXCEwU/jq73+beJ27soc/RYKSvhTRtxY2WwMzyIJg
+	 HRqYlELVoEU+gwVEgzYD2Co/H9oht+zRx+Kwr797+8lPHK1cgulM35l12OvkfMHinp
+	 AbH9rR6PEx5yQ==
+From: Mark Brown <broonie@kernel.org>
+Date: Fri, 09 Feb 2024 21:33:32 +0000
+Subject: [PATCH v2] regmap: kunit: Ensure that changed bytes are actually
+ different
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] arm64: dts: qcom: msm8976: Add Adreno GPU
-Content-Language: en-US
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Krishna Manikandan <quic_mkrishn@quicinc.com>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240121194221.13513-1-a39.skl@gmail.com>
- <20240121194221.13513-7-a39.skl@gmail.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240121194221.13513-7-a39.skl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240209-regmap-kunit-random-change-v2-1-be0a447c2891@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACuaxmUC/42NQQ6CMBBFr0Jm7RhaxYIr72FYFDvCBGnJFImGc
+ Hcr8QAu38vP+wtEEqYI52wBoZkjB59A7zK4dda3hOwSg871Mdd5hULtYEfsn54nFOtdGPC3VKZ
+ snKqaSjUFpMAodOfXFr/WiTuOU5D39jWrr/0rOytUaJ125mQKU5SHS0/i6bEP0kK9rusHxJhiY
+ cUAAAA=
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-0438c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3554; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=NlXZqaKkhXz9tvOQze70I37khCbmxb0wOBoeUVbkFGg=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlxpo37uV6HyHhh/cFp4ovSyuJmtbJ47ESPT3PZ
+ mP6lnnd7dmJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcaaNwAKCRAk1otyXVSH
+ 0O9OB/9TOf/Dgma/o0au9mrFdZIIhmRl0Pqjand++JcpqWRMlbfDVHKAGP2oT2vHxpGsBuYImAn
+ HTI+w/qLT8UBYJOeIqBqtcG+Ic3Mr3gwAdWXdb2e9y7iQAxbTyAo1v/RpcbpvyS8b7R/mmut+b5
+ PeiZ+lNeMW9dFv9AirjdFZB0g62Hg61SD/dOHRzIJzJypUsyRPnOUTjbGCmlRR3BIdWIVNp+45B
+ CRarnTD6tyF5eTneNnw2NxjcqjzLJHSZ7WHzlLcXP30tH6N92im759xtXbmTsL3NVwm+CMsAlFI
+ 5ONAr2g8LaIIlxaio98PqNtTn5T4bZTKK0DrSpTwHUJFcqGT
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On 21.01.2024 20:41, Adam Skladowski wrote:
-> Add Adreno GPU node.
-> 
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/msm8976.dtsi | 66 +++++++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> index 2d71ce34f00e..765c90ac14cb 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> @@ -1068,6 +1068,72 @@ mdss_dsi1_phy: phy@1a96a00 {
->  			};
->  		};
->  
-> +		adreno_gpu: gpu@1c00000 {
-> +			compatible = "qcom,adreno-510.0", "qcom,adreno";
-> +
-> +			reg = <0x01c00000 0x40000>;
-> +			reg-names = "kgsl_3d0_reg_memory";
-> +
-> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "kgsl_3d0_irq";
-> +
-> +			clock-names = "core",
-> +				      "iface",
-> +				      "mem",
-> +				      "mem_iface",
-> +				      "rbbmtimer",
-> +				      "alwayson";
-> +
-> +			clocks = <&gcc GCC_GFX3D_OXILI_CLK>,
-> +			    <&gcc GCC_GFX3D_OXILI_AHB_CLK>,
-> +			    <&gcc GCC_GFX3D_OXILI_GMEM_CLK>,
-> +			    <&gcc GCC_GFX3D_BIMC_CLK>,
-> +			    <&gcc GCC_GFX3D_OXILI_TIMER_CLK>,
-> +			    <&gcc GCC_GFX3D_OXILI_AON_CLK>;
+During the cache sync test we verify that values we expect to have been
+written only to the cache do not appear in the hardware. This works most
+of the time but since we randomly generate both the original and new values
+there is a low probability that these values may actually be the same.
+Wrap get_random_bytes() to ensure that the values are different, it is
+likely we will want a similar pattern for other tests in the future.
 
-The entries are misaligned
+We use random generation to try to avoid data dependencies in the tests.
 
-property
-property-names
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v2:
+- Check the whole change in.
+- Link to v1: https://lore.kernel.org/r/20240209-regmap-kunit-random-change-v1-1-ad2d76757583@kernel.org
+---
+ drivers/base/regmap/regmap-kunit.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-(and without a separating newline, please)
+diff --git a/drivers/base/regmap/regmap-kunit.c b/drivers/base/regmap/regmap-kunit.c
+index 026bdcb45127..e149b12d0d4a 100644
+--- a/drivers/base/regmap/regmap-kunit.c
++++ b/drivers/base/regmap/regmap-kunit.c
+@@ -9,6 +9,23 @@
+ 
+ #define BLOCK_TEST_SIZE 12
+ 
++static void get_changed_bytes(void *orig, void *new, size_t size)
++{
++	char *o = orig;
++	char *n = new;
++	int i;
++
++	get_random_bytes(new, size);
++
++	/*
++	 * This could be nicer and more efficient but we shouldn't
++	 * super care.
++	 */
++	for (i = 0; i < size; i++)
++		while (n[i] == o[i])
++			get_random_bytes(&n[i], 1);
++}
++
+ static const struct regmap_config test_regmap_config = {
+ 	.max_register = BLOCK_TEST_SIZE,
+ 	.reg_stride = 1,
+@@ -1265,16 +1282,16 @@ static void raw_sync(struct kunit *test)
+ 
+ 	hw_buf = (u16 *)data->vals;
+ 
+-	get_random_bytes(&val, sizeof(val));
++	get_changed_bytes(&hw_buf[6], &val[0], sizeof(val));
+ 
+ 	/* Do a regular write and a raw write in cache only mode */
+ 	regcache_cache_only(map, true);
+ 	KUNIT_EXPECT_EQ(test, 0, regmap_raw_write(map, 2, val, sizeof(val)));
+ 	if (config.val_format_endian == REGMAP_ENDIAN_BIG)
+-		KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 6,
++		KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 4,
+ 						      be16_to_cpu(val[0])));
+ 	else
+-		KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 6,
++		KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 4,
+ 						      le16_to_cpu(val[0])));
+ 
+ 	/* We should read back the new values, and defaults for the rest */
+@@ -1284,7 +1301,7 @@ static void raw_sync(struct kunit *test)
+ 		switch (i) {
+ 		case 2:
+ 		case 3:
+-		case 6:
++		case 4:
+ 			if (config.val_format_endian == REGMAP_ENDIAN_BIG) {
+ 				KUNIT_EXPECT_EQ(test, rval,
+ 						be16_to_cpu(val[i % 2]));
+@@ -1301,7 +1318,7 @@ static void raw_sync(struct kunit *test)
+ 	
+ 	/* The values should not appear in the "hardware" */
+ 	KUNIT_EXPECT_MEMNEQ(test, &hw_buf[2], val, sizeof(val));
+-	KUNIT_EXPECT_MEMNEQ(test, &hw_buf[6], val, sizeof(u16));
++	KUNIT_EXPECT_MEMNEQ(test, &hw_buf[4], val, sizeof(u16));
+ 
+ 	for (i = 0; i < config.max_register + 1; i++)
+ 		data->written[i] = false;
+@@ -1313,7 +1330,7 @@ static void raw_sync(struct kunit *test)
+ 
+ 	/* The values should now appear in the "hardware" */
+ 	KUNIT_EXPECT_MEMEQ(test, &hw_buf[2], val, sizeof(val));
+-	KUNIT_EXPECT_MEMEQ(test, &hw_buf[6], val, sizeof(u16));
++	KUNIT_EXPECT_MEMEQ(test, &hw_buf[4], val, sizeof(u16));
+ 
+ 	regmap_exit(map);
+ }
 
-> +
-> +			power-domains = <&rpmpd MSM8976_VDDCX>;
-> +
-> +			iommus = <&gpu_iommu 0>;
-> +
-> +			status = "disabled";
-> +
-> +			operating-points-v2 = <&gpu_opp_table>;
-> +
-> +			gpu_opp_table: opp-table {
-> +				compatible  ="operating-points-v2";
-> +
-> +				opp-200000000 {
-> +					opp-hz = /bits/ 64 <200000000>;
+---
+base-commit: 3b201c9af7c0cad2e8311d96c0c1b399606c70fa
+change-id: 20240209-regmap-kunit-random-change-178bd19b91b5
 
-A random downstream I took has:
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-19.2 MHz
-266.6 MHz
-300.0 MHz
-432.0 MHz
-480.0 MHz
-550.0 MHz
-600.0 MHz
-
-> +					opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
-
-you want required-opps here instead
-
-Konrad
