@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12C24A39;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE5D4C8B;
 	Fri,  9 Feb 2024 03:11:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707448268; cv=none; b=laRtEjsoxaOrhYC5UY7y41D7aE6/Q0gpYoaU6x3vdedEoHN7n0DzHGeitlQFzre+zNVCn1ACk/Agb6UJqfKIQ+rL3K5kkrMQhj9YDqZd+6l4thSB9RO7zDyHmdNi53E9ArwtG+og6cuNm8n+D8OPMbgfg6l8/2Xsw3pBrzYojm4=
+	t=1707448269; cv=none; b=nUEZYqfBbcEh20KQetjJDiCNP2XPzl1lvmfYebDSfqAy2vFYOulYdCF48HmDo7vxGKdO72E3BEfmpN8R7djz4Sd0TWjINjVv/vAqZ1P+Q65PXsVi5ZLpp4n7TTHMuWuoEan63zyLiy1UhB5Eixj31NrpjOYmkiqGKNQqkLzA3FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707448268; c=relaxed/simple;
-	bh=FEMqaacTifvkDTFtuSZUUgOdKMQSWteN9s+tEL6XsAg=;
+	s=arc-20240116; t=1707448269; c=relaxed/simple;
+	bh=IGK3/aKzRGBu17JJaI5GYQZ9QiBJsZ88T2WUDQD9Fds=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=apRgIDYa2xwix2yeHxZHYuFlswtJW0KRxIFX0ksJBBuaNl/FSHxrrNuIBX1Q5Yk9EEuOmh8gcbzT6UacdLX7RT7+g+LQAVk1dZObbiPvvzOPdmXIXWgV7WnFNz5PvuixbKyOjthD3Jcnn3fLCDUVlhDf5LeThBphsQQW1vBxM+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWBReY4e; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Tvk5rn3HYl+XEX9Wd8PkvXam0u7Aad0WXZsv71BndRnyji/9/2HD8CHCKRV+NYh+hU7Lx1DpvicWz6jHxJxNMAENbcph7v6cEf3cNP6SB0RM3TCkQdRJL90xLEyGFG1WIT6aVeJ6STQGyToEA1XctiLtysYBYKfu2HDFHk5I9bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLB6RbP4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWBReY4e"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 508A7C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLB6RbP4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6CAD1C43609;
 	Fri,  9 Feb 2024 03:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707448268;
-	bh=FEMqaacTifvkDTFtuSZUUgOdKMQSWteN9s+tEL6XsAg=;
+	bh=IGK3/aKzRGBu17JJaI5GYQZ9QiBJsZ88T2WUDQD9Fds=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gWBReY4ek5rOgXgjJwYEzt69Q6LyqASV1NPpzz4cqmQHsXQkN9Gt9upafCKOuTphJ
-	 f18pCRH1WR22OH+fzRukqa4Xf/ygIOk63WHjbWkGUu+VmHMtD5g5mf9c0d58BqqnF5
-	 U0COOkSGxEdB4lyz65gkEee1YJttkptiulqh2i/Yzlp8u7xZELXM81DDi7CxfJaM7M
-	 gdBjRWTLyL0M9u0EBuSk0IXUnl4b5Zbvh6TQw6eSmS6IRIEsKzCQ5VkNYJ4E301s/N
-	 jNSvttXSe5fzANmxebRZv5G7EPEpAVgvJBvj+MwhSzqi5SvZkWqWrJKcjBQhRl2vZ+
-	 h+68iJtEdlUdQ==
+	b=hLB6RbP4cH7XnuC71eMQjZGzbd+UPyk2J/WCudxfz2iO+KA/vBWszqak4FcwqmVzQ
+	 6P0ILzyKtbqSSrDY7rrxUjQIG5zuG/C++DnWpBNYP6HLN9H7pgtM4VHcbEtKtgNYBo
+	 vf1bdBQfiRQs7LvIbA0fJw1hUW0W6f0xJSsC5QT6mBibKclD8gMEEu8CdvHrwSvf7N
+	 O3svXSWhdA8R6RU9Y1TVipq8xXZUQUD5hCD4fK6ITwA2SRHQdnS0K89PI/djP/8siR
+	 ayX+4FWMSqLLohmQEn3tCWk/CUMGwVmQNz3WBLLKpcl4kBKn6FtGi1d07IGBfB5BTk
+	 jUkZrRYKWp5fQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3231AC395FD;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 570A3D8C96B;
 	Fri,  9 Feb 2024 03:11:08 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,37 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] qed: remove duplicated assignment to variable opaque_fid
+Subject: Re: [PATCH] net/sun3_82586: Avoid reading past buffer in debug output
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170744826820.23533.14107446456675150623.git-patchwork-notify@kernel.org>
+ <170744826835.23533.602886165980090200.git-patchwork-notify@kernel.org>
 Date: Fri, 09 Feb 2024 03:11:08 +0000
-References: <20240205215530.1851115-1-colin.i.king@gmail.com>
-In-Reply-To: <20240205215530.1851115-1-colin.i.king@gmail.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: aelior@marvell.com, manishc@marvell.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
+References: <20240206161651.work.876-kees@kernel.org>
+In-Reply-To: <20240206161651.work.876-kees@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: sammy@sammy.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, gustavoars@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon,  5 Feb 2024 21:55:30 +0000 you wrote:
-> Variable opaque_fid is being assigned twice with the same value
-> in two identical statements. Remove the redundant first assignment.
+On Tue,  6 Feb 2024 08:16:54 -0800 you wrote:
+> Since NUM_XMIT_BUFFS is always 1, building m68k with sun3_defconfig and
+> -Warraybounds, this build warning is visible[1]:
 > 
-> Cleans up clang scan build warnin:
-> drivers/net/ethernet/qlogic/qed/qed_rdma.c:1796:2: warning: Value
-> stored to 'opaque_fid' is never read [deadcode.DeadStores]
+> drivers/net/ethernet/i825xx/sun3_82586.c: In function 'sun3_82586_timeout':
+> drivers/net/ethernet/i825xx/sun3_82586.c:990:122: warning: array subscript 1 is above array bounds of 'volatile struct transmit_cmd_struct *[1]' [-Warray-bounds=]
+>   990 |                 printk("%s: command-stats: %04x %04x\n",dev->name,swab16(p->xmit_cmds[0]->cmd_status),swab16(p->xmit_cmds[1]->cmd_status));
+>       |                                                                                                               ~~~~~~~~~~~~^~~
+> ...
+> drivers/net/ethernet/i825xx/sun3_82586.c:156:46: note: while referencing 'xmit_cmds'
+>   156 |         volatile struct transmit_cmd_struct *xmit_cmds[NUM_XMIT_BUFFS];
 > 
 > [...]
 
 Here is the summary with links:
-  - qed: remove duplicated assignment to variable opaque_fid
-    https://git.kernel.org/netdev/net-next/c/5c80e62a2ac5
+  - net/sun3_82586: Avoid reading past buffer in debug output
+    https://git.kernel.org/netdev/net-next/c/4bea747f3fbe
 
 You are awesome, thank you!
 -- 
