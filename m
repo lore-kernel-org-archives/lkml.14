@@ -1,146 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9FF7D3ED
-	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 17:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6767B3D2;
+	Fri,  9 Feb 2024 17:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707500442; cv=none; b=cl5QGVLq50NSZc5/hqegSaYSNwqJxpnW55L6vC8zB0ktu9677dFnUh+88mtQNe8qNQNclplD0SgHZLemzbQixuWonFHPDAAbqpwT6qWqf/oMw5wx+taOXa++vcic9uasZWVxdC3n5zxBhTYZqgv9vmva0gXMe5DwNgciav4RMsA=
+	t=1707500516; cv=none; b=LT+rBQ+BgPrlOdStJ/3D9PbrQt7sHcsFqGLO5U8jRfmycIABDI9TZplecZFi0N2SX7lhFk02ha+9AdjqeLhnY3nXjZW4DJeRWz02Z/33QNn23NvrKts0ozc7MCb93Y3UXHDp3RWssEInJlG/BLHBMu1F+M0y9r15xo1DuTh5PV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707500442; c=relaxed/simple;
-	bh=o8b3GPwcypa+9hVIVmQX9pFn46G5rI+gSuxMV22E/pc=;
+	s=arc-20240116; t=1707500516; c=relaxed/simple;
+	bh=Qc4AbQqALiytLpMcojyv4Ko9mDH1xImfA6IKZkEgKFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0gUWLsRDznaGDW0OOrW0gjT8GjTysb1kSQCCfa0G7i3yiqjRSV48VFm+DKAMe4ABL5MW1lDpmoqJ9dCnCEWX3sro47nGD2g8wVRPLxElgUXHIV80qNsFijQvmHPnjqQcXgi8vY7oU80qNiHzzwSU+EJRYSgxxy+rtIEloSLBRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJkp8FcH; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RG3he8f3I6ABX3W0VXd++XBuZmTf/nVwQLJn8QJJGKZQUYHS5L7RyVdTQBAbpraF6LIKEpsNEcw3TJwK6dXQf7jcnX3QpS0sUMAdxQ6wAPOSyBFevS3FjkZxBZeq22mud57mNXC/ziywqAO7mIQyu7A4vfIZfl/rvzPsOsyahg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W31tYjMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJkp8FcH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707500439; x=1739036439;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o8b3GPwcypa+9hVIVmQX9pFn46G5rI+gSuxMV22E/pc=;
-  b=GJkp8FcHJWFY85pXYRegIs7PlSB+ls/1bbuucLM3yavdrKsFBO2+6k/A
-   EM3Syfy52gKWgCay9jiBDpi79gUfSCeQQfWGFexGrqf9khmdLIb1/aNf+
-   RkM/C+QXyFyRbCP93UdO1OJ10ouMjuldBDdCFsnq57Liixhj8NtPWtDhG
-   wtsIZFjrORTOk5NuDEo6PPjwdOZiNAffpw75wFQCk1WIeUKvPd0S3pR6O
-   hs8I04Hh3xEBttcRi2aceP2YiGvI+bJ0NNT31CfUFavoTdQEK0a3cQBE3
-   JHhTRMWWCXJdWOs656c9Ag03B7V/02sb+019+qwb8+1mFQkm6Tv/0TRKH
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="23948243"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="23948243"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:40:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="6637123"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 09 Feb 2024 09:40:36 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rYUrZ-0004z0-1p;
-	Fri, 09 Feb 2024 17:40:33 +0000
-Date: Sat, 10 Feb 2024 01:39:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v7 1/4] lib/stackdepot: Move stack_record struct
- definition into the header
-Message-ID: <202402100110.8JfjkMjh-lkp@intel.com>
-References: <20240208234539.19113-2-osalvador@suse.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W31tYjMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350E4C433C7;
+	Fri,  9 Feb 2024 17:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707500515;
+	bh=Qc4AbQqALiytLpMcojyv4Ko9mDH1xImfA6IKZkEgKFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W31tYjMSmQ111vjm+XeO6U1F3LX9XB1Q8g/y+du1AH49RXonhAqz+xKFUrA0eA2OH
+	 /M7tVdLaLD6BtZbLzpBsw4olqjVdMPOY+JLYP1fTTq9QjBdVMoWdcSi65zxfId0OWs
+	 hJlceQGm+doqVrbrUOm7A6FBQCMOzYeLhlMoS6cITY3OOzz9X4Z5ChZk1NfYuLXrHM
+	 mHdy8VMz7pg1omHGuW0keCpXVQ6LUjoJRMb0gseRutDLrsmxaDSA4O9WYGC1F4OB9A
+	 vIqP3cafYV/CIkJS/9i9DwLaCDmW5WC6j5KggWkp0dFBoGt5cDJmTq/9guEKGzwiS7
+	 jSVuDulsag74A==
+Date: Fri, 9 Feb 2024 17:41:51 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>, robh@kernel.org,
+	andi.shyti@kernel.org, semen.protsenko@linaro.org,
+	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+	linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	andre.draszik@linaro.org, peter.griffin@linaro.org,
+	kernel-team@android.com, willmcvicker@google.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org, arnd@arndb.de
+Subject: Re: [PATCH 01/12] spi: dt-bindings: introduce the ``fifo-depth``
+ property
+Message-ID: <ZcZj3/0xI6HqP8n8@finisterre.sirena.org.uk>
+References: <20240208135045.3728927-1-tudor.ambarus@linaro.org>
+ <20240208135045.3728927-2-tudor.ambarus@linaro.org>
+ <20240208-grating-legwarmer-0a04cfb04d61@spud>
+ <c2b08463-cb13-4e9b-8797-8ebcf1047f66@linaro.org>
+ <20240209-chest-sleet-a119fc3d4243@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xgLDICfeMpZPQCWn"
+Content-Disposition: inline
+In-Reply-To: <20240209-chest-sleet-a119fc3d4243@spud>
+X-Cookie: You might have mail.
+
+
+--xgLDICfeMpZPQCWn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240208234539.19113-2-osalvador@suse.de>
 
-Hi Oscar,
+On Fri, Feb 09, 2024 at 04:21:16PM +0000, Conor Dooley wrote:
+> On Fri, Feb 09, 2024 at 01:56:56PM +0000, Tudor Ambarus wrote:
 
-kernel test robot noticed the following build errors:
+> > At least I don't
+> > see how it would work, I guess it will use the minimum depth between the
+> > two?
 
-[auto build test ERROR on akpm-mm/mm-nonmm-unstable]
-[also build test ERROR on linus/master v6.8-rc3]
-[cannot apply to akpm-mm/mm-everything next-20240209]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> I'm not really sure how it would work other than that in the general
+> case, but some use case specific configuration could work, but I do
+> agree that it is
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Oscar-Salvador/lib-stackdepot-Move-stack_record-struct-definition-into-the-header/20240209-074611
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
-patch link:    https://lore.kernel.org/r/20240208234539.19113-2-osalvador%40suse.de
-patch subject: [PATCH v7 1/4] lib/stackdepot: Move stack_record struct definition into the header
-config: openrisc-defconfig (https://download.01.org/0day-ci/archive/20240210/202402100110.8JfjkMjh-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240210/202402100110.8JfjkMjh-lkp@intel.com/reproduce)
+You do get devices that are single duplex only where the mismatched
+sizes wouldn't be a pressing issue.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402100110.8JfjkMjh-lkp@intel.com/
+--xgLDICfeMpZPQCWn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-All errors (new ones prefixed by >>):
+-----BEGIN PGP SIGNATURE-----
 
-   In file included from include/linux/page_ext.h:7,
-                    from include/linux/mm.h:22,
-                    from include/linux/pid_namespace.h:7,
-                    from include/linux/ptrace.h:10,
-                    from arch/openrisc/kernel/asm-offsets.c:28:
->> include/linux/stackdepot.h:59:39: error: 'CONFIG_STACKDEPOT_MAX_FRAMES' undeclared here (not in a function)
-      59 |                 unsigned long entries[CONFIG_STACKDEPOT_MAX_FRAMES];    /* Frames */
-         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   make[3]: *** [scripts/Makefile.build:116: arch/openrisc/kernel/asm-offsets.s] Error 1
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1191: prepare0] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:240: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:240: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXGY94ACgkQJNaLcl1U
+h9CRSAf/UeE2nO0guLYvWREfU8g9XrY8V4UUuS9NFBhw7MxxJ7LMq3HNckLuExHe
+ooFPzasOI0p1bL9293Lp6lx7xjjB9v/3g+mdiWKQP3zGz2GeFALCACYhXPSAJMr0
+MGyjPLSsh62r3YTLVmi85MpnrbLiv63/uKTPuzonGgDrxF8xPpDHKrnHCZlSX84D
+aL63bNmK+OZZoVOWitOMy+BZLJbI7khnbt6QNatsyFtcW4LqNS6ssM1a5TwkLqtj
+bkfJ/cmBBRDMxj52bhU2aHPhzxkx9p3BRJNKogV6Pxk0WanzbRwcbmJFZS/IQTjk
+3z1Rf91cjlbTfeSCRRhLjAM5IeFY9g==
+=5hKK
+-----END PGP SIGNATURE-----
 
-
-vim +/CONFIG_STACKDEPOT_MAX_FRAMES +59 include/linux/stackdepot.h
-
-    51	
-    52	struct stack_record {
-    53		struct list_head hash_list;	/* Links in the hash table */
-    54		u32 hash;			/* Hash in hash table */
-    55		u32 size;			/* Number of stored frames */
-    56		union handle_parts handle;	/* Constant after initialization */
-    57		refcount_t count;
-    58		union {
-  > 59			unsigned long entries[CONFIG_STACKDEPOT_MAX_FRAMES];	/* Frames */
-    60			struct {
-    61				/*
-    62				 * An important invariant of the implementation is to
-    63				 * only place a stack record onto the freelist iff its
-    64				 * refcount is zero. Because stack records with a zero
-    65				 * refcount are never considered as valid, it is safe to
-    66				 * union @entries and freelist management state below.
-    67				 * Conversely, as soon as an entry is off the freelist
-    68				 * and its refcount becomes non-zero, the below must not
-    69				 * be accessed until being placed back on the freelist.
-    70				 */
-    71				struct list_head free_list;	/* Links in the freelist */
-    72				unsigned long rcu_state;	/* RCU cookie */
-    73			};
-    74		};
-    75	};
-    76	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--xgLDICfeMpZPQCWn--
