@@ -1,72 +1,73 @@
-Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A578180BF8;
-	Fri,  9 Feb 2024 18:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DB480C01;
+	Fri,  9 Feb 2024 18:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707502082; cv=none; b=qgZGjAIOGwa/vdhsvusITS0a/Sai2OUmnK3dK+RhMFtCKGyifKKjBwOuR86PYoSK+vXIrp7zTqe6too5ASDuho8LiGAdKTc54m43xQ3WwvyHn+teV/3n5tGmybfHvhVi1SHDw0cigW+voACJXvTtd/HmQmShmS9FZdICmKHQOuI=
+	t=1707502084; cv=none; b=rv/syLdC4yihOBTR/5UXe/IbcThKo+yshE6wYNXDjiZ56DZSqdo9MDJWPrmkREkNQmS3wQsQ9oW9MQS+riYx+T97cpcaPScKKtHgXTn1uGnBUrJh2mpfoZP1gXYIrMMJ1GwKUUiAQ+SOFcQZgCINoqKwZFTePgSmsTn1NvVkcOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707502082; c=relaxed/simple;
-	bh=+62asRFl0S1fz6APzJkHn+qsEgHXRlxqLyx3HTejsuA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VTKQocumdCvqhwLKLI1Bz7E96bFblYEiB6AsFGLn+s74NF1BdVghC636FhEaoh+aKj7Xe54MhCIh+Zup3hQ2BMx6hEGAYQYPiMxXI/ukZIAlvuaP3DlsClPxnfu4fmT7uYYIpb9WOUnHrSuFwMJnJylavEEvCUlWcsgQlGs1iS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=bl6udEzk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EUOTo/CJ; arc=none smtp.client-ip=103.168.172.146
+	s=arc-20240116; t=1707502084; c=relaxed/simple;
+	bh=LKttXLr0babb1IylnCacJGFrcMdR+mMwj71Fm7abKUY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MnXDMySoVxtqmseERckyF3+QLBQU4+33a+9KFw4pH4TMT6eVDmhRo7xmrrwCr9lHZ/SqVjIAEJt6dmfcW320ajjfnwgDfxMUCzBduubr2losdreD+4aTsN8nM4PH+NE9HGSKH353v6+EYuyGb1/0MG33I9viV6fUi8z33NTDGSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=WLN3XHtL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ndlPE5p9; arc=none smtp.client-ip=66.111.4.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="bl6udEzk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EUOTo/CJ"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 66AA613800BD;
-	Fri,  9 Feb 2024 13:07:59 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WLN3XHtL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ndlPE5p9"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 88E685C0154;
+	Fri,  9 Feb 2024 13:08:01 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 09 Feb 2024 13:07:59 -0500
+  by compute6.internal (MEProxy); Fri, 09 Feb 2024 13:08:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1707502079; x=1707588479; bh=2A
-	O4bjcUp6bVYUkMaYAR4RdvPKhD/l+vcIQLPfHFuDE=; b=bl6udEzk2yTyHJT8L8
-	SEQUh/JswxpyyvGZNTMHGQ/0llz9DGRN/bf7QEQlMT81C3otLFXgCFej7OlJjvXW
-	nSOlIP+hZR+zZe1xETCT3n1HgKniUazvUdGopfgdI6/z4l9ZV2No2BV5VAIGeMWS
-	ujjqOufueCIa7maz/UwtkYUq3cbCM8Uzz6leWI0anUckJnhlVScFzWS4jPS9TYgl
-	qclpBh4Z7p4pPtMSApXMiQsU36S84AIo2qNLBXwRx83ABZy+Kv0iQXQoRDPmIdZR
-	xtmT90bBHuS9/64PnV/uGOpGHQuzo+UG2DeZ6F9lRG3L3gDM3aeuRNMDnt94mdbo
-	5tPA==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1707502081;
+	 x=1707588481; bh=rOTpDa4ia+tDgi5nhBOgRAcL/ixRct8eMBhwoMPjL34=; b=
+	WLN3XHtLvsPxqg0Xk8woWerpd8LRHATppn8GwQi8sKjtTfpeEHZmvi0XS58opon6
+	IiY67MeRjpNczg3q+sprAdQZH3bYxbo2Fm7LqFf3AjdHCv0o2GBhi44Euj5j+h3N
+	++niUDDClkT325DBGoIBVrC95e6wxo6o39XyqlomCg33yBZzxgZ9i0FOKAD7lIIt
+	QloQmQhc38Qy/+j+WtJ58kT1RDhcRsSwVJm2LhRoZw2vyT9PcYHKYjieR+jn5nHj
+	uh+OrH8YWc5vSx9N8Tfw4ZnA1ohet3Vx3gfE8bbInfcK07zInwr87B7PY7/GygYb
+	NT2qhRv38IHeaT/qTbs2IA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1707502079; x=1707588479; bh=2AO4bjcUp6bVY
-	UkMaYAR4RdvPKhD/l+vcIQLPfHFuDE=; b=EUOTo/CJfzOrPOngxdFRONwtxh9ju
-	gif82uejdcNJyr6HETqbQNmjBuLjgzg9QCO4azhTfvhDiZXkiGFSGeJaepoKpd0n
-	7PMMzpC6SxSzcXO/DXHaZbtZ8fn0nwwJIgO4nUvsmIVTL5cnEJO+UQo7qs/GpIoi
-	iw4naqijcVfeK3wnFCDZC5t71Z2QyKL7aOShuCa2PIsWabDeKYkf3JVChSB/QgmC
-	j4EIkW1zigVEEpH2hrwcaWhLUNg1rup7OH+5lyO2UXVuAsEgQPmQDBU0eqIP1QD1
-	N7FnHHiELWvi4McqiNJtPWUGsExYaBzHK+9kB2MteFU1T69QyU9Q0XgPA==
-X-ME-Sender: <xms:_mnGZfPCeqXa9TLUI0IGfTDnA_mPQRiB70-3O9q_PJpGTt7LQlV5lQ>
-    <xme:_mnGZZ9vZXqVom-ntpBjyCJnHzJW7DxEhmF-lNMYs409GBz2PP4D-A7pVfaO4nYuT
-    a-LSp8vIZELyBwVbDE>
-X-ME-Received: <xmr:_mnGZeS4bf-oi3BqnSUConLXyq4UABMiiNsgCxdLd-X7nDFV5taaMU57bdjCS9NxQw>
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707502081; x=
+	1707588481; bh=rOTpDa4ia+tDgi5nhBOgRAcL/ixRct8eMBhwoMPjL34=; b=n
+	dlPE5p9ztThejkwz2SZi2wTTbhdWnzI76bsD+aBGUZi/JztyWHtRAdug5CqYV6zr
+	yl26DLxKKtBWL1W2st4ylB6EacXDnta11YIy6UQ4/aKxOGks2gcT/01WxT9ViJmB
+	SPjU1s1mc4YLBqnJmuh97FxTkslRDrsIKFQG1+GQ2iyR3sh+D1wleeYMEcshwx3P
+	pehK7vuS1wW00s5Fx7xbXkZoLdkUKSNl4g7rHDC9eSLsCNED8/DQOmdD6siLVCUk
+	mdAS3Yp4V9oC526/SyZT86BB4YGf2ynz+E2ft1eNAHjh4JjZY7klubkvehbuBWQB
+	J8ds12ZGPUx/dfR1vmjog==
+X-ME-Sender: <xms:AWrGZSid7p-SfiIZVGVQAwP5ALnd8XS5Sdn5YbRYV0f6TDkGWQftLA>
+    <xme:AWrGZTD2oFJOFxYq8xrYMStTBX7ij9-n0vs3ZPQk0MmezKoPBB1K0nm4--tJHFKjI
+    ZvBhE67KrOsLslYzJQ>
+X-ME-Received: <xmr:AWrGZaFKWFdYkkgcXf6QkrKHWMP4HL8GUm1cJ6a9i4vHlCJ-tyEUdfogFHB0nAxIWA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtdeigddutdejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeflihgrgihu
-    nhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecugg
-    ftrfgrthhtvghrnhepudffffffhfeuheevhffgleevkeeugeetfeegieeijeehfeekheek
-    veduveeigeeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:_mnGZTv958R2krqhI3egCQgnG7PhAlaebZGX1RGCwyViwocl-ULmqw>
-    <xmx:_mnGZXeY8RwwL463htW1oQnyL0Y8KfjiYtXayi9CzJvnxO_qyqRWrA>
-    <xmx:_mnGZf1wc6IQWFclIs7lZhxC35VrsglEGy21ig2KWjviIPD8Az7SdA>
-    <xmx:_2nGZYHZpnRP4_2qWfSjPJsgN_Kg1xMQx_O1BHbIWqWpSAQOtwCQhg>
+    cujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeflihgr
+    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffekgedugefhtdduudeghfeu
+    veegffegudekjeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:AWrGZbTY8zKJ_DSSFYMsvA6A4AjzXAMEBaTKG995StxJMSkavNu_5g>
+    <xmx:AWrGZfzAuODZ4oJPdSGMDh8_J-daDhOpBh6UHRKFW5lKb69ewgryRQ>
+    <xmx:AWrGZZ4vQ52R58cS0YlV9Vrrs9kVFe25cSzEY-BZNR0lc6iZ3SKAmg>
+    <xmx:AWrGZRuIw9euXMQ4k9rMPeSRkjUDnATspyAvQN63f0Uavagv237UpA>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 9 Feb 2024 13:07:57 -0500 (EST)
+ 9 Feb 2024 13:08:00 -0500 (EST)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 0/8] MIPS: Unify register numbering macros for uasm
-Date: Fri, 09 Feb 2024 18:07:46 +0000
-Message-Id: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
+Date: Fri, 09 Feb 2024 18:07:48 +0000
+Subject: [PATCH 2/8] MIPS: regdefs.h: Guard all defines with __ASSEMBLY__
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,60 +76,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPJpxmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIwNL3aLU9LzE3FRdk2RDkzRDQxPzVCNTJaDqgqLUtMwKsEnRsbW1AG3
- Qz89ZAAAA
+Message-Id: <20240209-regname-v1-2-2125efa016ef@flygoat.com>
+References: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
+In-Reply-To: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
  linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1325;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=731;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=+62asRFl0S1fz6APzJkHn+qsEgHXRlxqLyx3HTejsuA=;
- b=kA0DAAoWQ3EMfdd3KcMByyZiAGXGafzIu2KMdEbiNyppV45/ISVQ1snIT6OKVp5Ak3naaBsjm
- 4h1BAAWCgAdFiEEVBAijrCB0aDX4Gr8Q3EMfdd3KcMFAmXGafwACgkQQ3EMfdd3KcN9XQEA/lsM
- TSvyhGkAf06a3pH1IF/gB/golXzk2km1eDLr7u4A/iYEWr2MuhscR+EFvGDOqMLwcncV1k+uwg8
- fC37gqMkA
+ bh=LKttXLr0babb1IylnCacJGFrcMdR+mMwj71Fm7abKUY=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhtRjmX+u+E2w3D9TIWyGzjLr24sUjPm+5pWIlLdxC6d+m
+ uNSMvtCRykLgxgXg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAExE8jfDf1/n7K7JTx9wh822
+ 1eG/andxc6lbkv7PBNE5j5sOqm7f94WRobcypm6mZpWMU2DgouIHT6R39v4Jb48o4Dmw4pOJq+8
+ rVgA=
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Hi all,
-
-This is a attempt to unify register numbering macros for uasm,
-in response to review comment [1].
-
-This is a rather large cosmetic change so I decided to send
-it as a sepreate set.
-
-Please review.
-Thanks
+Those definitions are only meant to be used in pure assembly code.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-Jiaxun Yang (8):
-      MIPS: Unify define of CP0 registers for uasm code
-      MIPS: regdefs.h: Guard all defines with __ASSEMBLY__
-      MIPS: regdefs.h: Define a set of register numbers
-      MIPS: traps: Use GPR number macros
-      MIPS: page: Use GPR number macros
-      MIPS: tlbex: Use GPR number macros
-      MIPS: kvm/entry: Use GPR number macros
-      MIPS: pm-cps: Use GPR number macros
+ arch/mips/include/asm/regdef.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
- arch/mips/include/asm/mipsregs.h | 249 +++++++++++++++++-----
- arch/mips/include/asm/regdef.h   |  91 +++++++++
- arch/mips/kernel/pm-cps.c        | 134 ++++++------
- arch/mips/kernel/traps.c         |   6 +-
- arch/mips/kvm/entry.c            | 431 +++++++++++++++++----------------------
- arch/mips/mm/page.c              | 202 +++++++++---------
- arch/mips/mm/tlbex.c             | 214 +++++++++----------
- 7 files changed, 737 insertions(+), 590 deletions(-)
----
-base-commit: 445a555e0623387fa9b94e68e61681717e70200a
-change-id: 20240209-regname-4c14f1147e25
+diff --git a/arch/mips/include/asm/regdef.h b/arch/mips/include/asm/regdef.h
+index 3c687df1d515..87ba7be1a847 100644
+--- a/arch/mips/include/asm/regdef.h
++++ b/arch/mips/include/asm/regdef.h
+@@ -14,6 +14,7 @@
+ 
+ #include <asm/sgidefs.h>
+ 
++#ifdef __ASSEMBLY__
+ #if _MIPS_SIM == _MIPS_SIM_ABI32
+ 
+ /*
+@@ -102,5 +103,6 @@
+ #define ra	$31	/* return address */
+ 
+ #endif /* _MIPS_SIM == _MIPS_SIM_ABI64 || _MIPS_SIM == _MIPS_SIM_NABI32 */
++#endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_REGDEF_H */
 
-Best regards,
 -- 
-Jiaxun Yang <jiaxun.yang@flygoat.com>
+2.43.0
 
