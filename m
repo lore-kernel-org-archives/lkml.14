@@ -1,115 +1,168 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAB2364D6;
-	Fri,  9 Feb 2024 15:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB95692FC
+	for <linux-kernel@vger.kernel.org>; Fri,  9 Feb 2024 15:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707491369; cv=none; b=jeHyWo/Aaj469Ye9epYTmqzijTjmFuabsznbiLWXlUN/P/A6M2SvJauV9mfd7v4I50he+IVHtvR4k3igfcELG5R38pnOI1yR8uSpO9i9dKmy3hYMpRkIwtgF13ocB6wgqrjFqoMeslWNwd97AwIbC7qkNMjulRSXMvBgYJWw90o=
+	t=1707491423; cv=none; b=tcz/arkDr3KpXd/hbOutDhaYIUOcFitEjf8+goiPgbqMC6px9UiOFcxc6q7dh+cpBcf4DyUhWIZtUN77mD3gI8yY2JCbpxgrtCIrrnPfmbsRj7L+M1TAbzNpggQj8kPCf20kN6PGl48Sjkw7Egqmaz5a5G0hEw9j4RzMoFah9dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707491369; c=relaxed/simple;
-	bh=dWx046Tkcu2y3E2CdwqYqH3QkLRo4gCPm3p/Aq7/rvY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d9vpfo+YUAmLZDD5tNXAoOK6Kx7iQL0y0/RXbVhAfAn+VNNSLYl7MPhZNOUspe66g0aNW0aPxpTtEp2RYkKg0BbD3Evjpd0fKgAifEzhFurg4LcMUTSI3kjYWlSbJYvgi1blwXWAvFhuvQ4V5PcCU3RQ0fNIhmT7hJNaXuKbIHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=yM82d/pG; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1707491423; c=relaxed/simple;
+	bh=qtUK2RUPjq9zDcyg4Ds+2K42jq2xEZ+Gn6WwDqcikrs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nS10Jb1QRC3/kGmvSCCRYyZcyZXjn0/r3auGCOngxb4rwbtX8QUXZwGVLCylJEY3OMapxzuK4qQHj5dgFUuxToq2rGiCvnCiFqAJbwxKlax4mzYE6rl036+i+h0WAt4f1rshKHgCP4rWwGK3RcCa/FXCyWO35eNjYU1ooe6Eyxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=u3hVr4aS; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yM82d/pG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707491366; x=1739027366;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=dWx046Tkcu2y3E2CdwqYqH3QkLRo4gCPm3p/Aq7/rvY=;
-  b=yM82d/pG7B5It+OgyttNQb57obDLC5J7YDbjqPraffz/7/6royQoBqnO
-   FF25EMl/+Q7KHNzeC9csPhhPbyACYsCKbNc7w7hEd9Cr2wFb9iCBsn+Jr
-   XP21D47QwGVzXlgwPlLvp68MKFJpWyeB1PLTOjjr0mLviogbVPBphJJMY
-   nmo9BlrFPdm4TOk/sPP1e1RNezu+5mM2F25vYbkk3knkj51vvEGSjj4Dc
-   k4vfBwkWkUawo0dQhwvltAnEF6abIR1soTFIxfGF+Yj3ze7x4Q5uj6RX5
-   oiJi5Jnxwa3oaSh4LhuSgNwDwYJqjR+WP9M88BC+I/rcn4a4ogGC9Fqqa
-   g==;
-X-CSE-ConnectionGUID: /ftgHdBDRUKkBO7najs1cw==
-X-CSE-MsgGUID: VSn3vkQASAS92qqfg+3cTQ==
-X-IronPort-AV: E=Sophos;i="6.05,257,1701154800"; 
-   d="scan'208";a="17424562"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Feb 2024 08:09:24 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 9 Feb 2024 08:08:49 -0700
-Received: from che-lt-i70843lx.amer.actel.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 9 Feb 2024 08:08:37 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <linux@armlinux.org.uk>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <manikandan.m@microchip.com>,
-	<dharma.b@microchip.com>, <arnd@arndb.de>, <geert+renesas@glider.be>,
-	<Jason@zx2c4.com>, <mpe@ellerman.id.au>, <gerg@linux-m68k.org>,
-	<rdunlap@infradead.org>, <vbabka@suse.cz>, <dri-devel@lists.freedesktop.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <hari.prasathge@microchip.com>,
-	<akpm@linux-foundation.org>, <deller@gmx.de>
-Subject: [PATCH v4 3/4] MAINTAINERS: add SAM9X7 SoC's LVDS controller
-Date: Fri, 9 Feb 2024 20:37:56 +0530
-Message-ID: <20240209150757.66914-4-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240209150757.66914-1-dharma.b@microchip.com>
-References: <20240209150757.66914-1-dharma.b@microchip.com>
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="u3hVr4aS"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-785738e94b9so46622385a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 07:10:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1707491420; x=1708096220; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5jZoYn0SqLJVfeFn7JEaR0g9woQE+L+0Od2YAlUn5xo=;
+        b=u3hVr4aSeiXDVV7KEL5xBT7b+XrKLOH6eKjBD2ik/2BnKFAMhbFVVK6/zy/XrD2ix6
+         /oLrNPGsxbP3CrJX6SqJOUqosP8+Cuk2gBS+Iu2ypZ1Z2uxflChDm0FqmqkAE4IK2OMr
+         UPSTcsEY/07o90eWGpHKXPe2BJVZBm/j9jaAAs6GZ2ozeKmxWW+ADp6JgNAluj6MCKkU
+         v0RRVrEeW/Xh9gb8WNI+2gPom795eFxHPIYYnNXVHYf6weXIYaizYhHxYR8eWwB8Tl24
+         tyVvnS1TaNPfH9IcjljlbxaJwCYi4a8OeceEifZLAzUosHVp9l1m8mFA1mE3EWWc9mru
+         fygg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707491420; x=1708096220;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5jZoYn0SqLJVfeFn7JEaR0g9woQE+L+0Od2YAlUn5xo=;
+        b=qLyLYWRVK5dZOjtSk5uV8pONgaFOR0NBQL9Rri6opJkI1ZWkSYUhhiZ1C3Zz3LvCjp
+         Wc/+gh8/4z1OuTPYFvvbRJ1XhjU6xRyyEGkujsglulyYWzHuB/EcMCx/stACFGCIxh6X
+         MCMIQMAdfKYGQDgV4CiDWLKAe2ClBSvyhYvWkhdg9rKOyasOukBWTNS3hlOdfTfHNuF5
+         gthvP7dnhZmoBadvprs4eyxkx66kMZiJ+CTzhOpnrtky6egrdUDhVVe+9AoNJM0VF1hy
+         Ehc/no/a3A2g14HIJpmForNkCw0DyFIUVAwozX62DfHmjdjo178x1EFYwL4pkDIiUzJi
+         IjOA==
+X-Gm-Message-State: AOJu0YzpsuqT9n0mEVQku6GorrIfegnuw1bvyQgWcXhRpMFpgq5I1072
+	6AQ+ICsF/wf28on6JNXVlV5jYOXNIi9jnuU10sxjV9lp0yzYLYP3r0gInyUaM4E=
+X-Google-Smtp-Source: AGHT+IGJujCOaBUh3+oOR5ApSS6lvEa3a0jxNEBbqxn0JlqDSpYkF/buTzCRYwtvZMYQKa3lmxc9mw==
+X-Received: by 2002:a05:620a:268b:b0:785:9516:e18e with SMTP id c11-20020a05620a268b00b007859516e18emr2146194qkp.74.1707491419707;
+        Fri, 09 Feb 2024 07:10:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVvDdCfhFiryxWiYoJ2gBpV2oU/ctUCfE12dXwi2MCN5uEKO+MzA6EyjHUcEdauLIMu/Dhu39NM91HuTSdFlFqTQs1uigFEsJ6VdHtifb1WG2boHZV++LMH5/2PlduQGZ3Xfo1GPPUtLjAu5SuBx104V6/YlQ1W90oJH4QK0wlM9/zB6kMw2p03qMVMgU5F06FYfv1e9g96JfriQzsgfAYpSyHC9t7+4u5JN4JhhSTVJ+LGFW3tye2eH8mqomknTNbUylun83aBCPrvRImIZojgO2ICF6CFEp7FGQODOLSI1Q8RY6oFzQXAhAniujYJyIhgxQcCMdtuFQeTgIyos4CO0NJ9Vvs/zc9BjxzWtjWcHlG1bOs/uFri+QsOP8IBcRsNtBnBLoLTAVb0eu97DUt80Vcr
+Received: from nicolas-tpx395.localdomain ([2606:6d00:11:3354::7a9])
+        by smtp.gmail.com with ESMTPSA id c6-20020a05620a0ce600b0078565ed2bc6sm790938qkj.124.2024.02.09.07.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 07:10:18 -0800 (PST)
+Message-ID: <7322a22591ab18a664c9b6fa07957a163fceaa2d.camel@ndufresne.ca>
+Subject: Re: [PATCH v2 1/2] media: v4l2-ctrls: add encoder maximum bitrate
+ control
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Sachin Kumar Garg <quic_sachinku@quicinc.com>, hverkuil-cisco@xs4all.nl,
+  Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov
+ <stanimir.k.varbanov@gmail.com>,  Vikash Garodia
+ <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>,  Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Date: Fri, 09 Feb 2024 10:10:17 -0500
+In-Reply-To: <20240130112400.2636143-2-quic_sachinku@quicinc.com>
+References: <20240130112400.2636143-1-quic_sachinku@quicinc.com>
+	 <20240130112400.2636143-2-quic_sachinku@quicinc.com>
+Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Add the newly added LVDS controller for the SAM9X7 SoC to the existing
-MAINTAINERS entry.
+Hi Scahin,
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
-Changelog
-v3 ->v4
-- No changes.
-v2 -> v3
-- Move the entry before "MICROCHIP SAMA5D2-COMPATIBLE ADC DRIVER".
-v1 -> v2
-- No Changes.
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Le mardi 30 janvier 2024 =C3=A0 16:53 +0530, Sachin Kumar Garg a =C3=A9crit=
+=C2=A0:
+> Introduce V4L2_MPEG_VIDEO_BITRATE_MODE_MBR rate control to
+> limit the frame level maximum bit rate.
+> Encoder will choose appropriate quantization parameter and
+> do the smart bit allocation to set the frame maximum bitrate
+> level as per the Bitrate value configured.
+>=20
+> Signed-off-by: Sachin Kumar Garg <quic_sachinku@quicinc.com>
+> ---
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 2 ++
+>  drivers/media/v4l2-core/v4l2-ctrls-defs.c                 | 1 +
+>  include/uapi/linux/v4l2-controls.h                        | 1 +
+>  3 files changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index 2a165ae063fb..05ef4a70e3f5 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -576,6 +576,8 @@ enum v4l2_mpeg_video_bitrate_mode -
+>        - Constant bitrate
+>      * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``
+>        - Constant quality
+> +    * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_MBR``
+> +      - Maximum bitrate
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a7c4cf8201e0..ce592b6cf375 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14216,6 +14216,14 @@ S:	Supported
- F:	Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
- F:	drivers/pwm/pwm-atmel.c
- 
-+MICROCHIP SAM9x7-COMPATIBLE LVDS CONTROLLER
-+M:	Manikandan Muralidharan <manikandan.m@microchip.com>
-+M:	Dharma Balasubiramani <dharma.b@microchip.com>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
-+F:	drivers/gpu/drm/bridge/microchip-lvds.c
-+
- MICROCHIP SAMA5D2-COMPATIBLE ADC DRIVER
- M:	Eugen Hristev <eugen.hristev@microchip.com>
- L:	linux-iio@vger.kernel.org
--- 
-2.25.1
+I'm afraid for this one your documentation is too short. I believe your com=
+mit
+message helps, but this is not what our uAPI users will read.
+
+My understanding is that this feature is a form of constant quality (smart =
+bit
+allocation) but with a maximum rate guaranty. Using a specific mode (rather=
+ then
+a constraint on top of a constant quality mode) is a Qualcomm specific desi=
+gn. I
+think presets are generally easier to use, so I kind of like it. What is mi=
+ssing
+(arguably all these modes documentation are also missing it) is the rate
+observation window. Would be nice to check if there is a way to specify tha=
+t (or
+even configure it, if so add a cross reference).
+
+So I'd like to see some proper documentation for this one, remember that V4=
+L2
+documentation is also a specification and will serve to ensure drivers conf=
+orms
+to the preset expectations.
+
+regards,
+Nicolas
+
+> =20
+> =20
+> =20
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c b/drivers/media/v4=
+l2-core/v4l2-ctrls-defs.c
+> index 8696eb1cdd61..e0597b61ffb9 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+> @@ -154,6 +154,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>  		"Variable Bitrate",
+>  		"Constant Bitrate",
+>  		"Constant Quality",
+> +		"Maximum Bitrate",
+>  		NULL
+>  	};
+>  	static const char * const mpeg_stream_type[] =3D {
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2=
+-controls.h
+> index 99c3f5e99da7..7c74d6c417d1 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -393,6 +393,7 @@ enum v4l2_mpeg_video_bitrate_mode {
+>  	V4L2_MPEG_VIDEO_BITRATE_MODE_VBR =3D 0,
+>  	V4L2_MPEG_VIDEO_BITRATE_MODE_CBR =3D 1,
+>  	V4L2_MPEG_VIDEO_BITRATE_MODE_CQ  =3D 2,
+> +	V4L2_MPEG_VIDEO_BITRATE_MODE_MBR =3D 3,
+>  };
+>  #define V4L2_CID_MPEG_VIDEO_BITRATE		(V4L2_CID_CODEC_BASE+207)
+>  #define V4L2_CID_MPEG_VIDEO_BITRATE_PEAK	(V4L2_CID_CODEC_BASE+208)
 
