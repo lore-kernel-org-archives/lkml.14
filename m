@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDD220E4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE3620F1;
 	Sat, 10 Feb 2024 01:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707528079; cv=none; b=vF0iy3rK8jp9Fr+w9RMs98+KAG2+vVIbRsAHFCuEPeqA0it4XRi3kxfrh+/Z3qML9W0+RkqhBqrYgSoNLlGtjjKMlqLOy65DaH4sqtpmafpOz2SKdNNk+hkgdIggpgdIvSAhiOa1iTVc5BqsX8TEa/qHw+vem3XiD7EhfJ2/NA8=
+	t=1707528079; cv=none; b=albn0MbPd1b33WPNHir7OeFVThT7WdHtqu2rZ25m7Ys48XPALKA6n+FUEzJ6BhCLBiClJi1gGFLF6SVTlSlTX8pHA5n75+NGMdBLEsWLinwj0/IQEp5QzPilXBdsDYZlGQCF80YZXCA6InSd7C74HOuQ1L7WT8gjZ9yWo1kTR7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707528079; c=relaxed/simple;
-	bh=OuIAXsTXeI+yVn+RPThfGxCtRwDO4KvymqLeppySnxg=;
+	bh=YxQ5LMsMzEjuOZcPovgNYIQMKbIBxJn4ha0PHBzpGcw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MEC5TeFYjSA6mh6oBjKjhqeq0t753q7wsLSV83h1cpXSla38cyDOGnsTb5h9tKEYB4FA9HlWl6geCB2ZBdyKFOG6XCD6t8JIrOGCoNmP8q4rz/wGNOuGVghsOmH40vz2AEoR0HAadLt8QX9J7BqKZPc+YKoyjsPwbFyp4cL4OCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXtncJ8U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=myTF4afF2S554wsKmidv4Vu2zUXztJ6Sc/pIo60TyLUHnOW0C1/1MB8f0MyV37B/RgVADH2VvaJvPnMsiNH+52j+bKl461+BGmX4dzM3FRY2UNpCTWiuIAIWkrrTW8Wpu7DSqzBspYwKT4m43sGHfITN1qQQ6vgel5GevklkgSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBe392Sm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXtncJ8U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7947AC43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBe392Sm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 765D8C43390;
 	Sat, 10 Feb 2024 01:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707528078;
-	bh=OuIAXsTXeI+yVn+RPThfGxCtRwDO4KvymqLeppySnxg=;
+	bh=YxQ5LMsMzEjuOZcPovgNYIQMKbIBxJn4ha0PHBzpGcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WXtncJ8UL/Hq7MVHz9OgALE/sHilMJS9aQOakrLvTcLTBsIjmhMVQEfybuBtwnmcD
-	 R+hin9MG/pHkIbTAtSl8VyvTJP5Kbua/eyPmdlxLEjydS9MgIDpcKf2t6cBVM7UY7U
-	 8fR8VSC+ecrBnXNnvGan4asydXEca0l9wcXz5B/aHyj7WYY2saC0R9kYshCFJpavz+
-	 JPcnauDuKWrW+6Lf7RmQrtgK+JUlXRGpbFJxy30a92/fCjf1u7D34pKs24NLgu+58T
-	 6lAtgX+eESQEwiicf3MHz+gosm/6zSVUC4BQ5s8giagDKchQmptC2vrYPBkCmSI49W
-	 elgufCUiMkmKQ==
+	b=PBe392SmZd26CtDKNzpqe+91/ErPLtAEgyR7/4OIymBD7veyr5eyKlddEAgR/8wYV
+	 KnUEoXqJf4MZKrN4TB/vMS7usnqqdcXwz38VtKi/xycZsfd1GxDFRP4sr6BRNriOXM
+	 gKMS+WM3gbeM9+Ph81dVLPBS+SkezE44XE07e9svrDRUQQs41cUOh4VI1pE1SGpvLD
+	 XPCyZdaVB55onRLmrh5ua8UslempSMUDwgmkOAy/EJQ9D81MNaEtxfxJ1K9fEhp7qV
+	 7X9w0klJ1ailo8zJN8UdZt5tJ/fJqCey8feS3eCBgcQru7zs1XX4mHBLzxYxgOhQzO
+	 5rbJK8x41yBkA==
 Received: by mercury (Postfix, from userid 1000)
-	id D479E106052C; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
+	id DA48D106861A; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 01/14] dt-bindings: pinctrl: fsl,imx6ul-pinctrl: convert to YAML
-Date: Sat, 10 Feb 2024 02:18:05 +0100
-Message-ID: <20240210012114.489102-2-sre@kernel.org>
+Subject: [PATCH v1 03/14] dt-bindings: sound: fsl,imx-asrc: convert to YAML
+Date: Sat, 10 Feb 2024 02:18:07 +0100
+Message-ID: <20240210012114.489102-4-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240210012114.489102-1-sre@kernel.org>
 References: <20240210012114.489102-1-sre@kernel.org>
@@ -59,180 +59,266 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert i.MX6UL pinctrl bindings to YAML.
+Convert the i.MX ASRC DT binding to YAML.
 
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt   |  37 ------
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.yaml  | 116 ++++++++++++++++++
- 2 files changed, 116 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
+ .../devicetree/bindings/sound/fsl,asrc.txt    |  80 ---------
+ .../bindings/sound/fsl,imx-asrc.yaml          | 159 ++++++++++++++++++
+ 2 files changed, 159 insertions(+), 80 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-asrc.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
 deleted file mode 100644
-index 7ca4f6118d9a..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+index 998b4c8a7f78..000000000000
+--- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
 +++ /dev/null
-@@ -1,37 +0,0 @@
--* Freescale i.MX6 UltraLite IOMUX Controller
+@@ -1,80 +0,0 @@
+-Freescale Asynchronous Sample Rate Converter (ASRC) Controller
 -
--Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
--and usage.
+-The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+-signal associated with an input clock into a signal associated with a different
+-output clock. The driver currently works as a Front End of DPCM with other Back
+-Ends Audio controller such as ESAI, SSI and SAI. It has three pairs to support
+-three substreams within totally 10 channels.
 -
 -Required properties:
--- compatible: "fsl,imx6ul-iomuxc" for main IOMUX controller or
--  "fsl,imx6ull-iomuxc-snvs" for i.MX 6ULL's SNVS IOMUX controller.
--- fsl,pins: each entry consists of 6 integers and represents the mux and config
--  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
--  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
--  imx6ul-pinfunc.h under device tree source folder.  The last integer CONFIG is
--  the pad setting value like pull-up on this pin.  Please refer to i.MX6 UltraLite
--  Reference Manual for detailed CONFIG settings.
 -
--CONFIG bits definition:
--PAD_CTL_HYS                     (1 << 16)
--PAD_CTL_PUS_100K_DOWN           (0 << 14)
--PAD_CTL_PUS_47K_UP              (1 << 14)
--PAD_CTL_PUS_100K_UP             (2 << 14)
--PAD_CTL_PUS_22K_UP              (3 << 14)
--PAD_CTL_PUE                     (1 << 13)
--PAD_CTL_PKE                     (1 << 12)
--PAD_CTL_ODE                     (1 << 11)
--PAD_CTL_SPEED_LOW               (0 << 6)
--PAD_CTL_SPEED_MED               (1 << 6)
--PAD_CTL_SPEED_HIGH              (3 << 6)
--PAD_CTL_DSE_DISABLE             (0 << 3)
--PAD_CTL_DSE_260ohm              (1 << 3)
--PAD_CTL_DSE_130ohm              (2 << 3)
--PAD_CTL_DSE_87ohm               (3 << 3)
--PAD_CTL_DSE_65ohm               (4 << 3)
--PAD_CTL_DSE_52ohm               (5 << 3)
--PAD_CTL_DSE_43ohm               (6 << 3)
--PAD_CTL_DSE_37ohm               (7 << 3)
--PAD_CTL_SRE_FAST                (1 << 0)
--PAD_CTL_SRE_SLOW                (0 << 0)
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
+-  - compatible		: Compatible list, should contain one of the following
+-			  compatibles:
+-			  "fsl,imx35-asrc",
+-			  "fsl,imx53-asrc",
+-			  "fsl,imx8qm-asrc",
+-			  "fsl,imx8qxp-asrc",
+-
+-  - reg			: Offset and length of the register set for the device.
+-
+-  - interrupts		: Contains the spdif interrupt.
+-
+-  - dmas		: Generic dma devicetree binding as described in
+-			  Documentation/devicetree/bindings/dma/dma.txt.
+-
+-  - dma-names		: Contains "rxa", "rxb", "rxc", "txa", "txb" and "txc".
+-
+-  - clocks		: Contains an entry for each entry in clock-names.
+-
+-  - clock-names		: Contains the following entries
+-	"mem"		  Peripheral access clock to access registers.
+-	"ipg"		  Peripheral clock to driver module.
+-	"asrck_<0-f>"	  Clock sources for input and output clock.
+-	"spba"		  The spba clock is required when ASRC is placed as a
+-			  bus slave of the Shared Peripheral Bus and when two
+-			  or more bus masters (CPU, DMA or DSP) try to access
+-			  it. This property is optional depending on the SoC
+-			  design.
+-
+-   - fsl,asrc-rate	: Defines a mutual sample rate used by DPCM Back Ends.
+-
+-   - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
+-
+-   - fsl,asrc-clk-map   : Defines clock map used in driver. which is required
+-			  by imx8qm/imx8qxp platform
+-			  <0> - select the map for asrc0 in imx8qm/imx8qxp
+-			  <1> - select the map for asrc1 in imx8qm/imx8qxp
+-
+-Optional properties:
+-
+-   - big-endian		: If this property is absent, the little endian mode
+-			  will be in use as default. Otherwise, the big endian
+-			  mode will be in use for all the device registers.
+-
+-   - fsl,asrc-format	: Defines a mutual sample format used by DPCM Back
+-			  Ends, which can replace the fsl,asrc-width.
+-			  The value is 2 (S16_LE), or 6 (S24_LE).
+-
+-Example:
+-
+-asrc: asrc@2034000 {
+-	compatible = "fsl,imx53-asrc";
+-	reg = <0x02034000 0x4000>;
+-	interrupts = <0 50 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks 107>, <&clks 107>, <&clks 0>,
+-	       <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
+-	       <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
+-	       <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
+-	       <&clks 107>, <&clks 0>, <&clks 0>;
+-	clock-names = "mem", "ipg", "asrck0",
+-		"asrck_1", "asrck_2", "asrck_3", "asrck_4",
+-		"asrck_5", "asrck_6", "asrck_7", "asrck_8",
+-		"asrck_9", "asrck_a", "asrck_b", "asrck_c",
+-		"asrck_d", "asrck_e", "asrck_f";
+-	dmas = <&sdma 17 23 1>, <&sdma 18 23 1>, <&sdma 19 23 1>,
+-	     <&sdma 20 23 1>, <&sdma 21 23 1>, <&sdma 22 23 1>;
+-	dma-names = "rxa", "rxb", "rxc",
+-		"txa", "txb", "txc";
+-	fsl,asrc-rate  = <48000>;
+-	fsl,asrc-width = <16>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/fsl,imx-asrc.yaml b/Documentation/devicetree/bindings/sound/fsl,imx-asrc.yaml
 new file mode 100644
-index 000000000000..906b264a9e3c
+index 000000000000..bc1607ecf345
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++++ b/Documentation/devicetree/bindings/sound/fsl,imx-asrc.yaml
+@@ -0,0 +1,159 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx6ul-pinctrl.yaml#
++$id: http://devicetree.org/schemas/sound/fsl,imx-asrc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale IMX6UL IOMUX Controller
-+
-+maintainers:
-+  - Dong Aisheng <aisheng.dong@nxp.com>
++title: Freescale Asynchronous Sample Rate Converter (ASRC) Controller
 +
 +description:
-+  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-+  for common binding part and usage.
++  The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of
++  a signal associated with an input clock into a signal associated with a
++  different output clock. The driver currently works as a Front End of DPCM
++  with other Back Ends Audio controller such as ESAI, SSI and SAI. It has
++  three pairs to support three substreams within totally 10 channels.
 +
-+allOf:
-+  - $ref: pinctrl.yaml#
++maintainers:
++  - Shawn Guo <shawnguo@kernel.org>
++  - Sascha Hauer <s.hauer@pengutronix.de>
 +
 +properties:
 +  compatible:
-+    enum:
-+      - fsl,imx6ul-iomuxc
-+      - fsl,imx6ull-iomuxc-snvs
++    oneOf:
++      - enum:
++          - fsl,imx35-asrc
++          - fsl,imx53-asrc
++          - fsl,imx8qm-asrc
++          - fsl,imx8qxp-asrc
++      - items:
++          - enum:
++              - fsl,imx6sx-asrc
++              - fsl,imx6ul-asrc
++          - const: fsl,imx53-asrc
 +
 +  reg:
 +    maxItems: 1
 +
-+# Client device subnode's properties
-+patternProperties:
-+  'grp$':
-+    type: object
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    maxItems: 6
++
++  dma-names:
++    items:
++      - const: rxa
++      - const: rxb
++      - const: rxc
++      - const: txa
++      - const: txb
++      - const: txc
++
++  clocks:
++    maxItems: 19
++
++  clock-names:
++    items:
++      - const: mem
++      - const: ipg
++      - const: asrck_0
++      - const: asrck_1
++      - const: asrck_2
++      - const: asrck_3
++      - const: asrck_4
++      - const: asrck_5
++      - const: asrck_6
++      - const: asrck_7
++      - const: asrck_8
++      - const: asrck_9
++      - const: asrck_a
++      - const: asrck_b
++      - const: asrck_c
++      - const: asrck_d
++      - const: asrck_e
++      - const: asrck_f
++      - const: spba
++
++  fsl,asrc-rate:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The mutual sample rate used by DPCM Back Ends
++
++  fsl,asrc-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The mutual sample width used by DPCM Back Ends
++
++  fsl,asrc-clk-map:
++    $ref: /schemas/types.yaml#/definitions/uint32
 +    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
++      Defines clock map used in driver
++      <0> - select the map for asrc0 in imx8qm/imx8qxp
++      <1> - select the map for asrc1 in imx8qm/imx8qxp
 +
-+    properties:
-+      fsl,pins:
-+        description:
-+          each entry consists of 6 integers and represents the mux and config
-+          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-+          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm/boot/dts/imx6ul-pinfunc.h>. The last integer
-+          CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX6UL Reference Manual for detailed CONFIG settings.
-+        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+        items:
-+          items:
-+            - description: |
-+                "mux_reg" indicates the offset of mux register.
-+            - description: |
-+                "conf_reg" indicates the offset of pad configuration register.
-+            - description: |
-+                "input_reg" indicates the offset of select input register.
-+            - description: |
-+                "mux_val" indicates the mux value to be applied.
-+            - description: |
-+                "input_val" indicates the select input value to be applied.
-+            - description: |
-+                "pad_setting" indicates the pad configuration value to be applied:
-+                  PAD_CTL_HYS                     (1 << 16)
-+                  PAD_CTL_PUS_100K_DOWN           (0 << 14)
-+                  PAD_CTL_PUS_47K_UP              (1 << 14)
-+                  PAD_CTL_PUS_100K_UP             (2 << 14)
-+                  PAD_CTL_PUS_22K_UP              (3 << 14)
-+                  PAD_CTL_PUE                     (1 << 13)
-+                  PAD_CTL_PKE                     (1 << 12)
-+                  PAD_CTL_ODE                     (1 << 11)
-+                  PAD_CTL_SPEED_LOW               (0 << 6)
-+                  PAD_CTL_SPEED_MED               (1 << 6)
-+                  PAD_CTL_SPEED_HIGH              (3 << 6)
-+                  PAD_CTL_DSE_DISABLE             (0 << 3)
-+                  PAD_CTL_DSE_260ohm              (1 << 3)
-+                  PAD_CTL_DSE_130ohm              (2 << 3)
-+                  PAD_CTL_DSE_87ohm               (3 << 3)
-+                  PAD_CTL_DSE_65ohm               (4 << 3)
-+                  PAD_CTL_DSE_52ohm               (5 << 3)
-+                  PAD_CTL_DSE_43ohm               (6 << 3)
-+                  PAD_CTL_DSE_37ohm               (7 << 3)
-+                  PAD_CTL_SRE_FAST                (1 << 0)
-+                  PAD_CTL_SRE_SLOW                (0 << 0)
++  big-endian:
++    type: boolean
++    description:
++      If this property is absent, the little endian mode will be in use as
++      default. Otherwise, the big endian mode will be in use for all the
++      device registers.
 +
-+    required:
-+      - fsl,pins
-+
-+    additionalProperties: false
++  fsl,asrc-format:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Defines a mutual sample format used by DPCM Back Ends, which can
++      replace the fsl,asrc-width. The value is 2 (S16_LE), or 6 (S24_LE).
 +
 +required:
 +  - compatible
 +  - reg
++  - interrupts
++  - dmas
++  - dma-names
++  - clocks
++  - clock-names
++  - fsl,asrc-rate
++  - fsl,asrc-width
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - fsl,imx8qm-asrc
++              - fsl,imx8qxp-asrc
++    then:
++      required:
++        - fsl,asrc-clk-map
++    else:
++      properties:
++        fsl,asrc-clk-map: false
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    iomuxc: pinctrl@20e0000 {
-+      compatible = "fsl,imx6ul-iomuxc";
-+      reg = <0x020e0000 0x4000>;
-+
-+      mux_uart: uartgrp {
-+        fsl,pins = <
-+          0x0084 0x0310 0x0000 0 0 0x1b0b1
-+          0x0088 0x0314 0x0624 0 3 0x1b0b1
-+        >;
-+      };
-+    };
-+  - |
-+    iomuxc_snvs: pinctrl@2290000 {
-+      compatible = "fsl,imx6ull-iomuxc-snvs";
-+      reg = <0x02290000 0x4000>;
-+
-+      pinctrl_snvs_usbc_det: snvsusbcdetgrp {
-+        fsl,pins = <
-+          0x0010 0x0054 0x0000 0x5 0x0 0x130b0
-+        >;
-+      };
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++    asrc: asrc@2034000 {
++        compatible = "fsl,imx53-asrc";
++        reg = <0x02034000 0x4000>;
++        interrupts = <0 50 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_ASRC_IPG>,
++                 <&clks IMX6QDL_CLK_ASRC_MEM>, <&clks 0>,
++                 <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
++                 <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
++                 <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
++                 <&clks IMX6QDL_CLK_ASRC>, <&clks 0>, <&clks 0>,
++                 <&clks IMX6QDL_CLK_SPBA>;
++        clock-names = "mem", "ipg", "asrck_0",
++                "asrck_1", "asrck_2", "asrck_3", "asrck_4",
++                "asrck_5", "asrck_6", "asrck_7", "asrck_8",
++                "asrck_9", "asrck_a", "asrck_b", "asrck_c",
++                "asrck_d", "asrck_e", "asrck_f", "spba";
++        dmas = <&sdma 17 23 1>, <&sdma 18 23 1>, <&sdma 19 23 1>,
++               <&sdma 20 23 1>, <&sdma 21 23 1>, <&sdma 22 23 1>;
++        dma-names = "rxa", "rxb", "rxc",
++                    "txa", "txb", "txc";
++        fsl,asrc-rate  = <48000>;
++        fsl,asrc-width = <16>;
 +    };
 -- 
 2.43.0
