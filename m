@@ -1,97 +1,107 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8666D41A82;
-	Sat, 10 Feb 2024 17:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA07259B;
+	Sat, 10 Feb 2024 17:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707585067; cv=none; b=S2dfCeLOX+PqTpIuzOeGBVUWKydK1MKetrhSD1ZC4nA/D8bEnm2C5XyoRFmfwKtc/DcvwzXEt5NEwV5llCMpGR3dnA1gn4N6n5WDqN1H7d91xblgMe8+bBhUn7qGqwC5sp0ssuo0u44BlY90y0ePyLs37xkl2sQtcZk0cEzyqqk=
+	t=1707585207; cv=none; b=c9jqSqK9BDk0gXNUDcZvV0INyye63f1GyN/8GvRND7f1XGr4+2OhvGIDuP9K9HIL1xtQbUqT75oc6esvOQD16oUHDbUo9MZVorDrYgL7UZroKsxzE9Mc4KgTOkM//TYpGzCL34cXZj0rZzRfQl94oMWpLukbrjqriMzfuKHa9bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707585067; c=relaxed/simple;
-	bh=XJ8u9w16pVF5eU4Vn8N3gBf9AK0ZZkv3wuT7fLJUbMU=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Gc1i2bP2Jq09qbdczKcDKfSyjYgtUjtocB81C0icKv8ba8Lvg3IPGOGCX0Gj3NJ7jW9GOek9o8zGzhKHmgPl9vNv8at2Yj4HItjcrzeziv6e3j+eyC2F+/bJpt2iLPRefoNmOi3INerpnGE+cOgIxugFoOSKmQv+Ti1HrfcQWYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (31.173.86.126) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sat, 10 Feb
- 2024 20:10:55 +0300
-Subject: Re: [RFC PATCH net-next v2 5/7] net: ravb: Align poll function with
- NAPI docs
-To: Paul Barker <paul.barker.ct@bp.renesas.com>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Wolfram Sang
-	<wsa+renesas@sang-engineering.com>, <netdev@vger.kernel.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240206091909.3191-1-paul.barker.ct@bp.renesas.com>
- <20240206091909.3191-6-paul.barker.ct@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <0692fd9f-d25f-70e7-d309-d19e804edcc9@omp.ru>
-Date: Sat, 10 Feb 2024 20:10:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1707585207; c=relaxed/simple;
+	bh=Iegw3uSU/jDrRw1wO36FWEmxyFeRwPHeaAd3poNxct8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=THskFI9oKadEHwJ1oFJlxsSCIuEXED2K/NRRIg1HXAfVr94j9bTK8O/JGVQ+LbGe3HHuBM+8zKgNLJS6kOQguOVkgfeThZ13YaeoFHr6H9RTFbkQzNJMomtZ3CB7MJZxY6kCbsLzZcVcwLWcSoUlfr8NPkqXM14fShF7cxyczsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=rfTWOn8h; arc=none smtp.client-ip=89.177.23.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="rfTWOn8h"
+Received: from [10.0.0.200] (unknown [10.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id 2FD87165078;
+	Sat, 10 Feb 2024 18:05:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1707584759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Iegw3uSU/jDrRw1wO36FWEmxyFeRwPHeaAd3poNxct8=;
+	b=rfTWOn8hsJZ9VO96OhUFvyS7X7tW6HR4nm4yJUON1G88hkdLFHSpP6QNFSfX68Mq/VOS/y
+	oCgFAQ870Sab3D6ElhOpIHrhlNikNqSDZkctZYUB3z0M9Tx0vjO06KjLyilLigQj14N/rp
+	b+uKFWQksnkgM+R9l/OlKw/9fbdcbp8=
+Message-ID: <fc4d00d3-0bdc-4583-bc25-a34b6632db32@ixit.cz>
+Date: Sat, 10 Feb 2024 18:05:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240206091909.3191-6-paul.barker.ct@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+To: luca@z3ntu.xyz
+Cc: agross@kernel.org, airlied@gmail.com, andersson@kernel.org,
+ conor+dt@kernel.org, daniel@ffwll.ch, devicetree@vger.kernel.org,
+ dmitry.baryshkov@linaro.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, konrad.dybcio@linaro.org,
+ krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, marijn.suijten@somainline.org,
+ mripard@kernel.org, phone-devel@vger.kernel.org, quic_abhinavk@quicinc.com,
+ robdclark@gmail.com, robh+dt@kernel.org, sean@poorly.run,
+ tzimmermann@suse.de, ~postmarketos/upstreaming@lists.sr.ht
+References: <20240121-msm8226-gpu-v2-1-77f4a6fbbca4@z3ntu.xyz>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display/msm: gpu: Allow multiple
+ digits for patchid
 Content-Language: en-US
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <20240121-msm8226-gpu-v2-1-77f4a6fbbca4@z3ntu.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch02.omp.ru (10.188.4.13) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 02/10/2024 16:56:17
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 183344 [Feb 10 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.86.126 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.86.126 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.86.126
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 02/10/2024 17:00:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 2/10/2024 2:13:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On 2/6/24 12:19 PM, Paul Barker wrote:
-
-> Call napi_complete_done() in accordance with the documentation in
-> `Documentation/networking/napi.rst`.
-> 
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-
-[...]
-
-MBR, Sergey
+Reviewed-by: David Heidelberg <david@ixit.cz>
