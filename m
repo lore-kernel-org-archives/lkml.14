@@ -1,97 +1,111 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769D85C61B
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 16:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AB82B9C8;
+	Sat, 10 Feb 2024 16:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707582974; cv=none; b=nUuP9u0roRViwzVMnrdAkyG9+FNlAWyEl71e24IAhoSh22m0BNej7/mp5vgMFkUy0bzlBou0c5m88mCKWSP35InqdE/WrNHIpf6FQk53g6yyqq0H2gQ+xZBBO9yVn0Gy/SXcJ649qsg+YS3iaGmDno7RAqAHQJ3e1q7XjeD5aWw=
+	t=1707583151; cv=none; b=LFLaaWfwCZ24O+DVpOjDdS3ZV53bEvIlCQPpJa2Ws9zXjEX72ve6whjlzX8CfdKzi/ZYSkpEnVD4aGzvPLevcrZezbC6e4XUolx+dAY19ZGDugD9TJLevcKkhcooMdWs5Iv1mDCM6cjvSBz920YO8N05NKoRzvb9oBOZYlyBuJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707582974; c=relaxed/simple;
-	bh=xVg2rsySaUHLNxBRJA4noG/ZLifuDOmrz2i8pgGGNSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VJyRQHSdYcsZVRUNqFnCqF6Tonq1VPf0W8EABNqmM6Xv5Jh0IxVUKYiTdlrq8uWGR05Z22SpBZLoa1TVdNeEHQqpPwEcfuWLO6V1dnvmkSuc9II9dVs23Fiqn6dEuOH52lSD9ZfVTM+NOuZG+AK12mSCmO8QDik5alvy0K8rJfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RRSMuhGA; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707583151; c=relaxed/simple;
+	bh=Z0ejz2Z7KadDW8L5DtUsqa9+gFcYsfukyK6vqWCH2qU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kEE46Lp/Qa7dxU42KkJPIUMe7ZE5NeoJ/53g9afM3MqKfonuU0x5nyG1l9TVJR+/rDriw7lj0g2SQdH2cb1wgLyalUPVAc+7NPo2XNzhT0j487D/cJeC4LzuwBtkQiFpq6mLa4nmtsFoLNmFKUdttWuVolh2vswdfU0tx8/MTLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=AB17Nc0R; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRSMuhGA"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc74aac68a1so1980382276.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 08:36:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707582972; x=1708187772; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xVg2rsySaUHLNxBRJA4noG/ZLifuDOmrz2i8pgGGNSE=;
-        b=RRSMuhGAZmcQe0hEXu8DH1PdWCpMHJg0+wZDWFNBsc0rww+SEwi26aJJOJGTwekZgf
-         Fu9wC4oA3c5WaI8G29pxObipeMmuUXGVOo1RXKDm9ioFhuAb6KaTONQOHEXOPl0XMdk2
-         9Xs/zMjd3mTMLOQM5YnZ8oAgPY3EpsBfi/vUW4CBGYG5IOOBqRuVXEStU9oQjno2oNA4
-         O/obDG5wUgHkzOJ8CwvGq23BCVnOA8OvoaXO7XDoV5GQHO912izxESVyMGNvqM9Wtj54
-         MoRrL9AwniTjksLga6LedjBICs3mAguIJL9tS9bmItHWruPE6IEVh//f7WpYHgWDMAPA
-         6+cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707582972; x=1708187772;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xVg2rsySaUHLNxBRJA4noG/ZLifuDOmrz2i8pgGGNSE=;
-        b=oJbTLt77THz5pSc/bAzH3qbFJvl3ZAAZDzR8QfhTECeaTQDuc/EZHDwo/uAOgjM7ni
-         JPIYVgFq7BcjsduRV75dG+QHSd5kRaDCrQIygyjN48uxB/2jglgvP+c7MrFXERVwQBS5
-         uB3yeppv7squh9vjL/woL2fg+EgC02HFwJs5E9lCPkvBKtbSI+TLKTRYX8/KGgfDahxn
-         D+ii7lhuu5eZ5sMfc/8ty5CcotWaYRsl4cXW1LsziWTsdBN9ed/1myb+KwAZ1WuUIXOt
-         JCdNyjOSlnw4gU8wsk4FG05rlhFdoT4CTWaCKTxR5ZAmxO0jl81YrHrgb08DgDSK8USd
-         SPng==
-X-Forwarded-Encrypted: i=1; AJvYcCXTSbzNohYZDYE5ku/jdczXFh/6OjuZ979YhN4gqa8oTOovsRCQoTtNzSUsfxerJkr6L62Yn2Y/yYeV5+R2mWLfvC1dOEcaX4MQHWjm
-X-Gm-Message-State: AOJu0YygEe94q1Hq1IBI5a5d4c/WiGweufB0QXZZmAOZr8qLnYY8tP8c
-	8LsFRBtyp1hmiwtsx22AjITnBAjkzDIctDroI8I81as5VrDr2lQLHMJoNRPqNDZsivHq6IrxydN
-	5WNRifx/OEUgVHHpMC7MLwKTYaXU=
-X-Google-Smtp-Source: AGHT+IE+fvBFa8QWEnDUJIBbyfVmQzGPZ+d8gzHA8Ie7SibJhobr4pIOwYgIwXacPtIPXu0U6U4DMlRpkiRsS00J/No=
-X-Received: by 2002:a25:6809:0:b0:dc7:44d8:14c2 with SMTP id
- d9-20020a256809000000b00dc744d814c2mr2032273ybc.39.1707582972424; Sat, 10 Feb
- 2024 08:36:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="AB17Nc0R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1707583147; bh=Z0ejz2Z7KadDW8L5DtUsqa9+gFcYsfukyK6vqWCH2qU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=AB17Nc0RmHj3klVKrj1IsNpUmIxZe1/kCy8J+9uD8jij3g8BrFptG/atwQ+YtT+13
+	 TqPrzdhEchku2RKuqLBfNJ63eVeUD+DOxSNYhD3UJZf17PlsFB0YL9somQTfy3TQvW
+	 57oBxNISDh0HURSA4V6p1aOrS4cgtcdp5QaR9huU=
+From: Luca Weiss <luca@z3ntu.xyz>
+Date: Sat, 10 Feb 2024 17:38:56 +0100
+Subject: [PATCH v2 1/3] dt-bindings: power: rpmpd: Add MSM8974 power
+ domains
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208002841.GA2601476@dev-arch.thelio-3990X>
-In-Reply-To: <20240208002841.GA2601476@dev-arch.thelio-3990X>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 10 Feb 2024 17:36:01 +0100
-Message-ID: <CANiq72=G--5LW-9sg2PscTL863mFVNdnX7LUQX2Xj02qZs4crA@mail.gmail.com>
-Subject: Re: Prebuilt LLVM 18.1.0-rc2 uploaded
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240210-msm8974-rpmpd-v2-1-595e2ff80ea1@z3ntu.xyz>
+References: <20240210-msm8974-rpmpd-v2-0-595e2ff80ea1@z3ntu.xyz>
+In-Reply-To: <20240210-msm8974-rpmpd-v2-0-595e2ff80ea1@z3ntu.xyz>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Stephan Gerhold <stephan@gerhold.net>, 
+ =?utf-8?q?Matti_Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1565; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=Z0ejz2Z7KadDW8L5DtUsqa9+gFcYsfukyK6vqWCH2qU=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlx6aoRiRisauepXEiWVHnu49b09eKAS1bnXrX7
+ jEvQCBqlRuJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZcemqAAKCRBy2EO4nU3X
+ Vr46EACLtISs42mjjGJW4gCRA6r8/lZm3z/2tG+WrUKm9zBrVWLiXv1o+JEccOM4g1BPUv/fqyE
+ +52k7YixnX5fG6yYrT+SbJVqcCahMqZEdVZlZ2zLhDOk6xIg/RXc1NCOzXaZuL3VraatW+63m5Y
+ pNLeFrhGYsijhBNoFczuMOlQY7RfG78R06GZK221OWcXn7wUrEnoJVy8WvhNze9Gt9B3xRQ7kNE
+ ffvZVRDvQJ++pEG9EwmHprPQcYsKlHfw7e/1GAgEl0r/vwzpJdcGc9sb6+0Ly0/43gJ/ru+1eJ2
+ ObFTS/a5fPAt82CthnAb4J9CgTr9G2pCzElf4n+noJGR00/2xrk2vRVSvlSSXk9VxjaZyXWyrio
+ AyG2d4IipBbErgKEnkNjUzNh9XOM+kodStb5Eo1dHuVdUir2qY0ZY41euH+TRZV81XWKdBzlCJ3
+ 15UYpjEVtJII5+3k/GW9MNSIjtzNmMGhW2MDraqzqavmysPqdxMuzEhX+SRmn59owTj/dm3UqC6
+ yzCGYWUqcPHW1Pb21D5WDk5YXw7DT5zi4UBe72eeAEwCp56edc6/x+ZW+c3+hIc3xCwNLV1dZqT
+ drKZa/0PEzGW0Sx0IlI5npSpSEHxyoHTYlvq5ygn45FTAxt8wfgIQtPeT6+hyUMdLdrw1oCoOsC
+ tyRDMnl0QwM9Pdw==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-On Thu, Feb 8, 2024 at 1:28=E2=80=AFAM Nathan Chancellor <nathan@kernel.org=
-> wrote:
->
-> I have built and uploaded a prebuilt version of LLVM 18.1.0-rc2 to
-> https://mirrors.edge.kernel.org/pub/tools/llvm/.
->
-> As with Linux -rc releases, this is not the final version that will
-> ship. If you run across any issues, especially ones that were not
-> present in earlier LLVM releases, please consider reporting them to us
-> so that we have a chance to investigate and fix them before the final
-> release.
+Add the compatibles and indexes for the rpmpd in MSM8974, both with the
+standard PM8841+PM8941 PMICs but also devices found with PMA8084.
 
-I took a look at the LLVM 18 prerelease to see if these would work
-with Rust for e.g. CI and other users (instead of using the
-LLVM-provided apt ones, for instance), and noticed it does not bundle
-`libclang.so`.
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 2 ++
+ include/dt-bindings/power/qcom-rpmpd.h                  | 7 +++++++
+ 2 files changed, 9 insertions(+)
 
-Would it be possible to include it so that we can use `bindgen` and
-thus enable Rust with them?
+diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+index 2ff246cf8b81..929b7ef9c1bc 100644
+--- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
++++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+@@ -24,6 +24,8 @@ properties:
+           - qcom,msm8917-rpmpd
+           - qcom,msm8939-rpmpd
+           - qcom,msm8953-rpmpd
++          - qcom,msm8974-rpmpd
++          - qcom,msm8974pro-pma8084-rpmpd
+           - qcom,msm8976-rpmpd
+           - qcom,msm8994-rpmpd
+           - qcom,msm8996-rpmpd
+diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+index 7f4e2983a4c5..608087fb9a3d 100644
+--- a/include/dt-bindings/power/qcom-rpmpd.h
++++ b/include/dt-bindings/power/qcom-rpmpd.h
+@@ -308,6 +308,13 @@
+ #define MSM8953_VDDMX		5
+ #define MSM8953_VDDMX_AO	6
+ 
++/* MSM8974 Power Domain Indexes */
++#define MSM8974_VDDCX		0
++#define MSM8974_VDDCX_AO	1
++#define MSM8974_VDDCX_VFC	2
++#define MSM8974_VDDGFX		3
++#define MSM8974_VDDGFX_VFC	4
++
+ /* MSM8976 Power Domain Indexes */
+ #define MSM8976_VDDCX		0
+ #define MSM8976_VDDCX_AO	1
 
-I understand they are intended to be minimal toolchains, but if you
-think it would not be an unreasonable overhead, then it would be great
-to have it.
+-- 
+2.43.0
 
-Either way, thanks for these toolchains, Nathan!
-
-Cheers,
-Miguel
