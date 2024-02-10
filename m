@@ -1,110 +1,118 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1845BAD7;
-	Sat, 10 Feb 2024 15:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F765380D;
+	Sat, 10 Feb 2024 15:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707577975; cv=none; b=ccpkSIIzLkPEeqcrQqb+T2K4WaB96FCnZ6EU3BpZe6507Y89Yz5dXpW4HS4jVkDNVhpivsjiGbfTdrQAjHq3r5I5qRtmAbjqujktXWOd9yK4AQMhbmPUtlu3nO96lCLUgzvB6QlNPd/7xSvnFu57BxtZ0VmZovMxbeh8yb4ynMU=
+	t=1707578074; cv=none; b=ksZfjrR2yC1jqfpeBSqKtAE45/nuvsQF2RQYzpsJyLPeWlGxsWvxQQ9zIsA+iytTUKbS6czSdCXrfvWtmd2Q00U/92WsIZ2JPn7U6g9Pr4LBRPH1IM42ElGqid1yroCI7JMp0RDBdLKazEP/+jupGiwWwBJfXY1X0DFbIH6Zuok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707577975; c=relaxed/simple;
-	bh=pFaaGu8xoLVFZ/xkilJYNOhe4SID+w1X5c35gQ2D4N8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G73qZmUY7Ufbl6HjMQ4lfXBzwOsZIWJp24fP/R6Wea42ZKkUxru5Ia59NbeL0UUqB8JZTddUykHB7UXDxUGMQZMxv9AdiYGcbsUTNIeKGafTLusZNZfB6JmvkppF+2a/mbsfn2U55aJnhGzSrHadoCOSDS3RBm3SwrLdex+ekPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=drY9zONF; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707578074; c=relaxed/simple;
+	bh=kzuYAL0Q3W5IoevqxmRusinDuR6hBB8ObAvm8X5wMBM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rlWle6WgAYLTmCduq2Lx5l6F7gpivNvzxfoHGTyHo2j1fUX6HBiWASCTm9ehId0fJhP6N4pUX6FwbnRvNGoqQFoZ09uYUN7EVUOYB+3lA4yOHY+BXBSZbGPdTODJfdZS319GBXMHY888zUGrzsoPaqwPs70UFQJpZ/lL4b/fTHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=ApECabZt; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drY9zONF"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a30f7c9574eso224008866b.0;
-        Sat, 10 Feb 2024 07:12:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707577972; x=1708182772; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+3TVv5k2kyAT9B3mGBJu/+NC8ZeTvIm0YHEVTPnOgPI=;
-        b=drY9zONFSzORINl6XCIFvo79ZajUSnDMTIi5Z2pkeUtriMoLploPMitogmDxXR0zK8
-         YThSUTO+ctSnAIrs0FKI/cwj/tNqgdwuE1Aw+R061FazqgKi8y/q3h1un53ulI9FdT7v
-         GYLmECx80L0+K99dYT5K0Pzd+6nn9wpcTGGJze4OcLOpJShVaczkdNXUHg3GtLHMVw5g
-         BfPQ7kwGLVslMb7rJJOlvOjcMmsQrzY8/CNrMn5gH3q8hhaupT93r9jH8TdZLYC0WD6y
-         9g5saM/lOql1se0qoTFqZa/4Ipj70SIxDH/i07L4Hmd6VIHtYiNbBZiM1fqeuy4/urtP
-         2Gnw==
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="ApECabZt"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d8aadc624dso15273305ad.0;
+        Sat, 10 Feb 2024 07:14:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707577972; x=1708182772;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+3TVv5k2kyAT9B3mGBJu/+NC8ZeTvIm0YHEVTPnOgPI=;
-        b=q6h08W/QnacZCsopr+PqOmC1TDVw7LMJCZYymWUKjWHWCQm+ubacDDZo+xbLh48GqF
-         mo0A8lLfpO0NiEz1Lq09bwD/CaydkVPmhTacx/oGH/lH5heuS9kk6+MB5os4Ai9DDUsW
-         tL0TwUwLPoAVqhLiXyPJ1Rv8cgLK6VXp79kMOPwwH0RdcF/9XbGHl8uYO/eg4o5Q36xj
-         4MQAf+e8RMRe3vV8lF63BWjux1NTL3DiE1GJ94KJIzllgrm+75jasf5LUPmgnxGu2+IT
-         m4RBCGE8CPDESCtSCGW6Ts/pPx1lbUW9SFptlz/n0+PbksNhfcNclBFN5fkrOYB8Etzr
-         cKeA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6V4t1etB46k6cd4E2FbX8n1Se6kVBrH/BJUSconReh/MG9NtgF7Oow2YUL/Tqx6XkDxZ+r4FKXO4UDoaKZgoSxwjaGoZ2hW0jhOPdTK4oV0KMWLpFgV//RbWBrKUzly+8Meuyh4qS
-X-Gm-Message-State: AOJu0YzNKFjASpPG08DQEyHBB/e7eOZ5OjBP/Inr9rS5FFdqRI/e84DN
-	3OnoXbY1QmddxwKqL98XgXoIfE93ighTXOEsyfM/IShpiHpH09dGQRpUfBl8LesDbNlATdmhEbO
-	e96GJ+SrDTDiT0n4Xp5iQIRXucng=
-X-Google-Smtp-Source: AGHT+IGrQdkdIMgpyD9sqQT2AF00GLSHFoBGi3D70fBhru/UsrbXJoqat2RR+OX8G8KBofOMgXqhVE/2piBMmUDdDLI=
-X-Received: by 2002:a17:906:f190:b0:a38:4ff3:773 with SMTP id
- gs16-20020a170906f19000b00a384ff30773mr1435431ejb.47.1707577971557; Sat, 10
- Feb 2024 07:12:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707578072; x=1708182872;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:dkim-signature:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zQkaWqJl7pMIWT995zvqC9gdsJb2Z3jcvYFdnK+EjME=;
+        b=eE4vIQXDNjSdYQfEqGnENuJO5krQ1Y2FrFrNMu7iLm98BLrvOZyDdKpJzf0D0mam2Z
+         G2CFy9URWsGr9Dfz7RpCXGcqthU9B++uGnwYn0hZSLs7UfwdWvvS1whIgLHwndPpL7Vn
+         rzmsZ3LBWy20r0DSdJNpDoQc8Yy8uBVJBDxPdMjA2RcgHzKdp0Z9+ahqLM9JtPz7jBfr
+         w12FF5CgDyMhWvSEXPmN5Xwaj7P1EE9LmQOt1q3CrmcKj5DYGD6vxoQZHfED9IrcoYbi
+         ZWCgER/NNMpKWLfSDe/ljSEYb5xY6e0VhsS+q5S8lqyCCP5AnPhne/8ikE1/NzzebjDf
+         lMmA==
+X-Gm-Message-State: AOJu0YwxJR2HORS4Uo+8veegc4CoNgwbYSQrzvX/sREjvPH0MthAzzkk
+	Y5fkXMkmfqgqC1BWjZh7U8DHTuwjVu6M0m6Nn3Oxzg27tvi/mpwO
+X-Google-Smtp-Source: AGHT+IEdz/bpO2GULPdrY13S1STtbOkLXOlSe4oEyWSlw5VFStJBGV1Qf+9Ryfd0i06MTgqTdtqvqg==
+X-Received: by 2002:a17:902:d2c5:b0:1d9:bd7d:3c79 with SMTP id n5-20020a170902d2c500b001d9bd7d3c79mr2736458plc.26.1707578071716;
+        Sat, 10 Feb 2024 07:14:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXFYKIkxFttKdM3eJXrNabObw5BlBNpbjicdaGmAf54FIBXUGgHEGxkRAVjPrRx7JvWcCtdVGi7RKP25TSnLfssen1wPQaNZwJwHaotHXFlaYYr01+5rOoXN9tll9175aJJt+mCyxJWhw==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id kw14-20020a170902f90e00b001d949393c50sm3141350plb.187.2024.02.10.07.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Feb 2024 07:14:31 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707578069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zQkaWqJl7pMIWT995zvqC9gdsJb2Z3jcvYFdnK+EjME=;
+	b=ApECabZtu4UycNwFSZiPmDvVZyRf1VZTfpJ0/CkhHFaC65RKh0DTmKxp4Z6YmcWXYEU4RS
+	/mwjzYeZBCkqO9SL5XqIeHubmXr2yfqBxKfxpF/tSrOXLx44LpcRNqp4NYy0f6d+QdWN2X
+	keWgnAAU9yF16Oy3SkX7iH+j193LC1pXfLfJuwl4nmzYpJDLzjDjPkPL5yDIMa+lKBvtZC
+	U2jkWVK6rZOfIKXoKDzNPAM1KMK7jgNHt0qX2OoCD/MSHml3RPXfD7b9sXhv6uaUzSYpYv
+	t08WfRU4jfgyNoLaSqyipxa80NCpevfHSs9Kju25vFhIxhOyFEjbaJEgmVwCcg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Subject: [PATCH 0/2] Input: struct bus_type cleanup
+Date: Sat, 10 Feb 2024 12:15:00 -0300
+Message-Id: <20240210-bus_cleanup-input2-v1-0-0daef7e034e0@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240127160405.19696-1-petre.rodan@subdimension.ro>
- <20240127160405.19696-5-petre.rodan@subdimension.ro> <Zb-1UGJt27OV-vjc@surfacebook.localdomain>
- <ZcEPJh1i7cc0xyBW@sunspire> <20240210150907.40e27f53@jic23-huawei>
-In-Reply-To: <20240210150907.40e27f53@jic23-huawei>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 10 Feb 2024 17:12:15 +0200
-Message-ID: <CAHp75VerichvwEOHvYYsHdYYAVJUajYk=LaO0VRpS51DgAr29A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] iio: pressure: hsc030pa add triggered buffer
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Petre Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPSSx2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDI0MD3aTS4vjknNTEvNIC3cy8gtISI91U89Q000Qz41SLZBMloMaCotS
+ 0zAqwodGxtbUAl5bBaGQAAAA=
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=902; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=kzuYAL0Q3W5IoevqxmRusinDuR6hBB8ObAvm8X5wMBM=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlx5L5jYGFYOw0CEdClRUvwTtw1ri8R6501vnwR
+ i/MqNagmraJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZceS+QAKCRDJC4p8Y4ZY
+ pkV8D/oDomaYy2QI1rFyYeP6jx/IyxWyYCn8QIq7R0edSYalgdHiPAWB2zissyuzBJRTQw3YKrc
+ HSuwRdxW+Su42MFmBDUya8Y4RpTRQEm+wPJFULy0LJj10aFRNDsLWp5BMW+j8Y8rx0dUfte9FtQ
+ 4X7gxiOwZXf3EPIrJkZwNCUkwGnOkRbkyhIDr+4qat1F5/vO+nc0xWR0P/RrgFXC2Zp9tj/FmbM
+ sOKhX4VsaNDt7niq2Cg9R4mKP/QwXaDWrYAWndzwr7Nr7MPOds9yd7Cm3okeeocQPGoyagy1AqM
+ vO2867J5iM9ODO2Y4YzJz+0SByrlcojteSXjoCGdqd+pmHGK86VF3if/e0PNXMd4HN3lVmeQIA3
+ D1srtQVJqePcizSylEqLAd840rPYecb+8luw1MvMPsWhHRN3at1r2VcXwCF9WEd6lFnDH8lTjgE
+ FB9/iI51M1VRzioXWtYTf9YcVJeZkxAHsfXu1fgNh1uEa30kPR+WY1YgeovDlNTyNpqrw/jbosZ
+ FwKtLWoxcyK1BEVhpzIMuPO9w1hUzB2LDeVrngZiqKcGKC0Y4htxZjMW2o8Uu2ngxpLxgM54zPA
+ e5ZOWtOYCXcGglBpzj6ggjzAYtqaMsbIgSoaWfOghuHZC2a+AmEkKvXGBE2yhKNaSvIklh8WvpC
+ 3DNplai6i9XDb5g==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Sat, Feb 10, 2024 at 5:09=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
-> On Mon, 5 Feb 2024 18:39:02 +0200
-> Petre Rodan <petre.rodan@subdimension.ro> wrote:
-> > On Sun, Feb 04, 2024 at 06:03:28PM +0200, andy.shevchenko@gmail.com wro=
-te:
+This series is part of an effort to cleanup the users of the driver
+core, as can be seen in many recent patches authored by Greg across the
+tree (e.g. [1]).
 
-> > > > + memcpy(&data->scan.chan[1], &data->buffer[2], 2);
-> > >
-> > > Hmm... We don't have fixed-size memcpy() :-(
-> >
-> >       __be16 *ptr;
-> >
-> >       ptr =3D (__be16 *) data->buffer;
-> >       data->scan.chan[0] =3D *ptr;
-> >       data->scan.chan[1] =3D *++ptr;
-> >
-> > is this an acceptable replacement? I do not understand that your concer=
-n was, my
-> > intent was to copy exactly 2 bytes over.
->
-> Andy?
->
-> I'm not sure what you meant here either.
+---
+[1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
 
-It was just a rhetorical remark, no AR implied. I.o.w. the current code is =
-okay.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-> There is an existing oddity that the read_raw deals with this as a be32 a=
-nd
-> masking out the right sections for each channel rather than perhaps more =
-logical
-> be16 pair here.
+---
+Ricardo B. Marliere (2):
+      Input: synaptics-rmi4 - make rmi_bus_type const
+      Input: serio - make serio_bus const
 
+ drivers/input/rmi4/rmi_bus.c | 2 +-
+ drivers/input/rmi4/rmi_bus.h | 2 +-
+ drivers/input/serio/serio.c  | 2 +-
+ include/linux/serio.h        | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: d03f030115fe930de1222fef294730ba21b93045
+change-id: 20240210-bus_cleanup-input2-e7ef5a63e8c4
 
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
+
