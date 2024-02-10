@@ -1,137 +1,146 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656685381A
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 15:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82F654FB3;
+	Sat, 10 Feb 2024 15:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707577784; cv=none; b=J82PMtB4Q+dXiSLS99WNdeCGP0CP0zPjXSYPKgzlxO6pQufsbh6/4uXcLVFtholoB3gURoAN3R7PwC2Yt9n/s66jMEaS026kEh0ZF4uYYGK24TRrCX8cN9+u3gbMCRGJ6SXGC/qXqfkh5VuxdaGgBh9cZUiTka9+asYQaM8Vq1s=
+	t=1707577964; cv=none; b=eqSvQ6DcZs1e1oegjx9L+avdW1Upi5Z9l/oGFLykFbHfCcMEB3rJCEaTuw5CERcVzxJn+KrGSEfQcGzBIrANs7HnVcBfjDnrCrWNR6cI+s+7zKKNUgWxhvKPASIdcaYbo72m6vFtLmLJSjYO8hmx9WySbQjkIEJpa31GtbefMVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707577784; c=relaxed/simple;
-	bh=O3woKGLAIjryni1Jeart9hOwJG1ZEmeJEcbj6CVWNTo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AjrYzBlxAukhs2Fbrqnz4i7KiqNtJExqR1qpeBnrcP5PaJexOZ5kVYxp2sxknbWXTl/WVQRUhGcxmr4S31cJ479wB2XnDRQiLcd7wskfwIV+24lflkh8JhpEbpZl9ppbZgXRpCiRbx5Q5lF9IY4nDp7gpRXM4+bgNvkbU7QietI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=p6cV09os; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+	s=arc-20240116; t=1707577964; c=relaxed/simple;
+	bh=iTIO5bGoB4ZilWo6UjR4D1Rg7K9rc5sfkyk8gOgeG6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gHLszU08lRpCH3HC6OKYVbDp4dKYNn6AttKeCqcYrevoUNxLb1fUkzflwExJFLghEcpixxckysGvvmERZ0o8wcCw/GDLZU/Uv09iDN+GBhzDQzAQ7gksMCxQDHM2OKpimdvvtsFEMKTkAu/24wLVFuK40WZ40TtVrRpUvR16K0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g9SLJrnM; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="p6cV09os"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso1624836a12.0
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 07:09:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9SLJrnM"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d7232dcb3eso16217165ad.2;
+        Sat, 10 Feb 2024 07:12:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707577962; x=1708182762; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAwb6SlMI0NW4wrBgE4BjEZeBVnJ7/pDceRjOIxEIxg=;
+        b=g9SLJrnMS8EdX2mWp8OwsywMQb3ZJ6Mj3gT+O/1S1OzBNEgKSdaxhoe/nySFe96xPX
+         9RVa1/h6+hDLtNqXnKuKioyy5PISxPGcXUMeTz0QlYDMbGjaCs5dyj++cZg6JWI03El3
+         p+U91vZTLdls6SAXDr48vfz45t5BSXq4LhceK3rDepFhagW4d2K+7x2u9mRRlEX8+TNN
+         T0Pb8YjrOxsXgA/cr7wbMxX9LrwIHzF6Ng4UeO7lcFtgNZAH2FfjNFW+cfiPQ9RfK/UO
+         Nj8dD05C6j0VhKHZ3LZ9KaOnBWbhuTVYBGpraTO9KaKnRIZMhZCzPeasXI7gfmuXEPib
+         t7zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707577782; x=1708182582;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p1QaPWOuXyEob5IK2dCavHwEdoH6YtSk2GJpGvgSELY=;
-        b=lJVZP2ohbegBUH7/GaH5t8NlYXZwDx+wXk04KglnPHOJajdOBbtLWD0KCw1iX1CCOL
-         +8Rd6prAaBCXzmftV4jWJWkVdEAdf6BCyYbwPvEKe/Ko0XXE69LYM1WIxGndX6d5bid1
-         aHWQMsV7/zKZMr3fukmQUfFatMZvtudBbAC5PDLI6okJHOiphL+2SJ53N3J6jDBK3yoe
-         NFjF0kuVpgaSZW1l8kRD1+3r+zCDtS5vRbkw8Abph2Fp9CcsPgWAlJN/EiD7eEPwkiYI
-         Bnm5yevBTh/uCCL6zPtepm60I3h/OARnchbI1yoEGgXS/8pLUMe8VJxy1osQuN/4KCta
-         B78g==
-X-Gm-Message-State: AOJu0YwOm3pM7dqhIi1K/RstQgtlloFq8q8zYk0jMsX9rm9Ua7S7khPb
-	+ukxw4wQBjqSlz8EbowtcA16htSsFOwDnwEpWjTzv6QD5mUhX36V
-X-Google-Smtp-Source: AGHT+IEsyTUHG3qU4Yn7ugUfww2m9F1UsL44fJKKGPdKg/28BPHL4fmIvrgXt7VzyeovZ3AL03D9ww==
-X-Received: by 2002:a05:6a21:3189:b0:19e:40d8:7112 with SMTP id za9-20020a056a21318900b0019e40d87112mr1863911pzb.6.1707577781732;
-        Sat, 10 Feb 2024 07:09:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVz+eVDf2QrkjRH9PbkRVoZt6Cz33Uy2qYjHWJVl6h3YGdNBHweldCE+2ibA7ZlBw5e2B/4vVw8nbwQS72m8shvtxzjqnX1F8WfOWx7ul/jayv4qXTuMVIHtSaPtFIEUE5DqKjHm//5Wg==
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id bj18-20020a17090b089200b0029709558393sm3415554pjb.57.2024.02.10.07.09.41
+        d=1e100.net; s=20230601; t=1707577962; x=1708182762;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CAwb6SlMI0NW4wrBgE4BjEZeBVnJ7/pDceRjOIxEIxg=;
+        b=QFGVY6kYoYfaoCosUT+W3yHtIK4ysu81FDXnB2gUCRO6RhnxwWHi+eJ/bx5oTfwMhV
+         +DR2nHesXC9Qg9YYT7S2We9FZoOmTGCalzs7A4Xl4C8EyKhyhRWzEcZImrQE1QHVbClh
+         eQ0Vg0EbY7nKuVPjbGQDbv0TPrF89SS8TgaUt4WkSFB12kYbMzCSyPoUm5oNnH+oR4yC
+         bUXwngDASOX7waQsgvS6NNdjMwj+E7Mzh51mf7DRfbbTAcPTIy/TLgarBdaMzRgwGUP6
+         pXHC1gxZkVb8m6WmERv5/gfPJRE/9oxJbJl1tzBt1zdCQ472t6FX9OnNe9+ROOyO5dU9
+         x7mA==
+X-Gm-Message-State: AOJu0Yy3GMq1SrQv3bYBWQvmo4yLdbMwbeLLeA3XI5cci/NElarB35fe
+	pLRXExRxXo882OBzJvBQXLfXA+Jer3IZP/OdJf7dd0rqbzmT8izAkx1hzuKQ
+X-Google-Smtp-Source: AGHT+IFe8aIc+Flf04LZehzrsL9WPaNcHC3QmKqdfS3f6/ejzw1UW3om74cfRNnVYoZZHzV72qnIyw==
+X-Received: by 2002:a17:903:40c4:b0:1d7:7347:d80e with SMTP id t4-20020a17090340c400b001d77347d80emr2521087pld.37.1707577961837;
+        Sat, 10 Feb 2024 07:12:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVZQoHCC4TSupUv2aTjaeCQ1SMY+I+EhSNgr/eUCHVOon1OLL5nYmHjsBzCQzlsUsR5nr1y9DDD3h7ogkui1Uuaoe1MbEMnkZEi4rWdJYGnuRgVjDnYtAah32xwzfDRDLc4bChbAUqRtBEg4jkS2bjvEwd09AAzv/RtjANquO1qutExdZ8=
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id ja15-20020a170902efcf00b001d8d0487edbsm3155929plb.223.2024.02.10.07.12.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Feb 2024 07:09:41 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707577779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=p1QaPWOuXyEob5IK2dCavHwEdoH6YtSk2GJpGvgSELY=;
-	b=p6cV09os2arbl8jiR6woLygay+CZTtYMmja+YCLQgNTSDhk47QnFAlWTV+1EC1tioVWtk7
-	g6bu+TnaKJ4wdBpiFSeMt5aLh1rSS2nfo/8DeF3SBsUSMjXwpaRi4xcjYL3FB1TK3MFxoS
-	wxooKCB7oIzD+1KS4lOHfvKrnsi6mr53owZtTc01PeL1KwqWIKI+Lpnej97mRXL7JEpxFt
-	XPJG6f+boxVuayPq79BvFKNYn/7lSTKwKnw5WeE4vXZCkKMvyVtC1trHRTVSPgre/OA3Y9
-	nna465EzfP5pKq1HI5Mi9zHkqHPJ/wpWh57JhIELOaKH4y3lcov1M+64uhDTVw==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sat, 10 Feb 2024 12:10:14 -0300
-Subject: [PATCH] peci: Make peci_bus_type const
+        Sat, 10 Feb 2024 07:12:41 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 10 Feb 2024 07:12:39 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Problems with csum_partial with misaligned buffers on sh4 platform
+Message-ID: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240210-bus_cleanup-peci-v1-1-1e64bef6efc0@marliere.net>
-X-B4-Tracking: v=1; b=H4sIANWRx2UC/x3MQQqAIBBA0avIrBNMK6qrRITaVANhohhBePek5
- Vv8/0LEQBhhZC8EvCnS5QrqioE9tNuR01oMUshGyFpwk+JiT9Quee7REheDUraTw9r2BkrmA27
- 0/MtpzvkDNxWhc2IAAAA=
-To: Iwona Winiarska <iwona.winiarska@intel.com>
-Cc: openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1653; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=O3woKGLAIjryni1Jeart9hOwJG1ZEmeJEcbj6CVWNTo=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlx5HWXzeWYjUWC3gyPmxiPeBYUjpkdgMwR4KjY
- kwmqhCagn2JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZceR1gAKCRDJC4p8Y4ZY
- ptqkEACYh760FzcDVXtJDOPHGR2/2HxArqNC24eB5cpwNwQBObCSz45PVXmsUMAP7n7HUYOGkwp
- cOtsjL6cfUywVIw5x/FhShGiToozgdzBCDXmnS5GeNskcD8O4C69RXRzJPF6k21SkHVk+X1n5KA
- rdammB6VVxv9vb25p++4QxR9QuZIlo+wwAE/GOZKRDtcbNba7Sy/Q4gNOzyqDoXmKPGWAsBMvtk
- ATAHvWBFfLUDqNxEpbUNItC5ypgLCl8izX+vjE5fxuIA+3cTq2h9Aa8dSnL1umJW6XjeIrVeHEx
- 3SZsKHfwqRmgZEiyUwdeHDepFChtKYDlGCOEXflP8ppK/ecFXniwNXikSZRD6TdfRtTjqlNzKVL
- ATEFUUAtTFLpKZYk7MOUrK35N9P7fwip3tluVNghHyyUTJvTJ6tShXe4BOZHZKnQn3nbhRhM2te
- YwlViQY1Ne9ITmY0toOXQpIvHTQh+f/7H5ZCoxzseHbuL2nm4WKOj7iR/hf6I4I93mz7+gsljLI
- xRZ1Z5MJrgbf3MgkqxZ+wBiDk/1KKDWPZ04U9IhxUY7lVd/RmEu0hGUb8ezQQQ3hfJpYeveX3JK
- jpgMuaQ3TCF48WRR1xbLxTGyiIvJlBwgeW1G+O1gFm3ta113Fu2x37NHtl6r9Ewel5EY7EhyFCG
- KlLs/0oG+XOF55A==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Now that the driver core can properly handle constant struct bus_type,
-move the peci_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+Hi,
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/peci/core.c     | 2 +-
- drivers/peci/internal.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+when running checksum unit tests on sh4 qemu emulations, I get the following
+errors.
 
-diff --git a/drivers/peci/core.c b/drivers/peci/core.c
-index 0f83a9c6093b..b2f8db967e9b 100644
---- a/drivers/peci/core.c
-+++ b/drivers/peci/core.c
-@@ -201,7 +201,7 @@ static void peci_bus_device_remove(struct device *dev)
- 		driver->remove(device);
- }
- 
--struct bus_type peci_bus_type = {
-+const struct bus_type peci_bus_type = {
- 	.name		= "peci",
- 	.match		= peci_bus_device_match,
- 	.probe		= peci_bus_device_probe,
-diff --git a/drivers/peci/internal.h b/drivers/peci/internal.h
-index 9d75ea54504c..8a896c256c5f 100644
---- a/drivers/peci/internal.h
-+++ b/drivers/peci/internal.h
-@@ -81,7 +81,7 @@ extern const struct attribute_group *peci_device_groups[];
- int peci_device_create(struct peci_controller *controller, u8 addr);
- void peci_device_destroy(struct peci_device *device);
- 
--extern struct bus_type peci_bus_type;
-+extern const struct bus_type peci_bus_type;
- extern const struct attribute_group *peci_bus_groups[];
- 
- /**
+    KTAP version 1
+    # Subtest: checksum
+    # module: checksum_kunit
+    1..5
+    # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
+    Expected ( u64)result == ( u64)expec, but
+        ( u64)result == 53378 (0xd082)
+        ( u64)expec == 33488 (0x82d0)
+    not ok 1 test_csum_fixed_random_inputs
+    # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
+    Expected ( u64)result == ( u64)expec, but
+        ( u64)result == 65281 (0xff01)
+        ( u64)expec == 65280 (0xff00)
+    not ok 2 test_csum_all_carry_inputs
+    # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:573
+    Expected ( u64)result == ( u64)expec, but
+        ( u64)result == 65535 (0xffff)
+        ( u64)expec == 65534 (0xfffe)
+    not ok 3 test_csum_no_carry_inputs
+    ok 4 test_ip_fast_csum
+    ok 5 test_csum_ipv6_magic
+# checksum: pass:2 fail:3 skip:0 total:5
 
----
-base-commit: 047371968ffc470769f541d6933e262dc7085456
-change-id: 20240210-bus_cleanup-peci-0933c629d58b
+The above is with from a little endian system. On a big endian system,
+the test result is as follows.
 
-Best regards,
--- 
-Ricardo B. Marliere <ricardo@marliere.net>
+    KTAP version 1
+    # Subtest: checksum
+    # module: checksum_kunit
+    1..5
+    # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
+    Expected ( u64)result == ( u64)expec, but
+        ( u64)result == 33488 (0x82d0)
+        ( u64)expec == 53378 (0xd082)
+    not ok 1 test_csum_fixed_random_inputs
+    # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
+    Expected ( u64)result == ( u64)expec, but
+        ( u64)result == 65281 (0xff01)
+        ( u64)expec == 255 (0xff)
+    not ok 2 test_csum_all_carry_inputs
+    # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:565
+    Expected ( u64)result == ( u64)expec, but
+        ( u64)result == 1020 (0x3fc)
+        ( u64)expec == 0 (0x0)
+    not ok 3 test_csum_no_carry_inputs
+    # test_ip_fast_csum: ASSERTION FAILED at lib/checksum_kunit.c:589
+    Expected ( u64)expected == ( u64)csum_result, but
+        ( u64)expected == 55939 (0xda83)
+        ( u64)csum_result == 33754 (0x83da)
+    not ok 4 test_ip_fast_csum
+    # test_csum_ipv6_magic: ASSERTION FAILED at lib/checksum_kunit.c:617
+    Expected ( u64)expected_csum_ipv6_magic[i] == ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum), but
+        ( u64)expected_csum_ipv6_magic[i] == 6356 (0x18d4)
+        ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum) == 43586 (0xaa42)
+    not ok 5 test_csum_ipv6_magic
+# checksum: pass:0 fail:5 skip:0 total:5
 
+Note that test_ip_fast_csum and test_csum_ipv6_magic fail on all big endian
+systems due to a bug in the test code, unrelated to this problem.
+
+Analysis shows that the errors are seen only if the buffer is misaligned.
+Looking into arch/sh/lib/checksum.S, I found commit cadc4e1a2b4d2 ("sh:
+Handle calling csum_partial with misaligned data") which seemed to be
+related. Reverting that commit fixes the problem.
+This suggests that something may be wrong with that commit. Alternatively,
+of course, it may be possible that something is wrong with the qemu
+emulation, but that seems unlikely.
+
+Thanks,
+Guenter
