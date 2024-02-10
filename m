@@ -1,79 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEAB63C
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 02:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02093FFE
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 02:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707532791; cv=none; b=otw0QXOM6aZKuZIsxQXHTESRNKhp890k9OFhwOsBGAJo5EVHkViHEuIR2KL82MWy0Rhxb12KFQKTn2KXaNzoOi/jsqwMhstaL4p2SpHZlV21BEnCcXSZ09ObuH84aiv6mw15bQ0O9v4dMJZZtP2Oxo9ZlM/YcAuiEaeeWwRyk50=
+	t=1707533162; cv=none; b=gjNmqGPfnreaUHX+EskQ2mUYpnbAQ9M46AtiA5f5owVXBv18JSSCV8++xHlFhOQ+yKuzdsec6b8Gp18p2tG29uMa1PFp+ioivvaomwSdDxMm1rwR2bG7SteWPqugMCF9Q9qSlHUXGQ+OWXmAg+tEAvG9EFiBIzvQcz+hi1i2Egc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707532791; c=relaxed/simple;
-	bh=KvmExit0TrANeclOjX4bPITu2Wj408sKc/29bhsRktE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fbxqn/5y4jwEXbpKwSomqV+x/epB6vCkIGhX4jEh4y1jBBNZGEo/PVj+/hnQIWkPfTqnmA9zpsiIZU4Pv2Fvllo4IoqCsNCGlqEFvA2k/tNWtJEXSCK6iHY3n02Mw8ru16dZwZToVNAuAX+NpCRgpM3/MmIuwb3cX4UPviinxg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3eae/Ut; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707533162; c=relaxed/simple;
+	bh=fvcxdwhch+UgCOqtnEyZPh1ECKl5d5IgD43prRrJsXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=piW/hq2WCLepNN22oDWpAdCaZO/6p/0KOl4umxXCErgXyNFVBma/wfkDuMFMQrBVtmaGhbsaJfN1rlP//e7zBDyOSNKruqhdfU/MlpZOtR6IQHjtMITUM19CXvwZZ9vuC8VU+MiHsI4BnXALjk8YtztgWzYR4ttQNY15vHicC98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=FsV23qRh; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3eae/Ut"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707532790; x=1739068790;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KvmExit0TrANeclOjX4bPITu2Wj408sKc/29bhsRktE=;
-  b=j3eae/UtTXziLRpflI9ktThe53IM+tacfzsGcuxfjZVsekDJWb6Akjlh
-   okvBPpoKefLpgw/OzoJAswx5edaQIpdcc7aidbxhvqjHsOIovbtbpvUlw
-   VH0IlmEP3ZOxFlVJpDix/KAoBiOERR3njvFoUplwm+33ZM+SVEGTrLspn
-   R1d3kMj+XR+NlPd5GFKBiFnNl9jP4xuCOQ18XUPtaEVtrO/lYlJ2bWkbM
-   4JJJJ8JDXcISkNa9ebwyRjETppZEFYrHXD6eydaA0iNa7wHZE5S/1jOU3
-   uEwRF6OWv7ZSeC+eSo4gDdcyLAs3Gwkd8QL/+BKJuVfRGWwN4WhJHGGCg
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="5384172"
-X-IronPort-AV: E=Sophos;i="6.05,258,1701158400"; 
-   d="scan'208";a="5384172"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 18:39:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,258,1701158400"; 
-   d="scan'208";a="2077333"
-Received: from karenaba-mobl1.amr.corp.intel.com (HELO desk) ([10.209.64.107])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 18:39:49 -0800
-Date: Fri, 9 Feb 2024 18:39:47 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	antonio.gomez.iglesias@linux.intel.com,
-	alyssa.milburn@linux.intel.com, andrew.cooper3@citrix.com,
-	linux-kernel@vger.kernel.org,
-	Alyssa Milburn <alyssa.milburn@intel.com>
-Subject: Re: [PATCH] x86/bugs: Default retbleed to =stuff when retpoline is
- auto enabled
-Message-ID: <20240210023947.pefmjmogsxhissem@desk>
-References: <20240208-retbleed-auto-stuff-v1-1-6f12e513868f@linux.intel.com>
- <20240210004328.n7uxevxfiqr3gsot@treble>
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="FsV23qRh"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d8ef977f1eso13721655ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 18:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1707533160; x=1708137960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=juvAKGT5CeRrHs5S/LFrLMDdPScLSP5NQP+Ax181rF0=;
+        b=FsV23qRhe5NqfIAPYtjRTgh5nDJf2nmCSeZ9e6MTvkdNvQL2XXHld8zP+U4UsM8E1L
+         qTqO/zRwefc78kJB7t1Vws7Juk9BcfPS+TQuLHGo4CdFEMtYT9EXmFxfwjsmDeOQ99zJ
+         YmgHXcRp0CUKO9RAIMFPmdXLx1bP8iCx4IJjVbNdqdorUNFFHQVbtmGzL+gv6eT7VJIn
+         gcAaDtws+OhMjCJ6JF3UPfXSupgXKDUX501bGbCjXOKJ41/tc2sLEMCMm3xM/Yyggbtj
+         yvp682EFc2LfEC6XolT/H38hICo6OhwkIDLTl77YGH7Sh+Yg3BDoeoKZzefEMf2hCq6E
+         WsVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707533160; x=1708137960;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=juvAKGT5CeRrHs5S/LFrLMDdPScLSP5NQP+Ax181rF0=;
+        b=XVeKBPC/GMAKySELwSc51oYdW7Rsdg8d574iz57NprC/mYmXV3HcjoKaUle03EK7vA
+         sRQTAyvZgn/QC7oijAWpVO/5bZNK8g0l4hrn1xXLxiy7GS7C0FoEmKx0AbdxdqE+4Cl6
+         UQI7+WBerVzC9/Yn6f4RRmSsqcjBj7rh5oB/d8DO62BZPM+7799/SDiCRIOz3O4Z/i7H
+         zXPLiSr3DLOE/b/5d9mupB5TIq6SSnoaVHeo74IJUWO1awV6+czbCgKufKTv93qepr8Z
+         OtK6eznWYA92tBJVnisPW62EgI72hvxGYtwOKO8R56kkjgPZ/5MVnsLTWYRc8/9w3sy2
+         gMDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUY8nGWeLy/xCrtEtY05R78lr+aRS1ZcLzsgFb0uJveo3+4nVz6PgYdMaHoUfHtyLlUyaoAa6K2EeLYOe9hHAyk4XBPCfR4QaxDq5qp
+X-Gm-Message-State: AOJu0Yw0PGhuU1krw3fKpM3+1qydlR3mLGE71jbdoIZCRZ2L7+Uxfj/J
+	Yha/kKcvyM2bGAvo268Kv1S1/DD9nkm80QH2IK/U0lVFm99kWnkjhBqL9AMMbmk=
+X-Google-Smtp-Source: AGHT+IHEDqbAC4lmL3ZpUXSCN9GdkEM2l7fe8xTltkLkxmu1UR60/e25RS/zMOOX5wfJlxuteXW2tw==
+X-Received: by 2002:a17:902:ec8f:b0:1da:e86:3d9e with SMTP id x15-20020a170902ec8f00b001da0e863d9emr1412208plg.43.1707533159777;
+        Fri, 09 Feb 2024 18:45:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUMhzRkPJU68x71VCI0cCzTS1iGPROvorEHI8y/T4VEsPqoWKRiyLc6jpPnVnKyR0zJXFEBaQnHeIE9zBh6zGXKxKyy+69dAWbHc0cnlF/TixP9rdrhlkWGVbNYTmzwM8fPlu9XTnBpdXUyqMKn3yTL6Rsutw05p5yMUO5nqD1NE31MbFZvloHyWGYSV1eJJVaMWJ2keeytwpKYeVaELobWX4mCrvEtYg//ovV0TKLVKwXW7JhD3Tx4+WaLMube7ba5D8oQGgw83DyJ8YXup0gXBaT92tcI0eNYel3yhLEXra2BvSwFKyGdEJ48enl3MzyOclUYmQr1sL3m8FyrEm8q8rLyPEjIy+uHll/0f0hse679uE3lxbRm3BP676KdKumQKhN3ISg6shx/pXVo63coSaXdfB9bti21OvyKuV/uhofsNXW5tac4rbv/lticgt4p+dalE9KXCG3XGt2a5rTwLptPsnyG+3nsvILh9cGGbTQZYElnQdeGHU/SzhqwIloQYcRKUR0cqO54hwxFz1nBRZx+OVdWweRwpzKCKYsfSHi1DphxVSx4LeLATF3KML1avYiiqwq+Dx1TeVhwXMGLdZa4EXGE+V64Stk=
+Received: from hermes.local (204-195-123-141.wavecable.com. [204.195.123.141])
+        by smtp.gmail.com with ESMTPSA id a1-20020a170902ee8100b001d94c709738sm2149523pld.217.2024.02.09.18.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 18:45:59 -0800 (PST)
+Date: Fri, 9 Feb 2024 18:45:56 -0800
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jamal Hadi Salim
+ <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko
+ <jiri@resnulli.us>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, bpf@vger.kernel.org
+ (open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)),
+ linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH net-next v2] net/sched: actions report errors with
+ extack
+Message-ID: <20240209184556.00cde1a2@hermes.local>
+In-Reply-To: <20240209183133.1cc0a4f5@kernel.org>
+References: <20240205185537.216873-1-stephen@networkplumber.org>
+	<20240208182731.682985dd@kernel.org>
+	<20240209131119.6399c91b@hermes.local>
+	<20240209134112.4795eb19@kernel.org>
+	<20240209155830.448c2215@hermes.local>
+	<20240209183133.1cc0a4f5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240210004328.n7uxevxfiqr3gsot@treble>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 09, 2024 at 04:43:28PM -0800, Josh Poimboeuf wrote:
-> On Thu, Feb 08, 2024 at 05:12:15PM -0800, Pawan Gupta wrote:
-> > -		 * The Intel mitigation (IBRS or eIBRS) was already selected in
-> > +		 * If Intel mitigation (IBRS or eIBRS) was already selected in
-> >  		 * spectre_v2_select_mitigation().  'retbleed_mitigation' will
+On Fri, 9 Feb 2024 18:31:33 -0800
+Jakub Kicinski <kuba@kernel.org> wrote:
+
+> On Fri, 9 Feb 2024 15:58:30 -0800 Stephen Hemminger wrote:
+> > > I mean that NL_REQ_ATTR_CHECK() should be more than enough by itself.
+> > > We have full TC specs in YAML now, we can hack up a script to generate
+> > > reverse parsing tables for iproute2 even if you don't want to go full
+> > > YNL.    
+> > 
+> > Ok, then will take the err msg across all places using NL_REQ_ATTR_CHECK?  
 > 
-> 						 ^
-> 						 should be a comma
+> Take _out_ ? That'd be great, yup.
 
-Ok, will fix. Thanks for the review.
+
+I don't think that is actually a good idea because new kernel needs to still
+report errors to older userspace iproute2.
+
+This is kind of academic hair splitting, iproute2 doesn't send these kind
+of missing part messages. It is more from test suites, or from custom
+user programs; found this when looking at DPDK device driver that was
+sending its own netlink.
