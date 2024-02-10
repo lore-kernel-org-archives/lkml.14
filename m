@@ -1,167 +1,105 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589845F48A
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 19:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43A75F549
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 19:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707591842; cv=none; b=YGpKFIdnVTBgh9HgDKe41fNhPDlUiNfCBIEYvXzSB6ZQQXMB8h43BeOYQ6Ei6qtgaqkzbk4PFQozRDjGbHsLsbbdHUDU7HUUeMxvwO8vadmr+Z0VwvjNjETsS7R/B4zIU8nZL/COn/EzcXM6mZiIYmpBlSJR/8JMhxeix2AG7zs=
+	t=1707592295; cv=none; b=SdWfnq08RWN7Gl78/2R2Tbzvb9Mend4S9cAbaHH/nQk5fBDVwoH1i6GaWThMhPqq9VghaBo19ChDfy/FBCizN6dMAWXFoETuR7DcGUxaDJjxjB11Rwx/D6Ff3gQFHW/IBxybjMy9u9kAu3Bo4KNqtU+fnFBF+29Ht0ZfZ+3sVL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707591842; c=relaxed/simple;
-	bh=g812jRGii4cWwH6XD6nCrGWZSQ+YDUHLcIUACbfxTUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pkTeXtOIWJcRo51cHt0Bquzvce4df9iALgRnqCannjB13xdMvbrjgZCJeSJHJMyBGUFx77R3oknfLJZOSQMKJMtZdHfuFPe5BSc2FEJYVj5nOgdtYyMVo/Yhzdc/ZHZHmTehAAt/kWDdnybISKjDNg9QcYm1AtuppHssJUBjAL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZlRYqC36; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707592295; c=relaxed/simple;
+	bh=x1GVwGorkcxO3IafmVnsCPl7EfeQZAKgg116i67uWXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ck+M4TItzlYv0IysYTt9c0ChJmIpl4oTQplf+Iub1l1964pOUWQzKkJTxZ17Of0MQSPXD0X5hDzfCT4eEREqlXvsz1GbAivu+sJYK6Wh7hIzaKZMtytGN8L9uNQtiHPCdkMRBLO0GTPk5azAT8K96Yuw7YlUMjoGmeakqctHluc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Md2XEQjR; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZlRYqC36"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d93b982761so668105ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 11:04:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Md2XEQjR"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a3c3be8c988so48248666b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 11:11:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707591840; x=1708196640; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZDddWMAmYpcBDRLjzqZDMnY/iG2GzmBQVXleP9AJMuA=;
-        b=ZlRYqC365neCviYtBmxQjdq/myF5HQPMqbIFTclyGu+qnH2xgdAQo92Yd6DQ8uNNf7
-         pAEEbqG+ArNpTobylr+tpX33o0DS4hQbaoHAGHuUIL1BhV2EFwrs1fl4RAPDTEn8US5l
-         JsIudSQr+B89XI14rR+aI1mdZKG5DVfZgq+HcWzTKEkbq/4wsc8cSFeADlWpwpOS3TmT
-         /w5FKzwFP4xOpYBpduP3xrneJ+/2e6NEFExjdgy7eGX4EnNjH8FXb8U3/AsQ0UfGF+bD
-         QiwLVeS5I0tKouRKgDkrJvIzy0Ca9L69xx2VscU5ZHV5Vca3+3Izj9xfDY/0YbuXRybZ
-         UidA==
+        d=linaro.org; s=google; t=1707592290; x=1708197090; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LEw2EnFXzQVU2p0mkCDlT1t0pyChlA/M+u/ewTeLVg8=;
+        b=Md2XEQjRapgSam1RkndwtnhBIv3IzIxZbgnC0YMxB+jcEEFtTgf5TE0OMNTSI2JuJo
+         racZVqE0L8xlygRZp24y7jq//YWoPoBPRaYJ+f5z5IxexF80XGsw221ofW335/mn03gU
+         cXuzf4/pFgkZ+0MpKmW4Srtm/0VJgk6HEG+TQQEK+nthppjoEsczu+0xpoOvV7fea6I7
+         VE795PiSP6a2tO/v+Cz9OvDcLlM8LEycyvnJW/phATcQhSIweORRYivp7ZiR/XCTTUnt
+         NbkcRLzWO/pTRYo4WS7eHXUasK9bjnUsAukIMYE5BPa9z+9FRl+vcYAzThqt62a9Gqk2
+         tOgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707591840; x=1708196640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZDddWMAmYpcBDRLjzqZDMnY/iG2GzmBQVXleP9AJMuA=;
-        b=GuzSrrGwk2z5ocC4OKQk2kkrU3jLWudLQeqh36TIAud9V9k6jMKWSRyUn2e/1JwfW0
-         ziNPmREq4BudF1I1p2y5a5sI+1G0968cVLHnlFvLmh0hquXmCb+oBwaFSh4Z7ynmhH0N
-         v5D24Q/NpSV02PboiyAbyuU52SkDCtJggyJbNsZ57ObKyiL7sEouDNX5e21iJIxtevxN
-         ZSZucTxgpRaFDeElJL5BrJ0QyGiss/KjN4ubvXKtwGmR/9E4eb9A6kEr5PBKW3rnfIko
-         qKHjeGgIJb9t048frpjVmg05Ra/+hgVc0aCHjzeqPDWIM9Nwvx1VQNoC7WhDZKcmImZh
-         X66Q==
-X-Gm-Message-State: AOJu0YwDmwCf8YN7wRjlhUggctUKEwMgaz9z3gW0mhBJbFskCrhdGEH/
-	ywjo0ICm58Xs6h8SxlE4l/fICbmBLWAxsZV9cMDA1bzeFYtVobQ8OPFTbKwtQGq/ibkms2bVVF9
-	KhWNudQgoByRxf+hSEkpC5S8hBqrN1R5Qg0S0
-X-Google-Smtp-Source: AGHT+IEo8m6diSEIFCeEwbhXQ3bZRw4alPC/AQhPjkCrR0SS8Tn//gu7jRwtOpNbvqr52FGKGyHdNp3H5cjP9Z49zFw=
-X-Received: by 2002:a17:903:40c4:b0:1d7:7e3c:59ce with SMTP id
- t4-20020a17090340c400b001d77e3c59cemr65450pld.29.1707591840236; Sat, 10 Feb
- 2024 11:04:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707592290; x=1708197090;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LEw2EnFXzQVU2p0mkCDlT1t0pyChlA/M+u/ewTeLVg8=;
+        b=XYbEY5kq8GZ3kf8wJffJGuSyktH39buSvL1QDYUTO6Fjr0Tc33bKljlvKCczbmE19J
+         Rm1gr6/q8Km7Dv2W+teRtegpY4//c4umv9oRcLp+22wv+FoC1vY9FdPkQa1KWin5wg8F
+         oRYrgmgnhtNTsfhaujiA5IzCsAD25qdVOwb8A/NYDuPQpphE8jP7SPjP3ChLJwIPcBrB
+         i1q0aLtxfAK2jeVjW+mqZjsq2QL5MnE2JtgtCRSEpcjFCrBJ3uZCf3y3ESFekihxjMG6
+         6ByBthgri+qS8exNL/+9CYHOKN1WOT8t4OlGuO9+9CVv4/b+GXTiPyUSDR4xFIqw1JCh
+         96CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWV3qgxI10CS7GItQ/YeGGHZFWX1h0hOcSfbfaahcAwV8hMX9+ywTGOvEcVZwAqZ7WVrLscBTLdluNeorB7z0gs8uzHNkHXIzqzVJW
+X-Gm-Message-State: AOJu0YyISdkOt3cq30uV5A8VW44kKoWWScBxJqus+nMbpv5MG0Xuit+Z
+	X+IF7yRijSCj4ZdUHQ1RYIJfWSPxuwBNAi3V/G0mpo4iOH6BLn7LcyMSHZlX0Gg=
+X-Google-Smtp-Source: AGHT+IFQ1p9zAgzQOUSwl5Ea/XO5538HhUhx2MIaN+c3CTo0bUpLvWYiCGb3EOZeubpmv7KdMb4Lpw==
+X-Received: by 2002:a17:906:552:b0:a38:a174:1316 with SMTP id k18-20020a170906055200b00a38a1741316mr1910684eja.72.1707592289981;
+        Sat, 10 Feb 2024 11:11:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWiJrRAZbBqUDXJFWpkO0i+fsugtySrXkHVf/nkA66ymTNKN+pAUOFFjIqOwqSQrW4Oo/XrD4oJrk57DYMRjQC+gnbAQEvqZjIIveR9HzZw0qPE8I3EPPVIa2TT+7Di84fhT15I3NWIyknWFqblVVNW213nWW9x4j/KrKlhmx4QHbsMa+cYuiSnJB5MzR49nEC89AC1sIdBOROAko1SAoyG8tJdKkbW3njeLWpbPKKlAGYVsO0oesYed7a16kvV7/FPvplr8xO9Y+ud97ZONsUCfPNRnRcjpcfYiUi4QiDiKennm/kYxlyVZrPue9azFrCtZyn9pa9OsDe+oiu6TUf2nplRKErDDzCFzIKTUWCQJ6vl0vYg95nNyX3Sqb42puIfs6Kw6V6VQPFbf/wd11a54EwCpMGlM6dLQvxx
+Received: from [192.168.1.116] (abyl12.neoplus.adsl.tpnet.pl. [83.9.31.12])
+        by smtp.gmail.com with ESMTPSA id sf5-20020a1709078a8500b00a3bf0ab3f2bsm1789963ejc.21.2024.02.10.11.11.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 Feb 2024 11:11:29 -0800 (PST)
+Message-ID: <9e1d7e08-ed17-4876-91df-f05529184e58@linaro.org>
+Date: Sat, 10 Feb 2024 20:11:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205104049.48900-1-christianshewitt@gmail.com> <CANEJEGuVPfdteBfY_LyQ+D=t4HGHLvDut-Vj2xFjRM4e8kgh=Q@mail.gmail.com>
-In-Reply-To: <CANEJEGuVPfdteBfY_LyQ+D=t4HGHLvDut-Vj2xFjRM4e8kgh=Q@mail.gmail.com>
-From: Grant Grundler <grundler@google.com>
-Date: Sat, 10 Feb 2024 11:03:46 -0800
-Message-ID: <CANEJEGsdz6nCrWahBS13dAa9Q-urmb8Ap5Uaz8S7ExcTrfX6JQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] net: asix: add 0b95:1790 to AX88179A device list
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Grant Grundler <grundler@chromium.org>, linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] ARM: dts: qcom: msm8226: Sort and clean up nodes
+To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Matti_Lehtim=C3=A4ki?=
+ <matti.lehtimaki@gmail.com>
+References: <20240210-msm8226-cpu-v2-0-5d9cb4c35204@z3ntu.xyz>
+ <20240210-msm8226-cpu-v2-2-5d9cb4c35204@z3ntu.xyz>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240210-msm8226-cpu-v2-2-5d9cb4c35204@z3ntu.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 10, 2024 at 10:20=E2=80=AFAM Grant Grundler <grundler@google.co=
-m> wrote:
->
-> On Mon, Feb 5, 2024 at 2:40=E2=80=AFAM Christian Hewitt
-> <christianshewitt@gmail.com> wrote:
-> >
-> > Add a generic AX88179A entry for the 0b95:1790 device id:
-> >
-> > kernel: usb 2-1: New USB device found, idVendor=3D0b95, idProduct=3D179=
-0, bcdDevice=3D 2.00
-> > kernel: usb 2-1: New USB device strings: Mfr=3D1, Product=3D2, SerialNu=
-mber=3D3
-> > kernel: usb 2-1: Product: AX88179A
-> > kernel: usb 2-1: Manufacturer: ASIX
-> > kernel: usb 2-1: SerialNumber: 00D24DC0
-> > kernel: asix 2-1:1.0 (unnamed net_device) (uninitialized): Failed to re=
-ad reg index 0x0000: -32
-> > kernel: asix: probe of 2-1:1.0 failed with error -32
-> > kernel: ax88179_178a 2-1:1.0 (unnamed net_device) (uninitialized): Fail=
-ed to read reg index 0x0040: -32
-> > kernel: ax88179_178a 2-1:1.0 eth1: register 'ax88179_178a' at usb-0000:=
-01:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 20:7b:d2:d2:4d:c0
-> >
-> > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> > ---
-> > The change is tested by a LibreELEC (distro) user who reports the NIC t=
-o be working
-> > fine (and logs support this) but the "Failed to read reg index 0x0000: =
--32" errors
-> > suggest ax88178_info might not be the correct choice. I'm not a serious=
- coder so I
-> > need to "ask the audience" for suggestions on what more might be needed=
-?
-> >
-> >  drivers/net/usb/asix_devices.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devi=
-ces.c
-> > index f7cff58fe044..9a7b1136cd98 100644
-> > --- a/drivers/net/usb/asix_devices.c
-> > +++ b/drivers/net/usb/asix_devices.c
-> > @@ -1506,6 +1506,10 @@ static const struct usb_device_id        product=
-s [] =3D {
-> >         // ASIX AX88178 10/100/1000
-> >         USB_DEVICE (0x0b95, 0x1780),
-> >         .driver_info =3D (unsigned long) &ax88178_info,
-> > +}, {
-> > +       // ASIX AX88179A 10/100/1000
-> > +       USB_DEVICE(0x0b95, 0x1790),
-> > +       .driver_info =3D (unsigned long)&ax88178_info,
-> >  }, {
->
-> Hi Christian!
-> Seems like there are two problems here:
-> 1) The USB output is telling you this device is a AX88179A : the
-> changes most likely should be in ax88179_178a.c using the
-> ax881798_info:
->    https://elixir.bootlin.com/linux/latest/source/drivers/net/usb/ax88179=
-_178a.c#L1690
 
-Christian,
-Let me restate this more clearly: ax88179_178a is already claiming
-this device. No need to add anything to asix_devices.c
 
-> 2) What Andrew Lunn said. I'll add the asix driver should not be
-> probing (or claiming) this device - or at least be quiet about it when
-> it does.
+On 2/10/24 17:28, Luca Weiss wrote:
+> From: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+> 
+> Quite a few nodes haven't been sorted correctly by reg, so let's do this
+> now so that future nodes can be added at the correct place.
+> 
+> Also at the same time, move the status property last.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+> [luca: add more text to commit message]
+> Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
 
-That's why Andrew was asking about where 0x40 index is used.... and
-it's not obvious to me either right now since I don't see a definition
-for register index 0x40 in ax88179_178a.c file.
+Due to the nature of this change, it's hard to thoroughly review,
+but nothing screams nuclear breakage, so:
 
-Since this is happening with both drivers (asix and ax88179_178a) and
-it looks like this is happening before SET_NETDEV_DEV() is called, I'm
-going to assume this has something to do with usbnet_probe() calling
-pm_runtime_enable().
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Andrew's advice to add a WARN_ON call to the function printing "Failed
-to read reg index" on failure, is really good as it will tell us the
-exact call path through "a maze of twisty little passages, all the
-same" (to quote "colossal cave adventure" game from 1977 :D).
-
-cheers,
-grant
-
-> Thanks for looking into this!
->
-> cheers,
-> grant
->
-> >         // Logitec LAN-GTJ/U2A
-> >         USB_DEVICE (0x0789, 0x0160),
-> > --
-> > 2.34.1
-> >
+Konrad
