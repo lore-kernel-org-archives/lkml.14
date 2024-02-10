@@ -1,110 +1,116 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B9E5C8E9
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 16:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D7E53815;
+	Sat, 10 Feb 2024 16:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707583254; cv=none; b=ZqysewzqQqZsWivv5joxfGUtt37S1Ri129IAJuSDigzGKhLQhPSm4Q8e7pkaDpQDSth/ikmaaKJizAgRGo09bctWhILoAr+JhxpcTckPtP2IV12itEzK5B3EvtxmHKLuekrDorNzLbAX7BWXFhEnNWO1HvXc5Ct4O2F3VgU6IYg=
+	t=1707583546; cv=none; b=WepdmjkIsIIpkcN2ZJUIGXCu1gqOMqGbVTEk4yo5iVVK0LpAC4MTj8TicQZztFnit+Hh342dYd4U+zZshdcXzAffzXvyv279vbJ5XJOPPWxM46qQX2PpqTj8hNcJCIx6Hao6xqGrOGLuG7CrtLI9M+0VO4AMMnRJKCSygNtAAUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707583254; c=relaxed/simple;
-	bh=CscG4XnYZ8gB9jKhA67cDKdK7kHCrNVWFAz8jn8AnuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YTz0el4Rq+Z8+UK7/dJJNcCc97eTxQaMgU2QXFxVDCr9snKWXNksIUHcoMrjuJggLtPAXrdvdfUAPQ6DGkOBYXEW3uZR25LFyaGitjMwxe72Bv+CMT2WWFP7GDxLsOEIX5JnqAhZ8fDzAmdGSnyYv/e8bIVHZMQJdNyOH5vh2zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rYqOt-0001IA-CA; Sat, 10 Feb 2024 17:40:23 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rYqOq-005i4A-RJ; Sat, 10 Feb 2024 17:40:20 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rYqOq-002ERB-2S;
-	Sat, 10 Feb 2024 17:40:20 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: kernel@pengutronix.de,
-	Rob Herring <robh@kernel.org>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stephen Warren <swarren@wwwdotorg.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/3] spi: ppc4xx: Fix fallout from rename in struct spi_bitbang
-Date: Sat, 10 Feb 2024 17:40:07 +0100
-Message-ID: <20240210164006.208149-7-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240210164006.208149-5-u.kleine-koenig@pengutronix.de>
-References: <20240210164006.208149-5-u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1707583546; c=relaxed/simple;
+	bh=4LyuSFtAH8dWWrZ0TdSmOR1VTioRfo0NSD7Xn7VGFGg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c9u7atVSIp9bCXIaeStX69x+PxXnsABsN5/mSGd4bnunCrnNMFwbqLN7coMjnDUpG9UjTjN1S1Jqm9l5yD2Y7DXqC0Xd6h4RhVVjYsuMSBR19C4LUQsd8UmddMnpTdpi4RXmBg4gTSZ/hljQN7vCkt7fUVWfGjWUYwFq/Fj4Cl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=J5wKH7Gs; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="J5wKH7Gs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1707583542; bh=4LyuSFtAH8dWWrZ0TdSmOR1VTioRfo0NSD7Xn7VGFGg=;
+	h=From:Date:Subject:To:Cc;
+	b=J5wKH7GsmmoA90iPoUjYjckXz+rIS0s3lrsdeo8Z6oaRchZovUxG/dMvuS8OhRhE9
+	 gkTN/BtHgNwjfBTlVJNkIFWyryS7Wa0LemsmUgCXvS9Ht9ozBZVScLbY1CX6hZ4NPc
+	 K8+ZOMSwTm9etD/mLV3O+4PSAqyopqhMiWAJfdtA=
+From: Luca Weiss <luca@z3ntu.xyz>
+Date: Sat, 10 Feb 2024 17:45:40 +0100
+Subject: [PATCH v3] ARM: dts: qcom: msm8974: correct qfprom node size
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1827; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=CscG4XnYZ8gB9jKhA67cDKdK7kHCrNVWFAz8jn8AnuU=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtTjy15sdrJY9F8jIO+Kaaan0NOrB2xWBTr4/95UcFTOh JfFZt+5TkZjFgZGLgZZMUUW+8Y1mVZVcpGda/9dhhnEygQyhYGLUwAm0v2P/X/MGgUFI9ZodhFJ fU2vSK+abYtF5jtV+9/5f7bMWWXXht99awwil9p0hPjNqKxiUMnn4L/mKDA34Mn3NP8g+17Pu71 lWzZsFOCOj9sr+nHS2euG+WLO+qHeXz4Wx9SLyT1SSVt3QlS32k3/p49a7+xZr+8v5mjillqmeC znvMW/dlbtyJV1yT3yz7gyZrx9x1YSyP49t2SBgMx3E+aqXQ93CxW+ut6zLv3XrNMdpVKNzmev9 YpmXOk38d59Y8OrS5Enn8krHLLocj+0Y/d5sbt/21exnnlqeNz35YtDbVIMLm/aZuxuOnN/AUek Plf6lZ/uMhbi6z2DHC5rZhiruiyc9srR6LaNHrcdX0YKAA==
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240210-msm8974-qfprom-v3-1-26c424160334@z3ntu.xyz>
+X-B4-Tracking: v=1; b=H4sIADOox2UC/32Oyw6DIBBFf8WwLoaHWuiq/9F0gThUFqKCGh/x3
+ 4smTbppl2dyz72zoQDeQkC3ZEMeJhts6yLwS4J0rdwLsK0iI0YYJ5QT3IRGyGuGe9P5tsEFlZq
+ AMKyAEkWpVAFw6ZXT9aH1OmY+SpHSdMG6G42H/gh3Hoydz/XHM3Jtw9D65Xxmosf15+5EMcXym
+ itFIAci+H3lbhjTeVnRUTWx/zqLOhdcapPRSgJ86/u+vwHuonN8GAEAAA==
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Eduardo Valentin <edubezval@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Rajendra Nayak <quic_rjendra@quicinc.com>
+Cc: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Craig Tatlor <ctatlor97@gmail.com>, 
+ Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1645; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=peTVay4s/vEFP1xuIof2gqhA52otBBr/es0IRRtLLgo=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlx6g1kxsk59DftR8bHzdIk0OfLUVwAx4GIsCB8
+ m880mDOfleJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZceoNQAKCRBy2EO4nU3X
+ VjoQEACHSyPAgR37KKm8sMLAWsYLyK+wcIPisBND9Kx6T+78GNNPMf/ZvJj6D7DEk8TjXYE2Nuw
+ xWevyDHF6/Z0JjT/FoqXa+dMQ+VXOCm+xTZYPqcHsEmdGd9RPrZHujHSDod5tOeO3hTVYUWmO7v
+ 3GEdu4cH4GEgv3DlbnQJewDKdJtTYcCVmh/yKzDomSuFN7X5Sm0w11/6yjZwKbsoQ55aWhe1pos
+ 0RbN6iRHB3lkYTkYq1qHBVZaKBSBhAY/Bz+IA/Ro9WvpLbzZajxZeyVTlm/4F9vFSmf+/twe+bz
+ qtiORq+j3KrCj6fMRAWYya5DcFluczRRN8Y5+pgkHopc/RqBvOSUJ03VRAMULLTbFSMIKrpiJHP
+ v21f/CKSGN3GWHTOyoCnGcG7BvZOQZxJKEY66dgn0Zyh1GvDk2bdp4YjhAi1pCQ8J2Q9Uq1+ohC
+ lOj0hK9SkK9iOr6gx99YGeSvTdXEsuYlCU0M9UWxb1Bn4NiQf0ElcBlCViATPMVYmOPxiRXGFw/
+ FeZ2dLb2bapkxMa7ju+JyyHMM7aZlnh1z+gMIeVyw3fXB629CVogf27r/9uGl/GjWu7aypknLbZ
+ Q6psbh8lS8KIRIPWaUptx27EbXHMJzE3IihcldaJ8fT5hpXLrK3NzMxTFhmRTCthA8G+lfAiYkv
+ 3layf8Pxk0qirOw==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-I failed to adapt this driver because it's not enabled in a powerpc
-allmodconfig build and also wasn't hit by my grep expertise. Fix
-accordingly.
+From: Craig Tatlor <ctatlor97@gmail.com>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402100815.XQXw9XCF-lkp@intel.com/
-Fixes: 2259233110d9 ("spi: bitbang: Follow renaming of SPI "master" to "controller"")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+The qfprom actually is bigger than 0x1000, so adjust the reg.
+
+Note that the non-ECC-corrected qfprom can be found at 0xfc4b8000
+(-0x4000). The current reg points to the ECC-corrected qfprom block
+which should have equivalent values at all offsets compared to the
+non-corrected version.
+
+[luca@z3ntu.xyz: extract to standalone patch and adjust for review
+comments]
+
+Fixes: c59ffb519357 ("arm: dts: msm8974: Add thermal zones, tsens and qfprom nodes")
+Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
- drivers/spi/spi-ppc4xx.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Changes in v3:
+- Update size from 0x3000 to 0x2100 (Dmitry)
+- Link to v2: https://lore.kernel.org/r/20230130-msm8974-qfprom-v2-1-3839cf41d9ee@z3ntu.xyz
 
-diff --git a/drivers/spi/spi-ppc4xx.c b/drivers/spi/spi-ppc4xx.c
-index 2290b40459ef..2d5536efa9f8 100644
---- a/drivers/spi/spi-ppc4xx.c
-+++ b/drivers/spi/spi-ppc4xx.c
-@@ -364,22 +364,22 @@ static int spi_ppc4xx_of_probe(struct platform_device *op)
+Changes in v2:
+- Keep base offset but expand reg from 0x1000 to 0x3000 (Konrad)
+- Link to v1: https://lore.kernel.org/r/20230130-msm8974-qfprom-v1-1-975aa0e5e083@z3ntu.xyz
+---
+ arch/arm/boot/dts/qcom/qcom-msm8974.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+index b1413983787c..083ab780ab7e 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+@@ -1234,7 +1234,7 @@ restart@fc4ab000 {
  
- 	/* Setup the state for the bitbang driver */
- 	bbp = &hw->bitbang;
--	bbp->master = hw->host;
-+	bbp->ctlr = hw->host;
- 	bbp->setup_transfer = spi_ppc4xx_setupxfer;
- 	bbp->txrx_bufs = spi_ppc4xx_txrx;
- 	bbp->use_dma = 0;
--	bbp->master->setup = spi_ppc4xx_setup;
--	bbp->master->cleanup = spi_ppc4xx_cleanup;
--	bbp->master->bits_per_word_mask = SPI_BPW_MASK(8);
--	bbp->master->use_gpio_descriptors = true;
-+	bbp->ctlr->setup = spi_ppc4xx_setup;
-+	bbp->ctlr->cleanup = spi_ppc4xx_cleanup;
-+	bbp->ctlr->bits_per_word_mask = SPI_BPW_MASK(8);
-+	bbp->ctlr->use_gpio_descriptors = true;
- 	/*
- 	 * The SPI core will count the number of GPIO descriptors to figure
- 	 * out the number of chip selects available on the platform.
- 	 */
--	bbp->master->num_chipselect = 0;
-+	bbp->ctlr->num_chipselect = 0;
+ 		qfprom: qfprom@fc4bc000 {
+ 			compatible = "qcom,msm8974-qfprom", "qcom,qfprom";
+-			reg = <0xfc4bc000 0x1000>;
++			reg = <0xfc4bc000 0x2100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
  
- 	/* the spi->mode bits understood by this driver: */
--	bbp->master->mode_bits =
-+	bbp->ctlr->mode_bits =
- 		SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LSB_FIRST;
- 
- 	/* Get the clock for the OPB */
+
+---
+base-commit: 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478
+change-id: 20230130-msm8974-qfprom-619c0e8f26eb
+
+Best regards,
 -- 
-2.43.0
+Luca Weiss <luca@z3ntu.xyz>
 
