@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2814C210D;
-	Sat, 10 Feb 2024 01:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDFE20EB;
+	Sat, 10 Feb 2024 01:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707528079; cv=none; b=ksmsN4EgNE3yDrMFXcs34EbRAqOnddOq3Mt7SvDJsYqcStb8QADsMiBOrpv2fKW29NqkSowvmnPb+JEWbz9SF6e7SqdbGB9WqlCqd3f2tEdbEjMznPr5MFPP7RpFkeaRcxCFUcxjeSZu5tDOyeDn5wnhwyvhs/fpWrLy523gRzs=
+	t=1707528079; cv=none; b=N2zA5i4HmpQYLIQvsWXoP/+RYNKv3BgHg3z3N7W9vNIBkbdj98MYINr5EAMsG5H9kLc1ZX3XS7fCg29LWk5tt74cl/wMkjwAoFE/TxtIxjwNI8DEO4VpFM3Dlm+/9ezF9do/hb+4MyLiulV2nFD3PI/K3cQk17HuvxX1Akj9/DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707528079; c=relaxed/simple;
-	bh=dWxu+A0eskxCxCyAgj4qP+QeMpzGHP95MeA7XhDzexc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubV8squbsguX1BVGJkl9cHfRJfED+PXVF9s9358jDcjl+3eGdL/3gdJuizRGblqCANCY5dk4UBY54YRagqVQ38phssbAsAsKSOgbZ98j786lmvaIHdmcOgsVQ2xAjdQ40wETj8kWL1K5VFocyOSCZkGmIGxeB95NkDSOrPraM3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVuqAgss; arc=none smtp.client-ip=10.30.226.201
+	bh=FcvijwUU2lP+Mh0G39gT/Vb2K87CdhRBfFkJeTBo9gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LYGnKSripB48ef6o7YwMrZBTrJ12/TX7Svr5eizFcgbU2DQ+oE1yakb9FdJbC8mNKx0nbFLrxc8ir2mR0G8jYkFminN4M0WERCDBvVctP9gxVNkoGtSlmGfFE8VXev4fAjqCiuff44drEzUjms7aZSxMvCQBkMXe5TSncTnGZXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEjIDAMh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVuqAgss"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E554C433B1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEjIDAMh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB2DC43399;
 	Sat, 10 Feb 2024 01:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707528078;
-	bh=dWxu+A0eskxCxCyAgj4qP+QeMpzGHP95MeA7XhDzexc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KVuqAgssv1L9slpliqUn+iqTKKjUAGY1dC6CaT53dMvhw69xqA/0twJaEmQfYnF1v
-	 iFiSabfXsv7xi8SuXugRfHdfPNsYc5paMJuXQ3L2WxKjJyRUb8217dN2SP9ENGaDPG
-	 g5t3aiUeSiypQaxDtEMA3H94Sb2mt0hAZP/W3NnSrMrmP6KcIlXGPCtb1Wg/5gVVBZ
-	 OuI/imin8KFEu5YBjyOQ/iJ74Mq/d0CYE+azGCHlyfc1M91vb8ybHz3XYG2bQ7RDsh
-	 N53Od5PKR4u2kXComHMdjyujI5p+2RzyJUFWUvtcqoRmFKQUB2qPGO0qLLSJ8W28zR
-	 dgJkVN5BGon/Q==
+	bh=FcvijwUU2lP+Mh0G39gT/Vb2K87CdhRBfFkJeTBo9gs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fEjIDAMhwu90whUHMA2NejGkJ7Hma651gq4lUx3fJwSeNqDn0GFrgqz+tyOR22Dpc
+	 STl0tyOHaYPIq+LTy1rhVUq2A+9QOdH48zzsT/SrZb1NrTY7rEWxPmSNp9s9nB89Ts
+	 k5F97QE0tszacPknht2eb0zDlPyI6pRg+zT0lshgFx0ICxc5o+fsIZa7yodBhpDGYn
+	 JDuQY6nSHnYNeP5L9KMtm5F6ymYBXguGjPikwv5oDhCvTIYA1trESKlw6SYpESxtD0
+	 D1msUpUBWBKt7W0vpwizm64gOPzkvGmWEN6wUr1iJs8DbH5S1QRBMwynAWFVngIBb+
+	 CXAi/p4ghROCw==
 Received: by mercury (Postfix, from userid 1000)
-	id D288210608D6; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
+	id DD4D71068AF6; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -43,12 +44,13 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH v1 00/14] UNI-T UTi260B support
-Date: Sat, 10 Feb 2024 02:18:04 +0100
-Message-ID: <20240210012114.489102-1-sre@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 04/14] dt-bindings: input: touchscreen: fsl,imx6ul-tsc convert to YAML
+Date: Sat, 10 Feb 2024 02:18:08 +0100
+Message-ID: <20240210012114.489102-5-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240210012114.489102-1-sre@kernel.org>
+References: <20240210012114.489102-1-sre@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,79 +59,158 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Convert the i.MX6UL touchscreen DT binding to YAML.
 
-Hi,
-
-This adds adds support for the UNI-T UTi260B thermal camera, which is
-based on i.MX6ULL. Patches 1-11 clean up all warnings reported by
-CHECK_DTBS for i.MX6ULL (i.e. for an empty board). They are not specific
-to the UTi260B and in fact that machine has most of the IP handled by
-these patches marked as disabled. Then patches 12+13 introduce the vendor
-and board compatible DT bindings. Finally the last patches adds support
-for the thermal camera itself.
-
-The DT is based on reverse engineered information. More information about
-the device can be found in this presentation from Embedded Recipes 2023:
-
- * https://embedded-recipes.org/2023/wp-content/uploads/2023/10/Running-FOSS-on-a-Thermal-Camera-Sebastian-Reichel-compressed.pdf
- * https://www.youtube.com/watch?v=uvObsCG-Cqo
-
-I also prepared a branch with these patches (and a minimal kernel config)
-and published it here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git/log/?h=uti260b
-
-Greetings,
-
--- Sebastian
-
-Sebastian Reichel (14):
-  dt-bindings: pinctrl: fsl,imx6ul-pinctrl: convert to YAML
-  dt-bindings: bus: imx-weim: convert to YAML
-  dt-bindings: sound: fsl,imx-asrc: convert to YAML
-  dt-bindings: input: touchscreen: fsl,imx6ul-tsc convert to YAML
-  dt-bindings: soc: imx: fsl,imx-anatop: add binding
-  dt-bindings: soc: imx: fsl,imx-iomuxc-gpr: add imx6
-  dt-bindings: lcdif: Do not require power-domains for i.MX6ULL
-  dt-bindings: fsl-imx-sdma: fix HDMI audio index
-  ARM: dts: imx6ull: fix pinctrl node name
-  ARM: dts: imx6ul: Remove fsl,anatop from usbotg1
-  ARM: dts: imx6ul: add missing #thermal-sensor-cells
-  dt-bindings: vendor-prefixes: add UNI-T
-  dt-bindings: arm: add UNI-T UTi260b
-  ARM: dts: imx6ull-uti260b: Add board
-
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- .../devicetree/bindings/bus/fsl,imx-weim.yaml | 225 +++++++
- .../devicetree/bindings/bus/imx-weim.txt      | 117 ----
- .../bindings/display/fsl,lcdif.yaml           |   8 +-
- .../devicetree/bindings/dma/fsl,imx-sdma.yaml |   3 +-
- .../input/touchscreen/fsl,imx6ul-tsc.yaml     |  92 +++
- .../bindings/input/touchscreen/imx6ul_tsc.txt |  38 --
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt   |  37 --
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.yaml  | 116 ++++
- .../bindings/soc/imx/fsl,imx-anatop.yaml      | 125 ++++
- .../bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml  |  18 +
- .../devicetree/bindings/sound/fsl,asrc.txt    |  80 ---
- .../bindings/sound/fsl,imx-asrc.yaml          | 159 +++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
- arch/arm/boot/dts/nxp/imx/imx6ul.dtsi         |   2 +-
- arch/arm/boot/dts/nxp/imx/imx6ull-uti260b.dts | 564 ++++++++++++++++++
- arch/arm/boot/dts/nxp/imx/imx6ull.dtsi        |   2 +-
- 18 files changed, 1314 insertions(+), 276 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx-weim.yaml
- delete mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+ .../input/touchscreen/fsl,imx6ul-tsc.yaml     | 92 +++++++++++++++++++
+ .../bindings/input/touchscreen/imx6ul_tsc.txt | 38 --------
+ 2 files changed, 92 insertions(+), 38 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/soc/imx/fsl,imx-anatop.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-asrc.yaml
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-uti260b.dts
 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml b/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+new file mode 100644
+index 000000000000..db18f24978b1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/fsl,imx6ul-tsc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX6UL Touch Controller
++
++maintainers:
++  - Haibo Chen <haibo.chen@nxp.com>
++  - Shawn Guo <shawnguo@kernel.org>
++  - Sascha Hauer <s.hauer@pengutronix.de>
++
++properties:
++  compatible:
++    const: fsl,imx6ul-tsc
++
++  reg:
++    items:
++      - description: touch controller address
++      - description: ADC2 address
++
++  interrupts:
++    items:
++      - description: touch controller address
++      - description: ADC2 address
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: tsc
++      - const: adc
++
++  xnur-gpio:
++    description:
++      The X- gpio this controller connect to. This xnur-gpio returns to
++      low once the finger leave the touch screen (The last touch event
++      the touch controller capture).
++
++  measure-delay-time:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The value of measure delay time. Before X-axis or Y-axis measurement,
++      the screen need some time before even potential distribution ready.
++    default: 0xffff
++    minimum: 0
++    maximum: 0xffffff
++
++  pre-charge-time:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The touch screen need some time to precharge.
++    default: 0xfff
++    minimum: 0
++    maximum: 0xffffffff
++
++  touchscreen-average-samples:
++    description: Number of data samples which are averaged for each read.
++    enum: [ 1, 4, 8, 16, 32 ]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - xnur-gpio
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/imx6ul-clock.h>
++    #include <dt-bindings/gpio/gpio.h>
++    tsc: tsc@2040000 {
++        compatible = "fsl,imx6ul-tsc";
++        reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
++        interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6UL_CLK_IPG>,
++                 <&clks IMX6UL_CLK_ADC2>;
++        clock-names = "tsc", "adc";
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_tsc>;
++        xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++        measure-delay-time = <0xfff>;
++        pre-charge-time = <0xffff>;
++        touchscreen-average-samples = <32>;
++    };
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+deleted file mode 100644
+index 164915004424..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-* Freescale i.MX6UL Touch Controller
+-
+-Required properties:
+-- compatible: must be "fsl,imx6ul-tsc".
+-- reg: this touch controller address and the ADC2 address.
+-- interrupts: the interrupt of this touch controller and ADC2.
+-- clocks: the root clock of touch controller and ADC2.
+-- clock-names; must be "tsc" and "adc".
+-- xnur-gpio: the X- gpio this controller connect to.
+-  This xnur-gpio returns to low once the finger leave the touch screen (The
+-  last touch event the touch controller capture).
+-
+-Optional properties:
+-- measure-delay-time: the value of measure delay time.
+-  Before X-axis or Y-axis measurement, the screen need some time before
+-  even potential distribution ready.
+-  This value depends on the touch screen.
+-- pre-charge-time: the touch screen need some time to precharge.
+-  This value depends on the touch screen.
+-- touchscreen-average-samples: Number of data samples which are averaged for
+-  each read. Valid values are 1, 4, 8, 16 and 32.
+-
+-Example:
+-	tsc: tsc@2040000 {
+-		compatible = "fsl,imx6ul-tsc";
+-		reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
+-		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clks IMX6UL_CLK_IPG>,
+-			 <&clks IMX6UL_CLK_ADC2>;
+-		clock-names = "tsc", "adc";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_tsc>;
+-		xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
+-		measure-delay-time = <0xfff>;
+-		pre-charge-time = <0xffff>;
+-		touchscreen-average-samples = <32>;
+-	};
 -- 
 2.43.0
 
