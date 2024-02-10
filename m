@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDFE20EB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDD220E4;
 	Sat, 10 Feb 2024 01:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707528079; cv=none; b=N2zA5i4HmpQYLIQvsWXoP/+RYNKv3BgHg3z3N7W9vNIBkbdj98MYINr5EAMsG5H9kLc1ZX3XS7fCg29LWk5tt74cl/wMkjwAoFE/TxtIxjwNI8DEO4VpFM3Dlm+/9ezF9do/hb+4MyLiulV2nFD3PI/K3cQk17HuvxX1Akj9/DI=
+	t=1707528079; cv=none; b=vF0iy3rK8jp9Fr+w9RMs98+KAG2+vVIbRsAHFCuEPeqA0it4XRi3kxfrh+/Z3qML9W0+RkqhBqrYgSoNLlGtjjKMlqLOy65DaH4sqtpmafpOz2SKdNNk+hkgdIggpgdIvSAhiOa1iTVc5BqsX8TEa/qHw+vem3XiD7EhfJ2/NA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707528079; c=relaxed/simple;
-	bh=FcvijwUU2lP+Mh0G39gT/Vb2K87CdhRBfFkJeTBo9gs=;
+	bh=OuIAXsTXeI+yVn+RPThfGxCtRwDO4KvymqLeppySnxg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LYGnKSripB48ef6o7YwMrZBTrJ12/TX7Svr5eizFcgbU2DQ+oE1yakb9FdJbC8mNKx0nbFLrxc8ir2mR0G8jYkFminN4M0WERCDBvVctP9gxVNkoGtSlmGfFE8VXev4fAjqCiuff44drEzUjms7aZSxMvCQBkMXe5TSncTnGZXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEjIDAMh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MEC5TeFYjSA6mh6oBjKjhqeq0t753q7wsLSV83h1cpXSla38cyDOGnsTb5h9tKEYB4FA9HlWl6geCB2ZBdyKFOG6XCD6t8JIrOGCoNmP8q4rz/wGNOuGVghsOmH40vz2AEoR0HAadLt8QX9J7BqKZPc+YKoyjsPwbFyp4cL4OCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXtncJ8U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEjIDAMh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB2DC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXtncJ8U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7947AC43394;
 	Sat, 10 Feb 2024 01:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707528078;
-	bh=FcvijwUU2lP+Mh0G39gT/Vb2K87CdhRBfFkJeTBo9gs=;
+	bh=OuIAXsTXeI+yVn+RPThfGxCtRwDO4KvymqLeppySnxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fEjIDAMhwu90whUHMA2NejGkJ7Hma651gq4lUx3fJwSeNqDn0GFrgqz+tyOR22Dpc
-	 STl0tyOHaYPIq+LTy1rhVUq2A+9QOdH48zzsT/SrZb1NrTY7rEWxPmSNp9s9nB89Ts
-	 k5F97QE0tszacPknht2eb0zDlPyI6pRg+zT0lshgFx0ICxc5o+fsIZa7yodBhpDGYn
-	 JDuQY6nSHnYNeP5L9KMtm5F6ymYBXguGjPikwv5oDhCvTIYA1trESKlw6SYpESxtD0
-	 D1msUpUBWBKt7W0vpwizm64gOPzkvGmWEN6wUr1iJs8DbH5S1QRBMwynAWFVngIBb+
-	 CXAi/p4ghROCw==
+	b=WXtncJ8UL/Hq7MVHz9OgALE/sHilMJS9aQOakrLvTcLTBsIjmhMVQEfybuBtwnmcD
+	 R+hin9MG/pHkIbTAtSl8VyvTJP5Kbua/eyPmdlxLEjydS9MgIDpcKf2t6cBVM7UY7U
+	 8fR8VSC+ecrBnXNnvGan4asydXEca0l9wcXz5B/aHyj7WYY2saC0R9kYshCFJpavz+
+	 JPcnauDuKWrW+6Lf7RmQrtgK+JUlXRGpbFJxy30a92/fCjf1u7D34pKs24NLgu+58T
+	 6lAtgX+eESQEwiicf3MHz+gosm/6zSVUC4BQ5s8giagDKchQmptC2vrYPBkCmSI49W
+	 elgufCUiMkmKQ==
 Received: by mercury (Postfix, from userid 1000)
-	id DD4D71068AF6; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
+	id D479E106052C; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 04/14] dt-bindings: input: touchscreen: fsl,imx6ul-tsc convert to YAML
-Date: Sat, 10 Feb 2024 02:18:08 +0100
-Message-ID: <20240210012114.489102-5-sre@kernel.org>
+Subject: [PATCH v1 01/14] dt-bindings: pinctrl: fsl,imx6ul-pinctrl: convert to YAML
+Date: Sat, 10 Feb 2024 02:18:05 +0100
+Message-ID: <20240210012114.489102-2-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240210012114.489102-1-sre@kernel.org>
 References: <20240210012114.489102-1-sre@kernel.org>
@@ -59,158 +59,181 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the i.MX6UL touchscreen DT binding to YAML.
+Convert i.MX6UL pinctrl bindings to YAML.
 
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- .../input/touchscreen/fsl,imx6ul-tsc.yaml     | 92 +++++++++++++++++++
- .../bindings/input/touchscreen/imx6ul_tsc.txt | 38 --------
- 2 files changed, 92 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt   |  37 ------
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.yaml  | 116 ++++++++++++++++++
+ 2 files changed, 116 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml b/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+deleted file mode 100644
+index 7ca4f6118d9a..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-* Freescale i.MX6 UltraLite IOMUX Controller
+-
+-Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
+-and usage.
+-
+-Required properties:
+-- compatible: "fsl,imx6ul-iomuxc" for main IOMUX controller or
+-  "fsl,imx6ull-iomuxc-snvs" for i.MX 6ULL's SNVS IOMUX controller.
+-- fsl,pins: each entry consists of 6 integers and represents the mux and config
+-  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+-  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  imx6ul-pinfunc.h under device tree source folder.  The last integer CONFIG is
+-  the pad setting value like pull-up on this pin.  Please refer to i.MX6 UltraLite
+-  Reference Manual for detailed CONFIG settings.
+-
+-CONFIG bits definition:
+-PAD_CTL_HYS                     (1 << 16)
+-PAD_CTL_PUS_100K_DOWN           (0 << 14)
+-PAD_CTL_PUS_47K_UP              (1 << 14)
+-PAD_CTL_PUS_100K_UP             (2 << 14)
+-PAD_CTL_PUS_22K_UP              (3 << 14)
+-PAD_CTL_PUE                     (1 << 13)
+-PAD_CTL_PKE                     (1 << 12)
+-PAD_CTL_ODE                     (1 << 11)
+-PAD_CTL_SPEED_LOW               (0 << 6)
+-PAD_CTL_SPEED_MED               (1 << 6)
+-PAD_CTL_SPEED_HIGH              (3 << 6)
+-PAD_CTL_DSE_DISABLE             (0 << 3)
+-PAD_CTL_DSE_260ohm              (1 << 3)
+-PAD_CTL_DSE_130ohm              (2 << 3)
+-PAD_CTL_DSE_87ohm               (3 << 3)
+-PAD_CTL_DSE_65ohm               (4 << 3)
+-PAD_CTL_DSE_52ohm               (5 << 3)
+-PAD_CTL_DSE_43ohm               (6 << 3)
+-PAD_CTL_DSE_37ohm               (7 << 3)
+-PAD_CTL_SRE_FAST                (1 << 0)
+-PAD_CTL_SRE_SLOW                (0 << 0)
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
 new file mode 100644
-index 000000000000..db18f24978b1
+index 000000000000..906b264a9e3c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
+@@ -0,0 +1,116 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/input/touchscreen/fsl,imx6ul-tsc.yaml#
++$id: http://devicetree.org/schemas/pinctrl/fsl,imx6ul-pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale i.MX6UL Touch Controller
++title: Freescale IMX6UL IOMUX Controller
 +
 +maintainers:
-+  - Haibo Chen <haibo.chen@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
++  - Dong Aisheng <aisheng.dong@nxp.com>
++
++description:
++  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++  for common binding part and usage.
++
++allOf:
++  - $ref: pinctrl.yaml#
 +
 +properties:
 +  compatible:
-+    const: fsl,imx6ul-tsc
++    enum:
++      - fsl,imx6ul-iomuxc
++      - fsl,imx6ull-iomuxc-snvs
 +
 +  reg:
-+    items:
-+      - description: touch controller address
-+      - description: ADC2 address
++    maxItems: 1
 +
-+  interrupts:
-+    items:
-+      - description: touch controller address
-+      - description: ADC2 address
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: tsc
-+      - const: adc
-+
-+  xnur-gpio:
++# Client device subnode's properties
++patternProperties:
++  'grp$':
++    type: object
 +    description:
-+      The X- gpio this controller connect to. This xnur-gpio returns to
-+      low once the finger leave the touch screen (The last touch event
-+      the touch controller capture).
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
 +
-+  measure-delay-time:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The value of measure delay time. Before X-axis or Y-axis measurement,
-+      the screen need some time before even potential distribution ready.
-+    default: 0xffff
-+    minimum: 0
-+    maximum: 0xffffff
++    properties:
++      fsl,pins:
++        description:
++          each entry consists of 6 integers and represents the mux and config
++          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
++          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
++          be found in <arch/arm/boot/dts/imx6ul-pinfunc.h>. The last integer
++          CONFIG is the pad setting value like pull-up on this pin. Please
++          refer to i.MX6UL Reference Manual for detailed CONFIG settings.
++        $ref: /schemas/types.yaml#/definitions/uint32-matrix
++        items:
++          items:
++            - description: |
++                "mux_reg" indicates the offset of mux register.
++            - description: |
++                "conf_reg" indicates the offset of pad configuration register.
++            - description: |
++                "input_reg" indicates the offset of select input register.
++            - description: |
++                "mux_val" indicates the mux value to be applied.
++            - description: |
++                "input_val" indicates the select input value to be applied.
++            - description: |
++                "pad_setting" indicates the pad configuration value to be applied:
++                  PAD_CTL_HYS                     (1 << 16)
++                  PAD_CTL_PUS_100K_DOWN           (0 << 14)
++                  PAD_CTL_PUS_47K_UP              (1 << 14)
++                  PAD_CTL_PUS_100K_UP             (2 << 14)
++                  PAD_CTL_PUS_22K_UP              (3 << 14)
++                  PAD_CTL_PUE                     (1 << 13)
++                  PAD_CTL_PKE                     (1 << 12)
++                  PAD_CTL_ODE                     (1 << 11)
++                  PAD_CTL_SPEED_LOW               (0 << 6)
++                  PAD_CTL_SPEED_MED               (1 << 6)
++                  PAD_CTL_SPEED_HIGH              (3 << 6)
++                  PAD_CTL_DSE_DISABLE             (0 << 3)
++                  PAD_CTL_DSE_260ohm              (1 << 3)
++                  PAD_CTL_DSE_130ohm              (2 << 3)
++                  PAD_CTL_DSE_87ohm               (3 << 3)
++                  PAD_CTL_DSE_65ohm               (4 << 3)
++                  PAD_CTL_DSE_52ohm               (5 << 3)
++                  PAD_CTL_DSE_43ohm               (6 << 3)
++                  PAD_CTL_DSE_37ohm               (7 << 3)
++                  PAD_CTL_SRE_FAST                (1 << 0)
++                  PAD_CTL_SRE_SLOW                (0 << 0)
 +
-+  pre-charge-time:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The touch screen need some time to precharge.
-+    default: 0xfff
-+    minimum: 0
-+    maximum: 0xffffffff
++    required:
++      - fsl,pins
 +
-+  touchscreen-average-samples:
-+    description: Number of data samples which are averaged for each read.
-+    enum: [ 1, 4, 8, 16, 32 ]
++    additionalProperties: false
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - xnur-gpio
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/imx6ul-clock.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    tsc: tsc@2040000 {
-+        compatible = "fsl,imx6ul-tsc";
-+        reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
-+        interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clks IMX6UL_CLK_IPG>,
-+                 <&clks IMX6UL_CLK_ADC2>;
-+        clock-names = "tsc", "adc";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_tsc>;
-+        xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+        measure-delay-time = <0xfff>;
-+        pre-charge-time = <0xffff>;
-+        touchscreen-average-samples = <32>;
++    iomuxc: pinctrl@20e0000 {
++      compatible = "fsl,imx6ul-iomuxc";
++      reg = <0x020e0000 0x4000>;
++
++      mux_uart: uartgrp {
++        fsl,pins = <
++          0x0084 0x0310 0x0000 0 0 0x1b0b1
++          0x0088 0x0314 0x0624 0 3 0x1b0b1
++        >;
++      };
 +    };
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
-deleted file mode 100644
-index 164915004424..000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--* Freescale i.MX6UL Touch Controller
--
--Required properties:
--- compatible: must be "fsl,imx6ul-tsc".
--- reg: this touch controller address and the ADC2 address.
--- interrupts: the interrupt of this touch controller and ADC2.
--- clocks: the root clock of touch controller and ADC2.
--- clock-names; must be "tsc" and "adc".
--- xnur-gpio: the X- gpio this controller connect to.
--  This xnur-gpio returns to low once the finger leave the touch screen (The
--  last touch event the touch controller capture).
--
--Optional properties:
--- measure-delay-time: the value of measure delay time.
--  Before X-axis or Y-axis measurement, the screen need some time before
--  even potential distribution ready.
--  This value depends on the touch screen.
--- pre-charge-time: the touch screen need some time to precharge.
--  This value depends on the touch screen.
--- touchscreen-average-samples: Number of data samples which are averaged for
--  each read. Valid values are 1, 4, 8, 16 and 32.
--
--Example:
--	tsc: tsc@2040000 {
--		compatible = "fsl,imx6ul-tsc";
--		reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
--		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clks IMX6UL_CLK_IPG>,
--			 <&clks IMX6UL_CLK_ADC2>;
--		clock-names = "tsc", "adc";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_tsc>;
--		xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
--		measure-delay-time = <0xfff>;
--		pre-charge-time = <0xffff>;
--		touchscreen-average-samples = <32>;
--	};
++  - |
++    iomuxc_snvs: pinctrl@2290000 {
++      compatible = "fsl,imx6ull-iomuxc-snvs";
++      reg = <0x02290000 0x4000>;
++
++      pinctrl_snvs_usbc_det: snvsusbcdetgrp {
++        fsl,pins = <
++          0x0010 0x0054 0x0000 0x5 0x0 0x130b0
++        >;
++      };
++    };
 -- 
 2.43.0
 
