@@ -1,54 +1,54 @@
 Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057396351E
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 23:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4913864CF6
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 23:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707609084; cv=none; b=CVJT3p6Wkde9JNKY1DX4CpLoRbjcfGJvsrEOjY4XPPuFzyClAtcP6nRMtL8Lgz8DbWpVRJm5Mat75cXXVsgYbRmwRKFSa9mOVNKLIHX8MTvbEEcYCxBfBwmnMoymT/tZiqbyVsdwcGlnEn0vNBYXEijKcyKGioiTCHGE06Vgfio=
+	t=1707609088; cv=none; b=J1SsMQwokzk3Zx6v0nUNMoRu6giY+Dbr/tpc3CYUkwpPyxT0HXMyXxyBaS/bezYYpJ6o2aoHfJ7P9g8we6WON0e+vBft8td1OT9w81u7t92hWVUU/WhYPMe4zYnDd+sikqN+LtibDg+G/wbqAAHJnUNbjaSAVGUZJP7JGti8LQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707609084; c=relaxed/simple;
-	bh=f4Sac4mEUw0BI5hmgTH6/Jq4sbbkpzY9eNebwB4W+sQ=;
+	s=arc-20240116; t=1707609088; c=relaxed/simple;
+	bh=BgpJuFbGh1uswlxIaHPo2wvw9RKXh2Tg8JfjcMwd1b0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VyCu+/cHAw/F+MBv6QIi0YsLw2ErTGtzG6zCnRreuN9qIyrSGCJ9oTeE9OLvOfM6pDInoddeKP3Sk1Omlg3E2klaVf9MOsq1KYzCyfwH3yiyaNLoqeTC4ki08mOyuHUYlCYLf9Ij3byCqsaEa3AT6yznW0x0R0XGFr0Vmb2talI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KfBax3v6; arc=none smtp.client-ip=209.85.167.67
+	 MIME-Version:Content-Type; b=bV18MIlZFDCV/lzYbTe22VDdK4RUHYqrCPaoZWSVgQSbspHmfyttOm9wHgmZ1rtS9nxpFr7RalX8EIm/CNST+z/rMLw8psHNEInFpgIzbrJwFQnqeV/0oDfnZa1uM6TcAoKNToH7uUgroPNNl6apCkfXVrFrHOhDJSyFaTlLP5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZgGtHSlM; arc=none smtp.client-ip=209.85.167.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfBax3v6"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-51147d0abd1so2384698e87.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 15:51:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZgGtHSlM"
+Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-51168addef1so3887340e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 15:51:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707609081; x=1708213881; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707609084; x=1708213884; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tkxos9dGgcrWJ0r2tCur5eWGm4CQktOnj9qwMEqGt1o=;
-        b=KfBax3v623Qv6y2xTCsNLAtCXVY1WlBtL/6MK6mPY0UX13LY9E7yxVD80Rm0y4/TNs
-         XOUGfbAy7WxRlmiRVHaZOwYbTrRjXYqj8UDD09NDr/PGocuMtrDl5gjC6CqzW/7h/rLt
-         8CKaNdkFXph+Ptft3/wrTiTNxr5oiUrXZBCeo=
+        bh=0fePKdpvwVIgbzeITeSRDnfaI3pNosmqbiOFvtjCGd4=;
+        b=ZgGtHSlMBHdlXSSArbiLbydJUD17HeurhXehlb2xa1YwEdiThxXw9oju9fgkStt+4S
+         ZRxH8mg4k7ofhhy9d5fWt+b/EtM/SSoCXOb9hZZmZOfq+q1aP68cP0bbyQdP2bqP5McT
+         QxbDVpQOoZXSdnO5+PFE7pPIc4ayqxWcVzyk4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707609081; x=1708213881;
+        d=1e100.net; s=20230601; t=1707609084; x=1708213884;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tkxos9dGgcrWJ0r2tCur5eWGm4CQktOnj9qwMEqGt1o=;
-        b=IK2nzkBYlTo0R2GWgLoEdWCLJwAOaDkz/cW882CwzI3yEN2YywsqMOYGng15Y8VLXV
-         IuLikfKdBCkwEInYs9G5eK80hH+x02zqhDjL/bo1QahTdP1t7yYa4ScZeioT945qEdbM
-         9zJNeB4La8voeZN5SotHXo4NOx6NNDvHE3PjEgtTkU9PPLYYr7ZGIB2iwlmFXvqTF7YU
-         uWpAVqGsb58bHfaLsGGnu2N9ckG/DOr1WKQt55PaC5pmCPVvWK5YnkwnGWy9wCALcSg3
-         WefXYmjhxeY4jB+RvOP1e98u4qVFRTyXWQompK9FUxrZbW41NbqnbTUpn39wooyApa4H
-         SIgg==
-X-Gm-Message-State: AOJu0Yw4iMC0l6hkScH3+s7nRDl5LBa1UG4g7OMICBPCa9BtrfPvU7uq
-	vKzQ7gDtILupMARqBskVUvJbWGnwzAOdA364fWSxW+ijn7Ye8beFVpdOoh0D
-X-Google-Smtp-Source: AGHT+IGHAkCxvMTehufoxRwEMjLHz549p4jij5LRIE4K5aFDrmNzvyIUsQnDtcm9i6vPppoH6FzShQ==
-X-Received: by 2002:a19:ca58:0:b0:511:79d4:fd3e with SMTP id h24-20020a19ca58000000b0051179d4fd3emr1597737lfj.34.1707609081180;
-        Sat, 10 Feb 2024 15:51:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWps1kpiiPoE6sKwfqYMp+1eXTYtkI0CSuKhz/AReokCMYcZhEKgLbWk0M85iO+BPvrbIcE1EZD323/fyqJE4HjkBNzLdwYDW8J6LsKmB7cK5Bc8z3hIWTcQVnB2aCjxd7EDUFxbyO9+ofJ5tm0VGy+CpAnFkkw3MMDVZ0w968O1DynVEr3W/wuycA4d/bShuIIFH7elM+AH/UC5e3nF04Rx/Wcp97XieL7pLqhmlb9MyRZhL9Vxhaf2n+x1ySra9VH0VSYG9ZXS4V7p9X3juk/8pm080j6HatMrsqzIWqgs2OIPdI6m+9Bk1KGLhg8DLPiEj3SrMvQsY3NQ71qb4N/cFY5WtOstTpgBYVZShOZW60J4xpZTRMbSYV7LjUxpDGe+MlQEpHoSoLlPg3aT4PKscPS3d6eVc96NGMKsiMbnXRWj5E0TpZkL4Wuy7Gluhktd/vnKPvEkvowR1O84kFzqJTGpbQi7r1xbSJwiJo9KfWVp2vBbOGYFynqkJCnXDamL2shwngnxh/xRDk29wZpIXfPU+vh36nwVjhJf8HQkYPUuvgY9KRjE/zjamRdvheQsBnsot+gTu7U81KBjzcWK4cTxfhQhxfRGFdRGgvBdtIuQA==
+        bh=0fePKdpvwVIgbzeITeSRDnfaI3pNosmqbiOFvtjCGd4=;
+        b=uKOIp/vg4ucD25aGyIXsnlfSqoKMBxMNfjoNQw/4jgNwfy1c3jHdBQkGoT1JFIOqws
+         yFG9LHdAuwHyLWPXx/iTytHClxqwGNYtcefEml0r/WiYvK4ZsPCChiC+fhoqh1mtPvi+
+         bW7KxHDLdssYgEvkJ3Per6yHKBFBmECqrac9ul9336+Yc8GO9I4dLNFwkjHQbNPnd9QI
+         SQWadNVlZ3ojpRg+grnPK5IGpMhOGlvBgHHA3Im2OGDN+cXVQsXIkjGgZMKe22FqhNdI
+         7ZTdBak1eTvUfUJK9b9jHhgYMurNXFXMsM4YHy+2S4N2zt9EJQ6Fs7WX2oB/D+0lJeBc
+         Gm4w==
+X-Gm-Message-State: AOJu0YwFMyI0Cvs+498ZtKlHtrHUNnCXEnJ+Lbv4pwik/Lp0WL1VqtMn
+	FgZ6iH0wB2w+XOXE/i7nrP7Fw1+AQBSGPLc1b/8Q44XxV/tTWa4eNpLjIjs+
+X-Google-Smtp-Source: AGHT+IH3kiLAVwUDBpnlLlB///1mHF0xSi63b3pr/4UHDALv0F6GrYXIgV6pYsrUTvTSpTU6m/hvvw==
+X-Received: by 2002:ac2:485b:0:b0:511:5ef9:ebb0 with SMTP id 27-20020ac2485b000000b005115ef9ebb0mr1792496lfy.25.1707609084554;
+        Sat, 10 Feb 2024 15:51:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVe25uHF/Y6h5rhYjF7VhDkIljr93LL8p0J1F3LUwmAn/7U9VPhzTn/QCvhBXbjahw0V3qcMX0aw1kZU658PZh4oLCCYR3KmuEiJJw9a6XaZJnicBA2Ly4oilWLX2VKAixMLmou78F1vdvwei+pM8GGFvCxBWbXns8SJNbNabpmt23RsdMn2Lf7iRGISBK1xPHAJcK+/2q6lA8DhRUZBeFEfIzOk1FfSzhqKkw/ivPY4pQA2GJAS9jGs3XmewRKzxa/IgASN651oYd8S9Vp0QXUEgXy5m89gXVpS9h4xyZJWAGGULs1HPUpTWui+Q09vsa3462QT+Gykelb8HkZ54eiQB82x8f8pR8fbaMMc5Ees2dRUW/5udtR7dOghbogBsBplVQSGYSFrVQ9v2J/TG1IIIurutHekjF3Cxfw80Atlpvl48Cu3S7DAorBIqU8juja95tCwpijBiLQ25MKJlFMhLjlRtWpvwC7U19TJyeLZaGEJV8PnqHtvmU8FXaWRhiW2jZNOvvOBDJgkV6HTfFM2D8LYaxBdltM1Yn2nJNFcJavYekToXJu+lb/C4Jlj2Xk7zqhVpYxiI9nPZG1xHOxWpbnVnp/2cyhmec3Jo6iJGN7eA==
 Received: from ukaszb-l.roam.corp.google.com (alfa56.extreme-net.one.pl. [213.77.89.56])
-        by smtp.gmail.com with ESMTPSA id o27-20020a056512051b00b0051179ae1846sm365561lfb.280.2024.02.10.15.51.19
+        by smtp.gmail.com with ESMTPSA id o27-20020a056512051b00b0051179ae1846sm365561lfb.280.2024.02.10.15.51.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Feb 2024 15:51:20 -0800 (PST)
+        Sat, 10 Feb 2024 15:51:24 -0800 (PST)
 From: =?UTF-8?q?=C5=81ukasz=20Bartosik?= <ukaszb@chromium.org>
 To: Jason Baron <jbaron@akamai.com>,
 	Jim Cromie <jim.cromie@gmail.com>,
@@ -70,9 +70,9 @@ Cc: Guenter Roeck <groeck@google.com>,
 	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	upstream@semihalf.com
-Subject: [PATCH v4 31/39] dyndbg-test: test_private_trace_mixed_class - parameterize modname
-Date: Sun, 11 Feb 2024 00:50:01 +0100
-Message-ID: <20240210235009.2405808-32-ukaszb@chromium.org>
+Subject: [PATCH v4 33/39] dyndbg-test: setup environment for tests execution
+Date: Sun, 11 Feb 2024 00:50:03 +0100
+Message-ID: <20240210235009.2405808-34-ukaszb@chromium.org>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 In-Reply-To: <20240210235009.2405808-1-ukaszb@chromium.org>
 References: <20240210235009.2405808-1-ukaszb@chromium.org>
@@ -82,86 +82,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Jim Cromie <jim.cromie@gmail.com>
+Add function setup_env_for_tests which prepares dynamic debug
+and trace environment for tests execution. This is to clean up
+previous settings or leftovers after a failing test. The function
+setup_env_for_tests does the following to prepare the environment:
+- unloads test_dynamic_debug, test_dynamic_debug_submod modules
+if any of them is loaded,
+- it prints info about all callsites which have flags != "_" and
+sets these flags to "_:0",
+- it closes open trace instances and deletes their respective
+directories.
 
-This fn currently is hard-coded to modprobe test_dynamic_debug.ko for
-its tests, we'd also like to use test_dynamic_debug_submod.ko.
-Add local modname="test_dynamic_debug" to make this explicit.
+The patch also refactors ifrmmod function.
 
-This leaves the use of search_trace_name for hard-coded reference
-content, unfortunately that will take more fiddling.
-
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+Signed-off-by: Łukasz Bartosik <ukaszb@chromium.org>
 ---
- .../dynamic_debug/dyndbg_selftest.sh          | 32 +++++++++----------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ .../dynamic_debug/dyndbg_selftest.sh          | 36 +++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-index d1f447eef4c0..abe94af0f3eb 100755
+index 86bb039df4a1..f8b81e8a3bd6 100755
 --- a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
 +++ b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-@@ -499,7 +499,20 @@ function search_in_trace_for {
+@@ -147,8 +147,8 @@ function error_log_ref {
  }
  
- function test_private_trace_mixed_class {
--    echo -e "${GREEN}# TEST_PRIVATE_TRACE_5 ${NC}"
-+    local modname="test_dynamic_debug"
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_mixed_class ${NC}"
+ function ifrmmod {
+-    lsmod | grep $1 2>&1>/dev/null || echo $1 not there
+-    lsmod | grep $1 2>&1>/dev/null && rmmod $1
++    lsmod | grep $1 2>&1>/dev/null || ([ "$2" == "-v" ] && echo "module '$1' is not loaded")
++    lsmod | grep $1 2>&1>/dev/null && rmmod $1 && [ "$2" == "-v" ] && echo "unload module '$1'"
+ }
+ 
+ # $1 - text to search for
+@@ -657,6 +657,37 @@ function test_private_trace_fill_trace_index {
+     check_trace_instance_dir trace_instance_63 0
+ }
+ 
++# prepares dynamic debug and trace environment for tests execution
++function setup_env_for_tests {
++    echo -e "${GREEN}# SETUP_ENV_FOR_TESTS ${NC}"
 +
-+    local eyeball_ref=<<'EOD'
-+        modprobe-1173    [001] .....   7.781008: 0: test_dynamic_debug:do_cats: test_dd: D2_CORE msg
-+        modprobe-1173    [001] .....   7.781010: 0: test_dynamic_debug:do_cats: test_dd: D2_KMS msg
-+        modprobe-1173    [001] .....   7.781010: 0: test_dynamic_debug:do_levels: test_dd: V3 msg
-+             cat-1214    [001] .....   7.905494: 0: test_dd: doing categories
-+             cat-1214    [001] .....   7.905495: 0: test_dynamic_debug:do_cats: test_dd: D2_CORE msg
-+             cat-1214    [001] .....   7.905496: 0: test_dynamic_debug:do_cats: test_dd: D2_KMS msg
-+             cat-1214    [001] .....   7.905497: 0: test_dd: doing levels
-+             cat-1214    [001] .....   7.905498: 0: test_dynamic_debug:do_levels: test_dd: V3 msg
-+EOD
++    echo "MODULES"
++    ifrmmod test_dynamic_debug_submod -v	# unload test_dynamic_debug_submod module
++                                                # if it is loaded
++    ifrmmod test_dynamic_debug -v	# unload test_dynamic_debug module it if is loaded
++    echo
 +
-     ddcmd =_
-     ddcmd module,params,+T:unopened fail
-     check_err_msg "Invalid argument"
-@@ -509,7 +522,7 @@ function test_private_trace_mixed_class {
-     ddcmd open bupkus
-     is_trace_instance_opened bupkus
-     check_trace_instance_dir bupkus 1
--    modprobe test_dynamic_debug \
-+    modprobe $modname \
- 	     dyndbg=class,D2_CORE,+T:bupkus.mf%class,D2_KMS,+T:bupkus.mf%class,V3,+T:bupkus.mf
++    # display all callsites which have flags != "_"
++    echo "CALLSITES with flags != \":0\""
++    cat /proc/dynamic_debug/control | grep -v "=_" | grep -v "not set" | grep -v "^$" \
++	    | grep -v "#: Opened trace instances" | grep -v "#: Default trace destination"
++    ddcmd module,*,=_:0 # clear all flags and set dest to 0
++    echo
++
++    # close all opened trace instances and delete their respective directories
++    echo "OPEN trace instance"
++    output=$(tail -n9 /proc/dynamic_debug/control | grep "#: Opened trace instances" \
++	    | cut -f3 -d":" | xargs -n1)
++    for dst in $output
++    do
++        echo "close trace instance '$dst'"
++	echo close,$dst > /proc/dynamic_debug/control
++	echo "delete '/sys/kernel/debug/tracing/instances/$dst' directory"
++	rmdir /sys/kernel/debug/tracing/instances/$dst
++    done
++    echo
++}
++
+ tests_list=(
+     basic_tests
+     comma_terminator_tests
+@@ -680,6 +711,7 @@ tests_list=(
  
-     # test various name misses
-@@ -524,8 +537,7 @@ function test_private_trace_mixed_class {
-     ddcmd "module params =:0."
+ # Run tests
  
-     check_match_ct =T:bupkus.mf 3		# the 3 classes enabled above
--    # enable the 5 non-class'd pr_debug()s
--    ddcmd "module test_dynamic_debug =T:bupkus"
-+    ddcmd "module $modname =T:bupkus"		# enable the 5 non-class'd pr_debug()s
-     check_match_ct =T:bupkus 8 -r		# 8=5+3
- 
-     doprints
-@@ -538,18 +550,6 @@ function test_private_trace_mixed_class {
-     ddcmd close,bupkus
-     is_trace_instance_closed bupkus
- 
--    # check results
--    eyeball_ref=<<EOD
--        modprobe-1173    [001] .....   7.781008: 0: test_dynamic_debug:do_cats: test_dd: D2_CORE msg
--        modprobe-1173    [001] .....   7.781010: 0: test_dynamic_debug:do_cats: test_dd: D2_KMS msg
--        modprobe-1173    [001] .....   7.781010: 0: test_dynamic_debug:do_levels: test_dd: V3 msg
--             cat-1214    [001] .....   7.905494: 0: test_dd: doing categories
--             cat-1214    [001] .....   7.905495: 0: test_dynamic_debug:do_cats: test_dd: D2_CORE msg
--             cat-1214    [001] .....   7.905496: 0: test_dynamic_debug:do_cats: test_dd: D2_KMS msg
--             cat-1214    [001] .....   7.905497: 0: test_dd: doing levels
--             cat-1214    [001] .....   7.905498: 0: test_dynamic_debug:do_levels: test_dd: V3 msg
--EOD
--
-     # validate the 3 enabled class'd sites, with mf prefix
-     search_trace_name bupkus 0 "test_dynamic_debug:do_cats: test_dd: D2_CORE msg"
-     search_trace_name bupkus 0 "test_dynamic_debug:do_cats: test_dd: D2_KMS msg"
++setup_env_for_tests
+ for test in "${tests_list[@]}"
+ do
+     $test
 -- 
 2.43.0.687.g38aa6559b0-goog
 
